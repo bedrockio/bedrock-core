@@ -16,13 +16,13 @@ spec:
         env:
           - name: NODE_ENV
             value: "prod"
-          - name: API_MONGO_URI
+          - name: MONGO_URI
             value: "mongodb://mongo:27017/platform"
-          - name: API_APP_DOMAIN
+          - name: APP_DOMAIN
             value: "platform.com"
-          - name: API_POSTMARK_FROM
+          - name: POSTMARK_FROM
             value: "no-reply@platform.com"
-          - name: API_POSTMARK_APIKEY
+          - name: POSTMARK_APIKEY
             value: "abc"
         volumeMounts:
           - name: jobs-cache
