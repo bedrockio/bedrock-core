@@ -1,0 +1,14 @@
+{
+  "fontName": "'Work Sans'",
+  "fontSmoothing": "antialiased",
+  "headerFont": "'SF Pro Display', 'Helvetica Neue', Arial, Helvetica, sans-serif",
+  "pageFont": "'Work Sans', 'Helvetica Neue', Arial, Helvetica, sans-serif",
+  "googleFontName": "'Work Sans'",
+  "importGoogleFonts": "false",
+  "googleFontSizes": "'400,700,400italic,700italic'",
+  "googleSubset": "'latin'",
+  "googleProtocol": "'https://'",
+  "googleFontRequest": "'Work Sans:400,700,400italic,700italic&subset=latin'",
+  "bold": "bold",
+  "normal": "normal"
+}

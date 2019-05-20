@@ -1,0 +1,21 @@
+#!/bin/bash
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+cd $SCRIPTPATH; cd ../../
+PLATFORM_NAME=$(basename `pwd`)
+ENVIRONMENT=$1
+
+if [ "$ENVIRONMENT" == "" ]; then
+  echo "Usage: $0 <environment> [keyword]"
+  exit 1
+fi
+
+./deployment/scripts/check_gcloud_config $ENVIRONMENT
+if [ $? -ne 0 ]; then
+  exit 1
+fi
+
+export $(cat deployment/$ENVIRONMENT/env.conf | xargs)
+
+kubectl get services
+kubectl get nodes
+kubectl get pods

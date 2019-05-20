@@ -1,0 +1,12 @@
+#!/bin/bash
+ENVIRONMENT=$1
+
+if [ "$ENVIRONMENT" == "" ]; then
+  echo "Usage: $0 <environment>"
+  exit 1
+fi
+export $(cat deployment/$ENVIRONMENT/env.conf | xargs)
+gcloud compute ssl-certificates create \
+$ENVIRONMENT-ssl \
+--certificate deployment/$ENVIRONMENT/certificates/domain.crt \
+--private-key deployment/$ENVIRONMENT/certificates/domain.key

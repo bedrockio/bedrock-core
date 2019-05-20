@@ -1,0 +1,60 @@
+version: "3.7"
+
+services:
+  api:
+    command: ["./scripts/wait-for-it.sh", "mongo:27017", "--", "npm", "start"]
+    environment:
+      - MONGO_URI=mongodb://mongo/platform_dev
+    build:
+      context: ./services/api
+      dockerfile: Dockerfile
+    volumes:
+      - ./services/api/src:/service/src
+      - ./services/api/emails:/service/emails
+      - ./services/api/scripts:/service/scripts
+      - ./services/api/env.conf:/service/env.conf
+      - ./services/api/openapi.json:/service/openapi.json
+    ports:
+      - "2300:2300"
+    links:
+      - mongo
+    depends_on:
+      - mongo
+
+  web:
+    command: ["yarn", "start"]
+    build:
+      context: ./services/web
+      dockerfile: Dockerfile
+    volumes:
+      - ./services/web/src:/service/src
+    ports:
+      - "2200:2200"
+      - "34000:34000"
+    depends_on:
+      - api
+
+  api-docs:
+    build:
+      context: ./services/api-docs
+      dockerfile: Dockerfile
+    ports:
+      - "2400:2400"
+    links:
+      - api
+    depends_on:
+      - api
+
+  mongo:
+    image: mongo:4
+    command: mongod --smallfiles --logpath=/dev/null # small mem footprint + quiet
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+    volumes:
+      - db-data:/data/db
+    ports:
+      - 27017:27017
+
+volumes:
+  db-data:

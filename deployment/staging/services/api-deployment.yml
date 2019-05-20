@@ -1,0 +1,49 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: api-deployment
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        name: api
+    spec:
+      containers:
+      - image: gcr.io/platform-staging/platform-services-api
+        imagePullPolicy: Always
+        name: api
+        env:
+          - name: NODE_ENV
+            value: "staging"
+          - name: MONGO_URI
+            value: "mongodb://mongo:27017/platform"
+          - name: ADMIN_EMAIL
+            value: "admin@platform.com"
+          - name: ADMIN_USERNAME
+            value: "admin"
+          - name: ADMIN_PASSWORD
+            value: "admin.platform"
+          - name: JWT_SECRET
+            value: "njuhuhg78h"
+          - name: JWT_ADMINSECRET
+            value: "abc"
+          - name: APP_DOMAIN
+            value: "staging.platform.com"
+          - name: POSTMARK_FROM
+            value: "no-reply@platform.com"
+          - name: POSTMARK_APIKEY
+            value: "abc"
+          - name: UPLOADS_STORE
+            value: "gcs"
+          - name: UPLOADS_GCS_BUCKET
+            value: "platform-staging-uploads"
+        ports:
+        - name: http-server
+          containerPort: 2300
+        volumeMounts:
+          - name: api-cache
+            mountPath: /workdir/data
+      volumes:
+        - name: api-cache
+          emptyDir: {}

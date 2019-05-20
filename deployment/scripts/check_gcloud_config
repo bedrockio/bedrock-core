@@ -1,0 +1,34 @@
+#!/bin/bash
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+cd $SCRIPTPATH; cd ../../
+PLATFORM_NAME=$(basename `pwd`)
+ENVIRONMENT=$1
+
+if [ "$ENVIRONMENT" == "" ]; then
+  echo "Usage: $0 <environment>"
+  exit 1
+fi
+
+
+export $(cat deployment/$ENVIRONMENT/env.conf | xargs)
+CURRENT_GCLOUD_PROJECT=`gcloud config get-value project`
+CURRENT_GCLOUD_COMPUTE_ZONE=`gcloud config get-value compute/zone`
+CURRENT_GCLOUD_KUBERNETES_CLUSTER_NAME=`gcloud config get-value container/cluster`
+
+if [ "$GCLOUD_PROJECT" != "$CURRENT_GCLOUD_PROJECT" ]; then
+  echo "Invalid Google Cloud config (use authorize script): project = $CURRENT_GCLOUD_PROJECT"
+  exit 1
+fi
+
+if [ "$GCLOUD_COMPUTE_ZONE" != "$CURRENT_GCLOUD_COMPUTE_ZONE" ]; then
+  echo "Invalid Google Cloud config (use authorize script): compute/zone = $CURRENT_GCLOUD_COMPUTE_ZONE"
+  exit 1
+fi
+
+if [ "$GCLOUD_KUBERNETES_CLUSTER_NAME" != "$CURRENT_GCLOUD_KUBERNETES_CLUSTER_NAME" ]; then
+  echo "Invalid Google Cloud config (use authorize script): container/cluster = $CURRENT_GCLOUD_KUBERNETES_CLUSTER_NAME"
+  exit 1
+fi
+
+echo "Using Google Cloud environment $ENVIRONMENT (project=$GCLOUD_PROJECT, compute/zone=$GCLOUD_COMPUTE_ZONE, cluster=$GCLOUD_KUBERNETES_CLUSTER_NAME)"
+exit 0

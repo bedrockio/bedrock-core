@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: mongo-backups-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: mongodb-backups
+    spec:
+      containers:
+      - image: gcr.io/platform-staging/mongodb-backups
+        imagePullPolicy: Always
+        name: mongodb-backups
+        env:
+          - name: MONGO_HOST
+            value: "mongo"
+          - name: MONGO_DB
+            value: "platform"
+          - name: BACKUPS_GS_BUCKET
+            value: "platform-staging-mongodb-backups"

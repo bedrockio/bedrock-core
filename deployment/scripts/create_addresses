@@ -1,0 +1,6 @@
+#!/bin/bash
+gcloud compute addresses create api --region us-east1
+gcloud compute addresses create api-ingress --global
+gcloud compute addresses create web --region us-east1
+gcloud compute addresses create web-ingress --global
+gcloud compute addresses list

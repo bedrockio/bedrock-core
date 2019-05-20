@@ -1,0 +1,42 @@
+#!/bin/bash
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+cd $SCRIPTPATH; cd ../../
+PLATFORM_NAME=$(basename `pwd`)
+SERVICES=`ls services`
+SERVICE="$1"
+SUB_SERVICE="$2"
+
+function build_service() {
+  service=$1
+  sub_service=$2
+  cd services/$service
+  if [ "$sub_service" == "" ]; then
+    echo "=> Building $PLATFORM_NAME-services-$service"
+    docker build -t $PLATFORM_NAME-services-$service .
+  else
+    echo "=> Building $PLATFORM_NAME-services-$service-$sub_service"
+    docker build -t $PLATFORM_NAME-services-$service-$sub_service -f Dockerfile.$sub_service .
+  fi
+  response=$?
+  cd ../..
+  return $response
+}
+
+if [ "$SERVICE" == "" ]; then
+  for service in $SERVICES; do
+    DOCKER_FILES=`ls services/$service | grep Dockerfile`
+    for docker_file in $DOCKER_FILES; do
+      if [ "$docker_file" == "Dockerfile" ]; then
+        build_service $service
+      else
+        build_service $service ${docker_file:11}
+      fi
+      if [ $? -ne 0 ]; then
+        echo "Aborting"
+        exit 1
+      fi
+    done
+  done
+else
+  build_service $SERVICE $SUB_SERVICE
+fi

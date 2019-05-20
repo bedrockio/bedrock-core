@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: web-deployment
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        name: web
+    spec:
+      containers:
+      - image: gcr.io/platform-staging/platform-services-web
+        imagePullPolicy: Always
+        name: web
+        env:
+          - name: NODE_ENV
+            value: "staging"
+          - name: DOMAIN
+            value: staging.platform.com
+          - name: API_URL
+            value: "https://staging-api.platform.com"
+          - name: REDIRECT_TO_HTTPS
+            value: ""
+        ports:
+        - name: http-server
+          containerPort: 2200

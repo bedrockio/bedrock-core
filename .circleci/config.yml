@@ -1,0 +1,90 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - run:
+          name: Determine which projects have changed and trigger the builds
+          command: |
+            mkdir -p .services-metadata
+            if [ -z $CIRCLE_TOKEN ]; then 
+              echo "NO CIRCLE_TOKEN found in the environment variables"
+              echo "1. Under your user settings, create a Personal API Token"
+              echo "2. Under the project settings, add an environment var CIRCLE_TOKEN with the personal API token"
+              exit 1
+            fi
+
+            # Identify modified directories
+            LAST_SUCCESSFUL_BUILD_URL="https://circleci.com/api/v1.1/project/github/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/tree/$CIRCLE_BRANCH?filter=completed&limit=1"
+            LAST_SUCCESSFUL_COMMIT=`curl -Ss -u "$CIRCLE_TOKEN:" $LAST_SUCCESSFUL_BUILD_URL | jq -r '.[0]["vcs_revision"]'`
+
+            #first commit in a branch
+            if [[ ${LAST_SUCCESSFUL_COMMIT} == "null" ]]; then
+              COMMITS="origin/master"
+            else
+              COMMITS="${CIRCLE_SHA1}..${LAST_SUCCESSFUL_COMMIT}"
+            fi
+
+
+            for project in services/*/; do
+              projectname=$(basename $project)
+              if [[ $(git diff $COMMITS --name-status | grep "$projectname") ]]; then
+                echo "${projectname} => $(git diff $COMMITS --name-status)"
+                touch .services-metadata/${projectname}-changed
+              fi
+            done
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .services-metadata
+
+  api:
+    working_directory: ~/project/services/api
+    docker:
+      - image: circleci/node
+    steps:
+      - checkout:
+          path: ~/project
+      - attach_workspace:
+          at: ~/project/services/api
+      - run:
+          name: Check whether project changed
+          command: |
+            if ! [ -e .services-metadata/api-changed ]; then
+              echo "stopping as nothing was changed"
+              circleci-agent step halt
+              exit 0
+            fi
+            echo "running"
+            ls .services-metadata
+            rm -rf .services-metadata
+      - restore_cache:
+          key: dependency-cache-{{ checksum "yarn.lock" }}
+      - run:
+          name: Setup
+          command: yarn install
+      - save_cache:
+          key: dependency-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: Run test
+          command: |
+            npm test
+
+workflows:
+  version: 2.1
+  build_and_test:
+    jobs:
+      - build:
+          context: CIRCLE_TOKEN
+          filters:
+            branches:
+              only:
+                - master
+      - api:
+          requires:
+            - build

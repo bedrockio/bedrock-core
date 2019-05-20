@@ -1,0 +1,6 @@
+**/node_modules
+deployment
+.dockerignore
+.git
+.gitignore
+README.md

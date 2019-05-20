@@ -1,0 +1,12 @@
+${senderName} has invited you to join ${appName}
+---
+${senderName} (${senderEmail}) has invited you to join ${appName}
+${appName} is a complete platform-as-a-service solution that enables unified ingestion and
+processing of data for the rapid and uniform development of applications.
+
+Register now
+${appUrl}/accept-invite?token=${token}
+---
+Best,
+The ${appName} Team
+${appCompanyAddress}

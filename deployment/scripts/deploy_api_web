@@ -1,0 +1,17 @@
+#!/bin/bash
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+cd $SCRIPTPATH; cd ../../
+PLATFORM_NAME=$(basename `pwd`)
+ENVIRONMENT=$1
+
+if [ "$ENVIRONMENT" == "" ]; then
+  echo "Usage: $0 <environment>"
+  exit 1
+fi
+
+./deployment/scripts/build api
+./deployment/scripts/build web
+./deployment/scripts/push $ENVIRONMENT api
+./deployment/scripts/push $ENVIRONMENT web
+./deployment/scripts/apply $ENVIRONMENT api
+./deployment/scripts/apply $ENVIRONMENT web

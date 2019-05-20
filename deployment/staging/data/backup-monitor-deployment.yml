@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: backup-monitor-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: backup-monitor
+    spec:
+      containers:
+      - image: gcr.io/platform-staging/backup-monitor
+        imagePullPolicy: Always
+        name: backup-monitor
+        env:
+          - name: GS_BUCKETS
+            value: "pipeline-staging-backup staging-mongodb-backups"
+          - name: POSTMARK_API_KEY
+            value: "abc"
+          - name: POSTMARK_FROM
+            value: "dominiek@platform.com"
+          - name: EMAIL_ALERT
+            value: "dominiek@platform.com"
+          - name: EMAIL_HEALTH_CHECK
+            value: "dominiek@platform.com"
+          - name: ENVIRONMENT
+            value: "staging"

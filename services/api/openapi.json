@@ -1,0 +1,1561 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Platform Api",
+    "version": "2.0.0",
+    "description": "# Introduction\nThe Platform API is a RESTful JSON API that allows developers to access the functionality. \n"
+  },
+  "paths": {
+    "": {
+      "operationId": "get",
+      "get": {
+        "summary": "Get Api Info",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "version": "1.0.0"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": []
+      }
+    },
+    "/openapi.json": {
+      "operationId": "get-openapi.json",
+      "get": {
+        "summary": "Get Open Api Definition",
+        "responses": {},
+        "tags": []
+      }
+    },
+    "/1/auth/register": {
+      "operationId": "post-1-auth-register",
+      "post": {
+        "summary": "Register",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 6
+                  }
+                },
+                "additionalProperties": false,
+                "patterns": [],
+                "required": [
+                  "email",
+                  "name",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "data": {
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2E2NTk1NjgzNzFjZjYzNzU4M2FmNWUiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1NTQ0MDU3MTksImV4cCI6MTU1Njk5NzcxOX0.QF0moukbjxsEN4ScQjZVXBjjlj96wEr34gWfzbYaFXw"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A user with that email already exists"
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/1/auth/login": {
+      "operationId": "post-1-auth-login",
+      "post": {
+        "summary": "Login",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false,
+                "patterns": [],
+                "required": [
+                  "email",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "data": {
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2E2NTk1NjgzNzFjZjYzNzU4M2FmNWQiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1NTQ0MDU3MTgsImV4cCI6MTU1Njk5NzcxOH0.AxX6PE03u-oxtA81X-AKnYv_tutaf5wKfH_wmUzA0D8"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "email password combination does not match"
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/1/auth/accept-invite": {
+      "operationId": "post-1-auth-accept-invite",
+      "post": {
+        "summary": "Create auth",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 6
+                  }
+                },
+                "additionalProperties": false,
+                "patterns": [],
+                "required": [
+                  "name",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "500": {
+            "description": "Invite could not be found"
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/1/auth/request-password": {
+      "operationId": "post-1-auth-request-password",
+      "post": {
+        "summary": "Request password",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                },
+                "additionalProperties": false,
+                "patterns": [],
+                "required": [
+                  "email"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "success"
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/1/auth/set-password": {
+      "operationId": "post-1-auth-set-password",
+      "post": {
+        "summary": "Set Password",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 6
+                  }
+                },
+                "additionalProperties": false,
+                "patterns": [],
+                "required": [
+                  "token",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "data": {
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2E2NTk1NzgzNzFjZjYzNzU4M2FmNjAiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1NTQ0MDU3MTksImV4cCI6MTU1Njk5NzcxOX0.Reo0FGOeLwdWXOeBpu354vpHOosC_ULQT86DHzpTYCc"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "user does not exists"
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/1/users/me": {
+      "operationId": "patch-1-users-me",
+      "get": {
+        "summary": "List users",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "data": {
+                        "id": "5ca65956ccee3063762909ce",
+                        "roles": [],
+                        "email": "email1@platform.com",
+                        "name": "test user",
+                        "createdAt": "2019-04-04T19:21:58.213Z",
+                        "updatedAt": "2019-04-04T19:21:58.213Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "users"
+        ]
+      },
+      "patch": {
+        "summary": "Update user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "timeZone": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false,
+                "patterns": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "data": {
+                        "id": "5ca65956ccee3063762909cf",
+                        "roles": [],
+                        "email": "email2@platform.com",
+                        "name": "other name",
+                        "createdAt": "2019-04-04T19:21:58.290Z",
+                        "updatedAt": "2019-04-04T19:21:58.323Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/1/users/search": {
+      "operationId": "post-1-users-search",
+      "post": {
+        "summary": "Search user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "skip": {
+                    "default": 0,
+                    "type": "number"
+                  },
+                  "sort": {
+                    "default": {
+                      "field": "createdAt",
+                      "order": "desc"
+                    },
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string"
+                      },
+                      "order": {
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": false,
+                    "patterns": [],
+                    "required": [
+                      "field",
+                      "order"
+                    ]
+                  },
+                  "limit": {
+                    "default": 50,
+                    "type": "number"
+                  }
+                },
+                "additionalProperties": false,
+                "patterns": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "data": [
+                        {
+                          "id": "5ca65956ccee3063762909d2",
+                          "roles": [
+                            "user"
+                          ],
+                          "email": "email5@platform.com",
+                          "name": "Two",
+                          "createdAt": "2019-04-04T19:21:58.345Z",
+                          "updatedAt": "2019-04-04T19:21:58.345Z"
+                        },
+                        {
+                          "id": "5ca65956ccee3063762909d1",
+                          "roles": [
+                            "user"
+                          ],
+                          "email": "email4@platform.com",
+                          "name": "One",
+                          "createdAt": "2019-04-04T19:21:58.343Z",
+                          "updatedAt": "2019-04-04T19:21:58.343Z"
+                        },
+                        {
+                          "id": "5ca65956ccee3063762909d0",
+                          "roles": [
+                            "admin"
+                          ],
+                          "email": "email3@platform.com",
+                          "name": "test user",
+                          "createdAt": "2019-04-04T19:21:58.339Z",
+                          "updatedAt": "2019-04-04T19:21:58.339Z"
+                        },
+                        {
+                          "id": "5ca65956ccee3063762909cf",
+                          "roles": [],
+                          "email": "email2@platform.com",
+                          "name": "other name",
+                          "createdAt": "2019-04-04T19:21:58.290Z",
+                          "updatedAt": "2019-04-04T19:21:58.323Z"
+                        },
+                        {
+                          "id": "5ca65956ccee3063762909ce",
+                          "roles": [],
+                          "email": "email1@platform.com",
+                          "name": "test user",
+                          "createdAt": "2019-04-04T19:21:58.213Z",
+                          "updatedAt": "2019-04-04T19:21:58.213Z"
+                        }
+                      ],
+                      "meta": {
+                        "total": 5,
+                        "skip": 0,
+                        "limit": 50
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/1/users": {
+      "operationId": "post-1-users",
+      "post": {
+        "summary": "Create user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "roles": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 6
+                  }
+                },
+                "additionalProperties": false,
+                "patterns": [],
+                "required": [
+                  "email",
+                  "name",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "data": {
+                        "id": "5ca65956ccee3063762909d5",
+                        "roles": [],
+                        "email": "hello@dominiek.com",
+                        "name": "Hello",
+                        "createdAt": "2019-04-04T19:21:58.418Z",
+                        "updatedAt": "2019-04-04T19:21:58.418Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A user with that email already exists"
+          }
+        },
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/1/users/:user": {
+      "parameters": [
+        {
+          "name": "user",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "operationId": "get-1-users-:user",
+      "delete": {
+        "summary": "Delete user",
+        "responses": {
+          "204": {
+            "description": "success"
+          }
+        },
+        "tags": [
+          "users"
+        ]
+      },
+      "patch": {
+        "summary": "Update user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "roles": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                },
+                "additionalProperties": false,
+                "patterns": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "data": {
+                        "id": "5ca65956ccee3063762909dc",
+                        "roles": [
+                          "user"
+                        ],
+                        "email": "email14@platform.com",
+                        "name": "new name",
+                        "createdAt": "2019-04-04T19:21:58.771Z",
+                        "updatedAt": "2019-04-04T19:21:58.771Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "users"
+        ]
+      },
+      "get": {
+        "summary": "Get user",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "data": {
+                        "id": "5ca65956ccee3063762909e0",
+                        "roles": [
+                          "user"
+                        ],
+                        "email": "email18@platform.com",
+                        "name": "One",
+                        "createdAt": "2019-04-04T19:21:58.799Z",
+                        "updatedAt": "2019-04-04T19:21:58.799Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/1/products/search": {
+      "operationId": "post-1-products-search",
+      "post": {
+        "summary": "Search product",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "skip": {
+                    "default": 0,
+                    "type": "number"
+                  },
+                  "sort": {
+                    "default": {
+                      "field": "createdAt",
+                      "order": "desc"
+                    },
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string"
+                      },
+                      "order": {
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": false,
+                    "patterns": [],
+                    "required": [
+                      "field",
+                      "order"
+                    ]
+                  },
+                  "shopId": {
+                    "type": "string"
+                  },
+                  "limit": {
+                    "default": 50,
+                    "type": "number"
+                  }
+                },
+                "additionalProperties": false,
+                "patterns": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "data": [
+                        {
+                          "id": "5ca65956b23b8c6378403cbf",
+                          "sellingPoints": [],
+                          "name": "test 2",
+                          "description": "Some description",
+                          "shopId": "5ca65956b23b8c6378403cbe",
+                          "createdAt": "2019-04-04T19:21:58.215Z",
+                          "updatedAt": "2019-04-04T19:21:58.215Z"
+                        },
+                        {
+                          "id": "5ca65956b23b8c6378403cbd",
+                          "sellingPoints": [],
+                          "name": "test 1",
+                          "description": "Some description",
+                          "shopId": "5ca65956b23b8c6378403cbc",
+                          "createdAt": "2019-04-04T19:21:58.210Z",
+                          "updatedAt": "2019-04-04T19:21:58.210Z"
+                        }
+                      ],
+                      "meta": {
+                        "total": 2,
+                        "skip": 0,
+                        "limit": 50
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "products"
+        ]
+      }
+    },
+    "/1/products": {
+      "operationId": "post-1-products",
+      "post": {
+        "summary": "Create product",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "shopId": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "expiresAt": {
+                    "type": "string"
+                  },
+                  "priceUsd": {
+                    "type": "number",
+                    "minimum": 0.1,
+                    "maximum": 1000000
+                  },
+                  "isFeatured": {
+                    "type": "boolean"
+                  },
+                  "sellingPoints": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "additionalProperties": false,
+                "patterns": [],
+                "required": [
+                  "name",
+                  "shopId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "data": {
+                        "id": "5ca65956b23b8c6378403cc2",
+                        "sellingPoints": [],
+                        "name": "some other product",
+                        "shopId": "5ca65956b23b8c6378403cc1",
+                        "createdAt": "2019-04-04T19:21:58.339Z",
+                        "updatedAt": "2019-04-04T19:21:58.339Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "products"
+        ]
+      }
+    },
+    "/1/products/:product": {
+      "parameters": [
+        {
+          "name": "product",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "operationId": "get-1-products-:product",
+      "delete": {
+        "summary": "Delete product",
+        "responses": {
+          "204": {
+            "description": "success"
+          }
+        },
+        "tags": [
+          "products"
+        ]
+      },
+      "patch": {
+        "summary": "Update product",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "shopId": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "expiresAt": {
+                    "type": "string"
+                  },
+                  "priceUsd": {
+                    "type": "number",
+                    "minimum": 0.1,
+                    "maximum": 1000000
+                  },
+                  "isFeatured": {
+                    "type": "boolean"
+                  },
+                  "sellingPoints": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "deletedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                },
+                "additionalProperties": false,
+                "patterns": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "data": {
+                        "id": "5ca65956b23b8c6378403cc8",
+                        "sellingPoints": [],
+                        "name": "new name",
+                        "description": "Some description",
+                        "shopId": "5ca65956b23b8c6378403cc7",
+                        "createdAt": "2019-04-04T19:21:58.382Z",
+                        "updatedAt": "2019-04-04T19:21:58.394Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "products"
+        ]
+      },
+      "get": {
+        "summary": "Get product",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "data": {
+                        "id": "5ca65956b23b8c6378403ccb",
+                        "sellingPoints": [],
+                        "name": "test 1",
+                        "description": "Some description",
+                        "shopId": "5ca65956b23b8c6378403cca",
+                        "createdAt": "2019-04-04T19:21:58.409Z",
+                        "updatedAt": "2019-04-04T19:21:58.409Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "products"
+        ]
+      }
+    },
+    "/1/shops/search": {
+      "operationId": "post-1-shops-search",
+      "post": {
+        "summary": "Search shop",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "skip": {
+                    "default": 0,
+                    "type": "number"
+                  },
+                  "sort": {
+                    "default": {
+                      "field": "createdAt",
+                      "order": "desc"
+                    },
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string"
+                      },
+                      "order": {
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": false,
+                    "patterns": [],
+                    "required": [
+                      "field",
+                      "order"
+                    ]
+                  },
+                  "limit": {
+                    "default": 50,
+                    "type": "number"
+                  }
+                },
+                "additionalProperties": false,
+                "patterns": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "data": [
+                        {
+                          "id": "5ca6595621c9e96379102e22",
+                          "images": [],
+                          "name": "test 2",
+                          "description": "Some description",
+                          "createdAt": "2019-04-04T19:21:58.208Z",
+                          "updatedAt": "2019-04-04T19:21:58.208Z"
+                        },
+                        {
+                          "id": "5ca6595621c9e96379102e21",
+                          "images": [],
+                          "name": "test 1",
+                          "description": "Some description",
+                          "createdAt": "2019-04-04T19:21:58.205Z",
+                          "updatedAt": "2019-04-04T19:21:58.205Z"
+                        }
+                      ],
+                      "meta": {
+                        "total": 2,
+                        "skip": 0,
+                        "limit": 50
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "shops"
+        ]
+      }
+    },
+    "/1/shops": {
+      "operationId": "post-1-shops",
+      "post": {
+        "summary": "Create shop",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "country": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false,
+                "patterns": [],
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "data": {
+                        "id": "5ca6595621c9e96379102e25",
+                        "images": [
+                          {
+                            "id": "5ca6595621c9e96379102e24",
+                            "filename": "logo.png",
+                            "rawUrl": "logo.png",
+                            "hash": "test",
+                            "storageType": "local",
+                            "mimeType": "image/png",
+                            "ownerId": "none",
+                            "createdAt": "2019-04-04T19:21:58.324Z",
+                            "updatedAt": "2019-04-04T19:21:58.324Z"
+                          }
+                        ],
+                        "name": "shop name",
+                        "createdAt": "2019-04-04T19:21:58.339Z",
+                        "updatedAt": "2019-04-04T19:21:58.339Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "shops"
+        ]
+      }
+    },
+    "/1/shops/:shop": {
+      "parameters": [
+        {
+          "name": "shop",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "operationId": "get-1-shops-:shop",
+      "delete": {
+        "summary": "Delete shop",
+        "responses": {
+          "204": {
+            "description": "success"
+          }
+        },
+        "tags": [
+          "shops"
+        ]
+      },
+      "patch": {
+        "summary": "Update shop",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "country": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "deletedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                },
+                "additionalProperties": false,
+                "patterns": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "data": {
+                        "id": "5ca6595621c9e96379102e29",
+                        "images": [],
+                        "name": "new name",
+                        "description": "Some description",
+                        "createdAt": "2019-04-04T19:21:58.390Z",
+                        "updatedAt": "2019-04-04T19:21:58.408Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "shops"
+        ]
+      },
+      "get": {
+        "summary": "Get shop",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "data": {
+                        "id": "5ca6595621c9e96379102e2b",
+                        "images": [],
+                        "name": "test 1",
+                        "description": "Some description",
+                        "createdAt": "2019-04-04T19:21:58.428Z",
+                        "updatedAt": "2019-04-04T19:21:58.428Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "shops"
+        ]
+      }
+    },
+    "/1/uploads/:hash": {
+      "parameters": [
+        {
+          "name": "hash",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "operationId": "get-1-uploads-:hash",
+      "get": {
+        "summary": "Get upload",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "data": {
+                        "id": "5ca65956c7d0ca637a581a83",
+                        "filename": "logo.png",
+                        "rawUrl": "logo.png",
+                        "hash": "test",
+                        "storageType": "local",
+                        "mimeType": "image/png",
+                        "ownerId": "5ca65956c7d0ca637a581a82",
+                        "createdAt": "2019-04-04T19:21:58.984Z",
+                        "updatedAt": "2019-04-04T19:21:58.997Z",
+                        "deletedAt": "2019-04-04T19:21:58.996Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "uploads"
+        ]
+      }
+    },
+    "/1/uploads/:hash/image": {
+      "parameters": [
+        {
+          "name": "hash",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "operationId": "get-1-uploads-:hash-image",
+      "get": {
+        "summary": "Get upload",
+        "responses": {},
+        "tags": [
+          "uploads"
+        ]
+      }
+    },
+    "/1/uploads": {
+      "operationId": "post-1-uploads",
+      "post": {
+        "summary": "Create upload",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "data": {
+                        "id": "5ca65956c7d0ca637a581a81",
+                        "mimeType": "image/png",
+                        "filename": "logo.png",
+                        "hash": "d1dd4301b0bac00b69bca5723fe9ba41ad471079a1d660fd86c3132c4eac1864",
+                        "rawUrl": "/var/folders/3h/mtq3xk6d5kb76j02fpwqph640000gp/T/upload_c9d68b4c06828d72af8285358ec405ae",
+                        "storageType": "local",
+                        "thumbnailUrl": "/var/folders/3h/mtq3xk6d5kb76j02fpwqph640000gp/T/upload_c9d68b4c06828d72af8285358ec405ae",
+                        "ownerId": "5ca65956c7d0ca637a581a80",
+                        "createdAt": "2019-04-04T19:21:58.965Z",
+                        "updatedAt": "2019-04-04T19:21:58.965Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "uploads"
+        ]
+      }
+    },
+    "/1/uploads/:upload": {
+      "parameters": [
+        {
+          "name": "upload",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "operationId": "delete-1-uploads-:upload",
+      "delete": {
+        "summary": "Delete upload",
+        "responses": {
+          "204": {
+            "description": "success"
+          }
+        },
+        "tags": [
+          "uploads"
+        ]
+      }
+    },
+    "/1/invites/search": {
+      "operationId": "post-1-invites-search",
+      "post": {
+        "summary": "Search invite",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "skip": {
+                    "default": 0,
+                    "type": "number"
+                  },
+                  "sort": {
+                    "default": {
+                      "field": "createdAt",
+                      "order": "asc"
+                    },
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string"
+                      },
+                      "order": {
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": false,
+                    "patterns": [],
+                    "required": [
+                      "field",
+                      "order"
+                    ]
+                  },
+                  "limit": {
+                    "default": 50,
+                    "type": "number"
+                  }
+                },
+                "additionalProperties": false,
+                "patterns": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "data": [
+                        {
+                          "id": "5ca659568573196377687396",
+                          "email": "usera@platform.com",
+                          "createdAt": "2019-04-04T19:21:58.198Z",
+                          "updatedAt": "2019-04-04T19:21:58.198Z"
+                        },
+                        {
+                          "id": "5ca659568573196377687397",
+                          "email": "userb@platform.com",
+                          "createdAt": "2019-04-04T19:21:58.201Z",
+                          "updatedAt": "2019-04-04T19:21:58.201Z"
+                        }
+                      ],
+                      "meta": {
+                        "total": 2,
+                        "skip": 0,
+                        "limit": 50
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "invites"
+        ]
+      }
+    },
+    "/1/invites": {
+      "operationId": "post-1-invites",
+      "post": {
+        "summary": "Create invite",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "emails": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "email"
+                    }
+                  }
+                },
+                "additionalProperties": false,
+                "patterns": [],
+                "required": [
+                  "emails"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "success"
+          }
+        },
+        "tags": [
+          "invites"
+        ]
+      }
+    },
+    "/1/invites/:invite/resent": {
+      "parameters": [
+        {
+          "name": "invite",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "operationId": "post-1-invites-:invite-resent",
+      "post": {
+        "summary": "Create invite",
+        "responses": {
+          "204": {
+            "description": "success"
+          }
+        },
+        "tags": [
+          "invites"
+        ]
+      }
+    },
+    "/1/invites/:invite": {
+      "parameters": [
+        {
+          "name": "invite",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "operationId": "delete-1-invites-:invite",
+      "delete": {
+        "summary": "Delete invite",
+        "responses": {
+          "204": {
+            "description": "success"
+          }
+        },
+        "tags": [
+          "invites"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "name": "platform-api",
+  "version": "1.0.0",
+  "description": "Api",
+  "license": "MIT",
+  "engines": {
+    "node": ">=10"
+  },
+  "pre-commit": [
+    "lint"
+  ],
+  "scripts": {
+    "start": "nodemon -w src --exec \"MOCK_EMAIL=true NODE_ENV=dev node src/index.js\"",
+    "start:prod": "node src/index",
+    "docs": "STORE_RESULT=true yarn run test && DOCS=true node scripts/openapi",
+    "lint": "eslint src",
+    "test": "jest src",
+    "test:watch": "jest --watch -i src",
+    "emails": "node emails/build",
+    "lint:upgrade": "yarn upgrade eslint eslint-config-prettier eslint-plugin-jest prettier prettier-eslint"
+  },
+  "dependencies": {
+    "@google-cloud/storage": "^2.5.0",
+    "@kaareal/config": "^0.1.1",
+    "@koa/cors": "^3.0.0",
+    "@sentry/node": "^5.2.0",
+    "bcrypt": "^3.0.6",
+    "joi": "14.3.1",
+    "jsonwebtoken": "^8.5.1",
+    "koa": "^2.7.0",
+    "koa-body": "^4.0.8",
+    "koa-bodyparser": "4.2.1",
+    "koa-logger": "3.2.0",
+    "koa-router": "7.4.0",
+    "lodash": "4.17.11",
+    "mongoose": "^5.5.7",
+    "postmark": "2.2.4"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-prettier": "^4.2.0",
+    "eslint-plugin-jest": "^22.5.1",
+    "jest": "^24.8.0",
+    "joi-to-json-schema": "^5.0.0",
+    "juice": "^5.2.0",
+    "mongodb-memory-server": "^5.1.1",
+    "nodemon": "^1.19.0",
+    "pre-commit": "1.2.2",
+    "prettier": "^1.17.0",
+    "prettier-eslint": "^8.8.2",
+    "supertest": "3.0.0"
+  },
+  "jest": {
+    "setupFiles": [
+      "<rootDir>/src/test-helpers/setup-tests.js"
+    ]
+  },
+  "eslintConfig": {
+    "parserOptions": {
+      "ecmaVersion": 2017,
+      "ecmaFeatures": {
+        "experimentalObjectRestSpread": true
+      }
+    },
+    "env": {
+      "es6": true,
+      "node": true,
+      "browser": false
+    },
+    "extends": [
+      "eslint:recommended",
+      "plugin:jest/recommended",
+      "prettier"
+    ],
+    "rules": {
+      "no-console": [
+        "warn",
+        {
+          "allow": [
+            "warn",
+            "error",
+            "info"
+          ]
+        }
+      ]
+    }
+  },
+  "prettier": {
+    "singleQuote": true,
+    "arrowParens": "always",
+    "printWidth": 120
+  },
+  "toolchain": {
+    "node": "12.2.0",
+    "yarn": "1.13.0"
+  }
+}

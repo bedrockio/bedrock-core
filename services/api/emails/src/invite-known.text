@@ -1,0 +1,12 @@
+${senderName} has invited you to join ${appName}
+---
+You have already have an account with us.
+Open ${appUrl}
+
+In case you forgot your password click below to reset password (expires after 48 hours) 
+${appUrl}/reset-password?token=${token}
+
+---
+Best,
+The ${appName} Team
+${appCompanyAddress}

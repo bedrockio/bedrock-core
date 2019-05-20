@@ -1,0 +1,26 @@
+#!/usr/bin/env python
+
+import os
+import sys
+
+sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/../')
+
+import logging
+import api.constants as constants
+from api.fixtures import create_fixtures
+
+import pymongo
+import time
+
+client = pymongo.MongoClient(constants.MONGO_URL)
+db = client[constants.MONGO_DB]
+
+def ensure():
+    try:
+        create_fixtures(db)
+    except pymongo.errors.ServerSelectionTimeoutError:
+        logging.warning('Warning, could not connect to MongoDB (timeout), retrying..')
+        time.sleep(1)
+        ensure()
+
+ensure()

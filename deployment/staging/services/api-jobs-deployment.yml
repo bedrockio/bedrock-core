@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: jobs-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: jobs
+    spec:
+      containers:
+      - image: gcr.io/platform-staging/platform-jobs
+        imagePullPolicy: Always
+        name: api
+        env:
+          - name: NODE_ENV
+            value: "prod"
+          - name: API_MONGO_URI
+            value: "mongodb://mongo:27017/platform"
+          - name: API_APP_DOMAIN
+            value: "platform.com"
+          - name: API_POSTMARK_FROM
+            value: "no-reply@platform.com"
+          - name: API_POSTMARK_APIKEY
+            value: "abc"
+        volumeMounts:
+          - name: jobs-cache
+            mountPath: /workdir/data
+      volumes:
+        - name: jobs-cache
+          emptyDir: {}
