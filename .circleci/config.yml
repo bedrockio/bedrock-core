@@ -10,7 +10,7 @@ jobs:
           name: Determine which projects have changed and trigger the builds
           command: |
             mkdir -p .services-metadata
-            if [ -z $CIRCLE_TOKEN ]; then 
+            if [ -z $CIRCLE_TOKEN ]; then
               echo "NO CIRCLE_TOKEN found in the environment variables"
               echo "1. Under your user settings, create a Personal API Token"
               echo "2. Under the project settings, add an environment var CIRCLE_TOKEN with the personal API token"
@@ -80,7 +80,6 @@ workflows:
   build_and_test:
     jobs:
       - build:
-          context: CIRCLE_TOKEN
           filters:
             branches:
               only:
