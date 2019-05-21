@@ -31,7 +31,7 @@
     "/openapi.json": {
       "operationId": "get-openapi.json",
       "get": {
-        "summary": "Get Open API Definition",
+        "summary": "List ",
         "responses": {},
         "tags": []
       }
@@ -39,7 +39,7 @@
     "/1/auth/register": {
       "operationId": "post-1-auth-register",
       "post": {
-        "summary": "Register",
+        "summary": "Create Auth",
         "requestBody": {
           "required": true,
           "content": {
@@ -78,7 +78,7 @@
                   "default": {
                     "value": {
                       "data": {
-                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2U0M2I1OTIxNWRkYzdhZWMyM2UwZjciLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1NTg0NjEyNzQsImV4cCI6MTU2MTA1MzI3NH0.Tf1nZeNNMliegQa_4z2hfxGV8KYi1rzrylDusccPuxQ"
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2U0M2UzNjJjMDY1NTdlMmVmMmI2Y2EiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1NTg0NjIwMDYsImV4cCI6MTU2MTA1NDAwNn0.sHfAnjTYVlY-z43MoaBYoG4FFN1v-Nf3A7InzO5QLlE"
                       }
                     }
                   }
@@ -91,14 +91,14 @@
           }
         },
         "tags": [
-          "auth"
+          "Auth"
         ]
       }
     },
     "/1/auth/login": {
       "operationId": "post-1-auth-login",
       "post": {
-        "summary": "Login",
+        "summary": "Create Auth",
         "requestBody": {
           "required": true,
           "content": {
@@ -132,7 +132,7 @@
                   "default": {
                     "value": {
                       "data": {
-                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2U0M2I1ODIxNWRkYzdhZWMyM2UwZjYiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1NTg0NjEyNzMsImV4cCI6MTU2MTA1MzI3M30.E1TSNb1BKeaWpO0FNtEBlTcT7Vm7JX1b4no0TYxzyyY"
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2U0M2UzNTJjMDY1NTdlMmVmMmI2YzkiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1NTg0NjIwMDYsImV4cCI6MTU2MTA1NDAwNn0.drJLLFzprumLSGr1Szh-7XBng1IL4_4v-gxbywywUaM"
                       }
                     }
                   }
@@ -145,14 +145,14 @@
           }
         },
         "tags": [
-          "auth"
+          "Auth"
         ]
       }
     },
     "/1/auth/accept-invite": {
       "operationId": "post-1-auth-accept-invite",
       "post": {
-        "summary": "Create auth",
+        "summary": "Create Auth",
         "requestBody": {
           "required": true,
           "content": {
@@ -187,14 +187,14 @@
           }
         },
         "tags": [
-          "auth"
+          "Auth"
         ]
       }
     },
     "/1/auth/request-password": {
       "operationId": "post-1-auth-request-password",
       "post": {
-        "summary": "Request password",
+        "summary": "Create Auth",
         "requestBody": {
           "required": true,
           "content": {
@@ -222,14 +222,14 @@
           }
         },
         "tags": [
-          "auth"
+          "Auth"
         ]
       }
     },
     "/1/auth/set-password": {
       "operationId": "post-1-auth-set-password",
       "post": {
-        "summary": "Set Password",
+        "summary": "Create Auth",
         "requestBody": {
           "required": true,
           "content": {
@@ -263,7 +263,7 @@
                   "default": {
                     "value": {
                       "data": {
-                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2U0M2I1YTIxNWRkYzdhZWMyM2UwZjkiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1NTg0NjEyNzQsImV4cCI6MTU2MTA1MzI3NH0.uqKSCM-K18t6_8Wcj3ut_FGY-iiyy9FlSt3rpy4dI2U"
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2U0M2UzNjJjMDY1NTdlMmVmMmI2Y2MiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1NTg0NjIwMDcsImV4cCI6MTU2MTA1NDAwN30.xPe8XEUQgWX-pLxgskYDjsP6pbHVGT3kLZc7aTXvev8"
                       }
                     }
                   }
@@ -276,14 +276,14 @@
           }
         },
         "tags": [
-          "auth"
+          "Auth"
         ]
       }
     },
     "/1/users/me": {
       "operationId": "patch-1-users-me",
       "get": {
-        "summary": "List users",
+        "summary": "List Users",
         "responses": {
           "200": {
             "content": {
@@ -292,12 +292,12 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ce43b59d366737aed11f3ca",
+                        "id": "5ce43e35fcc36b7e2fceb108",
                         "roles": [],
                         "email": "email1@platform.com",
                         "name": "test user",
-                        "createdAt": "2019-05-21T17:54:33.874Z",
-                        "updatedAt": "2019-05-21T17:54:33.874Z"
+                        "createdAt": "2019-05-21T18:06:45.787Z",
+                        "updatedAt": "2019-05-21T18:06:45.787Z"
                       }
                     }
                   }
@@ -307,11 +307,11 @@
           }
         },
         "tags": [
-          "users"
+          "Users"
         ]
       },
       "patch": {
-        "summary": "Update user",
+        "summary": "Update User",
         "requestBody": {
           "required": true,
           "content": {
@@ -340,12 +340,12 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ce43b59d366737aed11f3cb",
+                        "id": "5ce43e35fcc36b7e2fceb109",
                         "roles": [],
                         "email": "email2@platform.com",
                         "name": "other name",
-                        "createdAt": "2019-05-21T17:54:33.953Z",
-                        "updatedAt": "2019-05-21T17:54:33.987Z"
+                        "createdAt": "2019-05-21T18:06:45.883Z",
+                        "updatedAt": "2019-05-21T18:06:45.927Z"
                       }
                     }
                   }
@@ -355,14 +355,14 @@
           }
         },
         "tags": [
-          "users"
+          "Users"
         ]
       }
     },
     "/1/users/search": {
       "operationId": "post-1-users-search",
       "post": {
-        "summary": "Search user",
+        "summary": "Search User",
         "requestBody": {
           "required": true,
           "content": {
@@ -415,50 +415,50 @@
                     "value": {
                       "data": [
                         {
-                          "id": "5ce43b5ad366737aed11f3ce",
+                          "id": "5ce43e35fcc36b7e2fceb10c",
                           "roles": [
                             "user"
                           ],
                           "email": "email5@platform.com",
                           "name": "Two",
-                          "createdAt": "2019-05-21T17:54:34.007Z",
-                          "updatedAt": "2019-05-21T17:54:34.007Z"
+                          "createdAt": "2019-05-21T18:06:45.944Z",
+                          "updatedAt": "2019-05-21T18:06:45.944Z"
                         },
                         {
-                          "id": "5ce43b5ad366737aed11f3cd",
+                          "id": "5ce43e35fcc36b7e2fceb10b",
                           "roles": [
                             "user"
                           ],
                           "email": "email4@platform.com",
                           "name": "One",
-                          "createdAt": "2019-05-21T17:54:34.003Z",
-                          "updatedAt": "2019-05-21T17:54:34.003Z"
+                          "createdAt": "2019-05-21T18:06:45.942Z",
+                          "updatedAt": "2019-05-21T18:06:45.942Z"
                         },
                         {
-                          "id": "5ce43b59d366737aed11f3cc",
+                          "id": "5ce43e35fcc36b7e2fceb10a",
                           "roles": [
                             "admin"
                           ],
                           "email": "email3@platform.com",
                           "name": "test user",
-                          "createdAt": "2019-05-21T17:54:34.000Z",
-                          "updatedAt": "2019-05-21T17:54:34.000Z"
+                          "createdAt": "2019-05-21T18:06:45.939Z",
+                          "updatedAt": "2019-05-21T18:06:45.939Z"
                         },
                         {
-                          "id": "5ce43b59d366737aed11f3cb",
+                          "id": "5ce43e35fcc36b7e2fceb109",
                           "roles": [],
                           "email": "email2@platform.com",
                           "name": "other name",
-                          "createdAt": "2019-05-21T17:54:33.953Z",
-                          "updatedAt": "2019-05-21T17:54:33.987Z"
+                          "createdAt": "2019-05-21T18:06:45.883Z",
+                          "updatedAt": "2019-05-21T18:06:45.927Z"
                         },
                         {
-                          "id": "5ce43b59d366737aed11f3ca",
+                          "id": "5ce43e35fcc36b7e2fceb108",
                           "roles": [],
                           "email": "email1@platform.com",
                           "name": "test user",
-                          "createdAt": "2019-05-21T17:54:33.874Z",
-                          "updatedAt": "2019-05-21T17:54:33.874Z"
+                          "createdAt": "2019-05-21T18:06:45.787Z",
+                          "updatedAt": "2019-05-21T18:06:45.787Z"
                         }
                       ],
                       "meta": {
@@ -474,14 +474,14 @@
           }
         },
         "tags": [
-          "users"
+          "Users"
         ]
       }
     },
     "/1/users": {
       "operationId": "post-1-users",
       "post": {
-        "summary": "Create user",
+        "summary": "Create User",
         "requestBody": {
           "required": true,
           "content": {
@@ -526,12 +526,12 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ce43b5ad366737aed11f3d1",
+                        "id": "5ce43e35fcc36b7e2fceb10f",
                         "roles": [],
                         "email": "hello@dominiek.com",
                         "name": "Hello",
-                        "createdAt": "2019-05-21T17:54:34.059Z",
-                        "updatedAt": "2019-05-21T17:54:34.059Z"
+                        "createdAt": "2019-05-21T18:06:45.994Z",
+                        "updatedAt": "2019-05-21T18:06:45.994Z"
                       }
                     }
                   }
@@ -544,7 +544,7 @@
           }
         },
         "tags": [
-          "users"
+          "Users"
         ]
       }
     },
@@ -561,18 +561,18 @@
       ],
       "operationId": "get-1-users-:user",
       "delete": {
-        "summary": "Delete user",
+        "summary": "Delete User",
         "responses": {
           "204": {
             "description": "success"
           }
         },
         "tags": [
-          "users"
+          "Users"
         ]
       },
       "patch": {
-        "summary": "Update user",
+        "summary": "Update User",
         "requestBody": {
           "required": true,
           "content": {
@@ -618,14 +618,14 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ce43b5ad366737aed11f3d8",
+                        "id": "5ce43e36fcc36b7e2fceb116",
                         "roles": [
                           "user"
                         ],
                         "email": "email14@platform.com",
                         "name": "new name",
-                        "createdAt": "2019-05-21T17:54:34.373Z",
-                        "updatedAt": "2019-05-21T17:54:34.373Z"
+                        "createdAt": "2019-05-21T18:06:46.338Z",
+                        "updatedAt": "2019-05-21T18:06:46.338Z"
                       }
                     }
                   }
@@ -635,11 +635,11 @@
           }
         },
         "tags": [
-          "users"
+          "Users"
         ]
       },
       "get": {
-        "summary": "Get user",
+        "summary": "Get User",
         "responses": {
           "200": {
             "content": {
@@ -648,14 +648,14 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ce43b5ad366737aed11f3dc",
+                        "id": "5ce43e36fcc36b7e2fceb11a",
                         "roles": [
                           "user"
                         ],
                         "email": "email18@platform.com",
                         "name": "One",
-                        "createdAt": "2019-05-21T17:54:34.394Z",
-                        "updatedAt": "2019-05-21T17:54:34.394Z"
+                        "createdAt": "2019-05-21T18:06:46.363Z",
+                        "updatedAt": "2019-05-21T18:06:46.363Z"
                       }
                     }
                   }
@@ -665,14 +665,14 @@
           }
         },
         "tags": [
-          "users"
+          "Users"
         ]
       }
     },
     "/1/products/search": {
       "operationId": "post-1-products-search",
       "post": {
-        "summary": "Search product",
+        "summary": "Search Product",
         "requestBody": {
           "required": true,
           "content": {
@@ -732,22 +732,22 @@
                     "value": {
                       "data": [
                         {
-                          "id": "5ce43b592f25bd7aeedee4d7",
+                          "id": "5ce43e358337667e31c50be3",
                           "sellingPoints": [],
                           "name": "test 2",
                           "description": "Some description",
-                          "shopId": "5ce43b592f25bd7aeedee4d6",
-                          "createdAt": "2019-05-21T17:54:33.891Z",
-                          "updatedAt": "2019-05-21T17:54:33.891Z"
+                          "shopId": "5ce43e358337667e31c50be2",
+                          "createdAt": "2019-05-21T18:06:45.813Z",
+                          "updatedAt": "2019-05-21T18:06:45.813Z"
                         },
                         {
-                          "id": "5ce43b592f25bd7aeedee4d5",
+                          "id": "5ce43e358337667e31c50be1",
                           "sellingPoints": [],
                           "name": "test 1",
                           "description": "Some description",
-                          "shopId": "5ce43b592f25bd7aeedee4d4",
-                          "createdAt": "2019-05-21T17:54:33.888Z",
-                          "updatedAt": "2019-05-21T17:54:33.888Z"
+                          "shopId": "5ce43e358337667e31c50be0",
+                          "createdAt": "2019-05-21T18:06:45.809Z",
+                          "updatedAt": "2019-05-21T18:06:45.809Z"
                         }
                       ],
                       "meta": {
@@ -763,14 +763,14 @@
           }
         },
         "tags": [
-          "products"
+          "Products"
         ]
       }
     },
     "/1/products": {
       "operationId": "post-1-products",
       "post": {
-        "summary": "Create product",
+        "summary": "Create Product",
         "requestBody": {
           "required": true,
           "content": {
@@ -823,12 +823,12 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ce43b5a2f25bd7aeedee4da",
+                        "id": "5ce43e358337667e31c50be6",
                         "sellingPoints": [],
                         "name": "some other product",
-                        "shopId": "5ce43b592f25bd7aeedee4d9",
-                        "createdAt": "2019-05-21T17:54:34.001Z",
-                        "updatedAt": "2019-05-21T17:54:34.001Z"
+                        "shopId": "5ce43e358337667e31c50be5",
+                        "createdAt": "2019-05-21T18:06:45.940Z",
+                        "updatedAt": "2019-05-21T18:06:45.940Z"
                       }
                     }
                   }
@@ -838,7 +838,7 @@
           }
         },
         "tags": [
-          "products"
+          "Products"
         ]
       }
     },
@@ -855,18 +855,18 @@
       ],
       "operationId": "get-1-products-:product",
       "delete": {
-        "summary": "Delete product",
+        "summary": "Delete Product",
         "responses": {
           "204": {
             "description": "success"
           }
         },
         "tags": [
-          "products"
+          "Products"
         ]
       },
       "patch": {
-        "summary": "Update product",
+        "summary": "Update Product",
         "requestBody": {
           "required": true,
           "content": {
@@ -930,13 +930,13 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ce43b5a2f25bd7aeedee4e0",
+                        "id": "5ce43e358337667e31c50bec",
                         "sellingPoints": [],
                         "name": "new name",
                         "description": "Some description",
-                        "shopId": "5ce43b5a2f25bd7aeedee4df",
-                        "createdAt": "2019-05-21T17:54:34.031Z",
-                        "updatedAt": "2019-05-21T17:54:34.040Z"
+                        "shopId": "5ce43e358337667e31c50beb",
+                        "createdAt": "2019-05-21T18:06:45.971Z",
+                        "updatedAt": "2019-05-21T18:06:45.981Z"
                       }
                     }
                   }
@@ -946,11 +946,11 @@
           }
         },
         "tags": [
-          "products"
+          "Products"
         ]
       },
       "get": {
-        "summary": "Get product",
+        "summary": "Get Product",
         "responses": {
           "200": {
             "content": {
@@ -959,13 +959,13 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ce43b5a2f25bd7aeedee4e3",
+                        "id": "5ce43e358337667e31c50bef",
                         "sellingPoints": [],
                         "name": "test 1",
                         "description": "Some description",
-                        "shopId": "5ce43b5a2f25bd7aeedee4e2",
-                        "createdAt": "2019-05-21T17:54:34.052Z",
-                        "updatedAt": "2019-05-21T17:54:34.052Z"
+                        "shopId": "5ce43e358337667e31c50bee",
+                        "createdAt": "2019-05-21T18:06:45.991Z",
+                        "updatedAt": "2019-05-21T18:06:45.991Z"
                       }
                     }
                   }
@@ -975,14 +975,14 @@
           }
         },
         "tags": [
-          "products"
+          "Products"
         ]
       }
     },
     "/1/shops/search": {
       "operationId": "post-1-shops-search",
       "post": {
-        "summary": "Search shop",
+        "summary": "Search Shop",
         "requestBody": {
           "required": true,
           "content": {
@@ -1039,20 +1039,20 @@
                     "value": {
                       "data": [
                         {
-                          "id": "5ce43b582f0bcf7aef850db1",
+                          "id": "5ce43e353f21e97e322e452a",
                           "images": [],
                           "name": "test 2",
                           "description": "Some description",
-                          "createdAt": "2019-05-21T17:54:32.907Z",
-                          "updatedAt": "2019-05-21T17:54:32.907Z"
+                          "createdAt": "2019-05-21T18:06:45.848Z",
+                          "updatedAt": "2019-05-21T18:06:45.848Z"
                         },
                         {
-                          "id": "5ce43b582f0bcf7aef850db0",
+                          "id": "5ce43e353f21e97e322e4529",
                           "images": [],
                           "name": "test 1",
                           "description": "Some description",
-                          "createdAt": "2019-05-21T17:54:32.902Z",
-                          "updatedAt": "2019-05-21T17:54:32.902Z"
+                          "createdAt": "2019-05-21T18:06:45.844Z",
+                          "updatedAt": "2019-05-21T18:06:45.844Z"
                         }
                       ],
                       "meta": {
@@ -1068,14 +1068,14 @@
           }
         },
         "tags": [
-          "shops"
+          "Shops"
         ]
       }
     },
     "/1/shops": {
       "operationId": "post-1-shops",
       "post": {
-        "summary": "Create shop",
+        "summary": "Create Shop",
         "requestBody": {
           "required": true,
           "content": {
@@ -1116,23 +1116,23 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ce43b592f0bcf7aef850db4",
+                        "id": "5ce43e353f21e97e322e452d",
                         "images": [
                           {
-                            "id": "5ce43b592f0bcf7aef850db3",
+                            "id": "5ce43e353f21e97e322e452c",
                             "filename": "logo.png",
                             "rawUrl": "logo.png",
                             "hash": "test",
                             "storageType": "local",
                             "mimeType": "image/png",
                             "ownerId": "none",
-                            "createdAt": "2019-05-21T17:54:33.052Z",
-                            "updatedAt": "2019-05-21T17:54:33.052Z"
+                            "createdAt": "2019-05-21T18:06:45.967Z",
+                            "updatedAt": "2019-05-21T18:06:45.967Z"
                           }
                         ],
                         "name": "shop name",
-                        "createdAt": "2019-05-21T17:54:33.066Z",
-                        "updatedAt": "2019-05-21T17:54:33.066Z"
+                        "createdAt": "2019-05-21T18:06:45.980Z",
+                        "updatedAt": "2019-05-21T18:06:45.980Z"
                       }
                     }
                   }
@@ -1142,7 +1142,7 @@
           }
         },
         "tags": [
-          "shops"
+          "Shops"
         ]
       }
     },
@@ -1159,18 +1159,18 @@
       ],
       "operationId": "get-1-shops-:shop",
       "delete": {
-        "summary": "Delete shop",
+        "summary": "Delete Shop",
         "responses": {
           "204": {
             "description": "success"
           }
         },
         "tags": [
-          "shops"
+          "Shops"
         ]
       },
       "patch": {
-        "summary": "Update shop",
+        "summary": "Update Shop",
         "requestBody": {
           "required": true,
           "content": {
@@ -1223,12 +1223,12 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ce43b592f0bcf7aef850db8",
+                        "id": "5ce43e363f21e97e322e4531",
                         "images": [],
                         "name": "new name",
                         "description": "Some description",
-                        "createdAt": "2019-05-21T17:54:33.113Z",
-                        "updatedAt": "2019-05-21T17:54:33.124Z"
+                        "createdAt": "2019-05-21T18:06:46.029Z",
+                        "updatedAt": "2019-05-21T18:06:46.047Z"
                       }
                     }
                   }
@@ -1238,11 +1238,11 @@
           }
         },
         "tags": [
-          "shops"
+          "Shops"
         ]
       },
       "get": {
-        "summary": "Get shop",
+        "summary": "Get Shop",
         "responses": {
           "200": {
             "content": {
@@ -1251,12 +1251,12 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ce43b592f0bcf7aef850dba",
+                        "id": "5ce43e363f21e97e322e4533",
                         "images": [],
                         "name": "test 1",
                         "description": "Some description",
-                        "createdAt": "2019-05-21T17:54:33.135Z",
-                        "updatedAt": "2019-05-21T17:54:33.135Z"
+                        "createdAt": "2019-05-21T18:06:46.058Z",
+                        "updatedAt": "2019-05-21T18:06:46.058Z"
                       }
                     }
                   }
@@ -1266,7 +1266,7 @@
           }
         },
         "tags": [
-          "shops"
+          "Shops"
         ]
       }
     },
@@ -1283,7 +1283,7 @@
       ],
       "operationId": "get-1-uploads-:hash",
       "get": {
-        "summary": "Get upload",
+        "summary": "Get Upload",
         "responses": {
           "200": {
             "content": {
@@ -1292,16 +1292,16 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ce43b593fbd2e7af288a2f0",
+                        "id": "5ce43e36acda327e34de5097",
                         "filename": "logo.png",
                         "rawUrl": "logo.png",
                         "hash": "test",
                         "storageType": "local",
                         "mimeType": "image/png",
-                        "ownerId": "5ce43b593fbd2e7af288a2ef",
-                        "createdAt": "2019-05-21T17:54:33.945Z",
-                        "updatedAt": "2019-05-21T17:54:33.960Z",
-                        "deletedAt": "2019-05-21T17:54:33.959Z"
+                        "ownerId": "5ce43e36acda327e34de5096",
+                        "createdAt": "2019-05-21T18:06:46.630Z",
+                        "updatedAt": "2019-05-21T18:06:46.640Z",
+                        "deletedAt": "2019-05-21T18:06:46.639Z"
                       }
                     }
                   }
@@ -1311,7 +1311,7 @@
           }
         },
         "tags": [
-          "uploads"
+          "Uploads"
         ]
       }
     },
@@ -1328,17 +1328,17 @@
       ],
       "operationId": "get-1-uploads-:hash-image",
       "get": {
-        "summary": "Get upload",
+        "summary": "Get Upload",
         "responses": {},
         "tags": [
-          "uploads"
+          "Uploads"
         ]
       }
     },
     "/1/uploads": {
       "operationId": "post-1-uploads",
       "post": {
-        "summary": "Create upload",
+        "summary": "Create Upload",
         "responses": {
           "200": {
             "content": {
@@ -1347,16 +1347,16 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ce43b593fbd2e7af288a2ee",
+                        "id": "5ce43e36acda327e34de5095",
                         "mimeType": "image/png",
                         "filename": "logo.png",
-                        "hash": "b9769511b4e2e6b6a6c2d099fa8d9efb8861e468358d29704b87496aebf7f66c",
-                        "rawUrl": "/var/folders/z9/vjt2qj311zv_vy0gmn29vcmc0000gn/T/upload_7216754fb3407567a4d883b022c63ccf",
+                        "hash": "e33f137c674224b8bc45ce9a5c52224cde686e24f5bb33034549d527af560da7",
+                        "rawUrl": "/var/folders/z9/vjt2qj311zv_vy0gmn29vcmc0000gn/T/upload_55e36f96a58920a9a7750ae766eae963",
                         "storageType": "local",
-                        "thumbnailUrl": "/var/folders/z9/vjt2qj311zv_vy0gmn29vcmc0000gn/T/upload_7216754fb3407567a4d883b022c63ccf",
-                        "ownerId": "5ce43b593fbd2e7af288a2ed",
-                        "createdAt": "2019-05-21T17:54:33.924Z",
-                        "updatedAt": "2019-05-21T17:54:33.924Z"
+                        "thumbnailUrl": "/var/folders/z9/vjt2qj311zv_vy0gmn29vcmc0000gn/T/upload_55e36f96a58920a9a7750ae766eae963",
+                        "ownerId": "5ce43e36acda327e34de5094",
+                        "createdAt": "2019-05-21T18:06:46.612Z",
+                        "updatedAt": "2019-05-21T18:06:46.612Z"
                       }
                     }
                   }
@@ -1366,7 +1366,7 @@
           }
         },
         "tags": [
-          "uploads"
+          "Uploads"
         ]
       }
     },
@@ -1383,21 +1383,21 @@
       ],
       "operationId": "delete-1-uploads-:upload",
       "delete": {
-        "summary": "Delete upload",
+        "summary": "Delete Upload",
         "responses": {
           "204": {
             "description": "success"
           }
         },
         "tags": [
-          "uploads"
+          "Uploads"
         ]
       }
     },
     "/1/invites/search": {
       "operationId": "post-1-invites-search",
       "post": {
-        "summary": "Search invite",
+        "summary": "Search Invite",
         "requestBody": {
           "required": true,
           "content": {
@@ -1450,16 +1450,16 @@
                     "value": {
                       "data": [
                         {
-                          "id": "5ce43b58847d457af099ea27",
+                          "id": "5ce43e352395697e309857cd",
                           "email": "usera@platform.com",
-                          "createdAt": "2019-05-21T17:54:32.882Z",
-                          "updatedAt": "2019-05-21T17:54:32.882Z"
+                          "createdAt": "2019-05-21T18:06:45.851Z",
+                          "updatedAt": "2019-05-21T18:06:45.851Z"
                         },
                         {
-                          "id": "5ce43b58847d457af099ea28",
+                          "id": "5ce43e352395697e309857ce",
                           "email": "userb@platform.com",
-                          "createdAt": "2019-05-21T17:54:32.887Z",
-                          "updatedAt": "2019-05-21T17:54:32.887Z"
+                          "createdAt": "2019-05-21T18:06:45.855Z",
+                          "updatedAt": "2019-05-21T18:06:45.855Z"
                         }
                       ],
                       "meta": {
@@ -1475,14 +1475,14 @@
           }
         },
         "tags": [
-          "invites"
+          "Invites"
         ]
       }
     },
     "/1/invites": {
       "operationId": "post-1-invites",
       "post": {
-        "summary": "Create invite",
+        "summary": "Create Invite",
         "requestBody": {
           "required": true,
           "content": {
@@ -1513,7 +1513,7 @@
           }
         },
         "tags": [
-          "invites"
+          "Invites"
         ]
       }
     },
@@ -1530,14 +1530,14 @@
       ],
       "operationId": "post-1-invites-:invite-resend",
       "post": {
-        "summary": "Create invite",
+        "summary": "Create Invite",
         "responses": {
           "204": {
             "description": "success"
           }
         },
         "tags": [
-          "invites"
+          "Invites"
         ]
       }
     },
@@ -1554,14 +1554,14 @@
       ],
       "operationId": "delete-1-invites-:invite",
       "delete": {
-        "summary": "Delete invite",
+        "summary": "Delete Invite",
         "responses": {
           "204": {
             "description": "success"
           }
         },
         "tags": [
-          "invites"
+          "Invites"
         ]
       }
     }

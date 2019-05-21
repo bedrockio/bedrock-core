@@ -132,7 +132,6 @@ const listener = app.listen(40015, async () => {
         if (oldRoute[method].summary) {
           route[method].summary = oldRoute[method].summary;
         }
-        if (oldRoute[method].tags) route[method].tags = oldRoute[method].tags;
       });
     });
   }
