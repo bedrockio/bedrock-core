@@ -12,8 +12,8 @@ jobs:
             mkdir -p .services-metadata
             if [ -z $CIRCLE_TOKEN ]; then
               echo "NO CIRCLE_TOKEN found in the environment variables"
-              echo "1. Under your user settings, create a Personal API Token"
-              echo "2. Under the project settings, add an environment var CIRCLE_TOKEN with the personal API token"
+              echo "1. Under your CircleCI user settings, create a Personal API Token"
+              echo "2. Under the CircleCI project settings, add an environment var CIRCLE_TOKEN with the personal API token"
               exit 1
             fi
 
@@ -73,7 +73,41 @@ jobs:
       - run:
           name: Run test
           command: |
-            npm test
+            yarn test
+
+  web:
+    working_directory: ~/project/services/web
+    docker:
+      - image: circleci/node
+    steps:
+      - checkout:
+          path: ~/project
+      - attach_workspace:
+          at: ~/project/services/web
+      - run:
+          name: Check whether project changed
+          command: |
+            if ! [ -e .services-metadata/web-changed ]; then
+              echo "stopping as nothing was changed"
+              circleci-agent step halt
+              exit 0
+            fi
+            echo "running"
+            ls .services-metadata
+            rm -rf .services-metadata
+      - restore_cache:
+          key: dependency-cache-{{ checksum "yarn.lock" }}
+      - run:
+          name: Setup
+          command: yarn install
+      - save_cache:
+          key: dependency-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: Run test
+          command: |
+            yarn test
 
 workflows:
   version: 2.1
@@ -85,5 +119,8 @@ workflows:
               only:
                 - master
       - api:
+          requires:
+            - build
+      - web:
           requires:
             - build
