@@ -108,9 +108,6 @@ exports.sendInvite = async ({ to, token, sender }) => {
     senderEmail: sender.email,
     token
   };
-
-  console.log(options);
-
   return sendMail(
     {
       to,

@@ -1,3 +1,6 @@
+const packageInfo = require('./../../package.json');
+const { startCase } = require('lodash');
+
 function getParameters(methodRoute) {
   const parameters = [];
 
@@ -74,7 +77,7 @@ function getResponses(methodRoute) {
 
 function getSummary(route) {
   const split = route.path.split('/').filter(Boolean);
-  const tag = split[1];
+  const tag = startCase(split[1]);
   const method = route.method.toLowerCase();
 
   if (method === 'post' && split[split.length - 1] === 'search') {
@@ -122,7 +125,7 @@ function getMethods(data, path) {
       summary: getSummary(route),
       ...(requestBody ? { requestBody } : {}),
       ...(responses ? { responses } : {}),
-      tags: tag ? [tag] : []
+      tags: tag ? [startCase(tag)] : []
     };
   });
   return methodsResult;
@@ -145,8 +148,8 @@ module.exports = function(data) {
     openapi: '3.0.1',
     info: {
       title: 'Platform API',
-      version: '2.0.0',
-      description: 'description'
+      version: packageInfo.version,
+      description: packageInfo.description
     },
     paths: getPaths(data)
   };

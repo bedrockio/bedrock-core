@@ -1,15 +1,15 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Platform Api",
-    "version": "2.0.0",
-    "description": "# Introduction\nThe Platform API is a RESTful JSON API that allows developers to access the functionality. \n"
+    "title": "Platform API",
+    "version": "1.0.0",
+    "description": "# Introduction\nThis portal provides documentation for all API calls in this platform. \n"
   },
   "paths": {
     "": {
       "operationId": "get",
       "get": {
-        "summary": "Get Api Info",
+        "summary": "List ",
         "responses": {
           "200": {
             "content": {
@@ -31,7 +31,7 @@
     "/openapi.json": {
       "operationId": "get-openapi.json",
       "get": {
-        "summary": "Get Open Api Definition",
+        "summary": "Get Open API Definition",
         "responses": {},
         "tags": []
       }
@@ -78,7 +78,7 @@
                   "default": {
                     "value": {
                       "data": {
-                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2E2NTk1NjgzNzFjZjYzNzU4M2FmNWUiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1NTQ0MDU3MTksImV4cCI6MTU1Njk5NzcxOX0.QF0moukbjxsEN4ScQjZVXBjjlj96wEr34gWfzbYaFXw"
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2U0M2I1OTIxNWRkYzdhZWMyM2UwZjciLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1NTg0NjEyNzQsImV4cCI6MTU2MTA1MzI3NH0.Tf1nZeNNMliegQa_4z2hfxGV8KYi1rzrylDusccPuxQ"
                       }
                     }
                   }
@@ -132,7 +132,7 @@
                   "default": {
                     "value": {
                       "data": {
-                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2E2NTk1NjgzNzFjZjYzNzU4M2FmNWQiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1NTQ0MDU3MTgsImV4cCI6MTU1Njk5NzcxOH0.AxX6PE03u-oxtA81X-AKnYv_tutaf5wKfH_wmUzA0D8"
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2U0M2I1ODIxNWRkYzdhZWMyM2UwZjYiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1NTg0NjEyNzMsImV4cCI6MTU2MTA1MzI3M30.E1TSNb1BKeaWpO0FNtEBlTcT7Vm7JX1b4no0TYxzyyY"
                       }
                     }
                   }
@@ -263,7 +263,7 @@
                   "default": {
                     "value": {
                       "data": {
-                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2E2NTk1NzgzNzFjZjYzNzU4M2FmNjAiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1NTQ0MDU3MTksImV4cCI6MTU1Njk5NzcxOX0.Reo0FGOeLwdWXOeBpu354vpHOosC_ULQT86DHzpTYCc"
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2U0M2I1YTIxNWRkYzdhZWMyM2UwZjkiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1NTg0NjEyNzQsImV4cCI6MTU2MTA1MzI3NH0.uqKSCM-K18t6_8Wcj3ut_FGY-iiyy9FlSt3rpy4dI2U"
                       }
                     }
                   }
@@ -292,12 +292,12 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ca65956ccee3063762909ce",
+                        "id": "5ce43b59d366737aed11f3ca",
                         "roles": [],
                         "email": "email1@platform.com",
                         "name": "test user",
-                        "createdAt": "2019-04-04T19:21:58.213Z",
-                        "updatedAt": "2019-04-04T19:21:58.213Z"
+                        "createdAt": "2019-05-21T17:54:33.874Z",
+                        "updatedAt": "2019-05-21T17:54:33.874Z"
                       }
                     }
                   }
@@ -340,12 +340,12 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ca65956ccee3063762909cf",
+                        "id": "5ce43b59d366737aed11f3cb",
                         "roles": [],
                         "email": "email2@platform.com",
                         "name": "other name",
-                        "createdAt": "2019-04-04T19:21:58.290Z",
-                        "updatedAt": "2019-04-04T19:21:58.323Z"
+                        "createdAt": "2019-05-21T17:54:33.953Z",
+                        "updatedAt": "2019-05-21T17:54:33.987Z"
                       }
                     }
                   }
@@ -415,50 +415,50 @@
                     "value": {
                       "data": [
                         {
-                          "id": "5ca65956ccee3063762909d2",
+                          "id": "5ce43b5ad366737aed11f3ce",
                           "roles": [
                             "user"
                           ],
                           "email": "email5@platform.com",
                           "name": "Two",
-                          "createdAt": "2019-04-04T19:21:58.345Z",
-                          "updatedAt": "2019-04-04T19:21:58.345Z"
+                          "createdAt": "2019-05-21T17:54:34.007Z",
+                          "updatedAt": "2019-05-21T17:54:34.007Z"
                         },
                         {
-                          "id": "5ca65956ccee3063762909d1",
+                          "id": "5ce43b5ad366737aed11f3cd",
                           "roles": [
                             "user"
                           ],
                           "email": "email4@platform.com",
                           "name": "One",
-                          "createdAt": "2019-04-04T19:21:58.343Z",
-                          "updatedAt": "2019-04-04T19:21:58.343Z"
+                          "createdAt": "2019-05-21T17:54:34.003Z",
+                          "updatedAt": "2019-05-21T17:54:34.003Z"
                         },
                         {
-                          "id": "5ca65956ccee3063762909d0",
+                          "id": "5ce43b59d366737aed11f3cc",
                           "roles": [
                             "admin"
                           ],
                           "email": "email3@platform.com",
                           "name": "test user",
-                          "createdAt": "2019-04-04T19:21:58.339Z",
-                          "updatedAt": "2019-04-04T19:21:58.339Z"
+                          "createdAt": "2019-05-21T17:54:34.000Z",
+                          "updatedAt": "2019-05-21T17:54:34.000Z"
                         },
                         {
-                          "id": "5ca65956ccee3063762909cf",
+                          "id": "5ce43b59d366737aed11f3cb",
                           "roles": [],
                           "email": "email2@platform.com",
                           "name": "other name",
-                          "createdAt": "2019-04-04T19:21:58.290Z",
-                          "updatedAt": "2019-04-04T19:21:58.323Z"
+                          "createdAt": "2019-05-21T17:54:33.953Z",
+                          "updatedAt": "2019-05-21T17:54:33.987Z"
                         },
                         {
-                          "id": "5ca65956ccee3063762909ce",
+                          "id": "5ce43b59d366737aed11f3ca",
                           "roles": [],
                           "email": "email1@platform.com",
                           "name": "test user",
-                          "createdAt": "2019-04-04T19:21:58.213Z",
-                          "updatedAt": "2019-04-04T19:21:58.213Z"
+                          "createdAt": "2019-05-21T17:54:33.874Z",
+                          "updatedAt": "2019-05-21T17:54:33.874Z"
                         }
                       ],
                       "meta": {
@@ -526,12 +526,12 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ca65956ccee3063762909d5",
+                        "id": "5ce43b5ad366737aed11f3d1",
                         "roles": [],
                         "email": "hello@dominiek.com",
                         "name": "Hello",
-                        "createdAt": "2019-04-04T19:21:58.418Z",
-                        "updatedAt": "2019-04-04T19:21:58.418Z"
+                        "createdAt": "2019-05-21T17:54:34.059Z",
+                        "updatedAt": "2019-05-21T17:54:34.059Z"
                       }
                     }
                   }
@@ -618,14 +618,14 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ca65956ccee3063762909dc",
+                        "id": "5ce43b5ad366737aed11f3d8",
                         "roles": [
                           "user"
                         ],
                         "email": "email14@platform.com",
                         "name": "new name",
-                        "createdAt": "2019-04-04T19:21:58.771Z",
-                        "updatedAt": "2019-04-04T19:21:58.771Z"
+                        "createdAt": "2019-05-21T17:54:34.373Z",
+                        "updatedAt": "2019-05-21T17:54:34.373Z"
                       }
                     }
                   }
@@ -648,14 +648,14 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ca65956ccee3063762909e0",
+                        "id": "5ce43b5ad366737aed11f3dc",
                         "roles": [
                           "user"
                         ],
                         "email": "email18@platform.com",
                         "name": "One",
-                        "createdAt": "2019-04-04T19:21:58.799Z",
-                        "updatedAt": "2019-04-04T19:21:58.799Z"
+                        "createdAt": "2019-05-21T17:54:34.394Z",
+                        "updatedAt": "2019-05-21T17:54:34.394Z"
                       }
                     }
                   }
@@ -695,6 +695,10 @@
                         "type": "string"
                       },
                       "order": {
+                        "enum": [
+                          "asc",
+                          "desc"
+                        ],
                         "type": "string"
                       }
                     },
@@ -728,22 +732,22 @@
                     "value": {
                       "data": [
                         {
-                          "id": "5ca65956b23b8c6378403cbf",
+                          "id": "5ce43b592f25bd7aeedee4d7",
                           "sellingPoints": [],
                           "name": "test 2",
                           "description": "Some description",
-                          "shopId": "5ca65956b23b8c6378403cbe",
-                          "createdAt": "2019-04-04T19:21:58.215Z",
-                          "updatedAt": "2019-04-04T19:21:58.215Z"
+                          "shopId": "5ce43b592f25bd7aeedee4d6",
+                          "createdAt": "2019-05-21T17:54:33.891Z",
+                          "updatedAt": "2019-05-21T17:54:33.891Z"
                         },
                         {
-                          "id": "5ca65956b23b8c6378403cbd",
+                          "id": "5ce43b592f25bd7aeedee4d5",
                           "sellingPoints": [],
                           "name": "test 1",
                           "description": "Some description",
-                          "shopId": "5ca65956b23b8c6378403cbc",
-                          "createdAt": "2019-04-04T19:21:58.210Z",
-                          "updatedAt": "2019-04-04T19:21:58.210Z"
+                          "shopId": "5ce43b592f25bd7aeedee4d4",
+                          "createdAt": "2019-05-21T17:54:33.888Z",
+                          "updatedAt": "2019-05-21T17:54:33.888Z"
                         }
                       ],
                       "meta": {
@@ -819,12 +823,12 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ca65956b23b8c6378403cc2",
+                        "id": "5ce43b5a2f25bd7aeedee4da",
                         "sellingPoints": [],
                         "name": "some other product",
-                        "shopId": "5ca65956b23b8c6378403cc1",
-                        "createdAt": "2019-04-04T19:21:58.339Z",
-                        "updatedAt": "2019-04-04T19:21:58.339Z"
+                        "shopId": "5ce43b592f25bd7aeedee4d9",
+                        "createdAt": "2019-05-21T17:54:34.001Z",
+                        "updatedAt": "2019-05-21T17:54:34.001Z"
                       }
                     }
                   }
@@ -926,13 +930,13 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ca65956b23b8c6378403cc8",
+                        "id": "5ce43b5a2f25bd7aeedee4e0",
                         "sellingPoints": [],
                         "name": "new name",
                         "description": "Some description",
-                        "shopId": "5ca65956b23b8c6378403cc7",
-                        "createdAt": "2019-04-04T19:21:58.382Z",
-                        "updatedAt": "2019-04-04T19:21:58.394Z"
+                        "shopId": "5ce43b5a2f25bd7aeedee4df",
+                        "createdAt": "2019-05-21T17:54:34.031Z",
+                        "updatedAt": "2019-05-21T17:54:34.040Z"
                       }
                     }
                   }
@@ -955,13 +959,13 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ca65956b23b8c6378403ccb",
+                        "id": "5ce43b5a2f25bd7aeedee4e3",
                         "sellingPoints": [],
                         "name": "test 1",
                         "description": "Some description",
-                        "shopId": "5ca65956b23b8c6378403cca",
-                        "createdAt": "2019-04-04T19:21:58.409Z",
-                        "updatedAt": "2019-04-04T19:21:58.409Z"
+                        "shopId": "5ce43b5a2f25bd7aeedee4e2",
+                        "createdAt": "2019-05-21T17:54:34.052Z",
+                        "updatedAt": "2019-05-21T17:54:34.052Z"
                       }
                     }
                   }
@@ -1001,6 +1005,10 @@
                         "type": "string"
                       },
                       "order": {
+                        "enum": [
+                          "asc",
+                          "desc"
+                        ],
                         "type": "string"
                       }
                     },
@@ -1031,20 +1039,20 @@
                     "value": {
                       "data": [
                         {
-                          "id": "5ca6595621c9e96379102e22",
+                          "id": "5ce43b582f0bcf7aef850db1",
                           "images": [],
                           "name": "test 2",
                           "description": "Some description",
-                          "createdAt": "2019-04-04T19:21:58.208Z",
-                          "updatedAt": "2019-04-04T19:21:58.208Z"
+                          "createdAt": "2019-05-21T17:54:32.907Z",
+                          "updatedAt": "2019-05-21T17:54:32.907Z"
                         },
                         {
-                          "id": "5ca6595621c9e96379102e21",
+                          "id": "5ce43b582f0bcf7aef850db0",
                           "images": [],
                           "name": "test 1",
                           "description": "Some description",
-                          "createdAt": "2019-04-04T19:21:58.205Z",
-                          "updatedAt": "2019-04-04T19:21:58.205Z"
+                          "createdAt": "2019-05-21T17:54:32.902Z",
+                          "updatedAt": "2019-05-21T17:54:32.902Z"
                         }
                       ],
                       "meta": {
@@ -1108,23 +1116,23 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ca6595621c9e96379102e25",
+                        "id": "5ce43b592f0bcf7aef850db4",
                         "images": [
                           {
-                            "id": "5ca6595621c9e96379102e24",
+                            "id": "5ce43b592f0bcf7aef850db3",
                             "filename": "logo.png",
                             "rawUrl": "logo.png",
                             "hash": "test",
                             "storageType": "local",
                             "mimeType": "image/png",
                             "ownerId": "none",
-                            "createdAt": "2019-04-04T19:21:58.324Z",
-                            "updatedAt": "2019-04-04T19:21:58.324Z"
+                            "createdAt": "2019-05-21T17:54:33.052Z",
+                            "updatedAt": "2019-05-21T17:54:33.052Z"
                           }
                         ],
                         "name": "shop name",
-                        "createdAt": "2019-04-04T19:21:58.339Z",
-                        "updatedAt": "2019-04-04T19:21:58.339Z"
+                        "createdAt": "2019-05-21T17:54:33.066Z",
+                        "updatedAt": "2019-05-21T17:54:33.066Z"
                       }
                     }
                   }
@@ -1215,12 +1223,12 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ca6595621c9e96379102e29",
+                        "id": "5ce43b592f0bcf7aef850db8",
                         "images": [],
                         "name": "new name",
                         "description": "Some description",
-                        "createdAt": "2019-04-04T19:21:58.390Z",
-                        "updatedAt": "2019-04-04T19:21:58.408Z"
+                        "createdAt": "2019-05-21T17:54:33.113Z",
+                        "updatedAt": "2019-05-21T17:54:33.124Z"
                       }
                     }
                   }
@@ -1243,12 +1251,12 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ca6595621c9e96379102e2b",
+                        "id": "5ce43b592f0bcf7aef850dba",
                         "images": [],
                         "name": "test 1",
                         "description": "Some description",
-                        "createdAt": "2019-04-04T19:21:58.428Z",
-                        "updatedAt": "2019-04-04T19:21:58.428Z"
+                        "createdAt": "2019-05-21T17:54:33.135Z",
+                        "updatedAt": "2019-05-21T17:54:33.135Z"
                       }
                     }
                   }
@@ -1284,16 +1292,16 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ca65956c7d0ca637a581a83",
+                        "id": "5ce43b593fbd2e7af288a2f0",
                         "filename": "logo.png",
                         "rawUrl": "logo.png",
                         "hash": "test",
                         "storageType": "local",
                         "mimeType": "image/png",
-                        "ownerId": "5ca65956c7d0ca637a581a82",
-                        "createdAt": "2019-04-04T19:21:58.984Z",
-                        "updatedAt": "2019-04-04T19:21:58.997Z",
-                        "deletedAt": "2019-04-04T19:21:58.996Z"
+                        "ownerId": "5ce43b593fbd2e7af288a2ef",
+                        "createdAt": "2019-05-21T17:54:33.945Z",
+                        "updatedAt": "2019-05-21T17:54:33.960Z",
+                        "deletedAt": "2019-05-21T17:54:33.959Z"
                       }
                     }
                   }
@@ -1339,16 +1347,16 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ca65956c7d0ca637a581a81",
+                        "id": "5ce43b593fbd2e7af288a2ee",
                         "mimeType": "image/png",
                         "filename": "logo.png",
-                        "hash": "d1dd4301b0bac00b69bca5723fe9ba41ad471079a1d660fd86c3132c4eac1864",
-                        "rawUrl": "/var/folders/3h/mtq3xk6d5kb76j02fpwqph640000gp/T/upload_c9d68b4c06828d72af8285358ec405ae",
+                        "hash": "b9769511b4e2e6b6a6c2d099fa8d9efb8861e468358d29704b87496aebf7f66c",
+                        "rawUrl": "/var/folders/z9/vjt2qj311zv_vy0gmn29vcmc0000gn/T/upload_7216754fb3407567a4d883b022c63ccf",
                         "storageType": "local",
-                        "thumbnailUrl": "/var/folders/3h/mtq3xk6d5kb76j02fpwqph640000gp/T/upload_c9d68b4c06828d72af8285358ec405ae",
-                        "ownerId": "5ca65956c7d0ca637a581a80",
-                        "createdAt": "2019-04-04T19:21:58.965Z",
-                        "updatedAt": "2019-04-04T19:21:58.965Z"
+                        "thumbnailUrl": "/var/folders/z9/vjt2qj311zv_vy0gmn29vcmc0000gn/T/upload_7216754fb3407567a4d883b022c63ccf",
+                        "ownerId": "5ce43b593fbd2e7af288a2ed",
+                        "createdAt": "2019-05-21T17:54:33.924Z",
+                        "updatedAt": "2019-05-21T17:54:33.924Z"
                       }
                     }
                   }
@@ -1442,16 +1450,16 @@
                     "value": {
                       "data": [
                         {
-                          "id": "5ca659568573196377687396",
+                          "id": "5ce43b58847d457af099ea27",
                           "email": "usera@platform.com",
-                          "createdAt": "2019-04-04T19:21:58.198Z",
-                          "updatedAt": "2019-04-04T19:21:58.198Z"
+                          "createdAt": "2019-05-21T17:54:32.882Z",
+                          "updatedAt": "2019-05-21T17:54:32.882Z"
                         },
                         {
-                          "id": "5ca659568573196377687397",
+                          "id": "5ce43b58847d457af099ea28",
                           "email": "userb@platform.com",
-                          "createdAt": "2019-04-04T19:21:58.201Z",
-                          "updatedAt": "2019-04-04T19:21:58.201Z"
+                          "createdAt": "2019-05-21T17:54:32.887Z",
+                          "updatedAt": "2019-05-21T17:54:32.887Z"
                         }
                       ],
                       "meta": {
@@ -1509,7 +1517,7 @@
         ]
       }
     },
-    "/1/invites/:invite/resent": {
+    "/1/invites/:invite/resend": {
       "parameters": [
         {
           "name": "invite",
@@ -1520,7 +1528,7 @@
           }
         }
       ],
-      "operationId": "post-1-invites-:invite-resent",
+      "operationId": "post-1-invites-:invite-resend",
       "post": {
         "summary": "Create invite",
         "responses": {

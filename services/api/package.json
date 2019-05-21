@@ -1,7 +1,6 @@
 {
   "name": "platform-api",
   "version": "1.0.0",
-  "description": "Api",
   "license": "MIT",
   "engines": {
     "node": ">=10"
