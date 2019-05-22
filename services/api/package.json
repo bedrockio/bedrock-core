@@ -10,10 +10,10 @@
     "start": "nodemon -w src --exec \"MOCK_EMAIL=true NODE_ENV=dev node src/index.js\"",
     "start:prod": "node src/index",
     "docs": "STORE_RESULT=true yarn run test && DOCS=true node scripts/openapi",
+    "emails": "node emails/build",
     "lint": "eslint src",
     "test": "jest src",
-    "test:watch": "jest --watch -i src",
-    "emails": "node emails/build"
+    "test:watch": "jest --watch -i src"
   },
   "dependencies": {
     "@google-cloud/storage": "^2.5.0",
