@@ -1,15 +1,9 @@
 {
-  "openapi": "3.0.1",
-  "info": {
-    "title": "Platform API",
-    "version": "1.0.0",
-    "description": "# Introduction\nThis portal provides documentation for all API calls in this platform. \n"
-  },
   "paths": {
     "": {
       "operationId": "get",
       "get": {
-        "summary": "List ",
+        "summary": "List",
         "responses": {
           "200": {
             "content": {
@@ -61,11 +55,7 @@
                 },
                 "additionalProperties": false,
                 "patterns": [],
-                "required": [
-                  "email",
-                  "name",
-                  "password"
-                ]
+                "required": ["email", "name", "password"]
               }
             }
           }
@@ -90,9 +80,7 @@
             "description": "A user with that email already exists"
           }
         },
-        "tags": [
-          "Auth"
-        ]
+        "tags": ["Auth"]
       }
     },
     "/1/auth/login": {
@@ -116,10 +104,7 @@
                 },
                 "additionalProperties": false,
                 "patterns": [],
-                "required": [
-                  "email",
-                  "password"
-                ]
+                "required": ["email", "password"]
               }
             }
           }
@@ -144,9 +129,7 @@
             "description": "email password combination does not match"
           }
         },
-        "tags": [
-          "Auth"
-        ]
+        "tags": ["Auth"]
       }
     },
     "/1/auth/accept-invite": {
@@ -173,10 +156,7 @@
                 },
                 "additionalProperties": false,
                 "patterns": [],
-                "required": [
-                  "name",
-                  "password"
-                ]
+                "required": ["name", "password"]
               }
             }
           }
@@ -186,9 +166,7 @@
             "description": "Invite could not be found"
           }
         },
-        "tags": [
-          "Auth"
-        ]
+        "tags": ["Auth"]
       }
     },
     "/1/auth/request-password": {
@@ -209,9 +187,7 @@
                 },
                 "additionalProperties": false,
                 "patterns": [],
-                "required": [
-                  "email"
-                ]
+                "required": ["email"]
               }
             }
           }
@@ -221,9 +197,7 @@
             "description": "success"
           }
         },
-        "tags": [
-          "Auth"
-        ]
+        "tags": ["Auth"]
       }
     },
     "/1/auth/set-password": {
@@ -247,10 +221,7 @@
                 },
                 "additionalProperties": false,
                 "patterns": [],
-                "required": [
-                  "token",
-                  "password"
-                ]
+                "required": ["token", "password"]
               }
             }
           }
@@ -275,9 +246,7 @@
             "description": "user does not exists"
           }
         },
-        "tags": [
-          "Auth"
-        ]
+        "tags": ["Auth"]
       }
     },
     "/1/users/me": {
@@ -306,9 +275,7 @@
             }
           }
         },
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       },
       "patch": {
         "summary": "Update User",
@@ -354,9 +321,7 @@
             }
           }
         },
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       }
     },
     "/1/users/search": {
@@ -390,10 +355,7 @@
                     },
                     "additionalProperties": false,
                     "patterns": [],
-                    "required": [
-                      "field",
-                      "order"
-                    ]
+                    "required": ["field", "order"]
                   },
                   "limit": {
                     "default": 50,
@@ -416,9 +378,7 @@
                       "data": [
                         {
                           "id": "5ce43e35fcc36b7e2fceb10c",
-                          "roles": [
-                            "user"
-                          ],
+                          "roles": ["user"],
                           "email": "email5@platform.com",
                           "name": "Two",
                           "createdAt": "2019-05-21T18:06:45.944Z",
@@ -426,9 +386,7 @@
                         },
                         {
                           "id": "5ce43e35fcc36b7e2fceb10b",
-                          "roles": [
-                            "user"
-                          ],
+                          "roles": ["user"],
                           "email": "email4@platform.com",
                           "name": "One",
                           "createdAt": "2019-05-21T18:06:45.942Z",
@@ -436,9 +394,7 @@
                         },
                         {
                           "id": "5ce43e35fcc36b7e2fceb10a",
-                          "roles": [
-                            "admin"
-                          ],
+                          "roles": ["admin"],
                           "email": "email3@platform.com",
                           "name": "test user",
                           "createdAt": "2019-05-21T18:06:45.939Z",
@@ -473,9 +429,7 @@
             }
           }
         },
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       }
     },
     "/1/users": {
@@ -509,11 +463,7 @@
                 },
                 "additionalProperties": false,
                 "patterns": [],
-                "required": [
-                  "email",
-                  "name",
-                  "password"
-                ]
+                "required": ["email", "name", "password"]
               }
             }
           }
@@ -543,9 +493,7 @@
             "description": "A user with that email already exists"
           }
         },
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       }
     },
     "/1/users/:user": {
@@ -567,9 +515,7 @@
             "description": "success"
           }
         },
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       },
       "patch": {
         "summary": "Update User",
@@ -619,9 +565,7 @@
                     "value": {
                       "data": {
                         "id": "5ce43e36fcc36b7e2fceb116",
-                        "roles": [
-                          "user"
-                        ],
+                        "roles": ["user"],
                         "email": "email14@platform.com",
                         "name": "new name",
                         "createdAt": "2019-05-21T18:06:46.338Z",
@@ -634,9 +578,7 @@
             }
           }
         },
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       },
       "get": {
         "summary": "Get User",
@@ -649,9 +591,7 @@
                     "value": {
                       "data": {
                         "id": "5ce43e36fcc36b7e2fceb11a",
-                        "roles": [
-                          "user"
-                        ],
+                        "roles": ["user"],
                         "email": "email18@platform.com",
                         "name": "One",
                         "createdAt": "2019-05-21T18:06:46.363Z",
@@ -664,9 +604,7 @@
             }
           }
         },
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       }
     },
     "/1/products/search": {
@@ -695,19 +633,13 @@
                         "type": "string"
                       },
                       "order": {
-                        "enum": [
-                          "asc",
-                          "desc"
-                        ],
+                        "enum": ["asc", "desc"],
                         "type": "string"
                       }
                     },
                     "additionalProperties": false,
                     "patterns": [],
-                    "required": [
-                      "field",
-                      "order"
-                    ]
+                    "required": ["field", "order"]
                   },
                   "shopId": {
                     "type": "string"
@@ -762,9 +694,7 @@
             }
           }
         },
-        "tags": [
-          "Products"
-        ]
+        "tags": ["Products"]
       }
     },
     "/1/products": {
@@ -807,10 +737,7 @@
                 },
                 "additionalProperties": false,
                 "patterns": [],
-                "required": [
-                  "name",
-                  "shopId"
-                ]
+                "required": ["name", "shopId"]
               }
             }
           }
@@ -837,9 +764,7 @@
             }
           }
         },
-        "tags": [
-          "Products"
-        ]
+        "tags": ["Products"]
       }
     },
     "/1/products/:product": {
@@ -861,9 +786,7 @@
             "description": "success"
           }
         },
-        "tags": [
-          "Products"
-        ]
+        "tags": ["Products"]
       },
       "patch": {
         "summary": "Update Product",
@@ -945,9 +868,7 @@
             }
           }
         },
-        "tags": [
-          "Products"
-        ]
+        "tags": ["Products"]
       },
       "get": {
         "summary": "Get Product",
@@ -974,9 +895,7 @@
             }
           }
         },
-        "tags": [
-          "Products"
-        ]
+        "tags": ["Products"]
       }
     },
     "/1/shops/search": {
@@ -1005,19 +924,13 @@
                         "type": "string"
                       },
                       "order": {
-                        "enum": [
-                          "asc",
-                          "desc"
-                        ],
+                        "enum": ["asc", "desc"],
                         "type": "string"
                       }
                     },
                     "additionalProperties": false,
                     "patterns": [],
-                    "required": [
-                      "field",
-                      "order"
-                    ]
+                    "required": ["field", "order"]
                   },
                   "limit": {
                     "default": 50,
@@ -1067,9 +980,7 @@
             }
           }
         },
-        "tags": [
-          "Shops"
-        ]
+        "tags": ["Shops"]
       }
     },
     "/1/shops": {
@@ -1101,9 +1012,7 @@
                 },
                 "additionalProperties": false,
                 "patterns": [],
-                "required": [
-                  "name"
-                ]
+                "required": ["name"]
               }
             }
           }
@@ -1141,9 +1050,7 @@
             }
           }
         },
-        "tags": [
-          "Shops"
-        ]
+        "tags": ["Shops"]
       }
     },
     "/1/shops/:shop": {
@@ -1165,9 +1072,7 @@
             "description": "success"
           }
         },
-        "tags": [
-          "Shops"
-        ]
+        "tags": ["Shops"]
       },
       "patch": {
         "summary": "Update Shop",
@@ -1237,9 +1142,7 @@
             }
           }
         },
-        "tags": [
-          "Shops"
-        ]
+        "tags": ["Shops"]
       },
       "get": {
         "summary": "Get Shop",
@@ -1265,9 +1168,7 @@
             }
           }
         },
-        "tags": [
-          "Shops"
-        ]
+        "tags": ["Shops"]
       }
     },
     "/1/uploads/:hash": {
@@ -1310,9 +1211,7 @@
             }
           }
         },
-        "tags": [
-          "Uploads"
-        ]
+        "tags": ["Uploads"]
       }
     },
     "/1/uploads/:hash/image": {
@@ -1330,9 +1229,7 @@
       "get": {
         "summary": "Get Upload",
         "responses": {},
-        "tags": [
-          "Uploads"
-        ]
+        "tags": ["Uploads"]
       }
     },
     "/1/uploads": {
@@ -1365,9 +1262,7 @@
             }
           }
         },
-        "tags": [
-          "Uploads"
-        ]
+        "tags": ["Uploads"]
       }
     },
     "/1/uploads/:upload": {
@@ -1389,9 +1284,7 @@
             "description": "success"
           }
         },
-        "tags": [
-          "Uploads"
-        ]
+        "tags": ["Uploads"]
       }
     },
     "/1/invites/search": {
@@ -1425,10 +1318,7 @@
                     },
                     "additionalProperties": false,
                     "patterns": [],
-                    "required": [
-                      "field",
-                      "order"
-                    ]
+                    "required": ["field", "order"]
                   },
                   "limit": {
                     "default": 50,
@@ -1474,9 +1364,7 @@
             }
           }
         },
-        "tags": [
-          "Invites"
-        ]
+        "tags": ["Invites"]
       }
     },
     "/1/invites": {
@@ -1500,9 +1388,7 @@
                 },
                 "additionalProperties": false,
                 "patterns": [],
-                "required": [
-                  "emails"
-                ]
+                "required": ["emails"]
               }
             }
           }
@@ -1512,9 +1398,7 @@
             "description": "success"
           }
         },
-        "tags": [
-          "Invites"
-        ]
+        "tags": ["Invites"]
       }
     },
     "/1/invites/:invite/resend": {
@@ -1536,9 +1420,7 @@
             "description": "success"
           }
         },
-        "tags": [
-          "Invites"
-        ]
+        "tags": ["Invites"]
       }
     },
     "/1/invites/:invite": {
@@ -1560,9 +1442,7 @@
             "description": "success"
           }
         },
-        "tags": [
-          "Invites"
-        ]
+        "tags": ["Invites"]
       }
     }
   }

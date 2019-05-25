@@ -1,0 +1,45 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Platform API",
+    "version": "1.0.0",
+    "description": "# Introduction\nThis portal provides documentation for all API calls in this platform. \n"
+  },
+  "paths": {
+    "": {
+      "get": {
+        "summary": "Get API Information"
+      }
+    },
+    "/openapi.json": {
+      "get": {
+        "summary": "Get OpenAPI Definition"
+      }
+    },
+    "/1/auth/register": {
+      "post": {
+        "summary": "Register"
+      }
+    },
+    "/1/auth/login": {
+      "post": {
+        "summary": "Login"
+      }
+    },
+    "/1/auth/accept-invite": {
+      "post": {
+        "summary": "Accept invite"
+      }
+    },
+    "/1/auth/request-password": {
+      "post": {
+        "summary": "Request password"
+      }
+    },
+    "/1/auth/set-password": {
+      "post": {
+        "summary": "Set Password"
+      }
+    }
+  }
+}
