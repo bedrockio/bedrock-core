@@ -10,7 +10,7 @@ spec:
         name: mongo
     spec:
       containers:
-      - image: mongo
+      - image: mongo:4.0.9
         name: mongo
         ports:
         - name: mongo
