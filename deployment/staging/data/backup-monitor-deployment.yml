@@ -15,7 +15,7 @@ spec:
         name: backup-monitor
         env:
           - name: GS_BUCKETS
-            value: "pipeline-staging-backup staging-mongodb-backups"
+            value: "platform-staging-uploads platform-staging-mongodb-backups"
           - name: POSTMARK_API_KEY
             value: "abc"
           - name: POSTMARK_FROM
