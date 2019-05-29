@@ -5,9 +5,11 @@
   "engines": {
     "node": ">=10"
   },
-  "pre-commit": ["lint"],
+  "pre-commit": [
+    "lint"
+  ],
   "scripts": {
-    "start": "nodemon -w src --exec \"MOCK_EMAIL=true NODE_ENV=dev node src/index.js\"",
+    "start": "nodemon -w src -w openapi --exec \"MOCK_EMAIL=true NODE_ENV=dev node src/index.js\"",
     "start:prod": "node src/index",
     "docs": "STORE_RESULT=true yarn run test && DOCS=true node scripts/openapi",
     "emails": "node emails/build",
@@ -47,7 +49,9 @@
     "supertest": "3.0.0"
   },
   "jest": {
-    "setupFiles": ["<rootDir>/src/test-helpers/setup-tests.js"]
+    "setupFiles": [
+      "<rootDir>/src/test-helpers/setup-tests.js"
+    ]
   },
   "eslintConfig": {
     "parserOptions": {
@@ -61,12 +65,20 @@
       "node": true,
       "browser": false
     },
-    "extends": ["eslint:recommended", "plugin:jest/recommended", "prettier"],
+    "extends": [
+      "eslint:recommended",
+      "plugin:jest/recommended",
+      "prettier"
+    ],
     "rules": {
       "no-console": [
         "warn",
         {
-          "allow": ["warn", "error", "info"]
+          "allow": [
+            "warn",
+            "error",
+            "info"
+          ]
         }
       ]
     }

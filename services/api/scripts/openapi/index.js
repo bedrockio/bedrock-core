@@ -114,7 +114,7 @@ const listener = app.listen(40015, async () => {
   listener.close();
 
   const openapi = convert(routes);
-  const filePath = path.join(__dirname, '../..', 'openapi.json');
+  const filePath = path.join(__dirname, '../../openapi/', 'generated.json');
 
   const baseString = (await fs.readFile(filePath)).toString();
   const base = baseString.length ? JSON.parse(baseString) : {};
@@ -129,9 +129,6 @@ const listener = app.listen(40015, async () => {
       if (!route || !oldRoute) return;
       ['get', 'post', 'patch', 'delete', 'put'].forEach((method) => {
         if (!oldRoute[method] || !route[method]) return;
-        if (oldRoute[method].summary) {
-          route[method].summary = oldRoute[method].summary;
-        }
       });
     });
   }

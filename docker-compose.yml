@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   api:
-    command: ["./scripts/wait-for-it.sh", "mongo:27017", "--", "npm", "start"]
+    command: ["./scripts/wait-for-it.sh", "mongo:27017", "--", "yarn", "start"]
     environment:
       - MONGO_URI=mongodb://mongo/platform_dev
     build:
@@ -13,7 +13,7 @@ services:
       - ./services/api/emails:/service/emails
       - ./services/api/scripts:/service/scripts
       - ./services/api/env.conf:/service/env.conf
-      - ./services/api/openapi.json:/service/openapi.json
+      - ./services/api/openapi:/service/openapi
     ports:
       - "2300:2300"
     links:

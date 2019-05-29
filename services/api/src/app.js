@@ -9,6 +9,7 @@ const fs = require('fs');
 const { version } = require('../package.json');
 const v1 = require('./v1');
 const config = require('@kaareal/config');
+const { merge } = require('lodash');
 
 const app = new Koa();
 
@@ -41,12 +42,19 @@ if (config.has('SENTRY_DNS')) {
 const router = new Router();
 app.router = router;
 router.get('/', (ctx) => {
-  ctx.body = { version };
+  ctx.body = {
+    version,
+    openapiPath: '/openapi.json'
+  };
 });
 
-const openapiJSON = fs.readFileSync(`${__dirname}/../openapi.json`).toString();
+const mergeOpenAPIJSON = merge(
+  JSON.parse(fs.readFileSync(`${__dirname}/../openapi/generated.json`).toString()),
+  JSON.parse(fs.readFileSync(`${__dirname}/../openapi/user-defined.json`).toString())
+);
+
 router.get('/openapi.json', (ctx) => {
-  ctx.body = openapiJSON;
+  ctx.body = mergeOpenAPIJSON;
 });
 
 router.use('/1', v1.routes());
