@@ -1,9 +1,14 @@
 {
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Platform API",
+    "version": "1.0.0"
+  },
   "paths": {
     "": {
       "operationId": "get",
       "get": {
-        "summary": "List",
+        "summary": "List ",
         "responses": {
           "200": {
             "content": {
@@ -11,7 +16,8 @@
                 "examples": {
                   "default": {
                     "value": {
-                      "version": "1.0.0"
+                      "version": "1.0.0",
+                      "openapiPath": "/openapi.json"
                     }
                   }
                 }
@@ -55,7 +61,11 @@
                 },
                 "additionalProperties": false,
                 "patterns": [],
-                "required": ["email", "name", "password"]
+                "required": [
+                  "email",
+                  "name",
+                  "password"
+                ]
               }
             }
           }
@@ -68,7 +78,7 @@
                   "default": {
                     "value": {
                       "data": {
-                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2U0M2UzNjJjMDY1NTdlMmVmMmI2Y2EiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1NTg0NjIwMDYsImV4cCI6MTU2MTA1NDAwNn0.sHfAnjTYVlY-z43MoaBYoG4FFN1v-Nf3A7InzO5QLlE"
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2YxMzE4YWIzNzA3NzA3M2Q1Y2RhYzIiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1NTkzMTA3MzAsImV4cCI6MTU2MTkwMjczMH0.fzj5IRkareqHqOYCmKv9AM2LiISCZPmgdfCNU7q-7EU"
                       }
                     }
                   }
@@ -80,7 +90,9 @@
             "description": "A user with that email already exists"
           }
         },
-        "tags": ["Auth"]
+        "tags": [
+          "Auth"
+        ]
       }
     },
     "/1/auth/login": {
@@ -104,7 +116,10 @@
                 },
                 "additionalProperties": false,
                 "patterns": [],
-                "required": ["email", "password"]
+                "required": [
+                  "email",
+                  "password"
+                ]
               }
             }
           }
@@ -117,7 +132,7 @@
                   "default": {
                     "value": {
                       "data": {
-                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2U0M2UzNTJjMDY1NTdlMmVmMmI2YzkiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1NTg0NjIwMDYsImV4cCI6MTU2MTA1NDAwNn0.drJLLFzprumLSGr1Szh-7XBng1IL4_4v-gxbywywUaM"
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2YxMzE4OWIzNzA3NzA3M2Q1Y2RhYzEiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1NTkzMTA3MzAsImV4cCI6MTU2MTkwMjczMH0.hHxrgj6wjUReaXIjPMYwKj12E8sgYbRjO8PThzdh5xE"
                       }
                     }
                   }
@@ -129,7 +144,9 @@
             "description": "email password combination does not match"
           }
         },
-        "tags": ["Auth"]
+        "tags": [
+          "Auth"
+        ]
       }
     },
     "/1/auth/accept-invite": {
@@ -156,7 +173,10 @@
                 },
                 "additionalProperties": false,
                 "patterns": [],
-                "required": ["name", "password"]
+                "required": [
+                  "name",
+                  "password"
+                ]
               }
             }
           }
@@ -166,7 +186,9 @@
             "description": "Invite could not be found"
           }
         },
-        "tags": ["Auth"]
+        "tags": [
+          "Auth"
+        ]
       }
     },
     "/1/auth/request-password": {
@@ -187,7 +209,9 @@
                 },
                 "additionalProperties": false,
                 "patterns": [],
-                "required": ["email"]
+                "required": [
+                  "email"
+                ]
               }
             }
           }
@@ -197,7 +221,9 @@
             "description": "success"
           }
         },
-        "tags": ["Auth"]
+        "tags": [
+          "Auth"
+        ]
       }
     },
     "/1/auth/set-password": {
@@ -221,7 +247,10 @@
                 },
                 "additionalProperties": false,
                 "patterns": [],
-                "required": ["token", "password"]
+                "required": [
+                  "token",
+                  "password"
+                ]
               }
             }
           }
@@ -234,7 +263,7 @@
                   "default": {
                     "value": {
                       "data": {
-                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2U0M2UzNjJjMDY1NTdlMmVmMmI2Y2MiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1NTg0NjIwMDcsImV4cCI6MTU2MTA1NDAwN30.xPe8XEUQgWX-pLxgskYDjsP6pbHVGT3kLZc7aTXvev8"
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2YxMzE4YWIzNzA3NzA3M2Q1Y2RhYzQiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1NTkzMTA3MzEsImV4cCI6MTU2MTkwMjczMX0.BFXiuzCxMb7B97BkWhrRueD8h-tby17ZhJjCscYBe3o"
                       }
                     }
                   }
@@ -246,7 +275,9 @@
             "description": "user does not exists"
           }
         },
-        "tags": ["Auth"]
+        "tags": [
+          "Auth"
+        ]
       }
     },
     "/1/users/me": {
@@ -261,12 +292,12 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ce43e35fcc36b7e2fceb108",
+                        "id": "5cf13189026ba9073e4b8fbf",
                         "roles": [],
                         "email": "email1@platform.com",
                         "name": "test user",
-                        "createdAt": "2019-05-21T18:06:45.787Z",
-                        "updatedAt": "2019-05-21T18:06:45.787Z"
+                        "createdAt": "2019-05-31T13:52:09.837Z",
+                        "updatedAt": "2019-05-31T13:52:09.837Z"
                       }
                     }
                   }
@@ -275,7 +306,9 @@
             }
           }
         },
-        "tags": ["Users"]
+        "tags": [
+          "Users"
+        ]
       },
       "patch": {
         "summary": "Update User",
@@ -307,12 +340,12 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ce43e35fcc36b7e2fceb109",
+                        "id": "5cf13189026ba9073e4b8fc0",
                         "roles": [],
                         "email": "email2@platform.com",
                         "name": "other name",
-                        "createdAt": "2019-05-21T18:06:45.883Z",
-                        "updatedAt": "2019-05-21T18:06:45.927Z"
+                        "createdAt": "2019-05-31T13:52:09.945Z",
+                        "updatedAt": "2019-05-31T13:52:10.031Z"
                       }
                     }
                   }
@@ -321,7 +354,9 @@
             }
           }
         },
-        "tags": ["Users"]
+        "tags": [
+          "Users"
+        ]
       }
     },
     "/1/users/search": {
@@ -355,7 +390,10 @@
                     },
                     "additionalProperties": false,
                     "patterns": [],
-                    "required": ["field", "order"]
+                    "required": [
+                      "field",
+                      "order"
+                    ]
                   },
                   "limit": {
                     "default": 50,
@@ -377,44 +415,50 @@
                     "value": {
                       "data": [
                         {
-                          "id": "5ce43e35fcc36b7e2fceb10c",
-                          "roles": ["user"],
+                          "id": "5cf1318a026ba9073e4b8fc3",
+                          "roles": [
+                            "user"
+                          ],
                           "email": "email5@platform.com",
                           "name": "Two",
-                          "createdAt": "2019-05-21T18:06:45.944Z",
-                          "updatedAt": "2019-05-21T18:06:45.944Z"
+                          "createdAt": "2019-05-31T13:52:10.057Z",
+                          "updatedAt": "2019-05-31T13:52:10.057Z"
                         },
                         {
-                          "id": "5ce43e35fcc36b7e2fceb10b",
-                          "roles": ["user"],
+                          "id": "5cf1318a026ba9073e4b8fc2",
+                          "roles": [
+                            "user"
+                          ],
                           "email": "email4@platform.com",
                           "name": "One",
-                          "createdAt": "2019-05-21T18:06:45.942Z",
-                          "updatedAt": "2019-05-21T18:06:45.942Z"
+                          "createdAt": "2019-05-31T13:52:10.051Z",
+                          "updatedAt": "2019-05-31T13:52:10.051Z"
                         },
                         {
-                          "id": "5ce43e35fcc36b7e2fceb10a",
-                          "roles": ["admin"],
+                          "id": "5cf1318a026ba9073e4b8fc1",
+                          "roles": [
+                            "admin"
+                          ],
                           "email": "email3@platform.com",
                           "name": "test user",
-                          "createdAt": "2019-05-21T18:06:45.939Z",
-                          "updatedAt": "2019-05-21T18:06:45.939Z"
+                          "createdAt": "2019-05-31T13:52:10.048Z",
+                          "updatedAt": "2019-05-31T13:52:10.048Z"
                         },
                         {
-                          "id": "5ce43e35fcc36b7e2fceb109",
+                          "id": "5cf13189026ba9073e4b8fc0",
                           "roles": [],
                           "email": "email2@platform.com",
                           "name": "other name",
-                          "createdAt": "2019-05-21T18:06:45.883Z",
-                          "updatedAt": "2019-05-21T18:06:45.927Z"
+                          "createdAt": "2019-05-31T13:52:09.945Z",
+                          "updatedAt": "2019-05-31T13:52:10.031Z"
                         },
                         {
-                          "id": "5ce43e35fcc36b7e2fceb108",
+                          "id": "5cf13189026ba9073e4b8fbf",
                           "roles": [],
                           "email": "email1@platform.com",
                           "name": "test user",
-                          "createdAt": "2019-05-21T18:06:45.787Z",
-                          "updatedAt": "2019-05-21T18:06:45.787Z"
+                          "createdAt": "2019-05-31T13:52:09.837Z",
+                          "updatedAt": "2019-05-31T13:52:09.837Z"
                         }
                       ],
                       "meta": {
@@ -429,7 +473,9 @@
             }
           }
         },
-        "tags": ["Users"]
+        "tags": [
+          "Users"
+        ]
       }
     },
     "/1/users": {
@@ -463,7 +509,11 @@
                 },
                 "additionalProperties": false,
                 "patterns": [],
-                "required": ["email", "name", "password"]
+                "required": [
+                  "email",
+                  "name",
+                  "password"
+                ]
               }
             }
           }
@@ -476,12 +526,12 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ce43e35fcc36b7e2fceb10f",
+                        "id": "5cf1318a026ba9073e4b8fc6",
                         "roles": [],
                         "email": "hello@dominiek.com",
                         "name": "Hello",
-                        "createdAt": "2019-05-21T18:06:45.994Z",
-                        "updatedAt": "2019-05-21T18:06:45.994Z"
+                        "createdAt": "2019-05-31T13:52:10.113Z",
+                        "updatedAt": "2019-05-31T13:52:10.113Z"
                       }
                     }
                   }
@@ -493,7 +543,9 @@
             "description": "A user with that email already exists"
           }
         },
-        "tags": ["Users"]
+        "tags": [
+          "Users"
+        ]
       }
     },
     "/1/users/:user": {
@@ -515,7 +567,9 @@
             "description": "success"
           }
         },
-        "tags": ["Users"]
+        "tags": [
+          "Users"
+        ]
       },
       "patch": {
         "summary": "Update User",
@@ -564,12 +618,14 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ce43e36fcc36b7e2fceb116",
-                        "roles": ["user"],
+                        "id": "5cf1318a026ba9073e4b8fcd",
+                        "roles": [
+                          "user"
+                        ],
                         "email": "email14@platform.com",
                         "name": "new name",
-                        "createdAt": "2019-05-21T18:06:46.338Z",
-                        "updatedAt": "2019-05-21T18:06:46.338Z"
+                        "createdAt": "2019-05-31T13:52:10.543Z",
+                        "updatedAt": "2019-05-31T13:52:10.543Z"
                       }
                     }
                   }
@@ -578,7 +634,9 @@
             }
           }
         },
-        "tags": ["Users"]
+        "tags": [
+          "Users"
+        ]
       },
       "get": {
         "summary": "Get User",
@@ -590,12 +648,14 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ce43e36fcc36b7e2fceb11a",
-                        "roles": ["user"],
+                        "id": "5cf1318a026ba9073e4b8fd1",
+                        "roles": [
+                          "user"
+                        ],
                         "email": "email18@platform.com",
                         "name": "One",
-                        "createdAt": "2019-05-21T18:06:46.363Z",
-                        "updatedAt": "2019-05-21T18:06:46.363Z"
+                        "createdAt": "2019-05-31T13:52:10.579Z",
+                        "updatedAt": "2019-05-31T13:52:10.579Z"
                       }
                     }
                   }
@@ -604,7 +664,9 @@
             }
           }
         },
-        "tags": ["Users"]
+        "tags": [
+          "Users"
+        ]
       }
     },
     "/1/products/search": {
@@ -633,13 +695,19 @@
                         "type": "string"
                       },
                       "order": {
-                        "enum": ["asc", "desc"],
+                        "enum": [
+                          "asc",
+                          "desc"
+                        ],
                         "type": "string"
                       }
                     },
                     "additionalProperties": false,
                     "patterns": [],
-                    "required": ["field", "order"]
+                    "required": [
+                      "field",
+                      "order"
+                    ]
                   },
                   "shopId": {
                     "type": "string"
@@ -664,22 +732,22 @@
                     "value": {
                       "data": [
                         {
-                          "id": "5ce43e358337667e31c50be3",
+                          "id": "5cf1318920f6460740853be9",
                           "sellingPoints": [],
                           "name": "test 2",
                           "description": "Some description",
-                          "shopId": "5ce43e358337667e31c50be2",
-                          "createdAt": "2019-05-21T18:06:45.813Z",
-                          "updatedAt": "2019-05-21T18:06:45.813Z"
+                          "shopId": "5cf1318920f6460740853be8",
+                          "createdAt": "2019-05-31T13:52:09.853Z",
+                          "updatedAt": "2019-05-31T13:52:09.853Z"
                         },
                         {
-                          "id": "5ce43e358337667e31c50be1",
+                          "id": "5cf1318920f6460740853be7",
                           "sellingPoints": [],
                           "name": "test 1",
                           "description": "Some description",
-                          "shopId": "5ce43e358337667e31c50be0",
-                          "createdAt": "2019-05-21T18:06:45.809Z",
-                          "updatedAt": "2019-05-21T18:06:45.809Z"
+                          "shopId": "5cf1318920f6460740853be6",
+                          "createdAt": "2019-05-31T13:52:09.848Z",
+                          "updatedAt": "2019-05-31T13:52:09.848Z"
                         }
                       ],
                       "meta": {
@@ -694,7 +762,9 @@
             }
           }
         },
-        "tags": ["Products"]
+        "tags": [
+          "Products"
+        ]
       }
     },
     "/1/products": {
@@ -737,7 +807,10 @@
                 },
                 "additionalProperties": false,
                 "patterns": [],
-                "required": ["name", "shopId"]
+                "required": [
+                  "name",
+                  "shopId"
+                ]
               }
             }
           }
@@ -750,12 +823,12 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ce43e358337667e31c50be6",
+                        "id": "5cf1318920f6460740853bec",
                         "sellingPoints": [],
                         "name": "some other product",
-                        "shopId": "5ce43e358337667e31c50be5",
-                        "createdAt": "2019-05-21T18:06:45.940Z",
-                        "updatedAt": "2019-05-21T18:06:45.940Z"
+                        "shopId": "5cf1318920f6460740853beb",
+                        "createdAt": "2019-05-31T13:52:09.987Z",
+                        "updatedAt": "2019-05-31T13:52:09.987Z"
                       }
                     }
                   }
@@ -764,7 +837,9 @@
             }
           }
         },
-        "tags": ["Products"]
+        "tags": [
+          "Products"
+        ]
       }
     },
     "/1/products/:product": {
@@ -786,7 +861,9 @@
             "description": "success"
           }
         },
-        "tags": ["Products"]
+        "tags": [
+          "Products"
+        ]
       },
       "patch": {
         "summary": "Update Product",
@@ -853,13 +930,13 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ce43e358337667e31c50bec",
+                        "id": "5cf1318a20f6460740853bf2",
                         "sellingPoints": [],
                         "name": "new name",
                         "description": "Some description",
-                        "shopId": "5ce43e358337667e31c50beb",
-                        "createdAt": "2019-05-21T18:06:45.971Z",
-                        "updatedAt": "2019-05-21T18:06:45.981Z"
+                        "shopId": "5cf1318a20f6460740853bf1",
+                        "createdAt": "2019-05-31T13:52:10.045Z",
+                        "updatedAt": "2019-05-31T13:52:10.058Z"
                       }
                     }
                   }
@@ -868,7 +945,9 @@
             }
           }
         },
-        "tags": ["Products"]
+        "tags": [
+          "Products"
+        ]
       },
       "get": {
         "summary": "Get Product",
@@ -880,13 +959,13 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ce43e358337667e31c50bef",
+                        "id": "5cf1318a20f6460740853bf5",
                         "sellingPoints": [],
                         "name": "test 1",
                         "description": "Some description",
-                        "shopId": "5ce43e358337667e31c50bee",
-                        "createdAt": "2019-05-21T18:06:45.991Z",
-                        "updatedAt": "2019-05-21T18:06:45.991Z"
+                        "shopId": "5cf1318a20f6460740853bf4",
+                        "createdAt": "2019-05-31T13:52:10.071Z",
+                        "updatedAt": "2019-05-31T13:52:10.071Z"
                       }
                     }
                   }
@@ -895,7 +974,9 @@
             }
           }
         },
-        "tags": ["Products"]
+        "tags": [
+          "Products"
+        ]
       }
     },
     "/1/shops/search": {
@@ -924,13 +1005,19 @@
                         "type": "string"
                       },
                       "order": {
-                        "enum": ["asc", "desc"],
+                        "enum": [
+                          "asc",
+                          "desc"
+                        ],
                         "type": "string"
                       }
                     },
                     "additionalProperties": false,
                     "patterns": [],
-                    "required": ["field", "order"]
+                    "required": [
+                      "field",
+                      "order"
+                    ]
                   },
                   "limit": {
                     "default": 50,
@@ -952,20 +1039,20 @@
                     "value": {
                       "data": [
                         {
-                          "id": "5ce43e353f21e97e322e452a",
+                          "id": "5cf131890fc9a2073f6d7c27",
                           "images": [],
                           "name": "test 2",
                           "description": "Some description",
-                          "createdAt": "2019-05-21T18:06:45.848Z",
-                          "updatedAt": "2019-05-21T18:06:45.848Z"
+                          "createdAt": "2019-05-31T13:52:09.778Z",
+                          "updatedAt": "2019-05-31T13:52:09.778Z"
                         },
                         {
-                          "id": "5ce43e353f21e97e322e4529",
+                          "id": "5cf131890fc9a2073f6d7c26",
                           "images": [],
                           "name": "test 1",
                           "description": "Some description",
-                          "createdAt": "2019-05-21T18:06:45.844Z",
-                          "updatedAt": "2019-05-21T18:06:45.844Z"
+                          "createdAt": "2019-05-31T13:52:09.775Z",
+                          "updatedAt": "2019-05-31T13:52:09.775Z"
                         }
                       ],
                       "meta": {
@@ -980,7 +1067,9 @@
             }
           }
         },
-        "tags": ["Shops"]
+        "tags": [
+          "Shops"
+        ]
       }
     },
     "/1/shops": {
@@ -1012,7 +1101,9 @@
                 },
                 "additionalProperties": false,
                 "patterns": [],
-                "required": ["name"]
+                "required": [
+                  "name"
+                ]
               }
             }
           }
@@ -1025,23 +1116,23 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ce43e353f21e97e322e452d",
+                        "id": "5cf131890fc9a2073f6d7c2a",
                         "images": [
                           {
-                            "id": "5ce43e353f21e97e322e452c",
+                            "id": "5cf131890fc9a2073f6d7c29",
                             "filename": "logo.png",
                             "rawUrl": "logo.png",
                             "hash": "test",
                             "storageType": "local",
                             "mimeType": "image/png",
                             "ownerId": "none",
-                            "createdAt": "2019-05-21T18:06:45.967Z",
-                            "updatedAt": "2019-05-21T18:06:45.967Z"
+                            "createdAt": "2019-05-31T13:52:09.923Z",
+                            "updatedAt": "2019-05-31T13:52:09.923Z"
                           }
                         ],
                         "name": "shop name",
-                        "createdAt": "2019-05-21T18:06:45.980Z",
-                        "updatedAt": "2019-05-21T18:06:45.980Z"
+                        "createdAt": "2019-05-31T13:52:09.966Z",
+                        "updatedAt": "2019-05-31T13:52:09.966Z"
                       }
                     }
                   }
@@ -1050,7 +1141,9 @@
             }
           }
         },
-        "tags": ["Shops"]
+        "tags": [
+          "Shops"
+        ]
       }
     },
     "/1/shops/:shop": {
@@ -1072,7 +1165,9 @@
             "description": "success"
           }
         },
-        "tags": ["Shops"]
+        "tags": [
+          "Shops"
+        ]
       },
       "patch": {
         "summary": "Update Shop",
@@ -1128,12 +1223,12 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ce43e363f21e97e322e4531",
+                        "id": "5cf1318a0fc9a2073f6d7c2e",
                         "images": [],
                         "name": "new name",
                         "description": "Some description",
-                        "createdAt": "2019-05-21T18:06:46.029Z",
-                        "updatedAt": "2019-05-21T18:06:46.047Z"
+                        "createdAt": "2019-05-31T13:52:10.020Z",
+                        "updatedAt": "2019-05-31T13:52:10.034Z"
                       }
                     }
                   }
@@ -1142,7 +1237,9 @@
             }
           }
         },
-        "tags": ["Shops"]
+        "tags": [
+          "Shops"
+        ]
       },
       "get": {
         "summary": "Get Shop",
@@ -1154,12 +1251,12 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ce43e363f21e97e322e4533",
+                        "id": "5cf1318a0fc9a2073f6d7c30",
                         "images": [],
                         "name": "test 1",
                         "description": "Some description",
-                        "createdAt": "2019-05-21T18:06:46.058Z",
-                        "updatedAt": "2019-05-21T18:06:46.058Z"
+                        "createdAt": "2019-05-31T13:52:10.049Z",
+                        "updatedAt": "2019-05-31T13:52:10.049Z"
                       }
                     }
                   }
@@ -1168,7 +1265,9 @@
             }
           }
         },
-        "tags": ["Shops"]
+        "tags": [
+          "Shops"
+        ]
       }
     },
     "/1/uploads/:hash": {
@@ -1193,16 +1292,16 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ce43e36acda327e34de5097",
+                        "id": "5cf1318b81273407431ce7a2",
                         "filename": "logo.png",
                         "rawUrl": "logo.png",
                         "hash": "test",
                         "storageType": "local",
                         "mimeType": "image/png",
-                        "ownerId": "5ce43e36acda327e34de5096",
-                        "createdAt": "2019-05-21T18:06:46.630Z",
-                        "updatedAt": "2019-05-21T18:06:46.640Z",
-                        "deletedAt": "2019-05-21T18:06:46.639Z"
+                        "ownerId": "5cf1318b81273407431ce7a1",
+                        "createdAt": "2019-05-31T13:52:11.053Z",
+                        "updatedAt": "2019-05-31T13:52:11.064Z",
+                        "deletedAt": "2019-05-31T13:52:11.062Z"
                       }
                     }
                   }
@@ -1211,7 +1310,9 @@
             }
           }
         },
-        "tags": ["Uploads"]
+        "tags": [
+          "Uploads"
+        ]
       }
     },
     "/1/uploads/:hash/image": {
@@ -1229,7 +1330,9 @@
       "get": {
         "summary": "Get Upload",
         "responses": {},
-        "tags": ["Uploads"]
+        "tags": [
+          "Uploads"
+        ]
       }
     },
     "/1/uploads": {
@@ -1244,16 +1347,16 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5ce43e36acda327e34de5095",
+                        "id": "5cf1318b81273407431ce7a0",
                         "mimeType": "image/png",
                         "filename": "logo.png",
-                        "hash": "e33f137c674224b8bc45ce9a5c52224cde686e24f5bb33034549d527af560da7",
-                        "rawUrl": "/var/folders/z9/vjt2qj311zv_vy0gmn29vcmc0000gn/T/upload_55e36f96a58920a9a7750ae766eae963",
+                        "hash": "77688ea469fc4e56384dbfa6f762c1979b7be5091fc40b7f6ff220fba82d1747",
+                        "rawUrl": "/var/folders/3h/mtq3xk6d5kb76j02fpwqph640000gp/T/upload_fa383849f3e6ec748a47e8e57e7f8cb2",
                         "storageType": "local",
-                        "thumbnailUrl": "/var/folders/z9/vjt2qj311zv_vy0gmn29vcmc0000gn/T/upload_55e36f96a58920a9a7750ae766eae963",
-                        "ownerId": "5ce43e36acda327e34de5094",
-                        "createdAt": "2019-05-21T18:06:46.612Z",
-                        "updatedAt": "2019-05-21T18:06:46.612Z"
+                        "thumbnailUrl": "/var/folders/3h/mtq3xk6d5kb76j02fpwqph640000gp/T/upload_fa383849f3e6ec748a47e8e57e7f8cb2",
+                        "ownerId": "5cf1318a81273407431ce79f",
+                        "createdAt": "2019-05-31T13:52:11.037Z",
+                        "updatedAt": "2019-05-31T13:52:11.037Z"
                       }
                     }
                   }
@@ -1262,7 +1365,9 @@
             }
           }
         },
-        "tags": ["Uploads"]
+        "tags": [
+          "Uploads"
+        ]
       }
     },
     "/1/uploads/:upload": {
@@ -1284,7 +1389,9 @@
             "description": "success"
           }
         },
-        "tags": ["Uploads"]
+        "tags": [
+          "Uploads"
+        ]
       }
     },
     "/1/invites/search": {
@@ -1318,7 +1425,10 @@
                     },
                     "additionalProperties": false,
                     "patterns": [],
-                    "required": ["field", "order"]
+                    "required": [
+                      "field",
+                      "order"
+                    ]
                   },
                   "limit": {
                     "default": 50,
@@ -1340,16 +1450,16 @@
                     "value": {
                       "data": [
                         {
-                          "id": "5ce43e352395697e309857cd",
+                          "id": "5cf13189f33dcd0741eca32f",
                           "email": "usera@platform.com",
-                          "createdAt": "2019-05-21T18:06:45.851Z",
-                          "updatedAt": "2019-05-21T18:06:45.851Z"
+                          "createdAt": "2019-05-31T13:52:09.732Z",
+                          "updatedAt": "2019-05-31T13:52:09.732Z"
                         },
                         {
-                          "id": "5ce43e352395697e309857ce",
+                          "id": "5cf13189f33dcd0741eca330",
                           "email": "userb@platform.com",
-                          "createdAt": "2019-05-21T18:06:45.855Z",
-                          "updatedAt": "2019-05-21T18:06:45.855Z"
+                          "createdAt": "2019-05-31T13:52:09.742Z",
+                          "updatedAt": "2019-05-31T13:52:09.742Z"
                         }
                       ],
                       "meta": {
@@ -1364,7 +1474,9 @@
             }
           }
         },
-        "tags": ["Invites"]
+        "tags": [
+          "Invites"
+        ]
       }
     },
     "/1/invites": {
@@ -1388,7 +1500,9 @@
                 },
                 "additionalProperties": false,
                 "patterns": [],
-                "required": ["emails"]
+                "required": [
+                  "emails"
+                ]
               }
             }
           }
@@ -1398,7 +1512,9 @@
             "description": "success"
           }
         },
-        "tags": ["Invites"]
+        "tags": [
+          "Invites"
+        ]
       }
     },
     "/1/invites/:invite/resend": {
@@ -1420,7 +1536,9 @@
             "description": "success"
           }
         },
-        "tags": ["Invites"]
+        "tags": [
+          "Invites"
+        ]
       }
     },
     "/1/invites/:invite": {
@@ -1442,7 +1560,9 @@
             "description": "success"
           }
         },
-        "tags": ["Invites"]
+        "tags": [
+          "Invites"
+        ]
       }
     }
   }

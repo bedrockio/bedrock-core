@@ -119,9 +119,6 @@ const listener = app.listen(40015, async () => {
   const baseString = (await fs.readFile(filePath)).toString();
   const base = baseString.length ? JSON.parse(baseString) : {};
 
-  if (base.info.title) openapi.info.description = base.info.title;
-  if (base.info.description) openapi.info.description = base.info.description;
-
   if (base.paths && openapi.paths) {
     Object.keys(base.paths).forEach((url) => {
       const route = openapi.paths[url];
