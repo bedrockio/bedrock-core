@@ -131,7 +131,7 @@ workflows:
           deployment: standard-cluster-1
           container: api
           image: sharkbone_api
-          path-to-dockerfile: ~/project/services/api/Dockerfile
+          path-to-dockerfile: ./services/api/Dockerfile
 
       - web:
           requires:
