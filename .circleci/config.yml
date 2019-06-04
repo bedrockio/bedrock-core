@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  gcp-gke: circleci/gcp-gke@0.1.0
+  gke: circleci/gcp-gke@0.1.0
 
 jobs:
   build:
