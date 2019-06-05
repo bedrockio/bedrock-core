@@ -43,6 +43,11 @@ jobs:
           root: .
           paths:
             - .services-metadata
+      - gke/publish-and-rollout-image:
+          deployment: standard-cluster-1
+          container: api
+          image: sharkbone_api
+          path-to-dockerfile: ./services/api/
 
   api:
     working_directory: ~/project/services/api
