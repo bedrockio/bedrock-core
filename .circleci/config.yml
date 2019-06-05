@@ -61,10 +61,9 @@ orbs:
               google-project-id: <<parameters.google-project-id>>
               image: <<parameters.image>>
               tag: <<parameters.tag>>
-          - rollout-image:
-              deployment: "<<parameters.deployment>>"
-              container: "<<parameters.container>>"
-              image: "<<parameters.image>>"
+          - run: |
+              gcloud container clusters get-credentials <<parameters.deployment>>
+              kubectl set image deployment <<parameters.deployment>> <<parameters.container>>=<<parameters.image>>
 
 jobs:
   diff_check:
