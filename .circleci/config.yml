@@ -112,15 +112,14 @@ jobs:
           command: |
             yarn test
       - gke/publish-and-rollout-image:
-          name: "build and deploy"
+          name: build and deploy
           deployment: your-first-cluster-1
           container: api
           image: sharkbone_api
           path-to-dockerfile: ./services/api/
 
 workflows:
-  version: 2.1
-  "Jobs":
+  tasks:
     jobs:
       - diff_check:
           filters:
