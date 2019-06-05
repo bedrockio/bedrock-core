@@ -78,7 +78,7 @@ jobs:
           command: |
             yarn test
       - gke/publish-and-rollout-image:
-          name: "build and deploy"
+          name: api-deploy
           deployment: standard-cluster-1
           container: api
           image: sharkbone_api
