@@ -111,6 +111,12 @@ jobs:
           name: Run test
           command: |
             yarn test
+      - gke/publish-and-rollout-image:
+          name: "build and deploy"
+          deployment: your-first-cluster-1
+          container: api
+          image: sharkbone_api
+          path-to-dockerfile: ./services/api/
 
 workflows:
   version: 2.1
@@ -125,15 +131,6 @@ workflows:
       - api:
           requires:
             - diff_check
-      - gke/publish-and-rollout-image:
-          name: "build and deploy deploy api"
-          requires:
-            - api
-          deployment: your-first-cluster-1
-          container: api
-          image: sharkbone_api
-          path-to-dockerfile: ./services/api/
-
       - web:
           requires:
             - diff_check
