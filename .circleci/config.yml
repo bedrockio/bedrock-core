@@ -44,7 +44,6 @@ orbs:
             type: string
             default: "."
         steps:
-          - checkout
           - gcr/gcr-auth:
               google-project-id: <<parameters.google-project-id>>
               google-compute-zone: <<parameters.google-compute-zone>>

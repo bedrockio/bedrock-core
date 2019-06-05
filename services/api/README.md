@@ -99,5 +99,5 @@ All configuration is done using environment variables. The default values in `en
 ## Building the Container
 
 ```
-docker build -t node-api-skeleton .
+docker build -t api .
 ```
