@@ -4,7 +4,7 @@ orbs:
   gke: circleci/gcp-gke@0.1.0
 
 jobs:
-  build:
+  diff_check:
     docker:
       - image: circleci/node:10
     steps:
@@ -114,9 +114,9 @@ jobs:
 
 workflows:
   version: 2.1
-  build_and_test:
+  "Jobs":
     jobs:
-      - build:
+      - diff_check:
           filters:
             branches:
               only:
@@ -124,15 +124,16 @@ workflows:
                 - ci
       - api:
           requires:
-            - build
+            - diff_check
       - gke/publish-and-rollout-image:
+          name: "build and deploy deploy api"
           requires:
             - api
-          deployment: standard-cluster-1
+          deployment: your-first-cluster-1
           container: api
           image: sharkbone_api
           path-to-dockerfile: ./services/api/
 
       - web:
           requires:
-            - build
+            - diff_check
