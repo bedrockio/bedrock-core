@@ -141,7 +141,6 @@ jobs:
           command: |
             yarn test
       - deploy/build-and-deploy:
-          name: api-deploy
           deployment: standard-cluster-1
           container: api
           image: sharkbone_api
