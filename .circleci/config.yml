@@ -1,12 +1,75 @@
 version: 2.1
 
 orbs:
-  gke: circleci/gcp-gke@0.1.0
+  deploy:
+    orbs:
+      gcloud: circleci/gcp-cli@1.0.6
+      gcr: circleci/gcp-gcr@0.0.2
+      k8s: circleci/kubernetes@0.1.0
+
+    commands:
+      build-and-deploy:
+        parameters:
+          deployment:
+            description: "The Kubernetes deployment name."
+            type: string
+          container:
+            description: "The Kubernetes container name."
+            type: string
+          gcloud-service-key:
+            description: The gcloud service key
+            type: env_var_name
+            default: GCLOUD_SERVICE_KEY
+          google-project-id:
+            description: The Google project ID to connect with via the gcloud CLI
+            type: env_var_name
+            default: GOOGLE_PROJECT_ID
+          google-compute-zone:
+            description: The Google compute zone to connect with via the gcloud CLI
+            type: env_var_name
+            default: GOOGLE_COMPUTE_ZONE
+          registry-url:
+            description: The GCR registry URL from ['', us, eu, asia].gcr.io
+            type: string
+            default: gcr.io
+          image:
+            description: A name for your docker image
+            type: string
+          tag:
+            description: A docker image tag
+            type: string
+            default: "latest"
+          path-to-dockerfile:
+            description: The relative path to the Dockerfile to use when building image
+            type: string
+            default: "."
+        steps:
+          - checkout
+          - gcr/gcr-auth:
+              google-project-id: <<parameters.google-project-id>>
+              google-compute-zone: <<parameters.google-compute-zone>>
+          - gcloud/install
+          - k8s/install
+          - gcr/build-image:
+              registry-url: <<parameters.registry-url>>
+              google-project-id: <<parameters.google-project-id>>
+              image: <<parameters.image>>
+              tag: << parameters.tag >>
+              path-to-dockerfile: <<parameters.path-to-dockerfile>>
+          - gcr/push-image:
+              registry-url: <<parameters.registry-url>>
+              google-project-id: <<parameters.google-project-id>>
+              image: <<parameters.image>>
+              tag: <<parameters.tag>>
+          - rollout-image:
+              deployment: "<<parameters.deployment>>"
+              container: "<<parameters.container>>"
+              image: "<<parameters.image>>"
 
 jobs:
   diff_check:
     docker:
-      - image: circleci/node:10
+      - image: circleci/node
     steps:
       - checkout
       - run:
@@ -77,7 +140,7 @@ jobs:
           name: Run test
           command: |
             yarn test
-      - gke/publish-and-rollout-image:
+      - deploy/build-and-deploy:
           name: api-deploy
           deployment: standard-cluster-1
           container: api
@@ -117,12 +180,6 @@ jobs:
           name: Run test
           command: |
             yarn test
-      - gke/publish-and-rollout-image:
-          name: build and deploy
-          deployment: your-first-cluster-1
-          container: api
-          image: sharkbone_api
-          path-to-dockerfile: ./services/api/
 
 workflows:
   tasks:
