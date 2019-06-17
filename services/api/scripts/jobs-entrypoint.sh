@@ -2,7 +2,7 @@
 echo "Setting crontab"
 env >> /etc/environment
 # Every 5 minutes
-echo "*/5 * * * * cd /api; node scripts/jobs.js >> /api/crontab.log 2>> /api/crontab.log" >> cron
+echo "*/5 * * * * cd /service; node scripts/jobs.js >> /service/crontab.log 2>> /service/crontab.log" >> cron
 crontab cron
 rm cron
 echo "Running all jobs for first time"
