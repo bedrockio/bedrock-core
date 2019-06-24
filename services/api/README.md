@@ -62,7 +62,7 @@ yarn install
 Ensure environment is the same using Notion:
 
 ```
-curl -sSLf https://get.notionjs.com | bash
+curl -sSLf https://get.volta.sh | bash
 ```
 
 ## Testing & Linting

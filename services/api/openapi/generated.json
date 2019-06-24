@@ -78,7 +78,7 @@
                   "default": {
                     "value": {
                       "data": {
-                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2YxMzE4YWIzNzA3NzA3M2Q1Y2RhYzIiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1NTkzMTA3MzAsImV4cCI6MTU2MTkwMjczMH0.fzj5IRkareqHqOYCmKv9AM2LiISCZPmgdfCNU7q-7EU"
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2YxM2M5N2EzODg4ZjM0ZmUyYzkxNTUiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1NTkzMTM1NjAsImV4cCI6MTU2MTkwNTU2MH0.a32HBHbFLog19RfCl01UQrvaO-GGNHqUByoTmP6XWz8"
                       }
                     }
                   }
@@ -132,7 +132,7 @@
                   "default": {
                     "value": {
                       "data": {
-                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2YxMzE4OWIzNzA3NzA3M2Q1Y2RhYzEiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1NTkzMTA3MzAsImV4cCI6MTU2MTkwMjczMH0.hHxrgj6wjUReaXIjPMYwKj12E8sgYbRjO8PThzdh5xE"
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2YxM2M5N2EzODg4ZjM0ZmUyYzkxNTQiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1NTkzMTM1NTksImV4cCI6MTU2MTkwNTU1OX0.2kviTsqDmgZKRPs4Pd_QsWzjBHUf-z-T91jhZwl91U8"
                       }
                     }
                   }
@@ -263,7 +263,7 @@
                   "default": {
                     "value": {
                       "data": {
-                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2YxMzE4YWIzNzA3NzA3M2Q1Y2RhYzQiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1NTkzMTA3MzEsImV4cCI6MTU2MTkwMjczMX0.BFXiuzCxMb7B97BkWhrRueD8h-tby17ZhJjCscYBe3o"
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2YxM2M5OGEzODg4ZjM0ZmUyYzkxNTciLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1NTkzMTM1NjAsImV4cCI6MTU2MTkwNTU2MH0.VZaqzC3tLhqE9r00V6TeDRiago00eWzEW4I3PCRv3cU"
                       }
                     }
                   }
@@ -292,12 +292,12 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5cf13189026ba9073e4b8fbf",
+                        "id": "5cf13c97b006b834ffbd70e4",
                         "roles": [],
                         "email": "email1@platform.com",
                         "name": "test user",
-                        "createdAt": "2019-05-31T13:52:09.837Z",
-                        "updatedAt": "2019-05-31T13:52:09.837Z"
+                        "createdAt": "2019-05-31T14:39:19.266Z",
+                        "updatedAt": "2019-05-31T14:39:19.266Z"
                       }
                     }
                   }
@@ -340,12 +340,12 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5cf13189026ba9073e4b8fc0",
+                        "id": "5cf13c97b006b834ffbd70e5",
                         "roles": [],
                         "email": "email2@platform.com",
                         "name": "other name",
-                        "createdAt": "2019-05-31T13:52:09.945Z",
-                        "updatedAt": "2019-05-31T13:52:10.031Z"
+                        "createdAt": "2019-05-31T14:39:19.348Z",
+                        "updatedAt": "2019-05-31T14:39:19.384Z"
                       }
                     }
                   }
@@ -415,50 +415,50 @@
                     "value": {
                       "data": [
                         {
-                          "id": "5cf1318a026ba9073e4b8fc3",
+                          "id": "5cf13c97b006b834ffbd70e8",
                           "roles": [
                             "user"
                           ],
                           "email": "email5@platform.com",
                           "name": "Two",
-                          "createdAt": "2019-05-31T13:52:10.057Z",
-                          "updatedAt": "2019-05-31T13:52:10.057Z"
+                          "createdAt": "2019-05-31T14:39:19.417Z",
+                          "updatedAt": "2019-05-31T14:39:19.417Z"
                         },
                         {
-                          "id": "5cf1318a026ba9073e4b8fc2",
+                          "id": "5cf13c97b006b834ffbd70e7",
                           "roles": [
                             "user"
                           ],
                           "email": "email4@platform.com",
                           "name": "One",
-                          "createdAt": "2019-05-31T13:52:10.051Z",
-                          "updatedAt": "2019-05-31T13:52:10.051Z"
+                          "createdAt": "2019-05-31T14:39:19.413Z",
+                          "updatedAt": "2019-05-31T14:39:19.413Z"
                         },
                         {
-                          "id": "5cf1318a026ba9073e4b8fc1",
+                          "id": "5cf13c97b006b834ffbd70e6",
                           "roles": [
                             "admin"
                           ],
                           "email": "email3@platform.com",
                           "name": "test user",
-                          "createdAt": "2019-05-31T13:52:10.048Z",
-                          "updatedAt": "2019-05-31T13:52:10.048Z"
+                          "createdAt": "2019-05-31T14:39:19.397Z",
+                          "updatedAt": "2019-05-31T14:39:19.397Z"
                         },
                         {
-                          "id": "5cf13189026ba9073e4b8fc0",
+                          "id": "5cf13c97b006b834ffbd70e5",
                           "roles": [],
                           "email": "email2@platform.com",
                           "name": "other name",
-                          "createdAt": "2019-05-31T13:52:09.945Z",
-                          "updatedAt": "2019-05-31T13:52:10.031Z"
+                          "createdAt": "2019-05-31T14:39:19.348Z",
+                          "updatedAt": "2019-05-31T14:39:19.384Z"
                         },
                         {
-                          "id": "5cf13189026ba9073e4b8fbf",
+                          "id": "5cf13c97b006b834ffbd70e4",
                           "roles": [],
                           "email": "email1@platform.com",
                           "name": "test user",
-                          "createdAt": "2019-05-31T13:52:09.837Z",
-                          "updatedAt": "2019-05-31T13:52:09.837Z"
+                          "createdAt": "2019-05-31T14:39:19.266Z",
+                          "updatedAt": "2019-05-31T14:39:19.266Z"
                         }
                       ],
                       "meta": {
@@ -526,12 +526,12 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5cf1318a026ba9073e4b8fc6",
+                        "id": "5cf13c97b006b834ffbd70eb",
                         "roles": [],
                         "email": "hello@dominiek.com",
                         "name": "Hello",
-                        "createdAt": "2019-05-31T13:52:10.113Z",
-                        "updatedAt": "2019-05-31T13:52:10.113Z"
+                        "createdAt": "2019-05-31T14:39:19.467Z",
+                        "updatedAt": "2019-05-31T14:39:19.467Z"
                       }
                     }
                   }
@@ -618,14 +618,14 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5cf1318a026ba9073e4b8fcd",
+                        "id": "5cf13c97b006b834ffbd70f2",
                         "roles": [
                           "user"
                         ],
                         "email": "email14@platform.com",
                         "name": "new name",
-                        "createdAt": "2019-05-31T13:52:10.543Z",
-                        "updatedAt": "2019-05-31T13:52:10.543Z"
+                        "createdAt": "2019-05-31T14:39:19.793Z",
+                        "updatedAt": "2019-05-31T14:39:19.793Z"
                       }
                     }
                   }
@@ -648,14 +648,14 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5cf1318a026ba9073e4b8fd1",
+                        "id": "5cf13c97b006b834ffbd70f6",
                         "roles": [
                           "user"
                         ],
                         "email": "email18@platform.com",
                         "name": "One",
-                        "createdAt": "2019-05-31T13:52:10.579Z",
-                        "updatedAt": "2019-05-31T13:52:10.579Z"
+                        "createdAt": "2019-05-31T14:39:19.817Z",
+                        "updatedAt": "2019-05-31T14:39:19.817Z"
                       }
                     }
                   }
@@ -732,22 +732,22 @@
                     "value": {
                       "data": [
                         {
-                          "id": "5cf1318920f6460740853be9",
+                          "id": "5cf13c9767add535017a4268",
                           "sellingPoints": [],
                           "name": "test 2",
                           "description": "Some description",
-                          "shopId": "5cf1318920f6460740853be8",
-                          "createdAt": "2019-05-31T13:52:09.853Z",
-                          "updatedAt": "2019-05-31T13:52:09.853Z"
+                          "shopId": "5cf13c9767add535017a4267",
+                          "createdAt": "2019-05-31T14:39:19.284Z",
+                          "updatedAt": "2019-05-31T14:39:19.284Z"
                         },
                         {
-                          "id": "5cf1318920f6460740853be7",
+                          "id": "5cf13c9767add535017a4266",
                           "sellingPoints": [],
                           "name": "test 1",
                           "description": "Some description",
-                          "shopId": "5cf1318920f6460740853be6",
-                          "createdAt": "2019-05-31T13:52:09.848Z",
-                          "updatedAt": "2019-05-31T13:52:09.848Z"
+                          "shopId": "5cf13c9767add535017a4265",
+                          "createdAt": "2019-05-31T14:39:19.280Z",
+                          "updatedAt": "2019-05-31T14:39:19.280Z"
                         }
                       ],
                       "meta": {
@@ -823,12 +823,12 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5cf1318920f6460740853bec",
+                        "id": "5cf13c9767add535017a426b",
                         "sellingPoints": [],
                         "name": "some other product",
-                        "shopId": "5cf1318920f6460740853beb",
-                        "createdAt": "2019-05-31T13:52:09.987Z",
-                        "updatedAt": "2019-05-31T13:52:09.987Z"
+                        "shopId": "5cf13c9767add535017a426a",
+                        "createdAt": "2019-05-31T14:39:19.392Z",
+                        "updatedAt": "2019-05-31T14:39:19.392Z"
                       }
                     }
                   }
@@ -930,13 +930,13 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5cf1318a20f6460740853bf2",
+                        "id": "5cf13c9767add535017a4271",
                         "sellingPoints": [],
                         "name": "new name",
                         "description": "Some description",
-                        "shopId": "5cf1318a20f6460740853bf1",
-                        "createdAt": "2019-05-31T13:52:10.045Z",
-                        "updatedAt": "2019-05-31T13:52:10.058Z"
+                        "shopId": "5cf13c9767add535017a4270",
+                        "createdAt": "2019-05-31T14:39:19.439Z",
+                        "updatedAt": "2019-05-31T14:39:19.450Z"
                       }
                     }
                   }
@@ -959,13 +959,13 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5cf1318a20f6460740853bf5",
+                        "id": "5cf13c9767add535017a4274",
                         "sellingPoints": [],
                         "name": "test 1",
                         "description": "Some description",
-                        "shopId": "5cf1318a20f6460740853bf4",
-                        "createdAt": "2019-05-31T13:52:10.071Z",
-                        "updatedAt": "2019-05-31T13:52:10.071Z"
+                        "shopId": "5cf13c9767add535017a4273",
+                        "createdAt": "2019-05-31T14:39:19.459Z",
+                        "updatedAt": "2019-05-31T14:39:19.459Z"
                       }
                     }
                   }
@@ -1039,20 +1039,20 @@
                     "value": {
                       "data": [
                         {
-                          "id": "5cf131890fc9a2073f6d7c27",
+                          "id": "5cf13c97d2ae403500e6e2d8",
                           "images": [],
                           "name": "test 2",
                           "description": "Some description",
-                          "createdAt": "2019-05-31T13:52:09.778Z",
-                          "updatedAt": "2019-05-31T13:52:09.778Z"
+                          "createdAt": "2019-05-31T14:39:19.254Z",
+                          "updatedAt": "2019-05-31T14:39:19.254Z"
                         },
                         {
-                          "id": "5cf131890fc9a2073f6d7c26",
+                          "id": "5cf13c97d2ae403500e6e2d7",
                           "images": [],
                           "name": "test 1",
                           "description": "Some description",
-                          "createdAt": "2019-05-31T13:52:09.775Z",
-                          "updatedAt": "2019-05-31T13:52:09.775Z"
+                          "createdAt": "2019-05-31T14:39:19.246Z",
+                          "updatedAt": "2019-05-31T14:39:19.246Z"
                         }
                       ],
                       "meta": {
@@ -1116,23 +1116,23 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5cf131890fc9a2073f6d7c2a",
+                        "id": "5cf13c97d2ae403500e6e2db",
                         "images": [
                           {
-                            "id": "5cf131890fc9a2073f6d7c29",
+                            "id": "5cf13c97d2ae403500e6e2da",
                             "filename": "logo.png",
                             "rawUrl": "logo.png",
                             "hash": "test",
                             "storageType": "local",
                             "mimeType": "image/png",
                             "ownerId": "none",
-                            "createdAt": "2019-05-31T13:52:09.923Z",
-                            "updatedAt": "2019-05-31T13:52:09.923Z"
+                            "createdAt": "2019-05-31T14:39:19.380Z",
+                            "updatedAt": "2019-05-31T14:39:19.380Z"
                           }
                         ],
                         "name": "shop name",
-                        "createdAt": "2019-05-31T13:52:09.966Z",
-                        "updatedAt": "2019-05-31T13:52:09.966Z"
+                        "createdAt": "2019-05-31T14:39:19.397Z",
+                        "updatedAt": "2019-05-31T14:39:19.397Z"
                       }
                     }
                   }
@@ -1223,12 +1223,12 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5cf1318a0fc9a2073f6d7c2e",
+                        "id": "5cf13c97d2ae403500e6e2df",
                         "images": [],
                         "name": "new name",
                         "description": "Some description",
-                        "createdAt": "2019-05-31T13:52:10.020Z",
-                        "updatedAt": "2019-05-31T13:52:10.034Z"
+                        "createdAt": "2019-05-31T14:39:19.447Z",
+                        "updatedAt": "2019-05-31T14:39:19.459Z"
                       }
                     }
                   }
@@ -1251,12 +1251,12 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5cf1318a0fc9a2073f6d7c30",
+                        "id": "5cf13c97d2ae403500e6e2e1",
                         "images": [],
                         "name": "test 1",
                         "description": "Some description",
-                        "createdAt": "2019-05-31T13:52:10.049Z",
-                        "updatedAt": "2019-05-31T13:52:10.049Z"
+                        "createdAt": "2019-05-31T14:39:19.469Z",
+                        "updatedAt": "2019-05-31T14:39:19.469Z"
                       }
                     }
                   }
@@ -1292,16 +1292,16 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5cf1318b81273407431ce7a2",
+                        "id": "5cf13c987696c735042b3650",
                         "filename": "logo.png",
                         "rawUrl": "logo.png",
                         "hash": "test",
                         "storageType": "local",
                         "mimeType": "image/png",
-                        "ownerId": "5cf1318b81273407431ce7a1",
-                        "createdAt": "2019-05-31T13:52:11.053Z",
-                        "updatedAt": "2019-05-31T13:52:11.064Z",
-                        "deletedAt": "2019-05-31T13:52:11.062Z"
+                        "ownerId": "5cf13c987696c735042b364f",
+                        "createdAt": "2019-05-31T14:39:20.132Z",
+                        "updatedAt": "2019-05-31T14:39:20.141Z",
+                        "deletedAt": "2019-05-31T14:39:20.140Z"
                       }
                     }
                   }
@@ -1347,16 +1347,16 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5cf1318b81273407431ce7a0",
+                        "id": "5cf13c987696c735042b364e",
                         "mimeType": "image/png",
                         "filename": "logo.png",
-                        "hash": "77688ea469fc4e56384dbfa6f762c1979b7be5091fc40b7f6ff220fba82d1747",
-                        "rawUrl": "/var/folders/3h/mtq3xk6d5kb76j02fpwqph640000gp/T/upload_fa383849f3e6ec748a47e8e57e7f8cb2",
+                        "hash": "aed8ce4d3ca6ada94436c5bd3db5bf3beea713c77da851b03de765ce467eaaee",
+                        "rawUrl": "/var/folders/z9/vjt2qj311zv_vy0gmn29vcmc0000gn/T/upload_80fd6237918c8108e25ffdb9b68528d9",
                         "storageType": "local",
-                        "thumbnailUrl": "/var/folders/3h/mtq3xk6d5kb76j02fpwqph640000gp/T/upload_fa383849f3e6ec748a47e8e57e7f8cb2",
-                        "ownerId": "5cf1318a81273407431ce79f",
-                        "createdAt": "2019-05-31T13:52:11.037Z",
-                        "updatedAt": "2019-05-31T13:52:11.037Z"
+                        "thumbnailUrl": "/var/folders/z9/vjt2qj311zv_vy0gmn29vcmc0000gn/T/upload_80fd6237918c8108e25ffdb9b68528d9",
+                        "ownerId": "5cf13c987696c735042b364d",
+                        "createdAt": "2019-05-31T14:39:20.114Z",
+                        "updatedAt": "2019-05-31T14:39:20.114Z"
                       }
                     }
                   }
@@ -1450,16 +1450,16 @@
                     "value": {
                       "data": [
                         {
-                          "id": "5cf13189f33dcd0741eca32f",
+                          "id": "5cf13c9783145c35026f60cf",
                           "email": "usera@platform.com",
-                          "createdAt": "2019-05-31T13:52:09.732Z",
-                          "updatedAt": "2019-05-31T13:52:09.732Z"
+                          "createdAt": "2019-05-31T14:39:19.231Z",
+                          "updatedAt": "2019-05-31T14:39:19.231Z"
                         },
                         {
-                          "id": "5cf13189f33dcd0741eca330",
+                          "id": "5cf13c9783145c35026f60d0",
                           "email": "userb@platform.com",
-                          "createdAt": "2019-05-31T13:52:09.742Z",
-                          "updatedAt": "2019-05-31T13:52:09.742Z"
+                          "createdAt": "2019-05-31T14:39:19.235Z",
+                          "updatedAt": "2019-05-31T14:39:19.235Z"
                         }
                       ],
                       "meta": {
