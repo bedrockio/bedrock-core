@@ -14,6 +14,11 @@ const { BIND_PORT, BIND_HOST, ...configs } = config.getAll();
       host: BIND_HOST,
       port: 34000
     },
+    devMiddleware: {
+      watchOptions: {
+        ignored: /node_modules/
+      }
+    },
     config: {
       ...webpackConfig,
       mode: 'development'
