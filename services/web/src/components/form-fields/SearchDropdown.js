@@ -72,7 +72,7 @@ export default class SearchDropdown extends React.Component {
         options = state.options;
       }
     }
-    console.log('options', state.defaultOptions, options);
+
     return (
       <Dropdown
         error={state.error}

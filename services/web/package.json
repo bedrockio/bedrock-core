@@ -37,7 +37,7 @@
     "koa": "^2.6.2",
     "koa-compress": "3.0.0",
     "koa-static": "^5.0.0",
-    "koa-webpack": "^5.2.1",
+    "koa-webpack": "^5.2.4",
     "less": "2.7.3",
     "less-loader": "4.1.0",
     "lodash": "4.17.5",
@@ -96,14 +96,21 @@
       "no-console": [
         "warn",
         {
-          "allow": ["warn", "error", "info"]
+          "allow": [
+            "warn",
+            "error",
+            "info"
+          ]
         }
       ]
     },
     "settings": {
       "import/resolver": {
         "node": {
-          "moduleDirectory": ["node_modules", "src"]
+          "moduleDirectory": [
+            "node_modules",
+            "src"
+          ]
         }
       }
     }
