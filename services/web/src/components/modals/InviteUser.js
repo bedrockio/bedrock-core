@@ -3,6 +3,7 @@ import { observer, inject } from 'mobx-react';
 
 import { Button, Form, TextArea, Modal } from 'semantic-ui-react';
 import { emailRegexp } from 'utils/validate';
+import AutoFocus from 'components/AutoFocus';
 
 const defaultState = () => {
   return {
@@ -73,17 +74,19 @@ export default class InviteForm extends React.Component {
       >
         <Modal.Header>Invite User</Modal.Header>
         <Modal.Content>
-          <Form onSubmit={this.handleSubmit} className={this.props.className}>
-            <Form.Field>
-              <label>Enter email address of the participant to invite</label>
-              <TextArea
-                style={{ height: '150px' }}
-                name="emails"
-                onChange={this.handleTextAreaChange}
-                placeholder="Email address seperate by comma or newline .e.g first@litmus.com, second@litmus.com"
-              />
-            </Form.Field>
-          </Form>
+          <AutoFocus>
+            <Form onSubmit={this.handleSubmit} className={this.props.className}>
+              <Form.Field>
+                <label>Enter email address of the participant to invite</label>
+                <TextArea
+                  style={{ height: '150px' }}
+                  name="emails"
+                  onChange={this.handleTextAreaChange}
+                  placeholder="Email address seperate by comma or newline .e.g first@litmus.com, second@litmus.com"
+                />
+              </Form.Field>
+            </Form>
+          </AutoFocus>
         </Modal.Content>
         <Modal.Actions>
           <Button basic onClick={this.props.onClose}>

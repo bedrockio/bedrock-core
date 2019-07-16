@@ -2,6 +2,7 @@ import React from 'react';
 import { observer, inject } from 'mobx-react';
 import { Form, Message, Modal, Button } from 'semantic-ui-react';
 import Password from 'components/form-fields/Password';
+import AutoFocus from 'components/AutoFocus';
 
 const rolesOptions = [
   { text: 'Admin', value: 'admin' },
@@ -85,48 +86,50 @@ export default class EditUser extends React.Component {
           {isUpdate ? `Edit "${initialValues.name}"` : 'New User'}
         </Modal.Header>
         <Modal.Content>
-          <Form
-            error={touched && Boolean(status.error)}
-            onSubmit={() => this.handleSubmit()}
-          >
-            {status.error && <Message error content={status.error.message} />}
-            <Form.Input
-              value={formValues.email || ''}
-              required
-              name="email"
-              label="E-mail"
-              type="text"
-              onChange={(e, { name, value }) => this.setField(name, value)}
-            />
-            <Form.Input
-              value={formValues.name || ''}
-              name="name"
-              label="Name"
-              required
-              type="text"
-              onChange={(e, { name, value }) => this.setField(name, value)}
-            />
-            {!isUpdate && (
-              <Password
-                name="password"
-                label="Password"
+          <AutoFocus>
+            <Form
+              error={touched && Boolean(status.error)}
+              onSubmit={() => this.handleSubmit()}
+            >
+              {status.error && <Message error content={status.error.message} />}
+              <Form.Input
+                value={formValues.email || ''}
                 required
-                value={formValues.password || ''}
+                name="email"
+                label="E-mail"
+                type="text"
                 onChange={(e, { name, value }) => this.setField(name, value)}
               />
-            )}
-            <Form.Dropdown
-              name="roles"
-              label="Roles"
-              required
-              fluid
-              selection
-              multiple
-              value={formValues.roles || []}
-              options={rolesOptions}
-              onChange={(e, { name, value }) => this.setField(name, value)}
-            />
-          </Form>
+              <Form.Input
+                value={formValues.name || ''}
+                name="name"
+                label="Name"
+                required
+                type="text"
+                onChange={(e, { name, value }) => this.setField(name, value)}
+              />
+              {!isUpdate && (
+                <Password
+                  name="password"
+                  label="Password"
+                  required
+                  value={formValues.password || ''}
+                  onChange={(e, { name, value }) => this.setField(name, value)}
+                />
+              )}
+              <Form.Dropdown
+                name="roles"
+                label="Roles"
+                required
+                fluid
+                selection
+                multiple
+                value={formValues.roles || []}
+                options={rolesOptions}
+                onChange={(e, { name, value }) => this.setField(name, value)}
+              />
+            </Form>
+          </AutoFocus>
         </Modal.Content>
         <Modal.Actions>
           <Button

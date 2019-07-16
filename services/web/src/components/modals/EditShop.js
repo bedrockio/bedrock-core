@@ -3,6 +3,7 @@ import { observer, inject } from 'mobx-react';
 import { Form, Message, Modal, Button } from 'semantic-ui-react';
 import UploadsField from 'components/form-fields/Uploads';
 import CountriesField from 'components/form-fields/Countries';
+import AutoFocus from 'components/AutoFocus';
 
 @inject('shops')
 @observer
@@ -81,42 +82,44 @@ export default class EditShop extends React.Component {
           {isUpdate ? `Edit "${initialValues.name}"` : 'New Shop'}
         </Modal.Header>
         <Modal.Content>
-          <Form
-            error={touched && Boolean(status.error)}
-            onSubmit={() => this.handleSubmit()}
-          >
-            {status.error && <Message error content={status.error.message} />}
-            <Form.Input
-              value={formValues.name || ''}
-              name="name"
-              label="Name"
-              required
-              type="text"
-              onChange={(e, { name, value }) => this.setField(name, value)}
-            />
+          <AutoFocus>
+            <Form
+              error={touched && Boolean(status.error)}
+              onSubmit={() => this.handleSubmit()}
+            >
+              {status.error && <Message error content={status.error.message} />}
+              <Form.Input
+                value={formValues.name || ''}
+                name="name"
+                label="Name"
+                required
+                type="text"
+                onChange={(e, { name, value }) => this.setField(name, value)}
+              />
 
-            <Form.TextArea
-              value={formValues.description || ''}
-              name="description"
-              label="Description"
-              type="text"
-              onChange={(e, { name, value }) => this.setField(name, value)}
-            />
+              <Form.TextArea
+                value={formValues.description || ''}
+                name="description"
+                label="Description"
+                type="text"
+                onChange={(e, { name, value }) => this.setField(name, value)}
+              />
 
-            <CountriesField
-              label="Country"
-              name="country"
-              value={formValues.country || 'United States'}
-              onChange={(value) => this.setField('country', value)}
-            />
+              <CountriesField
+                label="Country"
+                name="country"
+                value={formValues.country || 'United States'}
+                onChange={(value) => this.setField('country', value)}
+              />
 
-            <UploadsField
-              label="Images"
-              name="images"
-              value={formValues.images || []}
-              onChange={(value) => this.setField('images', value)}
-            />
-          </Form>
+              <UploadsField
+                label="Images"
+                name="images"
+                value={formValues.images || []}
+                onChange={(value) => this.setField('images', value)}
+              />
+            </Form>
+          </AutoFocus>
         </Modal.Content>
         <Modal.Actions>
           <Button

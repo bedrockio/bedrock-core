@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Icon, Modal, Button, Header } from 'semantic-ui-react';
 
-export default class HelpTip extends Component {
+export default class HelpTip extends React.Component {
   state = { open: false };
 
   close = (e) => {
