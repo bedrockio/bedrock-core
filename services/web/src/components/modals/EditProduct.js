@@ -4,29 +4,46 @@ import { observer, inject } from 'mobx-react';
 import { Form, Label, Message, Button, Modal } from 'semantic-ui-react';
 
 import DateTimeField from 'components/form-fields/DateTime';
-import ListField from 'components/form-fields/List';
 import AutoFocus from 'components/AutoFocus';
+
+function resetState(initialValues = {}) {
+  const { sellingPoints = [] } = initialValues;
+
+  return {
+    open: false,
+    sellingPointsOptions: sellingPoints.map((sellingPoint) => {
+      return {
+        value: sellingPoint,
+        text: sellingPoint
+      };
+    }),
+    formValues: {
+      sellingPoints: [],
+      ...initialValues
+    }
+  };
+}
 
 @inject('products')
 @observer
 export default class EditProduct extends React.Component {
   static defaultProps = {
-    initialValues: {}
+    initialValues: {
+      sellingPoints: []
+    }
   };
 
-  state = {
-    open: false,
-    formValues: { ...this.props.initialValues }
-  };
+  state = resetState(this.props.initialValues);
 
   componentDidUpdate(prevProps) {
     if (this.props.initialValues !== prevProps.initialValues) {
-      this.setState({
-        touched: false,
-        formValues: { ...this.props.initialValues }
-      });
+      this.setState(resetState(this.props.initialValues));
     }
   }
+
+  handleOnClose = () => {
+    this.setState(resetState(this.props.initialValues));
+  };
 
   handleSubmit = () => {
     const { products, initialValues } = this.props;
@@ -70,13 +87,7 @@ export default class EditProduct extends React.Component {
       <Modal
         closeIcon
         trigger={trigger}
-        onClose={() =>
-          this.setState({
-            open: false,
-            formValues: this.props.initialValues,
-            touched: false
-          })
-        }
+        onClose={this.handleOnClose}
         onOpen={() => this.setState({ open: true })}
         open={open}
       >
@@ -138,12 +149,26 @@ export default class EditProduct extends React.Component {
                 label="Expiration Date and Time"
                 onChange={(value) => this.setField('expiresAt', value)}
               />
-              <ListField
-                type="text"
+              <Form.Dropdown
                 name="sellingPoints"
+                selection
+                multiple
+                allowAdditions
+                search
+                options={this.state.sellingPointsOptions}
+                onAddItem={(e, { value }) => {
+                  this.setState((prevState) => ({
+                    sellingPointsOptions: [
+                      { text: value, value },
+                      ...prevState.sellingPointsOptions
+                    ]
+                  }));
+                }}
                 label="Selling Points"
-                value={formValues.sellingPoints || []}
-                onChange={(value) => this.setField('sellingPoints', value)}
+                onChange={(e, { value }) =>
+                  this.setField('sellingPoints', value)
+                }
+                value={formValues.sellingPoints}
               />
             </Form>
           </AutoFocus>
