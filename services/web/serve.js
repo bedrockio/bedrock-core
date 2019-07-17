@@ -9,45 +9,11 @@ const app = new Koa();
 
 const { BIND_PORT, BIND_HOST, ...configs } = config.getAll();
 
-function isPortInUse(port) {
-  return new Promise((resolve, reject) => {
-    const test = net
-      .createServer()
-      .once('error', (err) => {
-        if (err.code != 'EADDRINUSE') return reject(err);
-        resolve();
-      })
-      .once('listening', () => {
-        test.once('close', () => resolve()).close();
-      })
-      .listen(port);
-  });
-}
-
-const failedPort = [];
-async function findPort(min, max) {
-  if (failedPort.length > 10) {
-    console.error(
-      'failed to locate port after 10 attemps failed ports',
-      failedPort
-    );
-    return;
-  }
-  const randomPort = Math.round(Math.random() * (max - min) + min);
-  try {
-    await isPortInUse(randomPort);
-  } catch (e) {
-    failedPort.push(randomPort);
-    return findPort(min, max);
-  }
-  return randomPort;
-}
-
 (async () => {
   const webpackmiddleware = await webpack({
     hotClient: {
       host: BIND_HOST,
-      port: await findPort(34000, 35000)
+      port: 34001
     },
     devMiddleware: {
       watchOptions: {

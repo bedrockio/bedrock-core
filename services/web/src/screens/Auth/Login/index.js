@@ -4,6 +4,7 @@ import { observer, inject } from 'mobx-react';
 
 import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
+
 import LoginForm from './Form';
 import { Link } from 'react-router-dom';
 
