@@ -52,6 +52,23 @@ yarn start
 
 UI is running at [http://localhost:2200/](http://localhost:2200/)
 
+## Theming
+
+The default theme that semantic ui providers, can be modify via [src/theme/site/globals/site.variables](site.variables).
+Add the below variable to change the primary color
+
+```
+@primaryColor: #002f4e;
+```
+
+Note that a change will require webpack to rebundle and you will still need to reload the browser (but you dont need to restart webpack).
+
+More variables can found by exploring [https://github.com/Semantic-Org/Semantic-UI/tree/master/src/themes/default/modules](https://github.com/Semantic-Org/Semantic-UI/tree/master/src/themes/default/modules).
+
+If you need a variable exposed to [https://www.styled-components.com/docs/advanced#theming](styled-components)
+you can run `yarn theme:variables`, which will update [src/theme/theme.generated.json](theme/theme.generated.json)
+The `theme.generated.json` is in [src/index.js](src/index.js) loaded into a global `<ThemeProvider />` thereby exposing it to styled-components.
+
 ## Directory Structure
 
 - `package.json` - Configure dependencies
