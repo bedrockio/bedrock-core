@@ -25,7 +25,7 @@ export default ({ page, limit, total, onPageChange, className }) => {
       activePage={page}
       firstItem={null}
       lastItem={null}
-      totalPages={total / limit}
+      totalPages={Math.ceil(total / limit)}
     />
   );
 };
