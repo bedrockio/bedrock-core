@@ -16,7 +16,9 @@ module.exports = (async () => {
     console.info(`Started on port //${HOST}:${PORT}`);
     if (NODE_ENV === 'dev') {
       console.info('-----------------------------------------------------------------');
-      console.info(`Admin Login ${config.get('ADMIN_EMAIL')}:${config.get('ADMIN_PASSWORD')} (dev env only)`);
+      console.info(
+        `Admin Login ${config.get('ADMIN_EMAIL')}:${config.get('ADMIN_PASSWORD')} (only visibile in dev env)`
+      );
       console.info('-----------------------------------------------------------------');
     }
   });

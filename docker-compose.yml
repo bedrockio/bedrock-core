@@ -10,7 +10,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./services/api/src:/service/src
-      - ./services/api/emails:/service/emails
+      - ./services/api/templates/dist:/service/templates/dist
       - ./services/api/scripts:/service/scripts
       - ./services/api/env.conf:/service/env.conf
       - ./services/api/openapi:/service/openapi

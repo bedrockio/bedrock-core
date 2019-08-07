@@ -36,6 +36,12 @@ router
     }),
     async (ctx) => {
       const { email, name } = ctx.request.body;
+
+      await sendWelcome({
+        name,
+        to: email
+      });
+
       const existingUser = await User.findOne({ email, deletedAt: { $exists: false } });
       if (existingUser) {
         ctx.throw(400, 'A user with that email already exists');
@@ -44,11 +50,6 @@ router
       const user = await User.create({
         ...ctx.request.body,
         roles: ['user']
-      });
-
-      await sendWelcome({
-        name,
-        to: email
       });
 
       ctx.body = { data: { token: tokens.createUserToken(user) } };

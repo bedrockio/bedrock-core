@@ -4,8 +4,8 @@ const { sendMail } = require('./mailer');
 const config = require('@kaareal/config');
 const { template: templateFn } = require('./utils');
 const { promisify } = require('util');
+const templatesDist = path.join(__dirname, '../../templates/dist/emails');
 
-const templatesDist = path.join(__dirname, '../../emails/dist');
 const templates = {};
 
 const defaultOptions = {
@@ -17,6 +17,8 @@ const defaultOptions = {
 
 const readdir = promisify(fs.readdir);
 const readFile = promisify(fs.readFile);
+
+const defaultLanguage = 'en';
 
 let isReady = false;
 async function initialize() {
@@ -32,14 +34,24 @@ async function initialize() {
   isReady = true;
 }
 
-function template(templateName, map) {
-  const templateStr = templates[templateName];
-  if (!templateStr)
-    throw Error(`Cant find template by ${templateName}. Available templates: ${Object.keys(templates).join(', ')}`);
+function template(languageCode, templateName, map) {
+  let templateStr = templates[`${templateName}.${languageCode}`];
+  if (!templateStr) {
+    templateStr = templates[`${templateName}.${defaultLanguage}`];
+    if (templateStr) {
+      console.warn(`Cant find template by ${languageCode} ${templateName}. Using ${defaultLanguage} template instead.`);
+    } else {
+      throw new Error(
+        `Cant find template by ${languageCode} ${templateName}. Available templates: ${Object.keys(templates).join(
+          ', '
+        )}`
+      );
+    }
+  }
   return templateFn(templateStr, map);
 }
 
-exports.sendWelcome = async ({ to, name }) => {
+exports.sendWelcome = async (languageCode, { to, name }) => {
   await initialize();
   const options = {
     ...defaultOptions,
@@ -52,14 +64,14 @@ exports.sendWelcome = async ({ to, name }) => {
       subject: `Welcome to ${defaultOptions.appName}`
     },
     {
-      html: template('welcome.html', options),
-      text: template('welcome.text', options),
+      html: template(languageCode, 'welcome.html', options),
+      text: template(languageCode, 'welcome.text', options),
       options
     }
   );
 };
 
-exports.sendResetPasswordUnknown = async ({ to }) => {
+exports.sendResetPasswordUnknown = async (languageCode, { to }) => {
   await initialize();
   const options = {
     ...defaultOptions,
@@ -72,14 +84,14 @@ exports.sendResetPasswordUnknown = async ({ to }) => {
       subject: `Password Reset Request`
     },
     {
-      html: template('reset-password-unknown.html', options),
-      text: template('reset-password-unknown.text', options),
+      html: template(languageCode, 'reset-password-unknown.html', options),
+      text: template(languageCode, 'reset-password-unknown.text', options),
       options
     }
   );
 };
 
-exports.sendResetPassword = async ({ to, token }) => {
+exports.sendResetPassword = async (languageCode, { to, token }) => {
   await initialize();
   const options = {
     ...defaultOptions,
@@ -93,14 +105,14 @@ exports.sendResetPassword = async ({ to, token }) => {
       subject: `Password Reset Request`
     },
     {
-      html: template('reset-password.html', options),
-      text: template('reset-password.text', options),
+      html: template(languageCode, 'reset-password.html', options),
+      text: template(languageCode, 'reset-password.text', options),
       options
     }
   );
 };
 
-exports.sendInvite = async ({ to, token, sender }) => {
+exports.sendInvite = async (languageCode, { to, token, sender }) => {
   await initialize();
   const options = {
     ...defaultOptions,
@@ -114,14 +126,14 @@ exports.sendInvite = async ({ to, token, sender }) => {
       subject: `${sender.name} has invited you to join ${defaultOptions.appName}`
     },
     {
-      html: template('invite.html', options),
-      text: template('invite.text', options),
+      html: template(languageCode, 'invite.html', options),
+      text: template(languageCode, 'invite.text', options),
       options
     }
   );
 };
 
-exports.sendInviteKnown = async ({ to, token, sender }) => {
+exports.sendInviteKnown = async (languageCode, { to, token, sender }) => {
   await initialize();
   const options = {
     ...defaultOptions,
@@ -136,8 +148,8 @@ exports.sendInviteKnown = async ({ to, token, sender }) => {
       subject: `${sender.name} has invited you to join ${defaultOptions.appName}`
     },
     {
-      html: template('invite-known.html', options),
-      text: template('invite-known.text', options),
+      html: template(languageCode, 'invite-known.html', options),
+      text: template(languageCode, 'invite-known.text', options),
       options
     }
   );

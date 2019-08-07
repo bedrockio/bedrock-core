@@ -1,5 +1,6 @@
 node_modules
 dist
+!services/api/templates/dist
 .DS_Store
 apps/web/semantic
 apps/web/semantic.json

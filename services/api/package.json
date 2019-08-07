@@ -9,10 +9,10 @@
     "lint"
   ],
   "scripts": {
-    "start": "nodemon -w src -w openapi --exec \"MOCK_EMAIL=true NODE_ENV=dev node src/index.js\"",
+    "start": "nodemon -e js,html,text,json -w src -w templates/dist -w openapi --exec \"MOCK_EMAIL=true NODE_ENV=dev node src/index.js\"",
     "start:prod": "node src/index",
     "docs": "STORE_RESULT=true yarn run test && DOCS=true node scripts/openapi",
-    "emails": "node emails/build",
+    "templates": "node templates/build",
     "lint": "eslint src",
     "test": "jest src",
     "test:watch": "jest --watch -i src"
@@ -88,7 +88,7 @@
     "arrowParens": "always",
     "printWidth": 120
   },
-  "toolchain": {
+  "volta": {
     "node": "12.2.0",
     "yarn": "1.13.0"
   }

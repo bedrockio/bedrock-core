@@ -1,18 +1,17 @@
-function templateGet(p, obj) {
-  return p.split('.').reduce((res, key) => {
-    const r = res[key];
-    if (typeof r === 'undefined') {
-      throw Error(`template: was not provided a value for attribute $${key}`);
-    }
-    return r;
-  }, obj);
-}
+const { template } = require('lodash');
 
-exports.template = (template, map) => {
-  return template.replace(/\$\{.+?}/g, (match) => {
-    const p = match.substr(2, match.length - 3).trim();
-    return templateGet(p, map);
-  });
+const templateCache = {};
+
+exports.template = (string, options) => {
+  let templateFn = templateCache[string];
+  if (!templateFn) {
+    templateFn = templateCache[string] = template(string, {
+      evaluate: /{{([\s\S]+?)}}/g,
+      interpolate: /{{=([\s\S]+?)}}/g,
+      escape: /\${([\s\S]+?)}/g
+    });
+  }
+  return templateFn(options);
 };
 
 exports.sleep = (ms) => {

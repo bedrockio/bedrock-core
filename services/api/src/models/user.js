@@ -16,6 +16,7 @@ const schema = new mongoose.Schema(
       }
     ],
     name: { type: String, trim: true },
+    language: { type: String, default: 'en' },
     hashedPassword: { type: String },
     deletedAt: { type: Date },
     timeZone: { type: String }

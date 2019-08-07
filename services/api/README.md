@@ -13,8 +13,8 @@
 - `src/models` - Models for ORM (Mongoose)
 - `src/app.js` - Entrypoint into API (does not bind, so can be used in unit tests)
 - `src/index.js` - Launch script for the API)
-- `emails/dist` - Prebuild emails templates (dont modify => modify emails/src and run `npm run emails`)
-- `emails/src` - Emails templates
+- `templates/dist` - Prebuild templates (dont modify to modify `template/src` and run `yarn build:templates`)
+- `templates/src` - Templates for emails/pdfs/others
 
 ## API Summary
 
@@ -76,7 +76,7 @@ yarn test
 Code reload using nodemon:
 
 ```
-yarn dev
+yarn start
 ```
 
 ## Configuration
@@ -99,5 +99,13 @@ All configuration is done using environment variables. The default values in `en
 ## Building the Container
 
 ```
-docker build -t node-api-skeleton .
+docker build -t sharkbone-api .
 ```
+
+## Templates
+
+The reason for the having pre build templates:
+
+1. Keep it maintainable - Having styles and assets not inlined
+2. Keep it faster - Doing inline of assets/styles on runtime is still slow, so we pre build
+3. Keep the dependencies for 3. party to minimum - this is why the we don't build templates on runtime or as a step in the Dockerfile
