@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dropdown } from 'semantic-ui-react';
-import { get, omit } from 'lodash';
+import { get, omit, flatten, uniqBy } from 'lodash';
 
 export default class SearchDropdown extends React.Component {
   static defaultProps = {
@@ -28,7 +28,7 @@ export default class SearchDropdown extends React.Component {
       ].filter(Boolean)
     ).then((options) => {
       this.setState({
-        defaultOptions: [...options]
+        defaultOptions: flatten(options)
       });
     });
   }
@@ -41,7 +41,7 @@ export default class SearchDropdown extends React.Component {
       error: false
     });
 
-    fetchData(search)
+    return fetchData(search)
       .then(({ data }) => {
         const options = data.map((item) => {
           const key = get(item, valueField);
@@ -77,9 +77,13 @@ export default class SearchDropdown extends React.Component {
     const { multiple } = this.props;
     const props = omit(this.props, ['fetchData', 'valueField', 'textField']);
     let options = state.defaultOptions;
+
     if (state.search) {
       if (multiple) {
-        options = [...state.defaultOptions, ...state.options];
+        options = uniqBy(
+          [...state.defaultOptions, ...state.options],
+          (option) => option.value
+        );
       } else {
         options = state.options;
       }
