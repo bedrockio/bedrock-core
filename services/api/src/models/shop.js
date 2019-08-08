@@ -7,6 +7,7 @@ const schema = new mongoose.Schema(
     name: { type: String, trim: true, required: true },
     description: { type: String, trim: true },
     images: [{ type: ObjectId, ref: 'Upload' }],
+    categories: [{ type: ObjectId, ref: 'Categories' }],
     country: { type: String },
     deletedAt: { type: Date }
   },

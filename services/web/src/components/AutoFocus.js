@@ -1,5 +1,4 @@
 import React from 'react';
-import { Icon, Modal, Button, Header } from 'semantic-ui-react';
 
 export default class AutoFocus extends React.Component {
   constructor(props) {
