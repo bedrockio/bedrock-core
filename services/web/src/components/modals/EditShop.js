@@ -127,14 +127,18 @@ export default class EditShop extends React.Component {
                 value={formValues.country || 'United States'}
                 onChange={(value) => this.setField('country', value)}
               />
-
-              <SearchDropDown
-                onChange={this.handleOnCategoryChange}
-                value={formValues.categories}
-                multiple
-                fetchData={this.fetchCategories}
-                fluid
-              />
+              <Form.Field>
+                <label>
+                  Categories
+                  <SearchDropDown
+                    onChange={this.handleOnCategoryChange}
+                    value={formValues.categories}
+                    multiple
+                    fetchData={this.fetchCategories}
+                    fluid
+                  />
+                </label>
+              </Form.Field>
 
               <UploadsField
                 label="Images"
