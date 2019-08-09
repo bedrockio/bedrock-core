@@ -4,6 +4,8 @@ import { Form, Message, Modal, Button } from 'semantic-ui-react';
 import UploadsField from 'components/form-fields/Uploads';
 import CountriesField from 'components/form-fields/Countries';
 import AutoFocus from 'components/AutoFocus';
+import SearchDropDown from 'components/SearchDropdown';
+import request from 'utils/request';
 
 @inject('shops')
 @observer
@@ -54,6 +56,20 @@ export default class EditShop extends React.Component {
       }
     });
   }
+
+  fetchCategories = (filter) => {
+    return request({
+      method: 'POST',
+      path: '/1/categories/search',
+      body: {
+        ...filter
+      }
+    });
+  };
+
+  handleOnCategoryChange = (e, { value }) => {
+    this.setField('categories', value);
+  };
 
   render() {
     const { shops, initialValues, trigger } = this.props;
@@ -111,6 +127,18 @@ export default class EditShop extends React.Component {
                 value={formValues.country || 'United States'}
                 onChange={(value) => this.setField('country', value)}
               />
+              <Form.Field>
+                <label>
+                  Categories
+                  <SearchDropDown
+                    onChange={this.handleOnCategoryChange}
+                    value={formValues.categories}
+                    multiple
+                    fetchData={this.fetchCategories}
+                    fluid
+                  />
+                </label>
+              </Form.Field>
 
               <UploadsField
                 label="Images"

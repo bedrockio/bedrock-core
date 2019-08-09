@@ -10,6 +10,7 @@ const schema = {
   name: Joi.string().required(),
   description: Joi.string(),
   images: Joi.array().items(Joi.string()),
+  categories: Joi.array().items(Joi.string()),
   country: Joi.string()
 };
 
@@ -17,6 +18,9 @@ const patchSchema = {
   ...schema,
   id: Joi.string().strip(),
   name: Joi.string(),
+  categories: Joi.array().items(Joi.string()),
+  images: Joi.array().items(Joi.string()),
+  country: Joi.string(),
   createdAt: Joi.date().strip(),
   updatedAt: Joi.date().strip(),
   deletedAt: Joi.date().strip()

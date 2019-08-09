@@ -1,8 +1,13 @@
 import React from 'react';
 import { Dropdown } from 'semantic-ui-react';
-import { get, omit } from 'lodash';
+import { get, omit, flatten, uniqBy } from 'lodash';
 
 export default class SearchDropdown extends React.Component {
+  static defaultProps = {
+    valueField: 'id',
+    textField: 'name'
+  };
+
   state = {
     defaultOptions: [],
     options: [],
@@ -11,7 +16,7 @@ export default class SearchDropdown extends React.Component {
   };
 
   componentDidMount() {
-    const { valueField = 'id', multiple } = this.props;
+    const { valueField, multiple } = this.props;
     const fetchField = multiple ? `${valueField}s` : valueField;
     Promise.all(
       [
@@ -23,26 +28,26 @@ export default class SearchDropdown extends React.Component {
       ].filter(Boolean)
     ).then((options) => {
       this.setState({
-        defaultOptions: [...options]
+        defaultOptions: flatten(options)
       });
     });
   }
 
   loadOptions(search) {
-    const { valueField = 'id', textField = 'name', fetchData } = this.props;
+    const { valueField, textField, fetchData } = this.props;
     this.setState({
       search,
       loading: true,
       error: false
     });
 
-    fetchData(search)
+    return fetchData(search)
       .then(({ data }) => {
         const options = data.map((item) => {
+          const key = get(item, valueField);
           return {
-            key: get(item, valueField),
             text: get(item, textField),
-            value: get(item, valueField)
+            value: key
           };
         });
 
@@ -60,14 +65,25 @@ export default class SearchDropdown extends React.Component {
       });
   }
 
+  onHandleSearchChange = (e, { searchQuery }) => {
+    const { textField } = this.props;
+    if (searchQuery.length) {
+      this.loadOptions({ [textField]: searchQuery });
+    }
+  };
+
   render() {
     const { state } = this;
-    const { textField = 'name', multiple } = this.props;
+    const { multiple } = this.props;
     const props = omit(this.props, ['fetchData', 'valueField', 'textField']);
     let options = state.defaultOptions;
+
     if (state.search) {
       if (multiple) {
-        options = [...state.defaultOptions, ...state.options];
+        options = uniqBy(
+          [...state.defaultOptions, ...state.options],
+          (option) => option.value
+        );
       } else {
         options = state.options;
       }
@@ -80,10 +96,8 @@ export default class SearchDropdown extends React.Component {
         selection
         clearable={this.props.clearable}
         loading={state.loading}
-        options={state.search ? state.options : state.defaultOptions}
-        onSearchChange={(e, { searchQuery }) =>
-          this.loadOptions({ [textField]: searchQuery })
-        }
+        options={options}
+        onSearchChange={this.onHandleSearchChange}
         {...props}
       />
     );
