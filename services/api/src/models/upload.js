@@ -17,10 +17,6 @@ const schema = new mongoose.Schema(
   }
 );
 
-schema.methods.assign = function assign(fields) {
-  Object.assign(this, omit(fields, ['createdAt', 'updatedAt', 'deletedAt', 'id']));
-};
-
 schema.methods.delete = function deleteFn() {
   this.deletedAt = new Date();
   return this.save();

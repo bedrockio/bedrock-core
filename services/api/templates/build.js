@@ -17,7 +17,6 @@ function juiceResources(content, options) {
 async function handleFolder(folderPath, folderName) {
   const files = await fs.readdir(folderPath);
   const htmlFiles = files.filter((c) => c.includes('.html'));
-  const textFiles = files.filter((c) => c.includes('.text'));
 
   await fs.mkdir(path.join(distFolder, folderName), { recursive: true });
 
@@ -28,17 +27,11 @@ async function handleFolder(folderPath, folderName) {
     });
     await fs.writeFile(path.join(distFolder, folderName, htmlFile), inlined);
   }
-
-  for (const textFile of textFiles) {
-    await fs.writeFile(
-      path.join(distFolder, folderName, textFile),
-      await fs.readFile(path.join(folderPath, textFile).toString())
-    );
-  }
 }
 
 (async () => {
   for (const folder of await fs.readdir(templateFolder)) {
     await handleFolder(path.join(templateFolder, folder), folder);
   }
+  console.log('done');
 })();

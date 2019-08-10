@@ -27,7 +27,7 @@ async function initialize() {
   await Promise.all(
     files.map((file) => {
       return readFile(path.join(templatesDist, file)).then((str) => {
-        templates[file] = str.toString();
+        templates[file.replace(/.html$/, '')] = str.toString();
       });
     })
   );
@@ -64,8 +64,7 @@ exports.sendWelcome = async (languageCode, { to, name }) => {
       subject: `Welcome to ${defaultOptions.appName}`
     },
     {
-      html: template(languageCode, 'welcome.html', options),
-      text: template(languageCode, 'welcome.text', options),
+      html: template(languageCode, 'welcome', options),
       options
     }
   );
@@ -84,8 +83,7 @@ exports.sendResetPasswordUnknown = async (languageCode, { to }) => {
       subject: `Password Reset Request`
     },
     {
-      html: template(languageCode, 'reset-password-unknown.html', options),
-      text: template(languageCode, 'reset-password-unknown.text', options),
+      html: template(languageCode, 'reset-password-unknown', options),
       options
     }
   );
@@ -105,8 +103,7 @@ exports.sendResetPassword = async (languageCode, { to, token }) => {
       subject: `Password Reset Request`
     },
     {
-      html: template(languageCode, 'reset-password.html', options),
-      text: template(languageCode, 'reset-password.text', options),
+      html: template(languageCode, 'reset-password', options),
       options
     }
   );
@@ -126,8 +123,7 @@ exports.sendInvite = async (languageCode, { to, token, sender }) => {
       subject: `${sender.name} has invited you to join ${defaultOptions.appName}`
     },
     {
-      html: template(languageCode, 'invite.html', options),
-      text: template(languageCode, 'invite.text', options),
+      html: template(languageCode, 'invite', options),
       options
     }
   );
@@ -148,8 +144,7 @@ exports.sendInviteKnown = async (languageCode, { to, token, sender }) => {
       subject: `${sender.name} has invited you to join ${defaultOptions.appName}`
     },
     {
-      html: template(languageCode, 'invite-known.html', options),
-      text: template(languageCode, 'invite-known.text', options),
+      html: template(languageCode, 'invite-known', options),
       options
     }
   );

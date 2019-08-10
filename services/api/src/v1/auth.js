@@ -30,17 +30,13 @@ router
           .lowercase()
           .email()
           .required(),
+        language: Joi.string(),
         name: Joi.string().required(),
         password: passwordField.required()
       }
     }),
     async (ctx) => {
       const { email, name } = ctx.request.body;
-
-      await sendWelcome({
-        name,
-        to: email
-      });
 
       const existingUser = await User.findOne({ email, deletedAt: { $exists: false } });
       if (existingUser) {
@@ -50,6 +46,11 @@ router
       const user = await User.create({
         ...ctx.request.body,
         roles: ['user']
+      });
+
+      await sendWelcome(user.language, {
+        name,
+        to: email
       });
 
       ctx.body = { data: { token: tokens.createUserToken(user) } };
@@ -118,19 +119,20 @@ router
       body: {
         email: Joi.string()
           .email()
-          .required()
+          .required(),
+        language: Joi.string().default('en')
       }
     }),
     async (ctx) => {
-      const { email } = ctx.request.body;
+      const { email, language } = ctx.request.body;
       const user = await User.findOne({ email });
       if (user) {
-        await sendResetPassword({
+        await sendResetPassword(user.language, {
           to: email,
           token: tokens.createUserTemporaryToken({ userId: user.id }, 'password')
         });
       } else {
-        await sendResetPasswordUnknown({
+        await sendResetPasswordUnknown(language, {
           to: email
         });
       }

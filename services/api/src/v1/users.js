@@ -92,7 +92,8 @@ router
           .required(),
         name: Joi.string().required(),
         roles: Joi.array().items(Joi.string()),
-        password: passwordField.required()
+        password: passwordField.required(),
+        language: Joi.string()
       }
     }),
     async (ctx) => {
@@ -121,13 +122,15 @@ router
         email: Joi.string(),
         name: Joi.string(),
         roles: Joi.array().items(Joi.string()),
+        language: Joi.string(),
         createdAt: Joi.date().strip(),
-        updatedAt: Joi.date().strip()
+        updatedAt: Joi.date().strip(),
+        deletedAt: Joi.date().strip()
       }
     }),
     async (ctx) => {
       const { user } = ctx.state;
-      user.assign(ctx.request.body);
+      Object.assign(user, ctx.request.body);
       await user.save();
       ctx.body = {
         data: user.toResource()
