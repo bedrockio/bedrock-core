@@ -47,7 +47,9 @@ services:
 
   mongo:
     image: mongo:4
-    command: mongod --smallfiles --logpath=/dev/null # small mem footprint + quiet
+    command: mongod
+    logging:
+      driver: none
     environment:
       - MONGO_DATA_DIR=/data/db
       - MONGO_LOG_DIR=/dev/null
