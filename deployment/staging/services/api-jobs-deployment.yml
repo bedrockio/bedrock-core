@@ -10,23 +10,23 @@ spec:
         name: jobs
     spec:
       containers:
-      - image: gcr.io/platform-staging/platform-jobs
-        imagePullPolicy: Always
-        name: api
-        env:
-          - name: NODE_ENV
-            value: "prod"
-          - name: MONGO_URI
-            value: "mongodb://mongo:27017/platform"
-          - name: APP_DOMAIN
-            value: "platform.com"
-          - name: POSTMARK_FROM
-            value: "no-reply@platform.com"
-          - name: POSTMARK_APIKEY
-            value: "abc"
-        volumeMounts:
-          - name: jobs-cache
-            mountPath: /workdir/data
+        - image: gcr.io/platform-staging/platform-jobs
+          imagePullPolicy: Always
+          name: jobs
+          env:
+            - name: NODE_ENV
+              value: "prod"
+            - name: MONGO_URI
+              value: "mongodb://mongo:27017/platform"
+            - name: APP_DOMAIN
+              value: "platform.com"
+            - name: POSTMARK_FROM
+              value: "no-reply@platform.com"
+            - name: POSTMARK_APIKEY
+              value: "abc"
+          volumeMounts:
+            - name: jobs-cache
+              mountPath: /workdir/data
       volumes:
         - name: jobs-cache
           emptyDir: {}
