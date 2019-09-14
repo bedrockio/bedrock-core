@@ -8,4 +8,4 @@ rm cron
 echo "Running all jobs for first time"
 node /service/scripts/jobs.js >> /service/crontab.log 2>> /service/crontab.log
 crond &&
-tail -f /service/crontab.log
+tail -n 1000 -f /service/crontab.log
