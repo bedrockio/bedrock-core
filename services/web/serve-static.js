@@ -5,7 +5,16 @@ const compress = require('koa-compress');
 const koaStatic = require('koa-static');
 const config = require('@kaareal/config');
 
-const { BIND_PORT, BIND_HOST, ...configs } = config.getAll();
+const {
+  BIND_PORT,
+  BIND_HOST,
+  REDIRECT_TO_HTTPS,
+  ENABLE_HTTP_BASIC_AUTH,
+  HTTP_BASIC_AUTH_PATH,
+  HTTP_BASIC_AUTH_USER,
+  HTTP_BASIC_AUTH_PASS,
+  ...configs
+} = config.getAll();
 
 const app = new Koa();
 
@@ -34,8 +43,20 @@ const healthCheckResponder = (ctx, next) => {
 
 app.use(healthCheckResponder);
 
-if (process.env.REDIRECT_TO_HTTPS) {
+if (REDIRECT_TO_HTTPS) {
   app.use(redirecthttpsMiddleware);
+}
+
+if (ENABLE_HTTP_BASIC_AUTH) {
+  app.use(
+    koaMount(
+      HTTP_BASIC_AUTH_PATH,
+      basicAuth({
+        user: HTTP_BASIC_AUTH_USER,
+        pass: HTTP_BASIC_AUTH_PASS
+      })
+    )
+  );
 }
 
 function historyApiFallback(options = {}) {
