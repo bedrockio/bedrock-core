@@ -1,11 +1,19 @@
 #!/bin/bash
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+cd $SCRIPTPATH; cd ../../
 ENVIRONMENT=$1
 
 if [ "$ENVIRONMENT" == "" ]; then
   echo "Usage: $0 <environment>"
   exit 1
 fi
-export $(cat deployment/$ENVIRONMENT/env.conf | xargs)
+
+./deployment/scripts/check_gcloud_config $ENVIRONMENT
+if [ $? -ne 0 ]; then
+  exit 1
+fi
+
+export $(grep -v '^#' deployment/$ENVIRONMENT/env.conf | xargs)
 gcloud compute ssl-certificates create \
 $ENVIRONMENT-ssl \
 --certificate deployment/$ENVIRONMENT/certificates/domain.crt \

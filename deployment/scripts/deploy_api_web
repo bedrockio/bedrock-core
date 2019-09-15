@@ -9,9 +9,5 @@ if [ "$ENVIRONMENT" == "" ]; then
   exit 1
 fi
 
-./deployment/scripts/build api
-./deployment/scripts/build web
-./deployment/scripts/push $ENVIRONMENT api
-./deployment/scripts/push $ENVIRONMENT web
-./deployment/scripts/apply $ENVIRONMENT api
-./deployment/scripts/apply $ENVIRONMENT web
+./deployment/scripts/deploy $ENVIRONMENT api
+./deployment/scripts/deploy $ENVIRONMENT web

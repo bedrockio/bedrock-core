@@ -1,0 +1,28 @@
+#!/bin/bash
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+cd $SCRIPTPATH; cd ../../
+PLATFORM_NAME=$(basename `pwd`)
+ENVIRONMENT=$1
+SERVICE=$2
+OPTS=${@:3}
+
+if [ "$ENVIRONMENT" == "" ] || [ "$SERVICE" == "" ]; then
+  echo "Usage: $0 <environment> <service>"
+  exit 1
+fi
+
+./deployment/scripts/check_gcloud_config $ENVIRONMENT 1
+
+./deployment/scripts/warn $ENVIRONMENT
+if [ $? -ne 0 ]; then
+  exit 1
+fi
+
+./deployment/scripts/build $SERVICE
+./deployment/scripts/push $ENVIRONMENT $SERVICE
+
+if [ "$OPTS" == "--restart" ]; then
+  ./deployment/scripts/restart $ENVIRONMENT $SERVICE
+else
+  ./deployment/scripts/rollout $ENVIRONMENT $SERVICE
+fi

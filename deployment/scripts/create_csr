@@ -1,0 +1,20 @@
+#!/bin/bash
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+cd $SCRIPTPATH; cd ../../
+ENVIRONMENT=$1
+
+if [ "$ENVIRONMENT" == "" ]; then
+  echo "Usage: $0 <environment>"
+  exit 1
+fi
+
+./deployment/scripts/check_gcloud_config $ENVIRONMENT
+if [ $? -ne 0 ]; then
+  exit 1
+fi
+mkdir -p deployment/$ENVIRONMENT/certificates
+openssl genrsa -out deployment/$ENVIRONMENT/certificates/domain.key
+openssl req -new -key deployment/$ENVIRONMENT/certificates/domain.key -out deployment/$ENVIRONMENT/certificates/domain.csr
+echo "CSR stored as deployment/$ENVIRONMENT/certificates/domain.csr"
+cat deployment/$ENVIRONMENT/certificates/domain.csr
+echo "Make sure to save your certificate chain as deployment/$ENVIRONMENT/certificates/domain.crt"

@@ -1,0 +1,39 @@
+#!/bin/bash
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+cd $SCRIPTPATH; cd ../../
+ENVIRONMENT=$1
+SERVICES=$(deployment/scripts/services $2)
+
+if [ "$ENVIRONMENT" == "" ]; then
+  echo "Usage: $0 <environment>"
+  exit 1
+fi
+
+./deployment/scripts/check_gcloud_config $ENVIRONMENT 1
+
+function deploy_info() {
+  c1=$(get_path "Author" "author")
+  c2=$(get_path "Date" "date")
+  c3=$(get_path "Branch" "branch")
+  c4=$(get_path "Ref" "git")
+  info=$(kubectl get deployment $1-deployment -o jsonpath="$c1|$c2|$c3|$c4" --ignore-not-found)
+
+  if [ "$info" != "" ]; then
+    echo "------- Deploy Details ($1) -------"
+    echo ""
+    echo $info | tr "^" " " | tr "|" "\n"
+    echo ""
+    echo "------------------------------------"
+    echo ""
+  fi
+
+}
+
+function get_path() {
+  echo "^$1: {.spec.template.metadata.annotations.$2}{'\n'}"
+}
+
+echo ""
+for service in $SERVICES; do
+  deploy_info $service
+done

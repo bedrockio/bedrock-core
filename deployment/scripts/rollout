@@ -1,0 +1,30 @@
+#!/bin/bash
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+cd $SCRIPTPATH; cd ../../
+PLATFORM_NAME=$(basename `pwd`)
+ENVIRONMENT=$1
+SERVICES=$(deployment/scripts/services $2)
+METADATA=$(deployment/scripts/get_rollout_metadata)
+
+if [ "$ENVIRONMENT" == "" ]; then
+  echo "Usage: $0 <environment> [service]"
+  exit 1
+fi
+
+./deployment/scripts/check_gcloud_config $ENVIRONMENT
+if [ $? -ne 0 ]; then
+  exit 1
+fi
+
+function rollout() {
+  # Patching spec.template forces the container to pull the latest
+  # image and perform a rolling update as long as
+  # imagePullPolicy: Always is specified.
+  echo "Rolling out $ENVIRONMENT $1"
+  kubectl patch deployment --record $1-deployment -p "$METADATA"
+}
+
+for service in $SERVICES; do
+  rollout $service
+done
+

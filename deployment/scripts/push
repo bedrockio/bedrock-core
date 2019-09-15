@@ -16,14 +16,13 @@ if [ $? -ne 0 ]; then
 fi
 
 function push_service() {
-  gcloud docker -- push gcr.io/$1/$2:latest
+  docker push gcr.io/$1/$2:latest
 }
 
-export $(cat deployment/$ENVIRONMENT/env.conf | xargs)
+export $(grep -v '^#' deployment/$ENVIRONMENT/env.conf | xargs)
 
 if [ "$2" != "" ]; then
-  echo "Pushing all images matching $2"
-  IMAGES=`docker images | grep $PLATFORM_NAME | awk '{print $1}' | grep $2 | grep -v gcr.io`
+  IMAGES=`docker images | grep $PLATFORM_NAME | awk '{print $1}' | egrep services-$2 | grep -v gcr.io`
 fi
 
 for image in $IMAGES; do

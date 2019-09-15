@@ -10,19 +10,19 @@ spec:
         name: backup-monitor
     spec:
       containers:
-      - image: gcr.io/platform-staging/backup-monitor
-        imagePullPolicy: Always
-        name: backup-monitor
-        env:
-          - name: GS_BUCKETS
-            value: "platform-staging-uploads platform-staging-mongodb-backups"
-          - name: POSTMARK_API_KEY
-            value: "abc"
-          - name: POSTMARK_FROM
-            value: "dominiek@platform.com"
-          - name: EMAIL_ALERT
-            value: "dominiek@platform.com"
-          - name: EMAIL_HEALTH_CHECK
-            value: "dominiek@platform.com"
-          - name: ENVIRONMENT
-            value: "staging"
+        - image: dominiek/backup-monitor
+          imagePullPolicy: Always
+          name: backup-monitor
+          env:
+            - name: GS_BUCKETS
+              value: "platform-staging-uploads platform-staging-mongodb-backups"
+            - name: POSTMARK_API_KEY
+              value: "abc"
+            - name: POSTMARK_FROM
+              value: "dominiek@platform.com"
+            - name: EMAIL_ALERT
+              value: "dominiek@platform.com"
+            - name: EMAIL_HEALTH_CHECK
+              value: "dominiek@platform.com"
+            - name: ENVIRONMENT
+              value: "staging"

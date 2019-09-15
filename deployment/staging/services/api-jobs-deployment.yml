@@ -10,18 +10,18 @@ spec:
         name: jobs
     spec:
       containers:
-        - image: gcr.io/platform-staging/platform-jobs
+        - image: gcr.io/sharkbone-staging/sharkbone-jobs
           imagePullPolicy: Always
           name: jobs
           env:
             - name: NODE_ENV
               value: "prod"
             - name: MONGO_URI
-              value: "mongodb://mongo:27017/platform"
+              value: "mongodb://mongo:27017/sharkbone_production"
             - name: APP_DOMAIN
-              value: "platform.com"
+              value: "sharkbone.io"
             - name: POSTMARK_FROM
-              value: "no-reply@platform.com"
+              value: "no-reply@sharkbone.io"
             - name: POSTMARK_APIKEY
               value: "abc"
           volumeMounts:

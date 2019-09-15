@@ -1,0 +1,30 @@
+#!/bin/bash
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+cd $SCRIPTPATH; cd ../../
+PLATFORM_NAME=$(basename `pwd`)
+ENVIRONMENT=$1
+SERVICES=$(deployment/scripts/services $2)
+METADATA=$(deployment/scripts/get_rollout_metadata)
+
+if [ "$ENVIRONMENT" == "" ]; then
+  echo "Usage: $0 <environment> [service]"
+  exit 1
+fi
+
+./deployment/scripts/check_gcloud_config $ENVIRONMENT
+if [ $? -ne 0 ]; then
+  exit 1
+fi
+
+function restart_service() {
+  echo "Restarting $ENVIRONMENT $1"
+  kubectl delete -f deployment/$ENVIRONMENT/services/$1-deployment.yml --ignore-not-found
+  kubectl create -f deployment/$ENVIRONMENT/services/$1-deployment.yml --record
+  kubectl patch deployment --record $1-deployment -p "$METADATA"
+}
+
+export $(grep -v '^#' deployment/$ENVIRONMENT/env.conf | xargs)
+
+for service in $SERVICES; do
+  restart_service $service
+done

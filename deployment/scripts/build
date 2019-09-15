@@ -10,6 +10,14 @@ function build_service() {
   service=$1
   sub_service=$2
   cd services/$service
+
+  if [ -f hooks/pre_build ]; then
+    hooks/pre_build
+    if [ $? -ne 0 ]; then
+      exit 1
+    fi
+  fi
+
   if [ "$sub_service" == "" ]; then
     echo "=> Building $PLATFORM_NAME-services-$service"
     docker build -t $PLATFORM_NAME-services-$service .

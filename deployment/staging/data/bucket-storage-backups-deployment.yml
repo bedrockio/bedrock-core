@@ -10,11 +10,11 @@ spec:
         name: bucket-storage-backups
     spec:
       containers:
-      - image: gcr.io/platform-staging/bucket-storage-backups
-        imagePullPolicy: Always
-        name: bucket-storage-backups
-        env:
-          - name: SOURCE_GS_BUCKET
-            value: "platform-staging-uploads"
-          - name: DESTINATION_GS_BUCKET
-            value: "platform-staging-uploads-backup"
+        - image: dominiek/bucket-storage-backups
+          imagePullPolicy: Always
+          name: bucket-storage-backups
+          env:
+            - name: SOURCE_GS_BUCKET
+              value: "platform-staging-uploads"
+            - name: DESTINATION_GS_BUCKET
+              value: "platform-staging-uploads-backup"

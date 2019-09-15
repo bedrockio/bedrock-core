@@ -10,18 +10,18 @@ spec:
         name: web
     spec:
       containers:
-      - image: gcr.io/platform-staging/platform-services-web
-        imagePullPolicy: Always
-        name: web
-        env:
-          - name: NODE_ENV
-            value: "staging"
-          - name: DOMAIN
-            value: staging.platform.com
-          - name: API_URL
-            value: "https://staging-api.platform.com"
-          - name: REDIRECT_TO_HTTPS
-            value: ""
-        ports:
-        - name: http-server
-          containerPort: 2200
+        - image: gcr.io/sharkbone-staging/sharkbone-services-web
+          imagePullPolicy: Always
+          name: web
+          env:
+            - name: NODE_ENV
+              value: "staging"
+            - name: DOMAIN
+              value: staging.sharkbone.io
+            - name: API_URL
+              value: "https://staging-api.sharkbone.io"
+            - name: REDIRECT_TO_HTTPS
+              value: ""
+          ports:
+            - name: http-server
+              containerPort: 2200
