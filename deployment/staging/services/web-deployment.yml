@@ -10,16 +10,16 @@ spec:
         name: web
     spec:
       containers:
-        - image: gcr.io/sharkbone-staging/sharkbone-services-web
+        - image: gcr.io/bulkhead-staging/bulkhead-services-web
           imagePullPolicy: Always
           name: web
           env:
             - name: NODE_ENV
               value: "staging"
             - name: DOMAIN
-              value: staging.sharkbone.io
+              value: staging.bulkhead.io
             - name: API_URL
-              value: "https://staging-api.sharkbone.io"
+              value: "https://staging-api.bulkhead.io"
             - name: REDIRECT_TO_HTTPS
               value: ""
           ports:

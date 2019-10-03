@@ -10,34 +10,34 @@ spec:
         name: api
     spec:
       containers:
-        - image: gcr.io/sharkbone-staging/sharkbone-services-api
+        - image: gcr.io/bulkhead-staging/bulkhead-services-api
           imagePullPolicy: Always
           name: api
           env:
             - name: NODE_ENV
               value: "staging"
             - name: MONGO_URI
-              value: "mongodb://mongo:27017/sharkbone_production"
+              value: "mongodb://mongo:27017/bulkhead_production"
             - name: ADMIN_EMAIL
-              value: "admin@sharkbone.io"
+              value: "admin@bulkhead.io"
             - name: ADMIN_USERNAME
               value: "admin"
             - name: ADMIN_PASSWORD
-              value: "admin.sharkbone"
+              value: "admin.bulkhead"
             - name: JWT_SECRET
               value: "njuhuhg78h"
             - name: JWT_ADMINSECRET
               value: "abc"
             - name: APP_DOMAIN
-              value: "staging.sharkbone.io"
+              value: "staging.bulkhead.io"
             - name: POSTMARK_FROM
-              value: "no-reply@sharkbone.io"
+              value: "no-reply@bulkhead.io"
             - name: POSTMARK_APIKEY
               value: "abc"
             - name: UPLOADS_STORE
               value: "gcs"
             - name: UPLOADS_GCS_BUCKET
-              value: "sharkbone-staging-uploads"
+              value: "bulkhead-staging-uploads"
           ports:
             - name: http-server
               containerPort: 2300
