@@ -13,7 +13,8 @@
     "react-redux": "^5.0.7",
     "sentry-expo": "^1.9.0",
     "watchman": "^1.0.0",
-    "yup": "^0.26.2"
+    "yup": "^0.26.2",
+    "snyk": "^1.230.5"
   },
   "devDependencies": {
     "@babel/plugin-proposal-export-namespace-from": "^7.2.0",
@@ -32,7 +33,9 @@
     "start": "expo start --ios",
     "android": "expo start --android",
     "publish:staging": "expo publish --release-channel staging",
-    "publish:production": "expo publish --release-channel production"
+    "publish:production": "expo publish --release-channel production",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "main": "node_modules/expo/AppEntry.js",
   "private": true,
@@ -87,5 +90,6 @@
   "toolchain": {
     "node": "10.15.1",
     "yarn": "1.13.0"
-  }
+  },
+  "snyk": true
 }
