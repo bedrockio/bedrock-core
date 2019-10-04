@@ -15,7 +15,9 @@
     "emails": "node emails/build",
     "lint": "eslint src",
     "test": "jest src",
-    "test:watch": "jest --watch -i src"
+    "test:watch": "jest --watch -i src",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "dependencies": {
     "@google-cloud/storage": "^2.5.0",
@@ -32,7 +34,8 @@
     "koa-router": "7.4.0",
     "lodash": "4.17.11",
     "mongoose": "^5.5.7",
-    "postmark": "2.2.4"
+    "postmark": "2.2.4",
+    "snyk": "^1.230.5"
   },
   "devDependencies": {
     "eslint": "^5.16.0",
@@ -91,5 +94,6 @@
   "toolchain": {
     "node": "12.2.0",
     "yarn": "1.13.0"
-  }
+  },
+  "snyk": true
 }
