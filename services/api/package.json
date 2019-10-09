@@ -18,7 +18,7 @@
     "test:watch": "jest --watch -i src"
   },
   "dependencies": {
-    "@google-cloud/storage": "^2.5.0",
+    "@google-cloud/storage": "^3.0.0",
     "@kaareal/config": "^0.1.1",
     "@koa/cors": "^3.0.0",
     "@sentry/node": "^5.2.0",
