@@ -21,7 +21,7 @@
     "@google-cloud/storage": "^2.5.0",
     "@kaareal/config": "^0.1.1",
     "@koa/cors": "^3.0.0",
-    "@sentry/node": "^5.2.0",
+    "@sentry/node": "^5.7.0",
     "bcrypt": "^3.0.6",
     "joi": "14.3.1",
     "jsonwebtoken": "^8.5.1",
