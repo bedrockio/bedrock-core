@@ -3,7 +3,6 @@
     "editorconfig.editorconfig",
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
-    "jpoissonnier.vscode-styled-components",
-    "coenraads.bracket-pair-colorizer-2"
+    "jpoissonnier.vscode-styled-components"
   ]
 }
