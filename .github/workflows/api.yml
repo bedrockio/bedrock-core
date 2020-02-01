@@ -1,8 +1,6 @@
 name: "api"
 on:
   push:
-    branches:
-      - master
     paths:
       - services/api/*
 
@@ -16,24 +14,15 @@ jobs:
         image: mongo:4
         ports:
           - 27017:27017
-      elasticsearch:
-        image: docker.elastic.co/elasticsearch/elasticsearch:7.5.2
-        ports:
-          - "9200:9200"
-          - "9300:9300"
-        env:
-          "discovery.type":"single-node"
 
     steps:
       - uses: actions/checkout@v2
-        working-directory: ${{env.working_directory}}
-
       - name: Get yarn cache
         id: yarn-cache
         run: echo "::set-output name=dir::$(yarn cache dir)"
-        working-directory: ${{env.working_directory}}
+        working-directory: ${{ env.working_directory }}
       - run: yarn install
-        working-directory: ${{env.working_directory}}
+        working-directory: ${{ env.working_directory }}
       - uses: actions/cache@v1
         with:
           path: ${{ steps.yarn-cache.outputs.dir }}
@@ -41,4 +30,4 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
       - run: yarn test
-        working-directory: ${{env.working_directory}}
+        working-directory: ${{ env.working_directory }}
