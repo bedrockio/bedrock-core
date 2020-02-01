@@ -16,7 +16,7 @@
 - `emails/dist` - Prebuild emails templates (dont modify => modify emails/src and run `npm run emails`)
 - `emails/src` - Emails templates
 
-## API Summary
+## API Summary -
 
 ```
 POST /1/auth/register              # New user registration. Requires `email`
