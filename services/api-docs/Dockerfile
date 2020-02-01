@@ -1,4 +1,4 @@
-FROM node:10-alpine
+FROM node:12-alpine
 
 RUN apk add --no-cache bash git python make g++ bash
 
@@ -13,8 +13,6 @@ COPY . /service/
 # Set work directory to /api
 WORKDIR /service
 
-# Slim down container
-RUN apk del bash git python make g++
 
 EXPOSE 2400
 

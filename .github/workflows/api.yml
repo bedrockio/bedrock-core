@@ -1,0 +1,45 @@
+name: "api"
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - services/api/*
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    env:
+      working_directory: ./services/api
+    services:
+      mongodb:
+        image: mongo:4
+        ports:
+          - 27017:27017
+      elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.5.2
+        container_name: elasticsearch
+        ports:
+          - "9200:9200"
+          - "9300:9300"
+        environment:
+          - "discovery.type=single-node"
+
+    steps:
+      - uses: actions/checkout@v2
+        working-directory: ${{env.working_directory}}
+
+      - name: Get yarn cache
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+        working-directory: ${{env.working_directory}}
+      - run: yarn install
+        working-directory: ${{env.working_directory}}
+      - uses: actions/cache@v1
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - run: yarn test
+        working-directory: ${{env.working_directory}}
