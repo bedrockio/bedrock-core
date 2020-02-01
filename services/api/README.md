@@ -1,4 +1,4 @@
-# Platform API
+# BEDROCK API
 
 ## Directory Structure
 
