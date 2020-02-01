@@ -12,7 +12,7 @@
 - `src/middlewares` - Middleware libs
 - `src/models` - Models for ORM (Mongoose)
 - `src/app.js` - Entrypoint into API (does not bind, so can be used in unit tests)
-- `src/index.js` - Launch script for the API)
+- `src/index.js` - Launch script for the API
 - `emails/dist` - Prebuild emails templates (dont modify => modify emails/src and run `npm run emails`)
 - `emails/src` - Emails templates
 
