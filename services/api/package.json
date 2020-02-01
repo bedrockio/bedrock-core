@@ -14,7 +14,7 @@
     "docs": "STORE_RESULT=true yarn run test && DOCS=true node scripts/openapi",
     "emails": "node emails/build",
     "lint": "eslint src",
-    "test": "jest src",
+    "test": "jest src --forceExit",
     "test:watch": "jest --watch -i src"
   },
   "dependencies": {
