@@ -1,8 +1,6 @@
 name: "api"
 on:
   push:
-    branches:
-      - master
     paths:
       - services/api/*
 
