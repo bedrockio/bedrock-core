@@ -1,0 +1,52 @@
+{
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true
+  },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "legacyDecorators": true
+    }
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:jest/recommended",
+    "prettier"
+  ],
+  "rules": {
+    "semi": ["error", "always"],
+    "no-unused-vars": ["error", { "ignoreRestSiblings": true }],
+    "react/display-name": 0,
+    "react/prop-types": 0,
+    "react/no-unescaped-entities": ["allow"],
+    "no-console": [
+      "warn",
+      {
+        "allow": [
+          "warn",
+          "error",
+          "info"
+        ]
+      }
+    ]
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    },
+    "import/resolver": {
+      "node": {
+        "moduleDirectory": [
+          "node_modules",
+          "src"
+        ]
+      }
+    }
+  },
+  "globals": {
+    "__ENV__": "readonly"
+  }
+}

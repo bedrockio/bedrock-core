@@ -1,34 +1,71 @@
 const path = require('path');
+const yargs = require('yargs');
 const webpack = require('webpack');
+const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 
-const extractLess = new ExtractTextPlugin({
-  filename: '[name]-[hash].css'
-});
+const argv = yargs
+  .boolean('p')
+  .boolean('analyze')
+  .option('app', {
+    alias: 'a',
+    array: true,
+    default: ['public', 'admin'],
+  })
+  .argv;
 
-const isProduction = process.argv.indexOf('-p') >= 0;
-const ENV = isProduction ? 'production' : 'development';
+const DEV = !argv.p;
+
+if (DEV && argv.analyze) {
+  throw new Error('Analyze mode must be used in production. Use yarn build --analyze.');
+}
+
+function getTemplatePlugins() {
+  return argv.app.map(app => {
+    return new HtmlWebpackPlugin({
+      chunks: [app],
+      template: `src/common/index.html`,
+      templateParameters: {
+        app,
+        DEV,
+      },
+      filename: path.join(app === 'public' ? '' : app, 'index.html')
+    });
+  });
+}
+
+function getOptionalPlugins() {
+  const plugins = [];
+  if (argv.analyze) {
+    const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+    plugins.push(new BundleAnalyzerPlugin());
+  }
+  return plugins;
+}
+
+function getEntryPoints() {
+  return argv.app.reduce((entryPoints, app) => {
+    // koa-webpack -> webpack-hot-client requires this to be wrapped in an array
+    // https://github.com/webpack-contrib/webpack-hot-client/issues/11
+    entryPoints[app] = [`./src/${app}/index`];
+    return entryPoints;
+  }, {});
+}
 
 module.exports = {
-  devtool: isProduction ? 'source-maps' : 'cheap-module-source-map',
-  entry: {
-    app: ['./src/index']
-  },
+  devtool: DEV ? 'cheap-module-source-map' : 'source-map',
+  entry: getEntryPoints(),
   output: {
     publicPath: '/',
-    filename: '[name].[hash].bundle.js',
-    chunkFilename: '[name].chunk-[hash].bundle.js',
+    filename: 'assets/[name]-[hash].bundle.js',
+    chunkFilename: 'assets/[name]-chunk-[hash].bundle.js',
     path: path.join(__dirname, 'dist')
   },
   resolve: {
     alias: {
-      '../../theme.config$': path.resolve(
-        path.join(__dirname, 'src'),
-        'theme/theme.config'
-      )
+      '../../theme.config$': path.resolve('./src/common/theme/theme.config')
     },
     extensions: ['.js', '.json', '.jsx'],
     modules: [path.join(__dirname, 'src'), 'node_modules']
@@ -37,85 +74,77 @@ module.exports = {
     rules: [
       {
         test: /\.jsx?$/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            cacheDirectory: true,
-            presets: [
-              [
-                '@babel/preset-env',
-                {
-                  targets: '> 1%, not dead, not IE 11'
-                }
-              ],
-              '@babel/preset-react'
-            ],
-            plugins: [
-              ['lodash'],
-              ['react-hot-loader/babel'],
-              ['@babel/plugin-proposal-decorators', { legacy: true }],
-              ['@babel/plugin-proposal-class-properties', { loose: true }],
-              ['@babel/plugin-proposal-object-rest-spread'],
-              ['babel-plugin-mobx-deep-action'],
-              ['babel-plugin-styled-components']
-            ]
-          }
-        },
-        exclude: /node_modules/
+        exclude: /node_modules/,
+        loader: 'babel-loader'
       },
       {
         test: /\.(css|less)$/,
         use: [
           MiniCssExtractPlugin.loader,
           'css-loader',
-          ...(isProduction ? ['postcss-loader'] : []),
+          ...(DEV ? [] : ['postcss-loader']),
           'less-loader'
         ]
       },
       {
-        test: /\.(eot|png|jpg|ttf|svg|gif)$/,
-        use: ['file-loader']
+        test: /\.(png|jpg|svg|gif|eot|ttf)$/,
+        loader: 'file-loader',
+        options: {
+          outputPath: 'assets'
+        }
       },
       {
         test: /\.(pdf)$/,
-        loader:
-          'file-loader?name=[name].[ext]&outputPath=downloads/&publicPath=downloads/'
+        loader: 'file-loader?name=[name].[ext]&outputPath=downloads/&publicPath=downloads/',
+        options: {
+          outputPath: 'assets'
+        }
       },
       {
         test: /\.woff(2)?(\?v=\d\.\d\.\d)?$/,
-        loader: 'url-loader?limit=10000&minetype=application/font-woff'
+        loader: 'url-loader?limit=10000',
+        options: {
+          outputPath: 'assets'
+        }
       },
       {
         test: /\.(md)$/,
-        use: 'raw-loader'
-      }
+        loader: 'raw-loader'
+      },
     ]
   },
   plugins: [
     new webpack.ProvidePlugin({
       fetch:
-        'imports-loader?this=>global!exports-loader?global.fetch!whatwg-fetch/dist/fetch.umd'
-    }),
-    new webpack.DefinePlugin({
-      ENV: JSON.stringify(ENV),
-      'process.env': {
-        // For react building https://facebook.github.io/react/docs/optimizing-performance.html#use-the-production-build
-        NODE_ENV: JSON.stringify(ENV)
-      }
-    }),
-    new CircularDependencyPlugin({
-      exclude: /node_modules/,
-      failOnError: true,
-      cwd: process.cwd()
-    }),
-    new HtmlWebpackPlugin({
-      chunks: ['vendor', 'app'],
-      template: 'src/index.html',
-      filename: 'index.html'
+      'imports-loader?this=>global!exports-loader?global.fetch!whatwg-fetch/dist/fetch.umd'
     }),
     new MiniCssExtractPlugin({
       filename: 'assets/[name]-[hash].css'
     }),
-    extractLess
-  ]
+    new CircularDependencyPlugin({
+      exclude: /node_modules/,
+      failOnError: true,
+      cwd: process.cwd(),
+    }),
+    ...getTemplatePlugins(),
+    ...getOptionalPlugins(),
+  ],
+  optimization: {
+    minimizer: [
+      new TerserPlugin({
+        cache: true,
+        sourceMap: !DEV,
+        parallel: true,
+        terserOptions: {
+          output: {
+            comments: false
+          },
+        }
+      }),
+    ],
+  },
+  performance: {
+    maxAssetSize: 1500000,
+    maxEntrypointSize: 1500000
+  }
 };
