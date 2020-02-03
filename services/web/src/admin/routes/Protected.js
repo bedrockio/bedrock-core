@@ -1,11 +1,11 @@
 import React from 'react';
 import { Message } from 'semantic-ui-react';
 import { observer, inject } from 'mobx-react';
-import PageCenter from 'components/PageCenter';
-import PageLoader from 'components/PageLoader';
+import PageCenter from 'admin/components/PageCenter';
+import PageLoader from 'admin/components/PageLoader';
 import { Route } from 'react-router-dom';
 
-import Boot from 'components/Boot';
+import Boot from 'admin/components/Boot';
 
 @inject('appSession', 'me')
 @observer

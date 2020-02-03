@@ -1,9 +1,9 @@
 import React from 'react';
 import { Segment, Message, Grid } from 'semantic-ui-react';
 
-import request from 'utils/request';
-import PageCenter from 'components/PageCenter';
-import LogoTitle from 'components/LogoTitle';
+import { request } from 'utils/api';
+import PageCenter from 'admin/components/PageCenter';
+import LogoTitle from 'admin/components/LogoTitle';
 import Form from './Form';
 
 import { Link } from 'react-router-dom';
@@ -54,10 +54,10 @@ export default class Apply extends React.Component {
           <Segment secondary>
             <Grid>
               <Grid.Column floated="left" width={8}>
-                <Link to="/login">Login</Link>
+                <Link to="/admin/login">Login</Link>
               </Grid.Column>
               <Grid.Column floated="right" width={8} textAlign="right">
-                <Link to="/signup">Dont have an account</Link>
+                <Link to="/admin/signup">Dont have an account</Link>
               </Grid.Column>
             </Grid>
           </Segment>

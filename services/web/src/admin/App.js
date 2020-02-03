@@ -1,11 +1,11 @@
-import 'theme/semantic.less';
+import 'semantic-ui-less/semantic.less';
+import { hot } from 'react-hot-loader/root';
 
 import { Switch, Route, Redirect } from 'react-router-dom';
 import React from 'react';
-import { hot } from 'react-hot-loader';
 
-import AuthSwitchRoute from 'components/routes/AuthSwitch';
-import Protected from 'components/routes/Protected';
+import AuthSwitchRoute from './routes/AuthSwitch';
+import Protected from './routes/Protected';
 
 import Homepage from './screens/Homepage';
 import Dashboard from './screens/Dashboard';
@@ -23,30 +23,30 @@ import ResetPassword from './screens/Auth/ResetPassword';
 
 const App = () => (
   <Switch>
-    <AuthSwitchRoute exact path="/" loggedIn={Dashboard} loggedOut={Homepage} />
-    <Protected exact path="/shops" component={Shops} />
-    <Protected exact path="/shops/:id" component={Shop} />
-    <Protected exact path="/shops/:id/*" component={Shop} />
-    <Protected exact path="/settings" component={Settings} />
-    <Protected exact path="/invites" component={Invites} />
-    <Protected exact path="/users" component={Users} />
-    <Route exact path="/logout" component={Logout} />
+    <AuthSwitchRoute exact path="/admin/" loggedIn={Dashboard} loggedOut={Homepage} />
+    <Protected exact path="/admin/shops" component={Shops} />
+    <Protected exact path="/admin/shops/:id" component={Shop} />
+    <Protected exact path="/admin/shops/:id/*" component={Shop} />
+    <Protected exact path="/admin/settings" component={Settings} />
+    <Protected exact path="/admin/invites" component={Invites} />
+    <Protected exact path="/admin/users" component={Users} />
+    <Route exact path="/admin/logout" component={Logout} />
     <AuthSwitchRoute
       exact
-      path="/login"
+      path="/admin/login"
       loggedOut={Login}
-      loggedIn={() => <Redirect to="/" />}
+      loggedIn={() => <Redirect to="/admin/" />}
     />
     <AuthSwitchRoute
       exact
-      path="/signup"
+      path="/admin/signup"
       loggedOut={Signup}
-      loggedIn={() => <Redirect to="/" />}
+      loggedIn={() => <Redirect to="/admin/" />}
     />
-    <Route exact path="/accept-invite" component={AcceptInvite} />
-    <Route exact path="/forgot-password" component={ForgotPassword} />
-    <Route exact path="/reset-password" component={ResetPassword} />
+    <Route exact path="/admin/accept-invite" component={AcceptInvite} />
+    <Route exact path="/admin/forgot-password" component={ForgotPassword} />
+    <Route exact path="/admin/reset-password" component={ResetPassword} />
   </Switch>
 );
 
-export default hot(module)(App);
+export default hot(App);

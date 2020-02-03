@@ -10,7 +10,7 @@ import {
   Button,
   Message
 } from 'semantic-ui-react';
-import { processFile } from 'utils/csv';
+import { processFile } from 'utils/helpers/csv';
 
 export const productsImportMapping = {
   name: {

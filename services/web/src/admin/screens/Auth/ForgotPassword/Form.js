@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Button } from 'semantic-ui-react';
-import AutoFocus from 'components/AutoFocus';
+import AutoFocus from 'admin/components/AutoFocus';
 
 export default (props) => {
   const [email, setEmail] = React.useState('');

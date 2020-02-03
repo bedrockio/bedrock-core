@@ -1,6 +1,6 @@
 import React from 'react';
 import { observer, inject } from 'mobx-react';
-import AppWrapper from 'components/AppWrapper';
+import AppWrapper from 'admin/components/AppWrapper';
 
 @inject('me')
 @observer

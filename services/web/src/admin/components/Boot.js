@@ -1,8 +1,8 @@
 import React from 'react';
 import { Switch, withRouter } from 'react-router-dom';
 import { observer, inject } from 'mobx-react';
-import PageCenter from 'components/PageCenter';
-import PageLoader from 'components/PageLoader';
+import PageCenter from './PageCenter';
+import PageLoader from './PageLoader';
 import { Message, Button } from 'semantic-ui-react';
 
 @inject('appSession', 'me')

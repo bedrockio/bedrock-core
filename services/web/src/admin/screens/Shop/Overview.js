@@ -2,7 +2,7 @@ import React from 'react';
 import { observer, inject } from 'mobx-react';
 import { Header, Table, Image } from 'semantic-ui-react';
 import { DateTime } from 'luxon';
-import { urlForUpload } from 'utils/uploads';
+import { urlForUpload } from 'utils/api';
 
 @inject('shops')
 @observer

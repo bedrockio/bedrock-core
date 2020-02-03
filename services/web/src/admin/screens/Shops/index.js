@@ -1,13 +1,13 @@
 import React from 'react';
 import { observer, inject } from 'mobx-react';
 import { DateTime } from 'luxon';
-import AppWrapper from 'components/AppWrapper';
-import Pagination from 'components/Pagination';
+import AppWrapper from 'admin/components/AppWrapper';
+import Pagination from 'admin/components/Pagination';
 
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import HelpTip from 'components/HelpTip';
-import EditShop from 'components/modals/EditShop';
+import HelpTip from 'admin/components/HelpTip';
+import EditShop from 'admin/components/modals/EditShop';
 
 import {
   Container,
@@ -131,7 +131,7 @@ export default class Shops extends React.Component {
                     return (
                       <Table.Row key={item.id}>
                         <Table.Cell>
-                          <Link to={`/shops/${item.id}`}>{item.name}</Link>
+                          <Link to={`/admin/shops/${item.id}`}>{item.name}</Link>
                         </Table.Cell>
                         <Table.Cell>{item.description}</Table.Cell>
                         <Table.Cell>

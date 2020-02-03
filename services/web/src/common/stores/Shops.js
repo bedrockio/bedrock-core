@@ -1,6 +1,6 @@
 import { observable, action } from 'mobx';
 import BaseStore from './BaseStore';
-import request from 'utils/request';
+import { request } from 'utils/api';
 
 export default class ShopsStore extends BaseStore {
   @observable register = new Map();

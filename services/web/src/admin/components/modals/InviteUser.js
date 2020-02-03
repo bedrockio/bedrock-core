@@ -2,8 +2,8 @@ import React from 'react';
 import { observer, inject } from 'mobx-react';
 
 import { Button, Form, TextArea, Modal } from 'semantic-ui-react';
-import { emailRegexp } from 'utils/validate';
-import AutoFocus from 'components/AutoFocus';
+import { isValidEmail } from 'utils/helpers';
+import AutoFocus from '../AutoFocus';
 
 const defaultState = () => {
   return {
@@ -32,7 +32,7 @@ export default class InviteForm extends React.Component {
     const validEmails = [];
     const invalidEmails = [];
     values.forEach((text) => {
-      if (text.match(emailRegexp)) {
+      if (isValidEmail(text)) {
         validEmails.push(text);
       } else {
         invalidEmails.push(text);

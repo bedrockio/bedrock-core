@@ -1,8 +1,7 @@
 import React from 'react';
 import { Form, Message, Image, Icon, Label, Card } from 'semantic-ui-react';
 import Dropzone from 'react-dropzone';
-import request from 'utils/request';
-import { urlForUpload } from 'utils/uploads';
+import { request, urlForUpload } from 'utils/api';
 
 export default class Uploads extends React.Component {
   constructor(props) {

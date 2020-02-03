@@ -5,7 +5,7 @@ import { inject } from 'mobx-react';
 export default class Logout extends React.Component {
   componentDidMount() {
     this.props.appSession.reset();
-    window.location.href = '/';
+    window.location.href = '/admin/';
   }
   render() {
     return <div />;

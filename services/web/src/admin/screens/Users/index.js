@@ -1,11 +1,11 @@
 import React from 'react';
 import { observer, inject } from 'mobx-react';
 import { DateTime } from 'luxon';
-import AppWrapper from 'components/AppWrapper';
+import AppWrapper from 'admin/components/AppWrapper';
 import styled from 'styled-components';
 
-import HelpTip from 'components/HelpTip';
-import EditUser from 'components/modals/EditUser';
+import HelpTip from 'admin/components/HelpTip';
+import EditUser from 'admin/components/modals/EditUser';
 
 const Center = styled.div`
   display: flex;

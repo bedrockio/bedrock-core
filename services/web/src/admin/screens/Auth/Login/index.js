@@ -2,8 +2,8 @@ import React from 'react';
 import { Segment, Grid } from 'semantic-ui-react';
 import { observer, inject } from 'mobx-react';
 
-import PageCenter from 'components/PageCenter';
-import LogoTitle from 'components/LogoTitle';
+import PageCenter from 'admin/components/PageCenter';
+import LogoTitle from 'admin/components/LogoTitle';
 
 import LoginForm from './Form';
 import { Link } from 'react-router-dom';
@@ -23,7 +23,7 @@ export default class Login extends React.Component {
   handleOnSubmit = (body) => {
     return this.props.auth.login(body, 'login').then((err) => {
       if (err instanceof Error) return;
-      this.props.routing.replace('/');
+      this.props.routing.replace('/admin/');
     });
   };
 
@@ -39,10 +39,10 @@ export default class Login extends React.Component {
           <Segment secondary>
             <Grid>
               <Grid.Column floated="left" width={8}>
-                <Link to="/signup">Signup</Link>
+                <Link to="/admin/signup">Signup</Link>
               </Grid.Column>
               <Grid.Column floated="right" width={8} textAlign="right">
-                <Link to="/forgot-password">Forgot Password</Link>
+                <Link to="/admin/forgot-password">Forgot Password</Link>
               </Grid.Column>
             </Grid>
           </Segment>

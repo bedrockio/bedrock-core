@@ -1,11 +1,11 @@
 import React from 'react';
 import { observer, inject } from 'mobx-react';
 import { Form, Message, Modal, Button } from 'semantic-ui-react';
-import UploadsField from 'components/form-fields/Uploads';
-import CountriesField from 'components/form-fields/Countries';
-import AutoFocus from 'components/AutoFocus';
-import SearchDropDown from 'components/SearchDropdown';
-import request from 'utils/request';
+import UploadsField from '../form-fields/Uploads';
+import CountriesField from '../form-fields/Countries';
+import AutoFocus from '../AutoFocus';
+import SearchDropDown from '../SearchDropdown';
+import { request } from 'utils/api';
 
 @inject('shops')
 @observer

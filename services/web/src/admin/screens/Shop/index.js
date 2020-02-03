@@ -1,14 +1,14 @@
 import React from 'react';
 import { observer, inject } from 'mobx-react';
 import { Switch, Route, Link } from 'react-router-dom';
-import AppWrapper from 'components/AppWrapper';
+import AppWrapper from 'admin/components/AppWrapper';
 
 import { Container, Divider, Breadcrumb, Button } from 'semantic-ui-react';
 import Menu from './Menu';
-import PageLoader from 'components/PageLoader';
+import PageLoader from 'admin/components/PageLoader';
 import Overview from './Overview';
 import Products from './Products';
-import EditShop from 'components/modals/EditShop';
+import EditShop from 'admin/components/modals/EditShop';
 
 @inject('shops')
 @observer
@@ -41,11 +41,11 @@ export default class Shop extends React.Component {
             }
           />
           <Breadcrumb size="big">
-            <Breadcrumb.Section link as={Link} to="/">
+            <Breadcrumb.Section link as={Link} to="/admin/">
               Home
             </Breadcrumb.Section>
             <Breadcrumb.Divider icon="right chevron" />
-            <Breadcrumb.Section link as={Link} to="/shops">
+            <Breadcrumb.Section link as={Link} to="/admin/shops">
               Shops
             </Breadcrumb.Section>
             <Breadcrumb.Divider icon="right chevron" />
@@ -62,12 +62,12 @@ export default class Shop extends React.Component {
           <Switch>
             <Route
               exact
-              path="/shops/:id/products"
+              path="/admin/shops/:id/products"
               component={(props) => <Products {...props} shop={item} />}
             />
             <Route
               exact
-              path="/shops/:id"
+              path="/admin/shops/:id"
               item={item}
               component={(props) => <Overview {...props} shop={item} />}
             />

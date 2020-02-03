@@ -1,12 +1,12 @@
 import React from 'react';
 import { Segment, Message, Grid } from 'semantic-ui-react';
 import { observer, inject } from 'mobx-react';
-import PageCenter from 'components/PageCenter';
-import LogoTitle from 'components/LogoTitle';
+import PageCenter from 'admin/components/PageCenter';
+import LogoTitle from 'admin/components/LogoTitle';
 
 import Form from './Form';
 import { Link } from 'react-router-dom';
-import { getToken, parseToken } from 'utils/token';
+import { getToken, parseToken } from 'utils/api';
 
 @inject('auth', 'routing')
 @observer
@@ -26,7 +26,7 @@ export default class AcceptInvite extends React.Component {
     return this.props.auth
       .acceptInvite({ ...body, token: this.state.token }, 'accepInvite')
       .then(() => {
-        this.props.routing.push('/');
+        this.props.routing.push('/admin/');
       });
   };
 
@@ -46,7 +46,7 @@ export default class AcceptInvite extends React.Component {
           <Segment secondary>
             <Grid>
               <Grid.Column floated="left" width={12}>
-                Already have an account? <Link to="/login">Login</Link>
+                Already have an account? <Link to="/admin/login">Login</Link>
               </Grid.Column>
             </Grid>
           </Segment>

@@ -3,8 +3,8 @@ import { observer, inject } from 'mobx-react';
 
 import { Form, Label, Message, Button, Modal } from 'semantic-ui-react';
 
-import DateTimeField from 'components/form-fields/DateTime';
-import AutoFocus from 'components/AutoFocus';
+import DateTimeField from '../form-fields/DateTime';
+import AutoFocus from '../AutoFocus';
 
 function resetState(initialValues = {}) {
   const { sellingPoints = [] } = initialValues;

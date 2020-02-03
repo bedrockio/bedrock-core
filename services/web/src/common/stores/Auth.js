@@ -1,9 +1,9 @@
 import { action } from 'mobx';
 import BaseStore from './BaseStore';
-import request from 'utils/request';
+import { request } from 'utils/api';
 import { omit } from 'lodash';
 
-import appSession from 'stores/AppSession';
+import appSession from './AppSession';
 
 export default class AuthStore extends BaseStore {
   @action

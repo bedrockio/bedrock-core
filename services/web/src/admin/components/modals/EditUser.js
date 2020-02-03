@@ -1,8 +1,8 @@
 import React from 'react';
 import { observer, inject } from 'mobx-react';
 import { Form, Message, Modal, Button } from 'semantic-ui-react';
-import Password from 'components/form-fields/Password';
-import AutoFocus from 'components/AutoFocus';
+import Password from '../form-fields/Password';
+import AutoFocus from '../AutoFocus';
 
 const rolesOptions = [
   { text: 'Admin', value: 'admin' },

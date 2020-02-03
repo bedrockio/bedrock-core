@@ -3,9 +3,9 @@ import { observer, inject } from 'mobx-react';
 import { DateTime } from 'luxon';
 
 import styled from 'styled-components';
-import Pagination from 'components/Pagination';
-import HelpTip from 'components/HelpTip';
-import EditProduct from 'components/modals/EditProduct';
+import Pagination from 'admin/components/Pagination';
+import HelpTip from 'admin/components/HelpTip';
+import EditProduct from 'admin/components/modals/EditProduct';
 
 const Center = styled.div`
   display: flex;

@@ -1,6 +1,6 @@
 import qsStringify from './query-stringify';
-import config from 'config';
-import appSession from 'stores/AppSession';
+import appSession from 'common/stores/AppSession';
+import { API_URL } from '../env/client';
 
 export default function request(options) {
   const { path, method, body, params, token, file } = Object.assign(
@@ -22,7 +22,7 @@ export default function request(options) {
   const paramsPath = Object.keys(params || {}).length
     ? `?${qsStringify(params)}`
     : '';
-  const endpoint = `${config.API_URL.replace(/\/$/, '')}/${path.replace(
+  const endpoint = `${API_URL.replace(/\/$/, '')}/${path.replace(
     /^\//,
     ''
   )}${paramsPath}`;

@@ -2,12 +2,12 @@ import React from 'react';
 import { Segment, Message } from 'semantic-ui-react';
 import { observer, inject } from 'mobx-react';
 
-import PageCenter from 'components/PageCenter';
-import LogoTitle from 'components/LogoTitle';
+import PageCenter from 'admin/components/PageCenter';
+import LogoTitle from 'admin/components/LogoTitle';
 import Form from './Form';
 import { Link } from 'react-router-dom';
 
-import { getToken, parseToken } from 'utils/token';
+import { getToken, parseToken } from 'utils/api';
 
 @inject('auth')
 @observer
@@ -54,7 +54,7 @@ export default class ResetPassword extends React.Component {
               <Message info>
                 <Message.Header>Your password has been changed!</Message.Header>
                 <p>
-                  Click here to open the <Link to="/">Dashboard</Link>
+                  Click here to open the <Link to="/admin/">Dashboard</Link>
                 </p>
               </Message>
             )}

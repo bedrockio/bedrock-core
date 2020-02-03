@@ -17,8 +17,8 @@ import {
   Visibility
 } from 'semantic-ui-react';
 
-import logo from 'assets/logo.svg';
-import nanImage from 'assets/nan.jpg';
+import logo from 'admin/assets/logo.svg';
+import nanImage from 'admin/assets/nan.jpg';
 
 const HomepageHeading = ({ mobile }) => (
   <Container text>
@@ -86,15 +86,15 @@ class DesktopContainer extends React.Component {
               size="large"
             >
               <Container>
-                <Menu.Item to="/" as={Link} active>
+                <Menu.Item to="/admin/" as={Link} active>
                   Home
                 </Menu.Item>
                 <Menu.Item position="right">
-                  <Button to="/login" as={Link} inverted={!fixed}>
+                  <Button to="/admin/login" as={Link} inverted={!fixed}>
                     Log in
                   </Button>
                   <Button
-                    to="/signup"
+                    to="/admin/signup"
                     as={Link}
                     inverted={!fixed}
                     primary={fixed}
@@ -141,13 +141,13 @@ class MobileContainer extends React.Component {
             vertical
             visible={sidebarOpened}
           >
-            <Menu.Item to="/" as={Link} active>
+            <Menu.Item to="/admin/" as={Link} active>
               Home
             </Menu.Item>
-            <Menu.Item to="/login" as={Link}>
+            <Menu.Item to="/admin/login" as={Link}>
               Log in
             </Menu.Item>
-            <Menu.Item to="/register" as={Link}>
+            <Menu.Item to="/admin/register" as={Link}>
               Register
             </Menu.Item>
           </Sidebar>
@@ -169,11 +169,11 @@ class MobileContainer extends React.Component {
                     <Icon name="sidebar" />
                   </Menu.Item>
                   <Menu.Item position="right">
-                    <Button to="/login" as={Link} inverted>
+                    <Button to="/admin/login" as={Link} inverted>
                       Log in
                     </Button>
                     <Button
-                      to="/register"
+                      to="/admin/register"
                       as={Link}
                       inverted
                       style={{ marginLeft: '0.5em' }}

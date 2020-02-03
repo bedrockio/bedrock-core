@@ -2,7 +2,7 @@ import React from 'react';
 import { observer, inject } from 'mobx-react';
 import { NavLink, Link } from 'react-router-dom';
 import { Container, Dropdown, Icon, Menu } from 'semantic-ui-react';
-import logoInverted from 'assets/logo.svg';
+import logoInverted from 'admin/assets/logo.svg';
 
 @inject('me')
 @observer
@@ -14,14 +14,14 @@ export default class AppWrapper extends React.Component {
       <div>
         <Menu inverted fixed="top">
           <Container>
-            <Menu.Item as={Link} to="/">
+            <Menu.Item as={Link} to="/admin/">
               <img
                 style={{ width: '30px' }}
                 className="logo"
                 src={`${logoInverted}`}
               />
             </Menu.Item>
-            <Menu.Item as={NavLink} to="/shops">
+            <Menu.Item as={NavLink} to="/admin/shops">
               Shops
             </Menu.Item>
             <Menu.Menu position="right">
@@ -35,20 +35,20 @@ export default class AppWrapper extends React.Component {
                 }
               >
                 <Dropdown.Menu>
-                  <Dropdown.Item as={Link} to="/settings">
+                  <Dropdown.Item as={Link} to="/admin/settings">
                     Settings
                   </Dropdown.Item>
                   {isAdmin && (
-                    <Dropdown.Item as={Link} to="/users">
+                    <Dropdown.Item as={Link} to="/admin/users">
                       Users
                     </Dropdown.Item>
                   )}
                   {isAdmin && (
-                    <Dropdown.Item as={Link} to="/invites">
+                    <Dropdown.Item as={Link} to="/admin/invites">
                       Invites
                     </Dropdown.Item>
                   )}
-                  <Dropdown.Item as={Link} to="/logout">
+                  <Dropdown.Item as={Link} to="/admin/logout">
                     Log Out
                   </Dropdown.Item>
                 </Dropdown.Menu>

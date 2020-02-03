@@ -3,9 +3,9 @@ import { observer, inject } from 'mobx-react';
 import { DateTime } from 'luxon';
 
 import styled from 'styled-components';
-import AppWrapper from 'components/AppWrapper';
-import InviteUser from 'components/modals/InviteUser';
-import Pagination from 'components/Pagination';
+import AppWrapper from 'admin/components/AppWrapper';
+import InviteUser from 'admin/components/modals/InviteUser';
+import Pagination from 'admin/components/Pagination';
 
 import {
   Container,

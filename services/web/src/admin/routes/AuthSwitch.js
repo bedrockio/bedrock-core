@@ -1,7 +1,7 @@
 import React from 'react';
 import { observer, inject } from 'mobx-react';
 import { Route } from 'react-router-dom';
-import Boot from 'components/Boot';
+import Boot from 'admin/components/Boot';
 
 @inject('appSession')
 @observer
