@@ -8,15 +8,7 @@ const router = new Router();
 
 const passwordField = Joi.string()
   .min(6)
-  .options({
-    language: {
-      string: {
-        regex: {
-          base: 'Your password must be at least 6 characters long. Please try another.'
-        }
-      }
-    }
-  });
+  .message('Your password must be at least 6 characters long. Please try another.');
 
 router
   .use(authenticate({ type: 'user' }))
@@ -33,10 +25,10 @@ router
   .patch(
     '/me',
     validate({
-      body: {
+      body: Joi.object({
         name: Joi.string(),
         timeZone: Joi.string()
-      }
+      })
     }),
     async (ctx) => {
       const { authUser } = ctx.state;
@@ -49,7 +41,7 @@ router
   .post(
     '/search',
     validate({
-      body: {
+      body: Joi.object({
         skip: Joi.number().default(0),
         sort: Joi.object({
           field: Joi.string().required(),
@@ -61,7 +53,7 @@ router
         limit: Joi.number()
           .positive()
           .default(50)
-      }
+      })
     }),
     async (ctx) => {
       const { sort, skip, limit } = ctx.request.body;
@@ -85,7 +77,7 @@ router
   .post(
     '/',
     validate({
-      body: {
+      body: Joi.object({
         email: Joi.string()
           .lowercase()
           .email()
@@ -93,7 +85,7 @@ router
         name: Joi.string().required(),
         roles: Joi.array().items(Joi.string()),
         password: passwordField.required()
-      }
+      })
     }),
     async (ctx) => {
       const { email } = ctx.request.body;
@@ -116,14 +108,14 @@ router
   .patch(
     '/:user',
     validate({
-      body: {
+      body: Joi.object({
         id: Joi.string().strip(),
         email: Joi.string(),
         name: Joi.string(),
         roles: Joi.array().items(Joi.string()),
         createdAt: Joi.date().strip(),
         updatedAt: Joi.date().strip()
-      }
+      })
     }),
     async (ctx) => {
       const { user } = ctx.state;

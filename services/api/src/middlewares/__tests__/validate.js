@@ -5,7 +5,7 @@ const { context } = require('../../test-helpers');
 describe('validate', () => {
   it("should throw an error when the request doesn't contain a key as specified in Joi schema", async () => {
     const middleware = validate({
-      body: {} // Does not exist in given context
+      body: Joi.object({}) // Does not exist in given context
     });
     const ctx = context();
 
@@ -41,7 +41,7 @@ describe('validate', () => {
 
   it('should support the light syntax', async () => {
     const middleware = validate({
-      body: { test: Joi.string().required() }
+      body: Joi.object({ test: Joi.string().required() })
     });
     const ctx = context({ url: '/' });
     ctx.request.body = { test: 'something' };
@@ -53,7 +53,7 @@ describe('validate', () => {
 
   it('should do type conversion for query', async () => {
     const middleware = validate({
-      query: { convertToNumber: Joi.number().required() }
+      query: Joi.object({ convertToNumber: Joi.number().required() })
     });
     const ctx = context({ url: '/' });
     ctx.request.query = {
@@ -67,7 +67,7 @@ describe('validate', () => {
 
   it('should not allow attributes that are not defined', async () => {
     const middleware = validate({
-      query: { somethingExisting: Joi.string() }
+      query: Joi.object({ somethingExisting: Joi.string() })
     });
 
     const ctx = context({ url: '/' });
