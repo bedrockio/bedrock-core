@@ -1,0 +1,53 @@
+// Pre-defined animations. These allow for more subtle effects that
+// css transitions can't achieve, mostly for reversing the timing
+// function depending on the in or out state.
+//
+// Note: "animation-fill-mode: both" is required here as any animation
+// delays will keep the animation in it's final state which will cause
+// a jump.
+//
+// Note: less is shit and doesn't throw proper error messages, so if
+// you don't pass a @duration you will see a message saying that the
+// mixin isn't defined.
+//
+// Note: Firefox is strange here and seems to retain animation state
+// for classes that override. For example:
+//
+// .foo {
+//   .slideUpOut(500ms);
+// }
+// .foo.in {
+//   .slideUpIn(500ms);
+// }
+//
+// When the "in" class is removed it will not slide out as applying
+// the in animation did not reset the out animation state. However for
+// simple appearance animations this is acceptable.
+
+@import './easing';
+@import (once) './keyframes';
+
+.slideUpIn(@duration, @delay: 0s) {
+  animation: slide-up-in @duration @easeOutCubic @delay both;
+}
+
+.slideUpOut(@duration, @delay: 0s) {
+  animation: slide-up-out @duration @easeInCubic @delay both;
+}
+
+.slideLeftIn(@duration, @delay: 0s) {
+  animation: slide-left-in @duration @easeOutCubic @delay both;
+}
+
+.slideLeftOut(@duration, @delay: 0s) {
+  animation: slide-left-out @duration @easeInCubic @delay both;
+}
+
+.slideRightIn(@duration, @delay: 0s) {
+  animation: slide-right-in @duration @easeOutCubic @delay both;
+}
+
+.slideRightOut(@duration, @delay: 0s) {
+  animation: slide-right-out @duration @easeInCubic @delay both;
+}
+

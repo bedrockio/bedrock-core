@@ -1,0 +1,516 @@
+/*!
+ * Semantic UI Icon component reworked to use SVG icons.
+ */
+
+/*******************************
+            Theme
+*******************************/
+
+@type    : 'element';
+@element : 'icon';
+
+@import (multiple) '../../theme.config';
+
+
+// Overriding font-sizes here to approximate in pixels.
+
+// TODO: copied from public/styles/vars for now.
+
+@mini:    16px;
+@tiny:    20px;
+@small:   24px;
+@medium:  40px;
+@large:   64px;
+@big:     104px;
+@huge:    165px;
+@massive: 230px;
+
+/*******************************
+             Icon
+*******************************/
+
+.svg-icon {
+  fill: currentColor;
+  touch-action: manipulation;
+  display: inline-block;
+
+  vertical-align: middle;
+  opacity: @opacity;
+
+  paint-order: stroke;
+  backface-visibility: hidden;
+}
+
+.svg-icon.clickable {
+  cursor: pointer;
+}
+
+/*******************************
+             Types
+*******************************/
+
+/*--------------
+    Loading
+---------------*/
+
+.svg-icon.loading {
+  height: 1em;
+  line-height: 1;
+  animation: icon-loading @loadingDuration linear infinite;
+}
+@keyframes icon-loading {
+ from {
+    transform: rotate(0deg);
+ }
+ to {
+    transform: rotate(360deg);
+ }
+}
+
+/*******************************
+             States
+*******************************/
+
+.svg-icon.hover {
+  opacity: 1 !important;
+}
+
+.svg-icon.active {
+  opacity: 1 !important;
+}
+
+.emphasized.svg-icon {
+  opacity: 1 !important;
+}
+
+.disabled.svg-icon {
+  opacity: @disabledOpacity !important;
+}
+
+
+/*******************************
+           Variations
+*******************************/
+
+
+/*-------------------
+        Fitted
+--------------------*/
+
+.fitted.svg-icon {
+  width: auto;
+  margin: 0em !important;
+}
+
+/*-------------------
+         Link
+--------------------*/
+
+.link.svg-icon, i.link.icons {
+  cursor: pointer;
+  opacity: @linkOpacity;
+  transition: opacity @defaultDuration @defaultEasing;
+  color: inherit;
+}
+.link.svg-icon:hover, i.link.icons:hover {
+  opacity: 1 !important;
+}
+
+/*-------------------
+      Circular
+--------------------*/
+
+.circular.svg-icon {
+  border-radius: 500em !important;
+  line-height: 1 !important;
+
+  padding: @circularPadding !important;
+  box-shadow: @circularShadow;
+
+  width: @circularSize !important;
+  height: @circularSize !important;
+}
+.circular.inverted.svg-icon {
+  border: none;
+  box-shadow: none;
+}
+
+/*-------------------
+      Flipped
+--------------------*/
+
+.flipped.svg-icon,
+.horizontally.flipped.svg-icon {
+  transform: scale(-1, 1);
+}
+.vertically.flipped.svg-icon {
+  transform: scale(1, -1);
+}
+
+/*-------------------
+      Rotated
+--------------------*/
+
+.rotated.svg-icon,
+.right.rotated.svg-icon,
+.clockwise.rotated.svg-icon {
+  transform: rotate(90deg);
+}
+
+.left.rotated.svg-icon,
+.counterclockwise.rotated.svg-icon {
+  transform: rotate(-90deg);
+}
+
+/*-------------------
+      Bordered
+--------------------*/
+
+.bordered.svg-icon {
+  line-height: 1;
+  vertical-align: baseline;
+
+  width: @borderedSize;
+  height: @borderedSize;
+  padding: @borderedVerticalPadding @borderedHorizontalPadding !important;
+  box-shadow: @borderedShadow;
+}
+.bordered.inverted.svg-icon {
+  border: none;
+  box-shadow: none;
+}
+
+/*-------------------
+      Inverted
+--------------------*/
+
+/* Inverted Shapes */
+.inverted.bordered.svg-icon,
+.inverted.circular.svg-icon {
+  background-color: @black !important;
+  color: @white !important;
+}
+
+.inverted.svg-icon {
+  color: @white;
+}
+
+
+/*-------------------
+       Colors
+--------------------*/
+
+/* Red */
+.red.svg-icon {
+  color: @red !important;
+}
+.inverted.red.svg-icon {
+  color: @lightRed !important;
+}
+.inverted.bordered.red.svg-icon,
+.inverted.circular.red.svg-icon {
+  background-color: @red !important;
+  color: @white !important;
+}
+
+/* Orange */
+.orange.svg-icon {
+  color: @orange !important;
+}
+.inverted.orange.svg-icon {
+  color: @lightOrange !important;
+}
+.inverted.bordered.orange.svg-icon,
+.inverted.circular.orange.svg-icon {
+  background-color: @orange !important;
+  color: @white !important;
+}
+
+/* Yellow */
+.yellow.svg-icon {
+  color: @yellow !important;
+}
+.inverted.yellow.svg-icon {
+  color: @lightYellow !important;
+}
+.inverted.bordered.yellow.svg-icon,
+.inverted.circular.yellow.svg-icon {
+  background-color: @yellow !important;
+  color: @white !important;
+}
+
+/* Olive */
+.olive.svg-icon {
+  color: @olive !important;
+}
+.inverted.olive.svg-icon {
+  color: @lightOlive !important;
+}
+.inverted.bordered.olive.svg-icon,
+.inverted.circular.olive.svg-icon {
+  background-color: @olive !important;
+  color: @white !important;
+}
+
+/* Green */
+.green.svg-icon {
+  color: @green !important;
+}
+.inverted.green.svg-icon {
+  color: @lightGreen !important;
+}
+.inverted.bordered.green.svg-icon,
+.inverted.circular.green.svg-icon {
+  background-color: @green !important;
+  color: @white !important;
+}
+
+/* Teal */
+.teal.svg-icon {
+  color: @teal !important;
+}
+.inverted.teal.svg-icon {
+  color: @lightTeal !important;
+}
+.inverted.bordered.teal.svg-icon,
+.inverted.circular.teal.svg-icon {
+  background-color: @teal !important;
+  color: @white !important;
+}
+
+/* Blue */
+.blue.svg-icon {
+  color: @blue !important;
+}
+.inverted.blue.svg-icon {
+  color: @lightBlue !important;
+}
+.inverted.bordered.blue.svg-icon,
+.inverted.circular.blue.svg-icon {
+  background-color: @blue !important;
+  color: @white !important;
+}
+
+/* Violet */
+.violet.svg-icon {
+  color: @violet !important;
+}
+.inverted.violet.svg-icon {
+  color: @lightViolet !important;
+}
+.inverted.bordered.violet.svg-icon,
+.inverted.circular.violet.svg-icon {
+  background-color: @violet !important;
+  color: @white !important;
+}
+
+/* Purple */
+.purple.svg-icon {
+  color: @purple !important;
+}
+.inverted.purple.svg-icon {
+  color: @lightPurple !important;
+}
+.inverted.bordered.purple.svg-icon,
+.inverted.circular.purple.svg-icon {
+  background-color: @purple !important;
+  color: @white !important;
+}
+
+/* Pink */
+.pink.svg-icon {
+  color: @pink !important;
+}
+.inverted.pink.svg-icon {
+  color: @lightPink !important;
+}
+.inverted.bordered.pink.svg-icon,
+.inverted.circular.pink.svg-icon {
+  background-color: @pink !important;
+  color: @white !important;
+}
+
+/* Brown */
+.brown.svg-icon {
+  color: @brown !important;
+}
+.inverted.brown.svg-icon {
+  color: @lightBrown !important;
+}
+.inverted.bordered.brown.svg-icon,
+.inverted.circular.brown.svg-icon {
+  background-color: @brown !important;
+  color: @white !important;
+}
+
+/* Grey */
+.grey.svg-icon {
+  color: @grey !important;
+}
+.inverted.grey.svg-icon {
+  color: @lightGrey !important;
+}
+.inverted.bordered.grey.svg-icon,
+.inverted.circular.grey.svg-icon {
+  background-color: @grey !important;
+  color: @white !important;
+}
+
+/* Black */
+.black.svg-icon {
+  color: @black !important;
+}
+.inverted.black.svg-icon {
+  color: @lightBlack !important;
+}
+.inverted.bordered.black.svg-icon,
+.inverted.circular.black.svg-icon {
+  background-color: @black !important;
+  color: @white !important;
+}
+
+/*-------------------
+        Sizes
+--------------------*/
+
+.mini.svg-icon,
+.mini.icons > .svg-icon {
+  width: @mini !important;
+  height: @mini !important;
+}
+.tiny.svg-icon,
+.tiny.icons > .svg-icon {
+  width: @tiny !important;
+  height: @tiny !important;
+}
+.small.svg-icon,
+.small.icons > .svg-icon {
+  width: @small !important;
+  height: @small !important;
+}
+.svg-icon,
+.icons > .svg-icon {
+  width: @medium !important;
+  height: @medium !important;
+}
+.large.svg-icon,
+.large.icons > .svg-icon {
+  width: @large !important;
+  height: @large !important;
+}
+.big.svg-icon,
+.big.icons > .svg-icon {
+  width: @big !important;
+  height: @big !important;
+}
+.huge.svg-icon,
+.huge.icons > .svg-icon {
+  width: @huge !important;
+  height: @huge !important;
+}
+.massive.svg-icon,
+.massive.icons > .svg-icon {
+  width: @massive !important;
+  height: @massive !important;
+}
+.svg-icon[width] {
+  width: auto !important;
+}
+.svg-icon[height] {
+  height: auto !important;
+}
+
+
+/*******************************
+            Groups
+*******************************/
+
+.icons {
+  display: inline-block;
+  position: relative;
+  line-height: 1;
+}
+
+.icons .svg-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  margin: 0em;
+  margin: 0;
+}
+
+.icons .svg-icon:first-child {
+  position: static;
+  vertical-align: top;
+  transform: none;
+  margin-right: @distanceFromText;
+}
+
+/* Corner Icon */
+.icons .corner.svg-icon {
+  top: auto;
+  left: auto;
+  right: 0;
+  bottom: 0;
+  transform: none;
+  width: @small;
+  height: @small;
+  stroke: rgba(0, 0, 0, 0.1);
+}
+.icons .top.right.corner.svg-icon {
+  top: 0;
+  left: auto;
+  right: 0;
+  bottom: auto;
+}
+.icons .top.left.corner.svg-icon {
+  top: 0;
+  left: 0;
+  right: auto;
+  bottom: auto;
+}
+.icons .bottom.left.corner.svg-icon {
+  top: auto;
+  left: 0;
+  right: auto;
+  bottom: 0;
+}
+.icons .bottom.right.corner.svg-icon {
+  top: auto;
+  left: auto;
+  right: 0;
+  bottom: 0;
+}
+
+.loadUIOverrides();
+
+.ui.steps .step > .svg-icon {
+  margin: 0em 1rem 0em 0em;
+}
+
+.ui.icon.message > .svg-icon:not(.close) {
+  display: block;
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  width: auto;
+  line-height: 1;
+  vertical-align: middle;
+  font-size: 3em;
+  opacity: .8;
+}
+.ui.message > .svg-icon {
+    margin-right: .6em;
+}
+
+.ui.input {
+  position: relative;
+}
+
+.ui.input > .svg-icon {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+}

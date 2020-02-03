@@ -1,0 +1,146 @@
+@import './easing';
+
+.slideout(@length, @duration, @delay: 0ms) {
+  will-change: transform, opacity;
+
+  &-appear {
+    .out();
+  }
+
+  &-enter {
+    .in();
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  &-enter-active {
+    .in();
+    opacity: 0;
+    transform: translateX(@length);
+    transition: transform @duration @easeInQuart @delay, opacity @duration @easeInQuart @delay;
+  }
+
+  &-enter-done {
+    .out();
+    opacity: 0;
+    transform: translateX(@length);
+  }
+
+  &-exit {
+    .out();
+    opacity: 0;
+    transform: translateX(@length);
+  }
+
+  &-exit-active {
+    .in();
+    opacity: 1;
+    transform: translateX(0);
+    transition: transform @duration @easeOutQuart, opacity @duration @easeOutQuart;
+  }
+
+  &-exit-done {
+    .in();
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+}
+
+.zoomout(@scale, @duration, @delay: 0ms) {
+  will-change: transform, opacity;
+
+  &-appear {
+    .out();
+  }
+
+  &-enter {
+    .in();
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  &-enter-active {
+    .in();
+    opacity: 0;
+    transform: scale(@scale);
+    transition: transform @duration @easeInQuart @delay, opacity @duration @easeInQuart @delay;
+  }
+
+  &-enter-done {
+    .out();
+    opacity: 0;
+    transform: scale(@scale);
+  }
+
+  &-exit {
+    .out();
+    opacity: 0;
+    transform: scale(@scale);
+  }
+
+  &-exit-active {
+    .in();
+    opacity: 1;
+    transform: scale(1);
+    transition: transform @duration @easeOutQuart, opacity @duration @easeOutQuart;
+  }
+
+  &-exit-done {
+    .in();
+    opacity: 1;
+    transform: scale(1);
+  }
+
+}
+
+.fadeout(@duration, @delay: 0ms) {
+  will-change: opacity;
+
+  &-appear {
+    .out();
+  }
+
+  &-enter {
+    .in();
+    opacity: 1;
+  }
+
+  &-enter-active {
+    .in();
+    opacity: 0;
+    transition: opacity @duration linear @delay;
+  }
+
+  &-enter-done {
+    .out();
+    opacity: 0;
+  }
+
+  &-exit {
+    .out();
+    opacity: 0;
+  }
+
+  &-exit-active {
+    .in();
+    opacity: 1;
+    transition: opacity @duration linear;
+  }
+
+  &-exit-done {
+    .in();
+    opacity: 1;
+  }
+
+}
+
+.in() {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.out() {
+  visibility: hidden;
+  pointer-events: none;
+}
