@@ -1,0 +1,8 @@
+/* Fix for loader inside modal inverting */
+
+.ui.dimmer > .ui.modal .ui.loader:before {
+  border-color: @loaderFillColor;
+}
+.ui.dimmer > .ui.modal .ui.loader:after {
+  border-color: @shapeBorderColor;
+}

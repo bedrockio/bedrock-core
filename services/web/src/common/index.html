@@ -1,44 +1,63 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="Content-Language" content="en" />
+    <meta charset="utf-8">
+    <!-- Basic -->
+    <title>Platform Web</title>
+    <meta
+      name="description"
+      content=""
+      data-react-helmet>
+    <!-- FB -->
+    <meta property="og:title" content="" data-react-helmet>
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="">
+    <meta property="og:url" content="">
+    <meta
+      property="og:image"
+      content=""
+      data-react-helmet>
+    <meta
+      property="og:description"
+      content=""
+      data-react-helmet>
+    <!-- Twitter -->
+    <meta name="twitter:title" content="" data-react-helmet>
+    <meta name="twitter:site" content="">
+    <meta name="twitter:creator" content="">
+    <meta
+      name="twitter:image"
+      content=""
+      data-react-helmet>
+    <meta
+      name="twitter:description"
+      content=""
+      data-react-helmet>
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
-    />
-    <title>Platform Web</title>
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
     <link
       rel="apple-touch-icon"
       sizes="180x180"
-      href="<%= require('assets/favicons/apple-touch-icon.png') %>"
-    />
+      href="<%= require('common/assets/favicon-apple.png') %>">
     <link
       rel="icon"
       type="image/png"
       sizes="32x32"
-      href="<%= require('assets/favicons/favicon-32x32.png') %>"
-    />
+      href="<%= require('common/assets/favicon-32x32.png') %>">
     <link
       rel="icon"
       type="image/png"
-      sizes="16x16"
-      href="<%= require('assets/favicons/favicon-16x16.png') %>"
-    />
-    <link
-      rel="mask-icon"
-      href="<$= require('assets/favicons/safari-pinned-tab.svg') %>"
-      color="#5bbad5"
-    />
-    <meta name="msapplication-TileColor" content="#b91d47" />
-    <meta name="theme-color" content="#ffffff" />
-    <script
-      src="https://browser.sentry-cdn.com/4.6.4/bundle.min.js"
-      crossorigin="anonymous"
-    ></script>
+      sizes="32x32"
+      href="<%= require('common/assets/favicon-16x16.png') %>">
+    <meta name="msapplication-TileColor" content="#b91d47">
+    <meta name="theme-color" content="#ffffff">
     <!--env:conf-->
+    <% if (!DEV) { %>
+      <%= require('html-loader!utils/analytics/bootstrap.html') %>
+    <% } %>
   </head>
   <body>
-    <div style="height:100%;" id="root"></div>
+    <div id="root"></div>
   </body>
 </html>
