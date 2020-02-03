@@ -19,11 +19,11 @@
   },
   "dependencies": {
     "@google-cloud/storage": "^2.5.0",
+    "@hapi/joi": "^17.1.0",
     "@kaareal/config": "^0.1.1",
     "@koa/cors": "^3.0.0",
     "@sentry/node": "^5.2.0",
     "bcrypt": "^3.0.6",
-    "joi": "14.3.1",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.7.0",
     "koa-body": "^4.0.8",
@@ -38,15 +38,15 @@
     "eslint": "^5.16.0",
     "eslint-config-prettier": "^4.2.0",
     "eslint-plugin-jest": "^22.5.1",
-    "jest": "^24.8.0",
+    "jest": "^25.1.0",
     "joi-to-json-schema": "^5.0.0",
     "juice": "^5.2.0",
     "mongodb-memory-server": "^5.1.1",
     "nodemon": "^1.19.0",
     "pre-commit": "1.2.2",
-    "prettier": "^1.17.0",
-    "prettier-eslint": "^8.8.2",
-    "supertest": "3.0.0"
+    "prettier": "^1.19.1",
+    "prettier-eslint": "^9.0.1",
+    "supertest": "^4.0.2"
   },
   "jest": {
     "setupFiles": [
@@ -88,8 +88,8 @@
     "arrowParens": "always",
     "printWidth": 120
   },
-  "toolchain": {
-    "node": "12.2.0",
-    "yarn": "1.13.0"
+  "volta": {
+    "node": "12.14.1",
+    "yarn": "1.21.1"
   }
 }

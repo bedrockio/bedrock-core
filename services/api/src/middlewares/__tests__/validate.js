@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require('@hapi/joi');
 const validate = require('../validate');
 const { context } = require('../../test-helpers');
 

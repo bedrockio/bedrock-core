@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require('@hapi/joi');
 
 function validate(schemas, options) {
   const defaultOptions = {

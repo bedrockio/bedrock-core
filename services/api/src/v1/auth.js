@@ -1,5 +1,5 @@
 const Router = require('koa-router');
-const Joi = require('joi');
+const Joi = require('@hapi/joi');
 const validate = require('../middlewares/validate');
 const { authenticate } = require('../middlewares/authenticate');
 const tokens = require('../lib/tokens');
