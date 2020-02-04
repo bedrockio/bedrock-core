@@ -2,8 +2,9 @@ import React from 'react';
 import { defer } from 'lodash';
 import { Helmet } from 'react-helmet-async';
 import { getCurrentLocaleCode } from 'utils/l10n/client';
-import { trackPage } from 'utils/analytics';
 import { Component } from 'common/helpers';
+import { trackPage } from 'utils/analytics';
+import { scrollToTop } from 'utils/helpers';
 
 // TODO: how do we deal with metadata/contentful etc?
 // TODO: this is starting to get brittle with having to
@@ -25,35 +26,7 @@ export default class Screen extends Component {
       // segment.io checks for a canonical link first.
       defer(trackPage, this.constructor.name);
     } else if (type === 'PUSH') {
-      this.scrollToTop();
-    }
-  }
-
-  scrollToTop() {
-    if (window.scrollY === 0) {
-      return Promise.resolve();
-    } else {
-      return new Promise(function(resolve, reject) {
-        // Some browsers will throw an error on scrollTo
-        // when an options object is passed.
-        try {
-          window.scrollTo({
-            top: 0,
-            left: 0,
-            behavior: 'smooth'
-          });
-          function onScroll() {
-            if (window.scrollY === 0) {
-              window.removeEventListener('scroll', onScroll);
-              resolve();
-            }
-          }
-          window.addEventListener('scroll', onScroll);
-        } catch (err) {
-          window.scrollTo(0, 0);
-          resolve();
-        }
-      });
+      scrollToTop();
     }
   }
 

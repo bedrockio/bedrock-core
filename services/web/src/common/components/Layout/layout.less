@@ -1,0 +1,193 @@
+@import '../../styles/responsive';
+
+@padding: 10px;
+@extraPadding: 39px;
+
+.layout {
+  display: flex;
+  flex-flow: column;
+
+  // Don't remove this... will break kiosk
+  flex: auto;
+
+  &.horizontal,
+  &.center:not(.vertical):not(.horizontal) {
+    flex-flow: row;
+
+    @media @mobile {
+      &:not(.stackable) {
+        max-width: 100%;
+        overflow-x: auto;
+      }
+    }
+
+    &.stackable {
+      @media @mobile {
+        flex-flow: column;
+      }
+    }
+    &.right {
+      justify-content: flex-end;
+    }
+  }
+
+  &.center {
+    &.stackable {
+      @media @desktop {
+        align-items: center;
+      }
+    }
+    &:not(.stackable) {
+      align-items: center;
+    }
+    &:not(.vertical):not(.horizontal) {
+      justify-content: center;
+    }
+  }
+
+  &.stretch {
+    align-items: stretch;
+  }
+
+  &.baseline {
+    align-items: baseline;
+  }
+
+  &.top&.horizontal {
+    &:not(.stackable) {
+      align-items: flex-start;
+    }
+    &.stackable {
+      @media @desktop {
+        align-items: flex-start;
+      }
+    }
+  }
+
+  &.bottom&.horizontal {
+    &:not(.stackable) {
+      align-items: flex-end;
+    }
+    &.stackable {
+      @media @desktop {
+        align-items: flex-end;
+      }
+    }
+  }
+
+  &.spread {
+    justify-content: space-between;
+  }
+
+  &.wrap {
+    flex-wrap: wrap;
+  }
+
+  &.padded {
+
+    // Vertical (stacking doesn't apply)
+    &.vertical {
+      .verticalPadding();
+    }
+
+    &:not(.vertical) {
+
+      // Horizontal not stackable
+      &:not(.stackable) {
+        .horizontalPadding();
+      }
+
+      // Horizontal stackable
+      &.stackable {
+        @media @desktop {
+          .horizontalPadding();
+        }
+        @media @mobile {
+          .verticalPadding();
+
+          &.reversed {
+            flex-flow: column-reverse;
+          }
+        }
+      }
+    }
+
+  }
+
+}
+
+// Mixins
+
+.horizontalPadding() {
+  > .group {
+    &:not(:first-child) {
+      .paddingLeft();
+    }
+    &:not(:last-child) {
+      .paddingRight();
+    }
+  }
+}
+
+.verticalPadding() {
+  > .group {
+    padding-left: 0;
+    padding-right: 0;
+
+    :not(.reversed)& {
+      &:not(:first-child) {
+        .paddingTop();
+      }
+      &:not(:last-child) {
+        .paddingBottom();
+      }
+    }
+
+    .reversed& {
+      &:not(:first-child) {
+        .paddingBottom();
+      }
+      &:not(:last-child) {
+        .paddingTop();
+      }
+    }
+
+  }
+}
+
+.paddingLeft() {
+  :not(.extra)& {
+    padding-left: @padding;
+  }
+  .extra& {
+    padding-left: @extraPadding;
+  }
+}
+
+.paddingRight() {
+  :not(.extra)& {
+    padding-right: @padding;
+  }
+  .extra& {
+    padding-right: @extraPadding;
+  }
+}
+
+.paddingTop() {
+  :not(.extra)& {
+    padding-top: @padding;
+  }
+  .extra& {
+    padding-top: @extraPadding;
+  }
+}
+
+.paddingBottom() {
+  :not(.extra)& {
+    padding-bottom: @padding;
+  }
+  .extra& {
+    padding-bottom: @extraPadding;
+  }
+}
+
