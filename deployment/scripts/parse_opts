@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+
+parse_opts () {
+
+  local short=""
+  flush_short() {
+    local val=$1
+    if [[ "$short" != "" ]]; then
+      local key="opt_$short"
+      val=${val:=1}
+      export $key=$val
+      short=""
+    fi
+  }
+
+  while [[ $# > 0 ]]
+  do
+    case "${1}" in
+      --*)
+        local opt=${1:2}
+        local key=""
+        local var=""
+
+        if [[ $opt == *"="* ]]; then
+          # --foo= equvalent to empty
+          local arr=($(echo $opt | tr '=' ' '))
+          key="opt_${arr[0]}"
+          val=${arr[1]}
+        else
+          # --foo equivalent to --foo=1
+          key="opt_$opt"
+          val="1"
+        fi
+        key=$(echo "$key" | tr -d "-")
+
+        export $key=$val
+        ;;
+      -*)
+        short=${1:1}
+        ;;
+      *)
+        flush_short $1
+        ;;
+    esac
+    shift
+  done
+  flush_short
+}
+
+parse_arg() {
+  case "${1}" in
+    --*)
+      ;;
+    -*)
+      ;;
+    *)
+      echo $1
+      ;;
+  esac
+}

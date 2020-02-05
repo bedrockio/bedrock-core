@@ -33,6 +33,17 @@ check_config () {
 
 }
 
+if [ -d deployment/secrets ]; then
+  SECRET_FILES=`ls deployment/secrets | wc -l`
+  if [ "$SECRET_FILES" -ne 0 ]; then
+    echo "---"
+    echo "---"
+    echo "--- WARNING: Found a files in deployments/secrets/ - make sure to remove these!"
+    echo "---"
+    echo "---"
+  fi
+fi
+
 error=$(check_config)
 if [ "$error" != "" ]; then
   if [ "$FALLBACK" != "" ]; then

@@ -5,17 +5,21 @@ ENVIRONMENT=$1
 SERVICES=$(deployment/scripts/services $2)
 
 if [ "$ENVIRONMENT" == "" ]; then
-  echo "Usage: $0 <environment>"
-  exit 1
+cat <<-EOM
+  Usage: deploy_info <environment> [service]
+
+  Display deployment author, date, and git tag or ref.
+EOM
+exit 1
 fi
 
 ./deployment/scripts/check_gcloud_config $ENVIRONMENT 1
 
 function deploy_info() {
-  c1=$(get_path "Author" "author")
-  c2=$(get_path "Date" "date")
-  c3=$(get_path "Branch" "branch")
-  c4=$(get_path "Ref" "git")
+  c1=$(get_field "author" "Author")
+  c2=$(get_field "date" "Date")
+  c3=$(get_field "branch" "Branch")
+  c4=$(get_field "git" "Ref")
   info=$(kubectl get deployment $1-deployment -o jsonpath="$c1|$c2|$c3|$c4" --ignore-not-found)
 
   if [ "$info" != "" ]; then
@@ -29,8 +33,8 @@ function deploy_info() {
 
 }
 
-function get_path() {
-  echo "^$1: {.spec.template.metadata.annotations.$2}{'\n'}"
+function get_field() {
+  echo "^$2: {.spec.template.metadata.annotations.$1}{'\n'}"
 }
 
 echo ""
