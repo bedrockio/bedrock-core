@@ -2,8 +2,6 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CircularDependencyPlugin = require('circular-dependency-plugin');
 
 const extractLess = new ExtractTextPlugin({
   filename: '[name]-[hash].css'
@@ -11,6 +9,26 @@ const extractLess = new ExtractTextPlugin({
 
 const isProduction = process.argv.indexOf('-p') >= 0;
 const ENV = isProduction ? 'production' : 'development';
+
+const plugins = [
+  new webpack.ProvidePlugin({
+    fetch:
+      'imports-loader?this=>global!exports-loader?global.fetch!whatwg-fetch/dist/fetch.umd'
+  }),
+  new webpack.DefinePlugin({
+    ENV: JSON.stringify(ENV),
+    'process.env': {
+      // For react building https://facebook.github.io/react/docs/optimizing-performance.html#use-the-production-build
+      NODE_ENV: JSON.stringify(ENV)
+    }
+  }),
+  new HtmlWebpackPlugin({
+    chunks: ['vendor', 'app'],
+    template: 'src/index.html',
+    filename: 'index.html'
+  }),
+  extractLess
+];
 
 module.exports = {
   devtool: isProduction ? 'source-maps' : 'cheap-module-source-map',
@@ -36,23 +54,16 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
+        test: /\.js$/,
         use: {
           loader: 'babel-loader',
           options: {
             cacheDirectory: true,
-            presets: [
-              [
-                '@babel/preset-env',
-                {
-                  targets: '> 1%, not dead, not IE 11'
-                }
-              ],
-              '@babel/preset-react'
-            ],
+            babelrc: false,
+            presets: ['@babel/preset-env', '@babel/preset-react'],
             plugins: [
-              ['lodash'],
               ['react-hot-loader/babel'],
+              ['@babel/plugin-transform-runtime'],
               ['@babel/plugin-proposal-decorators', { legacy: true }],
               ['@babel/plugin-proposal-class-properties', { loose: true }],
               ['@babel/plugin-proposal-object-rest-spread'],
@@ -64,13 +75,13 @@ module.exports = {
         exclude: /node_modules/
       },
       {
-        test: /\.(css|less)$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          ...(isProduction ? ['postcss-loader'] : []),
-          'less-loader'
-        ]
+        test: /\.less|\.css$/,
+        use: extractLess.extract({
+          fallback: {
+            loader: 'style-loader'
+          },
+          use: ['css-loader', 'less-loader']
+        })
       },
       {
         test: /\.(eot|png|jpg|ttf|svg|gif)$/,
@@ -91,31 +102,5 @@ module.exports = {
       }
     ]
   },
-  plugins: [
-    new webpack.ProvidePlugin({
-      fetch:
-        'imports-loader?this=>global!exports-loader?global.fetch!whatwg-fetch/dist/fetch.umd'
-    }),
-    new webpack.DefinePlugin({
-      ENV: JSON.stringify(ENV),
-      'process.env': {
-        // For react building https://facebook.github.io/react/docs/optimizing-performance.html#use-the-production-build
-        NODE_ENV: JSON.stringify(ENV)
-      }
-    }),
-    new CircularDependencyPlugin({
-      exclude: /node_modules/,
-      failOnError: true,
-      cwd: process.cwd()
-    }),
-    new HtmlWebpackPlugin({
-      chunks: ['vendor', 'app'],
-      template: 'src/index.html',
-      filename: 'index.html'
-    }),
-    new MiniCssExtractPlugin({
-      filename: 'assets/[name]-[hash].css'
-    }),
-    extractLess
-  ]
+  plugins
 };

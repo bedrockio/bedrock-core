@@ -1,4 +1,4 @@
-FROM node:12-alpine
+FROM node:10-alpine
 
 RUN apk add --no-cache bash git python make g++ bash
 
@@ -14,6 +14,11 @@ COPY . /service/
 # Set work directory to /api
 WORKDIR /service/
 
+RUN yarn build
+
+# Slim down container
+RUN apk del git python make g++
+
 EXPOSE 2200
 
-CMD ["./scripts/entrypoint.sh"]
+CMD ["yarn", "run", "static"]

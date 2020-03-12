@@ -1,4 +1,4 @@
-# Platform Deployment
+# Bedrock Deployment
 
 ## Setup
 
@@ -119,6 +119,32 @@ Various scripts exists to create resources on Google Compute Cloud:
 ./deployment/scripts/create_disks
 ```
 
+### Scaling up an existing cluster
+
+To change the number of nodes in the running node pool:
+
+```
+gcloud container clusters resize cluster-1 --node-pool default-pool --size=5
+```
+
+### Kubernetes Dashboard on GKE
+
+Get a token:
+
+```
+gcloud config config-helper --format=json | jq -r '.credential.access_token'
+```
+
+Run proxy:
+
+```
+kubectl proxy
+```
+
+Open: http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/overview?namespace=default
+
+Insert token to authenticate.
+
 ### Configuring SSL
 
 Steps to enable SSL:
@@ -159,10 +185,10 @@ There are various data loss scenarios that each have their own procedure.
 
 #### Scenario A: Master Database Loss or Corruption
 
-In the event of master database loss or corruption, a full backup is available for each given day. A full copy of each day's database is stored in the MongoDB backup destination bucket (`platform-<environment>-mongodb-backups`). A timestamp is given to each daily MongoDB dump. E.g:
+In the event of master database loss or corruption, a full backup is available for each given day. A full copy of each day's database is stored in the MongoDB backup destination bucket (`bedrock-<environment>-mongodb-backups`). A timestamp is given to each daily MongoDB dump. E.g:
 
 ```
-mongo-platform-2019-03-05-16-50.tar.gz
+mongo-bedrock-2019-03-05-16-50.tar.gz
 ```
 
 In order to restore this data, follow the following steps:
@@ -170,15 +196,15 @@ In order to restore this data, follow the following steps:
 - Ensure a new version of the `data/mongo-deployment` pod is running. This can be done either with an old disk or a newly created disk.
 - Copy the file onto the pod
 - Open a terminal into the pod, using `kubectl exec -it <pod id> /bin/bash`
-- Unpack the backup file `tar xfzv mongo-platform-2019-03-05-16-50.tar.gz`
+- Unpack the backup file `tar xfzv mongo-bedrock-2019-03-05-16-50.tar.gz`
 - Run a `mongorestore` command using the backup folder and the targeted database
 
 #### Scenario B: Bucket Storage Loss or Corruption
 
-A full daily backup can be found in the bucket storage backup destination bucket (E.g. `platform-staging-uploads-backup`). In order to restore data follow the following steps:
+A full daily backup can be found in the bucket storage backup destination bucket (E.g. `bedrock-staging-uploads-backup`). In order to restore data follow the following steps:
 
 - Create a new GCS bucket in the same project
-- Copy files from the backup bucket to this new bucket: `gsutil cp -r gs://platform-staging-uploads-backup gs://platform-staging-uploads/.`
+- Copy files from the backup bucket to this new bucket: `gsutil cp -r gs://bedrock-staging-uploads-backup gs://bedrock-staging-uploads/.`
 - Switch over API, Jobs and Pipeline services to use the new backup
 - Once system is functioning properly, update bucket storage backup system with new origin bucket.
 

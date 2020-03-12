@@ -12,17 +12,17 @@ spec:
       containers:
         - image: dominiek/backup-monitor
           imagePullPolicy: Always
-          name: backup-monitor
+          name: main
           env:
             - name: GS_BUCKETS
-              value: "platform-staging-uploads platform-staging-mongodb-backups"
+              value: "bedrock-staging-uploads bedrock-staging-mongodb-backups"
             - name: POSTMARK_API_KEY
               value: "abc"
             - name: POSTMARK_FROM
-              value: "dominiek@platform.com"
+              value: "dominiek@bedrock.foundation"
             - name: EMAIL_ALERT
-              value: "dominiek@platform.com"
+              value: "dominiek@bedrock.foundation"
             - name: EMAIL_HEALTH_CHECK
-              value: "dominiek@platform.com"
+              value: "dominiek@bedrock.foundation"
             - name: ENVIRONMENT
               value: "staging"

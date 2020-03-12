@@ -1,4 +1,4 @@
-# Platform Mobile App
+# Bedrock Mobile App
 
 - [Development](#development)
   - [Setup](#setup)

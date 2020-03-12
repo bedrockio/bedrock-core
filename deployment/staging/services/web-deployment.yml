@@ -10,18 +10,16 @@ spec:
         name: web
     spec:
       containers:
-        - image: gcr.io/bulkhead-staging/bulkhead-services-web
+        - image: gcr.io/bedrock-staging/bedrock-services-web
           imagePullPolicy: Always
-          name: web
+          name: main
           env:
             - name: NODE_ENV
               value: "staging"
             - name: DOMAIN
-              value: staging.bulkhead.io
+              value: bedrock.foundation
             - name: API_URL
-              value: "https://staging-api.bulkhead.io"
-            - name: REDIRECT_TO_HTTPS
-              value: ""
+              value: "https://api.bedrock.foundation"
           ports:
             - name: http-server
               containerPort: 2200

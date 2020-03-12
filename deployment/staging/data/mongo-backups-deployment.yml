@@ -12,11 +12,11 @@ spec:
       containers:
         - image: dominiek/mongodb-backups
           imagePullPolicy: Always
-          name: mongodb-backups
+          name: main
           env:
             - name: MONGO_HOST
               value: "mongo"
             - name: MONGO_DB
-              value: "platform"
+              value: "bedrock_staging"
             - name: BACKUPS_GS_BUCKET
-              value: "platform-staging-mongodb-backups"
+              value: "bedrock-staging-mongodb-backups"

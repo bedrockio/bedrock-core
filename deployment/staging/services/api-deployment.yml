@@ -10,34 +10,34 @@ spec:
         name: api
     spec:
       containers:
-        - image: gcr.io/bulkhead-staging/bulkhead-services-api
+        - image: gcr.io/bedrock-staging/bedrock-services-api
           imagePullPolicy: Always
-          name: api
+          name: main
           env:
             - name: NODE_ENV
               value: "staging"
             - name: MONGO_URI
-              value: "mongodb://mongo:27017/bulkhead_production"
+              value: "mongodb://mongo:27017/bedrock_staging"
             - name: ADMIN_EMAIL
-              value: "admin@bulkhead.io"
+              value: "admin@bedrock.foundation"
             - name: ADMIN_USERNAME
               value: "admin"
             - name: ADMIN_PASSWORD
-              value: "admin.bulkhead"
+              value: "admin.bedrock"
             - name: JWT_SECRET
-              value: "njuhuhg78h"
+              value: "changeme1234"
             - name: JWT_ADMINSECRET
               value: "abc"
             - name: APP_DOMAIN
-              value: "staging.bulkhead.io"
+              value: "bedrock.foundation"
             - name: POSTMARK_FROM
-              value: "no-reply@bulkhead.io"
+              value: "no-reply@bedrock.foundation"
             - name: POSTMARK_APIKEY
               value: "abc"
             - name: UPLOADS_STORE
               value: "gcs"
             - name: UPLOADS_GCS_BUCKET
-              value: "bulkhead-staging-uploads"
+              value: "bedrock-staging-uploads"
           ports:
             - name: http-server
               containerPort: 2300

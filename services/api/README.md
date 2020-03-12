@@ -1,4 +1,4 @@
-# BEDROCK API
+# Bedrock API
 
 ## Directory Structure
 
@@ -85,13 +85,13 @@ All configuration is done using environment variables. The default values in `en
 
 - `BIND_HOST` - Host to bind to, defaults to `"0.0.0.0"`
 - `BIND_PORT` - Port to bind to, defaults to `2300`
-- `MONGO_URI` - MongoDB URI to connect to, defaults to `mongodb://localhost/platform_dev`
+- `MONGO_URI` - MongoDB URI to connect to, defaults to `mongodb://localhost/bedrock_dev`
 - `JWT_SECRET` - JWT secret for authentication, defaults to `[change me]`
-- `ADMIN_EMAIL` - Default root admin user `admin@platform.com`
+- `ADMIN_EMAIL` - Default root admin user `admin@bedrock.com`
 - `ADMIN_PASSWORD` - Default root admin password `[change me]`
-- `APP_NAME` - Default `Platform` to used in emails
+- `APP_NAME` - Default product name to be used in emails 'Bedrock
 - `APP_URL` - URL for app defaults to `http://localhost:2200`
-- `POSTMARK_FROM` - Reply email address `no-reply@platform.com`
+- `POSTMARK_FROM` - Reply email address `no-reply@bedrock.com`
 - `POSTMARK_APIKEY` - APIKey for Postmark `[change me]`
 - `UPLOADS_STORE` - Method for uploads. `local` or `gcs`
 - `UPLOADS_GCS_BUCKET` - GCS bucket for uploads
@@ -99,5 +99,7 @@ All configuration is done using environment variables. The default values in `en
 ## Building the Container
 
 ```
-docker build -t api .
+docker build -t bedrock-api .
 ```
+
+See [../../deployment](../deployment/) for more info

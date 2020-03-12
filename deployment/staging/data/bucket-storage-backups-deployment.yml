@@ -12,9 +12,9 @@ spec:
       containers:
         - image: dominiek/bucket-storage-backups
           imagePullPolicy: Always
-          name: bucket-storage-backups
+          name: main
           env:
             - name: SOURCE_GS_BUCKET
-              value: "platform-staging-uploads"
+              value: "bedrock-staging-uploads"
             - name: DESTINATION_GS_BUCKET
-              value: "platform-staging-uploads-backup"
+              value: "bedrock-staging-uploads-backup"

@@ -1,4 +1,4 @@
-# Platform Web
+# Bedrock Web
 
 ## Frameworks Used
 
