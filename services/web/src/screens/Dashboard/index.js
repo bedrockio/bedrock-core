@@ -5,6 +5,9 @@ import AppWrapper from 'components/AppWrapper';
 @inject('me')
 @observer
 export default class Home extends React.Component {
+  componentDidMount() {
+    this.props.history.replace('/shops');
+  }
   render() {
     return (
       <AppWrapper>
