@@ -1,16 +1,16 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: jobs-deployment
+  name: api-jobs-deployment
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        name: jobs
+        name: api-jobs
     spec:
       containers:
-        - image: gcr.io/bedrock-staging/bedrock-jobs
+        - image: gcr.io/bedrock-staging/bedrock-api-jobs
           imagePullPolicy: Always
           name: main
           env:
