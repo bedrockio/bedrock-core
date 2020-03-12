@@ -1,4 +1,4 @@
 #!/bin/bash
-gcloud compute disks create mongo-disk --size=50GB
-gcloud compute disks create elasticsearch-disk --size=100GB
+gcloud compute disks create mongo-disk --size=200GB --zone=us-east1-c
+gcloud compute disks create elasticsearch-disk --size=200GB --zone=us-east1-c
 gcloud compute disks list

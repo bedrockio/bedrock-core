@@ -68,10 +68,10 @@ describe('/1/shops', () => {
   });
 
   describe('DELETE /:shop', () => {
-    it('should be able to delete store', async () => {
+    it('should be able to delete shop', async () => {
       const user = await createUser();
       const shop = await Shop.create({
-        name: 'new Store'
+        name: 'new shop'
       });
       const response = await request('DELETE', `/1/shops/${shop.id}`, {}, { user });
       expect(response.status).toBe(204);
@@ -81,10 +81,10 @@ describe('/1/shops', () => {
   });
 
   describe('PATCH /:shop', () => {
-    it('should be able to update store', async () => {
+    it('should be able to update shop', async () => {
       const user = await createUser();
       const shop = await Shop.create({
-        name: 'store name',
+        name: 'shop name',
         description: 'Some description'
       });
       shop.name = 'new name';
@@ -96,8 +96,8 @@ describe('/1/shops', () => {
     });
   });
 
-  describe('GET /:store', () => {
-    it('should be able to access store', async () => {
+  describe('GET /:shop', () => {
+    it('should be able to access shop', async () => {
       const user = await createUser();
       const shop = await Shop.create({
         name: 'test 1',
