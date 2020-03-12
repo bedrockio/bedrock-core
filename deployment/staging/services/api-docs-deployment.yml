@@ -1,0 +1,31 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: api-docs-deployment
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        name: api-docs
+    spec:
+      containers:
+        - image: gcr.io/bedrock-foundation/bedrock-services-api-docs
+          imagePullPolicy: Always
+          name: main
+          env:
+            - name: NODE_ENV
+              value: "staging"
+            - name: ENABLE_HTTP_BASIC_AUTH
+              value: "yes"
+            - name: OPENAPI_URL
+              value: "https://api.bedrock.foundation/openapi.json"
+          ports:
+            - name: http-server
+              containerPort: 2400
+          volumeMounts:
+            - name: cache
+              mountPath: /workdir/data
+      volumes:
+        - name: cache
+          emptyDir: {}

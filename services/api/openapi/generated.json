@@ -78,7 +78,7 @@
                   "default": {
                     "value": {
                       "data": {
-                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2YxM2M5N2EzODg4ZjM0ZmUyYzkxNTUiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1NTkzMTM1NjAsImV4cCI6MTU2MTkwNTU2MH0.a32HBHbFLog19RfCl01UQrvaO-GGNHqUByoTmP6XWz8"
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZTZhYjdjMzQ2NDNkMzUwNjZlZjcyN2UiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1ODQwNTIxNjMsImV4cCI6MTU4NjY0NDE2M30.QQNFLKrrt_dJzN6-qrTH0hfj8j-bOp8shlQEQLKakI4"
                       }
                     }
                   }
@@ -132,7 +132,7 @@
                   "default": {
                     "value": {
                       "data": {
-                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2YxM2M5N2EzODg4ZjM0ZmUyYzkxNTQiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1NTkzMTM1NTksImV4cCI6MTU2MTkwNTU1OX0.2kviTsqDmgZKRPs4Pd_QsWzjBHUf-z-T91jhZwl91U8"
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZTZhYjdjMjQ2NDNkMzUwNjZlZjcyN2QiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1ODQwNTIxNjMsImV4cCI6MTU4NjY0NDE2M30.31l9M92JURLqFi6LKjIuLz3hMIc8DDlBxBIiSHVDx4M"
                       }
                     }
                   }
@@ -263,7 +263,7 @@
                   "default": {
                     "value": {
                       "data": {
-                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2YxM2M5OGEzODg4ZjM0ZmUyYzkxNTciLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1NTkzMTM1NjAsImV4cCI6MTU2MTkwNTU2MH0.VZaqzC3tLhqE9r00V6TeDRiago00eWzEW4I3PCRv3cU"
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZTZhYjdjMzQ2NDNkMzUwNjZlZjcyODAiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1ODQwNTIxNjMsImV4cCI6MTU4NjY0NDE2M30.a5Y_nHbu4k91zI4v4tPzzDegxEb8MzVHd41-fjWtmtg"
                       }
                     }
                   }
@@ -292,12 +292,12 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5cf13c97b006b834ffbd70e4",
+                        "id": "5e6ab7c2ddef9450677bcbf3",
                         "roles": [],
                         "email": "email1@platform.com",
                         "name": "test user",
-                        "createdAt": "2019-05-31T14:39:19.266Z",
-                        "updatedAt": "2019-05-31T14:39:19.266Z"
+                        "createdAt": "2020-03-12T22:29:22.509Z",
+                        "updatedAt": "2020-03-12T22:29:22.509Z"
                       }
                     }
                   }
@@ -340,12 +340,12 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5cf13c97b006b834ffbd70e5",
+                        "id": "5e6ab7c2ddef9450677bcbf4",
                         "roles": [],
                         "email": "email2@platform.com",
                         "name": "other name",
-                        "createdAt": "2019-05-31T14:39:19.348Z",
-                        "updatedAt": "2019-05-31T14:39:19.384Z"
+                        "createdAt": "2020-03-12T22:29:22.578Z",
+                        "updatedAt": "2020-03-12T22:29:22.604Z"
                       }
                     }
                   }
@@ -415,50 +415,50 @@
                     "value": {
                       "data": [
                         {
-                          "id": "5cf13c97b006b834ffbd70e8",
+                          "id": "5e6ab7c2ddef9450677bcbf7",
                           "roles": [
                             "user"
                           ],
                           "email": "email5@platform.com",
                           "name": "Two",
-                          "createdAt": "2019-05-31T14:39:19.417Z",
-                          "updatedAt": "2019-05-31T14:39:19.417Z"
+                          "createdAt": "2020-03-12T22:29:22.617Z",
+                          "updatedAt": "2020-03-12T22:29:22.617Z"
                         },
                         {
-                          "id": "5cf13c97b006b834ffbd70e7",
+                          "id": "5e6ab7c2ddef9450677bcbf6",
                           "roles": [
                             "user"
                           ],
                           "email": "email4@platform.com",
                           "name": "One",
-                          "createdAt": "2019-05-31T14:39:19.413Z",
-                          "updatedAt": "2019-05-31T14:39:19.413Z"
+                          "createdAt": "2020-03-12T22:29:22.615Z",
+                          "updatedAt": "2020-03-12T22:29:22.615Z"
                         },
                         {
-                          "id": "5cf13c97b006b834ffbd70e6",
+                          "id": "5e6ab7c2ddef9450677bcbf5",
                           "roles": [
                             "admin"
                           ],
                           "email": "email3@platform.com",
                           "name": "test user",
-                          "createdAt": "2019-05-31T14:39:19.397Z",
-                          "updatedAt": "2019-05-31T14:39:19.397Z"
+                          "createdAt": "2020-03-12T22:29:22.613Z",
+                          "updatedAt": "2020-03-12T22:29:22.613Z"
                         },
                         {
-                          "id": "5cf13c97b006b834ffbd70e5",
+                          "id": "5e6ab7c2ddef9450677bcbf4",
                           "roles": [],
                           "email": "email2@platform.com",
                           "name": "other name",
-                          "createdAt": "2019-05-31T14:39:19.348Z",
-                          "updatedAt": "2019-05-31T14:39:19.384Z"
+                          "createdAt": "2020-03-12T22:29:22.578Z",
+                          "updatedAt": "2020-03-12T22:29:22.604Z"
                         },
                         {
-                          "id": "5cf13c97b006b834ffbd70e4",
+                          "id": "5e6ab7c2ddef9450677bcbf3",
                           "roles": [],
                           "email": "email1@platform.com",
                           "name": "test user",
-                          "createdAt": "2019-05-31T14:39:19.266Z",
-                          "updatedAt": "2019-05-31T14:39:19.266Z"
+                          "createdAt": "2020-03-12T22:29:22.509Z",
+                          "updatedAt": "2020-03-12T22:29:22.509Z"
                         }
                       ],
                       "meta": {
@@ -526,12 +526,12 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5cf13c97b006b834ffbd70eb",
+                        "id": "5e6ab7c2ddef9450677bcbfa",
                         "roles": [],
                         "email": "hello@dominiek.com",
                         "name": "Hello",
-                        "createdAt": "2019-05-31T14:39:19.467Z",
-                        "updatedAt": "2019-05-31T14:39:19.467Z"
+                        "createdAt": "2020-03-12T22:29:22.653Z",
+                        "updatedAt": "2020-03-12T22:29:22.653Z"
                       }
                     }
                   }
@@ -618,14 +618,14 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5cf13c97b006b834ffbd70f2",
+                        "id": "5e6ab7c2ddef9450677bcc01",
                         "roles": [
                           "user"
                         ],
                         "email": "email14@platform.com",
                         "name": "new name",
-                        "createdAt": "2019-05-31T14:39:19.793Z",
-                        "updatedAt": "2019-05-31T14:39:19.793Z"
+                        "createdAt": "2020-03-12T22:29:22.937Z",
+                        "updatedAt": "2020-03-12T22:29:22.937Z"
                       }
                     }
                   }
@@ -648,14 +648,14 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5cf13c97b006b834ffbd70f6",
+                        "id": "5e6ab7c2ddef9450677bcc05",
                         "roles": [
                           "user"
                         ],
                         "email": "email18@platform.com",
                         "name": "One",
-                        "createdAt": "2019-05-31T14:39:19.817Z",
-                        "updatedAt": "2019-05-31T14:39:19.817Z"
+                        "createdAt": "2020-03-12T22:29:22.957Z",
+                        "updatedAt": "2020-03-12T22:29:22.957Z"
                       }
                     }
                   }
@@ -732,22 +732,22 @@
                     "value": {
                       "data": [
                         {
-                          "id": "5cf13c9767add535017a4268",
+                          "id": "5e6ab7c2c7c454506a0647a7",
                           "sellingPoints": [],
                           "name": "test 2",
                           "description": "Some description",
-                          "shopId": "5cf13c9767add535017a4267",
-                          "createdAt": "2019-05-31T14:39:19.284Z",
-                          "updatedAt": "2019-05-31T14:39:19.284Z"
+                          "shopId": "5e6ab7c2c7c454506a0647a6",
+                          "createdAt": "2020-03-12T22:29:22.565Z",
+                          "updatedAt": "2020-03-12T22:29:22.565Z"
                         },
                         {
-                          "id": "5cf13c9767add535017a4266",
+                          "id": "5e6ab7c2c7c454506a0647a5",
                           "sellingPoints": [],
                           "name": "test 1",
                           "description": "Some description",
-                          "shopId": "5cf13c9767add535017a4265",
-                          "createdAt": "2019-05-31T14:39:19.280Z",
-                          "updatedAt": "2019-05-31T14:39:19.280Z"
+                          "shopId": "5e6ab7c2c7c454506a0647a4",
+                          "createdAt": "2020-03-12T22:29:22.562Z",
+                          "updatedAt": "2020-03-12T22:29:22.562Z"
                         }
                       ],
                       "meta": {
@@ -823,12 +823,12 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5cf13c9767add535017a426b",
+                        "id": "5e6ab7c2c7c454506a0647aa",
                         "sellingPoints": [],
                         "name": "some other product",
-                        "shopId": "5cf13c9767add535017a426a",
-                        "createdAt": "2019-05-31T14:39:19.392Z",
-                        "updatedAt": "2019-05-31T14:39:19.392Z"
+                        "shopId": "5e6ab7c2c7c454506a0647a9",
+                        "createdAt": "2020-03-12T22:29:22.649Z",
+                        "updatedAt": "2020-03-12T22:29:22.649Z"
                       }
                     }
                   }
@@ -930,13 +930,13 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5cf13c9767add535017a4271",
+                        "id": "5e6ab7c2c7c454506a0647b0",
                         "sellingPoints": [],
                         "name": "new name",
                         "description": "Some description",
-                        "shopId": "5cf13c9767add535017a4270",
-                        "createdAt": "2019-05-31T14:39:19.439Z",
-                        "updatedAt": "2019-05-31T14:39:19.450Z"
+                        "shopId": "5e6ab7c2c7c454506a0647af",
+                        "createdAt": "2020-03-12T22:29:22.674Z",
+                        "updatedAt": "2020-03-12T22:29:22.680Z"
                       }
                     }
                   }
@@ -959,13 +959,13 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5cf13c9767add535017a4274",
+                        "id": "5e6ab7c2c7c454506a0647b3",
                         "sellingPoints": [],
                         "name": "test 1",
                         "description": "Some description",
-                        "shopId": "5cf13c9767add535017a4273",
-                        "createdAt": "2019-05-31T14:39:19.459Z",
-                        "updatedAt": "2019-05-31T14:39:19.459Z"
+                        "shopId": "5e6ab7c2c7c454506a0647b2",
+                        "createdAt": "2020-03-12T22:29:22.689Z",
+                        "updatedAt": "2020-03-12T22:29:22.689Z"
                       }
                     }
                   }
@@ -1039,20 +1039,22 @@
                     "value": {
                       "data": [
                         {
-                          "id": "5cf13c97d2ae403500e6e2d8",
+                          "id": "5e6ab7c2d55f89506839fbff",
                           "images": [],
+                          "categories": [],
                           "name": "test 2",
                           "description": "Some description",
-                          "createdAt": "2019-05-31T14:39:19.254Z",
-                          "updatedAt": "2019-05-31T14:39:19.254Z"
+                          "createdAt": "2020-03-12T22:29:22.514Z",
+                          "updatedAt": "2020-03-12T22:29:22.514Z"
                         },
                         {
-                          "id": "5cf13c97d2ae403500e6e2d7",
+                          "id": "5e6ab7c2d55f89506839fbfe",
                           "images": [],
+                          "categories": [],
                           "name": "test 1",
                           "description": "Some description",
-                          "createdAt": "2019-05-31T14:39:19.246Z",
-                          "updatedAt": "2019-05-31T14:39:19.246Z"
+                          "createdAt": "2020-03-12T22:29:22.510Z",
+                          "updatedAt": "2020-03-12T22:29:22.510Z"
                         }
                       ],
                       "meta": {
@@ -1095,6 +1097,12 @@
                       "type": "string"
                     }
                   },
+                  "categories": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
                   "country": {
                     "type": "string"
                   }
@@ -1116,23 +1124,24 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5cf13c97d2ae403500e6e2db",
+                        "id": "5e6ab7c2d55f89506839fc02",
                         "images": [
                           {
-                            "id": "5cf13c97d2ae403500e6e2da",
+                            "id": "5e6ab7c2d55f89506839fc01",
                             "filename": "logo.png",
                             "rawUrl": "logo.png",
                             "hash": "test",
                             "storageType": "local",
                             "mimeType": "image/png",
                             "ownerId": "none",
-                            "createdAt": "2019-05-31T14:39:19.380Z",
-                            "updatedAt": "2019-05-31T14:39:19.380Z"
+                            "createdAt": "2020-03-12T22:29:22.594Z",
+                            "updatedAt": "2020-03-12T22:29:22.594Z"
                           }
                         ],
+                        "categories": [],
                         "name": "shop name",
-                        "createdAt": "2019-05-31T14:39:19.397Z",
-                        "updatedAt": "2019-05-31T14:39:19.397Z"
+                        "createdAt": "2020-03-12T22:29:22.603Z",
+                        "updatedAt": "2020-03-12T22:29:22.603Z"
                       }
                     }
                   }
@@ -1190,6 +1199,12 @@
                       "type": "string"
                     }
                   },
+                  "categories": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
                   "country": {
                     "type": "string"
                   },
@@ -1223,12 +1238,13 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5cf13c97d2ae403500e6e2df",
+                        "id": "5e6ab7c2d55f89506839fc06",
                         "images": [],
+                        "categories": [],
                         "name": "new name",
                         "description": "Some description",
-                        "createdAt": "2019-05-31T14:39:19.447Z",
-                        "updatedAt": "2019-05-31T14:39:19.459Z"
+                        "createdAt": "2020-03-12T22:29:22.632Z",
+                        "updatedAt": "2020-03-12T22:29:22.641Z"
                       }
                     }
                   }
@@ -1251,12 +1267,13 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5cf13c97d2ae403500e6e2e1",
+                        "id": "5e6ab7c2d55f89506839fc08",
                         "images": [],
+                        "categories": [],
                         "name": "test 1",
                         "description": "Some description",
-                        "createdAt": "2019-05-31T14:39:19.469Z",
-                        "updatedAt": "2019-05-31T14:39:19.469Z"
+                        "createdAt": "2020-03-12T22:29:22.648Z",
+                        "updatedAt": "2020-03-12T22:29:22.648Z"
                       }
                     }
                   }
@@ -1292,16 +1309,16 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5cf13c987696c735042b3650",
+                        "id": "5e6ab7c3bb23c0506b03dfdc",
                         "filename": "logo.png",
                         "rawUrl": "logo.png",
                         "hash": "test",
                         "storageType": "local",
                         "mimeType": "image/png",
-                        "ownerId": "5cf13c987696c735042b364f",
-                        "createdAt": "2019-05-31T14:39:20.132Z",
-                        "updatedAt": "2019-05-31T14:39:20.141Z",
-                        "deletedAt": "2019-05-31T14:39:20.140Z"
+                        "ownerId": "5e6ab7c3bb23c0506b03dfdb",
+                        "createdAt": "2020-03-12T22:29:23.203Z",
+                        "updatedAt": "2020-03-12T22:29:23.211Z",
+                        "deletedAt": "2020-03-12T22:29:23.210Z"
                       }
                     }
                   }
@@ -1347,16 +1364,16 @@
                   "default": {
                     "value": {
                       "data": {
-                        "id": "5cf13c987696c735042b364e",
+                        "id": "5e6ab7c3bb23c0506b03dfda",
                         "mimeType": "image/png",
                         "filename": "logo.png",
-                        "hash": "aed8ce4d3ca6ada94436c5bd3db5bf3beea713c77da851b03de765ce467eaaee",
-                        "rawUrl": "/var/folders/z9/vjt2qj311zv_vy0gmn29vcmc0000gn/T/upload_80fd6237918c8108e25ffdb9b68528d9",
+                        "hash": "5143f7870b7344f4c0f632d3f92d4c326b552ec241ac72a76fbf05001de3603d",
+                        "rawUrl": "/var/folders/5k/zrxsbrxd2kbfn772fgw1bkx40000gn/T/upload_06a2c55644b0118ee7a10b6579c22f88",
                         "storageType": "local",
-                        "thumbnailUrl": "/var/folders/z9/vjt2qj311zv_vy0gmn29vcmc0000gn/T/upload_80fd6237918c8108e25ffdb9b68528d9",
-                        "ownerId": "5cf13c987696c735042b364d",
-                        "createdAt": "2019-05-31T14:39:20.114Z",
-                        "updatedAt": "2019-05-31T14:39:20.114Z"
+                        "thumbnailUrl": "/var/folders/5k/zrxsbrxd2kbfn772fgw1bkx40000gn/T/upload_06a2c55644b0118ee7a10b6579c22f88",
+                        "ownerId": "5e6ab7c3bb23c0506b03dfd9",
+                        "createdAt": "2020-03-12T22:29:23.192Z",
+                        "updatedAt": "2020-03-12T22:29:23.192Z"
                       }
                     }
                   }
@@ -1450,16 +1467,16 @@
                     "value": {
                       "data": [
                         {
-                          "id": "5cf13c9783145c35026f60cf",
+                          "id": "5e6ab7c2e8c31f5069835208",
                           "email": "usera@platform.com",
-                          "createdAt": "2019-05-31T14:39:19.231Z",
-                          "updatedAt": "2019-05-31T14:39:19.231Z"
+                          "createdAt": "2020-03-12T22:29:22.526Z",
+                          "updatedAt": "2020-03-12T22:29:22.526Z"
                         },
                         {
-                          "id": "5cf13c9783145c35026f60d0",
+                          "id": "5e6ab7c2e8c31f5069835209",
                           "email": "userb@platform.com",
-                          "createdAt": "2019-05-31T14:39:19.235Z",
-                          "updatedAt": "2019-05-31T14:39:19.235Z"
+                          "createdAt": "2020-03-12T22:29:22.528Z",
+                          "updatedAt": "2020-03-12T22:29:22.528Z"
                         }
                       ],
                       "meta": {
@@ -1562,6 +1579,72 @@
         },
         "tags": [
           "Invites"
+        ]
+      }
+    },
+    "/1/categories/search": {
+      "operationId": "post-1-categories-search",
+      "post": {
+        "summary": "Search Categorie",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "skip": {
+                    "default": 0,
+                    "type": "number"
+                  },
+                  "sort": {
+                    "default": {
+                      "field": "createdAt",
+                      "order": "desc"
+                    },
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string"
+                      },
+                      "order": {
+                        "enum": [
+                          "asc",
+                          "desc"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": false,
+                    "patterns": [],
+                    "required": [
+                      "field",
+                      "order"
+                    ]
+                  },
+                  "limit": {
+                    "default": 50,
+                    "type": "number"
+                  }
+                },
+                "additionalProperties": false,
+                "patterns": []
+              }
+            }
+          }
+        },
+        "responses": {},
+        "tags": [
+          "Categories"
         ]
       }
     }

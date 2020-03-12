@@ -10,7 +10,7 @@ spec:
         name: web
     spec:
       containers:
-        - image: gcr.io/bedrock-staging/bedrock-services-web
+        - image: gcr.io/bedrock-foundation/bedrock-services-web
           imagePullPolicy: Always
           name: main
           env:

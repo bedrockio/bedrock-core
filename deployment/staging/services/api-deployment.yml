@@ -10,7 +10,7 @@ spec:
         name: api
     spec:
       containers:
-        - image: gcr.io/bedrock-staging/bedrock-services-api
+        - image: gcr.io/bedrock-foundation/bedrock-services-api
           imagePullPolicy: Always
           name: main
           env:
@@ -42,8 +42,8 @@ spec:
             - name: http-server
               containerPort: 2300
           volumeMounts:
-            - name: api-cache
+            - name: cache
               mountPath: /workdir/data
       volumes:
-        - name: api-cache
+        - name: cache
           emptyDir: {}

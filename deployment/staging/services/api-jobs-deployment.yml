@@ -10,7 +10,7 @@ spec:
         name: api-jobs
     spec:
       containers:
-        - image: gcr.io/bedrock-staging/bedrock-api-jobs
+        - image: gcr.io/bedrock-foundation/bedrock-api-jobs
           imagePullPolicy: Always
           name: main
           env:
