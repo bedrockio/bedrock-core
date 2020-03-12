@@ -24,7 +24,7 @@ const HomepageHeading = ({ mobile }) => (
   <Container text>
     <Header
       as="h1"
-      content="Platform Home"
+      content="Bedrock Home"
       inverted
       style={{
         fontSize: mobile ? '2em' : '4em',

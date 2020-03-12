@@ -23,7 +23,7 @@ spec:
             - name: ADMIN_USERNAME
               value: "admin"
             - name: ADMIN_PASSWORD
-              value: "admin.bedrock"
+              value: "password1"
             - name: JWT_SECRET
               value: "changeme1234"
             - name: JWT_ADMINSECRET
