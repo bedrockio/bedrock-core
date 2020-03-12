@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "start": "nodemon -w src -w openapi --exec \"MOCK_EMAIL=true NODE_ENV=dev node src/index.js\"",
-    "start:prod": "node src/index",
+    "start:production": "node src/index",
     "docs": "STORE_RESULT=true yarn run test && DOCS=true node scripts/openapi",
     "emails": "node emails/build",
     "lint": "eslint src",
