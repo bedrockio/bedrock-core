@@ -7,7 +7,6 @@ import { hot } from 'react-hot-loader';
 import AuthSwitchRoute from 'components/routes/AuthSwitch';
 import Protected from 'components/routes/Protected';
 
-import Homepage from './screens/Homepage';
 import Dashboard from './screens/Dashboard';
 import Settings from './screens/Settings';
 import Invites from './screens/Invites';
@@ -23,7 +22,7 @@ import ResetPassword from './screens/Auth/ResetPassword';
 
 const App = () => (
   <Switch>
-    <AuthSwitchRoute exact path="/" loggedIn={Dashboard} loggedOut={Homepage} />
+    <AuthSwitchRoute exact path="/" loggedIn={Dashboard} loggedOut={Login} />
     <Protected exact path="/shops" component={Shops} />
     <Protected exact path="/shops/:id" component={Shop} />
     <Protected exact path="/shops/:id/*" component={Shop} />
