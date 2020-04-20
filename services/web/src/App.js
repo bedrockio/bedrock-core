@@ -7,6 +7,7 @@ import { hot } from 'react-hot-loader';
 import AuthSwitchRoute from 'components/routes/AuthSwitch';
 import Protected from 'components/routes/Protected';
 
+import DocsGettingStarted from './screens/Docs/GettingStarted';
 import Dashboard from './screens/Dashboard';
 import Settings from './screens/Settings';
 import Invites from './screens/Invites';
@@ -29,6 +30,11 @@ const App = () => (
     <Protected exact path="/settings" component={Settings} />
     <Protected exact path="/invites" component={Invites} />
     <Protected exact path="/users" component={Users} />
+    <Protected
+      exact
+      path="/docs/getting-started"
+      component={DocsGettingStarted}
+    />
     <Route exact path="/logout" component={Logout} />
     <AuthSwitchRoute
       exact

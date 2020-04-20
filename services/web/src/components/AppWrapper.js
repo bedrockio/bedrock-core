@@ -38,6 +38,9 @@ export default class AppWrapper extends React.Component {
                   <Dropdown.Item as={Link} to="/settings">
                     Settings
                   </Dropdown.Item>
+                  <Dropdown.Item as={Link} to="/docs/getting-started">
+                    API Docs
+                  </Dropdown.Item>
                   {isAdmin && (
                     <Dropdown.Item as={Link} to="/users">
                       Users
@@ -56,7 +59,7 @@ export default class AppWrapper extends React.Component {
             </Menu.Menu>
           </Container>
         </Menu>
-        <Container style={{ marginTop: '100px' }}>
+        <Container style={{ marginTop: '100px', paddingBottom: '100px' }}>
           {this.props.children}
         </Container>
       </div>

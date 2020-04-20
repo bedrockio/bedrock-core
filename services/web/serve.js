@@ -35,7 +35,8 @@ const { BIND_PORT, BIND_HOST, ...configs } = config.getAll();
           .replace(
             '<!--env:conf-->',
             `<script>window.__env_conf = ${JSON.stringify(configs)};</script>`
-          );
+          )
+          .replace('<!--title-->', `<title>${configs.APP_NAME}</title>`);
       }
     });
   });
