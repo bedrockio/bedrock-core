@@ -30,7 +30,7 @@
     "koa-bodyparser": "4.2.1",
     "koa-logger": "3.2.0",
     "koa-router": "7.4.0",
-    "lodash": "4.17.11",
+    "lodash": "4.17.13",
     "mongoose": "^5.5.7",
     "postmark": "2.2.4"
   },
