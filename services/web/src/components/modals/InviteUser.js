@@ -82,7 +82,7 @@ export default class InviteForm extends React.Component {
                   style={{ height: '150px' }}
                   name="emails"
                   onChange={this.handleTextAreaChange}
-                  placeholder="Email address seperate by comma or newline .e.g first@litmus.com, second@litmus.com"
+                  placeholder="Email address seperate by comma or newline .e.g first@gmail.com, second@gmail.com"
                 />
               </Form.Field>
             </Form>
