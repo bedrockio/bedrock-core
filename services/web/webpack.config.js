@@ -1,36 +1,36 @@
+// Note:
+//
+// To enable multiple builds, place each app in
+// a folder inside src, add them to "default"
+// args below, and move the html template to
+// src/common/index.html.
+
 const path = require('path');
-const webpack = require('webpack');
+const yargs = require('yargs');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CircularDependencyPlugin = require('circular-dependency-plugin');
 
-const extractLess = new ExtractTextPlugin({
-  filename: '[name]-[hash].css'
-});
+const argv = yargs
+  .boolean('p')
+  .boolean('analyze')
+  .option('app', {
+    alias: 'a',
+    array: true,
+    // Add multiple app names here.
+    default: [],
+  })
+  .argv;
 
-const isProduction = process.argv.indexOf('-p') >= 0;
-const ENV = isProduction ? 'production' : 'development';
+const DEV = !argv.p;
 
-const plugins = [
-  new webpack.DefinePlugin({
-    ENV: JSON.stringify(ENV),
-    'process.env': {
-      // For react building https://facebook.github.io/react/docs/optimizing-performance.html#use-the-production-build
-      NODE_ENV: JSON.stringify(ENV)
-    }
-  }),
-  new HtmlWebpackPlugin({
-    chunks: ['vendor', 'app'],
-    template: 'src/index.html',
-    filename: 'index.html'
-  }),
-  extractLess
-];
+if (DEV && argv.analyze) {
+  throw new Error('Analyze mode must be used in production. Use yarn build --analyze.');
+}
 
 module.exports = {
-  devtool: isProduction ? 'source-maps' : 'cheap-module-source-map',
-  entry: {
-    app: ['./src/index']
-  },
+  devtool: DEV ? 'cheap-module-source-map' : 'source-map',
+  entry: getEntryPoints(),
   output: {
     publicPath: '/',
     filename: '[name].[hash].bundle.js',
@@ -51,40 +51,27 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            cacheDirectory: true,
-            babelrc: false,
-            presets: ['@babel/preset-env', '@babel/preset-react'],
-            plugins: [
-              ['react-hot-loader/babel'],
-              ['@babel/plugin-transform-runtime'],
-              ['@babel/plugin-proposal-decorators', { legacy: true }],
-              ['@babel/plugin-proposal-class-properties', { loose: true }],
-              ['@babel/plugin-proposal-object-rest-spread'],
-              ['babel-plugin-mobx-deep-action'],
-              ['babel-plugin-styled-components']
-            ]
-          }
-        },
+        loader: 'babel-loader',
         exclude: /node_modules/
       },
       {
-        test: /\.less|\.css$/,
-        use: extractLess.extract({
-          fallback: {
-            loader: 'style-loader'
-          },
-          use: ['css-loader', 'less-loader']
-        })
+        test: /\.(css|less)$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          ...(DEV ? [] : ['postcss-loader']),
+          'less-loader'
+        ]
       },
       {
-        test: /\.(eot|png|jpg|ttf|svg|gif)$/,
-        use: ['file-loader']
+        test: /\.(png|jpg|svg|gif|eot|ttf)$/,
+        loader: 'file-loader',
+        options: {
+          outputPath: 'assets'
+        }
       },
       {
-        test: /\.(pdf)$/,
+        test: /\.pdf$/,
         loader:
           'file-loader?name=[name].[ext]&outputPath=downloads/&publicPath=downloads/'
       },
@@ -93,10 +80,71 @@ module.exports = {
         loader: 'url-loader?limit=10000&minetype=application/font-woff'
       },
       {
-        test: /\.(md)$/,
+        test: /\.md$/,
         use: 'raw-loader'
       }
     ]
   },
-  plugins
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: 'assets/[name]-[hash].css'
+    }),
+    new CircularDependencyPlugin({
+      exclude: /node_modules/,
+      failOnError: true,
+      cwd: process.cwd(),
+    }),
+    ...getTemplatePlugins(),
+    ...getOptionalPlugins(),
+  ]
 };
+
+// koa-webpack -> webpack-hot-client requires this to be wrapped in an array
+// https://github.com/webpack-contrib/webpack-hot-client/issues/11
+function getEntryPoints() {
+  const apps = argv.app;
+  const entryPoints = {};
+  if (apps.length === 0) {
+    entryPoints['public'] = ['./src/index'];
+  } else {
+    for (let app of apps) {
+      entryPoints[app] = [`./src/${app}/index`];
+    }
+  }
+  return entryPoints;
+}
+
+function getTemplatePlugins() {
+  let apps = argv.app;
+  let template, public;
+  if (apps.length > 0) {
+    template = 'src/common/index.html';
+  } else {
+    apps = ['public'];
+    template = 'src/index.html';
+  }
+  return apps.map((app) => {
+    return new HtmlWebpackPlugin({
+      template,
+      chunks: [app, 'vendor'],
+      templateParameters: {
+        app,
+        DEV,
+      },
+      minify: {
+        removeComments: false,
+        collapseWhitespace: true,
+      },
+      filename: path.join(app === 'public' ? '' : app, 'index.html')
+    });
+  });
+}
+
+function getOptionalPlugins() {
+  const plugins = [];
+  if (argv.analyze) {
+    const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+    plugins.push(new BundleAnalyzerPlugin());
+  }
+  return plugins;
+}
