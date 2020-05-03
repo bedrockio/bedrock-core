@@ -11,10 +11,6 @@ const isProduction = process.argv.indexOf('-p') >= 0;
 const ENV = isProduction ? 'production' : 'development';
 
 const plugins = [
-  new webpack.ProvidePlugin({
-    fetch:
-      'imports-loader?this=>global!exports-loader?global.fetch!whatwg-fetch/dist/fetch.umd'
-  }),
   new webpack.DefinePlugin({
     ENV: JSON.stringify(ENV),
     'process.env': {
