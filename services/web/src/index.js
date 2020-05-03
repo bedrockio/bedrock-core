@@ -12,9 +12,9 @@ import { createBrowserHistory } from 'history';
 import { syncHistoryWithStore, RouterStore } from 'mobx-react-router';
 import { configure } from 'mobx';
 import { ThemeProvider } from 'styled-components';
+import { SENTRY_DSN } from 'utils/env';
 
 import stores from './stores';
-import config from './config';
 
 import generatedTheme from './theme/theme.generated.json';
 
@@ -22,8 +22,8 @@ configure({
   enforceActions: 'always'
 });
 
-if (config.SENTRY_DSN && window.Sentry) {
-  window.Sentry.init({ dsn: config.SENTRY_DSN });
+if (SENTRY_DSN && window.Sentry) {
+  window.Sentry.init({ dsn: SENTRY_DSN });
 }
 
 const routing = new RouterStore();

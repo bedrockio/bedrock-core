@@ -7,6 +7,7 @@
 
 const path = require('path');
 const yargs = require('yargs');
+const config = require('@kaareal/config');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
@@ -33,8 +34,8 @@ module.exports = {
   entry: getEntryPoints(),
   output: {
     publicPath: '/',
-    filename: '[name].[hash].bundle.js',
-    chunkFilename: '[name].chunk-[hash].bundle.js',
+    filename: 'assets/[name].[hash].bundle.js',
+    chunkFilename: 'assets/[name].chunk-[hash].bundle.js',
     path: path.join(__dirname, 'dist')
   },
   resolve: {
@@ -65,20 +66,11 @@ module.exports = {
         ]
       },
       {
-        test: /\.(png|jpg|svg|gif|eot|ttf)$/,
+        test: /\.(png|jpg|svg|gif|pdf|eot|ttf|woff2?)$/,
         loader: 'file-loader',
         options: {
           outputPath: 'assets'
         }
-      },
-      {
-        test: /\.pdf$/,
-        loader:
-          'file-loader?name=[name].[ext]&outputPath=downloads/&publicPath=downloads/'
-      },
-      {
-        test: /\.woff(2)?(\?v=\d\.\d\.\d)?$/,
-        loader: 'url-loader?limit=10000&minetype=application/font-woff'
       },
       {
         test: /\.md$/,
@@ -131,6 +123,7 @@ function getTemplatePlugins() {
       templateParameters: {
         app,
         DEV,
+        ...config.getAll(),
       },
       minify: {
         removeComments: false,

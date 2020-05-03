@@ -1,11 +1,14 @@
-const fs = require('fs');
-const url = require('url');
 const Koa = require('koa');
+const koaLogger = require('koa-logger');
 const koaMount = require('koa-mount');
-const koaStatic = require('koa-static');
 const koaCompress = require('koa-compress');
 const koaBasicAuth = require('koa-basic-auth');
-const config = require('@kaareal/config');
+const envMiddleware = require('./src/utils/middleware/env');
+const assetsMiddleware = require('./src/utils/middleware/assets');
+const historyMiddleware = require('./src/utils/middleware/history');
+const templateMiddleware = require('./src/utils/middleware/template');
+const healthCheckMiddleware = require('./src/utils/middleware/healthCheck');
+const redirectHttpsMiddleware = require('./src/utils/middleware/redirectHttps');
 
 const {
   BIND_PORT,
@@ -15,38 +18,15 @@ const {
   HTTP_BASIC_AUTH_PATH,
   HTTP_BASIC_AUTH_USER,
   HTTP_BASIC_AUTH_PASS,
-  ...configs
-} = config.getAll();
+  publicEnv,
+} = require('./config');
 
 const app = new Koa();
 
-const redirecthttpsMiddleware = (ctx, next) => {
-  if (ctx.secure) return next();
-  if (ctx.get('x-forwarded-proto') === 'https') {
-    return next();
-  }
-
-  if (ctx.protocol === 'http' && ctx.headers.host) {
-    return ctx.redirect(`https://${ctx.headers.host}${ctx.url}`);
-  }
-  return next();
-};
-
-const healthCheckResponder = (ctx, next) => {
-  if (ctx.headers['user-agent'] === 'GoogleHC/1.0') {
-    const split = ctx.headers['user-agent'].split('/');
-    if (split[0] === 'GoogleHC') {
-      ctx.body = 'OK';
-      return;
-    }
-  }
-  return next();
-};
-
-app.use(healthCheckResponder);
+app.use(healthCheckMiddleware);
 
 if (REDIRECT_TO_HTTPS) {
-  app.use(redirecthttpsMiddleware);
+  app.use(redirectHttpsMiddleware);
 }
 
 if (ENABLE_HTTP_BASIC_AUTH) {
@@ -61,38 +41,12 @@ if (ENABLE_HTTP_BASIC_AUTH) {
   );
 }
 
-function historyApiFallback(options = {}) {
-  return function historyApi(ctx, next) {
-    if (ctx.method !== 'GET') return next();
-    if (
-      typeof ctx.headers.accept !== 'string' ||
-      ctx.headers.accept.indexOf('text/html') === -1 ||
-      ctx.headers.accept.indexOf('*/*') === -1
-    ) {
-      return next();
-    }
-
-    const parsedUrl = url.parse(ctx.url);
-    if (parsedUrl.pathname.indexOf('.') !== -1) return next();
-    ctx.url = options.index;
-    return next();
-  };
-}
-
-const indexTemplate = fs
-  .readFileSync('./dist/index.html')
-  .toString()
-  .replace(
-    '<!--env:conf-->',
-    `<script>window.__env_conf = ${JSON.stringify(configs)}</script>`
-  );
-
 app.use(koaCompress());
-app.use(historyApiFallback({ index: '/' }));
-app.use(koaStatic('./dist', { index: false }));
-app.use((ctx) => {
-  ctx.body = indexTemplate;
-});
+app.use(koaMount('/assets/', assetsMiddleware('./dist/assets')));
+app.use(koaLogger());
+app.use(envMiddleware(publicEnv));
+app.use(historyMiddleware({ apps: ['/'] }));
+app.use(templateMiddleware({ apps: ['/'] }));
 
 app.listen(BIND_PORT, BIND_HOST, (err) => {
   if (err) throw err;

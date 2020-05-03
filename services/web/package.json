@@ -11,7 +11,7 @@
     "static": "node ./serve-static",
     "theme:variables": "node scripts/update-theme-variables",
     "lint": "eslint src --fix",
-    "test": "jest src"
+    "test": "jest"
   },
   "dependencies": {
     "@babel/core": "^7.2.2",
@@ -38,7 +38,8 @@
     "jest": "^24.7.1",
     "koa": "^2.6.2",
     "koa-basic-auth": "^4.0.0",
-    "koa-compress": "3.0.0",
+    "koa-compress": "^4.0.1",
+    "koa-logger": "^3.2.1",
     "koa-mount": "^4.0.0",
     "koa-static": "^5.0.0",
     "koa-webpack": "^5.2.4",
