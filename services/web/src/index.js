@@ -1,3 +1,7 @@
+// react-hot-loader needs to be imported
+// before react and react-dom
+import 'react-hot-loader';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';

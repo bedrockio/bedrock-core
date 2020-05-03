@@ -1,5 +1,5 @@
-import 'theme/semantic.less';
 import { hot } from 'react-hot-loader/root';
+import 'theme/semantic.less';
 
 import { Switch, Route, Redirect } from 'react-router-dom';
 import React from 'react';
