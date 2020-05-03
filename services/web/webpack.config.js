@@ -109,7 +109,7 @@ function getEntryPoints() {
 
 function getTemplatePlugins() {
   let apps = argv.app;
-  let template, public;
+  let template;
   if (apps.length > 0) {
     template = 'src/common/index.html';
   } else {

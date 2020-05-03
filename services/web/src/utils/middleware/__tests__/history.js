@@ -12,7 +12,7 @@ function run(url, subdomain = 'www') {
     redirect: (url) => {
       redirect = url;
     }
-  }
+  };
   middleware(ctx, () => {
     aborted = false;
   });
@@ -21,7 +21,7 @@ function run(url, subdomain = 'www') {
     status: ctx.status,
     aborted,
     redirect,
-  }
+  };
 }
 
 describe('History Middleware', () => {

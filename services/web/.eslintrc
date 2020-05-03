@@ -6,8 +6,10 @@
   },
   "parser": "babel-eslint",
   "parserOptions": {
+    "ecmaVersion": 2020,
     "ecmaFeatures": {
-      "legacyDecorators": true
+      "impliedStrict": true,
+      "legacyDecorators": true,
     }
   },
   "extends": [
