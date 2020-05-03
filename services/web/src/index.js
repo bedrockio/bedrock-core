@@ -8,7 +8,7 @@ import App from './App';
 
 import { Provider } from 'mobx-react';
 import { Router } from 'react-router-dom';
-import createHistory from 'history/createBrowserHistory';
+import { createBrowserHistory } from 'history';
 import { syncHistoryWithStore, RouterStore } from 'mobx-react-router';
 import { configure } from 'mobx';
 import { ThemeProvider } from 'styled-components';
@@ -27,7 +27,7 @@ if (config.SENTRY_DSN && window.Sentry) {
 }
 
 const routing = new RouterStore();
-const history = syncHistoryWithStore(createHistory(), routing);
+const history = syncHistoryWithStore(createBrowserHistory(), routing);
 
 const Wrapper = () => (
   <Provider routing={routing} {...stores}>
