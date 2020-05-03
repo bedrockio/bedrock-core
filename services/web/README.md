@@ -11,6 +11,7 @@
 - [MobX](https://mobx.js.org/)
 - [Prettier](https://prettier.io/)
 - [Eslint](https://eslint.org/)
+- [Lodash](https://lodash.com/)
 
 ## Other Features
 
@@ -80,3 +81,11 @@ The `theme.generated.json` is in [src/index.js](src/index.js) loaded into a glob
 - `src/utils` - Home of specific JS helper utilities like for example `request.js` for doing API requests
 - `src/components` - Home of reuseable components
 - `src/index` - Main entrypoint into App UI
+
+## Lodash
+
+When using Lodash always used named imports. This will allow tree-shaking to remove unneeded modules.
+
+```js
+import { omit } from 'lodash';
+```
