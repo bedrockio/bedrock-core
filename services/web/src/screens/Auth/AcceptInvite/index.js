@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, Message, Grid } from 'semantic-ui-react';
+import { Segment, Grid } from 'semantic-ui-react';
 import { observer, inject } from 'mobx-react';
 import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';

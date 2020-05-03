@@ -5,7 +5,6 @@ import GETTING_STARTED_MD from 'docs/GETTING_STARTED.md';
 import CodeBlock from '../CodeBlock';
 import 'github-markdown-css';
 import { observer, inject } from 'mobx-react';
-import request from 'utils/request';
 import config from 'config';
 
 function enrichMarkdown(markdown, me, credentials) {

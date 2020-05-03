@@ -3,7 +3,6 @@ const webpackConfig = require('./webpack.config');
 const webpack = require('koa-webpack'); // eslint-disable-line
 const historyApiFallback = require('./history-middleware');
 const config = require('@kaareal/config');
-const net = require('net');
 
 const app = new Koa();
 

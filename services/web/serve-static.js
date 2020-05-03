@@ -1,8 +1,10 @@
 const fs = require('fs');
 const url = require('url');
 const Koa = require('koa');
-const compress = require('koa-compress');
+const koaMount = require('koa-mount');
 const koaStatic = require('koa-static');
+const koaCompress = require('koa-compress');
+const koaBasicAuth = require('koa-basic-auth');
 const config = require('@kaareal/config');
 
 const {
@@ -51,7 +53,7 @@ if (ENABLE_HTTP_BASIC_AUTH) {
   app.use(
     koaMount(
       HTTP_BASIC_AUTH_PATH,
-      basicAuth({
+      koaBasicAuth({
         user: HTTP_BASIC_AUTH_USER,
         pass: HTTP_BASIC_AUTH_PASS
       })
@@ -85,7 +87,7 @@ const indexTemplate = fs
     `<script>window.__env_conf = ${JSON.stringify(configs)}</script>`
   );
 
-app.use(compress());
+app.use(koaCompress());
 app.use(historyApiFallback({ index: '/' }));
 app.use(koaStatic('./dist', { index: false }));
 app.use((ctx) => {

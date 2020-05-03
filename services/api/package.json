@@ -35,17 +35,17 @@
     "postmark": "2.2.4"
   },
   "devDependencies": {
-    "eslint": "^5.16.0",
-    "eslint-config-prettier": "^4.2.0",
-    "eslint-plugin-jest": "^22.5.1",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-jest": "^23.8.2",
     "jest": "^24.8.0",
     "joi-to-json-schema": "^5.0.0",
     "juice": "^5.2.0",
     "mongodb-memory-server": "^5.1.1",
     "nodemon": "^1.19.0",
     "pre-commit": "1.2.2",
-    "prettier": "^1.17.0",
-    "prettier-eslint": "^8.8.2",
+    "prettier": "^2.0.5",
+    "prettier-eslint": "^9.0.1",
     "supertest": "3.0.0"
   },
   "jest": {
@@ -53,43 +53,13 @@
       "<rootDir>/src/test-helpers/setup-tests.js"
     ]
   },
-  "eslintConfig": {
-    "parserOptions": {
-      "ecmaVersion": 2017,
-      "ecmaFeatures": {
-        "experimentalObjectRestSpread": true
-      }
-    },
-    "env": {
-      "es6": true,
-      "node": true,
-      "browser": false
-    },
-    "extends": [
-      "eslint:recommended",
-      "plugin:jest/recommended",
-      "prettier"
-    ],
-    "rules": {
-      "no-console": [
-        "warn",
-        {
-          "allow": [
-            "warn",
-            "error",
-            "info"
-          ]
-        }
-      ]
-    }
-  },
   "prettier": {
     "singleQuote": true,
     "arrowParens": "always",
     "printWidth": 120
   },
   "volta": {
-    "node": "12.2.0",
-    "yarn": "1.13.0"
+    "node": "12.16.3",
+    "yarn": "1.22.4"
   }
 }
