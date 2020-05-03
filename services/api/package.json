@@ -18,34 +18,34 @@
     "test:watch": "jest --watch -i src"
   },
   "dependencies": {
-    "@google-cloud/storage": "^2.5.0",
-    "@kaareal/config": "^0.1.1",
+    "@google-cloud/storage": "^4.7.0",
+    "@hapi/joi": "^17.1.1",
+    "@kaareal/config": "^1.0.1",
     "@koa/cors": "^3.0.0",
-    "@sentry/node": "^5.2.0",
-    "bcrypt": "^3.0.6",
-    "joi": "14.3.1",
+    "@sentry/node": "^5.15.5",
+    "bcrypt": "^4.0.1",
     "jsonwebtoken": "^8.5.1",
-    "koa": "^2.7.0",
-    "koa-body": "^4.0.8",
-    "koa-logger": "3.2.0",
-    "koa-router": "7.4.0",
-    "lodash": "4.17.11",
-    "mongoose": "^5.5.7",
-    "postmark": "2.2.4"
+    "koa": "^2.11.0",
+    "koa-body": "^4.1.1",
+    "koa-logger": "^3.2.1",
+    "koa-router": "^8.0.8",
+    "lodash": "^4.17.15",
+    "mongoose": "^5.9.11",
+    "postmark": "^2.5.2"
   },
   "devDependencies": {
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-jest": "^23.8.2",
-    "jest": "^24.8.0",
-    "joi-to-json-schema": "^5.0.0",
-    "juice": "^5.2.0",
-    "mongodb-memory-server": "^5.1.1",
-    "nodemon": "^1.19.0",
-    "pre-commit": "1.2.2",
+    "jest": "^25.5.4",
+    "joi-to-json-schema": "^5.1.0",
+    "juice": "^6.0.0",
+    "mongodb-memory-server": "^6.5.2",
+    "nodemon": "^2.0.3",
+    "pre-commit": "^1.2.2",
     "prettier": "^2.0.5",
     "prettier-eslint": "^9.0.1",
-    "supertest": "3.0.0"
+    "supertest": "^4.0.2"
   },
   "jest": {
     "setupFiles": [
