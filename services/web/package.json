@@ -23,6 +23,7 @@
     "@kaareal/config": "^0.1.1",
     "autoprefixer": "^9.7.6",
     "babel-loader": "^8.0.5",
+    "babel-plugin-lodash": "^3.3.4",
     "babel-plugin-mobx-deep-action": "^1.6.0",
     "babel-plugin-styled-components": "1.5.1",
     "circular-dependency-plugin": "^5.2.0",
