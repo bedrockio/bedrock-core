@@ -1,0 +1,40 @@
+#!/bin/bash
+
+FILE=$1
+SIZE=$2
+DIR=$3
+
+function show_usage {
+  echo "Pads an image with transparent pixels to be exact dimensions.
+SIZE should be in the format WxH
+DIR can move the file to a different directory, otherwise the file
+will be overwritten.
+
+Requires imagemagick.
+
+Usage: $0 <FILE> <SIZE> [DIR]
+Example: $0 image.jpg 1024x768
+
+$1"
+  exit 1
+}
+
+if [ "$FILE" == "" ]; then
+  show_usage "<FILE> argument expected"
+fi
+
+if [ "$SIZE" == "" ]; then
+  show_usage "<SIZE> argument expected"
+fi
+
+if [ "$DIR" == "" ]; then
+  OUTPUT="$FILE"
+else
+  FILENAME="$(basename -- $FILE)"
+  OUTPUT="$DIR/$FILENAME"
+fi
+
+# Note order of background is important
+command="convert $FILE -background none -resize $SIZE -extent $SIZE -gravity center $OUTPUT"
+echo "$command"
+eval "$command"

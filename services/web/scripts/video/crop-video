@@ -1,0 +1,37 @@
+#!/bin/bash
+
+FILE=$1
+DIMENSIONS=$2
+
+function show_usage {
+  echo "Crops a video file.
+
+Requires ffmpeg 4.1.1 or greater.
+
+Usage: $0 <FILE> <DIMENSIONS>
+Example: $0 video.mp4 400x400
+
+$1"
+  exit 1
+}
+
+if [ "$FILE" == "" ]; then
+  show_usage "<FILE> argument expected"
+fi
+
+if [ "$DIMENSIONS" == "" ]; then
+  show_usage "<DIMENSIONS> argument expected"
+fi
+
+read WIDTH HEIGHT <<<$(IFS="x"; echo $DIMENSIONS)
+
+base=${FILE##*/}
+name="${base%.*}"
+
+ffmpeg -i $FILE \
+  -vcodec libx264 \
+  -pix_fmt yuv420p \
+  -profile:v baseline \
+  -level 3 \
+  -filter:v "crop=$WIDTH:$HEIGHT:0:0" \
+  $name-cropped.mp4

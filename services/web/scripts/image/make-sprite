@@ -1,0 +1,27 @@
+#!/bin/bash
+
+DIR=$1
+OUTPUT=$2
+
+function show_usage {
+  echo "Creates a spritesheet from a directory of png files.
+
+Requires imagemagick.
+
+Usage: $0 <DIR> <OUTPUT>
+
+$1"
+  exit 1
+}
+
+if [ "$DIR" == "" ]; then
+  show_usage "<DIR> argument expected"
+fi
+
+if [ "$OUTPUT" == "" ]; then
+  show_usage "<OUTPUT> argument expected"
+fi
+
+command="montage $DIR* -background none -geometry +0+0 -tile x1 $OUTPUT"
+echo "$command"
+eval "$command"
