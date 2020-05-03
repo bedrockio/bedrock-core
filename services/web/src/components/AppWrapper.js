@@ -9,7 +9,7 @@ import logoInverted from 'assets/logo.svg';
 export default class AppWrapper extends React.Component {
   render() {
     const { me } = this.props;
-    const isAdmin = me.user.roles.indexOf('admin') !== -1;
+    const { user } = me;
     return (
       <div>
         <Menu inverted fixed="top">
@@ -21,42 +21,46 @@ export default class AppWrapper extends React.Component {
                 src={`${logoInverted}`}
               />
             </Menu.Item>
-            <Menu.Item as={NavLink} to="/shops">
-              Shops
-            </Menu.Item>
-            <Menu.Menu position="right">
-              <Dropdown
-                className="account"
-                item
-                trigger={
-                  <span>
-                    <Icon name="user" /> {me.user && me.user.name}
-                  </span>
-                }
-              >
-                <Dropdown.Menu>
-                  <Dropdown.Item as={Link} to="/settings">
-                    Settings
-                  </Dropdown.Item>
-                  <Dropdown.Item as={Link} to="/docs/getting-started">
-                    API Docs
-                  </Dropdown.Item>
-                  {isAdmin && (
-                    <Dropdown.Item as={Link} to="/users">
-                      Users
-                    </Dropdown.Item>
-                  )}
-                  {isAdmin && (
-                    <Dropdown.Item as={Link} to="/invites">
-                      Invites
-                    </Dropdown.Item>
-                  )}
-                  <Dropdown.Item as={Link} to="/logout">
-                    Log Out
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </Menu.Menu>
+            {user && (
+              <React.Fragment>
+                <Menu.Item as={NavLink} to="/shops">
+                  Shops
+                </Menu.Item>
+                <Menu.Menu position="right">
+                  <Dropdown
+                    className="account"
+                    item
+                    trigger={
+                      <span>
+                        <Icon name="user" /> {user.name}
+                      </span>
+                    }
+                  >
+                    <Dropdown.Menu>
+                      <Dropdown.Item as={Link} to="/settings">
+                        Settings
+                      </Dropdown.Item>
+                      <Dropdown.Item as={Link} to="/docs/getting-started">
+                        API Docs
+                      </Dropdown.Item>
+                      {me.isAdmin() && (
+                        <React.Fragment>
+                          <Dropdown.Item as={Link} to="/users">
+                            Users
+                          </Dropdown.Item>
+                          <Dropdown.Item as={Link} to="/invites">
+                            Invites
+                          </Dropdown.Item>
+                        </React.Fragment>
+                      )}
+                      <Dropdown.Item as={Link} to="/logout">
+                        Log Out
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </Menu.Menu>
+              </React.Fragment>
+            )}
           </Container>
         </Menu>
         <Container style={{ marginTop: '100px', paddingBottom: '100px' }}>

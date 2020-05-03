@@ -52,6 +52,7 @@
     "mobx-react": "5.2.8",
     "mobx-react-router": "^4.0.5",
     "postcss-loader": "^3.0.0",
+    "prop-types": "^15.7.2",
     "raw-loader": "^1.0.0",
     "react": "^16.13.1",
     "react-day-picker": "^7.3.0",
