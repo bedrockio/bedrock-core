@@ -2,6 +2,7 @@ const Router = require('koa-router');
 const Joi = require('joi');
 const validate = require('../middlewares/validate');
 const { authenticate, fetchUser } = require('../middlewares/authenticate');
+const { NotFoundError } = require('../lib/errors');
 const Product = require('../models/product');
 
 const router = new Router();
@@ -34,7 +35,9 @@ router
   .param('product', async (id, ctx, next) => {
     const product = await Product.findById(id);
     ctx.state.product = product;
-    if (!product) return (ctx.status = 404);
+    if (!product) {
+      throw new NotFoundError();
+    }
     return next();
   })
   .post(

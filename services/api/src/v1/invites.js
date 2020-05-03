@@ -2,6 +2,7 @@ const Router = require('koa-router');
 const Joi = require('joi');
 const validate = require('../middlewares/validate');
 const { authenticate, fetchUser, checkUserRole } = require('../middlewares/authenticate');
+const { NotFoundError, GoneError } = require('../lib/errors');
 const Invite = require('../models/invite');
 const User = require('../models/user');
 
@@ -19,8 +20,11 @@ router
     const invite = await Invite.findById(id);
     ctx.state.invite = invite;
 
-    if (!invite) return (ctx.status = 404);
-    if (invite.deletedAt) return (ctx.status = 410);
+    if (!invite) {
+      throw new NotFoundError();
+    } else if (invite.deletedAt) {
+      throw new GoneError();
+    }
 
     return next();
   })

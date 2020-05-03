@@ -3,6 +3,7 @@ const Joi = require('joi');
 const User = require('../models/user');
 const validate = require('../middlewares/validate');
 const { authenticate, fetchUser, checkUserRole } = require('../middlewares/authenticate');
+const { NotFoundError, BadRequestError } = require('../lib/errors');
 
 const router = new Router();
 
@@ -24,7 +25,9 @@ router
   .param('user', async (id, ctx, next) => {
     const user = await User.findById(id);
     ctx.state.user = user;
-    if (!user) return (ctx.status = 404);
+    if (!user) {
+      throw new NotFoundError();
+    }
     return next();
   })
   .get('/me', (ctx) => {
@@ -99,7 +102,7 @@ router
       const { email } = ctx.request.body;
       const existingUser = await User.findOne({ email, deletedAt: { $exists: false } });
       if (existingUser) {
-        ctx.throw(400, 'A user with that email already exists');
+        throw new BadRequestError('A user with that email already exists');
       }
       const user = await User.create(ctx.request.body);
 

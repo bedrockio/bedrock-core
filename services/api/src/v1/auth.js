@@ -4,6 +4,7 @@ const validate = require('../middlewares/validate');
 const { authenticate } = require('../middlewares/authenticate');
 const tokens = require('../lib/tokens');
 const { sendWelcome, sendResetPassword, sendResetPasswordUnknown } = require('../lib/emails');
+const { BadRequestError, UnauthorizedError } = require('../lib/errors');
 const User = require('../models/user');
 const Invite = require('../models/invite');
 
@@ -38,7 +39,7 @@ router
       const { email, name } = ctx.request.body;
       const existingUser = await User.findOne({ email, deletedAt: { $exists: false } });
       if (existingUser) {
-        ctx.throw(400, 'A user with that email already exists');
+        throw new BadRequestError('A user with that email already exists');
       }
 
       const user = await User.create({
@@ -68,11 +69,11 @@ router
       const { email, password } = ctx.request.body;
       const user = await User.findOne({ email });
       if (!user) {
-        ctx.throw(401, 'email password combination does not match');
+        throw new UnauthorizedError('email password combination does not match');
       }
       const isSame = await user.verifyPassword(password);
       if (!isSame) {
-        ctx.throw(401, 'email password combination does not match');
+        throw new UnauthorizedError('email password combination does not match');
       }
       ctx.body = { data: { token: tokens.createUserToken(user) } };
     }
