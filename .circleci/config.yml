@@ -74,7 +74,6 @@ jobs:
           name: Run test
           command: |
             yarn test --silent src
-
   web:
     working_directory: ~/project/services/web
     docker:
@@ -113,11 +112,7 @@ workflows:
   version: 2.1
   build_and_test:
     jobs:
-      - build:
-          filters:
-            branches:
-              only:
-                - master
+      - build
       - api:
           requires:
             - build
