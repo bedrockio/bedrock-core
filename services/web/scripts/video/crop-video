@@ -4,12 +4,13 @@ FILE=$1
 DIMENSIONS=$2
 
 function show_usage {
+  script=$(basename $0)
   echo "Crops a video file.
 
 Requires ffmpeg 4.1.1 or greater.
 
-Usage: $0 <FILE> <DIMENSIONS>
-Example: $0 video.mp4 400x400
+Usage:   $script <FILE> <DIMENSIONS>
+Example: $script video.mp4 400x400
 
 $1"
   exit 1

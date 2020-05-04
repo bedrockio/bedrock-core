@@ -4,11 +4,14 @@ DIR=$1
 OUTPUT=$2
 
 function show_usage {
+  script=$(basename $0)
   echo "Creates a spritesheet from a directory of png files.
+Format will be inferred from the extension.
 
 Requires imagemagick.
 
-Usage: $0 <DIR> <OUTPUT>
+Usage:   $script <DIR> <OUTPUT>
+Example: $script images/ sprite.png
 
 $1"
   exit 1

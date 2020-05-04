@@ -1,10 +1,10 @@
 #!/bin/bash
 
-BUCKET="americandream-staging-videos"
 FILE=$1
-NAME=$2
+DESTINATION=$2
 
 function show_usage {
+  script=$(basename $0)
   echo "Builds an mpeg-dash and HLS manifest for an input
 video and uploads to gcloud bucket.
 
@@ -16,7 +16,8 @@ Requires ffmpeg 4.1.1 or greater.
 Requires gcloud authentication.
 Requires gsutil.
 
-Usage: $0 <FILE> <NAME>
+Usage:   $script <FILE> <DESTINATION>
+Example: $script intro.mp4 gs://production-videos/intro.mp4
 
 $1"
   exit 1
@@ -26,12 +27,15 @@ if [ "$FILE" == "" ]; then
   show_usage "<FILE> argument expected"
 fi
 
-if [ "$NAME" == "" ]; then
-  show_usage "<NAME> argument expected"
+if [ "$DESTINATION" == "" ]; then
+  show_usage "<DESTINATION> argument expected"
 fi
 
+base=$(basename -- "$DESTINATION")
+name="${base%.*}"
+
 TMP_DIR=tmp
-DIR=$TMP_DIR/$NAME
+DIR=$TMP_DIR/$name
 
 mkdir -p $DIR
 
@@ -47,5 +51,5 @@ ffmpeg -i $FILE \
   -single_file 1 \
   -f dash $DIR/manifest.mpd
 
-gsutil -m cp $DIR/* gs://americandream-staging-videos/$NAME
+gsutil -m cp $DIR/* $DESTINATION
 rm -rf $TMP_DIR

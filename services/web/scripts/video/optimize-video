@@ -4,13 +4,15 @@ FILE=$1
 MAX_WIDTH=${2-1200}
 
 function show_usage {
+  script=$(basename $0)
   echo "Optimizes a video asset for use on web. This fixes issues with
 certain browsers not being able to play H264 encoded videos. Default
 maximum width is 1200px.
 
 Requires ffmpeg 4.1.1 or greater.
 
-Usage: $0 <FILE> [MAX_WIDTH]
+Usage:   $script <FILE> [MAX_WIDTH]
+Example: $script intro.mp4 600
 
 $1"
   exit 1
