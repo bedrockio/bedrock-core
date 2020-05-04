@@ -172,6 +172,6 @@ NLLMS4145553,2019-01-01 02:14,2019-01-01 16:21,14:06:38,22.17,"Hongarenburg nabi
     expect(items[0].durationSeconds).toBe(29263);
     expect(items[0].connectorType).toBe('Type 2');
     expect(items[0].status).toBe('Finished');
-    expect(items[0].startedAt).toBe('2018-12-31T16:32:00.000Z');
+    expect(items[0].startedAt).toBe(new Date(2019, 0, 1, 1, 32).toISOString());
   });
 });
