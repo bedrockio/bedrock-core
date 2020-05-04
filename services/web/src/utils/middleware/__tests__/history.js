@@ -1,83 +1,76 @@
 import history from '../history';
+const { createFakeKoaContext } = require('utils/test/mocks/koa');
 
 const middleware = history({ apps: ['/', '/admin/'] });
 
 function run(url, subdomain = 'www') {
-  let aborted = true;
-  let redirect = null;
-  const ctx = {
-    url,
-    status: 200,
+  let nextCalled = false;
+  const ctx = createFakeKoaContext({
+    url: url,
     subdomains: [subdomain],
-    redirect: (url) => {
-      redirect = url;
-    }
-  };
-  middleware(ctx, () => {
-    aborted = false;
   });
+  middleware(ctx, () => nextCalled = true);
   return {
-    url: ctx.url,
-    status: ctx.status,
-    aborted,
-    redirect,
+    ctx,
+    nextCalled,
   };
 }
+
 
 describe('History Middleware', () => {
 
   describe('/', () => {
     it('should not rewrite /', () => {
-      const { url, status } = run('/');
-      expect(url).toBe('/');
-      expect(status).toBe(200);
+      const { ctx } = run('/');
+      expect(ctx.url).toBe('/');
+      expect(ctx.status).toBe(200);
     });
 
     it('should not redirect empty string', () => {
-      const { url, status } = run('');
-      expect(url).toBe('');
-      expect(status).toBe(200);
+      const { ctx } = run('');
+      expect(ctx.url).toBe('');
+      expect(ctx.status).toBe(200);
     });
 
     it('should rewrite /page', () => {
-      const { url, status } = run('/page');
-      expect(url).toBe('/');
-      expect(status).toBe(200);
+      const { ctx } = run('/page');
+      expect(ctx.url).toBe('/');
+      expect(ctx.status).toBe(200);
     });
 
     it('should rewrite /page/subpage', () => {
-      const { url, status } = run('/page/subpage');
-      expect(url).toBe('/');
-      expect(status).toBe(200);
+      const { ctx } = run('/page/subpage');
+      expect(ctx.url).toBe('/');
+      expect(ctx.status).toBe(200);
     });
   });
 
   describe('/admin/', () => {
 
     it('should not rewrite /admin/', () => {
-      const { url, status } = run('/admin/');
-      expect(url).toBe('/admin/');
-      expect(status).toBe(200);
+      const { ctx } = run('/admin/');
+      expect(ctx.url).toBe('/admin/');
+      expect(ctx.status).toBe(200);
     });
 
     it('should redirect /admin', () => {
-      const { url, status, aborted, redirect } = run('/admin');
-      expect(url).toBe('/admin');
-      expect(status).toBe(301);
-      expect(redirect).toBe('/admin/');
-      expect(aborted).toBe(true);
+      const { ctx, nextCalled } = run('/admin');
+      expect(ctx.url).toBe('/admin');
+      expect(ctx.status).toBe(301);
+      expect(ctx.response.header.location).toBe('/admin/');
+      expect(nextCalled).toBe(false);
     });
 
     it('should rewrite /admin/page', () => {
-      const { url, status } = run('/admin/page');
-      expect(url).toBe('/admin/');
-      expect(status).toBe(200);
+      const { ctx } = run('/admin/page');
+      expect(ctx.url).toBe('/admin/');
+      expect(ctx.status).toBe(200);
     });
 
     it('should rewrite /adminx to root', () => {
-      const { url, status } = run('/adminx');
-      expect(url).toBe('/');
-      expect(status).toBe(200);
+      const { ctx } = run('/adminx');
+      expect(ctx.url).toBe('/');
+      expect(ctx.status).toBe(200);
     });
 
   });

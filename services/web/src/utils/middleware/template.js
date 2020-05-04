@@ -7,7 +7,7 @@
 //
 // Usage:
 //
-// app.use(templateMiddleware({ apps: ['/', '/admin/'] }))
+// app.use(template({ apps: ['/', '/admin/'] }))
 //
 // Examples:
 //

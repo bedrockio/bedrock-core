@@ -8,7 +8,7 @@
 //
 // Usage:
 //
-// app.use(historyMiddleware({ for: ['/', '/admin/'] }))
+// app.use(history({ for: ['/', '/admin/'] }))
 //
 // Examples:
 //
