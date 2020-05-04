@@ -3,11 +3,8 @@
     "es6": true,
     "node": true,
   },
-  "parser": "babel-eslint",
   "parserOptions": {
-    "ecmaFeatures": {
-      "legacyDecorators": true
-    }
+    "ecmaVersion": 2020,
   },
   "extends": [
     "eslint:recommended",

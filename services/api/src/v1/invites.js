@@ -1,5 +1,5 @@
 const Router = require('koa-router');
-const Joi = require('joi');
+const Joi = require('@hapi/joi');
 const validate = require('../middlewares/validate');
 const { authenticate, fetchUser, checkUserRole } = require('../middlewares/authenticate');
 const { NotFoundError, GoneError } = require('../lib/errors');
@@ -34,7 +34,7 @@ router
   .post(
     '/search',
     validate({
-      body: {
+      body: Joi.object({
         skip: Joi.number().default(0),
         sort: Joi.object({
           field: Joi.string().required(),
@@ -46,7 +46,7 @@ router
         limit: Joi.number()
           .positive()
           .default(50)
-      }
+      })
     }),
     async (ctx) => {
       const { sort, skip, limit } = ctx.request.body;
@@ -71,11 +71,11 @@ router
   .post(
     '/',
     validate({
-      body: {
+      body: Joi.object({
         emails: Joi.array()
           .items(Joi.string().email())
           .required()
-      }
+      })
     }),
     async (ctx) => {
       const { authUser } = ctx.state;

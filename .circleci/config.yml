@@ -73,7 +73,7 @@ jobs:
       - run:
           name: Run test
           command: |
-            yarn test --silent src
+            yarn test --silent
   web:
     working_directory: ~/project/services/web
     docker:

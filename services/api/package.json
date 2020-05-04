@@ -14,7 +14,7 @@
     "docs": "STORE_RESULT=true yarn run test && DOCS=true node scripts/openapi",
     "emails": "node emails/build",
     "lint": "eslint src",
-    "test": "jest --forceExit",
+    "test": "jest --forceExit --detectOpenHandles",
     "test:watch": "jest --watch -i"
   },
   "dependencies": {
@@ -34,11 +34,11 @@
     "postmark": "^2.5.2"
   },
   "devDependencies": {
+    "@yeongjet/joi-to-json-schema": "^1.0.4",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-jest": "^23.8.2",
     "jest": "^25.5.4",
-    "joi-to-json-schema": "^5.1.0",
     "juice": "^6.0.0",
     "mongodb-memory-server": "^6.5.2",
     "nodemon": "^2.0.3",

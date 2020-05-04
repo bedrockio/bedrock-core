@@ -1,5 +1,5 @@
 const Router = require('koa-router');
-const Joi = require('joi');
+const Joi = require('@hapi/joi');
 const validate = require('../middlewares/validate');
 const { authenticate } = require('../middlewares/authenticate');
 const tokens = require('../lib/tokens');
@@ -12,28 +12,20 @@ const router = new Router();
 
 const passwordField = Joi.string()
   .min(6)
-  .options({
-    language: {
-      string: {
-        regex: {
-          base: 'Your password must be at least 6 characters long. Please try another.'
-        }
-      }
-    }
-  });
+  .message('Your password must be at least 6 characters long. Please try another.');
 
 router
   .post(
     '/register',
     validate({
-      body: {
+      body: Joi.object({
         email: Joi.string()
           .lowercase()
           .email()
           .required(),
         name: Joi.string().required(),
         password: passwordField.required()
-      }
+      })
     }),
     async (ctx) => {
       const { email, name } = ctx.request.body;
@@ -58,12 +50,12 @@ router
   .post(
     '/login',
     validate({
-      body: {
+      body: Joi.object({
         email: Joi.string()
           .email()
           .required(),
         password: Joi.string().required()
-      }
+      })
     }),
     async (ctx) => {
       const { email, password } = ctx.request.body;
@@ -81,11 +73,11 @@ router
   .post(
     '/accept-invite',
     validate({
-      body: {
+      body: Joi.object({
         token: Joi.string(),
         name: Joi.string().required(),
         password: passwordField.required()
-      }
+      })
     }),
     authenticate({ type: 'invite' }, { getToken: (ctx) => ctx.request.body.token }),
     async (ctx) => {
@@ -115,11 +107,11 @@ router
   .post(
     '/request-password',
     validate({
-      body: {
+      body: Joi.object({
         email: Joi.string()
           .email()
           .required()
-      }
+      })
     }),
     async (ctx) => {
       const { email } = ctx.request.body;
@@ -140,10 +132,10 @@ router
   .post(
     '/set-password',
     validate({
-      body: {
+      body: Joi.object({
         token: Joi.string().required(),
         password: passwordField.required()
-      }
+      })
     }),
     authenticate({ type: 'password' }, { getToken: (ctx) => ctx.request.body.token }),
     async (ctx) => {
