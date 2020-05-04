@@ -69,6 +69,7 @@ module.exports = {
         test: /\.(png|jpg|svg|gif|pdf|eot|ttf|woff2?)$/,
         loader: 'file-loader',
         options: {
+          esModule: false,
           outputPath: 'assets'
         }
       },
