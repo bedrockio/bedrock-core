@@ -1,24 +1,20 @@
-import { observable, action } from 'mobx';
-import BaseStore from './BaseStore';
+//import { observable, action } from 'mobx';
+//import BaseStore from './BaseStore';
+//import request from 'utils/request';
 import request from 'utils/request';
+import { BaseStore, action } from 'utils/store';
 
 export default class MeStore extends BaseStore {
-  @observable user;
+
+  get user() {
+    return this.item;
+  }
 
   @action
-  fetch(statusKey) {
-    const status = this.createStatus(statusKey);
-    return request({
+  async fetch(statusKey) {
+    return await request({
       method: 'GET',
       path: '/1/users/me'
     })
-      .then((resp) => {
-        this.user = resp.data;
-        status.success();
-      })
-      .catch((err) => {
-        status.error(err);
-        return err;
-      });
   }
 }

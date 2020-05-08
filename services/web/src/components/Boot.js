@@ -1,15 +1,15 @@
 import React from 'react';
 import { Switch, withRouter } from 'react-router-dom';
-import { observer, inject } from 'mobx-react';
+//import { observer, inject } from 'mobx-react';
+import { inject } from 'utils/store';
 import PageCenter from 'components/PageCenter';
 import PageLoader from 'components/PageLoader';
 import { Message, Button } from 'semantic-ui-react';
 
 @inject('appSession', 'me')
-@withRouter
-@observer
 export default class Boot extends React.Component {
-  componentWillMount() {
+
+  componentDidMount() {
     this.handleLoading();
   }
 
@@ -27,9 +27,8 @@ export default class Boot extends React.Component {
 
   render() {
     const { me, appSession } = this.props;
-    const status = me.getStatus('boot');
 
-    if (!appSession.loaded) {
+    if (me.loading) {
       return (
         <PageCenter>
           {status.error && (

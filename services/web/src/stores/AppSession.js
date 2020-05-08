@@ -1,36 +1,27 @@
-import { observable, action, reaction } from 'mobx';
+//import { observable, action, reaction } from 'mobx';
 
 class AppSession {
-  @observable token = window.localStorage.getItem('jwt');
-  @observable loaded;
 
   constructor() {
-    reaction(
-      () => this.token,
-      (token) => {
-        if (token) {
-          window.localStorage.setItem('jwt', token);
-        } else {
-          window.localStorage.removeItem('jwt');
-        }
-      }
-    );
+    this.token = localStorage.getItem('jwt');
+    this.loaded = false;
   }
 
-  @action
   setToken(token) {
-    this.token = token;
+    if (token) {
+      localStorage.setItem('jwt', token);
+    } else {
+      localStorage.removeItem('jwt', token);
+    }
   }
 
-  @action
-  setLoaded() {
-    this.loaded = true;
+  setLoaded(loaded = true) {
+    this.loaded = loaded;
   }
 
-  @action
   reset() {
-    this.token = null;
-    this.loaded = null;
+    this.setToken(null);
+    this.setLoaded(false);
   }
 }
 

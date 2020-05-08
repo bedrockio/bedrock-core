@@ -1,12 +1,12 @@
 import React from 'react';
-import { observer, inject } from 'mobx-react';
 import { NavLink, Link } from 'react-router-dom';
 import { Container, Dropdown, Icon, Menu } from 'semantic-ui-react';
 import logoInverted from 'assets/logo.svg';
+import { inject } from 'utils/store';
 
 @inject('me')
-@observer
 export default class AppWrapper extends React.Component {
+
   render() {
     const { me } = this.props;
     const isAdmin = me.user.roles.indexOf('admin') !== -1;

@@ -1,5 +1,6 @@
 import React from 'react';
-import { observer, inject } from 'mobx-react';
+//import { observer, inject } from 'mobx-react';
+import { inject } from 'utils/store';
 import { Form, Message, Modal, Button } from 'semantic-ui-react';
 import UploadsField from 'components/form-fields/Uploads';
 import CountriesField from 'components/form-fields/Countries';
@@ -8,8 +9,8 @@ import SearchDropDown from 'components/SearchDropdown';
 import request from 'utils/request';
 
 @inject('shops')
-@observer
 export default class EditShop extends React.Component {
+
   static defaultProps = {
     initialValues: {}
   };
