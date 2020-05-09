@@ -3,6 +3,8 @@
 FILE=$1
 SIZE=$2
 DIR=$3
+COLOR=${4-none}
+
 
 function show_usage {
   script=$(basename $0)
@@ -11,10 +13,11 @@ Format is inferred from the extension.
 SIZE should be in the format WxH.
 DIR can move the file to a different directory, otherwise the file
 will be overwritten.
+COLOR can be any color name or hex in format #ffffff (default transparent).
 
 Requires imagemagick.
 
-Usage:   $script <FILE> <SIZE> [DIR]
+Usage:   $script <FILE> <SIZE> [DIR] [COLOR]
 Example: $script image.jpg 1024x768
 
 $1"
@@ -37,6 +40,6 @@ else
 fi
 
 # Note order of background is important
-command="convert $FILE -background none -resize $SIZE -extent $SIZE -gravity center $OUTPUT"
+command="convert $FILE -background $COLOR -resize $SIZE -extent $SIZE -gravity center $OUTPUT"
 echo "$command"
 eval "$command"
