@@ -33,9 +33,9 @@ app.on('error', (err) => {
   }
 });
 
-if (config.has('SENTRY_DNS')) {
+if (config.has('SENTRY_DSN')) {
   Sentry.init({
-    dsn: config.get('SENTRY_DNS')
+    dsn: config.get('SENTRY_DSN')
   });
 }
 

@@ -8,7 +8,7 @@ module.exports = {
   publicEnv: pick(all, [
     'API_URL',
     'APP_NAME',
-    'SENTRY_DNS'
+    'SENTRY_DSN'
   ])
 };
 
