@@ -1,3 +1,5 @@
+// TODO: This is probably more suited to a plugin.
+
 // Handles localization via a cookie or URL prefix.
 //
 // For default URLs with no prefix, this middleware
