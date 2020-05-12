@@ -114,9 +114,7 @@ export default class ShopProducts extends React.Component {
                           }
                         />
                         <Modal
-                          header={`Are you sure you want to delete "${
-                            item.name
-                          }"?`}
+                          header={`Are you sure you want to delete "${item.name}"?`}
                           content="All data will be permanently deleted"
                           status={deleteStatus}
                           trigger={<Button basic icon="trash" />}

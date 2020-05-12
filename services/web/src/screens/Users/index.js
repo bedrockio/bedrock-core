@@ -22,17 +22,16 @@ import {
   Dimmer,
   Message,
   Modal,
-  Button,
-  Pagination
+  Button
 } from 'semantic-ui-react';
+import Pagination from 'components/Pagination';
 
 @inject('appSession', 'users')
 @observer
 export default class Users extends React.Component {
   state = {
     showCreateDialog: false,
-    editItem: null,
-    currentPage: 1
+    editItem: null
   };
   constructor(props) {
     super(props);
@@ -120,9 +119,7 @@ export default class Users extends React.Component {
                           }
                         />
                         <Modal
-                          header={`Are you sure you want to delete "${
-                            item.name
-                          }"?`}
+                          header={`Are you sure you want to delete "${item.name}"?`}
                           content="All data will be permanently deleted"
                           status={deleteStatus}
                           trigger={<Button basic icon="trash" />}
