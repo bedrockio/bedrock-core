@@ -1,16 +1,20 @@
+// react-hot-loader needs to be imported
+// before react and react-dom
+import 'react-hot-loader';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 
 import { Provider } from 'mobx-react';
 import { Router } from 'react-router-dom';
-import createHistory from 'history/createBrowserHistory';
+import { createBrowserHistory } from 'history';
 import { syncHistoryWithStore, RouterStore } from 'mobx-react-router';
 import { configure } from 'mobx';
 import { ThemeProvider } from 'styled-components';
+import { SENTRY_DSN } from 'utils/env';
 
 import stores from './stores';
-import config from './config';
 
 import generatedTheme from './theme/theme.generated.json';
 
@@ -18,12 +22,12 @@ configure({
   enforceActions: 'always'
 });
 
-if (config.SENTRY_DSN && window.Sentry) {
-  window.Sentry.init({ dsn: config.SENTRY_DSN });
+if (SENTRY_DSN && window.Sentry) {
+  window.Sentry.init({ dsn: SENTRY_DSN });
 }
 
 const routing = new RouterStore();
-const history = syncHistoryWithStore(createHistory(), routing);
+const history = syncHistoryWithStore(createBrowserHistory(), routing);
 
 const Wrapper = () => (
   <Provider routing={routing} {...stores}>

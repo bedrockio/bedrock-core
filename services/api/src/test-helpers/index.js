@@ -10,7 +10,7 @@ mongoose.Promise = Promise;
 
 const mongoServer = new MongoMemoryServer();
 exports.setupDb = () =>
-  new Promise(async (resolve) => {
+  new Promise((resolve) => {
     mongoServer.getConnectionString().then((mongoUri) => {
       const mongooseOpts = {
         autoReconnect: true,

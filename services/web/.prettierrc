@@ -1,0 +1,5 @@
+singleQuote: true
+allowParens: "always"
+trailingComma: "es5"
+jsxBracketSameLine: true
+printWidth: 120

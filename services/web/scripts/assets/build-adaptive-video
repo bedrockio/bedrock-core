@@ -1,0 +1,55 @@
+#!/bin/bash
+
+FILE=$1
+DESTINATION=$2
+
+function show_usage {
+  script=$(basename $0)
+  echo "Builds an mpeg-dash and HLS manifest for an input
+video and uploads to gcloud bucket.
+
+Resources:
+https://bitmovin.com/video-bitrate-streaming-hls-dash/
+https://ffmpeg.org/ffmpeg-formats.html#dash-2
+
+Requires ffmpeg 4.1.1 or greater.
+Requires gcloud authentication.
+Requires gsutil.
+
+Usage:   $script <FILE> <DESTINATION>
+Example: $script intro.mp4 gs://production-videos/intro.mp4
+
+$1"
+  exit 1
+}
+
+if [ "$FILE" == "" ]; then
+  show_usage "<FILE> argument expected"
+fi
+
+if [ "$DESTINATION" == "" ]; then
+  show_usage "<DESTINATION> argument expected"
+fi
+
+base=$(basename -- "$DESTINATION")
+name="${base%.*}"
+
+TMP_DIR=tmp
+DIR=$TMP_DIR/$name
+
+mkdir -p $DIR
+
+ffmpeg -i $FILE \
+  -map 0:v -map 0:v -map 0:v -map 0:a? \
+  -c:v libx264 \
+  -x264-params keyint=60:scenecut=0 \
+  -b:v:0 250k -s:v:0 426x240 -profile:v:0 baseline \
+  -b:v:1 500k -s:v:1 640x360 -profile:v:1 main \
+  -b:v:2 1500k -s:v:2 1280x720 -profile:v:2 high \
+  -c:a aac -b:a 192k \
+  -hls_playlist 1 \
+  -single_file 1 \
+  -f dash $DIR/manifest.mpd
+
+gsutil -m cp $DIR/* $DESTINATION
+rm -rf $TMP_DIR

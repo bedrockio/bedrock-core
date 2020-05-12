@@ -1,7 +1,7 @@
 import React from 'react';
-import { Form, Message, Image, Icon, Label, Card } from 'semantic-ui-react';
 import Dropzone from 'react-dropzone';
-import request from 'utils/request';
+import { Form, Message, Image, Icon, Label, Card } from 'semantic-ui-react';
+import { request } from 'utils/api';
 import { urlForUpload } from 'utils/uploads';
 
 export default class Uploads extends React.Component {
@@ -37,7 +37,7 @@ export default class Uploads extends React.Component {
     request({
       method: 'POST',
       path: '/1/uploads',
-      file: acceptedFiles[0]
+      body: acceptedFiles[0]
     })
       .then(({ data }) => {
         const { uploads } = this.state;

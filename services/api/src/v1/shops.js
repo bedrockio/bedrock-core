@@ -1,21 +1,21 @@
 const Router = require('koa-router');
-const Joi = require('joi');
+const Joi = require('@hapi/joi');
 const validate = require('../middlewares/validate');
 const { authenticate, fetchUser } = require('../middlewares/authenticate');
+const { NotFoundError } = require('../lib/errors');
 const Shop = require('../models/shop');
 
 const router = new Router();
 
-const schema = {
+const schema = Joi.object({
   name: Joi.string().required(),
   description: Joi.string(),
   images: Joi.array().items(Joi.string()),
   categories: Joi.array().items(Joi.string()),
   country: Joi.string()
-};
+});
 
-const patchSchema = {
-  ...schema,
+const patchSchema = schema.append({
   id: Joi.string().strip(),
   name: Joi.string(),
   categories: Joi.array().items(Joi.string()),
@@ -24,7 +24,7 @@ const patchSchema = {
   createdAt: Joi.date().strip(),
   updatedAt: Joi.date().strip(),
   deletedAt: Joi.date().strip()
-};
+});
 
 router
   .use(authenticate({ type: 'user' }))
@@ -32,18 +32,20 @@ router
   .param('shop', async (id, ctx, next) => {
     const shop = await Shop.findById(id).populate('images');
     ctx.state.shop = shop;
-    if (!shop) return (ctx.status = 404);
+    if (!shop) {
+      throw new NotFoundError();
+    }
     return next();
   })
   .post(
     '/search',
     validate({
-      body: {
+      body: Joi.object({
         skip: Joi.number().default(0),
         sort: Joi.object({
           field: Joi.string().required(),
           order: Joi.string()
-            .valid(['asc', 'desc'])
+            .valid('asc', 'desc')
             .required()
         }).default({
           field: 'createdAt',
@@ -52,7 +54,7 @@ router
         limit: Joi.number()
           .positive()
           .default(50)
-      }
+      })
     }),
     async (ctx) => {
       const { sort, skip, limit } = ctx.request.body;

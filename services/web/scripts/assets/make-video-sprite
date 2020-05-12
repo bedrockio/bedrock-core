@@ -1,0 +1,46 @@
+#!/bin/bash
+
+FILE=$1
+FPS=${2-24}
+
+function show_usage {
+  script=$(basename $0)
+  echo "Creates a spritesheet from a video file.
+Default FPS is 24.
+
+Requires ffmpeg 4.1.1 or greater.
+Requires imagemagick.
+
+Usage:   $script <FILE> [FPS]
+Example: $script intro.mp4 24
+
+$1"
+  exit 1
+}
+
+echo $0
+
+if [ "$FILE" == "" ]; then
+  show_usage "<FILE> argument expected"
+fi
+
+DIR="sprite-frames"
+
+base=${FILE##*/}
+name="${base%.*}"
+sprite="$name-sprite.jpg"
+
+rm $sprite 2> /dev/null
+mkdir $DIR
+
+ffmpeg -i $FILE -r $FPS $DIR/frame%04d.png
+
+frames=$(ls -1q $DIR | wc -l)
+
+echo "Output $frames frames"
+
+convert $DIR/frame*.png +append $sprite
+
+echo "Output $sprite"
+
+rm -rf $DIR

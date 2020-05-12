@@ -1,15 +1,18 @@
 import React from 'react';
-import { Message } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
 import { observer, inject } from 'mobx-react';
+import { Message } from 'semantic-ui-react';
+import { Route } from 'react-router-dom';
 import PageCenter from 'components/PageCenter';
 import PageLoader from 'components/PageLoader';
-import { Route } from 'react-router-dom';
+import NotFound from 'components/NotFound';
 
 import Boot from 'components/Boot';
 
 @inject('appSession', 'me')
 @observer
 export default class Protected extends React.Component {
+
   constructor(props) {
     super(props);
     this.handleLoading();
@@ -25,6 +28,21 @@ export default class Protected extends React.Component {
       return;
     }
     appSession.setLoaded();
+  }
+
+  hasAccess() {
+    const { me } = this.props;
+    if (!me.user) {
+      return false;
+    }
+    return this.getRoles().every((role) => {
+      return me.hasRole(role);
+    });
+  }
+
+  getRoles() {
+    const { admin, roles } = this.props;
+    return admin ? ['admin'] : roles;
   }
 
   render() {
@@ -47,6 +65,10 @@ export default class Protected extends React.Component {
           {!status.error && <PageLoader />}
         </PageCenter>
       );
+    } else if (!this.hasAccess()) {
+      return (
+        <NotFound />
+      );
     }
 
     return (
@@ -63,3 +85,13 @@ export default class Protected extends React.Component {
     );
   }
 }
+
+Protected.propTypes = {
+  admin: PropTypes.bool,
+  roles: PropTypes.array,
+};
+
+Protected.defaultProps = {
+  admin: false,
+  roles: [],
+};

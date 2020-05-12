@@ -9,7 +9,6 @@ import { urlForUpload } from 'utils/uploads';
 export default class ShopOverview extends React.Component {
   render() {
     const { shop } = this.props;
-    console.log(shop.updatedAt);
     return (
       <div>
         <Header as="h1">{shop.name}</Header>

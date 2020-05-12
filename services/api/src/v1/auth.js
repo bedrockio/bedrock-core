@@ -1,9 +1,10 @@
 const Router = require('koa-router');
-const Joi = require('joi');
+const Joi = require('@hapi/joi');
 const validate = require('../middlewares/validate');
 const { authenticate } = require('../middlewares/authenticate');
 const tokens = require('../lib/tokens');
 const { sendWelcome, sendResetPassword, sendResetPasswordUnknown } = require('../lib/emails');
+const { BadRequestError, UnauthorizedError } = require('../lib/errors');
 const User = require('../models/user');
 const Invite = require('../models/invite');
 
@@ -11,34 +12,26 @@ const router = new Router();
 
 const passwordField = Joi.string()
   .min(6)
-  .options({
-    language: {
-      string: {
-        regex: {
-          base: 'Your password must be at least 6 characters long. Please try another.'
-        }
-      }
-    }
-  });
+  .message('Your password must be at least 6 characters long. Please try another.');
 
 router
   .post(
     '/register',
     validate({
-      body: {
+      body: Joi.object({
         email: Joi.string()
           .lowercase()
           .email()
           .required(),
         name: Joi.string().required(),
         password: passwordField.required()
-      }
+      })
     }),
     async (ctx) => {
       const { email, name } = ctx.request.body;
       const existingUser = await User.findOne({ email, deletedAt: { $exists: false } });
       if (existingUser) {
-        ctx.throw(400, 'A user with that email already exists');
+        throw new BadRequestError('A user with that email already exists');
       }
 
       const user = await User.create({
@@ -57,22 +50,22 @@ router
   .post(
     '/login',
     validate({
-      body: {
+      body: Joi.object({
         email: Joi.string()
           .email()
           .required(),
         password: Joi.string().required()
-      }
+      })
     }),
     async (ctx) => {
       const { email, password } = ctx.request.body;
       const user = await User.findOne({ email });
       if (!user) {
-        ctx.throw(401, 'email password combination does not match');
+        throw new UnauthorizedError('email password combination does not match');
       }
       const isSame = await user.verifyPassword(password);
       if (!isSame) {
-        ctx.throw(401, 'email password combination does not match');
+        throw new UnauthorizedError('email password combination does not match');
       }
       ctx.body = { data: { token: tokens.createUserToken(user) } };
     }
@@ -80,11 +73,11 @@ router
   .post(
     '/accept-invite',
     validate({
-      body: {
+      body: Joi.object({
         token: Joi.string(),
         name: Joi.string().required(),
         password: passwordField.required()
-      }
+      })
     }),
     authenticate({ type: 'invite' }, { getToken: (ctx) => ctx.request.body.token }),
     async (ctx) => {
@@ -114,11 +107,11 @@ router
   .post(
     '/request-password',
     validate({
-      body: {
+      body: Joi.object({
         email: Joi.string()
           .email()
           .required()
-      }
+      })
     }),
     async (ctx) => {
       const { email } = ctx.request.body;
@@ -139,10 +132,10 @@ router
   .post(
     '/set-password',
     validate({
-      body: {
+      body: Joi.object({
         token: Joi.string().required(),
         password: passwordField.required()
-      }
+      })
     }),
     authenticate({ type: 'password' }, { getToken: (ctx) => ctx.request.body.token }),
     async (ctx) => {

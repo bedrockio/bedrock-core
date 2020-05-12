@@ -1,7 +1,9 @@
-import config from 'config';
+import { API_URL } from 'utils/env';
 
 export function urlForUpload(upload, thumbnail = false) {
-  let url = `${config.API_URL}/1/uploads/${upload.hash}/image`;
-  if (thumbnail) url += '?thumnail=true';
-  return url;
+  let url = `/1/uploads/${upload.hash}/image`;
+  if (thumbnail) {
+    url += '?thumbnail=true';
+  }
+  return new URL(url, API_URL).toString();
 }

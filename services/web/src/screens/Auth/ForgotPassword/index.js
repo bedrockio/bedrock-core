@@ -1,7 +1,6 @@
 import React from 'react';
 import { Segment, Message, Grid } from 'semantic-ui-react';
-
-import request from 'utils/request';
+import { request } from 'utils/api';
 import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
 import Form from './Form';

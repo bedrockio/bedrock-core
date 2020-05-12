@@ -1,8 +1,8 @@
+import { hot } from 'react-hot-loader/root';
 import 'theme/semantic.less';
 
 import { Switch, Route, Redirect } from 'react-router-dom';
 import React from 'react';
-import { hot } from 'react-hot-loader';
 
 import AuthSwitchRoute from 'components/routes/AuthSwitch';
 import Protected from 'components/routes/Protected';
@@ -54,4 +54,4 @@ const App = () => (
   </Switch>
 );
 
-export default hot(module)(App);
+export default hot(App);

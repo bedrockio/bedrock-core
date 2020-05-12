@@ -1,0 +1,40 @@
+{
+  "env": {
+    "es6": true,
+    "node": true,
+  },
+  "parserOptions": {
+    "ecmaVersion": 2020,
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:jest/recommended",
+    "prettier"
+  ],
+  "rules": {
+    "semi": "error",
+    "require-atomic-updates": "off",
+    "no-unused-vars": ["error", {
+      "ignoreRestSiblings": true
+    }],
+    "no-console": ["warn",
+      {
+        "allow": [
+          "warn",
+          "error",
+          "info"
+        ]
+      }
+    ]
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "moduleDirectory": [
+          "node_modules",
+          "src"
+        ]
+      }
+    }
+  },
+}

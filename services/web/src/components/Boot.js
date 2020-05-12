@@ -1,15 +1,16 @@
 import React from 'react';
-import { Switch, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { observer, inject } from 'mobx-react';
 import PageCenter from 'components/PageCenter';
 import PageLoader from 'components/PageLoader';
-import { Message, Button } from 'semantic-ui-react';
+import { Message } from 'semantic-ui-react';
 
 @inject('appSession', 'me')
 @withRouter
 @observer
 export default class Boot extends React.Component {
-  componentWillMount() {
+
+  componentDidMount() {
     this.handleLoading();
   }
 

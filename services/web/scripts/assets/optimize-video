@@ -1,0 +1,41 @@
+#!/bin/bash
+
+FILE=$1
+MAX_WIDTH=${2-1200}
+
+function show_usage {
+  script=$(basename $0)
+  echo "Optimizes a video asset for use on web. This fixes issues with
+certain browsers not being able to play H264 encoded videos. Default
+maximum width is 1200px.
+
+Requires ffmpeg 4.1.1 or greater.
+
+Usage:   $script <FILE> [MAX_WIDTH]
+Example: $script intro.mp4 600
+
+$1"
+  exit 1
+}
+
+echo $0
+
+if [ "$FILE" == "" ]; then
+  show_usage "<FILE> argument expected"
+fi
+
+echo $MAX_WIDTH
+
+base=${FILE##*/}
+name="${base%.*}"
+
+# pix_fmt yuv420p required for FF to work
+# Not sure what the rest do but they work
+
+ffmpeg -i $FILE \
+  -vcodec libx264 \
+  -pix_fmt yuv420p \
+  -profile:v baseline \
+  -level 3 \
+  -vf "scale='min($MAX_WIDTH,iw)':-2" \
+  "$name-optimized.mp4"

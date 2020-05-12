@@ -5,8 +5,7 @@ import GETTING_STARTED_MD from 'docs/GETTING_STARTED.md';
 import CodeBlock from '../CodeBlock';
 import 'github-markdown-css';
 import { observer, inject } from 'mobx-react';
-import request from 'utils/request';
-import config from 'config';
+import { API_URL, APP_NAME } from 'utils/env';
 
 function enrichMarkdown(markdown, me, credentials) {
   const { organization } = me;
@@ -25,11 +24,11 @@ function enrichMarkdown(markdown, me, credentials) {
   }
   enrichedMarkdown = enrichedMarkdown.replace(
     new RegExp('<API_URL>', 'g'),
-    config.API_URL.replace(/\/$/, '')
+    API_URL.replace(/\/$/, '')
   );
   enrichedMarkdown = enrichedMarkdown.replace(
     new RegExp('<APP_NAME>', 'g'),
-    config.APP_NAME.replace(/\/$/, '')
+    APP_NAME.replace(/\/$/, '')
   );
   return enrichedMarkdown;
 }

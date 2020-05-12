@@ -1,11 +1,11 @@
 import React from 'react';
 import { observer, inject } from 'mobx-react';
 import { Form, Message, Modal, Button } from 'semantic-ui-react';
+import { request } from 'utils/api';
 import UploadsField from 'components/form-fields/Uploads';
 import CountriesField from 'components/form-fields/Countries';
 import AutoFocus from 'components/AutoFocus';
 import SearchDropDown from 'components/SearchDropdown';
-import request from 'utils/request';
 
 @inject('shops')
 @observer
@@ -132,7 +132,7 @@ export default class EditShop extends React.Component {
                   Categories
                   <SearchDropDown
                     onChange={this.handleOnCategoryChange}
-                    value={formValues.categories}
+                    value={formValues.categories || []}
                     multiple
                     fetchData={this.fetchCategories}
                     fluid
