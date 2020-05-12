@@ -132,7 +132,7 @@ export default class EditShop extends React.Component {
                   Categories
                   <SearchDropDown
                     onChange={this.handleOnCategoryChange}
-                    value={formValues.categories}
+                    value={formValues.categories || []}
                     multiple
                     fetchData={this.fetchCategories}
                     fluid
