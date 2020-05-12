@@ -6,7 +6,7 @@ export default class UsersStore extends BaseStore {
   @observable register = new Map();
   @observable items = [];
   @observable totalItems = 0;
-  @observable limit = 20;
+  @observable limit = 10;
   @observable page = 1;
   @observable sort = {
     order: 'asc',
