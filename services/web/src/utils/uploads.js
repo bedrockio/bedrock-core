@@ -1,11 +1,9 @@
 import { API_URL } from 'utils/env';
 
 export function urlForUpload(upload, thumbnail = false) {
-  const url = new URL(`/1/uploads/${upload.hash}/image`, API_URL);
+  let url = `/1/uploads/${upload.hash}/image`;
   if (thumbnail) {
-    url.search = new URLSearchParams({
-      thumbnail: true
-    });
+    url += '?thumbnail=true';
   }
-  return url.toString();
+  return new URL(url, API_URL).toString();
 }
