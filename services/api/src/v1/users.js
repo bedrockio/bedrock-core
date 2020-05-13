@@ -23,7 +23,9 @@ router
     return next();
   })
   .get('/me', (ctx) => {
-    ctx.body = { data: ctx.state.authUser.toResource() };
+    ctx.body = {
+      data: ctx.state.authUser
+    };
   })
   .patch(
     '/me',
@@ -37,7 +39,9 @@ router
       const { authUser } = ctx.state;
       Object.assign(authUser, ctx.request.body);
       await authUser.save();
-      ctx.body = { data: authUser.toResource() };
+      ctx.body = {
+        data: authUser
+      };
     }
   )
   .use(checkUserRole({ role: 'admin' }))
@@ -68,7 +72,7 @@ router
 
       const total = await await User.countDocuments(query);
       ctx.body = {
-        data: data.map((i) => i.toResource()),
+        data,
         meta: {
           total,
           skip,
@@ -99,7 +103,7 @@ router
       const user = await User.create(ctx.request.body);
 
       ctx.body = {
-        data: user.toResource()
+        data: user
       };
     }
   )
@@ -125,13 +129,13 @@ router
       user.assign(ctx.request.body);
       await user.save();
       ctx.body = {
-        data: user.toResource()
+        data: user
       };
     }
   )
   .get('/:user', async (ctx) => {
     ctx.body = {
-      data: ctx.state.user.toResource()
+      data: ctx.state.user
     };
   });
 

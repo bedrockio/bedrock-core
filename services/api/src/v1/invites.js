@@ -59,7 +59,7 @@ router
       const total = await await Invite.countDocuments(query);
 
       ctx.body = {
-        data: invites.map((i) => i.toResource()),
+        data: invites,
         meta: {
           total,
           skip,

@@ -21,7 +21,7 @@ router
   .get('/:hash', async (ctx) => {
     const upload = await Upload.findOne({ hash: ctx.params.hash });
     ctx.body = {
-      data: upload.toResource()
+      data: upload
     };
   })
   .get('/:hash/image', async (ctx) => {
@@ -43,7 +43,7 @@ router
     params.ownerId = authUser.id;
     const upload = await Upload.create(params);
     ctx.body = {
-      data: upload.toResource()
+      data: upload
     };
   })
   .delete('/:upload', async (ctx) => {

@@ -88,7 +88,7 @@ describe('/1/shops', () => {
         description: 'Some description'
       });
       shop.name = 'new name';
-      const response = await request('PATCH', `/1/shops/${shop.id}`, shop.toResource(), { user });
+      const response = await request('PATCH', `/1/shops/${shop.id}`, shop.toJSON(), { user });
       expect(response.status).toBe(200);
       expect(response.body.data.name).toBe('new name');
       const dbShop = await Shop.findById(shop.id);
