@@ -11,32 +11,36 @@ afterAll(async () => {
 });
 
 
+let counter = 0;
+
+function createModel(schema) {
+  return mongoose.model(`SchemaTestModel${counter++}`, schema);
+}
+
 describe('Schema', () => {
 
   describe('basic functionality', () => {
 
     it('should be able to create basic schema', async () => {
-      const schema = new Schema(
-        {
-          name: { type: String, validate: /[a-z]/ }
-        },
-      );
-      const User = mongoose.model('SchemaUser1', schema);
+      const User = createModel(new Schema({
+        name: { type: String, validate: /[a-z]/ }
+      }));
       const user = new User({ name: 'foo' });
 
       expect(user.name).toBe('foo');
-      expect(async () => {
+
+      await expect(async () => {
         user.name = 'FOO';
         await user.save();
       }).rejects.toThrow();
+
     });
   });
 
   describe('defaults', () => {
 
     it('should add timestamps by default', async () => {
-      const schema = new Schema();
-      const User = mongoose.model('SchemaUser2', schema);
+      const User = createModel(new Schema());
       const user = new User();
       await user.save();
       expect(user.createdAt).toBeInstanceOf(Date);
@@ -44,8 +48,7 @@ describe('Schema', () => {
     });
 
     it('should add deletedAt by default', async () => {
-      const schema = new Schema();
-      const User = mongoose.model('SchemaUser3', schema);
+      const User = createModel(new Schema());
       const user = new User();
       await user.save();
       await user.delete();
@@ -57,16 +60,14 @@ describe('Schema', () => {
   describe('serialization', () => {
 
     it('should expose id', () => {
-      const schema = new Schema();
-      const User = mongoose.model('SchemaUser4', schema);
+      const User = createModel(new Schema());
       const user = new User();
       const data = JSON.parse(JSON.stringify(user));
       expect(data.id).toBe(user.id);
     });
 
     it('should not expose _id or __v', () => {
-      const schema = new Schema();
-      const User = mongoose.model('SchemaUser5', schema);
+      const User = createModel(new Schema());
       const user = new User();
       const data = JSON.parse(JSON.stringify(user));
       expect(data._id).toBeUndefined();
@@ -74,11 +75,10 @@ describe('Schema', () => {
     });
 
     it('should not expose fields with underscore or marked private', () => {
-      const schema = new Schema({
+      const User = createModel(new Schema({
         _private: String,
         password: { type: String, access: 'private' },
-      });
-      const User = mongoose.model('SchemaUser6', schema);
+      }));
       const user = new User();
       user._private = 'private';
       user.password = 'fake password';
@@ -90,6 +90,44 @@ describe('Schema', () => {
 
       expect(data._private).toBeUndefined();
       expect(data.password).toBeUndefined();
+    });
+
+  });
+
+  describe('autopopulate', () => {
+
+    it('should not expose private fields when using with autopopulate', async () => {
+      const User = createModel(new Schema({
+        password: { type: String, access: 'private' },
+      }));
+
+      const shopSchema = new Schema({
+        user: {
+          ref: User.modelName,
+          type: mongoose.Schema.Types.ObjectId,
+          autopopulate: true,
+        }
+      });
+
+      shopSchema.plugin(require('mongoose-autopopulate'));
+      const Shop = createModel(shopSchema);
+
+      const user = new User();
+      user.password = 'fake password';
+      await user.save();
+
+      let shop = new Shop();
+      shop.user = user;
+      await shop.save();
+
+      shop = await Shop.findById(shop.id);
+
+      const data = JSON.parse(JSON.stringify(shop));
+
+      expect(data.user.id).toBe(user.id);
+      expect(data.user._id).toBeUndefined();
+      expect(data.user.__v).toBeUndefined();
+      expect(data.user.password).toBeUndefined();
     });
 
   });
