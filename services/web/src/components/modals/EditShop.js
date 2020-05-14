@@ -10,7 +10,9 @@ import SearchDropDown from 'components/SearchDropdown';
 @inject('shops')
 @observer
 export default class EditShop extends React.Component {
+
   static defaultProps = {
+    onSave: () => {},
     initialValues: {}
   };
 
@@ -28,7 +30,7 @@ export default class EditShop extends React.Component {
     }
   }
 
-  handleSubmit = () => {
+  handleSubmit = async () => {
     const { shops, initialValues } = this.props;
     this.setState({
       touched: true
@@ -38,14 +40,20 @@ export default class EditShop extends React.Component {
       ? shops.update.bind(shops)
       : shops.create.bind(shops);
 
-    return action(this.state.formValues).then((err) => {
-      if (err instanceof Error) return;
+    try {
+      await action(this.state.formValues);
       this.setState({
         formValues: this.props.initialValues,
         open: false,
         touched: false
       });
-    });
+      this.props.onSave();
+    } catch(err) {
+      // TODO: handle this
+      this.setState({
+        error: err
+      });
+    }
   };
 
   setField(name, value) {
