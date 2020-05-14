@@ -22,7 +22,7 @@ const schema = new Schema(
     },
     hashedPassword: {
       type: String,
-      private: true
+      access: 'private',
     },
     timeZone: { type: String }
   },

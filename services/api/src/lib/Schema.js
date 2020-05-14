@@ -20,9 +20,9 @@ class Schema extends mongoose.Schema {
           for (let key of Object.keys(ret)) {
             const field = doc.schema.obj[key];
             // Omit any key with a private prefix "_" or marked
-            // "private" in the schema. Note that virtuals are
+            // "access": "private" in the schema. Note that virtuals are
             // excluded by default so they don't need to be removed.
-            if (key[0] === '_' || (field && field.private)) {
+            if (key[0] === '_' || (field && field.access === 'private')) {
               delete ret[key];
             }
           }
