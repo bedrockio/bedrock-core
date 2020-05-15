@@ -1,19 +1,17 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { observer, inject } from 'mobx-react';
-import AppWrapper from 'components/AppWrapper';
+import { Container, Header, Table, Button, Message, Modal } from 'semantic-ui-react';
 import { formatDate } from 'utils/date';
 
-import { Link } from 'react-router-dom';
+import AppWrapper from 'components/AppWrapper';
 import HelpTip from 'components/HelpTip';
 import EditShop from 'components/modals/EditShop';
 import { SearchProvider } from 'components/data';
 
-import { Container, Header, Table, Button, Message, Modal } from 'semantic-ui-react';
-
 @inject('shops')
 @observer
 export default class Shops extends React.Component {
-
   onDataNeeded = async (params) => {
     return await this.props.shops.search(params);
   };

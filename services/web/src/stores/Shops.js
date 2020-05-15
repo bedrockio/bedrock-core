@@ -4,10 +4,11 @@ import BaseStore from './BaseStore';
 export default class ShopsStore extends BaseStore {
 
   async fetch(id) {
-    return await request({
+    const { data } = await request({
       method: 'GET',
       path: `/1/shops/${id}`
     });
+    return data;
   }
 
   async search(params = {}) {

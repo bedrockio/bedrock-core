@@ -28,6 +28,7 @@ function resetState(initialValues = {}) {
 @observer
 export default class EditProduct extends React.Component {
   static defaultProps = {
+    onSave: () => {},
     initialValues: {
       sellingPoints: []
     }
@@ -45,7 +46,7 @@ export default class EditProduct extends React.Component {
     this.setState(resetState(this.props.initialValues));
   };
 
-  handleSubmit = () => {
+  handleSubmit = async () => {
     const { products, initialValues } = this.props;
     this.setState({
       touched: true
@@ -55,13 +56,18 @@ export default class EditProduct extends React.Component {
       ? products.update.bind(products)
       : products.create.bind(products);
 
-    return action(this.state.formValues).then((err) => {
-      if (err instanceof Error) return;
+    try {
+      await action(this.state.formValues);
       this.setState({
         formValues: this.props.initialValues,
         open: false
       });
-    });
+      this.props.onSave();
+    } catch(err) {
+      this.setState({
+        error: err
+      });
+    }
   };
 
   setField(name, value) {
