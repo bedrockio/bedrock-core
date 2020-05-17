@@ -1,16 +1,18 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
 import { Form, Message, Image, Icon, Label, Card } from 'semantic-ui-react';
 import { request } from 'utils/api';
 import { urlForUpload } from 'utils/uploads';
 
 export default class Uploads extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
       loading: false,
       error: null,
-      uploads: props.value ? props.value.slice() : []
+      uploads: props.value ? props.value.slice() : [],
     };
     props.onChange(this.state.uploads.map((upload) => upload.id));
   }
@@ -22,33 +24,34 @@ export default class Uploads extends React.Component {
     this.props.onChange(newUploads.map((upload) => upload.id));
   }
 
-  drop(acceptedFiles, rejectedFiles) {
-    this.setState({ loading: true, error: null });
-    const loading = false;
-    let error = null;
-    if (rejectedFiles.length) {
-      error = new Error(`File did not meet criteria: ${rejectedFiles[0].name}`);
-      return this.setState({ error, loading });
-    }
-    if (acceptedFiles.length > 1) {
-      error = new Error('Oops, you can only upload 1 file at a time');
-      return this.setState({ error, loading });
-    }
-    request({
-      method: 'POST',
-      path: '/1/uploads',
-      body: acceptedFiles[0]
-    })
-      .then(({ data }) => {
-        const { uploads } = this.state;
-        uploads.push(data);
-        this.setState({ uploads, loading });
-        this.props.onChange(uploads.map((upload) => upload.id));
-      })
-      .catch((error) => {
-        this.setState({ error, loading });
+  onDrop = async (acceptedFiles, rejectedFiles) => {
+    this.setState({
+      loading: true,
+      error: null,
+    });
+    try {
+      if (rejectedFiles.length) {
+        throw new Error(`File did not meet criteria: ${rejectedFiles[0].file.name}`);
+      }
+      const { data } = await request({
+        method: 'POST',
+        path: '/1/uploads',
+        files: acceptedFiles,
       });
-  }
+      const uploads = [...this.state.uploads, ...data];
+      this.setState({
+        uploads,
+        loading: false,
+      });
+      this.props.onChange(uploads.map((upload) => upload.id));
+    } catch (error) {
+      this.setState({
+        error,
+        loading: false,
+      });
+      this.props.onError(error);
+    }
+  };
 
   render() {
     const { required, label, type } = this.props;
@@ -71,7 +74,7 @@ export default class Uploads extends React.Component {
                       position: 'absolute',
                       right: '5px',
                       top: '5px',
-                      zIndex: 1
+                      zIndex: 1,
                     }}
                     onClick={() => this.delete(upload)}
                   />
@@ -85,37 +88,21 @@ export default class Uploads extends React.Component {
                 <Label key={upload.id}>
                   <Icon name={`${type} file outline`} />
                   {upload.filename}
-                  <Icon
-                    name="delete"
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => this.delete(upload)}
-                  />
+                  <Icon name="delete" style={{ cursor: 'pointer' }} onClick={() => this.delete(upload)} />
                 </Label>
               ))}
             </Label.Group>
           ))}
-        <Dropzone
-          maxSize={5 * 1024 * 1024}
-          onDrop={(acceptedFiles, rejectedFiles) =>
-            this.drop(acceptedFiles, rejectedFiles)
-          }
-        >
+        <Dropzone maxSize={5 * 1024 * 1024} onDrop={this.onDrop}>
           {({ getRootProps, getInputProps, isDragActive }) => {
             return (
               <div
                 {...getRootProps()}
                 className={
-                  isDragActive
-                    ? 'ui icon blue message upload-dropzone-active'
-                    : 'ui icon message upload-dropzone'
+                  isDragActive ? 'ui icon blue message upload-dropzone-active' : 'ui icon message upload-dropzone'
                 }
-                style={{ cursor: 'pointer', outline: 0 }}
-              >
-                {loading ? (
-                  <Icon name="sync alternate" loading />
-                ) : (
-                  <Icon name={`file ${type} outline`} />
-                )}
+                style={{ cursor: 'pointer', outline: 0 }}>
+                {loading ? <Icon name="sync alternate" loading /> : <Icon name={`file ${type} outline`} />}
                 <input {...getInputProps()} />
                 <div className="content">
                   {loading ? (
@@ -123,10 +110,7 @@ export default class Uploads extends React.Component {
                   ) : isDragActive ? (
                     <p>Drop files here...</p>
                   ) : (
-                    <p>
-                      Try dropping some files here, or click to select files to
-                      upload.
-                    </p>
+                    <p>Try dropping some files here, or click to select files to upload.</p>
                   )}
                 </div>
               </div>
@@ -138,6 +122,13 @@ export default class Uploads extends React.Component {
   }
 }
 
+Uploads.propTypes = {
+  type: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
+  onError: PropTypes.func,
+}
+
 Uploads.defaultProps = {
-  type: 'image'
+  type: 'image',
+  onError: () => {},
 };
