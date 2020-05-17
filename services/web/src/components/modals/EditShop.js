@@ -13,80 +13,99 @@ export default class EditShop extends React.Component {
 
   static defaultProps = {
     onSave: () => {},
-    initialValues: {}
   };
 
-  state = {
-    open: false,
-    formValues: { ...this.props.initialValues }
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false,
+      loading: false,
+      touched: false,
+      shop: props.shop || {},
+    };
+  }
 
   componentDidUpdate(prevProps) {
     if (this.props.initialValues !== prevProps.initialValues) {
       this.setState({
         touched: false,
-        formValues: { ...this.props.initialValues }
+        formValues: { ...this.props.initialValues },
       });
     }
   }
 
-  handleSubmit = async () => {
-    const { shops, initialValues } = this.props;
-    this.setState({
-      touched: true
-    });
+  isUpdate() {
+    return !!this.props.shop;
+  }
 
-    const action = initialValues.id
-      ? shops.update.bind(shops)
-      : shops.create.bind(shops);
+  onChange = (evt) => {
+    const { name, value } = evt.target;
+    this.setShopField(name, value);
+  }
 
-    try {
-      await action(this.state.formValues);
-      this.setState({
-        formValues: this.props.initialValues,
-        open: false,
-        touched: false
-      });
-      this.props.onSave();
-    } catch(err) {
-      // TODO: handle this
-      this.setState({
-        error: err
-      });
-    }
+  onCountryChange = (code) => {
+    this.setShopField('country', code);
+  }
+
+  onCategoryChange = (e, { value }) => {
+    this.setShopField('categories', value);
   };
 
-  setField(name, value) {
+  onImagesChange = (value) => {
+    this.setShopField('images', value);
+  }
+
+  setShopField(name, value) {
     this.setState({
-      formValues: {
-        ...this.state.formValues,
-        [name]: value
+      shop: {
+        ...this.state.shop,
+        [name]: value,
       }
     });
   }
+
+  onSubmit = async () => {
+    const { shop } = this.state;
+
+    try {
+      this.setState({
+        loading: true,
+        touched: true,
+      });
+
+      if (this.isUpdate()) {
+        await this.props.shops.update(shop);
+      } else {
+        await this.props.shops.create(shop);
+      }
+
+      this.setState({
+        open: false,
+        loading: false,
+        touched: false,
+      });
+      this.props.onSave();
+    } catch (error) {
+      this.setState({
+        error,
+        loading: false,
+      });
+    }
+  };
 
   fetchCategories = (filter) => {
     return request({
       method: 'POST',
       path: '/1/categories/search',
       body: {
-        ...filter
-      }
+        ...filter,
+      },
     });
   };
 
-  handleOnCategoryChange = (e, { value }) => {
-    this.setField('categories', value);
-  };
-
   render() {
-    const { shops, initialValues, trigger } = this.props;
-    const { formValues = {}, touched, open } = this.state;
-
-    const isUpdate = !!initialValues.id;
-    const status = isUpdate
-      ? shops.getStatus('update')
-      : shops.getStatus('create');
+    const { trigger } = this.props;
+    const { open, shop, touched, loading, error } = this.state;
 
     return (
       <Modal
@@ -95,74 +114,68 @@ export default class EditShop extends React.Component {
           this.setState({
             open: false,
             formValues: this.props.initialValues,
-            touched: false
+            touched: false,
           })
         }
         onOpen={() => this.setState({ open: true })}
         open={open}
-        trigger={trigger}
-      >
+        trigger={trigger}>
         <Modal.Header>
-          {isUpdate ? `Edit "${initialValues.name}"` : 'New Shop'}
+          {this.isUpdate() ? `Edit "${shop.name}"` : 'New Shop'}
         </Modal.Header>
         <Modal.Content>
           <AutoFocus>
-            <Form
-              error={touched && Boolean(status.error)}
-              onSubmit={() => this.handleSubmit()}
-            >
-              {status.error && <Message error content={status.error.message} />}
+            <Form error={touched && error} onSubmit={this.onSubmit}>
+              {error && <Message error content={error.message} />}
               <Form.Input
-                value={formValues.name || ''}
                 name="name"
                 label="Name"
                 required
                 type="text"
-                onChange={(e, { name, value }) => this.setField(name, value)}
+                value={shop.name || ''}
+                onChange={this.onChange}
               />
 
               <Form.TextArea
-                value={formValues.description || ''}
                 name="description"
                 label="Description"
                 type="text"
-                onChange={(e, { name, value }) => this.setField(name, value)}
+                value={shop.description || ''}
+                onChange={this.onChange}
               />
-
               <CountriesField
                 label="Country"
                 name="country"
-                value={formValues.country || 'United States'}
-                onChange={(value) => this.setField('country', value)}
+                value={shop.country || 'US'}
+                onChange={this.onCountryChange}
               />
               <Form.Field>
                 <label>
                   Categories
                   <SearchDropDown
-                    onChange={this.handleOnCategoryChange}
-                    value={formValues.categories || []}
                     multiple
+                    value={shop.categories || []}
+                    onChange={this.onCategoryChange}
                     fetchData={this.fetchCategories}
                     fluid
                   />
                 </label>
               </Form.Field>
-
               <UploadsField
                 label="Images"
                 name="images"
-                value={formValues.images || []}
-                onChange={(value) => this.setField('images', value)}
+                value={shop.images || []}
+                onChange={this.onImagesChange}
               />
             </Form>
           </AutoFocus>
         </Modal.Content>
         <Modal.Actions>
           <Button
-            loading={status.request === true}
             primary
-            content={isUpdate ? 'Update' : 'Create'}
-            onClick={this.handleSubmit}
+            loading={loading}
+            onClick={this.onSubmit}
+            content={this.isUpdate() ? 'Update' : 'Create'}
           />
         </Modal.Actions>
       </Modal>

@@ -61,7 +61,7 @@ export default class Shops extends React.Component {
                               <Table.Cell>{formatDate(item.createdAt)}</Table.Cell>
                               <Table.Cell textAlign="center">
                                 <EditShop
-                                  initialValues={item}
+                                  shop={item}
                                   trigger={<Button style={{ marginLeft: '20px' }} basic icon="edit" />}
                                   onSave={reload}
                                 />
