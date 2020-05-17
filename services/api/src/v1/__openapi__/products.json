@@ -1,0 +1,245 @@
+[
+  {
+    "method": "POST",
+    "path": "/search",
+    "operationId": "POST /search",
+    "examples": [],
+    "requestBody": [
+      {
+        "name": "skip",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "default": 0,
+          "type": "number"
+        }
+      },
+      {
+        "name": "sort",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "default": {
+            "field": "createdAt",
+            "order": "desc"
+          },
+          "type": "object",
+          "properties": {
+            "field": {
+              "type": "string"
+            },
+            "order": {
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "patterns": [],
+          "required": [
+            "field",
+            "order"
+          ]
+        }
+      },
+      {
+        "name": "shopId",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "limit",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "default": 50,
+          "type": "number"
+        }
+      }
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/",
+    "operationId": "POST /",
+    "examples": [],
+    "requestBody": [
+      {
+        "name": "name",
+        "description": "",
+        "required": true,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "shopId",
+        "description": "",
+        "required": true,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "description",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "expiresAt",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "priceUsd",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "number",
+          "minimum": 0.1,
+          "maximum": 1000000
+        }
+      },
+      {
+        "name": "isFeatured",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "boolean"
+        }
+      },
+      {
+        "name": "sellingPoints",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "method": "DELETE",
+    "path": "/:product",
+    "operationId": "DELETE /:product",
+    "examples": []
+  },
+  {
+    "method": "PATCH",
+    "path": "/:product",
+    "operationId": "PATCH /:product",
+    "examples": [],
+    "requestBody": [
+      {
+        "name": "description",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "expiresAt",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "priceUsd",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "number",
+          "minimum": 0.1,
+          "maximum": 1000000
+        }
+      },
+      {
+        "name": "isFeatured",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "boolean"
+        }
+      },
+      {
+        "name": "sellingPoints",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      {
+        "name": "name",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "shopId",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "id",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "createdAt",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      {
+        "name": "updatedAt",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      {
+        "name": "deletedAt",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    ]
+  }
+]

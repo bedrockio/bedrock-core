@@ -1,0 +1,77 @@
+[
+  {
+    "method": "POST",
+    "path": "/search",
+    "operationId": "POST /search",
+    "examples": [],
+    "requestBody": [
+      {
+        "name": "name",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "ids",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      {
+        "name": "skip",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "default": 0,
+          "type": "number"
+        }
+      },
+      {
+        "name": "sort",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "default": {
+            "field": "createdAt",
+            "order": "desc"
+          },
+          "type": "object",
+          "properties": {
+            "field": {
+              "type": "string"
+            },
+            "order": {
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "patterns": [],
+          "required": [
+            "field",
+            "order"
+          ]
+        }
+      },
+      {
+        "name": "limit",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "default": 50,
+          "type": "number"
+        }
+      }
+    ]
+  }
+]

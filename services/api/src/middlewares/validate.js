@@ -5,7 +5,7 @@ function validate(schemas, options) {
     abortEarly: false
   };
 
- return async function Validate(ctx, next) {
+ const promise = async function Validate(ctx, next) {
     Object.keys(schemas).forEach((key) => {
       const schema = schemas[key];
 
@@ -75,6 +75,9 @@ function validate(schemas, options) {
     });
     return next();
   };
+
+  promise.schemas = schemas
+  return promise;
 }
 
 function validateDocs(schemas) {

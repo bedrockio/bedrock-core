@@ -1,0 +1,190 @@
+[
+  {
+    "method": "PATCH",
+    "path": "/me",
+    "operationId": "PATCH /me",
+    "examples": [],
+    "requestBody": [
+      {
+        "name": "name",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "timeZone",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      }
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/search",
+    "operationId": "POST /search",
+    "examples": [],
+    "requestBody": [
+      {
+        "name": "skip",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "default": 0,
+          "type": "number"
+        }
+      },
+      {
+        "name": "sort",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "default": {
+            "field": "createdAt",
+            "order": "desc"
+          },
+          "type": "object",
+          "properties": {
+            "field": {
+              "type": "string"
+            },
+            "order": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "patterns": [],
+          "required": [
+            "field",
+            "order"
+          ]
+        }
+      },
+      {
+        "name": "limit",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "default": 50,
+          "type": "number"
+        }
+      }
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/",
+    "operationId": "POST /",
+    "examples": [],
+    "requestBody": [
+      {
+        "name": "email",
+        "description": "",
+        "required": true,
+        "schemas": {
+          "type": "string",
+          "format": "email"
+        }
+      },
+      {
+        "name": "name",
+        "description": "",
+        "required": true,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "roles",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      {
+        "name": "password",
+        "description": "",
+        "required": true,
+        "schemas": {
+          "type": "string",
+          "minLength": 6
+        }
+      }
+    ]
+  },
+  {
+    "method": "DELETE",
+    "path": "/:user",
+    "operationId": "DELETE /:user",
+    "examples": []
+  },
+  {
+    "method": "PATCH",
+    "path": "/:user",
+    "operationId": "PATCH /:user",
+    "examples": [],
+    "requestBody": [
+      {
+        "name": "id",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "email",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "name",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "roles",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      {
+        "name": "createdAt",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      {
+        "name": "updatedAt",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    ]
+  }
+]

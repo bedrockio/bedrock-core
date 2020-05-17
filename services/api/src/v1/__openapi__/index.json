@@ -1,0 +1,943 @@
+[
+  {
+    "method": "POST",
+    "path": "/auth/register",
+    "operationId": "POST /auth/register",
+    "examples": [],
+    "requestBody": [
+      {
+        "name": "email",
+        "description": "",
+        "required": true,
+        "schemas": {
+          "type": "string",
+          "format": "email"
+        }
+      },
+      {
+        "name": "name",
+        "description": "",
+        "required": true,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "password",
+        "description": "",
+        "required": true,
+        "schemas": {
+          "type": "string",
+          "minLength": 6
+        }
+      }
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/auth/login",
+    "operationId": "POST /auth/login",
+    "examples": [],
+    "requestBody": [
+      {
+        "name": "email",
+        "description": "",
+        "required": true,
+        "schemas": {
+          "type": "string",
+          "format": "email"
+        }
+      },
+      {
+        "name": "password",
+        "description": "",
+        "required": true,
+        "schemas": {
+          "type": "string"
+        }
+      }
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/auth/accept-invite",
+    "operationId": "POST /auth/accept-invite",
+    "examples": [],
+    "requestBody": [
+      {
+        "name": "token",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "name",
+        "description": "",
+        "required": true,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "password",
+        "description": "",
+        "required": true,
+        "schemas": {
+          "type": "string",
+          "minLength": 6
+        }
+      }
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/auth/request-password",
+    "operationId": "POST /auth/request-password",
+    "examples": [],
+    "requestBody": [
+      {
+        "name": "email",
+        "description": "",
+        "required": true,
+        "schemas": {
+          "type": "string",
+          "format": "email"
+        }
+      }
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/auth/set-password",
+    "operationId": "POST /auth/set-password",
+    "examples": [],
+    "requestBody": [
+      {
+        "name": "token",
+        "description": "",
+        "required": true,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "password",
+        "description": "",
+        "required": true,
+        "schemas": {
+          "type": "string",
+          "minLength": 6
+        }
+      }
+    ]
+  },
+  {
+    "method": "PATCH",
+    "path": "/users/me",
+    "operationId": "PATCH /users/me",
+    "examples": [],
+    "requestBody": [
+      {
+        "name": "name",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "timeZone",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      }
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/users/search",
+    "operationId": "POST /users/search",
+    "examples": [],
+    "requestBody": [
+      {
+        "name": "skip",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "default": 0,
+          "type": "number"
+        }
+      },
+      {
+        "name": "sort",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "default": {
+            "field": "createdAt",
+            "order": "desc"
+          },
+          "type": "object",
+          "properties": {
+            "field": {
+              "type": "string"
+            },
+            "order": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "patterns": [],
+          "required": [
+            "field",
+            "order"
+          ]
+        }
+      },
+      {
+        "name": "limit",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "default": 50,
+          "type": "number"
+        }
+      }
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/users/",
+    "operationId": "POST /users/",
+    "examples": [],
+    "requestBody": [
+      {
+        "name": "email",
+        "description": "",
+        "required": true,
+        "schemas": {
+          "type": "string",
+          "format": "email"
+        }
+      },
+      {
+        "name": "name",
+        "description": "",
+        "required": true,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "roles",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      {
+        "name": "password",
+        "description": "",
+        "required": true,
+        "schemas": {
+          "type": "string",
+          "minLength": 6
+        }
+      }
+    ]
+  },
+  {
+    "method": "DELETE",
+    "path": "/users/:user",
+    "operationId": "DELETE /users/:user",
+    "examples": []
+  },
+  {
+    "method": "PATCH",
+    "path": "/users/:user",
+    "operationId": "PATCH /users/:user",
+    "examples": [],
+    "requestBody": [
+      {
+        "name": "id",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "email",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "name",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "roles",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      {
+        "name": "createdAt",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      {
+        "name": "updatedAt",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/products/search",
+    "operationId": "POST /products/search",
+    "examples": [],
+    "requestBody": [
+      {
+        "name": "skip",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "default": 0,
+          "type": "number"
+        }
+      },
+      {
+        "name": "sort",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "default": {
+            "field": "createdAt",
+            "order": "desc"
+          },
+          "type": "object",
+          "properties": {
+            "field": {
+              "type": "string"
+            },
+            "order": {
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "patterns": [],
+          "required": [
+            "field",
+            "order"
+          ]
+        }
+      },
+      {
+        "name": "shopId",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "limit",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "default": 50,
+          "type": "number"
+        }
+      }
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/products/",
+    "operationId": "POST /products/",
+    "examples": [],
+    "requestBody": [
+      {
+        "name": "name",
+        "description": "",
+        "required": true,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "shopId",
+        "description": "",
+        "required": true,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "description",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "expiresAt",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "priceUsd",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "number",
+          "minimum": 0.1,
+          "maximum": 1000000
+        }
+      },
+      {
+        "name": "isFeatured",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "boolean"
+        }
+      },
+      {
+        "name": "sellingPoints",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "method": "DELETE",
+    "path": "/products/:product",
+    "operationId": "DELETE /products/:product",
+    "examples": []
+  },
+  {
+    "method": "PATCH",
+    "path": "/products/:product",
+    "operationId": "PATCH /products/:product",
+    "examples": [],
+    "requestBody": [
+      {
+        "name": "description",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "expiresAt",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "priceUsd",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "number",
+          "minimum": 0.1,
+          "maximum": 1000000
+        }
+      },
+      {
+        "name": "isFeatured",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "boolean"
+        }
+      },
+      {
+        "name": "sellingPoints",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      {
+        "name": "name",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "shopId",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "id",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "createdAt",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      {
+        "name": "updatedAt",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      {
+        "name": "deletedAt",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/shops/search",
+    "operationId": "POST /shops/search",
+    "examples": [],
+    "requestBody": [
+      {
+        "name": "skip",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "default": 0,
+          "type": "number"
+        }
+      },
+      {
+        "name": "sort",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "default": {
+            "field": "createdAt",
+            "order": "desc"
+          },
+          "type": "object",
+          "properties": {
+            "field": {
+              "type": "string"
+            },
+            "order": {
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "patterns": [],
+          "required": [
+            "field",
+            "order"
+          ]
+        }
+      },
+      {
+        "name": "limit",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "default": 50,
+          "type": "number"
+        }
+      }
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/shops/",
+    "operationId": "POST /shops/",
+    "examples": [],
+    "requestBody": [
+      {
+        "name": "name",
+        "description": "",
+        "required": true,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "description",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "images",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      {
+        "name": "categories",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      {
+        "name": "country",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      }
+    ]
+  },
+  {
+    "method": "DELETE",
+    "path": "/shops/:shop",
+    "operationId": "DELETE /shops/:shop",
+    "examples": []
+  },
+  {
+    "method": "PATCH",
+    "path": "/shops/:shop",
+    "operationId": "PATCH /shops/:shop",
+    "examples": [],
+    "requestBody": [
+      {
+        "name": "description",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "id",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "name",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "categories",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      {
+        "name": "images",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      {
+        "name": "country",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "createdAt",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      {
+        "name": "updatedAt",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      {
+        "name": "deletedAt",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/uploads/",
+    "operationId": "POST /uploads/",
+    "examples": []
+  },
+  {
+    "method": "DELETE",
+    "path": "/uploads/:upload",
+    "operationId": "DELETE /uploads/:upload",
+    "examples": []
+  },
+  {
+    "method": "POST",
+    "path": "/invites/search",
+    "operationId": "POST /invites/search",
+    "examples": [],
+    "requestBody": [
+      {
+        "name": "skip",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "default": 0,
+          "type": "number"
+        }
+      },
+      {
+        "name": "sort",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "default": {
+            "field": "createdAt",
+            "order": "asc"
+          },
+          "type": "object",
+          "properties": {
+            "field": {
+              "type": "string"
+            },
+            "order": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "patterns": [],
+          "required": [
+            "field",
+            "order"
+          ]
+        }
+      },
+      {
+        "name": "limit",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "default": 50,
+          "type": "number"
+        }
+      }
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/invites/",
+    "operationId": "POST /invites/",
+    "examples": [],
+    "requestBody": [
+      {
+        "name": "emails",
+        "description": "",
+        "required": true,
+        "schemas": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "email"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/invites/:invite/resend",
+    "operationId": "POST /invites/:invite/resend",
+    "examples": []
+  },
+  {
+    "method": "DELETE",
+    "path": "/invites/:invite",
+    "operationId": "DELETE /invites/:invite",
+    "examples": []
+  },
+  {
+    "method": "POST",
+    "path": "/categories/search",
+    "operationId": "POST /categories/search",
+    "examples": [],
+    "requestBody": [
+      {
+        "name": "name",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "ids",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      {
+        "name": "skip",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "default": 0,
+          "type": "number"
+        }
+      },
+      {
+        "name": "sort",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "default": {
+            "field": "createdAt",
+            "order": "desc"
+          },
+          "type": "object",
+          "properties": {
+            "field": {
+              "type": "string"
+            },
+            "order": {
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "patterns": [],
+          "required": [
+            "field",
+            "order"
+          ]
+        }
+      },
+      {
+        "name": "limit",
+        "description": "",
+        "required": false,
+        "schemas": {
+          "default": 50,
+          "type": "number"
+        }
+      }
+    ]
+  }
+]
