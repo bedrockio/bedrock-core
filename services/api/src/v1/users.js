@@ -14,7 +14,7 @@ const passwordField = Joi.string()
 router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
-  .param('user', async (id, ctx, next) => {
+  .param('userId', async (id, ctx, next) => {
     const user = await User.findById(id);
     ctx.state.user = user;
     if (!user) {
@@ -103,13 +103,13 @@ router
       };
     }
   )
-  .delete('/:user', async (ctx) => {
+  .delete('/:userId', async (ctx) => {
     const { user } = ctx.state;
     await user.delete();
     ctx.status = 204;
   })
   .patch(
-    '/:user',
+    '/:userId',
     validate({
       body: Joi.object({
         id: Joi.string().strip(),
@@ -129,7 +129,7 @@ router
       };
     }
   )
-  .get('/:user', async (ctx) => {
+  .get('/:userId', async (ctx) => {
     ctx.body = {
       data: ctx.state.user.toResource()
     };

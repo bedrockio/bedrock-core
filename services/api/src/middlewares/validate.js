@@ -80,20 +80,4 @@ function validate(schemas, options) {
   return promise;
 }
 
-function validateDocs(schemas) {
-  const { convert } = require('@yeongjet/joi-to-json-schema');
-  return async function ValidateDocs(ctx, next) {
-    const result = {};
-    Object.keys(schemas).forEach((key) => {
-      try {
-        result[key] = convert(schemas[key]);
-      } catch (e) {
-        console.error(e);
-      }
-    });
-    ctx.state.validation = result;
-    return next();
-  };
-}
-
-module.exports = process.env.DOCS ? validateDocs : validate;
+module.exports = validate;

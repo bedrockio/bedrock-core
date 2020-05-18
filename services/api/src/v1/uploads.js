@@ -8,7 +8,7 @@ const { storeUploadedFile } = require('../lib/uploads');
 const router = new Router();
 
 router
-  .param('upload', async (id, ctx, next) => {
+  .param('uploadId', async (id, ctx, next) => {
     const upload = await Upload.findById(id);
     ctx.state.upload = upload;
     if (!upload) {
@@ -46,7 +46,7 @@ router
       data: upload.toResource()
     };
   })
-  .delete('/:upload', async (ctx) => {
+  .delete('/:uploadId', async (ctx) => {
     const { upload } = ctx.state;
     await upload.delete();
     ctx.status = 204;

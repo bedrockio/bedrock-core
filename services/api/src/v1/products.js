@@ -31,7 +31,7 @@ const productPatchSchema = productSchema.append({
 router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
-  .param('product', async (id, ctx, next) => {
+  .param('productId', async (id, ctx, next) => {
     const product = await Product.findById(id);
     ctx.state.product = product;
     if (!product) {
@@ -93,13 +93,13 @@ router
       };
     }
   )
-  .delete('/:product', async (ctx) => {
+  .delete('/:productId', async (ctx) => {
     const product = ctx.state.product;
     await product.delete();
     ctx.status = 204;
   })
   .patch(
-    '/:product',
+    '/:productId',
     validate({
       body: productPatchSchema
     }),
@@ -112,7 +112,7 @@ router
       };
     }
   )
-  .get('/:product', async (ctx) => {
+  .get('/:productId', async (ctx) => {
     const { product } = await ctx.state;
     ctx.body = {
       data: product.toResource()

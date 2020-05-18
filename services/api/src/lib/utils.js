@@ -1,6 +1,8 @@
 
 const fs = require('fs')
 const { convert } = require('@yeongjet/joi-to-json-schema');
+const packageInfo = require('../../package.json')
+const config = require('@kaareal/config')
 
 function templateGet(p, obj) {
   return p.split('.').reduce((res, key) => {
@@ -99,5 +101,70 @@ exports.loadOpenApiDefinitions = (dir, rootPath) => {
         objects: routerDefinition.objects
       }
     })
+}
 
+// This is just for OpenAPI/Swagger compatibility purposes
+exports.expandOpenApi = (definitions) => {
+  const allPaths = {}
+  definitions.forEach(module => {
+    const { paths, objects } = module;
+    if (paths) {
+      paths.forEach(call => {
+        const { method, path, requestBody, requestQuery, responseBody, examples } = call;
+        if (!allPaths[path]) {
+          allPaths[path] = {}
+        }
+        const object = {
+          summary: `${method} ${path}`,
+          operationId: `${method} ${path}`,
+          tags: [module.name]
+        }
+        if (requestBody) {
+          const properties = {}
+          requestBody.forEach(param => {
+            properties[param.name] = {
+              type: param.schema ? param.schema.type : 'object',
+              description: param.description
+            }
+          })
+          object.requestBody = {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties
+                },
+                required: requestBody.filter(p => p.required).map(p => p.name)
+              }
+            }
+          }
+        }
+        if (examples && examples[0] && examples[0].responseBody) {
+          object.responses = {
+            200: {
+              'application/json': {
+                default: {
+                  value: examples[0].responseBody
+                }
+              }
+            }
+          }
+        }
+        allPaths[path][method.toLowerCase()] = object
+      })
+    }
+  })
+  return {
+    openapi: "3.0.3",
+    info: {
+      title: `${config.get('APP_NAME')} API`,
+      version: '1',
+      contact: {
+        url: config.get('APP_URL'),
+        email: config.get('APP_SUPPORT_EMAIL')
+      }
+    },
+    paths: allPaths
+  }
 }

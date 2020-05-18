@@ -78,7 +78,18 @@
           }
         }
       ],
-      "responseBody": [],
+      "responseBody": [
+        {
+          "name": "data",
+          "description": "List of User objects",
+          "schema": {
+            "type": "array",
+            "items": {
+              "type": "User"
+            }
+          }
+        }
+      ],
       "examples": []
     },
     {
@@ -136,13 +147,13 @@
     },
     {
       "method": "DELETE",
-      "path": "/:user",
+      "path": "/:userId",
       "responseBody": [],
       "examples": []
     },
     {
       "method": "PATCH",
-      "path": "/:user",
+      "path": "/:userId",
       "requestBody": [
         {
           "name": "email",
@@ -181,7 +192,25 @@
           }
         }
       ],
-      "examples": []
+      "examples": [
+        {
+          "name": "Set admin role on a given user",
+          "requestPath": "/1/users/5e6a9c000fc676447dc9936a",
+          "requestBody": {
+            "roles": ["admin"]
+          },
+          "responseBody": {
+            "data": {
+              "id": "5e6a9c000fc676447dc9936a",
+              "roles": ["admin"],
+              "name": "John Doe",
+              "email": "john.doe@gmail.com",
+              "createdAt": "2020-03-12T20:30:56.062Z",
+              "updatedAt": "2020-03-12T20:30:56.062Z"
+            }
+          }
+        }
+      ]
     },
     {
       "method": "GET",
@@ -195,11 +224,25 @@
           }
         }
       ],
-      "examples": []
+      "examples": [
+        {
+          "name": "Get user associated with current token",
+          "responseBody": {
+            "data": {
+              "id": "5e6a9c000fc676447dc9936a",
+              "roles": ["admin"],
+              "name": "John Doe",
+              "email": "john.doe@gmail.com",
+              "createdAt": "2020-03-12T20:30:56.062Z",
+              "updatedAt": "2020-03-12T20:30:56.062Z"
+            }
+          }
+        }
+      ]
     },
     {
       "method": "GET",
-      "path": "/:user",
+      "path": "/:userId",
       "responseBody": [
         {
           "name": "data",

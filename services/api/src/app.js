@@ -9,7 +9,7 @@ const fs = require('fs');
 const { version } = require('../package.json');
 const v1 = require('./v1');
 const config = require('@kaareal/config');
-const { loadOpenApiDefinitions } = require('./lib/utils')
+const { loadOpenApiDefinitions, expandOpenApi } = require('./lib/utils')
 
 const app = new Koa();
 
@@ -48,7 +48,11 @@ router.get('/', (ctx) => {
   };
 });
 
-const openApiDefinition = loadOpenApiDefinitions(__dirname + '/v1/__openapi__', '/1')
+const openApiLiteDefinition = loadOpenApiDefinitions(__dirname + '/v1/__openapi__', '/1')
+router.get('/openapi.lite.json', (ctx) => {
+  ctx.body = openApiLiteDefinition;
+});
+const openApiDefinition = expandOpenApi(openApiLiteDefinition)
 router.get('/openapi.json', (ctx) => {
   ctx.body = openApiDefinition;
 });
