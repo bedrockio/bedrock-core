@@ -4,7 +4,7 @@ services:
   api:
     command: ["./scripts/wait-for-it.sh", "mongo:27017", "--", "yarn", "start"]
     environment:
-      - MONGO_URI=mongodb://mongo/platform_dev
+      - MONGO_URI=mongodb://mongo/bedrock_dev
     build:
       context: ./services/api
       dockerfile: Dockerfile
