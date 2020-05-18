@@ -8,6 +8,8 @@ services:
     build:
       context: ./services/api
       dockerfile: Dockerfile
+      args:
+        NODE_ENV: development
     volumes:
       - ./services/api/src:/service/src
       - ./services/api/emails:/service/emails

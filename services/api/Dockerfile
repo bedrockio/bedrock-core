@@ -1,5 +1,7 @@
 FROM node:12-alpine
 
+ARG NODE_ENV=production
+
 # Update & install required packages
 RUN apk add --update bash git make python g++
 
