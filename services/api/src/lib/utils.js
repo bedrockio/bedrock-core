@@ -36,7 +36,7 @@ function getParamsFromValidationMiddleware(validationMiddleware, type) {
         name,
         description: "",
         required: (required || []).includes(name),
-        schemas: properties[name]
+        schema: properties[name]
       })
     });
     return params
@@ -48,17 +48,17 @@ function getParamsFromValidationMiddleware(validationMiddleware, type) {
 
 exports.routerToOpenApi = (router) => {
   const { stack } = router
-  return stack
+  const paths = stack
     .filter(layer => layer.methods.length > 0)
-    .filter(layer => !layer.methods.includes('HEAD'))
     .map(layer => {
       const { methods, path } = layer
-      const [method] = methods
+      let [method] = methods
+      if (methods.includes('HEAD')) {
+        method = 'GET'
+      }
       const definition = {
         method,
-        path,
-        operationId: `${method} ${path}`,
-        examples: []
+        path
       }
       const validationMiddleware = layer.stack.find(layer => !!layer.schemas)
       if (validationMiddleware) {
@@ -71,17 +71,32 @@ exports.routerToOpenApi = (router) => {
           definition.requestBody = body
         }
       }
+      definition.responseBody = []
+      definition.examples = []
       return definition
     })
+  return {
+    paths
+  }
 }
 
-exports.loadOpenApiDefinitions = (dir) => {
+exports.loadOpenApiDefinitions = (dir, rootPath) => {
   return fs.readdirSync(dir)
     .filter(path => path.match('.json'))
     .map(path => {
+      const routerName = path.replace('.json', '')
+      const routerDefinition = JSON.parse(fs.readFileSync(`${dir}/${path}`).toString())
       return {
-        name: path.replace('.json', ''),
-        definitions: JSON.parse(fs.readFileSync(`${dir}/${path}`).toString())
+        name: routerName,
+        paths: routerDefinition.paths.map(definition => {
+          let definitionPath = definition.path
+          if (definitionPath.slice(-1) === '/') {
+            definitionPath = definitionPath.slice(0, -1)
+          }
+          definition.path = `${rootPath}/${routerName}${definitionPath}`
+          return definition
+        }),
+        objects: routerDefinition.objects
       }
     })
 

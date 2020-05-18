@@ -48,7 +48,7 @@ router.get('/', (ctx) => {
   };
 });
 
-const openApiDefinition = loadOpenApiDefinitions(__dirname + '/v1/__openapi__')
+const openApiDefinition = loadOpenApiDefinitions(__dirname + '/v1/__openapi__', '/1')
 router.get('/openapi.json', (ctx) => {
   ctx.body = openApiDefinition;
 });

@@ -3,30 +3,32 @@ const fs = require('fs')
 const process = require('process');
 const { routerToOpenApi } = require('../../src/lib/utils')
 
-function routeExists(definitions, method, path) {
-  return !!definitions.find(d => d.method === method && d.path === path)
+function routeExists(paths, method, path) {
+  return !!paths.find(d => d.method === method && d.path === path)
 }
 
-async function ensureOpenApiDefinitions(destinationDir, router, routerName) {
+async function ensureOpenApipaths(destinationDir, router, routerName) {
   const destinationPath = `${destinationDir}/${routerName}.json`
   console.info(`Checking for new routes in router ${routerName}`)
   let numNewRoutes = 0;
-  const definitions = []
+  const paths = []
   if (fs.existsSync(destinationPath)) {
-    JSON.parse(fs.readFileSync(destinationPath).toString()).forEach(definition => definitions.push(definition))
+    JSON.parse(fs.readFileSync(destinationPath).toString()).paths.forEach(definition => paths.push(definition))
   }
-  routerToOpenApi(router).forEach(newDefinition => {
+  const routerDefinition = routerToOpenApi(router)
+  routerDefinition.paths.forEach(newDefinition => {
     const { method, path } = newDefinition
-    if (!routeExists(definitions, method, path)) {
+    if (!routeExists(paths, method, path)) {
       console.info(` Created entry for ${method} ${path}`)
-      definitions.push(newDefinition)
+      paths.push(newDefinition)
       numNewRoutes += 1
     }
   })
   if (numNewRoutes > 0) {
-    console.info(` Wrote ${numNewRoutes} definitions to ${destinationPath.replace(/.+\/src/, 'src')}`)
+    console.info(` Wrote ${numNewRoutes} paths to ${destinationPath.replace(/.+\/src/, 'src')}`)
+    routerDefinition.paths = paths
+    fs.writeFileSync(destinationPath, JSON.stringify(routerDefinition, null, 2))
   }
-  fs.writeFileSync(destinationPath, JSON.stringify(definitions, null, 2))
 }
 
 async function run() {
@@ -40,7 +42,7 @@ async function run() {
     }
   })
   for (const router of routers) {
-    await ensureOpenApiDefinitions(openApiDir, router.router, router.name)
+    await ensureOpenApipaths(openApiDir, router.router, router.name)
   }
 }
 
