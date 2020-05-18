@@ -9,6 +9,7 @@
 - `src/index.js` - Entrypoint for running and binding API
 - `src/lib` - Library files like utils etc
 - `src/v1` - Routes
+- `src/v1/__openapi__` - OpenAPI descriptions for use in documentation portal
 - `src/middlewares` - Middleware libs
 - `src/models` - Models for ORM (Mongoose)
 - `src/app.js` - Entrypoint into API (does not bind, so can be used in unit tests)
@@ -51,7 +52,7 @@ PATCH /1/products/:id              # Update products
 DELETE /1/products/:id             # Delete product
 ```
 
-See `services/api-docs` for full documentation on this API.
+See http://localhost:2200/docs for full documentation on this API.
 
 ## Install Dependencies
 
@@ -87,11 +88,11 @@ All configuration is done using environment variables. The default values in `en
 - `BIND_PORT` - Port to bind to, defaults to `2300`
 - `MONGO_URI` - MongoDB URI to connect to, defaults to `mongodb://localhost/bedrock_dev`
 - `JWT_SECRET` - JWT secret for authentication, defaults to `[change me]`
-- `ADMIN_EMAIL` - Default root admin user `admin@bedrock.com`
+- `ADMIN_EMAIL` - Default root admin user `admin@bedrock.foundation`
 - `ADMIN_PASSWORD` - Default root admin password `[change me]`
 - `APP_NAME` - Default product name to be used in emails 'Bedrock
 - `APP_URL` - URL for app defaults to `http://localhost:2200`
-- `POSTMARK_FROM` - Reply email address `no-reply@bedrock.com`
+- `POSTMARK_FROM` - Reply email address `no-reply@bedrock.foundation`
 - `POSTMARK_APIKEY` - APIKey for Postmark `[change me]`
 - `UPLOADS_STORE` - Method for uploads. `local` or `gcs`
 - `UPLOADS_GCS_BUCKET` - GCS bucket for uploads
@@ -103,3 +104,17 @@ docker build -t bedrock-api .
 ```
 
 See [../../deployment](../deployment/) for more info
+
+## Auto-generating API Documentation
+
+Good API documentation needs love, so make sure to take the time to describe parameters, create examples, etc.
+
+There's a script that automatically generates an OpenAPI definition for any added routes.
+
+Run:
+
+```
+node scripts/generate-openapi.js
+```
+
+The information in `src/v1/__openapi__` is exposed through the API and used by the Markdown-powered documentation portal in `/services/web/src/docs`.
