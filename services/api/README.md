@@ -103,7 +103,7 @@ All configuration is done using environment variables. The default values in `en
 docker build -t bedrock-api .
 ```
 
-See [../../deployment](../deployment/) for more info
+See [../../deployment](../../deployment/) for more info
 
 ## Auto-generating API Documentation
 
@@ -118,3 +118,5 @@ node scripts/generate-openapi.js
 ```
 
 The information in `src/v1/__openapi__` is exposed through the API and used by the Markdown-powered documentation portal in `/services/web/src/docs`.
+
+See [../../services/web](../../services/web) for more info
