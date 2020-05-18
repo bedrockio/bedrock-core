@@ -6,6 +6,14 @@ import { API_URL, APP_NAME } from 'utils/env';
 import { flatten } from 'lodash';
 import { request } from '../../utils';
 
+function formatTypeSummary(schema) {
+  if (!schema) return 'unknown';
+  if (schema.type === 'array' && schema.items && schema.items.type) {
+    return `[]${schema.items.type}`;
+  }
+  return schema.type;
+}
+
 class Macros {
   constructor(openApi) {
     this.openApi = openApi;
@@ -23,11 +31,11 @@ class Macros {
     const params = definition.requestBody || definition.requestQuery || [];
     if (!params || !params.length) return '';
     params.forEach(({ name, schema, required, description }) => {
-      const typeStr = schema ? schema.type : 'unknown';
+      const typeStr = formatTypeSummary(schema);
       const requiredStr = required ? 'Yes' : 'No';
       let descriptionStr = description || '';
       if (schema.default) {
-        descriptionStr += `(Default: ${schema.default})`;
+        descriptionStr += ` (Default: ${JSON.stringify(schema.default)})`;
       }
       markdown.push(`|\`${name}\`|${typeStr}|${requiredStr}|${descriptionStr}|`);
     });
@@ -40,10 +48,10 @@ class Macros {
     if (!responseBody || !responseBody.length) return '';
     let markdown = [`Response Body:\n`, '| Key | Type | Description |', '|--|--|--|--|'];
     responseBody.forEach(({ name, schema, description }) => {
-      const typeStr = schema ? schema.type : 'unknown';
+      const typeStr = formatTypeSummary(schema);
       let descriptionStr = description || '';
       if (schema && schema.default) {
-        descriptionStr += `(Default: ${schema.default})`;
+        descriptionStr += ` (Default: ${JSON.stringify(schema.default)})`;
       }
       markdown.push(`|\`${name}\`|${typeStr}|${descriptionStr}|`);
     });
@@ -55,14 +63,17 @@ class Macros {
     const { examples } = definition;
     if (!examples || !examples.length) return '';
     const markdown = [];
-    examples.forEach(({ name, requestBody, responseBody }) => {
+    examples.forEach(({ name, requestPath, requestBody, responseBody }) => {
       markdown.push(`#### Example: ${name}`);
-      if (requestBody) {
-        markdown.push(`Request JSON Body:\n`);
-        markdown.push('```json\n' + JSON.stringify(requestBody, null, 2) + '\n```');
+      if (method === 'GET') {
+        markdown.push(`Request:\n`);
+        markdown.push('```\nGET ' + path + '\n```');
+      } else {
+        markdown.push(`Request Body for \`${method} ${requestPath || path}\`\n`);
+        markdown.push('```json\n' + JSON.stringify(requestBody || {}, null, 2) + '\n```');
       }
       if (responseBody) {
-        markdown.push(`Response:\n`);
+        markdown.push(`Response Body:\n`);
         markdown.push('```json\n' + JSON.stringify(responseBody, null, 2) + '\n```\n');
       }
     });
@@ -89,7 +100,7 @@ class Macros {
     let markdown = [`Attributes:\n`, '| Key | Type | Description |', '|--|--|--|--|'];
     const { attributes } = definition;
     attributes.forEach(({ name, schema, description }) => {
-      const typeStr = schema ? schema.type : 'unknown';
+      const typeStr = formatTypeSummary(schema);
       let descriptionStr = description || '';
       markdown.push(`|\`${name}\`|${typeStr}|${descriptionStr}|`);
     });

@@ -9,6 +9,8 @@ import PageLoader from 'components/PageLoader';
 import GETTING_STARTED_MD from 'docs/GETTING_STARTED.md';
 import AUTHENTICATION_MD from 'docs/AUTHENTICATION.md';
 import USERS_MD from 'docs/USERS.md';
+import UPLOADS_MD from 'docs/UPLOADS.md';
+import SHOPS_MD from 'docs/SHOPS.md';
 import { request } from '../../utils/api';
 
 const pages = [
@@ -28,9 +30,14 @@ const pages = [
     markdown: USERS_MD,
   },
   {
-    id: 'products',
-    name: 'Products',
-    markdown: GETTING_STARTED_MD,
+    id: 'uploads',
+    name: 'Uploads',
+    markdown: UPLOADS_MD,
+  },
+  {
+    id: 'shops',
+    name: 'Shops',
+    markdown: SHOPS_MD,
   },
 ];
 
@@ -66,7 +73,7 @@ export default class Docs extends React.Component {
     me.fetch().then(() => {});
     request({
       method: 'GET',
-      path: '/openapi.json',
+      path: '/openapi.lite.json',
     })
       .then((openApi) => {
         this.setState({ loading: false, openApi });
@@ -81,6 +88,7 @@ export default class Docs extends React.Component {
       this.setState({
         ...stateForParams(this.props.match.params),
       });
+      window.scrollTo(0, 0);
     }
   }
 

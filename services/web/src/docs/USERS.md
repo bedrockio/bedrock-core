@@ -25,3 +25,27 @@ callSummary({method: 'PATCH', path: '/1/users/me'})
 Create a new user object. Requires admin permissions.
 
 callSummary({method: 'POST', path: '/1/users'})
+
+## List and Search Users
+
+List users and filter by certain attributes. Requires admin permissions.
+
+callSummary({method: 'POST', path: '/1/users/search'})
+
+## Get User
+
+Obtain user object by unique user ID. Requires admin permissions.
+
+callSummary({method: 'GET', path: '/1/users/:userId'})
+
+## Update User
+
+Update user information by ID. Requires admin permissions.
+
+callSummary({method: 'PATCH', path: '/1/users/:userId'})
+
+## Delete User
+
+Delete user by ID. Requires admin permissions.
+
+callSummary({method: 'DELETE', path: '/1/users/:userId'})
