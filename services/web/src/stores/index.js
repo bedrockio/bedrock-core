@@ -1,7 +1,7 @@
-export { default as me } from './Me';
-export { default as auth } from './Auth';
-export { default as users } from './Users';
-export { default as shops } from './Shops';
-export { default as invites } from './Invites';
-export { default as session } from './Session';
-export { default as products } from './Products';
+export { default as me } from './me';
+export { default as auth } from './auth';
+export { default as users } from './users';
+export { default as shops } from './shops';
+export { default as invites } from './invites';
+export { default as session } from './session';
+export { default as products } from './products';

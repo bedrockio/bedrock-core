@@ -2,7 +2,7 @@ import BaseStore from './BaseStore';
 import { request } from 'utils/api';
 import { omit } from 'lodash';
 
-import session from 'stores/Session';
+import session from 'stores/session';
 
 class Auth extends BaseStore {
 
