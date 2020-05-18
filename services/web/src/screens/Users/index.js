@@ -1,6 +1,6 @@
 import React from 'react';
-import { observer, inject } from 'mobx-react';
 import { formatDate } from 'utils/date';
+import inject from 'stores/inject';
 
 import { Confirm } from 'components/Semantic';
 import AppWrapper from 'components/AppWrapper';
@@ -16,12 +16,11 @@ import {
   Button
 } from 'semantic-ui-react';
 
-@inject('appSession', 'users')
-@observer
+@inject('users')
 export default class Users extends React.Component {
 
   onDataNeeded = async (params) => {
-    return await this.props.users.search(params);
+    return await this.context.users.search(params);
   };
 
   render() {
@@ -115,7 +114,7 @@ export default class Users extends React.Component {
                                     content="All data will be permanently deleted"
                                     trigger={<Button basic icon="trash" />}
                                     onConfirm={async () => {
-                                      await this.props.users.delete(item);
+                                      await this.context.users.delete(item);
                                       reload();
                                     }}
                                   />

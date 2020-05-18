@@ -1,12 +1,11 @@
 import React from 'react';
-import { observer, inject } from 'mobx-react';
+import inject from 'stores/inject';
 import AppWrapper from 'components/AppWrapper';
 
 @inject('me')
-@observer
 export default class Home extends React.Component {
   render() {
-    const { me } = this.props;
+    const { me } = this.context;
     return (
       <AppWrapper>
         From Settings => {me.user.name} ({me.user.email})

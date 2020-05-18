@@ -1,7 +1,7 @@
 import { request } from 'utils/api';
 import BaseStore from 'stores/BaseStore';
 
-export default class UsersStore extends BaseStore {
+class Users extends BaseStore {
 
   async fetch(id) {
     const { data } = request({
@@ -49,3 +49,5 @@ export default class UsersStore extends BaseStore {
   }
 
 }
+
+export default new Users();

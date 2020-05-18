@@ -1,7 +1,7 @@
 import React from 'react';
-import { observer, inject } from 'mobx-react';
 import { Switch, Route, Link } from 'react-router-dom';
 import AppWrapper from 'components/AppWrapper';
+import inject from 'stores/inject';
 
 import { Container, Divider, Breadcrumb, Button } from 'semantic-ui-react';
 import Menu from './Menu';
@@ -11,17 +11,20 @@ import Products from './Products';
 import EditShop from 'components/modals/EditShop';
 
 @inject('shops')
-@observer
 export default class Shop extends React.Component {
 
   state = {
     shop: null,
   };
 
-  async componentDidMount() {
+  componentDidMount() {
+    this.fetchShop();
+  }
+
+  fetchShop = async () => {
     const { id } = this.props.match.params;
     this.setState({
-      shop: await this.props.shops.fetch(id),
+      shop: await this.context.shops.fetch(id),
     });
   }
 
@@ -32,7 +35,8 @@ export default class Shop extends React.Component {
         <Container>
           {shop && (
             <EditShop
-              initialValues={shop}
+              shop={shop}
+              onSave={this.fetchShop}
               trigger={
                 <Button
                   floated="right"

@@ -1,137 +1,122 @@
 import React from 'react';
-import { observer, inject } from 'mobx-react';
-
 import { Form, Label, Message, Button, Modal } from 'semantic-ui-react';
+import inject from 'stores/inject';
 
 import DateTimeField from 'components/form-fields/DateTime';
 import AutoFocus from 'components/AutoFocus';
 
-function resetState(initialValues = {}) {
-  const { sellingPoints = [] } = initialValues;
-
-  return {
-    open: false,
-    sellingPointsOptions: sellingPoints.map((sellingPoint) => {
-      return {
-        value: sellingPoint,
-        text: sellingPoint
-      };
-    }),
-    formValues: {
-      sellingPoints: [],
-      ...initialValues
-    }
-  };
-}
-
 @inject('products')
-@observer
 export default class EditProduct extends React.Component {
   static defaultProps = {
     onSave: () => {},
-    initialValues: {
-      sellingPoints: []
-    }
   };
 
-  state = resetState(this.props.initialValues);
-
-  componentDidUpdate(prevProps) {
-    if (this.props.initialValues !== prevProps.initialValues) {
-      this.setState(resetState(this.props.initialValues));
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false,
+      loading: false,
+      touched: false,
+      product: props.product || {},
+      sellingPoints: props.product?.sellingPoints || [],
+    };
   }
 
-  handleOnClose = () => {
-    this.setState(resetState(this.props.initialValues));
-  };
+  isUpdate() {
+    return !!this.props.product;
+  }
 
-  handleSubmit = async () => {
-    const { products, initialValues } = this.props;
-    this.setState({
-      touched: true
-    });
-
-    const action = initialValues.id
-      ? products.update.bind(products)
-      : products.create.bind(products);
-
+  onSubmit = async () => {
+    const { product } = this.state;
     try {
-      await action(this.state.formValues);
       this.setState({
-        formValues: this.props.initialValues,
-        open: false
+        loading: true,
+        touched: true,
+      });
+
+      if (this.isUpdate()) {
+        await this.context.products.update(product);
+      } else {
+        await this.context.products.create(product);
+      }
+
+      this.setState({
+        open: false,
+        loading: false,
+        touched: false,
+        product: {},
       });
       this.props.onSave();
-    } catch(err) {
+    } catch (error) {
       this.setState({
-        error: err
+        error,
+        loading: false,
       });
     }
   };
 
   setField(name, value) {
     this.setState({
-      touched: false,
-      formValues: {
-        ...this.state.formValues,
-        [name]: value
-      }
+      product: {
+        ...this.state.product,
+        [name]: value,
+      },
+    });
+  }
+
+  getSellingPointsOptions() {
+    const { sellingPoints } = this.state;
+    return sellingPoints.map((point) => {
+      return {
+        text: point,
+        value: point,
+      };
     });
   }
 
   render() {
-    const { products, initialValues, trigger } = this.props;
-    const { formValues = {}, touched, open } = this.state;
-
-    const isUpdate = !!initialValues.id;
-    const status = isUpdate
-      ? products.getStatus('update')
-      : products.getStatus('create');
-
+    const { trigger } = this.props;
+    const { product, touched, open, loading, error } = this.state;
     return (
       <Modal
         closeIcon
-        trigger={trigger}
-        onClose={this.handleOnClose}
+        onClose={() =>
+          this.setState({
+            open: false,
+            touched: false,
+          })
+        }
         onOpen={() => this.setState({ open: true })}
         open={open}
-      >
-        <Modal.Header>
-          {isUpdate ? `Edit Product "${initialValues.name}"` : 'New Product'}
-        </Modal.Header>
+        trigger={trigger}>
+        <Modal.Header>{this.isUpdate() ? `Edit Product "${product.name}"` : 'New Product'}</Modal.Header>
         <Modal.Content>
           <AutoFocus>
-            <Form
-              error={touched && Boolean(status.error)}
-              onSubmit={() => this.handleSubmit()}
-            >
-              {status.error && <Message error content={status.error.message} />}
+            <Form error={touched && error} onSubmit={() => this.onSubmit()}>
+              {error && <Message error content={error.message} />}
 
               <Form.Input
-                error={touched && !(formValues.name || '').length}
+                error={touched && !(product.name || '').length}
                 required
                 name="name"
                 label="Name"
                 type="text"
-                value={formValues.name || ''}
+                value={product.name || ''}
                 onChange={(e, { name, value }) => this.setField(name, value)}
               />
 
               <Form.TextArea
                 name="description"
                 label="Description"
-                value={formValues.description || ''}
+                value={product.description || ''}
                 onChange={(e, { name, value }) => this.setField(name, value)}
               />
 
               <Form.Checkbox
                 label="Is Featured?"
                 name="isFeatured"
-                checked={formValues.isFeatured || false}
-                onChange={(e, { name, checked }) =>
-                  this.setField(name, checked)
-                }
+                checked={product.isFeatured || false}
+                onChange={(e, { name, checked }) => this.setField(name, checked)}
               />
 
               <Form.Input
@@ -139,11 +124,8 @@ export default class EditProduct extends React.Component {
                 placeholder="Amount"
                 name="priceUsd"
                 type="number"
-                onChange={(e, { name, value }) =>
-                  this.setField(name, parseInt(value, 10))
-                }
-                value={formValues.priceUsd || 0}
-              >
+                onChange={(e, { name, value }) => this.setField(name, parseInt(value, 10))}
+                value={product.priceUsd || 0}>
                 <Label basic>$</Label>
                 <input />
                 <Label>.00</Label>
@@ -151,7 +133,7 @@ export default class EditProduct extends React.Component {
 
               <DateTimeField
                 name="expiresAt"
-                value={formValues.expiresAt || new Date()}
+                value={product.expiresAt || new Date()}
                 label="Expiration Date and Time"
                 onChange={(value) => this.setField('expiresAt', value)}
               />
@@ -161,31 +143,23 @@ export default class EditProduct extends React.Component {
                 multiple
                 allowAdditions
                 search
-                options={this.state.sellingPointsOptions}
-                onAddItem={(e, { value }) => {
-                  this.setState((prevState) => ({
-                    sellingPointsOptions: [
-                      { text: value, value },
-                      ...prevState.sellingPointsOptions
-                    ]
-                  }));
-                }}
+                options={this.getSellingPointsOptions()}
                 label="Selling Points"
-                onChange={(e, { value }) =>
-                  this.setField('sellingPoints', value)
-                }
-                value={formValues.sellingPoints}
+                onAddItem={(e, { value }) => {
+                  this.setState({
+                    sellingPoints: [...this.state.sellingPoints, value],
+                  });
+                }}
+                onChange={(e, { value }) => {
+                  this.setField('sellingPoints', value);
+                }}
+                value={product.sellingPoints || []}
               />
             </Form>
           </AutoFocus>
         </Modal.Content>
         <Modal.Actions>
-          <Button
-            loading={status.request === true}
-            primary
-            content={isUpdate ? 'Update' : 'Create'}
-            onClick={this.handleSubmit}
-          />
+          <Button loading={loading} primary content={this.isUpdate() ? 'Update' : 'Create'} onClick={this.onSubmit} />
         </Modal.Actions>
       </Modal>
     );

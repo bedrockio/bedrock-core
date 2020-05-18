@@ -1,6 +1,6 @@
 import React from 'react';
 import { Segment, Grid } from 'semantic-ui-react';
-import { observer, inject } from 'mobx-react';
+import inject from 'stores/inject';
 import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
 
@@ -8,30 +8,41 @@ import Form from './Form';
 import { Link } from 'react-router-dom';
 import { getToken, parseToken } from 'utils/token';
 
-@inject('auth', 'routing')
-@observer
+@inject('auth')
 export default class AcceptInvite extends React.Component {
+
   constructor(props) {
     super(props);
     const token = getToken(props);
     const parsedToken = token && parseToken(token);
     this.state = {
       token,
-      jwt: parsedToken
+      jwt: parsedToken,
+      loading: false,
+      error: null,
     };
   }
 
-  onSubmit = (body) => {
-    this.setState({ initialValues: body });
-    return this.props.auth
-      .acceptInvite({ ...body, token: this.state.token }, 'accepInvite')
-      .then(() => {
-        this.props.routing.push('/');
+  onSubmit = async (body) => {
+    try {
+      this.setState({
+        loading: true,
       });
+      await this.context.auth.acceptInvite(body);
+      this.setState({
+        loading: false
+      });
+      this.props.history.push('/');
+    } catch(error) {
+      this.setState({
+        error,
+        loading: false
+      });
+    }
   };
 
   render() {
-    const status = this.props.auth.getStatus('accepInvite');
+    const { error, loading } = this.state;
     const { jwt } = this.state;
     return (
       <PageCenter>
@@ -39,8 +50,8 @@ export default class AcceptInvite extends React.Component {
         <Segment.Group>
           <Segment padded>
             <div className="wrapper">
-              <p>This invite is intented for {jwt.email}</p>
-              <Form onSubmit={this.onSubmit} status={status} />
+              <p>This invite is intended for {jwt?.email}</p>
+              <Form onSubmit={this.onSubmit} error={error} loading={loading} />
             </div>
           </Segment>
           <Segment secondary>

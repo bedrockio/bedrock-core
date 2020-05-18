@@ -4,7 +4,7 @@ import AppWrapper from 'components/AppWrapper';
 import GETTING_STARTED_MD from 'docs/GETTING_STARTED.md';
 import CodeBlock from '../CodeBlock';
 import 'github-markdown-css';
-import { observer, inject } from 'mobx-react';
+import inject from 'stores/inject';
 import { API_URL, APP_NAME } from 'utils/env';
 
 function enrichMarkdown(markdown, me, credentials) {
@@ -34,20 +34,14 @@ function enrichMarkdown(markdown, me, credentials) {
 }
 
 @inject('me')
-@observer
 export default class GettingStarted extends React.Component {
   state = {
     loading: true,
     error: null
   };
 
-  componentDidMount() {
-    const { me } = this.props;
-    me.fetch().then(() => {});
-  }
-
   render() {
-    const { me } = this.props;
+    const { me } = this.context;
     const { credentials } = this.state;
     const markdown = enrichMarkdown(GETTING_STARTED_MD, me, credentials);
     return (

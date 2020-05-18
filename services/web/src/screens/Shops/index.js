@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { observer, inject } from 'mobx-react';
 import { Container, Header, Table, Button, Message } from 'semantic-ui-react';
 import { formatDate } from 'utils/date';
 import { Confirm } from 'components/Semantic';
+import inject from 'stores/inject';
 
 import AppWrapper from 'components/AppWrapper';
 import HelpTip from 'components/HelpTip';
@@ -11,11 +11,10 @@ import EditShop from 'components/modals/EditShop';
 import { SearchProvider } from 'components/data';
 
 @inject('shops')
-@observer
 export default class Shops extends React.Component {
 
   onDataNeeded = async (params) => {
-    return await this.props.shops.search(params);
+    return await this.context.shops.search(params);
   };
 
   render() {
@@ -73,7 +72,7 @@ export default class Shops extends React.Component {
                                 content="All data will be permanently deleted"
                                 trigger={<Button basic icon="trash" />}
                                 onConfirm={async () => {
-                                  await this.props.shops.delete(item);
+                                  await this.context.shops.delete(item);
                                   reload();
                                 }}
                               />

@@ -3,7 +3,7 @@ import { Form, Input, Button, Message } from 'semantic-ui-react';
 import AutoFocus from 'components/AutoFocus';
 
 export default (props) => {
-  const { status } = props;
+  const { error, loading } = props;
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [touched, setTouched] = React.useState(false);
@@ -22,7 +22,7 @@ export default (props) => {
           });
         }}
       >
-        {status.error && <Message error content={status.error.message} />}
+        {error && <Message error content={error.message} />}
 
         <Form.Field error={touched && !email.length}>
           <Input
@@ -55,7 +55,7 @@ export default (props) => {
           primary
           size="large"
           content="Login"
-          loading={status.request}
+          loading={loading}
         />
       </Form>
     </AutoFocus>

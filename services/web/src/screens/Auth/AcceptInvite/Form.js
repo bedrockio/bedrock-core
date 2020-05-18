@@ -2,7 +2,7 @@ import React from 'react';
 import { Form, Button, Message } from 'semantic-ui-react';
 
 export default (props) => {
-  const { status } = props;
+  const { error, loading } = props;
   const [name, setName] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [touched, setTouched] = React.useState(false);
@@ -22,7 +22,7 @@ export default (props) => {
         });
       }}
     >
-      {status.error && <Message error content={status.error.message} />}
+      {error && <Message error content={error.message} />}
       <Form.Input
         required
         placeholder="Name"
@@ -64,7 +64,7 @@ export default (props) => {
       <Button
         fluid
         primary
-        loading={status.request}
+        loading={loading}
         size="large"
         content="Accept Invite"
       />

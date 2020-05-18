@@ -1,12 +1,11 @@
 import React from 'react';
-import { observer, inject } from 'mobx-react';
 import { Button, Form, TextArea, Modal, Message } from 'semantic-ui-react';
+import inject from 'stores/inject';
 
 import { emailRegexp } from 'utils/validate';
 import AutoFocus from 'components/AutoFocus';
 
 @inject('invites')
-@observer
 export default class InviteForm extends React.Component {
 
   static defaultProps = {
@@ -50,7 +49,7 @@ export default class InviteForm extends React.Component {
     });
     try {
       const { validEmails } = this.state;
-      await this.props.invites.create({ emails: validEmails });
+      await this.context.invites.create({ emails: validEmails });
       this.setState({
         open: false,
         loading: false,
@@ -69,7 +68,7 @@ export default class InviteForm extends React.Component {
 
   render() {
     const { open, loading, touched, validEmails, invalidEmails } = this.state;
-    const { invites, onSave, ...rest } = this.props;
+    const { onSave, ...rest } = this.props;
     return (
       <Modal
         closeIcon

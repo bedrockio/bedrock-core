@@ -1,92 +1,46 @@
-import { action } from 'mobx';
 import BaseStore from './BaseStore';
 import { request } from 'utils/api';
 import { omit } from 'lodash';
 
-import appSession from 'stores/AppSession';
+import session from 'stores/Session';
 
-export default class AuthStore extends BaseStore {
-  @action
-  setPassword(body, statusKey) {
-    const status = this.createStatus(statusKey);
-    return request({
+class Auth extends BaseStore {
+
+  async setPassword(body) {
+    const { data } = await request({
       method: 'POST',
       path: '/1/auth/set-password',
       body
-    })
-      .then((resp) => {
-        appSession.reset();
-        appSession.setToken(resp.data.token);
-        status.success();
-      })
-      .catch((err) => {
-        status.error(err);
-        return err;
-      });
+    });
+    session.setToken(data.token);
   }
 
-  @action
-  login(body, statusKey) {
-    const status = this.createStatus(statusKey);
-    return request({
+  async login(body) {
+    const { data } = await request({
       method: 'POST',
       path: '/1/auth/login',
-      body: body
-    })
-      .then((resp) => {
-        appSession.reset();
-        appSession.setToken(resp.data.token);
-        status.success();
-      })
-      .catch((err) => {
-        status.error(err);
-        return err;
-      });
+      body,
+    });
+    session.setToken(data.token);
   }
 
-  @action
-  acceptInvite(body, statusKey) {
-    return new Promise((resolve, reject) => {
-      const status = this.createStatus(statusKey);
-
-      request({
-        method: 'POST',
-        path: '/1/auth/accept-invite',
-        body: omit(body, ['acceptTerms', 'email'])
-      })
-        .then((resp) => {
-          appSession.reset();
-          appSession.setToken(resp.data.token);
-          status.success();
-          resolve();
-        })
-        .catch((err) => {
-          status.error(err);
-          reject(err);
-        });
+  async acceptInvite(body) {
+    const { data } = await request({
+      method: 'POST',
+      path: '/1/auth/accept-invite',
+      body: omit(body, ['acceptTerms', 'email'])
     });
+    session.setToken(data.token);
   }
 
-  @action
-  register(body, statusKey) {
-    return new Promise((resolve, reject) => {
-      const status = this.createStatus(statusKey);
-
-      request({
-        method: 'POST',
-        path: '/1/auth/register',
-        body
-      })
-        .then((resp) => {
-          appSession.reset();
-          appSession.setToken(resp.data.token);
-          status.success();
-          resolve();
-        })
-        .catch((err) => {
-          status.error(err);
-          reject(err);
-        });
+  async register(body) {
+    const { data } = await request({
+      method: 'POST',
+      path: '/1/auth/register',
+      body
     });
+    session.setToken(data.token);
   }
 }
+
+export default new Auth();

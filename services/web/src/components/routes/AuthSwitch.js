@@ -1,26 +1,24 @@
 import React from 'react';
-import { observer, inject } from 'mobx-react';
 import { Route } from 'react-router-dom';
 import Boot from 'components/Boot';
+import inject from 'stores/inject';
 
-@inject('appSession')
-@observer
+@inject('session')
 export default class AuthSwitchRoute extends React.Component {
+
   render() {
+    const { session } = this.context;
     const {
-      appSession,
       loggedIn: LoggedInComponent,
       loggedOut: LoggedOutComponent,
-      to,
-      exact
+      ...rest
     } = this.props;
 
     return (
       <Route
-        to={to}
-        exact={exact}
+        {...rest}
         render={(props) => {
-          return appSession.token ? (
+          return session.token ? (
             <Boot>
               <LoggedInComponent {...props} />
             </Boot>

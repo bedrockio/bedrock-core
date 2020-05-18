@@ -1,6 +1,6 @@
 import React from 'react';
 import { Segment, Grid } from 'semantic-ui-react';
-import { observer, inject } from 'mobx-react';
+import inject from 'stores/inject';
 
 import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
@@ -8,33 +8,34 @@ import LogoTitle from 'components/LogoTitle';
 import LoginForm from './Form';
 import { Link } from 'react-router-dom';
 
-@inject('auth', 'routing')
-@observer
+@inject('auth')
 export default class Login extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-  }
+
   state = {
     error: null,
-    success: false,
-    email: null
-  };
+    loading: false,
+  }
 
-  handleOnSubmit = (body) => {
-    return this.props.auth.login(body, 'login').then((err) => {
-      if (err instanceof Error) return;
-      this.props.routing.replace('/');
-    });
+  onSubmit = async (body) => {
+    try {
+      await this.context.auth.login(body);
+      this.props.history.push('/');
+    } catch(error) {
+      this.setState({
+        error,
+        loading: false,
+      });
+    }
   };
 
   render() {
-    const status = this.props.auth.getStatus('login');
+    const { error, loading } = this.state;
     return (
       <PageCenter>
         <LogoTitle title="Login" />
         <Segment.Group>
           <Segment padded>
-            <LoginForm onSubmit={this.handleOnSubmit} status={status} />
+            <LoginForm onSubmit={this.onSubmit} error={error} loading={loading} />
           </Segment>
           <Segment secondary>
             <Grid>

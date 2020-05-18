@@ -1,7 +1,7 @@
 import { request } from 'utils/api';
 import BaseStore from 'stores/BaseStore';
 
-export default class InvitesStore extends BaseStore {
+class Invites extends BaseStore {
 
   async fetch(id) {
     const { data } = request({
@@ -55,3 +55,5 @@ export default class InvitesStore extends BaseStore {
     });
   }
 }
+
+export default new Invites();

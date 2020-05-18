@@ -1,5 +1,5 @@
 import { API_URL } from 'utils/env';
-import appSession from 'stores/AppSession';
+import session from 'stores/Session';
 
 import { ApiError, ApiParseError } from './errors';
 
@@ -7,7 +7,7 @@ export default async function request(options) {
   const { method = 'GET', path, params } = options;
   let { body } = options;
 
-  const token = options.token || appSession.token;
+  const token = options.token || session.token;
 
   const headers = Object.assign(
     {

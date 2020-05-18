@@ -1,6 +1,7 @@
 import React from 'react';
-import { observer, inject } from 'mobx-react';
 import { Form, Message, Modal, Button } from 'semantic-ui-react';
+
+import inject from 'stores/inject';
 import Password from 'components/form-fields/Password';
 import AutoFocus from 'components/AutoFocus';
 
@@ -10,8 +11,8 @@ const rolesOptions = [
 ];
 
 @inject('users')
-@observer
 export default class EditUser extends React.Component {
+
   static defaultProps = {
     onSave: () => {},
   };
@@ -40,9 +41,9 @@ export default class EditUser extends React.Component {
       });
 
       if (this.isUpdate()) {
-        await this.props.users.update(user);
+        await this.context.users.update(user);
       } else {
-        await this.props.users.create(user);
+        await this.context.users.create(user);
       }
 
       this.setState({

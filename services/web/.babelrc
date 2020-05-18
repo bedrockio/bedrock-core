@@ -6,7 +6,6 @@
   "plugins": [
     ['lodash'],
     ['react-hot-loader/babel'],
-    ['babel-plugin-mobx-deep-action'],
     ['babel-plugin-styled-components'],
     ['@babel/plugin-transform-runtime'],
     ['@babel/plugin-proposal-decorators', { legacy: true }],

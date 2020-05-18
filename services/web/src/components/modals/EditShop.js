@@ -1,14 +1,13 @@
 import React from 'react';
-import { observer, inject } from 'mobx-react';
 import { Form, Message, Modal, Button } from 'semantic-ui-react';
 import { request } from 'utils/api';
+import inject from 'stores/inject';
 import UploadsField from 'components/form-fields/Uploads';
 import CountriesField from 'components/form-fields/Countries';
 import AutoFocus from 'components/AutoFocus';
 import SearchDropDown from 'components/SearchDropdown';
 
 @inject('shops')
-@observer
 export default class EditShop extends React.Component {
 
   static defaultProps = {
@@ -31,22 +30,22 @@ export default class EditShop extends React.Component {
 
   onChange = (evt) => {
     const { name, value } = evt.target;
-    this.setShopField(name, value);
+    this.setField(name, value);
   }
 
   onCountryChange = (code) => {
-    this.setShopField('country', code);
+    this.setField('country', code);
   }
 
   onCategoryChange = (e, { value }) => {
-    this.setShopField('categories', value);
+    this.setField('categories', value);
   };
 
   onImagesChange = (value) => {
-    this.setShopField('images', value);
+    this.setField('images', value);
   }
 
-  setShopField(name, value) {
+  setField(name, value) {
     this.setState({
       shop: {
         ...this.state.shop,
@@ -65,9 +64,9 @@ export default class EditShop extends React.Component {
       });
 
       if (this.isUpdate()) {
-        await this.props.shops.update(shop);
+        await this.context.shops.update(shop);
       } else {
-        await this.props.shops.create(shop);
+        await this.context.shops.create(shop);
       }
 
       this.setState({

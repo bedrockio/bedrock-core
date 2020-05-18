@@ -1,6 +1,6 @@
 import React from 'react';
-import { observer, inject } from 'mobx-react';
 import { formatDate } from 'utils/date';
+import inject from 'stores/inject';
 
 import AppWrapper from 'components/AppWrapper';
 import InviteUser from 'components/modals/InviteUser';
@@ -16,13 +16,12 @@ import {
 } from 'semantic-ui-react';
 
 @inject('invites')
-@observer
 export default class Home extends React.Component {
 
   state = {};
 
   onDataNeeded = async (params) => {
-    return await this.props.invites.search(params);
+    return await this.context.invites.search(params);
   };
 
   render() {
@@ -89,7 +88,7 @@ export default class Home extends React.Component {
                                   icon="trash"
                                   title="Delete"
                                   onClick={async () => {
-                                    await this.props.invites.delete(item);
+                                    await this.context.invites.delete(item);
                                     reload();
                                   }}
                                 />
@@ -98,8 +97,8 @@ export default class Home extends React.Component {
                                   icon="mail"
                                   title="Resend Invite"
                                   onClick={async () => {
-                                    await this.props.invites.resend(item);
-                                    //reload();
+                                    await this.context.invites.resend(item);
+                                    reload();
                                   }}
                                 />
                               </Table.Cell>

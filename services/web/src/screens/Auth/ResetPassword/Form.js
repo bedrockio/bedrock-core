@@ -3,7 +3,7 @@ import { Form, Button, Message } from 'semantic-ui-react';
 import AutoFocus from 'components/AutoFocus';
 
 export default (props) => {
-  const { status } = props;
+  const { loading, error } = props;
   const [password, setPassword] = React.useState('');
   const [repeat, setRepeat] = React.useState('');
   const [touched, setTouched] = React.useState(false);
@@ -23,7 +23,7 @@ export default (props) => {
           });
         }}
       >
-        {status.error && <Message error content={status.error.message} />}
+        {error && <Message error content={error.message} />}
 
         <Form.Input
           name="password"
@@ -53,7 +53,7 @@ export default (props) => {
           primary
           size="large"
           content="Reset Password"
-          loading={status.request}
+          loading={loading}
         />
       </Form>
     </AutoFocus>

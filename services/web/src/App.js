@@ -4,7 +4,7 @@ import 'theme/semantic.less';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import React from 'react';
 
-import AuthSwitchRoute from 'components/routes/AuthSwitch';
+import AuthSwitch from 'components/routes/AuthSwitch';
 import Protected from 'components/routes/Protected';
 
 import DocsGettingStarted from './screens/Docs/GettingStarted';
@@ -23,34 +23,33 @@ import ResetPassword from './screens/Auth/ResetPassword';
 
 const App = () => (
   <Switch>
-    <AuthSwitchRoute exact path="/" loggedIn={Dashboard} loggedOut={Login} />
-    <Protected exact path="/shops" component={Shops} />
-    <Protected exact path="/shops/:id" component={Shop} />
-    <Protected exact path="/shops/:id/*" component={Shop} />
-    <Protected exact path="/settings" component={Settings} />
-    <Protected exact path="/invites" component={Invites} />
-    <Protected exact path="/users" component={Users} />
+    <AuthSwitch path="/" loggedIn={Dashboard} loggedOut={Login} exact />
+    <Protected path="/shops" component={Shops} exact />
+    <Protected path="/shops/:id" component={Shop} />
+    <Protected path="/settings" component={Settings} exact />
+    <Protected path="/invites" component={Invites} exact />
+    <Protected path="/users" component={Users} exact />
     <Protected
-      exact
       path="/docs/getting-started"
       component={DocsGettingStarted}
-    />
-    <Route exact path="/logout" component={Logout} />
-    <AuthSwitchRoute
       exact
+    />
+    <Route path="/logout" component={Logout} exact />
+    <AuthSwitch
       path="/login"
       loggedOut={Login}
       loggedIn={() => <Redirect to="/" />}
-    />
-    <AuthSwitchRoute
       exact
+    />
+    <AuthSwitch
       path="/signup"
       loggedOut={Signup}
       loggedIn={() => <Redirect to="/" />}
+      exact
     />
-    <Route exact path="/accept-invite" component={AcceptInvite} />
-    <Route exact path="/forgot-password" component={ForgotPassword} />
-    <Route exact path="/reset-password" component={ResetPassword} />
+    <Route path="/accept-invite" component={AcceptInvite} exact />
+    <Route path="/forgot-password" component={ForgotPassword} exact />
+    <Route path="/reset-password" component={ResetPassword} exact />
   </Switch>
 );
 

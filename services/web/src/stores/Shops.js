@@ -1,7 +1,7 @@
 import { request } from 'utils/api';
 import BaseStore from './BaseStore';
 
-export default class ShopsStore extends BaseStore {
+class Shops extends BaseStore {
 
   async fetch(id) {
     const { data } = await request({
@@ -48,3 +48,5 @@ export default class ShopsStore extends BaseStore {
     });
   }
 }
+
+export default new Shops();

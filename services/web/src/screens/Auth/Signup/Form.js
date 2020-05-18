@@ -3,7 +3,7 @@ import { Form, Input, Button, Checkbox, Message } from 'semantic-ui-react';
 import AutoFocus from 'components/AutoFocus';
 
 export default (props) => {
-  const { status } = props;
+  const { error, loading } = props;
   const [name, setName] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
@@ -29,7 +29,7 @@ export default (props) => {
         {touched && !accepted && (
           <Message error content="Please accept the terms of service" />
         )}
-        {status.error && <Message error content={status.error.message} />}
+        {error && <Message error content={error.message} />}
         <Form.Field error={touched && !name.length}>
           <Input
             value={name}
@@ -82,7 +82,7 @@ export default (props) => {
           primary
           size="large"
           content="Signup"
-          loading={status.request}
+          loading={loading}
         />
       </Form>
     </AutoFocus>

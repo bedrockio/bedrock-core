@@ -1,18 +1,18 @@
 import React from 'react';
-import { observer, inject } from 'mobx-react';
-import { Container, Table, Message, Modal, Button, Header } from 'semantic-ui-react';
+import { Container, Table, Message, Button, Header } from 'semantic-ui-react';
+import inject from 'stores/inject';
 
+import { Confirm } from 'components/Semantic';
 import { formatDate } from 'utils/date';
 import { SearchProvider } from 'components/data';
 import HelpTip from 'components/HelpTip';
 import EditProduct from 'components/modals/EditProduct';
 
 @inject('products')
-@observer
 export default class ShopProducts extends React.Component {
 
   onDataNeeded = async (params) => {
-    return await this.props.products.search(params);
+    return await this.context.products.search(params);
   };
 
   render() {
@@ -24,9 +24,6 @@ export default class ShopProducts extends React.Component {
               <Header as="h2">
                 Products
                 <EditProduct
-                  initialValues={{
-                    shopId: this.props.shop.id,
-                  }}
                   onSave={reload}
                   trigger={
                     <Button primary floated="right" style={{ marginTop: '-5px' }} content="Add Product" icon="plus" />
@@ -62,26 +59,20 @@ export default class ShopProducts extends React.Component {
                           <Table.Cell>{formatDate(item.createdAt)}</Table.Cell>
                           <Table.Cell textAlign="center">
                             <EditProduct
-                              initialValues={item}
+                              product={item}
                               onSave={reload}
                               trigger={<Button style={{ marginLeft: '20px' }} basic icon="edit" />}
                             />
-                            <Modal
+                            <Confirm
+                              negative
+                              confirmText="Delete"
                               header={`Are you sure you want to delete "${item.name}"?`}
                               content="All data will be permanently deleted"
                               trigger={<Button basic icon="trash" />}
-                              closeIcon
-                              actions={[
-                                {
-                                  key: 'delete',
-                                    primary: true,
-                                    content: 'Delete',
-                                    onClick: async () => {
-                                      await this.props.products.delete(item);
-                                      reload();
-                                    },
-                                },
-                              ]}
+                              onConfirm={async () => {
+                                await this.context.products.delete(item);
+                                reload();
+                              }}
                             />
                           </Table.Cell>
                         </Table.Row>
