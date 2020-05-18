@@ -6,115 +6,116 @@ import AutoFocus from 'components/AutoFocus';
 
 const rolesOptions = [
   { text: 'Admin', value: 'admin' },
-  { text: 'User', value: 'user' }
+  { text: 'User', value: 'user' },
 ];
 
 @inject('users')
 @observer
 export default class EditUser extends React.Component {
   static defaultProps = {
-    initialValues: {}
+    onSave: () => {},
   };
 
-  state = {
-    open: false,
-    formValues: { ...this.props.initialValues }
-  };
-
-  componentDidUpdate(prevProps) {
-    if (this.props.initialValues !== prevProps.initialValues) {
-      this.setState({
-        touched: false,
-        formValues: { ...this.props.initialValues }
-      });
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false,
+      loading: false,
+      touched: false,
+      user: props.user || {},
+    };
   }
 
-  handleSubmit = () => {
-    const { users, initialValues } = this.props;
-    this.setState({
-      touched: true
-    });
+  onChange = (evt, { name, value }) => {
+    this.setUserField(name, value);
+  }
 
-    const action = initialValues.id
-      ? users.update.bind(users)
-      : users.create.bind(users);
+  onSubmit = async () => {
+    const { user } = this.state;
 
-    return action(this.state.formValues).then((err) => {
-      if (err instanceof Error) return;
+    try {
       this.setState({
-        formValues: this.props.initialValues,
-        open: false,
-        touched: false
+        loading: true,
+        touched: true,
       });
-    });
+
+      if (this.isUpdate()) {
+        await this.props.users.update(user);
+      } else {
+        await this.props.users.create(user);
+      }
+
+      this.setState({
+        open: false,
+        loading: false,
+        touched: false,
+        user: {},
+      });
+      this.props.onSave();
+    } catch (error) {
+      this.setState({
+        error,
+        loading: false,
+      });
+    }
   };
 
-  setField(name, value) {
+  isUpdate() {
+    return !!this.props.user;
+  }
+
+  setUserField(name, value) {
     this.setState({
-      formValues: {
-        ...this.state.formValues,
-        [name]: value
+      user: {
+        ...this.state.user,
+        [name]: value,
       }
     });
   }
 
   render() {
-    const { users, initialValues, trigger } = this.props;
-    const { formValues = {}, touched, open } = this.state;
-
-    const isUpdate = !!initialValues.id;
-    const status = isUpdate
-      ? users.getStatus('update')
-      : users.getStatus('create');
-
+    const { trigger } = this.props;
+    const { open, touched, error, user } = this.state;
     return (
       <Modal
         closeIcon
         onClose={() =>
           this.setState({
             open: false,
-            formValues: this.props.initialValues,
-            touched: false
+            touched: false,
           })
         }
         onOpen={() => this.setState({ open: true })}
         open={open}
-        trigger={trigger}
-      >
-        <Modal.Header>
-          {isUpdate ? `Edit "${initialValues.name}"` : 'New User'}
-        </Modal.Header>
+        trigger={trigger}>
+        <Modal.Header>{this.isUpdate() ? `Edit "${user.name}"` : 'New User'}</Modal.Header>
         <Modal.Content>
           <AutoFocus>
-            <Form
-              error={touched && Boolean(status.error)}
-              onSubmit={() => this.handleSubmit()}
-            >
-              {status.error && <Message error content={status.error.message} />}
+            <Form error={touched && error} onSubmit={this.onSubmit}>
+              {error && <Message error content={error.message} />}
               <Form.Input
-                value={formValues.email || ''}
-                required
-                name="email"
-                label="E-mail"
-                type="text"
-                onChange={(e, { name, value }) => this.setField(name, value)}
-              />
-              <Form.Input
-                value={formValues.name || ''}
+                value={user.name || ''}
                 name="name"
                 label="Name"
                 required
                 type="text"
-                onChange={(e, { name, value }) => this.setField(name, value)}
+                onChange={this.onChange}
               />
-              {!isUpdate && (
+              <Form.Input
+                value={user.email || ''}
+                required
+                name="email"
+                label="E-mail"
+                type="text"
+                onChange={this.onChange}
+              />
+              {!this.isUpdate() && (
                 <Password
                   name="password"
                   label="Password"
                   required
-                  value={formValues.password || ''}
-                  onChange={(e, { name, value }) => this.setField(name, value)}
+                  value={user.password || ''}
+                  onChange={this.onChange}
                 />
               )}
               <Form.Dropdown
@@ -124,9 +125,9 @@ export default class EditUser extends React.Component {
                 fluid
                 selection
                 multiple
-                value={formValues.roles || []}
+                value={user.roles || []}
                 options={rolesOptions}
-                onChange={(e, { name, value }) => this.setField(name, value)}
+                onChange={this.onChange}
               />
             </Form>
           </AutoFocus>
@@ -135,8 +136,8 @@ export default class EditUser extends React.Component {
           <Button
             loading={status.request === true}
             primary
-            content={isUpdate ? 'Update' : 'Create'}
-            onClick={this.handleSubmit}
+            content={this.isUpdate() ? 'Update' : 'Create'}
+            onClick={this.onSubmit}
           />
         </Modal.Actions>
       </Modal>
