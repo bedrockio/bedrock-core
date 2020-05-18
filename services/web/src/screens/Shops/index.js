@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { observer, inject } from 'mobx-react';
-import { Container, Header, Table, Button, Message, Modal } from 'semantic-ui-react';
+import { Container, Header, Table, Button, Message } from 'semantic-ui-react';
 import { formatDate } from 'utils/date';
+import { Confirm } from 'components/Semantic';
 
 import AppWrapper from 'components/AppWrapper';
 import HelpTip from 'components/HelpTip';
@@ -65,22 +66,16 @@ export default class Shops extends React.Component {
                                   trigger={<Button style={{ marginLeft: '20px' }} basic icon="edit" />}
                                   onSave={reload}
                                 />
-                                <Modal
+                                <Confirm
+                                  negative
+                                  confirmText="Delete"
                                   header={`Are you sure you want to delete "${item.name}"?`}
                                   content="All data will be permanently deleted"
                                   trigger={<Button basic icon="trash" />}
-                                  closeIcon
-                                  actions={[
-                                    {
-                                      key: 'delete',
-                                      primary: true,
-                                      content: 'Delete',
-                                      onClick: async () => {
-                                        await this.props.shops.delete(item);
-                                        reload();
-                                      },
-                                    },
-                                  ]}
+                                  onConfirm={async () => {
+                                    await this.props.shops.delete(item);
+                                    reload();
+                                  }}
                                 />
                               </Table.Cell>
                             </Table.Row>
