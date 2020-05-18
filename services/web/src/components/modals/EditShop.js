@@ -25,15 +25,6 @@ export default class EditShop extends React.Component {
     };
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props.initialValues !== prevProps.initialValues) {
-      this.setState({
-        touched: false,
-        formValues: { ...this.props.initialValues },
-      });
-    }
-  }
-
   isUpdate() {
     return !!this.props.shop;
   }
@@ -113,7 +104,6 @@ export default class EditShop extends React.Component {
         onClose={() =>
           this.setState({
             open: false,
-            formValues: this.props.initialValues,
             touched: false,
           })
         }

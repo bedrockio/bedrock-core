@@ -112,7 +112,7 @@ export default class SearchProvider extends React.Component {
   renderError() {
     const { error } = this.state;
     if (error) {
-      return <Message error content={error} />;
+      return <Message error content={error.message} />;
     }
   }
 

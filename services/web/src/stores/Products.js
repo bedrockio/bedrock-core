@@ -1,4 +1,3 @@
-import { observable, action } from 'mobx';
 import { request } from 'utils/api';
 import BaseStore from 'stores/BaseStore';
 
