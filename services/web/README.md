@@ -103,7 +103,7 @@ Markdown has some extentions that allow you to pull in information via OpenAPI:
 - `callSummary` - All of the above
 - `objectSummary` - Show attributes for a given rich object of `name`
 
-E.g:
+For example, to generate a summary of API parameters for login, add this to the Markdown:
 
 ```javascript
 callParams({ method: 'POST', path: '/1/auth/login' });
