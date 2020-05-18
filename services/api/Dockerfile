@@ -1,7 +1,5 @@
 FROM node:12-alpine
 
-ENV NODE_ENV production
-
 # Update & install required packages
 RUN apk add --update bash git make python g++
 
@@ -9,7 +7,7 @@ RUN apk add --update bash git make python g++
 COPY package.json /service/package.json
 COPY yarn.lock /service/yarn.lock
 
-RUN cd /service; yarn install --production=true
+RUN cd /service; yarn install
 
 # Fix bcrypt
 RUN cd /service; yarn --force add bcrypt --build-from-source
