@@ -164,6 +164,7 @@ export default class EditShop extends React.Component {
           <Button
             primary
             loading={loading}
+            disabled={loading}
             onClick={this.onSubmit}
             content={this.isUpdate() ? 'Update' : 'Create'}
           />

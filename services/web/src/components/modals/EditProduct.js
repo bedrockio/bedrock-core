@@ -159,7 +159,13 @@ export default class EditProduct extends React.Component {
           </AutoFocus>
         </Modal.Content>
         <Modal.Actions>
-          <Button loading={loading} primary content={this.isUpdate() ? 'Update' : 'Create'} onClick={this.onSubmit} />
+          <Button
+            primary
+            loading={loading}
+            disabled={loading}
+            onClick={this.onSubmit}
+            content={this.isUpdate() ? 'Update' : 'Create'}
+          />
         </Modal.Actions>
       </Modal>
     );

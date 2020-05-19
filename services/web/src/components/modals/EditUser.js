@@ -2,7 +2,6 @@ import React from 'react';
 import { Form, Message, Modal, Button } from 'semantic-ui-react';
 
 import inject from 'stores/inject';
-import Password from 'components/form-fields/Password';
 import AutoFocus from 'components/AutoFocus';
 
 const rolesOptions = [
@@ -76,7 +75,7 @@ export default class EditUser extends React.Component {
 
   render() {
     const { trigger } = this.props;
-    const { open, touched, error, user } = this.state;
+    const { open, touched, error, loading, user } = this.state;
     return (
       <Modal
         closeIcon
@@ -133,8 +132,9 @@ export default class EditUser extends React.Component {
         </Modal.Content>
         <Modal.Actions>
           <Button
-            loading={status.request === true}
             primary
+            loading={loading}
+            disabled={loading}
             content={this.isUpdate() ? 'Update' : 'Create'}
             onClick={this.onSubmit}
           />
