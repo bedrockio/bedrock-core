@@ -1,8 +1,7 @@
-import BaseStore from './BaseStore';
-
-class Session extends BaseStore {
+class Session {
 
   token = localStorage.getItem('jwt');
+  user = null;
 
   setToken(token) {
     if (token) {
@@ -11,7 +10,18 @@ class Session extends BaseStore {
       localStorage.removeItem('jwt');
     }
     this.token = token;
-    this.notify();
+  }
+
+  setUser(user) {
+    this.user = user;
+  }
+
+  isAdmin() {
+    return this.hasRole('admin');
+  }
+
+  hasRole(role) {
+    return this.user?.roles.includes(role);
   }
 
 }

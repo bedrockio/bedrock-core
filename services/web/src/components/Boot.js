@@ -1,10 +1,11 @@
 import React from 'react';
 import inject from 'stores/inject';
+import { request } from 'utils/api';
 import PageCenter from 'components/PageCenter';
 import PageLoader from 'components/PageLoader';
 import { Message } from 'semantic-ui-react';
 
-@inject('session', 'me')
+@inject('session')
 export default class Boot extends React.Component {
 
   state = {
@@ -17,10 +18,14 @@ export default class Boot extends React.Component {
   }
 
   async load() {
-    const { session, me } = this.context;
+    const { session } = this.context;
     if (session.token) {
       try {
-        await me.fetch();
+        const { data } = await request({
+          method: 'GET',
+          path: '/1/users/me'
+        });
+        session.setUser(data);
         this.setState({
           loading: false
         });

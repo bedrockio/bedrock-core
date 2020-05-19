@@ -7,8 +7,8 @@ import 'github-markdown-css';
 import inject from 'stores/inject';
 import { API_URL, APP_NAME } from 'utils/env';
 
-function enrichMarkdown(markdown, me, credentials) {
-  const { organization } = me;
+function enrichMarkdown(markdown, session, credentials) {
+  const { organization } = session;
   let enrichedMarkdown = markdown;
   if (organization) {
     enrichedMarkdown = enrichedMarkdown.replace(
@@ -33,7 +33,7 @@ function enrichMarkdown(markdown, me, credentials) {
   return enrichedMarkdown;
 }
 
-@inject('me')
+@inject('session')
 export default class GettingStarted extends React.Component {
   state = {
     loading: true,
@@ -41,9 +41,9 @@ export default class GettingStarted extends React.Component {
   };
 
   render() {
-    const { me } = this.context;
+    const { session } = this.context;
     const { credentials } = this.state;
-    const markdown = enrichMarkdown(GETTING_STARTED_MD, me, credentials);
+    const markdown = enrichMarkdown(GETTING_STARTED_MD, session, credentials);
     return (
       <AppWrapper>
         <div className="docs markdown-body">

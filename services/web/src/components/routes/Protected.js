@@ -5,16 +5,16 @@ import inject from 'stores/inject';
 import NotFound from 'components/NotFound';
 import AuthSwitch from './AuthSwitch';
 
-@inject('me')
+@inject('session')
 export default class Protected extends React.Component {
 
   hasAccess() {
-    const { me } = this.context;
-    if (!me.user) {
+    const { session } = this.context;
+    if (!session.user) {
       return false;
     }
     return this.getRoles().every((role) => {
-      return me.hasRole(role);
+      return session.hasRole(role);
     });
   }
 
