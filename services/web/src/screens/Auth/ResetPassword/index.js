@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 
 import { getToken, parseToken } from 'utils/token';
 
-@inject('auth', 'session')
+@inject('auth')
 export default class ResetPassword extends React.Component {
 
   constructor(props) {
@@ -43,7 +43,6 @@ export default class ResetPassword extends React.Component {
   };
 
   render() {
-    const { session } = this.context;
     const { jwt, error, loading, success } = this.state;
     return (
       <PageCenter>

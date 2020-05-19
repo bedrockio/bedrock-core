@@ -6,7 +6,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { SENTRY_DSN } from 'utils/env';
-import { StoreProvider } from './stores';
 import App from './App';
 
 if (SENTRY_DSN && window.Sentry) {
