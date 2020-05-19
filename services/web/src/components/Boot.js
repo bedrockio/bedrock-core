@@ -1,11 +1,10 @@
 import React from 'react';
-import inject from 'stores/inject';
 import { request } from 'utils/api';
+import { session } from 'stores';
 import PageCenter from 'components/PageCenter';
 import PageLoader from 'components/PageLoader';
 import { Message } from 'semantic-ui-react';
 
-@inject('session')
 export default class Boot extends React.Component {
 
   state = {
@@ -18,7 +17,6 @@ export default class Boot extends React.Component {
   }
 
   async load() {
-    const { session } = this.context;
     if (session.token) {
       try {
         const { data } = await request({

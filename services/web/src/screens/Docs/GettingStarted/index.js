@@ -4,10 +4,10 @@ import AppWrapper from 'components/AppWrapper';
 import GETTING_STARTED_MD from 'docs/GETTING_STARTED.md';
 import CodeBlock from '../CodeBlock';
 import 'github-markdown-css';
-import inject from 'stores/inject';
+import { session } from 'stores';
 import { API_URL, APP_NAME } from 'utils/env';
 
-function enrichMarkdown(markdown, session, credentials) {
+function enrichMarkdown(markdown, credentials) {
   const { organization } = session;
   let enrichedMarkdown = markdown;
   if (organization) {
@@ -33,7 +33,6 @@ function enrichMarkdown(markdown, session, credentials) {
   return enrichedMarkdown;
 }
 
-@inject('session')
 export default class GettingStarted extends React.Component {
   state = {
     loading: true,
@@ -41,9 +40,8 @@ export default class GettingStarted extends React.Component {
   };
 
   render() {
-    const { session } = this.context;
     const { credentials } = this.state;
-    const markdown = enrichMarkdown(GETTING_STARTED_MD, session, credentials);
+    const markdown = enrichMarkdown(GETTING_STARTED_MD, credentials);
     return (
       <AppWrapper>
         <div className="docs markdown-body">

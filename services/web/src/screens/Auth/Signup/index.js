@@ -2,13 +2,12 @@ import React from 'react';
 import { Segment, Grid } from 'semantic-ui-react';
 import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
-import inject from 'stores/inject';
+import { session } from 'stores';
 import { request } from 'utils/api';
 
 import Form from './Form';
 import { Link } from 'react-router-dom';
 
-@inject('session')
 export default class Signup extends React.Component {
 
   state = {
@@ -27,7 +26,7 @@ export default class Signup extends React.Component {
         path: '/1/auth/register',
         body
       });
-      this.context.session.setToken(data.token);
+      session.setToken(data.token);
       this.props.history.push('/');
     } catch(error) {
       this.setState({

@@ -1,14 +1,12 @@
 import React from 'react';
+import { session } from 'stores';
 import { NavLink, Link } from 'react-router-dom';
 import { Container, Dropdown, Icon, Menu } from 'semantic-ui-react';
-import inject from 'stores/inject';
 import logoInverted from 'assets/logo.svg';
 
-@inject('session')
 export default class AppWrapper extends React.Component {
 
   render() {
-    const { session } = this.context;
     const { user } = session;
     return (
       <div>

@@ -1,15 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
-import inject from 'stores/inject';
+import { session } from 'stores';
 import NotFound from 'components/NotFound';
 import AuthSwitch from './AuthSwitch';
 
-@inject('session')
 export default class Protected extends React.Component {
 
   hasAccess() {
-    const { session } = this.context;
     if (!session.user) {
       return false;
     }

@@ -1,11 +1,10 @@
 import React from 'react';
-import inject from 'stores/inject';
+import { session } from 'stores';
 
-@inject('session')
 export default class Logout extends React.Component {
 
   componentDidMount() {
-    this.context.session.setToken(null);
+    session.setToken(null);
     this.props.history.replace('/');
   }
 
