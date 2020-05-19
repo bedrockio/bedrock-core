@@ -26,6 +26,12 @@ class NotFoundError extends ApplicationError {
   }
 }
 
+class ConflictError extends ApplicationError {
+  constructor(message) {
+    super(message || 'Conflict', 409);
+  }
+}
+
 class GoneError extends ApplicationError {
   constructor(message) {
     super(message || 'Gone', 410);
@@ -34,6 +40,7 @@ class GoneError extends ApplicationError {
 
 module.exports = {
   GoneError,
+  ConflictError,
   NotFoundError,
   BadRequestError,
   UnauthorizedError,
