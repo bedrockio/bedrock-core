@@ -11,17 +11,14 @@ const config = require('@kaareal/config');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
+const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 
-const argv = yargs
-  .boolean('p')
-  .boolean('analyze')
-  .option('app', {
-    alias: 'a',
-    array: true,
-    // Add multiple app names here.
-    default: [],
-  })
-  .argv;
+const argv = yargs.boolean('p').boolean('analyze').option('app', {
+  alias: 'a',
+  array: true,
+  // Add multiple app names here.
+  default: [],
+}).argv;
 
 const DEV = !argv.p;
 
@@ -36,52 +33,44 @@ module.exports = {
     publicPath: '/',
     filename: 'assets/[name].[hash].bundle.js',
     chunkFilename: 'assets/[name].chunk-[hash].bundle.js',
-    path: path.join(__dirname, 'dist')
+    path: path.join(__dirname, 'dist'),
   },
   resolve: {
     alias: {
       'react-dom': '@hot-loader/react-dom',
-      '../../theme.config$': path.resolve(
-        path.join(__dirname, 'src'),
-        'theme/theme.config'
-      )
+      '../../theme.config$': path.resolve(path.join(__dirname, 'src'), 'theme/theme.config'),
     },
     extensions: ['.js', '.json', '.jsx'],
-    modules: [path.join(__dirname, 'src'), 'node_modules']
+    modules: [path.join(__dirname, 'src'), 'node_modules'],
   },
   module: {
     rules: [
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        exclude: /node_modules/
+        exclude: /node_modules/,
       },
       {
         test: /\.(css|less)$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          ...(DEV ? [] : ['postcss-loader']),
-          'less-loader'
-        ]
+        use: [MiniCssExtractPlugin.loader, 'css-loader', ...(DEV ? [] : ['postcss-loader']), 'less-loader'],
       },
       {
         test: /\.(png|jpg|svg|gif|pdf|eot|ttf|woff2?)$/,
         loader: 'file-loader',
         options: {
           esModule: false,
-          outputPath: 'assets'
-        }
+          outputPath: 'assets',
+        },
       },
       {
         test: /\.md$/,
-        use: 'raw-loader'
-      }
-    ]
+        use: 'raw-loader',
+      },
+    ],
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: 'assets/[name]-[hash].css'
+      filename: 'assets/[name]-[hash].css',
     }),
     new CircularDependencyPlugin({
       exclude: /node_modules/,
@@ -90,7 +79,10 @@ module.exports = {
     }),
     ...getTemplatePlugins(),
     ...getOptionalPlugins(),
-  ]
+    new FaviconsWebpackPlugin({
+      logo: './src/assets/favicon.png',
+    }),
+  ],
 };
 
 // koa-webpack -> webpack-hot-client requires this to be wrapped in an array
@@ -130,7 +122,8 @@ function getTemplatePlugins() {
         removeComments: false,
         collapseWhitespace: true,
       },
-      filename: path.join(app === 'public' ? '' : app, 'index.html')
+      filename: path.join(app === 'public' ? '' : app, 'index.html'),
+      inject: true,
     });
   });
 }
