@@ -92,7 +92,7 @@ export default class EditUser extends React.Component {
         <Modal.Header>{this.isUpdate() ? `Edit "${user.name}"` : 'New User'}</Modal.Header>
         <Modal.Content>
           <AutoFocus>
-            <Form error={touched && error} onSubmit={this.onSubmit}>
+            <Form error={touched && error}>
               {error && <Message error content={error.message} />}
               <Form.Input
                 value={user.name || ''}
@@ -105,18 +105,16 @@ export default class EditUser extends React.Component {
               <Form.Input
                 value={user.email || ''}
                 required
-                name="email"
-                label="E-mail"
-                type="text"
-                onChange={this.onChange}
+                type="email"
+                label="Email"
+                onChange={(e, { value }) => this.setUserField('email', value)}
               />
               {!this.isUpdate() && (
-                <Password
-                  name="password"
-                  label="Password"
+                <Form.Input
                   required
+                  label="Password"
                   value={user.password || ''}
-                  onChange={this.onChange}
+                  onChange={(e, { value }) => this.setUserField('password', value)}
                 />
               )}
               <Form.Dropdown
