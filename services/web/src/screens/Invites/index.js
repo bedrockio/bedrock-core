@@ -1,6 +1,6 @@
 import React from 'react';
 import { formatDateTime } from 'utils/date';
-import inject from 'stores/inject';
+import { request } from 'utils/api';
 
 import AppWrapper from 'components/AppWrapper';
 import InviteUser from 'components/modals/InviteUser';
@@ -15,13 +15,14 @@ import {
   Message,
 } from 'semantic-ui-react';
 
-@inject('invites')
 export default class Home extends React.Component {
 
-  state = {};
-
   onDataNeeded = async (params) => {
-    return await this.context.invites.search(params);
+    return await request({
+      method: 'POST',
+      path: '/1/invites/search',
+      body: params
+    });
   };
 
   render() {
@@ -87,7 +88,10 @@ export default class Home extends React.Component {
                                   icon="mail"
                                   title="Resend Invite"
                                   onClick={async () => {
-                                    await this.context.invites.resend(item);
+                                    await request({
+                                      method: 'POST',
+                                      path: `/1/invites/${item.id}/resend`
+                                    });
                                     reload();
                                   }}
                                 />
@@ -96,7 +100,10 @@ export default class Home extends React.Component {
                                   icon="trash"
                                   title="Delete"
                                   onClick={async () => {
-                                    await this.context.invites.delete(item);
+                                    await request({
+                                      method: 'DELETE',
+                                      path: `/1/invites/${item.id}`
+                                    });
                                     reload();
                                   }}
                                 />

@@ -3,7 +3,6 @@
 // performed.
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Button } from 'semantic-ui-react';
 
 export default class LoadButton extends React.Component {
@@ -16,16 +15,11 @@ export default class LoadButton extends React.Component {
     this.setState({
       loading: true,
     });
-    try {
-      await this.props.onClick();
-    } catch(err) {
-      this.props.onError();
-    } finally {
-      if (this.mounted) {
-        this.setState({
-          loading: false
-        });
-      }
+    await this.props.onClick();
+    if (this.mounted) {
+      this.setState({
+        loading: false
+      });
     }
   }
 
@@ -38,7 +32,7 @@ export default class LoadButton extends React.Component {
   }
 
   render() {
-    const { onClick, onError, ...rest } = this.props;
+    const { onClick, ...rest } = this.props;
     return (
       <Button
         loading={this.state.loading}
@@ -51,9 +45,4 @@ export default class LoadButton extends React.Component {
 
 LoadButton.propTypes = {
   ...Button.propTypes,
-  onError: PropTypes.func,
-};
-
-LoadButton.defaultProps = {
-  onError: () => {},
 };

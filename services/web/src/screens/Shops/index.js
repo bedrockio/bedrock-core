@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Container, Header, Table, Button, Message } from 'semantic-ui-react';
+import { request } from 'utils/api';
 import { formatDateTime } from 'utils/date';
 import { Confirm } from 'components/Semantic';
-import inject from 'stores/inject';
 
 import AppWrapper from 'components/AppWrapper';
 import HelpTip from 'components/HelpTip';
@@ -19,11 +19,14 @@ const countries = getData().map(({ code, name }) => ({
   key: code
 }));
 
-@inject('shops')
 export default class Shops extends React.Component {
 
   onDataNeeded = async (params) => {
-    return await this.context.shops.search(params);
+    return await request({
+      method: 'POST',
+      path: '/1/shops/search',
+      body: params
+    });
   };
 
   render() {
@@ -94,7 +97,10 @@ export default class Shops extends React.Component {
                                 content="All data will be permanently deleted"
                                 trigger={<Button basic icon="trash" />}
                                 onConfirm={async () => {
-                                  await this.context.shops.delete(item);
+                                  await request({
+                                    method: 'DELETE',
+                                    path: `/1/shops/${item.id}`
+                                  });
                                   reload();
                                 }}
                               />

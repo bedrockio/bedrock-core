@@ -1,6 +1,6 @@
 import React from 'react';
 import { formatDateTime } from 'utils/date';
-import inject from 'stores/inject';
+import { request } from 'utils/api';
 
 import { Confirm } from 'components/Semantic';
 import AppWrapper from 'components/AppWrapper';
@@ -17,11 +17,14 @@ import {
   Button,
 } from 'semantic-ui-react';
 
-@inject('users')
 export default class Users extends React.Component {
 
   onDataNeeded = async (params) => {
-    return await this.context.users.search(params);
+    return await request({
+      method: 'POST',
+      path: '/1/users/search',
+      body: params,
+    });
   };
 
   render() {
@@ -135,7 +138,10 @@ export default class Users extends React.Component {
                                     content="All data will be permanently deleted"
                                     trigger={<Button basic icon="trash" />}
                                     onConfirm={async () => {
-                                      await this.context.users.delete(item);
+                                      await request({
+                                        method: 'DELETE',
+                                        path: `/1/users/${item.id}`
+                                      });
                                       reload();
                                     }}
                                   />

@@ -22,13 +22,10 @@ export default (props) => {
           props.onSubmit({
             name,
             email,
-            password
+            password,
           });
-        }}
-      >
-        {touched && !accepted && (
-          <Message error content="Please accept the terms of service" />
-        )}
+        }}>
+        {touched && !accepted && <Message error content="Please accept the terms of service" />}
         {error && <Message error content={error.message} />}
         <Form.Field error={touched && !name.length}>
           <Input
@@ -78,12 +75,7 @@ export default (props) => {
           />
         </Form.Field>
 
-        <Button
-          primary
-          size="large"
-          content="Signup"
-          loading={loading}
-        />
+        <Button primary size="large" content="Signup" loading={loading} disabled={loading} />
       </Form>
     </AutoFocus>
   );

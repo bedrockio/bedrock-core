@@ -19,10 +19,9 @@ export default (props) => {
           if (repeat !== password) return;
 
           props.onSubmit({
-            password
+            password,
           });
-        }}
-      >
+        }}>
         {error && <Message error content={error.message} />}
 
         <Form.Input
@@ -48,13 +47,7 @@ export default (props) => {
           onChange={(e, { value }) => setRepeat(value)}
         />
 
-        <Button
-          fluid
-          primary
-          size="large"
-          content="Reset Password"
-          loading={loading}
-        />
+        <Button fluid primary size="large" content="Reset Password" loading={loading} />
       </Form>
     </AutoFocus>
   );

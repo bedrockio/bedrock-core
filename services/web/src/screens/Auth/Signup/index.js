@@ -3,11 +3,12 @@ import { Segment, Grid } from 'semantic-ui-react';
 import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
 import inject from 'stores/inject';
+import { request } from 'utils/api';
 
 import Form from './Form';
 import { Link } from 'react-router-dom';
 
-@inject('auth')
+@inject('session')
 export default class Signup extends React.Component {
 
   state = {
@@ -17,7 +18,16 @@ export default class Signup extends React.Component {
 
   onSubmit = async (body) => {
     try {
-      await this.context.auth.register(body);
+      this.setState({
+        error: null,
+        loading: true,
+      });
+      const { data } = await request({
+        method: 'POST',
+        path: '/1/auth/register',
+        body
+      });
+      this.context.session.setToken(data.token);
       this.props.history.push('/');
     } catch(error) {
       this.setState({

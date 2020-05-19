@@ -1,6 +1,7 @@
 import React from 'react';
 import { Segment, Message } from 'semantic-ui-react';
 import inject from 'stores/inject';
+import { request } from 'utils/api';
 
 import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
@@ -9,7 +10,7 @@ import { Link } from 'react-router-dom';
 
 import { getToken, parseToken } from 'utils/token';
 
-@inject('auth')
+@inject('session')
 export default class ResetPassword extends React.Component {
 
   constructor(props) {
@@ -26,10 +27,20 @@ export default class ResetPassword extends React.Component {
 
   onSubmit = async (body) => {
     try {
+      const { token } = this.state;
       this.setState({
         loading: true,
+        error: null,
       });
-      await this.context.auth.setPassword(body);
+      const { data } = await request({
+        method: 'POST',
+        path: '/1/auth/set-password',
+        body: {
+          ...body,
+          token,
+        }
+      });
+      this.context.session.setToken(data.token);
       this.setState({
         loading: false,
         success: true,

@@ -7,27 +7,36 @@ import Form from './Form';
 
 import { Link } from 'react-router-dom';
 
-export default class Apply extends React.Component {
+export default class ForgotPassword extends React.Component {
   state = {
-    error: null,
     success: false,
+    loading: false,
+    error: null,
     email: null,
-    loading: false
   };
 
-  onSubmit = (body) => {
-    this.setState({ email: body.email, loading: true });
-    return request({
-      method: 'POST',
-      path: '/1/auth/request-password',
-      body
-    })
-      .then(() => {
-        this.setState({ success: true, error: null });
-      })
-      .catch((c) => {
-        this.setState({ error: c, loading: false });
+  onSubmit = async (body) => {
+    this.setState({
+      error: null,
+      loading: true,
+    });
+    try {
+      await request({
+        method: 'POST',
+        path: '/1/auth/request-password',
+        body,
       });
+      this.setState({
+        email: body.email,
+        success: true,
+        loading: false,
+      });
+    } catch (error) {
+      this.setState({
+        error,
+        loading: false,
+      });
+    }
   };
 
   render() {
@@ -42,8 +51,7 @@ export default class Apply extends React.Component {
               <Message info>
                 <Message.Header>Mail sent!</Message.Header>
                 <p>
-                  Please follow the instructions in the email we sent to{' '}
-                  <b>{email}</b>
+                  Please follow the instructions in the email we sent to <b>{email}</b>
                 </p>
               </Message>
             ) : (

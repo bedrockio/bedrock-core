@@ -18,10 +18,9 @@ export default (props) => {
 
           props.onSubmit({
             email,
-            password
+            password,
           });
-        }}
-      >
+        }}>
         {error && <Message error content={error.message} />}
 
         <Form.Field error={touched && !email.length}>
@@ -56,6 +55,7 @@ export default (props) => {
           size="large"
           content="Login"
           loading={loading}
+          disabled={loading}
         />
       </Form>
     </AutoFocus>

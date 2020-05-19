@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Modal, Message, Button } from 'semantic-ui-react';
-import inject from 'stores/inject';
+import { request } from 'utils/api';
 import AutoFocus from 'components/AutoFocus';
 
 const rolesOptions = [
@@ -8,7 +8,6 @@ const rolesOptions = [
   { text: 'User', value: 'user' },
 ];
 
-@inject('users')
 export default class EditUser extends React.Component {
 
   constructor(props) {
@@ -43,9 +42,17 @@ export default class EditUser extends React.Component {
         touched: true,
       });
       if (this.isUpdate()) {
-        await this.context.users.update(user);
+        await request({
+          method: 'PATCH',
+          path: `/1/users/${user.id}`,
+          body: user,
+        });
       } else {
-        await this.context.users.create(user);
+        await request({
+          method: 'POST',
+          path: '/1/users',
+          body: user
+        });
         this.setState({
           user: {},
           touched: false,

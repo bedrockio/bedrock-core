@@ -1,5 +1,6 @@
 import React from 'react';
 import { Segment, Grid } from 'semantic-ui-react';
+import { request } from 'utils/api';
 import inject from 'stores/inject';
 import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
@@ -8,7 +9,7 @@ import Form from './Form';
 import { Link } from 'react-router-dom';
 import { getToken, parseToken } from 'utils/token';
 
-@inject('auth')
+@inject('session')
 export default class AcceptInvite extends React.Component {
 
   constructor(props) {
@@ -25,13 +26,20 @@ export default class AcceptInvite extends React.Component {
 
   onSubmit = async (body) => {
     try {
+      const { token } = this.state;
       this.setState({
+        error: null,
         loading: true,
       });
-      await this.context.auth.acceptInvite(body);
-      this.setState({
-        loading: false
+      const { data } = await request({
+        method: 'POST',
+        path: '/1/auth/accept-invite',
+        body: {
+          ...body,
+          token,
+        }
       });
+      this.context.session.setToken(data.token);
       this.props.history.push('/');
     } catch(error) {
       this.setState({

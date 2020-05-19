@@ -53,9 +53,9 @@ export default class SearchProvider extends React.Component {
     try {
       const { page, limit, sort, filters } = this.state;
       const { data, meta } = await this.props.onDataNeeded({
-        page,
         limit,
         sort,
+        skip: (page - 1) * limit,
         ...filters,
       });
       this.setState({

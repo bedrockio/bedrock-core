@@ -1,4 +1,5 @@
 import React from 'react';
+import { request } from 'utils/api';
 import { Segment, Grid } from 'semantic-ui-react';
 import inject from 'stores/inject';
 
@@ -8,7 +9,7 @@ import LogoTitle from 'components/LogoTitle';
 import LoginForm from './Form';
 import { Link } from 'react-router-dom';
 
-@inject('auth')
+@inject('session')
 export default class Login extends React.Component {
 
   state = {
@@ -18,7 +19,16 @@ export default class Login extends React.Component {
 
   onSubmit = async (body) => {
     try {
-      await this.context.auth.login(body);
+      this.setState({
+        error: null,
+        loading: true,
+      });
+      const { data } = await request({
+        method: 'POST',
+        path: '/1/auth/login',
+        body,
+      });
+      this.context.session.setToken(data.token);
       this.props.history.push('/');
     } catch(error) {
       this.setState({

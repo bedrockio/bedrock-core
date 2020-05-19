@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Table, Message, Button, Header } from 'semantic-ui-react';
-import inject from 'stores/inject';
+import { request } from 'utils/api';
 
 import { Confirm } from 'components/Semantic';
 import { formatDateTime } from 'utils/date';
@@ -8,11 +8,14 @@ import { SearchProvider } from 'components/data';
 import HelpTip from 'components/HelpTip';
 import EditProduct from 'components/modals/EditProduct';
 
-@inject('products')
 export default class ShopProducts extends React.Component {
 
   onDataNeeded = async (params) => {
-    return await this.context.products.search(params);
+    return await request({
+      method: 'POST',
+      path: '/1/products/search',
+      body: params
+    });
   };
 
   render() {
@@ -73,7 +76,10 @@ export default class ShopProducts extends React.Component {
                               content="All data will be permanently deleted"
                               trigger={<Button basic icon="trash" />}
                               onConfirm={async () => {
-                                await this.context.products.delete(item);
+                                await request({
+                                  method: 'DELETE',
+                                  path: `/1/products/${item.id}`
+                                });
                                 reload();
                               }}
                             />

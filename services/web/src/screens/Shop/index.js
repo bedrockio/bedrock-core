@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route, Link } from 'react-router-dom';
 import AppWrapper from 'components/AppWrapper';
-import inject from 'stores/inject';
+import { request } from 'utils/api';
 
 import { Container, Divider, Breadcrumb, Button } from 'semantic-ui-react';
 import Menu from './Menu';
@@ -10,7 +10,6 @@ import Overview from './Overview';
 import Products from './Products';
 import EditShop from 'components/modals/EditShop';
 
-@inject('shops')
 export default class Shop extends React.Component {
 
   state = {
@@ -23,8 +22,12 @@ export default class Shop extends React.Component {
 
   fetchShop = async () => {
     const { id } = this.props.match.params;
+    const { data } = await request({
+      method: 'GET',
+      path: `/1/shops/${id}`
+    });
     this.setState({
-      shop: await this.context.shops.fetch(id),
+      shop: data
     });
   }
 

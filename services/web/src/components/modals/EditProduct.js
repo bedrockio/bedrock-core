@@ -1,10 +1,9 @@
 import React from 'react';
 import { Modal, Form, Label, Button, Message } from 'semantic-ui-react';
-import inject from 'stores/inject';
+import { request } from 'utils/api';
 import AutoFocus from 'components/AutoFocus';
 import DateTimeField from 'components/form-fields/DateTime';
 
-@inject('products')
 export default class EditProduct extends React.Component {
 
   constructor(props) {
@@ -53,9 +52,17 @@ export default class EditProduct extends React.Component {
         touched: true,
       });
       if (this.isUpdate()) {
-        await this.context.products.update(product);
+        await request({
+          method: 'PATCH',
+          path: `/1/products/${product.id}`,
+          body: product,
+        });
       } else {
-        await this.context.products.create(product);
+        await request({
+          method: 'POST',
+          path: '/1/products',
+          body: product
+        });
         this.setState({
           product: {},
           touched: false,

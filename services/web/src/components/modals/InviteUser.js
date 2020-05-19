@@ -1,10 +1,9 @@
 import React from 'react';
 import { Form, Modal, Button, TextArea, Message } from 'semantic-ui-react';
-import inject from 'stores/inject';
+import { request } from 'utils/api';
 import { emailRegexp } from 'utils/validate';
 import AutoFocus from 'components/AutoFocus';
 
-@inject('invites')
 export default class InviteUser extends React.Component {
 
   state = {
@@ -43,7 +42,13 @@ export default class InviteUser extends React.Component {
         touched: true,
       });
       const { validEmails } = this.state;
-      await this.context.invites.create({ emails: validEmails });
+      await request({
+        method: 'POST',
+        path: '/1/invites',
+        body: {
+          emails: validEmails
+        }
+      });
       this.setState({
         open: false,
         loading: false,

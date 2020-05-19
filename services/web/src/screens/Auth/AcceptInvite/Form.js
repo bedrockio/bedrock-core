@@ -18,10 +18,9 @@ export default (props) => {
 
         props.onSubmit({
           name,
-          password
+          password,
         });
-      }}
-    >
+      }}>
       {error && <Message error content={error.message} />}
       <Form.Input
         required
@@ -65,6 +64,7 @@ export default (props) => {
         fluid
         primary
         loading={loading}
+        disabled={loading}
         size="large"
         content="Accept Invite"
       />

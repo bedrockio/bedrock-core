@@ -1,13 +1,11 @@
 import React from 'react';
 import { Form, Modal, Message, Button } from 'semantic-ui-react';
 import { request } from 'utils/api';
-import inject from 'stores/inject';
 import AutoFocus from 'components/AutoFocus';
 import SearchDropDown from 'components/SearchDropdown';
 import UploadsField from 'components/form-fields/Uploads';
 import CountriesField from 'components/form-fields/Countries';
 
-@inject('shops')
 export default class EditShop extends React.Component {
 
   constructor(props) {
@@ -42,9 +40,17 @@ export default class EditShop extends React.Component {
         touched: true,
       });
       if (this.isUpdate()) {
-        await this.context.shops.update(shop);
+        await request({
+          method: 'PATCH',
+          path: `/1/shops/${shop.id}`,
+          body: shop,
+        });
       } else {
-        await this.context.shops.create(shop);
+        await request({
+          method: 'POST',
+          path: '/1/shops',
+          body: shop
+        });
         this.setState({
           shop: {},
           touched: false,
