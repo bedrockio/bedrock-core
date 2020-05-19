@@ -39,11 +39,16 @@ router
   .use(fetchUser)
   .post('/', async (ctx) => {
     const { authUser } = ctx.state;
-    const params = await storeUploadedFile(ctx.request.files.file);
-    params.ownerId = authUser.id;
-    const upload = await Upload.create(params);
+    const file = ctx.request.files.file;
+    const isArray = Array.isArray(file);
+    const files = isArray ? file : [file];
+    const uploads = await Promise.all(files.map(async (file) => {
+      const params = await storeUploadedFile(file);
+      params.ownerId = authUser.id;
+      return await Upload.create(params);
+    }));
     ctx.body = {
-      data: upload
+      data: isArray ? uploads : uploads[0]
     };
   })
   .delete('/:upload', async (ctx) => {

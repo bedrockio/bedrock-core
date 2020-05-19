@@ -14,10 +14,13 @@ module.exports = async function handleRequest(httpMethod, url, bodyOrQuery = {},
   let promise;
 
   if (options.file) {
+    const files = Array.isArray(options.file) ? options.file : [options.file];
     promise = request(app.callback())
       .post(url)
-      .attach('file', options.file)
       .set(headers);
+    files.forEach((file) => {
+      promise = promise.attach('file', file)
+    });
   } else {
     if (httpMethod === 'POST') {
       promise = request(app.callback())

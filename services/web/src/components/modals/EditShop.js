@@ -16,6 +16,7 @@ export default class EditShop extends React.Component {
 
   state = {
     open: false,
+    hasError: false,
     formValues: { ...this.props.initialValues }
   };
 
@@ -73,7 +74,7 @@ export default class EditShop extends React.Component {
 
   render() {
     const { shops, initialValues, trigger } = this.props;
-    const { formValues = {}, touched, open } = this.state;
+    const { formValues = {}, touched, open, hasError } = this.state;
 
     const isUpdate = !!initialValues.id;
     const status = isUpdate
@@ -100,7 +101,7 @@ export default class EditShop extends React.Component {
         <Modal.Content>
           <AutoFocus>
             <Form
-              error={touched && Boolean(status.error)}
+              error={touched && (Boolean(status.error) || hasError)}
               onSubmit={() => this.handleSubmit()}
             >
               {status.error && <Message error content={status.error.message} />}
@@ -139,12 +140,12 @@ export default class EditShop extends React.Component {
                   />
                 </label>
               </Form.Field>
-
               <UploadsField
                 label="Images"
                 name="images"
                 value={formValues.images || []}
                 onChange={(value) => this.setField('images', value)}
+                onError={() => this.setState({ touched: true, hasError: true })}
               />
             </Form>
           </AutoFocus>
