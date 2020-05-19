@@ -34,7 +34,6 @@ export default class Home extends React.Component {
                 <Header as="h2">
                   Invites
                   <InviteUser
-                    size="tiny"
                     onSave={reload}
                     trigger={
                       <Button

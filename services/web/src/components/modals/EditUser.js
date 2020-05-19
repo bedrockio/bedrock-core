@@ -1,8 +1,7 @@
 import React from 'react';
-import { Form } from 'semantic-ui-react';
-
+import { Form, Modal, Message, Button } from 'semantic-ui-react';
 import inject from 'stores/inject';
-import EditModal from './EditModal';
+import AutoFocus from 'components/AutoFocus';
 
 const rolesOptions = [
   { text: 'Admin', value: 'admin' },
@@ -15,6 +14,10 @@ export default class EditUser extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      open: false,
+      touched: false,
+      loading: false,
+      error: null,
       user: props.user || {},
     };
   }
@@ -33,58 +36,97 @@ export default class EditUser extends React.Component {
   }
 
   onSubmit = async () => {
-    const { user } = this.state;
-    if (this.isUpdate()) {
-      await this.context.users.update(user);
-    } else {
-      await this.context.users.create(user);
+    try {
+      const { user } = this.state;
+      this.setState({
+        loading: true,
+        touched: true,
+      });
+      if (this.isUpdate()) {
+        await this.context.users.update(user);
+      } else {
+        await this.context.users.create(user);
+        this.setState({
+          user: {},
+          touched: false,
+        });
+      }
+      this.setState({
+        open: false,
+        loading: false,
+      });
+      this.props.onSave();
+    } catch (error) {
+      this.setState({
+        error,
+        loading: false,
+      });
     }
   };
 
   render() {
-    const { trigger, onSave } = this.props;
-    const { user } = this.state;
+    const { trigger } = this.props;
+    const { user, open, touched, loading, error } = this.state;
     return (
-      <EditModal
-        onSave={onSave}
-        trigger={trigger}
-        header={this.isUpdate() ? `Edit "${user.name}"` : 'New User'}
-        submitText={this.isUpdate() ? 'Update' : 'Create'}
-        onSubmit={this.onSubmit}>
-        <Form.Input
-          value={user.name || ''}
-          label="Name"
-          required
-          type="text"
-          onChange={(e, { value }) => this.setUserField('name', value)}
-        />
-        <Form.Input
-          value={user.email || ''}
-          required
-          type="email"
-          label="Email"
-          onChange={(e, { value }) => this.setUserField('email', value)}
-        />
-        {!this.isUpdate() && (
-          <Form.Input
-            required
-            label="Password"
-            value={user.password || ''}
-            onChange={(e, { value }) => this.setUserField('password', value)}
+      <Modal
+        closeIcon
+        onClose={() => this.setState({ open: false })}
+        onOpen={() => this.setState({ open: true })}
+        open={open}
+        trigger={trigger}>
+        <Modal.Header>
+          {this.isUpdate() ? `Edit "${user.name}"` : 'New User'}
+        </Modal.Header>
+        <Modal.Content>
+          <AutoFocus>
+            <Form error={touched && error}>
+              {error && <Message error content={error.message} />}
+              <Form.Input
+                value={user.name || ''}
+                label="Name"
+                required
+                type="text"
+                onChange={(e, { value }) => this.setUserField('name', value)}
+              />
+              <Form.Input
+                value={user.email || ''}
+                required
+                type="email"
+                label="Email"
+                onChange={(e, { value }) => this.setUserField('email', value)}
+              />
+              {!this.isUpdate() && (
+                <Form.Input
+                  required
+                  label="Password"
+                  value={user.password || ''}
+                  onChange={(e, { value }) => this.setUserField('password', value)}
+                />
+              )}
+              <Form.Dropdown
+                name="roles"
+                label="Roles"
+                required
+                fluid
+                selection
+                multiple
+                value={user.roles || []}
+                options={rolesOptions}
+                onChange={(e, { value }) => this.setUserField('roles', value)}
+              />
+            </Form>
+          </AutoFocus>
+        </Modal.Content>
+        <Modal.Actions>
+          <Button
+            primary
+            loading={loading}
+            disabled={loading}
+            content={this.isUpdate() ? 'Update' : 'Create'}
+            onClick={this.onSubmit}
           />
-        )}
-        <Form.Dropdown
-          name="roles"
-          label="Roles"
-          required
-          fluid
-          selection
-          multiple
-          value={user.roles || []}
-          options={rolesOptions}
-          onChange={(e, { value }) => this.setUserField('roles', value)}
-        />
-      </EditModal>
+        </Modal.Actions>
+      </Modal>
     );
   }
 }
