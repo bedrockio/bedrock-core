@@ -6,29 +6,61 @@ import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
 
 import LoginForm from './Form';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
+import { AppSession } from 'contexts/appSession';
+import { request } from 'utils/api';
 
-@inject('auth', 'routing')
-@observer
-export default class Login extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-  }
+class Login extends React.Component {
+  static contextType = AppSession;
+
   state = {
-    error: null,
-    success: false,
-    email: null
+    status: {},
   };
 
-  handleOnSubmit = (body) => {
-    return this.props.auth.login(body, 'login').then((err) => {
-      if (err instanceof Error) return;
-      this.props.routing.replace('/');
+  async login({ email, password }) {
+    this.setState({
+      status: {
+        request: true,
+      },
     });
+
+    try {
+      const { data } = await request({
+        method: 'POST',
+        path: '/1/auth/login',
+        body: {
+          email,
+          password,
+        },
+      });
+
+      const { setToken, reset } = this.context;
+
+      reset();
+      setToken(data.token);
+
+      this.setState({
+        status: {
+          success: true,
+        },
+      });
+
+      this.props.history.replace('/');
+    } catch (e) {
+      this.setState({
+        status: {
+          error: e,
+        },
+      });
+    }
+  }
+
+  handleOnSubmit = async body => {
+    await this.login(body);
   };
 
   render() {
-    const status = this.props.auth.getStatus('login');
+    const { status } = this.state;
     return (
       <PageCenter>
         <LogoTitle title="Login" />
@@ -51,3 +83,5 @@ export default class Login extends React.Component {
     );
   }
 }
+
+export default withRouter(Login);

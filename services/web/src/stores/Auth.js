@@ -12,33 +12,32 @@ export default class AuthStore extends BaseStore {
     return request({
       method: 'POST',
       path: '/1/auth/set-password',
-      body
+      body,
     })
-      .then((resp) => {
+      .then(resp => {
         appSession.reset();
         appSession.setToken(resp.data.token);
         status.success();
       })
-      .catch((err) => {
+      .catch(err => {
         status.error(err);
         return err;
       });
   }
 
-  @action
   login(body, statusKey) {
     const status = this.createStatus(statusKey);
     return request({
       method: 'POST',
       path: '/1/auth/login',
-      body: body
+      body: body,
     })
-      .then((resp) => {
+      .then(resp => {
         appSession.reset();
         appSession.setToken(resp.data.token);
         status.success();
       })
-      .catch((err) => {
+      .catch(err => {
         status.error(err);
         return err;
       });
@@ -52,15 +51,15 @@ export default class AuthStore extends BaseStore {
       request({
         method: 'POST',
         path: '/1/auth/accept-invite',
-        body: omit(body, ['acceptTerms', 'email'])
+        body: omit(body, ['acceptTerms', 'email']),
       })
-        .then((resp) => {
+        .then(resp => {
           appSession.reset();
           appSession.setToken(resp.data.token);
           status.success();
           resolve();
         })
-        .catch((err) => {
+        .catch(err => {
           status.error(err);
           reject(err);
         });
@@ -75,15 +74,15 @@ export default class AuthStore extends BaseStore {
       request({
         method: 'POST',
         path: '/1/auth/register',
-        body
+        body,
       })
-        .then((resp) => {
+        .then(resp => {
           appSession.reset();
           appSession.setToken(resp.data.token);
           status.success();
           resolve();
         })
-        .catch((err) => {
+        .catch(err => {
           status.error(err);
           reject(err);
         });

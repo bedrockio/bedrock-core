@@ -30,24 +30,10 @@ const App = () => (
     <Protected exact path="/settings" component={Settings} />
     <Protected exact path="/invites" component={Invites} />
     <Protected exact path="/users" component={Users} />
-    <Protected
-      exact
-      path="/docs/getting-started"
-      component={DocsGettingStarted}
-    />
+    <Protected exact path="/docs/getting-started" component={DocsGettingStarted} />
     <Route exact path="/logout" component={Logout} />
-    <AuthSwitchRoute
-      exact
-      path="/login"
-      loggedOut={Login}
-      loggedIn={() => <Redirect to="/" />}
-    />
-    <AuthSwitchRoute
-      exact
-      path="/signup"
-      loggedOut={Signup}
-      loggedIn={() => <Redirect to="/" />}
-    />
+    <AuthSwitchRoute exact path="/login" loggedOut={Login} loggedIn={() => <Redirect to="/" />} />
+    <AuthSwitchRoute exact path="/signup" loggedOut={Signup} loggedIn={() => <Redirect to="/" />} />
     <Route exact path="/accept-invite" component={AcceptInvite} />
     <Route exact path="/forgot-password" component={ForgotPassword} />
     <Route exact path="/reset-password" component={ResetPassword} />

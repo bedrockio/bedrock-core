@@ -7,7 +7,7 @@ export default async function request(options) {
   const { method = 'GET', path, params } = options;
   let { body } = options;
 
-  const token = options.token || appSession.token;
+  const token = options.token || window.localStorage.token;
 
   const headers = Object.assign(
     {

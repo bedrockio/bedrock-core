@@ -1,19 +1,21 @@
 import React from 'react';
-import { observer, inject } from 'mobx-react';
 import AppWrapper from 'components/AppWrapper';
+import { useHistory } from 'react-router-dom';
+import { useAppSession } from 'contexts/appSession';
 
-@inject('me')
-@observer
-export default class Home extends React.Component {
-  componentDidMount() {
-    this.props.history.replace('/shops');
-  }
-  render() {
-    return (
-      <AppWrapper>
-        Hello {this.props.me.user.name} ({this.props.me.user.email}) from
-        dashboard
-      </AppWrapper>
-    );
-  }
-}
+const Dashboard = () => {
+  const history = useHistory();
+  const { user } = useAppSession();
+
+  React.useEffect(() => {
+    history.push('/shops');
+  }, []);
+
+  return (
+    <AppWrapper>
+      Hello {user.name} ({user.email}) from dashboard
+    </AppWrapper>
+  );
+};
+
+export default Dashboard;

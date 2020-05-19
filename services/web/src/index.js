@@ -6,6 +6,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 
+import AppSession from 'contexts/appSession';
+
 import { Provider } from 'mobx-react';
 import { Router } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
@@ -19,7 +21,7 @@ import stores from './stores';
 import generatedTheme from './theme/theme.generated.json';
 
 configure({
-  enforceActions: 'always'
+  enforceActions: 'always',
 });
 
 if (SENTRY_DSN && window.Sentry) {
@@ -32,9 +34,11 @@ const history = syncHistoryWithStore(createBrowserHistory(), routing);
 const Wrapper = () => (
   <Provider routing={routing} {...stores}>
     <ThemeProvider theme={generatedTheme}>
-      <Router history={history}>
-        <App />
-      </Router>
+      <AppSession>
+        <Router history={history}>
+          <App />
+        </Router>
+      </AppSession>
     </ThemeProvider>
   </Provider>
 );
