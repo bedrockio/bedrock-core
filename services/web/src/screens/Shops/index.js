@@ -8,7 +8,16 @@ import inject from 'stores/inject';
 import AppWrapper from 'components/AppWrapper';
 import HelpTip from 'components/HelpTip';
 import EditShop from 'components/modals/EditShop';
+import Filters from 'components/modals/Filters';
 import { SearchProvider } from 'components/data';
+
+import { getData } from 'country-list';
+
+const countries = getData().map(({ code, name }) => ({
+  value: code,
+  text: name,
+  key: code
+}));
 
 @inject('shops')
 export default class Shops extends React.Component {
@@ -21,17 +30,30 @@ export default class Shops extends React.Component {
     return (
       <AppWrapper>
         <SearchProvider onDataNeeded={this.onDataNeeded}>
-          {({ items, getSorted, setSort, reload }) => {
+          {({ items, getSorted, setSort, filters, setFilters, reload }) => {
             return (
               <Container>
-                <Header as="h2">
-                  Shops
+                <div style={{float: 'right', marginTop: '-5px'}}>
+                  <Filters
+                    onSave={setFilters}
+                    filters={filters}
+                    fields={[
+                      {
+                        text: 'Country',
+                        name: 'country',
+                        options: countries,
+                      }
+                    ]}
+                  />
                   <EditShop
                     trigger={
-                      <Button primary floated="right" style={{ marginTop: '-5px' }} content="New Shop" icon="plus" />
+                      <Button primary content="New Shop" icon="plus" />
                     }
                     onSave={reload}
                   />
+                </div>
+                <Header as="h2">
+                  Shops
                 </Header>
                 {items.length === 0 ? (
                   <Message>No shops created yet</Message>

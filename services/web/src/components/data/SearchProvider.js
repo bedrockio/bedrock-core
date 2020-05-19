@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { pickBy } from 'lodash';
 import { Loader, Container, Message } from 'semantic-ui-react';
 import Pagination from 'components/Pagination';
 
@@ -14,6 +15,7 @@ export default class SearchProvider extends React.Component {
       meta: {
         total: 0,
       },
+      filters: props.filters,
       limit: props.limit,
       page: props.page,
       sort: props.sort,
@@ -25,8 +27,10 @@ export default class SearchProvider extends React.Component {
   }
 
   componentDidUpdate(lastProps, lastState) {
-    const { page, sort } = this.state;
-    if (page !== lastState.page || sort !== lastState.sort) {
+    const { page, sort, filters } = this.state;
+    if (page !== lastState.page
+     || sort !== lastState.sort
+     || filters !== lastState.filters) {
       this.fetch();
     }
   }
@@ -47,11 +51,12 @@ export default class SearchProvider extends React.Component {
       loading: true,
     });
     try {
-      const { page, limit, sort } = this.state;
+      const { page, limit, sort, filters } = this.state;
       const { data, meta } = await this.props.onDataNeeded({
         page,
         limit,
         sort,
+        ...filters,
       });
       this.setState({
         loading: false,
@@ -89,6 +94,12 @@ export default class SearchProvider extends React.Component {
     });
   };
 
+  setFilters = (filters) => {
+    this.setState({
+      filters: pickBy(filters),
+    });
+  }
+
   render() {
     const { loader } = this.props;
     const { loading } = this.state;
@@ -103,6 +114,7 @@ export default class SearchProvider extends React.Component {
           reload: this.fetch,
           setSort: this.setSort,
           getSorted: this.getSorted,
+          setFilters: this.setFilters,
         })}
         {this.renderPagination()}
       </div>

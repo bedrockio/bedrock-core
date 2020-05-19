@@ -6,6 +6,7 @@ import { Confirm } from 'components/Semantic';
 import AppWrapper from 'components/AppWrapper';
 import HelpTip from 'components/HelpTip';
 import EditUser from 'components/modals/EditUser';
+import Filters from 'components/modals/Filters';
 import { SearchProvider } from 'components/data';
 
 import {
@@ -13,7 +14,7 @@ import {
   Header,
   Table,
   Message,
-  Button
+  Button,
 } from 'semantic-ui-react';
 
 @inject('users')
@@ -27,23 +28,43 @@ export default class Users extends React.Component {
     return (
       <AppWrapper>
         <SearchProvider onDataNeeded={this.onDataNeeded}>
-          {({ items, getSorted, setSort, reload }) => {
+          {({ items, getSorted, setSort, filters, setFilters, reload }) => {
             return (
               <Container>
-                <Header as="h2">
-                  Users
+                <div style={{float: 'right', marginTop: '-5px'}}>
+                  <Filters
+                    onSave={setFilters}
+                    filters={filters}
+                    fields={[
+                      {
+                        text: 'Role',
+                        name: 'role',
+                        options: [
+                          {
+                            text: 'User',
+                            value: 'user',
+                          },
+                          {
+                            text: 'Admin',
+                            value: 'admin',
+                          }
+                        ]
+                      }
+                    ]}
+                  />
                   <EditUser
                     trigger={
                       <Button
                         primary
-                        floated="right"
-                        style={{ marginTop: '-5px' }}
                         content="New User"
                         icon="plus"
                       />
                     }
                     onSave={reload}
                   />
+                </div>
+                <Header as="h2">
+                  Users
                 </Header>
                 {items.length === 0 ? (
                   <Message>No users added yet</Message>
