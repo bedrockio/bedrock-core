@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Container, Header, Table, Button, Message } from 'semantic-ui-react';
-import { formatDate } from 'utils/date';
+import { formatDateTime } from 'utils/date';
 import { Confirm } from 'components/Semantic';
 import inject from 'stores/inject';
 
@@ -58,7 +58,7 @@ export default class Shops extends React.Component {
                               <Link to={`/shops/${item.id}`}>{item.name}</Link>
                             </Table.Cell>
                             <Table.Cell>{item.description}</Table.Cell>
-                            <Table.Cell>{formatDate(item.createdAt)}</Table.Cell>
+                            <Table.Cell>{formatDateTime(item.createdAt)}</Table.Cell>
                             <Table.Cell textAlign="center">
                               <EditShop
                                 shop={item}

@@ -2,6 +2,7 @@ import React from 'react';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import 'react-day-picker/lib/style.css';
 import { Form, Label, Input } from 'semantic-ui-react';
+import { formatDate } from 'utils/date';
 
 const dateToState = (date) => {
   return {
@@ -44,6 +45,7 @@ export default class DateTime extends React.Component {
     const dateString = stateToDate(newState).toISOString();
     this.props.onChange(dateString);
   }
+
   setHours(hoursStr) {
     const { date, minutes } = this.state;
     const newState = {
@@ -55,6 +57,7 @@ export default class DateTime extends React.Component {
     const dateString = stateToDate(newState).toISOString();
     this.props.onChange(dateString);
   }
+
   setMinutes(minutesStr) {
     const { date, hours } = this.state;
     const newState = {
@@ -66,6 +69,7 @@ export default class DateTime extends React.Component {
     const dateString = stateToDate(newState).toISOString();
     this.props.onChange(dateString);
   }
+
   render() {
     const { required, label, includeTime = true } = this.props;
     const { date, hours, minutes } = this.state;
@@ -76,6 +80,7 @@ export default class DateTime extends React.Component {
 
         <DayPickerInput
           value={date}
+          formatDate={formatDate}
           dayPickerProps={{ selectedDays: date }}
           style={{
             width: '140px',

@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatDate } from 'utils/date';
+import { formatDateTime } from 'utils/date';
 import inject from 'stores/inject';
 
 import AppWrapper from 'components/AppWrapper';
@@ -80,24 +80,24 @@ export default class Home extends React.Component {
                               </Table.Cell>
                               <Table.Cell collapsing>{item.status}</Table.Cell>
                               <Table.Cell collapsing>
-                                {formatDate(item.createdAt)}
+                                {formatDateTime(item.createdAt)}
                               </Table.Cell>
                               <Table.Cell textAlign="center">
-                                <LoadButton
-                                  basic
-                                  icon="trash"
-                                  title="Delete"
-                                  onClick={async () => {
-                                    await this.context.invites.delete(item);
-                                    reload();
-                                  }}
-                                />
                                 <LoadButton
                                   basic
                                   icon="mail"
                                   title="Resend Invite"
                                   onClick={async () => {
                                     await this.context.invites.resend(item);
+                                    reload();
+                                  }}
+                                />
+                                <LoadButton
+                                  basic
+                                  icon="trash"
+                                  title="Delete"
+                                  onClick={async () => {
+                                    await this.context.invites.delete(item);
                                     reload();
                                   }}
                                 />

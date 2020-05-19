@@ -1,25 +1,18 @@
 import React from 'react';
-import { Form, Message, Modal, Button } from 'semantic-ui-react';
+import { Form } from 'semantic-ui-react';
 import { request } from 'utils/api';
 import inject from 'stores/inject';
 import UploadsField from 'components/form-fields/Uploads';
 import CountriesField from 'components/form-fields/Countries';
-import AutoFocus from 'components/AutoFocus';
 import SearchDropDown from 'components/SearchDropdown';
+import EditModal from './EditModal';
 
 @inject('shops')
 export default class EditShop extends React.Component {
 
-  static defaultProps = {
-    onSave: () => {},
-  };
-
   constructor(props) {
     super(props);
     this.state = {
-      open: false,
-      loading: false,
-      touched: false,
       shop: props.shop || {},
     };
   }
@@ -28,24 +21,7 @@ export default class EditShop extends React.Component {
     return !!this.props.shop;
   }
 
-  onChange = (evt) => {
-    const { name, value } = evt.target;
-    this.setField(name, value);
-  }
-
-  onCountryChange = (code) => {
-    this.setField('country', code);
-  }
-
-  onCategoryChange = (e, { value }) => {
-    this.setField('categories', value);
-  };
-
-  onImagesChange = (value) => {
-    this.setField('images', value);
-  }
-
-  setField(name, value) {
+  setShopField(name, value) {
     this.setState({
       shop: {
         ...this.state.shop,
@@ -56,31 +32,10 @@ export default class EditShop extends React.Component {
 
   onSubmit = async () => {
     const { shop } = this.state;
-
-    try {
-      this.setState({
-        loading: true,
-        touched: true,
-      });
-
-      if (this.isUpdate()) {
-        await this.context.shops.update(shop);
-      } else {
-        await this.context.shops.create(shop);
-      }
-
-      this.setState({
-        open: false,
-        loading: false,
-        touched: false,
-        shop: {},
-      });
-      this.props.onSave();
-    } catch (error) {
-      this.setState({
-        error,
-        loading: false,
-      });
+    if (this.isUpdate()) {
+      await this.context.shops.update(shop);
+    } else {
+      await this.context.shops.create(shop);
     }
   };
 
@@ -95,81 +50,55 @@ export default class EditShop extends React.Component {
   };
 
   render() {
-    const { trigger } = this.props;
-    const { open, shop, touched, loading, error } = this.state;
-
+    const { trigger, onSave } = this.props;
+    const { shop } = this.state;
     return (
-      <Modal
-        closeIcon
-        onClose={() =>
-          this.setState({
-            open: false,
-            touched: false,
-          })
-        }
-        onOpen={() => this.setState({ open: true })}
-        open={open}
-        trigger={trigger}>
-        <Modal.Header>
-          {this.isUpdate() ? `Edit "${shop.name}"` : 'New Shop'}
-        </Modal.Header>
-        <Modal.Content>
-          <AutoFocus>
-            <Form error={touched && error} onSubmit={this.onSubmit}>
-              {error && <Message error content={error.message} />}
-              <Form.Input
-                name="name"
-                label="Name"
-                required
-                type="text"
-                value={shop.name || ''}
-                onChange={this.onChange}
-              />
-
-              <Form.TextArea
-                name="description"
-                label="Description"
-                type="text"
-                value={shop.description || ''}
-                onChange={this.onChange}
-              />
-              <CountriesField
-                label="Country"
-                name="country"
-                value={shop.country || 'US'}
-                onChange={this.onCountryChange}
-              />
-              <Form.Field>
-                <label>
-                  Categories
-                  <SearchDropDown
-                    multiple
-                    value={shop.categories || []}
-                    onChange={this.onCategoryChange}
-                    fetchData={this.fetchCategories}
-                    fluid
-                  />
-                </label>
-              </Form.Field>
-              <UploadsField
-                label="Images"
-                name="images"
-                value={shop.images || []}
-                onChange={this.onImagesChange}
-              />
-            </Form>
-          </AutoFocus>
-        </Modal.Content>
-        <Modal.Actions>
-          <Button
-            primary
-            loading={loading}
-            disabled={loading}
-            onClick={this.onSubmit}
-            content={this.isUpdate() ? 'Update' : 'Create'}
-          />
-        </Modal.Actions>
-      </Modal>
+      <EditModal
+        onSave={onSave}
+        trigger={trigger}
+        header={this.isUpdate() ? `Edit "${shop.name}"` : 'New Shop'}
+        submitText={this.isUpdate() ? 'Update' : 'Create'}
+        onSubmit={this.onSubmit}>
+        <Form.Input
+          name="name"
+          label="Name"
+          required
+          type="text"
+          value={shop.name || ''}
+          onChange={(e, { value }) => this.setShopField('name', value)}
+        />
+        <Form.TextArea
+          name="description"
+          label="Description"
+          type="text"
+          value={shop.description || ''}
+          onChange={(e, { value }) => this.setShopField('description', value)}
+        />
+        <CountriesField
+          label="Country"
+          name="country"
+          value={shop.country || 'US'}
+          onChange={(code) => this.setShopField('country', code)}
+        />
+        <Form.Field>
+          <label>
+            Categories
+            <SearchDropDown
+              multiple
+              value={shop.categories || []}
+              onChange={(e, { value }) => this.setShopField('categories', value)}
+              fetchData={this.fetchCategories}
+              fluid
+            />
+          </label>
+        </Form.Field>
+        <UploadsField
+          label="Images"
+          name="images"
+          value={shop.images || []}
+          onChange={(value) => this.setShopField('images', value)}
+        />
+      </EditModal>
     );
   }
 }

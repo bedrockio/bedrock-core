@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatDate } from 'utils/date';
+import { formatDateTime } from 'utils/date';
 import inject from 'stores/inject';
 
 import { Confirm } from 'components/Semantic';
@@ -94,7 +94,7 @@ export default class Users extends React.Component {
                                   .map((r) => r.slice(0, 1).toUpperCase() + r.slice(1))
                                   .join(', ')}
                                 </Table.Cell>
-                                <Table.Cell>{formatDate(item.createdAt)}</Table.Cell>
+                                <Table.Cell>{formatDateTime(item.createdAt)}</Table.Cell>
                                 <Table.Cell textAlign="center">
                                   <EditUser
                                     user={item}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Header, Table, Image } from 'semantic-ui-react';
 import { urlForUpload } from 'utils/uploads';
-import { formatDate } from 'utils/date';
+import { formatDateTime } from 'utils/date';
 
 export default class ShopOverview extends React.Component {
   render() {
@@ -22,13 +22,13 @@ export default class ShopOverview extends React.Component {
             <Table.Row>
               <Table.Cell>Created At</Table.Cell>
               <Table.Cell>
-                {formatDate(shop.createdAt)}
+                {formatDateTime(shop.createdAt)}
               </Table.Cell>
             </Table.Row>
             <Table.Row>
               <Table.Cell>Updated At</Table.Cell>
               <Table.Cell>
-                {formatDate(shop.updatedAt)}
+                {formatDateTime(shop.updatedAt)}
               </Table.Cell>
             </Table.Row>
           </Table.Body>

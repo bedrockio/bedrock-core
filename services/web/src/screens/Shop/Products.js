@@ -3,7 +3,7 @@ import { Container, Table, Message, Button, Header } from 'semantic-ui-react';
 import inject from 'stores/inject';
 
 import { Confirm } from 'components/Semantic';
-import { formatDate } from 'utils/date';
+import { formatDateTime } from 'utils/date';
 import { SearchProvider } from 'components/data';
 import HelpTip from 'components/HelpTip';
 import EditProduct from 'components/modals/EditProduct';
@@ -16,6 +16,7 @@ export default class ShopProducts extends React.Component {
   };
 
   render() {
+    const { shop } = this.props;
     return (
       <SearchProvider onDataNeeded={this.onDataNeeded}>
         {({ items, getSorted, setSort, reload }) => {
@@ -24,6 +25,7 @@ export default class ShopProducts extends React.Component {
               <Header as="h2">
                 Products
                 <EditProduct
+                  shopId={shop.id}
                   onSave={reload}
                   trigger={
                     <Button primary floated="right" style={{ marginTop: '-5px' }} content="Add Product" icon="plus" />
@@ -56,9 +58,10 @@ export default class ShopProducts extends React.Component {
                         <Table.Row key={item.id}>
                           <Table.Cell>{item.name}</Table.Cell>
                           <Table.Cell>{item.description}</Table.Cell>
-                          <Table.Cell>{formatDate(item.createdAt)}</Table.Cell>
+                          <Table.Cell>{formatDateTime(item.createdAt)}</Table.Cell>
                           <Table.Cell textAlign="center">
                             <EditProduct
+                              shopId={shop.id}
                               product={item}
                               onSave={reload}
                               trigger={<Button style={{ marginLeft: '20px' }} basic icon="edit" />}
