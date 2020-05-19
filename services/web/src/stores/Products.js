@@ -59,7 +59,7 @@ export default class ProductsStore extends BaseStore {
   @action
   fetchItems(
     {
-      shopId = this.shopId,
+      shop = this.shopId,
       limit = this.limit,
       skip = (this.page - 1) * this.limit
     } = {},
@@ -73,7 +73,7 @@ export default class ProductsStore extends BaseStore {
       body: {
         limit,
         skip,
-        shopId,
+        shop,
         sort: this.sort
       }
     })
@@ -96,10 +96,14 @@ export default class ProductsStore extends BaseStore {
   @action
   create(body, statusKey = 'create') {
     const status = this.createStatus(statusKey);
+    const { shopId, ...rest } = body;
     return request({
       method: 'POST',
       path: '/1/products',
-      body
+      body: {
+        shop: shopId,
+        ...rest,
+      }
     })
       .then(({ data }) => {
         const item = this.parseItem(data);
@@ -118,11 +122,14 @@ export default class ProductsStore extends BaseStore {
   @action
   update(body, statusKey = 'update') {
     const status = this.createStatus(statusKey);
-    const { id, ...rest } = body;
+    const { id, shop, ...rest } = body;
     return request({
       method: 'PATCH',
       path: `/1/products/${id}`,
-      body: rest
+      body: {
+        shop: shop.id,
+        ...rest
+      }
     })
       .then(({ data }) => {
         const item = this.parseItem(data);

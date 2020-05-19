@@ -19,6 +19,31 @@ describe('/1/users', () => {
       expect(response.status).toBe(200);
       expect(response.body.data.email).toBe(user.email);
     });
+
+    it('it should expose id getter', async () => {
+      const user = await createUser();
+      const response = await request('GET', '/1/users/me', {}, { user });
+      expect(response.status).toBe(200);
+      expect(response.body.data.id).toBe(user.id);
+    });
+
+    it('it should not expose _id or __v', async () => {
+      const user = await createUser();
+      const response = await request('GET', '/1/users/me', {}, { user });
+      expect(response.status).toBe(200);
+      expect(response.body.data._id).toBeUndefined();
+      expect(response.body.data.__v).toBeUndefined();
+    });
+
+    it('it should not expose _password or hashedPassword', async () => {
+      const user = await createUser({
+        password: 'fake password',
+      });
+      const response = await request('GET', '/1/users/me', {}, { user });
+      expect(response.status).toBe(200);
+      expect(response.body.data._password).toBeUndefined();
+      expect(response.body.data.hashedPassword).toBeUndefined();
+    });
   });
 
   describe('PATCH /me', () => {

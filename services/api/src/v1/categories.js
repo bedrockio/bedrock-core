@@ -45,7 +45,7 @@ router
 
       const total = await Category.countDocuments(query);
       ctx.body = {
-        data: data.map((i) => i.toResource()),
+        data,
         meta: {
           total,
           skip,
