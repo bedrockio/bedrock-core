@@ -1,22 +1,41 @@
 #!/bin/bash
+source ./deployment/scripts/parse_opts
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 cd $SCRIPTPATH; cd ../../
-ENVIRONMENT=$1
-SERVICES=$(deployment/scripts/services $2)
+
+ENVIRONMENT=$(parse_arg $1)
+SERVICE=$(parse_arg $2)
+SUB_SERVICE=$(parse_arg $3)
 
 if [ "$ENVIRONMENT" == "" ]; then
-  echo "Usage: $0 <environment>"
-  exit 1
+cat <<-EOM
+  Usage: deploy_info <environment> [service]
+
+  Display deployment author, date, and git tag or ref.
+EOM
+exit 1
 fi
+
+if [ "$SERVICE" == "" ]; then
+  SERVICES=$(deployment/scripts/services $2)
+else
+  SERVICES="$SERVICE"
+fi
+
 
 ./deployment/scripts/check_gcloud_config $ENVIRONMENT 1
 
 function deploy_info() {
-  c1=$(get_path "Author" "author")
-  c2=$(get_path "Date" "date")
-  c3=$(get_path "Branch" "branch")
-  c4=$(get_path "Ref" "git")
-  info=$(kubectl get deployment $1-deployment -o jsonpath="$c1|$c2|$c3|$c4" --ignore-not-found)
+  c1=$(get_field "author" "Author")
+  c2=$(get_field "date" "Date")
+  c3=$(get_field "branch" "Branch")
+  c4=$(get_field "git" "Ref")
+  if [ "$2" != "" ]; then
+    name="$1-$2"
+  else
+    name=$1
+  fi
+  info=$(kubectl get deployment $name-deployment -o jsonpath="$c1|$c2|$c3|$c4" --ignore-not-found)
 
   if [ "$info" != "" ]; then
     echo "------- Deploy Details ($1) -------"
@@ -29,11 +48,11 @@ function deploy_info() {
 
 }
 
-function get_path() {
-  echo "^$1: {.spec.template.metadata.annotations.$2}{'\n'}"
+function get_field() {
+  echo "^$2: {.spec.template.metadata.annotations.$1}{'\n'}"
 }
 
 echo ""
 for service in $SERVICES; do
-  deploy_info $service
+  deploy_info $service $SUB_SERVICE
 done
