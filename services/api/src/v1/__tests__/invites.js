@@ -64,7 +64,7 @@ describe('/1/invites', () => {
         },
         { user }
       );
-      expect(response.status).toBe(409);
+      expect(response.status).toBe(400);
     });
   });
 
