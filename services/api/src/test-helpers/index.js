@@ -13,12 +13,10 @@ exports.setupDb = () =>
   new Promise((resolve) => {
     mongoServer.getConnectionString().then((mongoUri) => {
       const mongooseOpts = {
-        autoReconnect: true,
-        reconnectTries: Number.MAX_VALUE,
-        reconnectInterval: 1000,
         useNewUrlParser: true,
         useCreateIndex: true,
-        useFindAndModify: false
+        useFindAndModify: false,
+        useUnifiedTopology: true,
       };
 
       mongoose.connect(mongoUri, mongooseOpts);

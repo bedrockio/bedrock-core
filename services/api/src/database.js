@@ -8,10 +8,7 @@ module.exports = async () => {
     useFindAndModify: false,
     useNewUrlParser: true,
     useCreateIndex: true,
-    // sets how many times to try reconnecting
-    reconnectTries: Number.MAX_VALUE,
-    // sets the delay between every retry (milliseconds)
-    reconnectInterval: 2000
+    useUnifiedTopology: true,
   });
   const db = mongoose.connection;
   db.on('error', console.error.bind(console, 'connection error:'));
