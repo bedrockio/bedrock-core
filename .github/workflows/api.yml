@@ -5,7 +5,7 @@ on:
       - services/api/*
 
 jobs:
-  tests:
+  test:
     runs-on: ubuntu-latest
     env:
       working_directory: ./services/api
@@ -21,13 +21,16 @@ jobs:
         id: yarn-cache
         run: echo "::set-output name=dir::$(yarn cache dir)"
         working-directory: ${{ env.working_directory }}
-      - run: yarn install
+      - name: yarn install
+        run: yarn install
         working-directory: ${{ env.working_directory }}
-      - uses: actions/cache@v1
+      - name: Set cache
+        uses: actions/cache@v1
         with:
           path: ${{ steps.yarn-cache.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-      - run: yarn test
+      - name: Test
+        run: yarn test
         working-directory: ${{ env.working_directory }}
