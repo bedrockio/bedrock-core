@@ -2,13 +2,15 @@ import React from 'react';
 import { observer, inject } from 'mobx-react';
 import { Switch, Route, Link } from 'react-router-dom';
 import AppWrapper from 'components/AppWrapper';
-
 import { Container, Divider, Breadcrumb, Button } from 'semantic-ui-react';
-import Menu from './Menu';
+
+import { Layout } from 'components/Layout';
 import PageLoader from 'components/PageLoader';
 import Overview from './Overview';
 import Products from './Products';
 import EditShop from 'components/modals/EditShop';
+
+import Menu from './Menu';
 
 @inject('shops')
 @observer
@@ -28,31 +30,31 @@ export default class Shop extends React.Component {
     return (
       <AppWrapper>
         <Container>
-          <EditShop
-            initialValues={item}
-            trigger={
-              <Button
-                floated="right"
-                style={{ marginTop: '-5px' }}
-                primary
-                icon="setting"
-                content="Settings"
-              />
-            }
-          />
-          <Breadcrumb size="big">
-            <Breadcrumb.Section link as={Link} to="/">
-              Home
-            </Breadcrumb.Section>
-            <Breadcrumb.Divider icon="right chevron" />
-            <Breadcrumb.Section link as={Link} to="/shops">
-              Shops
-            </Breadcrumb.Section>
-            <Breadcrumb.Divider icon="right chevron" />
-            <Breadcrumb.Section active>
-              {item ? item.name : 'Loading...'}
-            </Breadcrumb.Section>
-          </Breadcrumb>
+          <Layout horizontal center spread>
+            <Breadcrumb size="big">
+              <Breadcrumb.Section link as={Link} to="/">
+                Home
+              </Breadcrumb.Section>
+              <Breadcrumb.Divider icon="right chevron" />
+              <Breadcrumb.Section link as={Link} to="/shops">
+                Shops
+              </Breadcrumb.Section>
+              <Breadcrumb.Divider icon="right chevron" />
+              <Breadcrumb.Section active>
+                {item ? item.name : 'Loading...'}
+              </Breadcrumb.Section>
+            </Breadcrumb>
+            <EditShop
+              initialValues={item}
+              trigger={
+                <Button
+                  primary
+                  icon="setting"
+                  content="Settings"
+                />
+              }
+            />
+          </Layout>
         </Container>
         <Divider hidden />
         <Menu itemId={this.state.itemId} />

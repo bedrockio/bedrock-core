@@ -3,6 +3,7 @@ import { observer, inject } from 'mobx-react';
 import { DateTime } from 'luxon';
 import AppWrapper from 'components/AppWrapper';
 import Pagination from 'components/Pagination';
+import { Layout } from 'components/Layout';
 
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
@@ -82,18 +83,18 @@ export default class Shops extends React.Component {
       <AppWrapper>
         <Container>
           <Header as="h2">
-            Shops
-            <EditShop
-              trigger={
-                <Button
-                  primary
-                  floated="right"
-                  style={{ marginTop: '-5px' }}
-                  content="New Shop"
-                  icon="plus"
-                />
-              }
-            />
+            <Layout horizontal center spread>
+              Shops
+              <EditShop
+                trigger={
+                  <Button
+                    primary
+                    content="New Shop"
+                    icon="plus"
+                  />
+                }
+              />
+            </Layout>
           </Header>
           <div className="list">
             {listStatus.success && !shops.items.length && (
