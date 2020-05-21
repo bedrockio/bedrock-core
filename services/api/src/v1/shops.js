@@ -29,7 +29,7 @@ const patchSchema = schema.append({
 router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
-  .param('shop', async (id, ctx, next) => {
+  .param('shopId', async (id, ctx, next) => {
     const shop = await Shop.findById(id).populate('images');
     ctx.state.shop = shop;
     if (!shop) {
@@ -88,12 +88,12 @@ router
       };
     }
   )
-  .delete('/:shop', async (ctx) => {
+  .delete('/:shopId', async (ctx) => {
     await ctx.state.shop.delete();
     ctx.status = 204;
   })
   .patch(
-    '/:shop',
+    '/:shopId',
     validate({
       body: patchSchema
     }),
@@ -107,7 +107,7 @@ router
       };
     }
   )
-  .get('/:shop', async (ctx) => {
+  .get('/:shopId', async (ctx) => {
     const shop = ctx.state.shop;
     ctx.body = {
       data: shop
