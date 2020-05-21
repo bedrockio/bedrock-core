@@ -2,7 +2,7 @@ const Router = require('koa-router');
 const Joi = require('@hapi/joi');
 const validate = require('../middlewares/validate');
 const { authenticate, fetchUser, checkUserRole } = require('../middlewares/authenticate');
-const { NotFoundError, ConflictError, GoneError } = require('../lib/errors');
+const { NotFoundError, BadRequestError, GoneError } = require('../lib/errors');
 const Invite = require('../models/invite');
 const User = require('../models/user');
 
@@ -83,7 +83,7 @@ router
 
       for (let email of [...new Set(emails)]) {
         if ((await User.countDocuments({ email })) > 0) {
-          throw new ConflictError(`${email} is already a user.`);
+          throw new BadRequestError(`${email} is already a user.`);
         }
         const invite = await Invite.findOneAndUpdate(
           {
