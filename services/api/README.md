@@ -1,6 +1,6 @@
 # Bedrock API
 
-![Run Tests](https://github.com/bedrockio/bedrock-core/workflows/Run%20Tests/badge.svg)
+![Run Tests](https://github.com/bedrockio/bedrock-core/workflows/Tests/badge.svg)
 
 ## Directory Structure
 
