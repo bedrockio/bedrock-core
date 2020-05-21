@@ -25,5 +25,5 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: yarn install
       working-directory: ${{ env.working_directory }}
-    - run: yarn test
+    - run: yarn test --silent
       working-directory: ${{ env.working_directory }}
