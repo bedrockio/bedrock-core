@@ -1,5 +1,7 @@
 # Bedrock Web
 
+![Run Tests](https://github.com/bedrockio/bedrock-core/workflows/Run%20Tests/badge.svg)
+
 ## Frameworks Used
 
 - [Babel](https://babeljs.io/)
