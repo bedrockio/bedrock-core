@@ -16,7 +16,7 @@ function getToken(invite) {
 }
 
 router
-  .param('invite', async (id, ctx, next) => {
+  .param('inviteId', async (id, ctx, next) => {
     const invite = await Invite.findById(id);
     ctx.state.invite = invite;
 
@@ -59,7 +59,7 @@ router
       const total = await await Invite.countDocuments(query);
 
       ctx.body = {
-        data: invites.map((i) => i.toResource()),
+        data: invites,
         meta: {
           total,
           skip,
@@ -100,12 +100,12 @@ router
       ctx.status = 204;
     }
   )
-  .post('/:invite/resend', async (ctx) => {
+  .post('/:inviteId/resend', async (ctx) => {
     const { invite, authUser } = ctx.state;
     await sendInvite({ email: invite.email, sender: authUser, token: getToken(invite) });
     ctx.status = 204;
   })
-  .delete('/:invite', async (ctx) => {
+  .delete('/:inviteId', async (ctx) => {
     const { invite } = ctx.state;
     await invite.delete();
     ctx.status = 204;

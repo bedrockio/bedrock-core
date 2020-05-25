@@ -7,7 +7,7 @@ import React from 'react';
 import AuthSwitchRoute from 'components/routes/AuthSwitch';
 import Protected from 'components/routes/Protected';
 
-import DocsGettingStarted from './screens/Docs/GettingStarted';
+import Docs from './screens/Docs';
 import Dashboard from './screens/Dashboard';
 import Settings from './screens/Settings';
 import Invites from './screens/Invites';
@@ -30,24 +30,11 @@ const App = () => (
     <Protected exact path="/settings" component={Settings} />
     <Protected exact path="/invites" component={Invites} />
     <Protected exact path="/users" component={Users} />
-    <Protected
-      exact
-      path="/docs/getting-started"
-      component={DocsGettingStarted}
-    />
+    <Protected exact path="/docs" component={Docs} />
+    <Protected exact path="/docs/:id" component={Docs} />
     <Route exact path="/logout" component={Logout} />
-    <AuthSwitchRoute
-      exact
-      path="/login"
-      loggedOut={Login}
-      loggedIn={() => <Redirect to="/" />}
-    />
-    <AuthSwitchRoute
-      exact
-      path="/signup"
-      loggedOut={Signup}
-      loggedIn={() => <Redirect to="/" />}
-    />
+    <AuthSwitchRoute exact path="/login" loggedOut={Login} loggedIn={() => <Redirect to="/" />} />
+    <AuthSwitchRoute exact path="/signup" loggedOut={Signup} loggedIn={() => <Redirect to="/" />} />
     <Route exact path="/accept-invite" component={AcceptInvite} />
     <Route exact path="/forgot-password" component={ForgotPassword} />
     <Route exact path="/reset-password" component={ResetPassword} />

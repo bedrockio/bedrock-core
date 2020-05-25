@@ -54,7 +54,7 @@ const createUsers = async () => {
   });
 
   for (let i = 0; i < 15; i++) {
-    await Product.create({ name: `Product ${i + 1}`, shopId: shop.id });
+    await Product.create({ name: `Product ${i + 1}`, shop });
   }
   return true;
 };

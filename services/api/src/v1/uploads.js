@@ -8,7 +8,7 @@ const { storeUploadedFile } = require('../lib/uploads');
 const router = new Router();
 
 router
-  .param('upload', async (id, ctx, next) => {
+  .param('uploadId', async (id, ctx, next) => {
     const upload = await Upload.findById(id);
     ctx.state.upload = upload;
     if (!upload) {
@@ -21,7 +21,7 @@ router
   .get('/:hash', async (ctx) => {
     const upload = await Upload.findOne({ hash: ctx.params.hash });
     ctx.body = {
-      data: upload.toResource()
+      data: upload
     };
   })
   .get('/:hash/image', async (ctx) => {
@@ -39,14 +39,19 @@ router
   .use(fetchUser)
   .post('/', async (ctx) => {
     const { authUser } = ctx.state;
-    const params = await storeUploadedFile(ctx.request.files.file);
-    params.ownerId = authUser.id;
-    const upload = await Upload.create(params);
+    const file = ctx.request.files.file;
+    const isArray = Array.isArray(file);
+    const files = isArray ? file : [file];
+    const uploads = await Promise.all(files.map(async (file) => {
+      const params = await storeUploadedFile(file);
+      params.ownerId = authUser.id;
+      return await Upload.create(params);
+    }));
     ctx.body = {
-      data: upload.toResource()
+      data: isArray ? uploads : uploads[0]
     };
   })
-  .delete('/:upload', async (ctx) => {
+  .delete('/:uploadId', async (ctx) => {
     const { upload } = ctx.state;
     await upload.delete();
     ctx.status = 204;

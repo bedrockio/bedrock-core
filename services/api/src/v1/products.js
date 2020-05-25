@@ -9,7 +9,7 @@ const router = new Router();
 
 const productSchema = Joi.object({
   name: Joi.string().required(),
-  shopId: Joi.string().required(),
+  shop: Joi.string().required(),
   description: Joi.string(),
   expiresAt: Joi.string(),
   priceUsd: Joi.number()
@@ -21,7 +21,7 @@ const productSchema = Joi.object({
 
 const productPatchSchema = productSchema.append({
   name: Joi.string().optional(),
-  shopId: Joi.string().optional(),
+  shop: Joi.string().optional(),
   id: Joi.string().strip(),
   createdAt: Joi.date().strip(),
   updatedAt: Joi.date().strip(),
@@ -31,7 +31,7 @@ const productPatchSchema = productSchema.append({
 router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
-  .param('product', async (id, ctx, next) => {
+  .param('productId', async (id, ctx, next) => {
     const product = await Product.findById(id);
     ctx.state.product = product;
     if (!product) {
@@ -53,17 +53,17 @@ router
           field: 'createdAt',
           order: 'desc'
         }),
-        shopId: Joi.string(),
+        shop: Joi.string(),
         limit: Joi.number()
           .positive()
           .default(50)
       })
     }),
     async (ctx) => {
-      const { sort, skip, limit, shopId } = ctx.request.body;
+      const { sort, skip, limit, shop } = ctx.request.body;
       const query = { deletedAt: { $exists: false } };
-      if (shopId) {
-        query.shopId = shopId;
+      if (shop) {
+        query.shop = shop;
       }
       const data = await Product.find(query)
         .sort({ [sort.field]: sort.order === 'desc' ? -1 : 1 })
@@ -72,7 +72,7 @@ router
 
       const total = await Product.countDocuments(query);
       ctx.body = {
-        data: data.map((i) => i.toResource()),
+        data,
         meta: {
           total,
           skip,
@@ -89,17 +89,17 @@ router
     async (ctx) => {
       const product = await Product.create(ctx.request.body);
       ctx.body = {
-        data: product.toResource()
+        data: product
       };
     }
   )
-  .delete('/:product', async (ctx) => {
+  .delete('/:productId', async (ctx) => {
     const product = ctx.state.product;
     await product.delete();
     ctx.status = 204;
   })
   .patch(
-    '/:product',
+    '/:productId',
     validate({
       body: productPatchSchema
     }),
@@ -108,14 +108,14 @@ router
       Object.assign(product, ctx.request.body);
       await product.save();
       ctx.body = {
-        data: product.toResource()
+        data: product
       };
     }
   )
-  .get('/:product', async (ctx) => {
+  .get('/:productId', async (ctx) => {
     const { product } = await ctx.state;
     ctx.body = {
-      data: product.toResource()
+      data: product
     };
   });
 

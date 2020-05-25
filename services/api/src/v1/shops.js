@@ -29,7 +29,7 @@ const patchSchema = schema.append({
 router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
-  .param('shop', async (id, ctx, next) => {
+  .param('shopId', async (id, ctx, next) => {
     const shop = await Shop.findById(id).populate('images');
     ctx.state.shop = shop;
     if (!shop) {
@@ -62,12 +62,11 @@ router
       const data = await Shop.find(query)
         .sort({ [sort.field]: sort.order === 'desc' ? -1 : 1 })
         .skip(skip)
-        .limit(limit)
-        .populate('images');
+        .limit(limit);
 
       const total = await await Shop.countDocuments(query);
       ctx.body = {
-        data: data.map((i) => i.toResource()),
+        data,
         meta: {
           total,
           skip,
@@ -85,16 +84,16 @@ router
       const shop = await Shop.create(ctx.request.body);
       await shop.populate('images').execPopulate();
       ctx.body = {
-        data: shop.toResource()
+        data: shop
       };
     }
   )
-  .delete('/:shop', async (ctx) => {
+  .delete('/:shopId', async (ctx) => {
     await ctx.state.shop.delete();
     ctx.status = 204;
   })
   .patch(
-    '/:shop',
+    '/:shopId',
     validate({
       body: patchSchema
     }),
@@ -104,14 +103,14 @@ router
       await shop.save();
       await shop.execPopulate();
       ctx.body = {
-        data: shop.toResource()
+        data: shop
       };
     }
   )
-  .get('/:shop', async (ctx) => {
+  .get('/:shopId', async (ctx) => {
     const shop = ctx.state.shop;
     ctx.body = {
-      data: shop.toResource()
+      data: shop
     };
   });
 
