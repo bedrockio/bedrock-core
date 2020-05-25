@@ -2,7 +2,7 @@ import React from 'react';
 import { observer, inject } from 'mobx-react';
 import { NavLink, Link } from 'react-router-dom';
 import { Container, Dropdown, Icon, Menu } from 'semantic-ui-react';
-import logoInverted from 'assets/logo.svg';
+import logoInverted from 'assets/icon.svg';
 
 @inject('me')
 @observer
@@ -15,11 +15,7 @@ export default class AppWrapper extends React.Component {
         <Menu inverted fixed="top">
           <Container>
             <Menu.Item as={Link} to="/">
-              <img
-                style={{ width: '30px' }}
-                className="logo"
-                src={`${logoInverted}`}
-              />
+              <img style={{ width: '30px' }} className="logo" src={`${logoInverted}`} />
             </Menu.Item>
             {user && (
               <React.Fragment>
@@ -63,9 +59,7 @@ export default class AppWrapper extends React.Component {
             )}
           </Container>
         </Menu>
-        <Container style={{ marginTop: '100px', paddingBottom: '100px' }}>
-          {this.props.children}
-        </Container>
+        <Container style={{ marginTop: '100px', paddingBottom: '100px' }}>{this.props.children}</Container>
       </div>
     );
   }
