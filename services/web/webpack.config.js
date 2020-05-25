@@ -80,7 +80,7 @@ module.exports = {
     ...getTemplatePlugins(),
     ...getOptionalPlugins(),
     new FaviconsWebpackPlugin({
-      logo: './src/assets/favicon.png',
+      logo: './src/assets/icon.svg',
     }),
   ],
 };
