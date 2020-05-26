@@ -7,7 +7,6 @@ import UploadsField from 'components/form-fields/Uploads';
 import CountriesField from 'components/form-fields/Countries';
 
 export default class EditShop extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -29,7 +28,7 @@ export default class EditShop extends React.Component {
       shop: {
         ...this.state.shop,
         [name]: value,
-      }
+      },
     });
   }
 
@@ -50,7 +49,7 @@ export default class EditShop extends React.Component {
         await request({
           method: 'POST',
           path: '/1/shops',
-          body: shop
+          body: shop,
         });
         this.setState({
           shop: {},
@@ -86,13 +85,12 @@ export default class EditShop extends React.Component {
     return (
       <Modal
         closeIcon
+        closeOnDimmerClick={false}
         onClose={() => this.setState({ open: false })}
         onOpen={() => this.setState({ open: true })}
         open={open}
         trigger={trigger}>
-        <Modal.Header>
-          {this.isUpdate() ? `Edit "${shop.name}"` : 'New Shop'}
-        </Modal.Header>
+        <Modal.Header>{this.isUpdate() ? `Edit "${shop.name}"` : 'New Shop'}</Modal.Header>
         <Modal.Content>
           <AutoFocus>
             <Form error={touched && (error || hasError)}>

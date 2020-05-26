@@ -5,7 +5,6 @@ import { emailRegexp } from 'utils/validate';
 import AutoFocus from 'components/AutoFocus';
 
 export default class InviteUser extends React.Component {
-
   state = {
     touched: false,
     validEmails: [],
@@ -48,8 +47,8 @@ export default class InviteUser extends React.Component {
         method: 'POST',
         path: '/1/invites',
         body: {
-          emails: validEmails
-        }
+          emails: validEmails,
+        },
       });
       this.setState({
         open: false,
@@ -73,23 +72,18 @@ export default class InviteUser extends React.Component {
     return (
       <Modal
         closeIcon
+        closeOnDimmerClick={false}
         onClose={() => this.setState({ open: false })}
         onOpen={() => this.setState({ open: true })}
         open={open}
         size="tiny"
         trigger={trigger}>
-        <Modal.Header>
-          Invite Users
-        </Modal.Header>
+        <Modal.Header>Invite Users</Modal.Header>
         <Modal.Content>
           <AutoFocus>
             <Form error={touched && !!error}>
               {error && <Message error content={error.message} />}
-              {touched && invalidEmails.length > 0 && (
-                <Message negative>
-                  Invalid: {invalidEmails.join(', ')}
-                </Message>
-              )}
+              {touched && invalidEmails.length > 0 && <Message negative>Invalid: {invalidEmails.join(', ')}</Message>}
               <Form.Field>
                 <label>Enter email address of the participant to invite</label>
                 <TextArea

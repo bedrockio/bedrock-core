@@ -5,7 +5,6 @@ import AutoFocus from 'components/AutoFocus';
 import DateTimeField from 'components/form-fields/DateTime';
 
 export default class EditProduct extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -61,7 +60,7 @@ export default class EditProduct extends React.Component {
         await request({
           method: 'POST',
           path: '/1/products',
-          body: product
+          body: product,
         });
         this.setState({
           product: {},
@@ -87,13 +86,12 @@ export default class EditProduct extends React.Component {
     return (
       <Modal
         closeIcon
+        closeOnDimmerClick={false}
         onClose={() => this.setState({ open: false })}
         onOpen={() => this.setState({ open: true })}
         open={open}
         trigger={trigger}>
-        <Modal.Header>
-          {this.isUpdate() ? `Edit "${product.name}"` : 'New Product'}
-        </Modal.Header>
+        <Modal.Header>{this.isUpdate() ? `Edit "${product.name}"` : 'New Product'}</Modal.Header>
         <Modal.Content>
           <AutoFocus>
             <Form error={touched && error}>
@@ -166,5 +164,4 @@ export default class EditProduct extends React.Component {
       </Modal>
     );
   }
-
 }

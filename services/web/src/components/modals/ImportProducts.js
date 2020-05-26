@@ -2,37 +2,30 @@ import React from 'react';
 import Dropzone from 'react-dropzone';
 import { request } from 'utils/api';
 
-import {
-  Modal,
-  Icon,
-  Progress,
-  Table,
-  Button,
-  Message
-} from 'semantic-ui-react';
+import { Modal, Icon, Progress, Table, Button, Message } from 'semantic-ui-react';
 import { processFile } from 'utils/csv';
 
 export const productsImportMapping = {
   name: {
     required: true,
     matches: ['name'],
-    exactMatches: ['name', 'Name']
+    exactMatches: ['name', 'Name'],
   },
   description: {
     required: false,
-    exactMatches: ['description', 'Description']
+    exactMatches: ['description', 'Description'],
   },
   expiresAt: {
     required: false,
     exactMatches: ['Expire Date'],
-    type: 'datetime'
+    type: 'datetime',
   },
   priceUsd: {
     required: true,
     exactMatches: ['Type', 'type'],
     defaultValue: 0,
-    type: 'europeanOrAmericanNumber'
-  }
+    type: 'europeanOrAmericanNumber',
+  },
 };
 
 async function batchCreate(objects, percentFn) {
@@ -44,9 +37,9 @@ async function batchCreate(objects, percentFn) {
       await request({
         method: 'POST',
         path: '/1/products',
-        body: object
+        body: object,
       });
-    } catch(err) {
+    } catch (err) {
       errors.push(err);
     }
     percentFn((i / objects.length) * 100);
@@ -61,13 +54,13 @@ const defaultState = {
   loading: false,
   items: null,
   mapping: null,
-  progressPercent: 0
+  progressPercent: 0,
 };
 
 export default class ImportProducts extends React.Component {
   state = {
     open: false,
-    ...defaultState
+    ...defaultState,
   };
 
   drop(acceptedFiles, rejectedFiles) {
@@ -92,9 +85,7 @@ export default class ImportProducts extends React.Component {
   commit() {
     const { step, items } = this.state;
     this.setState({ step: step + 1, loading: true });
-    batchCreate(items, (progressPercent) =>
-      this.setState({ progressPercent })
-    )
+    batchCreate(items, (progressPercent) => this.setState({ progressPercent }))
       .then((errors) => this.setState({ loading: false, errors }))
       .catch((error) => this.setState({ loading: false, error }));
   }
@@ -136,16 +127,11 @@ export default class ImportProducts extends React.Component {
       <div>
         {error && <Message error content={error.message} />}
         {loading ? (
-          <Progress
-            label="Importing Data"
-            percent={progressPercent}
-            indicating
-          />
+          <Progress label="Importing Data" percent={progressPercent} indicating />
         ) : errors && errors.length ? (
           <div>
             <p>
-              Received {errors.length} errors while importing {items.length}{' '}
-              records:
+              Received {errors.length} errors while importing {items.length} records:
             </p>
             {this.renderErrorSummary(errors)}
           </div>
@@ -161,14 +147,11 @@ export default class ImportProducts extends React.Component {
     return (
       <div>
         {error && <Message error content={error.message} />}
-        {loading && (
-          <Progress label="Analyzing Data" percent={100} indicating />
-        )}
+        {loading && <Progress label="Analyzing Data" percent={100} indicating />}
         {items && (
           <div>
             <p>
-              Matched up {numColumnsMatched} columns over {items.length}{' '}
-              records. Preview:
+              Matched up {numColumnsMatched} columns over {items.length} records. Preview:
             </p>
             <Table celled>
               <Table.Header>
@@ -200,30 +183,22 @@ export default class ImportProducts extends React.Component {
     return (
       <Dropzone
         maxSize={5 * 1024 * 1024}
-        onDrop={(acceptedFiles, rejectedFiles) =>
-          this.drop(acceptedFiles, rejectedFiles)
-        }
-      >
+        onDrop={(acceptedFiles, rejectedFiles) => this.drop(acceptedFiles, rejectedFiles)}>
         {({ getRootProps, getInputProps, isDragActive }) => {
           return (
             <div
               {...getRootProps()}
               className={
-                isDragActive
-                  ? 'ui icon blue message upload-dropzone-active'
-                  : 'ui icon message upload-dropzone'
+                isDragActive ? 'ui icon blue message upload-dropzone-active' : 'ui icon message upload-dropzone'
               }
-              style={{ cursor: 'pointer', outline: 0 }}
-            >
+              style={{ cursor: 'pointer', outline: 0 }}>
               <Icon name="file outline" />
               <input {...getInputProps()} />
               <div className="content">
                 {isDragActive ? (
                   <p>Drop files here...</p>
                 ) : (
-                  <p>
-                    Drop a CSV file here, or click to select one for upload.
-                  </p>
+                  <p>Drop a CSV file here, or click to select one for upload.</p>
                 )}
               </div>
             </div>
@@ -239,18 +214,18 @@ export default class ImportProducts extends React.Component {
     return (
       <Modal
         closeIcon
+        closeOnDimmerClick={false}
         trigger={trigger}
         onClose={() => {
           this.setState({
             open: false,
             touched: false,
-            ...defaultState
+            ...defaultState,
           });
           this.props.onClose();
         }}
         onOpen={() => this.setState({ open: true })}
-        open={open}
-      >
+        open={open}>
         <Modal.Header>Import Products</Modal.Header>
         <Modal.Content>
           {step === 1 && this.renderUploadForm()}
@@ -264,7 +239,7 @@ export default class ImportProducts extends React.Component {
             disabled={step === 1 || step > 2}
             onClick={() => {
               this.setState({
-                ...defaultState
+                ...defaultState,
               });
             }}
           />
@@ -289,7 +264,7 @@ export default class ImportProducts extends React.Component {
                 this.setState({
                   open: false,
                   touched: false,
-                  ...defaultState
+                  ...defaultState,
                 });
                 this.props.onClose();
               }}

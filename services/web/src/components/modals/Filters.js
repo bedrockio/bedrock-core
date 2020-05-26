@@ -3,7 +3,6 @@ import { Modal, Form, Dropdown, Icon, Button } from 'semantic-ui-react';
 import DateTimeField from 'components/form-fields/DateTime';
 
 export default class Filters extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -13,11 +12,11 @@ export default class Filters extends React.Component {
 
   onSubmit = () => {
     this.props.onSave(this.state);
-  }
+  };
 
   setFilter(name, value) {
     this.setState({
-      [name]: value
+      [name]: value,
     });
   }
 
@@ -29,18 +28,17 @@ export default class Filters extends React.Component {
   render() {
     return (
       <Modal
+        closeIcon
         size="tiny"
         trigger={
           <Icon
             size="tiny"
-            style={{margin:'8px', cursor: 'pointer'}}
+            style={{ margin: '8px', cursor: 'pointer' }}
             color={this.hasFilters() ? 'orange' : 'grey'}
             name="filter"
           />
         }>
-        <Modal.Header>
-          Filter
-        </Modal.Header>
+        <Modal.Header>Filter</Modal.Header>
         <Modal.Content>
           <Form>
             {this.renderFields()}
@@ -48,11 +46,7 @@ export default class Filters extends React.Component {
           </Form>
         </Modal.Content>
         <Modal.Actions>
-          <Button
-            primary
-            content="Save"
-            onClick={this.onSubmit}
-          />
+          <Button primary content="Save" onClick={this.onSubmit} />
         </Modal.Actions>
       </Modal>
     );
@@ -63,7 +57,7 @@ export default class Filters extends React.Component {
     return (
       <Form.Field>
         <label>Created At</label>
-        <span style={{display: 'inline-block', verticalAlign: 'middle'}}>
+        <span style={{ display: 'inline-block', verticalAlign: 'middle' }}>
           <DateTimeField
             name="startAt"
             value={startAt}
@@ -73,15 +67,16 @@ export default class Filters extends React.Component {
             clearable
           />
         </span>
-        <span style={{
-          display: 'inline-block',
-          verticalAlign: 'middle',
-          margin: '0 10px',
-          opacity: '.2',
-        }}>
+        <span
+          style={{
+            display: 'inline-block',
+            verticalAlign: 'middle',
+            margin: '0 10px',
+            opacity: '.2',
+          }}>
           &ndash;
         </span>
-        <span style={{display: 'inline-block', verticalAlign: 'middle'}}>
+        <span style={{ display: 'inline-block', verticalAlign: 'middle' }}>
           <DateTimeField
             name="endAt"
             value={endAt}
@@ -104,15 +99,13 @@ export default class Filters extends React.Component {
             const { name, text } = field;
             return (
               <Form.Field key={name}>
-                <label htmlFor={name}>
-                  {text}
-                </label>
+                <label htmlFor={name}>{text}</label>
                 <Dropdown
                   id={name}
                   clearable
                   selection
                   options={field.options}
-                  style={{width: 'auto'}}
+                  style={{ width: 'auto' }}
                   placeholder="Select"
                   value={this.state[name]}
                   onChange={(e, { value }) => this.setFilter(name, value)}

@@ -9,7 +9,6 @@ const rolesOptions = [
 ];
 
 export default class EditUser extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -30,7 +29,7 @@ export default class EditUser extends React.Component {
       user: {
         ...this.state.user,
         [name]: value,
-      }
+      },
     });
   }
 
@@ -51,7 +50,7 @@ export default class EditUser extends React.Component {
         await request({
           method: 'POST',
           path: '/1/users',
-          body: user
+          body: user,
         });
         this.setState({
           user: {},
@@ -77,13 +76,12 @@ export default class EditUser extends React.Component {
     return (
       <Modal
         closeIcon
+        closeOnDimmerClick={false}
         onClose={() => this.setState({ open: false })}
         onOpen={() => this.setState({ open: true })}
         open={open}
         trigger={trigger}>
-        <Modal.Header>
-          {this.isUpdate() ? `Edit "${user.name}"` : 'New User'}
-        </Modal.Header>
+        <Modal.Header>{this.isUpdate() ? `Edit "${user.name}"` : 'New User'}</Modal.Header>
         <Modal.Content>
           <AutoFocus>
             <Form error={touched && error}>
