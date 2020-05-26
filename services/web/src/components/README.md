@@ -1,4 +1,4 @@
-# Bedrock Components
+# Bedrock Web Components
 
 Bedrock has a number of helper components designed to simplify and quickly iterate on layouts.
 
