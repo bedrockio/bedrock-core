@@ -1,8 +1,8 @@
 # Bedrock Web
 
-- [src/components](Components Documentation)
-- [src/utils](Utils Documentation)
-- [src/screens/Shops/index.js](CRUD View Example)
+- [Components Documentation](src/components)
+- [Utils Documentation](src/utils)
+- [CRUD View Example](src/screens/Shops/index.js)
 
 ## Directory Structure
 
