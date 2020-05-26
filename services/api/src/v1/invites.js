@@ -2,7 +2,7 @@ const Router = require('koa-router');
 const Joi = require('@hapi/joi');
 const validate = require('../middlewares/validate');
 const { authenticate, fetchUser, checkUserRole } = require('../middlewares/authenticate');
-const { NotFoundError, GoneError } = require('../lib/errors');
+const { NotFoundError, BadRequestError, GoneError } = require('../lib/errors');
 const Invite = require('../models/invite');
 const User = require('../models/user');
 
@@ -82,20 +82,21 @@ router
       const { emails } = ctx.request.body;
 
       for (let email of [...new Set(emails)]) {
-        if ((await User.countDocuments({ email })) === 0) {
-          const invite = await Invite.findOneAndUpdate(
-            {
-              email,
-              status: 'invited'
-            },
-            { status: 'invited', email, $unset: { deletedAt: 1 } },
-            {
-              new: true,
-              upsert: true
-            }
-          );
-          await sendInvite({ email, sender: authUser, token: getToken(invite) });
+        if ((await User.countDocuments({ email })) > 0) {
+          throw new BadRequestError(`${email} is already a user.`);
         }
+        const invite = await Invite.findOneAndUpdate(
+          {
+            email,
+            status: 'invited'
+          },
+          { status: 'invited', email, $unset: { deletedAt: 1 } },
+          {
+            new: true,
+            upsert: true
+          }
+        );
+        await sendInvite({ email, sender: authUser, token: getToken(invite) });
       }
       ctx.status = 204;
     }

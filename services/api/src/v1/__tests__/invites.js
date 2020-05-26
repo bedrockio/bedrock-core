@@ -49,6 +49,23 @@ describe('/1/invites', () => {
       );
       expect(response.status).toBe(204);
     });
+    it('should throw an error if user already exists', async () => {
+      const user = await createUser({
+        roles: ['admin']
+      });
+      const user2 = await createUser({
+        email: 'fake@fake.com'
+      });
+      const response = await request(
+        'POST',
+        '/1/invites',
+        {
+          emails: ['fake@fake.com']
+        },
+        { user }
+      );
+      expect(response.status).toBe(400);
+    });
   });
 
   describe('POST /:invite/resend', () => {
