@@ -1,4 +1,4 @@
-# Platform Deployment
+# Bedrock Deployment
 
 - [Setup](#setup)
 - [Existing Environments](#existing-environments)
