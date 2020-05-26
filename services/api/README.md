@@ -8,15 +8,14 @@ See http://localhost:2200/docs for full documentation on this API (requires runn
 
 ## Directory Structure
 
+- `env.conf` - Default configuration values (override via environment)
 - `package.json` - Configure dependencies
-- `config/defaults.json` - Default configuration, all values can be controlled via env vars
-- `config/custom-environment-variables.json` - Overwrite configuration with defined environment variables
 - `src/*/__tests__` - Unit tests
 - `src/index.js` - Entrypoint for running and binding API
 - `src/lib` - Library files like utils etc
 - `src/v1` - Routes
 - `src/v1/__openapi__` - OpenAPI descriptions for use in documentation portal
-- `src/middlewares` - Middleware libs
+- `src/middlewares` - Middleware extensions
 - `src/models` - Models for ORM (Mongoose)
 - `src/app.js` - Entrypoint into API (does not bind, so can be used in unit tests)
 - `src/index.js` - Launch script for the API
