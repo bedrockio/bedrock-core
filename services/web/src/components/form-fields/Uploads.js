@@ -14,14 +14,14 @@ export default class Uploads extends React.Component {
       error: null,
       uploads: props.value ? props.value.slice() : [],
     };
-    props.onChange(this.state.uploads.map((upload) => upload.id));
+    props.onChange(this.state.uploads);
   }
 
   delete(upload) {
     const { uploads } = this.state;
     const newUploads = uploads.filter((u) => u.id != upload.id);
     this.setState({ uploads: newUploads });
-    this.props.onChange(newUploads.map((upload) => upload.id));
+    this.props.onChange(newUploads);
   }
 
   onDrop = async (acceptedFiles, rejectedFiles) => {
@@ -38,12 +38,13 @@ export default class Uploads extends React.Component {
         path: '/1/uploads',
         files: acceptedFiles,
       });
-      const uploads = [...this.state.uploads, ...data];
+      const uploaded = Array.isArray(data) ? data : [data];
+      const uploads = [...this.state.uploads, ...uploaded];
       this.setState({
         uploads,
         loading: false,
       });
-      this.props.onChange(uploads.map((upload) => upload.id));
+      this.props.onChange(uploads);
     } catch (error) {
       this.setState({
         error,
@@ -126,7 +127,7 @@ Uploads.propTypes = {
   type: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   onError: PropTypes.func,
-}
+};
 
 Uploads.defaultProps = {
   type: 'image',

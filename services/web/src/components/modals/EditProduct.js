@@ -3,6 +3,7 @@ import { Modal, Form, Label, Button, Message } from 'semantic-ui-react';
 import { request } from 'utils/api';
 import AutoFocus from 'components/AutoFocus';
 import DateTimeField from 'components/form-fields/DateTime';
+import UploadsField from 'components/form-fields/Uploads';
 
 export default class EditProduct extends React.Component {
   constructor(props) {
@@ -12,6 +13,7 @@ export default class EditProduct extends React.Component {
       touched: false,
       loading: false,
       error: null,
+      hasError: false,
       product: {
         ...props.product,
         shop: props.shopId,
@@ -45,22 +47,28 @@ export default class EditProduct extends React.Component {
 
   onSubmit = async () => {
     try {
-      const { product } = this.state;
       this.setState({
         loading: true,
         touched: true,
       });
+      const { product } = this.state;
       if (this.isUpdate()) {
         await request({
           method: 'PATCH',
           path: `/1/products/${product.id}`,
-          body: product,
+          body: {
+            ...product,
+            images: (product.images || []).map((image) => image.id),
+          },
         });
       } else {
         await request({
           method: 'POST',
           path: '/1/products',
-          body: product,
+          body: {
+            ...product,
+            images: (product.images || []).map((image) => image.id),
+          },
         });
         this.setState({
           product: {},
@@ -82,7 +90,7 @@ export default class EditProduct extends React.Component {
 
   render() {
     const { trigger } = this.props;
-    const { product, open, touched, loading, error } = this.state;
+    const { product, open, touched, loading, error, hasError } = this.state;
     return (
       <Modal
         closeIcon
@@ -94,7 +102,7 @@ export default class EditProduct extends React.Component {
         <Modal.Header>{this.isUpdate() ? `Edit "${product.name}"` : 'New Product'}</Modal.Header>
         <Modal.Content>
           <AutoFocus>
-            <Form error={touched && error}>
+            <Form error={touched && (!!error || hasError)}>
               {error && <Message error content={error.message} />}
               <Form.Input
                 required
@@ -148,6 +156,13 @@ export default class EditProduct extends React.Component {
                 }}
                 onChange={(e, { value }) => this.setProductField('sellingPoints', value)}
                 value={product.sellingPoints || []}
+              />
+              <UploadsField
+                label="Images"
+                name="images"
+                value={product.images || []}
+                onChange={(value) => this.setProductField('images', value)}
+                onError={() => this.setState({ touched: true, hasError: true })}
               />
             </Form>
           </AutoFocus>

@@ -16,7 +16,8 @@ const productSchema = Joi.object({
     .min(0.1)
     .max(1000000),
   isFeatured: Joi.boolean(),
-  sellingPoints: Joi.array().items(Joi.string())
+  images: Joi.array().items(Joi.string()),
+  sellingPoints: Joi.array().items(Joi.string()),
 });
 
 const productPatchSchema = productSchema.append({
