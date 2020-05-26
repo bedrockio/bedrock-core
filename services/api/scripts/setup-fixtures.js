@@ -1,8 +1,10 @@
 const User = require('../src/models/user');
 const Product = require('../src/models/product');
 const Shop = require('../src/models/shop');
+const Upload = require('../src/models/upload');
 const Category = require('../src/models/category');
 const config = require('@kaareal/config');
+const { storeUploadedFile } = require('../src/lib/uploads');
 
 const adminConfig = {
   name: config.get('ADMIN_NAME'),
@@ -11,13 +13,23 @@ const adminConfig = {
   roles: ['admin']
 };
 
+const createUpload = async (owner, image) => {
+  const path = `${__dirname}/../fixtures/images/${image}`;
+  const file = { path, name: image, type: 'image/jpeg' };
+  const object = await storeUploadedFile(file);
+  return Upload.create({
+    ...object,
+    ownerId: owner._id
+  });
+};
+
 const createUsers = async () => {
   if (await User.findOne({ email: adminConfig.email })) {
     return false;
   }
 
   [
-    'jewellery',
+    'jewelry',
     'toy',
     'florist',
     'hairdresser',
@@ -50,11 +62,20 @@ const createUsers = async () => {
   console.info(`Added admin user ${adminUser.email}  to database`);
 
   const shop = await Shop.create({
-    name: 'Demo'
+    name: 'Demo',
+    images: [
+      await createUpload(adminUser, 'Shop.jpg'),
+    ],
   });
 
   for (let i = 0; i < 15; i++) {
-    await Product.create({ name: `Product ${i + 1}`, shop });
+    await Product.create({
+      name: `Product ${i + 1}`,
+      shop,
+      images: [
+        await createUpload(adminUser, `Product ${i + 1}.jpg`),
+      ],
+    });
   }
   return true;
 };
