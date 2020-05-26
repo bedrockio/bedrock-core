@@ -17,6 +17,11 @@ const schema = new Schema(
       required: true,
       autopopulate: true,
     },
+    images: [{
+      type: ObjectId,
+      ref: 'Upload',
+      autopopulate: true
+    }],
   },
 );
 
