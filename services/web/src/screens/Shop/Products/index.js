@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import Pagination from 'components/Pagination';
 import HelpTip from 'components/HelpTip';
 import EditProduct from 'components/modals/EditProduct';
+import { Layout } from 'components/Layout';
 
 const Center = styled.div`
   display: flex;
@@ -54,21 +55,21 @@ export default class ShopProducts extends React.Component {
       <Container>
         <div className="list">
           <Header as="h2">
-            Products
-            <EditProduct
-              initialValues={{
-                shopId: this.props.shop.id
-              }}
-              trigger={
-                <Button
-                  primary
-                  floated="right"
-                  style={{ marginTop: '-5px' }}
-                  content="Add Product"
-                  icon="plus"
-                />
-              }
-            />
+            <Layout horizontal center spread>
+              Products
+              <EditProduct
+                initialValues={{
+                  shopId: this.props.shop.id
+                }}
+                trigger={
+                  <Button
+                    primary
+                    content="Add Product"
+                    icon="plus"
+                  />
+                }
+              />
+            </Layout>
           </Header>
           {listStatus.success && !products.items.length && (
             <Message>No products added yet</Message>

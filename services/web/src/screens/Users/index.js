@@ -3,6 +3,7 @@ import { observer, inject } from 'mobx-react';
 import { DateTime } from 'luxon';
 import AppWrapper from 'components/AppWrapper';
 import styled from 'styled-components';
+import { Layout } from 'components/Layout';
 
 import HelpTip from 'components/HelpTip';
 import EditUser from 'components/modals/EditUser';
@@ -56,18 +57,18 @@ export default class Users extends React.Component {
       <AppWrapper>
         <Container>
           <Header as="h2">
-            Users
-            <EditUser
-              trigger={
-                <Button
-                  primary
-                  floated="right"
-                  style={{ marginTop: '-5px' }}
-                  content="New User"
-                  icon="plus"
-                />
-              }
-            />
+            <Layout horizontal center spread>
+              Users
+              <EditUser
+                trigger={
+                  <Button
+                    primary
+                    content="New User"
+                    icon="plus"
+                  />
+                }
+              />
+            </Layout>
           </Header>
           <div className="list">
             <Table celled>

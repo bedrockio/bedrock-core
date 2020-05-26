@@ -1,6 +1,7 @@
 import React from 'react';
 import { observer, inject } from 'mobx-react';
 import { DateTime } from 'luxon';
+import { Layout } from 'components/Layout';
 
 import styled from 'styled-components';
 import AppWrapper from 'components/AppWrapper';
@@ -49,19 +50,19 @@ export default class Home extends React.Component {
       <AppWrapper>
         <Container>
           <Header as="h2">
-            Invites
-            <InviteUser
-              size="tiny"
-              trigger={
-                <Button
-                  primary
-                  floated="right"
-                  style={{ marginTop: '-5px' }}
-                  content="Invite User"
-                  icon="plus"
-                />
-              }
-            />
+            <Layout horizontal center spread>
+              Invites
+              <InviteUser
+                size="tiny"
+                trigger={
+                  <Button
+                    primary
+                    content="Invite User"
+                    icon="plus"
+                  />
+                }
+              />
+            </Layout>
           </Header>
           <div className="list">
             {listStatus.success && !invites.items.length && (
