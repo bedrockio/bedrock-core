@@ -1,16 +1,19 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: api-deployment
 spec:
   replicas: 2
+  selector:
+    matchLabels:
+      app: api
   template:
     metadata:
       labels:
-        name: api
+        app: api
     spec:
       containers:
-        - image: gcr.io/bedrock-foundation/bedrock-services-api
+        - image: gcr.io/bedrock-foundation/bedrock-core-services-api
           imagePullPolicy: Always
           name: main
           env:
@@ -41,7 +44,7 @@ spec:
               containerPort: 2300
           volumeMounts:
             - name: cache
-              mountPath: /workdir/data
+              mountPath: /service/data
       volumes:
         - name: cache
           emptyDir: {}

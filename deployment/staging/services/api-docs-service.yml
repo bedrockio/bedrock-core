@@ -11,5 +11,5 @@ spec:
       targetPort: 2400
       protocol: TCP
   selector:
-    name: api-docs
+    app: api-docs
   loadBalancerIP: 34.74.246.233

@@ -11,5 +11,5 @@ spec:
       targetPort: 2300
       protocol: TCP
   selector:
-    name: api
+    app: api
   loadBalancerIP: 34.74.255.5
