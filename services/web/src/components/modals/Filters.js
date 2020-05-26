@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Form, Dropdown, Icon, Button } from 'semantic-ui-react';
+import { Modal, Form, Dropdown, Icon, Button, Label } from 'semantic-ui-react';
 import DateTimeField from 'components/form-fields/DateTime';
 
 export default class Filters extends React.Component {
@@ -12,6 +12,12 @@ export default class Filters extends React.Component {
 
   onSubmit = () => {
     this.props.onSave(this.state);
+  };
+
+  onReset = () => {
+    const state = {};
+    this.setState(state);
+    this.props.onSave(state);
   };
 
   setFilter(name, value) {
@@ -31,12 +37,22 @@ export default class Filters extends React.Component {
         closeIcon
         size="tiny"
         trigger={
-          <Icon
-            size="tiny"
-            style={{ margin: '8px', cursor: 'pointer' }}
-            color={this.hasFilters() ? 'orange' : 'grey'}
-            name="filter"
-          />
+          this.hasFilters() ? (
+            <Button as="div" labelPosition="right" style={{ marginRight: '10px' }}>
+              <Button basic color="primary">
+                <Icon name="filter" />
+                Filter
+              </Button>
+              <Label as="a" basic color="blue" pointing="left">
+                {Object.keys(this.props.filters).length}
+              </Label>
+            </Button>
+          ) : (
+            <Button basic color="primary" style={{ marginRight: '10px' }}>
+              <Icon name="filter" />
+              Filter
+            </Button>
+          )
         }>
         <Modal.Header>Filter</Modal.Header>
         <Modal.Content>
@@ -46,7 +62,8 @@ export default class Filters extends React.Component {
           </Form>
         </Modal.Content>
         <Modal.Actions>
-          <Button primary content="Save" onClick={this.onSubmit} />
+          <Button content="Reset" onClick={this.onReset} />
+          <Button primary content="Apply" onClick={this.onSubmit} />
         </Modal.Actions>
       </Modal>
     );
@@ -96,16 +113,17 @@ export default class Filters extends React.Component {
       return (
         <React.Fragment>
           {fields.map((field) => {
-            const { name, text } = field;
+            const { name, text, search } = field;
             return (
               <Form.Field key={name}>
                 <label htmlFor={name}>{text}</label>
                 <Dropdown
                   id={name}
+                  search={search || false}
                   clearable
                   selection
                   options={field.options}
-                  style={{ width: 'auto' }}
+                  fluid
                   placeholder="Select"
                   value={this.state[name]}
                   onChange={(e, { value }) => this.setFilter(name, value)}

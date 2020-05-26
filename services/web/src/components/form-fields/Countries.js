@@ -5,14 +5,13 @@ import { getData } from 'country-list';
 const countries = getData().map(({ code, name }) => ({
   value: code,
   text: name,
-  key: code
+  key: code,
 }));
 
 export default class Countries extends React.Component {
-
   onChange = (evt, { value }) => {
     return this.props.onChange(value);
-  }
+  };
 
   render() {
     const { required, label, placeholder, value, name } = this.props;
@@ -20,6 +19,7 @@ export default class Countries extends React.Component {
       <Form.Field required={required}>
         {label && <label>{label}</label>}
         <Select
+          search
           name={name}
           defaultValue={value}
           placeholder={placeholder}
@@ -29,5 +29,4 @@ export default class Countries extends React.Component {
       </Form.Field>
     );
   }
-
 }
