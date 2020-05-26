@@ -42,10 +42,6 @@ function validateToken(ctx, token, type) {
 
 exports.authenticate = ({ type } = {}, options = {}) => {
   return async (ctx, next) => {
-    if (process.env.DOCS) {
-      return next();
-    }
-
     const token = options.getToken ? options.getToken(ctx) : getToken(ctx);
     if (!token) ctx.throw(400, 'no jwt token found in request');
 
@@ -56,10 +52,6 @@ exports.authenticate = ({ type } = {}, options = {}) => {
 };
 
 exports.fetchUser = async (ctx, next) => {
-  if (process.env.DOCS) {
-    return next();
-  }
-
   ctx.state.authUser = await User.findById(ctx.state.jwt.userId);
   if (!ctx.state.authUser) ctx.throw(400, 'user associsated to token could not not be found');
   await next();
@@ -67,9 +59,6 @@ exports.fetchUser = async (ctx, next) => {
 
 exports.checkUserRole = function({ role }) {
   return (ctx, next) => {
-    if (process.env.DOCS) {
-      return next();
-    }
     if (!(ctx.state.authUser.roles || []).includes(role)) {
       return ctx.throw(401, `You don't have the right permission for this endpoint (required role: ${role})`);
     }

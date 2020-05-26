@@ -1,6 +1,7 @@
 import React from 'react';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
+import { Layout } from 'components/Layout';
 
 import { Confirm } from 'components/Semantic';
 import AppWrapper from 'components/AppWrapper';
@@ -35,39 +36,43 @@ export default class Users extends React.Component {
             return (
               <Container>
                 <div style={{float: 'right', marginTop: '-5px'}}>
-                  <Filters
-                    onSave={setFilters}
-                    filters={filters}
-                    fields={[
-                      {
-                        text: 'Role',
-                        name: 'role',
-                        options: [
-                          {
-                            text: 'User',
-                            value: 'user',
-                          },
-                          {
-                            text: 'Admin',
-                            value: 'admin',
-                          }
-                        ]
-                      }
-                    ]}
-                  />
-                  <EditUser
-                    trigger={
-                      <Button
-                        primary
-                        content="New User"
-                        icon="plus"
-                      />
-                    }
-                    onSave={reload}
-                  />
                 </div>
                 <Header as="h2">
-                  Users
+                  <Layout horizontal center spread>
+                    Users
+                    <Layout.Group>
+                      <Filters
+                        onSave={setFilters}
+                        filters={filters}
+                        fields={[
+                          {
+                            text: 'Role',
+                            name: 'role',
+                            options: [
+                              {
+                                text: 'User',
+                                value: 'user',
+                              },
+                              {
+                                text: 'Admin',
+                                value: 'admin',
+                              }
+                            ]
+                          }
+                        ]}
+                      />
+                      <EditUser
+                        trigger={
+                          <Button
+                            primary
+                            content="New User"
+                            icon="plus"
+                          />
+                        }
+                        onSave={reload}
+                      />
+                    </Layout.Group>
+                  </Layout>
                 </Header>
                 {items.length === 0 ? (
                   <Message>No users added yet</Message>

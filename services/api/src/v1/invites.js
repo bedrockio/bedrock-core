@@ -2,7 +2,7 @@ const Router = require('koa-router');
 const Joi = require('@hapi/joi');
 const validate = require('../middlewares/validate');
 const { authenticate, fetchUser, checkUserRole } = require('../middlewares/authenticate');
-const { NotFoundError, GoneError } = require('../lib/errors');
+const { NotFoundError, BadRequestError, GoneError } = require('../lib/errors');
 const Invite = require('../models/invite');
 const User = require('../models/user');
 
@@ -16,7 +16,7 @@ function getToken(invite) {
 }
 
 router
-  .param('invite', async (id, ctx, next) => {
+  .param('inviteId', async (id, ctx, next) => {
     const invite = await Invite.findById(id);
     ctx.state.invite = invite;
 
@@ -59,7 +59,7 @@ router
       const total = await await Invite.countDocuments(query);
 
       ctx.body = {
-        data: invites.map((i) => i.toResource()),
+        data: invites,
         meta: {
           total,
           skip,
@@ -82,30 +82,31 @@ router
       const { emails } = ctx.request.body;
 
       for (let email of [...new Set(emails)]) {
-        if ((await User.countDocuments({ email })) === 0) {
-          const invite = await Invite.findOneAndUpdate(
-            {
-              email,
-              status: 'invited'
-            },
-            { status: 'invited', email, $unset: { deletedAt: 1 } },
-            {
-              new: true,
-              upsert: true
-            }
-          );
-          await sendInvite({ email, sender: authUser, token: getToken(invite) });
+        if ((await User.countDocuments({ email })) > 0) {
+          throw new BadRequestError(`${email} is already a user.`);
         }
+        const invite = await Invite.findOneAndUpdate(
+          {
+            email,
+            status: 'invited'
+          },
+          { status: 'invited', email, $unset: { deletedAt: 1 } },
+          {
+            new: true,
+            upsert: true
+          }
+        );
+        await sendInvite({ email, sender: authUser, token: getToken(invite) });
       }
       ctx.status = 204;
     }
   )
-  .post('/:invite/resend', async (ctx) => {
+  .post('/:inviteId/resend', async (ctx) => {
     const { invite, authUser } = ctx.state;
     await sendInvite({ email: invite.email, sender: authUser, token: getToken(invite) });
     ctx.status = 204;
   })
-  .delete('/:invite', async (ctx) => {
+  .delete('/:inviteId', async (ctx) => {
     const { invite } = ctx.state;
     await invite.delete();
     ctx.status = 204;

@@ -7,7 +7,7 @@ import React from 'react';
 import AuthSwitch from 'components/routes/AuthSwitch';
 import Protected from 'components/routes/Protected';
 
-import DocsGettingStarted from './screens/Docs/GettingStarted';
+import Docs from './screens/Docs';
 import Dashboard from './screens/Dashboard';
 import Settings from './screens/Settings';
 import Invites from './screens/Invites';
@@ -29,11 +29,7 @@ const App = () => (
     <Protected path="/settings" component={Settings} exact />
     <Protected path="/invites" component={Invites} exact />
     <Protected path="/users" component={Users} exact />
-    <Protected
-      path="/docs/getting-started"
-      component={DocsGettingStarted}
-      exact
-    />
+    <Protected path="/docs/:id?" component={Docs} />
     <Route path="/logout" component={Logout} exact />
     <AuthSwitch
       path="/login"

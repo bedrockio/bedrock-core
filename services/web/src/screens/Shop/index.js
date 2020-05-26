@@ -1,14 +1,15 @@
 import React from 'react';
 import { Switch, Route, Link } from 'react-router-dom';
-import AppWrapper from 'components/AppWrapper';
+import { Container, Divider, Breadcrumb, Button } from 'semantic-ui-react';
 import { request } from 'utils/api';
 
-import { Container, Divider, Breadcrumb, Button } from 'semantic-ui-react';
-import Menu from './Menu';
+import AppWrapper from 'components/AppWrapper';
+import { Layout } from 'components/Layout';
 import PageLoader from 'components/PageLoader';
+import EditShop from 'components/modals/EditShop';
 import Overview from './Overview';
 import Products from './Products';
-import EditShop from 'components/modals/EditShop';
+import Menu from './Menu';
 
 export default class Shop extends React.Component {
 
@@ -36,34 +37,34 @@ export default class Shop extends React.Component {
     return (
       <AppWrapper>
         <Container>
-          {shop && (
-            <EditShop
-              shop={shop}
-              onSave={this.fetchShop}
-              trigger={
-                <Button
-                  floated="right"
-                  style={{ marginTop: '-5px' }}
-                  primary
-                  icon="setting"
-                  content="Settings"
-                />
-              }
-            />
-          )}
-          <Breadcrumb size="big">
-            <Breadcrumb.Section link as={Link} to="/">
-              Home
-            </Breadcrumb.Section>
-            <Breadcrumb.Divider icon="right chevron" />
-            <Breadcrumb.Section link as={Link} to="/shops">
-              Shops
-            </Breadcrumb.Section>
-            <Breadcrumb.Divider icon="right chevron" />
-            <Breadcrumb.Section active>
-              {shop?.name || 'Loading...'}
-            </Breadcrumb.Section>
-          </Breadcrumb>
+          <Layout horizontal center spread>
+            <Breadcrumb size="big">
+              <Breadcrumb.Section link as={Link} to="/">
+                Home
+              </Breadcrumb.Section>
+              <Breadcrumb.Divider icon="right chevron" />
+              <Breadcrumb.Section link as={Link} to="/shops">
+                Shops
+              </Breadcrumb.Section>
+              <Breadcrumb.Divider icon="right chevron" />
+              <Breadcrumb.Section active>
+                {shop?.name || 'Loading...'}
+              </Breadcrumb.Section>
+            </Breadcrumb>
+            {shop && (
+              <EditShop
+                shop={shop}
+                onSave={this.fetchShop}
+                trigger={
+                  <Button
+                    primary
+                    icon="setting"
+                    content="Settings"
+                  />
+                }
+              />
+            )}
+          </Layout>
         </Container>
         <Divider hidden />
         {!shop ? (

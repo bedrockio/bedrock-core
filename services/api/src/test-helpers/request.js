@@ -14,10 +14,13 @@ module.exports = async function handleRequest(httpMethod, url, bodyOrQuery = {},
   let promise;
 
   if (options.file) {
+    const files = Array.isArray(options.file) ? options.file : [options.file];
     promise = request(app.callback())
       .post(url)
-      .attach('file', options.file)
       .set(headers);
+    files.forEach((file) => {
+      promise = promise.attach('file', file)
+    });
   } else {
     if (httpMethod === 'POST') {
       promise = request(app.callback())
@@ -41,21 +44,6 @@ module.exports = async function handleRequest(httpMethod, url, bodyOrQuery = {},
     } else {
       throw Error(`${httpMethod} is not supported`);
     }
-  }
-
-  if (process.env.STORE_RESULT) {
-    promise.then(async (response) => {
-      await fs.appendFile(
-        path.join(__dirname, '../..', '.tests-responses'),
-        `${JSON.stringify({
-          method: httpMethod,
-          path: url,
-          status: response.status,
-          body: response.body
-        })}\n`
-      );
-      return response.body;
-    });
   }
 
   if (promise) {

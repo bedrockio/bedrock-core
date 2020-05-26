@@ -14,7 +14,7 @@ const passwordField = Joi.string()
 router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
-  .param('user', async (id, ctx, next) => {
+  .param('userId', async (id, ctx, next) => {
     const user = await User.findById(id);
     ctx.state.user = user;
     if (!user) {
@@ -23,7 +23,9 @@ router
     return next();
   })
   .get('/me', (ctx) => {
-    ctx.body = { data: ctx.state.authUser.toResource() };
+    ctx.body = {
+      data: ctx.state.authUser
+    };
   })
   .patch(
     '/me',
@@ -37,7 +39,9 @@ router
       const { authUser } = ctx.state;
       Object.assign(authUser, ctx.request.body);
       await authUser.save();
-      ctx.body = { data: authUser.toResource() };
+      ctx.body = {
+        data: authUser
+      };
     }
   )
   .use(checkUserRole({ role: 'admin' }))
@@ -83,7 +87,7 @@ router
 
       const total = await await User.countDocuments(query);
       ctx.body = {
-        data: data.map((i) => i.toResource()),
+        data,
         meta: {
           total,
           skip,
@@ -114,17 +118,17 @@ router
       const user = await User.create(ctx.request.body);
 
       ctx.body = {
-        data: user.toResource()
+        data: user
       };
     }
   )
-  .delete('/:user', async (ctx) => {
+  .delete('/:userId', async (ctx) => {
     const { user } = ctx.state;
     await user.delete();
     ctx.status = 204;
   })
   .patch(
-    '/:user',
+    '/:userId',
     validate({
       body: Joi.object({
         id: Joi.string().strip(),
@@ -140,13 +144,13 @@ router
       user.assign(ctx.request.body);
       await user.save();
       ctx.body = {
-        data: user.toResource()
+        data: user
       };
     }
   )
-  .get('/:user', async (ctx) => {
+  .get('/:userId', async (ctx) => {
     ctx.body = {
-      data: ctx.state.user.toResource()
+      data: ctx.state.user
     };
   });
 

@@ -1,8 +1,9 @@
 const { omit } = require('lodash');
 const mongoose = require('mongoose');
+const Schema = require('../lib/Schema');
 const bcrypt = require('bcrypt');
 
-const schema = new mongoose.Schema(
+const schema = new Schema(
   {
     email: {
       type: String,
@@ -15,14 +16,16 @@ const schema = new mongoose.Schema(
         type: String
       }
     ],
-    name: { type: String, trim: true },
-    hashedPassword: { type: String },
-    deletedAt: { type: Date },
+    name: {
+      type: String,
+      trim: true
+    },
+    hashedPassword: {
+      type: String,
+      access: 'private',
+    },
     timeZone: { type: String }
   },
-  {
-    timestamps: true
-  }
 );
 
 schema.methods.isAdmin = function isAdmin() {
@@ -42,11 +45,6 @@ schema.methods.assign = function assign(fields) {
   Object.assign(this, omit(fields, ['createdAt', 'updatedAt', 'deletedAt', 'id', 'hashedPassword'], {}));
 };
 
-schema.methods.delete = function deleteFn() {
-  this.deletedAt = new Date();
-  return this.save();
-};
-
 schema.virtual('password').set(function setPassword(password) {
   this._password = password;
 });
@@ -59,12 +57,5 @@ schema.pre('save', async function preSave(next) {
   }
   return next();
 });
-
-schema.methods.toResource = function toResource() {
-  return {
-    id: this._id,
-    ...omit(this.toObject(), ['_id', '__v', 'hashedPassword', '_password'])
-  };
-};
 
 module.exports = mongoose.models.User || mongoose.model('User', schema);

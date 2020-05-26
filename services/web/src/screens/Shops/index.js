@@ -1,17 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Container, Header, Table, Button, Message } from 'semantic-ui-react';
-import { request } from 'utils/api';
+import { getData } from 'country-list';
 import { formatDateTime } from 'utils/date';
-import { Confirm } from 'components/Semantic';
+import { request } from 'utils/api';
+
 
 import AppWrapper from 'components/AppWrapper';
+import { Layout } from 'components/Layout';
+import { Confirm } from 'components/Semantic';
+
 import HelpTip from 'components/HelpTip';
 import EditShop from 'components/modals/EditShop';
 import Filters from 'components/modals/Filters';
 import { SearchProvider } from 'components/data';
-
-import { getData } from 'country-list';
 
 const countries = getData().map(({ code, name }) => ({
   value: code,
@@ -36,27 +38,29 @@ export default class Shops extends React.Component {
           {({ items, getSorted, setSort, filters, setFilters, reload }) => {
             return (
               <Container>
-                <div style={{float: 'right', marginTop: '-5px'}}>
-                  <Filters
-                    onSave={setFilters}
-                    filters={filters}
-                    fields={[
-                      {
-                        text: 'Country',
-                        name: 'country',
-                        options: countries,
-                      }
-                    ]}
-                  />
-                  <EditShop
-                    trigger={
-                      <Button primary content="New Shop" icon="plus" />
-                    }
-                    onSave={reload}
-                  />
-                </div>
                 <Header as="h2">
-                  Shops
+                  <Layout horizontal center spread>
+                    Shops
+                    <Layout.Group>
+                      <Filters
+                        onSave={setFilters}
+                        filters={filters}
+                        fields={[
+                          {
+                            text: 'Country',
+                              name: 'country',
+                              options: countries,
+                          }
+                        ]}
+                      />
+                      <EditShop
+                        trigger={
+                          <Button primary content="New Shop" icon="plus" />
+                        }
+                        onSave={reload}
+                      />
+                    </Layout.Group>
+                  </Layout>
                 </Header>
                 {items.length === 0 ? (
                   <Message>No shops created yet</Message>

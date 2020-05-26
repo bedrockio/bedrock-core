@@ -1,10 +1,11 @@
 import React from 'react';
 import { Container, Table, Message, Button, Header } from 'semantic-ui-react';
+import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 
-import { Confirm } from 'components/Semantic';
-import { formatDateTime } from 'utils/date';
 import { SearchProvider } from 'components/data';
+import { Layout } from 'components/Layout';
+import { Confirm } from 'components/Semantic';
 import HelpTip from 'components/HelpTip';
 import EditProduct from 'components/modals/EditProduct';
 
@@ -26,14 +27,16 @@ export default class ShopProducts extends React.Component {
           return (
             <Container>
               <Header as="h2">
-                Products
-                <EditProduct
-                  shopId={shop.id}
-                  onSave={reload}
-                  trigger={
-                    <Button primary floated="right" style={{ marginTop: '-5px' }} content="Add Product" icon="plus" />
-                  }
-                />
+                <Layout horizontal center spread>
+                  Products
+                  <EditProduct
+                    shopId={shop.id}
+                    onSave={reload}
+                    trigger={
+                      <Button primary floated="right" style={{ marginTop: '-5px' }} content="Add Product" icon="plus" />
+                    }
+                  />
+                </Layout>
               </Header>
               {items.length === 0 ? (
                 <Message>No products added yet</Message>

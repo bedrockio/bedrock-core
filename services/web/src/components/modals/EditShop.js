@@ -15,6 +15,7 @@ export default class EditShop extends React.Component {
       touched: false,
       loading: false,
       error: null,
+      hasError: false,
       shop: props.shop || {},
     };
   }
@@ -81,7 +82,7 @@ export default class EditShop extends React.Component {
 
   render() {
     const { trigger } = this.props;
-    const { shop, open, touched, loading, error } = this.state;
+    const { shop, open, touched, loading, error, hasError } = this.state;
     return (
       <Modal
         closeIcon
@@ -94,7 +95,7 @@ export default class EditShop extends React.Component {
         </Modal.Header>
         <Modal.Content>
           <AutoFocus>
-            <Form error={touched && error}>
+            <Form error={touched && (error || hasError)}>
               {error && <Message error content={error.message} />}
               <Form.Input
                 name="name"
@@ -134,6 +135,7 @@ export default class EditShop extends React.Component {
                 name="images"
                 value={shop.images || []}
                 onChange={(value) => this.setShopField('images', value)}
+                onError={() => this.setState({ touched: true, hasError: true })}
               />
             </Form>
           </AutoFocus>

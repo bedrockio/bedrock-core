@@ -2,7 +2,7 @@ import React from 'react';
 import { session } from 'stores';
 import { NavLink, Link } from 'react-router-dom';
 import { Container, Dropdown, Icon, Menu } from 'semantic-ui-react';
-import logoInverted from 'assets/logo.svg';
+import logoInverted from 'assets/icon.svg';
 
 export default class AppWrapper extends React.Component {
 

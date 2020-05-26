@@ -4,7 +4,7 @@ import session from 'stores/session';
 import { ApiError, ApiParseError } from './errors';
 
 export default async function request(options) {
-  const { method = 'GET', path, params } = options;
+  const { method = 'GET', path, files, params } = options;
   let { body } = options;
 
   const token = options.token || session.token;
@@ -22,9 +22,11 @@ export default async function request(options) {
   const url = new URL(path, API_URL);
   url.search = new URLSearchParams(params);
 
-  if (body instanceof File) {
+  if (files) {
     const data = new FormData();
-    data.append('file', body);
+    files.forEach((file) => {
+      data.append('file', file);
+    });
     body = data;
   } else if (!(body instanceof FormData)) {
     body = JSON.stringify(body);

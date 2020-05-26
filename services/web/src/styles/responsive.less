@@ -1,0 +1,12 @@
+@tinyBreakpoint: 380px;
+@mobileBreakpoint: 768px;
+@tabletBreakpoint: 1128px;
+
+@tinyMax: (@tinyBreakpoint - 1);
+@mobileMax: (@mobileBreakpoint - 1);
+@tabletMax: (@tabletBreakpoint - 1);
+
+@tiny: ~"only screen and (max-width: @{tinyMax})";
+@mobile: ~"only screen and (max-width: @{mobileMax})";
+@desktop: ~"only screen and (min-width: @{mobileBreakpoint})";
+@tablet: ~"only screen and (min-width: @{mobileBreakpoint}) and (max-width: @{tabletMax})";

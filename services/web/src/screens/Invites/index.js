@@ -1,10 +1,11 @@
 import React from 'react';
-import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
+import { formatDateTime } from 'utils/date';
 
+import { SearchProvider } from 'components/data';
+import { Layout } from 'components/Layout';
 import AppWrapper from 'components/AppWrapper';
 import InviteUser from 'components/modals/InviteUser';
-import { SearchProvider } from 'components/data';
 import LoadButton from 'components/LoadButton';
 
 import {
@@ -33,19 +34,19 @@ export default class Home extends React.Component {
             return (
               <Container>
                 <Header as="h2">
-                  Invites
-                  <InviteUser
-                    onSave={reload}
-                    trigger={
-                      <Button
-                        primary
-                        floated="right"
-                        style={{ marginTop: '-5px' }}
-                        content="Invite User"
-                        icon="plus"
-                      />
-                    }
-                  />
+                  <Layout horizontal center spread>
+                    Invites
+                    <InviteUser
+                      size="tiny"
+                      trigger={
+                        <Button
+                          primary
+                          content="Invite User"
+                          icon="plus"
+                        />
+                      }
+                    />
+                  </Layout>
                 </Header>
                 <div className="list">
                   {items.length === 0 ? (
