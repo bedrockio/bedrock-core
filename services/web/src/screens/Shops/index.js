@@ -5,7 +5,6 @@ import { getData } from 'country-list';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 
-
 import AppWrapper from 'components/AppWrapper';
 import { Layout } from 'components/Layout';
 import { Confirm } from 'components/Semantic';
@@ -18,16 +17,15 @@ import { SearchProvider } from 'components/data';
 const countries = getData().map(({ code, name }) => ({
   value: code,
   text: name,
-  key: code
+  key: code,
 }));
 
 export default class Shops extends React.Component {
-
   onDataNeeded = async (params) => {
     return await request({
       method: 'POST',
       path: '/1/shops/search',
-      body: params
+      body: params,
     });
   };
 
@@ -48,17 +46,13 @@ export default class Shops extends React.Component {
                         fields={[
                           {
                             text: 'Country',
-                              name: 'country',
-                              options: countries,
-                          }
+                            name: 'country',
+                            options: countries,
+                            search: true,
+                          },
                         ]}
                       />
-                      <EditShop
-                        trigger={
-                          <Button primary content="New Shop" icon="plus" />
-                        }
-                        onSave={reload}
-                      />
+                      <EditShop trigger={<Button primary content="New Shop" icon="plus" />} onSave={reload} />
                     </Layout.Group>
                   </Layout>
                 </Header>
@@ -103,7 +97,7 @@ export default class Shops extends React.Component {
                                 onConfirm={async () => {
                                   await request({
                                     method: 'DELETE',
-                                    path: `/1/shops/${item.id}`
+                                    path: `/1/shops/${item.id}`,
                                   });
                                   reload();
                                 }}
