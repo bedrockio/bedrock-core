@@ -21,14 +21,16 @@
 
 ## Install Dependencies
 
-```
-yarn install
-```
-
-Ensure environment is the same using Notion:
+Ensure Node.js version uniformity using Volta:
 
 ```
 curl -sSLf https://get.volta.sh | bash
+```
+
+Install dependencies: (will install correct Node.js version)
+
+```
+yarn install
 ```
 
 ## Testing & Linting
@@ -42,7 +44,7 @@ yarn test
 Code reload using nodemon:
 
 ```
-yarn dev
+yarn start
 ```
 
 ## Configuration
@@ -93,6 +95,14 @@ node scripts/generate-openapi.js
 The information in `src/v1/__openapi__` is exposed through the API and used by the Markdown-powered documentation portal in `/services/web/src/docs`.
 
 See [../../services/web](../../services/web) for more info
+
+## Updating E-Mail Templates
+
+E-mail templates can be found in `emails/src`. When changes are made, run the following command to optimize the emails for mail readers:
+
+```
+yarn emails
+```
 
 ## API Summary
 
