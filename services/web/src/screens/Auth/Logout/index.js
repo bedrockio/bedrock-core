@@ -1,12 +1,13 @@
 import React from 'react';
-import { inject } from 'mobx-react';
+import { session } from 'stores';
 
-@inject('appSession', 'routing')
 export default class Logout extends React.Component {
+
   componentDidMount() {
-    this.props.appSession.reset();
-    window.location.href = '/';
+    session.setToken(null);
+    this.props.history.replace('/');
   }
+
   render() {
     return <div />;
   }

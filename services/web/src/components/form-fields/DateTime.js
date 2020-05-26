@@ -1,109 +1,92 @@
 import React from 'react';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import 'react-day-picker/lib/style.css';
-import { Form, Label, Input } from 'semantic-ui-react';
-
-const dateToState = (date) => {
-  return {
-    date,
-    hours: date.getHours(),
-    minutes: date.getMinutes()
-  };
-};
-
-const stateToDate = (state, includeTime = true) => {
-  if (!includeTime) {
-    return state.date;
-  }
-  const { date, hours, minutes } = state;
-  const newDate = new Date(
-    date.getFullYear(),
-    date.getMonth(),
-    date.getDate(),
-    hours,
-    minutes
-  );
-  return newDate;
-};
+import { Form, Label, Input, Icon } from 'semantic-ui-react';
+import { formatDate } from 'utils/date';
 
 export default class DateTime extends React.Component {
+
   constructor(props) {
     super(props);
-    const date = props.value ? new Date(Date.parse(props.value)) : new Date();
-    this.state = dateToState(date);
+    this.state = {
+      date: props.value ? new Date(props.value) : null,
+    };
   }
 
   setDate(date) {
-    const { hours, minutes } = this.state;
-    const newState = {
-      date,
-      hours,
-      minutes
-    };
-    this.setState(newState);
-    const dateString = stateToDate(newState).toISOString();
-    this.props.onChange(dateString);
+    this.setState({
+      date
+    });
+    this.props.onChange(date);
   }
-  setHours(hoursStr) {
-    const { date, minutes } = this.state;
-    const newState = {
-      date,
-      hours: parseInt(hoursStr),
-      minutes
-    };
-    this.setState(newState);
-    const dateString = stateToDate(newState).toISOString();
-    this.props.onChange(dateString);
+
+  setHours(hours) {
+    const date = new Date(this.state.date);
+    date.setHours(hours);
+    this.setDate(date);
   }
-  setMinutes(minutesStr) {
-    const { date, hours } = this.state;
-    const newState = {
-      date,
-      minutes: parseInt(minutesStr),
-      hours
-    };
-    this.setState(newState);
-    const dateString = stateToDate(newState).toISOString();
-    this.props.onChange(dateString);
+
+  setMinutes(minutes) {
+    const date = new Date(this.state.date);
+    date.setMinutes(minutes);
+    this.setDate(date);
   }
+
   render() {
-    const { required, label, includeTime = true } = this.props;
-    const { date, hours, minutes } = this.state;
-
+    const { required, label, placeholder, clearable, includeTime = true } = this.props;
+    const { date } = this.state;
     return (
-      <Form.Field required={required}>
+      <Form.Field
+        required={required}
+        style={{position: 'relative'}}>
         {label && <label>{label}</label>}
-
         <DayPickerInput
           value={date}
+          placeholder={placeholder}
+          formatDate={formatDate}
           dayPickerProps={{ selectedDays: date }}
           style={{
             width: '140px',
-            float: 'left',
-            marginRight: '10px',
-            marginBottom: '10px'
           }}
           onDayChange={(date) => this.setDate(date)}
         />
+        {clearable && (
+          <Icon name="x"
+            color="grey"
+            style={{
+              position: 'absolute',
+              top: '10px',
+              left: '115px',
+              cursor: 'pointer',
+              visibility: date ? 'visible' : 'hidden'
+            }}
+            onClick={() => this.setDate(null)}
+          />
+        )}
         {includeTime && (
           <React.Fragment>
             <Input
               type="text"
               labelPosition="right"
-              style={{ width: '60px', float: 'left', marginRight: '40px' }}
-              value={hours}
-              onChange={(e, props) => this.setHours(props.value)}
-            >
+              style={{
+                width: '60px',
+                verticalAlign: 'text-top',
+                margin: '0 40px 0 10px'
+              }}
+              value={date.getHours()}
+              onChange={(e, props) => this.setHours(props.value)}>
               <input />
               <Label>h</Label>
             </Input>
             <Input
               type="text"
               labelPosition="right"
-              style={{ width: '60px', float: 'left' }}
-              value={minutes}
-              onChange={(e, props) => this.setMinutes(props.value)}
-            >
+              style={{
+                width: '60px',
+                verticalAlign: 'text-top',
+              }}
+              value={date.getMinutes()}
+              onChange={(e, props) => this.setMinutes(props.value)}>
               <input />
               <Label>m</Label>
             </Input>

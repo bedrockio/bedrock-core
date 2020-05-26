@@ -1,32 +1,39 @@
 import React from 'react';
-import { observer, inject } from 'mobx-react';
 import { Switch, Route, Link } from 'react-router-dom';
-import AppWrapper from 'components/AppWrapper';
 import { Container, Divider, Breadcrumb, Button } from 'semantic-ui-react';
+import { request } from 'utils/api';
 
+import AppWrapper from 'components/AppWrapper';
 import { Layout } from 'components/Layout';
 import PageLoader from 'components/PageLoader';
+import EditShop from 'components/modals/EditShop';
 import Overview from './Overview';
 import Products from './Products';
-import EditShop from 'components/modals/EditShop';
-
 import Menu from './Menu';
 
-@inject('shops')
-@observer
 export default class Shop extends React.Component {
+
   state = {
-    itemId: this.props.match.params.id
+    shop: null,
   };
 
   componentDidMount() {
-    this.props.shops.fetchItem(this.state.itemId);
+    this.fetchShop();
+  }
+
+  fetchShop = async () => {
+    const { id } = this.props.match.params;
+    const { data } = await request({
+      method: 'GET',
+      path: `/1/shops/${id}`
+    });
+    this.setState({
+      shop: data
+    });
   }
 
   render() {
-    const { shops } = this.props;
-    const item = shops.get(this.state.itemId);
-
+    const { shop } = this.state;
     return (
       <AppWrapper>
         <Container>
@@ -41,39 +48,44 @@ export default class Shop extends React.Component {
               </Breadcrumb.Section>
               <Breadcrumb.Divider icon="right chevron" />
               <Breadcrumb.Section active>
-                {item ? item.name : 'Loading...'}
+                {shop?.name || 'Loading...'}
               </Breadcrumb.Section>
             </Breadcrumb>
-            <EditShop
-              initialValues={item}
-              trigger={
-                <Button
-                  primary
-                  icon="setting"
-                  content="Settings"
-                />
-              }
-            />
+            {shop && (
+              <EditShop
+                shop={shop}
+                onSave={this.fetchShop}
+                trigger={
+                  <Button
+                    primary
+                    icon="setting"
+                    content="Settings"
+                  />
+                }
+              />
+            )}
           </Layout>
         </Container>
         <Divider hidden />
-        <Menu itemId={this.state.itemId} />
-        <Divider hidden />
-        {!item && <PageLoader />}
-        {item && (
-          <Switch>
-            <Route
-              exact
-              path="/shops/:id/products"
-              component={(props) => <Products {...props} shop={item} />}
-            />
-            <Route
-              exact
-              path="/shops/:id"
-              item={item}
-              component={(props) => <Overview {...props} shop={item} />}
-            />
-          </Switch>
+        {!shop ? (
+          <PageLoader />
+        ) : (
+          <React.Fragment>
+            <Menu shop={shop} />
+            <Divider hidden />
+            <Switch>
+              <Route
+                exact
+                path="/shops/:id/products"
+                render={(props) => <Products {...props} shop={shop} />}
+              />
+              <Route
+                exact
+                path="/shops/:id"
+                render={(props) => <Overview {...props} shop={shop} />}
+              />
+            </Switch>
+          </React.Fragment>
         )}
       </AppWrapper>
     );

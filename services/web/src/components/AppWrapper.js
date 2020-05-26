@@ -1,15 +1,13 @@
 import React from 'react';
-import { observer, inject } from 'mobx-react';
+import { session } from 'stores';
 import { NavLink, Link } from 'react-router-dom';
 import { Container, Dropdown, Icon, Menu } from 'semantic-ui-react';
 import logoInverted from 'assets/icon.svg';
 
-@inject('me')
-@observer
 export default class AppWrapper extends React.Component {
+
   render() {
-    const { me } = this.props;
-    const { user } = me;
+    const { user } = session;
     return (
       <div>
         <Menu inverted fixed="top">
@@ -30,8 +28,7 @@ export default class AppWrapper extends React.Component {
                       <span>
                         <Icon name="user" /> {user.name}
                       </span>
-                    }
-                  >
+                    }>
                     <Dropdown.Menu>
                       <Dropdown.Item as={Link} to="/settings">
                         Settings
@@ -39,7 +36,7 @@ export default class AppWrapper extends React.Component {
                       <Dropdown.Item as={Link} to="/docs/getting-started">
                         API Docs
                       </Dropdown.Item>
-                      {me.isAdmin() && (
+                      {session.isAdmin() && (
                         <React.Fragment>
                           <Dropdown.Item as={Link} to="/users">
                             Users

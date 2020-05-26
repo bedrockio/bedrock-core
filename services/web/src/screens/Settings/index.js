@@ -1,15 +1,13 @@
 import React from 'react';
-import { observer, inject } from 'mobx-react';
+import { session } from 'stores';
 import AppWrapper from 'components/AppWrapper';
 
-@inject('me')
-@observer
 export default class Home extends React.Component {
   render() {
-    const { me } = this.props;
+    const { user } = session;
     return (
       <AppWrapper>
-        From Settings => {me.user.name} ({me.user.email})
+        From Settings => {user.name} ({user.email})
       </AppWrapper>
     );
   }

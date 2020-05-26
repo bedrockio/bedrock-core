@@ -8,27 +8,26 @@ const countries = getData().map(({ code, name }) => ({
   key: code
 }));
 
-export default function Countries({
-  required,
-  label,
-  placeholder = 'Country',
-  name,
-  ...props
-}) {
-  function handleChange(e, { value }) {
-    return props.onChange(value);
+export default class Countries extends React.Component {
+
+  onChange = (evt, { value }) => {
+    return this.props.onChange(value);
   }
 
-  return (
-    <Form.Field required={required}>
-      {label && <label>{label}</label>}
-      <Select
-        name={name}
-        defaultValue={props.value}
-        placeholder={placeholder}
-        options={countries}
-        onChange={handleChange}
-      />
-    </Form.Field>
-  );
+  render() {
+    const { required, label, placeholder, value, name } = this.props;
+    return (
+      <Form.Field required={required}>
+        {label && <label>{label}</label>}
+        <Select
+          name={name}
+          defaultValue={value}
+          placeholder={placeholder}
+          options={countries}
+          onChange={this.onChange}
+        />
+      </Form.Field>
+    );
+  }
+
 }

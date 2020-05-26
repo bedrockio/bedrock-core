@@ -1,18 +1,18 @@
 import React from 'react';
-import { observer, inject } from 'mobx-react';
 import AppWrapper from 'components/AppWrapper';
+import { session } from 'stores';
 
-@inject('me')
-@observer
 export default class Home extends React.Component {
+
   componentDidMount() {
     this.props.history.replace('/shops');
   }
+
   render() {
+    const { user } = session;
     return (
       <AppWrapper>
-        Hello {this.props.me.user.name} ({this.props.me.user.email}) from
-        dashboard
+        Hello {user.name} ({user.email}) from dashboard
       </AppWrapper>
     );
   }

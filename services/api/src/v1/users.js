@@ -49,6 +49,9 @@ router
     '/search',
     validate({
       body: Joi.object({
+        startAt: Joi.date(),
+        endAt: Joi.date(),
+        role: Joi.string(),
         skip: Joi.number().default(0),
         sort: Joi.object({
           field: Joi.string().required(),
@@ -63,8 +66,20 @@ router
       })
     }),
     async (ctx) => {
-      const { sort, skip, limit } = ctx.request.body;
+      const { sort, skip, limit, startAt, endAt, role } = ctx.request.body;
       const query = { deletedAt: { $exists: false } };
+      if (startAt || endAt) {
+        query.createdAt = {};
+        if (startAt) {
+          query.createdAt.$gte = startAt;
+        }
+        if (endAt) {
+          query.createdAt.$lte = endAt;
+        }
+      }
+      if (role) {
+        query.roles = { $in: [role] };
+      }
       const data = await User.find(query)
         .sort({ [sort.field]: sort.order === 'desc' ? -1 : 1 })
         .skip(skip)

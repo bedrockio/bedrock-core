@@ -34,6 +34,12 @@
           "info"
         ]
       }
+    ],
+    "jest/expect-expect": [
+      "error",
+      {
+        "assertFunctionNames": ["expect*", "assert*"]
+      }
     ]
   },
   "settings": {

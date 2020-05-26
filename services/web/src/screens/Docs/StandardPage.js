@@ -6,8 +6,8 @@ import { enrichMarkdown, executeOpenApiMacros } from 'utils/markdown';
 
 export default class StandardPage extends React.Component {
   render() {
-    const { credentials, me, page, openApi } = this.props;
-    let markdown = enrichMarkdown(page.markdown, me, credentials);
+    const { credentials, page, openApi } = this.props;
+    let markdown = enrichMarkdown(page.markdown, credentials);
     markdown = executeOpenApiMacros(openApi, markdown);
     return (
       <div className="docs markdown-body">

@@ -14,10 +14,9 @@ export default (props) => {
         onSubmit={() => {
           setTouched(true);
           props.onSubmit({
-            email
+            email,
           });
-        }}
-      >
+        }}>
         <Form.Input
           name="email"
           icon="mail"
@@ -34,6 +33,7 @@ export default (props) => {
           size="large"
           content="Request password"
           loading={props.loading}
+          disabled={props.loading}
         />
       </Form>
     </AutoFocus>

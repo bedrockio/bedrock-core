@@ -8,7 +8,6 @@
 - [ES6](https://babeljs.io/docs/learn-es2015/)
 - [React](https://facebook.github.io/react/)
 - [React Router V4](https://github.com/reactjs/react-router)
-- [MobX](https://mobx.js.org/)
 - [Prettier](https://prettier.io/)
 - [Eslint](https://eslint.org/)
 - [Lodash](https://lodash.com/)

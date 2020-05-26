@@ -1,5 +1,6 @@
 import { API_URL, APP_NAME } from 'utils/env';
 import { flatten } from 'lodash';
+import { session } from 'stores';
 
 function formatTypeSummary(schema) {
   if (!schema) return 'unknown';
@@ -117,8 +118,8 @@ export function executeOpenApiMacros(openApi, markdown) {
   return markdown;
 }
 
-export function enrichMarkdown(markdown, me, credentials) {
-  const { organization } = me;
+export function enrichMarkdown(markdown, credentials) {
+  const { organization } = session;
   let enrichedMarkdown = markdown;
   if (organization) {
     enrichedMarkdown = enrichedMarkdown.replace(new RegExp('<ORGANIZATION_ID>', 'g'), organization.id);

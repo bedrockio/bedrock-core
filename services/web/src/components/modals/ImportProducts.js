@@ -1,6 +1,6 @@
 import React from 'react';
-import { observer, inject } from 'mobx-react';
 import Dropzone from 'react-dropzone';
+import { request } from 'utils/api';
 
 import {
   Modal,
@@ -35,14 +35,19 @@ export const productsImportMapping = {
   }
 };
 
-async function batchCreate(store, objects, percentFn) {
+async function batchCreate(objects, percentFn) {
   const errors = [];
   percentFn(1);
   let i = 0;
-  for (const object of objects) {
-    const result = await store.create(object, false);
-    if (result instanceof Error) {
-      errors.push(result);
+  for await (const object of objects) {
+    try {
+      await request({
+        method: 'POST',
+        path: '/1/products',
+        body: object
+      });
+    } catch(err) {
+      errors.push(err);
     }
     percentFn((i / objects.length) * 100);
     i += 1;
@@ -59,8 +64,6 @@ const defaultState = {
   progressPercent: 0
 };
 
-@inject('products')
-@observer
 export default class ImportProducts extends React.Component {
   state = {
     open: false,
@@ -89,7 +92,7 @@ export default class ImportProducts extends React.Component {
   commit() {
     const { step, items } = this.state;
     this.setState({ step: step + 1, loading: true });
-    batchCreate(this.props.products, items, (progressPercent) =>
+    batchCreate(items, (progressPercent) =>
       this.setState({ progressPercent })
     )
       .then((errors) => this.setState({ loading: false, errors }))

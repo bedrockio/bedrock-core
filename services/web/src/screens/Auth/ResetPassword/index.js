@@ -1,6 +1,7 @@
 import React from 'react';
 import { Segment, Message } from 'semantic-ui-react';
-import { observer, inject } from 'mobx-react';
+import { session } from 'stores';
+import { request } from 'utils/api';
 
 import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
@@ -9,48 +10,65 @@ import { Link } from 'react-router-dom';
 
 import { getToken, parseToken } from 'utils/token';
 
-@inject('auth')
-@observer
 export default class ResetPassword extends React.Component {
+
   constructor(props) {
     super(props);
     const token = getToken(props);
     this.state = {
       token,
-      jwt: parseToken(token)
+      jwt: parseToken(token),
+      loading: false,
+      success: false,
+      error: null,
     };
   }
 
-  onSubmit = (body) => {
-    return this.props.auth.setPassword(
-      {
-        ...body,
-        token: this.state.token
-      },
-      'set-password'
-    );
+  onSubmit = async (body) => {
+    try {
+      const { token } = this.state;
+      this.setState({
+        loading: true,
+        error: null,
+      });
+      const { data } = await request({
+        method: 'POST',
+        path: '/1/auth/set-password',
+        body: {
+          ...body,
+          token,
+        }
+      });
+      session.setToken(data.token);
+      this.setState({
+        loading: false,
+        success: true,
+      });
+    } catch(error) {
+      this.setState({
+        error,
+        loading: false,
+      });
+    }
   };
 
   render() {
-    const { token, jwt } = this.state;
-    const status = this.props.auth.getStatus('set-password');
+    const { jwt, error, loading, success } = this.state;
     return (
       <PageCenter>
         <LogoTitle title="Reset Password" />
         <Segment.Group>
           <Segment padded>
-            {(!token || !jwt) && (
-              <p>
-                <Message error size="huge">
-                  <Message.Header>No valid token found</Message.Header>
-                  <Message.Content>
-                    Please ensure you either click the email link in the email
-                    or copy paste the link in full.
-                  </Message.Content>
-                </Message>
-              </p>
+            {(!jwt) && (
+              <Message error>
+                <Message.Header>No valid token found</Message.Header>
+                <Message.Content>
+                  Please ensure you either click the email link in the email
+                  or copy paste the link in full.
+                </Message.Content>
+              </Message>
             )}
-            {status.success && (
+            {success && (
               <Message info>
                 <Message.Header>Your password has been changed!</Message.Header>
                 <p>
@@ -58,8 +76,8 @@ export default class ResetPassword extends React.Component {
                 </p>
               </Message>
             )}
-            {!status.success && token && jwt && (
-              <Form onSubmit={this.onSubmit} status={status} />
+            {!success && jwt && (
+              <Form onSubmit={this.onSubmit} loading={loading} error={error} />
             )}
           </Segment>
         </Segment.Group>

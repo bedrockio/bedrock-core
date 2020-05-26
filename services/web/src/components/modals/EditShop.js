@@ -1,140 +1,130 @@
 import React from 'react';
-import { observer, inject } from 'mobx-react';
-import { Form, Message, Modal, Button } from 'semantic-ui-react';
+import { Form, Modal, Message, Button } from 'semantic-ui-react';
 import { request } from 'utils/api';
-import UploadsField from 'components/form-fields/Uploads';
-import CountriesField from 'components/form-fields/Countries';
 import AutoFocus from 'components/AutoFocus';
 import SearchDropDown from 'components/SearchDropdown';
+import UploadsField from 'components/form-fields/Uploads';
+import CountriesField from 'components/form-fields/Countries';
 
-@inject('shops')
-@observer
 export default class EditShop extends React.Component {
-  static defaultProps = {
-    initialValues: {}
-  };
 
-  state = {
-    open: false,
-    hasError: false,
-    formValues: { ...this.props.initialValues }
-  };
-
-  componentDidUpdate(prevProps) {
-    if (this.props.initialValues !== prevProps.initialValues) {
-      this.setState({
-        touched: false,
-        formValues: { ...this.props.initialValues }
-      });
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false,
+      touched: false,
+      loading: false,
+      error: null,
+      hasError: false,
+      shop: props.shop || {},
+    };
   }
 
-  handleSubmit = () => {
-    const { shops, initialValues } = this.props;
+  isUpdate() {
+    return !!this.props.shop;
+  }
+
+  setShopField(name, value) {
     this.setState({
-      touched: true
-    });
-
-    const action = initialValues.id
-      ? shops.update.bind(shops)
-      : shops.create.bind(shops);
-
-    return action(this.state.formValues).then((err) => {
-      if (err instanceof Error) return;
-      this.setState({
-        formValues: this.props.initialValues,
-        open: false,
-        touched: false
-      });
-    });
-  };
-
-  setField(name, value) {
-    this.setState({
-      formValues: {
-        ...this.state.formValues,
-        [name]: value
+      shop: {
+        ...this.state.shop,
+        [name]: value,
       }
     });
   }
+
+  onSubmit = async () => {
+    try {
+      const { shop } = this.state;
+      this.setState({
+        loading: true,
+        touched: true,
+      });
+      if (this.isUpdate()) {
+        await request({
+          method: 'PATCH',
+          path: `/1/shops/${shop.id}`,
+          body: shop,
+        });
+      } else {
+        await request({
+          method: 'POST',
+          path: '/1/shops',
+          body: shop
+        });
+        this.setState({
+          shop: {},
+          touched: false,
+        });
+      }
+      this.setState({
+        open: false,
+        loading: false,
+      });
+      this.props.onSave();
+    } catch (error) {
+      this.setState({
+        error,
+        loading: false,
+      });
+    }
+  };
 
   fetchCategories = (filter) => {
     return request({
       method: 'POST',
       path: '/1/categories/search',
       body: {
-        ...filter
-      }
+        ...filter,
+      },
     });
   };
 
-  handleOnCategoryChange = (e, { value }) => {
-    this.setField('categories', value);
-  };
-
   render() {
-    const { shops, initialValues, trigger } = this.props;
-    const { formValues = {}, touched, open, hasError } = this.state;
-
-    const isUpdate = !!initialValues.id;
-    const status = isUpdate
-      ? shops.getStatus('update')
-      : shops.getStatus('create');
-
+    const { trigger } = this.props;
+    const { shop, open, touched, loading, error, hasError } = this.state;
     return (
       <Modal
         closeIcon
-        onClose={() =>
-          this.setState({
-            open: false,
-            formValues: this.props.initialValues,
-            touched: false
-          })
-        }
+        onClose={() => this.setState({ open: false })}
         onOpen={() => this.setState({ open: true })}
         open={open}
-        trigger={trigger}
-      >
+        trigger={trigger}>
         <Modal.Header>
-          {isUpdate ? `Edit "${initialValues.name}"` : 'New Shop'}
+          {this.isUpdate() ? `Edit "${shop.name}"` : 'New Shop'}
         </Modal.Header>
         <Modal.Content>
           <AutoFocus>
-            <Form
-              error={touched && (Boolean(status.error) || hasError)}
-              onSubmit={() => this.handleSubmit()}
-            >
-              {status.error && <Message error content={status.error.message} />}
+            <Form error={touched && (error || hasError)}>
+              {error && <Message error content={error.message} />}
               <Form.Input
-                value={formValues.name || ''}
                 name="name"
                 label="Name"
                 required
                 type="text"
-                onChange={(e, { name, value }) => this.setField(name, value)}
+                value={shop.name || ''}
+                onChange={(e, { value }) => this.setShopField('name', value)}
               />
-
               <Form.TextArea
-                value={formValues.description || ''}
                 name="description"
                 label="Description"
                 type="text"
-                onChange={(e, { name, value }) => this.setField(name, value)}
+                value={shop.description || ''}
+                onChange={(e, { value }) => this.setShopField('description', value)}
               />
-
               <CountriesField
                 label="Country"
                 name="country"
-                value={formValues.country || 'United States'}
-                onChange={(value) => this.setField('country', value)}
+                value={shop.country || 'US'}
+                onChange={(code) => this.setShopField('country', code)}
               />
               <Form.Field>
                 <label>
                   Categories
                   <SearchDropDown
-                    onChange={this.handleOnCategoryChange}
-                    value={formValues.categories || []}
                     multiple
+                    value={shop.categories || []}
+                    onChange={(e, { value }) => this.setShopField('categories', value)}
                     fetchData={this.fetchCategories}
                     fluid
                   />
@@ -143,8 +133,8 @@ export default class EditShop extends React.Component {
               <UploadsField
                 label="Images"
                 name="images"
-                value={formValues.images || []}
-                onChange={(value) => this.setField('images', value)}
+                value={shop.images || []}
+                onChange={(value) => this.setShopField('images', value)}
                 onError={() => this.setState({ touched: true, hasError: true })}
               />
             </Form>
@@ -152,10 +142,11 @@ export default class EditShop extends React.Component {
         </Modal.Content>
         <Modal.Actions>
           <Button
-            loading={status.request === true}
             primary
-            content={isUpdate ? 'Update' : 'Create'}
-            onClick={this.handleSubmit}
+            loading={loading}
+            disabled={loading}
+            content={this.isUpdate() ? 'Update' : 'Create'}
+            onClick={this.onSubmit}
           />
         </Modal.Actions>
       </Modal>

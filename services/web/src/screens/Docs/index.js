@@ -1,8 +1,7 @@
 import React, { createRef } from 'react';
 import AppWrapper from 'components/AppWrapper';
-import { Container, Menu, Message, Breadcrumb, Divider, Grid, Sticky, Rail, Ref, Segment } from 'semantic-ui-react';
+import { Container, Menu, Message, Breadcrumb, Divider, Grid, Sticky, Ref, Segment } from 'semantic-ui-react';
 import { Switch, Route, Link, NavLink } from 'react-router-dom';
-import { observer, inject } from 'mobx-react';
 import StandardPage from './StandardPage';
 import PageLoader from 'components/PageLoader';
 
@@ -49,8 +48,6 @@ function stateForParams(params) {
   };
 }
 
-@inject('me')
-@observer
 export default class Docs extends React.Component {
   contextRef = createRef();
 
@@ -68,19 +65,22 @@ export default class Docs extends React.Component {
     error: null,
   };
 
-  componentDidMount() {
-    const { me } = this.props;
-    me.fetch().then(() => {});
-    request({
-      method: 'GET',
-      path: '/openapi.lite.json',
-    })
-      .then((openApi) => {
-        this.setState({ loading: false, openApi });
-      })
-      .catch((error) => {
-        this.setState({ error, loading: false });
+  async componentDidMount() {
+    try {
+      const openApi = await request({
+        method: 'GET',
+        path: '/openapi.lite.json',
       });
+      this.setState({
+        loading: false,
+        openApi
+      });
+    } catch(error) {
+      this.setState({
+        error,
+        loading: false
+      });
+    }
   }
 
   componentDidUpdate(prevProps) {

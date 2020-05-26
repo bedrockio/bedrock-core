@@ -28,7 +28,7 @@ describe('L10N Middleware', () => {
     expect(ctx.response.headers.location).toBe(`${prefix}page${query ? query : ''}`);
   }
 
-  function assertNotRedirected(ctx, cookie) {
+  function assertNotRedirected(ctx) {
     expect(ctx.response.headers).not.toHaveProperty('location');
   }
 
