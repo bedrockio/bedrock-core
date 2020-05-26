@@ -48,7 +48,7 @@ services:
       - api
 
   mongo:
-    image: mongo:4
+    image: mongo:4.0.9
     command: mongod
     logging:
       driver: none
