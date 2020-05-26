@@ -12,9 +12,6 @@ COPY yarn.lock /service/yarn.lock
 
 RUN cd /service; yarn install --production=true
 
-# Fix bcrypt
-# RUN cd /service; yarn --force add bcrypt --build-from-source
-
 # Copy app source
 COPY . /service/
 
