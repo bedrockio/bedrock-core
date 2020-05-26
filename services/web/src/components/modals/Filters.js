@@ -32,6 +32,7 @@ export default class Filters extends React.Component {
         size="tiny"
         trigger={
           <Icon
+            size="tiny"
             style={{margin:'8px', cursor: 'pointer'}}
             color={this.hasFilters() ? 'orange' : 'grey'}
             name="filter"

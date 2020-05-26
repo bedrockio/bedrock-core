@@ -32,6 +32,7 @@ export default class InviteUser extends React.Component {
       validEmails,
       invalidEmails,
       touched: false,
+      error: null,
     });
   };
 
@@ -40,6 +41,7 @@ export default class InviteUser extends React.Component {
       this.setState({
         loading: true,
         touched: true,
+        error: null,
       });
       const { validEmails } = this.state;
       await request({
@@ -81,8 +83,13 @@ export default class InviteUser extends React.Component {
         </Modal.Header>
         <Modal.Content>
           <AutoFocus>
-            <Form error={touched && error}>
+            <Form error={touched && !!error}>
               {error && <Message error content={error.message} />}
+              {touched && invalidEmails.length > 0 && (
+                <Message negative>
+                  Invalid: {invalidEmails.join(', ')}
+                </Message>
+              )}
               <Form.Field>
                 <label>Enter email address of the participant to invite</label>
                 <TextArea
@@ -93,11 +100,6 @@ export default class InviteUser extends React.Component {
                   placeholder="Email address seperate by comma or newline .e.g first@gmail.com, second@gmail.com"
                 />
               </Form.Field>
-              {touched && invalidEmails.length > 0 && (
-                <Message negative>
-                  Invalid: {invalidEmails.join(', ')}
-                </Message>
-              )}
             </Form>
           </AutoFocus>
         </Modal.Content>

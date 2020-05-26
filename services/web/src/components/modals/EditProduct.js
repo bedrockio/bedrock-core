@@ -15,7 +15,7 @@ export default class EditProduct extends React.Component {
       error: null,
       product: {
         ...props.product,
-        shopId: props.shopId,
+        shop: props.shopId,
       },
       sellingPoints: props.product?.sellingPoints || [],
     };
