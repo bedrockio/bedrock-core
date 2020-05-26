@@ -19,6 +19,7 @@
   "dependencies": {
     "@google-cloud/storage": "^4.7.0",
     "@hapi/joi": "^17.1.1",
+    "@yeongjet/joi-to-json-schema": "^1.0.4",
     "@kaareal/config": "^1.0.1",
     "@koa/cors": "^3.0.0",
     "@sentry/node": "^5.15.5",
@@ -34,7 +35,6 @@
     "postmark": "^2.5.2"
   },
   "devDependencies": {
-    "@yeongjet/joi-to-json-schema": "^1.0.4",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-jest": "^23.8.2",

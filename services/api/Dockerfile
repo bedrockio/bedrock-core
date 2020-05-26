@@ -3,7 +3,7 @@ FROM node:12-alpine
 ARG NODE_ENV=production
 
 # Update & install required packages
-RUN apk add --update bash git make python g++
+RUN apk add --update bash git make python g++ curl
 
 # Install app dependencies
 COPY package.json /service/package.json

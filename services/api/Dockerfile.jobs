@@ -1,22 +1,24 @@
-FROM node:10-alpine
+FROM node:12-alpine
 
 ENV NODE_ENV production
 
 # Update & install required packages
-RUN apk add --update bash git make python g++
+RUN apk add --update bash git make python g++ curl
 
 # Install app dependencies
 COPY package.json /service/package.json
 COPY yarn.lock /service/yarn.lock
 
+RUN cd /service; yarn install
 
-RUN cd /service; yarn install --production=true
+# Fix bcrypt
+RUN cd /service; yarn --force add bcrypt --build-from-source
 
 # Copy app source
-COPY . /service/
+COPY . /service
 
 # Set work directory to /api
-WORKDIR /service/
+WORKDIR /service
 
 RUN apk del python make g++
 
