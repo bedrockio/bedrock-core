@@ -44,13 +44,19 @@ export default class EditShop extends React.Component {
         await request({
           method: 'PATCH',
           path: `/1/shops/${shop.id}`,
-          body: shop,
+          body: {
+            ...shop,
+            images: (shop.images || []).map((image) => image.id),
+          }
         });
       } else {
         await request({
           method: 'POST',
           path: '/1/shops',
-          body: shop
+          body: {
+            ...shop,
+            images: (shop.images || []).map((image) => image.id),
+          }
         });
         this.setState({
           shop: {},
