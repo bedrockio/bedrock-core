@@ -1,7 +1,8 @@
 import React from 'react';
-import { Container, Table, Message, Button, Header } from 'semantic-ui-react';
+import { Container, Table, Message, Image, Button, Header } from 'semantic-ui-react';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
+import { urlForUpload } from 'utils/uploads';
 
 import { SearchProvider } from 'components/data';
 import { Layout } from 'components/Layout';
@@ -44,6 +45,9 @@ export default class ShopProducts extends React.Component {
                 <Table celled>
                   <Table.Header>
                     <Table.Row>
+                      <Table.HeaderCell width={2}>
+                        Image
+                      </Table.HeaderCell>
                       <Table.HeaderCell width={3} sorted={getSorted('name')} onClick={() => setSort('name')}>
                         Name
                       </Table.HeaderCell>
@@ -60,8 +64,17 @@ export default class ShopProducts extends React.Component {
                   </Table.Header>
                   <Table.Body>
                     {items.map((item) => {
+                      const [image] = item.images;
                       return (
                         <Table.Row key={item.id}>
+                          <Table.Cell>
+                            {image && (
+                              <Image
+                                style={{width: '100%'}}
+                                src={urlForUpload(image, true)}
+                              />
+                            )}
+                          </Table.Cell>
                           <Table.Cell>{item.name}</Table.Cell>
                           <Table.Cell>{item.description}</Table.Cell>
                           <Table.Cell>{formatDateTime(item.createdAt)}</Table.Cell>
