@@ -39,7 +39,7 @@ export default class Filters extends React.Component {
         trigger={
           this.hasFilters() ? (
             <Button as="div" labelPosition="right" style={{ marginRight: '10px' }}>
-              <Button basic color="primary">
+              <Button basic primary>
                 <Icon name="filter" />
                 Filter
               </Button>
@@ -48,7 +48,7 @@ export default class Filters extends React.Component {
               </Label>
             </Button>
           ) : (
-            <Button basic color="primary" style={{ marginRight: '10px' }}>
+            <Button basic primary style={{ marginRight: '10px' }}>
               <Icon name="filter" />
               Filter
             </Button>
