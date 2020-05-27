@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Schema = require('../lib/Schema');
+const Schema = require('../utils/Schema');
 
 const schema = new Schema(
   {
