@@ -53,7 +53,7 @@ exports.authenticate = ({ type } = {}, options = {}) => {
 
 exports.fetchUser = async (ctx, next) => {
   ctx.state.authUser = await User.findById(ctx.state.jwt.userId);
-  if (!ctx.state.authUser) ctx.throw(400, 'user associsated to token could not not be found');
+  if (!ctx.state.authUser) ctx.throw(400, 'user associated to token could not not be found');
   await next();
 };
 
