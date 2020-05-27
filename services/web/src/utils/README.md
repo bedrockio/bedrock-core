@@ -12,13 +12,13 @@ In order to do API calls, use the API utility:
 ```javascript
 import { request } from 'utils/api';
 
-request({
-  method: 'POST',
-  path: '/1/users/search',
-  body: {},
-})
-  .then(({ data }) => {})
-  .catch((error) => {});
+try {
+  const { data } = await request({
+    method: 'POST',
+    path: '/1/users/search',
+    body: {},
+  });
+} catch(err) {}
 ```
 
 ## Env / Configuration
