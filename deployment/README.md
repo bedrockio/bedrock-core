@@ -54,7 +54,7 @@ Each environment can be configured in `<environment>/env.conf`:
 
 ### Authorization
 
-- Use `gcloud auth login` and `gcloud auth application-default login` to sign into the right Google account
+- Use `gcloud config configurations create bedrock` and authorize Google Cloud `gcloud auth login`
 - Use `./deployment/scripts/authorize staging` to get cluster credentials
 - If you've used `gcloud auth` with another account, run `gcloud config set account <EMAIL>`, then re-run `./deployment/scripts/authorize`.
 
@@ -70,6 +70,12 @@ Then do the following
 gcloud auth configure-docker
 ```
 
+or
+
+```
+gcloud docker --authorize-only
+```
+
 ## New Environments
 
 ### Creating a new environment
@@ -80,6 +86,16 @@ gcloud auth configure-docker
 - Configure `<environment>/env.conf`
 - Create disks required for data stores, update Kubernetes files disk information
 - Use `kubectl create` to deploy all services and pods
+
+### Getting shell access
+
+There's a default `api-cli-deployment` provided that allows you to obtain a shell. This is useful when running migration scripts in production (you can take down the API and use CLI to do operations without new reads/writes coming in):
+
+```
+kubectl exec -it <CLI-POD-ID> /bin/bash
+```
+
+Note that the `api` and `web` services can be reached as hostnames: `curl http://api`
 
 ### Provisioning Scripts
 
