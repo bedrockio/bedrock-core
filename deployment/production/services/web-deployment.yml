@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+        - image: gcr.io/bedrock-foundation/bedrock-core-services-web
+          imagePullPolicy: Always
+          name: main
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: DOMAIN
+              value: bedrock.foundation
+            - name: API_URL
+              value: "https://api.bedrock.foundation"
+          ports:
+            - name: http-server
+              containerPort: 2200

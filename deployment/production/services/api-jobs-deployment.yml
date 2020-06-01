@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-jobs-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-jobs
+  template:
+    metadata:
+      labels:
+        app: api-jobs
+    spec:
+      containers:
+        - image: gcr.io/bedrock-foundation/bedrock-core-services-api-jobs
+          imagePullPolicy: Always
+          name: main
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: MONGO_URI
+              value: "mongodb://mongo:27017/bedrock_production"
+            - name: APP_DOMAIN
+              value: "bedrock.foundation"
+            - name: POSTMARK_FROM
+              value: "no-reply@bedrock.foundation"
+            - name: POSTMARK_APIKEY
+              value: "abc"
+          volumeMounts:
+            - name: cache
+              mountPath: /service/data
+      volumes:
+        - name: cache
+          emptyDir: {}

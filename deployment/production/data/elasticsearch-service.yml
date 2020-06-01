@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+ labels:
+   name: elasticsearch
+ name: elasticsearch
+spec:
+ ports:
+   - port: 9200
+     targetPort: 9200
+ selector:
+   name: elasticsearch
