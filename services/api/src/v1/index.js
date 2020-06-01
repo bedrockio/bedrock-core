@@ -6,6 +6,7 @@ const shops = require('./shops');
 const uploads = require('./uploads');
 const invites = require('./invites');
 const categories = require('./categories');
+const status = require('./status');
 
 const router = new Router();
 
@@ -16,5 +17,6 @@ router.use('/shops', shops.routes());
 router.use('/uploads', uploads.routes());
 router.use('/invites', invites.routes());
 router.use('/categories', categories.routes());
+router.use('/status', status.routes());
 
 module.exports = router;
