@@ -10,7 +10,7 @@ spec:
         name: backup-monitor
     spec:
       containers:
-        - image: dominiek/backup-monitor
+        - image: bedrock-foundation/backup-monitor
           imagePullPolicy: Always
           name: main
           env:
@@ -19,10 +19,10 @@ spec:
             - name: POSTMARK_API_KEY
               value: "abc"
             - name: POSTMARK_FROM
-              value: "dominiek@bedrock.foundation"
+              value: "bedrock-foundation@bedrock.foundation"
             - name: EMAIL_ALERT
-              value: "dominiek@bedrock.foundation"
+              value: "bedrock-foundation@bedrock.foundation"
             - name: EMAIL_HEALTH_CHECK
-              value: "dominiek@bedrock.foundation"
+              value: "bedrock-foundation@bedrock.foundation"
             - name: ENVIRONMENT
               value: "production"

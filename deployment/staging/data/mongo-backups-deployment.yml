@@ -10,7 +10,7 @@ spec:
         name: mongodb-backups
     spec:
       containers:
-        - image: dominiek/mongodb-backups
+        - image: bedrock-foundation/mongodb-backups
           imagePullPolicy: Always
           name: main
           env:
