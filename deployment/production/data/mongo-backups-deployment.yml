@@ -17,6 +17,6 @@ spec:
             - name: MONGO_HOST
               value: "mongo"
             - name: MONGO_DB
-              value: "bedrock_staging"
+              value: "bedrock_production"
             - name: BACKUPS_GS_BUCKET
-              value: "bedrock-staging-mongodb-backups"
+              value: "bedrock-production-mongodb-backups"

@@ -15,7 +15,7 @@ spec:
           name: main
           env:
             - name: GS_BUCKETS
-              value: "bedrock-staging-uploads bedrock-staging-mongodb-backups"
+              value: "bedrock-production-uploads bedrock-production-mongodb-backups"
             - name: POSTMARK_API_KEY
               value: "abc"
             - name: POSTMARK_FROM
@@ -25,4 +25,4 @@ spec:
             - name: EMAIL_HEALTH_CHECK
               value: "admin@bedrock.foundation"
             - name: ENVIRONMENT
-              value: "staging"
+              value: "production"
