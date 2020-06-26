@@ -36,6 +36,8 @@ replace() {
   sed -i '' "s/bedrock-production/$kebab-production/g" $1
   sed -i '' "s/bedrock-core-services/$kebab-services/g" $1
   sed -i '' "s/bedrock-foundation/$kebab/g" $1
+  sed -i '' "s/bedrock-web/$kebab-web/g" $1
+  sed -i '' "s/bedrock-api/$kebab-api/g" $1
   sed -i '' "s/admin@bedrock\.foundation/$email/g" $1
   sed -i '' "s/bedrock\.foundation/$domain/g" $1
   sed -i '' "s/APP_COMPANY_ADDRESS=.*/APP_COMPANY_ADDRESS=$address/g" $1
@@ -111,6 +113,7 @@ replace ./$kebab/deployment/production/data/mongo-backups-deployment.yml
 replace ./$kebab/deployment/production/data/mongo-deployment.yml
 replace ./$kebab/deployment/production/data/mongo-service.yml
 
+remove ./$kebab/create-project.sh
 remove ./$kebab/CONTRIBUTING.md
 remove ./$kebab/LICENSE
 remove ./$kebab/.git
