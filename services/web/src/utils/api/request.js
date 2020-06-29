@@ -1,5 +1,5 @@
 import { API_URL } from 'utils/env';
-import session from 'stores/session';
+import { session } from 'stores';
 
 import { ApiError, ApiParseError } from './errors';
 
