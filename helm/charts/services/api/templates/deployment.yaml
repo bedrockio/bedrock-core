@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bedrock-api
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: bedrock-api
+  template:
+    metadata:
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
+      labels:
+        app: bedrock-api
+        tier: backend
+    spec:
+      containers:
+        - image: "{{ .Values.image.api.name }}:{{ .Values.image.api.tag }}"
+          imagePullPolicy: Always
+          name: bedrock-api
+          env:
+            - name: NODE_ENV
+              value: {{ .Values.global.env | quote }}
+            - name: MONGO_URI
+              value: "mongodb://mongo:27017/{{ .Values.global.mongo_db }}"
+            - name: ADMIN_EMAIL
+              value: {{ .Values.admin.email | quote }}
+            - name: ADMIN_PASSWORD
+              value: {{ .Values.admin.password | quote }}
+            - name: JWT_SECRET
+              value: {{ .Values.jwt.secret | quote }}
+            - name: APP_DOMAIN
+              value: {{ .Values.global.app.domain | quote }}
+            - name: APP_URL
+              value: {{ .Values.global.app.url | quote }}
+            - name: POSTMARK_FROM
+              value: {{ .Values.postmark.from | quote }}
+            - name: POSTMARK_APIKEY
+              value: {{ .Values.postmark.api_key | quote }}
+            - name: UPLOADS_STORE
+              value: {{ .Values.uploads.store | quote }}
+            - name: UPLOADS_GCS_BUCKET
+              value: {{ .Values.uploads.gcs_bucket | quote }}
+          ports:
+            - name: http-server
+              containerPort: 2300
+          volumeMounts:
+            - name: cache
+              mountPath: /service/data
+      volumes:
+        - name: cache
+          emptyDir: {}

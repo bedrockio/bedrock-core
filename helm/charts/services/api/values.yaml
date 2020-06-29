@@ -1,0 +1,24 @@
+replicaCount: 2
+
+image:
+  api:
+    name: "gcr.io/bedrock-foundation/bedrock-core-services-api"
+    tag: "latest"
+  api_cli:
+    name: "gcr.io/bedrock-foundation/bedrock-core-services-api-cli"
+    tag: "latest"
+
+admin:
+  email: "admin@bedrock.foundation"
+  password: "password1"
+
+jwt:
+  secret: "changeme1234"
+
+postmark:
+  from: "no-reply@bedrock.foundation"
+  api_key: "abc"
+
+uploads:
+  store: "gcs"
+  gcs_bucket: "bedrock-staging-uploads"

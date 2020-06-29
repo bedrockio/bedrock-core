@@ -1,0 +1,7 @@
+elasticsearch:
+  cluster_name: "cluster-1-elasticsearch"
+  node_master: "false"
+  node_data: "false"
+  http_enable: "true"
+  es_java_opts: "-Xms500m -Xmx500m"
+  storage: 10Gi

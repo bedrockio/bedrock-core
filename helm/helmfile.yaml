@@ -1,0 +1,26 @@
+environments:
+  staging:
+  production:
+
+helmDefaults:
+  atomic: true
+  cleanupOnFail: true
+
+releases:
+- name: elasticsearch
+  chart: charts/data/elasticsearch
+  values:
+    - envs/{{ .Environment.Name }}.yaml
+
+- name: mongo
+  chart: charts/data/mongo
+  values:
+    - envs/{{ .Environment.Name }}.yaml
+
+- name: api
+  chart: charts/services/api
+  values:
+    - envs/{{ .Environment.Name }}.yaml
+  needs:
+  - mongo
+  - elasticsearch

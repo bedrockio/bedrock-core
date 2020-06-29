@@ -1,0 +1,13 @@
+{{- $domain := .Values.global.app.domain -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: api-ingress
+spec:
+  rules:
+    - host: "api.{{ $domain }}"
+      http:
+        paths:
+        - backend:
+           serviceName: bedrock-api
+           servicePort: 8000

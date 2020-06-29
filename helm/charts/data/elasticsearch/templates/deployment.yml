@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elasticsearch
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: elasticsearch
+  template:
+    metadata:
+      labels:
+        name: elasticsearch
+        tier: data
+    spec:
+      containers:
+      - image: elasticsearch:5
+        name: elasticsearch
+        env:
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: "CLUSTER_NAME"
+          value: {{ .Values.elasticsearch.cluster_name | quote }}
+        - name: NODE_MASTER
+          value: {{ .Values.elasticsearch.node_master | quote }}
+        - name: NODE_DATA
+          value: {{ .Values.elasticsearch.node_data | quote }}
+        - name: HTTP_ENABLE
+          value: {{ .Values.elasticsearch.http_enable | quote }}
+        - name: ES_JAVA_OPTS
+          value: {{ .Values.elasticsearch.es_java_opts | quote }}
+        ports:
+        - containerPort: 9200
+          name: http
+          protocol: TCP
+        - containerPort: 9300
+          name: transport
+          protocol: TCP
+        volumeMounts:
+        - name: elasticsearch-persistent-storage
+          mountPath: /usr/share/elasticsearch/data
+      volumes:
+        - name: elasticsearch-persistent-storage
+          persistentVolumeClaim:
+             claimName: elasticsearch-pvc
