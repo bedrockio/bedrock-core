@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bedrock-api-cli
+  name: api-cli
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.image.api_cli.replicas }}
   selector:
     matchLabels:
-      app: bedrock-api-cli
+      app: api-cli
   template:
     metadata:
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
       labels:
-        app: bedrock-api-cli
+        app: api-cli
         tier: backend
     spec:
       containers:
         - image: "{{ .Values.image.api_cli.name }}:{{ .Values.image.api_cli.tag }}"
           imagePullPolicy: Always
-          name: bedrock-api-cli
+          name: api-cli
           env:
             - name: NODE_ENV
               value: {{ .Values.global.env | quote }}

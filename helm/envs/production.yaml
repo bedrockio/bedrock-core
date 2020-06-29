@@ -8,13 +8,5 @@ global:
 jwt:
   secret: "meepmeep"
 
-image:
-  api:
-    name: "gcr.io/bedrock-foundation/bedrock-core-services-api"
-    tag: "latest"
-  api_cli:
-    name: "gcr.io/bedrock-foundation/bedrock-core-services-api"
-    tag: "latest"
-
 mongo:
   storage: 30Gi

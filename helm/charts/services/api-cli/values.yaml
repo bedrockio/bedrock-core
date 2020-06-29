@@ -1,7 +1,7 @@
 image:
-  api:
-    replicas: 2
-    name: "gcr.io/bedrock-foundation/bedrock-core-services-api"
+  api_cli:
+    replicas: 1
+    name: "gcr.io/bedrock-foundation/bedrock-core-services-api-cli"
     tag: "latest"
 
 admin:

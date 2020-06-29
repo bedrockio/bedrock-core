@@ -1,6 +1,6 @@
 apiVersion: v2
-name: api
-description: A Helm chart for Kubernetes to deploy the Bedrock api service.
+name: api-cli
+description: A Helm chart for Kubernetes to deploy the Bedrock api-cli service.
 
 # A chart can be either an 'application' or a 'library' chart.
 type: application

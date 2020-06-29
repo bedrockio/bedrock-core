@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bedrock-api
+  name: api
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.image.api.replicas }}
   selector:
     matchLabels:
-      app: bedrock-api
+      app: api
   template:
     metadata:
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
       labels:
-        app: bedrock-api
+        app: api
         tier: backend
     spec:
       containers:
         - image: "{{ .Values.image.api.name }}:{{ .Values.image.api.tag }}"
           imagePullPolicy: Always
-          name: bedrock-api
+          name: api
           env:
             - name: NODE_ENV
               value: {{ .Values.global.env | quote }}

@@ -24,3 +24,11 @@ releases:
   needs:
   - mongo
   - elasticsearch
+
+- name: api-cli
+  chart: charts/services/api-cli
+  values:
+    - envs/{{ .Environment.Name }}.yaml
+  needs:
+  - mongo
+  - elasticsearch
