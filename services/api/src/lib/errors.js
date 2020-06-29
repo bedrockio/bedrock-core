@@ -1,12 +1,10 @@
 class ApplicationError extends Error {
-
-  constructor(message, status) {
+  constructor(message, statusCode) {
     super(message);
-    this.status = status;
+    this.statusCode = statusCode;
     Error.captureStackTrace(this, this.constructor);
   }
-
-};
+}
 
 class BadRequestError extends ApplicationError {
   constructor(message) {
