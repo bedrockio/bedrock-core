@@ -115,6 +115,8 @@ helm rollback api
 
 ## Notes
 - If you do not pass an environment with `-e`, you will get an error. This forces the correct settings (env + kubeContext).
+- Used ingress instead of explicit load-balancers
+- Used Persistent Volume claims (pvc) instead of creating disks
 - This allows for easy usage and addition of Helm charts from the helm repo
 
 ## Missing
