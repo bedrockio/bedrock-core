@@ -1,34 +1,40 @@
 environments:
   staging:
+    values:
+    - envs/{{ .Environment.Name }}.yaml
   production:
+    values:
+    - envs/{{ .Environment.Name }}.yaml
 
 helmDefaults:
   atomic: true
   cleanupOnFail: true
 
+templates:
+  releaseDefaults: &releaseDefaults
+    values:
+      - envs/{{ .Environment.Name }}.yaml
+    kubeContext: {{ .Values.kubeContext }}
+
 releases:
 - name: elasticsearch
   chart: charts/data/elasticsearch
-  values:
-    - envs/{{ .Environment.Name }}.yaml
+  <<: *releaseDefaults
 
 - name: mongo
   chart: charts/data/mongo
-  values:
-    - envs/{{ .Environment.Name }}.yaml
+  <<: *releaseDefaults
 
 - name: api
   chart: charts/services/api
-  values:
-    - envs/{{ .Environment.Name }}.yaml
+  <<: *releaseDefaults
   needs:
   - mongo
   - elasticsearch
 
 - name: api-cli
   chart: charts/services/api-cli
-  values:
-    - envs/{{ .Environment.Name }}.yaml
+  <<: *releaseDefaults
   needs:
   - mongo
   - elasticsearch

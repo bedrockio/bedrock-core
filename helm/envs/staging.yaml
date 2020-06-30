@@ -1,3 +1,5 @@
+kubeContext: gke_bedrock-core_us-east1-c_cluster-helm
+
 global:
   env: "staging"
   mongo_db: "bedrock_staging"
@@ -7,14 +9,6 @@ global:
 
 jwt:
   secret: "whatwhat"
-
-image:
-  api:
-    name: "gcr.io/bedrock-foundation/bedrock-core-services-api"
-    tag: "latest"
-  api_cli:
-    name: "gcr.io/bedrock-foundation/bedrock-core-services-api-cli"
-    tag: "latest"
 
 mongo:
   storage: 30Gi

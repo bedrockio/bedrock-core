@@ -1,3 +1,5 @@
+kubeContext: gke_bedrock-core_us-east1-c_cluster-helm
+
 global:
   env: "production"
   mongo_db: "bedrock_production"
