@@ -30,7 +30,7 @@ router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
   .param('shopId', async (id, ctx, next) => {
-    const shop = await Shop.findById(id).populate('images');
+    const shop = await Shop.findById(id);
     ctx.state.shop = shop;
     if (!shop) {
       throw new NotFoundError();
@@ -97,7 +97,6 @@ router
     }),
     async (ctx) => {
       const shop = await Shop.create(ctx.request.body);
-      await shop.populate('images').execPopulate();
       ctx.body = {
         data: shop
       };
