@@ -136,6 +136,8 @@ annotations:
 {{- end }}
 ```
 
+See [Helm automatically-roll-deployments](https://helm.sh/docs/howto/charts_tips_and_tricks/#automatically-roll-deployments) for more info.
+
 ## Missing
 
 - [ ] Git commit meta data on (helm) releases. However, you do already have more helm release data (`helm list`)
