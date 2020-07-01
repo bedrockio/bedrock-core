@@ -14,7 +14,7 @@ spec:
         tier: data
     spec:
       containers:
-        - image: mongo:4.0.9
+        - image: "{{ .Values.image.mongo.name }}:{{ .Values.image.mongo.tag }}"
           name: main
           ports:
             - name: mongo

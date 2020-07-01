@@ -125,11 +125,15 @@ helm rollback api
 - Used Persistent Volume claims (pvc) instead of creating disks
 - This allows for easy usage and addition of Helm charts from the helm repo
 - Helmfile performs linting to check if your yaml files are valid
-- The api and web deployment yaml files have the folloing annotation, to always force a graceful rollout. Alternatively you could update/bump the version numbers on every change, but our default tag use is `latest`:
+- The api and web deployment yaml files have the following annotation, to always force a graceful rollout when the image tag is set to `latest`. The random string forces the pods to terminate and restart (with rollout, so no interuptions). In production you should pin the `tag` to the digest of the image, so it won't restart any pods when there are no yaml changes:
 
 ```yaml
 annotations:
+{{- if eq .Values.image.web.tag "latest" }}
   rollme: {{ randAlphaNum 5 | quote }}
+{{- else }}
+  rollme: "{{ .Values.image.web.tag }}"
+{{- end }}
 ```
 
 ## Missing

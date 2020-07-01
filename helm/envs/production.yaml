@@ -29,3 +29,5 @@ image:
   web:
     name: "gcr.io/bedrock-foundation/bedrock-core-services-web"
     tag: "latest"
+  mongo:
+    tag: "4.0.9"
