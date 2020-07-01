@@ -1,5 +1,5 @@
 const { setupDb, teardownDb, request } = require('../../test-helpers');
-const Shop = require('../../models/shop');
+const User = require('../../models/user');
 
 beforeAll(async () => {
   await setupDb();
@@ -8,7 +8,6 @@ beforeAll(async () => {
 afterAll(async () => {
   await teardownDb();
 });
-
 
 describe('/1/status', () => {
   describe('GET /', () => {
@@ -20,16 +19,15 @@ describe('/1/status', () => {
   });
 
   describe('GET /mongodb', () => {
-    it('should return success is false when there are no shops in mongodb', async () => {
+    it('should return success is false when there are no users in mongodb', async () => {
       const response = await request('GET', '/1/status/mongodb', {}, {});
       expect(response.status).toBe(200);
       expect(response.body.success).toBe(false);
     });
 
     it('should return success is true when there are mongodb venues', async () => {
-      const venue1 = await Shop.create({
-        name: 'Mom and Pop',
-        description: 'F   riendly neighbourhood mom and pop shop.'
+      const venue1 = await User.create({
+        email: 'info@test.com',
       });
 
       const response = await request('GET', '/1/status/mongodb', {}, {});
