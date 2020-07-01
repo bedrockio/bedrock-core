@@ -1,4 +1,4 @@
-kubeContext: gke_bedrock-core_us-east1-c_cluster-helm
+kubeContext: gke_bedrock-core-staging_us-east1-c_cluster-helm
 
 global:
   env: "staging"
@@ -6,6 +6,12 @@ global:
   app:
     domain: "bedrock.foundation"
     url: "https://bedrock.foundation"
+  api:
+    url: "https://api.bedrock.foundation"
+
+uploads:
+  store: "gcs"
+  gcs_bucket: "bedrock-staging-uploads"
 
 jwt:
   secret: "whatwhat"

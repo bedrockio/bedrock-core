@@ -38,3 +38,7 @@ releases:
   needs:
   - mongo
   - elasticsearch
+
+- name: web
+  chart: charts/services/web
+  <<: *releaseDefaults

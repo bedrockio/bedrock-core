@@ -6,9 +6,26 @@ global:
   app:
     domain: "bedrock.foundation"
     url: "https://bedrock.foundation"
+  api:
+    url: "https://api.bedrock.foundation"
+
+uploads:
+  store: "gcs"
+  gcs_bucket: "bedrock-production-uploads"
 
 jwt:
   secret: "meepmeep"
 
 mongo:
   storage: 30Gi
+
+image:
+  api:
+    name: "gcr.io/bedrock-foundation/bedrock-core-services-api"
+    tag: "latest"
+  api_cli:
+    name: "gcr.io/bedrock-foundation/bedrock-core-services-api-cli"
+    tag: "latest"
+  web:
+    name: "gcr.io/bedrock-foundation/bedrock-core-services-web"
+    tag: "latest"
