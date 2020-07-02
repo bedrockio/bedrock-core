@@ -1,4 +1,4 @@
-kubeContext: gke_bedrock-core_us-east1-c_cluster-helm
+kubeContext: gke_bedrock-foundation_us-east1-c_bedrock-production-cluster
 
 global:
   env: "production"
@@ -11,7 +11,7 @@ global:
 
 uploads:
   store: "gcs"
-  gcs_bucket: "bedrock-production-uploads"
+  gcs_bucket: "bedrock-foundation-production-uploads"
 
 jwt:
   secret: "meepmeep"
