@@ -1,2 +1,7 @@
+image:
+  mongo:
+    name: "mongo"
+    tag: "4.0.9"
+
 mongo:
   storage: 30Gi

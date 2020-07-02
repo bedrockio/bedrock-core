@@ -21,7 +21,7 @@ brew install helmfile
 ## Folder structure
 
 ```bash
-helm/
+helm
 ├── README.md
 ├── charts
 │   ├── data
@@ -53,7 +53,11 @@ helm/
 │       │   │   └── deployment.yaml
 │       │   └── values.yaml
 │       └── web
-│           └── templates
+│           ├── Chart.yaml
+│           ├── templates
+│           │   ├── deployment.yml
+│           │   └── service.yml
+│           └── values.yaml
 ├── envs
 │   ├── production.yaml
 │   └── staging.yaml
@@ -97,6 +101,8 @@ helmfile -e production apply
 helmfile -e production --selector name=api-cli apply
 ```
 
+So each `helmfile sync` will result in a new revision. Now if you were to run `helmfile apply`, which will first check for diffs and only then (if found) will call `helmfile sync` which will in turn call `helm upgrade --install` this will not happen.
+
 ## Helm commands
 
 ```bash
@@ -115,9 +121,22 @@ helm rollback api
 
 ## Notes
 - If you do not pass an environment with `-e`, you will get an error. This forces the correct settings (env + kubeContext).
-- Used ingress instead of explicit load-balancers
+- Used ingress for api instead of explicit loadBalancers. Web shows as an example the use of a loadBalancer service
 - Used Persistent Volume claims (pvc) instead of creating disks
 - This allows for easy usage and addition of Helm charts from the helm repo
+- Helmfile performs linting to check if your yaml files are valid
+- The api and web deployment yaml files have the following annotation, to always force a graceful rollout when the image tag is set to `latest`. The random string forces the pods to terminate and restart (with rollout, so no interuptions). In production you should pin the `tag` to the digest of the image, so it won't restart any pods when there are no yaml changes:
+
+```yaml
+annotations:
+{{- if eq .Values.image.web.tag "latest" }}
+  rollme: {{ randAlphaNum 5 | quote }}
+{{- else }}
+  rollme: "{{ .Values.image.web.tag }}"
+{{- end }}
+```
+
+See [Helm automatically-roll-deployments](https://helm.sh/docs/howto/charts_tips_and_tricks/#automatically-roll-deployments) for more info.
 
 ## Missing
 

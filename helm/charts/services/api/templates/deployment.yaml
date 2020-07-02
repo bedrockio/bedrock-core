@@ -10,7 +10,11 @@ spec:
   template:
     metadata:
       annotations:
+      {{- if eq .Values.image.api.tag "latest" }}
         rollme: {{ randAlphaNum 5 | quote }}
+      {{- else }}
+        rollme: "{{ .Values.image.api.tag }}"
+      {{- end }}
       labels:
         app: api
         tier: backend

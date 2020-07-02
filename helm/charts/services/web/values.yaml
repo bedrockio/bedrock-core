@@ -1,0 +1,5 @@
+image:
+  web:
+    replicas: 2
+    name: "gcr.io/bedrock-foundation/bedrock-core-services-web"
+    tag: "latest"

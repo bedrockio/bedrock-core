@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+spec:
+  replicas: {{ .Values.image.web.replicas }}
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      annotations:
+      {{- if eq .Values.image.web.tag "latest" }}
+        rollme: {{ randAlphaNum 5 | quote }}
+      {{- else }}
+        rollme: "{{ .Values.image.web.tag }}"
+      {{- end }}
+      labels:
+        app: web
+        tier: fronted
+    spec:
+      containers:
+        - image: "{{ .Values.image.web.name }}:{{ .Values.image.web.tag }}"
+          imagePullPolicy: Always
+          name: web
+          env:
+            - name: NODE_ENV
+              value: {{ .Values.global.env | quote }}
+            - name: DOMAIN
+              value: {{ .Values.global.app.domain | quote }}
+            - name: API_URL
+              value: {{ .Values.global.api.url | quote }}
+          ports:
+            - name: http-server
+              containerPort: 2200
