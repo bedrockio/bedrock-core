@@ -24,7 +24,7 @@
     "@koa/cors": "^3.0.0",
     "@sentry/node": "^5.15.5",
     "@yeongjet/joi-to-json-schema": "^1.0.4",
-    "bcrypt": "^4.0.1",
+    "bcrypt": "^5.0.0",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.11.0",
     "koa-body": "^4.1.1",
