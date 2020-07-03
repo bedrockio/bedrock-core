@@ -43,15 +43,15 @@ infrastructure/provisioning/
 ```bash
 # Staging
 # terraform init only has to be executed the first time
-$ ./infrasctructure/deployment/scripts/provision staging init
+$ ./infrastructure/deployment/scripts/provision staging init
 
-$ ./infrasctructure/deployment/scripts/provision staging plan
-$ ./infrasctructure/deployment/scripts/provision staging apply
+$ ./infrastructure/deployment/scripts/provision staging plan
+$ ./infrastructure/deployment/scripts/provision staging apply
 
 # Production
 # terraform init only has to be executed the first time
-$ ./infrasctructure/deployment/scripts/provision production init
+$ ./infrastructure/deployment/scripts/provision production init
 
-$ ./infrasctructure/deployment/scripts/provision production plan
-$ ./infrasctructure/deployment/scripts/provision production apply
+$ ./infrastructure/deployment/scripts/provision production plan
+$ ./infrastructure/deployment/scripts/provision production apply
 ```
