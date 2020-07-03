@@ -25,18 +25,15 @@ brew install terraform
 ## Directory Structure
 
 ```bash
-infra/provisioning/
+infrastructure/provisioning/
 ├── README.md
 ├── backend.tf
-├── envs # Environment specific variables and beckend tfvars
-│   ├── production
-│   │   ├── backend.tfvars
-│   │   └── variables.tfvars
-│   └── staging
-│       ├── backend.tfvars
-│       └── variables.tfvars
 ├── main.tf # Main rersource definitions (cluster, node_pool, buckets)
 ├── outputs.tf # Output values when running terraform commands
+├── production
+│   └── variables.tfvars
+├── staging
+│   └── variables.tfvars
 ├── variables.tf # Defines all variables for main.tf (override per env)
 └── versions.tf # Defines minimum terraform version
 ```
@@ -44,19 +41,17 @@ infra/provisioning/
 ## Provision GKE Cluster
 
 ```bash
-cd infa/provisioning;
-
 # Staging
 # terraform init only has to be executed the first time
-$ terraform init -backend-config=./envs/staging/backend.tfvars
+$ ./infrasctructure/deployment/scripts/provision staging init
 
-$ terraform plan -var-file=./envs/staging/variables.tfvars
-$ terraform apply -var-file=./envs/staging/variables.tfvars
+$ ./infrasctructure/deployment/scripts/provision staging plan
+$ ./infrasctructure/deployment/scripts/provision staging apply
 
 # Production
 # terraform init only has to be executed the first time
-$ terraform init -backend-config=./envs/production/backend.tfvars
+$ ./infrasctructure/deployment/scripts/provision production init
 
-$ terraform plan -var-file=./envs/production/variables.tfvars
-$ terraform apply -var-file=./envs/production/variables.tfvars
+$ ./infrasctructure/deployment/scripts/provision production plan
+$ ./infrasctructure/deployment/scripts/provision production apply
 ```
