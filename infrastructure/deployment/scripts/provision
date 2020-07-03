@@ -13,6 +13,10 @@ fi
 
 export $(grep -v '^#' infrastructure/deployment/$ENVIRONMENT/env.conf | xargs)
 
+function plan() {
+  terraform plan -var "project=$GCLOUD_PROJECT" -var "environment=$GCLOUD_ENV_NAME" -var "cluster_name=$GCLOUD_KUBERNETES_CLUSTER_NAME" -var-file=./$GCLOUD_ENV_NAME/variables.tfvars -out="${PLAN_FILE}"
+}
+
 if [ "$TERRAFORM" == "init" ]; then
   TERRAFORM_BUCKET=gs://$GCLOUD_BUCKET_PREFIX-terraform-system-state
   TERRAFORM_NOT_EXIST=$(gsutil ls "$TERRAFORM_BUCKET" 2>&1 > /dev/null)
@@ -27,11 +31,12 @@ if [ "$TERRAFORM" == "init" ]; then
 
 elif [ "$TERRAFORM" == "plan" ]; then
   cd infrastructure/provisioning;
-  terraform plan -var-file=./$GCLOUD_ENV_NAME/variables.tfvars -out="${PLAN_FILE}"
+  plan
 elif [ "$TERRAFORM" == "apply" ]; then
   cd infrastructure/provisioning;
   # Always execute plan before apply, to use the correct plan_file
-  terraform plan -var-file=./$GCLOUD_ENV_NAME/variables.tfvars -out="${PLAN_FILE}"
+  plan
+  # terraform plan -var-file=./$GCLOUD_ENV_NAME/variables.tfvars -out="${PLAN_FILE}"
   terraform apply "${PLAN_FILE}"
 else
   echo "Terraform command $TERRAFORM not supported"

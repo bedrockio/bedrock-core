@@ -3,7 +3,7 @@ variable "cluster_name" {
 }
 
 variable "description" {
-  default = "Terraform GKE Cluster"
+  default = "Terraformed GKE Cluster"
 }
 
 variable "project" {
