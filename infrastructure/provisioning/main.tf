@@ -27,6 +27,19 @@ resource "google_container_cluster" "default" {
     update = "2h"
     delete = "2h"
   }
+
+  ## Use when you want to use IP whitelist
+  # master_authorized_networks_config {
+
+  #   dynamic "cidr_blocks" {
+  #     for_each = var.master_authorizaed_networks_cidr_blocks
+  #     content {
+  #       display_name = cidr_blocks.value["display_name"]
+  #       cidr_block = cidr_blocks.value["cidr_block"]
+  #     }
+  #   }
+
+  # }
 }
 
 resource "google_container_node_pool" "default" {

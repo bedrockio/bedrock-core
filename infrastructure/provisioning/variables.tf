@@ -56,6 +56,16 @@ variable "buckets" {
   ]
 }
 
+variable "master_authorizaed_networks_cidr_blocks" {
+  type = list(map(string))
+  default = [
+    {
+      display_name = "All",
+      cidr_block = "0.0.0.0/1"
+    }
+  ]
+}
+
 variable "location" {
   default = "us-east1-c"
 }
