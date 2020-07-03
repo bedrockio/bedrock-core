@@ -10,7 +10,7 @@ if [ "$ENVIRONMENT" == "" ] || [ "$TERRAFORM" == "" ]; then
   exit 1
 fi
 
-export $(grep -v '^#' infra/deployment/$ENVIRONMENT/env.conf | xargs)
+export $(grep -v '^#' infrastructure/deployment/$ENVIRONMENT/env.conf | xargs)
 
 if [ "$TERRAFORM" == "init" ]; then
   TERRAFORM_BUCKET=gs://$GCLOUD_BUCKET_PREFIX-terraform-system-state
@@ -21,11 +21,11 @@ if [ "$TERRAFORM" == "init" ]; then
     gsutil mb -l us-east1 $TERRAFORM_BUCKET
   fi
 
-  cd infra/provisioning;
+  cd infrastructure/provisioning;
   terraform init -backend-config="bucket=${GCLOUD_BUCKET_PREFIX}-terraform-system-state" -backend-config="prefix=${CLOUD_ENV_NAME}"
 
 elif [ "$TERRAFORM" == "plan" ] || [ "$TERRAFORM" == "plan" ]; then
-  cd infra/provisioning;
+  cd infrastructure/provisioning;
   terraform $TERRAFORM -var-file=./$GCLOUD_ENV_NAME/variables.tfvars
 else
   echo "Terraform command $TERRAFORM not supported"

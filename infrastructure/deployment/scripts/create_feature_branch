@@ -1,6 +1,6 @@
 #!/bin/bash
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
-cd $SCRIPTPATH; cd ../../
+cd $SCRIPTPATH; cd ../../..
 PLATFORM_NAME=$(basename `pwd`)
 ENVIRONMENT=$1
 BASE_SERVICE=$2

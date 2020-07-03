@@ -1,6 +1,6 @@
 #!/bin/bash
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
-cd $SCRIPTPATH; cd ../../
+cd $SCRIPTPATH; cd ../../..
 ENVIRONMENT=$1
 DEPLOYMENT=$2
 
