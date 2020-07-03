@@ -18,15 +18,10 @@ class Schema extends mongoose.Schema {
           versionKey: false,
           transform: (doc, ret) => {
             for (let key of Object.keys(ret)) {
-              const field = doc.schema.obj[key];
-              // Support for arrays
-              if (field && field.length && field[0] && field[0].access === 'private') {
-                ret[key] = [];
-              }
               // Omit any key with a private prefix "_" or marked
               // "access": "private" in the schema. Note that virtuals are
               // excluded by default so they don't need to be removed.
-              if (key[0] === '_' || (field && field.access === 'private')) {
+              if (key[0] === '_' || this.isPrivateField(doc, key)) {
                 delete ret[key];
               }
             }
@@ -38,6 +33,14 @@ class Schema extends mongoose.Schema {
     Object.assign(this.methods, {
       delete: this.delete,
     });
+  }
+
+  isPrivateField(doc, key) {
+    let field = doc.schema.obj[key];
+    if (Array.isArray(field)) {
+      field = field[0];
+    }
+    return field && field.access === 'private';
   }
 
   delete() {

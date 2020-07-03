@@ -92,6 +92,19 @@ describe('Schema', () => {
       expect(data.password).toBeUndefined();
     });
 
+    it('should not expose array fields marked private', () => {
+      const User = createModel(new Schema({
+        tags: [{ type: String, access: 'private' }],
+      }));
+      const user = new User();
+      user.tags = ['one', 'two'];
+
+      expect(user.tags).toBeInstanceOf(Array);
+
+      const data = JSON.parse(JSON.stringify(user));
+      expect(data.tags).toBeUndefined();
+    });
+
   });
 
   describe('autopopulate', () => {
