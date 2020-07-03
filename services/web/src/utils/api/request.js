@@ -42,8 +42,17 @@ export default async function request(options) {
   if (res.status === 204) {
     return;
   } else if (!res.ok) {
-    const text = await res.text();
-    throw new ApiError(text || res.statusText, res.status);
+    let message, statusCode;
+    try {
+      const data = await res.clone().json();
+      if (data.error) {
+        message = data.error.message;
+        statusCode = data.error.statusCode;
+      }
+    } catch(err) {
+      message = await res.clone().text();
+    }
+    throw new ApiError(message || res.statusText, statusCode || res.status);
   }
 
   try {
