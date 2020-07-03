@@ -1,33 +1,60 @@
-# Terraform
+# Provisioning
 
-Launch and manage a GKE cluster using Terraform.
+- [Provisioning](#provisioning)
+  - [Setup](#setup)
+    - [Dependencies](#dependencies)
+    - [Install Terraform](#install-terraform)
+  - [Directory Structure](#directory-structure)
+  - [Provision GKE Cluster](#provision-gke-cluster)
 
-## Launch GKE Cluster
+## Setup
+
+### Dependencies
+
+- Make sure the `gcloud` CLI tools are available
+- Use `gcloud auth login` and `gcloud auth application-default login` to login to the right Google account
+- For provisioning we use [Terraform](https://www.terraform.io/)
+
+### Install Terraform
 
 ```bash
-$ terraform init
-
-# Staging
-$ terraform plan -var-file=./envs/staging.tfvars
-$ terraform apply -var-file=./envs/staging.tfvars
-
-# Production
-$ terraform plan -var-file=./envs/production.tfvars
-$ terraform apply -var-file=./envs/production.tfvars
+# MacOS terraform install
+brew install terraform
 ```
 
-## Folder structure
+## Directory Structure
 
 ```bash
-terraform
+infra/provisioning/
 ├── README.md
-├── envs # Environment specific variable values
-│   ├── production.tfvars
-│   └── staging.tfvars
+├── backend.tf
+├── envs # Environment specific variables and beckend tfvars
+│   ├── production
+│   │   ├── backend.tfvars
+│   │   └── variables.tfvars
+│   └── staging
+│       ├── backend.tfvars
+│       └── variables.tfvars
 ├── main.tf # Main rersource definitions (cluster, node_pool, buckets)
 ├── outputs.tf # Output values when running terraform commands
-├── terraform.tfstate # Terraform state
-├── terraform.tfstate.backup # Terraform state backup
 ├── variables.tf # Defines all variables for main.tf (override per env)
 └── versions.tf # Defines minimum terraform version
+```
+
+## Provision GKE Cluster
+
+```bash
+# Staging
+# terraform init only has to be executed the first time
+$ terraform init -backend-config=./envs/staging/backend.tfvars
+
+$ terraform plan -var-file=./envs/staging/variables.tfvars
+$ terraform apply -var-file=./envs/staging/variables.tfvars
+
+# Production
+# terraform init only has to be executed the first time
+$ terraform init -backend-config=./envs/production/backend.tfvars
+
+$ terraform plan -var-file=./envs/production/variables.tfvars
+$ terraform apply -var-file=./envs/production/variables.tfvars
 ```

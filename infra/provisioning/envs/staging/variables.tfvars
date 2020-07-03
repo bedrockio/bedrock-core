@@ -1,4 +1,4 @@
-project     = "bedrock-foundation"
-name        = "bedrock-staging-cluster"
-description = "Staging GKE cluster"
-environment = "staging"
+project      = "bedrock-foundation"
+cluster_name = "staging-cluster-1"
+description  = "Staging GKE cluster"
+environment  = "staging"

@@ -4,7 +4,7 @@ locals {
 
 resource "google_container_cluster" "default" {
   provider    = google-beta
-  name        = var.name
+  name        = var.cluster_name
   project     = var.project
   description = var.description
   location    = local.location
@@ -30,7 +30,7 @@ resource "google_container_cluster" "default" {
 }
 
 resource "google_container_node_pool" "default" {
-  name       = "${var.name}-node-pool"
+  name       = "${var.cluster_name}-node-pool"
   project    = var.project
   location   = local.location
   cluster    = google_container_cluster.default.name
