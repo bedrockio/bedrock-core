@@ -44,6 +44,8 @@ infra/provisioning/
 ## Provision GKE Cluster
 
 ```bash
+cd infa/provisioning;
+
 # Staging
 # terraform init only has to be executed the first time
 $ terraform init -backend-config=./envs/staging/backend.tfvars

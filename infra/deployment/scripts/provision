@@ -1,0 +1,32 @@
+#!/bin/bash
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+cd $SCRIPTPATH; cd ../../..
+PLATFORM_NAME=$(basename `pwd`)
+ENVIRONMENT=$1
+TERRAFORM=$2
+
+if [ "$ENVIRONMENT" == "" ] || [ "$TERRAFORM" == "" ]; then
+  echo "Usage: $0 <command> <environment>"
+  exit 1
+fi
+
+export $(grep -v '^#' infra/deployment/$ENVIRONMENT/env.conf | xargs)
+
+if [ "$TERRAFORM" == "init" ]; then
+  TERRAFORM_BUCKET=gs://$GCLOUD_BUCKET_PREFIX-terraform-system-state
+  TERRAFORM_NOT_EXIST=$(gsutil ls "$TERRAFORM_BUCKET" 2>&1 > /dev/null)
+
+  if [ "$TERRAFORM_NOT_EXIST" != "" ]; then
+    echo "$TERRAFORM_BUCKET does not exist. Creating now.."
+    gsutil mb -l us-east1 $TERRAFORM_BUCKET
+  fi
+
+  cd infra/provisioning;
+  terraform init -backend-config="bucket=${GCLOUD_BUCKET_PREFIX}-terraform-system-state" -backend-config="prefix=${CLOUD_ENV_NAME}"
+
+elif [ "$TERRAFORM" == "plan" ] || [ "$TERRAFORM" == "plan" ]; then
+  cd infra/provisioning;
+  terraform $TERRAFORM -var-file=./$GCLOUD_ENV_NAME/variables.tfvars
+else
+  echo "Terraform command $TERRAFORM not supported"
+fi
