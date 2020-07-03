@@ -2,7 +2,7 @@ import React from 'react';
 import { Form, Modal, Message, Button } from 'semantic-ui-react';
 import { request } from 'utils/api';
 import AutoFocus from 'components/AutoFocus';
-import SearchDropDown from 'components/SearchDropdown';
+import SearchDropdown from 'components/SearchDropdown';
 import UploadsField from 'components/form-fields/Uploads';
 import CountriesField from 'components/form-fields/Countries';
 
@@ -125,7 +125,7 @@ export default class EditShop extends React.Component {
               <Form.Field>
                 <label>
                   Categories
-                  <SearchDropDown
+                  <SearchDropdown
                     multiple
                     value={shop.categories || []}
                     onChange={(e, { value }) => this.setShopField('categories', value)}
