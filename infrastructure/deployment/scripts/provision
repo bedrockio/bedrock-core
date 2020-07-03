@@ -4,6 +4,7 @@ cd $SCRIPTPATH; cd ../../..
 PLATFORM_NAME=$(basename `pwd`)
 ENVIRONMENT=$1
 TERRAFORM=$2
+PLAN_FILE="$(mktemp)"
 
 if [ "$ENVIRONMENT" == "" ] || [ "$TERRAFORM" == "" ]; then
   echo "Usage: $0 <command> <environment>"
@@ -24,9 +25,14 @@ if [ "$TERRAFORM" == "init" ]; then
   cd infrastructure/provisioning;
   terraform init -backend-config="bucket=${GCLOUD_BUCKET_PREFIX}-terraform-system-state" -backend-config="prefix=${CLOUD_ENV_NAME}"
 
-elif [ "$TERRAFORM" == "plan" ] || [ "$TERRAFORM" == "plan" ]; then
+elif [ "$TERRAFORM" == "plan" ]; then
   cd infrastructure/provisioning;
-  terraform $TERRAFORM -var-file=./$GCLOUD_ENV_NAME/variables.tfvars
+  terraform plan -var-file=./$GCLOUD_ENV_NAME/variables.tfvars -out="${PLAN_FILE}"
+elif [ "$TERRAFORM" == "apply" ]; then
+  cd infrastructure/provisioning;
+  # Always execute plan before apply, to use the correct plan_file
+  terraform plan -var-file=./$GCLOUD_ENV_NAME/variables.tfvars -out="${PLAN_FILE}"
+  terraform apply "${PLAN_FILE}"
 else
   echo "Terraform command $TERRAFORM not supported"
 fi
