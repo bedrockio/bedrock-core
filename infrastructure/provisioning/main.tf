@@ -40,6 +40,11 @@ resource "google_container_cluster" "default" {
   #   }
 
   # }
+
+  ## Recommended to use private nodes
+  # private_cluster_config {
+  #   enable_private_nodes   = true
+  # }
 }
 
 resource "google_container_node_pool" "default" {
