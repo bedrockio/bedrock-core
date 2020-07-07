@@ -48,7 +48,7 @@ services:
       - api
 
   mongo:
-    image: mongo:4.2
+    image: mongo:4.2.8
     command: --serviceExecutor adaptive
     logging:
       driver: none
