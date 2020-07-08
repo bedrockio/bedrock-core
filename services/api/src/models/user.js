@@ -1,32 +1,30 @@
 const { omit } = require('lodash');
 const mongoose = require('mongoose');
-const Schema = require('../utils/Schema');
+const { createSchema } = require('../lib/utils/schema');
 const bcrypt = require('bcrypt');
 
-const schema = new Schema(
-  {
-    email: {
-      type: String,
-      required: true,
-      lowercase: true,
-      trim: true
-    },
-    roles: [
-      {
-        type: String
-      }
-    ],
-    name: {
-      type: String,
-      trim: true
-    },
-    hashedPassword: {
-      type: String,
-      access: 'private',
-    },
-    timeZone: { type: String }
+const schema = createSchema({
+  email: {
+    type: String,
+    required: true,
+    lowercase: true,
+    trim: true,
   },
-);
+  roles: [
+    {
+      type: String,
+    },
+  ],
+  name: {
+    type: String,
+    trim: true,
+  },
+  hashedPassword: {
+    type: String,
+    access: 'private',
+  },
+  timeZone: { type: String },
+});
 
 schema.methods.isAdmin = function isAdmin() {
   return this.roles.indexOf('admin') !== -1;

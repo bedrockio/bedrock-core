@@ -1,8 +1,8 @@
-const { routerToOpenApi } = require('../utils');
+const { routerToOpenApi } = require('../../utils/openApi');
 
 describe('Utils', () => {
   test('It should extract OpenAPI paths from a Koa Router', async () => {
-    const router = require('../../v1/users')
+    const router = require('../../../v1/users')
     const result = routerToOpenApi(router)
     const {paths} = result
     expect(paths.length > 4).toBe(true)
