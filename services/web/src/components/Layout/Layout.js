@@ -9,18 +9,30 @@ export default class Layout extends React.Component {
 
   static Group = Group;
 
-  getClassNames() {
+  getProps() {
+    const { className, ...rest } = this.props;
+    return {
+      ...omit(rest, Object.keys(Layout.propTypes)),
+      className: this.getClassNames(className),
+    };
+  }
+
+  getClassNames(propClassName) {
     const classNames = ['layout'];
-    const props = omit(this.props, 'children');
-    for (let className of Object.keys(props)) {
-      classNames.push(className);
+    if (propClassName) {
+      classNames.push(propClassName);
+    }
+    for (let name of Object.keys(Layout.propTypes)) {
+      if (name in this.props) {
+        classNames.push(name);
+      }
     }
     return classNames.join(' ');
   }
 
   render() {
     return (
-      <div className={this.getClassNames()}>
+      <div {...this.getProps()}>
         {this.props.children}
       </div>
     );
