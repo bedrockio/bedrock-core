@@ -1,10 +1,11 @@
 import React from 'react';
-import { session } from 'stores';
+import { withSession } from 'stores';
 import AppWrapper from 'components/AppWrapper';
 
+@withSession
 export default class Home extends React.Component {
   render() {
-    const { user } = session;
+    const { user } = this.context;
     return (
       <AppWrapper>
         From Settings => {user.name} ({user.email})

@@ -6,6 +6,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { SENTRY_DSN } from 'utils/env';
+import { SessionProvider } from 'stores';
 import App from './App';
 
 if (SENTRY_DSN && window.Sentry) {
@@ -14,7 +15,9 @@ if (SENTRY_DSN && window.Sentry) {
 
 const Wrapper = () => (
   <BrowserRouter>
-    <App />
+    <SessionProvider>
+      <App />
+    </SessionProvider>
   </BrowserRouter>
 );
 
