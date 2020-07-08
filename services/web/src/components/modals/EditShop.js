@@ -15,18 +15,18 @@ export default class EditShop extends React.Component {
       loading: false,
       error: null,
       hasError: false,
-      shop: props.shop || {},
+      item: props.item || {},
     };
   }
 
   isUpdate() {
-    return !!this.props.shop;
+    return !!this.props.item;
   }
 
-  setShopField(name, value) {
+  setField(name, value) {
     this.setState({
-      shop: {
-        ...this.state.shop,
+      item: {
+        ...this.state.item,
         [name]: value,
       },
     });
@@ -34,7 +34,7 @@ export default class EditShop extends React.Component {
 
   onSubmit = async () => {
     try {
-      const { shop } = this.state;
+      const { item } = this.state;
       this.setState({
         loading: true,
         touched: true,
@@ -42,10 +42,10 @@ export default class EditShop extends React.Component {
       if (this.isUpdate()) {
         await request({
           method: 'PATCH',
-          path: `/1/shops/${shop.id}`,
+          path: `/1/shops/${item.id}`,
           body: {
-            ...shop,
-            images: (shop.images || []).map((image) => image.id),
+            ...item,
+            images: (item.images || []).map((image) => image.id),
           },
         });
       } else {
@@ -53,12 +53,12 @@ export default class EditShop extends React.Component {
           method: 'POST',
           path: '/1/shops',
           body: {
-            ...shop,
-            images: (shop.images || []).map((image) => image.id),
+            ...item,
+            images: (item.images || []).map((image) => image.id),
           },
         });
         this.setState({
-          shop: {},
+          item: {},
           touched: false,
         });
       }
@@ -87,7 +87,7 @@ export default class EditShop extends React.Component {
 
   render() {
     const { trigger } = this.props;
-    const { shop, open, touched, loading, error, hasError } = this.state;
+    const { item, open, touched, loading, error, hasError } = this.state;
     return (
       <Modal
         closeIcon
@@ -96,7 +96,7 @@ export default class EditShop extends React.Component {
         onOpen={() => this.setState({ open: true })}
         open={open}
         trigger={trigger}>
-        <Modal.Header>{this.isUpdate() ? `Edit "${shop.name}"` : 'New Shop'}</Modal.Header>
+        <Modal.Header>{this.isUpdate() ? `Edit "${item.name}"` : 'New Shop'}</Modal.Header>
         <Modal.Content>
           <AutoFocus>
             <Form error={touched && (error || hasError)}>
@@ -106,29 +106,29 @@ export default class EditShop extends React.Component {
                 label="Name"
                 required
                 type="text"
-                value={shop.name || ''}
-                onChange={(e, { value }) => this.setShopField('name', value)}
+                value={item.name || ''}
+                onChange={(e, { value }) => this.setField('name', value)}
               />
               <Form.TextArea
                 name="description"
                 label="Description"
                 type="text"
-                value={shop.description || ''}
-                onChange={(e, { value }) => this.setShopField('description', value)}
+                value={item.description || ''}
+                onChange={(e, { value }) => this.setField('description', value)}
               />
               <CountriesField
                 label="Country"
                 name="country"
-                value={shop.country || 'US'}
-                onChange={(code) => this.setShopField('country', code)}
+                value={item.country || 'US'}
+                onChange={(code) => this.setField('country', code)}
               />
               <Form.Field>
                 <label>
                   Categories
                   <SearchDropdown
                     multiple
-                    value={shop.categories || []}
-                    onChange={(e, { value }) => this.setShopField('categories', value)}
+                    value={item.categories || []}
+                    onChange={(e, { value }) => this.setField('categories', value)}
                     fetchData={this.fetchCategories}
                     fluid
                   />
@@ -137,8 +137,8 @@ export default class EditShop extends React.Component {
               <UploadsField
                 label="Images"
                 name="images"
-                value={shop.images || []}
-                onChange={(value) => this.setShopField('images', value)}
+                value={item.images || []}
+                onChange={(value) => this.setField('images', value)}
                 onError={() => this.setState({ touched: true, hasError: true })}
               />
             </Form>
