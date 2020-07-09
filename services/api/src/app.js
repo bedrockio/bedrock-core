@@ -27,14 +27,9 @@ app
   .use(bodyParser({ multipart: true }));
 
 app.on('error', (err, ctx) => {
-  const { statusCode, message } = err;
-  ctx.type = 'json';
-  ctx.status = statusCode || 500;
-  ctx.body = {
-    error: { message, statusCode },
-  };
   if (ctx.status === 500) {
     console.error(err);
+    Sentry.captureException(err);
   }
 });
 

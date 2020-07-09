@@ -92,7 +92,7 @@ describe('/1/users', () => {
         token: 'some bad token not really a good token',
       });
       expect(response.status).toBe(400);
-      expect(response.body).toEqual({ error: { message: 'bad jwt token', statusCode: 400 } });
+      expect(response.body).toEqual({ error: { message: 'bad jwt token', status: 400 } });
     });
   });
 });
