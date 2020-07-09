@@ -6,24 +6,19 @@ export default (props) => {
   const { error, loading } = props;
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [touched, setTouched] = React.useState(false);
-
   return (
     <AutoFocus>
       <Form
-        error={touched}
+        error={!!error}
         size="large"
         onSubmit={() => {
-          setTouched(true);
-
           props.onSubmit({
             email,
             password,
           });
         }}>
         {error && <Message error content={error.message} />}
-
-        <Form.Field error={touched && !email.length}>
+        <Form.Field error={error?.hasField?.('email')}>
           <Input
             value={email}
             onChange={(e, { value }) => setEmail(value)}
@@ -35,8 +30,7 @@ export default (props) => {
             autoComplete="email"
           />
         </Form.Field>
-
-        <Form.Field error={touched && !password.length}>
+        <Form.Field error={error?.hasField?.('password')}>
           <Input
             value={password}
             onChange={(e, { value }) => setPassword(value)}
@@ -48,7 +42,6 @@ export default (props) => {
             type="password"
           />
         </Form.Field>
-
         <Button
           fluid
           primary

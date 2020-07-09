@@ -9,7 +9,6 @@ export default (props) => {
   const [password, setPassword] = React.useState('');
   const [accepted, setAccepted] = React.useState(false);
   const [touched, setTouched] = React.useState(false);
-
   return (
     <AutoFocus>
       <Form
@@ -27,7 +26,7 @@ export default (props) => {
         }}>
         {touched && !accepted && <Message error content="Please accept the terms of service" />}
         {error && <Message error content={error.message} />}
-        <Form.Field error={touched && !name.length}>
+        <Form.Field error={error?.hasField?.('name')}>
           <Input
             value={name}
             onChange={(e, { value }) => setName(value)}
@@ -38,8 +37,7 @@ export default (props) => {
             autoComplete="name"
           />
         </Form.Field>
-
-        <Form.Field error={touched && !email.length}>
+        <Form.Field error={error?.hasField?.('email')}>
           <Input
             value={email}
             onChange={(e, { value }) => setEmail(value)}
@@ -50,8 +48,7 @@ export default (props) => {
             autoComplete="email"
           />
         </Form.Field>
-
-        <Form.Field error={touched && !password.length}>
+        <Form.Field error={error?.hasField?.('password')}>
           <Input
             value={password}
             onChange={(e, { value }) => setPassword(value)}
@@ -62,7 +59,6 @@ export default (props) => {
             type="password"
           />
         </Form.Field>
-
         <Form.Field error={touched && !accepted}>
           <Checkbox
             label={
@@ -74,7 +70,6 @@ export default (props) => {
             onChange={(e, { checked }) => setAccepted(checked)}
           />
         </Form.Field>
-
         <Button primary size="large" content="Signup" loading={loading} disabled={loading} />
       </Form>
     </AutoFocus>
