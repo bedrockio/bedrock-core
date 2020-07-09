@@ -48,7 +48,7 @@ export default class Protected extends React.Component {
     if (DeniedComponent) {
       return <DeniedComponent {...props} />;
     } else {
-      return <Redirect to={'/'} />;
+      return <Redirect to="/" />;
     }
   }
 }
@@ -57,7 +57,7 @@ Protected.propTypes = {
   admin: PropTypes.bool,
   roles: PropTypes.array,
   allowed: PropTypes.elementType.isRequired,
-  denied: PropTypes.oneOfType([PropTypes.elementType, PropTypes.string]),
+  denied: PropTypes.elementType,
   ...Route.propTypes,
 };
 
