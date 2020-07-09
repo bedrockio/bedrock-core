@@ -9,7 +9,7 @@ RUN apk add --update bash git make python g++ curl
 COPY package.json /service/package.json
 COPY yarn.lock /service/yarn.lock
 
-RUN cd /service; yarn install
+RUN cd /service; yarn install --frozen-lockfile
 
 # Fix bcrypt
 RUN cd /service; yarn --force add bcrypt --build-from-source
@@ -25,8 +25,6 @@ ENV PORT 2300
 
 # expose the port to outside world
 EXPOSE  2300
-
-RUN apk del python make g++
 
 # start command as per package.json
 CMD ["./scripts/cli-entrypoint.sh"]

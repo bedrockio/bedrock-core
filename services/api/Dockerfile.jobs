@@ -9,7 +9,7 @@ RUN apk add --update bash git make python g++ curl
 COPY package.json /service/package.json
 COPY yarn.lock /service/yarn.lock
 
-RUN cd /service; yarn install
+RUN cd /service; yarn install --frozen-lockfile
 
 # Fix bcrypt
 RUN cd /service; yarn --force add bcrypt --build-from-source
@@ -20,6 +20,5 @@ COPY . /service
 # Set work directory to /api
 WORKDIR /service
 
-RUN apk del python make g++
 
 CMD ["./scripts/jobs-entrypoint.sh"]
