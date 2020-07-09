@@ -77,7 +77,6 @@ export class SessionProvider extends React.PureComponent {
         value={{
           ...this.state,
           setToken: this.setToken,
-          loadUser: this.loadUser,
           isAdmin: this.isAdmin,
           hasRole: this.hasRole,
         }}>
