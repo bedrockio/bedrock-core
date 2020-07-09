@@ -45,11 +45,9 @@ export default async function request(options) {
     let message, status, details;
     try {
       const data = await res.clone().json();
-      if (data.error) {
-        message = data.error.message;
-        status = data.error.status;
-        details = data.error.details;
-      }
+      message = data.error.message;
+      status = data.error.status;
+      details = data.error.details;
     } catch (err) {
       message = await res.clone().text();
     }
