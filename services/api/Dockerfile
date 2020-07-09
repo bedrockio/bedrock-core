@@ -2,17 +2,16 @@ FROM node:12-alpine
 
 ARG NODE_ENV=production
 
-# Update & install required packages
-RUN apk add --update bash git make python g++ curl
-
 # Install app dependencies
 COPY package.json /service/package.json
 COPY yarn.lock /service/yarn.lock
 
-RUN cd /service; yarn install --frozen-lockfile
-
-# Fix bcrypt
-RUN cd /service; yarn --force add bcrypt --build-from-source
+# Update & install required packages
+RUN apk add --update bash git make python g++ curl; \
+  cd /service; \
+  yarn install --frozen-lockfile; \
+  yarn --force add bcrypt --build-from-source; \
+  apk del python make g++
 
 # Copy app source
 COPY . /service
