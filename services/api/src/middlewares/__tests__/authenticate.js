@@ -38,7 +38,7 @@ describe('authenticate', () => {
 
   it('should confirm that type if specify in middleware', async () => {
     const middleware = authenticate({
-      type: 'sometype'
+      type: 'sometype',
     });
 
     const token = jwt.sign({ kid: 'user', type: 'not same type' }, 'verysecret');
