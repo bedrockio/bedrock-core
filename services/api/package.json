@@ -30,7 +30,7 @@
     "koa-body": "^4.1.1",
     "koa-logger": "^3.2.1",
     "koa-router": "^8.0.8",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.16",
     "mongoose": "^5.9.11",
     "mongoose-autopopulate": "^0.12.2",
     "postmark": "^2.5.2",
