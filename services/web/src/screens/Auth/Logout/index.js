@@ -1,10 +1,11 @@
 import React from 'react';
-import { session } from 'stores';
+import { withSession } from 'stores';
 
+@withSession
 export default class Logout extends React.Component {
 
-  componentDidMount() {
-    session.setToken(null);
+  async componentDidMount() {
+    await this.context.setToken(null);
     this.props.history.replace('/');
   }
 

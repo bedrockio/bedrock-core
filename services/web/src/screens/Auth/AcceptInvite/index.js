@@ -1,7 +1,7 @@
 import React from 'react';
 import { Segment, Grid } from 'semantic-ui-react';
 import { request } from 'utils/api';
-import { session } from 'stores';
+import { withSession } from 'stores';
 import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
 
@@ -9,6 +9,7 @@ import Form from './Form';
 import { Link } from 'react-router-dom';
 import { getToken, parseToken } from 'utils/token';
 
+@withSession
 export default class AcceptInvite extends React.Component {
 
   constructor(props) {
@@ -38,7 +39,7 @@ export default class AcceptInvite extends React.Component {
           token,
         }
       });
-      session.setToken(data.token);
+      await this.context.setToken(data.token);
       this.props.history.push('/');
     } catch(error) {
       this.setState({

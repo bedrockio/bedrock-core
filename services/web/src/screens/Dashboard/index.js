@@ -1,7 +1,8 @@
 import React from 'react';
 import AppWrapper from 'components/AppWrapper';
-import { session } from 'stores';
+import { withSession } from 'stores';
 
+@withSession
 export default class Home extends React.Component {
 
   componentDidMount() {
@@ -9,7 +10,7 @@ export default class Home extends React.Component {
   }
 
   render() {
-    const { user } = session;
+    const { user } = this.context;
     return (
       <AppWrapper>
         Hello {user.name} ({user.email}) from dashboard

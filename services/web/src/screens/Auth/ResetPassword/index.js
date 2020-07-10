@@ -1,6 +1,6 @@
 import React from 'react';
 import { Segment, Message } from 'semantic-ui-react';
-import { session } from 'stores';
+import { withSession } from 'stores';
 import { request } from 'utils/api';
 
 import PageCenter from 'components/PageCenter';
@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 
 import { getToken, parseToken } from 'utils/token';
 
+@withSession
 export default class ResetPassword extends React.Component {
 
   constructor(props) {
@@ -39,7 +40,7 @@ export default class ResetPassword extends React.Component {
           token,
         }
       });
-      session.setToken(data.token);
+      await this.context.setToken(data.token);
       this.setState({
         loading: false,
         success: true,
