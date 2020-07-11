@@ -4,7 +4,7 @@ module.exports = async (ctx, next) => {
   } catch (err) {
     let { status = 500, message, details } = err;
 
-    if (details) {
+    if (err.isJoi) {
       message = details.map((d) => d.message).join('\n');
     }
 
