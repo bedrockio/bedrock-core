@@ -1,12 +1,12 @@
 FROM node:12-alpine
 
-RUN apk add --no-cache bash git python make g++ bash
+ARG NODE_ENV=production
 
 COPY ./package.json /service/package.json
 COPY ./yarn.lock /service/yarn.lock
 
-
-RUN cd /service; yarn install --production=true
+# Install required packages
+RUN cd /service; yarn install --frozen-lockfile
 
 # Copy app source
 COPY . /service/
@@ -15,9 +15,6 @@ COPY . /service/
 WORKDIR /service/
 
 RUN yarn build
-
-# Slim down container
-RUN apk del git python make g++
 
 EXPOSE 2200
 
