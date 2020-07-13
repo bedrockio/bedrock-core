@@ -1,5 +1,5 @@
 const postmark = require('postmark');
-const config = require('@kaareal/config');
+const config = require('@bedrockio/config');
 
 const POSTMARK_FROM = config.get('POSTMARK_FROM');
 const env = process.env.NODE_ENV;
@@ -23,7 +23,7 @@ exports.sendMail = ({ to, subject }, { html, text, options }) => {
         To: to,
         Subject: subject,
         TextBody: text,
-        HtmlBody: html
+        HtmlBody: html,
       })
       .catch((error) => {
         console.error(`Error happened while sending email to ${to} (${error.message})`);

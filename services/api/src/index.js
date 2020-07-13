@@ -2,7 +2,7 @@ const database = require('./database');
 const setupFixtures = require('../scripts/setup-fixtures');
 const app = require('./app');
 
-const config = require('@kaareal/config');
+const config = require('@bedrockio/config');
 require('@google-cloud/trace-agent').start();
 
 const NODE_ENV = process.env.NODE_ENV;

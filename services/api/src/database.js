@@ -1,4 +1,4 @@
-const config = require('@kaareal/config');
+const config = require('@bedrockio/config');
 const mongoose = require('mongoose');
 
 mongoose.Promise = Promise;

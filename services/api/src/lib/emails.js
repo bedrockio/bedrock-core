@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { sendMail } = require('./mailer');
-const config = require('@kaareal/config');
+const config = require('@bedrockio/config');
 const { template: templateFn } = require('./utils/template');
 const { promisify } = require('util');
 
@@ -12,7 +12,7 @@ const defaultOptions = {
   appName: config.get('APP_NAME'),
   appUrl: config.get('APP_URL'),
   appSupportEmail: config.get('APP_SUPPORT_EMAIL'),
-  appCompanyAddress: config.get('APP_COMPANY_ADDRESS')
+  appCompanyAddress: config.get('APP_COMPANY_ADDRESS'),
 };
 
 const readdir = promisify(fs.readdir);
@@ -43,18 +43,18 @@ exports.sendWelcome = async ({ to, name }) => {
   await initialize();
   const options = {
     ...defaultOptions,
-    name
+    name,
   };
 
   return sendMail(
     {
       to,
-      subject: `Welcome to ${defaultOptions.appName}`
+      subject: `Welcome to ${defaultOptions.appName}`,
     },
     {
       html: template('welcome.html', options),
       text: template('welcome.text', options),
-      options
+      options,
     }
   );
 };
@@ -63,18 +63,18 @@ exports.sendResetPasswordUnknown = async ({ to }) => {
   await initialize();
   const options = {
     ...defaultOptions,
-    email: to
+    email: to,
   };
 
   return sendMail(
     {
       to,
-      subject: `Password Reset Request`
+      subject: `Password Reset Request`,
     },
     {
       html: template('reset-password-unknown.html', options),
       text: template('reset-password-unknown.text', options),
-      options
+      options,
     }
   );
 };
@@ -84,18 +84,18 @@ exports.sendResetPassword = async ({ to, token }) => {
   const options = {
     ...defaultOptions,
     email: to,
-    token
+    token,
   };
 
   return sendMail(
     {
       to,
-      subject: `Password Reset Request`
+      subject: `Password Reset Request`,
     },
     {
       html: template('reset-password.html', options),
       text: template('reset-password.text', options),
-      options
+      options,
     }
   );
 };
@@ -106,17 +106,17 @@ exports.sendInvite = async ({ to, token, sender }) => {
     ...defaultOptions,
     senderName: sender.name,
     senderEmail: sender.email,
-    token
+    token,
   };
   return sendMail(
     {
       to,
-      subject: `${sender.name} has invited you to join ${defaultOptions.appName}`
+      subject: `${sender.name} has invited you to join ${defaultOptions.appName}`,
     },
     {
       html: template('invite.html', options),
       text: template('invite.text', options),
-      options
+      options,
     }
   );
 };
@@ -127,18 +127,18 @@ exports.sendInviteKnown = async ({ to, token, sender }) => {
     ...defaultOptions,
     senderName: sender.name,
     senderEmail: sender.email,
-    token
+    token,
   };
 
   return sendMail(
     {
       to,
-      subject: `${sender.name} has invited you to join ${defaultOptions.appName}`
+      subject: `${sender.name} has invited you to join ${defaultOptions.appName}`,
     },
     {
       html: template('invite-known.html', options),
       text: template('invite-known.text', options),
-      options
+      options,
     }
   );
 };

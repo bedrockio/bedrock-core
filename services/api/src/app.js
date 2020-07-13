@@ -8,8 +8,8 @@ const Sentry = require('@sentry/node');
 const fs = require('fs');
 const { version } = require('../package.json');
 const v1 = require('./v1');
-const config = require('@kaareal/config');
-const { loadOpenApiDefinitions, expandOpenApi } = require('./lib/utils/openApi')
+const config = require('@bedrockio/config');
+const { loadOpenApiDefinitions, expandOpenApi } = require('./lib/utils/openApi');
 
 const app = new Koa();
 
@@ -21,7 +21,7 @@ app
   .use(
     cors({
       exposeHeaders: ['content-length'],
-      maxAge: 600
+      maxAge: 600,
     })
   )
   .use(bodyParser({ multipart: true }));
@@ -35,7 +35,7 @@ app.on('error', (err) => {
 
 if (config.has('SENTRY_DSN')) {
   Sentry.init({
-    dsn: config.get('SENTRY_DSN')
+    dsn: config.get('SENTRY_DSN'),
   });
 }
 
@@ -44,15 +44,15 @@ app.router = router;
 router.get('/', (ctx) => {
   ctx.body = {
     version,
-    openapiPath: '/openapi.json'
+    openapiPath: '/openapi.json',
   };
 });
 
-const openApiLiteDefinition = loadOpenApiDefinitions(__dirname + '/v1/__openapi__', '/1')
+const openApiLiteDefinition = loadOpenApiDefinitions(__dirname + '/v1/__openapi__', '/1');
 router.get('/openapi.lite.json', (ctx) => {
   ctx.body = openApiLiteDefinition;
 });
-const openApiDefinition = expandOpenApi(openApiLiteDefinition)
+const openApiDefinition = expandOpenApi(openApiLiteDefinition);
 router.get('/openapi.json', (ctx) => {
   ctx.body = openApiDefinition;
 });

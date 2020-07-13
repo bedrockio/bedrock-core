@@ -1,14 +1,14 @@
 const jwt = require('jsonwebtoken');
-const config = require('@kaareal/config');
+const config = require('@bedrockio/config');
 
 const expiresIn = {
   temporary: '1d',
   regular: '30d',
-  invite: '1d'
+  invite: '1d',
 };
 
 const secrets = {
-  user: config.get('JWT_SECRET')
+  user: config.get('JWT_SECRET'),
 };
 
 exports.createUserTemporaryToken = (claims, type) => {
@@ -16,11 +16,11 @@ exports.createUserTemporaryToken = (claims, type) => {
     {
       ...claims,
       type,
-      kid: 'user'
+      kid: 'user',
     },
     secrets.user,
     {
-      expiresIn: expiresIn.temporary
+      expiresIn: expiresIn.temporary,
     }
   );
 };
@@ -30,11 +30,11 @@ exports.createUserToken = (user) => {
     {
       userId: user._id,
       type: 'user',
-      kid: 'user'
+      kid: 'user',
     },
     secrets.user,
     {
-      expiresIn: expiresIn.regular
+      expiresIn: expiresIn.regular,
     }
   );
 };

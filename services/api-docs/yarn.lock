@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@kaareal/config@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@kaareal/config/-/config-0.1.1.tgz#f02090fa61e32665be1a13651fa1251bf45bac9f"
-  integrity sha512-O32G1ompXP7Ai5wqBFQAoIACj8kLC7p2Q80MdRe9YnImJPaHyS/YwkqzOM224nV03XDvX+/UQ+6qYgk9YvsLvQ==
+"@bedrockio/config@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@bedrockio/config/-/config-1.0.2.tgz#58c74668cd3b4dbc5a59cbd1dc061fd275cfe013"
+  integrity sha512-UDijSI6Mh3iwODY33rUf47mCY/zp/NKeSDNylsLv79HMCvyEecLjTfGutFF3/QkA46dIPuomaFMaUcKIJ7+opQ==
 
 accepts@^1.3.5:
   version "1.3.5"

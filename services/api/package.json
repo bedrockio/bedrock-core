@@ -17,10 +17,10 @@
     "test:watch": "jest --watch -i"
   },
   "dependencies": {
+    "@bedrockio/config": "^1.0.2",
     "@google-cloud/storage": "^4.7.0",
     "@google-cloud/trace-agent": "^4.2.5",
     "@hapi/joi": "^17.1.1",
-    "@kaareal/config": "^1.0.1",
     "@koa/cors": "^3.0.0",
     "@sentry/node": "^5.15.5",
     "@yeongjet/joi-to-json-schema": "^1.0.4",
