@@ -1,18 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Redirect } from 'react-router-dom';
-import { session } from 'stores';
-import NotFound from 'components/NotFound';
+import { Route, Redirect } from 'react-router-dom';
+import { withSession } from 'stores';
 import AuthSwitch from './AuthSwitch';
 
+@withSession
 export default class Protected extends React.Component {
 
   hasAccess() {
-    if (!session.user) {
+    const { user, hasRole } = this.context;
+    if (!user) {
       return false;
     }
     return this.getRoles().every((role) => {
-      return session.hasRole(role);
+      return hasRole(role);
     });
   }
 
@@ -22,22 +23,32 @@ export default class Protected extends React.Component {
   }
 
   render() {
-    const { exact, path, component: Component } = this.props;
+    const { exact, path } = this.props;
     return (
       <AuthSwitch
         exact={exact}
         path={path}
-        loggedOut={() => <Redirect to="/" />}
-        loggedIn={(props) => this.renderLoggedIn(Component, props)}
+        loggedOut={(props) => this.renderAccessDenied(props)}
+        loggedIn={(props) => this.renderLoggedIn(props)}
       />
     );
   }
 
-  renderLoggedIn(Component, props) {
+  renderLoggedIn(props) {
+    const { allowed: AllowedComponent } = this.props;
     if (this.hasAccess()) {
-      return <Component {...props} />;
+      return <AllowedComponent {...props} />;
     } else {
-      return <NotFound />;
+      return this.renderAccessDenied(props);
+    }
+  }
+
+  renderAccessDenied(props) {
+    const { denied: DeniedComponent } = this.props;
+    if (DeniedComponent) {
+      return <DeniedComponent {...props} />;
+    } else {
+      return <Redirect to="/" />;
     }
   }
 }
@@ -45,6 +56,9 @@ export default class Protected extends React.Component {
 Protected.propTypes = {
   admin: PropTypes.bool,
   roles: PropTypes.array,
+  allowed: PropTypes.elementType.isRequired,
+  denied: PropTypes.elementType,
+  ...Route.propTypes,
 };
 
 Protected.defaultProps = {

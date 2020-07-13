@@ -1,13 +1,11 @@
 const { omit } = require('lodash');
 const mongoose = require('mongoose');
-const Schema = require('../utils/Schema');
+const { createSchema } = require('../lib/utils/schema');
 
-const schema = new Schema(
-  {
-    email: { type: String, trim: true, lowercase: true, required: true },
-    status: { type: String },
-  },
-);
+const schema = createSchema({
+  email: { type: String, trim: true, lowercase: true, required: true },
+  status: { type: String },
+});
 
 schema.methods.assign = function assign(fields) {
   Object.assign(this, omit(fields, ['createdAt', 'updatedAt', 'deletedAt', 'id']));

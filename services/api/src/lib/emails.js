@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { sendMail } = require('./mailer');
 const config = require('@kaareal/config');
-const { template: templateFn } = require('./utils');
+const { template: templateFn } = require('./utils/template');
 const { promisify } = require('util');
 
 const templatesDist = path.join(__dirname, '../../emails/dist');
