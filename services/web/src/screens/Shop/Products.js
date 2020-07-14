@@ -81,7 +81,7 @@ export default class ShopProducts extends React.Component {
                           <Table.Cell textAlign="center">
                             <EditProduct
                               shopId={shop.id}
-                              product={item}
+                              item={item}
                               onSave={reload}
                               trigger={<Button style={{ marginLeft: '20px' }} basic icon="edit" />}
                             />

@@ -9,7 +9,7 @@ const fs = require('fs');
 const { version } = require('../package.json');
 const v1 = require('./v1');
 const config = require('@kaareal/config');
-const { loadOpenApiDefinitions, expandOpenApi } = require('./lib/utils');
+const { loadOpenApiDefinitions, expandOpenApi } = require('./lib/utils/openApi')
 
 const app = new Koa();
 

@@ -1,13 +1,14 @@
 import React from 'react';
-import { session } from 'stores';
+import { withSession } from 'stores';
 import { NavLink, Link } from 'react-router-dom';
 import { Container, Dropdown, Icon, Menu } from 'semantic-ui-react';
 import logoInverted from 'assets/icon.svg';
 
+@withSession
 export default class AppWrapper extends React.Component {
 
   render() {
-    const { user } = session;
+    const { user, isAdmin } = this.context;
     return (
       <div>
         <Menu inverted fixed="top">
@@ -36,7 +37,7 @@ export default class AppWrapper extends React.Component {
                       <Dropdown.Item as={Link} to="/docs/getting-started">
                         API Docs
                       </Dropdown.Item>
-                      {session.isAdmin() && (
+                      {isAdmin() && (
                         <React.Fragment>
                           <Dropdown.Item as={Link} to="/users">
                             Users
@@ -56,8 +57,11 @@ export default class AppWrapper extends React.Component {
             )}
           </Container>
         </Menu>
-        <Container style={{ marginTop: '100px', paddingBottom: '100px' }}>{this.props.children}</Container>
+        <Container style={{ marginTop: '100px', paddingBottom: '100px' }}>
+          {this.props.children}
+        </Container>
       </div>
     );
   }
+
 }

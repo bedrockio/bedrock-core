@@ -1,13 +1,11 @@
 import { API_URL } from 'utils/env';
-import { session } from 'stores';
-
 import { ApiError, ApiParseError } from './errors';
 
 export default async function request(options) {
   const { method = 'GET', path, files, params } = options;
   let { body } = options;
 
-  const token = options.token || session.token;
+  const token = options.token || localStorage.getItem('jwt');
 
   const headers = Object.assign(
     {

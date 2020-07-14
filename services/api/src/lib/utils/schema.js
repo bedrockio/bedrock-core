@@ -1,13 +1,12 @@
 const mongoose = require('mongoose');
 
-class Schema extends mongoose.Schema {
-
-  constructor(schema, options = {}) {
-    super({
+exports.createSchema = (definition, options = {}) => {
+  const schema = new mongoose.Schema(
+    {
       deletedAt: { type: Date },
-      ...schema,
-    }, {
-
+      ...definition,
+    },
+    {
       // Include timestamps by default.
       timestamps: true,
 
@@ -18,28 +17,29 @@ class Schema extends mongoose.Schema {
         versionKey: false,
         transform: (doc, ret) => {
           for (let key of Object.keys(ret)) {
-            const field = doc.schema.obj[key];
             // Omit any key with a private prefix "_" or marked
             // "access": "private" in the schema. Note that virtuals are
             // excluded by default so they don't need to be removed.
-            if (key[0] === '_' || (field && field.access === 'private')) {
+            if (key[0] === '_' || isPrivateField(doc, key)) {
               delete ret[key];
             }
           }
-        }
+        },
       },
-      ...options
-    });
-    Object.assign(this.methods, {
-      delete: this.delete,
-    });
-  }
-
-  delete() {
+      ...options,
+    }
+  );
+  schema.methods.delete = function() {
     this.deletedAt = new Date();
     return this.save();
+  };
+  return schema;
+};
+
+function isPrivateField(doc, key) {
+  let field = doc.schema.obj[key];
+  if (Array.isArray(field)) {
+    field = field[0];
   }
-
+  return field && field.access === 'private';
 }
-
-module.exports = Schema;

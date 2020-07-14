@@ -126,7 +126,7 @@ export default class Users extends React.Component {
                                 <Table.Cell>{formatDateTime(item.createdAt)}</Table.Cell>
                                 <Table.Cell textAlign="center">
                                   <EditUser
-                                    user={item}
+                                    item={item}
                                     trigger={
                                       <Button
                                         style={{ marginLeft: '20px' }}

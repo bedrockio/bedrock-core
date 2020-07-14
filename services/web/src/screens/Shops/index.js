@@ -84,7 +84,7 @@ export default class Shops extends React.Component {
                             <Table.Cell>{formatDateTime(item.createdAt)}</Table.Cell>
                             <Table.Cell textAlign="center">
                               <EditShop
-                                shop={item}
+                                item={item}
                                 trigger={<Button style={{ marginLeft: '20px' }} basic icon="edit" />}
                                 onSave={reload}
                               />

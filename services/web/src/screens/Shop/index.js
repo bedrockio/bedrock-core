@@ -53,7 +53,7 @@ export default class Shop extends React.Component {
             </Breadcrumb>
             {shop && (
               <EditShop
-                shop={shop}
+                item={shop}
                 onSave={this.fetchShop}
                 trigger={
                   <Button

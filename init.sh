@@ -1,0 +1,189 @@
+#!/bin/bash
+
+# This script initiates a new Bedrock platform template and configures the right settings:
+#
+#     curl https://get.bedrock.io | bash
+#
+# Note: this script is inspired by: https://sandstorm.io/news/2015-09-24-is-curl-bash-insecure-pgp-verified-install
+#
+
+if test -z "$BASH_VERSION"; then
+  echo "Please run this script using bash, not sh or any other shell." >&2
+  exit 1
+fi
+
+# We wrap the entire script in a big function which we only call at the very end, in order to
+# protect against the possibility of the connection dying mid-script. This protects us against
+# the problem described in this blog post:
+#   http://blog.existentialize.com/dont-pipe-to-your-shell.html
+_() {
+
+  prompt() {
+    local VALUE
+
+    # Hack: We read from FD 3 because when reading the script from a pipe, FD 0 is the script, not
+    #   the terminal. We checked above that FD 1 (stdout) is in fact a terminal and then dup it to
+    #   FD 3, thus we can input from FD 3 here.
+
+    printf "\e[1m$1\e[m" >&3
+    read -u 3 VALUE
+    echo "$VALUE"
+  }
+
+    set -euo pipefail
+    exec 3<&1
+
+  echo ""
+  echo ""
+  echo " ______  _______ ______   ______  _____  _______ _     _  "
+  echo " |_____] |______ |     \ |_____/ |     | |       |____/   "
+  echo " |_____] |______ |_____/ |    \_ |_____| |_____  |    \_  "
+  echo ""
+  echo ""
+
+  echo "" >&3
+  PROJECT=$(prompt "Enter project name: ")
+  DOMAIN=$(prompt "Enter domain: http://")
+  EMAIL=$(prompt "Enter email (optional): ")
+  ADDRESS=$(prompt "Enter address (optional): ")
+  GIT_REMOTE=$(prompt "Enter git remote (optional owner/repository): ")
+  JWT_SECRET=$(openssl rand -base64 30)
+
+  echo "Project $PROJECT"
+
+  if [ "$PROJECT" == "" ]; then
+    echo ""
+    echo "Project required! Exiting..."
+    exit 1
+  elif [ "$DOMAIN" == "" ]; then
+    echo ""
+    echo "Domain required! Exiting..."
+    exit 1
+  fi
+
+  kebab=`echo "$PROJECT" | tr '[:upper:]' '[:lower:]' | sed -e 's/\ /-/g'`
+  under=`echo "$PROJECT" | tr '[:upper:]' '[:lower:]' | sed -e 's/\ /_/g'`
+  steps=45
+  current=0
+
+  replace() {
+    if [ "$GIT_REMOTE" != "" ]; then
+    sed -i '' "s:bedrockio/bedrock-core:$GIT_REMOTE:g" $1
+    fi
+    sed -i '' "s/bedrock_dev/$under\_dev/g" $1
+    sed -i '' "s/bedrock_staging/$under\_staging/g" $1
+    sed -i '' "s/bedrock_production/$under\_production/g" $1
+    sed -i '' "s/bedrock-staging/$kebab-staging/g" $1
+    sed -i '' "s/bedrock-production/$kebab-production/g" $1
+    sed -i '' "s/bedrock-core-services/$kebab-services/g" $1
+    sed -i '' "s/bedrock-foundation/$kebab/g" $1
+    sed -i '' "s/bedrock-web/$kebab-web/g" $1
+    sed -i '' "s/bedrock-api/$kebab-api/g" $1
+    sed -i '' "s/admin@bedrock\.foundation/$EMAIL/g" $1
+    sed -i '' "s/bedrock\.foundation/$DOMAIN/g" $1
+    sed -i '' "s/APP_COMPANY_ADDRESS=.*/APP_COMPANY_ADDRESS=$ADDRESS/g" $1
+    sed -i '' "s/JWT_SECRET=.*/JWT_SECRET=$JWT_SECRET/g" $1
+    sed -i '' "s/Bedrock/$PROJECT/g" $1
+    sed -i '' "s/bedrock/$kebab/g" $1
+    update
+  }
+
+  remove() {
+    rm -rf $1
+    update
+  }
+
+  update() {
+    current=$((current+1))
+    pct=$(($current * 100 / $steps))
+    rem=$(($steps - $current))
+    bar=$(seq -s# $current|tr -d '[:digit:]')
+    spaces=$(seq -s\  $rem|tr -d '[:digit:]')
+    echo -ne "$bar$spaces ($pct%)\r"
+  }
+
+  echo "Creating Project..."
+  update
+
+  git clone git@github.com:bedrockio/bedrock-core.git $kebab
+  update
+
+  replace ./$kebab/docker-compose.yml
+
+  replace ./$kebab/services/api/env.conf
+  replace ./$kebab/services/api/package.json
+  replace ./$kebab/services/api/README.md
+  replace ./$kebab/services/web/env.conf
+  replace ./$kebab/services/web/package.json
+  replace ./$kebab/services/web/README.md
+  replace ./$kebab/services/web/src/utils/README.md
+  replace ./$kebab/services/web/src/components/README.md
+  replace ./$kebab/services/api-docs/package.json
+
+  replace ./$kebab/deployment/README.md
+  replace ./$kebab/deployment/staging/env.conf
+  replace ./$kebab/deployment/staging/services/api-cli-deployment.yml
+  replace ./$kebab/deployment/staging/services/api-deployment.yml
+  replace ./$kebab/deployment/staging/services/api-docs-deployment.yml
+  replace ./$kebab/deployment/staging/services/api-docs-service.yml
+  replace ./$kebab/deployment/staging/services/api-jobs-deployment.yml
+  replace ./$kebab/deployment/staging/services/api-service.yml
+  replace ./$kebab/deployment/staging/services/web-deployment.yml
+  replace ./$kebab/deployment/staging/services/web-service.yml
+  replace ./$kebab/deployment/staging/data/backup-monitor-deployment.yml
+  replace ./$kebab/deployment/staging/data/bucket-storage-backups-deployment.yml
+  replace ./$kebab/deployment/staging/data/elasticsearch-deployment.yml
+  replace ./$kebab/deployment/staging/data/elasticsearch-service.yml
+  replace ./$kebab/deployment/staging/data/mongo-backups-deployment.yml
+  replace ./$kebab/deployment/staging/data/mongo-deployment.yml
+  replace ./$kebab/deployment/staging/data/mongo-service.yml
+
+  replace ./$kebab/deployment/production/env.conf
+  replace ./$kebab/deployment/production/services/api-cli-deployment.yml
+  replace ./$kebab/deployment/production/services/api-deployment.yml
+  replace ./$kebab/deployment/production/services/api-docs-deployment.yml
+  replace ./$kebab/deployment/production/services/api-docs-service.yml
+  replace ./$kebab/deployment/production/services/api-jobs-deployment.yml
+  replace ./$kebab/deployment/production/services/api-service.yml
+  replace ./$kebab/deployment/production/services/web-deployment.yml
+  replace ./$kebab/deployment/production/services/web-service.yml
+  replace ./$kebab/deployment/production/data/backup-monitor-deployment.yml
+  replace ./$kebab/deployment/production/data/bucket-storage-backups-deployment.yml
+  replace ./$kebab/deployment/production/data/elasticsearch-deployment.yml
+  replace ./$kebab/deployment/production/data/elasticsearch-service.yml
+  replace ./$kebab/deployment/production/data/mongo-backups-deployment.yml
+  replace ./$kebab/deployment/production/data/mongo-deployment.yml
+  replace ./$kebab/deployment/production/data/mongo-service.yml
+
+  remove ./$kebab/create-project.sh
+  remove ./$kebab/CONTRIBUTING.md
+  remove ./$kebab/LICENSE
+  remove ./$kebab/.git
+
+  if [ "$GIT_REMOTE" != "" ]; then
+    pushd ./$kebab > /dev/null
+    git init
+    git remote add origin git@github.com:$GIT_REMOTE.git
+    git add .
+    git commit -m "Initial Commit"
+    git push -u --force origin master
+    popd
+  fi
+
+  if [ -f /System/Library/Sounds/Glass.aiff ]; then
+    afplay /System/Library/Sounds/Glass.aiff 2> /dev/null
+  fi
+
+  echo ""
+  echo "Installation completed!"
+  echo ""
+  echo "New Bedrock project has been created. To run the stack in Docker:"
+  echo ""
+  echo "cd $kebab; docker-compose up"
+  echo ""
+  echo ""
+
+
+}
+
+_ "$0" "$@"
