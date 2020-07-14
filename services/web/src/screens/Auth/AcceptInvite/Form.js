@@ -7,7 +7,6 @@ export default (props) => {
   const [password, setPassword] = React.useState('');
   const [touched, setTouched] = React.useState(false);
   const [accepted, setAccepted] = React.useState(false);
-
   return (
     <Form
       error={touched}
@@ -23,7 +22,6 @@ export default (props) => {
       }}>
       {error && <Message error content={error.message} />}
       <Form.Input
-        required
         placeholder="Name"
         name="name"
         autoComplete="name"
@@ -32,10 +30,9 @@ export default (props) => {
         type="text"
         value={name}
         onChange={(e, { value }) => setName(value)}
+        error={error?.hasField?.('name')}
       />
-
       <Form.Input
-        required
         placeholder="Password"
         autoComplete="new-password"
         name="password"
@@ -44,8 +41,8 @@ export default (props) => {
         type="password"
         value={password}
         onChange={(e, { value }) => setPassword(value)}
+        error={error?.hasField?.('password')}
       />
-
       <Form.Checkbox
         error={touched && !accepted}
         name="acceptTerms"

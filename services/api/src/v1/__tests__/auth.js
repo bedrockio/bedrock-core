@@ -18,7 +18,7 @@ describe('/1/users', () => {
     it('should log in a user in', async () => {
       const password = '123password!';
       const user = await createUser({
-        password
+        password,
       });
       const response = await request('POST', '/1/auth/login', { email: user.email, password });
       expect(response.status).toBe(200);
@@ -42,7 +42,7 @@ describe('/1/users', () => {
       expect(payload).toHaveProperty('type', 'user');
 
       const updatedUser = await User.findOne({
-        email
+        email,
       });
 
       expect(updatedUser.email).toBe(email);
@@ -53,7 +53,7 @@ describe('/1/users', () => {
     it('it should send an email to the registered user', async () => {
       const user = await createUser();
       const response = await request('POST', '/1/auth/request-password', {
-        email: user.email
+        email: user.email,
       });
       expect(response.status).toBe(204);
     });
@@ -61,7 +61,7 @@ describe('/1/users', () => {
     it('it should send an email to the unknown user', async () => {
       const email = 'email@email.com';
       const response = await request('POST', '/1/auth/request-password', {
-        email
+        email,
       });
       expect(response.status).toBe(204);
     });
@@ -73,7 +73,7 @@ describe('/1/users', () => {
       const password = 'very new password';
       const response = await request('POST', '/1/auth/set-password', {
         password,
-        token: tokens.createUserTemporaryToken({ userId: user._id }, 'password')
+        token: tokens.createUserTemporaryToken({ userId: user._id }, 'password'),
       });
       expect(response.status).toBe(200);
 
@@ -89,10 +89,10 @@ describe('/1/users', () => {
       const password = 'very new password';
       const response = await request('POST', '/1/auth/set-password', {
         password,
-        token: 'some bad token not really a good token'
+        token: 'some bad token not really a good token',
       });
       expect(response.status).toBe(400);
-      expect(response.text).toBe('bad jwt token');
+      expect(response.body).toEqual({ error: { message: 'bad jwt token', status: 400 } });
     });
   });
 });

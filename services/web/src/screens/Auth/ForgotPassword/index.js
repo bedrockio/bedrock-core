@@ -55,7 +55,7 @@ export default class ForgotPassword extends React.Component {
                 </p>
               </Message>
             ) : (
-              <Form onSubmit={this.onSubmit} loading={loading} />
+              <Form onSubmit={this.onSubmit} loading={loading} error={error} />
             )}
           </Segment>
           <Segment secondary>

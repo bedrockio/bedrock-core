@@ -27,6 +27,10 @@ export default class ResetPassword extends React.Component {
 
   onSubmit = async (body) => {
     try {
+      const { password, repeat } = body;
+      if (password !== repeat) {
+        throw new Error('Passwords do not match.');
+      }
       const { token } = this.state;
       this.setState({
         loading: true,
@@ -36,7 +40,7 @@ export default class ResetPassword extends React.Component {
         method: 'POST',
         path: '/1/auth/set-password',
         body: {
-          ...body,
+          password,
           token,
         }
       });

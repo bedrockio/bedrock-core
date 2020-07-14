@@ -3,16 +3,14 @@ import { Form, Button } from 'semantic-ui-react';
 import AutoFocus from 'components/AutoFocus';
 
 export default (props) => {
+  const { error, loading } = props;
   const [email, setEmail] = React.useState('');
-  const [touched, setTouched] = React.useState(false);
-
   return (
     <AutoFocus>
       <Form
-        error={touched}
+        error={!!error}
         size="large"
         onSubmit={() => {
-          setTouched(true);
           props.onSubmit({
             email,
           });
@@ -25,15 +23,15 @@ export default (props) => {
           type="text"
           autoComplete="email"
           onChange={(e, { value }) => setEmail(value)}
+          error={error?.hasField?.('email')}
         />
-
         <Button
           fluid
           primary
           size="large"
           content="Request password"
-          loading={props.loading}
-          disabled={props.loading}
+          loading={loading}
+          disabled={loading}
         />
       </Form>
     </AutoFocus>

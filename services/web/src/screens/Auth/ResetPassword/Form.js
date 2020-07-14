@@ -7,7 +7,6 @@ export default (props) => {
   const [password, setPassword] = React.useState('');
   const [repeat, setRepeat] = React.useState('');
   const [touched, setTouched] = React.useState(false);
-
   return (
     <AutoFocus>
       <Form
@@ -15,15 +14,12 @@ export default (props) => {
         size="large"
         onSubmit={() => {
           setTouched(true);
-
-          if (repeat !== password) return;
-
           props.onSubmit({
             password,
+            repeat,
           });
         }}>
         {error && <Message error content={error.message} />}
-
         <Form.Input
           name="password"
           icon="lock"
@@ -33,11 +29,12 @@ export default (props) => {
           type="password"
           value={password}
           onChange={(e, { value }) => setPassword(value)}
+          error={error?.hasField?.('password') || (touched && !password)}
         />
 
         <Form.Input
-          error={touched && repeat !== password}
-          name="password"
+          error={touched && (!repeat || repeat !== password)}
+          name="repeat"
           icon="lock"
           iconPosition="left"
           placeholder="Repeat Password"
