@@ -8,8 +8,8 @@ const Sentry = require('@sentry/node');
 const fs = require('fs');
 const { version } = require('../package.json');
 const v1 = require('./v1');
-const config = require('@kaareal/config');
-const { loadOpenApiDefinitions, expandOpenApi } = require('./lib/utils/openApi')
+const config = require('@bedrockio/config');
+const { loadOpenApiDefinitions, expandOpenApi } = require('./lib/utils/openApi');
 
 const app = new Koa();
 

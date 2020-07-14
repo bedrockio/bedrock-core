@@ -901,6 +901,11 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@bedrockio/config@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@bedrockio/config/-/config-1.0.2.tgz#58c74668cd3b4dbc5a59cbd1dc061fd275cfe013"
+  integrity sha512-UDijSI6Mh3iwODY33rUf47mCY/zp/NKeSDNylsLv79HMCvyEecLjTfGutFF3/QkA46dIPuomaFMaUcKIJ7+opQ==
+
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@cnakazawa/watch/-/watch-1.0.4.tgz#f864ae85004d0fcab6f50be9141c4da368d1656a"
@@ -1474,11 +1479,6 @@
   dependencies:
     "@babel/runtime" "^7.7.2"
     core-js "^3.4.1"
-
-"@kaareal/config@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@kaareal/config/-/config-1.0.1.tgz#5ceab794d58e205645054113fd51249fdb452c5e"
-  integrity sha512-7/vSLpcmSenTPSboJhU7EbmLd6BcSwswA51Hnri34ZsfxGkiP9iuFtNdwv7X+wyhKG3tK6G9DZV30U4wOZCEoQ==
 
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.0"

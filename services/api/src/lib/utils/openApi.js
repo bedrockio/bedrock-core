@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { convert } = require('@yeongjet/joi-to-json-schema');
-const config = require('@kaareal/config');
+const config = require('@bedrockio/config');
 
 function getParamsFromValidationMiddleware(validationMiddleware, type) {
   try {

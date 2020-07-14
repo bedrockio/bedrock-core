@@ -7,7 +7,7 @@
 
 const path = require('path');
 const yargs = require('yargs');
-const config = require('@kaareal/config');
+const config = require('@bedrockio/config');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
