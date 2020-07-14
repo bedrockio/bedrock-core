@@ -9,7 +9,7 @@
     "lint"
   ],
   "scripts": {
-    "start": "nodemon -w src -w openapi --exec \"MOCK_EMAIL=true NODE_ENV=dev node src/index.js\"",
+    "start": "nodemon -w src --exec \"MOCK_EMAIL=true NODE_ENV=dev node src/index.js\"",
     "start:production": "node src/index",
     "emails": "node emails/build",
     "lint": "eslint src",

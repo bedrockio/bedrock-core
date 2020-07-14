@@ -5,11 +5,11 @@ const logger = require('koa-logger');
 const bodyParser = require('koa-body');
 const errorHandler = require('./middlewares/error-handler');
 const Sentry = require('@sentry/node');
-const fs = require('fs');
+const path = require('path');
 const { version } = require('../package.json');
 const v1 = require('./v1');
 const config = require('@bedrockio/config');
-const { loadOpenApiDefinitions, expandOpenApi } = require('./lib/utils/openApi');
+const { loadOpenApiDefinitions, expandOpenApi } = require('./lib/utils/open-api');
 
 const app = new Koa();
 
@@ -48,10 +48,11 @@ router.get('/', (ctx) => {
   };
 });
 
-const openApiLiteDefinition = loadOpenApiDefinitions(__dirname + '/v1/__openapi__', '/1');
+const openApiLiteDefinition = loadOpenApiDefinitions(path.join(__dirname, '/v1/__openapi__'), '/1');
 router.get('/openapi.lite.json', (ctx) => {
   ctx.body = openApiLiteDefinition;
 });
+
 const openApiDefinition = expandOpenApi(openApiLiteDefinition);
 router.get('/openapi.json', (ctx) => {
   ctx.body = openApiDefinition;

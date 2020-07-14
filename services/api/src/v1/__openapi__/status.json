@@ -1,0 +1,16 @@
+{
+  "paths": [
+    {
+      "method": "GET",
+      "path": "/",
+      "responseBody": [],
+      "examples": []
+    },
+    {
+      "method": "GET",
+      "path": "/mongodb",
+      "responseBody": [],
+      "examples": []
+    }
+  ]
+}
