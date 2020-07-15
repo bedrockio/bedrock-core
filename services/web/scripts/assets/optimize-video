@@ -1,7 +1,8 @@
 #!/bin/bash
 
-FILE=$1
-MAX_WIDTH=${2-1200}
+INFILE=$1
+OUTFILE=$2
+MAX_WIDTH=${3-1200}
 
 function show_usage {
   script=$(basename $0)
@@ -11,7 +12,7 @@ maximum width is 1200px.
 
 Requires ffmpeg 4.1.1 or greater.
 
-Usage:   $script <FILE> [MAX_WIDTH]
+Usage:   $script <INFILE> [MAX_WIDTH]
 Example: $script intro.mp4 600
 
 $1"
@@ -20,22 +21,24 @@ $1"
 
 echo $0
 
-if [ "$FILE" == "" ]; then
-  show_usage "<FILE> argument expected"
+if [ "$INFILE" == "" ]; then
+  show_usage "<INFILE> argument expected"
+fi
+
+if [ "$INFILE" == "" ]; then
+  show_usage "<OUTFILE> argument expected"
 fi
 
 echo $MAX_WIDTH
 
-base=${FILE##*/}
-name="${base%.*}"
+base=${INFILE##*/}
 
 # pix_fmt yuv420p required for FF to work
 # Not sure what the rest do but they work
 
-ffmpeg -i $FILE \
+ffmpeg -i "$INFILE" \
   -vcodec libx264 \
   -pix_fmt yuv420p \
   -profile:v baseline \
   -level 3 \
-  -vf "scale='min($MAX_WIDTH,iw)':-2" \
-  "$name-optimized.mp4"
+  "$OUTFILE"
