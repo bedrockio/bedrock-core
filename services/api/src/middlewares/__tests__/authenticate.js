@@ -1,9 +1,10 @@
-const { authenticate } = require('../authenticate');
-const { context } = require('../../test-helpers');
+const { authenticate, fetchUser } = require('../authenticate');
+const { setupDb, teardownDb, context, createUser } = require('../../test-helpers');
 const jwt = require('jsonwebtoken');
 const config = require('@bedrockio/config');
 
 describe('authenticate', () => {
+
   it('should trigger an error if jwt token can not be found', async () => {
     const middleware = authenticate();
     let ctx;
@@ -44,7 +45,7 @@ describe('authenticate', () => {
     );
   });
 
-  it('should fail if token doesnt have rigth signature', async () => {
+  it('should fail if token doesnt have right signature', async () => {
     const middleware = authenticate();
     const token = jwt.sign({ kid: 'user' }, 'verysecret');
     const ctx = context({ headers: { authorization: `Bearer ${token}` } });
@@ -58,7 +59,7 @@ describe('authenticate', () => {
     await expect(middleware(ctx)).rejects.toHaveProperty('message', 'jwt expired');
   });
 
-  it('it should work with valid secet and not expired', async () => {
+  it('it should work with valid secret and not expired', async () => {
     const middleware = authenticate();
     const token = jwt.sign({ kid: 'user', attribute: 'value' }, config.get('JWT_SECRET'));
     const ctx = context({ headers: { authorization: `Bearer ${token}` } });
@@ -66,4 +67,113 @@ describe('authenticate', () => {
       expect(ctx.state.jwt.attribute).toBe('value');
     });
   });
+
+  it('it should only validate the token once when called multiple times', async () => {
+    const middleware = authenticate();
+    const token = jwt.sign({ kid: 'user', attribute: 'value' }, config.get('JWT_SECRET'));
+    const ctx = context({ headers: { authorization: `Bearer ${token}` } });
+
+    let tmp;
+    let count = 0;
+    ctx.state = {
+      get jwt() {
+        return tmp;
+      },
+      set jwt(value) {
+        tmp = value;
+        count++;
+      },
+    };
+    await middleware(ctx, () => {});
+    await middleware(ctx, () => {});
+    expect(ctx.state.jwt.attribute).toBe('value');
+    expect(count).toBe(1);
+  });
+
+  describe('optional authentication', () => {
+
+    it('it should authenticate when token exists', async () => {
+      const middleware = authenticate({ optional: true });
+      const token = jwt.sign({ kid: 'user', attribute: 'value' }, config.get('JWT_SECRET'));
+      const ctx = context({ headers: { authorization: `Bearer ${token}` } });
+      await middleware(ctx, () => {
+        expect(ctx.state.jwt.attribute).toBe('value');
+      });
+    });
+
+    it('it should not error when no token exists', async () => {
+      const middleware = authenticate({ optional: true });
+      const ctx = context();
+      await middleware(ctx, () => {
+        expect(ctx.state.jwt).toBeUndefined();
+      });
+    });
+
+    it('it should allow chaining of optional and required', async () => {
+      const optional = authenticate({ optional: true });
+      const required = authenticate();
+
+      const token = jwt.sign({ kid: 'user', attribute: 'value' }, config.get('JWT_SECRET'));
+      const ctx = context({ headers: { authorization: `Bearer ${token}` } });
+
+      await optional(ctx, () => {});
+      await required(ctx, () => {});
+      expect(ctx.state.jwt.attribute).toBe('value');
+    });
+
+    it('it should throw after optional when required and no token', async () => {
+      const optional = authenticate({ optional: true });
+      const required = authenticate();
+
+      const ctx = context();
+
+      await optional(ctx, () => {});
+      expect(ctx.state.jwt).toBeUndefined();
+
+      await expect(required(ctx)).rejects.toHaveProperty('message', 'no jwt token found in request');
+    });
+
+  });
+
+});
+
+describe('fetchUser', () => {
+
+  beforeAll(async () => {
+    await setupDb();
+  });
+
+  afterAll(async () => {
+    await teardownDb();
+  });
+
+  it('it should fetch the authUser', async () => {
+    const user = await createUser();
+    const ctx = context();
+    ctx.state.jwt = { userId: user.id };
+    await fetchUser(ctx, () => {
+      expect(ctx.state.authUser.id).toBe(user.id);
+    });
+  });
+
+  it('it should not fetch the user twice when called with the same context', async () => {
+    const user = await createUser();
+    const ctx = context();
+    let tmp;
+    let count = 0;
+    ctx.state = {
+      get authUser() {
+        return tmp;
+      },
+      set authUser(user) {
+        tmp = user;
+        count++;
+      },
+      jwt: { userId: user.id }
+    };
+    await fetchUser(ctx, () => {});
+    await fetchUser(ctx, () => {});
+    expect(count).toBe(1);
+  });
+
 });
