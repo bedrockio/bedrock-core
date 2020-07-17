@@ -6,8 +6,8 @@ const path = require('path');
 const tokens = require('../lib/tokens');
 
 module.exports = async function handleRequest(httpMethod, url, bodyOrQuery = {}, options = {}) {
-  const headers = {};
-  if (options.user) {
+  const headers = options.headers || {};
+  if (options.user && !headers.Authorization) {
     headers.Authorization = `Bearer ${tokens.createUserToken(options.user)}`;
   }
 

@@ -34,10 +34,8 @@ export default class AcceptInvite extends React.Component {
       const { data } = await request({
         method: 'POST',
         path: '/1/auth/accept-invite',
-        body: {
-          ...body,
-          token,
-        }
+        token,
+        body,
       });
       await this.context.setToken(data.token);
       this.props.history.push('/');

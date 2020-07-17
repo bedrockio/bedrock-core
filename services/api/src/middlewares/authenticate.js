@@ -40,9 +40,9 @@ function validateToken(ctx, token, type) {
   return payload;
 }
 
-exports.authenticate = ({ type } = {}, options = {}) => {
+exports.authenticate = ({ type } = {}) => {
   return async (ctx, next) => {
-    const token = options.getToken ? options.getToken(ctx) : getToken(ctx);
+    const token = getToken(ctx);
     if (!token) ctx.throw(400, 'no jwt token found in request');
 
     const payload = validateToken(ctx, token, type);

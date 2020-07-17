@@ -13,9 +13,6 @@ describe('authenticate', () => {
     ctx = context({ headers: { authorization: 'not Bearer $token' } });
     await expect(middleware(ctx)).rejects.toHaveProperty('message', 'no jwt token found in request');
 
-    const customTokenLocation = authenticate({}, { getToken: () => null });
-    ctx = context({ headers: { authorization: 'Bearer $token' } });
-    await expect(customTokenLocation(ctx)).rejects.toHaveProperty('message', 'no jwt token found in request');
   });
 
   it('should trigger an error if token is bad', async () => {
@@ -25,8 +22,6 @@ describe('authenticate', () => {
     await expect(middleware(ctx)).rejects.toHaveProperty('message', 'bad jwt token');
     ctx = context({});
 
-    const customTokenLocation = authenticate({}, { getToken: () => 'bad token' });
-    await expect(customTokenLocation(ctx)).rejects.toHaveProperty('message', 'bad jwt token');
   });
 
   it('should confirm that token has a valid kid', async () => {
