@@ -1,0 +1,27 @@
+#!/bin/bash
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+cd $SCRIPTPATH; cd ../../
+ENVIRONMENT=$1
+CONFIGMAP_NAME=$2
+
+if [ "$ENVIRONMENT" == "" ] || [ "$CONFIGMAP_NAME" == "" ]; then
+cat <<-EOM
+  Usage: set_configmap <environment> <configmap-name>
+  Set configmap from infrastructure/environments/<environment>/configmaps
+EOM
+exit 1
+fi
+
+./infrastructure/scripts/check_gcloud_config $ENVIRONMENT 1
+
+export $(grep -v '^#' infrastructure/environments/$ENVIRONMENT/env.conf | xargs)
+
+INFILE=infrastructure/environments/$ENVIRONMENT/configmaps/$CONFIGMAP_NAME.conf
+if [ ! -f $INFILE ]; then
+  echo "No such file: $INFILE"
+  exit 1
+fi
+
+kubectl create configmap $CONFIGMAP_NAME --from-env-file=$INFILE -o yaml --dry-run | kubectl replace -f - --ignore-not-found
+
+echo "Set configmap $INFILE"
