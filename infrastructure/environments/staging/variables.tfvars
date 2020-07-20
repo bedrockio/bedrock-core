@@ -3,7 +3,7 @@
 # cluster_name = "cluster-1"
 # environment  = "staging"
 description  = "Staging GKE cluster"
-# preemptible  = true
+preemptible  = true
 master_authorizaed_networks_cidr_blocks = [
   {
     display_name = "All",
