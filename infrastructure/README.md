@@ -1,23 +1,34 @@
 # Bedrock Deployment
 
-- [Setup](#setup)
-- [Existing Environments](#existing-environments)
-  - [Authorization](#authorization)
-- [New Environments](#new-environments)
-  - [Creation](#create-a-new-environment)
-  - [Provisioning](#provisioning)
-  - [Configuring SSL](#configuring-ssl)
-- [Deploying](#deploying)
-  - [Rollout Deploy](#rollout-deploy)
-  - [Feature Branches](#feature-branches)
-  - [Building Docker Containers](#building-docker-containers)
-  - [Pushing Docker Containers](#pushing-docker-containers)
-- [Disaster Recovery](#disaster-recovery)
-- [Other](#other)
-  - [Configuring Backups](#configuring-backups)
-  - [Backup Monitoring System](#backup-monitoring-system)
-  - [HTTP Basic Auth](#http-basic-auth)
-  - [Secrets](#secrets)
+- [Bedrock Deployment](#bedrock-deployment)
+  - [Setup](#setup)
+    - [Dependencies](#dependencies)
+    - [Directory Structure](#directory-structure)
+    - [Naming convention](#naming-convention)
+    - [Configuration](#configuration)
+  - [Existing Environments](#existing-environments)
+    - [Authorization](#authorization)
+  - [New Environments](#new-environments)
+    - [Creating a new environment](#creating-a-new-environment)
+    - [Getting shell access](#getting-shell-access)
+    - [Provisioning Scripts](#provisioning-scripts)
+    - [Configuring SSL](#configuring-ssl)
+  - [Deploying](#deploying)
+    - [Rollout Deploy](#rollout-deploy)
+    - [Feature Branches](#feature-branches)
+    - [Deploy info](#deploy-info)
+    - [Building Docker Containers](#building-docker-containers)
+    - [Pushing Docker Containers](#pushing-docker-containers)
+    - [Check cluster status](#check-cluster-status)
+  - [Disaster Recovery](#disaster-recovery)
+      - [Scenario A: Master Database Loss or Corruption](#scenario-a-master-database-loss-or-corruption)
+      - [Scenario B: Bucket Storage Loss or Corruption](#scenario-b-bucket-storage-loss-or-corruption)
+      - [Scenario C: Deletion of Google Cloud Project](#scenario-c-deletion-of-google-cloud-project)
+  - [Other](#other)
+    - [Configuring Backups](#configuring-backups)
+    - [Backup Monitoring System](#backup-monitoring-system)
+    - [HTTP Basic Auth](#http-basic-auth)
+    - [Secrets](#secrets)
 
 ## Setup
 
@@ -28,11 +39,14 @@
 
 ### Directory Structure
 
-- `scripts/` Deployment scripts
-- `staging/` Staging environment
-- `staging/data` Data infrastructure
-- `staging/services` Micro services infrastructure
-- `staging/env.conf` Staging environment configuration
+- `scripts/` Deployment and provisioning scripts
+- `provisioning` Terraform provisioning of Kubernetes cluster
+- `environments` Deployment configuration per environment, e.g. staging and production
+- `environments/staging/` Staging environment
+- `environments/staging/data` Data infrastructure
+- `environments/staging/services` Micro services infrastructure
+- `environments/staging/env.conf` Staging environment configuration
+- `environments/staging/variables.tfvars` Staging provisioning variables
 
 ### Naming convention
 
@@ -42,7 +56,7 @@
 
 ### Configuration
 
-Each environment can be configured in `<environment>/env.conf`:
+Each environment can be configured in `environments/<environment>/env.conf`:
 
 - `GCLOUD_ENV_NAME` - Name of the environment, e.g. staging
 - `GCLOUD_BUCKET_PREFIX` - Bucket prefix used for GCS bucket creation
@@ -55,8 +69,8 @@ Each environment can be configured in `<environment>/env.conf`:
 ### Authorization
 
 - Use `gcloud config configurations create bedrock` and authorize Google Cloud `gcloud auth login`
-- Use `./deployment/scripts/authorize staging` to get cluster credentials
-- If you've used `gcloud auth` with another account, run `gcloud config set account <EMAIL>`, then re-run `./deployment/scripts/authorize`.
+- Use `./infrastructure/scripts/authorize staging` to get cluster credentials
+- If you've used `gcloud auth` with another account, run `gcloud config set account <EMAIL>`, then re-run `./infrastructure/scripts/authorize`.
 
 If you get this error when trying to deploy:
 
@@ -82,8 +96,8 @@ gcloud docker --authorize-only
 
 - Create a Google Cloud project (in the GC console)
 - Create a Google Kubernetes cluster (in the GC console)
-- Authorize cluster `./deployment/scripts/authorize`
-- Configure `<environment>/env.conf`
+- Authorize cluster `./infrastructure/scripts/authorize`
+- Configure `environments/<environment>/env.conf`
 - Create disks required for data stores, update Kubernetes files disk information
 - Use `kubectl create` to deploy all services and pods
 
@@ -102,19 +116,19 @@ Note that the `api` and `web` services can be reached as hostnames: `curl http:/
 Various scripts exists to create resources on Google Compute Cloud:
 
 ```
-./deployment/scripts/create_buckets staging
-./deployment/scripts/create_addresses
-./deployment/scripts/create_disks
+./infrastructure/scripts/create_buckets staging
+./infrastructure/scripts/create_addresses
+./infrastructure/scripts/create_disks
 ```
 
 ### Configuring SSL
 
 Steps to enable SSL:
 
-1.  Create a certificate request `openssl req -new -newkey rsa:2048 -nodes -keyout deployment/<environment>/certificates/domain.key -out deployment/<environment>/certificates/domain.csr`
+1.  Create a certificate request `openssl req -new -newkey rsa:2048 -nodes -keyout environments/<environment>/certificates/domain.key -out environments/<environment>/certificates/domain.csr`
 2.  Buy an SSL certificate (e.g. GoDaddy). Use above `domain.csr` CSR. Download bundle.
-3.  Store the certificate (not the chain) as `deployment/<environment>/certificates/domain.crt`
-4.  Create certificate on Google Cloud `./deployment/scripts/create_certificate <environment>`
+3.  Store the certificate (not the chain) as `infrastructure/environmnents/<environment>/certificates/domain.crt`
+4.  Create certificate on Google Cloud `./infrastructure/scripts/create_certificate <environment>`
 5.  Make sure `api-ingress` and `web-ingress` are functioning
 6.  Use the Google Cloud Console - https://console.cloud.google.com/home/dashboard - to add frontend routes to `api-ingress` and `web-ingress`. Select above `<environment>-ssl` certificate.
 
@@ -127,13 +141,13 @@ The `deploy` script builds, pushes, and performs a rolling update of a service t
 Deploy "web" on staging:
 
 ```
-./deployment/scripts/deploy staging web
+./infrastructure/scripts/deploy staging web
 ```
 
 To deploy API and web together:
 
 ```
-./deployment/scripts/deploy_api_web staging
+./infrastructure/scripts/deploy_api_web staging
 ```
 
 ### Feature Branches
@@ -141,13 +155,13 @@ To deploy API and web together:
 The `--feature` flags can be used when deploying to create dynamic feature branches for testing. Pointing a subdomain at the feature branch ingress IP will enable the branch:
 
 ```
-./deployment/scripts/deploy staging web --feature=demo
+./infrastructure/scripts/deploy staging web --feature=demo
 ```
 
 The `--api` flag will additionally override the `API_URL` for features that require API changes:
 
 ```
-./deployment/scripts/deploy staging web --feature=demo --api=demo
+./infrastructure/scripts/deploy staging web --feature=demo --api=demo
 ```
 
 ### Deploy info
@@ -155,7 +169,7 @@ The `--api` flag will additionally override the `API_URL` for features that requ
 Each deployment is tagged with the author, date, and git ref of the deploy. To see these details for the currently running service use:
 
 ```
-./deployment/scripts/deploy_info staging web
+./infrastructure/scripts/deploy_info staging web
 ```
 
 ### Building Docker Containers
@@ -163,19 +177,19 @@ Each deployment is tagged with the author, date, and git ref of the deploy. To s
 Build all Docker containers:
 
 ```
-./deployment/scripts/build
+./infrastructure/scripts/build
 ```
 
 Build a specific service:
 
 ```
-./deployment/scripts/build api
+./infrastructure/scripts/build api
 ```
 
 Build a specific sub service:
 
 ```
-./deployment/scripts/build api jobs
+./infrastructure/scripts/build api jobs
 ```
 
 ### Pushing Docker Containers
@@ -189,19 +203,19 @@ gcloud auth configure-docker
 Push all locally known Docker containers to staging:
 
 ```
-./deployment/scripts/push staging
+./infrastructure/scripts/push staging
 ```
 
 Push all containers matching "api" to staging:
 
 ```
-./deployment/scripts/push staging api
+./infrastructure/scripts/push staging api
 ```
 
 ### Check cluster status
 
 ```
-./deployment/scripts/status staging
+./infrastructure/scripts/status staging
 ```
 
 ## Disaster Recovery
@@ -301,17 +315,17 @@ For a further example of this look at api-deloyment.yml for production.
 Convenience scripts for downloading and uploading secrets:
 
 ```
-./deployment/scripts/get_secrets staging credentials
+./infrastructure/scripts/get_secrets staging credentials
 ```
 
-This downloads all secret environment keys to `deployment/secrets/credentials.txt` - this folder is ignored by Git.
+This downloads all secret environment keys to `infrastructure/environments/staging/secrets/credentials.txt` - this folder is ignored by Git.
 
 _Security note: Never leave secret files on your machine_
 
 Once you edited the `.txt` file you can upload it like so:
 
 ```
-./deployment/scripts/set_secrets staging credentials
+./infrastructure/scripts/set_secrets staging credentials
 ```
 
-This uploads and deletes the values in `deployment/secrets/credentials.txt`. You can confirm the new values using `kubectl get secret credentials -o yaml` or using `kubectl exec` and confirming the environment variables in a given pod. Pods need a restart when secrets are updated!
+This uploads and deletes the values in `infrastructure/environments/staging/secrets/credentials.txt`. You can confirm the new values using `kubectl get secret credentials -o yaml` or using `kubectl exec` and confirming the environment variables in a given pod. Pods need a restart when secrets are updated!
