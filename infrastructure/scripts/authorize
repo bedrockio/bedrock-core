@@ -1,6 +1,6 @@
 #!/bin/bash
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
-cd $SCRIPTPATH; cd ../../..
+cd $SCRIPTPATH; cd ../../
 PLATFORM_NAME=$(basename `pwd`)
 ENVIRONMENT=$1
 
@@ -9,7 +9,7 @@ if [ "$ENVIRONMENT" == "" ]; then
   exit 1
 fi
 
-export $(grep -v '^#' deployment/$ENVIRONMENT/env.conf | xargs)
+export $(grep -v '^#' infrastructure/environments/$ENVIRONMENT/env.conf | xargs)
 
 gcloud config set project $GCLOUD_PROJECT
 gcloud config set compute/zone $GCLOUD_COMPUTE_ZONE

@@ -1,4 +1,4 @@
-## Set by infrastructure/deployment/scripts/provision
+## Set by infrastructure/scripts/provision
 # project      = "bedrock-foundation"
 # cluster_name = "production-cluster-1"
 # environment  = "production"

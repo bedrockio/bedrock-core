@@ -1,7 +1,7 @@
 #!/bin/bash
-source ./deployment/scripts/parse_opts
+source ./infrastructure/scripts/parse_opts
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
-cd $SCRIPTPATH; cd ../../..
+cd $SCRIPTPATH; cd ../../
 PLATFORM_NAME=$(basename `pwd`)
 
 ENVIRONMENT=$(parse_arg $1)
@@ -40,21 +40,21 @@ if [ "$ENVIRONMENT" == "production" ] && [ "$opt_feature" != "" ]; then
   exit 1
 fi
 
-./deployment/scripts/warn $ENVIRONMENT
+./infrastructure/scripts/warn $ENVIRONMENT
 if [ $? -ne 0 ]; then
   exit 1
 fi
 
-./deployment/scripts/build $SERVICE "$SUB_SERVICE" $opt_feature
-./deployment/scripts/push $ENVIRONMENT $SERVICE "$SUB_SERVICE" $opt_feature
+./infrastructure/scripts/build $SERVICE "$SUB_SERVICE" $opt_feature
+./infrastructure/scripts/push $ENVIRONMENT $SERVICE "$SUB_SERVICE" $opt_feature
 
 if [ "$opt_feature" != "" ]; then
   DEPLOYMENT="$SERVICE-$opt_feature-deployment"
-  ./deployment/scripts/create_feature_branch $ENVIRONMENT $SERVICE $opt_feature $opt_api
+  ./infrastructure/scripts/create_feature_branch $ENVIRONMENT $SERVICE $opt_feature $opt_api
 elif [ "$SUB_SERVICE" != "" ]; then
   DEPLOYMENT="$SERVICE-$SUB_SERVICE-deployment"
 else
   DEPLOYMENT="$SERVICE-deployment"
 fi
 
-./deployment/scripts/rollout $ENVIRONMENT $DEPLOYMENT
+./infrastructure/scripts/rollout $ENVIRONMENT $DEPLOYMENT

@@ -1,6 +1,6 @@
 #!/bin/bash
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
-cd $SCRIPTPATH; cd ../../..
+cd $SCRIPTPATH; cd ../../
 PLATFORM_NAME=$(basename `pwd`)
 ENVIRONMENT=$1
 TERRAFORM=$2
@@ -11,10 +11,10 @@ if [ "$ENVIRONMENT" == "" ] || [ "$TERRAFORM" == "" ]; then
   exit 1
 fi
 
-export $(grep -v '^#' infrastructure/deployment/$ENVIRONMENT/env.conf | xargs)
+export $(grep -v '^#' infrastructure/environments/$ENVIRONMENT/env.conf | xargs)
 
 function plan() {
-  terraform plan -var "project=$GCLOUD_PROJECT" -var "environment=$GCLOUD_ENV_NAME" -var "cluster_name=$GCLOUD_KUBERNETES_CLUSTER_NAME" -var-file=./$GCLOUD_ENV_NAME/variables.tfvars -out="${PLAN_FILE}"
+  terraform plan -var "project=$GCLOUD_PROJECT" -var "environment=$GCLOUD_ENV_NAME" -var "cluster_name=$GCLOUD_KUBERNETES_CLUSTER_NAME" -var-file=./infrastructure/environments/$ENVIRONMENT/variables.tfvars -out="${PLAN_FILE}"
 }
 
 if [ "$TERRAFORM" == "init" ]; then

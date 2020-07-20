@@ -30,28 +30,26 @@ infrastructure/provisioning/
 ├── backend.tf
 ├── main.tf # Main rersource definitions (cluster, node_pool, buckets)
 ├── outputs.tf # Output values when running terraform commands
-├── production
-│   └── variables.tfvars
-├── staging
-│   └── variables.tfvars
 ├── variables.tf # Defines all variables for main.tf (override per env)
 └── versions.tf # Defines minimum terraform version
 ```
+
+There is also a `variables.tfvars` file per environment to override default vars with environment specific values, which can be found in the `infrastructure/environments/<environment>/` folder.
 
 ## Provision GKE Cluster
 
 ```bash
 # Staging
 # terraform init only has to be executed the first time
-$ ./infrastructure/deployment/scripts/provision staging init
+$ ./infrastructure/scripts/provision staging init
 
-$ ./infrastructure/deployment/scripts/provision staging plan
-$ ./infrastructure/deployment/scripts/provision staging apply
+$ ./infrastructure/scripts/provision staging plan
+$ ./infrastructure/scripts/provision staging apply
 
 # Production
 # terraform init only has to be executed the first time
-$ ./infrastructure/deployment/scripts/provision production init
+$ ./infrastructure/scripts/provision production init
 
-$ ./infrastructure/deployment/scripts/provision production plan
-$ ./infrastructure/deployment/scripts/provision production apply
+$ ./infrastructure/scripts/provision production plan
+$ ./infrastructure/scripts/provision production apply
 ```
