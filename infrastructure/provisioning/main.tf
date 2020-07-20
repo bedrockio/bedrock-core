@@ -29,17 +29,17 @@ resource "google_container_cluster" "default" {
   }
 
   ## Use when you want to use IP whitelist
-  # master_authorized_networks_config {
+  master_authorized_networks_config {
 
-  #   dynamic "cidr_blocks" {
-  #     for_each = var.master_authorizaed_networks_cidr_blocks
-  #     content {
-  #       display_name = cidr_blocks.value["display_name"]
-  #       cidr_block = cidr_blocks.value["cidr_block"]
-  #     }
-  #   }
+    dynamic "cidr_blocks" {
+      for_each = var.master_authorizaed_networks_cidr_blocks
+      content {
+        display_name = cidr_blocks.value["display_name"]
+        cidr_block = cidr_blocks.value["cidr_block"]
+      }
+    }
 
-  # }
+  }
 
   ## Recommended to use private nodes
   # private_cluster_config {
