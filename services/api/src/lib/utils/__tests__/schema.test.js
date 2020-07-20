@@ -1,6 +1,6 @@
-const Schema = require('../Schema');
+const { createSchema } = require('../schema');
 const mongoose = require('mongoose');
-const { setupDb, teardownDb } = require('../../test-helpers');
+const { setupDb, teardownDb } = require('../../../test-helpers');
 
 beforeAll(async () => {
   await setupDb();
@@ -17,12 +17,12 @@ function createModel(schema) {
   return mongoose.model(`SchemaTestModel${counter++}`, schema);
 }
 
-describe('Schema', () => {
+describe('createSchema', () => {
 
   describe('basic functionality', () => {
 
     it('should be able to create basic schema', async () => {
-      const User = createModel(new Schema({
+      const User = createModel(createSchema({
         name: { type: String, validate: /[a-z]/ }
       }));
       const user = new User({ name: 'foo' });
@@ -40,7 +40,7 @@ describe('Schema', () => {
   describe('defaults', () => {
 
     it('should add timestamps by default', async () => {
-      const User = createModel(new Schema());
+      const User = createModel(createSchema());
       const user = new User();
       await user.save();
       expect(user.createdAt).toBeInstanceOf(Date);
@@ -48,7 +48,7 @@ describe('Schema', () => {
     });
 
     it('should add deletedAt by default', async () => {
-      const User = createModel(new Schema());
+      const User = createModel(createSchema());
       const user = new User();
       await user.save();
       await user.delete();
@@ -60,14 +60,14 @@ describe('Schema', () => {
   describe('serialization', () => {
 
     it('should expose id', () => {
-      const User = createModel(new Schema());
+      const User = createModel(createSchema());
       const user = new User();
       const data = JSON.parse(JSON.stringify(user));
       expect(data.id).toBe(user.id);
     });
 
     it('should not expose _id or __v', () => {
-      const User = createModel(new Schema());
+      const User = createModel(createSchema());
       const user = new User();
       const data = JSON.parse(JSON.stringify(user));
       expect(data._id).toBeUndefined();
@@ -75,7 +75,7 @@ describe('Schema', () => {
     });
 
     it('should not expose fields with underscore or marked private', () => {
-      const User = createModel(new Schema({
+      const User = createModel(createSchema({
         _private: String,
         password: { type: String, access: 'private' },
       }));
@@ -92,16 +92,29 @@ describe('Schema', () => {
       expect(data.password).toBeUndefined();
     });
 
+    it('should not expose array fields marked private', () => {
+      const User = createModel(createSchema({
+        tags: [{ type: String, access: 'private' }],
+      }));
+      const user = new User();
+      user.tags = ['one', 'two'];
+
+      expect(user.tags).toBeInstanceOf(Array);
+
+      const data = JSON.parse(JSON.stringify(user));
+      expect(data.tags).toBeUndefined();
+    });
+
   });
 
   describe('autopopulate', () => {
 
     it('should not expose private fields when using with autopopulate', async () => {
-      const User = createModel(new Schema({
+      const User = createModel(createSchema({
         password: { type: String, access: 'private' },
       }));
 
-      const shopSchema = new Schema({
+      const shopSchema = createSchema({
         user: {
           ref: User.modelName,
           type: mongoose.Schema.Types.ObjectId,

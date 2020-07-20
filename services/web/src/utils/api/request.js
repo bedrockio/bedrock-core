@@ -1,13 +1,11 @@
 import { API_URL } from 'utils/env';
-import { session } from 'stores';
-
 import { ApiError, ApiParseError } from './errors';
 
 export default async function request(options) {
   const { method = 'GET', path, files, params } = options;
   let { body } = options;
 
-  const token = options.token || session.token;
+  const token = options.token || localStorage.getItem('jwt');
 
   const headers = Object.assign(
     {
@@ -42,8 +40,16 @@ export default async function request(options) {
   if (res.status === 204) {
     return;
   } else if (!res.ok) {
-    const text = await res.text();
-    throw new ApiError(text || res.statusText, res.status);
+    let message, status, details;
+    try {
+      const data = await res.clone().json();
+      message = data.error.message;
+      status = data.error.status;
+      details = data.error.details;
+    } catch (err) {
+      message = await res.clone().text();
+    }
+    throw new ApiError(message || res.statusText, status || res.status, details);
   }
 
   try {

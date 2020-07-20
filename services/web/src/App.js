@@ -1,8 +1,8 @@
 import { hot } from 'react-hot-loader/root';
 import 'theme/semantic.less';
 
-import { Switch, Route, Redirect } from 'react-router-dom';
 import React from 'react';
+import { Switch, Route, Redirect } from 'react-router-dom';
 
 import AuthSwitch from 'components/routes/AuthSwitch';
 import Protected from 'components/routes/Protected';
@@ -24,12 +24,12 @@ import ResetPassword from './screens/Auth/ResetPassword';
 const App = () => (
   <Switch>
     <AuthSwitch path="/" loggedIn={Dashboard} loggedOut={Login} exact />
-    <Protected path="/shops" component={Shops} exact />
-    <Protected path="/shops/:id" component={Shop} />
-    <Protected path="/settings" component={Settings} exact />
-    <Protected path="/invites" component={Invites} exact />
-    <Protected path="/users" component={Users} exact />
-    <Protected path="/docs/:id?" component={Docs} />
+    <Protected path="/shops" allowed={Shops} exact />
+    <Protected path="/shops/:id" allowed={Shop} />
+    <Protected path="/settings" allowed={Settings} exact />
+    <Protected path="/invites" allowed={Invites} exact />
+    <Protected path="/users" allowed={Users} exact />
+    <Protected path="/docs/:id?" allowed={Docs} />
     <Route path="/logout" component={Logout} exact />
     <AuthSwitch
       path="/login"

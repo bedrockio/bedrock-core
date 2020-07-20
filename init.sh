@@ -18,29 +18,28 @@ fi
 #   http://blog.existentialize.com/dont-pipe-to-your-shell.html
 _() {
 
-prompt() {
-  local VALUE
+  prompt() {
+    local VALUE
 
-  # Hack: We read from FD 3 because when reading the script from a pipe, FD 0 is the script, not
-  #   the terminal. We checked above that FD 1 (stdout) is in fact a terminal and then dup it to
-  #   FD 3, thus we can input from FD 3 here.
+    # Hack: We read from FD 3 because when reading the script from a pipe, FD 0 is the script, not
+    #   the terminal. We checked above that FD 1 (stdout) is in fact a terminal and then dup it to
+    #   FD 3, thus we can input from FD 3 here.
 
-  printf "\e[1m$1\e[m" >&3
-  read -u 3 VALUE
-  echo "$VALUE"
-}
+    printf "\e[1m$1\e[m" >&3
+    read -u 3 VALUE
+    echo "$VALUE"
+  }
 
-  set -euo pipefail
-  exec 3<&1
+    set -euo pipefail
+    exec 3<&1
 
-echo ""
-echo ""
-echo " ______  _______ ______   ______  _____  _______ _     _  "
-echo " |_____] |______ |     \ |_____/ |     | |       |____/   "
-echo " |_____] |______ |_____/ |    \_ |_____| |_____  |    \_  "
-echo ""
-echo ""
-
+  echo ""
+  echo ""
+  echo " ______  _______ ______   ______  _____  _______ _     _  "
+  echo " |_____] |______ |     \ |_____/ |     | |       |____/   "
+  echo " |_____] |______ |_____/ |    \_ |_____| |_____  |    \_  "
+  echo ""
+  echo ""
 
   echo "" >&3
   PROJECT=$(prompt "Enter project name: ")
@@ -48,6 +47,7 @@ echo ""
   EMAIL=$(prompt "Enter email (optional): ")
   ADDRESS=$(prompt "Enter address (optional): ")
   GIT_REMOTE=$(prompt "Enter git remote (optional owner/repository): ")
+  JWT_SECRET=$(openssl rand -base64 30)
 
   echo "Project $PROJECT"
 
@@ -82,6 +82,7 @@ echo ""
     sed -i '' "s/admin@bedrock\.foundation/$EMAIL/g" $1
     sed -i '' "s/bedrock\.foundation/$DOMAIN/g" $1
     sed -i '' "s/APP_COMPANY_ADDRESS=.*/APP_COMPANY_ADDRESS=$ADDRESS/g" $1
+    sed -i '' "s/JWT_SECRET=.*/JWT_SECRET=$JWT_SECRET/g" $1
     sed -i '' "s/Bedrock/$PROJECT/g" $1
     sed -i '' "s/bedrock/$kebab/g" $1
     update

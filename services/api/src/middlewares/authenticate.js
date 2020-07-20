@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
-const config = require('@kaareal/config');
+const config = require('@bedrockio/config');
 const User = require('../models/user');
 
 const secrets = {
-  user: config.get('JWT_SECRET')
+  user: config.get('JWT_SECRET'),
 };
 
 function getToken(ctx) {
@@ -57,7 +57,7 @@ exports.fetchUser = async (ctx, next) => {
   await next();
 };
 
-exports.checkUserRole = function({ role }) {
+exports.checkUserRole = function ({ role }) {
   return (ctx, next) => {
     if (!(ctx.state.authUser.roles || []).includes(role)) {
       return ctx.throw(401, `You don't have the right permission for this endpoint (required role: ${role})`);

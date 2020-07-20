@@ -9,19 +9,43 @@ export default class Uploads extends React.Component {
 
   constructor(props) {
     super(props);
+    const uploads = this.getInitialUploads(props);
     this.state = {
       loading: false,
       error: null,
-      uploads: props.value ? props.value.slice() : [],
+      uploads,
     };
-    props.onChange(this.state.uploads);
+    this.onChange(uploads);
+  }
+
+  getInitialUploads(props) {
+    const { value } = props;
+    let uploads;
+    if (!value) {
+      uploads = [];
+    } else if (Array.isArray(value)) {
+      uploads = value.concat();
+    } else {
+      uploads = [value];
+    }
+    return uploads;
   }
 
   delete(upload) {
     const { uploads } = this.state;
     const newUploads = uploads.filter((u) => u.id != upload.id);
     this.setState({ uploads: newUploads });
-    this.props.onChange(newUploads);
+    this.onChange(newUploads);
+  }
+
+  onChange = () => {
+    const { single, onChange } = this.props;
+    const { uploads } = this.state;
+    if (single) {
+      onChange(uploads[0] || null);
+    } else {
+      onChange(uploads);
+    }
   }
 
   onDrop = async (acceptedFiles, rejectedFiles) => {
@@ -30,6 +54,10 @@ export default class Uploads extends React.Component {
       error: null,
     });
     try {
+      const { single } = this.props;
+      if (single) {
+        acceptedFiles = acceptedFiles.slice(0, 1);
+      }
       if (rejectedFiles.length) {
         throw new Error(`File did not meet criteria: ${rejectedFiles[0].file.name}`);
       }
@@ -39,12 +67,12 @@ export default class Uploads extends React.Component {
         files: acceptedFiles,
       });
       const uploaded = Array.isArray(data) ? data : [data];
-      const uploads = [...this.state.uploads, ...uploaded];
+      const uploads = single ? uploaded : [...this.state.uploads, ...uploaded];
       this.setState({
         uploads,
         loading: false,
       });
-      this.props.onChange(uploads);
+      this.onChange(uploads);
     } catch (error) {
       this.setState({
         error,
@@ -55,7 +83,7 @@ export default class Uploads extends React.Component {
   };
 
   render() {
-    const { required, label, type } = this.props;
+    const { required, label, type, single } = this.props;
     const { error, loading, uploads } = this.state;
     return (
       <Form.Field required={required}>
@@ -110,6 +138,8 @@ export default class Uploads extends React.Component {
                     <p>Uploading...</p>
                   ) : isDragActive ? (
                     <p>Drop files here...</p>
+                  ) : single ? (
+                    <p>Try dropping a file here, or click to select a file to upload.</p>
                   ) : (
                     <p>Try dropping some files here, or click to select files to upload.</p>
                   )}
@@ -125,11 +155,13 @@ export default class Uploads extends React.Component {
 
 Uploads.propTypes = {
   type: PropTypes.string,
+  single: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   onError: PropTypes.func,
 };
 
 Uploads.defaultProps = {
   type: 'image',
+  single: false,
   onError: () => {},
 };

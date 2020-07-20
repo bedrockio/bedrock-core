@@ -1,7 +1,7 @@
 const { authenticate } = require('../authenticate');
 const { context } = require('../../test-helpers');
 const jwt = require('jsonwebtoken');
-const config = require('@kaareal/config');
+const config = require('@bedrockio/config');
 
 describe('authenticate', () => {
   it('should trigger an error if jwt token can not be found', async () => {
@@ -38,7 +38,7 @@ describe('authenticate', () => {
 
   it('should confirm that type if specify in middleware', async () => {
     const middleware = authenticate({
-      type: 'sometype'
+      type: 'sometype',
     });
 
     const token = jwt.sign({ kid: 'user', type: 'not same type' }, 'verysecret');

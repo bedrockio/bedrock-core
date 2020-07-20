@@ -14,22 +14,22 @@ export default class EditProduct extends React.Component {
       loading: false,
       error: null,
       hasError: false,
-      product: {
-        ...props.product,
+      item: {
+        ...props.item,
         shop: props.shopId,
       },
-      sellingPoints: props.product?.sellingPoints || [],
+      sellingPoints: props.item?.sellingPoints || [],
     };
   }
 
   isUpdate() {
-    return !!this.props.product;
+    return !!this.props.item;
   }
 
-  setProductField(name, value) {
+  setField(name, value) {
     this.setState({
-      product: {
-        ...this.state.product,
+      item: {
+        ...this.state.item,
         [name]: value,
       },
     });
@@ -51,14 +51,14 @@ export default class EditProduct extends React.Component {
         loading: true,
         touched: true,
       });
-      const { product } = this.state;
+      const { item } = this.state;
       if (this.isUpdate()) {
         await request({
           method: 'PATCH',
-          path: `/1/products/${product.id}`,
+          path: `/1/products/${item.id}`,
           body: {
-            ...product,
-            images: (product.images || []).map((image) => image.id),
+            ...item,
+            images: (item.images || []).map((image) => image.id),
           },
         });
       } else {
@@ -66,12 +66,12 @@ export default class EditProduct extends React.Component {
           method: 'POST',
           path: '/1/products',
           body: {
-            ...product,
-            images: (product.images || []).map((image) => image.id),
+            ...item,
+            images: (item.images || []).map((image) => image.id),
           },
         });
         this.setState({
-          product: {},
+          item: {},
           touched: false,
         });
       }
@@ -90,7 +90,7 @@ export default class EditProduct extends React.Component {
 
   render() {
     const { trigger } = this.props;
-    const { product, open, touched, loading, error, hasError } = this.state;
+    const { item, open, touched, loading, error, hasError } = this.state;
     return (
       <Modal
         closeIcon
@@ -99,7 +99,7 @@ export default class EditProduct extends React.Component {
         onOpen={() => this.setState({ open: true })}
         open={open}
         trigger={trigger}>
-        <Modal.Header>{this.isUpdate() ? `Edit "${product.name}"` : 'New Product'}</Modal.Header>
+        <Modal.Header>{this.isUpdate() ? `Edit "${item.name}"` : 'New Product'}</Modal.Header>
         <Modal.Content>
           <AutoFocus>
             <Form error={touched && (!!error || hasError)}>
@@ -109,37 +109,37 @@ export default class EditProduct extends React.Component {
                 name="name"
                 label="Name"
                 type="text"
-                value={product.name || ''}
-                onChange={(e, { value }) => this.setProductField('name', value)}
+                value={item.name || ''}
+                onChange={(e, { value }) => this.setField('name', value)}
               />
               <Form.TextArea
                 name="description"
                 label="Description"
-                value={product.description || ''}
-                onChange={(e, { value }) => this.setProductField('description', value)}
+                value={item.description || ''}
+                onChange={(e, { value }) => this.setField('description', value)}
               />
               <Form.Checkbox
                 label="Is Featured?"
                 name="isFeatured"
-                checked={product.isFeatured || false}
-                onChange={(e, { checked }) => this.setProductField('isFeatured', checked)}
+                checked={item.isFeatured || false}
+                onChange={(e, { checked }) => this.setField('isFeatured', checked)}
               />
               <Form.Input
                 labelPosition="right"
                 placeholder="Amount"
                 name="priceUsd"
                 type="number"
-                onChange={(e, { value }) => this.setProductField('priceUsd', parseInt(value, 10))}
-                value={product.priceUsd || ''}>
+                onChange={(e, { value }) => this.setField('priceUsd', parseInt(value, 10))}
+                value={item.priceUsd || ''}>
                 <Label basic>$</Label>
                 <input />
                 <Label>.00</Label>
               </Form.Input>
               <DateTimeField
                 name="expiresAt"
-                value={product.expiresAt || new Date()}
+                value={item.expiresAt || new Date()}
                 label="Expiration Date and Time"
-                onChange={(value) => this.setProductField('expiresAt', value)}
+                onChange={(value) => this.setField('expiresAt', value)}
               />
               <Form.Dropdown
                 name="sellingPoints"
@@ -154,14 +154,14 @@ export default class EditProduct extends React.Component {
                     sellingPoints: [...this.state.sellingPoints, value],
                   });
                 }}
-                onChange={(e, { value }) => this.setProductField('sellingPoints', value)}
-                value={product.sellingPoints || []}
+                onChange={(e, { value }) => this.setField('sellingPoints', value)}
+                value={item.sellingPoints || []}
               />
               <UploadsField
                 label="Images"
                 name="images"
-                value={product.images || []}
-                onChange={(value) => this.setProductField('images', value)}
+                value={item.images || []}
+                onChange={(value) => this.setField('images', value)}
                 onError={() => this.setState({ touched: true, hasError: true })}
               />
             </Form>
