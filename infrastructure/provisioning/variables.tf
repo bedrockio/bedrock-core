@@ -39,7 +39,7 @@ variable "default_pool_max_nodes" {
 }
 
 variable "preemptible" {
-  default = true
+  default = false
 }
 
 variable "machine_type" {
@@ -61,7 +61,7 @@ variable "master_authorizaed_networks_cidr_blocks" {
   default = [
     {
       display_name = "All",
-      cidr_block = "0.0.0.0/1"
+      cidr_block = "0.0.0.0/0"
     }
   ]
 }
