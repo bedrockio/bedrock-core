@@ -4,7 +4,7 @@ More information about this platform: https://bedrock.io/
 
 More documentation about specific services and components can be found in the following sections:
 
-- [deployment/](deployment/) - Deployment automation, how to's, playbooks and procedures
+- [infrastructure/](infrastructure/) - Provisioning, Deployment automation, how to's, playbooks and procedures
 - [services/api](services/api) - Data API and data model layer that powers all applications
 - [services/api-docs](services/api-docs) - API Documentation portal
 - [services/web](services/web) - Web application and administration dashboard
