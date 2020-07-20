@@ -1,6 +1,6 @@
-# Bedrock Deployment
+# Bedrock Infrastructure
 
-- [Bedrock Deployment](#bedrock-deployment)
+- [Bedrock Infrastructure](#bedrock-infrastructure)
   - [Setup](#setup)
     - [Dependencies](#dependencies)
     - [Directory Structure](#directory-structure)
