@@ -22,6 +22,6 @@ if [ ! -f $INFILE ]; then
   exit 1
 fi
 
-kubectl create configmap $CONFIGMAP_NAME --from-env-file=$INFILE -o yaml --dry-run | kubectl replace -f - --ignore-not-found
+kubectl create configmap $CONFIGMAP_NAME --from-env-file=$INFILE -o yaml --dry-run=client | kubectl apply -f -
 
 echo "Set configmap $INFILE"
