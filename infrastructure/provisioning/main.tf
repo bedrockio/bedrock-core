@@ -22,6 +22,10 @@ resource "google_container_cluster" "default" {
     }
   }
 
+  release_channel {
+    channel = "STABLE"
+  }
+
   timeouts {
     create = "2h"
     update = "2h"
