@@ -93,12 +93,32 @@ gcloud docker --authorize-only
 
 ### Creating a new environment
 
-- Create a Google Cloud project (in the GC console)
-- Create a Google Kubernetes cluster (in the GC console)
-- Authorize cluster `./infrastructure/scripts/authorize`
-- Configure `environments/<environment>/env.conf`
-- Create disks required for data stores, update Kubernetes files disk information
-- Use `kubectl create` to deploy all services and pods
+Create a Google Cloud project (in the [GC dashboard console](https://console.cloud.google.com/home/dashboard)) or:
+
+```bash
+gcloud projects create bedrock-staging --name="Bedrock Staging"`
+```
+
+Create a Google Kubernetes cluster (in the [GC dashboard console](https://console.cloud.google.com/kubernetes)) or:
+
+```bash
+gcloud config set project bedrock-staging
+gcloud services enable container.googleapis.com # Takes a couple of minutes
+```
+
+Provisioning steps
+
+Authorize cluster:
+
+```bash
+./infrastructure/scripts/authorize
+```
+
+Configure: `environments/<environment>/env.conf`
+
+Create disks required for data stores, update Kubernetes files disk information
+
+Use `kubectl create` to deploy all services and pods
 
 ### Getting shell access
 
