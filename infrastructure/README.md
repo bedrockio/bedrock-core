@@ -120,6 +120,14 @@ Create disks required for data stores, update Kubernetes files disk information
 
 Use `kubectl create` to deploy all services and pods
 
+### Scaling Up or Down
+
+You can change the node size of an existing pool like so:
+
+```bash
+gcloud container clusters resize cluster-1 --node-pool cluster-1-node-pool --num-nodes 2
+```
+
 ### Getting shell access
 
 There's a default `api-cli-deployment` provided that allows you to obtain a shell. This is useful when running migration scripts in production (you can take down the API and use CLI to do operations without new reads/writes coming in):
