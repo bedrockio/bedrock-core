@@ -21,9 +21,9 @@
     - [Pushing Docker Containers](#pushing-docker-containers)
     - [Check cluster status](#check-cluster-status)
   - [Disaster Recovery](#disaster-recovery)
-      - [Scenario A: Master Database Loss or Corruption](#scenario-a-master-database-loss-or-corruption)
-      - [Scenario B: Bucket Storage Loss or Corruption](#scenario-b-bucket-storage-loss-or-corruption)
-      - [Scenario C: Deletion of Google Cloud Project](#scenario-c-deletion-of-google-cloud-project)
+    - [Scenario A: Master Database Loss or Corruption](#scenario-a-master-database-loss-or-corruption)
+    - [Scenario B: Bucket Storage Loss or Corruption](#scenario-b-bucket-storage-loss-or-corruption)
+    - [Scenario C: Deletion of Google Cloud Project](#scenario-c-deletion-of-google-cloud-project)
   - [Other](#other)
     - [Configuring Backups](#configuring-backups)
     - [Backup Monitoring System](#backup-monitoring-system)
@@ -35,7 +35,6 @@
 ### Dependencies
 
 - Make sure the `gcloud` CLI tools are available
-- Use `gcloud auth login` and `gcloud auth application-default login` to login to the right Google account
 
 ### Directory Structure
 
