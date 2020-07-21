@@ -38,6 +38,8 @@ There is also a `variables.tfvars` file per environment to override default vars
 
 ## Provision GKE Cluster
 
+Note: this script can take about 5 minutes.
+
 ```bash
 # Staging
 # terraform init only has to be executed the first time
