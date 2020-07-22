@@ -11,6 +11,12 @@ More documentation about specific services and components can be found in the fo
 
 ## Quick Start
 
+To generate a fresh Bedrock core codebase, run this in your terminal:
+
+```bash
+curl https://get.bedrock.io | bash
+```
+
 Using Docker Compose you can build and run all services and dependencies as follows:
 
 ```bash
