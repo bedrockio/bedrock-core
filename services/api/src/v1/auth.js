@@ -74,12 +74,11 @@ router
     '/accept-invite',
     validate({
       body: Joi.object({
-        token: Joi.string(),
         name: Joi.string().required(),
         password: passwordField.required()
       })
     }),
-    authenticate({ type: 'invite' }, { getToken: (ctx) => ctx.request.body.token }),
+    authenticate({ type: 'invite' }),
     async (ctx) => {
       const { name, password } = ctx.request.body;
       const invite = await Invite.findByIdAndUpdate(ctx.state.jwt.inviteId, {
@@ -133,11 +132,10 @@ router
     '/set-password',
     validate({
       body: Joi.object({
-        token: Joi.string().required(),
         password: passwordField.required()
       })
     }),
-    authenticate({ type: 'password' }, { getToken: (ctx) => ctx.request.body.token }),
+    authenticate({ type: 'password' }),
     async (ctx) => {
       const { password } = ctx.request.body;
       const user = await User.findById(ctx.state.jwt.userId);

@@ -40,20 +40,25 @@ function validateToken(ctx, token, type) {
   return payload;
 }
 
-exports.authenticate = ({ type } = {}, options = {}) => {
+exports.authenticate = ({ type, optional = false } = {}) => {
   return async (ctx, next) => {
-    const token = options.getToken ? options.getToken(ctx) : getToken(ctx);
-    if (!token) ctx.throw(400, 'no jwt token found in request');
-
-    const payload = validateToken(ctx, token, type);
-    ctx.state.jwt = payload;
+    if (!ctx.state.jwt) {
+      const token = getToken(ctx);
+      if (token) {
+        ctx.state.jwt = validateToken(ctx, token, type);
+      } else if (!optional) {
+        ctx.throw(400, 'no jwt token found in request');
+      }
+    }
     return next();
   };
 };
 
 exports.fetchUser = async (ctx, next) => {
-  ctx.state.authUser = await User.findById(ctx.state.jwt.userId);
-  if (!ctx.state.authUser) ctx.throw(400, 'user associated to token could not not be found');
+  if (!ctx.state.authUser) {
+    ctx.state.authUser = await User.findById(ctx.state.jwt.userId);
+    if (!ctx.state.authUser) ctx.throw(400, 'user associated to token could not not be found');
+  }
   await next();
 };
 
