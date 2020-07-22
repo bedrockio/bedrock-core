@@ -41,7 +41,7 @@ spec:
               value: "bedrock-staging-uploads"
           envFrom:
             - configMapRef:
-                name: api
+                name: api-config
           ports:
             - name: http-server
               containerPort: 2300

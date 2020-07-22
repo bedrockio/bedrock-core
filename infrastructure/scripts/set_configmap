@@ -22,6 +22,19 @@ if [ ! -f $INFILE ]; then
   exit 1
 fi
 
-kubectl create configmap $CONFIGMAP_NAME --from-env-file=$INFILE -o yaml --dry-run=client | kubectl apply -f -
+kubectl create configmap $CONFIGMAP_NAME-config --from-env-file=$INFILE -o yaml --dry-run=client | kubectl apply -f -
 
-echo "Set configmap $INFILE"
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+LightBlue='\033[1;34m'
+NC='\033[0m'
+
+echo -e "${LightBlue}"
+kubectl get cm/$CONFIGMAP_NAME-config -o yaml
+echo ""
+echo -e "${GREEN}Successfully set configmap '$CONFIGMAP_NAME-config' with '$INFILE'${NC}"
+echo ""
+echo -e "Re-deploy the following services:${YELLOW}"
+grep -lr "name: $CONFIGMAP_NAME-config" ./infrastructure/environments/$ENVIRONMENT
+echo ""
