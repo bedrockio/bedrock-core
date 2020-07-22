@@ -39,9 +39,9 @@ export default class ResetPassword extends React.Component {
       const { data } = await request({
         method: 'POST',
         path: '/1/auth/set-password',
+        token,
         body: {
           password,
-          token,
         }
       });
       await this.context.setToken(data.token);

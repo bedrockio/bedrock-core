@@ -71,10 +71,15 @@ describe('/1/users', () => {
     it('it should allow a user to set a password', async () => {
       const user = await createUser();
       const password = 'very new password';
+      const token = tokens.createUserTemporaryToken({ userId: user._id }, 'password');
       const response = await request('POST', '/1/auth/set-password', {
         password,
-        token: tokens.createUserTemporaryToken({ userId: user._id }, 'password'),
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
       });
+
       expect(response.status).toBe(200);
 
       const { payload } = jwt.decode(response.body.data.token, { complete: true });
@@ -89,7 +94,10 @@ describe('/1/users', () => {
       const password = 'very new password';
       const response = await request('POST', '/1/auth/set-password', {
         password,
-        token: 'some bad token not really a good token',
+      }, {
+        headers: {
+          Authorization: 'Bearer badtoken',
+        }
       });
       expect(response.status).toBe(400);
       expect(response.body).toEqual({ error: { message: 'bad jwt token', status: 400 } });
