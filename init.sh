@@ -82,9 +82,9 @@ _() {
     sed -i '' "s/admin@bedrock\.foundation/$EMAIL/g" $1
     sed -i '' "s/bedrock\.foundation/$DOMAIN/g" $1
     sed -i '' "s/APP_COMPANY_ADDRESS=.*/APP_COMPANY_ADDRESS=$ADDRESS/g" $1
+    sed -i '' "s/gcloud config configurations create bedrock/gcloud config configurations create $kebab/g" $1
     sed -i '' "s:JWT_SECRET=.*:JWT_SECRET=$JWT_SECRET:g" $1
     sed -i '' "s/Bedrock/$PROJECT/g" $1
-    sed -i '' "s/bedrock/$kebab/g" $1
     update
   }
 
