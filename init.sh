@@ -155,7 +155,7 @@ _() {
   replace ./$kebab/deployment/production/data/mongo-deployment.yml
   replace ./$kebab/deployment/production/data/mongo-service.yml
 
-  remove ./$kebab/create-project.sh
+  remove ./$kebab/init.sh
   remove ./$kebab/CONTRIBUTING.md
   remove ./$kebab/LICENSE
   remove ./$kebab/.git
