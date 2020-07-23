@@ -16,17 +16,11 @@ spec:
         - image: gcr.io/bedrock-foundation/bedrock-core-services-api-jobs
           imagePullPolicy: Always
           name: main
-          env:
-            - name: NODE_ENV
-              value: "staging"
-            - name: MONGO_URI
-              value: "mongodb://mongo:27017/bedrock_staging"
-            - name: APP_DOMAIN
-              value: "bedrock.foundation"
-            - name: POSTMARK_FROM
-              value: "no-reply@bedrock.foundation"
-            - name: POSTMARK_APIKEY
-              value: "abc"
+          envFrom:
+            - configMapRef:
+                name: global-config
+            - configMapRef:
+                name: api-config
           volumeMounts:
             - name: cache
               mountPath: /service/data

@@ -17,29 +17,19 @@ spec:
           imagePullPolicy: Always
           name: main
           env:
-            # - name: NODE_ENV
-            #   value: "staging"
-            # - name: MONGO_URI
-            #   value: "mongodb://mongo:27017/bedrock_staging"
             - name: ADMIN_EMAIL
               value: "admin@bedrock.foundation"
             - name: ADMIN_PASSWORD
               value: "password1"
             - name: JWT_SECRET
               value: "changeme1234"
-            # - name: APP_DOMAIN
-            #   value: "bedrock.foundation"
-            # - name: APP_URL
-            #   value: "https://bedrock.foundation"
-            # - name: POSTMARK_FROM
-            #   value: "no-reply@bedrock.foundation"
-            # - name: POSTMARK_APIKEY
-            #   value: "abc"
             - name: UPLOADS_STORE
               value: "gcs"
             - name: UPLOADS_GCS_BUCKET
               value: "bedrock-staging-uploads"
           envFrom:
+            - configMapRef:
+                name: global-config
             - configMapRef:
                 name: api-config
           ports:

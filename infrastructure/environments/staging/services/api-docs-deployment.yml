@@ -17,12 +17,13 @@ spec:
           imagePullPolicy: Always
           name: main
           env:
-            - name: NODE_ENV
-              value: "staging"
             - name: ENABLE_HTTP_BASIC_AUTH
               value: "yes"
             - name: OPENAPI_URL
               value: "https://api.bedrock.foundation/openapi.json"
+          envFrom:
+            - configMapRef:
+                name: global-config
           ports:
             - name: http-server
               containerPort: 2400

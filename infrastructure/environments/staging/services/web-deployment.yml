@@ -16,13 +16,9 @@ spec:
         - image: gcr.io/bedrock-foundation/bedrock-core-services-web
           imagePullPolicy: Always
           name: main
-          env:
-            - name: NODE_ENV
-              value: "staging"
-            - name: DOMAIN
-              value: bedrock.foundation
-            - name: API_URL
-              value: "https://api.bedrock.foundation"
+          envFrom:
+            - configMapRef:
+                name: global-config
           ports:
             - name: http-server
               containerPort: 2200
