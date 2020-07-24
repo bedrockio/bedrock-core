@@ -16,7 +16,14 @@ export default class Spacer extends React.Component {
 }
 
 Spacer.propTypes = {
-  size: PropTypes.oneOf(['xs', 's', 'm', 'l', 'xl']),
+  size: PropTypes.oneOf([
+    'mini',
+    'tiny',
+    'small',
+    'large',
+    'big',
+    'huge',
+  ]),
 };
 
 Spacer.defaultProps = {
