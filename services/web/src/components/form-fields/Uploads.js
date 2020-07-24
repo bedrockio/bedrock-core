@@ -171,19 +171,20 @@ export default class Uploads extends React.Component {
   }
 
   renderUpload(upload, type) {
+    const src = urlForUpload(upload, true);
     if (type === 'image') {
-      return <Image key={upload.id} src={urlForUpload(upload, true)} />;
+      return <Image key={upload.id} src={src} />;
     } else if (type === 'video') {
       return (
         <video
           style={{width: '100%'}}
-          src={urlForUpload(upload, true)}
+          src={src}
           controls
         />
       );
     } else if (type === 'audio') {
       return (
-        <audio src={urlForUpload(upload, true)} controls />
+        <audio src={src} controls />
       );
     }
   }
