@@ -156,6 +156,14 @@ describe('fetchUser', () => {
     });
   });
 
+  it('it should not fail without jwt token', async () => {
+    const user = await createUser();
+    const ctx = context();
+    await fetchUser(ctx, () => {
+      expect(ctx.state.authUser).toBeUndefined();
+    });
+  });
+
   it('it should not fetch the user twice when called with the same context', async () => {
     const user = await createUser();
     const ctx = context();
