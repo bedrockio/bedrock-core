@@ -25,6 +25,9 @@ export default async function request(options) {
     files.forEach((file) => {
       data.append('file', file);
     });
+    for (let [key, value] of Object.entries(body)) {
+      data.append(key, value);
+    }
     body = data;
   } else if (!(body instanceof FormData)) {
     body = JSON.stringify(body);

@@ -2,12 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { omit } from 'lodash';
 import Group from './Group';
+import Spacer from './Spacer';
 
 import './layout.less';
 
 export default class Layout extends React.Component {
 
   static Group = Group;
+  static Spacer = Spacer;
 
   getProps() {
     const { className, ...rest } = this.props;

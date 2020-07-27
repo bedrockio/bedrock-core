@@ -25,9 +25,9 @@ router
     };
   })
   .get('/:hash/image', async (ctx) => {
-    const { thumnail } = ctx.request.query;
+    const { thumbnail } = ctx.request.query;
     const upload = await Upload.findOne({ hash: ctx.params.hash });
-    const url = thumnail && upload.thumbnailUrl ? upload.thumbnailUrl : upload.rawUrl;
+    const url = thumbnail && upload.thumbnailUrl ? upload.thumbnailUrl : upload.rawUrl;
     if (upload.storageType === 'local') {
       ctx.set('Content-Type', upload.mimeType);
       ctx.body = createReadStream(url);

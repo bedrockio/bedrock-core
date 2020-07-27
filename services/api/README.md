@@ -83,6 +83,14 @@ The API provides a simple Docker container for running Cronjobs. The Cron schedu
 docker build -t bedrock-api-jobs -f Dockerfile.jobs .
 ```
 
+## Updating E-Mail Templates
+
+E-mail templates can be found in `emails/src`. When changes are made, run the following command to optimize the emails for mail readers:
+
+```
+yarn emails
+```
+
 ## Auto-generating API Documentation
 
 Good API documentation needs love, so make sure to take the time to describe parameters, create examples, etc.
@@ -95,14 +103,59 @@ Run:
 node scripts/generate-openapi.js
 ```
 
-The information in `src/v1/__openapi__` is exposed through the API and used by the Markdown-powered documentation portal in `/services/web/src/docs`.
+The format in `src/v1/__openapi__` is using a slimmed down version of the OpenAPI spec to make editing easier. API calls can be defined in the `paths` array and Object definitions can be defined in the `objects` array.
 
-See [../../services/web](../../services/web) for more info
+Here's an example of an API call definition:
 
-## Updating E-Mail Templates
-
-E-mail templates can be found in `emails/src`. When changes are made, run the following command to optimize the emails for mail readers:
-
+```json
+{
+  "method": "POST",
+  "path": "/login",
+  "requestBody": [
+    {
+      "name": "email",
+      "description": "E-mail address of the user trying to log in",
+      "required": true,
+      "schema": {
+        "type": "string",
+        "format": "email"
+      }
+    },
+    {
+      "name": "password",
+      "description": "Password associated with the e-mail address",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    }
+  ],
+  "responseBody": [
+    {
+      "name": "data.token",
+      "description": "JWT token that can be used to authenticate user",
+      "schema": {
+        "type": "string"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "name": "A new login from John Doe",
+      "requestBody": {
+        "email": "john.doe@gmail.com",
+        "password": "AN$.37127"
+      },
+      "responseBody": {
+        "data": {
+          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZTZhOWMwMDBmYzY3NjQ0N2RjOTkzNmEiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1ODk1NjgyODQsImV4cCI6MTU5MjE2MDI4NH0.I0DhLK9mBHCy8sJglzyLHYQHFfr34UYyCFyTaEgFFG"
+        }
+      }
+    }
+  ]
+}
 ```
-yarn emails
-```
+
+All information in `src/v1/__openapi__` is exposed through the API and used by the Markdown-powered documentation portal in `/services/web/src/docs`.
+
+See [../../services/web](../../services/web) for more info on customizing documentation.
