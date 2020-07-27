@@ -8,13 +8,13 @@ if [ "$ENVIRONMENT" == "" ]; then
   exit 1
 fi
 
-./infrastructure/scripts/check_gcloud_config $ENVIRONMENT
+./deployment/scripts/check_gcloud_config $ENVIRONMENT
 if [ $? -ne 0 ]; then
   exit 1
 fi
-mkdir -p infrastructure/environments/$ENVIRONMENT/certificates
-openssl genrsa -out infrastructure/environments/$ENVIRONMENT/certificates/domain.key
-openssl req -new -key infrastructure/environments/$ENVIRONMENT/certificates/domain.key -out infrastructure/environments/$ENVIRONMENT/certificates/domain.csr
-echo "CSR stored as infrastructure/environments/$ENVIRONMENT/certificates/domain.csr"
-cat infrastructure/environments/$ENVIRONMENT/certificates/domain.csr
-echo "Make sure to save your certificate chain as infrastructure/environments/$ENVIRONMENT/certificates/domain.crt"
+mkdir -p deployment/environments/$ENVIRONMENT/certificates
+openssl genrsa -out deployment/environments/$ENVIRONMENT/certificates/domain.key
+openssl req -new -key deployment/environments/$ENVIRONMENT/certificates/domain.key -out deployment/environments/$ENVIRONMENT/certificates/domain.csr
+echo "CSR stored as deployment/environments/$ENVIRONMENT/certificates/domain.csr"
+cat deployment/environments/$ENVIRONMENT/certificates/domain.csr
+echo "Make sure to save your certificate chain as deployment/environments/$ENVIRONMENT/certificates/domain.crt"

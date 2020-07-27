@@ -120,41 +120,41 @@ _() {
   replace ./$kebab/services/web/src/components/README.md
   replace ./$kebab/services/api-docs/package.json
 
-  replace ./$kebab/infrastructure/README.md
+  replace ./$kebab/deployment/README.md
 
-  replace ./$kebab/infrastructure/environments/staging/env.conf
-  replace ./$kebab/infrastructure/environments/staging/services/api-cli-deployment.yml
-  replace ./$kebab/infrastructure/environments/staging/services/api-deployment.yml
-  replace ./$kebab/infrastructure/environments/staging/services/api-docs-deployment.yml
-  replace ./$kebab/infrastructure/environments/staging/services/api-docs-service.yml
-  replace ./$kebab/infrastructure/environments/staging/services/api-jobs-deployment.yml
-  replace ./$kebab/infrastructure/environments/staging/services/api-service.yml
-  replace ./$kebab/infrastructure/environments/staging/services/web-deployment.yml
-  replace ./$kebab/infrastructure/environments/staging/services/web-service.yml
-  replace ./$kebab/infrastructure/environments/staging/data/backup-monitor-deployment.yml
-  replace ./$kebab/infrastructure/environments/staging/data/bucket-storage-backups-deployment.yml
-  replace ./$kebab/infrastructure/environments/staging/data/elasticsearch-deployment.yml
-  replace ./$kebab/infrastructure/environments/staging/data/elasticsearch-service.yml
-  replace ./$kebab/infrastructure/environments/staging/data/mongo-backups-deployment.yml
-  replace ./$kebab/infrastructure/environments/staging/data/mongo-deployment.yml
-  replace ./$kebab/infrastructure/environments/staging/data/mongo-service.yml
+  replace ./$kebab/deployment/environments/staging/env.conf
+  replace ./$kebab/deployment/environments/staging/services/api-cli-deployment.yml
+  replace ./$kebab/deployment/environments/staging/services/api-deployment.yml
+  replace ./$kebab/deployment/environments/staging/services/api-docs-deployment.yml
+  replace ./$kebab/deployment/environments/staging/services/api-docs-service.yml
+  replace ./$kebab/deployment/environments/staging/services/api-jobs-deployment.yml
+  replace ./$kebab/deployment/environments/staging/services/api-service.yml
+  replace ./$kebab/deployment/environments/staging/services/web-deployment.yml
+  replace ./$kebab/deployment/environments/staging/services/web-service.yml
+  replace ./$kebab/deployment/environments/staging/data/backup-monitor-deployment.yml
+  replace ./$kebab/deployment/environments/staging/data/bucket-storage-backups-deployment.yml
+  replace ./$kebab/deployment/environments/staging/data/elasticsearch-deployment.yml
+  replace ./$kebab/deployment/environments/staging/data/elasticsearch-service.yml
+  replace ./$kebab/deployment/environments/staging/data/mongo-backups-deployment.yml
+  replace ./$kebab/deployment/environments/staging/data/mongo-deployment.yml
+  replace ./$kebab/deployment/environments/staging/data/mongo-service.yml
 
-  replace ./$kebab/infrastructure/environments/production/env.conf
-  replace ./$kebab/infrastructure/environments/production/services/api-cli-deployment.yml
-  replace ./$kebab/infrastructure/environments/production/services/api-deployment.yml
-  replace ./$kebab/infrastructure/environments/production/services/api-docs-deployment.yml
-  replace ./$kebab/infrastructure/environments/production/services/api-docs-service.yml
-  replace ./$kebab/infrastructure/environments/production/services/api-jobs-deployment.yml
-  replace ./$kebab/infrastructure/environments/production/services/api-service.yml
-  replace ./$kebab/infrastructure/environments/production/services/web-deployment.yml
-  replace ./$kebab/infrastructure/environments/production/services/web-service.yml
-  replace ./$kebab/infrastructure/environments/production/data/backup-monitor-deployment.yml
-  replace ./$kebab/infrastructure/environments/production/data/bucket-storage-backups-deployment.yml
-  replace ./$kebab/infrastructure/environments/production/data/elasticsearch-deployment.yml
-  replace ./$kebab/infrastructure/environments/production/data/elasticsearch-service.yml
-  replace ./$kebab/infrastructure/environments/production/data/mongo-backups-deployment.yml
-  replace ./$kebab/infrastructure/environments/production/data/mongo-deployment.yml
-  replace ./$kebab/infrastructure/environments/production/data/mongo-service.yml
+  replace ./$kebab/deployment/environments/production/env.conf
+  replace ./$kebab/deployment/environments/production/services/api-cli-deployment.yml
+  replace ./$kebab/deployment/environments/production/services/api-deployment.yml
+  replace ./$kebab/deployment/environments/production/services/api-docs-deployment.yml
+  replace ./$kebab/deployment/environments/production/services/api-docs-service.yml
+  replace ./$kebab/deployment/environments/production/services/api-jobs-deployment.yml
+  replace ./$kebab/deployment/environments/production/services/api-service.yml
+  replace ./$kebab/deployment/environments/production/services/web-deployment.yml
+  replace ./$kebab/deployment/environments/production/services/web-service.yml
+  replace ./$kebab/deployment/environments/production/data/backup-monitor-deployment.yml
+  replace ./$kebab/deployment/environments/production/data/bucket-storage-backups-deployment.yml
+  replace ./$kebab/deployment/environments/production/data/elasticsearch-deployment.yml
+  replace ./$kebab/deployment/environments/production/data/elasticsearch-service.yml
+  replace ./$kebab/deployment/environments/production/data/mongo-backups-deployment.yml
+  replace ./$kebab/deployment/environments/production/data/mongo-deployment.yml
+  replace ./$kebab/deployment/environments/production/data/mongo-service.yml
 
   remove ./$kebab/init.sh
   remove ./$kebab/CONTRIBUTING.md

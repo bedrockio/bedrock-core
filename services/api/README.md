@@ -73,7 +73,7 @@ All configuration is done using environment variables. The default values in `en
 docker build -t bedrock-api .
 ```
 
-See [../../infrastructure](../../infrastructure/) for more info
+See [../../deployment](../../deployment/) for more info
 
 ## Configuring Background Jobs
 

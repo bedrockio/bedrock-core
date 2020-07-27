@@ -16,13 +16,13 @@ EOM
 exit 1
 fi
 
-./infrastructure/scripts/check_gcloud_config $ENVIRONMENT
+./deployment/scripts/check_gcloud_config $ENVIRONMENT
 if [ $? -ne 0 ]; then
   exit 1
 fi
 
-export $(grep -v '^#' infrastructure/environments/$ENVIRONMENT/env.conf | xargs)
+export $(grep -v '^#' deployment/environments/$ENVIRONMENT/env.conf | xargs)
 
 kubectl delete service/$SERVICE
 kubectl delete deployment/$SERVICE-deployment
-./infrastructure/scripts/patch_ingress $BASE_SERVICE $TAG "remove"
+./deployment/scripts/patch_ingress $BASE_SERVICE $TAG "remove"

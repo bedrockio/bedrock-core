@@ -8,13 +8,13 @@ if [ "$ENVIRONMENT" == "" ]; then
   exit 1
 fi
 
-./infrastructure/scripts/check_gcloud_config $ENVIRONMENT
+./deployment/scripts/check_gcloud_config $ENVIRONMENT
 if [ $? -ne 0 ]; then
   exit 1
 fi
 
-export $(grep -v '^#' infrastructure/environments/$ENVIRONMENT/env.conf | xargs)
+export $(grep -v '^#' deployment/environments/$ENVIRONMENT/env.conf | xargs)
 gcloud compute ssl-certificates create \
 $ENVIRONMENT-ssl \
---certificate infrastructure/environments/$ENVIRONMENT/certificates/domain.crt \
---private-key infrastructure/environments/$ENVIRONMENT/certificates/domain.key
+--certificate deployment/environments/$ENVIRONMENT/certificates/domain.crt \
+--private-key deployment/environments/$ENVIRONMENT/certificates/domain.key

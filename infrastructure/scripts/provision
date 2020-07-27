@@ -11,7 +11,7 @@ if [ "$ENVIRONMENT" == "" ] || [ "$TERRAFORM" == "" ]; then
   exit 1
 fi
 
-export $(grep -v '^#' infrastructure/environments/$ENVIRONMENT/env.conf | xargs)
+export $(grep -v '^#' deployment/environments/$ENVIRONMENT/env.conf | xargs)
 
 function plan() {
   terraform plan -var "project=$GCLOUD_PROJECT" -var "environment=$GCLOUD_ENV_NAME" -var "cluster_name=$GCLOUD_KUBERNETES_CLUSTER_NAME" -var-file=../environments/$ENVIRONMENT/variables.tfvars -out="${PLAN_FILE}"
@@ -26,14 +26,14 @@ if [ "$TERRAFORM" == "init" ]; then
     gsutil mb -l us-east1 $TERRAFORM_BUCKET
   fi
 
-  cd infrastructure/provisioning;
+  cd deployment/provisioning;
   terraform init -backend-config="bucket=${GCLOUD_BUCKET_PREFIX}-terraform-system-state" -backend-config="prefix=${CLOUD_ENV_NAME}"
 
 elif [ "$TERRAFORM" == "plan" ]; then
-  cd infrastructure/provisioning;
+  cd deployment/provisioning;
   plan
 elif [ "$TERRAFORM" == "apply" ]; then
-  cd infrastructure/provisioning;
+  cd deployment/provisioning;
   # Always execute plan before apply, to use the correct plan_file
   plan
   # terraform plan -var-file=./$GCLOUD_ENV_NAME/variables.tfvars -out="${PLAN_FILE}"

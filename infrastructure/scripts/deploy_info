@@ -1,5 +1,5 @@
 #!/bin/bash
-source ./infrastructure/scripts/parse_opts
+source ./deployment/scripts/parse_opts
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 cd $SCRIPTPATH; cd ../../
 
@@ -17,13 +17,13 @@ exit 1
 fi
 
 if [ "$SERVICE" == "" ]; then
-  SERVICES=$(infrastructure/scripts/services $2)
+  SERVICES=$(deployment/scripts/services $2)
 else
   SERVICES="$SERVICE"
 fi
 
 
-./infrastructure/scripts/check_gcloud_config $ENVIRONMENT 1
+./deployment/scripts/check_gcloud_config $ENVIRONMENT 1
 
 function deploy_info() {
   c1=$(get_field "author" "Author")
