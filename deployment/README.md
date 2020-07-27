@@ -16,7 +16,6 @@
     - [Create load balancer IP addresses](#create-load-balancer-ip-addresses)
     - [Deploy all services and pods](#deploy-all-services-and-pods)
     - [Scaling Up or Down](#scaling-up-or-down)
-    - [Configuring SSL](#configuring-ssl)
   - [Deploying](#deploying)
     - [Rollout Deploy](#rollout-deploy)
     - [Feature Branches](#feature-branches)
@@ -191,17 +190,6 @@ Update cluster:
 ```
 $ ./deployment/scripts/provision staging apply
 ```
-
-### Configuring SSL
-
-Steps to enable SSL:
-
-1.  Create a certificate request `openssl req -new -newkey rsa:2048 -nodes -keyout environments/<environment>/certificates/domain.key -out environments/<environment>/certificates/domain.csr`
-2.  Buy an SSL certificate (e.g. GoDaddy). Use above `domain.csr` CSR. Download bundle.
-3.  Store the certificate (not the chain) as `deployment/environmnents/<environment>/certificates/domain.crt`
-4.  Create certificate on Google Cloud `./deployment/scripts/create_certificate <environment>`
-5.  Make sure `api-ingress` and `web-ingress` are functioning
-6.  Use the Google Cloud Console - https://console.cloud.google.com/home/dashboard - to add frontend routes to `api-ingress` and `web-ingress`. Select above `<environment>-ssl` certificate.
 
 ## Deploying
 
