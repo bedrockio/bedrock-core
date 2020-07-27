@@ -8,11 +8,14 @@
     - [Configuration](#configuration)
   - [Existing Environments](#existing-environments)
     - [Authorization](#authorization)
-  - [New Environments](#new-environments)
+  - [Provisioning](#provisioning)
     - [Creating a new environment](#creating-a-new-environment)
+    - [Install Terraform](#install-terraform)
+    - [Directory Structure](#directory-structure-1)
+    - [Provision GKE Cluster](#provision-gke-cluster)
+    - [Create load balancer IP addresses](#create-load-balancer-ip-addresses)
+    - [Deploy all services and pods](#deploy-all-services-and-pods)
     - [Scaling Up or Down](#scaling-up-or-down)
-    - [Getting shell access](#getting-shell-access)
-    - [Provisioning Scripts](#provisioning-scripts)
     - [Configuring SSL](#configuring-ssl)
   - [Deploying](#deploying)
     - [Rollout Deploy](#rollout-deploy)
@@ -21,6 +24,7 @@
     - [Building Docker Containers](#building-docker-containers)
     - [Pushing Docker Containers](#pushing-docker-containers)
     - [Check cluster status](#check-cluster-status)
+    - [Getting shell access](#getting-shell-access)
   - [Disaster Recovery](#disaster-recovery)
       - [Scenario A: Master Database Loss or Corruption](#scenario-a-master-database-loss-or-corruption)
       - [Scenario B: Bucket Storage Loss or Corruption](#scenario-b-bucket-storage-loss-or-corruption)
@@ -36,17 +40,41 @@
 ### Dependencies
 
 - Make sure the `gcloud` CLI tools are available
+- Use `gcloud auth login` and `gcloud auth application-default login` to login to the right Google account
+- For provisioning we use [Terraform](https://www.terraform.io/)
 
 ### Directory Structure
 
-- `scripts/` Deployment and provisioning scripts
-- `provisioning` Terraform provisioning of Kubernetes cluster
-- `environments` Deployment configuration per environment, e.g. staging and production
-- `environments/staging/` Staging environment
-- `environments/staging/data` Data deployment
-- `environments/staging/services` Micro services deployment
-- `environments/staging/env.conf` Staging environment configuration
-- `environments/staging/variables.tfvars` Staging provisioning variables
+```bash
+deployment/
+├── README.md
+├── environments # Deployment configuration per environment
+│   ├── production # Production environment
+│   │   ├── data # Data deployment
+│   │   │   ├── mongo-deployment.yml
+│   │   │   ├── mongo-service.yml
+│   │   │   └── etc...
+│   │   ├── env.conf # Staging environment configuration
+│   │   ├── services # Micro services deployment
+│   │   │   ├── api-deployment.yml
+│   │   │   ├── api-service.yml
+│   │   │   ├── web-deployment.yml
+│   │   │   ├── web-service.yml
+│   │   │   └── etc...
+│   │   └── variables.tfvars # Staging provisioning variables
+│   └── staging # Staging environment
+│       └── etc...
+├── provisioning
+│   ├── backend.tf # defines Google bucket to keep state
+│   ├── main.tf # Main rersource definitions (cluster, node_pool, buckets)
+│   ├── outputs.tf # Output values when running terraform commands
+│   ├── variables.tf # Defines all variables for main.tf (override per env)
+│   └── versions.tf # Defines minimum terraform version
+└── scripts # Deployment and provisioning scripts
+    ├── authorize
+    ├── build
+    └── etc...
+```
 
 ### Naming convention
 
@@ -90,7 +118,9 @@ or
 gcloud docker --authorize-only
 ```
 
-## New Environments
+## Provisioning
+
+[Terraform](https://www.terraform.io/) is used (defining infrastructure as code) to provision the environment and create the Kubernetes cluster.
 
 ### Creating a new environment
 
@@ -100,53 +130,66 @@ Create a Google Cloud project (in the [GC dashboard console](https://console.clo
 gcloud projects create bedrock-staging --name="Bedrock Staging"`
 ```
 
-Create a Google Kubernetes cluster (in the [GC dashboard console](https://console.cloud.google.com/kubernetes)) or:
+Configure: `environments/<environment>/env.conf` and `environments/<environment>/variables.tfvars`
+
+### Install Terraform
 
 ```bash
-gcloud config set project bedrock-staging
-gcloud services enable container.googleapis.com # Takes a couple of minutes
+# MacOS terraform install
+brew install terraform
 ```
 
-Provisioning steps
+### Directory Structure
 
-Authorize cluster:
+
+
+There is also a `variables.tfvars` file per environment to override default vars with environment specific values, which can be found in the `environments/<environment>/` folder.
+
+### Provision GKE Cluster
+
+Note: this script can take about 5 minutes.
 
 ```bash
-./deployment/scripts/authorize
+# Staging
+# terraform init only has to be executed the first time
+$ ./deployment/scripts/provision staging init
+
+$ ./deployment/scripts/provision staging plan
+$ ./deployment/scripts/provision staging apply
+
+# Production
+# terraform init only has to be executed the first time
+$ ./deployment/scripts/provision production init
+
+$ ./deployment/scripts/provision production plan
+$ ./deployment/scripts/provision production apply
 ```
 
-Configure: `environments/<environment>/env.conf`
+### Create load balancer IP addresses
 
-Create disks required for data stores, update Kubernetes files disk information
+```
+./deployment/scripts/create_addresses
+```
+
+Update api and web deployments with static IP Addresses that were just created.
+
+### Deploy all services and pods
+
+Authorize cluster (e.g. staging):
+
+```bash
+./deployment/scripts/authorize staging
+```
 
 Use `kubectl create` to deploy all services and pods
 
 ### Scaling Up or Down
 
-You can change the node size of an existing pool like so:
+You can change the node size of the (existing) default pool with the Terraform variable `default_pool_node_count` per environment as defined in `environments/<environment>/vaiables.tfvars`
 
-```bash
-gcloud container clusters resize cluster-1 --node-pool cluster-1-node-pool --num-nodes 2
+Update cluster:
 ```
-
-### Getting shell access
-
-There's a default `api-cli-deployment` provided that allows you to obtain a shell. This is useful when running migration scripts in production (you can take down the API and use CLI to do operations without new reads/writes coming in):
-
-```
-kubectl exec -it <CLI-POD-ID> /bin/bash
-```
-
-Note that the `api` and `web` services can be reached as hostnames: `curl http://api`
-
-### Provisioning Scripts
-
-Various scripts exists to create resources on Google Compute Cloud:
-
-```
-./deployment/scripts/create_buckets staging
-./deployment/scripts/create_addresses
-./deployment/scripts/create_disks
+$ ./deployment/scripts/provision staging apply
 ```
 
 ### Configuring SSL
@@ -245,6 +288,16 @@ Push all containers matching "api" to staging:
 ```
 ./deployment/scripts/status staging
 ```
+
+### Getting shell access
+
+There's a default `api-cli-deployment` provided that allows you to obtain a shell. This is useful when running migration scripts in production (you can take down the API and use CLI to do operations without new reads/writes coming in):
+
+```
+kubectl exec -it <CLI-POD-ID> /bin/bash
+```
+
+Note that the `api` and `web` services can be reached as hostnames: `curl http://api`
 
 ## Disaster Recovery
 
