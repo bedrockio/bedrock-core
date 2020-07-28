@@ -51,6 +51,10 @@ _() {
 
   echo "Project $PROJECT"
 
+  if [ "$EMAIL" == "" ]; then
+    EMAIL="info@$DOMAIN"
+  fi
+
   if [ "$PROJECT" == "" ]; then
     echo ""
     echo "Project required! Exiting..."
@@ -121,6 +125,7 @@ _() {
   replace ./$kebab/services/api-docs/package.json
 
   replace ./$kebab/deployment/README.md
+  replace ./$kebab/README.md
 
   replace ./$kebab/deployment/environments/staging/env.conf
   replace ./$kebab/deployment/environments/staging/services/api-cli-deployment.yml
