@@ -131,8 +131,6 @@ describe('createSchema', () => {
       const User = createModel(createSchema());
       const user = await User.create({});
       const now = Date.now();
-      const createdAt = user.createdAt;
-      const updatedAt = user.updatedAt;
       user.assign({
         id: 'fake id',
         createdAt: new Date(now - 1000),
@@ -141,8 +139,8 @@ describe('createSchema', () => {
       });
       expect(user.id).not.toBe('fake id');
       expect(user._id.toString()).not.toBe('fake id');
-      expect(user.createdAt.getTime()).toBe(createdAt.getTime());
-      expect(user.updatedAt.getTime()).toBe(updatedAt.getTime());
+      expect(user.createdAt.getTime()).not.toBe(now - 1000);
+      expect(user.updatedAt.getTime()).not.toBe(now - 1000);
       expect(user.deletedAt).toBeUndefined();
     });
 
