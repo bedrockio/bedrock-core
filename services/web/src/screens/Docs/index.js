@@ -11,6 +11,7 @@ import USERS_MD from 'docs/USERS.md';
 import UPLOADS_MD from 'docs/UPLOADS.md';
 import SHOPS_MD from 'docs/SHOPS.md';
 import { request } from '../../utils/api';
+import { screen } from 'helpers';
 
 const pages = [
   {
@@ -48,6 +49,7 @@ function stateForParams(params) {
   };
 }
 
+@screen
 export default class Docs extends React.Component {
   contextRef = createRef();
 
@@ -60,6 +62,7 @@ export default class Docs extends React.Component {
       ...stateForParams(this.props.match.params),
     };
   }
+
   state = {
     loading: true,
     error: null,

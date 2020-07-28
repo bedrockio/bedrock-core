@@ -1,12 +1,14 @@
 import React from 'react';
 import { Segment, Message, Grid } from 'semantic-ui-react';
 import { request } from 'utils/api';
+import { screen } from 'helpers';
 import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
 import Form from './Form';
 
 import { Link } from 'react-router-dom';
 
+@screen
 export default class ForgotPassword extends React.Component {
   state = {
     success: false,

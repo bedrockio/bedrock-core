@@ -4,10 +4,12 @@ import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
 import { withSession } from 'stores';
 import { request } from 'utils/api';
+import { screen } from 'helpers';
 
 import Form from './Form';
 import { Link } from 'react-router-dom';
 
+@screen
 @withSession
 export default class Signup extends React.Component {
 

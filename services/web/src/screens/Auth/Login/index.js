@@ -2,6 +2,7 @@ import React from 'react';
 import { request } from 'utils/api';
 import { Segment, Grid } from 'semantic-ui-react';
 import { withSession } from 'stores';
+import { screen } from 'helpers';
 
 import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
@@ -9,6 +10,7 @@ import LogoTitle from 'components/LogoTitle';
 import LoginForm from './Form';
 import { Link } from 'react-router-dom';
 
+@screen
 @withSession
 export default class Login extends React.Component {
 
