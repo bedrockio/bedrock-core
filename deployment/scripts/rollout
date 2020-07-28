@@ -25,7 +25,7 @@ function rollout() {
 
   # Check for config file as it might not exist if the
   # deployment was dynamically created for a feature branch.
-  file="deployment/$ENVIRONMENT/services/$DEPLOYMENT.yml"
+  file="deployment/environments/$ENVIRONMENT/services/$DEPLOYMENT.yml"
   if [ -f "$file" ]; then
     kubectl apply -f $file --record
   fi

@@ -12,3 +12,4 @@ env
 *.pyc
 *.code-workspace
 tmp
+.terraform/

@@ -11,7 +11,7 @@ fi
 
 ./deployment/scripts/check_gcloud_config $ENVIRONMENT 1
 
-export $(grep -v '^#' deployment/$ENVIRONMENT/env.conf | xargs)
+export $(grep -v '^#' deployment/environments/$ENVIRONMENT/env.conf | xargs)
 
 kubectl get ingress
 kubectl get services
