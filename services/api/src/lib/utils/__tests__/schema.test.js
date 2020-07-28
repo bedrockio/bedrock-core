@@ -107,6 +107,59 @@ describe('createSchema', () => {
 
   });
 
+  describe('assign', () => {
+
+    it('should allow assignment of fields', async () => {
+      const User = createModel(createSchema({
+        name: { type: String },
+        fakeId: { type: Number },
+        fakeDate: { type: Date },
+      }));
+      const user = new User();
+      const now = Date.now();
+      user.assign({
+        name: 'fake name',
+        fakeNumber: 5,
+        fakeDate: new Date(now),
+      });
+      expect(user.name).toBe('fake name');
+      expect(user.fakeNumber).toBe(5);
+      expect(user.fakeDate.getTime()).toBe(now);
+    });
+
+    it('should not allow assignment of reserved fields', async () => {
+      const User = createModel(createSchema());
+      const user = await User.create({});
+      const now = Date.now();
+      const createdAt = user.createdAt;
+      const updatedAt = user.updatedAt;
+      user.assign({
+        id: 'fake id',
+        createdAt: new Date(now - 1000),
+        updatedAt: new Date(now - 1000),
+        deletedAt: new Date(now - 1000),
+      });
+      expect(user.id).not.toBe('fake id');
+      expect(user._id.toString()).not.toBe('fake id');
+      expect(user.createdAt.getTime()).toBe(createdAt.getTime());
+      expect(user.updatedAt.getTime()).toBe(updatedAt.getTime());
+      expect(user.deletedAt).toBeUndefined();
+    });
+
+    it('should not allow assignment of private fields', async () => {
+      const User = createModel(createSchema({
+        password: { type: String, access: 'private' },
+      }));
+      const user = new User();
+      user.assign({
+        password: 'fake password',
+      });
+      await user.save();
+      expect(user.password).not.toBe('fake password');
+    });
+
+  });
+
   describe('autopopulate', () => {
 
     it('should not expose private fields when using with autopopulate', async () => {

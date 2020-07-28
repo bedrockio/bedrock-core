@@ -1,4 +1,7 @@
 const mongoose = require('mongoose');
+const { omitBy } = require('lodash');
+
+const RESERVED_FIELDS = ['id', 'createdAt', 'updatedAt', 'deletedAt'];
 
 exports.createSchema = (definition, options = {}) => {
   const schema = new mongoose.Schema(
@@ -20,7 +23,7 @@ exports.createSchema = (definition, options = {}) => {
             // Omit any key with a private prefix "_" or marked
             // "access": "private" in the schema. Note that virtuals are
             // excluded by default so they don't need to be removed.
-            if (key[0] === '_' || isPrivateField(doc, key)) {
+            if (key[0] === '_' || isPrivateField(schema, key)) {
               delete ret[key];
             }
           }
@@ -29,6 +32,11 @@ exports.createSchema = (definition, options = {}) => {
       ...options,
     }
   );
+  schema.methods.assign = function assign(fields) {
+    Object.assign(this, omitBy(fields, (value, key) => {
+      return isPrivateField(schema, key) || RESERVED_FIELDS.includes(key);
+    }));
+  };
   schema.methods.delete = function() {
     this.deletedAt = new Date();
     return this.save();
@@ -36,8 +44,8 @@ exports.createSchema = (definition, options = {}) => {
   return schema;
 };
 
-function isPrivateField(doc, key) {
-  let field = doc.schema.obj[key];
+function isPrivateField(schema, key) {
+  let field = schema.obj[key];
   if (Array.isArray(field)) {
     field = field[0];
   }

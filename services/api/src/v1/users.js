@@ -37,7 +37,7 @@ router
     }),
     async (ctx) => {
       const { authUser } = ctx.state;
-      Object.assign(authUser, ctx.request.body);
+      authUser.assign(ctx.request.body);
       await authUser.save();
       ctx.body = {
         data: authUser
