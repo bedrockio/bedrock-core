@@ -13,7 +13,7 @@
     "start:production": "node src/index",
     "emails": "node emails/build",
     "lint": "eslint src",
-    "test": "jest --forceExit --detectOpenHandles",
+    "test": "jest",
     "test:watch": "jest --watch -i"
   },
   "dependencies": {
