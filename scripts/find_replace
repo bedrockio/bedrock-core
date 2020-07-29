@@ -25,7 +25,7 @@ instances() {
 }
 
 replace_instances_dry() {
-  find . -not -path '*node_modules*' -and \( -name '*.js' -or -name '*.json' -or -name '*.md' \) -exec grep -H $1 {} \;
+  find . -not -path '*node_modules*' -and \( -name '*.js' -or -name '*.json' -or -name '*.md' \) -exec grep --color=always -H $1 {} \;
 }
 
 replace_instances() {
@@ -86,6 +86,8 @@ if [[ "$STR" == *"-"* ]]; then
 fi
 replace_instances_dry $FIND_UPPER $REPLACE_UPPER
 replace_instances_dry $FIND_LOWER $REPLACE_LOWER
+
+printf "\e[37m"
 replace_files_dry $FIND $REPLACE
 if [[ "$STR" == *"-"* ]]; then
   replace_files_dry $FIND_KEBAB $REPLACE_KEBAB
@@ -95,6 +97,7 @@ if [[ "$STR" == *"-"* ]]; then
 fi
 replace_files_dry $FIND_UPPER $REPLACE_UPPER
 replace_files_dry $FIND_LOWER $REPLACE_LOWER
+printf "\e[m"
 
 PROCEED=$(prompt "Proceed? [y|n] ")
 
