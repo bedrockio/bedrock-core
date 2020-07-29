@@ -13,6 +13,7 @@ services:
     volumes:
       - ./services/api/src:/service/src
       - ./services/api/emails:/service/emails
+      - ./services/api/fixtures:/service/fixtures
       - ./services/api/scripts:/service/scripts
       - ./services/api/env.conf:/service/env.conf
       - ./services/api/openapi:/service/openapi

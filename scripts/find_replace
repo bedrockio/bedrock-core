@@ -25,12 +25,11 @@ instances() {
 }
 
 replace_instances_dry() {
-  #find . -name '*.js' -exec sed -i 's/'$1'/'$2'/g' {} \;
-  find . -name '*.js' -not -path '*node_modules*' -exec grep -H $1 {} \;
+  find . -name '*.*' -not -path '*node_modules*' -exec grep -H $1 {} \;
 }
 
 replace_instances() {
-  find . -name '*.js' -not -path '*node_modules*' -exec sed -i '' -e 's/'$1'/'$2'/g' {} \;
+  find . -name '*.*' -not -path '*node_modules*' -exec sed -i '' -e 's/'$1'/'$2'/g' {} \;
 }
 
 files() {
