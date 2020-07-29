@@ -1,4 +1,4 @@
-const Router = require('koa-router');
+const Router = require('@koa/router');
 const Joi = require('@hapi/joi');
 const validate = require('../middlewares/validate');
 const { authenticate, fetchUser } = require('../middlewares/authenticate');
@@ -12,9 +12,7 @@ const productSchema = Joi.object({
   shop: Joi.string().required(),
   description: Joi.string(),
   expiresAt: Joi.string(),
-  priceUsd: Joi.number()
-    .min(0.1)
-    .max(1000000),
+  priceUsd: Joi.number().min(0.1).max(1000000),
   isFeatured: Joi.boolean(),
   images: Joi.array().items(Joi.string()),
   sellingPoints: Joi.array().items(Joi.string()),
@@ -26,7 +24,7 @@ const productPatchSchema = productSchema.append({
   id: Joi.string().strip(),
   createdAt: Joi.date().strip(),
   updatedAt: Joi.date().strip(),
-  deletedAt: Joi.date().strip()
+  deletedAt: Joi.date().strip(),
 });
 
 router
@@ -47,18 +45,14 @@ router
         skip: Joi.number().default(0),
         sort: Joi.object({
           field: Joi.string().required(),
-          order: Joi.string()
-            .valid('asc', 'desc')
-            .required()
+          order: Joi.string().valid('asc', 'desc').required(),
         }).default({
           field: 'createdAt',
-          order: 'desc'
+          order: 'desc',
         }),
         shop: Joi.string(),
-        limit: Joi.number()
-          .positive()
-          .default(50)
-      })
+        limit: Joi.number().positive().default(50),
+      }),
     }),
     async (ctx) => {
       const { sort, skip, limit, shop } = ctx.request.body;
@@ -77,20 +71,20 @@ router
         meta: {
           total,
           skip,
-          limit
-        }
+          limit,
+        },
       };
     }
   )
   .post(
     '/',
     validate({
-      body: productSchema
+      body: productSchema,
     }),
     async (ctx) => {
       const product = await Product.create(ctx.request.body);
       ctx.body = {
-        data: product
+        data: product,
       };
     }
   )
@@ -102,21 +96,21 @@ router
   .patch(
     '/:productId',
     validate({
-      body: productPatchSchema
+      body: productPatchSchema,
     }),
     async (ctx) => {
       const product = ctx.state.product;
       Object.assign(product, ctx.request.body);
       await product.save();
       ctx.body = {
-        data: product
+        data: product,
       };
     }
   )
   .get('/:productId', async (ctx) => {
     const { product } = await ctx.state;
     ctx.body = {
-      data: product
+      data: product,
     };
   });
 

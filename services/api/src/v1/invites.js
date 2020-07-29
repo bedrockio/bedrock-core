@@ -1,4 +1,4 @@
-const Router = require('koa-router');
+const Router = require('@koa/router');
 const Joi = require('@hapi/joi');
 const validate = require('../middlewares/validate');
 const { authenticate, fetchUser, checkUserRole } = require('../middlewares/authenticate');
@@ -38,15 +38,13 @@ router
         skip: Joi.number().default(0),
         sort: Joi.object({
           field: Joi.string().required(),
-          order: Joi.string().required()
+          order: Joi.string().required(),
         }).default({
           field: 'createdAt',
-          order: 'asc'
+          order: 'asc',
         }),
-        limit: Joi.number()
-          .positive()
-          .default(50)
-      })
+        limit: Joi.number().positive().default(50),
+      }),
     }),
     async (ctx) => {
       const { sort, skip, limit } = ctx.request.body;
@@ -63,8 +61,8 @@ router
         meta: {
           total,
           skip,
-          limit
-        }
+          limit,
+        },
       };
     }
   )
@@ -72,10 +70,8 @@ router
     '/',
     validate({
       body: Joi.object({
-        emails: Joi.array()
-          .items(Joi.string().email())
-          .required()
-      })
+        emails: Joi.array().items(Joi.string().email()).required(),
+      }),
     }),
     async (ctx) => {
       const { authUser } = ctx.state;
@@ -88,12 +84,12 @@ router
         const invite = await Invite.findOneAndUpdate(
           {
             email,
-            status: 'invited'
+            status: 'invited',
           },
           { status: 'invited', email, $unset: { deletedAt: 1 } },
           {
             new: true,
-            upsert: true
+            upsert: true,
           }
         );
         await sendInvite({ email, sender: authUser, token: getToken(invite) });
