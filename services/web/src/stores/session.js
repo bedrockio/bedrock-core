@@ -143,3 +143,17 @@ export function withSession(Component) {
   Component.contextType = SessionContext;
   return Component;
 }
+
+export function withLoadedSession(Component) {
+
+  Component.contextType = SessionContext;
+
+  return class Wrapped extends React.Component {
+
+    static contextType = SessionContext;
+
+    render() {
+      return this.context.loading ? null : <Component {...this.props} />;
+    }
+  };
+}
