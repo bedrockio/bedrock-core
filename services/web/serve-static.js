@@ -19,7 +19,7 @@ const {
   HTTP_BASIC_AUTH_USER,
   HTTP_BASIC_AUTH_PASS,
   publicEnv,
-} = require('./config');
+} = require('./env');
 
 const app = new Koa();
 

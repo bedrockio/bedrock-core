@@ -7,7 +7,6 @@
 
 const path = require('path');
 const yargs = require('yargs');
-const config = require('@bedrockio/config');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
@@ -22,10 +21,7 @@ const argv = yargs.boolean('p').boolean('analyze').option('app', {
 
 const DEV = !argv.p;
 
-const TEMPLATE_PARAMS = {
-  DEV,
-  ...config.getAll(),
-};
+const ENV = require('./env');
 
 if (DEV && argv.analyze) {
   throw new Error('Analyze mode must be used in production. Use yarn build --analyze.');
@@ -79,7 +75,7 @@ module.exports = {
           // Expose template params used in partials included with
           // require('path/to/template.html') in the same way as the
           // main template.
-          params: TEMPLATE_PARAMS,
+          params: ENV,
         }
       },
     ],
@@ -163,7 +159,7 @@ function getTemplatePlugins() {
       chunks: [app, 'vendor'],
       templateParameters: {
         app,
-        ...TEMPLATE_PARAMS,
+        ...ENV,
       },
       minify: {
         removeComments: false,
