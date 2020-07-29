@@ -17,6 +17,13 @@ spec:
           imagePullPolicy: Always
           name: main
           env:
+            ## Global config ##
+            - name: NODE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: global-config
+                  key: NODE_ENV
+
             - name: ENABLE_HTTP_BASIC_AUTH
               value: "yes"
             - name: OPENAPI_URL

@@ -17,22 +17,54 @@ spec:
           imagePullPolicy: Always
           name: api-cli
           env:
+            ## Global config ##
             - name: NODE_ENV
-              value: "staging"
-            - name: MONGO_URI
-              value: "mongodb://mongo:27017/bedrock_staging"
-            - name: APP_DOMAIN
-              value: "bedrock.foundation"
+              valueFrom:
+                configMapKeyRef:
+                  name: global-config
+                  key: NODE_ENV
+            - name: DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: global-config
+                  key: DOMAIN
             - name: APP_URL
-              value: "https://bedrock.foundation"
+              valueFrom:
+                configMapKeyRef:
+                  name: global-config
+                  key: APP_URL
+            - name: API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: global-config
+                  key: API_URL
+
+            ## Api Config ##
+            - name: MONGO_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: MONGO_URI
             - name: POSTMARK_FROM
-              value: "no-reply@bedrock.foundation"
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: POSTMARK_FROM
             - name: POSTMARK_APIKEY
-              value: "abc"
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: POSTMARK_APIKEY
             - name: UPLOADS_STORE
-              value: "gcs"
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: UPLOADS_STORE
             - name: UPLOADS_GCS_BUCKET
-              value: "bedrock-staging-uploads"
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: UPLOADS_GCS_BUCKET
           volumeMounts:
             - name: jobs-cache
               mountPath: /workdir/data

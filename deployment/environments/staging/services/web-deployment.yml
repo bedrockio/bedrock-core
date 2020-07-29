@@ -16,9 +16,23 @@ spec:
         - image: gcr.io/bedrock-foundation/bedrock-core-services-web
           imagePullPolicy: Always
           name: main
-          envFrom:
-            - configMapRef:
-                name: global-config
+          env:
+            ## Global config ##
+            - name: NODE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: global-config
+                  key: NODE_ENV
+            - name: DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: global-config
+                  key: DOMAIN
+            - name: API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: global-config
+                  key: API_URL
           ports:
             - name: http-server
               containerPort: 2200

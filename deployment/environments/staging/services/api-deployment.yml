@@ -17,21 +17,61 @@ spec:
           imagePullPolicy: Always
           name: main
           env:
+            ## Global config ##
+            - name: NODE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: global-config
+                  key: NODE_ENV
+            - name: DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: global-config
+                  key: DOMAIN
+            - name: APP_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: global-config
+                  key: APP_URL
+            - name: API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: global-config
+                  key: API_URL
+
+            ## Api Config ##
+            - name: MONGO_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: MONGO_URI
+            - name: POSTMARK_FROM
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: POSTMARK_FROM
+            - name: POSTMARK_APIKEY
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: POSTMARK_APIKEY
+            - name: UPLOADS_STORE
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: UPLOADS_STORE
+            - name: UPLOADS_GCS_BUCKET
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: UPLOADS_GCS_BUCKET
+
             - name: ADMIN_EMAIL
               value: "admin@bedrock.foundation"
             - name: ADMIN_PASSWORD
               value: "development.now"
             - name: JWT_SECRET
               value: "changeme1234"
-            - name: UPLOADS_STORE
-              value: "gcs"
-            - name: UPLOADS_GCS_BUCKET
-              value: "bedrock-staging-uploads"
-          envFrom:
-            - configMapRef:
-                name: global-config
-            - configMapRef:
-                name: api-config
           ports:
             - name: http-server
               containerPort: 2300

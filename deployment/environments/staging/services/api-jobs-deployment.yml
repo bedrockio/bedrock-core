@@ -16,6 +16,36 @@ spec:
         - image: gcr.io/bedrock-foundation/bedrock-core-services-api-jobs
           imagePullPolicy: Always
           name: main
+          env:
+            ## Global config ##
+            - name: NODE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: global-config
+                  key: NODE_ENV
+            - name: DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: global-config
+                  key: DOMAIN
+
+            ## Api Config ##
+            - name: MONGO_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: MONGO_URI
+            - name: POSTMARK_FROM
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: POSTMARK_FROM
+            - name: POSTMARK_APIKEY
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: POSTMARK_APIKEY
+
           envFrom:
             - configMapRef:
                 name: global-config
