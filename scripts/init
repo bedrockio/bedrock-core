@@ -112,6 +112,8 @@ _() {
   git clone git@github.com:bedrockio/bedrock-core.git $kebab
   update
 
+  mkdir -p ./$kebab/data
+
   replace ./$kebab/docker-compose.yml
 
   replace ./$kebab/services/api/env.conf
