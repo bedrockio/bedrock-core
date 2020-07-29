@@ -24,7 +24,10 @@ spec:
             - name: ADMIN_EMAIL
               value: "admin@bedrock.foundation"
             - name: ADMIN_PASSWORD
-              value: "development.now"
+              valueFrom:
+                secretKeyRef:
+                  name: api-credentials
+                  key: ADMIN_PASSWORD
             - name: JWT_SECRET
               value: "changeme1234"
             - name: APP_DOMAIN
