@@ -88,7 +88,7 @@ resource "google_container_node_pool" "default" {
 }
 
 locals {
-  buckets = [for bucket in var.buckets : "${var.project}-${var.environment}-${bucket}"]
+  buckets = [for bucket in var.buckets : "${var.bucket_prefix}-${bucket}"]
 }
 
 resource "google_storage_bucket" "bucket" {

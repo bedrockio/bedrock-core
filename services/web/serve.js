@@ -8,7 +8,7 @@ const terminateMiddleware = require('./src/utils/middleware/terminate');
 
 const app = new Koa();
 
-const { BIND_PORT, BIND_HOST, publicEnv } = require('./config');
+const { BIND_PORT, BIND_HOST, publicEnv } = require('./env');
 
 (async () => {
   const webpackMiddleware = await webpack({
