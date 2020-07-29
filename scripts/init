@@ -180,6 +180,9 @@ _() {
     afplay /System/Library/Sounds/Glass.aiff 2> /dev/null
   fi
 
+  cd $kebab/services/api; yarn install > /dev/null 2> /dev/null &
+  cd $kebab/services/web; yarn install > /dev/null 2> /dev/null &
+
   echo ""
   echo "Installation completed!"
   echo ""
