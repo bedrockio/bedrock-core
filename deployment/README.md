@@ -376,7 +376,7 @@ Then to make it assessible for a deployment add something like the following to 
     valueFrom:
       secretKeyRef:
         name: credentials
-          key: MY_SECRET_KEY
+        key: MY_SECRET_KEY
 ```
 
 For a further example of this look at api-deloyment.yml for production.
