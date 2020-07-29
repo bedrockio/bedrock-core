@@ -161,7 +161,6 @@ _() {
   replace ./$kebab/deployment/environments/production/data/mongo-deployment.yml
   replace ./$kebab/deployment/environments/production/data/mongo-service.yml
 
-  remove ./$kebab/init.sh
   remove ./$kebab/CONTRIBUTING.md
   remove ./$kebab/LICENSE
   remove ./$kebab/.git
@@ -180,8 +179,12 @@ _() {
     afplay /System/Library/Sounds/Glass.aiff 2> /dev/null
   fi
 
-  cd $kebab/services/api; yarn install > /dev/null 2> /dev/null &
-  cd $kebab/services/web; yarn install > /dev/null 2> /dev/null &
+  pushd ./$kebab/services/api
+  yarn install > /dev/null 2> /dev/null &
+  popd
+  pushd ./$kebab/services/web
+  yarn install > /dev/null 2> /dev/null &
+  popd
 
   echo ""
   echo "Installation completed!"
