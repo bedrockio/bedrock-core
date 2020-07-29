@@ -46,6 +46,10 @@ variable "machine_type" {
   default = "n1-standard-1"
 }
 
+variable "bucket_prefix" {
+  default = "bedrock_staging"
+}
+
 variable "buckets" {
   type = set(string)
 

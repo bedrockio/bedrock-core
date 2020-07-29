@@ -14,12 +14,14 @@ fi
 export $(grep -v '^#' deployment/environments/$ENVIRONMENT/env.conf | xargs)
 
 function plan() {
-  terraform plan -var "project=$GCLOUD_PROJECT" -var "environment=$GCLOUD_ENV_NAME" -var "cluster_name=$GCLOUD_KUBERNETES_CLUSTER_NAME" -var-file=../environments/$ENVIRONMENT/variables.tfvars -out="${PLAN_FILE}"
+  terraform plan -var "project=$GCLOUD_PROJECT" -var "environment=$GCLOUD_ENV_NAME" -var "cluster_name=$GCLOUD_KUBERNETES_CLUSTER_NAME" -var "bucket_prefix=$GCLOUD_BUCKET_PREFIX" -var-file=../environments/$ENVIRONMENT/variables.tfvars -out="${PLAN_FILE}"
 }
 
 if [ "$TERRAFORM" == "init" ]; then
   TERRAFORM_BUCKET=gs://$GCLOUD_BUCKET_PREFIX-terraform-system-state
   TERRAFORM_NOT_EXIST=$(gsutil ls "$TERRAFORM_BUCKET" 2>&1 > /dev/null)
+
+  echo "Initialization can take several minutes..."
 
   if [ "$TERRAFORM_NOT_EXIST" != "" ]; then
     echo "$TERRAFORM_BUCKET does not exist. Creating now.."
@@ -36,6 +38,23 @@ elif [ "$TERRAFORM" == "apply" ]; then
   cd deployment/provisioning;
   # Always execute plan before apply, to use the correct plan_file
   plan
+  read -d '' message << EOM
+-------------------------------------------------------------------
+
+              Applying plan can take several minutes
+
+-------------------------------------------------------------------
+EOM
+  message+=$'\nAre you sure? (y/n): '
+  read -p "$message" -n 1 -r
+  if [[ ! $REPLY =~ ^[Yy]$ ]]
+  then
+    echo ""
+    echo "Aborted!"
+    exit 1
+  else
+    echo ""
+  fi
   # terraform plan -var-file=./$GCLOUD_ENV_NAME/variables.tfvars -out="${PLAN_FILE}"
   terraform apply "${PLAN_FILE}"
 else
