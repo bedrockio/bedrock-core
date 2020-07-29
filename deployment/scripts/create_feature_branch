@@ -1,0 +1,62 @@
+#!/bin/bash
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+cd $SCRIPTPATH; cd ../../
+PLATFORM_NAME=$(basename `pwd`)
+ENVIRONMENT=$1
+BASE_SERVICE=$2
+TAG=$3
+API=$4
+SERVICE="$BASE_SERVICE-$TAG"
+
+if [ "$ENVIRONMENT" == "" ] || [ "$SERVICE" == "" ] || [ "$TAG" == "" ]; then
+cat <<-EOM
+  Usage: create_feature_branch <environment> <service> <tag>
+
+  Creates a new service and deployment that serves a docker image
+  tagged with <tag>. Updates ingress rules to access this feature
+  branch by a subdomain.
+
+EOM
+exit 1
+fi
+
+./deployment/scripts/check_gcloud_config $ENVIRONMENT 1
+if [ $? -ne 0 ]; then
+  exit 1
+fi
+
+export $(grep -v '^#' deployment/environments/$ENVIRONMENT/env.conf | xargs)
+
+function create_service() {
+  r_name="s/name: $BASE_SERVICE$/name: $SERVICE/g"
+  r_lb="s/^.*loadBalancerIP: .*$//g"
+  file="deployment/environments/$ENVIRONMENT/services/$BASE_SERVICE-service.yml"
+  sed -e "$r_name" -e "$r_lb" "$file" | kubectl apply -f -
+}
+
+function create_deployment() {
+  r_name="s/name: $BASE_SERVICE$/name: $SERVICE/g"
+  r_domain="s/www\.$APP_TLD/$TAG.$APP_TLD/g"
+  r_name="s/name: $BASE_SERVICE$/name: $SERVICE/g"
+  r_deploy="s/name: $BASE_SERVICE-deployment/name: $SERVICE-deployment/g"
+  r_replicas="s/replicas: [0-9]*/replicas: 1/g"
+  r_image="s/image: .*$/image: gcr.io\/$GCLOUD_PROJECT\/$PLATFORM_NAME-services-$BASE_SERVICE:$TAG/g"
+  if [ "$BASE_SERVICE" == "web" ] && [ "$API" != "" ]; then
+    r_api="s/api\./$API-api./g"
+  else
+    r_api=""
+  fi
+  file="deployment/environments/$ENVIRONMENT/services/$BASE_SERVICE-deployment.yml"
+  sed \
+    -e "$r_name" \
+    -e "$r_domain" \
+    -e "$r_deploy" \
+    -e "$r_replicas" \
+    -e "$r_image" \
+    -e "$r_api" \
+    "$file" | kubectl apply -f -
+}
+
+create_service
+create_deployment
+./deployment/scripts/patch_ingress $BASE_SERVICE $TAG "add"

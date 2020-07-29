@@ -13,6 +13,7 @@ services:
     volumes:
       - ./services/api/src:/service/src
       - ./services/api/emails:/service/emails
+      - ./services/api/fixtures:/service/fixtures
       - ./services/api/scripts:/service/scripts
       - ./services/api/env.conf:/service/env.conf
       - ./services/api/openapi:/service/openapi
@@ -56,9 +57,6 @@ services:
       - MONGO_DATA_DIR=/data/db
       - MONGO_LOG_DIR=/dev/null
     volumes:
-      - db-data:/data/db
+      - ./data/db:/data/db
     ports:
       - 27017:27017
-
-volumes:
-  db-data:

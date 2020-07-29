@@ -1,16 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { omit } from 'lodash';
 
 import './group.less';
 
 export default class Group extends React.Component {
 
   getClassNames() {
+    const { className, children, ...props } = this.props;
     const classNames = ['group'];
-    const props = omit(this.props, 'children');
-    for (let className of Object.keys(props)) {
+    if (className) {
       classNames.push(className);
+    }
+    for (let key of Object.keys(props)) {
+      classNames.push(key);
     }
     return classNames.join(' ');
   }

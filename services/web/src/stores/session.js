@@ -1,4 +1,5 @@
 import React from 'react';
+import { merge, omit } from 'lodash';
 import { request } from 'utils/api';
 
 const SessionContext = React.createContext();
@@ -11,6 +12,7 @@ export class SessionProvider extends React.PureComponent {
       user: null,
       error: null,
       loading: true,
+      stored: this.loadStored(),
     };
   }
 
@@ -20,12 +22,12 @@ export class SessionProvider extends React.PureComponent {
 
   isAdmin = () => {
     return this.hasRole('admin');
-  }
+  };
 
   hasRole = (role) => {
     const { user } = this.state;
     return user?.roles.includes(role);
-  }
+  };
 
   setToken = async (token) => {
     if (token) {
@@ -35,7 +37,7 @@ export class SessionProvider extends React.PureComponent {
       localStorage.removeItem('jwt');
       this.clearUser();
     }
-  }
+  };
 
   loadUser = async () => {
     if (localStorage.getItem('jwt')) {
@@ -46,16 +48,16 @@ export class SessionProvider extends React.PureComponent {
       try {
         const { data } = await request({
           method: 'GET',
-          path: '/1/users/me'
+          path: '/1/users/me',
         });
         this.setState({
           user: data,
           loading: false,
         });
-      } catch(error) {
+      } catch (error) {
         this.setState({
           error,
-          loading: false
+          loading: false,
         });
       }
     } else {
@@ -63,11 +65,57 @@ export class SessionProvider extends React.PureComponent {
         loading: false,
       });
     }
-  }
+  };
+
+  updateUser = (data) => {
+    this.setState({
+      user: merge({}, this.state.user, data),
+    });
+  };
 
   clearUser = () => {
     this.setState({
       user: null,
+    });
+  };
+
+  addStored = (data) => {
+    this.setStored(
+      merge({}, this.state.stored, data)
+    );
+  };
+
+  removeStored = (key) => {
+    this.setStored(
+      omit(this.state.stored, key)
+    );
+  };
+
+  clearStored = () => {
+    this.setStored({});
+  };
+
+  loadStored() {
+    let data;
+    try {
+      const str = localStorage.getItem('session');
+      if (str) {
+        data = JSON.parse(str);
+      }
+    } catch (err) {
+      localStorage.removeItem('session');
+    }
+    return data || {};
+  }
+
+  setStored(data) {
+    if (Object.keys(data).length > 0) {
+      localStorage.setItem('session', JSON.stringify(data));
+    } else {
+      localStorage.removeItem('session');
+    }
+    this.setState({
+      stored: data,
     });
   }
 
@@ -77,6 +125,11 @@ export class SessionProvider extends React.PureComponent {
         value={{
           ...this.state,
           setToken: this.setToken,
+          addStored: this.addStored,
+          removeStored: this.removeStored,
+          clearStored: this.clearStored,
+          updateUser: this.updateUser,
+          loadUser: this.loadUser,
           isAdmin: this.isAdmin,
           hasRole: this.hasRole,
         }}>
