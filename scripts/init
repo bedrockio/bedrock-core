@@ -67,7 +67,7 @@ _() {
 
   kebab=`echo "$PROJECT" | tr '[:upper:]' '[:lower:]' | sed -e 's/\ /-/g'`
   under=`echo "$PROJECT" | tr '[:upper:]' '[:lower:]' | sed -e 's/\ /_/g'`
-  steps=50
+  steps=49
   current=0
 
   replace() {
