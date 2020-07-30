@@ -25,9 +25,9 @@
     - [Check cluster status](#check-cluster-status)
     - [Getting shell access](#getting-shell-access)
   - [Disaster Recovery](#disaster-recovery)
-      - [Scenario A: Master Database Loss or Corruption](#scenario-a-master-database-loss-or-corruption)
-      - [Scenario B: Bucket Storage Loss or Corruption](#scenario-b-bucket-storage-loss-or-corruption)
-      - [Scenario C: Deletion of Google Cloud Project](#scenario-c-deletion-of-google-cloud-project)
+    - [Scenario A: Master Database Loss or Corruption](#scenario-a-master-database-loss-or-corruption)
+    - [Scenario B: Bucket Storage Loss or Corruption](#scenario-b-bucket-storage-loss-or-corruption)
+    - [Scenario C: Deletion of Google Cloud Project](#scenario-c-deletion-of-google-cloud-project)
   - [Other](#other)
     - [Configuring Backups](#configuring-backups)
     - [Backup Monitoring System](#backup-monitoring-system)
@@ -123,28 +123,37 @@ gcloud docker --authorize-only
 
 ### Creating a new environment
 
-Create a Google Cloud project (in the [GC dashboard console](https://console.cloud.google.com/home/dashboard)) or:
+Create a Google Cloud project (in the [GC dashboard](https://console.cloud.google.com/home/dashboard)) or:
 
 ```bash
-gcloud projects create bedrock-staging --name="Bedrock Staging"`
+gcloud projects create bedrock-staging --name="Bedrock Staging"
+gcloud config set project seltzer-box-staging
 ```
 
-Configure: `environments/<environment>/env.conf` and `environments/<environment>/variables.tfvars`
+Configure: `environments/<environment>/env.conf`.
 
-### Install Terraform
+### Provision Script
+
+There is a script that automatically takes care of the remaining steps, But you can do it manually in case of more customized environments.
+
+The following script takes an environment variable and Google Project ID:
+
+```bash
+./deployments/scripts/provision_gcloud staging bedrock-staging
+```
+
+### Directory Structure
+
+There is a `variables.tfvars` file per environment to override default vars with environment specific values, which can be found in the `environments/<environment>/` folder.
+
+### Provision GKE Cluster
+
+Requires terraform:
 
 ```bash
 # MacOS terraform install
 brew install terraform
 ```
-
-### Directory Structure
-
-
-
-There is also a `variables.tfvars` file per environment to override default vars with environment specific values, which can be found in the `environments/<environment>/` folder.
-
-### Provision GKE Cluster
 
 Note: this script can take about 5 minutes.
 
@@ -187,6 +196,7 @@ Use `kubectl create` to deploy all services and pods
 You can change the node size of the (existing) default pool with the Terraform variable `default_pool_node_count` per environment as defined in `environments/<environment>/vaiables.tfvars`
 
 Update cluster:
+
 ```
 $ ./deployment/scripts/provision staging apply
 ```

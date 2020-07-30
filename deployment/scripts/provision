@@ -7,7 +7,12 @@ TERRAFORM=$2
 PLAN_FILE="$(mktemp)"
 
 if [ "$ENVIRONMENT" == "" ] || [ "$TERRAFORM" == "" ]; then
-  echo "Usage: $0 <command> <environment>"
+  echo "Usage: $0 <environment> <command>"
+  exit 1
+fi
+
+if ! [ -x "$(command -v terraform)" ]; then
+  echo 'Error: terraform is not installed (brew install terraform)' >&2
   exit 1
 fi
 

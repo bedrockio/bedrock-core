@@ -12,4 +12,4 @@ spec:
       protocol: TCP
   selector:
     app: api-docs
-  loadBalancerIP: 34.74.246.233
+  loadBalancerIP: 0.0.0.0
