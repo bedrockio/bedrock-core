@@ -29,6 +29,8 @@
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.0",
     "koa-body": "^4.2.0",
+    "koa-compress": "^5.0.1",
+    "koa-etag": "^3.0.0",
     "koa-logger": "^3.2.1",
     "lodash": "^4.17.19",
     "mongoose": "^5.9.26",
@@ -56,7 +58,7 @@
     ]
   },
   "volta": {
-    "node": "12.16.3",
+    "node": "12.18.3",
     "yarn": "1.22.4"
   }
 }

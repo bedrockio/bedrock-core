@@ -4,8 +4,8 @@
   "description": "",
   "dependencies": {
     "@bedrockio/config": "^1.0.2",
-    "koa": "^2.6.2",
-    "koa-compress": "^3.0.0",
+    "koa": "^2.13.0",
+    "koa-compress": "^5.0.1",
     "koa-static": "^5.0.0"
   },
   "devDependencies": {},
@@ -16,7 +16,7 @@
   "author": "",
   "license": "ISC",
   "volta": {
-    "node": "12.16.3",
+    "node": "12.18.3",
     "yarn": "1.22.4"
   }
 }

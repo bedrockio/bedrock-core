@@ -1,6 +1,8 @@
 const Router = require('@koa/router');
 const Koa = require('koa');
 const cors = require('@koa/cors');
+const etag = require('koa-etag');
+const compress = require('koa-compress');
 const logger = require('koa-logger');
 const bodyParser = require('koa-body');
 const errorHandler = require('./middlewares/error-handler');
@@ -17,6 +19,8 @@ const NODE_ENV = process.env.NODE_ENV;
 
 app
   .use(errorHandler)
+  .use(etag())
+  .use(compress())
   .use(NODE_ENV === 'test' ? (_, next) => next() : logger())
   .use(
     cors({
