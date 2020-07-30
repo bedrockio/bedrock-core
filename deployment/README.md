@@ -139,7 +139,7 @@ There is a script that automatically takes care of the remaining steps, But you 
 The following script takes an environment variable and Google Project ID:
 
 ```bash
-./deployments/scripts/provision_gcloud staging bedrock-staging
+./deployment/scripts/provision_gcloud staging bedrock-staging
 ```
 
 ### Directory Structure
