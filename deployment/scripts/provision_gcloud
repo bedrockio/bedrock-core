@@ -100,25 +100,25 @@ set_yml_container_path deployment/environments/$ENVIRONMENT/services/api-docs-de
 set_yml_container_path deployment/environments/$ENVIRONMENT/services/web-deployment.yml
 
 echo "Starting Terraform process"
-./deployment/scripts/provision staging init
-./deployment/scripts/provision staging plan
-./deployment/scripts/provision staging apply
+./deployment/scripts/provision $ENVIRONMENT init
+./deployment/scripts/provision $ENVIRONMENT plan
+./deployment/scripts/provision $ENVIRONMENT apply
 
 echo "Authorizing into Kubernetes cluster"
-./deployment/scripts/authorize staging
+./deployment/scripts/authorize $ENVIRONMENT
 kubectl get nodes
 
 echo "Creating data pods"
 kubectl create -f deployment/environments/$ENVIRONMENT/data
 
 echo "Creating services pods"
-./deployment/scripts/deploy staging api
+./deployment/scripts/deploy $ENVIRONMENT api
 kubectl create -f deployment/environments/$ENVIRONMENT/services/api-service.yml
-./deployment/scripts/deploy staging api cli
-./deployment/scripts/deploy staging web
+./deployment/scripts/deploy $ENVIRONMENT api cli
+./deployment/scripts/deploy $ENVIRONMENT web
 kubectl create -f deployment/environments/$ENVIRONMENT/services/web-service.yml
 
-./deployment/scripts/status staging
+./deployment/scripts/status $ENVIRONMENT
 
 API_ADDRESS=`get_address api`
 API_DOCS_ADDRESS=`get_address api-docs`
