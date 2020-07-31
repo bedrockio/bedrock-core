@@ -10,7 +10,7 @@ resource "google_container_cluster" "default" {
   location    = local.location
 
   remove_default_node_pool = true
-  initial_node_count       = var.initial_node_count
+  initial_node_count       = 1
   enable_kubernetes_alpha  = false
 
   master_auth {
@@ -56,9 +56,7 @@ resource "google_container_node_pool" "default" {
   project    = var.project
   location   = local.location
   cluster    = google_container_cluster.default.name
-  node_count = var.default_pool_node_count
-
-  # initial_node_count = 1
+  node_count = var.node_pool_count
 
   node_config {
     preemptible  = var.preemptible
@@ -80,11 +78,6 @@ resource "google_container_node_pool" "default" {
     auto_repair  = true
     auto_upgrade = true
   }
-
-  # autoscaling {
-  #   min_node_count = var.default_pool_min_nodes
-  #   max_node_count = var.default_pool_max_nodes
-  # }
 }
 
 locals {

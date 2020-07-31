@@ -3,7 +3,7 @@ variable "cluster_name" {
 }
 
 variable "description" {
-  default = "Terraformed GKE Cluster"
+  default = "Production GKE Cluster"
 }
 
 variable "project" {
@@ -11,7 +11,7 @@ variable "project" {
 }
 
 variable "environment" {
-  default = "staging"
+  default = "production"
 }
 
 variable "region" {
@@ -22,19 +22,7 @@ variable "zone" {
   default = "c"
 }
 
-variable "initial_node_count" {
-  default = 1
-}
-
-variable "default_pool_node_count" {
-  default = 3
-}
-
-variable "default_pool_min_nodes" {
-  default = 1
-}
-
-variable "default_pool_max_nodes" {
+variable "node_pool_count" {
   default = 3
 }
 
@@ -47,7 +35,7 @@ variable "machine_type" {
 }
 
 variable "bucket_prefix" {
-  default = "bedrock_staging"
+  default = "bedrock_production"
 }
 
 variable "buckets" {
@@ -68,8 +56,4 @@ variable "master_authorizaed_networks_cidr_blocks" {
       cidr_block = "0.0.0.0/0"
     }
   ]
-}
-
-variable "location" {
-  default = "us-east1-c"
 }

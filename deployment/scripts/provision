@@ -18,29 +18,40 @@ fi
 
 export $(grep -v '^#' deployment/environments/$ENVIRONMENT/env.conf | xargs)
 
+# $GCLOUD_COMPUTE_ZONE e.g. us-east1-c
+GCLOUD_REGION=$(echo $GCLOUD_COMPUTE_ZONE | cut -d- -f1-2) # e.g. us-east1
+GCLOUD_ZONE=$(echo $GCLOUD_COMPUTE_ZONE | cut -d- -f3) # e.g. c
+
+CURRENT_GCLOUD_PROJECT=`gcloud config get-value project`
+if [ "$GCLOUD_PROJECT" != "$CURRENT_GCLOUD_PROJECT" ]; then
+  echo "Invalid Google Cloud config (use authorize script): active project = '$CURRENT_GCLOUD_PROJECT', but the $ENVIRONMENT env.conf states project = '$GCLOUD_PROJECT'"
+  exit 1
+fi
+
 function plan() {
-  terraform plan -var "project=$GCLOUD_PROJECT" -var "environment=$GCLOUD_ENV_NAME" -var "cluster_name=$GCLOUD_KUBERNETES_CLUSTER_NAME" -var "bucket_prefix=$GCLOUD_BUCKET_PREFIX" -var-file=../environments/$ENVIRONMENT/variables.tfvars -out="${PLAN_FILE}"
+  terraform plan -var "project=$GCLOUD_PROJECT" -var "environment=$GCLOUD_ENV_NAME" -var "cluster_name=$GCLOUD_KUBERNETES_CLUSTER_NAME" -var "bucket_prefix=$GCLOUD_BUCKET_PREFIX" -var "region=$GCLOUD_REGION" -var "zone=$GCLOUD_ZONE" -out="${PLAN_FILE}"
 }
 
 if [ "$TERRAFORM" == "init" ]; then
-  TERRAFORM_BUCKET=gs://$GCLOUD_BUCKET_PREFIX-terraform-system-state
-  TERRAFORM_NOT_EXIST=$(gsutil ls "$TERRAFORM_BUCKET" 2>&1 > /dev/null)
+  TERRAFORM_BUCKET=$GCLOUD_BUCKET_PREFIX-terraform-system-state
+  echo $TERRAFORM_BUCKET
+  TERRAFORM_NOT_EXIST=$(gsutil ls "gs://$TERRAFORM_BUCKET" 2>&1 > /dev/null)
 
   echo "Initialization can take several minutes..."
 
   if [ "$TERRAFORM_NOT_EXIST" != "" ]; then
     echo "$TERRAFORM_BUCKET does not exist. Creating now.."
-    gsutil mb -l us-east1 $TERRAFORM_BUCKET
+    gsutil mb -l $GCLOUD_REGION "gs://$TERRAFORM_BUCKET"
   fi
 
-  cd deployment/provisioning;
-  terraform init -backend-config="bucket=${GCLOUD_BUCKET_PREFIX}-terraform-system-state" -backend-config="prefix=${CLOUD_ENV_NAME}"
+  cd deployment/environments/$ENVIRONMENT/provisioning;
+  terraform init -backend-config="bucket=${TERRAFORM_BUCKET}" -backend-config="prefix=${GCLOUD_ENV_NAME}"
 
 elif [ "$TERRAFORM" == "plan" ]; then
-  cd deployment/provisioning;
+  cd deployment/environments/$ENVIRONMENT/provisioning;
   plan
 elif [ "$TERRAFORM" == "apply" ]; then
-  cd deployment/provisioning;
+  cd deployment/environments/$ENVIRONMENT/provisioning;
   # Always execute plan before apply, to use the correct plan_file
   plan
   read -d '' message << EOM
@@ -60,8 +71,35 @@ EOM
   else
     echo ""
   fi
-  # terraform plan -var-file=./$GCLOUD_ENV_NAME/variables.tfvars -out="${PLAN_FILE}"
   terraform apply "${PLAN_FILE}"
+elif [ "$TERRAFORM" == "destroy" ]; then
+  cd deployment/environments/$ENVIRONMENT/provisioning;
+  # Always execute plan before apply, to use the correct plan_file
+  echo -e "Resources to destroy:\n"
+  terraform state list
+  echo ""
+  read -d '' message << EOM
+-------------------------------------------------------------------
+
+          Destroying infrastructure can take several minutes
+
+-------------------------------------------------------------------
+EOM
+  message+=$'\n\n'
+  message+="Project: $GCLOUD_PROJECT"
+  message+=$'\n'
+  message+="Environment: $ENVIRONMENT"
+  message+=$'\n\nAre you sure? (y/n): '
+  read -p "$message" -n 1 -r
+  if [[ ! $REPLY =~ ^[Yy]$ ]]
+  then
+    echo ""
+    echo "Aborted!"
+    exit 1
+  else
+    echo ""
+  fi
+  terraform destroy
 else
   echo "Terraform command $TERRAFORM not supported"
 fi
