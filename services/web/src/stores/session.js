@@ -2,6 +2,9 @@ import React from 'react';
 import { merge, omit } from 'lodash';
 import { request } from 'utils/api';
 
+// Stub to enable analytics
+// import { trackSession, setUserId } from 'utils/analytics';
+
 const SessionContext = React.createContext();
 
 export class SessionProvider extends React.PureComponent {
@@ -50,6 +53,8 @@ export class SessionProvider extends React.PureComponent {
           method: 'GET',
           path: '/1/users/me',
         });
+        // Stub to track user id if set up
+        // setUserId(data.id);
         this.setState({
           user: data,
           loading: false,
@@ -79,16 +84,22 @@ export class SessionProvider extends React.PureComponent {
     });
   };
 
-  addStored = (data) => {
+  addStored = (key, data) => {
     this.setStored(
-      merge({}, this.state.stored, data)
+      merge({}, this.state.stored, {
+        [key]: data
+      })
     );
+    // Stub to track session
+    // trackSession('add', key, data);
   };
 
   removeStored = (key) => {
     this.setStored(
       omit(this.state.stored, key)
     );
+    // Stub to track session
+    // trackSession('remove', key);
   };
 
   clearStored = () => {

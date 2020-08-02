@@ -1,0 +1,74 @@
+<script>
+/*
+ Custom drop-in implementation of pageview tracking for an SPA in GTM.
+
+ The issue:
+
+ SPAs often implement custom URL updates via the history API,
+ however typically the page hasn't rendered yet which means that
+ even though the URL has updated the page title as well as other
+ variables referenced through GTM like meta tags have not loaded
+ yet. This script defers the pageview event for a few milliseconds
+ to allow the DOM to catch up.
+
+ Instructions:
+
+ 1. Drop this script into a "Custom HTML" tag and trigger on "All Pages".
+ This will load this script on initial page load.
+
+ 2. Create a new trigger of type "Custom Event" and give the "Event Name"
+ field a value of "pageview". Set it to fire on all custom events.
+
+ 3. Create a new tag of type "Page View" and set the trigger to the custom
+ event trigger from step #2.
+
+ 4. Publish!
+ */
+(function(history) {
+
+  function fire() {
+    if (typeof dataLayer !== 'undefined') {
+      setTimeout(function() {
+        dataLayer.push({
+          event: 'pageview',
+        });
+      }, 20);
+    }
+  }
+
+  function patch(name) {
+    if (history) {
+      var fn = history[name];
+      var evtName = name.toLowerCase();
+      history[name] = function(state, title, url) {
+        if (normalize(url) !== normalize(location.href)) {
+          window.dispatchEvent(
+            new CustomEvent(evtName, {
+              detail: state,
+            })
+          );
+        }
+        return fn.apply(history, arguments);
+      };
+    }
+  }
+
+  function normalize(url) {
+    return url.replace(location.origin, '');
+  }
+
+  // Patch pushState and replaceState to fire events we can listen to.
+  patch('pushState');
+  patch('replaceState');
+
+  // Fire initial pageview on load.
+  window.addEventListener('load', fire);
+
+  // Listen to all history change events and fire the pageview 20ms later.
+  window.addEventListener('popstate', fire);
+  window.addEventListener('pushstate', fire);
+  window.addEventListener('replacestate', fire);
+
+})(window.history);
+
+</script>
