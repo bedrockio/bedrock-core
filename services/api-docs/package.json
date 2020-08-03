@@ -5,7 +5,6 @@
   "dependencies": {
     "@bedrockio/config": "^1.0.2",
     "koa": "^2.13.0",
-    "koa-compress": "^5.0.1",
     "koa-static": "^5.0.0"
   },
   "devDependencies": {},
