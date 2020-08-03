@@ -3,7 +3,7 @@ import { ApiError, ApiParseError } from './errors';
 
 export default async function request(options) {
   const { method = 'GET', path, files, params } = options;
-  let { body = {} } = options;
+  let { body } = options;
 
   const token = options.token || localStorage.getItem('jwt');
 
@@ -25,7 +25,7 @@ export default async function request(options) {
     files.forEach((file) => {
       data.append('file', file);
     });
-    for (let [key, value] of Object.entries(body)) {
+    for (let [key, value] of Object.entries(body || {})) {
       data.append(key, value);
     }
     body = data;
