@@ -10,7 +10,7 @@ spec:
         name: backup-monitor
     spec:
       containers:
-        - image: bedrock-foundation/backup-monitor
+        - image: dominiek/backup-monitor
           imagePullPolicy: Always
           name: main
           env:
