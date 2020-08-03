@@ -59,7 +59,7 @@ const createUsers = async () => {
   });
 
   const adminUser = await User.create(adminConfig);
-  console.info(`Added admin user ${adminUser.email}  to database`);
+  console.info(`Added admin user ${adminUser.email} to database`);
 
   const shop = await Shop.create({
     name: 'Demo',

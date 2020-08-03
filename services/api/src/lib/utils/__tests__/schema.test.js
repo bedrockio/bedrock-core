@@ -105,6 +105,52 @@ describe('createSchema', () => {
       expect(data.tags).toBeUndefined();
     });
 
+    it('should serialize identically with toObject', () => {
+      const User = createModel(createSchema({
+        secret: { type: String, access: 'private' },
+      }));
+      const user = new User({
+        secret: 'foo',
+      });
+      const data = user.toObject();
+      expect(data.id).toBe(user.id);
+      expect(data._id).toBeUndefined();
+      expect(data.__v).toBeUndefined();
+      expect(data.secret).toBeUndefined();
+    });
+
+    it('should allow access to private fields with options on toJSON', () => {
+      const User = createModel(createSchema({
+        secret: { type: String, access: 'private' },
+      }));
+      const user = new User({
+        secret: 'foo',
+      });
+      const data = user.toJSON({
+        private: true,
+      });
+      expect(data.id).toBe(user.id);
+      expect(data._id).toBeUndefined();
+      expect(data.__v).toBeUndefined();
+      expect(data.secret).toBe('foo');
+    });
+
+    it('should allow access to private fields with options on toObject', () => {
+      const User = createModel(createSchema({
+        secret: { type: String, access: 'private' },
+      }));
+      const user = new User({
+        secret: 'foo',
+      });
+      const data = user.toObject({
+        private: true,
+      });
+      expect(data.id).toBe(user.id);
+      expect(data._id).toBeUndefined();
+      expect(data.__v).toBeUndefined();
+      expect(data.secret).toBe('foo');
+    });
+
   });
 
   describe('autopopulate', () => {
@@ -143,5 +189,76 @@ describe('createSchema', () => {
       expect(data.user.password).toBeUndefined();
     });
 
+    it('should not allow access to private autopoulated fields by default', async () => {
+      const User = createModel(createSchema({
+        secret: { type: String, access: 'private' },
+      }));
+
+      const shopSchema = createSchema({
+        user: {
+          ref: User.modelName,
+          type: mongoose.Schema.Types.ObjectId,
+          autopopulate: true,
+        }
+      });
+
+      shopSchema.plugin(require('mongoose-autopopulate'));
+      const Shop = createModel(shopSchema);
+
+      const user = new User({
+        secret: 'foo'
+      });
+      await user.save();
+
+      let shop = new Shop();
+      shop.user = user;
+      await shop.save();
+
+      shop = await Shop.findById(shop.id);
+
+      const data = shop.toObject();
+
+      expect(data.user.id).toBe(user.id);
+      expect(data.user._id).toBeUndefined();
+      expect(data.user.__v).toBeUndefined();
+      expect(data.user.secret).toBeUndefined();
+    });
+
+    it('should allow access to private autopoulated fields with options', async () => {
+      const User = createModel(createSchema({
+        secret: { type: String, access: 'private' },
+      }));
+
+      const shopSchema = createSchema({
+        user: {
+          ref: User.modelName,
+          type: mongoose.Schema.Types.ObjectId,
+          autopopulate: true,
+        }
+      });
+
+      shopSchema.plugin(require('mongoose-autopopulate'));
+      const Shop = createModel(shopSchema);
+
+      const user = new User({
+        secret: 'foo'
+      });
+      await user.save();
+
+      let shop = new Shop();
+      shop.user = user;
+      await shop.save();
+
+      shop = await Shop.findById(shop.id);
+
+      const data = shop.toObject({
+        private: true
+      });
+
+      expect(data.user.id).toBe(user.id);
+      expect(data.user._id).toBeUndefined();
+      expect(data.user.__v).toBeUndefined();
+      expect(data.user.secret).toBe('foo');
+    });
   });
 });

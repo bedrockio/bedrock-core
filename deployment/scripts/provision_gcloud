@@ -1,0 +1,146 @@
+#!/bin/bash
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+cd $SCRIPTPATH; cd ../../
+PLATFORM_NAME=$(basename `pwd`)
+ENVIRONMENT=$1
+GCLOUD_PROJECT_ID=$2
+
+if [ "$ENVIRONMENT" == "" ] || [ "$GCLOUD_PROJECT_ID" == "" ]; then
+  echo "Usage: $0 <environment> <project id>"
+  exit 1
+fi
+
+if ! [ -x "$(command -v gcloud)" ]; then
+  echo 'Error: gcloud CLI is not installed (https://cloud.google.com/sdk/install)' >&2
+  exit 1
+fi
+
+if ! [ -x "$(command -v terraform)" ]; then
+  echo 'Error: terraform is not installed (brew install terraform).' >&2
+  exit 1
+fi
+
+if ! [ -x "$(command -v jq)" ]; then
+  echo 'Error: jq is not installed (brew install jq - you will love this command).' >&2
+  exit 1
+fi
+
+gcloud projects describe $GCLOUD_PROJECT_ID --format json > /dev/null 2> /dev/null
+if [ $? -eq 1 ]; then
+  echo 'Error: No access or unknown project: '$GCLOUD_PROJECT_ID' (Perhaps you need to do gcloud auth login)' >&2
+  exit 1
+fi
+
+function configure_env() {
+  local FILE=$1
+  local NAME=$2
+  local VALUE=$3
+  echo "Modifying $FILE"
+  sed -i '' -e 's/^'$NAME'=.*/'$NAME'='$VALUE'/g' $FILE
+}
+
+function replace() {
+  local FILE=$1
+  local FIND=$2
+  local REPLACE=$3
+  sed -i '' -e 's/'$FIND'/'$REPLACE'/g' $FILE
+}
+
+function get_address() {
+  local NAME=$1
+  echo `gcloud compute addresses describe --region us-east1 $NAME --format json | jq -r '.address'`
+}
+
+function get_yml_configuration_key() {
+  local FILE=$1
+  local KEY=$2
+  echo `cat $FILE | grep -A 1 $KEY | grep value | sed 's/[^"]*"\([^"]*\).*/\1/'`
+}
+
+function set_yml_container_path() {
+  local FILE=$1
+  sed -i '' -e 's/gcr\.io\/.*\//gcr.io\/'$GCLOUD_PROJECT_ID'\//g' $FILE
+}
+
+echo "Verified Google Cloud project $GCLOUD_PROJECT_ID, updating $ENVIRONMENT configuration (deployment/environments/$ENVIRONMENT/env.conf)"
+configure_env deployment/environments/$ENVIRONMENT/env.conf GCLOUD_PROJECT $GCLOUD_PROJECT_ID
+gcloud config set project $GCLOUD_PROJECT_ID
+
+echo "Enabling Compute services (This can take a couple of minutes)"
+gcloud services enable compute.googleapis.com
+
+echo "Enabling Kubernetes services"
+gcloud services enable container.googleapis.com
+
+gcloud compute addresses describe --region us-east1 api --format json 2> /dev/null > /dev/null
+if [ $? -eq 1 ]; then
+  echo "Reserving api, web and api-docs addresses"
+  ./deployment/scripts/create_addresses
+  API_ADDRESS=`get_address api`
+  API_DOCS_ADDRESS=`get_address api-docs`
+  WEB_ADDRESS=`get_address web`
+
+  echo "Configuring API address in Kubernetes service config ($ENVIRONMENT/services/api-service.yml)"
+  replace deployment/environments/$ENVIRONMENT/services/api-service.yml "0.0.0.0" $API_ADDRESS
+
+  echo "Configuring API docs address in Kubernetes service config ($ENVIRONMENT/services/api-service.yml)"
+  replace deployment/environments/$ENVIRONMENT/services/api-docs-service.yml "0.0.0.0" $API_DOCS_ADDRESS
+
+  echo "Configuring Web address in Kubernetes service config ($ENVIRONMENT/services/api-service.yml)"
+  replace deployment/environments/$ENVIRONMENT/services/web-service.yml "0.0.0.0" $WEB_ADDRESS
+else
+  echo "Addresses already created"
+fi
+
+echo "Auto configuring deployment GCR paths"
+set_yml_container_path deployment/environments/$ENVIRONMENT/services/api-deployment.yml
+set_yml_container_path deployment/environments/$ENVIRONMENT/services/api-cli-deployment.yml
+set_yml_container_path deployment/environments/$ENVIRONMENT/services/api-jobs-deployment.yml
+set_yml_container_path deployment/environments/$ENVIRONMENT/services/api-docs-deployment.yml
+set_yml_container_path deployment/environments/$ENVIRONMENT/services/web-deployment.yml
+
+echo "Starting Terraform process"
+./deployment/scripts/provision $ENVIRONMENT init
+./deployment/scripts/provision $ENVIRONMENT apply
+
+echo "Authorizing into Kubernetes cluster"
+./deployment/scripts/authorize $ENVIRONMENT
+kubectl get nodes
+
+echo "Creating data pods"
+kubectl create -f deployment/environments/$ENVIRONMENT/data
+
+echo "Creating services pods"
+./deployment/scripts/deploy $ENVIRONMENT api
+kubectl create -f deployment/environments/$ENVIRONMENT/services/api-service.yml
+./deployment/scripts/deploy $ENVIRONMENT api cli
+./deployment/scripts/deploy $ENVIRONMENT web
+kubectl create -f deployment/environments/$ENVIRONMENT/services/web-service.yml
+
+./deployment/scripts/status $ENVIRONMENT
+
+API_ADDRESS=`get_address api`
+API_DOCS_ADDRESS=`get_address api-docs`
+WEB_ADDRESS=`get_address web`
+
+APP_URL=`get_yml_configuration_key deployment/environments/$ENVIRONMENT/services/api-deployment.yml APP_URL`
+API_URL=`get_yml_configuration_key deployment/environments/$ENVIRONMENT/services/web-deployment.yml API_URL`
+DOMAIN=`get_yml_configuration_key deployment/environments/$ENVIRONMENT/services/web-deployment.yml DOMAIN`
+
+echo ""
+echo ""
+echo "Make sure to configure your DNS records (Cloudflare recommended):"
+echo ""
+echo " API:"
+echo " - address: $API_ADDRESS"
+echo " - configuration of API_URL in web deployment: $API_URL"
+echo ""
+echo " API Docs:"
+echo " - address: $API_DOCS_ADDRESS"
+echo " - recommended: https://api-docs.$DOMAIN"
+echo ""
+echo " Web:"
+echo " - address: $WEB_ADDRESS"
+echo " - configuration of APP_URL in api deployment: $APP_URL"
+echo ""
+echo ""

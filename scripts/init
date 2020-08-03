@@ -67,7 +67,7 @@ _() {
 
   kebab=`echo "$PROJECT" | tr '[:upper:]' '[:lower:]' | sed -e 's/\ /-/g'`
   under=`echo "$PROJECT" | tr '[:upper:]' '[:lower:]' | sed -e 's/\ /_/g'`
-  steps=45
+  steps=49
   current=0
 
   replace() {
@@ -111,6 +111,8 @@ _() {
 
   git clone git@github.com:bedrockio/bedrock-core.git $kebab
   update
+
+  mkdir -p ./$kebab/data
 
   replace ./$kebab/docker-compose.yml
 
@@ -179,12 +181,12 @@ _() {
     afplay /System/Library/Sounds/Glass.aiff 2> /dev/null
   fi
 
-  pushd ./$kebab/services/api
+  pushd ./$kebab/services/api > /dev/null
   yarn install > /dev/null 2> /dev/null &
-  popd
-  pushd ./$kebab/services/web
+  popd > /dev/null
+  pushd ./$kebab/services/web > /dev/null
   yarn install > /dev/null 2> /dev/null &
-  popd
+  popd > /dev/null
 
   echo ""
   echo "Installation completed!"
