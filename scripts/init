@@ -46,6 +46,7 @@ _() {
   DOMAIN=$(prompt "Enter domain: http://")
   EMAIL=$(prompt "Enter email (optional): ")
   ADDRESS=$(prompt "Enter address (optional): ")
+  ADMIN_PASSWORD=$(prompt "Enter admin password (optional): ")
   GIT_REMOTE=$(prompt "Enter git remote (optional owner/repository): ")
   JWT_SECRET=$(openssl rand -base64 30)
 
@@ -63,6 +64,10 @@ _() {
     echo ""
     echo "Domain required! Exiting..."
     exit 1
+  fi
+
+  if [ "$ADMIN_PASSWORD" == "" ]; then
+    ADMIN_PASSWORD="$(openssl rand -base64 10)"
   fi
 
   kebab=`echo "$PROJECT" | tr '[:upper:]' '[:lower:]' | sed -e 's/\ /-/g'`
@@ -187,6 +192,12 @@ _() {
   pushd ./$kebab/services/web > /dev/null
   yarn install > /dev/null 2> /dev/null &
   popd > /dev/null
+
+  mkdir -p ./$kebab/deployment/environments/staging/secrets
+  echo "ADMIN_PASSWORD=$ADMIN_PASSWORD" > ./$kebab/deployment/environments/staging/secrets/credentials.conf
+
+  mkdir -p ./$kebab/deployment/environments/production/secrets
+  echo "ADMIN_PASSWORD=$ADMIN_PASSWORD" > ./$kebab/deployment/environments/production/secrets/credentials.conf
 
   echo ""
   echo "Installation completed!"
