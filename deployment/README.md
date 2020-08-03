@@ -168,18 +168,12 @@ Note: this script can take about 5 minutes.
 
 ```bash
 # Staging
-# terraform init only has to be executed the first time
+# 'init' only has to be executed the first time
 $ ./deployment/scripts/provision staging init
-
+# 'plan' creates an execution plan for inspection
 $ ./deployment/scripts/provision staging plan
+# 'plan' is not required before 'apply', as 'apply' runs 'plan' in the background
 $ ./deployment/scripts/provision staging apply
-
-# Production
-# terraform init only has to be executed the first time
-$ ./deployment/scripts/provision production init
-
-$ ./deployment/scripts/provision production plan
-$ ./deployment/scripts/provision production apply
 ```
 
 ### Create load balancer IP addresses
