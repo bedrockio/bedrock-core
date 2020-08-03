@@ -103,7 +103,6 @@ class OpenApiMacros {
 }
 
 export function executeOpenApiMacros(openApi, markdown) {
-  const macros = new OpenApiMacros(openApi);
   Object.getOwnPropertyNames(OpenApiMacros.prototype).forEach((macroFn) => {
     const key = macroFn.toString();
     const re = new RegExp(key + '\\(' + '[^)]+' + '\\)', 'gm');
