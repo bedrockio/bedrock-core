@@ -1,4 +1,4 @@
-const Router = require('koa-router');
+const Router = require('@koa/router');
 const Joi = require('@hapi/joi');
 const validate = require('../middlewares/validate');
 const { authenticate } = require('../middlewares/authenticate');
@@ -19,13 +19,10 @@ router
     '/register',
     validate({
       body: Joi.object({
-        email: Joi.string()
-          .lowercase()
-          .email()
-          .required(),
+        email: Joi.string().lowercase().email().required(),
         name: Joi.string().required(),
-        password: passwordField.required()
-      })
+        password: passwordField.required(),
+      }),
     }),
     async (ctx) => {
       const { email, name } = ctx.request.body;
@@ -36,12 +33,12 @@ router
 
       const user = await User.create({
         ...ctx.request.body,
-        roles: ['user']
+        roles: ['user'],
       });
 
       await sendWelcome({
         name,
-        to: email
+        to: email,
       });
 
       ctx.body = { data: { token: tokens.createUserToken(user) } };
@@ -51,11 +48,9 @@ router
     '/login',
     validate({
       body: Joi.object({
-        email: Joi.string()
-          .email()
-          .required(),
-        password: Joi.string().required()
-      })
+        email: Joi.string().email().required(),
+        password: Joi.string().required(),
+      }),
     }),
     async (ctx) => {
       const { email, password } = ctx.request.body;
@@ -75,14 +70,14 @@ router
     validate({
       body: Joi.object({
         name: Joi.string().required(),
-        password: passwordField.required()
-      })
+        password: passwordField.required(),
+      }),
     }),
     authenticate({ type: 'invite' }),
     async (ctx) => {
       const { name, password } = ctx.request.body;
       const invite = await Invite.findByIdAndUpdate(ctx.state.jwt.inviteId, {
-        $set: { status: 'accepted' }
+        $set: { status: 'accepted' },
       });
       if (!invite) {
         return ctx.throw(500, 'Invite could not be found');
@@ -97,7 +92,7 @@ router
       const user = await User.create({
         name,
         email: invite.email,
-        password
+        password,
       });
 
       ctx.body = { data: { token: tokens.createUserToken(user) } };
@@ -107,10 +102,8 @@ router
     '/request-password',
     validate({
       body: Joi.object({
-        email: Joi.string()
-          .email()
-          .required()
-      })
+        email: Joi.string().email().required(),
+      }),
     }),
     async (ctx) => {
       const { email } = ctx.request.body;
@@ -118,11 +111,11 @@ router
       if (user) {
         await sendResetPassword({
           to: email,
-          token: tokens.createUserTemporaryToken({ userId: user.id }, 'password')
+          token: tokens.createUserTemporaryToken({ userId: user.id }, 'password'),
         });
       } else {
         await sendResetPasswordUnknown({
-          to: email
+          to: email,
         });
       }
       ctx.status = 204;
@@ -132,8 +125,8 @@ router
     '/set-password',
     validate({
       body: Joi.object({
-        password: passwordField.required()
-      })
+        password: passwordField.required(),
+      }),
     }),
     authenticate({ type: 'password' }),
     async (ctx) => {

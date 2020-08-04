@@ -1,7 +1,6 @@
 const fs = require("fs");
 const url = require("url");
 const Koa = require("koa");
-const compress = require("koa-compress");
 const koaStatic = require("koa-static");
 const config = require("@bedrockio/config");
 
@@ -34,7 +33,6 @@ const indexTemplate = fs
   .toString()
   .replace("<!--redoc:element-->", `<redoc spec-url="${OPENAPI_URL}"></redoc>`);
 
-app.use(compress());
 app.use(historyApiFallback({ index: "/" }));
 app.use(koaStatic("./src", { index: false }));
 app.use((ctx) => {
