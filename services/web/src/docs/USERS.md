@@ -26,17 +26,17 @@ Create a new user object. Requires admin permissions.
 
 callSummary({method: 'POST', path: '/1/users'})
 
-## List and Search Users
-
-List users and filter by certain attributes. Requires admin permissions.
-
-callSummary({method: 'POST', path: '/1/users/search'})
-
 ## Get User
 
 Obtain user object by unique user ID. Requires admin permissions.
 
 callSummary({method: 'GET', path: '/1/users/:userId'})
+
+## List and Search Users
+
+List users and filter by certain attributes. Requires admin permissions.
+
+callSummary({method: 'POST', path: '/1/users/search'})
 
 ## Update User
 

@@ -17,23 +17,58 @@ const createUpload = () => {
     hash: 'test',
     storageType: 'local',
     mimeType: 'image/png',
-    ownerId: 'none'
+    ownerId: 'none',
   });
 };
 
 describe('/1/shops', () => {
+  describe('POST /', () => {
+    it('should be able to create shop', async () => {
+      const user = await createUser();
+      const upload = await createUpload();
+      const response = await request(
+        'POST',
+        '/1/shops',
+        {
+          name: 'shop name',
+          images: [upload.id],
+        },
+        { user }
+      );
+      const data = response.body.data;
+      expect(response.status).toBe(200);
+      expect(data.name).toBe('shop name');
+      expect(data.images[0].id).toBe(upload.id);
+      expect(data.images[0].hash).toBe('test');
+    });
+  });
+
+  describe('GET /:shop', () => {
+    it('should be able to access shop', async () => {
+      const user = await createUser();
+      const shop = await Shop.create({
+        name: 'test 1',
+        description: 'Some description',
+      });
+      const response = await request('GET', `/1/shops/${shop.id}`, {}, { user });
+      expect(response.status).toBe(200);
+      expect(response.body.data.name).toBe(shop.name);
+    });
+  });
+
   describe('POST /search', () => {
     it('it should list out shops', async () => {
       const user = await createUser();
+      await Shop.deleteMany({});
 
       const shop1 = await Shop.create({
         name: 'test 1',
-        description: 'Some description'
+        description: 'Some description',
       });
 
       const shop2 = await Shop.create({
         name: 'test 2',
-        description: 'Some description'
+        description: 'Some description',
       });
 
       const response = await request('POST', '/1/shops/search', {}, { user });
@@ -46,46 +81,12 @@ describe('/1/shops', () => {
     });
   });
 
-  describe('POST /', () => {
-    it('should be able to create shop', async () => {
-      const user = await createUser();
-      const upload = await createUpload();
-      const response = await request(
-        'POST',
-        '/1/shops',
-        {
-          name: 'shop name',
-          images: [upload.id]
-        },
-        { user }
-      );
-      const data = response.body.data;
-      expect(response.status).toBe(200);
-      expect(data.name).toBe('shop name');
-      expect(data.images[0].id).toBe(upload.id);
-      expect(data.images[0].hash).toBe('test');
-    });
-  });
-
-  describe('DELETE /:shop', () => {
-    it('should be able to delete shop', async () => {
-      const user = await createUser();
-      const shop = await Shop.create({
-        name: 'new shop'
-      });
-      const response = await request('DELETE', `/1/shops/${shop.id}`, {}, { user });
-      expect(response.status).toBe(204);
-      const dbShop = await Shop.findById(shop.id);
-      expect(dbShop.deletedAt).toBeDefined();
-    });
-  });
-
   describe('PATCH /:shop', () => {
     it('should be able to update shop', async () => {
       const user = await createUser();
       const shop = await Shop.create({
         name: 'shop name',
-        description: 'Some description'
+        description: 'Some description',
       });
       shop.name = 'new name';
       const response = await request('PATCH', `/1/shops/${shop.id}`, shop.toJSON(), { user });
@@ -96,16 +97,16 @@ describe('/1/shops', () => {
     });
   });
 
-  describe('GET /:shop', () => {
-    it('should be able to access shop', async () => {
+  describe('DELETE /:shop', () => {
+    it('should be able to delete shop', async () => {
       const user = await createUser();
       const shop = await Shop.create({
-        name: 'test 1',
-        description: 'Some description'
+        name: 'new shop',
       });
-      const response = await request('GET', `/1/shops/${shop.id}`, {}, { user });
-      expect(response.status).toBe(200);
-      expect(response.body.data.name).toBe(shop.name);
+      const response = await request('DELETE', `/1/shops/${shop.id}`, {}, { user });
+      expect(response.status).toBe(204);
+      const dbShop = await Shop.findById(shop.id);
+      expect(dbShop.deletedAt).toBeDefined();
     });
   });
 });

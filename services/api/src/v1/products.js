@@ -39,6 +39,24 @@ router
     return next();
   })
   .post(
+    '/',
+    validate({
+      body: productSchema,
+    }),
+    async (ctx) => {
+      const product = await Product.create(ctx.request.body);
+      ctx.body = {
+        data: product,
+      };
+    }
+  )
+  .get('/:productId', async (ctx) => {
+    const { product } = await ctx.state;
+    ctx.body = {
+      data: product,
+    };
+  })
+  .post(
     '/search',
     validate({
       body: Joi.object({
@@ -80,23 +98,6 @@ router
       };
     }
   )
-  .post(
-    '/',
-    validate({
-      body: productSchema,
-    }),
-    async (ctx) => {
-      const product = await Product.create(ctx.request.body);
-      ctx.body = {
-        data: product,
-      };
-    }
-  )
-  .delete('/:productId', async (ctx) => {
-    const product = ctx.state.product;
-    await product.delete();
-    ctx.status = 204;
-  })
   .patch(
     '/:productId',
     validate({
@@ -111,11 +112,10 @@ router
       };
     }
   )
-  .get('/:productId', async (ctx) => {
-    const { product } = await ctx.state;
-    ctx.body = {
-      data: product,
-    };
+  .delete('/:productId', async (ctx) => {
+    const product = ctx.state.product;
+    await product.delete();
+    ctx.status = 204;
   });
 
 module.exports = router;
