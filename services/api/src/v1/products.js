@@ -50,13 +50,17 @@ router
           field: 'createdAt',
           order: 'desc',
         }),
+        ids: Joi.array().items(Joi.string()),
         shop: Joi.string(),
         limit: Joi.number().positive().default(50),
       }),
     }),
     async (ctx) => {
-      const { sort, skip, limit, shop } = ctx.request.body;
-      const query = { deletedAt: { $exists: false } };
+      const { ids = [], sort, skip, limit, shop } = ctx.request.body;
+      const query = {
+        ...(ids.length ? { _id: { $in: ids } } : {}),
+        deletedAt: { $exists: false },
+      };
       if (shop) {
         query.shop = shop;
       }

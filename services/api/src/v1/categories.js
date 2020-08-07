@@ -27,7 +27,7 @@ router
       }),
     }),
     async (ctx) => {
-      const { sort, skip, limit, ids = [], name } = ctx.request.body;
+      const { ids = [], sort, skip, limit, name } = ctx.request.body;
       const query = {
         ...(ids.length ? { _id: { $in: ids } } : {}),
         ...(name ? { name: { $regex: name, $options: 'i' } } : {}),
