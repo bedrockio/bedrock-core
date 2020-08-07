@@ -44,6 +44,17 @@ UI is running at [http://localhost:2200/](http://localhost:2200/)
 
 All configuration is done using environment variables. The default values in `env.conf` can be overwritten using environment variables.
 
+- `NODE_ENV` - Node environment `development`
+- `BIND_HOST` - Host to bind to, defaults to `"0.0.0.0"`
+- `BIND_PORT` - Port to bind to, defaults to `2300`
+- `APP_NAME` - Default product name to be used in views
+- `API_URL` - URL for API defaults to `http://localhost:2300`
+- `ENABLE_HTTP_BASIC_AUTH` - Enable HTTP basic auth (if `yes`)
+- `HTTP_BASIC_AUTH_PATH` - Basic Auth: Path to protect
+- `HTTP_BASIC_AUTH_USER` - Basic Auth: Username
+- `HTTP_BASIC_AUTH_PASS` - Basic Auth: Password
+- `SENTRY_DSN` - Sentry error monitoring credentials
+
 All config vars are available in the `serve.js` and `serve-static.js` server-side code. In the browser-side all variables are available as a global object `window.__env_conf`.
 
 ## Frameworks Used
