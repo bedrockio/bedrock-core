@@ -41,7 +41,7 @@
       var fn = history[name];
       var evtName = name.toLowerCase();
       history[name] = function(state, title, url) {
-        if (normalize(url) !== normalize(location.href)) {
+        if (normalize(url || '') !== normalize(location.href)) {
           window.dispatchEvent(
             new CustomEvent(evtName, {
               detail: state,
