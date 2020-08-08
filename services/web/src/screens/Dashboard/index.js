@@ -1,7 +1,9 @@
 import React from 'react';
 import AppWrapper from 'components/AppWrapper';
 import { withSession } from 'stores';
+import { screen } from 'helpers';
 
+@screen
 @withSession
 export default class Home extends React.Component {
 

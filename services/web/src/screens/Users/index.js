@@ -2,6 +2,7 @@ import React from 'react';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import { Layout } from 'components/Layout';
+import { screen } from 'helpers';
 
 import { Confirm } from 'components/Semantic';
 import AppWrapper from 'components/AppWrapper';
@@ -18,6 +19,7 @@ import {
   Button,
 } from 'semantic-ui-react';
 
+@screen
 export default class Users extends React.Component {
 
   onDataNeeded = async (params) => {
