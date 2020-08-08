@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+        - image: gcr.io/bedrock-foundation/bedrock-core-services-api
+          imagePullPolicy: Always
+          name: main
+          env:
+            - name: NODE_ENV
+              value: "staging"
+            - name: MONGO_URI
+              value: "mongodb://mongo:27017/bedrock_staging"
+            - name: ADMIN_EMAIL
+              value: "admin@bedrock.foundation"
+            - name: ADMIN_PASSWORD
+              value: "development.now"
+            - name: JWT_SECRET
+              value: "changeme1234"
+            - name: APP_DOMAIN
+              value: "bedrock.foundation"
+            - name: APP_URL
+              value: "https://bedrock.foundation"
+            - name: POSTMARK_FROM
+              value: "no-reply@bedrock.foundation"
+            - name: POSTMARK_APIKEY
+              value: "abc"
+            - name: UPLOADS_STORE
+              value: "gcs"
+            - name: UPLOADS_GCS_BUCKET
+              value: "bedrock-staging-uploads"
+          ports:
+            - name: http-server
+              containerPort: 2300
+          volumeMounts:
+            - name: cache
+              mountPath: /service/data
+      volumes:
+        - name: cache
+          emptyDir: {}

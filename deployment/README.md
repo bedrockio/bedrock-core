@@ -1,23 +1,39 @@
 # Bedrock Deployment
 
-- [Setup](#setup)
-- [Existing Environments](#existing-environments)
-  - [Authorization](#authorization)
-- [New Environments](#new-environments)
-  - [Creation](#create-a-new-environment)
+- [Bedrock Deployment](#bedrock-deployment)
+  - [Setup](#setup)
+    - [Dependencies](#dependencies)
+    - [Directory Structure](#directory-structure)
+    - [Naming convention](#naming-convention)
+    - [Configuration](#configuration)
+  - [Existing Environments](#existing-environments)
+    - [Authorization](#authorization)
   - [Provisioning](#provisioning)
-  - [Configuring SSL](#configuring-ssl)
-- [Deploying](#deploying)
-  - [Rollout Deploy](#rollout-deploy)
-  - [Feature Branches](#feature-branches)
-  - [Building Docker Containers](#building-docker-containers)
-  - [Pushing Docker Containers](#pushing-docker-containers)
-- [Disaster Recovery](#disaster-recovery)
-- [Other](#other)
-  - [Configuring Backups](#configuring-backups)
-  - [Backup Monitoring System](#backup-monitoring-system)
-  - [HTTP Basic Auth](#http-basic-auth)
-  - [Secrets](#secrets)
+    - [Creating a new environment](#creating-a-new-environment)
+    - [Provision Script](#provision-script)
+    - [Directory Structure](#directory-structure-1)
+    - [Provision GKE Cluster](#provision-gke-cluster)
+    - [Create load balancer IP addresses](#create-load-balancer-ip-addresses)
+    - [Deploy all services and pods](#deploy-all-services-and-pods)
+    - [Scaling Up or Down](#scaling-up-or-down)
+    - [Destroying Environment Infrastructure](#destroying-environment-infrastructure)
+  - [Deploying](#deploying)
+    - [Rollout Deploy](#rollout-deploy)
+    - [Feature Branches](#feature-branches)
+    - [Deploy info](#deploy-info)
+    - [Building Docker Containers](#building-docker-containers)
+    - [Pushing Docker Containers](#pushing-docker-containers)
+    - [Check cluster status](#check-cluster-status)
+    - [Getting shell access](#getting-shell-access)
+  - [Disaster Recovery](#disaster-recovery)
+      - [Scenario A: Master Database Loss or Corruption](#scenario-a-master-database-loss-or-corruption)
+      - [Scenario B: Bucket Storage Loss or Corruption](#scenario-b-bucket-storage-loss-or-corruption)
+      - [Scenario C: Deletion of Google Cloud Project](#scenario-c-deletion-of-google-cloud-project)
+  - [Other](#other)
+    - [Configuring Backups](#configuring-backups)
+    - [Backup Monitoring System](#backup-monitoring-system)
+    - [HTTP Basic Auth](#http-basic-auth)
+    - [Secrets](#secrets)
 
 ## Setup
 
@@ -25,14 +41,48 @@
 
 - Make sure the `gcloud` CLI tools are available
 - Use `gcloud auth login` and `gcloud auth application-default login` to login to the right Google account
+- For provisioning we use [Terraform](https://www.terraform.io/)
 
 ### Directory Structure
 
-- `scripts/` Deployment scripts
-- `staging/` Staging environment
-- `staging/data` Data infrastructure
-- `staging/services` Micro services infrastructure
-- `staging/env.conf` Staging environment configuration
+```bash
+deployment/
+├── README.md
+├── environments # Deployment configuration per environment
+│   ├── production # Production environment
+│   │   ├── data # Data deployment
+│   │   │   ├── mongo-deployment.yml
+│   │   │   ├── mongo-service.yml
+│   │   │   └── etc...
+│   │   ├── env.conf # Staging environment configuration
+│   │   ├── provisioning
+│   │   │   ├── backend.tf # defines Google bucket to keep state
+│   │   │   ├── main.tf # Main rersource definitions (cluster, node_pool, buckets)
+│   │   │   ├── outputs.tf # Output values when running terraform commands
+│   │   │   ├── variables.tf # Defines all variables for main.tf (override per env)
+│   │   │   └── versions.tf # Defines minimum terraform version
+│   │   ├── services # Micro services deployment
+│   │   │   ├── api-deployment.yml
+│   │   │   ├── api-service.yml
+│   │   │   ├── web-deployment.yml
+│   │   │   ├── web-service.yml
+│   │   │   └── etc...
+│   └── staging # Staging environment
+│       └── etc...
+├── provisioning
+│   ├── gcp-bucket-module # Terraform bucket module
+│   │   ├── main.tf
+│   │   └── variables.tf
+│   └── gke-cluster-module # Terraform GKE cluster and node pool module
+│       ├── main.tf
+│       ├── node_pool.tf
+│       ├── outputs.tf
+│       └── variables.tf
+└── scripts # Deployment and provisioning scripts
+    ├── authorize
+    ├── build
+    └── etc...
+```
 
 ### Naming convention
 
@@ -42,7 +92,7 @@
 
 ### Configuration
 
-Each environment can be configured in `<environment>/env.conf`:
+Each environment can be configured in `environments/<environment>/env.conf`:
 
 - `GCLOUD_ENV_NAME` - Name of the environment, e.g. staging
 - `GCLOUD_BUCKET_PREFIX` - Bucket prefix used for GCS bucket creation
@@ -76,47 +126,91 @@ or
 gcloud docker --authorize-only
 ```
 
-## New Environments
+## Provisioning
+
+[Terraform](https://www.terraform.io/) is used (defining infrastructure as code) to provision the environment and create the Kubernetes cluster.
 
 ### Creating a new environment
 
-- Create a Google Cloud project (in the GC console)
-- Create a Google Kubernetes cluster (in the GC console)
-- Authorize cluster `./deployment/scripts/authorize`
-- Configure `<environment>/env.conf`
-- Create disks required for data stores, update Kubernetes files disk information
-- Use `kubectl create` to deploy all services and pods
+Create a Google Cloud project (in the [GC dashboard](https://console.cloud.google.com/home/dashboard)) or:
 
-### Getting shell access
-
-There's a default `api-cli-deployment` provided that allows you to obtain a shell. This is useful when running migration scripts in production (you can take down the API and use CLI to do operations without new reads/writes coming in):
-
-```
-kubectl exec -it <CLI-POD-ID> /bin/bash
+```bash
+gcloud projects create bedrock-staging --name="Bedrock Staging"
+gcloud config set project seltzer-box-staging
 ```
 
-Note that the `api` and `web` services can be reached as hostnames: `curl http://api`
+Configure: `environments/<environment>/env.conf`.
 
-### Provisioning Scripts
+### Provision Script
 
-Various scripts exists to create resources on Google Compute Cloud:
+There is a script that automatically takes care of the remaining steps, But you can do it manually in case of more customized environments.
+
+The following script takes an environment variable and Google Project ID:
+
+```bash
+./deployment/scripts/provision_gcloud staging bedrock-staging
+```
+
+### Directory Structure
+
+There is a `variables.tfvars` file per environment to override default vars with environment specific values, which can be found in the `environments/<environment>/` folder.
+
+### Provision GKE Cluster
+
+Requires terraform:
+
+```bash
+# MacOS terraform install
+brew install terraform
+```
+
+Note: this script can take about 5 minutes.
+
+```bash
+# Staging
+# 'init' only has to be executed the first time
+$ ./deployment/scripts/provision staging init
+# 'plan' creates an execution plan for inspection
+$ ./deployment/scripts/provision staging plan
+# 'plan' is not required before 'apply', as 'apply' runs 'plan' in the background
+$ ./deployment/scripts/provision staging apply
+```
+
+### Create load balancer IP addresses
 
 ```
-./deployment/scripts/create_buckets staging
 ./deployment/scripts/create_addresses
-./deployment/scripts/create_disks
 ```
 
-### Configuring SSL
+Update api and web deployments with static IP Addresses that were just created.
 
-Steps to enable SSL:
+### Deploy all services and pods
 
-1.  Create a certificate request `openssl req -new -newkey rsa:2048 -nodes -keyout deployment/<environment>/certificates/domain.key -out deployment/<environment>/certificates/domain.csr`
-2.  Buy an SSL certificate (e.g. GoDaddy). Use above `domain.csr` CSR. Download bundle.
-3.  Store the certificate (not the chain) as `deployment/<environment>/certificates/domain.crt`
-4.  Create certificate on Google Cloud `./deployment/scripts/create_certificate <environment>`
-5.  Make sure `api-ingress` and `web-ingress` are functioning
-6.  Use the Google Cloud Console - https://console.cloud.google.com/home/dashboard - to add frontend routes to `api-ingress` and `web-ingress`. Select above `<environment>-ssl` certificate.
+Authorize cluster (e.g. staging):
+
+```bash
+./deployment/scripts/authorize staging
+```
+
+Use `kubectl create` to deploy all services and pods
+
+### Scaling Up or Down
+
+You can change the node size of the (existing) default pool with the Terraform variable `default_pool_node_count` per environment as defined in `environments/<environment>/vaiables.tfvars`
+
+Update cluster:
+
+```
+$ ./deployment/scripts/provision staging apply
+```
+
+### Destroying Environment Infrastructure
+
+You can destroy the infrastructure for a particular environment (e.g. `staging`) with:
+
+```
+$ ./deployment/scripts/provision staging destroy
+```
 
 ## Deploying
 
@@ -203,6 +297,16 @@ Push all containers matching "api" to staging:
 ```
 ./deployment/scripts/status staging
 ```
+
+### Getting shell access
+
+There's a default `api-cli-deployment` provided that allows you to obtain a shell. This is useful when running migration scripts in production (you can take down the API and use CLI to do operations without new reads/writes coming in):
+
+```
+kubectl exec -it <CLI-POD-ID> /bin/bash
+```
+
+Note that the `api` and `web` services can be reached as hostnames: `curl http://api`
 
 ## Disaster Recovery
 
@@ -304,7 +408,7 @@ Convenience scripts for downloading and uploading secrets:
 ./deployment/scripts/get_secrets staging credentials
 ```
 
-This downloads all secret environment keys to `deployment/secrets/credentials.txt` - this folder is ignored by Git.
+This downloads all secret environment keys to `deployment/environments/staging/secrets/credentials.txt` - this folder is ignored by Git.
 
 _Security note: Never leave secret files on your machine_
 
@@ -314,4 +418,4 @@ Once you edited the `.txt` file you can upload it like so:
 ./deployment/scripts/set_secrets staging credentials
 ```
 
-This uploads and deletes the values in `deployment/secrets/credentials.txt`. You can confirm the new values using `kubectl get secret credentials -o yaml` or using `kubectl exec` and confirming the environment variables in a given pod. Pods need a restart when secrets are updated!
+This uploads and deletes the values in `deployment/environments/staging/secrets/credentials.txt`. You can confirm the new values using `kubectl get secret credentials -o yaml` or using `kubectl exec` and confirming the environment variables in a given pod. Pods need a restart when secrets are updated!

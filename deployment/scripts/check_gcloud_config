@@ -12,7 +12,7 @@ if [ "$ENVIRONMENT" == "" ]; then
   exit 1
 fi
 
-export $(grep -v '^#' deployment/$ENVIRONMENT/env.conf | xargs)
+export $(grep -v '^#' deployment/environments/$ENVIRONMENT/env.conf | xargs)
 
 CURRENT_GCLOUD_PROJECT=`gcloud config get-value project`
 CURRENT_GCLOUD_COMPUTE_ZONE=`gcloud config get-value compute/zone`
@@ -33,12 +33,12 @@ check_config () {
 
 }
 
-if [ -d deployment/secrets ]; then
-  SECRET_FILES=`ls deployment/secrets | wc -l`
+if [ -d deployment/environments/$ENVIRONMENT/secrets ]; then
+  SECRET_FILES=`ls deployment/environments/$ENVIRONMENT/secrets | wc -l`
   if [ "$SECRET_FILES" -ne 0 ]; then
     echo "---"
     echo "---"
-    echo "--- WARNING: Found files in deployments/secrets/ - make sure to remove these!"
+    echo "--- WARNING: Found files in deployment/environments/$ENVIRONMENT/secrets/ - make sure to remove these!"
     echo "---"
     echo "---"
   fi

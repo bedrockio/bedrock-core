@@ -1,4 +1,4 @@
-const Router = require('koa-router');
+const Router = require('@koa/router');
 const auth = require('./auth');
 const users = require('./users');
 const products = require('./products');

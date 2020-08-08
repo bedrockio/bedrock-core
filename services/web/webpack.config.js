@@ -7,7 +7,6 @@
 
 const path = require('path');
 const yargs = require('yargs');
-const config = require('@bedrockio/config');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
@@ -21,6 +20,8 @@ const argv = yargs.boolean('p').boolean('analyze').option('app', {
 }).argv;
 
 const DEV = !argv.p;
+
+const ENV = require('./env');
 
 if (DEV && argv.analyze) {
   throw new Error('Analyze mode must be used in production. Use yarn build --analyze.');
@@ -55,7 +56,7 @@ module.exports = {
         use: [MiniCssExtractPlugin.loader, 'css-loader', ...(DEV ? [] : ['postcss-loader']), 'less-loader'],
       },
       {
-        test: /\.(png|jpg|svg|gif|pdf|eot|ttf|woff2?)$/,
+        test: /\.(png|jpg|svg|gif|mp4|pdf|eot|ttf|woff2?)$/,
         loader: 'file-loader',
         options: {
           esModule: false,
@@ -65,6 +66,17 @@ module.exports = {
       {
         test: /\.md$/,
         use: 'raw-loader',
+      },
+      {
+        test: /\.html$/i,
+        exclude: /index\.html$/,
+        loader: path.resolve('./src/utils/loaders/templateParams'),
+        options: {
+          // Expose template params used in partials included with
+          // require('path/to/template.html') in the same way as the
+          // main template.
+          params: ENV,
+        }
       },
     ],
   },
@@ -79,8 +91,40 @@ module.exports = {
     }),
     ...getTemplatePlugins(),
     ...getOptionalPlugins(),
+
+    // Favicons plugin occasionally makes webpack build fail due with error:
+    // glib: SVG has no elements
+    //
+    // This error is intermittent and tracked here:
+    // https://github.com/jantimon/favicons-webpack-plugin/issues/200
     new FaviconsWebpackPlugin({
       logo: './src/assets/icon.svg',
+
+      // Enable this line to test PWA stuff on dev.
+      // devMode: 'webapp',
+
+      // https://github.com/itgalaxy/favicons#usage
+      favicons: {
+        appName: '',                              // Your application's name.
+        dir: 'auto',                              // Primary text direction for name, short_name, and description
+        lang: 'en-US',                            // Primary language for name and short_name
+        background: '#fff',                       // Background colour for flattened icons.
+        theme_color: '#fff',                      // Theme color user for example in Android's task switcher.
+        appleStatusBarStyle: 'black-translucent', // Style for Apple status bar: "black-translucent", "default", "black". Not actually black!.
+        display: 'fullscreen',                    // Preferred display mode: "fullscreen", "standalone", "minimal-ui" or "browser".
+        orientation: 'portrait',                  // Default orientation: "any", "natural", "portrait" or "landscape".
+        loadManifestWithCredentials: true,        // Browsers don't send cookies when fetching a manifest, enable this to fix that.
+        icons: {
+          android: true,
+          appleIcon: true,
+          appleStartup: true,
+          coast: false,
+          favicons: true,
+          firefox: true,
+          windows: true,
+          yandex: false,
+        }
+      },
     }),
   ],
 };
@@ -115,8 +159,7 @@ function getTemplatePlugins() {
       chunks: [app, 'vendor'],
       templateParameters: {
         app,
-        DEV,
-        ...config.getAll(),
+        ...ENV,
       },
       minify: {
         removeComments: false,

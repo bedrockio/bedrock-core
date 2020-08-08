@@ -25,7 +25,7 @@ export default async function request(options) {
     files.forEach((file) => {
       data.append('file', file);
     });
-    for (let [key, value] of Object.entries(body)) {
+    for (let [key, value] of Object.entries(body || {})) {
       data.append(key, value);
     }
     body = data;

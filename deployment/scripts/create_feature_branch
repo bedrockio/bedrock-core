@@ -25,12 +25,12 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-export $(grep -v '^#' deployment/$ENVIRONMENT/env.conf | xargs)
+export $(grep -v '^#' deployment/environments/$ENVIRONMENT/env.conf | xargs)
 
 function create_service() {
   r_name="s/name: $BASE_SERVICE$/name: $SERVICE/g"
   r_lb="s/^.*loadBalancerIP: .*$//g"
-  file="deployment/$ENVIRONMENT/services/$BASE_SERVICE-service.yml"
+  file="deployment/environments/$ENVIRONMENT/services/$BASE_SERVICE-service.yml"
   sed -e "$r_name" -e "$r_lb" "$file" | kubectl apply -f -
 }
 
@@ -46,7 +46,7 @@ function create_deployment() {
   else
     r_api=""
   fi
-  file="deployment/$ENVIRONMENT/services/$BASE_SERVICE-deployment.yml"
+  file="deployment/environments/$ENVIRONMENT/services/$BASE_SERVICE-deployment.yml"
   sed \
     -e "$r_name" \
     -e "$r_domain" \

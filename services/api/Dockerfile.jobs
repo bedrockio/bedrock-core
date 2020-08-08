@@ -16,5 +16,7 @@ COPY . /service
 # Set work directory to /api
 WORKDIR /service
 
+# Needed for Gcloud Storage resumable file uploads
+RUN mkdir -p /root/.config
 
 CMD ["./scripts/jobs-entrypoint.sh"]

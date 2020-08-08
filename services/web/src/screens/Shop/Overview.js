@@ -2,7 +2,9 @@ import React from 'react';
 import { Header, Table, Image } from 'semantic-ui-react';
 import { urlForUpload } from 'utils/uploads';
 import { formatDateTime } from 'utils/date';
+import { screen } from 'helpers';
 
+@screen
 export default class ShopOverview extends React.Component {
   render() {
     const { shop } = this.props;

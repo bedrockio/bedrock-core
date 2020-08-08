@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: backup-monitor-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: backup-monitor
+    spec:
+      containers:
+        - image: dominiek/backup-monitor
+          imagePullPolicy: Always
+          name: main
+          env:
+            - name: GS_BUCKETS
+              value: "bedrock-staging-uploads bedrock-staging-mongodb-backups"
+            - name: POSTMARK_API_KEY
+              value: "abc"
+            - name: POSTMARK_FROM
+              value: "admin@bedrock.foundation"
+            - name: EMAIL_ALERT
+              value: "admin@bedrock.foundation"
+            - name: EMAIL_HEALTH_CHECK
+              value: "admin@bedrock.foundation"
+            - name: ENVIRONMENT
+              value: "staging"

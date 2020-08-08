@@ -1,0 +1,129 @@
+#!/bin/bash
+
+FIND=$1
+REPLACE=$2
+
+if [ "$FIND" == "" ] || [ "$1" == "" ]; then
+  echo "Usage: $0 <find> <replace>"
+  exit 1
+fi
+
+if ! [ -x "$(command -v rename)" ]; then
+  echo 'Error: rename is not installed.' >&2
+  exit 1
+fi
+
+prompt() {
+  local VALUE
+  printf "\e[1m$1\e[m" >&2
+  read VALUE
+  echo "$VALUE"
+}
+
+instances() {
+  echo `find . -not -path '*node_modules*' -and \( -name '*.js' -or -name '*.json' -or -name '*.md' \) -exec grep -H $1 {} \; | wc -l`
+}
+
+replace_instances_dry() {
+  find . -not -path '*node_modules*' -and \( -name '*.js' -or -name '*.json' -or -name '*.md' \) -exec grep --color=always -H $1 {} \;
+}
+
+replace_instances() {
+  find . -not -path '*node_modules*' -and \( -name '*.js' -or -name '*.json' -or -name '*.md' \) -exec sed -i '' -e 's/'$1'/'$2'/g' {} \;
+}
+
+files() {
+  echo `find . -name '*.js*' -not -path '*node_modules*' | grep $1 | wc -l`
+}
+
+replace_files_dry() {
+  rename -n s/$1/$2/g `find . -name '*.*' -not -path '*node_modules*' `
+}
+
+replace_files() {
+  rename -p s/$1/$2/g `find . -name '*.*' -not -path '*node_modules*' `
+}
+
+FIND_KEBAB=`echo $FIND | tr '[:upper:]' '[:lower:]' | sed -e 's/\ /-/g'`
+REPLACE_KEBAB=`echo $REPLACE | tr '[:upper:]' '[:lower:]' | sed -e 's/\ /-/g'`
+FIND_UNDER=`echo $FIND | tr '[:upper:]' '[:lower:]' | sed -e 's/\ /_/g'`
+REPLACE_UNDER=`echo $REPLACE | tr '[:upper:]' '[:lower:]' | sed -e 's/\ /_/g'`
+FIND_UPPER=`echo $FIND | tr '[:lower:]' '[:upper:]'`
+REPLACE_UPPER=`echo $REPLACE | tr '[:lower:]' '[:upper:]'`
+FIND_LOWER=`echo $FIND | tr '[:upper:]' '[:lower:]'`
+REPLACE_LOWER=`echo $REPLACE | tr '[:upper:]' '[:lower:]'`
+
+NUM_INSTANCES=`instances $FIND`
+NUM_FILES=`files $FIND`
+echo "Substitution 1: Exact case $FIND with $REPLACE: $NUM_INSTANCES instances, $NUM_FILES file renames"
+
+if [[ "$STR" == *"-"* ]]; then
+  NUM_KEBAB_INSTANCES=`instances $FIND_KEBAB`
+  NUM_KEBAB_FILES=`files $FIND_KEBAB`
+  echo "Substitution 2: Kebab case $FIND_KEBAB with $REPLACE_KEBAB: $NUM_KEBAB_INSTANCES instances, $NUM_KEBAB_FILES file renames"
+fi
+
+if [[ "$STR" == *"_"* ]]; then
+  NUM_UNDER_INSTANCES=`instances $FIND_UNDER`
+  NUM_UNDER_FILES=`files $FIND_UNDER`
+  echo "Substitution 3: Underscore case $FIND_UNDER with $REPLACE_UNDER: $NUM_UNDER_INSTANCES instances, $NUM_UNDER_FILES file renames"
+fi
+
+NUM_UPPER_INSTANCES=`instances $FIND_UPPER`
+NUM_UPPER_FILES=`files $FIND_UPPER`
+echo "Substitution 4: Upper case $FIND_UPPER with $REPLACE_UPPER: $NUM_UPPER_INSTANCES instances, $NUM_UPPER_FILES file renames"
+
+NUM_LOWER_INSTANCES=`instances $FIND_LOWER`
+NUM_LOWER_FILES=`files $FIND_LOWER`
+echo "Substitution 5: Lower case $FIND_LOWER with $REPLACE_LOWER: $NUM_LOWER_INSTANCES instances, $NUM_LOWER_FILES file renames"
+
+replace_instances_dry $FIND $REPLACE
+if [[ "$STR" == *"-"* ]]; then
+  replace_instances_dry $FIND_KEBAB $REPLACE_KEBAB
+fi
+if [[ "$STR" == *"-"* ]]; then
+  replace_instances_dry $FIND_UNDER $REPLACE_UNDER
+fi
+replace_instances_dry $FIND_UPPER $REPLACE_UPPER
+replace_instances_dry $FIND_LOWER $REPLACE_LOWER
+
+printf "\e[37m"
+replace_files_dry $FIND $REPLACE
+if [[ "$STR" == *"-"* ]]; then
+  replace_files_dry $FIND_KEBAB $REPLACE_KEBAB
+fi
+if [[ "$STR" == *"-"* ]]; then
+  replace_files_dry $FIND_UNDER $REPLACE_UNDER
+fi
+replace_files_dry $FIND_UPPER $REPLACE_UPPER
+replace_files_dry $FIND_LOWER $REPLACE_LOWER
+printf "\e[m"
+
+PROCEED=$(prompt "Proceed? [y|n] ")
+
+if [ "$PROCEED" == "y" ]; then
+  echo "Proceeding"
+  replace_instances $FIND $REPLACE
+  if [[ "$STR" == *"-"* ]]; then
+    replace_instances $FIND_KEBAB $REPLACE_KEBAB
+  fi
+  if [[ "$STR" == *"-"* ]]; then
+    replace_instances $FIND_UNDER $REPLACE_UNDER
+  fi
+  replace_instances $FIND_UPPER $REPLACE_UPPER
+  replace_instances $FIND_LOWER $REPLACE_LOWER
+  replace_files $FIND $REPLACE
+  if [[ "$STR" == *"-"* ]]; then
+    replace_files $FIND_KEBAB $REPLACE_KEBAB
+  fi
+  if [[ "$STR" == *"-"* ]]; then
+    replace_files $FIND_UNDER $REPLACE_UNDER
+  fi
+  replace_files $FIND_UPPER $REPLACE_UPPER
+  replace_files $FIND_LOWER $REPLACE_LOWER
+  echo "All done"
+  exit 0
+fi
+  echo "Aborting"
+  exit 1
+fi
