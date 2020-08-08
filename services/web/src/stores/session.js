@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { merge, omit } from 'lodash';
 import { request } from 'utils/api';
 
@@ -21,21 +21,25 @@ export class SessionProvider extends React.PureComponent {
   }
 
   isAdmin = () => {
-    return this.hasRole('admin');
+    return this.hasRoles(['admin']);
   };
 
-  hasRole = (role) => {
+  hasRoles = (roles = []) => {
     const { user } = this.state;
-    return user?.roles.includes(role);
+    return roles.some((role) => {
+      return user?.roles.includes(role);
+    });
+  };
+
+  hasRoles = (role) => {
+    return this.hasRoles([role]);
   };
 
   setToken = async (token) => {
     if (token) {
       localStorage.setItem('jwt', token);
-      await this.loadUser();
     } else {
       localStorage.removeItem('jwt');
-      this.clearUser();
     }
   };
 
@@ -62,6 +66,7 @@ export class SessionProvider extends React.PureComponent {
       }
     } else {
       this.setState({
+        user: null,
         loading: false,
       });
     }
@@ -79,9 +84,11 @@ export class SessionProvider extends React.PureComponent {
     });
   };
 
-  addStored = (data) => {
+  addStored = (key, data) => {
     this.setStored(
-      merge({}, this.state.stored, data)
+      merge({}, this.state.stored, {
+        [key]: data
+      })
     );
   };
 
@@ -130,8 +137,9 @@ export class SessionProvider extends React.PureComponent {
           clearStored: this.clearStored,
           updateUser: this.updateUser,
           loadUser: this.loadUser,
-          isAdmin: this.isAdmin,
+          hasRoles: this.hasRoles,
           hasRole: this.hasRole,
+          isAdmin: this.isAdmin,
         }}>
         {this.props.children}
       </SessionContext.Provider>
@@ -175,4 +183,8 @@ export function withLoadedSession(Component) {
       return this.context.loading ? null : <Component {...this.props} />;
     }
   };
+}
+
+export function useSession() {
+  return useContext(SessionContext);
 }

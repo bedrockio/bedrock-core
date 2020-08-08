@@ -1,0 +1,5 @@
+{
+  "GET /1/users/me": {
+    "name": "Bob"
+  }
+}
