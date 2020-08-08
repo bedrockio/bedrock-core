@@ -19,7 +19,7 @@
 
 ## Intro
 
-Google Tag Manager is an advanced tool that enables complex tracking with minimal code changes.
+Google Tag Manager is an advanced tool that allows custom triggers to send tracking data to a variety of services, most commonly Google Analytics.
 
 ### Advantages:
 
@@ -119,7 +119,6 @@ Request events are fired on every successful interaction with the API. They are 
 
 Setup:
 
-- Uncomment the tracking code in `services/web/src/utils/api/request.js`.
 - To start using request events, create two new custom variables of type `Data Layer Variable` called `Request Method` and `Request Path`. Set these to `request.method` and `request.path` respectively.
 
 Create new request event:
@@ -143,7 +142,6 @@ Session events are similar to request events but are triggered when data is adde
 
 Setup:
 
-- Uncomment the `trackSession` tracking code in `services/web/src/stores/session.js`.
 - Create two new custom variables of type `Data Layer Variable` called `Session Action` and `Session Key`. Set these to `action` and `key` respectively.
 
 Create new session event:

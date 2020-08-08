@@ -1,8 +1,6 @@
 import { API_URL } from 'utils/env';
 import { ApiError, ApiParseError } from './errors';
-
-// Stub to enable analytics
-// import { trackRequest } from '../analytics';
+import { trackRequest } from '../analytics';
 
 export default async function request(options) {
   const { method = 'GET', path, files, params } = options;
@@ -62,8 +60,7 @@ export default async function request(options) {
 
   try {
     const response = await res.json();
-    // Stub to track requests
-    // trackRequest(options, response.data);
+    trackRequest(options, response.data);
     return response;
   } catch (err) {
     throw new ApiParseError();
