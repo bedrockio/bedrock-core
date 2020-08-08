@@ -1,4 +1,4 @@
-# GTM Tracking
+# Tracking with Google Tag Manager / Google Analytics
 
 - [Intro](#intro)
 - [Setup](#setup)
