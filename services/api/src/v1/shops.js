@@ -109,7 +109,7 @@ router
     }),
     async (ctx) => {
       const shop = ctx.state.shop;
-      Object.assign(shop, ctx.request.body);
+      shop.assign(ctx.request.body);
       await shop.save();
       await shop.execPopulate();
       ctx.body = {
