@@ -7,8 +7,4 @@ const schema = createSchema({
   status: { type: String },
 });
 
-schema.methods.assign = function assign(fields) {
-  Object.assign(this, omit(fields, ['createdAt', 'updatedAt', 'deletedAt', 'id']));
-};
-
 module.exports = mongoose.models.Invite || mongoose.model('Invite', schema);

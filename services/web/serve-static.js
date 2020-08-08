@@ -1,7 +1,6 @@
 const Koa = require('koa');
 const koaLogger = require('koa-logger');
 const koaMount = require('koa-mount');
-const koaCompress = require('koa-compress');
 const koaBasicAuth = require('koa-basic-auth');
 const envMiddleware = require('./src/utils/middleware/env');
 const assetsMiddleware = require('./src/utils/middleware/assets');
@@ -19,7 +18,7 @@ const {
   HTTP_BASIC_AUTH_USER,
   HTTP_BASIC_AUTH_PASS,
   publicEnv,
-} = require('./config');
+} = require('./env');
 
 const app = new Koa();
 
@@ -35,13 +34,12 @@ if (ENABLE_HTTP_BASIC_AUTH) {
       HTTP_BASIC_AUTH_PATH,
       koaBasicAuth({
         user: HTTP_BASIC_AUTH_USER,
-        pass: HTTP_BASIC_AUTH_PASS
+        pass: HTTP_BASIC_AUTH_PASS,
       })
     )
   );
 }
 
-app.use(koaCompress());
 app.use(koaMount('/assets/', assetsMiddleware('./dist/assets')));
 app.use(koaLogger());
 app.use(envMiddleware(publicEnv));
@@ -50,7 +48,5 @@ app.use(templateMiddleware({ apps: ['/'] }));
 
 app.listen(BIND_PORT, BIND_HOST, (err) => {
   if (err) throw err;
-  console.info(
-    `🐬  Prod App server listening at http://${BIND_HOST}:${BIND_PORT} 🐬\r\n\r\n`
-  );
+  console.info(`🐬  Prod App server listening at http://${BIND_HOST}:${BIND_PORT} 🐬\r\n\r\n`);
 });

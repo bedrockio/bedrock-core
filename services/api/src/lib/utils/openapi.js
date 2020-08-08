@@ -1,8 +1,10 @@
 const fs = require('fs');
-const { convert } = require('@yeongjet/joi-to-json-schema');
+
 const config = require('@bedrockio/config');
 
 function getParamsFromValidationMiddleware(validationMiddleware, type) {
+  const { convert } = require('@yeongjet/joi-to-json-schema');
+
   try {
     const params = [];
     const { schemas } = validationMiddleware;

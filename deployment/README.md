@@ -10,12 +10,13 @@
     - [Authorization](#authorization)
   - [Provisioning](#provisioning)
     - [Creating a new environment](#creating-a-new-environment)
-    - [Install Terraform](#install-terraform)
+    - [Provision Script](#provision-script)
     - [Directory Structure](#directory-structure-1)
     - [Provision GKE Cluster](#provision-gke-cluster)
     - [Create load balancer IP addresses](#create-load-balancer-ip-addresses)
     - [Deploy all services and pods](#deploy-all-services-and-pods)
     - [Scaling Up or Down](#scaling-up-or-down)
+    - [Destroying Environment Infrastructure](#destroying-environment-infrastructure)
   - [Deploying](#deploying)
     - [Rollout Deploy](#rollout-deploy)
     - [Feature Branches](#feature-branches)
@@ -54,21 +55,29 @@ deployment/
 │   │   │   ├── mongo-service.yml
 │   │   │   └── etc...
 │   │   ├── env.conf # Staging environment configuration
+│   │   ├── provisioning
+│   │   │   ├── backend.tf # defines Google bucket to keep state
+│   │   │   ├── main.tf # Main rersource definitions (cluster, node_pool, buckets)
+│   │   │   ├── outputs.tf # Output values when running terraform commands
+│   │   │   ├── variables.tf # Defines all variables for main.tf (override per env)
+│   │   │   └── versions.tf # Defines minimum terraform version
 │   │   ├── services # Micro services deployment
 │   │   │   ├── api-deployment.yml
 │   │   │   ├── api-service.yml
 │   │   │   ├── web-deployment.yml
 │   │   │   ├── web-service.yml
 │   │   │   └── etc...
-│   │   └── variables.tfvars # Staging provisioning variables
 │   └── staging # Staging environment
 │       └── etc...
 ├── provisioning
-│   ├── backend.tf # defines Google bucket to keep state
-│   ├── main.tf # Main rersource definitions (cluster, node_pool, buckets)
-│   ├── outputs.tf # Output values when running terraform commands
-│   ├── variables.tf # Defines all variables for main.tf (override per env)
-│   └── versions.tf # Defines minimum terraform version
+│   ├── gcp-bucket-module # Terraform bucket module
+│   │   ├── main.tf
+│   │   └── variables.tf
+│   └── gke-cluster-module # Terraform GKE cluster and node pool module
+│       ├── main.tf
+│       ├── node_pool.tf
+│       ├── outputs.tf
+│       └── variables.tf
 └── scripts # Deployment and provisioning scripts
     ├── authorize
     ├── build
@@ -123,45 +132,48 @@ gcloud docker --authorize-only
 
 ### Creating a new environment
 
-Create a Google Cloud project (in the [GC dashboard console](https://console.cloud.google.com/home/dashboard)) or:
+Create a Google Cloud project (in the [GC dashboard](https://console.cloud.google.com/home/dashboard)) or:
 
 ```bash
-gcloud projects create bedrock-staging --name="Bedrock Staging"`
+gcloud projects create bedrock-staging --name="Bedrock Staging"
+gcloud config set project seltzer-box-staging
 ```
 
-Configure: `environments/<environment>/env.conf` and `environments/<environment>/variables.tfvars`
+Configure: `environments/<environment>/env.conf`.
 
-### Install Terraform
+### Provision Script
+
+There is a script that automatically takes care of the remaining steps, But you can do it manually in case of more customized environments.
+
+The following script takes an environment variable and Google Project ID:
+
+```bash
+./deployment/scripts/provision_gcloud staging bedrock-staging
+```
+
+### Directory Structure
+
+There is a `variables.tfvars` file per environment to override default vars with environment specific values, which can be found in the `environments/<environment>/` folder.
+
+### Provision GKE Cluster
+
+Requires terraform:
 
 ```bash
 # MacOS terraform install
 brew install terraform
 ```
 
-### Directory Structure
-
-
-
-There is also a `variables.tfvars` file per environment to override default vars with environment specific values, which can be found in the `environments/<environment>/` folder.
-
-### Provision GKE Cluster
-
 Note: this script can take about 5 minutes.
 
 ```bash
 # Staging
-# terraform init only has to be executed the first time
+# 'init' only has to be executed the first time
 $ ./deployment/scripts/provision staging init
-
+# 'plan' creates an execution plan for inspection
 $ ./deployment/scripts/provision staging plan
+# 'plan' is not required before 'apply', as 'apply' runs 'plan' in the background
 $ ./deployment/scripts/provision staging apply
-
-# Production
-# terraform init only has to be executed the first time
-$ ./deployment/scripts/provision production init
-
-$ ./deployment/scripts/provision production plan
-$ ./deployment/scripts/provision production apply
 ```
 
 ### Create load balancer IP addresses
@@ -187,8 +199,17 @@ Use `kubectl create` to deploy all services and pods
 You can change the node size of the (existing) default pool with the Terraform variable `default_pool_node_count` per environment as defined in `environments/<environment>/vaiables.tfvars`
 
 Update cluster:
+
 ```
 $ ./deployment/scripts/provision staging apply
+```
+
+### Destroying Environment Infrastructure
+
+You can destroy the infrastructure for a particular environment (e.g. `staging`) with:
+
+```
+$ ./deployment/scripts/provision staging destroy
 ```
 
 ## Deploying

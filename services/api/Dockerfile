@@ -22,5 +22,8 @@ ENV PORT 2300
 # expose the port to outside world
 EXPOSE  2300
 
+# Needed for Gcloud Storage resumable file uploads
+RUN mkdir -p /root/.config
+
 # start command as per package.json
 CMD ["node", "src/index"]

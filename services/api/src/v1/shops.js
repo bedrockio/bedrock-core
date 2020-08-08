@@ -1,4 +1,4 @@
-const Router = require('koa-router');
+const Router = require('@koa/router');
 const Joi = require('@hapi/joi');
 const validate = require('../middlewares/validate');
 const { authenticate, fetchUser } = require('../middlewares/authenticate');
@@ -12,7 +12,7 @@ const schema = Joi.object({
   description: Joi.string(),
   images: Joi.array().items(Joi.string()),
   categories: Joi.array().items(Joi.string()),
-  country: Joi.string()
+  country: Joi.string(),
 });
 
 const patchSchema = schema.append({
@@ -23,7 +23,7 @@ const patchSchema = schema.append({
   country: Joi.string(),
   createdAt: Joi.date().strip(),
   updatedAt: Joi.date().strip(),
-  deletedAt: Joi.date().strip()
+  deletedAt: Joi.date().strip(),
 });
 
 router
@@ -47,17 +47,13 @@ router
         skip: Joi.number().default(0),
         sort: Joi.object({
           field: Joi.string().required(),
-          order: Joi.string()
-            .valid('asc', 'desc')
-            .required()
+          order: Joi.string().valid('asc', 'desc').required(),
         }).default({
           field: 'createdAt',
-          order: 'desc'
+          order: 'desc',
         }),
-        limit: Joi.number()
-          .positive()
-          .default(50)
-      })
+        limit: Joi.number().positive().default(50),
+      }),
     }),
     async (ctx) => {
       const { sort, skip, limit, country, startAt, endAt } = ctx.request.body;
@@ -85,20 +81,20 @@ router
         meta: {
           total,
           skip,
-          limit
-        }
+          limit,
+        },
       };
     }
   )
   .post(
     '/',
     validate({
-      body: schema
+      body: schema,
     }),
     async (ctx) => {
       const shop = await Shop.create(ctx.request.body);
       ctx.body = {
-        data: shop
+        data: shop,
       };
     }
   )
@@ -109,22 +105,22 @@ router
   .patch(
     '/:shopId',
     validate({
-      body: patchSchema
+      body: patchSchema,
     }),
     async (ctx) => {
       const shop = ctx.state.shop;
-      Object.assign(shop, ctx.request.body);
+      shop.assign(ctx.request.body);
       await shop.save();
       await shop.execPopulate();
       ctx.body = {
-        data: shop
+        data: shop,
       };
     }
   )
   .get('/:shopId', async (ctx) => {
     const shop = ctx.state.shop;
     ctx.body = {
-      data: shop
+      data: shop,
     };
   });
 

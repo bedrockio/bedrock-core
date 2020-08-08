@@ -31,7 +31,7 @@ export class SessionProvider extends React.PureComponent {
     });
   };
 
-  hasRoles = (role) => {
+  hasRole = (role) => {
     return this.hasRoles([role]);
   };
 

@@ -20,12 +20,12 @@ export default class Layout extends React.Component {
   }
 
   getClassNames(propClassName) {
-    const classNames = ['layout'];
+    const classNames = ['ui', 'layout'];
     if (propClassName) {
       classNames.push(propClassName);
     }
-    for (let name of Object.keys(Layout.propTypes)) {
-      if (name in this.props) {
+    for (let [name, value] of Object.entries(Layout.propTypes)) {
+      if (value === PropTypes.bool && name in this.props) {
         classNames.push(name);
       }
     }
@@ -33,10 +33,11 @@ export default class Layout extends React.Component {
   }
 
   render() {
+    const { as: Component } = this.props;
     return (
-      <div {...this.getProps()}>
+      <Component {...this.getProps()}>
         {this.props.children}
-      </div>
+      </Component>
     );
   }
 
@@ -57,4 +58,12 @@ Layout.propTypes = {
   right: PropTypes.bool,
   extra: PropTypes.bool,
   top: PropTypes.bool,
+  as: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.elementType,
+  ]),
+};
+
+Layout.defaultProps = {
+  as: 'div',
 };

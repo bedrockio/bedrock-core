@@ -39,10 +39,6 @@ schema.methods.verifyPassword = function verifyPassword(password) {
   return bcrypt.compare(password, this.hashedPassword);
 };
 
-schema.methods.assign = function assign(fields) {
-  Object.assign(this, omit(fields, ['createdAt', 'updatedAt', 'deletedAt', 'id', 'hashedPassword'], {}));
-};
-
 schema.virtual('password').set(function setPassword(password) {
   this._password = password;
 });

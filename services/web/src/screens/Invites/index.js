@@ -1,6 +1,7 @@
 import React from 'react';
 import { request } from 'utils/api';
 import { formatDateTime } from 'utils/date';
+import { screen } from 'helpers';
 
 import { SearchProvider } from 'components/data';
 import { Layout } from 'components/Layout';
@@ -16,6 +17,7 @@ import {
   Message,
 } from 'semantic-ui-react';
 
+@screen
 export default class Home extends React.Component {
 
   onDataNeeded = async (params) => {

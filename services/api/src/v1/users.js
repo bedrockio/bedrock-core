@@ -1,4 +1,4 @@
-const Router = require('koa-router');
+const Router = require('@koa/router');
 const Joi = require('@hapi/joi');
 const User = require('../models/user');
 const validate = require('../middlewares/validate');
@@ -24,7 +24,7 @@ router
   })
   .get('/me', (ctx) => {
     ctx.body = {
-      data: ctx.state.authUser
+      data: ctx.state.authUser,
     };
   })
   .patch(
@@ -32,15 +32,15 @@ router
     validate({
       body: Joi.object({
         name: Joi.string(),
-        timeZone: Joi.string()
-      })
+        timeZone: Joi.string(),
+      }),
     }),
     async (ctx) => {
       const { authUser } = ctx.state;
-      Object.assign(authUser, ctx.request.body);
+      authUser.assign(ctx.request.body);
       await authUser.save();
       ctx.body = {
-        data: authUser
+        data: authUser,
       };
     }
   )
@@ -55,15 +55,13 @@ router
         skip: Joi.number().default(0),
         sort: Joi.object({
           field: Joi.string().required(),
-          order: Joi.string().required()
+          order: Joi.string().required(),
         }).default({
           field: 'createdAt',
-          order: 'desc'
+          order: 'desc',
         }),
-        limit: Joi.number()
-          .positive()
-          .default(50)
-      })
+        limit: Joi.number().positive().default(50),
+      }),
     }),
     async (ctx) => {
       const { sort, skip, limit, startAt, endAt, role } = ctx.request.body;
@@ -91,8 +89,8 @@ router
         meta: {
           total,
           skip,
-          limit
-        }
+          limit,
+        },
       };
     }
   )
@@ -100,14 +98,11 @@ router
     '/',
     validate({
       body: Joi.object({
-        email: Joi.string()
-          .lowercase()
-          .email()
-          .required(),
+        email: Joi.string().lowercase().email().required(),
         name: Joi.string().required(),
         roles: Joi.array().items(Joi.string()),
-        password: passwordField.required()
-      })
+        password: passwordField.required(),
+      }),
     }),
     async (ctx) => {
       const { email } = ctx.request.body;
@@ -118,7 +113,7 @@ router
       const user = await User.create(ctx.request.body);
 
       ctx.body = {
-        data: user
+        data: user,
       };
     }
   )
@@ -136,21 +131,21 @@ router
         name: Joi.string(),
         roles: Joi.array().items(Joi.string()),
         createdAt: Joi.date().strip(),
-        updatedAt: Joi.date().strip()
-      })
+        updatedAt: Joi.date().strip(),
+      }),
     }),
     async (ctx) => {
       const { user } = ctx.state;
       user.assign(ctx.request.body);
       await user.save();
       ctx.body = {
-        data: user
+        data: user,
       };
     }
   )
   .get('/:userId', async (ctx) => {
     ctx.body = {
-      data: ctx.state.user
+      data: ctx.state.user,
     };
   });
 
