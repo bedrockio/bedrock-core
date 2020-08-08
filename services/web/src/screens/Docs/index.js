@@ -1,5 +1,4 @@
 import React, { createRef } from 'react';
-import AppWrapper from 'components/AppWrapper';
 import { Container, Menu, Message, Breadcrumb, Divider, Grid, Sticky, Ref, Segment } from 'semantic-ui-react';
 import { Switch, Route, Link, NavLink } from 'react-router-dom';
 import StandardPage from './StandardPage';
@@ -105,15 +104,13 @@ export default class Docs extends React.Component {
 
     if (!page)
       return (
-        <AppWrapper>
-          <Container>
-            <Message error content="Page not found" />
-          </Container>
-        </AppWrapper>
+        <Container>
+          <Message error content="Page not found" />
+        </Container>
       );
 
     return (
-      <AppWrapper>
+      <React.Fragment>
         <Container>
           <Breadcrumb size="big">
             <Breadcrumb.Section link as={Link} to="/">
@@ -161,7 +158,7 @@ export default class Docs extends React.Component {
           </Grid.Row>
         </Grid>
         <Divider hidden />
-      </AppWrapper>
+      </React.Fragment>
     );
   }
 

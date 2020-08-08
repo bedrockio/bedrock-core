@@ -98,7 +98,7 @@ module.exports = {
     // This error is intermittent and tracked here:
     // https://github.com/jantimon/favicons-webpack-plugin/issues/200
     new FaviconsWebpackPlugin({
-      logo: './src/assets/icon.svg',
+      logo: './src/assets/favicon.svg',
 
       // Enable this line to test PWA stuff on dev.
       // devMode: 'webapp',

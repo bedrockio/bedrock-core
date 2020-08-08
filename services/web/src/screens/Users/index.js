@@ -5,11 +5,10 @@ import { Layout } from 'components/Layout';
 import { screen } from 'helpers';
 
 import { Confirm } from 'components/Semantic';
-import AppWrapper from 'components/AppWrapper';
+import SearchProvider from 'components/SearchProvider';
 import HelpTip from 'components/HelpTip';
-import EditUser from 'components/modals/EditUser';
-import Filters from 'components/modals/Filters';
-import { SearchProvider } from 'components/data';
+import EditUser from 'modals/EditUser';
+import Filters from 'modals/Filters';
 
 import {
   Container,
@@ -32,23 +31,22 @@ export default class Users extends React.Component {
 
   render() {
     return (
-      <AppWrapper>
-        <SearchProvider onDataNeeded={this.onDataNeeded}>
-          {({ items, getSorted, setSort, filters, setFilters, reload }) => {
-            return (
-              <Container>
-                <div style={{float: 'right', marginTop: '-5px'}}>
-                </div>
-                <Header as="h2">
-                  <Layout horizontal center spread>
-                    Users
-                    <Layout.Group>
-                      <Filters
-                        onSave={setFilters}
-                        filters={filters}
-                        fields={[
-                          {
-                            text: 'Role',
+      <SearchProvider onDataNeeded={this.onDataNeeded}>
+        {({ items, getSorted, setSort, filters, setFilters, reload }) => {
+          return (
+            <Container>
+              <div style={{float: 'right', marginTop: '-5px'}}>
+              </div>
+              <Header as="h2">
+                <Layout horizontal center spread>
+                  Users
+                  <Layout.Group>
+                    <Filters
+                      onSave={setFilters}
+                      filters={filters}
+                      fields={[
+                        {
+                          text: 'Role',
                             name: 'role',
                             options: [
                               {
@@ -60,110 +58,109 @@ export default class Users extends React.Component {
                                 value: 'admin',
                               }
                             ]
-                          }
-                        ]}
-                      />
-                      <EditUser
-                        trigger={
-                          <Button
-                            primary
-                            content="New User"
-                            icon="plus"
-                          />
                         }
-                        onSave={reload}
-                      />
-                    </Layout.Group>
-                  </Layout>
-                </Header>
-                {items.length === 0 ? (
-                  <Message>No users added yet</Message>
-                ) : (
-                  <Table celled sortable>
-                    <Table.Header>
-                      <Table.Row>
-                        <Table.HeaderCell
-                          width={3}
-                          onClick={() => setSort('name')}
-                          sorted={getSorted('name')}>
-                          Name
-                        </Table.HeaderCell>
-                        <Table.HeaderCell
-                          width={3}
-                          onClick={() => setSort('email')}
-                          sorted={getSorted('email')}>
-                          Email
-                        </Table.HeaderCell>
-                        <Table.HeaderCell
-                          width={3}
-                          onClick={() => setSort('roles')}
-                          sorted={getSorted('roles')}>
-                          Roles
-                        </Table.HeaderCell>
-                        <Table.HeaderCell
-                          onClick={() => setSort('createdAt')}
-                          sorted={getSorted('createdAt')}>
-                          Joined
-                          <HelpTip
-                            title="Joined"
-                            text="This is the date and time the user was created."
-                          />
-                        </Table.HeaderCell>
-                        <Table.HeaderCell textAlign="center">
-                          Actions
-                        </Table.HeaderCell>
-                      </Table.Row>
-                    </Table.Header>
-                    <Table.Body>
-                      {items.map((item) => {
-                        return (
-                          <Table.Row key={item.id}>
-                            <Table.Cell>{item.name}</Table.Cell>
-                            <Table.Cell>{item.email}</Table.Cell>
-                            <Table.Cell>
-                              {item.roles
-                                  .map((r) => r.slice(0, 1).toUpperCase() + r.slice(1))
-                                  .join(', ')}
-                                </Table.Cell>
-                                <Table.Cell>{formatDateTime(item.createdAt)}</Table.Cell>
-                                <Table.Cell textAlign="center">
-                                  <EditUser
-                                    item={item}
-                                    trigger={
-                                      <Button
-                                        style={{ marginLeft: '20px' }}
-                                        basic
-                                        icon="edit"
-                                      />
-                                    }
-                                    onSave={reload}
-                                  />
-                                  <Confirm
-                                    negative
-                                    confirmText="Delete"
-                                    header={`Are you sure you want to delete "${item.name}"?`}
-                                    content="All data will be permanently deleted"
-                                    trigger={<Button basic icon="trash" />}
-                                    onConfirm={async () => {
-                                      await request({
-                                        method: 'DELETE',
-                                        path: `/1/users/${item.id}`
-                                      });
-                                      reload();
-                                    }}
-                                  />
-                                </Table.Cell>
-                              </Table.Row>
-                        );
-                      })}
-                    </Table.Body>
-                  </Table>
-                )}
-              </Container>
-            );
-          }}
-        </SearchProvider>
-      </AppWrapper>
+                      ]}
+                    />
+                    <EditUser
+                      trigger={
+                        <Button
+                          primary
+                          content="New User"
+                          icon="plus"
+                        />
+                      }
+                      onSave={reload}
+                    />
+                  </Layout.Group>
+                </Layout>
+              </Header>
+              {items.length === 0 ? (
+                <Message>No users added yet</Message>
+              ) : (
+                <Table celled sortable>
+                  <Table.Header>
+                    <Table.Row>
+                      <Table.HeaderCell
+                        width={3}
+                        onClick={() => setSort('name')}
+                        sorted={getSorted('name')}>
+                        Name
+                      </Table.HeaderCell>
+                      <Table.HeaderCell
+                        width={3}
+                        onClick={() => setSort('email')}
+                        sorted={getSorted('email')}>
+                        Email
+                      </Table.HeaderCell>
+                      <Table.HeaderCell
+                        width={3}
+                        onClick={() => setSort('roles')}
+                        sorted={getSorted('roles')}>
+                        Roles
+                      </Table.HeaderCell>
+                      <Table.HeaderCell
+                        onClick={() => setSort('createdAt')}
+                        sorted={getSorted('createdAt')}>
+                        Joined
+                        <HelpTip
+                          title="Joined"
+                          text="This is the date and time the user was created."
+                        />
+                      </Table.HeaderCell>
+                      <Table.HeaderCell textAlign="center">
+                        Actions
+                      </Table.HeaderCell>
+                    </Table.Row>
+                  </Table.Header>
+                  <Table.Body>
+                    {items.map((item) => {
+                      return (
+                        <Table.Row key={item.id}>
+                          <Table.Cell>{item.name}</Table.Cell>
+                          <Table.Cell>{item.email}</Table.Cell>
+                          <Table.Cell>
+                            {item.roles
+                                .map((r) => r.slice(0, 1).toUpperCase() + r.slice(1))
+                                .join(', ')}
+                          </Table.Cell>
+                          <Table.Cell>{formatDateTime(item.createdAt)}</Table.Cell>
+                          <Table.Cell textAlign="center">
+                            <EditUser
+                              item={item}
+                              trigger={
+                                <Button
+                                  style={{ marginLeft: '20px' }}
+                                  basic
+                                  icon="edit"
+                                />
+                              }
+                              onSave={reload}
+                            />
+                            <Confirm
+                              negative
+                              confirmText="Delete"
+                              header={`Are you sure you want to delete "${item.name}"?`}
+                              content="All data will be permanently deleted"
+                              trigger={<Button basic icon="trash" />}
+                              onConfirm={async () => {
+                                await request({
+                                  method: 'DELETE',
+                                  path: `/1/users/${item.id}`
+                                });
+                                reload();
+                              }}
+                            />
+                          </Table.Cell>
+                        </Table.Row>
+                      );
+                    })}
+                  </Table.Body>
+                </Table>
+              )}
+            </Container>
+          );
+        }}
+      </SearchProvider>
     );
   }
 }

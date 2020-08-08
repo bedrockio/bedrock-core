@@ -1,63 +1,68 @@
 import React from 'react';
-import { Container, Table, Message, Image, Button, Header } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
+import { Table, Divider, Button, Message } from 'semantic-ui-react';
+import { getData } from 'country-list';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import { screen } from 'helpers';
-import { urlForUpload } from 'utils/uploads';
+import {
+  Confirm,
+  HelpTip,
+  Breadcrumbs,
+  SearchProvider,
+} from 'components';
+import { EditShop, Filters } from 'modals';
 
-import { SearchProvider } from 'components/data';
-import { Layout } from 'components/Layout';
-import { Confirm } from 'components/Semantic';
-import HelpTip from 'components/HelpTip';
-import EditProduct from 'components/modals/EditProduct';
+const countries = getData().map(({ code, name }) => ({
+  value: code,
+  text: name,
+  key: code,
+}));
 
 @screen
-export default class ShopProducts extends React.Component {
+export default class ShopList extends React.Component {
 
   onDataNeeded = async (params) => {
     return await request({
       method: 'POST',
-      path: '/1/products/search',
-      body: params
+      path: '/1/shops/search',
+      body: params,
     });
   };
 
   render() {
-    const { shop } = this.props;
     return (
       <SearchProvider onDataNeeded={this.onDataNeeded}>
-        {({ items, getSorted, setSort, reload }) => {
+        {({ items, getSorted, setSort, filters, setFilters, reload }) => {
           return (
-            <Container>
-              <Header as="h2">
-                <Layout horizontal center spread>
-                  Products
-                  <EditProduct
-                    shopId={shop.id}
-                    onSave={reload}
-                    trigger={
-                      <Button primary floated="right" style={{ marginTop: '-5px' }} content="Add Product" icon="plus" />
-                    }
-                  />
-                </Layout>
-              </Header>
+            <React.Fragment>
+              <Breadcrumbs active="Shops">
+                <Filters
+                  onSave={setFilters}
+                  filters={filters}
+                  fields={[
+                    {
+                      text: 'Country',
+                        name: 'country',
+                        options: countries,
+                        search: true,
+                    },
+                  ]}
+                />
+                <EditShop trigger={<Button primary content="New Shop" icon="plus" />} onSave={reload} />
+              </Breadcrumbs>
+              <Divider hidden />
               {items.length === 0 ? (
-                <Message>No products added yet</Message>
+                <Message>No shops created yet</Message>
               ) : (
-                <Table celled>
+                <Table celled sortable>
                   <Table.Header>
                     <Table.Row>
-                      <Table.HeaderCell width={2}>
-                        Image
-                      </Table.HeaderCell>
-                      <Table.HeaderCell width={3} sorted={getSorted('name')} onClick={() => setSort('name')}>
+                      <Table.HeaderCell width={3} onClick={() => setSort('name')} sorted={getSorted('name')}>
                         Name
                       </Table.HeaderCell>
                       <Table.HeaderCell width={3}>Description</Table.HeaderCell>
-                      <Table.HeaderCell
-                        width={3}
-                        sorted={getSorted('createdAt')}
-                        onClick={() => setSort('createdAt')}>
+                      <Table.HeaderCell onClick={() => setSort('createdAt')} sorted={getSorted('createdAt')}>
                         Created
                         <HelpTip title="Created" text="This is the date and time the product was created." />
                       </Table.HeaderCell>
@@ -66,26 +71,18 @@ export default class ShopProducts extends React.Component {
                   </Table.Header>
                   <Table.Body>
                     {items.map((item) => {
-                      const [image] = item.images;
                       return (
                         <Table.Row key={item.id}>
                           <Table.Cell>
-                            {image && (
-                              <Image
-                                style={{width: '100%'}}
-                                src={urlForUpload(image, true)}
-                              />
-                            )}
+                            <Link to={`/shops/${item.id}`}>{item.name}</Link>
                           </Table.Cell>
-                          <Table.Cell>{item.name}</Table.Cell>
                           <Table.Cell>{item.description}</Table.Cell>
                           <Table.Cell>{formatDateTime(item.createdAt)}</Table.Cell>
                           <Table.Cell textAlign="center">
-                            <EditProduct
-                              shopId={shop.id}
+                            <EditShop
                               item={item}
-                              onSave={reload}
                               trigger={<Button style={{ marginLeft: '20px' }} basic icon="edit" />}
+                              onSave={reload}
                             />
                             <Confirm
                               negative
@@ -96,7 +93,7 @@ export default class ShopProducts extends React.Component {
                               onConfirm={async () => {
                                 await request({
                                   method: 'DELETE',
-                                  path: `/1/products/${item.id}`
+                                  path: `/1/shops/${item.id}`,
                                 });
                                 reload();
                               }}
@@ -108,7 +105,7 @@ export default class ShopProducts extends React.Component {
                   </Table.Body>
                 </Table>
               )}
-            </Container>
+            </React.Fragment>
           );
         }}
       </SearchProvider>

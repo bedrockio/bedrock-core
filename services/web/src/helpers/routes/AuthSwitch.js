@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Route, Link } from 'react-router-dom';
 import { Loader, Message } from 'semantic-ui-react';
-import { Layout } from '../Layout';
+import { Layout } from 'components';
 import { withSession } from 'stores';
 
 @withSession

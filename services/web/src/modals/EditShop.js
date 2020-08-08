@@ -19,6 +19,15 @@ export default class EditShop extends React.Component {
     };
   }
 
+  componentDidUpdate(lastProps) {
+    const { item } = this.props;
+    if (item && item !== lastProps.item) {
+      this.setState({
+        item,
+      });
+    }
+  }
+
   isUpdate() {
     return !!this.props.item;
   }
