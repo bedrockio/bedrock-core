@@ -56,7 +56,7 @@ router
     }),
     async (ctx) => {
       const { sort, skip, limit, shop } = ctx.request.body;
-      const query = { deletedAt: { $exists: false } };
+      const query: { [key: string]: any; } = { deletedAt: { $exists: false } };
       if (shop) {
         query.shop = shop;
       }

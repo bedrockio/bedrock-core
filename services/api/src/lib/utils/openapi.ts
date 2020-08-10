@@ -36,7 +36,7 @@ const routerToOpenApi = (router) => {
       if (methods.includes('HEAD')) {
         method = 'GET';
       }
-      const definition = {
+      const definition: { [key: string]: any; } = {
         method,
         path,
       };
@@ -97,7 +97,7 @@ const expandOpenApi = (definitions) => {
         if (!allPaths[path]) {
           allPaths[path] = {};
         }
-        const object = {
+        const object: { [key: string]: any; } = {
           summary: `${method} ${path}`,
           operationId: `${method} ${path}`,
           tags: [module.name],

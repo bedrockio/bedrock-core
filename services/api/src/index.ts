@@ -16,7 +16,7 @@ export default (async () => {
   await database();
   await setupFixtures();
 
-  app.listen(PORT, HOST, () => {
+  app.listen(PORT, parseInt(HOST), () => {
     console.info(`Started on port //${HOST}:${PORT}`);
     if (NODE_ENV === 'dev') {
       console.info('-----------------------------------------------------------------');

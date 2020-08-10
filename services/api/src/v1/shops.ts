@@ -57,7 +57,7 @@ router
     }),
     async (ctx) => {
       const { sort, skip, limit, country, startAt, endAt } = ctx.request.body;
-      const query = { deletedAt: { $exists: false } };
+      const query: { [key: string]: any; } = { deletedAt: { $exists: false } };
       if (startAt || endAt) {
         query.createdAt = {};
         if (startAt) {

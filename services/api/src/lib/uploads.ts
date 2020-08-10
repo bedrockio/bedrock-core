@@ -34,6 +34,10 @@ const storeUploadedFile = async (uploadedFile) => {
     mimeType: uploadedFile.type,
     filename: uploadedFile.name,
     hash: crypto.randomBytes(32).toString('hex'),
+    rawUrl: '',
+    storageType: '',
+    thumbnailUrl: '',
+    ownerId: ''
   };
   if (config.get('UPLOADS_STORE') === 'gcs') {
     object.rawUrl = await uploadGcs(uploadedFile, object.hash);

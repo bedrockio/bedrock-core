@@ -9,7 +9,7 @@ afterAll(async () => {
   await teardownDb();
 });
 
-const createUpload = (user = {}) => {
+const createUpload = (user = {id: ''}) => {
   return Upload.create({
     filename: 'logo.png',
     rawUrl: 'logo.png',

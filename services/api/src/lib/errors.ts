@@ -1,4 +1,6 @@
 class ApplicationError extends Error {
+  status: String;
+
   constructor(message, status) {
     super(message);
     this.status = status;

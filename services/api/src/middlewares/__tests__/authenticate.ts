@@ -132,7 +132,7 @@ describe('authenticate', () => {
       await optional(ctx, () => {});
       expect(ctx.state.jwt).toBeUndefined();
 
-      await expect(required(ctx)).rejects.toHaveProperty('message', 'no jwt token found in request');
+      await expect(required(ctx, emptyNext)).rejects.toHaveProperty('message', 'no jwt token found in request');
     });
 
   });

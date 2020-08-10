@@ -92,14 +92,14 @@ router
             upsert: true,
           }
         );
-        await sendInvite({ email, sender: authUser, token: getToken(invite) });
+        await sendInvite({ to: email, sender: authUser, token: getToken(invite) });
       }
       ctx.status = 204;
     }
   )
   .post('/:inviteId/resend', async (ctx) => {
     const { invite, authUser } = ctx.state;
-    await sendInvite({ email: invite.email, sender: authUser, token: getToken(invite) });
+    await sendInvite({ to: invite.email, sender: authUser, token: getToken(invite) });
     ctx.status = 204;
   })
   .delete('/:inviteId', async (ctx) => {

@@ -3,7 +3,7 @@ import app from '../app';
 import qs from 'querystring';
 import * as tokens from '../lib/tokens';
 
-export default async function handleRequest(httpMethod, url, bodyOrQuery = {}, options = {}) {
+export default async function handleRequest(httpMethod, url, bodyOrQuery = {}, options: {[key: string]: any;} = {}) {
   const headers = options.headers || {};
   if (options.user && !headers.Authorization) {
     headers.Authorization = `Bearer ${tokens.createUserToken(options.user)}`;
