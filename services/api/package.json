@@ -13,7 +13,7 @@
     "copyfiles": "cp -r ./src/v1/__openapi__ ./built/src/v1/__openapi__ && cp -r ./fixtures ./built/ && cp -r ./src/v1/__tests__/fixtures ./built/src/v1/__tests__/ && mkdir -p ./built/emails/dist && cp -r ./emails/dist ./built/emails/",
     "build": "tsc",
     "postbuild": "yarn copyfiles",
-    "dev": "ts-node src/index.ts",
+    "dev": "MOCK_EMAIL=true NODE_ENV=dev ts-node-dev src/index.ts",
     "prod": "yarn build && node ./built/src/index.js",
     "start:production": "node src/index",
     "docs": "node scripts/generate-openapi",
@@ -58,7 +58,8 @@
     "prettier": "^2.0.5",
     "prettier-eslint": "^11.0.0",
     "supertest": "^4.0.2",
-    "ts-node": "^8.10.2"
+    "ts-node": "^8.10.2",
+    "ts-node-dev": "^1.0.0-pre.56"
   },
   "jest": {
     "setupFiles": [
