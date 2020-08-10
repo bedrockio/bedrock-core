@@ -43,11 +43,13 @@ schema.virtual('password').set(function setPassword(password) {
 });
 
 schema.pre('save', async function preSave(next) {
-  let password = this.get('_password');
-  if (password) {
+  // @ts-ignore: TODO fix
+  if (this._password) {
     const salt = await bcrypt.genSalt(12);
-    this.set('hashedPassword', await bcrypt.hash(password, salt));
-    this.set('_password', undefined);
+    // @ts-ignore: TODO fix
+    this.hashedPassword = await bcrypt.hash(this._password, salt);
+    // @ts-ignore: TODO fix
+    delete this._password;
   }
   return next();
 });
