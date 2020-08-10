@@ -9,18 +9,18 @@
     "lint"
   ],
   "scripts": {
-    "start": "nodemon -w src --exec \"MOCK_EMAIL=true NODE_ENV=dev node ./built/src/index.js\"",
-    "copyfiles": "cp -r ./src/v1/__openapi__ ./built/src/v1/__openapi__ && cp -r ./fixtures ./built/ && cp -r ./src/v1/__tests__/fixtures ./built/src/v1/__tests__/ && mkdir -p ./built/emails/dist && cp -r ./emails/dist ./built/emails/",
+    "start": "nodemon -w src --exec \"MOCK_EMAIL=true NODE_ENV=dev node ./dist/src/index.js\"",
+    "copyfiles": "cp -r ./src/v1/__openapi__ ./dist/src/v1/__openapi__ && cp -r ./fixtures ./dist/ && cp -r ./src/v1/__tests__/fixtures ./dist/src/v1/__tests__/ && mkdir -p ./dist/emails/dist && cp -r ./emails/dist ./dist/emails/",
     "build": "tsc",
     "postbuild": "yarn copyfiles",
     "dev": "MOCK_EMAIL=true NODE_ENV=dev ts-node-dev src/index.ts",
-    "prod": "yarn build && node ./built/src/index.js",
+    "prod": "yarn build && node ./dist/src/index.js",
     "start:production": "node src/index",
     "docs": "node scripts/generate-openapi",
     "emails": "node emails/build",
     "lint": "eslint src",
-    "test": "jest src",
-    "test:built": "jest built",
+    "test": "jest",
+    "test:dist": "jest --config ./jest.config.dist.js",
     "test:watch": "jest --watch -i"
   },
   "dependencies": {

@@ -14,8 +14,8 @@
     //   "*": ["node_modules/*", "src/types/*"]
     // },
     //"typeRoots": ["node_modules/@types", "src/types"],
-    "outDir": "./built",
+    "outDir": "./dist",
   },
-  "include": ["./src/**/*", "./scripts/**/*", "./jest.config.js"],
+  "include": ["./src/**/*", "./scripts/**/*"],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }
