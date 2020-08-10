@@ -40,7 +40,7 @@ function validateToken(ctx, token, type) {
   return payload;
 }
 
-const authenticate = ({ type, optional = false } = {}) => {
+const authenticate = ({ type = "", optional = false } = {}) => {
   return async (ctx, next) => {
     if (!ctx.state.jwt) {
       const token = getToken(ctx);

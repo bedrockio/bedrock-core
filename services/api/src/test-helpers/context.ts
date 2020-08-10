@@ -3,7 +3,7 @@
 import Stream from 'stream';
 import Koa from 'koa';
 
-const context = (req, res, app) => {
+const context = (req = null, res = null, app = null) => {
   const socket = new Stream.Duplex();
   req = Object.assign({ headers: {}, socket }, Stream.Readable.prototype, req);
   res = Object.assign({ _headers: {}, socket }, Stream.Writable.prototype, res);

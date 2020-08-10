@@ -2,6 +2,8 @@ import Joi from '@hapi/joi';
 import { validate } from '../validate';
 import { context } from '../../test-helpers';
 
+const emptyNext = () => {};
+
 describe('validate', () => {
   it("should throw an error when the request doesn't contain a key as specified in Joi schema", async () => {
     const middleware = validate({
@@ -9,7 +11,7 @@ describe('validate', () => {
     });
     const ctx = context();
 
-    await expect(middleware(ctx)).rejects.toHaveProperty(
+    await expect(middleware(ctx, emptyNext)).rejects.toHaveProperty(
       'message',
       "Specified schema key 'body' does not exist in 'request' object"
     );
@@ -24,7 +26,7 @@ describe('validate', () => {
     const ctx = context();
     ctx.request.body = { fail: 'fail' };
 
-    await expect(middleware(ctx)).rejects.toHaveProperty('status', 400);
+    await expect(middleware(ctx, emptyNext)).rejects.toHaveProperty('status', 400);
   });
 
   it('should accept a valid request', async () => {
@@ -76,7 +78,7 @@ describe('validate', () => {
       shouldBeRemoved: 'should be been removed from request'
     };
 
-    await expect(middleware(ctx)).rejects.toHaveProperty('status', 400);
-    await expect(middleware(ctx)).rejects.toHaveProperty('message', '"shouldBeRemoved" is not allowed');
+    await expect(middleware(ctx, emptyNext)).rejects.toHaveProperty('status', 400);
+    await expect(middleware(ctx, emptyNext)).rejects.toHaveProperty('message', '"shouldBeRemoved" is not allowed');
   });
 });

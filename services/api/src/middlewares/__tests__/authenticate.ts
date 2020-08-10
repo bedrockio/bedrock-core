@@ -3,16 +3,18 @@ import { setupDb, teardownDb, context, createUser } from '../../test-helpers';
 import jwt from 'jsonwebtoken';
 import config from '@bedrockio/config';
 
+const emptyNext = () => {};
+
 describe('authenticate', () => {
 
   it('should trigger an error if jwt token can not be found', async () => {
     const middleware = authenticate();
     let ctx;
     ctx = context({ headers: { notAuthorization: 'Bearer $token' } });
-    await expect(middleware(ctx)).rejects.toHaveProperty('message', 'no jwt token found in request');
+    await expect(middleware(ctx, emptyNext)).rejects.toHaveProperty('message', 'no jwt token found in request');
 
     ctx = context({ headers: { authorization: 'not Bearer $token' } });
-    await expect(middleware(ctx)).rejects.toHaveProperty('message', 'no jwt token found in request');
+    await expect(middleware(ctx, emptyNext)).rejects.toHaveProperty('message', 'no jwt token found in request');
 
   });
 
@@ -20,7 +22,7 @@ describe('authenticate', () => {
     const middleware = authenticate();
     let ctx;
     ctx = context({ headers: { authorization: 'Bearer badToken' } });
-    await expect(middleware(ctx)).rejects.toHaveProperty('message', 'bad jwt token');
+    await expect(middleware(ctx, emptyNext)).rejects.toHaveProperty('message', 'bad jwt token');
     ctx = context({});
 
   });
@@ -29,7 +31,7 @@ describe('authenticate', () => {
     const middleware = authenticate();
     const token = jwt.sign({ kid: 'not valid kid' }, 'verysecret');
     const ctx = context({ headers: { authorization: `Bearer ${token}` } });
-    await expect(middleware(ctx)).rejects.toHaveProperty('message', 'jwt token does not match supported kid');
+    await expect(middleware(ctx, emptyNext)).rejects.toHaveProperty('message', 'jwt token does not match supported kid');
   });
 
   it('should confirm that type if specify in middleware', async () => {
@@ -39,7 +41,7 @@ describe('authenticate', () => {
 
     const token = jwt.sign({ kid: 'user', type: 'not same type' }, 'verysecret');
     const ctx = context({ headers: { authorization: `Bearer ${token}` } });
-    await expect(middleware(ctx)).rejects.toHaveProperty(
+    await expect(middleware(ctx, emptyNext)).rejects.toHaveProperty(
       'message',
       'endpoint requires jwt token payload match type "sometype"'
     );
@@ -49,14 +51,14 @@ describe('authenticate', () => {
     const middleware = authenticate();
     const token = jwt.sign({ kid: 'user' }, 'verysecret');
     const ctx = context({ headers: { authorization: `Bearer ${token}` } });
-    await expect(middleware(ctx)).rejects.toHaveProperty('message', 'invalid signature');
+    await expect(middleware(ctx, emptyNext)).rejects.toHaveProperty('message', 'invalid signature');
   });
 
   it('should fail if expired', async () => {
     const middleware = authenticate();
     const token = jwt.sign({ kid: 'user' }, config.get('JWT_SECRET'), { expiresIn: 0 });
     const ctx = context({ headers: { authorization: `Bearer ${token}` } });
-    await expect(middleware(ctx)).rejects.toHaveProperty('message', 'jwt expired');
+    await expect(middleware(ctx, emptyNext)).rejects.toHaveProperty('message', 'jwt expired');
   });
 
   it('it should work with valid secret and not expired', async () => {
