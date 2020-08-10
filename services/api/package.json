@@ -9,7 +9,10 @@
     "lint"
   ],
   "scripts": {
-    "start": "nodemon -w src --exec \"MOCK_EMAIL=true NODE_ENV=dev node src/index.js\"",
+    "start": "nodemon -w src --exec \"MOCK_EMAIL=true NODE_ENV=dev node ./dist/index.js\"",
+    "build": "tsc",
+    "dev": "ts-node app.ts",
+    "prod": "yarn build && node ./dist/index.js",
     "start:production": "node src/index",
     "docs": "node scripts/generate-openapi",
     "emails": "node emails/build",
@@ -37,6 +40,10 @@
     "snyk": "^1.359.1"
   },
   "devDependencies": {
+    "@types/jest": "^26.0.9",
+    "@types/koa": "^2.11.3",
+    "@types/mongoose": "^5.7.36",
+    "@types/node": "^14.0.27",
     "@yeongjet/joi-to-json-schema": "^1.0.4",
     "eslint": "^7.5.0",
     "eslint-config-prettier": "^6.11.0",

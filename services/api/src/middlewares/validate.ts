@@ -1,5 +1,5 @@
 
-function validate(schemas, options) {
+function validate(schemas, options = {}) {
   const defaultOptions = {
     allowUnknown: false,
     abortEarly: false
