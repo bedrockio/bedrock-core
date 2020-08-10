@@ -8,7 +8,7 @@ import Sentry from '@sentry/node';
 import path from 'path';
 import { version } from '../package.json';
 import v1 from './v1';
-import config from '@bedrockio/config';
+import * as config from '@bedrockio/config';
 import { loadOpenApiDefinitions, expandOpenApi } from './lib/utils/openapi';
 
 const app = new Koa();
@@ -40,7 +40,7 @@ if (config.has('SENTRY_DSN')) {
 }
 
 const router = new Router();
-app.router = router;
+//app.router = router;
 router.get('/', (ctx) => {
   ctx.body = {
     version,

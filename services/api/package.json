@@ -9,10 +9,10 @@
     "lint"
   ],
   "scripts": {
-    "start": "nodemon -w src --exec \"MOCK_EMAIL=true NODE_ENV=dev node ./dist/index.js\"",
-    "build": "tsc",
-    "dev": "ts-node app.ts",
-    "prod": "yarn build && node ./dist/index.js",
+    "start": "nodemon -w src --exec \"MOCK_EMAIL=true NODE_ENV=dev node ./built/src/index.js\"",
+    "build": "tsc && cp -r ./src/v1/__openapi__ ./built/src/v1/__openapi__",
+    "dev": "ts-node src/index.ts",
+    "prod": "yarn build && node ./built/src/index.js",
     "start:production": "node src/index",
     "docs": "node scripts/generate-openapi",
     "emails": "node emails/build",
@@ -55,7 +55,8 @@
     "pre-commit": "^1.2.2",
     "prettier": "^2.0.5",
     "prettier-eslint": "^11.0.0",
-    "supertest": "^4.0.2"
+    "supertest": "^4.0.2",
+    "ts-node": "^8.10.2"
   },
   "jest": {
     "setupFiles": [

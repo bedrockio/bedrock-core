@@ -1,5 +1,5 @@
 import fs from 'fs';
-import config from '@bedrockio/config'
+import * as config from '@bedrockio/config'
 
 function getParamsFromValidationMiddleware(validationMiddleware, type) {
   const { convert } = require('@yeongjet/joi-to-json-schema');

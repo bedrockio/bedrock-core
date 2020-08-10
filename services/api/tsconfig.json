@@ -6,16 +6,16 @@
     "resolveJsonModule": true,
     "noImplicitAny": false, // Good start with false, and add types over time
     "moduleResolution": "node",
-    "lib": ["es2018"],
+    // "lib": ["es2018"],
     "module": "commonjs",
     "target": "es2018",
     "baseUrl": ".",
-    "paths": {
-      "*": ["node_modules/*", "src/types/*"]
-    },
-    "typeRoots": ["node_modules/@types", "src/types"],
+    // "paths": {
+    //   "*": ["node_modules/*", "src/types/*"]
+    // },
+    //"typeRoots": ["node_modules/@types", "src/types"],
     "outDir": "./built",
   },
   "include": ["./src/**/*", "jest.config.js"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "**/*.spec.ts"]
 }

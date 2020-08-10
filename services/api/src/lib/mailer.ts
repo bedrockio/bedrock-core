@@ -1,5 +1,5 @@
 import postmark from 'postmark';
-import config from '@bedrockio/config';
+import * as config from '@bedrockio/config';
 
 const POSTMARK_FROM = config.get('POSTMARK_FROM');
 const env = process.env.NODE_ENV;

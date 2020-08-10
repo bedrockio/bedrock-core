@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { sendMail }  from './mailer';
-import config from '@bedrockio/config';
+import * as config from '@bedrockio/config';
 import { template as templateFn } from './utils/template';
 import { promisify } from 'util';
 

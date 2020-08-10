@@ -1,3 +1,9 @@
+class metaError extends Error {
+  meta: any;
+  constructor(message = '') {
+    super(message);
+  }
+}
 
 function validate(schemas, options = {}) {
   const defaultOptions = {
@@ -13,7 +19,7 @@ function validate(schemas, options = {}) {
       ctx.request[`_${key}`] = requestItem;
 
       if (!requestItem) {
-        const error = new Error(`Specified schema key '${key}' does not exist in 'request' object`);
+        const error = new metaError(`Specified schema key '${key}' does not exist in 'request' object`);
         error.meta = {
           request: ctx.request
         };

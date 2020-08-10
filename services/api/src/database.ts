@@ -1,4 +1,4 @@
-import config from '@bedrockio/config';
+import * as config from '@bedrockio/config';
 import mongoose from 'mongoose';
 
 mongoose.Promise = Promise;

@@ -2,7 +2,7 @@ import database from './database';
 import setupFixtures from '../scripts/setup-fixtures';
 import app from './app';
 
-import config from '@bedrockio/config';
+import * as config from '@bedrockio/config';
 if (process.env.GCLOUD_PROJECT) {
   require('@google-cloud/trace-agent').start();
 }

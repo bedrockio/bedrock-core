@@ -1,4 +1,4 @@
-import config from '@bedrockio/config';
+import * as config from '@bedrockio/config';
 import fs from 'fs';
 import path from 'path';
 import os from 'os';

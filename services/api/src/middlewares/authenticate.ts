@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import config from '@bedrockio/config';
+import * as config from '@bedrockio/config';
 import User from '../models/user';
 
 const secrets = {
