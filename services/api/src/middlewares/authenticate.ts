@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
 import * as config from '@bedrockio/config';
 import User from '../models/user';
 
