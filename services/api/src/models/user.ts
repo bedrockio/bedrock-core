@@ -1,7 +1,6 @@
-const { omit } = require('lodash');
-const mongoose = require('mongoose');
-const { createSchema } = require('../lib/utils/schema');
-const bcrypt = require('bcrypt');
+import mongoose from 'mongoose';
+import { createSchema } from '../lib/utils/schema';
+import bcrypt from 'bcrypt';
 
 const schema = createSchema({
   email: {
@@ -52,4 +51,4 @@ schema.pre('save', async function preSave(next) {
   return next();
 });
 
-module.exports = mongoose.models.User || mongoose.model('User', schema);
+export default mongoose.model('User', schema);

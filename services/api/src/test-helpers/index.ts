@@ -1,15 +1,13 @@
-const mongoose = require('mongoose');
-const MongoMemoryServer = require('mongodb-memory-server').default;
-const { uniqueId } = require('lodash');
-const User = require('../models/user');
-
-exports.context = require('./context');
-exports.request = require('./request');
+import mongoose from 'mongoose';
+import MongoMemoryServer from 'mongodb-memory-server' //.default
+import uniqueId from 'lodash';
+import User from '../models/user';
+import { context } from './context';
 
 mongoose.Promise = Promise;
 
 const mongoServer = new MongoMemoryServer();
-exports.setupDb = () =>
+const setupDb = () =>
   new Promise((resolve) => {
     mongoServer.getConnectionString().then((mongoUri) => {
       const mongooseOpts = {
@@ -35,7 +33,7 @@ exports.setupDb = () =>
     });
   });
 
-exports.createUser = async (userAttributes = {}) => {
+const createUser = async (userAttributes = {}) => {
   return await User.create({
     email: `${uniqueId('email')}@platform.com`,
     name: 'test user',
@@ -43,7 +41,11 @@ exports.createUser = async (userAttributes = {}) => {
   });
 };
 
-exports.teardownDb = async () => {
+const teardownDb = async () => {
   await mongoServer.stop();
   await mongoose.disconnect();
 };
+
+export { context }
+export { createUser }
+export { teardownDb }

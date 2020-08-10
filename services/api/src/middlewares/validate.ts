@@ -80,4 +80,4 @@ function validate(schemas, options = {}) {
   return promise;
 }
 
-module.exports = validate;
+export { validate };

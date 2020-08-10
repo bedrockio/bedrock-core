@@ -1,9 +1,9 @@
 /* eslint-disable no-param-reassign, no-return-assign */
 
-const Stream = require('stream');
-const Koa = require('koa');
+import Stream from 'stream';
+import Koa from 'koa';
 
-module.exports = (req, res, app) => {
+const context = (req, res, app) => {
   const socket = new Stream.Duplex();
   req = Object.assign({ headers: {}, socket }, Stream.Readable.prototype, req);
   res = Object.assign({ _headers: {}, socket }, Stream.Writable.prototype, res);
@@ -15,6 +15,8 @@ module.exports = (req, res, app) => {
   return app.createContext(req, res);
 };
 
-module.exports.request = (req, res, app) => module.exports(req, res, app).request;
+export {  context }
 
-module.exports.response = (req, res, app) => module.exports(req, res, app).response;
+// module.exports.request = (req, res, app) => module.exports(req, res, app).request;
+
+// module.exports.response = (req, res, app) => module.exports(req, res, app).response;

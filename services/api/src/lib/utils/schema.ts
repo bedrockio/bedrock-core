@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const { omitBy } = require('lodash');
+import mongoose from 'mongoose';
+import { omitBy } from 'lodash';
 
 const RESERVED_FIELDS = ['id', 'createdAt', 'updatedAt', 'deletedAt'];
 
@@ -18,7 +18,7 @@ const serializeOptions = {
   }
 };
 
-exports.createSchema = (definition, options = {}) => {
+const createSchema = (definition, options = {}) => {
   const schema = new mongoose.Schema(
     {
       deletedAt: { type: Date },
@@ -46,6 +46,8 @@ exports.createSchema = (definition, options = {}) => {
   };
   return schema;
 };
+
+export { createSchema }
 
 function isDisallowedField(doc, key, allowPrivate = false) {
   let field = doc.schema.obj[key];
