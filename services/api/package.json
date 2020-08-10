@@ -10,14 +10,16 @@
   ],
   "scripts": {
     "start": "nodemon -w src --exec \"MOCK_EMAIL=true NODE_ENV=dev node ./built/src/index.js\"",
-    "build": "tsc && cp -r ./src/v1/__openapi__ ./built/src/v1/__openapi__ && cp -r ./fixtures ./built/fixtures",
+    "copyfiles": "cp -r ./src/v1/__openapi__ ./built/src/v1/__openapi__ && cp -r ./fixtures ./built/ && cp -r ./src/v1/__tests__/fixtures ./built/src/v1/__tests__/ && mkdir -p ./built/emails/dist && cp -r ./emails/dist ./built/emails/",
+    "build": "tsc",
+    "postbuild": "yarn copyfiles",
     "dev": "ts-node src/index.ts",
     "prod": "yarn build && node ./built/src/index.js",
     "start:production": "node src/index",
     "docs": "node scripts/generate-openapi",
     "emails": "node emails/build",
     "lint": "eslint src",
-    "test": "jest",
+    "test": "jest ./built",
     "test:watch": "jest --watch -i"
   },
   "dependencies": {

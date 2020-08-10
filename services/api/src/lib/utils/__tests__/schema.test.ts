@@ -1,6 +1,6 @@
-const { createSchema } = require('../schema');
-const mongoose = require('mongoose');
-const { setupDb, teardownDb } = require('../../../test-helpers');
+import { createSchema } from '../schema';
+import mongoose from 'mongoose';
+import { setupDb, teardownDb } from '../../../test-helpers';
 
 beforeAll(async () => {
   await setupDb();
@@ -27,9 +27,11 @@ describe('createSchema', () => {
       }));
       const user = new User({ name: 'foo' });
 
+      // @ts-ignore: TODO fix
       expect(user.name).toBe('foo');
 
       await expect(async () => {
+        // @ts-ignore: TODO fix
         user.name = 'FOO';
         await user.save();
       }).rejects.toThrow();
@@ -43,7 +45,9 @@ describe('createSchema', () => {
       const User = createModel(createSchema());
       const user = new User();
       await user.save();
+      // @ts-ignore: TODO fix
       expect(user.createdAt).toBeInstanceOf(Date);
+      // @ts-ignore: TODO fix
       expect(user.updatedAt).toBeInstanceOf(Date);
     });
 
@@ -51,7 +55,9 @@ describe('createSchema', () => {
       const User = createModel(createSchema());
       const user = new User();
       await user.save();
+      // @ts-ignore: TODO fix
       await user.delete();
+      // @ts-ignore: TODO fix
       expect(user.deletedAt).toBeInstanceOf(Date);
     });
 
@@ -80,10 +86,14 @@ describe('createSchema', () => {
         password: { type: String, access: 'private' },
       }));
       const user = new User();
+      // @ts-ignore: TODO fix
       user._private = 'private';
+      // @ts-ignore: TODO fix
       user.password = 'fake password';
 
+      // @ts-ignore: TODO fix
       expect(user._private).toBe('private');
+      // @ts-ignore: TODO fix
       expect(user.password).toBe('fake password');
 
       const data = JSON.parse(JSON.stringify(user));
@@ -97,8 +107,10 @@ describe('createSchema', () => {
         tags: [{ type: String, access: 'private' }],
       }));
       const user = new User();
+      // @ts-ignore: TODO fix
       user.tags = ['one', 'two'];
 
+      // @ts-ignore: TODO fix
       expect(user.tags).toBeInstanceOf(Array);
 
       const data = JSON.parse(JSON.stringify(user));
@@ -127,6 +139,7 @@ describe('createSchema', () => {
         secret: 'foo',
       });
       const data = user.toJSON({
+        // @ts-ignore: TODO fix
         private: true,
       });
       expect(data.id).toBe(user.id);
@@ -143,6 +156,7 @@ describe('createSchema', () => {
         secret: 'foo',
       });
       const data = user.toObject({
+        // @ts-ignore: TODO fix
         private: true,
       });
       expect(data.id).toBe(user.id);
@@ -163,13 +177,17 @@ describe('createSchema', () => {
       }));
       const user = new User();
       const now = Date.now();
+      // @ts-ignore: TODO fix
       user.assign({
         name: 'fake name',
         fakeNumber: 5,
         fakeDate: new Date(now),
       });
+      // @ts-ignore: TODO fix
       expect(user.name).toBe('fake name');
+      // @ts-ignore: TODO fix
       expect(user.fakeNumber).toBe(5);
+      // @ts-ignore: TODO fix
       expect(user.fakeDate.getTime()).toBe(now);
     });
 
@@ -177,6 +195,7 @@ describe('createSchema', () => {
       const User = createModel(createSchema());
       const user = await User.create({});
       const now = Date.now();
+      // @ts-ignore: TODO fix
       user.assign({
         id: 'fake id',
         createdAt: new Date(now - 1000),
@@ -185,8 +204,11 @@ describe('createSchema', () => {
       });
       expect(user.id).not.toBe('fake id');
       expect(user._id.toString()).not.toBe('fake id');
+      // @ts-ignore: TODO fix
       expect(user.createdAt.getTime()).not.toBe(now - 1000);
+      // @ts-ignore: TODO fix
       expect(user.updatedAt.getTime()).not.toBe(now - 1000);
+      // @ts-ignore: TODO fix
       expect(user.deletedAt).toBeUndefined();
     });
 
@@ -195,10 +217,12 @@ describe('createSchema', () => {
         password: { type: String, access: 'private' },
       }));
       const user = new User();
+      // @ts-ignore: TODO fix
       user.assign({
         password: 'fake password',
       });
       await user.save();
+      // @ts-ignore: TODO fix
       expect(user.password).not.toBe('fake password');
     });
 
@@ -223,10 +247,12 @@ describe('createSchema', () => {
       const Shop = createModel(shopSchema);
 
       const user = new User();
+      // @ts-ignore: TODO fix
       user.password = 'fake password';
       await user.save();
 
       let shop = new Shop();
+      // @ts-ignore: TODO fix
       shop.user = user;
       await shop.save();
 
@@ -262,6 +288,7 @@ describe('createSchema', () => {
       await user.save();
 
       let shop = new Shop();
+      // @ts-ignore: TODO fix
       shop.user = user;
       await shop.save();
 
@@ -297,12 +324,14 @@ describe('createSchema', () => {
       await user.save();
 
       let shop = new Shop();
+      // @ts-ignore: TODO fix
       shop.user = user;
       await shop.save();
 
       shop = await Shop.findById(shop.id);
 
       const data = shop.toObject({
+        // @ts-ignore: TODO fix
         private: true
       });
 

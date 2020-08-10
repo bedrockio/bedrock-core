@@ -1,6 +1,6 @@
 import { authenticate, fetchUser } from '../authenticate';
 import { setupDb, teardownDb, context, createUser } from '../../test-helpers';
-import jwt from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
 import * as config from '@bedrockio/config';
 
 const emptyNext = () => {};

@@ -1,5 +1,4 @@
-import jwt from 'jsonwebtoken';
-
+import * as jwt from 'jsonwebtoken';
 import User from '../../models/user';
 import * as tokens from '../../lib/tokens';
 

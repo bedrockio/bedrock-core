@@ -18,7 +18,7 @@ const serializeOptions = {
   }
 };
 
-const createSchema = (definition, options = {}) => {
+const createSchema = (definition = {}, options = {}) => {
   const schema = new mongoose.Schema(
     {
       deletedAt: { type: Date },

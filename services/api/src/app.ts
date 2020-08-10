@@ -4,7 +4,7 @@ import cors from '@koa/cors';
 import logger from 'koa-logger';
 import bodyParser from 'koa-body';
 import errorHandler from './middlewares/error-handler';
-import Sentry from '@sentry/node';
+import * as Sentry from '@sentry/node';
 import path from 'path';
 import { version } from '../package.json';
 import v1 from './v1';
