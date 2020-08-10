@@ -16,6 +16,6 @@
     //"typeRoots": ["node_modules/@types", "src/types"],
     "outDir": "./built",
   },
-  "include": ["./src/**/*", "jest.config.js"],
+  "include": ["./src/**/*", "./scripts/**/*", "jest.config.js"],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }

@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "start": "nodemon -w src --exec \"MOCK_EMAIL=true NODE_ENV=dev node ./built/src/index.js\"",
-    "build": "tsc && cp -r ./src/v1/__openapi__ ./built/src/v1/__openapi__",
+    "build": "tsc && cp -r ./src/v1/__openapi__ ./built/src/v1/__openapi__ && cp -r ./fixtures ./built/fixtures",
     "dev": "ts-node src/index.ts",
     "prod": "yarn build && node ./built/src/index.js",
     "start:production": "node src/index",

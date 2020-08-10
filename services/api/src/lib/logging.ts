@@ -2,7 +2,7 @@ function timeStr() {
   return new Date().toString();
 }
 
-exports.logger = {
+const logger = {
   debug(...args) {
     console.info(...[timeStr(), '-', 'DEBUG', '-'].concat(args));
   },
@@ -16,3 +16,5 @@ exports.logger = {
     console.info(...[timeStr(), '-', 'ERROR', '-'].concat(args));
   }
 };
+
+export { logger };
