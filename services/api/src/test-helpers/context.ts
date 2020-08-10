@@ -16,13 +16,3 @@ const context = (req = null, res = null, app = null) => {
 };
 
 export { context };
-
-// const request = (req, res, app) => context(req, res, app).request;
-// const response = (req, res, app) => context(req, res, app).response;
-
-// export { request };
-// export { response };
-
-// module.exports.request = (req, res, app) => module.exports(req, res, app).request;
-
-// module.exports.response = (req, res, app) => module.exports(req, res, app).response;
