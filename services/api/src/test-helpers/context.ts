@@ -17,11 +17,11 @@ const context = (req, res, app) => {
 
 export { context };
 
-const request = (req, res, app) => context(req, res, app).request;
-const response = (req, res, app) => context(req, res, app).response;
+// const request = (req, res, app) => context(req, res, app).request;
+// const response = (req, res, app) => context(req, res, app).response;
 
-export { request };
-export { response };
+// export { request };
+// export { response };
 
 // module.exports.request = (req, res, app) => module.exports(req, res, app).request;
 

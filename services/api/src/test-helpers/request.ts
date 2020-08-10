@@ -1,7 +1,7 @@
 import request from 'supertest'; //eslint-disable-line
 import app from '../app';
 import qs from 'querystring';
-import tokens from '../lib/tokens';
+import * as tokens from '../lib/tokens';
 
 export default async function handleRequest(httpMethod, url, bodyOrQuery = {}, options = {}) {
   const headers = options.headers || {};
