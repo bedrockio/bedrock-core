@@ -1,9 +1,9 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 
-const User = require('../../models/user');
-const tokens = require('../../lib/tokens');
+import User from '../../models/user';
+import * as tokens from '../../lib/tokens';
 
-const { setupDb, teardownDb, request, createUser } = require('../../test-helpers');
+import { setupDb, teardownDb, request, createUser } from '../../test-helpers';
 
 beforeAll(async () => {
   await setupDb();

@@ -1,5 +1,5 @@
-const jwt = require('jsonwebtoken');
-const config = require('@bedrockio/config');
+import jwt from 'jsonwebtoken';
+import config from '@bedrockio/config';
 
 const expiresIn = {
   temporary: '1d',
@@ -11,7 +11,7 @@ const secrets = {
   user: config.get('JWT_SECRET'),
 };
 
-exports.createUserTemporaryToken = (claims, type) => {
+const createUserTemporaryToken = (claims, type) => {
   return jwt.sign(
     {
       ...claims,
@@ -25,7 +25,9 @@ exports.createUserTemporaryToken = (claims, type) => {
   );
 };
 
-exports.createUserToken = (user) => {
+export { createUserTemporaryToken };
+
+const createUserToken = (user) => {
   return jwt.sign(
     {
       userId: user._id,
@@ -38,3 +40,5 @@ exports.createUserToken = (user) => {
     }
   );
 };
+
+export { createUserToken };

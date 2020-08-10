@@ -1,15 +1,15 @@
-const Router = require('@koa/router');
-const Koa = require('koa');
-const cors = require('@koa/cors');
-const logger = require('koa-logger');
-const bodyParser = require('koa-body');
-const errorHandler = require('./middlewares/error-handler');
-const Sentry = require('@sentry/node');
-const path = require('path');
-const { version } = require('../package.json');
-const v1 = require('./v1');
-const config = require('@bedrockio/config');
-const { loadOpenApiDefinitions, expandOpenApi } = require('./lib/utils/openapi');
+import Router from '@koa/router';
+import Koa from 'koa';
+import cors from '@koa/cors';
+import logger from 'koa-logger';
+import bodyParser from 'koa-body';
+import errorHandler from './middlewares/error-handler';
+import Sentry from '@sentry/node';
+import path from 'path';
+import { version } from '../package.json';
+import v1 from './v1';
+import config from '@bedrockio/config';
+import { loadOpenApiDefinitions, expandOpenApi } from './lib/utils/openapi';
 
 const app = new Koa();
 
@@ -63,4 +63,4 @@ router.use('/1', v1.routes());
 app.use(router.routes());
 app.use(router.allowedMethods());
 
-module.exports = app;
+export default app;

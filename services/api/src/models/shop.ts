@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const { createSchema } = require('../lib/utils/schema');
+import mongoose from 'mongoose';
+import { createSchema } from '../lib/utils/schema';
 const { ObjectId } = mongoose.Schema.Types;
 
 const schema = createSchema({
@@ -18,4 +18,4 @@ const schema = createSchema({
 
 schema.plugin(require('mongoose-autopopulate'));
 
-module.exports = mongoose.models.Shop || mongoose.model('Shop', schema);
+export default mongoose.models.Shop || mongoose.model('Shop', schema);

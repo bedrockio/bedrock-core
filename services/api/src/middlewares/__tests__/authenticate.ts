@@ -1,7 +1,7 @@
-const { authenticate, fetchUser } = require('../authenticate');
-const { setupDb, teardownDb, context, createUser } = require('../../test-helpers');
-const jwt = require('jsonwebtoken');
-const config = require('@bedrockio/config');
+import { authenticate, fetchUser } from '../authenticate';
+import { setupDb, teardownDb, context, createUser } from '../../test-helpers';
+import jwt from 'jsonwebtoken';
+import config from '@bedrockio/config';
 
 describe('authenticate', () => {
 

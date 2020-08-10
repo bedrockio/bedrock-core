@@ -1,9 +1,9 @@
-const fs = require('fs');
-const path = require('path');
-const { sendMail } = require('./mailer');
-const config = require('@bedrockio/config');
-const { template: templateFn } = require('./utils/template');
-const { promisify } = require('util');
+import fs from 'fs';
+import path from 'path';
+import { sendMail }  from './mailer';
+import config from '@bedrockio/config';
+import { template as templateFn } from './utils/template';
+import { promisify } from 'util';
 
 const templatesDist = path.join(__dirname, '../../emails/dist');
 const templates = {};
@@ -39,7 +39,7 @@ function template(templateName, map) {
   return templateFn(templateStr, map);
 }
 
-exports.sendWelcome = async ({ to, name }) => {
+const sendWelcome = async ({ to, name }) => {
   await initialize();
   const options = {
     ...defaultOptions,
@@ -59,7 +59,9 @@ exports.sendWelcome = async ({ to, name }) => {
   );
 };
 
-exports.sendResetPasswordUnknown = async ({ to }) => {
+export { sendWelcome };
+
+const sendResetPasswordUnknown = async ({ to }) => {
   await initialize();
   const options = {
     ...defaultOptions,
@@ -79,7 +81,9 @@ exports.sendResetPasswordUnknown = async ({ to }) => {
   );
 };
 
-exports.sendResetPassword = async ({ to, token }) => {
+export { sendResetPasswordUnknown };
+
+const sendResetPassword = async ({ to, token }) => {
   await initialize();
   const options = {
     ...defaultOptions,
@@ -100,7 +104,9 @@ exports.sendResetPassword = async ({ to, token }) => {
   );
 };
 
-exports.sendInvite = async ({ to, token, sender }) => {
+export { sendResetPassword };
+
+const sendInvite = async ({ to, token, sender }) => {
   await initialize();
   const options = {
     ...defaultOptions,
@@ -121,7 +127,9 @@ exports.sendInvite = async ({ to, token, sender }) => {
   );
 };
 
-exports.sendInviteKnown = async ({ to, token, sender }) => {
+export { sendInvite };
+
+const sendInviteKnown = async ({ to, token, sender }) => {
   await initialize();
   const options = {
     ...defaultOptions,
@@ -142,3 +150,5 @@ exports.sendInviteKnown = async ({ to, token, sender }) => {
     }
   );
 };
+
+export { sendInviteKnown };

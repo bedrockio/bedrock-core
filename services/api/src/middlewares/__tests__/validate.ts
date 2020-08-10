@@ -1,6 +1,6 @@
-const Joi = require('@hapi/joi');
-const validate = require('../validate');
-const { context } = require('../../test-helpers');
+import Joi from '@hapi/joi';
+import { validate } from '../validate';
+import { context } from '../../test-helpers';
 
 describe('validate', () => {
   it("should throw an error when the request doesn't contain a key as specified in Joi schema", async () => {

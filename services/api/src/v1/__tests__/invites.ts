@@ -1,5 +1,5 @@
-const Invite = require('../../models/invite');
-const { setupDb, teardownDb, request, createUser } = require('../../test-helpers');
+import Invite from '../../models/invite';
+import { setupDb, teardownDb, request, createUser } from '../../test-helpers';
 
 beforeAll(async () => {
   await setupDb();

@@ -1,9 +1,9 @@
-const Router = require('@koa/router');
-const Joi = require('@hapi/joi');
-const validate = require('../middlewares/validate');
-const { authenticate, fetchUser } = require('../middlewares/authenticate');
-const { NotFoundError } = require('../lib/errors');
-const Product = require('../models/product');
+import Router from '@koa/router';
+import Joi from '@hapi/joi';
+import { validate } from '../middlewares/validate';
+import { authenticate, fetchUser } from '../middlewares/authenticate';
+import { NotFoundError } from '../lib/errors';
+import Product from '../models/product';
 
 const router = new Router();
 
@@ -114,4 +114,4 @@ router
     };
   });
 
-module.exports = router;
+export default router;

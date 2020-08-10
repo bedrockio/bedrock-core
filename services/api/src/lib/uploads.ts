@@ -1,8 +1,8 @@
-const config = require('@bedrockio/config');
-const fs = require('fs');
-const path = require('path');
-const os = require('os');
-const crypto = require('crypto');
+import config from '@bedrockio/config';
+import fs from 'fs';
+import path from 'path';
+import os from 'os';
+import crypto from 'crypto';
 
 const uploadLocal = (file, hash) => {
   const destinationPath = path.join(os.tmpdir(), hash);
@@ -46,4 +46,4 @@ const storeUploadedFile = async (uploadedFile) => {
   return object;
 };
 
-module.exports = { storeUploadedFile };
+export { storeUploadedFile };

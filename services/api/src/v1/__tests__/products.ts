@@ -1,8 +1,6 @@
-const mongoose = require('mongoose');
-
-const Product = require('../../models/product');
-
-const { setupDb, teardownDb, request, createUser } = require('../../test-helpers');
+import mongoose from 'mongoose';
+import Product from '../../models/product';
+import { setupDb, teardownDb, request, createUser } from '../../test-helpers';
 
 beforeAll(async () => {
   await setupDb();

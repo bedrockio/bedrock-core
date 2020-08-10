@@ -1,8 +1,8 @@
-const Router = require('@koa/router');
-const Joi = require('@hapi/joi');
-const validate = require('../middlewares/validate');
-const { authenticate, fetchUser } = require('../middlewares/authenticate');
-const Category = require('../models/category');
+import Router from '@koa/router';
+import Joi from '@hapi/joi';
+import { validate } from '../middlewares/validate';
+import { authenticate, fetchUser } from '../middlewares/authenticate';
+import Category from '../models/category';
 
 const router = new Router();
 
@@ -51,4 +51,4 @@ router
     }
   );
 
-module.exports = router;
+export default router;

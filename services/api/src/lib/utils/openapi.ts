@@ -1,6 +1,5 @@
-const fs = require('fs');
-
-const config = require('@bedrockio/config');
+import fs from 'fs';
+import config from '@bedrockio/config'
 
 function getParamsFromValidationMiddleware(validationMiddleware, type) {
   const { convert } = require('@yeongjet/joi-to-json-schema');
@@ -27,7 +26,7 @@ function getParamsFromValidationMiddleware(validationMiddleware, type) {
   }
 }
 
-exports.routerToOpenApi = (router) => {
+const routerToOpenApi = (router) => {
   const { stack } = router;
   const paths = stack
     .filter((layer) => layer.methods.length > 0)
@@ -61,7 +60,9 @@ exports.routerToOpenApi = (router) => {
   };
 };
 
-exports.loadOpenApiDefinitions = (dir, rootPath) => {
+export { routerToOpenApi };
+
+const loadOpenApiDefinitions = (dir, rootPath) => {
   return fs
     .readdirSync(dir)
     .filter((path) => path.match('.json'))
@@ -83,8 +84,10 @@ exports.loadOpenApiDefinitions = (dir, rootPath) => {
     });
 };
 
+export { loadOpenApiDefinitions };
+
 // This is just for OpenAPI/Swagger compatibility purposes
-exports.expandOpenApi = (definitions) => {
+const expandOpenApi = (definitions) => {
   const allPaths = {};
   definitions.forEach((module) => {
     const { paths } = module;
@@ -148,3 +151,5 @@ exports.expandOpenApi = (definitions) => {
     paths: allPaths,
   };
 };
+
+export { expandOpenApi };

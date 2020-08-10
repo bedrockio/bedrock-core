@@ -1,9 +1,9 @@
-const request = require('supertest'); //eslint-disable-line
-const app = require('../app');
-const qs = require('querystring');
-const tokens = require('../lib/tokens');
+import request from 'supertest'; //eslint-disable-line
+import app from '../app';
+import qs from 'querystring';
+import tokens from '../lib/tokens';
 
-module.exports = async function handleRequest(httpMethod, url, bodyOrQuery = {}, options = {}) {
+export default async function handleRequest(httpMethod, url, bodyOrQuery = {}, options = {}) {
   const headers = options.headers || {};
   if (options.user && !headers.Authorization) {
     headers.Authorization = `Bearer ${tokens.createUserToken(options.user)}`;

@@ -1,6 +1,6 @@
-const jwt = require('jsonwebtoken');
-const config = require('@bedrockio/config');
-const User = require('../models/user');
+import jwt from 'jsonwebtoken';
+import config from '@bedrockio/config';
+import User from '../models/user';
 
 const secrets = {
   user: config.get('JWT_SECRET'),
@@ -40,7 +40,7 @@ function validateToken(ctx, token, type) {
   return payload;
 }
 
-exports.authenticate = ({ type, optional = false } = {}) => {
+const authenticate = ({ type, optional = false } = {}) => {
   return async (ctx, next) => {
     if (!ctx.state.jwt) {
       const token = getToken(ctx);
@@ -54,7 +54,9 @@ exports.authenticate = ({ type, optional = false } = {}) => {
   };
 };
 
-exports.fetchUser = async (ctx, next) => {
+export { authenticate };
+
+const fetchUser = async (ctx, next) => {
   if (!ctx.state.authUser && ctx.state.jwt) {
     ctx.state.authUser = await User.findById(ctx.state.jwt.userId);
     if (!ctx.state.authUser) ctx.throw(400, 'user associated to token could not not be found');
@@ -62,7 +64,9 @@ exports.fetchUser = async (ctx, next) => {
   await next();
 };
 
-exports.checkUserRole = function ({ role }) {
+export { fetchUser };
+
+const checkUserRole = function ({ role }) {
   return (ctx, next) => {
     if (!(ctx.state.authUser.roles || []).includes(role)) {
       return ctx.throw(401, `You don't have the right permission for this endpoint (required role: ${role})`);
@@ -70,3 +74,5 @@ exports.checkUserRole = function ({ role }) {
     return next();
   };
 };
+
+export { checkUserRole };

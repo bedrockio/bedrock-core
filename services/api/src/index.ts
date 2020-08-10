@@ -1,8 +1,8 @@
-const database = require('./database');
-const setupFixtures = require('../scripts/setup-fixtures');
-const app = require('./app');
+import database from './database';
+import setupFixtures from '../scripts/setup-fixtures';
+import app from './app';
 
-const config = require('@bedrockio/config');
+import config from '@bedrockio/config';
 if (process.env.GCLOUD_PROJECT) {
   require('@google-cloud/trace-agent').start();
 }
@@ -12,7 +12,7 @@ const NODE_ENV = process.env.NODE_ENV;
 const PORT = config.get('BIND_PORT');
 const HOST = config.get('BIND_HOST');
 
-module.exports = (async () => {
+export default (async () => {
   await database();
   await setupFixtures();
 

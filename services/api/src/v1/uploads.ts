@@ -1,9 +1,9 @@
-const Router = require('@koa/router');
-const { createReadStream } = require('fs');
-const { authenticate, fetchUser } = require('../middlewares/authenticate');
-const { NotFoundError, UnauthorizedError } = require('../lib/errors');
-const Upload = require('../models/upload');
-const { storeUploadedFile } = require('../lib/uploads');
+import Router from '@koa/router';
+import { createReadStream } from 'fs';
+import { authenticate, fetchUser } from '../middlewares/authenticate';
+import { NotFoundError, UnauthorizedError } from '../lib/errors';
+import Upload from '../models/upload';
+import { storeUploadedFile } from '../lib/uploads';
 
 const router = new Router();
 
@@ -59,4 +59,4 @@ router
     ctx.status = 204;
   });
 
-module.exports = router;
+export default router;

@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
-import MongoMemoryServer from 'mongodb-memory-server' //.default
+import { MongoMemoryServer } from 'mongodb-memory-server' //.default
 import uniqueId from 'lodash';
 import User from '../models/user';
-import { context } from './context';
+import { context, request, response } from './context';
 
 mongoose.Promise = Promise;
 
@@ -46,6 +46,4 @@ const teardownDb = async () => {
   await mongoose.disconnect();
 };
 
-export { context }
-export { createUser }
-export { teardownDb }
+export { context, request, response, setupDb, createUser, teardownDb };

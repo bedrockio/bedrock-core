@@ -1,10 +1,10 @@
-const postmark = require('postmark');
-const config = require('@bedrockio/config');
+import postmark from 'postmark';
+import config from '@bedrockio/config';
 
 const POSTMARK_FROM = config.get('POSTMARK_FROM');
 const env = process.env.NODE_ENV;
 
-exports.sendMail = ({ to, subject }, { html, text, options }) => {
+const sendMail = ({ to, subject }, { html, text, options }) => {
   if (!config.has('POSTMARK_APIKEY') || env === 'test') {
     if (env === 'test') {
       console.warn(`Sending email to ${to}`);
@@ -31,3 +31,5 @@ exports.sendMail = ({ to, subject }, { html, text, options }) => {
       });
   }
 };
+
+export { sendMail };

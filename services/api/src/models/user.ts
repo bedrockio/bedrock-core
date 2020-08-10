@@ -51,4 +51,4 @@ schema.pre('save', async function preSave(next) {
   return next();
 });
 
-export default mongoose.model('User', schema);
+export default mongoose.models.User || mongoose.model('User', schema);

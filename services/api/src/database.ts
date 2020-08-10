@@ -1,9 +1,9 @@
-const config = require('@bedrockio/config');
-const mongoose = require('mongoose');
+import config from '@bedrockio/config';
+import mongoose from 'mongoose';
 
 mongoose.Promise = Promise;
 
-module.exports = async () => {
+export default async () => {
   await mongoose.connect(config.get('MONGO_URI'), {
     // The underlying MongoDB driver has deprecated their current connection string parser.
     useNewUrlParser: true,

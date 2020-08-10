@@ -1,6 +1,5 @@
-const { omit } = require('lodash');
-const mongoose = require('mongoose');
-const { createSchema } = require('../lib/utils/schema');
+import mongoose from 'mongoose';
+import { createSchema } from '../lib/utils/schema';
 
 const schema = createSchema({
   filename: { type: String, required: true },
@@ -12,4 +11,4 @@ const schema = createSchema({
   thumbnailUrl: { type: String },
 });
 
-module.exports = mongoose.models.Upload || mongoose.model('Upload', schema);
+export default mongoose.models.Upload || mongoose.model('Upload', schema);

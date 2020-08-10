@@ -1,12 +1,12 @@
-const Router = require('@koa/router');
-const Joi = require('@hapi/joi');
-const validate = require('../middlewares/validate');
-const { authenticate } = require('../middlewares/authenticate');
-const tokens = require('../lib/tokens');
-const { sendWelcome, sendResetPassword, sendResetPasswordUnknown } = require('../lib/emails');
-const { BadRequestError, UnauthorizedError } = require('../lib/errors');
-const User = require('../models/user');
-const Invite = require('../models/invite');
+import Router from '@koa/router';
+import Joi from '@hapi/joi';
+import { validate } from '../middlewares/validate';
+import { authenticate } from '../middlewares/authenticate';
+import * as tokens from '../lib/tokens';
+import { sendWelcome, sendResetPassword, sendResetPasswordUnknown } from '../lib/emails';
+import { BadRequestError, UnauthorizedError } from '../lib/errors';
+import User from '../models/user';
+import Invite from '../models/invite';
 
 const router = new Router();
 
@@ -141,4 +141,4 @@ router
     }
   );
 
-module.exports = router;
+export default router;

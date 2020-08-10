@@ -1,5 +1,5 @@
-const Router = require('@koa/router');
-const User = require('../models/user');
+import Router from '@koa/router';
+import User from '../models/user';
 
 const router = new Router();
 
@@ -16,4 +16,4 @@ router
     };
   });
 
-module.exports = router;
+export default router;
