@@ -8,19 +8,23 @@ const Shop = require('../models/shop');
 const router = new Router();
 
 const schema = Joi.object({
+  // --- Generator: create
   name: Joi.string().required(),
   description: Joi.string(),
   images: Joi.array().items(Joi.string()),
   categories: Joi.array().items(Joi.string()),
   country: Joi.string(),
+  // --- Generator
 });
 
 const patchSchema = schema.append({
   id: Joi.string().strip(),
+  // --- Generator: update
   name: Joi.string(),
   categories: Joi.array().items(Joi.string()),
   images: Joi.array().items(Joi.string()),
   country: Joi.string(),
+  // --- Generator
   createdAt: Joi.date().strip(),
   updatedAt: Joi.date().strip(),
   deletedAt: Joi.date().strip(),
@@ -41,7 +45,10 @@ router
     '/search',
     validate({
       body: Joi.object({
+        // --- Generator: search
+        name: Joi.string(),
         country: Joi.string(),
+        // --- Generator
         startAt: Joi.date(),
         endAt: Joi.date(),
         skip: Joi.number().default(0),
@@ -56,8 +63,24 @@ router
       }),
     }),
     async (ctx) => {
-      const { sort, skip, limit, country, startAt, endAt } = ctx.request.body;
+      const { sort, skip, limit, startAt, endAt } = ctx.request.body;
+      // --- Generator: vars
+      const { name, country } = ctx.request.body;
+      // --- Generator
       const query = { deletedAt: { $exists: false } };
+
+      // --- Generator: queries
+      if (name) {
+        query.name = {
+          $regex: name,
+          $options: 'i',
+        };
+      }
+      if (country) {
+        query.country = country;
+      }
+      // --- Generator
+
       if (startAt || endAt) {
         query.createdAt = {};
         if (startAt) {
@@ -66,9 +89,6 @@ router
         if (endAt) {
           query.createdAt.$lte = endAt;
         }
-      }
-      if (country) {
-        query.country = country;
       }
       const data = await Shop.find(query)
         .sort({ [sort.field]: sort.order === 'desc' ? -1 : 1 })
@@ -111,7 +131,6 @@ router
       const shop = ctx.state.shop;
       shop.assign(ctx.request.body);
       await shop.save();
-      await shop.execPopulate();
       ctx.body = {
         data: shop,
       };

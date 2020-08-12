@@ -3,6 +3,7 @@ const { createSchema } = require('../lib/utils/schema');
 const { ObjectId } = mongoose.Schema.Types;
 
 const schema = createSchema({
+  // --- Generator: schema
   name: { type: String, trim: true, required: true },
   description: { type: String, trim: true },
   images: [
@@ -14,6 +15,7 @@ const schema = createSchema({
   ],
   categories: [{ type: ObjectId, ref: 'Categories' }],
   country: { type: String },
+  // --- Generator
 });
 
 schema.plugin(require('mongoose-autopopulate'));

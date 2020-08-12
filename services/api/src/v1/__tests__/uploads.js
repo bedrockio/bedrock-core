@@ -25,14 +25,14 @@ describe('/1/uploads', () => {
     it('should be able to create upload', async () => {
       const user = await createUser();
       const response = await request('POST', '/1/uploads', {}, { user, file: __dirname + '/fixtures/logo.png' });
-      const data = response.body.data;
+      const [upload] = response.body.data;
       expect(response.status).toBe(200);
-      expect(data.mimeType).toBe('image/png');
-      expect(data.storageType).toBe('local');
-      expect(data.hash.length).toBe(64);
-      expect(data.rawUrl[0]).toBe('/');
-      expect(data.filename).toBe('logo.png');
-      expect(data.ownerId).toBe(user.id);
+      expect(upload.mimeType).toBe('image/png');
+      expect(upload.storageType).toBe('local');
+      expect(upload.hash.length).toBe(64);
+      expect(upload.rawUrl[0]).toBe('/');
+      expect(upload.filename).toBe('logo.png');
+      expect(upload.ownerId).toBe(user.id);
     });
 
     it('should be able to handle multiple files', async () => {
