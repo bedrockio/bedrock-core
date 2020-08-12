@@ -1,13 +1,32 @@
 import React from 'react';
-import { Modal, Form, Dropdown, Icon, Button, Label } from 'semantic-ui-react';
+import { Modal, Form, Ref, Icon, Button, Label } from 'semantic-ui-react';
 import DateTimeField from 'components/form-fields/DateTime';
 
+import Input from './Input';
+import Dropdown from './Dropdown';
+
 export default class Filters extends React.Component {
+
+  static Input = Input;
+  static Dropdown = Dropdown;
+
   constructor(props) {
     super(props);
     this.state = {
       ...props.filters,
     };
+    this.formRef = React.createRef();
+  }
+
+  onModalOpen = () => {
+    setTimeout(() => {
+      const input = this.formRef.current.querySelector('input[name]');
+      input?.focus();
+    });
+  }
+
+  onFilterChange = (evt, { name, value }) => {
+    this.setFilter(name, value);
   }
 
   onSubmit = () => {
@@ -36,9 +55,10 @@ export default class Filters extends React.Component {
       <Modal
         closeIcon
         size="tiny"
+        onOpen={this.onModalOpen}
         trigger={
           this.hasFilters() ? (
-            <Button as="div" labelPosition="right" style={{ marginRight: '10px' }}>
+            <Button as="div" labelPosition="right" style={{ margin: '0 10px' }}>
               <Button basic primary>
                 <Icon name="filter" />
                 Filter
@@ -48,7 +68,7 @@ export default class Filters extends React.Component {
               </Label>
             </Button>
           ) : (
-            <Button basic primary style={{ marginRight: '10px' }}>
+            <Button basic primary style={{ margin: '0 10px' }}>
               <Icon name="filter" />
               Filter
             </Button>
@@ -56,14 +76,18 @@ export default class Filters extends React.Component {
         }>
         <Modal.Header>Filter</Modal.Header>
         <Modal.Content>
-          <Form>
-            {this.renderFields()}
-            {this.renderDateFilters()}
-          </Form>
+          <Ref innerRef={this.formRef}>
+            <Form
+              id="filters"
+              onSubmit={this.onSubmit}>
+              {this.renderFilters()}
+              {this.renderDateFilters()}
+            </Form>
+          </Ref>
         </Modal.Content>
         <Modal.Actions>
           <Button content="Reset" onClick={this.onReset} />
-          <Button primary content="Apply" onClick={this.onSubmit} />
+          <Button primary form="filters" content="Apply" />
         </Modal.Actions>
       </Modal>
     );
@@ -107,32 +131,13 @@ export default class Filters extends React.Component {
     );
   }
 
-  renderFields() {
-    const { fields } = this.props;
-    if (fields) {
-      return (
-        <React.Fragment>
-          {fields.map((field) => {
-            const { name, text, search } = field;
-            return (
-              <Form.Field key={name}>
-                <label htmlFor={name}>{text}</label>
-                <Dropdown
-                  id={name}
-                  search={search || false}
-                  clearable
-                  selection
-                  options={field.options}
-                  fluid
-                  placeholder="Select"
-                  value={this.state[name]}
-                  onChange={(e, { value }) => this.setFilter(name, value)}
-                />
-              </Form.Field>
-            );
-          })}
-        </React.Fragment>
-      );
-    }
+  renderFilters() {
+    return React.Children.map(this.props.children, (filter) => {
+      const { name } = filter.props;
+      return React.cloneElement(filter, {
+        value: this.state[name] || '',
+        onChange: this.onFilterChange,
+      });
+    });
   }
 }

@@ -37,18 +37,15 @@ export default class ShopList extends React.Component {
           return (
             <React.Fragment>
               <Breadcrumbs active="Shops">
-                <Filters
-                  onSave={setFilters}
-                  filters={filters}
-                  fields={[
-                    {
-                      text: 'Country',
-                        name: 'country',
-                        options: countries,
-                        search: true,
-                    },
-                  ]}
-                />
+                <Filters onSave={setFilters} filters={filters}>
+                  <Filters.Input label="Name" name="name" />
+                  <Filters.Dropdown
+                    label="Country"
+                    name="country"
+                    options={countries}
+                    search
+                  />
+                </Filters>
                 <EditShop trigger={<Button primary content="New Shop" icon="plus" />} onSave={reload} />
               </Breadcrumbs>
               <Divider hidden />

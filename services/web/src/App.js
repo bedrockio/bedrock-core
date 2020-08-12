@@ -22,7 +22,7 @@ import {
   ForgotPassword,
   ResetPassword,
   NotFound,
-} from './screens';
+} from 'screens';
 
 const App = () => (
   <React.Fragment>

@@ -7,8 +7,7 @@ import { screen } from 'helpers';
 import { Confirm } from 'components/Semantic';
 import SearchProvider from 'components/SearchProvider';
 import HelpTip from 'components/HelpTip';
-import EditUser from 'modals/EditUser';
-import Filters from 'modals/Filters';
+import { EditUser, Filters } from 'modals';
 
 import {
   Container,
@@ -41,26 +40,22 @@ export default class Users extends React.Component {
                 <Layout horizontal center spread>
                   Users
                   <Layout.Group>
-                    <Filters
-                      onSave={setFilters}
-                      filters={filters}
-                      fields={[
-                        {
-                          text: 'Role',
-                            name: 'role',
-                            options: [
-                              {
-                                text: 'User',
-                                value: 'user',
-                              },
-                              {
-                                text: 'Admin',
-                                value: 'admin',
-                              }
-                            ]
-                        }
-                      ]}
-                    />
+                    <Filters onSave={setFilters} filters={filters}>
+                      <Filters.Dropdown
+                        name="role"
+                        label="Role"
+                        options={[
+                          {
+                            text: 'User',
+                              value: 'user',
+                          },
+                          {
+                            text: 'Admin',
+                            value: 'admin',
+                          }
+                        ]}
+                      />
+                    </Filters>
                     <EditUser
                       trigger={
                         <Button
