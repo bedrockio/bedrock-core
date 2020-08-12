@@ -23,12 +23,14 @@ export default ({ id, shop, onSave }) => (
     <Divider hidden />
     <Menu tabular>
       <Menu.Item name="Overview" to={`/shops/${id}`} as={NavLink} exact />
+      {/* --- Generator: menus */}
       <Menu.Item
         name="Products"
         to={`/shops/${id}/products`}
         as={NavLink}
         exact
       />
+      {/* --- Generator */}
     </Menu>
     <Divider hidden />
   </React.Fragment>

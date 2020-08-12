@@ -19,6 +19,7 @@ export default class ShopOverview extends React.Component {
           <Loader active>Loading</Loader>
         ) : (
           <React.Fragment>
+            {/* --- Generator: overview */}
             <Header as="h1">{shop.name}</Header>
             <p>{shop.description}</p>
             <Header as="h3">Images</Header>
@@ -27,6 +28,7 @@ export default class ShopOverview extends React.Component {
                 <Image key={image.id} src={urlForUpload(image)} />
               ))}
             </Image.Group>
+            {/* --- Generator */}
             <Header as="h3">Details</Header>
             <Table definition>
               <Table.Body>

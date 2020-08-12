@@ -24,70 +24,61 @@ export default class Uploads extends React.Component {
 
   constructor(props) {
     super(props);
-    const uploads = this.getInitialUploads(props);
     this.state = {
+      uploads: [],
       loading: false,
       error: null,
-      uploads,
     };
-    this.onChange(uploads);
   }
 
-  getInitialUploads(props) {
-    const { value } = props;
-    let uploads;
-    if (!value) {
-      uploads = [];
-    } else if (Array.isArray(value)) {
-      uploads = value.concat();
-    } else {
-      uploads = [value];
-    }
-    return uploads;
-  }
+  // Lifecycle
 
-  delete(upload) {
-    const { uploads } = this.state;
-    const newUploads = uploads.filter((u) => u.id != upload.id);
-    this.setState({ uploads: newUploads });
-    this.onChange(newUploads);
-  }
-
-  onChange = () => {
-    const { single, onChange } = this.props;
-    const { uploads } = this.state;
-    if (single) {
-      onChange(uploads[0] || null);
-    } else {
-      onChange(uploads);
+  componentDidMount() {
+    const { value } = this.props;
+    if (value) {
+      this.setState({
+        uploads: this.isMultiple(value) ? value : [value],
+      });
     }
   }
+
+  componentDidUpdate(lastProps, lastState) {
+    const { uploads } = this.state;
+    if (uploads !== lastState.uploads) {
+      const ids = uploads.map((u) => u.id);
+      this.props.onChange({
+        name: this.props.name,
+        value: this.isMultiple() ? ids : ids[0],
+      });
+    }
+  }
+
+  // Events
 
   onDrop = async (acceptedFiles, rejectedFiles) => {
-    this.setState({
-      loading: true,
-      error: null,
-    });
     try {
-      const { single, type } = this.props;
-      if (single) {
+      if (!this.isMultiple()) {
         acceptedFiles = acceptedFiles.slice(0, 1);
       }
       if (rejectedFiles.length) {
-        throw new Error(`File must be of ${type} type.`);
+        throw new Error(`File must be of ${this.props.type} type.`);
       }
+      this.setState({
+        loading: true,
+        error: null,
+      });
       const { data } = await request({
         method: 'POST',
         path: '/1/uploads',
         files: acceptedFiles,
       });
-      const uploaded = Array.isArray(data) ? data : [data];
-      const uploads = single ? uploaded : [...this.state.uploads, ...uploaded];
       this.setState({
-        uploads,
+        uploads: [
+          ...this.state.uploads,
+          ...data,
+        ],
         loading: false,
       });
-      this.onChange(uploads);
     } catch (error) {
       this.setState({
         error,
@@ -97,8 +88,20 @@ export default class Uploads extends React.Component {
     }
   };
 
+  // Helpers
+
+  isMultiple(value = this.props.value) {
+    return Array.isArray(value);
+  }
+
+  delete(upload) {
+    const { uploads } = this.state;
+    const newUploads = uploads.filter((u) => u.id != upload.id);
+    this.setState({ uploads: newUploads });
+  }
+
   render() {
-    const { required, label, type, single } = this.props;
+    const { required, label, type } = this.props;
     const { error, loading, uploads } = this.state;
     return (
       <Form.Field required={required}>
@@ -156,10 +159,10 @@ export default class Uploads extends React.Component {
                     <p>Uploading...</p>
                   ) : isDragActive ? (
                     <p>Drop files here...</p>
-                  ) : single ? (
-                    <p>Try dropping a file here, or click to select a file to upload.</p>
-                  ) : (
+                  ) : this.isMultiple() ? (
                     <p>Try dropping some files here, or click to select files to upload.</p>
+                  ) : (
+                    <p>Try dropping a file here, or click to select a file to upload.</p>
                   )}
                 </div>
               </div>
@@ -197,13 +200,11 @@ export default class Uploads extends React.Component {
 
 Uploads.propTypes = {
   type: PropTypes.oneOf(Object.keys(MIME_TYPES)),
-  single: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   onError: PropTypes.func,
 };
 
 Uploads.defaultProps = {
   type: 'image',
-  single: false,
   onError: () => {},
 };

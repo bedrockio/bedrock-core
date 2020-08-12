@@ -33,11 +33,12 @@ export default class ShopList extends React.Component {
   render() {
     return (
       <SearchProvider onDataNeeded={this.onDataNeeded}>
-        {({ items, getSorted, setSort, filters, setFilters, reload }) => {
+        {({ items: shops, getSorted, setSort, filters, setFilters, reload }) => {
           return (
             <React.Fragment>
               <Breadcrumbs active="Shops">
                 <Filters onSave={setFilters} filters={filters}>
+                  {/* --- Generator: filters */}
                   <Filters.Input label="Name" name="name" />
                   <Filters.Dropdown
                     label="Country"
@@ -45,11 +46,12 @@ export default class ShopList extends React.Component {
                     options={countries}
                     search
                   />
+                  {/* --- Generator */}
                 </Filters>
                 <EditShop trigger={<Button primary content="New Shop" icon="plus" />} onSave={reload} />
               </Breadcrumbs>
               <Divider hidden />
-              {items.length === 0 ? (
+              {shops.length === 0 ? (
                 <Message>No shops created yet</Message>
               ) : (
                 <Table celled sortable>
@@ -67,30 +69,30 @@ export default class ShopList extends React.Component {
                     </Table.Row>
                   </Table.Header>
                   <Table.Body>
-                    {items.map((item) => {
+                    {shops.map((shop) => {
                       return (
-                        <Table.Row key={item.id}>
+                        <Table.Row key={shop.id}>
                           <Table.Cell>
-                            <Link to={`/shops/${item.id}`}>{item.name}</Link>
+                            <Link to={`/shops/${shop.id}`}>{shop.name}</Link>
                           </Table.Cell>
-                          <Table.Cell>{item.description}</Table.Cell>
-                          <Table.Cell>{formatDateTime(item.createdAt)}</Table.Cell>
+                          <Table.Cell>{shop.description}</Table.Cell>
+                          <Table.Cell>{formatDateTime(shop.createdAt)}</Table.Cell>
                           <Table.Cell textAlign="center">
                             <EditShop
-                              item={item}
+                              shop={shop}
                               trigger={<Button style={{ marginLeft: '20px' }} basic icon="edit" />}
                               onSave={reload}
                             />
                             <Confirm
                               negative
                               confirmText="Delete"
-                              header={`Are you sure you want to delete "${item.name}"?`}
+                              header={`Are you sure you want to delete "${shop.name}"?`}
                               content="All data will be permanently deleted"
                               trigger={<Button basic icon="trash" />}
                               onConfirm={async () => {
                                 await request({
                                   method: 'DELETE',
-                                  path: `/1/shops/${item.id}`,
+                                  path: `/1/shops/${shop.id}`,
                                 });
                                 reload();
                               }}
