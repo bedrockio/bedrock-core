@@ -2,77 +2,76 @@ import React from 'react';
 import { Modal, Form, Label, Button, Message } from 'semantic-ui-react';
 import { request } from 'utils/api';
 import AutoFocus from 'components/AutoFocus';
-import DateTimeField from 'components/form-fields/DateTime';
+
+// --- Generator: imports
+import DateField from 'components/form-fields/Date';
 import UploadsField from 'components/form-fields/Uploads';
+// --- Generator:
 
 export default class EditProduct extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
       open: false,
-      touched: false,
-      loading: false,
       error: null,
-      hasError: false,
-      item: {
-        ...props.item,
-        shop: props.shopId,
-      },
-      sellingPoints: props.item?.sellingPoints || [],
+      loading: false,
+      product: props.product || {},
     };
   }
 
-  isUpdate() {
-    return !!this.props.item;
+  componentDidUpdate(lastProps) {
+    const { product } = this.props;
+    if (product && product !== lastProps.product) {
+      this.setState({
+        product,
+      });
+    }
   }
 
-  setField(name, value) {
+  isUpdate() {
+    return !!this.props.product;
+  }
+
+  setField = (evt, { name, value }) => {
     this.setState({
-      item: {
-        ...this.state.item,
+      product: {
+        ...this.state.product,
         [name]: value,
       },
     });
-  }
+  };
 
-  getSellingPointsOptions() {
-    const { sellingPoints } = this.state;
-    return sellingPoints.map((point) => {
-      return {
-        text: point,
-        value: point,
-      };
-    });
-  }
+  setCheckedField = (evt, { name, checked }) => {
+    this.setField(evt, { name, value: checked });
+  };
 
   onSubmit = async () => {
     try {
       this.setState({
         loading: true,
-        touched: true,
       });
-      const { item } = this.state;
+      const { product } = this.state;
       if (this.isUpdate()) {
         await request({
           method: 'PATCH',
-          path: `/1/products/${item.id}`,
+          path: `/1/products/${product.id}`,
           body: {
-            ...item,
-            images: (item.images || []).map((image) => image.id),
-          },
+            ...product,
+            shop: this.props.shop.id,
+          }
         });
       } else {
         await request({
           method: 'POST',
           path: '/1/products',
           body: {
-            ...item,
-            images: (item.images || []).map((image) => image.id),
+            ...product,
+            shop: this.props.shop.id,
           },
         });
         this.setState({
-          item: {},
-          touched: false,
+          product: {},
         });
       }
       this.setState({
@@ -90,90 +89,105 @@ export default class EditProduct extends React.Component {
 
   render() {
     const { trigger } = this.props;
-    const { item, open, touched, loading, error, hasError } = this.state;
+    const { product, open, loading, error } = this.state;
     return (
       <Modal
         closeIcon
-        closeOnDimmerClick={false}
-        onClose={() => this.setState({ open: false })}
-        onOpen={() => this.setState({ open: true })}
         open={open}
-        trigger={trigger}>
-        <Modal.Header>{this.isUpdate() ? `Edit "${item.name}"` : 'New Product'}</Modal.Header>
+        trigger={trigger}
+        closeOnDimmerClick={false}
+        onOpen={() => this.setState({ open: true })}
+        onClose={() => this.setState({ open: false })}>
+        <Modal.Header>{this.isUpdate() ? `Edit "${product.name}"` : 'New Product'}</Modal.Header>
         <Modal.Content>
           <AutoFocus>
-            <Form error={touched && (!!error || hasError)}>
+            <Form
+              noValidate
+              id="edit-product"
+              error={!!error}
+              onSubmit={this.onSubmit}>
               {error && <Message error content={error.message} />}
+              {/* --- Generator: fields */}
               <Form.Input
                 required
+                type="text"
                 name="name"
                 label="Name"
-                type="text"
-                value={item.name || ''}
-                onChange={(e, { value }) => this.setField('name', value)}
+                value={product.name || ''}
+                onChange={this.setField}
               />
               <Form.TextArea
                 name="description"
                 label="Description"
-                value={item.description || ''}
-                onChange={(e, { value }) => this.setField('description', value)}
+                value={product.description || ''}
+                onChange={this.setField}
               />
               <Form.Checkbox
-                label="Is Featured?"
                 name="isFeatured"
-                checked={item.isFeatured || false}
-                onChange={(e, { checked }) => this.setField('isFeatured', checked)}
+                label="Is Featured?"
+                checked={product.isFeatured || false}
+                onChange={this.setCheckedField}
               />
               <Form.Input
+                type="number"
+                name="priceUsd"
                 labelPosition="right"
                 placeholder="Amount"
-                name="priceUsd"
-                type="number"
-                onChange={(e, { value }) => this.setField('priceUsd', parseInt(value, 10))}
-                value={item.priceUsd || ''}>
+                onChange={this.setField}
+                value={product.priceUsd || ''}>
                 <Label basic>$</Label>
                 <input />
                 <Label>.00</Label>
               </Form.Input>
-              <DateTimeField
+              <DateField
+                time
                 name="expiresAt"
-                value={item.expiresAt || new Date()}
+                value={product.expiresAt}
                 label="Expiration Date and Time"
-                onChange={(value) => this.setField('expiresAt', value)}
+                onChange={this.setField}
               />
               <Form.Dropdown
                 name="sellingPoints"
+                search
                 selection
                 multiple
                 allowAdditions
-                search
-                options={this.getSellingPointsOptions()}
+                options={
+                  product.sellingPoints?.map((value) => {
+                    return {
+                      value,
+                      text: value,
+                    };
+                  }) || []
+                }
                 label="Selling Points"
-                onAddItem={(e, { value }) => {
-                  this.setState({
-                    sellingPoints: [...this.state.sellingPoints, value],
+                onAddItem={(evt, { name, value }) => {
+                  this.setField(evt, {
+                    name,
+                    value: [...product.sellingPoints || [], value],
                   });
                 }}
-                onChange={(e, { value }) => this.setField('sellingPoints', value)}
-                value={item.sellingPoints || []}
+                onChange={this.setField}
+                value={product.sellingPoints || []}
               />
               <UploadsField
-                label="Images"
                 name="images"
-                value={item.images || []}
-                onChange={(value) => this.setField('images', value)}
-                onError={() => this.setState({ touched: true, hasError: true })}
+                label="Images"
+                value={product.images || []}
+                onChange={(data) => this.setField(null, data)}
+                onError={(error) => this.setState({ error })}
               />
+              {/* --- Generator */}
             </Form>
           </AutoFocus>
         </Modal.Content>
         <Modal.Actions>
           <Button
             primary
+            form="edit-product"
             loading={loading}
             disabled={loading}
             content={this.isUpdate() ? 'Update' : 'Create'}
-            onClick={this.onSubmit}
           />
         </Modal.Actions>
       </Modal>

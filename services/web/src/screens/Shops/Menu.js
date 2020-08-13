@@ -9,7 +9,7 @@ export default ({ id, shop, onSave }) => (
   <React.Fragment>
     <Breadcrumbs link={<Link to="/shops">Shops</Link>} active={shop?.name || 'Loading...'}>
       <EditShop
-        item={shop}
+        shop={shop}
         onSave={onSave}
         trigger={
           <Button

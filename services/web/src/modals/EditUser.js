@@ -84,7 +84,10 @@ export default class EditUser extends React.Component {
         <Modal.Header>{this.isUpdate() ? `Edit "${item.name}"` : 'New User'}</Modal.Header>
         <Modal.Content>
           <AutoFocus>
-            <Form error={touched && error}>
+            <Form
+              id="edit-user"
+              onSubmit={this.onSubmit}
+              error={touched && error}>
               {error && <Message error content={error.message} />}
               <Form.Input
                 value={item.name || ''}
@@ -125,10 +128,10 @@ export default class EditUser extends React.Component {
         <Modal.Actions>
           <Button
             primary
+            form="edit-user"
             loading={loading}
             disabled={loading}
             content={this.isUpdate() ? 'Update' : 'Create'}
-            onClick={this.onSubmit}
           />
         </Modal.Actions>
       </Modal>

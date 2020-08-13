@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Form, Ref, Icon, Button, Label } from 'semantic-ui-react';
-import DateTimeField from 'components/form-fields/DateTime';
+import DateField from 'components/form-fields/Date';
 
 import Input from './Input';
 import Dropdown from './Dropdown';
@@ -99,12 +99,11 @@ export default class Filters extends React.Component {
       <Form.Field>
         <label>Created At</label>
         <span style={{ display: 'inline-block', verticalAlign: 'middle' }}>
-          <DateTimeField
+          <DateField
             name="startAt"
             value={startAt}
             placeholder="No Start"
-            includeTime={false}
-            onChange={(value) => this.setFilter('startAt', value)}
+            onChange={(evt, { value }) => this.setFilter('startAt', value)}
             clearable
           />
         </span>
@@ -118,12 +117,11 @@ export default class Filters extends React.Component {
           &ndash;
         </span>
         <span style={{ display: 'inline-block', verticalAlign: 'middle' }}>
-          <DateTimeField
+          <DateField
             name="endAt"
             value={endAt}
             placeholder="No End"
-            includeTime={false}
-            onChange={(value) => this.setFilter('endAt', value)}
+            onChange={(evt, { value }) => this.setFilter('endAt', value)}
             clearable
           />
         </span>

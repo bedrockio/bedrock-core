@@ -3,13 +3,14 @@ import { Form, Modal, Message, Button } from 'semantic-ui-react';
 import { request } from 'utils/api';
 import AutoFocus from 'components/AutoFocus';
 
-// --- Generator: modal-imports
+// --- Generator: imports
 import UploadsField from 'components/form-fields/Uploads';
 import CountriesField from 'components/form-fields/Countries';
 import CategoriesField from 'components/form-fields/Categories';
 // --- Generator:
 
 export default class EditShop extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -42,13 +43,17 @@ export default class EditShop extends React.Component {
     });
   };
 
+  setCheckedField = (evt, { name, checked }) => {
+    this.setField(evt, { name, value: checked });
+  };
+
   onSubmit = async () => {
     try {
-      const { shop } = this.state;
       this.setState({
         error: null,
         loading: true,
       });
+      const { shop } = this.state;
       if (this.isUpdate()) {
         await request({
           method: 'PATCH',
@@ -92,14 +97,18 @@ export default class EditShop extends React.Component {
         <Modal.Header>{this.isUpdate() ? `Edit "${shop.name}"` : 'New Shop'}</Modal.Header>
         <Modal.Content>
           <AutoFocus>
-            <Form id="edit-shop" error={!!error}>
+            <Form
+              noValidate
+              id="edit-shop"
+              error={!!error}
+              onSubmit={this.onSubmit}>
               {error && <Message error content={error.message} />}
               {/* --- Generator: fields */}
               <Form.Input
-                name="name"
-                label="Name"
                 required
                 type="text"
+                name="name"
+                label="Name"
                 value={shop.name || ''}
                 onChange={this.setField}
               />
@@ -130,7 +139,6 @@ export default class EditShop extends React.Component {
             loading={loading}
             disabled={loading}
             content={this.isUpdate() ? 'Update' : 'Create'}
-            onClick={this.onSubmit}
           />
         </Modal.Actions>
       </Modal>

@@ -30,14 +30,14 @@ export default class ShopProducts extends React.Component {
         <Menu {...this.props} />
         {shop ? (
           <SearchProvider onDataNeeded={this.onDataNeeded}>
-            {({ items, getSorted, setSort, reload }) => {
+            {({ items: products, getSorted, setSort, reload }) => {
               return (
                 <React.Fragment>
                   <Header as="h2">
                     <Layout horizontal center spread>
                       Products
                       <EditProduct
-                        shopId={shop.id}
+                        shop={shop}
                         onSave={reload}
                         trigger={
                           <Button primary size="tiny" floated="right" content="Add Product" icon="plus" />
@@ -45,7 +45,7 @@ export default class ShopProducts extends React.Component {
                       />
                     </Layout>
                   </Header>
-                  {items.length === 0 ? (
+                  {products.length === 0 ? (
                     <Message>No products added yet</Message>
                   ) : (
                     <Table celled>
@@ -64,33 +64,33 @@ export default class ShopProducts extends React.Component {
                         </Table.Row>
                       </Table.Header>
                       <Table.Body>
-                        {items.map((item) => {
-                          const [image] = item.images;
+                        {products.map((product) => {
+                          const [image] = product.images;
                           return (
-                            <Table.Row key={item.id}>
+                            <Table.Row key={product.id}>
                               <Table.Cell>
                                 {image && <Image style={{ width: '100%' }} src={urlForUpload(image, true)} />}
                               </Table.Cell>
-                              <Table.Cell>{item.name}</Table.Cell>
-                              <Table.Cell>{item.description}</Table.Cell>
-                              <Table.Cell>{formatDateTime(item.createdAt)}</Table.Cell>
+                              <Table.Cell>{product.name}</Table.Cell>
+                              <Table.Cell>{product.description}</Table.Cell>
+                              <Table.Cell>{formatDateTime(product.createdAt)}</Table.Cell>
                               <Table.Cell textAlign="center">
                                 <EditProduct
-                                  shopId={shop.id}
-                                  item={item}
+                                  shop={shop}
+                                  product={product}
                                   onSave={reload}
                                   trigger={<Button style={{ marginLeft: '20px' }} basic icon="edit" />}
                                 />
                                 <Confirm
                                   negative
                                   confirmText="Delete"
-                                  header={`Are you sure you want to delete "${item.name}"?`}
+                                  header={`Are you sure you want to delete "${product.name}"?`}
                                   content="All data will be permanently deleted"
                                   trigger={<Button basic icon="trash" />}
                                   onConfirm={async () => {
                                     await request({
                                       method: 'DELETE',
-                                      path: `/1/products/${item.id}`,
+                                      path: `/1/products/${product.id}`,
                                     });
                                     reload();
                                   }}
