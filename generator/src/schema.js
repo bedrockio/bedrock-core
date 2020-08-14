@@ -11,6 +11,8 @@ const {
   validateCamelUpper
 } = require('./validations');
 
+let initialBuild = false;
+
 const SCHEMA_TYPES = [
   {
     title: 'String',
@@ -18,7 +20,7 @@ const SCHEMA_TYPES = [
   },
   {
     title: 'Text',
-    value: 'String',
+    value: 'Text',
     description: 'Same as String but generates <textfield>',
   },
   {
@@ -218,6 +220,7 @@ function validateMixed(str, type) {
 }
 
 async function getSchema(fields = []) {
+  initialBuild = fields.length > 0;
   let action;
   while (action !== 'build') {
     if (fields.length) {
@@ -259,9 +262,18 @@ async function getAction(fields) {
           ]
         : []),
     ],
-    initial: 0,
+    initial: getInitialAction(fields),
     hint: 'Select Action',
   });
+}
+
+function getInitialAction(fields) {
+  if (initialBuild) {
+    initialBuild = false;
+    return fields.length + 2;
+  } else {
+    return fields.length;
+  }
 }
 
 async function getField(field) {
@@ -301,7 +313,9 @@ async function getField(field) {
     schemaType = schemaType.replace(/Array/, '');
   }
 
-  if (schemaType === 'Upload') {
+  if (schemaType === 'Text') {
+    schemaType = 'String';
+  } else if (schemaType === 'Upload') {
     schemaType = 'ObjectId';
     ref = 'Upload';
   } else if (schemaType === 'ObjectId') {

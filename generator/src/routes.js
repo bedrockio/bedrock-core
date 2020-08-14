@@ -16,12 +16,14 @@ async function generateRoutes(options) {
 
   const routesDir = await assertPath(ROUTES_DIR);
 
+  const searchSchema = getSearchSchema(options.schema);
+
   let source = await readSourceFile(routesDir, 'shops.js');
   source = replacePrimary(source, options);
-  source = replaceSchema(source, 'create', options);
-  source = replaceSchema(source, 'update', options);
-  source = replaceSchema(source, 'search', options);
-  source = replaceSearchQuery(source, options);
+  source = replaceSchema(source, options.schema, 'create');
+  source = replaceSchema(source, options.schema, 'update');
+  source = replaceSchema(source, searchSchema, 'search');
+  source = replaceSearchQuery(source, searchSchema);
 
   await writeLocalFile(source, routesDir, `${pluralLower}.js`);
   await patchRoutesEntrypoint(routesDir, options);
@@ -63,15 +65,23 @@ function injectByReg(source, replace, reg) {
   return source;
 }
 
-function replaceSearchQuery(source, options) {
-  const { schema } = options;
+function getSearchSchema(schema) {
+  return schema.filter((field) => {
+    return !field.private && !field.type.match(/Array/);
+  });
+}
+
+function replaceSearchQuery(source, schema) {
+
+  const props = schema.map((field) => field.name);
+
   const vars = block`
-    const { ${schema.map((f) => f.name).join(', ')} } = ctx.request.body;
+    const { ${props.join(', ')} } = ctx.request.body;
   `;
-  const queries = schema.map((field) => {
-    const { name } = field;
-    // TODO: for now assume that only "name" requires
-    // partial text search
+
+  const queries = props.map((name) => {
+    // TODO: for now assume that only "name"
+    // requires partial text search
     if (name === 'name') {
       return block`
         if (${name}) {

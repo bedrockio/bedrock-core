@@ -3,7 +3,7 @@ const prompt = require('./prompt');
 const { saveSnapshot, restoreSnapshot } = require('./snapshot');
 
 const { getSchema } = require('./schema');
-const { getForeignReferences } = require('./references');
+const { getPrimaryReference, getSecondaryReferences } = require('./references');
 const { validateCamelUpper } = require('./validations');
 const { getCamelLower, getPlural } = require('./lang');
 
@@ -55,11 +55,6 @@ async function getOptions() {
 
   const snapshot = await restoreSnapshot(argv.snapshot);
 
-  //const foo = {
-    //...argv,
-    //...await restoreSnapshot(argv.snapshot),
-  //};
-
   prompt.override({
     ...argv,
     ...snapshot,
@@ -108,11 +103,9 @@ async function getOptions() {
       name: 'pluralUpper',
       validate: validateCamelUpper,
       initial: getPlural,
-      message: 'Enter plural name in camel case (ex. UserImages):',
+      message: 'Confirm plural name in camel case (ex. UserImages):',
     },
   ]);
-
-  prompt.override(null);
 
   const camelLower = getCamelLower(camelUpper);
   const pluralLower = getCamelLower(pluralUpper);
@@ -126,11 +119,15 @@ async function getOptions() {
     pluralLower,
   };
 
-  if (generate.includes('screens')) {
-    options.references = await getForeignReferences(options);
-  } else {
-    options.references = [];
+  if (type === 'primary' && generate.includes('screens')) {
+    options.secondaryReferences = await getSecondaryReferences(options);
+  } else if (type === 'secondary' && generate.includes('modals')) {
+    options.primaryReference = await getPrimaryReference(options);
   }
+
+  // Prevent having to avoid generic names when
+  // gathering the/ schema due to overrides.
+  prompt.override(null);
 
   options.schema = await getSchema(snapshot.schema);
 

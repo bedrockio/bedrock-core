@@ -1,4 +1,5 @@
 const { yellow } = require('kleur');
+const { startCase } = require('lodash');
 const { replaceFilters } = require('./filters');
 const { assertPath, mkdir, block } = require('./util');
 const { patchAppEntrypoint, patchIndex } = require('./patches');
@@ -20,18 +21,19 @@ async function generateScreens(options) {
   const screensDir = await assertPath(SCREENS_DIR);
   await mkdir(screensDir, pluralUpper);
 
-  await Promise.all(
-    FILES.map(async (file) => {
-      let source = await readSourceFile(screensDir, 'Shops', file);
-      source = replacePrimary(source, options);
-      source = replaceReferenceImports(source, options);
-      source = replaceReferenceRoutes(source, options);
-      source = replaceReferenceMenus(source, options);
-      source = replaceOverviewFields(source, options);
-      source = replaceFilters(source, options);
-      await writeLocalFile(source, screensDir, pluralUpper, file);
-    })
-  );
+  // Do this sequentially to ensure order
+  for (let file of FILES) {
+    let source = await readSourceFile(screensDir, 'Shops', file);
+    source = replacePrimary(source, options);
+    source = replaceReferenceImports(source, options);
+    source = replaceReferenceRoutes(source, options);
+    source = replaceReferenceMenus(source, options);
+    source = replaceOverview(source, options);
+    source = replaceHeaderCells(source, options);
+    source = replaceBodyCells(source, options, true);
+    source = replaceFilters(source, options);
+    await writeLocalFile(source, screensDir, pluralUpper, file);
+  }
 
   await generateReferenceScreens(screensDir, options);
   await patchAppEntrypoint(options);
@@ -41,28 +43,104 @@ async function generateScreens(options) {
 }
 
 function replaceReferenceImports(source, options) {
-  const imports = options.references
+  const imports = options.secondaryReferences
     .map(({ pluralUpper }) => {
       return `import ${pluralUpper} from './${pluralUpper}';`;
     })
     .join('\n');
-  return replaceBlock(source, imports, 'main-imports');
+  return replaceBlock(source, imports, 'ref-imports');
 }
 
-function replaceOverviewFields(source) {
-  // TODO: Just remove for now
-  return replaceBlock(source, '', 'overview');
+function replaceOverview(source, options) {
+  const { camelLower } = options;
+  const summaryFields = getSummaryFields(options);
+  const jsx = summaryFields.map((field, i) => {
+    const { name } = field;
+    const tag = i === 0 ? 'h1' : 'h3';
+    if (name === 'image') {
+      return block`
+        <Image key={${camelLower}.image.id} src={urlForUpload(${camelLower}.image)} />
+      `;
+    } else {
+      return block`
+        <Header as="${tag}">{${camelLower}.${name}}</Header>
+      `;
+    }
+  }).join('\n');
+
+  return replaceBlock(source, jsx, 'overview');
+}
+
+function replaceHeaderCells(source, options) {
+  const summaryFields = getSummaryFields(options);
+  const jsx = summaryFields.map((field) => {
+    const { name, type } = field;
+    const title = startCase(name);
+    if (type === 'String') {
+      return block`
+        <Table.HeaderCell
+          sorted={getSorted('${name}')}
+          onClick={() => setSort('${name}')}>
+          ${title}
+        </Table.HeaderCell>
+      `;
+    } else {
+      return block`
+        <Table.HeaderCell>
+         ${title}
+        </Table.HeaderCell>
+      `;
+    }
+  }).join('\n');
+
+  return replaceBlock(source, jsx, 'header-cells');
+}
+
+function replaceBodyCells(source, options, link) {
+  const { camelLower, pluralLower } = options;
+
+  const summaryFields = getSummaryFields(options);
+  const jsx = summaryFields.map((field, i) => {
+    const { name } = field;
+
+    let inner = name === 'image'
+      ? `<Image src={urlForUpload(${camelLower}.${name}, true)} />`
+      : `{${camelLower}.${name}}`;
+
+    if (i === 0 && link) {
+      inner = `
+          <Link to={\`/${pluralLower}/\${${camelLower}.id}\`}>
+            ${inner}
+          </Link>
+      `;
+    }
+    return block`
+        <Table.Cell>
+          ${inner}
+        </Table.Cell>
+    `;
+  }).join('\n');
+
+  return replaceBlock(source, jsx, 'body-cells');
+}
+
+function getSummaryFields(options) {
+  // Try to take the "name" and "image" fields if they exist.
+  return options.schema.filter((field) => {
+    const { name } = field;
+    return name === 'name' || name === 'image';
+  });
 }
 
 function replaceReferenceRoutes(source, options) {
-  const imports = options.references
-    .map(({ camelUpper, pluralLower }) => {
+  const imports = options.secondaryReferences
+    .map(({ camelUpper, pluralLower, pluralUpper }) => {
       return block`
       <Route
         exact
         path="/${options.pluralLower}/:id/${pluralLower}"
         render={(props) => (
-          <${camelUpper}
+          <${pluralUpper}
             id={id}
             {...props}
             {...this.state}
@@ -77,7 +155,7 @@ function replaceReferenceRoutes(source, options) {
 }
 
 function replaceReferenceMenus(source, options) {
-  const imports = options.references
+  const imports = options.secondaryReferences
     .map(({ pluralLower, pluralUpper }) => {
       return block`
       <Menu.Item
@@ -93,12 +171,14 @@ function replaceReferenceMenus(source, options) {
 }
 
 async function generateReferenceScreens(screensDir, options) {
-  if (options.references.length) {
-    const refSource = await readSourceFile(SCREENS_DIR, 'Shops/Products.js');
+  if (options.secondaryReferences.length) {
+    const refSource = await readSourceFile(screensDir, 'Shops/Products.js');
     await Promise.all(
-      options.references.map(async (ref) => {
+      options.secondaryReferences.map(async (ref) => {
         let source = refSource;
         source = replacePrimary(source, options);
+        source = replaceHeaderCells(source, options);
+        source = replaceBodyCells(source, options);
         source = replaceSecondary(source, ref);
         await writeLocalFile(
           source,

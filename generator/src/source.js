@@ -8,7 +8,7 @@ const USE_LOCAL = true;
 
 const GITHUB_RAW_BASE = 'https://raw.githubusercontent.com/bedrockio/bedrock-core/master';
 
-const GENERATOR_REG = /^([^\n]*)(\/\/|\{\/\*) --- Generator: BLOCK[\s\S]+?--- Generator\s*(\*\/\})?$/m;
+const GENERATOR_REG = /^([^\n]*)(\/\/|\{\/\*) --- Generator: BLOCK[\s\S]+?--- Generator( \*\/\})?$/m;
 
 function replaceBlock(source, inject, block) {
   const src = GENERATOR_REG.source.replace(/BLOCK/, block);
@@ -19,18 +19,25 @@ function replaceBlock(source, inject, block) {
 }
 
 function replacePrimary(source, resource) {
-  source = source.replace(/Shops/g, resource.pluralUpper);
-  source = source.replace(/shops/g, resource.pluralLower);
-  source = source.replace(/Shop/g, resource.camelUpper);
-  source = source.replace(/shop/g, resource.camelLower);
+  source = replaceToken(source, /Shops/g, resource.pluralUpper);
+  source = replaceToken(source, /shops/g, resource.pluralLower);
+  source = replaceToken(source, /Shop/g, resource.camelUpper);
+  source = replaceToken(source, /shop/g, resource.camelLower);
   return source;
 }
 
 function replaceSecondary(source, resource) {
-  source = source.replace(/Products/g, resource.pluralUpper);
-  source = source.replace(/products/g, resource.pluralLower);
-  source = source.replace(/Product/g, resource.camelUpper);
-  source = source.replace(/product/g, resource.camelLower);
+  source = replaceToken(source, /Products/g, resource.pluralUpper);
+  source = replaceToken(source, /products/g, resource.pluralLower);
+  source = replaceToken(source, /Product/g, resource.camelUpper);
+  source = replaceToken(source, /product/g, resource.camelLower);
+  return source;
+}
+
+function replaceToken(source, reg, token) {
+  if (token) {
+    source = source.replace(reg, token);
+  }
   return source;
 }
 

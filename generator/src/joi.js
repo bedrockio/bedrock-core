@@ -1,31 +1,28 @@
 const { replaceBlock } = require('./source');
 
-function replaceSchema(source, schemaType, options) {
-  const schema = outputSchema(options.schema, schemaType);
-  return replaceBlock(source, schema, schemaType);
+function replaceSchema(source, schema, operation) {
+  const output = outputSchema(schema, operation);
+  return replaceBlock(source, output, operation);
 }
 
-function outputSchema(schema, schemaType) {
+function outputSchema(schema, operation) {
   const str = schema.map((field) => {
-    return outputField(field, schemaType);
+    return outputField(field, operation);
   })
     .filter((f) => f)
     .join(',\n');
   return str ? str + ',' : '';
 }
 
-function outputField(field, schemaType) {
-  let { name, type, private } = field;
-  if (private) {
-    return '';
-  }
-  let required = schemaType === 'create' && field.required;
-  type = getJoiType(type);
+function outputField(field, operation) {
+  let { name, schemaType } = field;
+  let required = operation === 'create' && field.required;
+  const type = getJoiType(schemaType);
   return `${name}: ${type}.${required ? 'required' : 'optional'}()`;
 }
 
-function getJoiType(type) {
-  switch (type) {
+function getJoiType(schemaType) {
+  switch (schemaType) {
     case 'Upload':
     case 'ObjectId':
       return 'Joi.string()';
@@ -36,7 +33,7 @@ function getJoiType(type) {
     case 'Date':
       return 'Joi.date().iso()';
     default:
-      return `Joi.${type.toLowerCase()}()`;
+      return `Joi.${schemaType.toLowerCase()}()`;
   }
 }
 

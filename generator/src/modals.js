@@ -7,17 +7,26 @@ const {
   readSourceFile,
   writeLocalFile,
   replacePrimary,
+  replaceSecondary,
 } = require('./source');
 
 const MODALS_DIR = 'services/web/src/modals';
 
 async function generateModals(options) {
-  const { camelUpper } = options;
+  const { type, camelUpper } = options;
 
   const modalsDir = await assertPath(MODALS_DIR);
 
-  let source = await readSourceFile(modalsDir, 'EditShop.js');
-  source = replacePrimary(source, options);
+  let source;
+  if (type === 'primary') {
+    source = await readSourceFile(modalsDir, 'EditShop.js');
+    source = replacePrimary(source, options);
+  } else {
+    source = await readSourceFile(modalsDir, 'EditProduct.js');
+    source = replacePrimary(source, options.primaryReference);
+    source = replaceSecondary(source, options);
+  }
+
   source = replaceInputs(source, options);
   await writeLocalFile(source, modalsDir, `Edit${camelUpper}.js`);
 

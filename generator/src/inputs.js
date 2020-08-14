@@ -22,6 +22,7 @@ function getInputForField(field, camelLower) {
   switch (field.type) {
     case 'String': return getStringInput(field, camelLower);
     case 'Number': return getNumberInput(field, camelLower);
+    case 'Text':   return getTextInput(field, camelLower);
   }
 }
 
@@ -31,6 +32,19 @@ function getStringInput(field, camelLower) {
     <Form.Input
       ${required ? 'required' : ''}
       type="text"
+      name="${name}"
+      label="${startCase(name)}"
+      value={${camelLower}.${name} || ''}
+      onChange={this.setField}
+    />
+  `;
+}
+
+function getTextInput(field, camelLower) {
+  const { name, required } = field;
+  return block`
+    <Form.TextArea
+      ${required ? 'required' : ''}
       name="${name}"
       label="${startCase(name)}"
       value={${camelLower}.${name} || ''}
