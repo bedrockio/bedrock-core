@@ -51,11 +51,13 @@ export default class ShopProducts extends React.Component {
                     <Table celled>
                       <Table.Header>
                         <Table.Row>
+                          {/* --- Generator: header-cells */}
                           <Table.HeaderCell width={2}>Image</Table.HeaderCell>
                           <Table.HeaderCell width={3} sorted={getSorted('name')} onClick={() => setSort('name')}>
                             Name
                           </Table.HeaderCell>
                           <Table.HeaderCell width={3}>Description</Table.HeaderCell>
+                          {/* --- Generator */}
                           <Table.HeaderCell width={3} sorted={getSorted('createdAt')} onClick={() => setSort('createdAt')}>
                             Created
                             <HelpTip title="Created" text="This is the date and time the product was created." />
@@ -65,14 +67,17 @@ export default class ShopProducts extends React.Component {
                       </Table.Header>
                       <Table.Body>
                         {products.map((product) => {
-                          const [image] = product.images;
                           return (
                             <Table.Row key={product.id}>
+                              {/* --- Generator: body-cells */}
                               <Table.Cell>
-                                {image && <Image style={{ width: '100%' }} src={urlForUpload(image, true)} />}
+                                {product.images[0] && (
+                                  <Image style={{ width: '100%' }} src={urlForUpload(product.images[0], true)} />
+                                )}
                               </Table.Cell>
                               <Table.Cell>{product.name}</Table.Cell>
                               <Table.Cell>{product.description}</Table.Cell>
+                              {/* --- Generator */}
                               <Table.Cell>{formatDateTime(product.createdAt)}</Table.Cell>
                               <Table.Cell textAlign="center">
                                 <EditProduct

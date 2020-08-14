@@ -13,11 +13,13 @@ import {
 } from 'components';
 import { EditShop, Filters } from 'modals';
 
+// --- Generator: constants
 const countries = getData().map(({ code, name }) => ({
   value: code,
   text: name,
   key: code,
 }));
+// --- Generator
 
 @screen
 export default class ShopList extends React.Component {

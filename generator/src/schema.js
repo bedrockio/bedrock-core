@@ -321,7 +321,7 @@ async function getField(field) {
   } else if (schemaType === 'ObjectId') {
     ref = await prompt({
       type: 'text',
-      message: 'Ref:',
+      message: 'Ref (ex. UserImage):',
       validate: validateCamelUpper,
     });
   }

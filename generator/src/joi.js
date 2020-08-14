@@ -6,35 +6,63 @@ function replaceSchema(source, schema, operation) {
 }
 
 function outputSchema(schema, operation) {
-  const str = schema.map((field) => {
-    return outputField(field, operation);
-  })
+  const str = schema
+    .map((field) => {
+      return outputField(field, operation);
+    })
     .filter((f) => f)
     .join(',\n');
   return str ? str + ',' : '';
 }
 
 function outputField(field, operation) {
-  let { name, schemaType } = field;
-  let required = operation === 'create' && field.required;
-  const type = getJoiType(schemaType);
-  return `${name}: ${type}.${required ? 'required' : 'optional'}()`;
+  const joiType = getJoiType(field);
+  const required = fieldIsRequired(field);
+  let suffix = '';
+  if (operation === 'update') {
+    if (!required) {
+      return '';
+    } else {
+      suffix = '.optional()';
+    }
+  } else if (operation === 'create') {
+    if (required) {
+      suffix = '.required()';
+    }
+  }
+  return `${field.name}: ${joiType}${suffix}`;
 }
 
-function getJoiType(schemaType) {
-  switch (schemaType) {
+function fieldIsRequired(field) {
+  return field.required && !('default' in field);
+}
+
+function getJoiType(field, type) {
+  switch (type || field.type) {
     case 'Upload':
     case 'ObjectId':
       return 'Joi.string()';
     case 'UploadArray':
     case 'ObjectIdArray':
-    case 'StringArray':
       return 'Joi.array().items(Joi.string())';
+    case 'StringArray':
+      return `Joi.array().items(${getJoiType(field, field.schemaType)})`;
     case 'Date':
       return 'Joi.date().iso()';
     default:
-      return `Joi.${schemaType.toLowerCase()}()`;
+      return getJoiDefaultType(field);
   }
+}
+
+function getJoiDefaultType(field) {
+  let src = `Joi.${field.schemaType.toLowerCase()}()`;
+  if (field.enum) {
+    const options = field.enum.map((option) => {
+      return typeof option === 'string' ? `'${option}'` : option;
+    });
+    src += `.allow(${options.join(', ')})`;
+  }
+  return src;
 }
 
 module.exports = {

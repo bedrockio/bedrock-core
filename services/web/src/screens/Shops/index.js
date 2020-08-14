@@ -3,12 +3,12 @@ import { Switch, Route } from 'react-router-dom';
 import { Container } from 'semantic-ui-react';
 import { request } from 'utils/api';
 
-// --- Generator: main-imports
+import List from './List';
+import Overview from './Overview';
+
+// --- Generator: imports
 import Products from './Products';
 // --- Generator
-
-import Overview from './Overview';
-import List from './List';
 
 export default class Shops extends React.Component {
   state = {

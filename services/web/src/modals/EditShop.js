@@ -47,6 +47,10 @@ export default class EditShop extends React.Component {
     this.setField(evt, { name, value: checked });
   };
 
+  setNumberField = (evt, { name, value }) => {
+    this.setField(evt, { name, value: Number(value) });
+  };
+
   onSubmit = async () => {
     try {
       this.setState({

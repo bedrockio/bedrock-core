@@ -30,7 +30,8 @@ async function generateScreens(options) {
     source = replaceReferenceMenus(source, options);
     source = replaceOverview(source, options);
     source = replaceHeaderCells(source, options);
-    source = replaceBodyCells(source, options, true);
+    source = replaceConstants(source, options);
+    source = replaceBodyCells(source, options);
     source = replaceFilters(source, options);
     await writeLocalFile(source, screensDir, pluralUpper, file);
   }
@@ -48,7 +49,7 @@ function replaceReferenceImports(source, options) {
       return `import ${pluralUpper} from './${pluralUpper}';`;
     })
     .join('\n');
-  return replaceBlock(source, imports, 'ref-imports');
+  return replaceBlock(source, imports, 'imports');
 }
 
 function replaceOverview(source, options) {
@@ -96,8 +97,15 @@ function replaceHeaderCells(source, options) {
   return replaceBlock(source, jsx, 'header-cells');
 }
 
-function replaceBodyCells(source, options, link) {
-  const { camelLower, pluralLower } = options;
+function replaceBodyCells(source, options, resource) {
+
+  let link = false;
+  if (!resource) {
+    resource = options;
+    link = true;
+  }
+
+  const { camelLower, pluralLower } = resource;
 
   const summaryFields = getSummaryFields(options);
   const jsx = summaryFields.map((field, i) => {
@@ -122,6 +130,11 @@ function replaceBodyCells(source, options, link) {
   }).join('\n');
 
   return replaceBlock(source, jsx, 'body-cells');
+}
+
+function replaceConstants(source, options) {
+  // Just remove for now.
+  return replaceBlock(source, '', 'constants');
 }
 
 function getSummaryFields(options) {
@@ -177,8 +190,8 @@ async function generateReferenceScreens(screensDir, options) {
       options.secondaryReferences.map(async (ref) => {
         let source = refSource;
         source = replacePrimary(source, options);
-        source = replaceHeaderCells(source, options);
-        source = replaceBodyCells(source, options);
+        source = replaceHeaderCells(source, options, ref);
+        source = replaceBodyCells(source, options, ref);
         source = replaceSecondary(source, ref);
         await writeLocalFile(
           source,

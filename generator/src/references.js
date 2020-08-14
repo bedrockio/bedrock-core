@@ -35,7 +35,7 @@ async function getPrimaryReference(options) {
       type: 'text',
       name: 'primaryReferencePlural',
       validate: validateCamelUpper,
-      message: 'Name of reference in singular camel case (ex. UserImage):',
+      message: 'Ref (ex. UserImage):',
     });
   } else {
     camelUpper = selection;
@@ -56,7 +56,7 @@ async function getSecondaryReferences(options) {
 
   const modelNames = await getModelNames(options);
 
-  const selectedNames = await prompt({
+  let selectedNames = await prompt({
     type: 'multiselect',
     name: 'secondaryReferences',
     instructions: false,
@@ -67,9 +67,32 @@ async function getSecondaryReferences(options) {
         value: name,
         description: `Generates a ${camelUpper}${getPlural(name)} screen.`,
       };
+    }).concat({
+      title: 'Other',
+      value: 'other',
+      description: `Manually enter other references.`,
     }),
     hint: 'Space to select',
   });
+
+  if (selectedNames.includes('other')) {
+    const otherNames = await prompt({
+      type: 'list',
+      message: 'Comma separated refs (ex. Video, UserImage):',
+      validate: (str) => {
+        const arr = str.split(/,\s*/);
+        for (let el of arr) {
+          if (validateCamelUpper(el) !== true) {
+            return 'Please enter names in upper camel case.';
+          }
+        }
+        return true;
+      },
+    });
+
+    selectedNames = selectedNames.filter((name) => name !== 'other');
+    selectedNames = selectedNames.concat(otherNames);
+  }
 
   for (let camelUpper of selectedNames) {
     const pluralUpper = await prompt({
