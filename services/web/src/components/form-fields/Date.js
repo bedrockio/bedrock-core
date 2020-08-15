@@ -38,17 +38,20 @@ export default class DateField extends React.Component {
   }
 
   render() {
-    const { time, required, label, placeholder, clearable } = this.props;
+    const { time, required, label, placeholder, clearable, id } = this.props;
     let { value: date } = this.props;
     if (date && typeof date === 'string') {
       date = new Date(date);
     }
     return (
       <Form.Field required={required}>
-        {label && <label>{label}</label>}
+        {label && (
+          <label htmlFor={id}>{label}</label>
+        )}
         <Layout horizontal center>
           <Layout.Group style={{ position: 'relative' }}>
             <DayPickerInput
+              id={id}
               value={date}
               placeholder={placeholder}
               formatDate={formatDate}
