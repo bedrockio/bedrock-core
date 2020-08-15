@@ -89,16 +89,18 @@ function replaceOverviewRows(source, options) {
   });
 
   const rows = otherFields.map((field) => {
-    const { name } = field;
-    return block`
-      <Table.Row>
-        <Table.Cell>${startCase(name)}</Table.Cell>
-        <Table.Cell>
-          {${getOverviewCellValue(`${options.camelLower}.${name}`, field)}}
-        </Table.Cell>
-      </Table.Row>
-    `;
-  });
+    const { name, type } = field;
+    if (!type.match(/ObjectId/)) {
+      return block`
+        <Table.Row>
+          <Table.Cell>${startCase(name)}</Table.Cell>
+          <Table.Cell>
+            {${getOverviewCellValue(`${options.camelLower}.${name}`, field)}}
+          </Table.Cell>
+        </Table.Row>
+      `;
+    }
+  }).filter((r) => r);
 
   if (rows.length) {
     source = replaceBlock(source, rows.join('\n'), 'overview-rows');

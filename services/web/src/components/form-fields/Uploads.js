@@ -36,8 +36,12 @@ export default class Uploads extends React.Component {
   componentDidMount() {
     const { value } = this.props;
     if (value) {
-      this.setState({
-        uploads: this.isMultiple(value) ? value : [value],
+      // Set the parent ids on mount so that it can submit later.
+      // Do this on a timeout so that state conflicts don't occur.
+      setTimeout(() => {
+        this.setState({
+          uploads: this.isMultiple(value) ? value : [value],
+        });
       });
     }
   }

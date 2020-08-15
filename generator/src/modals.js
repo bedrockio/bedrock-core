@@ -49,6 +49,10 @@ function replaceImports(source, options) {
     imports.push("import UploadsField from 'components/form-fields/Uploads';");
   }
 
+  if (schema.some((field) => field.type.match(/ObjectId/))) {
+    imports.push("import ReferenceField from 'components/form-fields/Reference';");
+  }
+
   if (imports.length) {
     source = replaceBlock(source, imports.join('\n'), 'imports');
   }
