@@ -10,6 +10,7 @@ afterAll(async () => {
   await teardownDb();
 });
 
+// --- Generator: vars
 const createUpload = () => {
   return Upload.create({
     filename: 'logo.png',
@@ -20,10 +21,12 @@ const createUpload = () => {
     ownerId: 'none'
   });
 };
+// --- Generator
 
 describe('/1/shops', () => {
   describe('POST /search', () => {
     it('it should list out shops', async () => {
+      // --- Generator: test-body
       const user = await createUser();
 
       const shop1 = await Shop.create({
@@ -43,11 +46,13 @@ describe('/1/shops', () => {
       expect(body.data[1].name).toBe(shop1.name);
       expect(body.data[0].name).toBe(shop2.name);
       expect(body.meta.total).toBe(2);
+      // --- Generator
     });
   });
 
   describe('POST /', () => {
     it('should be able to create shop', async () => {
+      // --- Generator: test-body
       const user = await createUser();
       const upload = await createUpload();
       const response = await request(
@@ -64,11 +69,13 @@ describe('/1/shops', () => {
       expect(data.name).toBe('shop name');
       expect(data.images[0].id).toBe(upload.id);
       expect(data.images[0].hash).toBe('test');
+      // --- Generator
     });
   });
 
   describe('DELETE /:shop', () => {
     it('should be able to delete shop', async () => {
+      // --- Generator: test-body
       const user = await createUser();
       const shop = await Shop.create({
         name: 'new shop'
@@ -77,11 +84,13 @@ describe('/1/shops', () => {
       expect(response.status).toBe(204);
       const dbShop = await Shop.findById(shop.id);
       expect(dbShop.deletedAt).toBeDefined();
+      // --- Generator
     });
   });
 
   describe('PATCH /:shop', () => {
     it('should be able to update shop', async () => {
+      // --- Generator: test-body
       const user = await createUser();
       const shop = await Shop.create({
         name: 'shop name',
@@ -93,11 +102,13 @@ describe('/1/shops', () => {
       expect(response.body.data.name).toBe('new name');
       const dbShop = await Shop.findById(shop.id);
       expect(dbShop.name).toEqual('new name');
+      // --- Generator
     });
   });
 
   describe('GET /:shop', () => {
     it('should be able to access shop', async () => {
+      // --- Generator: test-body
       const user = await createUser();
       const shop = await Shop.create({
         name: 'test 1',
@@ -106,6 +117,7 @@ describe('/1/shops', () => {
       const response = await request('GET', `/1/shops/${shop.id}`, {}, { user });
       expect(response.status).toBe(200);
       expect(response.body.data.name).toBe(shop.name);
+      // --- Generator
     });
   });
 });

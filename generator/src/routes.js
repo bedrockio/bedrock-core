@@ -10,6 +10,7 @@ const {
 } = require('./source');
 
 const ROUTES_DIR = 'services/api/src/v1';
+const TESTS_DIR = 'services/api/src/v1/__tests__';
 
 async function generateRoutes(options) {
   const { pluralLower } = options;
@@ -26,10 +27,24 @@ async function generateRoutes(options) {
   source = replaceSearchQuery(source, searchSchema);
 
   await writeLocalFile(source, routesDir, `${pluralLower}.js`);
+
+  await generateTests(options);
   await patchRoutesEntrypoint(routesDir, options);
 
   console.log(yellow('Routes generated!'));
 }
+
+async function generateTests(options) {
+  const { pluralLower } = options;
+  const testsDir = await assertPath(TESTS_DIR);
+  let source = await readSourceFile(testsDir, 'shops.js');
+  source = replacePrimary(source, options);
+  source = replaceBlock(source, '', 'vars');
+  source = replaceBlock(source, 'expect.assertions(1); // TODO: write me!', 'test-body');
+  await writeLocalFile(source, testsDir, `${pluralLower}.js`);
+}
+
+// Entrypoint
 
 const REQUIRE_REG = /^const \w+ = require\('.+'\);$/gm;
 const ROUTES_REG  = /^router.use\(.+\);$/gm;
