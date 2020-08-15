@@ -8,23 +8,34 @@ function replaceInputs(source, options) {
 
 function getInputs(options) {
   const { camelLower } = options;
-  return options.schema.map((field) => {
-    const { private } = field;
-    if (!private) {
-      return getInputForField(field, camelLower);
-    }
-  })
+  return options.schema
+    .map((field) => {
+      const { private } = field;
+      if (!private) {
+        return getInputForField(field, camelLower);
+      }
+    })
     .filter((f) => f)
     .join('\n');
 }
 
 function getInputForField(field, camelLower) {
   switch (field.type) {
-    case 'String': return getStringInput(field, camelLower);
-    case 'Number': return getNumberInput(field, camelLower);
-    case 'Text':   return getTextInput(field, camelLower);
-    case 'Boolean': return getBooleanInput(field, camelLower);
-    case 'StringArray': return getStringArrayInput(field, camelLower);
+    case 'String':
+      return getStringInput(field, camelLower);
+    case 'Number':
+      return getNumberInput(field, camelLower);
+    case 'Text':
+      return getTextInput(field, camelLower);
+    case 'Date':
+      return getDateInput(field, camelLower);
+    case 'Boolean':
+      return getBooleanInput(field, camelLower);
+    case 'StringArray':
+      return getStringArrayInput(field, camelLower);
+    case 'Upload':
+    case 'UploadArray':
+      return getUploadInput(field, camelLower);
   }
 }
 
@@ -39,13 +50,15 @@ function getStringInput(field, camelLower) {
         label="${startCase(name)}"
         value={${camelLower}.${name} || ''}
         options={[
-        ${field.enum.map((val) => {
-          return `
+        ${field.enum
+          .map((val) => {
+            return `
           {
             text: "${val}",
             value: "${val}",
           }`;
-        }).join(',\n')}
+          })
+          .join(',\n')}
         ]}
         onChange={this.setField}
       />
@@ -76,13 +89,15 @@ function getStringArrayInput(field, camelLower) {
         label="${startCase(name)}"
         value={${camelLower}.${name} || []}
         options={[
-        ${field.enum.map((val) => {
-          return `
+        ${field.enum
+          .map((val) => {
+            return `
           {
             text: "${val}",
             value: "${val}",
           }`;
-        }).join(',\n')}
+          })
+          .join(',\n')}
         ]}
         onChange={this.setField}
       />
@@ -116,7 +131,6 @@ function getStringArrayInput(field, camelLower) {
       />
     `;
   }
-
 }
 
 function getTextInput(field, camelLower) {
@@ -128,6 +142,35 @@ function getTextInput(field, camelLower) {
       label="${startCase(name)}"
       value={${camelLower}.${name} || ''}
       onChange={this.setField}
+    />
+  `;
+}
+
+function getDateInput(field, camelLower) {
+  const { name, required } = field;
+  return block`
+    <DateField
+      ${field.time ? 'time' : ''}
+      ${required ? 'required' : ''}
+      name="${name}"
+      label="${startCase(name)}"
+      value={${camelLower}.${name} || ''}
+      onChange={this.setField}
+    />
+  `;
+}
+
+function getUploadInput(field, camelLower) {
+  const { name, type, required } = field;
+  const isArray = type.match(/Array/);
+  return block`
+    <UploadsField
+      name="${name}"
+      ${required ? 'required' : ''}
+      label="${startCase(name)}"
+      value={${camelLower}.${name}${isArray ? ' || []' : ''}}
+      onChange={(data) => this.setField(null, data)}
+      onError={(error) => this.setState({ error })}
     />
   `;
 }
@@ -149,7 +192,7 @@ function getNumberInput(field, camelLower) {
 }
 
 function getBooleanInput(field, camelLower) {
-  const { name, required, min, max } = field;
+  const { name, required } = field;
   return block`
     <Form.Checkbox
       ${required ? 'required' : ''}

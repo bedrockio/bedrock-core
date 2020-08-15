@@ -59,10 +59,12 @@ export default class ShopList extends React.Component {
                 <Table celled sortable>
                   <Table.Header>
                     <Table.Row>
+                      {/* --- Generator: list-header-cells */}
                       <Table.HeaderCell width={3} onClick={() => setSort('name')} sorted={getSorted('name')}>
                         Name
                       </Table.HeaderCell>
                       <Table.HeaderCell width={3}>Description</Table.HeaderCell>
+                      {/* --- Generator */}
                       <Table.HeaderCell onClick={() => setSort('createdAt')} sorted={getSorted('createdAt')}>
                         Created
                         <HelpTip title="Created" text="This is the date and time the product was created." />
@@ -74,10 +76,12 @@ export default class ShopList extends React.Component {
                     {shops.map((shop) => {
                       return (
                         <Table.Row key={shop.id}>
+                          {/* --- Generator: list-body-cells */}
                           <Table.Cell>
                             <Link to={`/shops/${shop.id}`}>{shop.name}</Link>
                           </Table.Cell>
                           <Table.Cell>{shop.description}</Table.Cell>
+                          {/* --- Generator */}
                           <Table.Cell>{formatDateTime(shop.createdAt)}</Table.Cell>
                           <Table.Cell textAlign="center">
                             <EditShop

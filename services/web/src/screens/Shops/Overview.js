@@ -1,10 +1,13 @@
 import React from 'react';
 import { Header, Table, Loader, Image } from 'semantic-ui-react';
-import { urlForUpload } from 'utils/uploads';
-import { formatDateTime } from 'utils/date';
 import { NotFound } from 'components';
 import { screen } from 'helpers';
 import Menu from './Menu';
+
+// --- Generator: overview-imports
+import { formatDateTime } from 'utils/date';
+import { urlForUpload } from 'utils/uploads';
+// --- Generator
 
 @screen
 export default class ShopOverview extends React.Component {
@@ -19,7 +22,7 @@ export default class ShopOverview extends React.Component {
           <Loader active>Loading</Loader>
         ) : (
           <React.Fragment>
-            {/* --- Generator: overview */}
+            {/* --- Generator: overview-fields */}
             <Header as="h1">{shop.name}</Header>
             <p>{shop.description}</p>
             <Header as="h3">Images</Header>
@@ -32,6 +35,14 @@ export default class ShopOverview extends React.Component {
             <Header as="h3">Details</Header>
             <Table definition>
               <Table.Body>
+                {/* --- Generator: overview-rows */}
+                <Table.Row>
+                  <Table.Cell>Categories</Table.Cell>
+                  <Table.Cell>
+                    {shop.categories.join(', ') || 'None'}
+                  </Table.Cell>
+                </Table.Row>
+                {/* --- Generator */}
                 <Table.Row>
                   <Table.Cell>Created At</Table.Cell>
                   <Table.Cell>

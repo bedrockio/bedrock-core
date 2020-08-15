@@ -51,7 +51,7 @@ export default class ShopProducts extends React.Component {
                     <Table celled>
                       <Table.Header>
                         <Table.Row>
-                          {/* --- Generator: header-cells */}
+                          {/* --- Generator: list-header-cells */}
                           <Table.HeaderCell width={2}>Image</Table.HeaderCell>
                           <Table.HeaderCell width={3} sorted={getSorted('name')} onClick={() => setSort('name')}>
                             Name
@@ -69,7 +69,7 @@ export default class ShopProducts extends React.Component {
                         {products.map((product) => {
                           return (
                             <Table.Row key={product.id}>
-                              {/* --- Generator: body-cells */}
+                              {/* --- Generator: list-body-cells */}
                               <Table.Cell>
                                 {product.images[0] && (
                                   <Image style={{ width: '100%' }} src={urlForUpload(product.images[0], true)} />

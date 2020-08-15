@@ -6,7 +6,7 @@ import AutoFocus from 'components/AutoFocus';
 // --- Generator: imports
 import DateField from 'components/form-fields/Date';
 import UploadsField from 'components/form-fields/Uploads';
-// --- Generator:
+// --- Generator
 
 export default class EditProduct extends React.Component {
 

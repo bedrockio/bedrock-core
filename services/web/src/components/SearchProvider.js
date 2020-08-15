@@ -95,8 +95,11 @@ export default class SearchProvider extends React.Component {
   };
 
   setFilters = (filters) => {
+    filters = pickBy(filters, (val) => {
+      return Array.isArray(val) ? val.length : val;
+    });
     this.setState({
-      filters: pickBy(filters),
+      filters,
     });
   }
 

@@ -161,6 +161,13 @@ const SCHEMA_OPTIONS = [
     },
   },
   {
+    title: 'time',
+    value: 'time',
+    selected: true,
+    types: ['Date'],
+    description: 'Will not display the time if false. Applies to screens and modals only.',
+  },
+  {
     title: 'autopopulate',
     value: 'autopopulate',
     selected: true,

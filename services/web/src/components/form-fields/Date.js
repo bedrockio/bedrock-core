@@ -39,7 +39,7 @@ export default class DateField extends React.Component {
   render() {
     const { time, required, label, placeholder, clearable } = this.props;
     let { value: date } = this.props;
-    if (typeof date === 'string') {
+    if (date && typeof date === 'string') {
       date = new Date(date);
     }
     return (

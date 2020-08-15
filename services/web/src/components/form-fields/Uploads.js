@@ -53,6 +53,19 @@ export default class Uploads extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    // Workaround for component re-mounting with an array of
+    // only ids... If we get unmounted here then reset to the
+    // original upload objects.
+    const { uploads } = this.state;
+    if (uploads.length) {
+      this.props.onChange({
+        name: this.props.name,
+        value: this.isMultiple() ? uploads : uploads[0],
+      });
+    }
+  }
+
   // Events
 
   onDrop = async (acceptedFiles, rejectedFiles) => {

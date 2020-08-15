@@ -28,10 +28,12 @@ async function generateScreens(options) {
     source = replaceReferenceImports(source, options);
     source = replaceReferenceRoutes(source, options);
     source = replaceReferenceMenus(source, options);
-    source = replaceOverview(source, options);
-    source = replaceHeaderCells(source, options);
+    source = replaceOverviewFields(source, options);
+    source = replaceOverviewRows(source, options);
+    source = replaceOverviewImports(source, options);
+    source = replaceListHeaderCells(source, options);
+    source = replaceListBodyCells(source, options);
     source = replaceConstants(source, options);
-    source = replaceBodyCells(source, options);
     source = replaceFilters(source, options);
     await writeLocalFile(source, screensDir, pluralUpper, file);
   }
@@ -52,15 +54,23 @@ function replaceReferenceImports(source, options) {
   return replaceBlock(source, imports, 'imports');
 }
 
-function replaceOverview(source, options) {
+function replaceOverviewFields(source, options) {
   const { camelLower } = options;
-  const summaryFields = getSummaryFields(options);
+  const summaryFields = getOverviewMainFields(options);
   const jsx = summaryFields.map((field, i) => {
     const { name } = field;
     const tag = i === 0 ? 'h1' : 'h3';
     if (name === 'image') {
       return block`
         <Image key={${camelLower}.image.id} src={urlForUpload(${camelLower}.image)} />
+      `;
+    } else if (name === 'images') {
+      return block`
+        <Image.Group size="large">
+          {${camelLower}.images.map((image) => (
+            <Image key={image.id} src={urlForUpload(image)} />
+          ))}
+        </Image.Group>
       `;
     } else {
       return block`
@@ -69,35 +79,102 @@ function replaceOverview(source, options) {
     }
   }).join('\n');
 
-  return replaceBlock(source, jsx, 'overview');
+  return replaceBlock(source, jsx, 'overview-fields');
 }
 
-function replaceHeaderCells(source, options) {
-  const summaryFields = getSummaryFields(options);
+function replaceOverviewRows(source, options) {
+  const summaryFields = getOverviewMainFields(options);
+  const otherFields = options.schema.filter((field) => {
+    return !summaryFields.includes(field);
+  });
+
+  const rows = otherFields.map((field) => {
+    const { name } = field;
+    return block`
+      <Table.Row>
+        <Table.Cell>${startCase(name)}</Table.Cell>
+        <Table.Cell>
+          {${getOverviewCellValue(`${options.camelLower}.${name}`, field)}}
+        </Table.Cell>
+      </Table.Row>
+    `;
+  });
+
+  if (rows.length) {
+    source = replaceBlock(source, rows.join('\n'), 'overview-rows');
+  }
+
+  return source;
+}
+
+function getOverviewCellValue(token, field) {
+  switch (field.type) {
+    case 'UploadArray':
+    case 'StringArray':
+    case 'ObjectIdArray':
+      return `${token}.join(', ') || 'None'`;
+    case 'Boolean':
+      return `${token} ? 'Yes' : 'No'`;
+    case 'Date':
+      if (field.time) {
+        return `${token} ? formatDateTime(${token}) : 'None'`;
+      } else {
+        return `${token} ? formatDate(${token}) : 'None'`;
+      }
+    default:
+      return `${token} || 'None'`;
+  }
+}
+
+function replaceOverviewImports(source, options) {
+  const { schema } = options;
+
+  const imports = [];
+
+  const dateMethods = ['formatDateTime'];
+
+  if (schema.some((field) => field.type === 'Date' && !field.time)) {
+    dateMethods.push('formatDate');
+  }
+
+  imports.push(`import { ${dateMethods.join(', ')} } from 'utils/date';`);
+
+  if (schema.some((field) => field.type.match(/Upload/))) {
+    imports.push("import { urlForUpload } from 'utils/uploads';");
+  }
+
+  if (imports.length) {
+    source = replaceBlock(source, imports.join('\n'), 'overview-imports');
+  }
+
+  return source;
+}
+
+function replaceListHeaderCells(source, options) {
+  const summaryFields = getListMainFields(options);
   const jsx = summaryFields.map((field) => {
     const { name, type } = field;
-    const title = startCase(name);
     if (type === 'String') {
       return block`
         <Table.HeaderCell
           sorted={getSorted('${name}')}
           onClick={() => setSort('${name}')}>
-          ${title}
+          ${startCase(name)}
         </Table.HeaderCell>
       `;
     } else {
       return block`
         <Table.HeaderCell>
-         ${title}
+         ${startCase(name)}
         </Table.HeaderCell>
       `;
     }
   }).join('\n');
 
-  return replaceBlock(source, jsx, 'header-cells');
+  return replaceBlock(source, jsx, 'list-header-cells');
 }
 
-function replaceBodyCells(source, options, resource) {
+function replaceListBodyCells(source, options, resource) {
 
   let link = false;
   if (!resource) {
@@ -107,7 +184,7 @@ function replaceBodyCells(source, options, resource) {
 
   const { camelLower, pluralLower } = resource;
 
-  const summaryFields = getSummaryFields(options);
+  const summaryFields = getListMainFields(options);
   const jsx = summaryFields.map((field, i) => {
     const { name } = field;
 
@@ -129,15 +206,23 @@ function replaceBodyCells(source, options, resource) {
     `;
   }).join('\n');
 
-  return replaceBlock(source, jsx, 'body-cells');
+  return replaceBlock(source, jsx, 'list-body-cells');
 }
 
-function replaceConstants(source, options) {
+function replaceConstants(source) {
   // Just remove for now.
   return replaceBlock(source, '', 'constants');
 }
 
-function getSummaryFields(options) {
+function getOverviewMainFields(options) {
+  // Try to take the "name" and "image" or "images" fields if they exist.
+  return options.schema.filter((field) => {
+    const { name } = field;
+    return name === 'name' || name === 'image' || name === 'images';
+  });
+}
+
+function getListMainFields(options) {
   // Try to take the "name" and "image" fields if they exist.
   return options.schema.filter((field) => {
     const { name } = field;
@@ -190,8 +275,8 @@ async function generateReferenceScreens(screensDir, options) {
       options.secondaryReferences.map(async (ref) => {
         let source = refSource;
         source = replacePrimary(source, options);
-        source = replaceHeaderCells(source, options, ref);
-        source = replaceBodyCells(source, options, ref);
+        source = replaceListHeaderCells(source, options, ref);
+        source = replaceListBodyCells(source, options, ref);
         source = replaceSecondary(source, ref);
         await writeLocalFile(
           source,

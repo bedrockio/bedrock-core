@@ -7,7 +7,7 @@ import AutoFocus from 'components/AutoFocus';
 import UploadsField from 'components/form-fields/Uploads';
 import CountriesField from 'components/form-fields/Countries';
 import CategoriesField from 'components/form-fields/Categories';
-// --- Generator:
+// --- Generator
 
 export default class EditShop extends React.Component {
 

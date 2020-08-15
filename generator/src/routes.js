@@ -67,7 +67,9 @@ function injectByReg(source, replace, reg) {
 
 function getSearchSchema(schema) {
   return schema.filter((field) => {
-    return !field.private;
+    const { type } = field;
+    // Disallow private and text fields for search
+    return !field.private && type !== 'Text';
   });
 }
 
@@ -92,7 +94,7 @@ function replaceSearchQuery(source, schema) {
       `;
     } else if (type.match(/Array/)) {
       return block`
-        if (${name}) {
+        if (${name} && ${name}.length) {
           query.${name} = { $in: ${name} };
         }
       `;
