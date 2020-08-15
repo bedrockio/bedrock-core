@@ -23,6 +23,8 @@ function getInputForField(field, camelLower) {
     case 'String': return getStringInput(field, camelLower);
     case 'Number': return getNumberInput(field, camelLower);
     case 'Text':   return getTextInput(field, camelLower);
+    case 'Boolean': return getBooleanInput(field, camelLower);
+    case 'StringArray': return getStringArrayInput(field, camelLower);
   }
 }
 
@@ -31,8 +33,8 @@ function getStringInput(field, camelLower) {
   if (field.enum) {
     return block`
       <Form.Dropdown
-        selection
         ${required ? 'required' : ''}
+        selection
         name="${name}"
         label="${startCase(name)}"
         value={${camelLower}.${name} || ''}
@@ -62,6 +64,61 @@ function getStringInput(field, camelLower) {
   }
 }
 
+function getStringArrayInput(field, camelLower) {
+  const { name, required } = field;
+  if (field.enum) {
+    return block`
+      <Form.Dropdown
+        ${required ? 'required' : ''}
+        multiple
+        selection
+        name="${name}"
+        label="${startCase(name)}"
+        value={${camelLower}.${name} || []}
+        options={[
+        ${field.enum.map((val) => {
+          return `
+          {
+            text: "${val}",
+            value: "${val}",
+          }`;
+        }).join(',\n')}
+        ]}
+        onChange={this.setField}
+      />
+    `;
+  } else {
+    return block`
+      <Form.Dropdown
+        ${required ? 'required' : ''}
+        search
+        selection
+        multiple
+        allowAdditions
+        name="${name}"
+        label="${startCase(name)}"
+        options={
+          ${camelLower}.${name}?.map((value) => {
+            return {
+              value,
+              text: value,
+            };
+          }) || []
+        }
+        onAddItem={(evt, { name, value }) => {
+          this.setField(evt, {
+            name,
+            value: [...${camelLower}.${name} || [], value],
+          });
+        }}
+        onChange={this.setField}
+        value={${camelLower}.${name} || []}
+      />
+    `;
+  }
+
+}
+
 function getTextInput(field, camelLower) {
   const { name, required } = field;
   return block`
@@ -87,6 +144,19 @@ function getNumberInput(field, camelLower) {
       onChange={this.setNumberField}
       ${min ? `min="${min}"` : ''}
       ${max ? `max="${max}"` : ''}
+    />
+  `;
+}
+
+function getBooleanInput(field, camelLower) {
+  const { name, required, min, max } = field;
+  return block`
+    <Form.Checkbox
+      ${required ? 'required' : ''}
+      name="${name}"
+      label="${startCase(name)}"
+      checked={${camelLower}.${name}}
+      onChange={this.setCheckedField}
     />
   `;
 }

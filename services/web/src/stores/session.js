@@ -78,6 +78,7 @@ export class SessionProvider extends React.PureComponent {
   clearUser = () => {
     this.setState({
       user: null,
+      error: null,
     });
   };
 

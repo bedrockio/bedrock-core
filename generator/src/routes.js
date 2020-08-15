@@ -67,19 +67,18 @@ function injectByReg(source, replace, reg) {
 
 function getSearchSchema(schema) {
   return schema.filter((field) => {
-    return !field.private && !field.type.match(/Array/);
+    return !field.private;
   });
 }
 
 function replaceSearchQuery(source, schema) {
 
-  const props = schema.map((field) => field.name);
-
   const vars = block`
-    const { ${props.join(', ')} } = ctx.request.body;
+    const { ${schema.map((f) => f.name).join(', ')} } = ctx.request.body;
   `;
 
-  const queries = props.map((name) => {
+  const queries = schema.map((field) => {
+    const { type, name } = field;
     // TODO: for now assume that only "name"
     // requires partial text search
     if (name === 'name') {
@@ -90,13 +89,19 @@ function replaceSearchQuery(source, schema) {
             $options: 'i',
           };
         }
-    `;
+      `;
+    } else if (type.match(/Array/)) {
+      return block`
+        if (${name}) {
+          query.${name} = { $in: ${name} };
+        }
+      `;
     } else {
       return block`
         if (${name}) {
           query.${name} = ${name};
         }
-    `;
+      `;
     }
   }).join('\n');
   source = replaceBlock(source, vars, 'vars');

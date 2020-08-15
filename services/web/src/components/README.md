@@ -56,7 +56,8 @@ A modal that allows filters to be used in conjunction with `SearchProvider`. Pro
 
 ```jsx
 <Filters onSave={setFilters} filters={filters}>
-  <Filters.Input name="name" label="Name" />
+  <Filters.Text name="name" label="Name" />
+  <Filters.Number name="name" label="Name" />
   <Filters.Dropdown label="Country" name="country" options={countries} search />
 </Filters>
 ```
@@ -65,7 +66,8 @@ A modal that allows filters to be used in conjunction with `SearchProvider`. Pro
 
 - `onSave` A function called when filters are saved.
 - `filters` An arbitrary object describing currently applied filters.
-- `Filters.Input` Props handed off to [`Form.Input`](https://react.semantic-ui.com/collections/form/). `name` is required.
+- `Filters.Text` Props handed off to [`Form.Input`](https://react.semantic-ui.com/collections/form/). `name` is required.
+- `Filters.Number` Props handed off to [`Form.Input`](https://react.semantic-ui.com/collections/form/) with `type="number"`. `name` is required.
 - `Filters.Dropdown` Props handed off to [`Form.Dropdown`](https://react.semantic-ui.com/collections/form/). `name` is required.
 
 ## Layout

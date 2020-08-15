@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form } from 'semantic-ui-react';
 
-export default class InputFilter extends React.Component {
+export default class TextFilter extends React.Component {
   render() {
     const { name, value, onChange } = this.props;
     return (
@@ -24,7 +24,7 @@ export default class InputFilter extends React.Component {
   }
 }
 
-InputFilter.propTypes = {
+TextFilter.propTypes = {
   ...Form.Input.propTypes,
   name: PropTypes.string.isRequired,
 };

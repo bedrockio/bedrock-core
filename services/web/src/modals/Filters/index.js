@@ -2,13 +2,17 @@ import React from 'react';
 import { Modal, Form, Ref, Icon, Button, Label } from 'semantic-ui-react';
 import DateField from 'components/form-fields/Date';
 
-import Input from './Input';
+import Text from './Text';
+import Number from './Number';
 import Dropdown from './Dropdown';
+import Checkbox from './Checkbox';
 
 export default class Filters extends React.Component {
 
-  static Input = Input;
+  static Text = Text;
+  static Number = Number;
   static Dropdown = Dropdown;
+  static Checkbox = Checkbox;
 
   constructor(props) {
     super(props);
@@ -131,9 +135,9 @@ export default class Filters extends React.Component {
 
   renderFilters() {
     return React.Children.map(this.props.children, (filter) => {
-      const { name } = filter.props;
+      const { name, multiple } = filter.props;
       return React.cloneElement(filter, {
-        value: this.state[name] || '',
+        value: this.state[name] || (multiple ? [] : ''),
         onChange: this.onFilterChange,
       });
     });

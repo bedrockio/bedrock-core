@@ -11,25 +11,87 @@ function getFilters(options) {
   return options.schema.map((field) => {
     const { private } = field;
     if (!private) {
-      return getInputForField(field, camelLower);
+      return getFilterForField(field, camelLower);
     }
   })
     .filter((f) => f)
     .join('\n');
 }
 
-function getInputForField(field, camelLower) {
+function getFilterForField(field, camelLower) {
   switch (field.type) {
-    case 'String': return getInputFilter(field, camelLower);
-    case 'Number': return getInputFilter(field, camelLower);
+    case 'String': return getTextFilter(field, camelLower);
+    case 'Number': return getNumberFilter(field, camelLower);
+    case 'Boolean': return getBooleanFilter(field, camelLower);
+    case 'StringArray': return getMultiDropdownFilter(field, camelLower);
   }
 }
 
-function getInputFilter(field) {
+function getTextFilter(field) {
   const { name } = field;
   return block`
-    <Filters.Input label="${startCase(name)}" name="${name}" />
+    <Filters.Text name="${name}" label="${startCase(name)}" />
   `;
+}
+
+function getNumberFilter(field) {
+  const { name, min, max } = field;
+  const hasMin = min != null;
+  const hasMax = max != null;
+  if (hasMin || hasMax) {
+    return block`
+      <Filters.Number
+        name="${name}"
+        label="${startCase(name)}"
+        ${hasMin ? `min="${min}"` : ''}
+        ${hasMax ? `max="${max}"` : ''}
+      />
+    `;
+  } else {
+    return block`
+      <Filters.Number name="${name}" label="${startCase(name)}" />
+    `;
+  }
+}
+
+function getBooleanFilter(field) {
+  const { name } = field;
+  return block`
+    <Filters.Checkbox name="${name}" label="${startCase(name)}" />
+  `;
+}
+
+function getMultiDropdownFilter(field) {
+  const { name } = field;
+  if (field.enum) {
+    return block`
+      <Filters.Dropdown
+        search
+        multiple
+        name="${name}"
+        label="${startCase(name)}"
+        options={[
+        ${field.enum.map((val) => {
+          return `
+          {
+            text: "${val}",
+            value: "${val}",
+          }`;
+        }).join(',\n')}
+        ]}
+      />
+    `;
+  } else {
+    return block`
+      <Filters.Dropdown
+        search
+        multiple
+        allowAdditions
+        name="${name}"
+        label="${startCase(name)}"
+      />
+    `;
+    }
 }
 
 module.exports = {

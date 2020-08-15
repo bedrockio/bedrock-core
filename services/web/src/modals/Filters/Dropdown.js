@@ -3,8 +3,26 @@ import PropTypes from 'prop-types';
 import { Form } from 'semantic-ui-react';
 
 export default class DropdownFilter extends React.Component {
+
+  getDefaultOptions() {
+    return this.props.value.map((val) => {
+      return {
+        text: val,
+        value: val,
+      };
+    });
+  }
+
   render() {
-    return <Form.Dropdown id={this.props.name} {...this.props} />;
+    const { name, options, ...rest } = this.props;
+    return (
+      <Form.Dropdown
+        id={name}
+        name={name}
+        options={options || this.getDefaultOptions()}
+        {...rest}
+      />
+    );
   }
 }
 

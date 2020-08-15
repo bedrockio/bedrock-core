@@ -80,7 +80,7 @@ const SCHEMA_OPTIONS = [
     title: 'enum',
     value: 'enum',
     selected: false,
-    types: ['String', 'Number'],
+    types: ['String', 'Number', 'StringArray'],
     prompt: {
       type: 'list',
       message: 'Allowed values (comma separated):',
