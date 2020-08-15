@@ -30,13 +30,16 @@ function getInputForField(field, options) {
       return getDateInput(field, options);
     case 'Boolean':
       return getBooleanInput(field, options);
-    case 'ObjectId':
-      return getReferenceInput(field, options);
     case 'StringArray':
       return getStringArrayInput(field, options);
     case 'Upload':
     case 'UploadArray':
       return getUploadInput(field, options);
+    case 'ObjectId':
+      // Only output reference inputs for primary resources.
+      if (options.type === 'primary') {
+        return getReferenceInput(field, options);
+      }
   }
 }
 
@@ -163,20 +166,23 @@ function getDateInput(field, options) {
 
 function getReferenceInput(field, options) {
   const { ref, name, type, required } = field;
-  const { pluralLower } = options.secondaryReferences.find((r) => {
+  const secondaryReference = options.secondaryReferences.find((r) => {
     return r.camelUpper === ref;
   });
-  const isArray = type.match(/Array/);
-  return block`
-    <ReferenceField
-      ${required ? 'required' : ''}
-      name="${name}"
-      label="${startCase(name)}"
-      value={${options.camelLower}.${name}${isArray ? ' || []' : ''}}
-      onChange={(data) => this.setField(null, data)}
-      resource="${pluralLower}"
-    />
-  `;
+  if (secondaryReference) {
+    const { pluralLower } = secondaryReference;
+    const isArray = type.match(/Array/);
+    return block`
+      <ReferenceField
+        ${required ? 'required' : ''}
+        name="${name}"
+        label="${startCase(name)}"
+        value={${options.camelLower}.${name}${isArray ? ' || []' : ''}}
+        onChange={(data) => this.setField(null, data)}
+        resource="${pluralLower}"
+      />
+    `;
+  }
 }
 
 function getUploadInput(field, options) {

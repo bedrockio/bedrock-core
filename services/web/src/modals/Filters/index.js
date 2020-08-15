@@ -3,6 +3,7 @@ import { Modal, Form, Ref, Icon, Button, Label } from 'semantic-ui-react';
 import DateField from 'components/form-fields/Date';
 
 import Text from './Text';
+import Date from './Date';
 import Number from './Number';
 import Dropdown from './Dropdown';
 import Checkbox from './Checkbox';
@@ -10,6 +11,7 @@ import Checkbox from './Checkbox';
 export default class Filters extends React.Component {
 
   static Text = Text;
+  static Date = Date;
   static Number = Number;
   static Dropdown = Dropdown;
   static Checkbox = Checkbox;

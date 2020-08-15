@@ -20,11 +20,19 @@ function getFilters(options) {
 
 function getFilterForField(field, camelLower) {
   switch (field.type) {
+    case 'Date': return getDateFilter(field, camelLower);
     case 'String': return getTextFilter(field, camelLower);
     case 'Number': return getNumberFilter(field, camelLower);
     case 'Boolean': return getBooleanFilter(field, camelLower);
     case 'StringArray': return getMultiDropdownFilter(field, camelLower);
   }
+}
+
+function getDateFilter(field) {
+  const { name } = field;
+  return block`
+    <Filters.Date name="${name}" label="${startCase(name)}" />
+  `;
 }
 
 function getTextFilter(field) {

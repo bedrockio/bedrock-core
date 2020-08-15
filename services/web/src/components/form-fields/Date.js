@@ -4,6 +4,7 @@ import DayPickerInput from 'react-day-picker/DayPickerInput';
 import 'react-day-picker/lib/style.css';
 import { Form, Label, Input, Icon } from 'semantic-ui-react';
 import { formatDate } from 'utils/date';
+import { Layout } from '../Layout';
 
 export default class DateField extends React.Component {
 
@@ -43,63 +44,63 @@ export default class DateField extends React.Component {
       date = new Date(date);
     }
     return (
-      <Form.Field
-        required={required}
-        style={{position: 'relative'}}>
+      <Form.Field required={required}>
         {label && <label>{label}</label>}
-        <DayPickerInput
-          value={date}
-          placeholder={placeholder}
-          formatDate={formatDate}
-          dayPickerProps={{ selectedDays: date }}
-          style={{
-            width: '140px',
-          }}
-          onDayChange={this.onDayChange}
-        />
-        {clearable && (
-          <Icon name="x"
-            color="grey"
-            style={{
-              position: 'absolute',
-              top: '10px',
-              left: '115px',
-              cursor: 'pointer',
-              visibility: date ? 'visible' : 'hidden'
-            }}
-            onClick={() => this.setDate(null)}
-          />
-        )}
-        {time && (
-          <React.Fragment>
-            <Input
-              type="number"
-              labelPosition="right"
+        <Layout horizontal center>
+          <Layout.Group style={{ position: 'relative' }}>
+            <DayPickerInput
+              value={date}
+              placeholder={placeholder}
+              formatDate={formatDate}
+              dayPickerProps={{ selectedDays: date }}
               style={{
-                width: '5em',
-                verticalAlign: 'text-top',
-                margin: '0 40px 0 10px'
+                width: '140px',
               }}
-              value={date ? date.getHours().toString() : ''}
-              onChange={this.onHoursChange}>
-              <input />
-              <Label>h</Label>
-            </Input>
-            <Input
-              type="number"
-              step="5"
-              labelPosition="right"
-              style={{
-                width: '5em',
-                verticalAlign: 'text-top',
-              }}
-              value={date ? date.getMinutes().toString().padStart(2, 0) : ''}
-              onChange={this.onMinutesChange}>
-              <input />
-              <Label>m</Label>
-            </Input>
-          </React.Fragment>
-        )}
+              onDayChange={this.onDayChange}
+            />
+            {clearable && (
+              <Icon name="x"
+                color="grey"
+                style={{
+                  position: 'absolute',
+                  top: '10px',
+                  right: '5px',
+                  cursor: 'pointer',
+                  visibility: date ? 'visible' : 'hidden'
+                }}
+                onClick={() => this.setDate(null)}
+              />
+            )}
+          </Layout.Group>
+          {time && (
+            <React.Fragment>
+              <Input
+                type="number"
+                labelPosition="right"
+                style={{
+                  width: '5em',
+                  margin: '0 40px 0 10px'
+                }}
+                value={date ? date.getHours().toString() : ''}
+                onChange={this.onHoursChange}>
+                <input />
+                <Label>h</Label>
+              </Input>
+              <Input
+                type="number"
+                step="5"
+                labelPosition="right"
+                style={{
+                  width: '5em',
+                }}
+                value={date ? date.getMinutes().toString().padStart(2, 0) : ''}
+                onChange={this.onMinutesChange}>
+                <input />
+                <Label>m</Label>
+              </Input>
+            </React.Fragment>
+          )}
+        </Layout>
       </Form.Field>
     );
   }
