@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Modal, Form, Ref, Icon, Button, Label } from 'semantic-ui-react';
 import DateField from 'components/form-fields/Date';
 
@@ -57,6 +58,7 @@ export default class Filters extends React.Component {
   }
 
   render() {
+    const { size } = this.props;
     return (
       <Modal
         closeIcon
@@ -65,7 +67,7 @@ export default class Filters extends React.Component {
         trigger={
           this.hasFilters() ? (
             <Button as="div" labelPosition="right" style={{ margin: '0 10px' }}>
-              <Button basic primary>
+              <Button basic primary size={size}>
                 <Icon name="filter" />
                 Filter
               </Button>
@@ -74,7 +76,7 @@ export default class Filters extends React.Component {
               </Label>
             </Button>
           ) : (
-            <Button basic primary style={{ margin: '0 10px' }}>
+            <Button basic primary size={size} style={{ margin: '0 10px' }}>
               <Icon name="filter" />
               Filter
             </Button>
@@ -145,3 +147,13 @@ export default class Filters extends React.Component {
     });
   }
 }
+
+Filters.propTypes = {
+  onSave: PropTypes.func.isRequired,
+  filters: PropTypes.object,
+  size: PropTypes.string,
+};
+
+Filters.defaultProps = {
+  size: 'medium',
+};

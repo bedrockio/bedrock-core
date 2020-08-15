@@ -10,7 +10,7 @@ import {
   HelpTip,
   SearchProvider,
 } from 'components';
-import { EditProduct } from 'modals';
+import { Filters, EditProduct } from 'modals';
 import Menu from './Menu';
 
 @screen
@@ -30,19 +30,24 @@ export default class ShopProducts extends React.Component {
         <Menu {...this.props} />
         {shop ? (
           <SearchProvider onDataNeeded={this.onDataNeeded}>
-            {({ items: products, getSorted, setSort, reload }) => {
+            {({ items: products, filters, setFilters, getSorted, setSort, reload }) => {
               return (
                 <React.Fragment>
                   <Header as="h2">
                     <Layout horizontal center spread>
                       Products
-                      <EditProduct
-                        shop={shop}
-                        onSave={reload}
-                        trigger={
-                          <Button primary size="tiny" floated="right" content="Add Product" icon="plus" />
-                        }
-                      />
+                      <Layout.Group>
+                        <Filters size="tiny" onSave={setFilters} filters={filters}>
+                          <Filters.Text label="Name" name="name" />
+                        </Filters>
+                        <EditProduct
+                          shop={shop}
+                          onSave={reload}
+                          trigger={
+                            <Button primary size="tiny" content="Add Product" icon="plus" />
+                          }
+                        />
+                      </Layout.Group>
                     </Layout>
                   </Header>
                   {products.length === 0 ? (
