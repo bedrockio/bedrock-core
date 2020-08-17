@@ -10,7 +10,8 @@
     "start": "node ./serve",
     "static": "node ./serve-static",
     "lint": "eslint src --fix",
-    "test": "jest"
+    "test": "jest",
+    "generate": "cd ../../generator && yarn install && yarn generate"
   },
   "dependencies": {
     "@babel/core": "^7.9.6",

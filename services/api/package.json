@@ -15,7 +15,8 @@
     "emails": "node emails/build",
     "lint": "eslint src",
     "test": "jest",
-    "test:watch": "jest --watch -i"
+    "test:watch": "jest --watch -i",
+    "generate": "cd ../../generator && yarn install && yarn generate"
   },
   "dependencies": {
     "@bedrockio/config": "^1.0.2",
