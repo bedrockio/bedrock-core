@@ -6,6 +6,7 @@ import AutoFocus from 'components/AutoFocus';
 // --- Generator: imports
 import DateField from 'components/form-fields/Date';
 import UploadsField from 'components/form-fields/Uploads';
+import CurrencyField from 'components/form-fields/Currency';
 // --- Generator
 
 export default class EditProduct extends React.Component {
@@ -99,7 +100,7 @@ export default class EditProduct extends React.Component {
         onOpen={() => this.setState({ open: true })}
         onClose={() => this.setState({ open: false })}>
         <Modal.Header>{this.isUpdate() ? `Edit "${product.name}"` : 'New Product'}</Modal.Header>
-        <Modal.Content>
+        <Modal.Content scrolling>
           <AutoFocus>
             <Form
               noValidate
@@ -128,17 +129,12 @@ export default class EditProduct extends React.Component {
                 checked={product.isFeatured || false}
                 onChange={this.setCheckedField}
               />
-              <Form.Input
-                type="number"
+              <CurrencyField
                 name="priceUsd"
-                labelPosition="right"
-                placeholder="Amount"
+                label="Price"
+                value={product.priceUsd || ''}
                 onChange={this.setField}
-                value={product.priceUsd || ''}>
-                <Label basic>$</Label>
-                <input />
-                <Label>.00</Label>
-              </Form.Input>
+              />
               <DateField
                 time
                 name="expiresAt"
