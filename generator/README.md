@@ -11,8 +11,8 @@ The resource generator is a tool to let you quickly scaffold models and their ac
 - [Routes](#routes)
 - [Screens](#screens)
 - [Modals](#modals)
-- [Snapshots](#snapshots)
 - [Patches](#patches)
+- [Snapshots](#snapshots)
 
 ## Types
 
@@ -44,7 +44,7 @@ There are different factors that go into data modeling, and not all models fit n
 
 ## Models
 
-Generates Mongoose models based on the schema information. Test stubs will also be generated.
+Generates Mongoose models based on the schema information.
 
 ---
 
@@ -57,6 +57,8 @@ Generates routes based on the schema information. This includes:
 - `PATCH /:id` - Updates the resource with `id`.
 - `DELETE /:id` - Soft-deletes the resource with `id`.
 - `POST /search` - Queries the resource. Fields will be generated based on the schema. `name` is a special field here that will generate a regex query.
+
+Test stubs will also be generated.
 
 ---
 
@@ -72,16 +74,16 @@ Generates screens based on the schema information. This includes:
 
 ## Modals
 
-Generates create/update modals based on the schema information. This will allow resources of all types to be created and edited. Fields will be generated based on the schema details entered.
+Generates modals based on the schema information. This will allow resources of all types to be created and edited. Fields will be generated based on the schema details entered.
+
+---
+
+## Patches
+
+In addition to generating files, this script will attempt to patch `index.js` entrypoints, `App.js` to add front-end routes, and the main menu when generating primary resource links. This behavior can be disabled if it is intrusive.
 
 ---
 
 ## Snapshots
 
 Generating a new resource will output a `json` file with the resource name. Re-generating with `--snapshot=resource.json` allows the resource details to be tweaked and re-generated.
-
----
-
-## Patches
-
-In addition to generating files, this script will attempt to patch `index.js` entrypoints, `App.js` to add routes, and the main menu when generating primary resource links. This behavior can be disabled if it is intrusive.
