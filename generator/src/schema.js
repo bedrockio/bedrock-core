@@ -1,4 +1,4 @@
-const { yellow } = require('kleur');
+const { yellow, gray } = require('kleur');
 const { parseDate } = require('./date');
 const { block, indent } = require('./util');
 const { getPlural } = require('./lang');
@@ -255,7 +255,7 @@ async function getSchema(fields = []) {
   let action;
   while (action !== 'build') {
     if (fields.length) {
-      let source = outputSchema(fields);
+      let source = outputSchema(fields, true);
       console.log(yellow(`Building Schema:\n{\n${indent(source, 2)}\n}`));
     } else {
       console.log(yellow('Create Schema:'));
@@ -402,6 +402,12 @@ async function getFieldOptions(type, field) {
       options[obj.value] = await prompt({
         ...obj.prompt,
         initial: () => {
+          if (obj.prompt.type === 'select') {
+            const index = obj.prompt.choices.findIndex((choice) => {
+              return choice.value === val;
+            });
+            return index === -1 ? 0 : index;
+          }
           if (val && Array.isArray(val)) {
             return val.join(', ');
           } else if (val) {
@@ -448,38 +454,41 @@ function getInitialType(field) {
   return idx === -1 ? 0 : idx;
 }
 
-function outputSchema(fields) {
+function outputSchema(fields, hints) {
   return fields
     .map((field) => {
       if (field.type.match(/Array/)) {
-        return outputArrayField(field);
+        return outputArrayField(field, hints);
       } else {
-        return outputField(field);
+        return outputField(field, hints);
       }
     })
     .join('\n');
 }
 
-function outputField(field) {
+function outputField(field, hints) {
   return block`
     ${field.name}: {
-      ${outputFieldOptions(field)}
+      ${outputFieldOptions(field, hints)}
     },
   `;
 }
 
-function outputArrayField(field) {
+function outputArrayField(field, hints) {
   return block`
     ${field.name}: [{
-      ${outputFieldOptions(field)}
+      ${outputFieldOptions(field, hints)}
     }],
   `;
 }
 
-function outputFieldOptions(field) {
+function outputFieldOptions(field, hints) {
   const { schemaType: type } = field;
+
+  let typeHint = hints && getTypeHint(field) || '';
+
   return `
-      type: ${type},
+      type: ${type},${typeHint}
       ${field.ref ? `ref: '${field.ref}',` : ''}
       ${field.trim ? 'trim: true,' : ''}
       ${field.required ? 'required: true,' : ''}
@@ -496,6 +505,24 @@ function outputFieldOptions(field) {
       ${outputFieldInteger(field) || ''}
       ${field.autopopulate ? 'autopopulate: true,' : ''}
   `;
+}
+
+function getTypeHint(field) {
+  if (field.type === 'Text') {
+    return gray(' // Generates <textarea>.');
+  }
+  if (field.type === 'Date') {
+    if (field.time) {
+      return gray(' // Date with time.');
+    } else {
+      return gray(' // Date only.');
+    }
+  }
+  if (field.currency === 'dollars') {
+    return gray(' // Formatted in dollars.');
+  } else if (field.currency === 'cents') {
+    return gray(' // Formatted in dollars. Value in cents.');
+  }
 }
 
 function outputFieldInteger(field) {
