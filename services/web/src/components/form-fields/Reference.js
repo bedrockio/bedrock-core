@@ -47,15 +47,18 @@ export default class ReferenceField extends React.Component {
   componentWillUnmount() {
     // Workaround for component re-mounting with an array of
     // only ids... If we get unmounted here then reset to the
-    // original upload objects.
+    // original upload objects. Do this on a timeout so state
+    // conflicts don't occur.
     const { ids, options } = this.state;
     if (ids.length) {
-      const items = ids.map((id) => {
-        return options.find((opt) => opt.value === id).item;
-      });
-      this.props.onChange({
-        name: this.props.name,
-        value: this.isMultiple() ? items : items[0],
+      setTimeout(() => {
+        const items = ids.map((id) => {
+          return options.find((opt) => opt.value === id).item;
+        });
+        this.props.onChange({
+          name: this.props.name,
+          value: this.isMultiple() ? items : items[0],
+        });
       });
     }
   }
