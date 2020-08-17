@@ -15,7 +15,7 @@ const schema = createSchema({
   ],
   categories: [{ type: ObjectId, ref: 'Categories' }],
   country: { type: String },
-  // --- Generator
+  // --- Generator: end
 });
 
 schema.plugin(require('mongoose-autopopulate'));

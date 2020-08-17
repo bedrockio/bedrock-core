@@ -44,6 +44,7 @@ function replaceImports(source, options) {
   const { schema } = options;
 
   const imports = [];
+
   if (schema.some((field) => field.type === 'Date')) {
     imports.push("import DateField from 'components/form-fields/Date';");
   }
@@ -60,9 +61,7 @@ function replaceImports(source, options) {
     imports.push("import CurrencyField from 'components/form-fields/Currency';");
   }
 
-  if (imports.length) {
-    source = replaceBlock(source, imports.join('\n'), 'imports');
-  }
+  source = replaceBlock(source, imports.join('\n'), 'imports');
 
   return source;
 }

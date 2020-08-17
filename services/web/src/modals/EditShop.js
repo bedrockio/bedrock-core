@@ -7,7 +7,7 @@ import AutoFocus from 'components/AutoFocus';
 import UploadsField from 'components/form-fields/Uploads';
 import CountriesField from 'components/form-fields/Countries';
 import CategoriesField from 'components/form-fields/Categories';
-// --- Generator
+// --- Generator: end
 
 export default class EditShop extends React.Component {
 
@@ -132,7 +132,7 @@ export default class EditShop extends React.Component {
                 onChange={(data) => this.setField(null, data)}
                 onError={(error) => this.setState({ error })}
               />
-              {/* --- Generator */}
+              {/* --- Generator: end */}
             </Form>
           </AutoFocus>
         </Modal.Content>

@@ -7,7 +7,7 @@ import AutoFocus from 'components/AutoFocus';
 import DateField from 'components/form-fields/Date';
 import UploadsField from 'components/form-fields/Uploads';
 import CurrencyField from 'components/form-fields/Currency';
-// --- Generator
+// --- Generator: end
 
 export default class EditProduct extends React.Component {
 
@@ -173,7 +173,7 @@ export default class EditProduct extends React.Component {
                 onChange={(data) => this.setField(null, data)}
                 onError={(error) => this.setState({ error })}
               />
-              {/* --- Generator */}
+              {/* --- Generator: end */}
             </Form>
           </AutoFocus>
         </Modal.Content>

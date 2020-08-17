@@ -8,7 +8,7 @@ import Overview from './Overview';
 
 // --- Generator: imports
 import Products from './Products';
-// --- Generator
+// --- Generator: end
 
 export default class Shops extends React.Component {
   state = {
@@ -78,7 +78,7 @@ export default class Shops extends React.Component {
             />
           )}
         />
-        {/* --- Generator */}
+        {/* --- Generator: end */}
       </Switch>
     );
   }

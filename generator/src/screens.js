@@ -107,9 +107,7 @@ function replaceOverviewRows(source, options) {
     }
   }).filter((r) => r);
 
-  if (rows.length) {
-    source = replaceBlock(source, rows.join('\n'), 'overview-rows');
-  }
+  source = replaceBlock(source, rows.join('\n'), 'overview-rows');
 
   return source;
 }
@@ -150,9 +148,7 @@ function replaceOverviewImports(source, options) {
     imports.push("import { urlForUpload } from 'utils/uploads';");
   }
 
-  if (imports.length) {
-    source = replaceBlock(source, imports.join('\n'), 'overview-imports');
-  }
+  source = replaceBlock(source, imports.join('\n'), 'overview-imports');
 
   return source;
 }
@@ -236,9 +232,7 @@ function replaceListImports(source, options) {
     imports.push("import { Image } from 'semantic-ui-react';");
   }
 
-  if (imports.length) {
-    source = replaceBlock(source, imports.join('\n'), 'list-imports');
-  }
+  source = replaceBlock(source, imports.join('\n'), 'list-imports');
 
   return source;
 }

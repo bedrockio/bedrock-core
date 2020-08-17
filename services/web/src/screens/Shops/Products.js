@@ -66,7 +66,7 @@ export default class ShopProducts extends React.Component {
                             Name
                           </Table.HeaderCell>
                           <Table.HeaderCell width={3}>Description</Table.HeaderCell>
-                          {/* --- Generator */}
+                          {/* --- Generator: end */}
                           <Table.HeaderCell width={3} sorted={getSorted('createdAt')} onClick={() => setSort('createdAt')}>
                             Created
                             <HelpTip title="Created" text="This is the date and time the product was created." />
@@ -86,7 +86,7 @@ export default class ShopProducts extends React.Component {
                               </Table.Cell>
                               <Table.Cell>{product.name}</Table.Cell>
                               <Table.Cell>{product.description}</Table.Cell>
-                              {/* --- Generator */}
+                              {/* --- Generator: end */}
                               <Table.Cell>{formatDateTime(product.createdAt)}</Table.Cell>
                               <Table.Cell textAlign="center">
                                 <EditProduct

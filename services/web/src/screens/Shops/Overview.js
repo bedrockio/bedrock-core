@@ -7,7 +7,7 @@ import Menu from './Menu';
 // --- Generator: overview-imports
 import { formatDateTime } from 'utils/date';
 import { urlForUpload } from 'utils/uploads';
-// --- Generator
+// --- Generator: end
 
 @screen
 export default class ShopOverview extends React.Component {
@@ -31,7 +31,7 @@ export default class ShopOverview extends React.Component {
                 <Image key={image.id} src={urlForUpload(image)} />
               ))}
             </Image.Group>
-            {/* --- Generator */}
+            {/* --- Generator: end */}
             <Header as="h3">Details</Header>
             <Table definition>
               <Table.Body>
@@ -42,7 +42,7 @@ export default class ShopOverview extends React.Component {
                     {shop.categories.join(', ') || 'None'}
                   </Table.Cell>
                 </Table.Row>
-                {/* --- Generator */}
+                {/* --- Generator: end */}
                 <Table.Row>
                   <Table.Cell>Created At</Table.Cell>
                   <Table.Cell>

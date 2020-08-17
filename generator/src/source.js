@@ -8,7 +8,7 @@ const USE_LOCAL = true;
 
 const GITHUB_RAW_BASE = 'https://raw.githubusercontent.com/bedrockio/bedrock-core/master';
 
-const GENERATOR_REG = /^([^\n]*)(\/\/|\{\/\*) --- Generator: BLOCK[\s\S]+?--- Generator( \*\/\})?$/gm;
+const GENERATOR_REG = /^([^\n]*)(\/\/|\{\/\*) --- Generator: BLOCK[\s\S]+?--- Generator: end( \*\/\})?$/gm;
 
 function replaceBlock(source, inject, block) {
   const src = GENERATOR_REG.source.replace(/BLOCK/, block);

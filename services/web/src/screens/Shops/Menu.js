@@ -30,7 +30,7 @@ export default ({ id, shop, onSave }) => (
         as={NavLink}
         exact
       />
-      {/* --- Generator */}
+      {/* --- Generator: end */}
     </Menu>
     <Divider hidden />
   </React.Fragment>

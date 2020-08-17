@@ -14,7 +14,7 @@ const schema = Joi.object({
   images: Joi.array().items(Joi.string()),
   categories: Joi.array().items(Joi.string()),
   country: Joi.string(),
-  // --- Generator
+  // --- Generator: end
 });
 
 const patchSchema = schema.append({
@@ -24,7 +24,7 @@ const patchSchema = schema.append({
   categories: Joi.array().items(Joi.string()),
   images: Joi.array().items(Joi.string()),
   country: Joi.string(),
-  // --- Generator
+  // --- Generator: end
   createdAt: Joi.date().strip(),
   updatedAt: Joi.date().strip(),
   deletedAt: Joi.date().strip(),
@@ -48,7 +48,7 @@ router
         // --- Generator: search
         name: Joi.string(),
         country: Joi.string(),
-        // --- Generator
+        // --- Generator: end
         startAt: Joi.date(),
         endAt: Joi.date(),
         skip: Joi.number().default(0),
@@ -66,7 +66,7 @@ router
       const { sort, skip, limit, startAt, endAt } = ctx.request.body;
       // --- Generator: vars
       const { name, country } = ctx.request.body;
-      // --- Generator
+      // --- Generator: end
       const query = { deletedAt: { $exists: false } };
 
       // --- Generator: queries
@@ -79,7 +79,7 @@ router
       if (country) {
         query.country = country;
       }
-      // --- Generator
+      // --- Generator: end
 
       if (startAt || endAt) {
         query.createdAt = {};

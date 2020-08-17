@@ -21,7 +21,7 @@ const createUpload = () => {
     ownerId: 'none'
   });
 };
-// --- Generator
+// --- Generator: end
 
 describe('/1/shops', () => {
   describe('POST /search', () => {
@@ -46,7 +46,7 @@ describe('/1/shops', () => {
       expect(body.data[1].name).toBe(shop1.name);
       expect(body.data[0].name).toBe(shop2.name);
       expect(body.meta.total).toBe(2);
-      // --- Generator
+      // --- Generator: end
     });
   });
 
@@ -69,7 +69,7 @@ describe('/1/shops', () => {
       expect(data.name).toBe('shop name');
       expect(data.images[0].id).toBe(upload.id);
       expect(data.images[0].hash).toBe('test');
-      // --- Generator
+      // --- Generator: end
     });
   });
 
@@ -84,7 +84,7 @@ describe('/1/shops', () => {
       expect(response.status).toBe(204);
       const dbShop = await Shop.findById(shop.id);
       expect(dbShop.deletedAt).toBeDefined();
-      // --- Generator
+      // --- Generator: end
     });
   });
 
@@ -102,7 +102,7 @@ describe('/1/shops', () => {
       expect(response.body.data.name).toBe('new name');
       const dbShop = await Shop.findById(shop.id);
       expect(dbShop.name).toEqual('new name');
-      // --- Generator
+      // --- Generator: end
     });
   });
 
@@ -117,7 +117,7 @@ describe('/1/shops', () => {
       const response = await request('GET', `/1/shops/${shop.id}`, {}, { user });
       expect(response.status).toBe(200);
       expect(response.body.data.name).toBe(shop.name);
-      // --- Generator
+      // --- Generator: end
     });
   });
 });

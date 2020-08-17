@@ -19,7 +19,7 @@ const countries = getData().map(({ code, name }) => ({
   text: name,
   key: code,
 }));
-// --- Generator
+// --- Generator: end
 
 @screen
 export default class ShopList extends React.Component {
@@ -48,7 +48,7 @@ export default class ShopList extends React.Component {
                     options={countries}
                     search
                   />
-                  {/* --- Generator */}
+                  {/* --- Generator: end */}
                 </Filters>
                 <EditShop trigger={<Button primary content="New Shop" icon="plus" />} onSave={reload} />
               </Breadcrumbs>
@@ -64,7 +64,7 @@ export default class ShopList extends React.Component {
                         Name
                       </Table.HeaderCell>
                       <Table.HeaderCell width={3}>Description</Table.HeaderCell>
-                      {/* --- Generator */}
+                      {/* --- Generator: end */}
                       <Table.HeaderCell onClick={() => setSort('createdAt')} sorted={getSorted('createdAt')}>
                         Created
                         <HelpTip title="Created" text="This is the date and time the product was created." />
@@ -81,7 +81,7 @@ export default class ShopList extends React.Component {
                             <Link to={`/shops/${shop.id}`}>{shop.name}</Link>
                           </Table.Cell>
                           <Table.Cell>{shop.description}</Table.Cell>
-                          {/* --- Generator */}
+                          {/* --- Generator: end */}
                           <Table.Cell>{formatDateTime(shop.createdAt)}</Table.Cell>
                           <Table.Cell textAlign="center">
                             <EditShop
