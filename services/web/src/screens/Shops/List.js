@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Table, Divider, Button, Message } from 'semantic-ui-react';
-import { getData } from 'country-list';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import { screen } from 'helpers';
@@ -13,7 +12,8 @@ import {
 } from 'components';
 import { EditShop, Filters } from 'modals';
 
-// --- Generator: constants
+// --- Generator: list-imports
+import { getData } from 'country-list';
 const countries = getData().map(({ code, name }) => ({
   value: code,
   text: name,

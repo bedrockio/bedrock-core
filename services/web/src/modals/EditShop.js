@@ -99,7 +99,7 @@ export default class EditShop extends React.Component {
         onOpen={() => this.setState({ open: true })}
         onClose={() => this.setState({ open: false })}>
         <Modal.Header>{this.isUpdate() ? `Edit "${shop.name}"` : 'New Shop'}</Modal.Header>
-        <Modal.Content>
+        <Modal.Content scrolling>
           <AutoFocus>
             <Form
               noValidate

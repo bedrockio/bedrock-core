@@ -16,10 +16,14 @@ import Menu from './Menu';
 @screen
 export default class ShopProducts extends React.Component {
   onDataNeeded = async (params) => {
+    const { shop } = this.props;
     return await request({
       method: 'POST',
       path: '/1/products/search',
-      body: params,
+      body: {
+        ...params,
+        shop: shop.id,
+      },
     });
   };
 
