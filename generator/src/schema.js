@@ -1,6 +1,7 @@
 const { yellow } = require('kleur');
 const { parseDate } = require('./date');
 const { block, indent } = require('./util');
+const { getPlural } = require('./lang');
 const prompt = require('./prompt');
 const {
   validateDate,
@@ -168,6 +169,29 @@ const SCHEMA_OPTIONS = [
     description: 'Will not display the time if false. Applies to screens and modals only.',
   },
   {
+    title: 'currency',
+    value: 'currency',
+    selected: false,
+    types: ['Number'],
+    description: 'Formats as currency. Applies to screens and modals only.',
+    prompt: {
+      type: 'select',
+      message: 'Currency type:',
+      choices: [
+        {
+          title: 'Dollars',
+          value: 'dollars',
+          description: 'Formats as USD.',
+        },
+        {
+          title: 'Cents',
+          value: 'cents',
+          description: 'Formats as USD. Assumes integer values * 100.',
+        }
+      ]
+    },
+  },
+  {
     title: 'autopopulate',
     value: 'autopopulate',
     selected: true,
@@ -314,6 +338,7 @@ async function getField(field) {
   }
 
   let ref;
+  let refPlural;
   let schemaType = type;
 
   if (schemaType.match(/Array/)) {
@@ -331,14 +356,21 @@ async function getField(field) {
       message: 'Ref (ex. UserImage):',
       validate: validateCamelUpper,
     });
+    refPlural = await prompt({
+      type: 'text',
+      validate: validateCamelUpper,
+      initial: getPlural(ref),
+      message: 'Confirm plural name in camel case (ex. UserImages):',
+    });
   }
 
   const options = await getFieldOptions(type, field);
 
   return {
-    ref,
     name,
     type,
+    ref,
+    refPlural,
     schemaType,
     ...options,
   };

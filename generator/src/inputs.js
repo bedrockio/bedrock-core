@@ -23,7 +23,11 @@ function getInputForField(field, options) {
     case 'String':
       return getStringInput(field, options);
     case 'Number':
-      return getNumberInput(field, options);
+      if (field.currency) {
+        return getCurrencyInput(field, options);
+      } else {
+        return getNumberInput(field, options);
+      }
     case 'Text':
       return getTextInput(field, options);
     case 'Date':
@@ -36,8 +40,10 @@ function getInputForField(field, options) {
     case 'UploadArray':
       return getUploadInput(field, options);
     case 'ObjectId':
-      // Only output reference inputs for primary resources.
-      if (options.type === 'primary') {
+    case 'ObjectIdArray':
+      // Only output reference inputs if the field is
+      // a primary reference as that will be injected separately.
+      if (!isPrimaryReferenceField(field, options)) {
         return getReferenceInput(field, options);
       }
   }
@@ -124,12 +130,6 @@ function getStringArrayInput(field, options) {
             };
           }) || []
         }
-        onAddItem={(evt, { name, value }) => {
-          this.setField(evt, {
-            name,
-            value: [...${options.camelLower}.${name} || [], value],
-          });
-        }}
         onChange={this.setField}
         value={${options.camelLower}.${name} || []}
       />
@@ -165,24 +165,18 @@ function getDateInput(field, options) {
 }
 
 function getReferenceInput(field, options) {
-  const { ref, name, type, required } = field;
-  const secondaryReference = options.secondaryReferences.find((r) => {
-    return r.camelUpper === ref;
-  });
-  if (secondaryReference) {
-    const { pluralLower } = secondaryReference;
-    const isArray = type.match(/Array/);
-    return block`
+  const { refPlural, name, type, required } = field;
+  const isArray = type.match(/Array/);
+  return block`
       <ReferenceField
         ${required ? 'required' : ''}
         name="${name}"
         label="${startCase(name)}"
         value={${options.camelLower}.${name}${isArray ? ' || []' : ''}}
         onChange={(data) => this.setField(null, data)}
-        resource="${pluralLower}"
+        resource="${refPlural}"
       />
     `;
-  }
 }
 
 function getUploadInput(field, options) {
@@ -216,6 +210,22 @@ function getNumberInput(field, options) {
   `;
 }
 
+function getCurrencyInput(field, options) {
+  const { name, required, min, max, currency } = field;
+  return block`
+    <CurrencyField
+      ${currency === 'cents' ? 'cents': ''}
+      ${required ? 'required' : ''}
+      name="${name}"
+      label="${startCase(name)}"
+      value={${options.camelLower}.${name} || ''}
+      onChange={this.setField}
+      ${min ? `min="${min}"` : ''}
+      ${max ? `max="${max}"` : ''}
+    />
+  `;
+}
+
 function getBooleanInput(field, options) {
   const { name, required } = field;
   return block`
@@ -227,6 +237,12 @@ function getBooleanInput(field, options) {
       onChange={this.setCheckedField}
     />
   `;
+}
+
+function isPrimaryReferenceField(field, options) {
+  const { type, primaryReference = {} } = options;
+  return type === 'secondary'
+      && primaryReference.camelUpper === field.ref;
 }
 
 module.exports = {

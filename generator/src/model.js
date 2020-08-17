@@ -17,8 +17,8 @@ async function generateModel(options) {
   const modelsDir = await assertPath(MODELS_DIR);
 
   let source = await readSourceFile(modelsDir, 'shop.js');
-  source = replaceBlock(source, outputSchema(options.schema), 'schema');
   source = replacePrimary(source, options);
+  source = replaceBlock(source, outputSchema(options.schema), 'schema');
   await writeLocalFile(source, modelsDir, `${camelLower}.js`);
 
   console.log(yellow('Model generated!'));

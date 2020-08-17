@@ -27,6 +27,7 @@ async function generateModals(options) {
     source = replacePrimary(source, options.primaryReference);
     source = replaceSecondary(source, options);
   }
+  source = replaceNameReference(source, options);
   source = replaceImports(source, options);
 
   source = replaceInputs(source, options);
@@ -53,8 +54,25 @@ function replaceImports(source, options) {
     imports.push("import ReferenceField from 'components/form-fields/Reference';");
   }
 
+  if (schema.some((field) => field.currency)) {
+    imports.push("import CurrencyField from 'components/form-fields/Currency';");
+  }
+
   if (imports.length) {
     source = replaceBlock(source, imports.join('\n'), 'imports');
+  }
+
+  return source;
+}
+
+function replaceNameReference(source, options) {
+  const { camelUpper } = options;
+  const hasName = options.schema.some((field) => field.name === 'name');
+
+  if (!hasName) {
+    // If the schema has no "name" field then don't
+    // rely on it for the modal title.
+    source = source.replace(/Edit "\${.+?}"/, `Edit ${camelUpper}`);
   }
 
   return source;

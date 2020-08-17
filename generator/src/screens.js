@@ -33,7 +33,7 @@ async function generateScreens(options) {
     source = replaceOverviewImports(source, options);
     source = replaceListHeaderCells(source, options);
     source = replaceListBodyCells(source, options);
-    source = replaceConstants(source, options);
+    source = replaceListImports(source, options);
     source = replaceFilters(source, options);
     await writeLocalFile(source, screensDir, pluralUpper, file);
   }
@@ -62,7 +62,9 @@ function replaceOverviewFields(source, options) {
     const tag = i === 0 ? 'h1' : 'h3';
     if (name === 'image') {
       return block`
-        <Image key={${camelLower}.image.id} src={urlForUpload(${camelLower}.image)} />
+        {${camelLower}.image && (
+          <Image key={${camelLower}.image.id} src={urlForUpload(${camelLower}.image)} />
+        )}
       `;
     } else if (name === 'images') {
       return block`
@@ -190,9 +192,16 @@ function replaceListBodyCells(source, options, resource) {
   const jsx = summaryFields.map((field, i) => {
     const { name } = field;
 
-    let inner = name === 'image'
-      ? `<Image src={urlForUpload(${camelLower}.${name}, true)} />`
-      : `{${camelLower}.${name}}`;
+    let inner;
+    if (name === 'image') {
+      inner = `
+        {${camelLower}.${name} && (
+          <Image src={urlForUpload(${camelLower}.${name}, true)} />
+        )}
+      `
+    } else {
+      inner = `{${camelLower}.${name}}`;
+    }
 
     if (i === 0 && link) {
       inner = `
@@ -211,9 +220,24 @@ function replaceListBodyCells(source, options, resource) {
   return replaceBlock(source, jsx, 'list-body-cells');
 }
 
-function replaceConstants(source) {
-  // Just remove for now.
-  return replaceBlock(source, '', 'constants');
+function replaceListImports(source, options) {
+  const { schema } = options;
+
+  const imports = [];
+
+  if (schema.some((field) => field.type.match(/Upload/))) {
+    imports.push("import { urlForUpload } from 'utils/uploads';");
+  }
+
+  if (schema.some(({ name }) => name === 'image' || name === 'images')) {
+    imports.push("import { Image } from 'semantic-ui-react';");
+  }
+
+  if (imports.length) {
+    source = replaceBlock(source, imports.join('\n'), 'list-imports');
+  }
+
+  return source;
 }
 
 function getOverviewMainFields(options) {

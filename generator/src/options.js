@@ -131,9 +131,7 @@ async function getOptions() {
 
   options.schema = await getSchema(snapshot.schema);
 
-  if (!argv.snapshot || argv.capture) {
-    await saveSnapshot(options, argv.capture);
-  }
+  await saveSnapshot(options, argv.capture);
 
   return options;
 }

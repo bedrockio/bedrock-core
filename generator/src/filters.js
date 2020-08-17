@@ -29,17 +29,41 @@ function getFilterForField(field, camelLower) {
 }
 
 function getDateFilter(field) {
-  const { name } = field;
+  const { name, time } = field;
   return block`
-    <Filters.Date name="${name}" label="${startCase(name)}" />
+    <Filters.Date
+      ${time ? 'time' : ''}
+      name="${name}"
+      label="${startCase(name)}"
+    />
   `;
 }
 
 function getTextFilter(field) {
   const { name } = field;
-  return block`
+
+  if (field.enum) {
+    return block`
+      <Filters.Dropdown
+        search
+        name="${name}"
+        label="${startCase(name)}"
+        options={[
+        ${field.enum.map((val) => {
+          return `
+          {
+            text: "${val}",
+            value: "${val}",
+          }`;
+        }).join(',\n')}
+        ]}
+      />
+    `;
+  } else {
+    return block`
     <Filters.Text name="${name}" label="${startCase(name)}" />
   `;
+  }
 }
 
 function getNumberFilter(field) {
