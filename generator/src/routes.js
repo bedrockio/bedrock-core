@@ -29,7 +29,10 @@ async function generateRoutes(options) {
   await writeLocalFile(source, routesDir, `${pluralLower}.js`);
 
   await generateTests(options);
-  await patchRoutesEntrypoint(routesDir, options);
+
+  if (options.entrypoints) {
+    await patchRoutesEntrypoint(routesDir, options);
+  }
 
   console.log(yellow('Routes generated!'));
 }

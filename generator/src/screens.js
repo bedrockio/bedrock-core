@@ -39,8 +39,11 @@ async function generateScreens(options) {
   }
 
   await generateReferenceScreens(screensDir, options);
-  await patchAppEntrypoint(options);
-  await patchIndex(screensDir, pluralUpper);
+
+  if (options.entrypoints) {
+    await patchAppEntrypoint(options);
+    await patchIndex(screensDir, pluralUpper);
+  }
 
   console.log(yellow('Screens generated!'));
 }

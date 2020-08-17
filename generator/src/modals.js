@@ -19,10 +19,10 @@ async function generateModals(options) {
   const modalsDir = await assertPath(MODALS_DIR);
 
   let source;
-  if (type === 'primary') {
+  if (type === 'primary' || type === 'support') {
     source = await readSourceFile(modalsDir, 'EditShop.js');
     source = replacePrimary(source, options);
-  } else {
+  } else if (type === 'secondary') {
     source = await readSourceFile(modalsDir, 'EditProduct.js');
     source = replacePrimary(source, options.primaryReference);
     source = replaceSecondary(source, options);
@@ -33,7 +33,9 @@ async function generateModals(options) {
   source = replaceInputs(source, options);
   await writeLocalFile(source, modalsDir, `Edit${camelUpper}.js`);
 
-  await patchIndex(modalsDir, `Edit${camelUpper}`);
+  if (options.entrypoints) {
+    await patchIndex(modalsDir, `Edit${camelUpper}`);
+  }
 
   console.log(yellow('Modals generated!'));
 }

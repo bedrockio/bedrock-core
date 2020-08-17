@@ -1,4 +1,4 @@
-
+const { green, white } = require('kleur');
 const { getOptions } = require('./options');
 const { generateModel } = require('./model');
 const { generateRoutes } = require('./routes');
@@ -7,6 +7,12 @@ const { generateModals } = require('./modals');
 const { patchMainMenu } = require('./patches');
 
 async function generateResource() {
+
+  console.log(`
+    ${green('Bedrock Resource Generator')}
+    ${white('For more see README.md')}
+  `);
+
   const options = await getOptions();
 
   if (options.generate.includes('model')) {

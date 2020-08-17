@@ -19,7 +19,7 @@ const GENERATE_OPTIONS = [
     value: 'model',
     selected: true,
     description: 'Generates Mongoose models.',
-    types: ['primary', 'secondary'],
+    types: ['primary', 'secondary', 'support'],
   },
   {
     title: 'Routes',
@@ -40,7 +40,7 @@ const GENERATE_OPTIONS = [
     value: 'modals',
     selected: true,
     description: 'Generates create/update modals.',
-    types: ['primary', 'secondary'],
+    types: ['primary', 'secondary', 'support'],
   },
   {
     title: 'Menu Link',
@@ -48,6 +48,13 @@ const GENERATE_OPTIONS = [
     selected: true,
     description: 'Generates a link in the main menu.',
     types: ['primary'],
+  },
+  {
+    title: 'Entrypoints',
+    value: 'entrypoints',
+    selected: true,
+    description: 'Attempts to patch entrypoints like index.js',
+    types: ['primary', 'secondary', 'support'],
   },
 ];
 
@@ -75,7 +82,12 @@ async function getOptions() {
         {
           title: 'Secondary',
           value: 'secondary',
-          description: 'A child in a has-one/has-many relationship. Will not generate screens or a menu link.',
+          description: 'A child dependent on a primary resource. Will not generate screens or a menu link.',
+        },
+        {
+          title: 'Support',
+          value: 'support',
+          description: 'A generalized support resource. Will not generate routes, screens, or a menu link.',
         },
       ],
       hint: 'Select One',
