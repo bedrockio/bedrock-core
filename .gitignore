@@ -14,3 +14,4 @@ env
 tmp
 data
 .terraform/
+globalConfig.json
