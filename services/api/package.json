@@ -44,7 +44,6 @@
     "eslint-plugin-jest": "^23.19.0",
     "jest": "^26.1.0",
     "juice": "^7.0.0",
-    "mongodb-memory-server": "^6.6.4",
     "nodemon": "^2.0.4",
     "pre-commit": "^1.2.2",
     "prettier": "^2.0.5",
