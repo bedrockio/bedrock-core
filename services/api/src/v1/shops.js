@@ -38,6 +38,24 @@ router
     return next();
   })
   .post(
+    '/',
+    validate({
+      body: schema,
+    }),
+    async (ctx) => {
+      const shop = await Shop.create(ctx.request.body);
+      ctx.body = {
+        data: shop,
+      };
+    }
+  )
+  .get('/:shopId', async (ctx) => {
+    const shop = ctx.state.shop;
+    ctx.body = {
+      data: shop,
+    };
+  })
+  .post(
     '/search',
     validate({
       body: Joi.object({
@@ -52,12 +70,16 @@ router
           field: 'createdAt',
           order: 'desc',
         }),
+        ids: Joi.array().items(Joi.string()),
         limit: Joi.number().positive().default(50),
       }),
     }),
     async (ctx) => {
-      const { sort, skip, limit, country, startAt, endAt } = ctx.request.body;
-      const query = { deletedAt: { $exists: false } };
+      const { ids = [], sort, skip, limit, country, startAt, endAt } = ctx.request.body;
+      const query = {
+        ...(ids.length ? { _id: { $in: ids } } : {}),
+        deletedAt: { $exists: false },
+      };
       if (startAt || endAt) {
         query.createdAt = {};
         if (startAt) {
@@ -86,22 +108,6 @@ router
       };
     }
   )
-  .post(
-    '/',
-    validate({
-      body: schema,
-    }),
-    async (ctx) => {
-      const shop = await Shop.create(ctx.request.body);
-      ctx.body = {
-        data: shop,
-      };
-    }
-  )
-  .delete('/:shopId', async (ctx) => {
-    await ctx.state.shop.delete();
-    ctx.status = 204;
-  })
   .patch(
     '/:shopId',
     validate({
@@ -117,11 +123,9 @@ router
       };
     }
   )
-  .get('/:shopId', async (ctx) => {
-    const shop = ctx.state.shop;
-    ctx.body = {
-      data: shop,
-    };
+  .delete('/:shopId', async (ctx) => {
+    await ctx.state.shop.delete();
+    ctx.status = 204;
   });
 
 module.exports = router;

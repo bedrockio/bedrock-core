@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { pickBy } from 'lodash';
-import { Loader, Container, Message } from 'semantic-ui-react';
+import { Loader, Container, Message, Divider } from 'semantic-ui-react';
 import Pagination from 'components/Pagination';
 
 export default class SearchProvider extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -28,9 +27,7 @@ export default class SearchProvider extends React.Component {
 
   componentDidUpdate(lastProps, lastState) {
     const { page, sort, filters } = this.state;
-    if (page !== lastState.page
-     || sort !== lastState.sort
-     || filters !== lastState.filters) {
+    if (page !== lastState.page || sort !== lastState.sort || filters !== lastState.filters) {
       this.fetch();
     }
   }
@@ -98,7 +95,7 @@ export default class SearchProvider extends React.Component {
     this.setState({
       filters: pickBy(filters),
     });
-  }
+  };
 
   render() {
     const { loader } = this.props;
@@ -134,6 +131,7 @@ export default class SearchProvider extends React.Component {
     if (pagination && meta.total > meta.limit) {
       return (
         <Container textAlign="center">
+          <Divider hidden />
           <Pagination page={page} limit={meta.limit} total={meta.total} onPageChange={this.onPageChange} />
         </Container>
       );

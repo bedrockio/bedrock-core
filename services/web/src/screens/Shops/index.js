@@ -70,7 +70,7 @@ export default class Shops extends React.Component {
                         <Table.HeaderCell width={3}>Description</Table.HeaderCell>
                         <Table.HeaderCell onClick={() => setSort('createdAt')} sorted={getSorted('createdAt')}>
                           Created
-                          <HelpTip title="Created" text="This is the date and time the product was created." />
+                          <HelpTip title="Created" text="This is the date and time the item was created." />
                         </Table.HeaderCell>
                         <Table.HeaderCell textAlign="center">Actions</Table.HeaderCell>
                       </Table.Row>

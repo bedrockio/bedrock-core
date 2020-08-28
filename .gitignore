@@ -1,8 +1,6 @@
 node_modules
 dist
 .DS_Store
-apps/web/semantic
-apps/web/semantic.json
 logs
 *.log
 npm-debug.log*
@@ -12,6 +10,7 @@ env
 *.pyc
 *.code-workspace
 tmp
-data
+/data
+services/api/data
 .terraform/
 globalConfig.json

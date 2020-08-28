@@ -1,60 +1,8 @@
 {
   "paths": [
     {
-      "method": "POST",
-      "path": "/search",
-      "requestBody": [
-        {
-          "name": "skip",
-          "description": "",
-          "required": false,
-          "schema": {
-            "default": 0,
-            "type": "number"
-          }
-        },
-        {
-          "name": "sort",
-          "description": "",
-          "required": false,
-          "schema": {
-            "default": {
-              "field": "createdAt",
-              "order": "desc"
-            },
-            "type": "object",
-            "properties": {
-              "field": {
-                "type": "string"
-              },
-              "order": {
-                "enum": ["asc", "desc"],
-                "type": "string"
-              }
-            },
-            "additionalProperties": false,
-            "patterns": [],
-            "required": ["field", "order"]
-          }
-        },
-        {
-          "name": "shopId",
-          "description": "",
-          "required": false,
-          "schema": {
-            "type": "string"
-          }
-        },
-        {
-          "name": "limit",
-          "description": "",
-          "required": false,
-          "schema": {
-            "default": 50,
-            "type": "number"
-          }
-        }
-      ],
+      "method": "GET",
+      "path": "/:productId",
       "responseBody": [],
       "examples": []
     },
@@ -128,11 +76,64 @@
       "examples": []
     },
     {
-      "method": "DELETE",
-      "path": "/:productId",
+      "method": "POST",
+      "path": "/search",
+      "requestBody": [
+        {
+          "name": "skip",
+          "description": "",
+          "required": false,
+          "schema": {
+            "default": 0,
+            "type": "number"
+          }
+        },
+        {
+          "name": "sort",
+          "description": "",
+          "required": false,
+          "schema": {
+            "default": {
+              "field": "createdAt",
+              "order": "desc"
+            },
+            "type": "object",
+            "properties": {
+              "field": {
+                "type": "string"
+              },
+              "order": {
+                "enum": ["asc", "desc"],
+                "type": "string"
+              }
+            },
+            "additionalProperties": false,
+            "patterns": [],
+            "required": ["field", "order"]
+          }
+        },
+        {
+          "name": "shopId",
+          "description": "",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "limit",
+          "description": "",
+          "required": false,
+          "schema": {
+            "default": 50,
+            "type": "number"
+          }
+        }
+      ],
       "responseBody": [],
       "examples": []
     },
+
     {
       "method": "PATCH",
       "path": "/:productId",
@@ -238,7 +239,7 @@
       "examples": []
     },
     {
-      "method": "GET",
+      "method": "DELETE",
       "path": "/:productId",
       "responseBody": [],
       "examples": []
