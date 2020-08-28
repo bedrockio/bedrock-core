@@ -2,6 +2,7 @@ import React from 'react';
 import { Container, Table, Message, Image, Button, Header } from 'semantic-ui-react';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
+import { screen } from 'helpers';
 import { urlForUpload } from 'utils/uploads';
 
 import { SearchProvider } from 'components/data';
@@ -10,6 +11,7 @@ import { Confirm } from 'components/Semantic';
 import HelpTip from 'components/HelpTip';
 import EditProduct from 'components/modals/EditProduct';
 
+@screen
 export default class ShopProducts extends React.Component {
   onDataNeeded = async (params) => {
     return await request({

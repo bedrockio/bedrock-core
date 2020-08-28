@@ -5,6 +5,21 @@ import { Form, Message, Image, Icon, Label, Card } from 'semantic-ui-react';
 import { request } from 'utils/api';
 import { urlForUpload } from 'utils/uploads';
 
+const MIME_TYPES = {
+  image: 'image/*',
+  video: 'video/*',
+  audio: 'audio/*',
+  text: 'text/*',
+  pdf: 'application/pdf',
+  csv: 'text/csv,application/vnd.ms-excel',
+  zip: 'application/zip,application/octet-stream',
+};
+
+const ALTERNATE_ICONS = {
+  csv: 'excel',
+  zip: 'archive',
+};
+
 export default class Uploads extends React.Component {
 
   constructor(props) {
@@ -54,12 +69,12 @@ export default class Uploads extends React.Component {
       error: null,
     });
     try {
-      const { single } = this.props;
+      const { single, type } = this.props;
       if (single) {
         acceptedFiles = acceptedFiles.slice(0, 1);
       }
       if (rejectedFiles.length) {
-        throw new Error(`File did not meet criteria: ${rejectedFiles[0].file.name}`);
+        throw new Error(`File must be of ${type} type.`);
       }
       const { data } = await request({
         method: 'POST',
@@ -90,11 +105,11 @@ export default class Uploads extends React.Component {
         {label && <label>{label}</label>}
         {error && <Message error content={error.message} />}
         {uploads.length > 0 &&
-          (type === 'image' ? (
+          (type === 'image' || type === 'video' || type === 'audio' ? (
             <Card.Group itemsPerRow={4}>
               {uploads.map((upload) => (
                 <Card key={upload.id}>
-                  <Image key={upload.id} src={urlForUpload(upload, true)} />
+                  {this.renderUpload(upload, type)}
                   <Icon
                     name="delete"
                     color="blue"
@@ -115,14 +130,17 @@ export default class Uploads extends React.Component {
             <Label.Group color="blue">
               {uploads.map((upload) => (
                 <Label key={upload.id}>
-                  <Icon name={`${type} file outline`} />
+                  {this.renderIconForType()}
                   {upload.filename}
                   <Icon name="delete" style={{ cursor: 'pointer' }} onClick={() => this.delete(upload)} />
                 </Label>
               ))}
             </Label.Group>
           ))}
-        <Dropzone maxSize={5 * 1024 * 1024} onDrop={this.onDrop}>
+        <Dropzone
+          accept={MIME_TYPES[type]}
+          maxSize={5 * 1024 * 1024}
+          onDrop={this.onDrop}>
           {({ getRootProps, getInputProps, isDragActive }) => {
             return (
               <div
@@ -131,7 +149,7 @@ export default class Uploads extends React.Component {
                   isDragActive ? 'ui icon blue message upload-dropzone-active' : 'ui icon message upload-dropzone'
                 }
                 style={{ cursor: 'pointer', outline: 0 }}>
-                {loading ? <Icon name="sync alternate" loading /> : <Icon name={`file ${type} outline`} />}
+                {loading ? <Icon name="sync alternate" loading /> : this.renderIconForType()}
                 <input {...getInputProps()} />
                 <div className="content">
                   {loading ? (
@@ -151,10 +169,34 @@ export default class Uploads extends React.Component {
       </Form.Field>
     );
   }
+
+  renderUpload(upload, type) {
+    const src = urlForUpload(upload, true);
+    if (type === 'image') {
+      return <Image key={upload.id} src={src} />;
+    } else if (type === 'video') {
+      return (
+        <video
+          style={{width: '100%'}}
+          src={src}
+          controls
+        />
+      );
+    } else if (type === 'audio') {
+      return (
+        <audio src={src} controls />
+      );
+    }
+  }
+
+  renderIconForType() {
+    const { type } = this.props;
+    return <Icon name={`${ALTERNATE_ICONS[type] || type || ''} file outline`} />;
+  }
 }
 
 Uploads.propTypes = {
-  type: PropTypes.string,
+  type: PropTypes.oneOf(Object.keys(MIME_TYPES)),
   single: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   onError: PropTypes.func,

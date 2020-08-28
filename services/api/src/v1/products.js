@@ -105,7 +105,7 @@ router
     }),
     async (ctx) => {
       const product = ctx.state.product;
-      Object.assign(product, ctx.request.body);
+      product.assign(ctx.request.body);
       await product.save();
       ctx.body = {
         data: product,

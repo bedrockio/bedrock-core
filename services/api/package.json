@@ -37,13 +37,13 @@
     "snyk": "^1.359.1"
   },
   "devDependencies": {
+    "@shelf/jest-mongodb": "^1.2.2",
     "@yeongjet/joi-to-json-schema": "^1.0.4",
     "eslint": "^7.5.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-jest": "^23.19.0",
     "jest": "^26.1.0",
     "juice": "^7.0.0",
-    "mongodb-memory-server": "^6.6.3",
     "nodemon": "^2.0.4",
     "pre-commit": "^1.2.2",
     "prettier": "^2.0.5",

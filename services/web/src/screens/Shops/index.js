@@ -4,6 +4,7 @@ import { Container, Header, Table, Button, Message } from 'semantic-ui-react';
 import { getData } from 'country-list';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
+import { screen } from 'helpers';
 
 import AppWrapper from 'components/AppWrapper';
 import { Layout } from 'components/Layout';
@@ -20,6 +21,7 @@ const countries = getData().map(({ code, name }) => ({
   key: code,
 }));
 
+@screen
 export default class Shops extends React.Component {
   onDataNeeded = async (params) => {
     return await request({

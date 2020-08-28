@@ -2,6 +2,7 @@ import React from 'react';
 import { Segment, Message } from 'semantic-ui-react';
 import { withSession } from 'stores';
 import { request } from 'utils/api';
+import { screen } from 'helpers';
 
 import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
@@ -10,6 +11,7 @@ import { Link } from 'react-router-dom';
 
 import { getToken, parseToken } from 'utils/token';
 
+@screen
 @withSession
 export default class ResetPassword extends React.Component {
 

@@ -12,8 +12,4 @@ const schema = createSchema({
   thumbnailUrl: { type: String },
 });
 
-schema.methods.assign = function assign(fields) {
-  Object.assign(this, omit(fields, ['createdAt', 'updatedAt', 'deletedAt', 'id']));
-};
-
 module.exports = mongoose.models.Upload || mongoose.model('Upload', schema);
