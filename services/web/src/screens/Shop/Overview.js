@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header, Table, Image } from 'semantic-ui-react';
+import { Header, Table, Image, Label } from 'semantic-ui-react';
 import { urlForUpload } from 'utils/uploads';
 import { formatDateTime } from 'utils/date';
 import { screen } from 'helpers';
@@ -22,16 +22,20 @@ export default class ShopOverview extends React.Component {
         <Table definition>
           <Table.Body>
             <Table.Row>
-              <Table.Cell>Created At</Table.Cell>
+              <Table.Cell>Categories</Table.Cell>
               <Table.Cell>
-                {formatDateTime(shop.createdAt)}
+                {shop.categories.map((category) => (
+                  <Label key={category.id} content={category.name} />
+                ))}
               </Table.Cell>
             </Table.Row>
             <Table.Row>
+              <Table.Cell>Created At</Table.Cell>
+              <Table.Cell>{formatDateTime(shop.createdAt)}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
               <Table.Cell>Updated At</Table.Cell>
-              <Table.Cell>
-                {formatDateTime(shop.updatedAt)}
-              </Table.Cell>
+              <Table.Cell>{formatDateTime(shop.updatedAt)}</Table.Cell>
             </Table.Row>
           </Table.Body>
         </Table>
