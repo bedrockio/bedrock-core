@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { merge, omit } from 'lodash';
 import { request } from 'utils/api';
+import { trackSession, setUserId } from 'utils/analytics';
 
 const SessionContext = React.createContext();
 
@@ -54,6 +55,9 @@ export class SessionProvider extends React.PureComponent {
           method: 'GET',
           path: '/1/users/me',
         });
+        // Uncomment this line if you want to set up
+        // User-Id tracking. https://bit.ly/2DKQYEN.
+        // setUserId(data.id);
         this.setState({
           user: data,
           loading: false,
@@ -90,12 +94,14 @@ export class SessionProvider extends React.PureComponent {
         [key]: data
       })
     );
+    trackSession('add', key, data);
   };
 
   removeStored = (key) => {
     this.setStored(
       omit(this.state.stored, key)
     );
+    trackSession('remove', key);
   };
 
   clearStored = () => {
