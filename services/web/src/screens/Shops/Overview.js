@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header, Table, Loader, Image } from 'semantic-ui-react';
+import { Header, Table, Loader, Image, Label } from 'semantic-ui-react';
 import { NotFound } from 'components';
 import { screen } from 'helpers';
 import Menu from './Menu';
@@ -39,7 +39,9 @@ export default class ShopOverview extends React.Component {
                 <Table.Row>
                   <Table.Cell>Categories</Table.Cell>
                   <Table.Cell>
-                    {shop.categories.join(', ') || 'None'}
+                    {shop.categories.map((category) => (
+                      <Label key={category.id} content={category.name} />
+                    ))}
                   </Table.Cell>
                 </Table.Row>
                 {/* --- Generator: end */}

@@ -1,6 +1,34 @@
 {
   "paths": [
     {
+      "method": "GET",
+      "path": "/me",
+      "responseBody": [
+        {
+          "name": "data",
+          "description": "Current User object",
+          "schema": {
+            "type": "User"
+          }
+        }
+      ],
+      "examples": [
+        {
+          "name": "Get user associated with current token",
+          "responseBody": {
+            "data": {
+              "id": "5e6a9c000fc676447dc9936a",
+              "roles": ["admin"],
+              "name": "John Doe",
+              "email": "john.doe@gmail.com",
+              "createdAt": "2020-03-12T20:30:56.062Z",
+              "updatedAt": "2020-03-12T20:30:56.062Z"
+            }
+          }
+        }
+      ]
+    },
+    {
       "method": "PATCH",
       "path": "/me",
       "requestBody": [
@@ -25,6 +53,73 @@
         {
           "name": "data",
           "description": "Updated user object",
+          "schema": {
+            "type": "User"
+          }
+        }
+      ],
+      "examples": []
+    },
+    {
+      "method": "POST",
+      "path": "/",
+      "requestBody": [
+        {
+          "name": "email",
+          "description": "E-mail address of user",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "email"
+          }
+        },
+        {
+          "name": "name",
+          "description": "Full name of user",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "roles",
+          "description": "List of roles to assign to user",
+          "required": false,
+          "schema": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "name": "password",
+          "description": "Password of at least 6 characters",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "minLength": 6
+          }
+        }
+      ],
+      "responseBody": [
+        {
+          "name": "data",
+          "description": "Created User object",
+          "schema": {
+            "type": "User"
+          }
+        }
+      ],
+      "examples": []
+    },
+    {
+      "method": "GET",
+      "path": "/:userId",
+      "responseBody": [
+        {
+          "name": "data",
+          "description": "User object matching request ID",
           "schema": {
             "type": "User"
           }
@@ -93,65 +188,6 @@
       "examples": []
     },
     {
-      "method": "POST",
-      "path": "/",
-      "requestBody": [
-        {
-          "name": "email",
-          "description": "E-mail address of user",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "format": "email"
-          }
-        },
-        {
-          "name": "name",
-          "description": "Full name of user",
-          "required": true,
-          "schema": {
-            "type": "string"
-          }
-        },
-        {
-          "name": "roles",
-          "description": "List of roles to assign to user",
-          "required": false,
-          "schema": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        },
-        {
-          "name": "password",
-          "description": "Password of at least 6 characters",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "minLength": 6
-          }
-        }
-      ],
-      "responseBody": [
-        {
-          "name": "data",
-          "description": "Created User object",
-          "schema": {
-            "type": "User"
-          }
-        }
-      ],
-      "examples": []
-    },
-    {
-      "method": "DELETE",
-      "path": "/:userId",
-      "responseBody": [],
-      "examples": []
-    },
-    {
       "method": "PATCH",
       "path": "/:userId",
       "requestBody": [
@@ -213,45 +249,9 @@
       ]
     },
     {
-      "method": "GET",
-      "path": "/me",
-      "responseBody": [
-        {
-          "name": "data",
-          "description": "Current User object",
-          "schema": {
-            "type": "User"
-          }
-        }
-      ],
-      "examples": [
-        {
-          "name": "Get user associated with current token",
-          "responseBody": {
-            "data": {
-              "id": "5e6a9c000fc676447dc9936a",
-              "roles": ["admin"],
-              "name": "John Doe",
-              "email": "john.doe@gmail.com",
-              "createdAt": "2020-03-12T20:30:56.062Z",
-              "updatedAt": "2020-03-12T20:30:56.062Z"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "method": "GET",
+      "method": "DELETE",
       "path": "/:userId",
-      "responseBody": [
-        {
-          "name": "data",
-          "description": "User object matching request ID",
-          "schema": {
-            "type": "User"
-          }
-        }
-      ],
+      "responseBody": [],
       "examples": []
     }
   ],

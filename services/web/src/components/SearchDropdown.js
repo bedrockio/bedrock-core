@@ -5,30 +5,40 @@ import { get, omit, flatten, uniqBy } from 'lodash';
 export default class SearchDropdown extends React.Component {
   static defaultProps = {
     valueField: 'id',
-    textField: 'name'
+    textField: 'name',
   };
 
   state = {
     defaultOptions: [],
     options: [],
     loading: false,
-    error: false
+    error: false,
   };
+
+  getValues() {
+    const { value, valueField, multiple } = this.props;
+    let normalizedValue = value;
+    if (multiple && value.length && typeof value[0] === 'object') {
+      normalizedValue = value.map((object) => object[valueField]);
+    }
+    return normalizedValue;
+  }
 
   componentDidMount() {
     const { valueField, multiple } = this.props;
     const fetchField = multiple ? `${valueField}s` : valueField;
+    const value = this.getValues();
     Promise.all(
       [
         this.loadOptions({}),
-        this.props.value &&
+        value &&
           this.loadOptions({
-            [fetchField]: this.props.value
-          })
+            [fetchField]: value,
+          }),
       ].filter(Boolean)
     ).then((options) => {
       this.setState({
-        defaultOptions: flatten(options)
+        defaultOptions: flatten(options),
       });
     });
   }
@@ -38,7 +48,7 @@ export default class SearchDropdown extends React.Component {
     this.setState({
       search,
       loading: true,
-      error: false
+      error: false,
     });
 
     return fetchData(search)
@@ -47,20 +57,20 @@ export default class SearchDropdown extends React.Component {
           const key = get(item, valueField);
           return {
             text: get(item, textField),
-            value: key
+            value: key,
           };
         });
 
         this.setState({
           loading: false,
-          options
+          options,
         });
         return options;
       })
       .catch(() => {
         this.setState({
           loading: false,
-          error: true
+          error: true,
         });
       });
   }
@@ -80,14 +90,13 @@ export default class SearchDropdown extends React.Component {
 
     if (state.search) {
       if (multiple) {
-        options = uniqBy(
-          [...state.defaultOptions, ...state.options],
-          (option) => option.value
-        );
+        options = uniqBy([...state.defaultOptions, ...state.options], (option) => option.value);
       } else {
         options = state.options;
       }
     }
+
+    const normalizedValue = this.getValues();
 
     return (
       <Dropdown
@@ -99,6 +108,7 @@ export default class SearchDropdown extends React.Component {
         options={options}
         onSearchChange={this.onHandleSearchChange}
         {...props}
+        value={normalizedValue}
       />
     );
   }

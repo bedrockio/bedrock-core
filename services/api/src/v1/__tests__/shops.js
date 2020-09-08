@@ -18,12 +18,13 @@ const createUpload = () => {
     hash: 'test',
     storageType: 'local',
     mimeType: 'image/png',
-    ownerId: 'none'
+    ownerId: 'none',
   });
 };
 // --- Generator: end
 
 describe('/1/shops', () => {
+
   describe('POST /search', () => {
     it('it should list out shops', async () => {
       // --- Generator: test-body
@@ -60,7 +61,7 @@ describe('/1/shops', () => {
         '/1/shops',
         {
           name: 'shop name',
-          images: [upload.id]
+          images: [upload.id],
         },
         { user }
       );
@@ -78,7 +79,8 @@ describe('/1/shops', () => {
       // --- Generator: test-body
       const user = await createUser();
       const shop = await Shop.create({
-        name: 'new shop'
+        name: 'test 1',
+        description: 'Some description',
       });
       const response = await request('DELETE', `/1/shops/${shop.id}`, {}, { user });
       expect(response.status).toBe(204);
@@ -94,7 +96,7 @@ describe('/1/shops', () => {
       const user = await createUser();
       const shop = await Shop.create({
         name: 'shop name',
-        description: 'Some description'
+        description: 'Some description',
       });
       shop.name = 'new name';
       const response = await request('PATCH', `/1/shops/${shop.id}`, shop.toJSON(), { user });
@@ -111,8 +113,7 @@ describe('/1/shops', () => {
       // --- Generator: test-body
       const user = await createUser();
       const shop = await Shop.create({
-        name: 'test 1',
-        description: 'Some description'
+        name: 'new shop',
       });
       const response = await request('GET', `/1/shops/${shop.id}`, {}, { user });
       expect(response.status).toBe(200);
