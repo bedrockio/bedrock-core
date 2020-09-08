@@ -3,6 +3,8 @@
 - [Components Documentation](src/components)
 - [Utils Documentation](src/utils)
 - [CRUD View Example](src/screens/Shops/index.js)
+- [Analytics](src/utils/analytics/README.md)
+- [Stores](src/stores/README.md)
 
 ## Directory Structure
 

@@ -19,16 +19,26 @@ const argv = yargs.boolean('p').boolean('analyze').option('app', {
   default: [],
 }).argv;
 
-const DEV = !argv.p;
+// The boolean toggle to determine if webpack is in production
+// mode or not. Avoiding naming this DEV to not confuse with
+// runtime env.
+const BUILD = !!argv.p;
 
-const ENV = require('./env');
+// Strip NODE_ENV env vars as they only make
+// sense during runtime.
+const { DEV, STAGING, PROD, ...rest } = require('./env');
 
-if (DEV && argv.analyze) {
-  throw new Error('Analyze mode must be used in production. Use yarn build --analyze.');
+const ENV = {
+  BUILD,
+  ...rest,
+};
+
+if (argv.analyze && !BUILD) {
+  throw new Error('Analyze mode must be used with -p flag. Use yarn build --analyze.');
 }
 
 module.exports = {
-  devtool: DEV ? 'cheap-module-source-map' : 'source-map',
+  devtool: BUILD ? 'source-map' : 'cheap-module-source-map',
   entry: getEntryPoints(),
   output: {
     publicPath: '/',
@@ -53,7 +63,7 @@ module.exports = {
       },
       {
         test: /\.(css|less)$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', ...(DEV ? [] : ['postcss-loader']), 'less-loader'],
+        use: [MiniCssExtractPlugin.loader, 'css-loader', ...(BUILD ? ['postcss-loader'] : []), 'less-loader'],
       },
       {
         test: /\.(png|jpg|svg|gif|mp4|pdf|eot|ttf|woff2?)$/,
