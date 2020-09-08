@@ -4,6 +4,7 @@ const validate = require('../middlewares/validate');
 const { authenticate, fetchUser } = require('../middlewares/authenticate');
 const { NotFoundError } = require('../lib/errors');
 const Product = require('../models/product');
+const { commonSearch } = require('../lib/utils/search');
 
 const router = new Router();
 
@@ -58,45 +59,27 @@ router
   })
   .post(
     '/search',
-    validate({
-      body: Joi.object({
-        skip: Joi.number().default(0),
-        sort: Joi.object({
-          field: Joi.string().required(),
-          order: Joi.string().valid('asc', 'desc').required(),
-        }).default({
-          field: 'createdAt',
-          order: 'desc',
-        }),
-        ids: Joi.array().items(Joi.string()),
-        shop: Joi.string(),
-        limit: Joi.number().positive().default(50),
-      }),
-    }),
-    async (ctx) => {
-      const { ids = [], sort, skip, limit, shop } = ctx.request.body;
-      const query = {
-        ...(ids.length ? { _id: { $in: ids } } : {}),
-        deletedAt: { $exists: false },
-      };
-      if (shop) {
-        query.shop = shop;
-      }
-      const data = await Product.find(query)
-        .sort({ [sort.field]: sort.order === 'desc' ? -1 : 1 })
-        .skip(skip)
-        .limit(limit);
+    ...commonSearch({
+      defaultExportFilename: 'products.csv',
+      defaultSortField: 'createdAt',
+      defaultSortOrder: 'desc',
+      searchFields: ['name', 'description'],
+      model: Product,
+      createQuery: async (ctx, query) => {
+        const { shop } = ctx.request.body;
 
-      const total = await Product.countDocuments(query);
-      ctx.body = {
-        data,
-        meta: {
-          total,
-          skip,
-          limit,
-        },
-      };
-    }
+        if (shop) {
+          query.shop = shop;
+        }
+
+        return {
+          ...query,
+        };
+      },
+      validateBody: {
+        shop: Joi.string(),
+      },
+    })
   )
   .patch(
     '/:productId',

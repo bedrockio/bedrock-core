@@ -3,6 +3,7 @@ const Joi = require('@hapi/joi');
 const validate = require('../middlewares/validate');
 const { authenticate, fetchUser } = require('../middlewares/authenticate');
 const { NotFoundError } = require('../lib/errors');
+const { commonSearch } = require('../lib/utils/search');
 const Shop = require('../models/shop');
 
 const router = new Router();
@@ -57,56 +58,27 @@ router
   })
   .post(
     '/search',
-    validate({
-      body: Joi.object({
-        country: Joi.string(),
-        startAt: Joi.date(),
-        endAt: Joi.date(),
-        skip: Joi.number().default(0),
-        sort: Joi.object({
-          field: Joi.string().required(),
-          order: Joi.string().valid('asc', 'desc').required(),
-        }).default({
-          field: 'createdAt',
-          order: 'desc',
-        }),
-        ids: Joi.array().items(Joi.string()),
-        limit: Joi.number().positive().default(50),
-      }),
-    }),
-    async (ctx) => {
-      const { ids = [], sort, skip, limit, country, startAt, endAt } = ctx.request.body;
-      const query = {
-        ...(ids.length ? { _id: { $in: ids } } : {}),
-        deletedAt: { $exists: false },
-      };
-      if (startAt || endAt) {
-        query.createdAt = {};
-        if (startAt) {
-          query.createdAt.$gte = startAt;
-        }
-        if (endAt) {
-          query.createdAt.$lte = endAt;
-        }
-      }
-      if (country) {
-        query.country = country;
-      }
-      const data = await Shop.find(query)
-        .sort({ [sort.field]: sort.order === 'desc' ? -1 : 1 })
-        .skip(skip)
-        .limit(limit);
+    ...commonSearch({
+      defaultExportFilename: 'shops.csv',
+      defaultSortField: 'createdAt',
+      defaultSortOrder: 'desc',
+      searchFields: ['name', 'description'],
+      model: Shop,
+      createQuery: async (ctx, query) => {
+        const { country } = ctx.request.body;
 
-      const total = await await Shop.countDocuments(query);
-      ctx.body = {
-        data,
-        meta: {
-          total,
-          skip,
-          limit,
-        },
-      };
-    }
+        if (country) {
+          query.country = country;
+        }
+
+        return {
+          ...query,
+        };
+      },
+      validateBody: {
+        country: Joi.string(),
+      },
+    })
   )
   .patch(
     '/:shopId',
