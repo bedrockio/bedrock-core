@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { merge, omit } from 'lodash';
 import { request } from 'utils/api';
 
@@ -31,13 +31,15 @@ export class SessionProvider extends React.PureComponent {
     });
   };
 
+  hasRole = (role) => {
+    return this.hasRoles([role]);
+  };
+
   setToken = async (token) => {
     if (token) {
       localStorage.setItem('jwt', token);
-      await this.loadUser();
     } else {
       localStorage.removeItem('jwt');
-      this.clearUser();
     }
   };
 
@@ -64,6 +66,7 @@ export class SessionProvider extends React.PureComponent {
       }
     } else {
       this.setState({
+        user: null,
         loading: false,
       });
     }
@@ -81,9 +84,11 @@ export class SessionProvider extends React.PureComponent {
     });
   };
 
-  addStored = (data) => {
+  addStored = (key, data) => {
     this.setStored(
-      merge({}, this.state.stored, data)
+      merge({}, this.state.stored, {
+        [key]: data
+      })
     );
   };
 
@@ -133,6 +138,7 @@ export class SessionProvider extends React.PureComponent {
           updateUser: this.updateUser,
           loadUser: this.loadUser,
           hasRoles: this.hasRoles,
+          hasRole: this.hasRole,
           isAdmin: this.isAdmin,
         }}>
         {this.props.children}
@@ -142,6 +148,43 @@ export class SessionProvider extends React.PureComponent {
 }
 
 export function withSession(Component) {
-  Component.contextType = SessionContext;
-  return Component;
+
+  let lastContext = {};
+
+  return class Wrapped extends Component {
+
+    // Preserve the component name
+    static name = Component.name;
+
+    static contextType = SessionContext;
+
+    componentDidMount() {
+      lastContext = this.context;
+      if (super.componentDidMount) {
+        super.componentDidMount();
+      }
+    }
+
+    getSnapshotBeforeUpdate() {
+      const context = lastContext;
+      lastContext = this.context;
+      return context;
+    }
+  };
+}
+
+export function withLoadedSession(Component) {
+  Component = withSession(Component);
+  return class Wrapped extends React.Component {
+
+    static contextType = SessionContext;
+
+    render() {
+      return this.context.loading ? null : <Component {...this.props} />;
+    }
+  };
+}
+
+export function useSession() {
+  return useContext(SessionContext);
 }
