@@ -159,7 +159,7 @@ exports.commonSearch = function ({
 }) {
   return [
     validate({
-      body: {
+      body: Joi.object({
         ...exports.commonSearchValidation({
           defaultExportFilename,
           defaultSortField,
@@ -167,7 +167,7 @@ exports.commonSearch = function ({
           exactStringMatchFields,
         }),
         ...(validateBody || {}),
-      },
+      }),
     }),
     async (ctx) => {
       const baseQuery = exports.commonSearchCreateQuery(ctx.request.body, {
@@ -184,7 +184,7 @@ exports.commonSearch = function ({
       }
 
       ctx.body = {
-        data: data.map((i) => i.toResource()),
+        data,
         meta,
       };
     },
