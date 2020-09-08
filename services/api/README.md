@@ -20,7 +20,7 @@ See http://localhost:2200/docs for full documentation on this API (requires runn
 - `src/app.js` - Entrypoint into API (does not bind, so can be used in unit tests)
 - `src/index.js` - Launch script for the API
 - `emails/dist` - Prebuild emails templates (dont modify => modify emails/src and run `yarn emails`)
-- `emails/src` - Emails templates
+- `emails/src` - Email templates
 
 ## Install Dependencies
 
@@ -57,15 +57,17 @@ All configuration is done using environment variables. The default values in `en
 - `BIND_HOST` - Host to bind to, defaults to `"0.0.0.0"`
 - `BIND_PORT` - Port to bind to, defaults to `2300`
 - `MONGO_URI` - MongoDB URI to connect to, defaults to `mongodb://localhost/bedrock_dev`
-- `JWT_SECRET` - JWT secret for authentication, defaults to `[change me]`
-- `ADMIN_EMAIL` - Default root admin user `admin@bedrock.foundation`
-- `ADMIN_PASSWORD` - Default root admin password `[change me]`
-- `APP_NAME` - Default product name to be used in emails 'Bedrock
+- `JWT_SECRET` - JWT secret used for token signing and encryption, defaults to `[change me]`
+- `ADMIN_NAME` - Default dashboard admin user name `admin`
+- `ADMIN_EMAIL` - Default dashboard admin user `admin@bedrock.foundation`
+- `ADMIN_PASSWORD` - Default dashboard admin password `[change me]`
+- `APP_NAME` - Default product name to be used in emails `Bedrock`
 - `APP_URL` - URL for app defaults to `http://localhost:2200`
 - `POSTMARK_FROM` - Reply email address `no-reply@bedrock.foundation`
 - `POSTMARK_APIKEY` - APIKey for Postmark `[change me]`
-- `UPLOADS_STORE` - Method for uploads. `local` or `gcs`
+- `UPLOADS_STORE` - Method for uploads. `local` or `gcs` (Google Cloud Storage)
 - `UPLOADS_GCS_BUCKET` - GCS bucket for uploads
+- `SENTRY_DSN` - Sentry error monitoring credentials
 
 ## Building the Container
 

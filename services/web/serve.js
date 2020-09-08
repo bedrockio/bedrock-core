@@ -1,4 +1,3 @@
-const http = require('http');
 const Koa = require('koa');
 const webpack = require('koa-webpack');
 const webpackConfig = require('./webpack.config');
@@ -33,14 +32,5 @@ const { BIND_PORT, BIND_HOST, publicEnv } = require('./env');
   app.use(webpackMiddleware);
   app.listen(BIND_PORT, BIND_HOST, () => {
     console.info(`Running App on http://${BIND_HOST}:${BIND_PORT}/`);
-
-    // This is to trigger the build already (avoids 10 second loading on first hit)
-    console.info(`Bundling assets for the first time (hot loading enabled)`);
-    http.request({
-      method: 'GET',
-      host: BIND_HOST,
-      port: BIND_PORT,
-      path: '/',
-    });
   });
 })();

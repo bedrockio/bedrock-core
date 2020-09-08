@@ -14,17 +14,17 @@ Create a new shop object. Requires admin permissions.
 
 callSummary({method: 'POST', path: '/1/shops'})
 
-## List and Search Shops
-
-List shops and filter by certain attributes. Requires admin permissions.
-
-callSummary({method: 'POST', path: '/1/shops/search'})
-
 ## Get Shop
 
 Obtain shop object by unique shop ID.
 
 callSummary({method: 'GET', path: '/1/shops/:shopId'})
+
+## List and Search Shops
+
+List shops and filter by certain attributes. Requires admin permissions.
+
+callSummary({method: 'POST', path: '/1/shops/search'})
 
 ## Update Shop
 

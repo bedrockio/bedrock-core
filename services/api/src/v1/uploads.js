@@ -1,4 +1,4 @@
-const Router = require('koa-router');
+const Router = require('@koa/router');
 const { createReadStream } = require('fs');
 const { authenticate, fetchUser } = require('../middlewares/authenticate');
 const { NotFoundError, UnauthorizedError } = require('../lib/errors');
@@ -21,7 +21,7 @@ router
   .get('/:hash', async (ctx) => {
     const upload = await Upload.findOne({ hash: ctx.params.hash });
     ctx.body = {
-      data: upload
+      data: upload,
     };
   })
   .get('/:hash/image', async (ctx) => {
@@ -42,13 +42,15 @@ router
     const file = ctx.request.files.file;
     const isArray = Array.isArray(file);
     const files = isArray ? file : [file];
-    const uploads = await Promise.all(files.map(async (file) => {
-      const params = await storeUploadedFile(file);
-      params.ownerId = authUser.id;
-      return await Upload.create(params);
-    }));
+    const uploads = await Promise.all(
+      files.map(async (file) => {
+        const params = await storeUploadedFile(file);
+        params.ownerId = authUser.id;
+        return await Upload.create(params);
+      })
+    );
     ctx.body = {
-      data: isArray ? uploads : uploads[0]
+      data: isArray ? uploads : uploads[0],
     };
   })
   .delete('/:uploadId', async (ctx) => {

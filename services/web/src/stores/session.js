@@ -22,12 +22,14 @@ export class SessionProvider extends React.PureComponent {
   }
 
   isAdmin = () => {
-    return this.hasRole('admin');
+    return this.hasRoles(['admin']);
   };
 
-  hasRole = (role) => {
+  hasRoles = (roles = []) => {
     const { user } = this.state;
-    return user?.roles.includes(role);
+    return roles.some((role) => {
+      return user?.roles.includes(role);
+    });
   };
 
   setToken = async (token) => {
@@ -138,8 +140,8 @@ export class SessionProvider extends React.PureComponent {
           clearStored: this.clearStored,
           updateUser: this.updateUser,
           loadUser: this.loadUser,
+          hasRoles: this.hasRoles,
           isAdmin: this.isAdmin,
-          hasRole: this.hasRole,
         }}>
         {this.props.children}
       </SessionContext.Provider>

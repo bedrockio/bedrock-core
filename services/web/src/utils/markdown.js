@@ -103,6 +103,7 @@ class OpenApiMacros {
 }
 
 export function executeOpenApiMacros(openApi, markdown) {
+  // eslint-disable-next-line no-unused-vars
   const macros = new OpenApiMacros(openApi);
   Object.getOwnPropertyNames(OpenApiMacros.prototype).forEach((macroFn) => {
     const key = macroFn.toString();

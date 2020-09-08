@@ -68,6 +68,7 @@ export default class EditShop extends React.Component {
       });
       this.props.onSave();
     } catch (error) {
+      console.log(error);
       this.setState({
         error,
         loading: false,

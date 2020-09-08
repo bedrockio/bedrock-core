@@ -66,4 +66,4 @@ Layout.propTypes = {
 
 Layout.defaultProps = {
   as: 'div',
-}
+};

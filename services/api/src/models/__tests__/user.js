@@ -31,5 +31,15 @@ describe('User', () => {
       expect(data.hashedPassword).toBeUndefined();
     });
 
+    it('should not allow hashedPassword to be set via assignment', () => {
+      const user = new User({
+        hashedPassword: 'fake hash',
+      });
+      user.assign({
+        hashPassword: 'new fake hash',
+      });
+      expect(user.hashedPassword).toBe('fake hash');
+    });
+
   });
 });

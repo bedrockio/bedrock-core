@@ -73,66 +73,6 @@
   "paths": [
     {
       "method": "POST",
-      "path": "/search",
-      "requestBody": [
-        {
-          "name": "skip",
-          "description": "Offset for paginating results",
-          "required": false,
-          "schema": {
-            "default": 0,
-            "type": "number"
-          }
-        },
-        {
-          "name": "sort",
-          "description": "Sort object",
-          "required": false,
-          "schema": {
-            "default": {
-              "field": "createdAt",
-              "order": "desc"
-            },
-            "type": "object",
-            "properties": {
-              "field": {
-                "type": "string"
-              },
-              "order": {
-                "type": "string"
-              }
-            },
-            "additionalProperties": false,
-            "patterns": [],
-            "required": ["field", "order"]
-          }
-        },
-        {
-          "name": "limit",
-          "description": "Maximum number of results to retrieve",
-          "required": false,
-          "schema": {
-            "default": 50,
-            "type": "number"
-          }
-        }
-      ],
-      "responseBody": [
-        {
-          "name": "data",
-          "description": "List of Shop objects",
-          "schema": {
-            "type": "array",
-            "items": {
-              "type": "Shop"
-            }
-          }
-        }
-      ],
-      "examples": []
-    },
-    {
-      "method": "POST",
       "path": "/",
       "requestBody": [
         {
@@ -194,9 +134,77 @@
       "examples": []
     },
     {
-      "method": "DELETE",
+      "method": "GET",
       "path": "/:shopId",
-      "responseBody": [],
+      "responseBody": [
+        {
+          "name": "data",
+          "description": "Shop object",
+          "schema": {
+            "type": "Shop"
+          }
+        }
+      ],
+      "examples": []
+    },
+    {
+      "method": "POST",
+      "path": "/search",
+      "requestBody": [
+        {
+          "name": "skip",
+          "description": "Offset for paginating results",
+          "required": false,
+          "schema": {
+            "default": 0,
+            "type": "number"
+          }
+        },
+        {
+          "name": "sort",
+          "description": "Sort object",
+          "required": false,
+          "schema": {
+            "default": {
+              "field": "createdAt",
+              "order": "desc"
+            },
+            "type": "object",
+            "properties": {
+              "field": {
+                "type": "string"
+              },
+              "order": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false,
+            "patterns": [],
+            "required": ["field", "order"]
+          }
+        },
+        {
+          "name": "limit",
+          "description": "Maximum number of results to retrieve",
+          "required": false,
+          "schema": {
+            "default": 50,
+            "type": "number"
+          }
+        }
+      ],
+      "responseBody": [
+        {
+          "name": "data",
+          "description": "List of Shop objects",
+          "schema": {
+            "type": "array",
+            "items": {
+              "type": "Shop"
+            }
+          }
+        }
+      ],
       "examples": []
     },
     {
@@ -262,17 +270,9 @@
       "examples": []
     },
     {
-      "method": "GET",
+      "method": "DELETE",
       "path": "/:shopId",
-      "responseBody": [
-        {
-          "name": "data",
-          "description": "Shop object",
-          "schema": {
-            "type": "Shop"
-          }
-        }
-      ],
+      "responseBody": [],
       "examples": []
     }
   ]

@@ -10,12 +10,13 @@
     - [Authorization](#authorization)
   - [Provisioning](#provisioning)
     - [Creating a new environment](#creating-a-new-environment)
-    - [Install Terraform](#install-terraform)
+    - [Provision Script](#provision-script)
     - [Directory Structure](#directory-structure-1)
     - [Provision GKE Cluster](#provision-gke-cluster)
     - [Create load balancer IP addresses](#create-load-balancer-ip-addresses)
     - [Deploy all services and pods](#deploy-all-services-and-pods)
     - [Scaling Up or Down](#scaling-up-or-down)
+    - [Destroying Environment Infrastructure](#destroying-environment-infrastructure)
   - [Deploying](#deploying)
     - [Rollout Deploy](#rollout-deploy)
     - [Feature Branches](#feature-branches)
@@ -25,9 +26,9 @@
     - [Check cluster status](#check-cluster-status)
     - [Getting shell access](#getting-shell-access)
   - [Disaster Recovery](#disaster-recovery)
-    - [Scenario A: Master Database Loss or Corruption](#scenario-a-master-database-loss-or-corruption)
-    - [Scenario B: Bucket Storage Loss or Corruption](#scenario-b-bucket-storage-loss-or-corruption)
-    - [Scenario C: Deletion of Google Cloud Project](#scenario-c-deletion-of-google-cloud-project)
+      - [Scenario A: Master Database Loss or Corruption](#scenario-a-master-database-loss-or-corruption)
+      - [Scenario B: Bucket Storage Loss or Corruption](#scenario-b-bucket-storage-loss-or-corruption)
+      - [Scenario C: Deletion of Google Cloud Project](#scenario-c-deletion-of-google-cloud-project)
   - [Other](#other)
     - [Configuring Backups](#configuring-backups)
     - [Backup Monitoring System](#backup-monitoring-system)
@@ -54,21 +55,29 @@ deployment/
 │   │   │   ├── mongo-service.yml
 │   │   │   └── etc...
 │   │   ├── env.conf # Staging environment configuration
+│   │   ├── provisioning
+│   │   │   ├── backend.tf # defines Google bucket to keep state
+│   │   │   ├── main.tf # Main rersource definitions (cluster, node_pool, buckets)
+│   │   │   ├── outputs.tf # Output values when running terraform commands
+│   │   │   ├── variables.tf # Defines all variables for main.tf (override per env)
+│   │   │   └── versions.tf # Defines minimum terraform version
 │   │   ├── services # Micro services deployment
 │   │   │   ├── api-deployment.yml
 │   │   │   ├── api-service.yml
 │   │   │   ├── web-deployment.yml
 │   │   │   ├── web-service.yml
 │   │   │   └── etc...
-│   │   └── variables.tfvars # Staging provisioning variables
 │   └── staging # Staging environment
 │       └── etc...
 ├── provisioning
-│   ├── backend.tf # defines Google bucket to keep state
-│   ├── main.tf # Main rersource definitions (cluster, node_pool, buckets)
-│   ├── outputs.tf # Output values when running terraform commands
-│   ├── variables.tf # Defines all variables for main.tf (override per env)
-│   └── versions.tf # Defines minimum terraform version
+│   ├── gcp-bucket-module # Terraform bucket module
+│   │   ├── main.tf
+│   │   └── variables.tf
+│   └── gke-cluster-module # Terraform GKE cluster and node pool module
+│       ├── main.tf
+│       ├── node_pool.tf
+│       ├── outputs.tf
+│       └── variables.tf
 └── scripts # Deployment and provisioning scripts
     ├── authorize
     ├── build
@@ -159,18 +168,12 @@ Note: this script can take about 5 minutes.
 
 ```bash
 # Staging
-# terraform init only has to be executed the first time
+# 'init' only has to be executed the first time
 $ ./deployment/scripts/provision staging init
-
+# 'plan' creates an execution plan for inspection
 $ ./deployment/scripts/provision staging plan
+# 'plan' is not required before 'apply', as 'apply' runs 'plan' in the background
 $ ./deployment/scripts/provision staging apply
-
-# Production
-# terraform init only has to be executed the first time
-$ ./deployment/scripts/provision production init
-
-$ ./deployment/scripts/provision production plan
-$ ./deployment/scripts/provision production apply
 ```
 
 ### Create load balancer IP addresses
@@ -199,6 +202,14 @@ Update cluster:
 
 ```
 $ ./deployment/scripts/provision staging apply
+```
+
+### Destroying Environment Infrastructure
+
+You can destroy the infrastructure for a particular environment (e.g. `staging`) with:
+
+```
+$ ./deployment/scripts/provision staging destroy
 ```
 
 ## Deploying

@@ -2,6 +2,7 @@ import React from 'react';
 import { Container, Table, Message, Image, Button, Header } from 'semantic-ui-react';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
+import { screen } from 'helpers';
 import { urlForUpload } from 'utils/uploads';
 
 import { SearchProvider } from 'components/data';
@@ -10,13 +11,13 @@ import { Confirm } from 'components/Semantic';
 import HelpTip from 'components/HelpTip';
 import EditProduct from 'components/modals/EditProduct';
 
+@screen
 export default class ShopProducts extends React.Component {
-
   onDataNeeded = async (params) => {
     return await request({
       method: 'POST',
       path: '/1/products/search',
-      body: params
+      body: params,
     });
   };
 
@@ -45,19 +46,14 @@ export default class ShopProducts extends React.Component {
                 <Table celled>
                   <Table.Header>
                     <Table.Row>
-                      <Table.HeaderCell width={2}>
-                        Image
-                      </Table.HeaderCell>
+                      <Table.HeaderCell width={2}>Image</Table.HeaderCell>
                       <Table.HeaderCell width={3} sorted={getSorted('name')} onClick={() => setSort('name')}>
                         Name
                       </Table.HeaderCell>
                       <Table.HeaderCell width={3}>Description</Table.HeaderCell>
-                      <Table.HeaderCell
-                        width={3}
-                        sorted={getSorted('createdAt')}
-                        onClick={() => setSort('createdAt')}>
+                      <Table.HeaderCell width={3} sorted={getSorted('createdAt')} onClick={() => setSort('createdAt')}>
                         Created
-                        <HelpTip title="Created" text="This is the date and time the product was created." />
+                        <HelpTip title="Created" text="This is the date and time the item was created." />
                       </Table.HeaderCell>
                       <Table.HeaderCell textAlign="center">Actions</Table.HeaderCell>
                     </Table.Row>
@@ -68,12 +64,7 @@ export default class ShopProducts extends React.Component {
                       return (
                         <Table.Row key={item.id}>
                           <Table.Cell>
-                            {image && (
-                              <Image
-                                style={{width: '100%'}}
-                                src={urlForUpload(image, true)}
-                              />
-                            )}
+                            {image && <Image style={{ width: '100%' }} src={urlForUpload(image, true)} />}
                           </Table.Cell>
                           <Table.Cell>{item.name}</Table.Cell>
                           <Table.Cell>{item.description}</Table.Cell>
@@ -94,7 +85,7 @@ export default class ShopProducts extends React.Component {
                               onConfirm={async () => {
                                 await request({
                                   method: 'DELETE',
-                                  path: `/1/products/${item.id}`
+                                  path: `/1/products/${item.id}`,
                                 });
                                 reload();
                               }}

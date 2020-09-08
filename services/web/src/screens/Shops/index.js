@@ -4,6 +4,7 @@ import { Container, Header, Table, Button, Message } from 'semantic-ui-react';
 import { getData } from 'country-list';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
+import { screen } from 'helpers';
 
 import AppWrapper from 'components/AppWrapper';
 import { Layout } from 'components/Layout';
@@ -20,6 +21,7 @@ const countries = getData().map(({ code, name }) => ({
   key: code,
 }));
 
+@screen
 export default class Shops extends React.Component {
   onDataNeeded = async (params) => {
     return await request({
@@ -68,7 +70,7 @@ export default class Shops extends React.Component {
                         <Table.HeaderCell width={3}>Description</Table.HeaderCell>
                         <Table.HeaderCell onClick={() => setSort('createdAt')} sorted={getSorted('createdAt')}>
                           Created
-                          <HelpTip title="Created" text="This is the date and time the product was created." />
+                          <HelpTip title="Created" text="This is the date and time the item was created." />
                         </Table.HeaderCell>
                         <Table.HeaderCell textAlign="center">Actions</Table.HeaderCell>
                       </Table.Row>

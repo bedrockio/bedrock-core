@@ -101,7 +101,6 @@ set_yml_container_path deployment/environments/$ENVIRONMENT/services/web-deploym
 
 echo "Starting Terraform process"
 ./deployment/scripts/provision $ENVIRONMENT init
-./deployment/scripts/provision $ENVIRONMENT plan
 ./deployment/scripts/provision $ENVIRONMENT apply
 
 echo "Authorizing into Kubernetes cluster"
