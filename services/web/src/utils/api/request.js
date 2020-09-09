@@ -1,5 +1,6 @@
 import { API_URL } from 'utils/env';
 import { ApiError, ApiParseError } from './errors';
+import { trackRequest } from '../analytics';
 
 export default async function request(options) {
   const { method = 'GET', path, files, params } = options;
@@ -46,9 +47,11 @@ export default async function request(options) {
     let message, status, details;
     try {
       const data = await res.clone().json();
-      message = data.error.message;
-      status = data.error.status;
-      details = data.error.details;
+      if (data.error) {
+        message = data.error.message;
+        status = data.error.status;
+        details = data.error.details;
+      }
     } catch (err) {
       message = await res.clone().text();
     }
@@ -56,7 +59,9 @@ export default async function request(options) {
   }
 
   try {
-    return await res.json();
+    const response = await res.json();
+    trackRequest(options, response.data);
+    return response;
   } catch (err) {
     throw new ApiParseError();
   }

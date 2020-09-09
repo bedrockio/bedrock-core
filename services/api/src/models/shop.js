@@ -13,7 +13,7 @@ const schema = createSchema({
       autopopulate: true,
     },
   ],
-  categories: [{ type: ObjectId, ref: 'Categories' }],
+  categories: [{ type: ObjectId, ref: 'Category', autopopulate: true }],
   country: { type: String },
   // --- Generator: end
 });

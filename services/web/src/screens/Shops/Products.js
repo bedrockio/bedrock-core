@@ -4,12 +4,7 @@ import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import { screen } from 'helpers';
 import { urlForUpload } from 'utils/uploads';
-import {
-  Layout,
-  Confirm,
-  HelpTip,
-  SearchProvider,
-} from 'components';
+import { Layout, Confirm, HelpTip, SearchProvider } from 'components';
 import { Filters, EditProduct } from 'modals';
 import Menu from './Menu';
 
@@ -47,9 +42,7 @@ export default class ShopProducts extends React.Component {
                         <EditProduct
                           shop={shop}
                           onSave={reload}
-                          trigger={
-                            <Button primary size="tiny" content="Add Product" icon="plus" />
-                          }
+                          trigger={<Button primary size="tiny" content="Add Product" icon="plus" />}
                         />
                       </Layout.Group>
                     </Layout>
@@ -67,9 +60,12 @@ export default class ShopProducts extends React.Component {
                           </Table.HeaderCell>
                           <Table.HeaderCell width={3}>Description</Table.HeaderCell>
                           {/* --- Generator: end */}
-                          <Table.HeaderCell width={3} sorted={getSorted('createdAt')} onClick={() => setSort('createdAt')}>
+                          <Table.HeaderCell
+                            width={3}
+                            sorted={getSorted('createdAt')}
+                            onClick={() => setSort('createdAt')}>
                             Created
-                            <HelpTip title="Created" text="This is the date and time the product was created." />
+                            <HelpTip title="Created" text="This is the date and time the item was created." />
                           </Table.HeaderCell>
                           <Table.HeaderCell textAlign="center">Actions</Table.HeaderCell>
                         </Table.Row>

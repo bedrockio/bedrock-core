@@ -46,6 +46,34 @@ router
   )
   .use(checkUserRole({ role: 'admin' }))
   .post(
+    '/',
+    validate({
+      body: Joi.object({
+        email: Joi.string().lowercase().email().required(),
+        name: Joi.string().required(),
+        roles: Joi.array().items(Joi.string()),
+        password: passwordField.required(),
+      }),
+    }),
+    async (ctx) => {
+      const { email } = ctx.request.body;
+      const existingUser = await User.findOne({ email, deletedAt: { $exists: false } });
+      if (existingUser) {
+        throw new BadRequestError('A user with that email already exists');
+      }
+      const user = await User.create(ctx.request.body);
+
+      ctx.body = {
+        data: user,
+      };
+    }
+  )
+  .get('/:userId', async (ctx) => {
+    ctx.body = {
+      data: ctx.state.user,
+    };
+  })
+  .post(
     '/search',
     validate({
       body: Joi.object({
@@ -101,34 +129,6 @@ router
       };
     }
   )
-  .post(
-    '/',
-    validate({
-      body: Joi.object({
-        email: Joi.string().lowercase().email().required(),
-        name: Joi.string().required(),
-        roles: Joi.array().items(Joi.string()),
-        password: passwordField.required(),
-      }),
-    }),
-    async (ctx) => {
-      const { email } = ctx.request.body;
-      const existingUser = await User.findOne({ email, deletedAt: { $exists: false } });
-      if (existingUser) {
-        throw new BadRequestError('A user with that email already exists');
-      }
-      const user = await User.create(ctx.request.body);
-
-      ctx.body = {
-        data: user,
-      };
-    }
-  )
-  .delete('/:userId', async (ctx) => {
-    const { user } = ctx.state;
-    await user.delete();
-    ctx.status = 204;
-  })
   .patch(
     '/:userId',
     validate({
@@ -150,10 +150,10 @@ router
       };
     }
   )
-  .get('/:userId', async (ctx) => {
-    ctx.body = {
-      data: ctx.state.user,
-    };
+  .delete('/:userId', async (ctx) => {
+    const { user } = ctx.state;
+    await user.delete();
+    ctx.status = 204;
   });
 
 module.exports = router;
