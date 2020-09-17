@@ -26,7 +26,7 @@ const createUpload = () => {
 describe('/1/shops', () => {
 
   describe('POST /search', () => {
-    it('it should list out shops', async () => {
+    it('should list out shops', async () => {
       // --- Generator: test-body
       const user = await createUser();
 

@@ -46,7 +46,7 @@ describe('/1/products', () => {
   });
 
   describe('POST /search', () => {
-    it('it should list out products', async () => {
+    it('should list out products', async () => {
       const user = await createUser();
       await Product.deleteMany({});
 
