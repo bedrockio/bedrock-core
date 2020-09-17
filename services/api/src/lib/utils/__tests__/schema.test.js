@@ -202,7 +202,7 @@ describe('createSchema', () => {
       expect(user.password).not.toBe('fake password');
     });
 
-    it('should delete null values for reference fields', async () => {
+    it('should delete falsy values for reference fields', async () => {
       const User = createModel(createSchema({
         password: { type: String, access: 'private' },
       }));
