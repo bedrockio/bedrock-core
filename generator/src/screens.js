@@ -40,7 +40,7 @@ async function generateScreens(options) {
 
   await generateReferenceScreens(screensDir, options);
 
-  if (options.entrypoints) {
+  if (options.generate.includes('entrypoints')) {
     await patchAppEntrypoint(options);
     await patchIndex(screensDir, pluralUpper);
   }

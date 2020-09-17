@@ -33,7 +33,7 @@ async function generateModals(options) {
   source = replaceInputs(source, options);
   await writeLocalFile(source, modalsDir, `Edit${camelUpper}.js`);
 
-  if (options.entrypoints) {
+  if (options.generate.includes('entrypoints')) {
     await patchIndex(modalsDir, `Edit${camelUpper}`);
   }
 

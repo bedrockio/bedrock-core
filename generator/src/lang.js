@@ -5,6 +5,7 @@ function getCamelLower(str) {
 
 function getPlural(str) {
   str = str.replace(/y$/, 'ie');
+  str = str.replace(/s$/, 'se');
   str = str.replace(/fe?$/, 've');
   str = str.replace(/([trd])o$/, '$1oe');
   str += 's';

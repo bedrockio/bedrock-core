@@ -29,8 +29,9 @@ async function generateRoutes(options) {
   await writeLocalFile(source, routesDir, `${pluralLower}.js`);
 
   await generateTests(options);
+  console.info(options.generate);
 
-  if (options.entrypoints) {
+  if (options.generate.includes('entrypoints')) {
     await patchRoutesEntrypoint(routesDir, options);
   }
 
