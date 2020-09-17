@@ -202,6 +202,61 @@ describe('createSchema', () => {
       expect(user.password).not.toBe('fake password');
     });
 
+    it('should delete null values for reference fields', async () => {
+      const User = createModel(createSchema({
+        password: { type: String, access: 'private' },
+      }));
+      const Shop = createModel(createSchema({
+        user: {
+          ref: User.modelName,
+          type: mongoose.Schema.Types.ObjectId,
+        }
+      }));
+      const shop = new Shop({
+        user: '5f63b1b88f09266f237e9d29',
+      });
+      await shop.save();
+
+      let data = JSON.parse(JSON.stringify(shop));
+      expect(data.user).toBe('5f63b1b88f09266f237e9d29');
+      shop.assign({
+        user: '',
+      });
+      await shop.save();
+      data = JSON.parse(JSON.stringify(shop));
+      expect('user' in data).toBe(false);
+    });
+
+    it('should still allow assignment of empty arrays for multi-reference fields', async () => {
+      const User = createModel(createSchema({
+        password: { type: String, access: 'private' },
+      }));
+      const Shop = createModel(createSchema({
+        users: [{
+          ref: User.modelName,
+          type: mongoose.Schema.Types.ObjectId,
+        }]
+      }));
+      const shop = new Shop({
+        users: [
+          '5f63b1b88f09266f237e9d29',
+          '5f63b1b88f09266f237e9d29',
+        ],
+      });
+      await shop.save();
+
+      let data = JSON.parse(JSON.stringify(shop));
+      expect(data.users).toEqual([
+        '5f63b1b88f09266f237e9d29',
+        '5f63b1b88f09266f237e9d29',
+      ]);
+      shop.assign({
+        users: [],
+      });
+      await shop.save();
+      data = JSON.parse(JSON.stringify(shop));
+      expect(data.users).toEqual([]);
+    });
   });
 
   describe('autopopulate', () => {
@@ -210,7 +265,6 @@ describe('createSchema', () => {
       const User = createModel(createSchema({
         password: { type: String, access: 'private' },
       }));
-
       const shopSchema = createSchema({
         user: {
           ref: User.modelName,
