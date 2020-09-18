@@ -5,7 +5,7 @@ const {
   API_URL,
   APP_NAME,
   SENTRY_DSN,
-} = window.__ENV__;
+} = window.__ENV__ || {};
 
 export {
   DEV,
