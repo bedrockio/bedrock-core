@@ -8,13 +8,13 @@
     <script src="https://browser.sentry-cdn.com/4.6.4/bundle.min.js" crossorigin="anonymous"></script>
     <% if (GTM_CONTAINER_ID) { %>
       <%= require('utils/analytics/head.html') %>
-    <% if } %>
+    <% } %>
     <!--env:conf-->
   </head>
   <body>
     <% if (GTM_CONTAINER_ID) { %>
       <%= require('utils/analytics/body.html') %>
-    <% if } %>
+    <% } %>
     <div style="height: 100%;" id="root"></div>
   </body>
 </html>
