@@ -13,7 +13,7 @@ afterAll(async () => {
   await teardownDb();
 });
 
-describe('/1/users', () => {
+describe('/1/auth', () => {
   describe('POST login', () => {
     it('should log in a user in', async () => {
       const password = '123password!';
@@ -72,13 +72,18 @@ describe('/1/users', () => {
       const user = await createUser();
       const password = 'very new password';
       const token = tokens.createUserTemporaryToken({ userId: user._id }, 'password');
-      const response = await request('POST', '/1/auth/set-password', {
-        password,
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await request(
+        'POST',
+        '/1/auth/set-password',
+        {
+          password,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
+      );
 
       expect(response.status).toBe(200);
 
@@ -92,13 +97,18 @@ describe('/1/users', () => {
 
     it('should handle invalid tokens', async () => {
       const password = 'very new password';
-      const response = await request('POST', '/1/auth/set-password', {
-        password,
-      }, {
-        headers: {
-          Authorization: 'Bearer badtoken',
+      const response = await request(
+        'POST',
+        '/1/auth/set-password',
+        {
+          password,
+        },
+        {
+          headers: {
+            Authorization: 'Bearer badtoken',
+          },
         }
-      });
+      );
       expect(response.status).toBe(400);
       expect(response.body).toEqual({ error: { message: 'bad jwt token', status: 400 } });
     });
