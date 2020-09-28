@@ -12,7 +12,9 @@
     "generate:screens": "./generate --generate=screens",
     "generate:modals": "./generate --generate=modals"
   },
-  "dependencies": {},
+  "dependencies": {
+    "shelljs": "^0.8.4"
+  },
   "devDependencies": {
     "eslint-config-prettier": "^6.11.0",
     "kleur": "^4.0.3",

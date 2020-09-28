@@ -1,0 +1,14 @@
+#!/usr/bin/env node
+
+const process = require('process');
+const { installPluginCli } = require('./src/plugins');
+
+installPluginCli()
+  .then(() => {
+    process.exit(0);
+  })
+  .catch((error) => {
+    console.error(`Fatal Error: ${error.message}`);
+    console.error(error.stack);
+    process.exit(1);
+  });
