@@ -71,6 +71,7 @@ const createUsers = async () => {
       name: `Product ${i + 1}`,
       shop,
       images: [await createUpload(adminUser, `Product ${i + 1}.jpg`)],
+      createdAt: new Date(Date.now() - 15 * Math.random() * 24 * 3600 * 1000),
     });
   }
   return true;
