@@ -234,6 +234,11 @@ async function installPluginCli() {
     const destination = __dirname + '/../..';
     await copyFiles(source, destination);
     await installDependencies(source, destination);
+    const info = await getInfo(source);
+    console.info('Patching completed');
+    if (info.homepage) {
+      console.info(`For ${info.name} Usage, see: ${info.homepage}`);
+    }
   }
 }
 
