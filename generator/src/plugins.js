@@ -3,9 +3,8 @@ const fs = require('fs');
 const path = require('path');
 const prompts = require('prompts');
 
-const ignoreFiles = ['.gitignore', 'bedrock.json'];
+const ignoreFiles = ['.gitignore', 'bedrock.json', 'README.md'];
 
-// Copied from routes.js
 function injectByReg(source, replace, reg) {
   if (!source.includes(replace)) {
     const match = source.match(reg);
@@ -60,6 +59,25 @@ async function installServiceEnv(destination, file, env, info) {
     console.info(`Configuring env default in ${file}: ${key}`);
     code = injectAtEnd(code, `${key}=${value}\n`);
   });
+  fs.writeFileSync(path.join(destination, file), code);
+}
+
+async function installApiRoutes(destination, file, routes) {
+  let code = fs.readFileSync(path.join(destination, file)).toString('utf-8');
+  for (const route of routes) {
+    const absolutePath = path.resolve(path.join(destination, route.path));
+    const absoluteDirPath = path.dirname(
+      path.resolve(path.join(destination, file))
+    );
+    const routeIncludePath = path.basename(
+      absolutePath.slice(absoluteDirPath.length + 1),
+      '.js'
+    );
+    const name = route.name;
+    console.info(`Including route in ${file}: /1/${name}`);
+    const includeCode = `\nconst ${name} = require('./${routeIncludePath}');\nrouter.use('/${name}', ${name}.routes());`;
+    code = injectByReg(code, includeCode, /^router.use\(.+\);$/gm);
+  }
   fs.writeFileSync(path.join(destination, file), code);
 }
 
@@ -151,6 +169,13 @@ async function installDependencies(source, destination) {
     }
     if (env) {
       await installServiceEnv(destination, '/services/api/env.conf', env, info);
+    }
+    if (routes) {
+      await installApiRoutes(
+        destination,
+        '/services/api/src/v1/index.js',
+        routes
+      );
     }
   }
 }
