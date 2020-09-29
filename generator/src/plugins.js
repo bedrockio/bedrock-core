@@ -4,6 +4,7 @@ const path = require('path');
 const prompts = require('prompts');
 
 const ignoreFiles = ['.gitignore', 'bedrock.json', 'README.md'];
+const ignoreFilesRegexes = [/\.git.+/];
 
 function injectByReg(source, replace, reg) {
   if (!source.includes(replace)) {
@@ -107,8 +108,7 @@ async function copyFiles(source, destination) {
   console.info('Copying files:');
   for (const file of files) {
     const relativePath = file.slice(absoluteSourcePath.length);
-    const fileName = file.split('/').slice(-1)[0];
-    if (ignoreFiles.includes(fileName)) {
+    if (ignoreFile(file)) {
       continue;
     }
     console.info(` ${relativePath}`);
@@ -116,6 +116,19 @@ async function copyFiles(source, destination) {
     fs.mkdirSync(path.dirname(destinationPath), { recursive: true });
     fs.copyFileSync(file, destinationPath);
   }
+}
+
+function ignoreFile(file) {
+  const fileName = file.split('/').slice(-1)[0];
+  if (ignoreFiles.includes(fileName)) {
+    return true;
+  }
+  for (const ignoreFilesRegex of ignoreFilesRegexes) {
+    if (file.match(ignoreFilesRegex)) {
+      return true;
+    }
+  }
+  return false;
 }
 
 async function summarizePlugin(source) {
@@ -147,8 +160,7 @@ async function summarizePlugin(source) {
   const files = getAllFiles(absoluteSourcePath);
   for (const file of files) {
     const relativePath = file.slice(absoluteSourcePath.length);
-    const fileName = file.split('/').slice(-1)[0];
-    if (ignoreFiles.includes(fileName)) {
+    if (ignoreFile(file)) {
       continue;
     }
     console.info(` ${relativePath}`);
