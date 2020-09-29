@@ -30,7 +30,8 @@ export default class Login extends React.Component {
         path: '/1/auth/login',
         body,
       });
-      await this.context.setToken(data.token);
+      this.context.setToken(data.token);
+      await this.context.loadUser();
       this.props.history.push('/');
     } catch(error) {
       this.setState({
