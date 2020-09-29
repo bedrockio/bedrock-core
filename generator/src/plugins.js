@@ -137,9 +137,9 @@ async function summarizePlugin(source) {
   if (info.description) {
     console.info(`  ${info.description}`);
   }
-  const { api } = info.services;
+  const { api, web } = info.services;
   if (api) {
-    const { dependencies, routes, env } = api;
+    const { dependencies, routes } = api;
     if (dependencies) {
       console.info(`API Node Dependencies:`);
       Object.keys(dependencies).forEach((package) => {
@@ -151,6 +151,17 @@ async function summarizePlugin(source) {
       console.info(`API Routes:`);
       routes.forEach((route) => {
         console.info(`  ${route.path}`);
+      });
+    }
+  }
+
+  if (web) {
+    const { dependencies } = web;
+    if (dependencies) {
+      console.info(`Web Node Dependencies:`);
+      Object.keys(dependencies).forEach((package) => {
+        const version = dependencies[package];
+        console.info(`  ${package}: ${version}`);
       });
     }
   }
@@ -169,7 +180,7 @@ async function summarizePlugin(source) {
 
 async function installDependencies(source, destination) {
   const info = await getInfo(source);
-  const { api } = info.services;
+  const { api, web } = info.services;
   if (api) {
     const { dependencies, env, routes } = api;
     if (dependencies) {
@@ -188,6 +199,19 @@ async function installDependencies(source, destination) {
         '/services/api/src/v1/index.js',
         routes
       );
+    }
+  }
+  if (web) {
+    const { dependencies, env } = web;
+    if (dependencies) {
+      await installPackageJsonDependencies(
+        destination,
+        '/services/web/package.json',
+        dependencies
+      );
+    }
+    if (env) {
+      await installServiceEnv(destination, '/services/web/env.conf', env, info);
     }
   }
 }
