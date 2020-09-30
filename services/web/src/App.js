@@ -34,7 +34,7 @@ const App = () => (
           <Protected path="/shops/:id?" allowed={Shops} />
           <Protected path="/settings" allowed={Settings} exact />
           <Protected path="/invites" allowed={Invites} exact />
-          <Protected path="/users" allowed={Users} exact />
+          <Protected path="/users/:id?" allowed={Users} />
           <Protected path="/docs/:id?" allowed={Docs} />
           <Route path="/logout" component={Logout} exact />
           <AuthSwitch
