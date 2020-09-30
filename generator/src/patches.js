@@ -29,8 +29,9 @@ async function patchAppEntrypoint(options) {
 
 // Index Entrypoints
 
-async function patchIndex(dir, name) {
-  const line = `export { default as ${name} } from './${name}';`;
+async function patchIndex(dir, name, ext = '') {
+  ext = ext ? `.${ext}` : '';
+  const line = `export { default as ${name} } from './${name}${ext}';`;
   let source = await readLocalFile(dir, 'index.js');
   if (!source.includes(line)) {
     if (source.slice(-1) !== '\n') {

@@ -1,6 +1,8 @@
 const Shop = require('../../models/shop');
-const Upload = require('../../models/upload');
 const { setupDb, teardownDb, request, createUser } = require('../../test-helpers');
+// --- Generator: requires
+const Upload = require('../../models/upload');
+// --- Generator: end
 
 beforeAll(async () => {
   await setupDb();
@@ -27,7 +29,7 @@ describe('/1/shops', () => {
 
   describe('POST /search', () => {
     it('should list out shops', async () => {
-      // --- Generator: test-body
+      // --- Generator: test-search
       const user = await createUser();
 
       const shop1 = await Shop.create({
@@ -51,9 +53,23 @@ describe('/1/shops', () => {
     });
   });
 
+  describe('GET /:shop', () => {
+    it('should be able to access shop', async () => {
+      // --- Generator: test-get
+      const user = await createUser();
+      const shop = await Shop.create({
+        name: 'new shop',
+      });
+      const response = await request('GET', `/1/shops/${shop.id}`, {}, { user });
+      expect(response.status).toBe(200);
+      expect(response.body.data.name).toBe(shop.name);
+      // --- Generator: end
+    });
+  });
+
   describe('POST /', () => {
     it('should be able to create shop', async () => {
-      // --- Generator: test-body
+      // --- Generator: test-post
       const user = await createUser();
       const upload = await createUpload();
       const response = await request(
@@ -76,25 +92,25 @@ describe('/1/shops', () => {
 
   describe('DELETE /:shop', () => {
     it('should be able to delete shop', async () => {
-      // --- Generator: test-body
+      // --- Generator: test-delete
       const user = await createUser();
-      const shop = await Shop.create({
+      let shop = await Shop.create({
         name: 'test 1',
         description: 'Some description',
       });
       const response = await request('DELETE', `/1/shops/${shop.id}`, {}, { user });
       expect(response.status).toBe(204);
-      const dbShop = await Shop.findById(shop.id);
-      expect(dbShop.deletedAt).toBeDefined();
+      shop = await Shop.findById(shop.id);
+      expect(shop.deletedAt).toBeDefined();
       // --- Generator: end
     });
   });
 
   describe('PATCH /:shop', () => {
     it('should be able to update shop', async () => {
-      // --- Generator: test-body
+      // --- Generator: test-patch
       const user = await createUser();
-      const shop = await Shop.create({
+      let shop = await Shop.create({
         name: 'shop name',
         description: 'Some description',
       });
@@ -102,23 +118,10 @@ describe('/1/shops', () => {
       const response = await request('PATCH', `/1/shops/${shop.id}`, shop.toJSON(), { user });
       expect(response.status).toBe(200);
       expect(response.body.data.name).toBe('new name');
-      const dbShop = await Shop.findById(shop.id);
-      expect(dbShop.name).toEqual('new name');
+      shop = await Shop.findById(shop.id);
+      expect(shop.name).toEqual('new name');
       // --- Generator: end
     });
   });
 
-  describe('GET /:shop', () => {
-    it('should be able to access shop', async () => {
-      // --- Generator: test-body
-      const user = await createUser();
-      const shop = await Shop.create({
-        name: 'new shop',
-      });
-      const response = await request('GET', `/1/shops/${shop.id}`, {}, { user });
-      expect(response.status).toBe(200);
-      expect(response.body.data.name).toBe(shop.name);
-      // --- Generator: end
-    });
-  });
 });

@@ -2,7 +2,9 @@ const { assertPath, block } = require('./util');
 const { replaceSchema } = require('./joi');
 const { kebabCase } = require('lodash');
 const { yellow } = require('kleur');
+const { generateDocs } = require('./docs');
 const { generateTests } = require('./tests');
+const { generateOpenApi } = require('./openapi');
 const {
   readSourceFile,
   writeLocalFile,
@@ -28,7 +30,9 @@ async function generateRoutes(options) {
 
   await writeLocalFile(source, routesDir, `${pluralLower}.js`);
 
+  await generateDocs(options);
   await generateTests(options);
+  await generateOpenApi(options);
   await patchRoutesEntrypoint(routesDir, options);
 
   console.log(yellow('Routes generated!'));
