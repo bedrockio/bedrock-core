@@ -59,7 +59,9 @@ export default class EditProduct extends React.Component {
           path: `/1/products/${product.id}`,
           body: {
             ...product,
+            // --- Generator: refs
             shop: this.props.shop.id,
+            // --- Generator: end
           }
         });
       } else {
@@ -68,7 +70,9 @@ export default class EditProduct extends React.Component {
           path: '/1/products',
           body: {
             ...product,
+            // --- Generator: refs
             shop: this.props.shop.id,
+            // --- Generator: end
           },
         });
         this.setState({
