@@ -1,6 +1,5 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import { Container } from 'semantic-ui-react';
 import { request } from 'utils/api';
 
 import List from './List';
@@ -42,7 +41,7 @@ export default class Shops extends React.Component {
         this.setState({
           shop: data,
         });
-      } catch(error) {
+      } catch (error) {
         this.setState({
           error,
         });
@@ -55,27 +54,22 @@ export default class Shops extends React.Component {
   };
 
   render() {
-    const { shop, error } = this.state;
-    const { id } = this.props.match.params;
     return (
       <Switch>
         <Route path="/shops" component={List} exact />
         <Route
           exact
           path="/shops/:id"
-          render={(props) => <Overview {...props} {...this.state} id={id} onSave={this.fetchShop} />}
+          render={(props) => (
+            <Overview {...props} {...this.state} onSave={this.fetchShop} />
+          )}
         />
         {/* --- Generator: routes */}
         <Route
           exact
           path="/shops/:id/products"
           render={(props) => (
-            <Products
-              id={id}
-              {...props}
-              {...this.state}
-              onSave={this.fetchShop}
-            />
+            <Products {...props} {...this.state} onSave={this.fetchShop} />
           )}
         />
         {/* --- Generator: end */}
