@@ -1,7 +1,8 @@
 const { assertPath, block } = require('./util');
 const { replaceSchema } = require('./joi');
+const { kebabCase } = require('lodash');
 const { yellow } = require('kleur');
-
+const { generateTests } = require('./tests');
 const {
   readSourceFile,
   writeLocalFile,
@@ -10,7 +11,6 @@ const {
 } = require('./source');
 
 const ROUTES_DIR = 'services/api/src/v1';
-const TESTS_DIR = 'services/api/src/v1/__tests__';
 
 async function generateRoutes(options) {
   const { schema, pluralLower } = options;
@@ -34,27 +34,18 @@ async function generateRoutes(options) {
   console.log(yellow('Routes generated!'));
 }
 
-async function generateTests(options) {
-  const { pluralLower } = options;
-  const testsDir = await assertPath(TESTS_DIR);
-  let source = await readSourceFile(testsDir, 'shops.js');
-  source = replacePrimary(source, options);
-  source = replaceBlock(source, '', 'vars');
-  source = replaceBlock(source, 'expect.assertions(1); // TODO: write me!', 'test-body');
-  await writeLocalFile(source, testsDir, `${pluralLower}.js`);
-}
-
 // Entrypoint
 
 const REQUIRE_REG = /^const \w+ = require\('.+'\);$/gm;
-const ROUTES_REG  = /^router.use\(.+\);$/gm;
+const ROUTES_REG = /^router.use\(.+\);$/gm;
 
 async function patchRoutesEntrypoint(routesDir, options) {
   const { pluralLower } = options;
+  const kebab = kebabCase(pluralLower);
   let source = await readSourceFile(routesDir, 'index.js');
 
   const requires = `const ${pluralLower} = require('./${pluralLower}');`;
-  const routes = `router.use('/${pluralLower}', ${pluralLower}.routes());`;
+  const routes = `router.use('/${kebab}', ${pluralLower}.routes());`;
 
   source = injectByReg(source, requires, REQUIRE_REG);
   source = injectByReg(source, routes, ROUTES_REG);
@@ -89,17 +80,17 @@ function getSearchSchema(schema) {
 }
 
 function replaceSearchQuery(source, schema) {
-
   const vars = block`
     const { ${schema.map((f) => f.name).join(', ')} } = ctx.request.body;
   `;
 
-  const queries = schema.map((field) => {
-    const { type, name } = field;
-    // TODO: for now assume that only "name"
-    // requires partial text search
-    if (name === 'name') {
-      return block`
+  const queries = schema
+    .map((field) => {
+      const { type, name } = field;
+      // TODO: for now assume that only "name"
+      // requires partial text search
+      if (name === 'name') {
+        return block`
         if (${name}) {
           query.${name} = {
             $regex: ${name},
@@ -107,20 +98,21 @@ function replaceSearchQuery(source, schema) {
           };
         }
       `;
-    } else if (type.match(/Array/)) {
-      return block`
+      } else if (type.match(/Array/)) {
+        return block`
         if (${name} && ${name}.length) {
           query.${name} = { $in: ${name} };
         }
       `;
-    } else {
-      return block`
+      } else {
+        return block`
         if (${name}) {
           query.${name} = ${name};
         }
       `;
-    }
-  }).join('\n');
+      }
+    })
+    .join('\n');
   source = replaceBlock(source, vars, 'vars');
   source = replaceBlock(source, queries, 'queries');
   return source;
