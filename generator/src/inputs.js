@@ -41,11 +41,7 @@ function getInputForField(field, options) {
       return getUploadInput(field, options);
     case 'ObjectId':
     case 'ObjectIdArray':
-      // Only output reference inputs if the field is
-      // a primary reference as that will be injected separately.
-      if (!isPrimaryReferenceField(field, options)) {
-        return getReferenceInput(field, options);
-      }
+      return getReferenceInput(field, options);
   }
 }
 
@@ -168,14 +164,16 @@ function getReferenceInput(field, options) {
   const { refPlural, name, type, required } = field;
   const isArray = type.match(/Array/);
   return block`
-      <ReferenceField
-        ${required ? 'required' : ''}
-        name="${name}"
-        label="${startCase(name)}"
-        value={${options.camelLower}.${name}${isArray ? ' || []' : ''}}
-        onChange={(data) => this.setField(null, data)}
-        resource="${refPlural}"
-      />
+      {!this.props.${name} && (
+        <ReferenceField
+          ${required ? 'required' : ''}
+          name="${name}"
+          label="${startCase(name)}"
+          value={${options.camelLower}.${name}${isArray ? ' || []' : ''}}
+          onChange={(data) => this.setField(null, data)}
+          resource="${refPlural}"
+        />
+      )}
     `;
 }
 
@@ -237,12 +235,6 @@ function getBooleanInput(field, options) {
       onChange={this.setCheckedField}
     />
   `;
-}
-
-function isPrimaryReferenceField(field, options) {
-  const { type, primaryReference = {} } = options;
-  return type === 'secondary'
-      && primaryReference.camelUpper === field.ref;
 }
 
 module.exports = {

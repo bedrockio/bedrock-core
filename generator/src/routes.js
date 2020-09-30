@@ -13,11 +13,10 @@ const ROUTES_DIR = 'services/api/src/v1';
 const TESTS_DIR = 'services/api/src/v1/__tests__';
 
 async function generateRoutes(options) {
-  const { pluralLower } = options;
+  const { schema, pluralLower } = options;
 
   const routesDir = await assertPath(ROUTES_DIR);
 
-  const schema = getSchema(options);
   const searchSchema = getSearchSchema(schema);
 
   let source = await readSourceFile(routesDir, 'shops.js');
@@ -30,10 +29,7 @@ async function generateRoutes(options) {
   await writeLocalFile(source, routesDir, `${pluralLower}.js`);
 
   await generateTests(options);
-
-  if (options.generate.includes('entrypoints')) {
-    await patchRoutesEntrypoint(routesDir, options);
-  }
+  await patchRoutesEntrypoint(routesDir, options);
 
   console.log(yellow('Routes generated!'));
 }
@@ -82,20 +78,6 @@ function injectByReg(source, replace, reg) {
     }
   }
   return source;
-}
-
-function getSchema(options) {
-  const schema = options.schema.concat();
-  const { primaryReference } = options;
-  if (primaryReference) {
-    schema.push({
-      name: primaryReference.camelLower,
-      type: 'ObjectId',
-      schemaType: 'ObjectId',
-      required: true,
-    });
-  }
-  return schema;
 }
 
 function getSearchSchema(schema) {

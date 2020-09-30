@@ -1,12 +1,12 @@
 const { yellow } = require('kleur');
-const { assertPath } = require('./util');
+const { assertPath, block } = require('./util');
 const { replaceInputs } = require('./inputs');
 const { patchIndex } = require('./patches');
+const { getCamelLower } = require('./lang');
 
 const {
   readSourceFile,
   writeLocalFile,
-  replacePrimary,
   replaceSecondary,
   replaceBlock,
 } = require('./source');
@@ -14,28 +14,19 @@ const {
 const MODALS_DIR = 'services/web/src/modals';
 
 async function generateModals(options) {
-  const { type, camelUpper } = options;
+  const { camelUpper } = options;
 
   const modalsDir = await assertPath(MODALS_DIR);
 
-  let source;
-  if (type === 'primary' || type === 'support') {
-    source = await readSourceFile(modalsDir, 'EditShop.js');
-    source = replacePrimary(source, options);
-  } else if (type === 'secondary') {
-    source = await readSourceFile(modalsDir, 'EditProduct.js');
-    source = replacePrimary(source, options.primaryReference);
-    source = replaceSecondary(source, options);
-  }
+  let source = await readSourceFile(modalsDir, 'EditProduct.js');
+  source = replaceSecondary(source, options);
+  source = replaceRefs(source, options);
   source = replaceNameReference(source, options);
   source = replaceImports(source, options);
 
   source = replaceInputs(source, options);
   await writeLocalFile(source, modalsDir, `Edit${camelUpper}.js`);
-
-  if (options.generate.includes('entrypoints')) {
-    await patchIndex(modalsDir, `Edit${camelUpper}`);
-  }
+  await patchIndex(modalsDir, `Edit${camelUpper}`);
 
   console.log(yellow('Modals generated!'));
 }
@@ -62,6 +53,26 @@ function replaceImports(source, options) {
   }
 
   source = replaceBlock(source, imports.join('\n'), 'imports');
+
+  return source;
+}
+
+function replaceRefs(source, options) {
+  const { schema } = options;
+
+  const refs = schema
+    .filter((field) => {
+      return field.type === 'ObjectId';
+    }).map((field) => {
+      const camelLower = getCamelLower(field.ref);
+      return block`
+        ...(this.props.${camelLower} && {
+          ${camelLower}: this.props.${camelLower}.id,
+        }),
+      `;
+    });
+
+  source = replaceBlock(source, refs.join('\n'), 'refs');
 
   return source;
 }

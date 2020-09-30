@@ -13,34 +13,7 @@ async function saveSnapshot(options, file) {
 async function restoreSnapshot(file) {
   if (file) {
     try {
-      const snapshot = require(path.resolve(file));
-      let {
-        primaryReference: primaryReferenceObj = {},
-        secondaryReferences,
-        ...rest
-      } = snapshot;
-      const {
-        camelUpper: primaryReference,
-        pluralUpper: primaryReferencePlural,
-      } = primaryReferenceObj;
-
-      let secondaryPluralReferences;
-      if (secondaryReferences) {
-        secondaryPluralReferences = secondaryReferences.reduce((obj, ref) => {
-          obj[`${ref.camelUpper}Plural`] = ref.pluralUpper;
-          return obj;
-        }, {});
-        secondaryReferences = secondaryReferences.map((ref) => {
-          return ref.camelUpper;
-        });
-      }
-      return {
-        primaryReference,
-        primaryReferencePlural,
-        secondaryReferences,
-        ...secondaryPluralReferences,
-        ...rest,
-      };
+      return require(path.resolve(file));
     } catch (err) {
       console.log(red(`Could not load "${file}"`));
       process.exit(1);

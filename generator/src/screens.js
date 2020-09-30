@@ -18,16 +18,15 @@ const SCREENS_DIR = 'services/web/src/Screens';
 async function generateScreens(options) {
   const { pluralUpper } = options;
 
-  const screensDir = await assertPath(SCREENS_DIR);
-  await mkdir(screensDir, pluralUpper);
+  const screensDir = await getScreensDir(options);
 
   // Do this sequentially to ensure order
   for (let file of FILES) {
     let source = await readSourceFile(screensDir, 'Shops', file);
     source = replacePrimary(source, options);
-    source = replaceReferenceImports(source, options);
-    source = replaceReferenceRoutes(source, options);
-    source = replaceReferenceMenus(source, options);
+    source = replaceSubScreenImports(source, options);
+    source = replaceSubScreenRoutes(source, options);
+    source = replaceSubScreenMenus(source, options);
     source = replaceOverviewFields(source, options);
     source = replaceOverviewRows(source, options);
     source = replaceOverviewImports(source, options);
@@ -38,28 +37,100 @@ async function generateScreens(options) {
     await writeLocalFile(source, screensDir, pluralUpper, file);
   }
 
-  await generateReferenceScreens(screensDir, options);
-
-  if (options.generate.includes('entrypoints')) {
-    await patchAppEntrypoint(options);
-    await patchIndex(screensDir, pluralUpper);
-  }
+  // Attempt to patch app entrypoint
+  await patchAppEntrypoint(options);
+  await patchIndex(screensDir, pluralUpper);
 
   console.log(yellow('Screens generated!'));
 }
 
-function replaceReferenceImports(source, options) {
-  const imports = options.secondaryReferences
-    .map(({ pluralUpper }) => {
-      return `import ${pluralUpper} from './${pluralUpper}';`;
+async function generateSubScreens(options) {
+  const screensDir = await getScreensDir(options);
+  const source = await readSourceFile(screensDir, 'Shops/Products.js');
+  await generateSubScreensFor(screensDir, source, [options], options.subScreens);
+  await generateSubScreensFor(screensDir, source, options.externalSubScreens, [options]);
+}
+
+async function generateSubScreensFor(screensDir, source, primary, secondary) {
+  if (primary.length && secondary.length) {
+    await Promise.all(
+      primary.map(async (primary) => {
+        return Promise.all(
+          secondary.map(async (secondary) => {
+            source = replacePrimary(source, primary);
+            source = replaceSecondary(source, secondary);
+            source = replaceListHeaderCells(source, secondary);
+            source = replaceListBodyCells(source, secondary, primary);
+            await writeLocalFile(
+              source,
+              screensDir,
+              primary.pluralUpper,
+              `${secondary.pluralUpper}.js`
+            );
+          })
+        );
+      })
+    );
+  }
+}
+
+async function getScreensDir(options) {
+  const { pluralUpper } = options;
+  const screensDir = await assertPath(SCREENS_DIR);
+  await mkdir(screensDir, pluralUpper);
+  return screensDir;
+}
+
+function replaceSubScreenImports(source, options) {
+  const { subScreens } = options;
+  const imports = subScreens.map((resource) => {
+    const { pluralUpper } = resource;
+    return `import ${pluralUpper} from './${pluralUpper}';`;
+  }).join('\n');
+
+  return replaceBlock(source, imports, 'imports');
+}
+
+function replaceSubScreenRoutes(source, options) {
+  const imports = options.subScreens
+    .map(({ pluralLower, pluralUpper }) => {
+      return block`
+      <Route
+        exact
+        path="/${options.pluralLower}/:id/${pluralLower}"
+        render={(props) => (
+          <${pluralUpper}
+            {...props}
+            {...this.state}
+            onSave={this.fetch${options.camelUpper}}
+          />
+        )}
+      />
+    `;
     })
     .join('\n');
-  return replaceBlock(source, imports, 'imports');
+  return replaceBlock(source, imports, 'routes');
+}
+
+function replaceSubScreenMenus(source, options) {
+  const imports = options.subScreens
+    .map(({ pluralLower, pluralUpper }) => {
+      return block`
+      <Menu.Item
+        name="${pluralUpper}"
+        to={\`/${options.pluralLower}/\${id}/${pluralLower}\`}
+        as={NavLink}
+        exact
+      />
+    `;
+    })
+    .join('\n');
+  return replaceBlock(source, imports, 'menus');
 }
 
 function replaceOverviewFields(source, options) {
   const { camelLower } = options;
-  const summaryFields = getOverviewMainFields(options);
+  const summaryFields = getSummaryFields(options);
   const jsx = summaryFields.map((field, i) => {
     const { name } = field;
     const tag = i === 0 ? 'h1' : 'h3';
@@ -88,7 +159,7 @@ function replaceOverviewFields(source, options) {
 }
 
 function replaceOverviewRows(source, options) {
-  const summaryFields = getOverviewMainFields(options);
+  const summaryFields = getSummaryFields(options);
   const otherFields = options.schema.filter((field) => {
     return !summaryFields.includes(field);
   });
@@ -154,7 +225,7 @@ function replaceOverviewImports(source, options) {
 }
 
 function replaceListHeaderCells(source, options) {
-  const summaryFields = getListMainFields(options);
+  const summaryFields = getSummaryFields(options);
   const jsx = summaryFields.map((field) => {
     const { name, type } = field;
     if (type === 'String') {
@@ -168,7 +239,7 @@ function replaceListHeaderCells(source, options) {
     } else {
       return block`
         <Table.HeaderCell>
-         ${startCase(name)}
+         ${name === 'id' ? 'ID' : startCase(name)}
         </Table.HeaderCell>
       `;
     }
@@ -187,7 +258,7 @@ function replaceListBodyCells(source, options, resource) {
 
   const { camelLower, pluralLower } = resource;
 
-  const summaryFields = getListMainFields(options);
+  const summaryFields = getSummaryFields(options);
   const jsx = summaryFields.map((field, i) => {
     const { name } = field;
 
@@ -197,7 +268,7 @@ function replaceListBodyCells(source, options, resource) {
         {${camelLower}.${name} && (
           <Image src={urlForUpload(${camelLower}.${name}, true)} />
         )}
-      `
+      `;
     } else {
       inner = `{${camelLower}.${name}}`;
     }
@@ -237,81 +308,22 @@ function replaceListImports(source, options) {
   return source;
 }
 
-function getOverviewMainFields(options) {
-  // Try to take the "name" and "image" or "images" fields if they exist.
-  return options.schema.filter((field) => {
-    const { name } = field;
-    return name === 'name' || name === 'image' || name === 'images';
-  });
-}
-
-function getListMainFields(options) {
+function getSummaryFields(options) {
   // Try to take the "name" and "image" fields if they exist.
-  return options.schema.filter((field) => {
+  const summaryFields = (options.schema || []).filter((field) => {
     const { name } = field;
     return name === 'name' || name === 'image';
   });
-}
-
-function replaceReferenceRoutes(source, options) {
-  const imports = options.secondaryReferences
-    .map(({ camelUpper, pluralLower, pluralUpper }) => {
-      return block`
-      <Route
-        exact
-        path="/${options.pluralLower}/:id/${pluralLower}"
-        render={(props) => (
-          <${pluralUpper}
-            id={id}
-            {...props}
-            {...this.state}
-            onSave={this.fetch${camelUpper}}
-          />
-        )}
-      />
-    `;
-    })
-    .join('\n');
-  return replaceBlock(source, imports, 'routes');
-}
-
-function replaceReferenceMenus(source, options) {
-  const imports = options.secondaryReferences
-    .map(({ pluralLower, pluralUpper }) => {
-      return block`
-      <Menu.Item
-        name="${pluralUpper}"
-        to={\`/${options.pluralLower}/\${id}/${pluralLower}\`}
-        as={NavLink}
-        exact
-      />
-    `;
-    })
-    .join('\n');
-  return replaceBlock(source, imports, 'menus');
-}
-
-async function generateReferenceScreens(screensDir, options) {
-  if (options.secondaryReferences.length) {
-    const refSource = await readSourceFile(screensDir, 'Shops/Products.js');
-    await Promise.all(
-      options.secondaryReferences.map(async (ref) => {
-        let source = refSource;
-        source = replacePrimary(source, options);
-        source = replaceListHeaderCells(source, options, ref);
-        source = replaceListBodyCells(source, options, ref);
-        source = replaceSecondary(source, ref);
-        await writeLocalFile(
-          source,
-          screensDir,
-          options.pluralUpper,
-          `${ref.pluralUpper}.js`
-        );
-      })
-    );
+  if (!summaryFields.length) {
+    summaryFields.push({
+      name: 'id',
+      type: 'id',
+    });
   }
+  return summaryFields;
 }
 
 module.exports = {
   generateScreens,
+  generateSubScreens,
 };

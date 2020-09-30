@@ -2,9 +2,12 @@ const { green, white } = require('kleur');
 const { getOptions } = require('./options');
 const { generateModel } = require('./model');
 const { generateRoutes } = require('./routes');
-const { generateScreens } = require('./screens');
 const { generateModals } = require('./modals');
 const { patchMainMenu } = require('./patches');
+const {
+  generateScreens,
+  generateSubScreens,
+} = require('./screens');
 
 async function generateResource() {
 
@@ -24,6 +27,9 @@ async function generateResource() {
   if (options.generate.includes('screens')) {
     await generateScreens(options);
   }
+  if (options.generate.includes('subscreens')) {
+    await generateSubScreens(options);
+  }
   if (options.generate.includes('modals')) {
     await generateModals(options);
   }
@@ -34,4 +40,4 @@ async function generateResource() {
 
 module.exports = {
   generateResource,
-}
+};

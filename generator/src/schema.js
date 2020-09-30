@@ -74,7 +74,7 @@ const SCHEMA_OPTIONS = [
   {
     title: 'trim',
     value: 'trim',
-    selected: true,
+    selected: false,
     types: ['String', 'StringArray'],
   },
   {
@@ -353,6 +353,7 @@ async function getField(field) {
   } else if (schemaType === 'ObjectId') {
     ref = await prompt({
       type: 'text',
+      initial: field.ref,
       message: 'Ref (ex. UserImage):',
       validate: validateCamelUpper,
     });
