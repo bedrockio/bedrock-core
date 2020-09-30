@@ -3,8 +3,8 @@ const fs = require('fs');
 const path = require('path');
 const prompts = require('prompts');
 
-const ignoreFiles = ['.gitignore', 'bedrock.json', 'README.md'];
-const ignoreFilesRegexes = [/\.git.+/];
+const ignoreFiles = ['.gitignore', 'bedrock.json', 'README.md', '.DS_Store'];
+const ignoreFilesRegexes = [/\.git.+/, /\/docs\/.*/];
 
 function injectByReg(source, replace, reg) {
   if (!source.includes(replace)) {
