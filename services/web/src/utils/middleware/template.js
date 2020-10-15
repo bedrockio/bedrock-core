@@ -27,7 +27,7 @@ function loadTemplates(urlPath, cache, opts) {
   fs.readdirSync(path.resolve('dist', urlPath), { withFileTypes: true }).forEach(dirent => {
     if (dirent.isDirectory()) {
       loadTemplates(path.join(urlPath, dirent.name), cache, opts);
-      } else if (dirent.isFile() && dirent.name.match(/\.(html|txt|xml)$/)) {
+    } else if (dirent.isFile() && dirent.name.match(/\.(html|txt|xml)$/)) {
       loadTemplate(path.join(urlPath, dirent.name), cache);
     }
   });
@@ -35,7 +35,7 @@ function loadTemplates(urlPath, cache, opts) {
 }
 
 function loadTemplate(templatePath, cache) {
-  let urlPath = templatePath.replace(/(.*?)(index.html)?/, '/$1');
+  let urlPath = templatePath.replace(/^(.*?)(index.html)?$/, '/$1');
   const template = fs.readFileSync(path.resolve('dist', templatePath), 'utf-8');
   cache[urlPath] = template;
 }
