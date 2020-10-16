@@ -1,4 +1,4 @@
-## Bedrock Web Utils
+## Web Utils
 
 These helper functions are available to do common UI patterns on top of these libraries:
 

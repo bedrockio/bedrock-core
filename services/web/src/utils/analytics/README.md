@@ -33,7 +33,7 @@ Google Tag Manager is an advanced tool that allows custom triggers to send track
 - Generally doesn't have SPAs in mind.
 - High learning curve and difficult to set up.
 
-The code and instructions here are intended to let you easily set up complex tracking in a way optimally set up for SPAs in general and Bedrock in particular.
+The code and instructions here are intended to let you easily set up complex tracking in a way optimally set up for SPAs.
 
 ## Setup
 
@@ -55,7 +55,7 @@ GTM pageviews assume a traditional web app where each page is a round trip to th
 
 ## Custom Events
 
-In GTM, anything not a pageview is considered a "custom event", and we can define these any way we want. Our strategy here will be to separate these into [interaction events](#interaction-events) and [data events](#data-events). Interaction events are concerned with the UI and require a single attribute in the code that will serve as a hook. Data events are a layer of structure that Bedrock provides on top of custom events that leverages interactions with the API and session storage.
+In GTM, anything not a pageview is considered a "custom event", and we can define these any way we want. Our strategy here will be to separate these into [interaction events](#interaction-events) and [data events](#data-events). Interaction events are concerned with the UI and require a single attribute in the code that will serve as a hook. Data events are a layer of structure on top of custom events that leverages interactions with the API and session storage.
 
 ## Triggers and Tags
 
@@ -65,7 +65,7 @@ After some experimentation, creating one tag for each "event" seems to be the mo
 
 ## Variables
 
-Custom events can capture anything in the app state. GTM provides many "Built-In Variables" for commonly tracked data such as page title, URL, etc. However "Custom Variables" allow access to anything in the page (for example the text of an element unrelated to the one clicked on). Bedrock additionally pushes as much context as possible in its [data events](#data-events) that can be accessed via "Data Layer Variables". These can be combined together to have full control over the final data pushed through.
+Custom events can capture anything in the app state. GTM provides many "Built-In Variables" for commonly tracked data such as page title, URL, etc. However "Custom Variables" allow access to anything in the page (for example the text of an element unrelated to the one clicked on). Other context is pushed through [data events](#data-events) that can be accessed via "Data Layer Variables". These can be combined together to have full control over the final data pushed through.
 
 ## Interaction Events
 
@@ -109,7 +109,7 @@ GTM offers many other useful events such as `Scroll Depth` that can be set up si
 
 ## Data Events
 
-In addition to pageview and interaction events, Bedrock also leverages its structure to provide data based events. In contrast to the question "what action did the user take?", these events attempt answer the question "what happened as a result?".
+Data based events exist as a layer on top of pageview and interaction events. In contrast to the question "what action did the user take?", these events attempt answer the question "what happened as a result?".
 
 For example, a click interaction event on the "Create Account" button is a useful indicator of the user's intent, however it doesn't actually answer the question "was an account created?", as the user may encouter an error or their connection may get cut off. Data events attempt to more accurately answer these questions.
 
@@ -132,9 +132,7 @@ Create new request event:
 
 The above tag and trigger will now fire on every **successful** `POST` request to `/1/auth/register`. This will ensure that the event will only fire when the actual user object was created.
 
-**Note**: One very imporant thing to note is that Google Analytics does **not** allow tracking of sensitive information like user email, social security number, etc. Although data pushed into the data layer is still in the context of the browser and can be considered secure, if a trigger were to expose it, it would be pushed up.
-
-Bedrock takes the extra step of stripping the entire request and response bodies unless specific fields are explicitly opted into. To do this update `PARAM_WHITELIST` in `services/web/src/utils/analytics/tracking.js`.
+**Note**: One very imporant thing to note is that Google Analytics does **not** allow tracking of sensitive information like user email, social security number, etc. Although data pushed into the data layer is still in the context of the browser and can be considered secure, if a trigger were to expose it, it would be pushed up. To prevent this, request and response are stripped unless specific fields are explicitly opted into. To do this update `PARAM_WHITELIST` in `services/web/src/utils/analytics/tracking.js`.
 
 ### Session Events
 
