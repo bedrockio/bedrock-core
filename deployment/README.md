@@ -104,7 +104,7 @@ Each environment can be configured in `environments/<environment>/env.conf`:
 
 ### Authorization
 
-- Use `gcloud config configurations create bedrock` and authorize Google Cloud `gcloud auth login`
+- Use `gcloud config configurations create [NAME]` and authorize Google Cloud `gcloud auth login`
 - Use `./deployment/scripts/authorize staging` to get cluster credentials
 - If you've used `gcloud auth` with another account, run `gcloud config set account <EMAIL>`, then re-run `./deployment/scripts/authorize`.
 
