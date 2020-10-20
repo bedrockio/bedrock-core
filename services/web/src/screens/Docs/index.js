@@ -76,12 +76,14 @@ export default class Docs extends React.Component {
       });
       this.setState({
         loading: false,
-        openApi
+        openApi,
+      }, () => {
+        this.checkJumpLink();
       });
-    } catch(error) {
+    } catch (error) {
       this.setState({
         error,
-        loading: false
+        loading: false,
       });
     }
   }
@@ -92,6 +94,16 @@ export default class Docs extends React.Component {
         ...stateForParams(this.props.match.params),
       });
       window.scrollTo(0, 0);
+    }
+  }
+
+  checkJumpLink() {
+    const { hash } = this.props.location;
+    if (hash) {
+      const el = document.querySelector(hash);
+      if (el) {
+        el.scrollIntoView();
+      }
     }
   }
 
