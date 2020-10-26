@@ -1,13 +1,16 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mongo-backups-deployment
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: mongo-backups
   template:
     metadata:
       labels:
-        name: mongodb-backups
+        app: mongo-backups
     spec:
       containers:
         - image: dominiek/mongodb-backups

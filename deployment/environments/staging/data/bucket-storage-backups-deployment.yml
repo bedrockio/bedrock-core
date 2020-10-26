@@ -1,13 +1,16 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: bucket-storage-backups-deployment
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: bucket-storage-backups
   template:
     metadata:
       labels:
-        name: bucket-storage-backups
+        app: bucket-storage-backups
     spec:
       containers:
         - image: dominiek/bucket-storage-backups
