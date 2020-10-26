@@ -1,43 +1,46 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: elasticsearch-deployment
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: elasticsearch
   template:
     metadata:
       labels:
-        name: elasticsearch
+        app: elasticsearch
     spec:
       containers:
-      - image: elasticsearch:5
-        name: elasticsearch
-        env:
-        - name: NAMESPACE
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.namespace
-        - name: "CLUSTER_NAME"
-          value: "cluster-1-elasticsearch"
-        - name: NODE_MASTER
-          value: "false"
-        - name: NODE_DATA
-          value: "false"
-        - name: HTTP_ENABLE
-          value: "true"
-        - name: ES_JAVA_OPTS
-          value: "-Xms500m -Xmx500m"
-        ports:
-        - containerPort: 9200
-          name: http
-          protocol: TCP
-        - containerPort: 9300
-          name: transport
-          protocol: TCP
-        volumeMounts:
-        - name: elasticsearch-persistent-storage
-          mountPath: /usr/share/elasticsearch/data
+        - image: elasticsearch:5
+          name: elasticsearch
+          env:
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: "CLUSTER_NAME"
+              value: "cluster-1-elasticsearch"
+            - name: NODE_MASTER
+              value: "false"
+            - name: NODE_DATA
+              value: "false"
+            - name: HTTP_ENABLE
+              value: "true"
+            - name: ES_JAVA_OPTS
+              value: "-Xms500m -Xmx500m"
+          ports:
+            - containerPort: 9200
+              name: http
+              protocol: TCP
+            - containerPort: 9300
+              name: transport
+              protocol: TCP
+          volumeMounts:
+            - name: elasticsearch-persistent-storage
+              mountPath: /usr/share/elasticsearch/data
       volumes:
         - name: elasticsearch-persistent-storage
           persistentVolumeClaim:
-             claimName: elasticsearch-pvc
+            claimName: elasticsearch-pvc
