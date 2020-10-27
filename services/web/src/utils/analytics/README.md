@@ -38,12 +38,12 @@ The code and instructions here are intended to let you easily set up complex tra
 ## Setup
 
 - Create a new GTM container and GA property (assuming GA).
-- Set `GTM_CONTAINER_ID` in `services/web/env.conf` to your new container ID.
+- Set `GTM_CONTAINER_ID` in `services/web/.env` to your new container ID.
 - In GTM create a new custom variable of type `Google Analytics Settings` and enter your GA tracking id. Name it `Google Analytics ID`. This will link GTM to GA.
 
 ## Environments
 
-Best practice is to set up separate environments for testing and production. To do this, repeat the steps above to create a new GTM container and GA property for production and set the container ID in `deployment/environments/production/services/web-deployment.yml`. The container ID provided in `services/web/env.conf` will be used for local dev and staging environments, with production tracking properly isolated.
+Best practice is to set up separate environments for testing and production. To do this, repeat the steps above to create a new GTM container and GA property for production and set the container ID in `deployment/environments/production/services/web-deployment.yml`. The container ID provided in `services/web/.env` will be used for local dev and staging environments, with production tracking properly isolated.
 
 ## Pageviews
 

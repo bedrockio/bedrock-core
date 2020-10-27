@@ -17,7 +17,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-export $(grep -v '^#' deployment/environments/$ENVIRONMENT/env.conf | xargs)
+export $(grep -v '^#' deployment/environments/$ENVIRONMENT/.env | xargs)
 
 if [ "$SUB_SERVICE" != "" ]; then
   IMAGES=`docker images | grep $PLATFORM_NAME | grep $TAG | awk '{print $1}' | grep "services-$SERVICE-$SUB_SERVICE$" | grep -v gcr.io`
