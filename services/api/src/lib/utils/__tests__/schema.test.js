@@ -62,14 +62,14 @@ describe('createSchema', () => {
     it('should expose id', () => {
       const User = createModel(createSchema());
       const user = new User();
-      const data = JSON.parse(JSON.stringify(user));
+      const data = user.toObject();
       expect(data.id).toBe(user.id);
     });
 
     it('should not expose _id or __v', () => {
       const User = createModel(createSchema());
       const user = new User();
-      const data = JSON.parse(JSON.stringify(user));
+      const data = user.toObject();
       expect(data._id).toBeUndefined();
       expect(data.__v).toBeUndefined();
     });
@@ -86,7 +86,7 @@ describe('createSchema', () => {
       expect(user._private).toBe('private');
       expect(user.password).toBe('fake password');
 
-      const data = JSON.parse(JSON.stringify(user));
+      const data = user.toObject();
 
       expect(data._private).toBeUndefined();
       expect(data.password).toBeUndefined();
@@ -101,7 +101,7 @@ describe('createSchema', () => {
 
       expect(user.tags).toBeInstanceOf(Array);
 
-      const data = JSON.parse(JSON.stringify(user));
+      const data = user.toObject();
       expect(data.tags).toBeUndefined();
     });
 
