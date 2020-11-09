@@ -41,7 +41,7 @@ class OpenApiMacros {
     if (!definition) return `\`Could not find API call for ${method} ${path}\``;
     const { responseBody } = definition;
     if (!responseBody || !responseBody.length) return '';
-    let markdown = [`Response Body:\n`, '| Key | Type | Description |', '|--|--|--|--|'];
+    let markdown = [`\nResponse Body:\n`, '| Key | Type | Description |', '|--|--|--|'];
     responseBody.forEach(({ name, schema, description }) => {
       const typeStr = formatTypeSummary(schema);
       let descriptionStr = description || '';
@@ -59,7 +59,7 @@ class OpenApiMacros {
     if (!examples || !examples.length) return '';
     const markdown = [];
     examples.forEach(({ name, requestPath, requestBody, responseBody }) => {
-      markdown.push(`#### Example: ${name}`);
+      markdown.push(`\n#### Example: ${name}`);
       if (method === 'GET') {
         markdown.push(`Request:\n`);
         markdown.push('```\nGET ' + path + '\n```');
@@ -91,19 +91,59 @@ class OpenApiMacros {
   objectSummary({ name }) {
     const definition = this.objects.find((d) => d.name === name);
     if (!definition) return `\`Could not find object for ${name}\``;
-    let markdown = [`Attributes:\n`, '| Key | Type | Description |', '|--|--|--|--|'];
+    let markdown = [`Attributes:\n`, '| Key | Type | Always Set? | Description |', '|--|--|--|--|'];
     const { attributes } = definition;
-    attributes.forEach(({ name, schema, description }) => {
+    attributes.forEach(({ name, schema, required, description }) => {
       const typeStr = formatTypeSummary(schema);
       let descriptionStr = description || '';
-      markdown.push(`|\`${name}\`|${typeStr}|${descriptionStr}|`);
+      if (schema.type === 'object' && schema.properties) {
+        descriptionStr += '<br />';
+        descriptionStr += '<br />';
+        descriptionStr += this.buildNestedTable(
+          ['Property', 'Type', 'Description'],
+          Object.entries(schema.properties).map(([key, val]) => {
+            const { type, description } = val;
+            return [key, type, description || 'foo'];
+          })
+        );
+      }
+      const requiredStr = required ? 'Yes' : 'No';
+      markdown.push(`|\`${name}\`|${typeStr}|${requiredStr}|${descriptionStr}|`);
     });
     return markdown.join('\n');
+  }
+
+  buildNestedTable(headerCells, bodyRows) {
+
+    function wrap(tag, arr, fn) {
+      return arr.map((el) => {
+        if (fn) {
+          el = fn(el);
+        }
+        return `<${tag}>${el}</${tag}>`;
+      }).join('');
+    }
+    return html`
+      <table>
+      <thead>
+        <tr>
+        ${wrap('th', headerCells)}
+        </tr>
+      </thead>
+      <tbody>
+        ${wrap('tr', bodyRows, (cells) => {
+          return wrap('td', cells);
+        })}
+        <tr>
+        </tr>
+      </tbody>
+      </table>
+    `;
   }
 }
 
 export function executeOpenApiMacros(openApi, markdown) {
-  // eslint-disable-next-line no-unused-vars
+  // eslint-disable-next-line
   const macros = new OpenApiMacros(openApi);
   Object.getOwnPropertyNames(OpenApiMacros.prototype).forEach((macroFn) => {
     const key = macroFn.toString();
@@ -129,4 +169,10 @@ export function enrichMarkdown(markdown, credentials, organization) {
   enrichedMarkdown = enrichedMarkdown.replace(new RegExp('<API_URL>', 'g'), API_URL.replace(/\/$/, ''));
   enrichedMarkdown = enrichedMarkdown.replace(new RegExp('<APP_NAME>', 'g'), APP_NAME.replace(/\/$/, ''));
   return enrichedMarkdown;
+}
+
+function html(chunks, ...args) {
+  return chunks.map((chunk, i) => {
+    return chunk.trim() + (args[i] || '');
+  }).join('').trim().replace(/\s*\n\s*/g, '');
 }
