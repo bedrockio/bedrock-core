@@ -5,13 +5,12 @@ import { NavLink } from 'react-router-dom';
 import { Breadcrumbs } from 'components';
 import { EditShop } from 'modals';
 
-export default ({ shop, match, onSave }) => {
-  const { id } = match.params;
+export default ({ shop, onSave }) => {
   return (
     <React.Fragment>
       <Breadcrumbs
         link={<Link to="/shops">Shops</Link>}
-        active={shop?.name || 'Loading...'}>
+        active={shop.name || 'Loading...'}>
         <EditShop
           shop={shop}
           onSave={onSave}
@@ -20,11 +19,11 @@ export default ({ shop, match, onSave }) => {
       </Breadcrumbs>
       <Divider hidden />
       <Menu tabular>
-        <Menu.Item name="Overview" to={`/shops/${id}`} as={NavLink} exact />
+        <Menu.Item name="Overview" to={`/shops/${shop.id}`} as={NavLink} exact />
         {/* --- Generator: menus */}
         <Menu.Item
           name="Products"
-          to={`/shops/${id}/products`}
+          to={`/shops/${shop.id}/products`}
           as={NavLink}
           exact
         />
