@@ -18,6 +18,8 @@ JWT is used for all authentication. You can provide your API token in a standard
 curl -H 'Authorization: Bearer <token>' <API_URL>/
 ```
 
+_When receiving a 401 status code, the client should clear any stored JWT tokens - this will enable authentication reset and expiry behavior_
+
 ### Requests
 
 A pragmatic RESTful style is enforced on all API calls. GET requests are only used to obtain objects.
