@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@bedrockio/config@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@bedrockio/config/-/config-1.0.2.tgz#58c74668cd3b4dbc5a59cbd1dc061fd275cfe013"
-  integrity sha512-UDijSI6Mh3iwODY33rUf47mCY/zp/NKeSDNylsLv79HMCvyEecLjTfGutFF3/QkA46dIPuomaFMaUcKIJ7+opQ==
+"@bedrockio/config@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@bedrockio/config/-/config-2.0.3.tgz#8acfb8106cd4e6a80a62f9a3374d24ca491c7d27"
+  integrity sha512-w7yAt11uhsm2DLZgVMSn6Pgkxvpv47Kk62nUfXv1uctxt0Ud4IG79WKmi/Z6Psyoy2EZgzxObhPVZ+Pa6NBYpA==
 
 accepts@^1.3.5:
   version "1.3.5"

@@ -18,12 +18,12 @@ try {
     path: '/1/users/search',
     body: {},
   });
-} catch(err) {}
+} catch (err) {}
 ```
 
 ## Env / Configuration
 
-Any environment variables can be passed from `env.conf`, a Docker container or the `serve.js` process. These can be explicitly exposed in [./env.js](./env.js). This is how they can be accessed anywhere in the code:
+Any environment variables can be passed from `.env`, a Docker container or the `serve.js` process. These can be explicitly exposed in [./env.js](./env.js). This is how they can be accessed anywhere in the code:
 
 ```javascript
 import { API_URL } from 'utils/env';

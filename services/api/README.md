@@ -8,7 +8,7 @@ See http://localhost:2200/docs for full documentation on this API (requires runn
 
 ## Directory Structure
 
-- `env.conf` - Default configuration values (override via environment)
+- `.env` - Default configuration values (override via environment)
 - `package.json` - Configure dependencies
 - `src/*/__tests__` - Unit tests
 - `src/index.js` - Entrypoint for running and binding API
@@ -52,7 +52,7 @@ yarn start
 
 ## Configuration
 
-All configuration is done using environment variables. The default values in `env.conf` can be overwritten using environment variables.
+All configuration is done using environment variables. The default values in `.env` can be overwritten using environment variables.
 
 - `BIND_HOST` - Host to bind to, defaults to `"0.0.0.0"`
 - `BIND_PORT` - Port to bind to, defaults to `2300`
