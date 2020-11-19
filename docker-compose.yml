@@ -29,6 +29,8 @@ services:
     build:
       context: ./services/web
       dockerfile: Dockerfile
+      args:
+        NODE_ENV: development
     volumes:
       - ./services/web/src:/service/src
     ports:
@@ -41,6 +43,8 @@ services:
     build:
       context: ./services/api-docs
       dockerfile: Dockerfile
+      args:
+        NODE_ENV: development
     ports:
       - "2400:2400"
     links:
