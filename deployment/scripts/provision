@@ -16,7 +16,7 @@ if ! [ -x "$(command -v terraform)" ]; then
   exit 1
 fi
 
-export $(grep -v '^#' deployment/environments/$ENVIRONMENT/env.conf | xargs)
+export $(grep -v '^#' deployment/environments/$ENVIRONMENT/.env | xargs)
 
 # $GCLOUD_COMPUTE_ZONE e.g. us-east1-c
 GCLOUD_REGION=$(echo $GCLOUD_COMPUTE_ZONE | cut -d- -f1-2) # e.g. us-east1
@@ -24,7 +24,7 @@ GCLOUD_ZONE=$(echo $GCLOUD_COMPUTE_ZONE | cut -d- -f3) # e.g. c
 
 CURRENT_GCLOUD_PROJECT=`gcloud config get-value project`
 if [ "$GCLOUD_PROJECT" != "$CURRENT_GCLOUD_PROJECT" ]; then
-  echo "Invalid Google Cloud config (use authorize script): active project = '$CURRENT_GCLOUD_PROJECT', but the $ENVIRONMENT env.conf states project = '$GCLOUD_PROJECT'"
+  echo "Invalid Google Cloud config (use authorize script): active project = '$CURRENT_GCLOUD_PROJECT', but the $ENVIRONMENT .env states project = '$GCLOUD_PROJECT'"
   exit 1
 fi
 

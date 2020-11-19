@@ -62,8 +62,8 @@ function set_yml_container_path() {
   sed -i '' -e 's/gcr\.io\/.*\//gcr.io\/'$GCLOUD_PROJECT_ID'\//g' $FILE
 }
 
-echo "Verified Google Cloud project $GCLOUD_PROJECT_ID, updating $ENVIRONMENT configuration (deployment/environments/$ENVIRONMENT/env.conf)"
-configure_env deployment/environments/$ENVIRONMENT/env.conf GCLOUD_PROJECT $GCLOUD_PROJECT_ID
+echo "Verified Google Cloud project $GCLOUD_PROJECT_ID, updating $ENVIRONMENT configuration (deployment/environments/$ENVIRONMENT/.env)"
+configure_env deployment/environments/$ENVIRONMENT/.env GCLOUD_PROJECT $GCLOUD_PROJECT_ID
 gcloud config set project $GCLOUD_PROJECT_ID
 
 echo "Enabling Compute services (This can take a couple of minutes)"

@@ -1,0 +1,8 @@
+{
+  "plugins": [
+    {
+      "id": "@bedrockio/bedrock-analytics",
+      "name": "Bedrock Analytics"
+    }
+  ]
+}

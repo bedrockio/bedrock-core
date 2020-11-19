@@ -25,9 +25,9 @@
   - [Check cluster status](#check-cluster-status)
   - [Getting shell access](#getting-shell-access)
 - [Disaster Recovery](#disaster-recovery)
-    - [Scenario A: Master Database Loss or Corruption](#scenario-a-master-database-loss-or-corruption)
-    - [Scenario B: Bucket Storage Loss or Corruption](#scenario-b-bucket-storage-loss-or-corruption)
-    - [Scenario C: Deletion of Google Cloud Project](#scenario-c-deletion-of-google-cloud-project)
+  - [Scenario A: Master Database Loss or Corruption](#scenario-a-master-database-loss-or-corruption)
+  - [Scenario B: Bucket Storage Loss or Corruption](#scenario-b-bucket-storage-loss-or-corruption)
+  - [Scenario C: Deletion of Google Cloud Project](#scenario-c-deletion-of-google-cloud-project)
 - [Other](#other)
   - [Configuring Backups](#configuring-backups)
   - [Backup Monitoring System](#backup-monitoring-system)
@@ -53,7 +53,7 @@ deployment/
 │   │   │   ├── mongo-deployment.yml
 │   │   │   ├── mongo-service.yml
 │   │   │   └── etc...
-│   │   ├── env.conf # Staging environment configuration
+│   │   ├── .env # Staging environment configuration
 │   │   ├── provisioning
 │   │   │   ├── backend.tf # defines Google bucket to keep state
 │   │   │   ├── main.tf # Main rersource definitions (cluster, node_pool, buckets)
@@ -91,7 +91,7 @@ deployment/
 
 ### Configuration
 
-Each environment can be configured in `environments/<environment>/env.conf`:
+Each environment can be configured in `environments/<environment>/.env`:
 
 - `GCLOUD_ENV_NAME` - Name of the environment, e.g. staging
 - `GCLOUD_BUCKET_PREFIX` - Bucket prefix used for GCS bucket creation
@@ -138,7 +138,7 @@ gcloud projects create bedrock-staging --name="Bedrock Staging"
 gcloud config set project seltzer-box-staging
 ```
 
-Configure: `environments/<environment>/env.conf`.
+Configure: `environments/<environment>/.env`.
 
 ### Provision Script
 

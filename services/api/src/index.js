@@ -9,7 +9,7 @@ if (process.env.GCLOUD_PROJECT) {
 
 const NODE_ENV = process.env.NODE_ENV;
 
-const PORT = config.get('BIND_PORT');
+const PORT = config.get('BIND_PORT', 'number');
 const HOST = config.get('BIND_HOST');
 
 module.exports = (async () => {

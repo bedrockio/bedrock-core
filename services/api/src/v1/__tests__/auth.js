@@ -109,8 +109,8 @@ describe('/1/auth', () => {
           },
         }
       );
-      expect(response.status).toBe(400);
-      expect(response.body).toEqual({ error: { message: 'bad jwt token', status: 400 } });
+      expect(response.status).toBe(401);
+      expect(response.body).toEqual({ error: { message: 'bad jwt token', status: 401 } });
     });
   });
 });

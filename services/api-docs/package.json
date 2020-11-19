@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "dependencies": {
-    "@bedrockio/config": "^1.0.2",
+    "@bedrockio/config": "^2.0.3",
     "koa": "^2.13.0",
     "koa-static": "^5.0.0"
   },
