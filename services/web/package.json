@@ -29,7 +29,7 @@
     "country-list": "^2.2.0",
     "css-loader": "^3.5.3",
     "cssnano": "^4.1.10",
-    "favicons-webpack-plugin": "^3.0.1",
+    "favicons-webpack-plugin": "^4.2.0",
     "file-loader": "^6.0.0",
     "github-markdown-css": "^4.0.0",
     "history": "^4.10.1",
@@ -83,7 +83,7 @@
     "webpack-bundle-analyzer": "^3.7.0"
   },
   "volta": {
-    "node": "12.18.3",
-    "yarn": "1.22.4"
+    "node": "14.15.1",
+    "yarn": "1.22.5"
   }
 }

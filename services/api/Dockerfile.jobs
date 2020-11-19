@@ -1,6 +1,6 @@
-FROM node:12-alpine
+FROM node:14-alpine
 
-ENV NODE_ENV production
+ARG NODE_ENV=production
 
 COPY package.json /service/package.json
 COPY yarn.lock /service/yarn.lock
