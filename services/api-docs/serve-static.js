@@ -4,7 +4,7 @@ const Koa = require("koa");
 const koaStatic = require("koa-static");
 const config = require("@bedrockio/config");
 
-const BIND_PORT = config.get("BIND_PORT", "integer");
+const BIND_PORT = config.get("BIND_PORT", "number");
 const BIND_HOST = config.get("BIND_HOST");
 const OPENAPI_URL = config.get("OPENAPI_URL");
 

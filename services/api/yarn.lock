@@ -263,10 +263,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@bedrockio/config@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@bedrockio/config/-/config-2.0.1.tgz#2b2d8b869e7e7234fa62c79513cc3a60ca8cfb44"
-  integrity sha512-b6fV5rQsx5nvKnbH/Y0tB3TwFyCtZbxsxMX68+10R+/hEb14AF2/w9UMW8pljERWwETD6wYTiv+IcMpAU1Djdw==
+"@bedrockio/config@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@bedrockio/config/-/config-2.0.3.tgz#8acfb8106cd4e6a80a62f9a3374d24ca491c7d27"
+  integrity sha512-w7yAt11uhsm2DLZgVMSn6Pgkxvpv47Kk62nUfXv1uctxt0Ud4IG79WKmi/Z6Psyoy2EZgzxObhPVZ+Pa6NBYpA==
 
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
