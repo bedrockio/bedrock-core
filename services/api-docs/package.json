@@ -15,7 +15,7 @@
   "author": "",
   "license": "ISC",
   "volta": {
-    "node": "14.14.0",
+    "node": "14.15.1",
     "yarn": "1.22.5"
   }
 }
