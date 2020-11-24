@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { omitBy } = require('lodash');
+const { ObjectId } = mongoose.Schema.Types;
 
 const RESERVED_FIELDS = ['id', 'createdAt', 'updatedAt', 'deletedAt'];
 
@@ -36,9 +37,15 @@ exports.createSchema = (definition, options = {}) => {
     }
   );
   schema.methods.assign = function assign(fields) {
-    Object.assign(this, omitBy(fields, (value, key) => {
+    fields = omitBy(fields, (value, key) => {
       return isDisallowedField(this, key) || RESERVED_FIELDS.includes(key);
-    }));
+    })
+    for (let [key, value] of Object.entries(fields)) {
+      if (!value && isReferenceField(this, key)) {
+        value = undefined;
+      }
+      this[key] = value;
+    }
   };
   schema.methods.delete = function() {
     this.deletedAt = new Date();
@@ -47,13 +54,20 @@ exports.createSchema = (definition, options = {}) => {
   return schema;
 };
 
+function isReferenceField(doc, key) {
+  const field = getField(doc, key);
+  return field.type === ObjectId;
+}
+
 function isDisallowedField(doc, key, allowPrivate = false) {
-  let field = doc.schema.obj[key];
-  if (Array.isArray(field)) {
-    field = field[0];
-  }
+  const field = getField(doc, key);
   if (field && field.access === 'private') {
     return !allowPrivate;
   }
   return false;
+}
+
+function getField(doc, key) {
+  const field = doc.schema.obj[key];
+  return Array.isArray(field) ? field[0] : field;
 }
