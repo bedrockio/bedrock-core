@@ -6,7 +6,7 @@ mongoose.Promise = Promise;
 
 exports.models = loadModelDir(__dirname + '/models');
 
-exports.initDb = async () => {
+exports.init = async () => {
   await mongoose.connect(config.get('MONGO_URI'), {
     // The underlying MongoDB driver has deprecated their current connection string parser.
     useNewUrlParser: true,
