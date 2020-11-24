@@ -3,7 +3,7 @@ const Joi = require('@hapi/joi');
 const validate = require('../middlewares/validate');
 const { authenticate, fetchUser } = require('../middlewares/authenticate');
 const { NotFoundError } = require('../lib/errors');
-const Product = require('../models/product');
+const { models } = require('../database');
 
 const router = new Router();
 
@@ -31,7 +31,7 @@ router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
   .param('productId', async (id, ctx, next) => {
-    const product = await Product.findById(id);
+    const product = await models.Product.findById(id);
     ctx.state.product = product;
     if (!product) {
       throw new NotFoundError();
@@ -44,7 +44,7 @@ router
       body: productSchema,
     }),
     async (ctx) => {
-      const product = await Product.create(ctx.request.body);
+      const product = await models.Product.create(ctx.request.body);
       ctx.body = {
         data: product,
       };
@@ -82,12 +82,12 @@ router
       if (shop) {
         query.shop = shop;
       }
-      const data = await Product.find(query)
+      const data = await models.Product.find(query)
         .sort({ [sort.field]: sort.order === 'desc' ? -1 : 1 })
         .skip(skip)
         .limit(limit);
 
-      const total = await Product.countDocuments(query);
+      const total = await models.Product.countDocuments(query);
       ctx.body = {
         data,
         meta: {

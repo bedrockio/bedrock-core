@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const config = require('@bedrockio/config');
-const User = require('../models/user');
+const mongoose = require('mongoose');
 
 const secrets = {
   user: config.get('JWT_SECRET'),
@@ -56,6 +56,7 @@ exports.authenticate = ({ type, optional = false } = {}) => {
 
 exports.fetchUser = async (ctx, next) => {
   if (!ctx.state.authUser && ctx.state.jwt) {
+    const { User } = mongoose.models;
     ctx.state.authUser = await User.findById(ctx.state.jwt.userId);
     if (!ctx.state.authUser) ctx.throw(401, 'user associated to token could not not be found');
   }

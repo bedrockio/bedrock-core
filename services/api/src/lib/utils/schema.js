@@ -82,17 +82,27 @@ exports.loadModelDir = (dirPath) => {
     if (file.match(/\.js$/) && !files.includes(`${basenameJs}.json`)) {
       console.warn(`Found a model ${basenameJs}.js but no corresponding ${basenameJs}.json`);
     }
+    if (file.match(/\.js$/)) {
+      const modelName = startCase(basenameJs).replace(/\s/g, '');
+      if (!mongoose.models[modelName]) {
+        const filePath = path.join(dirPath, file);
+        require(filePath);
+      }
+    }
     if (file.match(/\.json$/) && !files.includes(`${basename}.js`)) {
       const filePath = path.join(dirPath, file);
       const data = fs.readFileSync(filePath);
       try {
         const definition = JSON.parse(data);
         const modelName = definition.modelName || startCase(basename).replace(/\s/g, '');
-        exports.loadModel(definition, modelName);
+        if (!mongoose.models[modelName]) {
+          exports.loadModel(definition, modelName);
+        }
       } catch (error) {
         console.error(`Could not load model definition: ${filePath}`);
         console.error(error);
       }
     }
   }
+  return mongoose.models;
 };

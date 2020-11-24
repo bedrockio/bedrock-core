@@ -1,8 +1,5 @@
-const User = require('../src/models/user');
-const Product = require('../src/models/product');
-const Shop = require('../src/models/shop');
-const Upload = require('../src/models/upload');
-const Category = require('../src/models/category');
+const mongoose = require('mongoose');
+const { User, Product, Shop, Upload, Category } = mongoose.models;
 const config = require('@bedrockio/config');
 const { storeUploadedFile } = require('../src/lib/uploads');
 

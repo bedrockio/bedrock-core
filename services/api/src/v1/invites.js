@@ -3,8 +3,7 @@ const Joi = require('@hapi/joi');
 const validate = require('../middlewares/validate');
 const { authenticate, fetchUser, checkUserRole } = require('../middlewares/authenticate');
 const { NotFoundError, BadRequestError, GoneError } = require('../lib/errors');
-const Invite = require('../models/invite');
-const User = require('../models/user');
+const { models } = require('../database');
 
 const { sendInvite } = require('../lib/emails');
 const { createUserTemporaryToken } = require('../lib/tokens');
@@ -17,7 +16,7 @@ function getToken(invite) {
 
 router
   .param('inviteId', async (id, ctx, next) => {
-    const invite = await Invite.findById(id);
+    const invite = await models.Invite.findById(id);
     ctx.state.invite = invite;
 
     if (!invite) {
@@ -49,12 +48,12 @@ router
     async (ctx) => {
       const { sort, skip, limit } = ctx.request.body;
       const query = { deletedAt: { $exists: false } };
-      const invites = await Invite.find(query)
+      const invites = await models.Invite.find(query)
         .sort({ [sort.field]: sort.order === 'desc' ? -1 : 1 })
         .skip(skip)
         .limit(limit);
 
-      const total = await await Invite.countDocuments(query);
+      const total = await models.Invite.countDocuments(query);
 
       ctx.body = {
         data: invites,
@@ -78,10 +77,10 @@ router
       const { emails } = ctx.request.body;
 
       for (let email of [...new Set(emails)]) {
-        if ((await User.countDocuments({ email })) > 0) {
+        if ((await models.User.countDocuments({ email })) > 0) {
           throw new BadRequestError(`${email} is already a user.`);
         }
-        const invite = await Invite.findOneAndUpdate(
+        const invite = await models.Invite.findOneAndUpdate(
           {
             email,
             status: 'invited',

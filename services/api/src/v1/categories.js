@@ -2,7 +2,7 @@ const Router = require('@koa/router');
 const Joi = require('@hapi/joi');
 const validate = require('../middlewares/validate');
 const { authenticate, fetchUser } = require('../middlewares/authenticate');
-const Category = require('../models/category');
+const { models } = require('../database');
 
 const router = new Router();
 
@@ -34,12 +34,12 @@ router
         deletedAt: { $exists: false },
       };
 
-      const data = await Category.find(query)
+      const data = await models.Category.find(query)
         .sort({ [sort.field]: sort.order === 'desc' ? -1 : 1 })
         .skip(skip)
         .limit(limit);
 
-      const total = await Category.countDocuments(query);
+      const total = await models.Category.countDocuments(query);
       ctx.body = {
         data,
         meta: {

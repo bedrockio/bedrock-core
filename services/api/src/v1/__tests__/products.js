@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 
-const Product = require('../../models/product');
-
-const { setupDb, teardownDb, request, createUser } = require('../../test-helpers');
+const { setupDb, teardownDb, request, createUser, models } = require('../../test-helpers');
 
 beforeAll(async () => {
   await setupDb();
@@ -34,7 +32,7 @@ describe('/1/products', () => {
   describe('GET /:product', () => {
     it('should be able to access product', async () => {
       const user = await createUser();
-      const product = await Product.create({
+      const product = await models.Product.create({
         name: 'test 1',
         description: 'Some description',
         shop: mongoose.Types.ObjectId(),
@@ -48,15 +46,15 @@ describe('/1/products', () => {
   describe('POST /search', () => {
     it('it should list out products', async () => {
       const user = await createUser();
-      await Product.deleteMany({});
+      await models.Product.deleteMany({});
 
-      const product1 = await Product.create({
+      const product1 = await models.Product.create({
         name: 'test 1',
         description: 'Some description',
         shop: mongoose.Types.ObjectId(),
       });
 
-      const product2 = await Product.create({
+      const product2 = await models.Product.create({
         name: 'test 2',
         description: 'Some description',
         shop: mongoose.Types.ObjectId(),
@@ -76,7 +74,7 @@ describe('/1/products', () => {
   describe('PATCH /:product', () => {
     it('admins should be able to update product', async () => {
       const user = await createUser();
-      const product = await Product.create({
+      const product = await models.Product.create({
         name: 'test 1',
         description: 'Some description',
         shop: mongoose.Types.ObjectId(),
@@ -84,7 +82,7 @@ describe('/1/products', () => {
       const response = await request('PATCH', `/1/products/${product.id}`, { name: 'new name' }, { user });
       expect(response.status).toBe(200);
       expect(response.body.data.name).toBe('new name');
-      const dbProduct = await Product.findById(product.id);
+      const dbProduct = await models.Product.findById(product.id);
       expect(dbProduct.name).toEqual('new name');
     });
   });
@@ -92,14 +90,14 @@ describe('/1/products', () => {
   describe('DELETE /:product', () => {
     it('should be able to delete product', async () => {
       const user = await createUser();
-      const product = await Product.create({
+      const product = await models.Product.create({
         name: 'test 1',
         description: 'Some description',
         shop: mongoose.Types.ObjectId(),
       });
       const response = await request('DELETE', `/1/products/${product.id}`, {}, { user });
       expect(response.status).toBe(204);
-      const dbProduct = await Product.findById(product.id);
+      const dbProduct = await models.Product.findById(product.id);
       expect(dbProduct.deletedAt).toBeDefined();
     });
   });

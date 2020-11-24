@@ -2,14 +2,14 @@ const Router = require('@koa/router');
 const { createReadStream } = require('fs');
 const { authenticate, fetchUser } = require('../middlewares/authenticate');
 const { NotFoundError, UnauthorizedError } = require('../lib/errors');
-const Upload = require('../models/upload');
+const { models } = require('../database');
 const { storeUploadedFile } = require('../lib/uploads');
 
 const router = new Router();
 
 router
   .param('uploadId', async (id, ctx, next) => {
-    const upload = await Upload.findById(id);
+    const upload = await models.Upload.findById(id);
     ctx.state.upload = upload;
     if (!upload) {
       throw new NotFoundError();
@@ -19,14 +19,14 @@ router
     return next();
   })
   .get('/:hash', async (ctx) => {
-    const upload = await Upload.findOne({ hash: ctx.params.hash });
+    const upload = await models.Upload.findOne({ hash: ctx.params.hash });
     ctx.body = {
       data: upload,
     };
   })
   .get('/:hash/image', async (ctx) => {
     const { thumbnail } = ctx.request.query;
-    const upload = await Upload.findOne({ hash: ctx.params.hash });
+    const upload = await models.Upload.findOne({ hash: ctx.params.hash });
     const url = thumbnail && upload.thumbnailUrl ? upload.thumbnailUrl : upload.rawUrl;
     if (upload.storageType === 'local') {
       ctx.set('Content-Type', upload.mimeType);
@@ -46,7 +46,7 @@ router
       files.map(async (file) => {
         const params = await storeUploadedFile(file);
         params.ownerId = authUser.id;
-        return await Upload.create(params);
+        return await models.Upload.create(params);
       })
     );
     ctx.body = {

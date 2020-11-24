@@ -1,5 +1,4 @@
-const User = require('../../models/user');
-const { setupDb, teardownDb, request, createUser } = require('../../test-helpers');
+const { setupDb, teardownDb, request, createUser, models } = require('../../test-helpers');
 
 jest.mock('../../lib/emails');
 
@@ -52,7 +51,7 @@ describe('/1/users', () => {
       const response = await request('PATCH', '/1/users/me', { name: 'other name' }, { user });
       expect(response.status).toBe(200);
       expect(response.body.data.email).toBe(user.email);
-      const updatedUser = await User.findById(user._id);
+      const updatedUser = await models.User.findById(user._id);
       expect(updatedUser.name).toBe('other name');
     });
   });
@@ -137,7 +136,7 @@ describe('/1/users', () => {
       const response = await request('PATCH', `/1/users/${user1.id}`, { name: 'new name' }, { user: admin });
       expect(response.status).toBe(200);
       expect(response.body.data.name).toBe('new name');
-      const dbUser = await User.findById(user1.id);
+      const dbUser = await models.User.findById(user1.id);
       expect(dbUser.name).toEqual('new name');
     });
     it('it should deny access to non-admins', async () => {
@@ -154,7 +153,7 @@ describe('/1/users', () => {
       const user1 = await createUser({ roles: ['user'], name: 'One' });
       const response = await request('DELETE', `/1/users/${user1.id}`, {}, { user: admin });
       expect(response.status).toBe(204);
-      const dbUser = await User.findById(user1._id);
+      const dbUser = await models.User.findById(user1._id);
       expect(dbUser.deletedAt).toBeDefined();
     });
     it('it should deny access to non-admins', async () => {

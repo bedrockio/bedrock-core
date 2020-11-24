@@ -1,5 +1,4 @@
-const { setupDb, teardownDb, request } = require('../../test-helpers');
-const User = require('../../models/user');
+const { setupDb, teardownDb, request, models } = require('../../test-helpers');
 
 beforeAll(async () => {
   await setupDb();
@@ -26,7 +25,7 @@ describe('/1/status', () => {
     });
 
     it('should return success is true when there are mongodb venues', async () => {
-      const venue1 = await User.create({
+      await models.User.create({
         email: 'info@test.com',
       });
 

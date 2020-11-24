@@ -4,7 +4,9 @@ const { loadModelDir } = require('./lib/utils/schema');
 
 mongoose.Promise = Promise;
 
-module.exports = async () => {
+exports.models = loadModelDir(__dirname + '/models');
+
+exports.initDb = async () => {
   await mongoose.connect(config.get('MONGO_URI'), {
     // The underlying MongoDB driver has deprecated their current connection string parser.
     useNewUrlParser: true,
@@ -18,8 +20,6 @@ module.exports = async () => {
     // use native findOneAndUpdate() rather than findAndModify()
     useFindAndModify: false,
   });
-
-  await loadModelDir(__dirname + '/models');
 
   const db = mongoose.connection;
   db.on('error', console.error.bind(console, 'connection error:'));

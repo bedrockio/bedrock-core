@@ -1,5 +1,4 @@
-const Upload = require('../../models/upload');
-const { setupDb, teardownDb, request, createUser } = require('../../test-helpers');
+const { setupDb, teardownDb, request, createUser, models } = require('../../test-helpers');
 
 beforeAll(async () => {
   await setupDb();
@@ -10,7 +9,7 @@ afterAll(async () => {
 });
 
 const createUpload = (user = {}) => {
-  return Upload.create({
+  return models.Upload.create({
     filename: 'logo.png',
     rawUrl: 'logo.png',
     hash: 'test',
@@ -37,13 +36,15 @@ describe('/1/uploads', () => {
 
     it('should be able to handle multiple files', async () => {
       const user = await createUser();
-      const response = await request('POST', '/1/uploads', {}, {
-        user,
-        file: [
-          __dirname + '/fixtures/logo.png',
-          __dirname + '/fixtures/logo.png',
-        ],
-      });
+      const response = await request(
+        'POST',
+        '/1/uploads',
+        {},
+        {
+          user,
+          file: [__dirname + '/fixtures/logo.png', __dirname + '/fixtures/logo.png'],
+        }
+      );
       const data = response.body.data;
       expect(response.status).toBe(200);
       expect(data.length).toBe(2);
@@ -68,7 +69,7 @@ describe('/1/uploads', () => {
       const upload = await createUpload(user);
       const response = await request('DELETE', `/1/uploads/${upload.id}`, {}, { user });
       expect(response.status).toBe(204);
-      const dbUpload = await Upload.findById(upload.id);
+      const dbUpload = await models.Upload.findById(upload.id);
       expect(dbUpload.deletedAt).toBeDefined();
     });
 

@@ -1,9 +1,12 @@
 const mongoose = require('mongoose');
 const { uniqueId } = require('lodash');
-const User = require('../models/user');
 
 exports.context = require('./context');
 exports.request = require('./request');
+
+const { loadModelDir } = require('./../lib/utils/schema');
+const models = loadModelDir(__dirname + '/../models');
+exports.models = models;
 
 exports.setupDb = async () => {
   const mongooseOpts = {
@@ -18,6 +21,7 @@ exports.setupDb = async () => {
   // Take the URI path from MONGO_URI with the default db name,
   // and replace with per test unique db name: MONGO_DB_NAME
   const mongoURL = 'mongodb://' + global.__MONGO_URI__.split('/')[2] + '/' + global.__MONGO_DB_NAME__;
+
   await mongoose.connect(mongoURL, mongooseOpts, (err) => {
     if (err) {
       console.error(err);
@@ -27,7 +31,7 @@ exports.setupDb = async () => {
 };
 
 exports.createUser = async (userAttributes = {}) => {
-  return await User.create({
+  return await models.User.create({
     email: `${uniqueId('email')}@platform.com`,
     name: 'test user',
     ...userAttributes,
