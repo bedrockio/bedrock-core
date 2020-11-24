@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 const { omitBy } = require('lodash');
+const fs = require('fs');
+const path = require('path');
+const { startCase } = require('lodash');
 
 const RESERVED_FIELDS = ['id', 'createdAt', 'updatedAt', 'deletedAt'];
 
@@ -15,7 +18,7 @@ const serializeOptions = {
         delete ret[key];
       }
     }
-  }
+  },
 };
 
 exports.createSchema = (definition, options = {}) => {
@@ -36,11 +39,14 @@ exports.createSchema = (definition, options = {}) => {
     }
   );
   schema.methods.assign = function assign(fields) {
-    Object.assign(this, omitBy(fields, (value, key) => {
-      return isDisallowedField(this, key) || RESERVED_FIELDS.includes(key);
-    }));
+    Object.assign(
+      this,
+      omitBy(fields, (value, key) => {
+        return isDisallowedField(this, key) || RESERVED_FIELDS.includes(key);
+      })
+    );
   };
-  schema.methods.delete = function() {
+  schema.methods.delete = function () {
     this.deletedAt = new Date();
     return this.save();
   };
@@ -57,3 +63,36 @@ function isDisallowedField(doc, key, allowPrivate = false) {
   }
   return false;
 }
+
+exports.loadModel = (definition, name) => {
+  const { attributes } = definition;
+  if (!attributes) {
+    throw new Error(`Invalid model definition for ${name}, need attributes`);
+  }
+  const schema = exports.createSchema(attributes);
+  schema.plugin(require('mongoose-autopopulate'));
+  return mongoose.model(name, schema);
+};
+
+exports.loadModelDir = (dirPath) => {
+  const files = fs.readdirSync(dirPath);
+  for (const file of files) {
+    const basename = path.basename(file, '.json');
+    const basenameJs = path.basename(file, '.js');
+    if (file.match(/\.js$/) && !files.includes(`${basenameJs}.json`)) {
+      console.warn(`Found a model ${basenameJs}.js but no corresponding ${basenameJs}.json`);
+    }
+    if (file.match(/\.json$/) && !files.includes(`${basename}.js`)) {
+      const filePath = path.join(dirPath, file);
+      const data = fs.readFileSync(filePath);
+      try {
+        const definition = JSON.parse(data);
+        const modelName = definition.modelName || startCase(basename).replace(/\s/g, '');
+        exports.loadModel(definition, modelName);
+      } catch (error) {
+        console.error(`Could not load model definition: ${filePath}`);
+        console.error(error);
+      }
+    }
+  }
+};

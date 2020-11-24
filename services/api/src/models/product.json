@@ -1,0 +1,23 @@
+{
+  "attributes": {
+    "name": { "type": "String", "trim": true, "required": true },
+    "description": { "type": "String", "trim": true, "required": false },
+    "isFeatured": { "type": "Boolean" },
+    "expiresAt": { "type": "Date" },
+    "priceUsd": { "type": "Number" },
+    "sellingPoints": [{ "type": "String" }],
+    "shop": {
+      "ref": "Shop",
+      "type": "ObjectId",
+      "required": true,
+      "autopopulate": true
+    },
+    "images": [
+      {
+        "type": "ObjectId",
+        "ref": "Upload",
+        "autopopulate": true
+      }
+    ]
+  }
+}
