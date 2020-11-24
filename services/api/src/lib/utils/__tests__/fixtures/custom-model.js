@@ -1,5 +1,3 @@
 describe('CustomModel', () => {
-  it('should be a custom model', async () => {
-    expect(true).toBe(false);
-  });
+  it('should be a custom model', async () => {});
 });
