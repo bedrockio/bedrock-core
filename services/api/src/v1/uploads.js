@@ -2,7 +2,7 @@ const Router = require('@koa/router');
 const { createReadStream } = require('fs');
 const { authenticate, fetchUser } = require('../middlewares/authenticate');
 const { NotFoundError, UnauthorizedError } = require('../lib/errors');
-const Upload = require('../models/upload');
+const { Upload } = require('../models');
 const { storeUploadedFile } = require('../lib/uploads');
 
 const router = new Router();

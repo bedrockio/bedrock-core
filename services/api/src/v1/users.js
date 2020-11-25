@@ -1,9 +1,9 @@
 const Router = require('@koa/router');
 const Joi = require('@hapi/joi');
-const User = require('../models/user');
 const validate = require('../middlewares/validate');
 const { authenticate, fetchUser, checkUserRole } = require('../middlewares/authenticate');
 const { NotFoundError, BadRequestError } = require('../lib/errors');
+const { User } = require('../models');
 
 const router = new Router();
 
@@ -111,7 +111,7 @@ router
         .skip(skip)
         .limit(limit);
 
-      const total = await await User.countDocuments(query);
+      const total = await User.countDocuments(query);
       ctx.body = {
         data,
         meta: {

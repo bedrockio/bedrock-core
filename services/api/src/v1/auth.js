@@ -5,8 +5,7 @@ const { authenticate } = require('../middlewares/authenticate');
 const tokens = require('../lib/tokens');
 const { sendWelcome, sendResetPassword, sendResetPasswordUnknown } = require('../lib/emails');
 const { BadRequestError, UnauthorizedError } = require('../lib/errors');
-const User = require('../models/user');
-const Invite = require('../models/invite');
+const { User, Invite } = require('../models');
 
 const router = new Router();
 

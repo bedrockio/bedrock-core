@@ -1,6 +1,5 @@
-const Shop = require('../../models/shop');
-const Upload = require('../../models/upload');
 const { setupDb, teardownDb, request, createUser } = require('../../test-helpers');
+const { Shop, Upload } = require('../../models');
 
 beforeAll(async () => {
   await setupDb();

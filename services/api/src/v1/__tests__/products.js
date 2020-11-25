@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 
-const Product = require('../../models/product');
-
 const { setupDb, teardownDb, request, createUser } = require('../../test-helpers');
+const { Product } = require('../../models');
 
 beforeAll(async () => {
   await setupDb();

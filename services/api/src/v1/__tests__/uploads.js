@@ -1,5 +1,5 @@
-const Upload = require('../../models/upload');
 const { setupDb, teardownDb, request, createUser } = require('../../test-helpers');
+const { Upload } = require('../../models');
 
 beforeAll(async () => {
   await setupDb();
@@ -37,13 +37,15 @@ describe('/1/uploads', () => {
 
     it('should be able to handle multiple files', async () => {
       const user = await createUser();
-      const response = await request('POST', '/1/uploads', {}, {
-        user,
-        file: [
-          __dirname + '/fixtures/logo.png',
-          __dirname + '/fixtures/logo.png',
-        ],
-      });
+      const response = await request(
+        'POST',
+        '/1/uploads',
+        {},
+        {
+          user,
+          file: [__dirname + '/fixtures/logo.png', __dirname + '/fixtures/logo.png'],
+        }
+      );
       const data = response.body.data;
       expect(response.status).toBe(200);
       expect(data.length).toBe(2);

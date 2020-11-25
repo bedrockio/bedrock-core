@@ -1,0 +1,24 @@
+{
+  "attributes": {
+    "email": {
+      "type": "String",
+      "required": true,
+      "lowercase": true,
+      "trim": true
+    },
+    "roles": [
+      {
+        "type": "String"
+      }
+    ],
+    "name": {
+      "type": "String",
+      "trim": true
+    },
+    "hashedPassword": {
+      "type": "String",
+      "access": "private"
+    },
+    "timeZone": { "type": "String" }
+  }
+}
