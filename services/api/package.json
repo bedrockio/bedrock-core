@@ -34,7 +34,7 @@
     "mongoose": "^5.9.26",
     "mongoose-autopopulate": "^0.12.2",
     "postmark": "^2.5.4",
-    "snyk": "^1.359.1"
+    "snyk": "^1.425.4"
   },
   "devDependencies": {
     "@shelf/jest-mongodb": "^1.2.2",
