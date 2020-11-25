@@ -1,5 +1,4 @@
-const { models } = require('./../src/database');
-const { User, Product, Shop, Upload, Category } = models;
+const { User, Product, Shop, Upload, Category } = require('./../src/models');
 const config = require('@bedrockio/config');
 const { storeUploadedFile } = require('../src/lib/uploads');
 

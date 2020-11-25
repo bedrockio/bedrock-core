@@ -57,14 +57,14 @@ describe('createSchema', () => {
     it('should expose id', () => {
       const User = createTestModel(createSchema());
       const user = new User();
-      const data = JSON.parse(JSON.stringify(user));
+      const data = user.toObject();
       expect(data.id).toBe(user.id);
     });
 
     it('should not expose _id or __v', () => {
       const User = createTestModel(createSchema());
       const user = new User();
-      const data = JSON.parse(JSON.stringify(user));
+      const data = user.toObject();
       expect(data._id).toBeUndefined();
       expect(data.__v).toBeUndefined();
     });
@@ -83,7 +83,7 @@ describe('createSchema', () => {
       expect(user._private).toBe('private');
       expect(user.password).toBe('fake password');
 
-      const data = JSON.parse(JSON.stringify(user));
+      const data = user.toObject();
 
       expect(data._private).toBeUndefined();
       expect(data.password).toBeUndefined();
@@ -100,7 +100,7 @@ describe('createSchema', () => {
 
       expect(user.tags).toBeInstanceOf(Array);
 
-      const data = JSON.parse(JSON.stringify(user));
+      const data = user.toObject();
       expect(data.tags).toBeUndefined();
     });
 
@@ -208,6 +208,66 @@ describe('createSchema', () => {
       await user.save();
       expect(user.password).not.toBe('fake password');
     });
+
+    it('should delete falsy values for reference fields', async () => {
+      const User = createTestModel(
+        createSchema({
+          password: { type: String, access: 'private' },
+        })
+      );
+      const Shop = createTestModel(
+        createSchema({
+          user: {
+            ref: User.modelName,
+            type: mongoose.Schema.Types.ObjectId,
+          },
+        })
+      );
+      const shop = new Shop({
+        user: '5f63b1b88f09266f237e9d29',
+      });
+      await shop.save();
+
+      let data = JSON.parse(JSON.stringify(shop));
+      expect(data.user).toBe('5f63b1b88f09266f237e9d29');
+      shop.assign({
+        user: '',
+      });
+      await shop.save();
+      data = JSON.parse(JSON.stringify(shop));
+      expect('user' in data).toBe(false);
+    });
+
+    it('should still allow assignment of empty arrays for multi-reference fields', async () => {
+      const User = createTestModel(
+        createSchema({
+          password: { type: String, access: 'private' },
+        })
+      );
+      const Shop = createTestModel(
+        createSchema({
+          users: [
+            {
+              ref: User.modelName,
+              type: mongoose.Schema.Types.ObjectId,
+            },
+          ],
+        })
+      );
+      const shop = new Shop({
+        users: ['5f63b1b88f09266f237e9d29', '5f63b1b88f09266f237e9d29'],
+      });
+      await shop.save();
+
+      let data = JSON.parse(JSON.stringify(shop));
+      expect(data.users).toEqual(['5f63b1b88f09266f237e9d29', '5f63b1b88f09266f237e9d29']);
+      shop.assign({
+        users: [],
+      });
+      await shop.save();
+      data = JSON.parse(JSON.stringify(shop));
+      expect(data.users).toEqual([]);
+    });
   });
 
   describe('autopopulate', () => {
@@ -217,7 +277,6 @@ describe('createSchema', () => {
           password: { type: String, access: 'private' },
         })
       );
-
       const shopSchema = createSchema({
         user: {
           ref: User.modelName,
