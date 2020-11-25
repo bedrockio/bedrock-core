@@ -124,7 +124,6 @@ _() {
   replace ./$kebab/services/web/README.md
   replace ./$kebab/services/web/src/utils/README.md
   replace ./$kebab/services/web/src/components/README.md
-  replace ./$kebab/services/api-docs/package.json
 
   replace ./$kebab/deployment/README.md
   replace ./$kebab/README.md
@@ -132,8 +131,6 @@ _() {
   replace ./$kebab/deployment/environments/staging/.env
   replace ./$kebab/deployment/environments/staging/services/api-cli-deployment.yml
   replace ./$kebab/deployment/environments/staging/services/api-deployment.yml
-  replace ./$kebab/deployment/environments/staging/services/api-docs-deployment.yml
-  replace ./$kebab/deployment/environments/staging/services/api-docs-service.yml
   replace ./$kebab/deployment/environments/staging/services/api-jobs-deployment.yml
   replace ./$kebab/deployment/environments/staging/services/api-service.yml
   replace ./$kebab/deployment/environments/staging/services/web-deployment.yml
@@ -149,8 +146,6 @@ _() {
   replace ./$kebab/deployment/environments/production/.env
   replace ./$kebab/deployment/environments/production/services/api-cli-deployment.yml
   replace ./$kebab/deployment/environments/production/services/api-deployment.yml
-  replace ./$kebab/deployment/environments/production/services/api-docs-deployment.yml
-  replace ./$kebab/deployment/environments/production/services/api-docs-service.yml
   replace ./$kebab/deployment/environments/production/services/api-jobs-deployment.yml
   replace ./$kebab/deployment/environments/production/services/api-service.yml
   replace ./$kebab/deployment/environments/production/services/web-deployment.yml

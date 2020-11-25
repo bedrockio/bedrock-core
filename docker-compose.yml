@@ -39,19 +39,6 @@ services:
     depends_on:
       - api
 
-  api-docs:
-    build:
-      context: ./services/api-docs
-      dockerfile: Dockerfile
-      args:
-        NODE_ENV: development
-    ports:
-      - "2400:2400"
-    links:
-      - api
-    depends_on:
-      - api
-
   mongo:
     image: mongo:4.2.8
     command: --serviceExecutor adaptive
