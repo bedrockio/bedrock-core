@@ -1,5 +1,5 @@
 const { setupDb, teardownDb, request, createUser } = require('../../test-helpers');
-const { Invite } = require('../../models');
+const { Invite, User } = require('../../models');
 
 beforeAll(async () => {
   await setupDb();
@@ -50,8 +50,10 @@ describe('/1/invites', () => {
       expect(response.status).toBe(204);
     });
     it('should throw an error if user already exists', async () => {
+      await User.deleteMany({});
       const user = await createUser({
         roles: ['admin'],
+        email: 'fake@fake.com',
       });
       const response = await request(
         'POST',
