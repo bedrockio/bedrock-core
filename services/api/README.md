@@ -16,7 +16,7 @@ See http://localhost:2200/docs for full documentation on this API (requires runn
 - `src/v1` - Routes
 - `src/v1/__openapi__` - OpenAPI descriptions for use in documentation portal
 - `src/middlewares` - Middleware extensions
-- `src/models` - Models for ORM (Mongoose)
+- `src/models` - Mongoose ORM models (code and JSON) - [Models Documentation](./src/models)
 - `src/app.js` - Entrypoint into API (does not bind, so can be used in unit tests)
 - `src/index.js` - Launch script for the API
 - `emails/dist` - Prebuild emails templates (dont modify => modify emails/src and run `yarn emails`)
