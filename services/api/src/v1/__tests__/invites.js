@@ -53,9 +53,6 @@ describe('/1/invites', () => {
       const user = await createUser({
         roles: ['admin'],
       });
-      const user2 = await createUser({
-        email: 'fake@fake.com',
-      });
       const response = await request(
         'POST',
         '/1/invites',

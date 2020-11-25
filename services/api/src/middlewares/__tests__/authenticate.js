@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 const config = require('@bedrockio/config');
 
 describe('authenticate', () => {
-
   it('should trigger an error if jwt token can not be found', async () => {
     const middleware = authenticate();
     let ctx;
@@ -13,7 +12,6 @@ describe('authenticate', () => {
 
     ctx = context({ headers: { authorization: 'not Bearer $token' } });
     await expect(middleware(ctx)).rejects.toHaveProperty('message', 'no jwt token found in request');
-
   });
 
   it('should trigger an error if token is bad', async () => {
@@ -22,7 +20,6 @@ describe('authenticate', () => {
     ctx = context({ headers: { authorization: 'Bearer badToken' } });
     await expect(middleware(ctx)).rejects.toHaveProperty('message', 'bad jwt token');
     ctx = context({});
-
   });
 
   it('should confirm that token has a valid kid', async () => {
@@ -91,7 +88,6 @@ describe('authenticate', () => {
   });
 
   describe('optional authentication', () => {
-
     it('it should authenticate when token exists', async () => {
       const middleware = authenticate({ optional: true });
       const token = jwt.sign({ kid: 'user', attribute: 'value' }, config.get('JWT_SECRET'));
@@ -132,13 +128,10 @@ describe('authenticate', () => {
 
       await expect(required(ctx)).rejects.toHaveProperty('message', 'no jwt token found in request');
     });
-
   });
-
 });
 
 describe('fetchUser', () => {
-
   beforeAll(async () => {
     await setupDb();
   });
@@ -157,7 +150,6 @@ describe('fetchUser', () => {
   });
 
   it('it should not fail without jwt token', async () => {
-    const user = await createUser();
     const ctx = context();
     await fetchUser(ctx, () => {
       expect(ctx.state.authUser).toBeUndefined();
@@ -177,11 +169,10 @@ describe('fetchUser', () => {
         tmp = user;
         count++;
       },
-      jwt: { userId: user.id }
+      jwt: { userId: user.id },
     };
     await fetchUser(ctx, () => {});
     await fetchUser(ctx, () => {});
     expect(count).toBe(1);
   });
-
 });
