@@ -78,18 +78,7 @@ exports.loadModelDir = (dirPath) => {
   const files = fs.readdirSync(dirPath);
   for (const file of files) {
     const basename = path.basename(file, '.json');
-    const basenameJs = path.basename(file, '.js');
-    if (file.match(/\.js$/) && !files.includes(`${basenameJs}.json`)) {
-      console.warn(`Found a model ${basenameJs}.js but no corresponding ${basenameJs}.json`);
-    }
-    if (file.match(/\.js$/)) {
-      const modelName = startCase(basenameJs).replace(/\s/g, '');
-      if (!mongoose.models[modelName]) {
-        const filePath = path.join(dirPath, file);
-        require(filePath);
-      }
-    }
-    if (file.match(/\.json$/) && !files.includes(`${basename}.js`)) {
+    if (file.match(/\.json$/)) {
       const filePath = path.join(dirPath, file);
       const data = fs.readFileSync(filePath);
       try {

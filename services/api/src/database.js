@@ -1,10 +1,7 @@
 const config = require('@bedrockio/config');
 const mongoose = require('mongoose');
-const { loadModelDir } = require('./lib/utils/schema');
 
 mongoose.Promise = Promise;
-
-exports.models = loadModelDir(__dirname + '/models');
 
 exports.init = async () => {
   await mongoose.connect(config.get('MONGO_URI'), {

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { createSchema } = require('../lib/utils/schema');
 const bcrypt = require('bcrypt');
-const definition = require('./user.json');
+const definition = require('./definitions/user.json');
 
 const schema = createSchema(definition.attributes);
 

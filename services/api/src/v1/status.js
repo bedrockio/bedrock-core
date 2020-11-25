@@ -1,5 +1,5 @@
 const Router = require('@koa/router');
-const { models } = require('../database');
+const { User } = require('../models');
 
 const router = new Router();
 
@@ -10,7 +10,7 @@ router
     };
   })
   .get('/mongodb', async (ctx) => {
-    const numItems = await models.User.countDocuments({});
+    const numItems = await User.countDocuments({});
     ctx.body = {
       success: numItems > 0,
     };

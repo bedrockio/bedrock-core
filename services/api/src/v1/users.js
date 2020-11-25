@@ -3,7 +3,7 @@ const Joi = require('@hapi/joi');
 const validate = require('../middlewares/validate');
 const { authenticate, fetchUser, checkUserRole } = require('../middlewares/authenticate');
 const { NotFoundError, BadRequestError } = require('../lib/errors');
-const { models } = require('../database');
+const { User } = require('../models');
 
 const router = new Router();
 
@@ -15,7 +15,7 @@ router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
   .param('userId', async (id, ctx, next) => {
-    const user = await models.User.findById(id);
+    const user = await User.findById(id);
     ctx.state.user = user;
     if (!user) {
       throw new NotFoundError();
@@ -57,11 +57,11 @@ router
     }),
     async (ctx) => {
       const { email } = ctx.request.body;
-      const existingUser = await models.User.findOne({ email, deletedAt: { $exists: false } });
+      const existingUser = await User.findOne({ email, deletedAt: { $exists: false } });
       if (existingUser) {
         throw new BadRequestError('A user with that email already exists');
       }
-      const user = await models.User.create(ctx.request.body);
+      const user = await User.create(ctx.request.body);
 
       ctx.body = {
         data: user,
@@ -106,12 +106,12 @@ router
       if (role) {
         query.roles = { $in: [role] };
       }
-      const data = await models.User.find(query)
+      const data = await User.find(query)
         .sort({ [sort.field]: sort.order === 'desc' ? -1 : 1 })
         .skip(skip)
         .limit(limit);
 
-      const total = await models.User.countDocuments(query);
+      const total = await User.countDocuments(query);
       ctx.body = {
         data,
         meta: {

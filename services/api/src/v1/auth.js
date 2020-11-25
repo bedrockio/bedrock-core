@@ -5,7 +5,7 @@ const { authenticate } = require('../middlewares/authenticate');
 const tokens = require('../lib/tokens');
 const { sendWelcome, sendResetPassword, sendResetPasswordUnknown } = require('../lib/emails');
 const { BadRequestError, UnauthorizedError } = require('../lib/errors');
-const { models } = require('../database');
+const { User, Invite } = require('../models');
 
 const router = new Router();
 
@@ -25,12 +25,12 @@ router
     }),
     async (ctx) => {
       const { email, name } = ctx.request.body;
-      const existingUser = await models.User.findOne({ email, deletedAt: { $exists: false } });
+      const existingUser = await User.findOne({ email, deletedAt: { $exists: false } });
       if (existingUser) {
         throw new BadRequestError('A user with that email already exists');
       }
 
-      const user = await models.User.create({
+      const user = await User.create({
         ...ctx.request.body,
         roles: ['user'],
       });
@@ -53,7 +53,7 @@ router
     }),
     async (ctx) => {
       const { email, password } = ctx.request.body;
-      const user = await models.User.findOne({ email });
+      const user = await User.findOne({ email });
       if (!user) {
         throw new UnauthorizedError('email password combination does not match');
       }
@@ -75,20 +75,20 @@ router
     authenticate({ type: 'invite' }),
     async (ctx) => {
       const { name, password } = ctx.request.body;
-      const invite = await models.Invite.findByIdAndUpdate(ctx.state.jwt.inviteId, {
+      const invite = await Invite.findByIdAndUpdate(ctx.state.jwt.inviteId, {
         $set: { status: 'accepted' },
       });
       if (!invite) {
         return ctx.throw(500, 'Invite could not be found');
       }
-      const existingUser = await models.User.findOne({ email: invite.email });
+      const existingUser = await User.findOne({ email: invite.email });
 
       if (existingUser) {
         ctx.body = { data: { token: tokens.createUserToken(existingUser) } };
         return;
       }
 
-      const user = await models.User.create({
+      const user = await User.create({
         name,
         email: invite.email,
         password,
@@ -106,7 +106,7 @@ router
     }),
     async (ctx) => {
       const { email } = ctx.request.body;
-      const user = await models.User.findOne({ email });
+      const user = await User.findOne({ email });
       if (user) {
         await sendResetPassword({
           to: email,
@@ -130,7 +130,7 @@ router
     authenticate({ type: 'password' }),
     async (ctx) => {
       const { password } = ctx.request.body;
-      const user = await models.User.findById(ctx.state.jwt.userId);
+      const user = await User.findById(ctx.state.jwt.userId);
       if (!user) {
         ctx.throw(500, 'user does not exist');
       }

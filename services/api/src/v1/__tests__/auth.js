@@ -1,8 +1,7 @@
 const jwt = require('jsonwebtoken');
-
 const tokens = require('../../lib/tokens');
-
-const { setupDb, teardownDb, request, createUser, models } = require('../../test-helpers');
+const { setupDb, teardownDb, request, createUser } = require('../../test-helpers');
+const { User } = require('../../models');
 
 beforeAll(async () => {
   await setupDb();
@@ -40,7 +39,7 @@ describe('/1/auth', () => {
       expect(payload).toHaveProperty('kid', 'user');
       expect(payload).toHaveProperty('type', 'user');
 
-      const updatedUser = await models.User.findOne({
+      const updatedUser = await User.findOne({
         email,
       });
 
@@ -90,7 +89,7 @@ describe('/1/auth', () => {
       expect(payload).toHaveProperty('kid', 'user');
       expect(payload).toHaveProperty('type', 'user');
 
-      const updatedUser = await models.User.findById(user._id);
+      const updatedUser = await User.findById(user._id);
       expect(await updatedUser.verifyPassword(password)).toBe(true);
     });
 

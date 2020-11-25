@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const { setupDb, teardownDb, request, createUser, models } = require('../../test-helpers');
+const { setupDb, teardownDb, request, createUser } = require('../../test-helpers');
+const { Shop, Upload } = require('../../models');
 
 beforeAll(async () => {
   await setupDb();
@@ -10,7 +10,7 @@ afterAll(async () => {
 });
 
 const createUpload = () => {
-  return models.Upload.create({
+  return Upload.create({
     filename: 'logo.png',
     rawUrl: 'logo.png',
     hash: 'test',
@@ -45,7 +45,7 @@ describe('/1/shops', () => {
   describe('GET /:shop', () => {
     it('should be able to access shop', async () => {
       const user = await createUser();
-      const shop = await models.Shop.create({
+      const shop = await Shop.create({
         name: 'test 1',
         description: 'Some description',
       });
@@ -58,14 +58,14 @@ describe('/1/shops', () => {
   describe('POST /search', () => {
     it('it should list out shops', async () => {
       const user = await createUser();
-      await models.Shop.deleteMany({});
+      await Shop.deleteMany({});
 
-      const shop1 = await models.Shop.create({
+      const shop1 = await Shop.create({
         name: 'test 1',
         description: 'Some description',
       });
 
-      const shop2 = await models.Shop.create({
+      const shop2 = await Shop.create({
         name: 'test 2',
         description: 'Some description',
       });
@@ -83,7 +83,7 @@ describe('/1/shops', () => {
   describe('PATCH /:shop', () => {
     it('should be able to update shop', async () => {
       const user = await createUser();
-      const shop = await models.Shop.create({
+      const shop = await Shop.create({
         name: 'shop name',
         description: 'Some description',
       });
@@ -91,7 +91,7 @@ describe('/1/shops', () => {
       const response = await request('PATCH', `/1/shops/${shop.id}`, shop.toJSON(), { user });
       expect(response.status).toBe(200);
       expect(response.body.data.name).toBe('new name');
-      const dbShop = await models.Shop.findById(shop.id);
+      const dbShop = await Shop.findById(shop.id);
       expect(dbShop.name).toEqual('new name');
     });
   });
@@ -99,12 +99,12 @@ describe('/1/shops', () => {
   describe('DELETE /:shop', () => {
     it('should be able to delete shop', async () => {
       const user = await createUser();
-      const shop = await models.Shop.create({
+      const shop = await Shop.create({
         name: 'new shop',
       });
       const response = await request('DELETE', `/1/shops/${shop.id}`, {}, { user });
       expect(response.status).toBe(204);
-      const dbShop = await models.Shop.findById(shop.id);
+      const dbShop = await Shop.findById(shop.id);
       expect(dbShop.deletedAt).toBeDefined();
     });
   });

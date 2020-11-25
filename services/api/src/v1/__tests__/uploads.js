@@ -1,4 +1,5 @@
-const { setupDb, teardownDb, request, createUser, models } = require('../../test-helpers');
+const { setupDb, teardownDb, request, createUser } = require('../../test-helpers');
+const { Upload } = require('../../models');
 
 beforeAll(async () => {
   await setupDb();
@@ -9,7 +10,7 @@ afterAll(async () => {
 });
 
 const createUpload = (user = {}) => {
-  return models.Upload.create({
+  return Upload.create({
     filename: 'logo.png',
     rawUrl: 'logo.png',
     hash: 'test',
@@ -69,7 +70,7 @@ describe('/1/uploads', () => {
       const upload = await createUpload(user);
       const response = await request('DELETE', `/1/uploads/${upload.id}`, {}, { user });
       expect(response.status).toBe(204);
-      const dbUpload = await models.Upload.findById(upload.id);
+      const dbUpload = await Upload.findById(upload.id);
       expect(dbUpload.deletedAt).toBeDefined();
     });
 

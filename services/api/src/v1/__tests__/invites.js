@@ -1,4 +1,5 @@
-const { setupDb, teardownDb, request, createUser, models } = require('../../test-helpers');
+const { setupDb, teardownDb, request, createUser } = require('../../test-helpers');
+const { Invite } = require('../../models');
 
 beforeAll(async () => {
   await setupDb();
@@ -15,11 +16,11 @@ describe('/1/invites', () => {
         roles: ['admin'],
       });
 
-      const invite1 = await models.Invite.create({
+      const invite1 = await Invite.create({
         email: 'usera@platform.com',
       });
 
-      const invite2 = await models.Invite.create({
+      const invite2 = await Invite.create({
         email: 'userb@platform.com',
       });
 
@@ -72,7 +73,7 @@ describe('/1/invites', () => {
       const user = await createUser({
         roles: ['admin'],
       });
-      const invite = await models.Invite.create({
+      const invite = await Invite.create({
         email: 'delete@platform.com',
       });
       const response = await request('POST', `/1/invites/${invite.id}/resend`, {}, { user });
@@ -85,12 +86,12 @@ describe('/1/invites', () => {
       const user = await createUser({
         roles: ['admin'],
       });
-      const invite = await models.Invite.create({
+      const invite = await Invite.create({
         email: 'delete@platform.com',
       });
       const response = await request('DELETE', `/1/invites/${invite.id}`, {}, { user });
       expect(response.status).toBe(204);
-      const dbInvite = await models.Invite.findById(invite.id);
+      const dbInvite = await Invite.findById(invite.id);
       expect(dbInvite.deletedAt).toBeDefined();
     });
   });
