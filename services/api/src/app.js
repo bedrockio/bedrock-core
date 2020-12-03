@@ -43,8 +43,10 @@ const router = new Router();
 app.router = router;
 router.get('/', (ctx) => {
   ctx.body = {
+    environment: NODE_ENV,
     version,
     openapiPath: '/openapi.json',
+    servedAt: new Date(),
   };
 });
 
