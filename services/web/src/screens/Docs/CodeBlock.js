@@ -3,14 +3,16 @@ import PropTypes from 'prop-types';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
+atomDark['pre[class*="language-"]'].marginBottom = '1em';
+
 class CodeBlock extends PureComponent {
   static propTypes = {
     value: PropTypes.string.isRequired,
-    language: PropTypes.string
+    language: PropTypes.string,
   };
 
   static defaultProps = {
-    language: null
+    language: null,
   };
 
   render() {

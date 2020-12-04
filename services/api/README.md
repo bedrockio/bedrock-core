@@ -8,7 +8,7 @@ See http://localhost:2200/docs for full documentation on this API (requires runn
 
 ## Directory Structure
 
-- `env.conf` - Default configuration values (override via environment)
+- `.env` - Default configuration values (override via environment)
 - `package.json` - Configure dependencies
 - `src/*/__tests__` - Unit tests
 - `src/index.js` - Entrypoint for running and binding API
@@ -16,7 +16,7 @@ See http://localhost:2200/docs for full documentation on this API (requires runn
 - `src/v1` - Routes
 - `src/v1/__openapi__` - OpenAPI descriptions for use in documentation portal
 - `src/middlewares` - Middleware extensions
-- `src/models` - Models for ORM (Mongoose)
+- `src/models` - Mongoose ORM models (code and JSON) - [Models Documentation](./src/models)
 - `src/app.js` - Entrypoint into API (does not bind, so can be used in unit tests)
 - `src/index.js` - Launch script for the API
 - `emails/dist` - Prebuild emails templates (dont modify => modify emails/src and run `yarn emails`)
@@ -52,7 +52,7 @@ yarn start
 
 ## Configuration
 
-All configuration is done using environment variables. The default values in `env.conf` can be overwritten using environment variables.
+All configuration is done using environment variables. The default values in `.env` can be overwritten using environment variables.
 
 - `BIND_HOST` - Host to bind to, defaults to `"0.0.0.0"`
 - `BIND_PORT` - Port to bind to, defaults to `2300`

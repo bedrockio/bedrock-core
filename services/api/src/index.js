@@ -1,4 +1,4 @@
-const database = require('./database');
+const { init } = require('./database');
 const setupFixtures = require('../scripts/setup-fixtures');
 const app = require('./app');
 
@@ -9,11 +9,11 @@ if (process.env.GCLOUD_PROJECT) {
 
 const NODE_ENV = process.env.NODE_ENV;
 
-const PORT = config.get('BIND_PORT');
+const PORT = config.get('BIND_PORT', 'number');
 const HOST = config.get('BIND_HOST');
 
 module.exports = (async () => {
-  await database();
+  await init();
   await setupFixtures();
 
   app.listen(PORT, HOST, () => {

@@ -1,39 +1,38 @@
-# Bedrock Deployment
+# Deployment
 
-- [Bedrock Deployment](#bedrock-deployment)
-  - [Setup](#setup)
-    - [Dependencies](#dependencies)
-    - [Directory Structure](#directory-structure)
-    - [Naming convention](#naming-convention)
-    - [Configuration](#configuration)
-  - [Existing Environments](#existing-environments)
-    - [Authorization](#authorization)
-  - [Provisioning](#provisioning)
-    - [Creating a new environment](#creating-a-new-environment)
-    - [Provision Script](#provision-script)
-    - [Directory Structure](#directory-structure-1)
-    - [Provision GKE Cluster](#provision-gke-cluster)
-    - [Create load balancer IP addresses](#create-load-balancer-ip-addresses)
-    - [Deploy all services and pods](#deploy-all-services-and-pods)
-    - [Scaling Up or Down](#scaling-up-or-down)
-    - [Destroying Environment Infrastructure](#destroying-environment-infrastructure)
-  - [Deploying](#deploying)
-    - [Rollout Deploy](#rollout-deploy)
-    - [Feature Branches](#feature-branches)
-    - [Deploy info](#deploy-info)
-    - [Building Docker Containers](#building-docker-containers)
-    - [Pushing Docker Containers](#pushing-docker-containers)
-    - [Check cluster status](#check-cluster-status)
-    - [Getting shell access](#getting-shell-access)
-  - [Disaster Recovery](#disaster-recovery)
-      - [Scenario A: Master Database Loss or Corruption](#scenario-a-master-database-loss-or-corruption)
-      - [Scenario B: Bucket Storage Loss or Corruption](#scenario-b-bucket-storage-loss-or-corruption)
-      - [Scenario C: Deletion of Google Cloud Project](#scenario-c-deletion-of-google-cloud-project)
-  - [Other](#other)
-    - [Configuring Backups](#configuring-backups)
-    - [Backup Monitoring System](#backup-monitoring-system)
-    - [HTTP Basic Auth](#http-basic-auth)
-    - [Secrets](#secrets)
+- [Setup](#setup)
+  - [Dependencies](#dependencies)
+  - [Directory Structure](#directory-structure)
+  - [Naming convention](#naming-convention)
+  - [Configuration](#configuration)
+- [Existing Environments](#existing-environments)
+  - [Authorization](#authorization)
+- [Provisioning](#provisioning)
+  - [Creating a new environment](#creating-a-new-environment)
+  - [Provision Script](#provision-script)
+  - [Directory Structure](#directory-structure-1)
+  - [Provision GKE Cluster](#provision-gke-cluster)
+  - [Create load balancer IP addresses](#create-load-balancer-ip-addresses)
+  - [Deploy all services and pods](#deploy-all-services-and-pods)
+  - [Scaling Up or Down](#scaling-up-or-down)
+  - [Destroying Environment Infrastructure](#destroying-environment-infrastructure)
+- [Deploying](#deploying)
+  - [Rollout Deploy](#rollout-deploy)
+  - [Feature Branches](#feature-branches)
+  - [Deploy info](#deploy-info)
+  - [Building Docker Containers](#building-docker-containers)
+  - [Pushing Docker Containers](#pushing-docker-containers)
+  - [Check cluster status](#check-cluster-status)
+  - [Getting shell access](#getting-shell-access)
+- [Disaster Recovery](#disaster-recovery)
+  - [Scenario A: Master Database Loss or Corruption](#scenario-a-master-database-loss-or-corruption)
+  - [Scenario B: Bucket Storage Loss or Corruption](#scenario-b-bucket-storage-loss-or-corruption)
+  - [Scenario C: Deletion of Google Cloud Project](#scenario-c-deletion-of-google-cloud-project)
+- [Other](#other)
+  - [Configuring Backups](#configuring-backups)
+  - [Backup Monitoring System](#backup-monitoring-system)
+  - [HTTP Basic Auth](#http-basic-auth)
+  - [Secrets](#secrets)
 
 ## Setup
 
@@ -54,7 +53,7 @@ deployment/
 │   │   │   ├── mongo-deployment.yml
 │   │   │   ├── mongo-service.yml
 │   │   │   └── etc...
-│   │   ├── env.conf # Staging environment configuration
+│   │   ├── .env # Staging environment configuration
 │   │   ├── provisioning
 │   │   │   ├── backend.tf # defines Google bucket to keep state
 │   │   │   ├── main.tf # Main rersource definitions (cluster, node_pool, buckets)
@@ -92,7 +91,7 @@ deployment/
 
 ### Configuration
 
-Each environment can be configured in `environments/<environment>/env.conf`:
+Each environment can be configured in `environments/<environment>/.env`:
 
 - `GCLOUD_ENV_NAME` - Name of the environment, e.g. staging
 - `GCLOUD_BUCKET_PREFIX` - Bucket prefix used for GCS bucket creation
@@ -104,7 +103,7 @@ Each environment can be configured in `environments/<environment>/env.conf`:
 
 ### Authorization
 
-- Use `gcloud config configurations create bedrock` and authorize Google Cloud `gcloud auth login`
+- Use `gcloud config configurations create [NAME]` and authorize Google Cloud `gcloud auth login`
 - Use `./deployment/scripts/authorize staging` to get cluster credentials
 - If you've used `gcloud auth` with another account, run `gcloud config set account <EMAIL>`, then re-run `./deployment/scripts/authorize`.
 
@@ -139,7 +138,7 @@ gcloud projects create bedrock-staging --name="Bedrock Staging"
 gcloud config set project seltzer-box-staging
 ```
 
-Configure: `environments/<environment>/env.conf`.
+Configure: `environments/<environment>/.env`.
 
 ### Provision Script
 

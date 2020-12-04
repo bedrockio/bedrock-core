@@ -1,7 +1,6 @@
-const Shop = require('../../models/shop');
 const { setupDb, teardownDb, request, createUser } = require('../../test-helpers');
 // --- Generator: requires
-const Upload = require('../../models/upload');
+const { Shop, Upload } = require('../../models');
 // --- Generator: end
 
 beforeAll(async () => {

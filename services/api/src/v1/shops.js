@@ -3,7 +3,7 @@ const Joi = require('@hapi/joi');
 const validate = require('../middlewares/validate');
 const { authenticate, fetchUser } = require('../middlewares/authenticate');
 const { NotFoundError } = require('../lib/errors');
-const Shop = require('../models/shop');
+const { Shop } = require('../models');
 
 const router = new Router();
 
@@ -117,7 +117,7 @@ router
         .skip(skip)
         .limit(limit);
 
-      const total = await await Shop.countDocuments(query);
+      const total = await Shop.countDocuments(query);
       ctx.body = {
         data,
         meta: {

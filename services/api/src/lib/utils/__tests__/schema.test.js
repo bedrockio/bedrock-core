@@ -1,4 +1,4 @@
-const { createSchema } = require('../schema');
+const { createSchema, loadModel, loadModelDir } = require('../schema');
 const mongoose = require('mongoose');
 const { setupDb, teardownDb } = require('../../../test-helpers');
 
@@ -10,21 +10,20 @@ afterAll(async () => {
   await teardownDb();
 });
 
-
 let counter = 0;
 
-function createModel(schema) {
+function createTestModel(schema) {
   return mongoose.model(`SchemaTestModel${counter++}`, schema);
 }
 
 describe('createSchema', () => {
-
   describe('basic functionality', () => {
-
     it('should be able to create basic schema', async () => {
-      const User = createModel(createSchema({
-        name: { type: String, validate: /[a-z]/ }
-      }));
+      const User = createTestModel(
+        createSchema({
+          name: { type: String, validate: /[a-z]/ },
+        })
+      );
       const user = new User({ name: 'foo' });
 
       expect(user.name).toBe('foo');
@@ -33,14 +32,12 @@ describe('createSchema', () => {
         user.name = 'FOO';
         await user.save();
       }).rejects.toThrow();
-
     });
   });
 
   describe('defaults', () => {
-
     it('should add timestamps by default', async () => {
-      const User = createModel(createSchema());
+      const User = createTestModel(createSchema());
       const user = new User();
       await user.save();
       expect(user.createdAt).toBeInstanceOf(Date);
@@ -48,37 +45,37 @@ describe('createSchema', () => {
     });
 
     it('should add deletedAt by default', async () => {
-      const User = createModel(createSchema());
+      const User = createTestModel(createSchema());
       const user = new User();
       await user.save();
       await user.delete();
       expect(user.deletedAt).toBeInstanceOf(Date);
     });
-
   });
 
   describe('serialization', () => {
-
     it('should expose id', () => {
-      const User = createModel(createSchema());
+      const User = createTestModel(createSchema());
       const user = new User();
-      const data = JSON.parse(JSON.stringify(user));
+      const data = user.toObject();
       expect(data.id).toBe(user.id);
     });
 
     it('should not expose _id or __v', () => {
-      const User = createModel(createSchema());
+      const User = createTestModel(createSchema());
       const user = new User();
-      const data = JSON.parse(JSON.stringify(user));
+      const data = user.toObject();
       expect(data._id).toBeUndefined();
       expect(data.__v).toBeUndefined();
     });
 
     it('should not expose fields with underscore or marked private', () => {
-      const User = createModel(createSchema({
-        _private: String,
-        password: { type: String, access: 'private' },
-      }));
+      const User = createTestModel(
+        createSchema({
+          _private: String,
+          password: { type: String, access: 'private' },
+        })
+      );
       const user = new User();
       user._private = 'private';
       user.password = 'fake password';
@@ -86,29 +83,33 @@ describe('createSchema', () => {
       expect(user._private).toBe('private');
       expect(user.password).toBe('fake password');
 
-      const data = JSON.parse(JSON.stringify(user));
+      const data = user.toObject();
 
       expect(data._private).toBeUndefined();
       expect(data.password).toBeUndefined();
     });
 
     it('should not expose array fields marked private', () => {
-      const User = createModel(createSchema({
-        tags: [{ type: String, access: 'private' }],
-      }));
+      const User = createTestModel(
+        createSchema({
+          tags: [{ type: String, access: 'private' }],
+        })
+      );
       const user = new User();
       user.tags = ['one', 'two'];
 
       expect(user.tags).toBeInstanceOf(Array);
 
-      const data = JSON.parse(JSON.stringify(user));
+      const data = user.toObject();
       expect(data.tags).toBeUndefined();
     });
 
     it('should serialize identically with toObject', () => {
-      const User = createModel(createSchema({
-        secret: { type: String, access: 'private' },
-      }));
+      const User = createTestModel(
+        createSchema({
+          secret: { type: String, access: 'private' },
+        })
+      );
       const user = new User({
         secret: 'foo',
       });
@@ -120,9 +121,11 @@ describe('createSchema', () => {
     });
 
     it('should allow access to private fields with options on toJSON', () => {
-      const User = createModel(createSchema({
-        secret: { type: String, access: 'private' },
-      }));
+      const User = createTestModel(
+        createSchema({
+          secret: { type: String, access: 'private' },
+        })
+      );
       const user = new User({
         secret: 'foo',
       });
@@ -136,9 +139,11 @@ describe('createSchema', () => {
     });
 
     it('should allow access to private fields with options on toObject', () => {
-      const User = createModel(createSchema({
-        secret: { type: String, access: 'private' },
-      }));
+      const User = createTestModel(
+        createSchema({
+          secret: { type: String, access: 'private' },
+        })
+      );
       const user = new User({
         secret: 'foo',
       });
@@ -150,17 +155,17 @@ describe('createSchema', () => {
       expect(data.__v).toBeUndefined();
       expect(data.secret).toBe('foo');
     });
-
   });
 
   describe('assign', () => {
-
     it('should allow assignment of fields', async () => {
-      const User = createModel(createSchema({
-        name: { type: String },
-        fakeId: { type: Number },
-        fakeDate: { type: Date },
-      }));
+      const User = createTestModel(
+        createSchema({
+          name: { type: String },
+          fakeId: { type: Number },
+          fakeDate: { type: Date },
+        })
+      );
       const user = new User();
       const now = Date.now();
       user.assign({
@@ -174,7 +179,7 @@ describe('createSchema', () => {
     });
 
     it('should not allow assignment of reserved fields', async () => {
-      const User = createModel(createSchema());
+      const User = createTestModel(createSchema());
       const user = await User.create({});
       const now = Date.now();
       user.assign({
@@ -191,9 +196,11 @@ describe('createSchema', () => {
     });
 
     it('should not allow assignment of private fields', async () => {
-      const User = createModel(createSchema({
-        password: { type: String, access: 'private' },
-      }));
+      const User = createTestModel(
+        createSchema({
+          password: { type: String, access: 'private' },
+        })
+      );
       const user = new User();
       user.assign({
         password: 'fake password',
@@ -202,25 +209,84 @@ describe('createSchema', () => {
       expect(user.password).not.toBe('fake password');
     });
 
+    it('should delete falsy values for reference fields', async () => {
+      const User = createTestModel(
+        createSchema({
+          password: { type: String, access: 'private' },
+        })
+      );
+      const Shop = createTestModel(
+        createSchema({
+          user: {
+            ref: User.modelName,
+            type: mongoose.Schema.Types.ObjectId,
+          },
+        })
+      );
+      const shop = new Shop({
+        user: '5f63b1b88f09266f237e9d29',
+      });
+      await shop.save();
+
+      let data = JSON.parse(JSON.stringify(shop));
+      expect(data.user).toBe('5f63b1b88f09266f237e9d29');
+      shop.assign({
+        user: '',
+      });
+      await shop.save();
+      data = JSON.parse(JSON.stringify(shop));
+      expect('user' in data).toBe(false);
+    });
+
+    it('should still allow assignment of empty arrays for multi-reference fields', async () => {
+      const User = createTestModel(
+        createSchema({
+          password: { type: String, access: 'private' },
+        })
+      );
+      const Shop = createTestModel(
+        createSchema({
+          users: [
+            {
+              ref: User.modelName,
+              type: mongoose.Schema.Types.ObjectId,
+            },
+          ],
+        })
+      );
+      const shop = new Shop({
+        users: ['5f63b1b88f09266f237e9d29', '5f63b1b88f09266f237e9d29'],
+      });
+      await shop.save();
+
+      let data = JSON.parse(JSON.stringify(shop));
+      expect(data.users).toEqual(['5f63b1b88f09266f237e9d29', '5f63b1b88f09266f237e9d29']);
+      shop.assign({
+        users: [],
+      });
+      await shop.save();
+      data = JSON.parse(JSON.stringify(shop));
+      expect(data.users).toEqual([]);
+    });
   });
 
   describe('autopopulate', () => {
-
     it('should not expose private fields when using with autopopulate', async () => {
-      const User = createModel(createSchema({
-        password: { type: String, access: 'private' },
-      }));
-
+      const User = createTestModel(
+        createSchema({
+          password: { type: String, access: 'private' },
+        })
+      );
       const shopSchema = createSchema({
         user: {
           ref: User.modelName,
           type: mongoose.Schema.Types.ObjectId,
           autopopulate: true,
-        }
+        },
       });
 
       shopSchema.plugin(require('mongoose-autopopulate'));
-      const Shop = createModel(shopSchema);
+      const Shop = createTestModel(shopSchema);
 
       const user = new User();
       user.password = 'fake password';
@@ -241,23 +307,25 @@ describe('createSchema', () => {
     });
 
     it('should not allow access to private autopoulated fields by default', async () => {
-      const User = createModel(createSchema({
-        secret: { type: String, access: 'private' },
-      }));
+      const User = createTestModel(
+        createSchema({
+          secret: { type: String, access: 'private' },
+        })
+      );
 
       const shopSchema = createSchema({
         user: {
           ref: User.modelName,
           type: mongoose.Schema.Types.ObjectId,
           autopopulate: true,
-        }
+        },
       });
 
       shopSchema.plugin(require('mongoose-autopopulate'));
-      const Shop = createModel(shopSchema);
+      const Shop = createTestModel(shopSchema);
 
       const user = new User({
-        secret: 'foo'
+        secret: 'foo',
       });
       await user.save();
 
@@ -276,23 +344,25 @@ describe('createSchema', () => {
     });
 
     it('should allow access to private autopoulated fields with options', async () => {
-      const User = createModel(createSchema({
-        secret: { type: String, access: 'private' },
-      }));
+      const User = createTestModel(
+        createSchema({
+          secret: { type: String, access: 'private' },
+        })
+      );
 
       const shopSchema = createSchema({
         user: {
           ref: User.modelName,
           type: mongoose.Schema.Types.ObjectId,
           autopopulate: true,
-        }
+        },
       });
 
       shopSchema.plugin(require('mongoose-autopopulate'));
-      const Shop = createModel(shopSchema);
+      const Shop = createTestModel(shopSchema);
 
       const user = new User({
-        secret: 'foo'
+        secret: 'foo',
       });
       await user.save();
 
@@ -303,7 +373,7 @@ describe('createSchema', () => {
       shop = await Shop.findById(shop.id);
 
       const data = shop.toObject({
-        private: true
+        private: true,
       });
 
       expect(data.user.id).toBe(user.id);
@@ -311,5 +381,47 @@ describe('createSchema', () => {
       expect(data.user.__v).toBeUndefined();
       expect(data.user.secret).toBe('foo');
     });
+  });
+});
+
+describe('loadModel', () => {
+  it('should be able to create basic model', async () => {
+    expect(!!mongoose.models.Box).toBe(false);
+    const Box = loadModel(
+      {
+        attributes: {
+          name: { type: String, validate: /[a-z]/ },
+        },
+      },
+      'Box'
+    );
+    expect(!!mongoose.models.Box).toBe(true);
+    const box = new Box({ name: 'foo' });
+
+    expect(box.name).toBe('foo');
+
+    await expect(async () => {
+      box.name = 'FOO';
+      await box.save();
+    }).rejects.toThrow();
+  });
+});
+
+describe('loadModelDir', () => {
+  it('should be able to create models from a folder', async () => {
+    expect(!!mongoose.models.SpecialCategory).toBe(false);
+    expect(!!mongoose.models.CustomModel).toBe(false);
+    loadModelDir(__dirname + '/fixtures');
+    expect(!!mongoose.models.SpecialCategory).toBe(true);
+    //expect(!!mongoose.models.CustomModel).toBe(false);
+    const { SpecialCategory } = mongoose.models;
+    await SpecialCategory.deleteMany({});
+    const someRef = mongoose.Types.ObjectId();
+    const category = new SpecialCategory({ name: 'foo', someRef, count: 3 });
+    await category.save();
+    const foundCategory = await SpecialCategory.findOne();
+    expect(foundCategory.name).toBe('foo');
+    expect(foundCategory.someRef.toString()).toBe(someRef.toString());
+    expect(foundCategory.count).toBe(3);
   });
 });

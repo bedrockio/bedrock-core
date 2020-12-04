@@ -116,24 +116,21 @@ _() {
 
   replace ./$kebab/docker-compose.yml
 
-  replace ./$kebab/services/api/env.conf
+  replace ./$kebab/services/api/.env
   replace ./$kebab/services/api/package.json
   replace ./$kebab/services/api/README.md
-  replace ./$kebab/services/web/env.conf
+  replace ./$kebab/services/web/.env
   replace ./$kebab/services/web/package.json
   replace ./$kebab/services/web/README.md
   replace ./$kebab/services/web/src/utils/README.md
   replace ./$kebab/services/web/src/components/README.md
-  replace ./$kebab/services/api-docs/package.json
 
   replace ./$kebab/deployment/README.md
   replace ./$kebab/README.md
 
-  replace ./$kebab/deployment/environments/staging/env.conf
+  replace ./$kebab/deployment/environments/staging/.env
   replace ./$kebab/deployment/environments/staging/services/api-cli-deployment.yml
   replace ./$kebab/deployment/environments/staging/services/api-deployment.yml
-  replace ./$kebab/deployment/environments/staging/services/api-docs-deployment.yml
-  replace ./$kebab/deployment/environments/staging/services/api-docs-service.yml
   replace ./$kebab/deployment/environments/staging/services/api-jobs-deployment.yml
   replace ./$kebab/deployment/environments/staging/services/api-service.yml
   replace ./$kebab/deployment/environments/staging/services/web-deployment.yml
@@ -146,11 +143,9 @@ _() {
   replace ./$kebab/deployment/environments/staging/data/mongo-deployment.yml
   replace ./$kebab/deployment/environments/staging/data/mongo-service.yml
 
-  replace ./$kebab/deployment/environments/production/env.conf
+  replace ./$kebab/deployment/environments/production/.env
   replace ./$kebab/deployment/environments/production/services/api-cli-deployment.yml
   replace ./$kebab/deployment/environments/production/services/api-deployment.yml
-  replace ./$kebab/deployment/environments/production/services/api-docs-deployment.yml
-  replace ./$kebab/deployment/environments/production/services/api-docs-service.yml
   replace ./$kebab/deployment/environments/production/services/api-jobs-deployment.yml
   replace ./$kebab/deployment/environments/production/services/api-service.yml
   replace ./$kebab/deployment/environments/production/services/web-deployment.yml

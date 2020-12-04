@@ -1,6 +1,6 @@
-# Bedrock Web Components
+# Web Components
 
-Bedrock has a number of helper components designed to simplify and quickly iterate on layouts.
+Helper components designed to simplify and quickly iterate on layouts.
 
 - [Search Provider](#search-provider)
 - [Filters](#filters)

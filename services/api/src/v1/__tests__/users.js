@@ -1,5 +1,5 @@
-const User = require('../../models/user');
 const { setupDb, teardownDb, request, createUser } = require('../../test-helpers');
+const { User } = require('../../models');
 
 jest.mock('../../lib/emails');
 

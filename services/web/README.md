@@ -10,7 +10,7 @@
 
 - `package.json` - Configure dependencies
 - `webpack.config.js` - Bundling and build configuration
-- `env.conf` - Enviroment variables
+- `.env` - Enviroment variables
 - `src/components` - Home of reuseable components
 - `src/utils` - Home of specific JS helper utilities
 - `src/index.html` - Main entrypoint into App UI (Webpack injected)
@@ -44,7 +44,7 @@ UI is running at [http://localhost:2200/](http://localhost:2200/)
 
 ## Configuration
 
-All configuration is done using environment variables. The default values in `env.conf` can be overwritten using environment variables.
+All configuration is done using environment variables. The default values in `.env` can be overwritten using environment variables.
 
 - `NODE_ENV` - Node environment `development`
 - `BIND_HOST` - Host to bind to, defaults to `"0.0.0.0"`

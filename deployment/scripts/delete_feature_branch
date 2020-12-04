@@ -21,7 +21,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-export $(grep -v '^#' deployment/environments/$ENVIRONMENT/env.conf | xargs)
+export $(grep -v '^#' deployment/environments/$ENVIRONMENT/.env | xargs)
 
 kubectl delete service/$SERVICE
 kubectl delete deployment/$SERVICE-deployment

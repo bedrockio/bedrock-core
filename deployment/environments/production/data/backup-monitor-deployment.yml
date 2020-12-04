@@ -1,13 +1,16 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backup-monitor-deployment
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: backup-monitor
   template:
     metadata:
       labels:
-        name: backup-monitor
+        app: backup-monitor
     spec:
       containers:
         - image: dominiek/backup-monitor

@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
-const { omitBy } = require('lodash');
+const fs = require('fs');
+const path = require('path');
+const { startCase, omitBy } = require('lodash');
+const { ObjectId } = mongoose.Schema.Types;
 
 const RESERVED_FIELDS = ['id', 'createdAt', 'updatedAt', 'deletedAt'];
 
@@ -15,7 +18,7 @@ const serializeOptions = {
         delete ret[key];
       }
     }
-  }
+  },
 };
 
 exports.createSchema = (definition, options = {}) => {
@@ -36,24 +39,69 @@ exports.createSchema = (definition, options = {}) => {
     }
   );
   schema.methods.assign = function assign(fields) {
-    Object.assign(this, omitBy(fields, (value, key) => {
+    fields = omitBy(fields, (value, key) => {
       return isDisallowedField(this, key) || RESERVED_FIELDS.includes(key);
-    }));
+    });
+    for (let [key, value] of Object.entries(fields)) {
+      if (!value && isReferenceField(this, key)) {
+        value = undefined;
+      }
+      this[key] = value;
+    }
   };
-  schema.methods.delete = function() {
+  schema.methods.delete = function () {
     this.deletedAt = new Date();
     return this.save();
   };
   return schema;
 };
 
+function getField(doc, key) {
+  const field = doc.schema.obj[key];
+  return Array.isArray(field) ? field[0] : field;
+}
+
+function isReferenceField(doc, key) {
+  const field = getField(doc, key);
+  return field.type === ObjectId;
+}
+
 function isDisallowedField(doc, key, allowPrivate = false) {
-  let field = doc.schema.obj[key];
-  if (Array.isArray(field)) {
-    field = field[0];
-  }
+  const field = getField(doc, key);
   if (field && field.access === 'private') {
     return !allowPrivate;
   }
   return false;
 }
+
+exports.loadModel = (definition, name) => {
+  const { attributes } = definition;
+  if (!attributes) {
+    throw new Error(`Invalid model definition for ${name}, need attributes`);
+  }
+  const schema = exports.createSchema(attributes);
+  schema.plugin(require('mongoose-autopopulate'));
+  return mongoose.model(name, schema);
+};
+
+exports.loadModelDir = (dirPath) => {
+  const files = fs.readdirSync(dirPath);
+  for (const file of files) {
+    const basename = path.basename(file, '.json');
+    if (file.match(/\.json$/)) {
+      const filePath = path.join(dirPath, file);
+      const data = fs.readFileSync(filePath);
+      try {
+        const definition = JSON.parse(data);
+        const modelName = definition.modelName || startCase(basename).replace(/\s/g, '');
+        if (!mongoose.models[modelName]) {
+          exports.loadModel(definition, modelName);
+        }
+      } catch (error) {
+        console.error(`Could not load model definition: ${filePath}`);
+        console.error(error);
+      }
+    }
+  }
+  return mongoose.models;
+};

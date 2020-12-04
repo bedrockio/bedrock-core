@@ -15,7 +15,7 @@ services:
       - ./services/api/emails:/service/emails
       - ./services/api/fixtures:/service/fixtures
       - ./services/api/scripts:/service/scripts
-      - ./services/api/env.conf:/service/env.conf
+      - ./services/api/.env:/service/.env
       - ./services/api/openapi:/service/openapi
     ports:
       - "2300:2300"
@@ -29,22 +29,13 @@ services:
     build:
       context: ./services/web
       dockerfile: Dockerfile
+      args:
+        NODE_ENV: development
     volumes:
       - ./services/web/src:/service/src
     ports:
       - "2200:2200"
       - "34001:34001"
-    depends_on:
-      - api
-
-  api-docs:
-    build:
-      context: ./services/api-docs
-      dockerfile: Dockerfile
-    ports:
-      - "2400:2400"
-    links:
-      - api
     depends_on:
       - api
 

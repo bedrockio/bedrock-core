@@ -1,5 +1,5 @@
 ## These variables are set in the ./deployment/scripts/provision script with env values
-## from ./deployment/environments/<environment>/env.conf
+## from ./deployment/environments/<environment>/.env
 
 variable "project" {
   default = "bedrock-foundation"

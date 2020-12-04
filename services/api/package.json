@@ -19,7 +19,7 @@
     "generate": "cd ../../generator && yarn install && yarn generate"
   },
   "dependencies": {
-    "@bedrockio/config": "^1.0.2",
+    "@bedrockio/config": "^2.0.3",
     "@google-cloud/storage": "^5.1.2",
     "@google-cloud/trace-agent": "^5.1.0",
     "@hapi/joi": "^17.1.1",
@@ -45,6 +45,7 @@
     "eslint-plugin-jest": "^23.19.0",
     "jest": "^26.1.0",
     "juice": "^7.0.0",
+    "mongodb": "^3.6.2",
     "nodemon": "^2.0.4",
     "pre-commit": "^1.2.2",
     "prettier": "^2.0.5",
@@ -57,7 +58,7 @@
     ]
   },
   "volta": {
-    "node": "12.18.3",
-    "yarn": "1.22.4"
+    "node": "14.15.1",
+    "yarn": "1.22.5"
   }
 }

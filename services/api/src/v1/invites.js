@@ -3,8 +3,7 @@ const Joi = require('@hapi/joi');
 const validate = require('../middlewares/validate');
 const { authenticate, fetchUser, checkUserRole } = require('../middlewares/authenticate');
 const { NotFoundError, BadRequestError, GoneError } = require('../lib/errors');
-const Invite = require('../models/invite');
-const User = require('../models/user');
+const { Invite, User } = require('../models');
 
 const { sendInvite } = require('../lib/emails');
 const { createUserTemporaryToken } = require('../lib/tokens');
@@ -54,7 +53,7 @@ router
         .skip(skip)
         .limit(limit);
 
-      const total = await await Invite.countDocuments(query);
+      const total = await Invite.countDocuments(query);
 
       ctx.body = {
         data: invites,

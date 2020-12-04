@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const config = require('@bedrockio/config');
-const User = require('../models/user');
+const mongoose = require('mongoose');
 
 const secrets = {
   user: config.get('JWT_SECRET'),
@@ -19,7 +19,7 @@ function getToken(ctx) {
 function validateToken(ctx, token, type) {
   // ignoring signature for the moment
   const decoded = jwt.decode(token, { complete: true });
-  if (decoded === null) return ctx.throw(400, 'bad jwt token');
+  if (decoded === null) return ctx.throw(401, 'bad jwt token');
   const { payload } = decoded;
   const keyId = payload.kid;
   if (!['user'].includes(keyId)) {
@@ -47,7 +47,7 @@ exports.authenticate = ({ type, optional = false } = {}) => {
       if (token) {
         ctx.state.jwt = validateToken(ctx, token, type);
       } else if (!optional) {
-        ctx.throw(400, 'no jwt token found in request');
+        ctx.throw(401, 'no jwt token found in request');
       }
     }
     return next();
@@ -56,8 +56,9 @@ exports.authenticate = ({ type, optional = false } = {}) => {
 
 exports.fetchUser = async (ctx, next) => {
   if (!ctx.state.authUser && ctx.state.jwt) {
+    const { User } = mongoose.models;
     ctx.state.authUser = await User.findById(ctx.state.jwt.userId);
-    if (!ctx.state.authUser) ctx.throw(400, 'user associated to token could not not be found');
+    if (!ctx.state.authUser) ctx.throw(401, 'user associated to token could not not be found');
   }
   await next();
 };

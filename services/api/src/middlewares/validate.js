@@ -1,11 +1,10 @@
-
 function validate(schemas, options) {
   const defaultOptions = {
     allowUnknown: false,
-    abortEarly: false
+    abortEarly: false,
   };
 
- const promise = async function Validate(ctx, next) {
+  const promise = async function Validate(ctx, next) {
     Object.keys(schemas).forEach((key) => {
       const schema = schemas[key];
 
@@ -15,7 +14,7 @@ function validate(schemas, options) {
       if (!requestItem) {
         const error = new Error(`Specified schema key '${key}' does not exist in 'request' object`);
         error.meta = {
-          request: ctx.request
+          request: ctx.request,
         };
         ctx.throw(500, error);
       }
@@ -30,8 +29,8 @@ function validate(schemas, options) {
             meta: {
               parsedValue: value[detail.path],
               // Explicitly show it was not provided
-              providedValue: requestItem[detail.path] || null
-            }
+              providedValue: requestItem[detail.path] || null,
+            },
           };
         });
         ctx.throw(400, error);
@@ -63,7 +62,7 @@ function validate(schemas, options) {
               return value;
             }
             return this._querycache && this._querycache[this.querystring] ? value : originalQueryGetter;
-          }
+          },
         };
         Object.getOwnPropertyNames(src).forEach((name) => {
           const descriptor = Object.getOwnPropertyDescriptor(src, name);
@@ -76,7 +75,7 @@ function validate(schemas, options) {
     return next();
   };
 
-  promise.schemas = schemas
+  promise.schemas = schemas;
   return promise;
 }
 
