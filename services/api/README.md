@@ -50,6 +50,8 @@ Code reload using nodemon:
 yarn start
 ```
 
+This command will automatically populate MongoDB fixtures when and empty DB is found.
+
 ## Configuration
 
 All configuration is done using environment variables. The default values in `.env` can be overwritten using environment variables.
@@ -84,6 +86,16 @@ The API provides a simple Docker container for running Cronjobs. The Cron schedu
 ```
 docker build -t bedrock-api-jobs -f Dockerfile.jobs .
 ```
+
+## Reloading DB Fixtures
+
+DB fixtures are loaded automatically in the dev environment. However, using this command you can force reload the DB:
+
+```
+./scripts/fixtures/reload
+```
+
+_Note: In the staging environment this script can be run by obtaining a shell into the API CLI pod (See Deployment)_
 
 ## Updating E-Mail Templates
 

@@ -24,6 +24,7 @@
   - [Pushing Docker Containers](#pushing-docker-containers)
   - [Check cluster status](#check-cluster-status)
   - [Getting shell access](#getting-shell-access)
+  - [Reloading DB fixtures](#reloading-db-fixtures)
 - [Disaster Recovery](#disaster-recovery)
   - [Scenario A: Master Database Loss or Corruption](#scenario-a-master-database-loss-or-corruption)
   - [Scenario B: Bucket Storage Loss or Corruption](#scenario-b-bucket-storage-loss-or-corruption)
@@ -306,6 +307,16 @@ kubectl exec -it <CLI-POD-ID> /bin/bash
 ```
 
 Note that the `api` and `web` services can be reached as hostnames: `curl http://api`
+
+### Reloading DB fixtures
+
+Use the following command in the API CLI shell to reload the DB fixtures:
+
+```bash
+./scripts/fixtures/reload
+```
+
+Note: Fixtures are loaded automatically when the API CLI pod is started if no data is found in the DB
 
 ## Disaster Recovery
 
