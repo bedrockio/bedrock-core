@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { Menu, Divider, Button } from 'semantic-ui-react';
 import { NavLink } from 'react-router-dom';
 import { Breadcrumbs } from 'components';
-import { EditShop } from 'modals';
+
+import EditShop from 'modals/EditShop';
 
 export default ({ shop, onSave }) => {
   return (

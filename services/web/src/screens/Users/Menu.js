@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { Menu, Divider, Button } from 'semantic-ui-react';
 import { NavLink } from 'react-router-dom';
 import { Breadcrumbs } from 'components';
-import { EditUser } from 'modals';
+
+import EditUser from 'modals/EditUser';
 
 export default ({ user, match, onSave }) => {
   const { id } = match.params;

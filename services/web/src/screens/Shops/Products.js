@@ -5,7 +5,10 @@ import { request } from 'utils/api';
 import { screen } from 'helpers';
 import { urlForUpload } from 'utils/uploads';
 import { Layout, Confirm, HelpTip, SearchProvider } from 'components';
-import { Filters, EditProduct } from 'modals';
+
+import Filters from 'modals/Filters';
+import EditProduct from 'modals/EditProduct';
+
 import Menu from './Menu';
 
 @screen

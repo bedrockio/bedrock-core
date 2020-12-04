@@ -10,7 +10,9 @@ import {
   Breadcrumbs,
   SearchProvider,
 } from 'components';
-import { EditShop, Filters } from 'modals';
+
+import Filters from 'modals/Filters';
+import EditShop from 'modals/EditShop';
 
 // --- Generator: list-imports
 import { getData } from 'country-list';

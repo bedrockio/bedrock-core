@@ -8,7 +8,9 @@ import { screen } from 'helpers';
 import { Confirm } from 'components/Semantic';
 import SearchProvider from 'components/SearchProvider';
 import HelpTip from 'components/HelpTip';
-import { EditUser, Filters } from 'modals';
+
+import Filters from 'modals/Filters';
+import EditUser from 'modals/EditUser';
 
 import {
   Container,

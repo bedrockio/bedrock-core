@@ -8,21 +8,20 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import { Header, Footer } from 'components';
 import { AuthSwitch, Protected } from 'helpers/routes';
 
-import {
-  Docs,
-  Dashboard,
-  Settings,
-  Invites,
-  Users,
-  Login,
-  Shops,
-  Logout,
-  Signup,
-  AcceptInvite,
-  ForgotPassword,
-  ResetPassword,
-  NotFound,
-} from 'screens';
+import Dashboard from 'screens/Dashboard';
+import Docs from 'screens/Docs';
+import Invites from 'screens/Invites';
+import NotFound from 'screens/NotFound';
+import Settings from 'screens/Settings';
+import Shops from 'screens/Shops';
+import Users from 'screens/Users';
+
+import AcceptInvite from 'screens/Auth/AcceptInvite';
+import ForgotPassword from 'screens/Auth/ForgotPassword';
+import ResetPassword from 'screens/Auth/ResetPassword';
+import Login from 'screens/Auth/Login';
+import Logout from 'screens/Auth/Logout';
+import Signup from 'screens/Auth/Signup';
 
 const App = () => (
   <React.Fragment>
