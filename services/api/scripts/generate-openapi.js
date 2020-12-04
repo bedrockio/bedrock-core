@@ -1,6 +1,6 @@
 const fs = require('fs');
 const process = require('process');
-const { routerToOpenApi } = require('../src/lib/utils/openapi');
+const { routerToOpenApi } = require('../src/utils/openapi');
 
 function routeExists(paths, method, path) {
   return !!paths.find((d) => d.method === method && d.path === path);

@@ -1,9 +1,7 @@
-const User = require('../../models/user');
+const User = require('../user');
 
 describe('User', () => {
-
   describe('serialization', () => {
-
     it('should expose id', () => {
       const user = new User();
       const data = JSON.parse(JSON.stringify(user));
@@ -40,6 +38,5 @@ describe('User', () => {
       });
       expect(user.hashedPassword).toBe('fake hash');
     });
-
   });
 });

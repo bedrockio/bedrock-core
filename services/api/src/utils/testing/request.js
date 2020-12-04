@@ -1,7 +1,7 @@
 const request = require('supertest'); //eslint-disable-line
-const app = require('../app');
+const app = require('../../app');
 const qs = require('querystring');
-const tokens = require('../lib/tokens');
+const tokens = require('../tokens');
 
 module.exports = async function handleRequest(httpMethod, url, bodyOrQuery = {}, options = {}) {
   const headers = options.headers || {};
@@ -13,9 +13,7 @@ module.exports = async function handleRequest(httpMethod, url, bodyOrQuery = {},
 
   if (options.file) {
     const files = Array.isArray(options.file) ? options.file : [options.file];
-    promise = request(app.callback())
-      .post(url)
-      .set(headers);
+    promise = request(app.callback()).post(url).set(headers);
     for (let file of files) {
       promise = promise.attach('file', file);
     }

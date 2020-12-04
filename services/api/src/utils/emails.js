@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { sendMail } = require('./mailer');
 const config = require('@bedrockio/config');
-const { template: templateFn } = require('./utils/template');
+const { template: templateFn } = require('./template');
 const { promisify } = require('util');
 
 const templatesDist = path.join(__dirname, '../../emails/dist');

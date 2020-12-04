@@ -1,12 +1,12 @@
 const Router = require('@koa/router');
 const Joi = require('@hapi/joi');
-const validate = require('../middlewares/validate');
-const { authenticate, fetchUser, checkUserRole } = require('../middlewares/authenticate');
-const { NotFoundError, BadRequestError, GoneError } = require('../lib/errors');
+const validate = require('../utils/middleware/validate');
+const { authenticate, fetchUser, checkUserRole } = require('../utils/middleware/authenticate');
+const { NotFoundError, BadRequestError, GoneError } = require('../utils/errors');
 const { Invite, User } = require('../models');
 
-const { sendInvite } = require('../lib/emails');
-const { createUserTemporaryToken } = require('../lib/tokens');
+const { sendInvite } = require('../utils/emails');
+const { createUserTemporaryToken } = require('../utils/tokens');
 
 const router = new Router();
 

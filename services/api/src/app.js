@@ -3,13 +3,13 @@ const Koa = require('koa');
 const cors = require('@koa/cors');
 const logger = require('koa-logger');
 const bodyParser = require('koa-body');
-const errorHandler = require('./middlewares/error-handler');
+const errorHandler = require('./utils/middleware/error-handler');
 const Sentry = require('@sentry/node');
 const path = require('path');
 const { version } = require('../package.json');
-const v1 = require('./v1');
+const routes = require('./routes');
 const config = require('@bedrockio/config');
-const { loadOpenApiDefinitions, expandOpenApi } = require('./lib/utils/openapi');
+const { loadOpenApiDefinitions, expandOpenApi } = require('./utils/openapi');
 
 const app = new Koa();
 
@@ -50,7 +50,7 @@ router.get('/', (ctx) => {
   };
 });
 
-const openApiLiteDefinition = loadOpenApiDefinitions(path.join(__dirname, '/v1/__openapi__'), '/1');
+const openApiLiteDefinition = loadOpenApiDefinitions(path.join(__dirname, '/routes/__openapi__'), '/1');
 router.get('/openapi.lite.json', (ctx) => {
   ctx.body = openApiLiteDefinition;
 });
@@ -60,7 +60,7 @@ router.get('/openapi.json', (ctx) => {
   ctx.body = openApiDefinition;
 });
 
-router.use('/1', v1.routes());
+router.use('/1', routes.routes());
 
 app.use(router.routes());
 app.use(router.allowedMethods());
