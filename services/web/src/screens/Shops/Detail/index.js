@@ -5,7 +5,6 @@ import { Loader } from 'semantic-ui-react';
 import { Breadcrumbs, NotFound } from 'components';
 import { request } from 'utils/api';
 
-import List from './List';
 import Overview from './Overview';
 
 // --- Generator: imports
@@ -81,7 +80,6 @@ export default class Shops extends React.Component {
     }
     return (
       <Switch>
-        <Route path="/shops" component={List} exact />
         <Route
           exact
           path="/shops/:id"
