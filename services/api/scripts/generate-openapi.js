@@ -31,8 +31,8 @@ async function ensureOpenApipaths(destinationDir, router, routerName) {
 }
 
 async function run() {
-  const openApiDir = __dirname + '/../src/v1/__openapi__';
-  const routesDir = __dirname + '/../src/v1';
+  const openApiDir = __dirname + '/../src/routes/__openapi__';
+  const routesDir = __dirname + '/../src/routes';
   const routerFiles = fs
     .readdirSync(routesDir)
     .filter((p) => p.match('.js'))
