@@ -1,6 +1,7 @@
-const { User, Product, Shop, Upload, Category } = require('./../src/models');
+const { User, Product, Shop, Upload, Category } = require('./models');
 const config = require('@bedrockio/config');
-const { storeUploadedFile } = require('../src/lib/uploads');
+const { storeUploadedFile } = require('./lib/uploads');
+const { logger } = require('./lib/logging');
 
 const adminConfig = {
   name: config.get('ADMIN_NAME'),
@@ -19,10 +20,12 @@ const createUpload = async (owner, image) => {
   });
 };
 
-const createUsers = async () => {
+const createFixtures = async () => {
   if (await User.findOne({ email: adminConfig.email })) {
     return false;
   }
+
+  logger.info('Creating DB fixtures');
 
   [
     'jewelry',
@@ -72,4 +75,6 @@ const createUsers = async () => {
   return true;
 };
 
-module.exports = createUsers;
+module.exports = {
+  createFixtures,
+};

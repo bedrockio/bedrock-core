@@ -10,6 +10,7 @@ echo "*/10 * * * * cd /service; node scripts/jobs.js >> /service/crontab.log 2>>
 crontab cron
 rm cron
 echo "Running all jobs for first time"
-node /service/scripts/jobs.js >> /service/crontab.log 2>> /service/crontab.log
+node /service/scripts/jobs.js
+echo "" > /service/crontab.log
 crond &&
 tail -n 1000 -f /service/crontab.log

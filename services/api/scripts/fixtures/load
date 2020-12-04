@@ -1,0 +1,23 @@
+#!/usr/bin/env node
+
+const { logger } = require('./../../src/lib/logging');
+const { init } = require('./../../src/database');
+const { createFixtures } = require('./../../src/fixtures');
+
+async function run() {
+  await init();
+  const result = await createFixtures();
+  if (!result) {
+    logger.info('No DB fixtures to load, database is populated');
+  }
+}
+
+run()
+  .then(() => {
+    process.exit(0);
+  })
+  .catch((error) => {
+    logger.error(`Fatal error: ${error.message}, exiting.`);
+    console.warn(error.stack);
+    process.exit(1);
+  });

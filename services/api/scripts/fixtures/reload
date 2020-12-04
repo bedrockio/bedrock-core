@@ -1,0 +1,57 @@
+#!/usr/bin/env node
+
+const { logger } = require('./../../src/lib/logging');
+const { init } = require('./../../src/database');
+const { createFixtures } = require('./../../src/fixtures');
+const readline = require('readline');
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
+const allowedEnvironments = ['test', 'dev', 'staging'];
+
+const prompt = (message) =>
+  new Promise((resolve) => {
+    rl.question(message, (answer) => {
+      resolve(answer);
+      rl.close();
+    });
+  });
+
+async function run() {
+  const environment = process.env.NODE_ENV || 'production';
+  if (!allowedEnvironments.includes(environment)) {
+    throw new Error(`Not allowed in NODE_ENV other than ${allowedEnvironments.join(', ')} (NODE_ENV=${environment})`);
+  }
+  console.info(`
+-------------------------------------------------------------------
+
+  Warning: This will delete ALL DATA for the ${environment} environment
+
+-------------------------------------------------------------------
+
+`);
+  const answer = await prompt('Are you sure sure? [y|n] ');
+  if (answer.toLowerCase() !== 'y') {
+    throw new Error('Aborted');
+  }
+  const db = await init();
+  console.info(`Dropping database...`);
+  await db.dropDatabase();
+  const result = await createFixtures();
+  if (!result) {
+    logger.info('No DB fixtures to load, database is populated');
+  }
+}
+
+run()
+  .then(() => {
+    process.exit(0);
+  })
+  .catch((error) => {
+    logger.error(`Fatal error: ${error.message}, exiting.`);
+    console.warn(error.stack);
+    process.exit(1);
+  });
