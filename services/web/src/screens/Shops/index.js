@@ -66,40 +66,41 @@ export default class Shops extends React.Component {
     const { id } = this.props.match.params;
     const { shop, error } = this.state;
     const loading = id && !shop && !error;
+    if (loading) {
+      return (
+        <Loader active>Loading</Loader>
+      );
+    } else if (error) {
+      return (
+        <React.Fragment>
+          <Breadcrumbs
+            link={<Link to="/shops">Shops</Link>}
+            active="Not Found"
+          />
+          <NotFound message="Sorry that shop wasn't found." />
+        </React.Fragment>
+      );
+    }
     return (
-      <React.Fragment>
-        {loading ? (
-          <Loader active>Loading</Loader>
-        ) : (error) ? (
-          <React.Fragment>
-            <Breadcrumbs
-              link={<Link to="/shops">Shops</Link>}
-              active="Not Found"
-            />
-            <NotFound message="Sorry that shop wasn't found." />
-          </React.Fragment>
-        ) : (
-          <Switch>
-            <Route path="/shops" component={List} exact />
-            <Route
-              exact
-              path="/shops/:id"
-              render={(props) => (
-                <Overview {...props} {...this.state}  />
-              )}
-            />
-            {/* --- Generator: routes */}
-            <Route
-              exact
-              path="/shops/:id/products"
-              render={(props) => (
-                <Products {...props} {...this.state} />
-              )}
-            />
-            {/* --- Generator: end */}
-          </Switch>
-        )}
-      </React.Fragment>
+      <Switch>
+        <Route path="/shops" component={List} exact />
+        <Route
+          exact
+          path="/shops/:id"
+          render={(props) => (
+            <Overview {...props} {...this.state}  />
+          )}
+        />
+        {/* --- Generator: routes */}
+        <Route
+          exact
+          path="/shops/:id/products"
+          render={(props) => (
+            <Products {...props} {...this.state} />
+          )}
+        />
+        {/* --- Generator: end */}
+      </Switch>
     );
   }
 }
