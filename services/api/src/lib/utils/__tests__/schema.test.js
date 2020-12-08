@@ -1,4 +1,5 @@
 const { createSchema, loadModel, loadModelDir } = require('../schema');
+const Joi = require('joi');
 const mongoose = require('mongoose');
 const { setupDb, teardownDb } = require('../../../test-helpers');
 
@@ -424,4 +425,15 @@ describe('loadModelDir', () => {
     expect(foundCategory.someRef.toString()).toBe(someRef.toString());
     expect(foundCategory.count).toBe(3);
   });
+});
+
+describe('validation', () => {
+
+  it('should get a Joi validator with getValidator', () => {
+    const User = createTestModel(createSchema({
+      name: { type: String },
+    }));
+    expect(Joi.isSchema(User.getValidator())).toBe(true);
+  });
+
 });

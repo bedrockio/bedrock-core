@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const { startCase, omitBy } = require('lodash');
 const { ObjectId } = mongoose.Schema.Types;
+const { getValidatorForDefinition } = require('./validator');
 
 const RESERVED_FIELDS = ['id', 'createdAt', 'updatedAt', 'deletedAt'];
 
@@ -38,6 +39,11 @@ exports.createSchema = (definition, options = {}) => {
       ...options,
     }
   );
+
+  schema.static('getValidator', function getValidator() {
+    return getValidatorForDefinition(definition);
+  });
+
   schema.methods.assign = function assign(fields) {
     fields = omitBy(fields, (value, key) => {
       return isDisallowedField(this, key) || RESERVED_FIELDS.includes(key);
