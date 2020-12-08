@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-const { logger } = require('./../../src/lib/logging');
-const { init } = require('./../../src/database');
-const { createFixtures } = require('./../../src/fixtures');
+const { logger } = require('../../src/lib/logging');
+const { init } = require('../../src/database');
+const { createFixtures } = require('../../src/fixtures');
 
 async function run() {
   await init();

@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-const { logger } = require('./../../src/lib/logging');
-const { init } = require('./../../src/database');
-const { createFixtures } = require('./../../src/fixtures');
+const { logger } = require('../../src/lib/logging');
+const { init } = require('../../src/database');
+const { createFixtures } = require('../../src/fixtures');
 const readline = require('readline');
 
 const rl = readline.createInterface({
@@ -12,13 +12,14 @@ const rl = readline.createInterface({
 
 const allowedEnvironments = ['test', 'dev', 'staging'];
 
-const prompt = (message) =>
-  new Promise((resolve) => {
+function prompt(message) {
+  return new Promise((resolve) => {
     rl.question(message, (answer) => {
       resolve(answer);
       rl.close();
     });
   });
+}
 
 async function run() {
   const environment = process.env.NODE_ENV || 'production';
