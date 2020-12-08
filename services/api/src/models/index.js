@@ -1,4 +1,4 @@
-const { loadModelDir } = require('../lib/utils/schema');
+const { loadModelDir } = require('../utils/schema');
 
 module.exports = {
   User: require('./user'),

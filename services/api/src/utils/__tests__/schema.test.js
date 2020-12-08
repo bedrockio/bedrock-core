@@ -1,6 +1,6 @@
 const { createSchema, loadModel, loadModelDir } = require('../schema');
 const mongoose = require('mongoose');
-const { setupDb, teardownDb } = require('../../../test-helpers');
+const { setupDb, teardownDb } = require('../testing');
 
 beforeAll(async () => {
   await setupDb();

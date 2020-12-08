@@ -1,6 +1,6 @@
 const process = require('process');
-const { logger } = require('./../src/lib/logging');
-const { init } = require('./../src/database');
+const { logger } = require('./../src/utils/logging');
+const { init } = require('./../src/utils/database');
 
 async function run() {
   await init();

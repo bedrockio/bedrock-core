@@ -1,4 +1,4 @@
-const { request } = require('../test-helpers');
+const { request } = require('../utils/testing');
 
 describe('Test App Index', () => {
   test('It should have a valid index response', async () => {

@@ -1,7 +1,7 @@
 const { User, Product, Shop, Upload, Category } = require('./models');
 const config = require('@bedrockio/config');
-const { storeUploadedFile } = require('./lib/uploads');
-const { logger } = require('./lib/logging');
+const { storeUploadedFile } = require('./utils/uploads');
+const { logger } = require('./utils/logging');
 
 const adminConfig = {
   name: config.get('ADMIN_NAME'),

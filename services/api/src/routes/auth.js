@@ -1,10 +1,10 @@
 const Router = require('@koa/router');
 const Joi = require('@hapi/joi');
-const validate = require('../middlewares/validate');
-const { authenticate } = require('../middlewares/authenticate');
-const tokens = require('../lib/tokens');
-const { sendWelcome, sendResetPassword, sendResetPasswordUnknown } = require('../lib/emails');
-const { BadRequestError, UnauthorizedError } = require('../lib/errors');
+const validate = require('../utils/middleware/validate');
+const { authenticate } = require('../utils/middleware/authenticate');
+const tokens = require('../utils/tokens');
+const { sendWelcome, sendResetPassword, sendResetPasswordUnknown } = require('../utils/emails');
+const { BadRequestError, UnauthorizedError } = require('../utils/errors');
 const { User, Invite } = require('../models');
 
 const router = new Router();

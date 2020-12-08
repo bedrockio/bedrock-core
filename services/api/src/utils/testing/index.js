@@ -4,8 +4,8 @@ const { uniqueId } = require('lodash');
 exports.context = require('./context');
 exports.request = require('./request');
 
-const { loadModelDir } = require('./../lib/utils/schema');
-const models = loadModelDir(__dirname + '/../models');
+const { loadModelDir } = require('./../schema');
+const models = loadModelDir(__dirname + '/../../models');
 exports.models = models;
 
 exports.setupDb = async () => {

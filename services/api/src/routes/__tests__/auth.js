@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
-const tokens = require('../../lib/tokens');
-const { setupDb, teardownDb, request, createUser } = require('../../test-helpers');
+const tokens = require('../../utils/tokens');
+const { setupDb, teardownDb, request, createUser } = require('../../utils/testing');
 const { User } = require('../../models');
 
 beforeAll(async () => {

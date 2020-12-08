@@ -1,4 +1,4 @@
-const { setupDb, teardownDb, request, createUser } = require('../../test-helpers');
+const { setupDb, teardownDb, request, createUser } = require('../../utils/testing');
 const { Shop, Upload } = require('../../models');
 
 beforeAll(async () => {
