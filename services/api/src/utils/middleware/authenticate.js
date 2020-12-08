@@ -40,7 +40,7 @@ function validateToken(ctx, token, type) {
   return payload;
 }
 
-exports.authenticate = ({ type, optional = false } = {}) => {
+function authenticate({ type, optional = false } = {}) {
   return async (ctx, next) => {
     if (!ctx.state.jwt) {
       const token = getToken(ctx);
@@ -52,22 +52,28 @@ exports.authenticate = ({ type, optional = false } = {}) => {
     }
     return next();
   };
-};
+}
 
-exports.fetchUser = async (ctx, next) => {
+async function fetchUser(ctx, next) {
   if (!ctx.state.authUser && ctx.state.jwt) {
     const { User } = mongoose.models;
     ctx.state.authUser = await User.findById(ctx.state.jwt.userId);
     if (!ctx.state.authUser) ctx.throw(401, 'user associated to token could not not be found');
   }
   await next();
-};
+}
 
-exports.checkUserRole = function ({ role }) {
+function checkUserRole({ role }) {
   return (ctx, next) => {
     if (!(ctx.state.authUser.roles || []).includes(role)) {
       return ctx.throw(401, `You don't have the right permission for this endpoint (required role: ${role})`);
     }
     return next();
   };
+}
+
+module.exports = {
+  authenticate,
+  fetchUser,
+  checkUserRole,
 };
