@@ -1,4 +1,4 @@
-const { init } = require('./database');
+const { init } = require('./utils/database');
 const setupFixtures = require('../scripts/setup-fixtures');
 const app = require('./app');
 
