@@ -1,30 +1,9 @@
-const { omit } = require('lodash');
 const mongoose = require('mongoose');
-const { createSchema } = require('../lib/utils/schema');
+const { createSchema } = require('../utils/schema');
 const bcrypt = require('bcrypt');
+const definition = require('./definitions/user.json');
 
-const schema = createSchema({
-  email: {
-    type: String,
-    required: true,
-    lowercase: true,
-    trim: true,
-  },
-  roles: [
-    {
-      type: String,
-    },
-  ],
-  name: {
-    type: String,
-    trim: true,
-  },
-  hashedPassword: {
-    type: String,
-    access: 'private',
-  },
-  timeZone: { type: String },
-});
+const schema = createSchema(definition.attributes);
 
 schema.methods.isAdmin = function isAdmin() {
   return this.roles.indexOf('admin') !== -1;

@@ -1,0 +1,6 @@
+{
+  "attributes": {
+    "email": { "type": "String", "trim": true, "lowercase": true, "required": true },
+    "status": { "type": "String" }
+  }
+}

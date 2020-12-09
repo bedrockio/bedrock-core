@@ -1,5 +1,4 @@
 #!/bin/bash
 gcloud compute addresses create api --region us-east1
 gcloud compute addresses create web --region us-east1
-gcloud compute addresses create api-docs --region us-east1
 gcloud compute addresses list

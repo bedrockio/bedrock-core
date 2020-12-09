@@ -6,7 +6,7 @@
     "node": ">=10"
   },
   "scripts": {
-    "build": "rm -rf ./dist && webpack -p",
+    "build": "export NODE_OPTIONS=\"--max-old-space-size=4096\"; rm -rf ./dist && webpack -p",
     "start": "node ./serve",
     "static": "node ./serve-static",
     "lint": "eslint src --fix",

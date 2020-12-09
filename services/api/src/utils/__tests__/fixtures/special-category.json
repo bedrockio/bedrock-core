@@ -1,0 +1,7 @@
+{
+  "attributes": {
+    "name": { "type": "String", "trim": true, "required": true },
+    "count": { "type": "Number", "required": true },
+    "someRef": { "type": "ObjectId", "required": true }
+  }
+}

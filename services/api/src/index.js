@@ -1,5 +1,5 @@
-const database = require('./database');
-const setupFixtures = require('../scripts/setup-fixtures');
+const { init } = require('./utils/database');
+const { createFixtures } = require('./fixtures');
 const app = require('./app');
 
 const config = require('@bedrockio/config');
@@ -13,8 +13,10 @@ const PORT = config.get('BIND_PORT', 'number');
 const HOST = config.get('BIND_HOST');
 
 module.exports = (async () => {
-  await database();
-  await setupFixtures();
+  await init();
+  if (NODE_ENV === 'dev') {
+    await createFixtures();
+  }
 
   app.listen(PORT, HOST, () => {
     console.info(`Started on port //${HOST}:${PORT}`);

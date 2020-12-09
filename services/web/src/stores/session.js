@@ -1,12 +1,11 @@
 import React, { useContext } from 'react';
 import { merge, omit } from 'lodash';
 import { request } from 'utils/api';
-import { trackSession, setUserId } from 'utils/analytics';
+import { trackSession } from 'utils/analytics';
 
 const SessionContext = React.createContext();
 
 export class SessionProvider extends React.PureComponent {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -91,16 +90,14 @@ export class SessionProvider extends React.PureComponent {
   addStored = (key, data) => {
     this.setStored(
       merge({}, this.state.stored, {
-        [key]: data
+        [key]: data,
       })
     );
     trackSession('add', key, data);
   };
 
   removeStored = (key) => {
-    this.setStored(
-      omit(this.state.stored, key)
-    );
+    this.setStored(omit(this.state.stored, key));
     trackSession('remove', key);
   };
 
@@ -154,11 +151,9 @@ export class SessionProvider extends React.PureComponent {
 }
 
 export function withSession(Component) {
-
   let lastContext = {};
 
   return class Wrapped extends Component {
-
     // Preserve the component name
     static name = Component.name;
 
@@ -182,7 +177,6 @@ export function withSession(Component) {
 export function withLoadedSession(Component) {
   Component = withSession(Component);
   return class Wrapped extends React.Component {
-
     static contextType = SessionContext;
 
     render() {
