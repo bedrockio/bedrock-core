@@ -1,4 +1,5 @@
-const { setupDb, teardownDb, request, createUser } = require('../../test-helpers');
+const { setupDb, teardownDb, request, createUser } = require('../../utils/testing');
+
 // --- Generator: requires
 const { Shop, Upload } = require('../../models');
 // --- Generator: end
