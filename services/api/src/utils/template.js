@@ -8,9 +8,13 @@ function templateGet(p, obj) {
   }, obj);
 }
 
-exports.template = (template, map) => {
+function template(template, map) {
   return template.replace(/\$\{.+?}/g, (match) => {
     const p = match.substr(2, match.length - 3).trim();
     return templateGet(p, map);
   });
+}
+
+module.exports = {
+  template,
 };

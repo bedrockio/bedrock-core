@@ -1,4 +1,4 @@
-module.exports = async (ctx, next) => {
+async function errorHandler(ctx, next) {
   try {
     await next();
   } catch (err) {
@@ -15,4 +15,6 @@ module.exports = async (ctx, next) => {
     };
     ctx.app.emit('error', err, ctx);
   }
-};
+}
+
+module.exports = errorHandler;

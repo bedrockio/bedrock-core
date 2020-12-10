@@ -27,7 +27,7 @@ function getParamsFromValidationMiddleware(validationMiddleware, type) {
   }
 }
 
-exports.routerToOpenApi = (router) => {
+function routerToOpenApi(router) {
   const { stack } = router;
   const paths = stack
     .filter((layer) => layer.methods.length > 0)
@@ -59,9 +59,9 @@ exports.routerToOpenApi = (router) => {
   return {
     paths,
   };
-};
+}
 
-exports.loadOpenApiDefinitions = (dir, rootPath) => {
+function loadOpenApiDefinitions(dir, rootPath) {
   return fs
     .readdirSync(dir)
     .filter((path) => path.match('.json'))
@@ -81,10 +81,10 @@ exports.loadOpenApiDefinitions = (dir, rootPath) => {
         objects: routerDefinition.objects,
       };
     });
-};
+}
 
 // This is just for OpenAPI/Swagger compatibility purposes
-exports.expandOpenApi = (definitions) => {
+function expandOpenApi(definitions) {
   const allPaths = {};
   definitions.forEach((module) => {
     const { paths } = module;
@@ -147,4 +147,10 @@ exports.expandOpenApi = (definitions) => {
     },
     paths: allPaths,
   };
+}
+
+module.exports = {
+  routerToOpenApi,
+  loadOpenApiDefinitions,
+  expandOpenApi,
 };

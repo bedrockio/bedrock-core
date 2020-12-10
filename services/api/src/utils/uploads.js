@@ -4,15 +4,14 @@ const path = require('path');
 const os = require('os');
 const crypto = require('crypto');
 
-const uploadLocal = (file, hash) => {
+function uploadLocal(file, hash) {
   const destinationPath = path.join(os.tmpdir(), hash);
   fs.copyFileSync(file.path, destinationPath);
   console.info('Uploading locally %s -> %s', file.name, destinationPath);
-
   return file.path;
-};
+}
 
-const uploadGcs = async (file, hash) => {
+async function uploadGcs(file, hash) {
   const { Storage } = require('@google-cloud/storage');
   const storage = new Storage();
   const bucketName = config.get('UPLOADS_GCS_BUCKET');
@@ -27,9 +26,9 @@ const uploadGcs = async (file, hash) => {
   await uploadedGcsFile.makePublic();
   const metaData = await uploadedGcsFile.getMetadata();
   return metaData[0].mediaLink;
-};
+}
 
-const storeUploadedFile = async (uploadedFile) => {
+async function storeUploadedFile(uploadedFile) {
   const object = {
     mimeType: uploadedFile.type,
     filename: uploadedFile.name,
@@ -44,6 +43,6 @@ const storeUploadedFile = async (uploadedFile) => {
   }
   object.thumbnailUrl = object.rawUrl;
   return object;
-};
+}
 
 module.exports = { storeUploadedFile };

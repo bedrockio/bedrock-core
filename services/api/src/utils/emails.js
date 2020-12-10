@@ -39,7 +39,7 @@ function template(templateName, map) {
   return templateFn(templateStr, map);
 }
 
-exports.sendWelcome = async ({ to, name }) => {
+async function sendWelcome({ to, name }) {
   await initialize();
   const options = {
     ...defaultOptions,
@@ -57,9 +57,9 @@ exports.sendWelcome = async ({ to, name }) => {
       options,
     }
   );
-};
+}
 
-exports.sendResetPasswordUnknown = async ({ to }) => {
+async function sendResetPasswordUnknown({ to }) {
   await initialize();
   const options = {
     ...defaultOptions,
@@ -77,9 +77,9 @@ exports.sendResetPasswordUnknown = async ({ to }) => {
       options,
     }
   );
-};
+}
 
-exports.sendResetPassword = async ({ to, token }) => {
+async function sendResetPassword({ to, token }) {
   await initialize();
   const options = {
     ...defaultOptions,
@@ -98,9 +98,9 @@ exports.sendResetPassword = async ({ to, token }) => {
       options,
     }
   );
-};
+}
 
-exports.sendInvite = async ({ to, token, sender }) => {
+async function sendInvite({ to, token, sender }) {
   await initialize();
   const options = {
     ...defaultOptions,
@@ -119,9 +119,9 @@ exports.sendInvite = async ({ to, token, sender }) => {
       options,
     }
   );
-};
+}
 
-exports.sendInviteKnown = async ({ to, token, sender }) => {
+async function sendInviteKnown({ to, token, sender }) {
   await initialize();
   const options = {
     ...defaultOptions,
@@ -141,4 +141,12 @@ exports.sendInviteKnown = async ({ to, token, sender }) => {
       options,
     }
   );
+}
+
+module.exports = {
+  sendWelcome,
+  sendResetPasswordUnknown,
+  sendResetPassword,
+  sendInvite,
+  sendInviteKnown,
 };

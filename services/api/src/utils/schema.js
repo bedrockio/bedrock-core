@@ -21,7 +21,7 @@ const serializeOptions = {
   },
 };
 
-exports.createSchema = (definition, options = {}) => {
+function createSchema(definition, options = {}) {
   const schema = new mongoose.Schema(
     {
       deletedAt: { type: Date },
@@ -54,7 +54,7 @@ exports.createSchema = (definition, options = {}) => {
     return this.save();
   };
   return schema;
-};
+}
 
 function getField(doc, key) {
   const field = doc.schema.obj[key];
@@ -74,17 +74,17 @@ function isDisallowedField(doc, key, allowPrivate = false) {
   return false;
 }
 
-exports.loadModel = (definition, name) => {
+function loadModel(definition, name) {
   const { attributes } = definition;
   if (!attributes) {
     throw new Error(`Invalid model definition for ${name}, need attributes`);
   }
-  const schema = exports.createSchema(attributes);
+  const schema = createSchema(attributes);
   schema.plugin(require('mongoose-autopopulate'));
   return mongoose.model(name, schema);
-};
+}
 
-exports.loadModelDir = (dirPath) => {
+function loadModelDir(dirPath) {
   const files = fs.readdirSync(dirPath);
   for (const file of files) {
     const basename = path.basename(file, '.json');
@@ -95,7 +95,7 @@ exports.loadModelDir = (dirPath) => {
         const definition = JSON.parse(data);
         const modelName = definition.modelName || startCase(basename).replace(/\s/g, '');
         if (!mongoose.models[modelName]) {
-          exports.loadModel(definition, modelName);
+          loadModel(definition, modelName);
         }
       } catch (error) {
         console.error(`Could not load model definition: ${filePath}`);
@@ -104,4 +104,10 @@ exports.loadModelDir = (dirPath) => {
     }
   }
   return mongoose.models;
+}
+
+module.exports = {
+  createSchema,
+  loadModel,
+  loadModelDir,
 };

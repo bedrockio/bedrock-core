@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 mongoose.Promise = Promise;
 
-exports.init = async () => {
+async function init() {
   await mongoose.connect(config.get('MONGO_URI'), {
     // The underlying MongoDB driver has deprecated their current connection string parser.
     useNewUrlParser: true,
@@ -24,4 +24,8 @@ exports.init = async () => {
     console.info('mongodb connected');
   });
   return db;
+}
+
+module.exports = {
+  init,
 };
