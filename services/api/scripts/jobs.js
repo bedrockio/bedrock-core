@@ -1,6 +1,6 @@
 const process = require('process');
-const { logger } = require('./../src/lib/logging');
-const { init } = require('./../src/database');
+const { logger } = require('./../src/utils/logging');
+const { init } = require('./../src/utils/database');
 
 async function run() {
   await init();
@@ -13,5 +13,6 @@ run()
   })
   .catch((error) => {
     logger.error(`Fatal error: ${error.message}, exiting.`);
+    console.warn(error.stack);
     process.exit(1);
   });

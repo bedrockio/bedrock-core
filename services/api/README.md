@@ -10,17 +10,17 @@ See http://localhost:2200/docs for full documentation on this API (requires runn
 
 - `.env` - Default configuration values (override via environment)
 - `package.json` - Configure dependencies
-- `src/*/__tests__` - Unit tests
-- `src/index.js` - Entrypoint for running and binding API
-- `src/lib` - Library files like utils etc
-- `src/v1` - Routes
-- `src/v1/__openapi__` - OpenAPI descriptions for use in documentation portal
-- `src/middlewares` - Middleware extensions
+- `src/**/__tests__` - Unit tests
+- `src/lib` - Platform specific library files
+- `src/utils` - Various utilities, helpers and middleware extensions
+- `src/routes` - API Routes
+- `src/routes/__openapi__` - OpenAPI descriptions for use in documentation portal
 - `src/models` - Mongoose ORM models (code and JSON) - [Models Documentation](./src/models)
 - `src/app.js` - Entrypoint into API (does not bind, so can be used in unit tests)
 - `src/index.js` - Launch script for the API
 - `emails/dist` - Prebuild emails templates (dont modify => modify emails/src and run `yarn emails`)
 - `emails/src` - Email templates
+- `scripts` - Scripts and jobs
 
 ## Install Dependencies
 
@@ -49,6 +49,8 @@ Code reload using nodemon:
 ```
 yarn start
 ```
+
+This command will automatically populate MongoDB fixtures when and empty DB is found.
 
 ## Configuration
 
@@ -85,6 +87,16 @@ The API provides a simple Docker container for running Cronjobs. The Cron schedu
 docker build -t bedrock-api-jobs -f Dockerfile.jobs .
 ```
 
+## Reloading DB Fixtures
+
+DB fixtures are loaded automatically in the dev environment. However, using this command you can force reload the DB:
+
+```
+./scripts/fixtures/reload
+```
+
+_Note: In the staging environment this script can be run by obtaining a shell into the API CLI pod (See Deployment)_
+
 ## Updating E-Mail Templates
 
 E-mail templates can be found in `emails/src`. When changes are made, run the following command to optimize the emails for mail readers:
@@ -105,7 +117,7 @@ Run:
 node scripts/generate-openapi.js
 ```
 
-The format in `src/v1/__openapi__` is using a slimmed down version of the OpenAPI spec to make editing easier. API calls can be defined in the `paths` array and Object definitions can be defined in the `objects` array.
+The format in `src/routes/__openapi__` is using a slimmed down version of the OpenAPI spec to make editing easier. API calls can be defined in the `paths` array and Object definitions can be defined in the `objects` array.
 
 Here's an example of an API call definition:
 
@@ -158,6 +170,6 @@ Here's an example of an API call definition:
 }
 ```
 
-All information in `src/v1/__openapi__` is exposed through the API and used by the Markdown-powered documentation portal in `/services/web/src/docs`.
+All information in `src/routes/__openapi__` is exposed through the API and used by the Markdown-powered documentation portal in `/services/web/src/docs`.
 
 See [../../services/web](../../services/web) for more info on customizing documentation.

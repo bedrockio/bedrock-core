@@ -24,6 +24,7 @@
   - [Pushing Docker Containers](#pushing-docker-containers)
   - [Check cluster status](#check-cluster-status)
   - [Getting shell access](#getting-shell-access)
+  - [Reloading DB fixtures](#reloading-db-fixtures)
 - [Disaster Recovery](#disaster-recovery)
   - [Scenario A: Master Database Loss or Corruption](#scenario-a-master-database-loss-or-corruption)
   - [Scenario B: Bucket Storage Loss or Corruption](#scenario-b-bucket-storage-loss-or-corruption)
@@ -302,10 +303,20 @@ Push all containers matching "api" to staging:
 There's a default `api-cli-deployment` provided that allows you to obtain a shell. This is useful when running migration scripts in production (you can take down the API and use CLI to do operations without new reads/writes coming in):
 
 ```
-kubectl exec -it <CLI-POD-ID> /bin/bash
+kubectl exec -it <CLI-POD-ID> -- /bin/bash
 ```
 
 Note that the `api` and `web` services can be reached as hostnames: `curl http://api`
+
+### Reloading DB fixtures
+
+Use the following command in the API CLI shell to reload the DB fixtures:
+
+```bash
+./scripts/fixtures/reload
+```
+
+Note: Fixtures are loaded automatically when the API CLI pod is started if no data is found in the DB
 
 ## Disaster Recovery
 
@@ -323,7 +334,7 @@ In order to restore this data, follow the following steps:
 
 - Ensure a new version of the `data/mongo-deployment` pod is running. This can be done either with an old disk or a newly created disk.
 - Copy the file onto the pod
-- Open a terminal into the pod, using `kubectl exec -it <pod id> /bin/bash`
+- Open a terminal into the pod, using `kubectl exec -it <pod id> -- /bin/bash`
 - Unpack the backup file `tar xfzv mongo-platform-2019-03-05-16-50.tar.gz`
 - Run a `mongorestore` command using the backup folder and the targeted database
 

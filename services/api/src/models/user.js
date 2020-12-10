@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { createSchema } = require('../lib/utils/schema');
+const { createSchema } = require('../utils/schema');
 const bcrypt = require('bcrypt');
 const definition = require('./definitions/user.json');
 
