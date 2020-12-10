@@ -7,16 +7,12 @@ import { request } from 'utils/api';
 
 import Overview from './Overview';
 
-// --- Generator: imports
-import Products from './Products';
-// --- Generator: end
-
-export default class ShopDetail extends React.Component {
+export default class UserDetail extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      shop: null,
+      user: null,
       error: null,
       loading: true,
       onSave: this.onSave,
@@ -24,21 +20,21 @@ export default class ShopDetail extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchShop();
+    this.fetchUser();
   }
 
   componentDidUpdate(lastProps) {
     const { id } = this.props.match.params;
     if (id !== lastProps.match.params.id) {
-      this.fetchShop();
+      this.fetchUser();
     }
   }
 
   onSave = () => {
-    this.fetchShop();
+    this.fetchUser();
   }
 
-  async fetchShop() {
+  async fetchUser() {
     const { id } = this.props.match.params;
     try {
       this.setState({
@@ -47,10 +43,10 @@ export default class ShopDetail extends React.Component {
       });
       const { data } = await request({
         method: 'GET',
-        path: `/1/shops/${id}`,
+        path: `/1/users/${id}`,
       });
       this.setState({
-        shop: data,
+        user: data,
         loading: false,
       });
     } catch (error) {
@@ -71,10 +67,10 @@ export default class ShopDetail extends React.Component {
       return (
         <React.Fragment>
           <Breadcrumbs
-            link={<Link to="/shops">Shops</Link>}
+            link={<Link to="/users">Users</Link>}
             active="Not Found"
           />
-          <NotFound message="Sorry that shop wasn't found." />
+          <NotFound message="Sorry that user wasn't found." />
         </React.Fragment>
       );
     }
@@ -82,20 +78,11 @@ export default class ShopDetail extends React.Component {
       <Switch>
         <Route
           exact
-          path="/shops/:id"
+          path="/users/:id"
           render={(props) => (
             <Overview {...props} {...this.state}  />
           )}
         />
-        {/* --- Generator: routes */}
-        <Route
-          exact
-          path="/shops/:id/products"
-          render={(props) => (
-            <Products {...props} {...this.state} />
-          )}
-        />
-        {/* --- Generator: end */}
       </Switch>
     );
   }

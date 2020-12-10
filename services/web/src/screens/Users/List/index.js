@@ -1,24 +1,25 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Table, Divider, Button, Message } from 'semantic-ui-react';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
-import { Layout } from 'components/Layout';
 import { screen } from 'helpers';
-
-import { Confirm } from 'components/Semantic';
-import SearchProvider from 'components/SearchProvider';
-import HelpTip from 'components/HelpTip';
+import {
+  Confirm,
+  HelpTip,
+  Breadcrumbs,
+  SearchProvider,
+} from 'components';
 
 import Filters from 'modals/Filters';
 import EditUser from 'modals/EditUser';
 
-import {
-  Container,
-  Header,
-  Table,
-  Message,
-  Button,
-} from 'semantic-ui-react';
+import { getData } from 'country-list';
+const countries = getData().map(({ code, name }) => ({
+  value: code,
+  text: name,
+  key: code,
+}));
 
 @screen
 export default class UserList extends React.Component {
@@ -34,46 +35,24 @@ export default class UserList extends React.Component {
   render() {
     return (
       <SearchProvider onDataNeeded={this.onDataNeeded}>
-        {({ items, getSorted, setSort, filters, setFilters, reload }) => {
+        {({ items: users, getSorted, setSort, filters, setFilters, reload }) => {
           return (
-            <Container>
-              <div style={{float: 'right', marginTop: '-5px'}}>
-              </div>
-              <Header as="h2">
-                <Layout horizontal center spread>
-                  Users
-                  <Layout.Group>
-                    <Filters onSave={setFilters} filters={filters}>
-                      <Filters.Dropdown
-                        name="role"
-                        label="Role"
-                        options={[
-                          {
-                            text: 'User',
-                              value: 'user',
-                          },
-                          {
-                            text: 'Admin',
-                            value: 'admin',
-                          }
-                        ]}
-                      />
-                    </Filters>
-                    <EditUser
-                      trigger={
-                        <Button
-                          primary
-                          content="New User"
-                          icon="plus"
-                        />
-                      }
-                      onSave={reload}
-                    />
-                  </Layout.Group>
-                </Layout>
-              </Header>
-              {items.length === 0 ? (
-                <Message>No users added yet</Message>
+            <React.Fragment>
+              <Breadcrumbs active="Users">
+                <Filters onSave={setFilters} filters={filters}>
+                  <Filters.Text label="Name" name="name" />
+                  <Filters.Dropdown
+                    label="Country"
+                    name="country"
+                    options={countries}
+                    search
+                  />
+                </Filters>
+                <EditUser trigger={<Button primary content="New User" icon="plus" />} onSave={reload} />
+              </Breadcrumbs>
+              <Divider hidden />
+              {users.length === 0 ? (
+                <Message>No users created yet</Message>
               ) : (
                 <Table celled sortable>
                   <Table.Header>
@@ -111,24 +90,24 @@ export default class UserList extends React.Component {
                     </Table.Row>
                   </Table.Header>
                   <Table.Body>
-                    {items.map((item) => {
+                    {users.map((user) => {
                       return (
-                        <Table.Row key={item.id}>
+                        <Table.Row key={user.id}>
                           <Table.Cell>
-                            <Link to={`/users/${item.id}`}>
-                              {item.name}
+                            <Link to={`/users/${user.id}`}>
+                              {user.name}
                             </Link>
                           </Table.Cell>
-                          <Table.Cell>{item.email}</Table.Cell>
+                          <Table.Cell>{user.email}</Table.Cell>
                           <Table.Cell>
-                            {item.roles
+                            {user.roles
                                 .map((r) => r.slice(0, 1).toUpperCase() + r.slice(1))
                                 .join(', ')}
                           </Table.Cell>
-                          <Table.Cell>{formatDateTime(item.createdAt)}</Table.Cell>
+                          <Table.Cell>{formatDateTime(user.createdAt)}</Table.Cell>
                           <Table.Cell textAlign="center">
                             <EditUser
-                              user={item}
+                              user={user}
                               trigger={
                                 <Button
                                   style={{ marginLeft: '20px' }}
@@ -141,13 +120,13 @@ export default class UserList extends React.Component {
                             <Confirm
                               negative
                               confirmText="Delete"
-                              header={`Are you sure you want to delete "${item.name}"?`}
+                              header={`Are you sure you want to delete "${user.name}"?`}
                               content="All data will be permanently deleted"
                               trigger={<Button basic icon="trash" />}
                               onConfirm={async () => {
                                 await request({
                                   method: 'DELETE',
-                                  path: `/1/users/${item.id}`
+                                  path: `/1/users/${user.id}`
                                 });
                                 reload();
                               }}
@@ -159,11 +138,10 @@ export default class UserList extends React.Component {
                   </Table.Body>
                 </Table>
               )}
-            </Container>
+            </React.Fragment>
           );
         }}
       </SearchProvider>
     );
   }
 }
-
