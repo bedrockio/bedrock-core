@@ -5,21 +5,27 @@ import './group.less';
 
 export default class Group extends React.Component {
 
-  getClassNames() {
-    const { className, children, ...props } = this.props;
+  getProps() {
+    const { className, children, ...rest } = this.props;
     const classNames = ['group'];
     if (className) {
       classNames.push(className);
     }
-    for (let key of Object.keys(props)) {
-      classNames.push(key);
+    for (let key of Object.keys(rest)) {
+      if (key in Group.propTypes) {
+        classNames.push(key);
+        delete rest[key];
+      }
     }
-    return classNames.join(' ');
+    return {
+      className: classNames.join(' '),
+      ...rest,
+    };
   }
 
   render() {
     return (
-      <div className={this.getClassNames()}>
+      <div {...this.getProps()}>
         {this.props.children}
       </div>
     );

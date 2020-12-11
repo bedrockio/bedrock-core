@@ -12,7 +12,7 @@ maximum width is 1200px.
 
 Requires ffmpeg 4.1.1 or greater.
 
-Usage:   $script <INFILE> [MAX_WIDTH]
+Usage:   $script <INFILE> <OUTFILE> [MAX_WIDTH]
 Example: $script intro.mp4 600
 
 $1"

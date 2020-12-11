@@ -64,7 +64,7 @@ function routerToOpenApi(router) {
 function loadOpenApiDefinitions(dir, rootPath) {
   return fs
     .readdirSync(dir)
-    .filter((path) => path.match('.json'))
+    .filter((path) => path.match(/\.json$/))
     .map((path) => {
       const routerName = path.replace('.json', '');
       const routerDefinition = JSON.parse(fs.readFileSync(`${dir}/${path}`).toString());

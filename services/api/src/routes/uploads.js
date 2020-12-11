@@ -50,7 +50,7 @@ router
       })
     );
     ctx.body = {
-      data: isArray ? uploads : uploads[0],
+      data: uploads,
     };
   })
   .delete('/:uploadId', async (ctx) => {

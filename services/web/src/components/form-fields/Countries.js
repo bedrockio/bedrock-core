@@ -9,10 +9,6 @@ const countries = getData().map(({ code, name }) => ({
 }));
 
 export default class Countries extends React.Component {
-  onChange = (evt, { value }) => {
-    return this.props.onChange(value);
-  };
-
   render() {
     const { required, label, placeholder, value, name } = this.props;
     return (
@@ -24,7 +20,7 @@ export default class Countries extends React.Component {
           defaultValue={value}
           placeholder={placeholder}
           options={countries}
-          onChange={this.onChange}
+          onChange={this.props.onChange}
         />
       </Form.Field>
     );

@@ -1,0 +1,5 @@
+
+/* Add extra padding for dropdowns on scrolling modals */
+.ui.modal .scrolling.content {
+  padding-bottom: 5em;
+}

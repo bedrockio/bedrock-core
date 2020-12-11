@@ -52,39 +52,23 @@ onDataNeeded = async () => {
 
 ## Filters
 
-A modal that allows filters to be used in conjunction with `SearchProvider`. Usage:
+A modal that allows filters to be used in conjunction with `SearchProvider`. Props will be passed down to Semantic UI form elements. Usage:
 
 ```jsx
-<Filters
-  onSave={setFilters}
-  filters={filters}
-  fields={[
-    {
-      text: 'Role',
-      name: 'role',
-      options: [
-        {
-          text: 'User',
-          value: 'user',
-        },
-        {
-          text: 'Admin',
-          value: 'admin',
-        },
-      ],
-    },
-  ]}
-/>
+<Filters onSave={setFilters} filters={filters}>
+  <Filters.Text name="name" label="Name" />
+  <Filters.Number name="name" label="Name" />
+  <Filters.Dropdown label="Country" name="country" options={countries} search />
+</Filters>
 ```
 
 ### Props:
 
 - `onSave` A function called when filters are saved.
 - `filters` An arbitrary object describing currently applied filters.
-- `fields` An array of custom filters that are applied as dropdowns. Each filter is an object that takes the shape:
-  - `text` The text to be displayed as the label of the field.
-  - `name` The form name to be used.
-  - `options` An array of options to be used in the dropdown. Options take `text`, `value`, and `key` as keys compatible with Semantic UI.
+- `Filters.Text` Props handed off to [`Form.Input`](https://react.semantic-ui.com/collections/form/). `name` is required.
+- `Filters.Number` Props handed off to [`Form.Input`](https://react.semantic-ui.com/collections/form/) with `type="number"`. `name` is required.
+- `Filters.Dropdown` Props handed off to [`Form.Dropdown`](https://react.semantic-ui.com/collections/form/). `name` is required.
 
 ## Layout
 

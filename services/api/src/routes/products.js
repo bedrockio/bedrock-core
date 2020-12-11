@@ -60,6 +60,7 @@ router
     '/search',
     validate({
       body: Joi.object({
+        name: Joi.string(),
         skip: Joi.number().default(0),
         sort: Joi.object({
           field: Joi.string().required(),
@@ -74,13 +75,19 @@ router
       }),
     }),
     async (ctx) => {
-      const { ids = [], sort, skip, limit, shop } = ctx.request.body;
+      const { ids = [], sort, name, skip, limit, shop } = ctx.request.body;
       const query = {
         ...(ids.length ? { _id: { $in: ids } } : {}),
         deletedAt: { $exists: false },
       };
       if (shop) {
         query.shop = shop;
+      }
+      if (name) {
+        query.name = {
+          $regex: name,
+          $options: 'i',
+        };
       }
       const data = await Product.find(query)
         .sort({ [sort.field]: sort.order === 'desc' ? -1 : 1 })
