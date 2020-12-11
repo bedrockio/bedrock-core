@@ -20,6 +20,8 @@
       "type": "String",
       "access": "private"
     },
-    "timeZone": { "type": "String" }
+    "timeZone": {
+      "type": "String"
+    }
   }
 }

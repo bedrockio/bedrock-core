@@ -1,7 +1,14 @@
 {
   "attributes": {
-    "name": { "type": "String", "trim": true, "required": true },
-    "description": { "type": "String", "trim": true },
+    "name": {
+      "type": "String",
+      "trim": true,
+      "required": true
+    },
+    "description": {
+      "type": "String",
+      "trim": true
+    },
     "images": [
       {
         "type": "ObjectId",
@@ -9,7 +16,15 @@
         "autopopulate": true
       }
     ],
-    "categories": [{ "type": "ObjectId", "ref": "Category", "autopopulate": true }],
-    "country": { "type": "String" }
+    "categories": [
+      {
+        "type": "ObjectId",
+        "ref": "Category",
+        "autopopulate": true
+      }
+    ],
+    "country": {
+      "type": "String"
+    }
   }
 }
