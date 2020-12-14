@@ -8,7 +8,15 @@ function getValidatorForDefinition(definition) {
     deletedAt: Joi.any().strip(),
   };
   for (let [key, field] of Object.entries(definition)) {
-    obj[key] = getValidatorForField(field);
+    let validator;
+    if (Array.isArray(field)) {
+      validator = Joi.array().items(
+        getValidatorForField(field[0])
+      );
+    } else {
+      validator = getValidatorForField(field);
+    }
+    obj[key] = validator;
   }
   return Joi.object(obj).min(1);
 }
@@ -35,14 +43,16 @@ function getValidatorForField(field) {
 }
 
 function getValidatorForType(type) {
-  if (typeof type === 'string') {
-    type = global[type];
+  if (typeof type === 'function') {
+    type = type.name;
   }
   switch (type) {
-    case String:
+    case 'String':
       return Joi.string();
-    case Number:
+    case 'Number':
       return Joi.number();
+    case 'ObjectId':
+      return Joi.string().hex().length(24);
   }
 }
 

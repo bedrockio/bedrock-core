@@ -21,9 +21,9 @@ function assertFail(validator, obj) {
   }).toThrow();
 }
 
-describe('string validations', () => {
+describe('getValidatorForDefinition', () => {
 
-  describe('type alternates', () => {
+  describe('alternate type forms', () => {
 
     it('should get a validator for a basic string field', () => {
       const validator = getValidatorForDefinition({
@@ -55,18 +55,7 @@ describe('string validations', () => {
 
   });
 
-  describe('global options', () => {
-
-    it('should validate a required field', () => {
-      const validator = getValidatorForDefinition({
-        name: {
-          type: String,
-          required: true,
-        },
-      });
-      assertPass(validator, { name: 'foo' });
-      assertFail(validator, {});
-    });
+  describe('basic functionality', () => {
 
     it('should always fail if no keys set', () => {
       const validator = getValidatorForDefinition({
@@ -87,7 +76,22 @@ describe('string validations', () => {
 
   });
 
-  describe('string options', () => {
+  describe('global options', () => {
+
+    it('should validate a required field', () => {
+      const validator = getValidatorForDefinition({
+        name: {
+          type: String,
+          required: true,
+        },
+      });
+      assertPass(validator, { name: 'foo' });
+      assertFail(validator, {});
+    });
+
+  });
+
+  describe('string fields', () => {
 
     it('should validate an enum field', () => {
       const validator = getValidatorForDefinition({
@@ -160,7 +164,7 @@ describe('string validations', () => {
 
   });
 
-  describe('number options', () => {
+  describe('number fields', () => {
 
     it('should validate an enum field', () => {
       const validator = getValidatorForDefinition({
@@ -212,5 +216,57 @@ describe('string validations', () => {
 
   });
 
-});
+  describe('reference fields', () => {
 
+    it('should validate an ObjectId reference field', () => {
+      const validator = getValidatorForDefinition({
+        image: {
+          type: 'ObjectId',
+          ref: 'Upload',
+        },
+      });
+      assertPass(validator, { image: '5fd396fac80fa73203bd9554' });
+      assertFail(validator, { image: 'bad id' });
+    });
+
+  });
+
+  describe('array fields', () => {
+
+    it('should validate array of strings', () => {
+      const validator = getValidatorForDefinition({
+        categories: [{
+          type: String,
+        }],
+      });
+      assertPass(validator, { categories: ['foo'] });
+      assertPass(validator, { categories: [] });
+      assertFail(validator, { categories: 'foo' });
+    });
+
+    it('should validate array of object ids', () => {
+      const validator = getValidatorForDefinition({
+        categories: [{
+          type: 'ObjectId',
+        }],
+      });
+      assertPass(validator, { categories: ['5fd396fac80fa73203bd9554'] });
+      assertPass(validator, { categories: [] });
+      assertFail(validator, { categories: ['bad id'] });
+    });
+
+    it('should validate minimum number of elements for required array field', () => {
+      const validator = getValidatorForDefinition({
+        categories: [{
+          type: String,
+          required: true,
+        }],
+      });
+      assertPass(validator, { categories: ['foo'] });
+      assertFail(validator, { categories: [] });
+      assertFail(validator, { categories: 'foo' });
+    });
+
+  });
+
+});
