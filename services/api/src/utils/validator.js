@@ -51,6 +51,10 @@ function getValidatorForType(type) {
       return Joi.string();
     case 'Number':
       return Joi.number();
+    case 'Boolean':
+      return Joi.boolean();
+    case 'Date':
+      return Joi.date().iso();
     case 'ObjectId':
       return Joi.string().hex().length(24);
   }

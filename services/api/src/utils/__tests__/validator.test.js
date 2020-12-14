@@ -216,6 +216,31 @@ describe('getValidatorForDefinition', () => {
 
   });
 
+  describe('boolean fields', () => {
+
+    it('should validate boolean field', () => {
+      const validator = getValidatorForDefinition({
+        isActive: Boolean,
+      });
+      assertPass(validator, { isActive: true });
+      assertPass(validator, { isActive: false });
+    });
+
+  });
+
+  describe('date fields', () => {
+
+    it('should validate date ISO-8601 field', () => {
+      const validator = getValidatorForDefinition({
+        posted: Date,
+      });
+      assertPass(validator, { posted: '2020-01-01T00:00:00Z' });
+      assertPass(validator, { posted: '2020-01-01T00:00:00' });
+      assertFail(validator, { posted: 'January 1, 2020' });
+    });
+
+  });
+
   describe('reference fields', () => {
 
     it('should validate an ObjectId reference field', () => {
