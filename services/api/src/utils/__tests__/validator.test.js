@@ -75,6 +75,16 @@ describe('string validations', () => {
       assertFail(validator, {});
     });
 
+    it('should strip out internal fields', () => {
+      const validator = getValidatorForDefinition({
+        name: String,
+      });
+      assertPass(validator, { id: 1, name: 'foo' });
+      assertPass(validator, { createdAt: 'date', name: 'foo' });
+      assertPass(validator, { updatedAt: 'date', name: 'foo' });
+      assertPass(validator, { deletedAt: 'date', name: 'foo' });
+    });
+
   });
 
   describe('string options', () => {

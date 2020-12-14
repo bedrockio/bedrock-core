@@ -1,7 +1,12 @@
 const Joi = require('joi');
 
 function getValidatorForDefinition(definition) {
-  const obj = {};
+  const obj = {
+    id: Joi.any().strip(),
+    createdAt: Joi.any().strip(),
+    updatedAt: Joi.any().strip(),
+    deletedAt: Joi.any().strip(),
+  };
   for (let [key, field] of Object.entries(definition)) {
     obj[key] = getValidatorForField(field);
   }
