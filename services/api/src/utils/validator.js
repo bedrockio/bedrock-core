@@ -1,28 +1,36 @@
 const Joi = require('joi');
 
 function getValidatorForDefinition(definition) {
-  const obj = {
-    id: Joi.any().strip(),
-    createdAt: Joi.any().strip(),
-    updatedAt: Joi.any().strip(),
-    deletedAt: Joi.any().strip(),
-  };
-  for (let [key, field] of Object.entries(definition)) {
-    let validator;
-    if (Array.isArray(field)) {
-      validator = Joi.array().items(
-        getValidatorForField(field[0])
-      );
-    } else {
-      validator = getValidatorForField(field);
-    }
-    obj[key] = validator;
+  return getObjectValidator(definition)
+    .append({
+      id: Joi.any().strip(),
+      createdAt: Joi.any().strip(),
+      updatedAt: Joi.any().strip(),
+      deletedAt: Joi.any().strip(),
+    })
+    .min(1);
+}
+
+function getObjectValidator(obj) {
+  const map = {};
+  for (let [key, field] of Object.entries(obj)) {
+    map[key] = getValidatorForField(field);
   }
-  return Joi.object(obj).min(1);
+  return Joi.object(map);
 }
 
 function getValidatorForField(field) {
+  if (Array.isArray(field)) {
+    return Joi.array().items(
+      getValidatorForField(field[0])
+    );
+  }
   const { type, ...options } = getField(field);
+  if (!type || type === 'Mixed' || typeof type === 'object') {
+    // Mixed fields either have no type, type "mixed",
+    // or "type" as a nested object.
+    return getObjectValidator(field);
+  }
   let validator = getValidatorForType(type);
   if (options.required) {
     validator = validator.required();
@@ -57,6 +65,8 @@ function getValidatorForType(type) {
       return Joi.date().iso();
     case 'ObjectId':
       return Joi.string().hex().length(24);
+    default:
+      return Joi.object();
   }
 }
 

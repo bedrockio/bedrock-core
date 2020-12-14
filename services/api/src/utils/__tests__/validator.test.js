@@ -294,4 +294,37 @@ describe('getValidatorForDefinition', () => {
 
   });
 
+  describe('nested fields', () => {
+
+    it('should validate nested field', () => {
+      const validator = getValidatorForDefinition({
+        counts: {
+          view: Number,
+        },
+      });
+      assertPass(validator, { counts: { view: 1 }});
+      assertFail(validator, { counts: { view: 'bad number' }});
+    });
+
+    it('should validate explicit mixed type', () => {
+      const validator = getValidatorForDefinition({
+        counts: {
+          type: 'Mixed',
+          view: Number,
+        },
+      });
+      assertPass(validator, { counts: { view: 1 }});
+      assertFail(validator, { counts: { view: 'bad number' }});
+    });
+
+    it('should validate mixed with nested type object', () => {
+      const validator = getValidatorForDefinition({
+        type: { foo: String },
+      });
+      assertPass(validator, { type: { foo: 'foo' }});
+      assertFail(validator, { type: 'foo' });
+    });
+
+  });
+
 });
