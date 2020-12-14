@@ -44,6 +44,12 @@ function createSchema(definition, options = {}) {
     return getValidatorForDefinition(definition);
   });
 
+  schema.static('getPatchValidator', function getValidator() {
+    return getValidatorForDefinition(definition, {
+      skipRequired: true,
+    });
+  });
+
   schema.methods.assign = function assign(fields) {
     fields = omitBy(fields, (value, key) => {
       return isDisallowedField(this, key) || RESERVED_FIELDS.includes(key);

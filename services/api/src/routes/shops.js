@@ -44,7 +44,7 @@ router
   .post(
     '/',
     validate({
-      body: schema,
+      body: Shop.getValidator(),
     }),
     async (ctx) => {
       const shop = await Shop.create(ctx.request.body);

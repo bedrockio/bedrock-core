@@ -429,11 +429,65 @@ describe('loadModelDir', () => {
 
 describe('validation', () => {
 
+  function assertPass(validator, obj) {
+    expect(() => {
+      Joi.assert(obj, validator);
+    }).not.toThrow();
+  }
+  function assertFail(validator, obj) {
+    expect(() => {
+      Joi.assert(obj, validator);
+    }).toThrow();
+  }
+
   it('should get a Joi validator with getValidator', () => {
     const User = createTestModel(createSchema({
-      name: { type: String },
+      name: {
+        type: String,
+        required: true,
+      },
+      count: {
+        type: Number,
+        required: true,
+      }
     }));
-    expect(Joi.isSchema(User.getValidator())).toBe(true);
+    const validator = User.getValidator();
+    expect(Joi.isSchema(validator)).toBe(true);
+    assertPass(validator, {
+      name: 'foo',
+      count: 10,
+    });
+    assertFail(validator, {
+      name: 'foo',
+    });
+    assertFail(validator, {
+      name: 10,
+      count: 10,
+    });
+    assertFail(validator, {
+      foo: 'bar'
+    });
   });
 
+  it('should skip required fields with getPatchValidator', () => {
+    const User = createTestModel(createSchema({
+      name: {
+        type: String,
+        required: true,
+      },
+      count: {
+        type: Number,
+        required: true,
+      }
+    }));
+    const validator = User.getPatchValidator();
+    expect(Joi.isSchema(validator)).toBe(true);
+    assertPass(validator, {
+      name: 'foo',
+    });
+    assertPass(validator, {
+      count: 10,
+    });
+    assertFail(validator, {});
+  });
 });

@@ -74,6 +74,24 @@ describe('getValidatorForDefinition', () => {
       assertPass(validator, { deletedAt: 'date', name: 'foo' });
     });
 
+    it('should be able to override required fields', () => {
+      const validator = getValidatorForDefinition({
+        name: {
+          type: String,
+          required: true,
+        },
+        count: {
+          type: Number,
+          required: true,
+        }
+      }, {
+        skipRequired: true,
+      });
+      assertPass(validator, { name: 'foo' });
+      assertPass(validator, { count: 5 });
+      assertFail(validator, {});
+    });
+
   });
 
   describe('global options', () => {

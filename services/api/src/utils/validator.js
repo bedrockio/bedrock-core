@@ -1,7 +1,7 @@
 const Joi = require('joi');
 
-function getValidatorForDefinition(definition) {
-  return getObjectValidator(definition)
+function getValidatorForDefinition(definition, options) {
+  return getObjectValidator(definition, options)
     .append({
       id: Joi.any().strip(),
       createdAt: Joi.any().strip(),
@@ -11,41 +11,41 @@ function getValidatorForDefinition(definition) {
     .min(1);
 }
 
-function getObjectValidator(obj) {
+function getObjectValidator(obj, options) {
   const map = {};
   for (let [key, field] of Object.entries(obj)) {
-    map[key] = getValidatorForField(field);
+    map[key] = getValidatorForField(field, options);
   }
   return Joi.object(map);
 }
 
-function getValidatorForField(field) {
+function getValidatorForField(field, options = {}) {
   if (Array.isArray(field)) {
     return Joi.array().items(
       getValidatorForField(field[0])
     );
   }
-  const { type, ...options } = getField(field);
+  const { type, ...params } = getField(field);
   if (!type || type === 'Mixed' || typeof type === 'object') {
     // Mixed fields either have no type, type "mixed",
     // or "type" as a nested object.
-    return getObjectValidator(field);
+    return getObjectValidator(field, options);
   }
   let validator = getValidatorForType(type);
-  if (options.required) {
+  if (params.required && !options.skipRequired) {
     validator = validator.required();
   }
-  if (options.enum) {
-    validator = validator.valid(...options.enum);
+  if (params.enum) {
+    validator = validator.valid(...params.enum);
   }
-  if (options.match) {
-    validator = validator.pattern(RegExp(options.match));
+  if (params.match) {
+    validator = validator.pattern(RegExp(params.match));
   }
-  if (options.min || options.minLength) {
-    validator = validator.min(options.min || options.minLength);
+  if (params.min || params.minLength) {
+    validator = validator.min(params.min || params.minLength);
   }
-  if (options.max || options.maxLength) {
-    validator = validator.max(options.max || options.maxLength);
+  if (params.max || params.maxLength) {
+    validator = validator.max(params.max || params.maxLength);
   }
   return validator;
 }
