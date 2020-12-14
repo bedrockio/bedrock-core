@@ -1,5 +1,5 @@
 const { getValidatorForDefinition } = require('../validator');
-const { setupDb, teardownDb } = require('../../../test-helpers');
+const { setupDb, teardownDb } = require('../../utils/testing');
 const Joi = require('joi');
 
 beforeAll(async () => {
@@ -68,6 +68,13 @@ describe('string validations', () => {
       assertFail(validator, {});
     });
 
+    it('should always fail if no keys set', () => {
+      const validator = getValidatorForDefinition({
+        name: String,
+      });
+      assertFail(validator, {});
+    });
+
   });
 
   describe('string options', () => {
@@ -120,8 +127,6 @@ describe('string validations', () => {
     });
 
     it('should validate a matched field', () => {
-      // TODO: how to handle matching regex pattterns
-      // with JSON schema definitions
       const validator = getValidatorForDefinition({
         name: {
           type: String,
@@ -130,6 +135,17 @@ describe('string validations', () => {
       });
       assertPass(validator, { name: 'foo' });
       assertFail(validator, { name: 'foo ' });
+    });
+
+    it('should convert string match field to regex', () => {
+      const validator = getValidatorForDefinition({
+        name: {
+          type: 'String',
+          match: '^foo$',
+        },
+      });
+      assertPass(validator, { name: 'foo' });
+      assertFail(validator, { name: 'bar' });
     });
 
   });

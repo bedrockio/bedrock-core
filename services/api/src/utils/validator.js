@@ -5,7 +5,7 @@ function getValidatorForDefinition(definition) {
   for (let [key, field] of Object.entries(definition)) {
     obj[key] = getValidatorForField(field);
   }
-  return Joi.object(obj);
+  return Joi.object(obj).min(1);
 }
 
 function getValidatorForField(field) {
@@ -18,7 +18,7 @@ function getValidatorForField(field) {
     validator = validator.valid(...options.enum);
   }
   if (options.match) {
-    validator = validator.pattern(options.match);
+    validator = validator.pattern(RegExp(options.match));
   }
   if (options.min || options.minLength) {
     validator = validator.min(options.min || options.minLength);
