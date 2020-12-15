@@ -1,51 +1,28 @@
 import React, { createRef } from 'react';
-import AppWrapper from 'components/AppWrapper';
+import { startCase, kebabCase } from 'lodash';
 import { Container, Menu, Message, Breadcrumb, Divider, Grid, Sticky, Ref, Segment } from 'semantic-ui-react';
 import { Switch, Route, Link, NavLink } from 'react-router-dom';
 import StandardPage from './StandardPage';
 import PageLoader from 'components/PageLoader';
 
-import GETTING_STARTED_MD from 'docs/GETTING_STARTED.md';
-import AUTHENTICATION_MD from 'docs/AUTHENTICATION.md';
-import USERS_MD from 'docs/USERS.md';
-import UPLOADS_MD from 'docs/UPLOADS.md';
-import SHOPS_MD from 'docs/SHOPS.md';
 import { request } from '../../utils/api';
 import { screen } from 'helpers';
 
-const pages = [
-  {
-    id: 'getting-started',
-    name: 'Getting Started',
-    markdown: GETTING_STARTED_MD,
-  },
-  {
-    id: 'authentication',
-    name: 'Authentication',
-    markdown: AUTHENTICATION_MD,
-  },
-  {
-    id: 'users',
-    name: 'Users',
-    markdown: USERS_MD,
-  },
-  {
-    id: 'uploads',
-    name: 'Uploads',
-    markdown: UPLOADS_MD,
-  },
-  {
-    id: 'shops',
-    name: 'Shops',
-    markdown: SHOPS_MD,
-  },
-];
+import * as DOCS from 'docs';
+
+const PAGES = Object.keys(DOCS).map((name) => {
+  return {
+    id: kebabCase(name),
+    name: startCase(name.toLowerCase()),
+    markdown: DOCS[name],
+  };
+});
 
 function stateForParams(params) {
   const { id } = params;
   return {
     pageId: id,
-    page: id ? pages.find((p) => p.id === id) : pages[0],
+    page: id ? PAGES.find((p) => p.id === id) : PAGES[0],
   };
 }
 
@@ -117,15 +94,13 @@ export default class Docs extends React.Component {
 
     if (!page)
       return (
-        <AppWrapper>
-          <Container>
-            <Message error content="Page not found" />
-          </Container>
-        </AppWrapper>
+        <Container>
+          <Message error content="Page not found" />
+        </Container>
       );
 
     return (
-      <AppWrapper>
+      <React.Fragment>
         <Container>
           <Breadcrumb size="big">
             <Breadcrumb.Section link as={Link} to="/">
@@ -147,7 +122,7 @@ export default class Docs extends React.Component {
               <Ref innerRef={this.contextRef}>
                 <Segment basic>
                   <Switch>
-                    {pages
+                    {PAGES
                       .map((page) => {
                         return (
                           <Route
@@ -163,7 +138,7 @@ export default class Docs extends React.Component {
                           key="index"
                           exact
                           path={`/docs`}
-                          component={(props) => <StandardPage {...props} me={me} openApi={openApi} page={pages[0]} />}
+                          component={(props) => <StandardPage {...props} me={me} openApi={openApi} page={PAGES[0]} />}
                         />,
                       ])}
                   </Switch>
@@ -173,7 +148,7 @@ export default class Docs extends React.Component {
           </Grid.Row>
         </Grid>
         <Divider hidden />
-      </AppWrapper>
+      </React.Fragment>
     );
   }
 
@@ -181,7 +156,7 @@ export default class Docs extends React.Component {
     const { pageId } = this.state;
     return (
       <Menu fluid pointing secondary vertical>
-        {pages.map(({ id, name }) => {
+        {PAGES.map(({ id, name }) => {
           return <Menu.Item key={id} exact name={name} active={pageId === id} to={`/docs/${id}`} as={NavLink} />;
         })}
       </Menu>

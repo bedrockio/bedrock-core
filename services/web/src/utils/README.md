@@ -78,7 +78,7 @@ round(0.232837827873, 3);
 Format US Dollar amount:
 
 ```javascript
-import { formatUsd } from 'utils/formatting';
+import { formatUsd } from 'utils/currency';
 formatUsd(99.999999); // $99.99
 ```
 

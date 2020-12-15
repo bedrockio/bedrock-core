@@ -1,5 +1,4 @@
 import React from 'react';
-import AppWrapper from 'components/AppWrapper';
 import { withSession } from 'stores';
 import { screen } from 'helpers';
 
@@ -14,9 +13,9 @@ export default class Home extends React.Component {
   render() {
     const { user } = this.context;
     return (
-      <AppWrapper>
+      <div>
         Hello {user.name} ({user.email}) from dashboard
-      </AppWrapper>
+      </div>
     );
   }
 }

@@ -68,6 +68,12 @@ export default class SearchProvider extends React.Component {
     }
   };
 
+  reload = () => {
+    // Performed on a setTimeout
+    // to allow state to flush.
+    setTimeout(this.fetch);
+  }
+
   getSorted = (field) => {
     const { sort } = this.state;
     if (field === sort.field) {
@@ -92,8 +98,11 @@ export default class SearchProvider extends React.Component {
   };
 
   setFilters = (filters) => {
+    filters = pickBy(filters, (val) => {
+      return Array.isArray(val) ? val.length : val;
+    });
     this.setState({
-      filters: pickBy(filters),
+      filters,
     });
   };
 
@@ -108,7 +117,7 @@ export default class SearchProvider extends React.Component {
         {this.renderError()}
         {this.props.children({
           ...this.state,
-          reload: this.fetch,
+          reload: this.reload,
           setSort: this.setSort,
           getSorted: this.getSorted,
           setFilters: this.setFilters,

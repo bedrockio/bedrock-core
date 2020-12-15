@@ -9,6 +9,7 @@ const rolesOptions = [
 ];
 
 export default class EditUser extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -16,18 +17,27 @@ export default class EditUser extends React.Component {
       touched: false,
       loading: false,
       error: null,
-      item: props.item || {},
+      user: props.user || {},
     };
   }
 
+  componentDidUpdate(lastProps) {
+    const { user } = this.props;
+    if (user && user !== lastProps.user) {
+      this.setState({
+        user,
+      });
+    }
+  }
+
   isUpdate() {
-    return !!this.props.item;
+    return !!this.props.user;
   }
 
   setField(name, value) {
     this.setState({
-      item: {
-        ...this.state.item,
+      user: {
+        ...this.state.user,
         [name]: value,
       },
     });
@@ -35,7 +45,7 @@ export default class EditUser extends React.Component {
 
   onSubmit = async () => {
     try {
-      const { item } = this.state;
+      const { user } = this.state;
       this.setState({
         loading: true,
         touched: true,
@@ -43,17 +53,17 @@ export default class EditUser extends React.Component {
       if (this.isUpdate()) {
         await request({
           method: 'PATCH',
-          path: `/1/users/${item.id}`,
-          body: item,
+          path: `/1/users/${user.id}`,
+          body: user,
         });
       } else {
         await request({
           method: 'POST',
           path: '/1/users',
-          body: item,
+          body: user,
         });
         this.setState({
-          item: {},
+          user: {},
           touched: false,
         });
       }
@@ -72,7 +82,7 @@ export default class EditUser extends React.Component {
 
   render() {
     const { trigger } = this.props;
-    const { item, open, touched, loading, error } = this.state;
+    const { user, open, touched, loading, error } = this.state;
     return (
       <Modal
         closeIcon
@@ -81,20 +91,23 @@ export default class EditUser extends React.Component {
         onOpen={() => this.setState({ open: true })}
         open={open}
         trigger={trigger}>
-        <Modal.Header>{this.isUpdate() ? `Edit "${item.name}"` : 'New User'}</Modal.Header>
+        <Modal.Header>{this.isUpdate() ? `Edit "${user.name}"` : 'New User'}</Modal.Header>
         <Modal.Content>
           <AutoFocus>
-            <Form error={touched && error}>
+            <Form
+              id="edit-user"
+              onSubmit={this.onSubmit}
+              error={touched && error}>
               {error && <Message error content={error.message} />}
               <Form.Input
-                value={item.name || ''}
+                value={user.name || ''}
                 label="Name"
                 required
                 type="text"
                 onChange={(e, { value }) => this.setField('name', value)}
               />
               <Form.Input
-                value={item.email || ''}
+                value={user.email || ''}
                 required
                 type="email"
                 label="Email"
@@ -104,7 +117,7 @@ export default class EditUser extends React.Component {
                 <Form.Input
                   required
                   label="Password"
-                  value={item.password || ''}
+                  value={user.password || ''}
                   onChange={(e, { value }) => this.setField('password', value)}
                 />
               )}
@@ -115,7 +128,7 @@ export default class EditUser extends React.Component {
                 fluid
                 selection
                 multiple
-                value={item.roles || []}
+                value={user.roles || []}
                 options={rolesOptions}
                 onChange={(e, { value }) => this.setField('roles', value)}
               />
@@ -125,10 +138,10 @@ export default class EditUser extends React.Component {
         <Modal.Actions>
           <Button
             primary
+            form="edit-user"
             loading={loading}
             disabled={loading}
             content={this.isUpdate() ? 'Update' : 'Create'}
-            onClick={this.onSubmit}
           />
         </Modal.Actions>
       </Modal>

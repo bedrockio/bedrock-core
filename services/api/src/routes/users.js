@@ -78,6 +78,7 @@ router
     '/search',
     validate({
       body: Joi.object({
+        name: Joi.string(),
         startAt: Joi.date(),
         endAt: Joi.date(),
         role: Joi.string(),
@@ -93,7 +94,7 @@ router
       }),
     }),
     async (ctx) => {
-      const { sort, skip, limit, startAt, endAt, role } = ctx.request.body;
+      const { name, sort, skip, limit, startAt, endAt, role } = ctx.request.body;
       const query = { deletedAt: { $exists: false } };
       if (startAt || endAt) {
         query.createdAt = {};
@@ -103,6 +104,12 @@ router
         if (endAt) {
           query.createdAt.$lte = endAt;
         }
+      }
+      if (name) {
+        query.name = {
+          $regex: name,
+          $options: 'i',
+        };
       }
       if (role) {
         query['roles.role'] = { $in: [role] };
