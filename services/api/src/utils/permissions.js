@@ -1,7 +1,9 @@
 const endpointDefinitions = require('../permissions.json');
 const endpoints = Object.keys(endpointDefinitions);
+const validContexts = ['global', 'organization'];
 const permissionValues = ['none', 'read', 'read-write'];
 const permissionDefaultValue = 'none';
+const mongoose = require('mongoose');
 
 function permissionWithinBounds(maximumValue, value) {
   if (maximumValue === 'none' && value === 'none') return true;
@@ -44,7 +46,45 @@ function meetsLevel(permissionValue, level) {
   return false;
 }
 
+async function userHasAccess(user, { endpoint, level, context, target }) {
+  if (!endpoint) throw new Error('Expected endpoint (e.g. users)');
+  if (!level) throw new Error('Expected level (e.g. read)');
+  if (!context) throw new Error('Expected context (e.g. organization)');
+  if (!validContexts.includes(context)) throw new Error('Invalid context');
+  if (context !== 'global' && !target) throw new Error('Expected target for non global context');
+  const roles = [];
+  // Gather all relevant roles
+  for (const roleRef of user.roles) {
+    const roleId = roleRef.role.toString();
+    if (roleRef.context === 'global') {
+      const role = await mongoose.models.Role.findById(roleId);
+      if (role.deletedAt) continue;
+      roles.push(role);
+    } else {
+      if (roleRef.context !== context) continue;
+      // Only include target roles (e.g. matching organization ID) when not global context
+      if (context !== 'global') {
+        if (!roleRef.target) continue;
+        const roleTargetId = roleRef.target.toString();
+        if (target.toString() !== roleTargetId) continue;
+      }
+      const role = await mongoose.models.Role.findById(roleId);
+      if (role.deletedAt) continue;
+      roles.push(role);
+    }
+  }
+  let hasAccess = false;
+  for (const role of roles) {
+    const permissionValue = role.permissions[endpoint] || 'none';
+    if (meetsLevel(permissionValue, level)) {
+      hasAccess = true;
+    }
+  }
+  return hasAccess;
+}
+
 module.exports = {
+  validContexts,
   endpointDefinitions,
   endpoints,
   permissionValues,
@@ -52,4 +92,5 @@ module.exports = {
   meetsLevel,
   permissionDefaultValue,
   validatePermissions,
+  userHasAccess,
 };

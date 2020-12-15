@@ -1,7 +1,9 @@
 const Router = require('@koa/router');
 const Joi = require('@hapi/joi');
 const validate = require('../utils/middleware/validate');
-const { authenticate, fetchUser, checkUserRole } = require('../utils/middleware/authenticate');
+const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
+const { requirePermissions } = require('../utils/middleware/permissions');
+
 const { NotFoundError, BadRequestError, GoneError } = require('../utils/errors');
 const { Invite, User } = require('../models');
 
@@ -29,7 +31,7 @@ router
   })
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
-  .use(checkUserRole({ role: 'admin' }))
+  .use(requirePermissions({ endpoint: 'users', level: 'read', context: 'global' }))
   .post(
     '/search',
     validate({
@@ -65,6 +67,7 @@ router
       };
     }
   )
+  .use(requirePermissions({ endpoint: 'users', level: 'write', context: 'global' }))
   .post(
     '/',
     validate({

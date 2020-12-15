@@ -1,4 +1,4 @@
-const { setupDb, teardownDb, request, createUser } = require('../../utils/testing');
+const { setupDb, teardownDb, request, createUser, createUserWithGlobalPermissions } = require('../../utils/testing');
 const { Invite, User } = require('../../models');
 
 beforeAll(async () => {
@@ -12,8 +12,8 @@ afterAll(async () => {
 describe('/1/invites', () => {
   describe('POST /search', () => {
     it('it should list out invites', async () => {
-      const user = await createUser({
-        roles: ['admin'],
+      const user = await createUserWithGlobalPermissions({
+        users: 'read',
       });
 
       const invite1 = await Invite.create({
@@ -36,8 +36,8 @@ describe('/1/invites', () => {
 
   describe('POST /', () => {
     it('should be able to create invite', async () => {
-      const user = await createUser({
-        roles: ['admin'],
+      const user = await createUserWithGlobalPermissions({
+        users: 'read-write',
       });
       const response = await request(
         'POST',
@@ -51,9 +51,11 @@ describe('/1/invites', () => {
     });
     it('should throw an error if user already exists', async () => {
       await User.deleteMany({});
-      const user = await createUser({
-        roles: ['admin'],
+      await createUser({
         email: 'fake@fake.com',
+      });
+      const user = await createUserWithGlobalPermissions({
+        users: 'read-write',
       });
       const response = await request(
         'POST',
@@ -69,8 +71,8 @@ describe('/1/invites', () => {
 
   describe('POST /:invite/resend', () => {
     it('should be able to resend invite', async () => {
-      const user = await createUser({
-        roles: ['admin'],
+      const user = await createUserWithGlobalPermissions({
+        users: 'read-write',
       });
       const invite = await Invite.create({
         email: 'delete@platform.com',
@@ -82,8 +84,8 @@ describe('/1/invites', () => {
 
   describe('DELETE /:invite', () => {
     it('should be able to delete invite', async () => {
-      const user = await createUser({
-        roles: ['admin'],
+      const user = await createUserWithGlobalPermissions({
+        users: 'read-write',
       });
       const invite = await Invite.create({
         email: 'delete@platform.com',

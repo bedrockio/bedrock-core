@@ -1,7 +1,8 @@
 const Router = require('@koa/router');
 const Joi = require('@hapi/joi');
 const validate = require('../utils/middleware/validate');
-const { authenticate, fetchUser, checkUserRole } = require('../utils/middleware/authenticate');
+const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
+const { requirePermissions } = require('../utils/middleware/permissions');
 const { NotFoundError, BadRequestError } = require('../utils/errors');
 const { User } = require('../models');
 
@@ -44,14 +45,13 @@ router
       };
     }
   )
-  .use(checkUserRole({ role: 'admin' }))
+  .use(requirePermissions({ endpoint: 'users', level: 'read', context: 'global' }))
   .post(
     '/',
     validate({
       body: Joi.object({
         email: Joi.string().lowercase().email().required(),
         name: Joi.string().required(),
-        roles: Joi.array().items(Joi.string()),
         password: passwordField.required(),
       }),
     }),
@@ -73,6 +73,7 @@ router
       data: ctx.state.user,
     };
   })
+  .use(requirePermissions({ endpoint: 'users', level: 'write', context: 'global' }))
   .post(
     '/search',
     validate({
@@ -104,7 +105,7 @@ router
         }
       }
       if (role) {
-        query.roles = { $in: [role] };
+        query['roles.role'] = { $in: [role] };
       }
       const data = await User.find(query)
         .sort({ [sort.field]: sort.order === 'desc' ? -1 : 1 })

@@ -5,14 +5,6 @@ const definition = require('./definitions/user.json');
 
 const schema = createSchema(definition.attributes);
 
-schema.methods.isAdmin = function isAdmin() {
-  return this.roles.indexOf('admin') !== -1;
-};
-
-schema.methods.hasRole = function hasRole(role = 'user') {
-  return this.roles.indexOf(role) !== -1;
-};
-
 schema.methods.verifyPassword = function verifyPassword(password) {
   if (!this.hashedPassword) return false;
   return bcrypt.compare(password, this.hashedPassword);

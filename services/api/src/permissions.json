@@ -2,13 +2,22 @@
   "users": {
     "name": "Users",
     "maximums": {
-      "global": "read-write"
+      "global": "read-write",
+      "organization": "none"
     }
   },
   "roles": {
     "name": "Roles",
     "maximums": {
-      "global": "read-write"
+      "global": "read-write",
+      "organization": "none"
+    }
+  },
+  "shops": {
+    "name": "Shops",
+    "maximums": {
+      "global": "read-write",
+      "organization": "read-write"
     }
   }
 }

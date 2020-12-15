@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const config = require('@bedrockio/config');
 const mongoose = require('mongoose');
+const { userHasPermissions } = require('./../permissions');
 
 const secrets = {
   user: config.get('JWT_SECRET'),
@@ -63,17 +64,7 @@ async function fetchUser(ctx, next) {
   await next();
 }
 
-function checkUserRole({ role }) {
-  return (ctx, next) => {
-    if (!(ctx.state.authUser.roles || []).includes(role)) {
-      return ctx.throw(401, `You don't have the right permission for this endpoint (required role: ${role})`);
-    }
-    return next();
-  };
-}
-
 module.exports = {
   authenticate,
   fetchUser,
-  checkUserRole,
 };
