@@ -1,0 +1,14 @@
+{
+  "users": {
+    "name": "Users",
+    "maximums": {
+      "global": "read-write"
+    }
+  },
+  "roles": {
+    "name": "Roles",
+    "maximums": {
+      "global": "read-write"
+    }
+  }
+}
