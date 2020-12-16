@@ -38,18 +38,6 @@ router
     }
     return next();
   })
-  .post(
-    '/',
-    validate({
-      body: productSchema,
-    }),
-    async (ctx) => {
-      const product = await Product.create(ctx.request.body);
-      ctx.body = {
-        data: product,
-      };
-    }
-  )
   .get('/:productId', async (ctx) => {
     const { product } = await ctx.state;
     ctx.body = {
@@ -102,6 +90,18 @@ router
           skip,
           limit,
         },
+      };
+    }
+  )
+  .post(
+    '/',
+    validate({
+      body: productSchema,
+    }),
+    async (ctx) => {
+      const product = await Product.create(ctx.request.body);
+      ctx.body = {
+        data: product,
       };
     }
   )

@@ -41,18 +41,6 @@ router
     }
     return next();
   })
-  .post(
-    '/',
-    validate({
-      body: schema,
-    }),
-    async (ctx) => {
-      const shop = await Shop.create(ctx.request.body);
-      ctx.body = {
-        data: shop,
-      };
-    }
-  )
   .get('/:shopId', async (ctx) => {
     const shop = ctx.state.shop;
     ctx.body = {
@@ -125,6 +113,18 @@ router
           skip,
           limit,
         },
+      };
+    }
+  )
+  .post(
+    '/',
+    validate({
+      body: schema,
+    }),
+    async (ctx) => {
+      const shop = await Shop.create(ctx.request.body);
+      ctx.body = {
+        data: shop,
       };
     }
   )

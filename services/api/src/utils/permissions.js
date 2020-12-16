@@ -51,7 +51,6 @@ async function userHasAccess(user, { endpoint, level, context, target }) {
   if (!level) throw new Error('Expected level (e.g. read)');
   if (!context) throw new Error('Expected context (e.g. organization)');
   if (!validContexts.includes(context)) throw new Error('Invalid context');
-  if (context !== 'global' && !target) throw new Error('Expected target for non global context');
   const roles = [];
   // Gather all relevant roles
   for (const roleRef of user.roles) {
@@ -64,6 +63,7 @@ async function userHasAccess(user, { endpoint, level, context, target }) {
       if (roleRef.context !== context) continue;
       // Only include target roles (e.g. matching organization ID) when not global context
       if (context !== 'global') {
+        if (!target) continue;
         if (!roleRef.target) continue;
         const roleTargetId = roleRef.target.toString();
         if (target.toString() !== roleTargetId) continue;
