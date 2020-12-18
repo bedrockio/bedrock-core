@@ -9,7 +9,7 @@
     "lint"
   ],
   "scripts": {
-  "start": "nodemon -w src --exec \"MOCK_EMAIL=true NODE_ENV=dev node src/index.js | pino-pretty\"",
+    "start": "nodemon -w src --exec \"MOCK_EMAIL=true NODE_ENV=dev node src/index.js | pino-pretty\"",
     "start:production": "node src/index",
     "docs": "node scripts/generate-openapi",
     "emails": "node emails/build",
