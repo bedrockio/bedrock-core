@@ -1,3 +1,5 @@
+require('./utils/tracer');
+
 const { init } = require('./utils/database');
 const { createFixtures } = require('./fixtures');
 const app = require('./app');
