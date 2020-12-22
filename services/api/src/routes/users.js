@@ -47,34 +47,6 @@ router
   )
   .use(requirePermissions({ endpoint: 'users', level: 'read', context: 'global' }))
   .post(
-    '/',
-    validate({
-      body: Joi.object({
-        email: Joi.string().lowercase().email().required(),
-        name: Joi.string().required(),
-        password: passwordField.required(),
-      }),
-    }),
-    async (ctx) => {
-      const { email } = ctx.request.body;
-      const existingUser = await User.findOne({ email, deletedAt: { $exists: false } });
-      if (existingUser) {
-        throw new BadRequestError('A user with that email already exists');
-      }
-      const user = await User.create(ctx.request.body);
-
-      ctx.body = {
-        data: user,
-      };
-    }
-  )
-  .get('/:userId', async (ctx) => {
-    ctx.body = {
-      data: ctx.state.user,
-    };
-  })
-  .use(requirePermissions({ endpoint: 'users', level: 'write', context: 'global' }))
-  .post(
     '/search',
     validate({
       body: Joi.object({
@@ -127,6 +99,34 @@ router
           skip,
           limit,
         },
+      };
+    }
+  )
+  .get('/:userId', async (ctx) => {
+    ctx.body = {
+      data: ctx.state.user,
+    };
+  })
+  .use(requirePermissions({ endpoint: 'users', level: 'write', context: 'global' }))
+  .post(
+    '/',
+    validate({
+      body: Joi.object({
+        email: Joi.string().lowercase().email().required(),
+        name: Joi.string().required(),
+        password: passwordField.required(),
+      }),
+    }),
+    async (ctx) => {
+      const { email } = ctx.request.body;
+      const existingUser = await User.findOne({ email, deletedAt: { $exists: false } });
+      if (existingUser) {
+        throw new BadRequestError('A user with that email already exists');
+      }
+      const user = await User.create(ctx.request.body);
+
+      ctx.body = {
+        data: user,
       };
     }
   )

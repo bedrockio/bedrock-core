@@ -1,14 +1,27 @@
-const { User, Product, Shop, Upload, Category } = require('./models');
+const { User, Role, Product, Shop, Upload, Category } = require('./models');
 const config = require('@bedrockio/config');
 const { storeUploadedFile } = require('./utils/uploads');
 const { logger } = require('./utils/logging');
+const { createMaxPermissions } = require('./utils/permissions');
 
 const adminConfig = {
   name: config.get('ADMIN_NAME'),
   email: config.get('ADMIN_EMAIL'),
   password: config.get('ADMIN_PASSWORD'),
-  roles: ['admin'],
 };
+
+const roles = [
+  {
+    name: 'Super Admin',
+    context: 'global',
+    permissions: createMaxPermissions('global'),
+  },
+  {
+    name: 'Organization Owner',
+    context: 'organization',
+    permissions: createMaxPermissions('organization'),
+  },
+];
 
 const createUpload = async (owner, image) => {
   const path = `${__dirname}/../fixtures/images/${image}`;
@@ -20,12 +33,19 @@ const createUpload = async (owner, image) => {
   });
 };
 
+const createRoles = async () => {
+  for (const role of roles) {
+    await Role.create(role);
+  }
+};
+
 const createFixtures = async () => {
   if (await User.findOne({ email: adminConfig.email })) {
     return false;
   }
 
   logger.info('Creating DB fixtures');
+  await createRoles();
 
   [
     'jewelry',
@@ -57,7 +77,15 @@ const createFixtures = async () => {
     });
   });
 
-  const adminUser = await User.create(adminConfig);
+  const adminUser = await User.create({
+    roles: [
+      {
+        context: 'global',
+        role: await Role.findOne({ name: 'Super Admin' }),
+      },
+    ],
+    ...adminConfig,
+  });
   console.info(`Added admin user ${adminUser.email} to database`);
 
   const shop = await Shop.create({
@@ -76,5 +104,6 @@ const createFixtures = async () => {
 };
 
 module.exports = {
+  createRoles,
   createFixtures,
 };

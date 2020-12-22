@@ -38,6 +38,14 @@ function createDefaultPermissions() {
   return defaultPermissions;
 }
 
+function createMaxPermissions(context) {
+  const defaultPermissions = {};
+  for (const endpoint of endpoints) {
+    defaultPermissions[endpoint] = endpointDefinitions[endpoint].maximums[context] || 'none';
+  }
+  return defaultPermissions;
+}
+
 function meetsLevel(permissionValue, level) {
   if (permissionValue === 'none') return false;
   if (permissionValue === 'read-write' && level === 'write') return true;
@@ -89,6 +97,7 @@ module.exports = {
   endpoints,
   permissionValues,
   createDefaultPermissions,
+  createMaxPermissions,
   meetsLevel,
   permissionDefaultValue,
   validatePermissions,
