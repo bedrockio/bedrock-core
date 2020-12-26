@@ -1,9 +1,8 @@
+const pino = require('pino');
+const config = require('@bedrockio/config');
+
 const tracer = require('./tracer');
-
 const startTime = Symbol('startTime');
-const isLive = process.env.NODE_ENV == 'production';
-
-const pinoFn = require('pino');
 
 function getGlobalContext() {
   const currentSpan = tracer.getCurrentSpan();
@@ -11,7 +10,7 @@ function getGlobalContext() {
   return currentSpan.context();
 }
 
-const parentLogger = pinoFn({
+const parentLogger = pino({
   messageKey: 'message',
   formatters: {
     level(_, level) {
@@ -34,30 +33,11 @@ const parentLogger = pinoFn({
     },
   },
   base: null,
-  timestamp: pinoFn.stdTimeFunctions.isoTime,
+  level: config.get('LOG_LEVEL'),
+  timestamp: pino.stdTimeFunctions.isoTime,
   prettyPrint: process.env.NODE_ENV === 'dev' ? { messageKey: 'message' } : false,
 });
 
-/**
- * A LogEntry
- * @typedef {{request: import('http').IncomingMessage, response: import('http').ServerResponse, latency: number }} LogEntry
- */
-
-/**
- * @callback HttpRequestFormat
- * @param {LogEntry} logEntry Description
- */
-
-/**
- * @typedef {Object} Options
- * @property {HttpRequestFormat} [httpRequestFormat]
- * @property {string} [useLevel=info]
- */
-
-/**
- *
- * @param {*} param0
- */
 function formatCurrentTrace({ traceId, spanId }) {
   return {
     'logging.googleapis.com/spanId': spanId,
@@ -67,14 +47,8 @@ function formatCurrentTrace({ traceId, spanId }) {
 }
 
 const formatters = {
-  /**
-   *
-   * @param {LogEntry} param0
-   */
   gcloud: function ({ request, response, latency }) {
     // https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry
-    // https://cloud.google.com/logging/docs/agent/configuration#special-fields
-
     return Object.assign({
       message: `${request.method} ${request.url} ${response.getHeader('content-length')} - ${latency}ms`,
       httpRequest: {
@@ -93,31 +67,17 @@ const formatters = {
   },
 };
 
-const defaultOptions = {
-  useLevel: 'info',
-  ignoreUserAgents: ['GoogleHC/1.0'],
-  httpRequestFormat: formatters.gcloud,
-};
-
-/**
- *
- * @param {*} options
- */
-exports.httpMiddleware = function httpMiddleware(options) {
-  const { useLevel, ignoreUserAgents } = Object.assign(options, defaultOptions);
-
-  /**
-   *
-   * @param {import('http').IncomingMessage} request
-   * @param {import('http').ServerResponse} response
-   * @param {Error} [error]
-   */
+exports.loggingMiddleware = function loggingMiddleware({
+  useLevel = 'info',
+  ignoreUserAgents = ['GoogleHC/1.0'],
+  httpRequestFormat = formatters.gcloud,
+}) {
   function onResFinished(loggerInstance, request, response, error) {
     const latency = Date.now() - response[startTime];
     const isError = response.statusCode == 500 || !!error;
 
     loggerInstance[isError ? 'error' : useLevel](
-      options.httpRequestFormat({
+      httpRequestFormat({
         response,
         request,
         latency: latency,
@@ -126,16 +86,14 @@ exports.httpMiddleware = function httpMiddleware(options) {
     );
   }
 
-  /**
-   *
-   * @param {import('http').IncomingMessage} req
-   * @param {import('http').ServerResponse} res
-   * @param {function} next
-   */
-  function loggingMiddleware(req, res, next) {
+  function loggingMiddlewareInner(ctx, next) {
+    const res = ctx.res;
+    const req = ctx.req;
+
     res[startTime] = res[startTime] || Date.now();
 
-    const context = isLive && getGlobalContext();
+    // context only works in prod, as the context is trace based
+    const context = process.env.NODE_ENV === 'production' && getGlobalContext();
 
     // if the tracer is ignoring certain urls then it wont be available
     const globalFields = context ? formatCurrentTrace(context) : {};
@@ -143,6 +101,8 @@ exports.httpMiddleware = function httpMiddleware(options) {
     const requestLogger = parentLogger.child({
       ...globalFields,
     });
+
+    ctx.logger = requestLogger;
 
     if (ignoreUserAgents.includes(req.headers['user-agent'])) {
       return next();
@@ -153,20 +113,20 @@ exports.httpMiddleware = function httpMiddleware(options) {
 
     return next();
   }
-  return loggingMiddleware;
+  return loggingMiddlewareInner;
 };
 
 /**
- * @param0 {*} userContext
  * @returns {import('pino').Logger} Logger
  */
-exports.createLogger = function createLogger(context = {}) {
-  const globalContext = isLive && getGlobalContext();
+exports.createLogger = function createLogger(options) {
+  const globalContext = getGlobalContext();
+
   const globalContextFields = globalContext ? formatCurrentTrace(globalContext) : {};
 
   return parentLogger.child({
     ...globalContextFields,
-    ...context,
+    ...options,
   });
 };
 

@@ -9,13 +9,11 @@ const { version } = require('../package.json');
 const routes = require('./routes');
 const config = require('@bedrockio/config');
 const { loadOpenApiDefinitions, expandOpenApi } = require('./utils/openapi');
-const { createLogger, httpMiddleware } = require('./utils/logging');
+const { loggingMiddleware } = require('./utils/logging');
 
 const app = new Koa();
 
 const NODE_ENV = process.env.NODE_ENV;
-
-const http = httpMiddleware({});
 
 app
   .use(errorHandler)
@@ -25,20 +23,13 @@ app
       maxAge: 600,
     })
   )
-  .use(
-    process.env.NODE_ENV === 'test'
-      ? (_, next) => next()
-      : function httpLogger(ctx, next) {
-          return http(ctx.req, ctx.res, next);
-        }
-  )
+  .use(loggingMiddleware({ useLevel: config.get('LOG_LEVEL') }))
   .use(bodyParser({ multipart: true }));
 
-app.on('error', (err) => {
-  const logger = createLogger();
+app.on('error', (err, ctx) => {
   // dont output stacktraces of errors that is throw with status as they are known
   if (!err.status || err.status === 500) {
-    logger.error(err);
+    ctx.logger.error(err);
     Sentry.captureException(err);
   }
 });

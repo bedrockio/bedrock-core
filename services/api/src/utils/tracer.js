@@ -1,16 +1,17 @@
 const opentelemetry = require('@opentelemetry/api');
 
+const { LogLevel } = require('@opentelemetry/core');
 const { NodeTracerProvider } = require('@opentelemetry/node');
 const { SimpleSpanProcessor } = require('@opentelemetry/tracing');
 
 const { TraceExporter } = require('@google-cloud/opentelemetry-cloud-trace-exporter');
 
 const provider = new NodeTracerProvider({
+  logLevel: LogLevel.ERROR,
   plugins: {
     koa: {
       enabled: true,
       path: '@opentelemetry/koa-instrumentation',
-      enhancedDatabaseReporting: true,
     },
     http: {
       enabled: true,
