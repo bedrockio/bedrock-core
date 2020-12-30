@@ -1,10 +1,10 @@
 const pino = require('pino');
 const config = require('@bedrockio/config');
+const { floor } = require('lodash');
 
 const tracer = require('./tracer');
-const startTime = Symbol('startTime');
 
-function getGlobalContext() {
+function getTracerContext() {
   const currentSpan = tracer.getCurrentSpan();
   if (!currentSpan) return null;
   return currentSpan.context();
@@ -33,9 +33,8 @@ const parentLogger = pino({
     },
   },
   base: null,
-  level: config.get('LOG_LEVEL'),
+  level: config.get('LOG_LEVEL') || 'info',
   timestamp: pino.stdTimeFunctions.isoTime,
-  prettyPrint: process.env.NODE_ENV === 'dev' ? { messageKey: 'message' } : false,
 });
 
 function formatCurrentTrace({ traceId, spanId }) {
@@ -46,10 +45,25 @@ function formatCurrentTrace({ traceId, spanId }) {
   };
 }
 
+/**
+ * @returns {import('pino').Logger} Logger
+ */
+function createLogger(options = {}) {
+  const globalContext = getTracerContext();
+  const globalContextFields = globalContext ? formatCurrentTrace(globalContext) : {};
+
+  return parentLogger.child({
+    ...globalContextFields,
+    ...options,
+  });
+}
+
+exports.createLogger = createLogger;
+
 const formatters = {
+  // https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry
   gcloud: function ({ request, response, latency }) {
-    // https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry
-    return Object.assign({
+    return {
       message: `${request.method} ${request.url} ${response.getHeader('content-length')} - ${latency}ms`,
       httpRequest: {
         requestMethod: request.method.toUpperCase(),
@@ -59,75 +73,54 @@ const formatters = {
         userAgent: request.headers['user-agent'],
         referer: request.headers['referer'],
         remoteIp: request.headers['x-forwarded-for'],
-        latency: `${Math.floor(latency / 1e3)}.${Math.floor(latency % 1e3)}s`,
+        latency: `${floor(latency / 1000, 3)}s`,
         protocol: request.headers['x-forwarded-proto'],
-        responseSize: response.getHeader && response.getHeader('content-length'),
+        responseSize: response.getHeader('content-length'),
       },
-    });
+    };
   },
 };
 
-exports.loggingMiddleware = function loggingMiddleware({
-  useLevel = 'info',
-  ignoreUserAgents = ['GoogleHC/1.0'],
-  httpRequestFormat = formatters.gcloud,
-}) {
-  function onResFinished(loggerInstance, request, response, error) {
-    const latency = Date.now() - response[startTime];
-    const isError = response.statusCode == 500 || !!error;
+function onResFinished(loggerInstance, httpRequestFormat, startTime, request, response, error) {
+  const latency = Date.now() - startTime;
+  const isError = response.statusCode == 500 || !!error;
 
-    loggerInstance[isError ? 'error' : useLevel](
-      httpRequestFormat({
-        response,
-        request,
-        latency: latency,
-      }),
-      error
-    );
-  }
+  loggerInstance[isError ? 'error' : 'info'](
+    httpRequestFormat({
+      response,
+      request,
+      latency: latency,
+    }),
+    error
+  );
+}
+
+exports.loggingMiddleware = function loggingMiddleware(options = {}) {
+  const { httpRequestFormat, ignoreUserAgents } = {
+    ignoreUserAgents: ['GoogleHC/1.0', 'kube-probe/1.16+'],
+    httpRequestFormat: formatters.gcloud,
+    ...options,
+  };
 
   function loggingMiddlewareInner(ctx, next) {
     const res = ctx.res;
     const req = ctx.req;
 
-    res[startTime] = res[startTime] || Date.now();
-
-    // context only works in prod, as the context is trace based
-    const context = process.env.NODE_ENV === 'production' && getGlobalContext();
-
-    // if the tracer is ignoring certain urls then it wont be available
-    const globalFields = context ? formatCurrentTrace(context) : {};
-
-    const requestLogger = parentLogger.child({
-      ...globalFields,
-    });
+    const startTime = Date.now();
+    const requestLogger = createLogger();
 
     ctx.logger = requestLogger;
 
-    if (ignoreUserAgents.includes(req.headers['user-agent'])) {
+    if (ignoreUserAgents.includes(ctx.request.get('user-agent'))) {
       return next();
     }
 
-    res.once('finish', () => onResFinished(requestLogger, req, res));
-    res.once('error', (err) => onResFinished(requestLogger, req, res, err));
+    res.once('finish', () => onResFinished(requestLogger, httpRequestFormat, startTime, req, res));
+    res.once('error', (err) => onResFinished(requestLogger, httpRequestFormat, startTime, req, res, err));
 
     return next();
   }
   return loggingMiddlewareInner;
-};
-
-/**
- * @returns {import('pino').Logger} Logger
- */
-exports.createLogger = function createLogger(options) {
-  const globalContext = getGlobalContext();
-
-  const globalContextFields = globalContext ? formatCurrentTrace(globalContext) : {};
-
-  return parentLogger.child({
-    ...globalContextFields,
-    ...options,
-  });
 };
 
 exports.logger = parentLogger;

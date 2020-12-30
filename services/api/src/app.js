@@ -16,14 +16,14 @@ const app = new Koa();
 const NODE_ENV = process.env.NODE_ENV;
 
 app
-  .use(errorHandler)
   .use(
     cors({
       exposeHeaders: ['content-length'],
       maxAge: 600,
     })
   )
-  .use(loggingMiddleware({ useLevel: config.get('LOG_LEVEL') }))
+  .use(loggingMiddleware())
+  .use(errorHandler)
   .use(bodyParser({ multipart: true }));
 
 app.on('error', (err, ctx) => {

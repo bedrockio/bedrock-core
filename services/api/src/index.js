@@ -5,9 +5,6 @@ const { createFixtures } = require('./fixtures');
 const app = require('./app');
 
 const config = require('@bedrockio/config');
-if (process.env.GCLOUD_PROJECT) {
-  require('@google-cloud/trace-agent').start();
-}
 
 const NODE_ENV = process.env.NODE_ENV;
 

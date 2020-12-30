@@ -20,13 +20,7 @@ const provider = new NodeTracerProvider({
   },
 });
 
-if (process.env.NODE_ENV === 'production') {
-  // Configure the span processor to send spans to the exporter
-  provider.addSpanProcessor(new SimpleSpanProcessor(new TraceExporter()));
-  provider.register();
-} else {
-  // const { ZipkinExporter } = require('@opentelemetry/exporter-zipkin');
-  // provider.addSpanProcessor(new SimpleSpanProcessor(new ZipkinExporter({ serviceName: 'api' })));
-}
+provider.addSpanProcessor(new SimpleSpanProcessor(new TraceExporter()));
+provider.register();
 
 module.exports = opentelemetry.trace.getTracer('api');
