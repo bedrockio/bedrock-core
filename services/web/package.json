@@ -81,7 +81,7 @@
     "node-mocks-http": "^1.8.1",
     "prettier": "^2.0.5",
     "prettier-eslint": "^9.0.1",
-    "webpack-bundle-analyzer": "^3.7.0"
+    "webpack-bundle-analyzer": "^4.3.0"
   },
   "volta": {
     "node": "14.15.1",
