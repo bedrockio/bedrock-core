@@ -2,13 +2,13 @@ const Koa = require('koa');
 const koaLogger = require('koa-logger');
 const koaMount = require('koa-mount');
 const koaBasicAuth = require('koa-basic-auth');
-const envMiddleware = require('./middlewares/env');
+const envMiddleware = require('./middleware/env');
 
-const assetsMiddleware = require('./middlewares/assets');
-const historyMiddleware = require('./middlewares/history');
-const templateMiddleware = require('./middlewares/template');
-const healthCheckMiddleware = require('./middlewares/healthCheck');
-const redirectHttpsMiddleware = require('./middlewares/redirectHttps');
+const assetsMiddleware = require('./middleware/assets');
+const historyMiddleware = require('./middleware/history');
+const templateMiddleware = require('./middleware/template');
+const healthCheckMiddleware = require('./middleware/healthCheck');
+const redirectHttpsMiddleware = require('./middleware/redirectHttps');
 
 const {
   BIND_PORT,

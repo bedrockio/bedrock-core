@@ -1,9 +1,9 @@
 const Koa = require('koa');
 const webpack = require('koa-webpack');
 const webpackConfig = require('../webpack.config');
-const envMiddleware = require('./middlewares/env');
-const historyMiddleware = require('./middlewares/history');
-const terminateMiddleware = require('./middlewares/terminate');
+const envMiddleware = require('./middleware/env');
+const historyMiddleware = require('./middleware/history');
+const terminateMiddleware = require('./middleware/terminate');
 
 const app = new Koa();
 
