@@ -64,9 +64,16 @@ describe('getValidatorForDefinition', () => {
       assertFail(validator, {});
     });
 
-    it('should strip out internal fields', () => {
+    it('should be able to strip specific fields', () => {
       const validator = getValidatorForDefinition({
         name: String,
+      }, {
+        stripFields: [
+          'id',
+          'createdAt',
+          'updatedAt',
+          'deletedAt',
+        ],
       });
       assertPass(validator, { id: 1, name: 'foo' });
       assertPass(validator, { createdAt: 'date', name: 'foo' });

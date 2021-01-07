@@ -428,7 +428,6 @@ describe('loadModelDir', () => {
 });
 
 describe('validation', () => {
-
   function assertPass(validator, obj) {
     expect(() => {
       Joi.assert(obj, validator);
@@ -440,17 +439,21 @@ describe('validation', () => {
     }).toThrow();
   }
 
-  it('should get a Joi validator with getValidator', () => {
-    const User = createTestModel(createSchema({
-      name: {
-        type: String,
-        required: true,
-      },
-      count: {
-        type: Number,
-        required: true,
-      }
-    }));
+  describe('getValidator', () => {
+
+  it('should get a basic Joi validator', () => {
+    const User = createTestModel(
+      createSchema({
+        name: {
+          type: String,
+          required: true,
+        },
+        count: {
+          type: Number,
+          required: true,
+        },
+      })
+    );
     const validator = User.getValidator();
     expect(Joi.isSchema(validator)).toBe(true);
     assertPass(validator, {
@@ -465,29 +468,75 @@ describe('validation', () => {
       count: 10,
     });
     assertFail(validator, {
-      foo: 'bar'
+      foo: 'bar',
     });
   });
+  });
 
-  it('should skip required fields with getPatchValidator', () => {
-    const User = createTestModel(createSchema({
-      name: {
-        type: String,
-        required: true,
-      },
-      count: {
-        type: Number,
-        required: true,
-      }
-    }));
-    const validator = User.getPatchValidator();
-    expect(Joi.isSchema(validator)).toBe(true);
-    assertPass(validator, {
-      name: 'foo',
+
+  describe('getPatchValidator', () => {
+
+    it('should skip required fields', () => {
+      const User = createTestModel(
+        createSchema({
+          name: {
+            type: String,
+            required: true,
+          },
+          count: {
+            type: Number,
+            required: true,
+          },
+        })
+      );
+      const validator = User.getPatchValidator();
+      expect(Joi.isSchema(validator)).toBe(true);
+      assertPass(validator, {
+        name: 'foo',
+      });
+      assertPass(validator, {
+        count: 10,
+      });
+      assertFail(validator, {});
     });
-    assertPass(validator, {
-      count: 10,
+
+    it('should strip schema internal fields', () => {
+      const User = createTestModel(
+        createSchema({
+          name: {
+            type: String,
+            required: true,
+          },
+        })
+      );
+      const validator = User.getPatchValidator();
+      assertPass(validator, {
+        name: 'foo',
+        id: 'id',
+        createdAt: 'createdAt',
+        updatedAt: 'updatedAt',
+        deletedAt: 'deletedAt',
+      });
     });
-    assertFail(validator, {});
+
+    it('should fail on private fields', () => {
+      const User = createTestModel(
+        createSchema({
+          name: {
+            type: String,
+            required: true,
+          },
+          password: {
+            type: String,
+            access: 'private',
+          },
+        })
+      );
+      const validator = User.getValidator();
+      assertFail(validator, {
+        name: 'foo',
+        password: 'createdAt',
+      });
+    });
   });
 });

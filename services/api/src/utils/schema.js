@@ -41,11 +41,19 @@ function createSchema(definition, options = {}) {
   );
 
   schema.static('getValidator', function getValidator() {
-    return getValidatorForDefinition(definition);
+    return getValidatorForDefinition(definition, {
+      disallowField: (key) => {
+        return isDisallowedField(this, key);
+      },
+    });
   });
 
-  schema.static('getPatchValidator', function getValidator() {
+  schema.static('getPatchValidator', function getPatchValidator() {
     return getValidatorForDefinition(definition, {
+      disallowField: (key) => {
+        return isDisallowedField(this, key);
+      },
+      stripFields: RESERVED_FIELDS,
       skipRequired: true,
     });
   });
@@ -61,10 +69,12 @@ function createSchema(definition, options = {}) {
       this[key] = value;
     }
   };
+
   schema.methods.delete = function () {
     this.deletedAt = new Date();
     return this.save();
   };
+
   return schema;
 }
 

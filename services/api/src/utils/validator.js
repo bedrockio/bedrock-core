@@ -1,28 +1,28 @@
 const Joi = require('joi');
 
-function getValidatorForDefinition(definition, options) {
-  return getObjectValidator(definition, options)
-    .append({
-      id: Joi.any().strip(),
-      createdAt: Joi.any().strip(),
-      updatedAt: Joi.any().strip(),
-      deletedAt: Joi.any().strip(),
-    })
-    .min(1);
+function getValidatorForDefinition(definition, options = {}) {
+  return getObjectValidator(definition, options).min(1);
 }
 
 function getObjectValidator(obj, options) {
   const map = {};
+  const { disallowField, stripFields = [] } = options;
   for (let [key, field] of Object.entries(obj)) {
+    if (disallowField && disallowField(key)) {
+      continue;
+    }
     map[key] = getValidatorForField(field, options);
+  }
+  for (let key of stripFields) {
+    map[key] = Joi.any().strip();
   }
   return Joi.object(map);
 }
 
-function getValidatorForField(field, options = {}) {
+function getValidatorForField(field, options) {
   if (Array.isArray(field)) {
     return Joi.array().items(
-      getValidatorForField(field[0])
+      getValidatorForField(field[0], options)
     );
   }
   const { type, ...params } = getField(field);
