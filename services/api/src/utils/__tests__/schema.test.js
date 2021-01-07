@@ -269,6 +269,7 @@ describe('createSchema', () => {
       data = JSON.parse(JSON.stringify(shop));
       expect(data.users).toEqual([]);
     });
+
   });
 
   describe('autopopulate', () => {
@@ -440,42 +441,39 @@ describe('validation', () => {
   }
 
   describe('getValidator', () => {
-
-  it('should get a basic Joi validator', () => {
-    const User = createTestModel(
-      createSchema({
-        name: {
-          type: String,
-          required: true,
-        },
-        count: {
-          type: Number,
-          required: true,
-        },
-      })
-    );
-    const validator = User.getValidator();
-    expect(Joi.isSchema(validator)).toBe(true);
-    assertPass(validator, {
-      name: 'foo',
-      count: 10,
-    });
-    assertFail(validator, {
-      name: 'foo',
-    });
-    assertFail(validator, {
-      name: 10,
-      count: 10,
-    });
-    assertFail(validator, {
-      foo: 'bar',
+    it('should get a basic Joi validator', () => {
+      const User = createTestModel(
+        createSchema({
+          name: {
+            type: String,
+            required: true,
+          },
+          count: {
+            type: Number,
+            required: true,
+          },
+        })
+      );
+      const validator = User.getValidator();
+      expect(Joi.isSchema(validator)).toBe(true);
+      assertPass(validator, {
+        name: 'foo',
+        count: 10,
+      });
+      assertFail(validator, {
+        name: 'foo',
+      });
+      assertFail(validator, {
+        name: 10,
+        count: 10,
+      });
+      assertFail(validator, {
+        foo: 'bar',
+      });
     });
   });
-  });
-
 
   describe('getPatchValidator', () => {
-
     it('should skip required fields', () => {
       const User = createTestModel(
         createSchema({
