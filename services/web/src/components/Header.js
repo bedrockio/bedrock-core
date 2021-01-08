@@ -9,6 +9,9 @@ export default class Header extends React.Component {
 
   render() {
     const { user, isAdmin } = this.context;
+    if (!user) {
+      return null;
+    }
     return (
       <header>
         <Menu inverted fixed="top">

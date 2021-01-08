@@ -7,26 +7,6 @@ const { Product } = require('../models');
 
 const router = new Router();
 
-const productSchema = Joi.object({
-  name: Joi.string().required(),
-  shop: Joi.string().required(),
-  description: Joi.string(),
-  expiresAt: Joi.string(),
-  priceUsd: Joi.number().min(0.1).max(1000000),
-  isFeatured: Joi.boolean(),
-  images: Joi.array().items(Joi.string()),
-  sellingPoints: Joi.array().items(Joi.string()),
-});
-
-const productPatchSchema = productSchema.append({
-  name: Joi.string().optional(),
-  shop: Joi.string().optional(),
-  id: Joi.string().strip(),
-  createdAt: Joi.date().strip(),
-  updatedAt: Joi.date().strip(),
-  deletedAt: Joi.date().strip(),
-});
-
 router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
@@ -38,6 +18,18 @@ router
     }
     return next();
   })
+  .post(
+    '/',
+    validate({
+      body: Product.getValidator(),
+    }),
+    async (ctx) => {
+      const product = await Product.create(ctx.request.body);
+      ctx.body = {
+        data: product,
+      };
+    }
+  )
   .get('/:productId', async (ctx) => {
     const { product } = await ctx.state;
     ctx.body = {
@@ -108,7 +100,7 @@ router
   .patch(
     '/:productId',
     validate({
-      body: productPatchSchema,
+      body: Product.getPatchValidator(),
     }),
     async (ctx) => {
       const product = ctx.state.product;
