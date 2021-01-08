@@ -31,7 +31,7 @@ router
   })
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
-  .use(requirePermissions({ endpoint: 'users', level: 'read', context: 'global' }))
+  .use(requirePermissions({ endpoint: 'users', permission: 'read', scope: 'global' }))
   .post(
     '/search',
     validate({
@@ -67,7 +67,7 @@ router
       };
     }
   )
-  .use(requirePermissions({ endpoint: 'users', level: 'write', context: 'global' }))
+  .use(requirePermissions({ endpoint: 'users', permission: 'write', scope: 'global' }))
   .post(
     '/',
     validate({

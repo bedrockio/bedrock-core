@@ -1,4 +1,4 @@
-const { setupDb, teardownDb, request, createUser, createUserWithGlobalPermissions } = require('../../utils/testing');
+const { setupDb, teardownDb, request, createUser, createUserWithRole } = require('../../utils/testing');
 const { User } = require('../../models');
 
 jest.mock('../../utils/emails');
@@ -59,7 +59,7 @@ describe('/1/users', () => {
 
   describe('POST /', () => {
     it('should be able to create user', async () => {
-      const admin = await createUserWithGlobalPermissions({ users: 'read-write' });
+      const admin = await createUserWithRole('global', 'superAdmin');
       const response = await request(
         'POST',
         '/1/users',
@@ -93,7 +93,7 @@ describe('/1/users', () => {
 
   describe('GET /:user', () => {
     it('should be able to access user', async () => {
-      const admin = await createUserWithGlobalPermissions({ users: 'read-write' });
+      const admin = await createUserWithRole('global', 'superAdmin');
       const user1 = await createUser({ name: 'One' });
       const response = await request('GET', `/1/users/${user1.id}`, {}, { user: admin });
       expect(response.status).toBe(200);
@@ -109,7 +109,7 @@ describe('/1/users', () => {
 
   describe('POST /search', () => {
     it('it should list out users', async () => {
-      const admin = await createUserWithGlobalPermissions({ users: 'read-write' });
+      const admin = await createUserWithRole('global', 'superAdmin');
       const user1 = await createUser({ name: 'One' });
       const user2 = await createUser({ name: 'Two' });
 
@@ -132,7 +132,7 @@ describe('/1/users', () => {
 
   describe('PATCH /:user', () => {
     it('admins should be able to update user', async () => {
-      const admin = await createUserWithGlobalPermissions({ users: 'read-write' });
+      const admin = await createUserWithRole('global', 'superAdmin');
       const user1 = await createUser({ name: 'new name' });
       const response = await request('PATCH', `/1/users/${user1.id}`, { name: 'new name' }, { user: admin });
       expect(response.status).toBe(200);
@@ -150,7 +150,7 @@ describe('/1/users', () => {
 
   describe('DELETE /:user', () => {
     it('should be able to delete user', async () => {
-      const admin = await createUserWithGlobalPermissions({ users: 'read-write' });
+      const admin = await createUserWithRole('global', 'superAdmin');
       const user1 = await createUser({ name: 'One' });
       const response = await request('DELETE', `/1/users/${user1.id}`, {}, { user: admin });
       expect(response.status).toBe(204);

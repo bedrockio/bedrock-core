@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const { setupDb, teardownDb } = require('../testing');
-const { User, Role } = require('./../../models');
+const { setupDb, teardownDb } = require('../../testing');
+const { User } = require('./../../models');
 const { validatePermissions, userHasAccess } = require('../permissions');
 
 beforeAll(async () => {
@@ -26,209 +26,173 @@ describe('permissions', () => {
     };
     expect(validation3).toThrow(Error);
   });
-  it('userHasPermissions global context', async () => {
+  it('userHasPermissions global scope', async () => {
     await User.deleteMany({});
-    await Role.deleteMany({});
-    const superAdminRole = await Role.create({
-      name: 'Super Admin',
-      context: 'global',
-      permissions: {
-        shops: 'read-write',
-        users: 'read-write',
-      },
-    });
     const superAdminUser = await User.create({
       email: 'admin@permissions.com',
+      firstName: 'John',
+      lastName: 'Doe',
       roles: [
         {
-          context: 'global',
-          role: superAdminRole._id,
+          scope: 'global',
+          role: 'superAdmin',
         },
       ],
     });
-    expect(await userHasAccess(superAdminUser, { context: 'global', level: 'read', endpoint: 'shops' })).toBe(true);
+    expect(userHasAccess(superAdminUser, { scope: 'global', permission: 'read', endpoint: 'events' })).toBe(true);
     expect(
-      await userHasAccess(superAdminUser, { context: 'organization', level: 'read', endpoint: 'shops', target: '123' })
+      userHasAccess(superAdminUser, { scope: 'account', permission: 'read', endpoint: 'events', scopeRef: '123' })
     ).toBe(true);
-    expect(await userHasAccess(superAdminUser, { context: 'global', level: 'read', endpoint: 'unknown' })).toBe(false);
-    expect(await userHasAccess(superAdminUser, { context: 'global', level: 'write', endpoint: 'shops' })).toBe(true);
-    expect(await userHasAccess(superAdminUser, { context: 'global', level: 'write', endpoint: 'users' })).toBe(true);
-    const limitedAdminRole = await Role.create({
-      name: 'Limited Admin',
-      context: 'global',
-      permissions: {
-        shops: 'read',
-        users: 'none',
-      },
-    });
+    expect(userHasAccess(superAdminUser, { scope: 'global', permission: 'read', endpoint: 'unknown' })).toBe(false);
+    expect(userHasAccess(superAdminUser, { scope: 'global', permission: 'write', endpoint: 'events' })).toBe(true);
+    expect(userHasAccess(superAdminUser, { scope: 'global', permission: 'write', endpoint: 'users' })).toBe(true);
     const limitedAdminUser = await User.create({
       email: 'limited@permissions.com',
+      firstName: 'John',
+      lastName: 'Doe',
       roles: [
         {
-          context: 'global',
-          role: limitedAdminRole._id,
+          scope: 'global',
+          role: 'limitedAdmin',
         },
       ],
     });
-    expect(await userHasAccess(limitedAdminUser, { context: 'global', level: 'read', endpoint: 'shops' })).toBe(true);
-    expect(await userHasAccess(limitedAdminUser, { context: 'global', level: 'read', endpoint: 'unknown' })).toBe(
-      false
-    );
-    expect(await userHasAccess(limitedAdminUser, { context: 'global', level: 'write', endpoint: 'shops' })).toBe(false);
-    expect(await userHasAccess(limitedAdminUser, { context: 'global', level: 'read', endpoint: 'users' })).toBe(false);
-    expect(await userHasAccess(limitedAdminUser, { context: 'global', level: 'write', endpoint: 'users' })).toBe(false);
+    expect(userHasAccess(limitedAdminUser, { scope: 'global', permission: 'read', endpoint: 'events' })).toBe(true);
+    expect(userHasAccess(limitedAdminUser, { scope: 'global', permission: 'read', endpoint: 'unknown' })).toBe(false);
+    expect(userHasAccess(limitedAdminUser, { scope: 'global', permission: 'write', endpoint: 'events' })).toBe(false);
+    expect(userHasAccess(limitedAdminUser, { scope: 'global', permission: 'read', endpoint: 'users' })).toBe(false);
+    expect(userHasAccess(limitedAdminUser, { scope: 'global', permission: 'write', endpoint: 'users' })).toBe(false);
   });
-  it('userHasPermissions organization context', async () => {
+  it('userHasPermissions account scope', async () => {
     await User.deleteMany({});
-    await Role.deleteMany({});
-    const organization1Id = new mongoose.Types.ObjectId();
-    const organization2Id = new mongoose.Types.ObjectId();
-    const organizationAdminRole = await Role.create({
-      name: 'Organization Admin',
-      context: 'organization',
-      permissions: {
-        shops: 'read-write',
-        users: 'none',
-      },
-    });
-    const organizationAdminUser = await User.create({
+    const account1Id = new mongoose.Types.ObjectId();
+    const account2Id = new mongoose.Types.ObjectId();
+    const accountAdminUser = await User.create({
       email: 'admin@permissions.com',
+      firstName: 'John',
+      lastName: 'Doe',
       roles: [
         {
-          context: 'organization',
-          role: organizationAdminRole._id,
-          target: organization1Id,
+          scope: 'account',
+          role: 'superAdmin',
+          scopeRef: account1Id,
         },
       ],
     });
     expect(
-      await userHasAccess(organizationAdminUser, {
-        context: 'organization',
-        level: 'read',
-        endpoint: 'shops',
-        target: organization1Id,
+      userHasAccess(accountAdminUser, {
+        scope: 'account',
+        permission: 'read',
+        endpoint: 'events',
+        scopeRef: account1Id,
       })
     ).toBe(true);
     expect(
-      await userHasAccess(organizationAdminUser, {
-        context: 'global',
-        level: 'read',
-        endpoint: 'shops',
-        target: organization1Id,
+      userHasAccess(accountAdminUser, {
+        scope: 'global',
+        permission: 'read',
+        endpoint: 'events',
+        scopeRef: account1Id,
       })
     ).toBe(false);
     expect(
-      await userHasAccess(organizationAdminUser, {
-        context: 'organization',
-        level: 'read',
-        endpoint: 'shops',
-        target: organization2Id,
+      userHasAccess(accountAdminUser, {
+        scope: 'account',
+        permission: 'read',
+        endpoint: 'events',
+        scopeRef: account2Id,
       })
     ).toBe(false);
     expect(
-      await userHasAccess(organizationAdminUser, {
-        context: 'organization',
-        level: 'read',
+      userHasAccess(accountAdminUser, {
+        scope: 'account',
+        permission: 'read',
         endpoint: 'unknown',
-        target: organization1Id,
+        scopeRef: account1Id,
       })
     ).toBe(false);
     expect(
-      await userHasAccess(organizationAdminUser, {
-        context: 'organization',
-        level: 'write',
-        endpoint: 'shops',
-        target: organization1Id,
+      userHasAccess(accountAdminUser, {
+        scope: 'account',
+        permission: 'write',
+        endpoint: 'events',
+        scopeRef: account1Id,
       })
     ).toBe(true);
     expect(
-      await userHasAccess(organizationAdminUser, {
-        context: 'organization',
-        level: 'write',
-        endpoint: 'shops',
-        target: organization2Id,
+      userHasAccess(accountAdminUser, {
+        scope: 'account',
+        permission: 'write',
+        endpoint: 'events',
+        scopeRef: account2Id,
       })
     ).toBe(false);
     expect(
-      await userHasAccess(organizationAdminUser, {
-        context: 'organization',
-        level: 'read',
+      userHasAccess(accountAdminUser, {
+        scope: 'account',
+        permission: 'read',
         endpoint: 'users',
-        target: organization1Id,
+        scopeRef: account2Id,
       })
     ).toBe(false);
-    expect(
-      await userHasAccess(organizationAdminUser, {
-        context: 'organization',
-        level: 'read',
-        endpoint: 'users',
-        target: organization2Id,
-      })
-    ).toBe(false);
-    const limitedAdminRole = await Role.create({
-      name: 'Limited Admin',
-      context: 'organization',
-      permissions: {
-        shops: 'read',
-        users: 'none',
-      },
-    });
     const limitedAdminUser = await User.create({
       email: 'limitedadmin@permissions.com',
+      firstName: 'John',
+      lastName: 'Doe',
       roles: [
         {
-          context: 'organization',
-          role: limitedAdminRole._id,
-          target: organization1Id,
+          scope: 'account',
+          role: 'limitedAdmin',
+          scopeRef: account1Id,
         },
       ],
     });
     expect(
-      await userHasAccess(limitedAdminUser, {
-        context: 'organization',
-        level: 'read',
-        endpoint: 'shops',
-        target: organization1Id,
+      userHasAccess(limitedAdminUser, {
+        scope: 'account',
+        permission: 'read',
+        endpoint: 'events',
+        scopeRef: account1Id,
       })
     ).toBe(true);
     expect(
-      await userHasAccess(limitedAdminUser, {
-        context: 'organization',
-        level: 'read',
-        endpoint: 'shops',
-        target: organization2Id,
+      userHasAccess(limitedAdminUser, {
+        scope: 'account',
+        permission: 'read',
+        endpoint: 'events',
+        scopeRef: account2Id,
       })
     ).toBe(false);
     expect(
-      await userHasAccess(limitedAdminUser, {
-        context: 'organization',
-        level: 'read',
+      userHasAccess(limitedAdminUser, {
+        scope: 'account',
+        permission: 'read',
         endpoint: 'unknown',
-        target: organization1Id,
+        scopeRef: account1Id,
       })
     ).toBe(false);
     expect(
-      await userHasAccess(limitedAdminUser, {
-        context: 'organization',
-        level: 'write',
-        endpoint: 'shops',
-        target: organization1Id,
+      userHasAccess(limitedAdminUser, {
+        scope: 'account',
+        permission: 'write',
+        endpoint: 'events',
+        scopeRef: account1Id,
       })
     ).toBe(false);
     expect(
-      await userHasAccess(limitedAdminUser, {
-        context: 'organization',
-        level: 'read',
+      userHasAccess(limitedAdminUser, {
+        scope: 'account',
+        permission: 'read',
         endpoint: 'users',
-        target: organization1Id,
+        scopeRef: account1Id,
       })
     ).toBe(false);
     expect(
-      await userHasAccess(limitedAdminUser, {
-        context: 'organization',
-        level: 'write',
+      userHasAccess(limitedAdminUser, {
+        scope: 'account',
+        permission: 'write',
         endpoint: 'users',
-        target: organization1Id,
+        scopeRef: account1Id,
       })
     ).toBe(false);
   });

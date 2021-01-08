@@ -1,19 +1,19 @@
 const { userHasAccess } = require('./../permissions');
 
-function requirePermissions({ endpoint, level, context = 'global' }) {
-  if (!endpoint || !level) {
-    throw new Error('Need endpoint and level for requirePermissions');
+function requirePermissions({ endpoint, permission, scope = 'global' }) {
+  if (!endpoint || !permission) {
+    throw new Error('Need endpoint and permission for requirePermissions');
   }
   return async (ctx, next) => {
     if (!ctx.state.authUser) {
       return ctx.throw(401, `This endpoint requires authentication`);
     }
-    const target = ctx.state[context] || undefined;
-    const hasAccess = await userHasAccess(ctx.state.authUser, { context, endpoint, level, target });
+    const scopeRef = ctx.state[scope] || undefined;
+    const hasAccess = userHasAccess(ctx.state.authUser, { scope, endpoint, permission, scopeRef });
     if (!hasAccess) {
       return ctx.throw(
         401,
-        `You don't have the right permission for endpoint ${endpoint} (required level: ${context}/${level})`
+        `You don't have the right permission for endpoint ${endpoint} (required permission: ${scope}/${permission})`
       );
     }
     return next();

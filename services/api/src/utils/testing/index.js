@@ -43,20 +43,16 @@ async function createUser(userAttributes = {}) {
   });
 }
 
-async function createUserWithGlobalPermissions(permissions, userAttributes = {}) {
+async function createUserWithRole(scope, role, userAttributes = {}, scopeRef = undefined) {
   const email = `${uniqueId('email')}@platform.com`;
-  const role = await models.Role.create({
-    context: 'global',
-    name: `${email} permissions`,
-    permissions,
-  });
   return await models.User.create({
     email,
     name: 'test user',
     roles: [
       {
+        scope,
         role,
-        context: 'global',
+        scopeRef,
       },
     ],
     ...userAttributes,
@@ -72,6 +68,6 @@ module.exports = {
   request,
   setupDb,
   createUser,
-  createUserWithGlobalPermissions,
+  createUserWithRole,
   teardownDb,
 };

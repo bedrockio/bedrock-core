@@ -9,9 +9,9 @@
     },
     "roles": [
       {
-        "context": { "type": "String", "enum": ["global", "organization"], "required": true },
-        "target": { "type": "ObjectId" },
-        "role": { "type": "ObjectId", "ref": "Role", "required": true  }
+        "role": { "type": "string", "required": true },
+        "scope": { "type": "String", "enum": ["global", "account"], "required": true },
+        "scopeRef": { "type": "ObjectId" }
       }
     ],
     "name": {

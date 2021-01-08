@@ -85,18 +85,6 @@ router
       };
     }
   )
-  .post(
-    '/',
-    validate({
-      body: productSchema,
-    }),
-    async (ctx) => {
-      const product = await Product.create(ctx.request.body);
-      ctx.body = {
-        data: product,
-      };
-    }
-  )
   .patch(
     '/:productId',
     validate({

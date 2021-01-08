@@ -105,18 +105,6 @@ router
       };
     }
   )
-  .post(
-    '/',
-    validate({
-      body: schema,
-    }),
-    async (ctx) => {
-      const shop = await Shop.create(ctx.request.body);
-      ctx.body = {
-        data: shop,
-      };
-    }
-  )
   .patch(
     '/:shopId',
     validate({

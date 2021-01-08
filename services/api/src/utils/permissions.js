@@ -1,6 +1,7 @@
+const roleDefinitions = require('../roles.json');
 const endpointDefinitions = require('../permissions.json');
 const endpoints = Object.keys(endpointDefinitions);
-const validContexts = ['global', 'organization'];
+const validScopes = ['global', 'account'];
 const permissionValues = ['none', 'read', 'read-write'];
 const permissionDefaultValue = 'none';
 const mongoose = require('mongoose');
@@ -15,15 +16,15 @@ function permissionWithinBounds(maximumValue, value) {
   return false;
 }
 
-function validatePermissions(context, permissions) {
+function validatePermissions(scope, permissions) {
   const endpoints = Object.keys(permissions);
   for (const endpoint of endpoints) {
     if (endpoint[0] === '$') continue;
     const permissionValue = permissions[endpoint] || 'none';
-    const maximumPermissionValue = endpointDefinitions[endpoint].maximums[context] || 'none';
+    const maximumPermissionValue = endpointDefinitions[endpoint].maximums[scope] || 'none';
     if (!permissionWithinBounds(maximumPermissionValue, permissionValue)) {
       throw new Error(
-        `Permission ${permissionValue} for endpoint ${endpoint} exceeds maximum permission ${maximumPermissionValue} in context ${context}`
+        `Permission ${permissionValue} for endpoint ${endpoint} exceeds maximum permission ${maximumPermissionValue} in scope ${scope}`
       );
     }
   }
@@ -38,61 +39,73 @@ function createDefaultPermissions() {
   return defaultPermissions;
 }
 
-function createMaxPermissions(context) {
+function createMaxPermissions(scope) {
   const defaultPermissions = {};
   for (const endpoint of endpoints) {
-    defaultPermissions[endpoint] = endpointDefinitions[endpoint].maximums[context] || 'none';
+    defaultPermissions[endpoint] = endpointDefinitions[endpoint].maximums[scope] || 'none';
   }
   return defaultPermissions;
 }
 
-function meetsLevel(permissionValue, level) {
+function meetsLevel(permissionValue, requiredPermission) {
   if (permissionValue === 'none') return false;
-  if (permissionValue === 'read-write' && level === 'write') return true;
-  if (permissionValue === 'read-write' && level === 'read') return true;
-  if (permissionValue === 'read' && level === 'read') return true;
+  if (permissionValue === 'read-write' && requiredPermission === 'write') return true;
+  if (permissionValue === 'read-write' && requiredPermission === 'read') return true;
+  if (permissionValue === 'read' && requiredPermission === 'read') return true;
   return false;
 }
 
-async function userHasAccess(user, { endpoint, level, context, target }) {
+function userHasAccess(user, { endpoint, permission, scope, scopeRef }) {
   if (!endpoint) throw new Error('Expected endpoint (e.g. users)');
-  if (!level) throw new Error('Expected level (e.g. read)');
-  if (!context) throw new Error('Expected context (e.g. organization)');
-  if (!validContexts.includes(context)) throw new Error('Invalid context');
+  if (!permission) throw new Error('Expected permission (e.g. read)');
+  if (!scope) throw new Error('Expected scope (e.g. organization)');
+  if (!validScopes.includes(scope)) throw new Error('Invalid scope');
   const roles = [];
   // Gather all relevant roles
   for (const roleRef of user.roles) {
     const roleId = roleRef.role.toString();
-    if (roleRef.context === 'global') {
-      const role = await mongoose.models.Role.findById(roleId);
-      if (role.deletedAt) continue;
+    if (roleRef.scope === 'global') {
+      const role = roleDefinitions[roleId];
+      if (!role) continue;
       roles.push(role);
     } else {
-      if (roleRef.context !== context) continue;
-      // Only include target roles (e.g. matching organization ID) when not global context
-      if (context !== 'global') {
-        if (!target) continue;
-        if (!roleRef.target) continue;
-        const roleTargetId = roleRef.target.toString();
-        if (target.toString() !== roleTargetId) continue;
+      if (roleRef.scope !== scope) continue;
+      // Only include scopeRef roles (e.g. matching organization ID) when not global scope
+      if (scope !== 'global') {
+        if (!scopeRef) continue;
+        if (!roleRef.scopeRef) continue;
+        const roleTargetId = roleRef.scopeRef.toString();
+        if (scopeRef.toString() !== roleTargetId) continue;
       }
-      const role = await mongoose.models.Role.findById(roleId);
-      if (role.deletedAt) continue;
+      const role = roleDefinitions[roleId];
+      if (!role) continue;
       roles.push(role);
     }
   }
   let hasAccess = false;
   for (const role of roles) {
     const permissionValue = role.permissions[endpoint] || 'none';
-    if (meetsLevel(permissionValue, level)) {
+    if (meetsLevel(permissionValue, permission)) {
       hasAccess = true;
     }
   }
   return hasAccess;
 }
 
+function expandRoles(user) {
+  return {
+    ...user.toJSON(),
+    roles: user.toJSON().roles.map((roleRef) => {
+      return {
+        ...roleRef,
+        roleDefinition: roleDefinitions[roleRef.role],
+      };
+    }),
+  };
+}
+
 module.exports = {
-  validContexts,
+  validScopes,
   endpointDefinitions,
   endpoints,
   permissionValues,
@@ -102,4 +115,5 @@ module.exports = {
   permissionDefaultValue,
   validatePermissions,
   userHasAccess,
+  expandRoles,
 };

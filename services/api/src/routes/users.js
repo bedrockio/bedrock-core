@@ -5,6 +5,8 @@ const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
 const { NotFoundError, BadRequestError } = require('../utils/errors');
 const { User } = require('../models');
+const roles = require('./../roles.json');
+const permissions = require('./../permissions.json');
 
 const router = new Router();
 
@@ -45,7 +47,17 @@ router
       };
     }
   )
-  .use(requirePermissions({ endpoint: 'users', level: 'read', context: 'global' }))
+  .use(requirePermissions({ endpoint: 'users', permission: 'read', scope: 'global' }))
+  .get('/roles', (ctx) => {
+    ctx.body = {
+      data: roles,
+    };
+  })
+  .get('/permissions', (ctx) => {
+    ctx.body = {
+      data: permissions,
+    };
+  })
   .post(
     '/search',
     validate({
@@ -107,7 +119,7 @@ router
       data: ctx.state.user,
     };
   })
-  .use(requirePermissions({ endpoint: 'users', level: 'write', context: 'global' }))
+  .use(requirePermissions({ endpoint: 'users', permission: 'write', scope: 'global' }))
   .post(
     '/',
     validate({

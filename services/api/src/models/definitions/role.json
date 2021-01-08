@@ -1,8 +1,0 @@
-{
-  "attributes": {
-    "context": { "type": "String", "enum": [], "required": true },
-    "name": { "type": "String", "trim": true, "required": "true" },
-    "description": { "type": "String", "trim": true },
-    "deletedAt": { "type": "Date" }
-  }
-}
