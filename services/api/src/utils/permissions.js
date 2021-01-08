@@ -1,10 +1,9 @@
 const roleDefinitions = require('../roles.json');
 const endpointDefinitions = require('../permissions.json');
 const endpoints = Object.keys(endpointDefinitions);
-const validScopes = ['global', 'account'];
+const validScopes = ['global', 'organization'];
 const permissionValues = ['none', 'read', 'read-write'];
 const permissionDefaultValue = 'none';
-const mongoose = require('mongoose');
 
 function permissionWithinBounds(maximumValue, value) {
   if (maximumValue === 'none' && value === 'none') return true;

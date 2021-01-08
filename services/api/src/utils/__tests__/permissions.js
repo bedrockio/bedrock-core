@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { setupDb, teardownDb } = require('../../testing');
+const { setupDb, teardownDb } = require('../testing');
 const { User } = require('./../../models');
 const { validatePermissions, userHasAccess } = require('../permissions');
 
@@ -41,7 +41,7 @@ describe('permissions', () => {
     });
     expect(userHasAccess(superAdminUser, { scope: 'global', permission: 'read', endpoint: 'events' })).toBe(true);
     expect(
-      userHasAccess(superAdminUser, { scope: 'account', permission: 'read', endpoint: 'events', scopeRef: '123' })
+      userHasAccess(superAdminUser, { scope: 'organization', permission: 'read', endpoint: 'events', scopeRef: '123' })
     ).toBe(true);
     expect(userHasAccess(superAdminUser, { scope: 'global', permission: 'read', endpoint: 'unknown' })).toBe(false);
     expect(userHasAccess(superAdminUser, { scope: 'global', permission: 'write', endpoint: 'events' })).toBe(true);
@@ -63,76 +63,76 @@ describe('permissions', () => {
     expect(userHasAccess(limitedAdminUser, { scope: 'global', permission: 'read', endpoint: 'users' })).toBe(false);
     expect(userHasAccess(limitedAdminUser, { scope: 'global', permission: 'write', endpoint: 'users' })).toBe(false);
   });
-  it('userHasPermissions account scope', async () => {
+  it('userHasPermissions organization scope', async () => {
     await User.deleteMany({});
-    const account1Id = new mongoose.Types.ObjectId();
-    const account2Id = new mongoose.Types.ObjectId();
-    const accountAdminUser = await User.create({
+    const organization1Id = new mongoose.Types.ObjectId();
+    const organization2Id = new mongoose.Types.ObjectId();
+    const organizationAdminUser = await User.create({
       email: 'admin@permissions.com',
       firstName: 'John',
       lastName: 'Doe',
       roles: [
         {
-          scope: 'account',
+          scope: 'organization',
           role: 'superAdmin',
-          scopeRef: account1Id,
+          scopeRef: organization1Id,
         },
       ],
     });
     expect(
-      userHasAccess(accountAdminUser, {
-        scope: 'account',
+      userHasAccess(organizationAdminUser, {
+        scope: 'organization',
         permission: 'read',
         endpoint: 'events',
-        scopeRef: account1Id,
+        scopeRef: organization1Id,
       })
     ).toBe(true);
     expect(
-      userHasAccess(accountAdminUser, {
+      userHasAccess(organizationAdminUser, {
         scope: 'global',
         permission: 'read',
         endpoint: 'events',
-        scopeRef: account1Id,
+        scopeRef: organization1Id,
       })
     ).toBe(false);
     expect(
-      userHasAccess(accountAdminUser, {
-        scope: 'account',
+      userHasAccess(organizationAdminUser, {
+        scope: 'organization',
         permission: 'read',
         endpoint: 'events',
-        scopeRef: account2Id,
+        scopeRef: organization2Id,
       })
     ).toBe(false);
     expect(
-      userHasAccess(accountAdminUser, {
-        scope: 'account',
+      userHasAccess(organizationAdminUser, {
+        scope: 'organization',
         permission: 'read',
         endpoint: 'unknown',
-        scopeRef: account1Id,
+        scopeRef: organization1Id,
       })
     ).toBe(false);
     expect(
-      userHasAccess(accountAdminUser, {
-        scope: 'account',
+      userHasAccess(organizationAdminUser, {
+        scope: 'organization',
         permission: 'write',
         endpoint: 'events',
-        scopeRef: account1Id,
+        scopeRef: organization1Id,
       })
     ).toBe(true);
     expect(
-      userHasAccess(accountAdminUser, {
-        scope: 'account',
+      userHasAccess(organizationAdminUser, {
+        scope: 'organization',
         permission: 'write',
         endpoint: 'events',
-        scopeRef: account2Id,
+        scopeRef: organization2Id,
       })
     ).toBe(false);
     expect(
-      userHasAccess(accountAdminUser, {
-        scope: 'account',
+      userHasAccess(organizationAdminUser, {
+        scope: 'organization',
         permission: 'read',
         endpoint: 'users',
-        scopeRef: account2Id,
+        scopeRef: organization2Id,
       })
     ).toBe(false);
     const limitedAdminUser = await User.create({
@@ -141,58 +141,58 @@ describe('permissions', () => {
       lastName: 'Doe',
       roles: [
         {
-          scope: 'account',
+          scope: 'organization',
           role: 'limitedAdmin',
-          scopeRef: account1Id,
+          scopeRef: organization1Id,
         },
       ],
     });
     expect(
       userHasAccess(limitedAdminUser, {
-        scope: 'account',
+        scope: 'organization',
         permission: 'read',
         endpoint: 'events',
-        scopeRef: account1Id,
+        scopeRef: organization1Id,
       })
     ).toBe(true);
     expect(
       userHasAccess(limitedAdminUser, {
-        scope: 'account',
+        scope: 'organization',
         permission: 'read',
         endpoint: 'events',
-        scopeRef: account2Id,
+        scopeRef: organization2Id,
       })
     ).toBe(false);
     expect(
       userHasAccess(limitedAdminUser, {
-        scope: 'account',
+        scope: 'organization',
         permission: 'read',
         endpoint: 'unknown',
-        scopeRef: account1Id,
+        scopeRef: organization1Id,
       })
     ).toBe(false);
     expect(
       userHasAccess(limitedAdminUser, {
-        scope: 'account',
+        scope: 'organization',
         permission: 'write',
         endpoint: 'events',
-        scopeRef: account1Id,
+        scopeRef: organization1Id,
       })
     ).toBe(false);
     expect(
       userHasAccess(limitedAdminUser, {
-        scope: 'account',
+        scope: 'organization',
         permission: 'read',
         endpoint: 'users',
-        scopeRef: account1Id,
+        scopeRef: organization1Id,
       })
     ).toBe(false);
     expect(
       userHasAccess(limitedAdminUser, {
-        scope: 'account',
+        scope: 'organization',
         permission: 'write',
         endpoint: 'users',
-        scopeRef: account1Id,
+        scopeRef: organization1Id,
       })
     ).toBe(false);
   });

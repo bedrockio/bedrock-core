@@ -10,7 +10,7 @@
     "roles": [
       {
         "role": { "type": "string", "required": true },
-        "scope": { "type": "String", "enum": ["global", "account"], "required": true },
+        "scope": { "type": "String", "required": true },
         "scopeRef": { "type": "ObjectId" }
       }
     ],
