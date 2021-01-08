@@ -114,7 +114,6 @@ describe('/1/users', () => {
       const user2 = await createUser({ roles: ['user'], name: 'Two' });
 
       const response = await request('POST', '/1/users/search', {}, { user: admin });
-
       expect(response.status).toBe(200);
       const body = response.body;
       const names = body.data.map((i) => i.name);
