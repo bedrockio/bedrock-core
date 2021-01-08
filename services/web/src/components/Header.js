@@ -3,10 +3,10 @@ import { withSession } from 'stores';
 import { NavLink, Link } from 'react-router-dom';
 import { Container, Dropdown, Icon, Menu } from 'semantic-ui-react';
 import logo from 'assets/favicon.svg';
+import Protected from 'components/Protected';
 
 @withSession
 export default class Header extends React.Component {
-
   render() {
     const { user, isAdmin } = this.context;
     if (!user) {
@@ -38,16 +38,16 @@ export default class Header extends React.Component {
                   <Dropdown.Item as={Link} to="/docs/getting-started">
                     API Docs
                   </Dropdown.Item>
-                  {isAdmin() && (
-                    <React.Fragment>
-                      <Dropdown.Item as={Link} to="/users">
-                        Users
-                      </Dropdown.Item>
-                      <Dropdown.Item as={Link} to="/invites">
-                        Invites
-                      </Dropdown.Item>
-                    </React.Fragment>
-                  )}
+                  <Protected endpoint="events">
+                    <Dropdown.Item as={Link} to="/users">
+                      Users
+                    </Dropdown.Item>
+                  </Protected>
+                  <Protected endpoint="events">
+                    <Dropdown.Item as={Link} to="/invites">
+                      Invites
+                    </Dropdown.Item>
+                  </Protected>
                   <Dropdown.Item as={Link} to="/logout">
                     Log Out
                   </Dropdown.Item>
@@ -59,5 +59,4 @@ export default class Header extends React.Component {
       </header>
     );
   }
-
 }

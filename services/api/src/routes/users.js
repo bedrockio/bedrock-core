@@ -5,6 +5,7 @@ const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
 const { NotFoundError, BadRequestError } = require('../utils/errors');
 const { User } = require('../models');
+const { expandRoles } = require('./../utils/permissions');
 const roles = require('./../roles.json');
 const permissions = require('./../permissions.json');
 
@@ -26,8 +27,9 @@ router
     return next();
   })
   .get('/me', (ctx) => {
+    const { authUser } = ctx.state;
     ctx.body = {
-      data: ctx.state.authUser,
+      data: expandRoles(authUser),
     };
   })
   .patch(
@@ -43,7 +45,7 @@ router
       authUser.assign(ctx.request.body);
       await authUser.save();
       ctx.body = {
-        data: authUser,
+        data: expandRoles(authUser),
       };
     }
   )
@@ -105,7 +107,7 @@ router
 
       const total = await User.countDocuments(query);
       ctx.body = {
-        data,
+        data: data.map((item) => expandRoles(item)),
         meta: {
           total,
           skip,
@@ -149,7 +151,12 @@ router
         id: Joi.string().strip(),
         email: Joi.string(),
         name: Joi.string(),
-        roles: Joi.array().items(Joi.string()),
+        roles: Joi.array().items(
+          Joi.object({
+            role: Joi.string().required(),
+            scope: Joi.string().required(),
+          })
+        ),
         createdAt: Joi.date().strip(),
         updatedAt: Joi.date().strip(),
       }),
