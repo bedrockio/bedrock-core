@@ -1,0 +1,34 @@
+{
+  "superAdmin": {
+    "name": "Super Admin",
+    "permissions": {
+      "users": "read-write",
+      "brands": "read-write",
+      "events": "read-write",
+      "videos": "read-write",
+      "products": "read-write",
+      "orders": "read-write",
+      "analytics": "read",
+      "comments": "read-write",
+      "addresses": "read",
+      "causes": "read-write",
+      "carts": "read"
+    }
+  },
+  "limitedAdmin": {
+    "name": "Limited Admin",
+    "permissions": {
+      "users": "none",
+      "brands": "read",
+      "events": "read",
+      "videos": "read",
+      "products": "read",
+      "orders": "read",
+      "analytics": "read",
+      "comments": "read",
+      "addresses": "read",
+      "causes": "read",
+      "carts": "read"
+    }
+  }
+}

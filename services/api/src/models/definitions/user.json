@@ -9,7 +9,9 @@
     },
     "roles": [
       {
-        "type": "String"
+        "role": { "type": "string", "required": true },
+        "scope": { "type": "String", "required": true },
+        "scopeRef": { "type": "ObjectId" }
       }
     ],
     "name": {

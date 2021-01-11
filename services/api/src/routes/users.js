@@ -1,10 +1,14 @@
 const Router = require('@koa/router');
 const Joi = require('@hapi/joi');
 const validate = require('../utils/middleware/validate');
-const { authenticate, fetchUser, checkUserRole } = require('../utils/middleware/authenticate');
+const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
+const { requirePermissions } = require('../utils/middleware/permissions');
 const { NotFoundError, BadRequestError } = require('../utils/errors');
 const { searchValidation, exportValidation, getSearchQuery, search, searchExport } = require('../utils/search');
 const { User } = require('../models');
+const { expandRoles } = require('./../utils/permissions');
+const roles = require('./../roles.json');
+const permissions = require('./../permissions.json');
 
 const router = new Router();
 
@@ -24,8 +28,9 @@ router
     return next();
   })
   .get('/me', (ctx) => {
+    const { authUser } = ctx.state;
     ctx.body = {
-      data: ctx.state.authUser,
+      data: expandRoles(authUser),
     };
   })
   .patch(
@@ -41,37 +46,19 @@ router
       authUser.assign(ctx.request.body);
       await authUser.save();
       ctx.body = {
-        data: authUser,
+        data: expandRoles(authUser),
       };
     }
   )
-  .use(checkUserRole({ role: 'admin' }))
-  .post(
-    '/',
-    validate({
-      body: Joi.object({
-        email: Joi.string().lowercase().email().required(),
-        name: Joi.string().required(),
-        roles: Joi.array().items(Joi.string()),
-        password: passwordField.required(),
-      }),
-    }),
-    async (ctx) => {
-      const { email } = ctx.request.body;
-      const existingUser = await User.findOne({ email, deletedAt: { $exists: false } });
-      if (existingUser) {
-        throw new BadRequestError('A user with that email already exists');
-      }
-      const user = await User.create(ctx.request.body);
-
-      ctx.body = {
-        data: user,
-      };
-    }
-  )
-  .get('/:userId', async (ctx) => {
+  .use(requirePermissions({ endpoint: 'users', permission: 'read', scope: 'global' }))
+  .get('/roles', (ctx) => {
     ctx.body = {
-      data: ctx.state.user,
+      data: roles,
+    };
+  })
+  .get('/permissions', (ctx) => {
+    ctx.body = {
+      data: permissions,
     };
   })
   .post(
@@ -96,7 +83,7 @@ router
         };
       }
       if (role) {
-        query.roles = { $in: [role] };
+        query['roles.role'] = { $in: [role] };
       }
       const { data, meta } = await search(User, query, body);
 
@@ -105,8 +92,36 @@ router
       }
 
       ctx.body = {
-        data,
+        data: data.map((item) => expandRoles(item)),
         meta,
+      };
+    }
+  )
+  .get('/:userId', async (ctx) => {
+    ctx.body = {
+      data: ctx.state.user,
+    };
+  })
+  .use(requirePermissions({ endpoint: 'users', permission: 'write', scope: 'global' }))
+  .post(
+    '/',
+    validate({
+      body: Joi.object({
+        email: Joi.string().lowercase().email().required(),
+        name: Joi.string().required(),
+        password: passwordField.required(),
+      }),
+    }),
+    async (ctx) => {
+      const { email } = ctx.request.body;
+      const existingUser = await User.findOne({ email, deletedAt: { $exists: false } });
+      if (existingUser) {
+        throw new BadRequestError('A user with that email already exists');
+      }
+      const user = await User.create(ctx.request.body);
+
+      ctx.body = {
+        data: user,
       };
     }
   )
@@ -117,7 +132,12 @@ router
         id: Joi.string().strip(),
         email: Joi.string(),
         name: Joi.string(),
-        roles: Joi.array().items(Joi.string()),
+        roles: Joi.array().items(
+          Joi.object({
+            role: Joi.string().required(),
+            scope: Joi.string().required(),
+          })
+        ),
         createdAt: Joi.date().strip(),
         updatedAt: Joi.date().strip(),
       }),

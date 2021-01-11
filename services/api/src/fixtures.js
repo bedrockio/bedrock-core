@@ -7,7 +7,6 @@ const adminConfig = {
   name: config.get('ADMIN_NAME'),
   email: config.get('ADMIN_EMAIL'),
   password: config.get('ADMIN_PASSWORD'),
-  roles: ['admin'],
 };
 
 const createUpload = async (owner, image) => {
@@ -57,7 +56,10 @@ const createFixtures = async () => {
     });
   });
 
-  const adminUser = await User.create(adminConfig);
+  const adminUser = await User.create({
+    ...adminConfig,
+    roles: [{ scope: 'global', role: 'superAdmin' }],
+  });
   console.info(`Added admin user ${adminUser.email} to database`);
 
   const shop = await Shop.create({

@@ -1,4 +1,4 @@
-const { setupDb, teardownDb, request, createUser } = require('../../utils/testing');
+const { setupDb, teardownDb, request, createUser, createUserWithRole } = require('../../utils/testing');
 const { User } = require('../../models');
 
 jest.mock('../../utils/emails');
@@ -59,7 +59,7 @@ describe('/1/users', () => {
 
   describe('POST /', () => {
     it('should be able to create user', async () => {
-      const admin = await createUser({ roles: ['admin'] });
+      const admin = await createUserWithRole('global', 'superAdmin');
       const response = await request(
         'POST',
         '/1/users',
@@ -75,7 +75,7 @@ describe('/1/users', () => {
       expect(data.name).toBe('Hello');
     });
     it('it should deny access to non-admins', async () => {
-      const user = await createUser({ roles: ['user'] });
+      const user = await createUser({});
       const response = await request(
         'POST',
         '/1/users',
@@ -93,15 +93,15 @@ describe('/1/users', () => {
 
   describe('GET /:user', () => {
     it('should be able to access user', async () => {
-      const admin = await createUser({ roles: ['admin'] });
-      const user1 = await createUser({ roles: ['user'], name: 'One' });
+      const admin = await createUserWithRole('global', 'superAdmin');
+      const user1 = await createUser({ name: 'One' });
       const response = await request('GET', `/1/users/${user1.id}`, {}, { user: admin });
       expect(response.status).toBe(200);
       expect(response.body.data.name).toBe(user1.name);
     });
     it('it should deny access to non-admins', async () => {
-      const user = await createUser({ roles: ['user'] });
-      const user1 = await createUser({ roles: ['user'], name: 'new name' });
+      const user = await createUser({});
+      const user1 = await createUser({ name: 'new name' });
       const response = await request('GET', `/1/users/${user1.id}`, {}, { user });
       expect(response.status).toBe(401);
     });
@@ -109,9 +109,9 @@ describe('/1/users', () => {
 
   describe('POST /search', () => {
     it('it should list out users', async () => {
-      const admin = await createUser({ roles: ['admin'] });
-      const user1 = await createUser({ roles: ['user'], name: 'One' });
-      const user2 = await createUser({ roles: ['user'], name: 'Two' });
+      const admin = await createUserWithRole('global', 'superAdmin');
+      const user1 = await createUser({ name: 'One' });
+      const user2 = await createUser({ name: 'Two' });
 
       const response = await request('POST', '/1/users/search', {}, { user: admin });
       expect(response.status).toBe(200);
@@ -123,7 +123,7 @@ describe('/1/users', () => {
     });
 
     it('it should deny access to non-admins', async () => {
-      const user = await createUser({ roles: ['user'] });
+      const user = await createUser({});
       const response = await request('POST', '/1/users/search', {}, { user });
       expect(response.status).toBe(401);
     });
@@ -131,8 +131,8 @@ describe('/1/users', () => {
 
   describe('PATCH /:user', () => {
     it('admins should be able to update user', async () => {
-      const admin = await createUser({ roles: ['admin'] });
-      const user1 = await createUser({ roles: ['user'], name: 'new name' });
+      const admin = await createUserWithRole('global', 'superAdmin');
+      const user1 = await createUser({ name: 'new name' });
       const response = await request('PATCH', `/1/users/${user1.id}`, { name: 'new name' }, { user: admin });
       expect(response.status).toBe(200);
       expect(response.body.data.name).toBe('new name');
@@ -140,8 +140,8 @@ describe('/1/users', () => {
       expect(dbUser.name).toEqual('new name');
     });
     it('it should deny access to non-admins', async () => {
-      const user = await createUser({ roles: ['user'] });
-      const user1 = await createUser({ roles: ['user'], name: 'new name' });
+      const user = await createUser({});
+      const user1 = await createUser({ name: 'new name' });
       const response = await request('PATCH', `/1/users/${user1.id}`, { name: 'new name' }, { user });
       expect(response.status).toBe(401);
     });
@@ -149,16 +149,16 @@ describe('/1/users', () => {
 
   describe('DELETE /:user', () => {
     it('should be able to delete user', async () => {
-      const admin = await createUser({ roles: ['admin'] });
-      const user1 = await createUser({ roles: ['user'], name: 'One' });
+      const admin = await createUserWithRole('global', 'superAdmin');
+      const user1 = await createUser({ name: 'One' });
       const response = await request('DELETE', `/1/users/${user1.id}`, {}, { user: admin });
       expect(response.status).toBe(204);
       const dbUser = await User.findById(user1._id);
       expect(dbUser.deletedAt).toBeDefined();
     });
     it('it should deny access to non-admins', async () => {
-      const user = await createUser({ roles: ['user'] });
-      const user1 = await createUser({ roles: ['user'], name: 'One' });
+      const user = await createUser({});
+      const user1 = await createUser({ name: 'One' });
       const response = await request('DELETE', `/1/users/${user1.id}`, {}, { user });
       expect(response.status).toBe(401);
     });
