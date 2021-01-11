@@ -42,9 +42,9 @@ function getSearchQuery(body, options = {}) {
     }
   }
   if (keyword && !options.keywordFields) {
-    throw new Error('No keyword search has been configured for this API call')
+    throw new Error('No keyword search has been configured for this API call');
   }
-  if (keyword && options.keywordFields)
+  if (keyword && options.keywordFields) {
     query.$or = options.keywordFields.map((field) => {
       return {
         [field]: keyword,
