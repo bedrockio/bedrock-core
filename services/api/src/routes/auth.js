@@ -32,7 +32,6 @@ router
 
       const user = await User.create({
         ...ctx.request.body,
-        roles: ['user'],
       });
 
       await sendWelcome({

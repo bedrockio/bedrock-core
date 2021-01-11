@@ -1,14 +1,13 @@
 const mongoose = require('mongoose');
 const { uniqueId } = require('lodash');
 
-exports.context = require('./context');
-exports.request = require('./request');
+const context = require('./context');
+const request = require('./request');
 
 const { loadModelDir } = require('./../schema');
 const models = loadModelDir(__dirname + '/../../models');
-exports.models = models;
 
-exports.setupDb = async () => {
+async function setupDb() {
   const mongooseOpts = {
     useNewUrlParser: true,
     useCreateIndex: true,
@@ -28,16 +27,47 @@ exports.setupDb = async () => {
       process.exit(1);
     }
   });
-};
+}
 
-exports.createUser = async (userAttributes = {}) => {
+async function defaultOrganization() {
+  return (
+    (await models.Organization.findOne({ name: 'Default' })) || (await models.Organization.create({ name: 'Default' }))
+  );
+}
+
+async function createUser(userAttributes = {}) {
   return await models.User.create({
     email: `${uniqueId('email')}@platform.com`,
     name: 'test user',
     ...userAttributes,
   });
-};
+}
 
-exports.teardownDb = async () => {
+async function createUserWithRole(scope, role, userAttributes = {}, scopeRef = undefined) {
+  const email = `${uniqueId('email')}@platform.com`;
+  return await models.User.create({
+    email,
+    name: 'test user',
+    roles: [
+      {
+        scope,
+        role,
+        scopeRef,
+      },
+    ],
+    ...userAttributes,
+  });
+}
+
+async function teardownDb() {
   await mongoose.disconnect();
+}
+
+module.exports = {
+  context,
+  request,
+  setupDb,
+  createUser,
+  createUserWithRole,
+  teardownDb,
 };
