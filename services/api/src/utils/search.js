@@ -17,7 +17,7 @@ function searchValidation(options = {}) {
       order: sortOrder,
     }),
     limit: Joi.number().positive().default(limit),
-    keywords: Joi.string(),
+    keyword: Joi.string(),
   };
 }
 
@@ -30,7 +30,7 @@ function exportValidation(options = {}) {
 }
 
 function getSearchQuery(body, options = {}) {
-  const { keywords, startAt, endAt } = body;
+  const { keyword, startAt, endAt } = body;
   const query = { deletedAt: { $exists: false } };
   if (startAt || endAt) {
     query.createdAt = {};
@@ -41,15 +41,18 @@ function getSearchQuery(body, options = {}) {
       query.createdAt.$lte = endAt;
     }
   }
-  if (keywords && options.keywordsFields) {
-    query.$or = options.keywordsFields.map((field) => {
+  if (keyword && !options.keywordFields) {
+    throw new Error('No keyword search has been configured for this API call')
+  }
+  if (keyword && options.keywordFields)
+    query.$or = options.keywordFields.map((field) => {
       return {
-        [field]: keywords,
+        [field]: keyword,
       };
     });
-    if (ObjectId.isValid(keywords)) {
+    if (ObjectId.isValid(keyword)) {
       query.$or.push({
-        _id: keywords,
+        _id: keyword,
       });
     }
   }
