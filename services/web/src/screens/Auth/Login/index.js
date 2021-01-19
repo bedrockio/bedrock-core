@@ -13,11 +13,10 @@ import { Link } from 'react-router-dom';
 @screen
 @withSession
 export default class Login extends React.Component {
-
   state = {
     error: null,
     loading: false,
-  }
+  };
 
   onSubmit = async (body) => {
     try {
@@ -33,7 +32,7 @@ export default class Login extends React.Component {
       this.context.setToken(data.token);
       await this.context.loadUser();
       this.props.history.push('/');
-    } catch(error) {
+    } catch (error) {
       this.setState({
         error,
         loading: false,
@@ -48,7 +47,11 @@ export default class Login extends React.Component {
         <LogoTitle title="Login" />
         <Segment.Group>
           <Segment padded>
-            <LoginForm onSubmit={this.onSubmit} error={error} loading={loading} />
+            <LoginForm
+              onSubmit={this.onSubmit}
+              error={error}
+              loading={loading}
+            />
           </Segment>
           <Segment secondary>
             <Grid>
