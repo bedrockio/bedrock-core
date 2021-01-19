@@ -1,7 +1,6 @@
 const Router = require('@koa/router');
 const Koa = require('koa');
 const cors = require('@koa/cors');
-const logger = require('koa-logger');
 const bodyParser = require('koa-body');
 const errorHandler = require('./utils/middleware/error-handler');
 const Sentry = require('@sentry/node');
@@ -10,25 +9,27 @@ const { version } = require('../package.json');
 const routes = require('./routes');
 const config = require('@bedrockio/config');
 const { loadOpenApiDefinitions, expandOpenApi } = require('./utils/openapi');
+const { loggingMiddleware } = require('./utils/logging');
 
 const app = new Koa();
 
 const NODE_ENV = process.env.NODE_ENV;
 
 app
-  .use(errorHandler)
-  .use(NODE_ENV === 'test' ? (_, next) => next() : logger())
   .use(
     cors({
       exposeHeaders: ['content-length'],
       maxAge: 600,
     })
   )
+  .use(errorHandler)
+  .use(loggingMiddleware())
   .use(bodyParser({ multipart: true }));
 
 app.on('error', (err, ctx) => {
-  if (ctx.status === 500) {
-    console.error(err);
+  // dont output stacktraces of errors that is throw with status as they are known
+  if (!err.status || err.status === 500) {
+    ctx.logger.error(err);
     Sentry.captureException(err);
   }
 });
