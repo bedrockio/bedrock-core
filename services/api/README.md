@@ -97,6 +97,45 @@ DB fixtures are loaded automatically in the dev environment. However, using this
 
 _Note: In the staging environment this script can be run by obtaining a shell into the API CLI pod (See Deployment)_
 
+## Multi Tenancy
+
+The API is "multi tenant ready" and can be modified to accommodate specific tenancy patterns:
+
+- Single Tenant per platform deployment: Organization model could be removed.
+- Basic Multi Tenancy: Each request will result in a "Default" organization to be set. This can be overriden using the "Organization" header.
+- Managed Multi Tenancy: Manually add new organizations in the "Organizations" CRUD UI in the dashboard. Suitable for smaller enterprise use cases.
+- Self Serve Multi Tenancy; Requires changes to the register mechanism to create a new Organization for each signup. Suitable for broad SaaS.
+- Advanced Multi Tenancy; Allow users to self signup and also be invited into multiple organizations. Requires expaning the user model and invite mechanism to allow for multiple organizations.
+
+Example Create API call with multi tenancy enabled:
+
+```js
+const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
+const { requirePermissions } = require('../utils/middleware/permissions');
+
+router
+  .use(authenticate({ type: 'user' }))
+  .use(fetchUser)
+  // Only allow access to users that have write permissions for this organization
+  .use(requirePermissions({ endpoint: 'shops', level: 'write', context: 'organization' }))
+  .post(
+    '/',
+    validate({
+      body: schema,
+    }),
+    async (ctx) => {
+      const shop = await Shop.create({
+        // Set the organization for each object created
+        organization: ctx.state.organization,
+        ...ctx.request.body,
+      });
+      ctx.body = {
+        data: shop,
+      };
+    }
+  );
+```
+
 ## Updating E-Mail Templates
 
 E-mail templates can be found in `emails/src`. When changes are made, run the following command to optimize the emails for mail readers:

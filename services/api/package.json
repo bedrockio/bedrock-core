@@ -27,6 +27,8 @@
     "@koa/router": "^9.3.1",
     "@sentry/node": "^5.20.1",
     "bcrypt": "^5.0.0",
+    "fast-csv": "^4.3.6",
+    "joi": "^17.3.0",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.0",
     "koa-body": "^4.2.0",

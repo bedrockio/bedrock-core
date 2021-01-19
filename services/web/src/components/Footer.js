@@ -1,10 +1,17 @@
 import React from 'react';
+import { withSession } from 'stores';
 import { Container } from 'semantic-ui-react';
 import { Layout } from './Layout';
 import bedrock from 'assets/bedrock.svg';
 
+@withSession
 export default class Footer extends React.Component {
+
   render() {
+    const { user } = this.context;
+    if (!user) {
+      return null;
+    }
     return (
       <footer>
         <Container>
