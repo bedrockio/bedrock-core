@@ -12,6 +12,5 @@
             "machineType": "n2-standard-2"
         },
         "label": "app"
-    },
-    "platformName": "bedrock-foundation"
+    }
 }
