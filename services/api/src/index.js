@@ -14,13 +14,13 @@ const HOST = config.get('BIND_HOST');
 
 module.exports = (async () => {
   await init();
-  if (NODE_ENV === 'dev') {
+  if (NODE_ENV === 'development') {
     await createFixtures();
   }
 
   app.listen(PORT, HOST, () => {
     console.info(`Started on port //${HOST}:${PORT}`);
-    if (NODE_ENV === 'dev') {
+    if (NODE_ENV === 'development') {
       console.info('-----------------------------------------------------------------');
       console.info(
         `${config.get('APP_NAME')} Admin Login ${config.get('ADMIN_EMAIL')}:${config.get(
