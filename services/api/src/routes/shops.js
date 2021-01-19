@@ -7,29 +7,6 @@ const { Shop } = require('../models');
 
 const router = new Router();
 
-const schema = Joi.object({
-  // --- Generator: create
-  name: Joi.string().required(),
-  description: Joi.string(),
-  images: Joi.array().items(Joi.string()),
-  categories: Joi.array().items(Joi.string()),
-  country: Joi.string(),
-  // --- Generator: end
-});
-
-const patchSchema = schema.append({
-  id: Joi.string().strip(),
-  // --- Generator: update
-  name: Joi.string(),
-  categories: Joi.array().items(Joi.string()),
-  images: Joi.array().items(Joi.string()),
-  country: Joi.string(),
-  // --- Generator: end
-  createdAt: Joi.date().strip(),
-  updatedAt: Joi.date().strip(),
-  deletedAt: Joi.date().strip(),
-});
-
 router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
@@ -44,7 +21,7 @@ router
   .post(
     '/',
     validate({
-      body: schema,
+      body: Shop.getValidator(),
     }),
     async (ctx) => {
       const shop = await Shop.create(ctx.request.body);
@@ -131,7 +108,7 @@ router
   .patch(
     '/:shopId',
     validate({
-      body: patchSchema,
+      body: Shop.getPatchValidator(),
     }),
     async (ctx) => {
       const shop = ctx.state.shop;

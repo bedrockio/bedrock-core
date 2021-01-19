@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const { startCase, omitBy } = require('lodash');
 const { ObjectId } = mongoose.Schema.Types;
+const { getValidatorForDefinition } = require('./validator');
 
 const RESERVED_FIELDS = ['id', 'createdAt', 'updatedAt', 'deletedAt'];
 
@@ -38,6 +39,25 @@ function createSchema(definition, options = {}) {
       ...options,
     }
   );
+
+  schema.static('getValidator', function getValidator() {
+    return getValidatorForDefinition(definition, {
+      disallowField: (key) => {
+        return isDisallowedField(this, key);
+      },
+    });
+  });
+
+  schema.static('getPatchValidator', function getPatchValidator() {
+    return getValidatorForDefinition(definition, {
+      disallowField: (key) => {
+        return isDisallowedField(this, key);
+      },
+      stripFields: RESERVED_FIELDS,
+      skipRequired: true,
+    });
+  });
+
   schema.methods.assign = function assign(fields) {
     fields = omitBy(fields, (value, key) => {
       return isDisallowedField(this, key) || RESERVED_FIELDS.includes(key);
@@ -49,10 +69,12 @@ function createSchema(definition, options = {}) {
       this[key] = value;
     }
   };
+
   schema.methods.delete = function () {
     this.deletedAt = new Date();
     return this.save();
   };
+
   return schema;
 }
 

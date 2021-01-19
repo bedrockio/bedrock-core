@@ -4,12 +4,7 @@ import { Table, Divider, Button, Message } from 'semantic-ui-react';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import { screen } from 'helpers';
-import {
-  Confirm,
-  HelpTip,
-  Breadcrumbs,
-  SearchProvider,
-} from 'components';
+import { Confirm, HelpTip, Breadcrumbs, SearchProvider } from 'components';
 
 import Filters from 'modals/Filters';
 import EditUser from 'modals/EditUser';
@@ -23,7 +18,6 @@ const countries = getData().map(({ code, name }) => ({
 
 @screen
 export default class UserList extends React.Component {
-
   onDataNeeded = async (params) => {
     return await request({
       method: 'POST',
@@ -35,7 +29,14 @@ export default class UserList extends React.Component {
   render() {
     return (
       <SearchProvider onDataNeeded={this.onDataNeeded}>
-        {({ items: users, getSorted, setSort, filters, setFilters, reload }) => {
+        {({
+          items: users,
+          getSorted,
+          setSort,
+          filters,
+          setFilters,
+          reload,
+        }) => {
           return (
             <React.Fragment>
               <Breadcrumbs active="Users">
@@ -48,7 +49,10 @@ export default class UserList extends React.Component {
                     search
                   />
                 </Filters>
-                <EditUser trigger={<Button primary content="New User" icon="plus" />} onSave={reload} />
+                <EditUser
+                  trigger={<Button primary content="New User" icon="plus" />}
+                  onSave={reload}
+                />
               </Breadcrumbs>
               <Divider hidden />
               {users.length === 0 ? (
@@ -94,17 +98,17 @@ export default class UserList extends React.Component {
                       return (
                         <Table.Row key={user.id}>
                           <Table.Cell>
-                            <Link to={`/users/${user.id}`}>
-                              {user.name}
-                            </Link>
+                            <Link to={`/users/${user.id}`}>{user.name}</Link>
                           </Table.Cell>
                           <Table.Cell>{user.email}</Table.Cell>
                           <Table.Cell>
                             {user.roles
-                                .map((r) => r.slice(0, 1).toUpperCase() + r.slice(1))
-                                .join(', ')}
+                              .map((r) => r.roleDefinition.name)
+                              .join(', ')}
                           </Table.Cell>
-                          <Table.Cell>{formatDateTime(user.createdAt)}</Table.Cell>
+                          <Table.Cell>
+                            {formatDateTime(user.createdAt)}
+                          </Table.Cell>
                           <Table.Cell textAlign="center">
                             <EditUser
                               user={user}
@@ -126,7 +130,7 @@ export default class UserList extends React.Component {
                               onConfirm={async () => {
                                 await request({
                                   method: 'DELETE',
-                                  path: `/1/users/${user.id}`
+                                  path: `/1/users/${user.id}`,
                                 });
                                 reload();
                               }}

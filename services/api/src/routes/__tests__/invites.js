@@ -1,5 +1,5 @@
-const { setupDb, teardownDb, request, createUser } = require('../../utils/testing');
-const { Invite, User } = require('../../models');
+const { setupDb, teardownDb, request, createUser, createUserWithRole } = require('../../utils/testing');
+const { User, Invite } = require('../../models');
 
 beforeAll(async () => {
   await setupDb();
@@ -12,9 +12,7 @@ afterAll(async () => {
 describe('/1/invites', () => {
   describe('POST /search', () => {
     it('it should list out invites', async () => {
-      const user = await createUser({
-        roles: ['admin'],
-      });
+      const user = await createUserWithRole('global', 'superAdmin');
 
       const invite1 = await Invite.create({
         email: 'usera@platform.com',
@@ -36,9 +34,7 @@ describe('/1/invites', () => {
 
   describe('POST /', () => {
     it('should be able to create invite', async () => {
-      const user = await createUser({
-        roles: ['admin'],
-      });
+      const user = await createUserWithRole('global', 'superAdmin');
       const response = await request(
         'POST',
         '/1/invites',
@@ -51,10 +47,10 @@ describe('/1/invites', () => {
     });
     it('should throw an error if user already exists', async () => {
       await User.deleteMany({});
-      const user = await createUser({
-        roles: ['admin'],
+      await createUser({
         email: 'fake@fake.com',
       });
+      const user = await createUserWithRole('global', 'superAdmin');
       const response = await request(
         'POST',
         '/1/invites',
@@ -69,9 +65,7 @@ describe('/1/invites', () => {
 
   describe('POST /:invite/resend', () => {
     it('should be able to resend invite', async () => {
-      const user = await createUser({
-        roles: ['admin'],
-      });
+      const user = await createUserWithRole('global', 'superAdmin');
       const invite = await Invite.create({
         email: 'delete@platform.com',
       });
@@ -82,9 +76,7 @@ describe('/1/invites', () => {
 
   describe('DELETE /:invite', () => {
     it('should be able to delete invite', async () => {
-      const user = await createUser({
-        roles: ['admin'],
-      });
+      const user = await createUserWithRole('global', 'superAdmin');
       const invite = await Invite.create({
         email: 'delete@platform.com',
       });
