@@ -17,8 +17,10 @@ spec:
           imagePullPolicy: Always
           name: api-cli
           env:
-            - name: NODE_ENV
+            - name: ENV_NAME
               value: "staging"
+            - name: NODE_ENV
+              value: "production"
             - name: MONGO_URI
               value: "mongodb://mongo:27017/bedrock_staging"
             - name: APP_DOMAIN

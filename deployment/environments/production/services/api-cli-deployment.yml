@@ -17,6 +17,8 @@ spec:
           imagePullPolicy: Always
           name: api-cli
           env:
+            - name: ENV_NAME
+              value: "production"
             - name: NODE_ENV
               value: "production"
             - name: MONGO_URI
