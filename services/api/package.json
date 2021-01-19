@@ -9,7 +9,7 @@
     "lint"
   ],
   "scripts": {
-    "start": "nodemon -w src --exec \"MOCK_EMAIL=true NODE_ENV=development node src/index.js\"",
+    "start": "nodemon -w src --exec \"MOCK_EMAIL=true NODE_ENV=development node src/index.js | pino-pretty --messageKey=message\"",
     "start:production": "node src/index",
     "docs": "node scripts/generate-openapi",
     "emails": "node emails/build",
@@ -20,8 +20,9 @@
   },
   "dependencies": {
     "@bedrockio/config": "^2.0.3",
+    "@bedrockio/instrumentation": "^1.0.2",
     "@google-cloud/storage": "^5.1.2",
-    "@google-cloud/trace-agent": "^5.1.0",
+    "@hapi/joi": "^17.1.1",
     "@koa/cors": "^3.1.0",
     "@koa/router": "^9.3.1",
     "@sentry/node": "^5.20.1",
@@ -35,6 +36,7 @@
     "lodash": "^4.17.19",
     "mongoose": "^5.9.26",
     "mongoose-autopopulate": "^0.12.2",
+    "pino": "^6.11.0",
     "postmark": "^2.5.4",
     "snyk": "^1.359.1"
   },
@@ -48,6 +50,7 @@
     "juice": "^7.0.0",
     "mongodb": "^3.6.2",
     "nodemon": "^2.0.4",
+    "pino-pretty": "^4.3.0",
     "pre-commit": "^1.2.2",
     "prettier": "^2.0.5",
     "prettier-eslint": "^11.0.0",

@@ -3,15 +3,18 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const crypto = require('crypto');
+const { createLogger } = require('./logging');
 
 function uploadLocal(file, hash) {
+  const logger = createLogger();
   const destinationPath = path.join(os.tmpdir(), hash);
   fs.copyFileSync(file.path, destinationPath);
-  console.info('Uploading locally %s -> %s', file.name, destinationPath);
+  logger.info('Uploading locally %s -> %s', file.name, destinationPath);
   return file.path;
 }
 
 async function uploadGcs(file, hash) {
+  const logger = createLogger();
   const { Storage } = require('@google-cloud/storage');
   const storage = new Storage();
   const bucketName = config.get('UPLOADS_GCS_BUCKET');
@@ -21,7 +24,8 @@ async function uploadGcs(file, hash) {
     destination: `${hash}${extension}`,
   };
   await bucket.upload(file.path, options);
-  console.info('Uploading gcs %s -> gs://%s/%s', file.name, bucketName, options.destination);
+
+  logger.info('Uploading gcs %s -> gs://%s/%s', file.name, bucketName, options.destination);
   const uploadedGcsFile = bucket.file(options.destination);
   await uploadedGcsFile.makePublic();
   const metaData = await uploadedGcsFile.getMetadata();

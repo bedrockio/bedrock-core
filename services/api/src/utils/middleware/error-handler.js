@@ -13,6 +13,7 @@ async function errorHandler(ctx, next) {
     ctx.body = {
       error: { message, status, details },
     };
+
     ctx.app.emit('error', err, ctx);
   }
 }

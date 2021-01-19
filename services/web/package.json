@@ -7,8 +7,8 @@
   },
   "scripts": {
     "build": "export NODE_OPTIONS=\"--max-old-space-size=4096\"; rm -rf ./dist && webpack -p",
-    "start": "node ./serve",
-    "static": "node ./serve-static",
+    "start": "node ./serve/dev",
+    "static": "node ./serve/static",
     "lint": "eslint src --fix",
     "test": "jest",
     "generate": "cd ../../generator && yarn install && yarn generate"
