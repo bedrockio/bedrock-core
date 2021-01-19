@@ -22,8 +22,8 @@ app
       maxAge: 600,
     })
   )
-  .use(loggingMiddleware())
   .use(errorHandler)
+  .use(loggingMiddleware())
   .use(bodyParser({ multipart: true }));
 
 app.on('error', (err, ctx) => {

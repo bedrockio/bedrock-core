@@ -1,4 +1,5 @@
-require('./utils/tracer');
+const { initalize } = require('@bedrockio/instrumentation');
+initalize();
 
 const { init } = require('./utils/database');
 const { createFixtures } = require('./fixtures');

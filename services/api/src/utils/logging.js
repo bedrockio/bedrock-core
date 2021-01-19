@@ -1,8 +1,9 @@
 const pino = require('pino');
 const config = require('@bedrockio/config');
 const { floor } = require('lodash');
+const { getTracer } = require('@bedrockio/instrumentation');
 
-const tracer = require('./tracer');
+const tracer = getTracer('api');
 
 function getTracerContext() {
   const currentSpan = tracer.getCurrentSpan();
@@ -102,24 +103,24 @@ exports.loggingMiddleware = function loggingMiddleware(options = {}) {
     ...options,
   };
 
-  function loggingMiddlewareInner(ctx, next) {
-    const res = ctx.res;
-    const req = ctx.req;
+  async function loggingMiddlewareInner(ctx, next) {
+    if (ignoreUserAgents.includes(ctx.request.get('user-agent'))) {
+      return next();
+    }
+    const { res, req } = ctx;
 
     const startTime = Date.now();
     const requestLogger = createLogger();
 
-    ctx.logger = requestLogger;
-
-    if (ignoreUserAgents.includes(ctx.request.get('user-agent'))) {
-      return next();
+    try {
+      await next();
+      onResFinished(requestLogger, httpRequestFormat, startTime, req, res);
+    } catch (err) {
+      onResFinished(requestLogger, httpRequestFormat, startTime, req, res, err);
+      throw err;
     }
-
-    res.once('finish', () => onResFinished(requestLogger, httpRequestFormat, startTime, req, res));
-    res.once('error', (err) => onResFinished(requestLogger, httpRequestFormat, startTime, req, res, err));
-
-    return next();
   }
+
   return loggingMiddlewareInner;
 };
 
