@@ -4,6 +4,7 @@ const validate = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
 const { NotFoundError, BadRequestError } = require('../utils/errors');
+const { searchValidation, exportValidation, getSearchQuery, search, searchExport } = require('../utils/search');
 const { User } = require('../models');
 const { expandRoles } = require('./../utils/permissions');
 const roles = require('./../roles.json');
@@ -64,33 +65,17 @@ router
     '/search',
     validate({
       body: Joi.object({
+        ...searchValidation(),
+        ...exportValidation(),
         name: Joi.string(),
-        startAt: Joi.date(),
-        endAt: Joi.date(),
         role: Joi.string(),
-        skip: Joi.number().default(0),
-        sort: Joi.object({
-          field: Joi.string().required(),
-          order: Joi.string().required(),
-        }).default({
-          field: 'createdAt',
-          order: 'desc',
-        }),
-        limit: Joi.number().positive().default(50),
       }),
     }),
     async (ctx) => {
-      const { name, sort, skip, limit, startAt, endAt, role } = ctx.request.body;
-      const query = { deletedAt: { $exists: false } };
-      if (startAt || endAt) {
-        query.createdAt = {};
-        if (startAt) {
-          query.createdAt.$gte = startAt;
-        }
-        if (endAt) {
-          query.createdAt.$lte = endAt;
-        }
-      }
+      const { body } = ctx.request;
+      const query = getSearchQuery(body);
+
+      const { name, role } = body;
       if (name) {
         query.name = {
           $regex: name,
@@ -100,19 +85,15 @@ router
       if (role) {
         query['roles.role'] = { $in: [role] };
       }
-      const data = await User.find(query)
-        .sort({ [sort.field]: sort.order === 'desc' ? -1 : 1 })
-        .skip(skip)
-        .limit(limit);
+      const { data, meta } = await search(User, query, body);
 
-      const total = await User.countDocuments(query);
+      if (searchExport(ctx, data)) {
+        return;
+      }
+
       ctx.body = {
         data: data.map((item) => expandRoles(item)),
-        meta: {
-          total,
-          skip,
-          limit,
-        },
+        meta,
       };
     }
   )
