@@ -9,17 +9,18 @@ import CountriesField from 'components/form-fields/Countries';
 import CategoriesField from 'components/form-fields/Categories';
 // --- Generator: end
 
-function getDefaultState(props) {
-  return {
-    open: false,
-    error: null,
-    loading: false,
-    shop: props.shop || {},
-  };
-}
-
 export default class EditShop extends React.Component {
-  state = getDefaultState(this.props);
+  state = this.getDefaultState();
+
+  getDefaultState() {
+    const props = this.props;
+    return {
+      open: false,
+      error: null,
+      loading: false,
+      shop: props.shop || {},
+    };
+  }
 
   componentDidUpdate(lastProps) {
     const { shop } = this.props;
@@ -82,7 +83,7 @@ export default class EditShop extends React.Component {
   };
 
   onClose = () => {
-    this.setState(getDefaultState(this.props));
+    this.setState(this.getDefaultState());
   };
 
   render() {

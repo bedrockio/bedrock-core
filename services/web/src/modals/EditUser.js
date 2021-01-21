@@ -4,17 +4,18 @@ import { request } from 'utils/api';
 import AutoFocus from 'components/AutoFocus';
 import Roles from 'components/form-fields/Roles';
 
-function getDefaultState(props) {
-  return {
-    open: false,
-    loading: false,
-    error: null,
-    user: props.user || {},
-  };
-}
-
 export default class EditUser extends React.Component {
-  state = getDefaultState(this.props);
+  state = this.getDefaultState();
+
+  getDefaultState() {
+    const props = this.props;
+    return {
+      open: false,
+      loading: false,
+      error: null,
+      user: props.user || {},
+    };
+  }
 
   componentDidUpdate(lastProps) {
     const { user } = this.props;
@@ -68,7 +69,7 @@ export default class EditUser extends React.Component {
   };
 
   onClose = () => {
-    this.setState(getDefaultState(this.props));
+    this.setState(this.getDefaultState());
   };
 
   render() {

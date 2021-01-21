@@ -9,17 +9,18 @@ import UploadsField from 'components/form-fields/Uploads';
 import CurrencyField from 'components/form-fields/Currency';
 // --- Generator: end
 
-function getDefaultState(props = {}) {
-  return {
-    open: false,
-    error: null,
-    loading: false,
-    product: props.product || {},
-  };
-}
-
 export default class EditProduct extends React.Component {
-  state = getDefaultState(this.props);
+  state = this.getDefaultState();
+
+  getDefaultState() {
+    const props = this.props;
+    return {
+      open: false,
+      error: null,
+      loading: false,
+      product: props.product || {},
+    };
+  }
 
   componentDidUpdate(lastProps) {
     const { product } = this.props;
@@ -88,7 +89,7 @@ export default class EditProduct extends React.Component {
   };
 
   onClose = () => {
-    this.setState(getDefaultState(this.props));
+    this.setState(this.getDefaultState());
   };
 
   render() {

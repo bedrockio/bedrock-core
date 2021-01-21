@@ -4,15 +4,17 @@ import { request } from 'utils/api';
 import { emailRegexp } from 'utils/validate';
 import AutoFocus from 'components/AutoFocus';
 
-function getDefaultState() {
-  return {
-    touched: false,
-    validEmails: [],
-    invalidEmails: [],
-  };
-}
 export default class InviteUser extends React.Component {
-  state = getDefaultState(this.props);
+  state = this.getDefaultState();
+
+  getDefaultState() {
+    return {
+      open: false,
+      touched: false,
+      validEmails: [],
+      invalidEmails: [],
+    };
+  }
 
   onChange = (e, { value }) => {
     const values = value
@@ -64,7 +66,7 @@ export default class InviteUser extends React.Component {
   };
 
   onClose = () => {
-    this.setState(getDefaultState(this.props));
+    this.setState(this.getDefaultState());
   };
 
   render() {
