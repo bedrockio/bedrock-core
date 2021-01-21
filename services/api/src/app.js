@@ -13,7 +13,7 @@ const { loggingMiddleware } = require('./utils/logging');
 
 const app = new Koa();
 
-const NODE_ENV = process.env.NODE_ENV;
+const ENV_NAME = config.get('ENV_NAME');
 
 app
   .use(
@@ -44,7 +44,7 @@ const router = new Router();
 app.router = router;
 router.get('/', (ctx) => {
   ctx.body = {
-    environment: NODE_ENV,
+    environment: ENV_NAME,
     version,
     openapiPath: '/openapi.json',
     servedAt: new Date(),

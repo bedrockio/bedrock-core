@@ -2,15 +2,18 @@
 
 const { logger } = require('../../src/utils/logging');
 const { init } = require('../../src/database');
+const config = require('@bedrockio/config');
 const { createFixtures } = require('../../src/fixtures');
 const readline = require('readline');
+
+const ENV_NAME = config.get('ENV_NAME');
 
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
 
-const allowedEnvironments = ['test', 'dev', 'staging'];
+const allowedEnvironments = ['test', 'development', 'staging'];
 
 function prompt(message) {
   return new Promise((resolve) => {
@@ -22,14 +25,13 @@ function prompt(message) {
 }
 
 async function run() {
-  const environment = process.env.NODE_ENV || 'production';
-  if (!allowedEnvironments.includes(environment)) {
-    throw new Error(`Not allowed in NODE_ENV other than ${allowedEnvironments.join(', ')} (NODE_ENV=${environment})`);
+  if (!allowedEnvironments.includes(ENV_NAME)) {
+    throw new Error(`Not allowed in ENV_NAME other than ${allowedEnvironments.join(', ')} (ENV_NAME=${ENV_NAME})`);
   }
   console.info(`
 -------------------------------------------------------------------
 
-  Warning: This will delete ALL DATA for the ${environment} environment
+  Warning: This will delete ALL DATA for the ${ENV_NAME} environment
 
 -------------------------------------------------------------------
 
