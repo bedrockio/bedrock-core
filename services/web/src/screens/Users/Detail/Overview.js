@@ -1,6 +1,5 @@
 import React from 'react';
 import { Header, Table, Loader } from 'semantic-ui-react';
-import { NotFound } from 'components';
 import { screen } from 'helpers';
 import { formatDateTime } from 'utils/date';
 
@@ -9,13 +8,11 @@ import Menu from './Menu';
 @screen
 export default class UserOverview extends React.Component {
   render() {
-    const { user, error } = this.props;
+    const { user } = this.props;
     return (
       <React.Fragment>
         <Menu {...this.props} />
-        {error ? (
-          <NotFound message="Sorry that user wasn't found." />
-        ) : !user ? (
+        {!user ? (
           <Loader active>Loading</Loader>
         ) : (
           <React.Fragment>

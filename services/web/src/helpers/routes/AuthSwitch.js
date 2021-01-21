@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Route, Link } from 'react-router-dom';
 import { Loader, Message } from 'semantic-ui-react';
-import { Layout } from 'components';
 import { withSession } from 'stores';
+import ErrorScreen from 'screens/Error';
 
 @withSession
 export default class AuthSwitch extends React.Component {
@@ -28,12 +28,10 @@ export default class AuthSwitch extends React.Component {
       return <Loader active>Loading</Loader>;
     } else if (error) {
       return (
-        <Layout style={{ height: '100%' }} center>
-          <Layout.Group>
-            <Message error header="Something went wrong" content={error.message} />
-            <Link to="/logout">Logout</Link>
-          </Layout.Group>
-        </Layout>
+        <ErrorScreen>
+          <Message error header="Something went wrong" content={error.message} />
+          <Link to="/logout">Logout</Link>
+        </ErrorScreen>
       );
     }
     return (

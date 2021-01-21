@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Switch, Route } from 'react-router-dom';
-import { Loader } from 'semantic-ui-react';
-import { Breadcrumbs, NotFound } from 'components';
+import { Loader, Header } from 'semantic-ui-react';
+import { Breadcrumbs } from 'components';
 import { request } from 'utils/api';
+import { screen } from 'helpers';
 
 import Overview from './Overview';
 
@@ -11,6 +12,7 @@ import Overview from './Overview';
 import Products from './Products';
 // --- Generator: end
 
+@screen
 export default class ShopDetail extends React.Component {
 
   constructor(props) {
@@ -74,7 +76,7 @@ export default class ShopDetail extends React.Component {
             link={<Link to="/shops">Shops</Link>}
             active="Not Found"
           />
-          <NotFound message="Sorry that shop wasn't found." />
+          <Header content="Sorry that shop wasn't found." />
         </React.Fragment>
       );
     }
