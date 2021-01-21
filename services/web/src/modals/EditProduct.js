@@ -9,17 +9,17 @@ import UploadsField from 'components/form-fields/Uploads';
 import CurrencyField from 'components/form-fields/Currency';
 // --- Generator: end
 
-export default class EditProduct extends React.Component {
+function getDefaultState(props = {}) {
+  return {
+    open: false,
+    error: null,
+    loading: false,
+    product: props.product || {},
+  };
+}
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      open: false,
-      error: null,
-      loading: false,
-      product: props.product || {},
-    };
-  }
+export default class EditProduct extends React.Component {
+  state = getDefaultState(this.props);
 
   componentDidUpdate(lastProps) {
     const { product } = this.props;
@@ -62,7 +62,7 @@ export default class EditProduct extends React.Component {
             // --- Generator: refs
             shop: this.props.shop.id,
             // --- Generator: end
-          }
+          },
         });
       } else {
         await request({
@@ -75,14 +75,9 @@ export default class EditProduct extends React.Component {
             // --- Generator: end
           },
         });
-        this.setState({
-          product: {},
-        });
       }
-      this.setState({
-        open: false,
-        loading: false,
-      });
+
+      this.onClose();
       this.props.onSave();
     } catch (error) {
       this.setState({
@@ -90,6 +85,10 @@ export default class EditProduct extends React.Component {
         loading: false,
       });
     }
+  };
+
+  onClose = () => {
+    this.setState(getDefaultState(this.props));
   };
 
   render() {
@@ -102,8 +101,10 @@ export default class EditProduct extends React.Component {
         trigger={trigger}
         closeOnDimmerClick={false}
         onOpen={() => this.setState({ open: true })}
-        onClose={() => this.setState({ open: false })}>
-        <Modal.Header>{this.isUpdate() ? `Edit "${product.name}"` : 'New Product'}</Modal.Header>
+        onClose={this.onClose}>
+        <Modal.Header>
+          {this.isUpdate() ? `Edit "${product.name}"` : 'New Product'}
+        </Modal.Header>
         <Modal.Content scrolling>
           <AutoFocus>
             <Form
@@ -164,7 +165,7 @@ export default class EditProduct extends React.Component {
                 onAddItem={(evt, { name, value }) => {
                   this.setField(evt, {
                     name,
-                    value: [...product.sellingPoints || [], value],
+                    value: [...(product.sellingPoints || []), value],
                   });
                 }}
                 onChange={this.setField}

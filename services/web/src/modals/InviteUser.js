@@ -4,12 +4,15 @@ import { request } from 'utils/api';
 import { emailRegexp } from 'utils/validate';
 import AutoFocus from 'components/AutoFocus';
 
-export default class InviteUser extends React.Component {
-  state = {
+function getDefaultState() {
+  return {
     touched: false,
     validEmails: [],
     invalidEmails: [],
   };
+}
+export default class InviteUser extends React.Component {
+  state = getDefaultState(this.props);
 
   onChange = (e, { value }) => {
     const values = value
@@ -50,13 +53,7 @@ export default class InviteUser extends React.Component {
           emails: validEmails,
         },
       });
-      this.setState({
-        open: false,
-        loading: false,
-        touched: false,
-        validEmails: [],
-        invalidEmails: [],
-      });
+      this.onClose();
       this.props.onSave();
     } catch (error) {
       this.setState({
@@ -66,14 +63,25 @@ export default class InviteUser extends React.Component {
     }
   };
 
+  onClose = () => {
+    this.setState(getDefaultState(this.props));
+  };
+
   render() {
     const { trigger } = this.props;
-    const { validEmails, invalidEmails, open, touched, loading, error } = this.state;
+    const {
+      validEmails,
+      invalidEmails,
+      open,
+      touched,
+      loading,
+      error,
+    } = this.state;
     return (
       <Modal
         closeIcon
         closeOnDimmerClick={false}
-        onClose={() => this.setState({ open: false })}
+        onClose={this.onClose}
         onOpen={() => this.setState({ open: true })}
         open={open}
         size="tiny"
@@ -83,7 +91,9 @@ export default class InviteUser extends React.Component {
           <AutoFocus>
             <Form error={touched && !!error}>
               {error && <Message error content={error.message} />}
-              {touched && invalidEmails.length > 0 && <Message negative>Invalid: {invalidEmails.join(', ')}</Message>}
+              {touched && invalidEmails.length > 0 && (
+                <Message negative>Invalid: {invalidEmails.join(', ')}</Message>
+              )}
               <Form.Field>
                 <label>Enter email address of the participant to invite</label>
                 <TextArea
@@ -102,7 +112,9 @@ export default class InviteUser extends React.Component {
             primary
             loading={loading}
             disabled={loading || validEmails.length === 0}
-            content={`Invite Members ${validEmails.length ? `(${validEmails.length})` : ''}`}
+            content={`Invite Members ${
+              validEmails.length ? `(${validEmails.length})` : ''
+            }`}
             onClick={this.onSubmit}
           />
         </Modal.Actions>

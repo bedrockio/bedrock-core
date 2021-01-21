@@ -4,17 +4,17 @@ import { request } from 'utils/api';
 import AutoFocus from 'components/AutoFocus';
 import Roles from 'components/form-fields/Roles';
 
+function getDefaultState(props) {
+  return {
+    open: false,
+    loading: false,
+    error: null,
+    user: props.user || {},
+  };
+}
+
 export default class EditUser extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      open: false,
-      touched: false,
-      loading: false,
-      error: null,
-      user: props.user || {},
-    };
-  }
+  state = getDefaultState(this.props);
 
   componentDidUpdate(lastProps) {
     const { user } = this.props;
@@ -43,7 +43,6 @@ export default class EditUser extends React.Component {
       const { user } = this.state;
       this.setState({
         loading: true,
-        touched: true,
       });
       if (this.isUpdate()) {
         await request({
@@ -57,15 +56,8 @@ export default class EditUser extends React.Component {
           path: '/1/users',
           body: user,
         });
-        this.setState({
-          user: {},
-          touched: false,
-        });
       }
-      this.setState({
-        open: false,
-        loading: false,
-      });
+      this.onClose();
       this.props.onSave();
     } catch (error) {
       this.setState({
@@ -75,14 +67,18 @@ export default class EditUser extends React.Component {
     }
   };
 
+  onClose = () => {
+    this.setState(getDefaultState(this.props));
+  };
+
   render() {
     const { trigger } = this.props;
-    const { user, open, touched, loading, error } = this.state;
+    const { user, open, loading, error } = this.state;
     return (
       <Modal
         closeIcon
         closeOnDimmerClick={false}
-        onClose={() => this.setState({ open: false })}
+        onClose={this.onClose}
         onOpen={() => this.setState({ open: true })}
         open={open}
         trigger={trigger}>
@@ -91,10 +87,7 @@ export default class EditUser extends React.Component {
         </Modal.Header>
         <Modal.Content>
           <AutoFocus>
-            <Form
-              id="edit-user"
-              onSubmit={this.onSubmit}
-              error={touched && error}>
+            <Form id="edit-user" onSubmit={this.onSubmit} error={error}>
               {error && <Message error content={error.message} />}
               <Form.Input
                 value={user.name || ''}

@@ -9,17 +9,17 @@ import CountriesField from 'components/form-fields/Countries';
 import CategoriesField from 'components/form-fields/Categories';
 // --- Generator: end
 
-export default class EditShop extends React.Component {
+function getDefaultState(props) {
+  return {
+    open: false,
+    error: null,
+    loading: false,
+    shop: props.shop || {},
+  };
+}
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      open: false,
-      error: null,
-      loading: false,
-      shop: props.shop || {},
-    };
-  }
+export default class EditShop extends React.Component {
+  state = getDefaultState(this.props);
 
   componentDidUpdate(lastProps) {
     const { shop } = this.props;
@@ -70,14 +70,8 @@ export default class EditShop extends React.Component {
           path: '/1/shops',
           body: shop,
         });
-        this.setState({
-          shop: {},
-        });
       }
-      this.setState({
-        open: false,
-        loading: false,
-      });
+      this.onClose();
       this.props.onSave();
     } catch (error) {
       this.setState({
@@ -85,6 +79,10 @@ export default class EditShop extends React.Component {
         loading: false,
       });
     }
+  };
+
+  onClose = () => {
+    this.setState(getDefaultState(this.props));
   };
 
   render() {
@@ -97,8 +95,10 @@ export default class EditShop extends React.Component {
         trigger={trigger}
         closeOnDimmerClick={false}
         onOpen={() => this.setState({ open: true })}
-        onClose={() => this.setState({ open: false })}>
-        <Modal.Header>{this.isUpdate() ? `Edit "${shop.name}"` : 'New Shop'}</Modal.Header>
+        onClose={this.onClose}>
+        <Modal.Header>
+          {this.isUpdate() ? `Edit "${shop.name}"` : 'New Shop'}
+        </Modal.Header>
         <Modal.Content scrolling>
           <AutoFocus>
             <Form
@@ -123,8 +123,17 @@ export default class EditShop extends React.Component {
                 value={shop.description || ''}
                 onChange={this.setField}
               />
-              <CountriesField label="Country" name="country" value={shop.country || 'US'} onChange={this.setField} />
-              <CategoriesField name="categories" value={shop.categories || []} onChange={this.setField} />
+              <CountriesField
+                label="Country"
+                name="country"
+                value={shop.country || 'US'}
+                onChange={this.setField}
+              />
+              <CategoriesField
+                name="categories"
+                value={shop.categories || []}
+                onChange={this.setField}
+              />
               <UploadsField
                 name="images"
                 label="Images"
