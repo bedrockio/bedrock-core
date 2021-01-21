@@ -1,12 +1,12 @@
 const { pick } = require('lodash');
 const config = require('@bedrockio/config');
 
-const NODE_ENV = config.get('NODE_ENV');
+const ENV_NAME = config.get('ENV_NAME');
 
 const all = {
-  DEV: NODE_ENV === 'development',
-  PROD: NODE_ENV === 'production',
-  STAGING: NODE_ENV === 'staging',
+  DEV: ENV_NAME === 'development',
+  PROD: ENV_NAME === 'production',
+  STAGING: ENV_NAME === 'staging',
   ...config.getAll(),
 };
 
@@ -24,6 +24,5 @@ module.exports = {
     'AUTH0_CLIENT_ID',
     'AUTH0_REDIRECT_PATH',
     'INTERCOM_APP_ID',
-  ])
+  ]),
 };
-

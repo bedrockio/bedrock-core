@@ -7,20 +7,19 @@ const app = require('./app');
 
 const config = require('@bedrockio/config');
 
-const NODE_ENV = process.env.NODE_ENV;
-
+const ENV_NAME = config.get('ENV_NAME');
 const PORT = config.get('BIND_PORT', 'number');
 const HOST = config.get('BIND_HOST');
 
 module.exports = (async () => {
   await init();
-  if (NODE_ENV === 'development') {
+  if (ENV_NAME === 'development') {
     await createFixtures();
   }
 
   app.listen(PORT, HOST, () => {
     console.info(`Started on port //${HOST}:${PORT}`);
-    if (NODE_ENV === 'development') {
+    if (ENV_NAME === 'development') {
       console.info('-----------------------------------------------------------------');
       console.info(
         `${config.get('APP_NAME')} Admin Login ${config.get('ADMIN_EMAIL')}:${config.get(

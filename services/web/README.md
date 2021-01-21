@@ -46,7 +46,7 @@ UI is running at [http://localhost:2200/](http://localhost:2200/)
 
 All configuration is done using environment variables. The default values in `.env` can be overwritten using environment variables.
 
-- `NODE_ENV` - Node environment `development`
+- `ENV_NAME` - Node environment `development`
 - `BIND_HOST` - Host to bind to, defaults to `"0.0.0.0"`
 - `BIND_PORT` - Port to bind to, defaults to `2300`
 - `APP_NAME` - Default product name to be used in views
