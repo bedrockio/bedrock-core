@@ -4,7 +4,6 @@ import { Switch, Route } from 'react-router-dom';
 import { Loader, Header } from 'semantic-ui-react';
 import { Breadcrumbs } from 'components';
 import { request } from 'utils/api';
-import { screen } from 'helpers';
 
 import Overview from './Overview';
 
@@ -12,7 +11,6 @@ import Overview from './Overview';
 import Products from './Products';
 // --- Generator: end
 
-@screen
 export default class ShopDetail extends React.Component {
 
   constructor(props) {
