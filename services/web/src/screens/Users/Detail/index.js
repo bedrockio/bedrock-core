@@ -1,12 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Switch, Route } from 'react-router-dom';
-import { Loader } from 'semantic-ui-react';
-import { Breadcrumbs, NotFound } from 'components';
+import { Loader, Header } from 'semantic-ui-react';
+import { Breadcrumbs } from 'components';
 import { request } from 'utils/api';
+import { screen } from 'helpers';
 
 import Overview from './Overview';
 
+@screen
 export default class UserDetail extends React.Component {
 
   constructor(props) {
@@ -70,7 +72,7 @@ export default class UserDetail extends React.Component {
             link={<Link to="/users">Users</Link>}
             active="Not Found"
           />
-          <NotFound message="Sorry that user wasn't found." />
+          <Header content="Sorry that user wasn't found." />
         </React.Fragment>
       );
     }

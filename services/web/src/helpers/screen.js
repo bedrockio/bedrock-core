@@ -3,7 +3,15 @@ import { startCase } from 'lodash';
 import { Helmet } from 'react-helmet-async';
 import { APP_NAME } from 'utils/env';
 
+import * as LAYOUTS from 'layouts';
+
+function nullLayout(props) {
+  return props.children;
+}
+
 export default function(Component) {
+
+  const Layout = LAYOUTS[Component.layout || 'default'] || nullLayout;
 
   return class Screen extends React.PureComponent {
 
@@ -14,7 +22,9 @@ export default function(Component) {
             {this.renderTitle()}
             {this.renderCanonical()}
           </Helmet>
-          <Component {...this.props} />
+          <Layout>
+            <Component {...this.props} />
+          </Layout>
         </React.Fragment>
       );
     }
