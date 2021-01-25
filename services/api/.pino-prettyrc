@@ -1,0 +1,4 @@
+{
+  "ignore": "logging.googleapis.com/spanId,logging.googleapis.com/trace,logging.googleapis.com/trace_sampled,httpRequest,severity",
+  "messageKey": "message"
+}

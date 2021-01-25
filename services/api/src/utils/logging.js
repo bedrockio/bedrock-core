@@ -65,12 +65,12 @@ const formatters = {
   // https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry
   gcloud: function ({ request, response, latency }) {
     return {
-      message: `${request.method} ${request.url} ${response.length} - ${latency}ms`,
+      message: `${request.method} ${request.url} ${response.status} ${response.length || '?'} - ${latency} ms`,
       httpRequest: {
         requestMethod: request.method.toUpperCase(),
         requestUrl: request.originalUrl,
         requestSize: request.length ? request.length.toString() : undefined,
-        status: response.statusCode,
+        status: response.status,
         userAgent: request.get('user-agent') || undefined,
         referer: request.get('referer') || undefined,
         remoteIp: request.get('x-forwarded-for') || undefined,
