@@ -65,18 +65,18 @@ const formatters = {
   // https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry
   gcloud: function ({ request, response, latency }) {
     return {
-      message: `${request.method} ${request.url} ${response.status} ${response.length || '?'} - ${latency} ms`,
+      message: `${request.method} ${request.url} ${response.getHeader('content-length') || '?'} - ${latency} ms`,
       httpRequest: {
         requestMethod: request.method.toUpperCase(),
-        requestUrl: request.originalUrl,
-        requestSize: request.length ? request.length.toString() : undefined,
-        status: response.status,
-        userAgent: request.get('user-agent') || undefined,
-        referer: request.get('referer') || undefined,
-        remoteIp: request.get('x-forwarded-for') || undefined,
+        requestUrl: request.url,
+        requestSize: request.headers['content-length'],
+        status: response.statusCode,
+        userAgent: request.headers['user-agent'],
+        referer: request.headers['referer'],
+        remoteIp: request.headers['x-forwarded-for'],
         latency: `${floor(latency / 1000, 3)}s`,
-        protocol: request.get('x-forwarded-proto') || undefined,
-        responseSize: response.length ? response.length.toString() : undefined,
+        protocol: request.headers['x-forwarded-proto'],
+        responseSize: response.getHeader('content-length'),
       },
     };
   },
@@ -107,18 +107,20 @@ exports.loggingMiddleware = function loggingMiddleware(options = {}) {
     if (ignoreUserAgents.includes(ctx.request.get('user-agent'))) {
       return next();
     }
-    const { response, request } = ctx;
+    if (process.env.ENV_NAME === 'test') {
+      return next();
+    }
+
+    const { req, res } = ctx;
 
     const startTime = Date.now();
     const requestLogger = createLogger();
 
-    try {
-      await next();
-      onResFinished(requestLogger, httpRequestFormat, startTime, request, response);
-    } catch (err) {
-      onResFinished(requestLogger, httpRequestFormat, startTime, request, response, err);
-      throw err;
-    }
+    ctx.logger = requestLogger;
+
+    res.once('finish', () => onResFinished(requestLogger, httpRequestFormat, startTime, req, res));
+    res.once('error', (err) => onResFinished(requestLogger, httpRequestFormat, startTime, req, res, err));
+    return next();
   }
 
   return loggingMiddlewareInner;
