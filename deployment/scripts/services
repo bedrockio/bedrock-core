@@ -1,9 +1,0 @@
-#!/bin/bash
-
-SERVICES=$1
-
-if [ "$SERVICES" == "" ]; then
-  SERVICES=`ls services`
-fi
-
-echo $SERVICES
