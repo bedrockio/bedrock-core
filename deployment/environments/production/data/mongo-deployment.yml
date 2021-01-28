@@ -24,5 +24,6 @@ spec:
               mountPath: /data/db
       volumes:
         - name: mongo-persistent-storage
-          persistentVolumeClaim:
-            claimName: mongo-pvc
+          gcePersistentDisk:
+            pdName: mongo-disk
+            fsType: ext4

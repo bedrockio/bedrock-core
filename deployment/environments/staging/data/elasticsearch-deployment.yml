@@ -42,5 +42,6 @@ spec:
               mountPath: /usr/share/elasticsearch/data
       volumes:
         - name: elasticsearch-persistent-storage
-          persistentVolumeClaim:
-            claimName: elasticsearch-pvc
+          gcePersistentDisk:
+            pdName: elasticsearch-disk
+            fsType: ext4
