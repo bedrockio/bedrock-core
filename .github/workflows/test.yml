@@ -7,14 +7,14 @@ jobs:
       working_directory: ./services/api
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [14.x]
     steps:
       - uses: actions/checkout@v2
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: "14"
 
       - name: Cache node modules
         uses: actions/cache@v2
@@ -35,4 +35,7 @@ jobs:
 
       - name: Run Tests
         run: yarn test --silent
+        working-directory: ${{ env.working_directory }}
+      - name: Run ESLint
+        run: eslint . --ext .js,.jsx,.ts,.tsx
         working-directory: ${{ env.working_directory }}
