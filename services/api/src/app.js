@@ -11,10 +11,6 @@ const config = require('@bedrockio/config');
 const { loadOpenApiDefinitions, expandOpenApi } = require('./utils/openapi');
 const { loggingMiddleware } = require('./utils/logging');
 
-const b = 1;
-
-x();
-
 const app = new Koa();
 
 const ENV_NAME = config.get('ENV_NAME');
