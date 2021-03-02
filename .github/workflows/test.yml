@@ -14,7 +14,7 @@ jobs:
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
-          node-version: "14"
+          node-version: ${{ matrix.node-version }}
 
       - name: Cache node modules
         uses: actions/cache@v2
@@ -35,7 +35,4 @@ jobs:
 
       - name: Run Tests
         run: yarn test --silent
-        working-directory: ${{ env.working_directory }}
-      - name: Run ESLint
-        run: eslint . --ext .js,.jsx,.ts,.tsx
         working-directory: ${{ env.working_directory }}
