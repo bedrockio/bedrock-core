@@ -8,7 +8,7 @@ import Protected from 'components/Protected';
 @withSession
 export default class Header extends React.Component {
   render() {
-    const { user, isAdmin } = this.context;
+    const { user } = this.context;
     if (!user) {
       return null;
     }

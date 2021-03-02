@@ -29,12 +29,6 @@ async function setupDb() {
   });
 }
 
-async function defaultOrganization() {
-  return (
-    (await models.Organization.findOne({ name: 'Default' })) || (await models.Organization.create({ name: 'Default' }))
-  );
-}
-
 async function createUser(userAttributes = {}) {
   return await models.User.create({
     email: `${uniqueId('email')}@platform.com`,
