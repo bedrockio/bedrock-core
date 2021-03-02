@@ -3,8 +3,9 @@ on: [push]
 jobs:
   web:
     runs-on: ubuntu-latest
-    env:
-      working_directory: ./services/web
+    defaults:
+      run:
+        working-directory: ./services/web
     strategy:
       matrix:
         node-version: [14.x]
@@ -29,16 +30,15 @@ jobs:
             ${{ runner.os }}-yarn-
       - name: Install Dependencies
         run: yarn install
-        working-directory: ${{ env.working_directory }}
 
       - name: Run Lint
         run: yarn lint
-        working-directory: ${{ env.working_directory }}
 
   api:
     runs-on: ubuntu-latest
-    env:
-      working_directory: ./services/api
+    defaults:
+      run:
+        working-directory: ./services/api
     strategy:
       matrix:
         node-version: [14.x]
@@ -64,12 +64,9 @@ jobs:
 
       - name: Install Dependencies
         run: yarn install
-        working-directory: ${{ env.working_directory }}
 
       - name: Run Lint
         run: yarn lint
-        working-directory: ${{ env.working_directory }}
 
       - name: Run Tests
         run: yarn test --silent
-        working-directory: ${{ env.working_directory }}
