@@ -6,6 +6,7 @@ const csv = require('fast-csv');
 function searchValidation(options = {}) {
   const { limit = 50, sortField = 'createdAt', sortOrder = 'desc' } = options;
   return {
+    ids: Joi.array().items(Joi.string()),
     startAt: Joi.date(),
     endAt: Joi.date(),
     skip: Joi.number().default(0),
@@ -30,7 +31,7 @@ function exportValidation(options = {}) {
 }
 
 function getSearchQuery(body, options = {}) {
-  const { keyword, startAt, endAt } = body;
+  const { keyword, startAt, endAt, ids = [] } = body;
   const query = { deletedAt: { $exists: false } };
   if (startAt || endAt) {
     query.createdAt = {};
@@ -40,6 +41,9 @@ function getSearchQuery(body, options = {}) {
     if (endAt) {
       query.createdAt.$lte = endAt;
     }
+  }
+  if (ids.length) {
+    query._id = { $in: ids };
   }
   if (keyword && !options.keywordFields) {
     throw new Error('No keyword search has been configured for this API call');
