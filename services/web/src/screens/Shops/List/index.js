@@ -30,7 +30,20 @@ export default class ShopList extends React.Component {
     return await request({
       method: 'POST',
       path: '/1/shops/search',
-      body: params,
+      body: {
+        ...params,
+        category: params.category?.id,
+      },
+    });
+  };
+
+  fetchCategories = (filter) => {
+    return request({
+      method: 'POST',
+      path: '/1/categories/search',
+      body: {
+        ...filter,
+      },
     });
   };
 
@@ -49,6 +62,11 @@ export default class ShopList extends React.Component {
                     name="country"
                     options={countries}
                     search
+                  />
+                  <Filters.Dropdown
+                    label="Category"
+                    name="category"
+                    fetchData={this.fetchCategories}
                   />
                   {/* --- Generator: end */}
                 </Filters>

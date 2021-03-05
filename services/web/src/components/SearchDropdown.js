@@ -1,115 +1,113 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Dropdown } from 'semantic-ui-react';
-import { get, omit, flatten, uniqBy } from 'lodash';
+import { omit, uniqBy, debounce } from 'lodash';
 
 export default class SearchDropdown extends React.Component {
-  static defaultProps = {
-    valueField: 'id',
-    textField: 'name',
-  };
-
   state = {
-    defaultOptions: [],
-    options: [],
+    items: [],
     loading: false,
-    error: false,
+    error: null,
   };
-
-  getValues() {
-    const { value, valueField, multiple } = this.props;
-    let normalizedValue = value;
-    if (multiple && value.length && typeof value[0] === 'object') {
-      normalizedValue = value.map((object) => object[valueField]);
-    }
-    return normalizedValue;
-  }
 
   componentDidMount() {
-    const { valueField, multiple } = this.props;
-    const fetchField = multiple ? `${valueField}s` : valueField;
-    const value = this.getValues();
-    Promise.all(
-      [
-        this.loadOptions({}),
-        value &&
-          this.loadOptions({
-            [fetchField]: value,
-          }),
-      ].filter(Boolean)
-    ).then((options) => {
+    this.loadData();
+  }
+
+  async loadData(filters = {}) {
+    try {
       this.setState({
-        defaultOptions: flatten(options),
+        loading: false,
+        error: null,
       });
-    });
-  }
-
-  loadOptions(search) {
-    const { valueField, textField, fetchData } = this.props;
-    this.setState({
-      search,
-      loading: true,
-      error: false,
-    });
-
-    return fetchData(search)
-      .then(({ data }) => {
-        const options = data.map((item) => {
-          const key = get(item, valueField);
-          return {
-            text: get(item, textField),
-            value: key,
-          };
-        });
-
-        this.setState({
-          loading: false,
-          options,
-        });
-        return options;
-      })
-      .catch(() => {
-        this.setState({
-          loading: false,
-          error: true,
-        });
+      const { data } = await this.props.fetchData(filters);
+      this.setState({
+        items: data,
+        loading: false,
       });
-  }
-
-  onHandleSearchChange = (e, { searchQuery }) => {
-    const { textField } = this.props;
-    if (searchQuery.length) {
-      this.loadOptions({ [textField]: searchQuery });
+    } catch (error) {
+      this.setState({
+        error,
+        loading: false,
+      });
     }
+  }
+
+  onSearchChange = debounce(
+    async (evt, { searchQuery }) => {
+      this.loadData({ keyword: searchQuery });
+    },
+    200,
+    { leading: true }
+  );
+
+  onChange = (evt, { value, ...rest }) => {
+    const ids = Array.isArray(value) ? value : [value];
+    const items = this.getAllItems();
+    const selected = ids.map((id) => {
+      return items.find((item) => item.id === id);
+    });
+    value = this.props.multiple ? selected : selected[0];
+    this.props.onChange(evt, { value, ...rest });
+
+    // Workaround for onSearchChange not updating when
+    // the field is cleared internally.
+    this.onSearchChange(evt, { searchQuery: '' });
   };
 
-  render() {
-    const { state } = this;
-    const { multiple } = this.props;
-    const props = omit(this.props, ['fetchData', 'valueField', 'textField']);
-    let options = state.defaultOptions;
+  getAllItems() {
+    return uniqBy([...this.state.items, ...this.getSelectedItems()], 'id');
+  }
 
-    if (state.search) {
-      if (multiple) {
-        options = uniqBy([...state.defaultOptions, ...state.options], (option) => option.value);
-      } else {
-        options = state.options;
-      }
+  getSelectedItems() {
+    const { value } = this.props;
+    if (Array.isArray(value)) {
+      return value;
+    } else if (value) {
+      return [value];
+    } else {
+      return [];
     }
+  }
 
-    const normalizedValue = this.getValues();
+  getOptions() {
+    return this.getAllItems().map(({ name, id }) => {
+      return {
+        text: name,
+        value: id,
+      };
+    });
+  }
+
+  getValue() {
+    const { multiple, value } = this.props;
+    if (multiple) {
+      return value.map((obj) => obj.id);
+    } else {
+      return value?.id || '';
+    }
+  }
+
+  render() {
+    const { loading, error } = this.state;
 
     return (
       <Dropdown
-        error={state.error}
+        {...omit(this.props, Object.keys(SearchDropdown.propTypes))}
+        error={!!error}
+        loading={loading}
+        value={this.getValue()}
+        options={this.getOptions()}
+        onChange={this.onChange}
+        onSearchChange={this.onSearchChange}
         search
         selection
-        clearable={this.props.clearable}
-        loading={state.loading}
-        options={options}
-        onSearchChange={this.onHandleSearchChange}
-        {...props}
-        value={normalizedValue}
+        clearable
       />
     );
   }
 }
+
+SearchDropdown.propTypes = {
+  fetchData: PropTypes.func.isRequired,
+};
