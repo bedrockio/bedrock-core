@@ -44,6 +44,7 @@ router
         // --- Generator: search
         name: Joi.string(),
         country: Joi.string(),
+        category: Joi.string(),
         // --- Generator: end
         ...searchValidation(),
       }),
@@ -55,12 +56,15 @@ router
       });
 
       // --- Generator: vars
-      const { country } = ctx.request.body;
+      const { country, category } = ctx.request.body;
       // --- Generator: end
 
       // --- Generator: queries
       if (country) {
         query.country = country;
+      }
+      if (category) {
+        query.categories = category;
       }
       // --- Generator: end
 

@@ -21,7 +21,9 @@ router
     async (ctx) => {
       const { body } = ctx.request;
       const { name } = body;
-      const query = getSearchQuery(body);
+      const query = getSearchQuery(body, {
+        keywordFields: ['name'],
+      });
       if (name) {
         query.name = {
           $regex: name,

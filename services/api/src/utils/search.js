@@ -19,7 +19,7 @@ function searchValidation(options = {}) {
       order: sortOrder,
     }),
     limit: Joi.number().positive().default(limit),
-    keyword: Joi.string(),
+    keyword: Joi.string().allow(''),
   };
 }
 
