@@ -11,7 +11,6 @@ See http://localhost:2200/docs for full documentation on this API (requires runn
 - `.env` - Default configuration values (override via environment)
 - `package.json` - Configure dependencies
 - `src/**/__tests__` - Unit tests
-- `src/lib` - Platform specific library files
 - `src/utils` - Various utilities, helpers and middleware extensions
 - `src/routes` - API Routes
 - `src/routes/__openapi__` - OpenAPI descriptions for use in documentation portal
