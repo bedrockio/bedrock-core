@@ -1,4 +1,5 @@
 const Joi = require('@hapi/joi');
+const { escapeRegExp } = require('lodash');
 const ObjectId = require('mongoose').Types.ObjectId;
 const PassThrough = require('stream').PassThrough;
 const csv = require('fast-csv');
@@ -32,6 +33,7 @@ function exportValidation(options = {}) {
 
 function getSearchQuery(body, options = {}) {
   const { keyword, startAt, endAt, ids = [] } = body;
+  const { keywordFields = [] } = options;
   const query = { deletedAt: { $exists: false } };
   if (startAt || endAt) {
     query.createdAt = {};
@@ -45,15 +47,17 @@ function getSearchQuery(body, options = {}) {
   if (ids.length) {
     query._id = { $in: ids };
   }
-  if (keyword && !options.keywordFields) {
+  if (keyword && !keywordFields.length) {
     throw new Error('No keyword search has been configured for this API call');
   }
-  if (keyword && options.keywordFields) {
-    query.$or = options.keywordFields.map((field) => {
-      return {
-        [field]: keyword,
-      };
-    });
+  if (keyword) {
+    query.$or = [];
+    const reg = RegExp(escapeRegExp(keyword), 'i');
+    for (let field of keywordFields) {
+      query.$or.push({
+        [field]: reg,
+      });
+    }
     if (ObjectId.isValid(keyword)) {
       query.$or.push({
         _id: keyword,

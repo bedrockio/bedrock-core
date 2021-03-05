@@ -43,7 +43,7 @@ export default class ShopList extends React.Component {
               <Breadcrumbs active="Shops">
                 <Filters onSave={setFilters} filters={filters}>
                   {/* --- Generator: filters */}
-                  <Filters.Text label="Name" name="name" />
+                  <Filters.Text label="Search" name="keyword" placeholder="Enter name or shop id" />
                   <Filters.Dropdown
                     label="Country"
                     name="country"

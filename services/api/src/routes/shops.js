@@ -50,19 +50,15 @@ router
     }),
     async (ctx) => {
       const { body } = ctx.request;
-      const query = getSearchQuery(body);
+      const query = getSearchQuery(body, {
+        keywordFields: ['name'],
+      });
 
       // --- Generator: vars
-      const { name, country } = ctx.request.body;
+      const { country } = ctx.request.body;
       // --- Generator: end
 
       // --- Generator: queries
-      if (name) {
-        query.name = {
-          $regex: name,
-          $options: 'i',
-        };
-      }
       if (country) {
         query.country = country;
       }

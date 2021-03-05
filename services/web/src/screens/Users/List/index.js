@@ -9,13 +9,6 @@ import { Confirm, HelpTip, Breadcrumbs, SearchProvider } from 'components';
 import Filters from 'modals/Filters';
 import EditUser from 'modals/EditUser';
 
-import { getData } from 'country-list';
-const countries = getData().map(({ code, name }) => ({
-  value: code,
-  text: name,
-  key: code,
-}));
-
 @screen
 export default class UserList extends React.Component {
   onDataNeeded = async (params) => {
@@ -41,13 +34,7 @@ export default class UserList extends React.Component {
             <React.Fragment>
               <Breadcrumbs active="Users">
                 <Filters onSave={setFilters} filters={filters}>
-                  <Filters.Text label="Name" name="name" />
-                  <Filters.Dropdown
-                    label="Country"
-                    name="country"
-                    options={countries}
-                    search
-                  />
+                  <Filters.Text label="Search" name="keyword" placeholder="Enter name, email, or user id" />
                 </Filters>
                 <EditUser
                   trigger={<Button primary content="New User" icon="plus" />}

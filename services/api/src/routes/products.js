@@ -48,16 +48,12 @@ router
     }),
     async (ctx) => {
       const { body } = ctx.request;
-      const { name, shop } = body;
-      const query = getSearchQuery(body);
+      const { shop } = body;
+      const query = getSearchQuery(body, {
+        keywordFields: ['name'],
+      });
       if (shop) {
         query.shop = shop;
-      }
-      if (name) {
-        query.name = {
-          $regex: name,
-          $options: 'i',
-        };
       }
       const { data, meta } = await search(Product, query, body);
       ctx.body = {
