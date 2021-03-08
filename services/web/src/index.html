@@ -9,7 +9,7 @@
     <% if (GTM_CONTAINER_ID) { %>
       <%= require('utils/analytics/head.html') %>
     <% } %>
-    <!--env:conf-->
+    <script>window.__ENV__ = <%= PUBLIC_ENV %>;</script>
   </head>
   <body>
     <div id="root"></div>

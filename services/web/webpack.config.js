@@ -7,6 +7,7 @@
 
 const path = require('path');
 const yargs = require('yargs');
+const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -24,13 +25,9 @@ const argv = yargs.boolean('p').boolean('analyze').option('app', {
 // Additionally NODE_ENV seems to affect the build as well.
 const BUILD = process.env.NODE_ENV === 'production';
 
-// Strip NODE_ENV env vars as they only make
-// sense during runtime.
-const { DEV, STAGING, PROD, ...rest } = require('./env');
-
-const ENV = {
+const PARAMS = {
   BUILD,
-  ...rest,
+  ...require('./env'),
 };
 
 if (argv.analyze && !BUILD) {
@@ -87,7 +84,7 @@ module.exports = {
           // Expose template params used in partials included with
           // require('path/to/template.html') in the same way as the
           // main template.
-          params: ENV,
+          params: PARAMS,
         }
       },
     ],
@@ -112,8 +109,9 @@ module.exports = {
     new FaviconsWebpackPlugin({
       logo: './src/assets/favicon.svg',
 
-      // Enable this line to test PWA stuff on dev.
-      // devMode: 'webapp',
+      // Set devMode to "webapp" to test PWA stuff on dev.
+      mode: 'webapp',
+      devMode: 'light',
 
       // https://github.com/itgalaxy/favicons#usage
       favicons: {
@@ -156,19 +154,29 @@ module.exports = {
   },
 };
 
-// koa-webpack -> webpack-hot-client requires this to be wrapped in an array
-// https://github.com/webpack-contrib/webpack-hot-client/issues/11
 function getEntryPoints() {
   const apps = argv.app;
   const entryPoints = {};
   if (apps.length === 0) {
-    entryPoints['public'] = ['./src/index'];
+    entryPoints['public'] = getEntryPoint('./src/index');
   } else {
     for (let app of apps) {
-      entryPoints[app] = [`./src/${app}/index`];
+      entryPoints[app] = getEntryPoint(`./src/${app}/index`);
     }
   }
   return entryPoints;
+}
+
+// koa-webpack -> webpack-hot-client requires this to be wrapped in an array
+// https://github.com/webpack-contrib/webpack-hot-client/issues/11
+// TODO: manually loading this for now
+function getEntryPoint(path) {
+  const entry = [];
+  if (!BUILD) {
+    entry.push('webpack-hot-middleware/client');
+  }
+  entry.push(path);
+  return entry;
 }
 
 function getTemplatePlugins() {
@@ -186,7 +194,8 @@ function getTemplatePlugins() {
       chunks: [app, 'vendor'],
       templateParameters: {
         app,
-        ...ENV,
+        PUBLIC_ENV: JSON.stringify(PARAMS.PUBLIC),
+        ...PARAMS,
       },
       minify: {
         removeComments: false,
@@ -200,6 +209,9 @@ function getTemplatePlugins() {
 
 function getOptionalPlugins() {
   const plugins = [];
+  if (!BUILD) {
+    plugins.push(new webpack.HotModuleReplacementPlugin());
+  }
   if (argv.analyze) {
     const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
     plugins.push(new BundleAnalyzerPlugin());
