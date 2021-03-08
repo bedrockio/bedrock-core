@@ -2,7 +2,7 @@
 
 These helper functions are available to do common UI patterns on top of these libraries:
 
-- [Lodash](https://lodash.com/docs/4.17.15) - General Purpose Utils
+- [Lodash](https://lodash.com/docs) - General Purpose Utils
 - [Luxon](https://moment.github.io/luxon/) - Low-footprint Data Library
 
 ## API
