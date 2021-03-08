@@ -21,8 +21,10 @@ services:
       - "2300:2300"
     links:
       - mongo
+      - headless
     depends_on:
       - mongo
+      - headless
 
   web:
     command: ["yarn", "start"]
@@ -51,3 +53,13 @@ services:
       - ./data/db:/data/db
     ports:
       - 27017:27017
+
+  headless:
+    container_name: headless
+    build:
+      context: ./services/headless
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: development
+    ports:
+      - "2305:2305"
