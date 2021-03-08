@@ -8,8 +8,8 @@
 const path = require('path');
 const yargs = require('yargs');
 const webpack = require('webpack');
-const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const TerserWebpackPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
@@ -79,6 +79,7 @@ module.exports = {
       {
         test: /\.html$/i,
         exclude: /index\.html$/,
+        include: path.resolve(__dirname, 'src'),
         loader: path.resolve('./src/utils/loaders/templateParams'),
         options: {
           // Expose template params used in partials included with
@@ -91,7 +92,7 @@ module.exports = {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: 'assets/[name]-[contenthash].css',
+      filename: 'assets/[name].[contenthash].css',
     }),
     new CircularDependencyPlugin({
       exclude: /node_modules/,
@@ -139,19 +140,30 @@ module.exports = {
   ],
 
   optimization: {
-    minimize: true,
     minimizer: [
-      new TerserPlugin({
-        parallel: true,
-        terserOptions: {
-          mangle: false,
-          output: {
-            comments: false
-          },
-        }
-      }),
+      (compiler) => {
+        new TerserWebpackPlugin({
+          terserOptions: {
+            mangle: {
+              // Preventing function name mangling for now
+              // to allow screen name magic to work.
+              keep_fnames: true,
+            },
+          }
+        }).apply(compiler);
+      },
     ],
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendor',
+          chunks: 'all',
+        },
+      },
+    },
   },
+
 };
 
 function getEntryPoints() {
