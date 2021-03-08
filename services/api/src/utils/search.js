@@ -12,7 +12,7 @@ function searchValidation(options = {}) {
     skip: Joi.number().default(0),
     sort: Joi.object({
       field: Joi.string().required(),
-      order: Joi.string().required(),
+      order: Joi.string().allow('desc', 'asc').required(),
     }).default({
       field: sortField,
       order: sortOrder,
