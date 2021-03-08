@@ -107,7 +107,7 @@ module.exports = {
       process: 'process/browser',
     }),
     new MiniCssExtractPlugin({
-      filename: 'assets/[name].[contenthash].css',
+      filename: BUILD ? 'assets/[name].[contenthash].css' : 'assets/[name].css',
     }),
     new CircularDependencyPlugin({
       exclude: /node_modules/,
