@@ -31,7 +31,9 @@ const PARAMS = {
 };
 
 if (argv.analyze && !BUILD) {
-  throw new Error('Analyze mode must be used with -p flag. Use yarn build --analyze.');
+  throw new Error(
+    'Analyze mode must be used with -p flag. Use yarn build --analyze.'
+  );
 }
 
 module.exports = {
@@ -46,7 +48,10 @@ module.exports = {
   resolve: {
     alias: {
       'react-dom': '@hot-loader/react-dom',
-      '../../theme.config$': path.resolve(path.join(__dirname, 'src'), 'theme/theme.config'),
+      '../../theme.config$': path.resolve(
+        path.join(__dirname, 'src'),
+        'theme/theme.config'
+      ),
     },
     extensions: ['.js', '.json', '.jsx'],
     modules: [path.join(__dirname, 'src'), 'node_modules'],
@@ -54,7 +59,7 @@ module.exports = {
     // These must now be opted into via the "fallback" option.
     fallback: {
       path: false,
-    }
+    },
   },
   module: {
     rules: [
@@ -66,7 +71,12 @@ module.exports = {
       },
       {
         test: /\.(css|less)$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', ...(BUILD ? ['postcss-loader'] : []), 'less-loader'],
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          ...(BUILD ? ['postcss-loader'] : []),
+          'less-loader',
+        ],
       },
       {
         test: /\.(png|jpg|svg|gif|mp4|pdf|eot|ttf|woff2?)$/,
@@ -86,11 +96,16 @@ module.exports = {
           // require('path/to/template.html') in the same way as the
           // main template.
           params: PARAMS,
-        }
+        },
       },
     ],
   },
   plugins: [
+    // Required for react-markdown -> unified -> vfile which assumes
+    // node "process" to exist. Webpack 5 no longer shims these globals.
+    new webpack.ProvidePlugin({
+      process: 'process/browser',
+    }),
     new MiniCssExtractPlugin({
       filename: 'assets/[name].[contenthash].css',
     }),
@@ -116,15 +131,15 @@ module.exports = {
 
       // https://github.com/itgalaxy/favicons#usage
       favicons: {
-        appName: '',                              // Your application's name.
-        dir: 'auto',                              // Primary text direction for name, short_name, and description
-        lang: 'en-US',                            // Primary language for name and short_name
-        background: '#fff',                       // Background colour for flattened icons.
-        theme_color: '#fff',                      // Theme color user for example in Android's task switcher.
+        appName: '', // Your application's name.
+        dir: 'auto', // Primary text direction for name, short_name, and description
+        lang: 'en-US', // Primary language for name and short_name
+        background: '#fff', // Background colour for flattened icons.
+        theme_color: '#fff', // Theme color user for example in Android's task switcher.
         appleStatusBarStyle: 'black-translucent', // Style for Apple status bar: "black-translucent", "default", "black". Not actually black!.
-        display: 'fullscreen',                    // Preferred display mode: "fullscreen", "standalone", "minimal-ui" or "browser".
-        orientation: 'portrait',                  // Default orientation: "any", "natural", "portrait" or "landscape".
-        loadManifestWithCredentials: true,        // Browsers don't send cookies when fetching a manifest, enable this to fix that.
+        display: 'fullscreen', // Preferred display mode: "fullscreen", "standalone", "minimal-ui" or "browser".
+        orientation: 'portrait', // Default orientation: "any", "natural", "portrait" or "landscape".
+        loadManifestWithCredentials: true, // Browsers don't send cookies when fetching a manifest, enable this to fix that.
         icons: {
           android: true,
           appleIcon: true,
@@ -134,7 +149,7 @@ module.exports = {
           firefox: true,
           windows: true,
           yandex: false,
-        }
+        },
       },
     }),
   ],
@@ -149,7 +164,7 @@ module.exports = {
               // to allow screen name magic to work.
               keep_fnames: true,
             },
-          }
+          },
         }).apply(compiler);
       },
     ],
@@ -163,7 +178,13 @@ module.exports = {
       },
     },
   },
-
+  performance: {
+    // Optimistically set ~300kb file size limit and 2x that
+    // as an entrypoint limit, assuming ~20% compression.
+    // Mostly to shut up the warnings so they mean something.
+    maxAssetSize: 1500000,
+    maxEntrypointSize: 3000000,
+  },
 };
 
 function getEntryPoints() {
