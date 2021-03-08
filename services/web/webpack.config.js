@@ -7,6 +7,7 @@
 
 const path = require('path');
 const yargs = require('yargs');
+const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
@@ -19,10 +20,9 @@ const argv = yargs.boolean('p').boolean('analyze').option('app', {
   default: [],
 }).argv;
 
-// The boolean toggle to determine if webpack is in production
-// mode or not. Avoiding naming this DEV to not confuse with
-// runtime env.
-const BUILD = !!argv.p;
+// Note that webpack has deprecated the -p flag and now uses "mode".
+// Additionally NODE_ENV seems to affect the build as well.
+const BUILD = process.env.NODE_ENV === 'production';
 
 // Strip NODE_ENV env vars as they only make
 // sense during runtime.
@@ -38,13 +38,13 @@ if (argv.analyze && !BUILD) {
 }
 
 module.exports = {
+  mode: BUILD ? 'production' : 'development',
   devtool: BUILD ? 'source-map' : 'cheap-module-source-map',
   entry: getEntryPoints(),
   output: {
     publicPath: '/',
-    filename: 'assets/[name].[hash].bundle.js',
-    chunkFilename: 'assets/[name].chunk-[hash].bundle.js',
-    path: path.join(__dirname, 'dist'),
+    filename: 'assets/[name].[contenthash].js',
+    assetModuleFilename: 'assets/[contenthash][ext]',
   },
   resolve: {
     alias: {
@@ -53,12 +53,18 @@ module.exports = {
     },
     extensions: ['.js', '.json', '.jsx'],
     modules: [path.join(__dirname, 'src'), 'node_modules'],
+    // Node core modules were previously shimmed in webpack < v5.
+    // These must now be opted into via the "fallback" option.
+    fallback: {
+      path: false,
+    }
   },
   module: {
     rules: [
       {
         test: /\.js$/,
-        loader: 'babel-loader',
+        type: 'javascript/auto',
+        use: 'babel-loader',
         exclude: /node_modules/,
       },
       {
@@ -67,15 +73,11 @@ module.exports = {
       },
       {
         test: /\.(png|jpg|svg|gif|mp4|pdf|eot|ttf|woff2?)$/,
-        loader: 'file-loader',
-        options: {
-          esModule: false,
-          outputPath: 'assets',
-        },
+        type: 'asset/resource',
       },
       {
         test: /\.md$/,
-        use: 'raw-loader',
+        type: 'asset/source',
       },
       {
         test: /\.html$/i,
@@ -92,7 +94,7 @@ module.exports = {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: 'assets/[name]-[hash].css',
+      filename: 'assets/[name]-[contenthash].css',
     }),
     new CircularDependencyPlugin({
       exclude: /node_modules/,
@@ -137,6 +139,21 @@ module.exports = {
       },
     }),
   ],
+
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        parallel: true,
+        terserOptions: {
+          mangle: false,
+          output: {
+            comments: false
+          },
+        }
+      }),
+    ],
+  },
 };
 
 // koa-webpack -> webpack-hot-client requires this to be wrapped in an array
