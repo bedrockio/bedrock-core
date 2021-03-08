@@ -71,12 +71,14 @@ module.exports = {
       },
       {
         test: /\.(css|less)$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          ...(BUILD ? ['postcss-loader'] : []),
-          'less-loader',
-        ],
+        use: BUILD
+          ? [
+              MiniCssExtractPlugin.loader,
+              'css-loader',
+              'postcss-loader',
+              'less-loader',
+            ]
+          : ['style-loader', 'css-loader', 'less-loader'],
       },
       {
         test: /\.(png|jpg|svg|gif|mp4|pdf|eot|ttf|woff2?)$/,
@@ -105,9 +107,6 @@ module.exports = {
     // node "process" to exist. Webpack 5 no longer shims these globals.
     new webpack.ProvidePlugin({
       process: 'process/browser',
-    }),
-    new MiniCssExtractPlugin({
-      filename: BUILD ? 'assets/[name].[contenthash].css' : 'assets/[name].css',
     }),
     new CircularDependencyPlugin({
       exclude: /node_modules/,
@@ -242,7 +241,13 @@ function getTemplatePlugins() {
 
 function getOptionalPlugins() {
   const plugins = [];
-  if (!BUILD) {
+  if (BUILD) {
+    plugins.push(
+      new MiniCssExtractPlugin({
+        filename: 'assets/[name].[contenthash].css',
+      })
+    );
+  } else {
     plugins.push(new webpack.HotModuleReplacementPlugin());
   }
   if (argv.analyze) {
