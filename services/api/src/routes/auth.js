@@ -1,11 +1,19 @@
 const Router = require('@koa/router');
 const Joi = require('@hapi/joi');
+const config = require('@bedrockio/config');
 const validate = require('../utils/middleware/validate');
 const { authenticate } = require('../utils/middleware/authenticate');
 const tokens = require('../utils/tokens');
 const { sendWelcome, sendResetPassword, sendResetPasswordUnknown } = require('../utils/emails');
 const { BadRequestError, UnauthorizedError } = require('../utils/errors');
 const { User, Invite } = require('../models');
+const { OAuth2Client } = require('google-auth-library');
+
+const googleClient = new OAuth2Client(
+  config.get('GOOGLE_OAUTH_CLIENT_ID'),
+  config.get('GOOGLE_OAUTH_CLIENT_SECRET'),
+  config.get('GOOGLE_OAUTH_CLIENT_REDIRECT_URI'),
+);
 
 const router = new Router();
 
@@ -137,6 +145,47 @@ router
       await user.save();
       ctx.body = { data: { token: tokens.createUserToken(user) } };
     }
-  );
+  )
+  .get('/google', async (ctx) => {
+    const { code, state, redirect_uri: redirectUri } = ctx.request.query;
+    if (code) {
+      const { tokens: authTokens } = await googleClient.getToken(code);
+      const { email } = await googleClient.getTokenInfo(authTokens.access_token);
+      // TODO: create user? profile name?
+      const user = await User.findOne({
+        email,
+        deletedAt: {
+          $exists: false
+        }
+      });
+      const { redirectUri } = JSON.parse(Buffer.from(state, 'base64').toString());
+      const token = tokens.createUserToken(user);
+      if (redirectUri) {
+        const url = new URL(redirectUri);
+        url.searchParams.append('token', token);
+        ctx.redirect(url);
+      } else {
+        ctx.body = {
+          data: {
+            token,
+          }
+        };
+      }
+    } else {
+      let state;
+      if (redirectUri) {
+        state = JSON.stringify({
+          redirectUri,
+        });
+        state = Buffer.from(state).toString('base64');
+      }
+      const authUrl = googleClient.generateAuthUrl({
+        access_type: 'offline',
+        scope: 'openid profile email',
+        state,
+      });
+      ctx.redirect(authUrl);
+    }
+  });
 
 module.exports = router;
