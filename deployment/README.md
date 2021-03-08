@@ -1,47 +1,52 @@
 # Deployment
 
-- [Setup](#setup)
-  - [Dependencies](#dependencies)
-  - [Directory Structure](#directory-structure)
-  - [Naming convention](#naming-convention)
-  - [Configuration](#configuration)
-- [Existing Environments](#existing-environments)
-  - [Authorization](#authorization)
-- [Provisioning](#provisioning)
-  - [Creating a new environment](#creating-a-new-environment)
-  - [Provision Script](#provision-script)
-  - [Directory Structure](#directory-structure-1)
-  - [Provision GKE Cluster](#provision-gke-cluster)
-  - [Create load balancer IP addresses](#create-load-balancer-ip-addresses)
-  - [Deploy all services and pods](#deploy-all-services-and-pods)
-  - [Scaling Up or Down](#scaling-up-or-down)
-  - [Destroying Environment Infrastructure](#destroying-environment-infrastructure)
-- [Deploying](#deploying)
-  - [Rollout Deploy](#rollout-deploy)
-  - [Feature Branches](#feature-branches)
-  - [Deploy info](#deploy-info)
-  - [Building Docker Containers](#building-docker-containers)
-  - [Pushing Docker Containers](#pushing-docker-containers)
-  - [Check cluster status](#check-cluster-status)
-  - [Getting shell access](#getting-shell-access)
-  - [Reloading DB fixtures](#reloading-db-fixtures)
-- [Disaster Recovery](#disaster-recovery)
-  - [Scenario A: Master Database Loss or Corruption](#scenario-a-master-database-loss-or-corruption)
-  - [Scenario B: Bucket Storage Loss or Corruption](#scenario-b-bucket-storage-loss-or-corruption)
-  - [Scenario C: Deletion of Google Cloud Project](#scenario-c-deletion-of-google-cloud-project)
-- [Other](#other)
-  - [Configuring Backups](#configuring-backups)
-  - [Backup Monitoring System](#backup-monitoring-system)
-  - [HTTP Basic Auth](#http-basic-auth)
-  - [Secrets](#secrets)
+- [Deployment](#deployment)
+  - [Setup](#setup)
+    - [Dependencies](#dependencies)
+    - [Directory Structure](#directory-structure)
+    - [Naming convention](#naming-convention)
+    - [Configuration](#configuration)
+  - [Existing Environments](#existing-environments)
+    - [Authorization](#authorization)
+  - [Provisioning](#provisioning)
+    - [Creating a new environment](#creating-a-new-environment)
+    - [Provision Script](#provision-script)
+    - [Directory Structure](#directory-structure-1)
+    - [Provision GKE Cluster](#provision-gke-cluster)
+    - [Create load balancer IP addresses](#create-load-balancer-ip-addresses)
+    - [Deploy all services and pods](#deploy-all-services-and-pods)
+    - [Scaling Up or Down](#scaling-up-or-down)
+    - [Destroying Environment Infrastructure](#destroying-environment-infrastructure)
+  - [Deploying](#deploying)
+    - [Quick deploy of API and other services](#quick-deploy-of-api-and-other-services)
+    - [Building a Docker container](#building-a-docker-container)
+    - [Pushing Docker containers](#pushing-docker-containers)
+    - [Rollout Docker containers (restart pods)](#rollout-docker-containers-restart-pods)
+    - [Deploy info](#deploy-info)
+    - [Check cluster status](#check-cluster-status)
+    - [Getting shell access](#getting-shell-access)
+    - [Reloading DB fixtures](#reloading-db-fixtures)
+  - [Disaster Recovery](#disaster-recovery)
+      - [Scenario A: Master Database Loss or Corruption](#scenario-a-master-database-loss-or-corruption)
+      - [Scenario B: Bucket Storage Loss or Corruption](#scenario-b-bucket-storage-loss-or-corruption)
+      - [Scenario C: Deletion of Google Cloud Project](#scenario-c-deletion-of-google-cloud-project)
+  - [Other](#other)
+    - [Configuring Backups](#configuring-backups)
+    - [Backup Monitoring System](#backup-monitoring-system)
+    - [HTTP Basic Auth](#http-basic-auth)
+    - [Secrets](#secrets)
 
 ## Setup
 
 ### Dependencies
 
 - Make sure the `gcloud` CLI tools are available
-- Use `gcloud auth login` and `gcloud auth application-default login` to login to the right Google account
-- For provisioning we use [Terraform](https://www.terraform.io/)
+- Install the `bedrock-cli` ([link](https://github.com/bedrockio/bedrock-cli))
+```bash
+curl -s https://install.bedrock.io | bash
+```
+- Use `gcloud auth login` and `gcloud auth application-default login` to login to the right Google account, or `bedrock cloud login`.
+- For provisioning `bedrock-cli` requires [Terraform](https://www.terraform.io/)
 
 ### Directory Structure
 
@@ -54,7 +59,7 @@ deployment/
 │   │   │   ├── mongo-deployment.yml
 │   │   │   ├── mongo-service.yml
 │   │   │   └── etc...
-│   │   ├── .env # Staging environment configuration
+│   │   ├── config.json # Staging environment configuration for bedrock-cli
 │   │   ├── provisioning
 │   │   │   ├── backend.tf # defines Google bucket to keep state
 │   │   │   ├── main.tf # Main rersource definitions (cluster, node_pool, buckets)
@@ -79,8 +84,7 @@ deployment/
 │       ├── outputs.tf
 │       └── variables.tf
 └── scripts # Deployment and provisioning scripts
-    ├── authorize
-    ├── build
+    ├── create_addresses
     └── etc...
 ```
 
@@ -92,21 +96,29 @@ deployment/
 
 ### Configuration
 
-Each environment can be configured in `environments/<environment>/.env`:
-
-- `GCLOUD_ENV_NAME` - Name of the environment, e.g. staging
-- `GCLOUD_BUCKET_PREFIX` - Bucket prefix used for GCS bucket creation
-- `GCLOUD_PROJECT` - Google Cloud project id for this environment
-- `GCLOUD_COMPUTE_ZONE` - Default compute zone for project
-- `GCLOUD_KUBERNETES_CLUSTER_NAME` - Name of Kubernetes cluster to deploy to
+Each environment can be configured in `environments/<environment>/config.json`:
+```json
+{
+  "gcloud": {
+    "envName": "staging", // - Name of the environment, e.g. staging
+    "bucketPrefix": "bedrock-foundation", // - Bucket prefix used for GCS bucket creation
+    "project": "bedrock-foundation", // - Google Cloud project id for this environment
+    "computeZone": "us-east1-c", // - Default compute zone for project
+    "kubernetes": {
+      "clusterName": "cluster-1" // - Name of Kubernetes cluster for deployment
+    },
+    "label": "app" // - name of the deployment label that is used for kubectl matching
+  }
+}
+```
 
 ## Existing Environments
 
 ### Authorization
 
-- Use `gcloud config configurations create [NAME]` and authorize Google Cloud `gcloud auth login`
-- Use `./deployment/scripts/authorize staging` to get cluster credentials
-- If you've used `gcloud auth` with another account, run `gcloud config set account <EMAIL>`, then re-run `./deployment/scripts/authorize`.
+- Use `gcloud auth login` and `gcloud auth application-default login` to login to the right Google account, or `bedrock cloud login`
+- Use `bedrock cloud authorize staging` to get cluster credentials
+- If you've used `gcloud auth` with another account, run `gcloud config set account <EMAIL>` or `bedrock cloud account <EMAIL>`, then re-run `bedrock cloud authorize`.
 
 If you get this error when trying to deploy:
 
@@ -139,16 +151,16 @@ gcloud projects create bedrock-staging --name="Bedrock Staging"
 gcloud config set project seltzer-box-staging
 ```
 
-Configure: `environments/<environment>/.env`.
+Configure: `environments/<environment>/config.json`.
 
 ### Provision Script
 
-There is a script that automatically takes care of the remaining steps, But you can do it manually in case of more customized environments.
+There is a bootstrap command that automatically takes care of the remaining steps, But you can do it manually in case of more customized environments.
 
-The following script takes an environment variable and Google Project ID:
+The following command takes an environment variable and Google Project ID:
 
 ```bash
-./deployment/scripts/provision_gcloud staging bedrock-staging
+bedrock cloud bootstrap staging bedrock-staging
 ```
 
 ### Directory Structure
@@ -156,6 +168,8 @@ The following script takes an environment variable and Google Project ID:
 There is a `variables.tfvars` file per environment to override default vars with environment specific values, which can be found in the `environments/<environment>/` folder.
 
 ### Provision GKE Cluster
+
+If you don't want to use the bootstrap command, you can also only run the terraform provisioning steps as follows.
 
 Requires terraform:
 
@@ -169,30 +183,32 @@ Note: this script can take about 5 minutes.
 ```bash
 # Staging
 # 'init' only has to be executed the first time
-$ ./deployment/scripts/provision staging init
+$ bedrock cloud provision staging init
 # 'plan' creates an execution plan for inspection
-$ ./deployment/scripts/provision staging plan
+$ bedrock cloud provision staging plan
 # 'plan' is not required before 'apply', as 'apply' runs 'plan' in the background
-$ ./deployment/scripts/provision staging apply
+$ bedrock cloud provision staging apply
 ```
 
 ### Create load balancer IP addresses
+
+With `bootstrap` you already create load balancer IP addresses for api and web. If you need to create additional ones, you can update and run:
 
 ```
 ./deployment/scripts/create_addresses
 ```
 
-Update api and web deployments with static IP Addresses that were just created.
+Update service (.e.g., api and web) deployments with static IP Addresses that were just created.
 
 ### Deploy all services and pods
 
 Authorize cluster (e.g. staging):
 
 ```bash
-./deployment/scripts/authorize staging
+bedrock cloud authorize staging
 ```
 
-Use `kubectl create` to deploy all services and pods
+Use `bedrock cloud deploy` to deploy all services (press 'a' to select all services when prompted) and pods (or `kubectl create`)
 
 ### Scaling Up or Down
 
@@ -201,7 +217,7 @@ You can change the node size of the (existing) default pool with the Terraform v
 Update cluster:
 
 ```
-$ ./deployment/scripts/provision staging apply
+$ bedrock cloud provision staging apply
 ```
 
 ### Destroying Environment Infrastructure
@@ -209,39 +225,91 @@ $ ./deployment/scripts/provision staging apply
 You can destroy the infrastructure for a particular environment (e.g. `staging`) with:
 
 ```
-$ ./deployment/scripts/provision staging destroy
+$ bedrock cloud provision staging destroy
 ```
 
 ## Deploying
 
-### Rollout Deploy
+### Quick deploy of API and other services
 
-The `deploy` script builds, pushes, and performs a rolling update of a service that incurs no downtime. Note that this will also apply changes to environment variables.
+The `bedrock cloud deploy` command builds, pushes, and performs a rolling update of a service that incurs no downtime. Note that this will also apply changes to environment variables.
 
-Deploy "web" on staging:
+The following builds, pushes and applies containers for the `services/api`:
+
+```bash
+bedrock cloud deploy staging api
+```
+If you leave out the `api` argument, then you will be presented with a prompt to select the service you wish to deploy. Example:
+
+```bash
+bedrock cloud deploy staging
+? Select service / subservice: › - Space or arrow-keys to select. Press "a" to select all. Return to submit.
+◯   api
+◯   api / cli
+◯   api / jobs-accounting
+◯   api / jobs-eclearing
+◯   api / jobs-eclearing-cpo
+◯   api / jobs-eclearing-locations
+◯   api / jobs-ocpi-locations
+◯   api-docs
+◯ ↓ bedrock-indexer
+```
+
+If you also remove the `<environment>` parameter (`staging`), you will first be prompted to select the environment:
+
+```bash
+bedrock cloud deploy
+? Select environment: › - Use arrow-keys. Return to submit.
+❯   staging
+    production
+```
+
+### Building a Docker container
+
+Build all Docker containers:
+
+```bash
+bedrock cloud build # press 'a' to select all services and 'enter' to submit
+```
+
+Build a specific service:
 
 ```
-./deployment/scripts/deploy staging web
+bedrock cloud build api
 ```
 
-To deploy API and web together:
+Build a specific sub service:
 
 ```
-./deployment/scripts/deploy_api_web staging
+bedrock cloud build api jobs
 ```
 
-### Feature Branches
+### Pushing Docker containers
 
-The `--feature` flags can be used when deploying to create dynamic feature branches for testing. Pointing a subdomain at the feature branch ingress IP will enable the branch:
+Push all locally known Docker containers to staging:
+
+```bash
+bedrock cloud push staging # press 'a' to select all services and 'enter' to submit
+```
+
+Push all containers matching "api" to staging:
 
 ```
-./deployment/scripts/deploy staging web --feature=demo
+bedrock cloud push staging api
 ```
 
-The `--api` flag will additionally override the `API_URL` for features that require API changes:
+### Rollout Docker containers (restart pods)
+
+Rollout all deployments on staging:
+
+```bash
+bedrock cloud rollout staging # press 'a' to select all services and 'enter' to submit
+```
+
+Rollout all deployments matching "api" to staging:
 
 ```
-./deployment/scripts/deploy staging web --feature=demo --api=demo
+bedrock cloud rollout staging api
 ```
 
 ### Deploy info
@@ -249,59 +317,30 @@ The `--api` flag will additionally override the `API_URL` for features that requ
 Each deployment is tagged with the author, date, and git ref of the deploy. To see these details for the currently running service use:
 
 ```
-./deployment/scripts/deploy_info staging web
-```
-
-### Building Docker Containers
-
-Build all Docker containers:
-
-```
-./deployment/scripts/build
-```
-
-Build a specific service:
-
-```
-./deployment/scripts/build api
-```
-
-Build a specific sub service:
-
-```
-./deployment/scripts/build api jobs
-```
-
-### Pushing Docker Containers
-
-First set up docker to gcloud as a credential helper with:
-
-```
-gcloud auth configure-docker
-```
-
-Push all locally known Docker containers to staging:
-
-```
-./deployment/scripts/push staging
-```
-
-Push all containers matching "api" to staging:
-
-```
-./deployment/scripts/push staging api
+bedrock cloud info staging web
 ```
 
 ### Check cluster status
 
 ```
-./deployment/scripts/status staging
+bedrock cloud status staging
 ```
 
 ### Getting shell access
 
 There's a default `api-cli-deployment` provided that allows you to obtain a shell. This is useful when running migration scripts in production (you can take down the API and use CLI to do operations without new reads/writes coming in):
 
+```
+bedrock cloud shell
+```
+
+You can also get shell access to every other running deployment/pod:
+
+```
+bedrock cloud shell staging mongo
+```
+
+Alternatively with kubectl:
 ```
 kubectl exec -it <CLI-POD-ID> -- /bin/bash
 ```
@@ -388,14 +427,35 @@ We do not want to & should not check in sensitive keys into git. We therefore us
 
 We are using env files to attach secrets to our deployment. For example to create one we would enter the key/value pairs into a text file and create it like follows.
 
+Bedrock has the follwing secret commands:
+
+```bash
+  get [environment] [name]     Get Secret from cluster and store in local <secret-name>.conf file
+  set [environment] [name]     Push secret to cluster from local <secret-name>.conf file
+  info [environment] [name]    Retrieve secret info from cluster
+  delete [environment] [name]  Delete secret from cluster
+  help [command]               display help for command
 ```
-kubectl create secret generic credentials --from-env-file ./credentials.txt
+
+The `<secret-name>.conf` file needs to be located in the `/environments/<environment>/secrets` folder (create secrets folder if it doesn't exist yet.).
+
+
+For example create `credentials.conf` in `/environments/staging/secrets`, containing:
+
+```conf
+JWT_TOKEN=xyz
+```
+
+Then to create the secret on the Kubernetes cluster:
+
+```
+bedrock cloud secret set staging credentials
 ```
 
 and to view it
 
 ```
- kubectl get secret credentials -o yaml
+bedrock cloud secret info staging credentials
 ```
 
 _Security note: Al values that are downloaded are in base64. Please avoid adding sensitive information to your shell history when decoding._
@@ -415,17 +475,17 @@ For a further example of this look at api-deloyment.yml for production.
 Convenience scripts for downloading and uploading secrets:
 
 ```
-./deployment/scripts/get_secrets staging credentials
+bedrock cloud secret get staging credentials
 ```
 
-This downloads all secret environment keys to `deployment/environments/staging/secrets/credentials.txt` - this folder is ignored by Git.
+This downloads all secret environment keys to `deployment/environments/staging/secrets/credentials.conf` - this folder is ignored by Git.
 
 _Security note: Never leave secret files on your machine_
 
-Once you edited the `.txt` file you can upload it like so:
+Once you edited the `.conf` file you can upload it like so:
 
 ```
-./deployment/scripts/set_secrets staging credentials
+bedrock cloud secret set staging credentials
 ```
 
-This uploads and deletes the values in `deployment/environments/staging/secrets/credentials.txt`. You can confirm the new values using `kubectl get secret credentials -o yaml` or using `kubectl exec` and confirming the environment variables in a given pod. Pods need a restart when secrets are updated!
+This uploads and deletes the values in `deployment/environments/staging/secrets/credentials.conf`. You can confirm the new values using `bedrock cloud secret info staging credentials` or using `kubectl exec` and confirming the environment variables in a given pod. Pods need a restart when secrets are updated!

@@ -2,14 +2,9 @@ import React from 'react';
 import { Form, Modal, Message, Button } from 'semantic-ui-react';
 import { request } from 'utils/api';
 import AutoFocus from 'components/AutoFocus';
-
-const rolesOptions = [
-  { text: 'Admin', value: 'admin' },
-  { text: 'User', value: 'user' },
-];
+import Roles from 'components/form-fields/Roles';
 
 export default class EditUser extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -91,7 +86,9 @@ export default class EditUser extends React.Component {
         onOpen={() => this.setState({ open: true })}
         open={open}
         trigger={trigger}>
-        <Modal.Header>{this.isUpdate() ? `Edit "${user.name}"` : 'New User'}</Modal.Header>
+        <Modal.Header>
+          {this.isUpdate() ? `Edit "${user.name}"` : 'New User'}
+        </Modal.Header>
         <Modal.Content>
           <AutoFocus>
             <Form
@@ -121,16 +118,10 @@ export default class EditUser extends React.Component {
                   onChange={(e, { value }) => this.setField('password', value)}
                 />
               )}
-              <Form.Dropdown
-                name="roles"
-                label="Roles"
-                required
-                fluid
-                selection
-                multiple
+
+              <Roles
                 value={user.roles || []}
-                options={rolesOptions}
-                onChange={(e, { value }) => this.setField('roles', value)}
+                onChange={(value) => this.setField('roles', value)}
               />
             </Form>
           </AutoFocus>

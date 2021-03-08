@@ -1,6 +1,6 @@
 import { memoize } from 'lodash';
 
-export default memoize(function loadScript(src) {
+export const loadScript = memoize(function loadScript(src) {
   return new Promise(function(resolve, reject) {
     var script = document.createElement('script');
     script.async = true;
@@ -8,7 +8,9 @@ export default memoize(function loadScript(src) {
     script.addEventListener('load', () => {
       resolve();
     });
-    script.addEventListener('error', reject);
+    script.addEventListener('error', () => {
+      reject(new Error(`Could not load URL ${src}`));
+    });
     document.body.appendChild(script);
   });
 });

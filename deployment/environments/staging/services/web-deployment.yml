@@ -17,8 +17,10 @@ spec:
           imagePullPolicy: Always
           name: main
           env:
-            - name: NODE_ENV
+            - name: ENV_NAME
               value: "staging"
+            - name: NODE_ENV
+              value: "production"
             - name: DOMAIN
               value: bedrock.foundation
             - name: API_URL

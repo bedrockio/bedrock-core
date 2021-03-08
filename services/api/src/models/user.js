@@ -1,17 +1,11 @@
 const mongoose = require('mongoose');
 const { createSchema } = require('../utils/schema');
 const bcrypt = require('bcrypt');
+const { validScopes } = require('../utils/permissions');
 const definition = require('./definitions/user.json');
 
+definition.attributes.roles[0].enum = validScopes;
 const schema = createSchema(definition.attributes);
-
-schema.methods.isAdmin = function isAdmin() {
-  return this.roles.indexOf('admin') !== -1;
-};
-
-schema.methods.hasRole = function hasRole(role = 'user') {
-  return this.roles.indexOf(role) !== -1;
-};
 
 schema.methods.verifyPassword = function verifyPassword(password) {
   if (!this.hashedPassword) return false;

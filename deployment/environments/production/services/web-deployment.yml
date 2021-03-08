@@ -17,6 +17,8 @@ spec:
           imagePullPolicy: Always
           name: main
           env:
+            - name: ENV_NAME
+              value: "production"
             - name: NODE_ENV
               value: "production"
             - name: DOMAIN

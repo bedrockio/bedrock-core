@@ -2,11 +2,11 @@ const postmark = require('postmark');
 const config = require('@bedrockio/config');
 
 const POSTMARK_FROM = config.get('POSTMARK_FROM');
-const env = process.env.NODE_ENV;
+const ENV_NAME = config.get('ENV_NAME');
 
 function sendMail({ to, subject }, { html, text, options }) {
-  if (!config.has('POSTMARK_APIKEY') || env === 'test') {
-    if (env === 'test') {
+  if (!config.has('POSTMARK_APIKEY') || ENV_NAME === 'test') {
+    if (ENV_NAME === 'test') {
       console.warn(`Sending email to ${to}`);
     } else {
       console.warn(`Sending email to ${to}`);

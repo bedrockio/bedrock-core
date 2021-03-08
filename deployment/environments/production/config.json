@@ -1,0 +1,16 @@
+{
+    "gcloud": {
+        "envName": "production",
+        "bucketPrefix": "bedrock-foundation",
+        "project": "bedrock-foundation",
+        "computeZone": "us-east1-c",
+        "kubernetes": {
+            "clusterName": "cluster-1",
+            "nodePoolCount": 3,
+            "minNodeCount": 3,
+            "maxNodeCount": 6,
+            "machineType": "n2-standard-2"
+        },
+        "label": "app"
+    }
+}
