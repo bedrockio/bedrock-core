@@ -1,5 +1,5 @@
 const Router = require('@koa/router');
-const Joi = require('@hapi/joi');
+const Joi = require('joi');
 const validate = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { searchValidation, getSearchQuery, search } = require('../utils/search');
