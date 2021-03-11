@@ -1,6 +1,6 @@
 const Router = require('@koa/router');
 const Joi = require('joi');
-const validate = require('../utils/middleware/validate');
+const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { searchValidation, getSearchQuery, search } = require('../utils/search');
 const { requirePermissions } = require('../utils/middleware/permissions');
@@ -35,10 +35,8 @@ router
   .use(requirePermissions({ endpoint: 'users', permission: 'read', scope: 'global' }))
   .post(
     '/search',
-    validate({
-      body: Joi.object({
-        ...searchValidation(),
-      }),
+    validateBody({
+      ...searchValidation(),
     }),
     async (ctx) => {
       const { body } = ctx.request;
@@ -53,10 +51,8 @@ router
   .use(requirePermissions({ endpoint: 'users', permission: 'write', scope: 'global' }))
   .post(
     '/',
-    validate({
-      body: Joi.object({
-        emails: Joi.array().items(Joi.string().email()).required(),
-      }),
+    validateBody({
+      emails: Joi.array().items(Joi.string().email()).required(),
     }),
     async (ctx) => {
       const { authUser } = ctx.state;

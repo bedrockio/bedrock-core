@@ -1,6 +1,6 @@
 const Router = require('@koa/router');
 const Joi = require('joi');
-const validate = require('../utils/middleware/validate');
+const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
 const { NotFoundError, BadRequestError } = require('../utils/errors');
@@ -14,7 +14,8 @@ const router = new Router();
 
 const passwordField = Joi.string()
   .min(6)
-  .message('Your password must be at least 6 characters long. Please try another.');
+  .message('Your password must be at least 6 characters long. Please try another.')
+  .required()
 
 router
   .use(authenticate({ type: 'user' }))
@@ -35,11 +36,9 @@ router
   })
   .patch(
     '/me',
-    validate({
-      body: Joi.object({
-        name: Joi.string(),
-        timeZone: Joi.string(),
-      }),
+    validateBody({
+      name: Joi.string(),
+      timeZone: Joi.string(),
     }),
     async (ctx) => {
       const { authUser } = ctx.state;
@@ -63,13 +62,11 @@ router
   })
   .post(
     '/search',
-    validate({
-      body: Joi.object({
-        ...searchValidation(),
-        ...exportValidation(),
-        name: Joi.string(),
-        role: Joi.string(),
-      }),
+    validateBody({
+      ...searchValidation(),
+      ...exportValidation(),
+      name: Joi.string(),
+      role: Joi.string(),
     }),
     async (ctx) => {
       const { body } = ctx.request;
@@ -101,12 +98,11 @@ router
   .use(requirePermissions({ endpoint: 'users', permission: 'write', scope: 'global' }))
   .post(
     '/',
-    validate({
-      // TODO: can this somehow mix in plain objects?
-      body: User.getCreateValidation().append({
-        password: passwordField.required(),
+    validateBody(
+      User.getCreateValidation().append({
+        password: passwordField
       }),
-    }),
+    ),
     async (ctx) => {
       const { email } = ctx.request.body;
       const existingUser = await User.findOne({ email, deletedAt: { $exists: false } });
@@ -122,9 +118,7 @@ router
   )
   .patch(
     '/:userId',
-    validate({
-      body: User.getUpdateValidation(),
-    }),
+    validateBody(User.getUpdateValidation()),
     async (ctx) => {
       const { user } = ctx.state;
       user.assign(ctx.request.body);
