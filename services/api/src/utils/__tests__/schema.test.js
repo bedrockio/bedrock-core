@@ -384,6 +384,51 @@ describe('createSchema', () => {
       expect(data.user.secret).toBe('foo');
     });
   });
+
+  describe('mongoose validation shortcuts', () => {
+    it('should validate an email field', () => {
+      let user;
+      const User = createTestModel(
+        createSchema({
+          email: {
+            type: String,
+            validate: 'email',
+          },
+        })
+      );
+
+      user = new User({
+        email: 'good@email.com',
+      });
+      expect(user.validateSync()).toBeUndefined();
+
+      user = new User({
+        email: 'bad@email',
+      });
+      expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);
+    });
+    it('should validate a nested email field', () => {
+      let user;
+      const User = createTestModel(
+        createSchema({
+          emails: [{
+            type: String,
+            validate: 'email',
+          }],
+        })
+      );
+
+      user = new User({
+        emails: ['good@email.com'],
+      });
+      expect(user.validateSync()).toBeUndefined();
+
+      user = new User({
+        emails: ['bad@email'],
+      });
+      expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);
+    });
+  });
 });
 
 describe('loadModel', () => {

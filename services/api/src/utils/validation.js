@@ -2,8 +2,8 @@ const Joi = require('joi');
 
 const EMAIL_SCHEMA = Joi.string().lowercase().email().required();
 
-function getJoiSchemaForDefinition(definition, options = {}) {
-  return getObjectSchema(definition, options).min(1);
+function getJoiSchemaForAttributes(attributes, options = {}) {
+  return getObjectSchema(attributes, options).min(1);
 }
 
 function getMongooseValidator(type) {
@@ -34,27 +34,25 @@ function getSchemaForField(field, options) {
       getSchemaForField(field[0], options)
     );
   }
-  const { type, ...params } = getField(field);
-  if (!type || type === 'Mixed' || typeof type === 'object') {
-    // Mixed fields either have no type, type "mixed",
-    // or "type" as a nested object.
-    return getObjectSchema(field, options);
+  const { type, ...rest } = normalizeField(field);
+  if (type === 'Mixed') {
+    return getObjectSchema(rest, options);
   }
   let schema = getSchemaForType(type);
-  if (params.required && !options.skipRequired) {
+  if (field.required && !options.skipRequired) {
     schema = schema.required();
   }
-  if (params.enum) {
-    schema = schema.valid(...params.enum);
+  if (field.enum) {
+    schema = schema.valid(...field.enum);
   }
-  if (params.match) {
-    schema = schema.pattern(RegExp(params.match));
+  if (field.match) {
+    schema = schema.pattern(RegExp(field.match));
   }
-  if (params.min || params.minLength) {
-    schema = schema.min(params.min || params.minLength);
+  if (field.min || field.minLength) {
+    schema = schema.min(field.min || field.minLength);
   }
-  if (params.max || params.maxLength) {
-    schema = schema.max(params.max || params.maxLength);
+  if (field.max || field.maxLength) {
+    schema = schema.max(field.max || field.maxLength);
   }
   return schema;
 }
@@ -75,17 +73,22 @@ function getSchemaForType(type) {
     case 'ObjectId':
       return Joi.string().hex().length(24);
     default:
-      return Joi.object();
+      throw new TypeError(`Unknown schema type ${type}`);
   }
 }
 
-function getField(field) {
+function normalizeField(field) {
+  // Normalize different mongoose definition styles:
+  // { name: String }
+  // { type: { type: String } // allow "type" field
+  // { object: { type: Mixed }
   if (typeof field === 'object') {
-    return field;
-  } else {
     return {
-      type: field,
+      ...field,
+      type: field.type?.type || field.type || 'Mixed',
     };
+  } else {
+    return { type: field };
   }
 }
 
@@ -100,6 +103,6 @@ function joiSchemaToMongooseValidator(schema) {
 }
 
 module.exports = {
-  getJoiSchemaForDefinition,
+  getJoiSchemaForAttributes,
   getMongooseValidator,
 };

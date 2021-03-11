@@ -2,7 +2,7 @@
   "attributes": {
     "email": {
       "type": "String",
-      "validation": "email",
+      "validate": "email",
       "required": true,
       "lowercase": true,
       "trim": true,

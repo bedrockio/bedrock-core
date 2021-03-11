@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
-const { startCase, omitBy } = require('lodash');
+const { startCase, omitBy, isPlainObject } = require('lodash');
 const { ObjectId } = mongoose.Schema.Types;
-const { getJoiSchemaForDefinition, getMongooseValidator } = require('./validation');
+const { getJoiSchemaForAttributes, getMongooseValidator } = require('./validation');
 
 const RESERVED_FIELDS = ['id', 'createdAt', 'updatedAt', 'deletedAt'];
 
@@ -42,7 +42,7 @@ function createSchema(attributes = {}, options = {}) {
   );
 
   schema.static('getCreateValidation', function getCreateValidation() {
-    return getJoiSchemaForDefinition(definition, {
+    return getJoiSchemaForAttributes(attributes, {
       disallowField: (key) => {
         return isDisallowedField(this, key);
       },
@@ -50,7 +50,7 @@ function createSchema(attributes = {}, options = {}) {
   });
 
   schema.static('getUpdateValidation', function getUpdateValidation() {
-    return getJoiSchemaForDefinition(definition, {
+    return getJoiSchemaForAttributes(attributes, {
       disallowField: (key) => {
         return isDisallowedField(this, key);
       },
@@ -80,12 +80,30 @@ function createSchema(attributes = {}, options = {}) {
 }
 
 function attributesToDefinition(attributes) {
-  for (let field of Object.values(attributes)) {
-    if (field.validation) {
-      field.validate = getMongooseValidator(field.validation);
+  const definition = {};
+  const { type } = attributes;
+
+  // Is this a Mongoose descriptor like
+  // { type: String, required: true }
+  // or nested fields of Mixed type.
+  const isSchemaType = type && typeof type !== 'object';
+
+  for (let [key, val] of Object.entries(attributes)) {
+    if (isSchemaType) {
+      if (typeof val === 'string' && key === 'validate') {
+        // Map string shortcuts to mongoose validators such as "email".
+        val = getMongooseValidator(val);
+      }
+    } else {
+      if (Array.isArray(val)) {
+        val = val.map(attributesToDefinition);
+      } else if (isPlainObject(val)) {
+        val = attributesToDefinition(val);
+      }
     }
+    definition[key] = val;
   }
-  return attributes;
+  return definition;
 }
 
 function getField(doc, key) {
