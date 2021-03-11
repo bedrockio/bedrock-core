@@ -16,3 +16,15 @@ export const numberWithCommas = (x) => {
 export const numberWithDots = (x) => {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 };
+
+export function formatOption(types, key) {
+  const status = types[key];
+  const props = {
+    content: status.name,
+    icon: status.icon,
+  };
+  if (status.color) {
+    props.color = status.color;
+  }
+  return <Label {...props} />;
+}
