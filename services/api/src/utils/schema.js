@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const { startCase, omitBy } = require('lodash');
 const { ObjectId } = mongoose.Schema.Types;
-const { getValidatorForDefinition } = require('./validator');
+const { getJoiSchemaForDefinition, getMongooseValidator } = require('./validation');
 
 const RESERVED_FIELDS = ['id', 'createdAt', 'updatedAt', 'deletedAt'];
 
@@ -22,11 +22,12 @@ const serializeOptions = {
   },
 };
 
-function createSchema(definition, options = {}) {
+function createSchema(attributes = {}, options = {}) {
+  const definition = attributesToDefinition(attributes);
   const schema = new mongoose.Schema(
     {
-      deletedAt: { type: Date },
       ...definition,
+      deletedAt: { type: Date },
     },
     {
       // Include timestamps by default.
@@ -41,7 +42,7 @@ function createSchema(definition, options = {}) {
   );
 
   schema.static('getCreateValidation', function getCreateValidation() {
-    return getValidatorForDefinition(definition, {
+    return getJoiSchemaForDefinition(definition, {
       disallowField: (key) => {
         return isDisallowedField(this, key);
       },
@@ -49,7 +50,7 @@ function createSchema(definition, options = {}) {
   });
 
   schema.static('getUpdateValidation', function getUpdateValidation() {
-    return getValidatorForDefinition(definition, {
+    return getJoiSchemaForDefinition(definition, {
       disallowField: (key) => {
         return isDisallowedField(this, key);
       },
@@ -76,6 +77,15 @@ function createSchema(definition, options = {}) {
   };
 
   return schema;
+}
+
+function attributesToDefinition(attributes) {
+  for (let field of Object.values(attributes)) {
+    if (field.validation) {
+      field.validate = getMongooseValidator(field.validation);
+    }
+  }
+  return attributes;
 }
 
 function getField(doc, key) {
