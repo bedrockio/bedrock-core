@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const { validScopes } = require('../utils/permissions');
 const definition = require('./definitions/user.json');
 
-definition.attributes.roles[0].enum = validScopes;
+definition.attributes.roles[0].scope.enum = validScopes;
 const schema = createSchema(definition.attributes);
 
 schema.methods.verifyPassword = function verifyPassword(password) {
