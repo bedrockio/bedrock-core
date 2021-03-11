@@ -40,7 +40,7 @@ function createSchema(definition, options = {}) {
     }
   );
 
-  schema.static('getValidator', function getValidator() {
+  schema.static('getCreateValidation', function getCreateValidation() {
     return getValidatorForDefinition(definition, {
       disallowField: (key) => {
         return isDisallowedField(this, key);
@@ -48,7 +48,7 @@ function createSchema(definition, options = {}) {
     });
   });
 
-  schema.static('getPatchValidator', function getPatchValidator() {
+  schema.static('getUpdateValidation', function getUpdateValidation() {
     return getValidatorForDefinition(definition, {
       disallowField: (key) => {
         return isDisallowedField(this, key);

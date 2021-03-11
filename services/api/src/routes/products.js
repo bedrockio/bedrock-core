@@ -22,7 +22,7 @@ router
   .post(
     '/',
     validate({
-      body: Product.getValidator(),
+      body: Product.getCreateValidation(),
     }),
     async (ctx) => {
       const product = await Product.create(ctx.request.body);
@@ -65,7 +65,7 @@ router
   .patch(
     '/:productId',
     validate({
-      body: Product.getPatchValidator(),
+      body: Product.getUpdateValidation(),
     }),
     async (ctx) => {
       const product = ctx.state.product;

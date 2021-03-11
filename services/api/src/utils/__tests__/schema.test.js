@@ -429,19 +429,19 @@ describe('loadModelDir', () => {
 });
 
 describe('validation', () => {
-  function assertPass(validator, obj) {
+  function assertPass(schema, obj) {
     expect(() => {
-      Joi.assert(obj, validator);
+      Joi.assert(obj, schema);
     }).not.toThrow();
   }
-  function assertFail(validator, obj) {
+  function assertFail(schema, obj) {
     expect(() => {
-      Joi.assert(obj, validator);
+      Joi.assert(obj, schema);
     }).toThrow();
   }
 
-  describe('getValidator', () => {
-    it('should get a basic Joi validator', () => {
+  describe('create validation', () => {
+    it('should get a basic Joi create schema', () => {
       const User = createTestModel(
         createSchema({
           name: {
@@ -454,26 +454,26 @@ describe('validation', () => {
           },
         })
       );
-      const validator = User.getValidator();
-      expect(Joi.isSchema(validator)).toBe(true);
-      assertPass(validator, {
+      const schema = User.getCreateValidation();
+      expect(Joi.isSchema(schema)).toBe(true);
+      assertPass(schema, {
         name: 'foo',
         count: 10,
       });
-      assertFail(validator, {
+      assertFail(schema, {
         name: 'foo',
       });
-      assertFail(validator, {
+      assertFail(schema, {
         name: 10,
         count: 10,
       });
-      assertFail(validator, {
+      assertFail(schema, {
         foo: 'bar',
       });
     });
   });
 
-  describe('getPatchValidator', () => {
+  describe('update validation', () => {
     it('should skip required fields', () => {
       const User = createTestModel(
         createSchema({
@@ -487,15 +487,15 @@ describe('validation', () => {
           },
         })
       );
-      const validator = User.getPatchValidator();
-      expect(Joi.isSchema(validator)).toBe(true);
-      assertPass(validator, {
+      const schema = User.getUpdateValidation();
+      expect(Joi.isSchema(schema)).toBe(true);
+      assertPass(schema, {
         name: 'foo',
       });
-      assertPass(validator, {
+      assertPass(schema, {
         count: 10,
       });
-      assertFail(validator, {});
+      assertFail(schema, {});
     });
 
     it('should strip schema internal fields', () => {
@@ -507,8 +507,8 @@ describe('validation', () => {
           },
         })
       );
-      const validator = User.getPatchValidator();
-      assertPass(validator, {
+      const schema = User.getUpdateValidation();
+      assertPass(schema, {
         name: 'foo',
         id: 'id',
         createdAt: 'createdAt',
@@ -530,8 +530,8 @@ describe('validation', () => {
           },
         })
       );
-      const validator = User.getValidator();
-      assertFail(validator, {
+      const schema = User.getUpdateValidation();
+      assertFail(schema, {
         name: 'foo',
         password: 'createdAt',
       });

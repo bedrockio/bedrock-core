@@ -22,7 +22,7 @@ router
   .post(
     '/',
     validate({
-      body: Shop.getValidator(),
+      body: Shop.getCreateValidation(),
     }),
     async (ctx) => {
       const shop = await Shop.create(ctx.request.body);
@@ -78,7 +78,7 @@ router
   .patch(
     '/:shopId',
     validate({
-      body: Shop.getPatchValidator(),
+      body: Shop.getUpdateValidation(),
     }),
     async (ctx) => {
       const shop = ctx.state.shop;
