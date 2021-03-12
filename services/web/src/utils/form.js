@@ -1,15 +1,15 @@
 import { capitalize } from 'lodash';
 
-export const simpleOptions = (keys) =>
-  keys.map((key) => {
-    return {
-      key,
-      value: key,
-      text: capitalize(key),
-    };
-  });
-
-export const createOptions = (keys) => {
+export const createDropdownOptions = (keys) => {
+  if (keys.length && typeof keys[0] === 'string') {
+    return keys.map((key) => {
+      return {
+        key,
+        value: key,
+        text: capitalize(key),
+      };
+    });
+  }
   return Object.keys(keys).map((key) => {
     return {
       key,
