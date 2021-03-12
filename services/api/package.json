@@ -13,7 +13,7 @@
     "start:production": "node src/index",
     "docs": "node scripts/generate-openapi",
     "emails": "node emails/build",
-    "lint": "eslint src",
+    "lint": "eslint src scripts",
     "test": "jest",
     "test:watch": "jest --watch -i",
     "generate": "cd ../../generator && yarn install && yarn generate"
