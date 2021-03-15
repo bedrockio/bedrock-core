@@ -3,17 +3,12 @@ const { uniqueId } = require('lodash');
 
 const context = require('./context');
 const request = require('./request');
+const { flags } = require('../database');
 
 const { loadModelDir } = require('./../schema');
 const models = loadModelDir(__dirname + '/../../models');
 
 async function setupDb() {
-  const mongooseOpts = {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
-    useUnifiedTopology: true,
-  };
   // ENVs are set by jest-mongodb:
   // console.log(global.__MONGO_URI__);
   // console.log(global.__MONGO_DB_NAME__);
@@ -21,7 +16,7 @@ async function setupDb() {
   // and replace with per test unique db name: MONGO_DB_NAME
   const mongoURL = 'mongodb://' + global.__MONGO_URI__.split('/')[2] + '/' + global.__MONGO_DB_NAME__;
 
-  await mongoose.connect(mongoURL, mongooseOpts, (err) => {
+  await mongoose.connect(mongoURL, flags, (err) => {
     if (err) {
       console.error(err);
       process.exit(1);
