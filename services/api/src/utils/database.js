@@ -28,7 +28,6 @@ async function initalize() {
   return db;
 }
 
-module.exports = {
-  initalize,
-  flags,
-};
+initalize.flags = flags;
+
+module.exports = initalize;
