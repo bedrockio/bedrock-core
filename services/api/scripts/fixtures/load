@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
 const { logger } = require('../../src/utils/logging');
-const { initalize } = require('../../src/database');
+const { initialize } = require('../../src/database');
 const { createFixtures } = require('../../src/fixtures');
 
 async function run() {
-  await initalize();
+  await initialize();
   const result = await createFixtures();
   if (!result) {
     logger.info('No DB fixtures to load, database is populated');

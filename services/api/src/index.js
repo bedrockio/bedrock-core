@@ -1,7 +1,7 @@
 const { initalize: setup } = require('@bedrockio/instrumentation');
 setup();
 
-const { initalize } = require('./utils/database');
+const { initialize } = require('./utils/database');
 const { createFixtures } = require('./fixtures');
 const app = require('./app');
 
@@ -12,7 +12,7 @@ const PORT = config.get('BIND_PORT', 'number');
 const HOST = config.get('BIND_HOST');
 
 module.exports = (async () => {
-  await initalize();
+  await initialize();
   if (ENV_NAME === 'development') {
     await createFixtures();
   }
