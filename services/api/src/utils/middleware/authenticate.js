@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const config = require('@bedrockio/config');
 const mongoose = require('mongoose');
-const { userHasPermissions } = require('./../permissions');
 
 const secrets = {
   user: config.get('JWT_SECRET'),

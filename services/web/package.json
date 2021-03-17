@@ -9,7 +9,7 @@
     "build": "rm -rf ./dist && NODE_ENV=production NODE_OPTIONS=\"--max-old-space-size=4096\" webpack",
     "start": "node ./serve/dev",
     "static": "node ./serve/static",
-    "lint": "eslint src --fix",
+    "lint": "eslint src serve scripts",
     "test": "jest",
     "generate": "cd ../../generator && yarn install && yarn generate"
   },
@@ -22,6 +22,7 @@
     "@babel/preset-react": "^7.9.4",
     "@bedrockio/config": "^2.0.3",
     "@hot-loader/react-dom": "^16.13.0",
+    "@sentry/browser": "^6.0.1",
     "autoprefixer": "^9.7.6",
     "babel-loader": "^8.1.0",
     "babel-plugin-lodash": "^3.3.4",

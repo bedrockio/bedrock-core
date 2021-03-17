@@ -13,6 +13,7 @@ const all = {
 module.exports = {
   ...all,
   PUBLIC: pick(all, [
+    'ENV_NAME',
     'DEV',
     'PROD',
     'STAGING',
