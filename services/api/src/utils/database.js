@@ -16,18 +16,14 @@ const flags = {
   // use native findOneAndUpdate() rather than findAndModify()
   useFindAndModify: false,
 };
+exports.flags = flags;
 
-async function initalize() {
+exports.initialize = async function initialize() {
   await mongoose.connect(config.get('MONGO_URI'), flags);
-
   const db = mongoose.connection;
   db.on('error', console.error.bind(console, 'connection error:'));
   db.once('open', () => {
     console.info('mongodb connected');
   });
   return db;
-}
-
-initalize.flags = flags;
-
-module.exports = initalize;
+};
