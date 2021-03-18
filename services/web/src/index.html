@@ -8,14 +8,13 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
     />
     <title><%= APP_NAME %></title>
-
-    <% if (GTM_CONTAINER_ID) { %> <%= require('utils/analytics/head.html') %> <%
-    } %>
-    <!--env:conf-->
+    <%= require('utils/analytics/head.html') %>
+    <script>
+      window.__ENV__ = <%= PUBLIC_ENV %>;
+    </script>
   </head>
   <body>
     <div id="root"></div>
-    <% if (GTM_CONTAINER_ID) { %> <%= require('utils/analytics/body.html') %> <%
-    } %>
+    <%= require('utils/analytics/body.html') %>
   </body>
 </html>
