@@ -2,6 +2,8 @@
            Statistic
 *******************************/
 
+@import (multiple) '../globals/site.variables';
+
 /*-------------------
          View
 --------------------*/

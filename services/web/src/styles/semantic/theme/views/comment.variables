@@ -2,6 +2,7 @@
             Comments
 *******************************/
 
+@import (multiple) '../globals/site.variables';
 
 /*-------------------
        View

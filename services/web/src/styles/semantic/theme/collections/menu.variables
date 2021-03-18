@@ -2,6 +2,8 @@
              Menu
 *******************************/
 
+@import (multiple) '../globals/site.variables';
+
 /*-------------------
       Collection
 --------------------*/

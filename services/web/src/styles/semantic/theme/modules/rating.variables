@@ -2,6 +2,8 @@
              Rating
 *******************************/
 
+@import (multiple) '../globals/site.variables';
+
 @margin: 0em @relativeMini;
 @whiteSpace: nowrap;
 @verticalAlign: baseline;

@@ -2,6 +2,8 @@
             Message
 *******************************/
 
+@import (multiple) '../globals/site.variables';
+
 // @textColor
 
 /*-------------------

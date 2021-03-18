@@ -2,6 +2,8 @@
              Icon
 *******************************/
 
+@import (multiple) '../globals/site.variables';
+
 /*--------------
    Font Files
 ---------------*/
@@ -21,7 +23,6 @@
 ---------------*/
 
 /* Outline Icons */
-@importOutlineIcons: true;
 @outlineFontName: 'outline-icons';
 @outlineSrc:
   url("@{fontPath}/@{outlineFontName}.eot?#iefix") format('embedded-opentype'),
@@ -33,7 +34,6 @@
 @outlineFallbackSRC: url("@{fontPath}/@{outlineFontName}.eot");
 
 /* Brand Icons */
-@importBrandIcons: true;
 @brandFontName: 'brand-icons';
 @brandSrc:
   url("@{fontPath}/@{brandFontName}.eot?#iefix") format('embedded-opentype'),

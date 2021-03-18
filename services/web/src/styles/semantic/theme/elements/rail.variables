@@ -2,6 +2,8 @@
             Rail
 *******************************/
 
+@import (multiple) '../globals/site.variables';
+
 /*-------------------
        Element
 --------------------*/

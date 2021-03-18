@@ -1698,503 +1698,495 @@ i.icon.youtube.play:before { content: "\f167"; }
 *******************************/
 
 /* Outline Icon */
-.loadOutlineIcons() when (@importOutlineIcons) {
-  /* Load & Define Icon Font */
-  @font-face {
-    font-family: @outlineFontName;
-    src: @outlineFallbackSRC;
-    src: @outlineSrc;
-    font-style: normal;
-    font-weight: @normal;
-    font-variant: normal;
-    text-decoration: inherit;
-    text-transform: none;
-  }
-  i.icon.outline {
-    font-family: @outlineFontName;
-  }
-  /* Icon Definitions */
-  i.icon.address.book.outline:before { content: "\f2b9"; }
-  i.icon.address.card.outline:before { content: "\f2bb"; }
-  i.icon.arrow.alternate.circle.down.outline:before { content: "\f358"; }
-  i.icon.arrow.alternate.circle.left.outline:before { content: "\f359"; }
-  i.icon.arrow.alternate.circle.right.outline:before { content: "\f35a"; }
-  i.icon.arrow.alternate.circle.up.outline:before { content: "\f35b"; }
-  i.icon.bell.outline:before { content: "\f0f3"; }
-  i.icon.bell.slash.outline:before { content: "\f1f6"; }
-  i.icon.bookmark.outline:before { content: "\f02e"; }
-  i.icon.building.outline:before { content: "\f1ad"; }
-  i.icon.calendar.outline:before { content: "\f133"; }
-  i.icon.calendar.alternate.outline:before { content: "\f073"; }
-  i.icon.calendar.check.outline:before { content: "\f274"; }
-  i.icon.calendar.minus.outline:before { content: "\f272"; }
-  i.icon.calendar.plus.outline:before { content: "\f271"; }
-  i.icon.calendar.times.outline:before { content: "\f273"; }
-  i.icon.caret.square.down.outline:before { content: "\f150"; }
-  i.icon.caret.square.left.outline:before { content: "\f191"; }
-  i.icon.caret.square.right.outline:before { content: "\f152"; }
-  i.icon.caret.square.up.outline:before { content: "\f151"; }
-  i.icon.chart.bar.outline:before { content: "\f080"; }
-  i.icon.check.circle.outline:before { content: "\f058"; }
-  i.icon.check.square.outline:before { content: "\f14a"; }
-  i.icon.circle.outline:before { content: "\f111"; }
-  i.icon.clipboard.outline:before { content: "\f328"; }
-  i.icon.clock.outline:before { content: "\f017"; }
-  i.icon.clone.outline:before { content: "\f24d"; }
-  i.icon.closed.captioning.outline:before { content: "\f20a"; }
-  i.icon.comment.outline:before { content: "\f075"; }
-  i.icon.comment.alternate.outline:before { content: "\f27a"; }
-  i.icon.comments.outline:before { content: "\f086"; }
-  i.icon.compass.outline:before { content: "\f14e"; }
-  i.icon.copy.outline:before { content: "\f0c5"; }
-  i.icon.copyright.outline:before { content: "\f1f9"; }
-  i.icon.credit.card.outline:before { content: "\f09d"; }
-  i.icon.dot.circle.outline:before { content: "\f192"; }
-  i.icon.edit.outline:before { content: "\f044"; }
-  i.icon.envelope.outline:before { content: "\f0e0"; }
-  i.icon.envelope.open.outline:before { content: "\f2b6"; }
-  i.icon.eye.slash.outline:before { content: "\f070"; }
-  i.icon.file.outline:before { content: "\f15b"; }
-  i.icon.file.alternate.outline:before { content: "\f15c"; }
-  i.icon.file.archive.outline:before { content: "\f1c6"; }
-  i.icon.file.audio.outline:before { content: "\f1c7"; }
-  i.icon.file.code.outline:before { content: "\f1c9"; }
-  i.icon.file.excel.outline:before { content: "\f1c3"; }
-  i.icon.file.image.outline:before { content: "\f1c5"; }
-  i.icon.file.pdf.outline:before { content: "\f1c1"; }
-  i.icon.file.powerpoint.outline:before { content: "\f1c4"; }
-  i.icon.file.video.outline:before { content: "\f1c8"; }
-  i.icon.file.word.outline:before { content: "\f1c2"; }
-  i.icon.flag.outline:before { content: "\f024"; }
-  i.icon.folder.outline:before { content: "\f07b"; }
-  i.icon.folder.open.outline:before { content: "\f07c"; }
-  i.icon.frown.outline:before { content: "\f119"; }
-  i.icon.futbol.outline:before { content: "\f1e3"; }
-  i.icon.gem.outline:before { content: "\f3a5"; }
-  i.icon.hand.lizard.outline:before { content: "\f258"; }
-  i.icon.hand.paper.outline:before { content: "\f256"; }
-  i.icon.hand.peace.outline:before { content: "\f25b"; }
-  i.icon.hand.point.down.outline:before { content: "\f0a7"; }
-  i.icon.hand.point.left.outline:before { content: "\f0a5"; }
-  i.icon.hand.point.right.outline:before { content: "\f0a4"; }
-  i.icon.hand.point.up.outline:before { content: "\f0a6"; }
-  i.icon.hand.pointer.outline:before { content: "\f25a"; }
-  i.icon.hand.rock.outline:before { content: "\f255"; }
-  i.icon.hand.scissors.outline:before { content: "\f257"; }
-  i.icon.hand.spock.outline:before { content: "\f259"; }
-  i.icon.handshake.outline:before { content: "\f2b5"; }
-  i.icon.hdd.outline:before { content: "\f0a0"; }
-  i.icon.heart.outline:before { content: "\f004"; }
-  i.icon.hospital.outline:before { content: "\f0f8"; }
-  i.icon.hourglass.outline:before { content: "\f254"; }
-  i.icon.id.badge.outline:before { content: "\f2c1"; }
-  i.icon.id.card.outline:before { content: "\f2c2"; }
-  i.icon.image.outline:before { content: "\f03e"; }
-  i.icon.images.outline:before { content: "\f302"; }
-  i.icon.keyboard.outline:before { content: "\f11c"; }
-  i.icon.lemon.outline:before { content: "\f094"; }
-  i.icon.life.ring.outline:before { content: "\f1cd"; }
-  i.icon.lightbulb.outline:before { content: "\f0eb"; }
-  i.icon.list.alternate.outline:before { content: "\f022"; }
-  i.icon.map.outline:before { content: "\f279"; }
-  i.icon.meh.outline:before { content: "\f11a"; }
-  i.icon.minus.square.outline:before { content: "\f146"; }
-  i.icon.money.bill.alternate.outline:before { content: "\f3d1"; }
-  i.icon.moon.outline:before { content: "\f186"; }
-  i.icon.newspaper.outline:before { content: "\f1ea"; }
-  i.icon.object.group.outline:before { content: "\f247"; }
-  i.icon.object.ungroup.outline:before { content: "\f248"; }
-  i.icon.paper.plane.outline:before { content: "\f1d8"; }
-  i.icon.pause.circle.outline:before { content: "\f28b"; }
-  i.icon.play.circle.outline:before { content: "\f144"; }
-  i.icon.plus.square.outline:before { content: "\f0fe"; }
-  i.icon.question.circle.outline:before { content: "\f059"; }
-  i.icon.registered.outline:before { content: "\f25d"; }
-  i.icon.save.outline:before { content: "\f0c7"; }
-  i.icon.share.square.outline:before { content: "\f14d"; }
-  i.icon.smile.outline:before { content: "\f118"; }
-  i.icon.snowflake.outline:before { content: "\f2dc"; }
-  i.icon.square.outline:before { content: "\f0c8"; }
-  i.icon.star.outline:before { content: "\f005"; }
-  i.icon.star.half.outline:before { content: "\f089"; }
-  i.icon.sticky.note.outline:before { content: "\f249"; }
-  i.icon.stop.circle.outline:before { content: "\f28d"; }
-  i.icon.sun.outline:before { content: "\f185"; }
-  i.icon.thumbs.down.outline:before { content: "\f165"; }
-  i.icon.thumbs.up.outline:before { content: "\f164"; }
-  i.icon.times.circle.outline:before { content: "\f057"; }
-  i.icon.trash.alternate.outline:before { content: "\f2ed"; }
-  i.icon.user.outline:before { content: "\f007"; }
-  i.icon.user.circle.outline:before { content: "\f2bd"; }
-  i.icon.window.close.outline:before { content: "\f410"; }
-  i.icon.window.maximize.outline:before { content: "\f2d0"; }
-  i.icon.window.minimize.outline:before { content: "\f2d1"; }
-  i.icon.window.restore.outline:before { content: "\f2d2"; }
-
-  /* Outline Aliases */
-  i.icon.disk.outline:before { content: "\f0a0"; }
-  i.icon.heart.empty,
-  i.icon.star.empty {
-    font-family: @outlineFontName;
-  }
-  i.icon.heart.empty:before { content: "\f004"; }
-  i.icon.star.empty:before { content: "\f089"; }
-
+/* Load & Define Icon Font */
+@font-face {
+  font-family: @outlineFontName;
+  src: @outlineFallbackSRC;
+  src: @outlineSrc;
+  font-style: normal;
+  font-weight: @normal;
+  font-variant: normal;
+  text-decoration: inherit;
+  text-transform: none;
 }
-.loadOutlineIcons();
+i.icon.outline {
+  font-family: @outlineFontName;
+}
+/* Icon Definitions */
+i.icon.address.book.outline:before { content: "\f2b9"; }
+i.icon.address.card.outline:before { content: "\f2bb"; }
+i.icon.arrow.alternate.circle.down.outline:before { content: "\f358"; }
+i.icon.arrow.alternate.circle.left.outline:before { content: "\f359"; }
+i.icon.arrow.alternate.circle.right.outline:before { content: "\f35a"; }
+i.icon.arrow.alternate.circle.up.outline:before { content: "\f35b"; }
+i.icon.bell.outline:before { content: "\f0f3"; }
+i.icon.bell.slash.outline:before { content: "\f1f6"; }
+i.icon.bookmark.outline:before { content: "\f02e"; }
+i.icon.building.outline:before { content: "\f1ad"; }
+i.icon.calendar.outline:before { content: "\f133"; }
+i.icon.calendar.alternate.outline:before { content: "\f073"; }
+i.icon.calendar.check.outline:before { content: "\f274"; }
+i.icon.calendar.minus.outline:before { content: "\f272"; }
+i.icon.calendar.plus.outline:before { content: "\f271"; }
+i.icon.calendar.times.outline:before { content: "\f273"; }
+i.icon.caret.square.down.outline:before { content: "\f150"; }
+i.icon.caret.square.left.outline:before { content: "\f191"; }
+i.icon.caret.square.right.outline:before { content: "\f152"; }
+i.icon.caret.square.up.outline:before { content: "\f151"; }
+i.icon.chart.bar.outline:before { content: "\f080"; }
+i.icon.check.circle.outline:before { content: "\f058"; }
+i.icon.check.square.outline:before { content: "\f14a"; }
+i.icon.circle.outline:before { content: "\f111"; }
+i.icon.clipboard.outline:before { content: "\f328"; }
+i.icon.clock.outline:before { content: "\f017"; }
+i.icon.clone.outline:before { content: "\f24d"; }
+i.icon.closed.captioning.outline:before { content: "\f20a"; }
+i.icon.comment.outline:before { content: "\f075"; }
+i.icon.comment.alternate.outline:before { content: "\f27a"; }
+i.icon.comments.outline:before { content: "\f086"; }
+i.icon.compass.outline:before { content: "\f14e"; }
+i.icon.copy.outline:before { content: "\f0c5"; }
+i.icon.copyright.outline:before { content: "\f1f9"; }
+i.icon.credit.card.outline:before { content: "\f09d"; }
+i.icon.dot.circle.outline:before { content: "\f192"; }
+i.icon.edit.outline:before { content: "\f044"; }
+i.icon.envelope.outline:before { content: "\f0e0"; }
+i.icon.envelope.open.outline:before { content: "\f2b6"; }
+i.icon.eye.slash.outline:before { content: "\f070"; }
+i.icon.file.outline:before { content: "\f15b"; }
+i.icon.file.alternate.outline:before { content: "\f15c"; }
+i.icon.file.archive.outline:before { content: "\f1c6"; }
+i.icon.file.audio.outline:before { content: "\f1c7"; }
+i.icon.file.code.outline:before { content: "\f1c9"; }
+i.icon.file.excel.outline:before { content: "\f1c3"; }
+i.icon.file.image.outline:before { content: "\f1c5"; }
+i.icon.file.pdf.outline:before { content: "\f1c1"; }
+i.icon.file.powerpoint.outline:before { content: "\f1c4"; }
+i.icon.file.video.outline:before { content: "\f1c8"; }
+i.icon.file.word.outline:before { content: "\f1c2"; }
+i.icon.flag.outline:before { content: "\f024"; }
+i.icon.folder.outline:before { content: "\f07b"; }
+i.icon.folder.open.outline:before { content: "\f07c"; }
+i.icon.frown.outline:before { content: "\f119"; }
+i.icon.futbol.outline:before { content: "\f1e3"; }
+i.icon.gem.outline:before { content: "\f3a5"; }
+i.icon.hand.lizard.outline:before { content: "\f258"; }
+i.icon.hand.paper.outline:before { content: "\f256"; }
+i.icon.hand.peace.outline:before { content: "\f25b"; }
+i.icon.hand.point.down.outline:before { content: "\f0a7"; }
+i.icon.hand.point.left.outline:before { content: "\f0a5"; }
+i.icon.hand.point.right.outline:before { content: "\f0a4"; }
+i.icon.hand.point.up.outline:before { content: "\f0a6"; }
+i.icon.hand.pointer.outline:before { content: "\f25a"; }
+i.icon.hand.rock.outline:before { content: "\f255"; }
+i.icon.hand.scissors.outline:before { content: "\f257"; }
+i.icon.hand.spock.outline:before { content: "\f259"; }
+i.icon.handshake.outline:before { content: "\f2b5"; }
+i.icon.hdd.outline:before { content: "\f0a0"; }
+i.icon.heart.outline:before { content: "\f004"; }
+i.icon.hospital.outline:before { content: "\f0f8"; }
+i.icon.hourglass.outline:before { content: "\f254"; }
+i.icon.id.badge.outline:before { content: "\f2c1"; }
+i.icon.id.card.outline:before { content: "\f2c2"; }
+i.icon.image.outline:before { content: "\f03e"; }
+i.icon.images.outline:before { content: "\f302"; }
+i.icon.keyboard.outline:before { content: "\f11c"; }
+i.icon.lemon.outline:before { content: "\f094"; }
+i.icon.life.ring.outline:before { content: "\f1cd"; }
+i.icon.lightbulb.outline:before { content: "\f0eb"; }
+i.icon.list.alternate.outline:before { content: "\f022"; }
+i.icon.map.outline:before { content: "\f279"; }
+i.icon.meh.outline:before { content: "\f11a"; }
+i.icon.minus.square.outline:before { content: "\f146"; }
+i.icon.money.bill.alternate.outline:before { content: "\f3d1"; }
+i.icon.moon.outline:before { content: "\f186"; }
+i.icon.newspaper.outline:before { content: "\f1ea"; }
+i.icon.object.group.outline:before { content: "\f247"; }
+i.icon.object.ungroup.outline:before { content: "\f248"; }
+i.icon.paper.plane.outline:before { content: "\f1d8"; }
+i.icon.pause.circle.outline:before { content: "\f28b"; }
+i.icon.play.circle.outline:before { content: "\f144"; }
+i.icon.plus.square.outline:before { content: "\f0fe"; }
+i.icon.question.circle.outline:before { content: "\f059"; }
+i.icon.registered.outline:before { content: "\f25d"; }
+i.icon.save.outline:before { content: "\f0c7"; }
+i.icon.share.square.outline:before { content: "\f14d"; }
+i.icon.smile.outline:before { content: "\f118"; }
+i.icon.snowflake.outline:before { content: "\f2dc"; }
+i.icon.square.outline:before { content: "\f0c8"; }
+i.icon.star.outline:before { content: "\f005"; }
+i.icon.star.half.outline:before { content: "\f089"; }
+i.icon.sticky.note.outline:before { content: "\f249"; }
+i.icon.stop.circle.outline:before { content: "\f28d"; }
+i.icon.sun.outline:before { content: "\f185"; }
+i.icon.thumbs.down.outline:before { content: "\f165"; }
+i.icon.thumbs.up.outline:before { content: "\f164"; }
+i.icon.times.circle.outline:before { content: "\f057"; }
+i.icon.trash.alternate.outline:before { content: "\f2ed"; }
+i.icon.user.outline:before { content: "\f007"; }
+i.icon.user.circle.outline:before { content: "\f2bd"; }
+i.icon.window.close.outline:before { content: "\f410"; }
+i.icon.window.maximize.outline:before { content: "\f2d0"; }
+i.icon.window.minimize.outline:before { content: "\f2d1"; }
+i.icon.window.restore.outline:before { content: "\f2d2"; }
+
+/* Outline Aliases */
+i.icon.disk.outline:before { content: "\f0a0"; }
+i.icon.heart.empty,
+i.icon.star.empty {
+  font-family: @outlineFontName;
+}
+i.icon.heart.empty:before { content: "\f004"; }
+i.icon.star.empty:before { content: "\f089"; }
 
 /*******************************
            Brand Icons
 *******************************/
 
-.loadBrandIcons() when (@importBrandIcons) {
-  /* Load & Define Brand Font */
-  @font-face {
-    font-family: @brandFontName;
-    src: @brandFallbackSRC;
-    src: @brandSrc;
-    font-style: normal;
-    font-weight: @normal;
-    font-variant: normal;
-    text-decoration: inherit;
-    text-transform: none;
-  }
-  /* Brand Icon Font Family */
-  i.icon.\35 00px,
-  i.icon.accessible.icon,
-  i.icon.accusoft,
-  i.icon.adn,
-  i.icon.adversal,
-  i.icon.affiliatetheme,
-  i.icon.algolia,
-  i.icon.amazon,
-  i.icon.amazon.pay,
-  i.icon.amilia,
-  i.icon.android,
-  i.icon.angellist,
-  i.icon.angrycreative,
-  i.icon.angular,
-  i.icon.app.store,
-  i.icon.app.store.ios,
-  i.icon.apper,
-  i.icon.apple,
-  i.icon.apple.pay,
-  i.icon.asymmetrik,
-  i.icon.audible,
-  i.icon.autoprefixer,
-  i.icon.avianex,
-  i.icon.aviato,
-  i.icon.aws,
-  i.icon.bandcamp,
-  i.icon.behance,
-  i.icon.behance.square,
-  i.icon.bimobject,
-  i.icon.bitbucket,
-  i.icon.bitcoin,
-  i.icon.bity,
-  i.icon.black.tie,
-  i.icon.blackberry,
-  i.icon.blogger,
-  i.icon.blogger.b,
-  i.icon.bluetooth,
-  i.icon.bluetooth.b,
-  i.icon.btc,
-  i.icon.buromobelexperte,
-  i.icon.buysellads,
-  i.icon.cc.amazon.pay,
-  i.icon.cc.amex,
-  i.icon.cc.apple.pay,
-  i.icon.cc.diners.club,
-  i.icon.cc.discover,
-  i.icon.cc.jcb,
-  i.icon.cc.mastercard,
-  i.icon.cc.paypal,
-  i.icon.cc.stripe,
-  i.icon.cc.visa,
-  i.icon.centercode,
-  i.icon.chrome,
-  i.icon.cloudscale,
-  i.icon.cloudsmith,
-  i.icon.cloudversify,
-  i.icon.codepen,
-  i.icon.codiepie,
-  i.icon.connectdevelop,
-  i.icon.contao,
-  i.icon.cpanel,
-  i.icon.creative.commons,
-  i.icon.css3,
-  i.icon.css3.alternate,
-  i.icon.cuttlefish,
-  i.icon.d.and.d,
-  i.icon.dashcube,
-  i.icon.delicious,
-  i.icon.deploydog,
-  i.icon.deskpro,
-  i.icon.deviantart,
-  i.icon.digg,
-  i.icon.digital.ocean,
-  i.icon.discord,
-  i.icon.discourse,
-  i.icon.dochub,
-  i.icon.docker,
-  i.icon.draft2digital,
-  i.icon.dribbble,
-  i.icon.dribbble.square,
-  i.icon.dropbox,
-  i.icon.drupal,
-  i.icon.dyalog,
-  i.icon.earlybirds,
-  i.icon.edge,
-  i.icon.elementor,
-  i.icon.ember,
-  i.icon.empire,
-  i.icon.envira,
-  i.icon.erlang,
-  i.icon.ethereum,
-  i.icon.etsy,
-  i.icon.expeditedssl,
-  i.icon.facebook,
-  i.icon.facebook.f,
-  i.icon.facebook.messenger,
-  i.icon.facebook.square,
-  i.icon.firefox,
-  i.icon.first.order,
-  i.icon.firstdraft,
-  i.icon.flickr,
-  i.icon.flipboard,
-  i.icon.fly,
-  i.icon.font.awesome,
-  i.icon.font.awesome.alternate,
-  i.icon.font.awesome.flag,
-  i.icon.fonticons,
-  i.icon.fonticons.fi,
-  i.icon.fort.awesome,
-  i.icon.fort.awesome.alternate,
-  i.icon.forumbee,
-  i.icon.foursquare,
-  i.icon.free.code.camp,
-  i.icon.freebsd,
-  i.icon.get.pocket,
-  i.icon.gg,
-  i.icon.gg.circle,
-  i.icon.git,
-  i.icon.git.square,
-  i.icon.github,
-  i.icon.github.alternate,
-  i.icon.github.square,
-  i.icon.gitkraken,
-  i.icon.gitlab,
-  i.icon.gitter,
-  i.icon.glide,
-  i.icon.glide.g,
-  i.icon.gofore,
-  i.icon.goodreads,
-  i.icon.goodreads.g,
-  i.icon.google,
-  i.icon.google.drive,
-  i.icon.google.play,
-  i.icon.google.plus,
-  i.icon.google.plus.g,
-  i.icon.google.plus.square,
-  i.icon.google.wallet,
-  i.icon.gratipay,
-  i.icon.grav,
-  i.icon.gripfire,
-  i.icon.grunt,
-  i.icon.gulp,
-  i.icon.hacker.news,
-  i.icon.hacker.news.square,
-  i.icon.hips,
-  i.icon.hire.a.helper,
-  i.icon.hooli,
-  i.icon.hotjar,
-  i.icon.houzz,
-  i.icon.html5,
-  i.icon.hubspot,
-  i.icon.imdb,
-  i.icon.instagram,
-  i.icon.internet.explorer,
-  i.icon.ioxhost,
-  i.icon.itunes,
-  i.icon.itunes.note,
-  i.icon.jenkins,
-  i.icon.joget,
-  i.icon.joomla,
-  i.icon.js,
-  i.icon.js.square,
-  i.icon.jsfiddle,
-  i.icon.keycdn,
-  i.icon.kickstarter,
-  i.icon.kickstarter.k,
-  i.icon.korvue,
-  i.icon.laravel,
-  i.icon.lastfm,
-  i.icon.lastfm.square,
-  i.icon.leanpub,
-  i.icon.less,
-  i.icon.linechat,
-  i.icon.linkedin,
-  i.icon.linkedin.alternate,
-  i.icon.linkedin.in,
-  i.icon.linode,
-  i.icon.linux,
-  i.icon.lyft,
-  i.icon.magento,
-  i.icon.maxcdn,
-  i.icon.medapps,
-  i.icon.medium,
-  i.icon.medium.m,
-  i.icon.medrt,
-  i.icon.meetup,
-  i.icon.microsoft,
-  i.icon.mix,
-  i.icon.mixcloud,
-  i.icon.mizuni,
-  i.icon.modx,
-  i.icon.monero,
-  i.icon.napster,
-  i.icon.nintendo.switch,
-  i.icon.node,
-  i.icon.node.js,
-  i.icon.npm,
-  i.icon.ns8,
-  i.icon.nutritionix,
-  i.icon.odnoklassniki,
-  i.icon.odnoklassniki.square,
-  i.icon.opencart,
-  i.icon.openid,
-  i.icon.opera,
-  i.icon.optin.monster,
-  i.icon.osi,
-  i.icon.page4,
-  i.icon.pagelines,
-  i.icon.palfed,
-  i.icon.patreon,
-  i.icon.paypal,
-  i.icon.periscope,
-  i.icon.phabricator,
-  i.icon.phoenix.framework,
-  i.icon.php,
-  i.icon.pied.piper,
-  i.icon.pied.piper.alternate,
-  i.icon.pied.piper.pp,
-  i.icon.pinterest,
-  i.icon.pinterest.p,
-  i.icon.pinterest.square,
-  i.icon.playstation,
-  i.icon.product.hunt,
-  i.icon.pushed,
-  i.icon.python,
-  i.icon.qq,
-  i.icon.quinscape,
-  i.icon.quora,
-  i.icon.ravelry,
-  i.icon.react,
-  i.icon.rebel,
-  i.icon.redriver,
-  i.icon.reddit,
-  i.icon.reddit.alien,
-  i.icon.reddit.square,
-  i.icon.rendact,
-  i.icon.renren,
-  i.icon.replyd,
-  i.icon.resolving,
-  i.icon.rocketchat,
-  i.icon.rockrms,
-  i.icon.safari,
-  i.icon.sass,
-  i.icon.schlix,
-  i.icon.scribd,
-  i.icon.searchengin,
-  i.icon.sellcast,
-  i.icon.sellsy,
-  i.icon.servicestack,
-  i.icon.shirtsinbulk,
-  i.icon.simplybuilt,
-  i.icon.sistrix,
-  i.icon.skyatlas,
-  i.icon.skype,
-  i.icon.slack,
-  i.icon.slack.hash,
-  i.icon.slideshare,
-  i.icon.snapchat,
-  i.icon.snapchat.ghost,
-  i.icon.snapchat.square,
-  i.icon.soundcloud,
-  i.icon.speakap,
-  i.icon.spotify,
-  i.icon.stack.exchange,
-  i.icon.stack.overflow,
-  i.icon.staylinked,
-  i.icon.steam,
-  i.icon.steam.square,
-  i.icon.steam.symbol,
-  i.icon.sticker.mule,
-  i.icon.strava,
-  i.icon.stripe,
-  i.icon.stripe.s,
-  i.icon.studiovinari,
-  i.icon.stumbleupon,
-  i.icon.stumbleupon.circle,
-  i.icon.superpowers,
-  i.icon.supple,
-  i.icon.telegram,
-  i.icon.telegram.plane,
-  i.icon.tencent.weibo,
-  i.icon.themeisle,
-  i.icon.trello,
-  i.icon.tripadvisor,
-  i.icon.tumblr,
-  i.icon.tumblr.square,
-  i.icon.twitch,
-  i.icon.twitter,
-  i.icon.twitter.square,
-  i.icon.typo3,
-  i.icon.uber,
-  i.icon.uikit,
-  i.icon.uniregistry,
-  i.icon.untappd,
-  i.icon.usb,
-  i.icon.ussunnah,
-  i.icon.vaadin,
-  i.icon.viacoin,
-  i.icon.viadeo,
-  i.icon.viadeo.square,
-  i.icon.viber,
-  i.icon.vimeo,
-  i.icon.vimeo.square,
-  i.icon.vimeo.v,
-  i.icon.vine,
-  i.icon.vk,
-  i.icon.vnv,
-  i.icon.vuejs,
-  i.icon.wechat,
-  i.icon.weibo,
-  i.icon.weixin,
-  i.icon.whatsapp,
-  i.icon.whatsapp.square,
-  i.icon.whmcs,
-  i.icon.wikipedia.w,
-  i.icon.windows,
-  i.icon.wordpress,
-  i.icon.wordpress.simple,
-  i.icon.wpbeginner,
-  i.icon.wpexplorer,
-  i.icon.wpforms,
-  i.icon.xbox,
-  i.icon.xing,
-  i.icon.xing.square,
-  i.icon.y.combinator,
-  i.icon.yahoo,
-  i.icon.yandex,
-  i.icon.yandex.international,
-  i.icon.yelp,
-  i.icon.yoast,
-  i.icon.youtube,
-  i.icon.youtube.square {
-    font-family: 'brand-icons';
-  }
-  /* Brand Icons Ideally Would Be Defined Here */
-
+/* Load & Define Brand Font */
+@font-face {
+  font-family: @brandFontName;
+  src: @brandFallbackSRC;
+  src: @brandSrc;
+  font-style: normal;
+  font-weight: @normal;
+  font-variant: normal;
+  text-decoration: inherit;
+  text-transform: none;
 }
-.loadBrandIcons();
+/* Brand Icon Font Family */
+i.icon.\35 00px,
+i.icon.accessible.icon,
+i.icon.accusoft,
+i.icon.adn,
+i.icon.adversal,
+i.icon.affiliatetheme,
+i.icon.algolia,
+i.icon.amazon,
+i.icon.amazon.pay,
+i.icon.amilia,
+i.icon.android,
+i.icon.angellist,
+i.icon.angrycreative,
+i.icon.angular,
+i.icon.app.store,
+i.icon.app.store.ios,
+i.icon.apper,
+i.icon.apple,
+i.icon.apple.pay,
+i.icon.asymmetrik,
+i.icon.audible,
+i.icon.autoprefixer,
+i.icon.avianex,
+i.icon.aviato,
+i.icon.aws,
+i.icon.bandcamp,
+i.icon.behance,
+i.icon.behance.square,
+i.icon.bimobject,
+i.icon.bitbucket,
+i.icon.bitcoin,
+i.icon.bity,
+i.icon.black.tie,
+i.icon.blackberry,
+i.icon.blogger,
+i.icon.blogger.b,
+i.icon.bluetooth,
+i.icon.bluetooth.b,
+i.icon.btc,
+i.icon.buromobelexperte,
+i.icon.buysellads,
+i.icon.cc.amazon.pay,
+i.icon.cc.amex,
+i.icon.cc.apple.pay,
+i.icon.cc.diners.club,
+i.icon.cc.discover,
+i.icon.cc.jcb,
+i.icon.cc.mastercard,
+i.icon.cc.paypal,
+i.icon.cc.stripe,
+i.icon.cc.visa,
+i.icon.centercode,
+i.icon.chrome,
+i.icon.cloudscale,
+i.icon.cloudsmith,
+i.icon.cloudversify,
+i.icon.codepen,
+i.icon.codiepie,
+i.icon.connectdevelop,
+i.icon.contao,
+i.icon.cpanel,
+i.icon.creative.commons,
+i.icon.css3,
+i.icon.css3.alternate,
+i.icon.cuttlefish,
+i.icon.d.and.d,
+i.icon.dashcube,
+i.icon.delicious,
+i.icon.deploydog,
+i.icon.deskpro,
+i.icon.deviantart,
+i.icon.digg,
+i.icon.digital.ocean,
+i.icon.discord,
+i.icon.discourse,
+i.icon.dochub,
+i.icon.docker,
+i.icon.draft2digital,
+i.icon.dribbble,
+i.icon.dribbble.square,
+i.icon.dropbox,
+i.icon.drupal,
+i.icon.dyalog,
+i.icon.earlybirds,
+i.icon.edge,
+i.icon.elementor,
+i.icon.ember,
+i.icon.empire,
+i.icon.envira,
+i.icon.erlang,
+i.icon.ethereum,
+i.icon.etsy,
+i.icon.expeditedssl,
+i.icon.facebook,
+i.icon.facebook.f,
+i.icon.facebook.messenger,
+i.icon.facebook.square,
+i.icon.firefox,
+i.icon.first.order,
+i.icon.firstdraft,
+i.icon.flickr,
+i.icon.flipboard,
+i.icon.fly,
+i.icon.font.awesome,
+i.icon.font.awesome.alternate,
+i.icon.font.awesome.flag,
+i.icon.fonticons,
+i.icon.fonticons.fi,
+i.icon.fort.awesome,
+i.icon.fort.awesome.alternate,
+i.icon.forumbee,
+i.icon.foursquare,
+i.icon.free.code.camp,
+i.icon.freebsd,
+i.icon.get.pocket,
+i.icon.gg,
+i.icon.gg.circle,
+i.icon.git,
+i.icon.git.square,
+i.icon.github,
+i.icon.github.alternate,
+i.icon.github.square,
+i.icon.gitkraken,
+i.icon.gitlab,
+i.icon.gitter,
+i.icon.glide,
+i.icon.glide.g,
+i.icon.gofore,
+i.icon.goodreads,
+i.icon.goodreads.g,
+i.icon.google,
+i.icon.google.drive,
+i.icon.google.play,
+i.icon.google.plus,
+i.icon.google.plus.g,
+i.icon.google.plus.square,
+i.icon.google.wallet,
+i.icon.gratipay,
+i.icon.grav,
+i.icon.gripfire,
+i.icon.grunt,
+i.icon.gulp,
+i.icon.hacker.news,
+i.icon.hacker.news.square,
+i.icon.hips,
+i.icon.hire.a.helper,
+i.icon.hooli,
+i.icon.hotjar,
+i.icon.houzz,
+i.icon.html5,
+i.icon.hubspot,
+i.icon.imdb,
+i.icon.instagram,
+i.icon.internet.explorer,
+i.icon.ioxhost,
+i.icon.itunes,
+i.icon.itunes.note,
+i.icon.jenkins,
+i.icon.joget,
+i.icon.joomla,
+i.icon.js,
+i.icon.js.square,
+i.icon.jsfiddle,
+i.icon.keycdn,
+i.icon.kickstarter,
+i.icon.kickstarter.k,
+i.icon.korvue,
+i.icon.laravel,
+i.icon.lastfm,
+i.icon.lastfm.square,
+i.icon.leanpub,
+i.icon.less,
+i.icon.linechat,
+i.icon.linkedin,
+i.icon.linkedin.alternate,
+i.icon.linkedin.in,
+i.icon.linode,
+i.icon.linux,
+i.icon.lyft,
+i.icon.magento,
+i.icon.maxcdn,
+i.icon.medapps,
+i.icon.medium,
+i.icon.medium.m,
+i.icon.medrt,
+i.icon.meetup,
+i.icon.microsoft,
+i.icon.mix,
+i.icon.mixcloud,
+i.icon.mizuni,
+i.icon.modx,
+i.icon.monero,
+i.icon.napster,
+i.icon.nintendo.switch,
+i.icon.node,
+i.icon.node.js,
+i.icon.npm,
+i.icon.ns8,
+i.icon.nutritionix,
+i.icon.odnoklassniki,
+i.icon.odnoklassniki.square,
+i.icon.opencart,
+i.icon.openid,
+i.icon.opera,
+i.icon.optin.monster,
+i.icon.osi,
+i.icon.page4,
+i.icon.pagelines,
+i.icon.palfed,
+i.icon.patreon,
+i.icon.paypal,
+i.icon.periscope,
+i.icon.phabricator,
+i.icon.phoenix.framework,
+i.icon.php,
+i.icon.pied.piper,
+i.icon.pied.piper.alternate,
+i.icon.pied.piper.pp,
+i.icon.pinterest,
+i.icon.pinterest.p,
+i.icon.pinterest.square,
+i.icon.playstation,
+i.icon.product.hunt,
+i.icon.pushed,
+i.icon.python,
+i.icon.qq,
+i.icon.quinscape,
+i.icon.quora,
+i.icon.ravelry,
+i.icon.react,
+i.icon.rebel,
+i.icon.redriver,
+i.icon.reddit,
+i.icon.reddit.alien,
+i.icon.reddit.square,
+i.icon.rendact,
+i.icon.renren,
+i.icon.replyd,
+i.icon.resolving,
+i.icon.rocketchat,
+i.icon.rockrms,
+i.icon.safari,
+i.icon.sass,
+i.icon.schlix,
+i.icon.scribd,
+i.icon.searchengin,
+i.icon.sellcast,
+i.icon.sellsy,
+i.icon.servicestack,
+i.icon.shirtsinbulk,
+i.icon.simplybuilt,
+i.icon.sistrix,
+i.icon.skyatlas,
+i.icon.skype,
+i.icon.slack,
+i.icon.slack.hash,
+i.icon.slideshare,
+i.icon.snapchat,
+i.icon.snapchat.ghost,
+i.icon.snapchat.square,
+i.icon.soundcloud,
+i.icon.speakap,
+i.icon.spotify,
+i.icon.stack.exchange,
+i.icon.stack.overflow,
+i.icon.staylinked,
+i.icon.steam,
+i.icon.steam.square,
+i.icon.steam.symbol,
+i.icon.sticker.mule,
+i.icon.strava,
+i.icon.stripe,
+i.icon.stripe.s,
+i.icon.studiovinari,
+i.icon.stumbleupon,
+i.icon.stumbleupon.circle,
+i.icon.superpowers,
+i.icon.supple,
+i.icon.telegram,
+i.icon.telegram.plane,
+i.icon.tencent.weibo,
+i.icon.themeisle,
+i.icon.trello,
+i.icon.tripadvisor,
+i.icon.tumblr,
+i.icon.tumblr.square,
+i.icon.twitch,
+i.icon.twitter,
+i.icon.twitter.square,
+i.icon.typo3,
+i.icon.uber,
+i.icon.uikit,
+i.icon.uniregistry,
+i.icon.untappd,
+i.icon.usb,
+i.icon.ussunnah,
+i.icon.vaadin,
+i.icon.viacoin,
+i.icon.viadeo,
+i.icon.viadeo.square,
+i.icon.viber,
+i.icon.vimeo,
+i.icon.vimeo.square,
+i.icon.vimeo.v,
+i.icon.vine,
+i.icon.vk,
+i.icon.vnv,
+i.icon.vuejs,
+i.icon.wechat,
+i.icon.weibo,
+i.icon.weixin,
+i.icon.whatsapp,
+i.icon.whatsapp.square,
+i.icon.whmcs,
+i.icon.wikipedia.w,
+i.icon.windows,
+i.icon.wordpress,
+i.icon.wordpress.simple,
+i.icon.wpbeginner,
+i.icon.wpexplorer,
+i.icon.wpforms,
+i.icon.xbox,
+i.icon.xing,
+i.icon.xing.square,
+i.icon.y.combinator,
+i.icon.yahoo,
+i.icon.yandex,
+i.icon.yandex.international,
+i.icon.yelp,
+i.icon.yoast,
+i.icon.youtube,
+i.icon.youtube.square {
+  font-family: 'brand-icons';
+}
+/* Brand Icons Ideally Would Be Defined Here */

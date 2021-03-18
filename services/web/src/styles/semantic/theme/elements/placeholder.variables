@@ -1,3 +1,6 @@
+
+@import (multiple) '../globals/site.variables';
+
 @placeholderMaxWidth: 30rem;
 
 /* Key Content Sizing */

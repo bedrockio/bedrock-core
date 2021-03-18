@@ -2,6 +2,8 @@
             Dimmer
 *******************************/
 
+@import (multiple) '../globals/site.variables';
+
 @dimmablePosition: relative;
 @dimmerPosition: absolute;
 

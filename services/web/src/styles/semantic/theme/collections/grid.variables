@@ -2,6 +2,8 @@
              Grid
 *******************************/
 
+@import (multiple) '../globals/site.variables';
+
 /* Inherited From Site */
 
 // @mobileBreakpoint

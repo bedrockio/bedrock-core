@@ -2,6 +2,8 @@
             Checkbox
 *******************************/
 
+@import (multiple) '../globals/site.variables';
+
 @checkboxSize: 17px;
 @checkboxColor: @textColor;
 @checkboxLineHeight: @checkboxSize;

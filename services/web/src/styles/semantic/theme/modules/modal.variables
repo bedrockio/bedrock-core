@@ -2,6 +2,8 @@
              Modal
 *******************************/
 
+@import (multiple) '../globals/site.variables';
+
 @background: @white;
 @border: none;
 @zIndex: 1001;

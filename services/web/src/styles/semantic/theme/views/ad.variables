@@ -2,6 +2,8 @@
           Advertisement
 *******************************/
 
+@import (multiple) '../globals/site.variables';
+
 @margin: 1em 0em;
 @overflow: hidden;
 

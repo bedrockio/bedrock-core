@@ -2,6 +2,8 @@
            Accordion
 *******************************/
 
+@import (multiple) '../globals/site.variables';
+
 @boxShadow: none;
 
 /* Title */

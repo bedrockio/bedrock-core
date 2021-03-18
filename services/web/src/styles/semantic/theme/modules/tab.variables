@@ -2,6 +2,8 @@
               Tab
 *******************************/
 
+@import (multiple) '../globals/site.variables';
+
 /* Loading */
 @loadingMinHeight: 250px;
 @loadingContentPosition: relative;

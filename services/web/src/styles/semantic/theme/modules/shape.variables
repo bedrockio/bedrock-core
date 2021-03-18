@@ -2,6 +2,8 @@
              Shape
 *******************************/
 
+@import (multiple) '../globals/site.variables';
+
 @display: inline-block;
 
 /* Animating */

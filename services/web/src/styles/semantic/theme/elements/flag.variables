@@ -2,6 +2,8 @@
             Flag
 *******************************/
 
+@import (multiple) '../globals/site.variables';
+
 /*-------------------
        Element
 --------------------*/

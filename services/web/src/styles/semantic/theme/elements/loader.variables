@@ -2,6 +2,8 @@
              Loader
 *******************************/
 
+@import (multiple) '../globals/site.variables';
+
 /* Some global loader styles defined in site.variables */
 // @loaderSpeed
 // @loaderLineWidth

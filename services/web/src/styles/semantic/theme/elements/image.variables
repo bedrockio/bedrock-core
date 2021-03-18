@@ -2,6 +2,8 @@
             Image
 *******************************/
 
+@import (multiple) '../globals/site.variables';
+
 /*-------------------
        Element
 --------------------*/

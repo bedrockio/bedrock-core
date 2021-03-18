@@ -2,6 +2,8 @@
              Sidebar
 *******************************/
 
+@import (multiple) '../globals/site.variables';
+
 /*-------------------
        Content
 --------------------*/

@@ -2,6 +2,8 @@
           Transition
 *******************************/
 
+@import (multiple) '../globals/site.variables';
+
 @transitionDefaultEasing: @defaultEasing;
 @transitionDefaultFill: both;
 @transitionDefaultDuration: 300ms;

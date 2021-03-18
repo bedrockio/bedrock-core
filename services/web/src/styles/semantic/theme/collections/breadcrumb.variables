@@ -2,6 +2,8 @@
           Breadcrumb
 *******************************/
 
+@import (multiple) '../globals/site.variables';
+
 /*-------------------
      Breadcrumb
 --------------------*/

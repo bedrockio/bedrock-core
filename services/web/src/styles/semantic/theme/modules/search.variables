@@ -2,6 +2,8 @@
             Search
 *******************************/
 
+@import (multiple) '../globals/site.variables';
+
 /* Search Prompt */
 @promptBackground: @inputBackground;
 @promptVerticalPadding: @inputVerticalPadding;
