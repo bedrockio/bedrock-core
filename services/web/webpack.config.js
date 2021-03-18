@@ -1,10 +1,3 @@
-// Note:
-//
-// To enable multiple builds, place each app in
-// a folder inside src, add them to "default"
-// args below, and move the html template to
-// src/common/index.html.
-
 const path = require('path');
 const yargs = require('yargs');
 const webpack = require('webpack');
@@ -13,12 +6,18 @@ const TerserWebpackPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
+const { template: compileTemplate } = require('lodash');
 
-const argv = yargs.boolean('p').boolean('analyze').option('app', {
-  alias: 'a',
+// To enable multiple builds, place each app in a folder inside src,
+// add it below, and move src/index.html to src/common/index.html.
+const APPS = ['public'];
+
+// webpack v5 no longer passes command line flags so hooking into
+// "name" flag instead of "app".
+const argv = yargs.option('name', {
   array: true,
-  // Add multiple app names here.
-  default: [],
+  alias: 'apps',
+  default: APPS,
 }).argv;
 
 // Note that webpack has deprecated the -p flag and now uses "mode".
@@ -30,11 +29,7 @@ const PARAMS = {
   ...require('./env'),
 };
 
-if (argv.analyze && !BUILD) {
-  throw new Error(
-    'Analyze mode must be used with -p flag. Use yarn build --analyze.'
-  );
-}
+const templatePath = getTemplatePath();
 
 module.exports = {
   mode: BUILD ? 'production' : 'development',
@@ -90,14 +85,18 @@ module.exports = {
       },
       {
         test: /\.html$/i,
-        exclude: /index\.html$/,
-        include: path.resolve(__dirname, 'src'),
-        loader: path.resolve('./src/utils/loaders/templateParams'),
+        loader: 'html-loader',
+        exclude: templatePath,
         options: {
-          // Expose template params used in partials included with
-          // require('path/to/template.html') in the same way as the
-          // main template.
-          params: PARAMS,
+          esModule: false,
+          preprocessor: (source, ctx) => {
+            try {
+              return compileTemplate(source)(PARAMS);
+            } catch(err) {
+              ctx.emitError(err);
+              return source;
+            }
+          },
         },
       },
     ],
@@ -187,14 +186,13 @@ module.exports = {
 };
 
 function getEntryPoints() {
-  const apps = argv.app;
   const entryPoints = {};
-  if (apps.length === 0) {
-    entryPoints['public'] = getEntryPoint('./src/index');
-  } else {
-    for (let app of apps) {
-      entryPoints[app] = getEntryPoint(`./src/${app}/index`);
+  if (isMultiEntry()) {
+    for (let app of argv.apps) {
+      entryPoints[app] = getEntryPoint(`src/${app}/index.js`);
     }
+  } else {
+    entryPoints['public'] = getEntryPoint('src/index.js');
   }
   return entryPoints;
 }
@@ -202,27 +200,31 @@ function getEntryPoints() {
 // koa-webpack -> webpack-hot-client requires this to be wrapped in an array
 // https://github.com/webpack-contrib/webpack-hot-client/issues/11
 // TODO: manually loading this for now
-function getEntryPoint(path) {
+function getEntryPoint(relPath) {
   const entry = [];
   if (!BUILD) {
     entry.push('webpack-hot-middleware/client');
   }
-  entry.push(path);
+  entry.push(path.resolve(relPath));
   return entry;
 }
 
-function getTemplatePlugins() {
-  let apps = argv.app;
-  let template;
-  if (apps.length > 0) {
-    template = 'src/common/index.html';
+function getTemplatePath() {
+  if (isMultiEntry()) {
+    return path.resolve(__dirname, 'src/common/index.html');
   } else {
-    apps = ['public'];
-    template = 'src/index.html';
+    return path.resolve(__dirname, 'src/index.html');
   }
-  return apps.map((app) => {
+}
+
+function isMultiEntry() {
+  return APPS.length > 1;
+}
+
+function getTemplatePlugins() {
+  return argv.apps.map((app) => {
     return new HtmlWebpackPlugin({
-      template,
+      template: templatePath,
       chunks: [app, 'vendor'],
       templateParameters: {
         app,
@@ -249,10 +251,6 @@ function getOptionalPlugins() {
     );
   } else {
     plugins.push(new webpack.HotModuleReplacementPlugin());
-  }
-  if (argv.analyze) {
-    const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-    plugins.push(new BundleAnalyzerPlugin());
   }
   return plugins;
 }

@@ -37,6 +37,7 @@
     "file-loader": "^6.0.0",
     "github-markdown-css": "^4.0.0",
     "history": "^4.10.1",
+    "html-loader": "^2.1.2",
     "html-webpack-plugin": "^5.3.0",
     "jest": "^25.5.4",
     "koa": "^2.11.0",
@@ -87,8 +88,7 @@
     "lint-staged": "^10.2.2",
     "node-mocks-http": "^1.8.1",
     "prettier": "^2.0.5",
-    "prettier-eslint": "^9.0.1",
-    "webpack-bundle-analyzer": "^4.4.0"
+    "prettier-eslint": "^9.0.1"
   },
   "volta": {
     "node": "14.15.1",
