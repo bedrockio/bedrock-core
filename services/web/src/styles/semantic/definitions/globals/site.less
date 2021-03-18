@@ -205,4 +205,28 @@ input::selection {
 }
 
 .addScrollbars();
-.loadUIOverrides();
+
+/*-------------------------------------
+  Moved from custom site.overrides
+--------------------------------------*/
+
+html,
+.ui.fixed.menu {
+  // Fixes scrollbar jump
+  padding-left: calc(100vw - 100%);
+}
+
+header {
+  padding-top: 80px;
+}
+
+main {
+  min-height: calc(100vh - 150px);
+}
+
+footer {
+  padding: 30px 0 10px;
+  font-weight: bold;
+  opacity: 0.2;
+}
+
