@@ -8,15 +8,7 @@
  *
  */
 
-
-/*******************************
-            Theme
-*******************************/
-
-@type    : 'module';
-@element : 'dropdown';
-
-@import (multiple) '../../theme.config';
+@import '../../theme/modules/dropdown.variables';
 
 /*******************************
             Dropdown
@@ -1419,7 +1411,6 @@ select.ui.dropdown {
   box-shadow: @pointingArrowBoxShadow;
 }
 
-.loadUIOverrides();
 
 /*******************************
   Moved from dropdown.overrides

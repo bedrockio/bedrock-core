@@ -8,14 +8,7 @@
  *
  */
 
-/*******************************
-            Theme
-*******************************/
-
-@type    : 'view';
-@element : 'statistic';
-
-@import (multiple) '../../theme.config';
+@import '../../theme/views/statistic.variables';
 
 /*******************************
            Statistic
@@ -549,6 +542,3 @@
 .ui.huge.statistic > .text.value {
   font-size: @hugeTextValueSize !important;
 }
-
-
-.loadUIOverrides();

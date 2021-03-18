@@ -8,14 +8,7 @@
  *
  */
 
-/*******************************
-            Theme
-*******************************/
-
-@type    : 'module';
-@element : 'dimmer';
-
-@import (multiple) '../../theme.config';
+@import '../../theme/modules/dimmer.variables';
 
 /*******************************
             Dimmer
@@ -68,21 +61,18 @@
 }
 
 /* Scrollbars */
-.addScrollbars() when (@useCustomScrollbars) {
-  .ui.dimmer:not(.inverted)::-webkit-scrollbar-track {
-    background: @trackInvertedBackground;
-  }
-  .ui.dimmer:not(.inverted)::-webkit-scrollbar-thumb {
-    background: @thumbInvertedBackground;
-  }
-  .ui.dimmer:not(.inverted)::-webkit-scrollbar-thumb:window-inactive {
-    background: @thumbInvertedInactiveBackground;
-  }
-  .ui.dimmer:not(.inverted)::-webkit-scrollbar-thumb:hover {
-    background: @thumbInvertedHoverBackground;
-  }
+.ui.dimmer:not(.inverted)::-webkit-scrollbar-track {
+  background: @trackInvertedBackground;
 }
-.addScrollbars();
+.ui.dimmer:not(.inverted)::-webkit-scrollbar-thumb {
+  background: @thumbInvertedBackground;
+}
+.ui.dimmer:not(.inverted)::-webkit-scrollbar-thumb:window-inactive {
+  background: @thumbInvertedInactiveBackground;
+}
+.ui.dimmer:not(.inverted)::-webkit-scrollbar-thumb:hover {
+  background: @thumbInvertedHoverBackground;
+}
 
 /*******************************
             States
@@ -227,5 +217,3 @@ body.dimmable > .dimmer {
 .dimmed.dimmable > .ui.simple.inverted.dimmer {
   background-color: @simpleInvertedEndBackgroundColor;
 }
-
-.loadUIOverrides();

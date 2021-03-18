@@ -8,15 +8,7 @@
  *
  */
 
-
-/*******************************
-            Theme
-*******************************/
-
-@type    : 'module';
-@element : 'nag';
-
-@import (multiple) '../../theme.config';
+@import '../../theme/modules/nag.variables';
 
 /*******************************
              Nag
@@ -154,5 +146,3 @@ a.ui.nag {
 .ui.bottom.nags .nag:last-child {
   border-radius: @bottomBorderRadius;
 }
-
-.loadUIOverrides();

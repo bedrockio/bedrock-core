@@ -143,8 +143,6 @@
     Scroll Bars
 --------------------*/
 
-@useCustomScrollbars: true;
-
 @customScrollbarWidth: 10px;
 @customScrollbarHeight: 10px;
 
@@ -375,8 +373,8 @@
 --------------------*/
 
 /* For source only. Modified in gulp for dist */
-@imagePath : '../../themes/default/assets/images';
-@fontPath  : '../../themes/default/assets/fonts';
+@imagePath : '../../theme/assets/images';
+@fontPath  : '../../theme/assets/fonts';
 
 /*-------------------
        Em Sizes

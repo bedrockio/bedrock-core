@@ -8,16 +8,7 @@
  *
  */
 
-
-
-/*******************************
-            Theme
-*******************************/
-
-@type    : 'module';
-@element : 'sidebar';
-
-@import (multiple) '../../theme.config';
+@import '../../theme/modules/sidebar.variables';
 
 /*******************************
             Sidebar
@@ -534,5 +525,3 @@ body.pushable > .pusher {
 .ui.visible.scale.down.sidebar ~ .pusher {
   transform: scale(0.75);
 }
-
-.loadUIOverrides();

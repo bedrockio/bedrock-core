@@ -8,14 +8,7 @@
  *
  */
 
-/*******************************
-            Theme
-*******************************/
-
-@type    : 'element';
-@element : 'button';
-
-@import (multiple) '../../theme.config';
+@import '../../theme/elements/button.variables';
 
 /*******************************
             Button
@@ -3557,5 +3550,3 @@
 .ui.vertical.buttons .button:only-child {
   border-radius: @borderRadius;
 }
-
-.loadUIOverrides();
