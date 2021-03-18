@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, Divider, Button } from 'semantic-ui-react';
+import { Menu, Divider, Button } from 'semantic';
 import { NavLink } from 'react-router-dom';
 import { Breadcrumbs } from 'components';
 

@@ -14,7 +14,7 @@ import {
   Table,
   Button,
   Message,
-} from 'semantic-ui-react';
+} from 'semantic';
 
 @screen
 export default class Home extends React.Component {

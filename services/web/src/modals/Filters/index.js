@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Form, Ref, Icon, Button, Label } from 'semantic-ui-react';
+import { Modal, Form, Ref, Icon, Button, Label } from 'semantic';
 import DateField from 'components/form-fields/Date';
 
 import Text from './Text';

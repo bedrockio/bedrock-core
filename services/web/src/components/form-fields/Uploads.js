@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
-import { Form, Message, Image, Icon, Label, Card } from 'semantic-ui-react';
+import { Form, Message, Image, Icon, Label, Card } from 'semantic';
 import { request } from 'utils/api';
 import { urlForUpload } from 'utils/uploads';
 

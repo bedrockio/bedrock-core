@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Message, Loader, Image, Button, Header } from 'semantic-ui-react';
+import { Table, Message, Loader, Image, Button, Header } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import { screen } from 'helpers';

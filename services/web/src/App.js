@@ -20,8 +20,6 @@ import Login from 'screens/Auth/Login';
 import Logout from 'screens/Auth/Logout';
 import Signup from 'screens/Auth/Signup';
 
-import './app.less';
-
 const App = () => (
   <Switch>
     <AuthSwitch path="/" loggedIn={Dashboard} loggedOut={Login} exact />

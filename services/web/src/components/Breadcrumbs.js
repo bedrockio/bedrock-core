@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Breadcrumb } from 'semantic-ui-react';
+import { Breadcrumb } from 'semantic';
 import { Layout } from './Layout';
 
 export default class Breadcrumbs extends React.Component {

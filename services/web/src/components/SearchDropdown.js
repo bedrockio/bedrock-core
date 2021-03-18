@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dropdown } from 'semantic-ui-react';
+import { Dropdown } from 'semantic';
 import { get, omit, flatten, uniqBy } from 'lodash';
 
 export default class SearchDropdown extends React.Component {
