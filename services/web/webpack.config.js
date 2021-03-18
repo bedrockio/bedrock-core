@@ -33,7 +33,7 @@ const templatePath = getTemplatePath();
 
 module.exports = {
   mode: BUILD ? 'production' : 'development',
-  devtool: BUILD ? 'source-map' : 'cheap-module-source-map',
+  devtool: BUILD ? 'source-map' : 'eval-cheap-module-source-map',
   entry: getEntryPoints(),
   output: {
     publicPath: '/',
