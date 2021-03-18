@@ -43,10 +43,6 @@ module.exports = {
   resolve: {
     alias: {
       'react-dom': '@hot-loader/react-dom',
-      '../../theme.config$': path.resolve(
-        path.join(__dirname, 'src'),
-        'theme/theme.config'
-      ),
     },
     extensions: ['.js', '.json', '.jsx'],
     modules: [path.join(__dirname, 'src'), 'node_modules'],

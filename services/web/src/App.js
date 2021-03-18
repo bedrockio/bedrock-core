@@ -1,5 +1,4 @@
 import { hot } from 'react-hot-loader/root';
-import 'theme/semantic.less';
 
 import React from 'react';
 
@@ -20,6 +19,8 @@ import ResetPassword from 'screens/Auth/ResetPassword';
 import Login from 'screens/Auth/Login';
 import Logout from 'screens/Auth/Logout';
 import Signup from 'screens/Auth/Signup';
+
+import './app.less';
 
 const App = () => (
   <Switch>
