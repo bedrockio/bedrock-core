@@ -2,23 +2,13 @@
        Fonts
 --------------------*/
 
-@fontName          : 'Work Sans';
-@fontSmoothing     : antialiased;
+@baseFontFamily    : -apple-system, system-ui, Helvetica Neue, Arial, Helvetica, sans-serif;
+@headerFont        : @baseFontFamily;
+@pageFont          : @baseFontFamily;
 
-@headerFont        : 'SF Pro Display', 'Helvetica Neue', Arial, Helvetica, sans-serif;
-@pageFont          : @fontName, 'Helvetica Neue', Arial, Helvetica, sans-serif;
-
-@googleFontName    : @fontName;
-@importGoogleFonts : false;
-@googleFontSizes   : '400,700,400italic,700italic';
-@googleSubset      : 'latin';
-
-@googleProtocol    : 'https://';
-@googleFontRequest : '@{googleFontName}:@{googleFontSizes}&subset=@{googleSubset}';
-
-
-@bold              : bold;
 @normal            : normal;
+@semiBold          : 500;
+@bold              : bold;
 
 /*-------------------
       Base Sizes

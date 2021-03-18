@@ -13,7 +13,6 @@
 @horizontalMargin: 0em;
 @margin: @verticalMargin @horizontalMargin;
 @background: #FFFFFF;
-@fontFamily: @pageFont;
 @itemBackground: none;
 @fontWeight: @normal;
 @borderWidth: 1px;
@@ -31,7 +30,7 @@
   box-shadow @defaultDuration @defaultEasing,
   color @defaultDuration @defaultEasing
 ;
-@itemFontWeight: @normal;
+@itemFontWeight: @semiBold;
 @itemTextColor: @textColor;
 
 /* Divider */
@@ -171,7 +170,7 @@
 /* Active Item */
 @activeItemBackground: @transparentBlack;
 @activeItemTextColor: @selectedTextColor;
-@activeItemFontWeight: @normal;
+@activeItemFontWeight: @semiBold;
 @activeIconOpacity: 1;
 @activeItemBoxShadow: none;
 

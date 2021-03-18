@@ -13,7 +13,6 @@
 @shadowBoxShadow: 0px @shadowDistance 3px 0px @solidBorderColor;
 
 /* Card */
-@fontFamily: @pageFont;
 @display: flex;
 @background: @white;
 @borderRadius: @defaultBorderRadius;
