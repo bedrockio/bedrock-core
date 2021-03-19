@@ -56,12 +56,12 @@ describe('/1/auth', () => {
       expect(response.status).toBe(204);
     });
 
-    it('it should send an email to the unknown user', async () => {
+    it('it should return with 404 for unknown user', async () => {
       const email = 'email@email.com';
       const response = await request('POST', '/1/auth/request-password', {
         email,
       });
-      expect(response.status).toBe(204);
+      expect(response.status).toBe(404);
     });
   });
 

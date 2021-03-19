@@ -3,7 +3,7 @@ const Joi = require('@hapi/joi');
 const validate = require('../utils/middleware/validate');
 const { authenticate } = require('../utils/middleware/authenticate');
 const tokens = require('../utils/tokens');
-const { sendWelcome, sendResetPassword, sendResetPasswordUnknown } = require('../utils/emails');
+const { sendWelcome, sendResetPassword } = require('../utils/emails');
 const { BadRequestError, UnauthorizedError } = require('../utils/errors');
 const { User, Invite } = require('../models');
 
