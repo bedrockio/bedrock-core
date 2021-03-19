@@ -34,7 +34,7 @@
 --------------------*/
 
 /* Icon Input */
-@iconWidth: (@verticalPadding * 2) + @glyphWidth;
+@iconWidth: 14px;
 @iconOpacity: 0.5;
 @iconFocusOpacity: 1;
 @iconOffset: -0.5em;
