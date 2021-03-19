@@ -106,7 +106,7 @@ export default class Docs extends React.Component {
             <Breadcrumb.Section link as={Link} to="/">
               API Docs
             </Breadcrumb.Section>
-            <Breadcrumb.Divider icon="right chevron" />
+            <Breadcrumb.Divider icon="chevron-right" />
             <Breadcrumb.Section>{page.name}</Breadcrumb.Section>
           </Breadcrumb>
         </Container>

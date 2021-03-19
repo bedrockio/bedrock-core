@@ -23,14 +23,14 @@ export default class Breadcrumbs extends React.Component {
           <Breadcrumb.Section link as={Link} to="/">
             Home
           </Breadcrumb.Section>
-          <Breadcrumb.Divider icon="right chevron" />
+          <Breadcrumb.Divider icon="chevron-right" />
           {this.getPath().map((link, i) => {
             return (
               <React.Fragment key={i}>
                 <Breadcrumb.Section>
                   {link}
                 </Breadcrumb.Section>
-                <Breadcrumb.Divider icon="right chevron" />
+                <Breadcrumb.Divider icon="chevron-right" />
               </React.Fragment>
             );
           })}

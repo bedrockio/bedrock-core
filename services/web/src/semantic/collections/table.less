@@ -884,23 +884,18 @@
 
 .ui.sortable.table thead th:after {
   display: none;
-  font-style: normal;
-  font-weight: @normal;
-  text-decoration: inherit;
   content: '';
-  height: 1em;
-  width: @sortableIconWidth;
   opacity: @sortableIconOpacity;
   margin: 0em 0em 0em @sortableIconDistance;
-  // TODO: figure this out
-  font-family: 'Arial';
-  font-size: 16px;
+  border: 5px solid transparent;
 }
 .ui.sortable.table thead th.ascending:after {
-  content: @sortableIconAscending;
+  margin-top: -5px;
+  border-bottom-color: @sortableColor;
 }
 .ui.sortable.table thead th.descending:after {
-  content: @sortableIconDescending;
+  margin-top: 5px;
+  border-top-color: @sortableColor;
 }
 
 /* Hover */
@@ -920,6 +915,7 @@
 }
 .ui.sortable.table thead th.sorted:after {
   display: inline-block;
+  vertical-align: middle;
 }
 
 /* Sorted Hover */
