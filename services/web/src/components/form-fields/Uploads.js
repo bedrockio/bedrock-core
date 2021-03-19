@@ -211,7 +211,7 @@ export default class Uploads extends React.Component {
 
   renderIconForType() {
     const { type } = this.props;
-    return <Icon name={`${ALTERNATE_ICONS[type] || type || ''} file outline`} />;
+    return <Icon name={`file-${ALTERNATE_ICONS[type] || type || ''} outline`} />;
   }
 }
 
