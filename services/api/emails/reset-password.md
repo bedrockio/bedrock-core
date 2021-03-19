@@ -1,4 +1,4 @@
-## Password Recovery - ${appName}
+## Password Recovery - {{appName}}
 
 A password reset was requested for your account ({{email}}) on {{appName}}
 ({{{appUrl}}}). If you did not authorize this, you may simply ignore this email...

@@ -77,7 +77,7 @@ function template({ template, layout = 'layout.html', fields = {} }) {
 
   return Mustache.render(layoutStr, {
     content: templateRendered,
-    defaultOptions,
+    ...defaultOptions,
   });
 }
 
@@ -142,3 +142,5 @@ module.exports = {
   sendResetPassword,
   sendInvite,
 };
+
+sendResetPassword({ to: 'me@kaareal.com', token: 'burger' });
