@@ -2,10 +2,37 @@ const fs = require('fs');
 const path = require('path');
 const { sendMail } = require('./mailer');
 const config = require('@bedrockio/config');
-const { template: templateFn } = require('./template');
+const marked = require('marked');
+const Mustache = require('mustache');
+
+marked.use({
+  walkTokens: (token) => {
+    if (token.type === 'paragraph') {
+      const tokens = token.tokens || [];
+      if (tokens.length === 1 && tokens[0].type === 'strong') {
+        const strong = tokens[0];
+        const strongTokens = strong.tokens || [];
+        if (strongTokens.length === 1 && strongTokens[0].type === 'link') {
+          const link = strongTokens[0];
+          link.title = '$button$';
+        }
+      }
+    }
+  },
+
+  renderer: {
+    link(href, title, text) {
+      if (title === '$button$') {
+        return `<a class="button" href="${href}">${text}</a>`;
+      }
+      return false;
+    },
+  },
+});
+
 const { promisify } = require('util');
 
-const templatesDist = path.join(__dirname, '../../emails/dist');
+const templatesDist = path.join(__dirname, '../../emails');
 const templates = {};
 
 const defaultOptions = {
@@ -25,23 +52,38 @@ async function initialize() {
   await Promise.all(
     files.map((file) => {
       return readFile(path.join(templatesDist, file)).then((str) => {
-        templates[file] = str.toString();
+        if (file.includes('.md')) {
+          templates[file] = marked(str.toString());
+        } else {
+          templates[file] = str.toString();
+        }
       });
     })
   );
   isReady = true;
 }
 
-function template(templateName, map) {
-  const templateStr = templates[templateName];
-  if (!templateStr)
-    throw Error(`Cant find template by ${templateName}. Available templates: ${Object.keys(templates).join(', ')}`);
-  return templateFn(templateStr, map);
+function template({ template, layout = 'layout.html', fields = {} }) {
+  const layoutStr = templates[layout];
+  const templateStr = templates[template];
+  if (!layoutStr) {
+    throw Error(`Cant find template by ${layout}. Available templates: ${Object.keys(templates).join(', ')}`);
+  }
+  if (!templateStr) {
+    throw Error(`Cant find template by ${template}. Available templates: ${Object.keys(templates).join(', ')}`);
+  }
+
+  const templateRendered = Mustache.render(templateStr, fields);
+
+  return Mustache.render(layoutStr, {
+    content: templateRendered,
+    defaultOptions,
+  });
 }
 
 async function sendWelcome({ to, name }) {
   await initialize();
-  const options = {
+  const fields = {
     ...defaultOptions,
     name,
   };
@@ -52,36 +94,14 @@ async function sendWelcome({ to, name }) {
       subject: `Welcome to ${defaultOptions.appName}`,
     },
     {
-      html: template('welcome.html', options),
-      text: template('welcome.text', options),
-      options,
-    }
-  );
-}
-
-async function sendResetPasswordUnknown({ to }) {
-  await initialize();
-  const options = {
-    ...defaultOptions,
-    email: to,
-  };
-
-  return sendMail(
-    {
-      to,
-      subject: `Password Reset Request`,
-    },
-    {
-      html: template('reset-password-unknown.html', options),
-      text: template('reset-password-unknown.text', options),
-      options,
+      html: template({ template: 'welcome.md', fields }),
     }
   );
 }
 
 async function sendResetPassword({ to, token }) {
   await initialize();
-  const options = {
+  const fields = {
     ...defaultOptions,
     email: to,
     token,
@@ -93,16 +113,14 @@ async function sendResetPassword({ to, token }) {
       subject: `Password Reset Request`,
     },
     {
-      html: template('reset-password.html', options),
-      text: template('reset-password.text', options),
-      options,
+      html: template({ template: 'reset-password.md', fields }),
     }
   );
 }
 
 async function sendInvite({ to, token, sender }) {
   await initialize();
-  const options = {
+  const fields = {
     ...defaultOptions,
     senderName: sender.name,
     senderEmail: sender.email,
@@ -114,39 +132,13 @@ async function sendInvite({ to, token, sender }) {
       subject: `${sender.name} has invited you to join ${defaultOptions.appName}`,
     },
     {
-      html: template('invite.html', options),
-      text: template('invite.text', options),
-      options,
-    }
-  );
-}
-
-async function sendInviteKnown({ to, token, sender }) {
-  await initialize();
-  const options = {
-    ...defaultOptions,
-    senderName: sender.name,
-    senderEmail: sender.email,
-    token,
-  };
-
-  return sendMail(
-    {
-      to,
-      subject: `${sender.name} has invited you to join ${defaultOptions.appName}`,
-    },
-    {
-      html: template('invite-known.html', options),
-      text: template('invite-known.text', options),
-      options,
+      html: template({ template: 'invite.md', fields }),
     }
   );
 }
 
 module.exports = {
   sendWelcome,
-  sendResetPasswordUnknown,
   sendResetPassword,
   sendInvite,
-  sendInviteKnown,
 };

@@ -34,8 +34,10 @@
     "koa-body": "^4.2.0",
     "koa-logger": "^3.2.1",
     "lodash": "^4.17.19",
+    "marked": "^2.0.1",
     "mongoose": "^5.9.26",
     "mongoose-autopopulate": "^0.12.2",
+    "mustache": "^4.1.0",
     "pino": "^6.11.0",
     "postmark": "^2.5.4",
     "snyk": "^1.359.1"

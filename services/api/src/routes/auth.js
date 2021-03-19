@@ -106,16 +106,15 @@ router
     async (ctx) => {
       const { email } = ctx.request.body;
       const user = await User.findOne({ email });
-      if (user) {
-        await sendResetPassword({
-          to: email,
-          token: tokens.createUserTemporaryToken({ userId: user.id }, 'password'),
-        });
-      } else {
-        await sendResetPasswordUnknown({
-          to: email,
-        });
+      if (!user) {
+        ctx.throw(404, 'Unknown email address.');
       }
+
+      await sendResetPassword({
+        to: email,
+        token: tokens.createUserTemporaryToken({ userId: user.id }, 'password'),
+      });
+
       ctx.status = 204;
     }
   )
