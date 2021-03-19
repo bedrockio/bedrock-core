@@ -180,9 +180,8 @@
 @sortableIconWidth: auto;
 @sortableIconDistance: 0.5em;
 @sortableIconOpacity: 0.8;
-@sortableIconFont: 'Icons';
-@sortableIconAscending: '\f0d8';
-@sortableIconDescending: '\f0d7';
+@sortableIconAscending: '▴';
+@sortableIconDescending: '▾';
 @sortableDisabledColor: @disabledTextColor;
 
 @sortableHoverBackground: @transparentBlack;

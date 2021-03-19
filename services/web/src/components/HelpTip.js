@@ -19,7 +19,7 @@ export default class HelpTip extends React.Component {
     return (
       <div style={{ display: 'inline-block', marginLeft: '0.5em' }}>
         <Icon
-          name="question circle"
+          name="question-circle"
           style={{ color: '#cccccc', cursor: 'pointer' }}
           onClick={this.open}
         />

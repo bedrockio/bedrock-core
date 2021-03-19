@@ -48,20 +48,4 @@ import './modules/tab.less';
 import './modules/transition.less';
 
 export * from 'semantic-ui-react';
-
-//// Behaviors
-//export { Visibility } from 'semantic-ui-react';
-
-//// Addons
-//export {
-  ////Confirm,
-  //Pagination,
-  ////Portal,
-  ////Radio,
-  //Select,
-  //TextArea,
-  //TransitionablePortal,
-//} from 'semantic-ui-react';
-
-//// Extra
-//export { Ref } from 'semantic-ui-react';
+export { default as Icon } from './elements/Icon';

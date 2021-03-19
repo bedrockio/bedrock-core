@@ -97,8 +97,8 @@ ol.ui.list ol li,
 
 
 /* Icon */
-.ui.list .list > .item > i.icon,
-.ui.list > .item > i.icon {
+.ui.list .list > .item > svg.icon,
+.ui.list > .item > svg.icon {
   display: table-cell;
   margin: 0em;
   padding-top: @iconOffset;
@@ -106,8 +106,8 @@ ol.ui.list ol li,
   vertical-align: @iconContentVerticalAlign;
   transition: @iconTransition;
 }
-.ui.list .list > .item > i.icon:only-child,
-.ui.list > .item > i.icon:only-child {
+.ui.list .list > .item > svg.icon:only-child,
+.ui.list > .item > svg.icon:only-child {
   display: inline-block;
   vertical-align: @iconVerticalAlign;
 }
@@ -197,8 +197,8 @@ ol.ui.list ol li,
 }
 
 /* Linked Item Icons */
-.ui.list .list > a.item i.icon,
-.ui.list > a.item i.icon {
+.ui.list .list > a.item svg.icon,
+.ui.list > a.item svg.icon {
   color: @itemLinkIconColor;
 }
 
@@ -306,7 +306,7 @@ ol.ui.list ol li,
 }
 
 /* Horizontal List */
-.ui.horizontal.list > .item > i.icon {
+.ui.horizontal.list > .item > svg.icon {
   margin: 0em;
   padding: 0em @horizontalIconDistance 0em 0em;
 }

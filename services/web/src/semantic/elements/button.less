@@ -576,12 +576,9 @@
 ---------------*/
 
 .ui.button > .icon:not(.button) {
-  height: @iconHeight;
   opacity: @iconOpacity;
-  margin: @iconMargin;
   transition: @iconTransition;
-  vertical-align: @iconVerticalAlign;
-  color: @iconColor;
+  margin: 0;
 }
 
 .ui.button:not(.icon) > .icon:not(.button):not(.dropdown) {
@@ -682,14 +679,8 @@
 .ui.icon.buttons .button,
 .ui.icon.button {
   padding: @verticalPadding @verticalPadding ( @verticalPadding + @shadowOffset );
+  box-sizing: content-box;
 }
-.ui.icon.buttons .button > .icon,
-.ui.icon.button > .icon {
-  opacity: @iconButtonOpacity;
-  margin: 0em !important;
-  vertical-align: top;
-}
-
 
 /*-------------------
         Basic

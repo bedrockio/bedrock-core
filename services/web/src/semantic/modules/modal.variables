@@ -19,7 +19,7 @@
 @closeSize: 1.25em;
 @closeColor: @white;
 
-@closeHitbox: 2.25rem;
+@closeHitbox: 1.5rem;
 @closeDistance: 0.25rem;
 @closeHitBoxOffset: (@closeHitbox - 1rem) / 2;
 @closePadding: @closeHitBoxOffset 0rem 0rem 0rem;

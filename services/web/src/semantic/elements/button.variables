@@ -45,14 +45,11 @@
 ;
 
 /* Icon */
-@iconHeight: @relativeTiny;
 @iconOpacity: 0.8;
 @iconDistance: @relative6px;
-@iconColor: '';
 @iconTransition: opacity @defaultDuration @defaultEasing;
-@iconVerticalAlign: '';
 
-@iconMargin: 0em @iconDistance 0em -(@iconDistance / 2);
+@iconMargin: 0em @iconDistance 0em;
 @rightIconMargin: 0em -(@iconDistance / 2) 0em @iconDistance;
 
 /* Loader */
