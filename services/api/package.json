@@ -49,7 +49,6 @@
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-jest": "^23.19.0",
     "jest": "^26.1.0",
-    "juice": "^7.0.0",
     "mongodb": "^3.6.2",
     "nodemon": "^2.0.4",
     "pino-pretty": "^4.3.0",
