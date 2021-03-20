@@ -5,14 +5,15 @@ import SearchDropdown from '../SearchDropdown';
 
 export default class Categories extends React.Component {
 
-  fetchCategories = (filter) => {
-    return request({
+  fetchCategories = async (query) => {
+    const { data } = await request({
       method: 'POST',
       path: '/1/categories/search',
       body: {
-        ...filter,
+        name: query,
       },
     });
+    return data;
   };
 
   render() {

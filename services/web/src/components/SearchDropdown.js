@@ -14,13 +14,13 @@ export default class SearchDropdown extends React.Component {
     this.loadData();
   }
 
-  async loadData(filters = {}) {
+  async loadData(query = '') {
     try {
       this.setState({
         loading: false,
         error: null,
       });
-      const { data } = await this.props.fetchData(filters);
+      const data = await this.props.fetchData(query);
       this.setState({
         items: data,
         loading: false,
@@ -33,13 +33,9 @@ export default class SearchDropdown extends React.Component {
     }
   }
 
-  onSearchChange = debounce(
-    async (evt, { searchQuery }) => {
-      this.loadData({ keyword: searchQuery });
-    },
-    200,
-    { leading: true }
-  );
+  onSearchChange = debounce((evt, { searchQuery }) => {
+    this.loadData(searchQuery);
+  }, 200);
 
   onChange = (evt, { value, ...rest }) => {
     const ids = Array.isArray(value) ? value : [value];
@@ -71,10 +67,11 @@ export default class SearchDropdown extends React.Component {
   }
 
   getOptions() {
-    return this.getAllItems().map(({ name, id }) => {
+    return this.getAllItems().map((item) => {
+      const text = this.props.getOptionLabel(item);
       return {
-        text: name,
-        value: id,
+        text,
+        value: item.id,
       };
     });
   }
@@ -90,7 +87,6 @@ export default class SearchDropdown extends React.Component {
 
   render() {
     const { loading, error } = this.state;
-
     return (
       <Dropdown
         {...omit(this.props, Object.keys(SearchDropdown.propTypes))}
@@ -100,9 +96,9 @@ export default class SearchDropdown extends React.Component {
         options={this.getOptions()}
         onChange={this.onChange}
         onSearchChange={this.onSearchChange}
-        search
         selection
         clearable
+        search
       />
     );
   }
@@ -110,4 +106,9 @@ export default class SearchDropdown extends React.Component {
 
 SearchDropdown.propTypes = {
   fetchData: PropTypes.func.isRequired,
+  getOptionLabel: PropTypes.func,
+};
+
+SearchDropdown.defaultProps = {
+  getOptionLabel: (item) => item.name,
 };
