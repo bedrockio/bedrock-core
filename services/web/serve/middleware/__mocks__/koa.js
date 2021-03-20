@@ -1,4 +1,4 @@
-const Koa = require('koa');
+const Koa = jest.requireActual('koa');
 const httpMocks = require('node-mocks-http');
 
 const app = new Koa();
@@ -38,4 +38,3 @@ function createFakeKoaContext(mockReq = {}, mockRes = {}) {
 module.exports = {
   createFakeKoaContext
 };
-
