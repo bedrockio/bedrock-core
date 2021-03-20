@@ -14,7 +14,7 @@ router
     '/search',
     validate({
       body: Joi.object({
-        name: Joi.string(),
+        name: Joi.string().allow(''),
         ...searchValidation(),
       }),
     }),
