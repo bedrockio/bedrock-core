@@ -25,7 +25,7 @@ export default class Categories extends React.Component {
         <SearchDropdown
           fluid
           multiple
-          fetchData={this.fetchCategories}
+          onDataNeeded={this.fetchCategories}
           {...this.props}
         />
       </Form.Field>

@@ -25,12 +25,12 @@ function fetchUsers(query) {
 describe('SearchDropdown', () => {
   describe('options', () => {
     it('should render empty dropdown', () => {
-      const el = render(<SearchDropdown fetchData={() => []} />);
+      const el = render(<SearchDropdown onDataNeeded={() => []} />);
       expect(el.getByRole('listbox').textContent).toBe('No results found.');
     });
 
     it('should default to using name field as label', async () => {
-      const el = render(<SearchDropdown fetchData={fetchCategories} />);
+      const el = render(<SearchDropdown onDataNeeded={fetchCategories} />);
       const options = await el.findAllByRole('option');
       expect(options.length).toBe(2);
       expect(options[0].textContent).toBe('Red');
@@ -40,7 +40,7 @@ describe('SearchDropdown', () => {
     it('should allow a custom composite label', async () => {
       const el = render(
         <SearchDropdown
-          fetchData={fetchUsers}
+          onDataNeeded={fetchUsers}
           getOptionLabel={(item) => {
             return [item.firstName, item.lastName].join(' ');
           }}
@@ -58,7 +58,7 @@ describe('SearchDropdown', () => {
       let options;
       const el = render(
         <SearchDropdown
-          fetchData={fetchUsers}
+          onDataNeeded={fetchUsers}
           getOptionLabel={(item) => {
             return [item.firstName, item.lastName].join(' ');
           }}

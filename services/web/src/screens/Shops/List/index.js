@@ -67,7 +67,7 @@ export default class ShopList extends React.Component {
                   <Filters.Dropdown
                     label="Category"
                     name="category"
-                    fetchData={this.fetchCategories}
+                    onDataNeeded={this.fetchCategories}
                   />
                   {/* --- Generator: end */}
                 </Filters>

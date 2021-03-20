@@ -20,7 +20,7 @@ export default class SearchDropdown extends React.Component {
         loading: false,
         error: null,
       });
-      const data = await this.props.fetchData(query);
+      const data = await this.props.onDataNeeded(query);
       this.setState({
         items: data,
         loading: false,
@@ -105,7 +105,7 @@ export default class SearchDropdown extends React.Component {
 }
 
 SearchDropdown.propTypes = {
-  fetchData: PropTypes.func.isRequired,
+  onDataNeeded: PropTypes.func.isRequired,
   getOptionLabel: PropTypes.func,
 };
 
