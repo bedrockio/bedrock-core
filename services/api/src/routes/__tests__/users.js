@@ -13,21 +13,21 @@ afterAll(async () => {
 
 describe('/1/users', () => {
   describe('GET /me', () => {
-    it('it should return the logged in user', async () => {
+    it('should return the logged in user', async () => {
       const user = await createUser();
       const response = await request('GET', '/1/users/me', {}, { user });
       expect(response.status).toBe(200);
       expect(response.body.data.email).toBe(user.email);
     });
 
-    it('it should expose id getter', async () => {
+    it('should expose id getter', async () => {
       const user = await createUser();
       const response = await request('GET', '/1/users/me', {}, { user });
       expect(response.status).toBe(200);
       expect(response.body.data.id).toBe(user.id);
     });
 
-    it('it should not expose _id or __v', async () => {
+    it('should not expose _id or __v', async () => {
       const user = await createUser();
       const response = await request('GET', '/1/users/me', {}, { user });
       expect(response.status).toBe(200);
@@ -35,7 +35,7 @@ describe('/1/users', () => {
       expect(response.body.data.__v).toBeUndefined();
     });
 
-    it('it should not expose _password or hashedPassword', async () => {
+    it('should not expose _password or hashedPassword', async () => {
       const user = await createUser({
         password: 'fake password',
       });
@@ -47,7 +47,7 @@ describe('/1/users', () => {
   });
 
   describe('PATCH /me', () => {
-    it('it should allow updating the user', async () => {
+    it('should allow updating the user', async () => {
       const user = await createUser();
       const response = await request('PATCH', '/1/users/me', { name: 'other name' }, { user });
       expect(response.status).toBe(200);
@@ -74,7 +74,7 @@ describe('/1/users', () => {
       expect(response.status).toBe(200);
       expect(data.name).toBe('Hello');
     });
-    it('it should deny access to non-admins', async () => {
+    it('should deny access to non-admins', async () => {
       const user = await createUser({});
       const response = await request(
         'POST',
@@ -99,7 +99,7 @@ describe('/1/users', () => {
       expect(response.status).toBe(200);
       expect(response.body.data.name).toBe(user1.name);
     });
-    it('it should deny access to non-admins', async () => {
+    it('should deny access to non-admins', async () => {
       const user = await createUser({});
       const user1 = await createUser({ name: 'new name' });
       const response = await request('GET', `/1/users/${user1.id}`, {}, { user });
@@ -108,7 +108,7 @@ describe('/1/users', () => {
   });
 
   describe('POST /search', () => {
-    it('it should list out users', async () => {
+    it('should list out users', async () => {
       const admin = await createUserWithRole('global', 'superAdmin');
       const user1 = await createUser({ name: 'One' });
       const user2 = await createUser({ name: 'Two' });
@@ -122,7 +122,7 @@ describe('/1/users', () => {
       expect(body.meta.total > 2).toBe(true);
     });
 
-    it('it should deny access to non-admins', async () => {
+    it('should deny access to non-admins', async () => {
       const user = await createUser({});
       const response = await request('POST', '/1/users/search', {}, { user });
       expect(response.status).toBe(401);
@@ -139,7 +139,7 @@ describe('/1/users', () => {
       const dbUser = await User.findById(user1.id);
       expect(dbUser.name).toEqual('new name');
     });
-    it('it should deny access to non-admins', async () => {
+    it('should deny access to non-admins', async () => {
       const user = await createUser({});
       const user1 = await createUser({ name: 'new name' });
       const response = await request('PATCH', `/1/users/${user1.id}`, { name: 'new name' }, { user });
@@ -156,7 +156,7 @@ describe('/1/users', () => {
       const dbUser = await User.findById(user1._id);
       expect(dbUser.deletedAt).toBeDefined();
     });
-    it('it should deny access to non-admins', async () => {
+    it('should deny access to non-admins', async () => {
       const user = await createUser({});
       const user1 = await createUser({ name: 'One' });
       const response = await request('DELETE', `/1/users/${user1.id}`, {}, { user });
