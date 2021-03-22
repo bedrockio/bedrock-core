@@ -68,7 +68,7 @@ export default class SearchDropdown extends React.Component {
 
   getOptions() {
     return this.getAllItems().map((item) => {
-      const text = this.props.getItemLabel(item);
+      const text = this.props.getOptionLabel(item);
       return {
         text,
         value: item.id,
@@ -106,9 +106,9 @@ export default class SearchDropdown extends React.Component {
 
 SearchDropdown.propTypes = {
   onDataNeeded: PropTypes.func.isRequired,
-  getItemLabel: PropTypes.func,
+  getOptionLabel: PropTypes.func,
 };
 
 SearchDropdown.defaultProps = {
-  getItemLabel: (item) => item.name,
+  getOptionLabel: (item) => item.name,
 };

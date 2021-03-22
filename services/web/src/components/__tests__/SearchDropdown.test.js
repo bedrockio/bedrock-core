@@ -41,7 +41,7 @@ describe('SearchDropdown', () => {
       const el = render(
         <SearchDropdown
           onDataNeeded={fetchUsers}
-          getItemLabel={(item) => {
+          getOptionLabel={(item) => {
             return [item.firstName, item.lastName].join(' ');
           }}
         />
@@ -59,7 +59,7 @@ describe('SearchDropdown', () => {
       const el = render(
         <SearchDropdown
           onDataNeeded={fetchUsers}
-          getItemLabel={(item) => {
+          getOptionLabel={(item) => {
             return [item.firstName, item.lastName].join(' ');
           }}
         />
