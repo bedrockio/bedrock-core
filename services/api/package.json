@@ -43,17 +43,16 @@
   "devDependencies": {
     "@shelf/jest-mongodb": "^1.2.2",
     "@yeongjet/joi-to-json-schema": "^1.0.4",
-    "eslint": "^7.5.0",
-    "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-jest": "^23.19.0",
+    "eslint": "^7.22.0",
+    "eslint-plugin-bedrock": "file:../../../plugins/eslint-plugin-bedrock/",
     "jest": "^26.1.0",
     "juice": "^7.0.0",
     "mongodb": "^3.6.2",
     "nodemon": "^2.0.4",
     "pino-pretty": "^4.3.0",
     "pre-commit": "^1.2.2",
-    "prettier": "^2.0.5",
-    "prettier-eslint": "^11.0.0",
+    "prettier": "^2.2.1",
+    "prettier-eslint": "^12.0.0",
     "supertest": "^4.0.2"
   },
   "jest": {
