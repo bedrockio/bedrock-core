@@ -1,3 +1,6 @@
+import React from 'react';
+import { Label } from 'semantic-ui-react';
+
 export function round(value, decimals) {
   return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
 }

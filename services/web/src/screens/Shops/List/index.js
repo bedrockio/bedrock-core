@@ -11,7 +11,6 @@ import EditShop from 'modals/EditShop';
 
 // --- Generator: list-imports
 import { getData } from 'country-list';
-import { createDropdownOptions } from '../../../utils/form';
 const countries = getData().map(({ code, name }) => ({
   value: code,
   text: name,
