@@ -1,34 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form } from 'semantic-ui-react';
+import SearchDropdown from 'components/SearchDropdown';
 
 export default class DropdownFilter extends React.Component {
-
-  getDefaultOptions() {
-    return this.props.value.map((val) => {
-      return {
-        text: val,
-        value: val,
-      };
-    });
-  }
-
   render() {
-    const { name, options, ...rest } = this.props;
-    return (
-      <Form.Dropdown
-        id={name}
-        name={name}
-        options={options || this.getDefaultOptions()}
-        {...rest}
-      />
-    );
+    if (this.props.options) {
+      return <Form.Dropdown {...this.props} />;
+    } else {
+      const { label, disabled, error, ...rest } = this.props;
+      return (
+        <Form.Field disabled={disabled} error={error}>
+          <label>{label}</label>
+          <SearchDropdown {...rest} />
+        </Form.Field>
+      );
+    }
   }
 }
 
 DropdownFilter.propTypes = {
-  ...Form.Dropdown.propTypes,
   name: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
 };
 
 DropdownFilter.defaultProps = {

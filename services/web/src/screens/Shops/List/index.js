@@ -24,8 +24,22 @@ export default class ShopList extends React.Component {
     return await request({
       method: 'POST',
       path: '/1/shops/search',
-      body: params,
+      body: {
+        ...params,
+        category: params.category?.id,
+      },
     });
+  };
+
+  fetchCategories = async (query) => {
+    const { data } = await request({
+      method: 'POST',
+      path: '/1/categories/search',
+      body: {
+        name: query,
+      },
+    });
+    return data;
   };
 
   render() {
@@ -44,12 +58,17 @@ export default class ShopList extends React.Component {
               <Breadcrumbs active="Shops">
                 <Filters onSave={setFilters} filters={filters}>
                   {/* --- Generator: filters */}
-                  <Filters.Text label="Name" name="name" />
+                  <Filters.Text label="Search" name="keyword" placeholder="Enter name or shop id" />
                   <Filters.Dropdown
                     label="Country"
                     name="country"
                     options={countries}
                     search
+                  />
+                  <Filters.Dropdown
+                    label="Category"
+                    name="category"
+                    onDataNeeded={this.fetchCategories}
                   />
                   {/* --- Generator: end */}
                 </Filters>

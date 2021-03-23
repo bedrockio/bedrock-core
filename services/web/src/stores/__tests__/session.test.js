@@ -1,6 +1,6 @@
 import React from 'react';
 import { SessionProvider, withSession, withLoadedSession, useSession } from '../session';
-import { assertHtml, mount } from 'utils/test';
+import { render } from '@testing-library/react';
 
 jest.mock('utils/api');
 jest.mock('utils/env');
@@ -25,7 +25,10 @@ class MyComponent extends React.Component {
 
   render() {
     renderCount++;
-    const { user } = this.context;
+    const { loading, user } = this.context;
+    if (loading) {
+      return null;
+    }
     return (
       <div>
         {user?.name || 'Anonymous'}
@@ -39,29 +42,29 @@ describe('withSession', () => {
   const Component = withSession(MyComponent);
 
   it('should be anonymous when logged out', async () => {
-    await assertHtml(
+    const { container } = await render(
       <SessionProvider>
         <Component />
-      </SessionProvider>,
-      '<div>Anonymous</div>',
+      </SessionProvider>
     );
+    expect(container.textContent).toBe('Anonymous');
     expect(renderCount).toBe(2);
   });
 
   it('should display user name', async () => {
     localStorage.setItem('jwt', 'fake');
-    await assertHtml(
+    const { container } = await render(
       <SessionProvider>
         <Component />
-      </SessionProvider>,
-      '<div>Bob</div>'
+      </SessionProvider>
     );
+    expect(container.textContent).toBe('Bob');
     expect(renderCount).toBe(2);
   });
 
   it('should set the last context as a snapshot', async () => {
     localStorage.setItem('jwt', 'fake');
-    await mount(
+    await render(
       <SessionProvider>
         <Component />
       </SessionProvider>
@@ -78,23 +81,23 @@ describe('withLoadedSession', () => {
   const Component = withLoadedSession(MyComponent);
 
   it('should be anonymous when logged out', async () => {
-    await assertHtml(
+    const { container } = await render(
       <SessionProvider>
         <Component />
-      </SessionProvider>,
-      '<div>Anonymous</div>',
+      </SessionProvider>
     );
+    expect(container.textContent).toBe('Anonymous');
     expect(renderCount).toBe(1);
   });
 
   it('should display user name', async () => {
     localStorage.setItem('jwt', 'fake');
-    await assertHtml(
+    const { container } = await render(
       <SessionProvider>
         <Component />
-      </SessionProvider>,
-      '<div>Bob</div>'
+      </SessionProvider>
     );
+    expect(container.textContent).toBe('Bob');
     expect(renderCount).toBe(1);
   });
 
@@ -113,23 +116,23 @@ describe('useSession', () => {
   };
 
   it('should be anonymous when logged out', async () => {
-    await assertHtml(
+    const { container } = await render(
       <SessionProvider>
         <Component />
-      </SessionProvider>,
-      '<div>Anonymous</div>',
+      </SessionProvider>
     );
+    expect(container.textContent).toBe('Anonymous');
     expect(renderCount).toBe(2);
   });
 
   it('should display user name', async () => {
     localStorage.setItem('jwt', 'fake');
-    await assertHtml(
+    const { container } = await render(
       <SessionProvider>
         <Component />
-      </SessionProvider>,
-      '<div>Bob</div>'
+      </SessionProvider>
     );
+    expect(container.textContent).toBe('Bob');
     expect(renderCount).toBe(2);
   });
 

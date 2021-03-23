@@ -122,6 +122,21 @@ describe('/1/users', () => {
       expect(body.meta.total > 2).toBe(true);
     });
 
+    it('it should be able to search by ids', async () => {
+      const admin = await createUserWithRole('global', 'superAdmin');
+
+      const user1 = await createUser({ name: 'One' });
+      const user2 = await createUser({ name: 'Two' });
+
+      const response = await request('POST', '/1/users/search', {
+        ids: [user1.id, user2.id],
+      }, { user: admin });
+      expect(response.status).toBe(200);
+      expect(response.body.data.length).toBe(2);
+      expect(response.body.data[0].id).toBe(user2.id);
+      expect(response.body.data[1].id).toBe(user1.id);
+    });
+
     it('it should deny access to non-admins', async () => {
       const user = await createUser({});
       const response = await request('POST', '/1/users/search', {}, { user });

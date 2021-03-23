@@ -73,15 +73,11 @@ router
     }),
     async (ctx) => {
       const { body } = ctx.request;
-      const query = getSearchQuery(body);
+      const query = getSearchQuery(body, {
+        keywordFields: ['name', 'email'],
+      });
 
-      const { name, role } = body;
-      if (name) {
-        query.name = {
-          $regex: name,
-          $options: 'i',
-        };
-      }
+      const { role } = body;
       if (role) {
         query['roles.role'] = { $in: [role] };
       }
@@ -110,6 +106,12 @@ router
         email: Joi.string().lowercase().email().required(),
         name: Joi.string().required(),
         password: passwordField.required(),
+        roles: Joi.array().items(
+          Joi.object({
+            role: Joi.string().required(),
+            scope: Joi.string().required(),
+          })
+        ),
       }),
     }),
     async (ctx) => {
