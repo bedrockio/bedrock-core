@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form } from 'semantic';
-import { Form } from 'semantic-ui-react';
 import SearchDropdown from 'components/SearchDropdown';
 
 export default class DropdownFilter extends React.Component {
