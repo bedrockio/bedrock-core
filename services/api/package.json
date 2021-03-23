@@ -44,7 +44,7 @@
     "@shelf/jest-mongodb": "^1.2.2",
     "@yeongjet/joi-to-json-schema": "^1.0.4",
     "eslint": "^7.22.0",
-    "eslint-plugin-bedrock": "file:../../../plugins/eslint-plugin-bedrock/",
+    "eslint-plugin-bedrock": "^1.0.0",
     "jest": "^26.1.0",
     "juice": "^7.0.0",
     "mongodb": "^3.6.2",

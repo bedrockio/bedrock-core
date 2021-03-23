@@ -82,7 +82,7 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.10",
     "eslint": "^7.22.0",
-    "eslint-plugin-bedrock": "file:../../../plugins/eslint-plugin-bedrock/",
+    "eslint-plugin-bedrock": "^1.0.0",
     "lint-staged": "^10.5.4",
     "node-mocks-http": "^1.8.1",
     "prettier": "^2.2.1",
