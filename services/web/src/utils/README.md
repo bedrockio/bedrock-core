@@ -82,6 +82,63 @@ import { formatUsd } from 'utils/currency';
 formatUsd(99.999999); // $99.99
 ```
 
+Convert an option / rich enum to a Label element:
+
+```javascript
+import { formatOption } from 'utils/form';
+const statuses = {
+  pending: {
+    name: 'Pending',
+    icon: 'wait',
+  },
+  scheduled: {
+    name: 'Scheduled',
+    icon: 'checkmark',
+    color: 'olive',
+  },
+  cancelled: {
+    name: 'Cancelled',
+    icon: 'dont',
+    color: 'red',
+  },
+};
+
+formatOption(statuses, 'scheduled'); // <Label color="olive" icon="checkmark"...
+```
+
+## Forms
+
+Quickly create a bunch of options for Dropdown (and Label) from a hash:
+
+```javascript
+import { createDropdownOptions } from 'utils/forms';
+
+export const statuses = {
+  pending: {
+    name: 'Pending',
+    icon: 'wait',
+  },
+  scheduled: {
+    name: 'Scheduled',
+    icon: 'checkmark',
+    color: 'olive',
+  },
+  cancelled: {
+    name: 'Cancelled',
+    icon: 'dont',
+    color: 'red',
+  },
+};
+
+export const statusOptions = createDropdownOptions(statuses); // [{key: 'pending', 'icon': 'wait', ...}]
+```
+
+```javascript
+import { createDropdownOptions } from 'utils/forms';
+
+const options = createDropdownOptions(['pending', 'scheduled', 'cancelled']);
+```
+
 ## Uploads
 
 To get the URL for an Upload Object coming from the API:

@@ -1,5 +1,7 @@
 import history from '../history';
-const { createFakeKoaContext } = require('utils/test/mocks/koa');
+const { createFakeKoaContext } = require('koa');
+
+jest.mock('koa');
 
 const middleware = history({ apps: ['/', '/admin/'] });
 

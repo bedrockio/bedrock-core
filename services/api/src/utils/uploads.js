@@ -9,7 +9,7 @@ function uploadLocal(file, hash) {
   const logger = createLogger();
   const destinationPath = path.join(os.tmpdir(), hash);
   fs.copyFileSync(file.path, destinationPath);
-  logger.info('Uploading locally %s -> %s', file.name, destinationPath);
+  logger.debug('Uploading locally %s -> %s', file.name, destinationPath);
   return file.path;
 }
 
