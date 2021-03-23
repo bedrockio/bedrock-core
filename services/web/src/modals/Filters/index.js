@@ -83,7 +83,7 @@ export default class Filters extends React.Component {
           )
         }>
         <Modal.Header>Filter</Modal.Header>
-        <Modal.Content scrolling>
+        <Modal.Content>
           <Ref innerRef={this.formRef}>
             <Form
               id="filters"

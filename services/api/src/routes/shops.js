@@ -2,6 +2,7 @@ const Router = require('@koa/router');
 const Joi = require('@hapi/joi');
 const validate = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
+const { searchValidation, getSearchQuery, search } = require('../utils/search');
 const { NotFoundError } = require('../utils/errors');
 const { Shop } = require('../models');
 
@@ -43,65 +44,34 @@ router
         // --- Generator: search
         name: Joi.string(),
         country: Joi.string(),
+        category: Joi.string(),
         // --- Generator: end
-        startAt: Joi.date(),
-        endAt: Joi.date(),
-        skip: Joi.number().default(0),
-        sort: Joi.object({
-          field: Joi.string().required(),
-          order: Joi.string().valid('asc', 'desc').required(),
-        }).default({
-          field: 'createdAt',
-          order: 'desc',
-        }),
-        ids: Joi.array().items(Joi.string()),
-        limit: Joi.number().positive().default(50),
+        ...searchValidation(),
       }),
     }),
     async (ctx) => {
-      const { ids = [], sort, skip, limit, startAt, endAt } = ctx.request.body;
+      const { body } = ctx.request;
+      const query = getSearchQuery(body, {
+        keywordFields: ['name'],
+      });
+
       // --- Generator: vars
-      const { name, country } = ctx.request.body;
+      const { country, category } = ctx.request.body;
       // --- Generator: end
-      const query = {
-        ...(ids.length ? { _id: { $in: ids } } : {}),
-        deletedAt: { $exists: false },
-      };
 
       // --- Generator: queries
-      if (name) {
-        query.name = {
-          $regex: name,
-          $options: 'i',
-        };
-      }
       if (country) {
         query.country = country;
       }
+      if (category) {
+        query.categories = category;
+      }
       // --- Generator: end
 
-      if (startAt || endAt) {
-        query.createdAt = {};
-        if (startAt) {
-          query.createdAt.$gte = startAt;
-        }
-        if (endAt) {
-          query.createdAt.$lte = endAt;
-        }
-      }
-      const data = await Shop.find(query)
-        .sort({ [sort.field]: sort.order === 'desc' ? -1 : 1 })
-        .skip(skip)
-        .limit(limit);
-
-      const total = await Shop.countDocuments(query);
+      const { data, meta } = await search(Shop, query, body);
       ctx.body = {
         data,
-        meta: {
-          total,
-          skip,
-          limit,
-        },
+        meta,
       };
     }
   )

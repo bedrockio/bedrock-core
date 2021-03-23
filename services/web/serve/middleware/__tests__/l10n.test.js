@@ -1,5 +1,7 @@
 const l10nMiddleware = require('../l10n');
-const { createFakeKoaContext } = require('utils/test/mocks/koa');
+const { createFakeKoaContext } = require('koa');
+
+jest.mock('koa');
 
 const EN_PREFERRED = 'en,ja;q=0.9,en-US;q=0.8';
 const JA_PREFERRED = 'ja,en;q=0.9,en-US;q=0.8';

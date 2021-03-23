@@ -2,6 +2,7 @@ const Router = require('@koa/router');
 const Joi = require('@hapi/joi');
 const validate = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
+const { searchValidation, getSearchQuery, search } = require('../utils/search');
 const { requirePermissions } = require('../utils/middleware/permissions');
 
 const { NotFoundError, BadRequestError, GoneError } = require('../utils/errors');
@@ -36,34 +37,16 @@ router
     '/search',
     validate({
       body: Joi.object({
-        skip: Joi.number().default(0),
-        sort: Joi.object({
-          field: Joi.string().required(),
-          order: Joi.string().required(),
-        }).default({
-          field: 'createdAt',
-          order: 'asc',
-        }),
-        limit: Joi.number().positive().default(50),
+        ...searchValidation(),
       }),
     }),
     async (ctx) => {
-      const { sort, skip, limit } = ctx.request.body;
-      const query = { deletedAt: { $exists: false } };
-      const invites = await Invite.find(query)
-        .sort({ [sort.field]: sort.order === 'desc' ? -1 : 1 })
-        .skip(skip)
-        .limit(limit);
-
-      const total = await Invite.countDocuments(query);
-
+      const { body } = ctx.request;
+      const query = getSearchQuery(body);
+      const { data, meta } = await search(Invite, query, body);
       ctx.body = {
-        data: invites,
-        meta: {
-          total,
-          skip,
-          limit,
-        },
+        data,
+        meta,
       };
     }
   )
