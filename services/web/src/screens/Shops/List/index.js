@@ -4,12 +4,7 @@ import { Table, Divider, Button, Message } from 'semantic-ui-react';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import { screen } from 'helpers';
-import {
-  Confirm,
-  HelpTip,
-  Breadcrumbs,
-  SearchProvider,
-} from 'components';
+import { Confirm, HelpTip, Breadcrumbs, SearchProvider } from 'components';
 
 import Filters from 'modals/Filters';
 import EditShop from 'modals/EditShop';
@@ -25,7 +20,6 @@ const countries = getData().map(({ code, name }) => ({
 
 @screen
 export default class ShopList extends React.Component {
-
   onDataNeeded = async (params) => {
     return await request({
       method: 'POST',
@@ -51,7 +45,14 @@ export default class ShopList extends React.Component {
   render() {
     return (
       <SearchProvider onDataNeeded={this.onDataNeeded}>
-        {({ items: shops, getSorted, setSort, filters, setFilters, reload }) => {
+        {({
+          items: shops,
+          getSorted,
+          setSort,
+          filters,
+          setFilters,
+          reload,
+        }) => {
           return (
             <React.Fragment>
               <Breadcrumbs active="Shops">
@@ -71,7 +72,10 @@ export default class ShopList extends React.Component {
                   />
                   {/* --- Generator: end */}
                 </Filters>
-                <EditShop trigger={<Button primary content="New Shop" icon="plus" />} onSave={reload} />
+                <EditShop
+                  trigger={<Button primary content="New Shop" icon="plus" />}
+                  onSave={reload}
+                />
               </Breadcrumbs>
               <Divider hidden />
               {shops.length === 0 ? (
@@ -81,16 +85,26 @@ export default class ShopList extends React.Component {
                   <Table.Header>
                     <Table.Row>
                       {/* --- Generator: list-header-cells */}
-                      <Table.HeaderCell width={3} onClick={() => setSort('name')} sorted={getSorted('name')}>
+                      <Table.HeaderCell
+                        width={3}
+                        onClick={() => setSort('name')}
+                        sorted={getSorted('name')}>
                         Name
                       </Table.HeaderCell>
                       <Table.HeaderCell width={3}>Description</Table.HeaderCell>
                       {/* --- Generator: end */}
-                      <Table.HeaderCell onClick={() => setSort('createdAt')} sorted={getSorted('createdAt')}>
+                      <Table.HeaderCell
+                        onClick={() => setSort('createdAt')}
+                        sorted={getSorted('createdAt')}>
                         Created
-                        <HelpTip title="Created" text="This is the date and time the shop was created." />
+                        <HelpTip
+                          title="Created"
+                          text="This is the date and time the shop was created."
+                        />
                       </Table.HeaderCell>
-                      <Table.HeaderCell textAlign="center">Actions</Table.HeaderCell>
+                      <Table.HeaderCell textAlign="center">
+                        Actions
+                      </Table.HeaderCell>
                     </Table.Row>
                   </Table.Header>
                   <Table.Body>
@@ -103,11 +117,19 @@ export default class ShopList extends React.Component {
                           </Table.Cell>
                           <Table.Cell>{shop.description}</Table.Cell>
                           {/* --- Generator: end */}
-                          <Table.Cell>{formatDateTime(shop.createdAt)}</Table.Cell>
+                          <Table.Cell>
+                            {formatDateTime(shop.createdAt)}
+                          </Table.Cell>
                           <Table.Cell textAlign="center">
                             <EditShop
                               shop={shop}
-                              trigger={<Button style={{ marginLeft: '20px' }} basic icon="edit" />}
+                              trigger={
+                                <Button
+                                  style={{ marginLeft: '20px' }}
+                                  basic
+                                  icon="edit"
+                                />
+                              }
                               onSave={reload}
                             />
                             <Confirm
