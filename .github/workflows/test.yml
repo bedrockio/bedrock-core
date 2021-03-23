@@ -34,6 +34,9 @@ jobs:
       - name: Run Lint
         run: yarn lint
 
+      - name: Run Tests
+        run: yarn test --silent
+
   api:
     runs-on: ubuntu-latest
     defaults:
