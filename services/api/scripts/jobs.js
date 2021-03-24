@@ -1,9 +1,9 @@
 const process = require('process');
 const { logger } = require('./../src/utils/logging');
-const { init } = require('./../src/utils/database');
+const { initialize } = require('./../src/utils/database');
 
 async function run() {
-  await init();
+  await initialize();
   logger.info('Running jobs');
 }
 

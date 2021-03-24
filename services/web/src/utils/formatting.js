@@ -1,3 +1,6 @@
+import React from 'react';
+import { Label } from 'semantic-ui-react';
+
 export function round(value, decimals) {
   return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
 }
@@ -16,3 +19,15 @@ export const numberWithCommas = (x) => {
 export const numberWithDots = (x) => {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 };
+
+export function formatOption(types, key) {
+  const status = types[key];
+  const props = {
+    content: status.name,
+    icon: status.icon,
+  };
+  if (status.color) {
+    props.color = status.color;
+  }
+  return <Label {...props} />;
+}

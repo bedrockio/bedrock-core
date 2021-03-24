@@ -22,8 +22,8 @@
 // admin.site.com  /page        200     /admin/
 //
 
-const HOT_UPDATE_REG = /hot-update/;
-const EXT_URL = /\.[a-z]+$/i;
+const HOT_UPDATE_REG = /__webpack_hmr/;
+const EXT_URL = /\.[a-z0-9]+$/i;
 
 function canRewriteUrl(path) {
   return !hasFileExension(path) && !isHotUpdateUrl(path);

@@ -48,7 +48,7 @@ describe('/1/auth', () => {
   });
 
   describe('POST /request-password', () => {
-    it('it should send an email to the registered user', async () => {
+    it('should send an email to the registered user', async () => {
       const user = await createUser();
       const response = await request('POST', '/1/auth/request-password', {
         email: user.email,
@@ -56,7 +56,7 @@ describe('/1/auth', () => {
       expect(response.status).toBe(204);
     });
 
-    it('it should send an email to the unknown user', async () => {
+    it('should send an email to the unknown user', async () => {
       const email = 'email@email.com';
       const response = await request('POST', '/1/auth/request-password', {
         email,
@@ -66,7 +66,7 @@ describe('/1/auth', () => {
   });
 
   describe('POST /set-password', () => {
-    it('it should allow a user to set a password', async () => {
+    it('should allow a user to set a password', async () => {
       const user = await createUser();
       const password = 'very new password';
       const token = tokens.createUserTemporaryToken({ userId: user._id }, 'password');

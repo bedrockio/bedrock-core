@@ -14,22 +14,15 @@ router
     '/search',
     validate({
       body: Joi.object({
-        name: Joi.string(),
+        name: Joi.string().allow(''),
         ...searchValidation(),
       }),
     }),
     async (ctx) => {
       const { body } = ctx.request;
-      const { name } = body;
       const query = getSearchQuery(body, {
         keywordFields: ['name'],
       });
-      if (name) {
-        query.name = {
-          $regex: name,
-          $options: 'i',
-        };
-      }
       const { data, meta } = await search(Category, query, body);
       ctx.body = {
         data,

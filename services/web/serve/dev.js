@@ -1,36 +1,32 @@
 const Koa = require('koa');
-const webpack = require('koa-webpack');
-const webpackConfig = require('../webpack.config');
-const envMiddleware = require('./middleware/env');
+const webpack = require('webpack');
+const e2k = require('express-to-koa');
 const historyMiddleware = require('./middleware/history');
-const terminateMiddleware = require('./middleware/terminate');
+const webpackDevMiddleware = require('webpack-dev-middleware');
+const webpackHotMiddleware = require('webpack-hot-middleware');
 
 const app = new Koa();
 
-const { BIND_PORT, BIND_HOST, publicEnv } = require('../env');
+const { BIND_PORT, BIND_HOST } = require('../env');
 
 (async () => {
-  const webpackMiddleware = await webpack({
-    hotClient: {
-      host: BIND_HOST,
-      port: 34001,
-    },
-    devMiddleware: {
-      watchOptions: {
-        ignored: /node_modules/,
-      },
-    },
-    config: {
-      ...webpackConfig,
-      mode: 'development',
-    },
-  });
 
-  app.use(terminateMiddleware('/assets/', webpackMiddleware));
-  app.use(envMiddleware(publicEnv));
+  // Manually loading webpack-dev-middleware and webpack-hot-middleware
+  // until support for webpack v5 lands in koa-webpack:
+  // https://github.com/shellscape/koa-webpack/issues/126
+  const webpackConfig = require('../webpack.config.js');
+  const compiler = webpack({
+    ...webpackConfig,
+  });
+  const wrappedDevMiddleware = e2k(webpackDevMiddleware(compiler));
+  const wrappedHotMiddleware = e2k(webpackHotMiddleware(compiler));
+
   app.use(historyMiddleware({ apps: ['/'] }));
-  app.use(webpackMiddleware);
+  app.use(wrappedDevMiddleware);
+  app.use(wrappedHotMiddleware);
+
   app.listen(BIND_PORT, BIND_HOST, () => {
+    // eslint-disable-next-line
     console.info(`Running App on http://${BIND_HOST}:${BIND_PORT}`);
   });
 })();
