@@ -6,6 +6,7 @@ const TerserWebpackPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { template: compileTemplate } = require('lodash');
 
 // To enable multiple builds, place each app in a folder inside src,
@@ -149,6 +150,14 @@ module.exports = {
           yandex: false,
         },
       },
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.join(__dirname, './src/assets/public'),
+          to: path.join(__dirname, './dist'),
+        },
+      ],
     }),
   ],
 
