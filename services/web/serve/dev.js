@@ -26,6 +26,7 @@ const { BIND_PORT, BIND_HOST } = require('../env');
   app.use(wrappedHotMiddleware);
 
   app.listen(BIND_PORT, BIND_HOST, () => {
+    // eslint-disable-next-line
     console.info(`Running App on http://${BIND_HOST}:${BIND_PORT}`);
   });
 })();

@@ -1,60 +1,20 @@
 {
   "env": {
-    "es6": true,
     "node": true,
-    "browser": true,
+    "browser": true
   },
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "parserOptions": {
-    "ecmaVersion": 2020,
+    "sourceType": "module",
     "ecmaFeatures": {
-      "impliedStrict": true,
-      "legacyDecorators": true,
+      "legacyDecorators": true
     }
   },
   "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:jest/recommended",
-    "prettier"
+    "plugin:bedrock/recommended",
+    "plugin:bedrock/react",
+    "plugin:bedrock/jest"
   ],
-  "rules": {
-    "semi": "error",
-    "no-unused-vars": ["error", {
-      "ignoreRestSiblings": true
-    }],
-    "react/prop-types": "off",
-    "react/display-name": "off",
-    "react/no-unescaped-entities": "off",
-    "no-console": ["warn",
-      {
-        "allow": [
-          "warn",
-          "error",
-          "info"
-        ]
-      }
-    ],
-    "jest/expect-expect": [
-      "error",
-      {
-        "assertFunctionNames": ["expect*", "assert*"]
-      }
-    ]
-  },
-  "settings": {
-    "react": {
-      "version": "detect"
-    },
-    "import/resolver": {
-      "node": {
-        "moduleDirectory": [
-          "node_modules",
-          "src"
-        ]
-      }
-    }
-  },
   "globals": {
     "__ENV__": "readonly"
   }
