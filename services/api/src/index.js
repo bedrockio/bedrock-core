@@ -1,6 +1,4 @@
-const { initalize: setup } = require('@bedrockio/instrumentation');
-setup();
-
+const { logger } = require('./utils/logging');
 const { initialize } = require('./utils/database');
 const { createFixtures } = require('./fixtures');
 const app = require('./app');
@@ -18,15 +16,15 @@ module.exports = (async () => {
   }
 
   app.listen(PORT, HOST, () => {
-    console.info(`Started on port //${HOST}:${PORT}`);
+    logger.info(`Started on port //${HOST}:${PORT}`);
     if (ENV_NAME === 'development') {
-      console.info('-----------------------------------------------------------------');
-      console.info(
+      logger.info('-----------------------------------------------------------------');
+      logger.info(
         `${config.get('APP_NAME')} Admin Login ${config.get('ADMIN_EMAIL')}:${config.get(
           'ADMIN_PASSWORD'
         )} (dev env only)`
       );
-      console.info('-----------------------------------------------------------------');
+      logger.info('-----------------------------------------------------------------');
     }
   });
 

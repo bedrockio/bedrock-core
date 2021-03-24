@@ -2683,10 +2683,10 @@ date-and-time@^0.14.2:
   resolved "https://registry.yarnpkg.com/date-and-time/-/date-and-time-0.14.2.tgz#a4266c3dead460f6c231fe9674e585908dac354e"
   integrity sha512-EFTCh9zRSEpGPmJaexg7HTuzZHh6cnJj1ui7IGCFNXzd2QdpsNh05Db5TF3xzJm30YN+A8/6xHSuRcQqoc3kFA==
 
-dateformat@^3.0.3:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/dateformat/-/dateformat-3.0.3.tgz#a6e37499a4d9a9cf85ef5872044d62901c9889ae"
-  integrity sha512-jyCETtSl3VMZMWeRo7iY1FL19ges1t55hMo5yaam4Jrsm5EPL89UQkoQRyiI+Yf4k8r2ZpdngkV8hr1lIdjb3Q==
+dateformat@^4.5.1:
+  version "4.5.1"
+  resolved "https://registry.yarnpkg.com/dateformat/-/dateformat-4.5.1.tgz#c20e7a9ca77d147906b6dc2261a8be0a5bd2173c"
+  integrity sha512-OD0TZ+B7yP7ZgpJf5K2DIbj3FZvFvxgFUuaqA/V5zTjAtAAXZ1E8bktHxmAGs4x5b7PflqA9LeQ84Og7wYtF7Q==
 
 debug@2, debug@^2.2.0, debug@^2.3.3:
   version "2.6.9"
@@ -4255,11 +4255,6 @@ human-signals@^1.1.1:
   resolved "https://registry.yarnpkg.com/human-signals/-/human-signals-1.1.1.tgz#c5b1cd14f50aeae09ab6c59fe63ba3395fe4dfa3"
   integrity sha512-SEQu7vl8KjNL2eoGBLF3+wAjpsNfA9XMlXAYj/3EdaNfAlxKthD1xjEQfGOUhllCGGJVNY34bRr6lPINhNjyZw==
 
-humanize-number@0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/humanize-number/-/humanize-number-0.0.2.tgz#11c0af6a471643633588588048f1799541489c18"
-  integrity sha1-EcCvakcWQ2M1iFiASPF5lUFInBg=
-
 iconv-lite@0.4.24, iconv-lite@^0.4.24, iconv-lite@^0.4.4:
   version "0.4.24"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.24.tgz#2022b4b25fbddc21d2f524974a474aafe733908b"
@@ -5467,16 +5462,6 @@ koa-convert@^1.2.0:
     co "^4.6.0"
     koa-compose "^3.0.0"
 
-koa-logger@^3.2.1:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/koa-logger/-/koa-logger-3.2.1.tgz#ab9db879526db3837cc9ce4fd983c025b1689f22"
-  integrity sha512-MjlznhLLKy9+kG8nAXKJLM0/ClsQp/Or2vI3a5rbSQmgl8IJBQO0KI5FA70BvW+hqjtxjp49SpH2E7okS6NmHg==
-  dependencies:
-    bytes "^3.1.0"
-    chalk "^2.4.2"
-    humanize-number "0.0.2"
-    passthrough-counter "^1.0.0"
-
 koa@^2.13.0:
   version "2.13.1"
   resolved "https://registry.yarnpkg.com/koa/-/koa-2.13.1.tgz#6275172875b27bcfe1d454356a5b6b9f5a9b1051"
@@ -6647,11 +6632,6 @@ pascalcase@^0.1.1:
   resolved "https://registry.yarnpkg.com/pascalcase/-/pascalcase-0.1.1.tgz#b363e55e8006ca6fe21784d2db22bd15d7917f14"
   integrity sha1-s2PlXoAGym/iF4TS2yK9FdeRfxQ=
 
-passthrough-counter@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/passthrough-counter/-/passthrough-counter-1.0.0.tgz#1967d9e66da572b5c023c787db112a387ab166fa"
-  integrity sha1-GWfZ5m2lcrXAI8eH2xEqOHqxZvo=
-
 path-exists@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/path-exists/-/path-exists-4.0.0.tgz#513bdbe2d3b95d7762e8c1137efa195c6c61b5b3"
@@ -6711,15 +6691,15 @@ picomatch@^2.0.4, picomatch@^2.0.5, picomatch@^2.2.1:
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.2.2.tgz#21f333e9b6b8eaff02468f5146ea406d345f4dad"
   integrity sha512-q0M/9eZHzmr0AulXyPwNfZjtwZ/RBZlbN3K3CErVrk50T2ASYI7Bye0EvekFY3IP1Nt2DHu0re+V2ZHIpMkuWg==
 
-pino-pretty@^4.3.0:
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/pino-pretty/-/pino-pretty-4.3.0.tgz#18695606fd4f1e21cd1585d18999cd84d429e1d8"
-  integrity sha512-uEc9SUCCGVEs0goZvyznKXBHtI1PNjGgqHviJHxOCEFEWZN6Z/IQKv5pO9gSdm/b+WfX+/dfheWhtZUyScqjlQ==
+pino-pretty@^4.7.1:
+  version "4.7.1"
+  resolved "https://registry.yarnpkg.com/pino-pretty/-/pino-pretty-4.7.1.tgz#499cf185e110399deae731221c899915c811bd1a"
+  integrity sha512-ILE5YBpur88FlZ0cr1BNqVjgG9fOoK+md3peqmcs7AC6oq7SNiaJioIcrykMxfNsuygMYjUJtvAcARRE9aRc9w==
   dependencies:
     "@hapi/bourne" "^2.0.0"
     args "^5.0.1"
     chalk "^4.0.0"
-    dateformat "^3.0.3"
+    dateformat "^4.5.1"
     fast-safe-stringify "^2.0.7"
     jmespath "^0.15.0"
     joycon "^2.2.5"
@@ -6733,16 +6713,16 @@ pino-std-serializers@^3.1.0:
   resolved "https://registry.yarnpkg.com/pino-std-serializers/-/pino-std-serializers-3.1.1.tgz#5a9a00715c9ff3428d5555d4b023a3f8a5893e54"
   integrity sha512-Ud4+WzgEr/swOlfQdkxqKP2hlwuQlIqQ5YwYpo9MczNg2mpsKKyKgwQXW5KnP5tgH3/Cy9QRhAhLM8k1K+gfnA==
 
-pino@^6.11.0:
-  version "6.11.0"
-  resolved "https://registry.yarnpkg.com/pino/-/pino-6.11.0.tgz#c474712d462f1de524cf885257d21271d1ab7c16"
-  integrity sha512-VPqEE2sU1z6wqkTtr7DdTktayTNE/JgeuWjfXh9g/TI6X7venzv4gaoU24/jSywf6bBeDfZRHWEeO/6f8bNppA==
+pino@^6.11.2:
+  version "6.11.2"
+  resolved "https://registry.yarnpkg.com/pino/-/pino-6.11.2.tgz#2f3d119c526651aab4ec3d280844785d52d0b690"
+  integrity sha512-bmzxwbrIPxQUlAuMkF4PWVErUGERU4z37HazlhflKFg08crsNE3fACGN6gPwg5xtKOK47Ux5cZm8YCuLV4wWJg==
   dependencies:
     fast-redact "^3.0.0"
     fast-safe-stringify "^2.0.7"
     flatstr "^1.0.12"
     pino-std-serializers "^3.1.0"
-    quick-format-unescaped "^4.0.1"
+    quick-format-unescaped "4.0.1"
     sonic-boom "^1.0.2"
 
 pirates@^4.0.1:
@@ -6991,7 +6971,7 @@ queue-microtask@^1.2.2:
   resolved "https://registry.yarnpkg.com/queue-microtask/-/queue-microtask-1.2.3.tgz#4929228bbc724dfac43e0efb058caf7b6cfb6243"
   integrity sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==
 
-quick-format-unescaped@^4.0.1:
+quick-format-unescaped@4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/quick-format-unescaped/-/quick-format-unescaped-4.0.1.tgz#437a5ea1a0b61deb7605f8ab6a8fd3858dbeb701"
   integrity sha512-RyYpQ6Q5/drsJyOhrWHYMWTedvjTIat+FTwv0K4yoUxzvekw2aRHMQJLlnvt8UantkZg2++bEzD9EdxXqkWf4A==
