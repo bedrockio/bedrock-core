@@ -402,6 +402,34 @@ describe('getJoiSchemaForAttributes', () => {
       assertFail(schema, {});
     });
   });
+
+  describe('appendSchema', () => {
+
+    it('should be able to append plain objects as schemas', () => {
+      const schema = getJoiSchemaForAttributes({
+        type: { type: String, required: true },
+      }, {
+        appendSchema: {
+          count: Joi.number().required(),
+        }
+      });
+      assertFail(schema, { type: 'foo' });
+      assertPass(schema, { type: 'foo', count: 10 });
+    });
+
+    it('should be able to merge Joi schemas', () => {
+      const schema = getJoiSchemaForAttributes({
+        type: { type: String, required: true },
+        count: { type: Number, required: true },
+      }, {
+        appendSchema: Joi.object({
+          count: Joi.number().optional(),
+        })
+      });
+      assertPass(schema, { type: 'foo' });
+      assertPass(schema, { type: 'foo', count: 10 });
+    });
+  });
 });
 
 describe('getMongooseValidator', () => {

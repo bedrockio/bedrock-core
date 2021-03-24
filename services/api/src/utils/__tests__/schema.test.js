@@ -516,6 +516,29 @@ describe('validation', () => {
         foo: 'bar',
       });
     });
+
+    it('should be able to append schemas', () => {
+      const User = createTestModel(
+        createSchema({
+          name: {
+            type: String,
+            required: true,
+          },
+        })
+      );
+      const schema = User.getCreateValidation({
+        count: Joi.number().required(),
+      });
+      expect(Joi.isSchema(schema)).toBe(true);
+      assertFail(schema, {
+        name: 'foo',
+      });
+      assertPass(schema, {
+        name: 'foo',
+        count: 10,
+      });
+    });
+
   });
 
   describe('update validation', () => {

@@ -102,8 +102,7 @@ router
   .post(
     '/',
     validate({
-      // TODO: can this somehow mix in plain objects?
-      body: User.getCreateValidation().append({
+      body: User.getCreateValidation({
         password: passwordField.required(),
       }),
     }),

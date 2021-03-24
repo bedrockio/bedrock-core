@@ -41,19 +41,21 @@ function createSchema(attributes = {}, options = {}) {
     }
   );
 
-  schema.static('getCreateValidation', function getCreateValidation() {
+  schema.static('getCreateValidation', function getCreateValidation(appendSchema) {
     return getJoiSchemaForAttributes(attributes, {
       disallowField: (key) => {
         return isDisallowedField(this, key);
       },
+      appendSchema,
     });
   });
 
-  schema.static('getUpdateValidation', function getUpdateValidation() {
+  schema.static('getUpdateValidation', function getUpdateValidation(appendSchema) {
     return getJoiSchemaForAttributes(attributes, {
       disallowField: (key) => {
         return isDisallowedField(this, key);
       },
+      appendSchema,
       stripFields: RESERVED_FIELDS,
       skipRequired: true,
     });

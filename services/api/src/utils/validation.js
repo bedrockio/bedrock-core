@@ -3,7 +3,16 @@ const Joi = require('joi');
 const EMAIL_SCHEMA = Joi.string().lowercase().email().required();
 
 function getJoiSchemaForAttributes(attributes, options = {}) {
-  return getObjectSchema(attributes, options).min(1);
+  let { appendSchema } = options;
+  let schema = getObjectSchema(attributes, options).min(1);
+  if (appendSchema) {
+    if (Joi.isSchema(appendSchema)) {
+      schema = schema.concat(appendSchema);
+    } else {
+      schema = schema.append(appendSchema);
+    }
+  }
+  return schema;
 }
 
 function getMongooseValidator(type) {
