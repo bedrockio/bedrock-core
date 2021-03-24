@@ -4,6 +4,7 @@ const { uniqueId } = require('lodash');
 const context = require('./context');
 const request = require('./request');
 const { flags } = require('../database');
+const { logger } = require('../logging');
 
 const { loadModelDir } = require('./../schema');
 const models = loadModelDir(__dirname + '/../../models');
@@ -18,7 +19,7 @@ async function setupDb() {
 
   await mongoose.connect(mongoURL, flags, (err) => {
     if (err) {
-      console.error(err);
+      logger.error(err);
       process.exit(1);
     }
   });

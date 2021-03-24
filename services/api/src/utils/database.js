@@ -1,5 +1,6 @@
 const config = require('@bedrockio/config');
 const mongoose = require('mongoose');
+const { logger } = require('./logging');
 
 mongoose.Promise = Promise;
 
@@ -21,9 +22,11 @@ exports.flags = flags;
 exports.initialize = async function initialize() {
   await mongoose.connect(config.get('MONGO_URI'), flags);
   const db = mongoose.connection;
-  db.on('error', console.error.bind(console, 'connection error:'));
+  db.on('error', () => {
+    logger.error('connection error');
+  });
   db.once('open', () => {
-    console.info('mongodb connected');
+    logger.info('mongodb connected');
   });
   return db;
 };

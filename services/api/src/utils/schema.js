@@ -4,6 +4,7 @@ const path = require('path');
 const { startCase, omitBy } = require('lodash');
 const { ObjectId } = mongoose.Schema.Types;
 const { getValidatorForDefinition } = require('./validator');
+const { logger } = require('./logging');
 
 const RESERVED_FIELDS = ['id', 'createdAt', 'updatedAt', 'deletedAt'];
 
@@ -120,8 +121,8 @@ function loadModelDir(dirPath) {
           loadModel(definition, modelName);
         }
       } catch (error) {
-        console.error(`Could not load model definition: ${filePath}`);
-        console.error(error);
+        logger.error(`Could not load model definition: ${filePath}`);
+        logger.error(error);
       }
     }
   }

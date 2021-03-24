@@ -60,7 +60,7 @@ const createFixtures = async () => {
     ...adminConfig,
     roles: [{ scope: 'global', role: 'superAdmin' }],
   });
-  console.info(`Added admin user ${adminUser.email} to database`);
+  logger.info(`Added admin user ${adminUser.email} to database`);
 
   const shop = await Shop.create({
     name: 'Demo',
