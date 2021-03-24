@@ -159,13 +159,15 @@ describe('/1/users', () => {
       const dbUser = await User.findById(user1.id);
       expect(dbUser.name).toEqual('new name');
     });
+
     it('should deny access to non-admins', async () => {
       const user = await createUser({});
       const user1 = await createUser({ name: 'new name' });
       const response = await request('PATCH', `/1/users/${user1.id}`, { name: 'new name' }, { user });
       expect(response.status).toBe(401);
     });
-    it('be able to update user roles', async () => {
+
+    it('should be able to update user roles', async () => {
       const admin = await createUserWithRole('global', 'superAdmin');
       const user1 = await createUser({ name: 'new name' });
       const response = await request(
