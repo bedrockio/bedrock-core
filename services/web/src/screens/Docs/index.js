@@ -103,7 +103,7 @@ export default class Docs extends React.Component {
       <React.Fragment>
         <Container>
           <Breadcrumb size="big">
-            <Breadcrumb.Section link as={Link} to="/">
+            <Breadcrumb.Section link as={Link} to="/docs">
               API Docs
             </Breadcrumb.Section>
             <Breadcrumb.Divider icon="chevron-right" />

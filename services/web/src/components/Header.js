@@ -38,6 +38,9 @@ export default class Header extends React.Component {
                   <Dropdown.Item as={Link} to="/docs/getting-started">
                     API Docs
                   </Dropdown.Item>
+                  <Dropdown.Item as={Link} to="/components">
+                    Components
+                  </Dropdown.Item>
                   <Protected endpoint="events">
                     <Dropdown.Item as={Link} to="/users">
                       Users

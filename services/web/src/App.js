@@ -7,6 +7,7 @@ import { AuthSwitch, Protected } from 'helpers/routes';
 
 import Dashboard from 'screens/Dashboard';
 import Docs from 'screens/Docs';
+import Components from 'screens/Components';
 import Invites from 'screens/Invites';
 import NotFound from 'screens/NotFound';
 import Settings from 'screens/Settings';
@@ -28,6 +29,7 @@ const App = () => (
     <Protected path="/invites" allowed={Invites} exact />
     <Protected path="/users/:id?" allowed={Users} />
     <Protected path="/docs/:id?" allowed={Docs} />
+    <Protected path="/components" allowed={Components} exact />
     <Route path="/logout" component={Logout} exact />
     <AuthSwitch
       path="/login"
