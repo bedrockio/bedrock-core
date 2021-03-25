@@ -11,16 +11,27 @@ const serializeOptions = {
   getters: true,
   versionKey: false,
   transform: (doc, ret, options) => {
-    for (let key of Object.keys(ret)) {
-      // Omit any key with a private prefix "_" or marked
-      // "access": "private" in the schema. Note that virtuals are
-      // excluded by default so they don't need to be removed.
-      if (key[0] === '_' || isDisallowedField(doc, key, options.private)) {
-        delete ret[key];
-      }
-    }
+    transformField(ret, doc.schema.obj, options);
   },
 };
+
+function transformField(obj, schema, options) {
+  if (Array.isArray(obj)) {
+    for (let el of obj) {
+      transformField(el, schema[0], options);
+    }
+  } else if (obj && typeof obj === 'object') {
+    for (let [key, val] of Object.entries(obj)) {
+      // Omit any key with a private prefix "_" or marked
+      // "access": "private" in the schema.
+      if (key[0] === '_' || isDisallowedField(schema[key], options.private)) {
+        delete obj[key];
+      } else if (schema[key]) {
+        transformField(val, schema[key], options);
+      }
+    }
+  }
+}
 
 function createSchema(definition, options = {}) {
   const schema = new mongoose.Schema(
@@ -43,7 +54,7 @@ function createSchema(definition, options = {}) {
   schema.static('getValidator', function getValidator() {
     return getValidatorForDefinition(definition, {
       disallowField: (key) => {
-        return isDisallowedField(this, key);
+        return isDisallowedField(this.schema.obj[key]);
       },
     });
   });
@@ -51,7 +62,7 @@ function createSchema(definition, options = {}) {
   schema.static('getPatchValidator', function getPatchValidator() {
     return getValidatorForDefinition(definition, {
       disallowField: (key) => {
-        return isDisallowedField(this, key);
+        return isDisallowedField(this.schema.obj[key]);
       },
       stripFields: RESERVED_FIELDS,
       skipRequired: true,
@@ -60,10 +71,10 @@ function createSchema(definition, options = {}) {
 
   schema.methods.assign = function assign(fields) {
     fields = omitBy(fields, (value, key) => {
-      return isDisallowedField(this, key) || RESERVED_FIELDS.includes(key);
+      return isDisallowedField(this.schema.obj[key]) || RESERVED_FIELDS.includes(key);
     });
     for (let [key, value] of Object.entries(fields)) {
-      if (!value && isReferenceField(this, key)) {
+      if (!value && isReferenceField(this.schema.obj[key])) {
         value = undefined;
       }
       this[key] = value;
@@ -78,22 +89,19 @@ function createSchema(definition, options = {}) {
   return schema;
 }
 
-function getField(doc, key) {
-  const field = doc.schema.obj[key];
-  return Array.isArray(field) ? field[0] : field;
+function isReferenceField(schema) {
+  return resolveSchema(schema)?.type === ObjectId;
 }
 
-function isReferenceField(doc, key) {
-  const field = getField(doc, key);
-  return field.type === ObjectId;
-}
-
-function isDisallowedField(doc, key, allowPrivate = false) {
-  const field = getField(doc, key);
-  if (field && field.access === 'private') {
+function isDisallowedField(schema, allowPrivate = false) {
+  if (resolveSchema(schema)?.access === 'private') {
     return !allowPrivate;
   }
   return false;
+}
+
+function resolveSchema(schema) {
+  return Array.isArray(schema) ? schema[0] : schema;
 }
 
 function loadModel(definition, name) {
