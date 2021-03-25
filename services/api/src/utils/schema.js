@@ -51,12 +51,15 @@ function createSchema(attributes = {}, options = {}) {
   });
 
   schema.static('getUpdateValidation', function getUpdateValidation(appendSchema) {
+    const getters = Object.keys(schema.virtuals).filter((key) => {
+      return schema.virtuals[key].getters.length > 0;
+    });
     return getJoiSchemaForAttributes(attributes, {
       disallowField: (key) => {
         return isDisallowedField(this, key);
       },
       appendSchema,
-      stripFields: RESERVED_FIELDS,
+      stripFields: [...RESERVED_FIELDS, ...getters],
       skipRequired: true,
     });
   });

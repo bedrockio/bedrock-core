@@ -269,7 +269,6 @@ describe('createSchema', () => {
       data = JSON.parse(JSON.stringify(shop));
       expect(data.users).toEqual([]);
     });
-
   });
 
   describe('autopopulate', () => {
@@ -411,10 +410,12 @@ describe('createSchema', () => {
       let user;
       const User = createTestModel(
         createSchema({
-          emails: [{
-            type: String,
-            validate: 'email',
-          }],
+          emails: [
+            {
+              type: String,
+              validate: 'email',
+            },
+          ],
         })
       );
 
@@ -538,7 +539,6 @@ describe('validation', () => {
         count: 10,
       });
     });
-
   });
 
   describe('update validation', () => {
@@ -582,6 +582,30 @@ describe('validation', () => {
         createdAt: 'createdAt',
         updatedAt: 'updatedAt',
         deletedAt: 'deletedAt',
+      });
+    });
+
+    it('should strip virtuals', () => {
+      const userSchema = createSchema({
+        name: {
+          type: String,
+          required: true,
+        },
+      });
+      userSchema.virtual('bar').get(() => {
+        return 'bar';
+      });
+      const User = createTestModel(userSchema);
+      const schema = User.getUpdateValidation();
+      const obj = {
+        name: 'foo',
+        bar: 'bar',
+      };
+      assertPass(schema, obj);
+      expect(schema.validate(obj)).toEqual({
+        value: {
+          name: 'foo',
+        },
       });
     });
 
