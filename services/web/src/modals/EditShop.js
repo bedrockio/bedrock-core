@@ -62,10 +62,7 @@ export default class EditShop extends React.Component {
         await request({
           method: 'PATCH',
           path: `/1/shops/${shop.id}`,
-          body: {
-            ...shop,
-            categories: shop.categories.map((c) => c.id),
-          },
+          body: shop,
         });
       } else {
         await request({
