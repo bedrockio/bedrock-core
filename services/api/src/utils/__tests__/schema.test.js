@@ -387,7 +387,7 @@ describe('createSchema', () => {
 
   describe('mongoose validation shortcuts', () => {
 
-    it.only('should validate an email field', () => {
+    it('should validate an email field', () => {
       let user;
       const User = createTestModel(
         createSchema({
