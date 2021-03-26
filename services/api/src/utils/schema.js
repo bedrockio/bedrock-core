@@ -92,7 +92,7 @@ function attributesToDefinition(attributes) {
 
   for (let [key, val] of Object.entries(attributes)) {
     if (isSchemaType) {
-      if (typeof val === 'string' && key === 'validate') {
+      if (key === 'validate' && typeof val === 'string') {
         // Map string shortcuts to mongoose validators such as "email".
         val = getMongooseValidator(val);
       }
