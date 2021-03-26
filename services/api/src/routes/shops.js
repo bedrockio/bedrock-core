@@ -1,8 +1,6 @@
 const Router = require('@koa/router');
-const Joi = require('joi');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
-const { searchValidation, getSearchQuery, search } = require('../utils/search');
 const { NotFoundError } = require('../utils/errors');
 const { Shop } = require('../models');
 
@@ -37,34 +35,11 @@ router
   })
   .post(
     '/search',
-    validateBody({
-      // --- Generator: search
-      name: Joi.string(),
-      country: Joi.string(),
-      category: Joi.string(),
-      // --- Generator: end
-      ...searchValidation(),
-    }),
+    validateBody(
+      Shop.getSearchValidation(),
+    ),
     async (ctx) => {
-      const { body } = ctx.request;
-      const query = getSearchQuery(body, {
-        keywordFields: ['name'],
-      });
-
-      // --- Generator: vars
-      const { country, category } = ctx.request.body;
-      // --- Generator: end
-
-      // --- Generator: queries
-      if (country) {
-        query.country = country;
-      }
-      if (category) {
-        query.categories = category;
-      }
-      // --- Generator: end
-
-      const { data, meta } = await search(Shop, query, body);
+      const { data, meta } = await Shop.search(ctx.request.body);
       ctx.body = {
         data,
         meta,

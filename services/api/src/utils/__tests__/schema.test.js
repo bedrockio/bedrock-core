@@ -387,7 +387,7 @@ describe('createSchema', () => {
 
   describe('mongoose validation shortcuts', () => {
 
-    it.only('should validate an email field', () => {
+    it('should validate an email field', () => {
       let user;
       const User = createTestModel(
         createSchema({
@@ -531,7 +531,7 @@ describe('validation', () => {
     }).toThrow();
   }
 
-  describe('create validation', () => {
+  describe('getCreateValidation', () => {
     it('should get a basic Joi create schema', () => {
       const User = createTestModel(
         createSchema({
@@ -587,7 +587,7 @@ describe('validation', () => {
 
   });
 
-  describe('update validation', () => {
+  describe('getUpdateValidation', () => {
     it('should skip required fields', () => {
       const User = createTestModel(
         createSchema({
@@ -651,4 +651,120 @@ describe('validation', () => {
       });
     });
   });
+
+  describe('getSearchValidation', () => {
+    it('should get a basic search schema allowing empty', () => {
+      const User = createTestModel(
+        createSchema({
+          name: {
+            type: String,
+            required: true,
+          },
+        })
+      );
+      const schema = User.getSearchValidation();
+      expect(Joi.isSchema(schema)).toBe(true);
+      assertPass(schema, {
+        name: 'foo',
+      });
+      assertPass(schema, {});
+    });
+
+    it('should mixin default search schema', () => {
+      const User = createTestModel(
+        createSchema({
+          name: {
+            type: String,
+            required: true,
+          },
+        })
+      );
+      const schema = User.getSearchValidation();
+      assertPass(schema, {
+        name: 'foo',
+        keyword: 'keyword',
+        startAt: '2020-01-01T00:00:00',
+        endAt: '2020-01-01T00:00:00',
+        skip: 1,
+        limit: 5,
+        sort: {
+          field: 'createdAt',
+          order: 'desc',
+        },
+        // TODO: validate better?
+        ids: ['12345'],
+      });
+    });
+  });
+
+  describe('search', () => {
+
+    it('should search on name', async () => {
+      const User = createTestModel(
+        createSchema({
+          name: {
+            type: String,
+            required: true,
+          },
+        })
+      );
+      await Promise.all([
+        User.create({ name: 'Billy' }),
+        User.create({ name: 'Willy' }),
+      ]);
+      const { data, meta } = await User.search({ name: 'Billy' });
+      expect(data.length).toBe(1);
+      expect(data[0].name).toBe('Billy');
+      expect(meta.total).toBe(1);
+      expect(meta.skip).toBeUndefined();
+      expect(meta.limit).toBeUndefined();
+    });
+
+    it('should search on name as a keyword', async () => {
+      const User = createTestModel(
+        createSchema({
+          name: {
+            type: String,
+            required: true,
+          },
+        })
+      );
+      await Promise.all([
+        User.create({ name: 'Billy' }),
+        User.create({ name: 'Willy' }),
+      ]);
+      const { data, meta } = await User.search({ keyword: 'billy' });
+      expect(data.length).toBe(1);
+      expect(data[0].name).toBe('Billy');
+      expect(meta.total).toBe(1);
+    });
+
+    it('should search on an array field', async () => {
+      const User = createTestModel(
+        createSchema({
+          categories: [{
+            type: String,
+          }],
+        })
+      );
+      const [user1, user2] = await Promise.all([
+        User.create({ categories: ['owner', 'member'] }),
+        User.create({ categories: ['owner'] }),
+      ]);
+
+      let result;
+      result = await User.search({ categories: ['member'] });
+      expect(result.data.length).toBe(1);
+      expect(result.data[0].id).toBe(user1.id);
+      expect(result.meta.total).toBe(1);
+
+      result = await User.search({ categories: [] });
+      expect(result.data.length).toBe(2);
+      expect(result.data[0].id).toBe(user1.id);
+      expect(result.data[1].id).toBe(user2.id);
+      expect(result.meta.total).toBe(2);
+    });
+
+  });
+
 });

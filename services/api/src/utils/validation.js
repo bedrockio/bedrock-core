@@ -5,8 +5,11 @@ const FIXED_SCHEMAS = {
 };
 
 function getJoiSchema(attributes, options = {}) {
-  const { appendSchema } = options;
-  let schema = getObjectSchema(attributes, options).min(1);
+  const { appendSchema, skipEmptyCheck } = options;
+  let schema = getObjectSchema(attributes, options);
+  if (!skipEmptyCheck) {
+    schema = schema.min(1);
+  }
   if (appendSchema) {
     if (Joi.isSchema(appendSchema)) {
       schema = schema.concat(appendSchema);
@@ -96,10 +99,7 @@ function getSchemaForField(field, options = {}) {
 }
 
 function getSchemaForType(type) {
-  if (typeof type === 'function') {
-    type = type.name;
-  }
-  switch (type) {
+  switch (getCoercedSchemaType(type)) {
     case 'String':
       return Joi.string();
     case 'Number':
@@ -109,10 +109,19 @@ function getSchemaForType(type) {
     case 'Date':
       return Joi.date().iso();
     case 'ObjectId':
+      // TODO: derive this from ObjectId.isValid
       return Joi.string().hex().length(24);
     default:
       throw new TypeError(`Unknown schema type ${type}`);
   }
+}
+
+function getCoercedSchemaType(type) {
+  // Allow both "String" and String.
+  if (typeof type === 'function') {
+    type = type.name;
+  }
+  return type;
 }
 
 function normalizeField(field) {
@@ -132,5 +141,6 @@ function normalizeField(field) {
 
 module.exports = {
   getJoiSchema,
+  getCoercedSchemaType,
   getMongooseValidator,
 };

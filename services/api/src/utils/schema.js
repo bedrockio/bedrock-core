@@ -1,9 +1,14 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
-const { startCase, omitBy, isPlainObject } = require('lodash');
-const { ObjectId } = mongoose.Schema.Types;
-const { getJoiSchema, getMongooseValidator } = require('./validation');
+const { startCase, omitBy, escapeRegExp, isPlainObject } = require('lodash');
+
+// TODO: make this less dumb
+const { ObjectId: ObjectIdSchemaType } = mongoose.Schema.Types;
+const { ObjectId } = mongoose.Types;
+
+const { getJoiSchema, getMongooseValidator, getCoercedSchemaType } = require('./validation');
+const { searchValidation } = require('./search');
 
 const RESERVED_FIELDS = ['id', 'createdAt', 'updatedAt', 'deletedAt'];
 
@@ -61,6 +66,101 @@ function createSchema(attributes = {}, options = {}) {
     });
   });
 
+  schema.static('getSearchValidation', function getSearchValidation(searchOptions, appendSchema) {
+    return getJoiSchema(attributes, {
+      disallowField: (key) => {
+        return isDisallowedField(this, key);
+      },
+      stripFields: RESERVED_FIELDS,
+      skipRequired: true,
+      skipEmptyCheck: true,
+      appendSchema: {
+        ...searchValidation(searchOptions),
+        ...appendSchema,
+      }
+    });
+  });
+
+  function getKeywordFields() {
+    return Object.keys(attributes)
+      .filter((key) => {
+        let field = attributes[key];
+        // TODO: consolidate with getField later
+        field = Array.isArray(field) ? field[0] : field;
+        return getCoercedSchemaType(field.type) === 'String';
+      });
+  }
+
+  schema.static('search', async function search(body) {
+    let { ids, keyword, startAt, endAt, sort, skip, limit, ...rest } = body;
+    const query = {
+      deletedAt: {
+        $exists: false
+      }
+    };
+    if (ids?.length) {
+      query._id = { $in: ids };
+    }
+    if (keyword) {
+      const or = [];
+      const keywordFields = getKeywordFields();
+      if (keywordFields.length) {
+        const reg = RegExp(escapeRegExp(keyword), 'i');
+        for (let field of keywordFields) {
+          or.push({
+            [field]: reg,
+          });
+        }
+      }
+      if (ObjectId.isValid(keyword)) {
+        or.push({
+          _id: keyword,
+        });
+      }
+      if (or.length) {
+        query.$or = or;
+      }
+    }
+    if (startAt || endAt) {
+      query.createdAt = {};
+      if (startAt) {
+        query.createdAt.$gte = startAt;
+      }
+      if (endAt) {
+        query.createdAt.$lte = endAt;
+      }
+    }
+    for (let [key, value] of Object.entries(rest)) {
+      // TODO: is this logic ok? If searching on `categories: []`
+      // does this mean return everything or nothing matching categories?
+      if (Array.isArray(value)) {
+        if (value.length) {
+          query[key] = { $in: value };
+        }
+      } else if (value) {
+        query[key] = value;
+      }
+    }
+
+    const [data, total] = await Promise.all([
+      this
+      .find(query)
+      .sort(sort && { [sort.field]: sort.order === 'desc' ? -1 : 1 })
+      .skip(skip)
+      .limit(limit),
+      this.countDocuments(query)
+    ]);
+
+    return {
+      data,
+      meta: {
+        total,
+        skip,
+        limit,
+      },
+    };
+  });
+
   schema.methods.assign = function assign(fields) {
     fields = omitBy(fields, (value, key) => {
       return isDisallowedField(this, key) || RESERVED_FIELDS.includes(key);
@@ -115,7 +215,7 @@ function getField(doc, key) {
 
 function isReferenceField(doc, key) {
   const field = getField(doc, key);
-  return field.type === ObjectId;
+  return field.type === ObjectIdSchemaType;
 }
 
 function isDisallowedField(doc, key, allowPrivate = false) {
