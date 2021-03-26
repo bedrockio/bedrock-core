@@ -14,8 +14,7 @@ const router = new Router();
 
 const passwordField = Joi.string()
   .min(6)
-  .message('Your password must be at least 6 characters long. Please try another.')
-  .required()
+  .message('Your password must be at least 6 characters long. Please try another.');
 
 router
   .use(authenticate({ type: 'user' }))
@@ -99,9 +98,9 @@ router
   .post(
     '/',
     validateBody(
-      User.getCreateValidation().append({
+      User.getCreateValidation({
         password: passwordField.required(),
-      }),
+      })
     ),
     async (ctx) => {
       const { email } = ctx.request.body;
@@ -116,18 +115,14 @@ router
       };
     }
   )
-  .patch(
-    '/:userId',
-    validateBody(User.getUpdateValidation()),
-    async (ctx) => {
-      const { user } = ctx.state;
-      user.assign(ctx.request.body);
-      await user.save();
-      ctx.body = {
-        data: user,
-      };
-    }
-  )
+  .patch('/:userId', validateBody(User.getUpdateValidation()), async (ctx) => {
+    const { user } = ctx.state;
+    user.assign(ctx.request.body);
+    await user.save();
+    ctx.body = {
+      data: user,
+    };
+  })
   .delete('/:userId', async (ctx) => {
     const { user } = ctx.state;
     await user.delete();

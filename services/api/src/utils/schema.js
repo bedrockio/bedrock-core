@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const { startCase, omitBy, isPlainObject } = require('lodash');
 const { ObjectId } = mongoose.Schema.Types;
-const { getJoiSchemaForAttributes, getMongooseValidator } = require('./validation');
+const { getJoiSchema, getMongooseValidator } = require('./validation');
 
 const RESERVED_FIELDS = ['id', 'createdAt', 'updatedAt', 'deletedAt'];
 
@@ -42,7 +42,7 @@ function createSchema(attributes = {}, options = {}) {
   );
 
   schema.static('getCreateValidation', function getCreateValidation(appendSchema) {
-    return getJoiSchemaForAttributes(attributes, {
+    return getJoiSchema(attributes, {
       disallowField: (key) => {
         return isDisallowedField(this, key);
       },
@@ -51,7 +51,7 @@ function createSchema(attributes = {}, options = {}) {
   });
 
   schema.static('getUpdateValidation', function getUpdateValidation(appendSchema) {
-    return getJoiSchemaForAttributes(attributes, {
+    return getJoiSchema(attributes, {
       disallowField: (key) => {
         return isDisallowedField(this, key);
       },
@@ -93,8 +93,8 @@ function attributesToDefinition(attributes) {
   for (let [key, val] of Object.entries(attributes)) {
     if (isSchemaType) {
       if (key === 'validate' && typeof val === 'string') {
-        // Map string shortcuts to mongoose validators such as "email".
-        val = getMongooseValidator(val, attributes.required);
+        // Allow custom mongoose validation function that derives from the Joi schema.
+        val = getMongooseValidator(attributes);
       }
     } else {
       if (Array.isArray(val)) {

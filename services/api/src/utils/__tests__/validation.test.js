@@ -1,4 +1,4 @@
-const { getJoiSchemaForAttributes, getMongooseValidator } = require('../validation');
+const { getJoiSchema, getMongooseValidator } = require('../validation');
 const { setupDb, teardownDb } = require('../../utils/testing');
 const Joi = require('joi');
 
@@ -21,31 +21,31 @@ function assertFail(schema, obj) {
   }).toThrow();
 }
 
-describe('getJoiSchemaForAttributes', () => {
+describe('getJoiSchema', () => {
   describe('alternate type forms', () => {
     it('should get a schema for a basic string field', () => {
-      const schema = getJoiSchemaForAttributes({
+      const schema = getJoiSchema({
         name: { type: String },
       });
       expect(Joi.isSchema(schema)).toBe(true);
     });
 
     it('should get a schema for shorthand string field', () => {
-      const schema = getJoiSchemaForAttributes({
+      const schema = getJoiSchema({
         name: String,
       });
       expect(Joi.isSchema(schema)).toBe(true);
     });
 
     it('should get a schema for string type', () => {
-      const schema = getJoiSchemaForAttributes({
+      const schema = getJoiSchema({
         name: { type: 'String' },
       });
       expect(Joi.isSchema(schema)).toBe(true);
     });
 
     it('should get a schema for shorthand string type', () => {
-      const schema = getJoiSchemaForAttributes({
+      const schema = getJoiSchema({
         name: 'String',
       });
       expect(Joi.isSchema(schema)).toBe(true);
@@ -54,14 +54,14 @@ describe('getJoiSchemaForAttributes', () => {
 
   describe('basic functionality', () => {
     it('should always fail if no keys set', () => {
-      const schema = getJoiSchemaForAttributes({
+      const schema = getJoiSchema({
         name: String,
       });
       assertFail(schema, {});
     });
 
     it('should be able to strip specific fields', () => {
-      const schema = getJoiSchemaForAttributes(
+      const schema = getJoiSchema(
         {
           name: String,
         },
@@ -76,7 +76,7 @@ describe('getJoiSchemaForAttributes', () => {
     });
 
     it('should be able to override required fields', () => {
-      const schema = getJoiSchemaForAttributes(
+      const schema = getJoiSchema(
         {
           name: {
             type: String,
@@ -99,7 +99,7 @@ describe('getJoiSchemaForAttributes', () => {
 
   describe('global options', () => {
     it('should validate a required field', () => {
-      const schema = getJoiSchemaForAttributes({
+      const schema = getJoiSchema({
         name: {
           type: String,
           required: true,
@@ -112,7 +112,7 @@ describe('getJoiSchemaForAttributes', () => {
 
   describe('string fields', () => {
     it('should validate an enum field', () => {
-      const schema = getJoiSchemaForAttributes({
+      const schema = getJoiSchema({
         name: {
           type: String,
           enum: ['foo', 'bar'],
@@ -124,7 +124,7 @@ describe('getJoiSchemaForAttributes', () => {
     });
 
     it('should validate minimum length', () => {
-      const schema = getJoiSchemaForAttributes({
+      const schema = getJoiSchema({
         name: {
           type: String,
           minLength: 3,
@@ -135,7 +135,7 @@ describe('getJoiSchemaForAttributes', () => {
     });
 
     it('should validate maximum length', () => {
-      const schema = getJoiSchemaForAttributes({
+      const schema = getJoiSchema({
         name: {
           type: String,
           maxLength: 3,
@@ -146,7 +146,7 @@ describe('getJoiSchemaForAttributes', () => {
     });
 
     it('should validate minimum and maximum length together', () => {
-      const schema = getJoiSchemaForAttributes({
+      const schema = getJoiSchema({
         name: {
           type: String,
           minLength: 3,
@@ -159,7 +159,7 @@ describe('getJoiSchemaForAttributes', () => {
     });
 
     it('should validate a matched field', () => {
-      const schema = getJoiSchemaForAttributes({
+      const schema = getJoiSchema({
         name: {
           type: String,
           match: /^foo$/,
@@ -170,7 +170,7 @@ describe('getJoiSchemaForAttributes', () => {
     });
 
     it('should convert string match field to regex', () => {
-      const schema = getJoiSchemaForAttributes({
+      const schema = getJoiSchema({
         name: {
           type: 'String',
           match: '^foo$',
@@ -183,7 +183,7 @@ describe('getJoiSchemaForAttributes', () => {
 
   describe('number fields', () => {
     it('should validate an enum field', () => {
-      const schema = getJoiSchemaForAttributes({
+      const schema = getJoiSchema({
         count: {
           type: Number,
           enum: [100, 1000],
@@ -195,7 +195,7 @@ describe('getJoiSchemaForAttributes', () => {
     });
 
     it('should validate a minimum value', () => {
-      const schema = getJoiSchemaForAttributes({
+      const schema = getJoiSchema({
         count: {
           type: Number,
           min: 100,
@@ -206,7 +206,7 @@ describe('getJoiSchemaForAttributes', () => {
     });
 
     it('should validate maximum value', () => {
-      const schema = getJoiSchemaForAttributes({
+      const schema = getJoiSchema({
         count: {
           type: Number,
           max: 100,
@@ -217,7 +217,7 @@ describe('getJoiSchemaForAttributes', () => {
     });
 
     it('should validate minimum and maximum together', () => {
-      const schema = getJoiSchemaForAttributes({
+      const schema = getJoiSchema({
         count: {
           type: Number,
           min: 100,
@@ -233,7 +233,7 @@ describe('getJoiSchemaForAttributes', () => {
 
   describe('boolean fields', () => {
     it('should validate boolean field', () => {
-      const schema = getJoiSchemaForAttributes({
+      const schema = getJoiSchema({
         isActive: Boolean,
       });
       assertPass(schema, { isActive: true });
@@ -243,7 +243,7 @@ describe('getJoiSchemaForAttributes', () => {
 
   describe('date fields', () => {
     it('should validate date ISO-8601 field', () => {
-      const schema = getJoiSchemaForAttributes({
+      const schema = getJoiSchema({
         posted: Date,
       });
       assertPass(schema, { posted: '2020-01-01T00:00:00Z' });
@@ -254,7 +254,7 @@ describe('getJoiSchemaForAttributes', () => {
 
   describe('reference fields', () => {
     it('should validate an ObjectId reference field', () => {
-      const schema = getJoiSchemaForAttributes({
+      const schema = getJoiSchema({
         image: {
           type: 'ObjectId',
           ref: 'Upload',
@@ -267,7 +267,7 @@ describe('getJoiSchemaForAttributes', () => {
 
   describe('array fields', () => {
     it('should validate array of strings', () => {
-      const schema = getJoiSchemaForAttributes({
+      const schema = getJoiSchema({
         categories: [
           {
             type: String,
@@ -280,7 +280,7 @@ describe('getJoiSchemaForAttributes', () => {
     });
 
     it('should validate array type shortcut syntax', () => {
-      const schema = getJoiSchemaForAttributes({
+      const schema = getJoiSchema({
         categories: [String],
       });
       assertPass(schema, { categories: ['foo'] });
@@ -289,7 +289,7 @@ describe('getJoiSchemaForAttributes', () => {
     });
 
     it('should validate array of object ids', () => {
-      const schema = getJoiSchemaForAttributes({
+      const schema = getJoiSchema({
         categories: [
           {
             type: 'ObjectId',
@@ -302,7 +302,7 @@ describe('getJoiSchemaForAttributes', () => {
     });
 
     it('should validate minimum number of elements for required array field', () => {
-      const schema = getJoiSchemaForAttributes({
+      const schema = getJoiSchema({
         categories: [
           {
             type: String,
@@ -316,7 +316,7 @@ describe('getJoiSchemaForAttributes', () => {
     });
 
     it('should validate nested object array', () => {
-      const schema = getJoiSchemaForAttributes({
+      const schema = getJoiSchema({
         roles: [
           {
             role: { type: 'String', required: true },
@@ -373,7 +373,7 @@ describe('getJoiSchemaForAttributes', () => {
 
   describe('nested fields', () => {
     it('should validate nested field', () => {
-      const schema = getJoiSchemaForAttributes({
+      const schema = getJoiSchema({
         counts: {
           view: Number,
         },
@@ -383,7 +383,7 @@ describe('getJoiSchemaForAttributes', () => {
     });
 
     it('should validate explicit mixed type', () => {
-      const schema = getJoiSchemaForAttributes({
+      const schema = getJoiSchema({
         counts: {
           type: 'Mixed',
           view: Number,
@@ -394,38 +394,43 @@ describe('getJoiSchemaForAttributes', () => {
     });
 
     it('should validate mixed with nested type object', () => {
-      const schema = getJoiSchemaForAttributes({
+      const schema = getJoiSchema({
         type: { type: String, required: true },
       });
       assertPass(schema, { type: 'foo' });
-      assertFail(schema, { type: { type: 'foo' }});
+      assertFail(schema, { type: { type: 'foo' } });
       assertFail(schema, {});
     });
   });
 
   describe('appendSchema', () => {
-
     it('should be able to append plain objects as schemas', () => {
-      const schema = getJoiSchemaForAttributes({
-        type: { type: String, required: true },
-      }, {
-        appendSchema: {
-          count: Joi.number().required(),
+      const schema = getJoiSchema(
+        {
+          type: { type: String, required: true },
+        },
+        {
+          appendSchema: {
+            count: Joi.number().required(),
+          },
         }
-      });
+      );
       assertFail(schema, { type: 'foo' });
       assertPass(schema, { type: 'foo', count: 10 });
     });
 
     it('should be able to merge Joi schemas', () => {
-      const schema = getJoiSchemaForAttributes({
-        type: { type: String, required: true },
-        count: { type: Number, required: true },
-      }, {
-        appendSchema: Joi.object({
-          count: Joi.number().optional(),
-        })
-      });
+      const schema = getJoiSchema(
+        {
+          type: { type: String, required: true },
+          count: { type: Number, required: true },
+        },
+        {
+          appendSchema: Joi.object({
+            count: Joi.number().optional(),
+          }),
+        }
+      );
       assertPass(schema, { type: 'foo' });
       assertPass(schema, { type: 'foo', count: 10 });
     });
@@ -434,8 +439,29 @@ describe('getJoiSchemaForAttributes', () => {
 
 describe('getMongooseValidator', () => {
   it('should get an email validator', () => {
-    const emailValidator = getMongooseValidator('email');
+    const field = {
+      type: 'String',
+      validate: 'email',
+    };
+    const emailValidator = getMongooseValidator(field);
     expect(emailValidator('foo@bar.com')).toBe(true);
+    expect(emailValidator('')).toBe(true);
+    expect(() => {
+      emailValidator('bad@email');
+    }).toThrow();
+  });
+
+  it('should require an email when the schema is required', () => {
+    const field = {
+      type: 'String',
+      validate: 'email',
+      required: true,
+    };
+    const emailValidator = getMongooseValidator(field);
+    expect(emailValidator('foo@bar.com')).toBe(true);
+    expect(() => {
+      emailValidator('');
+    }).toThrow();
     expect(() => {
       emailValidator('bad@email');
     }).toThrow();

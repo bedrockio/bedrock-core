@@ -1,8 +1,10 @@
 const Joi = require('joi');
 
-const EMAIL_SCHEMA = Joi.string().lowercase().email();
+const FIXED_SCHEMAS = {
+  email: Joi.string().lowercase().email(),
+};
 
-function getJoiSchemaForAttributes(attributes, options = {}) {
+function getJoiSchema(attributes, options = {}) {
   const { appendSchema } = options;
   let schema = getObjectSchema(attributes, options).min(1);
   if (appendSchema) {
@@ -15,11 +17,23 @@ function getJoiSchemaForAttributes(attributes, options = {}) {
   return schema;
 }
 
-function getMongooseValidator(type, required) {
-  if (type === 'email') {
-    return joiSchemaToMongooseValidator(EMAIL_SCHEMA, required);
+function getMongooseValidator(field) {
+  const schema = getSchemaForField(field);
+  return (val) => {
+    const { error } = schema.validate(val);
+    if (error) {
+      throw error;
+    }
+    return true;
+  };
+}
+
+function getFixedSchema(name) {
+  const schema = FIXED_SCHEMAS[name];
+  if (!schema) {
+    throw new Error(`Cannot find schema for ${name}.`);
   }
-  throw new Error(`No validator for ${type}.`);
+  return schema;
 }
 
 function getObjectSchema(obj, options) {
@@ -37,20 +51,35 @@ function getObjectSchema(obj, options) {
   return Joi.object(map);
 }
 
-function getSchemaForField(field, options) {
+function getSchemaForField(field, options = {}) {
   if (Array.isArray(field)) {
     return Joi.array().items(
       getSchemaForField(field[0], options)
     );
   }
-  const { type, ...rest } = normalizeField(field);
+  const { type, validate, ...rest } = normalizeField(field);
   if (type === 'Mixed') {
     return getObjectSchema(rest, options);
   }
-  let schema = getSchemaForType(type);
+  let schema;
+
+  if (validate) {
+    schema = getFixedSchema(validate);
+  } else {
+    schema = getSchemaForType(type);
+  }
+
   if (field.required && !options.skipRequired) {
     schema = schema.required();
+  } else {
+    // TODO: for now we allow both empty strings and null
+    // as a potential signal for "set but non-existent".
+    // Is this ok? Do we not want any falsy fields in the
+    // db whatsoever?
+    schema = schema.allow('', null);
   }
+
+
   if (field.enum) {
     schema = schema.valid(...field.enum);
   }
@@ -101,25 +130,7 @@ function normalizeField(field) {
   }
 }
 
-function joiSchemaToMongooseValidator(schema, required) {
-
-  // TODO: for now we allow both empty strings and null
-  // as a potential signal for "set but non-existent".
-  // Is this ok? Do we not want any falsy fields in the
-  // db whatsoever?
-
-  schema = required ? schema.required() : schema.allow('', null);
-
-  return (val) => {
-    const { error } = schema.validate(val);
-    if (error) {
-      throw error;
-    }
-    return true;
-  };
-}
-
 module.exports = {
-  getJoiSchemaForAttributes,
+  getJoiSchema,
   getMongooseValidator,
 };
