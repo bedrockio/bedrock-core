@@ -11,7 +11,7 @@ afterAll(async () => {
 
 describe('/1/invites', () => {
   describe('POST /search', () => {
-    it('it should list out invites', async () => {
+    it('should list out invites', async () => {
       const user = await createUserWithRole('global', 'superAdmin');
 
       const invite1 = await Invite.create({

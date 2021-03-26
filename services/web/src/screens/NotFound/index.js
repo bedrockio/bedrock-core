@@ -1,11 +1,10 @@
 import React from 'react';
 import { screen } from 'helpers';
-import { Container, Header } from 'semantic-ui-react';
+import { Header } from 'semantic-ui-react';
 import PageCenter from 'components/PageCenter';
 
 @screen
 export default class NotFound extends React.Component {
-
   static layout = 'none';
 
   render() {

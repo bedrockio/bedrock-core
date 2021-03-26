@@ -100,7 +100,7 @@ router
     '/',
     validateBody(
       User.getCreateValidation().append({
-        password: passwordField
+        password: passwordField.required(),
       }),
     ),
     async (ctx) => {

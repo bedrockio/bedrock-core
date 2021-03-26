@@ -1,14 +1,23 @@
 const Joi = require('joi');
 
-const EMAIL_SCHEMA = Joi.string().lowercase().email().required();
+const EMAIL_SCHEMA = Joi.string().lowercase().email();
 
 function getJoiSchemaForAttributes(attributes, options = {}) {
-  return getObjectSchema(attributes, options).min(1);
+  const { appendSchema } = options;
+  let schema = getObjectSchema(attributes, options).min(1);
+  if (appendSchema) {
+    if (Joi.isSchema(appendSchema)) {
+      schema = schema.concat(appendSchema);
+    } else {
+      schema = schema.append(appendSchema);
+    }
+  }
+  return schema;
 }
 
-function getMongooseValidator(type) {
+function getMongooseValidator(type, required) {
   if (type === 'email') {
-    return joiSchemaToMongooseValidator(EMAIL_SCHEMA);
+    return joiSchemaToMongooseValidator(EMAIL_SCHEMA, required);
   }
   throw new Error(`No validator for ${type}.`);
 }
@@ -92,7 +101,15 @@ function normalizeField(field) {
   }
 }
 
-function joiSchemaToMongooseValidator(schema) {
+function joiSchemaToMongooseValidator(schema, required) {
+
+  // TODO: for now we allow both empty strings and null
+  // as a potential signal for "set but non-existent".
+  // Is this ok? Do we not want any falsy fields in the
+  // db whatsoever?
+
+  schema = required ? schema.required() : schema.allow('', null);
+
   return (val) => {
     const { error } = schema.validate(val);
     if (error) {

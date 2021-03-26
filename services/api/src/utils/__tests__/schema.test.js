@@ -386,12 +386,51 @@ describe('createSchema', () => {
   });
 
   describe('mongoose validation shortcuts', () => {
-    it('should validate an email field', () => {
+
+    it.only('should validate an email field', () => {
       let user;
       const User = createTestModel(
         createSchema({
           email: {
             type: String,
+            validate: 'email',
+          },
+        })
+      );
+
+      // TODO: for now we allow both empty strings and null
+      // as a potential signal for "set but non-existent".
+      // Is this ok? Do we not want any falsy fields in the
+      // db whatsoever?
+
+      user = new User({
+        email: '',
+      });
+      expect(user.validateSync()).toBeUndefined();
+
+      user = new User({
+        email: null,
+      });
+      expect(user.validateSync()).toBeUndefined();
+
+      user = new User({
+        email: 'good@email.com',
+      });
+      expect(user.validateSync()).toBeUndefined();
+
+      user = new User({
+        email: 'bad@email',
+      });
+      expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);
+    });
+
+    it('should validate a required email field', () => {
+      let user;
+      const User = createTestModel(
+        createSchema({
+          email: {
+            type: String,
+            required: true,
             validate: 'email',
           },
         })
@@ -406,7 +445,14 @@ describe('createSchema', () => {
         email: 'bad@email',
       });
       expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);
+
+      user = new User({
+        email: '',
+      });
+      expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);
+
     });
+
     it('should validate a nested email field', () => {
       let user;
       const User = createTestModel(
@@ -516,6 +562,29 @@ describe('validation', () => {
         foo: 'bar',
       });
     });
+
+    it('should be able to append schemas', () => {
+      const User = createTestModel(
+        createSchema({
+          name: {
+            type: String,
+            required: true,
+          },
+        })
+      );
+      const schema = User.getCreateValidation({
+        count: Joi.number().required(),
+      });
+      expect(Joi.isSchema(schema)).toBe(true);
+      assertFail(schema, {
+        name: 'foo',
+      });
+      assertPass(schema, {
+        name: 'foo',
+        count: 10,
+      });
+    });
+
   });
 
   describe('update validation', () => {

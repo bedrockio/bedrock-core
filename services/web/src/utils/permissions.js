@@ -13,7 +13,6 @@ export function userHasAccess(user, { endpoint, permission, scope, scopeRef }) {
   const roles = [];
   // Gather all relevant roles
   for (const roleRef of user.roles) {
-    const roleId = roleRef.role.toString();
     if (roleRef.scope === 'global') {
       const role = roleRef.roleDefinition;
       if (!role) continue;

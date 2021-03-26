@@ -32,7 +32,7 @@ export function trackSession(action, key, data) {
       data: sanitize(data),
     });
   }
-};
+}
 
 export function setUserId(userId) {
   if (ENABLED) {

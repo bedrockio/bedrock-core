@@ -59,10 +59,10 @@ class OpenApiMacros {
     if (!examples || !examples.length) return '';
     const markdown = [];
     examples.forEach(({ name, requestPath, requestBody, responseBody }) => {
-      markdown.push(`\n#### Example: ${name}`);
+      markdown.push(`\n#### Example: ${name || ''}`);
       if (method === 'GET') {
         markdown.push(`Request:\n`);
-        markdown.push('```\nGET ' + path + '\n```');
+        markdown.push('```bash\nGET ' + path + '\n```');
       } else {
         markdown.push(`Request Body for \`${method} ${requestPath || path}\`\n`);
         markdown.push('```json\n' + JSON.stringify(requestBody || {}, null, 2) + '\n```');

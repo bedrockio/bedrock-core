@@ -6,13 +6,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-import { SENTRY_DSN } from 'utils/env';
 import { SessionProvider } from 'stores';
 import App from './App';
-
-if (SENTRY_DSN && window.Sentry) {
-  window.Sentry.init({ dsn: SENTRY_DSN });
-}
+import 'utils/sentry';
 
 const Wrapper = () => (
   <BrowserRouter>

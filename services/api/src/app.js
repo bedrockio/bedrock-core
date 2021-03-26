@@ -27,10 +27,20 @@ app
   .use(bodyParser({ multipart: true }));
 
 app.on('error', (err, ctx) => {
+  if (err.code === 'EPIPE' || err.code === 'ECONNRESET') {
+    // When streaming media, clients may arbitrarily close the
+    // connection causing these errors when writing to the stream.
+    return;
+  }
   // dont output stacktraces of errors that is throw with status as they are known
   if (!err.status || err.status === 500) {
     ctx.logger.error(err);
-    Sentry.captureException(err);
+    Sentry.withScope(function (scope) {
+      scope.addEventProcessor(function (event) {
+        return Sentry.Handlers.parseRequest(event, ctx.request);
+      });
+      Sentry.captureException(err);
+    });
   }
 });
 
