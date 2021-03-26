@@ -1,4 +1,5 @@
 import React from 'react';
+import { memoize } from 'lodash';
 import { Link } from 'react-router-dom';
 import { Table, Divider, Button, Message } from 'semantic-ui-react';
 import { formatDateTime } from 'utils/date';
@@ -12,12 +13,39 @@ import EditUser from 'modals/EditUser';
 @screen
 export default class UserList extends React.Component {
   onDataNeeded = async (params) => {
+    const { roles, ...rest } = params;
+    console.info('hUMMMMMM', roles, rest);
     return await request({
       method: 'POST',
       path: '/1/users/search',
-      body: params,
+      body: {
+        ...rest,
+        ...roles && {
+          'roles.role': roles.map((r) => r.id),
+        }
+      },
     });
   };
+
+  fetchRoles = memoize(async (query) => {
+    // No roles search route yet, so improvise.
+    const { data } = await request({
+      method: 'GET',
+      path: `/1/users/roles`,
+    });
+    // TODO: ok maybe we finally need a non-id field for SearchDropdown
+    const roles = [];
+    for (let [key, val] of Object.entries(data)) {
+      const { name } = val;
+      if (!query || RegExp(query, 'i').test(name)) {
+        roles.push({
+          id: key,
+          name: val.name,
+        });
+      }
+    }
+    return roles;
+  });
 
   render() {
     return (
@@ -35,6 +63,7 @@ export default class UserList extends React.Component {
               <Breadcrumbs active="Users">
                 <Filters onSave={setFilters} filters={filters}>
                   <Filters.Text label="Search" name="keyword" placeholder="Enter name, email, or user id" />
+                  <Filters.Dropdown label="Role" name="roles" onDataNeeded={this.fetchRoles} multiple />
                 </Filters>
                 <EditUser
                   trigger={<Button primary content="New User" icon="plus" />}

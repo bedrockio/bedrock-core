@@ -269,7 +269,6 @@ describe('createSchema', () => {
       data = JSON.parse(JSON.stringify(shop));
       expect(data.users).toEqual([]);
     });
-
   });
 
   describe('autopopulate', () => {
@@ -386,7 +385,6 @@ describe('createSchema', () => {
   });
 
   describe('mongoose validation shortcuts', () => {
-
     it('should validate an email field', () => {
       let user;
       const User = createTestModel(
@@ -450,17 +448,18 @@ describe('createSchema', () => {
         email: '',
       });
       expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);
-
     });
 
     it('should validate a nested email field', () => {
       let user;
       const User = createTestModel(
         createSchema({
-          emails: [{
-            type: String,
-            validate: 'email',
-          }],
+          emails: [
+            {
+              type: String,
+              validate: 'email',
+            },
+          ],
         })
       );
 
@@ -584,7 +583,6 @@ describe('validation', () => {
         count: 10,
       });
     });
-
   });
 
   describe('getUpdateValidation', () => {
@@ -695,10 +693,28 @@ describe('validation', () => {
         ids: ['12345'],
       });
     });
+
+    it.only('should allow search on a nested field', () => {
+      const User = createTestModel(
+        createSchema({
+          roles: [
+            {
+              role: { type: 'String', required: true },
+              scope: { type: 'String', required: true },
+            },
+          ],
+        })
+      );
+      const schema = User.getSearchValidation();
+      assertPass(schema, {
+        roles: {
+          role: 'test',
+        }
+      });
+    });
   });
 
   describe('search', () => {
-
     it('should search on name', async () => {
       const User = createTestModel(
         createSchema({
@@ -708,10 +724,7 @@ describe('validation', () => {
           },
         })
       );
-      await Promise.all([
-        User.create({ name: 'Billy' }),
-        User.create({ name: 'Willy' }),
-      ]);
+      await Promise.all([User.create({ name: 'Billy' }), User.create({ name: 'Willy' })]);
       const { data, meta } = await User.search({ name: 'Billy' });
       expect(data.length).toBe(1);
       expect(data[0].name).toBe('Billy');
@@ -729,10 +742,7 @@ describe('validation', () => {
           },
         })
       );
-      await Promise.all([
-        User.create({ name: 'Billy' }),
-        User.create({ name: 'Willy' }),
-      ]);
+      await Promise.all([User.create({ name: 'Billy' }), User.create({ name: 'Willy' })]);
       const { data, meta } = await User.search({ keyword: 'billy' });
       expect(data.length).toBe(1);
       expect(data[0].name).toBe('Billy');
@@ -742,29 +752,82 @@ describe('validation', () => {
     it('should search on an array field', async () => {
       const User = createTestModel(
         createSchema({
-          categories: [{
-            type: String,
-          }],
+          order: Number,
+          categories: [
+            {
+              type: String,
+            },
+          ],
         })
       );
       const [user1, user2] = await Promise.all([
-        User.create({ categories: ['owner', 'member'] }),
-        User.create({ categories: ['owner'] }),
+        User.create({ order: 1, categories: ['owner', 'member'] }),
+        User.create({ order: 2, categories: ['owner'] }),
       ]);
 
       let result;
-      result = await User.search({ categories: ['member'] });
+      result = await User.search({
+        categories: ['member'],
+      });
       expect(result.data.length).toBe(1);
       expect(result.data[0].id).toBe(user1.id);
       expect(result.meta.total).toBe(1);
 
-      result = await User.search({ categories: [] });
+      result = await User.search({
+        categories: [],
+        sort: {
+          field: 'order',
+          order: 'asc',
+        },
+      });
       expect(result.data.length).toBe(2);
       expect(result.data[0].id).toBe(user1.id);
       expect(result.data[1].id).toBe(user2.id);
       expect(result.meta.total).toBe(2);
     });
 
-  });
+    it('should be able to perform a search on a nested field', async () => {
+      const User = createTestModel(
+        createSchema({
+          order: Number,
+          roles: [
+            {
+              role: { type: 'String', required: true },
+              scope: { type: 'String', required: true },
+            },
+          ],
+        })
+      );
+      const [user1, user2] = await Promise.all([
+        User.create({
+          order: 1,
+          roles: [
+            { role: 'owner', scope: 'global' },
+            { role: 'member', scope: 'global' },
+          ],
+        }),
+        User.create({
+          order: 2,
+          roles: [
+            { role: 'member', scope: 'global' },
+          ],
+        }),
+      ]);
 
+      let result;
+      result = await User.search({
+        roles: {
+          role: 'member',
+        },
+        sort: {
+          field: 'order',
+          order: 'asc',
+        },
+      });
+      expect(result.data.length).toBe(2);
+      expect(result.data[0].id).toBe(user1.id);
+      expect(result.data[1].id).toBe(user2.id);
+      expect(result.meta.total).toBe(2);
+    });
+  });
 });

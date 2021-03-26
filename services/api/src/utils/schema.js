@@ -74,6 +74,7 @@ function createSchema(attributes = {}, options = {}) {
       stripFields: RESERVED_FIELDS,
       skipRequired: true,
       skipEmptyCheck: true,
+      unwindArrayFields: true,
       appendSchema: {
         ...searchValidation(searchOptions),
         ...appendSchema,
@@ -137,8 +138,8 @@ function createSchema(attributes = {}, options = {}) {
         if (value.length) {
           query[key] = { $in: value };
         }
-      } else if (value) {
-        query[key] = value;
+      } else {
+        Object.assign(query, flattenObject(value, [key]));
       }
     }
 
@@ -256,6 +257,27 @@ function loadModelDir(dirPath) {
     }
   }
   return mongoose.models;
+}
+
+// Util
+
+// Flattens nested objects to a dot syntax.
+// Effectively the inverse of lodash get:
+// { foo: { bar: 3 } } -> { 'foo.bar': 3 }
+function flattenObject(obj, path = []) {
+  let result = {};
+  if (obj) {
+    if (isPlainObject(obj)) {
+      for (let [key, value] of Object.entries(obj)) {
+        result = {
+          ...flattenObject(value, [...path, key]),
+        };
+      }
+    } else {
+      result[path.join('.')] = obj;
+    }
+  }
+  return result;
 }
 
 module.exports = {

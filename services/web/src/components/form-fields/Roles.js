@@ -16,17 +16,16 @@ export default class Roles extends React.Component {
     this.fetch();
   }
 
-  fetch() {
-    request({
-      method: 'GET',
-      path: `/1/users/roles`,
-    })
-      .then(({ data }) => {
-        this.setState({ roles: data, loading: false });
-      })
-      .catch((error) => {
-        this.setState({ error, loading: false });
+  async fetch() {
+    try {
+      const { data } = await request({
+        method: 'GET',
+        path: `/1/users/roles`,
       });
+      this.setState({ roles: data, loading: false });
+    } catch (error) {
+      this.setState({ error, loading: false });
+    }
   }
 
   render() {
@@ -42,7 +41,7 @@ export default class Roles extends React.Component {
         fluid
         selection
         multiple
-        value={value.map((role) => role.role) || []}
+        value={(value || []).map((role) => role.role) || []}
         options={Object.keys(roles).map((role) => {
           return {
             value: role,
@@ -50,16 +49,15 @@ export default class Roles extends React.Component {
             text: roles[role].name,
           };
         })}
-        onChange={(e, { value }) =>
-          onChange(
-            value.map((role) => {
-              return {
-                scope: 'global',
-                role,
-              };
-            })
-          )
-        }
+        onChange={(evt, { name, value }) => {
+          value = value.map((role) => {
+            return {
+              scope: 'global',
+              role,
+            };
+          });
+          onChange(evt, { name, value });
+        }}
       />
     );
   }

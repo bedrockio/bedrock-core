@@ -4,7 +4,7 @@ const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
 const { NotFoundError, BadRequestError } = require('../utils/errors');
-const { searchValidation, exportValidation, getSearchQuery, search, searchExport } = require('../utils/search');
+const { exportValidation, searchExport } = require('../utils/search');
 const { User } = require('../models');
 const { expandRoles } = require('./../utils/permissions');
 const roles = require('./../roles.json');
@@ -61,28 +61,17 @@ router
   })
   .post(
     '/search',
-    validateBody({
-      ...searchValidation(),
-      ...exportValidation(),
-      name: Joi.string(),
-      role: Joi.string(),
-    }),
+    validateBody(
+      User.getSearchValidation({
+        ...exportValidation(),
+      })
+    ),
     async (ctx) => {
-      const { body } = ctx.request;
-      const query = getSearchQuery(body, {
-        keywordFields: ['name', 'email'],
-      });
-
-      const { role } = body;
-      if (role) {
-        query['roles.role'] = { $in: [role] };
-      }
-      const { data, meta } = await search(User, query, body);
-
+      console.info('IN WE GO!', ctx.request.body);
+      const { data, meta } = await User.search(ctx.request.body);
       if (searchExport(ctx, data)) {
         return;
       }
-
       ctx.body = {
         data: data.map((item) => expandRoles(item)),
         meta,

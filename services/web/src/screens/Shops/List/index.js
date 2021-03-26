@@ -21,12 +21,13 @@ const countries = getData().map(({ code, name }) => ({
 @screen
 export default class ShopList extends React.Component {
   onDataNeeded = async (params) => {
+    const { category, ...rest } = params;
     return await request({
       method: 'POST',
       path: '/1/shops/search',
       body: {
-        ...params,
-        category: params.category?.id,
+        ...rest,
+        ...category && { categories: [category.id] },
       },
     });
   };
@@ -36,7 +37,7 @@ export default class ShopList extends React.Component {
       method: 'POST',
       path: '/1/categories/search',
       body: {
-        name: query,
+        keyword: query,
       },
     });
     return data;

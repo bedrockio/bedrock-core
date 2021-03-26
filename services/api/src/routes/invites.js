@@ -2,7 +2,6 @@ const Router = require('@koa/router');
 const Joi = require('joi');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
-const { searchValidation, getSearchQuery, search } = require('../utils/search');
 const { requirePermissions } = require('../utils/middleware/permissions');
 
 const { NotFoundError, BadRequestError, GoneError } = require('../utils/errors');
@@ -35,13 +34,11 @@ router
   .use(requirePermissions({ endpoint: 'users', permission: 'read', scope: 'global' }))
   .post(
     '/search',
-    validateBody({
-      ...searchValidation(),
-    }),
+    validateBody(
+      Invite.getSearchValidation(),
+    ),
     async (ctx) => {
-      const { body } = ctx.request;
-      const query = getSearchQuery(body);
-      const { data, meta } = await search(Invite, query, body);
+      const { data, meta } = await Invite.search(ctx.request.body);
       ctx.body = {
         data,
         meta,

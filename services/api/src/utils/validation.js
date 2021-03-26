@@ -56,9 +56,13 @@ function getObjectSchema(obj, options) {
 
 function getSchemaForField(field, options = {}) {
   if (Array.isArray(field)) {
-    return Joi.array().items(
-      getSchemaForField(field[0], options)
-    );
+    if (options.unwindArrayFields) {
+      return getSchemaForField(field[0], options)
+    } else {
+      return Joi.array().items(
+        getSchemaForField(field[0], options)
+      );
+    }
   }
   const { type, validate, ...rest } = normalizeField(field);
   if (type === 'Mixed') {
