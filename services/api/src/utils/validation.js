@@ -3,7 +3,7 @@ const Joi = require('joi');
 const EMAIL_SCHEMA = Joi.string().lowercase().email().required();
 
 function getJoiSchemaForAttributes(attributes, options = {}) {
-  let { appendSchema } = options;
+  const { appendSchema } = options;
   let schema = getObjectSchema(attributes, options).min(1);
   if (appendSchema) {
     if (Joi.isSchema(appendSchema)) {
