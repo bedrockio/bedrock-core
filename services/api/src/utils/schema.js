@@ -94,7 +94,7 @@ function attributesToDefinition(attributes) {
     if (isSchemaType) {
       if (key === 'validate' && typeof val === 'string') {
         // Map string shortcuts to mongoose validators such as "email".
-        val = getMongooseValidator(val);
+        val = getMongooseValidator(val, attributes.required);
       }
     } else {
       if (Array.isArray(val)) {
