@@ -3,9 +3,9 @@
 // and rendering issues, SVG sprites can also be more easily bundled to
 // create custom icon sets.
 //
-// Default set is the latest FontAwesome build which should match the
-// semantic-ui docs, however may be more updated. Check the docs for
-// which icons are available here: https://fontawesome.com/icons
+// Default set is the latest FontAwesome build. Check the docs for
+// available icons: https://fontawesome.com/icons
+// Outline fonts should add "outline" to the name.
 //
 // All other props are identical to the semantic component.
 
@@ -42,7 +42,7 @@ export default class Icon extends React.Component {
       if (val === true) {
         classes.push(key);
       } else if (typeof val === 'string') {
-        if (key !== 'name' && key !== 'size' && key !== 'color') {
+        if (!['name', 'size', 'color'].includes(key)) {
           classes.push(key);
         }
         classes.push(val);
