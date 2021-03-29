@@ -40,7 +40,7 @@ export default class ShopProducts extends React.Component {
                       Products
                       <Layout.Group>
                         <Filters size="tiny" onSave={setFilters} filters={filters}>
-                          <Filters.Text label="Name" name="name" />
+                          <Filters.Text label="Search" name="keyword" placeholder="Enter name or product id" />
                         </Filters>
                         <EditProduct
                           shop={shop}

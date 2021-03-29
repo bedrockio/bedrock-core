@@ -1,5 +1,5 @@
 const process = require('process');
-const { logger } = require('./../src/utils/logging');
+const { logger } = require('@bedrockio/instrumentation');
 const { initialize } = require('./../src/utils/database');
 
 async function run() {
@@ -13,6 +13,6 @@ run()
   })
   .catch((error) => {
     logger.error(`Fatal error: ${error.message}, exiting.`);
-    console.warn(error.stack);
+    logger.warn(error.stack);
     process.exit(1);
   });

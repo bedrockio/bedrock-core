@@ -1,6 +1,7 @@
 const fs = require('fs');
 const process = require('process');
 const { routerToOpenApi } = require('../src/utils/openapi');
+const { logger } = require('@bedrockio/instrumentation');
 
 function routeExists(paths, method, path) {
   return !!paths.find((d) => d.method === method && d.path === path);
@@ -8,7 +9,7 @@ function routeExists(paths, method, path) {
 
 async function ensureOpenApipaths(destinationDir, router, routerName) {
   const destinationPath = `${destinationDir}/${routerName}.json`;
-  console.info(`Checking for new routes in router ${routerName}`);
+  logger.info(`Checking for new routes in router ${routerName}`);
   let numNewRoutes = 0;
   const paths = [];
   if (fs.existsSync(destinationPath)) {
@@ -18,13 +19,13 @@ async function ensureOpenApipaths(destinationDir, router, routerName) {
   routerDefinition.paths.forEach((newDefinition) => {
     const { method, path } = newDefinition;
     if (!routeExists(paths, method, path)) {
-      console.info(` Created entry for ${method} ${path}`);
+      logger.info(` Created entry for ${method} ${path}`);
       paths.push(newDefinition);
       numNewRoutes += 1;
     }
   });
   if (numNewRoutes > 0) {
-    console.info(` Wrote ${numNewRoutes} paths to ${destinationPath.replace(/.+\/src/, 'src')}`);
+    logger.info(` Wrote ${numNewRoutes} paths to ${destinationPath.replace(/.+\/src/, 'src')}`);
     routerDefinition.paths = paths;
     fs.writeFileSync(destinationPath, JSON.stringify(routerDefinition, null, 2));
   }
@@ -53,7 +54,7 @@ run()
     process.exit(0);
   })
   .catch((error) => {
-    console.error(`Fatal error: ${error.message}, exiting.`);
-    console.error(error.stack);
+    logger.error(`Fatal error: ${error.message}, exiting.`);
+    logger.error(error.stack);
     process.exit(1);
   });

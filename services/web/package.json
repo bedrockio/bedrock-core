@@ -9,7 +9,7 @@
     "build": "rm -rf ./dist && NODE_ENV=production NODE_OPTIONS=\"--max-old-space-size=4096\" webpack",
     "start": "node ./serve/dev",
     "static": "node ./serve/static",
-    "lint": "eslint src serve scripts",
+    "lint": "eslint .",
     "test": "jest",
     "generate": "cd ../../generator && yarn install && yarn generate"
   },
@@ -28,6 +28,7 @@
     "babel-plugin-lodash": "^3.3.4",
     "babel-plugin-styled-components": "^1.10.7",
     "circular-dependency-plugin": "^5.2.2",
+    "copy-webpack-plugin": "^8.1.0",
     "country-list": "^2.2.0",
     "css-loader": "^5.1.1",
     "cssnano": "^4.1.10",
@@ -65,7 +66,7 @@
     "react-markdown": "^5.0.3",
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
-    "react-syntax-highlighter": "^12.2.1",
+    "react-syntax-highlighter": "^15.4.3",
     "remark-gfm": "^1.0.0",
     "semantic-ui-less": "^2.4.1",
     "semantic-ui-react": "^0.88.2",
@@ -80,15 +81,15 @@
     "yargs": "^15.3.1"
   },
   "devDependencies": {
-    "babel-eslint": "^10.1.0",
-    "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-jest": "^23.8.2",
-    "eslint-plugin-react": "^7.19.0",
-    "lint-staged": "^10.2.2",
+    "@babel/eslint-parser": "^7.13.10",
+    "@testing-library/react": "^11.2.5",
+    "@testing-library/user-event": "^13.0.6",
+    "eslint": "^7.22.0",
+    "eslint-plugin-bedrock": "^1.0.0",
+    "lint-staged": "^10.5.4",
     "node-mocks-http": "^1.8.1",
-    "prettier": "^2.0.5",
-    "prettier-eslint": "^9.0.1"
+    "prettier": "^2.2.1",
+    "prettier-eslint": "^12.0.0"
   },
   "volta": {
     "node": "14.15.1",

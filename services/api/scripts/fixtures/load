@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { logger } = require('../../src/utils/logging');
+const { logger } = require('@bedrockio/instrumentation');
 const { initialize } = require('../../src/database');
 const { createFixtures } = require('../../src/fixtures');
 

@@ -11,7 +11,7 @@ afterAll(async () => {
 
 describe('/1/invites', () => {
   describe('POST /search', () => {
-    it('it should list out invites', async () => {
+    it('should list out invites', async () => {
       const user = await createUserWithRole('global', 'superAdmin');
 
       const invite1 = await Invite.create({
@@ -26,8 +26,8 @@ describe('/1/invites', () => {
 
       expect(response.status).toBe(200);
       const body = response.body;
-      expect(body.data[0].email).toBe(invite1.email);
-      expect(body.data[1].email).toBe(invite2.email);
+      expect(body.data[0].email).toBe(invite2.email);
+      expect(body.data[1].email).toBe(invite1.email);
       expect(body.meta.total).toBe(2);
     });
   });

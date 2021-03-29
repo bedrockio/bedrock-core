@@ -62,13 +62,19 @@ export default class EditShop extends React.Component {
         await request({
           method: 'PATCH',
           path: `/1/shops/${shop.id}`,
-          body: shop,
+          body: {
+            ...shop,
+            categories: shop.categories.map((c) => c.id),
+          },
         });
       } else {
         await request({
           method: 'POST',
           path: '/1/shops',
-          body: shop,
+          body: {
+            ...shop,
+            categories: shop.categories.map((c) => c.id),
+          },
         });
         this.setState({
           shop: {},
@@ -123,7 +129,7 @@ export default class EditShop extends React.Component {
                 value={shop.description || ''}
                 onChange={this.setField}
               />
-              <CountriesField label="Country" name="country" value={shop.country || 'US'} onChange={this.setField} />
+              <CountriesField label="Country" name="country" value={shop.country || ''} onChange={this.setField} />
               <CategoriesField name="categories" value={shop.categories || []} onChange={this.setField} />
               <UploadsField
                 name="images"
