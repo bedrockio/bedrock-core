@@ -149,7 +149,7 @@ yarn emails
 
 The http logging is center to rest api logging, as all executed code (besides a few exeptions like scripts/jobs) are executed in the context of a http request. Making it important to be able to "trace" (https://cloud.google.com/trace/) the log output to a given request.
 
-By default the log level in `development` is set to info, but can be overwritten via env flags (LOG_LEVEL).
+By default the log level in `development` is set to trace, but can be overwritten via env flags (LOG_LEVEL).
 
 Within a Koa request prefer `ctx.logger` as this provides extra logging specific to HTTP requests, otherwise use:
 
