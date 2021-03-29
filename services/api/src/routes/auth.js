@@ -3,7 +3,7 @@ const Joi = require('@hapi/joi');
 const validate = require('../utils/middleware/validate');
 const { authenticate } = require('../utils/middleware/authenticate');
 const tokens = require('../utils/tokens');
-const { sendWelcome, sendResetPassword } = require('../utils/emails');
+const { sendTemplatedMail } = require('../utils/mailer');
 const { BadRequestError, UnauthorizedError } = require('../utils/errors');
 const { User, Invite } = require('../models');
 
@@ -34,9 +34,11 @@ router
         ...ctx.request.body,
       });
 
-      await sendWelcome({
+      await sendTemplatedMail({
+        to: [name, email].join(' '),
+        template: 'welcome.md',
+        subject: 'Welcome to {{appName}}',
         name,
-        to: email,
       });
 
       ctx.body = { data: { token: tokens.createUserToken(user) } };
@@ -110,9 +112,12 @@ router
         ctx.throw(404, 'Unknown email address.');
       }
 
-      await sendResetPassword({
-        to: email,
+      await sendTemplatedMail({
+        to: [user.name, email].join(' '),
+        template: 'reset-password.md',
+        subject: 'Password Reset Request',
         token: tokens.createUserTemporaryToken({ userId: user.id }, 'password'),
+        email,
       });
 
       ctx.status = 204;

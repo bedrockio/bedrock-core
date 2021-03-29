@@ -1,8 +1,6 @@
 const { setupDb, teardownDb, request, createUser, createUserWithRole } = require('../../utils/testing');
 const { User } = require('../../models');
 
-jest.mock('../../utils/emails');
-
 beforeAll(async () => {
   await setupDb();
 });
@@ -128,9 +126,14 @@ describe('/1/users', () => {
       const user1 = await createUser({ name: 'One' });
       const user2 = await createUser({ name: 'Two' });
 
-      const response = await request('POST', '/1/users/search', {
-        ids: [user1.id, user2.id],
-      }, { user: admin });
+      const response = await request(
+        'POST',
+        '/1/users/search',
+        {
+          ids: [user1.id, user2.id],
+        },
+        { user: admin }
+      );
       expect(response.status).toBe(200);
       expect(response.body.data.length).toBe(2);
       expect(response.body.data[0].id).toBe(user2.id);
