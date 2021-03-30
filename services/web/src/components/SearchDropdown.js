@@ -26,7 +26,6 @@ export default class SearchDropdown extends React.Component {
         loading: false,
       });
     } catch (error) {
-      console.error(error);
       this.setState({
         error,
         loading: false,
