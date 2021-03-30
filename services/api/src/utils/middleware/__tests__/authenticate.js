@@ -56,7 +56,7 @@ describe('authenticate', () => {
     await expect(middleware(ctx)).rejects.toHaveProperty('message', 'jwt expired');
   });
 
-  it('it should work with valid secret and not expired', async () => {
+  it('should work with valid secret and not expired', async () => {
     const middleware = authenticate();
     const token = jwt.sign({ kid: 'user', attribute: 'value' }, config.get('JWT_SECRET'));
     const ctx = context({ headers: { authorization: `Bearer ${token}` } });
@@ -65,7 +65,7 @@ describe('authenticate', () => {
     });
   });
 
-  it('it should only validate the token once when called multiple times', async () => {
+  it('should only validate the token once when called multiple times', async () => {
     const middleware = authenticate();
     const token = jwt.sign({ kid: 'user', attribute: 'value' }, config.get('JWT_SECRET'));
     const ctx = context({ headers: { authorization: `Bearer ${token}` } });
@@ -88,7 +88,7 @@ describe('authenticate', () => {
   });
 
   describe('optional authentication', () => {
-    it('it should authenticate when token exists', async () => {
+    it('should authenticate when token exists', async () => {
       const middleware = authenticate({ optional: true });
       const token = jwt.sign({ kid: 'user', attribute: 'value' }, config.get('JWT_SECRET'));
       const ctx = context({ headers: { authorization: `Bearer ${token}` } });
@@ -97,7 +97,7 @@ describe('authenticate', () => {
       });
     });
 
-    it('it should not error when no token exists', async () => {
+    it('should not error when no token exists', async () => {
       const middleware = authenticate({ optional: true });
       const ctx = context();
       await middleware(ctx, () => {
@@ -105,7 +105,7 @@ describe('authenticate', () => {
       });
     });
 
-    it('it should allow chaining of optional and required', async () => {
+    it('should allow chaining of optional and required', async () => {
       const optional = authenticate({ optional: true });
       const required = authenticate();
 
@@ -117,7 +117,7 @@ describe('authenticate', () => {
       expect(ctx.state.jwt.attribute).toBe('value');
     });
 
-    it('it should throw after optional when required and no token', async () => {
+    it('should throw after optional when required and no token', async () => {
       const optional = authenticate({ optional: true });
       const required = authenticate();
 
@@ -140,7 +140,7 @@ describe('fetchUser', () => {
     await teardownDb();
   });
 
-  it('it should fetch the authUser', async () => {
+  it('should fetch the authUser', async () => {
     const user = await createUser();
     const ctx = context();
     ctx.state.jwt = { userId: user.id };
@@ -149,14 +149,14 @@ describe('fetchUser', () => {
     });
   });
 
-  it('it should not fail without jwt token', async () => {
+  it('should not fail without jwt token', async () => {
     const ctx = context();
     await fetchUser(ctx, () => {
       expect(ctx.state.authUser).toBeUndefined();
     });
   });
 
-  it('it should not fetch the user twice when called with the same context', async () => {
+  it('should not fetch the user twice when called with the same context', async () => {
     const user = await createUser();
     const ctx = context();
     let tmp;

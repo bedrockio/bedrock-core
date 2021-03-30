@@ -3,10 +3,9 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const crypto = require('crypto');
-const { createLogger } = require('./logging');
+const { logger } = require('@bedrockio/instrumentation');
 
 function uploadLocal(file, hash) {
-  const logger = createLogger();
   const destinationPath = path.join(os.tmpdir(), hash);
   fs.copyFileSync(file.path, destinationPath);
   logger.debug('Uploading locally %s -> %s', file.name, destinationPath);
@@ -14,7 +13,6 @@ function uploadLocal(file, hash) {
 }
 
 async function uploadGcs(file, hash) {
-  const logger = createLogger();
   const { Storage } = require('@google-cloud/storage');
   const storage = new Storage();
   const bucketName = config.get('UPLOADS_GCS_BUCKET');

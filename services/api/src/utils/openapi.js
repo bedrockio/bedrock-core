@@ -1,6 +1,6 @@
 const fs = require('fs');
-
 const config = require('@bedrockio/config');
+const { logger } = require('@bedrockio/instrumentation');
 
 function getParamsFromValidationMiddleware(validationMiddleware, type) {
   const { convert } = require('@yeongjet/joi-to-json-schema');
@@ -22,7 +22,7 @@ function getParamsFromValidationMiddleware(validationMiddleware, type) {
     });
     return params;
   } catch (error) {
-    console.warn(`Warning could not convert Joi validation to JSON: ${error.message}`);
+    logger.warn(`Warning could not convert Joi validation to JSON: ${error.message}`);
     return [];
   }
 }
