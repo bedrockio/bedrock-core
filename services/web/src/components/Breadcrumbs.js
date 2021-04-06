@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Breadcrumb } from 'semantic-ui-react';
+import { Breadcrumb } from 'semantic';
 import { Layout } from './Layout';
 
 export default class Breadcrumbs extends React.Component {
@@ -23,14 +23,14 @@ export default class Breadcrumbs extends React.Component {
           <Breadcrumb.Section link as={Link} to="/">
             Home
           </Breadcrumb.Section>
-          <Breadcrumb.Divider icon="right chevron" />
+          <Breadcrumb.Divider icon="chevron-right" />
           {this.getPath().map((link, i) => {
             return (
               <React.Fragment key={i}>
                 <Breadcrumb.Section>
                   {link}
                 </Breadcrumb.Section>
-                <Breadcrumb.Divider icon="right chevron" />
+                <Breadcrumb.Divider icon="chevron-right" />
               </React.Fragment>
             );
           })}

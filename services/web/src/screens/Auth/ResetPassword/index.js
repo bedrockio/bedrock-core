@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, Message } from 'semantic-ui-react';
+import { Segment, Message } from 'semantic';
 import { withSession } from 'stores';
 import { request } from 'utils/api';
 import { screen } from 'helpers';

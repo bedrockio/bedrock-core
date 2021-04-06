@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Modal, Button, TextArea, Message } from 'semantic-ui-react';
+import { Form, Modal, Button, TextArea, Message } from 'semantic';
 import { request } from 'utils/api';
 import { emailRegexp } from 'utils/validate';
 import AutoFocus from 'components/AutoFocus';

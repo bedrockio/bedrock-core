@@ -1,6 +1,6 @@
 import React from 'react';
 import { request } from 'utils/api';
-import { Form, Loader, Message } from 'semantic-ui-react';
+import { Form, Loader, Message } from 'semantic';
 
 export default class Roles extends React.Component {
   constructor(props) {
