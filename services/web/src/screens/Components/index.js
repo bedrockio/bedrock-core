@@ -3,7 +3,7 @@ import { Header, Button } from 'semantic-ui-react';
 import { screen } from 'helpers';
 
 @screen
-export default class  extends React.Component {
+export default class ComponentsScreen extends React.Component {
 
   render() {
     return (
