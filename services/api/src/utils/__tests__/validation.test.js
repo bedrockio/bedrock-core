@@ -264,7 +264,7 @@ describe('getJoiSchemaForAttributes', () => {
       assertFail(schema, { image: 'bad id' });
     });
 
-    it('should map an object with a valid ObjectId as the id field', () => {
+    it('should transform an object with a valid id field', () => {
       const schema = getJoiSchemaForAttributes({
         image: {
           type: 'ObjectId',
@@ -277,6 +277,36 @@ describe('getJoiSchemaForAttributes', () => {
       assertFail(schema, { image: { id: '5fd396fac80f' }});
       assertFail(schema, { image: { id: 'bad id' }});
       assertFail(schema, { image: { id: '' }});
+    });
+
+    it('should transform an array of objects or ids', () => {
+      const schema = getJoiSchemaForAttributes({
+        categories: [{
+          type: 'ObjectId',
+          ref: 'Upload',
+        }],
+      });
+      assertPass(schema, { categories: ['5fd396fac80fa73203bd9554'] });
+      assertPass(schema, { categories: [{ id: '5fd396fac80fa73203bd9554' }] });
+      assertPass(schema, {
+        categories: [
+          '5fd396fac80fa73203bd9554',
+          { id: '5fd396fac80fa73203bd9554' },
+          '5fd396fac80fa73203bd9554',
+          { id: '5fd396fac80fa73203bd9554' },
+          '5fd396fac80fa73203bd9554',
+        ]
+      });
+      assertFail(schema, {
+        categories: [
+          { id: '5fd396fac80fa73203bd9554' },
+          'bad id',
+        ]
+      });
+      assertFail(schema, { categories: [{ id: '5fd396fac80fa73203bd9xyz' }] });
+      assertFail(schema, { categories: [{ id: '5fd396fac80f' }] });
+      assertFail(schema, { categories: [{ id: 'bad id' }] });
+      assertFail(schema, { categories: [{ id: '' }] });
     });
   });
 
