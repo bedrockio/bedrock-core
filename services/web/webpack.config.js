@@ -89,7 +89,7 @@ module.exports = {
           preprocessor: (source, ctx) => {
             try {
               return compileTemplate(source)(PARAMS);
-            } catch(err) {
+            } catch (err) {
               ctx.emitError(err);
               return source;
             }
@@ -237,8 +237,13 @@ function getTemplatePlugins() {
         ...PARAMS,
       },
       minify: {
-        removeComments: false,
         collapseWhitespace: true,
+        keepClosingSlash: true,
+        removeComments: false,
+        removeRedundantAttributes: true,
+        removeScriptTypeAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        useShortDoctype: true,
       },
       filename: path.join(app === 'public' ? '' : app, 'index.html'),
       inject: true,

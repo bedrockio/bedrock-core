@@ -527,6 +527,97 @@ describe('createSchema', () => {
       expect(data.user.secret).toBe('foo');
     });
   });
+
+  describe('mongoose validation shortcuts', () => {
+
+    it('should validate an email field', () => {
+      let user;
+      const User = createTestModel(
+        createSchema({
+          email: {
+            type: String,
+            validate: 'email',
+          },
+        })
+      );
+
+      // TODO: for now we allow both empty strings and null
+      // as a potential signal for "set but non-existent".
+      // Is this ok? Do we not want any falsy fields in the
+      // db whatsoever?
+
+      user = new User({
+        email: '',
+      });
+      expect(user.validateSync()).toBeUndefined();
+
+      user = new User({
+        email: null,
+      });
+      expect(user.validateSync()).toBeUndefined();
+
+      user = new User({
+        email: 'good@email.com',
+      });
+      expect(user.validateSync()).toBeUndefined();
+
+      user = new User({
+        email: 'bad@email',
+      });
+      expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);
+    });
+
+    it('should validate a required email field', () => {
+      let user;
+      const User = createTestModel(
+        createSchema({
+          email: {
+            type: String,
+            required: true,
+            validate: 'email',
+          },
+        })
+      );
+
+      user = new User({
+        email: 'good@email.com',
+      });
+      expect(user.validateSync()).toBeUndefined();
+
+      user = new User({
+        email: 'bad@email',
+      });
+      expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);
+
+      user = new User({
+        email: '',
+      });
+      expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);
+
+    });
+
+    it('should validate a nested email field', () => {
+      let user;
+      const User = createTestModel(
+        createSchema({
+          emails: [{
+            type: String,
+            validate: 'email',
+          }],
+        })
+      );
+
+      user = new User({
+        emails: ['good@email.com'],
+      });
+      expect(user.validateSync()).toBeUndefined();
+
+      user = new User({
+        emails: ['bad@email'],
+      });
+      expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);
+    });
+  });
 });
 
 describe('loadModel', () => {
@@ -572,19 +663,19 @@ describe('loadModelDir', () => {
 });
 
 describe('validation', () => {
-  function assertPass(validator, obj) {
+  function assertPass(schema, obj) {
     expect(() => {
-      Joi.assert(obj, validator);
+      Joi.assert(obj, schema);
     }).not.toThrow();
   }
-  function assertFail(validator, obj) {
+  function assertFail(schema, obj) {
     expect(() => {
-      Joi.assert(obj, validator);
+      Joi.assert(obj, schema);
     }).toThrow();
   }
 
-  describe('getValidator', () => {
-    it('should get a basic Joi validator', () => {
+  describe('create validation', () => {
+    it('should get a basic Joi create schema', () => {
       const User = createTestModel(
         createSchema({
           name: {
@@ -597,26 +688,49 @@ describe('validation', () => {
           },
         })
       );
-      const validator = User.getValidator();
-      expect(Joi.isSchema(validator)).toBe(true);
-      assertPass(validator, {
+      const schema = User.getCreateValidation();
+      expect(Joi.isSchema(schema)).toBe(true);
+      assertPass(schema, {
         name: 'foo',
         count: 10,
       });
-      assertFail(validator, {
+      assertFail(schema, {
         name: 'foo',
       });
-      assertFail(validator, {
+      assertFail(schema, {
         name: 10,
         count: 10,
       });
-      assertFail(validator, {
+      assertFail(schema, {
         foo: 'bar',
       });
     });
+
+    it('should be able to append schemas', () => {
+      const User = createTestModel(
+        createSchema({
+          name: {
+            type: String,
+            required: true,
+          },
+        })
+      );
+      const schema = User.getCreateValidation({
+        count: Joi.number().required(),
+      });
+      expect(Joi.isSchema(schema)).toBe(true);
+      assertFail(schema, {
+        name: 'foo',
+      });
+      assertPass(schema, {
+        name: 'foo',
+        count: 10,
+      });
+    });
+
   });
 
-  describe('getPatchValidator', () => {
+  describe('update validation', () => {
     it('should skip required fields', () => {
       const User = createTestModel(
         createSchema({
@@ -630,15 +744,15 @@ describe('validation', () => {
           },
         })
       );
-      const validator = User.getPatchValidator();
-      expect(Joi.isSchema(validator)).toBe(true);
-      assertPass(validator, {
+      const schema = User.getUpdateValidation();
+      expect(Joi.isSchema(schema)).toBe(true);
+      assertPass(schema, {
         name: 'foo',
       });
-      assertPass(validator, {
+      assertPass(schema, {
         count: 10,
       });
-      assertFail(validator, {});
+      assertFail(schema, {});
     });
 
     it('should strip schema internal fields', () => {
@@ -650,8 +764,8 @@ describe('validation', () => {
           },
         })
       );
-      const validator = User.getPatchValidator();
-      assertPass(validator, {
+      const schema = User.getUpdateValidation();
+      assertPass(schema, {
         name: 'foo',
         id: 'id',
         createdAt: 'createdAt',
@@ -673,8 +787,8 @@ describe('validation', () => {
           },
         })
       );
-      const validator = User.getValidator();
-      assertFail(validator, {
+      const schema = User.getUpdateValidation();
+      assertFail(schema, {
         name: 'foo',
         password: 'createdAt',
       });
