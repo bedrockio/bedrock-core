@@ -1,8 +1,7 @@
 const Joi = require('joi');
 
-const OBJECT_ID_REG = /^[a-f0-9]{24}$/;
-
 const EMAIL_SCHEMA = Joi.string().lowercase().email();
+const OBJECT_ID_SCHEMA = Joi.string().hex().length(24);
 
 function getJoiSchemaForAttributes(attributes, options = {}) {
   const { appendSchema } = options;
@@ -84,9 +83,7 @@ function getSchemaForType(type) {
     case 'ObjectId':
       return Joi.custom((val) => {
         const id = String(val.id || val);
-        if (!OBJECT_ID_REG.test(id)) {
-          throw new Error('Invalid ObjectId');
-        }
+        Joi.assert(id, OBJECT_ID_SCHEMA);
         return id;
       });
     default:

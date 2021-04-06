@@ -263,6 +263,7 @@ describe('getJoiSchemaForAttributes', () => {
       assertPass(schema, { image: '5fd396fac80fa73203bd9554' });
       assertFail(schema, { image: 'bad id' });
     });
+
     it('should map an object with a valid ObjectId as the id field', () => {
       const schema = getJoiSchemaForAttributes({
         image: {
@@ -270,8 +271,12 @@ describe('getJoiSchemaForAttributes', () => {
           ref: 'Upload',
         },
       });
+      assertPass(schema, { image: '5fd396fac80fa73203bd9554'});
       assertPass(schema, { image: { id: '5fd396fac80fa73203bd9554' }});
+      assertFail(schema, { image: { id: '5fd396fac80fa73203bd9xyz' }});
+      assertFail(schema, { image: { id: '5fd396fac80f' }});
       assertFail(schema, { image: { id: 'bad id' }});
+      assertFail(schema, { image: { id: '' }});
     });
   });
 
