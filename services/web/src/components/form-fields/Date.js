@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import 'react-day-picker/lib/style.css';
-import { Form, Label, Input, Icon } from 'semantic-ui-react';
+import { Form, Label, Input, Icon } from 'semantic';
 import { formatDate } from 'utils/date';
 import { Layout } from '../Layout';
 

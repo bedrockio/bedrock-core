@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { debounce, uniqBy } from 'lodash';
-import { Form } from 'semantic-ui-react';
+import { Form } from 'semantic';
 import { request } from 'utils/api';
 
 export default class ReferenceField extends React.Component {

@@ -5,13 +5,5 @@
   "extends": [
     "plugin:bedrock/recommended",
     "plugin:bedrock/jest"
-  ],
-  "rules": {
-    "no-console": [
-      "warn",
-      {
-        "allow": ["warn", "error", "info"]
-      }
-    ]
-  }
+  ]
 }

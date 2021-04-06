@@ -1,0 +1,9 @@
+/*******************************
+            Sticky
+*******************************/
+
+@import (multiple) '../globals/site.variables';
+
+@transitionDuration: @defaultDuration;
+@transition: none;
+@zIndex: 800;
