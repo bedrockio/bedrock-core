@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Select } from 'semantic-ui-react';
+import { Form, Select } from 'semantic';
 import { getData } from 'country-list';
 
 const countries = getData().map(({ code, name }) => ({

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { logger } = require('@bedrockio/instrumentation');
 const { uniqueId } = require('lodash');
 
 const context = require('./context');
@@ -10,15 +11,15 @@ const models = loadModelDir(__dirname + '/../../models');
 
 async function setupDb() {
   // ENVs are set by jest-mongodb:
-  // console.log(global.__MONGO_URI__);
-  // console.log(global.__MONGO_DB_NAME__);
+  // global.__MONGO_URI__;
+  // global.__MONGO_DB_NAME__;
   // Take the URI path from MONGO_URI with the default db name,
   // and replace with per test unique db name: MONGO_DB_NAME
   const mongoURL = 'mongodb://' + global.__MONGO_URI__.split('/')[2] + '/' + global.__MONGO_DB_NAME__;
 
   await mongoose.connect(mongoURL, flags, (err) => {
     if (err) {
-      console.error(err);
+      logger.error(err);
       process.exit(1);
     }
   });

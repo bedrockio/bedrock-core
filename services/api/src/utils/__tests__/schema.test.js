@@ -70,6 +70,48 @@ describe('createSchema', () => {
       expect(data.__v).toBeUndefined();
     });
 
+    it('should not expose _id in nested array objects of mixed type', () => {
+      const User = createTestModel(
+        createSchema({
+          names: [
+            {
+              name: String,
+              position: Number,
+            },
+          ],
+        })
+      );
+      const user = new User({
+        names: [
+          {
+            name: 'Foo',
+            position: 2,
+          },
+        ],
+      });
+      const data = user.toObject();
+      expect(data.names[0]).toEqual({
+        name: 'Foo',
+        position: 2,
+      });
+    });
+
+    it('should not expose _id in deeply nested array objects of mixed type', () => {
+      const User = createTestModel(
+        createSchema({
+          one: [{ two: [{ three: [{ name: String, position: Number }] }] }],
+        })
+      );
+      const user = new User({
+        one: [{ two: [{ three: [{ name: 'Foo', position: 2 }] }] }],
+      });
+      const data = user.toObject();
+      expect(data).toEqual({
+        id: user.id,
+        one: [{ two: [{ three: [{ name: 'Foo', position: 2 }] }] }],
+      });
+    });
+
     it('should not expose fields with underscore or marked private', () => {
       const User = createTestModel(
         createSchema({
@@ -103,6 +145,108 @@ describe('createSchema', () => {
 
       const data = user.toObject();
       expect(data.tags).toBeUndefined();
+    });
+
+    it('should not expose deeply nested private fields', () => {
+      const User = createTestModel(
+        createSchema({
+          one: {
+            two: {
+              three: {
+                name: {
+                  type: String,
+                },
+                age: {
+                  type: Number,
+                  access: 'private',
+                },
+              },
+            },
+          },
+        })
+      );
+      const user = new User({
+        one: {
+          two: {
+            three: {
+              name: 'Harry',
+              age: 21,
+            },
+          },
+        },
+      });
+
+      const data = user.toObject();
+      expect(data).toEqual({
+        id: user.id,
+        one: {
+          two: {
+            three: {
+              name: 'Harry',
+            },
+          },
+        },
+      });
+    });
+
+    it('should not expose private fields deeply nested in arrays', () => {
+      const User = createTestModel(
+        createSchema({
+          one: [
+            {
+              two: [
+                {
+                  three: [
+                    {
+                      name: {
+                        type: String,
+                      },
+                      age: {
+                        type: Number,
+                        access: 'private',
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        })
+      );
+      const user = new User({
+        one: [
+          {
+            two: [
+              {
+                three: [
+                  {
+                    name: 'Harry',
+                    age: 21,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      });
+
+      const data = user.toObject();
+      expect(data).toEqual({
+        id: user.id,
+        one: [
+          {
+            two: [
+              {
+                three: [
+                  {
+                    name: 'Harry',
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      });
     });
 
     it('should serialize identically with toObject', () => {
@@ -269,7 +413,6 @@ describe('createSchema', () => {
       data = JSON.parse(JSON.stringify(shop));
       expect(data.users).toEqual([]);
     });
-
   });
 
   describe('autopopulate', () => {
@@ -387,7 +530,7 @@ describe('createSchema', () => {
 
   describe('mongoose validation shortcuts', () => {
 
-    it.only('should validate an email field', () => {
+    it('should validate an email field', () => {
       let user;
       const User = createTestModel(
         createSchema({

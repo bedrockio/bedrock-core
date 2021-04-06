@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input, Form, Label } from 'semantic-ui-react';
+import { Input, Form, Label } from 'semantic';
 
 export default function Password({ label, required, value, ...props }) {
   const [show, toggle] = React.useState(false);

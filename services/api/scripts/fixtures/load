@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-const { logger } = require('../../src/utils/logging');
-const { initialize } = require('../../src/database');
+const { logger } = require('@bedrockio/instrumentation');
+const { initialize } = require('../../src/utils/database');
 const { createFixtures } = require('../../src/fixtures');
 
 async function run() {

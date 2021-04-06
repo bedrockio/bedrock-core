@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form } from 'semantic-ui-react';
+import { Form } from 'semantic';
 
 export default class TextFilter extends React.Component {
   render() {

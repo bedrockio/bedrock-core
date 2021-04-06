@@ -6,6 +6,7 @@ const TerserWebpackPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { template: compileTemplate } = require('lodash');
 
 // To enable multiple builds, place each app in a folder inside src,
@@ -33,7 +34,7 @@ const templatePath = getTemplatePath();
 
 module.exports = {
   mode: BUILD ? 'production' : 'development',
-  devtool: BUILD ? 'source-map' : 'cheap-module-source-map',
+  devtool: BUILD ? 'source-map' : 'eval-cheap-module-source-map',
   entry: getEntryPoints(),
   output: {
     publicPath: '/',
@@ -43,10 +44,6 @@ module.exports = {
   resolve: {
     alias: {
       'react-dom': '@hot-loader/react-dom',
-      '../../theme.config$': path.resolve(
-        path.join(__dirname, 'src'),
-        'theme/theme.config'
-      ),
     },
     extensions: ['.js', '.json', '.jsx'],
     modules: [path.join(__dirname, 'src'), 'node_modules'],
@@ -92,7 +89,7 @@ module.exports = {
           preprocessor: (source, ctx) => {
             try {
               return compileTemplate(source)(PARAMS);
-            } catch(err) {
+            } catch (err) {
               ctx.emitError(err);
               return source;
             }
@@ -150,6 +147,14 @@ module.exports = {
         },
       },
     }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.join(__dirname, './src/assets/public'),
+          to: path.join(__dirname, './dist'),
+        },
+      ],
+    }),
   ],
 
   optimization: {
@@ -157,11 +162,10 @@ module.exports = {
       (compiler) => {
         new TerserWebpackPlugin({
           terserOptions: {
-            mangle: {
-              // Preventing function name mangling for now
-              // to allow screen name magic to work.
-              keep_fnames: true,
-            },
+            // Preventing function and class name mangling
+            // for now to allow screen name magic to work.
+            keep_fnames: true,
+            keep_classnames: true,
           },
         }).apply(compiler);
       },
@@ -232,8 +236,13 @@ function getTemplatePlugins() {
         ...PARAMS,
       },
       minify: {
-        removeComments: false,
         collapseWhitespace: true,
+        keepClosingSlash: true,
+        removeComments: false,
+        removeRedundantAttributes: true,
+        removeScriptTypeAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        useShortDoctype: true,
       },
       filename: path.join(app === 'public' ? '' : app, 'index.html'),
       inject: true,

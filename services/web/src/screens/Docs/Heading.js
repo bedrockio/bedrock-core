@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Icon } from 'semantic-ui-react';
+import { Icon } from 'semantic';
 import { kebabCase } from 'lodash';
 
 const flatten = (text, child) => {
