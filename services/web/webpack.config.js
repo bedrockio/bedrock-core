@@ -166,11 +166,10 @@ module.exports = {
       (compiler) => {
         new TerserWebpackPlugin({
           terserOptions: {
-            mangle: {
-              // Preventing function name mangling for now
-              // to allow screen name magic to work.
-              keep_fnames: true,
-            },
+            // Preventing function and class name mangling
+            // for now to allow screen name magic to work.
+            keep_fnames: true,
+            keep_classnames: true,
           },
         }).apply(compiler);
       },
