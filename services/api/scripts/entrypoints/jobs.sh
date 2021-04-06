@@ -4,6 +4,7 @@ if [ "$YACRON_FILE" == "" ]; then
   echo "No jobs YAML specified"
   exit 1
 fi
+# All settings below are defaults that can be overriden in the jobs/ YAML definitions
 cat >/service/job-base.yml <<EOL
 defaults:
   captureStdout: true
