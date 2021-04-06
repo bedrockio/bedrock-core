@@ -16,6 +16,8 @@ spec:
         - image: gcr.io/bedrock-foundation/bedrock-core-services-api-jobs
           imagePullPolicy: Always
           name: main
+          command:
+            - "./scripts/entrypoints/jobs.sh jobs/default.yml"
           env:
             - name: ENV_NAME
               value: "production"

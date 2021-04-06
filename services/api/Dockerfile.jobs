@@ -6,9 +6,12 @@ COPY package.json /service/package.json
 COPY yarn.lock /service/yarn.lock
 
 # Update & install required packages
-RUN apk add --update bash curl;
+RUN apk add --update bash curl gcc musl-dev python3 python3-dev;
+RUN python3 -m pip install --user pipx yq
+RUN python3 -m pipx ensurepath
+RUN python3 -m pipx install yacron
+RUN wget https://github.com/mikefarah/yq/releases/download/v4.6.3/yq_linux_386.tar.gz -O - | tar xz && mv yq_linux_386 /usr/bin/yq
 RUN cd /service; yarn install --frozen-lockfile;
-
 
 # Copy app source
 COPY . /service
@@ -19,4 +22,4 @@ WORKDIR /service
 # Needed for Gcloud Storage resumable file uploads
 RUN mkdir -p /root/.config
 
-CMD ["./scripts/jobs-entrypoint.sh"]
+CMD ["./scripts/entrypoints/jobs.sh", "jobs/default.yml"]
