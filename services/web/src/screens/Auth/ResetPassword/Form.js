@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Button, Message } from 'semantic-ui-react';
+import { Form, Button, Message } from 'semantic';
 import AutoFocus from 'components/AutoFocus';
 
 export default (props) => {

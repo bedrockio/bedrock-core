@@ -1,7 +1,7 @@
 import React from 'react';
 import { withSession } from 'stores';
 import { NavLink, Link } from 'react-router-dom';
-import { Container, Dropdown, Icon, Menu } from 'semantic-ui-react';
+import { Container, Dropdown, Icon, Menu } from 'semantic';
 import logo from 'assets/favicon.svg';
 import Protected from 'components/Protected';
 
@@ -37,6 +37,9 @@ export default class Header extends React.Component {
                   </Dropdown.Item>
                   <Dropdown.Item as={Link} to="/docs/getting-started">
                     API Docs
+                  </Dropdown.Item>
+                  <Dropdown.Item as={Link} to="/components">
+                    Components
                   </Dropdown.Item>
                   <Protected endpoint="events">
                     <Dropdown.Item as={Link} to="/users">

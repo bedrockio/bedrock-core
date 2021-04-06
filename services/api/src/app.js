@@ -9,7 +9,7 @@ const { version } = require('../package.json');
 const routes = require('./routes');
 const config = require('@bedrockio/config');
 const { loadOpenApiDefinitions, expandOpenApi } = require('./utils/openapi');
-const { loggingMiddleware } = require('./utils/logging');
+const { loggingMiddleware } = require('@bedrockio/instrumentation');
 
 const app = new Koa();
 

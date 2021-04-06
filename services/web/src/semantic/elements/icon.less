@@ -1,0 +1,464 @@
+/*!
+ * # Semantic UI - Icon
+ * http://github.com/semantic-org/semantic-ui/
+ *
+ *
+ * Released under the MIT license
+ * http://opensource.org/licenses/MIT
+ *
+ */
+
+@import './icon.variables';
+
+/*******************************
+             Icon
+*******************************/
+
+svg.icon {
+  fill: currentColor;
+  touch-action: manipulation;
+
+  display: inline-block;
+  vertical-align: bottom;
+  opacity: @opacity;
+
+  margin: 0em @distanceFromText 0em 0em;
+}
+
+svg.icon:before {
+  background: none !important;
+}
+
+/*******************************
+             Types
+*******************************/
+
+/*--------------
+    Loading
+---------------*/
+
+svg.icon.loading {
+  height: 1em;
+  line-height: 1;
+  animation: icon-loading @loadingDuration linear infinite;
+}
+@keyframes icon-loading {
+ from {
+    transform: rotate(0deg);
+ }
+ to {
+    transform: rotate(360deg);
+ }
+}
+
+/*******************************
+             States
+*******************************/
+
+svg.icon.hover {
+  opacity: 1 !important;
+}
+
+svg.icon.active {
+  opacity: 1 !important;
+}
+
+svg.emphasized.icon {
+  opacity: 1 !important;
+}
+
+svg.disabled.icon {
+  opacity: @disabledOpacity !important;
+}
+
+
+/*******************************
+           Variations
+*******************************/
+
+
+/*-------------------
+        Fitted
+--------------------*/
+
+svg.fitted.icon {
+  width: auto;
+  margin: 0em !important;
+}
+
+/*-------------------
+         Link
+--------------------*/
+
+svg.link.icon, svg.link.icons {
+  cursor: pointer;
+  opacity: @linkOpacity;
+  transition: opacity @defaultDuration @defaultEasing;
+}
+svg.link.icon:hover, svg.link.icons:hover {
+  opacity: 1 !important;
+}
+
+/*-------------------
+      Circular
+--------------------*/
+
+svg.circular.icon {
+  border-radius: 500em !important;
+  line-height: 1 !important;
+
+  padding: @circularPadding !important;
+  box-shadow: @circularShadow;
+
+  width: @circularSize !important;
+  height: @circularSize !important;
+}
+svg.circular.inverted.icon {
+  border: none;
+  box-shadow: none;
+}
+
+/*-------------------
+      Flipped
+--------------------*/
+
+svg.flipped.icon,
+svg.horizontally.flipped.icon {
+  transform: scale(-1, 1);
+}
+svg.vertically.flipped.icon {
+  transform: scale(1, -1);
+}
+
+/*-------------------
+      Rotated
+--------------------*/
+
+svg.rotated.icon,
+svg.right.rotated.icon,
+svg.clockwise.rotated.icon {
+  transform: rotate(90deg);
+}
+
+svg.left.rotated.icon,
+svg.counterclockwise.rotated.icon {
+  transform: rotate(-90deg);
+}
+
+/*-------------------
+      Bordered
+--------------------*/
+
+svg.bordered.icon {
+  line-height: 1;
+
+  width: @borderedSize;
+  height: @borderedSize;
+  padding: @borderedVerticalPadding @borderedHorizontalPadding !important;
+  box-shadow: @borderedShadow;
+}
+svg.bordered.inverted.icon {
+  border: none;
+  box-shadow: none;
+}
+
+/*-------------------
+      Inverted
+--------------------*/
+
+/* Inverted Shapes */
+svg.inverted.bordered.icon,
+svg.inverted.circular.icon {
+  background-color: @black !important;
+  color: @white !important;
+}
+
+svg.inverted.icon {
+  color: @white;
+}
+
+
+/*-------------------
+       Colors
+--------------------*/
+
+/* Red */
+svg.red.icon {
+  color: @red !important;
+}
+svg.inverted.red.icon {
+  color: @lightRed !important;
+}
+svg.inverted.bordered.red.icon,
+svg.inverted.circular.red.icon {
+  background-color: @red !important;
+  color: @white !important;
+}
+
+/* Orange */
+svg.orange.icon {
+  color: @orange !important;
+}
+svg.inverted.orange.icon {
+  color: @lightOrange !important;
+}
+svg.inverted.bordered.orange.icon,
+svg.inverted.circular.orange.icon {
+  background-color: @orange !important;
+  color: @white !important;
+}
+
+/* Yellow */
+svg.yellow.icon {
+  color: @yellow !important;
+}
+svg.inverted.yellow.icon {
+  color: @lightYellow !important;
+}
+svg.inverted.bordered.yellow.icon,
+svg.inverted.circular.yellow.icon {
+  background-color: @yellow !important;
+  color: @white !important;
+}
+
+/* Olive */
+svg.olive.icon {
+  color: @olive !important;
+}
+svg.inverted.olive.icon {
+  color: @lightOlive !important;
+}
+svg.inverted.bordered.olive.icon,
+svg.inverted.circular.olive.icon {
+  background-color: @olive !important;
+  color: @white !important;
+}
+
+/* Green */
+svg.green.icon {
+  color: @green !important;
+}
+svg.inverted.green.icon {
+  color: @lightGreen !important;
+}
+svg.inverted.bordered.green.icon,
+svg.inverted.circular.green.icon {
+  background-color: @green !important;
+  color: @white !important;
+}
+
+/* Teal */
+svg.teal.icon {
+  color: @teal !important;
+}
+svg.inverted.teal.icon {
+  color: @lightTeal !important;
+}
+svg.inverted.bordered.teal.icon,
+svg.inverted.circular.teal.icon {
+  background-color: @teal !important;
+  color: @white !important;
+}
+
+/* Blue */
+svg.blue.icon {
+  color: @blue !important;
+}
+svg.inverted.blue.icon {
+  color: @lightBlue !important;
+}
+svg.inverted.bordered.blue.icon,
+svg.inverted.circular.blue.icon {
+  background-color: @blue !important;
+  color: @white !important;
+}
+
+/* Violet */
+svg.violet.icon {
+  color: @violet !important;
+}
+svg.inverted.violet.icon {
+  color: @lightViolet !important;
+}
+svg.inverted.bordered.violet.icon,
+svg.inverted.circular.violet.icon {
+  background-color: @violet !important;
+  color: @white !important;
+}
+
+/* Purple */
+svg.purple.icon {
+  color: @purple !important;
+}
+svg.inverted.purple.icon {
+  color: @lightPurple !important;
+}
+svg.inverted.bordered.purple.icon,
+svg.inverted.circular.purple.icon {
+  background-color: @purple !important;
+  color: @white !important;
+}
+
+/* Pink */
+svg.pink.icon {
+  color: @pink !important;
+}
+svg.inverted.pink.icon {
+  color: @lightPink !important;
+}
+svg.inverted.bordered.pink.icon,
+svg.inverted.circular.pink.icon {
+  background-color: @pink !important;
+  color: @white !important;
+}
+
+/* Brown */
+svg.brown.icon {
+  color: @brown !important;
+}
+svg.inverted.brown.icon {
+  color: @lightBrown !important;
+}
+svg.inverted.bordered.brown.icon,
+svg.inverted.circular.brown.icon {
+  background-color: @brown !important;
+  color: @white !important;
+}
+
+/* Grey */
+svg.grey.icon {
+  color: @grey !important;
+}
+svg.inverted.grey.icon {
+  color: @lightGrey !important;
+}
+svg.inverted.bordered.grey.icon,
+svg.inverted.circular.grey.icon {
+  background-color: @grey !important;
+  color: @white !important;
+}
+
+/* Black */
+svg.black.icon {
+  color: @black !important;
+}
+svg.inverted.black.icon {
+  color: @lightBlack !important;
+}
+svg.inverted.bordered.black.icon,
+svg.inverted.circular.black.icon {
+  background-color: @black !important;
+  color: @white !important;
+}
+
+/*-------------------
+        Sizes
+--------------------*/
+
+svg.mini.icon,
+svg.mini.icons {
+  width: @mini;
+  height: @mini;
+}
+svg.tiny.icon,
+svg.tiny.icons {
+  width: @tiny;
+  height: @tiny;
+}
+svg.small.icon,
+svg.small.icons {
+  width: @small;
+  height: @small;
+}
+svg.icon,
+svg.icons {
+  width: @medium;
+  height: @medium;
+}
+svg.large.icon,
+svg.large.icons {
+  width: @large;
+  height: @large;
+}
+svg.big.icon,
+svg.big.icons {
+  width: @big;
+  height: @big;
+}
+svg.huge.icon,
+svg.huge.icons {
+  width: @huge;
+  height: @huge;
+}
+svg.massive.icon,
+svg.massive.icons {
+  width: @massive;
+  height: @massive;
+}
+
+/*******************************
+            Groups
+*******************************/
+
+svg.icons {
+  display: inline-block;
+  position: relative;
+  line-height: 1;
+}
+
+svg.icons .icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  margin: 0em;
+  margin: 0;
+}
+
+svg.icons .icon:first-child {
+  position: static;
+  width: auto;
+  height: auto;
+  vertical-align: top;
+  transform: none;
+  margin-right: @distanceFromText;
+}
+
+/* Corner Icon */
+svg.icons .corner.icon {
+  top: auto;
+  left: auto;
+  right: 0;
+  bottom: 0;
+  transform: none;
+  font-size: @cornerIconSize;
+  text-shadow: @cornerIconShadow;
+}
+svg.icons .top.right.corner.icon {
+  top: 0;
+  left: auto;
+  right: 0;
+  bottom: auto;
+}
+svg.icons .top.left.corner.icon {
+  top: 0;
+  left: 0;
+  right: auto;
+  bottom: auto;
+}
+svg.icons .bottom.left.corner.icon {
+  top: auto;
+  left: 0;
+  right: auto;
+  bottom: 0;
+}
+svg.icons .bottom.right.corner.icon {
+  top: auto;
+  left: auto;
+  right: 0;
+  bottom: 0;
+}
+
+svg.icons .inverted.corner.icon {
+  text-shadow: @cornerIconInvertedShadow;
+}

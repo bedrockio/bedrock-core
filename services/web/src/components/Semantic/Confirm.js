@@ -5,7 +5,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Modal } from 'semantic-ui-react';
+import { Modal } from 'semantic';
 
 export default class Confirm extends React.Component {
 

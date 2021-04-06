@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Switch, Route } from 'react-router-dom';
-import { Loader, Header } from 'semantic-ui-react';
+import { Loader, Header } from 'semantic';
 import { Breadcrumbs } from 'components';
 import { request } from 'utils/api';
 

@@ -1,0 +1,12 @@
+/*******************************
+          Transition
+*******************************/
+
+@import (multiple) '../globals/site.variables';
+
+@transitionDefaultEasing: @defaultEasing;
+@transitionDefaultFill: both;
+@transitionDefaultDuration: 300ms;
+
+@use3DAcceleration: translateZ(0);
+@backfaceVisibility: hidden;

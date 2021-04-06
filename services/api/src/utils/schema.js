@@ -4,6 +4,7 @@ const path = require('path');
 const { startCase, omitBy, isPlainObject } = require('lodash');
 const { ObjectId } = mongoose.Schema.Types;
 const { getJoiSchemaForAttributes, getMongooseValidator } = require('./validation');
+const { logger } = require('@bedrockio/instrumentation');
 
 const RESERVED_FIELDS = ['id', 'createdAt', 'updatedAt', 'deletedAt'];
 
@@ -11,16 +12,27 @@ const serializeOptions = {
   getters: true,
   versionKey: false,
   transform: (doc, ret, options) => {
-    for (let key of Object.keys(ret)) {
-      // Omit any key with a private prefix "_" or marked
-      // "access": "private" in the schema. Note that virtuals are
-      // excluded by default so they don't need to be removed.
-      if (key[0] === '_' || isDisallowedField(doc, key, options.private)) {
-        delete ret[key];
-      }
-    }
+    transformField(ret, doc.schema.obj, options);
   },
 };
+
+function transformField(obj, schema, options) {
+  if (Array.isArray(obj)) {
+    for (let el of obj) {
+      transformField(el, schema[0], options);
+    }
+  } else if (obj && typeof obj === 'object') {
+    for (let [key, val] of Object.entries(obj)) {
+      // Omit any key with a private prefix "_" or marked
+      // "access": "private" in the schema.
+      if (key[0] === '_' || isDisallowedField(schema[key], options.private)) {
+        delete obj[key];
+      } else if (schema[key]) {
+        transformField(val, schema[key], options);
+      }
+    }
+  }
+}
 
 function createSchema(attributes = {}, options = {}) {
   const definition = attributesToDefinition(attributes);
@@ -44,7 +56,7 @@ function createSchema(attributes = {}, options = {}) {
   schema.static('getCreateValidation', function getCreateValidation(appendSchema) {
     return getJoiSchemaForAttributes(attributes, {
       disallowField: (key) => {
-        return isDisallowedField(this, key);
+        return isDisallowedField(this.schema.obj[key]);
       },
       appendSchema,
     });
@@ -53,7 +65,7 @@ function createSchema(attributes = {}, options = {}) {
   schema.static('getUpdateValidation', function getUpdateValidation(appendSchema) {
     return getJoiSchemaForAttributes(attributes, {
       disallowField: (key) => {
-        return isDisallowedField(this, key);
+        return isDisallowedField(this.schema.obj[key]);
       },
       appendSchema,
       stripFields: RESERVED_FIELDS,
@@ -63,10 +75,10 @@ function createSchema(attributes = {}, options = {}) {
 
   schema.methods.assign = function assign(fields) {
     fields = omitBy(fields, (value, key) => {
-      return isDisallowedField(this, key) || RESERVED_FIELDS.includes(key);
+      return isDisallowedField(this.schema.obj[key]) || RESERVED_FIELDS.includes(key);
     });
     for (let [key, value] of Object.entries(fields)) {
-      if (!value && isReferenceField(this, key)) {
+      if (!value && isReferenceField(this.schema.obj[key])) {
         value = undefined;
       }
       this[key] = value;
@@ -92,9 +104,9 @@ function attributesToDefinition(attributes) {
 
   for (let [key, val] of Object.entries(attributes)) {
     if (isSchemaType) {
-      if (typeof val === 'string' && key === 'validate') {
+      if (key === 'validate' && typeof val === 'string') {
         // Map string shortcuts to mongoose validators such as "email".
-        val = getMongooseValidator(val);
+        val = getMongooseValidator(val, attributes.required);
       }
     } else {
       if (Array.isArray(val)) {
@@ -108,22 +120,19 @@ function attributesToDefinition(attributes) {
   return definition;
 }
 
-function getField(doc, key) {
-  const field = doc.schema.obj[key];
-  return Array.isArray(field) ? field[0] : field;
+function isReferenceField(schema) {
+  return resolveSchema(schema)?.type === ObjectId;
 }
 
-function isReferenceField(doc, key) {
-  const field = getField(doc, key);
-  return field.type === ObjectId;
-}
-
-function isDisallowedField(doc, key, allowPrivate = false) {
-  const field = getField(doc, key);
-  if (field && field.access === 'private') {
+function isDisallowedField(schema, allowPrivate = false) {
+  if (resolveSchema(schema)?.access === 'private') {
     return !allowPrivate;
   }
   return false;
+}
+
+function resolveSchema(schema) {
+  return Array.isArray(schema) ? schema[0] : schema;
 }
 
 function loadModel(definition, name) {
@@ -150,8 +159,8 @@ function loadModelDir(dirPath) {
           loadModel(definition, modelName);
         }
       } catch (error) {
-        console.error(`Could not load model definition: ${filePath}`);
-        console.error(error);
+        logger.error(`Could not load model definition: ${filePath}`);
+        logger.error(error);
       }
     }
   }

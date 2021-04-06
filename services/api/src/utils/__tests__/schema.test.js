@@ -70,6 +70,48 @@ describe('createSchema', () => {
       expect(data.__v).toBeUndefined();
     });
 
+    it('should not expose _id in nested array objects of mixed type', () => {
+      const User = createTestModel(
+        createSchema({
+          names: [
+            {
+              name: String,
+              position: Number,
+            },
+          ],
+        })
+      );
+      const user = new User({
+        names: [
+          {
+            name: 'Foo',
+            position: 2,
+          },
+        ],
+      });
+      const data = user.toObject();
+      expect(data.names[0]).toEqual({
+        name: 'Foo',
+        position: 2,
+      });
+    });
+
+    it('should not expose _id in deeply nested array objects of mixed type', () => {
+      const User = createTestModel(
+        createSchema({
+          one: [{ two: [{ three: [{ name: String, position: Number }] }] }],
+        })
+      );
+      const user = new User({
+        one: [{ two: [{ three: [{ name: 'Foo', position: 2 }] }] }],
+      });
+      const data = user.toObject();
+      expect(data).toEqual({
+        id: user.id,
+        one: [{ two: [{ three: [{ name: 'Foo', position: 2 }] }] }],
+      });
+    });
+
     it('should not expose fields with underscore or marked private', () => {
       const User = createTestModel(
         createSchema({
@@ -103,6 +145,108 @@ describe('createSchema', () => {
 
       const data = user.toObject();
       expect(data.tags).toBeUndefined();
+    });
+
+    it('should not expose deeply nested private fields', () => {
+      const User = createTestModel(
+        createSchema({
+          one: {
+            two: {
+              three: {
+                name: {
+                  type: String,
+                },
+                age: {
+                  type: Number,
+                  access: 'private',
+                },
+              },
+            },
+          },
+        })
+      );
+      const user = new User({
+        one: {
+          two: {
+            three: {
+              name: 'Harry',
+              age: 21,
+            },
+          },
+        },
+      });
+
+      const data = user.toObject();
+      expect(data).toEqual({
+        id: user.id,
+        one: {
+          two: {
+            three: {
+              name: 'Harry',
+            },
+          },
+        },
+      });
+    });
+
+    it('should not expose private fields deeply nested in arrays', () => {
+      const User = createTestModel(
+        createSchema({
+          one: [
+            {
+              two: [
+                {
+                  three: [
+                    {
+                      name: {
+                        type: String,
+                      },
+                      age: {
+                        type: Number,
+                        access: 'private',
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        })
+      );
+      const user = new User({
+        one: [
+          {
+            two: [
+              {
+                three: [
+                  {
+                    name: 'Harry',
+                    age: 21,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      });
+
+      const data = user.toObject();
+      expect(data).toEqual({
+        id: user.id,
+        one: [
+          {
+            two: [
+              {
+                three: [
+                  {
+                    name: 'Harry',
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      });
     });
 
     it('should serialize identically with toObject', () => {
@@ -269,7 +413,6 @@ describe('createSchema', () => {
       data = JSON.parse(JSON.stringify(shop));
       expect(data.users).toEqual([]);
     });
-
   });
 
   describe('autopopulate', () => {
@@ -386,12 +529,51 @@ describe('createSchema', () => {
   });
 
   describe('mongoose validation shortcuts', () => {
+
     it('should validate an email field', () => {
       let user;
       const User = createTestModel(
         createSchema({
           email: {
             type: String,
+            validate: 'email',
+          },
+        })
+      );
+
+      // TODO: for now we allow both empty strings and null
+      // as a potential signal for "set but non-existent".
+      // Is this ok? Do we not want any falsy fields in the
+      // db whatsoever?
+
+      user = new User({
+        email: '',
+      });
+      expect(user.validateSync()).toBeUndefined();
+
+      user = new User({
+        email: null,
+      });
+      expect(user.validateSync()).toBeUndefined();
+
+      user = new User({
+        email: 'good@email.com',
+      });
+      expect(user.validateSync()).toBeUndefined();
+
+      user = new User({
+        email: 'bad@email',
+      });
+      expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);
+    });
+
+    it('should validate a required email field', () => {
+      let user;
+      const User = createTestModel(
+        createSchema({
+          email: {
+            type: String,
+            required: true,
             validate: 'email',
           },
         })
@@ -406,7 +588,14 @@ describe('createSchema', () => {
         email: 'bad@email',
       });
       expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);
+
+      user = new User({
+        email: '',
+      });
+      expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);
+
     });
+
     it('should validate a nested email field', () => {
       let user;
       const User = createTestModel(

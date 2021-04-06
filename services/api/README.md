@@ -145,26 +145,20 @@ yarn emails
 
 ## Logging
 
-We are using https://getpino.io/ as logging library, which we have wrapped to ensure that it optimized to work with https://cloud.google.com/logging/ which requires certain fields to be set for http logging.
+`@bedrockio/instrumentation` provides log levels via [pino](https://getpino.io/) as well as optimizations for [Google Cloud Loggin](https://cloud.google.com/logging/) which requires certain fields to be set for http logging.
 
 The http logging is center to rest api logging, as all executed code (besides a few exeptions like scripts/jobs) are executed in the context of a http request. Making it important to be able to "trace" (https://cloud.google.com/trace/) the log output to a given request.
 
-By default the log level in `development` is set to info, but can be overwritten via env flags (LOG_LEVEL).
+By default the log level in `development` is set to trace, but can be overwritten via env flags (LOG_LEVEL).
 
-To access the logger you can use the `ctx.logger` or if don't have easy access to the ctx (koa request context) then do
+Within a Koa request prefer `ctx.logger` as this provides extra logging specific to HTTP requests, otherwise use:
 
 ```
-const { createLogger } = require('../utils/logging');
+const { logger } = require('@bedrockio/instrumentation');
 
-// do this
-function someWork() {
-  const logger = createLogger();
-  logger.info("something")
-}
+// Inside job, etc.
+logger.info("something")
 
-// don't create the logger outside the function
-// if it can be avoid (not always possible) as no trace context can be provide
-const logger = createLogger()
 ```
 
 ## Auto-generating API Documentation
