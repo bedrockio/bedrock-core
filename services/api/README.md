@@ -80,10 +80,43 @@ See [../../deployment](../../deployment/) for more info
 
 ## Configuring Background Jobs
 
-The API provides a simple Docker container for running Cronjobs. The Cron schedule can be configured in `scripts/jobs-entrypoint.sh`. Tip: use https://crontab.guru/ to check your cron schedule.
+The API provides a simple Docker container for running Cronjobs. The container uses [Yacron](https://github.com/gjcarneiro/yacron) to provide a reliable cron job system with added features such as timezones, concurrency policies, retry policies and Sentry error monitoring.
+
+Example configuration of a 10 minute job `jobs/default.yml`:
+
+```yaml
+defaults:
+  timezone: America/New_York
+jobs:
+  - name: example
+    command: node scripts/jobs/example.js
+    schedule: '*/10 * * * *' # Human readable: https://crontab.guru/
+    concurrencyPolicy: Forbid
+```
+
+To build the container:
 
 ```
 docker build -t bedrock-api-jobs -f Dockerfile.jobs .
+```
+
+Different job configurations can be specified by changing the entry point when running the container. E.g in Kubernetes:
+
+```yaml
+command:
+  - './scripts/entrypoints/jobs.sh jobs/default.yml'
+```
+
+To list all scheduled jobs on a running container:
+
+```bash
+curl -s -H "Accept: application/json" localhost:2600/status | jq
+```
+
+To force run a scheduled job:
+
+```bash
+curl -s -XPOST localhost:2600/jobs/example/start
 ```
 
 ## Reloading DB Fixtures
