@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const { startCase, omitBy, isPlainObject } = require('lodash');
 const { ObjectId } = mongoose.Schema.Types;
-const { getJoiSchemaForAttributes, getMongooseValidator } = require('./validation');
+const { getJoiSchema, getMongooseValidator } = require('./validation');
 const { logger } = require('@bedrockio/instrumentation');
 
 const RESERVED_FIELDS = ['id', 'createdAt', 'updatedAt', 'deletedAt'];
@@ -54,24 +54,14 @@ function createSchema(attributes = {}, options = {}) {
   );
 
   schema.static('getCreateValidation', function getCreateValidation(appendSchema) {
-    return getJoiSchemaForAttributes(attributes, {
-      disallowField: (key) => {
-        return isDisallowedField(this.schema.obj[key]);
-      },
+    return getJoiSchemaFromMongoose(schema, {
       appendSchema,
     });
   });
 
   schema.static('getUpdateValidation', function getUpdateValidation(appendSchema) {
-    const getters = Object.keys(schema.virtuals).filter((key) => {
-      return schema.virtuals[key].getters.length > 0;
-    });
-    return getJoiSchemaForAttributes(attributes, {
-      disallowField: (key) => {
-        return isDisallowedField(this.schema.obj[key]);
-      },
+    return getJoiSchemaFromMongoose(schema, {
       appendSchema,
-      stripFields: [...RESERVED_FIELDS, ...getters],
       skipRequired: true,
     });
   });
@@ -94,6 +84,23 @@ function createSchema(attributes = {}, options = {}) {
   };
 
   return schema;
+}
+
+function getJoiSchemaFromMongoose(schema, options) {
+  const getters = Object.keys(schema.virtuals).filter((key) => {
+    return schema.virtuals[key].getters.length > 0;
+  });
+  return getJoiSchema(schema.obj, {
+    stripFields: [...RESERVED_FIELDS, ...getters],
+    transformField: (key, field) => {
+      if (field instanceof mongoose.Schema) {
+        return getJoiSchemaFromMongoose(field, options);
+      } else if (!isDisallowedField(field)) {
+        return field;
+      }
+    },
+    ...options,
+  });
 }
 
 function attributesToDefinition(attributes) {
