@@ -14,3 +14,4 @@ tmp
 services/api/data
 .terraform/
 globalConfig.json
+.eslintcache
