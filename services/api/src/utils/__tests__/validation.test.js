@@ -253,60 +253,203 @@ describe('getJoiSchemaForAttributes', () => {
   });
 
   describe('reference fields', () => {
-    it('should validate an ObjectId reference field', () => {
-      const schema = getJoiSchemaForAttributes({
-        image: {
-          type: 'ObjectId',
-          ref: 'Upload',
-        },
+    describe('simple', () => {
+      it('should validate a string reference field', () => {
+        const schema = getJoiSchemaForAttributes({
+          image: {
+            type: 'ObjectId',
+            ref: 'Upload',
+          },
+        });
+        assertPass(schema, { image: '5fd396fac80fa73203bd9554' });
+        assertFail(schema, { image: 'bad id' });
       });
-      assertPass(schema, { image: '5fd396fac80fa73203bd9554' });
-      assertFail(schema, { image: 'bad id' });
+
+      it('should transform an object with a valid id', () => {
+        const schema = getJoiSchemaForAttributes({
+          image: {
+            type: 'ObjectId',
+            ref: 'Upload',
+          },
+        });
+        assertPass(schema, { image: '5fd396fac80fa73203bd9554' });
+        assertPass(schema, { image: { id: '5fd396fac80fa73203bd9554' } });
+        assertFail(schema, { image: { id: '5fd396fac80fa73203bd9xyz' } });
+        assertFail(schema, { image: { id: '5fd396fac80f' } });
+        assertFail(schema, { image: { id: 'bad id' } });
+        assertFail(schema, { image: { id: '' } });
+      });
+
+      it('should transform an array of objects or ids', () => {
+        const schema = getJoiSchemaForAttributes({
+          categories: [
+            {
+              type: 'ObjectId',
+              ref: 'Upload',
+            },
+          ],
+        });
+        assertPass(schema, { categories: ['5fd396fac80fa73203bd9554'] });
+        assertPass(schema, { categories: [{ id: '5fd396fac80fa73203bd9554' }] });
+        assertPass(schema, {
+          categories: [
+            '5fd396fac80fa73203bd9554',
+            { id: '5fd396fac80fa73203bd9554' },
+            '5fd396fac80fa73203bd9554',
+            { id: '5fd396fac80fa73203bd9554' },
+            '5fd396fac80fa73203bd9554',
+          ],
+        });
+        assertFail(schema, {
+          categories: [{ id: '5fd396fac80fa73203bd9554' }, 'bad id'],
+        });
+        assertFail(schema, { categories: [{ id: '5fd396fac80fa73203bd9xyz' }] });
+        assertFail(schema, { categories: [{ id: '5fd396fac80f' }] });
+        assertFail(schema, { categories: [{ id: 'bad id' }] });
+        assertFail(schema, { categories: [{ id: '' }] });
+      });
     });
 
-    it('should transform an object with a valid id field', () => {
-      const schema = getJoiSchemaForAttributes({
-        image: {
-          type: 'ObjectId',
-          ref: 'Upload',
-        },
+    describe('nested', () => {
+      it('should transform a deeply nested ObjectId', () => {
+        const schema = getJoiSchemaForAttributes({
+          user: {
+            manager: {
+              category: {
+                type: 'ObjectId',
+                ref: 'Upload',
+              },
+            },
+          },
+        });
+        assertPass(schema, {
+          user: {
+            manager: {
+              category: '5fd396fac80fa73203bd9554',
+            },
+          },
+        });
+        assertPass(schema, {
+          user: {
+            manager: {
+              category: {
+                id: '5fd396fac80fa73203bd9554',
+              },
+            },
+          },
+        });
+        assertFail(schema, {
+          user: {
+            manager: {
+              category: {
+                id: {
+                  id: '5fd396fac80fa73203bd9554',
+                },
+              },
+            },
+          },
+        });
+        assertFail(schema, {
+          user: {
+            manager: {
+              id: '5fd396fac80fa73203bd9554',
+            },
+          },
+        });
+        assertFail(schema, {
+          user: {
+            id: '5fd396fac80fa73203bd9554',
+          },
+        });
+        assertFail(schema, {
+          id: '5fd396fac80fa73203bd9554',
+        });
+        assertFail(schema, {});
       });
-      assertPass(schema, { image: '5fd396fac80fa73203bd9554'});
-      assertPass(schema, { image: { id: '5fd396fac80fa73203bd9554' }});
-      assertFail(schema, { image: { id: '5fd396fac80fa73203bd9xyz' }});
-      assertFail(schema, { image: { id: '5fd396fac80f' }});
-      assertFail(schema, { image: { id: 'bad id' }});
-      assertFail(schema, { image: { id: '' }});
-    });
 
-    it('should transform an array of objects or ids', () => {
-      const schema = getJoiSchemaForAttributes({
-        categories: [{
-          type: 'ObjectId',
-          ref: 'Upload',
-        }],
+      it('should transform a deeply nested array ObjectId', () => {
+        const schema = getJoiSchemaForAttributes({
+          users: [
+            {
+              managers: [
+                {
+                  categories: [
+                    {
+                      type: 'ObjectId',
+                      ref: 'Upload',
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        });
+        assertPass(schema, {
+          users: [
+            {
+              managers: [
+                {
+                  categories: ['5fd396fac80fa73203bd9554'],
+                },
+              ],
+            },
+          ],
+        });
+        assertPass(schema, {
+          users: [
+            {
+              managers: [
+                {
+                  categories: [
+                    {
+                      id: '5fd396fac80fa73203bd9554',
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        });
+        assertFail(schema, {
+          users: [
+            {
+              manager: [
+                {
+                  categories: [
+                    {
+                      id: {
+                        id: '5fd396fac80fa73203bd9554',
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        });
+        assertFail(schema, {
+          users: [
+            {
+              managers: [
+                {
+                  id: '5fd396fac80fa73203bd9554',
+                },
+              ],
+            },
+          ],
+        });
+        assertFail(schema, {
+          users: [
+            {
+              id: '5fd396fac80fa73203bd9554',
+            },
+          ],
+        });
+        assertFail(schema, {
+          id: '5fd396fac80fa73203bd9554',
+        });
+        assertFail(schema, {});
       });
-      assertPass(schema, { categories: ['5fd396fac80fa73203bd9554'] });
-      assertPass(schema, { categories: [{ id: '5fd396fac80fa73203bd9554' }] });
-      assertPass(schema, {
-        categories: [
-          '5fd396fac80fa73203bd9554',
-          { id: '5fd396fac80fa73203bd9554' },
-          '5fd396fac80fa73203bd9554',
-          { id: '5fd396fac80fa73203bd9554' },
-          '5fd396fac80fa73203bd9554',
-        ]
-      });
-      assertFail(schema, {
-        categories: [
-          { id: '5fd396fac80fa73203bd9554' },
-          'bad id',
-        ]
-      });
-      assertFail(schema, { categories: [{ id: '5fd396fac80fa73203bd9xyz' }] });
-      assertFail(schema, { categories: [{ id: '5fd396fac80f' }] });
-      assertFail(schema, { categories: [{ id: 'bad id' }] });
-      assertFail(schema, { categories: [{ id: '' }] });
     });
   });
 
@@ -443,34 +586,39 @@ describe('getJoiSchemaForAttributes', () => {
         type: { type: String, required: true },
       });
       assertPass(schema, { type: 'foo' });
-      assertFail(schema, { type: { type: 'foo' }});
+      assertFail(schema, { type: { type: 'foo' } });
       assertFail(schema, {});
     });
   });
 
   describe('appendSchema', () => {
-
     it('should be able to append plain objects as schemas', () => {
-      const schema = getJoiSchemaForAttributes({
-        type: { type: String, required: true },
-      }, {
-        appendSchema: {
-          count: Joi.number().required(),
+      const schema = getJoiSchemaForAttributes(
+        {
+          type: { type: String, required: true },
+        },
+        {
+          appendSchema: {
+            count: Joi.number().required(),
+          },
         }
-      });
+      );
       assertFail(schema, { type: 'foo' });
       assertPass(schema, { type: 'foo', count: 10 });
     });
 
     it('should be able to merge Joi schemas', () => {
-      const schema = getJoiSchemaForAttributes({
-        type: { type: String, required: true },
-        count: { type: Number, required: true },
-      }, {
-        appendSchema: Joi.object({
-          count: Joi.number().optional(),
-        })
-      });
+      const schema = getJoiSchemaForAttributes(
+        {
+          type: { type: String, required: true },
+          count: { type: Number, required: true },
+        },
+        {
+          appendSchema: Joi.object({
+            count: Joi.number().optional(),
+          }),
+        }
+      );
       assertPass(schema, { type: 'foo' });
       assertPass(schema, { type: 'foo', count: 10 });
     });
