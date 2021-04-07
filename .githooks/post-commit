@@ -2,7 +2,7 @@
 
 lint() {
   pushd "$1" > /dev/null
-  git diff --staged --name-only --relative *.js | xargs node_modules/.bin/eslint --cache
+  git diff HEAD^ --name-only --relative *.js | xargs node_modules/.bin/eslint --cache
   popd > /dev/null
 }
 
