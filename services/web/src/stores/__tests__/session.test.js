@@ -1,6 +1,6 @@
 import React from 'react';
 import { SessionProvider, withSession, withLoadedSession, useSession } from '../session';
-import { getToken, setToken, clearToken } from 'utils/api';
+import { setToken, clearToken } from 'utils/api';
 import { render } from '@testing-library/react';
 
 jest.mock('utils/api');
