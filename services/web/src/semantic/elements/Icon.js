@@ -30,6 +30,7 @@ const INTERNAL_MAP = {
   setting: 'cog',
   settings: 'cogs',
   dropdown: 'caret-down',
+  mail: 'envelope',
 };
 
 export default class Icon extends React.Component {
