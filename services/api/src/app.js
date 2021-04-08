@@ -1,8 +1,8 @@
 const Router = require('@koa/router');
 const Koa = require('koa');
-const cors = require('@koa/cors');
 const bodyParser = require('koa-body');
 const errorHandler = require('./utils/middleware/error-handler');
+const corsMiddleware = require('./utils/middleware/cors');
 const Sentry = require('@sentry/node');
 const path = require('path');
 const { version } = require('../package.json');
@@ -16,14 +16,9 @@ const app = new Koa();
 const ENV_NAME = config.get('ENV_NAME');
 
 app
-  .use(
-    cors({
-      exposeHeaders: ['content-length'],
-      maxAge: 600,
-    })
-  )
   .use(errorHandler)
   .use(loggingMiddleware())
+  .use(corsMiddleware())
   .use(bodyParser({ multipart: true }));
 
 app.on('error', (err, ctx) => {
