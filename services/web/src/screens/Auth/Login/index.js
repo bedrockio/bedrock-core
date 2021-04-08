@@ -33,7 +33,6 @@ export default class Login extends React.Component {
       await this.context.loadUser();
       this.props.history.push('/');
     } catch (error) {
-      console.info('hmmm', error);
       this.setState({
         error,
         loading: false,
