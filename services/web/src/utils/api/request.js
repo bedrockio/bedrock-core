@@ -1,7 +1,7 @@
 import { API_URL } from 'utils/env';
 import { ApiError, ApiParseError } from './errors';
 import { trackRequest } from '../analytics';
-import { getToken } from '../token';
+import { getToken } from './token';
 
 export default async function request(options) {
   const { method = 'GET', path, files, params } = options;
