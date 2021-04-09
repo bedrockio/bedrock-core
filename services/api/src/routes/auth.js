@@ -128,10 +128,15 @@ router
     }),
     authenticate({ type: 'password' }),
     async (ctx) => {
+      const { jwt } = ctx.state;
       const { password } = ctx.request.body;
-      const user = await User.findById(ctx.state.jwt.userId);
+      const user = await User.findByIdAndUpdate(jwt.userId, {
+        $unset: { pendingTokenId: 1 },
+      });
       if (!user) {
-        ctx.throw(400, 'user does not exist');
+        ctx.throw(400, 'User does not exist');
+      } else if (user.pendingTokenId !== jwt.jit) {
+        ctx.throw(400, 'Token is invalid');
       }
       user.password = password;
       await user.save();

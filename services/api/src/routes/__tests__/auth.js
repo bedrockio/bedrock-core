@@ -69,7 +69,7 @@ describe('/1/auth', () => {
     it('should allow a user to set a password', async () => {
       const user = await createUser();
       const password = 'very new password';
-      const token = tokens.createUserTemporaryToken({ userId: user._id }, 'password');
+      const token = tokens.createUserTemporaryToken({ userId: user.id }, 'password');
       const response = await request(
         'POST',
         '/1/auth/set-password',
@@ -89,7 +89,7 @@ describe('/1/auth', () => {
       expect(payload).toHaveProperty('kid', 'user');
       expect(payload).toHaveProperty('type', 'user');
 
-      const updatedUser = await User.findById(user._id);
+      const updatedUser = await User.findById(user.id);
       expect(await updatedUser.verifyPassword(password)).toBe(true);
     });
 
@@ -110,6 +110,41 @@ describe('/1/auth', () => {
 
       expect(response.status).toBe(400);
 
+    });
+
+    it('should only allow a token to be used once', async () => {
+      const user = await createUser();
+      const tokenId = tokens.generateTokenId();
+      const token = tokens.createUserTemporaryToken({ userId: user.id, jit: tokenId }, 'password');
+      user.pendingTokenId = tokenId;
+      user.save();
+      let response = await request(
+        'POST',
+        '/1/auth/set-password',
+        {
+          password: 'new password',
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      expect(response.status).toBe(200);
+
+      response = await request(
+        'POST',
+        '/1/auth/set-password',
+        {
+          password: 'even newer password!',
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      expect(response.status).toBe(400);
     });
 
     it('should handle invalid tokens', async () => {
