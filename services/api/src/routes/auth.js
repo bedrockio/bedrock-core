@@ -107,10 +107,13 @@ router
       const { email } = ctx.request.body;
       const user = await User.findOne({ email });
       if (user) {
+        const tokenId = tokens.generateTokenId();
         await sendResetPassword({
           to: email,
-          token: tokens.createUserTemporaryToken({ userId: user.id }, 'password'),
+          token: tokens.createUserTemporaryToken({ userId: user.id, jit: tokenId }, 'password'),
         });
+        user.pendingTokenId = tokenId;
+        await user.save();
       } else {
         await sendResetPasswordUnknown({
           to: email,

@@ -56,6 +56,15 @@ describe('/1/auth', () => {
       expect(response.status).toBe(204);
     });
 
+    it('should set a pending token id', async () => {
+      let user = await createUser();
+      const response = await request('POST', '/1/auth/request-password', {
+        email: user.email,
+      });
+      user = await User.findById(user.id);
+      expect(user.pendingTokenId).not.toBeUndefined();
+    });
+
     it('should send an email to the unknown user', async () => {
       const email = 'email@email.com';
       const response = await request('POST', '/1/auth/request-password', {
@@ -109,7 +118,6 @@ describe('/1/auth', () => {
       );
 
       expect(response.status).toBe(400);
-
     });
 
     it('should only allow a token to be used once', async () => {
