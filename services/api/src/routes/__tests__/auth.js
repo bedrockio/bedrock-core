@@ -93,6 +93,25 @@ describe('/1/auth', () => {
       expect(await updatedUser.verifyPassword(password)).toBe(true);
     });
 
+    it('should error when user is not found', async () => {
+      const token = tokens.createUserTemporaryToken({ userId: 'invalid user' }, 'password');
+      const response = await request(
+        'POST',
+        '/1/auth/set-password',
+        {
+          password: 'new password',
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      expect(response.status).toBe(400);
+
+    });
+
     it('should handle invalid tokens', async () => {
       const password = 'very new password';
       const response = await request(

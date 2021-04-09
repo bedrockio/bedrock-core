@@ -131,7 +131,7 @@ router
       const { password } = ctx.request.body;
       const user = await User.findById(ctx.state.jwt.userId);
       if (!user) {
-        ctx.throw(500, 'user does not exist');
+        ctx.throw(400, 'user does not exist');
       }
       user.password = password;
       await user.save();
