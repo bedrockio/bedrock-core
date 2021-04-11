@@ -235,7 +235,7 @@ describe('/1/auth', () => {
       user.pendingTokenId = 'different id';
       user.save();
 
-      response = await request(
+      let response = await request(
         'POST',
         '/1/auth/set-password',
         {
