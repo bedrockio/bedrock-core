@@ -4,7 +4,7 @@ const validate = require('../utils/middleware/validate');
 const { authenticate } = require('../utils/middleware/authenticate');
 const tokens = require('../utils/tokens');
 const { sendWelcome, sendResetPassword, sendResetPasswordUnknown } = require('../utils/emails');
-const { BadRequestError, UnauthorizedError } = require('../utils/errors');
+const { BadRequestError } = require('../utils/errors');
 const { User, Invite } = require('../models');
 
 const router = new Router();
@@ -52,15 +52,25 @@ router
     }),
     async (ctx) => {
       const { email, password } = ctx.request.body;
-      const user = await User.findOne({ email });
-      if (!user) {
-        throw new UnauthorizedError('email password combination does not match');
+      const user = await User.findOneAndUpdate(
+        { email },
+        {
+          lastLoginAttemptAt: new Date(),
+          $inc: { loginAttempts: 1 },
+        }
+      );
+      if (user) {
+        try {
+          user.verifyLoginAttempts();
+          await user.verifyPassword(password);
+          await user.updateOne({ loginAttempts: 0 });
+          ctx.body = { data: { token: tokens.createUserToken(user) } };
+        } catch (err) {
+          ctx.throw(401, err.message);
+        }
+      } else {
+        ctx.throw(401, 'Incorrect password');
       }
-      const isSame = await user.verifyPassword(password);
-      if (!isSame) {
-        throw new UnauthorizedError('email password combination does not match');
-      }
-      ctx.body = { data: { token: tokens.createUserToken(user) } };
     }
   )
   .post(

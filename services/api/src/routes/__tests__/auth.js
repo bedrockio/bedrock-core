@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const tokens = require('../../utils/tokens');
 const { setupDb, teardownDb, request, createUser } = require('../../utils/testing');
+const { mockTime, unmockTime, advanceTime } = require('../../utils/testing/time');
 const { User } = require('../../models');
 
 beforeAll(async () => {
@@ -24,6 +25,76 @@ describe('/1/auth', () => {
       const { payload } = jwt.decode(response.body.data.token, { complete: true });
       expect(payload).toHaveProperty('kid', 'user');
       expect(payload).toHaveProperty('type', 'user');
+    });
+
+    it('should throttle a few seconds after 3 bad attempts', async () => {
+      mockTime();
+
+      const password = '123password!';
+      const user = await createUser({
+        password,
+        loginAttempts: 3,
+        lastLoginAttemptAt: new Date(),
+      });
+      let response;
+
+      await request('POST', '/1/auth/login', { email: user.email, password: 'bad password' });
+
+      response = await request('POST', '/1/auth/login', { email: user.email, password });
+      expect(response.status).toBe(401);
+
+      advanceTime(60 * 1000);
+
+      response = await request('POST', '/1/auth/login', { email: user.email, password });
+      expect(response.status).toBe(200);
+
+      unmockTime();
+    });
+
+    it('should throttle 1 hour after 10 bad attempts', async () => {
+      mockTime();
+
+      const password = '123password!';
+      const user = await createUser({
+        password,
+        loginAttempts: 9,
+        lastLoginAttemptAt: new Date(),
+      });
+      let response;
+
+      response = await request('POST', '/1/auth/login', { email: user.email, password });
+      expect(response.status).toBe(401);
+
+      advanceTime(60 * 60 * 1000);
+
+      response = await request('POST', '/1/auth/login', { email: user.email, password });
+      expect(response.status).toBe(200);
+
+      unmockTime();
+    });
+
+    it('should not throttle after successful login attempt', async () => {
+      mockTime();
+
+      const password = '123password!';
+      const user = await createUser({
+        password,
+        loginAttempts: 10,
+        lastLoginAttemptAt: new Date(),
+      });
+      let response;
+
+      advanceTime(60 * 60 * 1000);
+
+      response = await request('POST', '/1/auth/login', { email: user.email, password });
+      expect(response.status).toBe(200);
+
+      advanceTime(1000);
+
+      response = await request('POST', '/1/auth/login', { email: user.email, password });
+      expect(response.status).toBe(200);
+
+      unmockTime();
     });
   });
 
@@ -58,7 +129,7 @@ describe('/1/auth', () => {
 
     it('should set a pending token id', async () => {
       let user = await createUser();
-      const response = await request('POST', '/1/auth/request-password', {
+      await request('POST', '/1/auth/request-password', {
         email: user.email,
       });
       user = await User.findById(user.id);
@@ -99,7 +170,9 @@ describe('/1/auth', () => {
       expect(payload).toHaveProperty('type', 'user');
 
       const updatedUser = await User.findById(user.id);
-      expect(await updatedUser.verifyPassword(password)).toBe(true);
+      await expect(async () => {
+        await updatedUser.verifyPassword(password);
+      }).not.toThrow();
     });
 
     it('should error when user is not found', async () => {

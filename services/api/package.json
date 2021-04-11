@@ -39,6 +39,7 @@
     "eslint-plugin-bedrock": "^1.0.0",
     "jest": "^26.1.0",
     "juice": "^7.0.0",
+    "mockdate": "^3.0.5",
     "mongodb": "^3.6.5",
     "nodemon": "^2.0.7",
     "prettier": "^2.2.1",

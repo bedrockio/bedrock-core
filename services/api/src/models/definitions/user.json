@@ -19,16 +19,25 @@
       "type": "String",
       "trim": true
     },
+    "timeZone": {
+      "type": "String"
+    },
     "hashedPassword": {
       "type": "String",
+      "access": "private"
+    },
+    "loginAttempts": {
+      "type": "Number",
+      "access": "private",
+      "default": 0
+    },
+    "lastLoginAttemptAt": {
+      "type": "Date",
       "access": "private"
     },
     "pendingTokenId": {
       "type": "String",
       "access": "private"
-    },
-    "timeZone": {
-      "type": "String"
     }
   }
 }
