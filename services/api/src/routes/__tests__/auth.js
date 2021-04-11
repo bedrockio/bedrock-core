@@ -101,7 +101,7 @@ describe('/1/auth', () => {
   describe('POST /register', () => {
     it('should handle success', async () => {
       const email = 'some@email.com';
-      const password = 'password1';
+      const password = '123password!';
       const name = 'bob';
       const response = await request('POST', '/1/auth/register', { name, email, password });
       expect(response.status).toBe(200);

@@ -10,8 +10,8 @@ const { User, Invite } = require('../models');
 const router = new Router();
 
 const passwordField = Joi.string()
-  .min(6)
-  .message('Your password must be at least 6 characters long. Please try another.');
+  .min(12)
+  .message('Your password must be at least 12 characters long. Please try another.');
 
 router
   .post(
@@ -119,7 +119,7 @@ router
       if (user) {
         const tokenId = tokens.generateTokenId();
         const token = tokens.createUserTemporaryToken({ userId: user.id, jti: tokenId }, 'password');
-        await user.update({ pendingTokenId: tokenId });
+        await user.updateOne({ pendingTokenId: tokenId });
         await sendResetPassword({
           to: email,
           token,
