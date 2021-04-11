@@ -196,7 +196,7 @@ describe('/1/auth', () => {
     it('should only allow a token to be used once', async () => {
       const user = await createUser();
       const tokenId = tokens.generateTokenId();
-      const token = tokens.createUserTemporaryToken({ userId: user.id, jit: tokenId }, 'password');
+      const token = tokens.createUserTemporaryToken({ userId: user.id, jti: tokenId }, 'password');
       user.pendingTokenId = tokenId;
       user.save();
       let response = await request(

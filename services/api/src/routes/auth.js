@@ -118,7 +118,7 @@ router
       const user = await User.findOne({ email });
       if (user) {
         const tokenId = tokens.generateTokenId();
-        const token = tokens.createUserTemporaryToken({ userId: user.id, jit: tokenId }, 'password');
+        const token = tokens.createUserTemporaryToken({ userId: user.id, jti: tokenId }, 'password');
         await user.update({ pendingTokenId: tokenId });
         await sendResetPassword({
           to: email,
@@ -148,7 +148,7 @@ router
       });
       if (!user) {
         ctx.throw(400, 'User does not exist');
-      } else if (user.pendingTokenId !== jwt.jit) {
+      } else if (user.pendingTokenId !== jwt.jti) {
         ctx.throw(400, 'Token is invalid');
       }
       user.password = password;
