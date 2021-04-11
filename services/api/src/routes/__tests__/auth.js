@@ -228,6 +228,31 @@ describe('/1/auth', () => {
       expect(response.status).toBe(400);
     });
 
+    it('should not consume token on unsuccessful attempt', async () => {
+      let user = await createUser();
+      const tokenId = tokens.generateTokenId();
+      const token = tokens.createUserTemporaryToken({ userId: user.id, jti: tokenId }, 'password');
+      user.pendingTokenId = 'different id';
+      user.save();
+
+      response = await request(
+        'POST',
+        '/1/auth/set-password',
+        {
+          password: 'even newer password!',
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      expect(response.status).toBe(400);
+
+      user = await User.findById(user.id);
+      expect(user.pendingTokenId).not.toBeUndefined();
+    });
+
     it('should handle invalid tokens', async () => {
       const password = 'very new password';
       const response = await request(
