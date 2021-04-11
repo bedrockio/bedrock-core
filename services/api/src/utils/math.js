@@ -1,4 +1,4 @@
-// Maps value t from scale aMin -> aMax to bMin -> bMax
+// Maps value from scale aMin -> aMax to bMin -> bMax
 // on an exponential scale. Using quartic exponent as the default.
 function mapExponential(val, aMin, aMax, bMin, bMax, pow = 4) {
   if (isNaN(val)) {
