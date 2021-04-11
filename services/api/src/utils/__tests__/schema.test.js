@@ -300,6 +300,27 @@ describe('createSchema', () => {
       expect(data.__v).toBeUndefined();
       expect(data.secret).toBe('foo');
     });
+
+    it('should be able to mark access on nested objects', async () => {
+      const User = createTestModel(
+        createSchema({
+          login: {
+            password: String,
+            attempts: Number,
+            access: 'private',
+          },
+        })
+      );
+      const user = new User({
+        login: {
+          password: 'password',
+          attempts: 10,
+        }
+      });
+      expect(user.login.password).toBe('password');
+      expect(user.login.attempts).toBe(10);
+      expect(user.toObject().login).toBeUndefined();
+    });
   });
 
   describe('assign', () => {
@@ -529,7 +550,6 @@ describe('createSchema', () => {
   });
 
   describe('mongoose validation shortcuts', () => {
-
     it('should validate an email field', () => {
       let user;
       const User = createTestModel(
@@ -593,17 +613,18 @@ describe('createSchema', () => {
         email: '',
       });
       expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);
-
     });
 
     it('should validate a nested email field', () => {
       let user;
       const User = createTestModel(
         createSchema({
-          emails: [{
-            type: String,
-            validate: 'email',
-          }],
+          emails: [
+            {
+              type: String,
+              validate: 'email',
+            },
+          ],
         })
       );
 
@@ -727,7 +748,6 @@ describe('validation', () => {
         count: 10,
       });
     });
-
   });
 
   describe('update validation', () => {
