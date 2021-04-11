@@ -118,12 +118,12 @@ router
       const user = await User.findOne({ email });
       if (user) {
         const tokenId = tokens.generateTokenId();
+        const token = tokens.createUserTemporaryToken({ userId: user.id, jit: tokenId }, 'password');
+        await user.update({ pendingTokenId: tokenId });
         await sendResetPassword({
           to: email,
-          token: tokens.createUserTemporaryToken({ userId: user.id, jit: tokenId }, 'password'),
+          token,
         });
-        user.pendingTokenId = tokenId;
-        await user.save();
       } else {
         await sendResetPasswordUnknown({
           to: email,
