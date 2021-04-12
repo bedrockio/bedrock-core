@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
-const { startCase, omitBy } = require('lodash');
+const { startCase, omitBy, isPlainObject } = require('lodash');
 const { ObjectId } = mongoose.Schema.Types;
-const { getValidatorForDefinition } = require('./validator');
+const { getJoiSchemaForAttributes, getMongooseValidator } = require('./validation');
 const { logger } = require('@bedrockio/instrumentation');
 
 const RESERVED_FIELDS = ['id', 'createdAt', 'updatedAt', 'deletedAt'];
@@ -34,11 +34,12 @@ function transformField(obj, schema, options) {
   }
 }
 
-function createSchema(definition, options = {}) {
+function createSchema(attributes = {}, options = {}) {
+  const definition = attributesToDefinition(attributes);
   const schema = new mongoose.Schema(
     {
-      deletedAt: { type: Date },
       ...definition,
+      deletedAt: { type: Date },
     },
     {
       // Include timestamps by default.
@@ -52,19 +53,21 @@ function createSchema(definition, options = {}) {
     }
   );
 
-  schema.static('getValidator', function getValidator() {
-    return getValidatorForDefinition(definition, {
+  schema.static('getCreateValidation', function getCreateValidation(appendSchema) {
+    return getJoiSchemaForAttributes(attributes, {
       disallowField: (key) => {
         return isDisallowedField(this.schema.obj[key]);
       },
+      appendSchema,
     });
   });
 
-  schema.static('getPatchValidator', function getPatchValidator() {
-    return getValidatorForDefinition(definition, {
+  schema.static('getUpdateValidation', function getUpdateValidation(appendSchema) {
+    return getJoiSchemaForAttributes(attributes, {
       disallowField: (key) => {
         return isDisallowedField(this.schema.obj[key]);
       },
+      appendSchema,
       stripFields: RESERVED_FIELDS,
       skipRequired: true,
     });
@@ -88,6 +91,33 @@ function createSchema(definition, options = {}) {
   };
 
   return schema;
+}
+
+function attributesToDefinition(attributes) {
+  const definition = {};
+  const { type } = attributes;
+
+  // Is this a Mongoose descriptor like
+  // { type: String, required: true }
+  // or nested fields of Mixed type.
+  const isSchemaType = type && typeof type !== 'object';
+
+  for (let [key, val] of Object.entries(attributes)) {
+    if (isSchemaType) {
+      if (key === 'validate' && typeof val === 'string') {
+        // Map string shortcuts to mongoose validators such as "email".
+        val = getMongooseValidator(val, attributes.required);
+      }
+    } else {
+      if (Array.isArray(val)) {
+        val = val.map(attributesToDefinition);
+      } else if (isPlainObject(val)) {
+        val = attributesToDefinition(val);
+      }
+    }
+    definition[key] = val;
+  }
+  return definition;
 }
 
 function isReferenceField(schema) {

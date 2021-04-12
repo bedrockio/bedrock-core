@@ -1,6 +1,6 @@
 import React from 'react';
 import { withSession } from 'stores';
-import { Container } from 'semantic-ui-react';
+import { Container } from 'semantic';
 import { Layout } from './Layout';
 import bedrock from 'assets/bedrock.svg';
 

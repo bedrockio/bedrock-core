@@ -1,4 +1,4 @@
-const Joi = require('@hapi/joi');
+const Joi = require('joi');
 const { escapeRegExp } = require('lodash');
 const ObjectId = require('mongoose').Types.ObjectId;
 const PassThrough = require('stream').PassThrough;

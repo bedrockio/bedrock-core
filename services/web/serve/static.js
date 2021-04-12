@@ -3,6 +3,7 @@ const koaLogger = require('koa-logger');
 const koaMount = require('koa-mount');
 const koaBasicAuth = require('koa-basic-auth');
 
+const envMiddleware = require('./middleware/env');
 const assetsMiddleware = require('./middleware/assets');
 const historyMiddleware = require('./middleware/history');
 const templateMiddleware = require('./middleware/template');
@@ -17,6 +18,7 @@ const {
   HTTP_BASIC_AUTH_PATH,
   HTTP_BASIC_AUTH_USER,
   HTTP_BASIC_AUTH_PASS,
+  PUBLIC,
 } = require('../env');
 
 const app = new Koa();
@@ -41,6 +43,7 @@ if (ENABLE_HTTP_BASIC_AUTH) {
 
 app.use(koaMount('/assets/', assetsMiddleware('./dist/assets')));
 app.use(koaLogger());
+app.use(envMiddleware(PUBLIC));
 app.use(historyMiddleware({ apps: ['/'] }));
 app.use(templateMiddleware({ apps: ['/'] }));
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header, Table, Loader } from 'semantic-ui-react';
+import { Header, Table, Loader } from 'semantic';
 import { screen } from 'helpers';
 import { formatDateTime } from 'utils/date';
 

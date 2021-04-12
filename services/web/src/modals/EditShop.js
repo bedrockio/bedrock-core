@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Modal, Message, Button } from 'semantic-ui-react';
+import { Form, Modal, Message, Button } from 'semantic';
 import { request } from 'utils/api';
 import AutoFocus from 'components/AutoFocus';
 

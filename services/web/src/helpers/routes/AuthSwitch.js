@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Route, Link } from 'react-router-dom';
-import { Loader, Message } from 'semantic-ui-react';
+import { Loader, Message } from 'semantic';
 import { withSession } from 'stores';
 import ErrorScreen from 'screens/Error';
 

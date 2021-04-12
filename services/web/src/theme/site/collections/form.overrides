@@ -1,5 +1,0 @@
-// Overrides Webkit's weird autosuggest stylings.
-
-.ui.form .field input:-webkit-autofill::first-line {
-  font: 400 16px @inputFont !important;
-}

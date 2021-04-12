@@ -197,13 +197,17 @@ logger.info("something")
 ## Auto-generating API Documentation
 
 Good API documentation needs love, so make sure to take the time to describe parameters, create examples, etc.
-
-There's a script that automatically generates an OpenAPI definition for any added routes.
-
-Run:
+The [Bedrock CLI](https://github.com/bedrockio/bedrock-cli) can generate documentation using the command:
 
 ```
-node scripts/generate-openapi.js
+bedrock generate docs
+```
+
+After generation, documentation can be found and augmented in the files:
+
+```
+services/api/src/routes/__openapi__/resource.json
+services/web/src/docs/RESOURCE.md
 ```
 
 The format in `src/routes/__openapi__` is using a slimmed down version of the OpenAPI spec to make editing easier. API calls can be defined in the `paths` array and Object definitions can be defined in the `objects` array.

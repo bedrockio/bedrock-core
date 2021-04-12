@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, Grid } from 'semantic-ui-react';
+import { Segment, Grid } from 'semantic';
 import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
 import { withSession } from 'stores';

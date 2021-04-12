@@ -1,6 +1,8 @@
 const User = require('../user');
+const mongoose = require('mongoose');
 
 describe('User', () => {
+
   describe('serialization', () => {
     it('should expose id', () => {
       const user = new User();
@@ -39,4 +41,26 @@ describe('User', () => {
       expect(user.hashedPassword).toBe('fake hash');
     });
   });
+
+  describe('validation', () => {
+    it('should validate email field', () => {
+      let user;
+
+      user = new User({
+        email: 'good@email.com',
+      });
+      expect(user.validateSync()).toBeUndefined();
+
+      user = new User({
+        email: 'bad@email',
+      });
+      expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);
+
+      user = new User({
+        email: null,
+      });
+      expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);
+    });
+  });
+
 });

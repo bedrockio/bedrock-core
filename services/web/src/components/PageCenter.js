@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid } from 'semantic-ui-react';
+import { Grid } from 'semantic';
 
 export default (props) => (
   <Grid style={{ minHeight: '100vh' }} centered verticalAlign="middle">

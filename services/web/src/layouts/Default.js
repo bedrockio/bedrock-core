@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container } from 'semantic-ui-react';
+import { Container } from 'semantic';
 import { Header, Footer } from 'components';
 
 export default class DefaultLayout extends React.Component {
