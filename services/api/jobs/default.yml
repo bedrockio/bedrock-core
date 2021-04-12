@@ -1,6 +1,6 @@
 # YACron configuration: https://github.com/gjcarneiro/yacron
 defaults:
-timezone: America/New_York
+  timezone: America/New_York
 jobs:
   - name: example
     command: node scripts/jobs/example.js
