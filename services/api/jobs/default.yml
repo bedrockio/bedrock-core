@@ -1,0 +1,8 @@
+# YACron configuration: https://github.com/gjcarneiro/yacron
+defaults:
+timezone: America/New_York
+jobs:
+  - name: example
+    command: node scripts/jobs/example.js
+    schedule: '*/10 * * * *' # Human readable: https://crontab.guru/
+    concurrencyPolicy: Forbid
