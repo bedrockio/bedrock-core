@@ -696,9 +696,10 @@ describe('getMongooseValidator', () => {
       type: 'String',
       validate: 'email',
     };
-    const emailValidator = getMongooseValidator(field);
+    const emailValidator = getMongooseValidator('email', field);
     expect(emailValidator('foo@bar.com')).toBe(true);
     expect(emailValidator('')).toBe(true);
+    expect(emailValidator.schemaName).toBe('email');
     expect(() => {
       emailValidator('bad@email');
     }).toThrow();
@@ -710,8 +711,9 @@ describe('getMongooseValidator', () => {
       validate: 'email',
       required: true,
     };
-    const emailValidator = getMongooseValidator(field);
+    const emailValidator = getMongooseValidator('email', field);
     expect(emailValidator('foo@bar.com')).toBe(true);
+    expect(emailValidator.schemaName).toBe('email');
     expect(() => {
       emailValidator('');
     }).toThrow();

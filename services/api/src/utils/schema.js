@@ -122,7 +122,7 @@ function attributesToDefinition(attributes) {
     if (isSchemaType) {
       if (key === 'validate' && typeof val === 'string') {
         // Allow custom mongoose validation function that derives from the Joi schema.
-        val = getMongooseValidator(attributes);
+        val = getMongooseValidator(val, attributes);
       }
     } else {
       if (Array.isArray(val)) {

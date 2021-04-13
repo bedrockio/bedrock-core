@@ -18,18 +18,23 @@ function getJoiSchema(attributes, options = {}) {
   return schema;
 }
 
-function getMongooseValidator(field) {
+function getMongooseValidator(schemaName, field) {
   const schema = getSchemaForField(field);
-  return (val) => {
+  const validator = (val) => {
     const { error } = schema.validate(val);
     if (error) {
       throw error;
     }
     return true;
   };
+  // A named shortcut back to the Joi schema to retrieve it
+  // later when generating validations.
+  validator.schemaName = schemaName;
+  return validator;
 }
 
-function getFixedSchema(name) {
+function getFixedSchema(arg) {
+  const name = arg.schemaName || arg;
   const schema = FIXED_SCHEMAS[name];
   if (!schema) {
     throw new Error(`Cannot find schema for ${name}.`);
