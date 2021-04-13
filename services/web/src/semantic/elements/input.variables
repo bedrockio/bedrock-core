@@ -34,7 +34,7 @@
 --------------------*/
 
 /* Icon Input */
-@iconWidth: 14px;
+@iconWidth: 45px;
 @iconOpacity: 0.5;
 @iconFocusOpacity: 1;
 @iconOffset: -0.5em;

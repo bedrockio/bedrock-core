@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { merge, omit } from 'lodash';
-import { request } from 'utils/api';
+import { request, getToken, setToken, clearToken } from 'utils/api';
 import { trackSession } from 'utils/analytics';
 
 const SessionContext = React.createContext();
@@ -37,14 +37,14 @@ export class SessionProvider extends React.PureComponent {
 
   setToken = async (token) => {
     if (token) {
-      localStorage.setItem('jwt', token);
+      setToken(token);
     } else {
-      localStorage.removeItem('jwt');
+      clearToken();
     }
   };
 
   loadUser = async () => {
-    if (localStorage.getItem('jwt')) {
+    if (getToken()) {
       this.setState({
         loading: true,
         error: null,
