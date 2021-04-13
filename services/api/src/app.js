@@ -13,6 +13,9 @@ const { loggingMiddleware } = require('@bedrockio/instrumentation');
 
 const app = new Koa();
 
+const x = 1313;
+b();
+
 const ENV_NAME = config.get('ENV_NAME');
 
 app
