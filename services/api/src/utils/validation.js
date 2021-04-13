@@ -2,7 +2,7 @@ const Joi = require('joi');
 
 const EMAIL_SCHEMA = Joi.string().lowercase().email();
 
-function getJoiSchemaForAttributes(attributes, options = {}) {
+function getJoiSchema(attributes, options = {}) {
   const { appendSchema } = options;
   let schema = getObjectSchema(attributes, options).min(1);
   if (appendSchema) {
@@ -24,12 +24,18 @@ function getMongooseValidator(type, required) {
 
 function getObjectSchema(obj, options) {
   const map = {};
-  const { disallowField, stripFields = [] } = options;
+  const { transformField, stripFields = [] } = options;
   for (let [key, field] of Object.entries(obj)) {
-    if (disallowField && disallowField(key)) {
-      continue;
+    if (transformField) {
+      field = transformField(key, field);
     }
-    map[key] = getSchemaForField(field, options);
+    if (field) {
+      if (Joi.isSchema(field)) {
+        map[key] = field;
+      } else {
+        map[key] = getSchemaForField(field, options);
+      }
+    }
   }
   for (let key of stripFields) {
     map[key] = Joi.any().strip();
@@ -39,9 +45,7 @@ function getObjectSchema(obj, options) {
 
 function getSchemaForField(field, options) {
   if (Array.isArray(field)) {
-    return Joi.array().items(
-      getSchemaForField(field[0], options)
-    );
+    return Joi.array().items(getSchemaForField(field[0], options));
   }
   const { type, ...rest } = normalizeField(field);
   if (type === 'Mixed') {
@@ -102,7 +106,6 @@ function normalizeField(field) {
 }
 
 function joiSchemaToMongooseValidator(schema, required) {
-
   // TODO: for now we allow both empty strings and null
   // as a potential signal for "set but non-existent".
   // Is this ok? Do we not want any falsy fields in the
@@ -120,6 +123,6 @@ function joiSchemaToMongooseValidator(schema, required) {
 }
 
 module.exports = {
-  getJoiSchemaForAttributes,
+  getJoiSchema,
   getMongooseValidator,
 };
