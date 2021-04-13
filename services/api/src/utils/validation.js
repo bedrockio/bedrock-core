@@ -1,6 +1,7 @@
 const Joi = require('joi');
 
 const EMAIL_SCHEMA = Joi.string().lowercase().email();
+const OBJECT_ID_SCHEMA = Joi.string().hex().length(24);
 
 function getJoiSchema(attributes, options = {}) {
   const { appendSchema } = options;
@@ -84,7 +85,11 @@ function getSchemaForType(type) {
     case 'Date':
       return Joi.date().iso();
     case 'ObjectId':
-      return Joi.string().hex().length(24);
+      return Joi.custom((val) => {
+        const id = String(val.id || val);
+        Joi.assert(id, OBJECT_ID_SCHEMA);
+        return id;
+      });
     default:
       throw new TypeError(`Unknown schema type ${type}`);
   }
