@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+lint() {
+  pushd "$1" > /dev/null
+  git diff HEAD^ --name-only --relative *.js | xargs node_modules/.bin/eslint --cache
+  popd > /dev/null
+}
+
+lint services/api
+lint services/web

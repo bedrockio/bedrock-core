@@ -9,10 +9,11 @@
     "start": "nodemon --delay 300ms --ignore __tests__/* -w src --exec \"MOCK_EMAIL=true node src/index.js\"",
     "start:production": "node src/index",
     "emails": "node emails/build",
-    "lint": "eslint src scripts || true",
+    "lint": "eslint . || true",
     "test": "jest",
     "test:watch": "jest --watch -i",
-    "generate": "cd ../../generator && yarn install && yarn generate"
+    "generate": "cd ../../generator && yarn install && yarn generate",
+    "prepare": "../../.githooks/init"
   },
   "dependencies": {
     "@bedrockio/config": "^2.0.3",
