@@ -26,13 +26,15 @@ EOL
 if [ "$SENTRY_DSN" != "" ]; then
 cat >>/service/job-base.yml <<EOL
   onPermanentFailure:
-    dsn:
-      value: $SENTRY_DSN
-    fingerprint:
-      - yacron
-      - "{{ environment.HOSTNAME }}"
-      - "{{ name }}"
-    level: warning
+    report:
+      sentry:
+        dsn:
+          value: $SENTRY_DSN
+        fingerprint:
+          - yacron
+          - "{{ environment.HOSTNAME }}"
+          - "{{ name }}"
+        level: warning
 EOL
 fi
 cat >>/service/job-base.yml <<EOL
