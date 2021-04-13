@@ -1,33 +1,37 @@
 const cors = require('@koa/cors');
-const config = require('@bedrockio/config');
 
-// Note: Whitelisting domains here for added security layer.
-// To simply reflect the Origin header for a CORS response this
-// option may be removed, however this opens up the API to any
-// origin.
+// Note: "allowedOrigins" can be passed into the options here to
+// enable whitelisting domains here for added security layer.
 //
-// Also note that although modern browsers will not allow this
+// This is off by default, which simply reflects the Origin header
+// in Access-Control-Allow-Origin, however note that this opens up
+// the API to any origin.
+//
+// Also note that although modern browsers will not allow the Origin
 // header to be overridden it is still possible to spoof.
 
-const ALLOWED_ORIGINS = [config.get('APP_URL')];
-
 const DEFAULTS = {
-  origin: (ctx) => {
-    const origin = ctx.get('Origin');
-    if (ALLOWED_ORIGINS.includes(origin)) {
-      return origin;
-    } else {
-      ctx.logger.warn(`Invalid Origin header for CORS request: ${origin}.`);
-      return ALLOWED_ORIGINS[0];
-    }
-  },
   exposeHeaders: ['content-length'],
   maxAge: 600,
 };
 
+function restrictOrigins(allowed) {
+  return (ctx) => {
+    const origin = ctx.get('Origin');
+    if (allowed.includes(origin)) {
+      return origin;
+    } else {
+      ctx.logger.warn(`Invalid Origin header for CORS request: ${origin}.`);
+      return allowed[0];
+    }
+  };
+}
+
 module.exports = function (options = {}) {
+  const { allowedOrigins, ...corsOptions } = options;
   return cors({
+    origin: allowedOrigins ? restrictOrigins(allowedOrigins) : null,
     ...DEFAULTS,
-    ...options,
+    ...corsOptions,
   });
 };
