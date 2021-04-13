@@ -12,9 +12,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Icon as SemanticIcon } from 'semantic-ui-react';
-import { createShorthandFactory } from 'semantic-ui-react/dist/es/lib/factories';
 import IconGroup from './IconGroup';
 import { omit } from 'lodash';
+
+// Note Jest is too convoluted to be able to
+// load this file from modules. This can move to src
+// when esm support lands.
+import { createShorthandFactory } from 'semantic-ui-react/dist/commonjs/lib/factories';
 
 import regularSet from '../assets/icons/regular.svg';
 import outlineSet from '../assets/icons/outline.svg';
@@ -26,6 +30,7 @@ const INTERNAL_MAP = {
   setting: 'cog',
   settings: 'cogs',
   dropdown: 'caret-down',
+  mail: 'envelope',
 };
 
 export default class Icon extends React.Component {
