@@ -9,7 +9,7 @@
     "build": "rm -rf ./dist && NODE_ENV=production NODE_OPTIONS=\"--max-old-space-size=4096\" webpack",
     "start": "node ./serve/dev",
     "static": "node ./serve/static",
-    "lint": "eslint .",
+    "lint": "eslint src serve || true",
     "test": "jest",
     "generate": "cd ../../generator && yarn install && yarn generate"
   },

@@ -9,7 +9,7 @@
     "start": "nodemon --delay 300ms --ignore __tests__/* -w src --exec \"MOCK_EMAIL=true node src/index.js\"",
     "start:production": "node src/index",
     "emails": "node emails/build",
-    "lint": "eslint src scripts",
+    "lint": "eslint src scripts || true",
     "test": "jest",
     "test:watch": "jest --watch -i",
     "generate": "cd ../../generator && yarn install && yarn generate"
