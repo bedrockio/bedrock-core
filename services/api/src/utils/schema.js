@@ -54,7 +54,7 @@ function createSchema(attributes = {}, options = {}) {
   );
 
   schema.static('getCreateValidation', function getCreateValidation(appendSchema) {
-    return getJoiSchema(attributes, {
+    return getJoiSchemaFromMongoose(schema, {
       disallowField: (key) => {
         return isDisallowedField(this.schema.obj[key]);
       },
@@ -63,12 +63,11 @@ function createSchema(attributes = {}, options = {}) {
   });
 
   schema.static('getUpdateValidation', function getUpdateValidation(appendSchema) {
-    return getJoiSchema(attributes, {
+    return getJoiSchemaFromMongoose(schema, {
       disallowField: (key) => {
         return isDisallowedField(this.schema.obj[key]);
       },
       appendSchema,
-      stripFields: RESERVED_FIELDS,
       skipRequired: true,
     });
   });
@@ -91,6 +90,23 @@ function createSchema(attributes = {}, options = {}) {
   };
 
   return schema;
+}
+
+function getJoiSchemaFromMongoose(schema, options) {
+  const getters = Object.keys(schema.virtuals).filter((key) => {
+    return schema.virtuals[key].getters.length > 0;
+  });
+  return getJoiSchema(schema.obj, {
+    stripFields: [...RESERVED_FIELDS, ...getters],
+    transformField: (key, field) => {
+      if (field instanceof mongoose.Schema) {
+        return getJoiSchemaFromMongoose(field, options);
+      } else if (!isDisallowedField(field)) {
+        return field;
+      }
+    },
+    ...options,
+  });
 }
 
 function attributesToDefinition(attributes) {

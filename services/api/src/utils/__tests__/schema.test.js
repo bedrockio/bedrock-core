@@ -19,7 +19,7 @@ function createTestModel(schema) {
 
 describe('createSchema', () => {
   describe('basic functionality', () => {
-    it('should be able to create basic schema', async () => {
+    it('should create a basic schema', async () => {
       const User = createTestModel(
         createSchema({
           name: { type: String, validate: /[a-z]/ },
@@ -31,6 +31,66 @@ describe('createSchema', () => {
 
       await expect(async () => {
         user.name = 'FOO';
+        await user.save();
+      }).rejects.toThrow();
+    });
+
+    it('should create a schema with an array field', async () => {
+      const User = createTestModel(
+        createSchema({
+          names: [{ type: String, validate: /[a-z]/ }],
+        })
+      );
+      const user = new User({ names: ['foo'] });
+
+      expect(Array.from(user.names)).toEqual(['foo']);
+
+      await expect(async () => {
+        user.names = ['FOO'];
+        await user.save();
+      }).rejects.toThrow();
+    });
+
+    it('should create a schema with a nested field', async () => {
+      const User = createTestModel(
+        createSchema({
+          profile: {
+            name: { type: String, validate: /[a-z]/ },
+          },
+        })
+      );
+      const user = new User({
+        profile: {
+          name: 'foo',
+        },
+      });
+
+      expect(user.profile.name).toBe('foo');
+
+      await expect(async () => {
+        user.profile.name = 'FOO';
+        await user.save();
+      }).rejects.toThrow();
+    });
+
+    it('should accept a schema for a subfield', async () => {
+      const User = createTestModel(
+        createSchema({
+          profile: createSchema({
+            name: { type: String, validate: /[a-z]/ },
+          }),
+        })
+      );
+      const user = new User({
+        profile: {
+          name: 'foo',
+        },
+      });
+
+      expect(user.profile.name).toBe('foo');
+
+      await expect(async () => {
+        user.profile.name = 'FOO';
         await user.save();
       }).rejects.toThrow();
     });
@@ -529,7 +589,6 @@ describe('createSchema', () => {
   });
 
   describe('mongoose validation shortcuts', () => {
-
     it('should validate an email field', () => {
       let user;
       const User = createTestModel(
@@ -593,17 +652,18 @@ describe('createSchema', () => {
         email: '',
       });
       expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);
-
     });
 
     it('should validate a nested email field', () => {
       let user;
       const User = createTestModel(
         createSchema({
-          emails: [{
-            type: String,
-            validate: 'email',
-          }],
+          emails: [
+            {
+              type: String,
+              validate: 'email',
+            },
+          ],
         })
       );
 
@@ -727,7 +787,6 @@ describe('validation', () => {
         count: 10,
       });
     });
-
   });
 
   describe('update validation', () => {
@@ -771,6 +830,89 @@ describe('validation', () => {
         createdAt: 'createdAt',
         updatedAt: 'updatedAt',
         deletedAt: 'deletedAt',
+      });
+    });
+
+    it('should strip virtuals', () => {
+      const userSchema = createSchema({
+        firstName: {
+          type: String,
+          required: true,
+        },
+        lastName: {
+          type: String,
+          required: true,
+        },
+      });
+      userSchema.virtual('fullName').get(function () {
+        return `${this.firstName} ${this.lastName}`;
+      });
+      const User = createTestModel(userSchema);
+      const user = new User({
+        firstName: 'John',
+        lastName: 'Doe',
+      });
+      const data = user.toObject();
+      expect(data).toEqual({
+        id: user.id,
+        firstName: 'John',
+        lastName: 'Doe',
+        fullName: 'John Doe',
+      });
+      const schema = User.getUpdateValidation();
+      assertPass(schema, data);
+      expect(schema.validate(data)).toEqual({
+        value: {
+          firstName: 'John',
+          lastName: 'Doe',
+        },
+      });
+    });
+
+    it('should strip nested virtuals', () => {
+      const profileSchema = createSchema({
+        firstName: {
+          type: String,
+          required: true,
+        },
+        lastName: {
+          type: String,
+          required: true,
+        },
+      });
+      profileSchema.virtual('fullName').get(function () {
+        return `${this.firstName} ${this.lastName}`;
+      });
+      const User = createTestModel(
+        createSchema({
+          profile: profileSchema,
+        })
+      );
+      const user = new User({
+        profile: {
+          firstName: 'John',
+          lastName: 'Doe',
+        },
+      });
+      const data = user.toObject();
+      expect(data).toEqual({
+        id: user.id,
+        profile: {
+          id: user.profile.id,
+          firstName: 'John',
+          lastName: 'Doe',
+          fullName: 'John Doe',
+        },
+      });
+      const schema = User.getUpdateValidation();
+      assertPass(schema, data);
+      expect(schema.validate(data)).toEqual({
+        value: {
+          profile: {
+            firstName: 'John',
+            lastName: 'Doe',
+          },
+        },
       });
     });
 
