@@ -25,6 +25,14 @@
     ],
     "country": {
       "type": "String"
+    },
+    "address": {
+      "street": { "type": "String" },
+      "houseNumber": { "type": "String" },
+      "city": { "type": "String" },
+      "postalCode": { "type": "String" },
+      "stateOrProvince": { "type": "String" },
+      "countryCode": { "type": "String" }
     }
   }
 }
