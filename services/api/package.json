@@ -34,12 +34,12 @@
   },
   "devDependencies": {
     "@shelf/jest-mongodb": "^1.2.2",
+    "@sinonjs/fake-timers": "^7.0.5",
     "@yeongjet/joi-to-json-schema": "^1.0.4",
     "eslint": "^7.22.0",
     "eslint-plugin-bedrock": "^1.0.0",
     "jest": "^26.1.0",
     "juice": "^7.0.0",
-    "mockdate": "^3.0.5",
     "mongodb": "^3.6.5",
     "nodemon": "^2.0.7",
     "prettier": "^2.2.1",

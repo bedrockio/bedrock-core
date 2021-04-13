@@ -1,19 +1,22 @@
-const MockDate = require('mockdate');
+const { createClock, timers } = require('@sinonjs/fake-timers');
+
+let clock;
 
 function mockTime() {
-  MockDate.set(Date.now());
+  clock = createClock();
+  global.Date = clock.Date;
 }
 
 function unmockTime() {
-  MockDate.reset();
+  global.Date = timers.Date;
 }
 
 function setTime(time) {
-  MockDate.set(time);
+  clock.setSystemTime(time);
 }
 
 function advanceTime(ms) {
-  MockDate.set(Date.now() + ms);
+  clock.setSystemTime(Date.now() + ms);
 }
 
 module.exports = {
