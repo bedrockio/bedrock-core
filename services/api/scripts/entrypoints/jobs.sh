@@ -12,7 +12,7 @@ defaults:
   killTimeout: 30
   failsWhen:
     producesStdout: false
-    producesStderr: true
+    producesStderr: false
     nonzeroReturn: true
     always: false
   onFailure:
