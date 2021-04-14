@@ -14,7 +14,6 @@ import EditUser from 'modals/EditUser';
 export default class UserList extends React.Component {
   onDataNeeded = async (params) => {
     const { roles, ...rest } = params;
-    console.info('hUMMMMMM', roles, rest);
     return await request({
       method: 'POST',
       path: '/1/users/search',
