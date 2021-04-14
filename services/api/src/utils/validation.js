@@ -23,10 +23,23 @@ function getMongooseValidator(type, required) {
   throw new Error(`No validator for ${type}.`);
 }
 
+function getArraySchema(obj, options) {
+  let schema = Joi.array();
+  if (Array.isArray(obj)) {
+    schema = schema.items(getSchemaForField(obj[0], options));
+  }
+  return schema;
+}
+
 function getObjectSchema(obj, options) {
   const map = {};
   const { transformField, stripFields = [] } = options;
   for (let [key, field] of Object.entries(obj)) {
+    if (key === 'type' && typeof field !== 'object') {
+      // Ignore "type" field unless it's an object like
+      // type: { type: String }
+      continue;
+    }
     if (transformField) {
       field = transformField(key, field);
     }
@@ -45,12 +58,11 @@ function getObjectSchema(obj, options) {
 }
 
 function getSchemaForField(field, options) {
-  if (Array.isArray(field)) {
-    return Joi.array().items(getSchemaForField(field[0], options));
-  }
-  const { type, ...rest } = normalizeField(field);
-  if (type === 'Mixed') {
-    return getObjectSchema(rest, options);
+  const type = getFieldType(field);
+  if (type === 'Array') {
+    return getArraySchema(field, options);
+  } else if (type === 'Mixed') {
+    return getObjectSchema(field, options);
   }
   let schema = getSchemaForType(type);
   if (field.required && !options.skipRequired) {
@@ -95,18 +107,30 @@ function getSchemaForType(type) {
   }
 }
 
-function normalizeField(field) {
-  // Normalize different mongoose definition styles:
-  // { name: String }
-  // { type: { type: String } // allow "type" field
-  // { object: { type: Mixed }
-  if (typeof field === 'object') {
-    return {
-      ...field,
-      type: field.type?.type || field.type || 'Mixed',
-    };
+function getFieldType(field) {
+  // Normalize different mongoose type definitions. Be careful
+  // of nested type definitions.
+  if (Array.isArray(field)) {
+    // names: [String]
+    return 'Array';
+  } else if (typeof field === 'object') {
+    if (typeof field.type === 'function') {
+      // name: { type: String }
+      return field.type.name;
+    } else if (typeof field.type === 'string') {
+      // name: { type: 'String' }
+      return field.type;
+    } else {
+      // profile: { name: String } (no type field)
+      // type: { type: 'String' } (may be nested)
+      return 'Mixed';
+    }
+  } else if (typeof field === 'function') {
+    // name: String
+    return field.name;
   } else {
-    return { type: field };
+    // name: 'String'
+    return field;
   }
 }
 
