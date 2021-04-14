@@ -28,7 +28,8 @@ async function setupDb() {
 async function createUser(userAttributes = {}) {
   return await models.User.create({
     email: `${uniqueId('email')}@platform.com`,
-    name: 'test user',
+    firstName: 'Test',
+    lastName: 'User',
     ...userAttributes,
   });
 }
@@ -37,7 +38,8 @@ async function createUserWithRole(scope, role, userAttributes = {}, scopeRef = u
   const email = `${uniqueId('email')}@platform.com`;
   return await models.User.create({
     email,
-    name: 'test user',
+    firstName: 'Test',
+    lastName: 'User',
     roles: [
       {
         scope,

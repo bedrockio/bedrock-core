@@ -36,7 +36,8 @@ router
   .patch(
     '/me',
     validateBody({
-      name: Joi.string(),
+      firstName: Joi.string(),
+      lastName: Joi.string(),
       timeZone: Joi.string(),
     }),
     async (ctx) => {

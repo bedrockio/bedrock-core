@@ -102,8 +102,9 @@ describe('/1/auth', () => {
     it('should handle success', async () => {
       const email = 'some@email.com';
       const password = '123password!';
-      const name = 'bob';
-      const response = await request('POST', '/1/auth/register', { name, email, password });
+      const firstName = 'Bob';
+      const lastName = 'Johnson';
+      const response = await request('POST', '/1/auth/register', { firstName, lastName, email, password });
       expect(response.status).toBe(200);
 
       const { payload } = jwt.decode(response.body.data.token, { complete: true });

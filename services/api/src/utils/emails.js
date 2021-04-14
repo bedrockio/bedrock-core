@@ -104,14 +104,14 @@ async function sendInvite({ to, token, sender }) {
   await initialize();
   const options = {
     ...defaultOptions,
-    senderName: sender.name,
+    senderName: sender.fullName,
     senderEmail: sender.email,
     token,
   };
   return sendMail(
     {
       to,
-      subject: `${sender.name} has invited you to join ${defaultOptions.appName}`,
+      subject: `${sender.fullName} has invited you to join ${defaultOptions.appName}`,
     },
     {
       html: template('invite.html', options),
@@ -125,7 +125,7 @@ async function sendInviteKnown({ to, token, sender }) {
   await initialize();
   const options = {
     ...defaultOptions,
-    senderName: sender.name,
+    senderName: sender.fullName,
     senderEmail: sender.email,
     token,
   };
@@ -133,7 +133,7 @@ async function sendInviteKnown({ to, token, sender }) {
   return sendMail(
     {
       to,
-      subject: `${sender.name} has invited you to join ${defaultOptions.appName}`,
+      subject: `${sender.fullName} has invited you to join ${defaultOptions.appName}`,
     },
     {
       html: template('invite-known.html', options),

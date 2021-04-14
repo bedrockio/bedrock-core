@@ -18,11 +18,12 @@ router
     '/register',
     validateBody({
       email: Joi.string().lowercase().email().required(),
-      name: Joi.string().required(),
+      firstName: Joi.string().required(),
+      lastName: Joi.string().required(),
       password: passwordField.required(),
     }),
     async (ctx) => {
-      const { email, name } = ctx.request.body;
+      const { email } = ctx.request.body;
       const existingUser = await User.findOne({ email, deletedAt: { $exists: false } });
       if (existingUser) {
         throw new BadRequestError('A user with that email already exists');
@@ -33,7 +34,7 @@ router
       });
 
       await sendWelcome({
-        name,
+        name: user.fullName,
         to: email,
       });
 

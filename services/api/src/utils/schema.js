@@ -2,10 +2,8 @@ const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
 
-// TODO: make this less dumb
-//const { ObjectId: ObjectIdSchemaType } = mongoose.Schema.Types;
 const { ObjectId } = mongoose.Types;
-
+const { ObjectId: ObjectIdSchemaType } = mongoose.Schema.Types;
 const { startCase, omitBy, isPlainObject } = require('lodash');
 const { getJoiSchema, getMongooseValidator } = require('./validation');
 const { searchValidation } = require('./search');
@@ -233,7 +231,7 @@ function attributesToDefinition(attributes) {
 }
 
 function isReferenceField(schema) {
-  return resolveSchema(schema)?.type === ObjectId;
+  return resolveSchema(schema)?.type === ObjectIdSchemaType;
 }
 
 function isDisallowedField(schema, allowPrivate = false) {

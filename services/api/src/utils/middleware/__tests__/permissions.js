@@ -1,5 +1,5 @@
 const { requirePermissions } = require('../permissions');
-const { setupDb, teardownDb, context } = require('../../testing');
+const { setupDb, teardownDb, createUser, context } = require('../../testing');
 const { User } = require('./../../../models');
 
 beforeAll(async () => {
@@ -13,7 +13,7 @@ afterAll(async () => {
 
 describe('permissions', () => {
   it('should trigger an error if no auth user is set', async () => {
-    const authUser = await User.create({
+    const authUser = await createUser({
       email: 'test@test.com',
     });
     const middleware = requirePermissions({ scope: 'global', endpoint: 'users', permission: 'read' });
@@ -28,7 +28,7 @@ describe('permissions', () => {
     );
   });
   it('should allow global role based access control to certain endpoints', async () => {
-    const superAdminUser = await User.create({
+    const superAdminUser = await createUser({
       email: 'admin@permissions.com',
       roles: [
         {
@@ -37,7 +37,7 @@ describe('permissions', () => {
         },
       ],
     });
-    const plainUser = await User.create({
+    const plainUser = await createUser({
       email: 'plain@permissions.com',
     });
     const middleware = requirePermissions({ scope: 'global', endpoint: 'users', permission: 'read' });
