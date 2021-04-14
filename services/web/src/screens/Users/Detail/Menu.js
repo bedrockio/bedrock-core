@@ -10,7 +10,7 @@ export default ({ user, match, onSave }) => {
   const { id } = match.params;
   return (
     <React.Fragment>
-      <Breadcrumbs link={<Link to="/users">Users</Link>} active={user?.name || 'Loading...'}>
+      <Breadcrumbs link={<Link to="/users">Users</Link>} active={user?.fullName || 'Loading...'}>
         <EditUser
           user={user}
           onSave={onSave}

@@ -14,7 +14,6 @@ import EditUser from 'modals/EditUser';
 export default class UserList extends React.Component {
   onDataNeeded = async (params) => {
     const { roles, ...rest } = params;
-    console.info('hUMMMMMM', roles, rest);
     return await request({
       method: 'POST',
       path: '/1/users/search',
@@ -79,8 +78,8 @@ export default class UserList extends React.Component {
                     <Table.Row>
                       <Table.HeaderCell
                         width={3}
-                        onClick={() => setSort('name')}
-                        sorted={getSorted('name')}>
+                        onClick={() => setSort('lastName')}
+                        sorted={getSorted('lastName')}>
                         Name
                       </Table.HeaderCell>
                       <Table.HeaderCell
@@ -114,7 +113,7 @@ export default class UserList extends React.Component {
                       return (
                         <Table.Row key={user.id}>
                           <Table.Cell>
-                            <Link to={`/users/${user.id}`}>{user.name}</Link>
+                            <Link to={`/users/${user.id}`}>{user.fullName}</Link>
                           </Table.Cell>
                           <Table.Cell>{user.email}</Table.Cell>
                           <Table.Cell>
@@ -140,7 +139,7 @@ export default class UserList extends React.Component {
                             <Confirm
                               negative
                               confirmText="Delete"
-                              header={`Are you sure you want to delete "${user.name}"?`}
+                              header={`Are you sure you want to delete "${user.fullName}"?`}
                               content="All data will be permanently deleted"
                               trigger={<Button basic icon="trash" />}
                               onConfirm={async () => {

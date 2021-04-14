@@ -49,7 +49,10 @@ export default class EditUser extends React.Component {
         await request({
           method: 'PATCH',
           path: `/1/users/${user.id}`,
-          body: user,
+          body: {
+            ...user,
+            roles: undefined,
+          },
         });
       } else {
         await request({
@@ -87,21 +90,30 @@ export default class EditUser extends React.Component {
         open={open}
         trigger={trigger}>
         <Modal.Header>
-          {this.isUpdate() ? `Edit "${user.name}"` : 'New User'}
+          {this.isUpdate() ? `Edit "${user.fullName}"` : 'New User'}
         </Modal.Header>
         <Modal.Content>
           <AutoFocus>
             <Form
               id="edit-user"
               onSubmit={this.onSubmit}
-              error={touched && error}>
+              error={touched && !!error}>
               {error && <Message error content={error.message} />}
               <Form.Input
-                value={user.name || ''}
-                label="Name"
+                value={user.firstName || ''}
+                label="First Name"
                 required
                 type="text"
-                onChange={(e, { value }) => this.setField('name', value)}
+                autoComplete="given-name"
+                onChange={(e, { value }) => this.setField('firstName', value)}
+              />
+              <Form.Input
+                value={user.lastName || ''}
+                label="Last Name"
+                required
+                type="text"
+                autoComplete="family-name"
+                onChange={(e, { value }) => this.setField('lastName', value)}
               />
               <Form.Input
                 value={user.email || ''}
