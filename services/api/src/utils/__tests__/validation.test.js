@@ -622,6 +622,30 @@ describe('getJoiSchema', () => {
         ],
       });
     });
+
+    it('should allow explit array string type', () => {
+      const schema = getJoiSchema({
+        tags: 'Array',
+      });
+      assertPass(schema, {
+        tags: ['foo', 'bar'],
+      });
+      assertFail(schema, {
+        tags: 'foo',
+      });
+    });
+
+    it('should allow explit array function type', () => {
+      const schema = getJoiSchema({
+        tags: Array,
+      });
+      assertPass(schema, {
+        tags: ['foo', 'bar'],
+      });
+      assertFail(schema, {
+        tags: 'foo',
+      });
+    });
   });
 
   describe('nested fields', () => {

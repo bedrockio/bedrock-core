@@ -936,4 +936,30 @@ describe('validation', () => {
       });
     });
   });
+
+  describe('other cases', () => {
+    it('should handle geolocation schema', () => {
+      const User = createTestModel(
+        createSchema({
+          geoLocation: {
+            type: { type: 'String', default: 'Point' },
+            coordinates: {
+              type: 'Array',
+              default: [],
+            },
+          },
+        })
+      );
+      const schema = User.getCreateValidation();
+      assertPass(schema, {
+        geoLocation: {
+          type: 'Line',
+          coordinates: [35, 95],
+        },
+      });
+      assertFail(schema, {
+        geoLocation: 'Line',
+      });
+    });
+  });
 });
