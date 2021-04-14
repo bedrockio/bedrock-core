@@ -67,7 +67,6 @@ router
       })
     ),
     async (ctx) => {
-      console.info('IN WE GO!', ctx.request.body);
       const { data, meta } = await User.search(ctx.request.body);
       if (searchExport(ctx, data)) {
         return;
