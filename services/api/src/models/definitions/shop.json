@@ -33,7 +33,14 @@
       "city": { "type": "String" },
       "postalCode": { "type": "String" },
       "stateOrProvince": { "type": "String" },
-      "countryCode": { "type": "String" }
+      "countryCode": { "type": "String" },
+      "geoLocation": {
+        "type": { "type": "String", "default": "Point" },
+        "coordinates": {
+          "type": "Array",
+          "default": []
+        }
+      }
     }
   }
 }
