@@ -360,6 +360,27 @@ describe('createSchema', () => {
       expect(data.__v).toBeUndefined();
       expect(data.secret).toBe('foo');
     });
+
+    it('should be able to mark access on nested objects', async () => {
+      const User = createTestModel(
+        createSchema({
+          login: {
+            password: String,
+            attempts: Number,
+            access: 'private',
+          },
+        })
+      );
+      const user = new User({
+        login: {
+          password: 'password',
+          attempts: 10,
+        }
+      });
+      expect(user.login.password).toBe('password');
+      expect(user.login.attempts).toBe(10);
+      expect(user.toObject().login).toBeUndefined();
+    });
   });
 
   describe('assign', () => {
