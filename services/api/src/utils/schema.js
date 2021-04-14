@@ -112,13 +112,21 @@ function attributesToDefinition(attributes) {
   // or nested fields of Mixed type.
   const isSchemaType = type && typeof type !== 'object';
 
+  if ('access' in attributes && !isSchemaType) {
+    // Inside nested objects "access" needs to be explicitly
+    // disallowed so that it is not assumed to be a field.
+    attributes.type = {
+      access: null
+    };
+  }
+
   for (let [key, val] of Object.entries(attributes)) {
     if (isSchemaType) {
       if (key === 'validate' && typeof val === 'string') {
         // Map string shortcuts to mongoose validators such as "email".
         val = getMongooseValidator(val, attributes.required);
       }
-    } else {
+    } else if (key !== 'type') {
       if (Array.isArray(val)) {
         val = val.map(attributesToDefinition);
       } else if (isPlainObject(val)) {
