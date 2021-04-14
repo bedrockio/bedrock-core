@@ -3,11 +3,11 @@ const fs = require('fs');
 const path = require('path');
 
 // TODO: make this less dumb
-const { ObjectId: ObjectIdSchemaType } = mongoose.Schema.Types;
+//const { ObjectId: ObjectIdSchemaType } = mongoose.Schema.Types;
 const { ObjectId } = mongoose.Types;
 
-const { startCase, omitBy, escapeRegExp, isPlainObject } = require('lodash');
-const { getJoiSchema, getMongooseValidator, getCoercedSchemaType } = require('./validation');
+const { startCase, omitBy, isPlainObject } = require('lodash');
+const { getJoiSchema, getMongooseValidator } = require('./validation');
 const { searchValidation } = require('./search');
 const { logger } = require('@bedrockio/instrumentation');
 
@@ -89,49 +89,36 @@ function createSchema(attributes = {}, options = {}) {
       appendSchema: {
         ...searchValidation(searchOptions),
         ...appendSchema,
-      }
+      },
     });
   });
 
-  function getKeywordFields() {
-    return Object.keys(attributes)
-      .filter((key) => {
-        let field = attributes[key];
-        // TODO: consolidate with getField later
-        field = Array.isArray(field) ? field[0] : field;
-        return getCoercedSchemaType(field.type) === 'String';
-      });
-  }
-
-  schema.static('search', async function search(body) {
-    let { ids, keyword, startAt, endAt, sort, skip, limit, ...rest } = body;
+  schema.static('search', async function search(body, options = {}) {
+    const { ids, keyword, startAt, endAt, sort, skip, limit, ...rest } = body;
+    const sortOptions = {};
     const query = {
       deletedAt: {
-        $exists: false
-      }
+        $exists: false,
+      },
     };
     if (ids?.length) {
       query._id = { $in: ids };
     }
     if (keyword) {
-      const or = [];
-      const keywordFields = getKeywordFields();
-      if (keywordFields.length) {
-        const reg = RegExp(escapeRegExp(keyword), 'i');
-        for (let field of keywordFields) {
-          or.push({
-            [field]: reg,
-          });
-        }
-      }
       if (ObjectId.isValid(keyword)) {
-        or.push({
-          _id: keyword,
-        });
+        query.$or = [{ $text: { $search: keyword } }, { _id: keyword }];
+      } else {
+        query.$text = {
+          $search: keyword,
+        };
       }
-      if (or.length) {
-        query.$or = or;
-      }
+      // TODO: projection can be removed in Mongo v4.4
+      options['score'] = {
+        $meta: 'textScore',
+      };
+      sortOptions['score'] = {
+        $meta: 'textScore',
+      };
     }
     if (startAt || endAt) {
       query.createdAt = {};
@@ -154,13 +141,13 @@ function createSchema(attributes = {}, options = {}) {
       }
     }
 
+    if (sort) {
+      sortOptions[sort.field] = sort.order === 'desc' ? -1 : 1;
+    }
+
     const [data, total] = await Promise.all([
-      this
-      .find(query)
-      .sort(sort && { [sort.field]: sort.order === 'desc' ? -1 : 1 })
-      .skip(skip)
-      .limit(limit),
-      this.countDocuments(query)
+      this.find(query, options).sort(sortOptions).skip(skip).limit(limit),
+      this.countDocuments(query),
     ]);
 
     return {
@@ -223,7 +210,7 @@ function attributesToDefinition(attributes) {
     // Inside nested objects "access" needs to be explicitly
     // disallowed so that it is not assumed to be a field.
     attributes.type = {
-      access: null
+      access: null,
     };
   }
 
