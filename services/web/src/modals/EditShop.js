@@ -5,7 +5,6 @@ import AutoFocus from 'components/AutoFocus';
 
 // --- Generator: imports
 import UploadsField from 'components/form-fields/Uploads';
-import CountriesField from 'components/form-fields/Countries';
 import CategoriesField from 'components/form-fields/Categories';
 import AddressField from 'components/form-fields/Address';
 // --- Generator: end
@@ -64,7 +63,7 @@ export default class EditShop extends React.Component {
           path: `/1/shops/${shop.id}`,
           body: {
             ...shop,
-            categories: shop.categories.map((c) => c.id),
+            categories: (shop.categories || []).map((c) => c.id),
           },
         });
       } else {
@@ -73,7 +72,7 @@ export default class EditShop extends React.Component {
           path: '/1/shops',
           body: {
             ...shop,
-            categories: shop.categories.map((c) => c.id),
+            categories: (shop.categories || []).map((c) => c.id),
           },
         });
         this.setState({
@@ -131,12 +130,6 @@ export default class EditShop extends React.Component {
                 value={shop.description || ''}
                 onChange={this.setField}
               />
-              <CountriesField
-                label="Country"
-                name="country"
-                value={shop.country || ''}
-                onChange={this.setField}
-              />
               <CategoriesField
                 name="categories"
                 value={shop.categories || []}
@@ -153,6 +146,7 @@ export default class EditShop extends React.Component {
                 value={shop.address}
                 onChange={this.setField}
                 name="address"
+                autoComplete="off"
               />
               {/* --- Generator: end */}
             </Form>

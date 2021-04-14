@@ -27,7 +27,8 @@
       "type": "String"
     },
     "address": {
-      "street": { "type": "String" },
+      "line1": { "type": "String" },
+      "line2": { "type": "String" },
       "houseNumber": { "type": "String" },
       "city": { "type": "String" },
       "postalCode": { "type": "String" },
