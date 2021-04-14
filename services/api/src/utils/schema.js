@@ -19,7 +19,7 @@ const serializeOptions = {
 function transformField(obj, schema, options) {
   if (Array.isArray(obj)) {
     for (let el of obj) {
-      transformField(el, schema[0], options);
+      transformField(el, resolveSchema(schema), options);
     }
   } else if (obj && typeof obj === 'object') {
     for (let [key, val] of Object.entries(obj)) {
@@ -110,11 +110,13 @@ function attributesToDefinition(attributes) {
   // Is this a Mongoose descriptor like
   // { type: String, required: true }
   // or nested fields of Mixed type.
-  const isSchemaType = type && typeof type !== 'object';
+  const isSchemaType = !!type && typeof type !== 'object';
 
   for (let [key, val] of Object.entries(attributes)) {
     if (isSchemaType) {
-      if (key === 'validate' && typeof val === 'string') {
+      if (key === 'type' && typeof val === 'string') {
+        val = getMongooseType(val);
+      } else if (key === 'validate' && typeof val === 'string') {
         // Map string shortcuts to mongoose validators such as "email".
         val = getMongooseValidator(val, attributes.required);
       }
@@ -127,7 +129,24 @@ function attributesToDefinition(attributes) {
     }
     definition[key] = val;
   }
+
+  if ('access' in attributes && !isSchemaType) {
+    // Inside nested objects "access" needs to be explicitly
+    // disallowed so that it is not assumed to be a field.
+    definition.type = {
+      access: null,
+    };
+  }
+
   return definition;
+}
+
+function getMongooseType(str) {
+  const type = mongoose.Schema.Types[str];
+  if (!type) {
+    throw new Error(`Type ${str} could not be converted to Mongoose type.`);
+  }
+  return type;
 }
 
 function isReferenceField(schema) {

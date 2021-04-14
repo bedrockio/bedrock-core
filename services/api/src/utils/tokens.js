@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const config = require('@bedrockio/config');
 
 const expiresIn = {
@@ -39,7 +40,12 @@ function createUserToken(user) {
   );
 }
 
+function generateTokenId() {
+  return crypto.randomBytes(16).toString('hex');
+}
+
 module.exports = {
   createUserTemporaryToken,
   createUserToken,
+  generateTokenId,
 };

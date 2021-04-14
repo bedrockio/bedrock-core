@@ -51,6 +51,32 @@ describe('createSchema', () => {
       }).rejects.toThrow();
     });
 
+    it('should allow alternate array function syntax', async () => {
+      const User = createTestModel(
+        createSchema({
+          names: {
+            type: Array,
+            default: [],
+          },
+        })
+      );
+      const user = new User({ names: ['foo'] });
+      expect(Array.from(user.names)).toEqual(['foo']);
+    });
+
+    it('should allow alternate array string syntax', async () => {
+      const User = createTestModel(
+        createSchema({
+          names: {
+            type: 'Array',
+            default: [],
+          },
+        })
+      );
+      const user = new User({ names: ['foo'] });
+      expect(Array.from(user.names)).toEqual(['foo']);
+    });
+
     it('should create a schema with a nested field', async () => {
       const User = createTestModel(
         createSchema({
@@ -359,6 +385,27 @@ describe('createSchema', () => {
       expect(data._id).toBeUndefined();
       expect(data.__v).toBeUndefined();
       expect(data.secret).toBe('foo');
+    });
+
+    it('should be able to mark access on nested objects', async () => {
+      const User = createTestModel(
+        createSchema({
+          login: {
+            password: String,
+            attempts: Number,
+            access: 'private',
+          },
+        })
+      );
+      const user = new User({
+        login: {
+          password: 'password',
+          attempts: 10,
+        },
+      });
+      expect(user.login.password).toBe('password');
+      expect(user.login.attempts).toBe(10);
+      expect(user.toObject().login).toBeUndefined();
     });
   });
 
@@ -938,18 +985,32 @@ describe('validation', () => {
   });
 
   describe('other cases', () => {
-    it('should handle geolocation schema', () => {
+    it('should handle geolocation schema', async () => {
       const User = createTestModel(
         createSchema({
           geoLocation: {
             type: { type: 'String', default: 'Point' },
             coordinates: {
-              type: 'Array',
+              type: Array,
               default: [],
             },
           },
         })
       );
+      const user = await User.create({
+        geoLocation: {
+          coordinates: [35, 95],
+        },
+      });
+      expect(user.toObject()).toEqual({
+        id: user.id,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+        geoLocation: {
+          type: 'Point',
+          coordinates: [35, 95],
+        },
+      });
       const schema = User.getCreateValidation();
       assertPass(schema, {
         geoLocation: {

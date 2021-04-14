@@ -84,9 +84,6 @@ function getSchemaForField(field, options) {
 }
 
 function getSchemaForType(type) {
-  if (typeof type === 'function') {
-    type = type.name;
-  }
   switch (type) {
     case 'String':
       return Joi.string();
@@ -108,29 +105,32 @@ function getSchemaForType(type) {
 }
 
 function getFieldType(field) {
-  // Normalize different mongoose type definitions. Be careful
-  // of nested type definitions.
+  // Normalize different type definitions including Mongoose types as well
+  // as strings. Be careful here of nested type definitions.
   if (Array.isArray(field)) {
     // names: [String]
     return 'Array';
+  } else if (typeof field === 'function') {
+    // Coerce both global constructors and mongoose.Schema.Types.
+    // name: String
+    // name: mongoose.Schema.Types.String
+    return field.schemaName || field.name;
   } else if (typeof field === 'object') {
-    if (typeof field.type === 'function') {
-      // name: { type: String }
-      return field.type.name;
-    } else if (typeof field.type === 'string') {
-      // name: { type: 'String' }
-      return field.type;
-    } else {
+    if (!field.type || typeof field.type === 'object') {
+      // Nested mixed type field
       // profile: { name: String } (no type field)
       // type: { type: 'String' } (may be nested)
       return 'Mixed';
+    } else {
+      // name: { type: String }
+      // name: { type: 'String' }
+      return getFieldType(field.type);
     }
-  } else if (typeof field === 'function') {
-    // name: String
-    return field.name;
-  } else {
+  } else if (typeof field === 'string') {
     // name: 'String'
     return field;
+  } else {
+    throw new Error(`Could not derive type for field ${field}.`);
   }
 }
 
