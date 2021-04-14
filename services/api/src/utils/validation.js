@@ -1,8 +1,9 @@
 const Joi = require('joi');
 
 const EMAIL_SCHEMA = Joi.string().lowercase().email();
+const OBJECT_ID_SCHEMA = Joi.string().hex().length(24);
 
-function getJoiSchemaForAttributes(attributes, options = {}) {
+function getJoiSchema(attributes, options = {}) {
   const { appendSchema } = options;
   let schema = getObjectSchema(attributes, options).min(1);
   if (appendSchema) {
@@ -22,14 +23,33 @@ function getMongooseValidator(type, required) {
   throw new Error(`No validator for ${type}.`);
 }
 
+function getArraySchema(obj, options) {
+  let schema = Joi.array();
+  if (Array.isArray(obj)) {
+    schema = schema.items(getSchemaForField(obj[0], options));
+  }
+  return schema;
+}
+
 function getObjectSchema(obj, options) {
   const map = {};
-  const { disallowField, stripFields = [] } = options;
+  const { transformField, stripFields = [] } = options;
   for (let [key, field] of Object.entries(obj)) {
-    if (disallowField && disallowField(key)) {
+    if (key === 'type' && typeof field !== 'object') {
+      // Ignore "type" field unless it's an object like
+      // type: { type: String }
       continue;
     }
-    map[key] = getSchemaForField(field, options);
+    if (transformField) {
+      field = transformField(key, field);
+    }
+    if (field) {
+      if (Joi.isSchema(field)) {
+        map[key] = field;
+      } else {
+        map[key] = getSchemaForField(field, options);
+      }
+    }
   }
   for (let key of stripFields) {
     map[key] = Joi.any().strip();
@@ -38,14 +58,11 @@ function getObjectSchema(obj, options) {
 }
 
 function getSchemaForField(field, options) {
-  if (Array.isArray(field)) {
-    return Joi.array().items(
-      getSchemaForField(field[0], options)
-    );
-  }
-  const { type, ...rest } = normalizeField(field);
-  if (type === 'Mixed') {
-    return getObjectSchema(rest, options);
+  const type = getFieldType(field);
+  if (type === 'Array') {
+    return getArraySchema(field, options);
+  } else if (type === 'Mixed') {
+    return getObjectSchema(field, options);
   }
   let schema = getSchemaForType(type);
   if (field.required && !options.skipRequired) {
@@ -80,29 +97,44 @@ function getSchemaForType(type) {
     case 'Date':
       return Joi.date().iso();
     case 'ObjectId':
-      return Joi.string().hex().length(24);
+      return Joi.custom((val) => {
+        const id = String(val.id || val);
+        Joi.assert(id, OBJECT_ID_SCHEMA);
+        return id;
+      });
     default:
       throw new TypeError(`Unknown schema type ${type}`);
   }
 }
 
-function normalizeField(field) {
-  // Normalize different mongoose definition styles:
-  // { name: String }
-  // { type: { type: String } // allow "type" field
-  // { object: { type: Mixed }
-  if (typeof field === 'object') {
-    return {
-      ...field,
-      type: field.type?.type || field.type || 'Mixed',
-    };
+function getFieldType(field) {
+  // Normalize different mongoose type definitions. Be careful
+  // of nested type definitions.
+  if (Array.isArray(field)) {
+    // names: [String]
+    return 'Array';
+  } else if (typeof field === 'object') {
+    if (typeof field.type === 'function') {
+      // name: { type: String }
+      return field.type.name;
+    } else if (typeof field.type === 'string') {
+      // name: { type: 'String' }
+      return field.type;
+    } else {
+      // profile: { name: String } (no type field)
+      // type: { type: 'String' } (may be nested)
+      return 'Mixed';
+    }
+  } else if (typeof field === 'function') {
+    // name: String
+    return field.name;
   } else {
-    return { type: field };
+    // name: 'String'
+    return field;
   }
 }
 
 function joiSchemaToMongooseValidator(schema, required) {
-
   // TODO: for now we allow both empty strings and null
   // as a potential signal for "set but non-existent".
   // Is this ok? Do we not want any falsy fields in the
@@ -120,6 +152,6 @@ function joiSchemaToMongooseValidator(schema, required) {
 }
 
 module.exports = {
-  getJoiSchemaForAttributes,
+  getJoiSchema,
   getMongooseValidator,
 };

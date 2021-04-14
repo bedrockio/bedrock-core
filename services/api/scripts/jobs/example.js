@@ -1,10 +1,13 @@
 const process = require('process');
 const { logger } = require('@bedrockio/instrumentation');
-const { initialize } = require('./../src/utils/database');
+const { initialize } = require('../../src/utils/database');
+const { sleep } = require('../../src/utils/sleep');
 
 async function run() {
   await initialize();
-  logger.info('Running jobs');
+  logger.info('Running example job');
+  await sleep(30 * 1000);
+  logger.info('Done');
 }
 
 run()
