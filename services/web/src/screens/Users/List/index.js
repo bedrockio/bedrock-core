@@ -1,7 +1,7 @@
 import React from 'react';
 import { memoize } from 'lodash';
 import { Link } from 'react-router-dom';
-import { Table, Divider, Button, Message } from 'semantic-ui-react';
+import { Table, Divider, Button, Message } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import { screen } from 'helpers';

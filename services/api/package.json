@@ -5,24 +5,22 @@
   "engines": {
     "node": ">=12"
   },
-  "pre-commit": [
-    "lint"
-  ],
   "scripts": {
-    "start": "nodemon -w src --exec \"MOCK_EMAIL=true node src/index.js | pino-pretty\"",
+    "start": "nodemon --delay 300ms --ignore __tests__/* -w src --exec \"MOCK_EMAIL=true node src/index.js\"",
     "start:production": "node src/index",
     "emails": "node emails/build",
-    "lint": "eslint src scripts",
+    "lint": "eslint .",
     "test": "jest",
     "test:watch": "jest --watch -i",
-    "generate": "cd ../../generator && yarn install && yarn generate"
+    "generate": "cd ../../generator && yarn install && yarn generate",
+    "prepare": "../../.githooks/init"
   },
   "dependencies": {
     "@bedrockio/config": "^2.0.3",
-    "@bedrockio/instrumentation": "^1.0.2",
+    "@bedrockio/instrumentation": "^1.4.3",
     "@google-cloud/storage": "^5.1.2",
     "@koa/cors": "^3.1.0",
-    "@koa/router": "^9.3.1",
+    "@koa/router": "^10.0.0",
     "@sentry/node": "^6.2.1",
     "bcrypt": "^5.0.0",
     "fast-csv": "^4.3.6",
@@ -30,25 +28,21 @@
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.0",
     "koa-body": "^4.2.0",
-    "koa-logger": "^3.2.1",
     "lodash": "^4.17.19",
-    "mongoose": "^5.12.2",
+    "mongoose": "^5.12.3",
     "mongoose-autopopulate": "^0.12.3",
-    "pino": "^6.11.0",
-    "postmark": "^2.5.4",
-    "snyk": "^1.359.1"
+    "postmark": "^2.5.4"
   },
   "devDependencies": {
     "@shelf/jest-mongodb": "^1.2.2",
+    "@sinonjs/fake-timers": "^7.0.5",
     "@yeongjet/joi-to-json-schema": "^1.0.4",
     "eslint": "^7.22.0",
     "eslint-plugin-bedrock": "^1.0.0",
     "jest": "^26.1.0",
     "juice": "^7.0.0",
-    "mongodb": "^3.6.2",
-    "nodemon": "^2.0.4",
-    "pino-pretty": "^4.3.0",
-    "pre-commit": "^1.2.2",
+    "mongodb": "^3.6.5",
+    "nodemon": "^2.0.7",
     "prettier": "^2.2.1",
     "prettier-eslint": "^12.0.0",
     "supertest": "^4.0.2"

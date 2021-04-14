@@ -95,6 +95,71 @@ describe('getJoiSchema', () => {
       assertPass(schema, { count: 5 });
       assertFail(schema, {});
     });
+
+    it('should be able to transform fields', () => {
+      const schema = getJoiSchema(
+        {
+          name: {
+            type: String,
+            required: true,
+          },
+        },
+        {
+          transformField: (key, field) => {
+            if (key === 'name') {
+              return {
+                ...field,
+                minLength: 5,
+              };
+            }
+          },
+        }
+      );
+      assertFail(schema, { name: 'foo' });
+      assertPass(schema, { name: 'fooooo' });
+    });
+
+    it('should be able to skip fields by returning falsy in transform', () => {
+      const schema = getJoiSchema(
+        {
+          name: {
+            type: String,
+            required: true,
+          },
+          password: {
+            type: String,
+            private: true,
+          },
+        },
+        {
+          transformField: (key, field) => {
+            if (!field.private) {
+              return field;
+            }
+          },
+        }
+      );
+      assertPass(schema, { name: 'foo' });
+      assertFail(schema, { name: 'foo', password: 'bar' });
+    });
+
+    it('should be able return a schema in transform', () => {
+      const schema = getJoiSchema(
+        {
+          name: {
+            type: String,
+            required: true,
+          },
+        },
+        {
+          transformField: () => {
+            return Joi.string().min(5);
+          },
+        }
+      );
+      assertFail(schema, { name: 'foo' });
+      assertPass(schema, { name: 'foooo' });
+    });
   });
 
   describe('global options', () => {
@@ -253,15 +318,203 @@ describe('getJoiSchema', () => {
   });
 
   describe('reference fields', () => {
-    it('should validate an ObjectId reference field', () => {
-      const schema = getJoiSchema({
-        image: {
-          type: 'ObjectId',
-          ref: 'Upload',
-        },
+    describe('simple', () => {
+      it('should validate a string reference field', () => {
+        const schema = getJoiSchema({
+          image: {
+            type: 'ObjectId',
+            ref: 'Upload',
+          },
+        });
+        assertPass(schema, { image: '5fd396fac80fa73203bd9554' });
+        assertFail(schema, { image: 'bad id' });
       });
-      assertPass(schema, { image: '5fd396fac80fa73203bd9554' });
-      assertFail(schema, { image: 'bad id' });
+
+      it('should transform an object with a valid id', () => {
+        const schema = getJoiSchema({
+          image: {
+            type: 'ObjectId',
+            ref: 'Upload',
+          },
+        });
+        assertPass(schema, { image: '5fd396fac80fa73203bd9554' });
+        assertPass(schema, { image: { id: '5fd396fac80fa73203bd9554' } });
+        assertFail(schema, { image: { id: '5fd396fac80fa73203bd9xyz' } });
+        assertFail(schema, { image: { id: '5fd396fac80f' } });
+        assertFail(schema, { image: { id: 'bad id' } });
+        assertFail(schema, { image: { id: '' } });
+      });
+
+      it('should transform an array of objects or ids', () => {
+        const schema = getJoiSchema({
+          categories: [
+            {
+              type: 'ObjectId',
+              ref: 'Upload',
+            },
+          ],
+        });
+        assertPass(schema, { categories: ['5fd396fac80fa73203bd9554'] });
+        assertPass(schema, { categories: [{ id: '5fd396fac80fa73203bd9554' }] });
+        assertPass(schema, {
+          categories: [
+            '5fd396fac80fa73203bd9554',
+            { id: '5fd396fac80fa73203bd9554' },
+            '5fd396fac80fa73203bd9554',
+            { id: '5fd396fac80fa73203bd9554' },
+            '5fd396fac80fa73203bd9554',
+          ],
+        });
+        assertFail(schema, {
+          categories: [{ id: '5fd396fac80fa73203bd9554' }, 'bad id'],
+        });
+        assertFail(schema, { categories: [{ id: '5fd396fac80fa73203bd9xyz' }] });
+        assertFail(schema, { categories: [{ id: '5fd396fac80f' }] });
+        assertFail(schema, { categories: [{ id: 'bad id' }] });
+        assertFail(schema, { categories: [{ id: '' }] });
+      });
+    });
+
+    describe('nested', () => {
+      it('should transform a deeply nested ObjectId', () => {
+        const schema = getJoiSchema({
+          user: {
+            manager: {
+              category: {
+                type: 'ObjectId',
+                ref: 'Upload',
+              },
+            },
+          },
+        });
+        assertPass(schema, {
+          user: {
+            manager: {
+              category: '5fd396fac80fa73203bd9554',
+            },
+          },
+        });
+        assertPass(schema, {
+          user: {
+            manager: {
+              category: {
+                id: '5fd396fac80fa73203bd9554',
+              },
+            },
+          },
+        });
+        assertFail(schema, {
+          user: {
+            manager: {
+              category: {
+                id: {
+                  id: '5fd396fac80fa73203bd9554',
+                },
+              },
+            },
+          },
+        });
+        assertFail(schema, {
+          user: {
+            manager: {
+              id: '5fd396fac80fa73203bd9554',
+            },
+          },
+        });
+        assertFail(schema, {
+          user: {
+            id: '5fd396fac80fa73203bd9554',
+          },
+        });
+        assertFail(schema, {
+          id: '5fd396fac80fa73203bd9554',
+        });
+        assertFail(schema, {});
+      });
+
+      it('should transform a deeply nested array ObjectId', () => {
+        const schema = getJoiSchema({
+          users: [
+            {
+              managers: [
+                {
+                  categories: [
+                    {
+                      type: 'ObjectId',
+                      ref: 'Upload',
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        });
+        assertPass(schema, {
+          users: [
+            {
+              managers: [
+                {
+                  categories: ['5fd396fac80fa73203bd9554'],
+                },
+              ],
+            },
+          ],
+        });
+        assertPass(schema, {
+          users: [
+            {
+              managers: [
+                {
+                  categories: [
+                    {
+                      id: '5fd396fac80fa73203bd9554',
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        });
+        assertFail(schema, {
+          users: [
+            {
+              manager: [
+                {
+                  categories: [
+                    {
+                      id: {
+                        id: '5fd396fac80fa73203bd9554',
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        });
+        assertFail(schema, {
+          users: [
+            {
+              managers: [
+                {
+                  id: '5fd396fac80fa73203bd9554',
+                },
+              ],
+            },
+          ],
+        });
+        assertFail(schema, {
+          users: [
+            {
+              id: '5fd396fac80fa73203bd9554',
+            },
+          ],
+        });
+        assertFail(schema, {
+          id: '5fd396fac80fa73203bd9554',
+        });
+        assertFail(schema, {});
+      });
     });
   });
 
@@ -369,6 +622,30 @@ describe('getJoiSchema', () => {
         ],
       });
     });
+
+    it('should allow explit array string type', () => {
+      const schema = getJoiSchema({
+        tags: 'Array',
+      });
+      assertPass(schema, {
+        tags: ['foo', 'bar'],
+      });
+      assertFail(schema, {
+        tags: 'foo',
+      });
+    });
+
+    it('should allow explit array function type', () => {
+      const schema = getJoiSchema({
+        tags: Array,
+      });
+      assertPass(schema, {
+        tags: ['foo', 'bar'],
+      });
+      assertFail(schema, {
+        tags: 'foo',
+      });
+    });
   });
 
   describe('nested fields', () => {
@@ -443,9 +720,10 @@ describe('getMongooseValidator', () => {
       type: 'String',
       validate: 'email',
     };
-    const emailValidator = getMongooseValidator(field);
+    const emailValidator = getMongooseValidator('email', field);
     expect(emailValidator('foo@bar.com')).toBe(true);
     expect(emailValidator('')).toBe(true);
+    expect(emailValidator.schemaName).toBe('email');
     expect(() => {
       emailValidator('bad@email');
     }).toThrow();
@@ -457,8 +735,9 @@ describe('getMongooseValidator', () => {
       validate: 'email',
       required: true,
     };
-    const emailValidator = getMongooseValidator(field);
+    const emailValidator = getMongooseValidator('email', field);
     expect(emailValidator('foo@bar.com')).toBe(true);
+    expect(emailValidator.schemaName).toBe('email');
     expect(() => {
       emailValidator('');
     }).toThrow();

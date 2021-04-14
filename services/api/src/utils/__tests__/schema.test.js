@@ -19,7 +19,7 @@ function createTestModel(schema) {
 
 describe('createSchema', () => {
   describe('basic functionality', () => {
-    it('should be able to create basic schema', async () => {
+    it('should create a basic schema', async () => {
       const User = createTestModel(
         createSchema({
           name: { type: String, validate: /[a-z]/ },
@@ -31,6 +31,66 @@ describe('createSchema', () => {
 
       await expect(async () => {
         user.name = 'FOO';
+        await user.save();
+      }).rejects.toThrow();
+    });
+
+    it('should create a schema with an array field', async () => {
+      const User = createTestModel(
+        createSchema({
+          names: [{ type: String, validate: /[a-z]/ }],
+        })
+      );
+      const user = new User({ names: ['foo'] });
+
+      expect(Array.from(user.names)).toEqual(['foo']);
+
+      await expect(async () => {
+        user.names = ['FOO'];
+        await user.save();
+      }).rejects.toThrow();
+    });
+
+    it('should create a schema with a nested field', async () => {
+      const User = createTestModel(
+        createSchema({
+          profile: {
+            name: { type: String, validate: /[a-z]/ },
+          },
+        })
+      );
+      const user = new User({
+        profile: {
+          name: 'foo',
+        },
+      });
+
+      expect(user.profile.name).toBe('foo');
+
+      await expect(async () => {
+        user.profile.name = 'FOO';
+        await user.save();
+      }).rejects.toThrow();
+    });
+
+    it('should accept a schema for a subfield', async () => {
+      const User = createTestModel(
+        createSchema({
+          profile: createSchema({
+            name: { type: String, validate: /[a-z]/ },
+          }),
+        })
+      );
+      const user = new User({
+        profile: {
+          name: 'foo',
+        },
+      });
+
+      expect(user.profile.name).toBe('foo');
+
+      await expect(async () => {
+        user.profile.name = 'FOO';
         await user.save();
       }).rejects.toThrow();
     });
@@ -70,6 +130,48 @@ describe('createSchema', () => {
       expect(data.__v).toBeUndefined();
     });
 
+    it('should not expose _id in nested array objects of mixed type', () => {
+      const User = createTestModel(
+        createSchema({
+          names: [
+            {
+              name: String,
+              position: Number,
+            },
+          ],
+        })
+      );
+      const user = new User({
+        names: [
+          {
+            name: 'Foo',
+            position: 2,
+          },
+        ],
+      });
+      const data = user.toObject();
+      expect(data.names[0]).toEqual({
+        name: 'Foo',
+        position: 2,
+      });
+    });
+
+    it('should not expose _id in deeply nested array objects of mixed type', () => {
+      const User = createTestModel(
+        createSchema({
+          one: [{ two: [{ three: [{ name: String, position: Number }] }] }],
+        })
+      );
+      const user = new User({
+        one: [{ two: [{ three: [{ name: 'Foo', position: 2 }] }] }],
+      });
+      const data = user.toObject();
+      expect(data).toEqual({
+        id: user.id,
+        one: [{ two: [{ three: [{ name: 'Foo', position: 2 }] }] }],
+      });
+    });
+
     it('should not expose fields with underscore or marked private', () => {
       const User = createTestModel(
         createSchema({
@@ -103,6 +205,108 @@ describe('createSchema', () => {
 
       const data = user.toObject();
       expect(data.tags).toBeUndefined();
+    });
+
+    it('should not expose deeply nested private fields', () => {
+      const User = createTestModel(
+        createSchema({
+          one: {
+            two: {
+              three: {
+                name: {
+                  type: String,
+                },
+                age: {
+                  type: Number,
+                  access: 'private',
+                },
+              },
+            },
+          },
+        })
+      );
+      const user = new User({
+        one: {
+          two: {
+            three: {
+              name: 'Harry',
+              age: 21,
+            },
+          },
+        },
+      });
+
+      const data = user.toObject();
+      expect(data).toEqual({
+        id: user.id,
+        one: {
+          two: {
+            three: {
+              name: 'Harry',
+            },
+          },
+        },
+      });
+    });
+
+    it('should not expose private fields deeply nested in arrays', () => {
+      const User = createTestModel(
+        createSchema({
+          one: [
+            {
+              two: [
+                {
+                  three: [
+                    {
+                      name: {
+                        type: String,
+                      },
+                      age: {
+                        type: Number,
+                        access: 'private',
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        })
+      );
+      const user = new User({
+        one: [
+          {
+            two: [
+              {
+                three: [
+                  {
+                    name: 'Harry',
+                    age: 21,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      });
+
+      const data = user.toObject();
+      expect(data).toEqual({
+        id: user.id,
+        one: [
+          {
+            two: [
+              {
+                three: [
+                  {
+                    name: 'Harry',
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      });
     });
 
     it('should serialize identically with toObject', () => {
@@ -155,6 +359,27 @@ describe('createSchema', () => {
       expect(data._id).toBeUndefined();
       expect(data.__v).toBeUndefined();
       expect(data.secret).toBe('foo');
+    });
+
+    it('should be able to mark access on nested objects', async () => {
+      const User = createTestModel(
+        createSchema({
+          login: {
+            password: String,
+            attempts: Number,
+            access: 'private',
+          },
+        })
+      );
+      const user = new User({
+        login: {
+          password: 'password',
+          attempts: 10,
+        }
+      });
+      expect(user.login.password).toBe('password');
+      expect(user.login.attempts).toBe(10);
+      expect(user.toObject().login).toBeUndefined();
     });
   });
 
@@ -629,6 +854,89 @@ describe('validation', () => {
       });
     });
 
+    it('should strip virtuals', () => {
+      const userSchema = createSchema({
+        firstName: {
+          type: String,
+          required: true,
+        },
+        lastName: {
+          type: String,
+          required: true,
+        },
+      });
+      userSchema.virtual('fullName').get(function () {
+        return `${this.firstName} ${this.lastName}`;
+      });
+      const User = createTestModel(userSchema);
+      const user = new User({
+        firstName: 'John',
+        lastName: 'Doe',
+      });
+      const data = user.toObject();
+      expect(data).toEqual({
+        id: user.id,
+        firstName: 'John',
+        lastName: 'Doe',
+        fullName: 'John Doe',
+      });
+      const schema = User.getUpdateValidation();
+      assertPass(schema, data);
+      expect(schema.validate(data)).toEqual({
+        value: {
+          firstName: 'John',
+          lastName: 'Doe',
+        },
+      });
+    });
+
+    it('should strip nested virtuals', () => {
+      const profileSchema = createSchema({
+        firstName: {
+          type: String,
+          required: true,
+        },
+        lastName: {
+          type: String,
+          required: true,
+        },
+      });
+      profileSchema.virtual('fullName').get(function () {
+        return `${this.firstName} ${this.lastName}`;
+      });
+      const User = createTestModel(
+        createSchema({
+          profile: profileSchema,
+        })
+      );
+      const user = new User({
+        profile: {
+          firstName: 'John',
+          lastName: 'Doe',
+        },
+      });
+      const data = user.toObject();
+      expect(data).toEqual({
+        id: user.id,
+        profile: {
+          id: user.profile.id,
+          firstName: 'John',
+          lastName: 'Doe',
+          fullName: 'John Doe',
+        },
+      });
+      const schema = User.getUpdateValidation();
+      assertPass(schema, data);
+      expect(schema.validate(data)).toEqual({
+        value: {
+          profile: {
+            firstName: 'John',
+            lastName: 'Doe',
+          },
+        },
+      });
+    });
+
     it('should fail on private fields', () => {
       const User = createTestModel(
         createSchema({
@@ -828,6 +1136,32 @@ describe('validation', () => {
       expect(result.data[0].id).toBe(user1.id);
       expect(result.data[1].id).toBe(user2.id);
       expect(result.meta.total).toBe(2);
+    });
+  });
+
+  describe('other cases', () => {
+    it('should handle geolocation schema', () => {
+      const User = createTestModel(
+        createSchema({
+          geoLocation: {
+            type: { type: 'String', default: 'Point' },
+            coordinates: {
+              type: 'Array',
+              default: [],
+            },
+          },
+        })
+      );
+      const schema = User.getCreateValidation();
+      assertPass(schema, {
+        geoLocation: {
+          type: 'Line',
+          coordinates: [35, 95],
+        },
+      });
+      assertFail(schema, {
+        geoLocation: 'Line',
+      });
     });
   });
 });

@@ -4,14 +4,14 @@ const { validateBody } = require('../utils/middleware/validate');
 const { authenticate } = require('../utils/middleware/authenticate');
 const tokens = require('../utils/tokens');
 const { sendWelcome, sendResetPassword, sendResetPasswordUnknown } = require('../utils/emails');
-const { BadRequestError, UnauthorizedError } = require('../utils/errors');
+const { BadRequestError } = require('../utils/errors');
 const { User, Invite } = require('../models');
 
 const router = new Router();
 
 const passwordField = Joi.string()
-  .min(6)
-  .message('Your password must be at least 6 characters long. Please try another.');
+  .min(12)
+  .message('Your password must be at least 12 characters long. Please try another.');
 
 router
   .post(
@@ -48,15 +48,25 @@ router
     }),
     async (ctx) => {
       const { email, password } = ctx.request.body;
-      const user = await User.findOne({ email });
-      if (!user) {
-        throw new UnauthorizedError('email password combination does not match');
+      const user = await User.findOneAndUpdate(
+        { email },
+        {
+          lastLoginAttemptAt: new Date(),
+          $inc: { loginAttempts: 1 },
+        }
+      );
+      if (user) {
+        try {
+          user.verifyLoginAttempts();
+          await user.verifyPassword(password);
+          await user.updateOne({ loginAttempts: 0 });
+          ctx.body = { data: { token: tokens.createUserToken(user) } };
+        } catch (err) {
+          ctx.throw(401, err.message);
+        }
+      } else {
+        ctx.throw(401, 'Incorrect password');
       }
-      const isSame = await user.verifyPassword(password);
-      if (!isSame) {
-        throw new UnauthorizedError('email password combination does not match');
-      }
-      ctx.body = { data: { token: tokens.createUserToken(user) } };
     }
   )
   .post(
@@ -99,9 +109,12 @@ router
       const { email } = ctx.request.body;
       const user = await User.findOne({ email });
       if (user) {
+        const tokenId = tokens.generateTokenId();
+        const token = tokens.createUserTemporaryToken({ userId: user.id, jti: tokenId }, 'password');
+        await user.updateOne({ pendingTokenId: tokenId });
         await sendResetPassword({
           to: email,
-          token: tokens.createUserTemporaryToken({ userId: user.id }, 'password'),
+          token,
         });
       } else {
         await sendResetPasswordUnknown({
@@ -118,12 +131,16 @@ router
     }),
     authenticate({ type: 'password' }),
     async (ctx) => {
+      const { jwt } = ctx.state;
       const { password } = ctx.request.body;
-      const user = await User.findById(ctx.state.jwt.userId);
+      const user = await User.findById(jwt.userId);
       if (!user) {
-        ctx.throw(500, 'user does not exist');
+        ctx.throw(400, 'User does not exist');
+      } else if (user.pendingTokenId !== jwt.jti) {
+        ctx.throw(400, 'Token is invalid');
       }
       user.password = password;
+      user.pendingTokenId = undefined;
       await user.save();
       ctx.body = { data: { token: tokens.createUserToken(user) } };
     }

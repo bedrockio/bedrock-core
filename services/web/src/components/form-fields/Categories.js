@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form } from 'semantic-ui-react';
+import { Form } from 'semantic';
 import { request } from 'utils/api';
 import SearchDropdown from '../SearchDropdown';
 

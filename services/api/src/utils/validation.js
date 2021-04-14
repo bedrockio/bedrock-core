@@ -2,6 +2,7 @@ const Joi = require('joi');
 
 const FIXED_SCHEMAS = {
   email: Joi.string().lowercase().email(),
+  objectId: Joi.string().hex().length(24),
 };
 
 function getJoiSchema(attributes, options = {}) {
@@ -20,18 +21,23 @@ function getJoiSchema(attributes, options = {}) {
   return schema;
 }
 
-function getMongooseValidator(field) {
+function getMongooseValidator(schemaName, field) {
   const schema = getSchemaForField(field);
-  return (val) => {
+  const validator = (val) => {
     const { error } = schema.validate(val);
     if (error) {
       throw error;
     }
     return true;
   };
+  // A named shortcut back to the Joi schema to retrieve it
+  // later when generating validations.
+  validator.schemaName = schemaName;
+  return validator;
 }
 
-function getFixedSchema(name) {
+function getFixedSchema(arg) {
+  const name = arg.schemaName || arg;
   const schema = FIXED_SCHEMAS[name];
   if (!schema) {
     throw new Error(`Cannot find schema for ${name}.`);
@@ -39,14 +45,45 @@ function getFixedSchema(name) {
   return schema;
 }
 
+function getArraySchema(obj, options) {
+  if (Array.isArray(obj)) {
+    // Array notation allows further specification
+    // of array fields:
+    // tags: [{ name: String }]
+    if (options.unwindArrayFields) {
+      return getSchemaForField(obj[0], options)
+    } else {
+      return Joi.array().items(
+        getSchemaForField(obj[0], options)
+      );
+    }
+  } else {
+    // Object/constructor notation implies array of anything:
+    // tags: { type: Array }
+    // tags: Array
+    return Joi.array();
+  }
+}
+
 function getObjectSchema(obj, options) {
   const map = {};
-  const { disallowField, stripFields = [] } = options;
+  const { transformField, stripFields = [] } = options;
   for (let [key, field] of Object.entries(obj)) {
-    if (disallowField && disallowField(key)) {
+    if (key === 'type' && typeof field !== 'object') {
+      // Ignore "type" field unless it's an object like
+      // type: { type: String }
       continue;
     }
-    map[key] = getSchemaForField(field, options);
+    if (transformField) {
+      field = transformField(key, field);
+    }
+    if (field) {
+      if (Joi.isSchema(field)) {
+        map[key] = field;
+      } else {
+        map[key] = getSchemaForField(field, options);
+      }
+    }
   }
   for (let key of stripFields) {
     map[key] = Joi.any().strip();
@@ -55,23 +92,16 @@ function getObjectSchema(obj, options) {
 }
 
 function getSchemaForField(field, options = {}) {
-  if (Array.isArray(field)) {
-    if (options.unwindArrayFields) {
-      return getSchemaForField(field[0], options)
-    } else {
-      return Joi.array().items(
-        getSchemaForField(field[0], options)
-      );
-    }
+  const type = getFieldType(field);
+  if (type === 'Array') {
+    return getArraySchema(field, options);
+  } else if (type === 'Mixed') {
+    return getObjectSchema(field, options);
   }
-  const { type, validate, ...rest } = normalizeField(field);
-  if (type === 'Mixed') {
-    return getObjectSchema(rest, options);
-  }
-  let schema;
 
-  if (validate) {
-    schema = getFixedSchema(validate);
+  let schema;
+  if (field.validate) {
+    schema = getFixedSchema(field.validate);
   } else {
     schema = getSchemaForType(type);
   }
@@ -85,7 +115,6 @@ function getSchemaForField(field, options = {}) {
     // db whatsoever?
     schema = schema.allow('', null);
   }
-
 
   if (field.enum) {
     schema = schema.valid(...field.enum);
@@ -113,8 +142,11 @@ function getSchemaForType(type) {
     case 'Date':
       return Joi.date().iso();
     case 'ObjectId':
-      // TODO: derive this from ObjectId.isValid
-      return Joi.string().hex().length(24);
+      return Joi.custom((val) => {
+        const id = String(val.id || val);
+        Joi.assert(id, FIXED_SCHEMAS['objectId']);
+        return id;
+      });
     default:
       throw new TypeError(`Unknown schema type ${type}`);
   }
@@ -128,18 +160,29 @@ function getCoercedSchemaType(type) {
   return type;
 }
 
-function normalizeField(field) {
-  // Normalize different mongoose definition styles:
-  // { name: String }
-  // { type: { type: String } // allow "type" field
-  // { object: { type: Mixed }
-  if (typeof field === 'object') {
-    return {
-      ...field,
-      type: field.type?.type || field.type || 'Mixed',
-    };
+function getFieldType(field) {
+  // Normalize different mongoose type definitions. Be careful
+  // of nested type definitions.
+  if (Array.isArray(field)) {
+    // names: [String]
+    return 'Array';
+  } else if (typeof field === 'object') {
+    // TODO: can getCoercedSchemaType be used here too?
+    if (typeof field.type === 'function') {
+      // name: { type: String }
+      return field.type.name;
+    } else if (typeof field.type === 'string') {
+      // name: { type: 'String' }
+      return field.type;
+    } else {
+      // profile: { name: String } (no type field)
+      // type: { type: 'String' } (may be nested)
+      return 'Mixed';
+    }
   } else {
-    return { type: field };
+    // name: String
+    // name: 'String'
+    return getCoercedSchemaType(field);
   }
 }
 

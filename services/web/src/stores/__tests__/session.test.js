@@ -1,5 +1,6 @@
 import React from 'react';
 import { SessionProvider, withSession, withLoadedSession, useSession } from '../session';
+import { setToken, clearToken } from 'utils/api';
 import { render } from '@testing-library/react';
 
 jest.mock('utils/api');
@@ -14,7 +15,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  localStorage.clear();
+  clearToken();
 });
 
 class MyComponent extends React.Component {
@@ -52,7 +53,7 @@ describe('withSession', () => {
   });
 
   it('should display user name', async () => {
-    localStorage.setItem('jwt', 'fake');
+    setToken('fake');
     const { container } = await render(
       <SessionProvider>
         <Component />
@@ -63,7 +64,7 @@ describe('withSession', () => {
   });
 
   it('should set the last context as a snapshot', async () => {
-    localStorage.setItem('jwt', 'fake');
+    setToken('fake');
     await render(
       <SessionProvider>
         <Component />
@@ -91,7 +92,7 @@ describe('withLoadedSession', () => {
   });
 
   it('should display user name', async () => {
-    localStorage.setItem('jwt', 'fake');
+    setToken('fake');
     const { container } = await render(
       <SessionProvider>
         <Component />
@@ -126,7 +127,7 @@ describe('useSession', () => {
   });
 
   it('should display user name', async () => {
-    localStorage.setItem('jwt', 'fake');
+    setToken('fake');
     const { container } = await render(
       <SessionProvider>
         <Component />

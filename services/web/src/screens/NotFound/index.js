@@ -1,6 +1,6 @@
 import React from 'react';
 import { screen } from 'helpers';
-import { Header } from 'semantic-ui-react';
+import { Header } from 'semantic';
 import PageCenter from 'components/PageCenter';
 
 @screen

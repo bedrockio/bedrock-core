@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Modal, Message, Button } from 'semantic-ui-react';
+import { Form, Modal, Message, Button } from 'semantic';
 import { request } from 'utils/api';
 import AutoFocus from 'components/AutoFocus';
 
@@ -62,19 +62,13 @@ export default class EditShop extends React.Component {
         await request({
           method: 'PATCH',
           path: `/1/shops/${shop.id}`,
-          body: {
-            ...shop,
-            categories: shop.categories.map((c) => c.id),
-          },
+          body: shop,
         });
       } else {
         await request({
           method: 'POST',
           path: '/1/shops',
-          body: {
-            ...shop,
-            categories: shop.categories.map((c) => c.id),
-          },
+          body: shop,
         });
         this.setState({
           shop: {},
