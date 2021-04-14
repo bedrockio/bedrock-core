@@ -51,7 +51,7 @@ function getArraySchema(obj, options) {
     // of array fields:
     // tags: [{ name: String }]
     if (options.unwindArrayFields) {
-      return getSchemaForField(obj[0], options)
+      return getSchemaForField(obj[0], options);
     } else {
       return Joi.array().items(
         getSchemaForField(obj[0], options)

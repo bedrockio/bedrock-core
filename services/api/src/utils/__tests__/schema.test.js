@@ -1002,7 +1002,7 @@ describe('validation', () => {
       });
     });
 
-    it.only('should allow search on a nested field', () => {
+    it('should allow search on a nested field', () => {
       const User = createTestModel(
         createSchema({
           roles: [

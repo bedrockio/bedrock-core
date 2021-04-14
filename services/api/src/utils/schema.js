@@ -2,10 +2,7 @@ const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
 
-// TODO: make this less dumb
-const { ObjectId: ObjectIdSchemaType } = mongoose.Schema.Types;
 const { ObjectId } = mongoose.Types;
-
 const { startCase, omitBy, escapeRegExp, isPlainObject } = require('lodash');
 const { getJoiSchema, getMongooseValidator, getCoercedSchemaType } = require('./validation');
 const { searchValidation } = require('./search');
