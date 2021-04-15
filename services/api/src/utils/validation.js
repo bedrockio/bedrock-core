@@ -21,10 +21,7 @@ function getJoiSchema(attributes, options = {}) {
 function getMongooseValidator(schemaName, field) {
   const schema = getSchemaForField(field);
   const validator = (val) => {
-    const { error } = schema.validate(val);
-    if (error) {
-      throw error;
-    }
+    Joi.assert(val, schema);
     return true;
   };
   // A named shortcut back to the Joi schema to retrieve it
