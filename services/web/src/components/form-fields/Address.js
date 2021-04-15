@@ -55,7 +55,6 @@ export default class Address extends React.Component {
       this.setState({ initializing: false, manualEntry: true });
       return;
     }
-    console.info('Loading Google JS API');
     loadScript(
       `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_API_KEY}&libraries=places`
     );
@@ -69,7 +68,6 @@ export default class Address extends React.Component {
   }
 
   initializeLookup() {
-    console.info('Initializing Google AutocompleteService and Geocoder');
     this.autocompleteService = new window.google.maps.places.AutocompleteService();
     this.geocoderService = new window.google.maps.Geocoder();
   }
@@ -150,7 +148,6 @@ export default class Address extends React.Component {
           };
           this.props.onChange(null, { name: this.props.name, value: address });
         }
-      } else {
       }
     });
   }
