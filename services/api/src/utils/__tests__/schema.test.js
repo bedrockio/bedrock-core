@@ -770,14 +770,14 @@ describe('loadModelDir', () => {
 });
 
 describe('validation', () => {
-  function assertPass(schema, obj) {
+  function assertPass(schema, obj, options) {
     expect(() => {
-      Joi.assert(obj, schema);
+      Joi.assert(obj, schema, options);
     }).not.toThrow();
   }
-  function assertFail(schema, obj) {
+  function assertFail(schema, obj, options) {
     expect(() => {
-      Joi.assert(obj, schema);
+      Joi.assert(obj, schema, options);
     }).toThrow();
   }
 
@@ -981,6 +981,137 @@ describe('validation', () => {
         name: 'foo',
         password: 'createdAt',
       });
+    });
+  });
+
+  describe('scopes', () => {
+    it('should be able to disallow all write access', async () => {
+      const User = createTestModel(
+        createSchema({
+          name: {
+            type: String,
+          },
+          password: {
+            type: String,
+            writeScopes: 'none',
+          },
+        })
+      );
+      const schema = User.getUpdateValidation();
+      assertPass(schema, {
+        name: 'Barry',
+      });
+      assertFail(schema, {
+        name: 'Barry',
+        password: 'fake password',
+      });
+    });
+
+    it('should be able to disallow write access by scope', async () => {
+      const User = createTestModel(
+        createSchema({
+          name: {
+            type: String,
+          },
+          password: {
+            type: String,
+            writeScopes: ['private'],
+          },
+        })
+      );
+      const schema = User.getUpdateValidation();
+      assertPass(schema, {
+        name: 'Barry',
+      });
+      assertFail(schema, {
+        name: 'Barry',
+        password: 'fake password',
+      });
+      assertPass(schema, {
+        name: 'Barry',
+        password: 'fake password',
+      }, { scopes: ['private'] });
+    });
+
+    it('should require only one of valid scopes', async () => {
+      const User = createTestModel(
+        createSchema({
+          foo: {
+            type: String,
+            writeScopes: ['foo'],
+          },
+          bar: {
+            type: String,
+            writeScopes: ['bar'],
+          },
+          foobar: {
+            type: String,
+            writeScopes: ['foo', 'bar'],
+          },
+        })
+      );
+      const schema = User.getUpdateValidation();
+
+      // With ['foo'] scopes
+      assertPass(schema, {
+        foo: 'foo!',
+      }, { scopes: ['foo'] });
+      assertFail(schema, {
+        bar: 'bar!',
+      }, { scopes: ['foo'] });
+      assertPass(schema, {
+        foobar: 'foobar!',
+      }, { scopes: ['foo'] });
+      assertPass(schema, {
+        foo: 'foo!',
+        foobar: 'foobar!',
+      }, { scopes: ['foo'] });
+      assertFail(schema, {
+        foo: 'foo!',
+        bar: 'bar!',
+        foobar: 'foobar!',
+      }, { scopes: ['foo'] });
+
+      // With ['bar'] scopes
+      assertFail(schema, {
+        foo: 'foo!',
+      }, { scopes: ['bar'] });
+      assertPass(schema, {
+        bar: 'bar!',
+      }, { scopes: ['bar'] });
+      assertPass(schema, {
+        foobar: 'foobar!',
+      }, { scopes: ['bar'] });
+      assertFail(schema, {
+        foo: 'foo!',
+        foobar: 'foobar!',
+      }, { scopes: ['bar'] });
+      assertFail(schema, {
+        foo: 'foo!',
+        bar: 'bar!',
+        foobar: 'foobar!',
+      }, { scopes: ['bar'] });
+
+      // With ['foo', 'bar'] scopes
+      assertPass(schema, {
+        foo: 'foo!',
+      }, { scopes: ['foo', 'bar'] });
+      assertPass(schema, {
+        bar: 'bar!',
+      }, { scopes: ['foo', 'bar'] });
+      assertPass(schema, {
+        foobar: 'foobar!',
+      }, { scopes: ['foo', 'bar'] });
+      assertPass(schema, {
+        foo: 'foo!',
+        foobar: 'foobar!',
+      }, { scopes: ['foo', 'bar'] });
+      assertPass(schema, {
+        foo: 'foo!',
+        bar: 'bar!',
+        foobar: 'foobar!',
+      }, { scopes: ['foo', 'bar'] });
+
     });
   });
 
