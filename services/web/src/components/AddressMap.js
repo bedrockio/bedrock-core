@@ -49,9 +49,9 @@ class Map extends Component {
       lat: 44.967243,
       lng: -103.771556,
     };
-    if (address.geoLocation && address.geoLocation.coordinates.length) {
-      center.lat = address.geoLocation.coordinates[1];
-      center.lng = address.geoLocation.coordinates[0];
+    if (address.geometry && address.geometry.coordinates.length) {
+      center.lat = address.geometry.coordinates[1];
+      center.lng = address.geometry.coordinates[0];
     } else {
       currentZoom = 2;
     }
@@ -69,13 +69,13 @@ class Map extends Component {
           defaultCenter={center}
           defaultZoom={currentZoom}>
           {[address]
-            .filter((a) => a.geoLocation && a.geoLocation.coordinates.length)
+            .filter((a) => a.geometry && a.geometry.coordinates.length)
             .map((address, i) => {
               return (
                 <Marker
                   key={i}
-                  lat={address.geoLocation.coordinates[1]}
-                  lng={address.geoLocation.coordinates[0]}
+                  lat={address.geometry.coordinates[1]}
+                  lng={address.geometry.coordinates[0]}
                   visible={this.state.visible}
                 />
               );

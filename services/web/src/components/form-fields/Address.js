@@ -120,12 +120,12 @@ export default class Address extends React.Component {
         if (results[0] && results[0].geometry) {
           const { address_components } = results[0];
           const { location } = results[0].geometry;
-          const geoLocation = {
+          const geometry = {
             type: 'Point',
             coordinates: [location.lng(), location.lat()],
           };
           const address = {
-            geoLocation,
+            geometry,
             line1: `${extractGoogleAddressComponent(
               address_components,
               'street_number'

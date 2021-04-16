@@ -29,12 +29,11 @@
     "address": {
       "line1": { "type": "String" },
       "line2": { "type": "String" },
-      "houseNumber": { "type": "String" },
       "city": { "type": "String" },
       "postalCode": { "type": "String" },
       "stateOrProvince": { "type": "String" },
       "countryCode": { "type": "String" },
-      "geoLocation": {
+      "geometry": {
         "type": { "type": "String", "default": "Point" },
         "coordinates": {
           "type": "Array",
