@@ -150,15 +150,13 @@ export default class Address extends React.Component {
   renderLookupDropdown() {
     const { placeOptions, error, lookupValue } = this.state;
 
-    const options = placeOptions
-      ? placeOptions.map((place) => {
-          return {
-            value: place.description,
-            text: place.description,
-            key: place.description,
-          };
-        })
-      : [];
+    const options = (placeOptions || []).map((place) => {
+      return {
+        value: place.description,
+        text: place.description,
+        key: place.description,
+      };
+    });
 
     if (!options.map((o) => o.value).includes(lookupValue)) {
       options.push({
