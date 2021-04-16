@@ -78,7 +78,7 @@ export default class UsStates extends React.Component {
         <Select
           search
           name={name}
-          defaultValue={value}
+          value={value}
           placeholder={placeholder}
           options={statesOptions}
           onChange={this.props.onChange}
