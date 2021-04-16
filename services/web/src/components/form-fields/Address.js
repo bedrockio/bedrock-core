@@ -44,7 +44,7 @@ export default class Address extends React.Component {
     this.loadGoogleDependency();
   }
 
-  loadGoogleDependency() {
+  async loadGoogleDependency() {
     const { disableLookup } = this.props;
     if (window.google) {
       this.initializeLookup();
@@ -55,20 +55,11 @@ export default class Address extends React.Component {
       this.setState({ initializing: false, manualEntry: true });
       return;
     }
-    loadScript(
+    await loadScript(
       `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_API_KEY}&libraries=places`
     );
-    this.loadingInterval = setInterval(() => {
-      if (window.google) {
-        clearInterval(this.loadingInterval);
-        this.initializeLookup();
-        this.setState({ initializing: false });
-      }
-    }, 200);
-  }
-
-  componentDidUnmount() {
-    clearTimeout(this.loadingInterval);
+    this.initializeLookup();
+    this.setState({ initializing: false });
   }
 
   initializeLookup() {
