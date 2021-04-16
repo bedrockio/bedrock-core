@@ -23,7 +23,7 @@ async function uploadGcs(file, hash) {
   };
   await bucket.upload(file.path, options);
 
-  logger.info('Uploading gcs %s -> gs://%s/%s', file.name, bucketName, options.destination);
+  logger.debug('Uploading gcs %s -> gs://%s/%s', file.name, bucketName, options.destination);
   const uploadedGcsFile = bucket.file(options.destination);
   await uploadedGcsFile.makePublic();
   const metaData = await uploadedGcsFile.getMetadata();

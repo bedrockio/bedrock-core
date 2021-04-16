@@ -11,6 +11,11 @@ const router = new Router();
 router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
+  .use(
+    audit.config({
+      model: Product,
+    })
+  )
   .param('productId', async (id, ctx, next) => {
     const product = await Product.findById(id);
     ctx.state.product = product;

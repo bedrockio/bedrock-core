@@ -29,6 +29,7 @@ function sendMail({ to, subject }, { html, text, options }) {
       .catch((error) => {
         logger.error(`Error happened while sending email to ${to} (${error.message})`);
         logger.error(error);
+        throw error;
       });
   }
 }

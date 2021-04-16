@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-const { logger } = require('@bedrockio/instrumentation');
 const { initialize } = require('../../src/utils/database');
 const config = require('@bedrockio/config');
 const { createFixtures } = require('../../src/fixtures');
@@ -45,7 +44,7 @@ async function run() {
   await db.dropDatabase();
   const result = await createFixtures();
   if (!result) {
-    logger.info('No DB fixtures to load, database is populated');
+    console.info('No DB fixtures to load, database is populated');
   }
 }
 
@@ -54,7 +53,7 @@ run()
     process.exit(0);
   })
   .catch((error) => {
-    logger.error(`Fatal error: ${error.message}, exiting.`);
-    console.warn(error.stack);
+    console.error(`Fatal error: ${error.message}, exiting.`);
+    console.error(error.stack);
     process.exit(1);
   });
