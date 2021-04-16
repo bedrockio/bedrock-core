@@ -22,8 +22,8 @@ function composeDefaultLookupValue(address) {
   if (address.city) {
     components.push(address.city);
   }
-  if (address.stateOrProvince) {
-    components.push(address.stateOrProvince);
+  if (address.region) {
+    components.push(address.region);
   }
   if (address.countryCode) {
     components.push(address.countryCode);
@@ -82,7 +82,7 @@ export default class Address extends React.Component {
     if (this.props.autoComplete == 'off') {
       return 'off';
     }
-    if (key === 'stateOrProvince') {
+    if (key === 'region') {
       return 'address-level1';
     }
     if (key === 'city') {
@@ -131,7 +131,7 @@ export default class Address extends React.Component {
               'street_number'
             )} ${extractGoogleAddressComponent(address_components, 'route')}`,
             city: extractGoogleAddressComponent(address_components, 'locality'),
-            stateOrProvince: extractGoogleAddressComponent(
+            region: extractGoogleAddressComponent(
               address_components,
               'administrative_area_level_1',
               'short_name'
@@ -235,19 +235,19 @@ export default class Address extends React.Component {
             />
             {get(value, 'countryCode') === 'US' ? (
               <UsStates
-                name="stateOrProvince"
-                value={get(value, 'stateOrProvince')}
+                name="region"
+                value={get(value, 'region')}
                 onChange={this.setField}
-                autoComplete={this.getAutoCompleteName('stateOrProvince')}
+                autoComplete={this.getAutoCompleteName('region')}
               />
             ) : (
               <Form.Input
                 type="text"
-                name="stateOrProvince"
+                name="region"
                 label="State/Province"
-                value={get(value, 'stateOrProvince')}
+                value={get(value, 'region')}
                 onChange={this.setField}
-                autoComplete={this.getAutoCompleteName('stateOrProvince')}
+                autoComplete={this.getAutoCompleteName('region')}
               />
             )}
             <Form.Input

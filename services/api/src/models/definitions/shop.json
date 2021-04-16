@@ -31,7 +31,7 @@
       "line2": { "type": "String" },
       "city": { "type": "String" },
       "postalCode": { "type": "String" },
-      "stateOrProvince": { "type": "String" },
+      "region": { "type": "String" },
       "countryCode": { "type": "String" },
       "geometry": {
         "type": { "type": "String", "default": "Point" },
