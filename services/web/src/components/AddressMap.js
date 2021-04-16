@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import GoogleMapReact from 'google-map-react';
 import styled from 'styled-components';
 import { Transition } from 'semantic-ui-react';
@@ -26,7 +26,7 @@ function createOptions() {
   };
 }
 
-class Map extends Component {
+class Map extends React.Component {
   state = {
     visible: false,
   };
