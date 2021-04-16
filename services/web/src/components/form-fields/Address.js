@@ -67,6 +67,10 @@ export default class Address extends React.Component {
     }, 200);
   }
 
+  componentDidUnmount() {
+    clearTimeout(this.loadingInterval);
+  }
+
   initializeLookup() {
     this.autocompleteService = new window.google.maps.places.AutocompleteService();
     this.geocoderService = new window.google.maps.Geocoder();
