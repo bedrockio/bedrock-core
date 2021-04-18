@@ -49,6 +49,7 @@ module.exports = function templateMiddleware(opts) {
   return (ctx, next) => {
     const template = getTemplate(ctx.url);
     if (template) {
+      ctx.set('X-Frame-Options', 'deny');
       ctx.body = template;
     } else {
       ctx.status = 404;
