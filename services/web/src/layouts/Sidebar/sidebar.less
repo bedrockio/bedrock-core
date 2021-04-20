@@ -8,6 +8,8 @@
 // as they are dumb and assume they have the entire width of
 // the page... can these be rewritten to instead use max-width
 // instead of width?
+//
+// TODO: hook this up to vars somehow?
 
 .ui.container {
   width: auto !important;
@@ -22,6 +24,7 @@
     height: 100vh;
     padding: @padding;
     background-color: #f8fafc;
+    border-right: 1px solid rgba(0,0,0,.05);
 
     &--fixed {
       margin-left: -@menuWidth;
@@ -38,6 +41,7 @@
     &--dark {
       color: #fff;
       background-color: #1b1c1d;
+      border-right: none;
     }
 
   }
