@@ -18,6 +18,7 @@ import Trigger from './Trigger';
 import './sidebar.less';
 
 const BREAKPOINTS = {
+  always: 0,
   tablet: 768,
   desktop: 1128,
 };
@@ -106,7 +107,7 @@ export default class SidebarLayout extends React.Component {
 
 SidebarLayout.propTypes = {
   open: PropTypes.oneOfType([
-    PropTypes.oneOf(['desktop', 'tablet']),
+    PropTypes.oneOf(['desktop', 'tablet', 'always']),
     PropTypes.number,
   ]),
   dimmer: PropTypes.bool,
