@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import bem from 'helpers/bem';
 
 import Menu from './Menu';
+import Item from './Item';
 import Content from './Content';
 import Trigger from './Trigger';
 
@@ -26,12 +27,14 @@ const BREAKPOINTS = {
 const Context = React.createContext();
 
 Menu.contextType = Context;
+Item.contextType = Context;
 Content.contextType = Context;
 Trigger.contextType = Context;
 
 @bem
 export default class SidebarLayout extends React.Component {
   static Menu = Menu;
+  static Item = Item;
   static Content = Content;
   static Trigger = Trigger;
 
