@@ -104,13 +104,16 @@ p:last-child {
         Links
 --------------------*/
 
+// Allow text links inside paragraphs to be blue but leave others reset.
+
 a {
   color: @linkColor;
   text-decoration: @linkUnderline;
-}
-a:hover {
-  color: @linkHoverColor;
-  text-decoration: @linkHoverUnderline;
+
+  &:hover {
+    color: @linkHoverColor;
+    text-decoration: @linkHoverUnderline;
+  }
 }
 
 
@@ -194,18 +197,13 @@ input::selection {
   Moved from custom site.overrides
 --------------------------------------*/
 
-html,
-.ui.fixed.menu {
-  // Fixes scrollbar jump
-  padding-left: calc(100vw - 100%);
-}
-
 header {
-  padding-top: 80px;
-}
+  padding-bottom: 20px;
 
-main {
-  min-height: calc(100vh - 150px);
+  a,
+  a:hover {
+    color: inherit;
+  }
 }
 
 footer {

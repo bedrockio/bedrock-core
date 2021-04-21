@@ -10,6 +10,8 @@ import { Link } from 'react-router-dom';
 
 @screen
 export default class ForgotPassword extends React.Component {
+  static layout = 'none';
+
   state = {
     success: false,
     loading: false,

@@ -13,6 +13,7 @@ import { getUrlToken } from 'utils/token';
 @screen
 @withSession
 export default class AcceptInvite extends React.Component {
+  static layout = 'none';
 
   constructor(props) {
     super(props);
