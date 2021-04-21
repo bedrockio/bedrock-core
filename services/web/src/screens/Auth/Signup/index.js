@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 @screen
 @withSession
 export default class Signup extends React.Component {
+  static layout = 'none';
 
   state = {
     error: null,

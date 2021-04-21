@@ -10,7 +10,7 @@ export default ({ title }) => {
         <Image
           src={Logo}
           alt="Logo"
-          style={{ height: '80px', margin: '0 auto' }}
+          style={{ height: '75px', margin: '0 auto' }}
         />
       </Link>
       <Header as="h3" textAlign="center" style={{ textTransform: 'uppercase' }}>
