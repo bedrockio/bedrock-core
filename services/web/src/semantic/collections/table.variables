@@ -184,7 +184,7 @@
 @sortableIconDescending: '▾';
 @sortableDisabledColor: @disabledTextColor;
 
-@sortableHoverBackground: rgba(74,99,142,0.04);
+@sortableHoverBackground: rgba(74,99,142,0.06);
 @sortableHoverColor: @hoveredTextColor;
 
 @sortableActiveBackground: rgba(74,99,142,0.08);

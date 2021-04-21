@@ -7,7 +7,7 @@ import Footer from 'components/Footer';
 import Protected from 'components/Protected';
 import Sidebar from './Sidebar';
 
-import logo from 'assets/favicon.svg';
+import logo from 'assets/bedrock.svg';
 
 @withSession
 export default class DefaultLayout extends React.Component {
@@ -16,9 +16,9 @@ export default class DefaultLayout extends React.Component {
     return (
       <Sidebar>
         {user && (
-          <Sidebar.Menu dark>
-            <Sidebar.Item as={NavLink} to="/">
-              <img style={{ width: '30px' }} className="logo" src={logo} />
+          <Sidebar.Menu>
+            <Sidebar.Item as={NavLink} to="/" style={{ marginBottom: '20px' }}>
+              <img style={{ height: '30px' }} className="logo" src={logo} />
             </Sidebar.Item>
             <Sidebar.Item as={NavLink} to="/shops">
               Shops
@@ -51,7 +51,7 @@ export default class DefaultLayout extends React.Component {
           <Sidebar.Trigger>
             <Icon name="bars" />
           </Sidebar.Trigger>
-          <Header />
+          {/* <Header /> */}
           <main>
             <Container>{this.props.children}</Container>
           </main>

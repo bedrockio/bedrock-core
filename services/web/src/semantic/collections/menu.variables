@@ -246,12 +246,12 @@
 /* Pointing */
 @secondaryPointingBorderWidth: 2px;
 @secondaryPointingBorderColor: @borderColor;
-@secondaryPointingItemVerticalPadding: @relativeTiny;
-@secondaryPointingItemHorizontalPadding: @relativeLarge;
+@secondaryPointingItemVerticalPadding: @relativeMini;
+@secondaryPointingItemHorizontalPadding: @relative1px;
 
 @secondaryPointingHoverTextColor: @textColor;
 
-@secondaryPointingActiveBorderColor: @black;
+@secondaryPointingActiveBorderColor: @primaryColor;
 @secondaryPointingActiveTextColor: @selectedTextColor;
 @secondaryPointingActiveFontWeight: @bold;
 

@@ -13,14 +13,14 @@
 @verticalAlign: middle;
 
 @dividerSpacing: @3px;
-@dividerOpacity: 0.7;
+@dividerOpacity: 0.5;
 @dividerColor: @lightTextColor;
 
 @dividerSize: @relativeSmall;
 @dividerVerticalAlign: baseline;
 
 @iconDividerSize: @relativeTiny;
-@iconDividerVerticalAlign: baseline;
+@iconDividerVerticalAlign: bottom;
 
 @sectionMargin: 0em;
 @sectionPadding: 0em;
@@ -28,8 +28,11 @@
 /* Coupling */
 @segmentPadding: @relativeMini @relativeMedium;
 
+/* Link Color */
+@breadcrumbLinkColor: #ABADB3;
+
 /*-------------------
        States
 --------------------*/
 
-@activeFontWeight: @bold;
+@activeFontWeight: 500;

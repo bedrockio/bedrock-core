@@ -15,7 +15,7 @@ export default class ComponentsScreen extends React.Component {
   render() {
     return (
       <div>
-        <Header size="huge">Kitchen Sink</Header>
+        <Header size="huge">UI Components</Header>
 
         <Segment>
           <Header size="large">Buttons</Header>

@@ -19,18 +19,18 @@ export default class Breadcrumbs extends React.Component {
     const { active } = this.props;
     return (
       <Layout horizontal center spread>
-        <Breadcrumb size="big">
+        <Breadcrumb size="mini" style={{ textTransform:'uppercase', letterSpacing:'.03em', fontWeight:'500'}}>
           <Breadcrumb.Section link as={Link} to="/">
             Home
           </Breadcrumb.Section>
-          <Breadcrumb.Divider icon="chevron-right" />
+          <Breadcrumb.Divider icon="chevron-right" style={{ width:'10px', height:'10px'}} />
           {this.getPath().map((link, i) => {
             return (
               <React.Fragment key={i}>
                 <Breadcrumb.Section>
                   {link}
                 </Breadcrumb.Section>
-                <Breadcrumb.Divider icon="chevron-right" />
+                <Breadcrumb.Divider icon="chevron-right" style={{ width:'10px', height:'10px'}} />
               </React.Fragment>
             );
           })}
