@@ -42,22 +42,22 @@
 /* Table Header */
 @headerBorder: 1px solid @internalBorderColor;
 @headerDivider: none;
-@headerBackground: @offWhite;
+@headerBackground: #F9FAFB;
 @headerAlign: inherit;
 @headerVerticalAlign: inherit;
-@headerColor: @textColor;
+@headerColor: #565C66;
 @headerVerticalPadding: @relativeSmall;
 @headerHorizontalPadding: @cellHorizontalPadding;
 @headerFontStyle: none;
-@headerFontWeight: @bold;
-@headerTextTransform: none;
+@headerFontWeight: 500;
+@headerTextTransform: uppercase;
 @headerBoxShadow: none;
 
 /* Table Footer */
 @footerBoxShadow: none;
 @footerBorder: 1px solid @borderColor;
 @footerDivider: none;
-@footerBackground: @offWhite;
+@footerBackground: #F9FAFB;
 @footerAlign: inherit;
 @footerVerticalAlign: middle;
 @footerColor: @textColor;
@@ -174,7 +174,7 @@
 
 /* Sortable */
 @sortableBackground: '';
-@sortableColor: @textColor;
+@sortableColor: #565C66;
 
 @sortableBorder: 1px solid @borderColor;
 @sortableIconWidth: auto;
@@ -184,13 +184,13 @@
 @sortableIconDescending: '▾';
 @sortableDisabledColor: @disabledTextColor;
 
-@sortableHoverBackground: @transparentBlack;
+@sortableHoverBackground: rgba(74,99,142,0.04);
 @sortableHoverColor: @hoveredTextColor;
 
-@sortableActiveBackground: @transparentBlack;
+@sortableActiveBackground: rgba(74,99,142,0.08);
 @sortableActiveColor: @selectedTextColor;
 
-@sortableActiveHoverBackground: @transparentBlack;
+@sortableActiveHoverBackground: rgba(74,99,142,0.08);
 @sortableActiveHoverColor: @selectedTextColor;
 
 @sortableInvertedBorderColor: transparent;
