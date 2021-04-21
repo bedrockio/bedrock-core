@@ -1,6 +1,6 @@
 @import '../../styles/responsive';
 
-@padding: 20px;
+@padding: 25px;
 @menuWidth: 250px;
 
 // TODO: (@skatey)
@@ -14,6 +14,11 @@
 .ui.container {
   width: auto !important;
   max-width: 1137px !important;
+
+  @media (min-width: 768px) and (max-width: 1457px) {
+    margin-left: 15px !important;
+    margin-right: 15px !important;
+  }
 }
 
 .sidebar-layout {
@@ -55,8 +60,9 @@
 
   &-content {
     flex: auto;
-    padding: @padding;
     position: relative;
+    padding-top: 15px;
+    padding-bottom: 15px;
   }
 
   &-trigger {
