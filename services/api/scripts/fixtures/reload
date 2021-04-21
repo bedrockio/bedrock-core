@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-
+const { logger } = require('@bedrockio/instrumentation');
 const { initialize } = require('../../src/utils/database');
 const config = require('@bedrockio/config');
 const { createFixtures } = require('../../src/fixtures');
@@ -27,7 +27,7 @@ async function run() {
   if (!allowedEnvironments.includes(ENV_NAME)) {
     throw new Error(`Not allowed in ENV_NAME other than ${allowedEnvironments.join(', ')} (ENV_NAME=${ENV_NAME})`);
   }
-  console.info(`
+  logger.info(`
 -------------------------------------------------------------------
 
   Warning: This will delete ALL DATA for the ${ENV_NAME} environment
@@ -40,11 +40,11 @@ async function run() {
     throw new Error('Aborted');
   }
   const db = await initialize();
-  console.info(`Dropping database...`);
+  logger.info(`Dropping database...`);
   await db.dropDatabase();
   const result = await createFixtures();
   if (!result) {
-    console.info('No DB fixtures to load, database is populated');
+    logger.info('No DB fixtures to load, database is populated');
   }
 }
 
@@ -53,7 +53,7 @@ run()
     process.exit(0);
   })
   .catch((error) => {
-    console.error(`Fatal error: ${error.message}, exiting.`);
-    console.error(error.stack);
+    logger.error(`Fatal error: ${error.message}, exiting.`);
+    console.warn(error.stack);
     process.exit(1);
   });

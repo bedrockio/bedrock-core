@@ -12,7 +12,6 @@ router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
   .post(
-    'create',
     '/',
     validate({
       body: Product.getCreateValidation(),
@@ -25,7 +24,6 @@ router
     }
   )
   .post(
-    'query',
     '/search',
     validate({
       body: Joi.object({
@@ -58,14 +56,13 @@ router
     ctx.state.product = product;
     return next();
   })
-  .get('lookup', '/:productId', async (ctx) => {
+  .get('/:productId', async (ctx) => {
     const { product } = await ctx.state;
     ctx.body = {
       data: product,
     };
   })
   .patch(
-    'update',
     '/:productId',
     validate({
       body: Product.getUpdateValidation(),
