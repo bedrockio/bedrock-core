@@ -1,0 +1,88 @@
+@import '../../styles/responsive';
+
+@padding: 20px;
+@menuWidth: 250px;
+
+// TODO: (@skatey)
+// Using this component needs to overwrite container styles
+// as they are dumb and assume they have the entire width of
+// the page... can these be rewritten to instead use max-width
+// instead of width?
+//
+// TODO: hook this up to vars somehow?
+
+.ui.container {
+  width: auto !important;
+  max-width: 1137px !important;
+}
+
+.sidebar-layout {
+  display: flex;
+
+  &-menu {
+    flex: 0 0 @menuWidth;
+    height: 100vh;
+    padding: @padding;
+    background-color: #f8fafc;
+    border-right: 1px solid rgba(0,0,0,.05);
+
+    &--fixed {
+      margin-left: -@menuWidth;
+      box-shadow: 0 0 4px rgba(0,0,0,.2);
+      position: relative;
+      z-index: 2;
+      transition: ease-in-out 200ms transform;
+    }
+
+    &--fixed&--open {
+      transform: translateX(@menuWidth);
+    }
+
+    &--dark {
+      color: #fff;
+      background-color: #1b1c1d;
+      border-right: none;
+    }
+
+  }
+
+  &-item {
+    display: block;
+    font-size: 16px;
+    line-height: 2.2;
+    color: inherit;
+  }
+
+  &-content {
+    flex: auto;
+    padding: @padding;
+    position: relative;
+  }
+
+  &-trigger {
+    cursor: pointer;
+
+    &--hidden {
+      display: none;
+    }
+  }
+
+  &__dimmer {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,.8);
+    transition: linear 200ms opacity;
+    opacity: 0;
+    pointer-events: none;
+
+    &--open {
+      opacity: 1;
+    }
+  }
+
+}
