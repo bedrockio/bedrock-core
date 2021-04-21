@@ -76,7 +76,7 @@ router
       };
     }
   )
-  .delete('delete', '/:productId', async (ctx) => {
+  .delete('/:productId', async (ctx) => {
     const product = ctx.state.product;
     await product.delete();
     ctx.status = 204;

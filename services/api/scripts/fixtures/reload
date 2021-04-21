@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 const { logger } = require('@bedrockio/instrumentation');
 const { initialize } = require('../../src/utils/database');
 const config = require('@bedrockio/config');
@@ -27,7 +28,7 @@ async function run() {
   if (!allowedEnvironments.includes(ENV_NAME)) {
     throw new Error(`Not allowed in ENV_NAME other than ${allowedEnvironments.join(', ')} (ENV_NAME=${ENV_NAME})`);
   }
-  logger.info(`
+  console.info(`
 -------------------------------------------------------------------
 
   Warning: This will delete ALL DATA for the ${ENV_NAME} environment
@@ -40,7 +41,7 @@ async function run() {
     throw new Error('Aborted');
   }
   const db = await initialize();
-  logger.info(`Dropping database...`);
+  console.info(`Dropping database...`);
   await db.dropDatabase();
   const result = await createFixtures();
   if (!result) {

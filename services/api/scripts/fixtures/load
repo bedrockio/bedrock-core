@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 const { logger } = require('@bedrockio/instrumentation');
 const { initialize } = require('../../src/utils/database');
 const { createFixtures } = require('../../src/fixtures');
