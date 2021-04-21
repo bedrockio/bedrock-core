@@ -47,6 +47,11 @@ function setupMiddleware({ getUser = (ctx) => ctx.state.authUser } = {}) {
         return;
       }
 
+      // if no action(_matchedRouteName) assume the endpoint should not be tracked
+      if (ctx._matchedRouteName) {
+        return;
+      }
+
       return save(ctx, {
         user,
         object,
