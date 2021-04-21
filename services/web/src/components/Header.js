@@ -1,19 +1,23 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Container, Icon } from 'semantic';
+import { Icon } from 'semantic';
 import { Layout } from 'components/Layout';
+import Sidebar from 'layouts/Sidebar';
 
 export default class Header extends React.Component {
   render() {
     return (
       <header>
-        <Container>
-          <Layout horizontal center right>
-            <NavLink to="/settings">
-              <Icon name="user" />
-            </NavLink>
-          </Layout>
-        </Container>
+        <Layout horizontal center spread>
+          <Layout.Group>
+            <Sidebar.Trigger>
+              <Icon name="bars" />
+            </Sidebar.Trigger>
+          </Layout.Group>
+          <NavLink to="/settings">
+            <Icon name="user" />
+          </NavLink>
+        </Layout>
       </header>
     );
   }

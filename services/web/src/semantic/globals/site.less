@@ -104,13 +104,16 @@ p:last-child {
         Links
 --------------------*/
 
+// Allow text links inside paragraphs to be blue but leave others reset.
+
 a {
   color: @linkColor;
   text-decoration: @linkUnderline;
-}
-a:hover {
-  color: @linkHoverColor;
-  text-decoration: @linkHoverUnderline;
+
+  &:hover {
+    color: @linkHoverColor;
+    text-decoration: @linkHoverUnderline;
+  }
 }
 
 
@@ -201,10 +204,6 @@ header {
   a:hover {
     color: inherit;
   }
-}
-
-main {
-  min-height: calc(100vh - 150px);
 }
 
 footer {
