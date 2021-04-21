@@ -16,29 +16,31 @@ const schema = new Schema({
   action: String,
 });
 
-const AuditHistory = mongoose.model('User', schema);
+const AuditHistory = mongoose.model('AuditHistory', schema);
 
 function save(ctx, { user, object, collectionName, action }) {
   return AuditHistory.create({
     userId: user.id,
-    collectionName: object.collection.collectionName || collectionName,
-    objectId: object.id,
+    collectionName: collectionName || object?.collection.collectionName,
+    objectId: object?.id,
     object,
-    requestUrl: ctx.request.url,
+    requestUrl: ctx.request.path,
     requestMethod: ctx.request.method,
     requestQuery: ctx.request.query,
+    requestBody: ctx.request.body,
     action: action || ctx._matchedRouteName,
   });
 }
 
-function setupMiddleware({ getUser = (ctx) => ctx.state.authUser }) {
+function setupMiddleware({ getUser = (ctx) => ctx.state.authUser } = {}) {
   return (ctx, next) => {
     ctx[auditSymbol] = {};
+
     return next().then(() => {
       const auditContext = ctx[auditSymbol] || {};
       const user = auditContext.user || getUser(ctx);
-      const object = auditContext.object;
-      const collectionName = auditContext.collectionName;
+
+      const { object, collectionName } = auditContext;
 
       if (!user) {
         ctx.logger.warn('[Audit] no user set');
@@ -61,7 +63,6 @@ function setUser(ctx, user) {
 function setObject(ctx, object) {
   ctx[auditSymbol].collectionName = object.collection.collectionName;
   ctx[auditSymbol].object = object.toObject();
-  ctx[auditSymbol].objectVersion = object._v;
 }
 
 module.exports = {

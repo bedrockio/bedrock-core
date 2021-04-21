@@ -1,12 +1,4 @@
-const { setupTelemetry } = require('@bedrockio/instrumentation');
-
-if (process.env.NODE_ENV === 'production') {
-  setupTelemetry({
-    http: {
-      ignoreIncomingPaths: ['/'],
-    },
-  });
-}
+const { logger } = require('@bedrockio/instrumentation');
 
 const { initialize } = require('./utils/database');
 const { createFixtures } = require('./fixtures');

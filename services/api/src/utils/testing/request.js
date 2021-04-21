@@ -1,7 +1,8 @@
 const request = require('supertest'); //eslint-disable-line
-const mainApp = require('../../app');
+
 const qs = require('querystring');
 const tokens = require('../tokens');
+const defaultApp = require('../../app');
 
 module.exports = async function handleRequest(httpMethod, url, bodyOrQuery = {}, options = {}) {
   const headers = options.headers || {};
@@ -11,8 +12,7 @@ module.exports = async function handleRequest(httpMethod, url, bodyOrQuery = {},
 
   let promise;
 
-  const app = options.app || mainApp;
-  console.log('app', app);
+  const app = options.app || defaultApp;
 
   if (options.file) {
     const files = Array.isArray(options.file) ? options.file : [options.file];
@@ -41,7 +41,7 @@ module.exports = async function handleRequest(httpMethod, url, bodyOrQuery = {},
         .send({ ...bodyOrQuery });
     } else if (httpMethod === 'GET') {
       promise = request(app.callback())
-        .get(`${url}?${qs.stringify({ ...bodyOrQuery })}`)
+        .get(`${url}${Object.values(bodyOrQuery).length ? `?${qs.stringify({ ...bodyOrQuery })}` : ''}`)
         .set(headers);
     } else {
       throw Error(`${httpMethod} is not supported`);
