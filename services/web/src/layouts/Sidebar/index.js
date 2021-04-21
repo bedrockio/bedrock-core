@@ -41,7 +41,7 @@ export default class SidebarLayout extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      fixed: this.isFixed(),
+      offscreen: this.isOffscreen(),
       open: false,
     };
   }
@@ -59,10 +59,10 @@ export default class SidebarLayout extends React.Component {
   // Events
 
   onResize = throttle(() => {
-    const fixed = this.isFixed();
+    const offscreen = this.isOffscreen();
     this.setState({
-      fixed,
-      open: fixed && this.state.open,
+      offscreen,
+      open: offscreen && this.state.open,
     });
   }, 200);
 
@@ -78,7 +78,7 @@ export default class SidebarLayout extends React.Component {
 
   // Other
 
-  isFixed() {
+  isOffscreen() {
     return window.innerWidth <= this.resolveBreakpoint();
   }
 
@@ -99,8 +99,8 @@ export default class SidebarLayout extends React.Component {
 
   renderDimmer() {
     const { dimmer } = this.props;
-    const { fixed, open } = this.state;
-    if (dimmer && fixed) {
+    const { offscreen, open } = this.state;
+    if (dimmer && offscreen) {
       return (
         <div className={this.getElementClass('dimmer', open ? 'open' : null)} />
       );
