@@ -22,25 +22,26 @@
 }
 
 .sidebar-layout {
-  display: flex;
 
   &-menu {
-    flex: 0 0 @menuWidth;
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    width: @menuWidth;
     height: 100vh;
     padding: @padding;
     background-color: #f4f0eb;
     border-right: 1px solid rgba(0,0,0,.05);
 
-    &--fixed {
-      margin-left: -@menuWidth;
+    &--offscreen {
       box-shadow: 0 0 4px rgba(0,0,0,.2);
-      position: relative;
-      z-index: 2;
       transition: ease-in-out 200ms transform;
+      transform: translateX(-@menuWidth);
     }
 
-    &--fixed&--open {
-      transform: translateX(@menuWidth);
+    &--offscreen&--open {
+      transform: translateX(0);
     }
 
     &--dark {
@@ -55,14 +56,19 @@
     display: block;
     font-size: 14px;
     line-height: 2.2;
-    color: inherit;
+
+    &,&:hover {
+      color: inherit;
+    }
   }
 
   &-content {
-    flex: auto;
-    position: relative;
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding: 15px 0;
+
+    &--offset {
+      margin-left: @menuWidth;
+      padding: 15px;
+    }
   }
 
   &-trigger {
@@ -74,8 +80,7 @@
   }
 
   &__dimmer {
-    content: '';
-    position: absolute;
+    position: fixed;
     z-index: 1;
     top: 0;
     left: 0;
@@ -88,6 +93,7 @@
 
     &--open {
       opacity: 1;
+      pointer-events: auto;
     }
   }
 

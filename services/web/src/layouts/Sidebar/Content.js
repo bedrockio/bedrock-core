@@ -4,8 +4,8 @@ import bem from 'helpers/bem';
 @bem
 export default class SidebarLayoutContent extends React.Component {
   getModifiers() {
-    const { fixed } = this.context;
-    return [fixed ? 'fixed' : null];
+    const { offscreen } = this.context;
+    return [offscreen ? null : 'offset'];
   }
 
   render() {

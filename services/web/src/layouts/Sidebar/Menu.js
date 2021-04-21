@@ -6,11 +6,11 @@ import bem from 'helpers/bem';
 export default class SidebarLayoutMenu extends React.Component {
   getModifiers() {
     const { dark } = this.props;
-    const { fixed, open } = this.context;
+    const { offscreen, open } = this.context;
     return [
       dark ? 'dark' : null,
       open ? 'open' : null,
-      fixed ? 'fixed' : null,
+      offscreen ? 'offscreen' : null,
     ];
   }
 
