@@ -11,20 +11,8 @@ const router = new Router();
 router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
-  .use(
-    audit.config({
-      model: Product,
-    })
-  )
-  .param('productId', async (id, ctx, next) => {
-    const product = await Product.findById(id);
-    ctx.state.product = product;
-    if (!product) {
-      throw new NotFoundError();
-    }
-    return next();
-  })
   .post(
+    'create',
     '/',
     validate({
       body: Product.getCreateValidation(),
@@ -36,13 +24,8 @@ router
       };
     }
   )
-  .get('/:productId', async (ctx) => {
-    const { product } = await ctx.state;
-    ctx.body = {
-      data: product,
-    };
-  })
   .post(
+    'query',
     '/search',
     validate({
       body: Joi.object({
@@ -67,7 +50,22 @@ router
       };
     }
   )
+  .param('productId', async (id, ctx, next) => {
+    const product = await Product.findById(id);
+    if (!product) {
+      throw new NotFoundError();
+    }
+    ctx.state.product = product;
+    return next();
+  })
+  .get('lookup', '/:productId', async (ctx) => {
+    const { product } = await ctx.state;
+    ctx.body = {
+      data: product,
+    };
+  })
   .patch(
+    'update',
     '/:productId',
     validate({
       body: Product.getUpdateValidation(),
@@ -81,7 +79,7 @@ router
       };
     }
   )
-  .delete('/:productId', async (ctx) => {
+  .delete('delete', '/:productId', async (ctx) => {
     const product = ctx.state.product;
     await product.delete();
     ctx.status = 204;

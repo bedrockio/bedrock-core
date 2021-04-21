@@ -1,5 +1,5 @@
 const request = require('supertest'); //eslint-disable-line
-const app = require('../../app');
+const mainApp = require('../../app');
 const qs = require('querystring');
 const tokens = require('../tokens');
 
@@ -10,6 +10,9 @@ module.exports = async function handleRequest(httpMethod, url, bodyOrQuery = {},
   }
 
   let promise;
+
+  const app = options.app || mainApp;
+  console.log('app', app);
 
   if (options.file) {
     const files = Array.isArray(options.file) ? options.file : [options.file];
