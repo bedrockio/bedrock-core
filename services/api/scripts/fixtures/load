@@ -17,6 +17,6 @@ run()
   })
   .catch((error) => {
     logger.error(`Fatal error: ${error.message}, exiting.`);
-    logger.warn(error.stack);
+    console.warn(error.stack);
     process.exit(1);
   });
