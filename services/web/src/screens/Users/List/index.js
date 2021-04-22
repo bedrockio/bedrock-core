@@ -4,7 +4,7 @@ import { Table, Divider, Button, Message } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import { screen } from 'helpers';
-import { Confirm, HelpTip, Breadcrumbs, SearchProvider } from 'components';
+import { Confirm, HelpTip, Breadcrumbs, SearchProvider, Layout } from 'components';
 
 import Filters from 'modals/Filters';
 import EditUser from 'modals/EditUser';
@@ -32,7 +32,11 @@ export default class UserList extends React.Component {
         }) => {
           return (
             <React.Fragment>
-              <Breadcrumbs active="Users">
+              <Breadcrumbs active="Users" />
+              <div style={{ display:'inline-block', height:'10px'}} />
+              <Layout horizontal center spread>
+              <h1 style={{ margin:'0' }}>Users</h1>
+              <Layout.Group>
                 <Filters onSave={setFilters} filters={filters}>
                   <Filters.Text label="Search" name="keyword" placeholder="Enter name, email, or user id" />
                 </Filters>
@@ -40,7 +44,8 @@ export default class UserList extends React.Component {
                   trigger={<Button primary content="New User" icon="plus" />}
                   onSave={reload}
                 />
-              </Breadcrumbs>
+                </Layout.Group>
+              </Layout>
               <Divider hidden />
               {users.length === 0 ? (
                 <Message>No users created yet</Message>
