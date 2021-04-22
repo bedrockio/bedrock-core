@@ -2,11 +2,17 @@ locals {
   global = {
     project          = var.project,
     region           = var.region,
+    multi_region     = var.multi_region,
     zone             = var.zone,
     environment      = var.environment,
     location         = "${var.region}-${var.zone}",
     bucket_prefix    = var.bucket_prefix,
-    cluster_name     = var.cluster_name
+    cluster_name     = var.cluster_name,
+    node_pool_count  = var.node_pool_count,
+    min_node_count   = var.min_node_count,
+    max_node_count   = var.max_node_count,
+    machine_type     = var.machine_type,
+    preemptible      = var.preemptible
   }
 }
 
