@@ -17,10 +17,10 @@ export default class HelpTip extends React.Component {
     const { icon, title, text } = this.props;
 
     return (
-      <div style={{ display: 'inline-block', marginLeft: '0.5em' }}>
+      <div style={{ display: 'inline-block', marginLeft: '0.5em', verticalAlign: 'top', marginTop:'-2px' }}>
         <Icon
           name="question-circle"
-          style={{ color: '#cccccc', cursor: 'pointer' }}
+          style={{ color: '#ccc', cursor: 'pointer' }}
           onClick={this.open}
         />
         {this.state.open && (

@@ -79,10 +79,10 @@
 --------------------*/
 
 /* Used on inputs, textarea etc */
-@focusedFormBorderColor: #85B7D9;
+@focusedFormBorderColor: #3B82F6;
 
 /* Used on dropdowns, other larger blocks */
-@focusedFormMutedBorderColor: #96C8DA;
+@focusedFormMutedBorderColor: #3B82F6;
 
 /*-------------------
         Sizes
@@ -452,7 +452,7 @@
 
 @circularRadius                : 500rem;
 
-@borderColor               : #e5e7eb;
+@borderColor               : #D1D5DB;
 @strongBorderColor         : rgba(34, 36, 38, 0.22);
 @internalBorderColor       : rgba(34, 36, 38, 0.1);
 @selectedBorderColor       : rgba(34, 36, 38, 0.35);
