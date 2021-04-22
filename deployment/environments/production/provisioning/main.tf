@@ -21,3 +21,11 @@ module "gcp-buckets" {
 
   global = local.global
 }
+
+resource "google_compute_disk" "mongo_disk" {
+  project = var.project
+  name    = "mongo-disk"
+  type    = "pd-ssd"
+  zone    = local.global.location
+  size    = 100
+}
