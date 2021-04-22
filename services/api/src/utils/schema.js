@@ -190,6 +190,7 @@ function loadModelDir(dirPath) {
       } catch (error) {
         logger.error(`Could not load model definition: ${filePath}`);
         logger.error(error);
+        throw error;
       }
     }
   }
