@@ -8,7 +8,7 @@
   "scripts": {
     "start": "nodemon --delay 300ms --ignore __tests__/* -w src --exec \"MOCK_EMAIL=true node src/index.js\"",
     "start:production": "node src/index",
-    "emails": "node emails/build",
+    "docs": "node scripts/generate-openapi",
     "lint": "eslint .",
     "test": "jest",
     "test:watch": "jest --watch -i",
@@ -29,8 +29,10 @@
     "koa": "^2.13.0",
     "koa-body": "^4.2.0",
     "lodash": "^4.17.19",
+    "marked": "^2.0.1",
     "mongoose": "^5.9.26",
     "mongoose-autopopulate": "^0.12.2",
+    "mustache": "^4.1.0",
     "postmark": "^2.5.4"
   },
   "devDependencies": {
@@ -40,7 +42,6 @@
     "eslint": "^7.22.0",
     "eslint-plugin-bedrock": "^1.0.2",
     "jest": "^26.1.0",
-    "juice": "^7.0.0",
     "mongodb": "^3.6.5",
     "nodemon": "^2.0.7",
     "prettier": "^2.2.1",
