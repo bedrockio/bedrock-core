@@ -7,18 +7,18 @@ import Sidebar from 'layouts/Sidebar';
 export default class Header extends React.Component {
   render() {
     return (
-      <header>
-        <Layout horizontal center spread>
+      <div>
+        <Layout horizontal right spread>
           <Layout.Group>
-            <Sidebar.Trigger>
+            <Sidebar.Trigger style={{ marginBottom:'20px' }}>
               <Icon name="bars" />
             </Sidebar.Trigger>
           </Layout.Group>
-          <NavLink to="/settings">
+          {/* <NavLink to="/settings">
             <Icon name="user" />
-          </NavLink>
+          </NavLink> */}
         </Layout>
-      </header>
+      </div>
     );
   }
 }

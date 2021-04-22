@@ -19,6 +19,10 @@
   display: @display;
   margin: @verticalMargin 0em;
   vertical-align: @verticalAlign;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  font-weight: 500;
+  color: #ABADB3;
 }
 .ui.breadcrumb:first-child {
   margin-top: 0em;
@@ -89,6 +93,10 @@
 
 .ui.mini.breadcrumb {
   font-size: @mini;
+}
+.ui.mini.breadcrumb .divider {
+  width: 10px;
+  height: 10px;
 }
 .ui.tiny.breadcrumb {
   font-size: @tiny;

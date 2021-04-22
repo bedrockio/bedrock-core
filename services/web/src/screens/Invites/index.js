@@ -32,7 +32,7 @@ export default class Home extends React.Component {
       <SearchProvider onDataNeeded={this.onDataNeeded}>
         {({ items, getSorted, setSort, reload }) => {
           return (
-            <Container>
+            <div>
               <Header as="h2">
                 <Layout horizontal center spread>
                   Invites
@@ -117,7 +117,7 @@ export default class Home extends React.Component {
                   </Table>
                 )}
               </div>
-            </Container>
+            </div>
           );
         }}
       </SearchProvider>
