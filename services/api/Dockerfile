@@ -9,7 +9,7 @@ COPY yarn.lock /service/yarn.lock
 
 # Update & install required packages
 RUN apk add --update bash curl;
-RUN cd /service; yarn install --frozen-lockfile --ignore-scripts;
+RUN cd /service; yarn install --frozen-lockfile;
 
 # Copy app source
 COPY . /service
