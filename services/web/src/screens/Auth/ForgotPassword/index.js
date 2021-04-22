@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, Message, Grid } from 'semantic-ui-react';
+import { Segment, Message, Grid } from 'semantic';
 import { request } from 'utils/api';
 import { screen } from 'helpers';
 import PageCenter from 'components/PageCenter';
@@ -10,6 +10,8 @@ import { Link } from 'react-router-dom';
 
 @screen
 export default class ForgotPassword extends React.Component {
+  static layout = 'none';
+
   state = {
     success: false,
     loading: false,

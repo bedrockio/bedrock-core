@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, Grid } from 'semantic-ui-react';
+import { Segment, Grid } from 'semantic';
 import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
 import { withSession } from 'stores';
@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 @screen
 @withSession
 export default class Signup extends React.Component {
+  static layout = 'none';
 
   state = {
     error: null,

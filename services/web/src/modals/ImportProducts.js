@@ -2,7 +2,7 @@ import React from 'react';
 import Dropzone from 'react-dropzone';
 import { request } from 'utils/api';
 
-import { Modal, Icon, Progress, Table, Button, Message } from 'semantic-ui-react';
+import { Modal, Icon, Progress, Table, Button, Message } from 'semantic';
 import { processFile } from 'utils/csv';
 
 export const productsImportMapping = {

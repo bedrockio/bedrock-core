@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header, Image } from 'semantic-ui-react';
+import { Header, Image } from 'semantic';
 import { Link } from 'react-router-dom';
 import Logo from 'assets/logo.svg';
 
@@ -10,7 +10,7 @@ export default ({ title }) => {
         <Image
           src={Logo}
           alt="Logo"
-          style={{ height: '80px', margin: '0 auto' }}
+          style={{ height: '75px', margin: '0 auto' }}
         />
       </Link>
       <Header as="h3" textAlign="center" style={{ textTransform: 'uppercase' }}>

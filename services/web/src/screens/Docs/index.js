@@ -1,6 +1,6 @@
 import React, { createRef } from 'react';
 import { startCase, kebabCase } from 'lodash';
-import { Container, Menu, Message, Breadcrumb, Divider, Grid, Sticky, Ref, Segment } from 'semantic-ui-react';
+import { Container, Menu, Message, Breadcrumb, Divider, Grid, Sticky, Ref, Segment } from 'semantic';
 import { Switch, Route, Link, NavLink } from 'react-router-dom';
 import StandardPage from './StandardPage';
 import PageLoader from 'components/PageLoader';
@@ -103,10 +103,10 @@ export default class Docs extends React.Component {
       <React.Fragment>
         <Container>
           <Breadcrumb size="big">
-            <Breadcrumb.Section link as={Link} to="/">
+            <Breadcrumb.Section link as={Link} to="/docs">
               API Docs
             </Breadcrumb.Section>
-            <Breadcrumb.Divider icon="right chevron" />
+            <Breadcrumb.Divider icon="chevron-right" />
             <Breadcrumb.Section>{page.name}</Breadcrumb.Section>
           </Breadcrumb>
         </Container>

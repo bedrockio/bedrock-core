@@ -1,6 +1,6 @@
 import React from 'react';
 import { request } from 'utils/api';
-import { Segment, Grid } from 'semantic-ui-react';
+import { Segment, Grid } from 'semantic';
 import { withSession } from 'stores';
 import { screen } from 'helpers';
 
@@ -13,6 +13,8 @@ import { Link } from 'react-router-dom';
 @screen
 @withSession
 export default class Login extends React.Component {
+  static layout = 'none';
+
   state = {
     error: null,
     loading: false,

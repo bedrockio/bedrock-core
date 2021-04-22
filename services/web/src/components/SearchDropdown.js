@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Dropdown } from 'semantic-ui-react';
-import { omit, uniqBy, debounce } from 'lodash';
+import { Dropdown } from 'semantic';
+import { debounce, omit, uniqBy } from 'lodash';
 
 export default class SearchDropdown extends React.Component {
   state = {

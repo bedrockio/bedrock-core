@@ -1,8 +1,10 @@
 const Koa = require('koa');
-const koaLogger = require('koa-logger');
+
+const { loggingMiddleware } = require('@bedrockio/instrumentation');
 const koaMount = require('koa-mount');
 const koaBasicAuth = require('koa-basic-auth');
 
+const envMiddleware = require('./middleware/env');
 const assetsMiddleware = require('./middleware/assets');
 const historyMiddleware = require('./middleware/history');
 const templateMiddleware = require('./middleware/template');
@@ -17,6 +19,7 @@ const {
   HTTP_BASIC_AUTH_PATH,
   HTTP_BASIC_AUTH_USER,
   HTTP_BASIC_AUTH_PASS,
+  PUBLIC,
 } = require('../env');
 
 const app = new Koa();
@@ -39,10 +42,12 @@ if (ENABLE_HTTP_BASIC_AUTH) {
   );
 }
 
-app.use(koaMount('/assets/', assetsMiddleware('./dist/assets')));
-app.use(koaLogger());
-app.use(historyMiddleware({ apps: ['/'] }));
-app.use(templateMiddleware({ apps: ['/'] }));
+app
+  .use(koaMount('/assets/', assetsMiddleware('./dist/assets')))
+  .use(loggingMiddleware())
+  .use(envMiddleware(PUBLIC))
+  .use(historyMiddleware({ apps: ['/'] }))
+  .use(templateMiddleware({ apps: ['/'] }));
 
 app.listen(BIND_PORT, BIND_HOST, (err) => {
   if (err) throw err;

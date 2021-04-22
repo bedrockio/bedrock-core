@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { pickBy } from 'lodash';
-import { Loader, Container, Message, Divider } from 'semantic-ui-react';
+import { Loader, Container, Message, Divider } from 'semantic';
 import Pagination from 'components/Pagination';
 
 export default class SearchProvider extends React.Component {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, Grid } from 'semantic-ui-react';
+import { Segment, Grid } from 'semantic';
 import { request } from 'utils/api';
 import { withSession } from 'stores';
 import { screen } from 'helpers';
@@ -8,19 +8,19 @@ import LogoTitle from 'components/LogoTitle';
 
 import Form from './Form';
 import { Link } from 'react-router-dom';
-import { getToken, parseToken } from 'utils/token';
+import { getUrlToken } from 'utils/token';
 
 @screen
 @withSession
 export default class AcceptInvite extends React.Component {
+  static layout = 'none';
 
   constructor(props) {
     super(props);
-    const token = getToken(props);
-    const parsedToken = token && parseToken(token);
+    const { token, payload } = getUrlToken();
     this.state = {
       token,
-      jwt: parsedToken,
+      payload,
       loading: false,
       error: null,
     };
@@ -51,15 +51,14 @@ export default class AcceptInvite extends React.Component {
   };
 
   render() {
-    const { error, loading } = this.state;
-    const { jwt } = this.state;
+    const { payload, error, loading } = this.state;
     return (
       <PageCenter>
         <LogoTitle title="Accept Invite" />
         <Segment.Group>
           <Segment padded>
             <div className="wrapper">
-              <p>This invite is intended for {jwt?.email}</p>
+              <p>This invite is intended for {payload?.email}</p>
               <Form onSubmit={this.onSubmit} error={error} loading={loading} />
             </div>
           </Segment>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, Message } from 'semantic-ui-react';
+import { Segment, Message } from 'semantic';
 import { withSession } from 'stores';
 import { request } from 'utils/api';
 import { screen } from 'helpers';
@@ -8,19 +8,19 @@ import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
 import Form from './Form';
 import { Link } from 'react-router-dom';
-
-import { getToken, parseToken } from 'utils/token';
+import { getUrlToken } from 'utils/token';
 
 @screen
 @withSession
 export default class ResetPassword extends React.Component {
+  static layout = 'none';
 
   constructor(props) {
     super(props);
-    const token = getToken(props);
+    const { token, payload } = getUrlToken();
     this.state = {
       token,
-      jwt: parseToken(token),
+      payload,
       loading: false,
       success: false,
       error: null,
@@ -61,13 +61,13 @@ export default class ResetPassword extends React.Component {
   };
 
   render() {
-    const { jwt, error, loading, success } = this.state;
+    const { payload, error, loading, success } = this.state;
     return (
       <PageCenter>
         <LogoTitle title="Reset Password" />
         <Segment.Group>
           <Segment padded>
-            {(!jwt) && (
+            {(!payload) && (
               <Message error>
                 <Message.Header>No valid token found</Message.Header>
                 <Message.Content>
@@ -84,7 +84,7 @@ export default class ResetPassword extends React.Component {
                 </p>
               </Message>
             )}
-            {!success && jwt && (
+            {!success && payload && (
               <Form onSubmit={this.onSubmit} loading={loading} error={error} />
             )}
           </Segment>

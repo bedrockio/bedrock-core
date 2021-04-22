@@ -1,3 +1,0 @@
-.ui.message p {
-  white-space: pre-line;
-}

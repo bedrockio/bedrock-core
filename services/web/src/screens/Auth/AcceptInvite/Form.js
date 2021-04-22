@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Button, Message } from 'semantic-ui-react';
+import { Form, Button, Message } from 'semantic';
 
 export default (props) => {
   const { error, loading } = props;
@@ -25,7 +25,7 @@ export default (props) => {
         placeholder="Name"
         name="name"
         autoComplete="name"
-        icon="id card outline"
+        icon="id-card outline"
         iconPosition="left"
         type="text"
         value={name}

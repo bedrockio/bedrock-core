@@ -27,22 +27,30 @@ spec:
               value: "admin@bedrock.foundation"
             - name: ADMIN_PASSWORD
               value: "development.now"
-            - name: JWT_SECRET
-              value: "changeme1234"
             - name: APP_DOMAIN
               value: "bedrock.foundation"
             - name: APP_URL
               value: "https://bedrock.foundation"
             - name: POSTMARK_FROM
               value: "no-reply@bedrock.foundation"
-            - name: POSTMARK_APIKEY
-              value: "abc"
             - name: UPLOADS_STORE
               value: "gcs"
             - name: UPLOADS_GCS_BUCKET
               value: "bedrock-production-uploads"
             - name: LOG_LEVEL
               value: "debug"
+            # The `bedrock cloud` command in the CLI will help with
+            # the creation and storing of secrets for production.
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: JWT_SECRET
+            - name: POSTMARK_APIKEY
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: POSTMARK_APIKEY
           ports:
             - name: http-server
               containerPort: 2300

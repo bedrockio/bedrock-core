@@ -1,5 +1,5 @@
 const Router = require('@koa/router');
-const Joi = require('@hapi/joi');
+const Joi = require('joi');
 const validate = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
@@ -102,16 +102,8 @@ router
   .post(
     '/',
     validate({
-      body: Joi.object({
-        email: Joi.string().lowercase().email().required(),
-        name: Joi.string().required(),
+      body: User.getCreateValidation({
         password: passwordField.required(),
-        roles: Joi.array().items(
-          Joi.object({
-            role: Joi.string().required(),
-            scope: Joi.string().required(),
-          })
-        ),
       }),
     }),
     async (ctx) => {
@@ -130,19 +122,7 @@ router
   .patch(
     '/:userId',
     validate({
-      body: Joi.object({
-        id: Joi.string().strip(),
-        email: Joi.string(),
-        name: Joi.string(),
-        roles: Joi.array().items(
-          Joi.object({
-            role: Joi.string().required(),
-            scope: Joi.string().required(),
-          })
-        ),
-        createdAt: Joi.date().strip(),
-        updatedAt: Joi.date().strip(),
-      }),
+      body: User.getUpdateValidation(),
     }),
     async (ctx) => {
       const { user } = ctx.state;
