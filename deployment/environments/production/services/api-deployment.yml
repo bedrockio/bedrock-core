@@ -4,6 +4,11 @@ metadata:
   name: api-deployment
 spec:
   replicas: 2
+  strategy:
+    type: RollingUpdate # New pods are added gradually, and old pods are terminated gradually
+    rollingUpdate:
+      maxSurge: 1 # The number of pods that can be created above the desired amount of pods during an update
+      maxUnavailable: 1 # The number of pods that can be unavailable during the update process
   selector:
     matchLabels:
       app: api
@@ -61,6 +66,23 @@ spec:
           volumeMounts:
             - name: cache
               mountPath: /service/data
+          # https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+          readinessProbe: # readiness probes to know when a container is ready to start accepting traffic
+            initialDelaySeconds: 5 # Number of seconds after the container has started before liveness or readiness probes are initiated. Defaults to 0 seconds.
+            periodSeconds: 5 # How often (in seconds) to perform the probe. Default to 10 seconds
+            timeoutSeconds: 2 # Number of seconds after which the probe times out. Defaults to 1 second
+            failureThreshold: 2 # When a probe fails, Kubernetes will try failureThreshold times before giving up.
+            httpGet:
+              path: /1/status/mongodb
+              port: 2300
+          livenessProbe: # liveness probes to know when to restart a container
+            httpGet:
+              path: /1/status/mongodb
+              port: 2300
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 2
       volumes:
         - name: cache
           emptyDir: {}
