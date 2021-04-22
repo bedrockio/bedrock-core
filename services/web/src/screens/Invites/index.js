@@ -9,7 +9,6 @@ import InviteUser from 'modals/InviteUser';
 import LoadButton from 'components/LoadButton';
 
 import {
-  Container,
   Header,
   Table,
   Button,

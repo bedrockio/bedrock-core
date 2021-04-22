@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header, Button, Message, Segment, Dropdown, Table, Icon, Menu } from 'semantic-ui-react';
+import { Header, Button, Message, Segment, Dropdown, Table } from 'semantic-ui-react';
 import { screen } from 'helpers';
 import Spacer from '../../components/Layout/Spacer';
 
@@ -7,7 +7,7 @@ const options = [
   { key: 1, text: 'Choice 1', value: 1 },
   { key: 2, text: 'Choice 2', value: 2 },
   { key: 3, text: 'Choice 3', value: 3 },
-]
+];
 
 @screen
 export default class ComponentsScreen extends React.Component {
