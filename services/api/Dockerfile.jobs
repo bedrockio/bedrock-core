@@ -11,7 +11,7 @@ RUN python3 -m pip install --user pipx yq
 RUN python3 -m pipx ensurepath
 RUN python3 -m pipx install yacron
 RUN wget https://github.com/mikefarah/yq/releases/download/v4.6.3/yq_linux_386.tar.gz -O - | tar xz && mv yq_linux_386 /usr/bin/yq
-RUN cd /service; yarn install --frozen-lockfile;
+RUN cd /service; yarn install --frozen-lockfile --ignore-scripts;
 
 # Copy app source
 COPY . /service
