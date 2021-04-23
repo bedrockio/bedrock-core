@@ -12,11 +12,10 @@ const secrets = {
   user: config.get('JWT_SECRET'),
 };
 
-function createUserTemporaryToken(claims, type) {
+function createTemporaryToken(claims) {
   return jwt.sign(
     {
       ...claims,
-      type,
       kid: 'user',
     },
     secrets.user,
@@ -26,10 +25,11 @@ function createUserTemporaryToken(claims, type) {
   );
 }
 
-function createUserToken(user) {
+function createAuthToken(sub, jti) {
   return jwt.sign(
     {
-      userId: user._id,
+      sub,
+      jti,
       type: 'user',
       kid: 'user',
     },
@@ -45,7 +45,7 @@ function generateTokenId() {
 }
 
 module.exports = {
-  createUserTemporaryToken,
-  createUserToken,
+  createTemporaryToken,
+  createAuthToken,
   generateTokenId,
 };
