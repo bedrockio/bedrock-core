@@ -9,12 +9,12 @@ const { NotFoundError, BadRequestError, GoneError } = require('../utils/errors')
 const { Invite, User } = require('../models');
 
 const { sendTemplatedMail } = require('../utils/mailer');
-const { createUserTemporaryToken } = require('../utils/tokens');
+const { createTemporaryToken } = require('../utils/tokens');
 
 const router = new Router();
 
 function getToken(invite) {
-  return createUserTemporaryToken({ inviteId: invite._id, email: invite.email }, 'invite');
+  return createTemporaryToken({ type: 'invite', inviteId: invite._id, email: invite.email });
 }
 
 function sendInvite(sender, invite) {
