@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { createAuthToken, createTemporaryToken, generateTokenId } = require('../../utils/tokens');
+const { createTemporaryToken, generateTokenId } = require('../../utils/tokens');
 const { setupDb, teardownDb, request, createUser } = require('../../utils/testing');
 const { mockTime, unmockTime, advanceTime } = require('../../utils/testing/time');
 const { User } = require('../../models');
