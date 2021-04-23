@@ -1,8 +1,6 @@
 const { setupDb, teardownDb, request, createUser, createUserWithRole } = require('../../utils/testing');
 const { User } = require('../../models');
 
-jest.mock('../../utils/emails');
-
 beforeAll(async () => {
   await setupDb();
 });

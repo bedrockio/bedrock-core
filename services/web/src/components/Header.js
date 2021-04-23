@@ -1,64 +1,23 @@
 import React from 'react';
-import { withSession } from 'stores';
-import { NavLink, Link } from 'react-router-dom';
-import { Container, Dropdown, Icon, Menu } from 'semantic';
-import logo from 'assets/favicon.svg';
-import Protected from 'components/Protected';
+import { NavLink } from 'react-router-dom';
+import { Icon } from 'semantic';
+import { Layout } from 'components/Layout';
+import Sidebar from 'layouts/Sidebar';
 
-@withSession
 export default class Header extends React.Component {
   render() {
-    const { user } = this.context;
-    if (!user) {
-      return null;
-    }
     return (
       <header>
-        <Menu inverted fixed="top">
-          <Container>
-            <Menu.Item as={Link} to="/">
-              <img style={{ width: '30px' }} className="logo" src={`${logo}`} />
-            </Menu.Item>
-            <Menu.Item as={NavLink} to="/shops">
-              Shops
-            </Menu.Item>
-            <Menu.Menu position="right">
-              <Dropdown
-                className="account"
-                item
-                trigger={
-                  <span>
-                    <Icon name="user" /> {user?.name}
-                  </span>
-                }>
-                <Dropdown.Menu>
-                  <Dropdown.Item as={Link} to="/settings">
-                    Settings
-                  </Dropdown.Item>
-                  <Dropdown.Item as={Link} to="/docs/getting-started">
-                    API Docs
-                  </Dropdown.Item>
-                  <Dropdown.Item as={Link} to="/components">
-                    Components
-                  </Dropdown.Item>
-                  <Protected endpoint="events">
-                    <Dropdown.Item as={Link} to="/users">
-                      Users
-                    </Dropdown.Item>
-                  </Protected>
-                  <Protected endpoint="events">
-                    <Dropdown.Item as={Link} to="/invites">
-                      Invites
-                    </Dropdown.Item>
-                  </Protected>
-                  <Dropdown.Item as={Link} to="/logout">
-                    Log Out
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </Menu.Menu>
-          </Container>
-        </Menu>
+        <Layout horizontal center spread>
+          <Layout.Group>
+            <Sidebar.Trigger>
+              <Icon name="bars" />
+            </Sidebar.Trigger>
+          </Layout.Group>
+          <NavLink to="/settings">
+            <Icon name="user" />
+          </NavLink>
+        </Layout>
       </header>
     );
   }

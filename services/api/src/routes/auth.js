@@ -3,7 +3,7 @@ const Joi = require('joi');
 const validate = require('../utils/middleware/validate');
 const { authenticate } = require('../utils/middleware/authenticate');
 const { createAuthToken, createTemporaryToken, generateTokenId } = require('../utils/tokens');
-const { sendWelcome, sendResetPassword, sendResetPasswordUnknown } = require('../utils/emails');
+const { sendTemplatedMail } = require('../utils/mailer');
 const { BadRequestError } = require('../utils/errors');
 const { User, Invite } = require('../models');
 
@@ -36,9 +36,11 @@ router
         ...ctx.request.body,
       });
 
-      await sendWelcome({
+      await sendTemplatedMail({
+        to: [name, email].join(' '),
+        template: 'welcome.md',
+        subject: 'Welcome to {{appName}}',
         name,
-        to: email,
       });
 
       ctx.body = { data: { token: createAuthToken(user.id, authTokenId) } };
@@ -123,19 +125,22 @@ router
     async (ctx) => {
       const { email } = ctx.request.body;
       const user = await User.findOne({ email });
-      if (user) {
-        const tokenId = generateTokenId();
-        const token = createTemporaryToken({ type: 'password', sub: user.id, jti: tokenId });
-        await user.updateOne({ tempTokenId: tokenId });
-        await sendResetPassword({
-          to: email,
-          token,
-        });
-      } else {
-        await sendResetPasswordUnknown({
-          to: email,
-        });
+      if (!user) {
+        ctx.throw(400, 'Unknown email address.');
       }
+
+      const tokenId = generateTokenId();
+      const token = createTemporaryToken({ type: 'password', sub: user.id, jti: tokenId });
+      await user.updateOne({ tempTokenId: tokenId });
+
+      await sendTemplatedMail({
+        to: [user.name, email].join(' '),
+        template: 'reset-password.md',
+        subject: 'Password Reset Request',
+        token,
+        email,
+      });
+
       ctx.status = 204;
     }
   )

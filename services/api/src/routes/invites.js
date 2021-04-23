@@ -8,13 +8,23 @@ const { requirePermissions } = require('../utils/middleware/permissions');
 const { NotFoundError, BadRequestError, GoneError } = require('../utils/errors');
 const { Invite, User } = require('../models');
 
-const { sendInvite } = require('../utils/emails');
+const { sendTemplatedMail } = require('../utils/mailer');
 const { createTemporaryToken } = require('../utils/tokens');
 
 const router = new Router();
 
 function getToken(invite) {
   return createTemporaryToken({ type: 'invite', inviteId: invite._id, email: invite.email });
+}
+
+function sendInvite(sender, invite) {
+  return sendTemplatedMail({
+    to: invite.email,
+    subject: `${sender.name} has invited you to join {{appName}}`,
+    template: 'invite.md',
+    sender,
+    token: getToken(invite),
+  });
 }
 
 router
@@ -77,14 +87,14 @@ router
             upsert: true,
           }
         );
-        await sendInvite({ email, sender: authUser, token: getToken(invite) });
+        await sendInvite(authUser, invite);
       }
       ctx.status = 204;
     }
   )
   .post('/:inviteId/resend', async (ctx) => {
     const { invite, authUser } = ctx.state;
-    await sendInvite({ email: invite.email, sender: authUser, token: getToken(invite) });
+    await sendInvite(authUser, invite);
     ctx.status = 204;
   })
   .delete('/:inviteId', async (ctx) => {

@@ -8,9 +8,12 @@
   flex-flow: column;
   flex: auto;
 
+  &.horizontal {
+    flex-flow: row;
+  }
+
   &.horizontal,
   &.center:not(.vertical):not(.horizontal) {
-    flex-flow: row;
 
     @media @mobile {
       &:not(.stackable) {
