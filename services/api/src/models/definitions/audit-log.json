@@ -1,0 +1,40 @@
+{
+  "attributes": {
+    "requestPath":  {
+      "type": "String",
+      "required": true
+    },
+    "requestNamespace":  {
+      "type": "String",
+      "required": true
+    },
+    "requestNormalizedPath":  {
+      "type": "String",
+      "required": true
+    },
+    "requestMethod":  {
+      "type": "String",
+      "required": true
+    },
+    "action":  {
+      "type": "String",
+      "required": true
+    },
+    "type":  {
+      "type": "String",
+      "enum": ["create", "update", "delete", "read"]
+    },
+    "diffObject": {
+      "type": "Mixed"
+    },
+    "objectId": {
+      "type": "ObjectId"
+    },
+    "userId": {
+      "type": "ObjectId",
+      "ref": "User",
+      "required": true
+    }
+  }
+}
+
