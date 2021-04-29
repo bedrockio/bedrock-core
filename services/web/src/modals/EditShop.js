@@ -6,8 +6,8 @@ import { modal } from 'helpers';
 
 // --- Generator: imports
 import UploadsField from 'components/form-fields/Uploads';
-import CountriesField from 'components/form-fields/Countries';
 import CategoriesField from 'components/form-fields/Categories';
+import AddressField from 'components/form-fields/Address';
 // --- Generator: end
 
 @modal
@@ -102,12 +102,6 @@ export default class EditShop extends React.Component {
                 value={shop.description || ''}
                 onChange={this.setField}
               />
-              <CountriesField
-                label="Country"
-                name="country"
-                value={shop.country || ''}
-                onChange={this.setField}
-              />
               <CategoriesField
                 name="categories"
                 value={shop.categories || []}
@@ -119,6 +113,12 @@ export default class EditShop extends React.Component {
                 value={shop.images || []}
                 onChange={(data) => this.setField(null, data)}
                 onError={(error) => this.setState({ error })}
+              />
+              <AddressField
+                value={shop.address}
+                onChange={this.setField}
+                name="address"
+                autoComplete="off"
               />
               {/* --- Generator: end */}
             </Form>

@@ -43,7 +43,7 @@ router
       body: Joi.object({
         // --- Generator: search
         name: Joi.string(),
-        country: Joi.string(),
+        countryCode: Joi.string(),
         category: Joi.string(),
         // --- Generator: end
         ...searchValidation(),
@@ -56,12 +56,12 @@ router
       });
 
       // --- Generator: vars
-      const { country, category } = ctx.request.body;
+      const { countryCode, category } = ctx.request.body;
       // --- Generator: end
 
       // --- Generator: queries
-      if (country) {
-        query.country = country;
+      if (countryCode) {
+        query['address.countryCode'] = countryCode;
       }
       if (category) {
         query.categories = category;
