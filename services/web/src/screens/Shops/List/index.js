@@ -4,7 +4,13 @@ import { Table, Divider, Button, Message } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import { screen } from 'helpers';
-import { Confirm, HelpTip, Breadcrumbs, SearchProvider } from 'components';
+import {
+  Confirm,
+  HelpTip,
+  Breadcrumbs,
+  SearchProvider,
+  ManagedModal,
+} from 'components';
 
 import Filters from 'modals/Filters';
 import EditShop from 'modals/EditShop';
@@ -58,7 +64,11 @@ export default class ShopList extends React.Component {
               <Breadcrumbs active="Shops">
                 <Filters onSave={setFilters} filters={filters}>
                   {/* --- Generator: filters */}
-                  <Filters.Text label="Search" name="keyword" placeholder="Enter name or shop id" />
+                  <Filters.Text
+                    label="Search"
+                    name="keyword"
+                    placeholder="Enter name or shop id"
+                  />
                   <Filters.Dropdown
                     label="Country"
                     name="country"
@@ -72,9 +82,9 @@ export default class ShopList extends React.Component {
                   />
                   {/* --- Generator: end */}
                 </Filters>
-                <EditShop
+                <ManagedModal
                   trigger={<Button primary content="New Shop" icon="plus" />}
-                  onSave={reload}
+                  content={<EditShop onSave={reload} />}
                 />
               </Breadcrumbs>
               <Divider hidden />
@@ -121,8 +131,7 @@ export default class ShopList extends React.Component {
                             {formatDateTime(shop.createdAt)}
                           </Table.Cell>
                           <Table.Cell textAlign="center">
-                            <EditShop
-                              shop={shop}
+                            <ManagedModal
                               trigger={
                                 <Button
                                   style={{ marginLeft: '20px' }}
@@ -130,7 +139,7 @@ export default class ShopList extends React.Component {
                                   icon="edit"
                                 />
                               }
-                              onSave={reload}
+                              content={<EditShop shop={shop} onSave={reload} />}
                             />
                             <Confirm
                               negative
