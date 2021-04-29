@@ -53,6 +53,7 @@ export default class EditUser extends React.Component {
       }
       this.props.onClose(true);
     } catch (error) {
+      console.error(error);
       this.setState({
         error,
         loading: false,
