@@ -10,17 +10,13 @@ export default ({ user, match, onSave }) => {
   const { id } = match.params;
   return (
     <React.Fragment>
-      <Breadcrumbs link={<Link to="/users">Users</Link>} active={user?.name || 'Loading...'}>
+      <Breadcrumbs
+        link={<Link to="/users">Users</Link>}
+        active={user?.name || 'Loading...'}>
         <EditUser
           user={user}
           onSave={onSave}
-          trigger={
-            <Button
-              primary
-              icon="setting"
-              content="Settings"
-            />
-          }
+          trigger={<Button primary icon="setting" content="Settings" />}
         />
       </Breadcrumbs>
       <Divider hidden />

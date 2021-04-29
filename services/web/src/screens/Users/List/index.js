@@ -34,7 +34,11 @@ export default class UserList extends React.Component {
             <React.Fragment>
               <Breadcrumbs active="Users">
                 <Filters onSave={setFilters} filters={filters}>
-                  <Filters.Text label="Search" name="keyword" placeholder="Enter name, email, or user id" />
+                  <Filters.Text
+                    label="Search"
+                    name="keyword"
+                    placeholder="Enter name, email, or user id"
+                  />
                 </Filters>
                 <EditUser
                   trigger={<Button primary content="New User" icon="plus" />}

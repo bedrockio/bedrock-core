@@ -2,6 +2,7 @@ import React from 'react';
 import { Form, Modal, Message, Button } from 'semantic';
 import { request } from 'utils/api';
 import AutoFocus from 'components/AutoFocus';
+import { modal } from 'helpers';
 
 // --- Generator: imports
 import UploadsField from 'components/form-fields/Uploads';
@@ -9,25 +10,15 @@ import CountriesField from 'components/form-fields/Countries';
 import CategoriesField from 'components/form-fields/Categories';
 // --- Generator: end
 
+@modal
 export default class EditShop extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
-      open: false,
       error: null,
       loading: false,
       shop: props.shop || {},
     };
-  }
-
-  componentDidUpdate(lastProps) {
-    const { shop } = this.props;
-    if (shop && shop !== lastProps.shop) {
-      this.setState({
-        shop,
-      });
-    }
   }
 
   isUpdate() {
@@ -52,12 +43,12 @@ export default class EditShop extends React.Component {
   };
 
   onSubmit = async () => {
+    this.setState({
+      error: null,
+      loading: true,
+    });
+    const { shop } = this.state;
     try {
-      this.setState({
-        error: null,
-        loading: true,
-      });
-      const { shop } = this.state;
       if (this.isUpdate()) {
         await request({
           method: 'PATCH',
@@ -70,15 +61,8 @@ export default class EditShop extends React.Component {
           path: '/1/shops',
           body: shop,
         });
-        this.setState({
-          shop: {},
-        });
       }
-      this.setState({
-        open: false,
-        loading: false,
-      });
-      this.props.onSave();
+      this.props.onClose(true);
     } catch (error) {
       this.setState({
         error,
@@ -88,17 +72,12 @@ export default class EditShop extends React.Component {
   };
 
   render() {
-    const { trigger } = this.props;
-    const { shop, open, loading, error } = this.state;
+    const { shop, loading, error } = this.state;
     return (
-      <Modal
-        closeIcon
-        open={open}
-        trigger={trigger}
-        closeOnDimmerClick={false}
-        onOpen={() => this.setState({ open: true })}
-        onClose={() => this.setState({ open: false })}>
-        <Modal.Header>{this.isUpdate() ? `Edit "${shop.name}"` : 'New Shop'}</Modal.Header>
+      <>
+        <Modal.Header>
+          {this.isUpdate() ? `Edit "${shop.name}"` : 'New Shop'}
+        </Modal.Header>
         <Modal.Content scrolling>
           <AutoFocus>
             <Form
@@ -123,8 +102,17 @@ export default class EditShop extends React.Component {
                 value={shop.description || ''}
                 onChange={this.setField}
               />
-              <CountriesField label="Country" name="country" value={shop.country || ''} onChange={this.setField} />
-              <CategoriesField name="categories" value={shop.categories || []} onChange={this.setField} />
+              <CountriesField
+                label="Country"
+                name="country"
+                value={shop.country || ''}
+                onChange={this.setField}
+              />
+              <CategoriesField
+                name="categories"
+                value={shop.categories || []}
+                onChange={this.setField}
+              />
               <UploadsField
                 name="images"
                 label="Images"
@@ -145,7 +133,7 @@ export default class EditShop extends React.Component {
             content={this.isUpdate() ? 'Update' : 'Create'}
           />
         </Modal.Actions>
-      </Modal>
+      </>
     );
   }
 }
