@@ -1,4 +1,5 @@
 const { authenticate, fetchUser } = require('../authenticate');
+const { createAuthToken, generateTokenId } = require('../../tokens');
 const { setupDb, teardownDb, context, createUser } = require('../../testing');
 const jwt = require('jsonwebtoken');
 const config = require('@bedrockio/config');
@@ -143,7 +144,7 @@ describe('fetchUser', () => {
   it('should fetch the authUser', async () => {
     const user = await createUser();
     const ctx = context();
-    ctx.state.jwt = { userId: user.id };
+    ctx.state.jwt = { sub: user.id };
     await fetchUser(ctx, () => {
       expect(ctx.state.authUser.id).toBe(user.id);
     });
@@ -169,10 +170,55 @@ describe('fetchUser', () => {
         tmp = user;
         count++;
       },
-      jwt: { userId: user.id },
+      jwt: { sub: user.id },
     };
     await fetchUser(ctx, () => {});
     await fetchUser(ctx, () => {});
     expect(count).toBe(1);
+  });
+
+});
+
+describe('token interop', () => {
+
+  beforeAll(async () => {
+    await setupDb();
+  });
+
+  afterAll(async () => {
+    await teardownDb();
+  });
+
+  async function generateAuthToken(user) {
+    const tokenId = generateTokenId();
+    await user.update({
+      authTokenId: tokenId,
+    });
+    return await createAuthToken(user.id, tokenId);
+  }
+
+  it('should not be able to replay a previous token', async () => {
+    let ctx;
+    const user = await createUser();
+
+    // Generate new token for user and authorize
+    const token1 = await generateAuthToken(user);
+    ctx = context({ headers: { authorization: `Bearer ${token1}` } });
+    await authenticate()(ctx, () => {});
+    await fetchUser(ctx, () => {});
+    expect(ctx.state.authUser.id).toBe(user.id);
+
+    // Generate another token for user and authorize
+    const token2 = await generateAuthToken(user);
+    ctx = context({ headers: { authorization: `Bearer ${token2}` } });
+    await authenticate()(ctx, () => {});
+    await fetchUser(ctx, () => {});
+    expect(ctx.state.authUser.id).toBe(user.id);
+
+    // Attempt to authorize with first token
+    ctx = context({ headers: { authorization: `Bearer ${token1}` } });
+    await authenticate()(ctx, () => {});
+    await expect(fetchUser(ctx, () => {})).rejects.toHaveProperty('message', 'user associated to token could not be found');
+
   });
 });

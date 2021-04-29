@@ -31,3 +31,20 @@ export function formatOption(types, key) {
   }
   return <Label {...props} />;
 }
+
+export function formatAddress(address) {
+  const components = [];
+  if (address.line1) {
+    components.push(address.line1);
+  }
+  if (address.city) {
+    components.push(address.city);
+  }
+  if (address.stateOrProvince) {
+    components.push(address.stateOrProvince);
+  }
+  if (address.countryCode) {
+    components.push(address.countryCode);
+  }
+  return components.join(', ');
+}

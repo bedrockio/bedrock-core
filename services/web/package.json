@@ -12,7 +12,7 @@
     "lint": "eslint .",
     "test": "jest",
     "generate": "cd ../../generator && yarn install && yarn generate",
-    "prepare": "../../.githooks/init"
+    "prepare": "scripts/install_githooks"
   },
   "dependencies": {
     "@babel/core": "^7.13.14",
@@ -22,6 +22,7 @@
     "@babel/preset-env": "^7.13.12",
     "@babel/preset-react": "^7.13.13",
     "@bedrockio/config": "^2.0.3",
+    "@bedrockio/instrumentation": "^1.4.6",
     "@hot-loader/react-dom": "^17.0.1",
     "@sentry/browser": "^6.0.1",
     "autoprefixer": "^9.7.6",
@@ -37,11 +38,11 @@
     "favicons": "^6.2.1",
     "favicons-webpack-plugin": "^5.0.2",
     "github-markdown-css": "^4.0.0",
+    "google-map-react": "^2.1.9",
     "html-loader": "^2.1.2",
     "html-webpack-plugin": "^5.3.1",
     "koa": "^2.11.0",
     "koa-basic-auth": "^4.0.0",
-    "koa-logger": "^3.2.1",
     "koa-mount": "^4.0.0",
     "koa-static": "^5.0.0",
     "less": "^4.1.1",
@@ -80,7 +81,7 @@
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^13.1.1",
     "eslint": "^7.22.0",
-    "eslint-plugin-bedrock": "^1.0.0",
+    "eslint-plugin-bedrock": "^1.0.2",
     "jest": "^26.6.3",
     "node-mocks-http": "^1.8.1",
     "prettier": "^2.2.1",

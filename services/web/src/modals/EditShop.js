@@ -5,12 +5,11 @@ import AutoFocus from 'components/AutoFocus';
 
 // --- Generator: imports
 import UploadsField from 'components/form-fields/Uploads';
-import CountriesField from 'components/form-fields/Countries';
 import CategoriesField from 'components/form-fields/Categories';
+import AddressField from 'components/form-fields/Address';
 // --- Generator: end
 
 export default class EditShop extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -98,7 +97,9 @@ export default class EditShop extends React.Component {
         closeOnDimmerClick={false}
         onOpen={() => this.setState({ open: true })}
         onClose={() => this.setState({ open: false })}>
-        <Modal.Header>{this.isUpdate() ? `Edit "${shop.name}"` : 'New Shop'}</Modal.Header>
+        <Modal.Header>
+          {this.isUpdate() ? `Edit "${shop.name}"` : 'New Shop'}
+        </Modal.Header>
         <Modal.Content scrolling>
           <AutoFocus>
             <Form
@@ -123,14 +124,23 @@ export default class EditShop extends React.Component {
                 value={shop.description || ''}
                 onChange={this.setField}
               />
-              <CountriesField label="Country" name="country" value={shop.country || ''} onChange={this.setField} />
-              <CategoriesField name="categories" value={shop.categories || []} onChange={this.setField} />
+              <CategoriesField
+                name="categories"
+                value={shop.categories || []}
+                onChange={this.setField}
+              />
               <UploadsField
                 name="images"
                 label="Images"
                 value={shop.images || []}
                 onChange={(data) => this.setField(null, data)}
                 onError={(error) => this.setState({ error })}
+              />
+              <AddressField
+                value={shop.address}
+                onChange={this.setField}
+                name="address"
+                autoComplete="off"
               />
               {/* --- Generator: end */}
             </Form>

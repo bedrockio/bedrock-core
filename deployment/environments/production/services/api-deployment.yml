@@ -3,7 +3,11 @@ kind: Deployment
 metadata:
   name: api-deployment
 spec:
-  replicas: 2
+  strategy:
+    type: RollingUpdate # New pods are added gradually, and old pods are terminated gradually
+    rollingUpdate:
+      maxSurge: 1 # The number of pods that can be created above the desired amount of pods during an update
+      maxUnavailable: 1 # The number of pods that can be unavailable during the update process
   selector:
     matchLabels:
       app: api
@@ -16,6 +20,13 @@ spec:
         - image: gcr.io/bedrock-foundation/bedrock-core-services-api
           imagePullPolicy: Always
           name: main
+          resources:
+            limits:
+              cpu: "1000m"
+              memory: "4Gi"
+            requests:
+              cpu: "500m"
+              memory: "256Mi"
           env:
             - name: ENV_NAME
               value: "production"
@@ -27,28 +38,53 @@ spec:
               value: "admin@bedrock.foundation"
             - name: ADMIN_PASSWORD
               value: "development.now"
-            - name: JWT_SECRET
-              value: "changeme1234"
             - name: APP_DOMAIN
               value: "bedrock.foundation"
             - name: APP_URL
               value: "https://bedrock.foundation"
             - name: POSTMARK_FROM
               value: "no-reply@bedrock.foundation"
-            - name: POSTMARK_APIKEY
-              value: "abc"
             - name: UPLOADS_STORE
               value: "gcs"
             - name: UPLOADS_GCS_BUCKET
               value: "bedrock-production-uploads"
             - name: LOG_LEVEL
               value: "debug"
+            # The `bedrock cloud` command in the CLI will help with
+            # the creation and storing of secrets for production.
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: JWT_SECRET
+            - name: POSTMARK_APIKEY
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: POSTMARK_APIKEY
           ports:
             - name: http-server
               containerPort: 2300
           volumeMounts:
             - name: cache
               mountPath: /service/data
+          # https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+          readinessProbe: # readiness probes to know when a container is ready to start accepting traffic
+            initialDelaySeconds: 5 # Number of seconds after the container has started before liveness or readiness probes are initiated. Defaults to 0 seconds.
+            periodSeconds: 5 # How often (in seconds) to perform the probe. Default to 10 seconds
+            timeoutSeconds: 2 # Number of seconds after which the probe times out. Defaults to 1 second
+            failureThreshold: 2 # When a probe fails, Kubernetes will try failureThreshold times before giving up.
+            httpGet:
+              path: /1/status/mongodb
+              port: 2300
+          livenessProbe: # liveness probes to know when to restart a container
+            httpGet:
+              path: /1/status/mongodb
+              port: 2300
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 2
       volumes:
         - name: cache
           emptyDir: {}

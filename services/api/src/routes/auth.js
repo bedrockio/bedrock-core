@@ -2,8 +2,8 @@ const Router = require('@koa/router');
 const Joi = require('joi');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate } = require('../utils/middleware/authenticate');
-const tokens = require('../utils/tokens');
-const { sendWelcome, sendResetPassword, sendResetPasswordUnknown } = require('../utils/emails');
+const { createAuthToken, createTemporaryToken, generateTokenId } = require('../utils/tokens');
+const { sendTemplatedMail } = require('../utils/mailer');
 const { BadRequestError } = require('../utils/errors');
 const { User, Invite } = require('../models');
 
@@ -28,16 +28,20 @@ router
         throw new BadRequestError('A user with that email already exists');
       }
 
+      const authTokenId = generateTokenId();
       const user = await User.create({
+        authTokenId,
         ...ctx.request.body,
       });
 
-      await sendWelcome({
+      await sendTemplatedMail({
+        to: [name, email].join(' '),
+        template: 'welcome.md',
+        subject: 'Welcome to {{appName}}',
         name,
-        to: email,
       });
 
-      ctx.body = { data: { token: tokens.createUserToken(user) } };
+      ctx.body = { data: { token: createAuthToken(user.id, authTokenId) } };
     }
   )
   .post(
@@ -59,8 +63,10 @@ router
         try {
           user.verifyLoginAttempts();
           await user.verifyPassword(password);
-          await user.updateOne({ loginAttempts: 0 });
-          ctx.body = { data: { token: tokens.createUserToken(user) } };
+
+          const authTokenId = generateTokenId();
+          await user.updateOne({ loginAttempts: 0, authTokenId });
+          ctx.body = { data: { token: createAuthToken(user.id, authTokenId) } };
         } catch (err) {
           ctx.throw(401, err.message);
         }
@@ -84,10 +90,12 @@ router
       if (!invite) {
         return ctx.throw(500, 'Invite could not be found');
       }
+      const authTokenId = generateTokenId();
       const existingUser = await User.findOne({ email: invite.email });
 
       if (existingUser) {
-        ctx.body = { data: { token: tokens.createUserToken(existingUser) } };
+        await existingUser.updateOne({ authTokenId });
+        ctx.body = { data: { token: createAuthToken(existingUser.id, authTokenId) } };
         return;
       }
 
@@ -95,9 +103,10 @@ router
         name,
         email: invite.email,
         password,
+        authTokenId,
       });
 
-      ctx.body = { data: { token: tokens.createUserToken(user) } };
+      ctx.body = { data: { token: createAuthToken(user.id, authTokenId) } };
     }
   )
   .post(
@@ -108,19 +117,22 @@ router
     async (ctx) => {
       const { email } = ctx.request.body;
       const user = await User.findOne({ email });
-      if (user) {
-        const tokenId = tokens.generateTokenId();
-        const token = tokens.createUserTemporaryToken({ userId: user.id, jti: tokenId }, 'password');
-        await user.updateOne({ pendingTokenId: tokenId });
-        await sendResetPassword({
-          to: email,
-          token,
-        });
-      } else {
-        await sendResetPasswordUnknown({
-          to: email,
-        });
+      if (!user) {
+        ctx.throw(400, 'Unknown email address.');
       }
+
+      const tokenId = generateTokenId();
+      const token = createTemporaryToken({ type: 'password', sub: user.id, jti: tokenId });
+      await user.updateOne({ tempTokenId: tokenId });
+
+      await sendTemplatedMail({
+        to: [user.name, email].join(' '),
+        template: 'reset-password.md',
+        subject: 'Password Reset Request',
+        token,
+        email,
+      });
+
       ctx.status = 204;
     }
   )
@@ -133,16 +145,16 @@ router
     async (ctx) => {
       const { jwt } = ctx.state;
       const { password } = ctx.request.body;
-      const user = await User.findById(jwt.userId);
+      const user = await User.findById(jwt.sub);
       if (!user) {
         ctx.throw(400, 'User does not exist');
-      } else if (user.pendingTokenId !== jwt.jti) {
+      } else if (user.tempTokenId !== jwt.jti) {
         ctx.throw(400, 'Token is invalid');
       }
       user.password = password;
-      user.pendingTokenId = undefined;
+      user.tempTokenId = undefined;
       await user.save();
-      ctx.body = { data: { token: tokens.createUserToken(user) } };
+      ctx.body = { data: { token: createAuthToken(user.id) } };
     }
   );
 

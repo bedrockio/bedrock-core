@@ -1,11 +1,16 @@
 import React from 'react';
-import { Grid } from 'semantic';
+import { Layout } from './Layout';
 
 export default (props) => (
-  <Grid style={{ minHeight: '100vh' }} centered verticalAlign="middle">
-    <Grid.Column
-      style={{ maxWidth: props.maxWidth || '550px', margin: '40px 0' }}>
-      {props.children}
-    </Grid.Column>
-  </Grid>
+  <Layout
+    center
+    style={{
+      height: '100%',
+      margin: '0 auto',
+      padding: '0 15px',
+      alignItems: 'stretch',
+      maxWidth: props.maxWidth || '550px',
+    }}>
+    {props.children}
+  </Layout>
 );

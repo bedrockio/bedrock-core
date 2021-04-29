@@ -6,6 +6,7 @@ ARG NODE_ENV=production
 # Install app dependencies
 COPY package.json /service/package.json
 COPY yarn.lock /service/yarn.lock
+COPY scripts/install_githooks /service/scripts/install_githooks
 
 # Update & install required packages
 RUN apk add --update bash curl;

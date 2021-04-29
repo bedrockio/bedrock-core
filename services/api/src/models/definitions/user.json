@@ -35,7 +35,11 @@
       "type": "Date",
       "access": "private"
     },
-    "pendingTokenId": {
+    "authTokenId": {
+      "type": "String",
+      "access": "private"
+    },
+    "tempTokenId": {
       "type": "String",
       "access": "private"
     }
