@@ -24,6 +24,12 @@
     "objectId": {
       "type": "ObjectId"
     },
+    "objectType": {
+      "type": "String"
+    },
+    "type": {
+      "type": "String"
+    },
     "user": {
       "type": "ObjectId",
       "ref": "User",

@@ -72,18 +72,22 @@ describe('AuditLog', () => {
       const ctx = await getContext(user);
 
       await AuditLog.append('did something', {
+        type: 'security',
         ctx,
         objectDiff: { email: user.email },
         objectId: user.id,
+        objectType: 'user',
       });
 
       const logs = await AuditLog.find({ objectId: user.id });
       expect(logs.length).toBe(1);
 
       const log = logs[0];
+      expect(log.type).toBe('security');
       expect(log.action).toBe('did something');
       expect(log.objectDiff.email).toBe('bob@gmail.com');
       expect(log.objectId.toString()).toBe(user.id);
+      expect(log.objectType).toBe('user');
       expect(log.requestMethod).toBe('GET');
       expect(log.requestUrl).toBe('/1/products/id');
       expect(log.routeNormalizedPath).toBe('/1/products/:id');
