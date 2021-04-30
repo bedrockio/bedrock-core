@@ -19,7 +19,6 @@ export default class ShopDetail extends React.Component {
       shop: null,
       error: null,
       loading: true,
-      onSave: this.onSave,
     };
   }
 
@@ -84,7 +83,7 @@ export default class ShopDetail extends React.Component {
           exact
           path="/shops/:id"
           render={(props) => (
-            <Overview {...props} {...this.state}  />
+            <Overview {...props} {...this.state} onSave={this.onSave} />
           )}
         />
         {/* --- Generator: routes */}
@@ -92,7 +91,7 @@ export default class ShopDetail extends React.Component {
           exact
           path="/shops/:id/products"
           render={(props) => (
-            <Products {...props} {...this.state} />
+            <Products {...props} {...this.state} onSave={this.onSave} />
           )}
         />
         {/* --- Generator: end */}
