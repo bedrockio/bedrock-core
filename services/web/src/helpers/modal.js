@@ -2,15 +2,15 @@ import React from 'react';
 import { Modal } from 'semantic';
 
 export default function modal(Component) {
-  class ModalWrapper extends React.Component {
+  class WrappedModal extends React.Component {
     state = {
       open: this.props.open,
-      modelKey: Date.now(),
+      modalKey: Date.now(),
     };
 
     componentDidUpdate(lastProps) {
       const { open } = this.props;
-      if (open && open !== lastProps.open) {
+      if (open !== lastProps.open) {
         this.setState({
           open,
         });
@@ -18,7 +18,7 @@ export default function modal(Component) {
     }
 
     onReset = () => {
-      this.setState({ modelKey: Date.now() });
+      this.setState({ modalKey: Date.now() });
       if (this.props.onReset) this.props.onReset();
     };
 
@@ -36,7 +36,7 @@ export default function modal(Component) {
     };
 
     render() {
-      const { open, modelKey } = this.state;
+      const { open, modalKey } = this.state;
       const {
         onClose,
         onOpen,
@@ -60,25 +60,23 @@ export default function modal(Component) {
           trigger={trigger}
           centered={centered}
           open={open}>
-          {open && (
-            <Component
-              key={modelKey}
-              {...rest}
-              onClose={this.onClose}
-              reset={this.onReset}
-            />
-          )}
+          <Component
+            key={modalKey}
+            {...rest}
+            onClose={this.onClose}
+            reset={this.onReset}
+          />
         </Modal>
       );
     }
   }
-  ModalWrapper.propTypes = Modal.propTypes;
+  WrappedModal.propTypes = Modal.propTypes;
 
-  ModalWrapper.defaultProps = {
+  WrappedModal.defaultProps = {
     closeOnDimmerClick: false,
     closeIcon: true,
     open: false,
   };
 
-  return ModalWrapper;
+  return WrappedModal;
 }
