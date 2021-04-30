@@ -70,6 +70,7 @@ router
 
           const authTokenId = generateTokenId();
           await user.updateOne({ loginAttempts: 0, authTokenId });
+
           ctx.body = { data: { token: createAuthToken(user.id, authTokenId) } };
         } catch (err) {
           ctx.throw(401, err.message);

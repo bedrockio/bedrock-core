@@ -1,14 +1,6 @@
 {
   "attributes": {
-    "requestPath":  {
-      "type": "String",
-      "required": true
-    },
-    "requestNamespace":  {
-      "type": "String",
-      "required": true
-    },
-    "requestNormalizedPath":  {
+    "requestUrl":  {
       "type": "String",
       "required": true
     },
@@ -16,21 +8,23 @@
       "type": "String",
       "required": true
     },
+    "routePrefix":  {
+      "type": "String"
+    },
+    "routeNormalizedPath":  {
+      "type": "String"
+    },
     "action":  {
       "type": "String",
       "required": true
     },
-    "type":  {
-      "type": "String",
-      "enum": ["create", "update", "delete", "read"]
-    },
-    "diffObject": {
+    "objectDiff": {
       "type": "Mixed"
     },
     "objectId": {
       "type": "ObjectId"
     },
-    "userId": {
+    "user": {
       "type": "ObjectId",
       "ref": "User",
       "required": true
