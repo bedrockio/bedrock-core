@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { logger } = require('@bedrockio/instrumentation');
 const bcrypt = require('bcrypt');
 const { mapExponential } = require('../utils/math');
 const { createSchema } = require('../utils/schema');
@@ -20,8 +19,7 @@ const schema = createSchema(definition.attributes);
 
 schema.methods.verifyPassword = async function verifyPassword(password) {
   if (!this.hashedPassword) {
-    logger.error(`Can't verifyPassword as no password is set`, { userId: this.id, email: this.email });
-    return Promise.resolve(false);
+    throw Error('No password set for user');
   }
   return bcrypt.compare(password, this.hashedPassword);
 };
