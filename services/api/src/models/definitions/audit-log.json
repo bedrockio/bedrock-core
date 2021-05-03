@@ -14,7 +14,7 @@
     "routeNormalizedPath":  {
       "type": "String"
     },
-    "action":  {
+    "activity":  {
       "type": "String",
       "required": true
     },

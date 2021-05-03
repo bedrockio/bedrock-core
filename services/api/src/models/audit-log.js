@@ -21,10 +21,10 @@ schema.statics.getDiffObject = function getDiffObject(object, fields) {
   return pick(pick(object.toObject(), pathsModified), fields);
 };
 
-schema.statics.append = function (action, { ctx, type, objectDiff, objectId, objectType }) {
+schema.statics.append = function (activity, { ctx, type, objectDiff, objectId, objectType }) {
   return this.create({
     ...this.getFieldsContext(ctx),
-    action,
+    activity,
     objectId,
     objectDiff: isEmpty(objectDiff) ? undefined : objectDiff,
     objectType,

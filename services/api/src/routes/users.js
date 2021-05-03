@@ -5,7 +5,7 @@ const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
 const { NotFoundError, BadRequestError } = require('../utils/errors');
 const { searchValidation, exportValidation, getSearchQuery, search, searchExport } = require('../utils/search');
-const { User } = require('../models');
+const { User, AuditLog } = require('../models');
 const { expandRoles } = require('./../utils/permissions');
 const roles = require('./../roles.json');
 const permissions = require('./../permissions.json');
@@ -114,6 +114,14 @@ router
       }
       const user = await User.create(ctx.request.body);
 
+      await AuditLog.append('created user', {
+        ctx,
+        userId: ctx.authUser.id,
+        objectId: user.id,
+        objectType: 'user',
+        objectDiff: { email: user.email, roles: user.roles },
+      });
+
       ctx.body = {
         data: user,
       };
@@ -127,7 +135,15 @@ router
     async (ctx) => {
       const { user } = ctx.state;
       user.assign(ctx.request.body);
+      const objectDiff = AuditLog.getObjectDiff(user, ['email', 'roles']);
       await user.save();
+      await AuditLog.append('created user', {
+        ctx,
+        userId: ctx.authUser.id,
+        objectId: user.id,
+        objectType: 'user',
+        objectDiff: objectDiff,
+      });
       ctx.body = {
         data: user,
       };
@@ -136,6 +152,12 @@ router
   .delete('/:userId', async (ctx) => {
     const { user } = ctx.state;
     await user.delete();
+    await AuditLog.append('deleted user', {
+      ctx,
+      userId: ctx.authUser.id,
+      objectId: user.id,
+      objectType: 'user',
+    });
     ctx.status = 204;
   });
 

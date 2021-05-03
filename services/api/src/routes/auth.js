@@ -5,7 +5,7 @@ const { authenticate } = require('../utils/middleware/authenticate');
 const { createAuthToken, createTemporaryToken, generateTokenId } = require('../utils/tokens');
 const { sendTemplatedMail } = require('../utils/mailer');
 const { BadRequestError } = require('../utils/errors');
-const { User, Invite } = require('../models');
+const { User, Invite, AuditLog } = require('../models');
 
 const router = new Router();
 
@@ -34,6 +34,13 @@ router
       const user = await User.create({
         authTokenId,
         ...ctx.request.body,
+      });
+
+      await AuditLog.append('registered', {
+        ctx,
+        objectId: user.id,
+        objectType: 'user',
+        userId: user.id,
       });
 
       await sendTemplatedMail({
@@ -71,8 +78,22 @@ router
           const authTokenId = generateTokenId();
           await user.updateOne({ loginAttempts: 0, authTokenId });
 
+          await AuditLog.append('authenticated', {
+            ctx,
+            objectId: user.id,
+            objectType: 'user',
+            userId: user.id,
+          });
+
           ctx.body = { data: { token: createAuthToken(user.id, authTokenId) } };
         } catch (err) {
+          await AuditLog.append('attempted authentication', {
+            type: 'security',
+            ctx,
+            objectId: user.id,
+            objectType: 'user',
+            userId: user.id,
+          });
           ctx.throw(401, err.message);
         }
       } else {
@@ -95,7 +116,7 @@ router
         $set: { status: 'accepted' },
       });
       if (!invite) {
-        return ctx.throw(500, 'Invite could not be found');
+        return ctx.throw(400, 'Invite could not be found');
       }
       const authTokenId = generateTokenId();
       const existingUser = await User.findOne({ email: invite.email });
@@ -111,6 +132,13 @@ router
         email: invite.email,
         password,
         authTokenId,
+      });
+
+      await AuditLog.append('registered', {
+        ctx,
+        objectId: user.id,
+        objectType: 'user',
+        userId: user.id,
       });
 
       ctx.body = { data: { token: createAuthToken(user.id, authTokenId) } };
@@ -160,11 +188,26 @@ router
       if (!user) {
         ctx.throw(400, 'User does not exist');
       } else if (user.tempTokenId !== jwt.jti) {
+        await AuditLog.append('attempted reset password', {
+          ctx,
+          type: 'security',
+          objectId: user.id,
+          objectType: 'user',
+          userId: user.id,
+        });
         ctx.throw(400, 'Token is invalid');
       }
       user.password = password;
       user.tempTokenId = undefined;
+
       await user.save();
+
+      await AuditLog.append('reset password', {
+        ctx,
+        objectId: user.id,
+        objectType: 'user',
+        userId: user.id,
+      });
       ctx.body = { data: { token: createAuthToken(user.id) } };
     }
   );

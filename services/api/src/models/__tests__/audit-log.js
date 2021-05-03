@@ -84,13 +84,14 @@ describe('AuditLog', () => {
 
       const log = logs[0];
       expect(log.type).toBe('security');
-      expect(log.action).toBe('did something');
+      expect(log.activity).toBe('did something');
       expect(log.objectDiff.email).toBe('bob@gmail.com');
       expect(log.objectId.toString()).toBe(user.id);
       expect(log.objectType).toBe('user');
       expect(log.requestMethod).toBe('GET');
       expect(log.requestUrl).toBe('/1/products/id');
       expect(log.routeNormalizedPath).toBe('/1/products/:id');
+      expect(log.createdAt).toBeDefined();
       expect(log.user.toString()).toBe(user.id);
     });
   });
