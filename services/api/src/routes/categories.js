@@ -1,6 +1,6 @@
 const Router = require('@koa/router');
 const Joi = require('joi');
-const validate = require('../utils/middleware/validate');
+const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { searchValidation, getSearchQuery, search } = require('../utils/search');
 const { Category } = require('../models');
@@ -12,11 +12,9 @@ router
   .use(fetchUser)
   .post(
     '/search',
-    validate({
-      body: Joi.object({
-        name: Joi.string().allow(''),
-        ...searchValidation(),
-      }),
+    validateBody({
+      name: Joi.string().allow(''),
+      ...searchValidation(),
     }),
     async (ctx) => {
       const { body } = ctx.request;

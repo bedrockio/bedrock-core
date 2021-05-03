@@ -1,6 +1,6 @@
 const Router = require('@koa/router');
 const Joi = require('joi');
-const validate = require('../utils/middleware/validate');
+const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
 const { NotFoundError, BadRequestError } = require('../utils/errors');
@@ -35,11 +35,9 @@ router
   })
   .patch(
     '/me',
-    validate({
-      body: Joi.object({
-        name: Joi.string(),
-        timeZone: Joi.string(),
-      }),
+    validateBody({
+      name: Joi.string(),
+      timeZone: Joi.string(),
     }),
     async (ctx) => {
       const { authUser } = ctx.state;
@@ -63,13 +61,11 @@ router
   })
   .post(
     '/search',
-    validate({
-      body: Joi.object({
-        ...searchValidation(),
-        ...exportValidation(),
-        name: Joi.string(),
-        role: Joi.string(),
-      }),
+    validateBody({
+      ...searchValidation(),
+      ...exportValidation(),
+      name: Joi.string(),
+      role: Joi.string(),
     }),
     async (ctx) => {
       const { body } = ctx.request;
@@ -101,11 +97,11 @@ router
   .use(requirePermissions({ endpoint: 'users', permission: 'write', scope: 'global' }))
   .post(
     '/',
-    validate({
-      body: User.getCreateValidation({
+    validateBody(
+      User.getCreateValidation({
         password: passwordField.required(),
-      }),
-    }),
+      })
+    ),
     async (ctx) => {
       const { email } = ctx.request.body;
       const existingUser = await User.findOne({ email, deletedAt: { $exists: false } });
@@ -119,20 +115,14 @@ router
       };
     }
   )
-  .patch(
-    '/:userId',
-    validate({
-      body: User.getUpdateValidation(),
-    }),
-    async (ctx) => {
-      const { user } = ctx.state;
-      user.assign(ctx.request.body);
-      await user.save();
-      ctx.body = {
-        data: user,
-      };
-    }
-  )
+  .patch('/:userId', validateBody(User.getUpdateValidation()), async (ctx) => {
+    const { user } = ctx.state;
+    user.assign(ctx.request.body);
+    await user.save();
+    ctx.body = {
+      data: user,
+    };
+  })
   .delete('/:userId', async (ctx) => {
     const { user } = ctx.state;
     await user.delete();

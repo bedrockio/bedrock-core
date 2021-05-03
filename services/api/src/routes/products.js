@@ -1,6 +1,6 @@
 const Router = require('@koa/router');
 const Joi = require('joi');
-const validate = require('../utils/middleware/validate');
+const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { searchValidation, getSearchQuery, search } = require('../utils/search');
 const { NotFoundError } = require('../utils/errors');
@@ -21,9 +21,7 @@ router
   })
   .post(
     '/',
-    validate({
-      body: Product.getCreateValidation(),
-    }),
+    validateBody(Product.getCreateValidation()),
     async (ctx) => {
       const product = await Product.create(ctx.request.body);
       ctx.body = {
@@ -39,12 +37,10 @@ router
   })
   .post(
     '/search',
-    validate({
-      body: Joi.object({
-        name: Joi.string(),
-        shop: Joi.string(),
-        ...searchValidation(),
-      }),
+    validateBody({
+      name: Joi.string(),
+      shop: Joi.string(),
+      ...searchValidation(),
     }),
     async (ctx) => {
       const { body } = ctx.request;
@@ -64,9 +60,7 @@ router
   )
   .patch(
     '/:productId',
-    validate({
-      body: Product.getUpdateValidation(),
-    }),
+    validateBody(Product.getUpdateValidation()),
     async (ctx) => {
       const product = ctx.state.product;
       product.assign(ctx.request.body);

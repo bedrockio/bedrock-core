@@ -716,8 +716,31 @@ describe('getJoiSchema', () => {
 
 describe('getMongooseValidator', () => {
   it('should get an email validator', () => {
-    const emailValidator = getMongooseValidator('email');
+    const field = {
+      type: 'String',
+      validate: 'email',
+    };
+    const emailValidator = getMongooseValidator('email', field);
     expect(emailValidator('foo@bar.com')).toBe(true);
+    expect(emailValidator('')).toBe(true);
+    expect(emailValidator.schemaName).toBe('email');
+    expect(() => {
+      emailValidator('bad@email');
+    }).toThrow();
+  });
+
+  it('should require an email when the schema is required', () => {
+    const field = {
+      type: 'String',
+      validate: 'email',
+      required: true,
+    };
+    const emailValidator = getMongooseValidator('email', field);
+    expect(emailValidator('foo@bar.com')).toBe(true);
+    expect(emailValidator.schemaName).toBe('email');
+    expect(() => {
+      emailValidator('');
+    }).toThrow();
     expect(() => {
       emailValidator('bad@email');
     }).toThrow();
