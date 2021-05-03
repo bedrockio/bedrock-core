@@ -3,7 +3,6 @@ const Joi = require('joi');
 const validate = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { searchValidation, getSearchQuery, search } = require('../utils/search');
-const { NotFoundError } = require('../utils/errors');
 const { Shop } = require('../models');
 
 const router = new Router();
@@ -15,8 +14,11 @@ router
     const shop = await Shop.findById(id);
     ctx.state.shop = shop;
     if (!shop) {
-      throw new NotFoundError();
+      ctx.throw(404);
+    } else if (shop.deletedAt) {
+      ctx.throw(410);
     }
+
     return next();
   })
   .post(

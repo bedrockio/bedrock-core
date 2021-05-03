@@ -3,7 +3,6 @@ const Joi = require('joi');
 const validate = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { searchValidation, getSearchQuery, search } = require('../utils/search');
-const { NotFoundError } = require('../utils/errors');
 const { Product } = require('../models');
 
 const router = new Router();
@@ -15,7 +14,7 @@ router
     const product = await Product.findById(id);
     ctx.state.product = product;
     if (!product) {
-      throw new NotFoundError();
+      ctx.throw(404);
     }
     return next();
   })

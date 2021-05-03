@@ -8,10 +8,7 @@ async function errorHandler(ctx, next) {
   } catch (err) {
     let { status = 500, message, details, expose } = err;
 
-    // `expose` is set if the error is triggered via ctx.throw or ctx.assert
-    // if its not set => assume its 3 party error and should trigger a 500
     if (!expose) {
-      status = 500;
       if (ENV_NAME === 'production') {
         message = 'An unexpected error occurred. Please try again later.';
       }

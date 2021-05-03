@@ -4,7 +4,6 @@ const validate = require('../utils/middleware/validate');
 const { authenticate } = require('../utils/middleware/authenticate');
 const { createAuthToken, createTemporaryToken, generateTokenId } = require('../utils/tokens');
 const { sendTemplatedMail } = require('../utils/mailer');
-const { BadRequestError } = require('../utils/errors');
 const { User, Invite } = require('../models');
 
 const router = new Router();
@@ -27,7 +26,7 @@ router
       const { email, name } = ctx.request.body;
       const existingUser = await User.findOne({ email, deletedAt: { $exists: false } });
       if (existingUser) {
-        throw new BadRequestError('A user with that email already exists');
+        ctx.throw(400, 'A user with that email already exists');
       }
 
       const authTokenId = generateTokenId();
