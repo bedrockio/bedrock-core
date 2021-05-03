@@ -6,11 +6,12 @@ async function errorHandler(ctx, next) {
   try {
     await next();
   } catch (err) {
-    let { status, message, details, expose } = err;
+    let { status = 500, message, details, expose } = err;
 
     // `expose` is set if the error is triggered via ctx.throw or ctx.assert
     // if its not set => assume its 3 party error and should trigger a 500
-    if (!expose || !status) {
+    if (!expose) {
+      status = 500;
       if (ENV_NAME === 'production') {
         message = 'An unexpected error occurred. Please try again later.';
       }
@@ -21,7 +22,7 @@ async function errorHandler(ctx, next) {
     }
 
     ctx.type = 'json';
-    ctx.status = status || 500;
+    ctx.status = status;
     ctx.body = {
       error: { message, status, details },
     };
