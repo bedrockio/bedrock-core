@@ -40,7 +40,7 @@ router
         ctx,
         objectId: user.id,
         objectType: 'user',
-        userId: user.id,
+        user: user.id,
       });
 
       await sendTemplatedMail({
@@ -82,7 +82,7 @@ router
             ctx,
             objectId: user.id,
             objectType: 'user',
-            userId: user.id,
+            user: user.id,
           });
 
           ctx.body = { data: { token: createAuthToken(user.id, authTokenId) } };
@@ -92,7 +92,7 @@ router
             ctx,
             objectId: user.id,
             objectType: 'user',
-            userId: user.id,
+            user: user.id,
           });
           ctx.throw(401, err.message);
         }
@@ -138,7 +138,7 @@ router
         ctx,
         objectId: user.id,
         objectType: 'user',
-        userId: user.id,
+        user: user.id,
       });
 
       ctx.body = { data: { token: createAuthToken(user.id, authTokenId) } };
@@ -193,7 +193,7 @@ router
           type: 'security',
           objectId: user.id,
           objectType: 'user',
-          userId: user.id,
+          user: user.id,
         });
         ctx.throw(400, 'Token is invalid');
       }
@@ -206,7 +206,7 @@ router
         ctx,
         objectId: user.id,
         objectType: 'user',
-        userId: user.id,
+        user: user.id,
       });
       ctx.body = { data: { token: createAuthToken(user.id) } };
     }

@@ -1,5 +1,4 @@
 const { setupDb, teardownDb, request, createUser, createUserWithRole } = require('../../utils/testing');
-const { User, AuditLog } = require('../../models');
 
 beforeAll(async () => {
   await setupDb();

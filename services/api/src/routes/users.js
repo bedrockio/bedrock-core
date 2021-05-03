@@ -116,7 +116,6 @@ router
 
       await AuditLog.append('created user', {
         ctx,
-        userId: ctx.authUser.id,
         objectId: user.id,
         objectType: 'user',
         objectDiff: { email: user.email, roles: user.roles },
@@ -135,11 +134,10 @@ router
     async (ctx) => {
       const { user } = ctx.state;
       user.assign(ctx.request.body);
-      const objectDiff = AuditLog.getObjectDiff(user, ['email', 'roles']);
+      const objectDiff = AuditLog.getDiffObject(user, ['email', 'roles']);
       await user.save();
       await AuditLog.append('created user', {
         ctx,
-        userId: ctx.authUser.id,
         objectId: user.id,
         objectType: 'user',
         objectDiff: objectDiff,
@@ -154,7 +152,6 @@ router
     await user.delete();
     await AuditLog.append('deleted user', {
       ctx,
-      userId: ctx.authUser.id,
       objectId: user.id,
       objectType: 'user',
     });
