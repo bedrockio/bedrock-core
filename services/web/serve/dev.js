@@ -8,7 +8,7 @@ const webpackHotMiddleware = require('webpack-hot-middleware');
 
 const app = new Koa();
 
-const { BIND_PORT, BIND_HOST, PUBLIC } = require('../env');
+const { SERVER_PORT, SERVER_HOST, PUBLIC } = require('../env');
 
 (async () => {
   // Manually loading webpack-dev-middleware and webpack-hot-middleware

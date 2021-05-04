@@ -15,8 +15,8 @@ const app = require('./app');
 const config = require('@bedrockio/config');
 
 const ENV_NAME = config.get('ENV_NAME');
-const PORT = config.get('BIND_PORT', 'number');
-const HOST = config.get('BIND_HOST');
+const PORT = config.get('SERVER_PORT', 'number');
+const HOST = config.get('SERVER_HOST');
 
 module.exports = (async () => {
   await initialize();
