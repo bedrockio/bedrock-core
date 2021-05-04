@@ -10,23 +10,14 @@ const historyMiddleware = require('./middleware/history');
 const templateMiddleware = require('./middleware/template');
 const healthCheckMiddleware = require('./middleware/healthCheck');
 const redirectHttpsMiddleware = require('./middleware/redirectHttps');
-const { omitBy } = require('lodash');
-
-const config = require('@bedrockio/config');
-
-const allConfig = config.getAll();
-const publicEnv = pick(
-  Object.keys(config.getAll()).filter((key) => key.start('SERVER'))
-);
 
 const {
   SERVER_PORT,
   SERVER_HOST,
-  SERVER_REDIRECT_TO_HTTPS,
-  SERVER_ENABLE_HTTP_BASIC_AUTH,
-  SERVER_HTTP_BASIC_AUTH_PATH,
-  SERVER_HTTP_BASIC_AUTH_USER,
-  SERVER_HTTP_BASIC_AUTH_PASS,
+  HTTP_FORCE_HTTPS,
+  HTTP_BASIC_AUTH_PATH,
+  HTTP_BASIC_AUTH_USER,
+  HTTP_BASIC_AUTH_PASS,
   PUBLIC,
 } = require('./env');
 
@@ -34,17 +25,17 @@ const app = new Koa();
 
 app.use(healthCheckMiddleware);
 
-if (SERVER_REDIRECT_TO_HTTPS) {
+if (HTTP_FORCE_HTTPS) {
   app.use(redirectHttpsMiddleware);
 }
 
-if (SERVER_ENABLE_HTTP_BASIC_AUTH) {
+if (HTTP_BASIC_AUTH_PATH) {
   app.use(
     koaMount(
-      SERVER_HTTP_BASIC_AUTH_PATH,
+      HTTP_BASIC_AUTH_PATH,
       koaBasicAuth({
-        user: SERVER_HTTP_BASIC_AUTH_USER,
-        pass: SERVER_HTTP_BASIC_AUTH_PASS,
+        user: HTTP_BASIC_AUTH_USER,
+        pass: HTTP_BASIC_AUTH_PASS,
       })
     )
   );

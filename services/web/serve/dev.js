@@ -8,7 +8,7 @@ const webpackHotMiddleware = require('webpack-hot-middleware');
 
 const app = new Koa();
 
-const { SERVER_PORT, SERVER_HOST, PUBLIC } = require('../env');
+const { SERVER_PORT, SERVER_HOST, PUBLIC } = require('./env');
 
 (async () => {
   // Manually loading webpack-dev-middleware and webpack-hot-middleware
@@ -63,8 +63,8 @@ const { SERVER_PORT, SERVER_HOST, PUBLIC } = require('../env');
   app.use(wrappedDevMiddleware);
   app.use(wrappedHotMiddleware);
 
-  app.listen(BIND_PORT, BIND_HOST, () => {
+  app.listen(SERVER_PORT, SERVER_HOST, () => {
     // eslint-disable-next-line
-    console.info(`Running App on http://${BIND_HOST}:${BIND_PORT}`);
+    console.info(`Running App on http://${SERVER_HOST}:${SERVER_PORT}`);
   });
 })();

@@ -27,7 +27,7 @@ const BUILD = process.env.NODE_ENV === 'production';
 
 const PARAMS = {
   BUILD,
-  ...require('./env'),
+  ...require('./serve/env').PUBLIC,
 };
 
 const templatePath = getTemplatePath();
