@@ -20,7 +20,12 @@ export default ({ shop, onSave }) => {
       </Breadcrumbs>
       <Divider hidden />
       <Menu tabular>
-        <Menu.Item name="Overview" to={`/shops/${shop.id}`} as={NavLink} exact />
+        <Menu.Item
+          name="Overview"
+          to={`/shops/${shop.id}`}
+          as={NavLink}
+          exact
+        />
         {/* --- Generator: menus */}
         <Menu.Item
           name="Products"

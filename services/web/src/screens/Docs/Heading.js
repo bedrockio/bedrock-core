@@ -13,7 +13,6 @@ const ROUTE_REG = /^(GET|POST|PATCH|DELETE) \/1\/(.+)$/;
 import './heading.less';
 
 export default class Heading extends PureComponent {
-
   render() {
     const { level, children } = this.props;
     let text = React.Children.toArray(children).reduce(flatten, '');
@@ -38,5 +37,4 @@ export default class Heading extends PureComponent {
       </React.Fragment>
     );
   }
-
 }

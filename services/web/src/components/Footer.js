@@ -6,7 +6,6 @@ import bedrock from 'assets/bedrock.svg';
 
 @withSession
 export default class Footer extends React.Component {
-
   render() {
     const { user } = this.context;
     if (!user) {

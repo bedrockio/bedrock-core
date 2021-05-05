@@ -55,7 +55,8 @@ export default class ForgotPassword extends React.Component {
               <Message info>
                 <Message.Header>Mail sent!</Message.Header>
                 <p>
-                  Please follow the instructions in the email we sent to <b>{email}</b>
+                  Please follow the instructions in the email we sent to{' '}
+                  <b>{email}</b>
                 </p>
               </Message>
             ) : (

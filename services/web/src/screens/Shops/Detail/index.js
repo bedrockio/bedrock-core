@@ -12,7 +12,6 @@ import Products from './Products';
 // --- Generator: end
 
 export default class ShopDetail extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -35,7 +34,7 @@ export default class ShopDetail extends React.Component {
 
   onSave = () => {
     this.fetchShop();
-  }
+  };
 
   async fetchShop() {
     const { id } = this.props.match.params;
@@ -63,9 +62,7 @@ export default class ShopDetail extends React.Component {
   render() {
     const { loading, error } = this.state;
     if (loading) {
-      return (
-        <Loader active>Loading</Loader>
-      );
+      return <Loader active>Loading</Loader>;
     } else if (error) {
       return (
         <React.Fragment>
@@ -77,6 +74,7 @@ export default class ShopDetail extends React.Component {
         </React.Fragment>
       );
     }
+
     return (
       <Switch>
         <Route

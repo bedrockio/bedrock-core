@@ -56,13 +56,12 @@ function validateQuery(schema, options) {
 
     return next();
   };
-
 }
 
 function getValidator(schema, options = {}) {
   schema = Joi.isSchema(schema) ? schema : Joi.object(schema);
   schema = schema.min(1);
-  options = {...DEFAULT_OPTIONS, ...options };
+  options = { ...DEFAULT_OPTIONS, ...options };
   return (obj = {}) => {
     const { value, error } = schema.validate(obj, options);
     if (error) {

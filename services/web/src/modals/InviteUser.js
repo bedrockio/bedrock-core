@@ -68,7 +68,14 @@ export default class InviteUser extends React.Component {
 
   render() {
     const { trigger } = this.props;
-    const { validEmails, invalidEmails, open, touched, loading, error } = this.state;
+    const {
+      validEmails,
+      invalidEmails,
+      open,
+      touched,
+      loading,
+      error,
+    } = this.state;
     return (
       <Modal
         closeIcon
@@ -83,7 +90,9 @@ export default class InviteUser extends React.Component {
           <AutoFocus>
             <Form error={touched && !!error}>
               {error && <Message error content={error.message} />}
-              {touched && invalidEmails.length > 0 && <Message negative>Invalid: {invalidEmails.join(', ')}</Message>}
+              {touched && invalidEmails.length > 0 && (
+                <Message negative>Invalid: {invalidEmails.join(', ')}</Message>
+              )}
               <Form.Field>
                 <label>Enter email address of the participant to invite</label>
                 <TextArea
@@ -102,7 +111,9 @@ export default class InviteUser extends React.Component {
             primary
             loading={loading}
             disabled={loading || validEmails.length === 0}
-            content={`Invite Members ${validEmails.length ? `(${validEmails.length})` : ''}`}
+            content={`Invite Members ${
+              validEmails.length ? `(${validEmails.length})` : ''
+            }`}
             onClick={this.onSubmit}
           />
         </Modal.Actions>

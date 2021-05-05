@@ -11,16 +11,14 @@ function run(url, subdomain = 'www') {
     url: url,
     subdomains: [subdomain],
   });
-  middleware(ctx, () => nextCalled = true);
+  middleware(ctx, () => (nextCalled = true));
   return {
     ctx,
     nextCalled,
   };
 }
 
-
 describe('History Middleware', () => {
-
   describe('/', () => {
     it('should not rewrite /', () => {
       const { ctx } = run('/');
@@ -48,7 +46,6 @@ describe('History Middleware', () => {
   });
 
   describe('/admin/', () => {
-
     it('should not rewrite /admin/', () => {
       const { ctx } = run('/admin/');
       expect(ctx.url).toBe('/admin/');
@@ -74,8 +71,5 @@ describe('History Middleware', () => {
       expect(ctx.url).toBe('/');
       expect(ctx.status).toBe(200);
     });
-
   });
-
-
 });

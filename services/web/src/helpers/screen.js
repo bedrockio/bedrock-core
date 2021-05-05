@@ -9,13 +9,11 @@ function nullLayout(props) {
   return props.children;
 }
 
-export default function(Component) {
-
+export default function (Component) {
   const Layout = LAYOUTS[Component.layout || 'default'] || nullLayout;
   const title = startCase(Component.name.replace(/Screen$/, ''));
 
   return class Screen extends React.PureComponent {
-
     render() {
       return (
         <React.Fragment>
@@ -40,6 +38,5 @@ export default function(Component) {
     renderCanonical() {
       return <link rel="canonical" href={location.href} />;
     }
-
   };
 }

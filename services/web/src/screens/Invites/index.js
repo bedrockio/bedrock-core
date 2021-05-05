@@ -8,22 +8,15 @@ import { Layout } from 'components/Layout';
 import InviteUser from 'modals/InviteUser';
 import LoadButton from 'components/LoadButton';
 
-import {
-  Container,
-  Header,
-  Table,
-  Button,
-  Message,
-} from 'semantic';
+import { Container, Header, Table, Button, Message } from 'semantic';
 
 @screen
 export default class Home extends React.Component {
-
   onDataNeeded = async (params) => {
     return await request({
       method: 'POST',
       path: '/1/invites/search',
-      body: params
+      body: params,
     });
   };
 
@@ -40,11 +33,7 @@ export default class Home extends React.Component {
                     size="tiny"
                     onSave={reload}
                     trigger={
-                      <Button
-                        primary
-                        content="Invite User"
-                        icon="plus"
-                      />
+                      <Button primary content="Invite User" icon="plus" />
                     }
                   />
                 </Layout>
@@ -77,9 +66,7 @@ export default class Home extends React.Component {
                       {items.map((item) => {
                         return (
                           <Table.Row key={item.id}>
-                            <Table.Cell>
-                              {item.email}
-                            </Table.Cell>
+                            <Table.Cell>{item.email}</Table.Cell>
                             <Table.Cell collapsing>{item.status}</Table.Cell>
                             <Table.Cell collapsing>
                               {formatDateTime(item.createdAt)}
@@ -92,7 +79,7 @@ export default class Home extends React.Component {
                                 onClick={async () => {
                                   await request({
                                     method: 'POST',
-                                    path: `/1/invites/${item.id}/resend`
+                                    path: `/1/invites/${item.id}/resend`,
                                   });
                                   reload();
                                 }}
@@ -104,7 +91,7 @@ export default class Home extends React.Component {
                                 onClick={async () => {
                                   await request({
                                     method: 'DELETE',
-                                    path: `/1/invites/${item.id}`
+                                    path: `/1/invites/${item.id}`,
                                   });
                                   reload();
                                 }}

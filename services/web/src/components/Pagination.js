@@ -9,7 +9,7 @@ export default ({ page, limit, total, onPageChange, className }) => {
         page * limit - total < 0
           ? {
               'aria-label': 'Next Page',
-              content: 'Next'
+              content: 'Next',
             }
           : null
       }
@@ -17,7 +17,7 @@ export default ({ page, limit, total, onPageChange, className }) => {
         page !== 1
           ? {
               'aria-label': 'Previous item',
-              content: 'Previous'
+              content: 'Previous',
             }
           : null
       }

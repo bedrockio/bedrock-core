@@ -102,7 +102,10 @@ export default class SidebarLayout extends React.Component {
     const { offscreen, open } = this.state;
     if (dimmer && offscreen) {
       return (
-        <div className={this.getElementClass('dimmer', open ? 'open' : null)} onClick={this.close} />
+        <div
+          className={this.getElementClass('dimmer', open ? 'open' : null)}
+          onClick={this.close}
+        />
       );
     }
   }

@@ -34,7 +34,6 @@ const INTERNAL_MAP = {
 };
 
 export default class Icon extends React.Component {
-
   static Group = IconGroup;
 
   getClassName() {
@@ -61,7 +60,10 @@ export default class Icon extends React.Component {
     let { name } = this.props;
     name = INTERNAL_MAP[name] || name;
     if (name.includes('outline')) {
-      name = name.split(' ').filter((n) => n !== 'outline').join(' ');
+      name = name
+        .split(' ')
+        .filter((n) => n !== 'outline')
+        .join(' ');
       baseUrl = outlineSet;
     } else {
       baseUrl = regularSet;
@@ -81,14 +83,32 @@ export default class Icon extends React.Component {
       </svg>
     );
   }
-
 }
 
 Icon.propTypes = {
   bordered: PropTypes.bool,
   circular: PropTypes.bool,
-  color: PropTypes.oneOf(['red', 'orange', 'yellow', 'olive', 'green', 'teal', 'blue', 'violet', 'purple', 'pink', 'brown', 'grey', 'black']),
-  corner: PropTypes.oneOf(['top left', 'top right', 'bottom left', 'bottom right']),
+  color: PropTypes.oneOf([
+    'red',
+    'orange',
+    'yellow',
+    'olive',
+    'green',
+    'teal',
+    'blue',
+    'violet',
+    'purple',
+    'pink',
+    'brown',
+    'grey',
+    'black',
+  ]),
+  corner: PropTypes.oneOf([
+    'top left',
+    'top right',
+    'bottom left',
+    'bottom right',
+  ]),
   disabled: PropTypes.bool,
   fitted: PropTypes.bool,
   flipped: PropTypes.oneOf(['horizontally', 'vertically']),
@@ -98,7 +118,15 @@ Icon.propTypes = {
   loading: PropTypes.bool,
   name: PropTypes.string.isRequired,
   rotated: PropTypes.oneOf(['clockwise', 'counterclockwise']),
-  size: PropTypes.oneOf(['mini', 'tiny', 'small', 'large', 'big', 'huge', 'massive']),
+  size: PropTypes.oneOf([
+    'mini',
+    'tiny',
+    'small',
+    'large',
+    'big',
+    'huge',
+    'massive',
+  ]),
   width: PropTypes.number,
 };
 
@@ -114,4 +142,3 @@ Icon.defaultProps = {
 SemanticIcon.create = createShorthandFactory(Icon, (name) => {
   return { name };
 });
-

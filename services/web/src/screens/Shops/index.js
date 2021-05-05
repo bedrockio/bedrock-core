@@ -5,7 +5,6 @@ import List from './List';
 import Detail from './Detail';
 
 export default class Shops extends React.Component {
-
   render() {
     return (
       <Switch>
