@@ -59,20 +59,22 @@ router
           $inc: { loginAttempts: 1 },
         }
       );
-      if (user) {
-        try {
-          user.verifyLoginAttempts();
-          await user.verifyPassword(password);
 
-          const authTokenId = generateTokenId();
-          await user.updateOne({ loginAttempts: 0, authTokenId });
-          ctx.body = { data: { token: createAuthToken(user.id, authTokenId) } };
-        } catch (err) {
-          ctx.throw(401, err.message);
-        }
-      } else {
+      if (!user) {
         ctx.throw(401, 'Incorrect password');
       }
+
+      if (!user.verifyLoginAttempts()) {
+        ctx.throw(401, 'Too many login attempts');
+      }
+
+      if (!(await user.verifyPassword(password))) {
+        ctx.throw(401, 'Incorrect password');
+      }
+
+      const authTokenId = generateTokenId();
+      await user.updateOne({ loginAttempts: 0, authTokenId });
+      ctx.body = { data: { token: createAuthToken(user.id, authTokenId) } };
     }
   )
   .post(
