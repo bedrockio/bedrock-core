@@ -27,13 +27,11 @@ function sendInvite(sender, invite) {
 
 router
   .param('inviteId', async (id, ctx, next) => {
-    const invite = await Invite.findById(id);
+    const invite = await Invite.findOne({ _id: id, deletedAt: { $exists: false } });
     ctx.state.invite = invite;
 
     if (!invite) {
       ctx.throw(404);
-    } else if (invite.deletedAt) {
-      ctx.throw(410);
     }
 
     return next();

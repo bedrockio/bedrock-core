@@ -11,7 +11,7 @@ router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
   .param('productId', async (id, ctx, next) => {
-    const product = await Product.findById(id);
+    const product = await Product.findOne({ _id: id, deletedAt: { $exists: false } });
     ctx.state.product = product;
     if (!product) {
       ctx.throw(404);

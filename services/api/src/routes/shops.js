@@ -11,12 +11,10 @@ router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
   .param('shopId', async (id, ctx, next) => {
-    const shop = await Shop.findById(id);
+    const shop = await Shop.findOne({ _id: id, deletedAt: { $exists: false } });
     ctx.state.shop = shop;
     if (!shop) {
       ctx.throw(404);
-    } else if (shop.deletedAt) {
-      ctx.throw(410);
     }
 
     return next();

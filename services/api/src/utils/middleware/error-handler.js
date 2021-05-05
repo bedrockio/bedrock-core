@@ -1,5 +1,4 @@
 const config = require('@bedrockio/config');
-
 const ENV_NAME = config.get('ENV_NAME');
 
 async function errorHandler(ctx, next) {
