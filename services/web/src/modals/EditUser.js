@@ -51,7 +51,8 @@ export default class EditUser extends React.Component {
           body: user,
         });
       }
-      this.props.onClose(true);
+      this.props.onSave();
+      this.props.onClose();
     } catch (error) {
       console.error(error);
       this.setState({

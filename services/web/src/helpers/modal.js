@@ -5,7 +5,6 @@ export default function modal(Component) {
   class WrappedModal extends React.Component {
     state = {
       open: this.props.open,
-      modalKey: Date.now(),
     };
 
     componentDidUpdate(lastProps) {
@@ -17,17 +16,9 @@ export default function modal(Component) {
       }
     }
 
-    onReset = () => {
-      this.setState({ modalKey: Date.now() });
-      if (this.props.onReset) this.props.onReset();
-    };
-
-    onClose = (success) => {
+    onClose = () => {
       this.setState({ open: false });
-      if (this.props.onClose) this.props.onClose(success);
-      if (this.props.onSave && success) {
-        this.props.onSave(success);
-      }
+      if (this.props.onClose) this.props.onClose();
     };
 
     onOpen = () => {
@@ -36,7 +27,7 @@ export default function modal(Component) {
     };
 
     render() {
-      const { open, modalKey } = this.state;
+      const { open } = this.state;
       const {
         onClose,
         onOpen,
@@ -56,16 +47,11 @@ export default function modal(Component) {
           closeOnDocumentClick={closeOnDocumentClick}
           size={size}
           onOpen={this.onOpen}
-          onClose={() => this.onClose()}
+          onClose={this.onClose}
           trigger={trigger}
           centered={centered}
           open={open}>
-          <Component
-            key={modalKey}
-            {...rest}
-            onClose={this.onClose}
-            reset={this.onReset}
-          />
+          <Component {...rest} onClose={this.onClose} />
         </Modal>
       );
     }

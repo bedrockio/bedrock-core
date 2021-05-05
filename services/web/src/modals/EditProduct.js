@@ -68,7 +68,8 @@ export default class EditProduct extends React.Component {
           },
         });
       }
-      this.props.onClose(true);
+      this.props.onSave();
+      this.props.onClose();
     } catch (error) {
       console.error(error);
       this.setState({

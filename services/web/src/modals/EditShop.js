@@ -62,7 +62,8 @@ export default class EditShop extends React.Component {
           body: shop,
         });
       }
-      this.props.onClose(true);
+      this.props.onSave();
+      this.props.onClose();
     } catch (error) {
       console.error(error);
       this.setState({

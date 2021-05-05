@@ -50,14 +50,18 @@ async function batchCreate(objects, percentFn) {
   return errors;
 }
 
+const defaultState = {
+  step: 1,
+  loading: false,
+  items: null,
+  mapping: null,
+  progressPercent: 0,
+};
+
 @modal
 export default class ImportProducts extends React.Component {
   state = {
-    step: 1,
-    loading: false,
-    items: null,
-    mapping: null,
-    progressPercent: 0,
+    ...defaultState,
   };
 
   drop(acceptedFiles, rejectedFiles) {
@@ -235,7 +239,9 @@ export default class ImportProducts extends React.Component {
             icon="redo"
             disabled={step === 1 || step > 2}
             onClick={() => {
-              this.props.reset();
+              this.setState({
+                ...defaultState,
+              });
             }}
           />
           {step === 2 && (
@@ -256,7 +262,7 @@ export default class ImportProducts extends React.Component {
               disabled={loading}
               loading={loading}
               onClick={() => {
-                this.props.onClose(true);
+                this.props.onClose();
               }}
             />
           )}
