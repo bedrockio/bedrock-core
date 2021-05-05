@@ -15,7 +15,6 @@ export default class UserDetail extends React.Component {
       user: null,
       error: null,
       loading: true,
-      onSave: this.onSave,
     };
   }
 
@@ -80,7 +79,7 @@ export default class UserDetail extends React.Component {
           exact
           path="/users/:id"
           render={(props) => (
-            <Overview {...props} {...this.state}  />
+            <Overview {...props} {...this.state} onSave={this.onSave} />
           )}
         />
       </Switch>

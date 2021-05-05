@@ -1,6 +1,6 @@
 const Router = require('@koa/router');
 const Joi = require('joi');
-const validate = require('../utils/middleware/validate');
+const { validateBody } = require('../utils/middleware/validate');
 const { authenticate } = require('../utils/middleware/authenticate');
 const { createAuthToken, createTemporaryToken, generateTokenId } = require('../utils/tokens');
 const { sendTemplatedMail } = require('../utils/mailer');
@@ -16,12 +16,10 @@ const passwordField = Joi.string()
 router
   .post(
     '/register',
-    validate({
-      body: Joi.object({
-        email: Joi.string().lowercase().email().required(),
-        name: Joi.string().required(),
-        password: passwordField.required(),
-      }),
+    validateBody({
+      email: Joi.string().lowercase().email().required(),
+      name: Joi.string().required(),
+      password: passwordField.required(),
     }),
     async (ctx) => {
       const { email, name } = ctx.request.body;
@@ -48,11 +46,9 @@ router
   )
   .post(
     '/login',
-    validate({
-      body: Joi.object({
-        email: Joi.string().email().required(),
-        password: Joi.string().required(),
-      }),
+    validateBody({
+      email: Joi.string().email().required(),
+      password: Joi.string().required(),
     }),
     async (ctx) => {
       const { email, password } = ctx.request.body;
@@ -63,29 +59,29 @@ router
           $inc: { loginAttempts: 1 },
         }
       );
-      if (user) {
-        try {
-          user.verifyLoginAttempts();
-          await user.verifyPassword(password);
 
-          const authTokenId = generateTokenId();
-          await user.updateOne({ loginAttempts: 0, authTokenId });
-          ctx.body = { data: { token: createAuthToken(user.id, authTokenId) } };
-        } catch (err) {
-          ctx.throw(401, err.message);
-        }
-      } else {
+      if (!user) {
         ctx.throw(401, 'Incorrect password');
       }
+
+      if (!user.verifyLoginAttempts()) {
+        ctx.throw(401, 'Too many login attempts');
+      }
+
+      if (!(await user.verifyPassword(password))) {
+        ctx.throw(401, 'Incorrect password');
+      }
+
+      const authTokenId = generateTokenId();
+      await user.updateOne({ loginAttempts: 0, authTokenId });
+      ctx.body = { data: { token: createAuthToken(user.id, authTokenId) } };
     }
   )
   .post(
     '/accept-invite',
-    validate({
-      body: Joi.object({
-        name: Joi.string().required(),
-        password: passwordField.required(),
-      }),
+    validateBody({
+      name: Joi.string().required(),
+      password: passwordField.required(),
     }),
     authenticate({ type: 'invite' }),
     async (ctx) => {
@@ -117,10 +113,8 @@ router
   )
   .post(
     '/request-password',
-    validate({
-      body: Joi.object({
-        email: Joi.string().email().required(),
-      }),
+    validateBody({
+      email: Joi.string().email().required(),
     }),
     async (ctx) => {
       const { email } = ctx.request.body;
@@ -146,10 +140,8 @@ router
   )
   .post(
     '/set-password',
-    validate({
-      body: Joi.object({
-        password: passwordField.required(),
-      }),
+    validateBody({
+      password: passwordField.required(),
     }),
     authenticate({ type: 'password' }),
     async (ctx) => {

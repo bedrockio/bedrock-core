@@ -1,7 +1,9 @@
 const Joi = require('joi');
 
-const EMAIL_SCHEMA = Joi.string().lowercase().email();
-const OBJECT_ID_SCHEMA = Joi.string().hex().length(24);
+const FIXED_SCHEMAS = {
+  email: Joi.string().lowercase().email(),
+  objectId: Joi.string().hex().length(24),
+};
 
 function getJoiSchema(attributes, options = {}) {
   const { appendSchema } = options;
@@ -16,11 +18,28 @@ function getJoiSchema(attributes, options = {}) {
   return schema;
 }
 
-function getMongooseValidator(type, required) {
-  if (type === 'email') {
-    return joiSchemaToMongooseValidator(EMAIL_SCHEMA, required);
+function getMongooseValidator(schemaName, field) {
+  const schema = getSchemaForField(field);
+  const validator = (val) => {
+    const { error } = schema.validate(val);
+    if (error) {
+      throw error;
+    }
+    return true;
+  };
+  // A named shortcut back to the Joi schema to retrieve it
+  // later when generating validations.
+  validator.schemaName = schemaName;
+  return validator;
+}
+
+function getFixedSchema(arg) {
+  const name = arg.schemaName || arg;
+  const schema = FIXED_SCHEMAS[name];
+  if (!schema) {
+    throw new Error(`Cannot find schema for ${name}.`);
   }
-  throw new Error(`No validator for ${type}.`);
+  return schema;
 }
 
 function getArraySchema(obj, options) {
@@ -57,17 +76,31 @@ function getObjectSchema(obj, options) {
   return Joi.object(map);
 }
 
-function getSchemaForField(field, options) {
+function getSchemaForField(field, options = {}) {
   const type = getFieldType(field);
   if (type === 'Array') {
     return getArraySchema(field, options);
   } else if (type === 'Mixed') {
     return getObjectSchema(field, options);
   }
-  let schema = getSchemaForType(type);
+
+  let schema;
+  if (field.validate) {
+    schema = getFixedSchema(field.validate);
+  } else {
+    schema = getSchemaForType(type);
+  }
+
   if (field.required && !options.skipRequired) {
     schema = schema.required();
+  } else {
+    // TODO: for now we allow both empty strings and null
+    // as a potential signal for "set but non-existent".
+    // Is this ok? Do we not want any falsy fields in the
+    // db whatsoever?
+    schema = schema.allow('', null);
   }
+
   if (field.enum) {
     schema = schema.valid(...field.enum);
   }
@@ -96,7 +129,7 @@ function getSchemaForType(type) {
     case 'ObjectId':
       return Joi.custom((val) => {
         const id = String(val.id || val);
-        Joi.assert(id, OBJECT_ID_SCHEMA);
+        Joi.assert(id, FIXED_SCHEMAS['objectId']);
         return id;
       });
     default:
@@ -132,23 +165,6 @@ function getFieldType(field) {
   } else {
     throw new Error(`Could not derive type for field ${field}.`);
   }
-}
-
-function joiSchemaToMongooseValidator(schema, required) {
-  // TODO: for now we allow both empty strings and null
-  // as a potential signal for "set but non-existent".
-  // Is this ok? Do we not want any falsy fields in the
-  // db whatsoever?
-
-  schema = required ? schema.required() : schema.allow('', null);
-
-  return (val) => {
-    const { error } = schema.validate(val);
-    if (error) {
-      throw error;
-    }
-    return true;
-  };
 }
 
 module.exports = {
