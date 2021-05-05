@@ -1,6 +1,8 @@
 const path = require('path');
 const yargs = require('yargs');
 const webpack = require('webpack');
+const config = require('@bedrockio/config');
+
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -27,7 +29,7 @@ const BUILD = process.env.NODE_ENV === 'production';
 
 const PARAMS = {
   BUILD,
-  ...require('./serve/env').PUBLIC,
+  ...config.getAll(),
 };
 
 const templatePath = getTemplatePath();
@@ -232,7 +234,6 @@ function getTemplatePlugins() {
       chunks: [app, 'vendor'],
       templateParameters: {
         app,
-        PUBLIC_ENV: JSON.stringify(PARAMS.PUBLIC),
         ...PARAMS,
       },
       minify: {

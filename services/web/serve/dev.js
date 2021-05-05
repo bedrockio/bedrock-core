@@ -1,6 +1,9 @@
 const Koa = require('koa');
 const webpack = require('webpack');
 const e2k = require('express-to-koa');
+const config = require('@bedrockio/config');
+const { pick } = require('lodash');
+
 const envMiddleware = require('./middleware/env');
 const historyMiddleware = require('./middleware/history');
 const webpackDevMiddleware = require('webpack-dev-middleware');
@@ -8,7 +11,15 @@ const webpackHotMiddleware = require('webpack-hot-middleware');
 
 const app = new Koa();
 
-const { SERVER_PORT, SERVER_HOST, PUBLIC } = require('./env');
+const allConfig = config.getAll();
+const PUBLIC = pick(
+  allConfig,
+  Object.keys(allConfig).filter(
+    (key) => !key.startsWith('SERVER') && !key.startsWith('HTTP')
+  )
+);
+
+const { SERVER_PORT, SERVER_HOST } = allConfig;
 
 (async () => {
   // Manually loading webpack-dev-middleware and webpack-hot-middleware
