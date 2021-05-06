@@ -22,7 +22,6 @@
 }
 
 .sidebar-layout {
-
   &-menu {
     position: fixed;
     z-index: 2;
@@ -32,11 +31,11 @@
     height: 100vh;
     padding: @padding;
     background-color: #f8fafc;
-    border-right: 1px solid rgba(0,0,0,.05);
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
     overflow-y: auto;
 
     &--offscreen {
-      box-shadow: 0 0 4px rgba(0,0,0,.2);
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
       transition: ease-in-out 200ms transform;
       transform: translateX(-@menuWidth);
     }
@@ -50,7 +49,6 @@
       background-color: #1b1c1d;
       border-right: none;
     }
-
   }
 
   &-item {
@@ -58,7 +56,8 @@
     font-size: 16px;
     line-height: 2.2;
 
-    &,&:hover {
+    &,
+    &:hover {
       color: inherit;
     }
   }
@@ -87,7 +86,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,.8);
+    background-color: rgba(0, 0, 0, 0.8);
     transition: linear 200ms opacity;
     opacity: 0;
     pointer-events: none;
@@ -97,5 +96,4 @@
       pointer-events: auto;
     }
   }
-
 }

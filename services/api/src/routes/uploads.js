@@ -1,7 +1,6 @@
 const Router = require('@koa/router');
 const { createReadStream } = require('fs');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
-const { NotFoundError, UnauthorizedError } = require('../utils/errors');
 const { Upload } = require('../models');
 const { storeUploadedFile } = require('../utils/uploads');
 
@@ -9,13 +8,15 @@ const router = new Router();
 
 router
   .param('uploadId', async (id, ctx, next) => {
-    const upload = await Upload.findById(id);
+    const upload = await Upload.findOne({ _id: id, deletedAt: { $exists: false } });
     ctx.state.upload = upload;
+
     if (!upload) {
-      throw new NotFoundError();
+      ctx.throw(404);
     } else if (ctx.state.authUser.id != upload.ownerId) {
-      throw new UnauthorizedError();
+      ctx.throw(401);
     }
+
     return next();
   })
   .get('/:hash', async (ctx) => {

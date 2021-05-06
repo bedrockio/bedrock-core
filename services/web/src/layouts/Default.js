@@ -47,9 +47,7 @@ export default class DefaultLayout extends React.Component {
         <Sidebar.Content>
           <Container>
             <Header />
-            <main>
-              {this.props.children}
-            </main>
+            <main>{this.props.children}</main>
             <Footer />
           </Container>
         </Sidebar.Content>

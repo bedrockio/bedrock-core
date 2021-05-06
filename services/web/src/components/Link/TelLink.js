@@ -6,7 +6,6 @@ import ExternalLink from './ExternalLink';
 // https://www.telerik.com/forums/proper-way-to-do-mailto-and-tel-links
 
 export default class TelLink extends React.Component {
-
   static FORMAT_REG = /[-()\s]/g;
 
   render() {
@@ -20,5 +19,4 @@ export default class TelLink extends React.Component {
       </ExternalLink>
     );
   }
-
 }

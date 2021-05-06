@@ -6,10 +6,9 @@ import React from 'react';
 import { Button } from 'semantic';
 
 export default class LoadButton extends React.Component {
-
   state = {
     loading: false,
-  }
+  };
 
   onClick = async () => {
     this.setState({
@@ -18,10 +17,10 @@ export default class LoadButton extends React.Component {
     await this.props.onClick();
     if (this.mounted) {
       this.setState({
-        loading: false
+        loading: false,
       });
     }
-  }
+  };
 
   componentDidMount() {
     this.mounted = true;
@@ -34,11 +33,7 @@ export default class LoadButton extends React.Component {
   render() {
     const { onClick, ...rest } = this.props;
     return (
-      <Button
-        loading={this.state.loading}
-        onClick={this.onClick}
-        {...rest}
-      />
+      <Button loading={this.state.loading} onClick={this.onClick} {...rest} />
     );
   }
 }

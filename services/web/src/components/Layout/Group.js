@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import './group.less';
 
 export default class Group extends React.Component {
-
   getProps() {
     const { className, children, ...rest } = this.props;
     const classNames = ['group'];
@@ -24,13 +23,8 @@ export default class Group extends React.Component {
   }
 
   render() {
-    return (
-      <div {...this.getProps()}>
-        {this.props.children}
-      </div>
-    );
+    return <div {...this.getProps()}>{this.props.children}</div>;
   }
-
 }
 
 Group.propTypes = {

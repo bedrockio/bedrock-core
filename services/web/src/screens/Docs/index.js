@@ -1,6 +1,16 @@
 import React, { createRef } from 'react';
 import { startCase, kebabCase } from 'lodash';
-import { Container, Menu, Message, Breadcrumb, Divider, Grid, Sticky, Ref, Segment } from 'semantic';
+import {
+  Container,
+  Menu,
+  Message,
+  Breadcrumb,
+  Divider,
+  Grid,
+  Sticky,
+  Ref,
+  Segment,
+} from 'semantic';
 import { Switch, Route, Link, NavLink } from 'react-router-dom';
 import StandardPage from './StandardPage';
 import PageLoader from 'components/PageLoader';
@@ -51,12 +61,15 @@ export default class Docs extends React.Component {
         method: 'GET',
         path: '/openapi.lite.json',
       });
-      this.setState({
-        loading: false,
-        openApi,
-      }, () => {
-        this.checkJumpLink();
-      });
+      this.setState(
+        {
+          loading: false,
+          openApi,
+        },
+        () => {
+          this.checkJumpLink();
+        }
+      );
     } catch (error) {
       this.setState({
         error,
@@ -122,25 +135,37 @@ export default class Docs extends React.Component {
               <Ref innerRef={this.contextRef}>
                 <Segment basic>
                   <Switch>
-                    {PAGES
-                      .map((page) => {
-                        return (
-                          <Route
-                            key={page.id}
-                            exact
-                            path={`/docs/${page.id}`}
-                            component={(props) => <StandardPage {...props} me={me} openApi={openApi} page={page} />}
-                          />
-                        );
-                      })
-                      .concat([
+                    {PAGES.map((page) => {
+                      return (
                         <Route
-                          key="index"
+                          key={page.id}
                           exact
-                          path={`/docs`}
-                          component={(props) => <StandardPage {...props} me={me} openApi={openApi} page={PAGES[0]} />}
-                        />,
-                      ])}
+                          path={`/docs/${page.id}`}
+                          component={(props) => (
+                            <StandardPage
+                              {...props}
+                              me={me}
+                              openApi={openApi}
+                              page={page}
+                            />
+                          )}
+                        />
+                      );
+                    }).concat([
+                      <Route
+                        key="index"
+                        exact
+                        path={`/docs`}
+                        component={(props) => (
+                          <StandardPage
+                            {...props}
+                            me={me}
+                            openApi={openApi}
+                            page={PAGES[0]}
+                          />
+                        )}
+                      />,
+                    ])}
                   </Switch>
                 </Segment>
               </Ref>
@@ -157,7 +182,16 @@ export default class Docs extends React.Component {
     return (
       <Menu fluid pointing secondary vertical>
         {PAGES.map(({ id, name }) => {
-          return <Menu.Item key={id} exact name={name} active={pageId === id} to={`/docs/${id}`} as={NavLink} />;
+          return (
+            <Menu.Item
+              key={id}
+              exact
+              name={name}
+              active={pageId === id}
+              to={`/docs/${id}`}
+              as={NavLink}
+            />
+          );
         })}
       </Menu>
     );

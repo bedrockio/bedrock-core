@@ -30,8 +30,7 @@ export default class HelpTip extends React.Component {
             size="small"
             closeOnEscape={true}
             closeOnDimmerClick={true}
-            onClose={this.close}
-          >
+            onClose={this.close}>
             <Header
               icon={icon || 'info circle'}
               content={title || 'Explanation'}

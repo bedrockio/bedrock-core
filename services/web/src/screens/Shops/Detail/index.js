@@ -74,6 +74,7 @@ export default class ShopDetail extends React.Component {
         </React.Fragment>
       );
     }
+
     return (
       <Switch>
         <Route

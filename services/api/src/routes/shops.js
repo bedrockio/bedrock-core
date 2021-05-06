@@ -3,7 +3,6 @@ const Joi = require('joi');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { searchValidation, getSearchQuery, search } = require('../utils/search');
-const { NotFoundError } = require('../utils/errors');
 const { Shop } = require('../models');
 
 const router = new Router();
@@ -12,11 +11,12 @@ router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
   .param('shopId', async (id, ctx, next) => {
-    const shop = await Shop.findById(id);
+    const shop = await Shop.findOne({ _id: id, deletedAt: { $exists: false } });
     ctx.state.shop = shop;
     if (!shop) {
-      throw new NotFoundError();
+      ctx.throw(404);
     }
+
     return next();
   })
   .post('/', validateBody(Shop.getCreateValidation()), async (ctx) => {
