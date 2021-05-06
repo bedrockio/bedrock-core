@@ -6,7 +6,6 @@ const { createAuthToken, createTemporaryToken, generateTokenId } = require('../u
 const { sendTemplatedMail } = require('../utils/mailer');
 const { BadRequestError } = require('../utils/errors');
 const { User, Invite } = require('../models');
-const user = require('../models/user');
 
 const router = new Router();
 
