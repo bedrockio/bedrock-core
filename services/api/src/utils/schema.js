@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
+const pluginAutoPopulate = require('mongoose-autopopulate');
+
 const { startCase, omitBy, isPlainObject } = require('lodash');
 const { ObjectId } = mongoose.Schema.Types;
 const { getJoiSchema, getMongooseValidator } = require('./validation');
@@ -89,7 +91,7 @@ function createSchema(attributes = {}, options = {}) {
     return this.save();
   };
 
-  schema.plugin(require('mongoose-autopopulate'));
+  schema.plugin(pluginAutoPopulate);
   return schema;
 }
 
