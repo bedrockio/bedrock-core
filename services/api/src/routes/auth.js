@@ -72,21 +72,16 @@ router
         ctx.throw(401, 'Incorrect password');
       }
 
-      let authTokenId = user.authTokenId;
-      if (!user.authTokenId) {
-        authTokenId = generateTokenId();
-        user.authTokenId = authTokenId;
-      }
-      user.loginAttempts = 0;
-      await user.save();
-      ctx.body = { data: { token: createAuthToken(user.id, authTokenId) } };
+      const authTokenId = generateTokenId();
+      await user.updateOne({ loginAttempts: 0, authTokenId });
+      ctx.body = { data: { token: createAuthToken(user.id, user.authTokenId) } };
     }
   )
   .post('/logout', authenticate({ type: 'user' }), fetchUser, async (ctx) => {
     const user = ctx.state.authUser;
-    const authTokenId = generateTokenId();
-    user.authTokenId = authTokenId;
-    await user.save();
+    await user.updateOne({
+      authTokenId: generateTokenId(),
+    });
     ctx.status = 204;
   })
   .post(
