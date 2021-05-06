@@ -44,8 +44,9 @@ export default class InviteUser extends React.Component {
       error: null,
     });
 
+    const { validEmails } = this.state;
+
     try {
-      const { validEmails } = this.state;
       await request({
         method: 'POST',
         path: '/1/invites',
@@ -57,7 +58,6 @@ export default class InviteUser extends React.Component {
       this.props.onSave();
       this.props.onClose();
     } catch (error) {
-      console.error(error);
       this.setState({
         error,
         loading: false,

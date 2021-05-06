@@ -59,6 +59,7 @@ export default function modal(Component) {
   WrappedModal.propTypes = Modal.propTypes;
 
   WrappedModal.defaultProps = {
+    ...Modal.defaultProps,
     closeOnDimmerClick: false,
     closeIcon: true,
     open: false,
