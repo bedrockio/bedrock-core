@@ -89,6 +89,7 @@ function createSchema(attributes = {}, options = {}) {
     return this.save();
   };
 
+  schema.plugin(require('mongoose-autopopulate'));
   return schema;
 }
 
@@ -176,7 +177,6 @@ function loadModel(definition, name) {
     throw new Error(`Invalid model definition for ${name}, need attributes`);
   }
   const schema = createSchema(attributes);
-  schema.plugin(require('mongoose-autopopulate'));
   return mongoose.model(name, schema);
 }
 
