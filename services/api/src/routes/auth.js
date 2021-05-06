@@ -23,7 +23,7 @@ router
     }),
     async (ctx) => {
       const { email, name } = ctx.request.body;
-      const existingUser = await User.findOne({ email, deletedAt: { $exists: false } });
+      const existingUser = await User.findOne({ email });
       if (existingUser) {
         throw new BadRequestError('A user with that email already exists');
       }

@@ -31,6 +31,7 @@
     "marked": "^2.0.1",
     "mongoose": "^5.9.26",
     "mongoose-autopopulate": "^0.12.2",
+    "mongoose-delete": "^0.5.3",
     "mustache": "^4.1.0",
     "postmark": "^2.5.4"
   },

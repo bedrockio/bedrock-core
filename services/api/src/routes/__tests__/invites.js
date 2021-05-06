@@ -82,7 +82,7 @@ describe('/1/invites', () => {
       });
       const response = await request('DELETE', `/1/invites/${invite.id}`, {}, { user });
       expect(response.status).toBe(204);
-      const dbInvite = await Invite.findById(invite.id);
+      const dbInvite = await Invite.findOneDeleted({ _id: invite.id });
       expect(dbInvite.deletedAt).toBeDefined();
     });
   });

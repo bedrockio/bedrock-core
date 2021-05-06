@@ -99,8 +99,8 @@ describe('/1/shops', () => {
       });
       const response = await request('DELETE', `/1/shops/${shop.id}`, {}, { user });
       expect(response.status).toBe(204);
-      shop = await Shop.findById(shop.id);
-      expect(shop.deletedAt).toBeDefined();
+      const dbShop = await Shop.findOneDeleted({ _id: shop.id });
+      expect(dbShop.deletedAt).toBeDefined();
       // --- Generator: end
     });
   });

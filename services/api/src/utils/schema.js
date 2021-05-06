@@ -2,13 +2,14 @@ const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
 const pluginAutoPopulate = require('mongoose-autopopulate');
+const pluginDelete = require('mongoose-delete');
 
+const { logger } = require('@bedrockio/instrumentation');
 const { startCase, omitBy, isPlainObject } = require('lodash');
 const { ObjectId } = mongoose.Schema.Types;
 const { getJoiSchema, getMongooseValidator } = require('./validation');
-const { logger } = require('@bedrockio/instrumentation');
 
-const RESERVED_FIELDS = ['id', 'createdAt', 'updatedAt', 'deletedAt'];
+const RESERVED_FIELDS = ['id', 'createdAt', 'updatedAt', 'deletedAt', 'deleted'];
 
 const serializeOptions = {
   getters: true,
@@ -27,7 +28,7 @@ function transformField(obj, schema, options) {
     for (let [key, val] of Object.entries(obj)) {
       // Omit any key with a private prefix "_" or marked
       // "access": "private" in the schema.
-      if (key[0] === '_' || isDisallowedField(schema[key], options.private)) {
+      if (key[0] === '_' || key === 'deleted' || isDisallowedField(schema[key], options.private)) {
         delete obj[key];
       } else if (schema[key]) {
         transformField(val, schema[key], options);
@@ -41,7 +42,6 @@ function createSchema(attributes = {}, options = {}) {
   const schema = new mongoose.Schema(
     {
       ...definition,
-      deletedAt: { type: Date },
     },
     {
       // Include timestamps by default.
@@ -86,12 +86,12 @@ function createSchema(attributes = {}, options = {}) {
     }
   };
 
-  schema.methods.delete = function () {
-    this.deletedAt = new Date();
-    return this.save();
-  };
-
   schema.plugin(pluginAutoPopulate);
+  schema.plugin(pluginDelete, {
+    deletedAt: true,
+    overrideMethods: ['countDocuments', 'find', 'findOne'],
+  });
+
   return schema;
 }
 

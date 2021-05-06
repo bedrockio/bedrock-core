@@ -98,7 +98,7 @@ describe('/1/products', () => {
       });
       const response = await request('DELETE', `/1/products/${product.id}`, {}, { user });
       expect(response.status).toBe(204);
-      const dbProduct = await Product.findById(product.id);
+      const dbProduct = await Product.findOneDeleted({ _id: product.id });
       expect(dbProduct.deletedAt).toBeDefined();
     });
   });
