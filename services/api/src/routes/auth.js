@@ -1,11 +1,12 @@
 const Router = require('@koa/router');
 const Joi = require('joi');
 const { validateBody } = require('../utils/middleware/validate');
-const { authenticate } = require('../utils/middleware/authenticate');
+const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { createAuthToken, createTemporaryToken, generateTokenId } = require('../utils/tokens');
 const { sendTemplatedMail } = require('../utils/mailer');
 const { BadRequestError } = require('../utils/errors');
 const { User, Invite } = require('../models');
+const user = require('../models/user');
 
 const router = new Router();
 
@@ -72,11 +73,23 @@ router
         ctx.throw(401, 'Incorrect password');
       }
 
-      const authTokenId = generateTokenId();
-      await user.updateOne({ loginAttempts: 0, authTokenId });
+      let authTokenId = user.authTokenId;
+      if (!user.authTokenId) {
+        authTokenId = generateTokenId();
+        user.authTokenId = authTokenId;
+      }
+      user.loginAttempts = 0;
+      await user.save();
       ctx.body = { data: { token: createAuthToken(user.id, authTokenId) } };
     }
   )
+  .post('/logout', authenticate({ type: 'user' }), fetchUser, async (ctx) => {
+    const user = ctx.state.authUser;
+    const authTokenId = generateTokenId();
+    user.authTokenId = authTokenId;
+    await user.save();
+    ctx.status = 204;
+  })
   .post(
     '/accept-invite',
     validateBody({
