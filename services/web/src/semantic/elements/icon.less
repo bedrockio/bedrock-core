@@ -43,12 +43,12 @@ svg.icon.loading {
   animation: icon-loading @loadingDuration linear infinite;
 }
 @keyframes icon-loading {
- from {
+  from {
     transform: rotate(0deg);
- }
- to {
+  }
+  to {
     transform: rotate(360deg);
- }
+  }
 }
 
 /*******************************
@@ -71,11 +71,9 @@ svg.disabled.icon {
   opacity: @disabledOpacity !important;
 }
 
-
 /*******************************
            Variations
 *******************************/
-
 
 /*-------------------
         Fitted
@@ -90,12 +88,14 @@ svg.fitted.icon {
          Link
 --------------------*/
 
-svg.link.icon, svg.link.icons {
+svg.link.icon,
+svg.link.icons {
   cursor: pointer;
   opacity: @linkOpacity;
   transition: opacity @defaultDuration @defaultEasing;
 }
-svg.link.icon:hover, svg.link.icons:hover {
+svg.link.icon:hover,
+svg.link.icons:hover {
   opacity: 1 !important;
 }
 
@@ -176,7 +176,6 @@ svg.inverted.circular.icon {
 svg.inverted.icon {
   color: @white;
 }
-
 
 /*-------------------
        Colors

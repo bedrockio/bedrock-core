@@ -65,7 +65,7 @@ export default class ShopList extends React.Component {
                       <Filters.Text label="Search" name="keyword" placeholder="Enter name or shop id" />
                       <Filters.Dropdown
                         label="Country"
-                        name="country"
+                        name="countryCode"
                         options={countries}
                         search
                       />

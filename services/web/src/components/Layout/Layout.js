@@ -7,7 +7,6 @@ import Spacer from './Spacer';
 import './layout.less';
 
 export default class Layout extends React.Component {
-
   static Group = Group;
   static Spacer = Spacer;
 
@@ -34,13 +33,8 @@ export default class Layout extends React.Component {
 
   render() {
     const { as: Component } = this.props;
-    return (
-      <Component {...this.getProps()}>
-        {this.props.children}
-      </Component>
-    );
+    return <Component {...this.getProps()}>{this.props.children}</Component>;
   }
-
 }
 
 Layout.propTypes = {
@@ -58,10 +52,7 @@ Layout.propTypes = {
   right: PropTypes.bool,
   extra: PropTypes.bool,
   top: PropTypes.bool,
-  as: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.elementType,
-  ]),
+  as: PropTypes.oneOfType([PropTypes.string, PropTypes.elementType]),
 };
 
 Layout.defaultProps = {

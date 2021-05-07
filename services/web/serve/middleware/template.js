@@ -24,7 +24,9 @@ const path = require('path');
 let templateCache;
 
 function loadTemplates(urlPath, cache, opts) {
-  fs.readdirSync(path.resolve('dist', urlPath), { withFileTypes: true }).forEach(dirent => {
+  fs.readdirSync(path.resolve('dist', urlPath), {
+    withFileTypes: true,
+  }).forEach((dirent) => {
     if (dirent.isDirectory()) {
       loadTemplates(path.join(urlPath, dirent.name), cache, opts);
     } else if (dirent.isFile() && dirent.name.match(/\.(html|txt|xml)$/)) {

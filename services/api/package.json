@@ -12,8 +12,7 @@
     "lint": "eslint .",
     "test": "jest",
     "test:watch": "jest --watch -i",
-    "generate": "cd ../../generator && yarn install && yarn generate",
-    "prepare": "../../.githooks/init || true"
+    "generate": "cd ../../generator && yarn install && yarn generate"
   },
   "dependencies": {
     "@bedrockio/config": "^2.0.3",

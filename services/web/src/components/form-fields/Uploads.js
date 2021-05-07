@@ -21,7 +21,6 @@ const ALTERNATE_ICONS = {
 };
 
 export default class Uploads extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -90,10 +89,7 @@ export default class Uploads extends React.Component {
         files: acceptedFiles,
       });
       this.setState({
-        uploads: [
-          ...this.state.uploads,
-          ...data,
-        ],
+        uploads: [...this.state.uploads, ...data],
         loading: false,
       });
     } catch (error) {
@@ -152,7 +148,11 @@ export default class Uploads extends React.Component {
                 <Label key={upload.id}>
                   {this.renderIconForType()}
                   {upload.filename}
-                  <Icon name="delete" style={{ cursor: 'pointer' }} onClick={() => this.delete(upload)} />
+                  <Icon
+                    name="delete"
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => this.delete(upload)}
+                  />
                 </Label>
               ))}
             </Label.Group>
@@ -166,10 +166,16 @@ export default class Uploads extends React.Component {
               <div
                 {...getRootProps()}
                 className={
-                  isDragActive ? 'ui icon blue message upload-dropzone-active' : 'ui icon message upload-dropzone'
+                  isDragActive
+                    ? 'ui icon blue message upload-dropzone-active'
+                    : 'ui icon message upload-dropzone'
                 }
                 style={{ cursor: 'pointer', outline: 0 }}>
-                {loading ? <Icon name="sync alternate" loading /> : this.renderIconForType()}
+                {loading ? (
+                  <Icon name="sync alternate" loading />
+                ) : (
+                  this.renderIconForType()
+                )}
                 <input {...getInputProps()} />
                 <div className="content">
                   {loading ? (
@@ -177,9 +183,15 @@ export default class Uploads extends React.Component {
                   ) : isDragActive ? (
                     <p>Drop files here...</p>
                   ) : this.isMultiple() ? (
-                    <p>Try dropping some files here, or click to select files to upload.</p>
+                    <p>
+                      Try dropping some files here, or click to select files to
+                      upload.
+                    </p>
                   ) : (
-                    <p>Try dropping a file here, or click to select a file to upload.</p>
+                    <p>
+                      Try dropping a file here, or click to select a file to
+                      upload.
+                    </p>
                   )}
                 </div>
               </div>
@@ -195,23 +207,17 @@ export default class Uploads extends React.Component {
     if (type === 'image') {
       return <Image key={upload.id} src={src} />;
     } else if (type === 'video') {
-      return (
-        <video
-          style={{width: '100%'}}
-          src={src}
-          controls
-        />
-      );
+      return <video style={{ width: '100%' }} src={src} controls />;
     } else if (type === 'audio') {
-      return (
-        <audio src={src} controls />
-      );
+      return <audio src={src} controls />;
     }
   }
 
   renderIconForType() {
     const { type } = this.props;
-    return <Icon name={`file-${ALTERNATE_ICONS[type] || type || ''} outline`} />;
+    return (
+      <Icon name={`file-${ALTERNATE_ICONS[type] || type || ''} outline`} />
+    );
   }
 }
 

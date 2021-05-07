@@ -11,7 +11,6 @@ const options = [
 
 @screen
 export default class ComponentsScreen extends React.Component {
-
   render() {
     return (
       <div>
@@ -118,5 +117,4 @@ export default class ComponentsScreen extends React.Component {
       </div>
     );
   }
-
 }

@@ -55,12 +55,18 @@ function createSchema(attributes = {}, options = {}) {
 
   schema.static('getCreateValidation', function getCreateValidation(appendSchema) {
     return getJoiSchemaFromMongoose(schema, {
+      disallowField: (key) => {
+        return isDisallowedField(this.schema.obj[key]);
+      },
       appendSchema,
     });
   });
 
   schema.static('getUpdateValidation', function getUpdateValidation(appendSchema) {
     return getJoiSchemaFromMongoose(schema, {
+      disallowField: (key) => {
+        return isDisallowedField(this.schema.obj[key]);
+      },
       appendSchema,
       skipRequired: true,
     });
@@ -117,8 +123,8 @@ function attributesToDefinition(attributes) {
       if (key === 'type' && typeof val === 'string') {
         val = getMongooseType(val);
       } else if (key === 'validate' && typeof val === 'string') {
-        // Map string shortcuts to mongoose validators such as "email".
-        val = getMongooseValidator(val, attributes.required);
+        // Allow custom mongoose validation function that derives from the Joi schema.
+        val = getMongooseValidator(val, attributes);
       }
     } else {
       if (Array.isArray(val)) {

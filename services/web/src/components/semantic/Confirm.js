@@ -8,7 +8,6 @@ import PropTypes from 'prop-types';
 import { Modal } from 'semantic';
 
 export default class Confirm extends React.Component {
-
   render() {
     const { negative, confirmText, onCancel, onConfirm, ...rest } = this.props;
     return (
@@ -31,7 +30,6 @@ export default class Confirm extends React.Component {
       />
     );
   }
-
 }
 
 Confirm.propTypes = {

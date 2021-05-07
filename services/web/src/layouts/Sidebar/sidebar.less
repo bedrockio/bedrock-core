@@ -22,7 +22,6 @@
 }
 
 .sidebar-layout {
-
   &-menu {
     position: fixed;
     z-index: 2;
@@ -36,7 +35,7 @@
     overflow-y: auto;
 
     &--offscreen {
-      box-shadow: 0 0 4px rgba(0,0,0,.2);
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
       transition: ease-in-out 200ms transform;
       transform: translateX(-@menuWidth);
     }
@@ -50,7 +49,6 @@
       background-color: #1E1E1E;
       border-right: none;
     }
-
   }
 
   &-item {
@@ -58,7 +56,8 @@
     font-size: 14px;
     line-height: 2.2;
 
-    &,&:hover {
+    &,
+    &:hover {
       color: inherit;
     }
   }

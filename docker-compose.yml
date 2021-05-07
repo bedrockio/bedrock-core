@@ -2,14 +2,11 @@ version: "3.7"
 
 services:
   api:
-    command: ["./scripts/wait-for-it.sh", "mongo:27017", "--", "yarn", "start"]
     environment:
       - MONGO_URI=mongodb://mongo/bedrock_dev
     build:
       context: ./services/api
       dockerfile: Dockerfile
-      args:
-        NODE_ENV: development
     volumes:
       - ./services/api/src:/service/src
       - ./services/api/emails:/service/emails
@@ -25,12 +22,9 @@ services:
       - mongo
 
   web:
-    command: ["yarn", "start"]
     build:
       context: ./services/web
       dockerfile: Dockerfile
-      args:
-        NODE_ENV: development
     volumes:
       - ./services/web/src:/service/src
     ports:
@@ -40,7 +34,7 @@ services:
       - api
 
   mongo:
-    image: mongo:4.2.8
+    image: mongo:4.4.4
     command: --serviceExecutor adaptive
     logging:
       driver: none

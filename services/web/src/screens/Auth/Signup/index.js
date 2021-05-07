@@ -17,7 +17,7 @@ export default class Signup extends React.Component {
   state = {
     error: null,
     loading: false,
-  }
+  };
 
   onSubmit = async (body) => {
     try {
@@ -28,12 +28,12 @@ export default class Signup extends React.Component {
       const { data } = await request({
         method: 'POST',
         path: '/1/auth/register',
-        body
+        body,
       });
       this.context.setToken(data.token);
       await this.context.loadUser();
       this.props.history.push('/');
-    } catch(error) {
+    } catch (error) {
       this.setState({
         error,
         loading: false,

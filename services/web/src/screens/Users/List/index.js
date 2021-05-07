@@ -38,7 +38,11 @@ export default class UserList extends React.Component {
               <h1 style={{ margin:'0' }}>Users</h1>
               <Layout.Group>
                 <Filters onSave={setFilters} filters={filters}>
-                  <Filters.Text label="Search" name="keyword" placeholder="Enter name, email, or user id" />
+                  <Filters.Text
+                    label="Search"
+                    name="keyword"
+                    placeholder="Enter name, email, or user id"
+                  />
                 </Filters>
                 <EditUser
                   trigger={<Button primary content="New User" icon="plus" />}

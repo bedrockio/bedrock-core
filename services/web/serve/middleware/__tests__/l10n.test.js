@@ -8,18 +8,17 @@ const JA_PREFERRED = 'ja,en;q=0.9,en-US;q=0.8';
 const FR_CA_PREFERRED = 'fr-CA,fr;q=0.9,ja;q=0.8';
 
 describe('L10N Middleware', () => {
-
   const middleware = l10nMiddleware(['en-US', 'ja-JP', 'fr', 'fr-CA'], 'en-US');
 
   function run(url, headers, code) {
     const ctx = createFakeKoaContext({
       url: url,
       headers: {
-        'Accept-Language': headers
+        'Accept-Language': headers,
       },
       cookies: {
-        hl: code
-      }
+        hl: code,
+      },
     });
     middleware(ctx, () => {});
     return ctx;
@@ -27,7 +26,9 @@ describe('L10N Middleware', () => {
 
   function assertRedirected(ctx, code, query) {
     const prefix = code === 'en' ? '/' : `/${code}/`;
-    expect(ctx.response.headers.location).toBe(`${prefix}page${query ? query : ''}`);
+    expect(ctx.response.headers.location).toBe(
+      `${prefix}page${query ? query : ''}`
+    );
   }
 
   function assertNotRedirected(ctx) {
@@ -35,7 +36,6 @@ describe('L10N Middleware', () => {
   }
 
   describe('redirects', () => {
-
     it('should not redirect when headers prefer default', () => {
       const ctx = run('/page', EN_PREFERRED);
       expect(ctx.state.l10n.hl).toBe('en-US');
@@ -84,11 +84,9 @@ describe('L10N Middleware', () => {
       const ctx = run('/en/page', EN_PREFERRED);
       assertRedirected(ctx, 'en');
     });
-
   });
 
   describe('l10n urls', () => {
-
     it('should correctly set l10n urls', () => {
       const ctx = run('/page', EN_PREFERRED);
       expect(ctx.state.l10n).toEqual({
@@ -98,24 +96,24 @@ describe('L10N Middleware', () => {
           {
             code: 'en-US',
             url: '/page',
-            canonical: true
+            canonical: true,
           },
           {
             code: 'ja-JP',
             url: '/ja/page',
-            canonical: false
+            canonical: false,
           },
           {
             code: 'fr',
             url: '/fr/page',
-            canonical: false
+            canonical: false,
           },
           {
             code: 'fr-CA',
             url: '/fr-CA/page',
-            canonical: false
-          }
-        ]
+            canonical: false,
+          },
+        ],
       });
     });
 
@@ -128,24 +126,24 @@ describe('L10N Middleware', () => {
           {
             code: 'en-US',
             url: '/page',
-            canonical: true
+            canonical: true,
           },
           {
             code: 'ja-JP',
             url: '/ja/page',
-            canonical: false
+            canonical: false,
           },
           {
             code: 'fr',
             url: '/fr/page',
-            canonical: false
+            canonical: false,
           },
           {
             code: 'fr-CA',
             url: '/fr-CA/page',
-            canonical: false
-          }
-        ]
+            canonical: false,
+          },
+        ],
       });
     });
 
@@ -158,26 +156,25 @@ describe('L10N Middleware', () => {
           {
             code: 'en-US',
             url: '/page?foo=bar',
-            canonical: true
+            canonical: true,
           },
           {
             code: 'ja-JP',
             url: '/ja/page?foo=bar',
-            canonical: false
+            canonical: false,
           },
           {
             code: 'fr',
             url: '/fr/page?foo=bar',
-            canonical: false
+            canonical: false,
           },
           {
             code: 'fr-CA',
             url: '/fr-CA/page?foo=bar',
-            canonical: false
-          }
-        ]
+            canonical: false,
+          },
+        ],
       });
     });
-
   });
 });

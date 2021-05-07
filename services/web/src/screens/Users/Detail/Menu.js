@@ -19,13 +19,7 @@ export default ({ user, match, onSave }) => {
         <EditUser
           user={user}
           onSave={onSave}
-          trigger={
-            <Button
-              primary
-              icon="setting"
-              content="Settings"
-            />
-          }
+          trigger={<Button primary icon="setting" content="Settings" />}
         />
         </Layout.Group>
       </Layout>

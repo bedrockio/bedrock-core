@@ -1,9 +1,8 @@
 const Router = require('@koa/router');
 const Joi = require('joi');
-const validate = require('../utils/middleware/validate');
+const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
-const { NotFoundError, BadRequestError } = require('../utils/errors');
 const { searchValidation, exportValidation, getSearchQuery, search, searchExport } = require('../utils/search');
 const { User } = require('../models');
 const { expandRoles } = require('./../utils/permissions');
@@ -20,11 +19,13 @@ router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
   .param('userId', async (id, ctx, next) => {
-    const user = await User.findById(id);
+    const user = await User.findOne({ _id: id, deletedAt: { $exists: false } });
     ctx.state.user = user;
+
     if (!user) {
-      throw new NotFoundError();
+      ctx.throw(404);
     }
+
     return next();
   })
   .get('/me', (ctx) => {
@@ -35,11 +36,9 @@ router
   })
   .patch(
     '/me',
-    validate({
-      body: Joi.object({
-        name: Joi.string(),
-        timeZone: Joi.string(),
-      }),
+    validateBody({
+      name: Joi.string(),
+      timeZone: Joi.string(),
     }),
     async (ctx) => {
       const { authUser } = ctx.state;
@@ -63,13 +62,11 @@ router
   })
   .post(
     '/search',
-    validate({
-      body: Joi.object({
-        ...searchValidation(),
-        ...exportValidation(),
-        name: Joi.string(),
-        role: Joi.string(),
-      }),
+    validateBody({
+      ...searchValidation(),
+      ...exportValidation(),
+      name: Joi.string(),
+      role: Joi.string(),
     }),
     async (ctx) => {
       const { body } = ctx.request;
@@ -101,16 +98,16 @@ router
   .use(requirePermissions({ endpoint: 'users', permission: 'write', scope: 'global' }))
   .post(
     '/',
-    validate({
-      body: User.getCreateValidation({
+    validateBody(
+      User.getCreateValidation({
         password: passwordField.required(),
-      }),
-    }),
+      })
+    ),
     async (ctx) => {
       const { email } = ctx.request.body;
       const existingUser = await User.findOne({ email, deletedAt: { $exists: false } });
       if (existingUser) {
-        throw new BadRequestError('A user with that email already exists');
+        ctx.throw(400, 'A user with that email already exists');
       }
       const user = await User.create(ctx.request.body);
 
@@ -119,20 +116,14 @@ router
       };
     }
   )
-  .patch(
-    '/:userId',
-    validate({
-      body: User.getUpdateValidation(),
-    }),
-    async (ctx) => {
-      const { user } = ctx.state;
-      user.assign(ctx.request.body);
-      await user.save();
-      ctx.body = {
-        data: user,
-      };
-    }
-  )
+  .patch('/:userId', validateBody(User.getUpdateValidation()), async (ctx) => {
+    const { user } = ctx.state;
+    user.assign(ctx.request.body);
+    await user.save();
+    ctx.body = {
+      data: user,
+    };
+  })
   .delete('/:userId', async (ctx) => {
     const { user } = ctx.state;
     await user.delete();

@@ -54,8 +54,8 @@ This command will automatically populate MongoDB fixtures when and empty DB is f
 
 All configuration is done using environment variables. The default values in `.env` can be overwritten using environment variables.
 
-- `BIND_HOST` - Host to bind to, defaults to `"0.0.0.0"`
-- `BIND_PORT` - Port to bind to, defaults to `2300`
+- `SERVER_HOST` - Host to bind to, defaults to `"0.0.0.0"`
+- `SERVER_PORT` - Port to bind to, defaults to `2300`
 - `MONGO_URI` - MongoDB URI to connect to, defaults to `mongodb://localhost/bedrock_dev`
 - `JWT_SECRET` - JWT secret used for token signing and encryption, defaults to `[change me]`
 - `ADMIN_NAME` - Default dashboard admin user name `admin`

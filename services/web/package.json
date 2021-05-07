@@ -11,8 +11,7 @@
     "static": "node ./serve/static",
     "lint": "eslint .",
     "test": "jest",
-    "generate": "cd ../../generator && yarn install && yarn generate",
-    "prepare": "../../.githooks/init || true"
+    "generate": "cd ../../generator && yarn install && yarn generate"
   },
   "dependencies": {
     "@babel/core": "^7.13.14",
@@ -38,6 +37,7 @@
     "favicons": "^6.2.1",
     "favicons-webpack-plugin": "^5.0.2",
     "github-markdown-css": "^4.0.0",
+    "google-map-react": "^2.1.9",
     "html-loader": "^2.1.2",
     "html-webpack-plugin": "^5.3.1",
     "koa": "^2.11.0",

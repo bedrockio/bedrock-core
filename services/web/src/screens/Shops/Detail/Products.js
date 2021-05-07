@@ -32,7 +32,14 @@ export default class ShopProducts extends React.Component {
         <Menu {...this.props} />
         {shop ? (
           <SearchProvider onDataNeeded={this.onDataNeeded}>
-            {({ items: products, filters, setFilters, getSorted, setSort, reload }) => {
+            {({
+              items: products,
+              filters,
+              setFilters,
+              getSorted,
+              setSort,
+              reload,
+            }) => {
               return (
                 <React.Fragment>
                   <Layout horizontal center spread>
@@ -56,19 +63,29 @@ export default class ShopProducts extends React.Component {
                         <Table.Row>
                           {/* --- Generator: list-header-cells */}
                           <Table.HeaderCell width={2}>Image</Table.HeaderCell>
-                          <Table.HeaderCell width={3} sorted={getSorted('name')} onClick={() => setSort('name')}>
+                          <Table.HeaderCell
+                            width={3}
+                            sorted={getSorted('name')}
+                            onClick={() => setSort('name')}>
                             Name
                           </Table.HeaderCell>
-                          <Table.HeaderCell width={3}>Description</Table.HeaderCell>
+                          <Table.HeaderCell width={3}>
+                            Description
+                          </Table.HeaderCell>
                           {/* --- Generator: end */}
                           <Table.HeaderCell
                             width={3}
                             sorted={getSorted('createdAt')}
                             onClick={() => setSort('createdAt')}>
                             Created
-                            <HelpTip title="Created" text="This is the date and time the item was created." />
+                            <HelpTip
+                              title="Created"
+                              text="This is the date and time the item was created."
+                            />
                           </Table.HeaderCell>
-                          <Table.HeaderCell textAlign="center">Actions</Table.HeaderCell>
+                          <Table.HeaderCell textAlign="center">
+                            Actions
+                          </Table.HeaderCell>
                         </Table.Row>
                       </Table.Header>
                       <Table.Body>
@@ -78,19 +95,30 @@ export default class ShopProducts extends React.Component {
                               {/* --- Generator: list-body-cells */}
                               <Table.Cell>
                                 {product.images[0] && (
-                                  <Image style={{ width: '100%' }} src={urlForUpload(product.images[0], true)} />
+                                  <Image
+                                    style={{ width: '100%' }}
+                                    src={urlForUpload(product.images[0], true)}
+                                  />
                                 )}
                               </Table.Cell>
                               <Table.Cell>{product.name}</Table.Cell>
                               <Table.Cell>{product.description}</Table.Cell>
                               {/* --- Generator: end */}
-                              <Table.Cell>{formatDateTime(product.createdAt)}</Table.Cell>
+                              <Table.Cell>
+                                {formatDateTime(product.createdAt)}
+                              </Table.Cell>
                               <Table.Cell textAlign="center">
                                 <EditProduct
                                   shop={shop}
                                   product={product}
                                   onSave={reload}
-                                  trigger={<Button style={{ marginLeft: '20px' }} basic icon="edit" />}
+                                  trigger={
+                                    <Button
+                                      style={{ marginLeft: '20px' }}
+                                      basic
+                                      icon="edit"
+                                    />
+                                  }
                                 />
                                 <Confirm
                                   negative

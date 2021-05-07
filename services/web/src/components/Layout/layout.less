@@ -14,7 +14,6 @@
 
   &.horizontal,
   &.center:not(.vertical):not(.horizontal) {
-
     @media @mobile {
       &:not(.stackable) {
         max-width: 100%;
@@ -85,14 +84,12 @@
   }
 
   &.padded {
-
     // Vertical (stacking doesn't apply)
     &.vertical {
       .verticalPadding();
     }
 
     &:not(.vertical) {
-
       // Horizontal not stackable
       &:not(.stackable) {
         .horizontalPadding();
@@ -108,14 +105,13 @@
           }
         }
         @media @tablet {
-          .horizontalPadding(.5);
+          .horizontalPadding(0.5);
         }
         @media @mobile {
-          .verticalPadding(.8);
+          .verticalPadding(0.8);
         }
       }
     }
-
   }
 
   &.horizontal {
@@ -124,7 +120,6 @@
       margin-right: 0;
     }
   }
-
 }
 
 // Mixins
@@ -163,7 +158,6 @@
       .paddingBottom(@mult);
     }
   }
-
 }
 
 .paddingLeft(@mult: 1) {
@@ -201,4 +195,3 @@
     padding-bottom: @extraPadding * @mult;
   }
 }
-

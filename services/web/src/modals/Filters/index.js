@@ -10,7 +10,6 @@ import Dropdown from './Dropdown';
 import Checkbox from './Checkbox';
 
 export default class Filters extends React.Component {
-
   static Text = Text;
   static Date = Date;
   static Number = Number;
@@ -30,11 +29,11 @@ export default class Filters extends React.Component {
       const input = this.formRef.current.querySelector('input[name]');
       input?.focus();
     });
-  }
+  };
 
   onFilterChange = (evt, { name, value }) => {
     this.setFilter(name, value);
-  }
+  };
 
   onSubmit = () => {
     this.props.onSave(this.state);
@@ -85,9 +84,7 @@ export default class Filters extends React.Component {
         <Modal.Header>Filter</Modal.Header>
         <Modal.Content>
           <Ref innerRef={this.formRef}>
-            <Form
-              id="filters"
-              onSubmit={this.onSubmit}>
+            <Form id="filters" onSubmit={this.onSubmit}>
               {this.renderFilters()}
               {this.renderDateFilters()}
             </Form>

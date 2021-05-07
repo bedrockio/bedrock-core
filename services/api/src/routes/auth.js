@@ -1,10 +1,9 @@
 const Router = require('@koa/router');
 const Joi = require('joi');
-const validate = require('../utils/middleware/validate');
+const { validateBody } = require('../utils/middleware/validate');
 const { authenticate } = require('../utils/middleware/authenticate');
-const tokens = require('../utils/tokens');
+const { createAuthToken, createTemporaryToken, generateTokenId } = require('../utils/tokens');
 const { sendTemplatedMail } = require('../utils/mailer');
-const { BadRequestError } = require('../utils/errors');
 const { User, Invite } = require('../models');
 
 const router = new Router();
@@ -16,21 +15,21 @@ const passwordField = Joi.string()
 router
   .post(
     '/register',
-    validate({
-      body: Joi.object({
-        email: Joi.string().lowercase().email().required(),
-        name: Joi.string().required(),
-        password: passwordField.required(),
-      }),
+    validateBody({
+      email: Joi.string().lowercase().email().required(),
+      name: Joi.string().required(),
+      password: passwordField.required(),
     }),
     async (ctx) => {
       const { email, name } = ctx.request.body;
       const existingUser = await User.findOne({ email, deletedAt: { $exists: false } });
       if (existingUser) {
-        throw new BadRequestError('A user with that email already exists');
+        ctx.throw(400, 'A user with that email already exists');
       }
 
+      const authTokenId = generateTokenId();
       const user = await User.create({
+        authTokenId,
         ...ctx.request.body,
       });
 
@@ -41,16 +40,14 @@ router
         name,
       });
 
-      ctx.body = { data: { token: tokens.createUserToken(user) } };
+      ctx.body = { data: { token: createAuthToken(user.id, authTokenId) } };
     }
   )
   .post(
     '/login',
-    validate({
-      body: Joi.object({
-        email: Joi.string().email().required(),
-        password: Joi.string().required(),
-      }),
+    validateBody({
+      email: Joi.string().email().required(),
+      password: Joi.string().required(),
     }),
     async (ctx) => {
       const { email, password } = ctx.request.body;
@@ -61,27 +58,29 @@ router
           $inc: { loginAttempts: 1 },
         }
       );
-      if (user) {
-        try {
-          user.verifyLoginAttempts();
-          await user.verifyPassword(password);
-          await user.updateOne({ loginAttempts: 0 });
-          ctx.body = { data: { token: tokens.createUserToken(user) } };
-        } catch (err) {
-          ctx.throw(401, err.message);
-        }
-      } else {
+
+      if (!user) {
         ctx.throw(401, 'Incorrect password');
       }
+
+      if (!user.verifyLoginAttempts()) {
+        ctx.throw(401, 'Too many login attempts');
+      }
+
+      if (!(await user.verifyPassword(password))) {
+        ctx.throw(401, 'Incorrect password');
+      }
+
+      const authTokenId = generateTokenId();
+      await user.updateOne({ loginAttempts: 0, authTokenId });
+      ctx.body = { data: { token: createAuthToken(user.id, authTokenId) } };
     }
   )
   .post(
     '/accept-invite',
-    validate({
-      body: Joi.object({
-        name: Joi.string().required(),
-        password: passwordField.required(),
-      }),
+    validateBody({
+      name: Joi.string().required(),
+      password: passwordField.required(),
     }),
     authenticate({ type: 'invite' }),
     async (ctx) => {
@@ -92,10 +91,12 @@ router
       if (!invite) {
         return ctx.throw(500, 'Invite could not be found');
       }
+      const authTokenId = generateTokenId();
       const existingUser = await User.findOne({ email: invite.email });
 
       if (existingUser) {
-        ctx.body = { data: { token: tokens.createUserToken(existingUser) } };
+        await existingUser.updateOne({ authTokenId });
+        ctx.body = { data: { token: createAuthToken(existingUser.id, authTokenId) } };
         return;
       }
 
@@ -103,17 +104,16 @@ router
         name,
         email: invite.email,
         password,
+        authTokenId,
       });
 
-      ctx.body = { data: { token: tokens.createUserToken(user) } };
+      ctx.body = { data: { token: createAuthToken(user.id, authTokenId) } };
     }
   )
   .post(
     '/request-password',
-    validate({
-      body: Joi.object({
-        email: Joi.string().email().required(),
-      }),
+    validateBody({
+      email: Joi.string().email().required(),
     }),
     async (ctx) => {
       const { email } = ctx.request.body;
@@ -122,9 +122,9 @@ router
         ctx.throw(400, 'Unknown email address.');
       }
 
-      const tokenId = tokens.generateTokenId();
-      const token = tokens.createUserTemporaryToken({ userId: user.id, jti: tokenId }, 'password');
-      await user.updateOne({ pendingTokenId: tokenId });
+      const tokenId = generateTokenId();
+      const token = createTemporaryToken({ type: 'password', sub: user.id, jti: tokenId });
+      await user.updateOne({ tempTokenId: tokenId });
 
       await sendTemplatedMail({
         to: [user.name, email].join(' '),
@@ -139,25 +139,23 @@ router
   )
   .post(
     '/set-password',
-    validate({
-      body: Joi.object({
-        password: passwordField.required(),
-      }),
+    validateBody({
+      password: passwordField.required(),
     }),
     authenticate({ type: 'password' }),
     async (ctx) => {
       const { jwt } = ctx.state;
       const { password } = ctx.request.body;
-      const user = await User.findById(jwt.userId);
+      const user = await User.findById(jwt.sub);
       if (!user) {
         ctx.throw(400, 'User does not exist');
-      } else if (user.pendingTokenId !== jwt.jti) {
+      } else if (user.tempTokenId !== jwt.jti) {
         ctx.throw(400, 'Token is invalid');
       }
       user.password = password;
-      user.pendingTokenId = undefined;
+      user.tempTokenId = undefined;
       await user.save();
-      ctx.body = { data: { token: tokens.createUserToken(user) } };
+      ctx.body = { data: { token: createAuthToken(user.id) } };
     }
   );
 
