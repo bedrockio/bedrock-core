@@ -38,6 +38,7 @@ function stateForParams(params) {
 
 @screen
 export default class Docs extends React.Component {
+  static layout = 'Portal';
   contextRef = createRef();
 
   constructor(props) {
@@ -125,7 +126,7 @@ export default class Docs extends React.Component {
         <Grid>
           <Grid.Row>
             <Grid.Column width={3}>
-              <Sticky offset={100} context={this.contextRef}>
+              <Sticky offset={131} context={this.contextRef}>
                 {this.renderMenu()}
               </Sticky>
             </Grid.Column>

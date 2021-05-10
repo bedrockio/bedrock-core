@@ -12,7 +12,7 @@ import logo from 'assets/bedrock.svg';
 import { SidebarPusher } from 'semantic-ui-react';
 
 @withSession
-export default class DefaultLayout extends React.Component {
+export default class DashboardLayout extends React.Component {
   render() {
     return (
       <Sidebar>
