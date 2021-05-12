@@ -2,7 +2,6 @@ import React from 'react';
 import { withSession } from 'stores';
 import { NavLink } from 'react-router-dom';
 import { Menu, Icon, Container } from 'semantic';
-import Header from 'components/Header';
 import Footer from 'components/Footer';
 import { Layout } from 'components';
 import Protected from 'components/Protected';
@@ -29,39 +28,42 @@ export default class DashboardLayout extends React.Component {
                 <Menu.Item as={NavLink} to="/shops">
                   <Icon name="store"/>Shops
                 </Menu.Item>
-
                 <Protected endpoint="events">
                   <Menu.Item as={NavLink} to="/users">
                     <Icon name="users"/>Users
                   </Menu.Item>
                 </Protected>
-
                 <Protected endpoint="events">
                   <Menu.Item as={NavLink} to="/invites">
                     <Icon name="envelope"/>Invites
                   </Menu.Item>
                 </Protected>
               </Menu>
-
               <Layout style={{ flex:'0 0 auto', paddingTop:'0.5em', borderTop:'1px solid #ccc' }}>
-              <Menu secondary vertical>
-                <Menu.Item as={NavLink} to="/docs/getting-started">
-                  <Icon name="terminal"/>Docs
-                </Menu.Item>
-                <Menu.Item as={NavLink} to="/settings">
-                  <Icon name="cog"/>Settings
-                </Menu.Item>
-                <Menu.Item as={NavLink} to="/logout">
-                  <Icon name="sign-out-alt"/>Log Out
-                </Menu.Item>
-              </Menu>
+                <Menu secondary vertical>
+                  <Menu.Item as={NavLink} to="/docs/getting-started">
+                    <Icon name="terminal"/>Docs
+                  </Menu.Item>
+                  <Menu.Item as={NavLink} to="/settings">
+                    <Icon name="cog"/>Settings
+                  </Menu.Item>
+                  <Menu.Item as={NavLink} to="/logout">
+                    <Icon name="sign-out-alt"/>Log Out
+                  </Menu.Item>
+                </Menu>
               </Layout>
             </Layout>
           </Layout>
         </Sidebar.Menu>
         <Sidebar.Content>
           <Container>
-            <Header />
+            <Layout horizontal right spread>
+              <Layout.Group>
+                <Sidebar.Trigger style={{ marginBottom:'20px' }}>
+                  <Icon name="bars" />
+                </Sidebar.Trigger>
+              </Layout.Group>
+            </Layout>
             <main>{this.props.children}</main>
             <Footer />
           </Container>
