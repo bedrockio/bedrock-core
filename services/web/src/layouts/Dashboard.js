@@ -1,13 +1,14 @@
 import React from 'react';
 import { withSession } from 'stores';
 import { NavLink } from 'react-router-dom';
-import { Menu, Icon, Container } from 'semantic';
+import { Menu, Icon, Container, Grid } from 'semantic';
 import Footer from 'components/Footer';
 import { Layout } from 'components';
 import Protected from 'components/Protected';
 import Sidebar from './Sidebar';
 
 import logo from 'assets/bedrock.svg';
+import favicon from 'assets/favicon.svg';
 import { SidebarPusher } from 'semantic-ui-react';
 
 @withSession
@@ -56,14 +57,21 @@ export default class DashboardLayout extends React.Component {
           </Layout>
         </Sidebar.Menu>
         <Sidebar.Content>
-          <Container>
-            <Layout horizontal right spread>
+          <div className="mheader">
+            <Layout horizontal spread center>
+              <Layout.Group>
+                <NavLink className="mlogo" to="/">
+                  <img style={{ height: '15px', marginTop:'2px' }} src={favicon} />
+                </NavLink>
+              </Layout.Group>
               <Layout.Group>
                 <Sidebar.Trigger style={{ marginBottom:'20px' }}>
-                  <Icon name="bars" />
+                  <Icon name="bars" style={{ verticalAlign:'top', marginTop:'2px' }} />
                 </Sidebar.Trigger>
               </Layout.Group>
             </Layout>
+          </div>
+          <Container>
             <main>{this.props.children}</main>
             <Footer />
           </Container>

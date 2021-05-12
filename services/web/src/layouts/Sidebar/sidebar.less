@@ -69,6 +69,18 @@
       margin-left: @menuWidth;
       padding: 20px 15px 0 15px;
     }
+
+    .mheader {
+      background: #f4f0eb;
+      padding: 7px 15px 5px 15px;
+      border-bottom: 1px solid rgba(0,0,0,.05);
+      margin: -15px 0 10px 0;
+      display: none;
+
+      @media (max-width: 767px) {
+        display: flex;
+      }
+    }
   }
 
   &-trigger {
