@@ -31,9 +31,11 @@ export default class Heading extends PureComponent {
     return (
       <React.Fragment>
         <a href={`#${slug}`}>
-          <Icon name="linkify" />
+          <Icon name="link" />
         </a>
-        {children}
+        <span>
+          {children}
+        </span>
       </React.Fragment>
     );
   }

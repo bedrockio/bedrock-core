@@ -1,14 +1,19 @@
 .markdown-body .linked-heading {
   // Needed while using a fixed heading.
-  padding-top: 50px + 24px;
-  margin-top: -50px;
+  padding-top: 100px + 24px;
+  margin-top: -100px;
 
   a {
     color: inherit;
     font-size: 15px;
     margin-left: -1.4em;
+    display: inline-block;
     vertical-align: middle;
     opacity: 0;
+  }
+
+  a + span {
+    vertical-align: middle;
   }
 
   &:hover a {
