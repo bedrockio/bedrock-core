@@ -1,5 +1,5 @@
 import React, { createRef } from 'react';
-import { Header, Button, Message, Segment, Dropdown, Table, Label, Icon, Container, Grid, Divider, Menu, Sticky, Ref } from 'semantic';
+import { Header, Button, Message, Segment, Dropdown, Table, Label, Icon, Container, Grid, Divider, Menu, Sticky, Ref, Form } from 'semantic';
 import { screen } from 'helpers';
 import Spacer from '../../components/Layout/Spacer';
 import { Layout, Breadcrumbs } from 'components';
@@ -25,6 +25,7 @@ export default class ComponentsScreen extends React.Component {
                 <Menu fluid pointing secondary vertical>
                   <a className="menu item" href="#buttons">Buttons</a>
                   <a className="menu item" href="#message">Message</a>
+                  <a className="menu item" href="#form">Form</a>
                   <a className="menu item" href="#dropdown">Dropdown</a>
                   <a className="menu item" href="#table">Table</a>
                   <a className="menu item" href="#icon">Icon</a>
@@ -88,6 +89,40 @@ export default class ComponentsScreen extends React.Component {
                       <Header size="small">Error Message</Header>
                       <p>Message Content</p>
                     </Message>
+                  </Segment>
+
+                  <Segment id="form">
+                    <Header size="large">Form</Header>
+                    <Spacer size="small" />
+                    
+                    <Form>
+                      
+                      <Header size="medium">Input Field</Header>
+                      <Form.Field>
+                        <label>Label</label>
+                        <input placeholder='Placeholder' width="200" />
+                      </Form.Field>
+                      
+                      <Header size="medium">Checkbox</Header>
+                      <Form.Field>
+                        <Form.Checkbox label='Checkbox 1' />
+                        <Form.Checkbox label='Checkbox 2' />
+                      </Form.Field>
+                      
+                      <Header size="medium">Radio</Header>
+                      <Form.Field>
+                        <Form.Radio label="Radio 1" id="1" name="radio" value="1" checked />
+                        <Form.Radio label="Radio 2" id="2" name="radio" value="2" />
+                      </Form.Field>
+                      
+                      <Header size="medium">Text Area</Header>
+                      <Form.Field>
+                        <Form.TextArea label='Label' placeholder='Placeholder text...' />
+                      </Form.Field>
+
+                    </Form>
+
+
                   </Segment>
 
                   <Segment id="dropdown">
