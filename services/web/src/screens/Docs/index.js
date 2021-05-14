@@ -116,7 +116,7 @@ export default class Docs extends React.Component {
     return (
       <React.Fragment>
           <Breadcrumb size="mini">
-            <Breadcrumb.Section link as={Link} to="/docs">
+            <Breadcrumb.Section link as={Link} to="/docs/api">
               API Docs
             </Breadcrumb.Section>
             <Breadcrumb.Divider icon="chevron-right" />
@@ -139,7 +139,7 @@ export default class Docs extends React.Component {
                         <Route
                           key={page.id}
                           exact
-                          path={`/docs/${page.id}`}
+                          path={`/docs/api/${page.id}`}
                           component={(props) => (
                             <StandardPage
                               {...props}
@@ -154,7 +154,7 @@ export default class Docs extends React.Component {
                       <Route
                         key="index"
                         exact
-                        path={`/docs`}
+                        path={`/docs/api`}
                         component={(props) => (
                           <StandardPage
                             {...props}
@@ -187,7 +187,7 @@ export default class Docs extends React.Component {
               exact
               name={name}
               active={pageId === id}
-              to={`/docs/${id}`}
+              to={`/docs/api/${id}`}
               as={NavLink}
             />
           );
