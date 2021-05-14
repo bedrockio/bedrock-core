@@ -42,7 +42,7 @@ export default class DashboardLayout extends React.Component {
               </Menu>
               <Layout style={{ flex:'0 0 auto', paddingTop:'0.5em', borderTop:'1px solid #ccc' }}>
                 <Menu secondary vertical>
-                  <Menu.Item as={NavLink} to="/docs/getting-started">
+                  <Menu.Item as={NavLink} to="/docs/api/getting-started">
                     <Icon name="terminal"/>Docs
                   </Menu.Item>
                   <Menu.Item as={NavLink} to="/settings">
