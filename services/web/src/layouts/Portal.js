@@ -15,7 +15,7 @@ export default class PortalLayout extends React.Component {
             background: '#f4f0eb',
             position: 'fixed',
             width: '100%',
-            zIndex: '1',
+            zIndex: '2',
           }}>
           <Layout
             horizontal
@@ -29,9 +29,9 @@ export default class PortalLayout extends React.Component {
               <NavLink
                 to="/signup"
                 style={{ marginRight: '20px', fontWeight: 'bold' }}>
-                Create Account
+                Signup
               </NavLink>
-              <Button primary as={NavLink} to="/login">
+              <Button primary compact as={NavLink} to="/login">
                 Login
               </Button>
             </div>

@@ -29,9 +29,9 @@ export default class ComponentsScreen extends React.Component {
           <Divider hidden />
         <Grid>
             <Grid.Row>
-              <Grid.Column width={3}>
+              <Grid.Column width={3} only="tablet computer">
                 <Sticky offset={131} context={this.contextRef}>
-                  <Menu fluid pointing secondary vertical>
+                  <Menu fluid pointing secondary vertical >
                     <JumpLink className="menu item" to="buttons">Buttons</JumpLink>
                     <JumpLink className="menu item" to="message">Message</JumpLink>
                     <JumpLink className="menu item" to="form">Form</JumpLink>
@@ -48,9 +48,28 @@ export default class ComponentsScreen extends React.Component {
                   </Menu>
                 </Sticky>
               </Grid.Column>
-              <Grid.Column width={13}>
+              <Grid.Column width={16} only="mobile" style={{ zIndex:'1', marginBottom: '20px' }}>
+                <Dropdown text="Components Menu" fluid>
+                    <Dropdown.Menu>
+                        <JumpLink className="item" to="buttons">Buttons</JumpLink>
+                        <JumpLink className="item" to="message">Message</JumpLink>
+                        <JumpLink className="item" to="form">Form</JumpLink>
+                        <JumpLink className="item" to="dropdown">Dropdown</JumpLink>
+                        <JumpLink className="item" to="table">Table</JumpLink>
+                        <JumpLink className="item" to="icon">Icon</JumpLink>
+                        <JumpLink className="item" to="label">Label</JumpLink>
+                        <JumpLink className="item" to="segment">Segment</JumpLink>
+                        <JumpLink className="item" to="container-grid">Container & Grid</JumpLink>
+                        <JumpLink className="item" to="header">Header</JumpLink>
+                        <JumpLink className="item" to="menu">Menu</JumpLink>
+                        <JumpLink className="item" to="divider">Divider</JumpLink>
+                        <JumpLink className="item" to="breadcrumbs">Breadcrumbs</JumpLink>  
+                    </Dropdown.Menu>
+                  </Dropdown>
+              </Grid.Column>
+              <Grid.Column mobile={16} tablet={13} computer={13}>
                 <Ref innerRef={this.contextRef}>
-                  <div>
+                  <React.Fragment>
                     <Header size="huge">UI Components
 
                     </Header>
@@ -378,7 +397,7 @@ export default class ComponentsScreen extends React.Component {
 
                         <Header size="small">Primary</Header>
 
-                        <Menu primary>
+                        <Menu>
                           <Menu.Item active>
                             Tab 1
                           </Menu.Item>
@@ -420,7 +439,7 @@ export default class ComponentsScreen extends React.Component {
 
                         <Header size="small">Primary Vertical</Header>
 
-                        <Menu primary vertical>
+                        <Menu vertical>
                           <Menu.Item active>
                             Tab 1
                           </Menu.Item>
@@ -460,6 +479,21 @@ export default class ComponentsScreen extends React.Component {
                           </Menu.Item>
                         </Menu>
 
+                        <Header size="small">Dashboard Menu Optional Header Variation</Header>
+
+                        <Menu secondary vertical>
+                          {/* Style is only used here for visual purpose. Once Menu.Header is used inside Dashboards Sidebar component it will render with applied style automatically */}
+                          <Menu.Header style={{ padding:'0.78571429em 0.46em', textTransform:'uppercase', fontSize:'11px', color:'#ABADB3', fontWeight:'bold' }}>
+                            Item Header
+                          </Menu.Header>
+                          <Menu.Item active>
+                            Item 1
+                          </Menu.Item>
+                          <Menu.Item>
+                            Item 2
+                          </Menu.Item>
+                        </Menu>
+
                       </Segment>
                     </JumpLink.Target>
 
@@ -493,7 +527,7 @@ export default class ComponentsScreen extends React.Component {
                         <Breadcrumbs active="One Active" />
                       </Segment>
                     </JumpLink.Target>
-                  </div>
+                  </React.Fragment>
                 </Ref>
               </Grid.Column>
             </Grid.Row>

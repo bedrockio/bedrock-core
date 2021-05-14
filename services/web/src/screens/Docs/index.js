@@ -10,6 +10,7 @@ import {
   Sticky,
   Ref,
   Segment,
+  Dropdown
 } from 'semantic';
 import { Switch, Route, Link, NavLink } from 'react-router-dom';
 import StandardPage from './StandardPage';
@@ -124,49 +125,43 @@ export default class Docs extends React.Component {
           </Breadcrumb>
         <Divider hidden />
         <Grid>
-          <Grid.Row>
-            <Grid.Column width={3}>
-              <Sticky offset={131} context={this.contextRef}>
-                {this.renderMenu()}
-              </Sticky>
-            </Grid.Column>
-            <Grid.Column width={13}>
+          <Grid.Row>  
+            {this.renderMenu()}
+            <Grid.Column mobile={16} tablet={13} computer={13}>
               <Ref innerRef={this.contextRef}>
-                <Segment basic>
-                  <Switch>
-                    {PAGES.map((page) => {
-                      return (
-                        <Route
-                          key={page.id}
-                          exact
-                          path={`/docs/api/${page.id}`}
-                          component={(props) => (
-                            <StandardPage
-                              {...props}
-                              me={me}
-                              openApi={openApi}
-                              page={page}
-                            />
-                          )}
-                        />
-                      );
-                    }).concat([
+                <Switch>
+                  {PAGES.map((page) => {
+                    return (
                       <Route
-                        key="index"
+                        key={page.id}
                         exact
-                        path={`/docs/api`}
+                        path={`/docs/api/${page.id}`}
                         component={(props) => (
                           <StandardPage
                             {...props}
                             me={me}
                             openApi={openApi}
-                            page={PAGES[0]}
+                            page={page}
                           />
                         )}
-                      />,
-                    ])}
-                  </Switch>
-                </Segment>
+                      />
+                    );
+                  }).concat([
+                    <Route
+                      key="index"
+                      exact
+                      path={`/docs/api`}
+                      component={(props) => (
+                        <StandardPage
+                          {...props}
+                          me={me}
+                          openApi={openApi}
+                          page={PAGES[0]}
+                        />
+                      )}
+                    />,
+                  ])}
+                </Switch>
               </Ref>
             </Grid.Column>
           </Grid.Row>
@@ -179,20 +174,46 @@ export default class Docs extends React.Component {
   renderMenu() {
     const { pageId } = this.state;
     return (
-      <Menu fluid pointing secondary vertical>
-        {PAGES.map(({ id, name }) => {
-          return (
-            <Menu.Item
-              key={id}
-              exact
-              name={name}
-              active={pageId === id}
-              to={`/docs/api/${id}`}
-              as={NavLink}
-            />
-          );
-        })}
-      </Menu>
+      <React.Fragment>
+        <Grid.Column width={3} only="tablet computer">
+          <Sticky offset={131} context={this.contextRef}>
+            <Menu fluid pointing secondary vertical>
+              {PAGES.map(({ id, name }) => {
+                return (
+                  <Menu.Item
+                    key={id}
+                    exact
+                    name={name}
+                    active={pageId === id}
+                    to={`/docs/api/${id}`}
+                    as={NavLink}
+                  />
+                );
+              })}
+            </Menu>
+          </Sticky>
+        </Grid.Column>
+        <Grid.Column width={16} only="mobile" style={{ zIndex:'1', marginBottom: '20px' }}>
+          <Dropdown text="API Docs Menu" fluid>
+            <Dropdown.Menu>
+              {PAGES.map(({ id, name }) => {
+                    return (
+                      <Dropdown.Item
+                        key={id}
+                        exact
+                        name={name}
+                        active={pageId === id}
+                        to={`/docs/api/${id}`}
+                        as={NavLink}
+                      >
+                      {name}
+                      </Dropdown.Item>
+                    );
+                  })}
+              </Dropdown.Menu>
+            </Dropdown>
+          </Grid.Column>
+      </React.Fragment>
     );
   }
 }
