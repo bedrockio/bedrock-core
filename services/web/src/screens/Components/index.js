@@ -447,7 +447,7 @@ export default class ComponentsScreen extends React.Component {
 
                     <Header size="small">Primary</Header>
 
-                    <Menu primary>
+                    <Menu>
                       <Menu.Item active>Tab 1</Menu.Item>
                       <Menu.Item>Tab 2</Menu.Item>
                       <Menu.Item>Tab 3</Menu.Item>
@@ -471,7 +471,7 @@ export default class ComponentsScreen extends React.Component {
 
                     <Header size="small">Primary Vertical</Header>
 
-                    <Menu primary vertical>
+                    <Menu vertical>
                       <Menu.Item active>Tab 1</Menu.Item>
                       <Menu.Item>Tab 2</Menu.Item>
                       <Menu.Item>Tab 3</Menu.Item>
