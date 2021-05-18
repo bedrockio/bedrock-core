@@ -65,7 +65,7 @@ async function sendTemplatedMail({ template, layout = 'layout.html', subject, to
 
   const options = {
     ...args,
-    defaultOptions,
+    ...defaultOptions,
   };
 
   const content = Mustache.render(templateStr, options);
