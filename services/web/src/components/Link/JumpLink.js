@@ -35,7 +35,7 @@ class JumpLink extends React.Component {
   static Target = JumpTarget;
 
   render() {
-    const { to, className, ...rest } = this.props;
+    const { to, className = '', ...rest } = this.props;
     const classes = className.split(' ');
     classes.push('jump-link');
     return <a href={`#${to}`} className={classes.join(' ')} {...rest} />;
