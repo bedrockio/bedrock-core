@@ -171,6 +171,6 @@ ReferenceField.propTypes = {
 };
 
 ReferenceField.defaultProps = {
-  icon: 'check',
-  color: 'green',
+  icon: undefined,
+  color: undefined,
 };
