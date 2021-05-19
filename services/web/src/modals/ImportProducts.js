@@ -262,7 +262,7 @@ export default class ImportProducts extends React.Component {
               disabled={loading}
               loading={loading}
               onClick={() => {
-                this.props.onClose();
+                this.props.close();
               }}
             />
           )}

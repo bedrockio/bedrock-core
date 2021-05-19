@@ -51,7 +51,7 @@ export default function modal(Component) {
           trigger={trigger}
           centered={centered}
           open={open}>
-          <Component {...rest} onClose={this.onClose} />
+          <Component {...rest} close={this.onClose} />
         </Modal>
       );
     }
