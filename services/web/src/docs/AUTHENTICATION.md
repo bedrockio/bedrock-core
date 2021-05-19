@@ -14,6 +14,12 @@ This exchanges a user's credentials (email and password) for a JWT token. This t
 
 callSummary({method: 'POST', path: '/1/auth/login'})
 
+## Logout
+
+This deauthenticates all tokens for the given user
+
+callSummary({method: 'POST', path: '/1/auth/logout'})
+
 ## Request Password
 
 This call can be used for the user to reset their password. A temporary token and link will be mailed to the user's email address if found in the system.
