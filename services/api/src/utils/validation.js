@@ -21,10 +21,7 @@ function getJoiSchema(attributes, options = {}) {
 function getMongooseValidator(schemaName, field) {
   const schema = getSchemaForField(field);
   const validator = (val) => {
-    const { error } = schema.validate(val);
-    if (error) {
-      throw error;
-    }
+    Joi.assert(val, schema);
     return true;
   };
   // A named shortcut back to the Joi schema to retrieve it
@@ -93,6 +90,8 @@ function getSchemaForField(field, options = {}) {
 
   if (field.required && !options.skipRequired) {
     schema = schema.required();
+  } else if (field.writeScopes) {
+    schema = schema.custom(validateScopes(field.writeScopes));
   } else {
     // TODO: for now we allow both empty strings and null
     // as a potential signal for "set but non-existent".
@@ -114,6 +113,23 @@ function getSchemaForField(field, options = {}) {
     schema = schema.max(field.max || field.maxLength);
   }
   return schema;
+}
+
+function validateScopes(scopes) {
+  return (val, { prefs }) => {
+    let allowed = false;
+    if (scopes === 'all') {
+      allowed = true;
+    } else if (Array.isArray(scopes)) {
+      allowed = scopes.some((scope) => {
+        return prefs.scopes?.includes(scope);
+      });
+    }
+    if (!allowed) {
+      throw new Error(`Validation failed for scopes ${scopes}.`);
+    }
+    return val;
+  };
 }
 
 function getSchemaForType(type) {

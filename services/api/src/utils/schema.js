@@ -57,18 +57,12 @@ function createSchema(attributes = {}, options = {}) {
 
   schema.static('getCreateValidation', function getCreateValidation(appendSchema) {
     return getJoiSchemaFromMongoose(schema, {
-      disallowField: (key) => {
-        return isDisallowedField(this.schema.obj[key]);
-      },
       appendSchema,
     });
   });
 
   schema.static('getUpdateValidation', function getUpdateValidation(appendSchema) {
     return getJoiSchemaFromMongoose(schema, {
-      disallowField: (key) => {
-        return isDisallowedField(this.schema.obj[key]);
-      },
       appendSchema,
       skipRequired: true,
     });
