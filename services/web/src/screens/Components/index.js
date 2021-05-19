@@ -82,11 +82,11 @@ export default class ComponentsScreen extends React.Component {
                   <JumpLink className="menu item" to="menu">
                     Menu
                   </JumpLink>
-                  <JumpLink className="menu item" to="divider">
-                    Divider
-                  </JumpLink>
                   <JumpLink className="menu item" to="breadcrumbs">
                     Breadcrumbs
+                  </JumpLink>
+                  <JumpLink className="menu item" to="divider">
+                    Divider
                   </JumpLink>
                 </Menu>
               </Sticky>
@@ -105,8 +105,8 @@ export default class ComponentsScreen extends React.Component {
                       <JumpLink className="item" to="container-grid">Container & Grid</JumpLink>
                       <JumpLink className="item" to="header">Header</JumpLink>
                       <JumpLink className="item" to="menu">Menu</JumpLink>
-                      <JumpLink className="item" to="divider">Divider</JumpLink>
                       <JumpLink className="item" to="breadcrumbs">Breadcrumbs</JumpLink>  
+                      <JumpLink className="item" to="divider">Divider</JumpLink>
                     </Dropdown.Menu>
                   </Dropdown>
               </Grid.Column>
@@ -135,6 +135,8 @@ export default class ComponentsScreen extends React.Component {
                     <Button icon="check" content="Complete Task" />
                     <Button icon="check" basic />
                   </JumpLink.Target>
+
+                  <div style={{ margin:'50px 0 20px 0', borderBottom:'1px solid #ccc' }} />
 
                   <JumpLink.Target id="message">
                     <Header size="large">Message</Header>
@@ -168,6 +170,8 @@ export default class ComponentsScreen extends React.Component {
                       <p>Message Content</p>
                     </Message>
                   </JumpLink.Target>
+
+                  <div style={{ margin:'50px 0 20px 0', borderBottom:'1px solid #ccc' }} />
 
                   <JumpLink.Target id="form">
                     <Header size="large">Form</Header>
@@ -213,6 +217,8 @@ export default class ComponentsScreen extends React.Component {
                     </Form>
                   </JumpLink.Target>
 
+                  <div style={{ margin:'50px 0 20px 0', borderBottom:'1px solid #ccc' }} />
+
                   <JumpLink.Target id="dropdown">
                     <Header size="large">Dropdown</Header>
                     <Spacer size="small" />
@@ -248,6 +254,8 @@ export default class ComponentsScreen extends React.Component {
                       />
                     </Layout>
                   </JumpLink.Target>
+
+                  <div style={{ margin:'50px 0 20px 0', borderBottom:'1px solid #ccc' }} />
 
                   <JumpLink.Target id="table">
                     <Header size="large">Table</Header>
@@ -290,6 +298,8 @@ export default class ComponentsScreen extends React.Component {
                     </Table>
                   </JumpLink.Target>
 
+                  <div style={{ margin:'50px 0 20px 0', borderBottom:'1px solid #ccc' }} />
+
                   <JumpLink.Target id="icon">
                     <Header size="large">Icon</Header>
                     <Spacer size="small" />
@@ -304,6 +314,8 @@ export default class ComponentsScreen extends React.Component {
                     <Icon name="user" circular inverted color="green" />
                     <Icon name="user" bordered inverted />
                   </JumpLink.Target>
+
+                  <div style={{ margin:'50px 0 20px 0', borderBottom:'1px solid #ccc' }} />
 
                   <JumpLink.Target id="label">
                     <Header size="large">Label</Header>
@@ -327,6 +339,8 @@ export default class ComponentsScreen extends React.Component {
                     <Label color="blue">Colored label</Label>
                   </JumpLink.Target>
 
+                  <div style={{ margin:'50px 0 20px 0', borderBottom:'1px solid #ccc' }} />
+
                   <JumpLink.Target id="segment">
                     <Header size="large">Segment</Header>
                     <Spacer size="small" />
@@ -339,6 +353,8 @@ export default class ComponentsScreen extends React.Component {
 
                     <Segment raised>Raised Segment</Segment>
                   </JumpLink.Target>
+
+                  <div style={{ margin:'50px 0 20px 0', borderBottom:'1px solid #ccc' }} />
 
                   <JumpLink.Target id="container-grid">
                     <Header size="large">Container & Grid</Header>
@@ -405,6 +421,8 @@ export default class ComponentsScreen extends React.Component {
                     </Grid>
                   </JumpLink.Target>
 
+                  <div style={{ margin:'50px 0 20px 0', borderBottom:'1px solid #ccc' }} />
+
                   <JumpLink.Target id="header">
                     <Header size="large">Header</Header>
                     <Spacer size="small" />
@@ -438,6 +456,8 @@ export default class ComponentsScreen extends React.Component {
 
                     <Header size="huge">Huge Header</Header>
                   </JumpLink.Target>
+
+                  <div style={{ margin:'50px 0 20px 0', borderBottom:'1px solid #ccc' }} />
 
                   <JumpLink.Target id="menu">
                     <Header size="large">Menu</Header>
@@ -494,6 +514,21 @@ export default class ComponentsScreen extends React.Component {
                     </Menu>
                   </JumpLink.Target>
 
+                  <div style={{ margin:'50px 0 20px 0', borderBottom:'1px solid #ccc' }} />
+
+                  <JumpLink.Target id="breadcrumbs">
+                    <Header size="large">Breadcrumbs</Header>
+                    <Spacer size="small" />
+
+                    <Header size="medium">Standard Breadcrumbs</Header>
+
+                    <Breadcrumbs link="One" active="Two Active" />
+
+                    <Breadcrumbs active="One Active" />
+                  </JumpLink.Target>
+
+                  <div style={{ margin:'50px 0 20px 0', borderBottom:'1px solid #ccc' }} />
+                  
                   <JumpLink.Target id="divider">
                     <Header size="large">Divider</Header>
                     <Spacer size="small" />
@@ -505,17 +540,6 @@ export default class ComponentsScreen extends React.Component {
                     <Header size="medium">Divider with Text</Header>
 
                     <Divider horizontal>OR</Divider>
-                  </JumpLink.Target>
-                  
-                  <JumpLink.Target id="breadcrumbs">
-                    <Header size="large">Breadcrumbs</Header>
-                    <Spacer size="small" />
-
-                    <Header size="medium">Standard Breadcrumbs</Header>
-
-                    <Breadcrumbs link="One" active="Two Active" />
-
-                    <Breadcrumbs active="One Active" />
                   </JumpLink.Target>
                 </div>
               </Ref>
