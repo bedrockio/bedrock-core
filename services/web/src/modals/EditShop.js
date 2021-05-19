@@ -2,6 +2,7 @@ import React from 'react';
 import { Form, Modal, Message, Button } from 'semantic';
 import { request } from 'utils/api';
 import AutoFocus from 'components/AutoFocus';
+import { modal } from 'helpers';
 
 // --- Generator: imports
 import UploadsField from 'components/form-fields/Uploads';
@@ -9,24 +10,15 @@ import CategoriesField from 'components/form-fields/Categories';
 import AddressField from 'components/form-fields/Address';
 // --- Generator: end
 
+@modal
 export default class EditShop extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: false,
       error: null,
       loading: false,
       shop: props.shop || {},
     };
-  }
-
-  componentDidUpdate(lastProps) {
-    const { shop } = this.props;
-    if (shop && shop !== lastProps.shop) {
-      this.setState({
-        shop,
-      });
-    }
   }
 
   isUpdate() {
@@ -51,12 +43,12 @@ export default class EditShop extends React.Component {
   };
 
   onSubmit = async () => {
+    this.setState({
+      error: null,
+      loading: true,
+    });
+    const { shop } = this.state;
     try {
-      this.setState({
-        error: null,
-        loading: true,
-      });
-      const { shop } = this.state;
       if (this.isUpdate()) {
         await request({
           method: 'PATCH',
@@ -69,15 +61,9 @@ export default class EditShop extends React.Component {
           path: '/1/shops',
           body: shop,
         });
-        this.setState({
-          shop: {},
-        });
       }
-      this.setState({
-        open: false,
-        loading: false,
-      });
       this.props.onSave();
+      this.props.close();
     } catch (error) {
       this.setState({
         error,
@@ -87,16 +73,9 @@ export default class EditShop extends React.Component {
   };
 
   render() {
-    const { trigger } = this.props;
-    const { shop, open, loading, error } = this.state;
+    const { shop, loading, error } = this.state;
     return (
-      <Modal
-        closeIcon
-        open={open}
-        trigger={trigger}
-        closeOnDimmerClick={false}
-        onOpen={() => this.setState({ open: true })}
-        onClose={() => this.setState({ open: false })}>
+      <>
         <Modal.Header>
           {this.isUpdate() ? `Edit "${shop.name}"` : 'New Shop'}
         </Modal.Header>
@@ -155,7 +134,7 @@ export default class EditShop extends React.Component {
             content={this.isUpdate() ? 'Update' : 'Create'}
           />
         </Modal.Actions>
-      </Modal>
+      </>
     );
   }
 }

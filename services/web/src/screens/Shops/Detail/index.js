@@ -21,6 +21,10 @@ export default class ShopDetail extends React.Component {
     };
   }
 
+  onSave = () => {
+    this.fetchShop();
+  };
+
   componentDidMount() {
     this.fetchShop();
   }
@@ -31,10 +35,6 @@ export default class ShopDetail extends React.Component {
       this.fetchShop();
     }
   }
-
-  onSave = () => {
-    this.fetchShop();
-  };
 
   async fetchShop() {
     const { id } = this.props.match.params;

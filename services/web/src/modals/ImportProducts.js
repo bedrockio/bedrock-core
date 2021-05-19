@@ -1,6 +1,7 @@
 import React from 'react';
 import Dropzone from 'react-dropzone';
 import { request } from 'utils/api';
+import { modal } from 'helpers';
 
 import { Modal, Icon, Progress, Table, Button, Message } from 'semantic';
 import { processFile } from 'utils/csv';
@@ -57,9 +58,9 @@ const defaultState = {
   progressPercent: 0,
 };
 
+@modal
 export default class ImportProducts extends React.Component {
   state = {
-    open: false,
     ...defaultState,
   };
 
@@ -223,23 +224,9 @@ export default class ImportProducts extends React.Component {
   }
 
   render() {
-    const { trigger } = this.props;
-    const { open, step, loading } = this.state;
+    const { step, loading } = this.state;
     return (
-      <Modal
-        closeIcon
-        closeOnDimmerClick={false}
-        trigger={trigger}
-        onClose={() => {
-          this.setState({
-            open: false,
-            touched: false,
-            ...defaultState,
-          });
-          this.props.onClose();
-        }}
-        onOpen={() => this.setState({ open: true })}
-        open={open}>
+      <>
         <Modal.Header>Import Products</Modal.Header>
         <Modal.Content>
           {step === 1 && this.renderUploadForm()}
@@ -275,17 +262,12 @@ export default class ImportProducts extends React.Component {
               disabled={loading}
               loading={loading}
               onClick={() => {
-                this.setState({
-                  open: false,
-                  touched: false,
-                  ...defaultState,
-                });
-                this.props.onClose();
+                this.props.close();
               }}
             />
           )}
         </Modal.Actions>
-      </Modal>
+      </>
     );
   }
 }
