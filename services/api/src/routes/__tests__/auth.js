@@ -139,8 +139,7 @@ describe('/1/auth', () => {
       const response = await request('POST', '/1/auth/logout', {}, { user });
       expect(response.status).toBe(204);
       const updatedUser = await User.findById(user.id);
-      expect(updatedUser.authTokenId).toBeDefined();
-      expect(updatedUser.authTokenId).not.toBe(user.authTokenId);
+      expect(updatedUser.authTokenId).not.toBeDefined();
     });
   });
 
