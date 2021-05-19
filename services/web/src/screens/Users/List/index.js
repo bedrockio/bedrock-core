@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Table, Divider, Button, Message } from 'semantic';
+import { Table, Divider, Button, Message, Label } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import { screen } from 'helpers';
 import { Confirm, HelpTip, Breadcrumbs, SearchProvider } from 'components';
+import { formatRoles } from 'utils/permissions';
 
 import Filters from 'modals/Filters';
 import EditUser from 'modals/EditUser';
@@ -93,9 +94,17 @@ export default class UserList extends React.Component {
                           </Table.Cell>
                           <Table.Cell>{user.email}</Table.Cell>
                           <Table.Cell>
-                            {user.roles
-                              .map((r) => r.roleDefinition.name)
-                              .join(', ')}
+                            {formatRoles(user.roles).map((label) => (
+                              <Label
+                                key={label.key}
+                                {...label}
+                                style={{
+                                  marginBottom: '3px',
+                                  marginLeft: 0,
+                                  marginRight: '5px',
+                                }}
+                              />
+                            ))}
                           </Table.Cell>
                           <Table.Cell>
                             {formatDateTime(user.createdAt)}
