@@ -39,12 +39,12 @@ describe('permissions', () => {
         },
       ],
     });
-    expect(userHasAccess(superAdminUser, { scope: 'global', permission: 'read', endpoint: 'events' })).toBe(true);
+    expect(userHasAccess(superAdminUser, { scope: 'global', permission: 'read', endpoint: 'users' })).toBe(true);
     expect(
-      userHasAccess(superAdminUser, { scope: 'organization', permission: 'read', endpoint: 'events', scopeRef: '123' })
+      userHasAccess(superAdminUser, { scope: 'organization', permission: 'read', endpoint: 'users', scopeRef: '123' })
     ).toBe(true);
     expect(userHasAccess(superAdminUser, { scope: 'global', permission: 'read', endpoint: 'unknown' })).toBe(false);
-    expect(userHasAccess(superAdminUser, { scope: 'global', permission: 'write', endpoint: 'events' })).toBe(true);
+    expect(userHasAccess(superAdminUser, { scope: 'global', permission: 'write', endpoint: 'users' })).toBe(true);
     expect(userHasAccess(superAdminUser, { scope: 'global', permission: 'write', endpoint: 'users' })).toBe(true);
     const limitedAdminUser = await User.create({
       email: 'limited@permissions.com',
@@ -57,10 +57,8 @@ describe('permissions', () => {
         },
       ],
     });
-    expect(userHasAccess(limitedAdminUser, { scope: 'global', permission: 'read', endpoint: 'events' })).toBe(true);
+    expect(userHasAccess(limitedAdminUser, { scope: 'global', permission: 'read', endpoint: 'users' })).toBe(true);
     expect(userHasAccess(limitedAdminUser, { scope: 'global', permission: 'read', endpoint: 'unknown' })).toBe(false);
-    expect(userHasAccess(limitedAdminUser, { scope: 'global', permission: 'write', endpoint: 'events' })).toBe(false);
-    expect(userHasAccess(limitedAdminUser, { scope: 'global', permission: 'read', endpoint: 'users' })).toBe(false);
     expect(userHasAccess(limitedAdminUser, { scope: 'global', permission: 'write', endpoint: 'users' })).toBe(false);
   });
   it('userHasPermissions organization scope', async () => {
@@ -83,7 +81,7 @@ describe('permissions', () => {
       userHasAccess(organizationAdminUser, {
         scope: 'organization',
         permission: 'read',
-        endpoint: 'events',
+        endpoint: 'users',
         scopeRef: organization1Id,
       })
     ).toBe(true);
@@ -91,7 +89,7 @@ describe('permissions', () => {
       userHasAccess(organizationAdminUser, {
         scope: 'global',
         permission: 'read',
-        endpoint: 'events',
+        endpoint: 'users',
         scopeRef: organization1Id,
       })
     ).toBe(false);
@@ -99,7 +97,7 @@ describe('permissions', () => {
       userHasAccess(organizationAdminUser, {
         scope: 'organization',
         permission: 'read',
-        endpoint: 'events',
+        endpoint: 'users',
         scopeRef: organization2Id,
       })
     ).toBe(false);
@@ -115,7 +113,7 @@ describe('permissions', () => {
       userHasAccess(organizationAdminUser, {
         scope: 'organization',
         permission: 'write',
-        endpoint: 'events',
+        endpoint: 'users',
         scopeRef: organization1Id,
       })
     ).toBe(true);
@@ -123,7 +121,7 @@ describe('permissions', () => {
       userHasAccess(organizationAdminUser, {
         scope: 'organization',
         permission: 'write',
-        endpoint: 'events',
+        endpoint: 'users',
         scopeRef: organization2Id,
       })
     ).toBe(false);
@@ -151,7 +149,7 @@ describe('permissions', () => {
       userHasAccess(limitedAdminUser, {
         scope: 'organization',
         permission: 'read',
-        endpoint: 'events',
+        endpoint: 'users',
         scopeRef: organization1Id,
       })
     ).toBe(true);
@@ -159,7 +157,7 @@ describe('permissions', () => {
       userHasAccess(limitedAdminUser, {
         scope: 'organization',
         permission: 'read',
-        endpoint: 'events',
+        endpoint: 'users',
         scopeRef: organization2Id,
       })
     ).toBe(false);
@@ -175,14 +173,6 @@ describe('permissions', () => {
       userHasAccess(limitedAdminUser, {
         scope: 'organization',
         permission: 'write',
-        endpoint: 'events',
-        scopeRef: organization1Id,
-      })
-    ).toBe(false);
-    expect(
-      userHasAccess(limitedAdminUser, {
-        scope: 'organization',
-        permission: 'read',
         endpoint: 'users',
         scopeRef: organization1Id,
       })
