@@ -80,7 +80,9 @@ router
   .post('/logout', authenticate({ type: 'user' }), fetchUser, async (ctx) => {
     const user = ctx.state.authUser;
     await user.updateOne({
-      authTokenId: generateTokenId(),
+      $unset: {
+        authTokenId: true,
+      },
     });
     ctx.status = 204;
   })
