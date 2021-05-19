@@ -133,6 +133,16 @@ describe('/1/auth', () => {
     });
   });
 
+  describe('POST /logout', () => {
+    it('should changed authTokenId on logout', async () => {
+      const user = await createUser();
+      const response = await request('POST', '/1/auth/logout', {}, { user });
+      expect(response.status).toBe(204);
+      const updatedUser = await User.findById(user.id);
+      expect(updatedUser.authTokenId).not.toBeDefined();
+    });
+  });
+
   describe('POST /request-password', () => {
     it('should send an email to the registered user', async () => {
       const user = await createUser();

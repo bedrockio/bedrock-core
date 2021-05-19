@@ -1,7 +1,7 @@
 const Router = require('@koa/router');
 const Joi = require('joi');
 const { validateBody } = require('../utils/middleware/validate');
-const { authenticate } = require('../utils/middleware/authenticate');
+const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { createAuthToken, createTemporaryToken, generateTokenId } = require('../utils/tokens');
 const { sendTemplatedMail } = require('../utils/mailer');
 const { User, Invite } = require('../models');
@@ -73,9 +73,18 @@ router
 
       const authTokenId = generateTokenId();
       await user.updateOne({ loginAttempts: 0, authTokenId });
-      ctx.body = { data: { token: createAuthToken(user.id, authTokenId) } };
+      ctx.body = { data: { token: createAuthToken(user.id, user.authTokenId) } };
     }
   )
+  .post('/logout', authenticate({ type: 'user' }), fetchUser, async (ctx) => {
+    const user = ctx.state.authUser;
+    await user.updateOne({
+      $unset: {
+        authTokenId: true,
+      },
+    });
+    ctx.status = 204;
+  })
   .post(
     '/accept-invite',
     validateBody({
