@@ -1,73 +1,66 @@
 const Joi = require('joi');
-const validate = require('../validate');
+const { validateBody, validateQuery } = require('../validate');
 const { context } = require('../../testing');
 
-describe('validate', () => {
-  it("should throw an error when the request doesn't contain a key as specified in Joi schema", async () => {
-    const middleware = validate({
-      body: Joi.object({}), // Does not exist in given context
-    });
+describe('validateBody', () => {
+  it('should throw an error if empty object passed', () => {
+    const middleware = validateBody({});
     const ctx = context();
-
-    await expect(middleware(ctx)).rejects.toHaveProperty(
-      'message',
-      "Specified schema key 'body' does not exist in 'request' object"
-    );
+    expect(() => middleware(ctx, () => {})).toThrow('"value" must have at least 1 key');
   });
 
-  it('should reject a request with invalid params', async () => {
+  it('should reject a request with invalid params', () => {
     // Require test param, but don't provide it in ctx object:
-    const middleware = validate({
-      body: Joi.object().keys({ test: Joi.number().required() }),
+    const middleware = validateBody({
+      test: Joi.number().required(),
     });
-
     const ctx = context();
-    ctx.request.body = { fail: 'fail' };
-
-    await expect(middleware(ctx)).rejects.toHaveProperty('status', 400);
+    expect(() => middleware(ctx, () => {})).toThrow('"test" is required');
   });
 
-  it('should accept a valid request', async () => {
-    const middleware = validate({
-      body: Joi.object().keys({ test: Joi.string().required() }),
+  it('should accept a valid request', () => {
+    const middleware = validateBody({
+      test: Joi.string().required(),
     });
     const ctx = context({ url: '/' });
     ctx.request.body = { test: 'something' };
 
-    await middleware(ctx, () => {
+    middleware(ctx, () => {
       expect(ctx.request.body.test).toBe('something');
     });
   });
 
-  it('should support the light syntax', async () => {
-    const middleware = validate({
-      body: Joi.object({ test: Joi.string().required() }),
+  it('should support the light syntax', () => {
+    const middleware = validateBody({
+      test: Joi.string().required(),
     });
     const ctx = context({ url: '/' });
     ctx.request.body = { test: 'something' };
 
-    await middleware(ctx, () => {
+    middleware(ctx, () => {
       expect(ctx.request.body.test).toBe('something');
     });
   });
+});
 
-  it('should do type conversion for query', async () => {
-    const middleware = validate({
-      query: Joi.object({ convertToNumber: Joi.number().required() }),
+describe('validateQuery', () => {
+  it('should do type conversion for query', () => {
+    const middleware = validateQuery({
+      convertToNumber: Joi.number().required(),
     });
     const ctx = context({ url: '/' });
     ctx.request.query = {
       convertToNumber: '1234',
     };
 
-    await middleware(ctx, () => {
+    middleware(ctx, () => {
       expect(ctx.request.query.convertToNumber).toBe(1234);
     });
   });
 
-  it('should not allow attributes that are not defined', async () => {
-    const middleware = validate({
-      query: Joi.object({ somethingExisting: Joi.string() }),
+  it('should not allow attributes that are not defined', () => {
+    const middleware = validateQuery({
+      somethingExisting: Joi.string(),
     });
 
     const ctx = context({ url: '/' });
@@ -76,7 +69,6 @@ describe('validate', () => {
       shouldBeRemoved: 'should be been removed from request',
     };
 
-    await expect(middleware(ctx)).rejects.toHaveProperty('status', 400);
-    await expect(middleware(ctx)).rejects.toHaveProperty('message', '"shouldBeRemoved" is not allowed');
+    expect(() => middleware(ctx, () => {})).toThrow('"shouldBeRemoved" is not allowed');
   });
 });

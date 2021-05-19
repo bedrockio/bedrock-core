@@ -42,10 +42,10 @@ export default class AcceptInvite extends React.Component {
       this.context.setToken(data.token);
       await this.context.loadUser();
       this.props.history.push('/');
-    } catch(error) {
+    } catch (error) {
       this.setState({
         error,
-        loading: false
+        loading: false,
       });
     }
   };

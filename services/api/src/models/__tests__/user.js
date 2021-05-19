@@ -2,7 +2,6 @@ const User = require('../user');
 const mongoose = require('mongoose');
 
 describe('User', () => {
-
   describe('serialization', () => {
     it('should expose id', () => {
       const user = new User();
@@ -62,5 +61,4 @@ describe('User', () => {
       expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);
     });
   });
-
 });

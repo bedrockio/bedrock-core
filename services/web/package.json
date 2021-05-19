@@ -11,8 +11,7 @@
     "static": "node ./serve/static",
     "lint": "eslint .",
     "test": "jest",
-    "generate": "cd ../../generator && yarn install && yarn generate",
-    "prepare": "scripts/install_githooks"
+    "generate": "cd ../../generator && yarn install && yarn generate"
   },
   "dependencies": {
     "@babel/core": "^7.13.14",

@@ -22,7 +22,7 @@
   margin: 0em;
   outline: none;
   -webkit-appearance: none;
-  -webkit-tap-highlight-color:  rgba(255, 255, 255, 0);
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
 
   text-shadow: none;
   font-style: normal;
@@ -42,7 +42,6 @@
 .ui.search .prompt {
   border-radius: @promptBorderRadius;
 }
-
 
 /*--------------
      Icon
@@ -172,7 +171,6 @@
   text-align: @actionAlign;
 }
 
-
 /*******************************
             States
 *******************************/
@@ -226,7 +224,6 @@
   box-shadow: 0px 0px 0px 1px transparent;
 }
 
-
 /*--------------
       Hover
 ---------------*/
@@ -275,7 +272,6 @@
   opacity: @disabledOpacity;
 }
 
-
 /*******************************
            Types
 *******************************/
@@ -304,14 +300,16 @@
   opacity: @selectionCloseIconOpacity;
   pointer-events: auto;
 }
-.ui.search.selection > .icon.input:not([class*="left icon"]) > .icon ~ .remove.icon {
+.ui.search.selection
+  > .icon.input:not([class*='left icon'])
+  > .icon
+  ~ .remove.icon {
   right: @selectionCloseIconInputRight;
 }
 .ui.search.selection > .icon.input > .remove.icon:hover {
   opacity: @selectionCloseIconHoverOpacity;
   color: @selectionCloseIconHoverColor;
 }
-
 
 /*--------------
     Category
@@ -383,11 +381,11 @@
      Left / Right
 --------------------*/
 
-.ui[class*="left aligned"].search > .results {
+.ui[class*='left aligned'].search > .results {
   right: auto;
   left: 0%;
 }
-.ui[class*="right aligned"].search > .results {
+.ui[class*='right aligned'].search > .results {
   right: 0%;
   left: auto;
 }
@@ -399,7 +397,6 @@
 .ui.fluid.search .results {
   width: 100%;
 }
-
 
 /*--------------
       Sizes

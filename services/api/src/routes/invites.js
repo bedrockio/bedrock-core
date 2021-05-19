@@ -1,11 +1,9 @@
 const Router = require('@koa/router');
 const Joi = require('joi');
-const validate = require('../utils/middleware/validate');
+const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { searchValidation, getSearchQuery, search } = require('../utils/search');
 const { requirePermissions } = require('../utils/middleware/permissions');
-
-const { NotFoundError, BadRequestError, GoneError } = require('../utils/errors');
 const { Invite, User } = require('../models');
 
 const { sendTemplatedMail } = require('../utils/mailer');
@@ -29,13 +27,11 @@ function sendInvite(sender, invite) {
 
 router
   .param('inviteId', async (id, ctx, next) => {
-    const invite = await Invite.findById(id);
+    const invite = await Invite.findOne({ _id: id, deletedAt: { $exists: false } });
     ctx.state.invite = invite;
 
     if (!invite) {
-      throw new NotFoundError();
-    } else if (invite.deletedAt) {
-      throw new GoneError();
+      ctx.throw(404);
     }
 
     return next();
@@ -45,10 +41,8 @@ router
   .use(requirePermissions({ endpoint: 'users', permission: 'read', scope: 'global' }))
   .post(
     '/search',
-    validate({
-      body: Joi.object({
-        ...searchValidation(),
-      }),
+    validateBody({
+      ...searchValidation(),
     }),
     async (ctx) => {
       const { body } = ctx.request;
@@ -63,10 +57,8 @@ router
   .use(requirePermissions({ endpoint: 'users', permission: 'write', scope: 'global' }))
   .post(
     '/',
-    validate({
-      body: Joi.object({
-        emails: Joi.array().items(Joi.string().email()).required(),
-      }),
+    validateBody({
+      emails: Joi.array().items(Joi.string().email()).required(),
     }),
     async (ctx) => {
       const { authUser } = ctx.state;
@@ -74,7 +66,7 @@ router
 
       for (let email of [...new Set(emails)]) {
         if ((await User.countDocuments({ email })) > 0) {
-          throw new BadRequestError(`${email} is already a user.`);
+          ctx.throw(400, `${email} is already a user.`);
         }
         const invite = await Invite.findOneAndUpdate(
           {

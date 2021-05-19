@@ -4,7 +4,6 @@ import { request } from 'utils/api';
 import SearchDropdown from '../SearchDropdown';
 
 export default class Categories extends React.Component {
-
   fetchCategories = async (query) => {
     const { data } = await request({
       method: 'POST',
@@ -19,9 +18,7 @@ export default class Categories extends React.Component {
   render() {
     return (
       <Form.Field>
-        <label>
-          Categories
-        </label>
+        <label>Categories</label>
         <SearchDropdown
           fluid
           multiple
@@ -31,5 +28,4 @@ export default class Categories extends React.Component {
       </Form.Field>
     );
   }
-
 }

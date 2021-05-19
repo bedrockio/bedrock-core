@@ -1,8 +1,8 @@
 const SYMBOLS = {
-  'USD': '$',
-  'EUR': '€',
-  'GBP': '£',
-  'JPY': '¥',
+  USD: '$',
+  EUR: '€',
+  GBP: '£',
+  JPY: '¥',
 };
 
 export function formatUsd(val) {

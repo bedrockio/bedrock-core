@@ -18,7 +18,6 @@ export default class ShopDetail extends React.Component {
       shop: null,
       error: null,
       loading: true,
-      onSave: this.onSave,
     };
   }
 
@@ -75,18 +74,23 @@ export default class ShopDetail extends React.Component {
         </React.Fragment>
       );
     }
+
     return (
       <Switch>
         <Route
           exact
           path="/shops/:id"
-          render={(props) => <Overview {...props} {...this.state} />}
+          render={(props) => (
+            <Overview {...props} {...this.state} onSave={this.onSave} />
+          )}
         />
         {/* --- Generator: routes */}
         <Route
           exact
           path="/shops/:id/products"
-          render={(props) => <Products {...props} {...this.state} />}
+          render={(props) => (
+            <Products {...props} {...this.state} onSave={this.onSave} />
+          )}
         />
         {/* --- Generator: end */}
       </Switch>
