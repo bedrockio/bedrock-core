@@ -72,7 +72,9 @@ router
       }
 
       const authTokenId = generateTokenId();
-      await user.updateOne({ loginAttempts: 0, authTokenId });
+      user.loginAttempts = 0;
+      user.authTokenId = authTokenId;
+      await user.save();
       ctx.body = { data: { token: createAuthToken(user.id, user.authTokenId) } };
     }
   )
