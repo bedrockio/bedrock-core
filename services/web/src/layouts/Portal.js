@@ -26,13 +26,8 @@ export default class PortalLayout extends React.Component {
               <img style={{ height: '30px' }} src={logo} />
             </NavLink>
             <div>
-              <NavLink
-                to="/signup"
-                style={{ marginRight: '20px', fontWeight: 'bold' }}>
-                Signup
-              </NavLink>
-              <Button primary compact as={NavLink} to="/login">
-                Login
+              <Button primary compact as={NavLink} to="/">
+                Dashboard &rarr;
               </Button>
             </div>
           </Layout>
