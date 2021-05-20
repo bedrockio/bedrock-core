@@ -13,18 +13,17 @@ export default class FetchObject extends React.Component {
     this.fetch(this.props);
   }
 
-  fetch() {
+  async fetch() {
     const { endpoint, id } = this.props;
-    request({
-      method: 'GET',
-      path: `/1/${endpoint}/${id}`,
-    })
-      .then(({ data }) => {
-        this.setState({ data, error: null, loading: false });
-      })
-      .catch((error) => {
-        this.setState({ error, loading: false });
+    try {
+      const { data } = await request({
+        method: 'GET',
+        path: `/1/${endpoint}/${id}`,
       });
+      this.setState({ data, error: null, loading: false });
+    } catch (error) {
+      this.setState({ error, loading: false });
+    }
   }
 
   render() {
