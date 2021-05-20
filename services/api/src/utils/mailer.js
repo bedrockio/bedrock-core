@@ -29,7 +29,27 @@ marked.use({
   renderer: {
     link(href, title, text) {
       if (title === '$button$') {
-        return `<a class="button" href="${href}">${text}</a>`;
+        return `
+          <table class="body-action" align="center" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td align="center">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td align="center">
+                      <table border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                          <td>
+                            <a href="${href}" class="button" target="_blank"><span class="text">${text}</span></a>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        `;
       }
       return false;
     },
@@ -40,6 +60,7 @@ const defaultOptions = {
   appName: config.get('APP_NAME'),
   appUrl: config.get('APP_URL'),
   appSupportEmail: config.get('APP_SUPPORT_EMAIL'),
+  appCompanyName: config.get('APP_COMPANY_NAME'),
   appCompanyAddress: config.get('APP_COMPANY_ADDRESS'),
 };
 
