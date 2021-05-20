@@ -19,14 +19,18 @@ svg.icon {
   touch-action: manipulation;
 
   display: inline-block;
-  vertical-align: bottom;
+  vertical-align: middle;
   opacity: @opacity;
 
   margin: 0em @distanceFromText 0em 0em;
-}
 
-svg.icon:before {
-  background: none !important;
+  // This is needed for inline vertical centering
+  // when placed against a text node of unknown height
+  // that can't be wrapped in a span. Simply using
+  // vertical-align: middle has unpredictable results for some reason.
+  position: relative;
+  top: -0.1em;
+
 }
 
 /*******************************
