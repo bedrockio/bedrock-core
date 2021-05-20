@@ -82,9 +82,9 @@
 --------------------*/
 
 /* Definition */
-@definitionPageBackground: @white;
+@definitionPageBackground: @pageBackground;
 
-@definitionHeaderBackground: transparent;
+@definitionHeaderBackground: @pageBackground;
 @definitionHeaderColor: @unselectedTextColor;
 @definitionHeaderFontWeight: @normal;
 

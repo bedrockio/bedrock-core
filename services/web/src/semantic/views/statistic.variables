@@ -28,9 +28,9 @@
 
 /* Value */
 @valueFont: @pageFont;
-@valueFontWeight: @normal;
+@valueFontWeight: @bold;
 @valueLineHeight: 1em;
-@valueColor: @black;
+@valueColor: @textColor;
 @valueTextTransform: uppercase;
 
 /* Label */
@@ -39,7 +39,7 @@
 @bottomLabelDistance: 0rem;
 @labelFont: @headerFont;
 @labelFontWeight: @bold;
-@labelColor: @textColor;
+@labelColor: @grey;
 @labelLineHeight: @relativeLarge;
 @labelTextTransform: uppercase;
 

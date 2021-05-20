@@ -15,7 +15,12 @@ import {
   Sticky,
   Ref,
   Form,
+  Input,
+  TextArea,
   Breadcrumb,
+  Statistic,
+  Card,
+  Progress
 } from 'semantic';
 import { screen } from 'helpers';
 import Spacer from '../../components/Layout/Spacer';
@@ -26,6 +31,13 @@ const options = [
   { key: 1, text: 'Choice 1', value: 1 },
   { key: 2, text: 'Choice 2', value: 2 },
   { key: 3, text: 'Choice 3', value: 3 },
+];
+
+const options2 = [
+  { key: 1, text: 'Apple', value: 1, icon: 'apple-alt' },
+  { key: 2, text: 'Lemon', value: 2, icon: 'lemon' },
+  { key: 3, text: 'Carrot', value: 3, icon: 'carrot' },
+  { key: 4, text: 'Pepper', value: 4, icon: 'pepper-hot' },
 ];
 
 @screen
@@ -88,6 +100,15 @@ export default class ComponentsScreen extends React.Component {
                   <JumpLink className="menu item" to="divider">
                     Divider
                   </JumpLink>
+                  <JumpLink className="menu item" to="statistic">
+                    Statistic
+                  </JumpLink>
+                  <JumpLink className="menu item" to="card">
+                    Card
+                  </JumpLink>
+                  <JumpLink className="menu item" to="progress">
+                    Progress
+                  </JumpLink>
                 </Menu>
               </Sticky>
             </Grid.Column>
@@ -107,6 +128,9 @@ export default class ComponentsScreen extends React.Component {
                       <JumpLink className="item" to="menu">Menu</JumpLink>
                       <JumpLink className="item" to="breadcrumbs">Breadcrumbs</JumpLink>  
                       <JumpLink className="item" to="divider">Divider</JumpLink>
+                      <JumpLink className="item" to="statistic">Statistic</JumpLink>
+                      <JumpLink className="item" to="card">Card</JumpLink>
+                      <JumpLink className="item" to="progress">Progress</JumpLink>
                     </Dropdown.Menu>
                   </Dropdown>
               </Grid.Column>
@@ -181,13 +205,27 @@ export default class ComponentsScreen extends React.Component {
                       <Header size="medium">Input Field</Header>
                       <Form.Field>
                         <label>Label</label>
-                        <input placeholder="Placeholder" width="200" />
+                        <Input placeholder="Placeholder" type="text" />
+                      </Form.Field>
+
+                      <Form.Field>
+                        <Input placeholder="Placeholder" label="Label" type="text" />
+                      </Form.Field>
+
+                      <Form.Field>
+                        <Input placeholder="Search" type="search" icon="search" />
                       </Form.Field>
 
                       <Header size="medium">Checkbox</Header>
                       <Form.Field>
                         <Form.Checkbox label="Checkbox 1" />
                         <Form.Checkbox label="Checkbox 2" />
+                      </Form.Field>
+
+                      <Header size="medium">Toggle Checkbox</Header>
+                      <Form.Field>
+                        <Form.Checkbox toggle label="Toggle 1" />
+                        <Form.Checkbox toggle label="Toggle 2" />
                       </Form.Field>
 
                       <Header size="medium">Radio</Header>
@@ -209,7 +247,7 @@ export default class ComponentsScreen extends React.Component {
 
                       <Header size="medium">Text Area</Header>
                       <Form.Field>
-                        <Form.TextArea
+                        <TextArea
                           label="Label"
                           placeholder="Placeholder text..."
                         />
@@ -236,10 +274,9 @@ export default class ComponentsScreen extends React.Component {
                           width: '16px',
                         }}></div>
                       <Dropdown
-                        placeholder="Search Selection"
+                        placeholder="Selection with Icons"
                         selection
-                        search
-                        options={options}
+                        options={options2}
                       />
                       <div
                         style={{
@@ -247,7 +284,17 @@ export default class ComponentsScreen extends React.Component {
                           width: '16px',
                         }}></div>
                       <Dropdown
-                        placeholder="Multiple Selection"
+                        placeholder="Typeahead Selection"
+                        selection
+                        search
+                        options={options}
+                      />
+                    </Layout>
+                    <Divider hidden />
+                    
+                    <Layout horizontal>
+                      <Dropdown
+                        placeholder="Multiple Options Selection"
                         multiple
                         selection
                         options={options}
@@ -261,12 +308,14 @@ export default class ComponentsScreen extends React.Component {
                     <Header size="large">Table</Header>
                     <Spacer size="small" />
 
+                    <Header size="medium">Celled Table</Header>
+
                     <Table celled>
                       <Table.Header>
                         <Table.Row>
-                          <Table.HeaderCell>Header</Table.HeaderCell>
-                          <Table.HeaderCell>Header</Table.HeaderCell>
-                          <Table.HeaderCell>Header</Table.HeaderCell>
+                          <Table.HeaderCell>Header 1</Table.HeaderCell>
+                          <Table.HeaderCell>Header 2</Table.HeaderCell>
+                          <Table.HeaderCell>Header 3</Table.HeaderCell>
                         </Table.Row>
                       </Table.Header>
 
@@ -296,6 +345,59 @@ export default class ComponentsScreen extends React.Component {
                         </Table.Row>
                       </Table.Footer>
                     </Table>
+
+                    <Header size="medium">Very Basic Table</Header>
+
+                    <Table basic="very">
+                      <Table.Header>
+                        <Table.Row>
+                          <Table.HeaderCell>Header 1</Table.HeaderCell>
+                          <Table.HeaderCell>Header 2</Table.HeaderCell>
+                        </Table.Row>
+                      </Table.Header>
+
+                      <Table.Body>
+                        <Table.Row>
+                          <Table.Cell>Cell</Table.Cell>
+                          <Table.Cell>Cell</Table.Cell>
+                        </Table.Row>
+                        <Table.Row>
+                          <Table.Cell>Cell</Table.Cell>
+                          <Table.Cell>Cell</Table.Cell>
+                        </Table.Row>
+                      </Table.Body>
+                    </Table>
+
+                    <Header size="medium">Definition Table</Header>
+
+                    <Table definition>
+                      <Table.Header>
+                        <Table.Row>
+                          <Table.HeaderCell />
+                          <Table.HeaderCell>Header 2</Table.HeaderCell>
+                          <Table.HeaderCell>Header 3</Table.HeaderCell>
+                        </Table.Row>
+                      </Table.Header>
+
+                      <Table.Body>
+                        <Table.Row>
+                          <Table.Cell>Definition 1</Table.Cell>
+                          <Table.Cell>Cell</Table.Cell>
+                          <Table.Cell>Cell</Table.Cell>
+                        </Table.Row>
+                        <Table.Row>
+                          <Table.Cell>Definition 2</Table.Cell>
+                          <Table.Cell>Cell</Table.Cell>
+                          <Table.Cell>Cell</Table.Cell>
+                        </Table.Row>
+                        <Table.Row>
+                          <Table.Cell>Definition 3</Table.Cell>
+                          <Table.Cell>Cell</Table.Cell>
+                          <Table.Cell>Cell</Table.Cell>
+                        </Table.Row>
+                      </Table.Body>
+                    </Table>
+
                   </JumpLink.Target>
 
                   <div style={{ margin:'50px 0 20px 0', borderBottom:'1px solid #ccc' }} />
@@ -337,6 +439,23 @@ export default class ComponentsScreen extends React.Component {
                     </Label>
 
                     <Label color="blue">Colored label</Label>
+
+                    <Header size="medium">Colors</Header>
+
+                    <Label color="red">Red label</Label>
+                    <Label color="orange">Orange label</Label>
+                    <Label color="yellow">Yellow label</Label>
+                    <Label color="olive">Olive label</Label>
+                    <Label color="green">Green label</Label>
+                    <Label color="teal">Teal label</Label>
+                    <Label color="blue">Blue label</Label>
+                    <Label color="violet">Violet label</Label>
+                    <Label color="purple">Purple label</Label>
+                    <Label color="pink">Pink label</Label>
+                    <Label color="brown">Brown label</Label>
+                    <Label color="grey">Grey label</Label>
+                    <Label color="black">Black label</Label>
+
                   </JumpLink.Target>
 
                   <div style={{ margin:'50px 0 20px 0', borderBottom:'1px solid #ccc' }} />
@@ -347,11 +466,47 @@ export default class ComponentsScreen extends React.Component {
 
                     <Header size="medium">Variations</Header>
 
-                    <Segment>Standard Segment</Segment>
+                    <Segment>
+                      Standard Segment
+                    </Segment>
 
-                    <Segment placeholder>Placeholder Segment</Segment>
+                    <Segment raised>
+                      Raised Segment
+                    </Segment>
 
-                    <Segment raised>Raised Segment</Segment>
+                    <Segment attached="top">
+                      Attached Top Segment
+                    </Segment>
+                    <Segment attached>
+                      Attached Segment
+                    </Segment>
+                    <Segment attached="bottom">
+                      Attached Bottom Segment
+                    </Segment>
+
+                    <Segment.Group>
+                      <Segment>
+                        Grouped Main Segment
+                      </Segment>
+                      <Segment secondary>
+                        Grouped Secondary Segment
+                      </Segment>
+                    </Segment.Group>
+
+                    <Segment placeholder>
+                      <Header icon>
+                        <Icon name="envelope" />
+                        Placeholder Segment
+                      </Header>
+                      <Button
+                        as={Link}
+                        to="#"
+                        primary
+                        size="large"
+                      >
+                        Action
+                      </Button>
+                    </Segment>
                   </JumpLink.Target>
 
                   <div style={{ margin:'50px 0 20px 0', borderBottom:'1px solid #ccc' }} />
@@ -541,6 +696,109 @@ export default class ComponentsScreen extends React.Component {
 
                     <Divider horizontal>OR</Divider>
                   </JumpLink.Target>
+
+                  <JumpLink.Target id="statistic">
+                    <Header size="large">Statistic</Header>
+                    <Spacer size="small" />
+
+                    <Header size="medium">Variations</Header>
+
+                    <Layout horizontal>
+                    <Statistic>
+                      <Statistic.Value>74,550</Statistic.Value>
+                      <Statistic.Label>Bottom Label</Statistic.Label>
+                    </Statistic>
+
+                    <Statistic>
+                      <Statistic.Label>Top Label</Statistic.Label>
+                      <Statistic.Value>25,150</Statistic.Value>
+                    </Statistic>
+                    </Layout>
+                  </JumpLink.Target>
+
+                  <JumpLink.Target id="card">
+                    <Header size="large">Card</Header>
+                    <Spacer size="small" />
+
+                    <Header size="medium">Variations</Header>
+
+                    <Card.Group>
+                      <Card>
+                        <Card.Content>
+                          <Card.Header>
+                            Card Header
+                          </Card.Header>
+                          <Card.Meta>
+                            Meta text
+                          </Card.Meta>
+                          <Card.Description>Description</Card.Description>
+                        </Card.Content>
+                        <Card.Content extra>
+                          Extra info
+                        </Card.Content>
+                      </Card>
+
+                      <Card href="#">
+                        <Card.Content>
+                          <Card.Header>
+                            Linked Card
+                          </Card.Header>
+                          <Card.Meta>
+                            Meta text
+                          </Card.Meta>
+                          <Card.Description>Description</Card.Description>
+                          </Card.Content>
+                          <Card.Content extra>
+                          <Button
+                            basic
+                            content="Action"
+                            onClick={() => this}
+                          />
+                        </Card.Content>
+                      </Card>
+                    </Card.Group>
+
+                    <Card fluid color="red">
+                      <Card.Content>
+                        <Card.Header>
+                          Fluid Card with Color
+                        </Card.Header>
+                        <Card.Meta>
+                          Meta Text
+                        </Card.Meta>
+                        <Card.Description>Description</Card.Description>
+                      </Card.Content>
+                      <Card.Content extra>
+                        <Button
+                          basic
+                          icon="check"
+                          content="Action"
+                          onClick={() => this}
+                        />
+                      </Card.Content>
+                    </Card>
+                  </JumpLink.Target>
+
+                  <JumpLink.Target id="progress">
+                    <Header size="large">Progress</Header>
+                    <Spacer size="small" />
+
+                    <Header size="medium">Variations</Header>
+
+                    <b>Standard</b>
+                    <Progress percent={11} />
+
+                    <b>Standard with percentage</b>
+                    <Progress percent={44} progress />
+
+                    <b>Colored</b>
+                    <Progress percent={32} color="purple" />
+
+                    <b>Tiny Size</b>
+                    <Progress percent={78} color="blue" size="tiny" />
+
+                  </JumpLink.Target>
+
                 </div>
               </Ref>
             </Grid.Column>

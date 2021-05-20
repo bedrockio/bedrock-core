@@ -9,7 +9,7 @@
 --------------------*/
 
 @verticalAlign: baseline;
-@verticalMargin: 0em;
+@verticalMargin: @relative2px;
 @horizontalMargin: @relative2px;
 @backgroundColor: #E8E8E8;
 @color: @mutedTextColor;
