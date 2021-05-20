@@ -40,3 +40,28 @@ export function userHasAccess(user, { endpoint, permission, scope, scopeRef }) {
   }
   return hasAccess;
 }
+
+export function formatRoles(roles) {
+  const labels = [];
+  const scopeRefs = [];
+  roles.forEach((role) => {
+    if (role.scope === 'global') {
+      labels.push({
+        key: `global-${role.role}`,
+        content: role.roleDefinition.name,
+        icon: 'globe',
+      });
+    } else {
+      const key = `${role.role}-${role.scope}-${role.scopeRef}`;
+      if (!scopeRefs.includes(key)) {
+        scopeRefs.push(key);
+        labels.push({
+          key: key,
+          content: role.roleDefinition.name,
+          icon: 'building',
+        });
+      }
+    }
+  });
+  return labels;
+}
