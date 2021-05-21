@@ -114,6 +114,13 @@
 @textColor           : #111827;
 
 /*-------------------
+        Sidebar Main Menu & Portal Main Menu
+--------------------*/
+
+@mainMenuBackground      : #f4f0eb;
+
+
+/*-------------------
       Paragraph
 --------------------*/
 

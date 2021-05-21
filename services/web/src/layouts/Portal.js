@@ -6,17 +6,13 @@ import { Layout } from 'components';
 
 import logo from 'assets/bedrock.svg';
 
+import './portal.less';
+
 export default class PortalLayout extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Layout
-          style={{
-            background: '#f4f0eb',
-            position: 'fixed',
-            width: '100%',
-            zIndex: '2',
-          }}>
+        <Layout className="top-menu">
           <Layout
             horizontal
             spread

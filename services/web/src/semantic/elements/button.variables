@@ -11,7 +11,7 @@
 /* Button */
 @verticalMargin: 0em;
 @horizontalMargin: 0.25em;
-@backgroundColor: #77a741;
+@backgroundColor: @primaryColor;
 @backgroundImage: none;
 @background: @backgroundColor @backgroundImage;
 @lineHeight: 1em;
@@ -84,7 +84,7 @@
 --------------------*/
 
 /* Hovered */
-@hoverBackgroundColor: #6a903e;
+@hoverBackgroundColor: darken(@primaryColor, 20%);
 @hoverBackgroundImage: @backgroundImage;
 @hoverBoxShadow: @boxShadow;
 @hoverColor: @invertedTextColor;
@@ -102,7 +102,7 @@
 @disabledBoxShadow: none;
 
 /* Pressed Down */
-@downBackgroundColor: #5d8233;
+@downBackgroundColor: darken(@primaryColor, 50%);
 @downBackgroundImage: '';
 @downPressedShadow: none;
 @downBoxShadow:
@@ -112,7 +112,7 @@
 @downColor: @invertedTextColor;
 
 /* Active */
-@activeBackgroundColor: #5d8233;
+@activeBackgroundColor: darken(@primaryColor, 50%);
 @activeBackgroundImage: none;
 @activeColor: @invertedTextColor;
 @activeBoxShadow: @borderBoxShadow;
