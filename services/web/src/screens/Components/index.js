@@ -113,7 +113,8 @@ export default class ComponentsScreen extends React.Component {
               </Sticky>
             </Grid.Column>
             <Grid.Column width={16} only="mobile" style={{ zIndex:'1', marginBottom: '20px' }}>
-                <Dropdown text="Components Menu" fluid>
+              <Menu fluid>
+                <Dropdown text="Components Menu" className="link item" fluid style={{ justifyContent:'space-between' }}>
                     <Dropdown.Menu>
                       <JumpLink className="item" to="buttons">Buttons</JumpLink>
                       <JumpLink className="item" to="message">Message</JumpLink>
@@ -133,6 +134,7 @@ export default class ComponentsScreen extends React.Component {
                       <JumpLink className="item" to="progress">Progress</JumpLink>
                     </Dropdown.Menu>
                   </Dropdown>
+              </Menu>
               </Grid.Column>
             <Grid.Column width={13}>
               <Ref innerRef={this.contextRef}>
@@ -157,7 +159,8 @@ export default class ComponentsScreen extends React.Component {
 
                     <Header size="medium">With Icon</Header>
                     <Button icon="check" content="Complete Task" />
-                    <Button icon="check" basic />
+                    <Button icon="globe" />
+                    <Button icon="globe" basic />
                   </JumpLink.Target>
 
                   <div style={{ margin:'50px 0 20px 0', borderBottom:'1px solid #ccc' }} />
@@ -170,28 +173,28 @@ export default class ComponentsScreen extends React.Component {
                     <Message icon>
                       <Icon name="circle-notch" loading />
                       <Message.Content>
-                        <Header>Loading</Header>
+                        <Header size="small">Loading</Header>
                         Message Content
                       </Message.Content>
                     </Message>
                     <Message info>
                       <Header size="small">Info</Header>
-                      <p>Message Content</p>
+                      Message Content
                     </Message>
                     <Message success icon>
                       <Icon name="check" />
                       <Message.Content>
-                        <Header>Success</Header>
+                        <Header size="small">Success</Header>
                         Message Content
                       </Message.Content>
                     </Message>
                     <Message warning>
                       <Header size="small">Warning</Header>
-                      <p>Message Content</p>
+                      Message Content
                     </Message>
                     <Message error>
                       <Header size="small">Error</Header>
-                      <p>Message Content</p>
+                      Message Content
                     </Message>
                   </JumpLink.Target>
 

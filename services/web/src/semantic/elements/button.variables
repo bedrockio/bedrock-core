@@ -47,11 +47,11 @@
 ;
 
 /* Icon */
-@iconOpacity: 0.8;
+@iconOpacity: 1;
 @iconDistance: @relative6px;
 @iconTransition: opacity @defaultDuration @defaultEasing;
 
-@iconMargin: 0em @iconDistance 0em;
+@iconMargin: 0em @iconDistance 0em -(@iconDistance / 2);
 @rightIconMargin: 0em -(@iconDistance / 2) 0em @iconDistance;
 
 /* Loader */
@@ -161,7 +161,7 @@
 @orSpacerColor: transparent;
 
 /* Icon */
-@iconButtonOpacity: 0.9;
+@iconButtonOpacity: 1;
 
 /* Labeled */
 @labeledLabelFontSize: @medium;

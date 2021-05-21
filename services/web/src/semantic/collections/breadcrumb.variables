@@ -17,10 +17,10 @@
 @dividerColor: @lightTextColor;
 
 @dividerSize: @relativeSmall;
-@dividerVerticalAlign: baseline;
+@dividerVerticalAlign: top;
 
 @iconDividerSize: @relativeTiny;
-@iconDividerVerticalAlign: bottom;
+@iconDividerVerticalAlign: top;
 
 @sectionMargin: 0em;
 @sectionPadding: 0em;

@@ -194,25 +194,27 @@ export default class Docs extends React.Component {
           </Sticky>
         </Grid.Column>
         <Grid.Column width={16} only="mobile" style={{ zIndex:'1', marginBottom: '20px' }}>
-          <Dropdown text="API Docs Menu" fluid>
-            <Dropdown.Menu>
-              {PAGES.map(({ id, name }) => {
-                    return (
-                      <Dropdown.Item
-                        key={id}
-                        exact
-                        name={name}
-                        active={pageId === id}
-                        to={`/docs/api/${id}`}
-                        as={NavLink}
-                      >
-                      {name}
-                      </Dropdown.Item>
-                    );
-                  })}
+          <Menu fluid>
+            <Dropdown text="API Docs Menu" className="link item" fluid style={{ justifyContent:'space-between' }}>
+              <Dropdown.Menu>
+                {PAGES.map(({ id, name }) => {
+                      return (
+                        <Dropdown.Item
+                          key={id}
+                          exact
+                          name={name}
+                          active={pageId === id}
+                          to={`/docs/api/${id}`}
+                          as={NavLink}
+                        >
+                        {name}
+                        </Dropdown.Item>
+                      );
+                    })}
               </Dropdown.Menu>
             </Dropdown>
-          </Grid.Column>
+          </Menu>
+        </Grid.Column>
       </React.Fragment>
     );
   }
