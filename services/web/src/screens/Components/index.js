@@ -216,6 +216,14 @@ export default class ComponentsScreen extends React.Component {
                       </Form.Field>
 
                       <Form.Field>
+                        <Input labelPosition="right" type="text" placeholder="Amount">
+                          <Label basic>$</Label>
+                          <input />
+                          <Label>.00</Label>
+                        </Input>
+                      </Form.Field>
+
+                      <Form.Field>
                         <Input placeholder="Search" type="search" icon="search" />
                       </Form.Field>
 
