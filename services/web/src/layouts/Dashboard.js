@@ -22,9 +22,9 @@ export default class DashboardLayout extends React.Component {
               <img style={{ height: '30px' }} src={logo} />
             </Sidebar.Item>
             <Layout vertical top style={{ justifyContent:'space-between', overflow:'hidden' }}>
-              <Menu secondary vertical style={{ overflowY:'auto', margin:'0.5em 0 0 0' }}>
+              <Menu secondary vertical fluid style={{ overflowY:'auto', margin:'0.5em 0 0 0', padding:'0 0 0 25px' }}>
                 <Menu.Header>
-                  Items
+                  Main Menu
                 </Menu.Header>
                 <Menu.Item as={NavLink} to="/shops">
                   <Icon name="store"/>Shops
@@ -40,8 +40,8 @@ export default class DashboardLayout extends React.Component {
                   </Menu.Item>
                 </Protected>
               </Menu>
-              <Layout style={{ flex:'0 0 auto', paddingTop:'0.5em', borderTop:'1px solid #ccc' }}>
-                <Menu secondary vertical>
+              <Layout style={{ flex:'0 0 auto', paddingTop:'15px', borderTop:'1px solid #ccc' }}>
+                <Menu secondary vertical fluid style={{ margin:'0', padding:'0 0 10px 25px' }}>
                   <Menu.Item as={NavLink} to="/docs/api/getting-started">
                     <Icon name="terminal"/>Docs
                   </Menu.Item>
