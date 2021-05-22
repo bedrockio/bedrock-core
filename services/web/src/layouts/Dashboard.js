@@ -35,7 +35,7 @@ export default class DashboardLayout extends React.Component {
                   <Icon name="store" />
                   Shops
                 </Menu.Item>
-                <Protected endpoint="events">
+                <Protected endpoint="users">
                   <Accordion as={Menu} secondary vertical fluid>
                     <Accordion.Title index={0} onClick={this.handleClick}>
                       <Menu.Item as={NavLink} to="/users">
