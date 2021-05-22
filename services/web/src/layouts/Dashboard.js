@@ -21,7 +21,7 @@ export default class DashboardLayout extends React.Component {
             <Sidebar.Item as={NavLink} className="logo" to="/">
               <img style={{ height: '30px' }} src={logo} />
             </Sidebar.Item>
-            <Layout vertical top style={{ justifyContent:'space-between', overflow:'hidden' }}>
+            <Layout vertical top spread>
               <Menu secondary vertical fluid style={{ overflowY:'auto', margin:'0.5em 0 0 0', padding:'0 0 0 25px' }}>
                 <Menu.Header>
                   Main Menu
