@@ -7,8 +7,14 @@ import SearchProvider from 'components/SearchProvider';
 import { Layout } from 'components/Layout';
 import InviteUser from 'modals/InviteUser';
 import LoadButton from 'components/LoadButton';
+import { Breadcrumbs } from 'components';
 
-import { Container, Header, Table, Button, Message } from 'semantic';
+import {
+  Table,
+  Button,
+  Message,
+  Divider
+} from 'semantic';
 
 @screen
 export default class Home extends React.Component {
@@ -25,10 +31,14 @@ export default class Home extends React.Component {
       <SearchProvider onDataNeeded={this.onDataNeeded}>
         {({ items, getSorted, setSort, reload }) => {
           return (
-            <Container>
-              <Header as="h2">
-                <Layout horizontal center spread>
-                  Invites
+            <div>
+              <Breadcrumbs active="Invites" />
+              <div style={{ display:'inline-block', height:'10px'}} />
+              <Layout horizontal center spread>
+                <h1 style={{ margin:'0' }}>
+                    Invites
+                </h1>
+                <Layout.Group>
                   <InviteUser
                     size="tiny"
                     onSave={reload}
@@ -36,8 +46,9 @@ export default class Home extends React.Component {
                       <Button primary content="Invite User" icon="plus" />
                     }
                   />
-                </Layout>
-              </Header>
+                </Layout.Group>
+              </Layout>
+              <Divider hidden />
               <div className="list">
                 {items.length === 0 ? (
                   <Message>No invitations yet</Message>
@@ -104,7 +115,7 @@ export default class Home extends React.Component {
                   </Table>
                 )}
               </div>
-            </Container>
+            </div>
           );
         }}
       </SearchProvider>

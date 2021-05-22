@@ -91,7 +91,7 @@
 @tinySubHeaderFontSize  : @h5SubHeaderFontSize;
 
 /* Icon Header */
-@iconHeaderSize: 3em;
+@iconHeaderSize: 1.5em;
 @iconHeaderOpacity: 1;
 @iconHeaderMargin: 0.5rem;
 @circularHeaderIconSize: 2em;

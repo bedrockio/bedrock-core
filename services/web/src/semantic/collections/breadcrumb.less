@@ -19,6 +19,10 @@
   display: @display;
   margin: @verticalMargin 0em;
   vertical-align: @verticalAlign;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  font-weight: 500;
+  color: #ABADB3;
 }
 .ui.breadcrumb:first-child {
   margin-top: 0em;
@@ -44,16 +48,17 @@
 
 /* Link */
 .ui.breadcrumb a {
-  color: @linkColor;
+  color: @breadcrumbLinkColor;
 }
 .ui.breadcrumb a:hover {
-  color: @linkHoverColor;
+  color: @breadcrumbLinkColor;
 }
 
 /* Icon Divider */
 .ui.breadcrumb .icon.divider {
   font-size: @iconDividerSize;
   vertical-align: @iconDividerVerticalAlign;
+  margin-top: 2px;
 }
 
 /* Section */
@@ -78,6 +83,7 @@
 
 .ui.breadcrumb .active.section {
   font-weight: @activeFontWeight;
+  color: saturate(darken(@breadcrumbLinkColor, 40), 10, relative);
 }
 
 /*******************************
@@ -86,6 +92,10 @@
 
 .ui.mini.breadcrumb {
   font-size: @mini;
+}
+.ui.mini.breadcrumb .divider {
+  width: 10px;
+  height: 10px;
 }
 .ui.tiny.breadcrumb {
   font-size: @tiny;

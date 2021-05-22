@@ -67,6 +67,7 @@ a.ui.label {
 /* Icon */
 .ui.label > .icon {
   margin: 0em @iconDistance 0em 0em;
+  font-size: @deleteSize;
 }
 
 /* Detail */
@@ -83,7 +84,8 @@ a.ui.label {
 
 /* Removable label */
 .ui.label > .close.icon,
-.ui.label > .delete.icon {
+.ui.label > .delete.icon,
+.ui.label > .times.icon {
   cursor: pointer;
   margin-right: 0em;
   margin-left: @deleteMargin;

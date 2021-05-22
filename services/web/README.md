@@ -106,3 +106,16 @@ For example, to generate a summary of API parameters for login, add this to the 
 ```javascript
 callParams({ method: 'POST', path: '/1/auth/login' });
 ```
+
+## Updating Styles
+
+All base styles and Semantic UI componenets live under `src/semantic`. You can tweak and change styling of elements based on your projects needs.
+
+With just a few tweaks you can tweak Bedrocks default styling to make it your own. Go to `src/semantic/globals/site.variables` file and update a few variables:
+
+- `@primaryColor` - Set projects primary accent color (default: green)
+- `@pageBackground` - Set page background (default: light sandy)
+- `@mainMenuBackground` - Set main menus background (default: sandy)
+- `@linkColor` - Set projects link color (default: dark green)
+
+Semantic UI variables and components allow you to change styles to be the way you want them for your project. You can dive deeper into components documentation at [React Semantic UI](http://react.semantic-ui.com/).

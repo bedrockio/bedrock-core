@@ -10,7 +10,7 @@ function nullLayout(props) {
 }
 
 export default function (Component) {
-  const Layout = LAYOUTS[Component.layout || 'default'] || nullLayout;
+  const Layout = LAYOUTS[Component.layout || 'Dashboard'] || nullLayout;
   const title = startCase(Component.name.replace(/Screen$/, ''));
 
   return class Screen extends React.PureComponent {

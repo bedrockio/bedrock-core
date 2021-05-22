@@ -71,7 +71,7 @@ export default class Filters extends React.Component {
                 <Icon name="filter" />
                 Filter
               </Button>
-              <Label as="a" basic color="blue" pointing="left">
+              <Label as="a" basic color="olive" pointing="left">
                 {Object.keys(this.props.filters).length}
               </Label>
             </Button>
