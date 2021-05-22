@@ -62,8 +62,11 @@
     .ui.menu.secondary .item {
       border-left: 3px solid transparent;
       border-radius: 0 !important;
-      margin-left: -13px;
+      margin: 0 0 0.35714286em -13px;
       padding-left: 10px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
   
     .ui.menu .active.item {
@@ -77,7 +80,28 @@
       font-size: 11px;
       color: #ABADB3;
       font-weight: bold;
-  
+    }
+
+    .ui.menu.secondary.accordion {
+      margin: 0;
+    }
+
+    .ui.menu.secondary.accordion .content {
+      padding: 0;
+    }
+
+    .ui.menu.secondary.accordion .content .item {
+      margin-left: 13px;
+    }
+
+    .ui.menu.secondary.accordion .title {
+      padding: 0;
+    }
+
+    .ui.menu.secondary.accordion .item {
+      font-size: 1em;
+      padding: 0.78571429em 0.92857143em;
+      color: @textColor;
     }
   }
 

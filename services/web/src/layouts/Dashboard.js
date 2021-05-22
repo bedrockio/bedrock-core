@@ -13,11 +13,7 @@ import { AccordionPanel, SidebarPusher } from 'semantic-ui-react';
 
 @withSession
 export default class DashboardLayout extends React.Component {
-  
-
   render() {
-  
-
     return (
       <Sidebar>
         <Sidebar.Menu>
@@ -33,35 +29,23 @@ export default class DashboardLayout extends React.Component {
                 <Menu.Item as={NavLink} to="/shops">
                   <Icon name="store"/>Shops
                 </Menu.Item>
-
-                <Accordion as={Menu} secondary vertical fluid>
-                  <Accordion.Title
-                      // active={activeIndex === 0}
-                      index={0}
-                      // onClick={this.handleClick}
-                  >
-                    <Icon name="users" />Users
-                  </Accordion.Title>
-                  <Accordion.Content >
-                    <Menu.Item as={NavLink} to="/invites">
-                      <Icon name="envelope"/>Invites
-                    </Menu.Item>
-                    <Menu.Item as={NavLink} to="/docs">
-                      <Icon name="terminal"/>Docs
-                    </Menu.Item>
-                  </Accordion.Content>
-                </Accordion>
-
-                {/* <Protected endpoint="events">
-                  <Menu.Item as={NavLink} to="/users">
-                    <Icon name="users"/>Users
-                  </Menu.Item>
-                </Protected>
                 <Protected endpoint="events">
-                  <Menu.Item as={NavLink} to="/invites">
-                    <Icon name="envelope"/>Invites
-                  </Menu.Item>
-                </Protected> */}
+                  <Accordion as={Menu} secondary vertical fluid>
+                    <Accordion.Title
+                        index={0}
+                        onClick={this.handleClick}
+                    >
+                      <Menu.Item as={NavLink} to="/users">
+                        <Icon name="users"/>Users
+                      </Menu.Item>
+                    </Accordion.Title>
+                    <Accordion.Content>
+                      <Menu.Item as={NavLink} to="/invites">
+                        Invites
+                      </Menu.Item>
+                    </Accordion.Content>
+                  </Accordion>
+                </Protected>
               </Menu>
               <Layout style={{ flex:'0 0 auto', paddingTop:'15px', borderTop:'1px solid #ccc' }}>
                 <Menu secondary vertical fluid style={{ margin:'0', padding:'0 0 10px 25px' }}>
