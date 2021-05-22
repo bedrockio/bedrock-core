@@ -15,7 +15,7 @@ export default class Footer extends React.Component {
       <footer>
         <Container>
           <Layout horizontal center right>
-            Built with&nbsp;&nbsp;
+            <span style={{ marginRight: '10px' }}>Built with</span>
             <img width="112" height="24" src={bedrock} />
           </Layout>
         </Container>

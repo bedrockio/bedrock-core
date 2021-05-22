@@ -1,18 +1,10 @@
 import React, { createRef } from 'react';
-import { startCase, kebabCase } from 'lodash';
-import {
-  Container,
-  Menu,
-  Message,
-  Breadcrumb,
-  Divider,
-  Grid,
-  Sticky,
-  Ref,
-  Segment,
-  Dropdown
-} from 'semantic';
 import { Switch, Route, Link, NavLink } from 'react-router-dom';
+import { startCase, kebabCase } from 'lodash';
+import { Breadcrumb, Container, Divider, Menu, Message, Ref } from 'semantic';
+import { Layout } from 'components/Layout';
+import { Menu as ResponsiveMenu } from 'components/Responsive';
+
 import StandardPage from './StandardPage';
 import PageLoader from 'components/PageLoader';
 
@@ -100,7 +92,7 @@ export default class Docs extends React.Component {
   }
 
   render() {
-    const { page, loading, openApi } = this.state;
+    const { page, loading, openApi, pageId } = this.state;
     const { me } = this.props;
 
     if (loading) {
@@ -116,68 +108,17 @@ export default class Docs extends React.Component {
 
     return (
       <React.Fragment>
-          <Breadcrumb size="mini">
-            <Breadcrumb.Section link as={Link} to="/docs/api">
-              API Docs
-            </Breadcrumb.Section>
-            <Breadcrumb.Divider icon="chevron-right" />
-            <Breadcrumb.Section>{page.name}</Breadcrumb.Section>
-          </Breadcrumb>
+        <Breadcrumb size="mini">
+          <Breadcrumb.Section link as={Link} to="/docs/api">
+            API Docs
+          </Breadcrumb.Section>
+          <Breadcrumb.Divider icon="chevron-right" />
+          <Breadcrumb.Section>{page.name}</Breadcrumb.Section>
+        </Breadcrumb>
         <Divider hidden />
-        <Grid>
-          <Grid.Row>  
-            {this.renderMenu()}
-            <Grid.Column mobile={16} tablet={13} computer={13}>
-              <Ref innerRef={this.contextRef}>
-                <Switch>
-                  {PAGES.map((page) => {
-                    return (
-                      <Route
-                        key={page.id}
-                        exact
-                        path={`/docs/api/${page.id}`}
-                        component={(props) => (
-                          <StandardPage
-                            {...props}
-                            me={me}
-                            openApi={openApi}
-                            page={page}
-                          />
-                        )}
-                      />
-                    );
-                  }).concat([
-                    <Route
-                      key="index"
-                      exact
-                      path={`/docs/api`}
-                      component={(props) => (
-                        <StandardPage
-                          {...props}
-                          me={me}
-                          openApi={openApi}
-                          page={PAGES[0]}
-                        />
-                      )}
-                    />,
-                  ])}
-                </Switch>
-              </Ref>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-        <Divider hidden />
-      </React.Fragment>
-    );
-  }
-
-  renderMenu() {
-    const { pageId } = this.state;
-    return (
-      <React.Fragment>
-        <Grid.Column width={3} only="tablet computer">
-          <Sticky offset={131} context={this.contextRef}>
-            <Menu fluid pointing secondary vertical>
+        <Layout horizontal top stackable>
+          <Layout.Group size="200px" fixed>
+            <ResponsiveMenu contextRef={this.contextRef} title="Docs Menu">
               {PAGES.map(({ id, name }) => {
                 return (
                   <Menu.Item
@@ -190,31 +131,48 @@ export default class Docs extends React.Component {
                   />
                 );
               })}
-            </Menu>
-          </Sticky>
-        </Grid.Column>
-        <Grid.Column width={16} only="mobile" style={{ zIndex:'1', marginBottom: '20px' }}>
-          <Menu fluid>
-            <Dropdown text="API Docs Menu" className="link item" fluid style={{ justifyContent:'space-between' }}>
-              <Dropdown.Menu>
-                {PAGES.map(({ id, name }) => {
-                      return (
-                        <Dropdown.Item
-                          key={id}
-                          exact
-                          name={name}
-                          active={pageId === id}
-                          to={`/docs/api/${id}`}
-                          as={NavLink}
-                        >
-                        {name}
-                        </Dropdown.Item>
-                      );
-                    })}
-              </Dropdown.Menu>
-            </Dropdown>
-          </Menu>
-        </Grid.Column>
+            </ResponsiveMenu>
+          </Layout.Group>
+          <Layout.Spacer size={1} />
+          <Layout.Group>
+            <Ref innerRef={this.contextRef}>
+              <Switch>
+                {PAGES.map((page) => {
+                  return (
+                    <Route
+                      key={page.id}
+                      exact
+                      path={`/docs/api/${page.id}`}
+                      component={(props) => (
+                        <StandardPage
+                          {...props}
+                          me={me}
+                          openApi={openApi}
+                          page={page}
+                        />
+                      )}
+                    />
+                  );
+                }).concat([
+                  <Route
+                    key="index"
+                    exact
+                    path={`/docs/api`}
+                    component={(props) => (
+                      <StandardPage
+                        {...props}
+                        me={me}
+                        openApi={openApi}
+                        page={PAGES[0]}
+                      />
+                    )}
+                  />,
+                ])}
+              </Switch>
+            </Ref>
+          </Layout.Group>
+        </Layout>
+        <Divider hidden />
       </React.Fragment>
     );
   }

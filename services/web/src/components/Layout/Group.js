@@ -1,18 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { SIZE_TYPE, getSizeStyles } from './utils';
 
 import './group.less';
 
 export default class Group extends React.Component {
   getProps() {
     const { className, children, ...rest } = this.props;
-    const classNames = ['group'];
+    const classNames = ['layout-group'];
     if (className) {
       classNames.push(className);
     }
     for (let key of Object.keys(rest)) {
       if (key in Group.propTypes) {
-        classNames.push(key);
+        if (typeof rest[key] === 'boolean') {
+          classNames.push(key);
+        }
         delete rest[key];
       }
     }
@@ -23,7 +26,11 @@ export default class Group extends React.Component {
   }
 
   render() {
-    return <div {...this.getProps()}>{this.props.children}</div>;
+    return (
+      <div {...this.getProps()} style={getSizeStyles(this.props)}>
+        {this.props.children}
+      </div>
+    );
   }
 }
 
@@ -32,4 +39,6 @@ Group.propTypes = {
   flex: PropTypes.bool,
   fixed: PropTypes.bool,
   shrink: PropTypes.bool,
+  center: PropTypes.bool,
+  size: SIZE_TYPE,
 };
