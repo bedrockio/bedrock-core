@@ -12,7 +12,21 @@ import favicon from 'assets/favicon.svg';
 
 @withSession
 export default class DashboardLayout extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeIndex: null,
+    };
+  }
+
+  onClick = (evt, { index }) => {
+    this.setState({
+      activeIndex: index,
+    });
+  };
+
   render() {
+    const { activeIndex } = this.state;
     return (
       <Sidebar>
         <Sidebar.Menu>
@@ -37,13 +51,16 @@ export default class DashboardLayout extends React.Component {
                 </Menu.Item>
                 <Protected endpoint="users">
                   <Accordion as={Menu} secondary vertical fluid>
-                    <Accordion.Title index={0} onClick={this.handleClick}>
+                    <Accordion.Title
+                      active={activeIndex === 0}
+                      index={0}
+                      onClick={this.onClick}>
+                      <Icon name="users" /> Users
+                    </Accordion.Title>
+                    <Accordion.Content active={activeIndex === 0}>
                       <Menu.Item as={NavLink} to="/users">
-                        <Icon name="users" />
                         Users
                       </Menu.Item>
-                    </Accordion.Title>
-                    <Accordion.Content>
                       <Menu.Item as={NavLink} to="/invites">
                         Invites
                       </Menu.Item>
