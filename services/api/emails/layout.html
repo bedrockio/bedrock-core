@@ -9,7 +9,6 @@
     <title></title>
     <style type="text/css" rel="stylesheet" media="all">
       /* Base ------------------------------ */
-
       body {
         width: 100% !important;
         height: 100%;
@@ -119,6 +118,10 @@
         box-sizing: border-box;
       }
 
+      .button .text {
+        color: #fff !important;
+      }
+
       @media only screen and (max-width: 500px) {
         .button {
           width: 100% !important;
@@ -127,16 +130,12 @@
       }
 
       body {
-        background-color: #f4f4f7;
+        background-color: #f2f4f6;
         color: #51545e;
       }
 
       p {
         color: #51545e;
-      }
-
-      p.sub {
-        color: #6b6e76;
       }
 
       .email-wrapper {
@@ -146,7 +145,7 @@
         -premailer-width: 100%;
         -premailer-cellpadding: 0;
         -premailer-cellspacing: 0;
-        background-color: #f4f4f7;
+        background-color: #f2f4f6;
       }
 
       .email-content {
@@ -184,7 +183,6 @@
         -premailer-width: 100%;
         -premailer-cellpadding: 0;
         -premailer-cellspacing: 0;
-        background-color: #ffffff;
       }
 
       .email-body_inner {
@@ -208,7 +206,7 @@
       }
 
       .email-footer p {
-        color: #6b6e76;
+        color: #a8aaaf;
       }
 
       .body-action {
@@ -228,7 +226,7 @@
       }
 
       .content-cell {
-        padding: 35px;
+        padding: 45px;
       }
       /*Media Queries ------------------------------ */
 
@@ -283,12 +281,12 @@
           <table class="email-content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
             <tr>
               <td class="email-masthead">
-                <a href="{{appUrl}}" class="f-fallback email-masthead_name">{{appName}}</a>
+                <a href="{{&appUrl}}" class="f-fallback email-masthead_name"> {{appName}} </a>
               </td>
             </tr>
             <!-- Email Body -->
             <tr>
-              <td class="email-body" width="100%" cellpadding="0" cellspacing="0">
+              <td class="email-body" width="570" cellpadding="0" cellspacing="0">
                 <table
                   class="email-body_inner"
                   align="center"
@@ -320,8 +318,8 @@
                     <td class="content-cell" align="center">
                       <p class="f-fallback sub align-center">&copy; 2021 {{appName}}. All rights reserved.</p>
                       <p class="f-fallback sub align-center">
-                        {{companyName}}
-                        <br />{{companyAddress}}
+                        {{appCompanyName}}
+                        <br />{{appCompanyAddress}}
                       </p>
                     </td>
                   </tr>

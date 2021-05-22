@@ -1,16 +1,16 @@
 {
-    "gcloud": {
-        "envName": "staging",
-        "bucketPrefix": "bedrock-foundation-staging",
-        "project": "bedrock-foundation-staging",
-        "computeZone": "us-east1-c",
-        "kubernetes": {
-            "clusterName": "cluster-1",
-            "nodePoolCount": 1,
-            "minNodeCount": 1,
-            "maxNodeCount": 3,
-            "machineType": "n2-standard-2"
-        },
-        "label": "app"
-    }
+  "gcloud": {
+    "envName": "staging",
+    "bucketPrefix": "bedrock-foundation-staging",
+    "project": "bedrock-foundation-staging",
+    "computeZone": "us-east1-c",
+    "kubernetes": {
+      "clusterName": "cluster-1",
+      "nodePoolCount": 1,
+      "minNodeCount": 1,
+      "maxNodeCount": 3,
+      "machineType": "n2-standard-2"
+    },
+    "label": "app"
+  }
 }

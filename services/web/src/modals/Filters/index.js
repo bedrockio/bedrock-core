@@ -37,6 +37,7 @@ export default class Filters extends React.Component {
 
   onSubmit = () => {
     this.props.onSave(this.state);
+    this.props.onClose(true);
   };
 
   onReset = () => {

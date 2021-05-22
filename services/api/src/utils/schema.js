@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
+const pluginAutoPopulate = require('mongoose-autopopulate');
+
 const { startCase, omitBy, isPlainObject } = require('lodash');
 const { ObjectId } = mongoose.Schema.Types;
 const { getJoiSchema, getMongooseValidator } = require('./validation');
@@ -55,18 +57,12 @@ function createSchema(attributes = {}, options = {}) {
 
   schema.static('getCreateValidation', function getCreateValidation(appendSchema) {
     return getJoiSchemaFromMongoose(schema, {
-      disallowField: (key) => {
-        return isDisallowedField(this.schema.obj[key]);
-      },
       appendSchema,
     });
   });
 
   schema.static('getUpdateValidation', function getUpdateValidation(appendSchema) {
     return getJoiSchemaFromMongoose(schema, {
-      disallowField: (key) => {
-        return isDisallowedField(this.schema.obj[key]);
-      },
       appendSchema,
       skipRequired: true,
     });
@@ -89,6 +85,7 @@ function createSchema(attributes = {}, options = {}) {
     return this.save();
   };
 
+  schema.plugin(pluginAutoPopulate);
   return schema;
 }
 
@@ -176,7 +173,6 @@ function loadModel(definition, name) {
     throw new Error(`Invalid model definition for ${name}, need attributes`);
   }
   const schema = createSchema(attributes);
-  schema.plugin(require('mongoose-autopopulate'));
   return mongoose.model(name, schema);
 }
 
