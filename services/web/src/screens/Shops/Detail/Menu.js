@@ -11,11 +11,11 @@ export default ({ shop, onSave }) => {
     <React.Fragment>
       <Breadcrumbs
         link={<Link to="/shops">Shops</Link>}
-        active={shop.name || 'Loading...'}>
+        active={shop.name}>
       </Breadcrumbs>
       <div style={{ display:'block', height:'15px'}} />
       <Layout horizontal center spread>
-        <h1 style={{ margin:'0' }}>{shop.name || 'Loading'} Shop</h1>
+        <h1 style={{ margin:'0' }}>{shop.name} Shop</h1>
         <Layout.Group>
         <EditShop
           shop={shop}
