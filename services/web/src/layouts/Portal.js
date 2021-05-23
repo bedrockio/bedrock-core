@@ -3,23 +3,25 @@ import { NavLink } from 'react-router-dom';
 import { Menu, Icon, Container, Button } from 'semantic';
 import Footer from 'components/Footer';
 import { Layout } from 'components';
+import bem from 'helpers/bem';
 
 import logo from 'assets/bedrock.svg';
 
 import './portal.less';
 
+@bem
 export default class PortalLayout extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Layout className="top-menu">
+        <Layout className={this.getElementClass('menu')}>
           <Layout
+            className={this.getElementClass('menu-top')}
             horizontal
-            spread
             center
-            style={{ padding: '20px 25px 10px 25px' }}>
+            spread>
             <NavLink className="logo" to="/">
-              <img style={{ height: '30px' }} src={logo} />
+              <img height="30" src={logo} />
             </NavLink>
             <div>
               <Button primary compact as={NavLink} to="/">
@@ -27,7 +29,10 @@ export default class PortalLayout extends React.Component {
               </Button>
             </div>
           </Layout>
-          <Menu secondary pointing style={{ margin: '0', padding: '0 15px' }}>
+          <Menu
+            className={this.getElementClass('menu-bottom')}
+            secondary
+            pointing>
             <Container>
               <Menu.Item as={NavLink} to="/docs/getting-started">
                 <Icon name="terminal" /> API Docs
@@ -38,7 +43,7 @@ export default class PortalLayout extends React.Component {
             </Container>
           </Menu>
         </Layout>
-        <Layout style={{ padding: '131px 15px 0 15px' }}>
+        <Layout className={this.getElementClass('content')}>
           <Container>
             <main>{this.props.children}</main>
             <Footer />
