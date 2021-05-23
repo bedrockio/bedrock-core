@@ -30,9 +30,13 @@
     left: 0;
     width: @menuWidth;
     height: 100vh;
-    padding: 15px @menuPadding;
+    padding: 15px 0;
     background-color: @mainMenuBackground;
     border-right: 1px solid rgba(0, 0, 0, 0.05);
+
+    &-wrap {
+      padding-left: 25px;
+    }
 
     &--offscreen {
       box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
@@ -49,7 +53,6 @@
       background-color: #1e1e1e;
       border-right: none;
     }
-
   }
 
   &-header {
@@ -57,24 +60,23 @@
     font-size: 11px;
     color: #abadb3;
     font-weight: bold;
-    margin-bottom: 1em;
+    margin-left: 25px;
+    margin-bottom: 5px;
   }
 
   &-link {
     display: block;
-    padding: .7em 1em;
+    padding: 0.7em 22px;
     color: @textColor;
     border-left: 3px solid transparent;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
     font-weight: 500;
-    margin-left: -15px;
-    margin-right: -@menuPadding;
 
     &:hover {
       color: inherit;
-      background-color: rgba(0,0,0,.05);
+      background-color: rgba(0, 0, 0, 0.05);
     }
 
     &.active {
@@ -89,7 +91,6 @@
     .sidebar-layout-accordion & {
       padding-left: 2em;
     }
-
   }
 
   &-accordion {
@@ -102,7 +103,7 @@
 
   &-divider {
     height: 1px;
-    margin: 15px -@menuPadding;
+    margin: 0 0 15px -@menuPadding;
     background-color: #ccc;
   }
 
@@ -113,7 +114,6 @@
       margin-left: @menuWidth;
       padding: 20px 15px 0 15px;
     }
-
   }
 
   &-mobile {

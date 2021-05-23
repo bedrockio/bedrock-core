@@ -15,7 +15,7 @@ export default class DashboardLayout extends React.Component {
       <Sidebar>
         <Sidebar.Menu>
           <Layout style={{ height: '100%' }}>
-            <NavLink style={{ padding: '15px 0' }} to="/">
+            <NavLink style={{ margin: '10px 25px 15px 25px' }} to="/">
               <img height="30" src={logo} />
             </NavLink>
             <Layout vertical spread>
