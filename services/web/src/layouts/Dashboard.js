@@ -31,72 +31,52 @@ export default class DashboardLayout extends React.Component {
       <Sidebar>
         <Sidebar.Menu>
           <Layout style={{ height: '100%' }}>
-            <Sidebar.Item as={NavLink} className="logo" to="/">
-              <img style={{ height: '30px' }} src={logo} />
-            </Sidebar.Item>
-            <Layout vertical top spread>
-              <Menu
-                secondary
-                vertical
-                fluid
-                style={{
-                  overflowY: 'auto',
-                  margin: '0.5em 0 0 0',
-                  padding: '0 0 0 25px',
-                }}>
-                <Menu.Header>Main Menu</Menu.Header>
-                <Menu.Item as={NavLink} to="/shops">
+            <NavLink style={{ padding: '15px 0' }} to="/">
+              <img height="30" src={logo} />
+            </NavLink>
+            <Layout vertical spread>
+              <Layout.Group>
+                <Sidebar.Header>Main Menu</Sidebar.Header>
+                <Sidebar.Link to="/shops">
                   <Icon name="store" />
                   Shops
-                </Menu.Item>
+                </Sidebar.Link>
                 <Protected endpoint="users">
                   <Accordion as={Menu} secondary vertical fluid>
                     <Accordion.Title
                       active={activeIndex === 0}
                       index={0}
                       onClick={this.onClick}>
-                      <Icon name="users" /> Users
+                      <Sidebar.Link to="/users">
+                        <Icon name="users" />
+                        Users
+                      </Sidebar.Link>
                     </Accordion.Title>
                     <Accordion.Content active={activeIndex === 0}>
-                      <Menu.Item as={NavLink} to="/users">
-                        Users
-                      </Menu.Item>
-                      <Menu.Item as={NavLink} to="/invites">
-                        Invites
-                      </Menu.Item>
+                      <Sidebar.Link to="/invites">Invites</Sidebar.Link>
                     </Accordion.Content>
                   </Accordion>
                 </Protected>
-              </Menu>
-              <Layout
-                style={{
-                  flex: '0 0 auto',
-                  paddingTop: '15px',
-                  borderTop: '1px solid #ccc',
-                }}>
-                <Menu
-                  secondary
-                  vertical
-                  fluid
-                  style={{ margin: '0', padding: '0 0 10px 25px' }}>
-                  <Menu.Item as={NavLink} to="/company">
-                    <Icon name="building" />
-                    Bedrock Inc.
-                  </Menu.Item>
-                  <Menu.Item as={NavLink} to="/settings">
-                    <Icon name="cog" />
-                    Settings
-                  </Menu.Item>
-                  <Menu.Item as={NavLink} to="/docs/api/getting-started">
-                    <Icon name="terminal" />
-                    Docs
-                  </Menu.Item>
-                  <Menu.Item as={NavLink} to="/logout">
-                    <Icon name="sign-out-alt" />
-                    Log Out
-                  </Menu.Item>
-                </Menu>
-              </Layout>
+              </Layout.Group>
+              <Layout.Group>
+                <Sidebar.Divider />
+                <Sidebar.Link to="/company">
+                  <Icon name="building" />
+                  Bedrock Inc.
+                </Sidebar.Link>
+                <Sidebar.Link to="/settings">
+                  <Icon name="cog" />
+                  Settings
+                </Sidebar.Link>
+                <Sidebar.Link to="/docs/api/getting-started">
+                  <Icon name="terminal" />
+                  Docs
+                </Sidebar.Link>
+                <Sidebar.Link to="/logout">
+                  <Icon name="sign-out-alt" />
+                  Log Out
+                </Sidebar.Link>
+              </Layout.Group>
             </Layout>
           </Layout>
         </Sidebar.Menu>
