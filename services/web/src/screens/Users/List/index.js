@@ -34,9 +34,8 @@ export default class UserList extends React.Component {
           return (
             <React.Fragment>
               <Breadcrumbs active="Users" />
-              <div style={{ display:'inline-block', height:'10px'}} />
               <Layout horizontal center spread>
-              <h1 style={{ margin:'0' }}>Users</h1>
+              <h1>Users</h1>
               <Layout.Group>
                 <Filters onSave={setFilters} filters={filters}>
                   <Filters.Text

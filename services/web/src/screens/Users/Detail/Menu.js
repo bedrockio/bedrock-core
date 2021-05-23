@@ -12,9 +12,8 @@ export default ({ user, match, onSave }) => {
   return (
     <React.Fragment>
       <Breadcrumbs link={<Link to="/users">Users</Link>} active={user.name} />
-      <div style={{ display: 'block', height: '15px' }} />
       <Layout horizontal center spread>
-        <h1 style={{ margin: '0', textTransform: 'capitalize' }}>
+        <h1 style={{ textTransform: 'capitalize' }}>
           {user.name} User
         </h1>
         <Layout.Group>
