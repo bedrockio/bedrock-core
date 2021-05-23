@@ -81,26 +81,20 @@ export default class DashboardLayout extends React.Component {
           </Layout>
         </Sidebar.Menu>
         <Sidebar.Content>
-          <div className="mheader">
+          <Sidebar.Mobile>
             <Layout horizontal spread center>
               <Layout.Group>
-                <NavLink className="mlogo" to="/">
-                  <img
-                    style={{ height: '15px', marginTop: '2px' }}
-                    src={favicon}
-                  />
+                <NavLink to="/">
+                  <img src={favicon} height="15" />
                 </NavLink>
               </Layout.Group>
               <Layout.Group>
-                <Sidebar.Trigger style={{ marginBottom: '20px' }}>
-                  <Icon
-                    name="bars"
-                    style={{ verticalAlign: 'top', marginTop: '2px' }}
-                  />
+                <Sidebar.Trigger>
+                  <Icon name="bars" fitted />
                 </Sidebar.Trigger>
               </Layout.Group>
             </Layout>
-          </div>
+          </Sidebar.Mobile>
           <Container>
             <main>{this.props.children}</main>
             <Footer />
