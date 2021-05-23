@@ -14,7 +14,7 @@
   }
 
   &.grow {
-    flex: auto;
+    flex: 1 1 1px;
   }
 
   &.flex {
@@ -26,6 +26,19 @@
     flex-flow: inherit;
     align-items: center;
     justify-content: center;
+  }
+
+  &.overflow {
+
+    .layout.vertical & {
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    .layout.horizontal & {
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
   }
 
   .sizingWorkaround();

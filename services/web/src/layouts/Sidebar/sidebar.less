@@ -33,7 +33,6 @@
     padding: 15px @menuPadding;
     background-color: @mainMenuBackground;
     border-right: 1px solid rgba(0, 0, 0, 0.05);
-    overflow-y: auto;
 
     &--offscreen {
       box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
@@ -49,22 +48,6 @@
       color: #fff;
       background-color: #1e1e1e;
       border-right: none;
-    }
-
-    .ui.menu.secondary.accordion {
-      margin: 0;
-    }
-
-    .ui.menu.secondary.accordion .content {
-      padding: 0;
-    }
-
-    .ui.menu.secondary.accordion .content .item {
-      margin-left: 13px;
-    }
-
-    .ui.menu.secondary.accordion .title {
-      padding: 0;
     }
 
   }
@@ -101,6 +84,19 @@
 
     .icon {
       margin-right: 10px;
+    }
+
+    .sidebar-layout-accordion & {
+      padding-left: 2em;
+    }
+
+  }
+
+  &-accordion {
+    display: none;
+
+    &--active {
+      display: block;
     }
   }
 

@@ -1,7 +1,6 @@
 import React from 'react';
-import { withSession } from 'stores';
 import { NavLink } from 'react-router-dom';
-import { Menu, Icon, Container, Accordion } from 'semantic';
+import { Icon, Container } from 'semantic';
 import Footer from 'components/Footer';
 import { Layout } from 'components';
 import Protected from 'components/Protected';
@@ -10,23 +9,8 @@ import Sidebar from './Sidebar';
 import logo from 'assets/bedrock.svg';
 import favicon from 'assets/favicon.svg';
 
-@withSession
 export default class DashboardLayout extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      activeIndex: null,
-    };
-  }
-
-  onClick = (evt, { index }) => {
-    this.setState({
-      activeIndex: index,
-    });
-  };
-
   render() {
-    const { activeIndex } = this.state;
     return (
       <Sidebar>
         <Sidebar.Menu>
@@ -37,25 +21,23 @@ export default class DashboardLayout extends React.Component {
             <Layout vertical spread>
               <Layout.Group>
                 <Sidebar.Header>Main Menu</Sidebar.Header>
+              </Layout.Group>
+              <Layout.Group grow overflow>
                 <Sidebar.Link to="/shops">
                   <Icon name="store" />
                   Shops
                 </Sidebar.Link>
                 <Protected endpoint="users">
-                  <Accordion as={Menu} secondary vertical fluid>
-                    <Accordion.Title
-                      active={activeIndex === 0}
-                      index={0}
-                      onClick={this.onClick}>
-                      <Sidebar.Link to="/users">
-                        <Icon name="users" />
-                        Users
-                      </Sidebar.Link>
-                    </Accordion.Title>
-                    <Accordion.Content active={activeIndex === 0}>
-                      <Sidebar.Link to="/invites">Invites</Sidebar.Link>
-                    </Accordion.Content>
-                  </Accordion>
+                  <Sidebar.Link to="/users">
+                    <Icon name="users" />
+                    Users
+                  </Sidebar.Link>
+                  <Sidebar.Accordion active="/users">
+                    <Sidebar.Link to="/users/invites">
+                      <Icon name="envelope" />
+                      Invites
+                    </Sidebar.Link>
+                  </Sidebar.Accordion>
                 </Protected>
               </Layout.Group>
               <Layout.Group>

@@ -18,6 +18,7 @@ import Mobile from './Mobile';
 import Content from './Content';
 import Trigger from './Trigger';
 import Divider from './Divider';
+import Accordion from './Accordion';
 
 import './sidebar.less';
 
@@ -36,6 +37,7 @@ Mobile.contextType = Context;
 Content.contextType = Context;
 Trigger.contextType = Context;
 Divider.contextType = Context;
+Accordion.contextType = Context;
 
 @bem
 export default class SidebarLayout extends React.Component {
@@ -46,6 +48,7 @@ export default class SidebarLayout extends React.Component {
   static Content = Content;
   static Trigger = Trigger;
   static Divider = Divider;
+  static Accordion = Accordion;
 
   constructor(props) {
     super(props);
