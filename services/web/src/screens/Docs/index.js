@@ -156,8 +156,8 @@ export default class Docs extends React.Component {
                 }).concat([
                   <Route
                     key="index"
+                    path="/docs"
                     exact
-                    path={`/docs`}
                     component={(props) => (
                       <StandardPage
                         {...props}
