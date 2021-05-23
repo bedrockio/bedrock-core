@@ -29,10 +29,10 @@ export default class PortalLayout extends React.Component {
           </Layout>
           <Menu secondary pointing style={{ margin: '0', padding: '0 15px' }}>
             <Container>
-              <Menu.Item as={NavLink} to="/docs/api/getting-started">
+              <Menu.Item as={NavLink} to="/docs/getting-started">
                 <Icon name="terminal" /> API Docs
               </Menu.Item>
-              <Menu.Item as={NavLink} to="/docs/ui/components">
+              <Menu.Item as={NavLink} to="/docs/ui">
                 <Icon name="cube" /> UI Components
               </Menu.Item>
             </Container>

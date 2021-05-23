@@ -51,7 +51,7 @@ export default class ComponentsScreen extends React.Component {
     return (
       <React.Fragment>
         <Breadcrumb size="mini">
-          <Breadcrumb.Section link as={Link} to="/docs/api">
+          <Breadcrumb.Section link as={Link} to="/docs">
             Docs
           </Breadcrumb.Section>
           <Breadcrumb.Divider icon="chevron-right" />

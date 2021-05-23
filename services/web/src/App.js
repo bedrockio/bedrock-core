@@ -28,8 +28,8 @@ const App = () => (
     <Protected path="/settings" allowed={Settings} exact />
     <Protected path="/users/invites" allowed={Invites} exact />
     <Protected path="/users/:id?" allowed={Users} />
-    <Route path="/docs/ui/components" component={Components} exact />
-    <Route path="/docs/api/:id?" component={Docs} />
+    <Route path="/docs/ui" component={Components} exact />
+    <Route path="/docs/:id?" component={Docs} />
     <Route path="/logout" component={Logout} exact />
     <AuthSwitch
       path="/login"
