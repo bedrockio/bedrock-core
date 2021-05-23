@@ -15,7 +15,7 @@ export default class DashboardLayout extends React.Component {
       <Sidebar>
         <Sidebar.Menu>
           <Layout style={{ height: '100%' }}>
-            <NavLink style={{ margin: '10px 25px 15px 25px' }} to="/">
+            <NavLink style={{ margin: '5px 25px 15px 25px' }} to="/">
               <img height="30" src={logo} />
             </NavLink>
             <Layout vertical spread>
@@ -42,10 +42,10 @@ export default class DashboardLayout extends React.Component {
               </Layout.Group>
               <Layout.Group>
                 <Sidebar.Divider />
-                <Sidebar.Link to="/company">
+                {/* <Sidebar.Link to="/company">
                   <Icon name="building" />
                   Bedrock Inc.
-                </Sidebar.Link>
+                </Sidebar.Link> */}
                 <Sidebar.Link to="/settings">
                   <Icon name="cog" />
                   Settings
