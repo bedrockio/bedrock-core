@@ -431,6 +431,10 @@ export default class ComponentsScreen extends React.Component {
                     <Icon name="envelope" /> Label with icon
                   </Label>
 
+                  <Label>
+                    <Icon name="globe" /> Label with icon
+                  </Label>
+
                   <Label as="a">
                     Label as Link <Icon name="times" />
                   </Label>

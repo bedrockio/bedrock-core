@@ -41,7 +41,7 @@
 @linkTransition: @labelTransitionDuration opacity @labelTransitionEasing;
 
 /* Icon */
-@iconDistance: 0.75em;
+@iconDistance: 0.5em;
 
 /* Image */
 @imageHeight: (1em + @verticalPadding * 2);
@@ -55,7 +55,7 @@
 /* Delete */
 @deleteOpacity: @linkOpacity;
 @deleteSize: @relativeSmall;
-@deleteMargin: 0.5em;
+@deleteMargin: 0.3em;
 @deleteTransition: background @labelTransitionDuration @labelTransitionEasing;
 
 /*-------------------
