@@ -17,7 +17,7 @@ export default class Breadcrumbs extends React.Component {
   render() {
     const { active } = this.props;
     return (
-      <div>
+      <div style={{ marginBottom: '15px' }}>
         <Breadcrumb size="mini">
           <Breadcrumb.Section link as={Link} to="/">
             Home

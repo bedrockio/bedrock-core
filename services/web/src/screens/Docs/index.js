@@ -109,7 +109,7 @@ export default class Docs extends React.Component {
     return (
       <React.Fragment>
         <Breadcrumb size="mini">
-          <Breadcrumb.Section link as={Link} to="/docs/api">
+          <Breadcrumb.Section link as={Link} to="/docs">
             API Docs
           </Breadcrumb.Section>
           <Breadcrumb.Divider icon="chevron-right" />
@@ -126,7 +126,7 @@ export default class Docs extends React.Component {
                     exact
                     name={name}
                     active={pageId === id}
-                    to={`/docs/api/${id}`}
+                    to={`/docs/${id}`}
                     as={NavLink}
                   />
                 );
@@ -142,7 +142,7 @@ export default class Docs extends React.Component {
                     <Route
                       key={page.id}
                       exact
-                      path={`/docs/api/${page.id}`}
+                      path={`/docs/${page.id}`}
                       component={(props) => (
                         <StandardPage
                           {...props}
@@ -156,8 +156,8 @@ export default class Docs extends React.Component {
                 }).concat([
                   <Route
                     key="index"
+                    path="/docs"
                     exact
-                    path={`/docs/api`}
                     component={(props) => (
                       <StandardPage
                         {...props}

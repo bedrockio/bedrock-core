@@ -33,9 +33,8 @@ export default class Home extends React.Component {
           return (
             <div>
               <Breadcrumbs active="Invites" />
-              <div style={{ display:'inline-block', height:'10px'}} />
               <Layout horizontal center spread>
-                <h1 style={{ margin:'0' }}>
+                <h1>
                     Invites
                 </h1>
                 <Layout.Group>

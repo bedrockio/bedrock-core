@@ -56,9 +56,8 @@ export default class ShopList extends React.Component {
           return (
             <React.Fragment>
               <Breadcrumbs active="Shops" />
-              <div style={{ display:'inline-block', height:'10px'}} />
               <Layout horizontal center spread>
-                <h1 style={{ margin:'0' }}>Shops</h1>
+                <h1>Shops</h1>
                 <Layout.Group>
                   <Filters onSave={setFilters} filters={filters}>
                       {/* --- Generator: filters */}

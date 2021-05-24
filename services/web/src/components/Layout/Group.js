@@ -35,10 +35,11 @@ export default class Group extends React.Component {
 }
 
 Group.propTypes = {
+  size: SIZE_TYPE,
   grow: PropTypes.bool,
   flex: PropTypes.bool,
   fixed: PropTypes.bool,
   shrink: PropTypes.bool,
   center: PropTypes.bool,
-  size: SIZE_TYPE,
+  overflow: PropTypes.bool,
 };

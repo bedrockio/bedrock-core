@@ -1,8 +1,8 @@
-@import '../../styles/responsive';
 @import '../../semantic/globals/site.variables';
+@import '../../styles/responsive';
 
-@padding: 0;
 @menuWidth: 250px;
+@menuPadding: 25px;
 
 // TODO: (@skatey)
 // Using this component needs to overwrite container styles
@@ -30,10 +30,13 @@
     left: 0;
     width: @menuWidth;
     height: 100vh;
-    padding: @padding;
+    padding: 15px 0;
     background-color: @mainMenuBackground;
-    border-right: 1px solid rgba(0,0,0,.05);
-    overflow-y: auto;
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
+
+    &-wrap {
+      padding-left: 25px;
+    }
 
     &--offscreen {
       box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
@@ -47,20 +50,61 @@
 
     &--dark {
       color: #fff;
-      background-color: #1E1E1E;
+      background-color: #1e1e1e;
       border-right: none;
     }
   }
 
-  &-item {
-    display: block;
-    font-size: 14px;
-    line-height: 2.2;
+  &-header {
+    text-transform: uppercase;
+    font-size: 11px;
+    color: #abadb3;
+    font-weight: bold;
+    margin-left: 25px;
+    margin-bottom: 5px;
+  }
 
-    &,
+  &-link {
+    display: block;
+    padding: 0.7em 22px;
+    color: @textColor;
+    border-left: 3px solid transparent;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-weight: 500;
+
     &:hover {
       color: inherit;
+      background-color: rgba(0, 0, 0, 0.05);
     }
+
+    &.active {
+      border-left: 3px solid @primaryColor;
+      background-color: rgba(@primaryColor, 0.1);
+    }
+
+    .icon {
+      margin-right: 10px;
+    }
+
+    .sidebar-layout-accordion & {
+      padding-left: 2em;
+    }
+  }
+
+  &-accordion {
+    display: none;
+
+    &--active {
+      display: block;
+    }
+  }
+
+  &-divider {
+    height: 1px;
+    margin: 0 0 15px -@menuPadding;
+    background-color: #ccc;
   }
 
   &-content {
@@ -70,17 +114,16 @@
       margin-left: @menuWidth;
       padding: 20px 15px 0 15px;
     }
+  }
 
-    .mheader {
-      background: @mainMenuBackground;
-      padding: 7px 15px 5px 15px;
-      border-bottom: 1px solid rgba(0,0,0,.05);
-      margin: -15px 0 10px 0;
+  &-mobile {
+    background: @mainMenuBackground;
+    padding: 7px 15px 5px 15px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    margin: -15px 0 10px 0;
+
+    @media @desktop {
       display: none;
-
-      @media (max-width: 767px) {
-        display: flex;
-      }
     }
   }
 
@@ -99,7 +142,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color:rgba(193, 201, 210, .7);
+    background-color: rgba(193, 201, 210, 0.7);
     transition: linear 200ms opacity;
     opacity: 0;
     pointer-events: none;
@@ -109,34 +152,4 @@
       pointer-events: auto;
     }
   }
-
-  .logo {
-    margin: 25px 25px 0 25px;
-  }
-
-  .ui.menu .active.item.logo {
-    background: none;
-  }
-
-  .ui.menu.secondary .item {
-    border-left: 3px solid transparent;
-    border-radius: 0 !important;
-    margin-left: -13px;
-    padding-left: 10px;
-  }
-
-  .ui.menu .active.item {
-    border-left: 3px solid @primaryColor;
-    background-color: rgba(@primaryColor, .1);
-  }
-
-  .ui.menu .header {
-    padding: 0.78571429em 0.46em 0.78571429em 0;
-    text-transform: uppercase;
-    font-size: 11px;
-    color: #ABADB3;
-    font-weight: bold;
-
-  }
-
 }

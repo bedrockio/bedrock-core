@@ -17,7 +17,7 @@ export default class ShopOverview extends React.Component {
       <React.Fragment>
         <Menu {...this.props} />
         {/* --- Generator: overview-fields */}
-        <Header as="h2" style={{ marginTop: '0' }}>Overview</Header>
+        <Header as="h2">Overview</Header>
         <p>{shop.description}</p>
         <Header as="h3">Images</Header>
         <Image.Group size="large">

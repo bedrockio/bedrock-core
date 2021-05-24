@@ -11,23 +11,22 @@ export default ({ user, match, onSave }) => {
   const { id } = match.params;
   return (
     <React.Fragment>
-      <Breadcrumbs link={<Link to="/users">Users</Link>} active={user?.name || 'Loading...'} />
-      <div style={{ display:'block', height:'15px'}} />
+      <Breadcrumbs link={<Link to="/users">Users</Link>} active={user.name} />
       <Layout horizontal center spread>
-      <h1 style={{ margin:'0', textTransform: 'capitalize' }}>{user?.name || 'Loading'} User</h1>
+        <h1 style={{ textTransform: 'capitalize' }}>
+          {user.name} User
+        </h1>
         <Layout.Group>
-        <EditUser
-          user={user}
-          onSave={onSave}
-          trigger={<Button primary icon="setting" content="Settings" />}
-        />
+          <EditUser
+            user={user}
+            onSave={onSave}
+            trigger={<Button primary icon="setting" content="Settings" />}
+          />
         </Layout.Group>
       </Layout>
-      
       <Menu pointing secondary>
         <Menu.Item name="Overview" to={`/users/${id}`} as={NavLink} exact />
       </Menu>
-      
     </React.Fragment>
   );
 };
