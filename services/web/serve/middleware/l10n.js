@@ -48,7 +48,6 @@ const COOKIE_NAME = 'hl';
 const DEFAULT_CODE = 'en-US';
 
 module.exports = function l10nMiddleware(localeCodes, defaultCode) {
-
   localeCodes = localeCodes || [DEFAULT_CODE];
   defaultCode = defaultCode || DEFAULT_CODE;
 
@@ -70,16 +69,15 @@ module.exports = function l10nMiddleware(localeCodes, defaultCode) {
 
   function getL10nUrls(url, hl) {
     const baseUrl = getBaseUrl(url, hl);
-    return localeCodes
-      .map((code) => {
-        const { canonical, prefix } = getUrlPrefix(code);
-        const url = `${prefix}${baseUrl}`;
-        return {
-          url,
-          code,
-          canonical,
-        };
-      });
+    return localeCodes.map((code) => {
+      const { canonical, prefix } = getUrlPrefix(code);
+      const url = `${prefix}${baseUrl}`;
+      return {
+        url,
+        code,
+        canonical,
+      };
+    });
   }
 
   function getUrlPrefix(code) {
@@ -115,10 +113,10 @@ module.exports = function l10nMiddleware(localeCodes, defaultCode) {
     // Otherwise redirect the user only if they don't explicitly
     // have a language set.
     else if (!hl) {
-
       // If the user has set a language preference in their cookies,
       // then use it, otherwise get from Accept-Language header and store.
-      hl = ctx.cookies.get(COOKIE_NAME) || ctx.acceptsLanguages(acceptedLocales);
+      hl =
+        ctx.cookies.get(COOKIE_NAME) || ctx.acceptsLanguages(acceptedLocales);
 
       // If the requested language does not match the page,
       // then redirect them to it.
@@ -129,7 +127,7 @@ module.exports = function l10nMiddleware(localeCodes, defaultCode) {
     ctx.state.l10n = {
       hl: map[hl],
       urls: getL10nUrls(ctx.url, hl),
-      prefix: `/${urlLang || ''}`
+      prefix: `/${urlLang || ''}`,
     };
     return next();
   };

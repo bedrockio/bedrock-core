@@ -1,24 +1,32 @@
 {
   "attributes": {
-    "requestUrl":  {
+    "requestUrl": {
       "type": "String",
       "required": true
     },
-    "requestMethod":  {
+    "requestMethod": {
       "type": "String",
       "required": true
     },
-    "routePrefix":  {
+    "routePrefix": {
       "type": "String"
     },
-    "routeNormalizedPath":  {
+    "routeNormalizedPath": {
       "type": "String"
     },
-    "activity":  {
+    "activity": {
       "type": "String",
       "required": true
     },
-    "objectDiff": {
+    "modifiedFields": [
+      {
+        "type": "String"
+      }
+    ],
+    "objectBefore": {
+      "type": "Mixed"
+    },
+    "objectAfter": {
       "type": "Mixed"
     },
     "objectId": {
@@ -37,4 +45,3 @@
     }
   }
 }
-

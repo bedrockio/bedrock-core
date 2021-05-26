@@ -24,7 +24,9 @@ export default (props) => {
             password,
           });
         }}>
-        {touched && !accepted && <Message error content="Please accept the terms of service" />}
+        {touched && !accepted && (
+          <Message error content="Please accept the terms of service" />
+        )}
         {error && <Message error content={error.message} />}
         <Form.Field error={error?.hasField?.('name')}>
           <Input
@@ -70,7 +72,13 @@ export default (props) => {
             onChange={(e, { checked }) => setAccepted(checked)}
           />
         </Form.Field>
-        <Button primary size="large" content="Signup" loading={loading} disabled={loading} />
+        <Button
+          primary
+          size="large"
+          content="Signup"
+          loading={loading}
+          disabled={loading}
+        />
       </Form>
     </AutoFocus>
   );

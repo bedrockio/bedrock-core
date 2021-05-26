@@ -53,7 +53,7 @@
 @listItemMargin: 0.3em;
 
 /* Icon */
-@iconDistance: 0.6em;
+@iconDistance: 1.5em;
 
 /* Close Icon */
 @closeTopDistance: @verticalPadding - @lineHeightOffset;
@@ -67,7 +67,7 @@
 --------------------*/
 
 /* Icon Message */
-@iconSize: 3em;
+@iconSize: 2.6em;
 @iconOpacity: 0.8;
 @iconContentDistance: 0rem;
 @iconVerticalAlign: middle;

@@ -16,3 +16,4 @@ services/api/data
 globalConfig.json
 .eslintcache
 .vscode
+secrets

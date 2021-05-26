@@ -176,11 +176,9 @@ describe('fetchUser', () => {
     await fetchUser(ctx, () => {});
     expect(count).toBe(1);
   });
-
 });
 
 describe('token interop', () => {
-
   beforeAll(async () => {
     await setupDb();
   });
@@ -218,7 +216,9 @@ describe('token interop', () => {
     // Attempt to authorize with first token
     ctx = context({ headers: { authorization: `Bearer ${token1}` } });
     await authenticate()(ctx, () => {});
-    await expect(fetchUser(ctx, () => {})).rejects.toHaveProperty('message', 'user associated to token could not be found');
-
+    await expect(fetchUser(ctx, () => {})).rejects.toHaveProperty(
+      'message',
+      'user associated to token could not be found'
+    );
   });
 });

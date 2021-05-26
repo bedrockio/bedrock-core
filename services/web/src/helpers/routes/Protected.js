@@ -6,9 +6,12 @@ import AuthSwitch from './AuthSwitch';
 
 @withSession
 export default class Protected extends React.Component {
-
   render() {
-    const { allowed: AllowedComponent, denied: DeniedComponent, ...rest } = this.props;
+    const {
+      allowed: AllowedComponent,
+      denied: DeniedComponent,
+      ...rest
+    } = this.props;
     return (
       <AuthSwitch
         loggedIn={AllowedComponent}
@@ -17,7 +20,6 @@ export default class Protected extends React.Component {
       />
     );
   }
-
 }
 
 Protected.propTypes = {

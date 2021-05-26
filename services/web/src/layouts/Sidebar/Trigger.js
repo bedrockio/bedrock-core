@@ -3,11 +3,6 @@ import bem from 'helpers/bem';
 
 @bem
 export default class SidebarLayoutTrigger extends React.Component {
-  getModifiers() {
-    const { offscreen } = this.context;
-    return [offscreen ? null : 'hidden'];
-  }
-
   onClick = (evt) => {
     evt.stopPropagation();
     this.context.toggle();

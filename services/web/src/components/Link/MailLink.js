@@ -6,7 +6,6 @@ import ExternalLink from './ExternalLink';
 // https://www.telerik.com/forums/proper-way-to-do-mailto-and-tel-links
 
 export default class MailLink extends React.Component {
-
   render() {
     const { mail, ...props } = this.props;
     return (
@@ -18,5 +17,4 @@ export default class MailLink extends React.Component {
       </ExternalLink>
     );
   }
-
 }

@@ -12,16 +12,18 @@ import Products from './Products';
 // --- Generator: end
 
 export default class ShopDetail extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
       shop: null,
       error: null,
       loading: true,
-      onSave: this.onSave,
     };
   }
+
+  onSave = () => {
+    this.fetchShop();
+  };
 
   componentDidMount() {
     this.fetchShop();
@@ -32,10 +34,6 @@ export default class ShopDetail extends React.Component {
     if (id !== lastProps.match.params.id) {
       this.fetchShop();
     }
-  }
-
-  onSave = () => {
-    this.fetchShop();
   }
 
   async fetchShop() {
@@ -64,9 +62,7 @@ export default class ShopDetail extends React.Component {
   render() {
     const { loading, error } = this.state;
     if (loading) {
-      return (
-        <Loader active>Loading</Loader>
-      );
+      return <Loader active>Loading</Loader>;
     } else if (error) {
       return (
         <React.Fragment>
@@ -78,13 +74,14 @@ export default class ShopDetail extends React.Component {
         </React.Fragment>
       );
     }
+
     return (
       <Switch>
         <Route
           exact
           path="/shops/:id"
           render={(props) => (
-            <Overview {...props} {...this.state}  />
+            <Overview {...props} {...this.state} onSave={this.onSave} />
           )}
         />
         {/* --- Generator: routes */}
@@ -92,7 +89,7 @@ export default class ShopDetail extends React.Component {
           exact
           path="/shops/:id/products"
           render={(props) => (
-            <Products {...props} {...this.state} />
+            <Products {...props} {...this.state} onSave={this.onSave} />
           )}
         />
         {/* --- Generator: end */}

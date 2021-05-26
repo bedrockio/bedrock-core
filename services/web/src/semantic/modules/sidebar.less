@@ -40,7 +40,6 @@
   backface-visibility: hidden;
 }
 
-
 /*--------------
    Direction
 ---------------*/
@@ -72,7 +71,6 @@
   transform: translate3d(0, 100%, 0);
 }
 
-
 /*--------------
      Pushable
 ---------------*/
@@ -97,7 +95,6 @@ body.pushable {
 .pushable:not(body) > .pusher:after {
   position: absolute;
 }
-
 
 /*--------------
      Fixed
@@ -230,7 +227,6 @@ body.pushable > .pusher {
        iOS
 ---------------*/
 
-
 /*******************************
           Variations
 *******************************/
@@ -244,8 +240,8 @@ body.pushable > .pusher {
 .ui.thin.right.sidebar {
   width: @thinWidth;
 }
-.ui[class*="very thin"].left.sidebar,
-.ui[class*="very thin"].right.sidebar {
+.ui[class*='very thin'].left.sidebar,
+.ui[class*='very thin'].right.sidebar {
   width: @veryThinWidth;
 }
 .ui.left.sidebar,
@@ -256,8 +252,8 @@ body.pushable > .pusher {
 .ui.wide.right.sidebar {
   width: @wideWidth;
 }
-.ui[class*="very wide"].left.sidebar,
-.ui[class*="very wide"].right.sidebar {
+.ui[class*='very wide'].left.sidebar,
+.ui[class*='very wide'].right.sidebar {
   width: @veryWideWidth;
 }
 
@@ -266,16 +262,16 @@ body.pushable > .pusher {
 .ui.visible.thin.left.sidebar ~ .pusher {
   transform: translate3d(@thinWidth, 0, 0);
 }
-.ui.visible[class*="very thin"].left.sidebar ~ .fixed,
-.ui.visible[class*="very thin"].left.sidebar ~ .pusher {
+.ui.visible[class*='very thin'].left.sidebar ~ .fixed,
+.ui.visible[class*='very thin'].left.sidebar ~ .pusher {
   transform: translate3d(@veryThinWidth, 0, 0);
 }
 .ui.visible.wide.left.sidebar ~ .fixed,
 .ui.visible.wide.left.sidebar ~ .pusher {
   transform: translate3d(@wideWidth, 0, 0);
 }
-.ui.visible[class*="very wide"].left.sidebar ~ .fixed,
-.ui.visible[class*="very wide"].left.sidebar ~ .pusher {
+.ui.visible[class*='very wide'].left.sidebar ~ .fixed,
+.ui.visible[class*='very wide'].left.sidebar ~ .pusher {
   transform: translate3d(@veryWideWidth, 0, 0);
 }
 
@@ -284,20 +280,18 @@ body.pushable > .pusher {
 .ui.visible.thin.right.sidebar ~ .pusher {
   transform: translate3d(-@thinWidth, 0, 0);
 }
-.ui.visible[class*="very thin"].right.sidebar ~ .fixed,
-.ui.visible[class*="very thin"].right.sidebar ~ .pusher {
+.ui.visible[class*='very thin'].right.sidebar ~ .fixed,
+.ui.visible[class*='very thin'].right.sidebar ~ .pusher {
   transform: translate3d(-@veryThinWidth, 0, 0);
 }
 .ui.visible.wide.right.sidebar ~ .fixed,
 .ui.visible.wide.right.sidebar ~ .pusher {
   transform: translate3d(-@wideWidth, 0, 0);
 }
-.ui.visible[class*="very wide"].right.sidebar ~ .fixed,
-.ui.visible[class*="very wide"].right.sidebar ~ .pusher {
+.ui.visible[class*='very wide'].right.sidebar ~ .fixed,
+.ui.visible[class*='very wide'].right.sidebar ~ .pusher {
   transform: translate3d(-@veryWideWidth, 0, 0);
 }
-
-
 
 /*******************************
           Animations
@@ -352,8 +346,6 @@ body.pushable > .pusher {
   transform: none !important;
 }
 
-
-
 /*--------------
       Push
 ---------------*/
@@ -383,7 +375,6 @@ body.pushable > .pusher {
   transform: translate3d(0%, 0, 0);
 }
 
-
 /*--------------
     Uncover
 ---------------*/
@@ -399,7 +390,6 @@ body.pushable > .pusher {
   transform: translate3d(0, 0, 0);
   transition: transform @duration @easing;
 }
-
 
 /*--------------
    Slide Along
@@ -433,7 +423,6 @@ body.pushable > .pusher {
 .ui.visible.slide.along.sidebar {
   transform: translate3d(0%, 0, 0);
 }
-
 
 /*--------------
    Slide Out

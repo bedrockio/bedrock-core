@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, Form, Button, Message } from 'semantic';
 import { request } from 'utils/api';
 import AutoFocus from 'components/AutoFocus';
+import { modal } from 'helpers';
 
 // --- Generator: imports
 import DateField from 'components/form-fields/Date';
@@ -9,25 +10,15 @@ import UploadsField from 'components/form-fields/Uploads';
 import CurrencyField from 'components/form-fields/Currency';
 // --- Generator: end
 
+@modal
 export default class EditProduct extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
-      open: false,
       error: null,
       loading: false,
       product: props.product || {},
     };
-  }
-
-  componentDidUpdate(lastProps) {
-    const { product } = this.props;
-    if (product && product !== lastProps.product) {
-      this.setState({
-        product,
-      });
-    }
   }
 
   isUpdate() {
@@ -48,11 +39,12 @@ export default class EditProduct extends React.Component {
   };
 
   onSubmit = async () => {
+    this.setState({
+      loading: true,
+    });
+    const { product } = this.state;
+
     try {
-      this.setState({
-        loading: true,
-      });
-      const { product } = this.state;
       if (this.isUpdate()) {
         await request({
           method: 'PATCH',
@@ -62,7 +54,7 @@ export default class EditProduct extends React.Component {
             // --- Generator: refs
             shop: this.props.shop.id,
             // --- Generator: end
-          }
+          },
         });
       } else {
         await request({
@@ -75,15 +67,9 @@ export default class EditProduct extends React.Component {
             // --- Generator: end
           },
         });
-        this.setState({
-          product: {},
-        });
       }
-      this.setState({
-        open: false,
-        loading: false,
-      });
       this.props.onSave();
+      this.props.close();
     } catch (error) {
       this.setState({
         error,
@@ -93,17 +79,12 @@ export default class EditProduct extends React.Component {
   };
 
   render() {
-    const { trigger } = this.props;
-    const { product, open, loading, error } = this.state;
+    const { product, loading, error } = this.state;
     return (
-      <Modal
-        closeIcon
-        open={open}
-        trigger={trigger}
-        closeOnDimmerClick={false}
-        onOpen={() => this.setState({ open: true })}
-        onClose={() => this.setState({ open: false })}>
-        <Modal.Header>{this.isUpdate() ? `Edit "${product.name}"` : 'New Product'}</Modal.Header>
+      <>
+        <Modal.Header>
+          {this.isUpdate() ? `Edit "${product.name}"` : 'New Product'}
+        </Modal.Header>
         <Modal.Content scrolling>
           <AutoFocus>
             <Form
@@ -164,7 +145,7 @@ export default class EditProduct extends React.Component {
                 onAddItem={(evt, { name, value }) => {
                   this.setField(evt, {
                     name,
-                    value: [...product.sellingPoints || [], value],
+                    value: [...(product.sellingPoints || []), value],
                   });
                 }}
                 onChange={this.setField}
@@ -190,7 +171,7 @@ export default class EditProduct extends React.Component {
             content={this.isUpdate() ? 'Update' : 'Create'}
           />
         </Modal.Actions>
-      </Modal>
+      </>
     );
   }
 }

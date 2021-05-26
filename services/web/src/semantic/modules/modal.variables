@@ -4,25 +4,22 @@
 
 @import (multiple) '../globals/site.variables';
 
-@background: @white;
+@background: @pageBackground;
 @border: none;
 @zIndex: 1001;
 @borderRadius: @defaultBorderRadius;
 @transformOrigin: 50% 25%;
-@boxShadow:
-  1px 3px 3px 0px rgba(0, 0, 0, 0.2),
-  1px 3px 15px 2px rgba(0, 0, 0, 0.2)
-;
+@boxShadow: 0 0 5px 1px rgba(0,0,0,0.075);
 
 /* Close Icon */
-@closeOpacity: 0.8;
-@closeSize: 1.25em;
-@closeColor: @white;
+@closeOpacity: 1;
+@closeSize: 1em;
+@closeColor: @black;
 
-@closeHitbox: 1.5rem;
-@closeDistance: 0.25rem;
+@closeHitbox: 2rem;
+@closeDistance: -1rem;
 @closeHitBoxOffset: (@closeHitbox - 1rem) / 2;
-@closePadding: @closeHitBoxOffset 0rem 0rem 0rem;
+@closePadding: 4px;
 @closeTop: -(@closeDistance + @closeHitbox);
 @closeRight: -(@closeDistance + @closeHitbox);
 
@@ -43,7 +40,7 @@
 @contentFontSize: 1em;
 @contentPadding: 1.5rem;
 @contentLineHeight: 1.4;
-@contentBackground: #FFFFFF;
+@contentBackground: @pageBackground;
 
 /* Image / Description */
 @imageWidth: '';
@@ -57,7 +54,7 @@
 
 /* Modal Actions */
 @actionBorder: 1px solid @borderColor;
-@actionBackground: @offWhite;
+@actionBackground: #fff;
 @actionPadding: 1rem 1rem;
 @actionAlign: right;
 
