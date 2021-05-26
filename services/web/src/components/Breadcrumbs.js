@@ -5,7 +5,6 @@ import { Breadcrumb } from 'semantic';
 import { Layout } from './Layout';
 
 export default class Breadcrumbs extends React.Component {
-
   getPath() {
     const { link, path } = this.props;
     if (link) {
@@ -18,8 +17,8 @@ export default class Breadcrumbs extends React.Component {
   render() {
     const { active } = this.props;
     return (
-      <Layout horizontal center spread>
-        <Breadcrumb size="big">
+      <div style={{ marginBottom: '15px' }}>
+        <Breadcrumb size="mini">
           <Breadcrumb.Section link as={Link} to="/">
             Home
           </Breadcrumb.Section>
@@ -27,24 +26,19 @@ export default class Breadcrumbs extends React.Component {
           {this.getPath().map((link, i) => {
             return (
               <React.Fragment key={i}>
-                <Breadcrumb.Section>
-                  {link}
-                </Breadcrumb.Section>
+                <Breadcrumb.Section>{link}</Breadcrumb.Section>
                 <Breadcrumb.Divider icon="chevron-right" />
               </React.Fragment>
             );
           })}
-          <Breadcrumb.Section active>
-            {active}
-          </Breadcrumb.Section>
+          <Breadcrumb.Section active>{active}</Breadcrumb.Section>
         </Breadcrumb>
         <Layout.Group>
           {this.props.children}
         </Layout.Group>
-      </Layout>
+      </div>
     );
   }
-
 }
 
 Breadcrumbs.propTypes = {

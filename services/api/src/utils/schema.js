@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
+const pluginAutoPopulate = require('mongoose-autopopulate');
+
 const { startCase, omitBy, isPlainObject } = require('lodash');
 const { ObjectId } = mongoose.Schema.Types;
 const { getJoiSchema, getMongooseValidator } = require('./validation');
@@ -83,6 +85,7 @@ function createSchema(attributes = {}, options = {}) {
     return this.save();
   };
 
+  schema.plugin(pluginAutoPopulate);
   return schema;
 }
 
@@ -117,8 +120,8 @@ function attributesToDefinition(attributes) {
       if (key === 'type' && typeof val === 'string') {
         val = getMongooseType(val);
       } else if (key === 'validate' && typeof val === 'string') {
-        // Map string shortcuts to mongoose validators such as "email".
-        val = getMongooseValidator(val, attributes.required);
+        // Allow custom mongoose validation function that derives from the Joi schema.
+        val = getMongooseValidator(val, attributes);
       }
     } else {
       if (Array.isArray(val)) {
@@ -170,7 +173,6 @@ function loadModel(definition, name) {
     throw new Error(`Invalid model definition for ${name}, need attributes`);
   }
   const schema = createSchema(attributes);
-  schema.plugin(require('mongoose-autopopulate'));
   return mongoose.model(name, schema);
 }
 
@@ -190,6 +192,7 @@ function loadModelDir(dirPath) {
       } catch (error) {
         logger.error(`Could not load model definition: ${filePath}`);
         logger.error(error);
+        throw error;
       }
     }
   }

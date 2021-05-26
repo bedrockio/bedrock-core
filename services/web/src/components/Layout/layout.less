@@ -47,7 +47,8 @@
   }
 
   &.stretch {
-    align-items: stretch;
+    align-items: stretch !important;
+    height: 100%;
   }
 
   &.baseline {
@@ -78,6 +79,10 @@
 
   &.spread {
     justify-content: space-between;
+  }
+
+  &.around {
+    justify-content: space-around;
   }
 
   &.wrap {

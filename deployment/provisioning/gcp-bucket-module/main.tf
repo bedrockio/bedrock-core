@@ -7,6 +7,6 @@ resource "google_storage_bucket" "bucket" {
 
   name          = each.value
   project       = var.global.project
-  location      = var.global.region
-  storage_class = "REGIONAL"
+  location      = var.global.multi_region
+  storage_class = "MULTI_REGIONAL"
 }

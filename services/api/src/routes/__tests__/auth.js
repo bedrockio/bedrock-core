@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const tokens = require('../../utils/tokens');
+const { createTemporaryToken, generateTokenId } = require('../../utils/tokens');
 const { setupDb, teardownDb, request, createUser } = require('../../utils/testing');
 const { mockTime, unmockTime, advanceTime } = require('../../utils/testing/time');
 const { User } = require('../../models');
@@ -96,6 +96,21 @@ describe('/1/auth', () => {
 
       unmockTime();
     });
+
+    it('should set the authTokenId on login', async () => {
+      const password = '123password!';
+      let user = await createUser({
+        password,
+      });
+
+      let response;
+
+      response = await request('POST', '/1/auth/login', { email: user.email, password });
+      expect(response.status).toBe(200);
+
+      user = await User.findById(user.id);
+      expect(user.authTokenId).not.toBeUndefined();
+    });
   });
 
   describe('POST /register', () => {
@@ -118,6 +133,16 @@ describe('/1/auth', () => {
     });
   });
 
+  describe('POST /logout', () => {
+    it('should changed authTokenId on logout', async () => {
+      const user = await createUser();
+      const response = await request('POST', '/1/auth/logout', {}, { user });
+      expect(response.status).toBe(204);
+      const updatedUser = await User.findById(user.id);
+      expect(updatedUser.authTokenId).not.toBeDefined();
+    });
+  });
+
   describe('POST /request-password', () => {
     it('should send an email to the registered user', async () => {
       const user = await createUser();
@@ -127,29 +152,32 @@ describe('/1/auth', () => {
       expect(response.status).toBe(204);
     });
 
-    it('should set a pending token id', async () => {
+    it('should set a temporary token id', async () => {
       let user = await createUser();
       await request('POST', '/1/auth/request-password', {
         email: user.email,
       });
       user = await User.findById(user.id);
-      expect(user.pendingTokenId).not.toBeUndefined();
+      expect(user.tempTokenId).not.toBeUndefined();
     });
 
-    it('should send an email to the unknown user', async () => {
+    it('should return with 400 for unknown user', async () => {
       const email = 'email@email.com';
       const response = await request('POST', '/1/auth/request-password', {
         email,
       });
-      expect(response.status).toBe(204);
+      expect(response.status).toBe(400);
     });
   });
 
   describe('POST /set-password', () => {
     it('should allow a user to set a password', async () => {
-      const user = await createUser();
+      const tokenId = generateTokenId();
+      const user = await createUser({
+        tempTokenId: tokenId,
+      });
       const password = 'very new password';
-      const token = tokens.createUserTemporaryToken({ userId: user.id }, 'password');
+      const token = createTemporaryToken({ type: 'password', sub: user.id, jti: tokenId });
       const response = await request(
         'POST',
         '/1/auth/set-password',
@@ -176,7 +204,7 @@ describe('/1/auth', () => {
     });
 
     it('should error when user is not found', async () => {
-      const token = tokens.createUserTemporaryToken({ userId: 'invalid user' }, 'password');
+      const token = createTemporaryToken({ type: 'password', sub: 'invalid user' });
       const response = await request(
         'POST',
         '/1/auth/set-password',
@@ -195,9 +223,9 @@ describe('/1/auth', () => {
 
     it('should only allow a token to be used once', async () => {
       const user = await createUser();
-      const tokenId = tokens.generateTokenId();
-      const token = tokens.createUserTemporaryToken({ userId: user.id, jti: tokenId }, 'password');
-      user.pendingTokenId = tokenId;
+      const tokenId = generateTokenId();
+      const token = createTemporaryToken({ type: 'password', sub: user.id, jti: tokenId });
+      user.tempTokenId = tokenId;
       user.save();
       let response = await request(
         'POST',
@@ -230,9 +258,9 @@ describe('/1/auth', () => {
 
     it('should not consume token on unsuccessful attempt', async () => {
       let user = await createUser();
-      const tokenId = tokens.generateTokenId();
-      const token = tokens.createUserTemporaryToken({ userId: user.id, jti: tokenId }, 'password');
-      user.pendingTokenId = 'different id';
+      const tokenId = generateTokenId();
+      const token = createTemporaryToken({ type: 'password', sub: user.id, jti: tokenId });
+      user.tempTokenId = 'different id';
       user.save();
 
       let response = await request(
@@ -250,7 +278,7 @@ describe('/1/auth', () => {
       expect(response.status).toBe(400);
 
       user = await User.findById(user.id);
-      expect(user.pendingTokenId).not.toBeUndefined();
+      expect(user.tempTokenId).not.toBeUndefined();
     });
 
     it('should handle invalid tokens', async () => {

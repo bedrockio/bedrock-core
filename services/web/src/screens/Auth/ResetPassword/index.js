@@ -44,7 +44,7 @@ export default class ResetPassword extends React.Component {
         token,
         body: {
           password,
-        }
+        },
       });
       this.context.setToken(data.token);
       await this.context.loadUser();
@@ -52,7 +52,7 @@ export default class ResetPassword extends React.Component {
         loading: false,
         success: true,
       });
-    } catch(error) {
+    } catch (error) {
       this.setState({
         error,
         loading: false,
@@ -67,12 +67,12 @@ export default class ResetPassword extends React.Component {
         <LogoTitle title="Reset Password" />
         <Segment.Group>
           <Segment padded>
-            {(!payload) && (
+            {!payload && (
               <Message error>
                 <Message.Header>No valid token found</Message.Header>
                 <Message.Content>
-                  Please ensure you either click the email link in the email
-                  or copy paste the link in full.
+                  Please ensure you either click the email link in the email or
+                  copy paste the link in full.
                 </Message.Content>
               </Message>
             )}

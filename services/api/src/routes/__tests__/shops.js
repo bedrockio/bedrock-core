@@ -26,7 +26,6 @@ const createUpload = () => {
 // --- Generator: end
 
 describe('/1/shops', () => {
-
   describe('POST /search', () => {
     it('should list out shops', async () => {
       // --- Generator: test-search
@@ -34,12 +33,12 @@ describe('/1/shops', () => {
 
       const shop1 = await Shop.create({
         name: 'test 1',
-        description: 'Some description'
+        description: 'Some description',
       });
 
       const shop2 = await Shop.create({
         name: 'test 2',
-        description: 'Some description'
+        description: 'Some description',
       });
 
       const response = await request('POST', '/1/shops/search', {}, { user });
@@ -123,5 +122,4 @@ describe('/1/shops', () => {
       // --- Generator: end
     });
   });
-
 });

@@ -7,7 +7,6 @@ import ErrorScreen from 'screens/Error';
 
 @withSession
 export default class AuthSwitch extends React.Component {
-
   hasAccess() {
     const { admin, roles } = this.props;
     const { user, isAdmin, hasRoles } = this.context;
@@ -23,13 +22,21 @@ export default class AuthSwitch extends React.Component {
 
   render() {
     const { loading, error } = this.context;
-    const { loggedIn: LoggedInComponent, loggedOut: LoggedOutComponent, ...rest } = this.props;
+    const {
+      loggedIn: LoggedInComponent,
+      loggedOut: LoggedOutComponent,
+      ...rest
+    } = this.props;
     if (loading) {
       return <Loader active>Loading</Loader>;
     } else if (error) {
       return (
         <ErrorScreen>
-          <Message error header="Something went wrong" content={error.message} />
+          <Message
+            error
+            header="Something went wrong"
+            content={error.message}
+          />
           <Link to="/logout">Logout</Link>
         </ErrorScreen>
       );
@@ -38,7 +45,11 @@ export default class AuthSwitch extends React.Component {
       <Route
         {...rest}
         render={(props) => {
-          return this.hasAccess() ? <LoggedInComponent {...props} /> : <LoggedOutComponent {...props} />;
+          return this.hasAccess() ? (
+            <LoggedInComponent {...props} />
+          ) : (
+            <LoggedOutComponent {...props} />
+          );
         }}
       />
     );

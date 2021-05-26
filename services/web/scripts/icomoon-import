@@ -1,0 +1,25 @@
+#!/bin/bash
+
+ZIP_FILE=$1
+APP=$2
+
+if [ "$ZIP_FILE" == "" ]; then
+cat <<-EOM
+
+  Update icons from downloaded icomoon file.
+
+  Usage: icomoon-import <ZIP_FILE> <APP>
+
+EOM
+exit 1
+fi
+
+unzip $ZIP_FILE symbol-defs.svg
+
+if [ "$APP" != "" ]; then
+  mv symbol-defs.svg src/$APP/assets/icons.svg
+else
+  mv symbol-defs.svg src/assets/icons.svg
+fi
+
+rm $ZIP_FILE

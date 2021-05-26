@@ -16,7 +16,9 @@ export default class SidebarLayoutMenu extends React.Component {
 
   render() {
     const Element = this.props.as;
-    return <Element className={this.getBlockClass()}>{this.props.children}</Element>;
+    return (
+      <Element className={this.getBlockClass()}>{this.props.children}</Element>
+    );
   }
 }
 

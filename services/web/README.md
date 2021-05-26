@@ -46,15 +46,14 @@ UI is running at [http://localhost:2200/](http://localhost:2200/)
 
 All configuration is done using environment variables. The default values in `.env` can be overwritten using environment variables.
 
-- `ENV_NAME` - Node environment `development`
-- `BIND_HOST` - Host to bind to, defaults to `"0.0.0.0"`
-- `BIND_PORT` - Port to bind to, defaults to `2300`
-- `APP_NAME` - Default product name to be used in views
-- `API_URL` - URL for API defaults to `http://localhost:2300`
-- `ENABLE_HTTP_BASIC_AUTH` - Enable HTTP basic auth (if `yes`)
+- `SERVER_HOST` - Host to bind to, defaults to `"0.0.0.0"`
+- `SERVER_PORT` - Port to bind to, defaults to `2300`
 - `HTTP_BASIC_AUTH_PATH` - Basic Auth: Path to protect
 - `HTTP_BASIC_AUTH_USER` - Basic Auth: Username
 - `HTTP_BASIC_AUTH_PASS` - Basic Auth: Password
+- `ENV_NAME` - Node environment `development`
+- `APP_NAME` - Default product name to be used in views
+- `API_URL` - URL for API defaults to `http://localhost:2300`
 - `SENTRY_DSN` - Sentry error monitoring credentials
 
 All config vars are available in the `serve/dev.js` and `serve/static.js` server-side code. In the browser-side all variables are available as a global object `window.__env_conf`.
@@ -107,3 +106,16 @@ For example, to generate a summary of API parameters for login, add this to the 
 ```javascript
 callParams({ method: 'POST', path: '/1/auth/login' });
 ```
+
+## Updating Styles
+
+All base styles and Semantic UI componenets live under `src/semantic`. You can tweak and change styling of elements based on your projects needs.
+
+With just a few tweaks you can tweak Bedrocks default styling to make it your own. Go to `src/semantic/globals/site.variables` file and update a few variables:
+
+- `@primaryColor` - Set projects primary accent color (default: green)
+- `@pageBackground` - Set page background (default: light sandy)
+- `@mainMenuBackground` - Set main menus background (default: sandy)
+- `@linkColor` - Set projects link color (default: dark green)
+
+Semantic UI variables and components allow you to change styles to be the way you want them for your project. You can dive deeper into components documentation at [React Semantic UI](http://react.semantic-ui.com/).

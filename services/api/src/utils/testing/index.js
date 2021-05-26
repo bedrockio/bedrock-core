@@ -1,4 +1,3 @@
-const { logger } = require('@bedrockio/instrumentation');
 const mongoose = require('mongoose');
 const { uniqueId } = require('lodash');
 
@@ -19,7 +18,7 @@ async function setupDb() {
 
   await mongoose.connect(mongoURL, flags, (err) => {
     if (err) {
-      logger.error(err);
+      console.error(err);
       process.exit(1);
     }
   });

@@ -6,6 +6,7 @@ Helper components designed to simplify and quickly iterate on layouts.
 - [Filters](#filters)
 - [Layout](#layout)
 - [Links](#links)
+- [Icons](#icons)
 
 ## Search Provider
 
@@ -26,7 +27,7 @@ onDataNeeded = async () => {
 </SearchProvider>
 ```
 
-### Props:
+### Props
 
 - `children` A function that renders the list or table. Takes a single argument that provides the following:
   - `items` The result provided from `onDataNeeded`
@@ -157,3 +158,7 @@ Link helpers handle the complexities of external linking and browser discrepanci
 - `MailLink` - Links to an external email application. Takes a single `mail` prop.
 - `TelLink` - Links to an external phone application. Takes a single `tel` prop.
 - `ContentLink` - Catch-all helper when link type is unknown. Takes a single `href` prop. Falls back to `react-router-dom` when link is relative.
+
+### Icons
+
+We use a custom SVG-based icon component that follows [Semantic UI props](https://react.semantic-ui.com/elements/icon/), however the icon set itself is the latest Font Awesome icons which means the `name` prop differs. To find a specific icon, use the [main icon search](https://fontawesome.com/icons) on the Font Awesome site.

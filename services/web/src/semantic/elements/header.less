@@ -26,9 +26,6 @@
   color: @textColor;
 }
 
-.ui.header:first-child {
-  margin-top: @firstMargin;
-}
 .ui.header:last-child {
   margin-bottom: @lastMargin;
 }
@@ -106,7 +103,6 @@
   vertical-align: @contentIconAlignment;
 }
 
-
 /*--------------
  Loose Coupling
 ---------------*/
@@ -122,12 +118,9 @@
   margin-top: @nextParagraphDistance;
 }
 
-
-
 /*******************************
             Types
 *******************************/
-
 
 /*--------------
      Page
@@ -149,7 +142,6 @@ h5.ui.header {
   font-size: @h5;
 }
 
-
 /* Sub Header */
 h1.ui.header .sub.header {
   font-size: @h1SubHeaderFontSize;
@@ -166,7 +158,6 @@ h4.ui.header .sub.header {
 h5.ui.header .sub.header {
   font-size: @h5SubHeaderFontSize;
 }
-
 
 /*--------------
  Content Heading
@@ -232,8 +223,6 @@ h5.ui.header .sub.header {
   font-size: @hugeSubHeadingSize;
 }
 
-
-
 /*-------------------
         Icon
 --------------------*/
@@ -257,8 +246,8 @@ h5.ui.header .sub.header {
 .ui.icon.header .icon {
   float: none;
   display: block;
-  width: auto;
-  height: auto;
+  width: @iconHeaderSize;
+  height: @iconHeaderSize;
   line-height: 1;
   padding: 0em;
   font-size: @iconHeaderSize;
@@ -292,7 +281,6 @@ h5.ui.header .sub.header {
   opacity: @disabledOpacity;
 }
 
-
 /*******************************
            Variations
 *******************************/
@@ -319,7 +307,6 @@ h5.ui.header .sub.header {
 .ui.inverted.block.header {
   border-bottom: none;
 }
-
 
 /*-------------------
        Colors
@@ -542,7 +529,6 @@ a.ui.inverted.grey.header:hover {
   color: @lightGreyHover !important;
 }
 
-
 /*-------------------
        Aligned
 --------------------*/
@@ -571,12 +557,12 @@ a.ui.inverted.grey.header:hover {
 --------------------*/
 
 .ui.floated.header,
-.ui[class*="left floated"].header {
+.ui[class*='left floated'].header {
   float: left;
   margin-top: 0em;
   margin-right: @floatedMargin;
 }
-.ui[class*="right floated"].header {
+.ui[class*='right floated'].header {
   float: right;
   margin-top: 0em;
   margin-left: @floatedMargin;
@@ -589,7 +575,6 @@ a.ui.inverted.grey.header:hover {
 .ui.fitted.header {
   padding: 0em;
 }
-
 
 /*-------------------
       Dividing
@@ -609,7 +594,6 @@ a.ui.inverted.grey.header:hover {
 .ui.inverted.dividing.header {
   border-bottom-color: @invertedDividedBorderColor;
 }
-
 
 /*-------------------
         Block

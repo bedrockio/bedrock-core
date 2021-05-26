@@ -44,7 +44,13 @@ export default (props) => {
           onChange={(e, { value }) => setRepeat(value)}
         />
 
-        <Button fluid primary size="large" content="Reset Password" loading={loading} />
+        <Button
+          fluid
+          primary
+          size="large"
+          content="Reset Password"
+          loading={loading}
+        />
       </Form>
     </AutoFocus>
   );

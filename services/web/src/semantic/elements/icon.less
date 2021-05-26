@@ -19,14 +19,17 @@ svg.icon {
   touch-action: manipulation;
 
   display: inline-block;
-  vertical-align: bottom;
+  vertical-align: middle;
   opacity: @opacity;
 
   margin: 0em @distanceFromText 0em 0em;
-}
 
-svg.icon:before {
-  background: none !important;
+  // This is needed for inline vertical centering
+  // when placed against a text node of unknown height
+  // that can't be wrapped in a span. Simply using
+  // vertical-align: middle has unpredictable results for some reason.
+  position: relative;
+  top: -0.1em;
 }
 
 /*******************************
@@ -43,12 +46,12 @@ svg.icon.loading {
   animation: icon-loading @loadingDuration linear infinite;
 }
 @keyframes icon-loading {
- from {
+  from {
     transform: rotate(0deg);
- }
- to {
+  }
+  to {
     transform: rotate(360deg);
- }
+  }
 }
 
 /*******************************
@@ -71,31 +74,30 @@ svg.disabled.icon {
   opacity: @disabledOpacity !important;
 }
 
-
 /*******************************
            Variations
 *******************************/
-
 
 /*-------------------
         Fitted
 --------------------*/
 
 svg.fitted.icon {
-  width: auto;
-  margin: 0em !important;
+  margin: 0;
 }
 
 /*-------------------
          Link
 --------------------*/
 
-svg.link.icon, svg.link.icons {
+svg.link.icon,
+svg.link.icons {
   cursor: pointer;
   opacity: @linkOpacity;
   transition: opacity @defaultDuration @defaultEasing;
 }
-svg.link.icon:hover, svg.link.icons:hover {
+svg.link.icon:hover,
+svg.link.icons:hover {
   opacity: 1 !important;
 }
 
@@ -176,7 +178,6 @@ svg.inverted.circular.icon {
 svg.inverted.icon {
   color: @white;
 }
-
 
 /*-------------------
        Colors

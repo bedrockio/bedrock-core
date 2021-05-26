@@ -50,7 +50,6 @@
   margin: 0em;
 }
 
-
 /*--------------------
         Labels
 ---------------------*/
@@ -68,20 +67,19 @@
     Standard Inputs
 ---------------------*/
 
-
 .ui.form textarea,
 .ui.form input:not([type]),
-.ui.form input[type="date"],
-.ui.form input[type="datetime-local"],
-.ui.form input[type="email"],
-.ui.form input[type="number"],
-.ui.form input[type="password"],
-.ui.form input[type="search"],
-.ui.form input[type="tel"],
-.ui.form input[type="time"],
-.ui.form input[type="text"],
-.ui.form input[type="file"],
-.ui.form input[type="url"] {
+.ui.form input[type='date'],
+.ui.form input[type='datetime-local'],
+.ui.form input[type='email'],
+.ui.form input[type='number'],
+.ui.form input[type='password'],
+.ui.form input[type='search'],
+.ui.form input[type='tel'],
+.ui.form input[type='time'],
+.ui.form input[type='text'],
+.ui.form input[type='file'],
+.ui.form input[type='url'] {
   width: @inputWidth;
   vertical-align: top;
 }
@@ -93,22 +91,22 @@
 }
 
 .ui.form input:not([type]),
-.ui.form input[type="date"],
-.ui.form input[type="datetime-local"],
-.ui.form input[type="email"],
-.ui.form input[type="number"],
-.ui.form input[type="password"],
-.ui.form input[type="search"],
-.ui.form input[type="tel"],
-.ui.form input[type="time"],
-.ui.form input[type="text"],
-.ui.form input[type="file"],
-.ui.form input[type="url"] {
+.ui.form input[type='date'],
+.ui.form input[type='datetime-local'],
+.ui.form input[type='email'],
+.ui.form input[type='number'],
+.ui.form input[type='password'],
+.ui.form input[type='search'],
+.ui.form input[type='tel'],
+.ui.form input[type='time'],
+.ui.form input[type='text'],
+.ui.form input[type='file'],
+.ui.form input[type='url'] {
   font-family: @inputFont;
   margin: 0em;
   outline: none;
   -webkit-appearance: none;
-  tap-highlight-color:  rgba(255, 255, 255, 0);
+  tap-highlight-color: rgba(255, 255, 255, 0);
 
   line-height: @inputLineHeight;
   padding: @inputPadding;
@@ -126,7 +124,7 @@
 .ui.form textarea {
   margin: 0em;
   -webkit-appearance: none;
-  tap-highlight-color:  rgba(255, 255, 255, 0);
+  tap-highlight-color: rgba(255, 255, 255, 0);
 
   padding: @textAreaPadding;
   font-size: @textAreaFontSize;
@@ -148,8 +146,16 @@
 }
 
 .ui.form textarea,
-.ui.form input[type="checkbox"] {
+.ui.form input[type='checkbox'] {
   vertical-align: @checkboxVerticalAlign;
+}
+
+.ui.form textarea::placeholder {
+  color: #6c727f;
+}
+
+.ui.form textarea::placeholder:focus {
+  color: #6c727f;
 }
 
 /*--------------------------
@@ -159,7 +165,6 @@
 .ui.form input.attached {
   width: auto;
 }
-
 
 /*--------------------
      Basic Select
@@ -239,7 +244,6 @@
   width: 0px;
 }
 
-
 /*--------------------
    Types of Messages
 ---------------------*/
@@ -279,7 +283,6 @@
   left: 0em;
 }
 
-
 /*******************************
             States
 *******************************/
@@ -304,8 +307,6 @@
   box-shadow: 0px 0px 0px 100px @inputAutoFillErrorBackground inset !important;
   border-color: @inputAutoFillErrorBorder !important;
 }
-
-
 
 /*--------------------
       Placeholder
@@ -353,23 +354,22 @@
   color: @inputErrorPlaceholderFocusColor;
 }
 
-
 /*--------------------
         Focus
 ---------------------*/
 
 .ui.form input:not([type]):focus,
-.ui.form input[type="date"]:focus,
-.ui.form input[type="datetime-local"]:focus,
-.ui.form input[type="email"]:focus,
-.ui.form input[type="number"]:focus,
-.ui.form input[type="password"]:focus,
-.ui.form input[type="search"]:focus,
-.ui.form input[type="tel"]:focus,
-.ui.form input[type="time"]:focus,
-.ui.form input[type="text"]:focus,
-.ui.form input[type="file"]:focus,
-.ui.form input[type="url"]:focus {
+.ui.form input[type='date']:focus,
+.ui.form input[type='datetime-local']:focus,
+.ui.form input[type='email']:focus,
+.ui.form input[type='number']:focus,
+.ui.form input[type='password']:focus,
+.ui.form input[type='search']:focus,
+.ui.form input[type='tel']:focus,
+.ui.form input[type='time']:focus,
+.ui.form input[type='text']:focus,
+.ui.form input[type='file']:focus,
+.ui.form input[type='url']:focus {
   color: @inputFocusColor;
   border-color: @inputFocusBorderColor;
   border-radius: @inputFocusBorderRadius;
@@ -384,7 +384,6 @@
   box-shadow: @textAreaFocusBoxShadow;
   -webkit-appearance: none;
 }
-
 
 /*--------------------
         Success
@@ -448,31 +447,31 @@
 .ui.form .fields.error .field textarea,
 .ui.form .fields.error .field select,
 .ui.form .fields.error .field input:not([type]),
-.ui.form .fields.error .field input[type="date"],
-.ui.form .fields.error .field input[type="datetime-local"],
-.ui.form .fields.error .field input[type="email"],
-.ui.form .fields.error .field input[type="number"],
-.ui.form .fields.error .field input[type="password"],
-.ui.form .fields.error .field input[type="search"],
-.ui.form .fields.error .field input[type="tel"],
-.ui.form .fields.error .field input[type="time"],
-.ui.form .fields.error .field input[type="text"],
-.ui.form .fields.error .field input[type="file"],
-.ui.form .fields.error .field input[type="url"],
+.ui.form .fields.error .field input[type='date'],
+.ui.form .fields.error .field input[type='datetime-local'],
+.ui.form .fields.error .field input[type='email'],
+.ui.form .fields.error .field input[type='number'],
+.ui.form .fields.error .field input[type='password'],
+.ui.form .fields.error .field input[type='search'],
+.ui.form .fields.error .field input[type='tel'],
+.ui.form .fields.error .field input[type='time'],
+.ui.form .fields.error .field input[type='text'],
+.ui.form .fields.error .field input[type='file'],
+.ui.form .fields.error .field input[type='url'],
 .ui.form .field.error textarea,
 .ui.form .field.error select,
 .ui.form .field.error input:not([type]),
-.ui.form .field.error input[type="date"],
-.ui.form .field.error input[type="datetime-local"],
-.ui.form .field.error input[type="email"],
-.ui.form .field.error input[type="number"],
-.ui.form .field.error input[type="password"],
-.ui.form .field.error input[type="search"],
-.ui.form .field.error input[type="tel"],
-.ui.form .field.error input[type="time"],
-.ui.form .field.error input[type="text"],
-.ui.form .field.error input[type="file"],
-.ui.form .field.error input[type="url"] {
+.ui.form .field.error input[type='date'],
+.ui.form .field.error input[type='datetime-local'],
+.ui.form .field.error input[type='email'],
+.ui.form .field.error input[type='number'],
+.ui.form .field.error input[type='password'],
+.ui.form .field.error input[type='search'],
+.ui.form .field.error input[type='tel'],
+.ui.form .field.error input[type='time'],
+.ui.form .field.error input[type='text'],
+.ui.form .field.error input[type='file'],
+.ui.form .field.error input[type='url'] {
   background: @formErrorBackground;
   border-color: @formErrorBorder;
   color: @formErrorColor;
@@ -482,17 +481,17 @@
 .ui.form .field.error textarea:focus,
 .ui.form .field.error select:focus,
 .ui.form .field.error input:not([type]):focus,
-.ui.form .field.error input[type="date"]:focus,
-.ui.form .field.error input[type="datetime-local"]:focus,
-.ui.form .field.error input[type="email"]:focus,
-.ui.form .field.error input[type="number"]:focus,
-.ui.form .field.error input[type="password"]:focus,
-.ui.form .field.error input[type="search"]:focus,
-.ui.form .field.error input[type="tel"]:focus,
-.ui.form .field.error input[type="time"]:focus,
-.ui.form .field.error input[type="text"]:focus,
-.ui.form .field.error input[type="file"]:focus,
-.ui.form .field.error input[type="url"]:focus {
+.ui.form .field.error input[type='date']:focus,
+.ui.form .field.error input[type='datetime-local']:focus,
+.ui.form .field.error input[type='email']:focus,
+.ui.form .field.error input[type='number']:focus,
+.ui.form .field.error input[type='password']:focus,
+.ui.form .field.error input[type='search']:focus,
+.ui.form .field.error input[type='tel']:focus,
+.ui.form .field.error input[type='time']:focus,
+.ui.form .field.error input[type='text']:focus,
+.ui.form .field.error input[type='file']:focus,
+.ui.form .field.error input[type='url']:focus {
   background: @inputErrorFocusBackground;
   border-color: @inputErrorFocusBorder;
   color: @inputErrorFocusColor;
@@ -548,7 +547,6 @@
   background-color: @dropdownErrorSelectedBackground;
 }
 
-
 /* Active */
 .ui.form .fields.error .field .ui.dropdown .menu .active.item,
 .ui.form .field.error .ui.dropdown .menu .active.item {
@@ -597,7 +595,6 @@
   opacity: 1;
 }
 
-
 /*--------------
     Loading
 ---------------*/
@@ -632,7 +629,8 @@
 
   border-radius: @circularRadius;
 
-  border-color: @loaderLineColor @loaderFillColor @loaderFillColor @loaderFillColor;
+  border-color: @loaderLineColor @loaderFillColor @loaderFillColor
+    @loaderFillColor;
   border-style: solid;
   border-width: @loaderLineWidth;
 
@@ -649,7 +647,6 @@
     transform: rotate(360deg);
   }
 }
-
 
 /*******************************
          Element Types
@@ -683,11 +680,9 @@
   left: 100%;
 }
 
-
 /*******************************
            Variations
 *******************************/
-
 
 /*--------------------
     Inverted Colors
@@ -709,23 +704,22 @@
 
 /* Inverted Field */
 .ui.inverted.form input:not([type]),
-.ui.inverted.form input[type="date"],
-.ui.inverted.form input[type="datetime-local"],
-.ui.inverted.form input[type="email"],
-.ui.inverted.form input[type="number"],
-.ui.inverted.form input[type="password"],
-.ui.inverted.form input[type="search"],
-.ui.inverted.form input[type="tel"],
-.ui.inverted.form input[type="time"],
-.ui.inverted.form input[type="text"],
-.ui.inverted.form input[type="file"],
-.ui.inverted.form input[type="url"] {
+.ui.inverted.form input[type='date'],
+.ui.inverted.form input[type='datetime-local'],
+.ui.inverted.form input[type='email'],
+.ui.inverted.form input[type='number'],
+.ui.inverted.form input[type='password'],
+.ui.inverted.form input[type='search'],
+.ui.inverted.form input[type='tel'],
+.ui.inverted.form input[type='time'],
+.ui.inverted.form input[type='text'],
+.ui.inverted.form input[type='file'],
+.ui.inverted.form input[type='url'] {
   background: @invertedInputBackground;
   border-color: @invertedInputBorderColor;
   color: @invertedInputColor;
   box-shadow: @invertedInputBoxShadow;
 }
-
 
 /*--------------------
      Field Groups
@@ -814,13 +808,15 @@
 }
 
 /* Swap to full width on mobile */
-@media only screen and (max-width : @largestMobileScreen) {
+@media only screen and (max-width: @largestMobileScreen) {
   .ui.form .fields {
     flex-wrap: wrap;
   }
 
-  .ui[class*="equal width"].form:not(.unstackable) .fields > .field,
-  .ui.form:not(.unstackable) [class*="equal width"].fields:not(.unstackable) > .field,
+  .ui[class*='equal width'].form:not(.unstackable) .fields > .field,
+  .ui.form:not(.unstackable)
+    [class*='equal width'].fields:not(.unstackable)
+    > .field,
   .ui.form:not(.unstackable) .two.fields:not(.unstackable) > .fields,
   .ui.form:not(.unstackable) .two.fields:not(.unstackable) > .field,
   .ui.form:not(.unstackable) .three.fields:not(.unstackable) > .fields,
@@ -843,7 +839,6 @@
     margin: 0em 0em @rowDistance;
   }
 }
-
 
 /* Sizing Combinations */
 .ui.form .fields .wide.field {
@@ -902,7 +897,7 @@
 }
 
 /* Swap to full width on mobile */
-@media only screen and (max-width : @largestMobileScreen) {
+@media only screen and (max-width: @largestMobileScreen) {
   .ui.form:not(.unstackable) .two.fields:not(.unstackable) > .fields,
   .ui.form:not(.unstackable) .two.fields:not(.unstackable) > .field,
   .ui.form:not(.unstackable) .three.fields:not(.unstackable) > .fields,
@@ -937,8 +932,8 @@
      Equal Width
 ---------------------*/
 
-.ui[class*="equal width"].form .fields > .field,
-.ui.form [class*="equal width"].fields > .field {
+.ui[class*='equal width'].form .fields > .field,
+.ui.form [class*='equal width'].fields > .field {
   width: 100%;
   flex: 1 1 auto;
 }
@@ -1012,7 +1007,6 @@
 .ui.form .inline.fields .wide.field > select {
   width: 100%;
 }
-
 
 /*--------------------
         Sizes
