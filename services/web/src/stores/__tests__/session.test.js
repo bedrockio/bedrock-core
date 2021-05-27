@@ -1,5 +1,10 @@
 import React from 'react';
-import { SessionProvider, withSession, withLoadedSession, useSession } from '../session';
+import {
+  SessionProvider,
+  withSession,
+  withLoadedSession,
+  useSession,
+} from '../session';
 import { setToken, clearToken } from 'utils/api';
 import { render } from '@testing-library/react';
 
@@ -19,7 +24,6 @@ afterEach(() => {
 });
 
 class MyComponent extends React.Component {
-
   componentDidUpdate(lastProps, lastState, lastContext) {
     snapshot = lastContext;
   }
@@ -30,16 +34,11 @@ class MyComponent extends React.Component {
     if (loading) {
       return null;
     }
-    return (
-      <div>
-        {user?.name || 'Anonymous'}
-      </div>
-    );
+    return <div>{user?.name || 'Anonymous'}</div>;
   }
 }
 
 describe('withSession', () => {
-
   const Component = withSession(MyComponent);
 
   it('should be anonymous when logged out', async () => {
@@ -74,11 +73,9 @@ describe('withSession', () => {
     expect(snapshot.loading).toBe(true);
     expect(renderCount).toBe(2);
   });
-
 });
 
 describe('withLoadedSession', () => {
-
   const Component = withLoadedSession(MyComponent);
 
   it('should be anonymous when logged out', async () => {
@@ -101,19 +98,13 @@ describe('withLoadedSession', () => {
     expect(container.textContent).toBe('Bob');
     expect(renderCount).toBe(1);
   });
-
 });
 
 describe('useSession', () => {
-
   const Component = () => {
     renderCount++;
     const { user } = useSession();
-    return (
-      <div>
-        {user?.name || 'Anonymous'}
-      </div>
-    );
+    return <div>{user?.name || 'Anonymous'}</div>;
   };
 
   it('should be anonymous when logged out', async () => {
@@ -136,6 +127,4 @@ describe('useSession', () => {
     expect(container.textContent).toBe('Bob');
     expect(renderCount).toBe(2);
   });
-
-
 });

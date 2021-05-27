@@ -1,11 +1,12 @@
 import React from 'react';
 import { memoize } from 'lodash';
 import { Link } from 'react-router-dom';
-import { Table, Divider, Button, Message } from 'semantic';
+import { Table, Divider, Button, Message, Label } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import { screen } from 'helpers';
-import { Confirm, HelpTip, Breadcrumbs, SearchProvider } from 'components';
+import { Confirm, HelpTip, Breadcrumbs, SearchProvider, Layout } from 'components';
+import { formatRoles } from 'utils/permissions';
 
 import Filters from 'modals/Filters';
 import EditUser from 'modals/EditUser';
@@ -59,7 +60,10 @@ export default class UserList extends React.Component {
         }) => {
           return (
             <React.Fragment>
-              <Breadcrumbs active="Users">
+              <Breadcrumbs active="Users" />
+              <Layout horizontal center spread>
+              <h1>Users</h1>
+              <Layout.Group>
                 <Filters onSave={setFilters} filters={filters}>
                   <Filters.Text label="Search" name="keyword" placeholder="Enter name, email, or user id" />
                   <Filters.Dropdown label="Role" name="roles" onDataNeeded={this.fetchRoles} multiple />
@@ -68,7 +72,8 @@ export default class UserList extends React.Component {
                   trigger={<Button primary content="New User" icon="plus" />}
                   onSave={reload}
                 />
-              </Breadcrumbs>
+                </Layout.Group>
+              </Layout>
               <Divider hidden />
               {users.length === 0 ? (
                 <Message>No users created yet</Message>
@@ -117,9 +122,17 @@ export default class UserList extends React.Component {
                           </Table.Cell>
                           <Table.Cell>{user.email}</Table.Cell>
                           <Table.Cell>
-                            {user.roles
-                              .map((r) => r.roleDefinition.name)
-                              .join(', ')}
+                            {formatRoles(user.roles).map((label) => (
+                              <Label
+                                key={label.key}
+                                {...label}
+                                style={{
+                                  marginBottom: '3px',
+                                  marginLeft: 0,
+                                  marginRight: '5px',
+                                }}
+                              />
+                            ))}
                           </Table.Cell>
                           <Table.Cell>
                             {formatDateTime(user.createdAt)}

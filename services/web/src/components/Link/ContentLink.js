@@ -11,7 +11,6 @@ const MAIL_LINK_REG = /^mailto:/;
 const EXTERNAL_LINK_REG = /^https?:/;
 
 export default class ContentLink extends React.Component {
-
   render() {
     const { href, ...props } = this.props;
     if (EXTERNAL_LINK_REG.test(href)) {
@@ -24,5 +23,4 @@ export default class ContentLink extends React.Component {
       return <Link to={href} {...props} />;
     }
   }
-
 }

@@ -7,7 +7,6 @@ import { formatDate } from 'utils/date';
 import { Layout } from '../Layout';
 
 export default class DateField extends React.Component {
-
   setDate(evt, date) {
     this.props.onChange(evt, {
       ...this.props,
@@ -17,7 +16,7 @@ export default class DateField extends React.Component {
 
   onDayChange = (date) => {
     this.setDate(null, date);
-  }
+  };
 
   onHoursChange = (evt, { value }) => {
     let { value: date } = this.props;
@@ -26,7 +25,7 @@ export default class DateField extends React.Component {
       date.setHours(value);
       this.setDate(evt, date);
     }
-  }
+  };
 
   onMinutesChange = (evt, { value }) => {
     let { value: date } = this.props;
@@ -35,7 +34,7 @@ export default class DateField extends React.Component {
       date.setMinutes(value);
       this.setDate(evt, date);
     }
-  }
+  };
 
   render() {
     const { time, required, label, placeholder, clearable, id } = this.props;
@@ -45,9 +44,7 @@ export default class DateField extends React.Component {
     }
     return (
       <Form.Field required={required}>
-        {label && (
-          <label htmlFor={id}>{label}</label>
-        )}
+        {label && <label htmlFor={id}>{label}</label>}
         <Layout horizontal center>
           <Layout.Group style={{ position: 'relative' }}>
             <DayPickerInput
@@ -62,14 +59,15 @@ export default class DateField extends React.Component {
               onDayChange={this.onDayChange}
             />
             {clearable && (
-              <Icon name="x"
+              <Icon
+                name="x"
                 color="grey"
                 style={{
                   position: 'absolute',
                   top: '10px',
                   right: '5px',
                   cursor: 'pointer',
-                  visibility: date ? 'visible' : 'hidden'
+                  visibility: date ? 'visible' : 'hidden',
                 }}
                 onClick={() => this.setDate(null)}
               />
@@ -82,7 +80,7 @@ export default class DateField extends React.Component {
                 labelPosition="right"
                 style={{
                   width: '5em',
-                  margin: '0 40px 0 10px'
+                  margin: '0 40px 0 10px',
                 }}
                 value={date ? date.getHours().toString() : ''}
                 onChange={this.onHoursChange}>

@@ -16,7 +16,7 @@ variable "preemptible" {
 }
 
 variable "machine_type" {
-  default = "n1-standard-1"
+  default = "n2-standard-2"
 }
 
 variable "master_authorizaed_networks_cidr_blocks" {

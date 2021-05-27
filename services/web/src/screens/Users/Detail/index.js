@@ -8,14 +8,12 @@ import { request } from 'utils/api';
 import Overview from './Overview';
 
 export default class UserDetail extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
       user: null,
       error: null,
       loading: true,
-      onSave: this.onSave,
     };
   }
 
@@ -32,7 +30,7 @@ export default class UserDetail extends React.Component {
 
   onSave = () => {
     this.fetchUser();
-  }
+  };
 
   async fetchUser() {
     const { id } = this.props.match.params;
@@ -60,9 +58,7 @@ export default class UserDetail extends React.Component {
   render() {
     const { loading, error } = this.state;
     if (loading) {
-      return (
-        <Loader active>Loading</Loader>
-      );
+      return <Loader active>Loading</Loader>;
     } else if (error) {
       return (
         <React.Fragment>
@@ -80,7 +76,7 @@ export default class UserDetail extends React.Component {
           exact
           path="/users/:id"
           render={(props) => (
-            <Overview {...props} {...this.state}  />
+            <Overview {...props} {...this.state} onSave={this.onSave} />
           )}
         />
       </Switch>

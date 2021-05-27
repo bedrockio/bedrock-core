@@ -13,6 +13,8 @@ import { Link } from 'react-router-dom';
 @screen
 @withSession
 export default class Login extends React.Component {
+  static layout = 'none';
+
   state = {
     error: null,
     loading: false,

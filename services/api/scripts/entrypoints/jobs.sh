@@ -1,4 +1,18 @@
 #!/bin/bash
+
+echo "" > /service/.motd
+echo "Welcome to the API Jobs pod. All API code is available here." >> /service/.motd
+echo "" >> /service/.motd
+echo "Example commands:" >> /service/.motd
+echo "" >> /service/.motd
+echo "  # List all jobs that are running on this pod:"
+echo "  curl -s -H \"Accept: application/json\" localhost:2600/status | jq" >> /service/.motd
+echo "" >> /service/.motd
+echo "  # Force the start of a scheduled job:"
+echo "  curl -s -XPOST localhost:2600/jobs/example/start" >> /service/.motd
+echo "" >> /service/.motd
+echo "cat /service/.motd" >> /root/.bashrc
+
 YACRON_FILE=$1
 if [ "$YACRON_FILE" == "" ]; then
   echo "No jobs YAML specified"

@@ -1,7 +1,10 @@
 import React, { createRef } from 'react';
-import { startCase, kebabCase } from 'lodash';
-import { Container, Menu, Message, Breadcrumb, Divider, Grid, Sticky, Ref, Segment } from 'semantic';
 import { Switch, Route, Link, NavLink } from 'react-router-dom';
+import { startCase, kebabCase } from 'lodash';
+import { Breadcrumb, Container, Divider, Menu, Message, Ref } from 'semantic';
+import { Layout } from 'components/Layout';
+import { Menu as ResponsiveMenu } from 'components/Responsive';
+
 import StandardPage from './StandardPage';
 import PageLoader from 'components/PageLoader';
 
@@ -28,6 +31,7 @@ function stateForParams(params) {
 
 @screen
 export default class Docs extends React.Component {
+  static layout = 'Portal';
   contextRef = createRef();
 
   constructor(props) {
@@ -51,12 +55,15 @@ export default class Docs extends React.Component {
         method: 'GET',
         path: '/openapi.lite.json',
       });
-      this.setState({
-        loading: false,
-        openApi,
-      }, () => {
-        this.checkJumpLink();
-      });
+      this.setState(
+        {
+          loading: false,
+          openApi,
+        },
+        () => {
+          this.checkJumpLink();
+        }
+      );
     } catch (error) {
       this.setState({
         error,
@@ -85,7 +92,7 @@ export default class Docs extends React.Component {
   }
 
   render() {
-    const { page, loading, openApi } = this.state;
+    const { page, loading, openApi, pageId } = this.state;
     const { me } = this.props;
 
     if (loading) {
@@ -101,65 +108,72 @@ export default class Docs extends React.Component {
 
     return (
       <React.Fragment>
-        <Container>
-          <Breadcrumb size="big">
-            <Breadcrumb.Section link as={Link} to="/docs">
-              API Docs
-            </Breadcrumb.Section>
-            <Breadcrumb.Divider icon="chevron-right" />
-            <Breadcrumb.Section>{page.name}</Breadcrumb.Section>
-          </Breadcrumb>
-        </Container>
+        <Breadcrumb size="mini">
+          <Breadcrumb.Section link as={Link} to="/docs">
+            API Docs
+          </Breadcrumb.Section>
+          <Breadcrumb.Divider icon="chevron-right" />
+          <Breadcrumb.Section>{page.name}</Breadcrumb.Section>
+        </Breadcrumb>
         <Divider hidden />
-        <Grid>
-          <Grid.Row>
-            <Grid.Column width={3}>
-              <Sticky offset={100} context={this.contextRef}>
-                {this.renderMenu()}
-              </Sticky>
-            </Grid.Column>
-            <Grid.Column width={13}>
-              <Ref innerRef={this.contextRef}>
-                <Segment basic>
-                  <Switch>
-                    {PAGES
-                      .map((page) => {
-                        return (
-                          <Route
-                            key={page.id}
-                            exact
-                            path={`/docs/${page.id}`}
-                            component={(props) => <StandardPage {...props} me={me} openApi={openApi} page={page} />}
-                          />
-                        );
-                      })
-                      .concat([
-                        <Route
-                          key="index"
-                          exact
-                          path={`/docs`}
-                          component={(props) => <StandardPage {...props} me={me} openApi={openApi} page={PAGES[0]} />}
-                        />,
-                      ])}
-                  </Switch>
-                </Segment>
-              </Ref>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
+        <Layout horizontal top stackable>
+          <Layout.Group size="200px" fixed>
+            <ResponsiveMenu contextRef={this.contextRef} title="Docs Menu">
+              {PAGES.map(({ id, name }) => {
+                return (
+                  <Menu.Item
+                    key={id}
+                    exact
+                    name={name}
+                    active={pageId === id}
+                    to={`/docs/${id}`}
+                    as={NavLink}
+                  />
+                );
+              })}
+            </ResponsiveMenu>
+          </Layout.Group>
+          <Layout.Spacer size={1} />
+          <Layout.Group>
+            <Ref innerRef={this.contextRef}>
+              <Switch>
+                {PAGES.map((page) => {
+                  return (
+                    <Route
+                      key={page.id}
+                      exact
+                      path={`/docs/${page.id}`}
+                      component={(props) => (
+                        <StandardPage
+                          {...props}
+                          me={me}
+                          openApi={openApi}
+                          page={page}
+                        />
+                      )}
+                    />
+                  );
+                }).concat([
+                  <Route
+                    key="index"
+                    path="/docs"
+                    exact
+                    component={(props) => (
+                      <StandardPage
+                        {...props}
+                        me={me}
+                        openApi={openApi}
+                        page={PAGES[0]}
+                      />
+                    )}
+                  />,
+                ])}
+              </Switch>
+            </Ref>
+          </Layout.Group>
+        </Layout>
         <Divider hidden />
       </React.Fragment>
-    );
-  }
-
-  renderMenu() {
-    const { pageId } = this.state;
-    return (
-      <Menu fluid pointing secondary vertical>
-        {PAGES.map(({ id, name }) => {
-          return <Menu.Item key={id} exact name={name} active={pageId === id} to={`/docs/${id}`} as={NavLink} />;
-        })}
-      </Menu>
     );
   }
 }

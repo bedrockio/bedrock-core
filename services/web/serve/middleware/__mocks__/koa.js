@@ -4,7 +4,6 @@ const httpMocks = require('node-mocks-http');
 const app = new Koa();
 
 class FakeCookies {
-
   constructor(data = {}) {
     this.data = data;
   }
@@ -16,11 +15,9 @@ class FakeCookies {
   set(key, val) {
     this.data[key] = val;
   }
-
 }
 
 function createFakeKoaContext(mockReq = {}, mockRes = {}) {
-
   // Koa checks this so assign as mock value
   Object.assign(mockReq, { socket: {} });
 
@@ -36,5 +33,5 @@ function createFakeKoaContext(mockReq = {}, mockRes = {}) {
 }
 
 module.exports = {
-  createFakeKoaContext
+  createFakeKoaContext,
 };

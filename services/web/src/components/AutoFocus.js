@@ -17,11 +17,11 @@ export default class AutoFocus extends React.Component {
     if (!testNode) return [];
 
     if (testNode.sourceIndex) {
-      allElements.sort(function(a, b) {
+      allElements.sort(function (a, b) {
         return a.sourceIndex - b.sourceIndex;
       });
     } else if (testNode.compareDocumentPosition) {
-      allElements.sort(function(a, b) {
+      allElements.sort(function (a, b) {
         return 3 - (a.compareDocumentPosition(b) & 6);
       });
     }

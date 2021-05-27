@@ -1,14 +1,17 @@
 const Koa = require('koa');
 const webpack = require('webpack');
 const e2k = require('express-to-koa');
+const config = require('@bedrockio/config');
+
 const envMiddleware = require('./middleware/env');
 const historyMiddleware = require('./middleware/history');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 
-const app = new Koa();
+const SERVER_PORT = config.get('SERVER_PORT');
+const SERVER_HOST = config.get('SERVER_HOST');
 
-const { BIND_PORT, BIND_HOST, PUBLIC } = require('../env');
+const app = new Koa();
 
 (async () => {
   // Manually loading webpack-dev-middleware and webpack-hot-middleware
@@ -58,13 +61,13 @@ const { BIND_PORT, BIND_HOST, PUBLIC } = require('../env');
   };
   const wrappedHotMiddleware = e2k(webpackHotMiddleware(compiler));
 
-  app.use(envMiddleware(PUBLIC));
+  app.use(envMiddleware());
   app.use(historyMiddleware({ apps: ['/'] }));
   app.use(wrappedDevMiddleware);
   app.use(wrappedHotMiddleware);
 
-  app.listen(BIND_PORT, BIND_HOST, () => {
+  app.listen(SERVER_PORT, SERVER_HOST, () => {
     // eslint-disable-next-line
-    console.info(`Running App on http://${BIND_HOST}:${BIND_PORT}`);
+    console.info(`Running App on http://${SERVER_HOST}:${SERVER_PORT}`);
   });
 })();

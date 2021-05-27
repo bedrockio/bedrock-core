@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 export default class IconGroup extends React.Component {
-
   getClassName() {
     const { size, className } = this.props;
     const classes = ['ui icons'];
@@ -17,18 +16,21 @@ export default class IconGroup extends React.Component {
 
   render() {
     const { content, children } = this.props;
-    return (
-      <div className={this.getClassName()}>
-        {content || children}
-      </div>
-    );
+    return <div className={this.getClassName()}>{content || children}</div>;
   }
-
 }
 
 IconGroup.propTypes = {
   className: PropTypes.string,
   children: PropTypes.node,
   content: PropTypes.node,
-  size: PropTypes.oneOf(['mini', 'tiny', 'small', 'large', 'big', 'huge', 'massive']),
+  size: PropTypes.oneOf([
+    'mini',
+    'tiny',
+    'small',
+    'large',
+    'big',
+    'huge',
+    'massive',
+  ]),
 };

@@ -1,29 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { SIZE_TYPE, getSizeStyles } from './utils';
 
 import './spacer.less';
 
 export default class Spacer extends React.Component {
 
-  getClassNames() {
-    return ['spacer', this.props.size].join(' ');
-  }
-
   render() {
-    return <div className={this.getClassNames()} />;
+    return <div className="layout-spacer" style={getSizeStyles(this.props)} />;
   }
 
 }
 
 Spacer.propTypes = {
-  size: PropTypes.oneOf([
-    'mini',
-    'tiny',
-    'small',
-    'large',
-    'big',
-    'huge',
-  ]),
+  size: SIZE_TYPE,
 };
 
 Spacer.defaultProps = {

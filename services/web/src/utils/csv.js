@@ -120,7 +120,7 @@ export const matchColumns = (columnMapping, fields) => {
     const result = {
       destinationColumn: null,
       destinationIndex: -1,
-      ...configuration
+      ...configuration,
     };
     for (let i = 0; fields.length > i; i += 1) {
       const field = fields[i];
@@ -192,7 +192,7 @@ export const processText = (columnMapping, text) => {
   return {
     items,
     mapping,
-    numColumnsMatched
+    numColumnsMatched,
   };
 };
 
@@ -220,7 +220,7 @@ function getDeepKeys(obj) {
     if (typeof obj[key] === 'object') {
       var subkeys = getDeepKeys(obj[key]);
       keys = keys.concat(
-        subkeys.map(function(subkey) {
+        subkeys.map(function (subkey) {
           return key + '.' + subkey;
         })
       );
@@ -233,8 +233,9 @@ function autoFormatCell(key) {
   return (object) => {
     const value = get(object, key);
     if (value instanceof Date) {
-      return `${value.getMonth() +
-        1}/${value.getDate()}/${value.getFullYear()} ${value.getHours()}:${value.getMinutes()}:${value.getSeconds()}`;
+      return `${
+        value.getMonth() + 1
+      }/${value.getDate()}/${value.getFullYear()} ${value.getHours()}:${value.getMinutes()}:${value.getSeconds()}`;
     }
     return value;
   };
