@@ -93,7 +93,7 @@ function createSchema(attributes = {}, options = {}) {
     }
   });
 
-  // stores what all the pathsModified, that does reset after .save
+  // keeps the directModifiedPaths around after document.save
   schema.pre('save', function () {
     const paths = this.directModifiedPaths() || [];
     this.$locals.auditPathsModified = uniq([...(this.$locals.pathsModified || []), ...paths]);
