@@ -148,7 +148,7 @@ function validateScopes(scopes) {
 }
 
 function getSchemaForType(type) {
-  switch (getCoercedSchemaType(type)) {
+  switch (type) {
     case 'String':
       return Joi.string();
     case 'Number':
@@ -168,14 +168,6 @@ function getSchemaForType(type) {
   }
 }
 
-function getCoercedSchemaType(type) {
-  // Allow both "String" and String.
-  if (typeof type === 'function') {
-    type = type.name;
-  }
-  return type;
-}
-
 function getFieldType(field) {
   // Normalize different type definitions including Mongoose types as well
   // as strings. Be careful here of nested type definitions.
@@ -188,7 +180,7 @@ function getFieldType(field) {
     // name: mongoose.Schema.Types.String
     return field.schemaName || field.name;
   } else if (typeof field === 'object') {
-    const type = getCoercedSchemaType(field.type);
+    const { type } = field;
     if (!type || typeof type === 'object') {
       // Nested mixed type field
       // profile: { name: String } (no type field)
@@ -197,7 +189,7 @@ function getFieldType(field) {
     } else {
       // name: { type: String }
       // name: { type: 'String' }
-      return type;
+      return getFieldType(type);
     }
   } else if (typeof field === 'string') {
     // name: 'String'
@@ -208,7 +200,7 @@ function getFieldType(field) {
 }
 
 module.exports = {
+  getFieldType,
   getJoiSchema,
-  getCoercedSchemaType,
   getMongooseValidator,
 };

@@ -5,7 +5,7 @@ const autopopulate = require('mongoose-autopopulate');
 const { logger } = require('@bedrockio/instrumentation');
 const { startCase, omitBy, escapeRegExp, isPlainObject } = require('lodash');
 
-const { getJoiSchema, getMongooseValidator, getCoercedSchemaType } = require('./validation');
+const { getJoiSchema, getMongooseValidator, getFieldType } = require('./validation');
 const { searchValidation } = require('./search');
 
 const { ObjectId } = mongoose.Types;
@@ -93,7 +93,7 @@ function createSchema(attributes = {}, options = {}) {
         let field = attributes[key];
         // TODO: consolidate with getField later
         field = Array.isArray(field) ? field[0] : field;
-        return getCoercedSchemaType(field.type) === 'String';
+        return getFieldType(field) === 'String';
       });
   }
 
