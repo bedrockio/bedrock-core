@@ -1,8 +1,9 @@
 const Router = require('@koa/router');
 const Joi = require('joi');
-const validate = require('../utils/middleware/validate');
+const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
+
 const { searchValidation, exportValidation, getSearchQuery, search, searchExport } = require('../utils/search');
 const { AuditLog } = require('../models');
 const router = new Router();
@@ -13,15 +14,15 @@ router
   .use(requirePermissions({ endpoint: 'auditLogs', permission: 'read', scope: 'global' }))
   .post(
     '/search',
-    validate({
-      body: Joi.object({
+    validateBody(
+      Joi.object({
         ...searchValidation(),
         ...exportValidation(),
         userId: Joi.string(),
         objectId: Joi.string(),
         type: Joi.string(),
-      }),
-    }),
+      })
+    ),
     async (ctx) => {
       const { body } = ctx.request;
       const query = getSearchQuery(body, {

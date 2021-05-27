@@ -35,26 +35,41 @@ async function getContext(user) {
 }
 
 describe('AuditLog', () => {
-  describe('getDiffObject', () => {
+  describe('getObjectFields', () => {
     it('should return a diff object', async () => {
-      const user = new User({});
+      const user = await User.create({
+        email: 'bob@old.com',
+      });
       user.email = 'bob@new.com';
-      const diffObject = AuditLog.getDiffObject(user, ['email']);
+      const fields = AuditLog.getObjectFields(user, ['email']);
+      expect(fields.objectId).toBe(user.id);
+      expect(fields.objectType).toBe('User');
+      expect(fields.objectBefore.email).toBe('bob@old.com');
+      expect(fields.objectAfter.email).toBe('bob@new.com');
+    });
 
-      expect(JSON.stringify(diffObject)).toBe(
-        JSON.stringify({
-          email: 'bob@new.com',
-        })
-      );
+    it('should maintain original object after saving', async () => {
+      const user = await User.create({
+        email: 'bob@original.com',
+      });
+      user.email = 'bob@modified.com';
+      await user.save();
+
+      const fields = AuditLog.getObjectFields(user, ['email']);
+
+      expect(fields.objectId).toBe(user.id);
+      expect(fields.objectType).toBe('User');
+      expect(fields.objectBefore.email).toBe('bob@original.com');
+      expect(fields.objectAfter.email).toBe('bob@modified.com');
     });
   });
 
-  describe('getFieldsContext', () => {
+  describe('getContextFields', () => {
     it('should extract fields from ctx', async () => {
       const user = new User({});
       const ctx = await getContext(user);
 
-      expect(AuditLog.getFieldsContext(ctx)).toEqual(
+      expect(AuditLog.getContextFields(ctx)).toEqual(
         expect.objectContaining({
           requestMethod: 'GET',
           requestUrl: '/1/products/id',
@@ -71,10 +86,8 @@ describe('AuditLog', () => {
       const user = new User({ email: 'bob@gmail.com' });
       const ctx = await getContext(user);
 
-      await AuditLog.append('did something', {
+      await AuditLog.append('did something', ctx, {
         type: 'security',
-        ctx,
-        objectDiff: { email: user.email },
         objectId: user.id,
         objectType: 'user',
       });
@@ -85,7 +98,6 @@ describe('AuditLog', () => {
       const log = logs[0];
       expect(log.type).toBe('security');
       expect(log.activity).toBe('did something');
-      expect(log.objectDiff.email).toBe('bob@gmail.com');
       expect(log.objectId.toString()).toBe(user.id);
       expect(log.objectType).toBe('user');
       expect(log.requestMethod).toBe('GET');
@@ -93,6 +105,22 @@ describe('AuditLog', () => {
       expect(log.routeNormalizedPath).toBe('/1/products/:id');
       expect(log.createdAt).toBeDefined();
       expect(log.user.toString()).toBe(user.id);
+    });
+
+    it('dont write if no change happend', async () => {
+      const user = new User({ email: 'bob@gmail.com' });
+      const ctx = await getContext(user);
+
+      await AuditLog.append('did something', ctx, {
+        type: 'security',
+        objectId: user.id,
+        objectType: 'user',
+        objectAfter: {},
+        objectBefore: {},
+      });
+
+      const logs = await AuditLog.find({ objectId: user.id });
+      expect(logs.length).toBe(0);
     });
   });
 });

@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const pluginAutoPopulate = require('mongoose-autopopulate');
 
-const { startCase, omitBy, isPlainObject } = require('lodash');
+const { startCase, omitBy, isPlainObject, uniq } = require('lodash');
 const { ObjectId } = mongoose.Schema.Types;
 const { getJoiSchema, getMongooseValidator } = require('./validation');
 const { logger } = require('@bedrockio/instrumentation');
@@ -84,6 +84,20 @@ function createSchema(attributes = {}, options = {}) {
     this.deletedAt = new Date();
     return this.save();
   };
+
+  schema.post(/^init|save/, function () {
+    if (!this.$locals.auditOriginal) {
+      this.$locals.auditOriginal = this.toObject({
+        depopulate: true,
+      });
+    }
+  });
+
+  // stores what all the pathsModified, that does reset after .save
+  schema.pre('save', function () {
+    const paths = this.directModifiedPaths() || [];
+    this.$locals.auditPathsModified = uniq([...(this.$locals.pathsModified || []), ...paths]);
+  });
 
   schema.plugin(pluginAutoPopulate);
   return schema;

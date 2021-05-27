@@ -4,7 +4,7 @@ const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { createAuthToken, createTemporaryToken, generateTokenId } = require('../utils/tokens');
 const { sendTemplatedMail } = require('../utils/mailer');
-const { User, Invite } = require('../models');
+const { User, Invite, AuditLog } = require('../models');
 
 const router = new Router();
 
@@ -33,10 +33,9 @@ router
         ...ctx.request.body,
       });
 
-      await AuditLog.append('registered', {
-        ctx,
+      await AuditLog.append('registered', ctx, {
         objectId: user.id,
-        objectType: 'user',
+        objectType: 'User',
         user: user.id,
       });
 
@@ -58,7 +57,6 @@ router
     }),
     async (ctx) => {
       const { email, password } = ctx.request.body;
-
       const user = await User.findOneAndUpdate(
         { email },
         {
@@ -72,22 +70,20 @@ router
       }
 
       if (!user.verifyLoginAttempts()) {
-        await AuditLog.append('reached max. authentication attempts', {
+        await AuditLog.append('reached max. authentication attempts', ctx, {
           type: 'security',
-          ctx,
           objectId: user.id,
-          objectType: 'user',
+          objectType: 'User',
           user: user.id,
         });
         ctx.throw(401, 'Too many login attempts');
       }
 
       if (!(await user.verifyPassword(password))) {
-        await AuditLog.append('failed authentication', {
+        await AuditLog.append('failed authentication', ctx, {
           type: 'security',
-          ctx,
           objectId: user.id,
-          objectType: 'user',
+          objectType: 'User',
           user: user.id,
         });
         ctx.throw(401, 'Incorrect password');
@@ -98,10 +94,9 @@ router
       user.authTokenId = authTokenId;
       await user.save();
 
-      await AuditLog.append('successfully authenticated', {
-        ctx,
+      await AuditLog.append('successfully authenticated', ctx, {
         objectId: user.id,
-        objectType: 'user',
+        objectType: 'User',
         user: user.id,
       });
 
@@ -148,10 +143,9 @@ router
         authTokenId,
       });
 
-      await AuditLog.append('registered', {
-        ctx,
+      await AuditLog.append('registered', ctx, {
         objectId: user.id,
-        objectType: 'user',
+        objectType: 'User',
         user: user.id,
       });
 
@@ -198,11 +192,10 @@ router
       if (!user) {
         ctx.throw(400, 'User does not exist');
       } else if (user.tempTokenId !== jwt.jti) {
-        await AuditLog.append('attempted reset password', {
-          ctx,
+        await AuditLog.append('attempted reset password', ctx, {
           type: 'security',
           objectId: user.id,
-          objectType: 'user',
+          objectType: 'User',
           user: user.id,
         });
         ctx.throw(400, 'Token is invalid');
@@ -212,10 +205,9 @@ router
 
       await user.save();
 
-      await AuditLog.append('reset password', {
-        ctx,
+      await AuditLog.append('reset password', ctx, {
         objectId: user.id,
-        objectType: 'user',
+        objectType: 'User',
         user: user.id,
       });
       ctx.body = { data: { token: createAuthToken(user.id) } };

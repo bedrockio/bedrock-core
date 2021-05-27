@@ -3,14 +3,16 @@
     "name": "Super Admin",
     "allowScopes": ["global", "organization"],
     "permissions": {
-      "users": "read-write"
+      "users": "read-write",
+      "auditLogs": "read"
     }
   },
   "limitedAdmin": {
     "name": "Limited Admin",
     "allowScopes": ["organization"],
     "permissions": {
-      "users": "read"
+      "users": "read",
+      "auditLogs": "read"
     }
   }
 }

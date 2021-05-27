@@ -3,7 +3,7 @@ const Joi = require('joi');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { searchValidation, getSearchQuery, search } = require('../utils/search');
-const { Product } = require('../models');
+const { Product, AuditLog } = require('../models');
 
 const router = new Router();
 
@@ -57,7 +57,14 @@ router
   .patch('/:productId', validateBody(Product.getUpdateValidation()), async (ctx) => {
     const product = ctx.state.product;
     product.assign(ctx.request.body);
+
     await product.save();
+
+    await AuditLog.append('updated product', ctx, {
+      type: 'admin',
+      ...AuditLog.getObjectFields(product, ['shop', 'name']),
+    });
+
     ctx.body = {
       data: product,
     };

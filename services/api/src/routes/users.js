@@ -111,11 +111,9 @@ router
       }
       const user = await User.create(ctx.request.body);
 
-      await AuditLog.append('created user', {
-        ctx,
-        objectId: user.id,
-        objectType: 'user',
-        objectDiff: { email: user.email, roles: user.roles },
+      await AuditLog.append('created user', ctx, {
+        type: 'admin',
+        ...AuditLog.getObjectFields(user, ['email', 'roles'], true),
       });
 
       ctx.body = {
@@ -126,14 +124,14 @@ router
   .patch('/:userId', validateBody(User.getUpdateValidation()), async (ctx) => {
     const { user } = ctx.state;
     user.assign(ctx.request.body);
-    const objectDiff = AuditLog.getDiffObject(user, ['email', 'roles']);
+
     await user.save();
-    await AuditLog.append('created user', {
-      ctx,
-      objectId: user.id,
-      objectType: 'user',
-      objectDiff: objectDiff,
+
+    await AuditLog.append('updated user', ctx, {
+      type: 'admin',
+      ...AuditLog.getObjectFields(user, ['email', 'roles']),
     });
+
     ctx.body = {
       data: user,
     };
@@ -141,11 +139,12 @@ router
   .delete('/:userId', async (ctx) => {
     const { user } = ctx.state;
     await user.delete();
-    await AuditLog.append('deleted user', {
-      ctx,
-      objectId: user.id,
-      objectType: 'user',
+
+    await AuditLog.append('deleted user', ctx, {
+      type: 'admin',
+      ...AuditLog.getObjectFields(user),
     });
+
     ctx.status = 204;
   });
 
