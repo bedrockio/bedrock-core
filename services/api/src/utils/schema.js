@@ -98,7 +98,7 @@ function createSchema(attributes = {}, options = {}) {
   }
 
   schema.static('search', async function search(body) {
-    let { ids, keyword, startAt, endAt, sort, skip, limit, ...rest } = body;
+    const { ids, keyword, startAt, endAt, sort, skip, limit, ...rest } = body;
     const query = {
       deletedAt: {
         $exists: false
