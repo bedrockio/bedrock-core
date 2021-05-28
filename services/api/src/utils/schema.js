@@ -201,14 +201,6 @@ function attributesToDefinition(attributes) {
   // or nested fields of Mixed type.
   const isSchemaType = !!type && typeof type !== 'object';
 
-  if ('access' in attributes && !isSchemaType) {
-    // Inside nested objects "access" needs to be explicitly
-    // disallowed so that it is not assumed to be a field.
-    attributes.type = {
-      access: null,
-    };
-  }
-
   for (let [key, val] of Object.entries(attributes)) {
     if (isSchemaType) {
       if (key === 'type' && typeof val === 'string') {
