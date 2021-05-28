@@ -38,7 +38,6 @@ router
         to: user.fullName,
         template: 'welcome.md',
         subject: 'Welcome to {{appName}}',
-        name,
       });
 
       ctx.body = { data: { token: createAuthToken(user.id, authTokenId) } };
@@ -139,7 +138,7 @@ router
       await user.updateOne({ tempTokenId: tokenId });
 
       await sendTemplatedMail({
-        to: [user.name, email].join(' '),
+        to: [user.fullName, email].join(' '),
         template: 'reset-password.md',
         subject: 'Password Reset Request',
         token,
