@@ -8,9 +8,12 @@
   flex-flow: column;
   flex: auto;
 
+  &.horizontal {
+    flex-flow: row;
+  }
+
   &.horizontal,
   &.center:not(.vertical):not(.horizontal) {
-    flex-flow: row;
 
     @media @mobile {
       &:not(.stackable) {
@@ -44,7 +47,8 @@
   }
 
   &.stretch {
-    align-items: stretch;
+    align-items: stretch !important;
+    height: 100%;
   }
 
   &.baseline {
@@ -75,6 +79,10 @@
 
   &.spread {
     justify-content: space-between;
+  }
+
+  &.around {
+    justify-content: space-around;
   }
 
   &.wrap {

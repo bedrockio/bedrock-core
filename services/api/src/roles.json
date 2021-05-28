@@ -1,34 +1,16 @@
 {
   "superAdmin": {
     "name": "Super Admin",
+    "allowScopes": ["global", "organization"],
     "permissions": {
-      "users": "read-write",
-      "brands": "read-write",
-      "events": "read-write",
-      "videos": "read-write",
-      "products": "read-write",
-      "orders": "read-write",
-      "analytics": "read",
-      "comments": "read-write",
-      "addresses": "read",
-      "causes": "read-write",
-      "carts": "read"
+      "users": "read-write"
     }
   },
   "limitedAdmin": {
     "name": "Limited Admin",
+    "allowScopes": ["organization"],
     "permissions": {
-      "users": "none",
-      "brands": "read",
-      "events": "read",
-      "videos": "read",
-      "products": "read",
-      "orders": "read",
-      "analytics": "read",
-      "comments": "read",
-      "addresses": "read",
-      "causes": "read",
-      "carts": "read"
+      "users": "read"
     }
   }
 }

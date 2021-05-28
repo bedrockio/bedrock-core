@@ -17,8 +17,7 @@ See http://localhost:2200/docs for full documentation on this API (requires runn
 - `src/models` - Mongoose ORM models (code and JSON) - [Models Documentation](./src/models)
 - `src/app.js` - Entrypoint into API (does not bind, so can be used in unit tests)
 - `src/index.js` - Launch script for the API
-- `emails/dist` - Prebuild emails templates (dont modify => modify emails/src and run `yarn emails`)
-- `emails/src` - Email templates
+- `emails` - Email templates
 - `scripts` - Scripts and jobs
 
 ## Install Dependencies
@@ -55,8 +54,8 @@ This command will automatically populate MongoDB fixtures when and empty DB is f
 
 All configuration is done using environment variables. The default values in `.env` can be overwritten using environment variables.
 
-- `BIND_HOST` - Host to bind to, defaults to `"0.0.0.0"`
-- `BIND_PORT` - Port to bind to, defaults to `2300`
+- `SERVER_HOST` - Host to bind to, defaults to `"0.0.0.0"`
+- `SERVER_PORT` - Port to bind to, defaults to `2300`
 - `MONGO_URI` - MongoDB URI to connect to, defaults to `mongodb://localhost/bedrock_dev`
 - `JWT_SECRET` - JWT secret used for token signing and encryption, defaults to `[change me]`
 - `ADMIN_NAME` - Default dashboard admin user name `admin`
@@ -170,11 +169,31 @@ router
 
 ## Updating E-Mail Templates
 
-E-mail templates can be found in `emails/src`. When changes are made, run the following command to optimize the emails for mail readers:
+E-mail templates can be found in `emails`.
+There is a layout.html that contains the styling and default layout, and a template for each email, that gets injected into the layout.
+Multiple layouts are supported, just make sure you specify what layout to use when calling
+`template({ layout: "other-layout.html", template: "..." })`
+
+You can either use markdown or full html templates. Both are run though https://mustache.github.io/ for templating
+
+### To create a button in markdown
 
 ```
-yarn emails
+**[Reset Password]({{{appUrl}}}/reset-password?token={{token}})**
 ```
+
+This translates to
+
+```
+<p><a class="button" href="{{{appUrl}}}/reset-password?token={{token}}">Reset Pasword</a/</p>
+```
+
+(note this only works if the `strong` link is the only element inside the paragraph)
+
+### Recall to unescape appUrl
+
+We are using mustache for templating, it will attempt to escape the http:`//` which causes issues.
+So when using the the appUrl write `{{&appUrl}}`
 
 ## Logging
 

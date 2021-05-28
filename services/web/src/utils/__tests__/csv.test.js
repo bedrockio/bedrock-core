@@ -4,54 +4,54 @@ const tokensImportMapping = {
   uid: {
     required: true,
     matches: ['UID'],
-    exactMatches: ['uid', 'UID']
+    exactMatches: ['uid', 'UID'],
   },
   customId: {
     required: true,
-    exactMatches: ['Custom ID', 'custom_id', 'custom id', 'laadpasnummer']
+    exactMatches: ['Custom ID', 'custom_id', 'custom id', 'laadpasnummer'],
   },
   type: {
     exactMatches: ['Type', 'type'],
-    defaultValue: 'mifare'
-  }
+    defaultValue: 'mifare',
+  },
 };
 
 const chargeSessionsImportMapping = {
   externalId: {
     required: true,
-    exactMatches: ['CDR_ID', 'CDR ID']
+    exactMatches: ['CDR_ID', 'CDR ID'],
   },
   startedAt: {
     required: true,
     exactMatches: ['Start_datetime', 'Start'],
-    type: 'datetime'
+    type: 'datetime',
   },
   endedAt: {
     required: true,
     exactMatches: ['End_datetime', 'End'],
-    type: 'datetime'
+    type: 'datetime',
   },
   durationSeconds: {
     required: false,
     exactMatches: ['Duration'],
-    type: 'duration'
+    type: 'duration',
   },
   kwh: {
     required: true,
     exactMatches: ['Volume', 'KWh'],
-    type: 'europeanOrAmericanNumber'
+    type: 'europeanOrAmericanNumber',
   },
   'chargeLocation.address': {
     required: true,
-    exactMatches: ['Charge_Point_Address', 'Address']
+    exactMatches: ['Charge_Point_Address', 'Address'],
   },
   'chargeLocation.postalCode': {
     required: true,
-    exactMatches: ['Charge_Point_ZIP', 'Postcode']
+    exactMatches: ['Charge_Point_ZIP', 'Postcode'],
   },
   'chargeLocation.city': {
     required: true,
-    exactMatches: ['Charge_Point_City', 'City']
+    exactMatches: ['Charge_Point_City', 'City'],
   },
   'chargeLocation.countryCode': {
     required: true,
@@ -59,46 +59,46 @@ const chargeSessionsImportMapping = {
     parseFn: (value) => {
       if (value === 'NLD') return 'NL';
       return value;
-    }
+    },
   },
   tokenUid: {
     required: true,
-    exactMatches: ['Authentication_ID', 'Authentication ID']
+    exactMatches: ['Authentication_ID', 'Authentication ID'],
   },
   tokenContractId: {
     required: true,
-    exactMatches: ['Contract_ID', 'Contract ID']
+    exactMatches: ['Contract_ID', 'Contract ID'],
   },
   chargePointId: {
     required: true,
-    exactMatches: ['Charge_Point_ID', 'Charge Point ID']
+    exactMatches: ['Charge_Point_ID', 'Charge Point ID'],
   },
   serviceProviderId: {
     required: true,
-    exactMatches: ['Service_Provider_ID', 'Service Provider ID']
+    exactMatches: ['Service_Provider_ID', 'Service Provider ID'],
   },
   infraProviderId: {
     required: true,
-    exactMatches: ['Infra_Provider_ID', 'Infra Provider ID']
+    exactMatches: ['Infra_Provider_ID', 'Infra Provider ID'],
   },
   connectorType: {
     required: false,
-    exactMatches: ['Connector type']
+    exactMatches: ['Connector type'],
   },
   status: {
     required: false,
-    exactMatches: ['Status']
+    exactMatches: ['Status'],
   },
   externalCalculatedPrice: {
     required: true,
     exactMatches: ['Calculated_Cost', 'Price (EUR)'],
-    type: 'europeanOrAmericanNumber'
+    type: 'europeanOrAmericanNumber',
   },
   importSource: {
     required: false,
     defaultValue: 'csv',
-    exactMatches: ['Import_Source']
-  }
+    exactMatches: ['Import_Source'],
+  },
 };
 
 describe('utils/csv', () => {
@@ -137,7 +137,7 @@ describe('utils/csv', () => {
       'address',
       'postalCode',
       'city',
-      'countryCode'
+      'countryCode',
     ]);
     expect(items[0].chargeLocation.city).toBe('Epe');
     expect(items[0].chargeLocation.countryCode).toBe('NL');
@@ -163,7 +163,7 @@ NLLMS4145553,2019-01-01 02:14,2019-01-01 16:21,14:06:38,22.17,"Hongarenburg nabi
       'address',
       'postalCode',
       'city',
-      'countryCode'
+      'countryCode',
     ]);
     expect(items[0].chargeLocation.city).toBe('Amersfoort');
     expect(items[0].chargeLocation.countryCode).toBe('NL');

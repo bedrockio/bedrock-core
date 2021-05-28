@@ -40,7 +40,7 @@ function isHotUpdateUrl(url) {
 function matchSubdomainApp(subdomains, apps) {
   if (subdomains.length === 1) {
     const app = `/${subdomains[0]}/`;
-    return apps.find(a => a === app);
+    return apps.find((a) => a === app);
   }
   return null;
 }
@@ -50,7 +50,7 @@ module.exports = function historyMiddleware(opt) {
   // Sort to ensure longer urls are tested first.
   apps.sort((a, b) => b.length - a.length);
   // Match both /app and /app/.
-  const tokens = apps.map(app => {
+  const tokens = apps.map((app) => {
     return app.length > 1 ? app.replace(/\/$/, '(/|$)') : app;
   });
   const reg = RegExp(`^${tokens.join('|')}`);

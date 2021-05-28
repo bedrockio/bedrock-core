@@ -106,6 +106,12 @@ const statuses = {
 formatOption(statuses, 'scheduled'); // <Label color="olive" icon="checkmark"...
 ```
 
+Format an `address` object:
+
+```javascript
+formatAddress(shop.address);
+```
+
 ## Forms
 
 Quickly create a bunch of options for Dropdown (and Label) from a hash:

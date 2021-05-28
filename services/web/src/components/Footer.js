@@ -6,7 +6,6 @@ import bedrock from 'assets/bedrock.svg';
 
 @withSession
 export default class Footer extends React.Component {
-
   render() {
     const { user } = this.context;
     if (!user) {
@@ -16,7 +15,7 @@ export default class Footer extends React.Component {
       <footer>
         <Container>
           <Layout horizontal center right>
-            Built with&nbsp;&nbsp;
+            <span style={{ marginRight: '10px' }}>Built with</span>
             <img width="112" height="24" src={bedrock} />
           </Layout>
         </Container>

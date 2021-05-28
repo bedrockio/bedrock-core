@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Icon } from 'semantic';
 import { kebabCase } from 'lodash';
+import { JumpLink } from 'components/Link';
 
 const flatten = (text, child) => {
   return typeof child === 'string'
@@ -13,7 +14,6 @@ const ROUTE_REG = /^(GET|POST|PATCH|DELETE) \/1\/(.+)$/;
 import './heading.less';
 
 export default class Heading extends PureComponent {
-
   render() {
     const { level, children } = this.props;
     let text = React.Children.toArray(children).reduce(flatten, '');
@@ -22,21 +22,28 @@ export default class Heading extends PureComponent {
     const Component = `h${level}`;
     const link = level > 1;
     return (
-      <Component id={slug} className={link ? 'linked-heading' : null}>
-        {link ? this.renderLink(slug, children) : children}
-      </Component>
+      <React.Fragment>
+        {link ? (
+          <JumpLink.Target id={slug}>
+            <Component className="linked-heading">
+              {this.renderLink(slug, children)}
+            </Component>
+          </JumpLink.Target>
+        ) : (
+          <Component>{children}</Component>
+        )}
+      </React.Fragment>
     );
   }
 
   renderLink(slug, children) {
     return (
       <React.Fragment>
-        <a href={`#${slug}`}>
-          <Icon name="linkify" />
-        </a>
-        {children}
+        <JumpLink to={slug}>
+          <Icon name="link" />
+        </JumpLink>
+        <span>{children}</span>
       </React.Fragment>
     );
   }
-
 }

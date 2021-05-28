@@ -16,6 +16,10 @@ spec:
         - image: gcr.io/bedrock-foundation/bedrock-core-services-web
           imagePullPolicy: Always
           name: main
+          # resources:
+          #   limits:
+          #     cpu: "1000m"
+          #     memory: "4Gi"
           env:
             - name: ENV_NAME
               value: "staging"

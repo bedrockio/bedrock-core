@@ -19,10 +19,18 @@ class OpenApiMacros {
     return `#### \`${method} ${path}\``;
   }
   callParams({ method, path }) {
-    const definition = this.paths.find((d) => d.method === method && d.path === path);
+    const definition = this.paths.find(
+      (d) => d.method === method && d.path === path
+    );
     if (!definition) return `\`Could not find API call for ${method} ${path}\``;
-    const parameterType = definition.requestBody ? 'JSON Body' : 'Request Query';
-    let markdown = [`${parameterType} Parameters:\n`, '| Key | Type | Required | Description |', '|--|--|--|--|'];
+    const parameterType = definition.requestBody
+      ? 'JSON Body'
+      : 'Request Query';
+    let markdown = [
+      `${parameterType} Parameters:\n`,
+      '| Key | Type | Required | Description |',
+      '|--|--|--|--|',
+    ];
     const params = definition.requestBody || definition.requestQuery || [];
     if (!params || !params.length) return '';
     params.forEach(({ name, schema, required, description }) => {
@@ -32,16 +40,24 @@ class OpenApiMacros {
       if (schema.default) {
         descriptionStr += ` (Default: ${JSON.stringify(schema.default)})`;
       }
-      markdown.push(`|\`${name}\`|${typeStr}|${requiredStr}|${descriptionStr}|`);
+      markdown.push(
+        `|\`${name}\`|${typeStr}|${requiredStr}|${descriptionStr}|`
+      );
     });
     return markdown.join('\n');
   }
   callResponse({ method, path }) {
-    const definition = this.paths.find((d) => d.method === method && d.path === path);
+    const definition = this.paths.find(
+      (d) => d.method === method && d.path === path
+    );
     if (!definition) return `\`Could not find API call for ${method} ${path}\``;
     const { responseBody } = definition;
     if (!responseBody || !responseBody.length) return '';
-    let markdown = [`\nResponse Body:\n`, '| Key | Type | Description |', '|--|--|--|'];
+    let markdown = [
+      `\nResponse Body:\n`,
+      '| Key | Type | Description |',
+      '|--|--|--|',
+    ];
     responseBody.forEach(({ name, schema, description }) => {
       const typeStr = formatTypeSummary(schema);
       let descriptionStr = description || '';
@@ -53,7 +69,9 @@ class OpenApiMacros {
     return markdown.join('\n');
   }
   callExamples({ method, path }) {
-    const definition = this.paths.find((d) => d.method === method && d.path === path);
+    const definition = this.paths.find(
+      (d) => d.method === method && d.path === path
+    );
     if (!definition) return `\`Could not find API call for ${method} ${path}\``;
     const { examples } = definition;
     if (!examples || !examples.length) return '';
@@ -64,12 +82,18 @@ class OpenApiMacros {
         markdown.push(`Request:\n`);
         markdown.push('```bash\nGET ' + path + '\n```');
       } else {
-        markdown.push(`Request Body for \`${method} ${requestPath || path}\`\n`);
-        markdown.push('```json\n' + JSON.stringify(requestBody || {}, null, 2) + '\n```');
+        markdown.push(
+          `Request Body for \`${method} ${requestPath || path}\`\n`
+        );
+        markdown.push(
+          '```json\n' + JSON.stringify(requestBody || {}, null, 2) + '\n```'
+        );
       }
       if (responseBody) {
         markdown.push(`Response Body:\n`);
-        markdown.push('```json\n' + JSON.stringify(responseBody, null, 2) + '\n```\n');
+        markdown.push(
+          '```json\n' + JSON.stringify(responseBody, null, 2) + '\n```\n'
+        );
       }
     });
     return markdown.join('\n');
@@ -91,7 +115,11 @@ class OpenApiMacros {
   objectSummary({ name }) {
     const definition = this.objects.find((d) => d.name === name);
     if (!definition) return `\`Could not find object for ${name}\``;
-    let markdown = [`Attributes:\n`, '| Key | Type | Always Set? | Description |', '|--|--|--|--|'];
+    let markdown = [
+      `Attributes:\n`,
+      '| Key | Type | Always Set? | Description |',
+      '|--|--|--|--|',
+    ];
     const { attributes } = definition;
     attributes.forEach(({ name, schema, required, description }) => {
       const typeStr = formatTypeSummary(schema);
@@ -108,35 +136,37 @@ class OpenApiMacros {
         );
       }
       const requiredStr = required ? 'Yes' : 'No';
-      markdown.push(`|\`${name}\`|${typeStr}|${requiredStr}|${descriptionStr}|`);
+      markdown.push(
+        `|\`${name}\`|${typeStr}|${requiredStr}|${descriptionStr}|`
+      );
     });
     return markdown.join('\n');
   }
 
   buildNestedTable(headerCells, bodyRows) {
-
     function wrap(tag, arr, fn) {
-      return arr.map((el) => {
-        if (fn) {
-          el = fn(el);
-        }
-        return `<${tag}>${el}</${tag}>`;
-      }).join('');
+      return arr
+        .map((el) => {
+          if (fn) {
+            el = fn(el);
+          }
+          return `<${tag}>${el}</${tag}>`;
+        })
+        .join('');
     }
     return html`
       <table>
-      <thead>
-        <tr>
-        ${wrap('th', headerCells)}
-        </tr>
-      </thead>
-      <tbody>
-        ${wrap('tr', bodyRows, (cells) => {
-          return wrap('td', cells);
-        })}
-        <tr>
-        </tr>
-      </tbody>
+        <thead>
+          <tr>
+            ${wrap('th', headerCells)}
+          </tr>
+        </thead>
+        <tbody>
+          ${wrap('tr', bodyRows, (cells) => {
+            return wrap('td', cells);
+          })}
+          <tr></tr>
+        </tbody>
       </table>
     `;
   }
@@ -161,18 +191,34 @@ export function executeOpenApiMacros(openApi, markdown) {
 export function enrichMarkdown(markdown, credentials, organization) {
   let enrichedMarkdown = markdown;
   if (organization) {
-    enrichedMarkdown = enrichedMarkdown.replace(new RegExp('<ORGANIZATION_ID>', 'g'), organization.id);
+    enrichedMarkdown = enrichedMarkdown.replace(
+      new RegExp('<ORGANIZATION_ID>', 'g'),
+      organization.id
+    );
   }
   if (credentials && credentials.length) {
-    enrichedMarkdown = enrichedMarkdown.replace(new RegExp('<TOKEN>', 'g'), credentials[0].apiToken);
+    enrichedMarkdown = enrichedMarkdown.replace(
+      new RegExp('<TOKEN>', 'g'),
+      credentials[0].apiToken
+    );
   }
-  enrichedMarkdown = enrichedMarkdown.replace(new RegExp('<API_URL>', 'g'), API_URL.replace(/\/$/, ''));
-  enrichedMarkdown = enrichedMarkdown.replace(new RegExp('<APP_NAME>', 'g'), APP_NAME.replace(/\/$/, ''));
+  enrichedMarkdown = enrichedMarkdown.replace(
+    new RegExp('<API_URL>', 'g'),
+    API_URL.replace(/\/$/, '')
+  );
+  enrichedMarkdown = enrichedMarkdown.replace(
+    new RegExp('<APP_NAME>', 'g'),
+    APP_NAME.replace(/\/$/, '')
+  );
   return enrichedMarkdown;
 }
 
 function html(chunks, ...args) {
-  return chunks.map((chunk, i) => {
-    return chunk.trim() + (args[i] || '');
-  }).join('').trim().replace(/\s*\n\s*/g, '');
+  return chunks
+    .map((chunk, i) => {
+      return chunk.trim() + (args[i] || '');
+    })
+    .join('')
+    .trim()
+    .replace(/\s*\n\s*/g, '');
 }

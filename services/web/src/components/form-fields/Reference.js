@@ -5,7 +5,6 @@ import { Form } from 'semantic';
 import { request } from 'utils/api';
 
 export default class ReferenceField extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -72,7 +71,7 @@ export default class ReferenceField extends React.Component {
     this.setState({
       ids,
     });
-  }
+  };
 
   onSearchChange = (evt, { searchQuery: query }) => {
     this.setState({
@@ -80,7 +79,7 @@ export default class ReferenceField extends React.Component {
       loading: true,
     });
     this.search(query);
-  }
+  };
 
   search = debounce(async (query) => {
     if (query) {
@@ -99,10 +98,10 @@ export default class ReferenceField extends React.Component {
       });
       this.queued -= 1;
       if (this.queued === 0) {
-        const options = uniqBy([
-          ...this.state.options,
-          ...this.mapOptions(data),
-        ], 'value');
+        const options = uniqBy(
+          [...this.state.options, ...this.mapOptions(data)],
+          'value'
+        );
         this.setState({
           options,
           loading: false,
@@ -163,8 +162,7 @@ export default class ReferenceField extends React.Component {
       content: label.text,
       icon,
     };
-  }
-
+  };
 }
 
 ReferenceField.propTypes = {
@@ -173,6 +171,6 @@ ReferenceField.propTypes = {
 };
 
 ReferenceField.defaultProps = {
-  icon: 'check',
-  color: 'green',
+  icon: undefined,
+  color: undefined,
 };

@@ -51,6 +51,32 @@ describe('createSchema', () => {
       }).rejects.toThrow();
     });
 
+    it('should allow alternate array function syntax', async () => {
+      const User = createTestModel(
+        createSchema({
+          names: {
+            type: Array,
+            default: [],
+          },
+        })
+      );
+      const user = new User({ names: ['foo'] });
+      expect(Array.from(user.names)).toEqual(['foo']);
+    });
+
+    it('should allow alternate array string syntax', async () => {
+      const User = createTestModel(
+        createSchema({
+          names: {
+            type: 'Array',
+            default: [],
+          },
+        })
+      );
+      const user = new User({ names: ['foo'] });
+      expect(Array.from(user.names)).toEqual(['foo']);
+    });
+
     it('should create a schema with a nested field', async () => {
       const User = createTestModel(
         createSchema({
@@ -375,7 +401,7 @@ describe('createSchema', () => {
         login: {
           password: 'password',
           attempts: 10,
-        }
+        },
       });
       expect(user.login.password).toBe('password');
       expect(user.login.attempts).toBe(10);
@@ -744,14 +770,14 @@ describe('loadModelDir', () => {
 });
 
 describe('validation', () => {
-  function assertPass(schema, obj) {
+  function assertPass(schema, obj, options) {
     expect(() => {
-      Joi.assert(obj, schema);
+      Joi.assert(obj, schema, options);
     }).not.toThrow();
   }
-  function assertFail(schema, obj) {
+  function assertFail(schema, obj, options) {
     expect(() => {
-      Joi.assert(obj, schema);
+      Joi.assert(obj, schema, options);
     }).toThrow();
   }
 
@@ -1002,24 +1028,6 @@ describe('validation', () => {
       });
     });
 
-    it('should allow search on a nested field', () => {
-      const User = createTestModel(
-        createSchema({
-          roles: [
-            {
-              role: { type: 'String', required: true },
-              scope: { type: 'String', required: true },
-            },
-          ],
-        })
-      );
-      const schema = User.getSearchValidation();
-      assertPass(schema, {
-        roles: {
-          role: 'test',
-        }
-      });
-    });
   });
 
   describe('search', () => {
@@ -1140,18 +1148,32 @@ describe('validation', () => {
   });
 
   describe('other cases', () => {
-    it('should handle geolocation schema', () => {
+    it('should handle geolocation schema', async () => {
       const User = createTestModel(
         createSchema({
           geoLocation: {
             type: { type: 'String', default: 'Point' },
             coordinates: {
-              type: 'Array',
+              type: Array,
               default: [],
             },
           },
         })
       );
+      const user = await User.create({
+        geoLocation: {
+          coordinates: [35, 95],
+        },
+      });
+      expect(user.toObject()).toEqual({
+        id: user.id,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+        geoLocation: {
+          type: 'Point',
+          coordinates: [35, 95],
+        },
+      });
       const schema = User.getCreateValidation();
       assertPass(schema, {
         geoLocation: {
@@ -1164,4 +1186,155 @@ describe('validation', () => {
       });
     });
   });
+
+  describe('scopes', () => {
+    it('should be able to disallow all write access', async () => {
+      const User = createTestModel(
+        createSchema({
+          name: {
+            type: String,
+          },
+          password: {
+            type: String,
+            writeScopes: 'none',
+          },
+        })
+      );
+      const schema = User.getUpdateValidation();
+      assertPass(schema, {
+        name: 'Barry',
+      });
+      assertFail(schema, {
+        name: 'Barry',
+        password: 'fake password',
+      });
+    });
+
+    it('should be able to disallow write access by scope', async () => {
+      const User = createTestModel(
+        createSchema({
+          name: {
+            type: String,
+            required: true,
+          },
+          password: {
+            type: String,
+            writeScopes: ['private'],
+          },
+        })
+      );
+      const schema = User.getUpdateValidation();
+      assertPass(schema, {
+        name: 'Barry',
+      });
+      assertFail(schema, {
+        name: 'Barry',
+        password: 'fake password',
+      });
+      assertPass(schema, {
+        name: 'Barry',
+        password: 'fake password',
+      }, { scopes: ['private'] });
+    });
+
+    it('should require only one of valid scopes', async () => {
+      const User = createTestModel(
+        createSchema({
+          foo: {
+            type: String,
+            writeScopes: ['foo'],
+          },
+          bar: {
+            type: String,
+            writeScopes: ['bar'],
+          },
+          foobar: {
+            type: String,
+            writeScopes: ['foo', 'bar'],
+          },
+        })
+      );
+      const schema = User.getUpdateValidation();
+
+      // With ['foo'] scopes
+      assertPass(schema, {
+        foo: 'foo!',
+      }, { scopes: ['foo'] });
+      assertFail(schema, {
+        bar: 'bar!',
+      }, { scopes: ['foo'] });
+      assertPass(schema, {
+        foobar: 'foobar!',
+      }, { scopes: ['foo'] });
+      assertPass(schema, {
+        foo: 'foo!',
+        foobar: 'foobar!',
+      }, { scopes: ['foo'] });
+      assertFail(schema, {
+        foo: 'foo!',
+        bar: 'bar!',
+        foobar: 'foobar!',
+      }, { scopes: ['foo'] });
+
+      // With ['bar'] scopes
+      assertFail(schema, {
+        foo: 'foo!',
+      }, { scopes: ['bar'] });
+      assertPass(schema, {
+        bar: 'bar!',
+      }, { scopes: ['bar'] });
+      assertPass(schema, {
+        foobar: 'foobar!',
+      }, { scopes: ['bar'] });
+      assertFail(schema, {
+        foo: 'foo!',
+        foobar: 'foobar!',
+      }, { scopes: ['bar'] });
+      assertFail(schema, {
+        foo: 'foo!',
+        bar: 'bar!',
+        foobar: 'foobar!',
+      }, { scopes: ['bar'] });
+
+      // With ['foo', 'bar'] scopes
+      assertPass(schema, {
+        foo: 'foo!',
+      }, { scopes: ['foo', 'bar'] });
+      assertPass(schema, {
+        bar: 'bar!',
+      }, { scopes: ['foo', 'bar'] });
+      assertPass(schema, {
+        foobar: 'foobar!',
+      }, { scopes: ['foo', 'bar'] });
+      assertPass(schema, {
+        foo: 'foo!',
+        foobar: 'foobar!',
+      }, { scopes: ['foo', 'bar'] });
+      assertPass(schema, {
+        foo: 'foo!',
+        bar: 'bar!',
+        foobar: 'foobar!',
+      }, { scopes: ['foo', 'bar'] });
+    });
+
+    it('should allow search on a nested field', () => {
+      const User = createTestModel(
+        createSchema({
+          roles: [
+            {
+              role: { type: 'String', required: true },
+              scope: { type: 'String', required: true },
+            },
+          ],
+        })
+      );
+      const schema = User.getSearchValidation();
+      assertPass(schema, {
+        roles: {
+          role: 'test',
+        }
+      });
+    });
+  });
+
 });

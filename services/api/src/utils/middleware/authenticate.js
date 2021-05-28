@@ -56,9 +56,13 @@ function authenticate({ type, optional = false } = {}) {
 
 async function fetchUser(ctx, next) {
   if (!ctx.state.authUser && ctx.state.jwt) {
+    const { jwt } = ctx.state;
     const { User } = mongoose.models;
-    ctx.state.authUser = await User.findById(ctx.state.jwt.userId);
-    if (!ctx.state.authUser) ctx.throw(401, 'user associated to token could not not be found');
+    const user = await User.findById(jwt.sub);
+    if (!user || (jwt.jti && jwt.jti !== user.authTokenId)) {
+      ctx.throw(401, 'user associated to token could not be found');
+    }
+    ctx.state.authUser = user;
   }
   await next();
 }

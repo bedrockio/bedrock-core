@@ -7,23 +7,22 @@ import SearchProvider from 'components/SearchProvider';
 import { Layout } from 'components/Layout';
 import InviteUser from 'modals/InviteUser';
 import LoadButton from 'components/LoadButton';
+import { Breadcrumbs } from 'components';
 
 import {
-  Container,
-  Header,
   Table,
   Button,
   Message,
+  Divider
 } from 'semantic';
 
 @screen
 export default class Home extends React.Component {
-
   onDataNeeded = async (params) => {
     return await request({
       method: 'POST',
       path: '/1/invites/search',
-      body: params
+      body: params,
     });
   };
 
@@ -32,23 +31,23 @@ export default class Home extends React.Component {
       <SearchProvider onDataNeeded={this.onDataNeeded}>
         {({ items, getSorted, setSort, reload }) => {
           return (
-            <Container>
-              <Header as="h2">
-                <Layout horizontal center spread>
-                  Invites
+            <div>
+              <Breadcrumbs active="Invites" />
+              <Layout horizontal center spread>
+                <h1>
+                    Invites
+                </h1>
+                <Layout.Group>
                   <InviteUser
                     size="tiny"
                     onSave={reload}
                     trigger={
-                      <Button
-                        primary
-                        content="Invite User"
-                        icon="plus"
-                      />
+                      <Button primary content="Invite User" icon="plus" />
                     }
                   />
-                </Layout>
-              </Header>
+                </Layout.Group>
+              </Layout>
+              <Divider hidden />
               <div className="list">
                 {items.length === 0 ? (
                   <Message>No invitations yet</Message>
@@ -77,9 +76,7 @@ export default class Home extends React.Component {
                       {items.map((item) => {
                         return (
                           <Table.Row key={item.id}>
-                            <Table.Cell>
-                              {item.email}
-                            </Table.Cell>
+                            <Table.Cell>{item.email}</Table.Cell>
                             <Table.Cell collapsing>{item.status}</Table.Cell>
                             <Table.Cell collapsing>
                               {formatDateTime(item.createdAt)}
@@ -92,7 +89,7 @@ export default class Home extends React.Component {
                                 onClick={async () => {
                                   await request({
                                     method: 'POST',
-                                    path: `/1/invites/${item.id}/resend`
+                                    path: `/1/invites/${item.id}/resend`,
                                   });
                                   reload();
                                 }}
@@ -104,7 +101,7 @@ export default class Home extends React.Component {
                                 onClick={async () => {
                                   await request({
                                     method: 'DELETE',
-                                    path: `/1/invites/${item.id}`
+                                    path: `/1/invites/${item.id}`,
                                   });
                                   reload();
                                 }}
@@ -117,7 +114,7 @@ export default class Home extends React.Component {
                   </Table>
                 )}
               </div>
-            </Container>
+            </div>
           );
         }}
       </SearchProvider>

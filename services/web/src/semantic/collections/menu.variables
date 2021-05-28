@@ -69,11 +69,11 @@
 @headerTextTransform: @normal;
 
 /* Vertical Icon */
-@verticalIconFloat: right;
-@verticalIconMargin: 0em 0em 0em 0.5em;
+@verticalIconFloat: left;
+@verticalIconMargin: 0em 0.7em 0em 0;
 
 /* Vertical Header */
-@verticalHeaderMargin: 0em 0em 0.5em;
+@verticalHeaderMargin: 0em 0em 1em;
 @verticalHeaderFontSize: @relativeMedium;
 @verticalHeaderFontWeight: @bold;
 
@@ -246,12 +246,12 @@
 /* Pointing */
 @secondaryPointingBorderWidth: 2px;
 @secondaryPointingBorderColor: @borderColor;
-@secondaryPointingItemVerticalPadding: @relativeTiny;
-@secondaryPointingItemHorizontalPadding: @relativeLarge;
+@secondaryPointingItemVerticalPadding: @relativeMini;
+@secondaryPointingItemHorizontalPadding: @relative1px;
 
 @secondaryPointingHoverTextColor: @textColor;
 
-@secondaryPointingActiveBorderColor: @black;
+@secondaryPointingActiveBorderColor: @primaryColor;
 @secondaryPointingActiveTextColor: @selectedTextColor;
 @secondaryPointingActiveFontWeight: @bold;
 

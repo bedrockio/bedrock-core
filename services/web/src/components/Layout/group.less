@@ -1,19 +1,45 @@
 @import '../../styles/responsive';
+@import './sizing';
 
-.layout > .group {
+.layout-group {
+
+  // Fixes flexbox quirk:
+  // https://stackoverflow.com/q/36247140/907125
+
+  min-width: 0;
+  min-height: 0;
 
   &.fixed {
     flex: none;
   }
 
   &.grow {
-    flex: auto;
-    min-width: 0;
-    min-height: 0;
+    flex: 1 1 1px;
   }
 
   &.flex {
     display: flex;
   }
 
+  &.center {
+    display: flex;
+    flex-flow: inherit;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &.overflow {
+
+    .layout.vertical & {
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    .layout.horizontal & {
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+  }
+
+  .sizingWorkaround();
 }

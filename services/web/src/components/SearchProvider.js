@@ -27,7 +27,11 @@ export default class SearchProvider extends React.Component {
 
   componentDidUpdate(lastProps, lastState) {
     const { page, sort, filters } = this.state;
-    if (page !== lastState.page || sort !== lastState.sort || filters !== lastState.filters) {
+    if (
+      page !== lastState.page ||
+      sort !== lastState.sort ||
+      filters !== lastState.filters
+    ) {
       this.fetch();
     }
   }
@@ -72,7 +76,7 @@ export default class SearchProvider extends React.Component {
     // Performed on a setTimeout
     // to allow state to flush.
     setTimeout(this.fetch);
-  }
+  };
 
   getSorted = (field) => {
     const { sort } = this.state;
@@ -141,7 +145,12 @@ export default class SearchProvider extends React.Component {
       return (
         <Container textAlign="center">
           <Divider hidden />
-          <Pagination page={page} limit={meta.limit} total={meta.total} onPageChange={this.onPageChange} />
+          <Pagination
+            page={page}
+            limit={meta.limit}
+            total={meta.total}
+            onPageChange={this.onPageChange}
+          />
         </Container>
       );
     }

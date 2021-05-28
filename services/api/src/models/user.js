@@ -5,7 +5,6 @@ const { createSchema } = require('../utils/schema');
 const { validScopes } = require('../utils/permissions');
 const definition = require('./definitions/user.json');
 
-
 const LOGIN_THROTTLE = {
   // Apply lockout after 3 tries
   triesMin: 3,
@@ -20,21 +19,16 @@ const schema = createSchema(definition.attributes);
 
 schema.methods.verifyPassword = async function verifyPassword(password) {
   if (!this.hashedPassword) {
-    throw new Error('No password set for user');
-  } else if (!(await bcrypt.compare(password, this.hashedPassword))) {
-    throw new Error('Incorrect password');
+    throw Error('No password set for user');
   }
+  return bcrypt.compare(password, this.hashedPassword);
 };
 
 schema.methods.verifyLoginAttempts = function verifyLoginAttempts() {
-  if (this.lastLoginAttemptAt) {
-    const { triesMin, triesMax, timeMax } = LOGIN_THROTTLE;
-    const dt = new Date() - this.lastLoginAttemptAt;
-    const threshold = mapExponential(this.loginAttempts, triesMin, triesMax, 0, timeMax);
-    if (dt < threshold) {
-      throw new Error('Too many login attempts');
-    }
-  }
+  const { triesMin, triesMax, timeMax } = LOGIN_THROTTLE;
+  const dt = new Date() - this.lastLoginAttemptAt || Date.now();
+  const threshold = mapExponential(this.loginAttempts, triesMin, triesMax, 0, timeMax);
+  return dt >= threshold;
 };
 
 schema.virtual('fullName').get(function getFullName() {

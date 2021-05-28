@@ -56,7 +56,11 @@ export default async function request(options) {
     } catch (err) {
       message = await res.clone().text();
     }
-    throw new ApiError(message || res.statusText, status || res.status, details);
+    throw new ApiError(
+      message || res.statusText,
+      status || res.status,
+      details
+    );
   }
 
   try {

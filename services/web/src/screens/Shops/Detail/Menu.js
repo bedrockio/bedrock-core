@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, Divider, Button } from 'semantic';
+import { Menu, Button } from 'semantic';
 import { NavLink } from 'react-router-dom';
-import { Breadcrumbs } from 'components';
+import { Breadcrumbs, Layout } from 'components';
 
 import EditShop from 'modals/EditShop';
 
@@ -11,15 +11,19 @@ export default ({ shop, onSave }) => {
     <React.Fragment>
       <Breadcrumbs
         link={<Link to="/shops">Shops</Link>}
-        active={shop.name || 'Loading...'}>
+        active={shop.name}>
+      </Breadcrumbs>
+      <Layout horizontal center spread>
+        <h1>{shop.name} Shop</h1>
+        <Layout.Group>
         <EditShop
           shop={shop}
           onSave={onSave}
           trigger={<Button primary icon="setting" content="Settings" />}
         />
-      </Breadcrumbs>
-      <Divider hidden />
-      <Menu tabular>
+          </Layout.Group>
+      </Layout>
+      <Menu pointing secondary>
         <Menu.Item name="Overview" to={`/shops/${shop.id}`} as={NavLink} exact />
         {/* --- Generator: menus */}
         <Menu.Item
@@ -30,7 +34,6 @@ export default ({ shop, onSave }) => {
         />
         {/* --- Generator: end */}
       </Menu>
-      <Divider hidden />
     </React.Fragment>
   );
 };

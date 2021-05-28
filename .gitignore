@@ -15,3 +15,5 @@ services/api/data
 .terraform/
 globalConfig.json
 .eslintcache
+.vscode
+secrets

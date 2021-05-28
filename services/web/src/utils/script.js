@@ -1,7 +1,7 @@
 import { memoize } from 'lodash';
 
 export const loadScript = memoize(function loadScript(src) {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     var script = document.createElement('script');
     script.async = true;
     script.src = src;

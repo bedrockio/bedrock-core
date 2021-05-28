@@ -27,5 +27,4 @@ export default class StandardPage extends React.Component {
       </div>
     );
   }
-
 }

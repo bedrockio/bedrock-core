@@ -16,6 +16,10 @@ spec:
         - image: dominiek/backup-monitor
           imagePullPolicy: Always
           name: main
+          resources:
+            limits:
+              cpu: "1000m"
+              memory: "4Gi"
           env:
             - name: GS_BUCKETS
               value: "bedrock-staging-uploads bedrock-staging-mongodb-backups"

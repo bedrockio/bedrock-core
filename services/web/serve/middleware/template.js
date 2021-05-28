@@ -24,7 +24,9 @@ const path = require('path');
 let templateCache;
 
 function loadTemplates(urlPath, cache, opts) {
-  fs.readdirSync(path.resolve('dist', urlPath), { withFileTypes: true }).forEach(dirent => {
+  fs.readdirSync(path.resolve('dist', urlPath), {
+    withFileTypes: true,
+  }).forEach((dirent) => {
     if (dirent.isDirectory()) {
       loadTemplates(path.join(urlPath, dirent.name), cache, opts);
     } else if (dirent.isFile() && dirent.name.match(/\.(html|txt|xml)$/)) {
@@ -49,6 +51,7 @@ module.exports = function templateMiddleware(opts) {
   return (ctx, next) => {
     const template = getTemplate(ctx.url);
     if (template) {
+      ctx.set('X-Frame-Options', 'deny');
       ctx.body = template;
     } else {
       ctx.status = 404;

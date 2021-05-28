@@ -24,10 +24,7 @@ function getJoiSchema(attributes, options = {}) {
 function getMongooseValidator(schemaName, field) {
   const schema = getSchemaForField(field);
   const validator = (val) => {
-    const { error } = schema.validate(val);
-    if (error) {
-      throw error;
-    }
+    Joi.assert(val, schema);
     return true;
   };
   // A named shortcut back to the Joi schema to retrieve it
@@ -108,6 +105,8 @@ function getSchemaForField(field, options = {}) {
 
   if (field.required && !options.skipRequired) {
     schema = schema.required();
+  } else if (field.writeScopes) {
+    schema = schema.custom(validateScopes(field.writeScopes));
   } else {
     // TODO: for now we allow both empty strings and null
     // as a potential signal for "set but non-existent".
@@ -131,8 +130,25 @@ function getSchemaForField(field, options = {}) {
   return schema;
 }
 
+function validateScopes(scopes) {
+  return (val, { prefs }) => {
+    let allowed = false;
+    if (scopes === 'all') {
+      allowed = true;
+    } else if (Array.isArray(scopes)) {
+      allowed = scopes.some((scope) => {
+        return prefs.scopes?.includes(scope);
+      });
+    }
+    if (!allowed) {
+      throw new Error(`Validation failed for scopes ${scopes}.`);
+    }
+    return val;
+  };
+}
+
 function getSchemaForType(type) {
-  switch (getCoercedSchemaType(type)) {
+  switch (type) {
     case 'String':
       return Joi.string();
     case 'Number':
@@ -152,42 +168,38 @@ function getSchemaForType(type) {
   }
 }
 
-function getCoercedSchemaType(type) {
-  // Allow both "String" and String.
-  if (typeof type === 'function') {
-    type = type.name;
-  }
-  return type;
-}
-
 function getFieldType(field) {
-  // Normalize different mongoose type definitions. Be careful
-  // of nested type definitions.
+  // Normalize different type definitions including Mongoose types as well
+  // as strings. Be careful here of nested type definitions.
   if (Array.isArray(field)) {
     // names: [String]
     return 'Array';
+  } else if (typeof field === 'function') {
+    // Coerce both global constructors and mongoose.Schema.Types.
+    // name: String
+    // name: mongoose.Schema.Types.String
+    return field.schemaName || field.name;
   } else if (typeof field === 'object') {
-    // TODO: can getCoercedSchemaType be used here too?
-    if (typeof field.type === 'function') {
-      // name: { type: String }
-      return field.type.name;
-    } else if (typeof field.type === 'string') {
-      // name: { type: 'String' }
-      return field.type;
-    } else {
+    const { type } = field;
+    if (!type || typeof type === 'object') {
+      // Nested mixed type field
       // profile: { name: String } (no type field)
       // type: { type: 'String' } (may be nested)
       return 'Mixed';
+    } else {
+      // name: { type: String }
+      // name: { type: 'String' }
+      return getFieldType(type);
     }
-  } else {
-    // name: String
+  } else if (typeof field === 'string') {
     // name: 'String'
-    return getCoercedSchemaType(field);
+    return field;
+  } else {
+    throw new Error(`Could not derive type for field ${field}.`);
   }
 }
 
 module.exports = {
   getJoiSchema,
-  getCoercedSchemaType,
   getMongooseValidator,
 };

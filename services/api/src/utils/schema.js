@@ -1,13 +1,15 @@
-const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
+const mongoose = require('mongoose');
+const autopopulate = require('mongoose-autopopulate');
+const { logger } = require('@bedrockio/instrumentation');
+const { startCase, omitBy, isPlainObject } = require('lodash');
+
+const { getJoiSchema, getMongooseValidator } = require('./validation');
+const { searchValidation } = require('./search');
 
 const { ObjectId } = mongoose.Types;
 const { ObjectId: ObjectIdSchemaType } = mongoose.Schema.Types;
-const { startCase, omitBy, isPlainObject } = require('lodash');
-const { getJoiSchema, getMongooseValidator } = require('./validation');
-const { searchValidation } = require('./search');
-const { logger } = require('@bedrockio/instrumentation');
 
 const RESERVED_FIELDS = ['id', 'createdAt', 'updatedAt', 'deletedAt'];
 
@@ -22,7 +24,7 @@ const serializeOptions = {
 function transformField(obj, schema, options) {
   if (Array.isArray(obj)) {
     for (let el of obj) {
-      transformField(el, schema[0], options);
+      transformField(el, resolveSchema(schema), options);
     }
   } else if (obj && typeof obj === 'object') {
     for (let [key, val] of Object.entries(obj)) {
@@ -58,18 +60,12 @@ function createSchema(attributes = {}, options = {}) {
 
   schema.static('getCreateValidation', function getCreateValidation(appendSchema) {
     return getJoiSchemaFromMongoose(schema, {
-      disallowField: (key) => {
-        return isDisallowedField(this.schema.obj[key]);
-      },
       appendSchema,
     });
   });
 
   schema.static('getUpdateValidation', function getUpdateValidation(appendSchema) {
     return getJoiSchemaFromMongoose(schema, {
-      disallowField: (key) => {
-        return isDisallowedField(this.schema.obj[key]);
-      },
       appendSchema,
       skipRequired: true,
     });
@@ -91,7 +87,7 @@ function createSchema(attributes = {}, options = {}) {
     });
   });
 
-  schema.static('search', async function search(body, options = {}) {
+  schema.static('search', async function search(body) {
     const { ids, keyword, startAt, endAt, sort, skip, limit, ...rest } = body;
     const sortOptions = {};
     const query = {
@@ -175,6 +171,7 @@ function createSchema(attributes = {}, options = {}) {
     return this.save();
   };
 
+  schema.plugin(autopopulate);
   return schema;
 }
 
@@ -202,7 +199,7 @@ function attributesToDefinition(attributes) {
   // Is this a Mongoose descriptor like
   // { type: String, required: true }
   // or nested fields of Mixed type.
-  const isSchemaType = type && typeof type !== 'object';
+  const isSchemaType = !!type && typeof type !== 'object';
 
   if ('access' in attributes && !isSchemaType) {
     // Inside nested objects "access" needs to be explicitly
@@ -214,11 +211,13 @@ function attributesToDefinition(attributes) {
 
   for (let [key, val] of Object.entries(attributes)) {
     if (isSchemaType) {
-      if (key === 'validate' && typeof val === 'string') {
+      if (key === 'type' && typeof val === 'string') {
+        val = getMongooseType(val);
+      } else if (key === 'validate' && typeof val === 'string') {
         // Allow custom mongoose validation function that derives from the Joi schema.
         val = getMongooseValidator(val, attributes);
       }
-    } else if (key !== 'type') {
+    } else {
       if (Array.isArray(val)) {
         val = val.map(attributesToDefinition);
       } else if (isPlainObject(val)) {
@@ -227,7 +226,24 @@ function attributesToDefinition(attributes) {
     }
     definition[key] = val;
   }
+
+  if ('access' in attributes && !isSchemaType) {
+    // Inside nested objects "access" needs to be explicitly
+    // disallowed so that it is not assumed to be a field.
+    definition.type = {
+      access: null,
+    };
+  }
+
   return definition;
+}
+
+function getMongooseType(str) {
+  const type = mongoose.Schema.Types[str];
+  if (!type) {
+    throw new Error(`Type ${str} could not be converted to Mongoose type.`);
+  }
+  return type;
 }
 
 function isReferenceField(schema) {
@@ -251,7 +267,6 @@ function loadModel(definition, name) {
     throw new Error(`Invalid model definition for ${name}, need attributes`);
   }
   const schema = createSchema(attributes);
-  schema.plugin(require('mongoose-autopopulate'));
   return mongoose.model(name, schema);
 }
 
@@ -271,6 +286,7 @@ function loadModelDir(dirPath) {
       } catch (error) {
         logger.error(`Could not load model definition: ${filePath}`);
         logger.error(error);
+        throw error;
       }
     }
   }

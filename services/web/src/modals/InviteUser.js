@@ -3,7 +3,9 @@ import { Form, Modal, Button, TextArea, Message } from 'semantic';
 import { request } from 'utils/api';
 import { emailRegexp } from 'utils/validate';
 import AutoFocus from 'components/AutoFocus';
+import { modal } from 'helpers';
 
+@modal
 export default class InviteUser extends React.Component {
   state = {
     touched: false,
@@ -36,13 +38,15 @@ export default class InviteUser extends React.Component {
   };
 
   onSubmit = async () => {
+    this.setState({
+      loading: true,
+      touched: true,
+      error: null,
+    });
+
+    const { validEmails } = this.state;
+
     try {
-      this.setState({
-        loading: true,
-        touched: true,
-        error: null,
-      });
-      const { validEmails } = this.state;
       await request({
         method: 'POST',
         path: '/1/invites',
@@ -50,14 +54,9 @@ export default class InviteUser extends React.Component {
           emails: validEmails,
         },
       });
-      this.setState({
-        open: false,
-        loading: false,
-        touched: false,
-        validEmails: [],
-        invalidEmails: [],
-      });
+
       this.props.onSave();
+      this.props.close();
     } catch (error) {
       this.setState({
         error,
@@ -67,23 +66,17 @@ export default class InviteUser extends React.Component {
   };
 
   render() {
-    const { trigger } = this.props;
-    const { validEmails, invalidEmails, open, touched, loading, error } = this.state;
+    const { validEmails, invalidEmails, touched, loading, error } = this.state;
     return (
-      <Modal
-        closeIcon
-        closeOnDimmerClick={false}
-        onClose={() => this.setState({ open: false })}
-        onOpen={() => this.setState({ open: true })}
-        open={open}
-        size="tiny"
-        trigger={trigger}>
+      <>
         <Modal.Header>Invite Users</Modal.Header>
         <Modal.Content>
           <AutoFocus>
             <Form error={touched && !!error}>
               {error && <Message error content={error.message} />}
-              {touched && invalidEmails.length > 0 && <Message negative>Invalid: {invalidEmails.join(', ')}</Message>}
+              {touched && invalidEmails.length > 0 && (
+                <Message negative>Invalid: {invalidEmails.join(', ')}</Message>
+              )}
               <Form.Field>
                 <label>Enter email address of the participant to invite</label>
                 <TextArea
@@ -102,11 +95,13 @@ export default class InviteUser extends React.Component {
             primary
             loading={loading}
             disabled={loading || validEmails.length === 0}
-            content={`Invite Members ${validEmails.length ? `(${validEmails.length})` : ''}`}
+            content={`Invite Members ${
+              validEmails.length ? `(${validEmails.length})` : ''
+            }`}
             onClick={this.onSubmit}
           />
         </Modal.Actions>
-      </Modal>
+      </>
     );
   }
 }
