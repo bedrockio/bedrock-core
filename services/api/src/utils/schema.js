@@ -106,13 +106,6 @@ function createSchema(attributes = {}, options = {}) {
           $search: keyword,
         };
       }
-      // TODO: projection can be removed in Mongo v4.4
-      options['score'] = {
-        $meta: 'textScore',
-      };
-      sortOptions['score'] = {
-        $meta: 'textScore',
-      };
     }
     if (startAt || endAt) {
       query.createdAt = {};
