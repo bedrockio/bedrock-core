@@ -86,17 +86,20 @@ function createSchema(attributes = {}, options = {}) {
   };
 
   schema.post(/^init|save/, function () {
-    if (!this.$locals.auditOriginal) {
-      this.$locals.auditOriginal = this.toObject({
+    if (!this.$locals.original) {
+      this.$locals.original = this.toObject({
         depopulate: true,
       });
     }
   });
 
-  // keeps the directModifiedPaths around after document.save
   schema.pre('save', function () {
-    const paths = this.directModifiedPaths() || [];
-    this.$locals.auditPathsModified = uniq([...(this.$locals.pathsModified || []), ...paths]);
+    // keeps the directModifiedPaths around after document.save
+    this.$locals.pathsModified = uniq([...(this.$locals.pathsModified || []), ...this.directModifiedPaths()]);
+
+    if (!this.$locals.isNew) {
+      this.$locals.isNew = this.isNew;
+    }
   });
 
   schema.plugin(pluginAutoPopulate);

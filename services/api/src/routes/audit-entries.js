@@ -5,13 +5,13 @@ const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
 
 const { searchValidation, exportValidation, getSearchQuery, search, searchExport } = require('../utils/search');
-const { AuditLog } = require('../models');
+const { AuditEntry } = require('../models');
 const router = new Router();
 
 router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
-  .use(requirePermissions({ endpoint: 'auditLogs', permission: 'read', scope: 'global' }))
+  .use(requirePermissions({ endpoint: 'audit-entries', permission: 'read', scope: 'global' }))
   .post(
     '/search',
     validateBody(
@@ -40,7 +40,7 @@ router
         query.type = type;
       }
 
-      const { data, meta } = await search(AuditLog, query, body);
+      const { data, meta } = await search(AuditEntry, query, body);
 
       if (searchExport(ctx, data)) {
         return;

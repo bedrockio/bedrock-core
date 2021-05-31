@@ -4,7 +4,7 @@ const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
 const { searchValidation, exportValidation, getSearchQuery, search, searchExport } = require('../utils/search');
-const { User, AuditLog } = require('../models');
+const { User, AuditEntry } = require('../models');
 const { expandRoles } = require('./../utils/permissions');
 const roles = require('./../roles.json');
 const permissions = require('./../permissions.json');
@@ -111,9 +111,10 @@ router
       }
       const user = await User.create(ctx.request.body);
 
-      await AuditLog.append('created user', ctx, {
+      await AuditEntry.append('created user', ctx, {
         type: 'admin',
-        ...AuditLog.getObjectFields(user, ['email', 'roles'], true),
+        object: user,
+        fields: ['email', 'roles'],
       });
 
       ctx.body = {
@@ -127,9 +128,10 @@ router
 
     await user.save();
 
-    await AuditLog.append('updated user', ctx, {
+    await AuditEntry.append('updated user', ctx, {
       type: 'admin',
-      ...AuditLog.getObjectFields(user, ['email', 'roles']),
+      object: user,
+      fields: ['email', 'roles'],
     });
 
     ctx.body = {
@@ -140,9 +142,9 @@ router
     const { user } = ctx.state;
     await user.delete();
 
-    await AuditLog.append('deleted user', ctx, {
+    await AuditEntry.append('deleted user', ctx, {
       type: 'admin',
-      ...AuditLog.getObjectFields(user),
+      object: user,
     });
 
     ctx.status = 204;

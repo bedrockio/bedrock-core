@@ -3,7 +3,7 @@ const Joi = require('joi');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { searchValidation, getSearchQuery, search } = require('../utils/search');
-const { Product, AuditLog } = require('../models');
+const { Product, AuditEntry } = require('../models');
 
 const router = new Router();
 
@@ -60,9 +60,10 @@ router
 
     await product.save();
 
-    await AuditLog.append('updated product', ctx, {
+    await AuditEntry.append('updated product', ctx, {
       type: 'admin',
-      ...AuditLog.getObjectFields(product, ['shop', 'name']),
+      object: product,
+      fields: ['shop', 'name'],
     });
 
     ctx.body = {

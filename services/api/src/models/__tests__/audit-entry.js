@@ -1,4 +1,4 @@
-const AuditLog = require('../audit-log');
+const AuditEntry = require('../audit-entry');
 const User = require('../user');
 const Koa = require('koa');
 const Router = require('@koa/router');
@@ -34,33 +34,32 @@ async function getContext(user) {
   return current;
 }
 
-describe('AuditLog', () => {
+describe('AuditEntry', () => {
   describe('getObjectFields', () => {
-    it('should return a diff object', async () => {
-      const user = await User.create({
-        email: 'bob@old.com',
+    it('should return a diff object (new object)', async () => {
+      const user = new User({
+        email: 'bob@new.com',
       });
-      user.email = 'bob@new.com';
-      const fields = AuditLog.getObjectFields(user, ['email']);
+      await user.save();
+      const fields = AuditEntry.getObjectFields(user, ['email']);
       expect(fields.objectId).toBe(user.id);
       expect(fields.objectType).toBe('User');
-      expect(fields.objectBefore.email).toBe('bob@old.com');
       expect(fields.objectAfter.email).toBe('bob@new.com');
+      expect(fields.objectBefore).not.toBeDefined();
     });
 
-    it('should maintain original object after saving', async () => {
+    it('should return a diff object (old object)', async () => {
       const user = await User.create({
-        email: 'bob@original.com',
+        email: 'hugo@old.com',
       });
-      user.email = 'bob@modified.com';
-      await user.save();
-
-      const fields = AuditLog.getObjectFields(user, ['email']);
-
-      expect(fields.objectId).toBe(user.id);
+      const dbUser = await User.findById(user.id);
+      dbUser.email = 'hugo@new.com';
+      await dbUser.save();
+      const fields = AuditEntry.getObjectFields(dbUser, ['email']);
+      expect(fields.objectId).toBe(dbUser.id);
       expect(fields.objectType).toBe('User');
-      expect(fields.objectBefore.email).toBe('bob@original.com');
-      expect(fields.objectAfter.email).toBe('bob@modified.com');
+      expect(fields.objectBefore.email).toBe('hugo@old.com');
+      expect(fields.objectAfter.email).toBe('hugo@new.com');
     });
   });
 
@@ -69,7 +68,7 @@ describe('AuditLog', () => {
       const user = new User({});
       const ctx = await getContext(user);
 
-      expect(AuditLog.getContextFields(ctx)).toEqual(
+      expect(AuditEntry.getContextFields(ctx)).toEqual(
         expect.objectContaining({
           requestMethod: 'GET',
           requestUrl: '/1/products/id',
@@ -86,13 +85,13 @@ describe('AuditLog', () => {
       const user = new User({ email: 'bob@gmail.com' });
       const ctx = await getContext(user);
 
-      await AuditLog.append('did something', ctx, {
+      await AuditEntry.append('did something', ctx, {
         type: 'security',
         objectId: user.id,
         objectType: 'user',
       });
 
-      const logs = await AuditLog.find({ objectId: user.id });
+      const logs = await AuditEntry.find({ objectId: user.id });
       expect(logs.length).toBe(1);
 
       const log = logs[0];
@@ -111,7 +110,7 @@ describe('AuditLog', () => {
       const user = new User({ email: 'bob@gmail.com' });
       const ctx = await getContext(user);
 
-      await AuditLog.append('did something', ctx, {
+      await AuditEntry.append('did something', ctx, {
         type: 'security',
         objectId: user.id,
         objectType: 'user',
@@ -119,7 +118,7 @@ describe('AuditLog', () => {
         objectBefore: {},
       });
 
-      const logs = await AuditLog.find({ objectId: user.id });
+      const logs = await AuditEntry.find({ objectId: user.id });
       expect(logs.length).toBe(0);
     });
   });

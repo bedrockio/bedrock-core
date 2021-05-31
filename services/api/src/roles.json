@@ -4,7 +4,7 @@
     "allowScopes": ["global", "organization"],
     "permissions": {
       "users": "read-write",
-      "auditLogs": "read"
+      "audit-entries": "read"
     }
   },
   "limitedAdmin": {
@@ -12,7 +12,7 @@
     "allowScopes": ["organization"],
     "permissions": {
       "users": "read",
-      "auditLogs": "read"
+      "audit-entries": "read"
     }
   }
 }
