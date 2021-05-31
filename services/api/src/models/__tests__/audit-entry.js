@@ -106,7 +106,7 @@ describe('AuditEntry', () => {
       expect(log.user.toString()).toBe(user.id);
     });
 
-    it('dont write if no change happend', async () => {
+    it('should not change, if nothing was changed', async () => {
       const user = new User({ email: 'bob@gmail.com' });
       const ctx = await getContext(user);
 
@@ -115,7 +115,6 @@ describe('AuditEntry', () => {
         objectId: user.id,
         objectType: 'user',
         objectAfter: {},
-        objectBefore: {},
       });
 
       const logs = await AuditEntry.find({ objectId: user.id });
