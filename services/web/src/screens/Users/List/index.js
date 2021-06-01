@@ -58,19 +58,16 @@ export default class UserList extends React.Component {
                   <Table.Header>
                     <Table.Row>
                       <Table.HeaderCell
-                        width={3}
                         onClick={() => setSort('name')}
                         sorted={getSorted('name')}>
                         Name
                       </Table.HeaderCell>
                       <Table.HeaderCell
-                        width={3}
                         onClick={() => setSort('email')}
                         sorted={getSorted('email')}>
                         Email
                       </Table.HeaderCell>
                       <Table.HeaderCell
-                        width={3}
                         onClick={() => setSort('roles')}
                         sorted={getSorted('roles')}>
                         Roles
