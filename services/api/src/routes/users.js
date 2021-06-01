@@ -116,14 +116,27 @@ router
       };
     }
   )
-  .patch('/:userId', validateBody(User.getUpdateValidation()), async (ctx) => {
-    const { user } = ctx.state;
-    user.assign(ctx.request.body);
-    await user.save();
-    ctx.body = {
-      data: user,
-    };
-  })
+  .patch(
+    '/:userId',
+    validateBody(
+      User.getUpdateValidation().append({
+        roles: (roles) => {
+          return roles.map((role) => {
+            const { roleDefinition, ...rest } = role;
+            return rest;
+          });
+        },
+      })
+    ),
+    async (ctx) => {
+      const { user } = ctx.state;
+      user.assign(ctx.request.body);
+      await user.save();
+      ctx.body = {
+        data: user,
+      };
+    }
+  )
   .delete('/:userId', async (ctx) => {
     const { user } = ctx.state;
     await user.delete();
