@@ -149,7 +149,7 @@ export default class Roles extends React.Component {
         <Form.Dropdown
           name="globalRoles"
           label={
-            <>
+            <label>
               Global Roles
               <Popup
                 content="Global scoped roles give a user permissions across all organizations."
@@ -161,11 +161,11 @@ export default class Roles extends React.Component {
                       cursor: 'pointer',
                       color: '#cccccc',
                     }}
-                    name="help circle"
+                    name="question-circle"
                   />
                 }
               />
-            </>
+            </label>
           }
           fluid
           selection
