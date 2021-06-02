@@ -14,7 +14,7 @@ afterAll(async () => {
 let counter = 0;
 
 function createTestModel(schema) {
-  return mongoose.model(`SchemaTestModel${counter++}`, schema);
+  return mongoose.model(`SchemaTestModel${counter++}`, schema || createSchema());
 }
 
 describe('createSchema', () => {
@@ -141,272 +141,324 @@ describe('createSchema', () => {
   });
 
   describe('serialization', () => {
-    it('should expose id', () => {
-      const User = createTestModel(createSchema());
-      const user = new User();
-      const data = user.toObject();
-      expect(data.id).toBe(user.id);
-    });
 
-    it('should not expose _id or __v', () => {
-      const User = createTestModel(createSchema());
-      const user = new User();
-      const data = user.toObject();
-      expect(data._id).toBeUndefined();
-      expect(data.__v).toBeUndefined();
-    });
+    describe('reserved fields', () => {
 
-    it('should not expose _id in nested array objects of mixed type', () => {
-      const User = createTestModel(
-        createSchema({
+      it('should expose id', () => {
+        const User = createTestModel(createSchema());
+        const user = new User();
+        const data = user.toObject();
+        expect(data.id).toBe(user.id);
+      });
+
+      it('should not expose _id or __v', () => {
+        const User = createTestModel(createSchema());
+        const user = new User();
+        const data = user.toObject();
+        expect(data._id).toBeUndefined();
+        expect(data.__v).toBeUndefined();
+      });
+
+      it('should not expose _id in nested array objects of mixed type', () => {
+        const User = createTestModel(
+          createSchema({
+            names: [
+              {
+                name: String,
+                position: Number,
+              },
+            ],
+          })
+        );
+        const user = new User({
           names: [
             {
-              name: String,
-              position: Number,
+              name: 'Foo',
+              position: 2,
             },
           ],
-        })
-      );
-      const user = new User({
-        names: [
-          {
-            name: 'Foo',
-            position: 2,
-          },
-        ],
+        });
+        const data = user.toObject();
+        expect(data.names[0]).toEqual({
+          name: 'Foo',
+          position: 2,
+        });
       });
-      const data = user.toObject();
-      expect(data.names[0]).toEqual({
-        name: 'Foo',
-        position: 2,
+
+      it('should not expose _id in deeply nested array objects of mixed type', () => {
+        const User = createTestModel(
+          createSchema({
+            one: [{ two: [{ three: [{ name: String, position: Number }] }] }],
+          })
+        );
+        const user = new User({
+          one: [{ two: [{ three: [{ name: 'Foo', position: 2 }] }] }],
+        });
+        const data = user.toObject();
+        expect(data).toEqual({
+          id: user.id,
+          one: [{ two: [{ three: [{ name: 'Foo', position: 2 }] }] }],
+        });
       });
+
+      it('should not expose fields with underscore', () => {
+        const User = createTestModel(
+          createSchema({
+            _private: String,
+          })
+        );
+        const user = new User();
+        user._private = 'private';
+
+        expect(user._private).toBe('private');
+        const data = user.toObject();
+        expect(data._private).toBeUndefined();
+      });
+
     });
 
-    it('should not expose _id in deeply nested array objects of mixed type', () => {
-      const User = createTestModel(
-        createSchema({
-          one: [{ two: [{ three: [{ name: String, position: Number }] }] }],
-        })
-      );
-      const user = new User({
-        one: [{ two: [{ three: [{ name: 'Foo', position: 2 }] }] }],
+    describe('read scopes', () => {
+
+      it('should be able to disallow all read access', () => {
+        const User = createTestModel(
+          createSchema({
+            password: { type: String, readScopes: 'none' },
+          })
+        );
+        const user = new User();
+        user.password = 'fake password';
+        expect(user.password).toBe('fake password');
+        expect(user.toObject().password).toBeUndefined();
       });
-      const data = user.toObject();
-      expect(data).toEqual({
-        id: user.id,
-        one: [{ two: [{ three: [{ name: 'Foo', position: 2 }] }] }],
+
+      it('should be able to disallow read access by scope', () => {
+        const User = createTestModel(
+          createSchema({
+            password: { type: String, readScopes: ['admin'] },
+          })
+        );
+        const user = new User();
+        user.password = 'fake password';
+        expect(user.password).toBe('fake password');
+        expect(user.toObject().password).toBeUndefined();
       });
-    });
 
-    it('should not expose fields with underscore or marked private', () => {
-      const User = createTestModel(
-        createSchema({
-          _private: String,
-          password: { type: String, access: 'private' },
-        })
-      );
-      const user = new User();
-      user._private = 'private';
-      user.password = 'fake password';
+      it('should be able to allow read access by scope', () => {
+        const User = createTestModel(
+          createSchema({
+            password: { type: String, readScopes: ['admin'] },
+          })
+        );
+        const user = new User();
+        user.password = 'fake password';
+        expect(user.password).toBe('fake password');
+        expect(user.toObject({ scopes: ['admin'] }).password).toBe('fake password');
+      });
 
-      expect(user._private).toBe('private');
-      expect(user.password).toBe('fake password');
+      it('should be able to allow read access to all', () => {
+        const User = createTestModel(
+          createSchema({
+            password: { type: String, readScopes: 'all' },
+          })
+        );
+        const user = new User();
+        user.password = 'fake password';
+        expect(user.password).toBe('fake password');
+        expect(user.toObject().password).toBe('fake password');
+      });
 
-      const data = user.toObject();
+      it('should not expose private array fields', () => {
+        const User = createTestModel(
+          createSchema({
+            tags: [{ type: String, readScopes: 'none' }],
+          })
+        );
+        const user = new User();
+        user.tags = ['one', 'two'];
 
-      expect(data._private).toBeUndefined();
-      expect(data.password).toBeUndefined();
-    });
+        expect(user.tags).toBeInstanceOf(Array);
 
-    it('should not expose array fields marked private', () => {
-      const User = createTestModel(
-        createSchema({
-          tags: [{ type: String, access: 'private' }],
-        })
-      );
-      const user = new User();
-      user.tags = ['one', 'two'];
+        const data = user.toObject();
+        expect(data.tags).toBeUndefined();
+      });
 
-      expect(user.tags).toBeInstanceOf(Array);
-
-      const data = user.toObject();
-      expect(data.tags).toBeUndefined();
-    });
-
-    it('should not expose deeply nested private fields', () => {
-      const User = createTestModel(
-        createSchema({
-          one: {
-            two: {
-              three: {
-                name: {
-                  type: String,
-                },
-                age: {
-                  type: Number,
-                  access: 'private',
+      it('should not expose deeply nested private fields', () => {
+        const User = createTestModel(
+          createSchema({
+            one: {
+              two: {
+                three: {
+                  name: {
+                    type: String,
+                  },
+                  age: {
+                    type: Number,
+                    readScopes: 'none',
+                  },
                 },
               },
             },
-          },
-        })
-      );
-      const user = new User({
-        one: {
-          two: {
-            three: {
-              name: 'Harry',
-              age: 21,
+          })
+        );
+        const user = new User({
+          one: {
+            two: {
+              three: {
+                name: 'Harry',
+                age: 21,
+              },
             },
           },
-        },
-      });
+        });
 
-      const data = user.toObject();
-      expect(data).toEqual({
-        id: user.id,
-        one: {
-          two: {
-            three: {
-              name: 'Harry',
+        const data = user.toObject();
+        expect(data).toEqual({
+          id: user.id,
+          one: {
+            two: {
+              three: {
+                name: 'Harry',
+              },
             },
           },
-        },
+        });
       });
-    });
 
-    it('should not expose private fields deeply nested in arrays', () => {
-      const User = createTestModel(
-        createSchema({
+      it('should not expose private fields deeply nested in arrays', () => {
+        const User = createTestModel(
+          createSchema({
+            one: [
+              {
+                two: [
+                  {
+                    three: [
+                      {
+                        name: {
+                          type: String,
+                        },
+                        age: {
+                          type: Number,
+                          readScopes: 'none',
+                        },
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          })
+        );
+        const user = new User({
           one: [
             {
               two: [
                 {
                   three: [
                     {
-                      name: {
-                        type: String,
-                      },
-                      age: {
-                        type: Number,
-                        access: 'private',
-                      },
+                      name: 'Harry',
+                      age: 21,
                     },
                   ],
                 },
               ],
             },
           ],
-        })
-      );
-      const user = new User({
-        one: [
-          {
-            two: [
-              {
-                three: [
-                  {
-                    name: 'Harry',
-                    age: 21,
-                  },
-                ],
-              },
-            ],
-          },
-        ],
+        });
+
+        const data = user.toObject();
+        expect(data).toEqual({
+          id: user.id,
+          one: [
+            {
+              two: [
+                {
+                  three: [
+                    {
+                      name: 'Harry',
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        });
       });
 
-      const data = user.toObject();
-      expect(data).toEqual({
-        id: user.id,
-        one: [
-          {
-            two: [
-              {
-                three: [
-                  {
-                    name: 'Harry',
-                  },
-                ],
-              },
-            ],
-          },
-        ],
+      it('should serialize identically with toObject', () => {
+        const User = createTestModel(
+          createSchema({
+            secret: { type: String, readScopes: 'none' },
+          })
+        );
+        const user = new User({
+          secret: 'foo',
+        });
+        const data = user.toObject();
+        expect(data.id).toBe(user.id);
+        expect(data._id).toBeUndefined();
+        expect(data.__v).toBeUndefined();
+        expect(data.secret).toBeUndefined();
       });
-    });
 
-    it('should serialize identically with toObject', () => {
-      const User = createTestModel(
-        createSchema({
-          secret: { type: String, access: 'private' },
-        })
-      );
-      const user = new User({
-        secret: 'foo',
+      it('should allow access to private fields with options on toJSON', () => {
+        const User = createTestModel(
+          createSchema({
+            secret: { type: String, readScopes: ['admin'] },
+          })
+        );
+        const user = new User({
+          secret: 'foo',
+        });
+        const data = user.toJSON({
+          scopes: ['admin'],
+        });
+        expect(data.id).toBe(user.id);
+        expect(data._id).toBeUndefined();
+        expect(data.__v).toBeUndefined();
+        expect(data.secret).toBe('foo');
       });
-      const data = user.toObject();
-      expect(data.id).toBe(user.id);
-      expect(data._id).toBeUndefined();
-      expect(data.__v).toBeUndefined();
-      expect(data.secret).toBeUndefined();
-    });
 
-    it('should allow access to private fields with options on toJSON', () => {
-      const User = createTestModel(
-        createSchema({
-          secret: { type: String, access: 'private' },
-        })
-      );
-      const user = new User({
-        secret: 'foo',
+      it('should allow access to private fields with options on toObject', () => {
+        const User = createTestModel(
+          createSchema({
+            secret: { type: String, readScopes: ['admin'] },
+          })
+        );
+        const user = new User({
+          secret: 'foo',
+        });
+        const data = user.toObject({
+          scopes: ['admin'],
+        });
+        expect(data.id).toBe(user.id);
+        expect(data._id).toBeUndefined();
+        expect(data.__v).toBeUndefined();
+        expect(data.secret).toBe('foo');
       });
-      const data = user.toJSON({
-        private: true,
-      });
-      expect(data.id).toBe(user.id);
-      expect(data._id).toBeUndefined();
-      expect(data.__v).toBeUndefined();
-      expect(data.secret).toBe('foo');
-    });
 
-    it('should allow access to private fields with options on toObject', () => {
-      const User = createTestModel(
-        createSchema({
-          secret: { type: String, access: 'private' },
-        })
-      );
-      const user = new User({
-        secret: 'foo',
-      });
-      const data = user.toObject({
-        private: true,
-      });
-      expect(data.id).toBe(user.id);
-      expect(data._id).toBeUndefined();
-      expect(data.__v).toBeUndefined();
-      expect(data.secret).toBe('foo');
-    });
-
-    it('should be able to mark access on nested objects', async () => {
-      const User = createTestModel(
-        createSchema({
+      it('should be able to mark access on nested objects', async () => {
+        const User = createTestModel(
+          createSchema({
+            login: {
+              password: String,
+              attempts: Number,
+              readScopes: ['admin'],
+            },
+          })
+        );
+        const user = new User({
           login: {
-            password: String,
-            attempts: Number,
-            access: 'private',
+            password: 'password',
+            attempts: 10,
           },
-        })
-      );
-      const user = new User({
-        login: {
-          password: 'password',
-          attempts: 10,
-        },
+        });
+        expect(user.login.password).toBe('password');
+        expect(user.login.attempts).toBe(10);
+        expect(user.toObject().login).toBeUndefined();
       });
-      expect(user.login.password).toBe('password');
-      expect(user.login.attempts).toBe(10);
-      expect(user.toObject().login).toBeUndefined();
+
     });
+
   });
 
   describe('assign', () => {
@@ -430,43 +482,8 @@ describe('createSchema', () => {
       expect(user.fakeDate.getTime()).toBe(now);
     });
 
-    it('should not allow assignment of reserved fields', async () => {
-      const User = createTestModel(createSchema());
-      const user = await User.create({});
-      const now = Date.now();
-      user.assign({
-        id: 'fake id',
-        createdAt: new Date(now - 1000),
-        updatedAt: new Date(now - 1000),
-        deletedAt: new Date(now - 1000),
-      });
-      expect(user.id).not.toBe('fake id');
-      expect(user._id.toString()).not.toBe('fake id');
-      expect(user.createdAt.getTime()).not.toBe(now - 1000);
-      expect(user.updatedAt.getTime()).not.toBe(now - 1000);
-      expect(user.deletedAt).toBeUndefined();
-    });
-
-    it('should not allow assignment of private fields', async () => {
-      const User = createTestModel(
-        createSchema({
-          password: { type: String, access: 'private' },
-        })
-      );
-      const user = new User();
-      user.assign({
-        password: 'fake password',
-      });
-      await user.save();
-      expect(user.password).not.toBe('fake password');
-    });
-
     it('should delete falsy values for reference fields', async () => {
-      const User = createTestModel(
-        createSchema({
-          password: { type: String, access: 'private' },
-        })
-      );
+      const User = createTestModel();
       const Shop = createTestModel(
         createSchema({
           user: {
@@ -491,11 +508,7 @@ describe('createSchema', () => {
     });
 
     it('should still allow assignment of empty arrays for multi-reference fields', async () => {
-      const User = createTestModel(
-        createSchema({
-          password: { type: String, access: 'private' },
-        })
-      );
+      const User = createTestModel();
       const Shop = createTestModel(
         createSchema({
           users: [
@@ -526,7 +539,7 @@ describe('createSchema', () => {
     it('should not expose private fields when using with autopopulate', async () => {
       const User = createTestModel(
         createSchema({
-          password: { type: String, access: 'private' },
+          password: { type: String, readScopes: 'none' },
         })
       );
       const shopSchema = createSchema({
@@ -558,10 +571,10 @@ describe('createSchema', () => {
       expect(data.user.password).toBeUndefined();
     });
 
-    it('should not allow access to private autopoulated fields by default', async () => {
+    it('should not allow access to private autopopulated fields by default', async () => {
       const User = createTestModel(
         createSchema({
-          secret: { type: String, access: 'private' },
+          secret: { type: String, readScopes: 'none' },
         })
       );
 
@@ -595,10 +608,10 @@ describe('createSchema', () => {
       expect(data.user.secret).toBeUndefined();
     });
 
-    it('should allow access to private autopoulated fields with options', async () => {
+    it('should allow access to private autopopulated fields with options', async () => {
       const User = createTestModel(
         createSchema({
-          secret: { type: String, access: 'private' },
+          secret: { type: String, readScopes: ['admin'] },
         })
       );
 
@@ -625,7 +638,7 @@ describe('createSchema', () => {
       shop = await Shop.findById(shop.id);
 
       const data = shop.toObject({
-        private: true,
+        scopes: ['admin'],
       });
 
       expect(data.user.id).toBe(user.id);
@@ -834,6 +847,7 @@ describe('validation', () => {
         count: 10,
       });
     });
+
   });
 
   describe('update validation', () => {
@@ -861,7 +875,7 @@ describe('validation', () => {
       assertFail(schema, {});
     });
 
-    it('should strip schema internal fields', () => {
+    it('should strip reserved fields', () => {
       const User = createTestModel(
         createSchema({
           name: {
@@ -963,156 +977,137 @@ describe('validation', () => {
       });
     });
 
-    it('should fail on private fields', () => {
-      const User = createTestModel(
-        createSchema({
-          name: {
-            type: String,
-            required: true,
-          },
-          password: {
-            type: String,
-            access: 'private',
-          },
-        })
-      );
-      const schema = User.getUpdateValidation();
-      assertFail(schema, {
-        name: 'foo',
-        password: 'createdAt',
+    describe('write scopes', () => {
+      it('should be able to disallow all write access', async () => {
+        const User = createTestModel(
+          createSchema({
+            name: {
+              type: String,
+            },
+            password: {
+              type: String,
+              writeScopes: 'none',
+            },
+          })
+        );
+        const schema = User.getUpdateValidation();
+        assertPass(schema, {
+          name: 'Barry',
+        });
+        assertFail(schema, {
+          name: 'Barry',
+          password: 'fake password',
+        });
+      });
+
+      it('should be able to disallow write access by scope', async () => {
+        const User = createTestModel(
+          createSchema({
+            name: {
+              type: String,
+            },
+            password: {
+              type: String,
+              writeScopes: ['private'],
+            },
+          })
+        );
+        const schema = User.getUpdateValidation();
+        assertPass(schema, {
+          name: 'Barry',
+        });
+        assertFail(schema, {
+          name: 'Barry',
+          password: 'fake password',
+        });
+        assertPass(schema, {
+          name: 'Barry',
+          password: 'fake password',
+        }, { scopes: ['private'] });
+      });
+
+      it('should require only one of valid scopes', async () => {
+        const User = createTestModel(
+          createSchema({
+            foo: {
+              type: String,
+              writeScopes: ['foo'],
+            },
+            bar: {
+              type: String,
+              writeScopes: ['bar'],
+            },
+            foobar: {
+              type: String,
+              writeScopes: ['foo', 'bar'],
+            },
+          })
+        );
+        const schema = User.getUpdateValidation();
+
+        // With ['foo'] scopes
+        assertPass(schema, {
+          foo: 'foo!',
+        }, { scopes: ['foo'] });
+        assertFail(schema, {
+          bar: 'bar!',
+        }, { scopes: ['foo'] });
+        assertPass(schema, {
+          foobar: 'foobar!',
+        }, { scopes: ['foo'] });
+        assertPass(schema, {
+          foo: 'foo!',
+          foobar: 'foobar!',
+        }, { scopes: ['foo'] });
+        assertFail(schema, {
+          foo: 'foo!',
+          bar: 'bar!',
+          foobar: 'foobar!',
+        }, { scopes: ['foo'] });
+
+        // With ['bar'] scopes
+        assertFail(schema, {
+          foo: 'foo!',
+        }, { scopes: ['bar'] });
+        assertPass(schema, {
+          bar: 'bar!',
+        }, { scopes: ['bar'] });
+        assertPass(schema, {
+          foobar: 'foobar!',
+        }, { scopes: ['bar'] });
+        assertFail(schema, {
+          foo: 'foo!',
+          foobar: 'foobar!',
+        }, { scopes: ['bar'] });
+        assertFail(schema, {
+          foo: 'foo!',
+          bar: 'bar!',
+          foobar: 'foobar!',
+        }, { scopes: ['bar'] });
+
+        // With ['foo', 'bar'] scopes
+        assertPass(schema, {
+          foo: 'foo!',
+        }, { scopes: ['foo', 'bar'] });
+        assertPass(schema, {
+          bar: 'bar!',
+        }, { scopes: ['foo', 'bar'] });
+        assertPass(schema, {
+          foobar: 'foobar!',
+        }, { scopes: ['foo', 'bar'] });
+        assertPass(schema, {
+          foo: 'foo!',
+          foobar: 'foobar!',
+        }, { scopes: ['foo', 'bar'] });
+        assertPass(schema, {
+          foo: 'foo!',
+          bar: 'bar!',
+          foobar: 'foobar!',
+        }, { scopes: ['foo', 'bar'] });
+
       });
     });
-  });
 
-  describe('scopes', () => {
-    it('should be able to disallow all write access', async () => {
-      const User = createTestModel(
-        createSchema({
-          name: {
-            type: String,
-          },
-          password: {
-            type: String,
-            writeScopes: 'none',
-          },
-        })
-      );
-      const schema = User.getUpdateValidation();
-      assertPass(schema, {
-        name: 'Barry',
-      });
-      assertFail(schema, {
-        name: 'Barry',
-        password: 'fake password',
-      });
-    });
-
-    it('should be able to disallow write access by scope', async () => {
-      const User = createTestModel(
-        createSchema({
-          name: {
-            type: String,
-          },
-          password: {
-            type: String,
-            writeScopes: ['private'],
-          },
-        })
-      );
-      const schema = User.getUpdateValidation();
-      assertPass(schema, {
-        name: 'Barry',
-      });
-      assertFail(schema, {
-        name: 'Barry',
-        password: 'fake password',
-      });
-      assertPass(schema, {
-        name: 'Barry',
-        password: 'fake password',
-      }, { scopes: ['private'] });
-    });
-
-    it('should require only one of valid scopes', async () => {
-      const User = createTestModel(
-        createSchema({
-          foo: {
-            type: String,
-            writeScopes: ['foo'],
-          },
-          bar: {
-            type: String,
-            writeScopes: ['bar'],
-          },
-          foobar: {
-            type: String,
-            writeScopes: ['foo', 'bar'],
-          },
-        })
-      );
-      const schema = User.getUpdateValidation();
-
-      // With ['foo'] scopes
-      assertPass(schema, {
-        foo: 'foo!',
-      }, { scopes: ['foo'] });
-      assertFail(schema, {
-        bar: 'bar!',
-      }, { scopes: ['foo'] });
-      assertPass(schema, {
-        foobar: 'foobar!',
-      }, { scopes: ['foo'] });
-      assertPass(schema, {
-        foo: 'foo!',
-        foobar: 'foobar!',
-      }, { scopes: ['foo'] });
-      assertFail(schema, {
-        foo: 'foo!',
-        bar: 'bar!',
-        foobar: 'foobar!',
-      }, { scopes: ['foo'] });
-
-      // With ['bar'] scopes
-      assertFail(schema, {
-        foo: 'foo!',
-      }, { scopes: ['bar'] });
-      assertPass(schema, {
-        bar: 'bar!',
-      }, { scopes: ['bar'] });
-      assertPass(schema, {
-        foobar: 'foobar!',
-      }, { scopes: ['bar'] });
-      assertFail(schema, {
-        foo: 'foo!',
-        foobar: 'foobar!',
-      }, { scopes: ['bar'] });
-      assertFail(schema, {
-        foo: 'foo!',
-        bar: 'bar!',
-        foobar: 'foobar!',
-      }, { scopes: ['bar'] });
-
-      // With ['foo', 'bar'] scopes
-      assertPass(schema, {
-        foo: 'foo!',
-      }, { scopes: ['foo', 'bar'] });
-      assertPass(schema, {
-        bar: 'bar!',
-      }, { scopes: ['foo', 'bar'] });
-      assertPass(schema, {
-        foobar: 'foobar!',
-      }, { scopes: ['foo', 'bar'] });
-      assertPass(schema, {
-        foo: 'foo!',
-        foobar: 'foobar!',
-      }, { scopes: ['foo', 'bar'] });
-      assertPass(schema, {
-        foo: 'foo!',
-        bar: 'bar!',
-        foobar: 'foobar!',
-      }, { scopes: ['foo', 'bar'] });
-
-    });
   });
 
   describe('other cases', () => {

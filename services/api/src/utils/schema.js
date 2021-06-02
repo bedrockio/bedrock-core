@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const pluginAutoPopulate = require('mongoose-autopopulate');
 
-const { startCase, omitBy, isPlainObject } = require('lodash');
+const { startCase, isPlainObject } = require('lodash');
 const { ObjectId } = mongoose.Schema.Types;
 const { getJoiSchema, getMongooseValidator } = require('./validation');
 const { logger } = require('@bedrockio/instrumentation');
@@ -26,8 +26,8 @@ function transformField(obj, schema, options) {
   } else if (obj && typeof obj === 'object') {
     for (let [key, val] of Object.entries(obj)) {
       // Omit any key with a private prefix "_" or marked
-      // "access": "private" in the schema.
-      if (key[0] === '_' || isDisallowedField(schema[key], options.private)) {
+      // with "readScopes" in the schema.
+      if (key[0] === '_' || !isAllowedField(schema[key], options.scopes)) {
         delete obj[key];
       } else if (schema[key]) {
         transformField(val, schema[key], options);
@@ -69,9 +69,6 @@ function createSchema(attributes = {}, options = {}) {
   });
 
   schema.methods.assign = function assign(fields) {
-    fields = omitBy(fields, (value, key) => {
-      return isDisallowedField(this.schema.obj[key]) || RESERVED_FIELDS.includes(key);
-    });
     for (let [key, value] of Object.entries(fields)) {
       if (!value && isReferenceField(this.schema.obj[key])) {
         value = undefined;
@@ -98,7 +95,7 @@ function getJoiSchemaFromMongoose(schema, options) {
     transformField: (key, field) => {
       if (field instanceof mongoose.Schema) {
         return getJoiSchemaFromMongoose(field, options);
-      } else if (!isDisallowedField(field)) {
+      } else {
         return field;
       }
     },
@@ -123,7 +120,7 @@ function attributesToDefinition(attributes) {
         // Allow custom mongoose validation function that derives from the Joi schema.
         val = getMongooseValidator(val, attributes);
       }
-    } else {
+    } else if (key !== 'readScopes') {
       if (Array.isArray(val)) {
         val = val.map(attributesToDefinition);
       } else if (isPlainObject(val)) {
@@ -131,14 +128,6 @@ function attributesToDefinition(attributes) {
       }
     }
     definition[key] = val;
-  }
-
-  if ('access' in attributes && !isSchemaType) {
-    // Inside nested objects "access" needs to be explicitly
-    // disallowed so that it is not assumed to be a field.
-    definition.type = {
-      access: null,
-    };
   }
 
   return definition;
@@ -156,11 +145,17 @@ function isReferenceField(schema) {
   return resolveSchema(schema)?.type === ObjectId;
 }
 
-function isDisallowedField(schema, allowPrivate = false) {
-  if (resolveSchema(schema)?.access === 'private') {
-    return !allowPrivate;
+function isAllowedField(schema, scopes = []) {
+  const { readScopes = 'all' } = resolveSchema(schema) || {};
+  if (readScopes === 'all') {
+    return true;
+  } else if (Array.isArray(readScopes)) {
+    return readScopes.some((scope) => {
+      return scopes.includes(scope);
+    });
+  } else {
+    return false;
   }
-  return false;
 }
 
 function resolveSchema(schema) {

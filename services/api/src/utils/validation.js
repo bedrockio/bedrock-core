@@ -91,7 +91,7 @@ function getSchemaForField(field, options = {}) {
   if (field.required && !options.skipRequired) {
     schema = schema.required();
   } else if (field.writeScopes) {
-    schema = schema.custom(validateScopes(field.writeScopes));
+    schema = validateScopes(field.writeScopes);
   } else {
     // TODO: for now we allow both empty strings and null
     // as a potential signal for "set but non-existent".
@@ -116,7 +116,7 @@ function getSchemaForField(field, options = {}) {
 }
 
 function validateScopes(scopes) {
-  return (val, { prefs }) => {
+  return Joi.custom((val, { prefs }) => {
     let allowed = false;
     if (scopes === 'all') {
       allowed = true;
@@ -126,10 +126,17 @@ function validateScopes(scopes) {
       });
     }
     if (!allowed) {
-      throw new Error(`Validation failed for scopes ${scopes}.`);
+      throw new Error();
     }
     return val;
-  };
+  }).error((errors) => {
+    for (let error of errors) {
+      const { path } = error;
+      error.message = `Insufficient permissions to write to ${path.join('.')}`;
+      error.local.permissions = true;
+    }
+    return errors;
+  });
 }
 
 function getSchemaForType(type) {
