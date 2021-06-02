@@ -6,7 +6,7 @@ import { Layout } from 'components';
 import Protected from 'components/Protected';
 import Sidebar from './Sidebar';
 
-import logo from 'assets/bedrock.svg';
+import logo from 'assets/logo.svg';
 import favicon from 'assets/favicon.svg';
 
 export default class DashboardLayout extends React.Component {
@@ -42,10 +42,6 @@ export default class DashboardLayout extends React.Component {
               </Layout.Group>
               <Layout.Group>
                 <Sidebar.Divider />
-                {/* <Sidebar.Link to="/company">
-                  <Icon name="building" />
-                  Bedrock Inc.
-                </Sidebar.Link> */}
                 <Sidebar.Link to="/settings">
                   <Icon name="cog" />
                   Settings

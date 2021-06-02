@@ -2,7 +2,7 @@ import React from 'react';
 import { withSession } from 'stores';
 import { Container } from 'semantic';
 import { Layout } from './Layout';
-import bedrock from 'assets/bedrock.svg';
+import logo from 'assets/logo.svg';
 
 @withSession
 export default class Footer extends React.Component {
@@ -16,7 +16,7 @@ export default class Footer extends React.Component {
         <Container>
           <Layout horizontal center right>
             <span style={{ marginRight: '10px' }}>Built with</span>
-            <img width="112" height="24" src={bedrock} />
+            <img width="112" height="24" src={logo} />
           </Layout>
         </Container>
       </footer>
