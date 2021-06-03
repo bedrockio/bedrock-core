@@ -52,4 +52,5 @@ describe('User', () => {
       expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);
     });
   });
+
 });
