@@ -16,7 +16,7 @@ describe('User', () => {
       expect(data.__v).toBeUndefined();
     });
 
-    it('should not expose _password or hashedPassword serialize', () => {
+    it('should not expose _password or hashedPassword', () => {
       const user = new User({
         password: 'fake password',
         hashedPassword: 'fake hash',
@@ -30,15 +30,6 @@ describe('User', () => {
       expect(data.hashedPassword).toBeUndefined();
     });
 
-    it('should not allow hashedPassword to be set via assignment', () => {
-      const user = new User({
-        hashedPassword: 'fake hash',
-      });
-      user.assign({
-        hashPassword: 'new fake hash',
-      });
-      expect(user.hashedPassword).toBe('fake hash');
-    });
   });
 
   describe('validation', () => {
