@@ -659,15 +659,22 @@ describe('getJoiSchema', () => {
       assertFail(schema, { counts: { view: 'bad number' } });
     });
 
-    it('should validate explicit mixed type', () => {
+    it('should not validate mixed type', () => {
+      const schema = getJoiSchema({
+        counts: 'Mixed'
+      });
+      assertPass(schema, { counts: { foo: 'bar' } });
+      assertPass(schema, { counts: { name: 'foo' } });
+    });
+
+    it('should not validate explicit mixed type', () => {
       const schema = getJoiSchema({
         counts: {
-          type: 'Mixed',
-          view: Number,
-        },
+          type: 'Mixed'
+        }
       });
-      assertPass(schema, { counts: { view: 1 } });
-      assertFail(schema, { counts: { view: 'bad number' } });
+      assertPass(schema, { counts: { foo: 'bar' } });
+      assertPass(schema, { counts: { name: 'foo' } });
     });
 
     it('should validate mixed with nested type object', () => {

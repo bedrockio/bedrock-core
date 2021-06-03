@@ -77,7 +77,7 @@ function getSchemaForField(field, options = {}) {
   const type = getFieldType(field);
   if (type === 'Array') {
     return getArraySchema(field, options);
-  } else if (type === 'Mixed') {
+  } else if (type === 'Object') {
     return getObjectSchema(field, options);
   }
 
@@ -99,18 +99,19 @@ function getSchemaForField(field, options = {}) {
     // db whatsoever?
     schema = schema.allow('', null);
   }
-
-  if (field.enum) {
-    schema = schema.valid(...field.enum);
-  }
-  if (field.match) {
-    schema = schema.pattern(RegExp(field.match));
-  }
-  if (field.min || field.minLength) {
-    schema = schema.min(field.min || field.minLength);
-  }
-  if (field.max || field.maxLength) {
-    schema = schema.max(field.max || field.maxLength);
+  if (typeof field === 'object') {
+    if (field.enum) {
+      schema = schema.valid(...field.enum);
+    }
+    if (field.match) {
+      schema = schema.pattern(RegExp(field.match));
+    }
+    if (field.min || field.minLength) {
+      schema = schema.min(field.min || field.minLength);
+    }
+    if (field.max || field.maxLength) {
+      schema = schema.max(field.max || field.maxLength);
+    }
   }
   return schema;
 }
@@ -149,6 +150,8 @@ function getSchemaForType(type) {
       return Joi.boolean();
     case 'Date':
       return Joi.date().iso();
+    case 'Mixed':
+      return Joi.object();
     case 'ObjectId':
       return Joi.custom((val) => {
         const id = String(val.id || val);
@@ -173,10 +176,10 @@ function getFieldType(field) {
     return field.schemaName || field.name;
   } else if (typeof field === 'object') {
     if (!field.type || typeof field.type === 'object') {
-      // Nested mixed type field
+      // Nested field
       // profile: { name: String } (no type field)
       // type: { type: 'String' } (may be nested)
-      return 'Mixed';
+      return 'Object';
     } else {
       // name: { type: String }
       // name: { type: 'String' }

@@ -875,6 +875,56 @@ describe('validation', () => {
       assertFail(schema, {});
     });
 
+    it('should not enforce a schema on unstructured objects', () => {
+      const User = createTestModel(
+        createSchema({
+          profile: {
+            name: 'String',
+          },
+          devices: [
+            {
+              type: 'Object',
+            },
+          ],
+        })
+      );
+      const schema = User.getUpdateValidation();
+      expect(Joi.isSchema(schema)).toBe(true);
+      assertPass(schema, {
+        devices: [
+          {
+            id: 'id',
+            name: 'name',
+            class: 'class',
+          },
+        ],
+      });
+      assertPass(schema, {
+        profile: {
+          name: 'foo',
+        },
+        devices: [
+          {
+            id: 'id',
+            name: 'name',
+            class: 'class',
+          },
+        ],
+      });
+      assertFail(schema, {
+        profile: {
+          foo: 'bar',
+        },
+        devices: [
+          {
+            id: 'id',
+            name: 'name',
+            class: 'class',
+          },
+        ],
+      });
+    });
+
     it('should strip reserved fields', () => {
       const User = createTestModel(
         createSchema({

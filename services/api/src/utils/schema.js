@@ -113,10 +113,11 @@ function attributesToDefinition(attributes) {
   const isSchemaType = !!type && typeof type !== 'object';
 
   for (let [key, val] of Object.entries(attributes)) {
+    const type = typeof val;
     if (isSchemaType) {
-      if (key === 'type' && typeof val === 'string') {
+      if (key === 'type' && type === 'string') {
         val = getMongooseType(val);
-      } else if (key === 'validate' && typeof val === 'string') {
+      } else if (key === 'validate' && type === 'string') {
         // Allow custom mongoose validation function that derives from the Joi schema.
         val = getMongooseValidator(val, attributes);
       }
@@ -125,6 +126,8 @@ function attributesToDefinition(attributes) {
         val = val.map(attributesToDefinition);
       } else if (isPlainObject(val)) {
         val = attributesToDefinition(val);
+      } else if (type === 'string') {
+        val = getMongooseType(val);
       }
     }
     definition[key] = val;
