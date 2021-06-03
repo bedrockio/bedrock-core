@@ -29,27 +29,7 @@ marked.use({
   renderer: {
     link(href, title, text) {
       if (title === '$button$') {
-        return `
-          <table class="body-action" align="center" width="100%" cellpadding="0" cellspacing="0">
-            <tr>
-              <td align="center">
-                <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                  <tr>
-                    <td align="center">
-                      <table border="0" cellspacing="0" cellpadding="0">
-                        <tr>
-                          <td>
-                            <a href="${href}" class="button" target="_blank"><span class="text">${text}</span></a>
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-          </table>
-        `;
+        return `<a href="${href}" class="button" target="_blank"><span class="text">${text}</span></a>`;
       }
       return false;
     },
@@ -62,6 +42,7 @@ const defaultOptions = {
   appSupportEmail: config.get('APP_SUPPORT_EMAIL'),
   appCompanyName: config.get('APP_COMPANY_NAME'),
   appCompanyAddress: config.get('APP_COMPANY_ADDRESS'),
+  appLogoUrl: config.get('APP_LOGO_URL'),
 };
 
 const templatesDist = path.join(__dirname, '../../emails');
@@ -99,7 +80,7 @@ async function sendTemplatedMail({ template, layout = 'layout.html', subject, to
   await sendMail({
     to,
     subject: Mustache.render(subject, options),
-    html,
+    html: html.replace(/midnightblue/g, config.get('APP_PRIMARY_COLOR')),
     options,
   });
 }
