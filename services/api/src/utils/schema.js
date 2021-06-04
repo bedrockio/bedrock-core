@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
-const pluginAutoPopulate = require('mongoose-autopopulate');
+const mongoose = require('mongoose');
+const autopopulate = require('mongoose-autopopulate');
 
 const { startCase, isPlainObject } = require('lodash');
 const { ObjectId } = mongoose.Schema.Types;
@@ -168,7 +168,8 @@ function createSchema(attributes = {}, options = {}) {
     });
   });
 
-  schema.plugin(pluginAutoPopulate);
+  schema.plugin(autopopulate);
+
   return schema;
 }
 
