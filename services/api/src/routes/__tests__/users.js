@@ -229,9 +229,10 @@ describe('/1/users', () => {
       const user1 = await createUser({ name: 'One' });
       const response = await request('DELETE', `/1/users/${user1.id}`, {}, { user: admin });
       expect(response.status).toBe(204);
-      const dbUser = await User.findById(user1._id);
+      const dbUser = await User.findByIdDeleted(user1.id);
       expect(dbUser.deletedAt).toBeDefined();
     });
+
     it('should deny access to non-admins', async () => {
       const user = await createUser({});
       const user1 = await createUser({ name: 'One' });

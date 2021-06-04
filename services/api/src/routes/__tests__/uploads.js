@@ -70,7 +70,7 @@ describe('/1/uploads', () => {
       const upload = await createUpload(user);
       const response = await request('DELETE', `/1/uploads/${upload.id}`, {}, { user });
       expect(response.status).toBe(204);
-      const dbUpload = await Upload.findById(upload.id);
+      const dbUpload = await Upload.findByIdDeleted(upload.id);
       expect(dbUpload.deletedAt).toBeDefined();
     });
 
