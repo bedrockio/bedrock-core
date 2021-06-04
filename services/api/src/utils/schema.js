@@ -69,24 +69,16 @@ function createSchema(attributes = {}, options = {}) {
     });
   });
 
-  schema.methods.assign = function assign(fields) {
+  schema.method('assign', function assign(fields) {
     for (let [key, value] of Object.entries(fields)) {
       if (!value && isReferenceField(this.schema.obj[key])) {
         value = undefined;
       }
       this[key] = value;
     }
-  };
+  });
 
-  schema.methods.delete = function () {
-    this.deletedAt = new Date();
-    return this.save();
-  };
-
-  schema.methods.restore = function () {
-    this.deletedAt = undefined;
-    return this.save();
-  };
+  // Soft delete
 
   schema.pre(/^find|count|exists/, function (next) {
     const filter = this.getFilter();
@@ -98,6 +90,16 @@ function createSchema(attributes = {}, options = {}) {
       }
     }
     return next();
+  });
+
+  schema.method('delete', function () {
+    this.deletedAt = new Date();
+    return this.save();
+  });
+
+  schema.method('restore', function () {
+    this.deletedAt = undefined;
+    return this.save();
   });
 
   schema.static('findDeleted', function findOneDeleted(filter) {
