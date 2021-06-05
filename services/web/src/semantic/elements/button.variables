@@ -48,7 +48,7 @@
 
 /* Icon */
 @iconOpacity: 1;
-@iconDistance: @relative6px;
+@iconDistance: @relative12px;
 @iconTransition: opacity @defaultDuration @defaultEasing;
 
 @iconMargin: 0em @iconDistance 0em -(@iconDistance / 2);
