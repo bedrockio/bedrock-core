@@ -3,4 +3,4 @@ import Dashboard from './Dashboard';
 import Portal from './Portal';
 
 useLayout(Dashboard, 'Dashboard');
-useLayout(Dashboard, 'Portal');
+useLayout(Portal, 'Portal');
