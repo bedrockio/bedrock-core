@@ -1,6 +1,5 @@
 import React from 'react';
 import { withSession } from 'stores';
-import { Container } from 'semantic';
 import { Layout } from './Layout';
 import logo from 'assets/logo.svg';
 
@@ -13,12 +12,10 @@ export default class Footer extends React.Component {
     }
     return (
       <footer>
-        <Container>
-          <Layout horizontal center right>
-            <span style={{ marginRight: '10px' }}>Built with</span>
-            <img width="112" height="24" src={logo} />
-          </Layout>
-        </Container>
+        <Layout horizontal center right>
+          <span style={{ marginRight: '10px' }}>Built with</span>
+          <img width="112" height="24" src={logo} />
+        </Layout>
       </footer>
     );
   }
