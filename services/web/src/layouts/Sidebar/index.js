@@ -13,6 +13,7 @@ import bem from 'helpers/bem';
 
 import Menu from './Menu';
 import Link from './Link';
+import Item from './Item';
 import Header from './Header';
 import Mobile from './Mobile';
 import Content from './Content';
@@ -43,6 +44,7 @@ Accordion.contextType = Context;
 export default class SidebarLayout extends React.Component {
   static Menu = Menu;
   static Link = Link;
+  static Item = Item;
   static Header = Header;
   static Mobile = Mobile;
   static Content = Content;

@@ -4,6 +4,7 @@ import { Icon, Container } from 'semantic';
 import Footer from 'components/Footer';
 import { Layout } from 'components';
 import Protected from 'components/Protected';
+import Organization from 'modals/Organization';
 import Sidebar from './Sidebar';
 
 import logo from 'assets/logo.svg';
@@ -50,6 +51,16 @@ export default class DashboardLayout extends React.Component {
                   <Icon name="terminal" />
                   Docs
                 </Sidebar.Link>
+                <Sidebar.Item>
+                  <Organization
+                    trigger={
+                      <div>
+                        <Icon name="building" />
+                        Account
+                      </div>
+                    }
+                  />
+                </Sidebar.Item>
                 <Sidebar.Link to="/logout">
                   <Icon name="sign-out-alt" />
                   Log Out

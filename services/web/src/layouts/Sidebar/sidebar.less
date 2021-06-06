@@ -4,23 +4,7 @@
 @menuWidth: 250px;
 @menuPadding: 25px;
 
-// TODO: (@skatey)
-// Using this component needs to overwrite container styles
-// as they are dumb and assume they have the entire width of
-// the page... can these be rewritten to instead use max-width
-// instead of width?
-//
 // TODO: hook this up to vars somehow?
-
-.ui.container {
-  width: auto !important;
-  max-width: 1137px !important;
-
-  @media (min-width: 768px) and (max-width: 1457px) {
-    margin-left: 15px !important;
-    margin-right: 15px !important;
-  }
-}
 
 .sidebar-layout {
   &-menu {
@@ -67,7 +51,8 @@
     margin: 5px 0 5px 25px;
   }
 
-  &-link {
+  &-link,
+  &-item {
     display: block;
     padding: 0.7em 22px;
     color: @textColor;
@@ -76,6 +61,7 @@
     text-overflow: ellipsis;
     overflow: hidden;
     font-weight: 500;
+    cursor: pointer;
 
     &:hover {
       color: inherit;
@@ -115,7 +101,7 @@
 
     &--offset {
       margin-left: @menuWidth;
-      padding: 20px 15px 0 15px;
+      padding: 20px 25px 0 25px;
     }
   }
 
