@@ -20,6 +20,18 @@ export default class DashboardLayout extends React.Component {
               <img height="30" src={logo} />
             </NavLink>
             <Layout vertical spread>
+              <Sidebar.Item>
+                <Organization
+                  trigger={
+                    <div>
+                      <Icon name="building" />
+                      Bedrock Inc.
+                      <Icon name="caret-down" className="right" />
+                    </div>
+                  }
+                  size="tiny"
+                />
+              </Sidebar.Item>
               <Layout.Group>
                 <Sidebar.Header>Main Menu</Sidebar.Header>
               </Layout.Group>
@@ -51,16 +63,6 @@ export default class DashboardLayout extends React.Component {
                   <Icon name="terminal" />
                   Docs
                 </Sidebar.Link>
-                <Sidebar.Item>
-                  <Organization
-                    trigger={
-                      <div>
-                        <Icon name="building" />
-                        Account
-                      </div>
-                    }
-                  />
-                </Sidebar.Item>
                 <Sidebar.Link to="/logout">
                   <Icon name="sign-out-alt" />
                   Log Out
