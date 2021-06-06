@@ -45,16 +45,30 @@ export default class ShopProducts extends React.Component {
                   <Layout horizontal center spread>
                     <Header as="h2">Products</Header>
                     <Layout.Group>
-                      <Filters size="tiny" onSave={setFilters} filters={filters}>
-                        <Filters.Text label="Search" name="keyword" placeholder="Enter name or product id" />
+                      <Filters
+                        size="small"
+                        onSave={setFilters}
+                        filters={filters}>
+                        <Filters.Text
+                          label="Search"
+                          name="keyword"
+                          placeholder="Enter name or product id"
+                        />
                       </Filters>
                       <EditProduct
                         shop={shop}
                         onSave={reload}
-                        trigger={<Button primary size="tiny" content="Add Product" icon="plus" />}
+                        trigger={
+                          <Button
+                            primary
+                            size="small"
+                            content="Add Product"
+                            icon="plus"
+                          />
+                        }
                       />
                     </Layout.Group>
-                    </Layout>
+                  </Layout>
                   {products.length === 0 ? (
                     <Message>No products added yet</Message>
                   ) : (
