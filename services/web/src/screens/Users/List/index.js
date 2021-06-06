@@ -56,7 +56,6 @@ export default class UserList extends React.Component {
                   />
                 </Layout.Group>
               </Layout>
-              <Divider hidden />
               {users.length === 0 ? (
                 <Message>No users created yet</Message>
               ) : (

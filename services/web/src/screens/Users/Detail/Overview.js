@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header, Table, Loader } from 'semantic';
+import { Header, Table, Loader, Divider } from 'semantic';
 import { screen } from 'helpers';
 import { formatDateTime } from 'utils/date';
 
@@ -16,8 +16,8 @@ export default class UserOverview extends React.Component {
           <Loader active>Loading</Loader>
         ) : (
           <React.Fragment>
-            
-            <Header as="h3">Details</Header>
+            <Divider hidden />
+            <Header as="h2">Details</Header>
             <Table definition>
               <Table.Body>
                 <Table.Row>

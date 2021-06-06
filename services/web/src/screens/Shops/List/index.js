@@ -91,7 +91,6 @@ export default class ShopList extends React.Component {
                   />
                 </Layout.Group>
               </Layout>
-              <Divider hidden />
               {shops.length === 0 ? (
                 <Message>No shops created yet</Message>
               ) : (
