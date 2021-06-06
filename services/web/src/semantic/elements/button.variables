@@ -51,7 +51,7 @@
 @iconDistance: @relative12px;
 @iconTransition: opacity @defaultDuration @defaultEasing;
 
-@iconMargin: 0em @iconDistance 0em -(@iconDistance / 2);
+@iconMargin: 0em @iconDistance 0em -(@iconDistance / 3);
 @rightIconMargin: 0em -(@iconDistance / 2) 0em @iconDistance;
 
 /* Loader */
