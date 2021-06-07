@@ -39,17 +39,19 @@
     }
   }
 
+  &-header:first-child {
+    margin-top: 0;
+  }
+
   &-header {
     text-transform: uppercase;
     font-size: 11px;
     color: #abadb3;
     font-weight: bold;
-    margin-left: 25px;
-    margin-bottom: 5px;
+    margin: 5px 0 5px 25px;
   }
 
-  &-link,
-  &-item {
+  &-link {
     display: block;
     padding: 0.7em 22px;
     color: @textColor;
@@ -75,7 +77,35 @@
     }
 
     .sidebar-layout-accordion & {
-      padding-left: 3em;
+      padding-left: 40px;
+    }
+  }
+
+  &-item {
+    display: block;
+    margin: 0 23px 15px 23px;
+    padding: 0 2px 0.6em 2px;
+    color: @textColor;
+    border-bottom: 1px solid @borderColor;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-weight: 500;
+    cursor: pointer;
+
+    &:hover {
+      color: inherit;
+      border-color: rgba(34, 36, 38, 0.35);
+    }
+
+    .icon {
+      margin-right: 10px;
+    }
+
+    .right {
+      float: right;
+      top: 3px;
+      margin-right: 5px;
     }
   }
 
