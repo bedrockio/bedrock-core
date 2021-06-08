@@ -4,9 +4,10 @@ import { Icon, Container } from 'semantic';
 import Footer from 'components/Footer';
 import { Layout } from 'components';
 import Protected from 'components/Protected';
+import Organization from 'modals/Organization';
 import Sidebar from './Sidebar';
 
-import logo from 'assets/bedrock.svg';
+import logo from 'assets/logo.svg';
 import favicon from 'assets/favicon.svg';
 
 export default class DashboardLayout extends React.Component {
@@ -19,6 +20,18 @@ export default class DashboardLayout extends React.Component {
               <img height="30" src={logo} />
             </NavLink>
             <Layout vertical spread>
+              <Sidebar.Item>
+                <Organization
+                  trigger={
+                    <div>
+                      <Icon name="building" />
+                      Bedrock Inc.
+                      <Icon name="caret-down" className="right" />
+                    </div>
+                  }
+                  size="tiny"
+                />
+              </Sidebar.Item>
               <Layout.Group>
                 <Sidebar.Header>Main Menu</Sidebar.Header>
               </Layout.Group>
@@ -42,10 +55,6 @@ export default class DashboardLayout extends React.Component {
               </Layout.Group>
               <Layout.Group>
                 <Sidebar.Divider />
-                {/* <Sidebar.Link to="/company">
-                  <Icon name="building" />
-                  Bedrock Inc.
-                </Sidebar.Link> */}
                 <Sidebar.Link to="/settings">
                   <Icon name="cog" />
                   Settings

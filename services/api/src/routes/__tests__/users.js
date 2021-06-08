@@ -72,6 +72,7 @@ describe('/1/users', () => {
       expect(response.status).toBe(200);
       expect(data.name).toBe('Hello');
     });
+
     it('should deny access to non-admins', async () => {
       const user = await createUser({});
       const response = await request(
@@ -190,6 +191,7 @@ describe('/1/users', () => {
       expect(dbUser.roles[0].role).toBe('limitedAdmin');
       expect(dbUser.roles[0].scope).toBe('global');
     });
+
     it('should strip out reserved fields', async () => {
       const admin = await createUserWithRole('global', 'superAdmin');
       const user1 = await createUser({ name: 'new name' });
@@ -204,6 +206,21 @@ describe('/1/users', () => {
       const dbUser = await User.findById(user1.id);
       expect(dbUser.name).toEqual('new name');
     });
+
+    it('should fail when trying to set hashed password', async () => {
+      const admin = await createUserWithRole('global', 'superAdmin');
+      const user = await createUser({ name: 'new name' });
+      const response = await request(
+        'PATCH',
+        `/1/users/${user.id}`,
+        {
+          hashedPassword: 'new hashed password'
+        },
+        { user: admin }
+      );
+      expect(response.status).toBe(401);
+    });
+
   });
 
   describe('DELETE /:user', () => {
@@ -212,9 +229,10 @@ describe('/1/users', () => {
       const user1 = await createUser({ name: 'One' });
       const response = await request('DELETE', `/1/users/${user1.id}`, {}, { user: admin });
       expect(response.status).toBe(204);
-      const dbUser = await User.findById(user1._id);
+      const dbUser = await User.findByIdDeleted(user1.id);
       expect(dbUser.deletedAt).toBeDefined();
     });
+
     it('should deny access to non-admins', async () => {
       const user = await createUser({});
       const user1 = await createUser({ name: 'One' });

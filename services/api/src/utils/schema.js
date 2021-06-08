@@ -2,8 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const mongoose = require('mongoose');
 const autopopulate = require('mongoose-autopopulate');
+const { startCase, escapeRegExp, isPlainObject } = require('lodash');
 const { logger } = require('@bedrockio/instrumentation');
-const { startCase, omitBy, escapeRegExp, isPlainObject } = require('lodash');
 
 const { getJoiSchema, getMongooseValidator, getFieldType } = require('./validation');
 const { searchValidation } = require('./search');
@@ -29,8 +29,8 @@ function transformField(obj, schema, options) {
   } else if (obj && typeof obj === 'object') {
     for (let [key, val] of Object.entries(obj)) {
       // Omit any key with a private prefix "_" or marked
-      // "access": "private" in the schema.
-      if (key[0] === '_' || isDisallowedField(schema[key], options.private)) {
+      // with "readScopes" in the schema.
+      if (key[0] === '_' || !isAllowedField(schema[key], options.scopes)) {
         delete obj[key];
       } else if (schema[key]) {
         transformField(val, schema[key], options);
@@ -41,6 +41,7 @@ function transformField(obj, schema, options) {
 
 function createSchema(attributes = {}, options = {}) {
   const definition = attributesToDefinition(attributes);
+
   const schema = new mongoose.Schema(
     {
       ...definition,
@@ -73,9 +74,6 @@ function createSchema(attributes = {}, options = {}) {
 
   schema.static('getSearchValidation', function getSearchValidation(searchOptions, appendSchema) {
     return getJoiSchema(attributes, {
-      disallowField: (key) => {
-        return isDisallowedField(this, key);
-      },
       stripFields: RESERVED_FIELDS,
       skipRequired: true,
       skipEmptyCheck: true,
@@ -165,24 +163,113 @@ function createSchema(attributes = {}, options = {}) {
     };
   });
 
-  schema.methods.assign = function assign(fields) {
-    fields = omitBy(fields, (value, key) => {
-      return isDisallowedField(this.schema.obj[key]) || RESERVED_FIELDS.includes(key);
-    });
+  schema.method('assign', function assign(fields) {
     for (let [key, value] of Object.entries(fields)) {
       if (!value && isReferenceField(this.schema.obj[key])) {
         value = undefined;
       }
       this[key] = value;
     }
-  };
+  });
 
-  schema.methods.delete = function () {
+  // Soft delete
+
+  schema.pre(/^find|count|exists/, function (next) {
+    const filter = this.getFilter();
+    if (filter.deletedAt === undefined) {
+      if ('deletedAt' in filter) {
+        delete filter.deletedAt;
+      } else {
+        filter.deletedAt = { $exists: false };
+      }
+    }
+    return next();
+  });
+
+  schema.method('delete', function () {
     this.deletedAt = new Date();
     return this.save();
-  };
+  });
+
+  schema.method('restore', function restore() {
+    this.deletedAt = undefined;
+    return this.save();
+  });
+
+  schema.method('destroy', function destroy() {
+    return this.remove();
+  });
+
+  schema.static('findDeleted', function findOneDeleted(filter) {
+    return this.find({
+      ...filter,
+      deletedAt: { $exists: true },
+    });
+  });
+
+  schema.static('findOneDeleted', function findOneDeleted(filter) {
+    return this.findOne({
+      ...filter,
+      deletedAt: { $exists: true },
+    });
+  });
+
+  schema.static('findByIdDeleted', function findByIdDeleted(id) {
+    return this.findOne({
+      _id: id,
+      deletedAt: { $exists: true },
+    });
+  });
+
+  schema.static('existsDeleted', function existsDeleted() {
+    return this.exists({
+      deletedAt: { $exists: true },
+    });
+  });
+
+  schema.static('countDocumentsDeleted', function countDocumentsDeleted(filter) {
+    return this.countDocuments({
+      ...filter,
+      deletedAt: { $exists: true },
+    });
+  });
+
+  schema.static('findWithDeleted', function findOneWithDeleted(filter) {
+    return this.find({
+      ...filter,
+      deletedAt: undefined,
+    });
+  });
+
+  schema.static('findOneWithDeleted', function findOneWithDeleted(filter) {
+    return this.findOne({
+      ...filter,
+      deletedAt: undefined,
+    });
+  });
+
+  schema.static('findByIdWithDeleted', function findByIdWithDeleted(id) {
+    return this.findOne({
+      _id: id,
+      deletedAt: undefined,
+    });
+  });
+
+  schema.static('existsWithDeleted', function existsWithDeleted() {
+    return this.exists({
+      deletedAt: undefined,
+    });
+  });
+
+  schema.static('countDocumentsWithDeleted', function countDocumentsWithDeleted(filter) {
+    return this.countDocuments({
+      ...filter,
+      deletedAt: undefined,
+    });
+  });
 
   schema.plugin(autopopulate);
+
   return schema;
 }
 
@@ -195,7 +282,7 @@ function getJoiSchemaFromMongoose(schema, options) {
     transformField: (key, field) => {
       if (field instanceof mongoose.Schema) {
         return getJoiSchemaFromMongoose(field, options);
-      } else if (!isDisallowedField(field)) {
+      } else {
         return field;
       }
     },
@@ -213,29 +300,24 @@ function attributesToDefinition(attributes) {
   const isSchemaType = !!type && typeof type !== 'object';
 
   for (let [key, val] of Object.entries(attributes)) {
+    const type = typeof val;
     if (isSchemaType) {
-      if (key === 'type' && typeof val === 'string') {
+      if (key === 'type' && type === 'string') {
         val = getMongooseType(val);
-      } else if (key === 'validate' && typeof val === 'string') {
+      } else if (key === 'validate' && type === 'string') {
         // Allow custom mongoose validation function that derives from the Joi schema.
         val = getMongooseValidator(val, attributes);
       }
-    } else {
+    } else if (key !== 'readScopes') {
       if (Array.isArray(val)) {
         val = val.map(attributesToDefinition);
       } else if (isPlainObject(val)) {
         val = attributesToDefinition(val);
+      } else if (type === 'string') {
+        val = getMongooseType(val);
       }
     }
     definition[key] = val;
-  }
-
-  if ('access' in attributes && !isSchemaType) {
-    // Inside nested objects "access" needs to be explicitly
-    // disallowed so that it is not assumed to be a field.
-    definition.type = {
-      access: null,
-    };
   }
 
   return definition;
@@ -253,11 +335,17 @@ function isReferenceField(schema) {
   return resolveSchema(schema)?.type === ObjectIdSchemaType;
 }
 
-function isDisallowedField(schema, allowPrivate = false) {
-  if (resolveSchema(schema)?.access === 'private') {
-    return !allowPrivate;
+function isAllowedField(schema, scopes = []) {
+  const { readScopes = 'all' } = resolveSchema(schema) || {};
+  if (readScopes === 'all') {
+    return true;
+  } else if (Array.isArray(readScopes)) {
+    return readScopes.some((scope) => {
+      return scopes.includes(scope);
+    });
+  } else {
+    return false;
   }
-  return false;
 }
 
 function resolveSchema(schema) {

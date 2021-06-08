@@ -89,7 +89,6 @@ export default class UserList extends React.Component {
                   />
                 </Layout.Group>
               </Layout>
-              <Divider hidden />
               {users.length === 0 ? (
                 <Message>No users created yet</Message>
               ) : (
@@ -97,19 +96,16 @@ export default class UserList extends React.Component {
                   <Table.Header>
                     <Table.Row>
                       <Table.HeaderCell
-                        width={3}
                         onClick={() => setSort('name')}
                         sorted={getSorted('name')}>
                         Name
                       </Table.HeaderCell>
                       <Table.HeaderCell
-                        width={3}
                         onClick={() => setSort('email')}
                         sorted={getSorted('email')}>
                         Email
                       </Table.HeaderCell>
                       <Table.HeaderCell
-                        width={3}
                         onClick={() => setSort('roles')}
                         sorted={getSorted('roles')}>
                         Roles
@@ -155,13 +151,7 @@ export default class UserList extends React.Component {
                           <Table.Cell textAlign="center">
                             <EditUser
                               user={user}
-                              trigger={
-                                <Button
-                                  style={{ marginLeft: '20px' }}
-                                  basic
-                                  icon="edit"
-                                />
-                              }
+                              trigger={<Button basic icon="edit" />}
                               onSave={reload}
                             />
                             <Confirm
