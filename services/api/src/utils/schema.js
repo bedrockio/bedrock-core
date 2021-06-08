@@ -97,9 +97,13 @@ function createSchema(attributes = {}, options = {}) {
     return this.save();
   });
 
-  schema.method('restore', function () {
+  schema.method('restore', function restore() {
     this.deletedAt = undefined;
     return this.save();
+  });
+
+  schema.method('destroy', function destroy() {
+    return this.remove();
   });
 
   schema.static('findDeleted', function findOneDeleted(filter) {

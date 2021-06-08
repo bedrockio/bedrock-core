@@ -815,6 +815,22 @@ describe('createSchema', () => {
       expect(await User.existsWithDeleted({ name: 'bar' })).toBe(true);
       expect(await User.countDocumentsWithDeleted()).toBe(2);
     });
+
+    it('should be able to hard delete a document', async () => {
+      const User = createTestModel(
+        createSchema({
+          name: 'String',
+        })
+      );
+      const user = await User.create({
+        name: 'foo',
+      });
+      await User.create({
+        name: 'foo2',
+      });
+      await user.destroy();
+      expect(await User.countDocumentsWithDeleted()).toBe(1);
+    });
   });
 });
 
