@@ -45,10 +45,6 @@ export default class SearchDropdown extends React.Component {
     });
     value = this.props.multiple ? selected : selected[0];
     this.props.onChange(evt, { value, ...rest });
-
-    // Workaround for onSearchChange not updating when
-    // the field is cleared internally.
-    this.onSearchChange(evt, { searchQuery: '' });
   };
 
   getAllItems() {
