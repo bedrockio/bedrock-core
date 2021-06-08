@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
-const pluginAutoPopulate = require('mongoose-autopopulate');
+const mongoose = require('mongoose');
+const autopopulate = require('mongoose-autopopulate');
 
 const { startCase, isPlainObject } = require('lodash');
 const { ObjectId } = mongoose.Schema.Types;
@@ -38,6 +38,7 @@ function transformField(obj, schema, options) {
 
 function createSchema(attributes = {}, options = {}) {
   const definition = attributesToDefinition(attributes);
+
   const schema = new mongoose.Schema(
     {
       ...definition,
@@ -68,21 +69,113 @@ function createSchema(attributes = {}, options = {}) {
     });
   });
 
-  schema.methods.assign = function assign(fields) {
+  schema.method('assign', function assign(fields) {
     for (let [key, value] of Object.entries(fields)) {
       if (!value && isReferenceField(this.schema.obj[key])) {
         value = undefined;
       }
       this[key] = value;
     }
-  };
+  });
 
-  schema.methods.delete = function () {
+  // Soft delete
+
+  schema.pre(/^find|count|exists/, function (next) {
+    const filter = this.getFilter();
+    if (filter.deletedAt === undefined) {
+      if ('deletedAt' in filter) {
+        delete filter.deletedAt;
+      } else {
+        filter.deletedAt = { $exists: false };
+      }
+    }
+    return next();
+  });
+
+  schema.method('delete', function () {
     this.deletedAt = new Date();
     return this.save();
-  };
+  });
 
-  schema.plugin(pluginAutoPopulate);
+  schema.method('restore', function restore() {
+    this.deletedAt = undefined;
+    return this.save();
+  });
+
+  schema.method('destroy', function destroy() {
+    return this.remove();
+  });
+
+  schema.static('findDeleted', function findOneDeleted(filter) {
+    return this.find({
+      ...filter,
+      deletedAt: { $exists: true },
+    });
+  });
+
+  schema.static('findOneDeleted', function findOneDeleted(filter) {
+    return this.findOne({
+      ...filter,
+      deletedAt: { $exists: true },
+    });
+  });
+
+  schema.static('findByIdDeleted', function findByIdDeleted(id) {
+    return this.findOne({
+      _id: id,
+      deletedAt: { $exists: true },
+    });
+  });
+
+  schema.static('existsDeleted', function existsDeleted() {
+    return this.exists({
+      deletedAt: { $exists: true },
+    });
+  });
+
+  schema.static('countDocumentsDeleted', function countDocumentsDeleted(filter) {
+    return this.countDocuments({
+      ...filter,
+      deletedAt: { $exists: true },
+    });
+  });
+
+  schema.static('findWithDeleted', function findOneWithDeleted(filter) {
+    return this.find({
+      ...filter,
+      deletedAt: undefined,
+    });
+  });
+
+  schema.static('findOneWithDeleted', function findOneWithDeleted(filter) {
+    return this.findOne({
+      ...filter,
+      deletedAt: undefined,
+    });
+  });
+
+  schema.static('findByIdWithDeleted', function findByIdWithDeleted(id) {
+    return this.findOne({
+      _id: id,
+      deletedAt: undefined,
+    });
+  });
+
+  schema.static('existsWithDeleted', function existsWithDeleted() {
+    return this.exists({
+      deletedAt: undefined,
+    });
+  });
+
+  schema.static('countDocumentsWithDeleted', function countDocumentsWithDeleted(filter) {
+    return this.countDocuments({
+      ...filter,
+      deletedAt: undefined,
+    });
+  });
+
+  schema.plugin(autopopulate);
+
   return schema;
 }
 

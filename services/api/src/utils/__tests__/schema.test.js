@@ -141,9 +141,7 @@ describe('createSchema', () => {
   });
 
   describe('serialization', () => {
-
     describe('reserved fields', () => {
-
       it('should expose id', () => {
         const User = createTestModel(createSchema());
         const user = new User();
@@ -214,11 +212,9 @@ describe('createSchema', () => {
         const data = user.toObject();
         expect(data._private).toBeUndefined();
       });
-
     });
 
     describe('read scopes', () => {
-
       it('should be able to disallow all read access', () => {
         const User = createTestModel(
           createSchema({
@@ -456,9 +452,7 @@ describe('createSchema', () => {
         expect(user.login.attempts).toBe(10);
         expect(user.toObject().login).toBeUndefined();
       });
-
     });
-
   });
 
   describe('assign', () => {
@@ -738,6 +732,106 @@ describe('createSchema', () => {
       expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);
     });
   });
+
+  describe('soft delete', () => {
+    it('should be able to soft delete a document', async () => {
+      const User = createTestModel(
+        createSchema({
+          name: 'String',
+        })
+      );
+      const user = await User.create({
+        name: 'foo',
+      });
+      await user.delete();
+      expect(await user.deletedAt).toBeInstanceOf(Date);
+    });
+
+    it('should be able to restore a document', async () => {
+      const User = createTestModel(
+        createSchema({
+          name: 'String',
+        })
+      );
+      const user = await User.create({
+        name: 'foo',
+      });
+      await user.delete();
+      expect(await user.deletedAt).toBeInstanceOf(Date);
+      await user.restore();
+      expect(await user.deletedAt).toBeUndefined();
+    });
+
+    it('should not query deleted documents by default', async () => {
+      const User = createTestModel(
+        createSchema({
+          name: 'String',
+        })
+      );
+      const deletedUser = await User.create({
+        name: 'foo',
+        deletedAt: new Date(),
+      });
+      expect(await User.find()).toEqual([]);
+      expect(await User.findOne()).toBe(null);
+      expect(await User.findById(deletedUser.id)).toBe(null);
+      expect(await User.exists()).toBe(false);
+      expect(await User.countDocuments()).toBe(0);
+    });
+
+    it('should still be able to query deleted documents', async () => {
+      const User = createTestModel(
+        createSchema({
+          name: 'String',
+        })
+      );
+      const deletedUser = await User.create({
+        name: 'foo',
+        deletedAt: new Date(),
+      });
+      expect(await User.findDeleted()).not.toBe(null);
+      expect(await User.findOneDeleted()).not.toBe(null);
+      expect(await User.findByIdDeleted(deletedUser.id)).not.toBe(null);
+      expect(await User.existsDeleted()).toBe(true);
+      expect(await User.countDocumentsDeleted()).toBe(1);
+    });
+
+    it('should still be able to query with deleted documents', async () => {
+      const User = createTestModel(
+        createSchema({
+          name: 'String',
+        })
+      );
+      await User.create({
+        name: 'foo',
+      });
+      const deletedUser = await User.create({
+        name: 'bar',
+        deletedAt: new Date(),
+      });
+      expect((await User.findWithDeleted()).length).toBe(2);
+      expect(await User.findOneWithDeleted({ name: 'bar' })).not.toBe(null);
+      expect(await User.findByIdWithDeleted(deletedUser.id)).not.toBe(null);
+      expect(await User.existsWithDeleted({ name: 'bar' })).toBe(true);
+      expect(await User.countDocumentsWithDeleted()).toBe(2);
+    });
+
+    it('should be able to hard delete a document', async () => {
+      const User = createTestModel(
+        createSchema({
+          name: 'String',
+        })
+      );
+      const user = await User.create({
+        name: 'foo',
+      });
+      await User.create({
+        name: 'foo2',
+      });
+      await user.destroy();
+      expect(await User.countDocumentsWithDeleted()).toBe(1);
+    });
+  });
 });
 
 describe('loadModel', () => {
@@ -847,7 +941,6 @@ describe('validation', () => {
         count: 10,
       });
     });
-
   });
 
   describe('update validation', () => {
@@ -1070,10 +1163,14 @@ describe('validation', () => {
           name: 'Barry',
           password: 'fake password',
         });
-        assertPass(schema, {
-          name: 'Barry',
-          password: 'fake password',
-        }, { scopes: ['private'] });
+        assertPass(
+          schema,
+          {
+            name: 'Barry',
+            password: 'fake password',
+          },
+          { scopes: ['private'] }
+        );
       });
 
       it('should require only one of valid scopes', async () => {
@@ -1096,68 +1193,126 @@ describe('validation', () => {
         const schema = User.getUpdateValidation();
 
         // With ['foo'] scopes
-        assertPass(schema, {
-          foo: 'foo!',
-        }, { scopes: ['foo'] });
-        assertFail(schema, {
-          bar: 'bar!',
-        }, { scopes: ['foo'] });
-        assertPass(schema, {
-          foobar: 'foobar!',
-        }, { scopes: ['foo'] });
-        assertPass(schema, {
-          foo: 'foo!',
-          foobar: 'foobar!',
-        }, { scopes: ['foo'] });
-        assertFail(schema, {
-          foo: 'foo!',
-          bar: 'bar!',
-          foobar: 'foobar!',
-        }, { scopes: ['foo'] });
+        assertPass(
+          schema,
+          {
+            foo: 'foo!',
+          },
+          { scopes: ['foo'] }
+        );
+        assertFail(
+          schema,
+          {
+            bar: 'bar!',
+          },
+          { scopes: ['foo'] }
+        );
+        assertPass(
+          schema,
+          {
+            foobar: 'foobar!',
+          },
+          { scopes: ['foo'] }
+        );
+        assertPass(
+          schema,
+          {
+            foo: 'foo!',
+            foobar: 'foobar!',
+          },
+          { scopes: ['foo'] }
+        );
+        assertFail(
+          schema,
+          {
+            foo: 'foo!',
+            bar: 'bar!',
+            foobar: 'foobar!',
+          },
+          { scopes: ['foo'] }
+        );
 
         // With ['bar'] scopes
-        assertFail(schema, {
-          foo: 'foo!',
-        }, { scopes: ['bar'] });
-        assertPass(schema, {
-          bar: 'bar!',
-        }, { scopes: ['bar'] });
-        assertPass(schema, {
-          foobar: 'foobar!',
-        }, { scopes: ['bar'] });
-        assertFail(schema, {
-          foo: 'foo!',
-          foobar: 'foobar!',
-        }, { scopes: ['bar'] });
-        assertFail(schema, {
-          foo: 'foo!',
-          bar: 'bar!',
-          foobar: 'foobar!',
-        }, { scopes: ['bar'] });
+        assertFail(
+          schema,
+          {
+            foo: 'foo!',
+          },
+          { scopes: ['bar'] }
+        );
+        assertPass(
+          schema,
+          {
+            bar: 'bar!',
+          },
+          { scopes: ['bar'] }
+        );
+        assertPass(
+          schema,
+          {
+            foobar: 'foobar!',
+          },
+          { scopes: ['bar'] }
+        );
+        assertFail(
+          schema,
+          {
+            foo: 'foo!',
+            foobar: 'foobar!',
+          },
+          { scopes: ['bar'] }
+        );
+        assertFail(
+          schema,
+          {
+            foo: 'foo!',
+            bar: 'bar!',
+            foobar: 'foobar!',
+          },
+          { scopes: ['bar'] }
+        );
 
         // With ['foo', 'bar'] scopes
-        assertPass(schema, {
-          foo: 'foo!',
-        }, { scopes: ['foo', 'bar'] });
-        assertPass(schema, {
-          bar: 'bar!',
-        }, { scopes: ['foo', 'bar'] });
-        assertPass(schema, {
-          foobar: 'foobar!',
-        }, { scopes: ['foo', 'bar'] });
-        assertPass(schema, {
-          foo: 'foo!',
-          foobar: 'foobar!',
-        }, { scopes: ['foo', 'bar'] });
-        assertPass(schema, {
-          foo: 'foo!',
-          bar: 'bar!',
-          foobar: 'foobar!',
-        }, { scopes: ['foo', 'bar'] });
-
+        assertPass(
+          schema,
+          {
+            foo: 'foo!',
+          },
+          { scopes: ['foo', 'bar'] }
+        );
+        assertPass(
+          schema,
+          {
+            bar: 'bar!',
+          },
+          { scopes: ['foo', 'bar'] }
+        );
+        assertPass(
+          schema,
+          {
+            foobar: 'foobar!',
+          },
+          { scopes: ['foo', 'bar'] }
+        );
+        assertPass(
+          schema,
+          {
+            foo: 'foo!',
+            foobar: 'foobar!',
+          },
+          { scopes: ['foo', 'bar'] }
+        );
+        assertPass(
+          schema,
+          {
+            foo: 'foo!',
+            bar: 'bar!',
+            foobar: 'foobar!',
+          },
+          { scopes: ['foo', 'bar'] }
+        );
       });
     });
-
   });
 
   describe('other cases', () => {

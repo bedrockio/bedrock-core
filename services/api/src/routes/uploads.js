@@ -8,7 +8,7 @@ const router = new Router();
 
 router
   .param('uploadId', async (id, ctx, next) => {
-    const upload = await Upload.findOne({ _id: id, deletedAt: { $exists: false } });
+    const upload = await Upload.findById(id);
     ctx.state.upload = upload;
 
     if (!upload) {

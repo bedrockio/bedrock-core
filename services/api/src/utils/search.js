@@ -34,7 +34,7 @@ function exportValidation(options = {}) {
 function getSearchQuery(body, options = {}) {
   const { keyword, startAt, endAt, ids = [] } = body;
   const { keywordFields = [] } = options;
-  const query = { deletedAt: { $exists: false } };
+  const query = {};
   if (startAt || endAt) {
     query.createdAt = {};
     if (startAt) {

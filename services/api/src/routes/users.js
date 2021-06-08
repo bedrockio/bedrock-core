@@ -19,7 +19,7 @@ router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
   .param('userId', async (id, ctx, next) => {
-    const user = await User.findOne({ _id: id, deletedAt: { $exists: false } });
+    const user = await User.findById(id);
     ctx.state.user = user;
 
     if (!user) {
@@ -105,7 +105,7 @@ router
     ),
     async (ctx) => {
       const { email } = ctx.request.body;
-      const existingUser = await User.findOne({ email, deletedAt: { $exists: false } });
+      const existingUser = await User.findOne({ email });
       if (existingUser) {
         ctx.throw(400, 'A user with that email already exists');
       }
