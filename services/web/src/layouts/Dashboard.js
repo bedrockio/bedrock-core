@@ -6,12 +6,16 @@ import { Layout } from 'components';
 import Protected from 'components/Protected';
 import Organization from 'modals/Organization';
 import Sidebar from './Sidebar';
+import { withSession } from 'stores';
+import { userCanSwitchOrganizations } from 'utils/permissions';
 
 import logo from 'assets/logo.svg';
 import favicon from 'assets/favicon.svg';
 
+@withSession
 export default class DashboardLayout extends React.Component {
   render() {
+    const { user, getOrganization } = this.context;
     return (
       <Sidebar>
         <Sidebar.Menu>
@@ -20,18 +24,20 @@ export default class DashboardLayout extends React.Component {
               <img height="30" src={logo} />
             </NavLink>
             <Layout vertical spread>
-              <Sidebar.Item>
-                <Organization
-                  trigger={
-                    <div>
-                      <Icon name="building" />
-                      Bedrock Inc.
-                      <Icon name="caret-down" className="right" />
-                    </div>
-                  }
-                  size="tiny"
-                />
-              </Sidebar.Item>
+              {userCanSwitchOrganizations(user) && (
+                <Sidebar.Item>
+                  <Organization
+                    trigger={
+                      <div>
+                        <Icon name="building" />
+                        {getOrganization()?.name || 'Select Organization'}
+                        <Icon name="caret-down" className="right" />
+                      </div>
+                    }
+                    size="tiny"
+                  />
+                </Sidebar.Item>
+              )}
               <Layout.Group>
                 <Sidebar.Header>Main Menu</Sidebar.Header>
               </Layout.Group>
