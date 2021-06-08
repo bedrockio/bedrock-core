@@ -19,33 +19,29 @@ async function setupDb() {
 
   try {
     await mongoose.connect(mongoURL, flags);
-  } catch(err) {
+  } catch (err) {
     logger.error(err);
     process.exit(1);
   }
 }
 
-async function createUser(userAttributes = {}) {
+async function createUser(attributes = {}) {
   return await models.User.create({
     email: `${uniqueId('email')}@platform.com`,
     name: 'test user',
-    ...userAttributes,
+    ...attributes,
   });
 }
 
-async function createUserWithRole(scope, role, userAttributes = {}, scopeRef = undefined) {
-  const email = `${uniqueId('email')}@platform.com`;
-  return await models.User.create({
-    email,
-    name: 'test user',
+function createAdminUser(attributes) {
+  return createUser({
+    ...attributes,
     roles: [
       {
-        scope,
-        role,
-        scopeRef,
+        scope: 'global',
+        role: 'superAdmin',
       },
     ],
-    ...userAttributes,
   });
 }
 
@@ -58,6 +54,6 @@ module.exports = {
   request,
   setupDb,
   createUser,
-  createUserWithRole,
+  createAdminUser,
   teardownDb,
 };
