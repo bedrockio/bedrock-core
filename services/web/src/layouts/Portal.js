@@ -5,7 +5,7 @@ import Footer from 'components/Footer';
 import { Layout } from 'components';
 import bem from 'helpers/bem';
 
-import logo from 'assets/bedrock.svg';
+import logo from 'assets/logo.svg';
 
 import './portal.less';
 

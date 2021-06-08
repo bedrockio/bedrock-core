@@ -19,7 +19,7 @@ router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
   .param('userId', async (id, ctx, next) => {
-    const user = await User.findOne({ _id: id, deletedAt: { $exists: false } });
+    const user = await User.findById(id);
     ctx.state.user = user;
 
     if (!user) {
@@ -94,7 +94,7 @@ router
     ),
     async (ctx) => {
       const { email } = ctx.request.body;
-      const existingUser = await User.findOne({ email, deletedAt: { $exists: false } });
+      const existingUser = await User.findOne({ email });
       if (existingUser) {
         ctx.throw(400, 'A user with that email already exists');
       }
@@ -105,14 +105,27 @@ router
       };
     }
   )
-  .patch('/:userId', validateBody(User.getUpdateValidation()), async (ctx) => {
-    const { user } = ctx.state;
-    user.assign(ctx.request.body);
-    await user.save();
-    ctx.body = {
-      data: user,
-    };
-  })
+  .patch(
+    '/:userId',
+    validateBody(
+      User.getUpdateValidation().append({
+        roles: (roles) => {
+          return roles.map((role) => {
+            const { roleDefinition, ...rest } = role;
+            return rest;
+          });
+        },
+      })
+    ),
+    async (ctx) => {
+      const { user } = ctx.state;
+      user.assign(ctx.request.body);
+      await user.save();
+      ctx.body = {
+        data: user,
+      };
+    }
+  )
   .delete('/:userId', async (ctx) => {
     const { user } = ctx.state;
     await user.delete();

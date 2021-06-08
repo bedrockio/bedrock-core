@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header, Table, Image, Label } from 'semantic';
+import { Header, Table, Image, Label, Divider } from 'semantic';
 import { screen } from 'helpers';
 import Menu from './Menu';
 
@@ -16,6 +16,7 @@ export default class ShopOverview extends React.Component {
     return (
       <React.Fragment>
         <Menu {...this.props} />
+        <Divider hidden />
         {/* --- Generator: overview-fields */}
         <Header as="h2">Overview</Header>
         <p>{shop.description}</p>

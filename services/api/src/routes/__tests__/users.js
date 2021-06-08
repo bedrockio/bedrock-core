@@ -77,6 +77,7 @@ describe('/1/users', () => {
       expect(data.lastName).toBe('Yellow');
       expect(data.fullName).toBe('Mellow Yellow');
     });
+
     it('should deny access to non-admins', async () => {
       const user = await createUser({});
       const response = await request(
@@ -219,6 +220,21 @@ describe('/1/users', () => {
       const dbUser = await User.findById(user1.id);
       expect(dbUser.fullName).toEqual('New Name');
     });
+
+    it('should fail when trying to set hashed password', async () => {
+      const admin = await createUserWithRole('global', 'superAdmin');
+      const user = await createUser({ name: 'new name' });
+      const response = await request(
+        'PATCH',
+        `/1/users/${user.id}`,
+        {
+          hashedPassword: 'new hashed password'
+        },
+        { user: admin }
+      );
+      expect(response.status).toBe(401);
+    });
+
   });
 
   describe('DELETE /:user', () => {
@@ -227,9 +243,10 @@ describe('/1/users', () => {
       const user1 = await createUser({ firstName: 'Neo', lastName: 'One' });
       const response = await request('DELETE', `/1/users/${user1.id}`, {}, { user: admin });
       expect(response.status).toBe(204);
-      const dbUser = await User.findById(user1._id);
+      const dbUser = await User.findByIdDeleted(user1.id);
       expect(dbUser.deletedAt).toBeDefined();
     });
+
     it('should deny access to non-admins', async () => {
       const user = await createUser({});
       const user1 = await createUser({ firstName: 'Neo', lastName: 'One' });

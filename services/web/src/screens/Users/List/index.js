@@ -5,7 +5,13 @@ import { Table, Divider, Button, Message, Label } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import { screen } from 'helpers';
-import { Confirm, HelpTip, Breadcrumbs, SearchProvider, Layout } from 'components';
+import {
+  Confirm,
+  HelpTip,
+  Breadcrumbs,
+  SearchProvider,
+  Layout,
+} from 'components';
 import { formatRoles } from 'utils/permissions';
 
 import Filters from 'modals/Filters';
@@ -20,9 +26,9 @@ export default class UserList extends React.Component {
       path: '/1/users/search',
       body: {
         ...rest,
-        ...roles && {
+        ...(roles && {
           'roles.role': roles.map((r) => r.id),
-        }
+        }),
       },
     });
   };
@@ -62,19 +68,27 @@ export default class UserList extends React.Component {
             <React.Fragment>
               <Breadcrumbs active="Users" />
               <Layout horizontal center spread>
-              <h1>Users</h1>
-              <Layout.Group>
-                <Filters onSave={setFilters} filters={filters}>
-                  <Filters.Text label="Search" name="keyword" placeholder="Enter name, email, or user id" />
-                  <Filters.Dropdown label="Role" name="roles" onDataNeeded={this.fetchRoles} multiple />
-                </Filters>
-                <EditUser
-                  trigger={<Button primary content="New User" icon="plus" />}
-                  onSave={reload}
-                />
+                <h1>Users</h1>
+                <Layout.Group>
+                  <Filters onSave={setFilters} filters={filters}>
+                    <Filters.Text
+                      label="Search"
+                      name="keyword"
+                      placeholder="Enter name, email, or user id"
+                    />
+                    <Filters.Dropdown
+                      label="Role"
+                      name="roles"
+                      onDataNeeded={this.fetchRoles}
+                      multiple
+                    />
+                  </Filters>
+                  <EditUser
+                    trigger={<Button primary content="New User" icon="plus" />}
+                    onSave={reload}
+                  />
                 </Layout.Group>
               </Layout>
-              <Divider hidden />
               {users.length === 0 ? (
                 <Message>No users created yet</Message>
               ) : (
@@ -88,13 +102,11 @@ export default class UserList extends React.Component {
                         Name
                       </Table.HeaderCell>
                       <Table.HeaderCell
-                        width={3}
                         onClick={() => setSort('email')}
                         sorted={getSorted('email')}>
                         Email
                       </Table.HeaderCell>
                       <Table.HeaderCell
-                        width={3}
                         onClick={() => setSort('roles')}
                         sorted={getSorted('roles')}>
                         Roles
@@ -140,13 +152,7 @@ export default class UserList extends React.Component {
                           <Table.Cell textAlign="center">
                             <EditUser
                               user={user}
-                              trigger={
-                                <Button
-                                  style={{ marginLeft: '20px' }}
-                                  basic
-                                  icon="edit"
-                                />
-                              }
+                              trigger={<Button basic icon="edit" />}
                               onSave={reload}
                             />
                             <Confirm

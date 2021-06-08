@@ -30,24 +30,29 @@
     },
     "hashedPassword": {
       "type": "String",
-      "access": "private"
+      "readScopes": "none",
+      "writeScopes": "none"
     },
     "loginAttempts": {
       "type": "Number",
-      "access": "private",
-      "default": 0
+      "default": 0,
+      "readScopes": "none",
+      "writeScopes": "none"
     },
     "lastLoginAttemptAt": {
       "type": "Date",
-      "access": "private"
+      "readScopes": "none",
+      "writeScopes": "none"
     },
     "authTokenId": {
       "type": "String",
-      "access": "private"
+      "readScopes": "none",
+      "writeScopes": "none"
     },
     "tempTokenId": {
       "type": "String",
-      "access": "private"
+      "readScopes": "none",
+      "writeScopes": "none"
     }
   }
 }

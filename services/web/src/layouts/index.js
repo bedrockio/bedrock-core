@@ -1,2 +1,6 @@
-export { default as Dashboard } from './Dashboard';
-export { default as Portal } from './Portal';
+import { useLayout } from 'helpers/screen';
+import Dashboard from './Dashboard';
+import Portal from './Portal';
+
+useLayout(Dashboard, 'Dashboard');
+useLayout(Portal, 'Portal');

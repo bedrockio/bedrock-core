@@ -17,7 +17,7 @@ export default class Breadcrumbs extends React.Component {
   render() {
     const { active } = this.props;
     return (
-      <div style={{ marginBottom: '15px' }}>
+      <div style={{ marginBottom: '5px' }}>
         <Breadcrumb size="mini">
           <Breadcrumb.Section link as={Link} to="/">
             Home
@@ -33,9 +33,7 @@ export default class Breadcrumbs extends React.Component {
           })}
           <Breadcrumb.Section active>{active}</Breadcrumb.Section>
         </Breadcrumb>
-        <Layout.Group>
-          {this.props.children}
-        </Layout.Group>
+        <Layout.Group>{this.props.children}</Layout.Group>
       </div>
     );
   }

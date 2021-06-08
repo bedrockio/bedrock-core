@@ -181,7 +181,7 @@ export function withLoadedSession(Component) {
     static contextType = SessionContext;
 
     render() {
-      return this.context.loading ? null : <Component {...this.props} />;
+      return <Component {...this.props} />;
     }
   };
 }

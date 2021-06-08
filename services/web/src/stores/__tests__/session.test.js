@@ -85,7 +85,7 @@ describe('withLoadedSession', () => {
       </SessionProvider>
     );
     expect(container.textContent).toBe('Anonymous');
-    expect(renderCount).toBe(1);
+    expect(renderCount).toBe(2);
   });
 
   it('should display user name', async () => {
@@ -96,7 +96,7 @@ describe('withLoadedSession', () => {
       </SessionProvider>
     );
     expect(container.textContent).toBe('Bob');
-    expect(renderCount).toBe(1);
+    expect(renderCount).toBe(2);
   });
 });
 
