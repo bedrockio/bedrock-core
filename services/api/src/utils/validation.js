@@ -50,9 +50,7 @@ function getArraySchema(obj, options) {
     if (options.unwindArrayFields) {
       return getSchemaForField(obj[0], options);
     } else {
-      return Joi.array().items(
-        getSchemaForField(obj[0], options)
-      );
+      return Joi.array().items(getSchemaForField(obj[0], options));
     }
   } else {
     // Object/constructor notation implies array of anything:

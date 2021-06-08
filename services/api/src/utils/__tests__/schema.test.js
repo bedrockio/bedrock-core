@@ -1027,7 +1027,6 @@ describe('validation', () => {
         ids: ['12345'],
       });
     });
-
   });
 
   describe('search', () => {
@@ -1124,9 +1123,7 @@ describe('validation', () => {
         }),
         User.create({
           order: 2,
-          roles: [
-            { role: 'member', scope: 'global' },
-          ],
+          roles: [{ role: 'member', scope: 'global' }],
         }),
       ]);
 
@@ -1231,10 +1228,14 @@ describe('validation', () => {
         name: 'Barry',
         password: 'fake password',
       });
-      assertPass(schema, {
-        name: 'Barry',
-        password: 'fake password',
-      }, { scopes: ['private'] });
+      assertPass(
+        schema,
+        {
+          name: 'Barry',
+          password: 'fake password',
+        },
+        { scopes: ['private'] }
+      );
     });
 
     it('should require only one of valid scopes', async () => {
@@ -1257,64 +1258,124 @@ describe('validation', () => {
       const schema = User.getUpdateValidation();
 
       // With ['foo'] scopes
-      assertPass(schema, {
-        foo: 'foo!',
-      }, { scopes: ['foo'] });
-      assertFail(schema, {
-        bar: 'bar!',
-      }, { scopes: ['foo'] });
-      assertPass(schema, {
-        foobar: 'foobar!',
-      }, { scopes: ['foo'] });
-      assertPass(schema, {
-        foo: 'foo!',
-        foobar: 'foobar!',
-      }, { scopes: ['foo'] });
-      assertFail(schema, {
-        foo: 'foo!',
-        bar: 'bar!',
-        foobar: 'foobar!',
-      }, { scopes: ['foo'] });
+      assertPass(
+        schema,
+        {
+          foo: 'foo!',
+        },
+        { scopes: ['foo'] }
+      );
+      assertFail(
+        schema,
+        {
+          bar: 'bar!',
+        },
+        { scopes: ['foo'] }
+      );
+      assertPass(
+        schema,
+        {
+          foobar: 'foobar!',
+        },
+        { scopes: ['foo'] }
+      );
+      assertPass(
+        schema,
+        {
+          foo: 'foo!',
+          foobar: 'foobar!',
+        },
+        { scopes: ['foo'] }
+      );
+      assertFail(
+        schema,
+        {
+          foo: 'foo!',
+          bar: 'bar!',
+          foobar: 'foobar!',
+        },
+        { scopes: ['foo'] }
+      );
 
       // With ['bar'] scopes
-      assertFail(schema, {
-        foo: 'foo!',
-      }, { scopes: ['bar'] });
-      assertPass(schema, {
-        bar: 'bar!',
-      }, { scopes: ['bar'] });
-      assertPass(schema, {
-        foobar: 'foobar!',
-      }, { scopes: ['bar'] });
-      assertFail(schema, {
-        foo: 'foo!',
-        foobar: 'foobar!',
-      }, { scopes: ['bar'] });
-      assertFail(schema, {
-        foo: 'foo!',
-        bar: 'bar!',
-        foobar: 'foobar!',
-      }, { scopes: ['bar'] });
+      assertFail(
+        schema,
+        {
+          foo: 'foo!',
+        },
+        { scopes: ['bar'] }
+      );
+      assertPass(
+        schema,
+        {
+          bar: 'bar!',
+        },
+        { scopes: ['bar'] }
+      );
+      assertPass(
+        schema,
+        {
+          foobar: 'foobar!',
+        },
+        { scopes: ['bar'] }
+      );
+      assertFail(
+        schema,
+        {
+          foo: 'foo!',
+          foobar: 'foobar!',
+        },
+        { scopes: ['bar'] }
+      );
+      assertFail(
+        schema,
+        {
+          foo: 'foo!',
+          bar: 'bar!',
+          foobar: 'foobar!',
+        },
+        { scopes: ['bar'] }
+      );
 
       // With ['foo', 'bar'] scopes
-      assertPass(schema, {
-        foo: 'foo!',
-      }, { scopes: ['foo', 'bar'] });
-      assertPass(schema, {
-        bar: 'bar!',
-      }, { scopes: ['foo', 'bar'] });
-      assertPass(schema, {
-        foobar: 'foobar!',
-      }, { scopes: ['foo', 'bar'] });
-      assertPass(schema, {
-        foo: 'foo!',
-        foobar: 'foobar!',
-      }, { scopes: ['foo', 'bar'] });
-      assertPass(schema, {
-        foo: 'foo!',
-        bar: 'bar!',
-        foobar: 'foobar!',
-      }, { scopes: ['foo', 'bar'] });
+      assertPass(
+        schema,
+        {
+          foo: 'foo!',
+        },
+        { scopes: ['foo', 'bar'] }
+      );
+      assertPass(
+        schema,
+        {
+          bar: 'bar!',
+        },
+        { scopes: ['foo', 'bar'] }
+      );
+      assertPass(
+        schema,
+        {
+          foobar: 'foobar!',
+        },
+        { scopes: ['foo', 'bar'] }
+      );
+      assertPass(
+        schema,
+        {
+          foo: 'foo!',
+          foobar: 'foobar!',
+        },
+        { scopes: ['foo', 'bar'] }
+      );
+      assertPass(
+        schema,
+        {
+          foo: 'foo!',
+          bar: 'bar!',
+          foobar: 'foobar!',
+        },
+        { scopes: ['foo', 'bar'] }
+      );
     });
 
     it('should allow search on a nested field', () => {
@@ -1332,9 +1393,8 @@ describe('validation', () => {
       assertPass(schema, {
         roles: {
           role: 'test',
-        }
+        },
       });
     });
   });
-
 });

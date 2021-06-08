@@ -83,26 +83,25 @@ function createSchema(attributes = {}, options = {}) {
       appendSchema: {
         ...searchValidation(searchOptions),
         ...appendSchema,
-      }
+      },
     });
   });
 
   function getKeywordFields() {
-    return Object.keys(attributes)
-      .filter((key) => {
-        let field = attributes[key];
-        // TODO: consolidate with getField later
-        field = Array.isArray(field) ? field[0] : field;
-        return getFieldType(field) === 'String';
-      });
+    return Object.keys(attributes).filter((key) => {
+      let field = attributes[key];
+      // TODO: consolidate with getField later
+      field = Array.isArray(field) ? field[0] : field;
+      return getFieldType(field) === 'String';
+    });
   }
 
   schema.static('search', async function search(body) {
     const { ids, keyword, startAt, endAt, sort, skip, limit, ...rest } = body;
     const query = {
       deletedAt: {
-        $exists: false
-      }
+        $exists: false,
+      },
     };
     if (ids?.length) {
       query._id = { $in: ids };
@@ -149,12 +148,11 @@ function createSchema(attributes = {}, options = {}) {
     }
 
     const [data, total] = await Promise.all([
-      this
-      .find(query)
-      .sort(sort && { [sort.field]: sort.order === 'desc' ? -1 : 1 })
-      .skip(skip)
-      .limit(limit),
-      this.countDocuments(query)
+      this.find(query)
+        .sort(sort && { [sort.field]: sort.order === 'desc' ? -1 : 1 })
+        .skip(skip)
+        .limit(limit),
+      this.countDocuments(query),
     ]);
 
     return {
