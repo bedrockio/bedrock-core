@@ -2,11 +2,14 @@ const fs = require('fs');
 const path = require('path');
 const mongoose = require('mongoose');
 const autopopulate = require('mongoose-autopopulate');
-
-const { startCase, isPlainObject } = require('lodash');
-const { ObjectId } = mongoose.Schema.Types;
-const { getJoiSchema, getMongooseValidator } = require('./validation');
+const { startCase, escapeRegExp, isPlainObject } = require('lodash');
 const { logger } = require('@bedrockio/instrumentation');
+
+const { getJoiSchema, getMongooseValidator, getFieldType } = require('./validation');
+const { searchValidation } = require('./search');
+
+const { ObjectId } = mongoose.Types;
+const { ObjectId: ObjectIdSchemaType } = mongoose.Schema.Types;
 
 const RESERVED_FIELDS = ['id', 'createdAt', 'updatedAt', 'deletedAt'];
 
@@ -67,6 +70,97 @@ function createSchema(attributes = {}, options = {}) {
       appendSchema,
       skipRequired: true,
     });
+  });
+
+  schema.static('getSearchValidation', function getSearchValidation(searchOptions, appendSchema) {
+    return getJoiSchema(attributes, {
+      stripFields: RESERVED_FIELDS,
+      skipRequired: true,
+      skipEmptyCheck: true,
+      unwindArrayFields: true,
+      appendSchema: {
+        ...searchValidation(searchOptions),
+        ...appendSchema,
+      },
+    });
+  });
+
+  function getKeywordFields() {
+    return Object.keys(attributes).filter((key) => {
+      let field = attributes[key];
+      // TODO: consolidate with getField later
+      field = Array.isArray(field) ? field[0] : field;
+      return getFieldType(field) === 'String';
+    });
+  }
+
+  schema.static('search', async function search(body) {
+    const { ids, keyword, startAt, endAt, sort, skip, limit, ...rest } = body;
+    const query = {
+      deletedAt: {
+        $exists: false,
+      },
+    };
+    if (ids?.length) {
+      query._id = { $in: ids };
+    }
+    if (keyword) {
+      const or = [];
+      const keywordFields = getKeywordFields();
+      if (keywordFields.length) {
+        const reg = RegExp(escapeRegExp(keyword), 'i');
+        for (let field of keywordFields) {
+          or.push({
+            [field]: reg,
+          });
+        }
+      }
+      if (ObjectId.isValid(keyword)) {
+        or.push({
+          _id: keyword,
+        });
+      }
+      if (or.length) {
+        query.$or = or;
+      }
+    }
+    if (startAt || endAt) {
+      query.createdAt = {};
+      if (startAt) {
+        query.createdAt.$gte = startAt;
+      }
+      if (endAt) {
+        query.createdAt.$lte = endAt;
+      }
+    }
+    for (let [key, value] of Object.entries(rest)) {
+      // TODO: is this logic ok? If searching on `categories: []`
+      // does this mean return everything or nothing matching categories?
+      if (Array.isArray(value)) {
+        if (value.length) {
+          query[key] = { $in: value };
+        }
+      } else {
+        Object.assign(query, flattenObject(value, [key]));
+      }
+    }
+
+    const [data, total] = await Promise.all([
+      this.find(query)
+        .sort(sort && { [sort.field]: sort.order === 'desc' ? -1 : 1 })
+        .skip(skip)
+        .limit(limit),
+      this.countDocuments(query),
+    ]);
+
+    return {
+      data,
+      meta: {
+        total,
+        skip,
+        limit,
+      },
+    };
   });
 
   schema.method('assign', function assign(fields) {
@@ -238,7 +332,7 @@ function getMongooseType(str) {
 }
 
 function isReferenceField(schema) {
-  return resolveSchema(schema)?.type === ObjectId;
+  return resolveSchema(schema)?.type === ObjectIdSchemaType;
 }
 
 function isAllowedField(schema, scopes = []) {
@@ -288,6 +382,27 @@ function loadModelDir(dirPath) {
     }
   }
   return mongoose.models;
+}
+
+// Util
+
+// Flattens nested objects to a dot syntax.
+// Effectively the inverse of lodash get:
+// { foo: { bar: 3 } } -> { 'foo.bar': 3 }
+function flattenObject(obj, path = []) {
+  let result = {};
+  if (obj) {
+    if (isPlainObject(obj)) {
+      for (let [key, value] of Object.entries(obj)) {
+        result = {
+          ...flattenObject(value, [...path, key]),
+        };
+      }
+    } else {
+      result[path.join('.')] = obj;
+    }
+  }
+  return result;
 }
 
 module.exports = {

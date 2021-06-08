@@ -1,8 +1,6 @@
 const Router = require('@koa/router');
-const Joi = require('joi');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
-const { searchValidation, getSearchQuery, search } = require('../utils/search');
 const { Product } = require('../models');
 
 const router = new Router();
@@ -32,21 +30,11 @@ router
   })
   .post(
     '/search',
-    validateBody({
-      name: Joi.string(),
-      shop: Joi.string(),
-      ...searchValidation(),
-    }),
+    validateBody(
+      Product.getSearchValidation(),
+    ),
     async (ctx) => {
-      const { body } = ctx.request;
-      const { shop } = body;
-      const query = getSearchQuery(body, {
-        keywordFields: ['name'],
-      });
-      if (shop) {
-        query.shop = shop;
-      }
-      const { data, meta } = await search(Product, query, body);
+      const { data, meta } = await Product.search(ctx.request.body);
       ctx.body = {
         data,
         meta,

@@ -888,7 +888,7 @@ describe('validation', () => {
     }).toThrow();
   }
 
-  describe('create validation', () => {
+  describe('getCreateValidation', () => {
     it('should get a basic Joi create schema', () => {
       const User = createTestModel(
         createSchema({
@@ -941,9 +941,47 @@ describe('validation', () => {
         count: 10,
       });
     });
+
+    it('should handle geolocation schema', async () => {
+      const User = createTestModel(
+        createSchema({
+          geoLocation: {
+            type: { type: 'String', default: 'Point' },
+            coordinates: {
+              type: Array,
+              default: [],
+            },
+          },
+        })
+      );
+      const user = await User.create({
+        geoLocation: {
+          coordinates: [35, 95],
+        },
+      });
+      expect(user.toObject()).toEqual({
+        id: user.id,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+        geoLocation: {
+          type: 'Point',
+          coordinates: [35, 95],
+        },
+      });
+      const schema = User.getCreateValidation();
+      assertPass(schema, {
+        geoLocation: {
+          type: 'Line',
+          coordinates: [35, 95],
+        },
+      });
+      assertFail(schema, {
+        geoLocation: 'Line',
+      });
+    });
   });
 
-  describe('update validation', () => {
+  describe('getUpdateValidation', () => {
     it('should skip required fields', () => {
       const User = createTestModel(
         createSchema({
@@ -1313,45 +1351,184 @@ describe('validation', () => {
         );
       });
     });
-  });
 
-  describe('other cases', () => {
-    it('should handle geolocation schema', async () => {
+    it('should allow search on a nested field', () => {
       const User = createTestModel(
         createSchema({
-          geoLocation: {
-            type: { type: 'String', default: 'Point' },
-            coordinates: {
-              type: Array,
-              default: [],
+          roles: [
+            {
+              role: { type: 'String', required: true },
+              scope: { type: 'String', required: true },
             },
+          ],
+        })
+      );
+      const schema = User.getSearchValidation();
+      assertPass(schema, {
+        roles: {
+          role: 'test',
+        },
+      });
+    });
+  });
+
+  describe('getSearchValidation', () => {
+    it('should get a basic search schema allowing empty', () => {
+      const User = createTestModel(
+        createSchema({
+          name: {
+            type: String,
+            required: true,
           },
         })
       );
-      const user = await User.create({
-        geoLocation: {
-          coordinates: [35, 95],
-        },
-      });
-      expect(user.toObject()).toEqual({
-        id: user.id,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt,
-        geoLocation: {
-          type: 'Point',
-          coordinates: [35, 95],
-        },
-      });
-      const schema = User.getCreateValidation();
+      const schema = User.getSearchValidation();
+      expect(Joi.isSchema(schema)).toBe(true);
       assertPass(schema, {
-        geoLocation: {
-          type: 'Line',
-          coordinates: [35, 95],
-        },
+        name: 'foo',
       });
-      assertFail(schema, {
-        geoLocation: 'Line',
+      assertPass(schema, {});
+    });
+
+    it('should mixin default search schema', () => {
+      const User = createTestModel(
+        createSchema({
+          name: {
+            type: String,
+            required: true,
+          },
+        })
+      );
+      const schema = User.getSearchValidation();
+      assertPass(schema, {
+        name: 'foo',
+        keyword: 'keyword',
+        startAt: '2020-01-01T00:00:00',
+        endAt: '2020-01-01T00:00:00',
+        skip: 1,
+        limit: 5,
+        sort: {
+          field: 'createdAt',
+          order: 'desc',
+        },
+        // TODO: validate better?
+        ids: ['12345'],
       });
     });
+  });
+});
+
+describe('search', () => {
+  it('should search on name', async () => {
+    const User = createTestModel(
+      createSchema({
+        name: {
+          type: String,
+          required: true,
+        },
+      })
+    );
+    await Promise.all([User.create({ name: 'Billy' }), User.create({ name: 'Willy' })]);
+    const { data, meta } = await User.search({ name: 'Billy' });
+    expect(data.length).toBe(1);
+    expect(data[0].name).toBe('Billy');
+    expect(meta.total).toBe(1);
+    expect(meta.skip).toBeUndefined();
+    expect(meta.limit).toBeUndefined();
+  });
+
+  it('should search on name as a keyword', async () => {
+    const User = createTestModel(
+      createSchema({
+        name: {
+          type: String,
+          required: true,
+        },
+      })
+    );
+    await Promise.all([User.create({ name: 'Billy' }), User.create({ name: 'Willy' })]);
+    const { data, meta } = await User.search({ keyword: 'billy' });
+    expect(data.length).toBe(1);
+    expect(data[0].name).toBe('Billy');
+    expect(meta.total).toBe(1);
+  });
+
+  it('should search on an array field', async () => {
+    const User = createTestModel(
+      createSchema({
+        order: Number,
+        categories: [
+          {
+            type: String,
+          },
+        ],
+      })
+    );
+    const [user1, user2] = await Promise.all([
+      User.create({ order: 1, categories: ['owner', 'member'] }),
+      User.create({ order: 2, categories: ['owner'] }),
+    ]);
+
+    let result;
+    result = await User.search({
+      categories: ['member'],
+    });
+    expect(result.data.length).toBe(1);
+    expect(result.data[0].id).toBe(user1.id);
+    expect(result.meta.total).toBe(1);
+
+    result = await User.search({
+      categories: [],
+      sort: {
+        field: 'order',
+        order: 'asc',
+      },
+    });
+    expect(result.data.length).toBe(2);
+    expect(result.data[0].id).toBe(user1.id);
+    expect(result.data[1].id).toBe(user2.id);
+    expect(result.meta.total).toBe(2);
+  });
+
+  it('should be able to perform a search on a nested field', async () => {
+    const User = createTestModel(
+      createSchema({
+        order: Number,
+        roles: [
+          {
+            role: { type: 'String', required: true },
+            scope: { type: 'String', required: true },
+          },
+        ],
+      })
+    );
+    const [user1, user2] = await Promise.all([
+      User.create({
+        order: 1,
+        roles: [
+          { role: 'owner', scope: 'global' },
+          { role: 'member', scope: 'global' },
+        ],
+      }),
+      User.create({
+        order: 2,
+        roles: [{ role: 'member', scope: 'global' }],
+      }),
+    ]);
+
+    let result;
+    result = await User.search({
+      roles: {
+        role: 'member',
+      },
+      sort: {
+        field: 'order',
+        order: 'asc',
+      },
+    });
+    expect(result.data.length).toBe(2);
+    expect(result.data[0].id).toBe(user1.id);
+    expect(result.data[1].id).toBe(user2.id);
+    expect(result.meta.total).toBe(2);
   });
 });

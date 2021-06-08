@@ -26,35 +26,37 @@ const createFixtures = async () => {
 
   logger.info('Creating DB fixtures');
 
-  [
-    'jewelry',
-    'toy',
-    'florist',
-    'hairdresser',
-    'barber',
-    'shoe',
-    'clothes',
-    'hardware',
-    'delicatessen',
-    'books',
-    'pets',
-    'chemist',
-    'fishmonger',
-    'butcher',
-    'baker',
-    'supermarket',
-    'grocer',
-    'department',
-    'tea',
-    'music',
-    'optician',
-    'travel',
-    'design',
-  ].forEach(async (name) => {
-    await Category.create({
-      name,
-    });
-  });
+  const categories = await Promise.all(
+    [
+      'jewelry',
+      'toy',
+      'florist',
+      'hairdresser',
+      'barber',
+      'shoe',
+      'clothes',
+      'hardware',
+      'delicatessen',
+      'books',
+      'pets',
+      'chemist',
+      'fishmonger',
+      'butcher',
+      'baker',
+      'supermarket',
+      'grocer',
+      'department',
+      'tea',
+      'music',
+      'optician',
+      'travel',
+      'design',
+    ].map(async (name) => {
+      return await Category.create({
+        name,
+      });
+    })
+  );
 
   const adminUser = await User.create({
     ...adminConfig,
@@ -65,6 +67,7 @@ const createFixtures = async () => {
   const shop = await Shop.create({
     name: 'Demo',
     images: [await createUpload(adminUser, 'Shop.jpg')],
+    categories: [categories[0], categories[1], categories[2]],
   });
 
   for (let i = 0; i < 15; i++) {

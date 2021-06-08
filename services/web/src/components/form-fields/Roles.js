@@ -1,14 +1,6 @@
 import React from 'react';
 import { request } from 'utils/api';
-import {
-  Form,
-  Loader,
-  Popup,
-  Icon,
-  Message,
-  Modal,
-  Button,
-} from 'semantic';
+import { Form, Loader, Popup, Icon, Message, Modal, Button } from 'semantic';
 import SearchDropdown from 'components/SearchDropdown';
 import FetchObject from 'components/FetchObject';
 import { union } from 'lodash';
@@ -31,18 +23,16 @@ export default class Roles extends React.Component {
     this.fetch();
   }
 
-  fetch() {
-    request({
-      method: 'GET',
-      path: `/1/users/roles`,
-    })
-      .then(({ data }) => {
-        const allRoles = data;
-        this.setState({ allRoles, loading: false });
-      })
-      .catch((error) => {
-        this.setState({ error, loading: false });
+  async fetch() {
+    try {
+      const { data } = await request({
+        method: 'GET',
+        path: `/1/users/roles`,
       });
+      this.setState({ roles: data, loading: false });
+    } catch (error) {
+      this.setState({ error, loading: false });
+    }
   }
 
   setGlobalValues(values) {

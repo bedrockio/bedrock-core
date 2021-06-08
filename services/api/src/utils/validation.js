@@ -6,8 +6,11 @@ const FIXED_SCHEMAS = {
 };
 
 function getJoiSchema(attributes, options = {}) {
-  const { appendSchema } = options;
-  let schema = getObjectSchema(attributes, options).min(1);
+  const { appendSchema, skipEmptyCheck } = options;
+  let schema = getObjectSchema(attributes, options);
+  if (!skipEmptyCheck) {
+    schema = schema.min(1);
+  }
   if (appendSchema) {
     if (Joi.isSchema(appendSchema)) {
       schema = schema.concat(appendSchema);
@@ -40,11 +43,21 @@ function getFixedSchema(arg) {
 }
 
 function getArraySchema(obj, options) {
-  let schema = Joi.array();
   if (Array.isArray(obj)) {
-    schema = schema.items(getSchemaForField(obj[0], options));
+    // Array notation allows further specification
+    // of array fields:
+    // tags: [{ name: String }]
+    if (options.unwindArrayFields) {
+      return getSchemaForField(obj[0], options);
+    } else {
+      return Joi.array().items(getSchemaForField(obj[0], options));
+    }
+  } else {
+    // Object/constructor notation implies array of anything:
+    // tags: { type: Array }
+    // tags: Array
+    return Joi.array();
   }
-  return schema;
 }
 
 function getObjectSchema(obj, options) {
@@ -194,6 +207,7 @@ function getFieldType(field) {
 }
 
 module.exports = {
+  getFieldType,
   getJoiSchema,
   getMongooseValidator,
 };
