@@ -66,7 +66,7 @@ export default class Filters extends React.Component {
         onOpen={this.onModalOpen}
         trigger={
           this.hasFilters() ? (
-            <Button as="div" labelPosition="right" style={{ margin: '0 10px' }}>
+            <Button as="div" labelPosition="right">
               <Button basic primary size={size}>
                 <Icon name="filter" />
                 Filter
@@ -76,7 +76,7 @@ export default class Filters extends React.Component {
               </Label>
             </Button>
           ) : (
-            <Button basic primary size={size} style={{ margin: '0 10px' }}>
+            <Button basic primary size={size}>
               <Icon name="filter" />
               Filter
             </Button>

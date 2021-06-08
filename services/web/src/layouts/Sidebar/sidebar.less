@@ -4,23 +4,7 @@
 @menuWidth: 250px;
 @menuPadding: 25px;
 
-// TODO: (@skatey)
-// Using this component needs to overwrite container styles
-// as they are dumb and assume they have the entire width of
-// the page... can these be rewritten to instead use max-width
-// instead of width?
-//
 // TODO: hook this up to vars somehow?
-
-.ui.container {
-  width: auto !important;
-  max-width: 1137px !important;
-
-  @media (min-width: 768px) and (max-width: 1457px) {
-    margin-left: 15px !important;
-    margin-right: 15px !important;
-  }
-}
 
 .sidebar-layout {
   &-menu {
@@ -55,13 +39,16 @@
     }
   }
 
+  &-header:first-child {
+    margin-top: 0;
+  }
+
   &-header {
     text-transform: uppercase;
     font-size: 11px;
     color: #abadb3;
     font-weight: bold;
-    margin-left: 25px;
-    margin-bottom: 5px;
+    margin: 5px 0 5px 25px;
   }
 
   &-link {
@@ -73,6 +60,7 @@
     text-overflow: ellipsis;
     overflow: hidden;
     font-weight: 500;
+    cursor: pointer;
 
     &:hover {
       color: inherit;
@@ -89,7 +77,35 @@
     }
 
     .sidebar-layout-accordion & {
-      padding-left: 3em;
+      padding-left: 40px;
+    }
+  }
+
+  &-item {
+    display: block;
+    margin: 0 23px 15px 23px;
+    padding: 0 2px 0.6em 2px;
+    color: @textColor;
+    border-bottom: 1px solid @borderColor;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-weight: 500;
+    cursor: pointer;
+
+    &:hover {
+      color: inherit;
+      border-color: rgba(34, 36, 38, 0.35);
+    }
+
+    .icon {
+      margin-right: 10px;
+    }
+
+    .right {
+      float: right;
+      top: 3px;
+      margin-right: 5px;
     }
   }
 
@@ -112,7 +128,7 @@
 
     &--offset {
       margin-left: @menuWidth;
-      padding: 20px 15px 0 15px;
+      padding: 20px 25px 0 25px;
     }
   }
 

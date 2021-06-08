@@ -4,7 +4,13 @@ import { Table, Divider, Button, Message } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import { screen } from 'helpers';
-import { Confirm, HelpTip, Breadcrumbs, SearchProvider, Layout } from 'components';
+import {
+  Confirm,
+  HelpTip,
+  Breadcrumbs,
+  SearchProvider,
+  Layout,
+} from 'components';
 
 import Filters from 'modals/Filters';
 import EditShop from 'modals/EditShop';
@@ -60,28 +66,31 @@ export default class ShopList extends React.Component {
                 <h1>Shops</h1>
                 <Layout.Group>
                   <Filters onSave={setFilters} filters={filters}>
-                      {/* --- Generator: filters */}
-                      <Filters.Text label="Search" name="keyword" placeholder="Enter name or shop id" />
-                      <Filters.Dropdown
-                        label="Country"
-                        name="countryCode"
-                        options={countries}
-                        search
-                      />
-                      <Filters.Dropdown
-                        label="Category"
-                        name="category"
-                        onDataNeeded={this.fetchCategories}
-                      />
-                      {/* --- Generator: end */}
-                    </Filters>
-                    <EditShop
-                      trigger={<Button primary content="New Shop" icon="plus" />}
-                      onSave={reload}
+                    {/* --- Generator: filters */}
+                    <Filters.Text
+                      label="Search"
+                      name="keyword"
+                      placeholder="Enter name or shop id"
                     />
-                  </Layout.Group>
-                </Layout>
-              <Divider hidden />
+                    <Filters.Dropdown
+                      label="Country"
+                      name="countryCode"
+                      options={countries}
+                      search
+                    />
+                    <Filters.Dropdown
+                      label="Category"
+                      name="category"
+                      onDataNeeded={this.fetchCategories}
+                    />
+                    {/* --- Generator: end */}
+                  </Filters>
+                  <EditShop
+                    trigger={<Button primary content="New Shop" icon="plus" />}
+                    onSave={reload}
+                  />
+                </Layout.Group>
+              </Layout>
               {shops.length === 0 ? (
                 <Message>No shops created yet</Message>
               ) : (
@@ -127,13 +136,7 @@ export default class ShopList extends React.Component {
                           <Table.Cell textAlign="center">
                             <EditShop
                               shop={shop}
-                              trigger={
-                                <Button
-                                  style={{ marginLeft: '20px' }}
-                                  basic
-                                  icon="edit"
-                                />
-                              }
+                              trigger={<Button basic icon="edit" />}
                               onSave={reload}
                             />
                             <Confirm

@@ -10,7 +10,7 @@
 
 /* Button */
 @verticalMargin: 0em;
-@horizontalMargin: 0.25em;
+@horizontalMargin: 0.4em;
 @backgroundColor: @primaryColor;
 @backgroundImage: none;
 @background: @backgroundColor @backgroundImage;
@@ -48,10 +48,10 @@
 
 /* Icon */
 @iconOpacity: 1;
-@iconDistance: @relative6px;
+@iconDistance: @relative12px;
 @iconTransition: opacity @defaultDuration @defaultEasing;
 
-@iconMargin: 0em @iconDistance 0em -(@iconDistance / 2);
+@iconMargin: 0em @iconDistance 0em -(@iconDistance / 3);
 @rightIconMargin: 0em -(@iconDistance / 2) 0em @iconDistance;
 
 /* Loader */

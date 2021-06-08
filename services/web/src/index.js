@@ -7,8 +7,11 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { SessionProvider } from 'stores';
-import App from './App';
+
+import 'layouts';
 import 'utils/sentry';
+
+import App from './App';
 
 const Wrapper = () => (
   <BrowserRouter>
