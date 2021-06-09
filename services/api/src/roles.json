@@ -10,7 +10,7 @@
     }
   },
   "admin": {
-    "name": "Organization Admin",
+    "name": "Admin",
     "allowScopes": ["organization"],
     "permissions": {
       "users": "read-write",
@@ -19,7 +19,7 @@
     }
   },
   "viewer": {
-    "name": "Organization Viewer",
+    "name": "Viewer",
     "allowScopes": ["organization"],
     "permissions": {
       "users": "read",
