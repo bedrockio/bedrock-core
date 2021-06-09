@@ -1,4 +1,4 @@
-const { setupDb, teardownDb, request, createUpload, createUser } = require('../../utils/testing');
+const { setupDb, teardownDb, request, createUser } = require('../../utils/testing');
 const { Shop } = require('../../models');
 
 beforeAll(async () => {
@@ -49,21 +49,17 @@ describe('/1/shops', () => {
   describe('POST /', () => {
     it('should be able to create shop', async () => {
       const user = await createUser();
-      const upload = await createUpload();
       const response = await request(
         'POST',
         '/1/shops',
         {
           name: 'shop name',
-          images: [upload.id],
         },
         { user }
       );
       const data = response.body.data;
       expect(response.status).toBe(200);
       expect(data.name).toBe('shop name');
-      expect(data.images[0].id).toBe(upload.id);
-      expect(data.images[0].hash).toBe('test');
     });
   });
 
