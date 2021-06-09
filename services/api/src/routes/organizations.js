@@ -18,7 +18,7 @@ router
     }
     return next();
   })
-  .post('/mine/search', authenticate({ type: 'user' }), fetchUser, async (ctx) => {
+  .post('/mine/search', async (ctx) => {
     const { authUser } = ctx.state;
     const { body } = ctx.request;
     const ids = authUser.roles.filter((role) => role.scope === 'organization').map((role) => role.scopeRef);
