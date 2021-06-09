@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header, Table, Image, Label, Divider } from 'semantic';
+import { Header, Table, Divider } from 'semantic';
 import { screen } from 'helpers';
 import Menu from './Menu';
 

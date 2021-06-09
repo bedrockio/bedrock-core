@@ -45,7 +45,7 @@ describe('withSession', () => {
       </SessionProvider>
     );
     waitFor(() => {
-    expect(container.textContent).toBe('Anonymous');
+      expect(container.textContent).toBe('Anonymous');
     });
   });
 
@@ -57,7 +57,7 @@ describe('withSession', () => {
       </SessionProvider>
     );
     waitFor(() => {
-    expect(container.textContent).toBe('Bob');
+      expect(container.textContent).toBe('Bob');
     });
   });
 
@@ -69,8 +69,8 @@ describe('withSession', () => {
       </SessionProvider>
     );
     waitFor(() => {
-    expect(snapshot.user).toBe(null);
-    expect(snapshot.loading).toBe(true);
+      expect(snapshot.user).toBe(null);
+      expect(snapshot.loading).toBe(true);
     });
   });
 });
@@ -85,7 +85,7 @@ describe('withLoadedSession', () => {
       </SessionProvider>
     );
     waitFor(() => {
-    expect(container.textContent).toBe('Anonymous');
+      expect(container.textContent).toBe('Anonymous');
     });
   });
 
@@ -115,7 +115,7 @@ describe('useSession', () => {
       </SessionProvider>
     );
     waitFor(() => {
-    expect(container.textContent).toBe('Anonymous');
+      expect(container.textContent).toBe('Anonymous');
     });
   });
 
