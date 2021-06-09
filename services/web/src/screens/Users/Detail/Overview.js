@@ -26,7 +26,7 @@ export default class UserOverview extends React.Component {
                 </Table.Row>
                 <Table.Row>
                   <Table.Cell>Roles</Table.Cell>
-                  <Table.Cell>{user.roles.join(', ')}</Table.Cell>
+                  <Table.Cell>{user.roles.map((r) => r.roleDefinition.name).join(', ')}</Table.Cell>
                 </Table.Row>
                 <Table.Row>
                   <Table.Cell>Created At</Table.Cell>

@@ -118,11 +118,15 @@ export class SessionProvider extends React.PureComponent {
   loadOrganization = async () => {
     const organizationId = this.getStored('organizationId');
     if (organizationId) {
-      const { data } = await request({
-        method: 'GET',
-        path: `/1/organizations/${organizationId}`,
-      });
-      return data;
+      try {
+        const { data } = await request({
+          method: 'GET',
+          path: `/1/organizations/${organizationId}`,
+        });
+        return data;
+      } catch(err) {
+        this.removeStored('organizationId');
+      }
     }
   };
 

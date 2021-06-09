@@ -14,7 +14,7 @@ export default ({ user, match, onSave }) => {
       <Breadcrumbs link={<Link to="/users">Users</Link>} active={user.name} />
       <Layout horizontal center spread>
         <h1 style={{ textTransform: 'capitalize' }}>
-          {user.name} User
+          {user.name}
         </h1>
         <Layout.Group>
           <EditUser
