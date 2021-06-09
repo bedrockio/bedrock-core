@@ -4,6 +4,7 @@ const path = require('path');
 const os = require('os');
 const crypto = require('crypto');
 const { logger } = require('@bedrockio/instrumentation');
+const mime = require('mime-types');
 
 function uploadLocal(file, hash) {
   const destinationPath = path.join(os.tmpdir(), hash);
@@ -31,8 +32,9 @@ async function uploadGcs(file, hash) {
 }
 
 async function storeUploadedFile(uploadedFile) {
+  const mimeType = uploadedFile.type || mime.lookup(uploadedFile.name);
   const object = {
-    mimeType: uploadedFile.type,
+    mimeType,
     filename: uploadedFile.name,
     hash: crypto.randomBytes(32).toString('hex'),
   };
