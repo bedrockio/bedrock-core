@@ -202,15 +202,18 @@ export default class Roles extends React.Component {
   onSelectChange = (evt, { value: role, ...rest }) => {
     const { roles, organization, organizations } = this.state;
     let { value } = this.props;
-    value = uniqBy([
-      ...value,
-      {
-        role,
-        scope: 'organization',
-        scopeRef: organization.id,
-        roleDefinition: roles[role],
-      },
-    ], (role) => this.getRoleId(role));
+    value = uniqBy(
+      [
+        ...value,
+        {
+          role,
+          scope: 'organization',
+          scopeRef: organization.id,
+          roleDefinition: roles[role],
+        },
+      ],
+      (role) => this.getRoleId(role)
+    );
     this.props.onChange(evt, { value, ...rest });
     this.setState({
       input: 'all',
@@ -296,5 +299,4 @@ export default class Roles extends React.Component {
       />
     );
   }
-
 }

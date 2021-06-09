@@ -148,7 +148,7 @@ export default class UserList extends React.Component {
                           <Table.Cell>
                             {formatDateTime(user.createdAt)}
                           </Table.Cell>
-                          <Table.Cell textAlign="center">
+                          <Table.Cell textAlign="center" singleLine>
                             <EditUser
                               user={user}
                               trigger={<Button basic icon="edit" />}

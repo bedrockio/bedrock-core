@@ -134,7 +134,7 @@ export default class ShopList extends React.Component {
                           <Table.Cell>
                             {formatDateTime(shop.createdAt)}
                           </Table.Cell>
-                          <Table.Cell textAlign="center">
+                          <Table.Cell textAlign="center" singleLine>
                             <EditShop
                               shop={shop}
                               trigger={<Button basic icon="edit" />}
