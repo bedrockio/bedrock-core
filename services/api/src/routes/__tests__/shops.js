@@ -1,5 +1,5 @@
 const { setupDb, teardownDb, request, createUpload, createUser } = require('../../utils/testing');
-const { Shop, Upload } = require('../../models');
+const { Shop } = require('../../models');
 
 beforeAll(async () => {
   await setupDb();
