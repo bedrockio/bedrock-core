@@ -1,4 +1,4 @@
-const { setupDb, teardownDb, request, createUser } = require('../../utils/testing');
+const { setupDb, teardownDb, request, createUpload, createUser } = require('../../utils/testing');
 const { Upload } = require('../../models');
 
 beforeAll(async () => {
@@ -8,17 +8,6 @@ beforeAll(async () => {
 afterAll(async () => {
   await teardownDb();
 });
-
-const createUpload = (user = {}) => {
-  return Upload.create({
-    filename: 'logo.png',
-    rawUrl: 'logo.png',
-    hash: 'test',
-    storageType: 'local',
-    mimeType: 'image/png',
-    ownerId: user.id || 'none',
-  });
-};
 
 describe('/1/uploads', () => {
   describe('POST /', () => {

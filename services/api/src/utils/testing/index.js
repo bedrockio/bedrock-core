@@ -19,7 +19,7 @@ async function setupDb() {
 
   try {
     await mongoose.connect(mongoURL, flags);
-  } catch(err) {
+  } catch (err) {
     logger.error(err);
     process.exit(1);
   }
@@ -30,6 +30,17 @@ async function createUser(userAttributes = {}) {
     email: `${uniqueId('email')}@platform.com`,
     name: 'test user',
     ...userAttributes,
+  });
+}
+
+async function createUpload(user = {}) {
+  return await models.Upload.create({
+    filename: 'logo.png',
+    rawUrl: 'logo.png',
+    hash: 'test',
+    storageType: 'local',
+    mimeType: 'image/png',
+    ownerId: user.id || 'none',
   });
 }
 
@@ -58,6 +69,7 @@ module.exports = {
   request,
   setupDb,
   createUser,
+  createUpload,
   createUserWithRole,
   teardownDb,
 };
