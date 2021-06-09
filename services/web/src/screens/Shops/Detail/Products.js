@@ -111,7 +111,7 @@ export default class ShopProducts extends React.Component {
                                 {product.images[0] && (
                                   <Image
                                     style={{ width: '100%' }}
-                                    src={urlForUpload(product.images[0], true)}
+                                    src={urlForUpload(product.images[0])}
                                   />
                                 )}
                               </Table.Cell>
