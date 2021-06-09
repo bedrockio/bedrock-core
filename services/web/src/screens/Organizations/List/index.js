@@ -24,20 +24,9 @@ export default class OrganizationList extends React.Component {
       path: '/1/organizations/search',
       body: {
         ...rest,
-        ...category && { categories: [category.id] },
+        ...(category && { categories: [category.id] }),
       },
     });
-  };
-
-  fetchCategories = async (query) => {
-    const { data } = await request({
-      method: 'POST',
-      path: '/1/categories/search',
-      body: {
-        keyword: query,
-      },
-    });
-    return data;
   };
 
   render() {
@@ -61,7 +50,9 @@ export default class OrganizationList extends React.Component {
                     <Filters.Text name="name" label="Name" />
                   </Filters>
                   <EditOrganization
-                    trigger={<Button primary content="New Organization" icon="plus" />}
+                    trigger={
+                      <Button primary content="New Organization" icon="plus" />
+                    }
                     onSave={reload}
                   />
                 </Layout.Group>

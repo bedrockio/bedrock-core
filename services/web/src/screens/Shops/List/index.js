@@ -33,20 +33,9 @@ export default class ShopList extends React.Component {
       path: '/1/shops/search',
       body: {
         ...rest,
-        ...category && { categories: [category.id] },
+        ...(category && { categories: [category.id] }),
       },
     });
-  };
-
-  fetchCategories = async (query) => {
-    const { data } = await request({
-      method: 'POST',
-      path: '/1/categories/search',
-      body: {
-        keyword: query,
-      },
-    });
-    return data;
   };
 
   render() {
@@ -82,7 +71,16 @@ export default class ShopList extends React.Component {
                     <Filters.Dropdown
                       label="Category"
                       name="category"
-                      onDataNeeded={this.fetchCategories}
+                      onDataNeeded={async () => {
+                        const { data } = await request({
+                          method: 'POST',
+                          path: '/1/categories/search',
+                          body: {
+                            keyword: query,
+                          },
+                        });
+                        return data;
+                      }}
                     />
                     {/* --- Generator: end */}
                   </Filters>
