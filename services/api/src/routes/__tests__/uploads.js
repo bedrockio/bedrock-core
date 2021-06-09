@@ -82,11 +82,11 @@ describe('/1/uploads', () => {
     });
   });
 
-  describe('GET /:hash', () => {
-    it('should be able to access upload by hash', async () => {
+  describe('GET /:id', () => {
+    it('should be able to access upload by id', async () => {
       const user = await createUser();
       const upload = await createUpload(user);
-      const response = await request('GET', `/1/uploads/${upload.hash}`, {}, { user });
+      const response = await request('GET', `/1/uploads/${upload.id}`, {}, { user });
       expect(response.status).toBe(200);
       expect(response.body.data.filename).toBe('logo.png');
     });
