@@ -101,7 +101,7 @@ function getSchemaForField(field, options = {}) {
     schema = getSchemaForType(type);
   }
 
-  if (field.required && !options.skipRequired) {
+  if (field.required && !field.default && !options.skipRequired) {
     schema = schema.required();
   } else if (field.writeScopes) {
     schema = validateScopes(field.writeScopes);

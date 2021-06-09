@@ -979,6 +979,28 @@ describe('validation', () => {
         geoLocation: 'Line',
       });
     });
+
+    it('should not require a field with a default', () => {
+      const User = createTestModel(
+        createSchema({
+          name: {
+            type: String,
+            required: true,
+          },
+          type: {
+            type: String,
+            required: true,
+            enum: ['foo', 'bar'],
+            default: 'foo',
+          },
+        })
+      );
+      const schema = User.getCreateValidation();
+      expect(Joi.isSchema(schema)).toBe(true);
+      assertPass(schema, {
+        name: 'foo',
+      });
+    });
   });
 
   describe('getUpdateValidation', () => {
