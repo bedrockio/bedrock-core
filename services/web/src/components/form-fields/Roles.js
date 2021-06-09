@@ -254,49 +254,37 @@ export default class Roles extends React.Component {
   renderInput() {
     const { input } = this.state;
     if (input === 'all') {
-      return this.renderAll();
+      return (
+        <Dropdown
+          fluid
+          multiple
+          selection
+          name="roles"
+          value={this.getValues()}
+          options={this.getOptions()}
+          onChange={this.onChange}
+          loading={this.state.loading}
+        />
+      );
     } else if (input === 'search') {
-      return this.renderSearch();
+      return (
+        <SearchDropdown
+          fluid
+          placeholder="Select Organization"
+          onChange={this.onSearchChange}
+          onDataNeeded={this.fetchOrganizations}
+        />
+      );
     } else if (input === 'roles') {
-      return this.renderRoles();
+      return (
+        <Dropdown
+          fluid
+          selection
+          placeholder="Select Role"
+          options={this.getSelectOptions()}
+          onChange={this.onSelectChange}
+        />
+      );
     }
-  }
-
-  renderAll() {
-    return (
-      <Dropdown
-        fluid
-        multiple
-        selection
-        name="roles"
-        value={this.getValues()}
-        options={this.getOptions()}
-        onChange={this.onChange}
-        loading={this.state.loading}
-      />
-    );
-  }
-
-  renderSearch() {
-    return (
-      <SearchDropdown
-        fluid
-        placeholder="Select Organization"
-        onChange={this.onSearchChange}
-        onDataNeeded={this.fetchOrganizations}
-      />
-    );
-  }
-
-  renderRoles() {
-    return (
-      <Dropdown
-        fluid
-        selection
-        placeholder="Select Role"
-        options={this.getSelectOptions()}
-        onChange={this.onSelectChange}
-      />
-    );
   }
 }
