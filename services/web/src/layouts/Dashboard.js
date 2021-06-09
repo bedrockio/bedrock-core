@@ -58,6 +58,12 @@ export default class DashboardLayout extends React.Component {
                     </Sidebar.Link>
                   </Sidebar.Accordion>
                 </Protected>
+                <Protected endpoint="organizations">
+                  <Sidebar.Link to="/organizations">
+                    <Icon name="building" />
+                    Organizations
+                  </Sidebar.Link>
+                </Protected>
               </Layout.Group>
               <Layout.Group>
                 <Sidebar.Divider />
