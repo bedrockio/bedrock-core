@@ -81,7 +81,7 @@ router
   )
   .get('/:userId', async (ctx) => {
     ctx.body = {
-      data: ctx.state.user,
+      data: expandRoles(ctx.state.user),
     };
   })
   .use(requirePermissions({ endpoint: 'users', permission: 'write', scope: 'global' }))
