@@ -29,16 +29,16 @@ router
           total: 0,
         },
       };
-    } else {
-      const { data, meta } = await Organization.search({
-        ids,
-        ...body,
-      });
-      ctx.body = {
-        data,
-        meta,
-      };
+      return;
     }
+    const { data, meta } = await Organization.search({
+      ids,
+      ...body,
+    });
+    ctx.body = {
+      data,
+      meta,
+    };
   })
   .get('/:organizationId', async (ctx) => {
     const organization = ctx.state.organization;
