@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Table, Divider, Button, Message } from 'semantic';
+import { Table, Button, Message } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import { screen } from 'helpers';
@@ -27,14 +27,10 @@ const countries = getData().map(({ code, name }) => ({
 @screen
 export default class ShopList extends React.Component {
   onDataNeeded = async (params) => {
-    const { category, ...rest } = params;
     return await request({
       method: 'POST',
       path: '/1/shops/search',
-      body: {
-        ...rest,
-        ...category && { categories: [category.id] },
-      },
+      body: params,
     });
   };
 
@@ -78,11 +74,6 @@ export default class ShopList extends React.Component {
                       name="countryCode"
                       options={countries}
                       search
-                    />
-                    <Filters.Dropdown
-                      label="Category"
-                      name="category"
-                      onDataNeeded={this.fetchCategories}
                     />
                     {/* --- Generator: end */}
                   </Filters>

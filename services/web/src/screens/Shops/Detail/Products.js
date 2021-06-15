@@ -72,7 +72,7 @@ export default class ShopProducts extends React.Component {
                   {products.length === 0 ? (
                     <Message>No products added yet</Message>
                   ) : (
-                    <Table celled>
+                    <Table sortable celled>
                       <Table.Header>
                         <Table.Row>
                           {/* --- Generator: list-header-cells */}
