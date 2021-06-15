@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { debounce, uniqBy } from 'lodash';
+import { debounce, uniqBy, omit } from 'lodash';
 import { Form } from 'semantic';
 import { request } from 'utils/api';
 
@@ -8,107 +8,48 @@ export default class ReferenceField extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      query: '',
-      ids: [],
-      options: [],
+      data: [],
       loading: false,
     };
-    this.queued = 0;
-  }
-
-  // Lifecycle
-
-  componentDidMount() {
-    const { value } = this.props;
-    if (value) {
-      // Set the parent ids on mount so that it can submit later.
-      // Do this on a timeout so that state conflicts don't occur.
-      setTimeout(() => {
-        const items = this.isMultiple(value) ? value : [value];
-        this.setState({
-          ids: this.mapIds(items),
-          options: this.mapOptions(items),
-        });
-      });
-    }
-  }
-
-  componentDidUpdate(lastProps, lastState) {
-    const { ids } = this.state;
-    if (ids !== lastState.ids) {
-      this.props.onChange({
-        name: this.props.name,
-        value: this.isMultiple() ? ids : ids[0],
-      });
-    }
-  }
-
-  componentWillUnmount() {
-    // Workaround for component re-mounting with an array of
-    // only ids... If we get unmounted here then reset to the
-    // original upload objects. Do this on a timeout so state
-    // conflicts don't occur.
-    const { ids, options } = this.state;
-    if (ids.length) {
-      setTimeout(() => {
-        const items = ids.map((id) => {
-          return options.find((opt) => opt.value === id).item;
-        });
-        this.props.onChange({
-          name: this.props.name,
-          value: this.isMultiple() ? items : items[0],
-        });
-      });
-    }
   }
 
   // Events
 
-  onChange = (evt, { value: ids }) => {
-    if (!this.isMultiple()) {
-      ids = ids.slice(-1);
+  onChange = (evt, { value, ...rest }) => {
+    const { data } = this.state;
+    if (this.isMultiple()) {
+      value = data.filter((item) => value.includes(item.id));
+    } else {
+      value = data.find((item) => item.id === value);
     }
-    this.setState({
-      ids,
-    });
+    this.props.onChange(evt, { value, ...rest });
   };
 
   onSearchChange = (evt, { searchQuery: query }) => {
-    this.setState({
-      query,
-      loading: true,
-    });
     this.search(query);
   };
 
   search = debounce(async (query) => {
     if (query) {
-      const { resource } = this.props;
-      this.queued += 1;
+      const { resource, route } = this.props;
       this.setState({
         loading: true,
       });
       const { data } = await request({
         method: 'POST',
-        path: `/1/${resource}/search`,
+        path: `/1/${resource}${route}`,
         body: {
-          name: query,
+          keyword: query,
           limit: 20,
         },
       });
-      this.queued -= 1;
-      if (this.queued === 0) {
-        const options = uniqBy(
-          [...this.state.options, ...this.mapOptions(data)],
-          'value'
-        );
-        this.setState({
-          options,
-          loading: false,
-        });
-      }
-    } else if (!this.queued) {
       this.setState({
+        data,
+        loading: false,
+      });
+    } else {
+      this.setState({
+        data: [],
         loading: false,
       });
     }
@@ -120,14 +61,28 @@ export default class ReferenceField extends React.Component {
     return Array.isArray(value);
   }
 
-  mapIds(items) {
-    return items.map((item) => item.id);
+  getValue() {
+    const { value } = this.props;
+    if (this.isMultiple()) {
+      return value.map((item) => item.id);
+    } else {
+      return value?.id;
+    }
   }
 
-  mapOptions(items) {
+  getItems() {
+    const { value } = this.props;
+    if (this.isMultiple()) {
+      return value;
+    } else {
+      return value ? [value] : [];
+    }
+  }
+
+  getOptions() {
+    const items = uniqBy([...this.getItems(), ...this.state.data], 'id');
     return items.map((item) => {
       return {
-        item,
         text: item.name,
         value: item.id,
       };
@@ -135,22 +90,23 @@ export default class ReferenceField extends React.Component {
   }
 
   render() {
-    const { icon, color, value, resource, onChange, ...rest } = this.props;
-    const { ids, options, loading } = this.state;
+    const { resource } = this.props;
+    const { loading } = this.state;
+    const props = omit(this.props, Object.keys(ReferenceField.propTypes));
     return (
       <Form.Dropdown
         search
-        multiple
         selection
-        value={ids}
         loading={loading}
-        options={options}
+        value={this.getValue()}
+        options={this.getOptions()}
+        multiple={this.isMultiple()}
         placeholder={`Search ${resource}`}
         noResultsMessage={loading ? 'Loading...' : 'No results.'}
         renderLabel={this.renderLabel}
         onSearchChange={this.onSearchChange}
         onChange={this.onChange}
-        {...rest}
+        {...props}
       />
     );
   }
@@ -168,9 +124,16 @@ export default class ReferenceField extends React.Component {
 ReferenceField.propTypes = {
   icon: PropTypes.string,
   color: PropTypes.string,
+  route: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
+  resource: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object,
+    PropTypes.array,
+  ]),
 };
 
 ReferenceField.defaultProps = {
-  icon: undefined,
-  color: undefined,
+  route: '/search',
 };
