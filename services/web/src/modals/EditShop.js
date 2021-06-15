@@ -4,11 +4,9 @@ import { request } from 'utils/api';
 import AutoFocus from 'components/AutoFocus';
 import { modal } from 'helpers';
 
-// --- Generator: imports
 import UploadsField from 'components/form-fields/Uploads';
 import CategoriesField from 'components/form-fields/Categories';
 import AddressField from 'components/form-fields/Address';
-// --- Generator: end
 
 @modal
 export default class EditShop extends React.Component {
@@ -75,7 +73,7 @@ export default class EditShop extends React.Component {
   render() {
     const { shop, loading, error } = this.state;
     return (
-      <>
+      <React.Fragment>
         <Modal.Header>
           {this.isUpdate() ? `Edit "${shop.name}"` : 'New Shop'}
         </Modal.Header>
@@ -87,7 +85,6 @@ export default class EditShop extends React.Component {
               error={!!error}
               onSubmit={this.onSubmit}>
               {error && <Message error content={error.message} />}
-              {/* --- Generator: fields */}
               <Form.Input
                 required
                 type="text"
@@ -121,7 +118,6 @@ export default class EditShop extends React.Component {
                 name="address"
                 autoComplete="off"
               />
-              {/* --- Generator: end */}
             </Form>
           </AutoFocus>
         </Modal.Content>
@@ -134,7 +130,7 @@ export default class EditShop extends React.Component {
             content={this.isUpdate() ? 'Update' : 'Create'}
           />
         </Modal.Actions>
-      </>
+      </React.Fragment>
     );
   }
 }
