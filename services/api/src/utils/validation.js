@@ -69,6 +69,9 @@ function getObjectSchema(obj, options) {
       // type: { type: String }
       continue;
     }
+    if (field.skipValidation) {
+      field = Joi.any().strip();
+    }
     if (transformField) {
       field = transformField(key, field);
     }

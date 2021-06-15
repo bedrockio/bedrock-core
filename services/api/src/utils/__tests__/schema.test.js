@@ -1001,6 +1001,27 @@ describe('validation', () => {
         name: 'foo',
       });
     });
+
+    it('should allow a flag to skip required', async () => {
+      const User = createTestModel(
+        createSchema({
+          name: {
+            type: String,
+            required: true,
+          },
+          age: {
+            type: Number,
+            required: true,
+            skipValidation: true,
+          },
+        })
+      );
+      const schema = User.getCreateValidation();
+      expect(Joi.isSchema(schema)).toBe(true);
+      assertPass(schema, {
+        name: 'foo',
+      });
+    });
   });
 
   describe('getUpdateValidation', () => {
@@ -1391,6 +1412,34 @@ describe('validation', () => {
           role: 'test',
         },
       });
+    });
+
+    it('should strip validation with skip flag', async () => {
+      const User = createTestModel(
+        createSchema({
+          name: {
+            type: String,
+            required: true,
+          },
+          age: {
+            type: Number,
+            required: true,
+            skipValidation: true,
+            default: 10,
+          },
+        })
+      );
+      const schema = User.getUpdateValidation();
+      expect(Joi.isSchema(schema)).toBe(true);
+      assertPass(schema, {
+        name: 'foo',
+        age: 25,
+      });
+      const { value } = schema.validate({
+        name: 'foo',
+        age: 25,
+      });
+      expect(value.age).toBeUndefined();
     });
   });
 
