@@ -4,6 +4,7 @@ import { Switch, Route } from 'react-router-dom';
 import { Loader, Header } from 'semantic';
 import { Breadcrumbs } from 'components';
 import { request } from 'utils/api';
+import NotFound from '../../NotFound';
 
 import Overview from './Overview';
 
@@ -79,6 +80,7 @@ export default class UserDetail extends React.Component {
             <Overview {...props} {...this.state} onSave={this.onSave} />
           )}
         />
+        <Route component={NotFound} />
       </Switch>
     );
   }
