@@ -79,7 +79,7 @@ export default class EditShop extends React.Component {
         <Modal.Header>
           {this.isUpdate() ? `Edit "${shop.name}"` : 'New Shop'}
         </Modal.Header>
-        <Modal.Content scrolling>
+        <Modal.Content>
           <AutoFocus>
             <Form
               noValidate
