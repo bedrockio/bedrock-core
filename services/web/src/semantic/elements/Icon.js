@@ -25,7 +25,15 @@ const INTERNAL_MAP = {
   delete: 'times',
   setting: 'cog',
   settings: 'cogs',
-  dropdown: 'caret-down',
+  dropdown: (props) => {
+    // Semantic stupidly overrides icons based on className
+    // instead of passing the correct "name" so conditionally
+    // handle here.
+    if (props.className.split(' ').includes('clear')) {
+      return 'times';
+    }
+    return 'caret-down';
+  },
   mail: 'envelope',
 };
 
@@ -58,9 +66,13 @@ export default class Icon extends React.Component {
   }
 
   resolveIcon() {
-    const { name } = this.props;
+    let { name } = this.props;
+    const mapped = INTERNAL_MAP[name];
+    if (mapped) {
+      name = typeof mapped === 'function' ? mapped(this.props) : mapped;
+    }
     return {
-      name: INTERNAL_MAP[name] || name,
+      name,
       url: this.resolveSet(),
     };
   }
