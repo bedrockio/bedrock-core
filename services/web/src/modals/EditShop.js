@@ -109,7 +109,7 @@ export default class EditShop extends React.Component {
                 name="images"
                 label="Images"
                 value={shop.images || []}
-                onChange={(data) => this.setField(null, data)}
+                onChange={this.setField}
                 onError={(error) => this.setState({ error })}
               />
               <AddressField

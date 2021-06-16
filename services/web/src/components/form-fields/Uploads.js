@@ -15,63 +15,29 @@ const MIME_TYPES = {
   zip: 'application/zip,application/octet-stream',
 };
 
-const ALTERNATE_ICONS = {
-  csv: 'excel',
-  zip: 'archive',
+const ICONS = {
+  image: 'file-image',
+  video: 'file-video',
+  audio: 'file-audio',
+  text: 'file-alt',
+  pdf: 'file-pdf',
+  csv: 'file-excel',
+  zip: 'file-archive',
 };
 
 export default class Uploads extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      uploads: [],
       loading: false,
       error: null,
     };
   }
 
-  // Lifecycle
-
-  componentDidMount() {
-    const { value } = this.props;
-    if (value) {
-      // Set the parent ids on mount so that it can submit later.
-      // Do this on a timeout so that state conflicts don't occur.
-      setTimeout(() => {
-        this.setState({
-          uploads: this.isMultiple(value) ? value : [value],
-        });
-      });
-    }
-  }
-
-  componentDidUpdate(lastProps, lastState) {
-    const { uploads } = this.state;
-    if (uploads !== lastState.uploads) {
-      const ids = uploads.map((u) => u.id);
-      this.props.onChange({
-        name: this.props.name,
-        value: this.isMultiple() ? ids : ids[0],
-      });
-    }
-  }
-
-  componentWillUnmount() {
-    // Workaround for component re-mounting with an array of
-    // only ids... If we get unmounted here then reset to the
-    // original upload objects.
-    const { uploads } = this.state;
-    if (uploads.length) {
-      this.props.onChange({
-        name: this.props.name,
-        value: this.isMultiple() ? uploads : uploads[0],
-      });
-    }
-  }
-
   // Events
 
-  onDrop = async (acceptedFiles, rejectedFiles) => {
+  onDrop = async (acceptedFiles, rejectedFiles, evt) => {
+    const { name, value } = this.props;
     try {
       if (!this.isMultiple()) {
         acceptedFiles = acceptedFiles.slice(0, 1);
@@ -89,9 +55,20 @@ export default class Uploads extends React.Component {
         files: acceptedFiles,
       });
       this.setState({
-        uploads: [...this.state.uploads, ...data],
         loading: false,
       });
+
+      if (this.isMultiple()) {
+        this.props.onChange(evt, {
+          name,
+          value: [...value, ...data],
+        });
+      } else {
+        this.props.onChange(evt, {
+          name,
+          value: data[0],
+        });
+      }
     } catch (error) {
       this.setState({
         error,
@@ -103,19 +80,53 @@ export default class Uploads extends React.Component {
 
   // Helpers
 
-  isMultiple(value = this.props.value) {
-    return Array.isArray(value);
+  getUploads() {
+    const { value } = this.props;
+    if (this.isMultiple()) {
+      return value;
+    } else {
+      return value ? [value] : [];
+    }
   }
 
-  delete(upload) {
-    const { uploads } = this.state;
-    const newUploads = uploads.filter((u) => u.id != upload.id);
-    this.setState({ uploads: newUploads });
+  getUploadId(obj) {
+    return obj.id || obj;
+  }
+
+  isMultiple() {
+    return Array.isArray(this.props.value);
+  }
+
+  delete(evt, upload) {
+    const { name, value } = this.props;
+    if (this.isMultiple()) {
+      const removeId = this.getUploadId(upload);
+      this.props.onChange(evt, {
+        name,
+        value: value.filter((obj) => {
+          return this.getUploadId(obj) !== removeId;
+        }),
+      });
+    } else {
+      this.props.onChange(evt, {
+        name,
+        value: null,
+      });
+    }
+  }
+
+  getVisualStyles() {
+    return {
+      objectFit: 'cover',
+      width: '100%',
+      height: '100%',
+    };
   }
 
   render() {
     const { required, label, type } = this.props;
-    const { error, loading, uploads } = this.state;
+    const { error, loading } = this.state;
+    const uploads = this.getUploads();
     return (
       <Form.Field required={required}>
         {label && <label>{label}</label>}
@@ -124,34 +135,29 @@ export default class Uploads extends React.Component {
           (type === 'image' || type === 'video' || type === 'audio' ? (
             <Card.Group itemsPerRow={4}>
               {uploads.map((upload) => (
-                <Card key={upload.id}>
+                <Card key={this.getUploadId(upload)}>
                   {this.renderUpload(upload, type)}
                   <Icon
+                    fitted
                     name="delete"
-                    color="blue"
-                    style={{
-                      cursor: 'pointer',
-                      position: 'absolute',
-                      right: '5px',
-                      top: '5px',
-                      zIndex: 1,
-                    }}
-                    onClick={() => this.delete(upload)}
+                    onClick={(evt) => this.delete(evt, upload)}
                   />
-                  <Card.Content>{upload.filename}</Card.Content>
+                  {upload.filename && (
+                    <div className="caption">{upload.filename}</div>
+                  )}
                 </Card>
               ))}
             </Card.Group>
           ) : (
             <Label.Group color="blue">
               {uploads.map((upload) => (
-                <Label key={upload.id}>
+                <Label key={this.getUploadId(upload)}>
                   {this.renderIconForType()}
-                  {upload.filename}
+                  {upload.filename || 'File'}
                   <Icon
                     name="delete"
                     style={{ cursor: 'pointer' }}
-                    onClick={() => this.delete(upload)}
+                    onClick={(evt) => this.delete(evt, upload)}
                   />
                 </Label>
               ))}
@@ -172,7 +178,7 @@ export default class Uploads extends React.Component {
                 }
                 style={{ cursor: 'pointer', outline: 0 }}>
                 {loading ? (
-                  <Icon name="sync alternate" loading />
+                  <Icon name="sync-alt" loading />
                 ) : (
                   this.renderIconForType()
                 )}
@@ -205,9 +211,9 @@ export default class Uploads extends React.Component {
   renderUpload(upload, type) {
     const src = urlForUpload(upload);
     if (type === 'image') {
-      return <Image key={upload.id} src={src} />;
+      return <Image src={src} style={this.getVisualStyles()} />;
     } else if (type === 'video') {
-      return <video style={{ width: '100%' }} src={src} controls />;
+      return <video src={src} style={this.getVisualStyles()} controls />;
     } else if (type === 'audio') {
       return <audio src={src} controls />;
     }
@@ -215,9 +221,7 @@ export default class Uploads extends React.Component {
 
   renderIconForType() {
     const { type } = this.props;
-    return (
-      <Icon name={`file-${ALTERNATE_ICONS[type] || type || ''} outline`} />
-    );
+    return <Icon name={ICONS[type]} outline />;
   }
 }
 

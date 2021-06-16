@@ -159,7 +159,7 @@ export default class EditProduct extends React.Component {
                 name="images"
                 label="Images"
                 value={product.images || []}
-                onChange={(data) => this.setField(null, data)}
+                onChange={this.setField}
                 onError={(error) => this.setState({ error })}
               />
               {/* --- Generator: end */}
