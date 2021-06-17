@@ -1602,4 +1602,22 @@ describe('search', () => {
     expect(result.data[1].id).toBe(user2.id);
     expect(result.meta.total).toBe(2);
   });
+
+  it('should be able to mixin operator queries', async () => {
+    const User = createTestModel(
+      createSchema({
+        name: {
+          type: String,
+          required: true,
+        },
+      })
+    );
+    await Promise.all([User.create({ name: 'Billy' }), User.create({ name: 'Willy' })]);
+    const { data, meta } = await User.search({ name: { $ne: 'Billy' } });
+    expect(data.length).toBe(1);
+    expect(data[0].name).toBe('Willy');
+    expect(meta.total).toBe(1);
+    expect(meta.skip).toBeUndefined();
+    expect(meta.limit).toBeUndefined();
+  });
 });

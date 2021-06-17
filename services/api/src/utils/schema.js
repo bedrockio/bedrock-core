@@ -137,7 +137,7 @@ function createSchema(attributes = {}, options = {}) {
           query[key] = { $in: value };
         }
       } else {
-        Object.assign(query, flattenObject(value, [key]));
+        Object.assign(query, flattenQuery(value, [key]));
       }
     }
 
@@ -390,16 +390,17 @@ function loadModelDir(dirPath) {
 
 // Util
 
-// Flattens nested objects to a dot syntax.
+// Flattens nested queries to a dot syntax.
 // Effectively the inverse of lodash get:
 // { foo: { bar: 3 } } -> { 'foo.bar': 3 }
-function flattenObject(obj, path = []) {
+// Will not flatten mongo operator objects.
+function flattenQuery(obj, path = []) {
   let result = {};
   if (obj) {
-    if (isPlainObject(obj)) {
+    if (isPlainObject(obj) && !isMongoOperator(obj)) {
       for (let [key, value] of Object.entries(obj)) {
         result = {
-          ...flattenObject(value, [...path, key]),
+          ...flattenQuery(value, [...path, key]),
         };
       }
     } else {
@@ -407,6 +408,12 @@ function flattenObject(obj, path = []) {
     }
   }
   return result;
+}
+
+function isMongoOperator(obj) {
+  return Object.keys(obj).some((key) => {
+    return key.startsWith('$');
+  });
 }
 
 module.exports = {
