@@ -124,8 +124,10 @@ export class SessionProvider extends React.PureComponent {
           path: `/1/organizations/${organizationId}`,
         });
         return data;
-      } catch(err) {
-        this.removeStored('organizationId');
+      } catch (err) {
+        if (err.status < 500) {
+          this.removeStored('organizationId');
+        }
       }
     }
   };
