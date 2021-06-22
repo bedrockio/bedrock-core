@@ -1,4 +1,4 @@
-const { User, Product, Shop, Upload, Category } = require('./models');
+const { User, Product, Shop, Upload, Category, Organization } = require('./models');
 const config = require('@bedrockio/config');
 const { storeUploadedFile } = require('./utils/uploads');
 const { logger } = require('@bedrockio/instrumentation');
@@ -25,6 +25,18 @@ const createFixtures = async () => {
   }
 
   logger.info('Creating DB fixtures');
+
+  await Promise.all([
+    Organization.create({
+      name: 'Bedrock Inc.',
+    }),
+    Organization.create({
+      name: 'Bedrock Institute',
+    }),
+    Organization.create({
+      name: 'Bedrock University',
+    }),
+  ]);
 
   const categories = await Promise.all(
     [

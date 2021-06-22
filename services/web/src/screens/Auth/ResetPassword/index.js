@@ -47,7 +47,7 @@ export default class ResetPassword extends React.Component {
         },
       });
       this.context.setToken(data.token);
-      await this.context.loadUser();
+      await this.context.load();
       this.setState({
         loading: false,
         success: true,

@@ -32,7 +32,7 @@ export default class Login extends React.Component {
         body,
       });
       this.context.setToken(data.token);
-      await this.context.loadUser();
+      await this.context.load();
       this.props.history.push('/');
     } catch (error) {
       this.setState({

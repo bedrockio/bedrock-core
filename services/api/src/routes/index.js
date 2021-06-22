@@ -5,8 +5,9 @@ const products = require('./products');
 const shops = require('./shops');
 const uploads = require('./uploads');
 const invites = require('./invites');
-const categories = require('./categories');
 const status = require('./status');
+const categories = require('./categories');
+const organizations = require('./organizations');
 
 const router = new Router();
 
@@ -16,7 +17,8 @@ router.use('/products', products.routes());
 router.use('/shops', shops.routes());
 router.use('/uploads', uploads.routes());
 router.use('/invites', invites.routes());
-router.use('/categories', categories.routes());
 router.use('/status', status.routes());
+router.use('/categories', categories.routes());
+router.use('/organizations', organizations.routes());
 
 module.exports = router;

@@ -25,11 +25,23 @@ async function setupDb() {
   }
 }
 
-async function createUser(userAttributes = {}) {
+async function createUser(attributes = {}) {
   return await models.User.create({
     email: `${uniqueId('email')}@platform.com`,
     name: 'test user',
-    ...userAttributes,
+    ...attributes,
+  });
+}
+
+function createAdminUser(attributes) {
+  return createUser({
+    ...attributes,
+    roles: [
+      {
+        scope: 'global',
+        role: 'superAdmin',
+      },
+    ],
   });
 }
 
@@ -44,22 +56,6 @@ async function createUpload(user = {}) {
   });
 }
 
-async function createUserWithRole(scope, role, userAttributes = {}, scopeRef = undefined) {
-  const email = `${uniqueId('email')}@platform.com`;
-  return await models.User.create({
-    email,
-    name: 'test user',
-    roles: [
-      {
-        scope,
-        role,
-        scopeRef,
-      },
-    ],
-    ...userAttributes,
-  });
-}
-
 async function teardownDb() {
   await mongoose.disconnect();
 }
@@ -69,7 +65,7 @@ module.exports = {
   request,
   setupDb,
   createUser,
+  createAdminUser,
   createUpload,
-  createUserWithRole,
   teardownDb,
 };

@@ -97,10 +97,9 @@ export default class EditUser extends React.Component {
                   onChange={(e, { value }) => this.setField('password', value)}
                 />
               )}
-
               <Roles
                 value={user.roles || []}
-                onChange={(value) => this.setField('roles', value)}
+                onChange={(e, { value }) => this.setField('roles', value)}
               />
             </Form>
           </AutoFocus>

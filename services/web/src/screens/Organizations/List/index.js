@@ -13,24 +13,19 @@ import {
 } from 'components';
 
 import Filters from 'modals/Filters';
-import EditShop from 'modals/EditShop';
-
-// --- Generator: list-imports
-import { getData } from 'country-list';
-const countries = getData().map(({ code, name }) => ({
-  value: code,
-  text: name,
-  key: code,
-}));
-// --- Generator: end
+import EditOrganization from 'modals/EditOrganization';
 
 @screen
-export default class ShopList extends React.Component {
+export default class OrganizationList extends React.Component {
   onDataNeeded = async (params) => {
+    const { category, ...rest } = params;
     return await request({
       method: 'POST',
-      path: '/1/shops/search',
-      body: params,
+      path: '/1/organizations/search',
+      body: {
+        ...rest,
+        ...(category && { categories: [category.id] }),
+      },
     });
   };
 
@@ -38,7 +33,7 @@ export default class ShopList extends React.Component {
     return (
       <SearchProvider onDataNeeded={this.onDataNeeded}>
         {({
-          items: shops,
+          items: organizations,
           getSorted,
           setSort,
           filters,
@@ -47,53 +42,39 @@ export default class ShopList extends React.Component {
         }) => {
           return (
             <React.Fragment>
-              <Breadcrumbs active="Shops" />
+              <Breadcrumbs active="Organizations" />
               <Layout horizontal center spread>
-                <h1>Shops</h1>
+                <h1>Organizations</h1>
                 <Layout.Group>
                   <Filters onSave={setFilters} filters={filters}>
-                    {/* --- Generator: filters */}
-                    <Filters.Text
-                      label="Search"
-                      name="keyword"
-                      placeholder="Enter name or shop id"
-                    />
-                    <Filters.Dropdown
-                      label="Country"
-                      name="countryCode"
-                      options={countries}
-                      search
-                    />
-                    {/* --- Generator: end */}
+                    <Filters.Text name="name" label="Name" />
                   </Filters>
-                  <EditShop
-                    trigger={<Button primary content="New Shop" icon="plus" />}
+                  <EditOrganization
+                    trigger={
+                      <Button primary content="New Organization" icon="plus" />
+                    }
                     onSave={reload}
                   />
                 </Layout.Group>
               </Layout>
-              {shops.length === 0 ? (
-                <Message>No shops created yet</Message>
+              {organizations.length === 0 ? (
+                <Message>No organizations created yet</Message>
               ) : (
                 <Table celled sortable>
                   <Table.Header>
                     <Table.Row>
-                      {/* --- Generator: list-header-cells */}
                       <Table.HeaderCell
-                        width={3}
-                        onClick={() => setSort('name')}
-                        sorted={getSorted('name')}>
+                        sorted={getSorted('name')}
+                        onClick={() => setSort('name')}>
                         Name
                       </Table.HeaderCell>
-                      <Table.HeaderCell width={3}>Description</Table.HeaderCell>
-                      {/* --- Generator: end */}
                       <Table.HeaderCell
                         onClick={() => setSort('createdAt')}
                         sorted={getSorted('createdAt')}>
                         Created
                         <HelpTip
                           title="Created"
-                          text="This is the date and time the shop was created."
+                          text="This is the date and time the organization was created."
                         />
                       </Table.HeaderCell>
                       <Table.HeaderCell textAlign="center">
@@ -102,34 +83,33 @@ export default class ShopList extends React.Component {
                     </Table.Row>
                   </Table.Header>
                   <Table.Body>
-                    {shops.map((shop) => {
+                    {organizations.map((organization) => {
                       return (
-                        <Table.Row key={shop.id}>
-                          {/* --- Generator: list-body-cells */}
+                        <Table.Row key={organization.id}>
                           <Table.Cell>
-                            <Link to={`/shops/${shop.id}`}>{shop.name}</Link>
+                            <Link to={`/organizations/${organization.id}`}>
+                              {organization.name}
+                            </Link>
                           </Table.Cell>
-                          <Table.Cell>{shop.description}</Table.Cell>
-                          {/* --- Generator: end */}
                           <Table.Cell>
-                            {formatDateTime(shop.createdAt)}
+                            {formatDateTime(organization.createdAt)}
                           </Table.Cell>
-                          <Table.Cell textAlign="center" singleLine>
-                            <EditShop
-                              shop={shop}
+                          <Table.Cell textAlign="center">
+                            <EditOrganization
+                              organization={organization}
                               trigger={<Button basic icon="edit" />}
                               onSave={reload}
                             />
                             <Confirm
                               negative
                               confirmText="Delete"
-                              header={`Are you sure you want to delete "${shop.name}"?`}
+                              header={`Are you sure you want to delete "${organization.name}"?`}
                               content="All data will be permanently deleted"
                               trigger={<Button basic icon="trash" />}
                               onConfirm={async () => {
                                 await request({
                                   method: 'DELETE',
-                                  path: `/1/shops/${shop.id}`,
+                                  path: `/1/organizations/${organization.id}`,
                                 });
                                 reload();
                               }}

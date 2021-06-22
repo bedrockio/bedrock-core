@@ -1,41 +1,60 @@
 import React from 'react';
-import { Modal, Form } from 'semantic';
+import { Modal } from 'semantic';
 import { modal } from 'helpers';
-import { Menu } from 'semantic-ui-react';
-import { Layout } from 'components';
+import { withSession } from 'stores';
+import { request } from 'utils/api';
+import { userHasAccess } from 'utils/permissions';
+import SearchDropdown from 'components/SearchDropdown';
 
 @modal
+@withSession
 export default class OrganizationSelector extends React.Component {
+  fetchOrganizations = async (keyword) => {
+    const { user } = this.context;
+    if (
+      userHasAccess(user, {
+        endpoint: 'organizations',
+        permission: 'read',
+        scope: 'global',
+      })
+    ) {
+      const { data } = await request({
+        method: 'POST',
+        path: '/1/organizations/search',
+        body: {
+          keyword,
+        },
+      });
+      return data;
+    } else {
+      const { data } = await request({
+        method: 'POST',
+        path: '/1/organizations/mine/search',
+        body: {
+          keyword,
+        },
+      });
+      return data;
+    }
+  };
+
+  onChange = (evt, { value }) => {
+    this.context.setOrganization(value);
+    this.props.close();
+  };
+
   render() {
     return (
       <React.Fragment>
         <Modal.Header>Select Organization</Modal.Header>
         <Modal.Content>
-          <Layout style={{ height: '300px' }}>
-            <Form.Input
-              id="id"
-              icon="search"
-              placeholder="Search for organization by name"
-              fluid
-              style={{ marginBottom: '20px' }}
-            />
-            <div style={{ height: 'auto', overflowY: 'auto' }}>
-              <Menu secondary vertical fluid>
-                <Menu.Item as="a" to="#">
-                  Bedrock Inc.
-                </Menu.Item>
-                <Menu.Item as="a" to="#">
-                  Bedrock Institute
-                </Menu.Item>
-                <Menu.Item as="a" to="#">
-                  Bedrock Organization
-                </Menu.Item>
-                <Menu.Item as="a" to="#">
-                  Bedrock University
-                </Menu.Item>
-              </Menu>
-            </div>
-          </Layout>
+          <SearchDropdown
+            fluid
+            clearable
+            value={this.context.getOrganization()}
+            onDataNeeded={this.fetchOrganizations}
+            onChange={this.onChange}
+          />
         </Modal.Content>
       </React.Fragment>
     );
