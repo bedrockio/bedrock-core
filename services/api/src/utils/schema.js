@@ -5,7 +5,7 @@ const autopopulate = require('mongoose-autopopulate');
 const { startCase, escapeRegExp, isPlainObject } = require('lodash');
 const { logger } = require('@bedrockio/instrumentation');
 
-const { getJoiSchema, getMongooseValidator, getFieldType } = require('./validation');
+const { getJoiSchema, getMongooseValidator } = require('./validation');
 const { searchValidation } = require('./search');
 
 const { ObjectId } = mongoose.Types;
@@ -85,15 +85,6 @@ function createSchema(attributes = {}, options = {}) {
     });
   });
 
-  function getKeywordFields() {
-    return Object.keys(attributes).filter((key) => {
-      let field = attributes[key];
-      // TODO: consolidate with getField later
-      field = Array.isArray(field) ? field[0] : field;
-      return getFieldType(field) === 'String';
-    });
-  }
-
   schema.static('search', async function search(body) {
     const { ids, keyword, startAt, endAt, sort, skip, limit, ...rest } = body;
     const query = {};
@@ -101,23 +92,12 @@ function createSchema(attributes = {}, options = {}) {
       query._id = { $in: ids };
     }
     if (keyword) {
-      const or = [];
-      const keywordFields = getKeywordFields();
-      if (keywordFields.length) {
-        const reg = RegExp(escapeRegExp(keyword), 'i');
-        for (let field of keywordFields) {
-          or.push({
-            [field]: reg,
-          });
-        }
-      }
       if (ObjectId.isValid(keyword)) {
-        or.push({
-          _id: keyword,
-        });
-      }
-      if (or.length) {
-        query.$or = or;
+        query.$or = [{ $text: { $search: keyword } }, { _id: keyword }];
+      } else {
+        query.$text = {
+          $search: keyword,
+        };
       }
     }
     if (startAt || endAt) {

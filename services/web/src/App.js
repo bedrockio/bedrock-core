@@ -20,6 +20,7 @@ import ResetPassword from 'screens/Auth/ResetPassword';
 import Login from 'screens/Auth/Login';
 import Logout from 'screens/Auth/Logout';
 import Signup from 'screens/Auth/Signup';
+import Organizations from 'screens/Organizations';
 
 const App = () => (
   <Switch>
@@ -27,6 +28,7 @@ const App = () => (
     <Protected path="/shops/:id?" allowed={Shops} />
     <Protected path="/settings" allowed={Settings} exact />
     <Protected path="/users/invites" allowed={Invites} exact />
+    <Protected path="/organizations/:id?" allowed={Organizations} />
     <Protected path="/users/:id?" allowed={Users} />
     <Route path="/docs/ui" component={Components} exact />
     <Route path="/docs/:id?" component={Docs} />

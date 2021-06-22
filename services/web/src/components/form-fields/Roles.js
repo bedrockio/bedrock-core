@@ -1,269 +1,290 @@
 import React from 'react';
+import { once, uniq, uniqBy } from 'lodash';
 import { request } from 'utils/api';
-import { Form, Loader, Popup, Icon, Message, Modal, Button } from 'semantic';
+import { Form, Dropdown, Popup, Icon, Message } from 'semantic';
 import SearchDropdown from 'components/SearchDropdown';
-import FetchObject from 'components/FetchObject';
-import { union } from 'lodash';
+
+const fetchRoles = once(async () => {
+  const { data } = await request({
+    method: 'GET',
+    path: `/1/users/roles`,
+  });
+  return data;
+});
 
 export default class Roles extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      allRoles: null,
-      allOrganizations: null,
+      input: 'all',
       error: null,
+      roles: null,
       loading: true,
-      roles: props.value,
-      scopedOrganizationIds: this.getScopeRefs(props.value, 'organization'),
-      showAddOrganizationModal: false,
+      organizations: [],
     };
   }
 
   componentDidMount() {
-    this.fetch();
+    this.fetchRoles();
   }
 
-  async fetch() {
+  fetchRoles = async () => {
     try {
-      const { data } = await request({
-        method: 'GET',
-        path: `/1/users/roles`,
+      this.setState({
+        loading: true,
       });
-      this.setState({ roles: data, loading: false });
+      const roles = await fetchRoles();
+      const organizations = await this.fetchRequiredOrganizations();
+      this.setState({
+        roles,
+        organizations,
+        loading: false,
+      });
     } catch (error) {
-      this.setState({ error, loading: false });
+      this.setState({
+        error,
+        loading: false,
+      });
     }
-  }
+  };
 
-  setGlobalValues(values) {
-    const otherRoles = this.state.roles.filter(
-      (role) => role.scope !== 'global'
-    );
-    const roles = otherRoles.concat(
-      values.map((value) => {
-        return {
-          scope: 'global',
-          role: value,
-        };
-      })
-    );
-    this.setState({
-      roles,
-    });
-    this.props.onChange(roles);
-  }
-
-  getGlobalValues() {
-    return this.state.roles
-      .filter((role) => role.scope === 'global')
-      .map((role) => role.role);
-  }
-
-  getScopedValues(scope, scopeRef) {
-    return this.state.roles
-      .filter((role) => role.scope === scope && role.scopeRef === scopeRef)
-      .map((role) => role.role);
-  }
-
-  setScopedValues(scope, scopeRef, values) {
-    const otherRoles = this.state.roles.filter(
-      (role) => !(role.scope === scope && role.scopeRef === scopeRef)
-    );
-    const roles = otherRoles.concat(
-      values.map((value) => {
-        return {
-          scope,
-          scopeRef,
-          role: value,
-        };
-      })
-    );
-    this.setState({
-      roles,
-    });
-    this.props.onChange(roles);
-  }
-
-  getScopeRefs(roles, scope) {
-    return union(
-      roles.filter((role) => role.scope === scope).map((role) => role.scopeRef)
-    );
-  }
-
-  fetchOrganizations = async () => {
+  fetchOrganizations = async (keyword) => {
     const { data } = await request({
       method: 'POST',
       path: '/1/organizations/search',
-      body: {},
+      body: {
+        keyword,
+      },
     });
     return data;
   };
 
-  addOrganizationScope() {
-    const { currentOrganization, scopedOrganizationIds } = this.state;
-    scopedOrganizationIds.push(currentOrganization.id);
-    this.setState({ scopedOrganizationIds });
+  fetchRequiredOrganizations = async () => {
+    const { value } = this.props;
+    const ids = uniq(
+      value
+        .filter((role) => {
+          return role.scope === 'organization';
+        })
+        .map((role) => {
+          return role.scopeRef;
+        })
+    );
+    if (ids.length) {
+      const { data } = await request({
+        method: 'POST',
+        path: '/1/organizations/search',
+        body: {
+          ids,
+        },
+      });
+      return data;
+    }
+    return [];
+  };
+
+  // Consolidated roles dropdown
+
+  onChange = (evt, { value, ...rest }) => {
+    if (value.includes('add')) {
+      this.setState({
+        input: 'search',
+      });
+    } else {
+      const { roles } = this.state;
+      value = value.map((value) => {
+        const [scope, role, scopeRef] = value.split(':');
+        return {
+          scope,
+          role,
+          scopeRef,
+          roleDefinition: roles[role],
+        };
+      });
+      this.props.onChange(evt, { value, ...rest });
+    }
+  };
+
+  getValues() {
+    if (this.state.loading) {
+      return [];
+    }
+    return this.props.value.map((role) => this.getRoleId(role));
   }
 
-  getOptionsForScope(scope) {
-    const { allRoles } = this.state;
-    return Object.keys(allRoles)
-      .map((key) => {
-        return {
-          ...allRoles[key],
-          id: key,
-        };
+  getOptions() {
+    return [
+      ...this.getGlobalOptions(),
+      ...this.getOrganizationOptions(),
+      {
+        text: 'Add Organization Role',
+        value: 'add',
+      },
+    ];
+  }
+
+  getGlobalOptions() {
+    const { roles } = this.state;
+    return Object.entries(roles || {})
+      .filter(([, role]) => {
+        return role.allowScopes.includes('global');
       })
-      .filter((role) => role.allowScopes.includes(scope))
-      .map((role) => {
+      .map(([id, role]) => {
         return {
-          value: role.id,
-          key: role.id,
+          value: `global:${id}`,
+          text: (
+            <React.Fragment>
+              <Icon name="globe" />
+              {role.name}
+            </React.Fragment>
+          ),
+        };
+      });
+  }
+
+  getOrganizationOptions() {
+    if (this.state.loading) {
+      return [];
+    }
+    const { value } = this.props;
+    const { organizations } = this.state;
+    return value
+      .filter((role) => {
+        return role.scope === 'organization';
+      })
+      .map((role) => {
+        const org = organizations.find((org) => {
+          return org.id === role.scopeRef;
+        });
+        return {
+          value: this.getRoleId(role),
+          text: (
+            <React.Fragment>
+              <Icon name="building" />
+              {org.name} {role.roleDefinition.name}
+            </React.Fragment>
+          ),
+        };
+      });
+  }
+
+  getRoleId(role) {
+    return [role.scope, role.role, role.scopeRef]
+      .filter((str) => str)
+      .join(':');
+  }
+
+  // Organization search dropdown
+
+  onSearchChange = (evt, { value: organization }) => {
+    this.setState({
+      input: 'roles',
+      organization,
+    });
+  };
+
+  // Select role dropdown
+
+  getSelectOptions() {
+    const { roles } = this.state;
+    return Object.entries(roles || {})
+      .filter(([, role]) => {
+        return role.allowScopes.includes('organization');
+      })
+      .map(([id, role]) => {
+        return {
+          value: id,
           text: role.name,
         };
       });
   }
 
+  onSelectChange = (evt, { value: role, ...rest }) => {
+    const { roles, organization, organizations } = this.state;
+    let { value } = this.props;
+    value = uniqBy(
+      [
+        ...value,
+        {
+          role,
+          scope: 'organization',
+          scopeRef: organization.id,
+          roleDefinition: roles[role],
+        },
+      ],
+      (role) => this.getRoleId(role)
+    );
+    this.props.onChange(evt, { value, ...rest });
+    this.setState({
+      input: 'all',
+      organization: null,
+      organizations: uniqBy([...organizations, organization], (org) => org.id),
+    });
+  };
+
   render() {
-    const {
-      error,
-      loading,
-      scopedOrganizationIds,
-      showAddOrganizationModal,
-    } = this.state;
-    const { enableOrganizationScopes } = this.props;
-    if (loading) return <Loader />;
-    if (error) return <Message error content={error.message} />;
+    const { error } = this.state;
+    if (error) {
+      return <Message error content={error.message} />;
+    }
     return (
-      <>
-        <Form.Dropdown
-          name="globalRoles"
-          label={
-            <label>
-              Global Roles
-              <Popup
-                content="Global scoped roles give a user permissions across all organizations."
-                on="click"
-                trigger={
-                  <Icon
-                    style={{
-                      marginLeft: '5px',
-                      cursor: 'pointer',
-                      color: '#cccccc',
-                    }}
-                    name="question-circle"
-                  />
-                }
+      <Form.Field>
+        <label htmlFor="roles">
+          Roles
+          <Popup
+            content="Roles may be global or scoped to an organization."
+            on="click"
+            trigger={
+              <Icon
+                style={{
+                  marginLeft: '5px',
+                  cursor: 'pointer',
+                  color: '#cccccc',
+                }}
+                name="question-circle"
               />
-            </label>
-          }
+            }
+          />
+        </label>
+        {this.renderInput()}
+      </Form.Field>
+    );
+  }
+
+  renderInput() {
+    const { input } = this.state;
+    if (input === 'all') {
+      return (
+        <Dropdown
+          fluid
+          multiple
+          selection
+          name="roles"
+          value={this.getValues()}
+          options={this.getOptions()}
+          onChange={this.onChange}
+          loading={this.state.loading}
+        />
+      );
+    } else if (input === 'search') {
+      return (
+        <SearchDropdown
+          fluid
+          placeholder="Select Organization"
+          onChange={this.onSearchChange}
+          onDataNeeded={this.fetchOrganizations}
+        />
+      );
+    } else if (input === 'roles') {
+      return (
+        <Dropdown
           fluid
           selection
-          multiple
-          value={this.getGlobalValues()}
-          options={this.getOptionsForScope('global')}
-          onChange={(e, { value }) => this.setGlobalValues(value)}
+          placeholder="Select Role"
+          options={this.getSelectOptions()}
+          onChange={this.onSelectChange}
         />
-        {scopedOrganizationIds.map((organizationId) => {
-          const name = `organization-${organizationId}`;
-          return (
-            <FetchObject
-              key={name}
-              id={organizationId}
-              endpoint="organizations">
-              {(organization) => {
-                return (
-                  <Form.Dropdown
-                    name={name}
-                    label={
-                      <>
-                        {organization.name} Organization Roles
-                        <Popup
-                          content="Organization scoped roles give a user permissions for a single organization (overrides locations)."
-                          on="click"
-                          trigger={
-                            <Icon
-                              style={{
-                                marginLeft: '5px',
-                                cursor: 'pointer',
-                                color: '#cccccc',
-                              }}
-                              name="help circle"
-                            />
-                          }
-                        />
-                      </>
-                    }
-                    fluid
-                    selection
-                    multiple
-                    value={this.getScopedValues('organization', organizationId)}
-                    options={this.getOptionsForScope('organization')}
-                    onChange={(e, { value }) =>
-                      this.setScopedValues(
-                        'organization',
-                        organizationId,
-                        value
-                      )
-                    }
-                  />
-                );
-              }}
-            </FetchObject>
-          );
-        })}
-        <Modal
-          open={showAddOrganizationModal}
-          onClose={() => this.setState({ showAddOrganizationModal: false })}
-          content={
-            <Modal.Content>
-              <Form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  this.addOrganizationScope();
-                  this.setState({ showAddOrganizationModal: false });
-                }}>
-                <Form.Field>
-                  <label>Select Organization</label>
-                  <SearchDropdown
-                    onChange={(e, { value }) => {
-                      this.setState({ currentOrganization: value });
-                    }}
-                    fluid
-                    onDataNeeded={this.fetchOrganizations}
-                    search={false}
-                    value={this.state.currentOrganization}
-                  />
-                </Form.Field>
-                <Button
-                  primary
-                  submit
-                  content="Add"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    this.addOrganizationScope();
-                    this.setState({ showAddOrganizationModal: false });
-                  }}
-                />
-              </Form>
-            </Modal.Content>
-          }
-          size="tiny"
-          on="click"
-        />
-        {enableOrganizationScopes && (
-          <Button
-            onClick={(e) => {
-              e.preventDefault();
-              this.setState({ showAddOrganizationModal: true });
-            }}
-            basic
-            icon="plus"
-            content="Add Organization Scope"
-            size="tiny"
-          />
-        )}
-      </>
-    );
+      );
+    }
   }
 }

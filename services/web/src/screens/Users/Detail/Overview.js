@@ -16,8 +16,8 @@ export default class UserOverview extends React.Component {
           <Loader active>Loading</Loader>
         ) : (
           <React.Fragment>
-            <Divider hidden />
-            <Header as="h2">Details</Header>
+            <Header as="h1">{user.fullName}</Header>
+            <Header as="h3">Details</Header>
             <Table definition>
               <Table.Body>
                 <Table.Row>
@@ -26,7 +26,7 @@ export default class UserOverview extends React.Component {
                 </Table.Row>
                 <Table.Row>
                   <Table.Cell>Roles</Table.Cell>
-                  <Table.Cell>{user.roles.join(', ')}</Table.Cell>
+                  <Table.Cell>{user.roles.map((r) => r.roleDefinition.name).join(', ')}</Table.Cell>
                 </Table.Row>
                 <Table.Row>
                   <Table.Cell>Created At</Table.Cell>

@@ -17,7 +17,7 @@ function getToken(invite) {
 function sendInvite(sender, invite) {
   return sendTemplatedMail({
     to: invite.email,
-    subject: `${sender.name} has invited you to join {{appName}}`,
+    subject: `${sender.fullName} has invited you to join {{appName}}`,
     template: 'invite.md',
     sender,
     token: getToken(invite),

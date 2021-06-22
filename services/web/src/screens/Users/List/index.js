@@ -1,7 +1,7 @@
 import React from 'react';
 import { memoize } from 'lodash';
 import { Link } from 'react-router-dom';
-import { Table, Divider, Button, Message, Label } from 'semantic';
+import { Table, Button, Message, Label } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import { screen } from 'helpers';
@@ -96,8 +96,9 @@ export default class UserList extends React.Component {
                   <Table.Header>
                     <Table.Row>
                       <Table.HeaderCell
-                        onClick={() => setSort('name')}
-                        sorted={getSorted('name')}>
+                        width={3}
+                        onClick={() => setSort('lastName')}
+                        sorted={getSorted('lastName')}>
                         Name
                       </Table.HeaderCell>
                       <Table.HeaderCell
@@ -129,7 +130,7 @@ export default class UserList extends React.Component {
                       return (
                         <Table.Row key={user.id}>
                           <Table.Cell>
-                            <Link to={`/users/${user.id}`}>{user.name}</Link>
+                            <Link to={`/users/${user.id}`}>{user.fullName}</Link>
                           </Table.Cell>
                           <Table.Cell>{user.email}</Table.Cell>
                           <Table.Cell>
@@ -148,7 +149,7 @@ export default class UserList extends React.Component {
                           <Table.Cell>
                             {formatDateTime(user.createdAt)}
                           </Table.Cell>
-                          <Table.Cell textAlign="center">
+                          <Table.Cell textAlign="center" singleLine>
                             <EditUser
                               user={user}
                               trigger={<Button basic icon="edit" />}
@@ -157,7 +158,7 @@ export default class UserList extends React.Component {
                             <Confirm
                               negative
                               confirmText="Delete"
-                              header={`Are you sure you want to delete "${user.name}"?`}
+                              header={`Are you sure you want to delete "${user.fullName}"?`}
                               content="All data will be permanently deleted"
                               trigger={<Button basic icon="trash" />}
                               onConfirm={async () => {

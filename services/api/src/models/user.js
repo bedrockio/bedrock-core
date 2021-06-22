@@ -31,6 +31,10 @@ schema.method('verifyLoginAttempts', function verifyLoginAttempts() {
   return dt >= threshold;
 });
 
+schema.virtual('fullName').get(function getFullName() {
+  return [this.firstName, this.lastName].join(' ');
+});
+
 schema.virtual('password').set(function setPassword(password) {
   this._password = password;
 });
@@ -42,6 +46,12 @@ schema.pre('save', async function preSave(next) {
     delete this._password;
   }
   return next();
+});
+
+schema.index({
+  firstName: 'text',
+  lastName: 'text',
+  email: 'text',
 });
 
 module.exports = mongoose.models.User || mongoose.model('User', schema);

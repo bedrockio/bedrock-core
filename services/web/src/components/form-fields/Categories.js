@@ -9,7 +9,7 @@ export default class Categories extends React.Component {
       method: 'POST',
       path: '/1/categories/search',
       body: {
-        name: query,
+        keyword: query,
       },
     });
     return data;

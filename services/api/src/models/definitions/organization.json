@@ -1,6 +1,5 @@
 {
   "attributes": {
-    "name": { "type": "String", "trim": true, "required": "true" },
-    "deletedAt": { "type": "Date" }
+    "name": { "type": "String", "trim": true, "required": "true" }
   }
 }
