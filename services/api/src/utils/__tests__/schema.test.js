@@ -1501,8 +1501,7 @@ describe('search', () => {
     );
     await Promise.all([User.create({ name: 'Billy' }), User.create({ name: 'Willy' })]);
     const { data, meta } = await User.search({ name: 'Billy' });
-    expect(data.length).toBe(1);
-    expect(data[0].name).toBe('Billy');
+    expect(data).toMatchObject([{ name: 'Billy' }]);
     expect(meta.total).toBe(1);
     expect(meta.skip).toBeUndefined();
     expect(meta.limit).toBeUndefined();
@@ -1519,8 +1518,7 @@ describe('search', () => {
     );
     await Promise.all([User.create({ name: 'Billy' }), User.create({ name: 'Willy' })]);
     const { data, meta } = await User.search({ keyword: 'billy' });
-    expect(data.length).toBe(1);
-    expect(data[0].name).toBe('Billy');
+    expect(data).toMatchObject([{ name: 'Billy' }]);
     expect(meta.total).toBe(1);
   });
 
@@ -1544,8 +1542,7 @@ describe('search', () => {
     result = await User.search({
       categories: ['member'],
     });
-    expect(result.data.length).toBe(1);
-    expect(result.data[0].id).toBe(user1.id);
+    expect(result.data).toMatchObject([{ id: user1.id }]);
     expect(result.meta.total).toBe(1);
 
     result = await User.search({
@@ -1555,9 +1552,7 @@ describe('search', () => {
         order: 'asc',
       },
     });
-    expect(result.data.length).toBe(2);
-    expect(result.data[0].id).toBe(user1.id);
-    expect(result.data[1].id).toBe(user2.id);
+    expect(result.data).toMatchObject([{ id: user1.id }, { id: user2.id }]);
     expect(result.meta.total).toBe(2);
   });
 
@@ -1597,9 +1592,7 @@ describe('search', () => {
         order: 'asc',
       },
     });
-    expect(result.data.length).toBe(2);
-    expect(result.data[0].id).toBe(user1.id);
-    expect(result.data[1].id).toBe(user2.id);
+    expect(result.data).toMatchObject([{ id: user1.id }, { id: user2.id }]);
     expect(result.meta.total).toBe(2);
   });
 
@@ -1681,7 +1674,6 @@ describe('search', () => {
     const { data, meta } = await User.search({
       $or: [{ name: 'Billy' }, { age: 10 }],
     });
-    expect(data.length).toBe(2);
     expect(data).toMatchObject([
       { name: 'Billy', age: 20 },
       { name: 'Chilly', age: 10 },
@@ -1698,8 +1690,11 @@ describe('search', () => {
     );
     await Promise.all([User.create({ name: 'Billy' }), User.create({ name: 'Willy' })]);
     const { data, meta } = await User.search({ name: { $ne: 'Billy' } });
-    expect(data.length).toBe(1);
-    expect(data[0].name).toBe('Willy');
+    expect(data).toMatchObject([
+      {
+        name: 'Willy',
+      },
+    ]);
     expect(meta.total).toBe(1);
     expect(meta.skip).toBeUndefined();
     expect(meta.limit).toBeUndefined();
