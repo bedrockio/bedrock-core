@@ -1,16 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Table, Button, Message } from 'semantic';
+import { Table, Button, Message, Confirm } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import { screen } from 'helpers';
-import {
-  Confirm,
-  HelpTip,
-  Breadcrumbs,
-  SearchProvider,
-  Layout,
-} from 'components';
+import { HelpTip, Breadcrumbs, SearchProvider, Layout } from 'components';
 
 import Filters from 'modals/Filters';
 import EditOrganization from 'modals/EditOrganization';
@@ -102,7 +96,7 @@ export default class OrganizationList extends React.Component {
                             />
                             <Confirm
                               negative
-                              confirmText="Delete"
+                              confirmButton="Delete"
                               header={`Are you sure you want to delete "${organization.name}"?`}
                               content="All data will be permanently deleted"
                               trigger={<Button basic icon="trash" />}

@@ -1,10 +1,18 @@
 import React from 'react';
-import { Table, Message, Loader, Image, Button, Header } from 'semantic';
+import {
+  Table,
+  Message,
+  Loader,
+  Image,
+  Button,
+  Header,
+  Confirm,
+} from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import { screen } from 'helpers';
 import { urlForUpload } from 'utils/uploads';
-import { Layout, Confirm, HelpTip, SearchProvider } from 'components';
+import { Layout, HelpTip, SearchProvider } from 'components';
 
 import Filters from 'modals/Filters';
 import EditProduct from 'modals/EditProduct';
@@ -130,7 +138,7 @@ export default class ShopProducts extends React.Component {
                                 />
                                 <Confirm
                                   negative
-                                  confirmText="Delete"
+                                  confirmButton="Delete"
                                   header={`Are you sure you want to delete "${product.name}"?`}
                                   content="All data will be permanently deleted"
                                   trigger={<Button basic icon="trash" />}
