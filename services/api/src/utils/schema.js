@@ -129,18 +129,7 @@ function createSchema(attributes = {}, options = {}) {
         query.createdAt.$lte = endAt;
       }
     }
-    for (let [key, value] of Object.entries(rest)) {
-      // TODO: is this logic ok? If searching on `categories: []`
-      // does this mean return everything or nothing matching categories?
-      if (Array.isArray(value)) {
-        if (value.length) {
-          query[key] = { $in: value };
-        }
-      } else {
-        Object.assign(query, flattenQuery(value, [key]));
-      }
-    }
-
+    Object.assign(query, flattenQuery(rest));
     const [data, total] = await Promise.all([
       this.find(query)
         .sort(sort && { [sort.field]: sort.order === 'desc' ? -1 : 1 })
@@ -394,26 +383,37 @@ function loadModelDir(dirPath) {
 // Effectively the inverse of lodash get:
 // { foo: { bar: 3 } } -> { 'foo.bar': 3 }
 // Will not flatten mongo operator objects.
-function flattenQuery(obj, path = []) {
-  let result = {};
-  if (obj) {
-    if (isPlainObject(obj) && !isMongoOperator(obj)) {
-      for (let [key, value] of Object.entries(obj)) {
-        result = {
-          ...flattenQuery(value, [...path, key]),
-        };
-      }
+function flattenQuery(query, root = {}, path = []) {
+  for (let [key, value] of Object.entries(query)) {
+    path = [...path, key];
+    if (isNestedQuery(key, value)) {
+      flattenQuery(value, root, path);
+    } else if (isArrayQuery(key, value)) {
+      // TODO: is this logic ok? If searching on `categories: []`
+      // does this mean return everything or nothing matching categories?
+      root[path.join('.')] = { $in: value };
     } else {
-      result[path.join('.')] = obj;
+      root[path.join('.')] = value;
     }
   }
-  return result;
+  return root;
 }
 
-function isMongoOperator(obj) {
-  return Object.keys(obj).some((key) => {
-    return key.startsWith('$');
+function isNestedQuery(key, value) {
+  if (isMongoOperator(key) || !isPlainObject(value)) {
+    return false;
+  }
+  return Object.keys(value).every((key) => {
+    return !isMongoOperator(key);
   });
+}
+
+function isArrayQuery(key, value) {
+  return !isMongoOperator(key) && Array.isArray(value);
+}
+
+function isMongoOperator(str) {
+  return str.startsWith('$');
 }
 
 module.exports = {

@@ -1549,7 +1549,7 @@ describe('search', () => {
     expect(result.meta.total).toBe(1);
 
     result = await User.search({
-      categories: [],
+      categories: ['owner'],
       sort: {
         field: 'order',
         order: 'asc',
@@ -1603,12 +1603,96 @@ describe('search', () => {
     expect(result.meta.total).toBe(2);
   });
 
+  it('should be able to perform a search on a complex nested field', async () => {
+    const User = createTestModel(
+      createSchema({
+        name: String,
+        profile: {
+          roles: [
+            {
+              role: {
+                functions: [String],
+              },
+            },
+          ],
+        },
+      })
+    );
+    const [user1, user2] = await Promise.all([
+      User.create({
+        name: 'Bob',
+        profile: {
+          roles: [
+            {
+              role: {
+                functions: ['owner', 'spectator'],
+              },
+            },
+          ],
+        },
+      }),
+      User.create({
+        name: 'Fred',
+        profile: {
+          roles: [
+            {
+              role: {
+                functions: ['manager', 'spectator'],
+              },
+            },
+          ],
+        },
+      }),
+    ]);
+
+    let result;
+    result = await User.search({
+      profile: {
+        roles: {
+          role: {
+            functions: ['owner'],
+          },
+        },
+      },
+    });
+    expect(result.data).toMatchObject([
+      {
+        name: 'Bob',
+      },
+    ]);
+  });
+
   it('should be able to mixin operator queries', async () => {
     const User = createTestModel(
       createSchema({
         name: {
           type: String,
-          required: true,
+        },
+        age: {
+          type: Number,
+        },
+      })
+    );
+    await Promise.all([
+      User.create({ name: 'Billy', age: 20 }),
+      User.create({ name: 'Willy', age: 32 }),
+      User.create({ name: 'Chilly', age: 10 }),
+    ]);
+    const { data, meta } = await User.search({
+      $or: [{ name: 'Billy' }, { age: 10 }],
+    });
+    expect(data.length).toBe(2);
+    expect(data).toMatchObject([
+      { name: 'Billy', age: 20 },
+      { name: 'Chilly', age: 10 },
+    ]);
+  });
+
+  it('should be able to mixin nested operator queries', async () => {
+    const User = createTestModel(
+      createSchema({
+        name: {
+          type: String,
         },
       })
     );
