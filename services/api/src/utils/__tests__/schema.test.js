@@ -1509,14 +1509,16 @@ describe('search', () => {
   });
 
   it('should search on name as a keyword', async () => {
-    const User = createTestModel(
-      createSchema({
-        name: {
-          type: String,
-          required: true,
-        },
-      })
-    );
+    const schema = createSchema({
+      name: {
+        type: String,
+        required: true,
+      },
+    });
+    schema.index({
+      name: 'text',
+    });
+    const User = createTestModel(schema);
     await Promise.all([User.create({ name: 'Billy' }), User.create({ name: 'Willy' })]);
     const { data, meta } = await User.search({ keyword: 'billy' });
     expect(data.length).toBe(1);

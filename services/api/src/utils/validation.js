@@ -210,7 +210,6 @@ function getFieldType(field) {
 }
 
 module.exports = {
-  getFieldType,
   getJoiSchema,
   getMongooseValidator,
 };

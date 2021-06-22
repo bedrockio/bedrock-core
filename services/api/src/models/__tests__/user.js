@@ -37,16 +37,22 @@ describe('User', () => {
       let user;
 
       user = new User({
+        firstName: 'Neo',
+        lastName: 'One',
         email: 'good@email.com',
       });
       expect(user.validateSync()).toBeUndefined();
 
       user = new User({
+        firstName: 'Neo',
+        lastName: 'One',
         email: 'bad@email',
       });
       expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);
 
       user = new User({
+        firstName: 'Neo',
+        lastName: 'One',
         email: null,
       });
       expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);

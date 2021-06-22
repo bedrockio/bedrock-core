@@ -28,7 +28,8 @@ async function setupDb() {
 async function createUser(attributes = {}) {
   return await models.User.create({
     email: `${uniqueId('email')}@platform.com`,
-    name: 'test user',
+    firstName: 'Test',
+    lastName: 'User',
     ...attributes,
   });
 }

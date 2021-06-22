@@ -16,8 +16,8 @@ export default class UserOverview extends React.Component {
           <Loader active>Loading</Loader>
         ) : (
           <React.Fragment>
-            <Divider hidden />
-            <Header as="h2">Details</Header>
+            <Header as="h1">{user.fullName}</Header>
+            <Header as="h3">Details</Header>
             <Table definition>
               <Table.Body>
                 <Table.Row>
