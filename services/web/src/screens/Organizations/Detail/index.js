@@ -4,40 +4,35 @@ import { Switch, Route } from 'react-router-dom';
 import { Loader, Header } from 'semantic';
 import { Breadcrumbs } from 'components';
 import { request } from 'utils/api';
-import NotFound from '../../NotFound';
 
 import Overview from './Overview';
 
-// --- Generator: imports
-import Products from './Products';
-// --- Generator: end
-
-export default class ShopDetail extends React.Component {
+export default class OrganizationDetail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      shop: null,
+      organization: null,
       error: null,
       loading: true,
     };
   }
 
   onSave = () => {
-    this.fetchShop();
+    this.fetchOrganization();
   };
 
   componentDidMount() {
-    this.fetchShop();
+    this.fetchOrganization();
   }
 
   componentDidUpdate(lastProps) {
     const { id } = this.props.match.params;
     if (id !== lastProps.match.params.id) {
-      this.fetchShop();
+      this.fetchOrganization();
     }
   }
 
-  async fetchShop() {
+  async fetchOrganization() {
     const { id } = this.props.match.params;
     try {
       this.setState({
@@ -46,10 +41,10 @@ export default class ShopDetail extends React.Component {
       });
       const { data } = await request({
         method: 'GET',
-        path: `/1/shops/${id}`,
+        path: `/1/organizations/${id}`,
       });
       this.setState({
-        shop: data,
+        organization: data,
         loading: false,
       });
     } catch (error) {
@@ -68,10 +63,10 @@ export default class ShopDetail extends React.Component {
       return (
         <React.Fragment>
           <Breadcrumbs
-            link={<Link to="/shops">Shops</Link>}
+            link={<Link to="/organizations">Organizations</Link>}
             active="Not Found"
           />
-          <Header content="Sorry that shop wasn't found." />
+          <Header content="Sorry that organization wasn't found." />
         </React.Fragment>
       );
     }
@@ -80,21 +75,12 @@ export default class ShopDetail extends React.Component {
       <Switch>
         <Route
           exact
-          path="/shops/:id"
+          path="/organizations/:id"
           render={(props) => (
             <Overview {...props} {...this.state} onSave={this.onSave} />
           )}
         />
-        {/* --- Generator: routes */}
-        <Route
-          exact
-          path="/shops/:id/products"
-          render={(props) => (
-            <Products {...props} {...this.state} onSave={this.onSave} />
-          )}
-        />
-        {/* --- Generator: end */}
-        <Route component={NotFound} />
+
       </Switch>
     );
   }

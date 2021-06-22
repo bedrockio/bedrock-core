@@ -8,8 +8,25 @@ import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { SessionProvider } from 'stores';
 
-import 'layouts';
 import 'utils/sentry';
+
+// Layouts
+
+import { useLayout } from 'helpers/screen';
+import DashboardLayout from 'layouts/Dashboard';
+import PortalLayout from 'layouts/Portal';
+
+useLayout(DashboardLayout, 'Dashboard');
+useLayout(PortalLayout, 'Portal');
+
+// Icons
+
+import { Icon } from 'semantic';
+import basicIcons from 'semantic/assets/icons/basic.svg';
+import outlineIcons from 'semantic/assets/icons/outline.svg';
+
+Icon.useSet(basicIcons);
+Icon.useSet(outlineIcons, 'outline');
 
 import App from './App';
 

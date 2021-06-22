@@ -19,35 +19,41 @@ async function setupDb() {
 
   try {
     await mongoose.connect(mongoURL, flags);
-  } catch(err) {
+  } catch (err) {
     logger.error(err);
     process.exit(1);
   }
 }
 
-async function createUser(userAttributes = {}) {
+async function createUser(attributes = {}) {
   return await models.User.create({
     email: `${uniqueId('email')}@platform.com`,
     firstName: 'Test',
     lastName: 'User',
-    ...userAttributes,
+    ...attributes,
   });
 }
 
-async function createUserWithRole(scope, role, userAttributes = {}, scopeRef = undefined) {
-  const email = `${uniqueId('email')}@platform.com`;
-  return await models.User.create({
-    email,
-    firstName: 'Test',
-    lastName: 'User',
+function createAdminUser(attributes) {
+  return createUser({
+    ...attributes,
     roles: [
       {
-        scope,
-        role,
-        scopeRef,
+        scope: 'global',
+        role: 'superAdmin',
       },
     ],
-    ...userAttributes,
+  });
+}
+
+async function createUpload(user = {}) {
+  return await models.Upload.create({
+    filename: 'logo.png',
+    rawUrl: 'logo.png',
+    hash: 'test',
+    storageType: 'local',
+    mimeType: 'image/png',
+    ownerId: user.id || 'none',
   });
 }
 
@@ -60,6 +66,7 @@ module.exports = {
   request,
   setupDb,
   createUser,
-  createUserWithRole,
+  createAdminUser,
+  createUpload,
   teardownDb,
 };

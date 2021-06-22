@@ -59,6 +59,9 @@ const app = new Koa();
 
     return Promise.all([ready, init]);
   };
+
+  // Hot reloader also shows some issues with webpack v5
+  // https://github.com/webpack-contrib/webpack-hot-middleware/pull/394
   const wrappedHotMiddleware = e2k(webpackHotMiddleware(compiler));
 
   app.use(envMiddleware());

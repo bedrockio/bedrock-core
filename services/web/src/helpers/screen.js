@@ -10,11 +10,11 @@ export function useLayout(Component, name) {
 }
 
 export default function (Component) {
-  const Layout = layouts[Component.layout || 'Dashboard'] || nullLayout;
   const title = startCase(Component.name.replace(/Screen$/, ''));
 
   return class Screen extends React.PureComponent {
     render() {
+      const Layout = layouts[Component.layout || 'Dashboard'] || nullLayout;
       return (
         <React.Fragment>
           <Helmet>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { memoize } from 'lodash';
 import { Link } from 'react-router-dom';
-import { Table, Divider, Button, Message, Label } from 'semantic';
+import { Table, Button, Message, Label } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import { screen } from 'helpers';
@@ -149,7 +149,7 @@ export default class UserList extends React.Component {
                           <Table.Cell>
                             {formatDateTime(user.createdAt)}
                           </Table.Cell>
-                          <Table.Cell textAlign="center">
+                          <Table.Cell textAlign="center" singleLine>
                             <EditUser
                               user={user}
                               trigger={<Button basic icon="edit" />}

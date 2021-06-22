@@ -979,6 +979,49 @@ describe('validation', () => {
         geoLocation: 'Line',
       });
     });
+
+    it('should not require a field with a default', () => {
+      const User = createTestModel(
+        createSchema({
+          name: {
+            type: String,
+            required: true,
+          },
+          type: {
+            type: String,
+            required: true,
+            enum: ['foo', 'bar'],
+            default: 'foo',
+          },
+        })
+      );
+      const schema = User.getCreateValidation();
+      expect(Joi.isSchema(schema)).toBe(true);
+      assertPass(schema, {
+        name: 'foo',
+      });
+    });
+
+    it('should allow a flag to skip required', async () => {
+      const User = createTestModel(
+        createSchema({
+          name: {
+            type: String,
+            required: true,
+          },
+          age: {
+            type: Number,
+            required: true,
+            skipValidation: true,
+          },
+        })
+      );
+      const schema = User.getCreateValidation();
+      expect(Joi.isSchema(schema)).toBe(true);
+      assertPass(schema, {
+        name: 'foo',
+      });
+    });
   });
 
   describe('getUpdateValidation', () => {
@@ -1370,6 +1413,34 @@ describe('validation', () => {
         },
       });
     });
+
+    it('should strip validation with skip flag', async () => {
+      const User = createTestModel(
+        createSchema({
+          name: {
+            type: String,
+            required: true,
+          },
+          age: {
+            type: Number,
+            required: true,
+            skipValidation: true,
+            default: 10,
+          },
+        })
+      );
+      const schema = User.getUpdateValidation();
+      expect(Joi.isSchema(schema)).toBe(true);
+      assertPass(schema, {
+        name: 'foo',
+        age: 25,
+      });
+      const { value } = schema.validate({
+        name: 'foo',
+        age: 25,
+      });
+      expect(value.age).toBeUndefined();
+    });
   });
 
   describe('getSearchValidation', () => {
@@ -1532,5 +1603,23 @@ describe('search', () => {
     expect(result.data[0].id).toBe(user1.id);
     expect(result.data[1].id).toBe(user2.id);
     expect(result.meta.total).toBe(2);
+  });
+
+  it('should be able to mixin operator queries', async () => {
+    const User = createTestModel(
+      createSchema({
+        name: {
+          type: String,
+          required: true,
+        },
+      })
+    );
+    await Promise.all([User.create({ name: 'Billy' }), User.create({ name: 'Willy' })]);
+    const { data, meta } = await User.search({ name: { $ne: 'Billy' } });
+    expect(data.length).toBe(1);
+    expect(data[0].name).toBe('Willy');
+    expect(meta.total).toBe(1);
+    expect(meta.skip).toBeUndefined();
+    expect(meta.limit).toBeUndefined();
   });
 });

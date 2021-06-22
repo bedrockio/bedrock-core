@@ -1,4 +1,4 @@
-const { setupDb, teardownDb, request, createUser, createUserWithRole } = require('../../utils/testing');
+const { setupDb, teardownDb, request, createUser, createAdminUser } = require('../../utils/testing');
 const { User } = require('../../models');
 
 beforeAll(async () => {
@@ -59,7 +59,7 @@ describe('/1/users', () => {
 
   describe('POST /', () => {
     it('should be able to create user', async () => {
-      const admin = await createUserWithRole('global', 'superAdmin');
+      const admin = await createAdminUser();
       const response = await request(
         'POST',
         '/1/users',
@@ -98,7 +98,7 @@ describe('/1/users', () => {
 
   describe('GET /:user', () => {
     it('should be able to access user', async () => {
-      const admin = await createUserWithRole('global', 'superAdmin');
+      const admin = await createAdminUser();
       const user1 = await createUser({ firstName: 'Neo', lastName: 'One' });
       const response = await request('GET', `/1/users/${user1.id}`, {}, { user: admin });
       expect(response.status).toBe(200);
@@ -115,7 +115,7 @@ describe('/1/users', () => {
 
   describe('POST /search', () => {
     it('should list out users', async () => {
-      const admin = await createUserWithRole('global', 'superAdmin');
+      const admin = await createAdminUser();
       const user1 = await createUser({ firstName: 'Neo', lastName: 'One' });
       const user2 = await createUser({ firstName: 'Riker', lastName: 'Two' });
 
@@ -129,7 +129,7 @@ describe('/1/users', () => {
     });
 
     it('should be able to search by ids', async () => {
-      const admin = await createUserWithRole('global', 'superAdmin');
+      const admin = await createAdminUser();
 
       const user1 = await createUser({ firstName: 'Neo', lastName: 'One' });
       const user2 = await createUser({ firstName: 'Riker', lastName: 'Two' });
@@ -157,7 +157,7 @@ describe('/1/users', () => {
 
   describe('PATCH /:user', () => {
     it('admins should be able to update user', async () => {
-      const admin = await createUserWithRole('global', 'superAdmin');
+      const admin = await createAdminUser();
       const user1 = await createUser({ firstName: 'Old', lastName: 'Name' });
       const response = await request(
         'PATCH',
@@ -180,7 +180,7 @@ describe('/1/users', () => {
     });
 
     it('should be able to update user roles', async () => {
-      const admin = await createUserWithRole('global', 'superAdmin');
+      const admin = await createAdminUser();
       const user1 = await createUser({ firstName: 'New', lastName: 'Name' });
       const response = await request(
         'PATCH',
@@ -206,7 +206,7 @@ describe('/1/users', () => {
     });
 
     it('should strip out reserved fields', async () => {
-      const admin = await createUserWithRole('global', 'superAdmin');
+      const admin = await createAdminUser();
       const user1 = await createUser({ firstName: 'New', lastName: 'Name' });
       const response = await request(
         'PATCH',
@@ -222,7 +222,7 @@ describe('/1/users', () => {
     });
 
     it('should fail when trying to set hashed password', async () => {
-      const admin = await createUserWithRole('global', 'superAdmin');
+      const admin = await createAdminUser();
       const user = await createUser({ name: 'new name' });
       const response = await request(
         'PATCH',
@@ -239,7 +239,7 @@ describe('/1/users', () => {
 
   describe('DELETE /:user', () => {
     it('should be able to delete user', async () => {
-      const admin = await createUserWithRole('global', 'superAdmin');
+      const admin = await createAdminUser();
       const user1 = await createUser({ firstName: 'Neo', lastName: 'One' });
       const response = await request('DELETE', `/1/users/${user1.id}`, {}, { user: admin });
       expect(response.status).toBe(204);

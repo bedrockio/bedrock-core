@@ -26,9 +26,10 @@ describe('permissions', () => {
     };
     expect(validation3).toThrow(Error);
   });
-  it('userHasPermissions global scope', async () => {
+
+  it('should validate correctly for super admin', async () => {
     await User.deleteMany({});
-    const superAdminUser = await User.create({
+    const superAdmin = await User.create({
       email: 'admin@permissions.com',
       firstName: 'John',
       lastName: 'Doe',
@@ -39,46 +40,33 @@ describe('permissions', () => {
         },
       ],
     });
-    expect(userHasAccess(superAdminUser, { scope: 'global', permission: 'read', endpoint: 'users' })).toBe(true);
+    expect(userHasAccess(superAdmin, { scope: 'global', permission: 'read', endpoint: 'users' })).toBe(true);
     expect(
-      userHasAccess(superAdminUser, { scope: 'organization', permission: 'read', endpoint: 'users', scopeRef: '123' })
+      userHasAccess(superAdmin, { scope: 'organization', permission: 'read', endpoint: 'users', scopeRef: '123' })
     ).toBe(true);
-    expect(userHasAccess(superAdminUser, { scope: 'global', permission: 'read', endpoint: 'unknown' })).toBe(false);
-    expect(userHasAccess(superAdminUser, { scope: 'global', permission: 'write', endpoint: 'users' })).toBe(true);
-    expect(userHasAccess(superAdminUser, { scope: 'global', permission: 'write', endpoint: 'users' })).toBe(true);
-    const limitedAdminUser = await User.create({
-      email: 'limited@permissions.com',
-      firstName: 'John',
-      lastName: 'Doe',
-      roles: [
-        {
-          scope: 'global',
-          role: 'limitedAdmin',
-        },
-      ],
-    });
-    expect(userHasAccess(limitedAdminUser, { scope: 'global', permission: 'read', endpoint: 'users' })).toBe(true);
-    expect(userHasAccess(limitedAdminUser, { scope: 'global', permission: 'read', endpoint: 'unknown' })).toBe(false);
-    expect(userHasAccess(limitedAdminUser, { scope: 'global', permission: 'write', endpoint: 'users' })).toBe(false);
+    expect(userHasAccess(superAdmin, { scope: 'global', permission: 'read', endpoint: 'unknown' })).toBe(false);
+    expect(userHasAccess(superAdmin, { scope: 'global', permission: 'write', endpoint: 'users' })).toBe(true);
+    expect(userHasAccess(superAdmin, { scope: 'global', permission: 'write', endpoint: 'users' })).toBe(true);
   });
-  it('userHasPermissions organization scope', async () => {
+
+  it('should validate correctly for organization admin', async () => {
     await User.deleteMany({});
     const organization1Id = new mongoose.Types.ObjectId();
     const organization2Id = new mongoose.Types.ObjectId();
-    const organizationAdminUser = await User.create({
+    const admin = await User.create({
       email: 'admin@permissions.com',
       firstName: 'John',
       lastName: 'Doe',
       roles: [
         {
           scope: 'organization',
-          role: 'superAdmin',
+          role: 'admin',
           scopeRef: organization1Id,
         },
       ],
     });
     expect(
-      userHasAccess(organizationAdminUser, {
+      userHasAccess(admin, {
         scope: 'organization',
         permission: 'read',
         endpoint: 'users',
@@ -86,7 +74,7 @@ describe('permissions', () => {
       })
     ).toBe(true);
     expect(
-      userHasAccess(organizationAdminUser, {
+      userHasAccess(admin, {
         scope: 'global',
         permission: 'read',
         endpoint: 'users',
@@ -94,7 +82,7 @@ describe('permissions', () => {
       })
     ).toBe(false);
     expect(
-      userHasAccess(organizationAdminUser, {
+      userHasAccess(admin, {
         scope: 'organization',
         permission: 'read',
         endpoint: 'users',
@@ -102,7 +90,7 @@ describe('permissions', () => {
       })
     ).toBe(false);
     expect(
-      userHasAccess(organizationAdminUser, {
+      userHasAccess(admin, {
         scope: 'organization',
         permission: 'read',
         endpoint: 'unknown',
@@ -110,7 +98,7 @@ describe('permissions', () => {
       })
     ).toBe(false);
     expect(
-      userHasAccess(organizationAdminUser, {
+      userHasAccess(admin, {
         scope: 'organization',
         permission: 'write',
         endpoint: 'users',
@@ -118,7 +106,7 @@ describe('permissions', () => {
       })
     ).toBe(true);
     expect(
-      userHasAccess(organizationAdminUser, {
+      userHasAccess(admin, {
         scope: 'organization',
         permission: 'write',
         endpoint: 'users',
@@ -126,27 +114,35 @@ describe('permissions', () => {
       })
     ).toBe(false);
     expect(
-      userHasAccess(organizationAdminUser, {
+      userHasAccess(admin, {
         scope: 'organization',
         permission: 'read',
         endpoint: 'users',
         scopeRef: organization2Id,
       })
     ).toBe(false);
-    const limitedAdminUser = await User.create({
-      email: 'limitedadmin@permissions.com',
+  });
+
+  it('should validate correctly for organization viewer', async () => {
+    const organization1Id = new mongoose.Types.ObjectId();
+    const organization2Id = new mongoose.Types.ObjectId();
+    const viewer = await User.create({
+      email: 'viewer@permissions.com',
       firstName: 'John',
       lastName: 'Doe',
       roles: [
         {
           scope: 'organization',
-          role: 'limitedAdmin',
+          role: 'viewer',
           scopeRef: organization1Id,
         },
       ],
     });
+    expect(userHasAccess(viewer, { scope: 'global', permission: 'read', endpoint: 'users' })).toBe(false);
+    expect(userHasAccess(viewer, { scope: 'global', permission: 'read', endpoint: 'unknown' })).toBe(false);
+    expect(userHasAccess(viewer, { scope: 'global', permission: 'write', endpoint: 'users' })).toBe(false);
     expect(
-      userHasAccess(limitedAdminUser, {
+      userHasAccess(viewer, {
         scope: 'organization',
         permission: 'read',
         endpoint: 'users',
@@ -154,7 +150,7 @@ describe('permissions', () => {
       })
     ).toBe(true);
     expect(
-      userHasAccess(limitedAdminUser, {
+      userHasAccess(viewer, {
         scope: 'organization',
         permission: 'read',
         endpoint: 'users',
@@ -162,7 +158,7 @@ describe('permissions', () => {
       })
     ).toBe(false);
     expect(
-      userHasAccess(limitedAdminUser, {
+      userHasAccess(viewer, {
         scope: 'organization',
         permission: 'read',
         endpoint: 'unknown',
@@ -170,7 +166,7 @@ describe('permissions', () => {
       })
     ).toBe(false);
     expect(
-      userHasAccess(limitedAdminUser, {
+      userHasAccess(viewer, {
         scope: 'organization',
         permission: 'write',
         endpoint: 'users',
@@ -178,7 +174,7 @@ describe('permissions', () => {
       })
     ).toBe(false);
     expect(
-      userHasAccess(limitedAdminUser, {
+      userHasAccess(viewer, {
         scope: 'organization',
         permission: 'write',
         endpoint: 'users',

@@ -87,12 +87,7 @@ function createSchema(attributes = {}, options = {}) {
 
   schema.static('search', async function search(body) {
     const { ids, keyword, startAt, endAt, sort, skip, limit, ...rest } = body;
-    const sortOptions = {};
-    const query = {
-      deletedAt: {
-        $exists: false,
-      },
-    };
+    const query = {};
     if (ids?.length) {
       query._id = { $in: ids };
     }
@@ -122,16 +117,15 @@ function createSchema(attributes = {}, options = {}) {
           query[key] = { $in: value };
         }
       } else {
-        Object.assign(query, flattenObject(value, [key]));
+        Object.assign(query, flattenQuery(value, [key]));
       }
     }
 
-    if (sort) {
-      sortOptions[sort.field] = sort.order === 'desc' ? -1 : 1;
-    }
-
     const [data, total] = await Promise.all([
-      this.find(query, options).sort(sortOptions).skip(skip).limit(limit),
+      this.find(query)
+        .sort(sort && { [sort.field]: sort.order === 'desc' ? -1 : 1 })
+        .skip(skip)
+        .limit(limit),
       this.countDocuments(query),
     ]);
 
@@ -272,7 +266,7 @@ function getJoiSchemaFromMongoose(schema, options) {
   });
 }
 
-function attributesToDefinition(attributes) {
+function attributesToDefinition(attributes, path = []) {
   const definition = {};
   const { type } = attributes;
 
@@ -285,18 +279,20 @@ function attributesToDefinition(attributes) {
     const type = typeof val;
     if (isSchemaType) {
       if (key === 'type' && type === 'string') {
-        val = getMongooseType(val);
+        val = getMongooseType(val, attributes, path);
       } else if (key === 'validate' && type === 'string') {
         // Allow custom mongoose validation function that derives from the Joi schema.
         val = getMongooseValidator(val, attributes);
       }
     } else if (key !== 'readScopes') {
       if (Array.isArray(val)) {
-        val = val.map(attributesToDefinition);
+        val = val.map((el, i) => {
+          return attributesToDefinition(el, [...path, i]);
+        });
       } else if (isPlainObject(val)) {
-        val = attributesToDefinition(val);
+        val = attributesToDefinition(val, [...path, key]);
       } else if (type === 'string') {
-        val = getMongooseType(val);
+        val = getMongooseType(val, attributes, path);
       }
     }
     definition[key] = val;
@@ -305,10 +301,12 @@ function attributesToDefinition(attributes) {
   return definition;
 }
 
-function getMongooseType(str) {
+function getMongooseType(str, attributes, path) {
   const type = mongoose.Schema.Types[str];
   if (!type) {
     throw new Error(`Type ${str} could not be converted to Mongoose type.`);
+  } else if (type === ObjectIdSchemaType && !attributes.ref) {
+    throw new Error(`Ref must be passed for ${path.join('.')}`);
   }
   return type;
 }
@@ -339,8 +337,12 @@ function loadModel(definition, name) {
   if (!attributes) {
     throw new Error(`Invalid model definition for ${name}, need attributes`);
   }
-  const schema = createSchema(attributes);
-  return mongoose.model(name, schema);
+  try {
+    const schema = createSchema(attributes);
+    return mongoose.model(name, schema);
+  } catch (err) {
+    throw new Error(`${err.message} (loading ${name})`);
+  }
 }
 
 function loadModelDir(dirPath) {
@@ -368,16 +370,17 @@ function loadModelDir(dirPath) {
 
 // Util
 
-// Flattens nested objects to a dot syntax.
+// Flattens nested queries to a dot syntax.
 // Effectively the inverse of lodash get:
 // { foo: { bar: 3 } } -> { 'foo.bar': 3 }
-function flattenObject(obj, path = []) {
+// Will not flatten mongo operator objects.
+function flattenQuery(obj, path = []) {
   let result = {};
   if (obj) {
-    if (isPlainObject(obj)) {
+    if (isPlainObject(obj) && !isMongoOperator(obj)) {
       for (let [key, value] of Object.entries(obj)) {
         result = {
-          ...flattenObject(value, [...path, key]),
+          ...flattenQuery(value, [...path, key]),
         };
       }
     } else {
@@ -385,6 +388,12 @@ function flattenObject(obj, path = []) {
     }
   }
   return result;
+}
+
+function isMongoOperator(obj) {
+  return Object.keys(obj).some((key) => {
+    return key.startsWith('$');
+  });
 }
 
 module.exports = {

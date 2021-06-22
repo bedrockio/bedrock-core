@@ -5,7 +5,6 @@
 //
 // Default set is the latest FontAwesome build. Check the docs for
 // available icons: https://fontawesome.com/icons
-// Outline fonts should add "outline" to the name.
 //
 // All other props are identical to the semantic component.
 
@@ -20,21 +19,32 @@ import { omit } from 'lodash';
 // when esm support lands.
 import { createShorthandFactory } from 'semantic-ui-react/dist/commonjs/lib/factories';
 
-import regularSet from '../assets/icons/regular.svg';
-import outlineSet from '../assets/icons/outline.svg';
-
 // Maps internal semantic name references to new icon names.
 const INTERNAL_MAP = {
   close: 'times',
   delete: 'times',
   setting: 'cog',
   settings: 'cogs',
-  dropdown: 'caret-down',
+  dropdown: (props) => {
+    // Semantic stupidly overrides icons based on className
+    // instead of passing the correct "name" so conditionally
+    // handle here.
+    if (props.className.split(' ').includes('clear')) {
+      return 'times';
+    }
+    return 'caret-down';
+  },
   mail: 'envelope',
 };
 
 export default class Icon extends React.Component {
   static Group = IconGroup;
+
+  static sets = {};
+
+  static useSet(url, name = 'basic') {
+    this.sets[name] = url;
+  }
 
   getClassName() {
     const classes = ['icon'];
@@ -56,30 +66,33 @@ export default class Icon extends React.Component {
   }
 
   resolveIcon() {
-    let baseUrl;
     let { name } = this.props;
-    name = INTERNAL_MAP[name] || name;
-    if (name.includes('outline')) {
-      name = name
-        .split(' ')
-        .filter((n) => n !== 'outline')
-        .join(' ');
-      baseUrl = outlineSet;
-    } else {
-      baseUrl = regularSet;
+    const mapped = INTERNAL_MAP[name];
+    if (mapped) {
+      name = typeof mapped === 'function' ? mapped(this.props) : mapped;
     }
     return {
       name,
-      baseUrl,
+      url: this.resolveSet(),
     };
+  }
+
+  resolveSet() {
+    if (this.props.outline) {
+      return Icon.sets.outline;
+    } else if (this.props.custom) {
+      return Icon.sets.custom;
+    } else {
+      return Icon.sets.basic;
+    }
   }
 
   render() {
     const props = omit(this.props, Object.keys(Icon.propTypes));
-    const { baseUrl, name } = this.resolveIcon();
+    const { url, name } = this.resolveIcon();
     return (
       <svg {...props} className={this.getClassName()}>
-        <use xlinkHref={`${baseUrl}#${name}`}></use>
+        <use xlinkHref={`${url}#${name}`}></use>
       </svg>
     );
   }
@@ -128,6 +141,8 @@ Icon.propTypes = {
     'massive',
   ]),
   width: PropTypes.number,
+  outline: PropTypes.bool,
+  custom: PropTypes.bool,
 };
 
 Icon.defaultProps = {
@@ -137,6 +152,8 @@ Icon.defaultProps = {
   fitted: false,
   link: false,
   loading: false,
+  outline: false,
+  custom: false,
 };
 
 SemanticIcon.create = createShorthandFactory(Icon, (name) => {
