@@ -34,6 +34,10 @@ export default class EditProduct extends React.Component {
     });
   };
 
+  setNumberField = (evt, { name, value }) => {
+    this.setField(evt, { name, value: Number(value) });
+  };
+
   setCheckedField = (evt, { name, checked }) => {
     this.setField(evt, { name, value: checked });
   };
@@ -50,10 +54,10 @@ export default class EditProduct extends React.Component {
           method: 'PATCH',
           path: `/1/products/${product.id}`,
           body: {
-            ...product,
             // --- Generator: refs
             shop: this.props.shop.id,
             // --- Generator: end
+            ...product,
           },
         });
       } else {
@@ -61,10 +65,10 @@ export default class EditProduct extends React.Component {
           method: 'POST',
           path: '/1/products',
           body: {
-            ...product,
             // --- Generator: refs
             shop: this.props.shop.id,
             // --- Generator: end
+            ...product,
           },
         });
       }
@@ -81,7 +85,7 @@ export default class EditProduct extends React.Component {
   render() {
     const { product, loading, error } = this.state;
     return (
-      <>
+      <React.Fragment>
         <Modal.Header>
           {this.isUpdate() ? `Edit "${product.name}"` : 'New Product'}
         </Modal.Header>
@@ -155,7 +159,7 @@ export default class EditProduct extends React.Component {
                 name="images"
                 label="Images"
                 value={product.images || []}
-                onChange={(data) => this.setField(null, data)}
+                onChange={this.setField}
                 onError={(error) => this.setState({ error })}
               />
               {/* --- Generator: end */}
@@ -171,7 +175,7 @@ export default class EditProduct extends React.Component {
             content={this.isUpdate() ? 'Update' : 'Create'}
           />
         </Modal.Actions>
-      </>
+      </React.Fragment>
     );
   }
 }

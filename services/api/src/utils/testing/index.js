@@ -45,6 +45,17 @@ function createAdminUser(attributes) {
   });
 }
 
+async function createUpload(user = {}) {
+  return await models.Upload.create({
+    filename: 'logo.png',
+    rawUrl: 'logo.png',
+    hash: 'test',
+    storageType: 'local',
+    mimeType: 'image/png',
+    ownerId: user.id || 'none',
+  });
+}
+
 async function teardownDb() {
   await mongoose.disconnect();
 }
@@ -55,5 +66,6 @@ module.exports = {
   setupDb,
   createUser,
   createAdminUser,
+  createUpload,
   teardownDb,
 };

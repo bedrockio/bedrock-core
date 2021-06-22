@@ -27,14 +27,10 @@ const countries = getData().map(({ code, name }) => ({
 @screen
 export default class ShopList extends React.Component {
   onDataNeeded = async (params) => {
-    const { category, ...rest } = params;
     return await request({
       method: 'POST',
       path: '/1/shops/search',
-      body: {
-        ...rest,
-        ...(category && { categories: [category.id] }),
-      },
+      body: params,
     });
   };
 
@@ -67,20 +63,6 @@ export default class ShopList extends React.Component {
                       name="countryCode"
                       options={countries}
                       search
-                    />
-                    <Filters.Dropdown
-                      label="Category"
-                      name="category"
-                      onDataNeeded={async (query) => {
-                        const { data } = await request({
-                          method: 'POST',
-                          path: '/1/categories/search',
-                          body: {
-                            keyword: query,
-                          },
-                        });
-                        return data;
-                      }}
                     />
                     {/* --- Generator: end */}
                   </Filters>

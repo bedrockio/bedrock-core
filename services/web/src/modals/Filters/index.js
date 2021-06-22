@@ -37,7 +37,6 @@ export default class Filters extends React.Component {
 
   onSubmit = () => {
     this.props.onSave(this.state);
-    this.props.onClose(true);
   };
 
   onReset = () => {
@@ -71,7 +70,7 @@ export default class Filters extends React.Component {
                 <Icon name="filter" />
                 Filter
               </Button>
-              <Label as="a" basic color="olive" pointing="left">
+              <Label as="a" pointing="left">
                 {Object.keys(this.props.filters).length}
               </Label>
             </Button>

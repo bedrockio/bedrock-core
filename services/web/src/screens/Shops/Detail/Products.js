@@ -72,7 +72,7 @@ export default class ShopProducts extends React.Component {
                   {products.length === 0 ? (
                     <Message>No products added yet</Message>
                   ) : (
-                    <Table celled>
+                    <Table sortable celled>
                       <Table.Header>
                         <Table.Row>
                           {/* --- Generator: list-header-cells */}
@@ -111,7 +111,7 @@ export default class ShopProducts extends React.Component {
                                 {product.images[0] && (
                                   <Image
                                     style={{ width: '100%' }}
-                                    src={urlForUpload(product.images[0], true)}
+                                    src={urlForUpload(product.images[0])}
                                   />
                                 )}
                               </Table.Cell>
