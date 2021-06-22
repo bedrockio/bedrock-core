@@ -1556,6 +1556,21 @@ describe('search', () => {
     expect(result.meta.total).toBe(2);
   });
 
+  it('should behave like $in when empty array passed', async () => {
+    const User = createTestModel(
+      createSchema({
+        categories: [String],
+      })
+    );
+    await Promise.all([User.create({ categories: ['owner', 'member'] }), User.create({ categories: ['owner'] })]);
+
+    const result = await User.search({
+      categories: [],
+    });
+    expect(result.data).toMatchObject([]);
+    expect(result.meta.total).toBe(0);
+  });
+
   it('should be able to perform a search on a nested field', async () => {
     const User = createTestModel(
       createSchema({
@@ -1611,7 +1626,7 @@ describe('search', () => {
         },
       })
     );
-    const [user1, user2] = await Promise.all([
+    await Promise.all([
       User.create({
         name: 'Bob',
         profile: {
@@ -1671,7 +1686,7 @@ describe('search', () => {
       User.create({ name: 'Willy', age: 32 }),
       User.create({ name: 'Chilly', age: 10 }),
     ]);
-    const { data, meta } = await User.search({
+    const { data } = await User.search({
       $or: [{ name: 'Billy' }, { age: 10 }],
     });
     expect(data).toMatchObject([

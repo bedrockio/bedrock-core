@@ -389,8 +389,6 @@ function flattenQuery(query, root = {}, path = []) {
     if (isNestedQuery(key, value)) {
       flattenQuery(value, root, path);
     } else if (isArrayQuery(key, value)) {
-      // TODO: is this logic ok? If searching on `categories: []`
-      // does this mean return everything or nothing matching categories?
       root[path.join('.')] = { $in: value };
     } else {
       root[path.join('.')] = value;
