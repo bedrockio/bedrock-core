@@ -66,9 +66,9 @@ export default class Icon extends React.Component {
   }
 
   resolveIcon() {
-    let { name } = this.props;
+    let { name, custom } = this.props;
     const mapped = INTERNAL_MAP[name];
-    if (mapped) {
+    if (mapped && !custom) {
       name = typeof mapped === 'function' ? mapped(this.props) : mapped;
     }
     return {
