@@ -13,7 +13,7 @@ export function parseLines(text) {
 }
 
 export function parseColumns(headerLine) {
-  headerLine
+  return headerLine
     .replace(/[\n\r]+/g, '')
     .split(/,/)
     .map((k) => k.replace(/"\s/g, ''))
@@ -167,7 +167,7 @@ export function matchColumns(columnMapping, fields) {
 }
 
 export function createItems(lines, mapping) {
-  lines.map((line) => {
+  return lines.map((line) => {
     const object = {};
     Object.keys(mapping).forEach((key) => {
       let value = mapping[key].defaultValue;
