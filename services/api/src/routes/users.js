@@ -69,7 +69,8 @@ router
       })
     ),
     async (ctx) => {
-      const { data, meta } = await User.search(ctx.request.body);
+      const { filename, format, ...rest } = ctx.request.body;
+      const { data, meta } = await User.search(rest);
       if (searchExport(ctx, data)) {
         return;
       }
