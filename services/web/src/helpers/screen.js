@@ -2,6 +2,7 @@ import React from 'react';
 import { startCase } from 'lodash';
 import { Helmet } from 'react-helmet-async';
 import { APP_NAME } from 'utils/env';
+import bem from 'helpers/bem';
 
 const layouts = {};
 
@@ -11,6 +12,8 @@ export function useLayout(Component, name) {
 
 export default function (Component) {
   const title = startCase(Component.name.replace(/Screen$/, ''));
+
+  Component = bem(Component);
 
   return class Screen extends React.PureComponent {
     render() {
