@@ -77,7 +77,7 @@
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^13.1.1",
     "eslint": "^7.22.0",
-    "eslint-plugin-bedrock": "^1.0.7",
+    "eslint-plugin-bedrock": "^1.0.9",
     "jest": "^26.6.3",
     "node-mocks-http": "^1.8.1",
     "prettier": "^2.2.1",

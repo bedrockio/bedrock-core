@@ -4060,10 +4060,10 @@ escodegen@^2.0.0:
   optionalDependencies:
     source-map "~0.6.1"
 
-eslint-plugin-bedrock@^1.0.7:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-bedrock/-/eslint-plugin-bedrock-1.0.7.tgz#72aa2f4a46fb35901c20035b51a4c008683352d8"
-  integrity sha512-508/LYWqnE/SwSbeAO/9phg1gNhMR78K2UZ33KWsLM5v6SPcfAqBvduZOHUf7tL+p5ip2g8zvn1ZWfjqRN/ssw==
+eslint-plugin-bedrock@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-bedrock/-/eslint-plugin-bedrock-1.0.9.tgz#6df2f6d1637a4c6f649014e75a6f6914a1821ccf"
+  integrity sha512-/3bvjDiMeQWLYqxNrxyII31k38zEGOdnQeMmn/3UAd5W/z13HMTmhBSOuu38icKSJCQ8xopuw1ckyIRuDKKdxg==
   dependencies:
     eslint-plugin-jest "^24.3.6"
     eslint-plugin-react "^7.24.0"
