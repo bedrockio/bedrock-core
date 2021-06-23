@@ -363,9 +363,9 @@ function loadModelDir(dirPath) {
 // Effectively the inverse of lodash get:
 // { foo: { bar: 3 } } -> { 'foo.bar': 3 }
 // Will not flatten mongo operator objects.
-function flattenQuery(query, root = {}, path = []) {
+function flattenQuery(query, root = {}, rootPath = []) {
   for (let [key, value] of Object.entries(query)) {
-    path = [...path, key];
+    const path = [...rootPath, key];
     if (isNestedQuery(key, value)) {
       flattenQuery(value, root, path);
     } else if (isArrayQuery(key, value)) {

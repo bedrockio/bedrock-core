@@ -1716,4 +1716,43 @@ describe('search', () => {
     expect(meta.skip).toBeUndefined();
     expect(meta.limit).toBeUndefined();
   });
+
+  it('should allow custom dot path in query', async () => {
+    const Organization = createTestModel();
+    const User = createTestModel(
+      createSchema({
+        roles: [
+          {
+            role: {
+              type: 'String',
+              required: true,
+            },
+            scope: {
+              type: 'String',
+              required: true,
+            },
+            scopeRef: {
+              type: 'ObjectId',
+              ref: 'Organization',
+            },
+          },
+        ],
+      })
+    );
+    const organization = await Organization.create({});
+    await User.create({
+      roles: [
+        {
+          role: 'admin',
+          scope: 'organization',
+          scopeRef: organization.id,
+        },
+      ],
+    });
+    const { data } = await User.search({
+      'roles.scope': 'organization',
+      'roles.scopeRef': organization.id,
+    });
+    expect(data.length).toBe(1);
+  });
 });
