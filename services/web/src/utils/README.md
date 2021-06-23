@@ -54,18 +54,13 @@ import { truncate } from 'utils/formatting';
 truncate(myLongText, 100);
 ```
 
-Format a large number with commas:
+Format a number:
 
 ```javascript
-import { numberWithCommas } from 'utils/formatting';
-numberWithCommas(1000000);
-```
-
-Format a large number with periods (European):
-
-```javascript
-import { numberWithDots } from 'utils/formatting';
-numberWithDots(1000000);
+import { formatNumber } from 'utils/formatting';
+formatNumber(1000000); // Default formatting for browser locale
+formatNumber(1000000, 'en'); // -> 1,000,000
+formatNumber(1000000, 'nl'); // -> 1.000.000
 ```
 
 Round a number to three decimal places (safe way):
