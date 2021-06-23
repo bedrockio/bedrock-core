@@ -44,7 +44,7 @@ describe('withSession', () => {
         <Component />
       </SessionProvider>
     );
-    waitFor(() => {
+    await waitFor(() => {
       expect(container.textContent).toBe('Anonymous');
     });
   });
@@ -56,7 +56,7 @@ describe('withSession', () => {
         <Component />
       </SessionProvider>
     );
-    waitFor(() => {
+    await waitFor(() => {
       expect(container.textContent).toBe('Bob');
     });
   });
@@ -68,7 +68,7 @@ describe('withSession', () => {
         <Component />
       </SessionProvider>
     );
-    waitFor(() => {
+    await waitFor(() => {
       expect(snapshot.user).toBe(null);
       expect(snapshot.loading).toBe(true);
     });
@@ -84,7 +84,7 @@ describe('withLoadedSession', () => {
         <Component />
       </SessionProvider>
     );
-    waitFor(() => {
+    await waitFor(() => {
       expect(container.textContent).toBe('Anonymous');
     });
   });
@@ -96,7 +96,7 @@ describe('withLoadedSession', () => {
         <Component />
       </SessionProvider>
     );
-    waitFor(() => {
+    await waitFor(() => {
       expect(container.textContent).toBe('Bob');
     });
   });
@@ -114,7 +114,7 @@ describe('useSession', () => {
         <Component />
       </SessionProvider>
     );
-    waitFor(() => {
+    await waitFor(() => {
       expect(container.textContent).toBe('Anonymous');
     });
   });
@@ -126,7 +126,7 @@ describe('useSession', () => {
         <Component />
       </SessionProvider>
     );
-    waitFor(() => {
+    await waitFor(() => {
       expect(container.textContent).toBe('Bob');
     });
   });
