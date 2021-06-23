@@ -3,7 +3,7 @@ const PassThrough = require('stream').PassThrough;
 const csv = require('fast-csv');
 
 function searchValidation(options = {}) {
-  const { limit = 50, sortField = 'createdAt', sortOrder = 'desc' } = options;
+  const { limit = 50, sortField = 'createdAt', sortOrder = 'desc', ...rest } = options;
   return {
     ids: Joi.array().items(Joi.string()),
     keyword: Joi.string().allow(''),
@@ -18,6 +18,7 @@ function searchValidation(options = {}) {
       order: sortOrder,
     }),
     limit: Joi.number().positive().default(limit),
+    ...rest,
   };
 }
 

@@ -72,15 +72,14 @@ function createSchema(attributes = {}, options = {}) {
     });
   });
 
-  schema.static('getSearchValidation', function getSearchValidation(searchOptions, appendSchema) {
+  schema.static('getSearchValidation', function getSearchValidation(options) {
     return getJoiSchema(attributes, {
       stripFields: RESERVED_FIELDS,
       skipRequired: true,
       skipEmptyCheck: true,
       unwindArrayFields: true,
       appendSchema: {
-        ...searchValidation(searchOptions),
-        ...appendSchema,
+        ...searchValidation(options),
       },
     });
   });
