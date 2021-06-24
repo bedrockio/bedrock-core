@@ -15,10 +15,10 @@ spec:
       containers:
         - image: mongo:4.4.4
           name: main
-          resources:
-            limits:
-              cpu: "8000m"
-              memory: "32Gi"
+          # resources:
+          #   limits:
+          #     cpu: "8000m"
+          #     memory: "32Gi"
           ports:
             - name: mongo
               containerPort: 27017
