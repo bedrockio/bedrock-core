@@ -1,19 +1,22 @@
 import { DateTime } from 'luxon';
 
-export function formatDate(arg) {
-  return getFormatted(arg, DateTime.DATE_MED);
+export function formatDate(arg, locale) {
+  return getFormatted(arg, DateTime.DATE_MED, locale);
 }
 
-export function formatDateTime(arg) {
-  return getFormatted(arg, DateTime.DATETIME_MED);
+export function formatDateTime(arg, locale) {
+  return getFormatted(arg, DateTime.DATETIME_MED, locale);
 }
 
-function getFormatted(arg, format) {
+function getFormatted(arg, format, locale) {
   let date;
   if (typeof arg === 'string') {
     date = DateTime.fromISO(arg);
   } else {
     date = DateTime.fromJSDate(arg);
   }
-  return date.toLocaleString(format);
+  return date.toLocaleString({
+    locale,
+    ...format,
+  });
 }

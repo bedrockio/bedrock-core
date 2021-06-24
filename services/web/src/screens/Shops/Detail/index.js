@@ -4,6 +4,7 @@ import { Switch, Route } from 'react-router-dom';
 import { Loader, Header } from 'semantic';
 import { Breadcrumbs } from 'components';
 import { request } from 'utils/api';
+import NotFound from '../../NotFound';
 
 import Overview from './Overview';
 
@@ -93,6 +94,7 @@ export default class ShopDetail extends React.Component {
           )}
         />
         {/* --- Generator: end */}
+        <Route component={NotFound} />
       </Switch>
     );
   }

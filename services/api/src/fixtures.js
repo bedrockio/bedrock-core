@@ -1,12 +1,19 @@
-const { User, Product, Shop, Upload, Category } = require('./models');
+const { User, Product, Shop, Upload, Category, Organization } = require('./models');
 const config = require('@bedrockio/config');
 const { storeUploadedFile } = require('./utils/uploads');
 const { logger } = require('@bedrockio/instrumentation');
 
-const adminConfig = {
-  name: config.get('ADMIN_NAME'),
-  email: config.get('ADMIN_EMAIL'),
-  password: config.get('ADMIN_PASSWORD'),
+const { ADMIN_NAME, ADMIN_EMAIL, ADMIN_PASSWORD } = config.getAll();
+
+const createAdmin = async () => {
+  const [firstName, lastName] = ADMIN_NAME.split(' ');
+  return await User.create({
+    firstName,
+    lastName,
+    email: ADMIN_EMAIL,
+    password: ADMIN_PASSWORD,
+    roles: [{ scope: 'global', role: 'superAdmin' }],
+  });
 };
 
 const createUpload = async (owner, image) => {
@@ -20,51 +27,63 @@ const createUpload = async (owner, image) => {
 };
 
 const createFixtures = async () => {
-  if (await User.findOne({ email: adminConfig.email })) {
+  if (await User.findOne({ email: ADMIN_EMAIL })) {
     return false;
   }
 
   logger.info('Creating DB fixtures');
 
-  [
-    'jewelry',
-    'toy',
-    'florist',
-    'hairdresser',
-    'barber',
-    'shoe',
-    'clothes',
-    'hardware',
-    'delicatessen',
-    'books',
-    'pets',
-    'chemist',
-    'fishmonger',
-    'butcher',
-    'baker',
-    'supermarket',
-    'grocer',
-    'department',
-    'tea',
-    'music',
-    'optician',
-    'travel',
-    'design',
-  ].forEach(async (name) => {
-    await Category.create({
-      name,
-    });
-  });
+  await Promise.all([
+    Organization.create({
+      name: 'Bedrock Inc.',
+    }),
+    Organization.create({
+      name: 'Bedrock Institute',
+    }),
+    Organization.create({
+      name: 'Bedrock University',
+    }),
+  ]);
 
-  const adminUser = await User.create({
-    ...adminConfig,
-    roles: [{ scope: 'global', role: 'superAdmin' }],
-  });
+  const categories = await Promise.all(
+    [
+      'jewelry',
+      'toy',
+      'florist',
+      'hairdresser',
+      'barber',
+      'shoe',
+      'clothes',
+      'hardware',
+      'delicatessen',
+      'books',
+      'pets',
+      'chemist',
+      'fishmonger',
+      'butcher',
+      'baker',
+      'supermarket',
+      'grocer',
+      'department',
+      'tea',
+      'music',
+      'optician',
+      'travel',
+      'design',
+    ].map(async (name) => {
+      return await Category.create({
+        name,
+      });
+    })
+  );
+
+  const adminUser = await createAdmin();
   logger.info(`Added admin user ${adminUser.email} to database`);
 
   const shop = await Shop.create({
     name: 'Demo',
     images: [await createUpload(adminUser, 'Shop.jpg')],
+    categories: [categories[0], categories[1], categories[2]],
   });
 
   for (let i = 0; i < 15; i++) {

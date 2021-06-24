@@ -1,12 +1,15 @@
-const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
-const pluginAutoPopulate = require('mongoose-autopopulate');
-
-const { startCase, isPlainObject } = require('lodash');
-const { ObjectId } = mongoose.Schema.Types;
-const { getJoiSchema, getMongooseValidator } = require('./validation');
+const mongoose = require('mongoose');
+const autopopulate = require('mongoose-autopopulate');
+const { startCase, escapeRegExp, isPlainObject } = require('lodash');
 const { logger } = require('@bedrockio/instrumentation');
+
+const { getJoiSchema, getMongooseValidator } = require('./validation');
+const { searchValidation } = require('./search');
+
+const { ObjectId } = mongoose.Types;
+const { ObjectId: ObjectIdSchemaType } = mongoose.Schema.Types;
 
 const RESERVED_FIELDS = ['id', 'createdAt', 'updatedAt', 'deletedAt'];
 
@@ -38,6 +41,7 @@ function transformField(obj, schema, options) {
 
 function createSchema(attributes = {}, options = {}) {
   const definition = attributesToDefinition(attributes);
+
   const schema = new mongoose.Schema(
     {
       ...definition,
@@ -68,21 +72,168 @@ function createSchema(attributes = {}, options = {}) {
     });
   });
 
-  schema.methods.assign = function assign(fields) {
+  schema.static('getSearchValidation', function getSearchValidation(options) {
+    return getJoiSchema(attributes, {
+      stripFields: RESERVED_FIELDS,
+      skipRequired: true,
+      skipEmptyCheck: true,
+      unwindArrayFields: true,
+      appendSchema: {
+        ...searchValidation(options),
+      },
+    });
+  });
+
+  schema.static('search', async function search(body) {
+    const { ids, keyword, startAt, endAt, sort, skip, limit, ...rest } = body;
+    const query = {};
+    if (ids?.length) {
+      query._id = { $in: ids };
+    }
+    if (keyword) {
+      if (ObjectId.isValid(keyword)) {
+        query.$or = [{ $text: { $search: keyword } }, { _id: keyword }];
+      } else {
+        query.$text = {
+          $search: keyword,
+        };
+      }
+    }
+    if (startAt || endAt) {
+      query.createdAt = {};
+      if (startAt) {
+        query.createdAt.$gte = startAt;
+      }
+      if (endAt) {
+        query.createdAt.$lte = endAt;
+      }
+    }
+    Object.assign(query, flattenQuery(rest));
+    const [data, total] = await Promise.all([
+      this.find(query)
+        .sort(sort && { [sort.field]: sort.order === 'desc' ? -1 : 1 })
+        .skip(skip)
+        .limit(limit),
+      this.countDocuments(query),
+    ]);
+
+    return {
+      data,
+      meta: {
+        total,
+        skip,
+        limit,
+      },
+    };
+  });
+
+  schema.method('assign', function assign(fields) {
     for (let [key, value] of Object.entries(fields)) {
       if (!value && isReferenceField(this.schema.obj[key])) {
         value = undefined;
       }
       this[key] = value;
     }
-  };
+  });
 
-  schema.methods.delete = function () {
+  // Soft delete
+
+  schema.pre(/^find|count|exists/, function (next) {
+    const filter = this.getFilter();
+    if (filter.deletedAt === undefined) {
+      if ('deletedAt' in filter) {
+        delete filter.deletedAt;
+      } else {
+        filter.deletedAt = { $exists: false };
+      }
+    }
+    return next();
+  });
+
+  schema.method('delete', function () {
     this.deletedAt = new Date();
     return this.save();
-  };
+  });
 
-  schema.plugin(pluginAutoPopulate);
+  schema.method('restore', function restore() {
+    this.deletedAt = undefined;
+    return this.save();
+  });
+
+  schema.method('destroy', function destroy() {
+    return this.remove();
+  });
+
+  schema.static('findDeleted', function findOneDeleted(filter) {
+    return this.find({
+      ...filter,
+      deletedAt: { $exists: true },
+    });
+  });
+
+  schema.static('findOneDeleted', function findOneDeleted(filter) {
+    return this.findOne({
+      ...filter,
+      deletedAt: { $exists: true },
+    });
+  });
+
+  schema.static('findByIdDeleted', function findByIdDeleted(id) {
+    return this.findOne({
+      _id: id,
+      deletedAt: { $exists: true },
+    });
+  });
+
+  schema.static('existsDeleted', function existsDeleted() {
+    return this.exists({
+      deletedAt: { $exists: true },
+    });
+  });
+
+  schema.static('countDocumentsDeleted', function countDocumentsDeleted(filter) {
+    return this.countDocuments({
+      ...filter,
+      deletedAt: { $exists: true },
+    });
+  });
+
+  schema.static('findWithDeleted', function findOneWithDeleted(filter) {
+    return this.find({
+      ...filter,
+      deletedAt: undefined,
+    });
+  });
+
+  schema.static('findOneWithDeleted', function findOneWithDeleted(filter) {
+    return this.findOne({
+      ...filter,
+      deletedAt: undefined,
+    });
+  });
+
+  schema.static('findByIdWithDeleted', function findByIdWithDeleted(id) {
+    return this.findOne({
+      _id: id,
+      deletedAt: undefined,
+    });
+  });
+
+  schema.static('existsWithDeleted', function existsWithDeleted() {
+    return this.exists({
+      deletedAt: undefined,
+    });
+  });
+
+  schema.static('countDocumentsWithDeleted', function countDocumentsWithDeleted(filter) {
+    return this.countDocuments({
+      ...filter,
+      deletedAt: undefined,
+    });
+  });
+
+  schema.plugin(autopopulate);
+
   return schema;
 }
 
@@ -103,7 +254,7 @@ function getJoiSchemaFromMongoose(schema, options) {
   });
 }
 
-function attributesToDefinition(attributes) {
+function attributesToDefinition(attributes, path = []) {
   const definition = {};
   const { type } = attributes;
 
@@ -116,18 +267,20 @@ function attributesToDefinition(attributes) {
     const type = typeof val;
     if (isSchemaType) {
       if (key === 'type' && type === 'string') {
-        val = getMongooseType(val);
+        val = getMongooseType(val, attributes, path);
       } else if (key === 'validate' && type === 'string') {
         // Allow custom mongoose validation function that derives from the Joi schema.
         val = getMongooseValidator(val, attributes);
       }
     } else if (key !== 'readScopes') {
       if (Array.isArray(val)) {
-        val = val.map(attributesToDefinition);
+        val = val.map((el, i) => {
+          return attributesToDefinition(el, [...path, i]);
+        });
       } else if (isPlainObject(val)) {
-        val = attributesToDefinition(val);
+        val = attributesToDefinition(val, [...path, key]);
       } else if (type === 'string') {
-        val = getMongooseType(val);
+        val = getMongooseType(val, attributes, path);
       }
     }
     definition[key] = val;
@@ -136,16 +289,18 @@ function attributesToDefinition(attributes) {
   return definition;
 }
 
-function getMongooseType(str) {
+function getMongooseType(str, attributes, path) {
   const type = mongoose.Schema.Types[str];
   if (!type) {
     throw new Error(`Type ${str} could not be converted to Mongoose type.`);
+  } else if (type === ObjectIdSchemaType && !attributes.ref) {
+    throw new Error(`Ref must be passed for ${path.join('.')}`);
   }
   return type;
 }
 
 function isReferenceField(schema) {
-  return resolveSchema(schema)?.type === ObjectId;
+  return resolveSchema(schema)?.type === ObjectIdSchemaType;
 }
 
 function isAllowedField(schema, scopes = []) {
@@ -170,8 +325,12 @@ function loadModel(definition, name) {
   if (!attributes) {
     throw new Error(`Invalid model definition for ${name}, need attributes`);
   }
-  const schema = createSchema(attributes);
-  return mongoose.model(name, schema);
+  try {
+    const schema = createSchema(attributes);
+    return mongoose.model(name, schema);
+  } catch (err) {
+    throw new Error(`${err.message} (loading ${name})`);
+  }
 }
 
 function loadModelDir(dirPath) {
@@ -195,6 +354,43 @@ function loadModelDir(dirPath) {
     }
   }
   return mongoose.models;
+}
+
+// Util
+
+// Flattens nested queries to a dot syntax.
+// Effectively the inverse of lodash get:
+// { foo: { bar: 3 } } -> { 'foo.bar': 3 }
+// Will not flatten mongo operator objects.
+function flattenQuery(query, root = {}, rootPath = []) {
+  for (let [key, value] of Object.entries(query)) {
+    const path = [...rootPath, key];
+    if (isNestedQuery(key, value)) {
+      flattenQuery(value, root, path);
+    } else if (isArrayQuery(key, value)) {
+      root[path.join('.')] = { $in: value };
+    } else {
+      root[path.join('.')] = value;
+    }
+  }
+  return root;
+}
+
+function isNestedQuery(key, value) {
+  if (isMongoOperator(key) || !isPlainObject(value)) {
+    return false;
+  }
+  return Object.keys(value).every((key) => {
+    return !isMongoOperator(key);
+  });
+}
+
+function isArrayQuery(key, value) {
+  return !isMongoOperator(key) && Array.isArray(value);
+}
+
+function isMongoOperator(str) {
+  return str.startsWith('$');
 }
 
 module.exports = {

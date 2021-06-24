@@ -141,9 +141,7 @@ describe('createSchema', () => {
   });
 
   describe('serialization', () => {
-
     describe('reserved fields', () => {
-
       it('should expose id', () => {
         const User = createTestModel(createSchema());
         const user = new User();
@@ -214,11 +212,9 @@ describe('createSchema', () => {
         const data = user.toObject();
         expect(data._private).toBeUndefined();
       });
-
     });
 
     describe('read scopes', () => {
-
       it('should be able to disallow all read access', () => {
         const User = createTestModel(
           createSchema({
@@ -456,9 +452,7 @@ describe('createSchema', () => {
         expect(user.login.attempts).toBe(10);
         expect(user.toObject().login).toBeUndefined();
       });
-
     });
-
   });
 
   describe('assign', () => {
@@ -738,6 +732,106 @@ describe('createSchema', () => {
       expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);
     });
   });
+
+  describe('soft delete', () => {
+    it('should be able to soft delete a document', async () => {
+      const User = createTestModel(
+        createSchema({
+          name: 'String',
+        })
+      );
+      const user = await User.create({
+        name: 'foo',
+      });
+      await user.delete();
+      expect(await user.deletedAt).toBeInstanceOf(Date);
+    });
+
+    it('should be able to restore a document', async () => {
+      const User = createTestModel(
+        createSchema({
+          name: 'String',
+        })
+      );
+      const user = await User.create({
+        name: 'foo',
+      });
+      await user.delete();
+      expect(await user.deletedAt).toBeInstanceOf(Date);
+      await user.restore();
+      expect(await user.deletedAt).toBeUndefined();
+    });
+
+    it('should not query deleted documents by default', async () => {
+      const User = createTestModel(
+        createSchema({
+          name: 'String',
+        })
+      );
+      const deletedUser = await User.create({
+        name: 'foo',
+        deletedAt: new Date(),
+      });
+      expect(await User.find()).toEqual([]);
+      expect(await User.findOne()).toBe(null);
+      expect(await User.findById(deletedUser.id)).toBe(null);
+      expect(await User.exists()).toBe(false);
+      expect(await User.countDocuments()).toBe(0);
+    });
+
+    it('should still be able to query deleted documents', async () => {
+      const User = createTestModel(
+        createSchema({
+          name: 'String',
+        })
+      );
+      const deletedUser = await User.create({
+        name: 'foo',
+        deletedAt: new Date(),
+      });
+      expect(await User.findDeleted()).not.toBe(null);
+      expect(await User.findOneDeleted()).not.toBe(null);
+      expect(await User.findByIdDeleted(deletedUser.id)).not.toBe(null);
+      expect(await User.existsDeleted()).toBe(true);
+      expect(await User.countDocumentsDeleted()).toBe(1);
+    });
+
+    it('should still be able to query with deleted documents', async () => {
+      const User = createTestModel(
+        createSchema({
+          name: 'String',
+        })
+      );
+      await User.create({
+        name: 'foo',
+      });
+      const deletedUser = await User.create({
+        name: 'bar',
+        deletedAt: new Date(),
+      });
+      expect((await User.findWithDeleted()).length).toBe(2);
+      expect(await User.findOneWithDeleted({ name: 'bar' })).not.toBe(null);
+      expect(await User.findByIdWithDeleted(deletedUser.id)).not.toBe(null);
+      expect(await User.existsWithDeleted({ name: 'bar' })).toBe(true);
+      expect(await User.countDocumentsWithDeleted()).toBe(2);
+    });
+
+    it('should be able to hard delete a document', async () => {
+      const User = createTestModel(
+        createSchema({
+          name: 'String',
+        })
+      );
+      const user = await User.create({
+        name: 'foo',
+      });
+      await User.create({
+        name: 'foo2',
+      });
+      await user.destroy();
+      expect(await User.countDocumentsWithDeleted()).toBe(1);
+    });
+  });
 });
 
 describe('loadModel', () => {
@@ -794,7 +888,7 @@ describe('validation', () => {
     }).toThrow();
   }
 
-  describe('create validation', () => {
+  describe('getCreateValidation', () => {
     it('should get a basic Joi create schema', () => {
       const User = createTestModel(
         createSchema({
@@ -848,9 +942,89 @@ describe('validation', () => {
       });
     });
 
+    it('should handle geolocation schema', async () => {
+      const User = createTestModel(
+        createSchema({
+          geoLocation: {
+            type: { type: 'String', default: 'Point' },
+            coordinates: {
+              type: Array,
+              default: [],
+            },
+          },
+        })
+      );
+      const user = await User.create({
+        geoLocation: {
+          coordinates: [35, 95],
+        },
+      });
+      expect(user.toObject()).toEqual({
+        id: user.id,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+        geoLocation: {
+          type: 'Point',
+          coordinates: [35, 95],
+        },
+      });
+      const schema = User.getCreateValidation();
+      assertPass(schema, {
+        geoLocation: {
+          type: 'Line',
+          coordinates: [35, 95],
+        },
+      });
+      assertFail(schema, {
+        geoLocation: 'Line',
+      });
+    });
+
+    it('should not require a field with a default', () => {
+      const User = createTestModel(
+        createSchema({
+          name: {
+            type: String,
+            required: true,
+          },
+          type: {
+            type: String,
+            required: true,
+            enum: ['foo', 'bar'],
+            default: 'foo',
+          },
+        })
+      );
+      const schema = User.getCreateValidation();
+      expect(Joi.isSchema(schema)).toBe(true);
+      assertPass(schema, {
+        name: 'foo',
+      });
+    });
+
+    it('should allow a flag to skip required', async () => {
+      const User = createTestModel(
+        createSchema({
+          name: {
+            type: String,
+            required: true,
+          },
+          age: {
+            type: Number,
+            required: true,
+            skipValidation: true,
+          },
+        })
+      );
+      const schema = User.getCreateValidation();
+      expect(Joi.isSchema(schema)).toBe(true);
+      assertPass(schema, {
+        name: 'foo',
+      });
+    });
   });
 
-  describe('update validation', () => {
+  describe('getUpdateValidation', () => {
     it('should skip required fields', () => {
       const User = createTestModel(
         createSchema({
@@ -1070,10 +1244,14 @@ describe('validation', () => {
           name: 'Barry',
           password: 'fake password',
         });
-        assertPass(schema, {
-          name: 'Barry',
-          password: 'fake password',
-        }, { scopes: ['private'] });
+        assertPass(
+          schema,
+          {
+            name: 'Barry',
+            password: 'fake password',
+          },
+          { scopes: ['private'] }
+        );
       });
 
       it('should require only one of valid scopes', async () => {
@@ -1096,107 +1274,485 @@ describe('validation', () => {
         const schema = User.getUpdateValidation();
 
         // With ['foo'] scopes
-        assertPass(schema, {
-          foo: 'foo!',
-        }, { scopes: ['foo'] });
-        assertFail(schema, {
-          bar: 'bar!',
-        }, { scopes: ['foo'] });
-        assertPass(schema, {
-          foobar: 'foobar!',
-        }, { scopes: ['foo'] });
-        assertPass(schema, {
-          foo: 'foo!',
-          foobar: 'foobar!',
-        }, { scopes: ['foo'] });
-        assertFail(schema, {
-          foo: 'foo!',
-          bar: 'bar!',
-          foobar: 'foobar!',
-        }, { scopes: ['foo'] });
+        assertPass(
+          schema,
+          {
+            foo: 'foo!',
+          },
+          { scopes: ['foo'] }
+        );
+        assertFail(
+          schema,
+          {
+            bar: 'bar!',
+          },
+          { scopes: ['foo'] }
+        );
+        assertPass(
+          schema,
+          {
+            foobar: 'foobar!',
+          },
+          { scopes: ['foo'] }
+        );
+        assertPass(
+          schema,
+          {
+            foo: 'foo!',
+            foobar: 'foobar!',
+          },
+          { scopes: ['foo'] }
+        );
+        assertFail(
+          schema,
+          {
+            foo: 'foo!',
+            bar: 'bar!',
+            foobar: 'foobar!',
+          },
+          { scopes: ['foo'] }
+        );
 
         // With ['bar'] scopes
-        assertFail(schema, {
-          foo: 'foo!',
-        }, { scopes: ['bar'] });
-        assertPass(schema, {
-          bar: 'bar!',
-        }, { scopes: ['bar'] });
-        assertPass(schema, {
-          foobar: 'foobar!',
-        }, { scopes: ['bar'] });
-        assertFail(schema, {
-          foo: 'foo!',
-          foobar: 'foobar!',
-        }, { scopes: ['bar'] });
-        assertFail(schema, {
-          foo: 'foo!',
-          bar: 'bar!',
-          foobar: 'foobar!',
-        }, { scopes: ['bar'] });
+        assertFail(
+          schema,
+          {
+            foo: 'foo!',
+          },
+          { scopes: ['bar'] }
+        );
+        assertPass(
+          schema,
+          {
+            bar: 'bar!',
+          },
+          { scopes: ['bar'] }
+        );
+        assertPass(
+          schema,
+          {
+            foobar: 'foobar!',
+          },
+          { scopes: ['bar'] }
+        );
+        assertFail(
+          schema,
+          {
+            foo: 'foo!',
+            foobar: 'foobar!',
+          },
+          { scopes: ['bar'] }
+        );
+        assertFail(
+          schema,
+          {
+            foo: 'foo!',
+            bar: 'bar!',
+            foobar: 'foobar!',
+          },
+          { scopes: ['bar'] }
+        );
 
         // With ['foo', 'bar'] scopes
-        assertPass(schema, {
-          foo: 'foo!',
-        }, { scopes: ['foo', 'bar'] });
-        assertPass(schema, {
-          bar: 'bar!',
-        }, { scopes: ['foo', 'bar'] });
-        assertPass(schema, {
-          foobar: 'foobar!',
-        }, { scopes: ['foo', 'bar'] });
-        assertPass(schema, {
-          foo: 'foo!',
-          foobar: 'foobar!',
-        }, { scopes: ['foo', 'bar'] });
-        assertPass(schema, {
-          foo: 'foo!',
-          bar: 'bar!',
-          foobar: 'foobar!',
-        }, { scopes: ['foo', 'bar'] });
-
+        assertPass(
+          schema,
+          {
+            foo: 'foo!',
+          },
+          { scopes: ['foo', 'bar'] }
+        );
+        assertPass(
+          schema,
+          {
+            bar: 'bar!',
+          },
+          { scopes: ['foo', 'bar'] }
+        );
+        assertPass(
+          schema,
+          {
+            foobar: 'foobar!',
+          },
+          { scopes: ['foo', 'bar'] }
+        );
+        assertPass(
+          schema,
+          {
+            foo: 'foo!',
+            foobar: 'foobar!',
+          },
+          { scopes: ['foo', 'bar'] }
+        );
+        assertPass(
+          schema,
+          {
+            foo: 'foo!',
+            bar: 'bar!',
+            foobar: 'foobar!',
+          },
+          { scopes: ['foo', 'bar'] }
+        );
       });
     });
 
-  });
-
-  describe('other cases', () => {
-    it('should handle geolocation schema', async () => {
+    it('should allow search on a nested field', () => {
       const User = createTestModel(
         createSchema({
-          geoLocation: {
-            type: { type: 'String', default: 'Point' },
-            coordinates: {
-              type: Array,
-              default: [],
+          roles: [
+            {
+              role: { type: 'String', required: true },
+              scope: { type: 'String', required: true },
             },
+          ],
+        })
+      );
+      const schema = User.getSearchValidation();
+      assertPass(schema, {
+        roles: {
+          role: 'test',
+        },
+      });
+    });
+
+    it('should strip validation with skip flag', async () => {
+      const User = createTestModel(
+        createSchema({
+          name: {
+            type: String,
+            required: true,
+          },
+          age: {
+            type: Number,
+            required: true,
+            skipValidation: true,
+            default: 10,
           },
         })
       );
-      const user = await User.create({
-        geoLocation: {
-          coordinates: [35, 95],
-        },
-      });
-      expect(user.toObject()).toEqual({
-        id: user.id,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt,
-        geoLocation: {
-          type: 'Point',
-          coordinates: [35, 95],
-        },
-      });
-      const schema = User.getCreateValidation();
+      const schema = User.getUpdateValidation();
+      expect(Joi.isSchema(schema)).toBe(true);
       assertPass(schema, {
-        geoLocation: {
-          type: 'Line',
-          coordinates: [35, 95],
-        },
+        name: 'foo',
+        age: 25,
       });
-      assertFail(schema, {
-        geoLocation: 'Line',
+      const { value } = schema.validate({
+        name: 'foo',
+        age: 25,
+      });
+      expect(value.age).toBeUndefined();
+    });
+  });
+
+  describe('getSearchValidation', () => {
+    it('should get a basic search schema allowing empty', () => {
+      const User = createTestModel(
+        createSchema({
+          name: {
+            type: String,
+            required: true,
+          },
+        })
+      );
+      const schema = User.getSearchValidation();
+      expect(Joi.isSchema(schema)).toBe(true);
+      assertPass(schema, {
+        name: 'foo',
+      });
+      assertPass(schema, {});
+    });
+
+    it('should mixin default search schema', () => {
+      const User = createTestModel(
+        createSchema({
+          name: {
+            type: String,
+            required: true,
+          },
+        })
+      );
+      const schema = User.getSearchValidation();
+      assertPass(schema, {
+        name: 'foo',
+        keyword: 'keyword',
+        startAt: '2020-01-01T00:00:00',
+        endAt: '2020-01-01T00:00:00',
+        skip: 1,
+        limit: 5,
+        sort: {
+          field: 'createdAt',
+          order: 'desc',
+        },
+        // TODO: validate better?
+        ids: ['12345'],
       });
     });
+  });
+});
+
+describe('search', () => {
+  it('should search on name', async () => {
+    const User = createTestModel(
+      createSchema({
+        name: {
+          type: String,
+          required: true,
+        },
+      })
+    );
+    await Promise.all([User.create({ name: 'Billy' }), User.create({ name: 'Willy' })]);
+    const { data, meta } = await User.search({ name: 'Billy' });
+    expect(data).toMatchObject([{ name: 'Billy' }]);
+    expect(meta.total).toBe(1);
+    expect(meta.skip).toBeUndefined();
+    expect(meta.limit).toBeUndefined();
+  });
+
+  it('should search on name as a keyword', async () => {
+    const schema = createSchema({
+      name: {
+        type: String,
+        required: true,
+      },
+    });
+    schema.index({
+      name: 'text',
+    });
+    const User = createTestModel(schema);
+    await Promise.all([User.create({ name: 'Billy' }), User.create({ name: 'Willy' })]);
+    const { data, meta } = await User.search({ keyword: 'billy' });
+    expect(data).toMatchObject([{ name: 'Billy' }]);
+    expect(meta.total).toBe(1);
+  });
+
+  it('should search on an array field', async () => {
+    const User = createTestModel(
+      createSchema({
+        order: Number,
+        categories: [
+          {
+            type: String,
+          },
+        ],
+      })
+    );
+    const [user1, user2] = await Promise.all([
+      User.create({ order: 1, categories: ['owner', 'member'] }),
+      User.create({ order: 2, categories: ['owner'] }),
+    ]);
+
+    let result;
+    result = await User.search({
+      categories: ['member'],
+    });
+    expect(result.data).toMatchObject([{ id: user1.id }]);
+    expect(result.meta.total).toBe(1);
+
+    result = await User.search({
+      categories: ['owner'],
+      sort: {
+        field: 'order',
+        order: 'asc',
+      },
+    });
+    expect(result.data).toMatchObject([{ id: user1.id }, { id: user2.id }]);
+    expect(result.meta.total).toBe(2);
+  });
+
+  it('should behave like $in when empty array passed', async () => {
+    const User = createTestModel(
+      createSchema({
+        categories: [String],
+      })
+    );
+    await Promise.all([User.create({ categories: ['owner', 'member'] }), User.create({ categories: ['owner'] })]);
+
+    const result = await User.search({
+      categories: [],
+    });
+    expect(result.data).toMatchObject([]);
+    expect(result.meta.total).toBe(0);
+  });
+
+  it('should be able to perform a search on a nested field', async () => {
+    const User = createTestModel(
+      createSchema({
+        order: Number,
+        roles: [
+          {
+            role: { type: 'String', required: true },
+            scope: { type: 'String', required: true },
+          },
+        ],
+      })
+    );
+    const [user1, user2] = await Promise.all([
+      User.create({
+        order: 1,
+        roles: [
+          { role: 'owner', scope: 'global' },
+          { role: 'member', scope: 'global' },
+        ],
+      }),
+      User.create({
+        order: 2,
+        roles: [{ role: 'member', scope: 'global' }],
+      }),
+    ]);
+
+    let result;
+    result = await User.search({
+      roles: {
+        role: 'member',
+      },
+      sort: {
+        field: 'order',
+        order: 'asc',
+      },
+    });
+    expect(result.data).toMatchObject([{ id: user1.id }, { id: user2.id }]);
+    expect(result.meta.total).toBe(2);
+  });
+
+  it('should be able to perform a search on a complex nested field', async () => {
+    const User = createTestModel(
+      createSchema({
+        name: String,
+        profile: {
+          roles: [
+            {
+              role: {
+                functions: [String],
+              },
+            },
+          ],
+        },
+      })
+    );
+    await Promise.all([
+      User.create({
+        name: 'Bob',
+        profile: {
+          roles: [
+            {
+              role: {
+                functions: ['owner', 'spectator'],
+              },
+            },
+          ],
+        },
+      }),
+      User.create({
+        name: 'Fred',
+        profile: {
+          roles: [
+            {
+              role: {
+                functions: ['manager', 'spectator'],
+              },
+            },
+          ],
+        },
+      }),
+    ]);
+
+    let result;
+    result = await User.search({
+      profile: {
+        roles: {
+          role: {
+            functions: ['owner'],
+          },
+        },
+      },
+    });
+    expect(result.data).toMatchObject([
+      {
+        name: 'Bob',
+      },
+    ]);
+  });
+
+  it('should be able to mixin operator queries', async () => {
+    const User = createTestModel(
+      createSchema({
+        name: {
+          type: String,
+        },
+        age: {
+          type: Number,
+        },
+      })
+    );
+    await Promise.all([
+      User.create({ name: 'Billy', age: 20 }),
+      User.create({ name: 'Willy', age: 32 }),
+      User.create({ name: 'Chilly', age: 10 }),
+    ]);
+    const { data } = await User.search({
+      $or: [{ name: 'Billy' }, { age: 10 }],
+    });
+    expect(data).toMatchObject([
+      { name: 'Billy', age: 20 },
+      { name: 'Chilly', age: 10 },
+    ]);
+  });
+
+  it('should be able to mixin nested operator queries', async () => {
+    const User = createTestModel(
+      createSchema({
+        name: {
+          type: String,
+        },
+      })
+    );
+    await Promise.all([User.create({ name: 'Billy' }), User.create({ name: 'Willy' })]);
+    const { data, meta } = await User.search({ name: { $ne: 'Billy' } });
+    expect(data).toMatchObject([
+      {
+        name: 'Willy',
+      },
+    ]);
+    expect(meta.total).toBe(1);
+    expect(meta.skip).toBeUndefined();
+    expect(meta.limit).toBeUndefined();
+  });
+
+  it('should allow custom dot path in query', async () => {
+    const Organization = createTestModel();
+    const User = createTestModel(
+      createSchema({
+        roles: [
+          {
+            role: {
+              type: 'String',
+              required: true,
+            },
+            scope: {
+              type: 'String',
+              required: true,
+            },
+            scopeRef: {
+              type: 'ObjectId',
+              ref: 'Organization',
+            },
+          },
+        ],
+      })
+    );
+    const organization = await Organization.create({});
+    await User.create({
+      roles: [
+        {
+          role: 'admin',
+          scope: 'organization',
+          scopeRef: organization.id,
+        },
+      ],
+    });
+    const { data } = await User.search({
+      'roles.scope': 'organization',
+      'roles.scopeRef': organization.id,
+    });
+    expect(data.length).toBe(1);
   });
 });

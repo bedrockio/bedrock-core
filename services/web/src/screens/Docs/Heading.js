@@ -3,11 +3,11 @@ import { Icon } from 'semantic';
 import { kebabCase } from 'lodash';
 import { JumpLink } from 'components/Link';
 
-const flatten = (text, child) => {
+function flatten(text, child) {
   return typeof child === 'string'
     ? text + child
     : React.Children.toArray(child.props.children).reduce(flatten, text);
-};
+}
 
 const ROUTE_REG = /^(GET|POST|PATCH|DELETE) \/1\/(.+)$/;
 

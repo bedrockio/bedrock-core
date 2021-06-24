@@ -6,16 +6,14 @@ import {
   useSession,
 } from '../session';
 import { setToken, clearToken } from 'utils/api';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 
 jest.mock('utils/api');
 jest.mock('utils/env');
 
-let renderCount;
 let snapshot;
 
 beforeEach(() => {
-  renderCount = 0;
   snapshot = null;
 });
 
@@ -29,7 +27,6 @@ class MyComponent extends React.Component {
   }
 
   render() {
-    renderCount++;
     const { loading, user } = this.context;
     if (loading) {
       return null;
@@ -47,8 +44,9 @@ describe('withSession', () => {
         <Component />
       </SessionProvider>
     );
-    expect(container.textContent).toBe('Anonymous');
-    expect(renderCount).toBe(2);
+    await waitFor(() => {
+      expect(container.textContent).toBe('Anonymous');
+    });
   });
 
   it('should display user name', async () => {
@@ -58,8 +56,9 @@ describe('withSession', () => {
         <Component />
       </SessionProvider>
     );
-    expect(container.textContent).toBe('Bob');
-    expect(renderCount).toBe(2);
+    await waitFor(() => {
+      expect(container.textContent).toBe('Bob');
+    });
   });
 
   it('should set the last context as a snapshot', async () => {
@@ -69,9 +68,10 @@ describe('withSession', () => {
         <Component />
       </SessionProvider>
     );
-    expect(snapshot.user).toBe(null);
-    expect(snapshot.loading).toBe(true);
-    expect(renderCount).toBe(2);
+    await waitFor(() => {
+      expect(snapshot.user).toBe(null);
+      expect(snapshot.loading).toBe(true);
+    });
   });
 });
 
@@ -84,8 +84,9 @@ describe('withLoadedSession', () => {
         <Component />
       </SessionProvider>
     );
-    expect(container.textContent).toBe('Anonymous');
-    expect(renderCount).toBe(2);
+    await waitFor(() => {
+      expect(container.textContent).toBe('Anonymous');
+    });
   });
 
   it('should display user name', async () => {
@@ -95,14 +96,14 @@ describe('withLoadedSession', () => {
         <Component />
       </SessionProvider>
     );
-    expect(container.textContent).toBe('Bob');
-    expect(renderCount).toBe(2);
+    await waitFor(() => {
+      expect(container.textContent).toBe('Bob');
+    });
   });
 });
 
 describe('useSession', () => {
   const Component = () => {
-    renderCount++;
     const { user } = useSession();
     return <div>{user?.name || 'Anonymous'}</div>;
   };
@@ -113,8 +114,9 @@ describe('useSession', () => {
         <Component />
       </SessionProvider>
     );
-    expect(container.textContent).toBe('Anonymous');
-    expect(renderCount).toBe(2);
+    await waitFor(() => {
+      expect(container.textContent).toBe('Anonymous');
+    });
   });
 
   it('should display user name', async () => {
@@ -124,7 +126,8 @@ describe('useSession', () => {
         <Component />
       </SessionProvider>
     );
-    expect(container.textContent).toBe('Bob');
-    expect(renderCount).toBe(2);
+    await waitFor(() => {
+      expect(container.textContent).toBe('Bob');
+    });
   });
 });

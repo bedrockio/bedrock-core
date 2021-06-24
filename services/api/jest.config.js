@@ -1,4 +1,5 @@
 process.env.ENV_NAME = 'test';
+process.env.LOG_LEVEL = 'warn';
 module.exports = {
   testTimeout: 60000,
   preset: '@shelf/jest-mongodb',

@@ -1,22 +1,22 @@
 import React from 'react';
 import GoogleMapReact from 'google-map-react';
-import styled from 'styled-components';
 import { Transition } from 'semantic-ui-react';
 import { GOOGLE_API_KEY } from 'utils/env';
 
-const StyledMarker = styled.div`
-  color: #fff;
-  background: #1478c1;
-  border-radius: 50%;
-  padding: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 const Marker = (props) => (
   <Transition visible={props.visible} animation="browse" duration={500}>
-    <StyledMarker {...props} />
+    <div
+      style={{
+        color: '#fff',
+        background: '#1478c1',
+        borderRadius: '50%',
+        padding: '10px',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+      {...props}
+    />
   </Transition>
 );
 

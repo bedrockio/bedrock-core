@@ -1,6 +1,6 @@
 import { capitalize } from 'lodash';
 
-export const createDropdownOptions = (keys) => {
+export function createDropdownOptions(keys) {
   if (keys.length && typeof keys[0] === 'string') {
     return keys.map((key) => {
       return {
@@ -18,4 +18,4 @@ export const createDropdownOptions = (keys) => {
       value: key,
     };
   });
-};
+}

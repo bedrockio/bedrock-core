@@ -17,12 +17,13 @@ router
     '/register',
     validateBody({
       email: Joi.string().lowercase().email().required(),
-      name: Joi.string().required(),
+      firstName: Joi.string().required(),
+      lastName: Joi.string().required(),
       password: passwordField.required(),
     }),
     async (ctx) => {
-      const { email, name } = ctx.request.body;
-      const existingUser = await User.findOne({ email, deletedAt: { $exists: false } });
+      const { email } = ctx.request.body;
+      const existingUser = await User.findOne({ email });
       if (existingUser) {
         ctx.throw(400, 'A user with that email already exists');
       }
@@ -34,10 +35,9 @@ router
       });
 
       await sendTemplatedMail({
-        to: [name, email].join(' '),
+        to: user.fullName,
         template: 'welcome.md',
         subject: 'Welcome to {{appName}}',
-        name,
       });
 
       ctx.body = { data: { token: createAuthToken(user.id, authTokenId) } };
@@ -138,7 +138,7 @@ router
       await user.updateOne({ tempTokenId: tokenId });
 
       await sendTemplatedMail({
-        to: [user.name, email].join(' '),
+        to: [user.fullName, email].join(' '),
         template: 'reset-password.md',
         subject: 'Password Reset Request',
         token,

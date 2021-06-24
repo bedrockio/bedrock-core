@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@bedrockio/config": "^2.0.3",
-    "@bedrockio/instrumentation": "^1.4.8",
+    "@bedrockio/instrumentation": "^1.4.9",
     "@google-cloud/storage": "^5.1.2",
     "@koa/cors": "^3.1.0",
     "@koa/router": "^10.0.0",
@@ -29,8 +29,8 @@
     "koa-body": "^4.2.0",
     "lodash": "^4.17.19",
     "marked": "^2.0.1",
-    "mongoose": "^5.9.26",
-    "mongoose-autopopulate": "^0.12.2",
+    "mongoose": "^5.12.12",
+    "mongoose-autopopulate": "^0.14.0",
     "mustache": "^4.1.0",
     "postmark": "^2.5.4"
   },
@@ -41,7 +41,7 @@
     "eslint": "^7.22.0",
     "eslint-plugin-bedrock": "^1.0.7",
     "jest": "^26.1.0",
-    "mongodb": "^3.6.5",
+    "mongodb": "^3.6.9",
     "nodemon": "^2.0.7",
     "prettier": "^2.2.1",
     "prettier-eslint": "^12.0.0",

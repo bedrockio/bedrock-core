@@ -17,19 +17,23 @@ const LOGIN_THROTTLE = {
 definition.attributes.roles[0].scope.enum = validScopes;
 const schema = createSchema(definition.attributes);
 
-schema.methods.verifyPassword = async function verifyPassword(password) {
+schema.method('verifyPassword', async function verifyPassword(password) {
   if (!this.hashedPassword) {
     throw Error('No password set for user');
   }
   return bcrypt.compare(password, this.hashedPassword);
-};
+});
 
-schema.methods.verifyLoginAttempts = function verifyLoginAttempts() {
+schema.method('verifyLoginAttempts', function verifyLoginAttempts() {
   const { triesMin, triesMax, timeMax } = LOGIN_THROTTLE;
   const dt = new Date() - this.lastLoginAttemptAt || Date.now();
   const threshold = mapExponential(this.loginAttempts, triesMin, triesMax, 0, timeMax);
   return dt >= threshold;
-};
+});
+
+schema.virtual('fullName').get(function getFullName() {
+  return [this.firstName, this.lastName].join(' ');
+});
 
 schema.virtual('password').set(function setPassword(password) {
   this._password = password;
@@ -42,6 +46,12 @@ schema.pre('save', async function preSave(next) {
     delete this._password;
   }
   return next();
+});
+
+schema.index({
+  firstName: 'text',
+  lastName: 'text',
+  email: 'text',
 });
 
 module.exports = mongoose.models.User || mongoose.model('User', schema);

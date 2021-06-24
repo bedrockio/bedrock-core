@@ -1,4 +1,4 @@
-const { setupDb, teardownDb, request, createUser } = require('../../utils/testing');
+const { setupDb, teardownDb, request, createUpload, createUser } = require('../../utils/testing');
 const { Upload } = require('../../models');
 
 beforeAll(async () => {
@@ -8,17 +8,6 @@ beforeAll(async () => {
 afterAll(async () => {
   await teardownDb();
 });
-
-const createUpload = (user = {}) => {
-  return Upload.create({
-    filename: 'logo.png',
-    rawUrl: 'logo.png',
-    hash: 'test',
-    storageType: 'local',
-    mimeType: 'image/png',
-    ownerId: user.id || 'none',
-  });
-};
 
 describe('/1/uploads', () => {
   describe('POST /', () => {
@@ -70,7 +59,7 @@ describe('/1/uploads', () => {
       const upload = await createUpload(user);
       const response = await request('DELETE', `/1/uploads/${upload.id}`, {}, { user });
       expect(response.status).toBe(204);
-      const dbUpload = await Upload.findById(upload.id);
+      const dbUpload = await Upload.findByIdDeleted(upload.id);
       expect(dbUpload.deletedAt).toBeDefined();
     });
 
@@ -82,11 +71,11 @@ describe('/1/uploads', () => {
     });
   });
 
-  describe('GET /:hash', () => {
-    it('should be able to access upload by hash', async () => {
+  describe('GET /:id', () => {
+    it('should be able to access upload by id', async () => {
       const user = await createUser();
       const upload = await createUpload(user);
-      const response = await request('GET', `/1/uploads/${upload.hash}`, {}, { user });
+      const response = await request('GET', `/1/uploads/${upload.id}`, {}, { user });
       expect(response.status).toBe(200);
       expect(response.body.data.filename).toBe('logo.png');
     });

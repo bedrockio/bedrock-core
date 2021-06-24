@@ -1,16 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Table, Divider, Button, Message } from 'semantic';
+import { Table, Button, Message, Confirm } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import { screen } from 'helpers';
-import {
-  Confirm,
-  HelpTip,
-  Breadcrumbs,
-  SearchProvider,
-  Layout,
-} from 'components';
+import { HelpTip, Breadcrumbs, SearchProvider, Layout } from 'components';
 
 import Filters from 'modals/Filters';
 import EditShop from 'modals/EditShop';
@@ -30,22 +24,8 @@ export default class ShopList extends React.Component {
     return await request({
       method: 'POST',
       path: '/1/shops/search',
-      body: {
-        ...params,
-        category: params.category?.id,
-      },
+      body: params,
     });
-  };
-
-  fetchCategories = async (query) => {
-    const { data } = await request({
-      method: 'POST',
-      path: '/1/categories/search',
-      body: {
-        name: query,
-      },
-    });
-    return data;
   };
 
   render() {
@@ -77,11 +57,6 @@ export default class ShopList extends React.Component {
                       name="countryCode"
                       options={countries}
                       search
-                    />
-                    <Filters.Dropdown
-                      label="Category"
-                      name="category"
-                      onDataNeeded={this.fetchCategories}
                     />
                     {/* --- Generator: end */}
                   </Filters>
@@ -133,7 +108,7 @@ export default class ShopList extends React.Component {
                           <Table.Cell>
                             {formatDateTime(shop.createdAt)}
                           </Table.Cell>
-                          <Table.Cell textAlign="center">
+                          <Table.Cell textAlign="center" singleLine>
                             <EditShop
                               shop={shop}
                               trigger={<Button basic icon="edit" />}
@@ -141,7 +116,7 @@ export default class ShopList extends React.Component {
                             />
                             <Confirm
                               negative
-                              confirmText="Delete"
+                              confirmButton="Delete"
                               header={`Are you sure you want to delete "${shop.name}"?`}
                               content="All data will be permanently deleted"
                               trigger={<Button basic icon="trash" />}
