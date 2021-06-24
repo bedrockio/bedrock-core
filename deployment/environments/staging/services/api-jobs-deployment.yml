@@ -21,7 +21,9 @@ spec:
               cpu: "1000m"
               memory: "4Gi"
           command:
-            - "./scripts/entrypoints/jobs.sh jobs/default.yml"
+            - /service/scripts/entrypoints/jobs.sh
+          args:
+            - /service/jobs/default.yml
           env:
             - name: ENV_NAME
               value: "staging"
