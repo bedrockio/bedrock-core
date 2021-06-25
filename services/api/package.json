@@ -6,7 +6,7 @@
     "node": ">=12"
   },
   "scripts": {
-    "start": "nodemon --delay 300ms --ignore __tests__/* -w src --exec \"MOCK_EMAIL=true node src/index.js\"",
+    "start": "nodemon --delay 300ms --ignore __tests__/* -w src --exec \"node src/index.js\"",
     "start:production": "node src/index",
     "docs": "node scripts/generate-openapi",
     "lint": "eslint .",

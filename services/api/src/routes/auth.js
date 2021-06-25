@@ -4,7 +4,8 @@ const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { createAuthToken, createTemporaryToken, generateTokenId } = require('../utils/tokens');
 const { sendTemplatedMail } = require('../utils/mailer');
-const { User, Invite } = require('../models');
+const { User, Invite, AuditEntry } = require('../models');
+const { object } = require('joi');
 
 const router = new Router();
 
@@ -32,6 +33,11 @@ router
       const user = await User.create({
         authTokenId,
         ...ctx.request.body,
+      });
+
+      await AuditEntry.append('registered', ctx, {
+        object: user,
+        user: user.id,
       });
 
       await sendTemplatedMail({
@@ -64,10 +70,20 @@ router
       }
 
       if (!user.verifyLoginAttempts()) {
+        await AuditEntry.append('reached max. authentication attempts', ctx, {
+          type: 'security',
+          object: user,
+          user: user.id,
+        });
         ctx.throw(401, 'Too many login attempts');
       }
 
       if (!(await user.verifyPassword(password))) {
+        await AuditEntry.append('failed authentication', ctx, {
+          type: 'security',
+          object: user,
+          user: user.id,
+        });
         ctx.throw(401, 'Incorrect password');
       }
 
@@ -75,6 +91,12 @@ router
       user.loginAttempts = 0;
       user.authTokenId = authTokenId;
       await user.save();
+
+      await AuditEntry.append('successfully authenticated', ctx, {
+        object: user,
+        user: user.id,
+      });
+
       ctx.body = { data: { token: createAuthToken(user.id, user.authTokenId) } };
     }
   )
@@ -100,7 +122,7 @@ router
         $set: { status: 'accepted' },
       });
       if (!invite) {
-        return ctx.throw(500, 'Invite could not be found');
+        return ctx.throw(400, 'Invite could not be found');
       }
       const authTokenId = generateTokenId();
       const existingUser = await User.findOne({ email: invite.email });
@@ -116,6 +138,11 @@ router
         email: invite.email,
         password,
         authTokenId,
+      });
+
+      await AuditEntry.append('registered', ctx, {
+        object: user,
+        user: user.id,
       });
 
       ctx.body = { data: { token: createAuthToken(user.id, authTokenId) } };
@@ -161,11 +188,22 @@ router
       if (!user) {
         ctx.throw(400, 'User does not exist');
       } else if (user.tempTokenId !== jwt.jti) {
+        await AuditEntry.append('attempted reset password', ctx, {
+          type: 'security',
+          object: user,
+          user: user.id,
+        });
         ctx.throw(400, 'Token is invalid');
       }
       user.password = password;
       user.tempTokenId = undefined;
+
       await user.save();
+
+      await AuditEntry.append('reset password', ctx, {
+        object: user,
+        user: user.id,
+      });
       ctx.body = { data: { token: createAuthToken(user.id) } };
     }
   );

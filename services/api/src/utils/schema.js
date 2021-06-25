@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const mongoose = require('mongoose');
 const autopopulate = require('mongoose-autopopulate');
-const { startCase, escapeRegExp, isPlainObject } = require('lodash');
+const { startCase, uniq, isPlainObject } = require('lodash');
 const { logger } = require('@bedrockio/instrumentation');
 
 const { getJoiSchema, getMongooseValidator } = require('./validation');
@@ -232,8 +232,23 @@ function createSchema(attributes = {}, options = {}) {
     });
   });
 
-  schema.plugin(autopopulate);
+  schema.post(/^init|save/, function () {
+    if (!this.$locals.original) {
+      this.$locals.original = this.toObject({
+        depopulate: true,
+      });
+    }
+  });
 
+  schema.pre('save', function () {
+    // keeps the directModifiedPaths around after document.save
+    this.$locals.pathsModified = uniq([...(this.$locals.pathsModified || []), ...this.directModifiedPaths()]);
+    if (!this.$locals.isNew) {
+      this.$locals.isNew = this.isNew;
+    }
+  });
+
+  schema.plugin(autopopulate);
   return schema;
 }
 

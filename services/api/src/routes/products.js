@@ -28,23 +28,19 @@ router
       data: product,
     };
   })
-  .post(
-    '/search',
-    validateBody(
-      Product.getSearchValidation(),
-    ),
-    async (ctx) => {
-      const { data, meta } = await Product.search(ctx.request.body);
-      ctx.body = {
-        data,
-        meta,
-      };
-    }
-  )
+  .post('/search', validateBody(Product.getSearchValidation()), async (ctx) => {
+    const { data, meta } = await Product.search(ctx.request.body);
+    ctx.body = {
+      data,
+      meta,
+    };
+  })
   .patch('/:productId', validateBody(Product.getUpdateValidation()), async (ctx) => {
     const product = ctx.state.product;
     product.assign(ctx.request.body);
+
     await product.save();
+
     ctx.body = {
       data: product,
     };

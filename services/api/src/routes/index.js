@@ -6,12 +6,14 @@ const shops = require('./shops');
 const uploads = require('./uploads');
 const invites = require('./invites');
 const status = require('./status');
+const auditEntries = require('./audit-entries');
 const categories = require('./categories');
 const organizations = require('./organizations');
 
 const router = new Router();
 
 router.use('/auth', auth.routes());
+router.use('/audit-entries', auditEntries.routes());
 router.use('/users', users.routes());
 router.use('/products', products.routes());
 router.use('/shops', shops.routes());
