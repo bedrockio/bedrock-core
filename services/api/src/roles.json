@@ -3,7 +3,7 @@
     "name": "Super Admin",
     "allowScopes": ["global"],
     "permissions": {
-      "audit-entries": "read",
+      "auditEntries": "read",
       "users": "read-write",
       "shops": "read-write",
       "products": "read-write",
@@ -14,7 +14,7 @@
     "name": "Admin",
     "allowScopes": ["organization"],
     "permissions": {
-      "audit-entries": "read",
+      "auditEntries": "read",
       "users": "read-write",
       "shops": "read-write",
       "products": "read-write"
@@ -24,7 +24,7 @@
     "name": "Viewer",
     "allowScopes": ["organization"],
     "permissions": {
-      "audit-entries": "read",
+      "auditEntries": "read",
       "users": "read",
       "shops": "read",
       "products": "read"

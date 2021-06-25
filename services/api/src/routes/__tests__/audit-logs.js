@@ -1,4 +1,4 @@
-const { setupDb, teardownDb, request, createUser, createUserWithRole } = require('../../utils/testing');
+const { setupDb, teardownDb, request, createUser, createAdminUser } = require('../../utils/testing');
 
 beforeAll(async () => {
   await setupDb();
@@ -11,7 +11,7 @@ afterAll(async () => {
 describe('/1/audit-entries', () => {
   describe('POST /search', () => {
     it('should list audit logs', async () => {
-      const admin = await createUserWithRole('global', 'superAdmin');
+      const admin = await createAdminUser();
       const response = await request('POST', '/1/audit-entries/search', {}, { user: admin });
       expect(response.status).toBe(200);
     });

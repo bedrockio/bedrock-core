@@ -1,47 +1,26 @@
 const Router = require('@koa/router');
-const Joi = require('joi');
+
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
-
-const { searchValidation, exportValidation, getSearchQuery, search, searchExport } = require('../utils/search');
+const { exportValidation, searchExport } = require('../utils/search');
 const { AuditEntry } = require('../models');
 const router = new Router();
 
 router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
-  .use(requirePermissions({ endpoint: 'audit-entries', permission: 'read', scope: 'global' }))
+  .use(requirePermissions({ endpoint: 'auditEntries', permission: 'read', scope: 'global' }))
   .post(
     '/search',
     validateBody(
-      Joi.object({
-        ...searchValidation(),
-        ...exportValidation(),
-        userId: Joi.string(),
-        objectId: Joi.string(),
-        type: Joi.string(),
+      AuditEntry.getSearchValidation({
+        ...exportValidation,
       })
     ),
     async (ctx) => {
-      const { body } = ctx.request;
-      const query = getSearchQuery(body, {
-        keywordFields: ['objectId', 'userId', 'activity'],
-      });
-
-      const { userId, objectId, type } = body;
-      if (userId) {
-        query.userId = userId;
-      }
-      if (objectId) {
-        query.objectId = objectId;
-      }
-      if (type) {
-        query.type = type;
-      }
-
-      const { data, meta } = await search(AuditEntry, query, body);
-
+      const { format, filename, ...params } = ctx.request.body;
+      const { data, meta } = await AuditEntry.search(params);
       if (searchExport(ctx, data)) {
         return;
       }
