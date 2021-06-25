@@ -1,4 +1,7 @@
-const { Organization } = require('./../models');
+const { Organization } = require('../../models');
+const config = require('@bedrockio/config');
+
+const APP_NAME = config.get('APP_NAME');
 
 function fetchOrganization() {
   return async (ctx, next) => {
@@ -11,7 +14,7 @@ function fetchOrganization() {
       ctx.state.organization = organization;
     } else {
       ctx.state.organization =
-        (await Organization.findOne({ name: 'Default' })) || (await Organization.create({ name: 'Default' }));
+        (await Organization.findOne({ name: APP_NAME })) || (await Organization.create({ name: APP_NAME }));
     }
     return next();
   };

@@ -3,8 +3,8 @@ const Joi = require('joi');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
-const { searchValidation, exportValidation, getSearchQuery, search, searchExport } = require('../utils/search');
-const { User, AuditEntry } = require('../models');
+const { exportValidation, searchExport } = require('../utils/search');
+const { User } = require('../models');
 const { expandRoles } = require('./../utils/permissions');
 const roles = require('./../roles.json');
 const permissions = require('./../permissions.json');
@@ -19,7 +19,7 @@ router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
   .param('userId', async (id, ctx, next) => {
-    const user = await User.findOne({ _id: id, deletedAt: { $exists: false } });
+    const user = await User.findById(id);
     ctx.state.user = user;
 
     if (!user) {
@@ -37,7 +37,8 @@ router
   .patch(
     '/me',
     validateBody({
-      name: Joi.string(),
+      firstName: Joi.string(),
+      lastName: Joi.string(),
       timeZone: Joi.string(),
     }),
     async (ctx) => {
@@ -62,28 +63,17 @@ router
   })
   .post(
     '/search',
-    validateBody({
-      ...searchValidation(),
-      ...exportValidation(),
-      name: Joi.string(),
-      role: Joi.string(),
-    }),
+    validateBody(
+      User.getSearchValidation({
+        ...exportValidation(),
+      })
+    ),
     async (ctx) => {
-      const { body } = ctx.request;
-      const query = getSearchQuery(body, {
-        keywordFields: ['name', 'email'],
-      });
-
-      const { role } = body;
-      if (role) {
-        query['roles.role'] = { $in: [role] };
-      }
-      const { data, meta } = await search(User, query, body);
-
+      const { format, filename, ...params } = ctx.request.body;
+      const { data, meta } = await User.search(params);
       if (searchExport(ctx, data)) {
         return;
       }
-
       ctx.body = {
         data: data.map((item) => expandRoles(item)),
         meta,
@@ -92,7 +82,7 @@ router
   )
   .get('/:userId', async (ctx) => {
     ctx.body = {
-      data: ctx.state.user,
+      data: expandRoles(ctx.state.user),
     };
   })
   .use(requirePermissions({ endpoint: 'users', permission: 'write', scope: 'global' }))
@@ -105,48 +95,41 @@ router
     ),
     async (ctx) => {
       const { email } = ctx.request.body;
-      const existingUser = await User.findOne({ email, deletedAt: { $exists: false } });
+      const existingUser = await User.findOne({ email });
       if (existingUser) {
         ctx.throw(400, 'A user with that email already exists');
       }
       const user = await User.create(ctx.request.body);
-
-      await AuditEntry.append('created user', ctx, {
-        type: 'admin',
-        object: user,
-        fields: ['email', 'roles'],
-      });
 
       ctx.body = {
         data: user,
       };
     }
   )
-  .patch('/:userId', validateBody(User.getUpdateValidation()), async (ctx) => {
-    const { user } = ctx.state;
-    user.assign(ctx.request.body);
-
-    await user.save();
-
-    await AuditEntry.append('updated user', ctx, {
-      type: 'admin',
-      object: user,
-      fields: ['email', 'roles'],
-    });
-
-    ctx.body = {
-      data: user,
-    };
-  })
+  .patch(
+    '/:userId',
+    validateBody(
+      User.getUpdateValidation().append({
+        roles: (roles) => {
+          return roles.map((role) => {
+            const { roleDefinition, ...rest } = role;
+            return rest;
+          });
+        },
+      })
+    ),
+    async (ctx) => {
+      const { user } = ctx.state;
+      user.assign(ctx.request.body);
+      await user.save();
+      ctx.body = {
+        data: user,
+      };
+    }
+  )
   .delete('/:userId', async (ctx) => {
     const { user } = ctx.state;
     await user.delete();
-
-    await AuditEntry.append('deleted user', ctx, {
-      type: 'admin',
-      object: user,
-    });
-
     ctx.status = 204;
   });
 

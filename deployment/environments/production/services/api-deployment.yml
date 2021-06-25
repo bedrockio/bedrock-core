@@ -34,10 +34,6 @@ spec:
               value: "production"
             - name: MONGO_URI
               value: "mongodb://mongo:27017/bedrock_production"
-            - name: ADMIN_EMAIL
-              value: "admin@bedrock.foundation"
-            - name: ADMIN_PASSWORD
-              value: "development.now"
             - name: APP_DOMAIN
               value: "bedrock.foundation"
             - name: APP_URL

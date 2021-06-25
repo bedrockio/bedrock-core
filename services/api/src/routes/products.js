@@ -1,9 +1,7 @@
 const Router = require('@koa/router');
-const Joi = require('joi');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
-const { searchValidation, getSearchQuery, search } = require('../utils/search');
-const { Product, AuditEntry } = require('../models');
+const { Product } = require('../models');
 
 const router = new Router();
 
@@ -11,7 +9,7 @@ router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
   .param('productId', async (id, ctx, next) => {
-    const product = await Product.findOne({ _id: id, deletedAt: { $exists: false } });
+    const product = await Product.findById(id);
     ctx.state.product = product;
     if (!product) {
       ctx.throw(404);
@@ -30,41 +28,18 @@ router
       data: product,
     };
   })
-  .post(
-    '/search',
-    validateBody({
-      name: Joi.string(),
-      shop: Joi.string(),
-      ...searchValidation(),
-    }),
-    async (ctx) => {
-      const { body } = ctx.request;
-      const { shop } = body;
-      const query = getSearchQuery(body, {
-        keywordFields: ['name'],
-      });
-      if (shop) {
-        query.shop = shop;
-      }
-      const { data, meta } = await search(Product, query, body);
-
-      ctx.body = {
-        data,
-        meta,
-      };
-    }
-  )
+  .post('/search', validateBody(Product.getSearchValidation()), async (ctx) => {
+    const { data, meta } = await Product.search(ctx.request.body);
+    ctx.body = {
+      data,
+      meta,
+    };
+  })
   .patch('/:productId', validateBody(Product.getUpdateValidation()), async (ctx) => {
     const product = ctx.state.product;
     product.assign(ctx.request.body);
 
     await product.save();
-
-    await AuditEntry.append('updated product', ctx, {
-      type: 'admin',
-      object: product,
-      fields: ['shop', 'name'],
-    });
 
     ctx.body = {
       data: product,

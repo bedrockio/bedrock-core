@@ -2,7 +2,6 @@ const Router = require('@koa/router');
 const Joi = require('joi');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
-const { searchValidation, getSearchQuery, search } = require('../utils/search');
 const { requirePermissions } = require('../utils/middleware/permissions');
 const { Invite, User } = require('../models');
 
@@ -18,7 +17,7 @@ function getToken(invite) {
 function sendInvite(sender, invite) {
   return sendTemplatedMail({
     to: invite.email,
-    subject: `${sender.name} has invited you to join {{appName}}`,
+    subject: `${sender.fullName} has invited you to join {{appName}}`,
     template: 'invite.md',
     sender,
     token: getToken(invite),
@@ -27,7 +26,7 @@ function sendInvite(sender, invite) {
 
 router
   .param('inviteId', async (id, ctx, next) => {
-    const invite = await Invite.findOne({ _id: id, deletedAt: { $exists: false } });
+    const invite = await Invite.findById(id);
     ctx.state.invite = invite;
 
     if (!invite) {
@@ -41,13 +40,11 @@ router
   .use(requirePermissions({ endpoint: 'users', permission: 'read', scope: 'global' }))
   .post(
     '/search',
-    validateBody({
-      ...searchValidation(),
-    }),
+    validateBody(
+      Invite.getSearchValidation(),
+    ),
     async (ctx) => {
-      const { body } = ctx.request;
-      const query = getSearchQuery(body);
-      const { data, meta } = await search(Invite, query, body);
+      const { data, meta } = await Invite.search(ctx.request.body);
       ctx.body = {
         data,
         meta,

@@ -189,7 +189,7 @@ describe('token interop', () => {
 
   async function generateAuthToken(user) {
     const tokenId = generateTokenId();
-    await user.update({
+    await user.updateOne({
       authTokenId: tokenId,
     });
     return await createAuthToken(user.id, tokenId);

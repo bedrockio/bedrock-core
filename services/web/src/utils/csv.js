@@ -1,22 +1,26 @@
 import { get, set } from 'lodash';
 
-export const sleep = (ms) => new Promise((accept) => setTimeout(accept, ms));
+export function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
-export const parseLines = (text) =>
-  text
+export function parseLines(text) {
+  return text
     .replace(/\r/gm, '\n')
     .replace(/\n\n/gm, '\n')
     .split('\n')
     .filter((line) => line.length);
+}
 
-export const parseColumns = (headerLine) =>
-  headerLine
+export function parseColumns(headerLine) {
+  return headerLine
     .replace(/[\n\r]+/g, '')
     .split(/,/)
     .map((k) => k.replace(/"\s/g, ''))
     .filter((k) => k !== '');
+}
 
-export const parseType = (type, rawValue) => {
+export function parseType(type, rawValue) {
   if (type === 'europeanNumber') {
     return parseFloat(rawValue.replace(/\./g, '').replace(/,/, '.'), 10);
   }
@@ -44,7 +48,7 @@ export const parseType = (type, rawValue) => {
       parseInt(value[2], 10)
     );
   }
-};
+}
 
 function csvTextToArray(strData, strDelimiter) {
   // Check to see if the delimiter is defined. If not,
@@ -113,7 +117,7 @@ function csvTextToArray(strData, strDelimiter) {
   return arrData;
 }
 
-export const matchColumns = (columnMapping, fields) => {
+export function matchColumns(columnMapping, fields) {
   const mapping = {};
   Object.keys(columnMapping).forEach((key) => {
     const configuration = columnMapping[key];
@@ -160,10 +164,10 @@ export const matchColumns = (columnMapping, fields) => {
     mapping[key] = result;
   });
   return mapping;
-};
+}
 
-export const createItems = (lines, mapping) =>
-  lines.map((line) => {
+export function createItems(lines, mapping) {
+  return lines.map((line) => {
     const object = {};
     Object.keys(mapping).forEach((key) => {
       let value = mapping[key].defaultValue;
@@ -179,8 +183,9 @@ export const createItems = (lines, mapping) =>
     });
     return object;
   });
+}
 
-export const processText = (columnMapping, text) => {
+export function processText(columnMapping, text) {
   const sheet = csvTextToArray(text).filter(
     (row) => !(row.length === 1 && row[0] === '')
   );
@@ -194,9 +199,9 @@ export const processText = (columnMapping, text) => {
     mapping,
     numColumnsMatched,
   };
-};
+}
 
-export const processFile = (columnMapping, file) => {
+export function processFile(columnMapping, file) {
   return new Promise((accept, reject) => {
     const reader = new FileReader();
     reader.onload = () => {
@@ -211,7 +216,7 @@ export const processFile = (columnMapping, file) => {
     };
     reader.readAsText(file);
   });
-};
+}
 
 function getDeepKeys(obj) {
   var keys = [];

@@ -13,11 +13,12 @@ export class SessionProvider extends React.PureComponent {
       error: null,
       loading: true,
       stored: this.loadStored(),
+      organization: null,
     };
   }
 
   componentDidMount() {
-    this.loadUser();
+    this.load();
   }
 
   isAdmin = () => {
@@ -43,22 +44,24 @@ export class SessionProvider extends React.PureComponent {
     }
   };
 
-  loadUser = async () => {
+  load = async () => {
     if (getToken()) {
       this.setState({
         loading: true,
         error: null,
       });
       try {
-        const { data } = await request({
+        const { data: user } = await request({
           method: 'GET',
           path: '/1/users/me',
         });
+        const organization = await this.loadOrganization();
         // Uncomment this line if you want to set up
         // User-Id tracking. https://bit.ly/2DKQYEN.
         // setUserId(data.id);
         this.setState({
-          user: data,
+          user,
+          organization,
           loading: false,
         });
       } catch (error) {
@@ -97,6 +100,10 @@ export class SessionProvider extends React.PureComponent {
     trackSession('add', key, data);
   };
 
+  getStored = (key) => {
+    return this.state.stored[key];
+  };
+
   removeStored = (key) => {
     this.setStored(omit(this.state.stored, key));
     trackSession('remove', key);
@@ -104,6 +111,36 @@ export class SessionProvider extends React.PureComponent {
 
   clearStored = () => {
     this.setStored({});
+  };
+
+  // Organizations
+
+  loadOrganization = async () => {
+    const organizationId = this.getStored('organizationId');
+    if (organizationId) {
+      try {
+        const { data } = await request({
+          method: 'GET',
+          path: `/1/organizations/${organizationId}`,
+        });
+        return data;
+      } catch (err) {
+        if (err.status < 500) {
+          this.removeStored('organizationId');
+        }
+      }
+    }
+  };
+
+  setOrganization = (organization) => {
+    this.addStored('organizationId', organization.id);
+    this.setState({
+      organization,
+    });
+  };
+
+  getOrganization = () => {
+    return this.state.organization;
   };
 
   loadStored() {
@@ -135,15 +172,18 @@ export class SessionProvider extends React.PureComponent {
       <SessionContext.Provider
         value={{
           ...this.state,
+          load: this.load,
           setToken: this.setToken,
           addStored: this.addStored,
+          getStored: this.getStored,
           removeStored: this.removeStored,
           clearStored: this.clearStored,
           updateUser: this.updateUser,
-          loadUser: this.loadUser,
           hasRoles: this.hasRoles,
           hasRole: this.hasRole,
           isAdmin: this.isAdmin,
+          setOrganization: this.setOrganization,
+          getOrganization: this.getOrganization,
         }}>
         {this.props.children}
       </SessionContext.Provider>
@@ -181,7 +221,7 @@ export function withLoadedSession(Component) {
     static contextType = SessionContext;
 
     render() {
-      return this.context.loading ? null : <Component {...this.props} />;
+      return <Component {...this.props} />;
     }
   };
 }

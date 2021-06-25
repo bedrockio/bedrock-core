@@ -31,6 +31,10 @@ spec:
               value: "bedrock.foundation"
             - name: APP_URL
               value: "https://bedrock.foundation"
+            - name: ADMIN_EMAIL
+              value: "admin@bedrock.foundation"
+            - name: ADMIN_PASSWORD
+              value: "development.now"
             - name: POSTMARK_FROM
               value: "no-reply@bedrock.foundation"
             - name: POSTMARK_APIKEY

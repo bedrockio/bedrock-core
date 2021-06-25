@@ -37,7 +37,6 @@ export default class Filters extends React.Component {
 
   onSubmit = () => {
     this.props.onSave(this.state);
-    this.props.onClose(true);
   };
 
   onReset = () => {
@@ -66,17 +65,17 @@ export default class Filters extends React.Component {
         onOpen={this.onModalOpen}
         trigger={
           this.hasFilters() ? (
-            <Button as="div" labelPosition="right" style={{ margin: '0 10px' }}>
+            <Button as="div" labelPosition="right">
               <Button basic primary size={size}>
                 <Icon name="filter" />
                 Filter
               </Button>
-              <Label as="a" basic color="olive" pointing="left">
+              <Label as="a" pointing="left">
                 {Object.keys(this.props.filters).length}
               </Label>
             </Button>
           ) : (
-            <Button basic primary size={size} style={{ margin: '0 10px' }}>
+            <Button basic primary size={size}>
               <Icon name="filter" />
               Filter
             </Button>

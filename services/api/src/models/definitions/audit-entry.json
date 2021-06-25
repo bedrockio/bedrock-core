@@ -25,7 +25,7 @@
       "type": "Mixed"
     },
     "objectId": {
-      "type": "ObjectId"
+      "type": "String"
     },
     "objectType": {
       "type": "String"

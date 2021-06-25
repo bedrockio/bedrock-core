@@ -1,0 +1,58 @@
+#!/usr/bin/env node
+
+const models = require('../../src/models');
+const { capitalize, camelCase } = require('lodash');
+const { initialize } = require('../../src/utils/database');
+const { logger } = require('@bedrockio/instrumentation');
+const readline = require('readline');
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
+function prompt(message) {
+  return new Promise((resolve) => {
+    rl.question(message, (answer) => {
+      resolve(answer);
+      rl.close();
+    });
+  });
+}
+
+async function run() {
+  let input = process.argv.slice(2);
+  if (!input.length) {
+    input = Object.keys(models);
+  }
+  logger.info(`
+-------------------------------------------------------------------
+
+  Warning: This will sync indexes.
+  Depending on the size of the collection this may take some time.
+
+-------------------------------------------------------------------
+
+`);
+  const answer = await prompt('Are you sure sure? [y|n] ');
+  if (answer.toLowerCase() !== 'y') {
+    throw new Error('Aborted');
+  }
+  await initialize();
+  for (let modelName of input) {
+    const name = capitalize(camelCase(modelName));
+    const model = models[name];
+    logger.info(`Syncing indexes for ${name}.`);
+    await model.syncIndexes();
+  }
+}
+
+run()
+  .then(() => {
+    process.exit(0);
+  })
+  .catch((error) => {
+    logger.error(`Fatal error: ${error.message}, exiting.`);
+    logger.warn(error.stack);
+    process.exit(1);
+  });

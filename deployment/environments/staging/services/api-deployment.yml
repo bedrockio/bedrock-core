@@ -32,10 +32,6 @@ spec:
               value: "production"
             - name: MONGO_URI
               value: "mongodb://mongo:27017/bedrock_staging"
-            - name: ADMIN_EMAIL
-              value: "admin@bedrock.foundation"
-            - name: ADMIN_PASSWORD
-              value: "development.now"
             - name: JWT_SECRET
               value: "changeme1234"
             - name: APP_DOMAIN

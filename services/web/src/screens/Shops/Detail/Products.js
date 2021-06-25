@@ -1,10 +1,18 @@
 import React from 'react';
-import { Table, Message, Loader, Image, Button, Header } from 'semantic';
+import {
+  Table,
+  Message,
+  Loader,
+  Image,
+  Button,
+  Header,
+  Confirm,
+} from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import { screen } from 'helpers';
 import { urlForUpload } from 'utils/uploads';
-import { Layout, Confirm, HelpTip, SearchProvider } from 'components';
+import { Layout, HelpTip, SearchProvider } from 'components';
 
 import Filters from 'modals/Filters';
 import EditProduct from 'modals/EditProduct';
@@ -45,20 +53,34 @@ export default class ShopProducts extends React.Component {
                   <Layout horizontal center spread>
                     <Header as="h2">Products</Header>
                     <Layout.Group>
-                      <Filters size="tiny" onSave={setFilters} filters={filters}>
-                        <Filters.Text label="Search" name="keyword" placeholder="Enter name or product id" />
+                      <Filters
+                        size="small"
+                        onSave={setFilters}
+                        filters={filters}>
+                        <Filters.Text
+                          label="Search"
+                          name="keyword"
+                          placeholder="Enter name or product id"
+                        />
                       </Filters>
                       <EditProduct
                         shop={shop}
                         onSave={reload}
-                        trigger={<Button primary size="tiny" content="Add Product" icon="plus" />}
+                        trigger={
+                          <Button
+                            primary
+                            size="small"
+                            content="Add Product"
+                            icon="plus"
+                          />
+                        }
                       />
                     </Layout.Group>
-                    </Layout>
+                  </Layout>
                   {products.length === 0 ? (
                     <Message>No products added yet</Message>
                   ) : (
-                    <Table celled>
+                    <Table sortable celled>
                       <Table.Header>
                         <Table.Row>
                           {/* --- Generator: list-header-cells */}
@@ -97,7 +119,7 @@ export default class ShopProducts extends React.Component {
                                 {product.images[0] && (
                                   <Image
                                     style={{ width: '100%' }}
-                                    src={urlForUpload(product.images[0], true)}
+                                    src={urlForUpload(product.images[0])}
                                   />
                                 )}
                               </Table.Cell>
@@ -112,17 +134,11 @@ export default class ShopProducts extends React.Component {
                                   shop={shop}
                                   product={product}
                                   onSave={reload}
-                                  trigger={
-                                    <Button
-                                      style={{ marginLeft: '20px' }}
-                                      basic
-                                      icon="edit"
-                                    />
-                                  }
+                                  trigger={<Button basic icon="edit" />}
                                 />
                                 <Confirm
                                   negative
-                                  confirmText="Delete"
+                                  confirmButton="Delete"
                                   header={`Are you sure you want to delete "${product.name}"?`}
                                   content="All data will be permanently deleted"
                                   trigger={<Button basic icon="trash" />}

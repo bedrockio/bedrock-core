@@ -1,4 +1,4 @@
-const { setupDb, teardownDb, request, createUser, createUserWithRole } = require('../../utils/testing');
+const { setupDb, teardownDb, request, createUser, createAdminUser } = require('../../utils/testing');
 const { User, Invite } = require('../../models');
 
 beforeAll(async () => {
@@ -12,7 +12,7 @@ afterAll(async () => {
 describe('/1/invites', () => {
   describe('POST /search', () => {
     it('should list out invites', async () => {
-      const user = await createUserWithRole('global', 'superAdmin');
+      const user = await createAdminUser();
 
       const invite1 = await Invite.create({
         email: 'usera@platform.com',
@@ -34,7 +34,7 @@ describe('/1/invites', () => {
 
   describe('POST /', () => {
     it('should be able to create invite', async () => {
-      const user = await createUserWithRole('global', 'superAdmin');
+      const user = await createAdminUser();
       const response = await request(
         'POST',
         '/1/invites',
@@ -50,7 +50,7 @@ describe('/1/invites', () => {
       await createUser({
         email: 'fake@fake.com',
       });
-      const user = await createUserWithRole('global', 'superAdmin');
+      const user = await createAdminUser();
       const response = await request(
         'POST',
         '/1/invites',
@@ -65,7 +65,7 @@ describe('/1/invites', () => {
 
   describe('POST /:invite/resend', () => {
     it('should be able to resend invite', async () => {
-      const user = await createUserWithRole('global', 'superAdmin');
+      const user = await createAdminUser();
       const invite = await Invite.create({
         email: 'delete@platform.com',
       });
@@ -76,13 +76,13 @@ describe('/1/invites', () => {
 
   describe('DELETE /:invite', () => {
     it('should be able to delete invite', async () => {
-      const user = await createUserWithRole('global', 'superAdmin');
+      const user = await createAdminUser();
       const invite = await Invite.create({
         email: 'delete@platform.com',
       });
       const response = await request('DELETE', `/1/invites/${invite.id}`, {}, { user });
       expect(response.status).toBe(204);
-      const dbInvite = await Invite.findById(invite.id);
+      const dbInvite = await Invite.findByIdDeleted(invite.id);
       expect(dbInvite.deletedAt).toBeDefined();
     });
   });

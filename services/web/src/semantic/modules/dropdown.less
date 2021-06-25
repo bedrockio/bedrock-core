@@ -744,17 +744,15 @@ select.ui.dropdown {
        Loading
 ---------------------*/
 
-.ui.loading.dropdown > svg.icon {
-  height: @relative14px !important;
-}
 .ui.loading.selection.dropdown > svg.icon {
-  padding: @relative21px @relative18px !important;
+  display: none;
 }
-.ui.loading.dropdown > svg.icon:before {
+
+.ui.loading.dropdown:before {
   position: absolute;
   content: '';
   top: 50%;
-  left: 50%;
+  right: 10px;
 
   margin: @loaderMargin;
   width: @loaderSize;
@@ -763,11 +761,12 @@ select.ui.dropdown {
   border-radius: @circularRadius;
   border: @loaderLineWidth solid @loaderFillColor;
 }
-.ui.loading.dropdown > svg.icon:after {
+
+.ui.loading.dropdown:after {
   position: absolute;
   content: '';
   top: 50%;
-  left: 50%;
+  right: 10px;
   box-shadow: 0px 0px 0px 1px transparent;
 
   margin: @loaderMargin;

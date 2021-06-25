@@ -11,6 +11,9 @@ module.exports = async function handleRequest(httpMethod, url, bodyOrQuery = {},
     await user.save();
     headers.Authorization = `Bearer ${createAuthToken(user.id, user.authTokenId)}`;
   }
+  if (options.organization) {
+    headers.organization = options.organization.id;
+  }
 
   let promise;
 
@@ -30,6 +33,11 @@ module.exports = async function handleRequest(httpMethod, url, bodyOrQuery = {},
         .set(headers)
         .send({ ...bodyOrQuery });
     } else if (httpMethod === 'PATCH') {
+      promise = request(app.callback())
+        .patch(url)
+        .set(headers)
+        .send({ ...bodyOrQuery });
+    } else if (httpMethod === 'PUT') {
       promise = request(app.callback())
         .patch(url)
         .set(headers)

@@ -8,7 +8,7 @@ const router = new Router();
 
 router
   .param('uploadId', async (id, ctx, next) => {
-    const upload = await Upload.findOne({ _id: id, deletedAt: { $exists: false } });
+    const upload = await Upload.findById(id);
     ctx.state.upload = upload;
 
     if (!upload) {
@@ -19,16 +19,15 @@ router
 
     return next();
   })
-  .get('/:hash', async (ctx) => {
-    const upload = await Upload.findOne({ hash: ctx.params.hash });
+  .get('/:id', async (ctx) => {
+    const upload = await Upload.findById(ctx.params.id);
     ctx.body = {
       data: upload,
     };
   })
-  .get('/:hash/image', async (ctx) => {
-    const { thumbnail } = ctx.request.query;
-    const upload = await Upload.findOne({ hash: ctx.params.hash });
-    const url = thumbnail && upload.thumbnailUrl ? upload.thumbnailUrl : upload.rawUrl;
+  .get('/:id/image', async (ctx) => {
+    const upload = await Upload.findById(ctx.params.id);
+    const url = upload.rawUrl;
     if (upload.storageType === 'local') {
       ctx.set('Content-Type', upload.mimeType);
       ctx.body = createReadStream(url);

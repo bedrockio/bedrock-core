@@ -10,7 +10,7 @@ function validateBody(schema, options) {
   return (ctx, next) => {
     const { value, error } = validator(ctx.request.body);
     if (error) {
-      ctx.throw(400, error);
+      ctx.throw(getErrorCode(error), error);
     }
     ctx.request.body = value;
     return next();
@@ -22,7 +22,7 @@ function validateQuery(schema, options) {
   return (ctx, next) => {
     const { value, error } = validator(ctx.request.query);
     if (error) {
-      ctx.throw(400, error);
+      ctx.throw(getErrorCode(error), error);
     }
 
     // Koa (and the koa-qs module) uses a setter which causes the
@@ -78,6 +78,13 @@ function getValidator(schema, options = {}) {
     }
     return { value, error };
   };
+}
+
+function getErrorCode(error) {
+  const isPermissions = error.details.every((err) => {
+    return err.context.permissions;
+  });
+  return isPermissions ? 401 : 400;
 }
 
 module.exports = {

@@ -6,8 +6,11 @@ const FIXED_SCHEMAS = {
 };
 
 function getJoiSchema(attributes, options = {}) {
-  const { appendSchema } = options;
-  let schema = getObjectSchema(attributes, options).min(1);
+  const { appendSchema, skipEmptyCheck } = options;
+  let schema = getObjectSchema(attributes, options);
+  if (!skipEmptyCheck) {
+    schema = schema.min(1);
+  }
   if (appendSchema) {
     if (Joi.isSchema(appendSchema)) {
       schema = schema.concat(appendSchema);
@@ -40,11 +43,21 @@ function getFixedSchema(arg) {
 }
 
 function getArraySchema(obj, options) {
-  let schema = Joi.array();
   if (Array.isArray(obj)) {
-    schema = schema.items(getSchemaForField(obj[0], options));
+    // Array notation allows further specification
+    // of array fields:
+    // tags: [{ name: String }]
+    if (options.unwindArrayFields) {
+      return getSchemaForField(obj[0], options);
+    } else {
+      return Joi.array().items(getSchemaForField(obj[0], options));
+    }
+  } else {
+    // Object/constructor notation implies array of anything:
+    // tags: { type: Array }
+    // tags: Array
+    return Joi.array();
   }
-  return schema;
 }
 
 function getObjectSchema(obj, options) {
@@ -55,6 +68,9 @@ function getObjectSchema(obj, options) {
       // Ignore "type" field unless it's an object like
       // type: { type: String }
       continue;
+    }
+    if (field.skipValidation) {
+      field = Joi.any().strip();
     }
     if (transformField) {
       field = transformField(key, field);
@@ -77,7 +93,7 @@ function getSchemaForField(field, options = {}) {
   const type = getFieldType(field);
   if (type === 'Array') {
     return getArraySchema(field, options);
-  } else if (type === 'Mixed') {
+  } else if (type === 'Object') {
     return getObjectSchema(field, options);
   }
 
@@ -88,10 +104,10 @@ function getSchemaForField(field, options = {}) {
     schema = getSchemaForType(type);
   }
 
-  if (field.required && !options.skipRequired) {
+  if (field.required && !field.default && !options.skipRequired) {
     schema = schema.required();
   } else if (field.writeScopes) {
-    schema = schema.custom(validateScopes(field.writeScopes));
+    schema = validateScopes(field.writeScopes);
   } else {
     // TODO: for now we allow both empty strings and null
     // as a potential signal for "set but non-existent".
@@ -99,24 +115,25 @@ function getSchemaForField(field, options = {}) {
     // db whatsoever?
     schema = schema.allow('', null);
   }
-
-  if (field.enum) {
-    schema = schema.valid(...field.enum);
-  }
-  if (field.match) {
-    schema = schema.pattern(RegExp(field.match));
-  }
-  if (field.min || field.minLength) {
-    schema = schema.min(field.min || field.minLength);
-  }
-  if (field.max || field.maxLength) {
-    schema = schema.max(field.max || field.maxLength);
+  if (typeof field === 'object') {
+    if (field.enum) {
+      schema = schema.valid(...field.enum);
+    }
+    if (field.match) {
+      schema = schema.pattern(RegExp(field.match));
+    }
+    if (field.min || field.minLength) {
+      schema = schema.min(field.min || field.minLength);
+    }
+    if (field.max || field.maxLength) {
+      schema = schema.max(field.max || field.maxLength);
+    }
   }
   return schema;
 }
 
 function validateScopes(scopes) {
-  return (val, { prefs }) => {
+  return Joi.custom((val, { prefs }) => {
     let allowed = false;
     if (scopes === 'all') {
       allowed = true;
@@ -126,10 +143,17 @@ function validateScopes(scopes) {
       });
     }
     if (!allowed) {
-      throw new Error(`Validation failed for scopes ${scopes}.`);
+      throw new Error();
     }
     return val;
-  };
+  }).error((errors) => {
+    for (let error of errors) {
+      const { path } = error;
+      error.message = `Insufficient permissions to write to ${path.join('.')}`;
+      error.local.permissions = true;
+    }
+    return errors;
+  });
 }
 
 function getSchemaForType(type) {
@@ -142,6 +166,8 @@ function getSchemaForType(type) {
       return Joi.boolean();
     case 'Date':
       return Joi.date().iso();
+    case 'Mixed':
+      return Joi.object();
     case 'ObjectId':
       return Joi.custom((val) => {
         const id = String(val.id || val);
@@ -166,10 +192,10 @@ function getFieldType(field) {
     return field.schemaName || field.name;
   } else if (typeof field === 'object') {
     if (!field.type || typeof field.type === 'object') {
-      // Nested mixed type field
+      // Nested field
       // profile: { name: String } (no type field)
       // type: { type: 'String' } (may be nested)
-      return 'Mixed';
+      return 'Object';
     } else {
       // name: { type: String }
       // name: { type: 'String' }

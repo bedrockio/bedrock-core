@@ -28,7 +28,7 @@
 
   font-family: inherit;
 
-  margin: 0em @horizontalMargin @verticalMargin 0em;
+  margin: 0em @horizontalMargin @verticalMargin @horizontalMargin;
   padding: @verticalPadding @horizontalPadding
     (@verticalPadding + @shadowOffset);
 
@@ -48,6 +48,14 @@
   will-change: @willChange;
 
   -webkit-tap-highlight-color: @tapColor;
+}
+
+.ui.button:first-child {
+  margin-left: 0em;
+}
+
+.ui.button:last-child {
+  margin-right: 0em;
 }
 
 /*******************************
@@ -579,6 +587,8 @@
   opacity: @iconOpacity;
   transition: @iconTransition;
   margin: 0;
+  vertical-align: top;
+  top: 0;
 }
 
 .ui.button:not(.icon) > .icon:not(.button):not(.dropdown) {

@@ -2,19 +2,22 @@ import React from 'react';
 import { startCase } from 'lodash';
 import { Helmet } from 'react-helmet-async';
 import { APP_NAME } from 'utils/env';
+import bem from 'helpers/bem';
 
-import * as LAYOUTS from 'layouts';
+const layouts = {};
 
-function nullLayout(props) {
-  return props.children;
+export function useLayout(Component, name) {
+  layouts[name] = Component;
 }
 
 export default function (Component) {
-  const Layout = LAYOUTS[Component.layout || 'Dashboard'] || nullLayout;
   const title = startCase(Component.name.replace(/Screen$/, ''));
+
+  Component = bem(Component);
 
   return class Screen extends React.PureComponent {
     render() {
+      const Layout = layouts[Component.layout || 'Dashboard'] || nullLayout;
       return (
         <React.Fragment>
           <Helmet>
@@ -39,4 +42,8 @@ export default function (Component) {
       return <link rel="canonical" href={location.href} />;
     }
   };
+}
+
+function nullLayout(props) {
+  return props.children;
 }

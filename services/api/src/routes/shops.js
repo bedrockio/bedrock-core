@@ -1,8 +1,6 @@
 const Router = require('@koa/router');
-const Joi = require('joi');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
-const { searchValidation, getSearchQuery, search } = require('../utils/search');
 const { Shop } = require('../models');
 
 const router = new Router();
@@ -11,7 +9,7 @@ router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
   .param('shopId', async (id, ctx, next) => {
-    const shop = await Shop.findOne({ _id: id, deletedAt: { $exists: false } });
+    const shop = await Shop.findById(id);
     ctx.state.shop = shop;
     if (!shop) {
       ctx.throw(404);
@@ -33,34 +31,11 @@ router
   })
   .post(
     '/search',
-    validateBody({
-      // --- Generator: search
-      name: Joi.string(),
-      countryCode: Joi.string(),
-      category: Joi.string(),
-      // --- Generator: end
-      ...searchValidation(),
-    }),
+    validateBody(
+      Shop.getSearchValidation(),
+    ),
     async (ctx) => {
-      const { body } = ctx.request;
-      const query = getSearchQuery(body, {
-        keywordFields: ['name'],
-      });
-
-      // --- Generator: vars
-      const { countryCode, category } = ctx.request.body;
-      // --- Generator: end
-
-      // --- Generator: queries
-      if (countryCode) {
-        query['address.countryCode'] = countryCode;
-      }
-      if (category) {
-        query.categories = category;
-      }
-      // --- Generator: end
-
-      const { data, meta } = await search(Shop, query, body);
+      const { data, meta } = await Shop.search(ctx.request.body);
       ctx.body = {
         data,
         meta,

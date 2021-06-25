@@ -10,13 +10,28 @@
     },
     "roles": [
       {
-        "role": { "type": "String", "required": true },
-        "scope": { "type": "String", "required": true },
-        "scopeRef": { "type": "ObjectId" }
+        "role": {
+          "type": "String",
+          "required": true
+        },
+        "scope": {
+          "type": "String",
+          "required": true
+        },
+        "scopeRef": {
+          "type": "ObjectId",
+          "ref": "Organization"
+        }
       }
     ],
-    "name": {
+    "firstName": {
       "type": "String",
+      "required": true,
+      "trim": true
+    },
+    "lastName": {
+      "type": "String",
+      "required": true,
       "trim": true
     },
     "timeZone": {
@@ -24,24 +39,29 @@
     },
     "hashedPassword": {
       "type": "String",
-      "access": "private"
+      "readScopes": "none",
+      "writeScopes": "none"
     },
     "loginAttempts": {
       "type": "Number",
-      "access": "private",
-      "default": 0
+      "default": 0,
+      "readScopes": "none",
+      "writeScopes": "none"
     },
     "lastLoginAttemptAt": {
       "type": "Date",
-      "access": "private"
+      "readScopes": "none",
+      "writeScopes": "none"
     },
     "authTokenId": {
       "type": "String",
-      "access": "private"
+      "readScopes": "none",
+      "writeScopes": "none"
     },
     "tempTokenId": {
       "type": "String",
-      "access": "private"
+      "readScopes": "none",
+      "writeScopes": "none"
     }
   }
 }

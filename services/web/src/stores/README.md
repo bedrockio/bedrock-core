@@ -99,13 +99,13 @@ export default function MyComponent() {
 State exposed on the session context:
 
 - `user` - An `Object` representing the user when loaded. Null when no authentication token is set.
-- `loading` - `true` when the session is loading. This happens once on bootstrap or when `loadUser` is explicitly called.
+- `loading` - `true` when the session is loading. This happens once on bootstrap or when `load` is explicitly called.
 - `error` - An `Error` object when the session errored.
 - `stored` - An `Object` holding the locally stored data.
 
 ## Methods
 
-- `loadUser()` - Reloads the user.
+- `load()` - Reloads the session data.
 - `updateUser(data)` - Updates the user with `data`.
 - `addStored(key, value)` - Adds session data. `key` must be a `string` and `value` must be serializable. Data is stored using `localStorage`.
 - `removeStored(key)` - Removes stored data. `key` must be a `string`.
