@@ -4,7 +4,7 @@ const Koa = require('koa');
 const Router = require('@koa/router');
 const request = require('supertest');
 
-const { setupDb, teardownDb } = require('../../utils/testing');
+const { setupDb, teardownDb, createUser } = require('../../utils/testing');
 
 beforeAll(async () => {
   await setupDb();
@@ -37,7 +37,7 @@ async function getContext(user) {
 describe('AuditEntry', () => {
   describe('getObjectFields', () => {
     it('should return a diff object (new object)', async () => {
-      const user = new User({
+      const user = await createUser({
         email: 'bob@new.com',
       });
       await user.save();
@@ -49,7 +49,7 @@ describe('AuditEntry', () => {
     });
 
     it('should return a diff object (old object)', async () => {
-      const user = await User.create({
+      const user = await createUser({
         email: 'hugo@old.com',
       });
       const dbUser = await User.findById(user.id);
