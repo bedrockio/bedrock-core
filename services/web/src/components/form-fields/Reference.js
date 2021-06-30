@@ -39,7 +39,7 @@ export default class ReferenceField extends React.Component {
         method: 'POST',
         path: `/1/${resource}${route}`,
         body: {
-          keyword: query,
+          ...this.getFilter(query),
           limit: 20,
         },
       });
@@ -59,6 +59,18 @@ export default class ReferenceField extends React.Component {
 
   isMultiple(value = this.props.value) {
     return Array.isArray(value);
+  }
+
+  getFilter(query) {
+    const { keyword, regex, field } = this.props;
+    if (keyword) {
+      return { keyword: query };
+    } else {
+      if (regex) {
+        query = `/${query}/i`;
+      }
+      return { [field]: query };
+    }
   }
 
   getValue() {
@@ -125,6 +137,8 @@ ReferenceField.propTypes = {
   icon: PropTypes.string,
   color: PropTypes.string,
   route: PropTypes.string,
+  keyword: PropTypes.bool,
+  regex: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   resource: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([
@@ -136,4 +150,7 @@ ReferenceField.propTypes = {
 
 ReferenceField.defaultProps = {
   route: '/search',
+  keyword: false,
+  regex: false,
+  field: 'name',
 };
