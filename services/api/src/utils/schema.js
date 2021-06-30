@@ -72,14 +72,15 @@ function createSchema(attributes = {}, options = {}) {
     });
   });
 
-  schema.static('getSearchValidation', function getSearchValidation(options) {
+  schema.static('getSearchValidation', function getSearchValidation(searchOptions, appendSchema) {
     return getJoiSchema(attributes, {
       stripFields: RESERVED_FIELDS,
       skipRequired: true,
       skipEmptyCheck: true,
       unwindArrayFields: true,
       appendSchema: {
-        ...searchValidation(options),
+        ...searchValidation(searchOptions),
+        ...appendSchema,
       },
     });
   });
@@ -384,6 +385,8 @@ function flattenQuery(query, root = {}, rootPath = []) {
       flattenQuery(value, root, path);
     } else if (isArrayQuery(key, value)) {
       root[path.join('.')] = { $in: value };
+    } else if (isRegexQuery(key, value)) {
+      root[path.join('.')] = parseRegexQuery(value);
     } else {
       root[path.join('.')] = value;
     }
@@ -406,6 +409,25 @@ function isArrayQuery(key, value) {
 
 function isMongoOperator(str) {
   return str.startsWith('$');
+}
+
+// Regex queries
+
+const REGEX_QUERY = /^\/(.+)\/(\w*)$/;
+
+function isRegexQuery(key, value) {
+  return REGEX_QUERY.test(value);
+}
+
+function parseRegexQuery(str) {
+  // Note that using the $options syntax allows for PCRE features
+  // that aren't supported in Javascript as compared to RegExp(...):
+  // https://docs.mongodb.com/manual/reference/operator/query/regex/#pcre-vs-javascript
+  const [, $regex, $options] = str.match(REGEX_QUERY);
+  return {
+    $regex,
+    $options,
+  };
 }
 
 module.exports = {

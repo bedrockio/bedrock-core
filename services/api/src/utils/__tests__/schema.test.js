@@ -1558,6 +1558,23 @@ describe('search', () => {
     expect(result.meta.total).toBe(2);
   });
 
+  it('should allow shorthand for a regex query', async () => {
+    const User = createTestModel(
+      createSchema({
+        name: String,
+      })
+    );
+    const [user1, user2] = await Promise.all([User.create({ name: 'Willy' }), User.create({ name: 'Billy' })]);
+
+    let result;
+
+    result = await User.search({
+      name: '/bi/i',
+    });
+    expect(result.data).toMatchObject([{ name: 'Billy' }]);
+    expect(result.meta.total).toBe(1);
+  });
+
   it('should behave like $in when empty array passed', async () => {
     const User = createTestModel(
       createSchema({
