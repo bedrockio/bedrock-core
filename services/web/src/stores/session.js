@@ -1,10 +1,12 @@
 import React, { useContext } from 'react';
 import { merge, omit } from 'lodash';
+import { withRouter } from 'react-router-dom';
 import { request, getToken, setToken, clearToken } from 'utils/api';
 import { trackSession } from 'utils/analytics';
 
 const SessionContext = React.createContext();
 
+@withRouter
 export class SessionProvider extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -19,6 +21,13 @@ export class SessionProvider extends React.PureComponent {
 
   componentDidMount() {
     this.load();
+    this.attachHistory();
+  }
+
+  componentDidCatch(error) {
+    this.setState({
+      error,
+    });
   }
 
   isAdmin = () => {
@@ -143,7 +152,9 @@ export class SessionProvider extends React.PureComponent {
     return this.state.organization;
   };
 
-  loadStored() {
+  // Session storage
+
+  loadStored = () => {
     let data;
     try {
       const str = localStorage.getItem('session');
@@ -154,9 +165,9 @@ export class SessionProvider extends React.PureComponent {
       localStorage.removeItem('session');
     }
     return data || {};
-  }
+  };
 
-  setStored(data) {
+  setStored = (data) => {
     if (Object.keys(data).length > 0) {
       localStorage.setItem('session', JSON.stringify(data));
     } else {
@@ -165,7 +176,19 @@ export class SessionProvider extends React.PureComponent {
     this.setState({
       stored: data,
     });
-  }
+  };
+
+  // History
+
+  attachHistory = () => {
+    this.props.history.listen(this.onHistoryChange);
+  };
+
+  onHistoryChange = () => {
+    this.setState({
+      error: null,
+    });
+  };
 
   render() {
     return (

@@ -4,7 +4,6 @@ import PageCenter from 'components/PageCenter';
 
 @screen
 export default class ErrorScreen extends React.Component {
-
   static layout = 'none';
 
   render() {
