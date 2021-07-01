@@ -1,5 +1,5 @@
 resource "google_container_node_pool" "default" {
-  name       = "node-pool"
+  name       = "pool-1"
   project    = var.global.project
   location   = var.global.location
   cluster    = google_container_cluster.default.name
