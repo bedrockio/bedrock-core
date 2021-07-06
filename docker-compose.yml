@@ -29,7 +29,6 @@ services:
       - ./services/web/src:/service/src
     ports:
       - "2200:2200"
-      - "34001:34001"
     depends_on:
       - api
 
