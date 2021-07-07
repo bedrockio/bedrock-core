@@ -5,7 +5,7 @@ export default (props) => (
   <Layout
     center
     style={{
-      height: '100%',
+      height: '100vh',
       margin: '0 auto',
       padding: '0 15px',
       alignItems: 'stretch',
