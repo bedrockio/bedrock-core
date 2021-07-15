@@ -1,4 +1,4 @@
-FROM node:14-alpine
+FROM node:14.17.3-alpine3.11
 
 ARG NODE_ENV=production
 
