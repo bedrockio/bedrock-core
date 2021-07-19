@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Switch, Route } from 'react-router-dom';
-import { Loader, Header } from 'semantic';
-import { Breadcrumbs } from 'components';
+import { Loader } from 'semantic';
 import { request } from 'utils/api';
-import NotFound from '../../NotFound';
+
+import NotFound from 'screens/NotFound';
 
 import Overview from './Overview';
 
@@ -62,13 +62,10 @@ export default class UserDetail extends React.Component {
       return <Loader active>Loading</Loader>;
     } else if (error) {
       return (
-        <React.Fragment>
-          <Breadcrumbs
-            link={<Link to="/users">Users</Link>}
-            active="Not Found"
-          />
-          <Header content="Sorry that user wasn't found." />
-        </React.Fragment>
+        <NotFound
+          link={<Link to="/users">Users</Link>}
+          message="Sorry that user wasn't found."
+        />
       );
     }
     return (

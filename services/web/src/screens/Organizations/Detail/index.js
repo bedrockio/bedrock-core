@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Switch, Route } from 'react-router-dom';
-import { Loader, Header } from 'semantic';
-import { Breadcrumbs } from 'components';
+import { Loader } from 'semantic';
 import { request } from 'utils/api';
+
+import NotFound from 'screens/NotFound';
 
 import Overview from './Overview';
 
@@ -61,13 +62,10 @@ export default class OrganizationDetail extends React.Component {
       return <Loader active>Loading</Loader>;
     } else if (error) {
       return (
-        <React.Fragment>
-          <Breadcrumbs
-            link={<Link to="/organizations">Organizations</Link>}
-            active="Not Found"
-          />
-          <Header content="Sorry that organization wasn't found." />
-        </React.Fragment>
+        <NotFound
+          link={<Link to="/organizations">Organization</Link>}
+          message="Sorry that organization wasn't found."
+        />
       );
     }
 
@@ -80,7 +78,6 @@ export default class OrganizationDetail extends React.Component {
             <Overview {...props} {...this.state} onSave={this.onSave} />
           )}
         />
-
       </Switch>
     );
   }

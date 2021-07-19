@@ -1,19 +1,20 @@
 import React from 'react';
 import { screen } from 'helpers';
 import { Header } from 'semantic';
+import { Breadcrumbs } from 'components';
 import PageCenter from 'components/PageCenter';
 
 @screen
 export default class NotFound extends React.Component {
-  static layout = 'none';
-
   render() {
+    const { message, ...rest } = this.props;
     return (
-      <PageCenter>
-        <Header as="h1" textAlign="center">
-          Sorry that page wasn't found.
+      <React.Fragment>
+        <Breadcrumbs {...rest} />
+        <Header as="h1">
+          {this.props.message || 'Sorry that page was not found.'}
         </Header>
-      </PageCenter>
+      </React.Fragment>
     );
   }
 }

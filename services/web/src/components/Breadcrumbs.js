@@ -19,18 +19,18 @@ export default class Breadcrumbs extends React.Component {
     return (
       <div style={{ marginBottom: '5px' }}>
         <Breadcrumb size="mini">
-          <Breadcrumb.Section link as={Link} to="/">
-            Home
+          <Breadcrumb.Section>
+            <Link to="/">Home</Link>
           </Breadcrumb.Section>
-          <Breadcrumb.Divider icon="chevron-right" />
           {this.getPath().map((link, i) => {
             return (
               <React.Fragment key={i}>
-                <Breadcrumb.Section>{link}</Breadcrumb.Section>
                 <Breadcrumb.Divider icon="chevron-right" />
+                <Breadcrumb.Section>{link}</Breadcrumb.Section>
               </React.Fragment>
             );
           })}
+          {active && <Breadcrumb.Divider icon="chevron-right" />}
           <Breadcrumb.Section active>{active}</Breadcrumb.Section>
         </Breadcrumb>
         <Layout.Group>{this.props.children}</Layout.Group>
@@ -40,7 +40,7 @@ export default class Breadcrumbs extends React.Component {
 }
 
 Breadcrumbs.propTypes = {
-  active: PropTypes.node.isRequired,
+  active: PropTypes.node,
   link: PropTypes.node,
   path: PropTypes.arrayOf(PropTypes.node),
 };

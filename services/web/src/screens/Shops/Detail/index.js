@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Switch, Route } from 'react-router-dom';
-import { Loader, Header } from 'semantic';
-import { Breadcrumbs } from 'components';
+import { Loader } from 'semantic';
 import { request } from 'utils/api';
-import NotFound from '../../NotFound';
+
+import NotFound from 'screens/NotFound';
 
 import Overview from './Overview';
 
@@ -66,13 +66,10 @@ export default class ShopDetail extends React.Component {
       return <Loader active>Loading</Loader>;
     } else if (error) {
       return (
-        <React.Fragment>
-          <Breadcrumbs
-            link={<Link to="/shops">Shops</Link>}
-            active="Not Found"
-          />
-          <Header content="Sorry that shop wasn't found." />
-        </React.Fragment>
+        <NotFound
+          link={<Link to="/shops">Shops</Link>}
+          message="Sorry that shop wasn't found."
+        />
       );
     }
 
