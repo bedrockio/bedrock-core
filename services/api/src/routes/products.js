@@ -9,12 +9,16 @@ router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
   .param('productId', async (id, ctx, next) => {
-    const product = await Product.findById(id);
-    ctx.state.product = product;
-    if (!product) {
-      ctx.throw(404);
+    try {
+      const product = await Product.findById(id);
+      if (!product) {
+        ctx.throw(404);
+      }
+      ctx.state.product = product;
+      return next();
+    } catch (err) {
+      ctx.throw(400, err);
     }
-    return next();
   })
   .post('/', validateBody(Product.getCreateValidation()), async (ctx) => {
     const product = await Product.create(ctx.request.body);

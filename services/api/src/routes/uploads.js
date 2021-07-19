@@ -8,16 +8,18 @@ const router = new Router();
 
 router
   .param('uploadId', async (id, ctx, next) => {
-    const upload = await Upload.findById(id);
-    ctx.state.upload = upload;
-
-    if (!upload) {
-      ctx.throw(404);
-    } else if (ctx.state.authUser.id != upload.ownerId) {
-      ctx.throw(401);
+    try {
+      const upload = await Upload.findById(id);
+      if (!upload) {
+        ctx.throw(404);
+      } else if (ctx.state.authUser.id != upload.ownerId) {
+        ctx.throw(401);
+      }
+      ctx.state.upload = upload;
+      return next();
+    } catch (err) {
+      ctx.throw(400, err);
     }
-
-    return next();
   })
   .get('/:id', async (ctx) => {
     const upload = await Upload.findById(ctx.params.id);

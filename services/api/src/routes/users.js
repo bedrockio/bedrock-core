@@ -19,14 +19,16 @@ router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
   .param('userId', async (id, ctx, next) => {
-    const user = await User.findById(id);
-    ctx.state.user = user;
-
-    if (!user) {
-      ctx.throw(404);
+    try {
+      const user = await User.findById(id);
+      if (!user) {
+        ctx.throw(404);
+      }
+      ctx.state.user = user;
+      return next();
+    } catch (err) {
+      ctx.throw(400, err);
     }
-
-    return next();
   })
   .get('/me', (ctx) => {
     const { authUser } = ctx.state;

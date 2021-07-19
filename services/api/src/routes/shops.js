@@ -9,13 +9,16 @@ router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
   .param('shopId', async (id, ctx, next) => {
-    const shop = await Shop.findById(id);
-    ctx.state.shop = shop;
-    if (!shop) {
-      ctx.throw(404);
+    try {
+      const shop = await Shop.findById(id);
+      if (!shop) {
+        ctx.throw(404);
+      }
+      ctx.state.shop = shop;
+      return next();
+    } catch (err) {
+      ctx.throw(400, err);
     }
-
-    return next();
   })
   .post('/', validateBody(Shop.getCreateValidation()), async (ctx) => {
     const shop = await Shop.create(ctx.request.body);
@@ -29,19 +32,13 @@ router
       data: shop,
     };
   })
-  .post(
-    '/search',
-    validateBody(
-      Shop.getSearchValidation(),
-    ),
-    async (ctx) => {
-      const { data, meta } = await Shop.search(ctx.request.body);
-      ctx.body = {
-        data,
-        meta,
-      };
-    }
-  )
+  .post('/search', validateBody(Shop.getSearchValidation()), async (ctx) => {
+    const { data, meta } = await Shop.search(ctx.request.body);
+    ctx.body = {
+      data,
+      meta,
+    };
+  })
   .patch('/:shopId', validateBody(Shop.getUpdateValidation()), async (ctx) => {
     const shop = ctx.state.shop;
     shop.assign(ctx.request.body);
