@@ -5,6 +5,9 @@ module.exports = {
     node: true,
     browser: true,
   },
+  settings: {
+    jest: { version: 26 },
+  },
   parser: '@babel/eslint-parser',
   parserOptions: {
     sourceType: 'module',
