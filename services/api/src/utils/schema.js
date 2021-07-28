@@ -333,7 +333,13 @@ function isAllowedField(schema, scopes = []) {
 }
 
 function resolveSchema(schema) {
-  return Array.isArray(schema) ? schema[0] : schema;
+  if (Array.isArray(schema)) {
+    schema = schema[0];
+  }
+  if (typeof schema?.type === 'object') {
+    return schema.type;
+  }
+  return schema;
 }
 
 function loadModel(definition, name) {

@@ -452,6 +452,28 @@ describe('createSchema', () => {
         expect(user.login.attempts).toBe(10);
         expect(user.toObject().login).toBeUndefined();
       });
+
+      it('should be able to disallow access on nested objects', async () => {
+        const User = createTestModel(
+          createSchema({
+            terms: {
+              type: {
+                readScopes: 'none',
+              },
+              service: Boolean,
+              privacy: Boolean,
+            },
+          })
+        );
+        const user = new User({
+          terms: {
+            service: true,
+            privacy: true,
+          },
+        });
+        expect(user.terms).toEqual({ service: true, privacy: true });
+        expect(user.toObject().terms).toBeUndefined();
+      });
     });
   });
 

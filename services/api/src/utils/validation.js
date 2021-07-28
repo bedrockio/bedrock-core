@@ -64,8 +64,9 @@ function getObjectSchema(obj, options) {
   const map = {};
   const { transformField, stripFields = [] } = options;
   for (let [key, field] of Object.entries(obj)) {
-    if (key === 'type' && typeof field !== 'object') {
-      // Ignore "type" field unless it's an object like
+    if (key === 'type' && !field.type) {
+      // Ignore "type" field unless it's defining a field
+      // named "type":
       // type: { type: String }
       continue;
     }
