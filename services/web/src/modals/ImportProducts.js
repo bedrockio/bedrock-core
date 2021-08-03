@@ -205,7 +205,7 @@ export default class ImportProducts extends React.Component {
                   : 'ui icon message upload-dropzone'
               }
               style={{ cursor: 'pointer', outline: 0 }}>
-              <Icon name="file outline" />
+              <Icon name="file-excel" />
               <input {...getInputProps()} />
               <div className="content">
                 {isDragActive ? (

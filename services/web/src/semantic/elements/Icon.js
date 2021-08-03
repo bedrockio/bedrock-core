@@ -42,7 +42,7 @@ export default class Icon extends React.Component {
 
   static sets = {};
 
-  static useSet(url, name = 'basic') {
+  static useSet(url, name = 'default') {
     this.sets[name] = url;
   }
 
@@ -66,25 +66,31 @@ export default class Icon extends React.Component {
   }
 
   resolveIcon() {
-    let { name, custom } = this.props;
-    const mapped = INTERNAL_MAP[name];
-    if (mapped && !custom) {
-      name = typeof mapped === 'function' ? mapped(this.props) : mapped;
-    }
+    let name = this.resolveName();
+    let set = 'default';
+    name = name
+      .split(' ')
+      .filter((token) => {
+        if (Icon.sets[token]) {
+          set = token;
+          return false;
+        }
+        return true;
+      })
+      .join(' ');
     return {
       name,
-      url: this.resolveSet(),
+      url: Icon.sets[set],
     };
   }
 
-  resolveSet() {
-    if (this.props.outline) {
-      return Icon.sets.outline;
-    } else if (this.props.custom) {
-      return Icon.sets.custom;
-    } else {
-      return Icon.sets.basic;
+  resolveName() {
+    let { name } = this.props;
+    name = INTERNAL_MAP[name] || name;
+    if (typeof name === 'function') {
+      name = name(this.props);
     }
+    return name;
   }
 
   render() {
@@ -126,6 +132,7 @@ Icon.propTypes = {
   fitted: PropTypes.bool,
   flipped: PropTypes.oneOf(['horizontally', 'vertically']),
   height: PropTypes.number,
+  width: PropTypes.number,
   inverted: PropTypes.bool,
   link: PropTypes.bool,
   loading: PropTypes.bool,
@@ -140,9 +147,6 @@ Icon.propTypes = {
     'huge',
     'massive',
   ]),
-  width: PropTypes.number,
-  outline: PropTypes.bool,
-  custom: PropTypes.bool,
 };
 
 Icon.defaultProps = {
@@ -152,8 +156,7 @@ Icon.defaultProps = {
   fitted: false,
   link: false,
   loading: false,
-  outline: false,
-  custom: false,
+  set: 'default',
 };
 
 SemanticIcon.create = createShorthandFactory(Icon, (name) => {

@@ -22,11 +22,13 @@ useLayout(PortalLayout, 'Portal');
 // Icons
 
 import { Icon } from 'semantic';
-import basicIcons from 'semantic/assets/icons/basic.svg';
-import outlineIcons from 'semantic/assets/icons/outline.svg';
+import solidIcons from 'semantic/assets/icons/solid.svg';
+import brandIcons from 'semantic/assets/icons/brands.svg';
+import regularIcons from 'semantic/assets/icons/regular.svg';
 
-Icon.useSet(basicIcons);
-Icon.useSet(outlineIcons, 'outline');
+Icon.useSet(solidIcons);
+Icon.useSet(brandIcons, 'brand');
+Icon.useSet(regularIcons, 'regular');
 
 import App from './App';
 
