@@ -13,6 +13,7 @@ const MIME_TYPES = {
   pdf: 'application/pdf',
   csv: 'text/csv,application/vnd.ms-excel',
   zip: 'application/zip,application/octet-stream',
+  'image/pdf': 'image/*,application/pdf',
 };
 
 const ICONS = {
@@ -23,6 +24,7 @@ const ICONS = {
   pdf: 'file-pdf',
   csv: 'file-excel',
   zip: 'file-archive',
+  'image/pdf': 'file-image',
 };
 
 export default class Uploads extends React.Component {
