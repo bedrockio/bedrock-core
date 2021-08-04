@@ -75,8 +75,8 @@ function createSchema(attributes = {}, options = {}) {
   schema.static('getSearchValidation', function getSearchValidation(searchOptions, appendSchema) {
     return getJoiSchema(attributes, {
       stripFields: RESERVED_FIELDS,
+      allowEmpty: true,
       skipRequired: true,
-      skipEmptyCheck: true,
       unwindArrayFields: true,
       appendSchema: {
         ...searchValidation(searchOptions),
