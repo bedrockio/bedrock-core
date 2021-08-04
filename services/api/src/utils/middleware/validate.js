@@ -60,7 +60,6 @@ function validateQuery(schema, options) {
 
 function getValidator(schema, options = {}) {
   schema = Joi.isSchema(schema) ? schema : Joi.object(schema);
-  schema = schema.min(1);
   options = { ...DEFAULT_OPTIONS, ...options };
   return (obj = {}) => {
     const { value, error } = schema.validate(obj, options);
