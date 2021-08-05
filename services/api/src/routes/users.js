@@ -1,9 +1,11 @@
 const Router = require('@koa/router');
+const config = require('@bedrockio/config');
 const Joi = require('joi');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
 const { exportValidation, searchExport } = require('../utils/search');
+const mfa = require('../utils/mfa');
 const { User } = require('../models');
 const { expandRoles } = require('./../utils/permissions');
 const roles = require('./../roles.json');
@@ -51,6 +53,64 @@ router
         data: expandRoles(authUser),
       };
     }
+  )
+  .delete('/me/mfa', async (ctx) => {
+    const { authUser } = ctx.state;
+    authUser.mfaSecret = undefined;
+    authUser.mfaMethod = undefined;
+    await authUser.save();
+    ctx.status = 204;
+  })
+  .post(
+    '/me/mfa/config',
+    validateBody({
+      method: Joi.string().allow('sms', 'otp').required(),
+      phoneNumber: Joi.number(),
+    }),
+    async (ctx) => {
+      const { authUser } = ctx.state;
+      const { method, phoneNumber } = ctx.request.body;
+
+      if (authUser.mfaSecret) {
+        ctx.throw(400, 'You already have mfa enabled');
+      }
+
+      if (method === 'sms' && !phoneNumber) {
+        ctx.throw(400, 'phoneNumber is required');
+      }
+
+      const secret = mfa.generateSecret({
+        name: config.get('APP_NAME'),
+        account: authUser.email,
+      });
+
+      if (phoneNumber) {
+        authUser.phoneNumber = phoneNumber;
+      }
+      authUser.mfaSecret = secret;
+      authUser.mfaMethod = method;
+
+      await authUser.save();
+
+      if (method === 'sms') {
+        await mfa.sendToken(authUser);
+      }
+
+      ctx.body = {
+        data: {
+          secret,
+        },
+      };
+    }
+  )
+  .post(
+    '/me/mfa/confirm',
+    validateBody({
+      method: Joi.string().allow('sms', 'otp'),
+      secret: Joi.string(),
+      code: Joi.string(),
+    }),
+    async (ctx) => {}
   )
   .use(requirePermissions({ endpoint: 'users', permission: 'read', scope: 'global' }))
   .get('/roles', (ctx) => {

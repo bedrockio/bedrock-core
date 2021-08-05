@@ -5,7 +5,9 @@ const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { createAuthToken, createTemporaryToken, generateTokenId } = require('../utils/tokens');
 const { sendTemplatedMail } = require('../utils/mailer');
 const { User, Invite, AuditEntry } = require('../models');
-const { object } = require('joi');
+
+const mfa = require('../utils/mfa');
+const sms = require('../utils/sms');
 
 const router = new Router();
 
@@ -87,12 +89,77 @@ router
         ctx.throw(401, 'Incorrect password');
       }
 
-      const authTokenId = generateTokenId();
       user.loginAttempts = 0;
+
+      if (await mfa.requireChallenge(ctx, user)) {
+        const tokenId = generateTokenId();
+        const token = createTemporaryToken({ type: 'mfa', sub: user.id, jti: tokenId });
+        user.tempTokenId = tokenId;
+        await user.save();
+        ctx.body = { data: { token, mfaRequired: user.mfaMethod } };
+        return;
+      }
+
+      const authTokenId = generateTokenId();
       user.authTokenId = authTokenId;
       await user.save();
 
       await AuditEntry.append('successfully authenticated', ctx, {
+        object: user,
+        user: user.id,
+      });
+
+      ctx.body = { data: { token: createAuthToken(user.id, user.authTokenId) } };
+    }
+  )
+  .post('/mfa/send-token', async (ctx) => {
+    const result = await mfa.sendToken(ctx.state.authUser);
+    if (!result) {
+      ctx.throw(400, `mfa has not been configured`);
+    }
+    ctx.state = 204;
+  })
+  .post(
+    '/mfa/verify',
+    validateBody({
+      code: Joi.string().required(),
+    }),
+    authenticate({ type: 'mfa' }),
+    async (ctx) => {
+      const { jwt } = ctx.state;
+      const user = await User.findOneAndUpdate(
+        { _id: jwt.sub },
+        {
+          lastLoginAttemptAt: new Date(),
+          $inc: { loginAttempts: 1 },
+        }
+      );
+
+      if (!user) {
+        ctx.throw(400, 'User does not exist');
+      } else if (user.tempTokenId !== jwt.jti) {
+        ctx.throw(400, 'Token is invalid');
+      }
+
+      if (!user.verifyLoginAttempts()) {
+        await AuditEntry.append('reached max. mfa challenge attempts', ctx, {
+          type: 'security',
+          object: user,
+          user: user.id,
+        });
+        ctx.throw(401, 'Too many attempts');
+      }
+
+      if (!mfa.verifyCode(user, ctx.request.body.code)) {
+        await AuditEntry.append('failed mfa challenge', ctx, {
+          type: 'security',
+          object: user,
+          user: user.id,
+        });
+        ctx.throw(400, 'Not Valid Code');
+      }
+
+      await AuditEntry.append('successfully authenticated (mfa)', ctx, {
         object: user,
         user: user.id,
       });
