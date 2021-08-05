@@ -106,9 +106,8 @@ router
   .post(
     '/me/mfa/confirm',
     validateBody({
-      method: Joi.string().allow('sms', 'otp'),
-      secret: Joi.string(),
       code: Joi.string(),
+      secret: Joi.string(),
     }),
     async (ctx) => {}
   )
