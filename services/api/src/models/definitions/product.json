@@ -37,5 +37,8 @@
         "autopopulate": true
       }
     ]
-  }
+  },
+  "search": [
+    "name"
+  ]
 }

@@ -4,7 +4,7 @@ const { get, pick, isEmpty, intersection } = require('lodash');
 
 const definition = require('./definitions/audit-entry.json');
 
-const schema = createSchema(definition.attributes);
+const schema = createSchema(definition);
 
 schema.statics.getContextFields = function (ctx) {
   return {
