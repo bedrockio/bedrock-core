@@ -49,6 +49,7 @@ export default class SearchProvider extends React.Component {
 
   fetch = async () => {
     this.setState({
+      error: null,
       loading: true,
     });
     try {
@@ -64,10 +65,10 @@ export default class SearchProvider extends React.Component {
         items: data,
         meta: Object.assign({}, this.state.meta, meta),
       });
-    } catch (err) {
+    } catch (error) {
       this.setState({
         loading: false,
-        error: err,
+        error,
       });
     }
   };
