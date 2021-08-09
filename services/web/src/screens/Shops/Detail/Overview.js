@@ -27,7 +27,6 @@ export default class ShopOverview extends React.Component {
           ))}
         </Image.Group>
         {/* --- Generator: end */}
-        <Header as="h3">Details</Header>
         <Table definition>
           <Table.Body>
             {/* --- Generator: overview-rows */}
