@@ -123,8 +123,8 @@ export default class EditProduct extends React.Component {
               <DateField
                 time
                 name="expiresAt"
-                value={product.expiresAt}
                 label="Expires At"
+                value={product.expiresAt}
                 onChange={this.setField}
               />
               <Form.Dropdown
@@ -133,6 +133,7 @@ export default class EditProduct extends React.Component {
                 multiple
                 allowAdditions
                 name="sellingPoints"
+                label="Selling Points"
                 options={
                   product.sellingPoints?.map((value) => {
                     return {
@@ -141,7 +142,6 @@ export default class EditProduct extends React.Component {
                     };
                   }) || []
                 }
-                label="Selling Points"
                 onAddItem={(evt, { name, value }) => {
                   this.setField(evt, {
                     name,
@@ -160,6 +160,7 @@ export default class EditProduct extends React.Component {
               />
               {!this.props.shop && (
                 <ReferenceField
+                  required
                   name="shop"
                   label="Shop"
                   value={product.shop}
