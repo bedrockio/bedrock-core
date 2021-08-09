@@ -110,8 +110,8 @@ export default class EditProduct extends React.Component {
               />
               <Form.Checkbox
                 name="isFeatured"
-                label="Is Featured?"
-                checked={product.isFeatured || false}
+                label="Is Featured"
+                checked={product.isFeatured}
                 onChange={this.setCheckedField}
               />
               <CurrencyField
