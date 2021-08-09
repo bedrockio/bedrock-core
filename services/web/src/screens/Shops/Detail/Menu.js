@@ -11,20 +11,24 @@ export default ({ shop, onSave }) => {
     <React.Fragment>
       <Breadcrumbs
         link={<Link to="/shops">Shops</Link>}
-        active={shop.name}>
-      </Breadcrumbs>
+        active={shop.name}></Breadcrumbs>
       <Layout horizontal center spread>
-        <h1>{shop.name} Shop</h1>
+        <h1>{shop.name}</h1>
         <Layout.Group>
-        <EditShop
-          shop={shop}
-          onSave={onSave}
-          trigger={<Button primary icon="setting" content="Settings" />}
-        />
-          </Layout.Group>
+          <EditShop
+            shop={shop}
+            onSave={onSave}
+            trigger={<Button primary icon="setting" content="Settings" />}
+          />
+        </Layout.Group>
       </Layout>
       <Menu pointing secondary>
-        <Menu.Item name="Overview" to={`/shops/${shop.id}`} as={NavLink} exact />
+        <Menu.Item
+          name="Overview"
+          to={`/shops/${shop.id}`}
+          as={NavLink}
+          exact
+        />
         {/* --- Generator: menus */}
         <Menu.Item
           name="Products"
