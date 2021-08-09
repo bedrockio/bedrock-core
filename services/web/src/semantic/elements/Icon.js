@@ -36,6 +36,7 @@ const INTERNAL_MAP = {
   },
   mail: 'envelope',
 };
+const CLASS_PROPS = ['name', 'size', 'color', 'corner', 'flipped', 'rotated'];
 
 export default class Icon extends React.Component {
   static Group = IconGroup;
@@ -47,7 +48,7 @@ export default class Icon extends React.Component {
   }
 
   getClassName() {
-    const classes = ['icon'];
+    const classes = ['ui icon'];
     const { className, ...rest } = this.props;
     if (className) {
       classes.push(className);
@@ -56,10 +57,9 @@ export default class Icon extends React.Component {
       if (val === true) {
         classes.push(key);
       } else if (typeof val === 'string') {
-        if (!['name', 'size', 'color'].includes(key)) {
-          classes.push(key);
+        if (CLASS_PROPS.includes(key)) {
+          classes.push(val);
         }
-        classes.push(val);
       }
     }
     return classes.join(' ');
@@ -138,6 +138,7 @@ Icon.propTypes = {
   loading: PropTypes.bool,
   name: PropTypes.string.isRequired,
   rotated: PropTypes.oneOf(['clockwise', 'counterclockwise']),
+  set: PropTypes.string,
   size: PropTypes.oneOf([
     'mini',
     'tiny',
