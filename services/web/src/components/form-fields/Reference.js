@@ -39,6 +39,7 @@ export default class ReferenceField extends React.Component {
         method: 'POST',
         path,
         body: {
+          ...this.props.searchProps,
           keyword: query,
           limit: 20,
         },
@@ -82,9 +83,10 @@ export default class ReferenceField extends React.Component {
   getOptions() {
     const items = uniqBy([...this.getItems(), ...this.state.data], 'id');
     return items.map((item) => {
+      const { getOptionLabel, getOptionValue } = this.props;
       return {
-        text: item.name,
-        value: item.id,
+        text: getOptionLabel(item),
+        value: getOptionValue(item),
       };
     });
   }
@@ -127,13 +129,18 @@ ReferenceField.propTypes = {
   path: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
   onChange: PropTypes.func.isRequired,
+  searchProps: PropTypes.object,
   value: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.object,
     PropTypes.array,
   ]),
+  getOptionLabel: PropTypes.func,
+  getOptionValue: PropTypes.func,
 };
 
 ReferenceField.defaultProps = {
   placeholder: 'Search',
+  getOptionLabel: (item) => item.name,
+  getOptionValue: (item) => item.id,
 };
