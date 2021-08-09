@@ -8,6 +8,7 @@ import { modal } from 'helpers';
 import DateField from 'components/form-fields/Date';
 import UploadsField from 'components/form-fields/Uploads';
 import CurrencyField from 'components/form-fields/Currency';
+import ReferenceField from 'components/form-fields/Reference';
 // --- Generator: end
 
 @modal
@@ -53,12 +54,7 @@ export default class EditProduct extends React.Component {
         await request({
           method: 'PATCH',
           path: `/1/products/${product.id}`,
-          body: {
-            // --- Generator: refs
-            shop: this.props.shop.id,
-            // --- Generator: end
-            ...product,
-          },
+          body: product,
         });
       } else {
         await request({
@@ -66,7 +62,7 @@ export default class EditProduct extends React.Component {
           path: '/1/products',
           body: {
             // --- Generator: refs
-            shop: this.props.shop.id,
+            shop: this.props.shop?.id || product.shop?.id,
             // --- Generator: end
             ...product,
           },
@@ -162,6 +158,16 @@ export default class EditProduct extends React.Component {
                 onChange={this.setField}
                 onError={(error) => this.setState({ error })}
               />
+              {!this.props.shop && (
+                <ReferenceField
+                  name="shop"
+                  label="Shop"
+                  value={product.shop}
+                  path="/1/shops/search"
+                  placeholder="Search Shops"
+                  onChange={this.setField}
+                />
+              )}
               {/* --- Generator: end */}
             </Form>
           </AutoFocus>

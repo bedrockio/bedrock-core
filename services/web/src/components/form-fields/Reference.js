@@ -31,15 +31,15 @@ export default class ReferenceField extends React.Component {
 
   search = debounce(async (query) => {
     if (query) {
-      const { resource, route } = this.props;
+      const { path } = this.props;
       this.setState({
         loading: true,
       });
       const { data } = await request({
         method: 'POST',
-        path: `/1/${resource}${route}`,
+        path,
         body: {
-          ...this.getFilter(query),
+          keyword: query,
           limit: 20,
         },
       });
@@ -59,18 +59,6 @@ export default class ReferenceField extends React.Component {
 
   isMultiple(value = this.props.value) {
     return Array.isArray(value);
-  }
-
-  getFilter(query) {
-    const { keyword, regex, field } = this.props;
-    if (keyword) {
-      return { keyword: query };
-    } else {
-      if (regex) {
-        query = `/${query}/i`;
-      }
-      return { [field]: query };
-    }
   }
 
   getValue() {
@@ -102,7 +90,7 @@ export default class ReferenceField extends React.Component {
   }
 
   render() {
-    const { resource } = this.props;
+    const { placeholder } = this.props;
     const { loading } = this.state;
     const props = omit(this.props, Object.keys(ReferenceField.propTypes));
     return (
@@ -113,7 +101,7 @@ export default class ReferenceField extends React.Component {
         value={this.getValue()}
         options={this.getOptions()}
         multiple={this.isMultiple()}
-        placeholder={`Search ${resource}`}
+        placeholder={placeholder}
         noResultsMessage={loading ? 'Loading...' : 'No results.'}
         renderLabel={this.renderLabel}
         onSearchChange={this.onSearchChange}
@@ -136,11 +124,9 @@ export default class ReferenceField extends React.Component {
 ReferenceField.propTypes = {
   icon: PropTypes.string,
   color: PropTypes.string,
-  route: PropTypes.string,
-  keyword: PropTypes.bool,
-  regex: PropTypes.bool,
+  path: PropTypes.string.isRequired,
+  placeholder: PropTypes.string,
   onChange: PropTypes.func.isRequired,
-  resource: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.object,
@@ -149,8 +135,5 @@ ReferenceField.propTypes = {
 };
 
 ReferenceField.defaultProps = {
-  route: '/search',
-  keyword: false,
-  regex: false,
-  field: 'name',
+  placeholder: 'Search',
 };
