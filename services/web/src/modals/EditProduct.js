@@ -124,15 +124,15 @@ export default class EditProduct extends React.Component {
                 time
                 name="expiresAt"
                 value={product.expiresAt}
-                label="Expiration Date and Time"
+                label="Expires At"
                 onChange={this.setField}
               />
               <Form.Dropdown
-                name="sellingPoints"
                 search
                 selection
                 multiple
                 allowAdditions
+                name="sellingPoints"
                 options={
                   product.sellingPoints?.map((value) => {
                     return {
