@@ -48,7 +48,11 @@ export function userCanSwitchOrganizations(user) {
   if (nonGlobalRoles.length > 1) {
     return true;
   } else {
-    return userHasAccess(user, { endpoint: 'organizations', permission: 'read', scope: 'global' });
+    return userHasAccess(user, {
+      endpoint: 'organizations',
+      permission: 'read',
+      scope: 'global',
+    });
   }
 }
 
