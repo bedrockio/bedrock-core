@@ -40,7 +40,7 @@ function transformField(obj, schema, options) {
 }
 
 function createSchema(definition, options = {}) {
-  const mongoDefinition = attributesToMongoDefinition(definition.attributes);
+  const mongoDefinition = attributesToMongoDefinition(definition.attributes, definition);
 
   const schema = new mongoose.Schema(
     {
@@ -104,6 +104,7 @@ function createSchema(definition, options = {}) {
       }
     }
     Object.assign(query, flattenQuery(rest));
+
     const [data, total] = await Promise.all([
       this.find(query)
         .sort(sort && { [sort.field]: sort.order === 'desc' ? -1 : 1 })
@@ -111,6 +112,7 @@ function createSchema(definition, options = {}) {
         .limit(limit),
       this.countDocuments(query),
     ]);
+
     return {
       data,
       meta: {
@@ -263,7 +265,7 @@ function getJoiSchemaFromMongoose(schema, options) {
   });
 }
 
-function attributesToMongoDefinition(attributes, path = []) {
+function attributesToMongoDefinition(attributes, options = {}, path = []) {
   const definition = {};
   const { type } = attributes;
 
@@ -280,14 +282,16 @@ function attributesToMongoDefinition(attributes, path = []) {
       } else if (key === 'validate' && type === 'string') {
         // Allow custom mongoose validation function that derives from the Joi schema.
         val = getMongooseValidator(val, attributes);
+      } else if (key === 'autopopulate') {
+        val = getAutopopulateOptions(val, options);
       }
     } else if (key !== 'readScopes') {
       if (Array.isArray(val)) {
         val = val.map((el, i) => {
-          return attributesToMongoDefinition(el, [...path, i]);
+          return attributesToMongoDefinition(el, options, [...path, i]);
         });
       } else if (isPlainObject(val)) {
-        val = attributesToMongoDefinition(val, [...path, key]);
+        val = attributesToMongoDefinition(val, options, [...path, key]);
       } else if (type === 'string') {
         val = getMongooseType(val, attributes, path);
       }
@@ -296,6 +300,15 @@ function attributesToMongoDefinition(attributes, path = []) {
   }
 
   return definition;
+}
+
+function getAutopopulateOptions(val, options = {}) {
+  if (val === true) {
+    val = options.autopopulate || {
+      maxDepth: 1,
+    };
+  }
+  return val;
 }
 
 function getMongooseType(str, attributes, path) {

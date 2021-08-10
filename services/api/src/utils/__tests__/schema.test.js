@@ -570,7 +570,6 @@ describe('createSchema', () => {
         },
       });
 
-      shopSchema.plugin(require('mongoose-autopopulate'));
       const Shop = createTestModel(shopSchema);
 
       const user = new User();
@@ -606,7 +605,6 @@ describe('createSchema', () => {
         },
       });
 
-      shopSchema.plugin(require('mongoose-autopopulate'));
       const Shop = createTestModel(shopSchema);
 
       const user = new User({
@@ -643,7 +641,6 @@ describe('createSchema', () => {
         },
       });
 
-      shopSchema.plugin(require('mongoose-autopopulate'));
       const Shop = createTestModel(shopSchema);
 
       const user = new User({
@@ -665,6 +662,143 @@ describe('createSchema', () => {
       expect(data.user._id).toBeUndefined();
       expect(data.user.__v).toBeUndefined();
       expect(data.user.secret).toBe('foo');
+    });
+
+    it('should autopopulate to a depth of 1 by default', async () => {
+      const User = createTestModel(
+        createSchemaFromAttributes({
+          name: { type: String },
+        })
+      );
+
+      const Shop = createTestModel(
+        createSchemaFromAttributes({
+          user: {
+            ref: User.modelName,
+            type: 'ObjectId',
+            autopopulate: true,
+          },
+        })
+      );
+
+      const Product = createTestModel(
+        createSchemaFromAttributes({
+          shop: {
+            ref: Shop.modelName,
+            type: 'ObjectId',
+            autopopulate: true,
+          },
+        })
+      );
+
+      const user = await User.create({
+        name: 'Marlon',
+      });
+
+      const shop = await Shop.create({
+        user,
+      });
+
+      const product = await Product.create({
+        shop,
+      });
+
+      expect(product.shop.user.toString()).toBe(user.id);
+    });
+
+    it('should allow autopopulate overrides on definition', async () => {
+      const User = createTestModel(
+        createSchemaFromAttributes({
+          name: { type: String },
+        })
+      );
+
+      const Shop = createTestModel(
+        createSchemaFromAttributes({
+          user: {
+            ref: User.modelName,
+            type: 'ObjectId',
+            autopopulate: true,
+          },
+        })
+      );
+
+      const Product = createTestModel(
+        createSchema({
+          attributes: {
+            shop: {
+              ref: Shop.modelName,
+              type: 'ObjectId',
+              autopopulate: true,
+            },
+          },
+          autopopulate: {
+            maxDepth: 2,
+          },
+        })
+      );
+
+      const user = await User.create({
+        name: 'Marlon',
+      });
+
+      const shop = await Shop.create({
+        user,
+      });
+
+      const product = await Product.create({
+        shop,
+      });
+
+      expect(product.shop.user).toMatchObject({
+        name: 'Marlon',
+      });
+    });
+
+    it('should respect autopopulate options per field', async () => {
+      const User = createTestModel(
+        createSchemaFromAttributes({
+          name: { type: String },
+        })
+      );
+
+      const Shop = createTestModel(
+        createSchemaFromAttributes({
+          user: {
+            ref: User.modelName,
+            type: 'ObjectId',
+            autopopulate: true,
+          },
+        })
+      );
+
+      const Product = createTestModel(
+        createSchemaFromAttributes({
+          shop: {
+            ref: Shop.modelName,
+            type: 'ObjectId',
+            autopopulate: {
+              maxDepth: 2,
+            },
+          },
+        })
+      );
+
+      const user = await User.create({
+        name: 'Marlon',
+      });
+
+      const shop = await Shop.create({
+        user,
+      });
+
+      const product = await Product.create({
+        shop,
+      });
+
+      expect(product.shop.user).toMatchObject({
+        name: 'Marlon',
+      });
     });
   });
 
@@ -1811,6 +1945,10 @@ describe('search', () => {
     ]);
     const { data } = await User.search({
       $or: [{ name: 'Billy' }, { age: 10 }],
+      sort: {
+        field: 'name',
+        order: 'asc',
+      },
     });
     expect(data).toMatchObject([
       { name: 'Billy', age: 20 },
