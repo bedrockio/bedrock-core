@@ -24,6 +24,7 @@ import Signup from 'screens/Auth/Signup';
 import Organizations from 'screens/Organizations';
 import Loading from 'screens/Loading';
 import Error from 'screens/Error';
+import Products from 'screens/Products';
 
 const App = () => {
   const { loading, error } = useSession();
@@ -36,6 +37,7 @@ const App = () => {
     <Switch>
       <AuthSwitch path="/" loggedIn={Dashboard} loggedOut={Login} exact />
       <Protected path="/shops/:id?" allowed={Shops} />
+      <Protected path="/products/:id?" allowed={Products} />
       <Protected path="/settings" allowed={Settings} exact />
       <Protected path="/users/invites" allowed={Invites} exact />
       <Protected path="/organizations/:id?" allowed={Organizations} />

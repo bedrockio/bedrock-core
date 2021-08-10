@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import {
   Table,
   Message,
@@ -123,7 +124,11 @@ export default class ShopProducts extends React.Component {
                                   />
                                 )}
                               </Table.Cell>
-                              <Table.Cell>{product.name}</Table.Cell>
+                              <Table.Cell>
+                                <Link to={`/products/${product.id}`}>
+                                  {product.name}
+                                </Link>
+                              </Table.Cell>
                               <Table.Cell>{product.description}</Table.Cell>
                               {/* --- Generator: end */}
                               <Table.Cell>
