@@ -21,6 +21,11 @@ exports.flags = flags;
 
 exports.initialize = async function initialize() {
   await mongoose.connect(config.get('MONGO_URI'), flags);
+
+  if (config.get('MONGO_DEBUG')) {
+    mongoose.set('debug', true);
+  }
+
   const db = mongoose.connection;
   db.on('error', () => {
     logger.error('connection error');
