@@ -3,6 +3,7 @@ import { merge, omit } from 'lodash';
 import { withRouter } from 'react-router-dom';
 import { request, getToken, setToken, clearToken } from 'utils/api';
 import { trackSession } from 'utils/analytics';
+import { captureError } from 'utils/sentry';
 
 const SessionContext = React.createContext();
 
@@ -25,6 +26,7 @@ export class SessionProvider extends React.PureComponent {
   }
 
   componentDidCatch(error) {
+    captureError(error);
     this.setState({
       error,
     });
@@ -98,6 +100,19 @@ export class SessionProvider extends React.PureComponent {
       user: null,
       error: null,
     });
+  };
+
+  logout = async () => {
+    try {
+      await request({
+        method: 'POST',
+        path: '/1/auth/logout',
+      });
+    } catch (err) {
+      // JWT token errors may throw here
+    }
+    await this.setToken(null);
+    document.location = '/';
   };
 
   addStored = (key, data) => {
@@ -202,6 +217,8 @@ export class SessionProvider extends React.PureComponent {
           removeStored: this.removeStored,
           clearStored: this.clearStored,
           updateUser: this.updateUser,
+          clearUser: this.clearUser,
+          logout: this.logout,
           hasRoles: this.hasRoles,
           hasRole: this.hasRole,
           isAdmin: this.isAdmin,
