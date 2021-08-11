@@ -131,8 +131,6 @@ Icon.propTypes = {
   disabled: PropTypes.bool,
   fitted: PropTypes.bool,
   flipped: PropTypes.oneOf(['horizontally', 'vertically']),
-  height: PropTypes.number,
-  width: PropTypes.number,
   inverted: PropTypes.bool,
   link: PropTypes.bool,
   loading: PropTypes.bool,

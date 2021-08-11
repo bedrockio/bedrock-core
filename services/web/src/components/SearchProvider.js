@@ -79,6 +79,19 @@ export default class SearchProvider extends React.Component {
     setTimeout(this.fetch);
   };
 
+  replaceItem = (item, fn) => {
+    let { items } = this.state;
+    const index = items.findIndex((i) => {
+      return fn ? fn(i) : i === item;
+    });
+    if (index !== -1) {
+      items = [...items.slice(0, index), item, ...items.slice(index + 1)];
+      this.setState({
+        items,
+      });
+    }
+  };
+
   getSorted = (field) => {
     const { sort } = this.state;
     if (field === sort.field) {
@@ -126,6 +139,7 @@ export default class SearchProvider extends React.Component {
           setSort: this.setSort,
           getSorted: this.getSorted,
           setFilters: this.setFilters,
+          replaceItem: this.replaceItem,
         })}
         {this.renderPagination()}
       </div>
@@ -180,4 +194,5 @@ SearchProvider.defaultProps = {
   },
   loader: true,
   pagination: true,
+  filters: {},
 };
