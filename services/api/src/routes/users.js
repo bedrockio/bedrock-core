@@ -87,9 +87,8 @@ router
       if (phoneNumber) {
         authUser.phoneNumber = phoneNumber;
       }
-      authUser.mfaSecret = secret;
-      authUser.mfaMethod = method;
 
+      authUser.mfaMethod = method;
       await authUser.save();
 
       if (method === 'sms') {
@@ -109,7 +108,18 @@ router
       code: Joi.string(),
       secret: Joi.string(),
     }),
-    async (ctx) => {}
+    async (ctx) => {
+      const { authUser } = ctx.state;
+      const { secret, code } = ctx.request.body;
+      // allow 2 "windows" with the sms to ensure that sms can be delieved in time
+      if (!mfa.verifyToken(secret, code, authUser.mfaMethod === 'sms' ? 2 : 1)) {
+        ctx.throw('code is not valid', 400);
+      }
+
+      authUser.mfaSecret = secret;
+      await authUser.save();
+      ctx.status = 204;
+    }
   )
   .use(requirePermissions({ endpoint: 'users', permission: 'read', scope: 'global' }))
   .get('/roles', (ctx) => {

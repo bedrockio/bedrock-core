@@ -49,7 +49,7 @@ function generateToken(secret) {
   return notp.totp.gen(bin);
 }
 
-function verifyToken(secret, token, window = 4) {
+function verifyToken(secret, token, window = 1) {
   if (!token || !token.length) return null;
 
   const unformatted = secret.replace(/\W+/g, '').toUpperCase();
