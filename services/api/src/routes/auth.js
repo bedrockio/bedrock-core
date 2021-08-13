@@ -156,7 +156,7 @@ router
           object: user,
           user: user.id,
         });
-        ctx.throw(400, 'Not Valid Code');
+        ctx.throw(400, 'Not valid code');
       }
 
       await AuditEntry.append('successfully authenticated (mfa)', ctx, {
