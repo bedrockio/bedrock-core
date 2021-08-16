@@ -1,9 +1,10 @@
 import React from 'react';
-import { Header, Table, Image, Label, Divider } from 'semantic';
+import { Table, Label, Divider } from 'semantic';
 import { screen } from 'helpers';
 import Menu from './Menu';
 
 // --- Generator: overview-imports
+import { Header, Image } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { formatAddress } from 'utils/formatting';
 import { urlForUpload } from 'utils/uploads';

@@ -5,10 +5,9 @@ import { Loader } from 'semantic';
 import { request } from 'utils/api';
 
 import NotFound from 'screens/NotFound';
-
 import Overview from './Overview';
 
-// --- Generator: imports
+// --- Generator: detail-imports
 import Products from './Products';
 // --- Generator: end
 

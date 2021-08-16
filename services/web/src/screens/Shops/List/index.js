@@ -1,15 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Table, Button, Message, Confirm } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import { screen } from 'helpers';
 import { HelpTip, Breadcrumbs, SearchProvider, Layout } from 'components';
-
-import Filters from 'modals/Filters';
-import EditShop from 'modals/EditShop';
-
 // --- Generator: list-imports
+import { Link } from 'react-router-dom';
 import { getData } from 'country-list';
 const countries = getData().map(({ code, name }) => ({
   value: code,
@@ -17,6 +13,9 @@ const countries = getData().map(({ code, name }) => ({
   key: code,
 }));
 // --- Generator: end
+
+import Filters from 'modals/Filters';
+import EditShop from 'modals/EditShop';
 
 @screen
 export default class ShopList extends React.Component {

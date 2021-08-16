@@ -1,19 +1,14 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import {
-  Table,
-  Message,
-  Loader,
-  Image,
-  Button,
-  Header,
-  Confirm,
-} from 'semantic';
+import { Table, Message, Loader, Button, Header, Confirm } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import { screen } from 'helpers';
-import { urlForUpload } from 'utils/uploads';
 import { Layout, HelpTip, SearchProvider } from 'components';
+// --- Generator: list-imports
+import { Link } from 'react-router-dom';
+import { Image } from 'semantic';
+import { urlForUpload } from 'utils/uploads';
+// --- Generator: end
 
 import Filters from 'modals/Filters';
 import EditProduct from 'modals/EditProduct';
