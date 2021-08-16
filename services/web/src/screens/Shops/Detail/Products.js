@@ -4,7 +4,7 @@ import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import { screen } from 'helpers';
 import { Layout, HelpTip, SearchProvider } from 'components';
-// --- Generator: list-imports
+// --- Generator: subscreen-imports
 import { Link } from 'react-router-dom';
 import { Image } from 'semantic';
 import { urlForUpload } from 'utils/uploads';
