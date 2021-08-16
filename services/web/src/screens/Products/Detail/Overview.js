@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header, Table, Image, Label, Divider } from 'semantic';
+import { Table, Image, Divider } from 'semantic';
 import { screen } from 'helpers';
 import Menu from './Menu';
 
@@ -23,21 +23,15 @@ export default class ProductOverview extends React.Component {
           <Table.Body>
             <Table.Row>
               <Table.Cell>Description</Table.Cell>
-              <Table.Cell>
-                {product.description || 'None'}
-              </Table.Cell>
+              <Table.Cell>{product.description || 'None'}</Table.Cell>
             </Table.Row>
             <Table.Row>
               <Table.Cell>Is Featured</Table.Cell>
-              <Table.Cell>
-                {product.isFeatured ? 'Yes' : 'No'}
-              </Table.Cell>
+              <Table.Cell>{product.isFeatured ? 'Yes' : 'No'}</Table.Cell>
             </Table.Row>
             <Table.Row>
               <Table.Cell>Price Usd</Table.Cell>
-              <Table.Cell>
-                {product.priceUsd || 'None'}
-              </Table.Cell>
+              <Table.Cell>{product.priceUsd || 'None'}</Table.Cell>
             </Table.Row>
             <Table.Row>
               <Table.Cell>Expires At</Table.Cell>
