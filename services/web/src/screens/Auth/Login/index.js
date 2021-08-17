@@ -7,7 +7,8 @@ import { screen } from 'helpers';
 import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
 
-import LoginForm from './Form';
+import LoginForm from './LoginForm';
+import MFAForm from './MFAForm';
 import { Link } from 'react-router-dom';
 
 @screen
@@ -18,9 +19,12 @@ export default class Login extends React.Component {
   state = {
     error: null,
     loading: false,
+    view: 'login',
+    mfaToken: null,
+    mfaMethod: null,
   };
 
-  onSubmit = async (body) => {
+  onLoginSubmit = async (body) => {
     try {
       this.setState({
         error: null,
@@ -31,6 +35,42 @@ export default class Login extends React.Component {
         path: '/1/auth/login',
         body,
       });
+
+      if (data.mfaRequired) {
+        this.setState({
+          mfaToken: data.token,
+          mfaMethod: data.mfaRequired,
+          view: 'mfa',
+        });
+        return;
+      }
+
+      this.context.setToken(data.token);
+      await this.context.load();
+      this.props.history.push('/');
+    } catch (error) {
+      this.setState({
+        error,
+        loading: false,
+      });
+    }
+  };
+
+  onMFASubmit = async ({ code }) => {
+    try {
+      this.setState({
+        error: null,
+        loading: true,
+      });
+      const { data } = await request({
+        method: 'POST',
+        path: '/1/auth/login',
+        token: this.state.mfaToken,
+        body: {
+          code,
+        },
+      });
+
       this.context.setToken(data.token);
       await this.context.load();
       this.props.history.push('/');
@@ -43,17 +83,26 @@ export default class Login extends React.Component {
   };
 
   render() {
-    const { error, loading } = this.state;
+    const { error, loading, view } = this.state;
     return (
       <PageCenter>
         <LogoTitle title="Login" />
         <Segment.Group>
           <Segment padded>
-            <LoginForm
-              onSubmit={this.onSubmit}
-              error={error}
-              loading={loading}
-            />
+            {view === 'login' && (
+              <LoginForm
+                onSubmit={this.onLoginSubmit}
+                error={error}
+                loading={loading}
+              />
+            )}
+            {view === 'mfa' && (
+              <MFAForm
+                onSubmit={this.onMFASubmit}
+                error={error}
+                loading={loading}
+              />
+            )}
           </Segment>
           <Segment secondary>
             <Grid>

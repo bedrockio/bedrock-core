@@ -1,16 +1,25 @@
 import React from 'react';
-import { withSession } from 'stores';
-import { screen } from 'helpers';
+import { Switch, Route, Redirect } from 'react-router-dom';
 
-@screen
-@withSession
+import Account from './Account';
+import Security from './Security';
+
 export default class Settings extends React.Component {
   render() {
-    const { user } = this.context;
     return (
-      <div>
-        From Settings => {user.name} ({user.email})
-      </div>
+      <Switch>
+        <Redirect exact path="/settings" to="settings/account" />
+        <Route
+          exact
+          path="/settings/account"
+          render={(props) => <Account {...props} {...this.context} />}
+        />
+        <Route
+          exact
+          path="/settings/security"
+          render={(props) => <Security {...props} {...this.context} />}
+        />
+      </Switch>
     );
   }
 }
