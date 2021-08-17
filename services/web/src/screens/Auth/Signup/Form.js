@@ -4,11 +4,21 @@ import AutoFocus from 'components/AutoFocus';
 
 export default (props) => {
   const { error, loading } = props;
-  const [name, setName] = React.useState('');
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [accepted, setAccepted] = React.useState(false);
+
   const [touched, setTouched] = React.useState(false);
+
+  const [fields, setFields] = React.useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    accepted: false,
+  });
+
+  function setField(name, value) {
+    setFields({ ...fields, ...{ [name]: value } });
+  }
+
   return (
     <AutoFocus>
       <Form
@@ -16,60 +26,69 @@ export default (props) => {
         size="large"
         onSubmit={() => {
           setTouched(true);
+          const { accepted, ...rest } = fields;
           if (!accepted) return;
 
-          props.onSubmit({
-            name,
-            email,
-            password,
-          });
+          props.onSubmit(rest);
         }}>
-        {touched && !accepted && (
+        {touched && !fields.accepted && (
           <Message error content="Please accept the terms of service" />
         )}
         {error && <Message error content={error.message} />}
-        <Form.Field error={error?.hasField?.('name')}>
+        <Form.Field error={error?.hasField?.('firstName')}>
           <Input
-            value={name}
-            onChange={(e, { value }) => setName(value)}
-            icon="user"
-            iconPosition="left"
-            placeholder="Full Name"
+            value={fields.firstName}
+            name="firstName"
+            placeholder="First Name"
             type="text"
             autoComplete="name"
+            onChange={(e, { value, name }) => setField(name, value)}
+          />
+        </Form.Field>
+        <Form.Field error={error?.hasField?.('lastName')}>
+          <Input
+            value={fields.lastName}
+            name="lastName"
+            placeholder="Last Name"
+            type="text"
+            autoComplete="name"
+            onChange={(e, { value, name }) => setField(name, value)}
           />
         </Form.Field>
         <Form.Field error={error?.hasField?.('email')}>
           <Input
-            value={email}
-            onChange={(e, { value }) => setEmail(value)}
+            value={fields.email}
+            name="email"
             icon="mail"
             iconPosition="left"
             placeholder="E-mail Address"
             type="email"
             autoComplete="email"
+            onChange={(e, { value, name }) => setField(name, value)}
           />
         </Form.Field>
         <Form.Field error={error?.hasField?.('password')}>
           <Input
-            value={password}
-            onChange={(e, { value }) => setPassword(value)}
+            value={fields.password}
             icon="lock"
+            name="password"
             iconPosition="left"
             placeholder="Password"
             autoComplete="new-password"
             type="password"
+            onChange={(e, { value, name }) => setField(name, value)}
           />
         </Form.Field>
-        <Form.Field error={touched && !accepted}>
+        <Form.Field error={touched && !fields.accepted}>
           <Checkbox
+            name="accepted"
             label={
               <label>
                 I accept the <a href="/terms">Terms of Service</a>.
               </label>
             }
-            checked={accepted}
-            onChange={(e, { checked }) => setAccepted(checked)}
+            checked={fields.accepted}
+            onChange={(e, { checked, name }) => setField(name, checked)}
           />
         </Form.Field>
         <Button
