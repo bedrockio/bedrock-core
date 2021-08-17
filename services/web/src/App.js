@@ -38,7 +38,7 @@ const App = () => {
       <AuthSwitch path="/" loggedIn={Dashboard} loggedOut={Login} exact />
       <Protected path="/shops/:id?" allowed={Shops} />
       <Protected path="/products/:id?" allowed={Products} />
-      <Protected path="/settings" allowed={Settings} exact />
+      <Protected path="/settings/:id?" allowed={Settings} exact />
       <Protected path="/users/invites" allowed={Invites} exact />
       <Protected path="/organizations/:id?" allowed={Organizations} />
       <Protected path="/users/:id?" allowed={Users} />

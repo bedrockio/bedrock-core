@@ -3,14 +3,15 @@ import { Segment, Message, Form, Button, Divider } from 'semantic';
 import { screen } from 'helpers';
 import Menu from './Menu';
 import { request } from 'utils/api';
+import { pick } from 'lodash';
 
 import { withSession } from 'stores';
 
-@withSession
 @screen
+@withSession
 export default class Account extends React.Component {
   state = {
-    user: this.context.user,
+    user: pick(this.context.user, ['firstName', 'lastName', 'timeZone']),
   };
 
   setField = (evt, { name, value }) => {
@@ -39,6 +40,10 @@ export default class Account extends React.Component {
         body: user,
       });
       this.context.updateUser(data);
+      this.setState({
+        error: false,
+        loading: false,
+      });
     } catch (error) {
       this.setState({
         error,
@@ -49,6 +54,8 @@ export default class Account extends React.Component {
 
   render() {
     const { user, error, loading } = this.state;
+
+    if (!this.context.user) return <div></div>;
     return (
       <React.Fragment>
         <Menu />
@@ -58,17 +65,16 @@ export default class Account extends React.Component {
           <Segment>
             <Form.Input
               type="text"
-              name="name"
-              label="Full Name"
-              value={user.name || ''}
+              name="firstName"
+              label="First Name"
+              value={user.firstName || ''}
               onChange={this.setField}
             />
-
             <Form.Input
               type="text"
-              name="email"
-              label="E-Mail"
-              value={user.email || ''}
+              name="lastName"
+              label="Last Name"
+              value={user.lastName || ''}
               onChange={this.setField}
             />
           </Segment>

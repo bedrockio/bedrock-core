@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, Button, Message } from 'semantic';
+import { Form, Input, Button, Message, Header } from 'semantic';
 
 export default (props) => {
   const { error, loading } = props;
@@ -14,20 +14,22 @@ export default (props) => {
           code,
         });
       }}>
+      <Header>Two-factor authentication</Header>
       {error && <Message error content={error.message} />}
+
       <Form.Field error={error?.hasField?.('code')}>
         <Input
           value={code}
           onChange={(e, { value }) => setCode(value)}
           name="code"
-          placeholder="Verification Code"
+          placeholder="Enter the security code displayed by your app."
         />
       </Form.Field>
       <Button
         fluid
         primary
         size="large"
-        content="Login"
+        content="Verify Code"
         loading={loading}
         disabled={loading}
       />

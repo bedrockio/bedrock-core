@@ -8,7 +8,7 @@ export default class Settings extends React.Component {
   render() {
     return (
       <Switch>
-        <Redirect exact path="/settings" to="settings/account" />
+        <Redirect exact path="/settings" to="/settings/account" />
         <Route
           exact
           path="/settings/account"
@@ -19,6 +19,7 @@ export default class Settings extends React.Component {
           path="/settings/security"
           render={(props) => <Security {...props} {...this.context} />}
         />
+        <Redirect exact to="/settings/account" />
       </Switch>
     );
   }

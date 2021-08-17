@@ -8,9 +8,9 @@ export default () => {
     <React.Fragment>
       <Breadcrumbs active="Account settings"></Breadcrumbs>
       <Menu pointing secondary>
-        <Menu.Item name="Profile" to={`/profile`} as={NavLink} exact />
+        <Menu.Item name="Account" to={`/settings/account`} as={NavLink} exact />
         <Menu.Item
-          name="Account security"
+          name="Security"
           to={`/settings/security`}
           as={NavLink}
           exact
