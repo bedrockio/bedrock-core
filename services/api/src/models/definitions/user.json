@@ -56,6 +56,11 @@
       "readScopes": "none",
       "writeScopes": "none"
     },
+    "passwordVerifiedAt": {
+      "type": "Date",
+      "readScopes": "none",
+      "writeScopes": "none"
+    },
     "authTokenId": {
       "type": "String",
       "readScopes": "none",

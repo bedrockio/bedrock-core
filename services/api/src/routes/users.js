@@ -17,6 +17,14 @@ const passwordField = Joi.string()
   .min(6)
   .message('Your password must be at least 6 characters long. Please try another.');
 
+const checkPasswordVerification = (ctx, next) => {
+  const { authUser } = ctx.state;
+  if (authUser.passwordVerifiedAt > Date.now() - 10 * 60 * 1000) {
+    ctx.throw(400, 'Password verifications is needed');
+  }
+  next();
+};
+
 router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
@@ -54,8 +62,9 @@ router
       };
     }
   )
-  .delete('/me/mfa', async (ctx) => {
+  .delete('/me/mfa', checkPasswordVerification, async (ctx) => {
     const { authUser } = ctx.state;
+
     authUser.mfaSecret = undefined;
     authUser.mfaMethod = undefined;
     await authUser.save();
@@ -67,8 +76,10 @@ router
       method: Joi.string().allow('sms', 'otp').required(),
       phoneNumber: Joi.number(),
     }),
+    checkPasswordVerification,
     async (ctx) => {
       const { authUser } = ctx.state;
+
       const { method, phoneNumber } = ctx.request.body;
 
       if (authUser.mfaSecret) {
@@ -108,12 +119,13 @@ router
       code: Joi.string(),
       secret: Joi.string(),
     }),
+    checkPasswordVerification,
     async (ctx) => {
       const { authUser } = ctx.state;
       const { secret, code } = ctx.request.body;
-      // allow 2 "windows" with the sms to ensure that sms can be delieved in time
-      if (!mfa.verifyToken(secret, code, authUser.mfaMethod === 'sms' ? 2 : 1)) {
-        ctx.throw('code is not valid', 400);
+      // allow 2 "windows" with sms to ensure that sms can be delieved in time
+      if (!mfa.verifyToken(authUser.mfaSecret, authUser.mfaMethod, code)) {
+        ctx.throw('Not a valid code', 400);
       }
 
       authUser.mfaSecret = secret;

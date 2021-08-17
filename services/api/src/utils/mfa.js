@@ -49,14 +49,14 @@ function generateToken(secret) {
   return notp.totp.gen(bin);
 }
 
-function verifyToken(secret, token, window = 1) {
+function verifyToken(secret, method, token) {
   if (!token || !token.length) return null;
 
   const unformatted = secret.replace(/\W+/g, '').toUpperCase();
   const bin = b32.decode(unformatted);
 
   return notp.totp.verify(token.replace(/\W+/g, ''), bin, {
-    window,
+    window: method === 'sms' ? 2 : 1,
     time: 30,
   });
 }

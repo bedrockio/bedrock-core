@@ -112,12 +112,45 @@ router
       ctx.body = { data: { token: createAuthToken(user.id, user.authTokenId) } };
     }
   )
+  .post(
+    '/verify-password',
+    validateBody({
+      password: Joi.string(),
+    }),
+    authenticate({ type: 'user' }),
+    async (ctx) => {
+      const { authUser } = ctx.state;
+      const { password } = ctx.request.body;
+
+      if (!authUser.verifyLoginAttempts()) {
+        await AuditEntry.append('reached max. authentication attempts', ctx, {
+          type: 'security',
+          object: authUser,
+          user: authUser.id,
+        });
+        ctx.throw(401, 'Too many attempts');
+      }
+
+      if (!(await authUser.verifyPassword(password))) {
+        await AuditEntry.append('failed authentication (verify-password)', ctx, {
+          type: 'security',
+          object: authUser,
+          user: authUser.id,
+        });
+        ctx.throw(401, 'Incorrect password');
+      }
+      authUser.passwordVerifiedAt = new Date();
+      await authUser.save();
+
+      ctx.status = 204;
+    }
+  )
   .post('/mfa/send-token', async (ctx) => {
     const result = await mfa.sendToken(ctx.state.authUser);
     if (!result) {
       ctx.throw(400, `mfa has not been configured`);
     }
-    ctx.state = 204;
+    ctx.status = 204;
   })
   .post(
     '/mfa/verify',
@@ -150,13 +183,13 @@ router
         ctx.throw(401, 'Too many attempts');
       }
 
-      if (!mfa.verifyCode(user, ctx.request.body.code)) {
+      if (!mfa.verifyToken(user.mfaSecret, user.mfaMethod, ctx.request.body.code)) {
         await AuditEntry.append('failed mfa challenge', ctx, {
           type: 'security',
           object: user,
           user: user.id,
         });
-        ctx.throw(400, 'Not valid code');
+        ctx.throw(400, 'Not a valid code');
       }
 
       await AuditEntry.append('successfully authenticated (mfa)', ctx, {
@@ -242,6 +275,7 @@ router
       ctx.status = 204;
     }
   )
+
   .post(
     '/set-password',
     validateBody({
