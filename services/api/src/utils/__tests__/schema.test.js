@@ -14,14 +14,18 @@ afterAll(async () => {
 let counter = 0;
 
 function createTestModel(schema) {
-  return mongoose.model(`SchemaTestModel${counter++}`, schema || createSchema());
+  return mongoose.model(`SchemaTestModel${counter++}`, schema || createSchemaFromAttributes());
+}
+
+function createSchemaFromAttributes(attributes = {}) {
+  return createSchema({ attributes });
 }
 
 describe('createSchema', () => {
   describe('basic functionality', () => {
     it('should create a basic schema', async () => {
       const User = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           name: { type: String, validate: /[a-z]/ },
         })
       );
@@ -37,7 +41,7 @@ describe('createSchema', () => {
 
     it('should create a schema with an array field', async () => {
       const User = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           names: [{ type: String, validate: /[a-z]/ }],
         })
       );
@@ -53,7 +57,7 @@ describe('createSchema', () => {
 
     it('should allow alternate array function syntax', async () => {
       const User = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           names: {
             type: Array,
             default: [],
@@ -66,7 +70,7 @@ describe('createSchema', () => {
 
     it('should allow alternate array string syntax', async () => {
       const User = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           names: {
             type: 'Array',
             default: [],
@@ -79,7 +83,7 @@ describe('createSchema', () => {
 
     it('should create a schema with a nested field', async () => {
       const User = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           profile: {
             name: { type: String, validate: /[a-z]/ },
           },
@@ -101,8 +105,8 @@ describe('createSchema', () => {
 
     it('should accept a schema for a subfield', async () => {
       const User = createTestModel(
-        createSchema({
-          profile: createSchema({
+        createSchemaFromAttributes({
+          profile: createSchemaFromAttributes({
             name: { type: String, validate: /[a-z]/ },
           }),
         })
@@ -124,7 +128,7 @@ describe('createSchema', () => {
 
   describe('defaults', () => {
     it('should add timestamps by default', async () => {
-      const User = createTestModel(createSchema());
+      const User = createTestModel(createSchemaFromAttributes());
       const user = new User();
       await user.save();
       expect(user.createdAt).toBeInstanceOf(Date);
@@ -132,7 +136,7 @@ describe('createSchema', () => {
     });
 
     it('should add deletedAt by default', async () => {
-      const User = createTestModel(createSchema());
+      const User = createTestModel(createSchemaFromAttributes());
       const user = new User();
       await user.save();
       await user.delete();
@@ -143,14 +147,14 @@ describe('createSchema', () => {
   describe('serialization', () => {
     describe('reserved fields', () => {
       it('should expose id', () => {
-        const User = createTestModel(createSchema());
+        const User = createTestModel(createSchemaFromAttributes());
         const user = new User();
         const data = user.toObject();
         expect(data.id).toBe(user.id);
       });
 
       it('should not expose _id or __v', () => {
-        const User = createTestModel(createSchema());
+        const User = createTestModel(createSchemaFromAttributes());
         const user = new User();
         const data = user.toObject();
         expect(data._id).toBeUndefined();
@@ -159,7 +163,7 @@ describe('createSchema', () => {
 
       it('should not expose _id in nested array objects of mixed type', () => {
         const User = createTestModel(
-          createSchema({
+          createSchemaFromAttributes({
             names: [
               {
                 name: String,
@@ -185,7 +189,7 @@ describe('createSchema', () => {
 
       it('should not expose _id in deeply nested array objects of mixed type', () => {
         const User = createTestModel(
-          createSchema({
+          createSchemaFromAttributes({
             one: [{ two: [{ three: [{ name: String, position: Number }] }] }],
           })
         );
@@ -201,7 +205,7 @@ describe('createSchema', () => {
 
       it('should not expose fields with underscore', () => {
         const User = createTestModel(
-          createSchema({
+          createSchemaFromAttributes({
             _private: String,
           })
         );
@@ -217,7 +221,7 @@ describe('createSchema', () => {
     describe('read scopes', () => {
       it('should be able to disallow all read access', () => {
         const User = createTestModel(
-          createSchema({
+          createSchemaFromAttributes({
             password: { type: String, readScopes: 'none' },
           })
         );
@@ -229,7 +233,7 @@ describe('createSchema', () => {
 
       it('should be able to disallow read access by scope', () => {
         const User = createTestModel(
-          createSchema({
+          createSchemaFromAttributes({
             password: { type: String, readScopes: ['admin'] },
           })
         );
@@ -241,7 +245,7 @@ describe('createSchema', () => {
 
       it('should be able to allow read access by scope', () => {
         const User = createTestModel(
-          createSchema({
+          createSchemaFromAttributes({
             password: { type: String, readScopes: ['admin'] },
           })
         );
@@ -253,7 +257,7 @@ describe('createSchema', () => {
 
       it('should be able to allow read access to all', () => {
         const User = createTestModel(
-          createSchema({
+          createSchemaFromAttributes({
             password: { type: String, readScopes: 'all' },
           })
         );
@@ -265,7 +269,7 @@ describe('createSchema', () => {
 
       it('should not expose private array fields', () => {
         const User = createTestModel(
-          createSchema({
+          createSchemaFromAttributes({
             tags: [{ type: String, readScopes: 'none' }],
           })
         );
@@ -280,7 +284,7 @@ describe('createSchema', () => {
 
       it('should not expose deeply nested private fields', () => {
         const User = createTestModel(
-          createSchema({
+          createSchemaFromAttributes({
             one: {
               two: {
                 three: {
@@ -322,7 +326,7 @@ describe('createSchema', () => {
 
       it('should not expose private fields deeply nested in arrays', () => {
         const User = createTestModel(
-          createSchema({
+          createSchemaFromAttributes({
             one: [
               {
                 two: [
@@ -382,7 +386,7 @@ describe('createSchema', () => {
 
       it('should serialize identically with toObject', () => {
         const User = createTestModel(
-          createSchema({
+          createSchemaFromAttributes({
             secret: { type: String, readScopes: 'none' },
           })
         );
@@ -398,7 +402,7 @@ describe('createSchema', () => {
 
       it('should allow access to private fields with options on toJSON', () => {
         const User = createTestModel(
-          createSchema({
+          createSchemaFromAttributes({
             secret: { type: String, readScopes: ['admin'] },
           })
         );
@@ -416,7 +420,7 @@ describe('createSchema', () => {
 
       it('should allow access to private fields with options on toObject', () => {
         const User = createTestModel(
-          createSchema({
+          createSchemaFromAttributes({
             secret: { type: String, readScopes: ['admin'] },
           })
         );
@@ -434,7 +438,7 @@ describe('createSchema', () => {
 
       it('should be able to mark access on nested objects', async () => {
         const User = createTestModel(
-          createSchema({
+          createSchemaFromAttributes({
             login: {
               password: String,
               attempts: Number,
@@ -455,7 +459,7 @@ describe('createSchema', () => {
 
       it('should be able to disallow access on nested objects', async () => {
         const User = createTestModel(
-          createSchema({
+          createSchemaFromAttributes({
             terms: {
               type: {
                 readScopes: 'none',
@@ -480,7 +484,7 @@ describe('createSchema', () => {
   describe('assign', () => {
     it('should allow assignment of fields', async () => {
       const User = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           name: { type: String },
           fakeId: { type: Number },
           fakeDate: { type: Date },
@@ -501,7 +505,7 @@ describe('createSchema', () => {
     it('should delete falsy values for reference fields', async () => {
       const User = createTestModel();
       const Shop = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           user: {
             ref: User.modelName,
             type: mongoose.Schema.Types.ObjectId,
@@ -526,7 +530,7 @@ describe('createSchema', () => {
     it('should still allow assignment of empty arrays for multi-reference fields', async () => {
       const User = createTestModel();
       const Shop = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           users: [
             {
               ref: User.modelName,
@@ -554,11 +558,11 @@ describe('createSchema', () => {
   describe('autopopulate', () => {
     it('should not expose private fields when using with autopopulate', async () => {
       const User = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           password: { type: String, readScopes: 'none' },
         })
       );
-      const shopSchema = createSchema({
+      const shopSchema = createSchemaFromAttributes({
         user: {
           ref: User.modelName,
           type: mongoose.Schema.Types.ObjectId,
@@ -566,7 +570,6 @@ describe('createSchema', () => {
         },
       });
 
-      shopSchema.plugin(require('mongoose-autopopulate'));
       const Shop = createTestModel(shopSchema);
 
       const user = new User();
@@ -589,12 +592,12 @@ describe('createSchema', () => {
 
     it('should not allow access to private autopopulated fields by default', async () => {
       const User = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           secret: { type: String, readScopes: 'none' },
         })
       );
 
-      const shopSchema = createSchema({
+      const shopSchema = createSchemaFromAttributes({
         user: {
           ref: User.modelName,
           type: mongoose.Schema.Types.ObjectId,
@@ -602,7 +605,6 @@ describe('createSchema', () => {
         },
       });
 
-      shopSchema.plugin(require('mongoose-autopopulate'));
       const Shop = createTestModel(shopSchema);
 
       const user = new User({
@@ -626,12 +628,12 @@ describe('createSchema', () => {
 
     it('should allow access to private autopopulated fields with options', async () => {
       const User = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           secret: { type: String, readScopes: ['admin'] },
         })
       );
 
-      const shopSchema = createSchema({
+      const shopSchema = createSchemaFromAttributes({
         user: {
           ref: User.modelName,
           type: mongoose.Schema.Types.ObjectId,
@@ -639,7 +641,6 @@ describe('createSchema', () => {
         },
       });
 
-      shopSchema.plugin(require('mongoose-autopopulate'));
       const Shop = createTestModel(shopSchema);
 
       const user = new User({
@@ -662,13 +663,150 @@ describe('createSchema', () => {
       expect(data.user.__v).toBeUndefined();
       expect(data.user.secret).toBe('foo');
     });
+
+    it('should autopopulate to a depth of 1 by default', async () => {
+      const User = createTestModel(
+        createSchemaFromAttributes({
+          name: { type: String },
+        })
+      );
+
+      const Shop = createTestModel(
+        createSchemaFromAttributes({
+          user: {
+            ref: User.modelName,
+            type: 'ObjectId',
+            autopopulate: true,
+          },
+        })
+      );
+
+      const Product = createTestModel(
+        createSchemaFromAttributes({
+          shop: {
+            ref: Shop.modelName,
+            type: 'ObjectId',
+            autopopulate: true,
+          },
+        })
+      );
+
+      const user = await User.create({
+        name: 'Marlon',
+      });
+
+      const shop = await Shop.create({
+        user,
+      });
+
+      const product = await Product.create({
+        shop,
+      });
+
+      expect(product.shop.user.toString()).toBe(user.id);
+    });
+
+    it('should allow autopopulate overrides on definition', async () => {
+      const User = createTestModel(
+        createSchemaFromAttributes({
+          name: { type: String },
+        })
+      );
+
+      const Shop = createTestModel(
+        createSchemaFromAttributes({
+          user: {
+            ref: User.modelName,
+            type: 'ObjectId',
+            autopopulate: true,
+          },
+        })
+      );
+
+      const Product = createTestModel(
+        createSchema({
+          attributes: {
+            shop: {
+              ref: Shop.modelName,
+              type: 'ObjectId',
+              autopopulate: true,
+            },
+          },
+          autopopulate: {
+            maxDepth: 2,
+          },
+        })
+      );
+
+      const user = await User.create({
+        name: 'Marlon',
+      });
+
+      const shop = await Shop.create({
+        user,
+      });
+
+      const product = await Product.create({
+        shop,
+      });
+
+      expect(product.shop.user).toMatchObject({
+        name: 'Marlon',
+      });
+    });
+
+    it('should respect autopopulate options per field', async () => {
+      const User = createTestModel(
+        createSchemaFromAttributes({
+          name: { type: String },
+        })
+      );
+
+      const Shop = createTestModel(
+        createSchemaFromAttributes({
+          user: {
+            ref: User.modelName,
+            type: 'ObjectId',
+            autopopulate: true,
+          },
+        })
+      );
+
+      const Product = createTestModel(
+        createSchemaFromAttributes({
+          shop: {
+            ref: Shop.modelName,
+            type: 'ObjectId',
+            autopopulate: {
+              maxDepth: 2,
+            },
+          },
+        })
+      );
+
+      const user = await User.create({
+        name: 'Marlon',
+      });
+
+      const shop = await Shop.create({
+        user,
+      });
+
+      const product = await Product.create({
+        shop,
+      });
+
+      expect(product.shop.user).toMatchObject({
+        name: 'Marlon',
+      });
+    });
   });
 
   describe('mongoose validation shortcuts', () => {
     it('should validate an email field', () => {
       let user;
       const User = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           email: {
             type: String,
             validate: 'email',
@@ -705,7 +843,7 @@ describe('createSchema', () => {
     it('should validate a required email field', () => {
       let user;
       const User = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           email: {
             type: String,
             required: true,
@@ -733,7 +871,7 @@ describe('createSchema', () => {
     it('should validate a nested email field', () => {
       let user;
       const User = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           emails: [
             {
               type: String,
@@ -758,7 +896,7 @@ describe('createSchema', () => {
   describe('soft delete', () => {
     it('should be able to soft delete a document', async () => {
       const User = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           name: 'String',
         })
       );
@@ -771,7 +909,7 @@ describe('createSchema', () => {
 
     it('should be able to restore a document', async () => {
       const User = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           name: 'String',
         })
       );
@@ -786,7 +924,7 @@ describe('createSchema', () => {
 
     it('should not query deleted documents by default', async () => {
       const User = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           name: 'String',
         })
       );
@@ -803,7 +941,7 @@ describe('createSchema', () => {
 
     it('should still be able to query deleted documents', async () => {
       const User = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           name: 'String',
         })
       );
@@ -820,7 +958,7 @@ describe('createSchema', () => {
 
     it('should still be able to query with deleted documents', async () => {
       const User = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           name: 'String',
         })
       );
@@ -840,7 +978,7 @@ describe('createSchema', () => {
 
     it('should be able to hard delete a document', async () => {
       const User = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           name: 'String',
         })
       );
@@ -913,7 +1051,7 @@ describe('validation', () => {
   describe('getCreateValidation', () => {
     it('should get a basic Joi create schema', () => {
       const User = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           name: {
             type: String,
             required: true,
@@ -944,7 +1082,7 @@ describe('validation', () => {
 
     it('should be able to append schemas', () => {
       const User = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           name: {
             type: String,
             required: true,
@@ -966,7 +1104,7 @@ describe('validation', () => {
 
     it('should handle geolocation schema', async () => {
       const User = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           geoLocation: {
             type: { type: 'String', default: 'Point' },
             coordinates: {
@@ -1004,7 +1142,7 @@ describe('validation', () => {
 
     it('should not require a field with a default', () => {
       const User = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           name: {
             type: String,
             required: true,
@@ -1026,7 +1164,7 @@ describe('validation', () => {
 
     it('should allow a flag to skip required', async () => {
       const User = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           name: {
             type: String,
             required: true,
@@ -1049,7 +1187,7 @@ describe('validation', () => {
   describe('getUpdateValidation', () => {
     it('should skip required fields', () => {
       const User = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           name: {
             type: String,
             required: true,
@@ -1073,7 +1211,7 @@ describe('validation', () => {
 
     it('should not enforce a schema on unstructured objects', () => {
       const User = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           profile: {
             name: 'String',
           },
@@ -1123,7 +1261,7 @@ describe('validation', () => {
 
     it('should strip reserved fields', () => {
       const User = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           name: {
             type: String,
             required: true,
@@ -1141,7 +1279,7 @@ describe('validation', () => {
     });
 
     it('should strip virtuals', () => {
-      const userSchema = createSchema({
+      const userSchema = createSchemaFromAttributes({
         firstName: {
           type: String,
           required: true,
@@ -1177,7 +1315,7 @@ describe('validation', () => {
     });
 
     it('should strip nested virtuals', () => {
-      const profileSchema = createSchema({
+      const profileSchema = createSchemaFromAttributes({
         firstName: {
           type: String,
           required: true,
@@ -1191,7 +1329,7 @@ describe('validation', () => {
         return `${this.firstName} ${this.lastName}`;
       });
       const User = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           profile: profileSchema,
         })
       );
@@ -1226,7 +1364,7 @@ describe('validation', () => {
     describe('write scopes', () => {
       it('should be able to disallow all write access', async () => {
         const User = createTestModel(
-          createSchema({
+          createSchemaFromAttributes({
             name: {
               type: String,
             },
@@ -1248,7 +1386,7 @@ describe('validation', () => {
 
       it('should be able to disallow write access by scope', async () => {
         const User = createTestModel(
-          createSchema({
+          createSchemaFromAttributes({
             name: {
               type: String,
             },
@@ -1278,7 +1416,7 @@ describe('validation', () => {
 
       it('should require only one of valid scopes', async () => {
         const User = createTestModel(
-          createSchema({
+          createSchemaFromAttributes({
             foo: {
               type: String,
               writeScopes: ['foo'],
@@ -1419,7 +1557,7 @@ describe('validation', () => {
 
     it('should allow search on a nested field', () => {
       const User = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           roles: [
             {
               role: { type: 'String', required: true },
@@ -1438,7 +1576,7 @@ describe('validation', () => {
 
     it('should strip validation with skip flag', async () => {
       const User = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           name: {
             type: String,
             required: true,
@@ -1468,7 +1606,7 @@ describe('validation', () => {
   describe('getSearchValidation', () => {
     it('should get a basic search schema allowing empty', () => {
       const User = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           name: {
             type: String,
             required: true,
@@ -1485,7 +1623,7 @@ describe('validation', () => {
 
     it('should mixin default search schema', () => {
       const User = createTestModel(
-        createSchema({
+        createSchemaFromAttributes({
           name: {
             type: String,
             required: true,
@@ -1514,7 +1652,7 @@ describe('validation', () => {
 describe('search', () => {
   it('should search on name', async () => {
     const User = createTestModel(
-      createSchema({
+      createSchemaFromAttributes({
         name: {
           type: String,
           required: true,
@@ -1530,7 +1668,7 @@ describe('search', () => {
   });
 
   it('should search on name as a keyword', async () => {
-    const schema = createSchema({
+    const schema = createSchemaFromAttributes({
       name: {
         type: String,
         required: true,
@@ -1546,9 +1684,87 @@ describe('search', () => {
     expect(meta.total).toBe(1);
   });
 
+  it('should allow partial text match when search fields are defined', async () => {
+    let result;
+    const schema = createSchema({
+      attributes: {
+        name: {
+          type: String,
+          required: true,
+        },
+      },
+      search: ['name'],
+    });
+    schema.index({
+      name: 'text',
+    });
+    const User = createTestModel(schema);
+    await Promise.all([User.create({ name: 'Billy' }), User.create({ name: 'Willy' })]);
+
+    result = await User.search({ keyword: 'bil' });
+    expect(result.data).toMatchObject([{ name: 'Billy' }]);
+    expect(result.meta.total).toBe(1);
+
+    result = await User.search({ keyword: 'lly' });
+    expect(result.data).toMatchObject([{ name: 'Billy' }, { name: 'Willy' }]);
+    expect(result.meta.total).toBe(2);
+  });
+
+  it('should allow partial text match on multiple fields', async () => {
+    let result;
+    const schema = createSchema({
+      attributes: {
+        name: {
+          type: String,
+          required: true,
+        },
+        role: {
+          type: String,
+          required: true,
+        },
+      },
+      search: ['name', 'role'],
+    });
+    schema.index({
+      name: 'text',
+    });
+    const User = createTestModel(schema);
+    await Promise.all([User.create({ name: 'Billy', role: 'user' }), User.create({ name: 'Willy', role: 'manager' })]);
+
+    result = await User.search({ keyword: 'use' });
+    expect(result.data).toMatchObject([{ name: 'Billy', role: 'user' }]);
+    expect(result.meta.total).toBe(1);
+
+    result = await User.search({ keyword: 'man' });
+    expect(result.data).toMatchObject([{ name: 'Willy', role: 'manager' }]);
+    expect(result.meta.total).toBe(1);
+  });
+
+  it('should allow id search with partial text match', async () => {
+    let result;
+    const schema = createSchema({
+      attributes: {
+        name: {
+          type: String,
+          required: true,
+        },
+      },
+      search: ['name'],
+    });
+    const User = createTestModel(schema);
+    const [billy] = await Promise.all([
+      User.create({ name: 'Billy', role: 'user' }),
+      User.create({ name: 'Willy', role: 'manager' }),
+    ]);
+
+    result = await User.search({ keyword: billy.id });
+    expect(result.data).toMatchObject([{ name: 'Billy' }]);
+    expect(result.meta.total).toBe(1);
+  });
+
   it('should search on an array field', async () => {
     const User = createTestModel(
-      createSchema({
+      createSchemaFromAttributes({
         order: Number,
         categories: [
           {
@@ -1582,11 +1798,11 @@ describe('search', () => {
 
   it('should allow shorthand for a regex query', async () => {
     const User = createTestModel(
-      createSchema({
+      createSchemaFromAttributes({
         name: String,
       })
     );
-    const [user1, user2] = await Promise.all([User.create({ name: 'Willy' }), User.create({ name: 'Billy' })]);
+    await Promise.all([User.create({ name: 'Willy' }), User.create({ name: 'Billy' })]);
 
     let result;
 
@@ -1599,7 +1815,7 @@ describe('search', () => {
 
   it('should behave like $in when empty array passed', async () => {
     const User = createTestModel(
-      createSchema({
+      createSchemaFromAttributes({
         categories: [String],
       })
     );
@@ -1614,7 +1830,7 @@ describe('search', () => {
 
   it('should be able to perform a search on a nested field', async () => {
     const User = createTestModel(
-      createSchema({
+      createSchemaFromAttributes({
         order: Number,
         roles: [
           {
@@ -1654,7 +1870,7 @@ describe('search', () => {
 
   it('should be able to perform a search on a complex nested field', async () => {
     const User = createTestModel(
-      createSchema({
+      createSchemaFromAttributes({
         name: String,
         profile: {
           roles: [
@@ -1713,7 +1929,7 @@ describe('search', () => {
 
   it('should be able to mixin operator queries', async () => {
     const User = createTestModel(
-      createSchema({
+      createSchemaFromAttributes({
         name: {
           type: String,
         },
@@ -1729,6 +1945,10 @@ describe('search', () => {
     ]);
     const { data } = await User.search({
       $or: [{ name: 'Billy' }, { age: 10 }],
+      sort: {
+        field: 'name',
+        order: 'asc',
+      },
     });
     expect(data).toMatchObject([
       { name: 'Billy', age: 20 },
@@ -1738,7 +1958,7 @@ describe('search', () => {
 
   it('should be able to mixin nested operator queries', async () => {
     const User = createTestModel(
-      createSchema({
+      createSchemaFromAttributes({
         name: {
           type: String,
         },
@@ -1759,7 +1979,7 @@ describe('search', () => {
   it('should allow custom dot path in query', async () => {
     const Organization = createTestModel();
     const User = createTestModel(
-      createSchema({
+      createSchemaFromAttributes({
         roles: [
           {
             role: {

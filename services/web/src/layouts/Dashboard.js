@@ -46,6 +46,10 @@ export default class DashboardLayout extends React.Component {
                   <Icon name="store" />
                   Shops
                 </Sidebar.Link>
+                <Sidebar.Link to="/products">
+                  <Icon name="box" />
+                  Products
+                </Sidebar.Link>
                 <Protected endpoint="users">
                   <Sidebar.Link to="/users">
                     <Icon name="users" />

@@ -8,16 +8,19 @@
     "description": {
       "type": "String",
       "trim": true,
-      "required": false
+      "required": false,
+      "text": true
     },
     "isFeatured": {
       "type": "Boolean"
     },
-    "expiresAt": {
-      "type": "Date"
-    },
     "priceUsd": {
-      "type": "Number"
+      "type": "Number",
+      "currency": true
+    },
+    "expiresAt": {
+      "type": "Date",
+      "time": true
     },
     "sellingPoints": [
       {
@@ -37,5 +40,8 @@
         "autopopulate": true
       }
     ]
-  }
+  },
+  "search": [
+    "name"
+  ]
 }

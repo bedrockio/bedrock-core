@@ -1,9 +1,10 @@
 import React from 'react';
-import { Header, Table, Image, Label, Divider } from 'semantic';
+import { Table, Header, Divider } from 'semantic';
 import { screen } from 'helpers';
 import Menu from './Menu';
 
 // --- Generator: overview-imports
+import { Image, Label } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { formatAddress } from 'utils/formatting';
 import { urlForUpload } from 'utils/uploads';
@@ -27,7 +28,6 @@ export default class ShopOverview extends React.Component {
           ))}
         </Image.Group>
         {/* --- Generator: end */}
-        <Header as="h3">Details</Header>
         <Table definition>
           <Table.Body>
             {/* --- Generator: overview-rows */}

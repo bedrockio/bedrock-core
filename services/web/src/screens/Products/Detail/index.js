@@ -5,38 +5,35 @@ import { Loader } from 'semantic';
 import { request } from 'utils/api';
 
 import NotFound from 'screens/NotFound';
+
 import Overview from './Overview';
 
-// --- Generator: detail-imports
-import Products from './Products';
-// --- Generator: end
-
-export default class ShopDetail extends React.Component {
+export default class ProductDetail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      shop: null,
+      product: null,
       error: null,
       loading: true,
     };
   }
 
   onSave = () => {
-    this.fetchShop();
+    this.fetchProduct();
   };
 
   componentDidMount() {
-    this.fetchShop();
+    this.fetchProduct();
   }
 
   componentDidUpdate(lastProps) {
     const { id } = this.props.match.params;
     if (id !== lastProps.match.params.id) {
-      this.fetchShop();
+      this.fetchProduct();
     }
   }
 
-  async fetchShop() {
+  async fetchProduct() {
     const { id } = this.props.match.params;
     try {
       this.setState({
@@ -45,10 +42,10 @@ export default class ShopDetail extends React.Component {
       });
       const { data } = await request({
         method: 'GET',
-        path: `/1/shops/${id}`,
+        path: `/1/products/${id}`,
       });
       this.setState({
-        shop: data,
+        product: data,
         loading: false,
       });
     } catch (error) {
@@ -66,8 +63,8 @@ export default class ShopDetail extends React.Component {
     } else if (error) {
       return (
         <NotFound
-          link={<Link to="/shops">Shops</Link>}
-          message="Sorry that shop wasn't found."
+          link={<Link to="/products">Products</Link>}
+          message="Sorry that product wasn't found."
         />
       );
     }
@@ -76,20 +73,12 @@ export default class ShopDetail extends React.Component {
       <Switch>
         <Route
           exact
-          path="/shops/:id"
+          path="/products/:id"
           render={(props) => (
             <Overview {...props} {...this.state} onSave={this.onSave} />
           )}
         />
-        {/* --- Generator: routes */}
-        <Route
-          exact
-          path="/shops/:id/products"
-          render={(props) => (
-            <Products {...props} {...this.state} onSave={this.onSave} />
-          )}
-        />
-        {/* --- Generator: end */}
+
         <Route component={NotFound} />
       </Switch>
     );

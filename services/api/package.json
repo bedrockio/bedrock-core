@@ -7,6 +7,7 @@
   },
   "scripts": {
     "start": "nodemon --delay 300ms --ignore __tests__/* -w src --exec \"node src/index.js\"",
+    "debug": "MONGO_DEBUG=true yarn start",
     "start:production": "node src/index",
     "docs": "node scripts/generate-openapi",
     "lint": "eslint .",

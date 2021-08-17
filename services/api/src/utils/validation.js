@@ -6,9 +6,9 @@ const FIXED_SCHEMAS = {
 };
 
 function getJoiSchema(attributes, options = {}) {
-  const { appendSchema, skipEmptyCheck } = options;
+  const { appendSchema, allowEmpty } = options;
   let schema = getObjectSchema(attributes, options);
-  if (!skipEmptyCheck) {
+  if (!allowEmpty) {
     schema = schema.min(1);
   }
   if (appendSchema) {

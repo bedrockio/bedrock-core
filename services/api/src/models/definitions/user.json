@@ -80,5 +80,10 @@
       "readScopes": "none",
       "writeScopes": "none"
     }
-  }
+  },
+  "search": [
+    "firstName",
+    "lastName",
+    "email"
+  ]
 }

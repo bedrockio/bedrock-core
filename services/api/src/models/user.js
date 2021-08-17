@@ -15,7 +15,7 @@ const LOGIN_THROTTLE = {
 };
 
 definition.attributes.roles[0].scope.enum = validScopes;
-const schema = createSchema(definition.attributes);
+const schema = createSchema(definition);
 
 schema.method('verifyPassword', async function verifyPassword(password) {
   if (!this.hashedPassword) {
@@ -46,12 +46,6 @@ schema.pre('save', async function preSave(next) {
     delete this._password;
   }
   return next();
-});
-
-schema.index({
-  firstName: 'text',
-  lastName: 'text',
-  email: 'text',
 });
 
 module.exports = mongoose.models.User || mongoose.model('User', schema);

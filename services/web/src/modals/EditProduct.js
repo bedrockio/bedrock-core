@@ -8,6 +8,7 @@ import { modal } from 'helpers';
 import DateField from 'components/form-fields/Date';
 import UploadsField from 'components/form-fields/Uploads';
 import CurrencyField from 'components/form-fields/Currency';
+import ReferenceField from 'components/form-fields/Reference';
 // --- Generator: end
 
 @modal
@@ -53,12 +54,7 @@ export default class EditProduct extends React.Component {
         await request({
           method: 'PATCH',
           path: `/1/products/${product.id}`,
-          body: {
-            // --- Generator: refs
-            shop: this.props.shop.id,
-            // --- Generator: end
-            ...product,
-          },
+          body: product,
         });
       } else {
         await request({
@@ -66,14 +62,14 @@ export default class EditProduct extends React.Component {
           path: '/1/products',
           body: {
             // --- Generator: refs
-            shop: this.props.shop.id,
+            shop: this.props.shop?.id || product.shop?.id,
             // --- Generator: end
             ...product,
           },
         });
       }
-      this.props.onSave();
       this.props.close();
+      this.props.onSave();
     } catch (error) {
       this.setState({
         error,
@@ -114,8 +110,8 @@ export default class EditProduct extends React.Component {
               />
               <Form.Checkbox
                 name="isFeatured"
-                label="Is Featured?"
-                checked={product.isFeatured || false}
+                label="Is Featured"
+                checked={product.isFeatured}
                 onChange={this.setCheckedField}
               />
               <CurrencyField
@@ -127,16 +123,17 @@ export default class EditProduct extends React.Component {
               <DateField
                 time
                 name="expiresAt"
+                label="Expires At"
                 value={product.expiresAt}
-                label="Expiration Date and Time"
                 onChange={this.setField}
               />
               <Form.Dropdown
-                name="sellingPoints"
                 search
                 selection
                 multiple
                 allowAdditions
+                name="sellingPoints"
+                label="Selling Points"
                 options={
                   product.sellingPoints?.map((value) => {
                     return {
@@ -145,7 +142,6 @@ export default class EditProduct extends React.Component {
                     };
                   }) || []
                 }
-                label="Selling Points"
                 onAddItem={(evt, { name, value }) => {
                   this.setField(evt, {
                     name,
@@ -162,6 +158,17 @@ export default class EditProduct extends React.Component {
                 onChange={this.setField}
                 onError={(error) => this.setState({ error })}
               />
+              {!this.props.shop && (
+                <ReferenceField
+                  required
+                  name="shop"
+                  label="Shop"
+                  value={product.shop}
+                  path="/1/shops/search"
+                  placeholder="Search Shops"
+                  onChange={this.setField}
+                />
+              )}
               {/* --- Generator: end */}
             </Form>
           </AutoFocus>

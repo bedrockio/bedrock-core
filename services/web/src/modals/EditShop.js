@@ -60,8 +60,8 @@ export default class EditShop extends React.Component {
           body: shop,
         });
       }
-      this.props.onSave();
       this.props.close();
+      this.props.onSave();
     } catch (error) {
       this.setState({
         error,

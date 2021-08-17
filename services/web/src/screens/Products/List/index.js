@@ -1,28 +1,23 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Table, Button, Message, Confirm } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import { screen } from 'helpers';
 import { HelpTip, Breadcrumbs, SearchProvider, Layout } from 'components';
-// --- Generator: list-imports
-import { Link } from 'react-router-dom';
-import { getData } from 'country-list';
-const countries = getData().map(({ code, name }) => ({
-  value: code,
-  text: name,
-  key: code,
-}));
-// --- Generator: end
 
 import Filters from 'modals/Filters';
-import EditShop from 'modals/EditShop';
+import EditProduct from 'modals/EditProduct';
+
+import { urlForUpload } from 'utils/uploads';
+import { Image } from 'semantic-ui-react';
 
 @screen
-export default class ShopList extends React.Component {
+export default class ProductList extends React.Component {
   onDataNeeded = async (params) => {
     return await request({
       method: 'POST',
-      path: '/1/shops/search',
+      path: '/1/products/search',
       body: params,
     });
   };
@@ -31,7 +26,7 @@ export default class ShopList extends React.Component {
     return (
       <SearchProvider onDataNeeded={this.onDataNeeded}>
         {({
-          items: shops,
+          items: products,
           getSorted,
           setSort,
           filters,
@@ -40,53 +35,50 @@ export default class ShopList extends React.Component {
         }) => {
           return (
             <React.Fragment>
-              <Breadcrumbs active="Shops" />
+              <Breadcrumbs active="Products" />
               <Layout horizontal center spread>
-                <h1>Shops</h1>
+                <h1>Products</h1>
                 <Layout.Group>
                   <Filters onSave={setFilters} filters={filters}>
-                    {/* --- Generator: filters */}
-                    <Filters.Text
-                      label="Search"
-                      name="keyword"
-                      placeholder="Enter name or shop id"
-                    />
+                    <Filters.Text name="name" label="Name" />
+                    <Filters.Checkbox name="isFeatured" label="Is Featured" />
+                    <Filters.Number name="priceUsd" label="Price Usd" />
+                    <Filters.Date time name="expiresAt" label="Expires At" />
                     <Filters.Dropdown
-                      label="Country"
-                      name="countryCode"
-                      options={countries}
                       search
+                      multiple
+                      allowAdditions
+                      name="sellingPoints"
+                      label="Selling Points"
                     />
-                    {/* --- Generator: end */}
                   </Filters>
-                  <EditShop
-                    trigger={<Button primary content="New Shop" icon="plus" />}
+                  <EditProduct
+                    trigger={
+                      <Button primary content="New Product" icon="plus" />
+                    }
                     onSave={reload}
                   />
                 </Layout.Group>
               </Layout>
-              {shops.length === 0 ? (
-                <Message>No shops created yet</Message>
+              {products.length === 0 ? (
+                <Message>No products created yet</Message>
               ) : (
                 <Table celled sortable>
                   <Table.Header>
                     <Table.Row>
-                      {/* --- Generator: list-header-cells */}
                       <Table.HeaderCell
-                        width={3}
-                        onClick={() => setSort('name')}
-                        sorted={getSorted('name')}>
+                        sorted={getSorted('name')}
+                        onClick={() => setSort('name')}>
                         Name
                       </Table.HeaderCell>
-                      <Table.HeaderCell width={3}>Description</Table.HeaderCell>
-                      {/* --- Generator: end */}
+                      <Table.HeaderCell>Images</Table.HeaderCell>
                       <Table.HeaderCell
                         onClick={() => setSort('createdAt')}
                         sorted={getSorted('createdAt')}>
                         Created
                         <HelpTip
                           title="Created"
-                          text="This is the date and time the shop was created."
+                          text="This is the date and time the product was created."
                         />
                       </Table.HeaderCell>
                       <Table.HeaderCell textAlign="center">
@@ -95,34 +87,41 @@ export default class ShopList extends React.Component {
                     </Table.Row>
                   </Table.Header>
                   <Table.Body>
-                    {shops.map((shop) => {
+                    {products.map((product) => {
                       return (
-                        <Table.Row key={shop.id}>
-                          {/* --- Generator: list-body-cells */}
+                        <Table.Row key={product.id}>
                           <Table.Cell>
-                            <Link to={`/shops/${shop.id}`}>{shop.name}</Link>
+                            <Link to={`/products/${product.id}`}>
+                              {product.name}
+                            </Link>
                           </Table.Cell>
-                          <Table.Cell>{shop.description}</Table.Cell>
-                          {/* --- Generator: end */}
+                          <Table.Cell textAlign="center">
+                            {product.images[0] && (
+                              <Image
+                                size="tiny"
+                                src={urlForUpload(product.images[0], true)}
+                              />
+                            )}
+                          </Table.Cell>
                           <Table.Cell>
-                            {formatDateTime(shop.createdAt)}
+                            {formatDateTime(product.createdAt)}
                           </Table.Cell>
                           <Table.Cell textAlign="center" singleLine>
-                            <EditShop
-                              shop={shop}
+                            <EditProduct
+                              product={product}
                               trigger={<Button basic icon="edit" />}
                               onSave={reload}
                             />
                             <Confirm
                               negative
                               confirmButton="Delete"
-                              header={`Are you sure you want to delete "${shop.name}"?`}
+                              header={`Are you sure you want to delete "${product.name}"?`}
                               content="All data will be permanently deleted"
                               trigger={<Button basic icon="trash" />}
                               onConfirm={async () => {
                                 await request({
                                   method: 'DELETE',
-                                  path: `/1/shops/${shop.id}`,
+                                  path: `/1/products/${product.id}`,
                                 });
                                 reload();
                               }}

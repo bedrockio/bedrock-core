@@ -39,12 +39,12 @@ function transformField(obj, schema, options) {
   }
 }
 
-function createSchema(attributes = {}, options = {}) {
-  const definition = attributesToDefinition(attributes);
+function createSchema(definition, options = {}) {
+  const mongoDefinition = attributesToMongoDefinition(definition.attributes, definition);
 
   const schema = new mongoose.Schema(
     {
-      ...definition,
+      ...mongoDefinition,
       deletedAt: { type: Date },
     },
     {
@@ -73,10 +73,10 @@ function createSchema(attributes = {}, options = {}) {
   });
 
   schema.static('getSearchValidation', function getSearchValidation(searchOptions, appendSchema) {
-    return getJoiSchema(attributes, {
+    return getJoiSchemaFromMongoose(schema, {
       stripFields: RESERVED_FIELDS,
+      allowEmpty: true,
       skipRequired: true,
-      skipEmptyCheck: true,
       unwindArrayFields: true,
       appendSchema: {
         ...searchValidation(searchOptions),
@@ -92,13 +92,7 @@ function createSchema(attributes = {}, options = {}) {
       query._id = { $in: ids };
     }
     if (keyword) {
-      if (ObjectId.isValid(keyword)) {
-        query.$or = [{ $text: { $search: keyword } }, { _id: keyword }];
-      } else {
-        query.$text = {
-          $search: keyword,
-        };
-      }
+      Object.assign(query, buildKeywordQuery(keyword, definition));
     }
     if (startAt || endAt) {
       query.createdAt = {};
@@ -110,6 +104,7 @@ function createSchema(attributes = {}, options = {}) {
       }
     }
     Object.assign(query, flattenQuery(rest));
+
     const [data, total] = await Promise.all([
       this.find(query)
         .sort(sort && { [sort.field]: sort.order === 'desc' ? -1 : 1 })
@@ -270,7 +265,7 @@ function getJoiSchemaFromMongoose(schema, options) {
   });
 }
 
-function attributesToDefinition(attributes, path = []) {
+function attributesToMongoDefinition(attributes, options = {}, path = []) {
   const definition = {};
   const { type } = attributes;
 
@@ -287,14 +282,16 @@ function attributesToDefinition(attributes, path = []) {
       } else if (key === 'validate' && type === 'string') {
         // Allow custom mongoose validation function that derives from the Joi schema.
         val = getMongooseValidator(val, attributes);
+      } else if (key === 'autopopulate') {
+        val = getAutopopulateOptions(val, options);
       }
     } else if (key !== 'readScopes') {
       if (Array.isArray(val)) {
         val = val.map((el, i) => {
-          return attributesToDefinition(el, [...path, i]);
+          return attributesToMongoDefinition(el, options, [...path, i]);
         });
       } else if (isPlainObject(val)) {
-        val = attributesToDefinition(val, [...path, key]);
+        val = attributesToMongoDefinition(val, options, [...path, key]);
       } else if (type === 'string') {
         val = getMongooseType(val, attributes, path);
       }
@@ -303,6 +300,15 @@ function attributesToDefinition(attributes, path = []) {
   }
 
   return definition;
+}
+
+function getAutopopulateOptions(val, options = {}) {
+  if (val === true) {
+    val = options.autopopulate || {
+      maxDepth: 1,
+    };
+  }
+  return val;
 }
 
 function getMongooseType(str, attributes, path) {
@@ -343,12 +349,11 @@ function resolveSchema(schema) {
 }
 
 function loadModel(definition, name) {
-  const { attributes } = definition;
-  if (!attributes) {
+  if (!definition.attributes) {
     throw new Error(`Invalid model definition for ${name}, need attributes`);
   }
   try {
-    const schema = createSchema(attributes);
+    const schema = createSchema(definition);
     return mongoose.model(name, schema);
   } catch (err) {
     throw new Error(`${err.message} (loading ${name})`);
@@ -415,6 +420,74 @@ function isArrayQuery(key, value) {
 
 function isMongoOperator(str) {
   return str.startsWith('$');
+}
+
+// Keyword queries
+//
+// Mongo supports text indexes, however search operations do not support partial
+// word matches except for stemming rules (eg: "taste", "tastes", and "tasteful").
+//
+// Text indexes are preferred for performance, diacritic handling and more, however
+// for smaller collections partial matches can be manually enabled by specifying an
+// array of "search" fields on the definition:
+//
+// {
+//   "attributes": {
+//     "name": {
+//       "type": "String",
+//       "required": true,
+//       "trim": true
+//     },
+//   },
+//   "search": [
+//     "name",
+//     "description"
+//   ]
+// },
+//
+// Be aware that this may impact performance in which case moving to a text index
+// may be preferable, however partial word matches will stop working. Support for
+// ngram based text search appears to be coming but has no landing date yet.
+//
+// References:
+// https://stackoverflow.com/questions/44833817/mongodb-full-and-partial-text-search
+// https://jira.mongodb.org/browse/SERVER-15090
+
+function buildKeywordQuery(keyword, definition) {
+  if (definition.search) {
+    return buildRegexQuery(keyword, definition);
+  } else {
+    return buildTextIndexQuery(keyword);
+  }
+}
+
+function buildRegexQuery(keyword, definition) {
+  const queries = definition.search.map((field) => {
+    return {
+      [field]: {
+        $regex: `${keyword}`,
+        $options: 'i',
+      },
+    };
+  });
+  if (ObjectId.isValid(keyword)) {
+    queries.push({ _id: keyword });
+  }
+  return { $or: queries };
+}
+
+function buildTextIndexQuery(keyword) {
+  if (ObjectId.isValid(keyword)) {
+    return {
+      $or: [{ $text: { $search: keyword } }, { _id: keyword }],
+    };
+  } else {
+    return {
+      $text: {
+        $search: keyword,
+      },
+    };
+  }
 }
 
 // Regex queries

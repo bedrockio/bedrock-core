@@ -1,18 +1,14 @@
 import React from 'react';
-import {
-  Table,
-  Message,
-  Loader,
-  Image,
-  Button,
-  Header,
-  Confirm,
-} from 'semantic';
+import { Table, Message, Loader, Button, Header, Confirm } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import { screen } from 'helpers';
-import { urlForUpload } from 'utils/uploads';
 import { Layout, HelpTip, SearchProvider } from 'components';
+// --- Generator: subscreen-imports
+import { Link } from 'react-router-dom';
+import { Image } from 'semantic';
+import { urlForUpload } from 'utils/uploads';
+// --- Generator: end
 
 import Filters from 'modals/Filters';
 import EditProduct from 'modals/EditProduct';
@@ -123,7 +119,11 @@ export default class ShopProducts extends React.Component {
                                   />
                                 )}
                               </Table.Cell>
-                              <Table.Cell>{product.name}</Table.Cell>
+                              <Table.Cell>
+                                <Link to={`/products/${product.id}`}>
+                                  {product.name}
+                                </Link>
+                              </Table.Cell>
                               <Table.Cell>{product.description}</Table.Cell>
                               {/* --- Generator: end */}
                               <Table.Cell>

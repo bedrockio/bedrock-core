@@ -3,10 +3,10 @@ const { validateBody, validateQuery } = require('../validate');
 const { context } = require('../../testing');
 
 describe('validateBody', () => {
-  it('should throw an error if empty object passed', () => {
+  it('should not throw an error if empty object passed', () => {
     const middleware = validateBody({});
     const ctx = context();
-    expect(() => middleware(ctx, () => {})).toThrow('"value" must have at least 1 key');
+    expect(() => middleware(ctx, () => {})).not.toThrow('"value" must have at least 1 key');
   });
 
   it('should reject a request with invalid params', () => {

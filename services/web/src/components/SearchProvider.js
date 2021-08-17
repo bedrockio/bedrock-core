@@ -49,6 +49,7 @@ export default class SearchProvider extends React.Component {
 
   fetch = async () => {
     this.setState({
+      error: null,
       loading: true,
     });
     try {
@@ -64,10 +65,10 @@ export default class SearchProvider extends React.Component {
         items: data,
         meta: Object.assign({}, this.state.meta, meta),
       });
-    } catch (err) {
+    } catch (error) {
       this.setState({
         loading: false,
-        error: err,
+        error,
       });
     }
   };
@@ -76,6 +77,19 @@ export default class SearchProvider extends React.Component {
     // Performed on a setTimeout
     // to allow state to flush.
     setTimeout(this.fetch);
+  };
+
+  replaceItem = (item, fn) => {
+    let { items } = this.state;
+    const index = items.findIndex((i) => {
+      return fn ? fn(i) : i === item;
+    });
+    if (index !== -1) {
+      items = [...items.slice(0, index), item, ...items.slice(index + 1)];
+      this.setState({
+        items,
+      });
+    }
   };
 
   getSorted = (field) => {
@@ -125,6 +139,7 @@ export default class SearchProvider extends React.Component {
           setSort: this.setSort,
           getSorted: this.getSorted,
           setFilters: this.setFilters,
+          replaceItem: this.replaceItem,
         })}
         {this.renderPagination()}
       </div>
@@ -179,4 +194,5 @@ SearchProvider.defaultProps = {
   },
   loader: true,
   pagination: true,
+  filters: {},
 };
