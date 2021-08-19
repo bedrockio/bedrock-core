@@ -115,28 +115,6 @@ export class SessionProvider extends React.PureComponent {
     document.location = '/';
   };
 
-  addStored = (key, data) => {
-    this.setStored(
-      merge({}, this.state.stored, {
-        [key]: data,
-      })
-    );
-    trackSession('add', key, data);
-  };
-
-  getStored = (key) => {
-    return this.state.stored[key];
-  };
-
-  removeStored = (key) => {
-    this.setStored(omit(this.state.stored, key));
-    trackSession('remove', key);
-  };
-
-  clearStored = () => {
-    this.setStored({});
-  };
-
   // Organizations
 
   loadOrganization = async () => {
@@ -157,7 +135,7 @@ export class SessionProvider extends React.PureComponent {
   };
 
   setOrganization = (organization) => {
-    this.addStored('organizationId', organization.id);
+    this.setStored('organizationId', organization.id);
     this.setState({
       organization,
     });
@@ -168,6 +146,28 @@ export class SessionProvider extends React.PureComponent {
   };
 
   // Session storage
+
+  getStored = (key) => {
+    return this.state.stored[key];
+  };
+
+  setStored = (key, data) => {
+    this.updateStored(
+      merge({}, this.state.stored, {
+        [key]: data,
+      })
+    );
+    trackSession('add', key, data);
+  };
+
+  removeStored = (key) => {
+    this.updateStored(omit(this.state.stored, key));
+    trackSession('remove', key);
+  };
+
+  clearStored = () => {
+    this.updateStored({});
+  };
 
   loadStored = () => {
     let data;
@@ -182,7 +182,7 @@ export class SessionProvider extends React.PureComponent {
     return data || {};
   };
 
-  setStored = (data) => {
+  updateStored = (data) => {
     if (Object.keys(data).length > 0) {
       localStorage.setItem('session', JSON.stringify(data));
     } else {
@@ -212,8 +212,8 @@ export class SessionProvider extends React.PureComponent {
           ...this.state,
           load: this.load,
           setToken: this.setToken,
-          addStored: this.addStored,
           getStored: this.getStored,
+          setStored: this.setStored,
           removeStored: this.removeStored,
           clearStored: this.clearStored,
           updateUser: this.updateUser,

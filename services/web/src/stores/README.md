@@ -107,7 +107,7 @@ State exposed on the session context:
 
 - `load()` - Reloads the session data.
 - `updateUser(data)` - Updates the user with `data`.
-- `addStored(key, value)` - Adds session data. `key` must be a `string` and `value` must be serializable. Data is stored using `localStorage`.
+- `setStored(key, value)` - Adds session data. `key` must be a `string` and `value` must be serializable. Data is stored using `localStorage`.
 - `removeStored(key)` - Removes stored data. `key` must be a `string`.
 - `clearStored()` - Clears all stored data.
 - `isAdmin()` - Checks if the user has the `admin` role.
