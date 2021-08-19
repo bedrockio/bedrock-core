@@ -1,5 +1,4 @@
 import React from 'react';
-import { request } from 'utils/api';
 import { Segment, Grid } from 'semantic';
 import { withSession } from 'stores';
 import { screen } from 'helpers';
@@ -26,14 +25,7 @@ export default class Login extends React.Component {
         error: null,
         loading: true,
       });
-      const { data } = await request({
-        method: 'POST',
-        path: '/1/auth/login',
-        body,
-      });
-      this.context.setToken(data.token);
-      await this.context.load();
-      this.props.history.push('/');
+      this.props.history.push(await this.context.login(body));
     } catch (error) {
       this.setState({
         error,

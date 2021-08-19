@@ -12,7 +12,7 @@ export default class ErrorScreen extends React.Component {
   static layout = 'none';
 
   onLogoutClick = () => {
-    this.context.logout();
+    this.context.logout(true);
   };
 
   onReloadClick = () => {

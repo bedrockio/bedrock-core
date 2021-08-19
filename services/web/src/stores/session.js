@@ -102,7 +102,13 @@ export class SessionProvider extends React.PureComponent {
     });
   };
 
-  logout = async () => {
+  // Authentication
+
+  logout = async (capture) => {
+    if (capture) {
+      const { pathname, search } = window.location;
+      this.setStored('redirect', pathname + search);
+    }
     try {
       await request({
         method: 'POST',
@@ -115,10 +121,21 @@ export class SessionProvider extends React.PureComponent {
     document.location = '/';
   };
 
+  login = async (body) => {
+    const { data } = await request({
+      method: 'POST',
+      path: '/1/auth/login',
+      body,
+    });
+    this.setToken(data.token);
+    await this.load();
+    return this.popStored('redirect') || '/';
+  };
+
   // Organizations
 
   loadOrganization = async () => {
-    const organizationId = this.getStored('organizationId');
+    const organizationId = this.state.stored['organizationId'];
     if (organizationId) {
       try {
         const { data } = await request({
@@ -147,10 +164,6 @@ export class SessionProvider extends React.PureComponent {
 
   // Session storage
 
-  getStored = (key) => {
-    return this.state.stored[key];
-  };
-
   setStored = (key, data) => {
     this.updateStored(
       merge({}, this.state.stored, {
@@ -167,6 +180,14 @@ export class SessionProvider extends React.PureComponent {
 
   clearStored = () => {
     this.updateStored({});
+  };
+
+  popStored = (key) => {
+    const stored = this.state.stored[key];
+    if (stored) {
+      this.removeStored(key);
+      return stored;
+    }
   };
 
   loadStored = () => {
@@ -212,12 +233,12 @@ export class SessionProvider extends React.PureComponent {
           ...this.state,
           load: this.load,
           setToken: this.setToken,
-          getStored: this.getStored,
           setStored: this.setStored,
           removeStored: this.removeStored,
           clearStored: this.clearStored,
           updateUser: this.updateUser,
           clearUser: this.clearUser,
+          login: this.login,
           logout: this.logout,
           hasRoles: this.hasRoles,
           hasRole: this.hasRole,
