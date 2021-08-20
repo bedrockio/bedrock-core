@@ -89,6 +89,16 @@ export class SessionProvider extends React.PureComponent {
     }
   };
 
+  loadUser = async () => {
+    const { data } = await request({
+      method: 'GET',
+      path: '/1/users/me',
+    });
+    this.setState({
+      user: data,
+    });
+  };
+
   updateUser = (data) => {
     this.setState({
       user: merge({}, this.state.user, data),
@@ -218,6 +228,7 @@ export class SessionProvider extends React.PureComponent {
           clearStored: this.clearStored,
           updateUser: this.updateUser,
           clearUser: this.clearUser,
+          loadUser: this.loadUser,
           logout: this.logout,
           hasRoles: this.hasRoles,
           hasRole: this.hasRole,

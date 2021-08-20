@@ -18,6 +18,7 @@ import Users from 'screens/Users';
 import AcceptInvite from 'screens/Auth/AcceptInvite';
 import ForgotPassword from 'screens/Auth/ForgotPassword';
 import ResetPassword from 'screens/Auth/ResetPassword';
+import ConfirmAccess from 'screens/Auth/ConfirmAccess';
 import Login from 'screens/Auth/Login';
 import Logout from 'screens/Auth/Logout';
 import Signup from 'screens/Auth/Signup';
@@ -60,6 +61,7 @@ const App = () => {
       <Route path="/accept-invite" component={AcceptInvite} exact />
       <Route path="/forgot-password" component={ForgotPassword} exact />
       <Route path="/reset-password" component={ResetPassword} exact />
+      <Protected path="/confirm-access" allowed={ConfirmAccess} exact />
       <Route component={NotFound} />
     </Switch>
   );

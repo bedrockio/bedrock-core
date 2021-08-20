@@ -5,7 +5,7 @@ import { withSession } from 'stores';
 import { screen } from 'helpers';
 
 import PageCenter from 'components/PageCenter';
-import LogoTitle from 'components/LogoTitle';
+import Logo from 'components/LogoTitle';
 
 import LoginForm from './LoginForm';
 import MFAForm from './MFAForm';
@@ -86,7 +86,7 @@ export default class Login extends React.Component {
     const { error, loading, view } = this.state;
     return (
       <PageCenter>
-        <LogoTitle title="Login" />
+        <Logo title="Login" />
         <Segment.Group>
           <Segment padded>
             {view === 'login' && (

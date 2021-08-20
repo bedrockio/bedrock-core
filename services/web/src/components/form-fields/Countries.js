@@ -1,11 +1,11 @@
 import React from 'react';
 import { Form, Select } from 'semantic';
-import { getData } from 'country-list';
+import allCountries from 'utils/countries';
 
-const countries = getData().map(({ code, name }) => ({
-  value: code,
-  text: name,
-  key: code,
+const countries = allCountries.map(({ countryCode, nameEn }) => ({
+  value: countryCode,
+  text: nameEn,
+  key: countryCode,
 }));
 
 export default class Countries extends React.Component {

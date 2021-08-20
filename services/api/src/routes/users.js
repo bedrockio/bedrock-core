@@ -19,10 +19,11 @@ const passwordField = Joi.string()
 
 const checkPasswordVerification = (ctx, next) => {
   const { authUser } = ctx.state;
-  if (authUser.passwordVerifiedAt > Date.now() - 10 * 60 * 1000) {
-    ctx.throw(400, 'Password verifications is needed');
+  // If accessConfirmedAt is older than 10 mins
+  if (authUser.accessConfirmedAt < Date.now() - 10 * 60 * 1000) {
+    ctx.throw(403, 'Confirm access');
   }
-  next();
+  return next();
 };
 
 router
@@ -62,9 +63,8 @@ router
       };
     }
   )
-  .delete('/me/mfa', checkPasswordVerification, async (ctx) => {
+  .delete('/me/mfa/disable', checkPasswordVerification, async (ctx) => {
     const { authUser } = ctx.state;
-
     authUser.mfaSecret = undefined;
     authUser.mfaMethod = undefined;
     await authUser.save();
@@ -82,15 +82,11 @@ router
 
       const { method, phoneNumber } = ctx.request.body;
 
-      if (authUser.mfaSecret) {
-        ctx.throw(400, 'You already have mfa enabled');
-      }
-
       if (method === 'sms' && !phoneNumber) {
         ctx.throw(400, 'phoneNumber is required');
       }
 
-      const secret = mfa.generateSecret({
+      const { secret, uri } = mfa.generateSecret({
         name: config.get('APP_NAME'),
         account: authUser.email,
       });
@@ -99,9 +95,6 @@ router
         authUser.phoneNumber = phoneNumber;
       }
 
-      authUser.mfaMethod = method;
-      await authUser.save();
-
       if (method === 'sms') {
         await mfa.sendToken(authUser);
       }
@@ -109,25 +102,27 @@ router
       ctx.body = {
         data: {
           secret,
+          uri,
         },
       };
     }
   )
   .post(
-    '/me/mfa/confirm',
+    '/me/mfa/enable',
     validateBody({
       code: Joi.string(),
       secret: Joi.string(),
+      method: Joi.string().allow('sms', 'otp').required(),
     }),
     checkPasswordVerification,
     async (ctx) => {
       const { authUser } = ctx.state;
-      const { secret, code } = ctx.request.body;
+      const { secret, code, method } = ctx.request.body;
       // allow 2 "windows" with sms to ensure that sms can be delieved in time
-      if (!mfa.verifyToken(authUser.mfaSecret, authUser.mfaMethod, code)) {
+      if (!mfa.verifyToken(secret, method, code)) {
         ctx.throw('Not a valid code', 400);
       }
-
+      authUser.mfaMethod = method;
       authUser.mfaSecret = secret;
       await authUser.save();
       ctx.status = 204;

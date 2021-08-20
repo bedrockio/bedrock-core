@@ -56,9 +56,8 @@
       "readScopes": "none",
       "writeScopes": "none"
     },
-    "passwordVerifiedAt": {
+    "accessConfirmedAt": {
       "type": "Date",
-      "readScopes": "none",
       "writeScopes": "none"
     },
     "authTokenId": {
@@ -81,9 +80,5 @@
       "writeScopes": "none"
     }
   },
-  "search": [
-    "firstName",
-    "lastName",
-    "email"
-  ]
+  "search": ["firstName", "lastName", "email"]
 }

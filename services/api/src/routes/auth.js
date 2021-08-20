@@ -113,11 +113,12 @@ router
     }
   )
   .post(
-    '/verify-password',
+    '/confirm-access',
     validateBody({
       password: Joi.string(),
     }),
     authenticate({ type: 'user' }),
+    fetchUser,
     async (ctx) => {
       const { authUser } = ctx.state;
       const { password } = ctx.request.body;
@@ -132,14 +133,14 @@ router
       }
 
       if (!(await authUser.verifyPassword(password))) {
-        await AuditEntry.append('failed authentication (verify-password)', ctx, {
+        await AuditEntry.append('failed authentication (confirm-access)', ctx, {
           type: 'security',
           object: authUser,
           user: authUser.id,
         });
         ctx.throw(401, 'Incorrect password');
       }
-      authUser.passwordVerifiedAt = new Date();
+      authUser.accessConfirmedAt = new Date();
       await authUser.save();
 
       ctx.status = 204;

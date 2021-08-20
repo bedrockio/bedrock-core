@@ -15,8 +15,8 @@ async function requireChallenge(ctx, user) {
 
 function generateSecret(options) {
   const config = {
-    name: encodeURIComponent(options?.name ?? 'App'),
-    account: encodeURIComponent(options?.account ? `:${options.account}` : ''),
+    name: encodeURIComponent(options?.name ?? 'App').toLocaleLowerCase(),
+    account: encodeURIComponent(options?.account ? `:${options.account}` : '').toLocaleLowerCase(),
   };
 
   const bin = crypto.randomBytes(20);
@@ -31,13 +31,11 @@ function generateSecret(options) {
     .toUpperCase();
 
   const query = `?secret=${secret}&issuer=${config.name}`;
-  //const encodedQuery = query.replace('?', '%3F').replace('&', '%26');
   const uri = `otpauth://totp/${config.name}${config.account}`;
 
   return {
     secret,
     uri: `${uri}${query}`,
-    //qr: `https://chart.googleapis.com/chart?chs=166x166&chld=L|0&cht=qr&chl=${uri}${encodedQuery}`,
   };
 }
 
@@ -52,14 +50,23 @@ function generateToken(secret) {
 function verifyToken(secret, method, token) {
   if (!token || !token.length) return null;
 
-  const unformatted = secret.replace(/\W+/g, '').toUpperCase();
+  const unformatted = secret.toUpperCase();
   const bin = b32.decode(unformatted);
 
-  return notp.totp.verify(token.replace(/\W+/g, ''), bin, {
-    window: method === 'sms' ? 2 : 1,
+  const result = notp.totp.verify(token, bin, {
+    window: 4, // method === 'sms' ? 2 : 1,
     time: 30,
   });
+
+  return result;
 }
+
+const secret = generateSecret();
+const code = generateToken(secret.secret);
+console.log(secret);
+setTimeout(() => {
+  console.log('result', verifyToken(secret.secret, 'sms', code));
+}, 100);
 
 async function sendToken(user) {
   if (user.mfaMethod !== 'sms' || !user.mfaSecret || !user.phoneNumber) {

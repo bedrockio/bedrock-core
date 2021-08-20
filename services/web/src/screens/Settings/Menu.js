@@ -2,6 +2,7 @@ import React from 'react';
 import { Menu } from 'semantic';
 import { NavLink } from 'react-router-dom';
 import { Breadcrumbs } from 'components';
+import ConfirmAccessLink from 'components/Link/ConfirmAccessLink';
 
 export default () => {
   return (
@@ -11,8 +12,8 @@ export default () => {
         <Menu.Item name="Account" to={`/settings/account`} as={NavLink} exact />
         <Menu.Item
           name="Security"
-          to={`/settings/security`}
-          as={NavLink}
+          to={'/settings/security'}
+          as={ConfirmAccessLink}
           exact
         />
       </Menu>

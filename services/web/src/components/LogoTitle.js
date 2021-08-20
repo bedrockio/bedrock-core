@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header, Image } from 'semantic';
+import { Header, Image, Divider } from 'semantic';
 import { Link } from 'react-router-dom';
 import Logo from 'assets/logo.svg';
 
