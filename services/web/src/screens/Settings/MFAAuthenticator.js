@@ -17,7 +17,6 @@ import PageCenter from 'components/PageCenter';
 import { Link, withRouter } from 'react-router-dom';
 import LogoTitle from 'components/LogoTitle';
 
-@withRouter
 @screen
 export default class MFAAuthenticator extends React.Component {
   static layout = 'none';

@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  Segment,
-  Message,
-  Form,
-  Button,
-  Divider,
-  Header,
-  Label,
-} from 'semantic';
+import { Segment, Message, Button, Divider, Header, Label } from 'semantic';
 
 import { screen } from 'helpers';
 import Menu from './Menu';
@@ -103,7 +95,6 @@ export default class Account extends React.Component {
         {mfaMethod && (
           <>
             <Divider hidden></Divider>
-
             <Segment color="red">
               <Layout horizontal spread>
                 <div>

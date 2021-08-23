@@ -3,7 +3,12 @@ import { Form, Modal, Message, Button } from 'semantic';
 import { request } from 'utils/api';
 import { screen } from 'helpers';
 
-@withRouter
+const countryCallingCodes = allCountries.map(({ nameEn, callingCode }) => ({
+  value: callingCode,
+  text: `${nameEn} +${callingCode}`,
+  key: callingCode,
+}));
+
 @screen
 export default class MFASms extends React.Component {
   static layout = 'none';
@@ -13,7 +18,40 @@ export default class MFASms extends React.Component {
     loading: false,
     error: null,
     phoneNumber: '',
+    countryCode: '+1',
+    code: '',
+    smsSent: false,
   };
+
+  async triggerSms() {
+    const { countryCode, code } = this.state;
+    try {
+      const { data } = await request({
+        method: 'POST',
+        path: '/1/users/me/mfa/config',
+        body: {
+          method: 'sms',
+          phoneNumber: `+${countryCode}${code}`,
+        },
+      });
+
+      this.setState({
+        smsSent: true,
+      });
+    } catch (error) {
+      if (error.status == 403) {
+        this.props.history.push(
+          '/confirm-access?to=/settings/mfa-authenticator'
+        );
+        return;
+      }
+
+      this.setState({
+        error,
+        loading: false,
+      });
+    }
+  }
 
   onSubmit = async () => {
     const { user } = this.state;
@@ -43,7 +81,14 @@ export default class MFASms extends React.Component {
   };
 
   render() {
-    const { user, touched, loading, error } = this.state;
+    const {
+      touched,
+      loading,
+      error,
+      countryCode,
+      phoneNumber,
+      code,
+    } = this.state;
     return (
       <>
         <Modal.Header>Set up SMS authentication</Modal.Header>
@@ -53,39 +98,40 @@ export default class MFASms extends React.Component {
             in.
           </p>
 
-          <Form onSubmit={this.onSubmit} error={touched && !!error}>
+          <Form onSubmit={this.triggerSms} error={touched && !!error}>
             {error && <Message error content={error.message} />}
             <Form.Select
-              options={[]}
-              value={user.firstName || ''}
+              options={countryCallingCodes}
+              search
+              value={countryCode}
               label="Country code"
               required
               type="text"
-              autoComplete="given-name"
-              onChange={(e, { value }) => this.setField('firstName', value)}
+              autoComplete="tel-country-code"
+              onChange={(e, { value }) => this.setState({ countryCode: value })}
             />
             <Form.Input
-              value={user.firstName || ''}
+              value={phoneNumber}
               label="Phone number"
               required
-              type="text"
-              autoComplete="given-name"
-              onChange={(e, { value }) => this.setField('firstName', value)}
+              type="tel"
+              autoComplete="tel-local"
+              onChange={(e, { value }) => this.setState({ phoneNumber: value })}
             />
             Authentication codes will be sent here.
-            <Button>Send authentication Code</Button>
+            <Button type="submit">Send authentication Code</Button>
           </Form>
 
           <Form onSubmit={this.onSubmit} error={touched && !!error}>
             {error && <Message error content={error.message} />}
             Enter the six-digit code sent to your phone
             <Form.Input
-              value={user.firstName || ''}
+              value={code}
               label="Phone number"
               required
               type="text"
               autoComplete="given-name"
-              onChange={(e, { value }) => this.setField('firstName', value)}
+              onChange={(e, { value }) => this.setState({ code: value })}
             />
             It may take a minute to arrive.
           </Form>

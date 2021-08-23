@@ -8,6 +8,7 @@ import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
 
 import { Link } from 'react-router-dom';
+import Password from 'components/form-fields/Password';
 
 @screen
 @withSession
@@ -58,18 +59,15 @@ export default class ConfirmAccess extends React.Component {
           <Segment padded>
             <Form error={!!error} size="large" onSubmit={() => this.onSubmit()}>
               {error && <Message error content={error.message} />}
-              <Form.Field error={error?.hasField?.('email')}>
-                <Form.Input
-                  value={password}
-                  onChange={(e, { value }) =>
-                    this.setState({ password: value })
-                  }
-                  label="Password"
-                  type="password"
-                  autoComplete="off"
-                  autoFocus
-                />
-              </Form.Field>
+
+              <Password
+                value={password}
+                onChange={(e, { value }) => this.setState({ password: value })}
+                label="Password"
+                autoComplete="off"
+                autoFocus
+              />
+
               <Button
                 fluid
                 primary
