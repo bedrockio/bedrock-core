@@ -25,6 +25,8 @@ export default class Account extends React.Component {
       this.props.history.push(
         `/confirm-access?to=${this.props.location.pathname}`
       );
+    } else {
+      this.context.loadUser();
     }
   }
 
@@ -84,7 +86,7 @@ export default class Account extends React.Component {
                   size="small"
                   to="/settings/mfa-authenticator"
                   as={Link}>
-                  {mfaMethod === 'otp' ? 'Update' : 'Enable'}
+                  {mfaMethod === 'otp' ? 'Config' : 'Enable'}
                 </Button>
               </div>
             </Layout>
@@ -105,7 +107,7 @@ export default class Account extends React.Component {
               </div>
               <div>
                 <Button basic size="small" to="/settings/mfa-sms" as={Link}>
-                  {mfaMethod === 'sms' ? 'Update' : 'Enable'}
+                  {mfaMethod === 'sms' ? 'Config' : 'Enable'}
                 </Button>
               </div>
             </Layout>

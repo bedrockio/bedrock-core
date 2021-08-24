@@ -1,7 +1,6 @@
 const notp = require('notp');
 const crypto = require('crypto');
 const b32 = require('thirty-two');
-const sms = require('./sms');
 
 const config = require('@bedrockio/config');
 const APP_NAME = config.get('APP_NAME');
@@ -54,32 +53,15 @@ function verifyToken(secret, method, token) {
   const bin = b32.decode(unformatted);
 
   const result = notp.totp.verify(token, bin, {
-    window: 4, // method === 'sms' ? 2 : 1,
+    window: method === 'sms' ? 2 : 1,
     time: 30,
   });
 
   return result;
 }
 
-const secret = generateSecret();
-const code = generateToken(secret.secret);
-console.log(secret);
-setTimeout(() => {
-  console.log('result', verifyToken(secret.secret, 'sms', code));
-}, 100);
-
-async function sendToken(user) {
-  if (user.mfaMethod !== 'sms' || !user.mfaSecret || !user.phoneNumber) {
-    return false;
-  }
-
-  await sms.sendMessage(user.phoneNumber, `Your ${APP_NAME} verification code is: ${generateToken(user.mfaSecret)}`);
-  return true;
-}
-
 module.exports = {
   requireChallenge,
-  sendToken,
   verifyToken,
   generateSecret,
   generateToken,

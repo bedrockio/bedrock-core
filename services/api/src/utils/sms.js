@@ -25,9 +25,11 @@ async function sendMessage(to, body, options = { validityPeriod: 10 }) {
         Authorization,
       },
     });
-    const { error_message } = await response.json();
-    if (error_message) {
-      throw Error(`Failed to send message: ${error_message}`);
+
+    const { message, status } = await response.json();
+
+    if (message && status !== 200) {
+      throw Error(message);
     }
   } catch (e) {
     throw Error(e.message);

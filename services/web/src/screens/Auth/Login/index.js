@@ -22,6 +22,7 @@ export default class Login extends React.Component {
     view: 'login',
     mfaToken: null,
     mfaMethod: null,
+    mfaPhoneNumber: null,
   };
 
   onLoginSubmit = async (body) => {
@@ -40,6 +41,7 @@ export default class Login extends React.Component {
         this.setState({
           mfaToken: data.token,
           mfaMethod: data.mfaRequired,
+          mfaPhoneNumber: data.mfaPhoneNumber,
           view: 'mfa',
           loading: false,
         });
@@ -84,7 +86,8 @@ export default class Login extends React.Component {
   };
 
   render() {
-    const { error, loading, view } = this.state;
+    const { error, loading, view, mfaMethod, mfaPhoneNumber } = this.state;
+
     return (
       <PageCenter>
         <Logo title="Login" />
@@ -99,6 +102,8 @@ export default class Login extends React.Component {
             )}
             {view === 'mfa' && (
               <MFAForm
+                mfaPhoneNumber={mfaPhoneNumber}
+                mfaMethod={mfaMethod}
                 onSubmit={this.onMFASubmit}
                 error={error}
                 loading={loading}

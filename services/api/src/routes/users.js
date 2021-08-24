@@ -6,6 +6,7 @@ const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
 const { exportValidation, searchExport } = require('../utils/search');
 const mfa = require('../utils/mfa');
+const sms = require('../utils/sms');
 const { User } = require('../models');
 const { expandRoles } = require('./../utils/permissions');
 const roles = require('./../roles.json');
@@ -74,7 +75,7 @@ router
     '/me/mfa/config',
     validateBody({
       method: Joi.string().allow('sms', 'otp').required(),
-      phoneNumber: Joi.number(),
+      phoneNumber: Joi.string(),
     }),
     checkPasswordVerification,
     async (ctx) => {
@@ -91,12 +92,11 @@ router
         account: authUser.email,
       });
 
-      if (phoneNumber) {
-        authUser.phoneNumber = phoneNumber;
-      }
-
       if (method === 'sms') {
-        await mfa.sendToken(authUser);
+        await sms.sendMessage(
+          phoneNumber,
+          `Your ${config.get('APP_NAME')} verification code is: ${mfa.generateToken(secret)}`
+        );
       }
 
       ctx.body = {
@@ -113,15 +113,22 @@ router
       code: Joi.string(),
       secret: Joi.string(),
       method: Joi.string().allow('sms', 'otp').required(),
+      phoneNumber: Joi.string(),
     }),
     checkPasswordVerification,
     async (ctx) => {
       const { authUser } = ctx.state;
-      const { secret, code, method } = ctx.request.body;
+      const { secret, code, method, phoneNumber } = ctx.request.body;
       // allow 2 "windows" with sms to ensure that sms can be delieved in time
       if (!mfa.verifyToken(secret, method, code)) {
         ctx.throw('Not a valid code', 400);
       }
+
+      if (method === 'sms' && !phoneNumber) {
+        ctx.throw(400, 'phoneNumber is required');
+      }
+
+      authUser.mfaPhoneNumber = phoneNumber;
       authUser.mfaMethod = method;
       authUser.mfaSecret = secret;
       await authUser.save();

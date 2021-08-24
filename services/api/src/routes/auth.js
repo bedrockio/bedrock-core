@@ -5,6 +5,7 @@ const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { createAuthToken, createTemporaryToken, generateTokenId } = require('../utils/tokens');
 const { sendTemplatedMail } = require('../utils/mailer');
 const { User, Invite, AuditEntry } = require('../models');
+const config = require('@bedrockio/config');
 
 const mfa = require('../utils/mfa');
 const sms = require('../utils/sms');
@@ -96,7 +97,7 @@ router
         const token = createTemporaryToken({ type: 'mfa', sub: user.id, jti: tokenId });
         user.tempTokenId = tokenId;
         await user.save();
-        ctx.body = { data: { token, mfaRequired: user.mfaMethod } };
+        ctx.body = { data: { token, mfaRequired: user.mfaMethod, mfaPhoneNumber: user.mfaPhoneNumber.slice(-4) } };
         return;
       }
 
@@ -146,11 +147,23 @@ router
       ctx.status = 204;
     }
   )
-  .post('/mfa/send-token', async (ctx) => {
-    const result = await mfa.sendToken(ctx.state.authUser);
-    if (!result) {
-      ctx.throw(400, `mfa has not been configured`);
+  .post('/mfa/send-token', authenticate({ type: 'mfa' }), async (ctx) => {
+    const { jwt } = ctx.state;
+    const user = await User.findOneAndUpdate({ _id: jwt.sub });
+
+    if (user.mfaMethod !== 'sms') {
+      ctx.throw(400, 'sms multi factor verification is not enabled for this account');
     }
+
+    if (!user.mfaPhoneNumber || !user.mfaSecret) {
+      ctx.throw(400, 'sms multi factor verification has not been configed correctly');
+    }
+
+    await sms.sendMessage(
+      user.mfaPhoneNumber,
+      `Your ${config.get('APP_NAME')} verification code is: ${mfa.generateToken(user.mfaSecret)}`
+    );
+
     ctx.status = 204;
   })
   .post(

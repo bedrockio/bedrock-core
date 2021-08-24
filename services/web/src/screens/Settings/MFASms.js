@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 
 const countryCallingCodes = allCountries.map(({ nameEn, callingCode }) => ({
   value: callingCode,
-  text: `${nameEn} +${callingCode}`,
+  text: `${nameEn} (+${callingCode})`,
   key: `${nameEn}-${callingCode}`,
 }));
 
@@ -30,8 +30,11 @@ export default class MFASms extends React.Component {
 
   triggerSms = async () => {
     const { countryCode, phoneNumber } = this.state;
+    this.setState({
+      smsSent: false,
+    });
     try {
-      await request({
+      const { data } = await request({
         method: 'POST',
         path: '/1/users/me/mfa/config',
         body: {
@@ -41,6 +44,7 @@ export default class MFASms extends React.Component {
       });
 
       this.setState({
+        secret: data.secret,
         smsSent: true,
       });
     } catch (error) {
@@ -50,14 +54,14 @@ export default class MFASms extends React.Component {
       }
 
       this.setState({
-        error,
+        configError: error,
         loading: false,
       });
     }
   };
 
   onSubmit = async () => {
-    const { user } = this.state;
+    const { countryCode, phoneNumber } = this.state;
     this.setState({
       loading: true,
       touched: true,
@@ -65,17 +69,22 @@ export default class MFASms extends React.Component {
 
     try {
       await request({
-        method: 'PATCH',
-        path: `/1/users/${user.id}`,
+        method: 'POST',
+        path: '/1/users/me/mfa/enable',
         body: {
-          ...user,
-          roles: undefined,
+          code: this.state.code,
+          secret: this.state.secret,
+          phoneNumber: `+${countryCode}${phoneNumber}`,
+          method: 'sms',
         },
       });
-
-      this.props.onSave();
-      this.props.close();
+      this.props.history.push(`/settings/security`);
     } catch (error) {
+      if (error.status == 403) {
+        this.props.history.push('/confirm-access?to=/settings/mfa-sms');
+        return;
+      }
+
       this.setState({
         error,
         loading: false,
@@ -91,6 +100,7 @@ export default class MFASms extends React.Component {
       countryCode,
       phoneNumber,
       code,
+      configError,
     } = this.state;
 
     return (
@@ -101,8 +111,8 @@ export default class MFASms extends React.Component {
           <Segment>
             <Header size="small">1. What’s your mobile phone number?</Header>
             <p>Authentication codes will be sent to it.</p>
-            <Form onSubmit={this.triggerSms} error={touched && !!error}>
-              {error && <Message error content={error.message} />}
+            <Form onSubmit={this.triggerSms} error={touched && !!configError}>
+              {configError && <Message error content={configError.message} />}
               <Form.Select
                 options={countryCallingCodes}
                 search
@@ -122,7 +132,7 @@ export default class MFASms extends React.Component {
                 type="tel"
                 autoComplete="tel-local"
                 onChange={(e, { value }) =>
-                  this.setState({ phoneNumber: value })
+                  this.setState({ phoneNumber: value.replace(/ /g, '') })
                 }
               />
 

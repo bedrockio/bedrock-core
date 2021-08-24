@@ -34,9 +34,6 @@
       "required": true,
       "trim": true
     },
-    "phoneNumber": {
-      "type": "Number"
-    },
     "timeZone": {
       "type": "String"
     },
@@ -75,6 +72,11 @@
       "enum": ["sms", "otp"]
     },
     "mfaSecret": {
+      "type": "String",
+      "readScopes": "none",
+      "writeScopes": "none"
+    },
+    "mfaPhoneNumber": {
       "type": "String",
       "readScopes": "none",
       "writeScopes": "none"
