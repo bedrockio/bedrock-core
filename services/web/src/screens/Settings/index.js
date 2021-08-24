@@ -3,7 +3,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 
 import Account from './Account';
 import Security from './Security';
-import MFASms from './MfaSms';
+import MFASms from './MFASms';
 import MFAAuthenticator from './MFAAuthenticator';
 
 export default class Settings extends React.Component {

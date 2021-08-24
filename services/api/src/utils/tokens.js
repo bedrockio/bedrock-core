@@ -6,14 +6,13 @@ const expiresIn = {
   temporary: '1d',
   regular: '30d',
   invite: '1d',
-  shortLived: '10m',
 };
 
 const secrets = {
   user: config.get('JWT_SECRET'),
 };
 
-function createTemporaryToken(claims, { shortLived = false }) {
+function createTemporaryToken(claims) {
   return jwt.sign(
     {
       ...claims,
@@ -21,7 +20,7 @@ function createTemporaryToken(claims, { shortLived = false }) {
     },
     secrets.user,
     {
-      expiresIn: shortLived ? expiresIn.shortLived : expiresIn.temporary,
+      expiresIn: expiresIn.temporary,
     }
   );
 }

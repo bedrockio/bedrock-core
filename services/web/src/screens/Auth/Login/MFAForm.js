@@ -25,7 +25,7 @@ export default (props) => {
           placeholder="Enter the security code displayed by your app."
         />
       </Form.Field>
-      <Button
+      <Form.Button
         fluid
         primary
         size="large"

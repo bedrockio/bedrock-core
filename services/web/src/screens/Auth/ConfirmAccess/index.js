@@ -68,7 +68,7 @@ export default class ConfirmAccess extends React.Component {
                 autoFocus
               />
 
-              <Button
+              <Form.Button
                 fluid
                 primary
                 size="large"

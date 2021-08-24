@@ -41,6 +41,7 @@ export default class Login extends React.Component {
           mfaToken: data.token,
           mfaMethod: data.mfaRequired,
           view: 'mfa',
+          loading: false,
         });
         return;
       }
@@ -64,7 +65,7 @@ export default class Login extends React.Component {
       });
       const { data } = await request({
         method: 'POST',
-        path: '/1/auth/login',
+        path: '/1/auth/mfa/verify',
         token: this.state.mfaToken,
         body: {
           code,

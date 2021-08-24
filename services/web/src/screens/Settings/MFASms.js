@@ -1,12 +1,17 @@
 import React from 'react';
-import { Form, Modal, Message, Button } from 'semantic';
+import { Form, Message, Button, Segment, Header } from 'semantic';
 import { request } from 'utils/api';
 import { screen } from 'helpers';
+import allCountries from 'utils/countries';
+
+import PageCenter from 'components/PageCenter';
+import LogoTitle from 'components/LogoTitle';
+import { Link } from 'react-router-dom';
 
 const countryCallingCodes = allCountries.map(({ nameEn, callingCode }) => ({
   value: callingCode,
   text: `${nameEn} +${callingCode}`,
-  key: callingCode,
+  key: `${nameEn}-${callingCode}`,
 }));
 
 @screen
@@ -18,20 +23,20 @@ export default class MFASms extends React.Component {
     loading: false,
     error: null,
     phoneNumber: '',
-    countryCode: '+1',
+    countryCode: '',
     code: '',
     smsSent: false,
   };
 
-  async triggerSms() {
-    const { countryCode, code } = this.state;
+  triggerSms = async () => {
+    const { countryCode, phoneNumber } = this.state;
     try {
-      const { data } = await request({
+      await request({
         method: 'POST',
         path: '/1/users/me/mfa/config',
         body: {
           method: 'sms',
-          phoneNumber: `+${countryCode}${code}`,
+          phoneNumber: `+${countryCode}${phoneNumber}`,
         },
       });
 
@@ -40,9 +45,7 @@ export default class MFASms extends React.Component {
       });
     } catch (error) {
       if (error.status == 403) {
-        this.props.history.push(
-          '/confirm-access?to=/settings/mfa-authenticator'
-        );
+        this.props.history.push('/confirm-access?to=/settings/mfa-sms');
         return;
       }
 
@@ -51,7 +54,7 @@ export default class MFASms extends React.Component {
         loading: false,
       });
     }
-  }
+  };
 
   onSubmit = async () => {
     const { user } = this.state;
@@ -89,62 +92,87 @@ export default class MFASms extends React.Component {
       phoneNumber,
       code,
     } = this.state;
+
     return (
-      <>
-        <Modal.Header>Set up SMS authentication</Modal.Header>
-        <Modal.Content>
-          <p>
-            We will send authentication codes to your mobile phone during sign
-            in.
-          </p>
+      <PageCenter>
+        <LogoTitle title="Set up SMS authentication" />
 
-          <Form onSubmit={this.triggerSms} error={touched && !!error}>
-            {error && <Message error content={error.message} />}
-            <Form.Select
-              options={countryCallingCodes}
-              search
-              value={countryCode}
-              label="Country code"
-              required
-              type="text"
-              autoComplete="tel-country-code"
-              onChange={(e, { value }) => this.setState({ countryCode: value })}
-            />
-            <Form.Input
-              value={phoneNumber}
-              label="Phone number"
-              required
-              type="tel"
-              autoComplete="tel-local"
-              onChange={(e, { value }) => this.setState({ phoneNumber: value })}
-            />
-            Authentication codes will be sent here.
-            <Button type="submit">Send authentication Code</Button>
-          </Form>
+        <Segment.Group>
+          <Segment>
+            <Header size="small">1. What’s your mobile phone number?</Header>
+            <p>Authentication codes will be sent to it.</p>
+            <Form onSubmit={this.triggerSms} error={touched && !!error}>
+              {error && <Message error content={error.message} />}
+              <Form.Select
+                options={countryCallingCodes}
+                search
+                value={countryCode}
+                label="Country Code"
+                required
+                type="text"
+                autoComplete="tel-country-code"
+                onChange={(e, { value }) =>
+                  this.setState({ countryCode: value })
+                }
+              />
+              <Form.Input
+                value={phoneNumber}
+                label="Phone number"
+                required
+                type="tel"
+                autoComplete="tel-local"
+                onChange={(e, { value }) =>
+                  this.setState({ phoneNumber: value })
+                }
+              />
 
-          <Form onSubmit={this.onSubmit} error={touched && !!error}>
-            {error && <Message error content={error.message} />}
-            Enter the six-digit code sent to your phone
-            <Form.Input
-              value={code}
-              label="Phone number"
-              required
-              type="text"
-              autoComplete="given-name"
-              onChange={(e, { value }) => this.setState({ code: value })}
+              <Form.Button type="submit" basic>
+                Send authentication Code
+              </Form.Button>
+            </Form>
+          </Segment>
+          <Segment>
+            <Header size="small">
+              2. Enter the security code sent to your device
+            </Header>
+            <p> It may take a minute to arrive.</p>
+            <Form
+              id="authenticator-form"
+              onSubmit={this.onSubmit}
+              error={touched && !!error}>
+              {error && <Message error content={error.message} />}
+
+              <Form.Input
+                value={code}
+                disabled={!this.state.smsSent}
+                label="Enter the six-digit code sent to your phone"
+                required
+                placeholder="e.g. 423056"
+                type="text"
+                autoComplete="given-name"
+                onChange={(e, { value }) => this.setState({ code: value })}
+              />
+            </Form>
+          </Segment>
+          <Segment>
+            <Button
+              form="authenticator-form"
+              primary
+              loading={loading}
+              disabled={loading || code.length !== 6}
+              content={'Enable'}
             />
-            It may take a minute to arrive.
-          </Form>
-        </Modal.Content>
-        <Modal.Actions>
-          <Button
-            primary
-            loading={loading}
-            disabled={loading}
-            content={'Enable'}
-          />
-        </Modal.Actions>
-      </>
+            <Button
+              as={Link}
+              to="/settings/security"
+              basic
+              floated="right"
+              secondary
+              content={'Cancel'}
+            />
+          </Segment>
+        </Segment.Group>
+      </PageCenter>
     );
   }
 }
