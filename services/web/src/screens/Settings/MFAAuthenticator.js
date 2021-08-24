@@ -108,7 +108,7 @@ export default class MFAAuthenticator extends React.Component {
               , or <ExternalLink href="https://authy.com/">Authy.</ExternalLink>
             </p>
           </Segment>
-          <Segment>
+          <Segment style={{ minHeight: '276px' }}>
             <Header size="small">
               2. Scan this barcode using your authenticator app
             </Header>

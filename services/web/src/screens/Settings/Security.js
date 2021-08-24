@@ -4,18 +4,18 @@ import { Segment, Message, Button, Divider, Header, Label } from 'semantic';
 import { screen } from 'helpers';
 import Menu from './Menu';
 import { request } from 'utils/api';
-// import SetupAuthenticator from 'modals/mfa/SetupAuthenticator';
-//import SetupSMS from 'modals/mfa/SetupSMS';
-//import ConfirmAccess from 'modals/ConfirmAccess';
 
 import { withSession } from 'stores';
 import { Link } from 'react-router-dom';
 import { Layout } from 'components';
+import LoadButton from 'components/LoadButton';
 
 @screen
 @withSession
 export default class Account extends React.Component {
-  state = {};
+  state = {
+    error: undefined,
+  };
 
   componentDidMount() {
     if (
@@ -28,6 +28,25 @@ export default class Account extends React.Component {
     }
   }
 
+  disableMFa = async () => {
+    this.setState({ error: undefined });
+    try {
+      await request({
+        method: 'DELETE',
+        path: '/1/users/me/mfa/disable',
+      });
+    } catch (e) {
+      if (e.status === 403) {
+        this.props.history.push(
+          `/confirm-access?to=${this.props.location.pathname}`
+        );
+      } else {
+        this.setState({ error: e });
+      }
+    }
+    await this.context.loadUser();
+  };
+
   render() {
     const { error } = this.state;
     const { mfaMethod } = this.context.user;
@@ -36,7 +55,6 @@ export default class Account extends React.Component {
       <React.Fragment>
         <Menu />
         <Divider hidden />
-        {error && <Message error content={error.message} />}
 
         <Header>Two-factor authentication</Header>
         <p>
@@ -72,6 +90,7 @@ export default class Account extends React.Component {
             </Layout>
           </Segment>
           <Segment>
+            {error && <Message error content={error.message} />}
             <Layout horizontal spread>
               <div>
                 <Header
@@ -109,9 +128,13 @@ export default class Account extends React.Component {
                   </p>
                 </div>
                 <div>
-                  <Button basic size="small" color="red">
+                  <LoadButton
+                    onClick={this.disableMFa}
+                    basic
+                    size="small"
+                    color="red">
                     Turn off
-                  </Button>
+                  </LoadButton>
                 </div>
               </Layout>
             </Segment>
