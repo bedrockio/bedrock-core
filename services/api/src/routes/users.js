@@ -12,6 +12,8 @@ const { expandRoles } = require('./../utils/permissions');
 const roles = require('./../roles.json');
 const permissions = require('./../permissions.json');
 
+const { sendTemplatedMail } = require('../utils/mailer');
+
 const router = new Router();
 
 const passwordField = Joi.string()
@@ -20,8 +22,8 @@ const passwordField = Joi.string()
 
 const checkPasswordVerification = (ctx, next) => {
   const { authUser } = ctx.state;
-  // If accessConfirmedAt is older than 10 mins
-  if (authUser.accessConfirmedAt < Date.now() - 10 * 60 * 1000) {
+  // If accessConfirmedAt is older than 30 mins
+  if (authUser.accessConfirmedAt < Date.now() - 30 * 60 * 1000) {
     ctx.throw(403, 'Confirm access');
   }
   return next();
@@ -68,7 +70,16 @@ router
     const { authUser } = ctx.state;
     authUser.mfaSecret = undefined;
     authUser.mfaMethod = undefined;
+    authUser.mfaPhoneNumber = undefined;
     await authUser.save();
+
+    await sendTemplatedMail({
+      to: authUser.fullName,
+      template: 'mfa-disabled.md',
+      subject: 'Two-factor authentication disabled',
+      firstName: authUser.firstName,
+    });
+
     ctx.status = 204;
   })
   .post(
@@ -132,6 +143,15 @@ router
       authUser.mfaMethod = method;
       authUser.mfaSecret = secret;
       await authUser.save();
+
+      await sendTemplatedMail({
+        to: authUser.fullName,
+        template: authUser.mfaMethod === 'otp' ? 'mfa-otp-enabled.md' : 'mfa-sms-enabled.md',
+        subject: 'Two-factor authentication enabled',
+        mfaPhoneNumber: authUser.mfaPhoneNumber.slice(-4),
+        firstName: authUser.firstName,
+      });
+
       ctx.status = 204;
     }
   )

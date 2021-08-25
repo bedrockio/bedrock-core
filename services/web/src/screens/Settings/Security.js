@@ -20,7 +20,7 @@ export default class Account extends React.Component {
   componentDidMount() {
     if (
       Date.parse(this.context.user.accessConfirmedAt) <
-      Date.now() - 30 * 60 * 1000
+      Date.now() - 20 * 60 * 1000
     ) {
       this.props.history.push(
         `/confirm-access?to=${this.props.location.pathname}`
