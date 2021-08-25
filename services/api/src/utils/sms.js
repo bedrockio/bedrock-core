@@ -1,6 +1,7 @@
 const config = require('@bedrockio/config');
 const { URLSearchParams } = require('url');
 const fetch = require('node-fetch');
+const { logger } = require('@bedrockio/instrumentation');
 
 const TWILIO_AUTH_TOKEN = config.get('TWILIO_AUTH_TOKEN');
 const TWILIO_ACCOUNT_SID = config.get('TWILIO_ACCOUNT_SID');
@@ -25,11 +26,11 @@ async function sendMessage(to, body, options = { validityPeriod: 10 }) {
         Authorization,
       },
     });
-
     const { message, status } = await response.json();
 
     if (message && status !== 200) {
-      throw Error(message);
+      logger.error(`Failed to send sms: ${message}`);
+      throw Error('Failed to send sms');
     }
   } catch (e) {
     throw Error(e.message);

@@ -19,6 +19,7 @@ import AcceptInvite from 'screens/Auth/AcceptInvite';
 import ForgotPassword from 'screens/Auth/ForgotPassword';
 import ResetPassword from 'screens/Auth/ResetPassword';
 import ConfirmAccess from 'screens/Auth/ConfirmAccess';
+import MFAVerification from 'screens/Auth/MFAVerification';
 import Login from 'screens/Auth/Login';
 import Logout from 'screens/Auth/Logout';
 import Signup from 'screens/Auth/Signup';
@@ -49,6 +50,12 @@ const App = () => {
       <AuthSwitch
         path="/login"
         loggedOut={Login}
+        loggedIn={() => <Redirect to="/" />}
+        exact
+      />
+      <AuthSwitch
+        path="/mfa/verification"
+        loggedOut={MFAVerification}
         loggedIn={() => <Redirect to="/" />}
         exact
       />

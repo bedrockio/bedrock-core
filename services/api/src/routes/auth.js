@@ -97,7 +97,9 @@ router
         const token = createTemporaryToken({ type: 'mfa', sub: user.id, jti: tokenId });
         user.tempTokenId = tokenId;
         await user.save();
-        ctx.body = { data: { token, mfaRequired: user.mfaMethod, mfaPhoneNumber: user.mfaPhoneNumber.slice(-4) } };
+        ctx.body = {
+          data: { token, mfaRequired: true, mfaMethod: user.mfaMethod, mfaPhoneNumber: user.mfaPhoneNumber.slice(-4) },
+        };
         return;
       }
 
@@ -149,7 +151,8 @@ router
   )
   .post('/mfa/send-token', authenticate({ type: 'mfa' }), async (ctx) => {
     const { jwt } = ctx.state;
-    const user = await User.findOneAndUpdate({ _id: jwt.sub });
+    console.log(jwt);
+    const user = await User.findOne({ _id: jwt.sub });
 
     if (user.mfaMethod !== 'sms') {
       ctx.throw(400, 'sms multi factor verification is not enabled for this account');

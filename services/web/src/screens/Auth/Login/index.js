@@ -1,14 +1,12 @@
 import React from 'react';
 import { request } from 'utils/api';
-import { Segment, Grid } from 'semantic';
+import { Segment, Grid, Form, Message } from 'semantic';
 import { withSession } from 'stores';
 import { screen } from 'helpers';
 
 import PageCenter from 'components/PageCenter';
 import Logo from 'components/LogoTitle';
 
-import LoginForm from './LoginForm';
-import MFAForm from './MFAForm';
 import { Link } from 'react-router-dom';
 
 @screen
@@ -19,32 +17,29 @@ export default class Login extends React.Component {
   state = {
     error: null,
     loading: false,
-    view: 'login',
-    mfaToken: null,
-    mfaMethod: null,
-    mfaPhoneNumber: null,
+    email: '',
+    password: '',
   };
 
-  onLoginSubmit = async (body) => {
+  onSubmit = async () => {
     try {
       this.setState({
         error: null,
         loading: true,
       });
+
       const { data } = await request({
         method: 'POST',
         path: '/1/auth/login',
-        body,
+        body: {
+          email: this.state.email,
+          password: this.state.password,
+        },
       });
 
       if (data.mfaRequired) {
-        this.setState({
-          mfaToken: data.token,
-          mfaMethod: data.mfaRequired,
-          mfaPhoneNumber: data.mfaPhoneNumber,
-          view: 'mfa',
-          loading: false,
-        });
+        window.sessionStorage.setItem('mfa-auth', JSON.stringify(data));
+        this.props.history.push('/mfa/verification');
         return;
       }
 
@@ -59,56 +54,51 @@ export default class Login extends React.Component {
     }
   };
 
-  onMFASubmit = async ({ code }) => {
-    try {
-      this.setState({
-        error: null,
-        loading: true,
-      });
-      const { data } = await request({
-        method: 'POST',
-        path: '/1/auth/mfa/verify',
-        token: this.state.mfaToken,
-        body: {
-          code,
-        },
-      });
-
-      this.context.setToken(data.token);
-      await this.context.load();
-      this.props.history.push('/');
-    } catch (error) {
-      this.setState({
-        error,
-        loading: false,
-      });
-    }
-  };
-
   render() {
-    const { error, loading, view, mfaMethod, mfaPhoneNumber } = this.state;
+    const { error, loading, password, email } = this.state;
 
     return (
       <PageCenter>
         <Logo title="Login" />
         <Segment.Group>
           <Segment padded>
-            {view === 'login' && (
-              <LoginForm
-                onSubmit={this.onLoginSubmit}
-                error={error}
+            <Form error={!!error} size="large" onSubmit={this.onSubmit}>
+              {error && <Message error content={error.message} />}
+              <Form.Field error={error?.hasField?.('email')}>
+                <Form.Input
+                  value={email}
+                  onChange={(e, { value }) => this.setState({ email: value })}
+                  name="email"
+                  icon="mail"
+                  iconPosition="left"
+                  placeholder="E-mail Address"
+                  type="email"
+                  autoComplete="email"
+                />
+              </Form.Field>
+              <Form.Field error={error?.hasField?.('password')}>
+                <Form.Input
+                  value={password}
+                  onChange={(e, { value }) =>
+                    this.setState({ password: value })
+                  }
+                  name="password"
+                  icon="lock"
+                  iconPosition="left"
+                  placeholder="Password"
+                  autoComplete="current-password"
+                  type="password"
+                />
+              </Form.Field>
+              <Form.Button
+                fluid
+                primary
+                size="large"
+                content="Login"
                 loading={loading}
+                disabled={loading}
               />
-            )}
-            {view === 'mfa' && (
-              <MFAForm
-                mfaPhoneNumber={mfaPhoneNumber}
-                mfaMethod={mfaMethod}
-                onSubmit={this.onMFASubmit}
-                error={error}
-                loading={loading}
-              />
-            )}
+            </Form>
           </Segment>
           <Segment secondary>
             <Grid>

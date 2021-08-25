@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Message, Button, Segment, Header } from 'semantic';
+import { Form, Message, Button, Segment, Header, Divider } from 'semantic';
 import { request } from 'utils/api';
 import { screen } from 'helpers';
 import allCountries from 'utils/countries';
