@@ -151,7 +151,6 @@ router
   )
   .post('/mfa/send-token', authenticate({ type: 'mfa' }), async (ctx) => {
     const { jwt } = ctx.state;
-    console.log(jwt);
     const user = await User.findOne({ _id: jwt.sub });
 
     if (user.mfaMethod !== 'sms') {
