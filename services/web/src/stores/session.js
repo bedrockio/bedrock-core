@@ -47,7 +47,7 @@ export class SessionProvider extends React.PureComponent {
     return this.hasRoles([role]);
   };
 
-  setToken = async (token) => {
+  setToken = (token) => {
     if (token) {
       setToken(token);
     } else {
@@ -112,7 +112,13 @@ export class SessionProvider extends React.PureComponent {
     });
   };
 
-  logout = async () => {
+  // Authentication
+
+  logout = async (capture) => {
+    if (capture) {
+      const { pathname, search } = window.location;
+      this.setStored('redirect', pathname + search);
+    }
     try {
       await request({
         method: 'POST',
@@ -121,36 +127,20 @@ export class SessionProvider extends React.PureComponent {
     } catch (err) {
       // JWT token errors may throw here
     }
-    await this.setToken(null);
+    this.setToken(null);
     document.location = '/';
   };
 
-  addStored = (key, data) => {
-    this.setStored(
-      merge({}, this.state.stored, {
-        [key]: data,
-      })
-    );
-    trackSession('add', key, data);
-  };
-
-  getStored = (key) => {
-    return this.state.stored[key];
-  };
-
-  removeStored = (key) => {
-    this.setStored(omit(this.state.stored, key));
-    trackSession('remove', key);
-  };
-
-  clearStored = () => {
-    this.setStored({});
+  authenticate = async (token) => {
+    this.setToken(token);
+    await this.load();
+    return this.popStored('redirect') || '/';
   };
 
   // Organizations
 
   loadOrganization = async () => {
-    const organizationId = this.getStored('organizationId');
+    const organizationId = this.state.stored['organizationId'];
     if (organizationId) {
       try {
         const { data } = await request({
@@ -167,7 +157,7 @@ export class SessionProvider extends React.PureComponent {
   };
 
   setOrganization = (organization) => {
-    this.addStored('organizationId', organization.id);
+    this.setStored('organizationId', organization.id);
     this.setState({
       organization,
     });
@@ -178,6 +168,32 @@ export class SessionProvider extends React.PureComponent {
   };
 
   // Session storage
+
+  setStored = (key, data) => {
+    this.updateStored(
+      merge({}, this.state.stored, {
+        [key]: data,
+      })
+    );
+    trackSession('add', key, data);
+  };
+
+  removeStored = (key) => {
+    this.updateStored(omit(this.state.stored, key));
+    trackSession('remove', key);
+  };
+
+  clearStored = () => {
+    this.updateStored({});
+  };
+
+  popStored = (key) => {
+    const stored = this.state.stored[key];
+    if (stored) {
+      this.removeStored(key);
+      return stored;
+    }
+  };
 
   loadStored = () => {
     let data;
@@ -192,7 +208,7 @@ export class SessionProvider extends React.PureComponent {
     return data || {};
   };
 
-  setStored = (data) => {
+  updateStored = (data) => {
     if (Object.keys(data).length > 0) {
       localStorage.setItem('session', JSON.stringify(data));
     } else {
@@ -222,13 +238,13 @@ export class SessionProvider extends React.PureComponent {
           ...this.state,
           load: this.load,
           setToken: this.setToken,
-          addStored: this.addStored,
-          getStored: this.getStored,
+          setStored: this.setStored,
           removeStored: this.removeStored,
           clearStored: this.clearStored,
           updateUser: this.updateUser,
           clearUser: this.clearUser,
           loadUser: this.loadUser,
+          authenticate: this.authenticate,
           logout: this.logout,
           hasRoles: this.hasRoles,
           hasRole: this.hasRole,
