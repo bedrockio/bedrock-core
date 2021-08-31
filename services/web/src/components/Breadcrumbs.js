@@ -7,11 +7,7 @@ import { Layout } from './Layout';
 export default class Breadcrumbs extends React.Component {
   getPath() {
     const { link, path } = this.props;
-    if (link) {
-      return [link];
-    } else {
-      return path;
-    }
+    return link ? [link] : path;
   }
 
   render() {
@@ -25,12 +21,12 @@ export default class Breadcrumbs extends React.Component {
           {this.getPath().map((link, i) => {
             return (
               <React.Fragment key={i}>
-                <Breadcrumb.Divider hidden icon="chevron-right" />
+                <Breadcrumb.Divider icon="chevron-right" />
                 <Breadcrumb.Section>{link}</Breadcrumb.Section>
               </React.Fragment>
             );
           })}
-          {active && <Breadcrumb.Divider hidden icon="chevron-right" />}
+          {active && <Breadcrumb.Divider icon="chevron-right" />}
           <Breadcrumb.Section active>{active}</Breadcrumb.Section>
         </Breadcrumb>
         <Layout.Group>{this.props.children}</Layout.Group>

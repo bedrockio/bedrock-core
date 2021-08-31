@@ -15,13 +15,9 @@
 *******************************/
 
 .ui.breadcrumb {
-  line-height: 1;
   display: @display;
-  margin: @verticalMargin 0em;
   vertical-align: @verticalAlign;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
-  font-weight: 500;
   color: #abadb3;
 }
 .ui.breadcrumb:first-child {
@@ -40,10 +36,9 @@
   display: inline-block;
   opacity: @dividerOpacity;
   margin: 0em @dividerSpacing 0em;
-
-  font-size: @dividerSize;
   color: @dividerColor;
-  vertical-align: @dividerVerticalAlign;
+  vertical-align: -0.1em;
+  background: transparent;
 }
 
 /* Link */
@@ -52,13 +47,6 @@
 }
 .ui.breadcrumb a:hover {
   color: @breadcrumbLinkColor;
-}
-
-/* Icon Divider */
-.ui.breadcrumb .icon.divider {
-  font-size: @iconDividerSize;
-  vertical-align: @iconDividerVerticalAlign;
-  margin-top: 2px;
 }
 
 /* Section */

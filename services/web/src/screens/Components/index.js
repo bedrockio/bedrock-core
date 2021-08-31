@@ -60,7 +60,9 @@ export default class ComponentsScreen extends React.Component {
         <Divider hidden />
         <Layout horizontal top stackable>
           <Layout.Group size="200px" fixed>
-            <ResponsiveMenu contextRef={this.contextRef} title="Components Menu">
+            <ResponsiveMenu
+              contextRef={this.contextRef}
+              title="Components Menu">
               <JumpLink className="item" to="buttons">
                 Buttons
               </JumpLink>
@@ -195,11 +197,18 @@ export default class ComponentsScreen extends React.Component {
                     </Form.Field>
 
                     <Form.Field>
-                      <Input placeholder="Placeholder" label="Label" type="text" />
+                      <Input
+                        placeholder="Placeholder"
+                        label="Label"
+                        type="text"
+                      />
                     </Form.Field>
 
                     <Form.Field>
-                      <Input labelPosition="right" type="text" placeholder="Amount">
+                      <Input
+                        labelPosition="right"
+                        type="text"
+                        placeholder="Amount">
                         <Label basic>$</Label>
                         <input />
                         <Label>.00</Label>
@@ -231,12 +240,20 @@ export default class ComponentsScreen extends React.Component {
                         value="1"
                         checked
                       />
-                      <Form.Radio label="Radio 2" id="2" name="radio" value="2" />
+                      <Form.Radio
+                        label="Radio 2"
+                        id="2"
+                        name="radio"
+                        value="2"
+                      />
                     </Form.Field>
 
                     <Header size="medium">Text Area</Header>
                     <Form.Field>
-                      <TextArea label="Label" placeholder="Placeholder text..." />
+                      <TextArea
+                        label="Label"
+                        placeholder="Placeholder text..."
+                      />
                     </Form.Field>
                   </Form>
                 </JumpLink.Target>
@@ -253,7 +270,11 @@ export default class ComponentsScreen extends React.Component {
 
                   <Header size="medium">Variations</Header>
                   <Layout horizontal>
-                    <Dropdown placeholder="Selection" selection options={options} />
+                    <Dropdown
+                      placeholder="Selection"
+                      selection
+                      options={options}
+                    />
                     <div
                       style={{
                         display: 'inline-block',
@@ -698,6 +719,14 @@ export default class ComponentsScreen extends React.Component {
                   <Header size="medium">Divider with Text</Header>
 
                   <Divider horizontal>OR</Divider>
+
+                  <Header size="medium">Vertical Divider</Header>
+
+                  <Layout horizontal center>
+                    <Layout.Group>One</Layout.Group>
+                    <Divider vertical>AND</Divider>
+                    <Layout.Group>Two</Layout.Group>
+                  </Layout>
                 </JumpLink.Target>
 
                 <JumpLink.Target id="statistic">
