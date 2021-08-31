@@ -25,12 +25,12 @@ export default class Breadcrumbs extends React.Component {
           {this.getPath().map((link, i) => {
             return (
               <React.Fragment key={i}>
-                <Breadcrumb.Divider icon="chevron-right" />
+                <Breadcrumb.Divider hidden icon="chevron-right" />
                 <Breadcrumb.Section>{link}</Breadcrumb.Section>
               </React.Fragment>
             );
           })}
-          {active && <Breadcrumb.Divider icon="chevron-right" />}
+          {active && <Breadcrumb.Divider hidden icon="chevron-right" />}
           <Breadcrumb.Section active>{active}</Breadcrumb.Section>
         </Breadcrumb>
         <Layout.Group>{this.props.children}</Layout.Group>
