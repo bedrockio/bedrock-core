@@ -52,6 +52,9 @@ export default class Login extends React.Component {
         path: '/1/auth/mfa/send-token',
         token,
       });
+      this.setState({
+        loading: false,
+      });
     } catch (error) {
       this.setState({
         error,
