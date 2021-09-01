@@ -26,7 +26,7 @@ import { screen } from 'helpers';
 import { Layout } from 'components/Layout';
 import Breadcrumbs from 'components/Breadcrumbs';
 import { Menu as ResponsiveMenu } from 'components/Responsive';
-import { JumpLink } from 'components/Link';
+import { JumpLink, ExternalLink } from 'components/Link';
 
 const options = [
   { key: 1, text: 'Choice 1', value: 1 },
@@ -110,6 +110,9 @@ export default class ComponentsScreen extends React.Component {
               </JumpLink>
               <JumpLink className="item" to="progress">
                 Progress
+              </JumpLink>
+              <JumpLink className="item" to="external-link">
+                ExternalLink
               </JumpLink>
             </ResponsiveMenu>
           </Layout.Group>
@@ -802,6 +805,24 @@ export default class ComponentsScreen extends React.Component {
                   <Progress percent={32} color="purple" />
                   <b>Tiny Size</b>
                   <Progress percent={78} color="blue" size="tiny" />
+                </JumpLink.Target>
+
+                <JumpLink.Target id="external-link">
+                  <Header size="large">ExternalLink</Header>
+                  <Header size="medium">Variations</Header>
+                  <b>Without icon</b>
+                  <Divider hidden />
+                  <div>
+                    <ExternalLink href="/">Link without icon</ExternalLink>
+                  </div>
+                  <Divider hidden />
+                  <b>With Icon</b>
+                  <Divider hidden />
+                  <div>
+                    <ExternalLink href="/" icon>
+                      Link with icon
+                    </ExternalLink>
+                  </div>
                 </JumpLink.Target>
               </div>
             </Ref>
