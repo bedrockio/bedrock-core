@@ -1,12 +1,12 @@
 import React from 'react';
+import { pick, omit } from 'lodash';
 import PropTypes from 'prop-types';
 import { Route, Link } from 'react-router-dom';
 import { Loader, Message } from 'semantic';
 import { withSession } from 'stores';
 import ErrorScreen from 'screens/Error';
 
-@withSession
-export default class AuthSwitch extends React.Component {
+class AuthSwitch extends React.Component {
   hasAccess() {
     const { admin, roles } = this.props;
     const { user, isAdmin, hasRoles } = this.context;
@@ -25,7 +25,6 @@ export default class AuthSwitch extends React.Component {
     const {
       loggedIn: LoggedInComponent,
       loggedOut: LoggedOutComponent,
-      ...rest
     } = this.props;
     if (loading) {
       return <Loader active>Loading</Loader>;
@@ -41,14 +40,16 @@ export default class AuthSwitch extends React.Component {
         </ErrorScreen>
       );
     }
+    const routeProps = pick(this.props, Object.keys(Route.propTypes));
+    const passedProps = omit(this.props, Object.keys(AuthSwitch.propTypes));
     return (
       <Route
-        {...rest}
+        {...routeProps}
         render={(props) => {
           return this.hasAccess() ? (
-            <LoggedInComponent {...props} />
+            <LoggedInComponent {...props} {...passedProps} />
           ) : (
-            <LoggedOutComponent {...props} />
+            <LoggedOutComponent {...props} {...passedProps} />
           );
         }}
       />
@@ -68,3 +69,5 @@ AuthSwitch.defaultProps = {
   admin: false,
   roles: [],
 };
+
+export default withSession(AuthSwitch);
