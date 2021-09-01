@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Switch, Route } from 'react-router-dom';
+import { Protected } from 'helpers/routes';
 import { Loader } from 'semantic';
 import { request } from 'utils/api';
 
@@ -72,22 +73,19 @@ export default class ShopDetail extends React.Component {
       );
     }
 
+    const props = {
+      ...this.state,
+      onSave: this.onSave,
+    };
     return (
       <Switch>
-        <Route
-          exact
-          path="/shops/:id"
-          render={(props) => (
-            <Overview {...props} {...this.state} onSave={this.onSave} />
-          )}
-        />
+        <Protected exact path="/shops/:id" allowed={Overview} {...props} />
         {/* --- Generator: routes */}
-        <Route
+        <Protected
           exact
           path="/shops/:id/products"
-          render={(props) => (
-            <Products {...props} {...this.state} onSave={this.onSave} />
-          )}
+          allowed={Products}
+          {...props}
         />
         {/* --- Generator: end */}
         <Route component={NotFound} />
