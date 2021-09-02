@@ -1646,6 +1646,23 @@ describe('validation', () => {
         ids: ['12345'],
       });
     });
+
+    it('should allow an array for a string field', () => {
+      const User = createTestModel(
+        createSchemaFromAttributes({
+          name: {
+            type: String,
+            required: true,
+          },
+        })
+      );
+      const schema = User.getSearchValidation();
+      expect(Joi.isSchema(schema)).toBe(true);
+      assertPass(schema, {
+        name: ['foo', 'bar'],
+      });
+      assertPass(schema, {});
+    });
   });
 });
 
@@ -1701,11 +1718,23 @@ describe('search', () => {
     const User = createTestModel(schema);
     await Promise.all([User.create({ name: 'Billy' }), User.create({ name: 'Willy' })]);
 
-    result = await User.search({ keyword: 'bil' });
+    result = await User.search({
+      keyword: 'bil',
+      sort: {
+        field: 'name',
+        order: 'asc',
+      },
+    });
     expect(result.data).toMatchObject([{ name: 'Billy' }]);
     expect(result.meta.total).toBe(1);
 
-    result = await User.search({ keyword: 'lly' });
+    result = await User.search({
+      keyword: 'lly',
+      sort: {
+        field: 'name',
+        order: 'asc',
+      },
+    });
     expect(result.data).toMatchObject([{ name: 'Billy' }, { name: 'Willy' }]);
     expect(result.meta.total).toBe(2);
   });

@@ -129,6 +129,9 @@ function getSchemaForField(field, options = {}) {
     if (field.max || field.maxLength) {
       schema = schema.max(field.max || field.maxLength);
     }
+    if (options.allowMultiple) {
+      schema = Joi.alternatives().try(schema, Joi.array().items(schema));
+    }
   }
   return schema;
 }
