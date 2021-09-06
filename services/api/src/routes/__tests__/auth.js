@@ -119,7 +119,7 @@ describe('/1/auth', () => {
       const password = '123password!';
       const firstName = 'Bob';
       const lastName = 'Johnson';
-      const response = await request('POST', '/1/auth/register', { firstName, lastName, email, password });
+      let response = await request('POST', '/1/auth/register', { firstName, lastName, email, password });
       expect(response.status).toBe(200);
 
       const { payload } = jwt.decode(response.body.data.token, { complete: true });
@@ -131,6 +131,9 @@ describe('/1/auth', () => {
       });
 
       expect(updatedUser.email).toBe(email);
+
+      response = await request('POST', '/1/auth/register', { firstName, lastName, email, password });
+      expect(response.status).toBe(400);
     });
   });
 

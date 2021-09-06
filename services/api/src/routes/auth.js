@@ -5,7 +5,6 @@ const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { createAuthToken, createTemporaryToken, generateTokenId } = require('../utils/tokens');
 const { sendTemplatedMail } = require('../utils/mailer');
 const { User, Invite, AuditEntry } = require('../models');
-const { object } = require('joi');
 
 const router = new Router();
 
