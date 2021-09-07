@@ -6,6 +6,19 @@ import { Loader, Message } from 'semantic';
 import { withSession } from 'stores';
 import ErrorScreen from 'screens/Error';
 
+// Need to hard-code these as react-router
+// strips them in production 👎
+const ROUTE_PROP_TYPES = [
+  'children',
+  'component',
+  'exact',
+  'location',
+  'path',
+  'render',
+  'sensitive',
+  'strict',
+];
+
 class AuthSwitch extends React.Component {
   hasAccess() {
     const { admin, roles } = this.props;
@@ -40,7 +53,7 @@ class AuthSwitch extends React.Component {
         </ErrorScreen>
       );
     }
-    const routeProps = pick(this.props, Object.keys(Route.propTypes));
+    const routeProps = pick(this.props, Object.keys(ROUTE_PROP_TYPES));
     const passedProps = omit(this.props, Object.keys(AuthSwitch.propTypes));
     return (
       <Route
@@ -62,7 +75,7 @@ AuthSwitch.propTypes = {
   roles: PropTypes.array,
   loggedIn: PropTypes.elementType.isRequired,
   loggedOut: PropTypes.elementType.isRequired,
-  ...Route.propTypes,
+  ...ROUTE_PROP_TYPES,
 };
 
 AuthSwitch.defaultProps = {
