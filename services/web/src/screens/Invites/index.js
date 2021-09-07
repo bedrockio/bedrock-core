@@ -9,12 +9,7 @@ import InviteUser from 'modals/InviteUser';
 import LoadButton from 'components/LoadButton';
 import { Breadcrumbs } from 'components';
 
-import {
-  Table,
-  Button,
-  Message,
-  Divider
-} from 'semantic';
+import { Table, Button, Message, Divider } from 'semantic';
 
 @screen
 export default class Home extends React.Component {
@@ -34,9 +29,7 @@ export default class Home extends React.Component {
             <div>
               <Breadcrumbs active="Invites" />
               <Layout horizontal center spread>
-                <h1>
-                    Invites
-                </h1>
+                <h1>Invites</h1>
                 <Layout.Group>
                   <InviteUser
                     size="tiny"

@@ -1,4 +1,4 @@
 module.exports = {
-  ...require("@bedrockio/prettier-config"),
-  "printWidth": 120
+  ...require('@bedrockio/prettier-config'),
+  printWidth: 120,
 };

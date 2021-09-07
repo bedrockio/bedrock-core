@@ -661,7 +661,7 @@ describe('getJoiSchema', () => {
 
     it('should not validate mixed type', () => {
       const schema = getJoiSchema({
-        counts: 'Mixed'
+        counts: 'Mixed',
       });
       assertPass(schema, { counts: { foo: 'bar' } });
       assertPass(schema, { counts: { name: 'foo' } });
@@ -670,8 +670,8 @@ describe('getJoiSchema', () => {
     it('should not validate explicit mixed type', () => {
       const schema = getJoiSchema({
         counts: {
-          type: 'Mixed'
-        }
+          type: 'Mixed',
+        },
       });
       assertPass(schema, { counts: { foo: 'bar' } });
       assertPass(schema, { counts: { name: 'foo' } });

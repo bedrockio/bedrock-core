@@ -45,7 +45,6 @@ export default class EditOrganization extends React.Component {
           path: `/1/organizations/${organization.id}`,
           body: {
             ...organization,
-
           },
         });
       } else {
@@ -54,7 +53,6 @@ export default class EditOrganization extends React.Component {
           path: '/1/organizations',
           body: {
             ...organization,
-
           },
         });
       }

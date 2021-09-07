@@ -211,7 +211,13 @@ describe('/1/users', () => {
       const response = await request(
         'PATCH',
         `/1/users/${user1.id}`,
-        { firstName: 'New', lastName: 'Name', id: 'fake id', createdAt: '2020-01-01T00:00:00Z', updatedAt: '2020-01-01T00:00:00Z' },
+        {
+          firstName: 'New',
+          lastName: 'Name',
+          id: 'fake id',
+          createdAt: '2020-01-01T00:00:00Z',
+          updatedAt: '2020-01-01T00:00:00Z',
+        },
         { user: admin }
       );
       expect(response.status).toBe(200);
@@ -228,13 +234,12 @@ describe('/1/users', () => {
         'PATCH',
         `/1/users/${user.id}`,
         {
-          hashedPassword: 'new hashed password'
+          hashedPassword: 'new hashed password',
         },
         { user: admin }
       );
       expect(response.status).toBe(401);
     });
-
   });
 
   describe('DELETE /:user', () => {
