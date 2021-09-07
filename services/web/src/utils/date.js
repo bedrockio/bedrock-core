@@ -1,22 +1,26 @@
-import { DateTime } from 'luxon';
+const DATE_MED = {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+};
+
+const DATETIME_MED = {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+  hour: 'numeric',
+  minute: 'numeric',
+};
 
 export function formatDate(arg, locale) {
-  return getFormatted(arg, DateTime.DATE_MED, locale);
+  return getFormatted(arg, locale, DATE_MED);
 }
 
 export function formatDateTime(arg, locale) {
-  return getFormatted(arg, DateTime.DATETIME_MED, locale);
+  return getFormatted(arg, locale, DATETIME_MED);
 }
 
-function getFormatted(arg, format, locale) {
-  let date;
-  if (typeof arg === 'string') {
-    date = DateTime.fromISO(arg);
-  } else {
-    date = DateTime.fromJSDate(arg);
-  }
-  return date.toLocaleString({
-    locale,
-    ...format,
-  });
+function getFormatted(arg, locale, options) {
+  const date = typeof arg === 'string' ? new Date(arg) : arg;
+  return new Intl.DateTimeFormat(locale, options).format(date);
 }
