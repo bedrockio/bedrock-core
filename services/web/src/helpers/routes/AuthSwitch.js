@@ -53,7 +53,7 @@ class AuthSwitch extends React.Component {
         </ErrorScreen>
       );
     }
-    const routeProps = pick(this.props, Object.keys(ROUTE_PROP_TYPES));
+    const routeProps = pick(this.props, ROUTE_PROP_TYPES);
     const passedProps = omit(this.props, Object.keys(AuthSwitch.propTypes));
     return (
       <Route
@@ -75,7 +75,6 @@ AuthSwitch.propTypes = {
   roles: PropTypes.array,
   loggedIn: PropTypes.elementType.isRequired,
   loggedOut: PropTypes.elementType.isRequired,
-  ...ROUTE_PROP_TYPES,
 };
 
 AuthSwitch.defaultProps = {
