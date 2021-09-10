@@ -1,9 +1,10 @@
 import React from 'react';
-import { Form, Message, Button, Segment, Header, Divider } from 'semantic';
+import { Form, Message, Button, Segment, Header } from 'semantic';
 import { request } from 'utils/api';
 import { screen } from 'helpers';
 import allCountries from 'utils/countries';
 
+import Finalize from './Finalize';
 import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
 import { Link } from 'react-router-dom';
@@ -15,7 +16,7 @@ const countryCallingCodes = allCountries.map(({ nameEn, callingCode }) => ({
 }));
 
 @screen
-export default class MFASms extends React.Component {
+export default class Sms extends React.Component {
   static layout = 'none';
 
   state = {
@@ -60,7 +61,7 @@ export default class MFASms extends React.Component {
     }
   };
 
-  onSubmit = async () => {
+  onVerify = async () => {
     const { countryCode, phoneNumber } = this.state;
     this.setState({
       loading: true,
@@ -70,7 +71,7 @@ export default class MFASms extends React.Component {
     try {
       await request({
         method: 'POST',
-        path: '/1/users/me/mfa/enable',
+        path: '/1/users/me/mfa/verify',
         body: {
           code: this.state.code,
           secret: this.state.secret,
@@ -78,7 +79,16 @@ export default class MFASms extends React.Component {
           method: 'sms',
         },
       });
-      this.props.history.push(`/settings/security`);
+
+      const { data } = await request({
+        method: 'POST',
+        path: '/1/users/me/mfa/generate-codes',
+      });
+
+      this.setState({
+        verified: true,
+        codes: data,
+      });
     } catch (error) {
       if (error.status == 403) {
         this.props.history.push('/confirm-access?to=/settings/mfa-sms');
@@ -100,13 +110,31 @@ export default class MFASms extends React.Component {
       countryCode,
       phoneNumber,
       code,
+      codes,
+      secret,
       configError,
+      verified,
     } = this.state;
+
+    if (verified) {
+      return (
+        <Finalize
+          method="sms"
+          requestBody={{
+            code,
+            secret,
+            method: 'sms',
+            phoneNumber: `+${countryCode}${phoneNumber}`,
+            backupCodes: codes,
+          }}
+          codes={codes}
+        />
+      );
+    }
 
     return (
       <PageCenter>
         <LogoTitle title="Set up SMS authentication" />
-
         <Segment.Group>
           <Segment>
             <Header size="small">1. What’s your mobile phone number?</Header>
@@ -135,7 +163,6 @@ export default class MFASms extends React.Component {
                   this.setState({ phoneNumber: value.replace(/ /g, '') })
                 }
               />
-
               <Form.Button type="submit" basic>
                 Send authentication Code
               </Form.Button>
@@ -148,10 +175,9 @@ export default class MFASms extends React.Component {
             <p> It may take a minute to arrive.</p>
             <Form
               id="authenticator-form"
-              onSubmit={this.onSubmit}
+              onSubmit={this.onVerify}
               error={touched && !!error}>
               {error && <Message error content={error.message} />}
-
               <Form.Input
                 value={code}
                 disabled={!this.state.smsSent}
@@ -170,7 +196,7 @@ export default class MFASms extends React.Component {
               primary
               loading={loading}
               disabled={loading || code.length !== 6}
-              content={'Enable'}
+              content={'Verify'}
             />
             <Button
               as={Link}

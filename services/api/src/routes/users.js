@@ -118,6 +118,27 @@ router
       };
     }
   )
+  .post('/me/mfa/generate-codes', async (ctx) => {
+    ctx.body = {
+      data: mfa.generateBackupCodes(),
+    };
+  })
+  .post(
+    '/me/mfa/verify',
+    validateBody({
+      code: Joi.string(),
+      secret: Joi.string(),
+      method: Joi.string().allow('sms', 'otp').required(),
+    }),
+    async (ctx) => {
+      const { secret, code, method } = ctx.request.body;
+      // allow 2 "windows" with sms to ensure that sms can be delieved in time
+      if (!mfa.verifyToken(secret, method, code)) {
+        ctx.throw('Not a valid code', 400);
+      }
+      ctx.status = 204;
+    }
+  )
   .post(
     '/me/mfa/enable',
     validateBody({
@@ -125,11 +146,12 @@ router
       secret: Joi.string(),
       method: Joi.string().allow('sms', 'otp').required(),
       phoneNumber: Joi.string(),
+      backupCodes: Joi.array().items(Joi.string()).required(),
     }),
     checkPasswordVerification,
     async (ctx) => {
       const { authUser } = ctx.state;
-      const { secret, code, method, phoneNumber } = ctx.request.body;
+      const { secret, code, method, phoneNumber, backupCodes } = ctx.request.body;
       // allow 2 "windows" with sms to ensure that sms can be delieved in time
       if (!mfa.verifyToken(secret, method, code)) {
         ctx.throw('Not a valid code', 400);
@@ -142,13 +164,14 @@ router
       authUser.mfaPhoneNumber = phoneNumber;
       authUser.mfaMethod = method;
       authUser.mfaSecret = secret;
+      authUser.backupCodes = backupCodes;
       await authUser.save();
 
       await sendTemplatedMail({
         to: authUser.fullName,
         template: authUser.mfaMethod === 'otp' ? 'mfa-otp-enabled.md' : 'mfa-sms-enabled.md',
         subject: 'Two-factor authentication enabled',
-        mfaPhoneNumber: authUser?.mfaPhoneNumber.slice(-4),
+        mfaPhoneNumber: authUser.mfaPhoneNumber?.slice(-4),
         firstName: authUser.firstName,
       });
 

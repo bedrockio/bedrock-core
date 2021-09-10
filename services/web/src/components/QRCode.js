@@ -7,7 +7,6 @@ export default class QRCode extends React.Component {
     super(props);
     this.canvas = null;
     this.setCanvasRef = (element) => {
-      console.log(element);
       this.canvas = element;
     };
   }

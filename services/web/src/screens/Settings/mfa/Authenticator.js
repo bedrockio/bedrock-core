@@ -16,9 +16,10 @@ import { screen } from 'helpers';
 import PageCenter from 'components/PageCenter';
 import { Link } from 'react-router-dom';
 import LogoTitle from 'components/LogoTitle';
+import Finalize from './Finalize';
 
 @screen
-export default class MFAAuthenticator extends React.Component {
+export default class Authenticator extends React.Component {
   static layout = 'none';
 
   state = {
@@ -71,14 +72,23 @@ export default class MFAAuthenticator extends React.Component {
     try {
       await request({
         method: 'POST',
-        path: '/1/users/me/mfa/enable',
+        path: '/1/users/me/mfa/verify',
         body: {
           code: this.state.code,
           secret: this.state.secret,
           method: 'otp',
         },
       });
-      this.props.history.push(`/settings/security`);
+
+      const { data } = await request({
+        method: 'POST',
+        path: '/1/users/me/mfa/generate-codes',
+      });
+
+      this.setState({
+        verified: true,
+        codes: data,
+      });
     } catch (error) {
       this.setState({
         error,
@@ -88,7 +98,30 @@ export default class MFAAuthenticator extends React.Component {
   };
 
   render() {
-    const { code, loading, error, secretUri } = this.state;
+    const {
+      code,
+      codes,
+      loading,
+      error,
+      secretUri,
+      secret,
+      verified,
+    } = this.state;
+
+    if (verified) {
+      return (
+        <Finalize
+          codes={codes}
+          requestBody={{
+            code,
+            secret,
+            method: 'otp',
+            backupCodes: codes,
+          }}
+        />
+      );
+    }
+
     return (
       <PageCenter>
         <LogoTitle title="Set up app authentication" />
@@ -144,7 +177,7 @@ export default class MFAAuthenticator extends React.Component {
               primary
               loading={loading}
               disabled={loading || code.length !== 6}
-              content={'Enable'}
+              content={'Verify'}
             />
             <Button
               as={Link}

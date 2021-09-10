@@ -98,7 +98,7 @@ router
         user.tempTokenId = tokenId;
         await user.save();
         ctx.body = {
-          data: { token, mfaRequired: true, mfaMethod: user.mfaMethod, mfaPhoneNumber: user.mfaPhoneNumber.slice(-4) },
+          data: { token, mfaRequired: true, mfaMethod: user.mfaMethod, mfaPhoneNumber: user.mfaPhoneNumber?.slice(-4) },
         };
         return;
       }
@@ -176,6 +176,8 @@ router
     authenticate({ type: 'mfa' }),
     async (ctx) => {
       const { jwt } = ctx.state;
+      const { code } = ctx.request.body;
+
       const user = await User.findOneAndUpdate(
         { _id: jwt.sub },
         {
@@ -199,7 +201,15 @@ router
         ctx.throw(401, 'Too many attempts');
       }
 
-      if (!mfa.verifyToken(user.mfaSecret, user.mfaMethod, ctx.request.body.code)) {
+      // if backup code e.g 12345-16123
+      const backupCodes = (user.backupCodes || []).concat();
+      const foundBackupCode = backupCodes.indexOf(code);
+
+      if (foundBackupCode !== -1) {
+        backupCodes.splice(foundBackupCode, 1);
+        user.backupCodes = backupCodes;
+        await user.save();
+      } else if (!mfa.verifyToken(user.mfaSecret, user.mfaMethod, code)) {
         await AuditEntry.append('failed mfa challenge', ctx, {
           type: 'security',
           object: user,

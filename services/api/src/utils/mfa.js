@@ -1,9 +1,7 @@
 const notp = require('notp');
 const crypto = require('crypto');
 const b32 = require('thirty-two');
-
-const config = require('@bedrockio/config');
-const APP_NAME = config.get('APP_NAME');
+const { Console } = require('console');
 
 async function requireChallenge(ctx, user) {
   // TODO at late stage check the ctx for device change / ip change / blacklisted ip
@@ -60,9 +58,19 @@ function verifyToken(secret, method, token) {
   return result;
 }
 
+function generateBackupCodes(count = 16) {
+  const codes = [];
+  for (let i = 0; i < count; i++) {
+    const code = crypto.randomBytes(5).toString('hex').toUpperCase();
+    codes.push(`${code.slice(0, 5)}-${code.slice(5, 10)}`);
+  }
+  return codes;
+}
+
 module.exports = {
   requireChallenge,
   verifyToken,
   generateSecret,
   generateToken,
+  generateBackupCodes,
 };

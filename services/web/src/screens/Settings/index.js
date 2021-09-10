@@ -3,8 +3,8 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 
 import Account from './Account';
 import Security from './Security';
-import MFASms from './MFASms';
-import MFAAuthenticator from './MFAAuthenticator';
+import MfaSms from './mfa/Sms';
+import MfaAuthenticator from './mfa/Authenticator';
 
 export default class Settings extends React.Component {
   render() {
@@ -13,11 +13,11 @@ export default class Settings extends React.Component {
         <Redirect exact path="/settings" to="/settings/account" />
         <Route exact path="/settings/account" component={Account} />
         <Route exact path="/settings/security" component={Security} />
-        <Route exact path="/settings/mfa-sms" component={MFASms} />
+        <Route exact path="/settings/mfa-sms" component={MfaSms} />
         <Route
           exact
           path="/settings/mfa-authenticator"
-          component={MFAAuthenticator}
+          component={MfaAuthenticator}
         />
         <Redirect exact to="/settings/account" />
       </Switch>

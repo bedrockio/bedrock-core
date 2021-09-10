@@ -67,6 +67,13 @@
       "readScopes": "none",
       "writeScopes": "none"
     },
+    "backupCodes": [
+      {
+        "type": "String",
+        "readScopes": "none",
+        "writeScopes": "none"
+      }
+    ],
     "mfaMethod": {
       "type": "String",
       "enum": ["sms", "otp"]
