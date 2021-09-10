@@ -142,6 +142,7 @@ export default class Login extends React.Component {
                 loading={loading}
                 disabled={loading}
               />
+              <p>Can’t receive your code? Enter a backup code above.</p>
             </Form>
           </Segment>
         </Segment.Group>
