@@ -42,6 +42,7 @@ module.exports = {
     publicPath: '/',
     filename: 'assets/[name].[contenthash].js',
     assetModuleFilename: 'assets/[contenthash][ext]',
+    clean: true,
   },
   resolve: {
     alias: {
