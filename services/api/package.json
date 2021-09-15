@@ -10,7 +10,7 @@
     "debug": "MONGO_DEBUG=true yarn start",
     "start:production": "node src/index",
     "docs": "node scripts/generate-openapi",
-    "lint": "eslint .",
+    "lint": "eslint",
     "test": "jest",
     "test:watch": "jest --watch -i",
     "generate": "cd ../../generator && yarn install && yarn generate"
