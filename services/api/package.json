@@ -13,7 +13,8 @@
     "lint": "eslint",
     "test": "jest",
     "test:watch": "jest --watch -i",
-    "generate": "cd ../../generator && yarn install && yarn generate"
+    "fixtures:load": "./scripts/fixtures/load",
+    "fixtures:reload": "./scripts/fixtures/reload"
   },
   "dependencies": {
     "@bedrockio/config": "^2.0.3",
