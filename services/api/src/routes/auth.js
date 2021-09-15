@@ -40,7 +40,7 @@ router
       });
 
       await sendTemplatedMail({
-        to: user.fullName,
+        to: user.name,
         template: 'welcome.md',
         subject: 'Welcome to {{appName}}',
       });
@@ -164,7 +164,7 @@ router
       await user.updateOne({ tempTokenId: tokenId });
 
       await sendTemplatedMail({
-        to: [user.fullName, email].join(' '),
+        to: [user.name, email].join(' '),
         template: 'reset-password.md',
         subject: 'Password Reset Request',
         token,

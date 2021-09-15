@@ -69,7 +69,7 @@ export default class EditUser extends React.Component {
     return (
       <>
         <Modal.Header>
-          {this.isUpdate() ? `Edit "${user.fullName}"` : 'New User'}
+          {this.isUpdate() ? `Edit "${user.name}"` : 'New User'}
         </Modal.Header>
         <Modal.Content>
           <AutoFocus>

@@ -124,9 +124,7 @@ export default class UserList extends React.Component {
                       return (
                         <Table.Row key={user.id}>
                           <Table.Cell>
-                            <Link to={`/users/${user.id}`}>
-                              {user.fullName}
-                            </Link>
+                            <Link to={`/users/${user.id}`}>{user.name}</Link>
                           </Table.Cell>
                           <Table.Cell>{user.email}</Table.Cell>
                           <Table.Cell>
@@ -154,7 +152,7 @@ export default class UserList extends React.Component {
                             <Confirm
                               negative
                               confirmButton="Delete"
-                              header={`Are you sure you want to delete "${user.fullName}"?`}
+                              header={`Are you sure you want to delete "${user.name}"?`}
                               content="All data will be permanently deleted"
                               trigger={<Button basic icon="trash" />}
                               onConfirm={async () => {

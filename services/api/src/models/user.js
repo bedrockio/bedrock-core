@@ -31,11 +31,11 @@ schema.method('verifyLoginAttempts', function verifyLoginAttempts() {
   return dt >= threshold;
 });
 
-schema.virtual('fullName').get(function getFullName() {
+schema.virtual('name').get(function () {
   return [this.firstName, this.lastName].join(' ');
 });
 
-schema.virtual('password').set(function setPassword(password) {
+schema.virtual('password').set(function (password) {
   this._password = password;
 });
 

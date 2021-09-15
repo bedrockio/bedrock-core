@@ -53,7 +53,7 @@ describe('/1/users', () => {
       const updatedUser = await User.findById(user._id);
       expect(updatedUser.firstName).toBe('Other');
       expect(updatedUser.lastName).toBe('Name');
-      expect(updatedUser.fullName).toBe('Other Name');
+      expect(updatedUser.name).toBe('Other Name');
     });
   });
 
@@ -75,7 +75,7 @@ describe('/1/users', () => {
       expect(response.status).toBe(200);
       expect(data.firstName).toBe('Mellow');
       expect(data.lastName).toBe('Yellow');
-      expect(data.fullName).toBe('Mellow Yellow');
+      expect(data.name).toBe('Mellow Yellow');
     });
 
     it('should deny access to non-admins', async () => {
@@ -122,9 +122,9 @@ describe('/1/users', () => {
       const response = await request('POST', '/1/users/search', {}, { user: admin });
       expect(response.status).toBe(200);
       const body = response.body;
-      const names = body.data.map((i) => i.fullName);
-      expect(names.includes(user1.fullName)).toBe(true);
-      expect(names.includes(user2.fullName)).toBe(true);
+      const names = body.data.map((i) => i.name);
+      expect(names.includes(user1.name)).toBe(true);
+      expect(names.includes(user2.name)).toBe(true);
       expect(body.meta.total > 2).toBe(true);
     });
 
@@ -169,7 +169,7 @@ describe('/1/users', () => {
       expect(response.body.data.firstName).toBe('New');
       expect(response.body.data.lastName).toBe('Name');
       const dbUser = await User.findById(user1.id);
-      expect(dbUser.fullName).toEqual('New Name');
+      expect(dbUser.name).toEqual('New Name');
     });
 
     it('should deny access to non-admins', async () => {
@@ -224,7 +224,7 @@ describe('/1/users', () => {
       expect(response.body.data.firstName).toBe('New');
       expect(response.body.data.lastName).toBe('Name');
       const dbUser = await User.findById(user1.id);
-      expect(dbUser.fullName).toEqual('New Name');
+      expect(dbUser.name).toEqual('New Name');
     });
 
     it('should fail when trying to set hashed password', async () => {
