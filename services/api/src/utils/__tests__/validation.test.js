@@ -188,6 +188,21 @@ describe('getJoiSchema', () => {
       assertFail(schema, { name: 'baz' });
     });
 
+    it('should optionally allow an array on an enum field', () => {
+      const schema = getJoiSchema(
+        {
+          name: {
+            type: String,
+            enum: ['foo', 'bar'],
+          },
+        },
+        {
+          allowMultiple: true,
+        }
+      );
+      assertPass(schema, { name: ['foo', 'bar'] });
+    });
+
     it('should validate minimum length', () => {
       const schema = getJoiSchema({
         name: {
