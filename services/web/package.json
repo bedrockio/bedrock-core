@@ -72,7 +72,7 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.10",
-    "@bedrockio/prettier-config": "^1.0.0",
+    "@bedrockio/prettier-config": "^1.0.1",
     "@testing-library/dom": "^7.30.3",
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^13.1.1",
@@ -80,7 +80,7 @@
     "eslint-plugin-bedrock": "^1.0.9",
     "jest": "^26.6.3",
     "node-mocks-http": "^1.8.1",
-    "prettier": "^2.2.1",
+    "prettier": "^2.4.1",
     "webpack-bundle-analyzer": "^4.4.2"
   },
   "volta": {

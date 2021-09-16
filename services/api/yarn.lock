@@ -505,10 +505,10 @@
     kleur "^4.1.4"
     pino "^6.11.1"
 
-"@bedrockio/prettier-config@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@bedrockio/prettier-config/-/prettier-config-1.0.0.tgz#939a3df248369f34d7fe2c9d4a1aca15ce1f1622"
-  integrity sha512-VM5GllSzHgJ+ssjCTINqP70Oan6CsMbryIsdg+nMNktqJeIhzFlPAIwrplmYx1k4OYr1reZrd4bFY981+WzvdQ==
+"@bedrockio/prettier-config@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@bedrockio/prettier-config/-/prettier-config-1.0.1.tgz#7e93f8c26611964678fc85a640025e47396e46a1"
+  integrity sha512-c2uRXLt04DOH56PYxGG/QR7UOVDv2rf461TKpwQEBGT3k2409RyRs8lHw3v2rCZICp29pXphPYIXm8VVbP38jA==
 
 "@eslint/eslintrc@^0.4.0":
   version "0.4.0"
@@ -5330,10 +5330,15 @@ prettier-eslint@^12.0.0:
     typescript "^3.9.3"
     vue-eslint-parser "~7.1.0"
 
-prettier@^2.0.0, prettier@^2.2.1:
+prettier@^2.0.0:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.2.1.tgz#795a1a78dd52f073da0cd42b21f9c91381923ff5"
   integrity sha512-PqyhM2yCjg/oKkFPtTGUojv7gnZAoG80ttl45O6x2Ug/rMJw4wcc9k6aaf2hibP7BGVCCM33gZoGjyvt9mm16Q==
+
+prettier@^2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.4.1.tgz#671e11c89c14a4cfc876ce564106c4a6726c9f5c"
+  integrity sha512-9fbDAXSBcc6Bs1mZrDYb3XKzDLm4EXXL9sC1LqKP5rZkT6KRr/rf9amVUcODVXgguK/isJz0d0hP72WeaKWsvA==
 
 pretty-format@^23.0.1:
   version "23.6.0"

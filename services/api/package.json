@@ -37,7 +37,7 @@
     "postmark": "^2.5.4"
   },
   "devDependencies": {
-    "@bedrockio/prettier-config": "^1.0.0",
+    "@bedrockio/prettier-config": "^1.0.1",
     "@shelf/jest-mongodb": "^2.0.3",
     "@sinonjs/fake-timers": "^7.0.5",
     "@yeongjet/joi-to-json-schema": "^1.0.4",
@@ -48,7 +48,7 @@
     "jest-util": "^27.1.1",
     "mongodb": "^3.6.9",
     "nodemon": "^2.0.7",
-    "prettier": "^2.2.1",
+    "prettier": "^2.4.1",
     "prettier-eslint": "^12.0.0",
     "supertest": "^4.0.2"
   },
