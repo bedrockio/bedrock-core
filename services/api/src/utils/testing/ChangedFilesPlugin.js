@@ -26,14 +26,20 @@ const { getChangedFilesForRoots } = require('jest-changed-files');
 const { globsToMatcher } = require('jest-util');
 const { memoize } = require('lodash');
 
+const args = process.argv.slice(2);
+
 // Thank so much jest for not exposing this CLI config.
-const isWatchAll = process.argv.some((arg) => {
+const isWatchAll = args.some((arg) => {
   return arg === '--watch-all';
+});
+
+const hasFilters = args.some((arg) => {
+  return !arg.startsWith('--');
 });
 
 class ChangedFilesPlugin {
   apply(jestHooks) {
-    if (!isWatchAll) {
+    if (!isWatchAll && !hasFilters) {
       jestHooks.shouldRunTestSuite(async ({ config, testPath }) => {
         const matcher = getMatcher(config);
         const changedFiles = await this.getChangedFiles();

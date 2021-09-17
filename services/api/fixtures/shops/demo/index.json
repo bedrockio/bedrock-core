@@ -1,0 +1,12 @@
+{
+  "name": "Demo",
+  "images": [
+    "image.jpg"
+  ],
+  "categories": [
+    "jewelry",
+    "toy",
+    "florist"
+  ],
+  "owner": "Jack Sparrow"
+}

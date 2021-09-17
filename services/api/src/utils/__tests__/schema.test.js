@@ -1021,7 +1021,7 @@ describe('loadModelDir', () => {
   it('should be able to create models from a folder', async () => {
     expect(!!mongoose.models.SpecialCategory).toBe(false);
     expect(!!mongoose.models.CustomModel).toBe(false);
-    loadModelDir(__dirname + '/fixtures');
+    loadModelDir(__dirname + '/../__fixtures__');
     expect(!!mongoose.models.SpecialCategory).toBe(true);
     //expect(!!mongoose.models.CustomModel).toBe(false);
     const { SpecialCategory } = mongoose.models;

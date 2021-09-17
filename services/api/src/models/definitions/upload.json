@@ -20,8 +20,9 @@
       "type": "String",
       "required": true
     },
-    "ownerId": {
-      "type": "String",
+    "owner": {
+      "type": "ObjectId",
+      "ref": "User",
       "required": true
     },
     "thumbnailUrl": {
