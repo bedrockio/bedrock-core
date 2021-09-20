@@ -72,7 +72,6 @@ async function importFixture(id, meta) {
 async function runImport(id, attributes, meta) {
   const model = modelsByName[path.dirname(id)];
   meta = { id, model, meta };
-  await transformAttributes(attributes, meta);
   return createDocument(id, attributes, meta);
 }
 
@@ -81,6 +80,7 @@ const createDocument = memoize(async (id, attributes, meta) => {
   const { model } = meta;
 
   // Create the document
+  await transformAttributes(attributes, meta);
   await applyDefaults(model, attributes, meta);
   const doc = await model.create(attributes);
 
@@ -98,24 +98,34 @@ const createDocument = memoize(async (id, attributes, meta) => {
 
 // Property transform helpers.
 
-const CONTENT_REG = /\.(md|txt|html)$/;
-const UPLOAD_REG = /\.(jpg|png|svg|gif|webp|mp4|pdf|csv)$/;
-const INLINE_CONTENT_REG = /(\(|")([^)"\n]+?\.(?:jpg|png|svg|gif|webp|pdf))([)"])/g;
+async function transformAttributes(attributes, meta) {
+  await Promise.all(
+    Object.entries(attributes).map(async ([key, value]) => {
+      attributes[key] = await transformProperty([key], value, meta);
+    })
+  );
+}
 
 // Note that "keys" is the property path as an array.
 // The naming is only to not shadow "path".
 async function transformProperty(keys, value, meta) {
-  if (value && typeof value === 'object') {
+  const isObject = value === Object(value);
+  if (!isKnownField(keys, meta)) {
+    // If the field is not known it might be inlined data referenced
+    // elsewhere, however this is typically an array or object, so if
+    // the value is a primitive it is likely bad data.
+    if (!isObject) {
+      logBadFixtureField(keys, value, meta);
+    }
+  } else if (isObject) {
     // Iterate over both arrays and objects transforming them.
     await Promise.all(
       Object.entries(value).map(async ([k, v]) => {
         value[k] = await transformProperty([...keys, k], v, meta);
       })
     );
-  } else if (UPLOAD_REG.test(value)) {
-    value = await importUpload(value, meta);
-  } else if (CONTENT_REG.test(value)) {
-    value = await importContent(value, meta);
+  } else if (FILE_REG.test(value)) {
+    value = await transformFile(keys, value, meta);
   } else if (CUSTOM_TRANSFORM_REG.test(value)) {
     value = await transformCustom(value, meta);
   } else if (isReferenceField(keys, meta)) {
@@ -124,13 +134,23 @@ async function transformProperty(keys, value, meta) {
   return value;
 }
 
-async function transformAttributes(attributes, meta) {
-  await Promise.all(
-    Object.entries(attributes).map(async ([key, value]) => {
-      attributes[key] = await transformProperty([key], value, meta);
-    })
-  );
+// File transform helpers
+
+const FILE_REG = /\.(jpg|png|svg|gif|webp|mp4|md|txt|html|pdf|csv)$/;
+const INLINE_CONTENT_REG = /(\(|")([^)"\n]+?\.(?:jpg|png|svg|gif|webp|pdf))([)"])/g;
+const INLINE_CONTENT_TYPES_REG = /\.(md|html)$/;
+
+async function transformFile(keys, value, meta) {
+  if (isReferenceField(keys, meta)) {
+    value = await importUpload(value, meta);
+  } else if (isStringField(keys, meta)) {
+    value = await importContent(value, meta);
+  } else if (isBufferField(keys, meta)) {
+    value = await importBuffer(value, meta);
+  }
+  return value;
 }
+
 // Note that the same content file may be imported
 // in different contexts in generator modules, so this
 // function cannot be memoized.
@@ -141,7 +161,9 @@ async function importContent(file, meta) {
 
 const importContentOnce = memoize(async (file, meta) => {
   let content = await fs.readFile(file, 'utf8');
-  content = await inlineContentFiles(content, meta);
+  if (INLINE_CONTENT_TYPES_REG.test(file)) {
+    content = await inlineContentFiles(content, meta);
+  }
   return content;
 });
 
@@ -154,7 +176,16 @@ async function inlineContentFiles(content, meta) {
   });
 }
 
-// Custom transforms helpers
+async function importBuffer(file, meta) {
+  file = await resolveRelativeFile(file, meta);
+  return await importBufferOnce(file, meta);
+}
+
+const importBufferOnce = memoize(async (file) => {
+  return await fs.readFile(file);
+});
+
+// Custom transform helpers
 
 const CUSTOM_TRANSFORM_REG = /^<(?<func>\w+):(?<token>.+)>$/;
 
@@ -206,14 +237,42 @@ async function resolveRelativeFile(file, meta) {
   }
 }
 
-// Reference field helpers
+// Field helpers
 
 function isReferenceField(keys, meta) {
   const schemaType = getSchemaType(keys, meta);
   return schemaType instanceof mongoose.Schema.Types.ObjectId;
 }
 
+function isStringField(keys, meta) {
+  const schemaType = getSchemaType(keys, meta);
+  return schemaType instanceof mongoose.Schema.Types.String;
+}
+
+function isBufferField(keys, meta) {
+  const schemaType = getSchemaType(keys, meta);
+  return schemaType instanceof mongoose.Schema.Types.Buffer;
+}
+
+// A "known" field is either defined in the schema or
+// a custom field that will later be transformed.
+function isKnownField(keys, meta) {
+  const schemaType = getSchemaType(keys, meta);
+  if (schemaType) {
+    return true;
+  } else if (keys.length > 1) {
+    return false;
+  }
+  const transform = DEFAULT_TRANSFORMS[meta.model.modelName];
+  return transform && keys[0] in transform;
+}
+
 async function transformReferenceField(keys, value, meta) {
+  // Reference fields may have already resolved, in which
+  // case they will be an ObjectId so simply return it.
+  if (typeof value !== 'string') {
+    return value;
+  }
   const model = getReferenceModel(keys, meta);
   const id = join(pluralKebab(model.modelName), value);
   return await importFixturesWithGuard(id, meta);
@@ -271,7 +330,21 @@ function checkCircularReferences(id, meta) {
   }
 }
 
-// Memoize to prevent multiple logs for the same reference..
+// Memoize these messages to prevent multiple logs
+// for the same reference when importing recursively.
+
+const logBadFixtureField = memoize(
+  (keys, value, meta) => {
+    const prop = keys.join('.');
+    const str = JSON.stringify(value);
+    logger.warn(`Possible bad data in ${meta.id} -> "${prop}": ${str}`);
+  },
+  (keys, value, meta) => {
+    // Memoize per fixture, path, and value;
+    return meta.id + keys.join('.') + value;
+  }
+);
+
 const logCircularReference = memoize((message) => {
   logger.warn('Circular reference detected:', message);
   pushStat('circular', message);
@@ -560,9 +633,7 @@ function getIdBase(id) {
 let stats;
 
 function pushStat(type, value) {
-  if (stats) {
-    stats[type].push(value);
-  }
+  stats[type].push(value);
 }
 
 function logStats() {
@@ -610,7 +681,9 @@ function resetFixtures() {
   createDocument.cache.clear();
   importGeneratedDirectory.cache.clear();
   importUploadOnce.cache.clear();
+  importBufferOnce.cache.clear();
   importContentOnce.cache.clear();
+  logBadFixtureField.cache.clear();
   logCircularReference.cache.clear();
   loadModule.cache.clear();
 }

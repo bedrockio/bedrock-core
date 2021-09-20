@@ -7,8 +7,8 @@ As projects grow in complexity, having good fixture data becomes increasingly im
 - [File Structure](#file-structure)
 - [Fixture Modules](#fixture-modules)
 - [Transforms](#transforms)
-  - [File Transforms](#file-transforms)
-  - [Content Transforms](#content-transforms)
+  - [File Uploads](#file-uploads)
+  - [File Inlining](#file-inlining)
   - [Custom Transforms](#custom-transforms)
   - [Default Transforms](#default-transforms)
 - [Object References](#object-references)
@@ -78,8 +78,8 @@ Additionally, modules that export a function will be resolved asynchronously, op
 
 ```js
 const fetch = require('node-fetch');
+const url = 'https://jsonplaceholder.typicode.com/users/1';
 
-const url = 'https://jsonplaceholder.typicode.com/users';
 module.exports = async () => {
   return await fetch(url);
 };
@@ -89,9 +89,9 @@ module.exports = async () => {
 
 Certain types of fields will be transformed when importing.
 
-### File Transforms
+### File Uploads
 
-Inside fixtures, fields ending in media or known file types will be converted to `Upload` objects and attached:
+Files can be referenced and transformed inside fixtures. In the example below, the referenced files will be transformed to `Upload` objects when the schema type for that field is `ObjectId`.
 
 ```json
 {
@@ -101,9 +101,11 @@ Inside fixtures, fields ending in media or known file types will be converted to
 }
 ```
 
-### Content Transforms
+Allowed file types are `(jpg|png|svg|gif|webp|mp4|md|txt|html|pdf|csv)`.
 
-Content based files such as text, and markdown will be loaded and inlined directly into the data:
+### File Inlining
+
+To load the file and directly set the content on the document, simply change the schema type to `String`:
 
 ```json
 {
@@ -121,7 +123,7 @@ Content based files such as text, and markdown will be loaded and inlined direct
 }
 ```
 
-Additionally, links and images inside markdown and HTML files will be further inlined, converted to `Upload` objects, and replaced with a link to the file:
+When inlining content, links and images inside markdown and HTML files will be further inlined, converted to `Upload` objects, and replaced with a link to the file:
 
 ```md
 ## Title
@@ -137,18 +139,28 @@ Some descriptive text, an ![image](http://api/1/uploads/image.jpg),
 as well as a [link to a pdf](http://api/1/uploads/document.pdf).
 ```
 
+Finally, fields with a schema type `Buffer` will directly set binary data on the document:
+
+```js
+{
+  // Will be attached as binary data
+  // when the schema type is "Buffer".
+  "image": "image.jpg",
+}
+```
+
 ### Custom Transforms
 
 Custom transforms allow a specific syntax to have special behavior. Currently there are two kinds: environment variables and refs.
 
-```js
+```json
 {
   // Will pull from .env
   "email": "<env:ADMIN_EMAIL>"
 }
 ```
 
-```js
+```json
 {
   // Will import the ObjectId of another fixture
   // This is useful in freeform fields where the
@@ -165,10 +177,10 @@ Additionally there are a few built-in transforms for `User` fixtures that allow 
 
 - `name` will be expanded to `firstName` and `lastName`
 - `email` will be inferred from the `firstName` of the user and the admin email, for example `john@bedrock.foundation`.
-- `role` will be expanded into a `roles` object based on `src/roles.json`. Organization based roles will use the default organization (`oranizations/bedrock` see the [notes](#notes)).
-- `password` will default to `ADMIN_PASSWORD` in `.env` if not defined.
+- `role` will be expanded into a `roles` object based on `src/roles.json`. Organization based roles will use the default organization.
+- `password` will default to `ADMIN_PASSWORD` in the env if not defined.
 
-The `DEFAULT_TRANSFORMS` object in `./const.js` allows you to define other defaults.
+The `DEFAULT_TRANSFORMS` object in `./const` allows you to define other defaults.
 
 ## Object References
 
@@ -189,7 +201,7 @@ Circular dependencies are often a sign of a bad data structure, but not always. 
 
 ## Generated Fixtures
 
-In many cases having a module for each fixture can be too much overhead. In these cases fixtures can be generated using a single entrypoint in the base directory:
+In many cases having a single module for each fixture can be too much overhead. In these cases fixtures can be generated using a single entrypoint in the base directory:
 
 ```js
 // shops/index.js
@@ -228,13 +240,12 @@ Generated fixture modules are also passed two helper functions when they return 
 
 The first is `generateFixtureId` which works the same as when exporting arrays by incrementing a counter.
 
-The second is `loadFixtureModules` which allows you to reference other fixture modules without importing them. This can be useful for complex cases. In the following example recursion allows comments to be nested inline along with the posts for better context:
+The second is `loadFixtureModules` which allows you to reference other fixture modules without importing them. This can be useful for complex cases:
 
 ```js
-module.exports = async ({ generateFixtureId, loadFixtureModules }) => {
-  const fixtures = {};
-
+module.exports = async ({ loadFixtureModules, generateFixtureId }) => {
   const posts = loadFixtureModules('posts');
+  const fixtures = {};
 
   function exportComments(comments) {
     for (let comment of comments) {
@@ -251,6 +262,8 @@ module.exports = async ({ generateFixtureId, loadFixtureModules }) => {
 };
 ```
 
+In this example recursion allows comments to be nested inline along with the posts for better context.
+
 Notes:
 
 - Mongoose by default does not save unknown fields that are not defined in the schema. This allows a `comments` field to exist on posts in the fixtures without being imported.
@@ -259,7 +272,9 @@ Notes:
 
 ## Testing
 
-It is often useful to run tests against fixture data. To help facilitate this, fixtures can be imported and accessed easily. After running the imports, fixtures are available both as nested objects and though the full path, allowing easy referencing and iteration:
+It is often useful to run tests against fixture data. To help facilitate this, fixtures can be imported and accessed easily.
+
+After running the imports, fixtures can be accessed both as nested objects and though the full path, allowing easy referencing and iterating over the fixtures.
 
 ```js
 const { importFixtures } = require('utils/fixtures');
@@ -301,4 +316,4 @@ Running the script with `LOG_LEVEL=debug` will output detailed information that 
 
 ## Notes
 
-Note that `users/admin` and `oraganizations/bedrock` are special fixtures required to bootstrap the data. These are defined in `./const.js` and can be moved.
+Note that `users/admin` and `oraganizations/bedrock` are special fixtures required to bootstrap the data. These are defined in `./const` and can be moved.
