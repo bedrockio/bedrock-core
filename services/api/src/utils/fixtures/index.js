@@ -560,7 +560,9 @@ function getIdBase(id) {
 let stats;
 
 function pushStat(type, value) {
-  stats[type].push(value);
+  if (stats) {
+    stats[type].push(value);
+  }
 }
 
 function logStats() {

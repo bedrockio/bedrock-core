@@ -1,6 +1,6 @@
 const config = require('@bedrockio/config');
-const { setupDb, teardownDb } = require('../../utils/testing');
-const { importFixtures } = require('../fixtures');
+const { setupDb, teardownDb } = require('../../../utils/testing');
+const { importFixtures } = require('../');
 
 const { ADMIN_EMAIL } = config.getAll();
 
