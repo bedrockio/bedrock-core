@@ -11,7 +11,7 @@ const { storeUploadedFile } = require('../uploads');
 const { stringReplaceAsync } = require('../string');
 
 const { ADMIN_EMAIL, API_URL } = config.getAll();
-const { CUSTOM_TRANSFORMS, DEFAULT_TRANSFORMS, ADMIN_PATH } = require('./const');
+const { CUSTOM_TRANSFORMS, DEFAULT_TRANSFORMS, ADMIN_FIXTURE_ID } = require('./const');
 const BASE_DIR = path.join(__dirname, '../../../fixtures');
 
 // Loads fixtures once if not loaded and returns true/false.
@@ -214,12 +214,12 @@ const importUploadOnce = memoize(async (file, meta) => {
   const attributes = await storeUploadedFile({
     path: file,
   });
-  if (meta.id !== ADMIN_PATH) {
+  if (meta.id !== ADMIN_FIXTURE_ID) {
     // As a special case to bootstrap the admin user, allow their
     // profile image to not have an owner to sidestep the circular
     // reference user.image -> image.owner -> user.image.
     // All other images will be owned by the admin user for now.
-    attributes.owner = await importFixtures(ADMIN_PATH, {
+    attributes.owner = await importFixtures(ADMIN_FIXTURE_ID, {
       id: file,
       meta,
     });

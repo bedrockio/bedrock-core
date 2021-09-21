@@ -1,22 +1,34 @@
-# Fixture Importer
+# Importing Fixtures
 
 As projects grow in complexity, having good fixture data becomes increasingly important, however manually managing that data also becomes difficult. This module helps to alleviate these issues by providing a simple, consistent way to import fixtures.
 
 ## Concepts
 
+- [Usage](#usage)
 - [File Structure](#file-structure)
 - [Fixture Modules](#fixture-modules)
+- [Fixture Ids](#fixture-ids)
 - [Transforms](#transforms)
   - [File Uploads](#file-uploads)
   - [File Inlining](#file-inlining)
   - [Custom Transforms](#custom-transforms)
   - [Default Transforms](#default-transforms)
 - [Object References](#object-references)
-- [Circular Dependencies](#circular-dependencies)
+- [Circular References](#circular-references)
 - [Generated Fixtures](#generated-fixtures)
 - [Testing](#testing)
 - [Debugging](#debugging)
 - [Notes](#notes)
+
+## Usage
+
+Package scripts are the main way of interacting with fixtures:
+
+- `yarn start` - When the development server starts, fixtures will be loaded if the database is empty.
+- `yarn fixtures:reload` - Drops the database and reloads all fixtures.
+- `yarn fixtures:load` - Loads fixtures if the database is empty. This script is mostly for provisioning new environments.
+
+Additionally, this module exports a function `importFixtures` that can manually import fixtures. This is mostly provided for [testing](#testing).
 
 ## File Structure
 
@@ -42,7 +54,7 @@ Only base directories corresponding to model names will be resolved, so common o
 ```shell
 fixtures/shops/demo.json
 fixtures/files/logo.png
-fixtures/utils/other.js
+fixtures/utils.js
 ```
 
 ## Fixture Modules
@@ -78,20 +90,25 @@ Additionally, modules that export a function will be resolved asynchronously, op
 
 ```js
 const fetch = require('node-fetch');
-const url = 'https://jsonplaceholder.typicode.com/users/1';
 
 module.exports = async () => {
-  return await fetch(url);
+  return await fetch('https://jsonplaceholder.typicode.com/users/1');
 };
 ```
 
+## Fixture Ids
+
+When referencing fixtures, an id is used that corresponds to its relative file path. For example `shops/demo` refers to the `demo` fixture for the `Shop` model. The fixture name (the part after the slash) is either derived from the file path or set manually in the case of [generated fixtures](#generated-fixtures).
+
+Inside the fixtures themselves, typically only the name is needed as the base directory is [inferred from the schema](#object-references). However there are times when the full fixture id is needed to reference a fixture, for example when [testing](#testing).
+
 ## Transforms
 
-Certain types of fields will be transformed when importing.
+Certain fields will be transformed when importing.
 
 ### File Uploads
 
-Files can be referenced and transformed inside fixtures. In the example below, the referenced files will be transformed to `Upload` objects when the schema type for that field is `ObjectId`.
+Files can be referenced and transformed inside fixtures. In the example below, the referenced files will be transformed to `Upload` objects when the schema type for that field is an `ObjectId`.
 
 ```json
 {
@@ -105,7 +122,7 @@ Allowed file types are `(jpg|png|svg|gif|webp|mp4|md|txt|html|pdf|csv)`.
 
 ### File Inlining
 
-To load the file and directly set the content on the document, simply change the schema type to `String`:
+To load the file and directly set the content on the document, change the schema type to `String`:
 
 ```json
 {
@@ -118,7 +135,7 @@ To load the file and directly set the content on the document, simply change the
 ```json
 {
   "name": "Demo",
-  "description": "Hi! I'm the file content!",
+  "description": "I'm the content of description.md!",
   "intro": "intro.txt"
 }
 ```
@@ -151,16 +168,16 @@ Finally, fields with a schema type `Buffer` will directly set binary data on the
 
 ### Custom Transforms
 
-Custom transforms allow a specific syntax to have special behavior. Currently there are two kinds: environment variables and refs.
+Custom transforms are a specific syntax to allow special behavior. Currently there are two kinds: environment variables and refs.
 
-```json
+```js
 {
   // Will pull from .env
   "email": "<env:ADMIN_EMAIL>"
 }
 ```
 
-```json
+```js
 {
   // Will import the ObjectId of another fixture
   // This is useful in freeform fields where the
@@ -169,22 +186,22 @@ Custom transforms allow a specific syntax to have special behavior. Currently th
 }
 ```
 
-The `CUSTOM_TRANSFORMS` object in `./const` allows you to define other transforms making them extensible.
+Custom transforms can be configured and extended in `./const`.
 
 ### Default Transforms
 
-Additionally there are a few built-in transforms for `User` fixtures that allow shorter syntax.
+Additionally, there are a few built-in transforms for `User` fixtures that allow shorter syntax.
 
 - `name` will be expanded to `firstName` and `lastName`
 - `email` will be inferred from the `firstName` of the user and the admin email, for example `john@bedrock.foundation`.
-- `role` will be expanded into a `roles` object based on `src/roles.json`. Organization based roles will use the default organization.
-- `password` will default to `ADMIN_PASSWORD` in the env if not defined.
+- `role` will be expanded into a `roles` object based on keys defined in `src/roles.json`. Organization based roles will use the default organization.
+- `password` will default to `ADMIN_PASSWORD` in `.env`.
 
-The `DEFAULT_TRANSFORMS` object in `./const` allows you to define other defaults.
+Default transforms can be configured and extended in `./const`.
 
 ## Object References
 
-One major difficulty with wrangling fixtures is building complex inderdependent relationships. Fixture importer makes this easy by allowing you to reference other fixtures in the graph. For example:
+One major difficulty with wrangling fixtures is building complex inderdependent relationships. The fixture importer makes this easy by allowing you to reference other fixtures in the graph. For example:
 
 ```json
 {
@@ -193,11 +210,11 @@ One major difficulty with wrangling fixtures is building complex inderdependent 
 }
 ```
 
-The `shop` field here will be inferred from the schema and resolved to the `ObjectId` of the fixture imported from `fixtures/shops/shop-2`.
+Here, the attached result will be the `ObjectId` of the fixture imported from `shops/shop-2`. The full fixture id is inferred from the `shops` field in the schema.
 
-## Circular Dependencies
+## Circular References
 
-Circular dependencies are often a sign of a bad data structure, but not always. For example `user.profileImage` may reference an image object whose `owner` field is the user. When importing, circular dependencies will be detected and resolve themselves so that importing can be completed. In such cases a warning will be output to indicate a potential issue, however all data will be imported.
+Circular references are often a sign of a bad data structure, but not always. For example `user.profileImage` may reference an image object whose `owner` field is the user. When importing, circular dependencies will be detected and resolved automatically so that importing can complete. In such cases a warning will be output to indicate a potential issue, however all data will be imported.
 
 ## Generated Fixtures
 
@@ -219,15 +236,15 @@ module.exports = names.map((name) => {
 
 In this example, the resulting objects will all be imported as `Shop` fixtures. Note that these modules should return _plain objects_. They should be thought of as identical to individual JSON files, just procedurally generated. This is a powerful feature that allows generated fixtures to reference and be referenced by other fixtures.
 
-Additionally, returning an array here will result in auto-generated fixture names. For example the first import will be called `shop-1`. In some cases it may be preferable to choose the fixture name to allow other fixtures to reference them. In these cases simply export an object instead:
+Returning an array here will result in auto-generated fixture names. For example, the first export will be called `shop-1`. To manually choose the fixture name, export an object instead:
 
 ```js
 // shops/index.js
 
 const { kebabCase } = require('lodash');
 const names = ['Flower Shop', 'Department Store', 'Supermarket'];
-
 const fixtures = {};
+
 for (let name of names) {
   const slug = kebabCase(name);
   fixtures[slug] = { name, slug };
@@ -244,7 +261,7 @@ The second is `loadFixtureModules` which allows you to reference other fixture m
 
 ```js
 module.exports = async ({ loadFixtureModules, generateFixtureId }) => {
-  const posts = loadFixtureModules('posts');
+  const posts = await loadFixtureModules('posts');
   const fixtures = {};
 
   function exportComments(comments) {
@@ -266,15 +283,15 @@ In this example recursion allows comments to be nested inline along with the pos
 
 Notes:
 
-- Mongoose by default does not save unknown fields that are not defined in the schema. This allows a `comments` field to exist on posts in the fixtures without being imported.
-- Using `loadFixtureModules` will result in an object that is either built by reading subdirectories (the default) or the result of another generated fixture module.
-- Generated fixture modules will supercede any other fixtures within the directory. In other words if a `shops/index.js` file exists, no other fixtures in the `shops` directory will be loaded. However you can of course still `require` and export them. This behavior can be thought of as a gateway allowing you to aggregate, modify, and export customized fixtures.
+- Mongoose by default does not save unknown fields that are not defined in the schema. This allows a `comments` field to exist on a `post` in the fixtures without affecting the result.
+- Calling `loadFixtureModules` will return an object that is either built by reading subdirectories (the default) or the result of another generated fixture module.
+- Generated fixture modules will supercede any other fixtures within the directory. In other words, if a `shops/index.js` file exists, no other files in the `shops` directory will be imported automatically. However, you can of course still `require` and export them. This behavior can be thought of as a gateway allowing you to aggregate, modify, and export customized fixtures.
 
 ## Testing
 
 It is often useful to run tests against fixture data. To help facilitate this, fixtures can be imported and accessed easily.
 
-After running the imports, fixtures can be accessed both as nested objects and though the full path, allowing easy referencing and iterating over the fixtures.
+After running the imports, fixtures can be accessed both as nested objects and by the full [id](#fixture-ids), allowing easy referencing and iterating over the fixtures.
 
 ```js
 const { importFixtures } = require('utils/fixtures');
@@ -282,10 +299,8 @@ const { importFixtures } = require('utils/fixtures');
 test('Test against fixtures', async () => {
   const data = await importFixtures();
 
-  expect(data['shops']['demo']).toEqual({ ... });
-  expect(data['shops/demo']).toEqual({ ... });
-
-})
+  expect(data['shops']['demo']).toBe(data['shops/demo']);
+});
 ```
 
 Additionally, `importFixtures` can also be used to import only a subset of the fixtures:
@@ -295,18 +310,18 @@ const { importFixtures } = require('utils/fixtures');
 
 test('Test against a single shop', async () => {
   const shop = await importFixtures('shops/demo');
-  expect(shop).toEqual({ ... });
-})
+  // ...
+});
 
 test('Test against all shops', async () => {
   const shopsById = await importFixtures('shops');
   // ...
-})
+});
 ```
 
-Note that all fixture data is cached, which has implications for testing. For example calling `Users.deleteMany({})` after a test will remove all documents from the database, however running `importFixtures` a second time will return the memoized objects with nothing imported to the db.
+Note that all fixture data is cached, which has implications for testing. For example calling `Users.deleteMany({})` after a test will remove all `User` documents from the database, however running `importFixtures` a second time will return the memoized objects with nothing imported to the db.
 
-There are advantages to this, speed being the main one. An ideal testing scenario will assume a database loaded with base fixtures at the outset and only clean up the specific objects that test has created. However there may be scenarios where this is difficult so a `resetFixtures` function is also exported by this module. Running it will clear all caches and another call to `importFixtures` will re-import the data, however this may take time!
+There are advantages to this, speed being the main one. An ideal testing scenario will assume a database loaded with base fixtures at the outset and only clean up the specific objects that test has created. However there may be scenarios where this is difficult, so a `resetFixtures` function is also exported by this module. Running it will clear all caches and another call to `importFixtures` will re-import the data, however this may take time!
 
 Note that although calling `importFixtures('shops/demo')` will only import a subset of the fixtures, this may import a lot of data depending on the dependency chain.
 
@@ -316,4 +331,4 @@ Running the script with `LOG_LEVEL=debug` will output detailed information that 
 
 ## Notes
 
-Note that `users/admin` and `oraganizations/bedrock` are special fixtures required to bootstrap the data. These are defined in `./const` and can be moved.
+Note that `users/admin` and `oraganizations/bedrock` are special fixtures required to bootstrap the data. These are defined in `./const`.

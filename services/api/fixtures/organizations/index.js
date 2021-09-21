@@ -1,15 +1,10 @@
-const { Organization } = require('../../src/models');
+const { kebabCase } = require('lodash');
 
-const ORGANIZATIONS = ['Bedrock Inc.', 'Bedrock Institute', 'Bedrock University'];
+const ORGANIZATIONS = ['Bedrock', 'Bedrock Institute', 'Bedrock University'];
 
-module.exports = async () => {
-  const organizations = {};
-  await Promise.all(
-    ORGANIZATIONS.map(async (name) => {
-      organizations[name] = await Organization.create({
-        name,
-      });
-    })
-  );
-  return organizations;
-};
+const fixtures = {};
+for (let name of ORGANIZATIONS) {
+  fixtures[kebabCase(name)] = { name };
+}
+
+module.exports = fixtures;

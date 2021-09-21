@@ -1,5 +1,3 @@
-const { Category } = require('../../src/models');
-
 const CATEGORIES = [
   'jewelry',
   'toy',
@@ -26,14 +24,8 @@ const CATEGORIES = [
   'design',
 ];
 
-module.exports = async () => {
-  const categories = {};
-  await Promise.all(
-    CATEGORIES.map(async (name) => {
-      categories[name] = await Category.create({
-        name,
-      });
-    })
-  );
-  return categories;
-};
+const fixtures = {};
+for (let name of CATEGORIES) {
+  fixtures[name] = { name };
+}
+module.exports = fixtures;

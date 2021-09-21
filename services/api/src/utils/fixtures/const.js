@@ -5,7 +5,8 @@ const roleDefinitions = require('../../roles.json');
 const ENV = config.getAll();
 const { ADMIN_EMAIL, ADMIN_PASSWORD } = ENV;
 
-const ADMIN_PATH = 'users/admin';
+const ADMIN_FIXTURE_ID = 'users/admin';
+const ORGANIZATION_FIXTURE_ID = 'organizations/bedrock';
 
 const CUSTOM_TRANSFORMS = {
   env(key) {
@@ -42,8 +43,8 @@ const DEFAULT_TRANSFORMS = {
         if (def.allowScopes.includes('global')) {
           attributes.roles = [{ role, scope: 'global' }];
         } else {
-          const institution = await context.importFixtures('institutions/wqu', meta);
-          attributes.roles = [{ role, scope: 'institution', scopeRef: institution.id }];
+          const organization = await context.importFixtures(ORGANIZATION_FIXTURE_ID, meta);
+          attributes.roles = [{ role, scope: 'organization', scopeRef: organization.id }];
         }
         delete attributes.role;
       }
@@ -59,5 +60,5 @@ const DEFAULT_TRANSFORMS = {
 module.exports = {
   CUSTOM_TRANSFORMS,
   DEFAULT_TRANSFORMS,
-  ADMIN_PATH,
+  ADMIN_FIXTURE_ID,
 };
