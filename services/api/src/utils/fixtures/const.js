@@ -6,7 +6,7 @@ const ENV = config.getAll();
 const { ADMIN_EMAIL, ADMIN_PASSWORD } = ENV;
 
 const ADMIN_FIXTURE_ID = 'users/admin';
-const ORGANIZATION_FIXTURE_ID = 'organizations/bedrock';
+const BEDROCK_FIXTURE_ID = 'organizations/bedrock';
 
 const CUSTOM_TRANSFORMS = {
   env(key) {
@@ -17,15 +17,16 @@ const CUSTOM_TRANSFORMS = {
   },
 };
 
-const DEFAULT_TRANSFORMS = {
+const MODEL_TRANSFORMS = {
   User: {
     name(attributes) {
-      // Note intentionally not using name defaults as this can mask
-      // invalid fixtures which we want to error.
+      // Note intentionally not using name defaults as this
+      // can mask invalid fixtures which we want to error.
       const { name } = attributes;
       if (name) {
-        attributes.firstName = name.split(' ')[0];
-        attributes.lastName = name.split(' ').slice(1).join(' ');
+        const [firstName, ...rest] = name.split(' ');
+        attributes.firstName = firstName;
+        attributes.lastName = rest.join(' ');
         delete attributes.name;
       }
     },
@@ -43,7 +44,7 @@ const DEFAULT_TRANSFORMS = {
         if (def.allowScopes.includes('global')) {
           attributes.roles = [{ role, scope: 'global' }];
         } else {
-          const organization = await context.importFixtures(ORGANIZATION_FIXTURE_ID, meta);
+          const organization = await context.importFixtures(BEDROCK_FIXTURE_ID, meta);
           attributes.roles = [{ role, scope: 'organization', scopeRef: organization.id }];
         }
         delete attributes.role;
@@ -58,7 +59,7 @@ const DEFAULT_TRANSFORMS = {
 };
 
 module.exports = {
+  MODEL_TRANSFORMS,
   CUSTOM_TRANSFORMS,
-  DEFAULT_TRANSFORMS,
   ADMIN_FIXTURE_ID,
 };

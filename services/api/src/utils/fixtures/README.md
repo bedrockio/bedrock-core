@@ -11,8 +11,8 @@ As projects grow in complexity, having good fixture data becomes increasingly im
 - [Transforms](#transforms)
   - [File Uploads](#file-uploads)
   - [File Inlining](#file-inlining)
+  - [Model Transforms](#model-transforms)
   - [Custom Transforms](#custom-transforms)
-  - [Default Transforms](#default-transforms)
 - [Object References](#object-references)
 - [Circular References](#circular-references)
 - [Generated Fixtures](#generated-fixtures)
@@ -26,7 +26,7 @@ Package scripts are the main way of interacting with fixtures:
 
 - `yarn start` - When the development server starts, fixtures will be loaded if the database is empty.
 - `yarn fixtures:reload` - Drops the database and reloads all fixtures.
-- `yarn fixtures:load` - Loads fixtures if the database is empty. This script is mostly for provisioning new environments.
+- `yarn fixtures:load` - Loads fixtures if the database is empty. Fixtures are not auto-loaded in non-development environments as multiple pods starting up at the same time can cause data duplication, so instead this script is used to provision the data once through the CLI pod.
 
 Additionally, this module exports a function `importFixtures` that can manually import fixtures. This is mostly provided for [testing](#testing).
 
@@ -136,7 +136,7 @@ To load the file and directly set the content on the document, change the schema
 {
   "name": "Demo",
   "description": "I'm the content of description.md!",
-  "intro": "intro.txt"
+  "intro": "I'm the content of intro.txt!"
 }
 ```
 
@@ -166,9 +166,20 @@ Finally, fields with a schema type `Buffer` will directly set binary data on the
 }
 ```
 
+### Model Transforms
+
+Other transforms can be defined to target specific model contexts. Bedrock comes with transforms for the `User` model:
+
+- `name` will be expanded to `firstName` and `lastName`
+- `email` will be inferred from the `firstName` of the user and the admin email, for example `jack@bedrock.foundation`.
+- `role` will be expanded into a `roles` object based on keys defined in `src/roles.json`. Organization based roles will use the [default organization](#notes).
+- `password` will default to `ADMIN_PASSWORD` in `.env`.
+
+These can be configured and extended in `./const`.
+
 ### Custom Transforms
 
-Custom transforms are a specific syntax to allow special behavior. Currently there are two kinds: environment variables and refs.
+Custom transforms are a specific syntax to allow special behavior in all fixtures. Currently there are two kinds: environment variables and refs.
 
 ```js
 {
@@ -182,22 +193,11 @@ Custom transforms are a specific syntax to allow special behavior. Currently the
   // Will import the ObjectId of another fixture
   // This is useful in freeform fields where the
   // type cannot be inferred from the schema.
-  "object": "<ref:users/john>"
+  "object": "<ref:users/jack>"
 }
 ```
 
 Custom transforms can be configured and extended in `./const`.
-
-### Default Transforms
-
-Additionally, there are a few built-in transforms for `User` fixtures that allow shorter syntax.
-
-- `name` will be expanded to `firstName` and `lastName`
-- `email` will be inferred from the `firstName` of the user and the admin email, for example `john@bedrock.foundation`.
-- `role` will be expanded into a `roles` object based on keys defined in `src/roles.json`. Organization based roles will use the default organization.
-- `password` will default to `ADMIN_PASSWORD` in `.env`.
-
-Default transforms can be configured and extended in `./const`.
 
 ## Object References
 
@@ -206,11 +206,11 @@ One major difficulty with wrangling fixtures is building complex inderdependent 
 ```json
 {
   "name": "Product 1",
-  "shop": "shop-2"
+  "shop": "shop-1"
 }
 ```
 
-Here, the attached result will be the `ObjectId` of the fixture imported from `shops/shop-2`. The full fixture id is inferred from the `shops` field in the schema.
+Here, the attached result will be the `ObjectId` of the fixture imported from `shops/shop-1`. `shops` is inferred from the `ref` field in the `Product` model's schema.
 
 ## Circular References
 
@@ -234,7 +234,7 @@ module.exports = names.map((name) => {
 });
 ```
 
-In this example, the resulting objects will all be imported as `Shop` fixtures. Note that these modules should return _plain objects_. They should be thought of as identical to individual JSON files, just procedurally generated. This is a powerful feature that allows generated fixtures to reference and be referenced by other fixtures.
+In this example, the resulting objects will all be imported as `Shop` fixtures. Note that these modules should return _plain objects_. They should be thought of as identical to individual JSON files, just procedurally generated. This allows generated fixtures to reference and be referenced by other fixtures.
 
 Returning an array here will result in auto-generated fixture names. For example, the first export will be called `shop-1`. To manually choose the fixture name, export an object instead:
 
@@ -247,6 +247,9 @@ const fixtures = {};
 
 for (let name of names) {
   const slug = kebabCase(name);
+
+  // Allow fixtures to be referenced by their slug,
+  // ie. "flower-shop", "department-store", etc.
   fixtures[slug] = { name, slug };
 }
 
@@ -283,7 +286,7 @@ In this example recursion allows comments to be nested inline along with the pos
 
 Notes:
 
-- Mongoose by default does not save unknown fields that are not defined in the schema. This allows a `comments` field to exist on a `post` in the fixtures without affecting the result.
+- Mongoose by default does not save unknown fields that are not defined in the schema. This allows a `comments` field to exist on a `post` in the fixtures without affecting the imported data for the post.
 - Calling `loadFixtureModules` will return an object that is either built by reading subdirectories (the default) or the result of another generated fixture module.
 - Generated fixture modules will supercede any other fixtures within the directory. In other words, if a `shops/index.js` file exists, no other files in the `shops` directory will be imported automatically. However, you can of course still `require` and export them. This behavior can be thought of as a gateway allowing you to aggregate, modify, and export customized fixtures.
 

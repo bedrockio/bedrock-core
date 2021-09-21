@@ -1,17 +1,18 @@
 // Check out the README!
 
 const path = require('path');
-const mongoose = require('mongoose');
 const fs = require('fs/promises');
-const { logger } = require('@bedrockio/instrumentation');
+const mongoose = require('mongoose');
 const { memoize, mapKeys, camelCase, kebabCase } = require('lodash');
+const { logger } = require('@bedrockio/instrumentation');
 const config = require('@bedrockio/config');
 const models = require('../../models');
 const { storeUploadedFile } = require('../uploads');
 const { stringReplaceAsync } = require('../string');
 
 const { ADMIN_EMAIL, API_URL } = config.getAll();
-const { CUSTOM_TRANSFORMS, DEFAULT_TRANSFORMS, ADMIN_FIXTURE_ID } = require('./const');
+const { CUSTOM_TRANSFORMS, MODEL_TRANSFORMS, ADMIN_FIXTURE_ID } = require('./const');
+
 const BASE_DIR = path.join(__dirname, '../../../fixtures');
 
 // Loads fixtures once if not loaded and returns true/false.
@@ -32,9 +33,9 @@ async function importFixtures(id = '', meta) {
   if (!base) {
     return await importRoot(meta);
   }
-  const custom = await getGeneratedFixtures(base, name);
-  if (custom) {
-    return custom;
+  const generated = await getGeneratedFixtures(base, name);
+  if (generated) {
+    return generated;
   } else if (name) {
     return await importFixture(id, meta);
   } else {
@@ -56,7 +57,7 @@ async function importRoot(meta) {
 }
 
 async function importDirectory(base, meta) {
-  const names = await getSubdirectories(base);
+  const names = await readFixturesDirectory(base);
   return await buildFixtures(names, async (name) => {
     return {
       [name]: await importFixtures(join(base, name), meta),
@@ -77,12 +78,11 @@ async function runImport(id, attributes, meta) {
 
 const createDocument = memoize(async (id, attributes, meta) => {
   logger.debug(`Importing: ${id}`);
-  const { model } = meta;
 
   // Create the document
   await transformAttributes(attributes, meta);
-  await applyDefaults(model, attributes, meta);
-  const doc = await model.create(attributes);
+  await applyModelTransforms(attributes, meta);
+  const doc = await meta.model.create(attributes);
 
   // Post import phase
   setDocumentForPlaceholder(doc, meta.id);
@@ -129,7 +129,7 @@ async function transformProperty(keys, value, meta) {
   } else if (CUSTOM_TRANSFORM_REG.test(value)) {
     value = await transformCustom(value, meta);
   } else if (isReferenceField(keys, meta)) {
-    value = await transformReferenceField(keys, value, meta);
+    value = await transformReference(keys, value, meta);
   }
   return value;
 }
@@ -185,6 +185,19 @@ const importBufferOnce = memoize(async (file) => {
   return await fs.readFile(file);
 });
 
+// Model transform helpers
+
+async function applyModelTransforms(attributes, meta) {
+  const transforms = MODEL_TRANSFORMS[meta.model.modelName] || {};
+  await Promise.all(
+    Object.values(transforms).map(async (fn) => {
+      return await fn(attributes, meta, {
+        importFixtures,
+      });
+    })
+  );
+}
+
 // Custom transform helpers
 
 const CUSTOM_TRANSFORM_REG = /^<(?<func>\w+):(?<token>.+)>$/;
@@ -193,7 +206,7 @@ async function transformCustom(value, meta) {
   const { func, token } = value.match(CUSTOM_TRANSFORM_REG).groups;
   const transform = CUSTOM_TRANSFORMS[func];
   if (!transform) {
-    throw new Error(`Custom transform "${func}"" not recognized.`);
+    throw new Error(`Custom transform "${func}" not recognized.`);
   }
   return await transform(token, meta, {
     importFixtures,
@@ -217,7 +230,7 @@ const importUploadOnce = memoize(async (file, meta) => {
   if (meta.id !== ADMIN_FIXTURE_ID) {
     // As a special case to bootstrap the admin user, allow their
     // profile image to not have an owner to sidestep the circular
-    // reference user.image -> image.owner -> user.image.
+    // reference user.profileImage -> image.owner -> user.
     // All other images will be owned by the admin user for now.
     attributes.owner = await importFixtures(ADMIN_FIXTURE_ID, {
       id: file,
@@ -263,11 +276,11 @@ function isKnownField(keys, meta) {
   } else if (keys.length > 1) {
     return false;
   }
-  const transform = DEFAULT_TRANSFORMS[meta.model.modelName];
+  const transform = MODEL_TRANSFORMS[meta.model.modelName];
   return transform && keys[0] in transform;
 }
 
-async function transformReferenceField(keys, value, meta) {
+async function transformReference(keys, value, meta) {
   // Reference fields may have already resolved, in which
   // case they will be an ObjectId so simply return it.
   if (typeof value !== 'string') {
@@ -301,6 +314,8 @@ async function importFixturesWithGuard(id, meta) {
   } catch (err) {
     if (err instanceof CircularReferenceError) {
       logCircularReference(err.toString());
+    } else if (err instanceof GeneratedConflictError) {
+      logger.debug(`Generated conflict in ${id}. Falling back to placeholder.`);
     }
     return getReferencedPlaceholder(id);
   }
@@ -396,12 +411,11 @@ const importGeneratedDirectory = memoize(async (base) => {
 class GeneratedConflictError extends Error {}
 
 // Generated modules may contain recursive references.
-// If they do we need to throw an error so importing can bail.
+// If they do we need to throw an error to allow a fallback.
 function checkGeneratedConflict(id, meta) {
   const base = getIdBase(id);
   const context = getGeneratedContext(meta);
   if (context === base) {
-    logger.debug(`Generated conflict error ${id} -> ${context}`);
     throw new GeneratedConflictError();
   }
 }
@@ -416,8 +430,13 @@ function getGeneratedContext(meta) {
 }
 
 // Allow generators to load raw modules to reference them.
-async function loadFixtureModules(base) {
-  const names = await getSubdirectories(base);
+async function loadFixtureModules(id) {
+  const { base, name } = getIdComponents(id);
+  const generated = await getGeneratedFixtures(base, name);
+  if (generated) {
+    return generated;
+  }
+  const names = await readFixturesDirectory(base);
   return await buildFixtures(names, async (name) => {
     return {
       [name]: await loadModule(join(base, name)),
@@ -474,7 +493,7 @@ function getDocumentPlaceholders(doc) {
     if (schemaType instanceof mongoose.Schema.Types.ObjectId) {
       // Get the ObjectId for the path. If the path is populated
       // then the poorly named "populated" will return the id,
-      // otherwise get the direct path.
+      // otherwise get the direct property.
       const objectId = doc.populated(path) || doc.get(path);
       if (isReferencedPlaceholder(objectId)) {
         placeholders.push([objectId, path]);
@@ -570,17 +589,6 @@ function pluralKebab(str) {
   return mongoose.pluralize()(kebabCase(str));
 }
 
-async function applyDefaults(model, attributes, meta) {
-  const defaults = DEFAULT_TRANSFORMS[model.modelName] || {};
-  await Promise.all(
-    Object.values(defaults).map(async (fn) => {
-      return await fn(attributes, meta, {
-        importFixtures,
-      });
-    })
-  );
-}
-
 // File system helpers
 
 async function fileExists(file) {
@@ -592,22 +600,26 @@ async function fileExists(file) {
   }
 }
 
-async function getSubdirectories(dir = '') {
+async function getModelSubdirectories() {
+  const names = await readFixturesDirectory();
+  return names.filter((name) => {
+    return modelsByName[name];
+  });
+}
+
+async function readFixturesDirectory(dir = '') {
   const entries = await fs.readdir(path.resolve(BASE_DIR, dir), { withFileTypes: true });
   return entries
     .filter((entry) => {
-      return entry.isDirectory() || path.extname(entry.name) === '.json';
+      if (entry.isDirectory()) {
+        return true;
+      } else {
+        return dir && path.extname(entry.name) === '.json';
+      }
     })
     .map((entry) => {
       return entry.name;
     });
-}
-
-async function getModelSubdirectories() {
-  const names = await getSubdirectories();
-  return names.filter((name) => {
-    return modelsByName[name];
-  });
 }
 
 // Fixture id helpers
