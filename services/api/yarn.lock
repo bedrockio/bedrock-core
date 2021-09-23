@@ -505,10 +505,10 @@
     kleur "^4.1.4"
     pino "^6.11.1"
 
-"@bedrockio/prettier-config@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@bedrockio/prettier-config/-/prettier-config-1.0.0.tgz#939a3df248369f34d7fe2c9d4a1aca15ce1f1622"
-  integrity sha512-VM5GllSzHgJ+ssjCTINqP70Oan6CsMbryIsdg+nMNktqJeIhzFlPAIwrplmYx1k4OYr1reZrd4bFY981+WzvdQ==
+"@bedrockio/prettier-config@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@bedrockio/prettier-config/-/prettier-config-1.0.1.tgz#7e93f8c26611964678fc85a640025e47396e46a1"
+  integrity sha512-c2uRXLt04DOH56PYxGG/QR7UOVDv2rf461TKpwQEBGT3k2409RyRs8lHw3v2rCZICp29pXphPYIXm8VVbP38jA==
 
 "@eslint/eslintrc@^0.4.0":
   version "0.4.0"

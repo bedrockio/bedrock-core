@@ -72,7 +72,7 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.10",
-    "@bedrockio/prettier-config": "^1.0.0",
+    "@bedrockio/prettier-config": "^1.0.1",
     "@testing-library/dom": "^7.30.3",
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^13.1.1",
