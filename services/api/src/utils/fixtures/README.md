@@ -168,10 +168,10 @@ Finally, fields with a schema type `Buffer` will directly set binary data on the
 
 ### Model Transforms
 
-Other transforms can be defined to target specific model contexts. Bedrock comes with transforms for the `User` model:
+Other transforms can be defined to target specific model contexts. Bedrock comes with transforms that provide some defaults for the `User` model:
 
-- `name` will be expanded to `firstName` and `lastName`
-- `email` will be inferred from the `firstName` of the user and the admin email, for example `jack@bedrock.foundation`.
+- `name` will be expanded to `firstName` and `lastName`.
+- `email` will be generated if not specified. It will default to the `firstName` of the user and the domain of the admin email, for example `jack@bedrock.foundation`.
 - `role` will be expanded into a `roles` object based on keys defined in `src/roles.json`. Organization based roles will use the [default organization](#notes).
 - `password` will default to `ADMIN_PASSWORD` in `.env`.
 
@@ -206,11 +206,11 @@ One major difficulty with wrangling fixtures is building complex inderdependent 
 ```json
 {
   "name": "Product 1",
-  "shop": "shop-1"
+  "shop": "demo"
 }
 ```
 
-Here, the attached result will be the `ObjectId` of the fixture imported from `shops/shop-1`. `shops` is inferred from the `ref` field in the `Product` model's schema.
+Here, the `shop` field of the `Product` schema is known to be an `ObjectId` referencing a `Shop`, so the importer will load the fixture `shop/demo` and attach its `ObjectId` to this field.
 
 ## Circular References
 
@@ -221,7 +221,7 @@ Circular references are often a sign of a bad data structure, but not always. Fo
 In many cases having a single module for each fixture can be too much overhead. In these cases fixtures can be generated using a single entrypoint in the base directory:
 
 ```js
-// shops/index.js
+// fixtures/shops/index.js
 
 const { kebabCase } = require('lodash');
 const names = ['Flower Shop', 'Department Store', 'Supermarket'];
@@ -234,7 +234,7 @@ module.exports = names.map((name) => {
 });
 ```
 
-In this example, the resulting objects will all be imported as `Shop` fixtures. Note that these modules should return _plain objects_. They should be thought of as identical to individual JSON files, just procedurally generated. This allows generated fixtures to reference and be referenced by other fixtures.
+In this example, the resulting objects will all be imported as `Shop` fixtures. Note that these modules should return plain objects. They should be thought of as identical to individual JSON files, just procedurally generated. This allows generated fixtures to reference and be referenced by other fixtures.
 
 Returning an array here will result in auto-generated fixture names. For example, the first export will be called `shop-1`. To manually choose the fixture name, export an object instead:
 
@@ -249,7 +249,7 @@ for (let name of names) {
   const slug = kebabCase(name);
 
   // Allow fixtures to be referenced by their slug,
-  // ie. "flower-shop", "department-store", etc.
+  // ie. "shops/flower-shop", "shops/department-store", etc.
   fixtures[slug] = { name, slug };
 }
 
@@ -263,6 +263,8 @@ The first is `generateFixtureId` which works the same as when exporting arrays b
 The second is `loadFixtureModules` which allows you to reference other fixture modules without importing them. This can be useful for complex cases:
 
 ```js
+// fixtures/comments/index.js
+
 module.exports = async ({ loadFixtureModules, generateFixtureId }) => {
   const posts = await loadFixtureModules('posts');
   const fixtures = {};
@@ -274,7 +276,7 @@ module.exports = async ({ loadFixtureModules, generateFixtureId }) => {
     }
   }
 
-  for (let post of posts) {
+  for (let post of Object.values(posts)) {
     exportComments(post.comments);
   }
 
@@ -294,7 +296,7 @@ Notes:
 
 It is often useful to run tests against fixture data. To help facilitate this, fixtures can be imported and accessed easily.
 
-After running the imports, fixtures can be accessed both as nested objects and by the full [id](#fixture-ids), allowing easy referencing and iterating over the fixtures.
+After running the imports, fixtures can be accessed both as nested objects and by the full [id](#fixture-ids), allowing easy referencing and iteration:
 
 ```js
 const { importFixtures } = require('utils/fixtures');
