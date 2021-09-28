@@ -1,0 +1,45 @@
+{
+  "attributes": {
+    "name": {
+      "type": "String",
+      "required": true,
+      "trim": true
+    },
+    "upload": {
+      "type": "ObjectId",
+      "ref": "Upload",
+      "required": true,
+      "autopopulate": true
+    },
+    "captions": [
+      {
+        "kind": {
+          "type": "String",
+          "enum": [
+            "subtitles",
+            "captions",
+            "metadata"
+          ]
+        },
+        "language": {
+          "type": "String",
+          "enum": [
+            "en",
+            "fr",
+            "de"
+          ],
+          "default": "en"
+        },
+        "upload": {
+          "type": "ObjectId",
+          "ref": "Upload"
+        }
+      }
+    ],
+    "transcodeJobs": [
+      {
+        "name": "String"
+      }
+    ]
+  }
+}

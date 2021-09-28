@@ -25,6 +25,7 @@ import Organizations from 'screens/Organizations';
 import Loading from 'screens/Loading';
 import Error from 'screens/Error';
 import Products from 'screens/Products';
+import Videos from 'screens/Videos';
 
 const App = () => {
   const { loading, error } = useSession();
@@ -42,6 +43,7 @@ const App = () => {
       <Protected path="/users/invites" allowed={Invites} exact />
       <Protected path="/organizations/:id?" allowed={Organizations} />
       <Protected path="/users/:id?" allowed={Users} />
+      <Protected path="/videos" allowed={Videos} />
       <Route path="/docs/ui" component={Components} exact />
       <Route path="/docs/:id?" component={Docs} />
       <Route path="/logout" component={Logout} exact />

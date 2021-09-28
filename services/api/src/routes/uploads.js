@@ -1,6 +1,8 @@
 const Router = require('@koa/router');
+const Joi = require('joi');
 const { createReadStream } = require('fs');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
+const { validateBody } = require('../utils/middleware/validate');
 const { Upload } = require('../models');
 const { storeUploadedFile } = require('../utils/uploads');
 
@@ -39,22 +41,31 @@ router
   })
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
-  .post('/', async (ctx) => {
-    const { authUser } = ctx.state;
-    const file = ctx.request.files.file;
-    const isArray = Array.isArray(file);
-    const files = isArray ? file : [file];
-    const uploads = await Promise.all(
-      files.map(async (file) => {
-        const params = await storeUploadedFile(file);
-        params.ownerId = authUser.id;
-        return await Upload.create(params);
-      })
-    );
-    ctx.body = {
-      data: uploads,
-    };
-  })
+  .post(
+    '/',
+    validateBody({
+      gcs: Joi.boolean(),
+    }),
+    async (ctx) => {
+      const { gcs } = ctx.request.body;
+      const { authUser } = ctx.state;
+      const file = ctx.request.files.file;
+      const isArray = Array.isArray(file);
+      const files = isArray ? file : [file];
+      const uploads = await Promise.all(
+        files.map(async (file) => {
+          const params = await storeUploadedFile(file, {
+            forceGcs: gcs,
+          });
+          params.ownerId = authUser.id;
+          return await Upload.create(params);
+        })
+      );
+      ctx.body = {
+        data: uploads,
+      };
+    }
+  )
   .delete('/:uploadId', async (ctx) => {
     const { upload } = ctx.state;
     await upload.delete();

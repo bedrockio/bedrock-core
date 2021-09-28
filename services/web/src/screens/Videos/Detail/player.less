@@ -1,0 +1,31 @@
+.video-player {
+  // The actual player... move this out
+  &__real-player {
+    position: relative;
+
+    &-controls {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+
+    video {
+      display: block;
+      &::cue {
+        color: red;
+        opacity: 0.2;
+        line: 16;
+        position: 8%;
+        align: start;
+        size: 100%;
+      }
+
+      &::-webkit-media-text-track-display {
+        background-color: red !important;
+        top: auto !important;
+        bottom: 0 !important;
+      }
+    }
+  }
+}

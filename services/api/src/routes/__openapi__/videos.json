@@ -1,0 +1,34 @@
+{
+  "paths": [
+    {
+      "method": "POST",
+      "path": "/",
+      "responseBody": [],
+      "examples": []
+    },
+    {
+      "method": "GET",
+      "path": "/:videoId",
+      "responseBody": [],
+      "examples": []
+    },
+    {
+      "method": "POST",
+      "path": "/search",
+      "responseBody": [],
+      "examples": []
+    },
+    {
+      "method": "PATCH",
+      "path": "/:videoId",
+      "responseBody": [],
+      "examples": []
+    },
+    {
+      "method": "DELETE",
+      "path": "/:videoId",
+      "responseBody": [],
+      "examples": []
+    }
+  ]
+}

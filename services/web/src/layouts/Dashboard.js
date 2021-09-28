@@ -68,6 +68,12 @@ export default class DashboardLayout extends React.Component {
                     Organizations
                   </Sidebar.Link>
                 </Protected>
+                <Protected endpoint="videos">
+                  <Sidebar.Link to="/videos">
+                    <Icon name="video" />
+                    Videos
+                  </Sidebar.Link>
+                </Protected>
               </Layout.Group>
               <Layout.Group>
                 <Sidebar.Divider />

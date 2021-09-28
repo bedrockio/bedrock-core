@@ -7,7 +7,8 @@
       "users": "read-write",
       "shops": "read-write",
       "products": "read-write",
-      "organizations": "read-write"
+      "organizations": "read-write",
+      "videos": "read-write"
     }
   },
   "admin": {

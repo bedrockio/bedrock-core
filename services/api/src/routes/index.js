@@ -9,6 +9,7 @@ const status = require('./status');
 const auditEntries = require('./audit-entries');
 const categories = require('./categories');
 const organizations = require('./organizations');
+const videos = require('./videos');
 
 const router = new Router();
 
@@ -22,5 +23,6 @@ router.use('/invites', invites.routes());
 router.use('/status', status.routes());
 router.use('/categories', categories.routes());
 router.use('/organizations', organizations.routes());
+router.use('/videos', videos.routes());
 
 module.exports = router;

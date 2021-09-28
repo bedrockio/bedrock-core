@@ -31,14 +31,15 @@ async function uploadGcs(file, hash) {
   return metaData[0].mediaLink;
 }
 
-async function storeUploadedFile(uploadedFile) {
+async function storeUploadedFile(uploadedFile, options = {}) {
   const mimeType = uploadedFile.type || mime.lookup(uploadedFile.name);
   const object = {
     mimeType,
     filename: uploadedFile.name,
     hash: crypto.randomBytes(32).toString('hex'),
   };
-  if (config.get('UPLOADS_STORE') === 'gcs') {
+  console.info('ladkfajlfdkjasjdfl', options);
+  if (config.get('UPLOADS_STORE') === 'gcs' || options.forceGcs) {
     object.rawUrl = await uploadGcs(uploadedFile, object.hash);
     object.storageType = 'gcs';
   } else {

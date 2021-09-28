@@ -13,6 +13,7 @@ const MIME_TYPES = {
   pdf: 'application/pdf',
   csv: 'text/csv,application/vnd.ms-excel',
   zip: 'application/zip,application/octet-stream',
+  captions: 'text/vtt',
   'image/pdf': 'image/*,application/pdf',
 };
 
@@ -24,6 +25,7 @@ const ICONS = {
   pdf: 'file-pdf',
   csv: 'file-excel',
   zip: 'file-archive',
+  captions: 'comment-dots',
   'image/pdf': 'file-image',
 };
 
@@ -55,6 +57,9 @@ export default class Uploads extends React.Component {
         method: 'POST',
         path: '/1/uploads',
         files: acceptedFiles,
+        body: {
+          gcs: this.props.gcs,
+        },
       });
       this.setState({
         loading: false,
@@ -167,7 +172,7 @@ export default class Uploads extends React.Component {
           ))}
         <Dropzone
           accept={MIME_TYPES[type]}
-          maxSize={5 * 1024 * 1024}
+          maxSize={500 * 1024 * 1024}
           onDrop={this.onDrop}>
           {({ getRootProps, getInputProps, isDragActive }) => {
             return (
@@ -231,9 +236,11 @@ Uploads.propTypes = {
   type: PropTypes.oneOf(Object.keys(MIME_TYPES)),
   onChange: PropTypes.func.isRequired,
   onError: PropTypes.func,
+  gcs: PropTypes.bool,
 };
 
 Uploads.defaultProps = {
   type: 'image',
+  gcs: false,
   onError: () => {},
 };
