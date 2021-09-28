@@ -253,27 +253,29 @@ export class SessionProvider extends React.PureComponent {
 }
 
 export function withSession(Component) {
-  let lastContext = {};
+  Component.contextType = SessionContext;
+  return Component;
+  // let lastContext = {};
 
-  return class Wrapped extends Component {
-    // Preserve the component name
-    static name = Component.name;
+  // return class Wrapped extends Component {
+  //   // Preserve the component name
+  //   static name = Component.name;
 
-    static contextType = SessionContext;
+  //   static contextType = SessionContext;
 
-    componentDidMount() {
-      lastContext = this.context;
-      if (super.componentDidMount) {
-        super.componentDidMount();
-      }
-    }
+  //   componentDidMount() {
+  //     lastContext = this.context;
+  //     if (super.componentDidMount) {
+  //       super.componentDidMount();
+  //     }
+  //   }
 
-    getSnapshotBeforeUpdate() {
-      const context = lastContext;
-      lastContext = this.context;
-      return context;
-    }
-  };
+  //   getSnapshotBeforeUpdate() {
+  //     const context = lastContext;
+  //     lastContext = this.context;
+  //     return context;
+  //   }
+  // };
 }
 
 export function withLoadedSession(Component) {

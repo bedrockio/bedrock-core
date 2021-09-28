@@ -9,6 +9,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const { template: compileTemplate } = require('lodash');
 
 // To enable multiple builds, place each app in a folder inside src,
@@ -45,9 +46,6 @@ module.exports = {
     clean: true,
   },
   resolve: {
-    alias: {
-      'react-dom': '@hot-loader/react-dom',
-    },
     extensions: ['.js', '.json', '.jsx'],
     modules: [path.join(__dirname, 'src'), 'node_modules'],
     // Node core modules were previously shimmed in webpack < v5.
@@ -264,6 +262,7 @@ function getOptionalPlugins() {
       })
     );
   } else {
+    plugins.push(new ReactRefreshWebpackPlugin());
     plugins.push(new webpack.HotModuleReplacementPlugin());
   }
   return plugins;

@@ -1,5 +1,3 @@
-import { hot } from 'react-hot-loader/root';
-
 import React from 'react';
 
 import { Switch, Route, Redirect } from 'react-router-dom';
@@ -26,7 +24,7 @@ import Loading from 'screens/Loading';
 import Error from 'screens/Error';
 import Products from 'screens/Products';
 
-const App = () => {
+export default function App() {
   const { loading, error } = useSession();
   if (loading) {
     return <Loading />;
@@ -63,6 +61,4 @@ const App = () => {
       <Route component={NotFound} />
     </Switch>
   );
-};
-
-export default hot(App);
+}
