@@ -49,7 +49,7 @@
     "jest-util": "^27.1.1",
     "mongodb": "^3.6.9",
     "nodemon": "^2.0.7",
-    "prettier": "^2.2.1",
+    "prettier": "^2.4.1",
     "prettier-eslint": "^12.0.0",
     "supertest": "^4.0.2"
   },
