@@ -23,8 +23,8 @@
   outline: none;
   border: none;
   vertical-align: @verticalAlign;
-  background-color: @secondaryColor;
-  color: @textColor;
+  background: @basicBackground;
+  color: @basicTextColor;
 
   font-family: inherit;
 
@@ -67,9 +67,9 @@
 ---------------*/
 
 .ui.button:hover {
-  background-color: @secondaryColorHover;
+  background: @basicHoverBackground;
   box-shadow: @hoverBoxShadow;
-  color: @hoverColor;
+  color: @basicHoverTextColor;
 }
 
 .ui.button:hover .icon {
@@ -81,8 +81,8 @@
 ---------------*/
 
 .ui.button:focus {
-  background-color: @focusBackgroundColor;
-  color: @focusColor;
+  background: @basicFocusBackground;
+  color: @basicFocusTextColor;
   background-image: @focusBackgroundImage !important;
   box-shadow: @focusBoxShadow !important;
 }
@@ -97,9 +97,9 @@
 
 .ui.button:active,
 .ui.active.button:active {
-  background-color: @downBackgroundColor;
+  background: @basicDownBackground;
   background-image: @downBackgroundImage;
-  color: @downColor;
+  color: @basicDownTextColor;
   box-shadow: @downBoxShadow;
 }
 
