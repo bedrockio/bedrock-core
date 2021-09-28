@@ -2,7 +2,7 @@ import React from 'react';
 import { Table, Message, Loader, Button, Header, Confirm } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
-import { screen } from 'helpers';
+import screen from 'helpers/screen';
 import { Layout, HelpTip, SearchProvider } from 'components';
 // --- Generator: subscreen-imports
 import { Link } from 'react-router-dom';
