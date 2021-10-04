@@ -20,7 +20,6 @@ export default class VideoList extends React.Component {
   };
 
   render() {
-    console.info('??');
     return (
       <SearchProvider onDataNeeded={this.onDataNeeded}>
         {({
@@ -54,12 +53,20 @@ export default class VideoList extends React.Component {
                     <Table.Row>
                       <Table.HeaderCell
                         sorted={getSorted('name')}
-                        onClick={() => setSort('name')}>
+                        onClick={() => setSort('name')}
+                      >
                         Name
                       </Table.HeaderCell>
                       <Table.HeaderCell
+                        onClick={() => setSort('provider')}
+                        sorted={getSorted('provider')}
+                      >
+                        Provider
+                      </Table.HeaderCell>
+                      <Table.HeaderCell
                         onClick={() => setSort('createdAt')}
-                        sorted={getSorted('createdAt')}>
+                        sorted={getSorted('createdAt')}
+                      >
                         Created
                         <HelpTip
                           title="Created"
@@ -78,6 +85,7 @@ export default class VideoList extends React.Component {
                           <Table.Cell>
                             <Link to={`/videos/${video.id}`}>{video.name}</Link>
                           </Table.Cell>
+                          <Table.Cell>{video.provider}</Table.Cell>
                           <Table.Cell>
                             {formatDateTime(video.createdAt)}
                           </Table.Cell>

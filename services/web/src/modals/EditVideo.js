@@ -14,6 +14,7 @@ export default class EditVideo extends React.Component {
       error: null,
       loading: false,
       video: props.video || {
+        provider: 'vimeo',
         captions: [],
       },
     };
@@ -124,7 +125,8 @@ export default class EditVideo extends React.Component {
               noValidate
               id="edit-video"
               error={!!error}
-              onSubmit={this.onSubmit}>
+              onSubmit={this.onSubmit}
+            >
               {error && <Message error content={error.message} />}
               <Form.Input
                 required
@@ -132,6 +134,32 @@ export default class EditVideo extends React.Component {
                 name="name"
                 label="Name"
                 value={video.name || ''}
+                onChange={this.setField}
+              />
+              <Form.Dropdown
+                required
+                selection
+                name="provider"
+                value={video.provider || ''}
+                placeholder="Select Provider"
+                options={[
+                  {
+                    text: 'Google Cloud Transcoder',
+                    value: 'gcloud',
+                  },
+                  {
+                    text: 'Cloudflare Stream',
+                    value: 'cloudflare',
+                  },
+                  {
+                    text: 'Mux',
+                    value: 'mux',
+                  },
+                  {
+                    text: 'Vimeo',
+                    value: 'vimeo',
+                  },
+                ]}
                 onChange={this.setField}
               />
               <UploadsField
@@ -149,7 +177,7 @@ export default class EditVideo extends React.Component {
                 return (
                   <React.Fragment key={i}>
                     <Divider />
-                    <Header icon="poo">
+                    <Header>
                       Caption {i + 1}{' '}
                       <span onClick={() => this.removeCaption(i)}>
                         <Icon name="close" link />
@@ -176,14 +204,14 @@ export default class EditVideo extends React.Component {
                           },
                         ]}
                         onChange={(evt, { name, value }) =>
-                          this.setCaptionsField(i, name, value)
+                          this.setCaptionField(i, name, value)
                         }
                       />
                       <Form.Dropdown
                         selection
                         name="language"
                         label="Language"
-                        value={caption.kind || ''}
+                        value={caption.language || ''}
                         options={[
                           {
                             text: 'English',
@@ -199,22 +227,22 @@ export default class EditVideo extends React.Component {
                           },
                         ]}
                         onChange={(evt, { name, value }) =>
-                          this.setCaptionsField(i, name, value)
+                          this.setCaptionField(i, name, value)
                         }
                       />
                     </Form.Group>
                     <UploadsField
                       key={i}
                       required
-                      type="video"
+                      type="captions"
                       name="upload"
                       label="Upload"
-                      value={video.upload}
+                      value={caption.upload}
                       onChange={(evt, { name, value }) =>
-                        this.setCaptionsField(i, name, value)
+                        this.setCaptionField(i, name, value)
                       }
                       onError={(error) => this.setState({ error })}
-                      video
+                      gcs
                     />
                   </React.Fragment>
                 );

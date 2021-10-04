@@ -23,6 +23,7 @@
     "@google-cloud/video-transcoder": "^1.7.1",
     "@koa/cors": "^3.1.0",
     "@koa/router": "^10.0.0",
+    "@mux/mux-node": "^3.3.1",
     "@sentry/node": "^6.2.1",
     "bcrypt": "^5.0.0",
     "fast-csv": "^4.3.6",

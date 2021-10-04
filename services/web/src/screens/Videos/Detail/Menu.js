@@ -11,7 +11,8 @@ export default ({ video, onSave }) => {
     <React.Fragment>
       <Breadcrumbs
         link={<Link to="/videos">Videos</Link>}
-        active={video.name}></Breadcrumbs>
+        active={video.name}
+      ></Breadcrumbs>
       <Layout horizontal center spread>
         <h1>{video.name}</h1>
         <Layout.Group>
@@ -36,8 +37,8 @@ export default ({ video, onSave }) => {
           exact
         />
         <Menu.Item
-          name="Jobs"
-          to={`/videos/${video.id}/jobs`}
+          name="Status"
+          to={`/videos/${video.id}/status`}
           as={NavLink}
           exact
         />

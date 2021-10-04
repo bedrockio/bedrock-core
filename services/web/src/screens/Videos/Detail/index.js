@@ -8,7 +8,7 @@ import { request } from 'utils/api';
 import NotFound from 'screens/NotFound';
 import Overview from './Overview';
 import Player from './Player';
-import Jobs from './Jobs';
+import Status from './Status';
 
 export default class VideoDetail extends React.Component {
   constructor(props) {
@@ -84,7 +84,12 @@ export default class VideoDetail extends React.Component {
           allowed={Player}
           {...props}
         />
-        <Protected exact path="/videos/:id/jobs" allowed={Jobs} {...props} />
+        <Protected
+          exact
+          path="/videos/:id/status"
+          allowed={Status}
+          {...props}
+        />
         <Route component={NotFound} />
       </Switch>
     );

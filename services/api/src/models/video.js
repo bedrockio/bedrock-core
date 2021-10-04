@@ -14,6 +14,10 @@ schema.virtual('baseUrl').get(function () {
   return `${PUBLIC_BUCKET_BASE}/${this.id}/`;
 });
 
+schema.virtual('muxPlaybackId').get(function () {
+  return this.muxPlaybackIds[0]?.id;
+});
+
 schema.virtual('spriteSheets').get(function () {
   return {
     large: `${PUBLIC_BUCKET_BASE}/${this.id}/large-sprite-sheet0000000000.jpeg`,
