@@ -54,14 +54,15 @@ export default class Finalize extends React.Component {
 
     return (
       <PageCenter>
-        <LogoTitle title="Save your backup codes" />
+        <LogoTitle title="Save your recovery codes" />
 
         <Segment.Group>
           <Segment>
-            <Header size="small">Backup codes</Header>
+            <Header size="small">Two-factor recovery codes</Header>
             <p>
-              If you lose access to your authentication method, backup codes can
-              be used to access your account. Each code can only be used once.
+              Recovery codes can be used to access your account in the event you
+              lose access to your device and cannot receive two-factor
+              authentication codes.
             </p>
           </Segment>
 

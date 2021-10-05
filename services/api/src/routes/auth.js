@@ -73,7 +73,7 @@ router
       }
 
       if (!user.verifyLoginAttempts()) {
-        await AuditEntry.append('reached max. authentication attempts', ctx, {
+        await AuditEntry.append('reached max authentication attempts', ctx, {
           type: 'security',
           object: user,
           user: user.id,
@@ -127,7 +127,7 @@ router
       const { password } = ctx.request.body;
 
       if (!authUser.verifyLoginAttempts()) {
-        await AuditEntry.append('reached max. authentication attempts', ctx, {
+        await AuditEntry.append('reached max authentication attempts', ctx, {
           type: 'security',
           object: authUser,
           user: authUser.id,
@@ -193,7 +193,7 @@ router
       }
 
       if (!user.verifyLoginAttempts()) {
-        await AuditEntry.append('reached max. mfa challenge attempts', ctx, {
+        await AuditEntry.append('reached max mfa challenge attempts', ctx, {
           type: 'security',
           object: user,
           user: user.id,
