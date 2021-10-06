@@ -1,7 +1,6 @@
 const notp = require('notp');
 const crypto = require('crypto');
 const b32 = require('thirty-two');
-const { Console } = require('console');
 
 async function requireChallenge(ctx, user) {
   // TODO at late stage check the ctx for device change / ip change / blacklisted ip
@@ -45,7 +44,7 @@ function generateToken(secret) {
 }
 
 function verifyToken(secret, method, token) {
-  if (!token || !token.length) return null;
+  if (!token || !token.length || !secret) return null;
 
   const unformatted = secret.toUpperCase();
   const bin = b32.decode(unformatted);

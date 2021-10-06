@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { createTemporaryToken, generateTokenId } = require('../../utils/tokens');
+const { generateSecret, generateToken } = require('../../utils/mfa');
 const { setupDb, teardownDb, request, createUser } = require('../../utils/testing');
 const { mockTime, unmockTime, advanceTime } = require('../../utils/testing/time');
 const { User } = require('../../models');
@@ -25,6 +26,20 @@ describe('/1/auth', () => {
       const { payload } = jwt.decode(response.body.data.token, { complete: true });
       expect(payload).toHaveProperty('kid', 'user');
       expect(payload).toHaveProperty('type', 'user');
+    });
+
+    it('should login a user user with mfa enabled', async () => {
+      const password = '123password!';
+      const user = await createUser({
+        password,
+        mfaMethod: 'otp',
+      });
+      const response = await request('POST', '/1/auth/login', { email: user.email, password });
+      expect(response.status).toBe(200);
+
+      const { payload } = jwt.decode(response.body.data.token, { complete: true });
+      expect(payload).toHaveProperty('kid', 'user');
+      expect(payload).toHaveProperty('type', 'mfa');
     });
 
     it('should throttle a few seconds after 3 bad attempts', async () => {
@@ -131,6 +146,187 @@ describe('/1/auth', () => {
       });
 
       expect(updatedUser.email).toBe(email);
+    });
+  });
+
+  describe('POST /mfa/verify', () => {
+    it('should verify mfa token', async () => {
+      const user = await createUser({
+        email: 'bob@bob.com',
+        mfaMethod: 'otp',
+        tempTokenId: generateTokenId(),
+      });
+      const secret = generateSecret({
+        name: 'APP_TEST',
+        account: user,
+      });
+      user.mfaSecret = secret.secret;
+      await user.save();
+      const code = generateToken(secret.secret);
+
+      const token = createTemporaryToken({ type: 'mfa', sub: user.id, jti: user.tempTokenId });
+      const response = await request(
+        'POST',
+        '/1/auth/mfa/verify',
+        { code },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      const { payload } = jwt.decode(response.body.data.token, { complete: true });
+      expect(payload).toHaveProperty('kid', 'user');
+      expect(payload).toHaveProperty('type', 'user');
+    });
+
+    it('should verify backup code', async () => {
+      const backupCode = '12345-16123';
+      const user = await createUser({
+        backupCodes: [backupCode],
+      });
+      const token = createTemporaryToken({ type: 'mfa', sub: user.id, jti: user.tempTokenId });
+      const response = await request(
+        'POST',
+        '/1/auth/mfa/verify',
+        { code: backupCode },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      const { payload } = jwt.decode(response.body.data.token, { complete: true });
+      expect(payload).toHaveProperty('kid', 'user');
+      expect(payload).toHaveProperty('type', 'user');
+    });
+
+    it('should failed with bad code', async () => {
+      const user = await createUser({
+        email: 'bob@bob.com',
+        mfaMethod: 'otp',
+        tempTokenId: generateTokenId(),
+      });
+      const secret = generateSecret({
+        name: 'APP_TEST',
+        account: user,
+      });
+      user.mfaSecret = secret.secret;
+      await user.save();
+      const token = createTemporaryToken({ type: 'mfa', sub: user.id, jti: user.tempTokenId });
+      const response = await request(
+        'POST',
+        '/1/auth/mfa/verify',
+        { code: 'bad code' },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      expect(response.status).toBe(400);
+      expect(response.body.error.message).toBe('Not a valid code');
+    });
+
+    it('should failed with bad backup code', async () => {
+      const badBackupCode = '12345-16123';
+      const user = await createUser({
+        email: 'bob@bob.com',
+      });
+      await user.save();
+      const token = createTemporaryToken({ type: 'mfa', sub: user.id, jti: user.tempTokenId });
+      const response = await request(
+        'POST',
+        '/1/auth/mfa/verify',
+        { code: badBackupCode },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      expect(response.status).toBe(400);
+      expect(response.body.error.message).toBe('Not a valid code');
+    });
+
+    it('should increase login attempts', async () => {
+      const goodBackupCode = '92345-14812';
+      const user = await createUser({
+        email: 'bob@bob.com',
+        backupCodes: [goodBackupCode],
+        loginAttempts: 1,
+      });
+      await user.save();
+      const token = createTemporaryToken({ type: 'mfa', sub: user.id, jti: user.tempTokenId });
+      let response = await request(
+        'POST',
+        '/1/auth/mfa/verify',
+        { code: '123123' },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      const dbUser = await User.findById(user.id);
+      expect(dbUser.loginAttempts).toBe(2);
+      expect(response.status).toBe(400);
+    });
+
+    it('should block user if limit is reached', async () => {
+      const goodBackupCode = '92345-14812';
+      const user = await createUser({
+        email: 'bob@bob.com',
+        backupCodes: [goodBackupCode],
+        loginAttempts: 10,
+        lastLoginAttemptAt: new Date(),
+      });
+      await user.save();
+      const token = createTemporaryToken({ type: 'mfa', sub: user.id, jti: user.tempTokenId });
+      let response = await request(
+        'POST',
+        '/1/auth/mfa/verify',
+        { code: '123123' },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      expect(response.status).toBe(401);
+      expect(response.body.error.message).toBe('Too many attempts');
+    });
+  });
+
+  describe('POST /mfa/send-token', () => {
+    it('should trigger a token being sent', async () => {
+      const tokenId = generateTokenId();
+      const user = await createUser({
+        email: 'bob@bob.com',
+        mfaMethod: 'sms',
+        mfaSecret: generateSecret({
+          name: 'APP_TEST',
+          account: '',
+        }).secret,
+        mfaPhoneNumber: '123123123',
+        tempTokenId: tokenId,
+      });
+      const token = createTemporaryToken({ type: 'mfa', sub: user.id, jti: user.tempTokenId });
+      let response = await request(
+        'POST',
+        '/1/auth/mfa/send-token',
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      expect(response.status).toBe(204);
+    });
+  });
+
+  describe('POST /confirm-access', () => {
+    it('should allow users to confirm they own the account by enter their password', async () => {
+      const password = 'burgerfuntime';
+      const user = await createUser({
+        password,
+        accessConfirmedAt: new Date(Date.now() - 1000),
+      });
+
+      const response = await request(
+        'POST',
+        '/1/auth/confirm-access',
+        {
+          password,
+        },
+        { user }
+      );
+      expect(response.status).toBe(204);
+      const dbUser = await User.findById(user.id);
+      expect(dbUser.accessConfirmedAt.valueOf()).toBeGreaterThan(user.accessConfirmedAt.valueOf());
+    });
+
+    it('should block user if limit is reached', async () => {
+      const user = await createUser({
+        lastLoginAttemptAt: new Date(),
+        loginAttempts: 10,
+      });
+      let response = await request('POST', '/1/auth/confirm-access', { password: 'bad password' }, { user });
+      expect(response.status).toBe(401);
+      expect(response.body.error.message).toBe('Too many attempts');
     });
   });
 

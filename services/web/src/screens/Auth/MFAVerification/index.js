@@ -15,6 +15,7 @@ export default class Login extends React.Component {
   state = {
     error: null,
     loading: false,
+    code: '',
   };
 
   componentDidMount() {

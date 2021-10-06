@@ -158,7 +158,7 @@ router
     }
 
     if (!user.mfaPhoneNumber || !user.mfaSecret) {
-      ctx.throw(400, 'sms multi factor verification has not been configed correctly');
+      ctx.throw(400, 'sms multi factor verification has not been configured correctly');
     }
 
     await sms.sendMessage(
@@ -189,7 +189,7 @@ router
       if (!user) {
         ctx.throw(400, 'User does not exist');
       } else if (user.tempTokenId !== jwt.jti) {
-        ctx.throw(400, 'Token is invalid');
+        ctx.throw(400, 'Token is invalid (jti)');
       }
 
       if (!user.verifyLoginAttempts()) {
@@ -320,7 +320,7 @@ router
           object: user,
           user: user.id,
         });
-        ctx.throw(400, 'Token is invalid');
+        ctx.throw(400, 'Token is invalid (jti)');
       }
       user.password = password;
       user.tempTokenId = undefined;

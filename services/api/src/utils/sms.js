@@ -7,7 +7,14 @@ const TWILIO_AUTH_TOKEN = config.get('TWILIO_AUTH_TOKEN');
 const TWILIO_ACCOUNT_SID = config.get('TWILIO_ACCOUNT_SID');
 const TWILIO_MESSAGING_SERVICE_SID = config.get('TWILIO_MESSAGING_SERVICE_SID');
 
+const ENV_NAME = config.get('ENV_NAME');
+
 async function sendMessage(to, body, options = { validityPeriod: 10 }) {
+  if (ENV_NAME === 'test') {
+    logger.debug(`Sending sms to ${to}`);
+    return;
+  }
+
   const params = new URLSearchParams();
   params.append('To', to);
   params.append('MessagingServiceSid', TWILIO_MESSAGING_SERVICE_SID);
