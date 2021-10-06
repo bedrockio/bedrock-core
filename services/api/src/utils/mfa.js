@@ -11,8 +11,8 @@ async function requireChallenge(ctx, user) {
 
 function generateSecret(options) {
   const config = {
-    name: encodeURIComponent(options?.name ?? 'App').toLocaleLowerCase(),
-    account: encodeURIComponent(options?.account ? `:${options.account}` : '').toLocaleLowerCase(),
+    name: encodeURIComponent(options?.name ?? 'App').toLowerCase(),
+    account: encodeURIComponent(options?.account ? `:${options.account}` : '').toLowerCase(),
   };
 
   const bin = crypto.randomBytes(20);

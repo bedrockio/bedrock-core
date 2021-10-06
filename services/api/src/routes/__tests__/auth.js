@@ -152,7 +152,6 @@ describe('/1/auth', () => {
   describe('POST /mfa/verify', () => {
     it('should verify mfa token', async () => {
       const user = await createUser({
-        email: 'bob@bob.com',
         mfaMethod: 'otp',
         tempTokenId: generateTokenId(),
       });
@@ -195,7 +194,6 @@ describe('/1/auth', () => {
 
     it('should failed with bad code', async () => {
       const user = await createUser({
-        email: 'bob@bob.com',
         mfaMethod: 'otp',
         tempTokenId: generateTokenId(),
       });
@@ -218,9 +216,7 @@ describe('/1/auth', () => {
 
     it('should failed with bad backup code', async () => {
       const badBackupCode = '12345-16123';
-      const user = await createUser({
-        email: 'bob@bob.com',
-      });
+      const user = await createUser({});
       await user.save();
       const token = createTemporaryToken({ type: 'mfa', sub: user.id, jti: user.tempTokenId });
       const response = await request(
@@ -236,7 +232,6 @@ describe('/1/auth', () => {
     it('should increase login attempts', async () => {
       const goodBackupCode = '92345-14812';
       const user = await createUser({
-        email: 'bob@bob.com',
         backupCodes: [goodBackupCode],
         loginAttempts: 1,
       });
@@ -256,7 +251,6 @@ describe('/1/auth', () => {
     it('should block user if limit is reached', async () => {
       const goodBackupCode = '92345-14812';
       const user = await createUser({
-        email: 'bob@bob.com',
         backupCodes: [goodBackupCode],
         loginAttempts: 10,
         lastLoginAttemptAt: new Date(),
@@ -278,7 +272,6 @@ describe('/1/auth', () => {
     it('should trigger a token being sent', async () => {
       const tokenId = generateTokenId();
       const user = await createUser({
-        email: 'bob@bob.com',
         mfaMethod: 'sms',
         mfaSecret: generateSecret({
           name: 'APP_TEST',
