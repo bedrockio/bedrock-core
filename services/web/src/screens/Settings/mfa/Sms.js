@@ -33,6 +33,7 @@ export default class Sms extends React.Component {
     const { countryCode, phoneNumber } = this.state;
     this.setState({
       smsSent: false,
+      configError: undefined,
     });
     try {
       const { data } = await request({
@@ -66,6 +67,7 @@ export default class Sms extends React.Component {
     this.setState({
       loading: true,
       touched: true,
+      error: undefined,
     });
 
     try {
@@ -75,7 +77,6 @@ export default class Sms extends React.Component {
         body: {
           code: this.state.code,
           secret: this.state.secret,
-          phoneNumber: `+${countryCode}${phoneNumber}`,
           method: 'sms',
         },
       });
@@ -176,7 +177,8 @@ export default class Sms extends React.Component {
             <Form
               id="authenticator-form"
               onSubmit={this.onVerify}
-              error={touched && !!error}>
+              error={touched && !!error}
+            >
               {error && <Message error content={error.message} />}
               <Form.Input
                 value={code}
