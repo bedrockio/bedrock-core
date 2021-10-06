@@ -1,7 +1,7 @@
 import React from 'react';
 import { Segment, Message, Grid } from 'semantic';
 import { request } from 'utils/api';
-import { screen } from 'helpers';
+import screen from 'helpers/screen';
 import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
 import Form from './Form';

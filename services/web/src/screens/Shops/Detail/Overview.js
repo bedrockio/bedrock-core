@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table, Header, Divider } from 'semantic';
-import { screen } from 'helpers';
+import screen from 'helpers/screen';
 import Menu from './Menu';
 
 // --- Generator: overview-imports

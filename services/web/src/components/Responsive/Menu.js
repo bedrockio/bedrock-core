@@ -4,7 +4,6 @@ import Desktop from './Desktop';
 import Mobile from './Mobile';
 
 export default class ResponsiveMenu extends React.Component {
-
   render() {
     const { title, contextRef, children } = this.props;
     return (

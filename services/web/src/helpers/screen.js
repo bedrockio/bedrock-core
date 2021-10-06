@@ -4,20 +4,22 @@ import { Helmet } from 'react-helmet-async';
 import { APP_NAME } from 'utils/env';
 import bem from 'helpers/bem';
 
-const layouts = {};
+import DashboardLayout from 'layouts/Dashboard';
+import PortalLayout from 'layouts/Portal';
 
-export function useLayout(Component, name) {
-  layouts[name] = Component;
-}
+const layouts = {
+  portal: PortalLayout,
+  dashboard: DashboardLayout,
+};
 
 export default function (Component) {
   const title = startCase(Component.name.replace(/Screen$/, ''));
 
   Component = bem(Component);
+  const Layout = layouts[Component.layout || 'dashboard'] || nullLayout;
 
   return class Screen extends React.PureComponent {
     render() {
-      const Layout = layouts[Component.layout || 'Dashboard'] || nullLayout;
       return (
         <React.Fragment>
           <Helmet>

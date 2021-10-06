@@ -1,5 +1,5 @@
 import React from 'react';
-import { screen } from 'helpers';
+import screen from 'helpers/screen';
 import { Header } from 'semantic';
 import { Breadcrumbs } from 'components';
 

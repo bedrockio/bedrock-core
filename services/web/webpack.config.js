@@ -42,6 +42,7 @@ module.exports = {
     publicPath: '/',
     filename: 'assets/[name].[contenthash].js',
     assetModuleFilename: 'assets/[contenthash][ext]',
+    clean: true,
   },
   resolve: {
     alias: {
@@ -54,6 +55,9 @@ module.exports = {
     fallback: {
       path: false,
     },
+    // Webpack's chooses "browser" first by default which can increase
+    // bundle sizes as this is often pre-bundled code.
+    mainFields: ['module', 'browser', 'main'],
   },
   module: {
     rules: [

@@ -7,11 +7,7 @@ import { Layout } from './Layout';
 export default class Breadcrumbs extends React.Component {
   getPath() {
     const { link, path } = this.props;
-    if (link) {
-      return [link];
-    } else {
-      return path;
-    }
+    return link ? [link] : path;
   }
 
   render() {

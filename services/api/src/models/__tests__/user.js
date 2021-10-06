@@ -29,7 +29,6 @@ describe('User', () => {
       expect(data._password).toBeUndefined();
       expect(data.hashedPassword).toBeUndefined();
     });
-
   });
 
   describe('validation', () => {
@@ -58,5 +57,4 @@ describe('User', () => {
       expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);
     });
   });
-
 });

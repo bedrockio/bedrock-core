@@ -35,10 +35,11 @@ export default class Confirm extends React.Component {
   };
 
   render() {
-    const { negative, confirmButton, ...rest } = this.props;
+    const { size, negative, confirmButton, ...rest } = this.props;
     return (
       <SemanticConfirm
         {...rest}
+        size={size}
         open={this.state.open}
         onOpen={this.onOpen}
         onCancel={this.onCancel}
@@ -53,10 +54,12 @@ export default class Confirm extends React.Component {
 
 Confirm.propTypes = {
   ...Confirm.propTypes,
+  size: PropTypes.string,
   negative: PropTypes.bool,
 };
 
 Confirm.defaultProps = {
+  size: 'tiny',
   confirmButton: 'OK',
   negative: false,
   onCancel: () => {},

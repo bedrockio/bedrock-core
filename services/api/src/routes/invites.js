@@ -17,7 +17,7 @@ function getToken(invite) {
 function sendInvite(sender, invite) {
   return sendTemplatedMail({
     to: invite.email,
-    subject: `${sender.fullName} has invited you to join {{appName}}`,
+    subject: `${sender.name} has invited you to join {{appName}}`,
     template: 'invite.md',
     sender,
     token: getToken(invite),
@@ -38,19 +38,13 @@ router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
   .use(requirePermissions({ endpoint: 'users', permission: 'read', scope: 'global' }))
-  .post(
-    '/search',
-    validateBody(
-      Invite.getSearchValidation(),
-    ),
-    async (ctx) => {
-      const { data, meta } = await Invite.search(ctx.request.body);
-      ctx.body = {
-        data,
-        meta,
-      };
-    }
-  )
+  .post('/search', validateBody(Invite.getSearchValidation()), async (ctx) => {
+    const { data, meta } = await Invite.search(ctx.request.body);
+    ctx.body = {
+      data,
+      meta,
+    };
+  })
   .use(requirePermissions({ endpoint: 'users', permission: 'write', scope: 'global' }))
   .post(
     '/',

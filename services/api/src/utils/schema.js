@@ -77,6 +77,7 @@ function createSchema(definition, options = {}) {
       stripFields: RESERVED_FIELDS,
       allowEmpty: true,
       skipRequired: true,
+      allowMultiple: true,
       unwindArrayFields: true,
       appendSchema: {
         ...searchValidation(searchOptions),

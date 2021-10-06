@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Switch, Route } from 'react-router-dom';
+import { Protected } from 'helpers/routes';
 import { Loader } from 'semantic';
 import { request } from 'utils/api';
 
@@ -71,13 +72,14 @@ export default class OrganizationDetail extends React.Component {
 
     return (
       <Switch>
-        <Route
+        <Protected
           exact
           path="/organizations/:id"
-          render={(props) => (
-            <Overview {...props} {...this.state} onSave={this.onSave} />
-          )}
+          allowed={Overview}
+          onSave={this.onSave}
+          {...this.state}
         />
+        <Route component={NotFound} />
       </Switch>
     );
   }

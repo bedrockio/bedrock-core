@@ -3,7 +3,7 @@ import { request } from 'utils/api';
 import { Segment, Grid, Form, Message } from 'semantic';
 
 import { withSession } from 'stores';
-import { screen } from 'helpers';
+import screen from 'helpers/screen';
 
 import PageCenter from 'components/PageCenter';
 import Logo from 'components/LogoTitle';

@@ -2,7 +2,7 @@ import React from 'react';
 import { request } from 'utils/api';
 import { Segment, Form, Header, Message } from 'semantic';
 import { withSession } from 'stores';
-import { screen } from 'helpers';
+import screen from 'helpers/screen';
 
 import PageCenter from 'components/PageCenter';
 import Logo from 'components/LogoTitle';
@@ -129,7 +129,8 @@ export default class Login extends React.Component {
                     It may take a minute to arrive.{' '}
                     <a
                       onClick={this.triggerToken}
-                      style={{ cursor: 'pointer' }}>
+                      style={{ cursor: 'pointer' }}
+                    >
                       Send again?
                     </a>
                   </p>

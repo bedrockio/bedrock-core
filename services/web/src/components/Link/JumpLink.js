@@ -6,11 +6,11 @@ import './jump-link.less';
 class JumpTarget extends React.Component {
   onScrollEnter = () => {
     this.toggleLinkActive(true);
-  }
+  };
 
   onScrollLeave = () => {
     this.toggleLinkActive(false);
-  }
+  };
 
   toggleLinkActive = (toggle) => {
     const { id } = this.props;
@@ -18,7 +18,7 @@ class JumpTarget extends React.Component {
     for (let el of els) {
       el.classList.toggle('jump-link--active', toggle);
     }
-  }
+  };
 
   render() {
     const { id, children } = this.props;

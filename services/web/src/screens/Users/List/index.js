@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Table, Button, Message, Label, Confirm } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
-import { screen } from 'helpers';
+import screen from 'helpers/screen';
 import { HelpTip, Breadcrumbs, SearchProvider, Layout } from 'components';
 import { formatRoles } from 'utils/permissions';
 
@@ -124,9 +124,7 @@ export default class UserList extends React.Component {
                       return (
                         <Table.Row key={user.id}>
                           <Table.Cell>
-                            <Link to={`/users/${user.id}`}>
-                              {user.fullName}
-                            </Link>
+                            <Link to={`/users/${user.id}`}>{user.name}</Link>
                           </Table.Cell>
                           <Table.Cell>{user.email}</Table.Cell>
                           <Table.Cell>
@@ -154,7 +152,7 @@ export default class UserList extends React.Component {
                             <Confirm
                               negative
                               confirmButton="Delete"
-                              header={`Are you sure you want to delete "${user.fullName}"?`}
+                              header={`Are you sure you want to delete "${user.name}"?`}
                               content="All data will be permanently deleted"
                               trigger={<Button basic icon="trash" />}
                               onConfirm={async () => {

@@ -1,11 +1,11 @@
 const Router = require('@koa/router');
 const Joi = require('joi');
+const config = require('@bedrockio/config');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { createAuthToken, createTemporaryToken, generateTokenId } = require('../utils/tokens');
 const { sendTemplatedMail } = require('../utils/mailer');
 const { User, Invite, AuditEntry } = require('../models');
-const config = require('@bedrockio/config');
 
 const mfa = require('../utils/mfa');
 const sms = require('../utils/sms');
@@ -44,7 +44,7 @@ router
       });
 
       await sendTemplatedMail({
-        to: user.fullName,
+        to: user.name,
         template: 'welcome.md',
         subject: 'Welcome to {{appName}}',
       });
@@ -291,7 +291,7 @@ router
       await user.updateOne({ tempTokenId: tokenId });
 
       await sendTemplatedMail({
-        to: [user.fullName, email].join(' '),
+        to: [user.name, email].join(' '),
         template: 'reset-password.md',
         subject: 'Password Reset Request',
         token,

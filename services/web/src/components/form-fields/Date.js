@@ -36,6 +36,10 @@ export default class DateField extends React.Component {
     }
   };
 
+  formatDate(date) {
+    return formatDate(date);
+  }
+
   render() {
     const { time, required, label, placeholder, clearable, id } = this.props;
     let { value: date } = this.props;
@@ -51,7 +55,7 @@ export default class DateField extends React.Component {
               id={id}
               value={date}
               placeholder={placeholder}
-              formatDate={formatDate}
+              formatDate={this.formatDate}
               dayPickerProps={{ selectedDays: date }}
               style={{
                 width: '140px',

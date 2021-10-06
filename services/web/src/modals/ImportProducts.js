@@ -1,7 +1,7 @@
 import React from 'react';
 import Dropzone from 'react-dropzone';
 import { request } from 'utils/api';
-import { modal } from 'helpers';
+import modal from 'helpers/modal';
 
 import { Modal, Icon, Progress, Table, Button, Message } from 'semantic';
 import { processFile } from 'utils/csv';

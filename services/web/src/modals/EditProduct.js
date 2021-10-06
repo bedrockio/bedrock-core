@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, Form, Button, Message } from 'semantic';
 import { request } from 'utils/api';
 import AutoFocus from 'components/AutoFocus';
-import { modal } from 'helpers';
+import modal from 'helpers/modal';
 
 // --- Generator: imports
 import DateField from 'components/form-fields/Date';

@@ -29,7 +29,6 @@ export default ({ product, onSave }) => {
           as={NavLink}
           exact
         />
-
       </Menu>
     </React.Fragment>
   );

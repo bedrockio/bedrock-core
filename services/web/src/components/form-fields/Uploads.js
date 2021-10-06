@@ -13,8 +13,9 @@ const MIME_TYPES = {
   pdf: 'application/pdf',
   csv: 'text/csv,application/vnd.ms-excel',
   zip: 'application/zip,application/octet-stream',
-  'image/pdf': 'image/*,application/pdf',
 };
+
+const MEDIA_TYPES = ['image', 'video', 'audio'];
 
 const ICONS = {
   image: 'file-image',
@@ -24,7 +25,6 @@ const ICONS = {
   pdf: 'file-pdf',
   csv: 'file-excel',
   zip: 'file-archive',
-  'image/pdf': 'file-image',
 };
 
 export default class Uploads extends React.Component {
@@ -32,7 +32,6 @@ export default class Uploads extends React.Component {
     super(props);
     this.state = {
       loading: false,
-      error: null,
     };
   }
 
@@ -45,11 +44,11 @@ export default class Uploads extends React.Component {
         acceptedFiles = acceptedFiles.slice(0, 1);
       }
       if (rejectedFiles.length) {
-        throw new Error(`File must be of ${this.props.type} type.`);
+        const [err] = rejectedFiles[0].errors;
+        throw new Error(err.message);
       }
       this.setState({
         loading: true,
-        error: null,
       });
       const { data } = await request({
         method: 'POST',
@@ -73,7 +72,6 @@ export default class Uploads extends React.Component {
       }
     } catch (error) {
       this.setState({
-        error,
         loading: false,
       });
       this.props.onError(error);
@@ -117,7 +115,7 @@ export default class Uploads extends React.Component {
     }
   }
 
-  getVisualStyles() {
+  getMediaStyles() {
     return {
       objectFit: 'cover',
       width: '100%',
@@ -125,20 +123,62 @@ export default class Uploads extends React.Component {
     };
   }
 
+  // Type helpers
+
+  getTypes() {
+    return this.props.types || [this.props.type];
+  }
+
+  getTypeForUpload(upload) {
+    let type;
+    const types = this.getTypes();
+    if (upload.mimeType) {
+      const [base, subtype] = upload.mimeType.split('/');
+      type = Object.keys(MIME_TYPES).find((key) => {
+        return key === base || key === subtype;
+      });
+    }
+    if (!type && types.length === 1) {
+      type = types[0];
+    }
+    if (!type) {
+      throw new Error(`Could not determine file type for ${upload}.`);
+    }
+    return type;
+  }
+
+  getMimeTypes() {
+    return this.getTypes()
+      .map((type) => {
+        return MIME_TYPES[type];
+      })
+      .join(',');
+  }
+
+  hasMedia() {
+    const types = this.getTypes();
+    return types.some((type) => {
+      return MEDIA_TYPES.includes(type);
+    });
+  }
+
   render() {
-    const { required, label, type } = this.props;
+    const { required, label } = this.props;
     const { error, loading } = this.state;
     const uploads = this.getUploads();
     return (
       <Form.Field required={required}>
         {label && <label>{label}</label>}
-        {error && <Message error content={error.message} />}
         {uploads.length > 0 &&
-          (type === 'image' || type === 'video' || type === 'audio' ? (
+          (this.hasMedia() ? (
             <Card.Group itemsPerRow={4}>
               {uploads.map((upload) => (
-                <Card key={this.getUploadId(upload)}>
-                  {this.renderUpload(upload, type)}
+                <Card
+                  key={this.getUploadId(upload)}
+                  style={{
+                    background: '#888',
+                  }}>
+                  {this.renderUpload(upload)}
                   <Icon
                     fitted
                     name="delete"
@@ -166,7 +206,7 @@ export default class Uploads extends React.Component {
             </Label.Group>
           ))}
         <Dropzone
-          accept={MIME_TYPES[type]}
+          accept={this.getMimeTypes()}
           maxSize={5 * 1024 * 1024}
           onDrop={this.onDrop}>
           {({ getRootProps, getInputProps, isDragActive }) => {
@@ -210,12 +250,13 @@ export default class Uploads extends React.Component {
     );
   }
 
-  renderUpload(upload, type) {
+  renderUpload(upload) {
     const src = urlForUpload(upload);
+    const type = this.getTypeForUpload(upload);
     if (type === 'image') {
-      return <Image src={src} style={this.getVisualStyles()} />;
+      return <Image src={src} style={this.getMediaStyles()} />;
     } else if (type === 'video') {
-      return <video src={src} style={this.getVisualStyles()} controls />;
+      return <video src={src} style={this.getMediaStyles()} controls />;
     } else if (type === 'audio') {
       return <audio src={src} controls />;
     }
@@ -223,12 +264,13 @@ export default class Uploads extends React.Component {
 
   renderIconForType() {
     const { type } = this.props;
-    return <Icon name={ICONS[type]} />;
+    return <Icon name={ICONS[type] || 'file'} />;
   }
 }
 
 Uploads.propTypes = {
   type: PropTypes.oneOf(Object.keys(MIME_TYPES)),
+  types: PropTypes.arrayOf(PropTypes.oneOf(Object.keys(MIME_TYPES))),
   onChange: PropTypes.func.isRequired,
   onError: PropTypes.func,
 };

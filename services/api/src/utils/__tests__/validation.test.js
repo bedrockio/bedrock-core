@@ -188,6 +188,21 @@ describe('getJoiSchema', () => {
       assertFail(schema, { name: 'baz' });
     });
 
+    it('should optionally allow an array on an enum field', () => {
+      const schema = getJoiSchema(
+        {
+          name: {
+            type: String,
+            enum: ['foo', 'bar'],
+          },
+        },
+        {
+          allowMultiple: true,
+        }
+      );
+      assertPass(schema, { name: ['foo', 'bar'] });
+    });
+
     it('should validate minimum length', () => {
       const schema = getJoiSchema({
         name: {
@@ -661,7 +676,7 @@ describe('getJoiSchema', () => {
 
     it('should not validate mixed type', () => {
       const schema = getJoiSchema({
-        counts: 'Mixed'
+        counts: 'Mixed',
       });
       assertPass(schema, { counts: { foo: 'bar' } });
       assertPass(schema, { counts: { name: 'foo' } });
@@ -670,8 +685,8 @@ describe('getJoiSchema', () => {
     it('should not validate explicit mixed type', () => {
       const schema = getJoiSchema({
         counts: {
-          type: 'Mixed'
-        }
+          type: 'Mixed',
+        },
       });
       assertPass(schema, { counts: { foo: 'bar' } });
       assertPass(schema, { counts: { name: 'foo' } });

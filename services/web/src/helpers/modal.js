@@ -26,6 +26,13 @@ export default function modal(Component) {
       if (this.props.onOpen) this.props.onOpen();
     };
 
+    trapNativeEvents = (evt) => {
+      // Due to react event delegation semantic can bug out by
+      // catching events outside modals event though they are not
+      // DOM children, so stop propagation on all events to prevent this.
+      evt.stopPropagation();
+    };
+
     render() {
       const { open } = this.state;
       const {
@@ -42,6 +49,12 @@ export default function modal(Component) {
 
       return (
         <Modal
+          onClick={this.trapNativeEvents}
+          onFocus={this.trapNativeEvents}
+          onBlur={this.trapNativeEvents}
+          onMouseDown={this.trapNativeEvents}
+          onMouseUp={this.trapNativeEvents}
+          onKeyDown={this.trapNativeEvents}
           closeIcon={closeIcon}
           closeOnDimmerClick={closeOnDimmerClick}
           closeOnDocumentClick={closeOnDocumentClick}

@@ -3,7 +3,7 @@ import { Form, Modal, Message, Button } from 'semantic';
 import { request } from 'utils/api';
 import AutoFocus from 'components/AutoFocus';
 import Roles from 'components/form-fields/Roles';
-import { modal } from 'helpers';
+import modal from 'helpers/modal';
 
 @modal
 export default class EditUser extends React.Component {
@@ -69,7 +69,7 @@ export default class EditUser extends React.Component {
     return (
       <>
         <Modal.Header>
-          {this.isUpdate() ? `Edit "${user.fullName}"` : 'New User'}
+          {this.isUpdate() ? `Edit "${user.name}"` : 'New User'}
         </Modal.Header>
         <Modal.Content>
           <AutoFocus>

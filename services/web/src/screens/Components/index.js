@@ -22,11 +22,11 @@ import {
   Table,
   TextArea,
 } from 'semantic';
-import { screen } from 'helpers';
+import screen from 'helpers/screen';
 import { Layout } from 'components/Layout';
 import Breadcrumbs from 'components/Breadcrumbs';
 import { Menu as ResponsiveMenu } from 'components/Responsive';
-import { JumpLink } from 'components/Link';
+import { JumpLink, ExternalLink } from 'components/Link';
 
 const options = [
   { key: 1, text: 'Choice 1', value: 1 },
@@ -43,9 +43,9 @@ const options2 = [
 
 @screen
 export default class ComponentsScreen extends React.Component {
-  contextRef = React.createRef();
+  static layout = 'portal';
 
-  static layout = 'Portal';
+  contextRef = React.createRef();
 
   render() {
     return (
@@ -60,7 +60,9 @@ export default class ComponentsScreen extends React.Component {
         <Divider hidden />
         <Layout horizontal top stackable>
           <Layout.Group size="200px" fixed>
-            <ResponsiveMenu contextRef={this.contextRef} title="Components Menu">
+            <ResponsiveMenu
+              contextRef={this.contextRef}
+              title="Components Menu">
               <JumpLink className="item" to="buttons">
                 Buttons
               </JumpLink>
@@ -108,6 +110,9 @@ export default class ComponentsScreen extends React.Component {
               </JumpLink>
               <JumpLink className="item" to="progress">
                 Progress
+              </JumpLink>
+              <JumpLink className="item" to="external-link">
+                ExternalLink
               </JumpLink>
             </ResponsiveMenu>
           </Layout.Group>
@@ -195,11 +200,18 @@ export default class ComponentsScreen extends React.Component {
                     </Form.Field>
 
                     <Form.Field>
-                      <Input placeholder="Placeholder" label="Label" type="text" />
+                      <Input
+                        placeholder="Placeholder"
+                        label="Label"
+                        type="text"
+                      />
                     </Form.Field>
 
                     <Form.Field>
-                      <Input labelPosition="right" type="text" placeholder="Amount">
+                      <Input
+                        labelPosition="right"
+                        type="text"
+                        placeholder="Amount">
                         <Label basic>$</Label>
                         <input />
                         <Label>.00</Label>
@@ -231,12 +243,20 @@ export default class ComponentsScreen extends React.Component {
                         value="1"
                         checked
                       />
-                      <Form.Radio label="Radio 2" id="2" name="radio" value="2" />
+                      <Form.Radio
+                        label="Radio 2"
+                        id="2"
+                        name="radio"
+                        value="2"
+                      />
                     </Form.Field>
 
                     <Header size="medium">Text Area</Header>
                     <Form.Field>
-                      <TextArea label="Label" placeholder="Placeholder text..." />
+                      <TextArea
+                        label="Label"
+                        placeholder="Placeholder text..."
+                      />
                     </Form.Field>
                   </Form>
                 </JumpLink.Target>
@@ -253,7 +273,11 @@ export default class ComponentsScreen extends React.Component {
 
                   <Header size="medium">Variations</Header>
                   <Layout horizontal>
-                    <Dropdown placeholder="Selection" selection options={options} />
+                    <Dropdown
+                      placeholder="Selection"
+                      selection
+                      options={options}
+                    />
                     <div
                       style={{
                         display: 'inline-block',
@@ -698,6 +722,14 @@ export default class ComponentsScreen extends React.Component {
                   <Header size="medium">Divider with Text</Header>
 
                   <Divider horizontal>OR</Divider>
+
+                  <Header size="medium">Vertical Divider</Header>
+
+                  <Layout horizontal center>
+                    <Layout.Group>One</Layout.Group>
+                    <Divider vertical>AND</Divider>
+                    <Layout.Group>Two</Layout.Group>
+                  </Layout>
                 </JumpLink.Target>
 
                 <JumpLink.Target id="statistic">
@@ -773,6 +805,24 @@ export default class ComponentsScreen extends React.Component {
                   <Progress percent={32} color="purple" />
                   <b>Tiny Size</b>
                   <Progress percent={78} color="blue" size="tiny" />
+                </JumpLink.Target>
+
+                <JumpLink.Target id="external-link">
+                  <Header size="large">ExternalLink</Header>
+                  <Header size="medium">Variations</Header>
+                  <b>Without icon</b>
+                  <Divider hidden />
+                  <div>
+                    <ExternalLink href="/">Link without icon</ExternalLink>
+                  </div>
+                  <Divider hidden />
+                  <b>With Icon</b>
+                  <Divider hidden />
+                  <div>
+                    <ExternalLink href="/" icon>
+                      Link with icon
+                    </ExternalLink>
+                  </div>
                 </JumpLink.Target>
               </div>
             </Ref>

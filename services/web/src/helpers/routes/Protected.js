@@ -1,10 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Route, Redirect } from 'react-router-dom';
-import { withSession } from 'stores';
 import AuthSwitch from './AuthSwitch';
 
-@withSession
 export default class Protected extends React.Component {
   render() {
     const {

@@ -1,12 +1,25 @@
 import React from 'react';
+import { pick, omit } from 'lodash';
 import PropTypes from 'prop-types';
 import { Route, Link } from 'react-router-dom';
 import { Loader, Message } from 'semantic';
 import { withSession } from 'stores';
 import ErrorScreen from 'screens/Error';
 
-@withSession
-export default class AuthSwitch extends React.Component {
+// Need to hard-code these as react-router
+// strips them in production 👎
+const ROUTE_PROP_TYPES = [
+  'children',
+  'component',
+  'exact',
+  'location',
+  'path',
+  'render',
+  'sensitive',
+  'strict',
+];
+
+class AuthSwitch extends React.Component {
   hasAccess() {
     const { admin, roles } = this.props;
     const { user, isAdmin, hasRoles } = this.context;
@@ -25,7 +38,6 @@ export default class AuthSwitch extends React.Component {
     const {
       loggedIn: LoggedInComponent,
       loggedOut: LoggedOutComponent,
-      ...rest
     } = this.props;
     if (loading) {
       return <Loader active>Loading</Loader>;
@@ -41,14 +53,16 @@ export default class AuthSwitch extends React.Component {
         </ErrorScreen>
       );
     }
+    const routeProps = pick(this.props, ROUTE_PROP_TYPES);
+    const passedProps = omit(this.props, Object.keys(AuthSwitch.propTypes));
     return (
       <Route
-        {...rest}
+        {...routeProps}
         render={(props) => {
           return this.hasAccess() ? (
-            <LoggedInComponent {...props} />
+            <LoggedInComponent {...props} {...passedProps} />
           ) : (
-            <LoggedOutComponent {...props} />
+            <LoggedOutComponent {...props} {...passedProps} />
           );
         }}
       />
@@ -61,10 +75,11 @@ AuthSwitch.propTypes = {
   roles: PropTypes.array,
   loggedIn: PropTypes.elementType.isRequired,
   loggedOut: PropTypes.elementType.isRequired,
-  ...Route.propTypes,
 };
 
 AuthSwitch.defaultProps = {
   admin: false,
   roles: [],
 };
+
+export default withSession(AuthSwitch);

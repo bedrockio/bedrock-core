@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Message, Button, Segment, Header } from 'semantic';
 import { request } from 'utils/api';
-import { screen } from 'helpers';
+import screen from 'helpers/screen';
 import allCountries from 'utils/countries';
 
 import Finalize from './Finalize';

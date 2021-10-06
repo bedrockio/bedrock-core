@@ -1,6 +1,6 @@
 import React from 'react';
 import { Segment, Message, Form, Button, Divider } from 'semantic';
-import { screen } from 'helpers';
+import screen from 'helpers/screen';
 import Menu from './Menu';
 import { request } from 'utils/api';
 import { pick } from 'lodash';

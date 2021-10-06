@@ -10,15 +10,6 @@ import { SessionProvider } from 'stores';
 
 import 'utils/sentry';
 
-// Layouts
-
-import { useLayout } from 'helpers/screen';
-import DashboardLayout from 'layouts/Dashboard';
-import PortalLayout from 'layouts/Portal';
-
-useLayout(DashboardLayout, 'Dashboard');
-useLayout(PortalLayout, 'Portal');
-
 // Icons
 
 import { Icon } from 'semantic';

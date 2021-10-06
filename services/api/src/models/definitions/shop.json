@@ -27,14 +27,29 @@
       "type": "String"
     },
     "address": {
-      "line1": { "type": "String" },
-      "line2": { "type": "String" },
-      "city": { "type": "String" },
-      "postalCode": { "type": "String" },
-      "region": { "type": "String" },
-      "countryCode": { "type": "String" },
+      "line1": {
+        "type": "String"
+      },
+      "line2": {
+        "type": "String"
+      },
+      "city": {
+        "type": "String"
+      },
+      "postalCode": {
+        "type": "String"
+      },
+      "region": {
+        "type": "String"
+      },
+      "countryCode": {
+        "type": "String"
+      },
       "geometry": {
-        "type": { "type": "String", "default": "Point" },
+        "type": {
+          "type": "String",
+          "default": "Point"
+        },
         "coordinates": {
           "type": "Array",
           "default": []

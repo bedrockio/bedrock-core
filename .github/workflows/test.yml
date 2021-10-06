@@ -32,7 +32,7 @@ jobs:
         run: yarn install
 
       - name: Run Lint
-        run: yarn lint
+        run: yarn lint .
 
   api:
     runs-on: ubuntu-latest
@@ -66,7 +66,7 @@ jobs:
         run: yarn install
 
       - name: Run Lint
-        run: yarn lint || true
+        run: yarn lint . || true
 
       - name: Run Tests
         run: yarn test --silent

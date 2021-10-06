@@ -11,12 +11,9 @@ export default ({ user, match, onSave }) => {
   const { id } = match.params;
   return (
     <React.Fragment>
-      <Breadcrumbs
-        link={<Link to="/users">Users</Link>}
-        active={user.fullName}
-      />
+      <Breadcrumbs link={<Link to="/users">Users</Link>} active={user.name} />
       <Layout horizontal center spread>
-        <h1 style={{ textTransform: 'capitalize' }}>{user.fullName} User</h1>
+        <h1 style={{ textTransform: 'capitalize' }}>{user.name} User</h1>
         <Layout.Group>
           <EditUser
             user={user}

@@ -2,7 +2,7 @@ import React from 'react';
 import { Segment, Message } from 'semantic';
 import { withSession } from 'stores';
 import { request } from 'utils/api';
-import { screen } from 'helpers';
+import screen from 'helpers/screen';
 
 import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';

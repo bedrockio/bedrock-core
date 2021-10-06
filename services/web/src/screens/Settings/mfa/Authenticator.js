@@ -12,7 +12,7 @@ import { request } from 'utils/api';
 import QACode from 'components/QRCode';
 import { ExternalLink } from 'components/Link';
 
-import { screen } from 'helpers';
+import screen from 'helpers/screen';
 import PageCenter from 'components/PageCenter';
 import { Link } from 'react-router-dom';
 import LogoTitle from 'components/LogoTitle';

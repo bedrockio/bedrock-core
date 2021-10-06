@@ -1,4 +1,5 @@
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import {
   SessionProvider,
   withSession,
@@ -35,15 +36,23 @@ class MyComponent extends React.Component {
   }
 }
 
+function wrapProviders(Component) {
+  return () => {
+    return (
+      <MemoryRouter>
+        <SessionProvider>
+          <Component />
+        </SessionProvider>
+      </MemoryRouter>
+    );
+  };
+}
+
 describe('withSession', () => {
-  const Component = withSession(MyComponent);
+  const App = wrapProviders(withSession(MyComponent));
 
   it('should be anonymous when logged out', async () => {
-    const { container } = await render(
-      <SessionProvider>
-        <Component />
-      </SessionProvider>
-    );
+    const { container } = await render(<App />);
     await waitFor(() => {
       expect(container.textContent).toBe('Anonymous');
     });
@@ -51,11 +60,7 @@ describe('withSession', () => {
 
   it('should display user name', async () => {
     setToken('fake');
-    const { container } = await render(
-      <SessionProvider>
-        <Component />
-      </SessionProvider>
-    );
+    const { container } = await render(<App />);
     await waitFor(() => {
       expect(container.textContent).toBe('Bob');
     });
@@ -63,11 +68,7 @@ describe('withSession', () => {
 
   it('should set the last context as a snapshot', async () => {
     setToken('fake');
-    await render(
-      <SessionProvider>
-        <Component />
-      </SessionProvider>
-    );
+    await render(<App />);
     await waitFor(() => {
       expect(snapshot.user).toBe(null);
       expect(snapshot.loading).toBe(true);
@@ -76,14 +77,10 @@ describe('withSession', () => {
 });
 
 describe('withLoadedSession', () => {
-  const Component = withLoadedSession(MyComponent);
+  const App = wrapProviders(withLoadedSession(MyComponent));
 
   it('should be anonymous when logged out', async () => {
-    const { container } = await render(
-      <SessionProvider>
-        <Component />
-      </SessionProvider>
-    );
+    const { container } = await render(<App />);
     await waitFor(() => {
       expect(container.textContent).toBe('Anonymous');
     });
@@ -91,11 +88,7 @@ describe('withLoadedSession', () => {
 
   it('should display user name', async () => {
     setToken('fake');
-    const { container } = await render(
-      <SessionProvider>
-        <Component />
-      </SessionProvider>
-    );
+    const { container } = await render(<App />);
     await waitFor(() => {
       expect(container.textContent).toBe('Bob');
     });
@@ -103,17 +96,13 @@ describe('withLoadedSession', () => {
 });
 
 describe('useSession', () => {
-  const Component = () => {
+  const App = wrapProviders(() => {
     const { user } = useSession();
     return <div>{user?.name || 'Anonymous'}</div>;
-  };
+  });
 
   it('should be anonymous when logged out', async () => {
-    const { container } = await render(
-      <SessionProvider>
-        <Component />
-      </SessionProvider>
-    );
+    const { container } = await render(<App />);
     await waitFor(() => {
       expect(container.textContent).toBe('Anonymous');
     });
@@ -121,11 +110,7 @@ describe('useSession', () => {
 
   it('should display user name', async () => {
     setToken('fake');
-    const { container } = await render(
-      <SessionProvider>
-        <Component />
-      </SessionProvider>
-    );
+    const { container } = await render(<App />);
     await waitFor(() => {
       expect(container.textContent).toBe('Bob');
     });
