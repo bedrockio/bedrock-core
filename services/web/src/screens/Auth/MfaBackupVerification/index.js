@@ -124,10 +124,11 @@ export default class Login extends React.Component {
                 <a href={`mailto:${APP_SUPPORT_EMAIL}`}>{APP_SUPPORT_EMAIL}</a>{' '}
                 to start a manual verification process.
               </p>
-              <p>
-                <Link to="/login/verification">Back</Link>
-              </p>
+              <p></p>
             </Form>
+          </Segment>
+          <Segment secondary>
+            <Link to="/login/verification">Back to verification</Link>
           </Segment>
         </Segment.Group>
       </PageCenter>

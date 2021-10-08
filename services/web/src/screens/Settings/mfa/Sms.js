@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Message, Button, Segment, Header } from 'semantic';
+import { Form, Message, Button, Segment, Header, Divider } from 'semantic';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
 import allCountries from 'utils/countries';
@@ -8,6 +8,8 @@ import Finalize from './Finalize';
 import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
 import { Link } from 'react-router-dom';
+import ReactCodeInput from 'react-verification-code-input';
+import { Layout } from 'components';
 
 const countryCallingCodes = allCountries.map(({ nameEn, callingCode }) => ({
   value: callingCode,
@@ -174,23 +176,22 @@ export default class Sms extends React.Component {
               2. Enter the security code sent to your device
             </Header>
             <p> It may take a minute to arrive.</p>
-            <Form
-              id="authenticator-form"
-              onSubmit={this.onVerify}
-              error={touched && !!error}
-            >
-              {error && <Message error content={error.message} />}
-              <Form.Input
-                value={code}
-                disabled={!this.state.smsSent}
-                label="Enter the six-digit code sent to your phone"
-                required
-                placeholder="e.g. 423056"
-                type="text"
-                autoComplete="given-name"
-                onChange={(e, { value }) => this.setState({ code: value })}
+            <Divider hidden />
+            <Layout center>
+              <ReactCodeInput
+                className="verification-code"
+                type="number"
+                fields={6}
+                loading={loading}
+                onChange={(value) => this.setState({ code: value })}
+                onComplete={(value) => {
+                  this.setState({ code: value }, () => {
+                    this.onVerify();
+                  });
+                }}
               />
-            </Form>
+            </Layout>
+            <Divider hidden />
           </Segment>
           <Segment>
             <Button
@@ -198,6 +199,7 @@ export default class Sms extends React.Component {
               primary
               loading={loading}
               disabled={loading || code.length !== 6}
+              onClick={this.onVerify}
               content={'Verify'}
             />
             <Button

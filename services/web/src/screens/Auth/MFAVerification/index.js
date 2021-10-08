@@ -1,12 +1,15 @@
 import React from 'react';
 import { request } from 'utils/api';
-import { Segment, Form, Header, Message } from 'semantic';
+import { Segment, Form, Header, Message, Divider } from 'semantic';
 import { withSession } from 'stores';
 import screen from 'helpers/screen';
 
 import PageCenter from 'components/PageCenter';
 import Logo from 'components/LogoTitle';
 import { Link } from 'react-router-dom';
+import ReactCodeInput from 'react-verification-code-input';
+
+import { Layout } from 'components';
 
 @screen
 @withSession
@@ -100,58 +103,75 @@ export default class Login extends React.Component {
         <Logo title="Two-Step Verification" />
         <Segment.Group>
           <Segment padded>
-            <Form error={!!error} size="large" onSubmit={this.onSubmit}>
-              <Header>Two-factor Verification</Header>
-              {error && <Message error content={error.message} />}
-              {mfaSessionData.mfaMethod === 'otp' && (
-                <Form.Input
-                  value={this.state.code}
-                  onChange={(e, { value }) => this.setState({ code: value })}
-                  name="code"
-                  placeholder="Enter the security code displayed by your app."
-                />
-              )}
-              {mfaSessionData.mfaMethod === 'sms' && (
-                <>
-                  <p>
-                    For added security, please enter the code that has been sent
-                    to your phone number ending in{' '}
-                    {mfaSessionData.mfaPhoneNumber}
-                  </p>
-
-                  <Form.Input
-                    value={this.state.code}
-                    onChange={(e, { value }) => this.setState({ code: value })}
-                    name="code"
-                    placeholder="Enter the six-digit code sent to your phone"
+            <Header>Two-factor Verification</Header>
+            {error && <Message error content={error.message} />}
+            {mfaSessionData.mfaMethod === 'otp' && (
+              <React.Fragment>
+                <p>
+                  Enter the security code displayed by your authenticator app.
+                </p>
+                <Divider hidden />
+                <Layout center>
+                  <ReactCodeInput
+                    className="verification-code"
+                    type="number"
+                    fields={6}
+                    loading={loading}
+                    onChange={(value) => this.setState({ code: value })}
+                    onComplete={(value) => {
+                      this.setState({ code: value }, () => {
+                        this.onSubmit();
+                      });
+                    }}
                   />
+                </Layout>
+                <Divider hidden />
+              </React.Fragment>
+            )}
+            {mfaSessionData.mfaMethod === 'sms' && (
+              <>
+                <p>
+                  For added security, please enter the code that has been sent
+                  to your phone number ending in {mfaSessionData.mfaPhoneNumber}
+                </p>
+                <Divider hidden />
+                <Layout center>
+                  <ReactCodeInput
+                    className="verification-code"
+                    type="number"
+                    fields={6}
+                    loading={loading}
+                    onChange={(value) => this.setState({ code: value })}
+                    onComplete={(value) => {
+                      this.setState({ code: value }, () => {
+                        this.onSubmit();
+                      });
+                    }}
+                  />
+                </Layout>
+                <Divider hidden />
 
-                  <p>
-                    It may take a minute to arrive.{' '}
-                    <a
-                      onClick={this.triggerToken}
-                      style={{ cursor: 'pointer' }}>
-                      Send again?
-                    </a>
-                  </p>
-                </>
-              )}
-              <Form.Button
-                fluid
-                primary
-                size="large"
-                content="Sign In"
-                loading={loading}
-                disabled={loading}
-              />
-              <p>
-                Is this authentication method not working?{' '}
-                <Link to="/login/verification/backup">
-                  Use your backup codes
-                </Link>
-                .
-              </p>
-            </Form>
+                <p>
+                  It may take a minute to arrive.{' '}
+                  <a onClick={this.triggerToken} style={{ cursor: 'pointer' }}>
+                    Send again?
+                  </a>
+                </p>
+              </>
+            )}
+            <Form.Button
+              fluid
+              primary
+              size="large"
+              content="Sign In"
+              loading={loading}
+              disabled={loading}
+              onClick={this.onSubmit}
+            />
+          </Segment>
+          <Segment secondary>
+            Is this authentication method not working?{' '}
+            <Link to="/login/verification/backup">Use your backup codes</Link>.
           </Segment>
         </Segment.Group>
       </PageCenter>
