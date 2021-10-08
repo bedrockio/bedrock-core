@@ -2,7 +2,7 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "baseUrl": "./src",
-    "checkJs": true,
+    "checkJs": false,
     "jsx": "react-jsx"
   }
 }
