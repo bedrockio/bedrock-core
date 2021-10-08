@@ -3,6 +3,7 @@ import { request } from 'utils/api';
 import { Segment, Form, Header, Message } from 'semantic';
 import { withSession } from 'stores';
 import screen from 'helpers/screen';
+import { APP_SUPPORT_EMAIL } from 'utils/env';
 
 import PageCenter from 'components/PageCenter';
 import Logo from 'components/LogoTitle';
@@ -101,41 +102,15 @@ export default class Login extends React.Component {
         <Segment.Group>
           <Segment padded>
             <Form error={!!error} size="large" onSubmit={this.onSubmit}>
-              <Header>Two-factor Verification</Header>
+              <Header>Use Your Backup Codes</Header>
               {error && <Message error content={error.message} />}
-              {mfaSessionData.mfaMethod === 'otp' && (
-                <Form.Input
-                  value={this.state.code}
-                  onChange={(e, { value }) => this.setState({ code: value })}
-                  name="code"
-                  placeholder="Enter the security code displayed by your app."
-                />
-              )}
-              {mfaSessionData.mfaMethod === 'sms' && (
-                <>
-                  <p>
-                    For added security, please enter the code that has been sent
-                    to your phone number ending in{' '}
-                    {mfaSessionData.mfaPhoneNumber}
-                  </p>
-
-                  <Form.Input
-                    value={this.state.code}
-                    onChange={(e, { value }) => this.setState({ code: value })}
-                    name="code"
-                    placeholder="Enter the six-digit code sent to your phone"
-                  />
-
-                  <p>
-                    It may take a minute to arrive.{' '}
-                    <a
-                      onClick={this.triggerToken}
-                      style={{ cursor: 'pointer' }}>
-                      Send again?
-                    </a>
-                  </p>
-                </>
-              )}
+              <p>Please enter one of your unused backup verification codes:</p>
+              <Form.Input
+                value={this.state.code}
+                onChange={(e, { value }) => this.setState({ code: value })}
+                name="code"
+                placeholder="Backup verification code"
+              />
               <Form.Button
                 fluid
                 primary
@@ -145,11 +120,12 @@ export default class Login extends React.Component {
                 disabled={loading}
               />
               <p>
-                Is this authentication method not working?{' '}
-                <Link to="/login/verification/backup">
-                  Use your backup codes
-                </Link>
-                .
+                Don't have your backup codes anymore? Contact support at{' '}
+                <a href={`mailto:${APP_SUPPORT_EMAIL}`}>{APP_SUPPORT_EMAIL}</a>{' '}
+                to start a manual verification process.
+              </p>
+              <p>
+                <Link to="/login/verification">Back</Link>
               </p>
             </Form>
           </Segment>

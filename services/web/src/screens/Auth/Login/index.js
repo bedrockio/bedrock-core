@@ -40,7 +40,7 @@ export default class Login extends React.Component {
 
       if (data.mfaRequired) {
         window.sessionStorage.setItem('mfa-auth', JSON.stringify(data));
-        this.props.history.push('/mfa/verification');
+        this.props.history.push('/login/verification');
         return;
       }
 

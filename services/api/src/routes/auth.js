@@ -209,6 +209,10 @@ router
         backupCodes.splice(foundBackupCode, 1);
         user.backupCodes = backupCodes;
         await user.save();
+        await AuditEntry.append('successfully authenticated (mfa using backup code)', ctx, {
+          object: user,
+          user: user.id,
+        });
       } else if (!mfa.verifyToken(user.mfaSecret, user.mfaMethod, code)) {
         await AuditEntry.append('failed mfa challenge', ctx, {
           type: 'security',
