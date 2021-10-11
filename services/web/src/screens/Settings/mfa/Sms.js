@@ -24,7 +24,7 @@ export default class Sms extends React.Component {
   state = {
     touched: false,
     loading: false,
-    error: null,
+    error: undefined,
     phoneNumber: '',
     countryCode: '',
     code: '',
@@ -35,7 +35,7 @@ export default class Sms extends React.Component {
     const { countryCode, phoneNumber } = this.state;
     this.setState({
       smsSent: false,
-      configError: undefined,
+      error: undefined,
     });
     try {
       const { data } = await request({
@@ -58,14 +58,13 @@ export default class Sms extends React.Component {
       }
 
       this.setState({
-        configError: error,
+        error: error,
         loading: false,
       });
     }
   };
 
   onVerify = async () => {
-    const { countryCode, phoneNumber } = this.state;
     this.setState({
       loading: true,
       touched: true,
@@ -115,7 +114,6 @@ export default class Sms extends React.Component {
       code,
       codes,
       secret,
-      configError,
       verified,
     } = this.state;
 
@@ -142,8 +140,8 @@ export default class Sms extends React.Component {
           <Segment>
             <Header size="small">1. What’s your mobile phone number?</Header>
             <p>Authentication codes will be sent to it.</p>
-            <Form onSubmit={this.triggerSms} error={touched && !!configError}>
-              {configError && <Message error content={configError.message} />}
+            <Form onSubmit={this.triggerSms} error={touched && !!error}>
+              {error && <Message error content={error.message} />}
               <Form.Select
                 options={countryCallingCodes}
                 search

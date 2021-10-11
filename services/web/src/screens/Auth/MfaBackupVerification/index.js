@@ -94,7 +94,6 @@ export default class Login extends React.Component {
 
   render() {
     const { error, loading } = this.state;
-    const mfaSessionData = this.getMfaSessionData() || {};
 
     return (
       <PageCenter>

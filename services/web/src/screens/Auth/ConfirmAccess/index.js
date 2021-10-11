@@ -1,6 +1,6 @@
 import React from 'react';
 import { request } from 'utils/api';
-import { Segment, Grid, Message, Form, Button } from 'semantic';
+import { Segment, Grid, Message, Form } from 'semantic';
 import { withSession } from 'stores';
 import screen from 'helpers/screen';
 
