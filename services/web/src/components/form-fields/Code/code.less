@@ -1,0 +1,53 @@
+.formFieldCode {
+  --itemWidth: 4.5rem;
+  --itemHeight: 5rem;
+  --itemSpacing: 1rem;
+  --itemsCount: 4;
+  --activeIndex: -1;
+
+  @media screen and (max-width: 480px) {
+    --itemWidth: 2.5rem;
+    --itemHeight: 3rem;
+    --itemSpacing: 1rem;
+    font-size: 18px;
+  }
+
+  font-size: 30px;
+  display: flex;
+  position: relative;
+  justify-content: space-between;
+  width: calc(
+    var(--itemWidth) * var(--itemsCount) + var(--itemSpacing) *
+      (var(--itemsCount) - 1)
+  );
+
+  &__input {
+    position: absolute;
+    top: 0;
+
+    left: calc(
+      var(--activeIndex) * var(--itemWidth) + var(--itemSpacing) *
+        var(--activeIndex)
+    );
+
+    opacity: 0;
+    width: var(--itemWidth);
+    height: var(--itemHeight);
+  }
+
+  &__item {
+    width: var(--itemWidth);
+    height: var(--itemHeight);
+    padding: 0;
+    border-radius: 4px;
+    font-weight: 800;
+    line-height: var(--itemHeight);
+    text-align: center;
+    border: 0;
+    box-shadow: inset 0 0 0 1px #ccc;
+    transition: box-shadow 0.2s ease-out;
+    &.is-active {
+      box-shadow: inset 0 0 0 2px #888;
+    }
+  }
+}

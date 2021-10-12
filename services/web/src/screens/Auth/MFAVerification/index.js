@@ -7,7 +7,7 @@ import screen from 'helpers/screen';
 import PageCenter from 'components/PageCenter';
 import Logo from 'components/LogoTitle';
 import { Link } from 'react-router-dom';
-import ReactCodeInput from 'react-verification-code-input';
+import Code from 'components/form-fields/Code';
 
 import { Layout } from 'components';
 
@@ -112,7 +112,7 @@ export default class Login extends React.Component {
                 </p>
                 <Divider hidden />
                 <Layout center>
-                  <ReactCodeInput
+                  <Code
                     className="verification-code"
                     type="number"
                     fields={6}
@@ -136,7 +136,7 @@ export default class Login extends React.Component {
                 </p>
                 <Divider hidden />
                 <Layout center>
-                  <ReactCodeInput
+                  <Code
                     className="verification-code"
                     type="number"
                     fields={6}

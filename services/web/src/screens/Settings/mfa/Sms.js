@@ -8,7 +8,7 @@ import Finalize from './Finalize';
 import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
 import { Link } from 'react-router-dom';
-import ReactCodeInput from 'react-verification-code-input';
+import Code from 'components/form-fields/Code';
 import { Layout } from 'components';
 
 const countryCallingCodes = allCountries.map(({ nameEn, callingCode }) => ({
@@ -176,7 +176,7 @@ export default class Sms extends React.Component {
             <p> It may take a minute to arrive.</p>
             <Divider hidden />
             <Layout center>
-              <ReactCodeInput
+              <Code
                 className="verification-code"
                 type="number"
                 fields={6}
