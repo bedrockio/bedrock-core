@@ -12,7 +12,7 @@ router
       const upload = await Upload.findById(id);
       if (!upload) {
         ctx.throw(404);
-      } else if (ctx.state.authUser.id != upload.ownerId) {
+      } else if (ctx.state.authUser.id != upload.owner) {
         ctx.throw(401);
       }
       ctx.state.upload = upload;
@@ -47,7 +47,7 @@ router
     const uploads = await Promise.all(
       files.map(async (file) => {
         const params = await storeUploadedFile(file);
-        params.ownerId = authUser.id;
+        params.owner = authUser.id;
         return await Upload.create(params);
       })
     );

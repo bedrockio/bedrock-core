@@ -1,22 +1,16 @@
-#!/usr/bin/env node
+#!/usr/bin/env node --unhandled-rejections=strict
 
 const { initialize } = require('../../src/utils/database');
-const { createFixtures } = require('../../src/fixtures');
+const { loadFixtures } = require('../../src/utils/fixtures');
+const { logger } = require('@bedrockio/instrumentation');
 
-async function run() {
+(async () => {
   await initialize();
-  const result = await createFixtures();
+  const result = await loadFixtures();
   if (!result) {
-    console.info('No DB fixtures to load, database is populated');
+    logger.info('No DB fixtures to load, database is populated');
+  } else {
+    logger.info('Done! Fixtures have been loaded.');
   }
-}
-
-run()
-  .then(() => {
-    process.exit(0);
-  })
-  .catch((error) => {
-    console.error(`Fatal error: ${error.message}, exiting.`);
-    console.warn(error.stack);
-    process.exit(1);
-  });
+  process.exit(0);
+})();

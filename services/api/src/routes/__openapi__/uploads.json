@@ -46,7 +46,7 @@
           }
         },
         {
-          "name": "ownerId",
+          "name": "owner",
           "description": "User ID of the user doing the upload",
           "schema": {
             "type": "string"
@@ -89,7 +89,7 @@
               "rawUrl": "/var/folders/5k/zrxsbrxd2kbfn772fgw1bkx40000gn/T/upload_43586ce6b8dc1fdf203bf9d678544efb",
               "storageType": "local",
               "thumbnailUrl": "/var/folders/5k/zrxsbrxd2kbfn772fgw1bkx40000gn/T/upload_43586ce6b8dc1fdf203bf9d678544efb",
-              "ownerId": "5e6a9c000fc676447dc9936a",
+              "owner": "5e6a9c000fc676447dc9936a",
               "createdAt": "2020-05-18T21:30:43.678Z",
               "updatedAt": "2020-05-18T21:30:43.678Z"
             }

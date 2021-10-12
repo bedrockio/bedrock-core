@@ -3,7 +3,12 @@
     "node": true
   },
   "settings": {
-    "jest": { "version": 26 }
+    "jest": {
+      "version": 26
+    }
   },
-  "extends": ["plugin:bedrock/recommended", "plugin:bedrock/jest"]
+  "extends": [
+    "plugin:bedrock/recommended",
+    "plugin:bedrock/jest"
+  ]
 }

@@ -45,6 +45,7 @@ describe('/1/invites', () => {
       );
       expect(response.status).toBe(204);
     });
+
     it('should throw an error if user already exists', async () => {
       await User.deleteMany({});
       await createUser({

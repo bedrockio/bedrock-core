@@ -1,13 +1,11 @@
 const mongoose = require('mongoose');
 const { uniqueId } = require('lodash');
 const { logger } = require('@bedrockio/instrumentation');
+const { User, Upload } = require('../../models');
 
 const context = require('./context');
 const request = require('./request');
 const { flags } = require('../database');
-
-const { loadModelDir } = require('./../schema');
-const models = loadModelDir(__dirname + '/../../models');
 
 async function setupDb() {
   // ENVs are set by jest-mongodb:
@@ -25,8 +23,12 @@ async function setupDb() {
   }
 }
 
+async function teardownDb() {
+  await mongoose.disconnect();
+}
+
 async function createUser(attributes = {}) {
-  return await models.User.create({
+  return await User.create({
     email: `${uniqueId('email')}@platform.com`,
     firstName: 'Test',
     lastName: 'User',
@@ -34,8 +36,8 @@ async function createUser(attributes = {}) {
   });
 }
 
-function createAdminUser(attributes) {
-  return createUser({
+async function createAdminUser(attributes) {
+  return await createUser({
     ...attributes,
     roles: [
       {
@@ -46,27 +48,23 @@ function createAdminUser(attributes) {
   });
 }
 
-async function createUpload(user = {}) {
-  return await models.Upload.create({
-    filename: 'logo.png',
-    rawUrl: 'logo.png',
+async function createUpload(owner) {
+  return await Upload.create({
+    filename: 'test.png',
+    rawUrl: 'test.png',
     hash: 'test',
     storageType: 'local',
     mimeType: 'image/png',
-    ownerId: user.id || 'none',
+    owner: owner || mongoose.Types.ObjectId(),
   });
-}
-
-async function teardownDb() {
-  await mongoose.disconnect();
 }
 
 module.exports = {
   context,
   request,
   setupDb,
-  createUser,
-  createAdminUser,
-  createUpload,
   teardownDb,
+  createUser,
+  createUpload,
+  createAdminUser,
 };
