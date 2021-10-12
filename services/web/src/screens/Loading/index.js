@@ -1,6 +1,6 @@
 import React from 'react';
 import { Loader } from 'semantic';
-import { screen } from 'helpers';
+import screen from 'helpers/screen';
 import PageCenter from 'components/PageCenter';
 
 @screen

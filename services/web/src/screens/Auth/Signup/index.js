@@ -4,7 +4,7 @@ import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
 import { withSession } from 'stores';
 import { request } from 'utils/api';
-import { screen } from 'helpers';
+import screen from 'helpers/screen';
 
 import Form from './Form';
 import { Link } from 'react-router-dom';

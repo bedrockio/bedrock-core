@@ -9,7 +9,7 @@ import StandardPage from './StandardPage';
 import PageLoader from 'components/PageLoader';
 
 import { request } from '../../utils/api';
-import { screen } from 'helpers';
+import screen from 'helpers/screen';
 
 import * as DOCS from 'docs';
 
@@ -31,7 +31,8 @@ function stateForParams(params) {
 
 @screen
 export default class Docs extends React.Component {
-  static layout = 'Portal';
+  static layout = 'portal';
+
   contextRef = createRef();
 
   constructor(props) {

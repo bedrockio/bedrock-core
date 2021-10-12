@@ -22,7 +22,7 @@ import {
   Table,
   TextArea,
 } from 'semantic';
-import { screen } from 'helpers';
+import screen from 'helpers/screen';
 import { Layout } from 'components/Layout';
 import Breadcrumbs from 'components/Breadcrumbs';
 import { Menu as ResponsiveMenu } from 'components/Responsive';
@@ -43,9 +43,9 @@ const options2 = [
 
 @screen
 export default class ComponentsScreen extends React.Component {
-  contextRef = React.createRef();
+  static layout = 'portal';
 
-  static layout = 'Portal';
+  contextRef = React.createRef();
 
   render() {
     return (

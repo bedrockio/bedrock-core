@@ -1,7 +1,7 @@
 import React from 'react';
 import { request } from 'utils/api';
 import { formatDateTime } from 'utils/date';
-import { screen } from 'helpers';
+import screen from 'helpers/screen';
 
 import SearchProvider from 'components/SearchProvider';
 import { Layout } from 'components/Layout';
