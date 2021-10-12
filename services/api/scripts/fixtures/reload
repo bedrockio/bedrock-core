@@ -1,8 +1,9 @@
-#!/usr/bin/env node
+#!/usr/bin/env node --unhandled-rejections=strict
 
-const { initialize } = require('../../src/utils/database');
 const config = require('@bedrockio/config');
-const { createFixtures } = require('../../src/fixtures');
+const { logger } = require('@bedrockio/instrumentation');
+const { initialize } = require('../../src/utils/database');
+const { loadFixtures } = require('../../src/utils/fixtures');
 const readline = require('readline');
 
 const ENV_NAME = config.get('ENV_NAME');
@@ -23,11 +24,11 @@ function prompt(message) {
   });
 }
 
-async function run() {
+(async () => {
   if (!allowedEnvironments.includes(ENV_NAME)) {
     throw new Error(`Not allowed in ENV_NAME other than ${allowedEnvironments.join(', ')} (ENV_NAME=${ENV_NAME})`);
   }
-  console.info(`
+  logger.warn(`
 -------------------------------------------------------------------
 
   Warning: This will delete ALL DATA for the ${ENV_NAME} environment
@@ -37,23 +38,17 @@ async function run() {
 `);
   const answer = await prompt('Are you sure sure? [y|n] ');
   if (answer.toLowerCase() !== 'y') {
-    throw new Error('Aborted');
+    logger.error('Aborted.');
+    process.exit(1);
   }
   const db = await initialize();
-  console.info(`Dropping database...`);
+  logger.info(`Dropping database...`);
   await db.dropDatabase();
-  const result = await createFixtures();
+  const result = await loadFixtures();
   if (!result) {
-    console.info('No DB fixtures to load, database is populated');
+    logger.info('No DB fixtures to load, database is populated');
+  } else {
+    logger.info('Done! Fixtures have been reloaded.');
   }
-}
-
-run()
-  .then(() => {
-    process.exit(0);
-  })
-  .catch((error) => {
-    console.error(`Fatal error: ${error.message}, exiting.`);
-    console.warn(error.stack);
-    process.exit(1);
-  });
+  process.exit(0);
+})();

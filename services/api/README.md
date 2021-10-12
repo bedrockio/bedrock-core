@@ -19,6 +19,7 @@ See http://localhost:2200/docs for full documentation on this API (requires runn
 - `src/index.js` - Launch script for the API
 - `emails` - Email templates
 - `scripts` - Scripts and jobs
+- `fixtures` - Database [fixtures](#fixtures).
 
 ## Install Dependencies
 
@@ -118,15 +119,17 @@ To force run a scheduled job:
 curl -s -XPOST localhost:2600/jobs/example/start
 ```
 
-## Reloading DB Fixtures
+## Fixtures
 
-DB fixtures are loaded automatically in the dev environment. However, using this command you can force reload the DB:
+Fixtures are set up automatically from structured data in the `fixtures` directory and loaded when first running the development server. For more on how to set this up see the [readme](src/utils/fixtures/README.md).
+
+You can force reload fixtures with the command:
 
 ```
-./scripts/fixtures/reload
+yarn fixtures:reload
 ```
 
-_Note: In the staging environment this script can be run by obtaining a shell into the API CLI pod (See Deployment)_
+_Note: In the staging environment this script can be run by obtaining a shell into the API CLI pod (see [../../deployment](../../deployment/README.md))_
 
 ## Multi Tenancy
 

@@ -27,11 +27,9 @@ exports.initialize = async function initialize() {
   }
 
   const db = mongoose.connection;
+
   db.on('error', () => {
     logger.error('connection error');
-  });
-  db.once('open', () => {
-    logger.info('mongodb connected');
   });
   return db;
 };

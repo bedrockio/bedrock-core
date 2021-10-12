@@ -1,14 +1,14 @@
 const config = require('@bedrockio/config');
-const fs = require('fs');
+const { promises: fs } = require('fs');
 const path = require('path');
 const os = require('os');
 const crypto = require('crypto');
 const { logger } = require('@bedrockio/instrumentation');
 const mime = require('mime-types');
 
-function uploadLocal(file, hash) {
+async function uploadLocal(file, hash) {
   const destinationPath = path.join(os.tmpdir(), hash);
-  fs.copyFileSync(file.path, destinationPath);
+  await fs.copyFile(file.path, destinationPath);
   logger.debug('Uploading locally %s -> %s', file.name, destinationPath);
   return file.path;
 }
@@ -33,6 +33,7 @@ async function uploadGcs(file, hash) {
 
 async function storeUploadedFile(uploadedFile) {
   const mimeType = uploadedFile.type || mime.lookup(uploadedFile.name);
+  uploadedFile.name = uploadedFile.name || path.basename(uploadedFile.path);
   const object = {
     mimeType,
     filename: uploadedFile.name,
@@ -42,7 +43,7 @@ async function storeUploadedFile(uploadedFile) {
     object.rawUrl = await uploadGcs(uploadedFile, object.hash);
     object.storageType = 'gcs';
   } else {
-    object.rawUrl = uploadLocal(uploadedFile, object.hash);
+    object.rawUrl = await uploadLocal(uploadedFile, object.hash);
     object.storageType = 'local';
   }
   object.thumbnailUrl = object.rawUrl;

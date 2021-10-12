@@ -55,6 +55,11 @@
           "default": []
         }
       }
+    },
+    "owner": {
+      "type": "ObjectId",
+      "ref": "User",
+      "autopopulate": true
     }
   },
   "search": [

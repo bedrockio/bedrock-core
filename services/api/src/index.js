@@ -9,7 +9,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const { initialize } = require('./utils/database');
-const { createFixtures } = require('./fixtures');
+const { loadFixtures } = require('./utils/fixtures');
 const app = require('./app');
 
 const config = require('@bedrockio/config');
@@ -21,7 +21,7 @@ const HOST = config.get('SERVER_HOST');
 module.exports = (async () => {
   await initialize();
   if (ENV_NAME === 'development') {
-    await createFixtures();
+    await loadFixtures();
   }
 
   app.listen(PORT, HOST, () => {
