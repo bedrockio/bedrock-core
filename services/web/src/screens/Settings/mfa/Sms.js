@@ -12,7 +12,7 @@ import Code from 'components/form-fields/Code';
 import { Layout } from 'components';
 
 const countryCallingCodes = allCountries.map(({ nameEn, callingCode }) => ({
-  value: callingCode,
+  value: nameEn,
   text: `${nameEn} (+${callingCode})`,
   key: `${nameEn}-${callingCode}`,
 }));
@@ -26,13 +26,13 @@ export default class Sms extends React.Component {
     loading: false,
     error: undefined,
     phoneNumber: '',
-    countryCode: '',
+    country: '',
     code: '',
     smsSent: false,
   };
 
   triggerSms = async () => {
-    const { countryCode, phoneNumber } = this.state;
+    const { country, phoneNumber } = this.state;
     this.setState({
       smsSent: false,
       error: undefined,
@@ -43,7 +43,7 @@ export default class Sms extends React.Component {
         path: '/1/users/me/mfa/config',
         body: {
           method: 'sms',
-          phoneNumber: `+${countryCode}${phoneNumber}`,
+          phoneNumber: `+${country}${phoneNumber}`,
         },
       });
 
@@ -109,7 +109,7 @@ export default class Sms extends React.Component {
       touched,
       loading,
       error,
-      countryCode,
+      country,
       phoneNumber,
       code,
       codes,
@@ -118,6 +118,10 @@ export default class Sms extends React.Component {
     } = this.state;
 
     if (verified) {
+      const countryCode = allCountries.find(
+        (c) => c.name === country
+      ).callingCode;
+
       return (
         <Finalize
           method="sms"
@@ -145,14 +149,12 @@ export default class Sms extends React.Component {
               <Form.Select
                 options={countryCallingCodes}
                 search
-                value={countryCode}
+                value={country}
                 label="Country Code"
                 required
                 type="text"
                 autoComplete="tel-country-code"
-                onChange={(e, { value }) =>
-                  this.setState({ countryCode: value })
-                }
+                onChange={(e, { value }) => this.setState({ country: value })}
               />
               <Form.Input
                 value={phoneNumber}
