@@ -486,20 +486,20 @@ describe('createSchema', () => {
       const User = createTestModel(
         createSchemaFromAttributes({
           name: { type: String },
-          fakeId: { type: Number },
-          fakeDate: { type: Date },
+          number: { type: Number },
+          date: { type: Date },
         })
       );
       const user = new User();
       const now = Date.now();
       user.assign({
         name: 'fake name',
-        fakeNumber: 5,
-        fakeDate: new Date(now),
+        number: 5,
+        date: new Date(now),
       });
       expect(user.name).toBe('fake name');
-      expect(user.fakeNumber).toBe(5);
-      expect(user.fakeDate.getTime()).toBe(now);
+      expect(user.number).toBe(5);
+      expect(user.date.getTime()).toBe(now);
     });
 
     it('should delete falsy values for reference fields', async () => {
@@ -510,21 +510,46 @@ describe('createSchema', () => {
             ref: User.modelName,
             type: mongoose.Schema.Types.ObjectId,
           },
+          nested: {
+            name: String,
+            user: {
+              ref: User.modelName,
+              type: mongoose.Schema.Types.ObjectId,
+            },
+          },
         })
       );
+      const id = mongoose.Types.ObjectId().toString();
       const shop = new Shop({
-        user: '5f63b1b88f09266f237e9d29',
+        user: id,
+        nested: {
+          name: 'fake',
+          user: id,
+        },
       });
       await shop.save();
 
       let data = JSON.parse(JSON.stringify(shop));
-      expect(data.user).toBe('5f63b1b88f09266f237e9d29');
+      expect(data).toMatchObject({
+        user: id,
+        nested: {
+          name: 'fake',
+          user: id,
+        },
+      });
       shop.assign({
         user: '',
+        nested: {
+          user: '',
+        },
       });
       await shop.save();
+
       data = JSON.parse(JSON.stringify(shop));
-      expect('user' in data).toBe(false);
+      expect(data.user).toBeUndefined();
+      expect(data.nested).toEqual({
+        name: 'fake',
+      });
     });
 
     it('should still allow assignment of empty arrays for multi-reference fields', async () => {
@@ -552,6 +577,34 @@ describe('createSchema', () => {
       await shop.save();
       data = JSON.parse(JSON.stringify(shop));
       expect(data.users).toEqual([]);
+    });
+
+    it('should allow partial assignment of nested fields', async () => {
+      const User = createTestModel(
+        createSchemaFromAttributes({
+          profile: {
+            firstName: String,
+            lastName: String,
+          },
+        })
+      );
+
+      const user = await User.create({
+        profile: {
+          firstName: 'John',
+          lastName: 'Doe',
+        },
+      });
+
+      user.assign({
+        profile: {
+          firstName: 'Jane',
+        },
+      });
+      await user.save();
+
+      expect(user.profile.firstName).toEqual('Jane');
+      expect(user.profile.lastName).toEqual('Doe');
     });
   });
 

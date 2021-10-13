@@ -125,12 +125,8 @@ function createSchema(definition, options = {}) {
   });
 
   schema.method('assign', function assign(fields) {
-    for (let [key, value] of Object.entries(fields)) {
-      if (!value && isReferenceField(this.schema.obj[key])) {
-        value = undefined;
-      }
-      this[key] = value;
-    }
+    unsetReferenceFields(fields, this.schema.obj);
+    this.set(fields);
   });
 
   // Soft delete
@@ -385,6 +381,19 @@ function loadModelDir(dirPath) {
 }
 
 // Util
+
+// Sets falsy reference fields to undefined to signal
+// removal. Passing attributes through this function
+// normalizes falsy values so they are not saved to the db.
+function unsetReferenceFields(fields, schema) {
+  for (let [key, value] of Object.entries(fields)) {
+    if (!value && isReferenceField(schema[key])) {
+      fields[key] = undefined;
+    } else if (value && typeof value === 'object') {
+      unsetReferenceFields(value, schema[key]);
+    }
+  }
+}
 
 // Flattens nested queries to a dot syntax.
 // Effectively the inverse of lodash get:
