@@ -182,7 +182,6 @@ router
   .post(
     '/enable',
     validateBody({
-      code: Joi.string(),
       secret: Joi.string(),
       method: Joi.string().allow('sms', 'otp').required(),
       phoneNumber: Joi.string(),
@@ -191,11 +190,7 @@ router
     checkPasswordVerification,
     async (ctx) => {
       const { authUser } = ctx.state;
-      const { secret, code, method, phoneNumber, backupCodes } = ctx.request.body;
-      // allow 2 "windows" with sms to ensure that sms can be delieved in time
-      if (!mfa.verifyToken(secret, method, code)) {
-        ctx.throw('Not a valid code', 400);
-      }
+      const { secret, method, phoneNumber, backupCodes } = ctx.request.body;
 
       if (method === 'sms' && !phoneNumber) {
         ctx.throw(400, 'phoneNumber is required');

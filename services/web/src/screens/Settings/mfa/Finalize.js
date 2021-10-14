@@ -5,6 +5,7 @@ import { request } from 'utils/api';
 import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
 import { withRouter } from 'react-router-dom';
+import { APP_NAME } from 'utils/env';
 
 @withRouter
 export default class Finalize extends React.Component {
@@ -109,9 +110,9 @@ export default class Finalize extends React.Component {
               />
               {this.props.method !== 'sms' && (
                 <Message warning>
-                  I understand that Postmark cannot give me access to my account
-                  if I lose my backup codes and access to my authentication
-                  methods.
+                  I understand that {APP_NAME} cannot give me access to my
+                  account if I lose my backup codes and access to my
+                  authentication methods.
                 </Message>
               )}
               {this.props.method === 'sms' && (

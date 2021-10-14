@@ -72,7 +72,7 @@ export default class Authenticator extends React.Component {
     try {
       await request({
         method: 'POST',
-        path: '/1/auth/mfa/verify',
+        path: '/1/auth/mfa/confirm-code',
         body: {
           code: this.state.code,
           secret: this.state.secret,
@@ -98,22 +98,14 @@ export default class Authenticator extends React.Component {
   };
 
   render() {
-    const {
-      code,
-      codes,
-      loading,
-      error,
-      secretUri,
-      secret,
-      verified,
-    } = this.state;
+    const { code, codes, loading, error, secretUri, secret, verified } =
+      this.state;
 
     if (verified) {
       return (
         <Finalize
           codes={codes}
           requestBody={{
-            code,
             secret,
             method: 'otp',
             backupCodes: codes,

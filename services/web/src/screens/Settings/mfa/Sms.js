@@ -126,7 +126,6 @@ export default class Sms extends React.Component {
         <Finalize
           method="sms"
           requestBody={{
-            code,
             secret,
             method: 'sms',
             phoneNumber: `+${countryCode}${phoneNumber}`,

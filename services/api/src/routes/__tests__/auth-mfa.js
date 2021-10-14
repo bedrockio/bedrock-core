@@ -215,13 +215,11 @@ describe('/1/auth/mfa', () => {
         name: 'APP_TEST',
         account: user,
       });
-      const code = generateToken(secret);
 
       const response = await request(
         'POST',
         `/1/auth/mfa/enable`,
         {
-          code,
           secret,
           method: 'otp',
           backupCodes: ['burger'],
@@ -244,14 +242,11 @@ describe('/1/auth/mfa', () => {
         name: 'APP_TEST',
         account: user,
       });
-      const code = generateToken(secret);
-
       const response = await request(
         'POST',
         `/1/auth/mfa/enable`,
         {
           phoneNumber,
-          code,
           secret,
           method: 'sms',
           backupCodes: ['burger'],
@@ -266,31 +261,6 @@ describe('/1/auth/mfa', () => {
       expect(dbUser.mfaPhoneNumber).toBe(phoneNumber);
     });
 
-    it('should fail with a bad code', async () => {
-      const user = await createUser({
-        accessConfirmedAt: new Date(),
-      });
-      const { secret } = generateSecret({
-        name: 'APP_TEST',
-        account: user,
-      });
-
-      const response = await request(
-        'POST',
-        `/1/auth/mfa/enable`,
-        {
-          code: 'bad',
-          secret,
-          method: 'otp',
-          backupCodes: ['burger'],
-        },
-        { user }
-      );
-
-      expect(response.status).toBe(400);
-      expect(response.body.error.message).toBe('Not a valid code');
-    });
-
     it('should fail if you access has not be validated', async () => {
       const user = await createUser({
         accessConfirmedAt: new Date(0),
@@ -299,7 +269,6 @@ describe('/1/auth/mfa', () => {
         'POST',
         `/1/auth/mfa/enable`,
         {
-          code: 'bad',
           secret: '1213123',
           method: 'otp',
           backupCodes: ['burger'],
