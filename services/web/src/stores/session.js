@@ -153,7 +153,11 @@ export class SessionProvider extends React.PureComponent {
   };
 
   setOrganization = (organization) => {
-    this.setStored('organizationId', organization.id);
+    if (organization) {
+      this.setStored('organizationId', organization.id);
+    } else {
+      this.removeStored('organizationId');
+    }
     this.setState({
       organization,
     });

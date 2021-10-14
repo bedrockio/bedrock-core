@@ -51,6 +51,7 @@ export default class OrganizationSelector extends React.Component {
           <SearchDropdown
             fluid
             clearable
+            placeholder="Viewing all organizations"
             value={this.context.getOrganization()}
             onDataNeeded={this.fetchOrganizations}
             onChange={this.onChange}
