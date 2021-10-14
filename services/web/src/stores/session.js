@@ -158,9 +158,9 @@ export class SessionProvider extends React.PureComponent {
     } else {
       this.removeStored('organizationId');
     }
-    this.setState({
-      organization,
-    });
+    // Organizations may affect the context of all pages as well as
+    // persistent header/footer so need to do a hard-reload of the app.
+    window.location.reload();
   };
 
   getOrganization = () => {
