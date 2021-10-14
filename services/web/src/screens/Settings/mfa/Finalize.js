@@ -23,7 +23,7 @@ export default class Finalize extends React.Component {
     try {
       await request({
         method: 'POST',
-        path: '/1/users/me/mfa/enable',
+        path: '/1/auth/mfa/enable',
         body: this.props.requestBody,
       });
       this.props.history.push(`/settings/security`);

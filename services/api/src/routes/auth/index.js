@@ -1,16 +1,17 @@
+const mfaRouter = require('./mfa');
 const Router = require('@koa/router');
 const Joi = require('joi');
-const config = require('@bedrockio/config');
-const { validateBody } = require('../utils/middleware/validate');
-const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
-const { createAuthToken, createTemporaryToken, generateTokenId } = require('../utils/tokens');
-const { sendTemplatedMail } = require('../utils/mailer');
-const { User, Invite, AuditEntry } = require('../models');
+const { validateBody } = require('../../utils/middleware/validate');
+const { authenticate, fetchUser } = require('../../utils/middleware/authenticate');
+const { createAuthToken, createTemporaryToken, generateTokenId } = require('../../utils/tokens');
+const { sendTemplatedMail } = require('../../utils/mailer');
+const { User, Invite, AuditEntry } = require('../../models');
 
-const mfa = require('../utils/mfa');
-const sms = require('../utils/sms');
+const mfa = require('../../utils/mfa');
 
 const router = new Router();
+
+router.use('/mfa', mfaRouter.routes(), mfaRouter.allowedMethods());
 
 const passwordField = Joi.string()
   .min(12)
@@ -149,87 +150,6 @@ router
       ctx.status = 204;
     }
   )
-  .post('/mfa/send-token', authenticate({ type: 'mfa' }), async (ctx) => {
-    const { jwt } = ctx.state;
-    const user = await User.findOne({ _id: jwt.sub });
-
-    if (user.mfaMethod !== 'sms') {
-      ctx.throw(400, 'sms multi factor verification is not enabled for this account');
-    }
-
-    if (!user.mfaPhoneNumber || !user.mfaSecret) {
-      ctx.throw(400, 'sms multi factor verification has not been configured correctly');
-    }
-
-    await sms.sendMessage(
-      user.mfaPhoneNumber,
-      `Your ${config.get('APP_NAME')} verification code is: ${mfa.generateToken(user.mfaSecret)}`
-    );
-
-    ctx.status = 204;
-  })
-  .post(
-    '/mfa/verify',
-    validateBody({
-      code: Joi.string().required(),
-    }),
-    authenticate({ type: 'mfa' }),
-    async (ctx) => {
-      const { jwt } = ctx.state;
-      const { code } = ctx.request.body;
-
-      const user = await User.findOneAndUpdate(
-        { _id: jwt.sub },
-        {
-          lastLoginAttemptAt: new Date(),
-          $inc: { loginAttempts: 1 },
-        }
-      );
-
-      if (!user) {
-        ctx.throw(400, 'User does not exist');
-      } else if (user.tempTokenId !== jwt.jti) {
-        ctx.throw(400, 'Token is invalid (jti)');
-      }
-
-      if (!user.verifyLoginAttempts()) {
-        await AuditEntry.append('reached max mfa challenge attempts', ctx, {
-          type: 'security',
-          object: user,
-          user: user.id,
-        });
-        ctx.throw(401, 'Too many attempts');
-      }
-
-      // if backup code e.g 12345-16123
-      const backupCodes = (user.backupCodes || []).concat();
-      const foundBackupCode = backupCodes.indexOf(code);
-
-      if (foundBackupCode !== -1) {
-        backupCodes.splice(foundBackupCode, 1);
-        user.backupCodes = backupCodes;
-        await user.save();
-        await AuditEntry.append('successfully authenticated (mfa using backup code)', ctx, {
-          object: user,
-          user: user.id,
-        });
-      } else if (!mfa.verifyToken(user.mfaSecret, user.mfaMethod, code)) {
-        await AuditEntry.append('failed mfa challenge', ctx, {
-          type: 'security',
-          object: user,
-          user: user.id,
-        });
-        ctx.throw(400, 'Not a valid code');
-      }
-
-      await AuditEntry.append('successfully authenticated (mfa)', ctx, {
-        object: user,
-        user: user.id,
-      });
-
-      ctx.body = { data: { token: createAuthToken(user.id, user.authTokenId) } };
-    }
-  )
   .post('/logout', authenticate({ type: 'user' }), fetchUser, async (ctx) => {
     const user = ctx.state.authUser;
     await user.updateOne({
@@ -305,7 +225,6 @@ router
       ctx.status = 204;
     }
   )
-
   .post(
     '/set-password',
     validateBody({

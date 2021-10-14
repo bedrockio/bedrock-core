@@ -35,7 +35,7 @@ export default class Account extends React.Component {
     try {
       await request({
         method: 'DELETE',
-        path: '/1/users/me/mfa/disable',
+        path: '/1/auth/mfa/disable',
       });
     } catch (e) {
       if (e.status === 403) {

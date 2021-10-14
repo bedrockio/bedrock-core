@@ -1,33 +1,19 @@
 const Router = require('@koa/router');
-const config = require('@bedrockio/config');
 const Joi = require('joi');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
 const { exportValidation, searchExport } = require('../utils/search');
-const mfa = require('../utils/mfa');
-const sms = require('../utils/sms');
 const { User } = require('../models');
 const { expandRoles } = require('./../utils/permissions');
 const roles = require('./../roles.json');
 const permissions = require('./../permissions.json');
-
-const { sendTemplatedMail } = require('../utils/mailer');
 
 const router = new Router();
 
 const passwordField = Joi.string()
   .min(6)
   .message('Your password must be at least 6 characters long. Please try another.');
-
-const checkPasswordVerification = (ctx, next) => {
-  const { authUser } = ctx.state;
-  // If accessConfirmedAt is older than 30 mins
-  if (authUser.accessConfirmedAt < Date.now() - 30 * 60 * 1000) {
-    ctx.throw(403, 'Confirm access');
-  }
-  return next();
-};
 
 router
   .use(authenticate({ type: 'user' }))
@@ -64,118 +50,6 @@ router
       ctx.body = {
         data: expandRoles(authUser),
       };
-    }
-  )
-  .delete('/me/mfa/disable', checkPasswordVerification, async (ctx) => {
-    const { authUser } = ctx.state;
-    authUser.mfaSecret = undefined;
-    authUser.mfaMethod = undefined;
-    authUser.mfaPhoneNumber = undefined;
-    await authUser.save();
-
-    await sendTemplatedMail({
-      to: authUser.fullName,
-      template: 'mfa-disabled.md',
-      subject: 'Two-factor authentication disabled',
-      firstName: authUser.firstName,
-    });
-
-    ctx.status = 204;
-  })
-  .post(
-    '/me/mfa/config',
-    validateBody({
-      method: Joi.string().allow('sms', 'otp').required(),
-      phoneNumber: Joi.string(),
-    }),
-    checkPasswordVerification,
-    async (ctx) => {
-      const { authUser } = ctx.state;
-
-      const { method, phoneNumber } = ctx.request.body;
-
-      if (method === 'sms' && !phoneNumber) {
-        ctx.throw(400, 'phoneNumber is required');
-      }
-
-      const { secret, uri } = mfa.generateSecret({
-        name: config.get('APP_NAME'),
-        account: authUser.email,
-      });
-
-      if (method === 'sms') {
-        await sms.sendMessage(
-          phoneNumber,
-          `Your ${config.get('APP_NAME')} verification code is: ${mfa.generateToken(secret)}`
-        );
-      }
-
-      ctx.body = {
-        data: {
-          secret,
-          uri,
-        },
-      };
-    }
-  )
-  .post('/me/mfa/generate-codes', async (ctx) => {
-    ctx.body = {
-      data: mfa.generateBackupCodes(),
-    };
-  })
-  .post(
-    '/me/mfa/verify',
-    validateBody({
-      code: Joi.string(),
-      secret: Joi.string(),
-      method: Joi.string().allow('sms', 'otp').required(),
-    }),
-    async (ctx) => {
-      const { secret, code, method } = ctx.request.body;
-      // allow 2 "windows" with sms to ensure that sms can be delieved in time
-      if (!mfa.verifyToken(secret, method, code)) {
-        ctx.throw('Not a valid code', 400);
-      }
-      ctx.status = 204;
-    }
-  )
-  .post(
-    '/me/mfa/enable',
-    validateBody({
-      code: Joi.string(),
-      secret: Joi.string(),
-      method: Joi.string().allow('sms', 'otp').required(),
-      phoneNumber: Joi.string(),
-      backupCodes: Joi.array().items(Joi.string()).required(),
-    }),
-    checkPasswordVerification,
-    async (ctx) => {
-      const { authUser } = ctx.state;
-      const { secret, code, method, phoneNumber, backupCodes } = ctx.request.body;
-      // allow 2 "windows" with sms to ensure that sms can be delieved in time
-      if (!mfa.verifyToken(secret, method, code)) {
-        ctx.throw('Not a valid code', 400);
-      }
-
-      if (method === 'sms' && !phoneNumber) {
-        ctx.throw(400, 'phoneNumber is required');
-      }
-
-      authUser.mfaPhoneNumber = phoneNumber;
-      authUser.mfaMethod = method;
-      authUser.mfaSecret = secret;
-      authUser.backupCodes = backupCodes;
-      await authUser.save();
-
-      await sendTemplatedMail({
-        to: authUser.fullName,
-        template: authUser.mfaMethod === 'otp' ? 'mfa-otp-enabled.md' : 'mfa-sms-enabled.md',
-        subject: 'Two-factor authentication enabled',
-        mfaPhoneNumber: authUser.mfaPhoneNumber?.slice(-4),
-        firstName: authUser.firstName,
-      });
-
-      ctx.status = 204;
     }
   )
   .use(requirePermissions({ endpoint: 'users', permission: 'read', scope: 'global' }))

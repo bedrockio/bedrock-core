@@ -40,7 +40,7 @@ export default class Sms extends React.Component {
     try {
       const { data } = await request({
         method: 'POST',
-        path: '/1/users/me/mfa/config',
+        path: '/1/auth/mfa/config',
         body: {
           method: 'sms',
           phoneNumber: `+${country}${phoneNumber}`,
@@ -74,7 +74,7 @@ export default class Sms extends React.Component {
     try {
       await request({
         method: 'POST',
-        path: '/1/users/me/mfa/verify',
+        path: '/1/auth/mfa/verify',
         body: {
           code: this.state.code,
           secret: this.state.secret,
@@ -84,7 +84,7 @@ export default class Sms extends React.Component {
 
       const { data } = await request({
         method: 'POST',
-        path: '/1/users/me/mfa/generate-codes',
+        path: '/1/auth/mfa/generate-codes',
       });
 
       this.setState({
