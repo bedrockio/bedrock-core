@@ -1,37 +1,50 @@
 // Helper that provides methods to easily create
 // BEM style block/element/modifier classes.
 
+import React from 'react';
 import { kebabCase } from 'lodash';
+import { getWrappedComponent } from 'utils/hoc';
 
 export default function (Component) {
-  const block = kebabCase(Component.name);
+  // Unwrap wrapped components
+  const Wrapped = getWrappedComponent(Component);
 
-  function getClassNames(name, modifiers, extra) {
-    const classes = [
-      name,
-      ...modifiers.filter((m) => m).map((m) => `${name}--${m}`),
-    ];
-    if (extra) {
-      classes.push(extra);
-    }
-    return classes;
+  const block = kebabCase(Wrapped.name);
+
+  function getBlockClass(props, modifiers) {
+    return getClassNames(block, modifiers, props.className);
   }
 
-  return class extends Component {
-    getBlockClass = (...args) => {
-      return getClassNames(
-        block,
-        this.getModifiers?.(...args) || [],
-        this.props.className
-      ).join(' ');
-    };
+  function getElementClass(element, ...modifiers) {
+    return getClassNames(`${block}__${element}`, modifiers);
+  }
 
-    getElementClass = (name, ...modifiers) => {
-      return getClassNames(`${block}__${name}`, modifiers).join(' ');
+  if (Wrapped.prototype instanceof React.Component) {
+    Wrapped.prototype.getBlockClass = function () {
+      return getBlockClass(this.props, this.getModifiers?.() || []);
     };
+    Wrapped.prototype.getElementClass = getElementClass;
+    return Component;
+  } else {
+    return (props) => {
+      return (
+        <Component
+          {...props}
+          getBlockClass={(...modifiers) => getBlockClass(props, modifiers)}
+          getElementClass={getElementClass}
+        />
+      );
+    };
+  }
+}
 
-    getModifierClass = (modifier) => {
-      return `${block}--${modifier}`;
-    };
-  };
+function getClassNames(base, modifiers, extra) {
+  const classes = [
+    base,
+    ...modifiers.filter((m) => m).map((m) => `${base}--${m}`),
+  ];
+  if (extra) {
+    classes.push(extra);
+  }
+  return classes.join(' ');
 }

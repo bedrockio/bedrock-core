@@ -2,23 +2,26 @@ import React from 'react';
 import { startCase } from 'lodash';
 import { Helmet } from 'react-helmet-async';
 import { APP_NAME } from 'utils/env';
-import bem from 'helpers/bem';
+import { wrapComponent, getWrappedComponent } from 'utils/hoc';
 
 import DashboardLayout from 'layouts/Dashboard';
 import PortalLayout from 'layouts/Portal';
 
+// Note: Ideally the screen helper would be agnostic to specific
+// layouts and instead allow them to be defined by an app wiring
+// them together, however react-hot-reloader has issues with this.
 const layouts = {
   portal: PortalLayout,
   dashboard: DashboardLayout,
 };
 
 export default function (Component) {
-  const title = startCase(Component.name.replace(/Screen$/, ''));
+  const Wrapped = getWrappedComponent(Component);
+  const title = startCase(Wrapped.name.replace(/Screen$/, ''));
 
-  Component = bem(Component);
-  const Layout = layouts[Component.layout || 'dashboard'] || nullLayout;
+  const Layout = layouts[Wrapped.layout || 'dashboard'] || nullLayout;
 
-  return class Screen extends React.PureComponent {
+  class Screen extends React.PureComponent {
     render() {
       return (
         <React.Fragment>
@@ -43,7 +46,8 @@ export default function (Component) {
     renderCanonical() {
       return <link rel="canonical" href={location.href} />;
     }
-  };
+  }
+  return wrapComponent(Component, Screen);
 }
 
 function nullLayout(props) {

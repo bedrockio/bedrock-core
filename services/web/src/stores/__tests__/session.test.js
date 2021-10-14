@@ -1,96 +1,140 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, withRouter } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import {
-  SessionProvider,
+  useSession,
   withSession,
   withLoadedSession,
-  useSession,
+  SessionProvider,
 } from '../session';
+import screen from 'helpers/screen';
 import { setToken, clearToken } from 'utils/api';
 import { render, waitFor } from '@testing-library/react';
 
 jest.mock('utils/api');
 jest.mock('utils/env');
 
-let snapshot;
-
-beforeEach(() => {
-  snapshot = null;
-});
-
 afterEach(() => {
   clearToken();
 });
-
-class MyComponent extends React.Component {
-  componentDidUpdate(lastProps, lastState, lastContext) {
-    snapshot = lastContext;
-  }
-
-  render() {
-    const { loading, user } = this.context;
-    if (loading) {
-      return null;
-    }
-    return <div>{user?.name || 'Anonymous'}</div>;
-  }
-}
 
 function wrapProviders(Component) {
   return () => {
     return (
       <MemoryRouter>
         <SessionProvider>
-          <Component />
+          <HelmetProvider>
+            <Component />
+          </HelmetProvider>
         </SessionProvider>
       </MemoryRouter>
     );
   };
 }
 
-describe('withSession', () => {
-  const App = wrapProviders(withSession(MyComponent));
+function createComponent() {
+  return class extends React.Component {
+    render() {
+      return <div>{this.context.user?.name || 'Anonymous'}</div>;
+    }
+  };
+}
 
-  it('should be anonymous when logged out', async () => {
-    const { container } = await render(<App />);
-    await waitFor(() => {
-      expect(container.textContent).toBe('Anonymous');
+describe('hoc', () => {
+  describe('withSession', () => {
+    it('should be anonymous when logged out', async () => {
+      const App = wrapProviders(withSession(createComponent()));
+      const { container } = await render(<App />);
+      await waitFor(() => {
+        expect(container.textContent).toBe('Anonymous');
+      });
+    });
+
+    it('should display user name when logged in', async () => {
+      setToken('fake');
+      const App = wrapProviders(withSession(createComponent()));
+      const { container } = await render(<App />);
+      await waitFor(() => {
+        expect(container.textContent).toBe('Bob');
+      });
+    });
+
+    describe('withRouter interop', () => {
+      it('should allow withRouter first', async () => {
+        setToken('fake');
+        const App = wrapProviders(withSession(withRouter(createComponent())));
+        const { container } = await render(<App />);
+        await render(<App />);
+        await waitFor(() => {
+          expect(container.textContent).toBe('Bob');
+        });
+      });
+
+      it('should allow withRouter last', async () => {
+        setToken('fake');
+        const App = wrapProviders(withRouter(withSession(createComponent())));
+        const { container } = await render(<App />);
+        await render(<App />);
+        await waitFor(() => {
+          expect(container.textContent).toBe('Bob');
+        });
+      });
+    });
+
+    describe('screen interop', () => {
+      class MyScreen extends React.Component {
+        static layout = 'null';
+
+        render() {
+          return <div>{this.context.user?.name || 'Anonymous'}</div>;
+        }
+      }
+
+      afterEach(() => {
+        MyScreen.contextType = null;
+      });
+
+      it('should allow screen first', async () => {
+        setToken('fake');
+
+        const App = wrapProviders(withSession(screen(MyScreen)));
+        const { container } = await render(<App />);
+        await render(<App />);
+        await waitFor(() => {
+          expect(container.textContent).toBe('Bob');
+        });
+      });
+
+      it('should allow screen last', async () => {
+        setToken('fake');
+
+        const App = wrapProviders(screen(withSession(MyScreen)));
+        const { container } = await render(<App />);
+        await render(<App />);
+        await waitFor(() => {
+          expect(container.textContent).toBe('Bob');
+        });
+      });
     });
   });
 
-  it('should display user name', async () => {
-    setToken('fake');
-    const { container } = await render(<App />);
-    await waitFor(() => {
-      expect(container.textContent).toBe('Bob');
+  describe('withLoadedSession', () => {
+    it('should be anonymous when logged out', async () => {
+      const App = wrapProviders(withLoadedSession(createComponent()));
+      const { container } = await render(<App />);
+      await waitFor(() => {
+        expect(container.textContent).toBe('Anonymous');
+      });
     });
-  });
 
-  it('should set the last context as a snapshot', async () => {
-    setToken('fake');
-    await render(<App />);
-    await waitFor(() => {
-      expect(snapshot.user).toBe(null);
-      expect(snapshot.loading).toBe(true);
-    });
-  });
-});
-
-describe('withLoadedSession', () => {
-  const App = wrapProviders(withLoadedSession(MyComponent));
-
-  it('should be anonymous when logged out', async () => {
-    const { container } = await render(<App />);
-    await waitFor(() => {
-      expect(container.textContent).toBe('Anonymous');
-    });
-  });
-
-  it('should display user name', async () => {
-    setToken('fake');
-    const { container } = await render(<App />);
-    await waitFor(() => {
-      expect(container.textContent).toBe('Bob');
+    it('should display user name', async () => {
+      setToken('fake');
+      const App = wrapProviders(withLoadedSession(createComponent()));
+      const { container } = await render(<App />);
+      expect(container.textContent).not.toEqual('Anonymous');
+      await waitFor(() => {
+        expect(container.textContent).toBe('Bob');
+      });
     });
   });
 });

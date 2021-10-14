@@ -1,5 +1,11 @@
 {
   "GET /1/users/me": {
-    "name": "Bob"
+    "name": "Bob",
+    "roles": [
+      {
+        "scope": "global",
+        "role": "superAdmin"
+      }
+    ]
   }
 }
