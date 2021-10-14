@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
-import { Form, Message, Image, Icon, Label, Card } from 'semantic';
+import { Form, Image, Icon, Label, Card } from 'semantic';
 import { request } from 'utils/api';
 import { urlForUpload } from 'utils/uploads';
 
@@ -164,7 +164,7 @@ export default class Uploads extends React.Component {
 
   render() {
     const { required, label } = this.props;
-    const { error, loading } = this.state;
+    const { loading } = this.state;
     const uploads = this.getUploads();
     return (
       <Form.Field required={required}>
