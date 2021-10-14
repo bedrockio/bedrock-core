@@ -1,6 +1,5 @@
 const { setupDb, teardownDb, request, createUser, createAdminUser } = require('../../utils/testing');
 const { User } = require('../../models');
-const { generateSecret, generateToken } = require('../../utils/mfa');
 
 beforeAll(async () => {
   await setupDb();
