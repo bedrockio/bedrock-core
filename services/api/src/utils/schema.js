@@ -388,7 +388,7 @@ function loadModelDir(dirPath) {
 // Sets falsy reference fields to undefined to signal
 // removal. Passing attributes through this function
 // normalizes falsy values so they are not saved to the db.
-function unsetReferenceFields(fields, schema) {
+function unsetReferenceFields(fields, schema = {}) {
   for (let [key, value] of Object.entries(fields)) {
     if (!value && isReferenceField(schema[key])) {
       fields[key] = undefined;
