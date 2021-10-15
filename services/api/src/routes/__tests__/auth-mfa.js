@@ -249,7 +249,7 @@ describe('/1/auth/mfa', () => {
           phoneNumber,
           secret,
           method: 'sms',
-          mfaBackupCodes: ['burger'],
+          backupCodes: ['burger'],
         },
         { user }
       );

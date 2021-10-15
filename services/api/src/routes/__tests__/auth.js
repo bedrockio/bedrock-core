@@ -36,7 +36,7 @@ describe('/1/auth', () => {
       const response = await request('POST', '/1/auth/login', { email: user.email, password });
       expect(response.status).toBe(200);
 
-      const { payload } = jwt.decode(response.body.data.token, { complete: true });
+      const { payload } = jwt.decode(response.body.data.mfaToken, { complete: true });
       expect(payload).toHaveProperty('kid', 'user');
       expect(payload).toHaveProperty('type', 'mfa');
     });
