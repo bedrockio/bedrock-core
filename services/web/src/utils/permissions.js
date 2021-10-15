@@ -42,6 +42,9 @@ export function userHasAccess(user, { endpoint, permission, scope, scopeRef }) {
 }
 
 export function userCanSwitchOrganizations(user) {
+  if (!user) {
+    return false;
+  }
   const nonGlobalRoles = user.roles.filter((role) => {
     return role.scope !== 'organization';
   });

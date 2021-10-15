@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { request, getToken, setToken, clearToken } from 'utils/api';
 import { trackSession } from 'utils/analytics';
 import { captureError } from 'utils/sentry';
+import { wrapContext } from 'utils/hoc';
 
 const SessionContext = React.createContext();
 
@@ -157,10 +158,14 @@ export class SessionProvider extends React.PureComponent {
   };
 
   setOrganization = (organization) => {
-    this.setStored('organizationId', organization.id);
-    this.setState({
-      organization,
-    });
+    if (organization) {
+      this.setStored('organizationId', organization.id);
+    } else {
+      this.removeStored('organizationId');
+    }
+    // Organizations may affect the context of all pages as well as
+    // persistent header/footer so need to do a hard-reload of the app.
+    window.location.reload();
   };
 
   getOrganization = () => {
@@ -258,41 +263,19 @@ export class SessionProvider extends React.PureComponent {
   }
 }
 
-export function withSession(Component) {
-  let lastContext = {};
-
-  return class Wrapped extends Component {
-    // Preserve the component name
-    static name = Component.name;
-
-    static contextType = SessionContext;
-
-    componentDidMount() {
-      lastContext = this.context;
-      if (super.componentDidMount) {
-        super.componentDidMount();
-      }
-    }
-
-    getSnapshotBeforeUpdate() {
-      const context = lastContext;
-      lastContext = this.context;
-      return context;
-    }
-  };
+export function useSession() {
+  return useContext(SessionContext);
 }
+
+export const withSession = wrapContext(SessionContext);
 
 export function withLoadedSession(Component) {
   Component = withSession(Component);
-  return class Wrapped extends React.Component {
-    static contextType = SessionContext;
-
-    render() {
-      return <Component {...this.props} />;
+  return (props) => {
+    const { loading } = useSession();
+    if (loading) {
+      return null;
     }
+    return <Component {...props} />;
   };
-}
-
-export function useSession() {
-  return useContext(SessionContext);
 }

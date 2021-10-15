@@ -9,11 +9,9 @@ Components can inject a session store, allowing them to access and react to chan
 
 ## Class Components
 
-Class based components can be injected with the session store using the HOC `withSession` or `withLoadedSession`. These are identical with the exception that `withLoadedSession` does not mount the component until the user object has been loaded, ensuring that it is available when `componentDidMount` is called.
+Class based components can be injected with the session store using the HOC `withSession`, and accessed with `this.context`.
 
-Components are re-rendered when the session changes, most notably when the app bootstraps and first attempts to load the user in the case of `withSession`. For most cases, prefer `withSession` when the component can be displayed before access to the user object. This allows for a more responsive app that does not display an empty shell while the user is loading.
-
-When an update occurs due to a change to the session, the last session state will be passed to `componentDidUpdate` in the same manner as `lastProps` and `lastState`. This uses [getSnapshotBeforeUpdate](https://reactjs.org/docs/react-component.html#getsnapshotbeforeupdate) under the hood. In addition to the `user` object a boolean `loading` is exposed to react to the user loading state.
+Bedrock by default shows a loader while the session is bootstrapping. This means that you can use `withSession` and depend on the `user` object to exist when the wrapped component is mounted if the user is logged in. In most cases this is acceptable, however if the app needs to be more responsive (ie. display non-user specific content while bootstrapping), it can be removed (see [App.js](../App.js)) which will allow the wrapped component to render before the session is loaded. For most cases, `withSession` can still be used as the wrapped component will re-render when the session is loaded. For the less common case when components need to load data on `componentDidMount` another HOC `withLoadedSession` is provided. This will wait to mount the wrapped component until the session has been bootstrapped.
 
 ```jsx
 import { withSession } from 'stores';
@@ -21,17 +19,8 @@ import { withSession } from 'stores';
 class MyComponent extends React.Component {
   componentDidMount() {
     const { user, loading } = this.context;
-    console.log(user); // null
-    console.log(loading); // true
-  }
-
-  componentDidUpdate(lastProps, lastState, lastContext) {
-    const { user, loading } = this.context;
-    const { user: lastUser, loading: lastLoading } = lastContext;
-    console.log(user); // User object when logged in
-    console.log(loading); // false
-    console.log(lastUser); // null
-    console.log(lastLoading); // true
+    console.log(user);
+    console.log(loading);
   }
 
   render() {
