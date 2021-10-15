@@ -23,7 +23,7 @@ export default class QRCode extends React.Component {
     const tileW = this.props.width / cells.length;
     const tileH = this.props.height / cells.length;
 
-    for (let r = 0; r < cells.length; ++r) {
+    for (let r = 0; r < cells.length; r++) {
       const row = cells[r];
       for (let c = 0; c < row.length; ++c) {
         ctx.fillStyle = row[c] ? this.props.color : '#fff';

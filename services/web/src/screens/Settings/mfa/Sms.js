@@ -24,7 +24,7 @@ export default class Sms extends React.Component {
   state = {
     touched: false,
     loading: false,
-    error: undefined,
+    error: null,
     phoneNumber: '',
     country: '',
     code: '',
@@ -35,7 +35,7 @@ export default class Sms extends React.Component {
     const { country, phoneNumber } = this.state;
     this.setState({
       smsSent: false,
-      error: undefined,
+      error: null,
     });
     try {
       const { data } = await request({
@@ -68,7 +68,7 @@ export default class Sms extends React.Component {
     this.setState({
       loading: true,
       touched: true,
-      error: undefined,
+      error: null,
     });
 
     try {

@@ -14,7 +14,7 @@ import LoadButton from 'components/LoadButton';
 @withSession
 export default class Account extends React.Component {
   state = {
-    error: undefined,
+    error: null,
   };
 
   componentDidMount() {
@@ -31,7 +31,7 @@ export default class Account extends React.Component {
   }
 
   disableMFa = async () => {
-    this.setState({ error: undefined });
+    this.setState({ error: null });
     try {
       await request({
         method: 'DELETE',

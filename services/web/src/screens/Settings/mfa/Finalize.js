@@ -11,7 +11,7 @@ import { APP_NAME } from 'utils/env';
 export default class Finalize extends React.Component {
   state = {
     loading: false,
-    error: undefined,
+    error: null,
     savedCodes: false,
   };
 

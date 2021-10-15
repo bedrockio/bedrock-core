@@ -19,7 +19,7 @@ export default class Countries extends React.Component {
           name={name}
           value={value}
           placeholder={placeholder}
-          options={[] || countries}
+          options={countries}
           onChange={this.props.onChange}
         />
       </Form.Field>
