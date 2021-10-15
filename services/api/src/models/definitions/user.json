@@ -67,7 +67,7 @@
       "readScopes": "none",
       "writeScopes": "none"
     },
-    "backupCodes": [
+    "mfaBackupCodes": [
       {
         "type": "String",
         "readScopes": "none",

@@ -21,7 +21,7 @@ const checkPasswordVerification = (ctx, next) => {
 };
 
 router
-  .post('/send-token', authenticate({ type: 'mfa' }), async (ctx) => {
+  .post('/send-code', authenticate({ type: 'mfa' }), async (ctx) => {
     const { jwt } = ctx.state;
     const user = await User.findOne({ _id: jwt.sub });
 
@@ -74,12 +74,12 @@ router
       }
 
       // if backup code e.g 12345-16123
-      const backupCodes = (user.backupCodes || []).concat();
+      const backupCodes = (user.mfaBackupCodes || []).concat();
       const foundBackupCode = backupCodes.indexOf(code);
 
       if (foundBackupCode !== -1) {
         backupCodes.splice(foundBackupCode, 1);
-        user.backupCodes = backupCodes;
+        user.mfaBackupCodes = backupCodes;
         await user.save();
         await AuditEntry.append('successfully authenticated (mfa using backup code)', ctx, {
           object: user,
@@ -123,7 +123,7 @@ router
     ctx.status = 204;
   })
   .post(
-    '/config',
+    '/setup',
     validateBody({
       method: Joi.string().allow('sms', 'otp').required(),
       phoneNumber: Joi.string(),
@@ -158,16 +158,16 @@ router
       };
     }
   )
-  .post('/generate-codes', async (ctx) => {
+  .post('/generate-backup-codes', async (ctx) => {
     ctx.body = {
       data: mfa.generateBackupCodes(),
     };
   })
   .post(
-    '/confirm-code',
+    '/check-code',
     validateBody({
-      code: Joi.string(),
-      secret: Joi.string(),
+      code: Joi.string().required(),
+      secret: Joi.string().required(),
       method: Joi.string().allow('sms', 'otp').required(),
     }),
     async (ctx) => {
@@ -199,7 +199,7 @@ router
       authUser.mfaPhoneNumber = phoneNumber;
       authUser.mfaMethod = method;
       authUser.mfaSecret = secret;
-      authUser.backupCodes = backupCodes;
+      authUser.mfaBackupCodes = backupCodes;
       await authUser.save();
 
       await sendTemplatedMail({

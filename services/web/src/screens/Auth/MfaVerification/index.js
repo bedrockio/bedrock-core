@@ -54,7 +54,7 @@ export default class Login extends React.Component {
     try {
       await request({
         method: 'POST',
-        path: '/1/auth/mfa/send-token',
+        path: '/1/auth/mfa/send-code',
         token,
       });
       this.setState({

@@ -42,7 +42,7 @@ describe('/1/auth/mfa', () => {
     it('should verify backup code', async () => {
       const backupCode = '12345-16123';
       const user = await createUser({
-        backupCodes: [backupCode],
+        mfaBackupCodes: [backupCode],
       });
       const token = createTemporaryToken({ type: 'mfa', sub: user.id, jti: user.tempTokenId });
       const response = await request(
@@ -96,7 +96,7 @@ describe('/1/auth/mfa', () => {
     it('should increase login attempts', async () => {
       const goodBackupCode = '92345-14812';
       const user = await createUser({
-        backupCodes: [goodBackupCode],
+        mfaBackupCodes: [goodBackupCode],
         loginAttempts: 1,
       });
       await user.save();
@@ -115,7 +115,7 @@ describe('/1/auth/mfa', () => {
     it('should block user if limit is reached', async () => {
       const goodBackupCode = '92345-14812';
       const user = await createUser({
-        backupCodes: [goodBackupCode],
+        mfaBackupCodes: [goodBackupCode],
         loginAttempts: 10,
         lastLoginAttemptAt: new Date(),
       });
@@ -132,7 +132,7 @@ describe('/1/auth/mfa', () => {
     });
   });
 
-  describe('POST /mfa/send-token', () => {
+  describe('POST /mfa/send-code', () => {
     it('should trigger a token being sent', async () => {
       const tokenId = generateTokenId();
       const user = await createUser({
@@ -147,7 +147,7 @@ describe('/1/auth/mfa', () => {
       const token = createTemporaryToken({ type: 'mfa', sub: user.id, jti: user.tempTokenId });
       let response = await request(
         'POST',
-        '/1/auth/mfa/send-token',
+        '/1/auth/mfa/send-code',
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -155,14 +155,14 @@ describe('/1/auth/mfa', () => {
     });
   });
 
-  describe('POST /config', () => {
-    it('should allow mfa config (otp)', async () => {
+  describe('POST /setup', () => {
+    it('should allow mfa setup (otp)', async () => {
       const user = await createUser({
         accessConfirmedAt: new Date(),
       });
       const response = await request(
         'POST',
-        `/1/auth/mfa/config`,
+        `/1/auth/mfa/setup`,
         {
           method: 'otp',
         },
@@ -172,13 +172,13 @@ describe('/1/auth/mfa', () => {
       expect(response.body.data.secret).toBeDefined();
     });
 
-    it('should allow mfa config (sms)', async () => {
+    it('should allow mfa setup (sms)', async () => {
       const user = await createUser({
         accessConfirmedAt: new Date(),
       });
       const response = await request(
         'POST',
-        `/1/auth/mfa/config`,
+        `/1/auth/mfa/setup`,
         {
           method: 'sms',
           phoneNumber: '1231231',
@@ -195,7 +195,7 @@ describe('/1/auth/mfa', () => {
       });
       const response = await request(
         'POST',
-        `/1/auth/mfa/config`,
+        `/1/auth/mfa/setup`,
         {
           method: 'sms',
           phoneNumber: '1231231',
@@ -230,7 +230,7 @@ describe('/1/auth/mfa', () => {
       const dbUser = await User.findById(user.id);
       expect(dbUser.mfaSecret).toBe(secret);
       expect(dbUser.mfaMethod).toBe('otp');
-      expect(dbUser.backupCodes[0]).toBe('burger');
+      expect(dbUser.mfaBackupCodes[0]).toBe('burger');
     });
 
     it('should allow mfa to be enabled (sms)', async () => {
@@ -249,7 +249,7 @@ describe('/1/auth/mfa', () => {
           phoneNumber,
           secret,
           method: 'sms',
-          backupCodes: ['burger'],
+          mfaBackupCodes: ['burger'],
         },
         { user }
       );
@@ -257,7 +257,7 @@ describe('/1/auth/mfa', () => {
       const dbUser = await User.findById(user.id);
       expect(dbUser.mfaSecret).toBe(secret);
       expect(dbUser.mfaMethod).toBe('sms');
-      expect(dbUser.backupCodes[0]).toBe('burger');
+      expect(dbUser.mfaBackupCodes[0]).toBe('burger');
       expect(dbUser.mfaPhoneNumber).toBe(phoneNumber);
     });
 
@@ -279,16 +279,16 @@ describe('/1/auth/mfa', () => {
     });
   });
 
-  describe('POST /auth/mfa/generate-codes', () => {
+  describe('POST /auth/mfa/generate-backup-codes', () => {
     it('should generate new codes', async () => {
       const user = await createUser({});
-      const response = await request('POST', `/1/auth/mfa/generate-codes`, {}, { user });
+      const response = await request('POST', `/1/auth/mfa/generate-backup-codes`, {}, { user });
       expect(response.status).toBe(200);
       expect(response.body.data[0]).toBeDefined();
     });
   });
 
-  describe('POST /confirm-code', () => {
+  describe('POST /check-code', () => {
     it('should verify a code', async () => {
       const user = await createUser({});
       const { secret } = generateSecret({
@@ -299,7 +299,7 @@ describe('/1/auth/mfa', () => {
 
       const response = await request(
         'POST',
-        `/1/auth/mfa/confirm-code`,
+        `/1/auth/mfa/check-code`,
         {
           code,
           secret: secret,

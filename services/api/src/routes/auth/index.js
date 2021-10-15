@@ -95,11 +95,11 @@ router
 
       if (await mfa.requireChallenge(ctx, user)) {
         const tokenId = generateTokenId();
-        const token = createTemporaryToken({ type: 'mfa', sub: user.id, jti: tokenId });
+        const mfaToken = createTemporaryToken({ type: 'mfa', sub: user.id, jti: tokenId });
         user.tempTokenId = tokenId;
         await user.save();
         ctx.body = {
-          data: { token, mfaRequired: true, mfaMethod: user.mfaMethod, mfaPhoneNumber: user.mfaPhoneNumber?.slice(-4) },
+          data: { mfaToken, mfaRequired: true, mfaMethod: user.mfaMethod, mfaPhoneNumber: user.mfaPhoneNumber?.slice(-4) },
         };
         return;
       }
