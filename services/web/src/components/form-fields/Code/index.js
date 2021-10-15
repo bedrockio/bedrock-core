@@ -156,13 +156,13 @@ export default function FormFieldCode({
   return (
     <>
       <div
-        className="formFieldCode"
+        className="form-field-code"
         style={{
           '--itemsCount': length,
         }}>
         <input
           ref={codeInputRef}
-          className="formFieldCode__input"
+          className="form-field-code__input"
           autoComplete="one-time-code"
           type="text"
           inputMode="decimal"
@@ -184,7 +184,7 @@ export default function FormFieldCode({
             ref={ref}
             role="button"
             tabIndex={0}
-            className={`formFieldCode__item ${
+            className={`form-field-code__item ${
               i === activeIndex ? 'is-active' : ''
             }`}
             onFocus={onItemFocus(i)}>

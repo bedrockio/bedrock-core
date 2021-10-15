@@ -7,7 +7,10 @@ import LogoTitle from 'components/LogoTitle';
 import { withRouter } from 'react-router-dom';
 import { APP_NAME } from 'utils/env';
 
+import { withSession } from 'stores';
+
 @withRouter
+@withSession
 export default class Finalize extends React.Component {
   state = {
     loading: false,
@@ -27,6 +30,7 @@ export default class Finalize extends React.Component {
         path: '/1/auth/mfa/enable',
         body: this.props.requestBody,
       });
+      await this.context.reloadUser();
       this.props.history.push(`/settings/security`);
     } catch (error) {
       if (error.status == 403) {

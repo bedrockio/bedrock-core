@@ -25,8 +25,6 @@ export default class Account extends React.Component {
       this.props.history.push(
         `/confirm-access?to=${this.props.location.pathname}`
       );
-    } else {
-      this.context.loadUser();
     }
   }
 
@@ -37,16 +35,17 @@ export default class Account extends React.Component {
         method: 'DELETE',
         path: '/1/auth/mfa/disable',
       });
+      await this.context.reloadUser();
     } catch (e) {
       if (e.status === 403) {
         this.props.history.push(
           `/confirm-access?to=${this.props.location.pathname}`
         );
+        return;
       } else {
         this.setState({ error: e });
       }
     }
-    await this.context.loadUser();
   };
 
   render() {

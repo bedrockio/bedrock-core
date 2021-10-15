@@ -90,7 +90,7 @@ export class SessionProvider extends React.PureComponent {
     }
   };
 
-  loadUser = async () => {
+  reloadUser = async () => {
     const { data } = await request({
       method: 'GET',
       path: '/1/users/me',
@@ -248,7 +248,7 @@ export class SessionProvider extends React.PureComponent {
           clearStored: this.clearStored,
           updateUser: this.updateUser,
           clearUser: this.clearUser,
-          loadUser: this.loadUser,
+          reloadUser: this.reloadUser,
           authenticate: this.authenticate,
           logout: this.logout,
           hasRoles: this.hasRoles,

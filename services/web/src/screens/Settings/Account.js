@@ -14,10 +14,6 @@ export default class Account extends React.Component {
     user: pick(this.context.user, ['firstName', 'lastName', 'timeZone']),
   };
 
-  componentDidMount() {
-    this.context.loadUser();
-  }
-
   setField = (evt, { name, value }) => {
     this.setState({
       user: {

@@ -38,8 +38,7 @@ export default class ConfirmAccess extends React.Component {
           password: this.state.password,
         },
       });
-      await this.context.load();
-
+      await this.context.reloadUser();
       this.props.history.push(this.getRedirectPath());
     } catch (error) {
       this.setState({
