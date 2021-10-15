@@ -206,8 +206,8 @@ router
         to: authUser.fullName,
         template: authUser.mfaMethod === 'otp' ? 'mfa-otp-enabled.md' : 'mfa-sms-enabled.md',
         subject: 'Two-factor authentication enabled',
-        mfaPhoneNumber: authUser.mfaPhoneNumber?.slice(-4),
         firstName: authUser.firstName,
+        phoneLast4: authUser.mfaPhoneNumber?.slice(-4),
       });
 
       ctx.status = 204;
