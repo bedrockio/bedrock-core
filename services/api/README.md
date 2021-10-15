@@ -69,6 +69,9 @@ All configuration is done using environment variables. The default values in `.e
 - `UPLOADS_STORE` - Method for uploads. `local` or `gcs` (Google Cloud Storage)
 - `UPLOADS_GCS_BUCKET` - GCS bucket for uploads
 - `SENTRY_DSN` - Sentry error monitoring credentials
+- `TWILIO_ACCOUNT_SID` - Twilio Account SID
+- `TWILIO_AUTH_TOKEN` -  Twillio Auth token
+- `TWILIO_MESSAGING_SERVICE_SID` - Twillio MESSAGING_SERVICE_SID
 
 ## Building the Container
 
