@@ -276,6 +276,9 @@ function attributesToMongoDefinition(attributes, options = {}, path = []) {
     if (isSchemaType) {
       if (key === 'type' && type === 'string') {
         val = getMongooseType(val, attributes, path);
+      } else if (key === 'match' && type === 'string') {
+        // Convert match field to RegExp that cannot be expressed in JSON.
+        val = RegExp(val);
       } else if (key === 'validate' && type === 'string') {
         // Allow custom mongoose validation function that derives from the Joi schema.
         val = getMongooseValidator(val, attributes);

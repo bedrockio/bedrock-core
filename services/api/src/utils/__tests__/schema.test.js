@@ -124,6 +124,22 @@ describe('createSchema', () => {
         await user.save();
       }).rejects.toThrow();
     });
+
+    it('should convert a string match to a regexp', async () => {
+      const User = createTestModel(
+        createSchemaFromAttributes({
+          color: { type: String, match: '^#[0-9a-f]{6}$' },
+        })
+      );
+      const user = await User.create({
+        color: '#ffffff',
+      });
+
+      await expect(async () => {
+        user.color = 'foo';
+        await user.save();
+      }).rejects.toThrow();
+    });
   });
 
   describe('defaults', () => {
