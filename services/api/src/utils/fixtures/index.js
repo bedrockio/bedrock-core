@@ -3,7 +3,7 @@
 const path = require('path');
 const fs = require('fs/promises');
 const mongoose = require('mongoose');
-const { memoize, mapKeys, camelCase, kebabCase } = require('lodash');
+const { memoize, cloneDeep, mapKeys, camelCase, kebabCase } = require('lodash');
 const { logger } = require('@bedrockio/instrumentation');
 const config = require('@bedrockio/config');
 const models = require('../../models');
@@ -23,6 +23,7 @@ async function loadFixtures() {
   logger.info('Starting fixture import...');
   resetStats();
   await importFixtures();
+  await assertReferencedPlaceholders();
   logStats();
   resetFixtures();
   return true;
@@ -33,7 +34,7 @@ async function importFixtures(id = '', meta) {
   if (!base) {
     return await importRoot(meta);
   }
-  const generated = await getGeneratedFixtures(base, name);
+  const generated = await getGeneratedFixtures(base, name, 'imported');
   if (generated) {
     return generated;
   } else if (name) {
@@ -136,7 +137,7 @@ async function transformProperty(keys, value, meta) {
 
 // File transform helpers
 
-const FILE_REG = /\.(jpg|png|svg|gif|webp|mp4|md|txt|html|pdf|csv)$/;
+const FILE_REG = /\.(jpg|png|svg|gif|webp|mp3|mp4|md|txt|html|pdf|csv)$/;
 const INLINE_CONTENT_REG = /(\(|")([^)"\n]+?\.(?:jpg|png|svg|gif|webp|pdf))([)"])/g;
 const INLINE_CONTENT_TYPES_REG = /\.(md|html)$/;
 
@@ -367,22 +368,25 @@ const logCircularReference = memoize((message) => {
 
 // Generated module helpers.
 
-async function getGeneratedFixtures(base, name) {
-  let fixtures = await importGeneratedDirectory(base);
-  if (fixtures && name) {
-    fixtures = fixtures[name];
-    if (!fixtures) {
-      throw new Error(`Could not import ${name} from generated directory ${base}`);
+async function getGeneratedFixtures(base, name, type) {
+  const generated = await importGeneratedFixtures(base);
+  if (generated) {
+    let fixtures = generated[type];
+    if (name) {
+      fixtures = fixtures[name];
+      if (!fixtures) {
+        throw new Error(`Could not import ${name} from generated directory ${base}`);
+      }
     }
+    return fixtures;
   }
-  return fixtures;
 }
 
-const importGeneratedDirectory = memoize(async (base) => {
-  let fixtures;
+const importGeneratedFixtures = memoize(async (base) => {
+  let loaded, imported;
   const generateFixtureId = getFixtureIdGenerator(base);
   try {
-    fixtures = await loadModule(base, {
+    loaded = await loadModule(base, {
       generateFixtureId,
       loadFixtureModules,
     });
@@ -394,17 +398,28 @@ const importGeneratedDirectory = memoize(async (base) => {
       throw err;
     }
   }
-  if (fixtures) {
+  if (loaded) {
     pushStat('modules', base);
-    if (Array.isArray(fixtures)) {
-      fixtures = mapKeys(fixtures, generateFixtureId);
+    if (Array.isArray(loaded)) {
+      loaded = mapKeys(loaded, generateFixtureId);
     }
     const meta = { generated: base };
-    return await buildFixtures(Object.entries(fixtures), async ([name, attributes]) => {
+
+    // Imported attributes will be mutated, so do a deep clone
+    // to ensure that loaded fixtures will be unchanged. This allows
+    // generated fixtures to reference others and retain the fixture
+    // references exported by the generated module.
+    imported = cloneDeep(loaded);
+
+    imported = await buildFixtures(Object.entries(imported), async ([name, attributes]) => {
       return {
         [name]: await runImport(join(base, name), attributes, meta),
       };
     });
+    return {
+      loaded,
+      imported,
+    };
   }
 });
 
@@ -432,7 +447,7 @@ function getGeneratedContext(meta) {
 // Allow generators to load raw modules to reference them.
 async function loadFixtureModules(id) {
   const { base, name } = getIdComponents(id);
-  const generated = await getGeneratedFixtures(base, name);
+  const generated = await getGeneratedFixtures(base, name, 'loaded');
   if (generated) {
     return generated;
   }
@@ -532,6 +547,26 @@ const getPlaceholderForId = memoize((id) => {
   placeholdersById.set(id, placeholder.toString());
   return placeholder;
 });
+
+// Attempts to import referenced placeholders. If the
+// placeholder id does not exist this will fail providing
+// an error message to a possibly bad reference.
+async function assertReferencedPlaceholders() {
+  let hasBadReferences = false;
+  await Promise.all(
+    Array.from(referencedPlaceholders.values()).map(async (id) => {
+      try {
+        await importFixtures(id);
+      } catch (error) {
+        logger.error(`Could not load module ${id}`);
+        hasBadReferences = true;
+      }
+    })
+  );
+  if (hasBadReferences) {
+    throw new Error('Could not load due to missing modules.');
+  }
+}
 
 function cleanupPlaceholders() {
   placeholdersById = new Map();
@@ -693,7 +728,7 @@ function resetStats() {
 function resetFixtures() {
   cleanupPlaceholders();
   createDocument.cache.clear();
-  importGeneratedDirectory.cache.clear();
+  importGeneratedFixtures.cache.clear();
   importUploadOnce.cache.clear();
   importBufferOnce.cache.clear();
   importContentOnce.cache.clear();
