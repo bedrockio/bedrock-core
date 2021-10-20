@@ -67,7 +67,8 @@ async function importDirectory(base, meta) {
 }
 
 async function importFixture(id, meta) {
-  const attributes = await loadModule(id);
+  // Imported attributes will be mutated, so clone here.
+  const attributes = cloneDeep(await loadModule(id));
   return await runImport(id, attributes, meta);
 }
 
