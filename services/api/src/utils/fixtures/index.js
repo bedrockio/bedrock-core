@@ -25,7 +25,6 @@ async function loadFixtures() {
   await importFixtures();
   await assertReferencedPlaceholders();
   logStats();
-  resetFixtures();
   return true;
 }
 
