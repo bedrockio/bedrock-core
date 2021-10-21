@@ -19,10 +19,19 @@ svg.icon {
   touch-action: manipulation;
 
   display: inline-block;
-  vertical-align: baseline;
   opacity: @opacity;
 
   margin: 0em @distanceFromText 0em 0em;
+
+  // Best guess vertical alignment for icons next to a single text node.
+  // Note vertical-align: middle does not always place the icon dead center
+  // inside the parent, and appears to be off by 1px regardless of the icon
+  // or text size. This still *might* seem misaligned if the text has ascenders
+  // but no descenders or if the icon's bounding box is off so try to address
+  // those issues before messing with this.
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
 }
 
 .ui.icon.button > .icon {
