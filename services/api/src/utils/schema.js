@@ -11,7 +11,7 @@ const { searchValidation } = require('./search');
 const { ObjectId } = mongoose.Types;
 const { ObjectId: ObjectIdSchemaType } = mongoose.Schema.Types;
 
-const RESERVED_FIELDS = ['id', 'createdAt', 'updatedAt', 'deletedAt'];
+const RESERVED_FIELDS = ['id', 'createdAt', 'updatedAt', 'deletedAt', 'deleted'];
 
 const serializeOptions = {
   getters: true,
@@ -46,6 +46,7 @@ function createSchema(definition, options = {}) {
     {
       ...mongoDefinition,
       deletedAt: { type: Date },
+      deleted: { type: Boolean, default: false },
     },
     {
       // Include timestamps by default.
@@ -133,11 +134,13 @@ function createSchema(definition, options = {}) {
 
   schema.pre(/^find|count|exists/, function (next) {
     const filter = this.getFilter();
-    if (filter.deletedAt === undefined) {
-      if ('deletedAt' in filter) {
-        delete filter.deletedAt;
+    if (filter.deleted === undefined) {
+      // Allow search of both deleted and non-deleted docs with deleted: undefined
+      if ('deleted' in filter) {
+        delete filter.deleted;
       } else {
-        filter.deletedAt = { $exists: false };
+        // Search non-deleted docs by default
+        filter.deleted = false;
       }
     }
     return next();
@@ -145,11 +148,13 @@ function createSchema(definition, options = {}) {
 
   schema.method('delete', function () {
     this.deletedAt = new Date();
+    this.deleted = true;
     return this.save();
   });
 
   schema.method('restore', function restore() {
     this.deletedAt = undefined;
+    this.deleted = false;
     return this.save();
   });
 
@@ -160,68 +165,68 @@ function createSchema(definition, options = {}) {
   schema.static('findDeleted', function findOneDeleted(filter) {
     return this.find({
       ...filter,
-      deletedAt: { $exists: true },
+      deleted: true,
     });
   });
 
   schema.static('findOneDeleted', function findOneDeleted(filter) {
     return this.findOne({
       ...filter,
-      deletedAt: { $exists: true },
+      deleted: true,
     });
   });
 
   schema.static('findByIdDeleted', function findByIdDeleted(id) {
     return this.findOne({
       _id: id,
-      deletedAt: { $exists: true },
+      deleted: true,
     });
   });
 
   schema.static('existsDeleted', function existsDeleted() {
     return this.exists({
-      deletedAt: { $exists: true },
+      deleted: true,
     });
   });
 
   schema.static('countDocumentsDeleted', function countDocumentsDeleted(filter) {
     return this.countDocuments({
       ...filter,
-      deletedAt: { $exists: true },
+      deleted: true,
     });
   });
 
   schema.static('findWithDeleted', function findOneWithDeleted(filter) {
     return this.find({
       ...filter,
-      deletedAt: undefined,
+      deleted: undefined,
     });
   });
 
   schema.static('findOneWithDeleted', function findOneWithDeleted(filter) {
     return this.findOne({
       ...filter,
-      deletedAt: undefined,
+      deleted: undefined,
     });
   });
 
   schema.static('findByIdWithDeleted', function findByIdWithDeleted(id) {
     return this.findOne({
       _id: id,
-      deletedAt: undefined,
+      deleted: undefined,
     });
   });
 
   schema.static('existsWithDeleted', function existsWithDeleted() {
     return this.exists({
-      deletedAt: undefined,
+      deleted: undefined,
     });
   });
 
   schema.static('countDocumentsWithDeleted', function countDocumentsWithDeleted(filter) {
     return this.countDocuments({
       ...filter,
-      deletedAt: undefined,
+      deleted: undefined,
     });
   });
 

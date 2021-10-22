@@ -64,7 +64,7 @@ router
             email,
             status: 'invited',
           },
-          { status: 'invited', email, $unset: { deletedAt: 1 } },
+          { status: 'invited', email, $unset: { deleted: 1, deletedAt: 1 } },
           {
             new: true,
             upsert: true,
