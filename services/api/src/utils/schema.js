@@ -315,7 +315,7 @@ function getMongooseType(str, attributes, path) {
   const type = mongoose.Schema.Types[str];
   if (!type) {
     throw new Error(`Type ${str} could not be converted to Mongoose type.`);
-  } else if (type === ObjectIdSchemaType && !attributes.ref) {
+  } else if (type === ObjectIdSchemaType && !attributes.ref && !attributes.refPath) {
     throw new Error(`Ref must be passed for ${path.join('.')}`);
   }
   return type;
