@@ -3,7 +3,7 @@
 const path = require('path');
 const fs = require('fs/promises');
 const mongoose = require('mongoose');
-const { memoize, cloneDeep, mapKeys, camelCase, kebabCase } = require('lodash');
+const { get, memoize, cloneDeep, mapKeys, camelCase, kebabCase } = require('lodash');
 const { logger } = require('@bedrockio/instrumentation');
 const config = require('@bedrockio/config');
 const models = require('../../models');
@@ -73,7 +73,7 @@ async function importFixture(id, meta) {
 
 async function runImport(id, attributes, meta) {
   const model = modelsByName[path.dirname(id)];
-  meta = { id, model, meta };
+  meta = { id, model, meta, base: attributes };
   return createDocument(id, attributes, meta);
 }
 
@@ -294,7 +294,11 @@ async function transformReference(keys, value, meta) {
 
 function getReferenceModel(keys, meta) {
   const schemaType = getSchemaType(keys, meta);
-  return models[schemaType.options.ref];
+  let { ref, refPath } = schemaType.options;
+  if (!ref && refPath) {
+    ref = get(meta.base, refPath);
+  }
+  return models[ref];
 }
 
 function getSchemaType(keys, meta) {
