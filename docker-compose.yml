@@ -25,6 +25,9 @@ services:
     build:
       context: ./services/web
       dockerfile: Dockerfile
+      args:
+        NODE_ENV: development
+    command: yarn start
     volumes:
       - ./services/web/src:/service/src
     ports:

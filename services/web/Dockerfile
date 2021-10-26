@@ -8,7 +8,7 @@ COPY scripts/install_githooks service/scripts/install_githooks
 
 # Update & install required packages
 RUN apk add --update bash curl;
-RUN cd /service; yarn install --frozen-lockfile;
+RUN if [ "$NODE_ENV" = "development" ]; then cd /service; yarn install --frozen-lockfile; fi
 
 # Copy app source
 COPY . /service/
