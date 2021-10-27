@@ -15,6 +15,10 @@ const CUSTOM_TRANSFORMS = {
   async ref(key, meta, context) {
     return await context.importFixtures(key, meta);
   },
+  async obj(key, meta, context) {
+    const doc = await context.importFixtures(key, meta);
+    return doc.toObject();
+  },
 };
 
 const MODEL_TRANSFORMS = {
