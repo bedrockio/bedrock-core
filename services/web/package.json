@@ -6,9 +6,12 @@
     "node": ">=10"
   },
   "scripts": {
-    "build": "NODE_ENV=production NODE_OPTIONS=\"--max-old-space-size=4096\" webpack",
-    "start": "node ./serve/dev",
-    "static": "node ./serve/static",
+    "build:vite": "vite build",
+    "start:vite": "vite",
+    "static:vite": "vite preview",
+    "build:webpack": "NODE_ENV=production NODE_OPTIONS=\"--max-old-space-size=4096\" webpack",
+    "start:webpack": "node ./serve/dev",
+    "static:webpack": "node ./serve/static",
     "lint": "eslint",
     "test": "jest",
     "generate": "cd ../../generator && yarn install && yarn generate"
@@ -24,6 +27,7 @@
     "@bedrockio/instrumentation": "^1.4.9",
     "@hot-loader/react-dom": "^17.0.1",
     "@sentry/browser": "^6.0.1",
+    "@vitejs/plugin-react": "^1.0.6",
     "autoprefixer": "^9.7.6",
     "babel-loader": "^8.2.2",
     "babel-plugin-lodash": "^3.3.4",
@@ -64,6 +68,7 @@
     "semantic-ui-react": "^2.0.3",
     "style-loader": "^2.0.0",
     "terser-webpack-plugin": "^5.2.4",
+    "vite": "^2.6.13",
     "webpack": "^5.54.0",
     "webpack-cli": "^4.8.0",
     "webpack-dev-middleware": "^5.2.1",
