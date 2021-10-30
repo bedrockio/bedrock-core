@@ -135,12 +135,6 @@ Then do the following
 gcloud auth configure-docker
 ```
 
-or
-
-```
-gcloud auth configure-docker
-```
-
 ## Provisioning
 
 [Terraform](https://www.terraform.io/) is used (defining infrastructure as code) to provision the environment and create the Kubernetes cluster.
