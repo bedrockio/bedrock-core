@@ -27,9 +27,9 @@
     - [Getting shell access](#getting-shell-access)
     - [Reloading DB fixtures](#reloading-db-fixtures)
   - [Disaster Recovery](#disaster-recovery)
-      - [Scenario A: Master Database Loss or Corruption](#scenario-a-master-database-loss-or-corruption)
-      - [Scenario B: Bucket Storage Loss or Corruption](#scenario-b-bucket-storage-loss-or-corruption)
-      - [Scenario C: Deletion of Google Cloud Project](#scenario-c-deletion-of-google-cloud-project)
+    - [Scenario A: Master Database Loss or Corruption](#scenario-a-master-database-loss-or-corruption)
+    - [Scenario B: Bucket Storage Loss or Corruption](#scenario-b-bucket-storage-loss-or-corruption)
+    - [Scenario C: Deletion of Google Cloud Project](#scenario-c-deletion-of-google-cloud-project)
   - [Other](#other)
     - [Configuring Backups](#configuring-backups)
     - [Backup Monitoring System](#backup-monitoring-system)
@@ -42,9 +42,11 @@
 
 - Make sure the `gcloud` CLI tools are available
 - Install the `bedrock-cli` ([link](https://github.com/bedrockio/bedrock-cli))
+
 ```bash
 curl -s https://install.bedrock.io | bash
 ```
+
 - Use `gcloud auth login` and `gcloud auth application-default login` to login to the right Google account, or `bedrock cloud login`.
 - For provisioning `bedrock-cli` requires [Terraform](https://www.terraform.io/)
 
@@ -97,6 +99,7 @@ deployment/
 ### Configuration
 
 Each environment can be configured in `environments/<environment>/config.json`:
+
 ```json
 {
   "gcloud": {
@@ -135,7 +138,7 @@ gcloud auth configure-docker
 or
 
 ```
-gcloud docker --authorize-only
+gcloud auth configure-docker
 ```
 
 ## Provisioning
@@ -239,6 +242,7 @@ The following builds, pushes and applies containers for the `services/api`:
 ```bash
 bedrock cloud deploy staging api
 ```
+
 If you leave out the `api` argument, then you will be presented with a prompt to select the service you wish to deploy. Example:
 
 ```bash
@@ -341,6 +345,7 @@ bedrock cloud shell staging mongo
 ```
 
 Alternatively with kubectl:
+
 ```
 kubectl exec -it <CLI-POD-ID> -- /bin/bash
 ```
@@ -438,7 +443,6 @@ Bedrock has the follwing secret commands:
 ```
 
 The `<secret-name>.conf` file needs to be located in the `/environments/<environment>/secrets` folder (create secrets folder if it doesn't exist yet.).
-
 
 For example create `credentials.conf` in `/environments/staging/secrets`, containing:
 
