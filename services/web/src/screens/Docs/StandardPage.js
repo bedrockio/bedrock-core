@@ -3,16 +3,21 @@ import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
 import CodeBlock from './CodeBlock';
 import Heading from './Heading';
+import { withSession } from 'stores';
 import 'github-markdown-css';
-import { enrichMarkdown, executeOpenApiMacros } from 'utils/markdown';
+import { enrichMarkdown } from 'utils/markdown';
 
 import './table.less';
 
+@withSession
 export default class StandardPage extends React.Component {
   render() {
-    const { credentials, page, openApi } = this.props;
-    let markdown = enrichMarkdown(page.markdown, credentials);
-    markdown = executeOpenApiMacros(openApi, markdown);
+    const { page, openApi } = this.props;
+    const { organization } = this.context;
+    const markdown = enrichMarkdown(page.markdown, {
+      openApi,
+      organization,
+    });
     return (
       <div className="docs markdown-body">
         <ReactMarkdown

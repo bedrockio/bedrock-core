@@ -1,5 +1,6 @@
-import { API_URL, APP_NAME } from 'utils/env';
-import { flatten } from 'lodash';
+import { flatten, template } from 'lodash';
+import { getToken } from 'utils/api';
+import * as env from 'utils/env';
 
 function formatTypeSummary(schema) {
   if (!schema) return 'unknown';
@@ -15,10 +16,12 @@ class OpenApiMacros {
     this.paths = flatten(openApi.map((module) => module.paths || []));
     this.objects = flatten(openApi.map((module) => module.objects || []));
   }
-  callHeading({ method, path }) {
+
+  callHeading = ({ method, path }) => {
     return `#### \`${method} ${path}\``;
-  }
-  callParams({ method, path }) {
+  };
+
+  callParams = ({ method, path }) => {
     const definition = this.paths.find(
       (d) => d.method === method && d.path === path
     );
@@ -45,8 +48,9 @@ class OpenApiMacros {
       );
     });
     return markdown.join('\n');
-  }
-  callResponse({ method, path }) {
+  };
+
+  callResponse = ({ method, path }) => {
     const definition = this.paths.find(
       (d) => d.method === method && d.path === path
     );
@@ -67,8 +71,9 @@ class OpenApiMacros {
       markdown.push(`|\`${name}\`|${typeStr}|${descriptionStr}|`);
     });
     return markdown.join('\n');
-  }
-  callExamples({ method, path }) {
+  };
+
+  callExamples = ({ method, path }) => {
     const definition = this.paths.find(
       (d) => d.method === method && d.path === path
     );
@@ -97,8 +102,9 @@ class OpenApiMacros {
       }
     });
     return markdown.join('\n');
-  }
-  callSummary({ method, path }) {
+  };
+
+  callSummary = ({ method, path }) => {
     const markdown = [];
     markdown.push(this.callHeading({ method, path }));
     markdown.push(this.callParams({ method, path }));
@@ -111,8 +117,9 @@ class OpenApiMacros {
       markdown.push(examplesMd);
     }
     return markdown.join('\n');
-  }
-  objectSummary({ name }) {
+  };
+
+  objectSummary = ({ name }) => {
     const definition = this.objects.find((d) => d.name === name);
     if (!definition) return `\`Could not find object for ${name}\``;
     let markdown = [
@@ -141,7 +148,7 @@ class OpenApiMacros {
       );
     });
     return markdown.join('\n');
-  }
+  };
 
   buildNestedTable(headerCells, bodyRows) {
     function wrap(tag, arr, fn) {
@@ -172,45 +179,15 @@ class OpenApiMacros {
   }
 }
 
-export function executeOpenApiMacros(openApi, markdown) {
-  // eslint-disable-next-line
+export function enrichMarkdown(markdown, options) {
+  const { openApi, organization } = options;
   const macros = new OpenApiMacros(openApi);
-  Object.getOwnPropertyNames(OpenApiMacros.prototype).forEach((macroFn) => {
-    const key = macroFn.toString();
-    const re = new RegExp(key + '\\(' + '[^)]+' + '\\)', 'gm');
-    const matches = markdown.match(re);
-    matches &&
-      matches.forEach((match) => {
-        const result = eval(`macros.${match}`);
-        markdown = markdown.replace(match, result);
-      });
+  return template(markdown)({
+    ...env,
+    ...macros,
+    API_TOKEN: getToken(),
+    ORGANIZATION_ID: organization?.id,
   });
-  return markdown;
-}
-
-export function enrichMarkdown(markdown, credentials, organization) {
-  let enrichedMarkdown = markdown;
-  if (organization) {
-    enrichedMarkdown = enrichedMarkdown.replace(
-      new RegExp('<ORGANIZATION_ID>', 'g'),
-      organization.id
-    );
-  }
-  if (credentials && credentials.length) {
-    enrichedMarkdown = enrichedMarkdown.replace(
-      new RegExp('<TOKEN>', 'g'),
-      credentials[0].apiToken
-    );
-  }
-  enrichedMarkdown = enrichedMarkdown.replace(
-    new RegExp('<API_URL>', 'g'),
-    API_URL.replace(/\/$/, '')
-  );
-  enrichedMarkdown = enrichedMarkdown.replace(
-    new RegExp('<APP_NAME>', 'g'),
-    APP_NAME.replace(/\/$/, '')
-  );
-  return enrichedMarkdown;
 }
 
 function html(chunks, ...args) {

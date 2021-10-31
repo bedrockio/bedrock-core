@@ -1,13 +1,13 @@
-# <APP_NAME> API v1
+# <%= APP_NAME %> API v1
 
-The <APP_NAME> API is a RESTful JSON API. Select export CSV API calls are available for specific endpoints. All communication is enforced over HTTPS (with support for TLS 1.3) and protected by CloudFlare. Using the dashboard API credentials can be managed with a full RBAC permissioning layer.
+The <%= APP_NAME %> API is a RESTful JSON API. Select export CSV API calls are available for specific endpoints. All communication is enforced over HTTPS (with support for TLS 1.3) and protected by CloudFlare. Using the dashboard API credentials can be managed with a full RBAC permissioning layer.
 
 ### URLs
 
 Main production URL:
 
 ```
-<API_URL>/
+<%= API_URL %>/
 ```
 
 ### Authorization
@@ -15,7 +15,7 @@ Main production URL:
 JWT is used for all authentication. You can provide your API token in a standard bearer token request (`Authorization: Bearer <token>`) like so:
 
 ```bash
-curl -H 'Authorization: Bearer <token>' <API_URL>/
+curl -H 'Authorization: Bearer <token>' <%= API_URL %>/
 ```
 
 _When receiving a 401 status code, the client should clear any stored JWT tokens - this will enable authentication reset and expiry behavior_
@@ -27,7 +27,7 @@ A pragmatic RESTful style is enforced on all API calls. GET requests are only us
 Search/List API calls are done using POST to allow reliable JSON parameters. Example search:
 
 ```bash
-curl -XPOST <API_URL>/2/users/search \
+curl -XPOST <%= API_URL %>/2/users/search \
   -d '{"limit": 100, "skip": 0}' \
   -H 'Authorization: Bearer <token>' \
   -H 'Content-Type: application/json'
