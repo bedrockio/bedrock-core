@@ -5,14 +5,15 @@
     <meta http-equiv="Content-Language" content="en" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
-    />
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
     <title><%= APP_NAME %></title>
     <%= require('utils/analytics/head.html') %>
+    <link rel="stylesheet" href="index.css" />
     <!--env:conf-->
   </head>
   <body>
     <div id="root"></div>
     <%= require('utils/analytics/body.html') %>
+    <script src="index.js"></script>
   </body>
 </html>
