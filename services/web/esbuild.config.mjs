@@ -3,29 +3,31 @@ import { lessLoader } from 'esbuild-plugin-less';
 import babel from 'esbuild-plugin-babel';
 import html from './htmlPlugin.mjs';
 
+const BUILD = process.env.NODE_ENV === 'production';
+
 (async () => {
   await build({
-    // watch: true,
     entryPoints: ['src/index.js'],
     bundle: true,
-    // format: 'cjs',
-    // minify: true,
-    // sourcemap: true,
+    minify: BUILD,
+    sourcemap: !BUILD,
+    watch: !BUILD,
+    keepNames: true,
     // target: ['chrome58', 'firefox57', 'safari11', 'edge16'],
     loader: {
       // '.js': 'jsx',
       '.svg': 'file',
       '.png': 'file',
       '.jpg': 'file',
-      '.md': 'file',
+      '.md': 'text',
     },
-    outdir: 'dist/assets',
-    assetNames: '[name]-[hash]',
-    entryNames: 'public-[hash]',
+    outdir: 'dist',
+    assetNames: 'assets/[name].[hash]',
+    entryNames: 'assets/public.[hash]',
+    publicPath: '/',
     plugins: [
       html({
         template: 'src/index.html',
-        outfile: 'dist/index.html',
       }),
       lessLoader(),
       babel({

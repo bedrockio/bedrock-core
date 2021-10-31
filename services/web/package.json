@@ -6,7 +6,9 @@
     "node": ">=10"
   },
   "scripts": {
-    "build": "rm -rf dist && node esbuild.config.mjs",
+    "build": "rm -rf dist && NODE_ENV=production node esbuild.config.mjs",
+    "watch": "rm -rf dist && NODE_ENV=development node esbuild.config.mjs",
+    "build:webpack": "NODE_ENV=production NODE_OPTIONS=\"--max-old-space-size=4096\" webpack",
     "start": "node ./serve/dev",
     "static": "node ./serve/static",
     "lint": "eslint",

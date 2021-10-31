@@ -7,13 +7,11 @@ import config from '@bedrockio/config';
 
 async function buildTemplate({ template = 'index.html' }) {
   const dir = path.dirname(template);
-  const filename = path.basename(template);
   const file = path.resolve(process.cwd(), template);
   const source = loadTemplateSource(file);
   return {
     dir,
     source,
-    filename,
   };
 }
 
@@ -47,7 +45,7 @@ export default function (options) {
     setup(build) {
       build.initialOptions.metafile = true;
       build.onEnd(async ({ metafile }) => {
-        let { dir, filename, source } = await buildTemplate(options);
+        let { dir, source } = await buildTemplate(options);
         const $ = cheerio.load(source);
         const outputs = mapOutputs(metafile.outputs);
         const { outdir } = build.initialOptions;
@@ -67,7 +65,8 @@ export default function (options) {
             }
           }
         }
-        await writeFile(options.outfile, $.html());
+        const { outfile = path.basename(options.template) } = options;
+        await writeFile(path.join(outdir, outfile), $.html());
       });
     },
   };
