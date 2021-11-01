@@ -408,7 +408,9 @@ function flattenQuery(query, root = {}, rootPath = []) {
     if (isNestedQuery(key, value)) {
       flattenQuery(value, root, path);
     } else if (isArrayQuery(key, value)) {
-      root[path.join('.')] = { $in: value };
+      if (value.length) {
+        root[path.join('.')] = { $in: value };
+      }
     } else if (isRegexQuery(key, value)) {
       root[path.join('.')] = parseRegexQuery(value);
     } else {
