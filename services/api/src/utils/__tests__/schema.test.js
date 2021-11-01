@@ -1894,6 +1894,30 @@ describe('search', () => {
     expect(result.meta.total).toBe(2);
   });
 
+  it('should not filter query when empty array passed', async () => {
+    const User = createTestModel(
+      createSchemaFromAttributes({
+        order: Number,
+        categories: [String],
+      })
+    );
+    const [user1, user2] = await Promise.all([
+      User.create({ order: 1, categories: ['owner', 'member'] }),
+      User.create({ order: 2, categories: ['owner'] }),
+    ]);
+
+    const result = await User.search({
+      categories: [],
+      sort: {
+        field: 'order',
+        order: 'asc',
+      },
+    });
+
+    expect(result.data).toMatchObject([{ id: user1.id }, { id: user2.id }]);
+    expect(result.meta.total).toBe(2);
+  });
+
   it('should allow shorthand for a regex query', async () => {
     const User = createTestModel(
       createSchemaFromAttributes({
@@ -1909,21 +1933,6 @@ describe('search', () => {
     });
     expect(result.data).toMatchObject([{ name: 'Billy' }]);
     expect(result.meta.total).toBe(1);
-  });
-
-  it('should behave like $in when empty array passed', async () => {
-    const User = createTestModel(
-      createSchemaFromAttributes({
-        categories: [String],
-      })
-    );
-    await Promise.all([User.create({ categories: ['owner', 'member'] }), User.create({ categories: ['owner'] })]);
-
-    const result = await User.search({
-      categories: [],
-    });
-    expect(result.data).toMatchObject([]);
-    expect(result.meta.total).toBe(0);
   });
 
   it('should be able to perform a search on a nested field', async () => {
