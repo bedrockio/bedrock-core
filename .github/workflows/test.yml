@@ -8,7 +8,7 @@ jobs:
         working-directory: ./services/web
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [16.x]
     steps:
       - uses: actions/checkout@v2
 
@@ -41,7 +41,7 @@ jobs:
         working-directory: ./services/api
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [16.x]
     steps:
       - uses: actions/checkout@v2
 

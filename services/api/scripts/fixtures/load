@@ -1,4 +1,4 @@
-#!/usr/bin/env node --unhandled-rejections=strict
+#!/usr/bin/env node
 
 const { initialize } = require('../../src/utils/database');
 const { loadFixtures } = require('../../src/utils/fixtures');
