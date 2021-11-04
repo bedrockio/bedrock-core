@@ -27,6 +27,7 @@ describe('/1/organizations', () => {
 
   describe('POST /mine/search', () => {
     it('should list out own organizations', async () => {
+      // eslint-disable-next-line no-unused-vars
       const [org1, org2, org3] = await Promise.all([
         Organization.create({
           name: 'org 1',

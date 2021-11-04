@@ -2,7 +2,6 @@ const Router = require('@koa/router');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
-const { userHasAccess } = require('../utils/permissions');
 const { Organization } = require('../models');
 
 const router = new Router();

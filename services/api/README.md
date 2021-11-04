@@ -69,6 +69,10 @@ All configuration is done using environment variables. The default values in `.e
 - `UPLOADS_STORE` - Method for uploads. `local` or `gcs` (Google Cloud Storage)
 - `UPLOADS_GCS_BUCKET` - GCS bucket for uploads
 - `SENTRY_DSN` - Sentry error monitoring credentials
+- `TWILIO_ACCOUNT_SID` - Twilio Account SID (required for MFA SMS)
+- `TWILIO_AUTH_TOKEN` - Twillio Auth token (required for MFA SMS)
+- `TWILIO_MESSAGING_SERVICE_SID` - Twillio Messaging Service SID (required for MFA SMS)
+
 
 ## Building the Container
 
@@ -288,3 +292,13 @@ Here's an example of an API call definition:
 All information in `src/routes/__openapi__` is exposed through the API and used by the Markdown-powered documentation portal in `/services/web/src/docs`.
 
 See [../../services/web](../../services/web) for more info on customizing documentation.
+
+
+## Multi factor authentication
+
+By default multi factor authentication with a authenticator app (1password, lastpassword etc) works out of the box, but for sms verification you have to have a [Twilio](https://www.twilio.com/) account.
+
+In Twilio you need to create an account, that will generate the (TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN) to get TWILIO_MESSAGING_SERVICE_SID
+you have to create a [messaging service](https://support.twilio.com/hc/en-us/articles/223181308-Getting-started-with-Messaging-Services).
+
+To disable mfa: Update the login endpoint to not check for `mfa.requireChallenge`

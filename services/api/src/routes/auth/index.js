@@ -1,12 +1,17 @@
+const mfaRouter = require('./mfa');
 const Router = require('@koa/router');
 const Joi = require('joi');
-const { validateBody } = require('../utils/middleware/validate');
-const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
-const { createAuthToken, createTemporaryToken, generateTokenId } = require('../utils/tokens');
-const { sendTemplatedMail } = require('../utils/mailer');
-const { User, Invite, AuditEntry } = require('../models');
+const { validateBody } = require('../../utils/middleware/validate');
+const { authenticate, fetchUser } = require('../../utils/middleware/authenticate');
+const { createAuthToken, createTemporaryToken, generateTokenId } = require('../../utils/tokens');
+const { sendTemplatedMail } = require('../../utils/mailer');
+const { User, Invite, AuditEntry } = require('../../models');
+
+const mfa = require('../../utils/mfa');
 
 const router = new Router();
+
+router.use('/mfa', mfaRouter.routes(), mfaRouter.allowedMethods());
 
 const passwordField = Joi.string()
   .min(12)
@@ -69,7 +74,7 @@ router
       }
 
       if (!user.verifyLoginAttempts()) {
-        await AuditEntry.append('reached max. authentication attempts', ctx, {
+        await AuditEntry.append('reached max authentication attempts', ctx, {
           type: 'security',
           object: user,
           user: user.id,
@@ -86,8 +91,20 @@ router
         ctx.throw(401, 'Incorrect password');
       }
 
-      const authTokenId = generateTokenId();
       user.loginAttempts = 0;
+
+      if (await mfa.requireChallenge(ctx, user)) {
+        const tokenId = generateTokenId();
+        const mfaToken = createTemporaryToken({ type: 'mfa', sub: user.id, jti: tokenId });
+        user.tempTokenId = tokenId;
+        await user.save();
+        ctx.body = {
+          data: { mfaToken, mfaRequired: true, mfaMethod: user.mfaMethod, mfaPhoneNumber: user.mfaPhoneNumber?.slice(-4) },
+        };
+        return;
+      }
+
+      const authTokenId = generateTokenId();
       user.authTokenId = authTokenId;
       await user.save();
 
@@ -97,6 +114,40 @@ router
       });
 
       ctx.body = { data: { token: createAuthToken(user.id, user.authTokenId) } };
+    }
+  )
+  .post(
+    '/confirm-access',
+    validateBody({
+      password: Joi.string(),
+    }),
+    authenticate({ type: 'user' }),
+    fetchUser,
+    async (ctx) => {
+      const { authUser } = ctx.state;
+      const { password } = ctx.request.body;
+
+      if (!authUser.verifyLoginAttempts()) {
+        await AuditEntry.append('reached max authentication attempts', ctx, {
+          type: 'security',
+          object: authUser,
+          user: authUser.id,
+        });
+        ctx.throw(401, 'Too many attempts');
+      }
+
+      if (!(await authUser.verifyPassword(password))) {
+        await AuditEntry.append('failed authentication (confirm-access)', ctx, {
+          type: 'security',
+          object: authUser,
+          user: authUser.id,
+        });
+        ctx.throw(401, 'Incorrect password');
+      }
+      authUser.accessConfirmedAt = new Date();
+      await authUser.save();
+
+      ctx.status = 204;
     }
   )
   .post('/logout', authenticate({ type: 'user' }), fetchUser, async (ctx) => {
@@ -192,7 +243,7 @@ router
           object: user,
           user: user.id,
         });
-        ctx.throw(400, 'Token is invalid');
+        ctx.throw(400, 'Token is invalid (jti)');
       }
       user.password = password;
       user.tempTokenId = undefined;

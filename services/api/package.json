@@ -34,7 +34,10 @@
     "mongoose": "^5.12.12",
     "mongoose-autopopulate": "^0.14.0",
     "mustache": "^4.1.0",
-    "postmark": "^2.5.4"
+    "node-fetch": "^2.6.1",
+    "notp": "^2.0.3",
+    "postmark": "^2.5.4",
+    "thirty-two": "^1.0.2"
   },
   "devDependencies": {
     "@bedrockio/prettier-config": "^1.0.1",

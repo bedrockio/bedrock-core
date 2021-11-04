@@ -53,6 +53,10 @@
       "readScopes": "none",
       "writeScopes": "none"
     },
+    "accessConfirmedAt": {
+      "type": "Date",
+      "writeScopes": "none"
+    },
     "authTokenId": {
       "type": "String",
       "readScopes": "none",
@@ -62,11 +66,28 @@
       "type": "String",
       "readScopes": "none",
       "writeScopes": "none"
+    },
+    "mfaBackupCodes": [
+      {
+        "type": "String",
+        "readScopes": "none",
+        "writeScopes": "none"
+      }
+    ],
+    "mfaMethod": {
+      "type": "String",
+      "enum": ["sms", "otp"]
+    },
+    "mfaSecret": {
+      "type": "String",
+      "readScopes": "none",
+      "writeScopes": "none"
+    },
+    "mfaPhoneNumber": {
+      "type": "String",
+      "readScopes": "none",
+      "writeScopes": "none"
     }
   },
-  "search": [
-    "firstName",
-    "lastName",
-    "email"
-  ]
+  "search": ["firstName", "lastName", "email"]
 }

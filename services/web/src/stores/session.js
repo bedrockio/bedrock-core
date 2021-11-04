@@ -48,7 +48,7 @@ export class SessionProvider extends React.PureComponent {
     return this.hasRoles([role]);
   };
 
-  setToken = async (token) => {
+  setToken = (token) => {
     if (token) {
       setToken(token);
     } else {
@@ -90,6 +90,16 @@ export class SessionProvider extends React.PureComponent {
     }
   };
 
+  reloadUser = async () => {
+    const { data } = await request({
+      method: 'GET',
+      path: '/1/users/me',
+    });
+    this.setState({
+      user: data,
+    });
+  };
+
   updateUser = (data) => {
     this.setState({
       user: merge({}, this.state.user, data),
@@ -118,17 +128,12 @@ export class SessionProvider extends React.PureComponent {
     } catch (err) {
       // JWT token errors may throw here
     }
-    await this.setToken(null);
+    this.setToken(null);
     document.location = '/';
   };
 
-  login = async (body) => {
-    const { data } = await request({
-      method: 'POST',
-      path: '/1/auth/login',
-      body,
-    });
-    this.setToken(data.token);
+  authenticate = async (token) => {
+    this.setToken(token);
     await this.load();
     return this.popStored('redirect') || '/';
   };
@@ -243,7 +248,8 @@ export class SessionProvider extends React.PureComponent {
           clearStored: this.clearStored,
           updateUser: this.updateUser,
           clearUser: this.clearUser,
-          login: this.login,
+          reloadUser: this.reloadUser,
+          authenticate: this.authenticate,
           logout: this.logout,
           hasRoles: this.hasRoles,
           hasRole: this.hasRole,

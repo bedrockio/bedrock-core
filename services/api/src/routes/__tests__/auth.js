@@ -27,6 +27,20 @@ describe('/1/auth', () => {
       expect(payload).toHaveProperty('type', 'user');
     });
 
+    it('should login a user user with mfa enabled', async () => {
+      const password = '123password!';
+      const user = await createUser({
+        password,
+        mfaMethod: 'otp',
+      });
+      const response = await request('POST', '/1/auth/login', { email: user.email, password });
+      expect(response.status).toBe(200);
+
+      const { payload } = jwt.decode(response.body.data.mfaToken, { complete: true });
+      expect(payload).toHaveProperty('kid', 'user');
+      expect(payload).toHaveProperty('type', 'mfa');
+    });
+
     it('should throttle a few seconds after 3 bad attempts', async () => {
       mockTime();
 
@@ -44,7 +58,6 @@ describe('/1/auth', () => {
       expect(response.status).toBe(401);
 
       advanceTime(60 * 1000);
-
       response = await request('POST', '/1/auth/login', { email: user.email, password });
       expect(response.status).toBe(200);
 
@@ -134,6 +147,38 @@ describe('/1/auth', () => {
 
       response = await request('POST', '/1/auth/register', { firstName, lastName, email, password });
       expect(response.status).toBe(400);
+    });
+  });
+
+  describe('POST /confirm-access', () => {
+    it('should allow users to confirm they own the account by enter their password', async () => {
+      const password = 'burgerfuntime';
+      const user = await createUser({
+        password,
+        accessConfirmedAt: new Date(Date.now() - 1000),
+      });
+
+      const response = await request(
+        'POST',
+        '/1/auth/confirm-access',
+        {
+          password,
+        },
+        { user }
+      );
+      expect(response.status).toBe(204);
+      const dbUser = await User.findById(user.id);
+      expect(dbUser.accessConfirmedAt.valueOf()).toBeGreaterThan(user.accessConfirmedAt.valueOf());
+    });
+
+    it('should block user if limit is reached', async () => {
+      const user = await createUser({
+        lastLoginAttemptAt: new Date(),
+        loginAttempts: 10,
+      });
+      let response = await request('POST', '/1/auth/confirm-access', { password: 'bad password' }, { user });
+      expect(response.status).toBe(401);
+      expect(response.body.error.message).toBe('Too many attempts');
     });
   });
 

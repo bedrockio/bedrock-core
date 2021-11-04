@@ -25,6 +25,19 @@ function createTemporaryToken(claims) {
   );
 }
 
+function createShortLivedToken(claims) {
+  return jwt.sign(
+    {
+      ...claims,
+      kid: 'user',
+    },
+    secrets.user,
+    {
+      expiresIn: expiresIn.shortlived,
+    }
+  );
+}
+
 function createAuthToken(sub, jti) {
   return jwt.sign(
     {
@@ -45,6 +58,7 @@ function generateTokenId() {
 }
 
 module.exports = {
+  createShortLivedToken,
   createTemporaryToken,
   createAuthToken,
   generateTokenId,

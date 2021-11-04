@@ -6,12 +6,14 @@ import screen from 'helpers/screen';
 import { HelpTip, Breadcrumbs, SearchProvider, Layout } from 'components';
 // --- Generator: list-imports
 import { Link } from 'react-router-dom';
-import { getData } from 'country-list';
-const countries = getData().map(({ code, name }) => ({
-  value: code,
-  text: name,
-  key: code,
+import allCountries from 'utils/countries';
+
+const countries = allCountries.map(({ countryCode, nameEn }) => ({
+  value: countryCode,
+  text: nameEn,
+  key: countryCode,
 }));
+
 // --- Generator: end
 
 import Filters from 'modals/Filters';

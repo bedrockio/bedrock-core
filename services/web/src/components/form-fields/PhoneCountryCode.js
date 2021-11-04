@@ -1,16 +1,23 @@
 import React from 'react';
 import { Form, Select } from 'semantic';
+
 import allCountries from 'utils/countries';
 
-const countries = allCountries.map(({ countryCode, nameEn }) => ({
-  value: countryCode,
-  text: nameEn,
-  key: countryCode,
+const countries = allCountries.map(({ nameEn, callingCode }) => ({
+  value: callingCode,
+  text: `${nameEn} +${callingCode}`,
+  key: callingCode,
 }));
 
-export default class Countries extends React.Component {
+export default class PhoneCountryCode extends React.Component {
   render() {
-    const { required, label, placeholder, value, name } = this.props;
+    const {
+      required,
+      label = 'Country Code',
+      placeholder,
+      value,
+      name,
+    } = this.props;
     return (
       <Form.Field required={required}>
         {label && <label>{label}</label>}

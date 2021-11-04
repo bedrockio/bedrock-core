@@ -1,12 +1,13 @@
 import React from 'react';
-import { Segment, Grid } from 'semantic';
+import { request } from 'utils/api';
+import { Segment, Grid, Form, Message } from 'semantic';
+
 import { withSession } from 'stores';
 import screen from 'helpers/screen';
 
 import PageCenter from 'components/PageCenter';
-import LogoTitle from 'components/LogoTitle';
+import Logo from 'components/LogoTitle';
 
-import LoginForm from './Form';
 import { Link } from 'react-router-dom';
 
 @screen
@@ -17,15 +18,33 @@ export default class Login extends React.Component {
   state = {
     error: null,
     loading: false,
+    email: '',
+    password: '',
   };
 
-  onSubmit = async (body) => {
+  onSubmit = async () => {
     try {
       this.setState({
         error: null,
         loading: true,
       });
-      this.props.history.push(await this.context.login(body));
+
+      const { data } = await request({
+        method: 'POST',
+        path: '/1/auth/login',
+        body: {
+          email: this.state.email,
+          password: this.state.password,
+        },
+      });
+
+      if (data.mfaRequired) {
+        window.sessionStorage.setItem('mfa-auth', JSON.stringify(data));
+        this.props.history.push('/login/verification');
+        return;
+      }
+
+      this.props.history.push(this.context.authenticate(data.token));
     } catch (error) {
       this.setState({
         error,
@@ -35,17 +54,50 @@ export default class Login extends React.Component {
   };
 
   render() {
-    const { error, loading } = this.state;
+    const { error, loading, password, email } = this.state;
+
     return (
       <PageCenter>
-        <LogoTitle title="Login" />
+        <Logo title="Login" />
         <Segment.Group>
           <Segment padded>
-            <LoginForm
-              onSubmit={this.onSubmit}
-              error={error}
-              loading={loading}
-            />
+            <Form error={!!error} size="large" onSubmit={this.onSubmit}>
+              {error && <Message error content={error.message} />}
+              <Form.Field error={error?.hasField?.('email')}>
+                <Form.Input
+                  value={email}
+                  onChange={(e, { value }) => this.setState({ email: value })}
+                  name="email"
+                  icon="mail"
+                  iconPosition="left"
+                  placeholder="E-mail Address"
+                  type="email"
+                  autoComplete="email"
+                />
+              </Form.Field>
+              <Form.Field error={error?.hasField?.('password')}>
+                <Form.Input
+                  value={password}
+                  onChange={(e, { value }) =>
+                    this.setState({ password: value })
+                  }
+                  name="password"
+                  icon="lock"
+                  iconPosition="left"
+                  placeholder="Password"
+                  autoComplete="current-password"
+                  type="password"
+                />
+              </Form.Field>
+              <Form.Button
+                fluid
+                primary
+                size="large"
+                content="Login"
+                loading={loading}
+                disabled={loading}
+              />
+            </Form>
           </Segment>
           <Segment secondary>
             <Grid>
