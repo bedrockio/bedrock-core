@@ -426,7 +426,7 @@ We do not want to & should not check in sensitive keys into git. We therefore us
 
 We are using env files to attach secrets to our deployment. For example to create one we would enter the key/value pairs into a text file and create it like follows.
 
-Bedrock has the follwing secret commands:
+Bedrock has the following secret commands:
 
 ```bash
   get [environment] [name]     Get Secret from cluster and store in local <secret-name>.conf file
