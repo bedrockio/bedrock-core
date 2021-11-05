@@ -20,4 +20,4 @@ WORKDIR /service
 
 EXPOSE 2200
 
-CMD ["yarn", "start"
+CMD ["yarn", "start"]
