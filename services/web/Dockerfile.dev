@@ -1,19 +1,16 @@
 FROM node:16.13.0-alpine
 
-# Yarn will not install any package listed in devDependencies if the NODE_ENV
-# environment variable is set to production. Use this flag to instruct Yarn to
-# ignore NODE_ENV and take its production-or-not status from this flag instead.
-ARG NODE_ENV=production
-
 # Note layers should be ordered from less to more likely to change.
 
 # Update & install required packages
 RUN apk add --update bash curl;
 
+COPY scripts/install_githooks /service/scripts/install_githooks
+
 # Install app dependencies
 COPY package.json /service/package.json
 COPY yarn.lock /service/yarn.lock
-RUN cd /service; yarn install --frozen-lockfile;
+RUN cd /service; yarn install;
 
 # Copy app source
 COPY . /service
@@ -21,8 +18,6 @@ COPY . /service
 # Set work directory to /api
 WORKDIR /service
 
-RUN yarn build
-
 EXPOSE 2200
 
-CMD ["yarn", "run", "static"]
+CMD ["yarn", "start"

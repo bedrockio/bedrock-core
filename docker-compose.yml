@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.8"
 
 services:
   api:
@@ -6,7 +6,9 @@ services:
       - MONGO_URI=mongodb://mongo/bedrock_dev
     build:
       context: ./services/api
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
+      args:
+        NODE_ENV: development
     volumes:
       - ./services/api/src:/service/src
       - ./services/api/emails:/service/emails
@@ -24,7 +26,7 @@ services:
   web:
     build:
       context: ./services/web
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
       args:
         NODE_ENV: development
     command: yarn start
@@ -37,7 +39,7 @@ services:
 
   mongo:
     image: mongo:4.4.4
-    command: --serviceExecutor adaptive
+    command: mongod --quiet --logpath /dev/null --serviceExecutor adaptive
     logging:
       driver: none
     ports:

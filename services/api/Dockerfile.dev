@@ -1,0 +1,28 @@
+FROM node:16.13.0-alpine
+
+# Note layers should be ordered from less to more likely to change.
+
+# Update & install required packages
+RUN apk add --update bash curl;
+
+COPY scripts/install_githooks /service/scripts/install_githooks
+
+# Install app dependencies
+COPY package.json /service/package.json
+COPY yarn.lock /service/yarn.lock
+RUN cd /service; yarn install;
+
+# Copy app source
+COPY . /service
+
+# Set work directory to /api
+WORKDIR /service
+
+# Set your port
+ENV PORT 2300
+
+# Expose the port to outside world
+EXPOSE 2300
+
+# Start production server
+CMD ["yarn", "start"]
