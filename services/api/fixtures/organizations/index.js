@@ -1,10 +1,11 @@
-const { kebabCase } = require('lodash');
-
-const ORGANIZATIONS = ['Bedrock', 'Bedrock Institute', 'Bedrock University'];
-
-const fixtures = {};
-for (let name of ORGANIZATIONS) {
-  fixtures[kebabCase(name)] = { name };
-}
-
-module.exports = fixtures;
+module.exports = {
+  default: {
+    name: 'Bedrock',
+  },
+  'bedrock-institute': {
+    name: 'Bedrock Institute',
+  },
+  'bedrock-university': {
+    name: 'Bedrock University',
+  },
+};

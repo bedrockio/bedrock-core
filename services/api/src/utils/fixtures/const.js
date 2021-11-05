@@ -6,7 +6,7 @@ const ENV = config.getAll();
 const { ADMIN_EMAIL, ADMIN_PASSWORD } = ENV;
 
 const ADMIN_FIXTURE_ID = 'users/admin';
-const BEDROCK_FIXTURE_ID = 'organizations/bedrock';
+const ORGANIZATION_FIXTURE_ID = 'organizations/default';
 
 const CUSTOM_TRANSFORMS = {
   env(key) {
@@ -48,7 +48,7 @@ const MODEL_TRANSFORMS = {
         if (def.allowScopes.includes('global')) {
           attributes.roles = [{ role, scope: 'global' }];
         } else {
-          const organization = await context.importFixtures(BEDROCK_FIXTURE_ID, meta);
+          const organization = await context.importFixtures(ORGANIZATION_FIXTURE_ID, meta);
           attributes.roles = [{ role, scope: 'organization', scopeRef: organization.id }];
         }
         delete attributes.role;
