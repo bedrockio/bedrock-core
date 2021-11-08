@@ -52,7 +52,7 @@ export default class Login extends React.Component {
     try {
       await request({
         method: 'POST',
-        path: '/1/auth/mfa/send-code',
+        path: '/1/mfa/send-code',
         token,
       });
       this.setState({
@@ -76,7 +76,7 @@ export default class Login extends React.Component {
     try {
       const { data } = await request({
         method: 'POST',
-        path: '/1/auth/mfa/verify',
+        path: '/1/mfa/verify',
         token,
         body: {
           code: this.state.code,

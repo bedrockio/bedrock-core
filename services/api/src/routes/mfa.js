@@ -2,14 +2,14 @@ const Router = require('@koa/router');
 const config = require('@bedrockio/config');
 const Joi = require('joi');
 const router = new Router();
-const { authenticate, fetchUser } = require('../../utils/middleware/authenticate');
-const { User, AuditEntry } = require('../../models');
+const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
+const { User, AuditEntry } = require('../models');
 
-const mfa = require('../../utils/mfa');
-const sms = require('../../utils/sms');
-const { createAuthToken } = require('../../utils/tokens');
-const { sendTemplatedMail } = require('../../utils/mailer');
-const { validateBody } = require('../../utils/middleware/validate');
+const mfa = require('../utils/mfa');
+const sms = require('../utils/sms');
+const { createAuthToken } = require('../utils/tokens');
+const { sendTemplatedMail } = require('../utils/mailer');
+const { validateBody } = require('../utils/middleware/validate');
 
 const checkPasswordVerification = (ctx, next) => {
   const { authUser } = ctx.state;

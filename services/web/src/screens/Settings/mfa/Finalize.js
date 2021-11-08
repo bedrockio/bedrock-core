@@ -27,7 +27,7 @@ export default class Finalize extends React.Component {
     try {
       await request({
         method: 'POST',
-        path: '/1/auth/mfa/enable',
+        path: '/1/mfa/enable',
         body: this.props.requestBody,
       });
       await this.context.reloadUser();

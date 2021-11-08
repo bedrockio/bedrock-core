@@ -1,0 +1,174 @@
+{
+  "paths": [
+    {
+      "method": "POST",
+      "path": "/send-code",
+      "requestBody": [
+        {
+          "name": "token",
+          "description": "Mfa Token provided by the login endpoint",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "examples": []
+    },
+    {
+      "method": "POST",
+      "path": "/verify",
+      "requestBody": [
+        {
+          "name": "token",
+          "description": "Mfa Token provided by the login endpoint",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "code",
+          "description": "Verification code either provided by authenticator app or sms",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "examples": [
+        {
+          "requestBody": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZTZhOWMwMDBmYzY3NjQ0N2RjOTkzNmEiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1ODk1NjgyODQsImV4cCI6MTU5MjE2MDI4NH0.I0DhLK9mBHCy8sJglzyLHYQHFfr34UYyCFyTaEgFFG",
+            "code": "123456"
+          },
+          "responseBody": {
+            "data": {
+              "data": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MTY5NGI5Y2RhZjZkMjYzNzFiZjY3OTUiLCJqdGkiOiIzZTM1M2I1M2YxNDQ3YjI3MmE3YjJiYjE1YTM1ZjA3YyIsInR5cGUiOiJ1c2VyIiwia2lkIjoidXNlciIsImlhdCI6MTYzNDI5NzU4NywiZXhwIjoxNjM2ODg5NTg3fQ.KJuFWe-l4qAux7Zw43kGDQd1uyTeTT2UZuRvw92MpWE"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/disable",
+      "examples": []
+    },
+    {
+      "method": "POST",
+      "path": "/setup",
+      "requestBody": [
+        {
+          "name": "method",
+          "description": "Method `otp` (One-Time Password) or `sms`",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "phoneNumber",
+          "description": "PhoneNumber required for method=sms",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "examples": [{
+        "name": "Setup for otp",
+        "requestBody": {
+          "method": "mfa"
+        },
+        "responseBody": {
+          "data": {
+            "secret": "SR5OHSKVW2A746CLE5DYQ4N56BBED3UW",
+            "uri": "otpauth://totp/bedrock%3aadmin%40bedrock.foundation?secret=SR5OHSKVW2A746CLE5DYQ4N56BBED3UW&issuer=bedrock"
+          }
+        }
+      }]
+    },
+    {
+      "method": "POST",
+      "path": "/generate-backup-codes",
+      "examples": [{
+        "responseBody": {
+          "data": ["8E335-34039","B651A-8128A","35DC9-4FACF","B71BE-51316","63F7F-12D4E","5FBDD-947E6","3E7D3-D0F08","C5A5E-27FF0","4457C-025DF","02B28-6884E","A3A99-70B69","5D4D4-DCCAC","E507D-0D59B","0DFA2-384B3","F68CE-8C2F6","B2BB1-9443F"]
+        }
+      }]
+    },
+    {
+      "method": "POST",
+      "path": "/check-code",
+      "requestBody": [
+        {
+          "name": "method",
+          "description": "Method `otp` (One-Time Password) or `sms`",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "code",
+          "description": "The Code provided by the authenticator or Sms",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "secret",
+          "description": "The secret used to generate the code",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "examples": []
+    },
+    {
+      "method": "POST",
+      "path": "/enable",
+      "requestBody": [
+        {
+          "name": "method",
+          "description": "Method `otp` (one-time password) or `sms`",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "phoneNumber",
+          "description": "PhoneNumber required for method=sms",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "backupCodes",
+          "description": "Backup codes provided via POST /generate-backup-codes",
+          "required": true,
+          "schema": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+
+        },
+        {
+          "name": "secret",
+          "description": "The secret used to generate the code",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "examples": []
+    }
+  ]
+}

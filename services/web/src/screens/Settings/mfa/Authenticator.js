@@ -34,7 +34,7 @@ export default class Authenticator extends React.Component {
     try {
       const { data } = await request({
         method: 'POST',
-        path: '/1/auth/mfa/setup',
+        path: '/1/mfa/setup',
         body: {
           method: 'otp',
         },
@@ -68,7 +68,7 @@ export default class Authenticator extends React.Component {
     try {
       await request({
         method: 'POST',
-        path: '/1/auth/mfa/check-code',
+        path: '/1/mfa/check-code',
         body: {
           code: this.state.code,
           secret: this.state.secret,
@@ -78,7 +78,7 @@ export default class Authenticator extends React.Component {
 
       const { data } = await request({
         method: 'POST',
-        path: '/1/auth/mfa/generate-backup-codes',
+        path: '/1/mfa/generate-backup-codes',
       });
 
       this.setState({

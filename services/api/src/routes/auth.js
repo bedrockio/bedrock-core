@@ -1,21 +1,20 @@
-const mfaRouter = require('./mfa');
 const Router = require('@koa/router');
 const Joi = require('joi');
-const { validateBody } = require('../../utils/middleware/validate');
-const { authenticate, fetchUser } = require('../../utils/middleware/authenticate');
-const { createAuthToken, createTemporaryToken, generateTokenId } = require('../../utils/tokens');
-const { sendTemplatedMail } = require('../../utils/mailer');
-const { User, Invite, AuditEntry } = require('../../models');
+const { validateBody } = require('../utils/middleware/validate');
+const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
+const { createAuthToken, createTemporaryToken, generateTokenId } = require('../utils/tokens');
+const { sendTemplatedMail } = require('../utils/mailer');
+const { User, Invite, AuditEntry } = require('../models');
 
-const mfa = require('../../utils/mfa');
+const mfa = require('../utils/mfa');
 
 const router = new Router();
 
-router.use('/mfa', mfaRouter.routes(), mfaRouter.allowedMethods());
 
 const passwordField = Joi.string()
   .min(12)
   .message('Your password must be at least 12 characters long. Please try another.');
+
 
 router
   .post(

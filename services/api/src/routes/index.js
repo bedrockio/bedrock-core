@@ -1,5 +1,6 @@
 const Router = require('@koa/router');
 const auth = require('./auth');
+const mfa = require('./mfa');
 const users = require('./users');
 const products = require('./products');
 const shops = require('./shops');
@@ -13,6 +14,7 @@ const organizations = require('./organizations');
 const router = new Router();
 
 router.use('/auth', auth.routes());
+router.use('/mfa', mfa.routes());
 router.use('/audit-entries', auditEntries.routes());
 router.use('/users', users.routes());
 router.use('/products', products.routes());

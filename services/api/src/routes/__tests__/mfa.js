@@ -12,7 +12,7 @@ afterAll(async () => {
   await teardownDb();
 });
 
-describe('/1/auth/mfa', () => {
+describe('/1/mfa', () => {
   describe('POST /verify', () => {
     it('should verify mfa token', async () => {
       const user = await createUser({
@@ -30,7 +30,7 @@ describe('/1/auth/mfa', () => {
       const token = createTemporaryToken({ type: 'mfa', sub: user.id, jti: user.tempTokenId });
       const response = await request(
         'POST',
-        '/1/auth/mfa/verify',
+        '/1/mfa/verify',
         { code },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -47,7 +47,7 @@ describe('/1/auth/mfa', () => {
       const token = createTemporaryToken({ type: 'mfa', sub: user.id, jti: user.tempTokenId });
       const response = await request(
         'POST',
-        '/1/auth/mfa/verify',
+        '/1/mfa/verify',
         { code: backupCode },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -70,7 +70,7 @@ describe('/1/auth/mfa', () => {
       const token = createTemporaryToken({ type: 'mfa', sub: user.id, jti: user.tempTokenId });
       const response = await request(
         'POST',
-        '/1/auth/mfa/verify',
+        '/1/mfa/verify',
         { code: 'bad code' },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -85,7 +85,7 @@ describe('/1/auth/mfa', () => {
       const token = createTemporaryToken({ type: 'mfa', sub: user.id, jti: user.tempTokenId });
       const response = await request(
         'POST',
-        '/1/auth/mfa/verify',
+        '/1/mfa/verify',
         { code: badBackupCode },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -103,7 +103,7 @@ describe('/1/auth/mfa', () => {
       const token = createTemporaryToken({ type: 'mfa', sub: user.id, jti: user.tempTokenId });
       let response = await request(
         'POST',
-        '/1/auth/mfa/verify',
+        '/1/mfa/verify',
         { code: '123123' },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -123,7 +123,7 @@ describe('/1/auth/mfa', () => {
       const token = createTemporaryToken({ type: 'mfa', sub: user.id, jti: user.tempTokenId });
       let response = await request(
         'POST',
-        '/1/auth/mfa/verify',
+        '/1/mfa/verify',
         { code: '123123' },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -147,7 +147,7 @@ describe('/1/auth/mfa', () => {
       const token = createTemporaryToken({ type: 'mfa', sub: user.id, jti: user.tempTokenId });
       let response = await request(
         'POST',
-        '/1/auth/mfa/send-code',
+        '/1/mfa/send-code',
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -162,7 +162,7 @@ describe('/1/auth/mfa', () => {
       });
       const response = await request(
         'POST',
-        `/1/auth/mfa/setup`,
+        `/1/mfa/setup`,
         {
           method: 'otp',
         },
@@ -178,7 +178,7 @@ describe('/1/auth/mfa', () => {
       });
       const response = await request(
         'POST',
-        `/1/auth/mfa/setup`,
+        `/1/mfa/setup`,
         {
           method: 'sms',
           phoneNumber: '1231231',
@@ -195,7 +195,7 @@ describe('/1/auth/mfa', () => {
       });
       const response = await request(
         'POST',
-        `/1/auth/mfa/setup`,
+        `/1/mfa/setup`,
         {
           method: 'sms',
           phoneNumber: '1231231',
@@ -218,7 +218,7 @@ describe('/1/auth/mfa', () => {
 
       const response = await request(
         'POST',
-        `/1/auth/mfa/enable`,
+        `/1/mfa/enable`,
         {
           secret,
           method: 'otp',
@@ -244,7 +244,7 @@ describe('/1/auth/mfa', () => {
       });
       const response = await request(
         'POST',
-        `/1/auth/mfa/enable`,
+        `/1/mfa/enable`,
         {
           phoneNumber,
           secret,
@@ -267,7 +267,7 @@ describe('/1/auth/mfa', () => {
       });
       const response = await request(
         'POST',
-        `/1/auth/mfa/enable`,
+        `/1/mfa/enable`,
         {
           secret: '1213123',
           method: 'otp',
@@ -279,10 +279,10 @@ describe('/1/auth/mfa', () => {
     });
   });
 
-  describe('POST /auth/mfa/generate-backup-codes', () => {
+  describe('POST /mfa/generate-backup-codes', () => {
     it('should generate new codes', async () => {
       const user = await createUser({});
-      const response = await request('POST', `/1/auth/mfa/generate-backup-codes`, {}, { user });
+      const response = await request('POST', `/1/mfa/generate-backup-codes`, {}, { user });
       expect(response.status).toBe(200);
       expect(response.body.data[0]).toBeDefined();
     });
@@ -299,7 +299,7 @@ describe('/1/auth/mfa', () => {
 
       const response = await request(
         'POST',
-        `/1/auth/mfa/check-code`,
+        `/1/mfa/check-code`,
         {
           code,
           secret: secret,
