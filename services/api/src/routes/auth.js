@@ -55,8 +55,8 @@ router
   .post(
     '/login',
     validateBody({
-      email: Joi.string().email().required(),
-      password: Joi.string().required(),
+      email: Joi.string().email().trim().required(),
+      password: Joi.string().trim().required(),
     }),
     async (ctx) => {
       const { email, password } = ctx.request.body;
