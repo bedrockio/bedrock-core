@@ -4,8 +4,8 @@ import { Helmet } from 'react-helmet-async';
 import { APP_NAME } from 'utils/env';
 import { wrapComponent, getWrappedComponent } from 'utils/hoc';
 
-import DashboardLayout from 'layouts/Dashboard';
 import PortalLayout from 'layouts/Portal';
+import DashboardLayout from 'layouts/Dashboard';
 
 // Note: Ideally the screen helper would be agnostic to specific
 // layouts and instead allow them to be defined by an app wiring
@@ -17,8 +17,7 @@ const layouts = {
 
 export default function (Component) {
   const Wrapped = getWrappedComponent(Component);
-  const title = startCase(Wrapped.name.replace(/Screen$/, ''));
-
+  const title = Wrapped.title || startCase(Wrapped.name.replace(/Screen$/, ''));
   const Layout = layouts[Wrapped.layout || 'dashboard'] || nullLayout;
 
   class Screen extends React.PureComponent {
