@@ -12,7 +12,7 @@ import LoadButton from 'components/LoadButton';
 
 @screen
 @withSession
-export default class Account extends React.Component {
+export default class Security extends React.Component {
   state = {
     error: null,
   };
