@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 
 @screen
 @withSession
-export default class Login extends React.Component {
+export default class MfaBackupVerification extends React.Component {
   static layout = 'none';
 
   state = {

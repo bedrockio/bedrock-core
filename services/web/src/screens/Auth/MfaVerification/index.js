@@ -13,7 +13,7 @@ import { Layout } from 'components';
 
 @screen
 @withSession
-export default class Login extends React.Component {
+export default class MfaVerification extends React.Component {
   static layout = 'none';
 
   state = {
