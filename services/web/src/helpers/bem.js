@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { kebabCase } from 'lodash';
-import { getWrappedComponent } from 'utils/hoc';
+import { wrapComponent, getWrappedComponent } from 'utils/hoc';
 
 export default function (Component) {
   // Unwrap wrapped components
@@ -26,7 +26,7 @@ export default function (Component) {
     Wrapped.prototype.getElementClass = getElementClass;
     return Component;
   } else {
-    return (props) => {
+    return wrapComponent(Component, (props) => {
       return (
         <Component
           {...props}
@@ -34,7 +34,7 @@ export default function (Component) {
           getElementClass={getElementClass}
         />
       );
-    };
+    });
   }
 }
 
