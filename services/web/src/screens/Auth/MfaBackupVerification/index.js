@@ -42,7 +42,7 @@ export default class MfaBackupVerification extends React.Component {
   }
 
   triggerToken = async () => {
-    const { token } = this.getMfaSessionData();
+    const { mfaToken } = this.getMfaSessionData();
 
     this.setState({
       error: null,
@@ -53,7 +53,7 @@ export default class MfaBackupVerification extends React.Component {
       await request({
         method: 'POST',
         path: '/1/mfa/send-code',
-        token,
+        token: mfaToken,
       });
       this.setState({
         loading: false,
