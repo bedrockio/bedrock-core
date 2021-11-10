@@ -44,7 +44,7 @@ export default class MfaVerification extends React.Component {
   }
 
   triggerToken = async () => {
-    const { token } = this.getMfaSessionData();
+    const { mfaToken } = this.getMfaSessionData();
 
     this.setState({
       error: null,
@@ -55,7 +55,7 @@ export default class MfaVerification extends React.Component {
       await request({
         method: 'POST',
         path: '/1/mfa/send-code',
-        token,
+        token: mfaToken,
       });
       this.setState({
         loading: false,
@@ -150,7 +150,6 @@ export default class MfaVerification extends React.Component {
                   />
                 </Layout>
                 <Divider hidden />
-
                 <p>
                   It may take a minute to arrive.{' '}
                   <a onClick={this.triggerToken} style={{ cursor: 'pointer' }}>

@@ -36,20 +36,25 @@ export default class Sms extends React.Component {
     this.setState({
       smsSent: false,
       error: null,
+      smsLoading: true,
     });
+
+    const { callingCode } = allCountries.find((c) => c.nameEn === country);
+
     try {
       const { data } = await request({
         method: 'POST',
         path: '/1/mfa/setup',
         body: {
           method: 'sms',
-          phoneNumber: `+${country}${phoneNumber}`,
+          phoneNumber: `+${callingCode}${phoneNumber}`,
         },
       });
 
       this.setState({
         secret: data.secret,
         smsSent: true,
+        smsLoading: false,
       });
     } catch (error) {
       if (error.status == 403) {
@@ -59,7 +64,7 @@ export default class Sms extends React.Component {
 
       this.setState({
         error: error,
-        loading: false,
+        smsLoading: false,
       });
     }
   };
@@ -74,7 +79,7 @@ export default class Sms extends React.Component {
     try {
       await request({
         method: 'POST',
-        path: '/1/mfa/verify',
+        path: '/1/mfa/check-code',
         body: {
           code: this.state.code,
           secret: this.state.secret,
@@ -118,9 +123,7 @@ export default class Sms extends React.Component {
     } = this.state;
 
     if (verified) {
-      const countryCode = allCountries.find(
-        (c) => c.name === country
-      ).callingCode;
+      const { callingCode } = allCountries.find((c) => c.nameEn === country);
 
       return (
         <Finalize
@@ -128,7 +131,7 @@ export default class Sms extends React.Component {
           requestBody={{
             secret,
             method: 'sms',
-            phoneNumber: `+${countryCode}${phoneNumber}`,
+            phoneNumber: `+${callingCode}${phoneNumber}`,
             backupCodes: codes,
           }}
           codes={codes}
@@ -165,9 +168,20 @@ export default class Sms extends React.Component {
                   this.setState({ phoneNumber: value.replace(/ /g, '') })
                 }
               />
-              <Form.Button type="submit" basic>
-                Send authentication Code
-              </Form.Button>
+
+              <Layout horizontal center>
+                <Form.Button
+                  type="submit"
+                  basic
+                  loading={this.state.smsLoading}>
+                  Send authentication Code
+                </Form.Button>
+                {this.state.smsSent && (
+                  <div style={{ height: '28px', paddingLeft: '10px' }}>
+                    It may take a minute to arrive.{' '}
+                  </div>
+                )}
+              </Layout>
             </Form>
           </Segment>
           <Segment>
