@@ -1,0 +1,8 @@
+.DS_Store
+*.log
+*.pyc
+*.code-workspace
+.vscode
+tmp
+dist
+node_modules
