@@ -37,12 +37,22 @@ spec:
               value: "development.now"
             - name: POSTMARK_FROM
               value: "no-reply@bedrock.foundation"
-            - name: POSTMARK_APIKEY
-              value: "abc"
             - name: UPLOADS_STORE
               value: "gcs"
             - name: UPLOADS_GCS_BUCKET
               value: "bedrock-production-uploads"
+            # The `bedrock cloud` command in the CLI will help with
+            # the creation and storing of secrets for production.
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: JWT_SECRET
+            - name: POSTMARK_APIKEY
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: POSTMARK_APIKEY
           volumeMounts:
             - name: jobs-cache
               mountPath: /workdir/data

@@ -22,6 +22,6 @@ spec:
           #     memory: "4Gi"
           env:
             - name: SOURCE_GS_BUCKET
-              value: "bedrock-production-uploads"
+              value: "bedrock-foundation-uploads"
             - name: DESTINATION_GS_BUCKET
-              value: "bedrock-production-uploads-backup"
+              value: "bedrock-foundation-uploads-backup"

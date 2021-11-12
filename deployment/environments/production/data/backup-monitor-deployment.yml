@@ -22,7 +22,7 @@ spec:
           #     memory: "4Gi"
           env:
             - name: GS_BUCKETS
-              value: "bedrock-production-uploads bedrock-production-mongodb-backups"
+              value: "bedrock-foundation-uploads bedrock-foundation-mongodb-backups"
             - name: POSTMARK_API_KEY
               value: "abc"
             - name: POSTMARK_FROM
