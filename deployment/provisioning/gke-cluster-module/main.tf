@@ -11,9 +11,6 @@ resource "google_container_cluster" "default" {
   enable_kubernetes_alpha  = false
 
   master_auth {
-    username = ""
-    password = ""
-
     client_certificate_config {
       issue_client_certificate = false
     }
