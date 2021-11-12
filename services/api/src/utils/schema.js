@@ -30,7 +30,7 @@ function transformField(obj, schema, options) {
     for (let [key, val] of Object.entries(obj)) {
       // Omit any key with a private prefix "_" or marked
       // with "readScopes" in the schema.
-      if (key[0] === '_' || !isAllowedField(schema[key], options.scopes)) {
+      if (key[0] === '_' || key === 'deleted' || !isAllowedField(schema[key], options.scopes)) {
         delete obj[key];
       } else if (schema[key]) {
         transformField(val, schema[key], options);

@@ -1000,6 +1000,7 @@ describe('createSchema', () => {
       const deletedUser = await User.create({
         name: 'foo',
         deletedAt: new Date(),
+        deleted: true,
       });
       expect(await User.find()).toEqual([]);
       expect(await User.findOne()).toBe(null);
@@ -1017,6 +1018,7 @@ describe('createSchema', () => {
       const deletedUser = await User.create({
         name: 'foo',
         deletedAt: new Date(),
+        deleted: true,
       });
       expect(await User.findDeleted()).not.toBe(null);
       expect(await User.findOneDeleted()).not.toBe(null);
