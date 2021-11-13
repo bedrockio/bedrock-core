@@ -10,8 +10,6 @@ ARG NODE_ENV=production
 # Update & install required packages
 RUN apk add --update bash curl;
 
-COPY scripts/install_githooks /service/scripts/install_githooks
-
 # Needed for Gcloud Storage resumable file uploads
 RUN mkdir -p /root/.config
 
