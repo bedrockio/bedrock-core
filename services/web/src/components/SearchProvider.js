@@ -27,12 +27,31 @@ export default class SearchProvider extends React.Component {
 
   componentDidUpdate(lastProps, lastState) {
     const { page, sort, filters } = this.state;
+
     if (
       page !== lastState.page ||
       sort !== lastState.sort ||
       filters !== lastState.filters
     ) {
       this.fetch();
+    }
+
+    if (
+      this.props.page !== lastProps.page ||
+      this.props.sort !== lastProps.sort ||
+      this.props.filters !== lastProps.filters
+    ) {
+      this.setState(
+        {
+          page: this.props.page,
+          sort: this.props.sort,
+          filters: this.props.filters,
+          limit: this.props.limit,
+        },
+        () => {
+          this.fetch();
+        }
+      );
     }
   }
 
