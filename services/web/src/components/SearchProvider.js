@@ -42,7 +42,7 @@ export default class SearchProvider extends React.Component {
       props.page !== lastProps.page ||
       props.sort !== lastProps.sort ||
       props.filters !== lastProps.filters ||
-      props.limit !== this.props.limit
+      props.limit !== lastProps.limit
     ) {
       this.setState(
         {
