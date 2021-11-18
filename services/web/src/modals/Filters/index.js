@@ -19,12 +19,16 @@ export default class Filters extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      ...props.filters,
+      modalOpen: false,
+      filters: {
+        ...props.filters,
+      },
     };
     this.formRef = React.createRef();
   }
 
   onModalOpen = () => {
+    this.setState({ modalOpen: true, filters: this.props.filters });
     setTimeout(() => {
       const input = this.formRef.current.querySelector('input[name]');
       input?.focus();
@@ -36,18 +40,27 @@ export default class Filters extends React.Component {
   };
 
   onSubmit = () => {
-    this.props.onSave(this.state);
+    this.setState({
+      modalOpen: false,
+    });
+    this.props.onSave(this.state.filters);
   };
 
   onReset = () => {
-    const state = {};
-    this.setState(state);
-    this.props.onSave(state);
+    const filters = {};
+    this.setState({
+      filters,
+      modalOpen: false,
+    });
+    this.props.onSave(filters);
   };
 
   setFilter(name, value) {
     this.setState({
-      [name]: value,
+      filters: {
+        ...this.state.filters,
+        [name]: value,
+      },
     });
   }
 
@@ -58,11 +71,15 @@ export default class Filters extends React.Component {
 
   render() {
     const { size } = this.props;
+    const { modalOpen } = this.state;
+
     return (
       <Modal
         closeIcon
         size="tiny"
+        onClose={() => this.setState({ modalOpen: false })}
         onOpen={this.onModalOpen}
+        open={modalOpen}
         trigger={
           this.hasFilters() ? (
             <Button as="div" labelPosition="right">
@@ -71,7 +88,7 @@ export default class Filters extends React.Component {
                 Filter
               </Button>
               <Label as="a" pointing="left">
-                {Object.keys(this.props.filters).length}
+                Enabled
               </Label>
             </Button>
           ) : (
@@ -99,7 +116,7 @@ export default class Filters extends React.Component {
   }
 
   renderDateFilters() {
-    const { startAt, endAt } = this.state;
+    const { startAt, endAt } = this.state.filters;
     return (
       <Form.Field>
         <label>Created At</label>
@@ -138,7 +155,7 @@ export default class Filters extends React.Component {
     return React.Children.map(this.props.children, (filter) => {
       const { name, multiple } = filter.props;
       return React.cloneElement(filter, {
-        value: this.state[name] || (multiple ? [] : ''),
+        value: this.state.filters[name] || (multiple ? [] : ''),
         onChange: this.onFilterChange,
       });
     });
