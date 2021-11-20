@@ -72,7 +72,7 @@ All config vars are available in the `serve/dev.js` and `serve/static.js` server
 
 ## Other Features
 
-- Seemless pushState routing using React Router V4
+- Seamless pushState routing using React Router
 - Full login/signup flow with separate dashboard and homepage router
 - All CSS and assets served via Webpack/StyleLoader
 - Uses Semantic UI as a rich UI element base
