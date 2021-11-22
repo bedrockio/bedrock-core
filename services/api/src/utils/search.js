@@ -1,55 +1,25 @@
 const Joi = require('joi');
-const PassThrough = require('stream').PassThrough;
-const csv = require('fast-csv');
+
+const DEFAULT_LIMIT = 50;
+const DEFAULT_SORT = { field: 'createdAt', order: 'desc' };
 
 function searchValidation(options = {}) {
-  const { limit = 50, sortField = 'createdAt', sortOrder = 'desc', ...rest } = options;
+  const { sort = DEFAULT_SORT, limit = DEFAULT_LIMIT, ...rest } = options;
   return {
     ids: Joi.array().items(Joi.string()),
     keyword: Joi.string().allow(''),
-    startAt: Joi.date(),
-    endAt: Joi.date(),
     skip: Joi.number().default(0),
     sort: Joi.object({
       field: Joi.string().required(),
       order: Joi.string().allow('desc', 'asc').required(),
-    }).default({
-      field: sortField,
-      order: sortOrder,
-    }),
+    }).default(sort),
     limit: Joi.number().positive().default(limit),
     ...rest,
   };
 }
 
-function exportValidation(options = {}) {
-  const { filename = 'export.csv' } = options;
-  return {
-    filename: Joi.string().default(filename),
-    format: Joi.string().allow('json', 'csv').default('json'),
-  };
-}
-
-function searchExport(ctx, data) {
-  const { format, filename } = ctx.request.body;
-  if (format === 'csv') {
-    const csvStream = csv.format({ headers: true, objectMode: true, delimiter: ';' });
-
-    ctx.body = csvStream.pipe(PassThrough());
-
-    data.forEach((item) => {
-      csvStream.write(exports.flatten(item));
-    });
-    ctx.set('Content-Disposition', `attachment; filename=${filename}`);
-    ctx.set('Content-Type', 'text/csv');
-    csvStream.end();
-    return true;
-  }
-  return false;
-}
-
 module.exports = {
+  DEFAULT_SORT,
+  DEFAULT_LIMIT,
   searchValidation,
-  exportValidation,
-  searchExport,
 };

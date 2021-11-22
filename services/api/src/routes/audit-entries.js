@@ -3,7 +3,7 @@ const Router = require('@koa/router');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
-const { exportValidation, searchExport } = require('../utils/search');
+const { exportValidation, csvExport } = require('../utils/csv');
 const { AuditEntry } = require('../models');
 const router = new Router();
 
@@ -15,16 +15,15 @@ router
     '/search',
     validateBody(
       AuditEntry.getSearchValidation({
-        ...exportValidation,
+        ...exportValidation(),
       })
     ),
     async (ctx) => {
       const { format, filename, ...params } = ctx.request.body;
       const { data, meta } = await AuditEntry.search(params);
-      if (searchExport(ctx, data)) {
-        return;
+      if (format === 'csv') {
+        return csvExport(ctx, data);
       }
-
       ctx.body = {
         data,
         meta,

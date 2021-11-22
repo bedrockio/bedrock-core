@@ -3,7 +3,7 @@ const Joi = require('joi');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
-const { exportValidation, searchExport } = require('../utils/search');
+const { exportValidation, csvExport } = require('../utils/csv');
 const { User } = require('../models');
 const { expandRoles } = require('./../utils/permissions');
 const roles = require('./../roles.json');
@@ -73,8 +73,8 @@ router
     async (ctx) => {
       const { format, filename, ...params } = ctx.request.body;
       const { data, meta } = await User.search(params);
-      if (searchExport(ctx, data)) {
-        return;
+      if (format === 'csv') {
+        return csvExport(ctx, data);
       }
       ctx.body = {
         data: data.map((item) => expandRoles(item)),

@@ -102,7 +102,7 @@ function getSchemaForField(field, options = {}) {
   if (field.validate) {
     schema = getFixedSchema(field.validate);
   } else {
-    schema = getSchemaForType(type);
+    schema = getSchemaForType(type, options);
   }
 
   if (field.required && !field.default && !options.skipRequired) {
@@ -160,16 +160,40 @@ function validateScopes(scopes) {
   });
 }
 
-function getSchemaForType(type) {
+function getSchemaForType(type, options) {
   switch (type) {
     case 'String':
       return Joi.string();
     case 'Number':
-      return Joi.number();
+      if (options.allowRanges) {
+        return Joi.alternatives().try(
+          Joi.number(),
+          Joi.object({
+            lt: Joi.number(),
+            gt: Joi.number(),
+            lte: Joi.number(),
+            gte: Joi.number(),
+          })
+        );
+      } else {
+        return Joi.number();
+      }
     case 'Boolean':
       return Joi.boolean();
     case 'Date':
-      return Joi.date().iso();
+      if (options.allowRanges) {
+        return Joi.alternatives().try(
+          Joi.date().iso(),
+          Joi.object({
+            lt: Joi.date().iso(),
+            gt: Joi.date().iso(),
+            lte: Joi.date().iso(),
+            gte: Joi.date().iso(),
+          })
+        );
+      } else {
+        return Joi.date().iso();
+      }
     case 'Mixed':
       return Joi.object();
     case 'ObjectId':

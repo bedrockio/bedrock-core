@@ -140,6 +140,13 @@ describe('createSchema', () => {
         await user.save();
       }).rejects.toThrow();
     });
+
+    it('should convert native functions to mongoose', async () => {
+      const schema = createSchemaFromAttributes({
+        name: String,
+      });
+      expect(schema.obj.name).toBe(mongoose.Schema.Types.String);
+    });
   });
 
   describe('defaults', () => {
@@ -775,55 +782,6 @@ describe('createSchema', () => {
       expect(product.shop.user.toString()).toBe(user.id);
     });
 
-    it('should allow autopopulate overrides on definition', async () => {
-      const User = createTestModel(
-        createSchemaFromAttributes({
-          name: { type: String },
-        })
-      );
-
-      const Shop = createTestModel(
-        createSchemaFromAttributes({
-          user: {
-            ref: User.modelName,
-            type: 'ObjectId',
-            autopopulate: true,
-          },
-        })
-      );
-
-      const Product = createTestModel(
-        createSchema({
-          attributes: {
-            shop: {
-              ref: Shop.modelName,
-              type: 'ObjectId',
-              autopopulate: true,
-            },
-          },
-          autopopulate: {
-            maxDepth: 2,
-          },
-        })
-      );
-
-      const user = await User.create({
-        name: 'Marlon',
-      });
-
-      const shop = await Shop.create({
-        user,
-      });
-
-      const product = await Product.create({
-        shop,
-      });
-
-      expect(product.shop.user).toMatchObject({
-        name: 'Marlon',
-      });
-    });
-
     it('should respect autopopulate options per field', async () => {
       const User = createTestModel(
         createSchemaFromAttributes({
@@ -1039,6 +997,7 @@ describe('createSchema', () => {
       const deletedUser = await User.create({
         name: 'bar',
         deletedAt: new Date(),
+        deleted: true,
       });
       expect((await User.findWithDeleted()).length).toBe(2);
       expect(await User.findOneWithDeleted({ name: 'bar' })).not.toBe(null);
@@ -1705,8 +1664,6 @@ describe('validation', () => {
       assertPass(schema, {
         name: 'foo',
         keyword: 'keyword',
-        startAt: '2020-01-01T00:00:00',
-        endAt: '2020-01-01T00:00:00',
         skip: 1,
         limit: 5,
         sort: {
@@ -1734,6 +1691,24 @@ describe('validation', () => {
       });
       assertPass(schema, {});
     });
+
+    it('should allow range based search', () => {
+      const User = createTestModel(
+        createSchemaFromAttributes({
+          age: Number,
+          date: Date,
+        })
+      );
+      const schema = User.getSearchValidation();
+      expect(Joi.isSchema(schema)).toBe(true);
+      assertPass(schema, {
+        age: { gte: 5 },
+      });
+      assertPass(schema, {
+        date: { gte: '2020-01-01' },
+      });
+      assertPass(schema, {});
+    });
   });
 });
 
@@ -1750,9 +1725,11 @@ describe('search', () => {
     await Promise.all([User.create({ name: 'Billy' }), User.create({ name: 'Willy' })]);
     const { data, meta } = await User.search({ name: 'Billy' });
     expect(data).toMatchObject([{ name: 'Billy' }]);
-    expect(meta.total).toBe(1);
-    expect(meta.skip).toBeUndefined();
-    expect(meta.limit).toBeUndefined();
+    expect(meta).toEqual({
+      total: 1,
+      limit: 50,
+      skip: 0,
+    });
   });
 
   it('should search on name as a keyword', async () => {
@@ -1896,30 +1873,6 @@ describe('search', () => {
     expect(result.meta.total).toBe(2);
   });
 
-  it('should not filter query when empty array passed', async () => {
-    const User = createTestModel(
-      createSchemaFromAttributes({
-        order: Number,
-        categories: [String],
-      })
-    );
-    const [user1, user2] = await Promise.all([
-      User.create({ order: 1, categories: ['owner', 'member'] }),
-      User.create({ order: 2, categories: ['owner'] }),
-    ]);
-
-    const result = await User.search({
-      categories: [],
-      sort: {
-        field: 'order',
-        order: 'asc',
-      },
-    });
-
-    expect(result.data).toMatchObject([{ id: user1.id }, { id: user2.id }]);
-    expect(result.meta.total).toBe(2);
-  });
-
   it('should allow shorthand for a regex query', async () => {
     const User = createTestModel(
       createSchemaFromAttributes({
@@ -1935,6 +1888,21 @@ describe('search', () => {
     });
     expect(result.data).toMatchObject([{ name: 'Billy' }]);
     expect(result.meta.total).toBe(1);
+  });
+
+  it('should behave like $in when empty array passed', async () => {
+    const User = createTestModel(
+      createSchemaFromAttributes({
+        categories: [String],
+      })
+    );
+    await Promise.all([User.create({ categories: ['owner', 'member'] }), User.create({ categories: ['owner'] })]);
+
+    const result = await User.search({
+      categories: [],
+    });
+    expect(result.data).toMatchObject([]);
+    expect(result.meta.total).toBe(0);
   });
 
   it('should be able to perform a search on a nested field', async () => {
@@ -2080,9 +2048,11 @@ describe('search', () => {
         name: 'Willy',
       },
     ]);
-    expect(meta.total).toBe(1);
-    expect(meta.skip).toBeUndefined();
-    expect(meta.limit).toBeUndefined();
+    expect(meta).toEqual({
+      total: 1,
+      limit: 50,
+      skip: 0,
+    });
   });
 
   it('should allow custom dot path in query', async () => {
@@ -2122,5 +2092,127 @@ describe('search', () => {
       'roles.scopeRef': organization.id,
     });
     expect(data.length).toBe(1);
+  });
+
+  it('should allow date range search', async () => {
+    let result;
+    const schema = createSchemaFromAttributes({
+      name: String,
+      archivedAt: {
+        type: Date,
+      },
+    });
+    const User = createTestModel(schema);
+    await Promise.all([
+      User.create({ name: 'Billy', archivedAt: '2020-01-01' }),
+      User.create({ name: 'Willy', archivedAt: '2021-01-01' }),
+    ]);
+
+    result = await User.search({ archivedAt: { lte: '2020-06-01' } });
+    expect(result.data).toMatchObject([{ name: 'Billy' }]);
+    expect(result.meta.total).toBe(1);
+
+    result = await User.search({ archivedAt: { gte: '2020-06-01' } });
+    expect(result.data).toMatchObject([{ name: 'Willy' }]);
+    expect(result.meta.total).toBe(1);
+
+    result = await User.search({
+      archivedAt: { gte: '2019-06-01' },
+      sort: {
+        field: 'name',
+        order: 'asc',
+      },
+    });
+    expect(result.data).toMatchObject([{ name: 'Billy' }, { name: 'Willy' }]);
+    expect(result.meta.total).toBe(2);
+
+    result = await User.search({
+      archivedAt: {},
+      sort: {
+        field: 'name',
+        order: 'asc',
+      },
+    });
+    expect(result.data).toMatchObject([{ name: 'Billy' }, { name: 'Willy' }]);
+    expect(result.meta.total).toBe(2);
+  });
+
+  it('should allow number range search', async () => {
+    let result;
+    const schema = createSchemaFromAttributes({
+      name: String,
+      age: Number,
+    });
+    const User = createTestModel(schema);
+    await Promise.all([User.create({ name: 'Billy', age: 22 }), User.create({ name: 'Willy', age: 54 })]);
+
+    result = await User.search({ age: { lte: 25 } });
+    expect(result.data).toMatchObject([{ name: 'Billy' }]);
+    expect(result.meta.total).toBe(1);
+
+    result = await User.search({ age: { gte: 25 } });
+    expect(result.data).toMatchObject([{ name: 'Willy' }]);
+    expect(result.meta.total).toBe(1);
+
+    result = await User.search({
+      age: { gte: 10 },
+      sort: {
+        field: 'name',
+        order: 'asc',
+      },
+    });
+    expect(result.data).toMatchObject([{ name: 'Billy' }, { name: 'Willy' }]);
+    expect(result.meta.total).toBe(2);
+
+    result = await User.search({
+      age: {},
+      sort: {
+        field: 'name',
+        order: 'asc',
+      },
+    });
+    expect(result.data).toMatchObject([{ name: 'Billy' }, { name: 'Willy' }]);
+    expect(result.meta.total).toBe(2);
+  });
+
+  it('should return the query to allow population', async () => {
+    const User = createTestModel(
+      createSchemaFromAttributes({
+        name: 'String',
+      })
+    );
+    const Shop = createTestModel(
+      createSchemaFromAttributes({
+        user: {
+          ref: User.modelName,
+          type: mongoose.Schema.Types.ObjectId,
+        },
+      })
+    );
+
+    const user = await User.create({ name: 'Billy' });
+    await Shop.create({
+      user: user.id,
+    });
+
+    const { data, meta } = await Shop.search().populate('user');
+
+    expect(data).toMatchObject([{ user: { name: 'Billy' } }]);
+    expect(meta).toEqual({
+      total: 1,
+      limit: 50,
+      skip: 0,
+    });
+  });
+
+  it('should throw errors on bad queries', async () => {
+    const User = createTestModel(
+      createSchemaFromAttributes({
+        name: 'String',
+      })
+    );
+    await expect(async () => {
+      await User.search({ _id: 'bad' });
+    }).rejects.toThrow();
   });
 });

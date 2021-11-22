@@ -10,11 +10,9 @@ const mfa = require('../utils/mfa');
 
 const router = new Router();
 
-
 const passwordField = Joi.string()
   .min(12)
   .message('Your password must be at least 12 characters long. Please try another.');
-
 
 router
   .post(
@@ -98,7 +96,12 @@ router
         user.tempTokenId = tokenId;
         await user.save();
         ctx.body = {
-          data: { mfaToken, mfaRequired: true, mfaMethod: user.mfaMethod, mfaPhoneNumber: user.mfaPhoneNumber?.slice(-4) },
+          data: {
+            mfaToken,
+            mfaRequired: true,
+            mfaMethod: user.mfaMethod,
+            mfaPhoneNumber: user.mfaPhoneNumber?.slice(-4),
+          },
         };
         return;
       }

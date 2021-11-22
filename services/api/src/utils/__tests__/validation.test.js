@@ -734,6 +734,48 @@ describe('getJoiSchema', () => {
       assertPass(schema, { type: 'foo', count: 10 });
     });
   });
+
+  describe('ranges', () => {
+    it('should be able to append a date range schema', () => {
+      const schema = getJoiSchema(
+        {
+          startsAt: { type: Date },
+        },
+        {
+          allowRanges: true,
+        }
+      );
+      assertPass(schema, { startsAt: '2020-01-01' });
+      assertPass(schema, { startsAt: { lte: '2020-01-01' } });
+      assertPass(schema, { startsAt: { gte: '2019-01-01' } });
+      assertPass(schema, { startsAt: { gte: '2019-01-01', lte: '2020-01-01' } });
+      assertPass(schema, { startsAt: { lt: '2020-01-01' } });
+      assertPass(schema, { startsAt: { gt: '2019-01-01' } });
+      assertPass(schema, { startsAt: { gt: '2019-01-01', lt: '2020-01-01' } });
+      assertPass(schema, { startsAt: {} });
+      assertFail(schema, { startsAt: { lte: 'bad' } });
+    });
+
+    it('should be able to append a number range schema', () => {
+      const schema = getJoiSchema(
+        {
+          age: { type: Number },
+        },
+        {
+          allowRanges: true,
+        }
+      );
+      assertPass(schema, { age: 5 });
+      assertPass(schema, { age: { lte: 5 } });
+      assertPass(schema, { age: { gte: 5 } });
+      assertPass(schema, { age: { gte: 5, lte: 5 } });
+      assertPass(schema, { age: { lt: 5 } });
+      assertPass(schema, { age: { gt: 5 } });
+      assertPass(schema, { age: { gt: 5, lt: 5 } });
+      assertPass(schema, { age: {} });
+      assertFail(schema, { age: { lte: 'bad' } });
+    });
+  });
 });
 
 describe('getMongooseValidator', () => {

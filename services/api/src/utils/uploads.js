@@ -32,10 +32,11 @@ async function uploadGcs(file, hash) {
 }
 
 async function storeUploadedFile(uploadedFile) {
-  const mimeType = uploadedFile.type || mime.lookup(uploadedFile.name);
-  uploadedFile.name = uploadedFile.name || path.basename(uploadedFile.path);
+  if (!uploadedFile.name) {
+    uploadedFile.name = path.basename(uploadedFile.path);
+  }
   const object = {
-    mimeType,
+    mimeType: uploadedFile.type || mime.lookup(uploadedFile.name),
     filename: uploadedFile.name,
     hash: crypto.randomBytes(32).toString('hex'),
   };

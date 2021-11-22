@@ -53,7 +53,17 @@ describe('/1/organizations', () => {
           },
         ],
       });
-      const response = await request('POST', '/1/organizations/mine/search', {}, { user });
+      const response = await request(
+        'POST',
+        '/1/organizations/mine/search',
+        {
+          sort: {
+            name: 'name',
+            order: 'asc',
+          },
+        },
+        { user }
+      );
       expect(response.status).toBe(200);
       expect(response.body.data).toMatchObject([
         {
