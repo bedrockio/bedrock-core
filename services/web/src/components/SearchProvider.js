@@ -11,6 +11,7 @@ export default class SearchProvider extends React.Component {
       loading: true,
       items: [],
       error: null,
+      selectedIds: [],
       meta: {
         total: 0,
       },
@@ -27,6 +28,7 @@ export default class SearchProvider extends React.Component {
 
   componentDidUpdate(lastProps, lastState) {
     const { page, sort, filters } = this.state;
+
     if (
       page !== lastState.page ||
       sort !== lastState.sort ||
@@ -124,12 +126,30 @@ export default class SearchProvider extends React.Component {
     });
   };
 
+  toggle = (id, checked) => {
+    const { selectedIds } = this.state;
+    if (checked) {
+      return this.setState({ selectedIds: [...selectedIds, id] });
+    }
+    return this.setState({ selectedIds: selectedIds.filter((c) => c !== id) });
+  };
+
+  toggleAll = (ids, checked) => {
+    const { selectedIds } = this.state;
+    this.setState({
+      selectedIds: checked
+        ? [...selectedIds, ...ids]
+        : selectedIds.filter((c) => !ids.includes(c)),
+    });
+  };
+
   render() {
     const { loader } = this.props;
     const { loading } = this.state;
     if (loader && loading) {
       return <Loader active>Loading</Loader>;
     }
+
     return (
       <div>
         {this.renderError()}
@@ -140,6 +160,8 @@ export default class SearchProvider extends React.Component {
           getSorted: this.getSorted,
           setFilters: this.setFilters,
           replaceItem: this.replaceItem,
+          toggle: this.toggle,
+          toggleAll: this.toggleAll,
         })}
         {this.renderPagination()}
       </div>
