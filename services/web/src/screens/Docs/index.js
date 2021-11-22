@@ -78,7 +78,6 @@ export default class Docs extends React.Component {
       this.setState({
         ...stateForParams(this.props.match.params),
       });
-      window.scrollTo(0, 0);
     }
   }
 

@@ -7,7 +7,6 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { SessionProvider } from 'stores';
-
 import 'utils/sentry';
 
 // Icons
@@ -21,13 +20,18 @@ Icon.useSet(solidIcons);
 Icon.useSet(brandIcons, 'brand');
 Icon.useSet(regularIcons, 'regular');
 
+// Scrolling
+import ScrollProvider from 'helpers/ScrollProvider';
+
 import App from './App';
 
 const Wrapper = () => (
   <BrowserRouter>
     <SessionProvider>
       <HelmetProvider>
-        <App />
+        <ScrollProvider>
+          <App />
+        </ScrollProvider>
       </HelmetProvider>
     </SessionProvider>
   </BrowserRouter>
