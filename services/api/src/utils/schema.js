@@ -160,13 +160,8 @@ function createSchema(definition, options = {}) {
   schema.pre(/^find|count|exists/, function (next) {
     const filter = this.getFilter();
     if (filter.deleted === undefined) {
-      // Allow search of both deleted and non-deleted docs with deleted: undefined
-      if ('deleted' in filter) {
-        delete filter.deleted;
-      } else {
-        // Search non-deleted docs by default
-        filter.deleted = false;
-      }
+      // Search non-deleted docs by default
+      filter.deleted = false;
     }
     return next();
   });
@@ -224,34 +219,34 @@ function createSchema(definition, options = {}) {
   schema.static('findWithDeleted', function findOneWithDeleted(filter) {
     return this.find({
       ...filter,
-      deleted: undefined,
+      deleted: { $in: [true, false] },
     });
   });
 
   schema.static('findOneWithDeleted', function findOneWithDeleted(filter) {
     return this.findOne({
       ...filter,
-      deleted: undefined,
+      deleted: { $in: [true, false] },
     });
   });
 
   schema.static('findByIdWithDeleted', function findByIdWithDeleted(id) {
     return this.findOne({
       _id: id,
-      deleted: undefined,
+      deleted: { $in: [true, false] },
     });
   });
 
   schema.static('existsWithDeleted', function existsWithDeleted() {
     return this.exists({
-      deleted: undefined,
+      deleted: { $in: [true, false] },
     });
   });
 
   schema.static('countDocumentsWithDeleted', function countDocumentsWithDeleted(filter) {
     return this.countDocuments({
       ...filter,
-      deleted: undefined,
+      deleted: { $in: [true, false] },
     });
   });
 
