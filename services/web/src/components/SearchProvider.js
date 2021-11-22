@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { pickBy } from 'lodash';
+import { pickBy, uniq } from 'lodash';
 import { Loader, Container, Message, Divider } from 'semantic';
 import Pagination from 'components/Pagination';
 
@@ -129,7 +129,7 @@ export default class SearchProvider extends React.Component {
   toggle = (id, checked) => {
     const { selectedIds } = this.state;
     if (checked) {
-      return this.setState({ selectedIds: [...selectedIds, id] });
+      return this.setState({ selectedIds: uniq([...selectedIds, id]) });
     }
     return this.setState({ selectedIds: selectedIds.filter((c) => c !== id) });
   };
@@ -138,7 +138,7 @@ export default class SearchProvider extends React.Component {
     const { selectedIds } = this.state;
     this.setState({
       selectedIds: checked
-        ? [...selectedIds, ...ids]
+        ? uniq([...selectedIds, ...ids])
         : selectedIds.filter((c) => !ids.includes(c)),
     });
   };
