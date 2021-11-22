@@ -5,10 +5,10 @@ import { Table, Button, Message, Label, Confirm } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
-import { HelpTip, Breadcrumbs, SearchProvider, Layout } from 'components';
+import { HelpTip, Breadcrumbs, Layout } from 'components';
+import { SearchProvider, Filters } from 'components/search';
 import { formatRoles } from 'utils/permissions';
 
-import Filters from 'modals/Filters';
 import EditUser from 'modals/EditUser';
 
 @screen
@@ -50,33 +50,26 @@ export default class UserList extends React.Component {
   render() {
     return (
       <SearchProvider onDataNeeded={this.onDataNeeded}>
-        {({
-          items: users,
-          getSorted,
-          setSort,
-          filters,
-          setFilters,
-          reload,
-        }) => {
+        {({ items: users, getSorted, setSort, reload }) => {
           return (
             <React.Fragment>
               <Breadcrumbs active="Users" />
               <Layout horizontal center spread>
                 <h1>Users</h1>
                 <Layout.Group>
-                  <Filters onSave={setFilters} filters={filters}>
-                    <Filters.Text
+                  <Filters.Modal>
+                    <Filters.Search
                       label="Search"
                       name="keyword"
                       placeholder="Enter name, email, or user id"
                     />
                     <Filters.Dropdown
+                      multiple
                       label="Role"
                       name="roles"
                       onDataNeeded={this.fetchRoles}
-                      multiple
                     />
-                  </Filters>
+                  </Filters.Modal>
                   <EditUser
                     trigger={<Button primary content="New User" icon="plus" />}
                     onSave={reload}

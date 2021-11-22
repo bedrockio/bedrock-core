@@ -3,8 +3,17 @@ import PropTypes from 'prop-types';
 import { Form } from 'semantic';
 
 export default class NumberFilter extends React.Component {
+  onChange = (evt, { value, ...rest }) => {
+    this.context.onFilterChange(evt, {
+      ...rest,
+      type: 'text',
+      value: Number(value),
+    });
+  };
+
   render() {
-    const { name, value, min, max, onChange } = this.props;
+    const { name, min, max } = this.props;
+    const value = this.context.getFilterValue(name);
     return (
       <Form.Input
         id={name}
@@ -16,11 +25,15 @@ export default class NumberFilter extends React.Component {
             name: 'close',
             link: true,
             onClick: (evt) => {
-              onChange(evt, { name, value: '' });
-              evt.target.parentNode.querySelector('input').focus();
+              if (value) {
+                this.context.onFilterChange(evt, { name, value: '' });
+              }
+              evt.target.closest('.input').querySelector('input').focus();
             },
           }
         }
+        value={value || ''}
+        onChange={this.onChange}
         {...this.props}
       />
     );

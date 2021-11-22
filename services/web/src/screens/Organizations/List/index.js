@@ -4,9 +4,9 @@ import { Table, Button, Message, Confirm } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
-import { HelpTip, Breadcrumbs, SearchProvider, Layout } from 'components';
+import { HelpTip, Breadcrumbs, Layout } from 'components';
+import { SearchProvider, Filters } from 'components/search';
 
-import Filters from 'modals/Filters';
 import EditOrganization from 'modals/EditOrganization';
 
 @screen
@@ -26,23 +26,20 @@ export default class OrganizationList extends React.Component {
   render() {
     return (
       <SearchProvider onDataNeeded={this.onDataNeeded}>
-        {({
-          items: organizations,
-          getSorted,
-          setSort,
-          filters,
-          setFilters,
-          reload,
-        }) => {
+        {({ items: organizations, getSorted, setSort, reload }) => {
           return (
             <React.Fragment>
               <Breadcrumbs active="Organizations" />
               <Layout horizontal center spread>
                 <h1>Organizations</h1>
                 <Layout.Group>
-                  <Filters onSave={setFilters} filters={filters}>
-                    <Filters.Text name="name" label="Name" />
-                  </Filters>
+                  <Filters.Modal>
+                    <Filters.Search
+                      name="keyword"
+                      label="Name"
+                      placeholder="Enter name"
+                    />
+                  </Filters.Modal>
                   <EditOrganization
                     trigger={
                       <Button primary content="New Organization" icon="plus" />

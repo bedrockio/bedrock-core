@@ -2,11 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Table, Button, Message, Confirm } from 'semantic';
 import { formatDateTime } from 'utils/date';
+import { formatUsd } from 'utils/currency';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
-import { HelpTip, Breadcrumbs, SearchProvider, Layout } from 'components';
+import { HelpTip, Breadcrumbs, Layout } from 'components';
+import { SearchProvider, Filters } from 'components/search';
 
-import Filters from 'modals/Filters';
 import EditProduct from 'modals/EditProduct';
 
 import { urlForUpload } from 'utils/uploads';
@@ -25,33 +26,31 @@ export default class ProductList extends React.Component {
   render() {
     return (
       <SearchProvider onDataNeeded={this.onDataNeeded}>
-        {({
-          items: products,
-          getSorted,
-          setSort,
-          filters,
-          setFilters,
-          reload,
-        }) => {
+        {({ items: products, getSorted, setSort, reload }) => {
           return (
             <React.Fragment>
               <Breadcrumbs active="Products" />
               <Layout horizontal center spread>
                 <h1>Products</h1>
                 <Layout.Group>
-                  <Filters onSave={setFilters} filters={filters}>
-                    <Filters.Text name="name" label="Name" />
+                  <Filters.Modal>
+                    <Filters.Search name="keyword" label="Keyword" />
                     <Filters.Checkbox name="isFeatured" label="Is Featured" />
                     <Filters.Number name="priceUsd" label="Price Usd" />
-                    <Filters.Date time name="expiresAt" label="Expires At" />
+                    <Filters.DateRange
+                      time
+                      name="expiresAt"
+                      label="Expires At"
+                    />
                     <Filters.Dropdown
                       search
                       multiple
+                      selection
                       allowAdditions
                       name="sellingPoints"
                       label="Selling Points"
                     />
-                  </Filters>
+                  </Filters.Modal>
                   <EditProduct
                     trigger={
                       <Button primary content="New Product" icon="plus" />
@@ -72,6 +71,11 @@ export default class ProductList extends React.Component {
                         Name
                       </Table.HeaderCell>
                       <Table.HeaderCell>Images</Table.HeaderCell>
+                      <Table.HeaderCell
+                        onClick={() => setSort('priceUsd')}
+                        sorted={getSorted('priceUsd')}>
+                        Price
+                      </Table.HeaderCell>
                       <Table.HeaderCell
                         onClick={() => setSort('createdAt')}
                         sorted={getSorted('createdAt')}>
@@ -103,6 +107,7 @@ export default class ProductList extends React.Component {
                               />
                             )}
                           </Table.Cell>
+                          <Table.Cell>{formatUsd(product.priceUsd)}</Table.Cell>
                           <Table.Cell>
                             {formatDateTime(product.createdAt)}
                           </Table.Cell>

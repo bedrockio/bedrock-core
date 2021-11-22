@@ -3,17 +3,20 @@ import PropTypes from 'prop-types';
 import { Form } from 'semantic';
 
 export default class CheckboxFilter extends React.Component {
-  onChange = (evt, { name, checked }) => {
-    this.props.onChange(evt, { name, value: checked });
+  onChange = (evt, { checked, ...rest }) => {
+    this.context.onFilterChange(evt, {
+      ...rest,
+      value: checked,
+    });
   };
 
   render() {
-    const { name, value, onChange, ...rest } = this.props;
+    const { name, ...rest } = this.props;
     return (
       <Form.Checkbox
         id={name}
         name={name}
-        checked={!!value}
+        checked={this.context.getFilterValue(name) || false}
         onChange={this.onChange}
         {...rest}
       />
