@@ -4,17 +4,30 @@ const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { createAuthToken, createTemporaryToken, generateTokenId } = require('../utils/tokens');
 const { sendTemplatedMail } = require('../utils/mailer');
+const mfa = require('../utils/mfa');
+const { generateHumanCode } = require('../utils/codes');
 const { User, Invite, AuditEntry } = require('../models');
 
-const mfa = require('../utils/mfa');
-
 const router = new Router();
-
 
 const passwordField = Joi.string()
   .min(12)
   .message('Your password must be at least 12 characters long. Please try another.');
 
+async function handleMfaChallengeResponse(ctx, user) {
+  const tokenId = generateTokenId();
+  const mfaToken = createTemporaryToken({ type: 'mfa', sub: user.id, jti: tokenId });
+  user.tempTokenId = tokenId;
+  await user.save();
+  ctx.body = {
+    data: {
+      mfaToken,
+      mfaRequired: true,
+      mfaMethod: user.mfaMethod,
+      mfaPhoneNumber: user.mfaPhoneNumber?.slice(-4),
+    },
+  };
+}
 
 router
   .post(
@@ -50,6 +63,86 @@ router
       });
 
       ctx.body = { data: { token: createAuthToken(user.id, authTokenId) } };
+    }
+  )
+  .post(
+    '/login/email',
+    validateBody({
+      email: Joi.string().email().trim().required(),
+    }),
+    async (ctx) => {
+      const { email } = ctx.request.body;
+      const user = await User.findOne({ email });
+
+      if (!user) {
+        ctx.throw(400, 'Unknown email address.');
+      }
+
+      const code = generateHumanCode(6);
+      user.emailAuthOtp = code;
+      user.emailAuthOtpIssuedAt = new Date();
+      await user.save();
+      console.log(code);
+      const formattedCode = `${code.slice(0, 3)}-${code.slice(3, 6)}`;
+      await sendTemplatedMail({
+        to: [user.name, email].join(' '),
+        template: 'login-with-email.md',
+        subject: `{{appName}} confirmation code: ${formattedCode}`,
+        code: formattedCode,
+      });
+      ctx.status = 204;
+    }
+  )
+  .post(
+    '/login/email/confirm',
+    validateBody({
+      token: Joi.string().email().trim().required(),
+      code: Joi.string().required().trim(),
+    }),
+    async (ctx) => {
+      const { email, code } = ctx.request.body;
+      const user = await User.findOneAndUpdate(
+        { email },
+        {
+          lastLoginAttemptAt: new Date(),
+          $inc: { loginAttempts: 1 },
+        }
+      );
+
+      if (!user.verifyLoginAttempts()) {
+        await AuditEntry.append('reached max authentication attempts', ctx, {
+          type: 'security',
+          object: user,
+          user: user.id,
+        });
+        ctx.throw(401, 'Too many login attempts');
+      }
+
+      if (user.emailAuthOtpIssuedAt < Date.now() - 30 * 1000 * 60) {
+        return ctx.throw(400, 'Please request a new code');
+      }
+
+      if (user.emailAuthOtp !== code) {
+        await AuditEntry.append('failed ', ctx, {
+          type: 'security',
+          object: user,
+          user: user.id,
+        });
+        return ctx.throw(401, 'Code is not valid');
+      }
+
+      user.loginAttempts = 0;
+
+      if (await mfa.requireChallenge(ctx, user)) {
+        return handleMfaChallengeResponse(ctx, user);
+      }
+
+      const authTokenId = generateTokenId();
+      user.authTokenId = authTokenId;
+      user.accessConfirmedAt = new Date();
+      await user.save();
+
+      ctx.body = { data: { token: createAuthToken(user.id, user.authTokenId) } };
     }
   )
   .post(
@@ -93,18 +186,12 @@ router
       user.loginAttempts = 0;
 
       if (await mfa.requireChallenge(ctx, user)) {
-        const tokenId = generateTokenId();
-        const mfaToken = createTemporaryToken({ type: 'mfa', sub: user.id, jti: tokenId });
-        user.tempTokenId = tokenId;
-        await user.save();
-        ctx.body = {
-          data: { mfaToken, mfaRequired: true, mfaMethod: user.mfaMethod, mfaPhoneNumber: user.mfaPhoneNumber?.slice(-4) },
-        };
-        return;
+        return handleMfaChallengeResponse(ctx, user);
       }
 
       const authTokenId = generateTokenId();
       user.authTokenId = authTokenId;
+      user.accessConfirmedAt = new Date();
       await user.save();
 
       await AuditEntry.append('successfully authenticated', ctx, {

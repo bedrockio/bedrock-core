@@ -85,7 +85,7 @@ router
           object: user,
           user: user.id,
         });
-      } else if (!mfa.verifyToken(user.mfaSecret, user.mfaMethod, code)) {
+      } else if (!mfa.verifyToken(user.mfaSecret, code)) {
         await AuditEntry.append('failed mfa challenge', ctx, {
           type: 'security',
           object: user,
@@ -171,9 +171,9 @@ router
       method: Joi.string().allow('sms', 'otp').required(),
     }),
     async (ctx) => {
-      const { secret, code, method } = ctx.request.body;
+      const { secret, code } = ctx.request.body;
       // allow 2 "windows" with sms to ensure that sms can be delieved in time
-      if (!mfa.verifyToken(secret, method, code)) {
+      if (!mfa.verifyToken(secret, code)) {
         ctx.throw('Not a valid code', 400);
       }
       ctx.status = 204;

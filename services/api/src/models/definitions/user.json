@@ -67,6 +67,16 @@
       "readScopes": "none",
       "writeScopes": "none"
     },
+    "emailAuthOtp": {
+      "type": "String",
+      "readScopes": "none",
+      "writeScopes": "none"
+    },
+    "emailAuthOtpIssuedAt": {
+      "type": "Date",
+      "readScopes": "none",
+      "writeScopes": "none"
+    },
     "mfaBackupCodes": [
       {
         "type": "String",
@@ -76,7 +86,10 @@
     ],
     "mfaMethod": {
       "type": "String",
-      "enum": ["sms", "otp"]
+      "enum": [
+        "sms",
+        "otp"
+      ]
     },
     "mfaSecret": {
       "type": "String",
@@ -89,5 +102,9 @@
       "writeScopes": "none"
     }
   },
-  "search": ["firstName", "lastName", "email"]
+  "search": [
+    "firstName",
+    "lastName",
+    "email"
+  ]
 }

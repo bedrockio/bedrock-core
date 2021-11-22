@@ -22,6 +22,7 @@ import ConfirmAccess from 'screens/Auth/ConfirmAccess';
 import MfaVerification from 'screens/Auth/MfaVerification';
 import MfaBackupVerification from 'screens/Auth/MfaBackupVerification';
 import Login from 'screens/Auth/Login';
+import LoginWidthEmail from 'screens/Auth/LoginWithEmail';
 import Logout from 'screens/Auth/Logout';
 import Signup from 'screens/Auth/Signup';
 import Organizations from 'screens/Organizations';
@@ -38,7 +39,12 @@ const App = () => {
   }
   return (
     <Switch>
-      <AuthSwitch path="/" loggedIn={Dashboard} loggedOut={Login} exact />
+      <AuthSwitch
+        path="/"
+        loggedIn={Dashboard}
+        loggedOut={LoginWidthEmail}
+        exact
+      />
       <Protected path="/shops/:id?" allowed={Shops} />
       <Protected path="/products/:id?" allowed={Products} />
       <Protected path="/settings/:id?" allowed={Settings} exact />

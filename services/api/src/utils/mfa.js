@@ -1,6 +1,7 @@
 const notp = require('notp');
 const crypto = require('crypto');
 const b32 = require('thirty-two');
+const { generateHumanCode } = require('./codes');
 
 async function requireChallenge(ctx, user) {
   // TODO at late stage check the ctx for device change / ip change / blacklisted ip
@@ -39,18 +40,17 @@ function generateToken(secret) {
   if (!secret || !secret.length) return null;
   const unformatted = secret.replace(/\W+/g, '').toUpperCase();
   const bin = b32.decode(unformatted);
-
   return notp.totp.gen(bin);
 }
 
-function verifyToken(secret, method, token) {
+function verifyToken(secret, token, window = 2) {
   if (!token || !token.length || !secret) return null;
 
   const unformatted = secret.toUpperCase();
   const bin = b32.decode(unformatted);
 
   const result = notp.totp.verify(token, bin, {
-    window: method === 'sms' ? 2 : 1,
+    window,
     time: 30,
   });
 
@@ -60,7 +60,7 @@ function verifyToken(secret, method, token) {
 function generateBackupCodes(count = 16) {
   const codes = [];
   for (let i = 0; i < count; i++) {
-    const code = crypto.randomBytes(5).toString('hex').toUpperCase();
+    const code = generateHumanCode(10);
     codes.push(`${code.slice(0, 5)}-${code.slice(5, 10)}`);
   }
   return codes;
