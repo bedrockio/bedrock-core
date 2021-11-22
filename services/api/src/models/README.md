@@ -126,7 +126,7 @@ Additional validation can be mixed in by passing an object to these methods:
   - `date: { gt: '2020-01-01', lt: '2020-01-01' }`
   - `date: { gte: '2020-01-01', lte: '2020-01-01' }`
 
-##
+## Search
 
 The `Model.search` method is provided as a counterpart to `find` that allows complex search functionality and is designed to be directly a request body that is validated by `Model.getSearchValidation`. It returns an object with the search results as `data` and metadata about the search with `meta`:
 
