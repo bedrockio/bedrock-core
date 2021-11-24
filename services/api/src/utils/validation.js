@@ -70,9 +70,6 @@ function getObjectSchema(obj, options) {
       // type: { type: String }
       continue;
     }
-    if (field.skipValidation) {
-      field = Joi.any().strip();
-    }
     if (transformField) {
       field = transformField(key, field);
     }
@@ -105,7 +102,7 @@ function getSchemaForField(field, options = {}) {
     schema = getSchemaForType(type, options);
   }
 
-  if (field.required && !field.default && !options.skipRequired) {
+  if (isRequiredField(field, options)) {
     schema = schema.required();
   } else if (field.writeScopes) {
     schema = validateScopes(field.writeScopes);
@@ -134,6 +131,10 @@ function getSchemaForField(field, options = {}) {
     }
   }
   return schema;
+}
+
+function isRequiredField(field, options) {
+  return field.required && !field.default && !field.skipValidation && !options.skipRequired;
 }
 
 function validateScopes(scopes) {

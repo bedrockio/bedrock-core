@@ -26,7 +26,7 @@ function transformField(obj, schema, options) {
     for (let el of obj) {
       transformField(el, schema, options);
     }
-  } else if (obj && typeof obj === 'object') {
+  } else if (isPlainObject(obj)) {
     for (let [key, val] of Object.entries(obj)) {
       // Omit any key with a private prefix "_" or marked
       // with "readScopes" in the schema.
@@ -372,6 +372,9 @@ function isAllowedField(schema, key, scopes = []) {
     // Strip "deleted" field which defaults
     // to false and should not be exposed.
     return false;
+  } else if (!schema[key]) {
+    // No schema defined may be virtuals.
+    return true;
   }
   const { readScopes = 'all' } = resolveField(schema, key) || {};
   if (readScopes === 'all') {
@@ -385,13 +388,16 @@ function isAllowedField(schema, key, scopes = []) {
   }
 }
 
+// Note: Resolved field may be an object or a function
+// from mongoose.Schema.Types that is resolved from the
+// shorthand: field: 'String'.
 function resolveField(schema, key) {
-  let field = schema[key];
+  let field = schema?.[key];
   if (Array.isArray(field)) {
     field = field[0];
   }
   if (typeof field?.type === 'object') {
-    return field.type;
+    field = field.type;
   }
   return field;
 }
@@ -457,6 +463,10 @@ function unsetReferenceFields(fields, schema = {}) {
 // Will not flatten mongo operator objects.
 function flattenQuery(query, schema, root = {}, rootPath = []) {
   for (let [key, value] of Object.entries(query)) {
+    if (key.includes('.')) {
+      // Custom dot syntax is allowed and is already flattened, so skip.
+      continue;
+    }
     const path = [...rootPath, key];
     if (isRangeQuery(schema, key, value)) {
       if (!isEmpty(value)) {

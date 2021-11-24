@@ -1604,7 +1604,7 @@ describe('validation', () => {
       });
     });
 
-    it('should strip validation with skip flag', async () => {
+    it('should not strip validation with skip flag', async () => {
       const User = createTestModel(
         createSchemaFromAttributes({
           name: {
@@ -1629,7 +1629,7 @@ describe('validation', () => {
         name: 'foo',
         age: 25,
       });
-      expect(value.age).toBeUndefined();
+      expect(value.age).toBe(25);
     });
   });
 
@@ -2030,6 +2030,8 @@ describe('search', () => {
   });
 
   it('should be able to mixin operator queries', async () => {
+    let result;
+
     const User = createTestModel(
       createSchemaFromAttributes({
         name: {
@@ -2045,16 +2047,29 @@ describe('search', () => {
       User.create({ name: 'Willy', age: 32 }),
       User.create({ name: 'Chilly', age: 10 }),
     ]);
-    const { data } = await User.search({
+
+    result = await User.search({
       $or: [{ name: 'Billy' }, { age: 10 }],
       sort: {
         field: 'name',
         order: 'asc',
       },
     });
-    expect(data).toMatchObject([
+    expect(result.data).toMatchObject([
       { name: 'Billy', age: 20 },
       { name: 'Chilly', age: 10 },
+    ]);
+
+    result = await User.search({
+      name: { $ne: 'Billy' },
+      sort: {
+        field: 'name',
+        order: 'asc',
+      },
+    });
+    expect(result.data).toMatchObject([
+      { name: 'Chilly', age: 10 },
+      { name: 'Willy', age: 32 },
     ]);
   });
 
@@ -2230,7 +2245,7 @@ describe('search', () => {
     });
   });
 
-  it('should throw errors on bad queries', async () => {
+  it('should error on bad queries', async () => {
     const User = createTestModel(
       createSchemaFromAttributes({
         name: 'String',
