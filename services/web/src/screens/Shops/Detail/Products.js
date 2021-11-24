@@ -3,14 +3,14 @@ import { Table, Message, Loader, Button, Header, Confirm } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
-import { Layout, HelpTip, SearchProvider } from 'components';
+import { Layout, HelpTip } from 'components';
+import { SearchProvider, Filters } from 'components/search';
 // --- Generator: subscreen-imports
 import { Link } from 'react-router-dom';
 import { Image } from 'semantic';
 import { urlForUpload } from 'utils/uploads';
 // --- Generator: end
 
-import Filters from 'modals/Filters';
 import EditProduct from 'modals/EditProduct';
 
 import Menu from './Menu';
@@ -36,29 +36,19 @@ export default class ShopProducts extends React.Component {
         <Menu {...this.props} />
         {shop ? (
           <SearchProvider onDataNeeded={this.onDataNeeded}>
-            {({
-              items: products,
-              filters,
-              setFilters,
-              getSorted,
-              setSort,
-              reload,
-            }) => {
+            {({ items: products, getSorted, setSort, reload }) => {
               return (
                 <React.Fragment>
                   <Layout horizontal center spread>
                     <Header as="h2">Products</Header>
                     <Layout.Group>
-                      <Filters
-                        size="small"
-                        onSave={setFilters}
-                        filters={filters}>
-                        <Filters.Text
+                      <Filters.Modal size="small">
+                        <Filters.Search
                           label="Search"
                           name="keyword"
                           placeholder="Enter name or product id"
                         />
-                      </Filters>
+                      </Filters.Modal>
                       <EditProduct
                         shop={shop}
                         onSave={reload}

@@ -2,8 +2,7 @@ import React from 'react';
 import { request } from 'utils/api';
 import { formatDateTime } from 'utils/date';
 import screen from 'helpers/screen';
-
-import SearchProvider from 'components/SearchProvider';
+import { SearchProvider } from 'components/search';
 import { Layout } from 'components/Layout';
 import InviteUser from 'modals/InviteUser';
 import LoadButton from 'components/LoadButton';

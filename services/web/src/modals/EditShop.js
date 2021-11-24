@@ -6,6 +6,7 @@ import modal from 'helpers/modal';
 
 import UploadsField from 'components/form-fields/Uploads';
 import CategoriesField from 'components/form-fields/Categories';
+import CountriesField from 'components/form-fields/Countries';
 import AddressField from 'components/form-fields/Address';
 
 @modal
@@ -98,6 +99,12 @@ export default class EditShop extends React.Component {
                 label="Description"
                 type="text"
                 value={shop.description || ''}
+                onChange={this.setField}
+              />
+              <CountriesField
+                name="country"
+                label="Country"
+                value={shop.country || ''}
                 onChange={this.setField}
               />
               <CategoriesField

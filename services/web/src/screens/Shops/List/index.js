@@ -3,7 +3,8 @@ import { Table, Button, Message, Confirm } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
-import { HelpTip, Breadcrumbs, SearchProvider, Layout } from 'components';
+import { HelpTip, Breadcrumbs, Layout } from 'components';
+import { SearchProvider, Filters } from 'components/search';
 // --- Generator: list-imports
 import { Link } from 'react-router-dom';
 import allCountries from 'utils/countries';
@@ -16,7 +17,6 @@ const countries = allCountries.map(({ countryCode, nameEn }) => ({
 
 // --- Generator: end
 
-import Filters from 'modals/Filters';
 import EditShop from 'modals/EditShop';
 
 @screen
@@ -32,35 +32,28 @@ export default class ShopList extends React.Component {
   render() {
     return (
       <SearchProvider onDataNeeded={this.onDataNeeded}>
-        {({
-          items: shops,
-          getSorted,
-          setSort,
-          filters,
-          setFilters,
-          reload,
-        }) => {
+        {({ items: shops, getSorted, setSort, reload }) => {
           return (
             <React.Fragment>
               <Breadcrumbs active="Shops" />
               <Layout horizontal center spread>
                 <h1>Shops</h1>
                 <Layout.Group>
-                  <Filters onSave={setFilters} filters={filters}>
+                  <Filters.Modal>
                     {/* --- Generator: filters */}
-                    <Filters.Text
+                    <Filters.Search
                       label="Search"
                       name="keyword"
                       placeholder="Enter name or shop id"
                     />
                     <Filters.Dropdown
                       label="Country"
-                      name="countryCode"
+                      name="country"
                       options={countries}
                       search
                     />
                     {/* --- Generator: end */}
-                  </Filters>
+                  </Filters.Modal>
                   <EditShop
                     trigger={<Button primary content="New Shop" icon="plus" />}
                     onSave={reload}

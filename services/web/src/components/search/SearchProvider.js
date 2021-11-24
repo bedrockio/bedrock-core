@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { pickBy } from 'lodash';
-import { Loader, Container, Message, Divider } from 'semantic';
+import { Loader, Message, Divider } from 'semantic';
+import { debounce, pickBy } from 'lodash';
 import Pagination from 'components/Pagination';
+
+export const SearchContext = React.createContext();
 
 export default class SearchProvider extends React.Component {
   constructor(props) {
@@ -18,6 +20,7 @@ export default class SearchProvider extends React.Component {
       limit: props.limit,
       page: props.page,
       sort: props.sort,
+      pending: {},
     };
   }
 
@@ -26,23 +29,44 @@ export default class SearchProvider extends React.Component {
   }
 
   componentDidUpdate(lastProps, lastState) {
-    const { page, sort, filters } = this.state;
-    if (
-      page !== lastState.page ||
-      sort !== lastState.sort ||
-      filters !== lastState.filters
-    ) {
+    const changedProps = this.getChanged(this.props, lastProps);
+    if (changedProps) {
+      this.setState({
+        ...changedProps,
+      });
+    } else if (this.hasChanged(this.state, lastState)) {
       this.fetch();
     }
+  }
+
+  hasChanged(current, last) {
+    return !!this.getChanged(current, last);
+  }
+
+  getChanged(current, last) {
+    let changed = null;
+    for (let key of ['page', 'sort', 'limit', 'filters']) {
+      if (last[key] !== current[key]) {
+        changed = {
+          ...changed,
+          [key]: current[key],
+        };
+      }
+    }
+    return changed;
   }
 
   // Events
 
   onPageChange = (evt, data) => {
-    const { activePage } = data;
-    this.setState({
-      page: activePage,
-    });
+    const { activePage: page } = data;
+    if (this.props.onPageChange) {
+      this.props.onPageChange(evt, page);
+    } else {
+      this.setState({
+        page,
+      });
+    }
   };
 
   // Actions
@@ -77,6 +101,12 @@ export default class SearchProvider extends React.Component {
     // Performed on a setTimeout
     // to allow state to flush.
     setTimeout(this.fetch);
+  };
+
+  updateItems = (items) => {
+    this.setState({
+      items,
+    });
   };
 
   replaceItem = (item, fn) => {
@@ -124,25 +154,60 @@ export default class SearchProvider extends React.Component {
     });
   };
 
+  onFilterChange = (evt, data) => {
+    const { type, name, value, deferred } = data;
+    if (deferred || type !== 'text') {
+      this.setFilters({
+        ...this.state.filters,
+        [name]: value,
+      });
+    } else {
+      this.setState({
+        pending: {
+          ...this.state.pending,
+          [name]: value,
+        },
+      });
+      this.setFilterDeferred(evt, {
+        ...data,
+        deferred: true,
+      });
+    }
+  };
+
+  setFilterDeferred = debounce(this.onFilterChange, 300);
+
+  getFilterValue = (name) => {
+    const { pending, filters } = this.state;
+    return pending[name] || filters[name];
+  };
+
+  // Utils
+
   render() {
     const { loader } = this.props;
     const { loading } = this.state;
     if (loader && loading) {
       return <Loader active>Loading</Loader>;
     }
+    const context = {
+      ...this.state,
+      reload: this.reload,
+      update: this.update,
+      setSort: this.setSort,
+      getSorted: this.getSorted,
+      setFilters: this.setFilters,
+      replaceItem: this.replaceItem,
+      updateItems: this.updateItems,
+      onFilterChange: this.onFilterChange,
+      getFilterValue: this.getFilterValue,
+    };
     return (
-      <div>
+      <SearchContext.Provider value={context}>
         {this.renderError()}
-        {this.props.children({
-          ...this.state,
-          reload: this.reload,
-          setSort: this.setSort,
-          getSorted: this.getSorted,
-          setFilters: this.setFilters,
-          replaceItem: this.replaceItem,
-        })}
+        {this.props.children(context)}
         {this.renderPagination()}
-      </div>
+      </SearchContext.Provider>
     );
   }
 
@@ -158,7 +223,7 @@ export default class SearchProvider extends React.Component {
     const { page, meta } = this.state;
     if (pagination && meta.total > meta.limit) {
       return (
-        <Container textAlign="center">
+        <React.Fragment>
           <Divider hidden />
           <Pagination
             page={page}
@@ -166,7 +231,7 @@ export default class SearchProvider extends React.Component {
             total={meta.total}
             onPageChange={this.onPageChange}
           />
-        </Container>
+        </React.Fragment>
       );
     }
   }
@@ -183,13 +248,14 @@ SearchProvider.propTypes = {
   }),
   loader: PropTypes.bool,
   pagination: PropTypes.bool,
+  onPageChange: PropTypes.func,
 };
 
 SearchProvider.defaultProps = {
   page: 1,
   limit: 20,
   sort: {
-    order: 'asc',
+    order: 'desc',
     field: 'createdAt',
   },
   loader: true,

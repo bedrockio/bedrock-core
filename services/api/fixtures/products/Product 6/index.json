@@ -3,5 +3,6 @@
   "images": [
     "image.jpg"
   ],
+  "priceUsd": 50,
   "shop": "demo"
 }

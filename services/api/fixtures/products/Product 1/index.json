@@ -3,5 +3,8 @@
   "images": [
     "image.jpg"
   ],
+  "priceUsd": 99,
+  "isFeatured": true,
+  "expiresAt": "2025-01-01",
   "shop": "demo"
 }
