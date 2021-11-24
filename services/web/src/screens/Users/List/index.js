@@ -20,9 +20,9 @@ export default class UserList extends React.Component {
       path: '/1/users/search',
       body: {
         ...rest,
-        ...(roles && {
-          'roles.role': roles.map((r) => r.id),
-        }),
+        roles: roles && {
+          role: roles.map(({ id }) => id),
+        },
       },
     });
   };

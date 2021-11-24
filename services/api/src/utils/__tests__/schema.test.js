@@ -1932,6 +1932,7 @@ describe('search', () => {
     ]);
 
     let result;
+
     result = await User.search({
       roles: {
         role: 'member',
@@ -1943,6 +1944,30 @@ describe('search', () => {
     });
     expect(result.data).toMatchObject([{ id: user1.id }, { id: user2.id }]);
     expect(result.meta.total).toBe(2);
+
+    result = await User.search({
+      roles: {
+        role: ['owner', 'member'],
+      },
+      sort: {
+        field: 'order',
+        order: 'asc',
+      },
+    });
+    expect(result.data).toMatchObject([{ id: user1.id }, { id: user2.id }]);
+    expect(result.meta.total).toBe(2);
+
+    result = await User.search({
+      roles: {
+        role: ['owner'],
+      },
+      sort: {
+        field: 'order',
+        order: 'asc',
+      },
+    });
+    expect(result.data).toMatchObject([{ id: user1.id }]);
+    expect(result.meta.total).toBe(1);
   });
 
   it('should be able to perform a search on a complex nested field', async () => {
