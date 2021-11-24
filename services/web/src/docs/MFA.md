@@ -1,3 +1,5 @@
+# Multi Factor Authentication
+
 ## Verify
 
 This allows the a user with mfa enabled to authenticate and get a JWT token that can be used for authentication on all subsequent API calls. This api should be called after login.

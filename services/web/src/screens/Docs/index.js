@@ -4,6 +4,7 @@ import { startCase, kebabCase } from 'lodash';
 import { Breadcrumb, Container, Divider, Menu, Message, Ref } from 'semantic';
 import { Layout } from 'components/Layout';
 import { Menu as ResponsiveMenu } from 'components/Responsive';
+import { APP_NAME } from 'utils/env';
 
 import StandardPage from './StandardPage';
 import PageLoader from 'components/PageLoader';
@@ -13,20 +14,32 @@ import screen from 'helpers/screen';
 
 import * as DOCS from 'docs';
 
-const PAGES = Object.keys(DOCS).map((name) => {
-  return {
-    id: kebabCase(name),
-    name: startCase(name.toLowerCase()),
-    markdown: DOCS[name],
-  };
-});
+import './docs.less';
+
+const DEFAULT_PAGE_ID = 'getting-started';
+
+const PAGES = Object.keys(DOCS)
+  .sort()
+  .map((name) => {
+    return {
+      id: kebabCase(name),
+      name: startCase(name.toLowerCase()),
+      markdown: DOCS[name],
+    };
+  });
 
 function stateForParams(params) {
-  const { id } = params;
+  const { id = DEFAULT_PAGE_ID } = params;
   return {
     pageId: id,
-    page: id ? PAGES.find((p) => p.id === id) : PAGES[0],
+    page: id ? PAGES.find((p) => p.id === id) : getDefaultPage(),
   };
+}
+
+function getDefaultPage() {
+  return PAGES.find((page) => {
+    return page.id === DEFAULT_PAGE_ID;
+  });
 }
 
 @screen
@@ -44,11 +57,6 @@ export default class Docs extends React.Component {
       ...stateForParams(this.props.match.params),
     };
   }
-
-  state = {
-    loading: true,
-    error: null,
-  };
 
   async componentDidMount() {
     try {
@@ -108,6 +116,8 @@ export default class Docs extends React.Component {
 
     return (
       <React.Fragment>
+        <h1 className="primary">{APP_NAME} API v1</h1>
+        <Divider hidden />
         <Breadcrumb size="mini">
           <Breadcrumb.Section link as={Link} to="/docs">
             API Docs
@@ -163,7 +173,7 @@ export default class Docs extends React.Component {
                         {...props}
                         me={me}
                         openApi={openApi}
-                        page={PAGES[0]}
+                        page={getDefaultPage()}
                       />
                     )}
                   />,
