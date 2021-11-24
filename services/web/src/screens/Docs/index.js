@@ -14,8 +14,6 @@ import screen from 'helpers/screen';
 
 import * as DOCS from 'docs';
 
-import './docs.less';
-
 const DEFAULT_PAGE_ID = 'getting-started';
 
 const PAGES = Object.keys(DOCS)
