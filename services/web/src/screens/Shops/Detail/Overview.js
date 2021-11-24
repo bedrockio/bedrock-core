@@ -18,8 +18,8 @@ export default class ShopOverview extends React.Component {
       <React.Fragment>
         <Menu {...this.props} />
         <Divider hidden />
-        {/* --- Generator: overview-fields */}
         <Header as="h2">Overview</Header>
+        {/* --- Generator: overview-fields */}
         <p>{shop.description}</p>
         <Header as="h3">Images</Header>
         <Image.Group size="large">
