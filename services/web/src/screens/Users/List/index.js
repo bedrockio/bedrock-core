@@ -1,7 +1,15 @@
 import React from 'react';
 import { memoize } from 'lodash';
 import { Link } from 'react-router-dom';
-import { Table, Button, Message, Label, Confirm } from 'semantic';
+import {
+  Table,
+  Button,
+  Message,
+  Label,
+  Divider,
+  Loader,
+  Confirm,
+} from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
@@ -50,7 +58,7 @@ export default class UserList extends React.Component {
   render() {
     return (
       <SearchProvider onDataNeeded={this.onDataNeeded}>
-        {({ items: users, getSorted, setSort, reload }) => {
+        {({ items: users, getSorted, setSort, reload, loading, error }) => {
           return (
             <React.Fragment>
               <Breadcrumbs active="Users" />
@@ -76,7 +84,11 @@ export default class UserList extends React.Component {
                   />
                 </Layout.Group>
               </Layout>
-              {users.length === 0 ? (
+              {loading ? (
+                <Loader active />
+              ) : error ? (
+                <Message error content={error.message} />
+              ) : users.length === 0 ? (
                 <Message>No users created yet</Message>
               ) : (
                 <Table celled sortable>
@@ -163,6 +175,8 @@ export default class UserList extends React.Component {
                   </Table.Body>
                 </Table>
               )}
+              <Divider hidden />
+              <SearchProvider.Pagination />
             </React.Fragment>
           );
         }}

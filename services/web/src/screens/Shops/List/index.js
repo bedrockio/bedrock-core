@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Button, Message, Confirm } from 'semantic';
+import { Table, Button, Message, Divider, Loader, Confirm } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
@@ -32,7 +32,7 @@ export default class ShopList extends React.Component {
   render() {
     return (
       <SearchProvider onDataNeeded={this.onDataNeeded}>
-        {({ items: shops, getSorted, setSort, reload }) => {
+        {({ items: shops, getSorted, setSort, reload, loading, error }) => {
           return (
             <React.Fragment>
               <Breadcrumbs active="Shops" />
@@ -60,7 +60,11 @@ export default class ShopList extends React.Component {
                   />
                 </Layout.Group>
               </Layout>
-              {shops.length === 0 ? (
+              {loading ? (
+                <Loader active />
+              ) : error ? (
+                <Message error content={error.message} />
+              ) : shops.length === 0 ? (
                 <Message>No shops created yet</Message>
               ) : (
                 <Table celled sortable>
@@ -129,6 +133,8 @@ export default class ShopList extends React.Component {
                   </Table.Body>
                 </Table>
               )}
+              <Divider hidden />
+              <SearchProvider.Pagination />
             </React.Fragment>
           );
         }}

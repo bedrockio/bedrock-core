@@ -2,7 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form } from 'semantic';
 
+import SearchContext from '../context';
+
 export default class SearchFilter extends React.Component {
+  static contextType = SearchContext;
+
   render() {
     const { loading } = this.context;
     const { name, ...rest } = this.props;

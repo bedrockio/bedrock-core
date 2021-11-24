@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Table, Button, Message, Confirm } from 'semantic';
+import { Table, Button, Message, Divider, Loader, Confirm } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
@@ -26,7 +26,14 @@ export default class OrganizationList extends React.Component {
   render() {
     return (
       <SearchProvider onDataNeeded={this.onDataNeeded}>
-        {({ items: organizations, getSorted, setSort, reload }) => {
+        {({
+          items: organizations,
+          getSorted,
+          setSort,
+          reload,
+          loading,
+          error,
+        }) => {
           return (
             <React.Fragment>
               <Breadcrumbs active="Organizations" />
@@ -48,7 +55,11 @@ export default class OrganizationList extends React.Component {
                   />
                 </Layout.Group>
               </Layout>
-              {organizations.length === 0 ? (
+              {loading ? (
+                <Loader active />
+              ) : error ? (
+                <Message error content={error.message} />
+              ) : organizations.length === 0 ? (
                 <Message>No organizations created yet</Message>
               ) : (
                 <Table celled sortable>
@@ -112,6 +123,8 @@ export default class OrganizationList extends React.Component {
                   </Table.Body>
                 </Table>
               )}
+              <Divider hidden />
+              <SearchProvider.Pagination />
             </React.Fragment>
           );
         }}

@@ -2,7 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form } from 'semantic';
 
+import SearchContext from '../context';
+
 export default class NumberFilter extends React.Component {
+  static contextType = SearchContext;
+
   onChange = (evt, { value, ...rest }) => {
     this.context.onFilterChange(evt, {
       ...rest,

@@ -3,7 +3,11 @@ import PropTypes from 'prop-types';
 import { Form } from 'semantic';
 import SearchDropdown from 'components/SearchDropdown';
 
+import SearchContext from '../context';
+
 export default class DropdownFilter extends React.Component {
+  static contextType = SearchContext;
+
   getDefaultValue() {
     const { multiple } = this.props;
     return multiple ? [] : '';

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Table, Button, Message, Loader, Divider } from 'semantic';
 import { request } from 'utils/api';
 import { formatDateTime } from 'utils/date';
 import screen from 'helpers/screen';
@@ -7,8 +8,6 @@ import { Layout } from 'components/Layout';
 import InviteUser from 'modals/InviteUser';
 import LoadButton from 'components/LoadButton';
 import { Breadcrumbs } from 'components';
-
-import { Table, Button, Message, Divider } from 'semantic';
 
 @screen
 export default class Home extends React.Component {
@@ -23,7 +22,7 @@ export default class Home extends React.Component {
   render() {
     return (
       <SearchProvider onDataNeeded={this.onDataNeeded}>
-        {({ items, getSorted, setSort, reload }) => {
+        {({ items, getSorted, setSort, reload, loading, error }) => {
           return (
             <div>
               <Breadcrumbs active="Invites" />
@@ -41,7 +40,11 @@ export default class Home extends React.Component {
               </Layout>
               <Divider hidden />
               <div className="list">
-                {items.length === 0 ? (
+                {loading ? (
+                  <Loader active />
+                ) : error ? (
+                  <Message error content={error.message} />
+                ) : items.length === 0 ? (
                   <Message>No invitations yet</Message>
                 ) : (
                   <Table celled sortable>
@@ -105,6 +108,8 @@ export default class Home extends React.Component {
                     </Table.Body>
                   </Table>
                 )}
+                <Divider hidden />
+                <SearchProvider.Pagination />
               </div>
             </div>
           );

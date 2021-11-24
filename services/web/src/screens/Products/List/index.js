@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Table, Button, Message, Confirm } from 'semantic';
+import { Table, Button, Message, Divider, Loader, Confirm } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { formatUsd } from 'utils/currency';
 import { request } from 'utils/api';
@@ -26,7 +26,7 @@ export default class ProductList extends React.Component {
   render() {
     return (
       <SearchProvider onDataNeeded={this.onDataNeeded}>
-        {({ items: products, getSorted, setSort, reload }) => {
+        {({ items: products, getSorted, setSort, reload, loading, error }) => {
           return (
             <React.Fragment>
               <Breadcrumbs active="Products" />
@@ -59,7 +59,11 @@ export default class ProductList extends React.Component {
                   />
                 </Layout.Group>
               </Layout>
-              {products.length === 0 ? (
+              {loading ? (
+                <Loader active />
+              ) : error ? (
+                <Message error content={error.message} />
+              ) : products.length === 0 ? (
                 <Message>No products created yet</Message>
               ) : (
                 <Table celled sortable>
@@ -138,6 +142,8 @@ export default class ProductList extends React.Component {
                   </Table.Body>
                 </Table>
               )}
+              <Divider hidden />
+              <SearchProvider.Pagination />
             </React.Fragment>
           );
         }}
