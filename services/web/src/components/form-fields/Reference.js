@@ -16,11 +16,10 @@ export default class ReferenceField extends React.Component {
   // Events
 
   onChange = (evt, { value, ...rest }) => {
-    const { data } = this.state;
     if (this.isMultiple()) {
-      value = data.filter((item) => value.includes(item.id));
+      value = this.getItems().filter((item) => value.includes(item.id));
     } else {
-      value = data.find((item) => item.id === value);
+      value = this.getItems().find((item) => item.id === value);
     }
     this.props.onChange(evt, { value, ...rest });
   };
@@ -73,16 +72,12 @@ export default class ReferenceField extends React.Component {
 
   getItems() {
     const { value } = this.props;
-    if (this.isMultiple()) {
-      return value;
-    } else {
-      return value ? [value] : [];
-    }
+    const values = this.isMultiple ? value : [value];
+    return uniqBy([...values, ...this.state.data], 'id');
   }
 
   getOptions() {
-    const items = uniqBy([...this.getItems(), ...this.state.data], 'id');
-    return items.map((item) => {
+    return this.getItems().map((item) => {
       const { getOptionLabel, getOptionValue } = this.props;
       return {
         text: getOptionLabel(item),
