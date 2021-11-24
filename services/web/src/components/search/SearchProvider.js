@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { debounce, pickBy } from 'lodash';
 
-import SearchContext from './context';
+import SearchContext from './Context';
 import Pagination from './Pagination';
 
 export default class SearchProvider extends React.Component {

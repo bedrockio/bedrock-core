@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form } from 'semantic';
 
-import SearchContext from '../context';
+import SearchContext from '../Context';
 
 export default class CheckboxFilter extends React.Component {
   static contextType = SearchContext;

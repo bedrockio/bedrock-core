@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import DateField from 'components/form-fields/Date';
 import { isEmpty } from 'lodash';
 
-import SearchContext from '../context';
+import SearchContext from '../Context';
 import './date-range.less';
 
 export default class DateRangeFilter extends React.Component {

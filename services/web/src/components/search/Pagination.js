@@ -1,7 +1,7 @@
 import React from 'react';
 import Pagination from 'components/Pagination';
 
-import SearchContext from './context';
+import SearchContext from './Context';
 
 export default class SearchPagination extends React.Component {
   static contextType = SearchContext;

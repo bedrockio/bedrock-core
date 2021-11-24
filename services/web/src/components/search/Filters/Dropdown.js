@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Form } from 'semantic';
 import SearchDropdown from 'components/SearchDropdown';
 
-import SearchContext from '../context';
+import SearchContext from '../Context';
 
 export default class DropdownFilter extends React.Component {
   static contextType = SearchContext;
