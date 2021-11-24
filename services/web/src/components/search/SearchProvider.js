@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Loader, Message, Divider } from 'semantic';
 import { debounce, pickBy } from 'lodash';
-import Pagination from 'components/Pagination';
 
-export const SearchContext = React.createContext();
+import SearchContext from './Context';
+import Pagination from './Pagination';
 
 export default class SearchProvider extends React.Component {
+  static Pagination = Pagination;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -185,11 +186,6 @@ export default class SearchProvider extends React.Component {
   // Utils
 
   render() {
-    const { loader } = this.props;
-    const { loading } = this.state;
-    if (loader && loading) {
-      return <Loader active>Loading</Loader>;
-    }
     const context = {
       ...this.state,
       reload: this.reload,
@@ -199,41 +195,15 @@ export default class SearchProvider extends React.Component {
       setFilters: this.setFilters,
       replaceItem: this.replaceItem,
       updateItems: this.updateItems,
+      onPageChange: this.onPageChange,
       onFilterChange: this.onFilterChange,
       getFilterValue: this.getFilterValue,
     };
     return (
       <SearchContext.Provider value={context}>
-        {this.renderError()}
         {this.props.children(context)}
-        {this.renderPagination()}
       </SearchContext.Provider>
     );
-  }
-
-  renderError() {
-    const { error } = this.state;
-    if (error) {
-      return <Message error content={error.message} />;
-    }
-  }
-
-  renderPagination() {
-    const { pagination } = this.props;
-    const { page, meta } = this.state;
-    if (pagination && meta.total > meta.limit) {
-      return (
-        <React.Fragment>
-          <Divider hidden />
-          <Pagination
-            page={page}
-            limit={meta.limit}
-            total={meta.total}
-            onPageChange={this.onPageChange}
-          />
-        </React.Fragment>
-      );
-    }
   }
 }
 
@@ -246,8 +216,6 @@ SearchProvider.propTypes = {
     order: PropTypes.string,
     field: PropTypes.string,
   }),
-  loader: PropTypes.bool,
-  pagination: PropTypes.bool,
   onPageChange: PropTypes.func,
 };
 
@@ -258,7 +226,5 @@ SearchProvider.defaultProps = {
     order: 'desc',
     field: 'createdAt',
   },
-  loader: true,
-  pagination: true,
   filters: {},
 };

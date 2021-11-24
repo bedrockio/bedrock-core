@@ -3,9 +3,11 @@ import { omit } from 'lodash';
 import PropTypes from 'prop-types';
 import { Modal, Form, Ref, Icon, Button, Label } from 'semantic';
 
-import { SearchContext } from '../SearchProvider';
+import SearchContext from '../Context';
 
 export default class FilterModal extends React.Component {
+  static contextType = SearchContext;
+
   constructor(props) {
     super(props);
     this.state = {
