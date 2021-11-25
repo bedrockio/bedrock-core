@@ -23,7 +23,6 @@ async function loadFixtures() {
   logger.info('Starting fixture import...');
   resetStats();
   await importFixtures();
-  await assertReferencedPlaceholders();
   logStats();
   return true;
 }
@@ -319,10 +318,13 @@ async function importFixturesWithGuard(id, meta) {
   } catch (err) {
     if (err instanceof CircularReferenceError) {
       logCircularReference(err.toString());
+      return getReferencedPlaceholder(id);
     } else if (err instanceof GeneratedConflictError) {
       logger.debug(`Generated conflict in ${id}. Falling back to placeholder.`);
+      return getReferencedPlaceholder(id);
+    } else {
+      throw err;
     }
-    return getReferencedPlaceholder(id);
   }
 }
 
@@ -379,7 +381,7 @@ async function getGeneratedFixtures(base, name, type) {
     if (name) {
       fixtures = fixtures[name];
       if (!fixtures) {
-        throw new Error(`Could not import ${name} from generated directory ${base}`);
+        throw new Error(`Could not import ${join(base, name)} from generated directory ${base}.`);
       }
     }
     return fixtures;
@@ -551,26 +553,6 @@ const getPlaceholderForId = memoize((id) => {
   placeholdersById.set(id, placeholder.toString());
   return placeholder;
 });
-
-// Attempts to import referenced placeholders. If the
-// placeholder id does not exist this will fail providing
-// an error message to a possibly bad reference.
-async function assertReferencedPlaceholders() {
-  let hasBadReferences = false;
-  await Promise.all(
-    Array.from(referencedPlaceholders.values()).map(async (id) => {
-      try {
-        await importFixtures(id);
-      } catch (error) {
-        logger.error(`Could not load module ${id}`);
-        hasBadReferences = true;
-      }
-    })
-  );
-  if (hasBadReferences) {
-    throw new Error('Could not load due to missing modules.');
-  }
-}
 
 function cleanupPlaceholders() {
   placeholdersById = new Map();
