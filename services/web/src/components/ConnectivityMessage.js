@@ -20,13 +20,14 @@ export default class ConnectivityMessage extends React.Component {
       <div style={{ marginBottom: '1em' }}>
         <Message error>
           The network is unstable. Check your internet connection.{' '}
-          {this.context.loading ? (
-            <Loader size="tiny" active inline />
-          ) : (
-            <a onClick={() => this.context.testConnection()} href="#">
-              Retry?
-            </a>
-          )}
+          <a
+            onClick={(e) => {
+              e.preventDefault();
+              this.context.testConnection();
+            }}
+            href="#">
+            Retry?
+          </a>
         </Message>
       </div>
     );
