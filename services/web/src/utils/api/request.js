@@ -4,8 +4,11 @@ import { trackRequest } from '../analytics';
 import { getToken } from './token';
 
 export default async function request(options) {
-  const { method = 'GET', path, files, params } = options;
+  const { method = 'GET', path, files, params, timeout = 20000 } = options;
   let { body } = options;
+
+  const controller = new AbortController();
+  const timeoutRef = setTimeout(() => controller.abort(), timeout);
 
   const token = options.token || getToken();
 
@@ -36,11 +39,22 @@ export default async function request(options) {
     headers['Content-Type'] = 'application/json';
   }
 
-  const res = await fetch(url, {
-    method,
-    headers,
-    body,
-  });
+  let res;
+  try {
+    res = await fetch(url, {
+      method,
+      headers,
+      body,
+      signal: controller.signal,
+    });
+  } catch (err) {
+    if (err.name === 'AbortError') {
+      throw new ApiError('Request timed out. Check your internet connection.');
+    }
+    throw err;
+  }
+
+  clearTimeout(timeoutRef);
 
   if (res.status === 204) {
     return;
