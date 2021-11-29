@@ -5,6 +5,7 @@ const config = require('@bedrockio/config');
 
 const envMiddleware = require('./middleware/env');
 const historyMiddleware = require('./middleware/history');
+const connectivityMiddleware = require('./middleware/connectivity');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 
@@ -60,6 +61,7 @@ const app = new Koa();
     return Promise.all([ready, init]);
   };
 
+  app.use(connectivityMiddleware);
   // Hot reloader also shows some issues with webpack v5
   // https://github.com/webpack-contrib/webpack-hot-middleware/pull/394
   const wrappedHotMiddleware = e2k(webpackHotMiddleware(compiler));

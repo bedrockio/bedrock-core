@@ -22,6 +22,8 @@ Icon.useSet(regularIcons, 'regular');
 
 // Scrolling
 import ScrollProvider from 'helpers/ScrollProvider';
+// Connectivity
+import Connectivity from 'contexts/connectivity';
 
 import App from './App';
 
@@ -29,9 +31,11 @@ const Wrapper = () => (
   <BrowserRouter>
     <SessionProvider>
       <HelmetProvider>
-        <ScrollProvider>
-          <App />
-        </ScrollProvider>
+        <Connectivity.Provider>
+          <ScrollProvider>
+            <App />
+          </ScrollProvider>
+        </Connectivity.Provider>
       </HelmetProvider>
     </SessionProvider>
   </BrowserRouter>

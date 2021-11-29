@@ -4,6 +4,7 @@ import { Icon, Container } from 'semantic';
 import Footer from 'components/Footer';
 import { Layout } from 'components';
 import Protected from 'components/Protected';
+import ConnectivityMessage from 'components/ConnectivityMessage';
 import Organization from 'modals/Organization';
 import Sidebar from './Sidebar';
 import { withSession } from 'stores';
@@ -103,6 +104,7 @@ export default class DashboardLayout extends React.Component {
             </Layout>
           </Sidebar.Mobile>
           <Container>
+            <ConnectivityMessage />
             <main>{this.props.children}</main>
             <Footer />
           </Container>
