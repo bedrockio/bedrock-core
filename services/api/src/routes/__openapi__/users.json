@@ -18,8 +18,11 @@
           "responseBody": {
             "data": {
               "id": "5e6a9c000fc676447dc9936a",
-              "roles": ["admin"],
-              "name": "John Doe",
+              "roles": [
+                "admin"
+              ],
+              "firstName": "John",
+              "lastName": "Doe",
               "email": "john.doe@gmail.com",
               "createdAt": "2020-03-12T20:30:56.062Z",
               "updatedAt": "2020-03-12T20:30:56.062Z"
@@ -33,8 +36,16 @@
       "path": "/me",
       "requestBody": [
         {
-          "name": "name",
-          "description": "Full Name of user",
+          "name": "firstName",
+          "description": "First name of user",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "lastName",
+          "description": "Last name of user",
           "required": false,
           "schema": {
             "type": "string"
@@ -74,9 +85,17 @@
           }
         },
         {
-          "name": "name",
-          "description": "Full name of user",
-          "required": true,
+          "name": "firstName",
+          "description": "First name of user",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "lastName",
+          "description": "Last name of user",
+          "required": false,
           "schema": {
             "type": "string"
           }
@@ -160,7 +179,10 @@
             },
             "additionalProperties": false,
             "patterns": [],
-            "required": ["field", "order"]
+            "required": [
+              "field",
+              "order"
+            ]
           }
         },
         {
@@ -200,8 +222,16 @@
           }
         },
         {
-          "name": "name",
-          "description": "Full name of user",
+          "name": "firstName",
+          "description": "First name of user",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "lastName",
+          "description": "Last name of user",
           "required": false,
           "schema": {
             "type": "string"
@@ -233,13 +263,18 @@
           "name": "Set admin role on a given user",
           "requestPath": "/1/users/5e6a9c000fc676447dc9936a",
           "requestBody": {
-            "roles": ["admin"]
+            "roles": [
+              "admin"
+            ]
           },
           "responseBody": {
             "data": {
               "id": "5e6a9c000fc676447dc9936a",
-              "roles": ["admin"],
-              "name": "John Doe",
+              "roles": [
+                "admin"
+              ],
+              "firstName": "John",
+              "lastName": "Doe",
               "email": "john.doe@gmail.com",
               "createdAt": "2020-03-12T20:30:56.062Z",
               "updatedAt": "2020-03-12T20:30:56.062Z"
@@ -260,8 +295,17 @@
       "name": "User",
       "attributes": [
         {
-          "name": "name",
-          "description": "Full Name of user",
+          "name": "firstName",
+          "description": "First name of user",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "lastName",
+          "description": "Last name of user",
+          "required": true,
           "schema": {
             "type": "string"
           }

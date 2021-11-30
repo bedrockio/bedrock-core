@@ -20,8 +20,8 @@ export default class DashboardLayout extends React.Component {
       <Sidebar>
         <Sidebar.Menu>
           <Layout style={{ height: '100%' }}>
-            <NavLink style={{ margin: '5px 25px 15px 25px' }} to="/">
-              <img height="30" src={logo} />
+            <NavLink style={{ margin: '5px 25px 20px 25px' }} to="/">
+              <img width="100%" src={logo} />
             </NavLink>
             <Layout vertical spread>
               {userCanSwitchOrganizations(user) && (
@@ -51,7 +51,7 @@ export default class DashboardLayout extends React.Component {
                   Products
                 </Sidebar.Link>
                 <Protected endpoint="users">
-                  <Sidebar.Link to="/users">
+                  <Sidebar.Link to="/users" exact>
                     <Icon name="users" />
                     Users
                   </Sidebar.Link>

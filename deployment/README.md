@@ -145,7 +145,7 @@ Create a Google Cloud project (in the [GC dashboard](https://console.cloud.googl
 
 ```bash
 gcloud projects create bedrock-staging --name="Bedrock Staging"
-gcloud config set project seltzer-box-staging
+gcloud config set project bedrock-staging
 ```
 
 Configure: `environments/<environment>/config.json`.
