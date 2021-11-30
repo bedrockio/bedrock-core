@@ -52,7 +52,7 @@ export default class Roles extends React.Component {
     this.setState({
       roles,
     });
-    this.props.onChange(roles);
+    this.props.onChange(undefined, { value: roles });
   }
 
   getGlobalValues() {
@@ -83,7 +83,7 @@ export default class Roles extends React.Component {
     this.setState({
       roles,
     });
-    this.props.onChange(roles);
+    this.props.onChange(undefined, { value: roles });
   }
 
   getScopeRefs(roles, scope) {
@@ -127,12 +127,8 @@ export default class Roles extends React.Component {
   }
 
   render() {
-    const {
-      error,
-      loading,
-      scopedOrganizationIds,
-      showAddOrganizationModal,
-    } = this.state;
+    const { error, loading, scopedOrganizationIds, showAddOrganizationModal } =
+      this.state;
     const { enableOrganizationScopes } = this.props;
     if (loading) return <Loader />;
     if (error) return <Message error content={error.message} />;
