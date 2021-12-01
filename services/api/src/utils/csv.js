@@ -30,7 +30,7 @@ function exportValidation(options = {}) {
 }
 
 function exportItem(item, options, result = {}, rootPath = []) {
-  if (item && typeof item === 'object') {
+  if (item && typeof item === 'object' && !(item instanceof Date)) {
     if (item.toObject) {
       item = item.toObject();
     }
