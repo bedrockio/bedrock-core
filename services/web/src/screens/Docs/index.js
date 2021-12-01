@@ -12,19 +12,17 @@ import PageLoader from 'components/PageLoader';
 import { request } from '../../utils/api';
 import screen from 'helpers/screen';
 
-import * as DOCS from 'docs';
+import DOCS from 'docs';
 
 const DEFAULT_PAGE_ID = 'getting-started';
 
-const PAGES = Object.keys(DOCS)
-  .sort()
-  .map((name) => {
-    return {
-      id: kebabCase(name),
-      name: startCase(name.toLowerCase()),
-      markdown: DOCS[name],
-    };
-  });
+const PAGES = Object.keys(DOCS).map((name) => {
+  return {
+    id: kebabCase(name),
+    name: startCase(name.toLowerCase()),
+    markdown: DOCS[name],
+  };
+});
 
 function stateForParams(params) {
   const { id = DEFAULT_PAGE_ID } = params;

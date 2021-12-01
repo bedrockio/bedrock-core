@@ -1,6 +1,15 @@
-export { default as GETTING_STARTED } from './GETTING_STARTED.md';
-export { default as AUTHENTICATION } from './AUTHENTICATION.md';
-export { default as MULTI_FACTOR_AUTH } from './MFA.md';
-export { default as USERS } from './USERS.md';
-export { default as SHOPS } from './SHOPS.md';
-export { default as UPLOADS } from './UPLOADS.md';
+import GETTING_STARTED from './GETTING_STARTED.md';
+import AUTHENTICATION from './AUTHENTICATION.md';
+import MULTI_FACTOR_AUTH from './MFA.md';
+import USERS from './USERS.md';
+import SHOPS from './SHOPS.md';
+import UPLOADS from './UPLOADS.md';
+
+export default {
+  GETTING_STARTED,
+  AUTHENTICATION,
+  MULTI_FACTOR_AUTH,
+  USERS,
+  SHOPS,
+  UPLOADS,
+};
