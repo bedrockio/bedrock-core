@@ -25,9 +25,11 @@ export default class ErrorScreen extends React.Component {
       <PageCenter maxWidth="400px">
         <div>
           <Message error header={title} content={this.renderErrorBody()} />
-          <Button size="small" onClick={this.onLogoutClick} primary>
-            Logout
-          </Button>
+          <div>
+            <Button size="small" onClick={this.onLogoutClick} primary>
+              Logout
+            </Button>
+          </div>
         </div>
       </PageCenter>
     );
