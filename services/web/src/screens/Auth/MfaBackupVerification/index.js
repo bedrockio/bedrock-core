@@ -5,14 +5,13 @@ import { withSession } from 'stores';
 import screen from 'helpers/screen';
 import { APP_SUPPORT_EMAIL } from 'utils/env';
 
-import PageCenter from 'components/PageCenter';
 import Logo from 'components/LogoTitle';
 import { Link } from 'react-router-dom';
 
 @screen
 @withSession
 export default class MfaBackupVerification extends React.Component {
-  static layout = 'none';
+  static layout = 'basic';
 
   state = {
     error: null,
@@ -96,7 +95,7 @@ export default class MfaBackupVerification extends React.Component {
     const { error, loading } = this.state;
 
     return (
-      <PageCenter>
+      <React.Fragment>
         <Logo title="Two-Step Verification" />
         <Segment.Group>
           <Segment padded>
@@ -130,7 +129,7 @@ export default class MfaBackupVerification extends React.Component {
             <Link to="/login/verification">Back to verification</Link>
           </Segment>
         </Segment.Group>
-      </PageCenter>
+      </React.Fragment>
     );
   }
 }

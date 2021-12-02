@@ -4,7 +4,6 @@ import { withSession } from 'stores';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
 
-import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
 import Form from './Form';
 import { Link } from 'react-router-dom';
@@ -13,7 +12,7 @@ import { getUrlToken } from 'utils/token';
 @screen
 @withSession
 export default class ResetPassword extends React.Component {
-  static layout = 'none';
+  static layout = 'basic';
 
   constructor(props) {
     super(props);
@@ -63,7 +62,7 @@ export default class ResetPassword extends React.Component {
   render() {
     const { payload, error, loading, success } = this.state;
     return (
-      <PageCenter>
+      <React.Fragment>
         <LogoTitle title="Reset Password" />
         <Segment.Group>
           <Segment padded>
@@ -89,7 +88,7 @@ export default class ResetPassword extends React.Component {
             )}
           </Segment>
         </Segment.Group>
-      </PageCenter>
+      </React.Fragment>
     );
   }
 }

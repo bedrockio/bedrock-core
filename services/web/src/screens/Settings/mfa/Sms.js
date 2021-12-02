@@ -5,7 +5,6 @@ import screen from 'helpers/screen';
 import allCountries from 'utils/countries';
 
 import Finalize from './Finalize';
-import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
 import { Link } from 'react-router-dom';
 import Code from 'components/form-fields/Code';
@@ -19,7 +18,7 @@ const countryCallingCodes = allCountries.map(({ nameEn, callingCode }) => ({
 
 @screen
 export default class Sms extends React.Component {
-  static layout = 'none';
+  static layout = 'basic';
 
   state = {
     touched: false,
@@ -140,7 +139,7 @@ export default class Sms extends React.Component {
     }
 
     return (
-      <PageCenter>
+      <React.Fragment>
         <LogoTitle title="Set up SMS authentication" />
         <Segment.Group>
           <Segment>
@@ -225,7 +224,7 @@ export default class Sms extends React.Component {
             />
           </Segment>
         </Segment.Group>
-      </PageCenter>
+      </React.Fragment>
     );
   }
 }

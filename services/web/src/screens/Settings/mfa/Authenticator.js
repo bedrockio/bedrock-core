@@ -7,7 +7,6 @@ import { ExternalLink } from 'components/Link';
 import { Layout } from 'components';
 
 import screen from 'helpers/screen';
-import PageCenter from 'components/PageCenter';
 import { Link } from 'react-router-dom';
 import LogoTitle from 'components/LogoTitle';
 import Code from 'components/form-fields/Code';
@@ -16,7 +15,7 @@ import Finalize from './Finalize';
 
 @screen
 export default class Authenticator extends React.Component {
-  static layout = 'none';
+  static layout = 'basic';
 
   state = {
     loading: false,
@@ -111,9 +110,8 @@ export default class Authenticator extends React.Component {
     }
 
     return (
-      <PageCenter>
+      <React.Fragment>
         <LogoTitle title="Set up app authentication" />
-
         <Segment.Group>
           <Segment>
             <Header size="small">1. Download an authenticator app.</Header>
@@ -184,7 +182,7 @@ export default class Authenticator extends React.Component {
             </Segment>
           </Form>
         </Segment.Group>
-      </PageCenter>
+      </React.Fragment>
     );
   }
 }

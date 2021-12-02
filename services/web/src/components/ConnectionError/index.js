@@ -3,12 +3,14 @@ import bem from 'helpers/bem';
 
 import './connection-error.less';
 
+let stable = true;
+
 @bem
 export default class ConnectionError extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      stable: true,
+      stable,
     };
   }
 
@@ -28,14 +30,16 @@ export default class ConnectionError extends React.Component {
   }
 
   onStable = () => {
+    stable = true;
     this.setState({
-      stable: true,
+      stable,
     });
   };
 
   onUnstable = () => {
+    stable = false;
     this.setState({
-      stable: false,
+      stable,
     });
   };
 

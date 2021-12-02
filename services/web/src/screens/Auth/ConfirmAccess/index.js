@@ -4,7 +4,6 @@ import { Segment, Grid, Message, Form } from 'semantic';
 import { withSession } from 'stores';
 import screen from 'helpers/screen';
 
-import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
 
 import { Link } from 'react-router-dom';
@@ -13,7 +12,7 @@ import Password from 'components/form-fields/Password';
 @screen
 @withSession
 export default class ConfirmAccess extends React.Component {
-  static layout = 'none';
+  static layout = 'basic';
 
   state = {
     error: null,
@@ -52,7 +51,7 @@ export default class ConfirmAccess extends React.Component {
     const { error, loading, password } = this.state;
 
     return (
-      <PageCenter>
+      <React.Fragment>
         <LogoTitle title="Confirm Access" />
         <Segment.Group>
           <Segment padded>
@@ -85,7 +84,7 @@ export default class ConfirmAccess extends React.Component {
             </Grid>
           </Segment>
         </Segment.Group>
-      </PageCenter>
+      </React.Fragment>
     );
   }
 }

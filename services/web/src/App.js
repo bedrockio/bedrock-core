@@ -29,8 +29,6 @@ import Loading from 'screens/Loading';
 import Error from 'screens/Error';
 import Products from 'screens/Products';
 
-import ConnectionError from 'components/ConnectionError';
-
 const App = () => {
   const { loading, error } = useSession();
   if (loading) {
@@ -39,50 +37,47 @@ const App = () => {
     return <Error error={error} />;
   }
   return (
-    <React.Fragment>
-      <ConnectionError />
-      <Switch>
-        <AuthSwitch path="/" loggedIn={Dashboard} loggedOut={Login} exact />
-        <Protected path="/shops/:id?" allowed={Shops} />
-        <Protected path="/products/:id?" allowed={Products} />
-        <Protected path="/settings/:id?" allowed={Settings} exact />
-        <Protected path="/users/invites" allowed={Invites} exact />
-        <Protected path="/organizations/:id?" allowed={Organizations} />
-        <Protected path="/users/:id?" allowed={Users} />
-        <Route path="/docs/ui" component={Components} exact />
-        <Route path="/docs/:id?" component={Docs} />
-        <Route path="/logout" component={Logout} exact />
-        <AuthSwitch
-          path="/login/verification"
-          loggedOut={MfaVerification}
-          loggedIn={() => <Redirect to="/" />}
-          exact
-        />
-        <AuthSwitch
-          path="/login/verification/backup"
-          loggedOut={MfaBackupVerification}
-          loggedIn={() => <Redirect to="/" />}
-          exact
-        />
-        <AuthSwitch
-          path="/login"
-          loggedOut={Login}
-          loggedIn={() => <Redirect to="/" />}
-          exact
-        />
-        <AuthSwitch
-          path="/signup"
-          loggedOut={Signup}
-          loggedIn={() => <Redirect to="/" />}
-          exact
-        />
-        <Route path="/accept-invite" component={AcceptInvite} exact />
-        <Route path="/forgot-password" component={ForgotPassword} exact />
-        <Route path="/reset-password" component={ResetPassword} exact />
-        <Protected path="/confirm-access" allowed={ConfirmAccess} exact />
-        <Route component={NotFound} />
-      </Switch>
-    </React.Fragment>
+    <Switch>
+      <AuthSwitch path="/" loggedIn={Dashboard} loggedOut={Login} exact />
+      <Protected path="/shops/:id?" allowed={Shops} />
+      <Protected path="/products/:id?" allowed={Products} />
+      <Protected path="/settings/:id?" allowed={Settings} exact />
+      <Protected path="/users/invites" allowed={Invites} exact />
+      <Protected path="/organizations/:id?" allowed={Organizations} />
+      <Protected path="/users/:id?" allowed={Users} />
+      <Route path="/docs/ui" component={Components} exact />
+      <Route path="/docs/:id?" component={Docs} />
+      <Route path="/logout" component={Logout} exact />
+      <AuthSwitch
+        path="/login/verification"
+        loggedOut={MfaVerification}
+        loggedIn={() => <Redirect to="/" />}
+        exact
+      />
+      <AuthSwitch
+        path="/login/verification/backup"
+        loggedOut={MfaBackupVerification}
+        loggedIn={() => <Redirect to="/" />}
+        exact
+      />
+      <AuthSwitch
+        path="/login"
+        loggedOut={Login}
+        loggedIn={() => <Redirect to="/" />}
+        exact
+      />
+      <AuthSwitch
+        path="/signup"
+        loggedOut={Signup}
+        loggedIn={() => <Redirect to="/" />}
+        exact
+      />
+      <Route path="/accept-invite" component={AcceptInvite} exact />
+      <Route path="/forgot-password" component={ForgotPassword} exact />
+      <Route path="/reset-password" component={ResetPassword} exact />
+      <Protected path="/confirm-access" allowed={ConfirmAccess} exact />
+      <Route component={NotFound} />
+    </Switch>
   );
 };
 

@@ -2,7 +2,6 @@ import React from 'react';
 import { Segment, Message, Grid } from 'semantic';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
-import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
 import Form from './Form';
 
@@ -10,7 +9,7 @@ import { Link } from 'react-router-dom';
 
 @screen
 export default class ForgotPassword extends React.Component {
-  static layout = 'none';
+  static layout = 'basic';
 
   state = {
     success: false,
@@ -46,7 +45,7 @@ export default class ForgotPassword extends React.Component {
   render() {
     const { error, success, email, loading } = this.state;
     return (
-      <PageCenter>
+      <React.Fragment>
         <LogoTitle title="Forgot Password" />
         <Segment.Group>
           <Segment padded>
@@ -74,7 +73,7 @@ export default class ForgotPassword extends React.Component {
             </Grid>
           </Segment>
         </Segment.Group>
-      </PageCenter>
+      </React.Fragment>
     );
   }
 }

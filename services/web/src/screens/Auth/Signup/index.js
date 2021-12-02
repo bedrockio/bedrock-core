@@ -1,6 +1,5 @@
 import React from 'react';
 import { Segment, Grid } from 'semantic';
-import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
 import { withSession } from 'stores';
 import { request } from 'utils/api';
@@ -12,7 +11,7 @@ import { Link } from 'react-router-dom';
 @screen
 @withSession
 export default class Signup extends React.Component {
-  static layout = 'none';
+  static layout = 'basic';
 
   state = {
     error: null,
@@ -44,7 +43,7 @@ export default class Signup extends React.Component {
   render() {
     const { error, loading } = this.state;
     return (
-      <PageCenter>
+      <React.Fragment>
         <LogoTitle title="Create your account" />
         <Segment.Group>
           <Segment padded>
@@ -58,7 +57,7 @@ export default class Signup extends React.Component {
             </Grid>
           </Segment>
         </Segment.Group>
-      </PageCenter>
+      </React.Fragment>
     );
   }
 }

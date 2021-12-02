@@ -9,6 +9,8 @@ import Sidebar from './Sidebar';
 import { withSession } from 'stores';
 import { userCanSwitchOrganizations } from 'utils/permissions';
 
+import ConnectionError from 'components/ConnectionError';
+
 import logo from 'assets/logo.svg';
 import favicon from 'assets/favicon.svg';
 
@@ -18,6 +20,7 @@ export default class DashboardLayout extends React.Component {
     const { user, getOrganization } = this.context;
     return (
       <Sidebar>
+        <ConnectionError />
         <Sidebar.Menu>
           <Layout style={{ height: '100%' }}>
             <NavLink style={{ margin: '5px 25px 20px 25px' }} to="/">

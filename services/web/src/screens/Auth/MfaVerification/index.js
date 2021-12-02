@@ -4,7 +4,6 @@ import { Segment, Form, Header, Message, Divider } from 'semantic';
 import { withSession } from 'stores';
 import screen from 'helpers/screen';
 
-import PageCenter from 'components/PageCenter';
 import Logo from 'components/LogoTitle';
 import { Link } from 'react-router-dom';
 import Code from 'components/form-fields/Code';
@@ -14,7 +13,7 @@ import { Layout } from 'components';
 @screen
 @withSession
 export default class MfaVerification extends React.Component {
-  static layout = 'none';
+  static layout = 'basic';
 
   state = {
     error: null,
@@ -99,7 +98,7 @@ export default class MfaVerification extends React.Component {
     const mfaSessionData = this.getMfaSessionData() || {};
 
     return (
-      <PageCenter>
+      <React.Fragment>
         <Logo title="Two-Step Verification" />
         <Segment.Group>
           <Segment padded>
@@ -173,7 +172,7 @@ export default class MfaVerification extends React.Component {
             <Link to="/login/verification/backup">Use your backup codes</Link>.
           </Segment>
         </Segment.Group>
-      </PageCenter>
+      </React.Fragment>
     );
   }
 }
