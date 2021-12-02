@@ -78,7 +78,14 @@ export default class Account extends React.Component {
               onChange={this.setField}
             />
           </Segment>
-          <Button primary content="Save" loading={loading} disabled={loading} />
+          <div>
+            <Button
+              primary
+              content="Save"
+              loading={loading}
+              disabled={loading}
+            />
+          </div>
         </Form>
       </React.Fragment>
     );

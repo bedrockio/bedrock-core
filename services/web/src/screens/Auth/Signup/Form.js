@@ -91,7 +91,8 @@ export default (props) => {
             onChange={(e, { checked, name }) => setField(name, checked)}
           />
         </Form.Field>
-        <Button
+        <Form.Button
+          fluid
           primary
           size="large"
           content="Signup"

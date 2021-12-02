@@ -55,7 +55,7 @@
 /* Modal Actions */
 @actionBorder: 1px solid @borderColor;
 @actionBackground: #fff;
-@actionPadding: 1rem 1rem;
+@actionPadding: 1.5rem;
 @actionAlign: right;
 
 @buttonDistance: 0.75em;
