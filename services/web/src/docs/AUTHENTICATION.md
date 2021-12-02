@@ -8,6 +8,8 @@ Creates a new user object in the system. This can be initiated without any authe
 
 callSummary({method: 'POST', path: '/1/auth/register'})
 
+_Note: If you want to update other attributes on a User, please see the `PATCH /1/users/me` API call_
+
 ## Login
 
 This exchanges a user's credentials (email and password) for a JWT token. This token can be used for authentication on all subsequent API calls (See Getting Started). Unless the user has mfa enabled.

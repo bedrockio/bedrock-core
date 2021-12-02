@@ -34,32 +34,6 @@
     {
       "method": "PATCH",
       "path": "/me",
-      "requestBody": [
-        {
-          "name": "firstName",
-          "description": "First name of user",
-          "required": false,
-          "schema": {
-            "type": "string"
-          }
-        },
-        {
-          "name": "lastName",
-          "description": "Last name of user",
-          "required": false,
-          "schema": {
-            "type": "string"
-          }
-        },
-        {
-          "name": "timeZone",
-          "description": "Timezone in TZ Database standard (e.g. Europe/Amsterdam)",
-          "required": false,
-          "schema": {
-            "type": "string"
-          }
-        }
-      ],
       "responseBody": [
         {
           "name": "data",

@@ -16,7 +16,7 @@ callSummary({method: 'GET', path: '/1/users/me'})
 
 ## Update Self
 
-Update the user object for the user associated with the JWT token.
+Update the user object for the user associated with the JWT token. All fields in the User object can be updated using this.
 
 callSummary({method: 'PATCH', path: '/1/users/me'})
 
