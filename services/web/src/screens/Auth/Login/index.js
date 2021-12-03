@@ -43,7 +43,7 @@ export default class Login extends React.Component {
         return;
       }
 
-      this.props.history.push(this.context.authenticate(data.token));
+      this.props.history.push(await this.context.authenticate(data.token));
     } catch (error) {
       this.setState({
         error,

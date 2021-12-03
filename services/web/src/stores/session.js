@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { merge, omit } from 'lodash';
 import { withRouter } from 'react-router-dom';
-import { request, getToken, setToken, clearToken } from 'utils/api';
+import { request, getToken, setToken } from 'utils/api';
 import { trackSession } from 'utils/analytics';
 import { captureError } from 'utils/sentry';
 import { wrapContext } from 'utils/hoc';
@@ -46,14 +46,6 @@ export class SessionProvider extends React.PureComponent {
 
   hasRole = (role) => {
     return this.hasRoles([role]);
-  };
-
-  setToken = (token) => {
-    if (token) {
-      setToken(token);
-    } else {
-      clearToken();
-    }
   };
 
   load = async () => {
@@ -128,12 +120,13 @@ export class SessionProvider extends React.PureComponent {
     } catch (err) {
       // JWT token errors may throw here
     }
-    this.setToken(null);
-    document.location = '/';
+    setToken(null);
+    await this.load();
+    return '/';
   };
 
   authenticate = async (token) => {
-    this.setToken(token);
+    setToken(token);
     await this.load();
     return this.popStored('redirect') || '/';
   };
@@ -242,7 +235,6 @@ export class SessionProvider extends React.PureComponent {
         value={{
           ...this.state,
           load: this.load,
-          setToken: this.setToken,
           setStored: this.setStored,
           removeStored: this.removeStored,
           clearStored: this.clearStored,
