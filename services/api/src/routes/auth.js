@@ -164,12 +164,13 @@ router
   .post(
     '/accept-invite',
     validateBody({
-      name: Joi.string().required(),
+      firstName: Joi.string().required(),
+      lastName: Joi.string().required(),
       password: passwordField.required(),
     }),
     authenticate({ type: 'invite' }),
     async (ctx) => {
-      const { name, password } = ctx.request.body;
+      const { firstName, lastName, password } = ctx.request.body;
       const invite = await Invite.findByIdAndUpdate(ctx.state.jwt.inviteId, {
         $set: { status: 'accepted' },
       });
@@ -186,7 +187,8 @@ router
       }
 
       const user = await User.create({
-        name,
+        firstName,
+        lastName,
         email: invite.email,
         password,
         authTokenId,
