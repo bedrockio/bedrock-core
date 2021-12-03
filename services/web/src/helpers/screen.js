@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { APP_NAME } from 'utils/env';
 import { wrapComponent, getWrappedComponent } from 'utils/hoc';
 
+import BasicLayout from 'layouts/Basic';
 import PortalLayout from 'layouts/Portal';
 import DashboardLayout from 'layouts/Dashboard';
 
@@ -11,6 +12,7 @@ import DashboardLayout from 'layouts/Dashboard';
 // layouts and instead allow them to be defined by an app wiring
 // them together, however react-hot-reloader has issues with this.
 const layouts = {
+  basic: BasicLayout,
   portal: PortalLayout,
   dashboard: DashboardLayout,
 };
@@ -18,7 +20,11 @@ const layouts = {
 export default function (Component) {
   const Wrapped = getWrappedComponent(Component);
   const title = Wrapped.title || startCase(Wrapped.name.replace(/Screen$/, ''));
-  const Layout = layouts[Wrapped.layout || 'dashboard'] || nullLayout;
+  const Layout = layouts[Wrapped.layout || 'dashboard'];
+
+  if (!Layout) {
+    throw new Error(`No layout "${Wrapped.layout}".`);
+  }
 
   class Screen extends React.PureComponent {
     render() {
@@ -47,8 +53,4 @@ export default function (Component) {
     }
   }
   return wrapComponent(Component, Screen);
-}
-
-function nullLayout(props) {
-  return props.children;
 }

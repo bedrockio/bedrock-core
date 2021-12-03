@@ -5,7 +5,6 @@ import { Segment, Grid, Form, Message } from 'semantic';
 import { withSession } from 'stores';
 import screen from 'helpers/screen';
 
-import PageCenter from 'components/PageCenter';
 import Logo from 'components/LogoTitle';
 
 import { Link } from 'react-router-dom';
@@ -13,7 +12,7 @@ import { Link } from 'react-router-dom';
 @screen
 @withSession
 export default class Login extends React.Component {
-  static layout = 'none';
+  static layout = 'basic';
 
   state = {
     error: null,
@@ -57,7 +56,7 @@ export default class Login extends React.Component {
     const { error, loading, password, email } = this.state;
 
     return (
-      <PageCenter>
+      <React.Fragment>
         <Logo title="Login" />
         <Segment.Group>
           <Segment padded>
@@ -110,7 +109,7 @@ export default class Login extends React.Component {
             </Grid>
           </Segment>
         </Segment.Group>
-      </PageCenter>
+      </React.Fragment>
     );
   }
 }

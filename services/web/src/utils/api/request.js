@@ -2,6 +2,7 @@ import { API_URL } from 'utils/env';
 import { ApiError, ApiParseError } from './errors';
 import { trackRequest } from '../analytics';
 import { getToken } from './token';
+import { fetchWithTimeout } from '../fetch';
 
 export default async function request(options) {
   const { method = 'GET', path, files, params } = options;
@@ -36,7 +37,7 @@ export default async function request(options) {
     headers['Content-Type'] = 'application/json';
   }
 
-  const res = await fetch(url, {
+  const res = await fetchWithTimeout(url, {
     method,
     headers,
     body,

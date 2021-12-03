@@ -3,7 +3,6 @@ import { Segment, Grid } from 'semantic';
 import { request } from 'utils/api';
 import { withSession } from 'stores';
 import screen from 'helpers/screen';
-import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
 
 import Form from './Form';
@@ -13,7 +12,7 @@ import { getUrlToken } from 'utils/token';
 @screen
 @withSession
 export default class AcceptInvite extends React.Component {
-  static layout = 'none';
+  static layout = 'basic';
 
   constructor(props) {
     super(props);
@@ -53,7 +52,7 @@ export default class AcceptInvite extends React.Component {
   render() {
     const { payload, error, loading } = this.state;
     return (
-      <PageCenter>
+      <React.Fragment>
         <LogoTitle title="Accept Invite" />
         <Segment.Group>
           <Segment padded>
@@ -70,7 +69,7 @@ export default class AcceptInvite extends React.Component {
             </Grid>
           </Segment>
         </Segment.Group>
-      </PageCenter>
+      </React.Fragment>
     );
   }
 }

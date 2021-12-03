@@ -2,7 +2,6 @@ import React from 'react';
 import { Button, Segment, Header, Form, Message } from 'semantic';
 import { request } from 'utils/api';
 
-import PageCenter from 'components/PageCenter';
 import LogoTitle from 'components/LogoTitle';
 import { withRouter } from 'react-router-dom';
 import { APP_NAME } from 'utils/env';
@@ -12,6 +11,8 @@ import { withSession } from 'stores';
 @withRouter
 @withSession
 export default class Finalize extends React.Component {
+  static layout = 'basic';
+
   state = {
     loading: false,
     error: null,
@@ -58,9 +59,8 @@ export default class Finalize extends React.Component {
     }, '');
 
     return (
-      <PageCenter>
+      <React.Fragment>
         <LogoTitle title="Save your recovery codes" />
-
         <Segment.Group>
           <Segment>
             <Header size="small">Two-factor recovery codes</Header>
@@ -138,7 +138,7 @@ export default class Finalize extends React.Component {
             />
           </Segment>
         </Segment.Group>
-      </PageCenter>
+      </React.Fragment>
     );
   }
 }

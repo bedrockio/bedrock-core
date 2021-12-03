@@ -5,6 +5,8 @@ import Footer from 'components/Footer';
 import { Layout } from 'components';
 import bem from 'helpers/bem';
 
+import ConnectionError from 'components/ConnectionError';
+
 import logo from 'assets/logo.svg';
 
 import './portal.less';
@@ -14,6 +16,7 @@ export default class PortalLayout extends React.Component {
   render() {
     return (
       <React.Fragment>
+        <ConnectionError />
         <Layout className={this.getElementClass('menu')}>
           <Layout
             className={this.getElementClass('menu-top')}
