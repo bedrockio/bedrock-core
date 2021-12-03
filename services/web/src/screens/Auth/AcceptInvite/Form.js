@@ -3,7 +3,8 @@ import { Form, Button, Message } from 'semantic';
 
 export default (props) => {
   const { error, loading } = props;
-  const [name, setName] = React.useState('');
+  const [firstName, setFirstName] = React.useState('');
+  const [lastName, setLastName] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [touched, setTouched] = React.useState(false);
   const [accepted, setAccepted] = React.useState(false);
@@ -16,21 +17,29 @@ export default (props) => {
         if (!accepted) return;
 
         props.onSubmit({
-          name,
+          firstName,
+          lastName,
           password,
         });
       }}>
       {error && <Message error content={error.message} />}
       <Form.Input
-        placeholder="Name"
-        name="name"
-        autoComplete="name"
-        icon="id-card"
-        iconPosition="left"
         type="text"
-        value={name}
-        onChange={(e, { value }) => setName(value)}
-        error={error?.hasField?.('name')}
+        name="firstName"
+        value={firstName}
+        placeholder="First Name"
+        autoComplete="given-name"
+        onChange={(e, { value }) => setFirstName(value)}
+        error={error?.hasField?.('firstName')}
+      />
+      <Form.Input
+        type="text"
+        name="lastName"
+        value={lastName}
+        placeholder="Last Name"
+        autoComplete="family-name"
+        onChange={(e, { value }) => setLastName(value)}
+        error={error?.hasField?.('lastName')}
       />
       <Form.Input
         placeholder="Password"

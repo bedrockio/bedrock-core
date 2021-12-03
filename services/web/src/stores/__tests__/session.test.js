@@ -8,14 +8,14 @@ import {
   SessionProvider,
 } from '../session';
 import screen from 'helpers/screen';
-import { setToken, clearToken } from 'utils/api';
+import { setToken } from 'utils/api';
 import { render, waitFor } from '@testing-library/react';
 
 jest.mock('utils/api');
 jest.mock('utils/env');
 
 afterEach(() => {
-  clearToken();
+  setToken(null);
 });
 
 function wrapProviders(Component) {

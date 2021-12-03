@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const { createTemporaryToken, generateTokenId } = require('../../utils/tokens');
 const { setupDb, teardownDb, request, createUser } = require('../../utils/testing');
 const { mockTime, unmockTime, advanceTime } = require('../../utils/testing/time');
-const { User } = require('../../models');
+const { User, Invite } = require('../../models');
 
 beforeAll(async () => {
   await setupDb();
@@ -189,6 +189,40 @@ describe('/1/auth', () => {
       expect(response.status).toBe(204);
       const updatedUser = await User.findById(user.id);
       expect(updatedUser.authTokenId).not.toBeDefined();
+    });
+  });
+
+  describe('POST /accept-invite', () => {
+    it('should send an email to the registered user', async () => {
+      const invite = await Invite.create({
+        email: 'some@email.com',
+        status: 'invited',
+      });
+      const token = createTemporaryToken({ type: 'invite', inviteId: invite.id, email: invite.email });
+      const response = await request(
+        'POST',
+        '/1/auth/accept-invite',
+        {
+          firstName: 'Bob',
+          lastName: 'Johnson',
+          password: '123password!',
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      expect(response.status).toBe(200);
+
+      const { payload } = jwt.decode(response.body.data.token, { complete: true });
+      expect(payload).toHaveProperty('kid', 'user');
+      expect(payload).toHaveProperty('type', 'user');
+
+      const user = await User.findById(payload.sub);
+      expect(user.firstName).toBe('Bob');
+      expect(user.lastName).toBe('Johnson');
     });
   });
 

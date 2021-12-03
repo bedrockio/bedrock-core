@@ -10,8 +10,10 @@ import { ENV_NAME } from 'utils/env';
 export default class ErrorScreen extends React.Component {
   static layout = 'basic';
 
-  onLogoutClick = () => {
-    this.context.logout(true);
+  onLogoutClick = async () => {
+    const { pathname, search } = window.location;
+    this.context.setStored('redirect', pathname + search);
+    this.props.history.push(await this.context.logout());
   };
 
   onReloadClick = () => {

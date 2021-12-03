@@ -35,26 +35,24 @@ export default (props) => {
           <Message error content="Please accept the terms of service" />
         )}
         {error && <Message error content={error.message} />}
-        <Form.Field error={error?.hasField?.('firstName')}>
-          <Input
-            value={fields.firstName}
-            name="firstName"
-            placeholder="First Name"
-            type="text"
-            autoComplete="name"
-            onChange={(e, { value, name }) => setField(name, value)}
-          />
-        </Form.Field>
-        <Form.Field error={error?.hasField?.('lastName')}>
-          <Input
-            value={fields.lastName}
-            name="lastName"
-            placeholder="Last Name"
-            type="text"
-            autoComplete="name"
-            onChange={(e, { value, name }) => setField(name, value)}
-          />
-        </Form.Field>
+        <Form.Input
+          type="text"
+          name="firstName"
+          value={fields.firstName}
+          placeholder="First Name"
+          autoComplete="given-name"
+          onChange={(e, { value, name }) => setField(name, value)}
+          error={error?.hasField?.('firstName')}
+        />
+        <Form.Input
+          type="text"
+          name="lastName"
+          value={fields.lastName}
+          placeholder="Last Name"
+          autoComplete="family-name"
+          onChange={(e, { value, name }) => setField(name, value)}
+          error={error?.hasField?.('lastName')}
+        />
         <Form.Field error={error?.hasField?.('email')}>
           <Input
             value={fields.email}

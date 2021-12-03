@@ -102,4 +102,5 @@ State exposed on the session context:
 - `isAdmin()` - Checks if the user has the `admin` role.
 - `hasRole(role)` - Checks if the user has a specific role. `role` must be a `string`.
 - `hasRoles(roles)` - Checks if the user has any `roles`. `roles` must be an `Array` of type `string`.
-- `setToken(token)` - Sets the authentication token. `token` must be a `string`.
+- `authenticate(token)` - Authenticates the user. `token` must be a JWT token as a `string`. Returns a path to redirect.
+- `logout()` - Logs the user out. Returns a path to redirect.
