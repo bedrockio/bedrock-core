@@ -1,9 +1,12 @@
+const path = require('path');
 const { kebabCase } = require('lodash');
 const config = require('@bedrockio/config');
 const roleDefinitions = require('../../roles.json');
 
 const ENV = config.getAll();
 const { ADMIN_EMAIL, ADMIN_PASSWORD } = ENV;
+
+const BASE_DIR = path.join(__dirname, '../../../fixtures');
 
 const ADMIN_FIXTURE_ID = 'users/admin';
 const ORGANIZATION_FIXTURE_ID = 'organizations/default';
@@ -63,6 +66,7 @@ const MODEL_TRANSFORMS = {
 };
 
 module.exports = {
+  BASE_DIR,
   MODEL_TRANSFORMS,
   CUSTOM_TRANSFORMS,
   ADMIN_FIXTURE_ID,

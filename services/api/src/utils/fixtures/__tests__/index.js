@@ -1,8 +1,8 @@
-const config = require('@bedrockio/config');
 const { setupDb, teardownDb } = require('../../../utils/testing');
 const { importFixtures } = require('../');
 
-const { ADMIN_EMAIL } = config.getAll();
+jest.mock('../const');
+jest.mock('../models');
 
 beforeAll(async () => {
   await setupDb();
@@ -12,25 +12,17 @@ afterAll(async () => {
   await teardownDb();
 });
 
-describe('import', () => {
+describe('importFixtures', () => {
   it('should load root fixtures', async () => {
     const fixtures = await importFixtures();
     expect(fixtures).toMatchObject({
       users: {
         admin: {
-          email: ADMIN_EMAIL,
+          name: 'Joe',
         },
       },
       'users/admin': {
-        email: ADMIN_EMAIL,
-      },
-      shops: {
-        demo: {
-          name: 'Demo',
-        },
-      },
-      'shops/demo': {
-        name: 'Demo',
+        name: 'Joe',
       },
     });
   });
@@ -39,7 +31,7 @@ describe('import', () => {
     const fixtures = await importFixtures('users');
     expect(fixtures).toMatchObject({
       admin: {
-        email: ADMIN_EMAIL,
+        name: 'Joe',
       },
     });
   });
@@ -47,13 +39,22 @@ describe('import', () => {
   it('should load single fixture', async () => {
     const admin = await importFixtures('users/admin');
     expect(admin).toMatchObject({
-      email: ADMIN_EMAIL,
-      hashedPassword: expect.any(String),
+      name: 'Joe',
     });
   });
 
   it('should not be serialized', async () => {
     const admin = await importFixtures('users/admin');
     expect(admin.save).toBeInstanceOf(Function);
+  });
+
+  it('should import content files', async () => {
+    const post = await importFixtures('posts/post');
+    expect(post).toMatchObject({
+      content: '# Header\n',
+      nested: {
+        nestedContent: '# Header\n',
+      },
+    });
   });
 });

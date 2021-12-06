@@ -6,14 +6,12 @@ const mongoose = require('mongoose');
 const { get, memoize, cloneDeep, mapKeys, camelCase, kebabCase } = require('lodash');
 const { logger } = require('@bedrockio/instrumentation');
 const config = require('@bedrockio/config');
-const models = require('../../models');
 const { storeUploadedFile } = require('../uploads');
 const { stringReplaceAsync } = require('../string');
+const models = require('./models');
 
 const { ADMIN_EMAIL, API_URL } = config.getAll();
-const { CUSTOM_TRANSFORMS, MODEL_TRANSFORMS, ADMIN_FIXTURE_ID } = require('./const');
-
-const BASE_DIR = path.join(__dirname, '../../../fixtures');
+const { BASE_DIR, CUSTOM_TRANSFORMS, MODEL_TRANSFORMS, ADMIN_FIXTURE_ID } = require('./const');
 
 // Loads fixtures once if not loaded and returns true/false.
 async function loadFixtures() {
@@ -71,7 +69,7 @@ async function importFixture(id, meta) {
 }
 
 async function runImport(id, attributes, meta) {
-  const model = modelsByName[path.dirname(id)];
+  const model = getModelByName(path.dirname(id));
   meta = { id, model, meta, base: attributes };
   return createDocument(id, attributes, meta);
 }
@@ -270,14 +268,19 @@ function isBufferField(keys, meta) {
 // A "known" field is either defined in the schema or
 // a custom field that will later be transformed.
 function isKnownField(keys, meta) {
-  const schemaType = getSchemaType(keys, meta);
-  if (schemaType) {
+  if (isKnownTransform(keys, meta)) {
     return true;
-  } else if (keys.length > 1) {
-    return false;
+  } else {
+    const pathType = meta.model.schema.pathType(keys[0]);
+    // Calling "path" on the schema will not return anything
+    // for nested fields, so instead use "pathType".
+    return pathType === 'real' || pathType === 'nested';
   }
-  const transform = MODEL_TRANSFORMS[meta.model.modelName];
-  return transform && keys[0] in transform;
+}
+
+function isKnownTransform(keys, meta) {
+  const transforms = MODEL_TRANSFORMS[meta.model.modelName];
+  return !!transforms && keys.join('.') in transforms;
 }
 
 async function transformReference(keys, value, meta) {
@@ -467,7 +470,7 @@ async function loadFixtureModules(id) {
 
 // Auto-increment generator for base.
 function getFixtureIdGenerator(base) {
-  const singular = kebabCase(modelsByName[base].modelName);
+  const singular = kebabCase(getModelByName(base).modelName);
   let counter = 0;
   return () => {
     return `${singular}-${++counter}`;
@@ -599,6 +602,14 @@ for (let [name, model] of Object.entries(models)) {
   });
 }
 
+function getModelByName(name, assert = true) {
+  const model = modelsByName[name];
+  if (!model && assert) {
+    throw new Error(`Could not find model "${name}".`);
+  }
+  return model;
+}
+
 function pluralCamel(str) {
   // Mongoose pluralize is for db collections so will lose camel casing,
   // ie UserProfile -> userprofiles. To achieve the target "userProfiles",
@@ -624,7 +635,7 @@ async function fileExists(file) {
 async function getModelSubdirectories() {
   const names = await readFixturesDirectory();
   return names.filter((name) => {
-    return modelsByName[name];
+    return getModelByName(name, false);
   });
 }
 
@@ -639,7 +650,7 @@ async function readFixturesDirectory(dir = '') {
       }
     })
     .map((entry) => {
-      return entry.name;
+      return path.basename(entry.name, '.json');
     });
 }
 
