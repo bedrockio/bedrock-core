@@ -2,6 +2,9 @@
   "env": {
     "node": true
   },
+  "parserOptions": {
+    "ecmaVersion": "latest"
+  },
   "settings": {
     "jest": {
       "version": 26
