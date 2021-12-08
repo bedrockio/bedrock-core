@@ -167,8 +167,11 @@ const fetchTemplate = memoize(async (file) => {
       body,
       meta,
     };
-  } catch {
-    return '';
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      return '';
+    }
+    throw err;
   }
 });
 

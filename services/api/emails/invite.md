@@ -1,5 +1,5 @@
 ---
-subject: {{sender.name} has invited you to join {{APP_NAME}}
+subject: '{{sender.name}} has invited you to join {{APP_NAME}}'
 ---
 
 ## Invite
