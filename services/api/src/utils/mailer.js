@@ -53,51 +53,37 @@ async function sendTemplatedMail({ template, layout = 'layout.html', to, ...opti
     to = `"${user.name || 'User'}" <${user.email}>`;
   }
 
-  await sendMail({
-    to,
-    text,
-    html,
-    body,
-    subject,
-    vars,
-  });
-}
-
-async function sendMail({ to, subject, html, text, body, vars }) {
-  if (canSendMail()) {
-    try {
-      const client = new postmark.ServerClient(POSTMARK_API_KEY);
-      await client.sendEmail({
-        From: POSTMARK_FROM,
-        To: to,
-        Subject: subject,
-        TextBody: text,
-        HtmlBody: html,
-      });
-    } catch (error) {
-      logger.error(`Error happened while sending email to ${to} (${error.message})`);
-      logger.error(error);
-    }
+  if (ENV_NAME === 'test') {
+    logger.debug(`Sending email to ${to}`);
+  } else if (ENV_NAME === 'development' && !POSTMARK_SEND_DEV) {
+    logger.debug(`Sending email to ${to}`);
+    logger.debug(`Subject: ${subject}`);
+    logger.debug('Body:');
+    logger.debug(body);
+    logger.debug(vars);
   } else {
-    if (ENV_NAME === 'test') {
-      logger.debug(`Sending email to ${to}`);
-    } else {
-      logger.debug(`Sending email to ${to}`);
-      logger.debug(`Subject: ${subject}`);
-      logger.debug('Body:');
-      logger.debug(body);
-      logger.debug(vars);
-    }
+    await sendMail({
+      to,
+      html,
+      text,
+      subject,
+    });
   }
 }
 
-function canSendMail() {
-  if (ENV_NAME === 'test') {
-    return false;
-  } else if (ENV_NAME === 'development') {
-    return POSTMARK_API_KEY && POSTMARK_SEND_DEV;
-  } else {
-    return POSTMARK_API_KEY;
+async function sendMail({ to, html, text, subject }) {
+  try {
+    const client = new postmark.ServerClient(POSTMARK_API_KEY);
+    await client.sendEmail({
+      From: POSTMARK_FROM,
+      To: to,
+      Subject: subject,
+      TextBody: text,
+      HtmlBody: html,
+    });
+  } catch (error) {
+    logger.error(`Error happened while sending email to ${to} (${error.message})`);
+    logger.error(error);
   }
 }
 
