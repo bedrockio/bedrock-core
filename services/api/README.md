@@ -66,7 +66,7 @@ All configuration is done using environment variables. The default values in `.e
 - `APP_URL` - URL for app defaults to `http://localhost:2200`
 - `POSTMARK_FROM` - Reply email address `no-reply@bedrock.foundation`
 - `POSTMARK_API_KEY` - APIKey for Postmark
-- `POSTMARK_SEND_DEV` - Send emails in development for debugging.
+- `POSTMARK_DEV_TO` - Email recipient to send development mails for debugging.
 - `UPLOADS_STORE` - Method for uploads. `local` or `gcs` (Google Cloud Storage)
 - `UPLOADS_GCS_BUCKET` - GCS bucket for uploads
 - `SENTRY_DSN` - Sentry error monitoring credentials

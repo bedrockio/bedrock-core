@@ -11,7 +11,7 @@ const { logger } = require('@bedrockio/instrumentation');
 
 const ENV = config.getAll();
 
-const { ENV_NAME, POSTMARK_FROM, POSTMARK_API_KEY, POSTMARK_SEND_DEV } = ENV;
+const { ENV_NAME, POSTMARK_FROM, POSTMARK_API_KEY, POSTMARK_DEV_TO } = ENV;
 
 async function sendTemplatedMail({ template, layout = 'layout.html', to, ...options }) {
   const textTemplate = template.replace(/\.md$/, '.txt');
@@ -55,7 +55,7 @@ async function sendTemplatedMail({ template, layout = 'layout.html', to, ...opti
 
   if (ENV_NAME === 'test') {
     logger.debug(`Sending email to ${to}`);
-  } else if (ENV_NAME === 'development' && !POSTMARK_SEND_DEV) {
+  } else if (ENV_NAME === 'development' && !POSTMARK_DEV_TO) {
     logger.debug(`Sending email to ${to}`);
     logger.debug(`Subject: ${subject}`);
     logger.debug('Body:');
@@ -73,6 +73,9 @@ async function sendTemplatedMail({ template, layout = 'layout.html', to, ...opti
 
 async function sendMail({ to, html, text, subject }) {
   try {
+    if (ENV_NAME === 'development') {
+      to = POSTMARK_DEV_TO;
+    }
     const client = new postmark.ServerClient(POSTMARK_API_KEY);
     await client.sendEmail({
       From: POSTMARK_FROM,
