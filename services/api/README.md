@@ -65,14 +65,14 @@ All configuration is done using environment variables. The default values in `.e
 - `APP_NAME` - Default product name to be used in emails `Bedrock`
 - `APP_URL` - URL for app defaults to `http://localhost:2200`
 - `POSTMARK_FROM` - Reply email address `no-reply@bedrock.foundation`
-- `POSTMARK_APIKEY` - APIKey for Postmark `[change me]`
+- `POSTMARK_API_KEY` - APIKey for Postmark `[change me]`
+- `POSTMARK_SEND_DEV` - Send emails in development for debugging.
 - `UPLOADS_STORE` - Method for uploads. `local` or `gcs` (Google Cloud Storage)
 - `UPLOADS_GCS_BUCKET` - GCS bucket for uploads
 - `SENTRY_DSN` - Sentry error monitoring credentials
 - `TWILIO_ACCOUNT_SID` - Twilio Account SID (required for MFA SMS)
 - `TWILIO_AUTH_TOKEN` - Twillio Auth token (required for MFA SMS)
 - `TWILIO_MESSAGING_SERVICE_SID` - Twillio Messaging Service SID (required for MFA SMS)
-
 
 ## Building the Container
 
@@ -186,21 +186,21 @@ You can either use markdown or full html templates. Both are run though https://
 ### To create a button in markdown
 
 ```
-**[Reset Password]({{{appUrl}}}/reset-password?token={{token}})**
+**[Reset Password]({{{APP_URL}}}/reset-password?token={{token}})**
 ```
 
 This translates to
 
 ```
-<p><a class="button" href="{{{appUrl}}}/reset-password?token={{token}}">Reset Pasword</a/</p>
+<p><a class="button" href="{{{APP_URL}}}/reset-password?token={{token}}">Reset Pasword</a/</p>
 ```
 
 (note this only works if the `strong` link is the only element inside the paragraph)
 
-### Recall to unescape appUrl
+### Recall to unescape `APP_URL`
 
 We are using mustache for templating, it will attempt to escape the http:`//` which causes issues.
-So when using the the appUrl write `{{&appUrl}}`
+So when using the the `APP_URL` write `{{&APP_URL}}`
 
 ## Logging
 
@@ -292,7 +292,6 @@ Here's an example of an API call definition:
 All information in `src/routes/__openapi__` is exposed through the API and used by the Markdown-powered documentation portal in `/services/web/src/docs`.
 
 See [../../services/web](../../services/web) for more info on customizing documentation.
-
 
 ## Multi factor authentication
 

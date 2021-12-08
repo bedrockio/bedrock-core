@@ -1,11 +1,15 @@
+---
+subject: {{sender.name} has invited you to join {{APP_NAME}}
+---
+
 ## Invite
 
-{{senderName}} ({{senderEmail}}) has invited you to join {{appName}}
+{{sender.name}} ({{sender.email}}) has invited you to join {{APP_NAME}}
 
-{{appName}} is a complete platform-as-a-service solution that enables unified ingestion and processing of data for the rapid and uniform development of applications.
+{{APP_NAME}} is a complete platform-as-a-service solution that enables unified ingestion and processing of data for the rapid and uniform development of applications.
 
-**[Accept Invite]({{{appUrl}}}/accept-invite?token={{token}})**
+**[Accept Invite]({{{APP_URL}}}/accept-invite?token={{token}})**
 
-If you have any questions, please contact us at: {{appSupportEmail}}
+If you have any questions, please contact us at: {{APP_SUPPORT_EMAIL}}
 
-The {{appName}} Team - {{{appUrl}}}
+The {{APP_NAME}} Team - {{{APP_URL}}}

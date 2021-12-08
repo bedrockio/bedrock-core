@@ -1,13 +1,17 @@
-## Password Recovery - {{appName}}
+---
+subject: Password Reset Request
+---
 
-A password reset was requested for your account ({{email}}) on {{appName}}
-({{{appUrl}}}). If you did not authorize this, you may simply ignore this email.
+## Password Recovery - {{APP_NAME}}
+
+A password reset was requested for your account ({{email}}) on {{APP_NAME}}
+({{{APP_URL}}}). If you did not authorize this, you may simply ignore this email.
 
 To continue with your password reset,
 simply click the button below, and you will be able to change your password. This link will expire in 48 hours.
 
-**[Reset Password]({{&appUrl}}/reset-password?token={{token}})**
+**[Reset Password]({{&APP_URL}}/reset-password?token={{token}})**
 
-If you have any questions, please contact us at: {{appSupportEmail}}
+If you have any questions, please contact us at: {{APP_SUPPORT_EMAIL}}
 
-The {{appName}} Team - {{{appUrl}}}
+The {{APP_NAME}} Team - {{{APP_URL}}}

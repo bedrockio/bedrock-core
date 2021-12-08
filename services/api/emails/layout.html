@@ -17,7 +17,7 @@
       }
 
       a {
-        color: midnightblue;
+        color: {{APP_PRIMARY_COLOR}};
       }
 
       a img {
@@ -104,11 +104,11 @@
       /* Buttons ------------------------------ */
 
       .button {
-        background-color: midnightblue;
-        border-top: 10px solid midnightblue;
-        border-right: 18px solid midnightblue;
-        border-bottom: 10px solid midnightblue;
-        border-left: 18px solid midnightblue;
+        background-color: {{APP_PRIMARY_COLOR}};
+        border-top: 10px solid {{APP_PRIMARY_COLOR}};
+        border-right: 18px solid {{APP_PRIMARY_COLOR}};
+        border-bottom: 10px solid {{APP_PRIMARY_COLOR}};
+        border-left: 18px solid {{APP_PRIMARY_COLOR}};
         display: inline-block;
         color: #fff;
         text-decoration: none;
@@ -164,7 +164,7 @@
       }
 
       .email-masthead_logo {
-        width: 94px;
+        width: 124px;
       }
 
       .email-masthead_name {
@@ -281,8 +281,8 @@
           <table class="email-content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
             <tr>
               <td class="email-masthead">
-                <a href="{{&appUrl}}" class="f-fallback email-masthead_name">
-                  <img src="{{&appLogoUrl}}" alt="{{appName}}" />
+                <a href="{{&APP_URL}}" class="f-fallback email-masthead_name">
+                  <img src="{{&APP_LOGO_URL}}" alt="{{APP_NAME}}" class="email-masthead_logo" />
                 </a>
               </td>
             </tr>
@@ -295,8 +295,7 @@
                   width="570"
                   cellpadding="0"
                   cellspacing="0"
-                  role="presentation"
-                >
+                  role="presentation">
                   <!-- Body content -->
                   <tr>
                     <td class="content-cell">
@@ -314,14 +313,13 @@
                   width="570"
                   cellpadding="0"
                   cellspacing="0"
-                  role="presentation"
-                >
+                  role="presentation">
                   <tr>
                     <td class="content-cell" align="center">
-                      <p class="f-fallback sub align-center">&copy; 2021 {{appName}}. All rights reserved.</p>
+                      <p class="f-fallback sub align-center">&copy; 2021 {{APP_NAME}}. All rights reserved.</p>
                       <p class="f-fallback sub align-center">
-                        {{appCompanyName}}
-                        <br />{{appCompanyAddress}}
+                        {{APP_COMPANY_NAME}}
+                        <br />{{APP_COMPANY_ADDRESS}}
                       </p>
                     </td>
                   </tr>

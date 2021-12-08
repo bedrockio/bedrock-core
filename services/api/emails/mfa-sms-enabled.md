@@ -1,9 +1,13 @@
-## Hey {{firstName}}
+---
+subject: Two-factor authentication enabled
+---
 
-You just enabled two-factor authentication on your {{appName}} account.
+## Hey {{user.name}}
+
+You just enabled two-factor authentication on your {{APP_NAME}} account.
 
 Each time you log in, you will be asked to a verify a six-digit code sent via SMS to ••••••{{phoneLast4}}.
 
-If you think you've received this email in error, or if you have any questions, please contact us at: {{appSupportEmail}}
+If you think you've received this email in error, or if you have any questions, please contact us at: {{APP_SUPPORT_EMAIL}}
 
-The {{appName}} Team - {{{appUrl}}}
+The {{APP_NAME}} Team - {{{APP_URL}}}
