@@ -9,8 +9,10 @@ const TWILIO_MESSAGING_SERVICE_SID = config.get('TWILIO_MESSAGING_SERVICE_SID');
 
 const ENV_NAME = config.get('ENV_NAME');
 
+const hasKeys = TWILIO_AUTH_TOKEN && TWILIO_ACCOUNT_SID && TWILIO_MESSAGING_SERVICE_SID;
+
 async function sendMessage(to, body, options = { validityPeriod: 10 }) {
-  if (ENV_NAME === 'test') {
+  if (!hasKeys || ENV_NAME === 'test') {
     logger.debug(`Sending sms to ${to}`);
     return;
   }
