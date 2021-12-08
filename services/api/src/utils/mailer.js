@@ -26,7 +26,7 @@ async function sendTemplatedMail({ template, layout = 'layout.html', to, ...opti
     return;
   }
 
-  options = {
+  const vars = {
     ...ENV,
     ...layoutMeta,
     ...textMeta,
@@ -34,10 +34,10 @@ async function sendTemplatedMail({ template, layout = 'layout.html', to, ...opti
     ...options,
   };
 
-  const body = render(templateBody, options);
+  const body = render(templateBody, vars);
 
   const html = render(layoutBody, {
-    ...options,
+    ...vars,
     content: body,
   });
 
@@ -45,12 +45,12 @@ async function sendTemplatedMail({ template, layout = 'layout.html', to, ...opti
     textBody = htmlToText(body);
   }
 
-  const text = render(textBody, options);
-  const subject = render(options.subject, options);
+  const text = render(textBody, vars);
+  const subject = render(vars.subject, vars);
 
   if (!to && options.user) {
     const { user } = options;
-    to = `"${user.name}" <${user.email}>`;
+    to = `"${user.name || 'User'}" <${user.email}>`;
   }
 
   await sendMail({
@@ -59,11 +59,11 @@ async function sendTemplatedMail({ template, layout = 'layout.html', to, ...opti
     html,
     body,
     subject,
-    options,
+    vars,
   });
 }
 
-async function sendMail({ to, subject, html, text, body, options }) {
+async function sendMail({ to, subject, html, text, body, vars }) {
   if (canSendMail()) {
     try {
       const client = new postmark.ServerClient(POSTMARK_API_KEY);
@@ -86,7 +86,7 @@ async function sendMail({ to, subject, html, text, body, options }) {
       logger.debug(`Subject: ${subject}`);
       logger.debug('Body:');
       logger.debug(body);
-      logger.debug(options);
+      logger.debug(vars);
     }
   }
 }
@@ -144,9 +144,9 @@ Mustache.escape = (text) => {
   return text;
 };
 
-function render(body, options) {
+function render(body, vars) {
   if (body) {
-    return Mustache.render(body, options);
+    return Mustache.render(body, vars);
   } else {
     return '';
   }
@@ -159,13 +159,16 @@ const templatesDist = path.join(__dirname, '../../emails');
 const fetchTemplate = memoize(async (file) => {
   try {
     const str = await fs.readFile(path.join(templatesDist, file), 'utf8');
-    let { body, attributes: meta } = fm(str);
+    let { body, attributes } = fm(str);
     if (file.endsWith('.md')) {
       body = marked(body);
     }
     return {
       body,
-      meta,
+      meta: {
+        ...attributes,
+        currentYear: new Date().getFullYear(),
+      },
     };
   } catch (err) {
     if (err.code === 'ENOENT') {

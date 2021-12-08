@@ -58,14 +58,14 @@ All configuration is done using environment variables. The default values in `.e
 - `SERVER_HOST` - Host to bind to, defaults to `"0.0.0.0"`
 - `SERVER_PORT` - Port to bind to, defaults to `2300`
 - `MONGO_URI` - MongoDB URI to connect to, defaults to `mongodb://localhost/bedrock_dev`
-- `JWT_SECRET` - JWT secret used for token signing and encryption, defaults to `[change me]`
+- `JWT_SECRET` - JWT secret used for token signing and encryption
 - `ADMIN_NAME` - Default dashboard admin user name `admin`
 - `ADMIN_EMAIL` - Default dashboard admin user `admin@bedrock.foundation`
-- `ADMIN_PASSWORD` - Default dashboard admin password `[change me]`
+- `ADMIN_PASSWORD` - Default dashboard admin password
 - `APP_NAME` - Default product name to be used in emails `Bedrock`
 - `APP_URL` - URL for app defaults to `http://localhost:2200`
 - `POSTMARK_FROM` - Reply email address `no-reply@bedrock.foundation`
-- `POSTMARK_API_KEY` - APIKey for Postmark `[change me]`
+- `POSTMARK_API_KEY` - APIKey for Postmark
 - `POSTMARK_SEND_DEV` - Send emails in development for debugging.
 - `UPLOADS_STORE` - Method for uploads. `local` or `gcs` (Google Cloud Storage)
 - `UPLOADS_GCS_BUCKET` - GCS bucket for uploads
