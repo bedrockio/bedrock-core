@@ -379,7 +379,7 @@ describe('/1/auth', () => {
         }
       );
       expect(response.status).toBe(401);
-      expect(response.body).toEqual({ error: { message: 'bad jwt token', status: 401 } });
+      expect(response.body).toEqual({ error: { type: 'token', message: 'bad jwt token', status: 401 } });
     });
   });
 });
