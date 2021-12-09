@@ -1,0 +1,25 @@
+{
+  "attributes": {
+    "name": {
+      "type": "String",
+      "trim": true,
+      "required": true
+    },
+    "description": {
+      "type": "String",
+      "trim": true
+    },
+    "clientId": {
+      "type": "String",
+      "trim": true,
+      "required": true,
+      "writeScopes": "none"
+    },
+    "organization": {
+      "ref": "Organization",
+      "type": "ObjectId",
+      "required": true,
+      "autopopulate": true
+    }
+  }
+}
