@@ -29,7 +29,7 @@ export default class Signup extends React.Component {
         path: '/1/auth/register',
         body,
       });
-      this.props.history.push(await this.context.authenticate(data.token));
+      await this.context.authenticate(data.token);
     } catch (error) {
       this.setState({
         error,

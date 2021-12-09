@@ -81,8 +81,7 @@ export default class MfaBackupVerification extends React.Component {
           code: this.state.code,
         },
       });
-
-      this.props.history.push(this.context.authenticate(data.token));
+      await this.context.authenticate(data.token);
     } catch (error) {
       this.setState({
         error,

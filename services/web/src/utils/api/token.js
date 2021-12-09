@@ -1,5 +1,9 @@
 const KEY = 'jwt';
 
+export function hasToken() {
+  return !!getToken();
+}
+
 export function getToken() {
   return localStorage.getItem(KEY);
 }

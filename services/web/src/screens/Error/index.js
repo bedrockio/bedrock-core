@@ -11,9 +11,7 @@ export default class ErrorScreen extends React.Component {
   static layout = 'basic';
 
   onLogoutClick = async () => {
-    const { pathname, search } = window.location;
-    this.context.setStored('redirect', pathname + search);
-    this.props.history.push(await this.context.logout());
+    await this.context.logout(true);
   };
 
   onReloadClick = () => {
