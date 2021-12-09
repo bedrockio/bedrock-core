@@ -21,7 +21,7 @@ async function sendTemplatedMail({ template, layout = 'layout.html', to, ...opti
     { body: textBody, meta: textMeta },
   ] = await Promise.all([fetchTemplate(layout), fetchTemplate(template), fetchTemplate(textTemplate)]);
 
-  if (!templateBody && !textBody) {
+  if (!templateBody) {
     logger.error(`Could not load template ${template}.`);
     return;
   }
@@ -34,9 +34,10 @@ async function sendTemplatedMail({ template, layout = 'layout.html', to, ...opti
     ...options,
   };
 
-  const body = render(templateBody, vars);
+  // Order is important here as interpolated variables may contain markdown.
+  const body = marked(interpolate(templateBody, vars));
 
-  const html = render(layoutBody, {
+  const html = interpolate(layoutBody, {
     ...vars,
     content: body,
   });
@@ -45,8 +46,8 @@ async function sendTemplatedMail({ template, layout = 'layout.html', to, ...opti
     textBody = htmlToText(body);
   }
 
-  const text = render(textBody, vars);
-  const subject = render(vars.subject, vars);
+  const text = interpolate(textBody, vars);
+  const subject = interpolate(vars.subject, vars);
 
   if (!to && options.user) {
     const { user } = options;
@@ -133,7 +134,7 @@ Mustache.escape = (text) => {
   return text;
 };
 
-function render(body, vars) {
+function interpolate(body, vars) {
   if (body) {
     return Mustache.render(body, vars);
   } else {
@@ -143,15 +144,12 @@ function render(body, vars) {
 
 // Templates
 
-const templatesDist = path.join(__dirname, '../../emails');
+const templatesDist = path.join(__dirname, '../emails');
 
 const fetchTemplate = memoize(async (file) => {
   try {
     const str = await fs.readFile(path.join(templatesDist, file), 'utf8');
     let { body, attributes } = fm(str);
-    if (file.endsWith('.md')) {
-      body = marked(body);
-    }
     return {
       body,
       meta: {
