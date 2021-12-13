@@ -78,8 +78,12 @@ export default class DashboardLayout extends React.Component {
                   <Icon name="cog" />
                   Settings
                 </Sidebar.Link>
-                <Sidebar.Link to="/docs/getting-started">
+                <Sidebar.Link to="/developers">
                   <Icon name="terminal" />
+                  Developers
+                </Sidebar.Link>
+                <Sidebar.Link to="/docs">
+                  <Icon name="book-open" />
                   Docs
                 </Sidebar.Link>
                 <Sidebar.Link to="/logout">

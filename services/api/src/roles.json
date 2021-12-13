@@ -1,33 +1,42 @@
 {
   "superAdmin": {
     "name": "Super Admin",
-    "allowScopes": ["global"],
+    "allowScopes": [
+      "global"
+    ],
     "permissions": {
       "auditEntries": "read",
       "users": "read-write",
       "shops": "read-write",
       "products": "read-write",
-      "organizations": "read-write"
+      "organizations": "read-write",
+      "applications": "read-write"
     }
   },
   "admin": {
     "name": "Admin",
-    "allowScopes": ["organization"],
+    "allowScopes": [
+      "organization"
+    ],
     "permissions": {
       "auditEntries": "read",
       "users": "read-write",
       "shops": "read-write",
-      "products": "read-write"
+      "products": "read-write",
+      "applications": "read-write"
     }
   },
   "viewer": {
     "name": "Viewer",
-    "allowScopes": ["organization"],
+    "allowScopes": [
+      "organization"
+    ],
     "permissions": {
       "auditEntries": "read",
       "users": "read",
       "shops": "read",
-      "products": "read"
+      "products": "read",
+      "applications": "read"
     }
   }
 }

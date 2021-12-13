@@ -28,6 +28,7 @@ import Organizations from 'screens/Organizations';
 import Loading from 'screens/Loading';
 import Error from 'screens/Error';
 import Products from 'screens/Products';
+import Developers from 'screens/Developers';
 
 const App = () => {
   const { loading, error } = useSession();
@@ -47,6 +48,7 @@ const App = () => {
       <Protected path="/users/:id?" allowed={Users} />
       <Route path="/docs/ui" component={Components} exact />
       <Route path="/docs/:id?" component={Docs} />
+      <Route path="/developers/:id?" component={Developers} />
       <Route path="/logout" component={Logout} exact />
       <AuthSwitch
         path="/login/verification"

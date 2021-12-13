@@ -13,10 +13,11 @@
       "type": "String",
       "trim": true,
       "required": true,
+      "unique": true,
       "writeScopes": "none"
     },
-    "organization": {
-      "ref": "Organization",
+    "user": {
+      "ref": "User",
       "type": "ObjectId",
       "required": true,
       "autopopulate": true

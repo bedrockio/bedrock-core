@@ -21,6 +21,7 @@ router
   .post('/mine/search', fetchOrganization, async (ctx) => {
     const { body } = ctx.request;
     const { data, meta } = await Application.search({
+      user: ctx.state.authUser,
       ...body,
     });
     ctx.body = {
@@ -28,7 +29,7 @@ router
       meta,
     };
   })
-  .use(requirePermissions({ endpoint: 'application', permission: 'read', scope: 'global' }))
+  .use(requirePermissions({ endpoint: 'applications', permission: 'read', scope: 'global' }))
   .post('/search', validateBody(Application.getSearchValidation()), async (ctx) => {
     const { data, meta } = await Application.search(ctx.request.body);
     ctx.body = {
@@ -36,14 +37,18 @@ router
       meta,
     };
   })
-  .use(requirePermissions({ endpoint: 'organizations', permission: 'write', scope: 'global' }))
+  .use(requirePermissions({ endpoint: 'applications', permission: 'write', scope: 'global' }))
   .post('/', validateBody(Application.getCreateValidation()), async (ctx) => {
-    const application = await Application.create(ctx.request.body);
+    const application = await Application.create({
+      ...ctx.request.body,
+      clientId: 'soemthing',
+      user: ctx.state.authUser,
+    });
     ctx.body = {
       data: application,
     };
   })
-  .patch('/:organizationId', validateBody(Application.getUpdateValidation()), async (ctx) => {
+  .patch('/:application', validateBody(Application.getUpdateValidation()), async (ctx) => {
     const organization = ctx.state.organization;
     organization.assign(ctx.request.body);
     await organization.save();
@@ -51,7 +56,7 @@ router
       data: organization,
     };
   })
-  .delete('/:organizationId', async (ctx) => {
+  .delete('/:application', async (ctx) => {
     await ctx.state.organization.delete();
     ctx.status = 204;
   });
