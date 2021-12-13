@@ -1,5 +1,8 @@
 const { setupDb, teardownDb, request, createUser, createAdminUser } = require('../../utils/testing');
+const { assertMailSent } = require('../../utils/mailer');
 const { User, Invite } = require('../../models');
+
+jest.mock('../../utils/mailer');
 
 beforeAll(async () => {
   await setupDb();
@@ -44,6 +47,7 @@ describe('/1/invites', () => {
         { user }
       );
       expect(response.status).toBe(204);
+      assertMailSent('invite.md', 'new@platform.com');
     });
 
     it('should throw an error if user already exists', async () => {
