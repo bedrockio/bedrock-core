@@ -34,8 +34,12 @@ async function sendTemplatedMail({ template, layout = 'layout.html', to, ...opti
     ...options,
   };
 
-  // Order is important here as interpolated variables may contain markdown.
-  const body = marked(interpolate(templateBody, vars));
+  // Two pass interpolation here allows the passed content body
+  // to also contain variables so that dynamic contenet can work.
+  let body = templateBody;
+  body = interpolate(body, vars);
+  body = interpolate(body, vars);
+  body = marked(body);
 
   const html = interpolate(layoutBody, {
     ...vars,
@@ -63,6 +67,7 @@ async function sendTemplatedMail({ template, layout = 'layout.html', to, ...opti
     logger.debug(body);
     logger.debug(vars);
   } else {
+    logger.debug(`Sending postmark email to ${to}`);
     await sendMail({
       to,
       html,
