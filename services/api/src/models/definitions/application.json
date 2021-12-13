@@ -21,6 +21,10 @@
       "type": "ObjectId",
       "required": true,
       "autopopulate": true
+    },
+    "requestCount": {
+      "type": "Number",
+      "writeScopes": "none"
     }
   }
 }

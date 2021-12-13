@@ -41,7 +41,7 @@ router
   .post('/', validateBody(Application.getCreateValidation()), async (ctx) => {
     const application = await Application.create({
       ...ctx.request.body,
-      clientId: 'soemthing',
+      clientId: 'soemthing', // needs to be generated
       user: ctx.state.authUser,
     });
     ctx.body = {

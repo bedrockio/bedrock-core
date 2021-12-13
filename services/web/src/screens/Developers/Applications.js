@@ -1,9 +1,8 @@
 import React from 'react';
 import { Table, Button, Message, Divider, Loader, Confirm } from 'semantic';
-import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
-import { HelpTip, Breadcrumbs, Layout } from 'components';
+import { Breadcrumbs, Layout } from 'components';
 import { SearchProvider, Filters } from 'components/search';
 
 import EditApplication from 'modals/EditApplication';
@@ -65,17 +64,10 @@ export default class Applications extends React.Component {
                         onClick={() => setSort('name')}>
                         Name
                       </Table.HeaderCell>
-                      <Table.HeaderCell>Description</Table.HeaderCell>
+                      <Table.HeaderCell width={4}>Description</Table.HeaderCell>
                       <Table.HeaderCell>ClientId</Table.HeaderCell>
-                      <Table.HeaderCell
-                        onClick={() => setSort('createdAt')}
-                        sorted={getSorted('createdAt')}>
-                        Created
-                        <HelpTip
-                          title="Created"
-                          text="This is the date and time the organization was created."
-                        />
-                      </Table.HeaderCell>
+                      <Table.HeaderCell>Request Count</Table.HeaderCell>
+
                       <Table.HeaderCell textAlign="center">
                         Actions
                       </Table.HeaderCell>
@@ -86,11 +78,10 @@ export default class Applications extends React.Component {
                       return (
                         <Table.Row key={item.id}>
                           <Table.Cell>{item.name}</Table.Cell>
-                          <Table.Cell>
-                            {formatDateTime(item.createdAt)}
-                          </Table.Cell>
+                          <Table.Cell>{item.description}</Table.Cell>
+                          <Table.Cell>{item.requestCount}</Table.Cell>
                           <Table.Cell textAlign="center">
-                            <EditOrganization
+                            <EditApplication
                               organization={item}
                               trigger={<Button basic icon="edit" />}
                               onSave={reload}
