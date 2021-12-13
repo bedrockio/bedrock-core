@@ -1,7 +1,7 @@
 const postmark = require('postmark');
 const marked = require('marked');
 const Mustache = require('mustache');
-const { memoize } = require('lodash');
+const { memoize, camelCase } = require('lodash');
 const fm = require('front-matter');
 const fs = require('fs').promises;
 const path = require('path');
@@ -10,8 +10,9 @@ const config = require('@bedrockio/config');
 const { logger } = require('@bedrockio/instrumentation');
 
 const ENV = config.getAll();
-
 const { ENV_NAME, POSTMARK_FROM, POSTMARK_API_KEY, POSTMARK_DEV_TO } = ENV;
+
+const VARS = getVars(ENV);
 
 async function sendTemplatedMail({ template, layout = 'layout.html', to, ...options }) {
   const textTemplate = template.replace(/\.md$/, '.txt');
@@ -27,7 +28,7 @@ async function sendTemplatedMail({ template, layout = 'layout.html', to, ...opti
   }
 
   const vars = {
-    ...ENV,
+    ...VARS,
     ...layoutMeta,
     ...textMeta,
     ...templateMeta,
@@ -169,6 +170,18 @@ const fetchTemplate = memoize(async (file) => {
     throw err;
   }
 });
+
+// Vars
+
+function getVars(env) {
+  // Allow env vars to also be referenced by camel case
+  // as snake casing will cause issues in markdown.
+  const vars = { ...env };
+  for (let [key, val] of Object.entries(vars)) {
+    vars[camelCase(key)] = val;
+  }
+  return vars;
+}
 
 // Misc
 
