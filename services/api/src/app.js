@@ -3,7 +3,7 @@ const Koa = require('koa');
 const bodyParser = require('koa-body');
 const errorHandler = require('./utils/middleware/error-handler');
 const corsMiddleware = require('./utils/middleware/cors');
-const clientIdMiddleware = require('./utils/middleware/clientId');
+const clientMiddleware = require('./utils/middleware/client');
 const Sentry = require('@sentry/node');
 const path = require('path');
 const { version } = require('../package.json');
@@ -20,7 +20,7 @@ app
   .use(errorHandler)
   .use(loggingMiddleware())
   .use(corsMiddleware())
-  .use(clientIdMiddleware())
+  .use(clientMiddleware())
   .use(bodyParser({ multipart: true }));
 
 app.on('error', (err, ctx) => {

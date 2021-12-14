@@ -14,17 +14,21 @@
       "trim": true,
       "required": true,
       "unique": true,
+      "skipValidation": true,
       "writeScopes": "none"
     },
     "user": {
       "ref": "User",
       "type": "ObjectId",
       "required": true,
-      "autopopulate": true
+      "autopopulate": true,
+      "skipValidation": true
     },
     "requestCount": {
       "type": "Number",
-      "writeScopes": "none"
+      "writeScopes": "none",
+      "skipValidation": true,
+      "default": 0
     }
   }
 }

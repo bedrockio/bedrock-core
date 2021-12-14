@@ -1,10 +1,10 @@
 const { Application } = require('../../models');
 
-function fetchApplication() {
+function fetchClient() {
   return async (ctx, next) => {
-    const clientId = ctx.request.get('clientId') || '';
+    const clientId = ctx.request.get('client') || '';
     if (!clientId) {
-      return ctx.throw(400, `Missing clientId header`);
+      return ctx.throw(400, `Missing Client header`);
     }
 
     // Could be optimized by storing the application in ttl cache and batch updating the request count
@@ -12,19 +12,15 @@ function fetchApplication() {
       { clientId },
       {
         $inc: { requestCount: 1 },
-      },
-      {
-        upsert: true,
       }
     );
+
     if (!application) {
-      return ctx.throw(404, `clientId did not match any known applications`);
+      return ctx.throw(404, `Client did not match any known applications`);
     }
-    application.ctx.state.application = application;
+    ctx.state.application = application;
     return next();
   };
 }
 
-module.exports = {
-  fetchApplication,
-};
+module.exports = fetchClient;

@@ -1,9 +1,9 @@
 const Router = require('@koa/router');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
-const { requirePermissions } = require('../utils/middleware/permissions');
-const { fetchOrganization } = require('../utils/middleware/organizations');
 const { Application } = require('../models');
+const { kebabCase } = require('lodash');
+const Joi = require('joi');
 
 const router = new Router();
 
@@ -18,10 +18,10 @@ router
     }
     return next();
   })
-  .post('/mine/search', fetchOrganization, async (ctx) => {
+  .post('/mine/search', async (ctx) => {
     const { body } = ctx.request;
     const { data, meta } = await Application.search({
-      user: ctx.state.authUser,
+      user: ctx.state.authUser.id,
       ...body,
     });
     ctx.body = {
@@ -29,35 +29,42 @@ router
       meta,
     };
   })
-  .use(requirePermissions({ endpoint: 'applications', permission: 'read', scope: 'global' }))
-  .post('/search', validateBody(Application.getSearchValidation()), async (ctx) => {
-    const { data, meta } = await Application.search(ctx.request.body);
-    ctx.body = {
-      data,
-      meta,
-    };
-  })
-  .use(requirePermissions({ endpoint: 'applications', permission: 'write', scope: 'global' }))
   .post('/', validateBody(Application.getCreateValidation()), async (ctx) => {
+    const { body } = ctx.request;
+    const clientId = kebabCase(body.name);
+    const count = await Application.count({
+      clientId,
+    });
+
     const application = await Application.create({
-      ...ctx.request.body,
-      clientId: 'soemthing', // needs to be generated
+      ...body,
+      clientId: count ? `${clientId}-${count}` : clientId, // needs to be generated
       user: ctx.state.authUser,
     });
+
     ctx.body = {
       data: application,
     };
   })
-  .patch('/:application', validateBody(Application.getUpdateValidation()), async (ctx) => {
-    const organization = ctx.state.organization;
-    organization.assign(ctx.request.body);
-    await organization.save();
-    ctx.body = {
-      data: organization,
-    };
-  })
+  .patch(
+    '/:application',
+    validateBody(
+      Application.getUpdateValidation({
+        clientId: Joi.strip(),
+        requestCount: Joi.strip(),
+      })
+    ),
+    async (ctx) => {
+      const application = ctx.state.application;
+      application.assign(ctx.request.body);
+      await application.save();
+      ctx.body = {
+        data: application,
+      };
+    }
+  )
   .delete('/:application', async (ctx) => {
-    await ctx.state.organization.delete();
+    await ctx.state.application.delete();
     ctx.status = 204;
   });
 

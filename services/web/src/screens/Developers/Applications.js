@@ -1,5 +1,13 @@
 import React from 'react';
-import { Table, Button, Message, Divider, Loader, Confirm } from 'semantic';
+import {
+  Table,
+  Button,
+  Message,
+  Divider,
+  Loader,
+  Confirm,
+  Label,
+} from 'semantic';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
 import { Breadcrumbs, Layout } from 'components';
@@ -67,7 +75,6 @@ export default class Applications extends React.Component {
                       <Table.HeaderCell width={4}>Description</Table.HeaderCell>
                       <Table.HeaderCell>ClientId</Table.HeaderCell>
                       <Table.HeaderCell>Request Count</Table.HeaderCell>
-
                       <Table.HeaderCell textAlign="center">
                         Actions
                       </Table.HeaderCell>
@@ -79,10 +86,13 @@ export default class Applications extends React.Component {
                         <Table.Row key={item.id}>
                           <Table.Cell>{item.name}</Table.Cell>
                           <Table.Cell>{item.description}</Table.Cell>
+                          <Table.Cell>
+                            <Label>{item.clientId}</Label>
+                          </Table.Cell>
                           <Table.Cell>{item.requestCount}</Table.Cell>
                           <Table.Cell textAlign="center">
                             <EditApplication
-                              organization={item}
+                              application={item}
                               trigger={<Button basic icon="edit" />}
                               onSave={reload}
                             />

@@ -5,6 +5,7 @@ const {
   SENTRY_DSN,
   ENV_NAME,
   GOOGLE_API_KEY,
+  API_CLIENT_ID,
 } = window.__ENV__ || {};
 
 export {
@@ -14,4 +15,5 @@ export {
   SENTRY_DSN,
   ENV_NAME,
   GOOGLE_API_KEY,
+  API_CLIENT_ID,
 };

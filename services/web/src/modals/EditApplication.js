@@ -90,7 +90,6 @@ export default class EditApplication extends React.Component {
                 onChange={this.setField}
               />
               <Form.TextArea
-                required
                 name="description"
                 label="Description"
                 value={application.description || ''}
