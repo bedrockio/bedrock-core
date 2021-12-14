@@ -1,9 +1,11 @@
 const { Application } = require('../../models');
+const config = require('@bedrockio/config');
+const enabled = config.get('NODE_ENV') !== 'test';
 
 function fetchClient() {
   return async (ctx, next) => {
     const clientId = ctx.request.get('client') || '';
-    if (!clientId) {
+    if (!clientId && enabled) {
       return ctx.throw(400, `Missing Client header`);
     }
 
@@ -15,7 +17,7 @@ function fetchClient() {
       }
     );
 
-    if (!application) {
+    if (!application && enabled) {
       return ctx.throw(404, `Client did not match any known applications`);
     }
     ctx.state.application = application;
