@@ -5,8 +5,7 @@
       "validate": "email",
       "required": true,
       "lowercase": true,
-      "trim": true,
-      "unique": true
+      "trim": true
     },
     "roles": [
       {
@@ -76,7 +75,10 @@
     ],
     "mfaMethod": {
       "type": "String",
-      "enum": ["sms", "otp"]
+      "enum": [
+        "sms",
+        "otp"
+      ]
     },
     "mfaSecret": {
       "type": "String",
@@ -89,5 +91,9 @@
       "writeScopes": "none"
     }
   },
-  "search": ["firstName", "lastName", "email"]
+  "search": [
+    "firstName",
+    "lastName",
+    "email"
+  ]
 }
