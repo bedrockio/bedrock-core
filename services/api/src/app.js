@@ -20,7 +20,9 @@ app
   .use(errorHandler)
   .use(loggingMiddleware())
   .use(corsMiddleware())
-  .use(clientMiddleware())
+  .use(
+    clientMiddleware({ ignorePaths: ['/', '/openapi.json', '/openapi.lite.json', '/1/status', '/1/status/mongodb'] })
+  )
   .use(bodyParser({ multipart: true }));
 
 app.on('error', (err, ctx) => {
