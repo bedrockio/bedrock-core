@@ -11,7 +11,7 @@ router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
   .param('application', async (id, ctx, next) => {
-    const application = await Application.findById(id);
+    const application = await Application.findOne({ _id: id, user: ctx.state.authUser.id });
     ctx.state.application = application;
     if (!application) {
       ctx.throw(404);
