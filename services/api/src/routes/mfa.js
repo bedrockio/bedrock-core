@@ -115,7 +115,7 @@ router
 
     await sendTemplatedMail({
       user: authUser,
-      template: 'mfa-disabled.md',
+      file: 'mfa-disabled.md',
     });
 
     ctx.status = 204;
@@ -201,7 +201,7 @@ router
       await authUser.save();
 
       await sendTemplatedMail({
-        template: authUser.mfaMethod === 'otp' ? 'mfa-otp-enabled.md' : 'mfa-sms-enabled.md',
+        file: authUser.mfaMethod === 'otp' ? 'mfa-otp-enabled.md' : 'mfa-sms-enabled.md',
         phoneLast4: authUser.mfaPhoneNumber?.slice(-4),
         user: authUser,
       });

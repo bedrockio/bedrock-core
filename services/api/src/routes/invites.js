@@ -17,7 +17,7 @@ function getToken(invite) {
 function sendInvite(sender, invite) {
   return sendTemplatedMail({
     to: invite.email,
-    template: 'invite.md',
+    file: 'invite.md',
     sender,
     token: getToken(invite),
   });

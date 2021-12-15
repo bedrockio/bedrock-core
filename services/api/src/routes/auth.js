@@ -43,7 +43,7 @@ router
 
       await sendTemplatedMail({
         user,
-        template: 'welcome.md',
+        file: 'welcome.md',
       });
 
       ctx.body = { data: { token: createAuthToken(user.id, authTokenId) } };
@@ -221,7 +221,7 @@ router
         user,
         email,
         token,
-        template: 'reset-password.md',
+        file: 'reset-password.md',
       });
 
       ctx.status = 204;

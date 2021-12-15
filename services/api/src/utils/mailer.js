@@ -1,8 +1,8 @@
 const postmark = require('postmark');
 const marked = require('marked');
 const Mustache = require('mustache');
+const frontmatter = require('front-matter');
 const { memoize, camelCase } = require('lodash');
-const fm = require('front-matter');
 const fs = require('fs').promises;
 const path = require('path');
 
@@ -14,13 +14,9 @@ const { ENV_NAME, POSTMARK_FROM, POSTMARK_API_KEY, POSTMARK_DEV_TO } = ENV;
 
 const VARS = getVars(ENV);
 
-async function sendTemplatedMail({ template, layout = 'layout.html', to, ...options }) {
-  const textTemplate = template.replace(/\.md$/, '.txt');
-  let [
-    { body: layoutBody, meta: layoutMeta },
-    { body: templateBody, meta: templateMeta },
-    { body: textBody, meta: textMeta },
-  ] = await Promise.all([fetchTemplate(layout), fetchTemplate(template), fetchTemplate(textTemplate)]);
+async function sendTemplatedMail({ file, template, layout = 'layout.html', to, ...options }) {
+  const { body: templateBody, meta: templateMeta } = await loadTemplate(template, file);
+  const layoutBody = await loadTemplateFile(layout);
 
   if (!templateBody) {
     logger.error(`Could not load template ${template}.`);
@@ -29,16 +25,13 @@ async function sendTemplatedMail({ template, layout = 'layout.html', to, ...opti
 
   const vars = {
     ...VARS,
-    ...layoutMeta,
-    ...textMeta,
     ...templateMeta,
     ...options,
   };
 
-  // Two pass interpolation here allows the passed content body
-  // to also contain variables so that dynamic contenet can work.
+  // Interpolate variables within the template body then convert
+  // to html to be injected into the layout.
   let body = templateBody;
-  body = interpolate(body, vars);
   body = interpolate(body, vars);
   body = marked(body);
 
@@ -47,11 +40,7 @@ async function sendTemplatedMail({ template, layout = 'layout.html', to, ...opti
     content: body,
   });
 
-  if (!textBody) {
-    textBody = htmlToText(body);
-  }
-
-  const text = interpolate(textBody, vars);
+  const text = await loadPlainText(file, body);
   const subject = interpolate(vars.subject, vars);
 
   if (!to && options.user) {
@@ -59,9 +48,7 @@ async function sendTemplatedMail({ template, layout = 'layout.html', to, ...opti
     to = `"${user.name || 'User'}" <${user.email}>`;
   }
 
-  if (ENV_NAME === 'test') {
-    logger.debug(`Sending email to ${to}`);
-  } else if (ENV_NAME === 'development' && !POSTMARK_DEV_TO) {
+  if (ENV_NAME === 'development' && !POSTMARK_DEV_TO) {
     logger.debug(`Sending email to ${to}`);
     logger.debug(`Subject: ${subject}`);
     logger.debug('Body:');
@@ -152,24 +139,41 @@ function interpolate(body, vars) {
 
 const templatesDist = path.join(__dirname, '../emails');
 
-const fetchTemplate = memoize(async (file) => {
+const loadTemplateFile = memoize(async (file) => {
   try {
-    const str = await fs.readFile(path.join(templatesDist, file), 'utf8');
-    let { body, attributes } = fm(str);
-    return {
-      body,
-      meta: {
-        ...attributes,
-        currentYear: new Date().getFullYear(),
-      },
-    };
-  } catch (err) {
-    if (err.code === 'ENOENT') {
-      return '';
-    }
-    throw err;
+    return await fs.readFile(path.join(templatesDist, file), 'utf8');
+  } catch (error) {
+    return '';
   }
 });
+
+async function loadTemplate(template, file) {
+  const raw = await getTemplateRaw(template, file);
+  if (!raw) {
+    throw new Error('"template" or "file" required.');
+  }
+  const { body, attributes: meta } = frontmatter(raw);
+  return { body, meta };
+}
+
+async function getTemplateRaw(template, file) {
+  if (template) {
+    return template;
+  } else if (file) {
+    return await loadTemplateFile(file);
+  } else {
+    throw new Error('Either "template" or "file" required.');
+  }
+}
+
+async function loadPlainText(file, html, vars) {
+  const raw = file && (await loadTemplateFile(file.replace(/\.md$/, '.txt')));
+  if (raw) {
+    return interpolate(raw, vars);
+  } else {
+    return htmlToText(html);
+  }
+}
 
 // Vars
 
@@ -185,12 +189,17 @@ function getVars(env) {
 
 // Misc
 
+const TAG_REG = /<[^>]*>?/gm;
 const LINK_REG = /<a href="(.+?)"[^>]*>(.+)<\/a>/gm;
+const ENTITY_REG = /&#(\d+);/gm;
 
 // Remove html tags while preserving links for plaintext.
 function htmlToText(str) {
   str = str.replace(LINK_REG, '$2 ($1)');
-  str = str.replace(/<[^>]*>?/gm, '');
+  str = str.replace(TAG_REG, '');
+  str = str.replace(ENTITY_REG, (all, dec) => {
+    return String.fromCodePoint(dec);
+  });
   return str;
 }
 
