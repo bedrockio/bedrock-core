@@ -1,4 +1,7 @@
-const KEY = 'jwt';
+import { APP_NAME } from 'utils/env';
+import { camelCase } from 'lodash';
+
+const KEY = `${camelCase(APP_NAME)}JWT`;
 
 export function hasToken() {
   return !!getToken();
