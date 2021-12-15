@@ -27,6 +27,7 @@ async function sendTemplatedMail({ file, template, layout = 'layout.html', to, .
     ...VARS,
     ...templateMeta,
     ...options,
+    currentYear: new Date().getFullYear(),
   };
 
   // Interpolate variables within the template body then convert
