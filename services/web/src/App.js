@@ -2,16 +2,19 @@ import { hot } from 'react-hot-loader/root';
 
 import React from 'react';
 
-import { Switch, Route, Redirect } from 'react-router-dom';
-import { AuthSwitch, Protected } from 'helpers/routes';
+import { Switch, Redirect } from 'react-router-dom';
+import { AuthSwitch, Protected, Route } from 'helpers/routes';
 import { useSession } from 'stores';
 
 import Dashboard from 'screens/Dashboard';
-import Docs from 'screens/Docs';
-import Components from 'screens/Components';
+
+const Docs = React.lazy(() => import('./screens/Docs'));
+const Components = React.lazy(() => import('./screens/Components'));
+const Settings = React.lazy(() => import('./screens/Settings'));
+
 import Invites from 'screens/Invites';
 import NotFound from 'screens/NotFound';
-import Settings from 'screens/Settings';
+
 import Shops from 'screens/Shops';
 import Users from 'screens/Users';
 
@@ -24,6 +27,7 @@ import MfaBackupVerification from 'screens/Auth/MfaBackupVerification';
 import Login from 'screens/Auth/Login';
 import Logout from 'screens/Auth/Logout';
 import Signup from 'screens/Auth/Signup';
+
 import Organizations from 'screens/Organizations';
 import Loading from 'screens/Loading';
 import Error from 'screens/Error';

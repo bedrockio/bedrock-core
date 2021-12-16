@@ -5,6 +5,7 @@ import { Route, Link } from 'react-router-dom';
 import { Loader, Message } from 'semantic';
 import { withSession } from 'stores';
 import ErrorScreen from 'screens/Error';
+import Loading from 'screens/Loading';
 
 // Need to hard-code these as react-router
 // strips them in production 👎
@@ -35,10 +36,8 @@ class AuthSwitch extends React.Component {
 
   render() {
     const { loading, error } = this.context;
-    const {
-      loggedIn: LoggedInComponent,
-      loggedOut: LoggedOutComponent,
-    } = this.props;
+    const { loggedIn: LoggedInComponent, loggedOut: LoggedOutComponent } =
+      this.props;
     if (loading) {
       return <Loader active>Loading</Loader>;
     } else if (error) {
@@ -59,10 +58,14 @@ class AuthSwitch extends React.Component {
       <Route
         {...routeProps}
         render={(props) => {
-          return this.hasAccess() ? (
-            <LoggedInComponent {...props} {...passedProps} />
-          ) : (
-            <LoggedOutComponent {...props} {...passedProps} />
+          return (
+            <React.Suspense fallback={Loading}>
+              {this.hasAccess() ? (
+                <LoggedInComponent {...props} {...passedProps} />
+              ) : (
+                <LoggedOutComponent {...props} {...passedProps} />
+              )}
+            </React.Suspense>
           );
         }}
       />
