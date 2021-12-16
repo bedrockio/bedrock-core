@@ -6,3 +6,4 @@ jobs:
     command: node scripts/jobs/example.js
     schedule: '*/10 * * * *' # Human readable: https://crontab.guru/
     concurrencyPolicy: Forbid
+    streamPrefix: '' # removes logging prefix to ensure it works with gcloud logging
