@@ -11,27 +11,33 @@ import Dashboard from 'screens/Dashboard';
 const Docs = React.lazy(() => import('./screens/Docs'));
 const Components = React.lazy(() => import('./screens/Components'));
 const Settings = React.lazy(() => import('./screens/Settings'));
+const Invites = React.lazy(() => import('./screens/Invites'));
+const NotFound = React.lazy(() => import('./screens/NotFound'));
 
-import Invites from 'screens/Invites';
-import NotFound from 'screens/NotFound';
+const Shops = React.lazy(() => import('./screens/Shops'));
+const Users = React.lazy(() => import('./screens/Users'));
 
-import Shops from 'screens/Shops';
-import Users from 'screens/Users';
+const AcceptInvite = React.lazy(() => import('./screens/Auth/AcceptInvite'));
+const ForgotPassword = React.lazy(() =>
+  import('./screens/Auth/ForgotPassword')
+);
+const ResetPassword = React.lazy(() => import('./screens/Auth/ResetPassword'));
+const ConfirmAccess = React.lazy(() => import('./screens/Auth/ConfirmAccess'));
+const MfaVerification = React.lazy(() =>
+  import('./screens/Auth/MfaVerification')
+);
+const MfaBackupVerification = React.lazy(() =>
+  import('./screens/Auth/MfaBackupVerification')
+);
+const Login = React.lazy(() => import('./screens/Auth/Login'));
+const Logout = React.lazy(() => import('./screens/Auth/Logout'));
+const Signup = React.lazy(() => import('./screens/Auth/Signup'));
 
-import AcceptInvite from 'screens/Auth/AcceptInvite';
-import ForgotPassword from 'screens/Auth/ForgotPassword';
-import ResetPassword from 'screens/Auth/ResetPassword';
-import ConfirmAccess from 'screens/Auth/ConfirmAccess';
-import MfaVerification from 'screens/Auth/MfaVerification';
-import MfaBackupVerification from 'screens/Auth/MfaBackupVerification';
-import Login from 'screens/Auth/Login';
-import Logout from 'screens/Auth/Logout';
-import Signup from 'screens/Auth/Signup';
+const Organizations = React.lazy(() => import('./screens/Organizations'));
+const Products = React.lazy(() => import('./screens/Products'));
 
-import Organizations from 'screens/Organizations';
 import Loading from 'screens/Loading';
 import Error from 'screens/Error';
-import Products from 'screens/Products';
 
 const App = () => {
   const { loading, error } = useSession();
