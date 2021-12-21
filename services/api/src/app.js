@@ -3,7 +3,6 @@ const Koa = require('koa');
 const bodyParser = require('koa-body');
 const errorHandler = require('./utils/middleware/error-handler');
 const corsMiddleware = require('./utils/middleware/cors');
-const Sentry = require('@sentry/node');
 const path = require('path');
 const { version } = require('../package.json');
 const routes = require('./routes');
@@ -30,20 +29,8 @@ app.on('error', (err, ctx) => {
   // dont output stacktraces of errors that is throw with status as they are known
   if (!err.status || err.status === 500) {
     ctx.logger.error(err);
-    Sentry.withScope(function (scope) {
-      scope.addEventProcessor(function (event) {
-        return Sentry.Handlers.parseRequest(event, ctx.request);
-      });
-      Sentry.captureException(err);
-    });
   }
 });
-
-if (config.has('SENTRY_DSN')) {
-  Sentry.init({
-    dsn: config.get('SENTRY_DSN'),
-  });
-}
 
 const router = new Router();
 app.router = router;

@@ -68,11 +68,9 @@ All configuration is done using environment variables. The default values in `.e
 - `POSTMARK_APIKEY` - APIKey for Postmark `[change me]`
 - `UPLOADS_STORE` - Method for uploads. `local` or `gcs` (Google Cloud Storage)
 - `UPLOADS_GCS_BUCKET` - GCS bucket for uploads
-- `SENTRY_DSN` - Sentry error monitoring credentials
 - `TWILIO_ACCOUNT_SID` - Twilio Account SID (required for MFA SMS)
 - `TWILIO_AUTH_TOKEN` - Twillio Auth token (required for MFA SMS)
 - `TWILIO_MESSAGING_SERVICE_SID` - Twillio Messaging Service SID (required for MFA SMS)
-
 
 ## Building the Container
 
@@ -292,7 +290,6 @@ Here's an example of an API call definition:
 All information in `src/routes/__openapi__` is exposed through the API and used by the Markdown-powered documentation portal in `/services/web/src/docs`.
 
 See [../../services/web](../../services/web) for more info on customizing documentation.
-
 
 ## Multi factor authentication
 

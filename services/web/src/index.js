@@ -7,7 +7,6 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { SessionProvider } from 'stores';
-import 'utils/sentry';
 
 // Icons
 

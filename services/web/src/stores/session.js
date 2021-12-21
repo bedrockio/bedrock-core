@@ -3,7 +3,6 @@ import { merge, omit } from 'lodash';
 import { withRouter } from 'react-router-dom';
 import { request, hasToken, setToken } from 'utils/api';
 import { trackSession } from 'utils/analytics';
-import { captureError } from 'utils/sentry';
 import { wrapContext } from 'utils/hoc';
 
 const SessionContext = React.createContext();
@@ -27,7 +26,6 @@ export class SessionProvider extends React.PureComponent {
   }
 
   componentDidCatch(error) {
-    captureError(error);
     this.setState({
       error,
     });

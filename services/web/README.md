@@ -54,7 +54,6 @@ All configuration is done using environment variables. The default values in `.e
 - `ENV_NAME` - Node environment `development`
 - `APP_NAME` - Default product name to be used in views
 - `API_URL` - URL for API defaults to `http://localhost:2300`
-- `SENTRY_DSN` - Sentry error monitoring credentials
 
 All config vars are available in the `serve/dev.js` and `serve/static.js` server-side code. In the browser-side all variables are available as a global object `window.__env_conf`.
 
