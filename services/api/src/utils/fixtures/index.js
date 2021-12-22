@@ -8,6 +8,8 @@ const { logger } = require('@bedrockio/instrumentation');
 const config = require('@bedrockio/config');
 const { storeUploadedFile } = require('../uploads');
 const { stringReplaceAsync } = require('../string');
+const { exportFixtures } = require('./export');
+const { pluralCamel, pluralKebab } = require('./utils');
 const models = require('./models');
 
 const { ADMIN_EMAIL, API_URL } = config.getAll();
@@ -610,17 +612,6 @@ function getModelByName(name, assert = true) {
   return model;
 }
 
-function pluralCamel(str) {
-  // Mongoose pluralize is for db collections so will lose camel casing,
-  // ie UserProfile -> userprofiles. To achieve the target "userProfiles",
-  // first convert to kebab, then pluralize, then back to camel.
-  return camelCase(mongoose.pluralize()(kebabCase(str)));
-}
-
-function pluralKebab(str) {
-  return mongoose.pluralize()(kebabCase(str));
-}
-
 // File system helpers
 
 async function fileExists(file) {
@@ -750,4 +741,5 @@ module.exports = {
   loadFixtures,
   resetFixtures,
   importFixtures,
+  exportFixtures,
 };
