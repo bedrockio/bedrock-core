@@ -14,7 +14,8 @@
     "test": "jest",
     "test:watch": "jest --watch -i",
     "fixtures:load": "./scripts/fixtures/load",
-    "fixtures:reload": "./scripts/fixtures/reload"
+    "fixtures:reload": "./scripts/fixtures/reload",
+    "fixtures:export": "./scripts/fixtures/export"
   },
   "dependencies": {
     "@bedrockio/config": "^2.0.3",
@@ -27,6 +28,7 @@
     "fast-csv": "^4.3.6",
     "joi": "^17.4.0",
     "jsonwebtoken": "^8.5.1",
+    "jszip": "^3.7.1",
     "koa": "^2.13.0",
     "koa-body": "^4.2.0",
     "lodash": "^4.17.19",
