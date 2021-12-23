@@ -1,7 +1,8 @@
 module.exports = {
   default: {
-    name: 'WebApp',
-    clientId: 'webapp',
+    name: 'Web',
+    clientId: 'web',
+    description: 'API access for web dashboard',
     user: '<ref:users/admin>',
   },
 };
