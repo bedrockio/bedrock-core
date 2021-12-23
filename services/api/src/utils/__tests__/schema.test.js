@@ -278,6 +278,18 @@ describe('createSchema', () => {
         expect(user.toObject({ scopes: ['admin'] }).password).toBe('fake password');
       });
 
+      it('should allow string shortcut for scopes', () => {
+        const User = createTestModel(
+          createSchemaFromAttributes({
+            password: { type: String, readScopes: ['admin'] },
+          })
+        );
+        const user = new User();
+        user.password = 'fake password';
+        expect(user.password).toBe('fake password');
+        expect(user.toObject({ scope: 'admin' }).password).toBe('fake password');
+      });
+
       it('should be able to allow read access to all', () => {
         const User = createTestModel(
           createSchemaFromAttributes({

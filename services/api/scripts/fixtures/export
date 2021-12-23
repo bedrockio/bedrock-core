@@ -1,0 +1,45 @@
+#!/usr/bin/env node
+const { initialize } = require('../../src/utils/database');
+const { exportFixtures } = require('../../src/utils/fixtures');
+const { logger } = require('@bedrockio/instrumentation');
+
+(async () => {
+  const options = {};
+  for (let arg of process.argv.slice(2)) {
+    const [key, val] = arg.split('=');
+    options[key.replace('--', '')] = val || true;
+  }
+
+  if (options.help) {
+    logger.info(`
+-------------------------------------------------------------------
+
+  Usage: yarn fixtures:export [flags]
+
+  Options:
+
+    --model(s) = Comma separated list of models to export (required).
+    --id(s)    = Comma separated list of ObjectIds to export.
+    --stdout   = Write zip binary to stdout.
+
+-------------------------------------------------------------------
+`);
+    process.exit(0);
+  }
+
+  let modelNames = options.model || options.models;
+  if (modelNames) {
+    modelNames = modelNames.split(',');
+  }
+
+  let ids = options.id || options.ids;
+  if (ids) {
+    ids = ids.split(',');
+  }
+
+  let stdout = options.stdout;
+
+  await initialize();
+  await exportFixtures({ modelNames, ids, stdout });
+  process.exit(0);
+})();

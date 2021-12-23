@@ -30,7 +30,7 @@ function transformField(obj, schema, options) {
     for (let [key, val] of Object.entries(obj)) {
       // Omit any key with a private prefix "_" or marked
       // with "readScopes" in the schema.
-      if (!isAllowedField(schema, key, options.scopes)) {
+      if (!isAllowedField(schema, key, options)) {
         delete obj[key];
       } else if (schema[key]) {
         transformField(val, resolveField(schema, key), options);
@@ -364,7 +364,7 @@ function isNumberField(schema, key) {
   return resolveFieldSchema(schema, key) === SchemaNumber;
 }
 
-function isAllowedField(schema, key, scopes = []) {
+function isAllowedField(schema, key, options) {
   if (key[0] === '_') {
     // Strip internal _id and __v fields
     return false;
@@ -380,12 +380,18 @@ function isAllowedField(schema, key, scopes = []) {
   if (readScopes === 'all') {
     return true;
   } else if (Array.isArray(readScopes)) {
+    const scopes = resolveScopes(options);
     return readScopes.some((scope) => {
       return scopes.includes(scope);
     });
   } else {
     return false;
   }
+}
+
+function resolveScopes(options) {
+  const { scope, scopes = [] } = options;
+  return scope ? [scope] : scopes;
 }
 
 // Note: Resolved field may be an object or a function
