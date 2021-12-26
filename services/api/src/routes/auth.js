@@ -7,7 +7,6 @@ const { sendTemplatedMail } = require('../utils/mailer');
 const { User, Invite, AuditEntry } = require('../models');
 
 const mfa = require('../utils/mfa');
-
 const router = new Router();
 
 const passwordField = Joi.string()
@@ -47,7 +46,10 @@ router
         subject: 'Welcome to {{appName}}',
       });
 
-      ctx.body = { data: { token: createAuthToken(user.id, authTokenId) } };
+      ctx.body = {
+        [Symbol.for('protected')]: ['data.token'],
+        data: { token: createAuthToken(user.id, authTokenId) },
+      };
     }
   )
   .post(
@@ -56,6 +58,7 @@ router
       email: Joi.string().email().trim().required(),
       password: Joi.string().trim().required(),
     }),
+
     async (ctx) => {
       const { email, password } = ctx.request.body;
       const user = await User.findOneAndUpdate(
@@ -96,6 +99,7 @@ router
         user.tempTokenId = tokenId;
         await user.save();
         ctx.body = {
+          [Symbol.for('protected')]: ['data.mfaToken'],
           data: {
             mfaToken,
             mfaRequired: true,
@@ -182,7 +186,10 @@ router
 
       if (existingUser) {
         await existingUser.updateOne({ authTokenId });
-        ctx.body = { data: { token: createAuthToken(existingUser.id, authTokenId) } };
+        ctx.body = {
+          [Symbol.for('protected')]: ['data.token'],
+          data: { token: createAuthToken(existingUser.id, authTokenId) },
+        };
         return;
       }
 
@@ -199,7 +206,10 @@ router
         user: user.id,
       });
 
-      ctx.body = { data: { token: createAuthToken(user.id, authTokenId) } };
+      ctx.body = {
+        [Symbol.for('protected')]: ['data.token'],
+        data: { token: createAuthToken(user.id, authTokenId) },
+      };
     }
   )
   .post(
@@ -258,7 +268,11 @@ router
         object: user,
         user: user.id,
       });
-      ctx.body = { data: { token: createAuthToken(user.id) } };
+
+      ctx.body = {
+        [Symbol.for('protected')]: ['token'],
+        data: { token: createAuthToken(user.id) },
+      };
     }
   );
 

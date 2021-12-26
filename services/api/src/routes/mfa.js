@@ -99,7 +99,10 @@ router
         user: user.id,
       });
 
-      ctx.body = { data: { token: createAuthToken(user.id, user.authTokenId) } };
+      ctx.body = {
+        [Symbol.for('protected')]: ['data.token'],
+        data: { token: createAuthToken(user.id, user.authTokenId) },
+      };
     }
   );
 
@@ -151,6 +154,7 @@ router
       }
 
       ctx.body = {
+        [Symbol.for('protected')]: ['data.secret', 'data.uri'],
         data: {
           secret,
           uri,
@@ -160,6 +164,7 @@ router
   )
   .post('/generate-backup-codes', async (ctx) => {
     ctx.body = {
+      [Symbol.for('protected')]: ['data'],
       data: mfa.generateBackupCodes(),
     };
   })
