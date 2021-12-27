@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@bedrockio/config": "^2.0.3",
-    "@bedrockio/instrumentation": "^1.4.15",
+    "@bedrockio/instrumentation": "^1.4.16",
     "@google-cloud/storage": "^5.1.2",
     "@koa/cors": "^3.1.0",
     "@koa/router": "^10.0.0",
