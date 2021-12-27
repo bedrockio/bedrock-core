@@ -5,8 +5,8 @@ import screen from 'helpers/screen';
 import { Layout } from 'components';
 import { SearchProvider, Filters } from 'components/search';
 import Menu from './Menu';
-import SearchDropdown from 'components/SearchDropdown';
 import { formatDateTime } from 'utils/date';
+import CodeBlock from 'screens/Docs/CodeBlock';
 
 @screen
 export default class ApplicationLog extends React.Component {
@@ -59,18 +59,51 @@ export default class ApplicationLog extends React.Component {
 
     return (
       <SearchProvider limit={15} onDataNeeded={this.onDataNeeded}>
-        {({ items, getSorted, setSort, reload, loading, error }) => {
+        {({ items, loading, error }) => {
+          const selected = selectedItem || items[0];
           return (
             <React.Fragment>
               <Menu />
               <h1>Logs for Web</h1>
-              <Layout horizontal center spread>
-                <Layout.Group>
-                  <Filters.Search
-                    name="keyword"
-                    placeholder="Filter by Request Id"
-                  />
-                </Layout.Group>
+              <Layout horizontal left>
+                <Filters.Search
+                  name="keyword"
+                  placeholder="Filter by path or Request Id"
+                />
+                <Divider hidden vertical />
+                <Filters.Dropdown
+                  name="method"
+                  placeholder="Method"
+                  options={[
+                    {
+                      value: 'get',
+                      text: `GET`,
+                    },
+                    {
+                      value: 'post',
+                      text: `POST`,
+                    },
+                  ]}
+                />
+                <Divider hidden vertical />
+                <Filters.Dropdown
+                  name="response.status"
+                  placeholder="Status"
+                  options={[
+                    {
+                      value: 200,
+                      text: '200',
+                    },
+                    {
+                      value: 204,
+                      text: '204',
+                    },
+                    {
+                      value: 500,
+                      text: '500',
+                    },
+                  ]}
+                />
               </Layout>
               <Divider hidden />
               <Grid>
@@ -117,38 +150,45 @@ export default class ApplicationLog extends React.Component {
                       </Grid>
                     )}
                   </Grid.Column>
-                  {selectedItem && (
+                  {selected && (
                     <Grid.Column width={8}>
                       <h2
                         style={{
                           marginTop: '-1rem',
                         }}>
-                        {selectedItem.request.method} {selectedItem.request.url}
+                        {selected.request.method} {selected.request.url}
                       </h2>
                       <Table definition>
                         <Table.Body>
                           <Table.Row>
                             <Table.Cell>Status</Table.Cell>
-                            <Table.Cell>
-                              {selectedItem.response.status}
-                            </Table.Cell>
+                            <Table.Cell>{selected.response.status}</Table.Cell>
                           </Table.Row>
                           <Table.Row>
                             <Table.Cell>Request Id</Table.Cell>
-                            <Table.Cell>{selectedItem.requestId}</Table.Cell>
+                            <Table.Cell>{selected.requestId}</Table.Cell>
                           </Table.Row>
                           <Table.Row>
                             <Table.Cell>Time</Table.Cell>
                             <Table.Cell>
-                              {formatDateTime(selectedItem.createdAt)}
+                              {formatDateTime(selected.createdAt)}
                             </Table.Cell>
                           </Table.Row>
                           <Table.Row>
                             <Table.Cell>IP Address</Table.Cell>
-                            <Table.Cell>{selectedItem.request.ip}</Table.Cell>
+                            <Table.Cell>{selected.request.ip}</Table.Cell>
                           </Table.Row>
                         </Table.Body>
                       </Table>
+                      <h2>Response Body</h2>
+                      <CodeBlock
+                        language="json"
+                        value={JSON.stringify(
+                          selected.response.body,
+                          null,
+                          '\t'
+                        )}
+                      />
                     </Grid.Column>
                   )}
                 </Grid.Row>
