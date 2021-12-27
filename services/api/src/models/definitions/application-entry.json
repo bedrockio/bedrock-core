@@ -42,5 +42,9 @@
         "type": "Object"
       }
     }
-  }
+  },
+  "search": [
+    "requestId",
+    "routeNormalizedPath"
+  ]
 }

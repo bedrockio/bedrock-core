@@ -1,25 +1,19 @@
 import React from 'react';
-import {
-  Table,
-  Button,
-  Message,
-  Divider,
-  Loader,
-  Confirm,
-  Label,
-} from 'semantic';
+import { Message, Divider, Loader, Label, Grid, Table } from 'semantic';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
 import { Layout } from 'components';
 import { SearchProvider, Filters } from 'components/search';
 import Menu from './Menu';
 import SearchDropdown from 'components/SearchDropdown';
+import { formatDateTime } from 'utils/date';
 
 @screen
 export default class ApplicationLog extends React.Component {
   state = {
-    selected: null,
+    selectedApplication: null,
     applications: [],
+    selectedItem: null,
   };
   componentDidMount() {
     this.fetchApplications();
@@ -28,7 +22,7 @@ export default class ApplicationLog extends React.Component {
   onDataNeeded = async (body) => {
     return await request({
       method: 'POST',
-      path: `/1/applications/${this.state.selected.id}/logs/search`,
+      path: `/1/applications/${this.state.selectedApplication.id}/logs/search`,
       body,
     });
   };
@@ -45,7 +39,7 @@ export default class ApplicationLog extends React.Component {
       });
       this.setState({
         applications: data,
-        selected: data[0],
+        selectedApplication: data[0],
         loading: false,
       });
     } catch (error) {
@@ -57,79 +51,108 @@ export default class ApplicationLog extends React.Component {
   }
 
   render() {
-    const { loading, selected } = this.state;
+    const { loading, selectedItem } = this.state;
 
     if (loading) {
       return <Loader active />;
     }
 
     return (
-      <SearchProvider onDataNeeded={this.onDataNeeded}>
+      <SearchProvider limit={15} onDataNeeded={this.onDataNeeded}>
         {({ items, getSorted, setSort, reload, loading, error }) => {
           return (
             <React.Fragment>
               <Menu />
-              <h1></h1>
+              <h1>Logs for Web</h1>
               <Layout horizontal center spread>
                 <Layout.Group>
-                  <Filters.Search name="keyword" placeholder="Enter name" />
+                  <Filters.Search
+                    name="keyword"
+                    placeholder="Filter by Request Id"
+                  />
                 </Layout.Group>
               </Layout>
-              {loading ? (
-                <Loader active />
-              ) : error ? (
-                <Message error content={error.message} />
-              ) : items.length === 0 ? (
-                <Message>No applications created yet</Message>
-              ) : (
-                <Table celled sortable>
-                  <Table.Header>
-                    <Table.Row>
-                      <Table.HeaderCell
-                        sorted={getSorted('name')}
-                        onClick={() => setSort('name')}>
-                        Name
-                      </Table.HeaderCell>
-                      <Table.HeaderCell width={4}>Description</Table.HeaderCell>
-                      <Table.HeaderCell>ClientId</Table.HeaderCell>
-                      <Table.HeaderCell>Request Count</Table.HeaderCell>
-                      <Table.HeaderCell textAlign="center">
-                        Actions
-                      </Table.HeaderCell>
-                    </Table.Row>
-                  </Table.Header>
-                  <Table.Body>
-                    {items.map((item) => {
-                      return (
-                        <Table.Row key={item.id}>
-                          <Table.Cell>{item.name}</Table.Cell>
-                          <Table.Cell>{item.description}</Table.Cell>
-                          <Table.Cell>
-                            <Label>{item.clientId}</Label>
-                          </Table.Cell>
-                          <Table.Cell>{item.requestCount}</Table.Cell>
-                          <Table.Cell textAlign="center">
-                            <Confirm
-                              negative
-                              confirmButton="Delete"
-                              header={`Are you sure you want to delete "${item.name}"?`}
-                              content="All data will be permanently deleted"
-                              trigger={<Button basic icon="trash" />}
-                              onConfirm={async () => {
-                                await request({
-                                  method: 'DELETE',
-                                  path: `/1/applications/${item.id}`,
-                                });
-                                reload();
+              <Divider hidden />
+              <Grid>
+                <Grid.Row>
+                  <Grid.Column width={8}>
+                    {loading ? (
+                      <Loader active />
+                    ) : error ? (
+                      <Message error content={error.message} />
+                    ) : items.length === 0 ? (
+                      <Message>No applications created yet</Message>
+                    ) : (
+                      <Grid padded="horizontally">
+                        {items.map((item) => {
+                          return (
+                            <Grid.Row
+                              key={item.id}
+                              verticalAlign={'middle'}
+                              style={{
+                                borderTop: '1px solid #ccc',
+                                paddingTop: '0.5em',
+                                paddingBottom: '0.5em',
                               }}
-                            />
-                          </Table.Cell>
-                        </Table.Row>
-                      );
-                    })}
-                  </Table.Body>
-                </Table>
-              )}
+                              onClick={() =>
+                                this.setState({
+                                  selectedItem: item,
+                                })
+                              }>
+                              <Grid.Column width={2}>
+                                <Label>{item.response.status}</Label>
+                              </Grid.Column>
+                              <Grid.Column width={2}>
+                                {item.request.method.toUpperCase()}
+                              </Grid.Column>
+                              <Grid.Column width={7}>
+                                {item.request.url}
+                              </Grid.Column>
+                              <Grid.Column width={5}>
+                                <Label>{formatDateTime(item.createdAt)}</Label>
+                              </Grid.Column>
+                            </Grid.Row>
+                          );
+                        })}
+                      </Grid>
+                    )}
+                  </Grid.Column>
+                  {selectedItem && (
+                    <Grid.Column width={8}>
+                      <h2
+                        style={{
+                          marginTop: '-1rem',
+                        }}>
+                        {selectedItem.request.method} {selectedItem.request.url}
+                      </h2>
+                      <Table definition>
+                        <Table.Body>
+                          <Table.Row>
+                            <Table.Cell>Status</Table.Cell>
+                            <Table.Cell>
+                              {selectedItem.response.status}
+                            </Table.Cell>
+                          </Table.Row>
+                          <Table.Row>
+                            <Table.Cell>Request Id</Table.Cell>
+                            <Table.Cell>{selectedItem.requestId}</Table.Cell>
+                          </Table.Row>
+                          <Table.Row>
+                            <Table.Cell>Time</Table.Cell>
+                            <Table.Cell>
+                              {formatDateTime(selectedItem.createdAt)}
+                            </Table.Cell>
+                          </Table.Row>
+                          <Table.Row>
+                            <Table.Cell>IP Address</Table.Cell>
+                            <Table.Cell>{selectedItem.request.ip}</Table.Cell>
+                          </Table.Row>
+                        </Table.Body>
+                      </Table>
+                    </Grid.Column>
+                  )}
+                </Grid.Row>
+              </Grid>
               <Divider hidden />
               <SearchProvider.Pagination />
             </React.Fragment>

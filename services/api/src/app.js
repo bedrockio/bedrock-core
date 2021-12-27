@@ -4,7 +4,6 @@ const bodyParser = require('koa-body');
 const errorHandler = require('./utils/middleware/error-handler');
 const corsMiddleware = require('./utils/middleware/cors');
 const applicationMiddleware = require('./utils/middleware/application');
-const applicationLogger = require('./utils/middleware/application-logger');
 const Sentry = require('@sentry/node');
 const path = require('path');
 const { version } = require('../package.json');
@@ -18,7 +17,6 @@ const app = new Koa();
 const ENV_NAME = config.get('ENV_NAME');
 
 app
-  .use(applicationLogger())
   .use(errorHandler)
   .use(loggingMiddleware())
   .use(corsMiddleware())
