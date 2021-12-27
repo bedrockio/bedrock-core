@@ -24,7 +24,7 @@ app
   .use(corsMiddleware())
   .use(
     applicationMiddleware({
-      ignorePaths: ['/', '/openapi.json', '/openapi.lite.json', '/1/status', '/1/status/mongodb'],
+      ignorePaths: ['/', '/openapi.json', '/openapi.lite.json', '/1/status', '/1/status/mongodb', /\/1\/applications/],
     })
   )
   .use(bodyParser({ multipart: true }));

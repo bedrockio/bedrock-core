@@ -10,51 +10,69 @@ import {
 } from 'semantic';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
-import { Breadcrumbs, Layout } from 'components';
+import { Layout } from 'components';
 import { SearchProvider, Filters } from 'components/search';
-
-import EditApplication from 'modals/EditApplication';
+import Menu from './Menu';
+import SearchDropdown from 'components/SearchDropdown';
 
 @screen
-export default class Applications extends React.Component {
-  onDataNeeded = async (params) => {
-    const { category, ...rest } = params;
+export default class ApplicationLog extends React.Component {
+  state = {
+    selected: null,
+    applications: [],
+  };
+  componentDidMount() {
+    this.fetchApplications();
+  }
+
+  onDataNeeded = async (body) => {
     return await request({
       method: 'POST',
-      path: '/1/applications/mine/search',
-      body: {
-        ...rest,
-        ...(category && { categories: [category.id] }),
-      },
+      path: `/1/applications/${this.state.selected.id}/logs/search`,
+      body,
     });
   };
 
+  async fetchApplications() {
+    try {
+      this.setState({
+        error: null,
+        loading: true,
+      });
+      const { data } = await request({
+        method: 'POST',
+        path: '/1/applications/mine/search',
+      });
+      this.setState({
+        applications: data,
+        selected: data[0],
+        loading: false,
+      });
+    } catch (error) {
+      this.setState({
+        error,
+        loading: false,
+      });
+    }
+  }
+
   render() {
+    const { loading, selected } = this.state;
+
+    if (loading) {
+      return <Loader active />;
+    }
+
     return (
       <SearchProvider onDataNeeded={this.onDataNeeded}>
         {({ items, getSorted, setSort, reload, loading, error }) => {
           return (
             <React.Fragment>
-              <Breadcrumbs
-                link={[<span key="developers">Developers</span>]}
-                active="Logs"
-              />
+              <Menu />
+              <h1></h1>
               <Layout horizontal center spread>
-                <h1>Applications</h1>
                 <Layout.Group>
-                  <Filters.Modal>
-                    <Filters.Search
-                      name="keyword"
-                      label="Name"
-                      placeholder="Enter name"
-                    />
-                  </Filters.Modal>
-                  <EditApplication
-                    trigger={
-                      <Button primary content="New Application" icon="plus" />
-                    }
-                    onSave={reload}
-                  />
+                  <Filters.Search name="keyword" placeholder="Enter name" />
                 </Layout.Group>
               </Layout>
               {loading ? (
@@ -91,11 +109,6 @@ export default class Applications extends React.Component {
                           </Table.Cell>
                           <Table.Cell>{item.requestCount}</Table.Cell>
                           <Table.Cell textAlign="center">
-                            <EditApplication
-                              application={item}
-                              trigger={<Button basic icon="edit" />}
-                              onSave={reload}
-                            />
                             <Confirm
                               negative
                               confirmButton="Delete"

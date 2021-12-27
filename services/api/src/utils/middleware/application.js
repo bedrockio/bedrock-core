@@ -4,7 +4,18 @@ const enabled = config.get('ENV_NAME') !== 'test';
 
 function fetchApplication({ ignorePaths = [] }) {
   return async (ctx, next) => {
-    if (ignorePaths.includes(ctx.request.path)) return next();
+    const path = ctx.url;
+    const isPathIgnored = ignorePaths.find((ignorePath) => {
+      if (ignorePath instanceof RegExp) {
+        return ignorePath.test(path);
+      }
+
+      return ignorePath === path;
+    });
+
+    if (isPathIgnored) {
+      return next();
+    }
 
     const clientId = ctx.request.get('client-id') || '';
     if (!clientId && enabled) {

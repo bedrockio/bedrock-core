@@ -103,6 +103,8 @@ function createSchema(definition, options = {}) {
 
     Object.assign(query, flattenQuery(rest, schema.obj));
 
+    console.log(query);
+
     const mQuery = this.find(query)
       .sort(sort && { [sort.field]: sort.order === 'desc' ? -1 : 1 })
       .skip(skip)

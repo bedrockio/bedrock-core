@@ -12,8 +12,8 @@ import { request } from 'utils/api';
 import screen from 'helpers/screen';
 import { Breadcrumbs, Layout } from 'components';
 import { SearchProvider, Filters } from 'components/search';
-
 import EditApplication from 'modals/EditApplication';
+import Menu from './Menu';
 
 @screen
 export default class Applications extends React.Component {
@@ -35,28 +35,9 @@ export default class Applications extends React.Component {
         {({ items, getSorted, setSort, reload, loading, error }) => {
           return (
             <React.Fragment>
-              <Breadcrumbs
-                link={[<span key="developers">Developers</span>]}
-                active="Applications"
-              />
-              <Layout horizontal center spread>
-                <h1>Applications</h1>
-                <Layout.Group>
-                  <Filters.Modal>
-                    <Filters.Search
-                      name="keyword"
-                      label="Name"
-                      placeholder="Enter name"
-                    />
-                  </Filters.Modal>
-                  <EditApplication
-                    trigger={
-                      <Button primary content="New Application" icon="plus" />
-                    }
-                    onSave={reload}
-                  />
-                </Layout.Group>
-              </Layout>
+              <Menu />
+              <h1>Your applications</h1>
+
               {loading ? (
                 <Loader active />
               ) : error ? (
