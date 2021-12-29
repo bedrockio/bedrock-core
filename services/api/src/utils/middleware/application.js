@@ -31,6 +31,7 @@ function sanatizesRequestBody(body, protectedFields = ['password', 'secret', 'to
 function sanatizeResponseBody(body) {
   const sanatized = { ...body };
   const projectedFields = body[Symbol.for('protected')] || [];
+  console.log(projectedFields);
   if (Array.isArray(sanatized.data) && sanatized.data.length > 10) {
     sanatized.data = sanatized.data.slice(0, 10);
     sanatized.__truncated__ = {
@@ -93,7 +94,7 @@ function fetchApplication({ ignorePaths = [] }) {
       },
       response: {
         status: response.status,
-        body: sanatizeResponseBody(response.body),
+        body: sanatizeResponseBody(ctx.body),
         headers: sanatizesHeaders(response.headers),
       },
     });

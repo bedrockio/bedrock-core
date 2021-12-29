@@ -52,15 +52,18 @@ router
     validateBody(
       ApplicationEntry.getSearchValidation({
         ...exportValidation(),
+        'response.status': Joi.number(),
       })
     ),
     async (ctx) => {
       const { format, filename, ...params } = ctx.request.body;
       const { application } = ctx.state;
+
       const { data, meta } = await ApplicationEntry.search({
         ...params,
         application: application.id,
       });
+
       if (format === 'csv') {
         return csvExport(ctx, data);
       }

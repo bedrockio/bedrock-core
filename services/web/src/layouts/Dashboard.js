@@ -82,6 +82,18 @@ export default class DashboardLayout extends React.Component {
                   <Icon name="terminal" />
                   Developers
                 </Sidebar.Link>
+                <Sidebar.Accordion active="/developers">
+                  <Sidebar.Link to="/developers/applications">
+                    <Icon name="puzzle-piece" />
+                    Applications
+                  </Sidebar.Link>
+                </Sidebar.Accordion>
+                <Sidebar.Accordion active="/developers">
+                  <Sidebar.Link to="/developers/logs">
+                    <Icon name="database" />
+                    Logs
+                  </Sidebar.Link>
+                </Sidebar.Accordion>
                 <Sidebar.Link to="/docs">
                   <Icon name="book-open" />
                   Docs
