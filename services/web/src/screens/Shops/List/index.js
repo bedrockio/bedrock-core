@@ -8,6 +8,7 @@ import { SearchProvider, Filters } from 'components/search';
 // --- Generator: list-imports
 import { Link } from 'react-router-dom';
 import allCountries from 'utils/countries';
+import RequestBlock from 'components/RequestBlock';
 
 const countries = allCountries.map(({ countryCode, nameEn }) => ({
   value: countryCode,
@@ -135,6 +136,7 @@ export default class ShopList extends React.Component {
               )}
               <Divider hidden />
               <SearchProvider.Pagination />
+              <RequestBlock title="Requests Api" />
             </React.Fragment>
           );
         }}

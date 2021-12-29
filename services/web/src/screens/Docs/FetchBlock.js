@@ -6,11 +6,6 @@ import atomDark from 'react-syntax-highlighter/dist/esm/styles/prism/atom-dark';
 import bash from 'react-syntax-highlighter/dist/esm/languages/prism/bash';
 import json from 'react-syntax-highlighter/dist/esm/languages/prism/json';
 
-SyntaxHighlighter.registerLanguage('bash', bash);
-SyntaxHighlighter.registerLanguage('json', json);
-
-atomDark['pre[class*="language-"]'].marginBottom = '1em';
-
 class CodeBlock extends React.PureComponent {
   static propTypes = {
     value: PropTypes.string.isRequired,
