@@ -24,6 +24,6 @@ export default function templateFetch({ url, file, ...rest }) {
   }
   code.push(`fetch("${url}", options);`);
   code.push('  .then(response => response.json())');
-  code.push('  .then(response => console.log(response))');
+  code.push('  .then(response => console.log(response));');
   return code.join('\n');
 }

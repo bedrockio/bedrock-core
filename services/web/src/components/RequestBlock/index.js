@@ -54,7 +54,7 @@ export default class FetchBlock extends React.Component {
               options={options}
               value={this.state.current}
             />{' '}
-            <Button size="small" circular onClick={this.handleCopy}>
+            <Button size="small" circular onClick={this.handleOnCopy}>
               Copy
             </Button>
           </Layout.Group>
