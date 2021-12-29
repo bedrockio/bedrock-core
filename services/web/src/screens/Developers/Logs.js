@@ -72,16 +72,24 @@ export default class ApplicationLog extends React.Component {
                 />
                 <Divider hidden vertical />
                 <Filters.Dropdown
-                  name="method"
+                  name="request.method"
                   placeholder="Method"
                   options={[
                     {
-                      value: 'get',
-                      text: `GET`,
+                      value: 'GET',
+                      text: 'GET',
                     },
                     {
-                      value: 'post',
-                      text: `POST`,
+                      value: 'POST',
+                      text: 'POST',
+                    },
+                    {
+                      value: 'PATCH',
+                      text: 'PATCH',
+                    },
+                    {
+                      value: 'DELETE',
+                      text: 'DEL',
                     },
                   ]}
                 />
@@ -99,6 +107,14 @@ export default class ApplicationLog extends React.Component {
                       text: '204',
                     },
                     {
+                      value: 400,
+                      text: '400',
+                    },
+                    {
+                      value: 401,
+                      text: '401',
+                    },
+                    {
                       value: 500,
                       text: '500',
                     },
@@ -114,7 +130,7 @@ export default class ApplicationLog extends React.Component {
                     ) : error ? (
                       <Message error content={error.message} />
                     ) : items.length === 0 ? (
-                      <Message>No applications created yet</Message>
+                      <Message>No Results</Message>
                     ) : (
                       <Grid padded="horizontally">
                         {items.map((item) => {
@@ -161,13 +177,14 @@ export default class ApplicationLog extends React.Component {
                       <Table definition>
                         <Table.Body>
                           <Table.Row>
-                            <Table.Cell>Status</Table.Cell>
-                            <Table.Cell>{selected.response.status}</Table.Cell>
-                          </Table.Row>
-                          <Table.Row>
                             <Table.Cell>Request Id</Table.Cell>
                             <Table.Cell>{selected.requestId}</Table.Cell>
                           </Table.Row>
+                          <Table.Row>
+                            <Table.Cell>Status</Table.Cell>
+                            <Table.Cell>{selected.response.status}</Table.Cell>
+                          </Table.Row>
+
                           <Table.Row>
                             <Table.Cell>Time</Table.Cell>
                             <Table.Cell>
@@ -181,14 +198,16 @@ export default class ApplicationLog extends React.Component {
                         </Table.Body>
                       </Table>
                       <h2>Response Body</h2>
-                      <CodeBlock
-                        language="json"
-                        value={JSON.stringify(
-                          selected.response.body,
-                          null,
-                          '\t'
-                        )}
-                      />
+                      {selected.response.body && (
+                        <CodeBlock
+                          language="json"
+                          value={JSON.stringify(
+                            selected.response.body,
+                            null,
+                            '\t'
+                          )}
+                        />
+                      )}
                     </Grid.Column>
                   )}
                 </Grid.Row>

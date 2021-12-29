@@ -52,6 +52,7 @@ router
     validateBody(
       ApplicationEntry.getSearchValidation({
         ...exportValidation(),
+        'request.method': Joi.string().uppercase(),
         'response.status': Joi.number(),
       })
     ),

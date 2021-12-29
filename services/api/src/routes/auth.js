@@ -119,7 +119,10 @@ router
         user: user.id,
       });
 
-      ctx.body = { data: { token: createAuthToken(user.id, user.authTokenId) } };
+      ctx.body = {
+        [Symbol.for('protected')]: ['data.token'],
+        data: { token: createAuthToken(user.id, user.authTokenId) },
+      };
     }
   )
   .post(

@@ -100,7 +100,6 @@ function createSchema(definition, options = {}) {
     if (keyword) {
       Object.assign(query, buildKeywordQuery(keyword, definition));
     }
-
     Object.assign(query, flattenQuery(rest, schema.obj));
 
     const mQuery = this.find(query)
