@@ -471,6 +471,7 @@ function flattenQuery(query, schema, root = {}, rootPath = []) {
   for (let [key, value] of Object.entries(query)) {
     if (key.includes('.')) {
       // Custom dot syntax is allowed and is already flattened, so skip.
+      root[key] = value;
       continue;
     }
     const path = [...rootPath, key];
