@@ -1,5 +1,5 @@
 import React from 'react';
-import { Message, Divider, Loader, Label, Grid, Table } from 'semantic';
+import { Message, Divider, Loader, Label, Grid, Table, Select } from 'semantic';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
 import { Layout } from 'components';
@@ -51,7 +51,8 @@ export default class ApplicationLog extends React.Component {
   }
 
   render() {
-    const { loading, selectedItem } = this.state;
+    const { loading, selectedItem, applications, selectedApplication } =
+      this.state;
 
     if (loading) {
       return <Loader active />;
@@ -59,14 +60,44 @@ export default class ApplicationLog extends React.Component {
 
     return (
       <SearchProvider limit={15} onDataNeeded={this.onDataNeeded}>
-        {({ items, loading, error }) => {
+        {({ items, loading, error, reload }) => {
           const selected = selectedItem || items[0];
           return (
             <React.Fragment>
               <Menu />
-              <h1>Logs for Web</h1>
+              <Layout horizontal center>
+                <h1>Logs for</h1>
+                <Select
+                  style={{
+                    marginLeft: '1em',
+                  }}
+                  value={selectedApplication?.id}
+                  inline
+                  compact
+                  onChange={(e, { value }) =>
+                    this.setState(
+                      {
+                        selectedApplication: applications.find(
+                          (c) => c.id === value
+                        ),
+                      },
+                      () => reload()
+                    )
+                  }
+                  options={applications.map((cur) => {
+                    return {
+                      text: cur.name,
+                      value: cur.id,
+                    };
+                  })}
+                />
+              </Layout>
+
               <Layout horizontal left>
                 <Filters.Search
+                  style={{
+                    width: '300px',
+                  }}
                   name="keyword"
                   placeholder="Filter by path or Request Id"
                 />
@@ -197,16 +228,19 @@ export default class ApplicationLog extends React.Component {
                           </Table.Row>
                         </Table.Body>
                       </Table>
-                      <h2>Response Body</h2>
+
                       {selected.response.body && (
-                        <CodeBlock
-                          language="json"
-                          value={JSON.stringify(
-                            selected.response.body,
-                            null,
-                            '\t'
-                          )}
-                        />
+                        <>
+                          <h2>Response Body</h2>
+                          <CodeBlock
+                            language="json"
+                            value={JSON.stringify(
+                              selected.response.body,
+                              null,
+                              '\t'
+                            )}
+                          />
+                        </>
                       )}
                     </Grid.Column>
                   )}
