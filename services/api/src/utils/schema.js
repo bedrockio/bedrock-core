@@ -250,6 +250,22 @@ function createSchema(definition, options = {}) {
     });
   });
 
+  schema.method('assertNoReferences', async function () {
+    const { modelName } = this.constructor;
+    await Promise.all(
+      getAllReferences(modelName).map(async ({ model, paths }) => {
+        const count = await model.countDocuments({
+          $or: paths.map((path) => {
+            return { [path]: this.id };
+          }),
+        });
+        if (count > 0) {
+          throw new Error(`Refusing to delete ${dump(this)} referenced by ${model.modelName}.`);
+        }
+      })
+    );
+  });
+
   schema.post(/^init|save/, function () {
     if (!this.$locals.original) {
       this.$locals.original = this.toObject({
@@ -590,6 +606,46 @@ function buildTextIndexQuery(keyword) {
       },
     };
   }
+}
+
+// Reference helpers derive ObjectId references between models.
+
+function getAllReferences(targetName) {
+  return Object.values(mongoose.models)
+    .map((model) => {
+      const paths = getModelReferences(model, targetName);
+      return { model, paths };
+    })
+    .filter(({ paths }) => {
+      return paths.length > 0;
+    });
+}
+
+function getModelReferences(model, targetName) {
+  const paths = [];
+  model.schema.eachPath((schemaPath, schemaType) => {
+    if (schemaType instanceof SchemaObjectId && schemaPath[0] !== '_') {
+      const { ref, refPath } = schemaType.options;
+      let refs;
+      if (ref) {
+        refs = [ref];
+      } else if (refPath) {
+        refs = model.schema.path(refPath).options.enum;
+      } else {
+        throw new Error(`Cannot derive refs for ${model.modelName}#${schemaPath}.`);
+      }
+      if (refs.includes(targetName)) {
+        paths.push(schemaPath);
+      }
+    }
+  });
+  return paths;
+}
+
+// Inspection helpers
+
+function dump(doc) {
+  return `<${doc.constructor.modelName}: ${doc.id}>`;
 }
 
 // Regex queries

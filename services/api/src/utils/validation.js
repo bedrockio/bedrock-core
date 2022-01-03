@@ -105,7 +105,11 @@ function getSchemaForField(field, options = {}) {
   if (isRequiredField(field, options)) {
     schema = schema.required();
   } else if (field.writeScopes) {
-    schema = validateScopes(field.writeScopes);
+    if (field.skipValidation) {
+      schema = Joi.any().strip();
+    } else {
+      schema = validateWriteScopes(field.writeScopes);
+    }
   } else {
     // TODO: for now we allow both empty strings and null
     // as a potential signal for "set but non-existent".
@@ -137,7 +141,7 @@ function isRequiredField(field, options) {
   return field.required && !field.default && !field.skipValidation && !options.skipRequired;
 }
 
-function validateScopes(scopes) {
+function validateWriteScopes(scopes) {
   return Joi.custom((val, { prefs }) => {
     let allowed = false;
     if (scopes === 'all') {
