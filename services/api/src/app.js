@@ -22,7 +22,7 @@ app
   .use(corsMiddleware())
   .use(bodyParser({ multipart: true }));
 
-if (ENV_NAME === 'staging') {
+if (['staging', 'development'].includes(ENV_NAME)) {
   app.use(
     applicationMiddleware({
       ignorePaths: ['/', '/openapi.json', '/openapi.lite.json', '/1/status', '/1/status/mongodb', /\/1\/applications/],
