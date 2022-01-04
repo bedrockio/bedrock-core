@@ -10,7 +10,7 @@ import {
 } from 'semantic';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
-import { SearchProvider, Filters } from 'components/search';
+import { SearchProvider } from 'components/search';
 import EditApplication from 'modals/EditApplication';
 import Menu from './Menu';
 
