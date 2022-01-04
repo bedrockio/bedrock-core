@@ -61,7 +61,7 @@ function applicationMiddleware({ ignorePaths = [] }) {
     }
 
     const clientId = ctx.request.get('client-id') || '';
-    if (!clientId && enabled) {
+    if (!clientId) {
       return ctx.throw(400, 'Missing "client-id" header');
     }
 
@@ -73,7 +73,7 @@ function applicationMiddleware({ ignorePaths = [] }) {
       }
     );
 
-    if (!application && enabled) {
+    if (!application) {
       return ctx.throw(404, `The "Client-Id" did not match any known applications`);
     }
     ctx.state.application = application;
