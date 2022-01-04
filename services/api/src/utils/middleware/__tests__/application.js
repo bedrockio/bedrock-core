@@ -41,31 +41,41 @@ describe('application', () => {
     });
 
     const middleware = applicationMiddleware({ ignorePaths: [] });
-    const ctx = context(
-      {
-        headers: {
-          ['client-id']: application.clientId,
-        },
-        body: {
-          password: 'password',
-        },
+    const ctx = context({
+      headers: {
+        ['client-id']: application.clientId,
       },
-      {
-        body: {
-          data: {
-            password: 'token',
-            deeplyNested: {
-              token: 'token',
-            },
-          },
+    });
+
+    ctx.request.body = {
+      password: 'password',
+    };
+
+    ctx.body = {
+      justakey: '123',
+      password: 'token',
+      deeplyNested: {
+        token: 123123,
+      },
+      nestedArray: [
+        {
+          hash: 'something',
         },
-      }
-    );
+      ],
+      secrets: ['string', 'string'],
+    };
 
     await middleware(ctx, () => {});
     const applicationEntry = await ApplicationEntry.findOne({
       requestId: ctx.response.header['request-id'],
     });
-    console.log('entry', applicationEntry);
+
+    expect(applicationEntry.response.body).toMatchObject({
+      justakey: '123',
+      password: '[redacted]',
+      deeplyNested: { token: '[redacted]' },
+      nestedArray: [{ hash: '[redacted]' }],
+      secrets: ['[redacted]', '[redacted]'],
+    });
   });
 });

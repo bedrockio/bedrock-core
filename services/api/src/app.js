@@ -20,12 +20,15 @@ app
   .use(errorHandler)
   .use(loggingMiddleware())
   .use(corsMiddleware())
-  .use(
+  .use(bodyParser({ multipart: true }));
+
+if (ENV_NAME === 'staging') {
+  app.use(
     applicationMiddleware({
       ignorePaths: ['/', '/openapi.json', '/openapi.lite.json', '/1/status', '/1/status/mongodb', /\/1\/applications/],
     })
-  )
-  .use(bodyParser({ multipart: true }));
+  );
+}
 
 app.on('error', (err, ctx) => {
   if (err.code === 'EPIPE' || err.code === 'ECONNRESET') {

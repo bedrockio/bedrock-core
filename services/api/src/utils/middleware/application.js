@@ -1,6 +1,6 @@
 const { Application } = require('../../models');
 const config = require('@bedrockio/config');
-const enabled = config.get('ENV_NAME') !== 'test';
+const ENV_NAME = config.get('ENV_NAME');
 
 const { ApplicationEntry } = require('../../models');
 const { customAlphabet } = require('nanoid');
@@ -20,15 +20,30 @@ function sanatizesHeaders(headers) {
 }
 
 function redact(obj, prefix) {
-  return Object.keys(obj).reduce(function (acc, key) {
-    var value = obj[key];
-    if (typeof value === 'object') {
-      Object.assign(acc, redact(value, prefix + '.' + key));
-    } else if (key.match(/token|password|secret|hash/)) {
+  const result = Object.keys(obj).reduce(function (acc, key) {
+    const value = obj[key];
+    const keyMatched = key.match(/token|password|secret|hash/);
+
+    if (keyMatched && (typeof value === 'number' || typeof value === 'string')) {
+      acc[key] = '[redacted]';
+    } else if (keyMatched && Array.isArray(value) && typeof value[0] !== 'object') {
+      acc[key] = value.map(() => '[redacted]');
+    } else if (Array.isArray(value)) {
+      acc[key] = value.map((object) => redact(object));
+    } else if (typeof value === 'object') {
+      Object.assign(acc, redact(value, key));
+    } else {
       acc[key] = value;
     }
     return acc;
   }, {});
+
+  if (prefix) {
+    return {
+      [prefix]: result,
+    };
+  }
+  return result;
 }
 
 function applicationMiddleware({ ignorePaths = [] }) {
@@ -69,7 +84,6 @@ function applicationMiddleware({ ignorePaths = [] }) {
     ctx.set('Request-Id', requestId);
     const { request, response } = ctx;
 
-    console.log(response);
     await ApplicationEntry.create({
       application: application.id,
       routeNormalizedPath: ctx.routerPath,
@@ -92,6 +106,5 @@ function applicationMiddleware({ ignorePaths = [] }) {
 }
 
 module.exports = {
-  redact,
   applicationMiddleware,
 };
