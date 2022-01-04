@@ -1,6 +1,4 @@
 const { Application } = require('../../models');
-const config = require('@bedrockio/config');
-const ENV_NAME = config.get('ENV_NAME');
 
 const { ApplicationEntry } = require('../../models');
 const { customAlphabet } = require('nanoid');

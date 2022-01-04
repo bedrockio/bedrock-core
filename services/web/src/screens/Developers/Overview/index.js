@@ -15,15 +15,11 @@ export default class Applications extends React.Component {
   componentDidMount() {
     this.fetchApplications();
   }
-  fetchApplications = async (params) => {
-    const { category, ...rest } = params;
+
+  fetchApplications = async () => {
     return await request({
       method: 'POST',
       path: '/1/applications/mine/search',
-      body: {
-        ...rest,
-        ...(category && { categories: [category.id] }),
-      },
     });
   };
 
@@ -34,11 +30,25 @@ export default class Applications extends React.Component {
       <>
         <Breadcrumbs active="Developer" />
         <Segment>
-          <h2>Your integrations</h2>
+          <h2>
+            Your integrations <br /> Display some overview for each application,
+            perhaps a heatbeat chart using the last 100 requests or something
+            simple. <br />
+            Or perhaps just show the error count + request count.
+          </h2>
         </Segment>
 
         {!applications.length && (
           <div>
+            <p>
+              If yo dont have any applications this little wizard should get you
+              going in 4 steps. <br />
+              Create application. <br />
+              Show a curl request to trigger an api request + pull for new
+              requests <br />
+              Once a request has been triggered show the logs <br />
+            </p>
+
             <h3>Get started with {APP_NAME}</h3>
 
             <Segment>
