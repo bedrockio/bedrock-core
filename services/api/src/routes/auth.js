@@ -47,7 +47,6 @@ router
       });
 
       ctx.body = {
-        [Symbol.for('protected')]: ['data.token'],
         data: { token: createAuthToken(user.id, authTokenId) },
       };
     }
@@ -99,7 +98,6 @@ router
         user.tempTokenId = tokenId;
         await user.save();
         ctx.body = {
-          [Symbol.for('protected')]: ['data.mfaToken'],
           data: {
             mfaToken,
             mfaRequired: true,
@@ -120,7 +118,6 @@ router
       });
 
       ctx.body = {
-        [Symbol.for('protected')]: ['data.token'],
         data: { token: createAuthToken(user.id, user.authTokenId) },
       };
     }
@@ -190,7 +187,6 @@ router
       if (existingUser) {
         await existingUser.updateOne({ authTokenId });
         ctx.body = {
-          [Symbol.for('protected')]: ['data.token'],
           data: { token: createAuthToken(existingUser.id, authTokenId) },
         };
         return;
@@ -210,7 +206,6 @@ router
       });
 
       ctx.body = {
-        [Symbol.for('protected')]: ['data.token'],
         data: { token: createAuthToken(user.id, authTokenId) },
       };
     }
@@ -273,7 +268,6 @@ router
       });
 
       ctx.body = {
-        [Symbol.for('protected')]: ['token'],
         data: { token: createAuthToken(user.id) },
       };
     }

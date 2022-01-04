@@ -3,7 +3,6 @@ const config = require('@bedrockio/config');
 const enabled = config.get('ENV_NAME') !== 'test';
 
 const { ApplicationEntry } = require('../../models');
-const { omit, set } = require('lodash');
 const { customAlphabet } = require('nanoid');
 
 const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
@@ -20,35 +19,19 @@ function sanatizesHeaders(headers) {
   return sanatized;
 }
 
-function sanatizesRequestBody(body, protectedFields = ['password', 'secret', 'token']) {
-  const sanatized = {};
-  Object.keys(body).forEach((key) => {
-    sanatized[key] = protectedFields.includes(key) ? '[redacted]' : sanatized[key];
-  });
-  return sanatizesRequestBody;
+function redact(obj, prefix) {
+  return Object.keys(obj).reduce(function (acc, key) {
+    var value = obj[key];
+    if (typeof value === 'object') {
+      Object.assign(acc, redact(value, prefix + '.' + key));
+    } else if (key.match(/token|password|secret|hash/)) {
+      acc[key] = value;
+    }
+    return acc;
+  }, {});
 }
 
-function sanatizeResponseBody(body) {
-  if (!body) return undefined;
-  // clone body to avoid changing response when redacting
-  const sanatized = JSON.parse(JSON.stringify(body));
-  const projectedFields = body[Symbol.for('protected')] || [];
-  if (Array.isArray(sanatized.data) && sanatized.data.length > 10) {
-    sanatized.data = sanatized.data.slice(0, 10);
-    sanatized.__truncated__ = {
-      data: {
-        length: sanatized.data.length,
-      },
-    };
-  }
-  projectedFields.forEach((field) => {
-    set(sanatized, field, '[redacted]');
-  });
-
-  return sanatized;
-}
-
-function fetchApplication({ ignorePaths = [] }) {
+function applicationMiddleware({ ignorePaths = [] }) {
   return async (ctx, next) => {
     const path = ctx.url;
     const isPathIgnored = ignorePaths.find((ignorePath) => {
@@ -82,34 +65,33 @@ function fetchApplication({ ignorePaths = [] }) {
 
     await next();
 
-    const requestId = `${application.clientId}_${nanoid()}`;
+    const requestId = `${application.clientId}-${nanoid()}`;
     ctx.set('Request-Id', requestId);
     const { request, response } = ctx;
 
-    try {
-      await ApplicationEntry.create({
-        application: application.id,
-        routeNormalizedPath: ctx.routerPath,
-        routePrefix: ctx.router.opts.prefix,
-        requestId,
-        request: {
-          ip: request.ip,
-          method: request.method,
-          url: request.url,
-          body: sanatizesRequestBody(request.body),
-          headers: sanatizesHeaders(request.headers),
-        },
-        response: {
-          status: response.status,
-          headers: sanatizesHeaders(response.headers),
-          body: sanatizeResponseBody(ctx.response.body),
-        },
-      });
-      console.log(1);
-    } catch (e) {
-      console.error(e);
-    }
+    console.log(response);
+    await ApplicationEntry.create({
+      application: application.id,
+      routeNormalizedPath: ctx.routerPath,
+      routePrefix: ctx.router?.opts.prefix,
+      requestId,
+      request: {
+        ip: request.ip,
+        method: request.method,
+        url: request.url,
+        body: request.body ? redact(request.body) : undefined,
+        headers: sanatizesHeaders(request.headers),
+      },
+      response: {
+        status: response.status,
+        headers: sanatizesHeaders(response.headers),
+        body: response.body ? redact(response.body) : undefined,
+      },
+    });
   };
 }
 
-module.exports = fetchApplication;
+module.exports = {
+  redact,
+  applicationMiddleware,
+};
