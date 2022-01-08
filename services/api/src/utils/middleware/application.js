@@ -20,7 +20,7 @@ function sanatizesHeaders(headers) {
 function redact(obj, prefix) {
   const result = Object.keys(obj).reduce(function (acc, key) {
     const value = obj[key];
-    const keyMatched = key.match(/token|password|secret|hash/);
+    const keyMatched = key.match(/token|password|secret|hash|key|jwt|ping|payment|bank|iban/);
 
     if (keyMatched && (typeof value === 'number' || typeof value === 'string')) {
       acc[key] = '[redacted]';
@@ -42,6 +42,15 @@ function redact(obj, prefix) {
     };
   }
   return result;
+}
+
+function truncate(body) {
+  if (body.data.length > 20) {
+    return {
+      ...body,
+      data: [...body.data, `[${body.data.length - 20}/${body.data.length} items has been truncated]`].splice(0, 20),
+    };
+  }
 }
 
 function applicationMiddleware({ ignorePaths = [] }) {
@@ -97,7 +106,7 @@ function applicationMiddleware({ ignorePaths = [] }) {
       response: {
         status: response.status,
         headers: sanatizesHeaders(response.headers),
-        body: response.body ? redact(response.body) : undefined,
+        body: response.body ? redact(truncate(response.body)) : undefined,
       },
     });
   };
