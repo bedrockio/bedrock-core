@@ -138,10 +138,7 @@ router
         ctx.throw(400, 'phoneNumber is required');
       }
 
-      const { secret, uri } = mfa.generateSecret({
-        name: config.get('APP_NAME'),
-        account: authUser.email,
-      });
+      const secret = mfa.generateSecret();
 
       if (method === 'sms') {
         await sms.sendMessage(
@@ -153,7 +150,6 @@ router
       ctx.body = {
         data: {
           secret,
-          uri,
         },
       };
     }
