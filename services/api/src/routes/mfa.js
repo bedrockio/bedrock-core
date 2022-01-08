@@ -130,8 +130,6 @@ router
     }),
     checkPasswordVerification,
     async (ctx) => {
-      const { authUser } = ctx.state;
-
       const { method, phoneNumber } = ctx.request.body;
 
       if (method === 'sms' && !phoneNumber) {
@@ -156,7 +154,9 @@ router
   )
   .post('/generate-backup-codes', async (ctx) => {
     ctx.body = {
-      data: mfa.generateBackupCodes(),
+      data: {
+        codes: mfa.generateBackupCodes(),
+      },
     };
   })
   .post(

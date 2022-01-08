@@ -89,7 +89,7 @@ export default class Authenticator extends React.Component {
 
       this.setState({
         verified: true,
-        codes: data,
+        codes: data.codes,
       });
     } catch (error) {
       this.setState({

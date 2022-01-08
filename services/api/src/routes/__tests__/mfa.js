@@ -264,7 +264,7 @@ describe('/1/mfa', () => {
       const user = await createUser({});
       const response = await request('POST', `/1/mfa/generate-backup-codes`, {}, { user });
       expect(response.status).toBe(200);
-      expect(response.body.data[0]).toBeDefined();
+      expect(response.body.data.codes[0]).toBeDefined();
     });
   });
 

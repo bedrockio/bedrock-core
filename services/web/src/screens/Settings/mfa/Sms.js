@@ -93,7 +93,7 @@ export default class Sms extends React.Component {
 
       this.setState({
         verified: true,
-        codes: data,
+        codes: data.codes,
       });
     } catch (error) {
       if (error.status == 403) {
