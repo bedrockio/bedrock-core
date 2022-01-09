@@ -1,5 +1,13 @@
 import React from 'react';
-import { Table, Button, Message, Divider, Loader, Confirm } from 'semantic';
+import {
+  Table,
+  Button,
+  Message,
+  Divider,
+  Loader,
+  Confirm,
+  Segment,
+} from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
@@ -36,16 +44,21 @@ export default class ShopList extends React.Component {
           return (
             <React.Fragment>
               <Breadcrumbs active="Shops" />
+
               <Layout horizontal center spread>
                 <h1>Shops</h1>
                 <Layout.Group>
+                  <EditShop
+                    trigger={<Button primary content="New Shop" icon="plus" />}
+                    onSave={reload}
+                  />
+                </Layout.Group>
+              </Layout>
+              <Segment>
+                <Layout spread horizontal>
                   <Filters.Modal>
                     {/* --- Generator: filters */}
-                    <Filters.Search
-                      label="Search"
-                      name="keyword"
-                      placeholder="Enter name or shop id"
-                    />
+
                     <Filters.Dropdown
                       label="Country"
                       name="country"
@@ -54,12 +67,13 @@ export default class ShopList extends React.Component {
                     />
                     {/* --- Generator: end */}
                   </Filters.Modal>
-                  <EditShop
-                    trigger={<Button primary content="New Shop" icon="plus" />}
-                    onSave={reload}
+
+                  <Filters.Search
+                    name="keyword"
+                    placeholder="Enter name or shop id"
                   />
-                </Layout.Group>
-              </Layout>
+                </Layout>
+              </Segment>
               {loading ? (
                 <Loader active />
               ) : error ? (
