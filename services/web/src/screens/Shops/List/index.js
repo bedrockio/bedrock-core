@@ -41,11 +41,7 @@ export default class ShopList extends React.Component {
                 <Layout.Group>
                   <Filters.Modal>
                     {/* --- Generator: filters */}
-                    <Filters.Search
-                      label="Search"
-                      name="keyword"
-                      placeholder="Enter name or shop id"
-                    />
+
                     <Filters.Dropdown
                       label="Country"
                       name="country"
@@ -54,6 +50,11 @@ export default class ShopList extends React.Component {
                     />
                     {/* --- Generator: end */}
                   </Filters.Modal>
+
+                  <Filters.Search
+                    name="keyword"
+                    placeholder="Enter name or shop id"
+                  />
                   <EditShop
                     trigger={<Button primary content="New Shop" icon="plus" />}
                     onSave={reload}
