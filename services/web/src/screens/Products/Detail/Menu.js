@@ -1,7 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Menu, Button } from 'semantic';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { Breadcrumbs, Layout } from 'components';
 
 import EditProduct from 'modals/EditProduct';

@@ -4,7 +4,9 @@ import { request } from 'utils/api';
 import screen from 'helpers/screen';
 import { Layout } from 'components';
 import { SearchProvider, Filters } from 'components/search';
-import Menu from './Menu';
+import { Breadcrumbs } from 'components';
+import { Link } from 'react-router-dom';
+
 import { formatDateTime } from 'utils/date';
 import CodeBlock from 'screens/Docs/CodeBlock';
 
@@ -64,7 +66,10 @@ export default class ApplicationLog extends React.Component {
           const selected = selectedItem || items[0];
           return (
             <React.Fragment>
-              <Menu />
+              <Breadcrumbs
+                link={<Link to="/developers">Developers</Link>}
+                active="Logs"
+              />
               <Layout horizontal center>
                 <h1>Logs for</h1>
                 <Select

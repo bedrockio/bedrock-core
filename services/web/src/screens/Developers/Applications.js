@@ -12,7 +12,8 @@ import { request } from 'utils/api';
 import screen from 'helpers/screen';
 import { SearchProvider } from 'components/search';
 import EditApplication from 'modals/EditApplication';
-import Menu from './Menu';
+import { Breadcrumbs } from 'components';
+import { Link } from 'react-router-dom';
 
 @screen
 export default class Applications extends React.Component {
@@ -34,7 +35,10 @@ export default class Applications extends React.Component {
         {({ items, getSorted, setSort, reload, loading, error }) => {
           return (
             <React.Fragment>
-              <Menu />
+              <Breadcrumbs
+                link={<Link to="/developers">Developers</Link>}
+                active="Applications"
+              />
               <h1>Your applications</h1>
 
               {loading ? (

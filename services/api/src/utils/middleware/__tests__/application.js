@@ -33,7 +33,7 @@ describe('application', () => {
     expect(hash).toHaveLength(16);
   });
 
-  it('should redact fields [password/token/code]', async () => {
+  it('should truncate large response data.length < 20', async () => {
     const application = await Application.create({
       name: Date.now(),
       clientId: Date.now(),
@@ -52,14 +52,51 @@ describe('application', () => {
     };
 
     ctx.body = {
-      justakey: '123',
+      data: [...new Array(23)].map((c, index) => index),
+    };
+
+    await middleware(ctx, () => {});
+    const applicationEntry = await ApplicationEntry.findOne({
+      requestId: ctx.response.header['request-id'],
+    });
+    expect(applicationEntry.response.body.data[20]).toBe('[3 items has been truncated]');
+  });
+
+  it('should redact fields [token|password|secret|hash...]', async () => {
+    const application = await Application.create({
+      name: Date.now(),
+      clientId: Date.now(),
+      user: mongoose.Types.ObjectId(),
+    });
+
+    const middleware = applicationMiddleware({ ignorePaths: [] });
+    const ctx = context({
+      headers: {
+        ['client-id']: application.clientId,
+      },
+    });
+
+    ctx.request.body = {
+      password: 'password',
+    };
+
+    ctx.body = {
+      attribute: '123',
       password: 'token',
+      jwt: 'token',
       deeplyNested: {
-        token: 123123,
+        stoken: 123123,
       },
       nestedArray: [
         {
           hash: 'something',
+        },
+      ],
+      test: [
+        {
+          sneakyKey: 'big secret',
+          tested: ['234', 'test', null],
+          attribute: '123',
         },
       ],
       secrets: ['string', 'string'],
@@ -71,11 +108,19 @@ describe('application', () => {
     });
 
     expect(applicationEntry.response.body).toMatchObject({
-      justakey: '123',
       password: '[redacted]',
-      deeplyNested: { token: '[redacted]' },
+      jwt: '[redacted]',
+      deeplyNested: { stoken: '[redacted]' },
+      attribute: '123',
       nestedArray: [{ hash: '[redacted]' }],
       secrets: ['[redacted]', '[redacted]'],
+      test: [
+        {
+          sneakyKey: '[redacted]',
+          tested: ['234', 'test', null],
+          attribute: '123',
+        },
+      ],
     });
   });
 });

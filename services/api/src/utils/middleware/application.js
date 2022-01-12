@@ -14,43 +14,53 @@ function sanatizesHeaders(headers) {
   if (sanatized.Authorization && sanatized.Authorization.includes('Bearer')) {
     sanatized.Authorization = 'Bearer [redacted]';
   }
+
   return sanatized;
 }
 
-function redact(obj, prefix) {
-  const result = Object.keys(obj).reduce(function (acc, key) {
-    const value = obj[key];
-    const keyMatched = key.match(/token|password|secret|hash|key|jwt|ping|payment|bank|iban/);
+function isSimpleValue(value) {
+  return typeof value === 'number' || typeof value === 'string' || typeof value === 'boolean' || value === null;
+}
 
-    if (keyMatched && (typeof value === 'number' || typeof value === 'string')) {
-      acc[key] = '[redacted]';
+const protectedFields = /token|password|secret|hash|key|jwt|ping|payment|bank|iban/i;
+
+function redact(obj, prefix) {
+  Object.keys(obj).forEach(function (key) {
+    const value = obj[key];
+    const keyMatched = key.match(protectedFields);
+    const simpleValue = isSimpleValue(value);
+
+    if (keyMatched && simpleValue) {
+      obj[key] = '[redacted]';
     } else if (keyMatched && Array.isArray(value) && typeof value[0] !== 'object') {
-      acc[key] = value.map(() => '[redacted]');
+      obj[key] = value.map(() => '[redacted]');
+    } else if (simpleValue) {
+      obj[key] = value;
     } else if (Array.isArray(value)) {
-      acc[key] = value.map((object) => redact(object));
+      obj[key] = value.map((val) => {
+        return isSimpleValue(val) ? val : redact(val);
+      });
     } else if (typeof value === 'object') {
-      Object.assign(acc, redact(value, key));
-    } else {
-      acc[key] = value;
+      Object.assign(obj, redact(value, key));
     }
-    return acc;
   }, {});
 
   if (prefix) {
     return {
-      [prefix]: result,
+      [prefix]: obj,
     };
   }
-  return result;
+  return obj;
 }
 
 function truncate(body) {
-  if (body.data.length > 20) {
+  if (body.data?.length > 20) {
     return {
       ...body,
-      data: [...body.data, `[${body.data.length - 20}/${body.data.length} items has been truncated]`].splice(0, 20),
+      data: [...body.data.concat().splice(0, 20), `[${body.data.length - 20} items has been truncated]`],
     };
   }
+  return body;
 }
 
 function applicationMiddleware({ ignorePaths = [] }) {
@@ -106,7 +116,7 @@ function applicationMiddleware({ ignorePaths = [] }) {
       response: {
         status: response.status,
         headers: sanatizesHeaders(response.headers),
-        body: response.body ? redact(truncate(response.body)) : undefined,
+        body: response.body ? redact(truncate(JSON.parse(JSON.stringify(response.body)))) : undefined,
       },
     });
   };
