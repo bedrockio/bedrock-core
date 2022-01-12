@@ -104,6 +104,8 @@ function applicationMiddleware({ ignorePaths = [] }) {
     res.once('finish', () => {
       const { request, response } = ctx;
 
+      const isJSON = ctx.response.get('Content-Type')?.includes('application/json');
+
       ApplicationEntry.create({
         application: application.id,
         routeNormalizedPath: ctx.routerPath,
@@ -119,7 +121,7 @@ function applicationMiddleware({ ignorePaths = [] }) {
         response: {
           status: ctx.status,
           headers: sanatizesHeaders(response.headers),
-          body: response.body ? redact(truncate(JSON.parse(JSON.stringify(response.body)))) : undefined,
+          body: response.body && isJSON ? redact(truncate(JSON.parse(JSON.stringify(response.body)))) : undefined,
         },
       });
     });
