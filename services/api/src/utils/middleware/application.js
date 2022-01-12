@@ -63,8 +63,6 @@ function truncate(body) {
   return body;
 }
 
-function handleRequest(application, ctx) {}
-
 function applicationMiddleware({ ignorePaths = [] }) {
   return async (ctx, next) => {
     const path = ctx.url;
@@ -99,8 +97,11 @@ function applicationMiddleware({ ignorePaths = [] }) {
 
     const requestId = `${application.clientId}-${nanoid()}`;
     ctx.set('Request-Id', requestId);
+    const { res } = ctx;
 
-    ctx.res.once('finish', () => {
+    // fire after the response is done
+    // this allows to catch the error handlers output
+    res.once('finish', () => {
       const { request, response } = ctx;
 
       ApplicationEntry.create({

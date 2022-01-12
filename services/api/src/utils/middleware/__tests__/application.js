@@ -1,5 +1,8 @@
 const { applicationMiddleware } = require('../application');
+const { sleep } = require('../../../utils/sleep');
 const { setupDb, teardownDb, context } = require('../../testing');
+const EventEmitter = require('events');
+
 const { Application, ApplicationEntry } = require('./../../../models');
 const mongoose = require('mongoose');
 
@@ -20,13 +23,18 @@ describe('application', () => {
     });
 
     const middleware = applicationMiddleware({ ignorePaths: [] });
-    const ctx = context({
-      headers: {
-        ['client-id']: application.clientId,
+
+    const ctx = context(
+      {
+        headers: {
+          ['client-id']: application.clientId,
+        },
       },
-    });
+      EventEmitter.prototype
+    );
 
     await middleware(ctx, () => {});
+
     const [applicationId, hash] = ctx.response.header['request-id'].split('-');
     expect(applicationId).toBe(application.clientId);
     expect(hash).toBeDefined();
@@ -41,11 +49,14 @@ describe('application', () => {
     });
 
     const middleware = applicationMiddleware({ ignorePaths: [] });
-    const ctx = context({
-      headers: {
-        ['client-id']: application.clientId,
+    const ctx = context(
+      {
+        headers: {
+          ['client-id']: application.clientId,
+        },
       },
-    });
+      EventEmitter.prototype
+    );
 
     ctx.request.body = {
       password: 'password',
@@ -56,6 +67,8 @@ describe('application', () => {
     };
 
     await middleware(ctx, () => {});
+    ctx.res.emit('finish');
+    await sleep(50);
     const applicationEntry = await ApplicationEntry.findOne({
       requestId: ctx.response.header['request-id'],
     });
@@ -70,11 +83,14 @@ describe('application', () => {
     });
 
     const middleware = applicationMiddleware({ ignorePaths: [] });
-    const ctx = context({
-      headers: {
-        ['client-id']: application.clientId,
+    const ctx = context(
+      {
+        headers: {
+          ['client-id']: application.clientId,
+        },
       },
-    });
+      EventEmitter.prototype
+    );
 
     ctx.request.body = {
       password: 'password',
@@ -103,6 +119,9 @@ describe('application', () => {
     };
 
     await middleware(ctx, () => {});
+    ctx.res.emit('finish');
+    await sleep(50);
+
     const applicationEntry = await ApplicationEntry.findOne({
       requestId: ctx.response.header['request-id'],
     });
