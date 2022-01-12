@@ -63,6 +63,8 @@ function truncate(body) {
   return body;
 }
 
+function handleRequest(application, ctx) {}
+
 function applicationMiddleware({ ignorePaths = [] }) {
   return async (ctx, next) => {
     const path = ctx.url;
@@ -95,30 +97,33 @@ function applicationMiddleware({ ignorePaths = [] }) {
     }
     ctx.state.application = application;
 
-    await next();
-
     const requestId = `${application.clientId}-${nanoid()}`;
     ctx.set('Request-Id', requestId);
-    const { request, response } = ctx;
 
-    await ApplicationEntry.create({
-      application: application.id,
-      routeNormalizedPath: ctx.routerPath,
-      routePrefix: ctx.router?.opts.prefix,
-      requestId,
-      request: {
-        ip: request.ip,
-        method: request.method,
-        url: request.url,
-        body: request.body ? redact(request.body) : undefined,
-        headers: sanatizesHeaders(request.headers),
-      },
-      response: {
-        status: response.status,
-        headers: sanatizesHeaders(response.headers),
-        body: response.body ? redact(truncate(JSON.parse(JSON.stringify(response.body)))) : undefined,
-      },
+    ctx.res.once('finish', () => {
+      const { request, response } = ctx;
+
+      ApplicationEntry.create({
+        application: application.id,
+        routeNormalizedPath: ctx.routerPath,
+        routePrefix: ctx.router?.opts.prefix,
+        requestId,
+        request: {
+          ip: request.ip,
+          method: request.method,
+          url: request.url,
+          body: request.body ? redact(request.body) : undefined,
+          headers: sanatizesHeaders(request.headers),
+        },
+        response: {
+          status: ctx.status,
+          headers: sanatizesHeaders(response.headers),
+          body: response.body ? redact(truncate(JSON.parse(JSON.stringify(response.body)))) : undefined,
+        },
+      });
     });
+
+    return next();
   };
 }
 
