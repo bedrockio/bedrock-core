@@ -19,7 +19,8 @@ function sanitizeHeaders(headers) {
 }
 
 function isSimpleValue(value) {
-  return typeof value === 'number' || typeof value === 'string' || typeof value === 'boolean' || value === null;
+  const type = typeof value;
+  return type === 'number' || type === 'string' || type === 'boolean' || value === null;
 }
 
 const protectedFields = /token|password|secret|hash|key|jwt|ping|payment|bank|iban/i;
