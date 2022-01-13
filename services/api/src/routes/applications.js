@@ -33,7 +33,7 @@ router
   .post('/', validateBody(Application.getCreateValidation()), async (ctx) => {
     const { body } = ctx.request;
     const clientId = kebabCase(body.name);
-    const count = await Application.count({
+    const count = await Application.countDocuments({
       clientId,
     });
 

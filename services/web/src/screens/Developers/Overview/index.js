@@ -41,8 +41,8 @@ export default class Applications extends React.Component {
         {!applications.length && (
           <div>
             <p>
-              If yo dont have any applications this little wizard should get you
-              going in 4 steps. <br />
+              If you dont have any applications this little wizard should get
+              you going in 4 steps. <br />
               Create application. <br />
               Show a curl request to trigger an api request + pull for new
               requests <br />

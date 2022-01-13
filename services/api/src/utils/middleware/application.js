@@ -6,7 +6,7 @@ const { customAlphabet } = require('nanoid');
 const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 const nanoid = customAlphabet(alphabet, 16);
 
-function sanatizesHeaders(headers) {
+function sanitizeHeaders(headers) {
   const sanatized = {
     ...headers,
   };
@@ -93,7 +93,9 @@ function applicationMiddleware({ ignorePaths = [] }) {
     if (!application) {
       return ctx.throw(404, `The "Client-Id" did not match any known applications`);
     }
-    ctx.state.application = application;
+
+    // If we one day store context on the applications it can be exposed to the route like this
+    //ctx.state.application = application;
 
     const requestId = `${application.clientId}-${nanoid()}`;
     ctx.set('Request-Id', requestId);
@@ -104,7 +106,13 @@ function applicationMiddleware({ ignorePaths = [] }) {
     res.once('finish', () => {
       const { request, response } = ctx;
 
-      const isJSON = ctx.response.get('Content-Type')?.includes('application/json');
+      let responseBody;
+      if (response.get('Content-Type')?.includes('application/json')) {
+        // this is bit unlucky
+        // we need to stringify the doc to avoid having all kind of prototypes / bson id / other mongonse wrappers
+        const convertBody = JSON.parse(JSON.stringify(response.body));
+        responseBody = redact(truncate(convertBody));
+      }
 
       ApplicationEntry.create({
         application: application.id,
@@ -116,12 +124,12 @@ function applicationMiddleware({ ignorePaths = [] }) {
           method: request.method,
           url: request.url,
           body: request.body ? redact(request.body) : undefined,
-          headers: sanatizesHeaders(request.headers),
+          headers: sanitizeHeaders(request.headers),
         },
         response: {
           status: ctx.status,
-          headers: sanatizesHeaders(response.headers),
-          body: response.body && isJSON ? redact(truncate(JSON.parse(JSON.stringify(response.body)))) : undefined,
+          headers: sanitizeHeaders(response.headers),
+          body: responseBody,
         },
       });
     });
