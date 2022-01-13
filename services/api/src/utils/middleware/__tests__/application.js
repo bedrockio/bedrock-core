@@ -1,10 +1,10 @@
 const { applicationMiddleware } = require('../application');
 const { sleep } = require('../../../utils/sleep');
+const { importFixtures } = require('../../../utils/fixtures');
 const { setupDb, teardownDb, context } = require('../../testing');
 const EventEmitter = require('events');
 
-const { Application, ApplicationRequest } = require('./../../../models');
-const mongoose = require('mongoose');
+const { ApplicationRequest } = require('./../../../models');
 
 beforeAll(async () => {
   await setupDb();
@@ -16,12 +16,7 @@ afterAll(async () => {
 
 describe('application', () => {
   it('should set an request id', async () => {
-    const application = await Application.create({
-      name: Date.now(),
-      clientId: Date.now(),
-      user: mongoose.Types.ObjectId(),
-    });
-
+    const application = await importFixtures('applications/default');
     const middleware = applicationMiddleware({ ignorePaths: [] });
 
     const ctx = context(
@@ -42,12 +37,7 @@ describe('application', () => {
   });
 
   it('should truncate large response data.length < 20', async () => {
-    const application = await Application.create({
-      name: Date.now(),
-      clientId: Date.now(),
-      user: mongoose.Types.ObjectId(),
-    });
-
+    const application = await importFixtures('applications/default');
     const middleware = applicationMiddleware({ ignorePaths: [] });
     const ctx = context(
       {
@@ -76,12 +66,7 @@ describe('application', () => {
   });
 
   it('should redact fields [token|password|secret|hash...]', async () => {
-    const application = await Application.create({
-      name: Date.now(),
-      clientId: Date.now(),
-      user: mongoose.Types.ObjectId(),
-    });
-
+    const application = await importFixtures('applications/default');
     const middleware = applicationMiddleware({ ignorePaths: [] });
     const ctx = context(
       {

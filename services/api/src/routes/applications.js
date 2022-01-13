@@ -1,8 +1,9 @@
 const Router = require('@koa/router');
+const { kebabCase } = require('lodash');
+
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { Application, ApplicationRequest } = require('../models');
-const { kebabCase } = require('lodash');
 const { exportValidation, csvExport } = require('../utils/csv');
 const Joi = require('joi');
 
@@ -19,11 +20,11 @@ router
     }
     return next();
   })
-  .post('/mine/search', async (ctx) => {
+  .post('/mine/search', validateBody(Application.getSearchValidation()), async (ctx) => {
     const { body } = ctx.request;
     const { data, meta } = await Application.search({
-      user: ctx.state.authUser.id,
       ...body,
+      user: ctx.state.authUser.id,
     });
     ctx.body = {
       data,
@@ -79,23 +80,14 @@ router
       data: ctx.state.application,
     };
   })
-  .patch(
-    '/:application',
-    validateBody(
-      Application.getUpdateValidation({
-        clientId: Joi.strip(),
-        requestCount: Joi.strip(),
-      })
-    ),
-    async (ctx) => {
-      const application = ctx.state.application;
-      application.assign(ctx.request.body);
-      await application.save();
-      ctx.body = {
-        data: application,
-      };
-    }
-  )
+  .patch('/:application', validateBody(Application.getUpdateValidation()), async (ctx) => {
+    const application = ctx.state.application;
+    application.assign(ctx.request.body);
+    await application.save();
+    ctx.body = {
+      data: application,
+    };
+  })
   .delete('/:application', async (ctx) => {
     await ctx.state.application.delete();
     ctx.status = 204;
