@@ -115,6 +115,7 @@ function applicationMiddleware({ ignorePaths = [] }) {
         responseBody = redact(truncate(convertBody));
       }
 
+      // This could be done as upsert
       ApplicationRequest.create({
         application: application.id,
         routeNormalizedPath: ctx.routerPath,
