@@ -3,7 +3,7 @@ const { sleep } = require('../../../utils/sleep');
 const { setupDb, teardownDb, context } = require('../../testing');
 const EventEmitter = require('events');
 
-const { Application, ApplicationEntry } = require('./../../../models');
+const { Application, ApplicationRequest } = require('./../../../models');
 const mongoose = require('mongoose');
 
 beforeAll(async () => {
@@ -69,10 +69,10 @@ describe('application', () => {
     await middleware(ctx, () => {});
     ctx.res.emit('finish');
     await sleep(50);
-    const applicationEntry = await ApplicationEntry.findOne({
+    const applicationRequest = await ApplicationRequest.findOne({
       requestId: ctx.response.header['request-id'],
     });
-    expect(applicationEntry.response.body.data[20]).toBe('[3 items has been truncated]');
+    expect(applicationRequest.response.body.data[20]).toBe('[3 items has been truncated]');
   });
 
   it('should redact fields [token|password|secret|hash...]', async () => {
@@ -122,11 +122,11 @@ describe('application', () => {
     ctx.res.emit('finish');
     await sleep(50);
 
-    const applicationEntry = await ApplicationEntry.findOne({
+    const applicationRequest = await ApplicationRequest.findOne({
       requestId: ctx.response.header['request-id'],
     });
 
-    expect(applicationEntry.response.body).toMatchObject({
+    expect(applicationRequest.response.body).toMatchObject({
       password: '[redacted]',
       jwt: '[redacted]',
       deeplyNested: { stoken: '[redacted]' },

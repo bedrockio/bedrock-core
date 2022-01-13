@@ -1,6 +1,6 @@
 const { Application } = require('../../models');
 
-const { ApplicationEntry } = require('../../models');
+const { ApplicationRequest } = require('../../models');
 const { customAlphabet } = require('nanoid');
 
 const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
@@ -114,7 +114,7 @@ function applicationMiddleware({ ignorePaths = [] }) {
         responseBody = redact(truncate(convertBody));
       }
 
-      ApplicationEntry.create({
+      ApplicationRequest.create({
         application: application.id,
         routeNormalizedPath: ctx.routerPath,
         routePrefix: ctx.router?.opts.prefix,

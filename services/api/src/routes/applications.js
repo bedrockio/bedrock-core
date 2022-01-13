@@ -1,7 +1,7 @@
 const Router = require('@koa/router');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
-const { Application, ApplicationEntry } = require('../models');
+const { Application, ApplicationRequest } = require('../models');
 const { kebabCase } = require('lodash');
 const { exportValidation, csvExport } = require('../utils/csv');
 const Joi = require('joi');
@@ -50,7 +50,7 @@ router
   .post(
     '/:application/logs/search',
     validateBody(
-      ApplicationEntry.getSearchValidation({
+      ApplicationRequest.getSearchValidation({
         ...exportValidation(),
         'request.method': Joi.string().uppercase(),
         'response.status': Joi.number(),
@@ -60,7 +60,7 @@ router
       const { format, filename, ...params } = ctx.request.body;
       const { application } = ctx.state;
 
-      const { data, meta } = await ApplicationEntry.search({
+      const { data, meta } = await ApplicationRequest.search({
         ...params,
         application: application.id,
       });
