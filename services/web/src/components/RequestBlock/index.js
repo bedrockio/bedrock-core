@@ -34,7 +34,7 @@ export default class FetchBlock extends React.Component {
     return this.props.request;
   }
 
-  handleOnCopy = () => {
+  onCopyClick = () => {
     const option = options.find((c) => c.value === this.state.current);
     navigator.clipboard.writeText(option.template(this.getData()));
   };
@@ -54,7 +54,7 @@ export default class FetchBlock extends React.Component {
               options={options}
               value={this.state.current}
             />{' '}
-            <Button size="small" circular onClick={this.handleOnCopy}>
+            <Button size="small" circular onClick={this.onCopyClick}>
               Copy
             </Button>
           </Layout.Group>

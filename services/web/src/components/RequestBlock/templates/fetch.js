@@ -22,8 +22,9 @@ export default function templateFetch({ url, file, ...rest }) {
   } else {
     code.push(`const options = ${JSON.stringify(rest, null, 2)}`);
   }
-  code.push(`fetch("${url}", options);`);
-  code.push('  .then(response => response.json())');
-  code.push('  .then(response => console.log(response));');
+  code.push(`fetch("${url}", options)`);
+  code.push('  .then((response) => response.json())');
+  code.push('  .then((response) => console.log(response))');
+  code.push('  .then((error) => console.error(error));');
   return code.join('\n');
 }
