@@ -2228,6 +2228,27 @@ describe('search', () => {
     expect(result.meta.total).toBe(2);
   });
 
+  it('should allow date range search on dot path', async () => {
+    let result;
+    const schema = createSchemaFromAttributes({
+      user: {
+        name: String,
+        archivedAt: {
+          type: Date,
+        },
+      },
+    });
+    const User = createTestModel(schema);
+    await Promise.all([
+      User.create({ user: { name: 'Billy', archivedAt: '2020-01-01' } }),
+      User.create({ user: { name: 'Willy', archivedAt: '2021-01-01' } }),
+    ]);
+
+    result = await User.search({ 'user.archivedAt': { lte: '2020-06-01' } });
+    expect(result.data).toMatchObject([{ user: { name: 'Billy' } }]);
+    expect(result.meta.total).toBe(1);
+  });
+
   it('should allow number range search', async () => {
     let result;
     const schema = createSchemaFromAttributes({

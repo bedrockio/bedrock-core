@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const mongoose = require('mongoose');
 const autopopulate = require('mongoose-autopopulate');
-const { startCase, uniq, isEmpty, isPlainObject } = require('lodash');
+const { get, uniq, startCase, isEmpty, isPlainObject } = require('lodash');
 const { logger } = require('@bedrockio/instrumentation');
 
 const { getJoiSchema, getMongooseValidator } = require('./validation');
@@ -414,7 +414,7 @@ function resolveScopes(options) {
 // from mongoose.Schema.Types that is resolved from the
 // shorthand: field: 'String'.
 function resolveField(schema, key) {
-  let field = schema?.[key];
+  let field = get(schema, key);
   if (Array.isArray(field)) {
     field = field[0];
   }
