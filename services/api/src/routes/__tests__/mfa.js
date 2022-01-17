@@ -19,13 +19,10 @@ describe('/1/mfa', () => {
         mfaMethod: 'otp',
         tempTokenId: generateTokenId(),
       });
-      const secret = generateSecret({
-        name: 'APP_TEST',
-        account: user,
-      });
-      user.mfaSecret = secret.secret;
+      const secret = generateSecret();
+      user.mfaSecret = secret;
       await user.save();
-      const code = generateToken(secret.secret);
+      const code = generateToken(secret);
 
       const token = createTemporaryToken({ type: 'mfa', sub: user.id, jti: user.tempTokenId });
       const response = await request(
@@ -61,11 +58,8 @@ describe('/1/mfa', () => {
         mfaMethod: 'otp',
         tempTokenId: generateTokenId(),
       });
-      const secret = generateSecret({
-        name: 'APP_TEST',
-        account: user,
-      });
-      user.mfaSecret = secret.secret;
+      const secret = generateSecret();
+      user.mfaSecret = secret;
       await user.save();
       const token = createTemporaryToken({ type: 'mfa', sub: user.id, jti: user.tempTokenId });
       const response = await request(
@@ -137,20 +131,12 @@ describe('/1/mfa', () => {
       const tokenId = generateTokenId();
       const user = await createUser({
         mfaMethod: 'sms',
-        mfaSecret: generateSecret({
-          name: 'APP_TEST',
-          account: '',
-        }).secret,
+        mfaSecret: generateSecret(),
         mfaPhoneNumber: '123123123',
         tempTokenId: tokenId,
       });
       const token = createTemporaryToken({ type: 'mfa', sub: user.id, jti: user.tempTokenId });
-      let response = await request(
-        'POST',
-        '/1/mfa/send-code',
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      let response = await request('POST', '/1/mfa/send-code', {}, { headers: { Authorization: `Bearer ${token}` } });
       expect(response.status).toBe(204);
     });
   });
@@ -211,10 +197,7 @@ describe('/1/mfa', () => {
       const user = await createUser({
         accessConfirmedAt: new Date(),
       });
-      const { secret } = generateSecret({
-        name: 'APP_TEST',
-        account: user,
-      });
+      const secret = generateSecret();
 
       const response = await request(
         'POST',
@@ -238,10 +221,7 @@ describe('/1/mfa', () => {
       const user = await createUser({
         accessConfirmedAt: new Date(),
       });
-      const { secret } = generateSecret({
-        name: 'APP_TEST',
-        account: user,
-      });
+      const secret = generateSecret();
       const response = await request(
         'POST',
         `/1/mfa/enable`,
@@ -284,17 +264,14 @@ describe('/1/mfa', () => {
       const user = await createUser({});
       const response = await request('POST', `/1/mfa/generate-backup-codes`, {}, { user });
       expect(response.status).toBe(200);
-      expect(response.body.data[0]).toBeDefined();
+      expect(response.body.data.codes[0]).toBeDefined();
     });
   });
 
   describe('POST /check-code', () => {
     it('should verify a code', async () => {
       const user = await createUser({});
-      const { secret } = generateSecret({
-        name: 'APP_TEST',
-        account: '12213',
-      });
+      const secret = generateSecret();
       const code = generateToken(secret);
 
       const response = await request(

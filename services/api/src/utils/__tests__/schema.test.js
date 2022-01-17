@@ -1426,6 +1426,32 @@ describe('validation', () => {
         });
       });
 
+      it('should be able to strip write scope validation fields', async () => {
+        const User = createTestModel(
+          createSchemaFromAttributes({
+            name: {
+              type: String,
+            },
+            password: {
+              type: String,
+              writeScopes: 'none',
+              skipValidation: true,
+            },
+          })
+        );
+        const schema = User.getUpdateValidation();
+        assertPass(schema, {
+          name: 'Barry',
+        });
+
+        const { value } = schema.validate({
+          name: 'Barry',
+          password: 'fake password',
+        });
+        expect(value.name).toBe('Barry');
+        expect(value.password).toBeUndefined();
+      });
+
       it('should be able to disallow write access by scope', async () => {
         const User = createTestModel(
           createSchemaFromAttributes({
@@ -2130,19 +2156,32 @@ describe('search', () => {
       })
     );
     const organization = await Organization.create({});
-    await User.create({
-      roles: [
-        {
-          role: 'admin',
-          scope: 'organization',
-          scopeRef: organization.id,
-        },
-      ],
-    });
+    const organizationB = await Organization.create({});
+    await User.create(
+      {
+        roles: [
+          {
+            role: 'admin',
+            scope: 'organization',
+            scopeRef: organization.id,
+          },
+        ],
+      },
+      {
+        roles: [
+          {
+            role: 'admin',
+            scope: 'organization',
+            scopeRef: organizationB.id,
+          },
+        ],
+      }
+    );
     const { data } = await User.search({
       'roles.scope': 'organization',
       'roles.scopeRef': organization.id,
     });
+
     expect(data.length).toBe(1);
   });
 
@@ -2266,5 +2305,35 @@ describe('search', () => {
     await expect(async () => {
       await User.search({ _id: 'bad' });
     }).rejects.toThrow();
+  });
+});
+
+describe('assertNoReferences', () => {
+  it('should throw error if document is referenced externally', async () => {
+    const User = createTestModel(
+      createSchemaFromAttributes({
+        name: {
+          type: String,
+          required: true,
+        },
+      })
+    );
+    const Shop = createTestModel(
+      createSchemaFromAttributes({
+        user: {
+          ref: User.modelName,
+          type: mongoose.Schema.Types.ObjectId,
+        },
+      })
+    );
+    const user1 = await User.create({ name: 'foo ' });
+    const user2 = await User.create({ name: 'foo ' });
+    await Shop.create({ user: user1 });
+
+    await expect(async () => {
+      await user1.assertNoReferences();
+    }).rejects.toThrow();
+
+    await expect(user2.assertNoReferences()).resolves.toBeUndefined();
   });
 });

@@ -72,7 +72,7 @@ export default class ReferenceField extends React.Component {
 
   getItems() {
     const { value } = this.props;
-    const values = this.isMultiple ? value : [value];
+    const values = this.isMultiple() ? value : [value];
     return uniqBy([...values, ...this.state.data], 'id');
   }
 

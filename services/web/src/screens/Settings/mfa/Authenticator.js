@@ -12,6 +12,13 @@ import LogoTitle from 'components/LogoTitle';
 import Code from 'components/form-fields/Code';
 
 import Finalize from './Finalize';
+import { APP_NAME } from 'utils/env';
+
+function getOtpURI(secret) {
+  const query = `?secret=${secret}&issuer=${APP_NAME}`;
+  const uri = `otpauth://totp/${APP_NAME}`;
+  return `${uri}${query}`;
+}
 
 @screen
 export default class Authenticator extends React.Component {
@@ -41,7 +48,7 @@ export default class Authenticator extends React.Component {
 
       this.setState({
         secret: data.secret,
-        secretUri: data.uri,
+        secretUri: getOtpURI(data.secret),
         loading: false,
       });
     } catch (error) {
@@ -82,7 +89,7 @@ export default class Authenticator extends React.Component {
 
       this.setState({
         verified: true,
-        codes: data,
+        codes: data.codes,
       });
     } catch (error) {
       this.setState({
