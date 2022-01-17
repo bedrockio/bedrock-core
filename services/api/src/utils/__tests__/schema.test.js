@@ -147,6 +147,17 @@ describe('createSchema', () => {
       });
       expect(schema.obj.name).toBe(mongoose.Schema.Types.String);
     });
+
+    it('should error when type is unknown', async () => {
+      expect(() => {
+        createSchemaFromAttributes({
+          image: {
+            type: 'Object',
+            ref: 'Upload',
+          },
+        });
+      }).toThrow();
+    });
   });
 
   describe('defaults', () => {

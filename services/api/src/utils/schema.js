@@ -364,6 +364,8 @@ function getMongooseType(arg, attributes, path) {
     throw new Error(`Type ${str} could not be converted to Mongoose type.`);
   } else if (type === SchemaObjectId && !attributes.ref && !attributes.refPath) {
     throw new Error(`Ref must be passed for ${path.join('.')}`);
+  } else if (attributes.ref && type !== SchemaObjectId) {
+    throw new Error(`Schema with a ref must be of type ObjectId.`);
   }
   return type;
 }
