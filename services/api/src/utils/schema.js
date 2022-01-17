@@ -485,10 +485,6 @@ function unsetReferenceFields(fields, schema = {}) {
 // Will not flatten mongo operator objects.
 function flattenQuery(query, schema, root = {}, rootPath = []) {
   for (let [key, value] of Object.entries(query)) {
-    if (key.includes('.')) {
-      // Custom dot syntax is allowed and is already flattened, so skip.
-      continue;
-    }
     const path = [...rootPath, key];
     if (isRangeQuery(schema, key, value)) {
       if (!isEmpty(value)) {

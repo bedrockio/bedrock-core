@@ -2134,7 +2134,6 @@ describe('search', () => {
   });
 
   it('should allow custom dot path in query', async () => {
-    const Organization = createTestModel();
     const User = createTestModel(
       createSchemaFromAttributes({
         roles: [
@@ -2155,15 +2154,16 @@ describe('search', () => {
         ],
       })
     );
-    const organization = await Organization.create({});
-    const organizationB = await Organization.create({});
+    const ref1 = mongoose.Types.ObjectId();
+    const ref2 = mongoose.Types.ObjectId();
+
     await User.create(
       {
         roles: [
           {
             role: 'admin',
             scope: 'organization',
-            scopeRef: organization.id,
+            scopeRef: ref1,
           },
         ],
       },
@@ -2172,14 +2172,14 @@ describe('search', () => {
           {
             role: 'admin',
             scope: 'organization',
-            scopeRef: organizationB.id,
+            scopeRef: ref2,
           },
         ],
       }
     );
     const { data } = await User.search({
       'roles.scope': 'organization',
-      'roles.scopeRef': organization.id,
+      'roles.scopeRef': ref1,
     });
 
     expect(data.length).toBe(1);
