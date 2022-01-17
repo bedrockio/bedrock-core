@@ -1,11 +1,11 @@
-import { Layout } from 'components';
 import React from 'react';
 import { Button, Header, Dropdown } from 'semantic';
+import { Layout } from 'components';
 import CodeBlock from '../CodeBlock';
 import templateCurl from './templates/curl';
 import templateFetch from './templates/fetch';
 
-const options = [
+const OPTIONS = [
   {
     template: templateCurl,
     value: 'curl',
@@ -35,12 +35,12 @@ export default class FetchBlock extends React.Component {
   }
 
   onCopyClick = () => {
-    const option = options.find((c) => c.value === this.state.current);
+    const option = OPTIONS.find((c) => c.value === this.state.current);
     navigator.clipboard.writeText(option.template(this.getData()));
   };
 
   render() {
-    const option = options.find((c) => c.value === this.state.current);
+    const option = OPTIONS.find((c) => c.value === this.state.current);
     return (
       <>
         <Layout horizontal spread center>
@@ -51,7 +51,7 @@ export default class FetchBlock extends React.Component {
                 this.setState({ current: value });
               }}
               selection
-              options={options}
+              options={OPTIONS}
               value={this.state.current}
             />{' '}
             <Button size="small" circular onClick={this.onCopyClick}>
