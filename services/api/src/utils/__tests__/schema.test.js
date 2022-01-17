@@ -1759,6 +1759,43 @@ describe('validation', () => {
       assertPass(schema, {});
     });
   });
+
+  it('should allow min/max on fields', async () => {
+    const Review = createTestModel(
+      createSchemaFromAttributes({
+        age: {
+          type: Number,
+          min: 0,
+          max: 100,
+        },
+        date: {
+          type: Date,
+          min: '2020-01-01',
+          max: '2021-01-01',
+        },
+      })
+    );
+    const schema = Review.getSearchValidation();
+    assertPass(schema, {
+      age: 50,
+    });
+    assertFail(schema, {
+      age: -50,
+    });
+    assertFail(schema, {
+      age: 150,
+    });
+    assertPass(schema, {
+      date: '2020-06-01',
+    });
+    assertFail(schema, {
+      date: '2019-01-01',
+    });
+    assertFail(schema, {
+      date: '2022-01-01',
+    });
+    assertPass(schema, {});
+  });
 });
 
 describe('search', () => {
