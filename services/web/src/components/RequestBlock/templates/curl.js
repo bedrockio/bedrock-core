@@ -1,5 +1,12 @@
-export default function templateCurl({ method, url, file, headers, body }) {
+export default function templateCurl({
+  method,
+  url,
+  file,
+  headers = {},
+  body = {},
+}) {
   const code = [];
+
   code.push(`curl "${url}" -X ${method}`);
 
   if (file) {

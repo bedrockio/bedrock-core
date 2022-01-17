@@ -1,9 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Button, Header, Dropdown } from 'semantic';
-import { Layout } from 'components';
+import { Layout } from '../Layout';
 import CodeBlock from '../CodeBlock';
 import templateCurl from './templates/curl';
 import templateFetch from './templates/fetch';
+import templateSwift from './templates/swift';
+import { API_URL } from 'utils/env';
+import { request } from 'utils/api';
 
 const OPTIONS = [
   {
@@ -18,9 +22,34 @@ const OPTIONS = [
     text: 'Fetch',
     language: 'js',
   },
+  /*
+  {
+    template: templateSwift,
+    value: 'swift',
+    text: 'Swift',
+    language: 'swift',
+  },
+  */
 ];
 
-export default class FetchBlock extends React.Component {
+export default class RequestBlock extends React.Component {
+  static propTypes = {
+    authToken: PropTypes.string,
+    baseUrl: PropTypes.string,
+    request: PropTypes.shape({
+      path: PropTypes.string.isRequired,
+      method: PropTypes.oneOf(['POST', 'GET', 'PATCH', 'DELETE', 'PUT'])
+        .isRequired,
+      body: PropTypes.object,
+      headers: PropTypes.object,
+      file: PropTypes.bool,
+    }).isRequired,
+  };
+
+  static defaultProps = {
+    baseUrl: API_URL,
+  };
+
   state = {
     current: 'curl',
   };
@@ -31,7 +60,20 @@ export default class FetchBlock extends React.Component {
   }
 
   getData() {
-    return this.props.request;
+    const { baseUrl, authToken, request } = this.props;
+    const { path, ...rest } = request;
+    return {
+      ...rest,
+      url: baseUrl ? `${baseUrl}${path}` : path,
+      ...(authToken
+        ? {
+            headers: {
+              ...rest.headers,
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        : {}),
+    };
   }
 
   onCopyClick = () => {

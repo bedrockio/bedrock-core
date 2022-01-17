@@ -1,11 +1,10 @@
-import { omit } from 'lodash';
-export default function templateFetch({ url, file, ...rest }) {
+export default function templateFetch({ url, file, body, ...rest }) {
   const code = [];
   if (file) {
     code.push('const form = new FormData();');
     code.push('form.append("file", fileBlob);');
-    if (rest.body) {
-      for (let [key, value] of Object.entries(rest.body || {})) {
+    if (body) {
+      for (let [key, value] of Object.entries(body || {})) {
         code.push(
           `form.append("${key}", ${
             typeof value === 'string' ? `"${value}"` : value
@@ -14,13 +13,11 @@ export default function templateFetch({ url, file, ...rest }) {
       }
     }
     code.push('');
-    code.push(
-      `const options = ${JSON.stringify(omit(rest, ['body']), null, 2)}`
-    );
+    code.push(`const options = ${JSON.stringify(rest, null, 2)}`);
     code.push('options.body = form;');
     code.push('');
   } else {
-    code.push(`const options = ${JSON.stringify(rest, null, 2)}`);
+    code.push(`const options = ${JSON.stringify({ body, ...rest }, null, 2)}`);
   }
   code.push(`fetch("${url}", options)`);
   code.push('  .then((response) => response.json())');
