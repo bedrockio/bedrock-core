@@ -2156,19 +2156,32 @@ describe('search', () => {
       })
     );
     const organization = await Organization.create({});
-    await User.create({
-      roles: [
-        {
-          role: 'admin',
-          scope: 'organization',
-          scopeRef: organization.id,
-        },
-      ],
-    });
+    const organizationB = await Organization.create({});
+    await User.create(
+      {
+        roles: [
+          {
+            role: 'admin',
+            scope: 'organization',
+            scopeRef: organization.id,
+          },
+        ],
+      },
+      {
+        roles: [
+          {
+            role: 'admin',
+            scope: 'organization',
+            scopeRef: organizationB.id,
+          },
+        ],
+      }
+    );
     const { data } = await User.search({
       'roles.scope': 'organization',
       'roles.scopeRef': organization.id,
     });
+
     expect(data.length).toBe(1);
   });
 
