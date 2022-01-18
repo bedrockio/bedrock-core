@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const mongoose = require('mongoose');
 const autopopulate = require('mongoose-autopopulate');
-const { startCase, uniq, isEmpty, isPlainObject } = require('lodash');
+const { get, uniq, startCase, isEmpty, isPlainObject } = require('lodash');
 const { logger } = require('@bedrockio/instrumentation');
 
 const { getJoiSchema, getMongooseValidator } = require('./validation');
@@ -363,6 +363,8 @@ function getMongooseType(arg, attributes, path) {
     throw new Error(`Type ${str} could not be converted to Mongoose type.`);
   } else if (type === SchemaObjectId && !attributes.ref && !attributes.refPath) {
     throw new Error(`Ref must be passed for ${path.join('.')}`);
+  } else if (attributes.ref && type !== SchemaObjectId) {
+    throw new Error(`Schema with a ref must be of type ObjectId.`);
   }
   return type;
 }
@@ -413,7 +415,7 @@ function resolveScopes(options) {
 // from mongoose.Schema.Types that is resolved from the
 // shorthand: field: 'String'.
 function resolveField(schema, key) {
-  let field = schema?.[key];
+  let field = get(schema, key);
   if (Array.isArray(field)) {
     field = field[0];
   }
@@ -484,11 +486,6 @@ function unsetReferenceFields(fields, schema = {}) {
 // Will not flatten mongo operator objects.
 function flattenQuery(query, schema, root = {}, rootPath = []) {
   for (let [key, value] of Object.entries(query)) {
-    if (key.includes('.')) {
-      // Custom dot syntax is allowed and is already flattened, so skip.
-      root[key] = value;
-      continue;
-    }
     const path = [...rootPath, key];
     if (isRangeQuery(schema, key, value)) {
       if (!isEmpty(value)) {
