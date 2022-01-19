@@ -75,7 +75,7 @@ All configuration is done using environment variables. The default values in `.e
 
 ## Secrets
 
-No production secrets should ever be checked into your repository. Instead, use the [Secrets](https://github.com/bedrockio/bedrock-core/tree/master/deployment#secrets) deployment to facility to store secrets remotely.
+No production secrets should ever be checked into your repository. Instead, use the deployment [secrets](../../deployment#secrets) facility to store secrets remotely.
 
 ## Building the Container
 
