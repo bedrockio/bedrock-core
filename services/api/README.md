@@ -73,6 +73,9 @@ All configuration is done using environment variables. The default values in `.e
 - `TWILIO_AUTH_TOKEN` - Twillio Auth token (required for MFA SMS)
 - `TWILIO_MESSAGING_SERVICE_SID` - Twillio Messaging Service SID (required for MFA SMS)
 
+## Secrets
+
+No production secrets should ever be checked into your repository. Instead, use the [Secrets](https://github.com/bedrockio/bedrock-core/tree/master/deployment#secrets) deployment to facility to store secrets remotely.
 
 ## Building the Container
 
