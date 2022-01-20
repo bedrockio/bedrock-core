@@ -33,7 +33,7 @@
     "koa-body": "^4.2.0",
     "lodash": "^4.17.19",
     "marked": "^2.0.1",
-    "mongoose": "^5.12.12",
+    "mongoose": "^5.13.14",
     "mongoose-autopopulate": "^0.14.0",
     "mustache": "^4.1.0",
     "node-fetch": "^2.6.1",
