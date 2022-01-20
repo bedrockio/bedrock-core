@@ -38,7 +38,7 @@
     "mustache": "^4.1.0",
     "node-fetch": "^2.6.1",
     "notp": "^2.0.3",
-    "postmark": "^2.5.4",
+    "postmark": "^2.8.1",
     "thirty-two": "^1.0.2"
   },
   "devDependencies": {
