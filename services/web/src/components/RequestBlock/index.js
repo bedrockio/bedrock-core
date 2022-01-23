@@ -22,14 +22,13 @@ const OPTIONS = [
     text: 'Fetch',
     language: 'js',
   },
-  /*
+
   {
     template: templateSwift,
     value: 'swift',
     text: 'Swift',
     language: 'swift',
   },
-  */
 ];
 
 export default class RequestBlock extends React.Component {
