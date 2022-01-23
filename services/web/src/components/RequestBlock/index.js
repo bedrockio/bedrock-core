@@ -57,7 +57,7 @@ export default class RequestBlock extends React.Component {
     this.templateRef = React.createRef();
   }
 
-  getData() {
+  getData(expose) {
     const { baseUrl, authToken, request } = this.props;
     const { path, ...rest } = request;
     return {
@@ -67,7 +67,7 @@ export default class RequestBlock extends React.Component {
         ? {
             headers: {
               ...rest.headers,
-              Authorization: `Bearer ${authToken}`,
+              Authorization: `Bearer ${expose ? authToken : '<hidden>'}`,
             },
           }
         : {}),
@@ -76,7 +76,7 @@ export default class RequestBlock extends React.Component {
 
   onCopyClick = () => {
     const option = OPTIONS.find((c) => c.value === this.state.current);
-    navigator.clipboard.writeText(option.template(this.getData()));
+    navigator.clipboard.writeText(option.template(this.getData(true)));
   };
 
   render() {

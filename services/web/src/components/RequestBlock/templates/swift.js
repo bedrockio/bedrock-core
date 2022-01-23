@@ -58,7 +58,7 @@ export default function templateSwift({
     code.push('let string = "The string"');
     code.push('let fileData = Data(string.utf8)');
 
-    Object.keys(body).map((key) => {
+    Object.keys(body || {}).map((key) => {
       code.push(
         'data.append("\\r\\n--\\(boundary)\\r\\n".data(using: .utf8)!)',
         `data.append("Content-Disposition: form-data; name=\\"${key}"\\r\\n\\r\\n".data(using: .utf8)!)`,

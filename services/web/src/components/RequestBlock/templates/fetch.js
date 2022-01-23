@@ -2,7 +2,7 @@ export default function templateFetch({ url, file, body, ...rest }) {
   const code = [];
   if (file) {
     code.push('const form = new FormData();');
-    code.push('form.append("file", fileBlob);');
+    code.push('form.append("file", new Blob(["file data"]));');
     if (body) {
       for (let [key, value] of Object.entries(body || {})) {
         code.push(
