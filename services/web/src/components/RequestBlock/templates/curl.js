@@ -6,7 +6,6 @@ export default function templateCurl({
   body = {},
 }) {
   const code = [];
-
   code.push(`curl "${url}" -X ${method}`);
 
   if (file) {
