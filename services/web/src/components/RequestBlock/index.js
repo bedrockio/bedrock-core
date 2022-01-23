@@ -7,7 +7,6 @@ import templateCurl from './templates/curl';
 import templateFetch from './templates/fetch';
 import templateSwift from './templates/swift';
 import { API_URL } from 'utils/env';
-import { request } from 'utils/api';
 
 const OPTIONS = [
   {
