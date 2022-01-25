@@ -57,7 +57,7 @@ export default class RequestBlock extends React.Component {
     this.templateRef = React.createRef();
   }
 
-  getData(expose) {
+  getData() {
     const { baseUrl, authToken, request } = this.props;
     const { path, ...rest } = request;
     return {
@@ -67,7 +67,7 @@ export default class RequestBlock extends React.Component {
         ? {
             headers: {
               ...rest.headers,
-              Authorization: `Bearer ${expose ? authToken : '<hidden>'}`,
+              Authorization: `Bearer ${authToken}`,
             },
           }
         : {}),
@@ -81,10 +81,13 @@ export default class RequestBlock extends React.Component {
 
   render() {
     const option = OPTIONS.find((c) => c.value === this.state.current);
+    const { method, path } = this.props.request;
     return (
       <>
         <Layout horizontal spread center>
-          <Header style={{ margin: 0 }}>{this.props.title}</Header>
+          <Header style={{ margin: 0 }}>
+            {method} {path}
+          </Header>
           <Layout.Group>
             <Dropdown
               onChange={(e, { value }) => {

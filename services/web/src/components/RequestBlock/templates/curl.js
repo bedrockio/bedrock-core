@@ -21,7 +21,7 @@ export default function templateCurl({
     Object.keys(headers).forEach((key) => {
       code.push(`  -H "${key}: ${headers[key]}"`);
     });
-    if (body) {
+    if (Object.keys(body).length) {
       code.push(`  -d ${JSON.stringify(body)}`);
     }
   }

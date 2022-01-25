@@ -106,6 +106,16 @@
     {
       "method": "POST",
       "path": "/",
+      "requestBody": [
+        {
+          "name": "file",
+          "description": "Binary File",
+          "schema": {
+            "type": "string",
+            "format": "binary"
+          }
+        }
+      ],
       "responseBody": [
         {
           "name": "data",
@@ -115,7 +125,13 @@
           }
         }
       ],
-      "examples": []
+      "examples": [
+        {
+          "name": "Get upload meta data for a given hash",
+          "requestPath": "/1/uploads",
+          "requestBody": {}
+        }
+      ]
     },
     {
       "method": "DELETE",

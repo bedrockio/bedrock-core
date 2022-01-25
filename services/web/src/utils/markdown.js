@@ -80,13 +80,23 @@ class OpenApiMacros {
       markdown.push(`\n#### Example: ${name || ''}`);
       if (method === 'GET') {
         markdown.push(`Request:\n`);
-        markdown.push('```bash\nGET ' + path + '\n```');
+        markdown.push(
+          '```request_example\n' +
+            JSON.stringify({ method: 'GET', path }) +
+            '\n```'
+        );
       } else {
         markdown.push(
-          `Request Body for \`${method} ${requestPath || path}\`\n`
-        );
-        markdown.push(
-          '```json\n' + JSON.stringify(requestBody || {}, null, 2) + '\n```'
+          '```request_example\n' +
+            JSON.stringify({
+              method,
+              path: requestPath || path,
+              body: requestBody,
+              file: definition.requestBody.find(
+                (field) => field.schema?.format === 'binary'
+              ),
+            }) +
+            '\n```'
         );
       }
       if (responseBody) {
@@ -110,6 +120,7 @@ class OpenApiMacros {
     if (examplesMd) {
       markdown.push(examplesMd);
     }
+
     return markdown.join('\n');
   }
   objectSummary({ name }) {

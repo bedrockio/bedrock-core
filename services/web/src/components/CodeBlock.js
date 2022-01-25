@@ -13,7 +13,6 @@ export default class CodeBlock extends React.Component {
 
   render() {
     const { language, value } = this.props;
-
     return (
       <SyntaxHighlighter
         language={language || 'bash'}
