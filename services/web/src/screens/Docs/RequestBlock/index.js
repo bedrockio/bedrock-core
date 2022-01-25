@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Header, Dropdown } from 'semantic';
-import { Layout } from '../Layout';
+import { Layout } from 'components/Layout';
 import CodeBlock from '../CodeBlock';
 import templateCurl from './templates/curl';
 import templateFetch from './templates/fetch';
