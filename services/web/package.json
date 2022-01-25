@@ -37,7 +37,7 @@
     "github-markdown-css": "^4.0.0",
     "google-map-react": "^2.1.10",
     "html-loader": "^2.1.2",
-    "html-webpack-plugin": "^5.3.2",
+    "html-webpack-plugin": "^5.5.0",
     "koa": "^2.11.0",
     "koa-basic-auth": "^4.0.0",
     "koa-mount": "^4.0.0",
