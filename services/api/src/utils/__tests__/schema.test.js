@@ -158,6 +158,24 @@ describe('createSchema', () => {
         });
       }).toThrow();
     });
+
+    it('should not error when ObjectId has a refPath', async () => {
+      const schema = createSchemaFromAttributes({
+        image: {
+          type: 'ObjectId',
+          refPath: 'fakePath',
+        },
+      });
+      expect(schema.obj.image.type).toBe(mongoose.Schema.Types.ObjectId);
+    });
+
+    it('should not error when a ref field is defined', async () => {
+      const schema = createSchemaFromAttributes({
+        name: 'String',
+        ref: 'String',
+      });
+      expect(schema.obj.ref).toBe(mongoose.Schema.Types.String);
+    });
   });
 
   describe('defaults', () => {
