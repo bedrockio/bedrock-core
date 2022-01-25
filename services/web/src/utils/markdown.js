@@ -92,7 +92,7 @@ class OpenApiMacros {
               method,
               path: requestPath || path,
               body: requestBody,
-              file: definition.requestBody.find(
+              file: definition.requestBody?.find(
                 (field) => field.schema?.format === 'binary'
               ),
             }) +

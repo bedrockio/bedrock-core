@@ -9,7 +9,7 @@ export default function templateCurl({
   code.push(`curl "${url}" -X ${method}`);
 
   if (file) {
-    code.push(`  -F file=@pathtofile name-of-file.png`);
+    code.push(`  -F file=@path-to-file-you-want-to-upload`);
     Object.keys(body).forEach((key) => {
       code.push(`  -F ${key}=${body[key]}`);
     });

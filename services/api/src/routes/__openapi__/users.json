@@ -235,7 +235,7 @@
       "examples": [
         {
           "name": "Set admin role on a given user",
-          "requestPath": "/1/users/5e6a9c000fc676447dc9936a",
+          "requestPath": "/1/users/:id",
           "requestBody": {
             "roles": [
               "admin"

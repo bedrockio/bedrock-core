@@ -15,7 +15,7 @@ export default class StandardPage extends React.Component {
     if (props.language && props.language.includes('request')) {
       return (
         <RequestBlock
-          authToken={'<jwtToken>'}
+          authToken={'<token>'}
           request={JSON.parse(props.value)}
           baseUrl={API_URL}
         />
