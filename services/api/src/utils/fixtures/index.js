@@ -170,8 +170,7 @@ const importContentOnce = memoize(async (file, meta) => {
 async function inlineContentFiles(content, meta) {
   return await stringReplaceAsync(content, INLINE_CONTENT_REG, async (all, open, file, close) => {
     const upload = await importUpload(file, meta);
-    // TODO: this should be /raw
-    const url = `${API_URL}/1/uploads/${upload.id}/image`;
+    const url = `${API_URL}/1/uploads/${upload.id}/(raw|image)`;
     return `${open}${url}${close}`;
   });
 }

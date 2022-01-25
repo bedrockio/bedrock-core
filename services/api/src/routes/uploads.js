@@ -27,7 +27,7 @@ router
       data: upload,
     };
   })
-  .get('/:id/image', async (ctx) => {
+  .get('/:id/raw', async (ctx) => {
     const upload = await Upload.findById(ctx.params.id);
     const url = upload.rawUrl;
     if (upload.storageType === 'local') {
