@@ -105,7 +105,11 @@ function getSchemaForField(field, options = {}) {
   if (isRequiredField(field, options)) {
     schema = schema.required();
   } else if (field.writeScopes) {
-    schema = validateScopes(field.writeScopes);
+    if (field.skipValidation) {
+      schema = Joi.any().strip();
+    } else {
+      schema = validateWriteScopes(field.writeScopes);
+    }
   } else {
     // TODO: for now we allow both empty strings and null
     // as a potential signal for "set but non-existent".
@@ -120,15 +124,18 @@ function getSchemaForField(field, options = {}) {
     if (field.match) {
       schema = schema.pattern(RegExp(field.match));
     }
-    if (field.min || field.minLength) {
-      schema = schema.min(field.min || field.minLength);
+    if (field.min != null || field.minLength != null) {
+      schema = schema.min(field.min ?? field.minLength);
     }
-    if (field.max || field.maxLength) {
-      schema = schema.max(field.max || field.maxLength);
+    if (field.max != null || field.maxLength != null) {
+      schema = schema.max(field.max ?? field.maxLength);
     }
-    if (options.allowMultiple) {
-      schema = Joi.alternatives().try(schema, Joi.array().items(schema));
-    }
+  }
+  if (options.allowRanges) {
+    schema = getRangeSchema(schema);
+  }
+  if (options.allowMultiple) {
+    schema = Joi.alternatives().try(schema, Joi.array().items(schema));
   }
   return schema;
 }
@@ -137,7 +144,7 @@ function isRequiredField(field, options) {
   return field.required && !field.default && !field.skipValidation && !options.skipRequired;
 }
 
-function validateScopes(scopes) {
+function validateWriteScopes(scopes) {
   return Joi.custom((val, { prefs }) => {
     let allowed = false;
     if (scopes === 'all') {
@@ -161,40 +168,16 @@ function validateScopes(scopes) {
   });
 }
 
-function getSchemaForType(type, options) {
+function getSchemaForType(type) {
   switch (type) {
     case 'String':
       return Joi.string();
     case 'Number':
-      if (options.allowRanges) {
-        return Joi.alternatives().try(
-          Joi.number(),
-          Joi.object({
-            lt: Joi.number(),
-            gt: Joi.number(),
-            lte: Joi.number(),
-            gte: Joi.number(),
-          })
-        );
-      } else {
-        return Joi.number();
-      }
+      return Joi.number();
     case 'Boolean':
       return Joi.boolean();
     case 'Date':
-      if (options.allowRanges) {
-        return Joi.alternatives().try(
-          Joi.date().iso(),
-          Joi.object({
-            lt: Joi.date().iso(),
-            gt: Joi.date().iso(),
-            lte: Joi.date().iso(),
-            gte: Joi.date().iso(),
-          })
-        );
-      } else {
-        return Joi.date().iso();
-      }
+      return Joi.date().iso();
     case 'Mixed':
       return Joi.object();
     case 'ObjectId':
@@ -206,6 +189,31 @@ function getSchemaForType(type, options) {
     default:
       throw new TypeError(`Unknown schema type ${type}`);
   }
+}
+
+function getRangeSchema(schema) {
+  if (schema.type === 'number') {
+    schema = Joi.alternatives().try(
+      schema,
+      Joi.object({
+        lt: Joi.number(),
+        gt: Joi.number(),
+        lte: Joi.number(),
+        gte: Joi.number(),
+      })
+    );
+  } else if (schema.type === 'date') {
+    return Joi.alternatives().try(
+      schema,
+      Joi.object({
+        lt: Joi.date().iso(),
+        gt: Joi.date().iso(),
+        lte: Joi.date().iso(),
+        gte: Joi.date().iso(),
+      })
+    );
+  }
+  return schema;
 }
 
 function getFieldType(field) {

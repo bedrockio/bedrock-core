@@ -120,7 +120,7 @@ function isText(str) {
   return typeof str === 'string' && str.length > 150;
 }
 
-const INLINE_IMAGE_REG = /!\[(.+?)\]\((.+?\/1\/uploads\/(.*?)\/image)\)/g;
+const INLINE_IMAGE_REG = /!\[(.+?)\]\((.+?\/1\/uploads\/(.*?)\/(raw|image))\)/g;
 
 async function exportInlinedMarkdownImages(str, dir, zip) {
   return await stringReplaceAsync(str, INLINE_IMAGE_REG, async (all, text, link, id) => {

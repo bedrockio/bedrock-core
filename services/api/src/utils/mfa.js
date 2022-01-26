@@ -26,13 +26,7 @@ function generateSecret(options) {
     .join('')
     .toUpperCase();
 
-  const query = `?secret=${secret}&issuer=${config.name}`;
-  const uri = `otpauth://totp/${config.name}${config.account}`;
-
-  return {
-    secret,
-    uri: `${uri}${query}`,
-  };
+  return secret;
 }
 
 function generateToken(secret) {

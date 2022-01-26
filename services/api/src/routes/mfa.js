@@ -130,18 +130,13 @@ router
     }),
     checkPasswordVerification,
     async (ctx) => {
-      const { authUser } = ctx.state;
-
       const { method, phoneNumber } = ctx.request.body;
 
       if (method === 'sms' && !phoneNumber) {
         ctx.throw(400, 'phoneNumber is required');
       }
 
-      const { secret, uri } = mfa.generateSecret({
-        name: config.get('APP_NAME'),
-        account: authUser.email,
-      });
+      const secret = mfa.generateSecret();
 
       if (method === 'sms') {
         await sms.sendMessage(
@@ -153,14 +148,15 @@ router
       ctx.body = {
         data: {
           secret,
-          uri,
         },
       };
     }
   )
   .post('/generate-backup-codes', async (ctx) => {
     ctx.body = {
-      data: mfa.generateBackupCodes(),
+      data: {
+        codes: mfa.generateBackupCodes(),
+      },
     };
   })
   .post(

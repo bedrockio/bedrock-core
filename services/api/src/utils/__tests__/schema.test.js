@@ -147,6 +147,35 @@ describe('createSchema', () => {
       });
       expect(schema.obj.name).toBe(mongoose.Schema.Types.String);
     });
+
+    it('should error when type is unknown', async () => {
+      expect(() => {
+        createSchemaFromAttributes({
+          image: {
+            type: 'Object',
+            ref: 'Upload',
+          },
+        });
+      }).toThrow();
+    });
+
+    it('should not error when ObjectId has a refPath', async () => {
+      const schema = createSchemaFromAttributes({
+        image: {
+          type: 'ObjectId',
+          refPath: 'fakePath',
+        },
+      });
+      expect(schema.obj.image.type).toBe(mongoose.Schema.Types.ObjectId);
+    });
+
+    it('should not error when a ref field is defined', async () => {
+      const schema = createSchemaFromAttributes({
+        name: 'String',
+        ref: 'String',
+      });
+      expect(schema.obj.ref).toBe(mongoose.Schema.Types.String);
+    });
   });
 
   describe('defaults', () => {
@@ -1426,6 +1455,32 @@ describe('validation', () => {
         });
       });
 
+      it('should be able to strip write scope validation fields', async () => {
+        const User = createTestModel(
+          createSchemaFromAttributes({
+            name: {
+              type: String,
+            },
+            password: {
+              type: String,
+              writeScopes: 'none',
+              skipValidation: true,
+            },
+          })
+        );
+        const schema = User.getUpdateValidation();
+        assertPass(schema, {
+          name: 'Barry',
+        });
+
+        const { value } = schema.validate({
+          name: 'Barry',
+          password: 'fake password',
+        });
+        expect(value.name).toBe('Barry');
+        expect(value.password).toBeUndefined();
+      });
+
       it('should be able to disallow write access by scope', async () => {
         const User = createTestModel(
           createSchemaFromAttributes({
@@ -1721,6 +1776,43 @@ describe('validation', () => {
       });
       assertPass(schema, {});
     });
+  });
+
+  it('should allow min/max on fields', async () => {
+    const Review = createTestModel(
+      createSchemaFromAttributes({
+        age: {
+          type: Number,
+          min: 0,
+          max: 100,
+        },
+        date: {
+          type: Date,
+          min: '2020-01-01',
+          max: '2021-01-01',
+        },
+      })
+    );
+    const schema = Review.getSearchValidation();
+    assertPass(schema, {
+      age: 50,
+    });
+    assertFail(schema, {
+      age: -50,
+    });
+    assertFail(schema, {
+      age: 150,
+    });
+    assertPass(schema, {
+      date: '2020-06-01',
+    });
+    assertFail(schema, {
+      date: '2019-01-01',
+    });
+    assertFail(schema, {
+      date: '2022-01-01',
+    });
+    assertPass(schema, {});
   });
 });
 
@@ -2108,7 +2200,6 @@ describe('search', () => {
   });
 
   it('should allow custom dot path in query', async () => {
-    const Organization = createTestModel();
     const User = createTestModel(
       createSchemaFromAttributes({
         roles: [
@@ -2129,20 +2220,34 @@ describe('search', () => {
         ],
       })
     );
-    const organization = await Organization.create({});
-    await User.create({
-      roles: [
-        {
-          role: 'admin',
-          scope: 'organization',
-          scopeRef: organization.id,
-        },
-      ],
-    });
+    const ref1 = mongoose.Types.ObjectId();
+    const ref2 = mongoose.Types.ObjectId();
+
+    await User.create(
+      {
+        roles: [
+          {
+            role: 'admin',
+            scope: 'organization',
+            scopeRef: ref1,
+          },
+        ],
+      },
+      {
+        roles: [
+          {
+            role: 'admin',
+            scope: 'organization',
+            scopeRef: ref2,
+          },
+        ],
+      }
+    );
     const { data } = await User.search({
       'roles.scope': 'organization',
-      'roles.scopeRef': organization.id,
+      'roles.scopeRef': ref1,
     });
+
     expect(data.length).toBe(1);
   });
 
@@ -2187,6 +2292,27 @@ describe('search', () => {
     });
     expect(result.data).toMatchObject([{ name: 'Billy' }, { name: 'Willy' }]);
     expect(result.meta.total).toBe(2);
+  });
+
+  it('should allow date range search on dot path', async () => {
+    let result;
+    const schema = createSchemaFromAttributes({
+      user: {
+        name: String,
+        archivedAt: {
+          type: Date,
+        },
+      },
+    });
+    const User = createTestModel(schema);
+    await Promise.all([
+      User.create({ user: { name: 'Billy', archivedAt: '2020-01-01' } }),
+      User.create({ user: { name: 'Willy', archivedAt: '2021-01-01' } }),
+    ]);
+
+    result = await User.search({ 'user.archivedAt': { lte: '2020-06-01' } });
+    expect(result.data).toMatchObject([{ user: { name: 'Billy' } }]);
+    expect(result.meta.total).toBe(1);
   });
 
   it('should allow number range search', async () => {
@@ -2266,5 +2392,35 @@ describe('search', () => {
     await expect(async () => {
       await User.search({ _id: 'bad' });
     }).rejects.toThrow();
+  });
+});
+
+describe('assertNoReferences', () => {
+  it('should throw error if document is referenced externally', async () => {
+    const User = createTestModel(
+      createSchemaFromAttributes({
+        name: {
+          type: String,
+          required: true,
+        },
+      })
+    );
+    const Shop = createTestModel(
+      createSchemaFromAttributes({
+        user: {
+          ref: User.modelName,
+          type: mongoose.Schema.Types.ObjectId,
+        },
+      })
+    );
+    const user1 = await User.create({ name: 'foo ' });
+    const user2 = await User.create({ name: 'foo ' });
+    await Shop.create({ user: user1 });
+
+    await expect(async () => {
+      await user1.assertNoReferences();
+    }).rejects.toThrow();
+
+    await expect(user2.assertNoReferences()).resolves.toBeUndefined();
   });
 });
