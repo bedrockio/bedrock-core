@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Header, Dropdown } from 'semantic';
+import { Header, Dropdown } from 'semantic';
 import { Layout } from 'components/Layout';
 import CodeBlock from '../CodeBlock';
 import templateCurl from './templates/curl';
@@ -67,6 +67,9 @@ export default class RequestBlock extends React.Component {
         ? {
             headers: {
               ...rest.headers,
+              ...(request?.body && !request?.file
+                ? { 'Content-Type': 'application/json' }
+                : {}),
               Authorization: `Bearer ${authToken}`,
             },
           }

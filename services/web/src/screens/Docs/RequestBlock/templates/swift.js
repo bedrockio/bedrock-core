@@ -41,7 +41,7 @@ export default function templateSwift({
         body,
         LAYOUT_OPTION
       )}  as [String : Any]`,
-      `${indent}let postData = try JSONSerialization.data(withJSONObject: body, options: [])`
+      `${indent}let postData = try? JSONSerialization.data(withJSONObject: body, options: [])`
     );
   }
 
@@ -92,11 +92,11 @@ export default function templateSwift({
       `${indent}data.append("\\r\\n--\\(boundary)--\\r\\n".data(using: .utf8)!)`
     );
     code.push('');
-    code.push('request.httpBody = data');
+    code.push(`${indent}request.httpBody = data`);
   }
 
   if (hasBody) {
-    code.push('request.httpBody = postData as Data');
+    code.push(`${indent}request.httpBody = postData`);
   }
 
   code.push(
