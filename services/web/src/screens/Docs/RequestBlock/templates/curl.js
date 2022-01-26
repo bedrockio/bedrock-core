@@ -22,7 +22,7 @@ export default function templateCurl({
       code.push(`  -H "${key}: ${headers[key]}"`);
     });
     if (Object.keys(body).length) {
-      code.push(`  -d ${JSON.stringify(body)}`);
+      code.push(`  -d "${JSON.stringify(body).replace(/"/g, '\\"')}"`);
     }
   }
   return code.join('\\\n');

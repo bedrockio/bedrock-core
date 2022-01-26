@@ -19,68 +19,79 @@ export default function templateSwift({
   code.push('import Foundation');
   code.push('');
 
-  code.push(`let url = URL(string: "${url}")`);
+  code.push('class NetworkCaller {');
+  code.push(`  let url = URL(string: "${url}")!`);
+  code.push('  var dataTask: URLSessionDataTask?');
 
+  code.push('  func networkCall() {');
+  let indent = '   ';
   if (Object.keys(headers).length) {
     hasHeaders = true;
     code.push('');
-    code.push(literalDeclaration('headers', headers, LAYOUT_OPTION));
+    code.push(
+      `${indent}${literalDeclaration('headers', headers, LAYOUT_OPTION)}`
+    );
   }
 
   if (body && !file) {
     hasBody = true;
     code.push(
-      `${literalDeclaration('body', body, LAYOUT_OPTION)}  as [String : Any]`,
-      'let postData = try JSONSerialization.data(withJSONObject: body, options: [])'
+      `${indent}${literalDeclaration(
+        'body',
+        body,
+        LAYOUT_OPTION
+      )}  as [String : Any]`,
+      `${indent}let postData = try JSONSerialization.data(withJSONObject: body, options: [])`
     );
   }
 
   code.push(
     '',
-    'var request = URLRequest(url: url!)',
-    `request.httpMethod = "${method}"`
+    `${indent}var request = URLRequest(url: url)`,
+    `${indent}request.httpMethod = "${method}"`
   );
 
   if (hasHeaders) {
-    code.push('request.allHTTPHeaderFields = headers');
+    code.push(`${indent}request.allHTTPHeaderFields = headers`);
   }
 
   if (file) {
-    code.push('let boundary = UUID().uuidString');
+    code.push(`${indent}let boundary = UUID().uuidString`);
     code.push(
-      'request.setValue("multipart/form-data; boundary=\\(boundary)", forHTTPHeaderField: "Content-Type")'
+      `${indent}request.setValue("multipart/form-data; boundary=\\(boundary)", forHTTPHeaderField: "Content-Type")`
     );
 
     code.push('');
-    code.push('var data = Data()');
-    code.push('let minetype = "image/png"');
-    code.push('let fileName = "name-of-file.png"');
-    code.push('let string = "The string"');
-    code.push('let fileData = Data(string.utf8)');
+
+    code.push(`${indent}let minetype = "image/png"`);
+    code.push(`${indent}let fileName = "name-of-file.png"`);
+    code.push(`${indent}let imageData = "The string" //your image data`);
+    code.push(`${indent}let fileData = Data(imageData.utf8)`);
+
+    code.push('');
+    code.push(`${indent}// Add the image data to the raw http request data`);
+    code.push(`${indent}var data = Data()`);
 
     Object.keys(body || {}).map((key) => {
       code.push(
-        'data.append("\\r\\n--\\(boundary)\\r\\n".data(using: .utf8)!)',
-        `data.append("Content-Disposition: form-data; name=\\"${key}"\\r\\n\\r\\n".data(using: .utf8)!)`,
-        `data.append("${body[key]}".data(using: .utf8)!)`
+        `${indent}data.append("\\r\\n--\\(boundary)\\r\\n".data(using: .utf8)!)`,
+        `${indent}data.append("Content-Disposition: form-data; name=\\"${key}"\\r\\n\\r\\n".data(using: .utf8)!)`,
+        `${indent}data.append("${body[key]}".data(using: .utf8)!)`
       );
     });
 
-    code.push('// Add the image data to the raw http request data');
-    code.push('data.append("\\r\\n--\\(boundary)\\r\\n".data(using: .utf8)!)');
     code.push(
-      'data.append("Content-Disposition: form-data; name=\\"file\\"; filename=\\"\\(fileName)\\"\\r\\n".data(using: .utf8)!)'
-    );
-    code.push(
-      'data.append("Content-Type: \\(minetype)\\r\\n\\r\\n".data(using: .utf8)!)'
+      `${indent}data.append("\\r\\n--\\(boundary)\\r\\n".data(using: .utf8)!)`,
+      `${indent}data.append("Content-Disposition: form-data; name=\\"file\\"; filename=\\"\\(fileName)\\"\\r\\n".data(using: .utf8)!)`,
+      `${indent}data.append("Content-Type: \\(minetype)\\r\\n\\r\\n".data(using: .utf8)!)`
     );
 
-    code.push('data.append(fileData)');
+    code.push(`${indent}data.append(fileData)`);
     code.push('');
-
     code.push(
-      'data.append("\\r\\n--\\(boundary)--\\r\\n".data(using: .utf8)!)'
+      `${indent}data.append("\\r\\n--\\(boundary)--\\r\\n".data(using: .utf8)!)`
     );
+    code.push('');
     code.push('request.httpBody = data');
   }
 
@@ -90,22 +101,26 @@ export default function templateSwift({
 
   code.push(
     '',
-    'let session = URLSession.shared',
-    'let dataTask = session.dataTask(with: request, completionHandler: { responseData, response, error in ',
-    '  if (error != nil) {',
-    '    print(error)',
-    '    return',
-    '  }',
+    `${indent}let session = URLSession.shared`,
+    `${indent}dataTask = session.dataTask(with: request, completionHandler: { responseData, response, error in `,
+    `${indent}  if let error = error {`,
+    `${indent}    print(error)`,
+    `${indent}    return`,
+    `${indent}  }`,
     '',
-    '  print("Responsed with http status", (response as! HTTPURLResponse).statusCode)',
-    '  print("Responsed body:")',
+    `${indent}  print("Responsed with http status", (response as! HTTPURLResponse).statusCode)`,
+    `${indent}  print("Responsed body:")`,
     '',
-    '  let jsonData = try? JSONSerialization.jsonObject(with: responseData!, options: .allowFragments)',
-    '  if let json = jsonData as? [String: Any] {',
-    '    print(json)',
-    '  }',
-    '}).resume()'
+    `${indent}  let jsonData = try? JSONSerialization.jsonObject(with: responseData!, options: .allowFragments)`,
+    `${indent}  if let json = jsonData as? [String: Any] {`,
+    `${indent}     print(json)`,
+    `${indent}  }`,
+    `${indent}})`,
+    '',
+    `${indent}dataTask?.resume()`
   );
+  code.push('  }');
+  code.push('}');
 
   return code.join('\n');
 }
