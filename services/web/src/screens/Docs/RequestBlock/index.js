@@ -96,14 +96,12 @@ export default class RequestBlock extends React.Component {
               selection
               options={OPTIONS}
               value={this.state.current}
-            />{' '}
-            <Button size="small" circular onClick={this.onCopyClick}>
-              Copy
-            </Button>
+            />
           </Layout.Group>
         </Layout>
         <CodeBlock
           language={option.language}
+          onCopy={this.onCopyClick}
           value={option.template(this.getData())}></CodeBlock>
       </>
     );
