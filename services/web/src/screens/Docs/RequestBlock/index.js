@@ -74,11 +74,6 @@ export default class RequestBlock extends React.Component {
     };
   }
 
-  onCopyClick = () => {
-    const option = OPTIONS.find((c) => c.value === this.state.current);
-    navigator.clipboard.writeText(option.template(this.getData(true)));
-  };
-
   render() {
     const option = OPTIONS.find((c) => c.value === this.state.current);
     const { method, path } = this.props.request;
@@ -101,7 +96,6 @@ export default class RequestBlock extends React.Component {
         </Layout>
         <CodeBlock
           language={option.language}
-          onCopy={this.onCopyClick}
           value={option.template(this.getData())}></CodeBlock>
       </>
     );
