@@ -1,3 +1,4 @@
+import { escapeQoutes } from './utils/escape';
 export default function templateCurl({
   method,
   url,
@@ -11,15 +12,15 @@ export default function templateCurl({
   if (file) {
     code.push(`  -F file=@path-to-file-you-want-to-upload`);
     Object.keys(body).forEach((key) => {
-      code.push(`  -F ${key}=${body[key]}`);
+      code.push(`  -F ${escapeQoutes(key)}=${escapeQoutes(body[key])}`);
     });
     // headers goes last otherwise file upload doesnt work
     Object.keys(headers).forEach((key) => {
-      code.push(`  -H "${key}: ${headers[key]}"`);
+      code.push(`  -H "${escapeQoutes(key)}: ${escapeQoutes(headers[key])}"`);
     });
   } else {
     Object.keys(headers).forEach((key) => {
-      code.push(`  -H "${key}: ${headers[key]}"`);
+      code.push(`  -H "${escapeQoutes(key)}: ${escapeQoutes(headers[key])}"`);
     });
     if (Object.keys(body).length) {
       code.push(`  -d "${JSON.stringify(body).replace(/"/g, '\\"')}"`);
