@@ -79,12 +79,16 @@ function applicationMiddleware({ ignorePaths = [] }) {
       return next();
     }
 
+    // This is to ensure that api still works if an e.g. an <img> tag is used to fetch an image
+    if (ctx.request.get('Accept') !== 'application/json') {
+      return next();
+    }
+
     const apiKey = ctx.request.get('apikey') || '';
     if (!apiKey) {
       return ctx.throw(400, 'Missing "ApiKey" header');
     }
 
-    // Could be optimized by storing the application in ttl cache and batch updating the request count
     const application = await Application.findOneAndUpdate(
       { apiKey },
       {
@@ -96,48 +100,40 @@ function applicationMiddleware({ ignorePaths = [] }) {
       return ctx.throw(404, `The "ApiKey" did not match any known applications`);
     }
 
-    // If we one day store context on the applications it can be exposed to the route like this
-    //ctx.state.application = application;
-
     const requestId = `${application.apiKey}-${nanoid()}`;
     ctx.set('Request-Id', requestId);
-    const { res } = ctx;
 
-    // fire after the response is done
-    // this allows to catch the error handlers output
-    res.once('finish', () => {
-      const { request, response } = ctx;
+    await next();
 
-      let responseBody;
-      if (response.get('Content-Type')?.includes('application/json')) {
-        // this is bit unlucky
-        // we need to stringify the doc to avoid having all kind of prototypes / bson id / other mongonse wrappers
-        const convertBody = JSON.parse(JSON.stringify(response.body));
-        responseBody = redact(truncate(convertBody));
-      }
+    const { request, response } = ctx;
 
-      // This could be done as upsert
-      ApplicationRequest.create({
-        application: application.id,
-        routeNormalizedPath: ctx.routerPath,
-        routePrefix: ctx.router?.opts.prefix,
-        requestId,
-        request: {
-          ip: request.ip,
-          method: request.method,
-          path: request.url,
-          body: request.body ? redact(request.body) : undefined,
-          headers: sanitizeHeaders(request.headers),
-        },
-        response: {
-          status: ctx.status,
-          headers: sanitizeHeaders(response.headers),
-          body: responseBody,
-        },
-      });
+    let responseBody;
+    if (response.get('Content-Type')?.includes('application/json')) {
+      // this is bit unlucky
+      // we need to stringify the doc to avoid having all kind of prototypes / bson id / other mongonse wrappers
+      const convertBody = JSON.parse(JSON.stringify(response.body));
+      responseBody = redact(truncate(convertBody));
+    }
+
+    // This could be done as upsert
+    await ApplicationRequest.create({
+      application: application.id,
+      routeNormalizedPath: ctx.routerPath,
+      routePrefix: ctx.router?.opts.prefix,
+      requestId,
+      request: {
+        ip: request.ip,
+        method: request.method,
+        path: request.url,
+        body: request.body ? redact(request.body) : undefined,
+        headers: sanitizeHeaders(request.headers),
+      },
+      response: {
+        status: ctx.status,
+        headers: sanitizeHeaders(response.headers),
+        body: responseBody,
+      },
     });
-
-    return next();
   };
 }
 

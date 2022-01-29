@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Table, Menu } from 'semantic';
+import { Modal, Table, Menu, Divider } from 'semantic';
 import modal from 'helpers/modal';
 
 import RequestBlock from 'screens/Docs/RequestBlock';
@@ -18,7 +18,6 @@ export default class ShowRequest extends React.Component {
   render() {
     const { ip, ...rest } = this.props.request;
 
-    console.log(rest?.headers['content-type']?.toLowerCase());
     return (
       <>
         <Modal.Header>
@@ -45,6 +44,7 @@ export default class ShowRequest extends React.Component {
               onClick={() => this.setState({ tab: 'curl' })}
             />
           </Menu>
+          <Divider hidden />
           {this.state.tab === 'details' && (
             <>
               <Table definition>

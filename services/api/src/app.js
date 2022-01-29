@@ -16,19 +16,20 @@ const app = new Koa();
 
 const ENV_NAME = config.get('ENV_NAME');
 
-app
-  .use(errorHandler)
-  .use(loggingMiddleware())
-  .use(corsMiddleware())
-  .use(bodyParser({ multipart: true }));
-
 if (['staging', 'development'].includes(ENV_NAME)) {
+  // has to be the added before any middleware that changes the ctx.body
   app.use(
     applicationMiddleware({
       ignorePaths: ['/', '/openapi.json', '/openapi.lite.json', '/1/status', '/1/status/mongodb', /\/1\/applications/],
     })
   );
 }
+
+app
+  .use(errorHandler)
+  .use(loggingMiddleware())
+  .use(corsMiddleware())
+  .use(bodyParser({ multipart: true }));
 
 app.on('error', (err, ctx) => {
   if (err.code === 'EPIPE' || err.code === 'ECONNRESET') {
