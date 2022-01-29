@@ -124,7 +124,7 @@ function applicationMiddleware({ ignorePaths = [] }) {
         request: {
           ip: request.ip,
           method: request.method,
-          url: request.url,
+          path: request.url,
           body: request.body ? redact(request.body) : undefined,
           headers: sanitizeHeaders(request.headers),
         },

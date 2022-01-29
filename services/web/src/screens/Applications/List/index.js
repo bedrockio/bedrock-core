@@ -1,18 +1,10 @@
 import React from 'react';
-import {
-  Table,
-  Button,
-  Message,
-  Divider,
-  Loader,
-  Confirm,
-  Label,
-} from 'semantic';
+import { Table, Button, Message, Divider, Loader, Confirm } from 'semantic';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
 import { SearchProvider } from 'components/search';
 import EditApplication from 'modals/EditApplication';
-import { Breadcrumbs } from 'components';
+import { Breadcrumbs, Layout } from 'components';
 import { Link } from 'react-router-dom';
 
 @screen
@@ -35,7 +27,18 @@ export default class Applications extends React.Component {
                 link={<Link to="/applications">Applications</Link>}
                 active="Applications"
               />
-              <h1>Your applications</h1>
+
+              <Layout horizontal center spread>
+                <h1>My applications</h1>
+                <Layout.Group>
+                  <EditApplication
+                    trigger={
+                      <Button primary content="New Appliction" icon="plus" />
+                    }
+                    onSave={reload}
+                  />
+                </Layout.Group>
+              </Layout>
 
               {loading ? (
                 <Loader active />

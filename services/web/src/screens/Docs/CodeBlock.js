@@ -41,7 +41,7 @@ export default class CodeBlock extends React.Component {
         <SyntaxHighlighter
           language={language || 'bash'}
           style={atomDark}
-          wrapLines>
+          wrapLines={true}>
           {value}
         </SyntaxHighlighter>
       </div>

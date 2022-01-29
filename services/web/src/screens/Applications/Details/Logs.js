@@ -1,5 +1,5 @@
 import React from 'react';
-import { Message, Divider, Loader, Label, Grid, Table } from 'semantic';
+import { Message, Divider, Loader, Label, Grid, Table, Button } from 'semantic';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
 import { Layout } from 'components';
@@ -9,6 +9,7 @@ import Menu from './Menu';
 
 import { formatDateTime } from 'utils/date';
 import CodeBlock from 'screens/Docs/CodeBlock';
+import ShowRequest from 'modals/ShowRequest';
 
 @screen
 export default class ApplicationLogs extends React.Component {
@@ -52,73 +53,73 @@ export default class ApplicationLogs extends React.Component {
           {({ items, loading, error }) => {
             return (
               <React.Fragment>
-                <Layout horizontal left>
-                  <Filters.Search
-                    style={{
-                      width: '300px',
-                    }}
-                    name="keyword"
-                    placeholder="Filter by path or Request Id"
-                  />
-                  <Divider hidden vertical />
-                  <Filters.Dropdown
-                    name="request.method"
-                    placeholder="Method"
-                    options={[
-                      {
-                        value: 'GET',
-                        text: 'GET',
-                      },
-                      {
-                        value: 'POST',
-                        text: 'POST',
-                      },
-                      {
-                        value: 'PATCH',
-                        text: 'PATCH',
-                      },
-                      {
-                        value: 'DELETE',
-                        text: 'DEL',
-                      },
-                    ]}
-                  />
-                  <Divider hidden vertical />
-                  <Filters.Dropdown
-                    name="response.status"
-                    placeholder="Status"
-                    options={[
-                      {
-                        value: 200,
-                        text: '200',
-                      },
-                      {
-                        value: 204,
-                        text: '204',
-                      },
-                      {
-                        value: 400,
-                        text: '400',
-                      },
-                      {
-                        value: 401,
-                        text: '401',
-                      },
-                      {
-                        value: 404,
-                        text: '404',
-                      },
-                      {
-                        value: 500,
-                        text: '500',
-                      },
-                    ]}
-                  />
-                </Layout>
-                <Divider hidden />
                 <Grid>
                   <Grid.Row>
                     <Grid.Column width={9}>
+                      <Layout horizontal left>
+                        <Filters.Search
+                          style={{
+                            width: '300px',
+                          }}
+                          name="keyword"
+                          placeholder="Filter by path or Request Id"
+                        />
+                        <Divider hidden vertical />
+                        <Filters.Dropdown
+                          name="request.method"
+                          placeholder="Method"
+                          options={[
+                            {
+                              value: 'GET',
+                              text: 'GET',
+                            },
+                            {
+                              value: 'POST',
+                              text: 'POST',
+                            },
+                            {
+                              value: 'PATCH',
+                              text: 'PATCH',
+                            },
+                            {
+                              value: 'DELETE',
+                              text: 'DEL',
+                            },
+                          ]}
+                        />
+                        <Divider hidden vertical />
+                        <Filters.Dropdown
+                          name="response.status"
+                          placeholder="Status"
+                          options={[
+                            {
+                              value: 200,
+                              text: '200',
+                            },
+                            {
+                              value: 204,
+                              text: '204',
+                            },
+                            {
+                              value: 400,
+                              text: '400',
+                            },
+                            {
+                              value: 401,
+                              text: '401',
+                            },
+                            {
+                              value: 404,
+                              text: '404',
+                            },
+                            {
+                              value: 500,
+                              text: '500',
+                            },
+                          ]}
+                        />
+                      </Layout>
+                      <Divider hidden />
                       {loading ? (
                         <Loader active />
                       ) : error ? (
@@ -165,7 +166,7 @@ export default class ApplicationLogs extends React.Component {
                                     </Label>
                                   </Grid.Column>
                                   <Grid.Column width={7}>
-                                    {truncate(item.request.url, {
+                                    {truncate(item.request.path, {
                                       length: 30,
                                     })}
                                   </Grid.Column>
@@ -184,33 +185,50 @@ export default class ApplicationLogs extends React.Component {
                     {selectedItem && (
                       <Grid.Column width={7}>
                         <h2
-                          style={{ marginTop: '-2.5em' }}
-                          title={`${selectedItem.request.method} ${selectedItem.request.url}`}>
+                          style={{ marginTop: '10px' }}
+                          title={`${selectedItem.request.method} ${selectedItem.request.path}`}>
                           {selectedItem.request.method}{' '}
-                          {truncate(selectedItem.request.url, { length: 30 })}
+                          {truncate(selectedItem.request.path, { length: 25 })}
+                          <ShowRequest
+                            request={selectedItem.request}
+                            trigger={
+                              <Button
+                                compact
+                                floated="right"
+                                icon="expand-alt"
+                                basic
+                              />
+                            }
+                          />
                         </h2>
+
                         <Table definition>
                           <Table.Body>
                             <Table.Row>
-                              <Table.Cell>Request Id</Table.Cell>
-                              <Table.Cell>{selectedItem.requestId}</Table.Cell>
-                            </Table.Row>
-                            <Table.Row>
-                              <Table.Cell>Status</Table.Cell>
+                              <Table.Cell width={4}>Request Id</Table.Cell>
                               <Table.Cell>
-                                {selectedItem.response.status}
+                                <code>{selectedItem.requestId}</code>
                               </Table.Cell>
                             </Table.Row>
-
                             <Table.Row>
-                              <Table.Cell>Time</Table.Cell>
+                              <Table.Cell>URL</Table.Cell>
                               <Table.Cell>
-                                {formatDateTime(selectedItem.createdAt)}
+                                <code>{selectedItem.request.path}</code>
                               </Table.Cell>
                             </Table.Row>
                             <Table.Row>
                               <Table.Cell>IP Address</Table.Cell>
-                              <Table.Cell>{selectedItem.request.ip}</Table.Cell>
+                              <Table.Cell>
+                                <code>{selectedItem.request.ip}</code>
+                              </Table.Cell>
+                            </Table.Row>
+                            <Table.Row>
+                              <Table.Cell>Time</Table.Cell>
+                              <Table.Cell>
+                                <code>
+                                  {formatDateTime(selectedItem.createdAt)}
+                                </code>
+                              </Table.Cell>
                             </Table.Row>
                           </Table.Body>
                         </Table>
