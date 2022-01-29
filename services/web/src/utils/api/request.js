@@ -16,7 +16,7 @@ export default async function request(options) {
       ...(token && {
         Authorization: `Bearer ${token}`,
       }),
-      'Client-Id': API_CLIENT_ID,
+      ApiKey: API_CLIENT_ID,
     },
     options.headers
   );

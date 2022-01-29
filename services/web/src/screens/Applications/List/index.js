@@ -17,15 +17,11 @@ import { Link } from 'react-router-dom';
 
 @screen
 export default class Applications extends React.Component {
-  onDataNeeded = async (params) => {
-    const { category, ...rest } = params;
+  onDataNeeded = async (body) => {
     return await request({
       method: 'POST',
       path: '/1/applications/mine/search',
-      body: {
-        ...rest,
-        ...(category && { categories: [category.id] }),
-      },
+      body,
     });
   };
 
@@ -36,7 +32,7 @@ export default class Applications extends React.Component {
           return (
             <React.Fragment>
               <Breadcrumbs
-                link={<Link to="/developers">Developers</Link>}
+                link={<Link to="/applications">Applications</Link>}
                 active="Applications"
               />
               <h1>Your applications</h1>
@@ -57,7 +53,7 @@ export default class Applications extends React.Component {
                         Name
                       </Table.HeaderCell>
                       <Table.HeaderCell width={4}>Description</Table.HeaderCell>
-                      <Table.HeaderCell>ClientId</Table.HeaderCell>
+                      <Table.HeaderCell>APIKey</Table.HeaderCell>
                       <Table.HeaderCell>Request Count</Table.HeaderCell>
                       <Table.HeaderCell textAlign="center">
                         Actions
@@ -68,10 +64,14 @@ export default class Applications extends React.Component {
                     {items.map((item) => {
                       return (
                         <Table.Row key={item.id}>
-                          <Table.Cell>{item.name}</Table.Cell>
+                          <Table.Cell>
+                            <Link to={`/applications/${item.id}`}>
+                              {item.name}
+                            </Link>
+                          </Table.Cell>
                           <Table.Cell>{item.description}</Table.Cell>
                           <Table.Cell>
-                            <Label>{item.clientId}</Label>
+                            <code>{item.apiKey}</code>
                           </Table.Cell>
                           <Table.Cell>{item.requestCount}</Table.Cell>
                           <Table.Cell textAlign="center">

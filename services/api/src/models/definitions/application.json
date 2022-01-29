@@ -9,7 +9,7 @@
       "type": "String",
       "trim": true
     },
-    "clientId": {
+    "apiKey": {
       "type": "String",
       "trim": true,
       "required": true,

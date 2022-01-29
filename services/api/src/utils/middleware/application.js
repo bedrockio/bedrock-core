@@ -78,27 +78,27 @@ function applicationMiddleware({ ignorePaths = [] }) {
       return next();
     }
 
-    const clientId = ctx.request.get('client-id') || '';
-    if (!clientId) {
-      return ctx.throw(400, 'Missing "client-id" header');
+    const apiKey = ctx.request.get('apikey') || '';
+    if (!apiKey) {
+      return ctx.throw(400, 'Missing "ApiKey" header');
     }
 
     // Could be optimized by storing the application in ttl cache and batch updating the request count
     const application = await Application.findOneAndUpdate(
-      { clientId },
+      { apiKey },
       {
         $inc: { requestCount: 1 },
       }
     );
 
     if (!application) {
-      return ctx.throw(404, `The "Client-Id" did not match any known applications`);
+      return ctx.throw(404, `The "ApiKey" did not match any known applications`);
     }
 
     // If we one day store context on the applications it can be exposed to the route like this
     //ctx.state.application = application;
 
-    const requestId = `${application.clientId}-${nanoid()}`;
+    const requestId = `${application.apiKey}-${nanoid()}`;
     ctx.set('Request-Id', requestId);
     const { res } = ctx;
 

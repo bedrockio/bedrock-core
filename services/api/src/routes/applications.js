@@ -33,14 +33,14 @@ router
   })
   .post('/', validateBody(Application.getCreateValidation()), async (ctx) => {
     const { body } = ctx.request;
-    const clientId = kebabCase(body.name);
+    const apiKey = kebabCase(body.name);
     const count = await Application.countDocuments({
-      clientId,
+      apiKey,
     });
 
     const application = await Application.create({
       ...body,
-      clientId: count ? `${clientId}-${count}` : clientId, // needs to be generated
+      apiKey: count ? `${apiKey}-${count}` : apiKey,
       user: ctx.state.authUser,
     });
 

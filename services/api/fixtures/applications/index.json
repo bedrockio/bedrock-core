@@ -1,0 +1,14 @@
+{
+  "mobile": {
+    "name": "Mobile App",
+    "apiKey": "mobile",
+    "description": "API access for mobile",
+    "user": "<ref:users/admin>"
+  },
+  "web": {
+    "name": "Web App",
+    "apiKey": "web",
+    "description": "API access for web dashboard",
+    "user": "<ref:users/admin>"
+  }
+}

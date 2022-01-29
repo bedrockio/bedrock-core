@@ -22,7 +22,7 @@ describe('application', () => {
     const ctx = context(
       {
         headers: {
-          ['client-id']: application.clientId,
+          ['ApiKey']: application.apiKey,
         },
       },
       EventEmitter.prototype
@@ -31,7 +31,7 @@ describe('application', () => {
     await middleware(ctx, () => {});
 
     const [applicationId, hash] = ctx.response.header['request-id'].split('-');
-    expect(applicationId).toBe(application.clientId);
+    expect(applicationId).toBe(application.apiKey);
     expect(hash).toBeDefined();
     expect(hash).toHaveLength(16);
   });
@@ -42,7 +42,7 @@ describe('application', () => {
     const ctx = context(
       {
         headers: {
-          ['client-id']: application.clientId,
+          ['ApiKey']: application.apiKey,
         },
       },
       EventEmitter.prototype
@@ -71,7 +71,7 @@ describe('application', () => {
     const ctx = context(
       {
         headers: {
-          ['client-id']: application.clientId,
+          ['ApiKey']: application.apiKey,
         },
       },
       EventEmitter.prototype
