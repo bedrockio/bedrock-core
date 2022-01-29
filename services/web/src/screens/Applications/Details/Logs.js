@@ -188,7 +188,7 @@ export default class ApplicationLogs extends React.Component {
                           style={{ marginTop: '10px' }}
                           title={`${selectedItem.request.method} ${selectedItem.request.path}`}>
                           {selectedItem.request.method}{' '}
-                          {truncate(selectedItem.request.path, { length: 25 })}
+                          {truncate(selectedItem.request.path, { length: 30 })}
                           <ShowRequest
                             request={selectedItem.request}
                             trigger={
