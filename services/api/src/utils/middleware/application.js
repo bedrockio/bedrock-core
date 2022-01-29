@@ -7,11 +7,12 @@ const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
 const nanoid = customAlphabet(alphabet, 16);
 
 function sanitizeHeaders(headers) {
-  const sanatized = {
-    ...headers,
-  };
+  const sanatized = {};
+  Object.keys(headers).forEach((key) => {
+    sanatized[key.toLowerCase()] = headers[key];
+  });
 
-  if (sanatized.Authorization && sanatized.Authorization.includes('Bearer')) {
+  if (sanatized.authorization && sanatized.authorization.includes('Bearer')) {
     sanatized.Authorization = 'Bearer [redacted]';
   }
 

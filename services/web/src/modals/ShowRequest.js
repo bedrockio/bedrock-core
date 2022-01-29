@@ -17,6 +17,8 @@ export default class ShowRequest extends React.Component {
 
   render() {
     const { ip, ...rest } = this.props.request;
+
+    console.log(rest?.headers['content-type']?.toLowerCase());
     return (
       <>
         <Modal.Header>
@@ -31,6 +33,13 @@ export default class ShowRequest extends React.Component {
               onClick={() => this.setState({ tab: 'details' })}
             />
             <Menu.Item
+              {...(rest?.headers['content-type']?.toLowerCase() !==
+              'application/json'
+                ? {
+                    disabled: true,
+                    title: 'Only available for JSON request',
+                  }
+                : {})}
               content="Example (cURL)"
               active={this.state.tab === 'curl'}
               onClick={() => this.setState({ tab: 'curl' })}

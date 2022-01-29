@@ -212,7 +212,7 @@ export default class ApplicationLogs extends React.Component {
                               </Table.Cell>
                             </Table.Row>
                             <Table.Row>
-                              <Table.Cell>URL</Table.Cell>
+                              <Table.Cell>Path</Table.Cell>
                               <Table.Cell>
                                 <code>{selectedItem.request.path}</code>
                               </Table.Cell>
