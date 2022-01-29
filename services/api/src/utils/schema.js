@@ -315,7 +315,7 @@ function attributesToMongoose(attributes, path = []) {
     const type = typeof val;
     if (isSchemaType) {
       if (key === 'type') {
-        val = getMongooseType(val, attributes, path);
+        val = getMongooseType(val, path, attributes);
       } else if (key === 'match' && type === 'string') {
         // Convert match field to RegExp that cannot be expressed in JSON.
         val = RegExp(val);
@@ -333,7 +333,7 @@ function attributesToMongoose(attributes, path = []) {
       } else if (isPlainObject(val)) {
         val = attributesToMongoose(val, [...path, key]);
       } else if (!isMongooseSchema(val)) {
-        val = getMongooseType(val, attributes, path);
+        val = getMongooseType(val, path);
       }
     }
     definition[key] = val;
@@ -355,15 +355,15 @@ function getAutopopulateOptions(val) {
   return val;
 }
 
-function getMongooseType(arg, attributes, path) {
+function getMongooseType(arg, path, typedef = {}) {
   // Handle strings or functions.
   const str = arg.name || arg;
   const type = mongoose.Schema.Types[str];
   if (!type) {
     throw new Error(`Type ${str} could not be converted to Mongoose type.`);
-  } else if (type === SchemaObjectId && !attributes.ref && !attributes.refPath) {
+  } else if (type === SchemaObjectId && !typedef.ref && !typedef.refPath) {
     throw new Error(`Ref must be passed for ${path.join('.')}`);
-  } else if (attributes.ref && type !== SchemaObjectId) {
+  } else if (typedef.ref && type !== SchemaObjectId) {
     throw new Error(`Schema with a ref must be of type ObjectId.`);
   }
   return type;

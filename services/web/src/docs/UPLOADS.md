@@ -1,6 +1,8 @@
 # Uploads API
 
-This API provides binary upload and download capabilities. Each uploaded object has a `hash` attribute that allows read-only permissions to anyone using that key.
+This API provides binary upload and download capabilities. The `id` of an
+uploaded object can be used to [serve](#serve-uploaded-file) uploaded assets.
+Additionally, metadata on the uploaded object can be [retrieved](#get-upload).
 
 ## Upload Object
 
@@ -12,9 +14,11 @@ objectSummary({name: 'Upload'})
 
 Upload a new file. Requires an authenticated user.
 
-callHeading({method: 'POST', path: '/1/uploads'})
+callSummary({method: 'POST', path: '/1/uploads'})
 
-The request format for this call is multipart form data. The server expects a form field named `file` that contains the uploaded file. Arrays are supported too.
+The request format for this call is multipart form data. The server expects a
+form field named `file` that contains the uploaded file. Arrays are supported
+too.
 
 Example multipart form request:
 
@@ -33,17 +37,18 @@ Content-Type: image/png
 
 callResponse({method: 'POST', path: '/1/uploads'})
 
-## Download Uploaded File
+## Serve Uploaded File
 
-Obtain binary file by secret hash. This can result in a binary response with the uploaded mime type, or, if a cloud bucket storage engine is used, the response can be a redirect to the bucket storage CDN.
+Serves the raw binary file with appropriate headers (e.g. `Content-Type`). Will
+issue a `302` redirect if a cloud bucket storage engine is used.
 
-callSummary({method: 'GET', path: '/1/uploads/:hash/image'})
+callSummary({method: 'GET', path: '/1/uploads/:id/raw'})
 
 ## Get Upload
 
-Obtain upload meta data by using the secret content `hash`.
+Obtain upload meta data.
 
-callSummary({method: 'GET', path: '/1/uploads/:hash'})
+callSummary({method: 'GET', path: '/1/uploads/:id'})
 
 ## Delete Upload
 

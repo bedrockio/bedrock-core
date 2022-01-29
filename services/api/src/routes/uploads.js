@@ -27,7 +27,7 @@ router
       data: upload,
     };
   })
-  .get('/:id/image', async (ctx) => {
+  .get('/:id/raw', async (ctx) => {
     const upload = await Upload.findById(ctx.params.id);
     const url = upload.rawUrl;
     if (upload.storageType === 'local') {
@@ -42,6 +42,9 @@ router
   .post('/', async (ctx) => {
     const { authUser } = ctx.state;
     const file = ctx.request.files.file;
+    if (!file) {
+      ctx.throw(400, 'file is missing');
+    }
     const isArray = Array.isArray(file);
     const files = isArray ? file : [file];
     const uploads = await Promise.all(

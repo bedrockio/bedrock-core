@@ -257,6 +257,8 @@ router
         });
         ctx.throw(400, 'Token is invalid (jti)');
       }
+
+      user.loginAttempts = 0;
       user.password = password;
       user.tempTokenId = undefined;
 
