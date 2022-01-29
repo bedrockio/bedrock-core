@@ -191,6 +191,7 @@ export default class ApplicationLogs extends React.Component {
                           {truncate(selectedItem.request.path, { length: 30 })}
                           <ShowRequest
                             request={selectedItem.request}
+                            requestId={selectedItem.requestId}
                             trigger={
                               <Button
                                 compact

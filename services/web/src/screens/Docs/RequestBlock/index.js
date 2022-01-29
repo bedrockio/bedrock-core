@@ -34,6 +34,8 @@ export default class RequestBlock extends React.Component {
   static propTypes = {
     authToken: PropTypes.string,
     baseUrl: PropTypes.string,
+    header: PropTypes.bool,
+    template: PropTypes.string,
     request: PropTypes.shape({
       path: PropTypes.string.isRequired,
       method: PropTypes.oneOf(['POST', 'GET', 'PATCH', 'DELETE', 'PUT'])
@@ -46,10 +48,12 @@ export default class RequestBlock extends React.Component {
 
   static defaultProps = {
     baseUrl: API_URL,
+    header: true,
+    template: 'curl',
   };
 
   state = {
-    current: 'curl',
+    current: this.props.template,
   };
 
   constructor(props) {
@@ -82,21 +86,23 @@ export default class RequestBlock extends React.Component {
     const { method, path } = this.props.request;
     return (
       <>
-        <Layout horizontal spread center>
-          <Header style={{ margin: 0 }}>
-            {method} {path}
-          </Header>
-          <Layout.Group>
-            <Dropdown
-              onChange={(e, { value }) => {
-                this.setState({ current: value });
-              }}
-              selection
-              options={OPTIONS}
-              value={this.state.current}
-            />
-          </Layout.Group>
-        </Layout>
+        {this.props.header && (
+          <Layout horizontal spread center>
+            <Header style={{ margin: 0 }}>
+              {method} {path}
+            </Header>
+            <Layout.Group>
+              <Dropdown
+                onChange={(e, { value }) => {
+                  this.setState({ current: value });
+                }}
+                selection
+                options={OPTIONS}
+                value={this.state.current}
+              />
+            </Layout.Group>
+          </Layout>
+        )}
         <CodeBlock
           language={option.language}
           value={option.template(this.getData())}></CodeBlock>
