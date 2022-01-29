@@ -10,6 +10,7 @@ export default class CodeBlock extends React.Component {
   static propTypes = {
     value: PropTypes.string.isRequired,
     language: PropTypes.string,
+    height: PropTypes.string,
   };
 
   state = {
@@ -21,7 +22,7 @@ export default class CodeBlock extends React.Component {
   };
 
   render() {
-    const { language, value } = this.props;
+    const { language, value, height } = this.props;
     return (
       <div
         style={{ position: 'relative' }}
@@ -41,6 +42,13 @@ export default class CodeBlock extends React.Component {
         <SyntaxHighlighter
           language={language || 'bash'}
           style={atomDark}
+          customStyle={
+            height
+              ? {
+                  height,
+                }
+              : {}
+          }
           wrapLines={true}>
           {value}
         </SyntaxHighlighter>

@@ -62,7 +62,7 @@ export default class ApplicationLogs extends React.Component {
                             width: '300px',
                           }}
                           name="keyword"
-                          placeholder="Filter by path or Request Id"
+                          placeholder="Filter by Path or Request Id"
                         />
                         <Divider hidden vertical />
                         <Filters.Dropdown
@@ -236,8 +236,9 @@ export default class ApplicationLogs extends React.Component {
 
                         {selectedItem.response.body && (
                           <>
-                            <h2>Response Body</h2>
+                            <h3>Response Body</h3>
                             <CodeBlock
+                              height="500px"
                               language="json"
                               value={JSON.stringify(
                                 selectedItem.response.body,

@@ -32,6 +32,7 @@ const OPTIONS = [
 
 export default class RequestBlock extends React.Component {
   static propTypes = {
+    height: PropTypes.string,
     authToken: PropTypes.string,
     baseUrl: PropTypes.string,
     header: PropTypes.bool,
@@ -62,7 +63,7 @@ export default class RequestBlock extends React.Component {
   }
 
   getData() {
-    const { baseUrl, authToken, request } = this.props;
+    const { baseUrl, authToken, request, height } = this.props;
     const { path, ...rest } = request;
     return {
       ...rest,
@@ -104,6 +105,7 @@ export default class RequestBlock extends React.Component {
           </Layout>
         )}
         <CodeBlock
+          height={this.props.height}
           language={option.language}
           value={option.template(this.getData())}></CodeBlock>
       </>

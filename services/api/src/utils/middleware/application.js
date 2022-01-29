@@ -12,8 +12,8 @@ function sanitizeHeaders(headers) {
     sanatized[key.toLowerCase()] = headers[key];
   });
 
-  if (sanatized.authorization && sanatized.authorization.includes('Bearer')) {
-    sanatized.Authorization = 'Bearer [redacted]';
+  if (sanatized.authorization && /^bearer/i.test(sanatized.authorization.trim())) {
+    sanatized.authorization = 'Bearer [redacted]';
   }
 
   return sanatized;
