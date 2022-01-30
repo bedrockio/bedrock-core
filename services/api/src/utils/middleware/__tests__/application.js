@@ -16,17 +16,14 @@ afterAll(async () => {
 
 describe('application', () => {
   it('should set an request id', async () => {
-    const application = await importFixtures('applications/default');
+    const application = await importFixtures('applications/web');
     const middleware = applicationMiddleware({ ignorePaths: [] });
 
-    const ctx = context(
-      {
-        headers: {
-          ['ApiKey']: application.apiKey,
-        },
+    const ctx = context({
+      headers: {
+        apikey: application.apiKey,
       },
-      EventEmitter.prototype
-    );
+    });
 
     await middleware(ctx, () => {});
 
@@ -37,16 +34,13 @@ describe('application', () => {
   });
 
   it('should truncate large response data.length < 20', async () => {
-    const application = await importFixtures('applications/default');
+    const application = await importFixtures('applications/web');
     const middleware = applicationMiddleware({ ignorePaths: [] });
-    const ctx = context(
-      {
-        headers: {
-          ['ApiKey']: application.apiKey,
-        },
+    const ctx = context({
+      headers: {
+        apikey: application.apiKey,
       },
-      EventEmitter.prototype
-    );
+    });
 
     ctx.request.body = {
       password: 'password',
@@ -57,8 +51,7 @@ describe('application', () => {
     };
 
     await middleware(ctx, () => {});
-    ctx.res.emit('finish');
-    await sleep(50);
+
     const applicationRequest = await ApplicationRequest.findOne({
       requestId: ctx.response.header['request-id'],
     });
