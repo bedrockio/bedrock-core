@@ -59,7 +59,7 @@ describe('application', () => {
   });
 
   it('should redact fields [token|password|secret|hash...]', async () => {
-    const application = await importFixtures('applications/default');
+    const application = await importFixtures('applications/web');
     const middleware = applicationMiddleware({ ignorePaths: [] });
     const ctx = context(
       {
