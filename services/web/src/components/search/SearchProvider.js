@@ -157,7 +157,8 @@ export default class SearchProvider extends React.Component {
 
   onFilterChange = (evt, data) => {
     const { type, name, value, deferred } = data;
-    if (deferred || type !== 'text') {
+
+    if (!deferred || type !== 'text') {
       this.setFilters({
         ...this.state.filters,
         [name]: value,
@@ -180,6 +181,7 @@ export default class SearchProvider extends React.Component {
 
   getFilterValue = (name) => {
     const { pending, filters } = this.state;
+
     return pending[name] || filters[name];
   };
 

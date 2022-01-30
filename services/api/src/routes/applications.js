@@ -5,7 +5,6 @@ const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { Application, ApplicationRequest } = require('../models');
 const { exportValidation, csvExport } = require('../utils/csv');
-const Joi = require('joi');
 
 const router = new Router();
 
@@ -53,8 +52,6 @@ router
     validateBody(
       ApplicationRequest.getSearchValidation({
         ...exportValidation(),
-        'request.method': Joi.string().uppercase(),
-        'response.status': Joi.number(),
       })
     ),
     async (ctx) => {

@@ -8,9 +8,7 @@ afterAll(async () => {
   await teardownDb();
 });
 
-//XXX needs to be completed
-
-describe.skip('/1/applications', () => {
+describe('/1/applications', () => {
   describe('POST /mine/search', () => {
     it('should list audit logs', async () => {
       const admin = await createAdminUser();

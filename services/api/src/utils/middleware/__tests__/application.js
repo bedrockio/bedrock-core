@@ -1,8 +1,6 @@
 const { applicationMiddleware } = require('../application');
-const { sleep } = require('../../../utils/sleep');
 const { importFixtures } = require('../../../utils/fixtures');
 const { setupDb, teardownDb, context } = require('../../testing');
-const EventEmitter = require('events');
 
 const { ApplicationRequest } = require('./../../../models');
 
@@ -61,14 +59,11 @@ describe('application', () => {
   it('should redact fields [token|password|secret|hash...]', async () => {
     const application = await importFixtures('applications/web');
     const middleware = applicationMiddleware({ ignorePaths: [] });
-    const ctx = context(
-      {
-        headers: {
-          ['ApiKey']: application.apiKey,
-        },
+    const ctx = context({
+      headers: {
+        apikey: application.apiKey,
       },
-      EventEmitter.prototype
-    );
+    });
 
     ctx.request.body = {
       password: 'password',
@@ -97,8 +92,6 @@ describe('application', () => {
     };
 
     await middleware(ctx, () => {});
-    ctx.res.emit('finish');
-    await sleep(50);
 
     const applicationRequest = await ApplicationRequest.findOne({
       requestId: ctx.response.header['request-id'],

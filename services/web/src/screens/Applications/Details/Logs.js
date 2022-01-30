@@ -4,31 +4,58 @@ import { request } from 'utils/api';
 import screen from 'helpers/screen';
 import { Layout } from 'components';
 import { SearchProvider, Filters } from 'components/search';
-import { truncate } from 'lodash';
+import { set, truncate } from 'lodash';
 import Menu from './Menu';
 
 import { formatDateTime } from 'utils/date';
 import CodeBlock from 'screens/Docs/CodeBlock';
 import ShowRequest from 'modals/ShowRequest';
+import { withRouter } from 'react-router-dom';
 
+function getStateromQueryString(search) {
+  if (!search) return;
+  const params = new URLSearchParams(search);
+  return {
+    keyword: params.get('requestId'),
+  };
+}
+
+@withRouter
 @screen
 export default class ApplicationLogs extends React.Component {
   state = {
     selectedItem: null,
+    initialFilters: getStateromQueryString(this.props.location.search),
   };
 
   onDataNeeded = async (body) => {
     this.setState({
       selectedItem: null,
     });
+
+    if (body['response.status']) {
+      set(
+        body,
+        'response.status'.split('.'),
+        JSON.parse(body['response.status'])
+      );
+    }
+    if (body['request.method']) {
+      set(body, 'request.method'.split('.'), body['request.method']);
+    }
+
     const resp = await request({
       method: 'POST',
       path: `/1/applications/${this.props.application.id}/logs/search`,
       body,
     });
-    this.setState({
-      selectedItem: resp.data[0],
-    });
+    this.setState(
+      {
+        selectedItem: resp.data[0],
+      },
+      () => this.updateQueryString()
+    );
+
     return resp;
   };
 
@@ -39,24 +66,31 @@ export default class ApplicationLogs extends React.Component {
     return 'green';
   }
 
-  render() {
-    const { loading, selectedItem } = this.state;
+  updateQueryString() {
+    const pathName = this.props.location.pathname;
+    const queryString = this.state.selectedItem
+      ? `?requestId=${this.state.selectedItem.requestId}`
+      : '';
+    this.props.history.replace(`${pathName}${queryString}`);
+  }
 
-    if (loading) {
-      return <Loader active />;
-    }
+  render() {
+    const { selectedItem } = this.state;
 
     return (
       <React.Fragment>
         <Menu {...this.props} />
-        <SearchProvider limit={15} onDataNeeded={this.onDataNeeded}>
+        <SearchProvider
+          filters={this.state.initialFilters}
+          limit={15}
+          onDataNeeded={this.onDataNeeded}>
           {({ items, loading, error }) => {
             return (
               <React.Fragment>
                 <Grid>
                   <Grid.Row>
                     <Grid.Column width={9}>
-                      <Layout horizontal left>
+                      <Layout horizontal>
                         <Filters.Search
                           style={{
                             width: '300px',
@@ -66,6 +100,31 @@ export default class ApplicationLogs extends React.Component {
                         />
                         <Divider hidden vertical />
                         <Filters.Dropdown
+                          style={{
+                            width: '120px',
+                          }}
+                          label=""
+                          name="response.status"
+                          placeholder="Status"
+                          options={[
+                            {
+                              value: JSON.stringify({
+                                gte: 200,
+                                lt: 300,
+                              }),
+                              text: 'Succeesed',
+                            },
+                            {
+                              value: JSON.stringify({
+                                gt: 300,
+                              }),
+                              text: 'Failed',
+                            },
+                          ]}
+                        />
+                        <Divider hidden vertical />
+                        <Filters.Dropdown
+                          label=""
                           name="request.method"
                           placeholder="Method"
                           options={[
@@ -84,37 +143,6 @@ export default class ApplicationLogs extends React.Component {
                             {
                               value: 'DELETE',
                               text: 'DEL',
-                            },
-                          ]}
-                        />
-                        <Divider hidden vertical />
-                        <Filters.Dropdown
-                          name="response.status"
-                          placeholder="Status"
-                          options={[
-                            {
-                              value: 200,
-                              text: '200',
-                            },
-                            {
-                              value: 204,
-                              text: '204',
-                            },
-                            {
-                              value: 400,
-                              text: '400',
-                            },
-                            {
-                              value: 401,
-                              text: '401',
-                            },
-                            {
-                              value: 404,
-                              text: '404',
-                            },
-                            {
-                              value: 500,
-                              text: '500',
                             },
                           ]}
                         />
@@ -148,9 +176,12 @@ export default class ApplicationLogs extends React.Component {
                                         }),
                                   }}
                                   onClick={() =>
-                                    this.setState({
-                                      selectedItem: item,
-                                    })
+                                    this.setState(
+                                      {
+                                        selectedItem: item,
+                                      },
+                                      () => this.updateQueryString()
+                                    )
                                   }>
                                   <Grid.Column width={2}>
                                     <Label
@@ -188,7 +219,7 @@ export default class ApplicationLogs extends React.Component {
                           style={{ marginTop: '10px' }}
                           title={`${selectedItem.request.method} ${selectedItem.request.path}`}>
                           {selectedItem.request.method}{' '}
-                          {truncate(selectedItem.request.path, { length: 30 })}
+                          {truncate(selectedItem.request.path, { length: 28 })}
                           <ShowRequest
                             request={selectedItem.request}
                             requestId={selectedItem.requestId}
