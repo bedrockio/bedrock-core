@@ -9,7 +9,7 @@ async function requireChallenge(ctx, user) {
   return false;
 }
 
-function generateSecret(options) {
+function generateSecret() {
   const bin = crypto.randomBytes(20);
   const base32 = b32.encode(bin).toString('utf8').replace(/=/g, '');
 
