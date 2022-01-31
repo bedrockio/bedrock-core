@@ -70,13 +70,17 @@ router
         ctx.throw(401, 'Incorrect password');
       }
 
-      if (!user.verifyLoginAttempts()) {
+      const { verified, threshold } = user.verifyLoginAttempts();
+      if (!verified) {
         await AuditEntry.append('reached max authentication attempts', ctx, {
           type: 'security',
           object: user,
           user: user.id,
         });
-        ctx.throw(401, 'Too many login attempts');
+        ctx.throw(
+          401,
+          `Too many login attempts. Try again in ${Math.max(1, Math.floor(threshold / (60 * 1000)))} minute(s)`
+        );
       }
 
       if (!(await user.verifyPassword(password))) {
@@ -129,13 +133,14 @@ router
       const { authUser } = ctx.state;
       const { password } = ctx.request.body;
 
-      if (!authUser.verifyLoginAttempts()) {
+      const { verified, threshold } = authUser.verifyLoginAttempts();
+      if (!verified) {
         await AuditEntry.append('reached max authentication attempts', ctx, {
           type: 'security',
           object: authUser,
           user: authUser.id,
         });
-        ctx.throw(401, 'Too many attempts');
+        ctx.throw(401, `Too many attempts. Try again in ${Math.max(1, Math.floor(threshold / (60 * 1000)))} minute(s)`);
       }
 
       if (!(await authUser.verifyPassword(password))) {

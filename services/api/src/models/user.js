@@ -28,7 +28,10 @@ schema.method('verifyLoginAttempts', function verifyLoginAttempts() {
   const { triesMin, triesMax, timeMax } = LOGIN_THROTTLE;
   const dt = new Date() - this.lastLoginAttemptAt || Date.now();
   const threshold = mapExponential(this.loginAttempts, triesMin, triesMax, 0, timeMax);
-  return dt >= threshold;
+  return {
+    verified: dt >= threshold,
+    threshold,
+  };
 });
 
 schema.virtual('name').get(function () {
