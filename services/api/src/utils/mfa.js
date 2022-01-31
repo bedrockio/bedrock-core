@@ -10,11 +10,6 @@ async function requireChallenge(ctx, user) {
 }
 
 function generateSecret(options) {
-  const config = {
-    name: encodeURIComponent(options?.name ?? 'App').toLowerCase(),
-    account: encodeURIComponent(options?.account ? `:${options.account}` : '').toLowerCase(),
-  };
-
   const bin = crypto.randomBytes(20);
   const base32 = b32.encode(bin).toString('utf8').replace(/=/g, '');
 

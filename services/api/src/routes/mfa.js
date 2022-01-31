@@ -50,7 +50,7 @@ router
       const { jwt } = ctx.state;
       const { code } = ctx.request.body;
 
-      const user = await User.findOneAndUpdate({ _id: jwt.sub });
+      const user = await User.findOne({ _id: jwt.sub });
 
       if (!user) {
         ctx.throw(400, 'User does not exist');
