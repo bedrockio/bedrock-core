@@ -41,13 +41,13 @@ describe('/1/auth', () => {
       expect(payload).toHaveProperty('type', 'mfa');
     });
 
-    it('should throttle a few seconds after 3 bad attempts', async () => {
+    it('should throttle a few seconds after 5 bad attempts', async () => {
       mockTime();
 
       const password = '123password!';
       const user = await createUser({
         password,
-        loginAttempts: 3,
+        loginAttempts: 5,
         lastLoginAttemptAt: new Date(),
       });
       let response;

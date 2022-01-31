@@ -6,10 +6,10 @@ const { validScopes } = require('../utils/permissions');
 const definition = require('./definitions/user.json');
 
 const LOGIN_THROTTLE = {
-  // Apply lockout after 3 tries
-  triesMin: 3,
+  // Apply lockout after 5 tries
+  triesMin: 5,
   // Scale to max at 10 tries
-  triesMax: 10,
+  triesMax: 12,
   // 1 hour lockout maximum
   timeMax: 60 * 60 * 1000,
 };
