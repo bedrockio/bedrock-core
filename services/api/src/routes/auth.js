@@ -58,13 +58,7 @@ router
     }),
     async (ctx) => {
       const { email, password } = ctx.request.body;
-      const user = await User.findOneAndUpdate(
-        { email },
-        {
-          lastLoginAttemptAt: new Date(),
-          $inc: { loginAttempts: 1 },
-        }
-      );
+      const user = await User.findOne({ email });
 
       if (!user) {
         ctx.throw(401, 'Incorrect password');
@@ -82,6 +76,12 @@ router
           `Too many login attempts. Try again in ${Math.max(1, Math.floor(threshold / (60 * 1000)))} minute(s)`
         );
       }
+
+      user.set({
+        lastLoginAttemptAt: new Date(),
+        loginAttempts: user.loginAttempts + 1,
+      });
+      await user.save();
 
       if (!(await user.verifyPassword(password))) {
         await AuditEntry.append('failed authentication', ctx, {
@@ -142,6 +142,12 @@ router
         });
         ctx.throw(401, `Too many attempts. Try again in ${Math.max(1, Math.floor(threshold / (60 * 1000)))} minute(s)`);
       }
+
+      authUser.set({
+        lastLoginAttemptAt: new Date(),
+        loginAttempts: authUser.loginAttempts + 1,
+      });
+      await authUser.save();
 
       if (!(await authUser.verifyPassword(password))) {
         await AuditEntry.append('failed authentication (confirm-access)', ctx, {

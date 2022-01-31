@@ -178,7 +178,7 @@ describe('/1/auth', () => {
       });
       let response = await request('POST', '/1/auth/confirm-access', { password: 'bad password' }, { user });
       expect(response.status).toBe(401);
-      expect(response.body.error.message).toBe('Too many attempts');
+      expect(response.body.error.message).toBe('Too many attempts. Try again in 15 minute(s)');
     });
   });
 

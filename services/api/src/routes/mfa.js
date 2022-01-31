@@ -50,13 +50,7 @@ router
       const { jwt } = ctx.state;
       const { code } = ctx.request.body;
 
-      const user = await User.findOneAndUpdate(
-        { _id: jwt.sub },
-        {
-          lastLoginAttemptAt: new Date(),
-          $inc: { loginAttempts: 1 },
-        }
-      );
+      const user = await User.findOneAndUpdate({ _id: jwt.sub });
 
       if (!user) {
         ctx.throw(400, 'User does not exist');
@@ -73,6 +67,12 @@ router
         });
         ctx.throw(401, `Too many attempts. Try again in ${Math.max(1, Math.floor(threshold / (60 * 1000)))} minute(s)`);
       }
+
+      user.set({
+        lastLoginAttemptAt: new Date(),
+        loginAttempts: user.loginAttempts + 1,
+      });
+      await user.save();
 
       // if backup code e.g 12345-16123
       const backupCodes = (user.mfaBackupCodes || []).concat();
