@@ -1,10 +1,11 @@
 import React from 'react';
-import { Table, Button, Message, Divider, Loader, Confirm } from 'semantic';
+import { Table, Button, Divider, Confirm, Segment } from 'semantic';
+
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
 import { HelpTip, Breadcrumbs, Layout } from 'components';
-import { SearchProvider, Filters } from 'components/search';
+import { SearchProvider, Filters, Status, Export } from 'components/search';
 // --- Generator: list-imports
 import { Link } from 'react-router-dom';
 import allCountries from 'utils/countries';
@@ -39,13 +40,18 @@ export default class ShopList extends React.Component {
               <Layout horizontal center spread>
                 <h1>Shops</h1>
                 <Layout.Group>
+                  <Export filename="shops" />
+                  <EditShop
+                    trigger={<Button primary content="New Shop" icon="plus" />}
+                    onSave={reload}
+                  />
+                </Layout.Group>
+              </Layout>
+              <Segment>
+                <Layout horizontal center spread>
                   <Filters.Modal>
                     {/* --- Generator: filters */}
-                    <Filters.Search
-                      label="Search"
-                      name="keyword"
-                      placeholder="Enter name or shop id"
-                    />
+
                     <Filters.Dropdown
                       label="Country"
                       name="country"
@@ -54,19 +60,18 @@ export default class ShopList extends React.Component {
                     />
                     {/* --- Generator: end */}
                   </Filters.Modal>
-                  <EditShop
-                    trigger={<Button primary content="New Shop" icon="plus" />}
-                    onSave={reload}
-                  />
-                </Layout.Group>
-              </Layout>
-              {loading ? (
-                <Loader active />
-              ) : error ? (
-                <Message error content={error.message} />
-              ) : shops.length === 0 ? (
-                <Message>No shops created yet</Message>
-              ) : (
+                  <Filters.Overview />
+
+                  <Layout.Group>
+                    <Filters.Search
+                      name="keyword"
+                      placeholder="Enter name or id"
+                    />
+                  </Layout.Group>
+                </Layout>
+              </Segment>
+              <Status />
+              {shops.length !== 0 && (
                 <Table celled sortable>
                   <Table.Header>
                     <Table.Row>

@@ -45,3 +45,7 @@ export function formatAddress(address) {
   }
   return components.join(', ');
 }
+
+export function safeFileName(str) {
+  return str.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+}

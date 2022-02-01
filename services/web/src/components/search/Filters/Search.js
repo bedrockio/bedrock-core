@@ -7,29 +7,40 @@ import SearchContext from '../Context';
 export default class SearchFilter extends React.Component {
   static contextType = SearchContext;
 
+  state = {
+    value: this.context.getFilterValue(this.props.name),
+  };
+
   render() {
-    const { loading } = this.context;
+    const { loading, onFilterChange } = this.context;
     const { name, ...rest } = this.props;
+    const { value } = this.state;
+
     return (
-      <Form.Input
-        name={name}
-        loading={loading}
-        icon={this.renderIcon()}
-        value={this.context.getFilterValue(name) || ''}
-        onChange={this.context.onFilterChange}
-        {...rest}
-      />
+      <Form onSubmit={() => onFilterChange({}, { value, name })}>
+        <Form.Input
+          name={name}
+          loading={loading}
+          icon={this.renderIcon()}
+          value={this.state.value}
+          onChange={(e, { value }) => this.setState({ value })}
+          {...rest}
+        />
+      </Form>
     );
   }
 
   renderIcon() {
     const { name } = this.props;
-    const value = this.context.getFilterValue(name);
+    const value = this.state.value;
     return {
       name: value ? 'close' : 'search',
       link: true,
       onClick: (evt) => {
         if (value) {
+          this.setState({
+            value: '',
+          });
           this.context.onFilterChange(evt, { name, value: '' });
         }
         evt.target.closest('.input').querySelector('input').focus();

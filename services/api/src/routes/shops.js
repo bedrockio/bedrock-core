@@ -3,6 +3,7 @@ const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { Shop } = require('../models');
 
+const { exportValidation, csvExport } = require('../utils/csv');
 const router = new Router();
 
 router
@@ -32,8 +33,16 @@ router
       data: shop,
     };
   })
-  .post('/search', validateBody(Shop.getSearchValidation()), async (ctx) => {
-    const { data, meta } = await Shop.search(ctx.request.body);
+  .post('/search', validateBody(Shop.getSearchValidation({
+      ...exportValidation(),
+  })), async (ctx) => {
+    const { format, filename, ...params } = ctx.request.body;
+    const { data, meta } = await Shop.search(params);
+
+    if (format === 'csv') {
+      return csvExport(ctx, data, { filename });
+    }
+
     ctx.body = {
       data,
       meta,
