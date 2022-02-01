@@ -14,9 +14,7 @@ export default class SearchProvider extends React.Component {
       loading: true,
       items: [],
       error: null,
-      meta: {
-        total: 0,
-      },
+      fields: props.fields,
       filters: props.filters,
       limit: props.limit,
       page: props.page,
@@ -155,11 +153,14 @@ export default class SearchProvider extends React.Component {
     });
   };
 
-  registerField = ({ name, ...rest }) => {
+  registerField = (name, label, type) => {
     this.setState({
       fields: {
         ...this.state.fields,
-        [name]: rest,
+        [name]: {
+          label,
+          type,
+        },
       },
     });
   };
@@ -195,7 +196,6 @@ export default class SearchProvider extends React.Component {
   // Utils
 
   render() {
-    console.log(this.state);
     const context = {
       ...this.state,
       reload: this.reload,

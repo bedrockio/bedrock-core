@@ -9,7 +9,7 @@ export default class DropdownFilter extends React.Component {
   static contextType = SearchContext;
 
   componentDidMount() {
-    this.context.registerField(this.props);
+    this.context.registerField(this.props.name, this.props.label, 'string');
   }
 
   getDefaultValue() {
@@ -54,7 +54,14 @@ export default class DropdownFilter extends React.Component {
         <Form.Dropdown
           value={this.getValue()}
           options={this.getOptions()}
-          onChange={this.context.onFilterChange}
+          onChange={(e, { value, name, options }) => {
+            const label = options.find((option) => option.value == value).text;
+            this.context.onFilterChange({
+              value,
+              name,
+              label,
+            });
+          }}
           {...this.props}
         />
       );

@@ -48,19 +48,21 @@ export default class ShopList extends React.Component {
                 </Layout.Group>
               </Layout>
               <Segment>
-                <Layout horizontal center spread>
-                  <Filters.Modal>
-                    {/* --- Generator: filters */}
+                <Layout horizontal center spread stackable>
+                  <Layout horizontal>
+                    <Filters.Modal>
+                      {/* --- Generator: filters */}
 
-                    <Filters.Dropdown
-                      label="Country"
-                      name="country"
-                      options={countries}
-                      search
-                    />
-                    {/* --- Generator: end */}
-                  </Filters.Modal>
-                  <Filters.Overview />
+                      <Filters.Dropdown
+                        label="Country"
+                        name="country"
+                        options={countries}
+                        search
+                      />
+                      {/* --- Generator: end */}
+                    </Filters.Modal>
+                    <Filters.Overview />
+                  </Layout>
 
                   <Layout.Group>
                     <Filters.Search

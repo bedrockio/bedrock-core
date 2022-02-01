@@ -23,10 +23,6 @@ export default class FilterModal extends React.Component {
     });
   }
 
-  hasFilters = () => {
-    return this.getFilterCount() > 0;
-  };
-
   getFilterCount = () => {
     const keys = Object.keys(this.context.filters);
     return keys.filter((key) => {
@@ -56,8 +52,13 @@ export default class FilterModal extends React.Component {
     });
   };
 
-  onFilterChange = (evt, { name, value }) => {
+  onFilterChange = ({ name, value, label }) => {
     this.setState({
+      fields: {
+        [name]: {
+          label,
+        },
+      },
       filters: {
         ...this.state.filters,
         [name]: value,
@@ -69,6 +70,7 @@ export default class FilterModal extends React.Component {
     this.context.setFilters({
       ...this.context.filters,
       ...this.state.filters,
+      ...this.state.fields,
     });
     this.setState({
       open: false,
@@ -95,22 +97,10 @@ export default class FilterModal extends React.Component {
         onOpen={this.onModalOpen}
         onClose={this.onModalClose}
         trigger={
-          this.hasFilters() ? (
-            <Button as="div" labelPosition="right">
-              <Button basic primary size={size}>
-                <Icon name="filter" />
-                Filter
-              </Button>
-              <Label as="a" pointing="left">
-                {this.getFilterCount()}
-              </Label>
-            </Button>
-          ) : (
-            <Button basic primary size={size}>
-              <Icon name="filter" />
-              Filter
-            </Button>
-          )
+          <Button basic primary size={size}>
+            <Icon name="filter" />
+            Filter
+          </Button>
         }>
         <Modal.Header>Filter</Modal.Header>
         <Modal.Content>

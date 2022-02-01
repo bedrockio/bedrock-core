@@ -44,6 +44,7 @@ export default class SearchDropdown extends React.Component {
       return items.find((item) => item.id === id);
     });
     value = this.props.multiple ? selected : selected[0];
+    console.log('here');
     this.props.onChange(evt, { value, ...rest });
   };
 
