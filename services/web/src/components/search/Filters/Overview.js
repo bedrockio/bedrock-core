@@ -3,7 +3,7 @@ import SearchContext from '../Context';
 import { Label, Icon } from 'semantic';
 
 export default function Overview({ labels }) {
-  const { filters, onFilterChange } = useContext(SearchContext);
+  const { filters, fields, onFilterChange } = useContext(SearchContext);
   const filtersKeys = Object.keys(filters).filter((key) => labels[key]);
 
   return (
@@ -13,7 +13,7 @@ export default function Overview({ labels }) {
           key={filter}
           size="large"
           style={{ marginLeft: '10px', lineHeight: '20px' }}>
-          {labels[filter]}
+          {fields[filter].label}
           <Icon
             name="delete"
             onClick={() =>

@@ -4,14 +4,12 @@ import { Form } from 'semantic';
 import SearchDropdown from 'components/SearchDropdown';
 
 import SearchContext from '../Context';
-import { contextType } from 'google-map-react';
 
 export default class DropdownFilter extends React.Component {
   static contextType = SearchContext;
 
-  constructor(props) {
-    super(props);
-    this.context.registerFilter(this.props.label, this.props.type);
+  componentDidMount() {
+    this.context.registerField(this.props);
   }
 
   getDefaultValue() {

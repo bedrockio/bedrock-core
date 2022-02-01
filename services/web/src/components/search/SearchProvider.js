@@ -155,7 +155,14 @@ export default class SearchProvider extends React.Component {
     });
   };
 
-  registerFilter = (name, type) => {};
+  registerField = ({ name, ...rest }) => {
+    this.setState({
+      fields: {
+        ...this.state.fields,
+        [name]: rest,
+      },
+    });
+  };
 
   onFilterChange = (evt, data) => {
     const { type, name, value, deferred } = data;
@@ -188,6 +195,7 @@ export default class SearchProvider extends React.Component {
   // Utils
 
   render() {
+    console.log(this.state);
     const context = {
       ...this.state,
       reload: this.reload,
@@ -200,7 +208,7 @@ export default class SearchProvider extends React.Component {
       onPageChange: this.onPageChange,
       onFilterChange: this.onFilterChange,
       getFilterValue: this.getFilterValue,
-      registerFilter: this.registerFilter,
+      registerField: this.registerField,
       onDataNeeded: this.props.onDataNeeded,
     };
     return (
