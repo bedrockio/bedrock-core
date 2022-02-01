@@ -155,6 +155,8 @@ export default class SearchProvider extends React.Component {
     });
   };
 
+  registerFilter = (name, type) => {};
+
   onFilterChange = (evt, data) => {
     const { type, name, value, deferred } = data;
     if (!deferred || type !== 'text') {
