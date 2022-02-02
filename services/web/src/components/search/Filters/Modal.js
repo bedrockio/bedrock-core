@@ -55,6 +55,7 @@ export default class FilterModal extends React.Component {
   onFilterChange = ({ name, value, label }) => {
     this.setState({
       fields: {
+        ...this.state.fields,
         [name]: {
           label,
         },
@@ -67,11 +68,13 @@ export default class FilterModal extends React.Component {
   };
 
   onSubmit = () => {
-    this.context.setFilters({
-      ...this.context.filters,
-      ...this.state.filters,
-      ...this.state.fields,
-    });
+    this.context.setFilters(
+      {
+        ...this.context.filters,
+        ...this.state.filters,
+      },
+      this.state.fields
+    );
     this.setState({
       open: false,
     });

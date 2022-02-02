@@ -22,12 +22,23 @@ import EditShop from 'modals/EditShop';
 
 @screen
 export default class ShopList extends React.Component {
-  onDataNeeded = async (params) => {
-    return await request({
+  onDataNeeded = (body) => {
+    return request({
       method: 'POST',
       path: '/1/shops/search',
-      body: params,
+      body,
     });
+  };
+
+  fetchOwner = async (name) => {
+    const { data } = await request({
+      method: 'POST',
+      path: '/1/users/search',
+      body: {
+        name,
+      },
+    });
+    return data;
   };
 
   render() {
@@ -54,11 +65,19 @@ export default class ShopList extends React.Component {
                       {/* --- Generator: filters */}
 
                       <Filters.Dropdown
+                        label="Owner"
+                        name="owner"
+                        onDataNeeded={this.fetchOwner}
+                        search
+                      />
+
+                      <Filters.Dropdown
                         label="Country"
                         name="country"
                         options={countries}
                         search
                       />
+
                       {/* --- Generator: end */}
                     </Filters.Modal>
                     <Filters.Overview />

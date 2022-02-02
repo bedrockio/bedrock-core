@@ -144,12 +144,14 @@ export default class SearchProvider extends React.Component {
     });
   };
 
-  setFilters = (filters) => {
+  setFilters = (filters, fields) => {
     filters = pickBy(filters, (val) => {
       return Array.isArray(val) ? val.length : val;
     });
+
     this.setState({
       filters,
+      fields,
     });
   };
 
@@ -165,25 +167,26 @@ export default class SearchProvider extends React.Component {
     });
   };
 
-  onFilterChange = (evt, data) => {
-    const { type, name, value, deferred } = data;
-    if (!deferred || type !== 'text') {
-      this.setFilters({
+  onFilterChange = ({ name, value, label }) => {
+    const filters = pickBy(
+      {
         ...this.state.filters,
         [name]: value,
-      });
-    } else {
-      this.setState({
-        pending: {
-          ...this.state.pending,
-          [name]: value,
+      },
+      (val) => {
+        return Array.isArray(val) ? val.length : val;
+      }
+    );
+
+    this.setState({
+      fields: {
+        ...this.state.fields,
+        [name]: {
+          label,
         },
-      });
-      this.setFilterDeferred(evt, {
-        ...data,
-        deferred: true,
-      });
-    }
+      },
+      filters,
+    });
   };
 
   setFilterDeferred = debounce(this.onFilterChange, 300);

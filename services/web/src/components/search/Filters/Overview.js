@@ -8,20 +8,29 @@ export default function Overview() {
   const { filters, fields, onFilterChange } = useContext(SearchContext);
   const filtersKeys = Object.keys(filters);
 
+  console.log(fields, filtersKeys);
+
   return (
-    <Layout spread horizontal>
+    <Layout horizontal>
       {filtersKeys.slice(0, 3).map((key) => (
-        <Label key={key} size="large">
-          {fields[key].label}: {truncate(filters[key], { length: 20 })}
-          <Icon
-            name="delete"
-            onClick={() =>
-              onFilterChange(null, {
-                name: key,
-                value: undefined,
-              })
-            }
-          />
+        <Label
+          key={key}
+          basic
+          style={{
+            height: '36px',
+            margin: '0',
+            marginLeft: '0.5em',
+            lineHeight: '21px',
+            cursor: 'pointer',
+          }}
+          onClick={() =>
+            onFilterChange({
+              name: key,
+              value: undefined,
+            })
+          }>
+          {truncate(fields[key]?.label, { length: 25 })}
+          <Icon style={{ marginTop: '5px' }} name="delete" />
         </Label>
       ))}
     </Layout>
