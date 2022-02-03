@@ -10,12 +10,15 @@ import {
   Loader,
   Confirm,
 } from 'semantic';
+
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
+import { formatRoles } from 'utils/permissions';
+
 import { HelpTip, Breadcrumbs, Layout } from 'components';
 import { SearchProvider, Filters } from 'components/search';
-import { formatRoles } from 'utils/permissions';
+import ErrorMessage from 'components/ErrorMessage';
 
 import EditUser from 'modals/EditUser';
 
@@ -84,10 +87,9 @@ export default class UserList extends React.Component {
                   />
                 </Layout.Group>
               </Layout>
+              <ErrorMessage error={error} />
               {loading ? (
                 <Loader active />
-              ) : error ? (
-                <Message error content={error.message} />
               ) : users.length === 0 ? (
                 <Message>No users created yet</Message>
               ) : (

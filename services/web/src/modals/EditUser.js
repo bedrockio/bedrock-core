@@ -1,9 +1,11 @@
 import React from 'react';
-import { Form, Modal, Message, Button } from 'semantic';
+import { Form, Modal, Button } from 'semantic';
 import { request } from 'utils/api';
+import modal from 'helpers/modal';
+
 import AutoFocus from 'components/AutoFocus';
 import Roles from 'components/form-fields/Roles';
-import modal from 'helpers/modal';
+import ErrorMessage from 'components/ErrorMessage';
 
 @modal
 export default class EditUser extends React.Component {
@@ -77,7 +79,7 @@ export default class EditUser extends React.Component {
               id="edit-user"
               onSubmit={this.onSubmit}
               error={touched && !!error}>
-              {error && <Message error content={error.message} />}
+              <ErrorMessage error={error} />
               <Form.Input
                 value={user.firstName || ''}
                 label="First Name"

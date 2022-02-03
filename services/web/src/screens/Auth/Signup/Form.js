@@ -1,6 +1,7 @@
 import React from 'react';
 import { Form, Input, Checkbox, Message } from 'semantic';
 import AutoFocus from 'components/AutoFocus';
+import ErrorMessage from 'components/ErrorMessage';
 
 export default (props) => {
   const { error, loading } = props;
@@ -34,7 +35,7 @@ export default (props) => {
         {touched && !fields.accepted && (
           <Message error content="Please accept the terms of service" />
         )}
-        {error && <Message error content={error.message} />}
+        <ErrorMessage error={error} />
         <Form.Input
           type="text"
           name="firstName"

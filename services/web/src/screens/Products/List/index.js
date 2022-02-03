@@ -1,17 +1,19 @@
 import React from 'react';
+import { Image } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { Table, Button, Message, Divider, Loader, Confirm } from 'semantic';
+
 import { formatDateTime } from 'utils/date';
+import { urlForUpload } from 'utils/uploads';
 import { formatUsd } from 'utils/currency';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
+
 import { HelpTip, Breadcrumbs, Layout } from 'components';
 import { SearchProvider, Filters } from 'components/search';
+import ErrorMessage from 'components/ErrorMessage';
 
 import EditProduct from 'modals/EditProduct';
-
-import { urlForUpload } from 'utils/uploads';
-import { Image } from 'semantic-ui-react';
 
 @screen
 export default class ProductList extends React.Component {
@@ -59,10 +61,9 @@ export default class ProductList extends React.Component {
                   />
                 </Layout.Group>
               </Layout>
+              <ErrorMessage error={error} />
               {loading ? (
                 <Loader active />
-              ) : error ? (
-                <Message error content={error.message} />
               ) : products.length === 0 ? (
                 <Message>No products created yet</Message>
               ) : (

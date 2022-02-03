@@ -1,8 +1,9 @@
 import React from 'react';
-import { Modal, Form, Button, Message } from 'semantic';
+import { Modal, Form, Button } from 'semantic';
+import modal from 'helpers/modal';
 import { request } from 'utils/api';
 import AutoFocus from 'components/AutoFocus';
-import modal from 'helpers/modal';
+import ErrorMessage from 'components/ErrorMessage';
 
 // --- Generator: imports
 import DateField from 'components/form-fields/Date';
@@ -92,7 +93,7 @@ export default class EditProduct extends React.Component {
               id="edit-product"
               error={!!error}
               onSubmit={this.onSubmit}>
-              {error && <Message error content={error.message} />}
+              <ErrorMessage error={error} />
               {/* --- Generator: fields */}
               <Form.Input
                 required
