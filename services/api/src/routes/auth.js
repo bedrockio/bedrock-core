@@ -7,6 +7,7 @@ const { sendTemplatedMail } = require('../utils/mailer');
 const { User, Invite, AuditEntry } = require('../models');
 
 const mfa = require('../utils/mfa');
+const { verifyLoginAttempts, verifyPassword } = require('../utils/auth');
 
 const router = new Router();
 
@@ -64,35 +65,27 @@ router
         ctx.throw(401, 'Incorrect password');
       }
 
-      const { verified, threshold } = user.verifyLoginAttempts();
-      if (!verified) {
+      try {
+        await verifyLoginAttempts(user);
+      } catch (error) {
         await AuditEntry.append('reached max authentication attempts', ctx, {
           type: 'security',
           object: user,
           user: user.id,
         });
-        ctx.throw(
-          401,
-          `Too many login attempts. Try again in ${Math.max(1, Math.floor(threshold / (60 * 1000)))} minute(s)`
-        );
+        ctx.throw(401, error);
       }
 
-      user.set({
-        lastLoginAttemptAt: new Date(),
-        loginAttempts: user.loginAttempts + 1,
-      });
-      await user.save();
-
-      if (!(await user.verifyPassword(password))) {
+      try {
+        await verifyPassword(user, password);
+      } catch (error) {
         await AuditEntry.append('failed authentication', ctx, {
           type: 'security',
           object: user,
           user: user.id,
         });
-        ctx.throw(401, 'Incorrect password');
+        ctx.throw(400, error);
       }
-
-      user.loginAttempts = 0;
 
       if (await mfa.requireChallenge(ctx, user)) {
         const tokenId = generateTokenId();
@@ -133,33 +126,35 @@ router
       const { authUser } = ctx.state;
       const { password } = ctx.request.body;
 
-      const { verified, threshold } = authUser.verifyLoginAttempts();
-      if (!verified) {
-        await AuditEntry.append('reached max authentication attempts', ctx, {
+      try {
+        await verifyLoginAttempts(authUser);
+      } catch (error) {
+        await AuditEntry.append('Reached max authentication attempts', ctx, {
           type: 'security',
           object: authUser,
           user: authUser.id,
         });
-        ctx.throw(401, `Too many attempts. Try again in ${Math.max(1, Math.floor(threshold / (60 * 1000)))} minute(s)`);
+        ctx.throw(401, error);
       }
 
-      authUser.set({
-        lastLoginAttemptAt: new Date(),
-        loginAttempts: authUser.loginAttempts + 1,
+      try {
+        await verifyPassword(authUser, password);
+      } catch (error) {
+        await AuditEntry.append('Failed authentication (confirm-access)', ctx, {
+          type: 'security',
+          object: authUser,
+          user: authUser.id,
+        });
+        ctx.throw(400, error);
+      }
+
+      await AuditEntry.append('successfully authenticated (confirm-access)', ctx, {
+        object: authUser,
+        user: authUser.id,
       });
-      await authUser.save();
 
-      if (!(await authUser.verifyPassword(password))) {
-        await AuditEntry.append('failed authentication (confirm-access)', ctx, {
-          type: 'security',
-          object: authUser,
-          user: authUser.id,
-        });
-        ctx.throw(401, 'Incorrect password');
-      }
       authUser.accessConfirmedAt = new Date();
       await authUser.save();
-
       ctx.status = 204;
     }
   )

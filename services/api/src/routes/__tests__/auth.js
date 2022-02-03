@@ -3,6 +3,7 @@ const { createTemporaryToken, generateTokenId } = require('../../utils/tokens');
 const { setupDb, teardownDb, request, createUser } = require('../../utils/testing');
 const { mockTime, unmockTime, advanceTime } = require('../../utils/testing/time');
 const { User, Invite } = require('../../models');
+const { verifyPassword } = require('../../utils/auth');
 
 beforeAll(async () => {
   await setupDb();
@@ -52,7 +53,7 @@ describe('/1/auth', () => {
       });
       let response;
 
-      await request('POST', '/1/auth/login', { email: user.email, password: 'bad password' });
+      response = await request('POST', '/1/auth/login', { email: user.email, password: 'bad password' });
 
       response = await request('POST', '/1/auth/login', { email: user.email, password });
       expect(response.status).toBe(401);
@@ -282,7 +283,7 @@ describe('/1/auth', () => {
 
       const updatedUser = await User.findById(user.id);
       await expect(async () => {
-        await updatedUser.verifyPassword(password);
+        await verifyPassword(updatedUser, password);
       }).not.toThrow();
     });
 

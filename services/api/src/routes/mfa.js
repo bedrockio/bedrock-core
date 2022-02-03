@@ -10,6 +10,7 @@ const sms = require('../utils/sms');
 const { createAuthToken } = require('../utils/tokens');
 const { sendTemplatedMail } = require('../utils/mailer');
 const { validateBody } = require('../utils/middleware/validate');
+const { verifyLoginAttempts } = require('../utils/auth');
 
 const checkPasswordVerification = (ctx, next) => {
   const { authUser } = ctx.state;
@@ -58,21 +59,16 @@ router
         ctx.throw(400, 'Token is invalid (jti)');
       }
 
-      const { verified, threshold } = user.verifyLoginAttempts();
-      if (!verified) {
+      try {
+        await verifyLoginAttempts(user);
+      } catch (error) {
         await AuditEntry.append('reached max mfa challenge attempts', ctx, {
           type: 'security',
           object: user,
           user: user.id,
         });
-        ctx.throw(401, `Too many attempts. Try again in ${Math.max(1, Math.floor(threshold / (60 * 1000)))} minute(s)`);
+        ctx.throw(401, error);
       }
-
-      user.set({
-        lastLoginAttemptAt: new Date(),
-        loginAttempts: user.loginAttempts + 1,
-      });
-      await user.save();
 
       // if backup code e.g 12345-16123
       const backupCodes = (user.mfaBackupCodes || []).concat();
