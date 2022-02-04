@@ -6,6 +6,7 @@ import { wrapComponent, getWrappedComponent } from 'utils/hoc';
 
 import BasicLayout from 'layouts/Basic';
 import DashboardLayout from 'layouts/Dashboard';
+import PortalLayout from 'layouts/Portal';
 
 // Note: Ideally the screen helper would be agnostic to specific
 // layouts and instead allow them to be defined by an app wiring
@@ -13,15 +14,15 @@ import DashboardLayout from 'layouts/Dashboard';
 const layouts = {
   basic: BasicLayout,
   dashboard: DashboardLayout,
+  portal: PortalLayout,
 };
 
 export default function (Component) {
   const Wrapped = getWrappedComponent(Component);
   const title = Wrapped.title || startCase(Wrapped.name.replace(/Screen$/, ''));
-  const Layout =
-    Wrapped.layout !== null && layouts[Wrapped.layout || 'dashboard'];
+  const Layout = layouts[Wrapped.layout || 'dashboard'];
 
-  if (!Layout && Wrapped.layout !== null) {
+  if (!Layout) {
     throw new Error(`No layout "${Wrapped.layout}".`);
   }
 
@@ -33,12 +34,9 @@ export default function (Component) {
             {this.renderTitle()}
             {this.renderCanonical()}
           </Helmet>
-          {Layout && (
-            <Layout>
-              <Component {...this.props} />
-            </Layout>
-          )}
-          {!Layout && <Component {...this.props} />}
+          <Layout>
+            <Component {...this.props} />
+          </Layout>
         </React.Fragment>
       );
     }

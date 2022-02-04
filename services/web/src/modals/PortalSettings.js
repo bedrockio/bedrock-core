@@ -5,10 +5,10 @@ import { request } from 'utils/api';
 
 import SearchDropdown from 'components/SearchDropdown';
 import modal from 'helpers/modal';
-import { Context } from './Context';
+import { Context } from '../screens/Docs/Context';
 
 @modal
-export default class Settings extends React.Component {
+export default class PortalSettings extends React.Component {
   static contextType = Context;
 
   fetchApplications = async (keyword) => {

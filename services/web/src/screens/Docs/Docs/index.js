@@ -39,7 +39,7 @@ function getDefaultPage() {
 
 @screen
 export default class APIDocs extends React.Component {
-  static layout = null;
+  static layout = 'portal';
 
   contextRef = createRef();
 
