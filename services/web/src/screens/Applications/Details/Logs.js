@@ -233,6 +233,7 @@ export default class ApplicationLogs extends React.Component {
                           {truncate(selectedItem.request.path, { length: 28 })}
                           <ShowRequest
                             centered={false}
+                            application={this.props.application}
                             request={selectedItem.request}
                             requestId={selectedItem.requestId}
                             trigger={

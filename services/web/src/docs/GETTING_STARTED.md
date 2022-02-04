@@ -13,10 +13,10 @@ Main production URL:
 ### API Key
 
 Each client using using the api must provide use an API key to identify itself.
-You can provide your API key via an header (`APIKey: <apiKey>`):
+You can provide your API key via an header (`API-Key: <apiKey>`):
 
 ```bash
-curl -H 'APIKey: <apiKey>' <API_URL>/
+curl -H 'API-Key: <apiKey>' <API_URL>/
 ```
 
 ### Authorization

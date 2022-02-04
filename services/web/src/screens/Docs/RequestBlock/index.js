@@ -65,7 +65,7 @@ export default class RequestBlock extends React.Component {
   getDefaultHeaders() {
     const { authToken, apiKey } = this.props;
     const headers = {
-      ApiKey: `${apiKey || '<API_KEY>'}`,
+      'API-Key': `${apiKey || '<apiKey>'}`,
       ...this.props.headers,
     };
     if (authToken) {

@@ -93,7 +93,12 @@ export default class ShowRequest extends React.Component {
             </>
           )}
           {this.state.tab === 'curl' && (
-            <RequestBlock header={false} request={rest} />
+            <RequestBlock
+              apiKey={this.props.application.apiKey}
+              authToken="<token>"
+              header={false}
+              request={rest}
+            />
           )}
         </Modal.Content>
       </>
