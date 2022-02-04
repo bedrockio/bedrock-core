@@ -1,5 +1,14 @@
 import React from 'react';
-import { Message, Divider, Loader, Label, Grid, Table, Button } from 'semantic';
+import {
+  Message,
+  Divider,
+  Loader,
+  Label,
+  Grid,
+  Table,
+  Button,
+  Segment,
+} from 'semantic';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
 import { Layout } from 'components';
@@ -149,7 +158,9 @@ export default class ApplicationLogs extends React.Component {
                       </Layout>
                       <Divider hidden />
                       {loading ? (
-                        <Loader active />
+                        <Segment style={{ minHeight: '5em' }}>
+                          <Loader active />
+                        </Segment>
                       ) : error ? (
                         <Message error content={error.message} />
                       ) : items.length === 0 ? (
@@ -221,6 +232,7 @@ export default class ApplicationLogs extends React.Component {
                           {selectedItem.request.method}{' '}
                           {truncate(selectedItem.request.path, { length: 28 })}
                           <ShowRequest
+                            centered={false}
                             request={selectedItem.request}
                             requestId={selectedItem.requestId}
                             trigger={

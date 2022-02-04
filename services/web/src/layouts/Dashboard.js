@@ -8,7 +8,7 @@ import Organization from 'modals/Organization';
 import Sidebar from './Sidebar';
 import { withSession } from 'stores';
 import { userCanSwitchOrganizations } from 'utils/permissions';
-
+import { userHasAccess } from 'utils/permissions';
 import ConnectionError from 'components/ConnectionError';
 
 import logo from 'assets/logo.svg';
@@ -78,10 +78,16 @@ export default class DashboardLayout extends React.Component {
                   <Icon name="cog" />
                   Settings
                 </Sidebar.Link>
-                <Sidebar.Link to="/applications">
-                  <Icon name="terminal" />
-                  Applications
-                </Sidebar.Link>
+                {userHasAccess(this.context.user, {
+                  endpoint: 'applications',
+                  permission: 'read',
+                  scope: 'global',
+                }) && (
+                  <Sidebar.Link to="/applications">
+                    <Icon name="terminal" />
+                    Applications
+                  </Sidebar.Link>
+                )}
                 <Sidebar.Link to="/docs">
                   <Icon name="book-open" />
                   Docs

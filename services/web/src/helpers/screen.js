@@ -5,16 +5,16 @@ import { APP_NAME } from 'utils/env';
 import { wrapComponent, getWrappedComponent } from 'utils/hoc';
 
 import BasicLayout from 'layouts/Basic';
-import DashboardLayout from 'layouts/Dashboard';
 import PortalLayout from 'layouts/Portal';
+import DashboardLayout from 'layouts/Dashboard';
 
 // Note: Ideally the screen helper would be agnostic to specific
 // layouts and instead allow them to be defined by an app wiring
 // them together, however react-hot-reloader has issues with this.
 const layouts = {
   basic: BasicLayout,
-  dashboard: DashboardLayout,
   portal: PortalLayout,
+  dashboard: DashboardLayout,
 };
 
 export default function (Component) {
