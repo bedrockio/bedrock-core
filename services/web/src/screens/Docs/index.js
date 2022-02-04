@@ -1,199 +1,69 @@
-import React, { createRef } from 'react';
-import { Switch, Route, Link, NavLink } from 'react-router-dom';
-import { startCase, kebabCase } from 'lodash';
-import { Breadcrumb, Container, Divider, Menu, Message, Ref } from 'semantic';
-import { Layout } from 'components/Layout';
-import { Menu as ResponsiveMenu } from 'components/Responsive';
-import { APP_NAME } from 'utils/env';
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import { Menu, Icon, Container, Button } from 'semantic';
+import Footer from 'components/Footer';
+import { Layout } from 'components';
+import bem from 'helpers/bem';
+import ConnectionError from 'components/ConnectionError';
+
+import logo from 'assets/logo.svg';
+import './portal.less';
+import { Switch, Route } from 'react-router-dom';
+
+import Settings from './Settings';
+import Components from './Components';
+import Docs from './Docs';
 import DocsProvider from './Context';
 
-import StandardPage from './StandardPage';
-import PageLoader from 'components/PageLoader';
-
-import { request } from 'utils/api';
-
-import Portal from './Portal';
-
-import DOCS from 'docs';
-
-const DEFAULT_PAGE_ID = 'getting-started';
-
-const PAGES = Object.keys(DOCS).map((name) => {
-  return {
-    id: kebabCase(name),
-    name: startCase(name.toLowerCase()),
-    markdown: DOCS[name],
-  };
-});
-
-function stateForParams(params) {
-  const { id = DEFAULT_PAGE_ID } = params;
-  return {
-    pageId: id,
-    page: id ? PAGES.find((p) => p.id === id) : getDefaultPage(),
-  };
-}
-
-function getDefaultPage() {
-  return PAGES.find((page) => {
-    return page.id === DEFAULT_PAGE_ID;
-  });
-}
-
-function ProviderWrap({ ...props }) {
-  return (
-    <DocsProvider>
-      <Portal>
-        <Docs {...props} />
-      </Portal>
-    </DocsProvider>
-  );
-}
-
-class Docs extends React.Component {
-  contextRef = createRef();
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      openApi: null,
-      loading: true,
-      error: null,
-      ...stateForParams(this.props.match.params),
-    };
-  }
-
-  async componentDidMount() {
-    try {
-      const openApi = await request({
-        method: 'GET',
-        path: '/openapi.lite.json',
-      });
-      this.setState(
-        {
-          loading: false,
-          openApi,
-        },
-        () => {
-          this.checkJumpLink();
-        }
-      );
-    } catch (error) {
-      this.setState({
-        error,
-        loading: false,
-      });
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.match.params.id !== this.props.match.params.id) {
-      this.setState({
-        ...stateForParams(this.props.match.params),
-      });
-    }
-  }
-
-  checkJumpLink() {
-    const { hash } = this.props.location;
-    if (hash) {
-      const el = document.querySelector(hash);
-      if (el) {
-        el.scrollIntoView();
-      }
-    }
-  }
-
+@bem
+export default class PortalLayout extends React.Component {
   render() {
-    const { page, loading, openApi, pageId } = this.state;
-    const { me } = this.props;
-
-    if (loading) {
-      return <PageLoader />;
-    }
-
-    if (!page)
-      return (
-        <Container>
-          <Message error content="Page not found" />
-        </Container>
-      );
-
     return (
-      <>
-        <h1 className="primary">{APP_NAME} API v1</h1>
-        <Divider hidden />
-
-        <Breadcrumb size="mini">
-          <Breadcrumb.Section link as={Link} to="/docs">
-            API Docs
-          </Breadcrumb.Section>
-          <Breadcrumb.Divider icon="chevron-right" />
-          <Breadcrumb.Section>{page.name}</Breadcrumb.Section>
-        </Breadcrumb>
-
-        <Divider hidden />
-
-        <Layout horizontal top stackable>
-          <Layout.Group size="200px" fixed>
-            <ResponsiveMenu contextRef={this.contextRef} title="Docs Menu">
-              {PAGES.map(({ id, name }) => {
-                return (
-                  <Menu.Item
-                    key={id}
-                    exact
-                    name={name}
-                    active={pageId === id}
-                    to={`/docs/${id}`}
-                    as={NavLink}
-                  />
-                );
-              })}
-            </ResponsiveMenu>
-          </Layout.Group>
-          <Layout.Spacer size={1} />
-          <Layout.Group>
-            <Ref innerRef={this.contextRef}>
-              <Switch>
-                {PAGES.map((page) => {
-                  return (
-                    <Route
-                      key={page.id}
-                      exact
-                      path={`/docs/${page.id}`}
-                      component={(props) => (
-                        <StandardPage
-                          {...props}
-                          me={me}
-                          openApi={openApi}
-                          page={page}
-                        />
-                      )}
-                    />
-                  );
-                }).concat([
-                  <Route
-                    key="index"
-                    path="/docs"
-                    exact
-                    component={(props) => (
-                      <StandardPage
-                        {...props}
-                        me={me}
-                        openApi={openApi}
-                        page={getDefaultPage()}
-                      />
-                    )}
-                  />,
-                ])}
-              </Switch>
-            </Ref>
-          </Layout.Group>
+      <DocsProvider>
+        <ConnectionError />
+        <Layout className={this.getElementClass('menu')}>
+          <Layout
+            className={this.getElementClass('menu-top')}
+            horizontal
+            center
+            spread>
+            <NavLink className="logo" to="/">
+              <img height="30" src={logo} />
+            </NavLink>
+            <div>
+              <Settings trigger={<Button>Settings</Button>} size="tiny" />
+              <Button primary compact as={NavLink} to="/">
+                Dashboard &rarr;
+              </Button>
+            </div>
+          </Layout>
+          <Menu
+            className={this.getElementClass('menu-bottom')}
+            secondary
+            pointing>
+            <Container>
+              <Menu.Item as={NavLink} to="/docs/getting-started">
+                <Icon name="terminal" /> API Docs
+              </Menu.Item>
+              <Menu.Item as={NavLink} to="/docs/ui">
+                <Icon name="cube" /> UI Components
+              </Menu.Item>
+              <Menu.Item position="right" style={{ padding: 0 }}></Menu.Item>
+            </Container>
+          </Menu>
         </Layout>
-        <Divider hidden />
-      </>
+        <Layout className={this.getElementClass('content')}>
+          <Container>
+            <main>
+              <Switch>
+                <Route path="/docs/ui" component={Components} exact />
+                <Route path="/docs/:id" component={Docs} />
+              </Switch>
+            </main>
+            <Footer />
+          </Container>
+        </Layout>
+      </DocsProvider>
     );
   }
 }
-
-export default ProviderWrap;

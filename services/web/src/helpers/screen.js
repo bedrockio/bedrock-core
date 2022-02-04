@@ -5,7 +5,6 @@ import { APP_NAME } from 'utils/env';
 import { wrapComponent, getWrappedComponent } from 'utils/hoc';
 
 import BasicLayout from 'layouts/Basic';
-import PortalLayout from 'layouts/Portal';
 import DashboardLayout from 'layouts/Dashboard';
 
 // Note: Ideally the screen helper would be agnostic to specific
@@ -13,16 +12,16 @@ import DashboardLayout from 'layouts/Dashboard';
 // them together, however react-hot-reloader has issues with this.
 const layouts = {
   basic: BasicLayout,
-  portal: PortalLayout,
   dashboard: DashboardLayout,
 };
 
 export default function (Component) {
   const Wrapped = getWrappedComponent(Component);
   const title = Wrapped.title || startCase(Wrapped.name.replace(/Screen$/, ''));
-  const Layout = layouts[Wrapped.layout || 'dashboard'];
+  const Layout =
+    Wrapped.layout !== null && layouts[Wrapped.layout || 'dashboard'];
 
-  if (!Layout) {
+  if (!Layout && Wrapped.layout !== null) {
     throw new Error(`No layout "${Wrapped.layout}".`);
   }
 
@@ -34,9 +33,12 @@ export default function (Component) {
             {this.renderTitle()}
             {this.renderCanonical()}
           </Helmet>
-          <Layout>
-            <Component {...this.props} />
-          </Layout>
+          {Layout && (
+            <Layout>
+              <Component {...this.props} />
+            </Layout>
+          )}
+          {!Layout && <Component {...this.props} />}
         </React.Fragment>
       );
     }

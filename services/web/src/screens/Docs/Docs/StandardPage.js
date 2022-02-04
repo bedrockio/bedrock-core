@@ -9,7 +9,7 @@ import { enrichMarkdown, executeOpenApiMacros } from 'utils/markdown';
 
 import './table.less';
 import { API_URL } from 'utils/env';
-import { Context } from './Context';
+import { Context } from '../Context';
 
 export default class StandardPage extends React.Component {
   static contextType = Context;

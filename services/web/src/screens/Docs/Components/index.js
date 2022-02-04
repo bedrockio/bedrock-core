@@ -43,7 +43,7 @@ const options2 = [
 
 @screen
 export default class ComponentsScreen extends React.Component {
-  static layout = 'portal';
+  static layout = null;
 
   contextRef = React.createRef();
 
