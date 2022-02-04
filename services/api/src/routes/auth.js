@@ -84,7 +84,7 @@ router
           object: user,
           user: user.id,
         });
-        ctx.throw(400, error);
+        ctx.throw(401, error);
       }
 
       if (await mfa.requireChallenge(ctx, user)) {
@@ -145,7 +145,7 @@ router
           object: authUser,
           user: authUser.id,
         });
-        ctx.throw(400, error);
+        ctx.throw(401, error);
       }
 
       await AuditEntry.append('successfully authenticated (confirm-access)', ctx, {
