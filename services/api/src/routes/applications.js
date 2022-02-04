@@ -5,12 +5,14 @@ const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { Application, ApplicationRequest } = require('../models');
 const { exportValidation, csvExport } = require('../utils/csv');
+const { requirePermissions } = require('../utils/middleware/permissions');
 
 const router = new Router();
 
 router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
+  .use(requirePermissions({ endpoint: 'applications', permission: 'read', scope: 'global' }))
   .param('application', async (id, ctx, next) => {
     const application = await Application.findOne({ _id: id, user: ctx.state.authUser.id });
     ctx.state.application = application;
@@ -28,23 +30,6 @@ router
     ctx.body = {
       data,
       meta,
-    };
-  })
-  .post('/', validateBody(Application.getCreateValidation()), async (ctx) => {
-    const { body } = ctx.request;
-    const apiKey = kebabCase(body.name);
-    const count = await Application.countDocuments({
-      apiKey,
-    });
-
-    const application = await Application.create({
-      ...body,
-      apiKey: count ? `${apiKey}-${count}` : apiKey,
-      user: ctx.state.authUser,
-    });
-
-    ctx.body = {
-      data: application,
     };
   })
   .post(
@@ -75,6 +60,24 @@ router
   .get('/:application', async (ctx) => {
     ctx.body = {
       data: ctx.state.application,
+    };
+  })
+  .use(requirePermissions({ endpoint: 'applications', permission: 'write', scope: 'global' }))
+  .post('/', validateBody(Application.getCreateValidation()), async (ctx) => {
+    const { body } = ctx.request;
+    const apiKey = kebabCase(body.name);
+    const count = await Application.countDocuments({
+      apiKey,
+    });
+
+    const application = await Application.create({
+      ...body,
+      apiKey: count ? `${apiKey}-${count}` : apiKey,
+      user: ctx.state.authUser,
+    });
+
+    ctx.body = {
+      data: application,
     };
   })
   .patch('/:application', validateBody(Application.getUpdateValidation()), async (ctx) => {

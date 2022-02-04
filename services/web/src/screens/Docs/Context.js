@@ -1,7 +1,7 @@
 import React from 'react';
 export const Context = React.createContext();
 
-import { request } from 'utils/api';
+import { request, hasToken } from 'utils/api';
 
 export default class DocsProvider extends React.Component {
   constructor(props) {
@@ -13,7 +13,9 @@ export default class DocsProvider extends React.Component {
   }
 
   componentDidMount() {
-    this.selectDefaultApplication();
+    if (hasToken()) {
+      this.selectDefaultApplication();
+    }
   }
 
   selectDefaultApplication = async () => {

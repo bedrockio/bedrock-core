@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 
 import Components from './Components';
 import Docs from './Docs';
@@ -13,6 +13,7 @@ export default class PortalLayout extends React.Component {
         <Switch>
           <Route path="/docs/ui" component={Components} exact />
           <Route path="/docs/:id" component={Docs} />
+          <Redirect to="/docs/getting-started" />
         </Switch>
       </DocsProvider>
     );
