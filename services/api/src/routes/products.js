@@ -12,7 +12,7 @@ router
   .use(fetchUser)
   .param('productId', async (id, ctx, next) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      ctx.throw(400, 'ObjectId in path is not valid');
+      ctx.throw(404);
     }
     const product = await Product.findById(id);
     if (!product) {

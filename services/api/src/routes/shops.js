@@ -11,7 +11,7 @@ router
   .use(fetchUser)
   .param('shopId', async (id, ctx, next) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      ctx.throw(400, 'ObjectId in path is not valid');
+      ctx.throw(404, 'ObjectId in path is not valid');
     }
     const shop = await Shop.findById(id);
     if (!shop) {

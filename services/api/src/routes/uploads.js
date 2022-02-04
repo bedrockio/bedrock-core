@@ -10,7 +10,7 @@ const router = new Router();
 router
   .param('uploadId', async (id, ctx, next) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      ctx.throw(400, 'ObjectId in path is not valid');
+      ctx.throw(404);
     }
     const upload = await Upload.findById(id);
     if (!upload) {
