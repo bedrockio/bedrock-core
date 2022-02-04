@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Router = require('@koa/router');
 const Joi = require('joi');
 const { validateBody } = require('../utils/middleware/validate');
@@ -26,12 +27,14 @@ function sendInvite(sender, invite) {
 
 router
   .param('inviteId', async (id, ctx, next) => {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      ctx.throw(400, 'ObjectId in path is not valid');
+    }
     const invite = await Invite.findById(id);
-    ctx.state.invite = invite;
-
     if (!invite) {
       ctx.throw(404);
     }
+    ctx.state.invite = invite;
 
     return next();
   })

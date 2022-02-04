@@ -1,6 +1,8 @@
+const mongoose = require('mongoose');
 const Router = require('@koa/router');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
+
 const { Product } = require('../models');
 
 const router = new Router();
@@ -9,16 +11,15 @@ router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
   .param('productId', async (id, ctx, next) => {
-    try {
-      const product = await Product.findById(id);
-      if (!product) {
-        ctx.throw(404);
-      }
-      ctx.state.product = product;
-      return next();
-    } catch (err) {
-      ctx.throw(400, err);
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      ctx.throw(400, 'ObjectId in path is not valid');
     }
+    const product = await Product.findById(id);
+    if (!product) {
+      ctx.throw(404);
+    }
+    ctx.state.product = product;
+    return next();
   })
   .post('/', validateBody(Product.getCreateValidation()), async (ctx) => {
     const product = await Product.create(ctx.request.body);
