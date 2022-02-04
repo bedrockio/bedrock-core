@@ -5,12 +5,14 @@ import { Breadcrumb, Container, Divider, Menu, Message, Ref } from 'semantic';
 import { Layout } from 'components/Layout';
 import { Menu as ResponsiveMenu } from 'components/Responsive';
 import { APP_NAME } from 'utils/env';
+import DocsProvider from './Context';
 
 import StandardPage from './StandardPage';
 import PageLoader from 'components/PageLoader';
 
-import { request } from '../../utils/api';
-import screen from 'helpers/screen';
+import { request } from 'utils/api';
+
+import Portal from './Portal';
 
 import DOCS from 'docs';
 
@@ -38,10 +40,17 @@ function getDefaultPage() {
   });
 }
 
-@screen
-export default class Docs extends React.Component {
-  static layout = 'portal';
+function ProviderWrap({ ...props }) {
+  return (
+    <DocsProvider>
+      <Portal>
+        <Docs {...props} />
+      </Portal>
+    </DocsProvider>
+  );
+}
 
+class Docs extends React.Component {
   contextRef = createRef();
 
   constructor(props) {
@@ -111,9 +120,10 @@ export default class Docs extends React.Component {
       );
 
     return (
-      <React.Fragment>
+      <>
         <h1 className="primary">{APP_NAME} API v1</h1>
         <Divider hidden />
+
         <Breadcrumb size="mini">
           <Breadcrumb.Section link as={Link} to="/docs">
             API Docs
@@ -121,7 +131,9 @@ export default class Docs extends React.Component {
           <Breadcrumb.Divider icon="chevron-right" />
           <Breadcrumb.Section>{page.name}</Breadcrumb.Section>
         </Breadcrumb>
+
         <Divider hidden />
+
         <Layout horizontal top stackable>
           <Layout.Group size="200px" fixed>
             <ResponsiveMenu contextRef={this.contextRef} title="Docs Menu">
@@ -179,7 +191,9 @@ export default class Docs extends React.Component {
           </Layout.Group>
         </Layout>
         <Divider hidden />
-      </React.Fragment>
+      </>
     );
   }
 }
+
+export default ProviderWrap;

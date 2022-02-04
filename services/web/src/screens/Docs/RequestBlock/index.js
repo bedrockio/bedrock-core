@@ -33,6 +33,7 @@ const OPTIONS = [
 export default class RequestBlock extends React.Component {
   static propTypes = {
     height: PropTypes.string,
+    apiKey: PropTypes.string,
     authToken: PropTypes.string,
     baseUrl: PropTypes.string,
     header: PropTypes.bool,
@@ -43,7 +44,6 @@ export default class RequestBlock extends React.Component {
         .isRequired,
       body: PropTypes.object,
       headers: PropTypes.object,
-      file: PropTypes.bool,
     }).isRequired,
   };
 
@@ -62,29 +62,32 @@ export default class RequestBlock extends React.Component {
     this.templateRef = React.createRef();
   }
 
+  getDefaultHeaders() {
+    const { authToken, apiKey } = this.props;
+    const headers = {
+      ApiKey: `${apiKey || '<API_KEY>'}`,
+      ...this.props.headers,
+    };
+    if (authToken) {
+      headers['Authorization'] = `Bearer ${authToken}`;
+    }
+    return headers;
+  }
+
   getData() {
-    const { baseUrl, authToken, request, height } = this.props;
+    const { baseUrl, request } = this.props;
     const { path, ...rest } = request;
     return {
       ...rest,
       url: baseUrl ? `${baseUrl}${path}` : path,
-      ...(authToken
-        ? {
-            headers: {
-              ...rest.headers,
-              ...(request?.body && !request?.file
-                ? { 'Content-Type': 'application/json' }
-                : {}),
-              Authorization: `Bearer ${authToken}`,
-            },
-          }
-        : {}),
+      headers: this.getDefaultHeaders(),
     };
   }
 
   render() {
     const option = OPTIONS.find((c) => c.value === this.state.current);
     const { method, path } = this.props.request;
+
     return (
       <>
         {this.props.header && (
@@ -98,7 +101,12 @@ export default class RequestBlock extends React.Component {
                   this.setState({ current: value });
                 }}
                 selection
-                options={OPTIONS}
+                options={OPTIONS.map(({ value, text }) => {
+                  return {
+                    value,
+                    text,
+                  };
+                })}
                 value={this.state.current}
               />
             </Layout.Group>

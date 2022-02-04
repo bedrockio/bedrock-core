@@ -10,6 +10,15 @@ Main production URL:
 <API_URL>/
 ```
 
+### API Key
+
+Each client using using the api must provide use an API key to identify itself.
+You can provide your API key via an header (`APIKey: <apiKey>`):
+
+```bash
+curl -H 'APIKey: <apiKey>' <API_URL>/
+```
+
 ### Authorization
 
 JWT is used for all authentication. You can provide your API token in a standard bearer token request (`Authorization: Bearer <token>`) like so:
@@ -27,9 +36,10 @@ A pragmatic RESTful style is enforced on all API calls. GET requests are only us
 Search/List API calls are done using POST to allow reliable JSON parameters. Example search:
 
 ```bash
-curl -XPOST <API_URL>/2/users/search \
+curl -XPOST <API_URL>/1/users/search \
   -d '{"limit": 100, "skip": 0}' \
   -H 'Authorization: Bearer <token>' \
+  -H 'APIKey: <apikey>' \
   -H 'Content-Type: application/json'
 ```
 

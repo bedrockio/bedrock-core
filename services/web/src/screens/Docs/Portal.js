@@ -8,8 +8,12 @@ import bem from 'helpers/bem';
 import ConnectionError from 'components/ConnectionError';
 
 import logo from 'assets/logo.svg';
-
 import './portal.less';
+
+import Settings from './Settings';
+/*
+
+*/
 
 @bem
 export default class PortalLayout extends React.Component {
@@ -27,6 +31,7 @@ export default class PortalLayout extends React.Component {
               <img height="30" src={logo} />
             </NavLink>
             <div>
+              <Settings trigger={<Button>Settings</Button>} size="tiny" />
               <Button primary compact as={NavLink} to="/">
                 Dashboard &rarr;
               </Button>
@@ -43,6 +48,7 @@ export default class PortalLayout extends React.Component {
               <Menu.Item as={NavLink} to="/docs/ui">
                 <Icon name="cube" /> UI Components
               </Menu.Item>
+              <Menu.Item position="right" style={{ padding: 0 }}></Menu.Item>
             </Container>
           </Menu>
         </Layout>

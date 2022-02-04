@@ -79,7 +79,7 @@ function applicationMiddleware({ ignorePaths = [] }) {
       return next();
     }
 
-    const apiKey = ctx.get('apikey') || '';
+    const apiKey = ctx.get('apikey') || ctx.get('api_key') || '';
     if (!apiKey) {
       // This makes <img> tag work regardless of apikey, as its not possible a header for an image tag
       if (ctx.get('accept').includes('image/') && ctx.method === 'GET') {

@@ -9,13 +9,21 @@ import { enrichMarkdown, executeOpenApiMacros } from 'utils/markdown';
 
 import './table.less';
 import { API_URL } from 'utils/env';
+import { Context } from './Context';
 
 export default class StandardPage extends React.Component {
+  static contextType = Context;
+
+  state = {
+    application: undefined,
+  };
+
   renderCodeBlock = (props) => {
     if (props.language && props.language.includes('request')) {
       return (
         <RequestBlock
           authToken={'<token>'}
+          apiKey={this.context.application?.apiKey}
           request={JSON.parse(props.value)}
           baseUrl={API_URL}
         />
@@ -31,7 +39,7 @@ export default class StandardPage extends React.Component {
     markdown = executeOpenApiMacros(openApi, markdown);
 
     return (
-      <div className="docs markdown-body">
+      <div className="docs markdown-body" style={{ position: 'relative' }}>
         <ReactMarkdown
           allowDangerousHtml
           source={markdown}
