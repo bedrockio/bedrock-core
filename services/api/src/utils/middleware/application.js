@@ -110,6 +110,7 @@ function applicationMiddleware({ ignorePaths = [] }) {
     if (response.get('Content-Type')?.includes('application/json')) {
       // this is bit unlucky
       // we need to stringify the doc to avoid having all kind of prototypes / bson id / other mongonse wrappers
+      // perhaps its worth considering https://developer.mozilla.org/en-US/docs/Web/API/structuredClone when move to node 17+
       const convertBody = JSON.parse(JSON.stringify(response.body));
       responseBody = redact(truncate(convertBody));
     }
