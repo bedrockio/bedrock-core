@@ -232,26 +232,69 @@ describe('createSchema', () => {
             },
           ],
         });
-        const data = user.toObject();
+        const data = JSON.parse(JSON.stringify(user));
         expect(data.names[0]).toEqual({
           name: 'Foo',
           position: 2,
+          id: user.names[0].id,
         });
       });
 
       it('should not expose _id in deeply nested array objects of mixed type', () => {
         const User = createTestModel(
           createSchemaFromAttributes({
-            one: [{ two: [{ three: [{ name: String, position: Number }] }] }],
+            one: [
+              {
+                two: [
+                  {
+                    three: [
+                      {
+                        name: String,
+                        position: Number,
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
           })
         );
         const user = new User({
-          one: [{ two: [{ three: [{ name: 'Foo', position: 2 }] }] }],
+          one: [
+            {
+              two: [
+                {
+                  three: [
+                    {
+                      name: 'Foo',
+                      position: 2,
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
         });
-        const data = user.toObject();
+        const data = JSON.parse(JSON.stringify(user));
         expect(data).toEqual({
           id: user.id,
-          one: [{ two: [{ three: [{ name: 'Foo', position: 2 }] }] }],
+          one: [
+            {
+              id: user.one[0].id,
+              two: [
+                {
+                  id: user.one[0].two[0].id,
+                  three: [
+                    {
+                      name: 'Foo',
+                      position: 2,
+                      id: user.one[0].two[0].three[0].id,
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
         });
       });
 
@@ -429,15 +472,18 @@ describe('createSchema', () => {
           ],
         });
 
-        const data = user.toObject();
+        const data = JSON.parse(JSON.stringify(user));
         expect(data).toEqual({
           id: user.id,
           one: [
             {
+              id: user.one[0].id,
               two: [
                 {
+                  id: user.one[0].two[0].id,
                   three: [
                     {
+                      id: user.one[0].two[0].three[0].id,
                       name: 'Harry',
                     },
                   ],
@@ -542,6 +588,65 @@ describe('createSchema', () => {
         expect(user.terms).toEqual({ service: true, privacy: true });
         expect(user.toObject().terms).toBeUndefined();
       });
+    });
+
+    it('should serialize nested array object ids', async () => {
+      const User = createTestModel(
+        createSchemaFromAttributes({
+          foo: [
+            {
+              bar: [
+                {
+                  name: String,
+                },
+              ],
+            },
+          ],
+        })
+      );
+      const user = new User({
+        foo: [
+          {
+            bar: [
+              {
+                name: 'wut',
+              },
+            ],
+          },
+        ],
+      });
+      const data = JSON.parse(JSON.stringify(user));
+      expect(data.foo[0].bar[0].id).not.toBeUndefined();
+    });
+
+    it('should serialize id on nested field with type', async () => {
+      const User = createTestModel(
+        createSchemaFromAttributes({
+          foo: {
+            type: {
+              type: String,
+              required: true,
+            },
+            bar: [
+              {
+                name: String,
+              },
+            ],
+          },
+        })
+      );
+      const user = new User({
+        foo: {
+          type: 'foo type',
+          bar: [
+            {
+              name: 'name',
+            },
+          ],
+        },
+      });
+      const data = JSON.parse(JSON.stringify(user));
+      expect(data.foo.bar[0].id).not.toBeUndefined();
     });
   });
 
