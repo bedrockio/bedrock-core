@@ -670,6 +670,40 @@ describe('createSchema', () => {
       expect(user.profile.firstName).toEqual('Jane');
       expect(user.profile.lastName).toEqual('Doe');
     });
+
+    it('should naively merge nested array fields', async () => {
+      const Shop = createTestModel(
+        createSchemaFromAttributes({
+          products: [
+            {
+              name: String,
+            },
+          ],
+        })
+      );
+      const shop = await Shop.create({
+        products: [
+          {
+            name: 'shampoo',
+          },
+        ],
+      });
+
+      shop.assign({
+        products: [
+          {
+            name: 'conditioner',
+          },
+          {
+            name: 'body wash',
+          },
+        ],
+      });
+      await shop.save();
+
+      expect(shop.products[0].name).toBe('conditioner');
+      expect(shop.products[1].name).toBe('body wash');
+    });
   });
 
   describe('autopopulate', () => {
@@ -1697,6 +1731,51 @@ describe('validation', () => {
         age: 25,
       });
       expect(value.age).toBe(25);
+    });
+
+    it('should not skip required validations in array fields', () => {
+      const User = createTestModel(
+        createSchemaFromAttributes({
+          users: [
+            {
+              name: {
+                type: String,
+                required: true,
+              },
+              count: {
+                type: Number,
+              },
+            },
+          ],
+        })
+      );
+      const schema = User.getUpdateValidation();
+      expect(Joi.isSchema(schema)).toBe(true);
+      assertPass(schema, {
+        users: [
+          {
+            name: 'foo',
+          },
+        ],
+      });
+      assertPass(schema, {
+        users: [
+          {
+            name: 'foo',
+            count: 1,
+          },
+        ],
+      });
+      assertFail(schema, {
+        users: [{}],
+      });
+      assertFail(schema, {
+        users: [
+          {
+            count: 1,
+          },
+        ],
+      });
     });
   });
 
