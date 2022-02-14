@@ -143,10 +143,10 @@ const INLINE_CONTENT_TYPES_REG = /\.(md|html)$/;
 async function transformFile(keys, value, meta) {
   if (isReferenceField(keys, meta)) {
     value = await importUpload(value, meta);
-  } else if (isStringField(keys, meta)) {
-    value = await importContent(value, meta);
   } else if (isBufferField(keys, meta)) {
     value = await importBuffer(value, meta);
+  } else {
+    value = await importContent(value, meta);
   }
   return value;
 }
@@ -254,11 +254,6 @@ async function resolveRelativeFile(file, meta) {
 function isReferenceField(keys, meta) {
   const schemaType = getSchemaType(keys, meta);
   return schemaType instanceof mongoose.Schema.Types.ObjectId;
-}
-
-function isStringField(keys, meta) {
-  const schemaType = getSchemaType(keys, meta);
-  return schemaType instanceof mongoose.Schema.Types.String;
 }
 
 function isBufferField(keys, meta) {
