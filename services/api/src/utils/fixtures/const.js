@@ -16,7 +16,8 @@ const CUSTOM_TRANSFORMS = {
     return ENV[key];
   },
   async ref(key, meta, context) {
-    return await context.importFixtures(key, meta);
+    const doc = await context.importFixtures(key, meta);
+    return doc.id;
   },
   async obj(key, meta, context) {
     const doc = await context.importFixtures(key, meta);
