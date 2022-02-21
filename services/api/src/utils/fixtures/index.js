@@ -126,6 +126,20 @@ async function transformProperty(keys, value, meta) {
     // Iterate over both arrays and objects transforming them.
     await Promise.all(
       Object.entries(value).map(async ([k, v]) => {
+        // Keys in mixed object structures may sometimes also
+        // contain references that must be transformed to
+        // ObjectIds. for example:
+        //
+        // "map": {
+        //   "user-1": "user-2"
+        // }
+        //
+
+        if (CUSTOM_TRANSFORM_REG.test(k)) {
+          const resolved = await transformCustom(k, meta);
+          delete value[k];
+          k = resolved;
+        }
         value[k] = await transformProperty([...keys, k], v, meta);
       })
     );
