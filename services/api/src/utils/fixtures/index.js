@@ -65,9 +65,14 @@ async function importDirectory(base, meta) {
 }
 
 async function importFixture(id, meta) {
-  // Imported attributes will be mutated, so clone here.
-  const attributes = cloneDeep(await loadModule(id));
-  return await runImport(id, attributes, meta);
+  try {
+    // Imported attributes will be mutated, so clone here.
+    const attributes = cloneDeep(await loadModule(id));
+    return await runImport(id, attributes, meta);
+  } catch (error) {
+    logger.error(`Bad fixture reference: "${id}" (imported from "${meta.id}")`);
+    throw error;
+  }
 }
 
 async function runImport(id, attributes, meta) {
