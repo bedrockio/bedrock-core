@@ -70,7 +70,8 @@ async function importFixture(id, meta) {
     const attributes = cloneDeep(await loadModule(id));
     return await runImport(id, attributes, meta);
   } catch (error) {
-    logger.error(`Bad fixture reference: "${id}" (imported from "${meta.id}")`);
+    const sup = meta ? ` (imported from "${meta.id}")` : '';
+    logger.error(`Bad fixture reference: "${id}"${sup}`);
     throw error;
   }
 }
