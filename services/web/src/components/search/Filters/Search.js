@@ -17,16 +17,19 @@ export default class SearchFilter extends React.Component {
     const { value } = this.state;
 
     return (
-      <Form onSubmit={() => onFilterChange({}, { value, name })}>
-        <Form.Input
-          name={name}
-          loading={loading}
-          icon={this.renderIcon()}
-          value={this.state.value}
-          onChange={(e, { value }) => this.setState({ value })}
-          {...rest}
-        />
-      </Form>
+      <Form.Input
+        name={name}
+        loading={loading}
+        icon={this.renderIcon()}
+        value={this.state.value}
+        onChange={(e, { value }) => this.setState({ value })}
+        onKeyPress={(event) => {
+          if (event.key === 'Enter') {
+            onFilterChange({}, { value, name });
+          }
+        }}
+        {...rest}
+      />
     );
   }
 
