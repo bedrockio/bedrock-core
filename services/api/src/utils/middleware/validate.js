@@ -1,6 +1,7 @@
 const Joi = require('joi');
 
 const DEFAULT_OPTIONS = {
+  stripUnknown: true,
   allowUnknown: false,
   abortEarly: false,
 };

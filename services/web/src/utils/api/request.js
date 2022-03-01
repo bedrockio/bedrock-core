@@ -1,8 +1,8 @@
 import { API_URL } from 'utils/env';
 import { ApiError, ApiParseError } from './errors';
 import { trackRequest } from '../analytics';
-import { getToken } from './token';
 import { fetchWithTimeout } from '../fetch';
+import { getToken } from './token';
 
 export default async function request(options) {
   const { method = 'GET', path, files, params } = options;
@@ -46,10 +46,14 @@ export default async function request(options) {
   if (res.status === 204) {
     return;
   } else if (!res.ok) {
-    let message, status, details;
+    let type = 'error';
+    let message = res.statusText;
+    let status = res.status;
+    let details;
     try {
       const data = await res.clone().json();
       if (data.error) {
+        type = data.error.type;
         message = data.error.message;
         status = data.error.status;
         details = data.error.details;
@@ -57,11 +61,7 @@ export default async function request(options) {
     } catch (err) {
       message = await res.clone().text();
     }
-    throw new ApiError(
-      message || res.statusText,
-      status || res.status,
-      details
-    );
+    throw new ApiError(message, type, status, details);
   }
 
   try {

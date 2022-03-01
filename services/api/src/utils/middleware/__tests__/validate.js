@@ -41,6 +41,19 @@ describe('validateBody', () => {
       expect(ctx.request.body.test).toBe('something');
     });
   });
+
+  it('should strip unknown fields', () => {
+    const middleware = validateBody({
+      test: Joi.string().required(),
+    });
+    const ctx = context({ url: '/' });
+    ctx.request.body = { test: 'something', foo: 'bar' };
+
+    middleware(ctx, () => {
+      expect(ctx.request.body.test).toBe('something');
+      expect(ctx.request.body.foo).toBeUndefined();
+    });
+  });
 });
 
 describe('validateQuery', () => {
@@ -58,7 +71,7 @@ describe('validateQuery', () => {
     });
   });
 
-  it('should not allow attributes that are not defined', () => {
+  it('should strip attributes that are not defined', () => {
     const middleware = validateQuery({
       somethingExisting: Joi.string(),
     });
@@ -69,6 +82,9 @@ describe('validateQuery', () => {
       shouldBeRemoved: 'should be been removed from request',
     };
 
-    expect(() => middleware(ctx, () => {})).toThrow('"shouldBeRemoved" is not allowed');
+    middleware(ctx, () => {
+      expect(ctx.request.query.somethingExisting).toBe('yes');
+      expect(ctx.request.query.shouldBeRemoved).toBeUndefined();
+    });
   });
 });

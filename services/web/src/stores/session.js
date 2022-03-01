@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { merge, omit } from 'lodash';
 import { withRouter } from 'react-router-dom';
-import { request, getToken, setToken } from 'utils/api';
+import { request, hasToken, setToken } from 'utils/api';
 import { trackSession } from 'utils/analytics';
 import { captureError } from 'utils/sentry';
 import { wrapContext } from 'utils/hoc';
@@ -49,7 +49,7 @@ export class SessionProvider extends React.PureComponent {
   };
 
   load = async () => {
-    if (getToken()) {
+    if (hasToken()) {
       this.setState({
         loading: true,
         error: null,
@@ -69,10 +69,15 @@ export class SessionProvider extends React.PureComponent {
           loading: false,
         });
       } catch (error) {
-        this.setState({
-          error,
-          loading: false,
-        });
+        if (error.type === 'token') {
+          setToken(null);
+          await this.logout();
+        } else {
+          this.setState({
+            error,
+            loading: false,
+          });
+        }
       }
     } else {
       this.setState({
@@ -82,6 +87,7 @@ export class SessionProvider extends React.PureComponent {
     }
   };
 
+  // TODO: this shouldn't be needed
   reloadUser = async () => {
     const { data } = await request({
       method: 'GET',
@@ -112,23 +118,25 @@ export class SessionProvider extends React.PureComponent {
       const { pathname, search } = window.location;
       this.setStored('redirect', pathname + search);
     }
-    try {
-      await request({
-        method: 'POST',
-        path: '/1/auth/logout',
-      });
-    } catch (err) {
-      // JWT token errors may throw here
+    if (hasToken()) {
+      try {
+        await request({
+          method: 'POST',
+          path: '/1/auth/logout',
+        });
+      } catch (err) {
+        // JWT token errors may throw here
+      }
+      setToken(null);
     }
-    setToken(null);
     await this.load();
-    return '/';
+    this.props.history.push('/');
   };
 
   authenticate = async (token) => {
     setToken(token);
     await this.load();
-    return this.popStored('redirect') || '/';
+    this.props.history.push(this.popStored('redirect') || '/');
   };
 
   // Organizations

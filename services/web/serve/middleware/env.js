@@ -8,17 +8,20 @@ const PUBLIC = omitBy(
   (_, key) => key.startsWith('SERVER') || key.startsWith('HTTP')
 );
 
+const ENV_REG = /(?:<!-- |{{)env:(\w+)(?: -->|}})/g;
+
 module.exports = function envMiddleware() {
   const env = JSON.stringify(PUBLIC);
   return async (ctx, next) => {
     await next();
     if (ctx.type === 'text/html' && ctx.body) {
-      ctx.body = ctx.body
-        .toString()
-        .replace(
-          '<!--env:conf-->',
-          `<script>window.__ENV__ = ${env};</script>`
-        );
+      ctx.body = ctx.body.toString().replace(ENV_REG, (all, name) => {
+        if (name === 'conf') {
+          return `<script>window.__ENV__ = ${env};</script>`;
+        } else {
+          return PUBLIC[name] || '';
+        }
+      });
     }
   };
 };

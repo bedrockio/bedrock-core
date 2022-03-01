@@ -126,6 +126,7 @@ export default class ComponentsScreen extends React.Component {
                   <Header size="large">Buttons</Header>
 
                   <Header size="medium">Variations</Header>
+                  <Button content="Primary" primary />
                   <Button content="Standard" />
                   <Button circular content="Circular" />
                   <Button basic content="Basic" />

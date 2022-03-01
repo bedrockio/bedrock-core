@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const mongoose = require('mongoose');
 const autopopulate = require('mongoose-autopopulate');
-const { startCase, uniq, isEmpty, isPlainObject } = require('lodash');
+const { get, uniq, startCase, isEmpty, isPlainObject } = require('lodash');
 const { logger } = require('@bedrockio/instrumentation');
 
 const { getJoiSchema, getMongooseValidator } = require('./validation');
@@ -27,10 +27,13 @@ function transformField(obj, schema, options) {
       transformField(el, schema, options);
     }
   } else if (isPlainObject(obj)) {
+    if (!obj.id && obj._id) {
+      obj.id = obj._id;
+    }
     for (let [key, val] of Object.entries(obj)) {
       // Omit any key with a private prefix "_" or marked
       // with "readScopes" in the schema.
-      if (!isAllowedField(schema, key, options.scopes)) {
+      if (!isAllowedField(schema, key, options)) {
         delete obj[key];
       } else if (schema[key]) {
         transformField(val, resolveField(schema, key), options);
@@ -250,6 +253,22 @@ function createSchema(definition, options = {}) {
     });
   });
 
+  schema.method('assertNoReferences', async function () {
+    const { modelName } = this.constructor;
+    await Promise.all(
+      getAllReferences(modelName).map(async ({ model, paths }) => {
+        const count = await model.countDocuments({
+          $or: paths.map((path) => {
+            return { [path]: this.id };
+          }),
+        });
+        if (count > 0) {
+          throw new Error(`Refusing to delete ${dump(this)} referenced by ${model.modelName}.`);
+        }
+      })
+    );
+  });
+
   schema.post(/^init|save/, function () {
     if (!this.$locals.original) {
       this.$locals.original = this.toObject({
@@ -300,7 +319,7 @@ function attributesToMongoose(attributes, path = []) {
     const type = typeof val;
     if (isSchemaType) {
       if (key === 'type') {
-        val = getMongooseType(val, attributes, path);
+        val = getMongooseType(val, path, attributes);
       } else if (key === 'match' && type === 'string') {
         // Convert match field to RegExp that cannot be expressed in JSON.
         val = RegExp(val);
@@ -318,7 +337,7 @@ function attributesToMongoose(attributes, path = []) {
       } else if (isPlainObject(val)) {
         val = attributesToMongoose(val, [...path, key]);
       } else if (!isMongooseSchema(val)) {
-        val = getMongooseType(val, attributes, path);
+        val = getMongooseType(val, path);
       }
     }
     definition[key] = val;
@@ -340,14 +359,16 @@ function getAutopopulateOptions(val) {
   return val;
 }
 
-function getMongooseType(arg, attributes, path) {
+function getMongooseType(arg, path, typedef = {}) {
   // Handle strings or functions.
   const str = arg.name || arg;
   const type = mongoose.Schema.Types[str];
   if (!type) {
     throw new Error(`Type ${str} could not be converted to Mongoose type.`);
-  } else if (type === SchemaObjectId && !attributes.ref && !attributes.refPath) {
+  } else if (type === SchemaObjectId && !typedef.ref && !typedef.refPath) {
     throw new Error(`Ref must be passed for ${path.join('.')}`);
+  } else if (typedef.ref && type !== SchemaObjectId) {
+    throw new Error(`Schema with a ref must be of type ObjectId.`);
   }
   return type;
 }
@@ -364,7 +385,7 @@ function isNumberField(schema, key) {
   return resolveFieldSchema(schema, key) === SchemaNumber;
 }
 
-function isAllowedField(schema, key, scopes = []) {
+function isAllowedField(schema, key, options) {
   if (key[0] === '_') {
     // Strip internal _id and __v fields
     return false;
@@ -380,6 +401,7 @@ function isAllowedField(schema, key, scopes = []) {
   if (readScopes === 'all') {
     return true;
   } else if (Array.isArray(readScopes)) {
+    const scopes = resolveScopes(options);
     return readScopes.some((scope) => {
       return scopes.includes(scope);
     });
@@ -388,15 +410,26 @@ function isAllowedField(schema, key, scopes = []) {
   }
 }
 
+function resolveScopes(options) {
+  const { scope, scopes = [] } = options;
+  return scope ? [scope] : scopes;
+}
+
 // Note: Resolved field may be an object or a function
 // from mongoose.Schema.Types that is resolved from the
 // shorthand: field: 'String'.
 function resolveField(schema, key) {
-  let field = schema?.[key];
+  let field = get(schema, key);
   if (Array.isArray(field)) {
     field = field[0];
   }
-  if (typeof field?.type === 'object') {
+  // A literal "type" field may be defined as:
+  //  "type": {
+  //    "type": "String",
+  //    "required": true,
+  //  }
+  const type = field?.type;
+  if (typeof type === 'object' && !type.type) {
     field = field.type;
   }
   return field;
@@ -463,10 +496,6 @@ function unsetReferenceFields(fields, schema = {}) {
 // Will not flatten mongo operator objects.
 function flattenQuery(query, schema, root = {}, rootPath = []) {
   for (let [key, value] of Object.entries(query)) {
-    if (key.includes('.')) {
-      // Custom dot syntax is allowed and is already flattened, so skip.
-      continue;
-    }
     const path = [...rootPath, key];
     if (isRangeQuery(schema, key, value)) {
       if (!isEmpty(value)) {
@@ -584,6 +613,46 @@ function buildTextIndexQuery(keyword) {
       },
     };
   }
+}
+
+// Reference helpers derive ObjectId references between models.
+
+function getAllReferences(targetName) {
+  return Object.values(mongoose.models)
+    .map((model) => {
+      const paths = getModelReferences(model, targetName);
+      return { model, paths };
+    })
+    .filter(({ paths }) => {
+      return paths.length > 0;
+    });
+}
+
+function getModelReferences(model, targetName) {
+  const paths = [];
+  model.schema.eachPath((schemaPath, schemaType) => {
+    if (schemaType instanceof SchemaObjectId && schemaPath[0] !== '_') {
+      const { ref, refPath } = schemaType.options;
+      let refs;
+      if (ref) {
+        refs = [ref];
+      } else if (refPath) {
+        refs = model.schema.path(refPath).options.enum;
+      } else {
+        throw new Error(`Cannot derive refs for ${model.modelName}#${schemaPath}.`);
+      }
+      if (refs.includes(targetName)) {
+        paths.push(schemaPath);
+      }
+    }
+  });
+  return paths;
+}
+
+// Inspection helpers
+
+function dump(doc) {
+  return `<${doc.constructor.modelName}: ${doc.id}>`;
 }
 
 // Regex queries

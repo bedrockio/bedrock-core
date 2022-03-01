@@ -93,7 +93,7 @@ export default class Sms extends React.Component {
 
       this.setState({
         verified: true,
-        codes: data,
+        codes: data.codes,
       });
     } catch (error) {
       if (error.status == 403) {
@@ -172,6 +172,7 @@ export default class Sms extends React.Component {
                 <Form.Button
                   type="submit"
                   basic
+                  disabled={!phoneNumber || !country}
                   loading={this.state.smsLoading}>
                   Send authentication Code
                 </Form.Button>

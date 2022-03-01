@@ -6,6 +6,11 @@ const secrets = {
   user: config.get('JWT_SECRET'),
 };
 
+class TokenError extends Error {
+  type = 'token';
+  status = 401;
+}
+
 function getToken(ctx) {
   let token;
   const parts = (ctx.request.get('authorization') || '').split(' ');
@@ -19,22 +24,22 @@ function getToken(ctx) {
 function validateToken(ctx, token, type) {
   // ignoring signature for the moment
   const decoded = jwt.decode(token, { complete: true });
-  if (decoded === null) return ctx.throw(401, 'bad jwt token');
+  if (decoded === null) throw new TokenError('bad jwt token');
   const { payload } = decoded;
   const keyId = payload.kid;
   if (!['user'].includes(keyId)) {
-    ctx.throw(401, 'jwt token does not match supported kid');
+    throw new TokenError('jwt token does not match supported kid');
   }
 
   if (type && payload.type !== type) {
-    ctx.throw(401, `endpoint requires jwt token payload match type "${type}"`);
+    throw new TokenError(`endpoint requires jwt token payload match type "${type}"`);
   }
 
   // confirming signature
   try {
     jwt.verify(token, secrets[keyId]); // verify will throw
   } catch (e) {
-    ctx.throw(401, e);
+    throw new TokenError(e.message);
   }
 
   return payload;
@@ -47,7 +52,7 @@ function authenticate({ type, optional = false } = {}) {
       if (token) {
         ctx.state.jwt = validateToken(ctx, token, type);
       } else if (!optional) {
-        ctx.throw(401, 'no jwt token found in request');
+        throw new TokenError('no jwt token found in request');
       }
     }
     return next();
@@ -60,7 +65,7 @@ async function fetchUser(ctx, next) {
     const { User } = mongoose.models;
     const user = await User.findById(jwt.sub);
     if (!user || (jwt.jti && jwt.jti !== user.authTokenId)) {
-      ctx.throw(401, 'user associated to token could not be found');
+      throw new TokenError('user associated to token could not be found');
     }
     ctx.state.authUser = user;
   }

@@ -55,7 +55,7 @@ router
       const { emails } = ctx.request.body;
 
       for (let email of [...new Set(emails)]) {
-        if ((await User.countDocuments({ email })) > 0) {
+        if ((await User.countDocuments({ email, deleted: false })) > 0) {
           ctx.throw(400, `${email} is already a user.`);
         }
         const invite = await Invite.findOneAndUpdate(

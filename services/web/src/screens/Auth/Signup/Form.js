@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, Button, Checkbox, Message } from 'semantic';
+import { Form, Input, Checkbox, Message } from 'semantic';
 import AutoFocus from 'components/AutoFocus';
 
 export default (props) => {

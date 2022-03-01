@@ -5,7 +5,7 @@ async function errorHandler(ctx, next) {
   try {
     await next();
   } catch (err) {
-    let { status = 500, message, details, expose } = err;
+    let { status = 500, type = 'error', message, details, expose } = err;
 
     if (!expose) {
       if (ENV_NAME === 'production') {
@@ -20,7 +20,7 @@ async function errorHandler(ctx, next) {
     ctx.type = 'json';
     ctx.status = status;
     ctx.body = {
-      error: { message, status, details },
+      error: { type, message, status, details },
     };
 
     ctx.app.emit('error', err, ctx);
