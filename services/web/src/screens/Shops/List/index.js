@@ -5,6 +5,7 @@ import { request } from 'utils/api';
 import screen from 'helpers/screen';
 import { HelpTip, Breadcrumbs, Layout } from 'components';
 import { SearchProvider, Filters } from 'components/search';
+import ErrorMessage from 'components/ErrorMessage';
 // --- Generator: list-imports
 import { Link } from 'react-router-dom';
 import allCountries from 'utils/countries';
@@ -60,10 +61,9 @@ export default class ShopList extends React.Component {
                   />
                 </Layout.Group>
               </Layout>
+              <ErrorMessage error={error} />
               {loading ? (
                 <Loader active />
-              ) : error ? (
-                <Message error content={error.message} />
               ) : shops.length === 0 ? (
                 <Message>No shops created yet</Message>
               ) : (

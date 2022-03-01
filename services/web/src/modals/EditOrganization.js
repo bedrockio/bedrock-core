@@ -1,8 +1,9 @@
 import React from 'react';
-import { Modal, Form, Button, Message } from 'semantic';
+import { Modal, Form, Button } from 'semantic';
 import { request } from 'utils/api';
-import AutoFocus from 'components/AutoFocus';
 import modal from 'helpers/modal';
+import AutoFocus from 'components/AutoFocus';
+import ErrorMessage from 'components/ErrorMessage';
 
 @modal
 export default class EditOrganization extends React.Component {
@@ -80,7 +81,7 @@ export default class EditOrganization extends React.Component {
               id="edit-organization"
               error={!!error}
               onSubmit={this.onSubmit}>
-              {error && <Message error content={error.message} />}
+              <ErrorMessage error={error} />
               <Form.Input
                 required
                 type="text"

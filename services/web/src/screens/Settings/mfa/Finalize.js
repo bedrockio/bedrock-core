@@ -1,12 +1,13 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import { Button, Segment, Header, Form, Message } from 'semantic';
+
 import { request } from 'utils/api';
+import { APP_NAME } from 'utils/env';
+import { withSession } from 'stores';
 
 import LogoTitle from 'components/LogoTitle';
-import { withRouter } from 'react-router-dom';
-import { APP_NAME } from 'utils/env';
-
-import { withSession } from 'stores';
+import ErrorMessage from 'components/ErrorMessage';
 
 @withRouter
 @withSession
@@ -70,9 +71,7 @@ export default class Finalize extends React.Component {
               authentication codes.
             </p>
           </Segment>
-
-          {error && <Message error content={error.message} />}
-
+          <ErrorMessage error={error} />
           <Segment>
             <Button
               as={'a'}

@@ -1,10 +1,11 @@
 import React from 'react';
+import { Modal, Icon, Progress, Table, Button } from 'semantic';
 import Dropzone from 'react-dropzone';
 import { request } from 'utils/api';
 import modal from 'helpers/modal';
-
-import { Modal, Icon, Progress, Table, Button, Message } from 'semantic';
 import { processFile } from 'utils/csv';
+
+import ErrorMessage from 'components/ErrorMessage';
 
 export const productsImportMapping = {
   name: {
@@ -126,7 +127,7 @@ export default class ImportProducts extends React.Component {
     const { loading, progressPercent, error, errors, items } = this.state;
     return (
       <div>
-        {error && <Message error content={error.message} />}
+        <ErrorMessage error={error} />
         {loading ? (
           <Progress
             label="Importing Data"
@@ -152,7 +153,7 @@ export default class ImportProducts extends React.Component {
     const { error, loading, items, mapping, numColumnsMatched } = this.state;
     return (
       <div>
-        {error && <Message error content={error.message} />}
+        <ErrorMessage error={error} />
         {loading && (
           <Progress label="Analyzing Data" percent={100} indicating />
         )}

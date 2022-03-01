@@ -13,6 +13,7 @@ import { request } from 'utils/api';
 import screen from 'helpers/screen';
 import { Layout, HelpTip } from 'components';
 import { SearchProvider, Filters } from 'components/search';
+import ErrorMessage from 'components/ErrorMessage';
 // --- Generator: subscreen-imports
 import { Link } from 'react-router-dom';
 import { Image } from 'semantic';
@@ -69,10 +70,9 @@ export default class ShopProducts extends React.Component {
                   />
                 </Layout.Group>
               </Layout>
+              <ErrorMessage error={error} />
               {loading ? (
                 <Loader active />
-              ) : error ? (
-                <Message error content={error.message} />
               ) : products.length === 0 ? (
                 <Message>No products added yet</Message>
               ) : (
