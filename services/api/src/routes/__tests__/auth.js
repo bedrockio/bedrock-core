@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { assertMailSent } = require('postmark');
 const { createTemporaryToken, generateTokenId } = require('../../utils/tokens');
 const { setupDb, teardownDb, request, createUser } = require('../../utils/testing');
 const { mockTime, unmockTime, advanceTime } = require('../../utils/testing/time');
@@ -135,6 +136,8 @@ describe('/1/auth', () => {
       let response = await request('POST', '/1/auth/register', { firstName, lastName, email, password });
       expect(response.status).toBe(200);
 
+      assertMailSent({ to: email });
+
       const { payload } = jwt.decode(response.body.data.token, { complete: true });
       expect(payload).toHaveProperty('kid', 'user');
       expect(payload).toHaveProperty('type', 'user');
@@ -233,6 +236,7 @@ describe('/1/auth', () => {
         email: user.email,
       });
       expect(response.status).toBe(204);
+      assertMailSent({ to: user.email });
     });
 
     it('should set a temporary token id', async () => {

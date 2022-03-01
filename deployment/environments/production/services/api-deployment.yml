@@ -51,11 +51,11 @@ spec:
                 secretKeyRef:
                   name: secrets
                   key: JWT_SECRET
-            - name: POSTMARK_APIKEY
+            - name: POSTMARK_API_KEY
               valueFrom:
                 secretKeyRef:
                   name: secrets
-                  key: POSTMARK_APIKEY
+                  key: POSTMARK_API_KEY
           ports:
             - name: http-server
               containerPort: 2300
