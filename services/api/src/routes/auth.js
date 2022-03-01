@@ -42,9 +42,8 @@ router
       });
 
       await sendTemplatedMail({
-        to: user.name,
-        template: 'welcome.md',
-        subject: 'Welcome to {{appName}}',
+        user,
+        file: 'welcome.md',
       });
 
       ctx.body = { data: { token: createAuthToken(user.id, authTokenId) } };
@@ -219,11 +218,10 @@ router
       await user.updateOne({ tempTokenId: tokenId });
 
       await sendTemplatedMail({
-        to: [user.name, email].join(' '),
-        template: 'reset-password.md',
-        subject: 'Password Reset Request',
-        token,
+        user,
         email,
+        token,
+        file: 'reset-password.md',
       });
 
       ctx.status = 204;
@@ -249,6 +247,8 @@ router
         });
         ctx.throw(400, 'Token is invalid (jti)');
       }
+
+      user.loginAttempts = 0;
       user.password = password;
       user.tempTokenId = undefined;
 

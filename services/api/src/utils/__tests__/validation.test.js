@@ -96,6 +96,48 @@ describe('getJoiSchema', () => {
       assertFail(schema, {});
     });
 
+    it('should not skip required inside nested arrays', () => {
+      const schema = getJoiSchema(
+        {
+          users: [
+            {
+              name: {
+                type: String,
+                required: true,
+              },
+              count: {
+                type: Number,
+              },
+            },
+          ],
+        },
+        {
+          skipRequired: true,
+        }
+      );
+      assertPass(schema, {
+        users: [
+          {
+            name: 'foo',
+            count: 1,
+          },
+        ],
+      });
+      assertPass(schema, {
+        users: [
+          {
+            name: 'foo',
+          },
+        ],
+      });
+      assertPass(schema, {
+        users: [],
+      });
+      assertFail(schema, {
+        users: [{}],
+      });
+    });
+
     it('should be able to transform fields', () => {
       const schema = getJoiSchema(
         {

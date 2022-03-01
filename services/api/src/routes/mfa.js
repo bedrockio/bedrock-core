@@ -114,10 +114,8 @@ router
     await authUser.save();
 
     await sendTemplatedMail({
-      to: authUser.fullName,
-      template: 'mfa-disabled.md',
-      subject: 'Two-factor authentication disabled',
-      firstName: authUser.firstName,
+      user: authUser,
+      file: 'mfa-disabled.md',
     });
 
     ctx.status = 204;
@@ -199,11 +197,9 @@ router
       await authUser.save();
 
       await sendTemplatedMail({
-        to: authUser.fullName,
-        template: authUser.mfaMethod === 'otp' ? 'mfa-otp-enabled.md' : 'mfa-sms-enabled.md',
-        subject: 'Two-factor authentication enabled',
-        firstName: authUser.firstName,
+        file: authUser.mfaMethod === 'otp' ? 'mfa-otp-enabled.md' : 'mfa-sms-enabled.md',
         phoneLast4: authUser.mfaPhoneNumber?.slice(-4),
+        user: authUser,
       });
 
       ctx.status = 204;

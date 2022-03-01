@@ -14,7 +14,7 @@ objectSummary({name: 'Upload'})
 
 Upload a new file. Requires an authenticated user.
 
-callHeading({method: 'POST', path: '/1/uploads'})
+callSummary({method: 'POST', path: '/1/uploads'})
 
 The request format for this call is multipart form data. The server expects a
 form field named `file` that contains the uploaded file. Arrays are supported

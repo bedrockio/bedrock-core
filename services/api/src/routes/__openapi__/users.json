@@ -234,20 +234,15 @@
       ],
       "examples": [
         {
-          "name": "Set admin role on a given user",
-          "requestPath": "/1/users/5e6a9c000fc676447dc9936a",
+          "name": "Change the firstName of a user",
+          "requestPath": "/1/users/:id",
           "requestBody": {
-            "roles": [
-              "admin"
-            ]
+            "firstName": "New Name"
           },
           "responseBody": {
             "data": {
               "id": "5e6a9c000fc676447dc9936a",
-              "roles": [
-                "admin"
-              ],
-              "firstName": "John",
+              "firstName": "New Name",
               "lastName": "Doe",
               "email": "john.doe@gmail.com",
               "createdAt": "2020-03-12T20:30:56.062Z",

@@ -1,34 +1,50 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
+import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { Button } from 'semantic';
 import PropTypes from 'prop-types';
-import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
-import atomDark from 'react-syntax-highlighter/dist/esm/styles/prism/atom-dark';
-
-import bash from 'react-syntax-highlighter/dist/esm/languages/prism/bash';
-import json from 'react-syntax-highlighter/dist/esm/languages/prism/json';
-
-SyntaxHighlighter.registerLanguage('bash', bash);
-SyntaxHighlighter.registerLanguage('json', json);
 
 atomDark['pre[class*="language-"]'].marginBottom = '1em';
 
-class CodeBlock extends PureComponent {
+export default class CodeBlock extends React.Component {
   static propTypes = {
     value: PropTypes.string.isRequired,
     language: PropTypes.string,
   };
 
-  static defaultProps = {
-    language: null,
+  state = {
+    hover: false,
+  };
+
+  onCopyClick = () => {
+    navigator.clipboard.writeText(this.props.value);
   };
 
   render() {
     const { language, value } = this.props;
     return (
-      <SyntaxHighlighter language={language} style={atomDark}>
-        {value}
-      </SyntaxHighlighter>
+      <div
+        style={{ position: 'relative' }}
+        onMouseLeave={() => {
+          this.setState({ hover: false });
+        }}
+        onMouseEnter={() => this.setState({ hover: true })}>
+        {this.state.hover && (
+          <Button
+            basic
+            inverted
+            style={{ position: 'absolute', right: 0, top: '7px' }}
+            icon={'copy'}
+            onClick={this.onCopyClick}
+          />
+        )}
+        <SyntaxHighlighter
+          language={language || 'bash'}
+          style={atomDark}
+          wrapLines>
+          {value}
+        </SyntaxHighlighter>
+      </div>
     );
   }
 }
-
-export default CodeBlock;

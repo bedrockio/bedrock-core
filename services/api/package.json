@@ -6,10 +6,9 @@
     "node": ">=12"
   },
   "scripts": {
-    "start": "nodemon --delay 300ms --ignore __tests__/* -w src --exec \"node src/index.js\"",
+    "start": "nodemon --delay 300ms --ignore __tests__/* -w src e js,md.json --exec \"node src/index.js\"",
     "debug": "MONGO_DEBUG=true yarn start",
     "start:production": "node src/index",
-    "docs": "node scripts/generate-openapi",
     "lint": "eslint",
     "test": "jest",
     "test:watch": "jest --watch -i",
@@ -26,6 +25,8 @@
     "@sentry/node": "^6.18.1",
     "bcrypt": "^5.0.0",
     "fast-csv": "^4.3.6",
+    "front-matter": "^4.0.2",
+    "glob": "^7.2.0",
     "joi": "^17.4.0",
     "jsonwebtoken": "^8.5.1",
     "jszip": "^3.7.1",
