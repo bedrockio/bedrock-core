@@ -4,6 +4,7 @@ const { createTemporaryToken, generateTokenId } = require('../../utils/tokens');
 const { setupDb, teardownDb, request, createUser } = require('../../utils/testing');
 const { mockTime, unmockTime, advanceTime } = require('../../utils/testing/time');
 const { User, Invite } = require('../../models');
+const { verifyPassword } = require('../../utils/auth');
 
 beforeAll(async () => {
   await setupDb();
@@ -42,18 +43,18 @@ describe('/1/auth', () => {
       expect(payload).toHaveProperty('type', 'mfa');
     });
 
-    it('should throttle a few seconds after 3 bad attempts', async () => {
+    it('should throttle a few seconds after 5 bad attempts', async () => {
       mockTime();
 
       const password = '123password!';
       const user = await createUser({
         password,
-        loginAttempts: 3,
+        loginAttempts: 5,
         lastLoginAttemptAt: new Date(),
       });
       let response;
 
-      await request('POST', '/1/auth/login', { email: user.email, password: 'bad password' });
+      response = await request('POST', '/1/auth/login', { email: user.email, password: 'bad password' });
 
       response = await request('POST', '/1/auth/login', { email: user.email, password });
       expect(response.status).toBe(401);
@@ -181,7 +182,7 @@ describe('/1/auth', () => {
       });
       let response = await request('POST', '/1/auth/confirm-access', { password: 'bad password' }, { user });
       expect(response.status).toBe(401);
-      expect(response.body.error.message).toBe('Too many attempts');
+      expect(response.body.error.message).toBe('Too many attempts. Try again in 15 minute(s)');
     });
   });
 
@@ -286,7 +287,7 @@ describe('/1/auth', () => {
 
       const updatedUser = await User.findById(user.id);
       await expect(async () => {
-        await updatedUser.verifyPassword(password);
+        await verifyPassword(updatedUser, password);
       }).not.toThrow();
     });
 
