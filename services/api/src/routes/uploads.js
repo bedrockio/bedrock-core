@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Router = require('@koa/router');
 const { createReadStream } = require('fs');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
@@ -8,18 +9,17 @@ const router = new Router();
 
 router
   .param('uploadId', async (id, ctx, next) => {
-    try {
-      const upload = await Upload.findById(id);
-      if (!upload) {
-        ctx.throw(404);
-      } else if (ctx.state.authUser.id != upload.owner) {
-        ctx.throw(401);
-      }
-      ctx.state.upload = upload;
-      return next();
-    } catch (err) {
-      ctx.throw(400, err);
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      ctx.throw(404);
     }
+    const upload = await Upload.findById(id);
+    if (!upload) {
+      ctx.throw(404);
+    } else if (ctx.state.authUser.id != upload.owner) {
+      ctx.throw(401);
+    }
+    ctx.state.upload = upload;
+    return next();
   })
   .get('/:id', async (ctx) => {
     const upload = await Upload.findById(ctx.params.id);

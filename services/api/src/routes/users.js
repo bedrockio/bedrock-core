@@ -1,5 +1,6 @@
 const Router = require('@koa/router');
 const Joi = require('joi');
+const mongoose = require('mongoose');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
@@ -19,16 +20,15 @@ router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
   .param('userId', async (id, ctx, next) => {
-    try {
-      const user = await User.findById(id);
-      if (!user) {
-        ctx.throw(404);
-      }
-      ctx.state.user = user;
-      return next();
-    } catch (err) {
-      ctx.throw(400, err);
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      ctx.throw(404);
     }
+    const user = await User.findById(id);
+    if (!user) {
+      ctx.throw(404);
+    }
+    ctx.state.user = user;
+    return next();
   })
   .get('/me', (ctx) => {
     const { authUser } = ctx.state;

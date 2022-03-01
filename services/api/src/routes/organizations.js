@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Router = require('@koa/router');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
@@ -10,6 +11,9 @@ router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
   .param('organizationId', async (id, ctx, next) => {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      ctx.throw(404);
+    }
     const organization = await Organization.findById(id);
     ctx.state.organization = organization;
     if (!organization) {
