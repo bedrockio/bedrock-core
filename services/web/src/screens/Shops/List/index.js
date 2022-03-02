@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Button, Divider, Confirm, Segment } from 'semantic';
+import { Table, Button, Divider, Confirm, Segment, Form } from 'semantic';
 
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
@@ -30,7 +30,7 @@ export default class ShopList extends React.Component {
     });
   };
 
-  fetchOwner = async (name) => {
+  fetchOwners = async (name) => {
     const { data } = await request({
       method: 'POST',
       path: '/1/users/search',
@@ -44,7 +44,7 @@ export default class ShopList extends React.Component {
   render() {
     return (
       <SearchProvider onDataNeeded={this.onDataNeeded}>
-        {({ items: shops, getSorted, setSort, reload, loading, error }) => {
+        {({ items: shops, getSorted, setSort, reload, registerFilter }) => {
           return (
             <React.Fragment>
               <Breadcrumbs active="Shops" />
@@ -65,16 +65,30 @@ export default class ShopList extends React.Component {
                       {/* --- Generator: filters */}
 
                       <Filters.Dropdown
-                        label="Owner"
-                        name="owner"
-                        onDataNeeded={this.fetchOwner}
-                        search
-                      />
-
-                      <Filters.Dropdown
-                        label="Country"
                         name="country"
+                        label="Country"
                         options={countries}
+                        search
+                        {...registerFilter('country', (id) => {
+                          return [
+                            'Country',
+                            countries.find((c) => c.value === id).text,
+                          ];
+                        })}
+                      />
+                      <Filters.Dropdown
+                        {...registerFilter(
+                          {
+                            name: 'Owner',
+                            label: 'Owner',
+                            onDataNeeded: this.fetchOwners,
+                            search: true,
+                          },
+                          (id) =>
+                            this.fetchOwners({ id }).then(
+                              (data) => data[0].name
+                            )
+                        )}
                         search
                       />
 

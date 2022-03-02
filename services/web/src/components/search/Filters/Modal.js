@@ -5,6 +5,11 @@ import { Modal, Form, Ref, Icon, Button, Label } from 'semantic';
 
 import SearchContext from '../Context';
 
+function Test() {
+  console.log(1);
+  return <>hllo</>;
+}
+
 export default class FilterModal extends React.Component {
   static contextType = SearchContext;
 
@@ -68,13 +73,10 @@ export default class FilterModal extends React.Component {
   };
 
   onSubmit = () => {
-    this.context.setFilters(
-      {
-        ...this.context.filters,
-        ...this.state.filters,
-      },
-      this.state.fields
-    );
+    this.context.setFilters({
+      ...this.context.filters,
+      ...this.state.filters,
+    });
     this.setState({
       open: false,
     });
@@ -92,39 +94,44 @@ export default class FilterModal extends React.Component {
 
   render() {
     const { size } = this.props;
+    console.log(this.props.children);
+
     return (
-      <Modal
-        closeIcon
-        size="small"
-        open={this.state.open}
-        onOpen={this.onModalOpen}
-        onClose={this.onModalClose}
-        trigger={
-          <Button basic primary size={size}>
-            <Icon name="filter" />
-            Filter
-          </Button>
-        }>
-        <Modal.Header>Filter</Modal.Header>
-        <Modal.Content>
-          <Ref innerRef={this.formRef}>
-            <Form id="filters" onSubmit={this.onSubmit}>
-              <SearchContext.Provider
-                value={{
-                  ...this.context,
-                  onFilterChange: this.onFilterChange,
-                  getFilterValue: this.getFilterValue,
-                }}>
-                {this.props.children}
-              </SearchContext.Provider>
-            </Form>
-          </Ref>
-        </Modal.Content>
-        <Modal.Actions>
-          <Button content="Reset" onClick={this.onReset} />
-          <Button primary form="filters" content="Apply" />
-        </Modal.Actions>
-      </Modal>
+      <>
+        <Modal
+          closeIcon
+          size="small"
+          open={this.state.open}
+          onOpen={this.onModalOpen}
+          onClose={this.onModalClose}
+          trigger={
+            <Button basic primary size={size}>
+              <Icon name="filter" />
+              Filter
+            </Button>
+          }>
+          <Modal.Header>Filter</Modal.Header>
+          <Modal.Content>
+            <Test />
+            <Ref innerRef={this.formRef}>
+              <Form id="filters" onSubmit={this.onSubmit}>
+                <SearchContext.Provider
+                  value={{
+                    ...this.context,
+                    onFilterChange: this.onFilterChange,
+                    getFilterValue: this.getFilterValue,
+                  }}>
+                  {this.props.children}
+                </SearchContext.Provider>
+              </Form>
+            </Ref>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button content="Reset" onClick={this.onReset} />
+            <Button primary form="filters" content="Apply" />
+          </Modal.Actions>
+        </Modal>
+      </>
     );
   }
 }

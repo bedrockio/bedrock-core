@@ -144,30 +144,26 @@ export default class SearchProvider extends React.Component {
     });
   };
 
-  setFilters = (filters, fields) => {
+  registerFilter = (props, getLabel) => {
+   
+    props.name
+
+    return {
+      ...props,
+    };
+  };
+
+  setFilters = (filters) => {
     filters = pickBy(filters, (val) => {
       return Array.isArray(val) ? val.length : val;
     });
 
     this.setState({
       filters,
-      fields,
     });
   };
 
-  registerField = (name, label, type) => {
-    this.setState({
-      fields: {
-        ...this.state.fields,
-        [name]: {
-          label,
-          type,
-        },
-      },
-    });
-  };
-
-  onFilterChange = ({ name, value, label }) => {
+  onFilterChange = ({ name, value }) => {
     const filters = pickBy(
       {
         ...this.state.filters,
@@ -179,12 +175,6 @@ export default class SearchProvider extends React.Component {
     );
 
     this.setState({
-      fields: {
-        ...this.state.fields,
-        [name]: {
-          label,
-        },
-      },
       filters,
     });
   };
@@ -211,7 +201,7 @@ export default class SearchProvider extends React.Component {
       onPageChange: this.onPageChange,
       onFilterChange: this.onFilterChange,
       getFilterValue: this.getFilterValue,
-      registerField: this.registerField,
+      registerFilter: this.registerFilter,
       onDataNeeded: this.props.onDataNeeded,
     };
     return (

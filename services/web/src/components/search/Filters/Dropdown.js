@@ -8,6 +8,11 @@ import SearchContext from '../Context';
 export default class DropdownFilter extends React.Component {
   static contextType = SearchContext;
 
+  constructor(props) {
+    super(props);
+    console.log(123);
+  }
+
   getDefaultValue() {
     const { multiple } = this.props;
     return multiple ? [] : '';
@@ -33,6 +38,7 @@ export default class DropdownFilter extends React.Component {
   }
 
   render() {
+    console.log(123);
     if (this.props.onDataNeeded) {
       const { label, disabled, error, ...rest } = this.props;
       return (
