@@ -1,0 +1,911 @@
+{
+  "blocks": [
+    {
+      "type": "header-one",
+      "text": "Header 1",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "Some text with bold and italic1 and italic2 text.",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [
+        {
+          "style": "BOLD",
+          "offset": 15,
+          "length": 4
+        },
+        {
+          "style": "ITALIC",
+          "offset": 24,
+          "length": 7
+        },
+        {
+          "style": "ITALIC",
+          "offset": 36,
+          "length": 7
+        }
+      ]
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "Some text with code.",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [
+        {
+          "style": "CODE",
+          "offset": 15,
+          "length": 4
+        }
+      ]
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "Some text with *literal* _tokens_ and `code`.",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "A literal \\$1000 dollar figure.",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "italic line",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [
+        {
+          "style": "ITALIC",
+          "offset": 0,
+          "length": 11
+        }
+      ]
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "header-one",
+      "text": "Alternate Header 1",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "A relative link.",
+      "depth": 0,
+      "entityRanges": [
+        {
+          "key": 0,
+          "offset": 11,
+          "length": 4
+        }
+      ],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "An absolute link.",
+      "depth": 0,
+      "entityRanges": [
+        {
+          "key": 1,
+          "offset": 12,
+          "length": 4
+        }
+      ],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "header-two",
+      "text": "Header 2",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "atomic",
+      "text": " ",
+      "depth": 0,
+      "entityRanges": [
+        {
+          "key": 2,
+          "offset": 0,
+          "length": 1
+        }
+      ],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "atomic",
+      "text": " ",
+      "depth": 0,
+      "entityRanges": [
+        {
+          "key": 3,
+          "offset": 0,
+          "length": 1
+        }
+      ],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "atomic",
+      "text": " ",
+      "depth": 0,
+      "entityRanges": [
+        {
+          "key": 4,
+          "offset": 0,
+          "length": 1
+        }
+      ],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "atomic",
+      "text": " ",
+      "depth": 0,
+      "entityRanges": [
+        {
+          "key": 5,
+          "offset": 0,
+          "length": 1
+        }
+      ],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "atomic",
+      "text": " ",
+      "depth": 0,
+      "entityRanges": [
+        {
+          "key": 6,
+          "offset": 0,
+          "length": 1
+        }
+      ],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "atomic",
+      "text": " ",
+      "depth": 0,
+      "entityRanges": [
+        {
+          "key": 7,
+          "offset": 0,
+          "length": 1
+        }
+      ],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "atomic",
+      "text": " ",
+      "depth": 0,
+      "entityRanges": [
+        {
+          "key": 8,
+          "offset": 0,
+          "length": 1
+        }
+      ],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "atomic",
+      "text": " ",
+      "depth": 0,
+      "entityRanges": [
+        {
+          "key": 9,
+          "offset": 0,
+          "length": 1
+        }
+      ],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "header-two",
+      "text": "Alternate Header 2",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "Paragraph 1",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "Paragraph 2",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "Paragraph 3 with new line",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "Paragraph 4",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "with two trailing spaces",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "Paragraph 5",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "with trailing backslash",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "Paragraph 6 with new line",
+      "depth": 0,
+      "entityRanges": [
+        {
+          "key": 10,
+          "offset": 21,
+          "length": 4
+        }
+      ],
+      "inlineStyleRanges": [
+        {
+          "style": "BOLD",
+          "offset": 10,
+          "length": 1
+        },
+        {
+          "style": "BOLD",
+          "offset": 17,
+          "length": 3
+        }
+      ]
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "text with",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "multiple new lines",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "blockquote",
+      "text": "Block quote!",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "code-block",
+      "text": "A fenced code block!",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "code-block",
+      "text": "A fenced code line.",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "code-block",
+      "text": "A spaced code block!",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "code-block",
+      "text": "A spaced code line.",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "code-block",
+      "text": "A tabbed code block!",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "code-block",
+      "text": "A tabbed code line.",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "text": "Item 1",
+      "type": "unordered-list-item"
+    },
+    {
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "text": "Item 2",
+      "type": "unordered-list-item"
+    },
+    {
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "text": "Item 3",
+      "type": "unordered-list-item"
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "text": "Star 1",
+      "type": "unordered-list-item"
+    },
+    {
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "text": "Star 2",
+      "type": "unordered-list-item"
+    },
+    {
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "text": "Star 3",
+      "type": "unordered-list-item"
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "text": "Plus 1",
+      "type": "unordered-list-item"
+    },
+    {
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "text": "Plus 2",
+      "type": "unordered-list-item"
+    },
+    {
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "text": "Plus 3",
+      "type": "unordered-list-item"
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "text": "Item 1",
+      "type": "ordered-list-item"
+    },
+    {
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "text": "Item 2",
+      "type": "ordered-list-item"
+    },
+    {
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "text": "Item 3 with new line",
+      "type": "ordered-list-item"
+    },
+    {
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "text": "Item 4\nwith two trailing spaces",
+      "type": "ordered-list-item"
+    },
+    {
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "text": "Item 5\nwith trailing backslash",
+      "type": "ordered-list-item"
+    },
+    {
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "text": "Item 6 with multiple new lines",
+      "type": "ordered-list-item"
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "atomic",
+      "text": " ",
+      "depth": 0,
+      "entityRanges": [
+        {
+          "key": 11,
+          "offset": 0,
+          "length": 1
+        }
+      ],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "atomic",
+      "text": " ",
+      "depth": 0,
+      "entityRanges": [
+        {
+          "key": 12,
+          "offset": 0,
+          "length": 1
+        }
+      ],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "atomic",
+      "text": " ",
+      "depth": 0,
+      "entityRanges": [
+        {
+          "key": 13,
+          "offset": 0,
+          "length": 1
+        }
+      ],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "content adjacent to table",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    }
+  ],
+  "entityMap": {
+    "0": {
+      "type": "LINK",
+      "mutability": "MUTABLE",
+      "data": {
+        "url": "/page"
+      }
+    },
+    "1": {
+      "type": "LINK",
+      "mutability": "MUTABLE",
+      "data": {
+        "url": "https://foo.com"
+      }
+    },
+    "2": {
+      "type": "IMAGE",
+      "mutability": "IMMUTABLE",
+      "data": {
+        "title": "Absolute Image",
+        "src": "https://foo.com/image.jpg"
+      }
+    },
+    "3": {
+      "type": "IMAGE",
+      "mutability": "IMMUTABLE",
+      "data": {
+        "title": "Relative Image",
+        "src": "/image.jpg"
+      }
+    },
+    "4": {
+      "type": "IMAGE",
+      "mutability": "IMMUTABLE",
+      "data": {
+        "src": "/image.jpg",
+        "title": "Sized Image",
+        "alignment": "default",
+        "width": 30
+      }
+    },
+    "5": {
+      "type": "IMAGE",
+      "mutability": "IMMUTABLE",
+      "data": {
+        "src": "/image.jpg",
+        "title": "Center Image",
+        "alignment": "center"
+      }
+    },
+    "6": {
+      "type": "IMAGE",
+      "mutability": "IMMUTABLE",
+      "data": {
+        "src": "/image.jpg",
+        "title": "Right Image",
+        "alignment": "right"
+      }
+    },
+    "7": {
+      "type": "IMAGE",
+      "mutability": "IMMUTABLE",
+      "data": {
+        "src": "/image.jpg",
+        "title": "Left Image",
+        "alignment": "left"
+      }
+    },
+    "8": {
+      "type": "IMAGE",
+      "mutability": "IMMUTABLE",
+      "data": {
+        "src": "/image.jpg",
+        "title": "Complex Image",
+        "width": 45,
+        "alignment": "center"
+      }
+    },
+    "9": {
+      "type": "IMAGE",
+      "mutability": "IMMUTABLE",
+      "data": {
+        "src": "/image.jpg",
+        "title": "Compact Image",
+        "width": 25,
+        "alignment": "left"
+      }
+    },
+    "10": {
+      "data": {
+        "url": "#line"
+      },
+      "mutability": "MUTABLE",
+      "type": "LINK"
+    },
+    "11": {
+      "data": {
+        "head": [
+          "Header 1",
+          "Header 2"
+        ],
+        "body": [
+          [
+            "Row 1 Cell 1",
+            "Row 1 Cell 2"
+          ],
+          [
+            "Row 2 Cell 1",
+            "Row 2 Cell 2"
+          ],
+          [
+            "------------",
+            "------------"
+          ],
+          [
+            "Row 4 Cell 1",
+            "Row 4 Cell 2"
+          ],
+          [
+            "Row 5 Cell 1",
+            "Row 5 Cell 2"
+          ]
+        ]
+      },
+      "mutability": "IMMUTABLE",
+      "type": "TABLE"
+    },
+    "12": {
+      "data": {
+        "head": [
+          "Header 1",
+          "Header 2"
+        ],
+        "body": [
+          [
+            "Row 1 Cell 1",
+            "Row 1 Cell 2"
+          ],
+          [
+            "Row 2 Cell 1",
+            "Row 2 Cell 2"
+          ]
+        ]
+      },
+      "mutability": "IMMUTABLE",
+      "type": "TABLE"
+    },
+    "13": {
+      "data": {
+        "head": [
+          "Header 1",
+          "Header 2"
+        ],
+        "body": [
+          [
+            "Row 1 Cell 1",
+            "Row 1 Cell 2"
+          ],
+          [
+            "Row 2 Cell 1",
+            "Row 2 Cell 2"
+          ]
+        ]
+      },
+      "mutability": "IMMUTABLE",
+      "type": "TABLE"
+    }
+  }
+}

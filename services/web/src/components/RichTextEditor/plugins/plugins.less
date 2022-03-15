@@ -1,0 +1,17 @@
+.rich-text {
+  &__focus-target {
+    &--focused,
+    &--unfocused {
+      border-radius: 2px;
+      user-select: none;
+    }
+
+    &--unfocused:hover {
+      box-shadow: 0 0 0 2px rgba(0, 91, 247, 0.3);
+    }
+
+    &--focused {
+      box-shadow: 0 0 0 2px rgba(0, 91, 247, 0.5);
+    }
+  }
+}
