@@ -77,19 +77,15 @@ export default class ShopList extends React.Component {
                         })}
                       />
                       <Filters.Dropdown
-                        {...registerFilter(
-                          {
-                            name: 'Owner',
-                            label: 'Owner',
-                            onDataNeeded: this.fetchOwners,
-                            search: true,
-                          },
-                          (id) =>
-                            this.fetchOwners({ id }).then(
-                              (data) => data[0].name
-                            )
-                        )}
+                        name="Owner"
+                        label="Owner"
+                        onDataNeeded={this.fetchOwners}
                         search
+                        {...registerFilter('owner', (id) => {
+                          return this.fetchOwners({ ids: [id] }).then(
+                            (data) => ['owner', data[0].name]
+                          );
+                        })}
                       />
 
                       {/* --- Generator: end */}

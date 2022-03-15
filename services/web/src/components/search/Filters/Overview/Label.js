@@ -33,17 +33,23 @@ export default class OverviewLabel extends React.Component {
       loading: true,
     });
 
-    const field = this.props.fields;
-    if (field.onDataNeeded) {
-      
+    try {
+      const [label, value] = this.props.onDataNeeded(value);
+      this.setState({
+        label,
+        value,
+      });
+    } catch (e) {
+      this.setState({
+        error: e.message,
+      });
     }
   }
 
   render() {
-    const { name, ...rest } = this.props;
+    const { label, value } = this.state;
     return (
       <Label
-        key={name}
         basic
         style={{
           height: '36px',
@@ -53,6 +59,7 @@ export default class OverviewLabel extends React.Component {
           cursor: 'pointer',
         }}
         onClick={() => this.clearFilter()}>
+        {label} {value}
         <Icon style={{ marginTop: '5px' }} name="delete" />
       </Label>
     );

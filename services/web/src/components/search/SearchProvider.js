@@ -144,13 +144,13 @@ export default class SearchProvider extends React.Component {
     });
   };
 
-  registerFilter = (props, getLabel) => {
-   
-    props.name
-
-    return {
-      ...props,
-    };
+  registerFilter = (field, lookup) => {
+    this.setState({
+      fields: {
+        [field]: lookup,
+        ...this.state.fields,
+      },
+    });
   };
 
   setFilters = (filters) => {
