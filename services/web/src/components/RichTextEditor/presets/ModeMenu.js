@@ -3,7 +3,6 @@ import { Icon } from 'semantic';
 import { BUTTON_STYLES } from '../const';
 
 import Menu from '../Menu';
-import Button from '../Button';
 
 export default class RichTextEditorModeMenu extends React.Component {
   getStyles(mode = this.context.mode) {

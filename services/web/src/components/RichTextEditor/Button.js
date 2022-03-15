@@ -25,7 +25,7 @@ class RichTextEditorButton extends React.Component {
 
   isToggled() {
     const { editorState } = this.context;
-    const { type, toggled } = this.props;
+    const { type } = this.props;
     const { block, style } = BUTTON_STYLES[type];
     if (type === 'markdown') {
       return this.context.showMarkdown;
