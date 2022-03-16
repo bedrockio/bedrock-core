@@ -193,6 +193,9 @@ module.exports = {
     maxAssetSize: 1500000,
     maxEntrypointSize: 3000000,
   },
+  cache: {
+    type: 'filesystem',
+  },
 };
 
 function getEntryPoints() {
