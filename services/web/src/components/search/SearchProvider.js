@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { pickBy } from 'lodash';
+import { pickBy, uniqueId } from 'lodash';
 
 import SearchContext from './Context';
 import Pagination from './Pagination';
 import { withRouter } from 'react-router';
+
+const deplayedFieldsFields = {};
 
 @withRouter
 export default class SearchProvider extends React.Component {
@@ -13,6 +15,7 @@ export default class SearchProvider extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      id: uniqueId('search'),
       loading: true,
       items: [],
       error: null,
@@ -27,6 +30,10 @@ export default class SearchProvider extends React.Component {
 
   componentDidMount() {
     this.fetch();
+
+    this.setState({
+      fields: deplayedFieldsFields[this.state.id],
+    });
 
     setTimeout(() => {
       this.loadFilterFromUrl();
@@ -164,14 +171,11 @@ export default class SearchProvider extends React.Component {
   };
 
   registerField = ({ name, ...props }) => {
-    if (!this.state.fields[name]) {
-      this.setState({
-        fields: {
-          [name]: props,
-          ...this.state.fields,
-        },
-      });
-    }
+    const fields = deplayedFieldsFields[this.state.id] || {};
+    deplayedFieldsFields[this.state.id] = {
+      ...fields,
+      [name]: props,
+    };
 
     return {
       name,

@@ -1,14 +1,9 @@
 import React from 'react';
 import { omit } from 'lodash';
 import PropTypes from 'prop-types';
-import { Modal, Form, Ref, Icon, Button, Label } from 'semantic';
+import { Modal, Form, Ref, Icon, Button } from 'semantic';
 
 import SearchContext from '../Context';
-
-function Test() {
-  console.log(1);
-  return <>hllo</>;
-}
 
 export default class FilterModal extends React.Component {
   static contextType = SearchContext;
@@ -20,12 +15,6 @@ export default class FilterModal extends React.Component {
       filters: {},
     };
     this.formRef = React.createRef();
-  }
-
-  componentDidMount() {
-    this.setState({
-      filters: this.context.filters,
-    });
   }
 
   getFilterCount = () => {
@@ -40,9 +29,9 @@ export default class FilterModal extends React.Component {
   };
 
   onModalOpen = () => {
-    this.prevFilters = this.state.filters;
     this.setState({
       open: true,
+      filters: this.context.filters,
     });
     setTimeout(() => {
       const input = this.formRef.current.querySelector('input[name]');
@@ -94,7 +83,6 @@ export default class FilterModal extends React.Component {
 
   render() {
     const { size } = this.props;
-    console.log(this.props.children);
 
     return (
       <>
@@ -112,7 +100,6 @@ export default class FilterModal extends React.Component {
           }>
           <Modal.Header>Filter</Modal.Header>
           <Modal.Content>
-            <Test />
             <Ref innerRef={this.formRef}>
               <Form id="filters" onSubmit={this.onSubmit}>
                 <SearchContext.Provider

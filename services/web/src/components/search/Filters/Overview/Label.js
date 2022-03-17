@@ -61,7 +61,7 @@ export default class OverviewLabel extends React.Component {
           cursor: 'pointer',
         }}
         onClick={() => this.clearFilter()}>
-        {field.label} {value}
+        {field.label}: {value}
         <Icon style={{ marginTop: '5px' }} name="delete" />
       </Label>
     );

@@ -8,11 +8,6 @@ import SearchContext from '../Context';
 export default class DropdownFilter extends React.Component {
   static contextType = SearchContext;
 
-  constructor(props) {
-    super(props);
-    console.log(123);
-  }
-
   getDefaultValue() {
     const { multiple } = this.props;
     return multiple ? [] : '';
@@ -30,6 +25,7 @@ export default class DropdownFilter extends React.Component {
       const arr = Array.isArray(value) ? value : [value];
       return arr.map((value) => {
         return {
+          key: value,
           value,
           text: value,
         };
@@ -38,7 +34,6 @@ export default class DropdownFilter extends React.Component {
   }
 
   render() {
-    console.log(123);
     if (this.props.onDataNeeded) {
       const { label, disabled, error, ...rest } = this.props;
       return (
@@ -50,7 +45,6 @@ export default class DropdownFilter extends React.Component {
               this.context.onFilterChange({
                 value: value,
                 name,
-                label: `${this.props.label}: ${value.name}`,
               });
             }}
             {...rest}
@@ -62,12 +56,10 @@ export default class DropdownFilter extends React.Component {
         <Form.Dropdown
           value={this.getValue()}
           options={this.getOptions()}
-          onChange={(e, { value, name, options }) => {
-            const text = options.find((option) => option.value == value).text;
+          onChange={(e, { value, name }) => {
             this.context.onFilterChange({
               value,
               name,
-              label: `${this.props.label}: ${text}`,
             });
           }}
           {...this.props}
