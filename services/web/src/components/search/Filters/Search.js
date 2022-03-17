@@ -11,6 +11,10 @@ export default class SearchFilter extends React.Component {
     value: this.context.getFilterValue(this.props.name),
   };
 
+  componentDidUpdate(prevProps, prevState) {
+    const newValue = this.context.getFilterValue(this.props.name);
+  }
+
   render() {
     const { loading, onFilterChange } = this.context;
     const { name, ...rest } = this.props;
@@ -25,7 +29,9 @@ export default class SearchFilter extends React.Component {
         onChange={(e, { value }) => this.setState({ value })}
         onKeyPress={(event) => {
           if (event.key === 'Enter') {
-            onFilterChange({}, { value, name });
+            this.setState({ value: value }, () => {
+              onFilterChange({ value, name });
+            });
           }
         }}
         {...rest}

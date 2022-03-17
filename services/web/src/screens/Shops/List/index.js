@@ -1,12 +1,11 @@
 import React from 'react';
-import { Table, Button, Divider, Confirm, Segment, Form } from 'semantic';
+import { Table, Button, Divider, Confirm, Segment } from 'semantic';
 
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
 import { HelpTip, Breadcrumbs, Layout } from 'components';
 import { SearchProvider, Filters, Status, Export } from 'components/search';
-import ErrorMessage from 'components/ErrorMessage';
 
 // --- Generator: list-imports
 import { Link } from 'react-router-dom';
@@ -46,14 +45,7 @@ export default class ShopList extends React.Component {
   render() {
     return (
       <SearchProvider onDataNeeded={this.onDataNeeded}>
-        {({
-          items: shops,
-          getSorted,
-          setSort,
-          reload,
-          registerField,
-          error,
-        }) => {
+        {({ items: shops, getSorted, setSort, reload, registerField }) => {
           return (
             <React.Fragment>
               <Breadcrumbs active="Shops" />
@@ -105,13 +97,14 @@ export default class ShopList extends React.Component {
 
                   <Layout.Group>
                     <Filters.Search
-                      name="keyword"
                       placeholder="Enter name or id"
+                      {...registerField({
+                        name: 'keyword',
+                      })}
                     />
                   </Layout.Group>
                 </Layout>
               </Segment>
-              <ErrorMessage error={error} />
               <Status />
               {shops.length !== 0 && (
                 <Table celled sortable>
