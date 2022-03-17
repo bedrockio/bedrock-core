@@ -46,7 +46,14 @@ export default class ShopList extends React.Component {
   render() {
     return (
       <SearchProvider onDataNeeded={this.onDataNeeded}>
-        {({ items: shops, getSorted, setSort, reload, registerFilter }) => {
+        {({
+          items: shops,
+          getSorted,
+          setSort,
+          reload,
+          registerField,
+          error,
+        }) => {
           return (
             <React.Fragment>
               <Breadcrumbs active="Shops" />
@@ -68,26 +75,25 @@ export default class ShopList extends React.Component {
                       {/* --- Generator: filters */}
 
                       <Filters.Dropdown
-                        name="country"
-                        label="Country"
                         options={countries}
                         search
-                        {...registerFilter('country', (id) => {
-                          return [
-                            'Country',
+                        {...registerField({
+                          name: 'country',
+                          label: 'Country',
+                          getDisplayValue: (id) =>
                             countries.find((c) => c.value === id).text,
-                          ];
                         })}
                       />
                       <Filters.Dropdown
-                        name="Owner"
-                        label="Owner"
                         onDataNeeded={this.fetchOwners}
                         search
-                        {...registerFilter('owner', (id) => {
-                          return this.fetchOwners({ ids: [id] }).then(
-                            (data) => ['owner', data[0].name]
-                          );
+                        {...registerField({
+                          name: 'owner',
+                          label: 'Owner',
+                          getDisplayValue: (id) =>
+                            this.fetchOwners({
+                              ids: [id],
+                            }).then((data) => data[0].name),
                         })}
                       />
 

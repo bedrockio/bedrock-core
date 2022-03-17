@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { Label, Icon } from 'semantic';
-import { truncate } from 'lodash';
 import SearchContext from '../../Context';
 
 export default class OverviewLabel extends React.Component {
@@ -21,22 +20,23 @@ export default class OverviewLabel extends React.Component {
   };
 
   componentDidUpdate() {
-    const value = this.context.getFilterValue(this.props.name);
-    if (this.state.value != value) {
-      this.updateLabel(value);
+    const filteredValue = this.context.getFilterValue(this.props.name);
+    if (this.state.filteredValue != filteredValue) {
+      this.updateLabel(filteredValue);
     }
   }
 
-  updateLabel(value) {
+  async updateLabel(filteredValue) {
     this.setState({
-      value: value,
+      filteredValue: filteredValue,
       loading: true,
     });
 
     try {
-      const [label, value] = this.props.onDataNeeded(value);
+      const value = await this.props.field.getDisplayValue(
+        filteredValue?.id || filteredValue
+      );
       this.setState({
-        label,
         value,
       });
     } catch (e) {
@@ -47,7 +47,9 @@ export default class OverviewLabel extends React.Component {
   }
 
   render() {
-    const { label, value } = this.state;
+    const { value } = this.state;
+    const field = this.props.field;
+
     return (
       <Label
         basic
@@ -59,7 +61,7 @@ export default class OverviewLabel extends React.Component {
           cursor: 'pointer',
         }}
         onClick={() => this.clearFilter()}>
-        {label} {value}
+        {field.label} {value}
         <Icon style={{ marginTop: '5px' }} name="delete" />
       </Label>
     );

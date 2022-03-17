@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { debounce, pickBy } from 'lodash';
+import { pickBy } from 'lodash';
 
 import SearchContext from './Context';
 import Pagination from './Pagination';
+import { withRouter } from 'react-router';
 
+@withRouter
 export default class SearchProvider extends React.Component {
   static Pagination = Pagination;
 
@@ -14,7 +16,7 @@ export default class SearchProvider extends React.Component {
       loading: true,
       items: [],
       error: null,
-      fields: props.fields,
+      fields: props.fields || {},
       filters: props.filters,
       limit: props.limit,
       page: props.page,
@@ -25,6 +27,10 @@ export default class SearchProvider extends React.Component {
 
   componentDidMount() {
     this.fetch();
+
+    setTimeout(() => {
+      this.loadFilterFromUrl();
+    }, 0);
   }
 
   componentDidUpdate(lastProps, lastState) {
@@ -37,6 +43,19 @@ export default class SearchProvider extends React.Component {
       this.fetch();
     }
   }
+
+  loadFilterFromUrl = () => {
+    const params = new URLSearchParams(this.props.history.location.search);
+    const filters = {};
+    const fields = this.state.fields;
+
+    for (let [key, value] of params) {
+      if (fields[key]) {
+        filters[key] = value;
+      }
+    }
+    this.setFilters(filters);
+  };
 
   hasChanged(current, last) {
     return !!this.getChanged(current, last);
@@ -144,13 +163,20 @@ export default class SearchProvider extends React.Component {
     });
   };
 
-  registerFilter = (field, lookup) => {
-    this.setState({
-      fields: {
-        [field]: lookup,
-        ...this.state.fields,
-      },
-    });
+  registerField = ({ name, ...props }) => {
+    if (!this.state.fields[name]) {
+      this.setState({
+        fields: {
+          [name]: props,
+          ...this.state.fields,
+        },
+      });
+    }
+
+    return {
+      name,
+      label: props.label,
+    };
   };
 
   setFilters = (filters) => {
@@ -160,6 +186,16 @@ export default class SearchProvider extends React.Component {
 
     this.setState({
       filters,
+    });
+
+    const queryObject = {};
+    for (const key of Object.keys(filters)) {
+      queryObject[key] = filters[key]?.id || filters[key];
+    }
+
+    this.props.history.push({
+      pathname: this.props.history.location.pathname,
+      search: '?' + new URLSearchParams(queryObject).toString(),
     });
   };
 
@@ -174,12 +210,8 @@ export default class SearchProvider extends React.Component {
       }
     );
 
-    this.setState({
-      filters,
-    });
+    this.setFilters(filters);
   };
-
-  setFilterDeferred = debounce(this.onFilterChange, 300);
 
   getFilterValue = (name) => {
     const { pending, filters } = this.state;
@@ -201,7 +233,7 @@ export default class SearchProvider extends React.Component {
       onPageChange: this.onPageChange,
       onFilterChange: this.onFilterChange,
       getFilterValue: this.getFilterValue,
-      registerFilter: this.registerFilter,
+      registerField: this.registerField,
       onDataNeeded: this.props.onDataNeeded,
     };
     return (
