@@ -6,4 +6,7 @@ module.exports = {
   watchPlugins: ['./src/utils/testing/ChangedFilesPlugin'],
   // https://github.com/shelfio/jest-mongodb#6-jest-watch-mode-gotcha
   watchPathIgnorePatterns: ['globalConfig'],
+  moduleNameMapper: {
+    postmark: '<rootDir>/src/utils/testing/mocks/postmark',
+  },
 };

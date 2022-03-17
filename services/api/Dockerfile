@@ -13,16 +13,15 @@ RUN apk add --update bash curl;
 # Needed for Gcloud Storage resumable file uploads
 RUN mkdir -p /root/.config
 
-# Install app dependencies
-COPY package.json /service/package.json
-COPY yarn.lock /service/yarn.lock
-RUN cd /service; yarn install --frozen-lockfile;
+# Set work directory
+WORKDIR /service
+
+# Install dependencies and store yarn cache
+COPY package.json yarn.lock .
+RUN --mount=type=cache,target=/root/.yarn YARN_CACHE_FOLDER=/root/.yarn yarn install --frozen-lockfile
 
 # Copy app source
-COPY . /service
-
-# Set work directory to /api
-WORKDIR /service
+COPY . .
 
 # Set your port
 ENV PORT 2300

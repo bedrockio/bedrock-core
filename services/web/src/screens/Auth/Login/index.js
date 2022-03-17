@@ -1,13 +1,12 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { Segment, Grid, Form } from 'semantic';
 import { request } from 'utils/api';
-import { Segment, Grid, Form, Message } from 'semantic';
-
 import { withSession } from 'stores';
 import screen from 'helpers/screen';
 
 import Logo from 'components/LogoTitle';
-
-import { Link } from 'react-router-dom';
+import ErrorMessage from 'components/ErrorMessage';
 
 @screen
 @withSession
@@ -54,14 +53,13 @@ export default class Login extends React.Component {
 
   render() {
     const { error, loading, password, email } = this.state;
-
     return (
       <React.Fragment>
         <Logo title="Login" />
         <Segment.Group>
           <Segment padded>
             <Form error={!!error} size="large" onSubmit={this.onSubmit}>
-              {error && <Message error content={error.message} />}
+              <ErrorMessage error={error} />
               <Form.Field error={error?.hasField?.('email')}>
                 <Form.Input
                   value={email}

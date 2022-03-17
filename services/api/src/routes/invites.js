@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Router = require('@koa/router');
 const Joi = require('joi');
 const { validateBody } = require('../utils/middleware/validate');
@@ -17,8 +18,7 @@ function getToken(invite) {
 function sendInvite(sender, invite) {
   return sendTemplatedMail({
     to: invite.email,
-    subject: `${sender.name} has invited you to join {{appName}}`,
-    template: 'invite.md',
+    file: 'invite.md',
     sender,
     token: getToken(invite),
   });
@@ -26,12 +26,14 @@ function sendInvite(sender, invite) {
 
 router
   .param('inviteId', async (id, ctx, next) => {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      ctx.throw(404);
+    }
     const invite = await Invite.findById(id);
-    ctx.state.invite = invite;
-
     if (!invite) {
       ctx.throw(404);
     }
+    ctx.state.invite = invite;
 
     return next();
   })

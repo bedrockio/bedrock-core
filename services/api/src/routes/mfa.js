@@ -10,6 +10,7 @@ const sms = require('../utils/sms');
 const { createAuthToken } = require('../utils/tokens');
 const { sendTemplatedMail } = require('../utils/mailer');
 const { validateBody } = require('../utils/middleware/validate');
+const { verifyLoginAttempts } = require('../utils/auth');
 
 const checkPasswordVerification = (ctx, next) => {
   const { authUser } = ctx.state;
@@ -50,13 +51,7 @@ router
       const { jwt } = ctx.state;
       const { code } = ctx.request.body;
 
-      const user = await User.findOneAndUpdate(
-        { _id: jwt.sub },
-        {
-          lastLoginAttemptAt: new Date(),
-          $inc: { loginAttempts: 1 },
-        }
-      );
+      const user = await User.findOne({ _id: jwt.sub });
 
       if (!user) {
         ctx.throw(400, 'User does not exist');
@@ -64,13 +59,15 @@ router
         ctx.throw(400, 'Token is invalid (jti)');
       }
 
-      if (!user.verifyLoginAttempts()) {
+      try {
+        await verifyLoginAttempts(user);
+      } catch (error) {
         await AuditEntry.append('reached max mfa challenge attempts', ctx, {
           type: 'security',
           object: user,
           user: user.id,
         });
-        ctx.throw(401, 'Too many attempts');
+        ctx.throw(401, error);
       }
 
       // if backup code e.g 12345-16123
@@ -114,10 +111,8 @@ router
     await authUser.save();
 
     await sendTemplatedMail({
-      to: authUser.fullName,
-      template: 'mfa-disabled.md',
-      subject: 'Two-factor authentication disabled',
-      firstName: authUser.firstName,
+      user: authUser,
+      file: 'mfa-disabled.md',
     });
 
     ctx.status = 204;
@@ -199,11 +194,9 @@ router
       await authUser.save();
 
       await sendTemplatedMail({
-        to: authUser.fullName,
-        template: authUser.mfaMethod === 'otp' ? 'mfa-otp-enabled.md' : 'mfa-sms-enabled.md',
-        subject: 'Two-factor authentication enabled',
-        firstName: authUser.firstName,
+        file: authUser.mfaMethod === 'otp' ? 'mfa-otp-enabled.md' : 'mfa-sms-enabled.md',
         phoneLast4: authUser.mfaPhoneNumber?.slice(-4),
+        user: authUser,
       });
 
       ctx.status = 204;

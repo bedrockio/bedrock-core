@@ -1,14 +1,16 @@
 import React from 'react';
-import { Segment, Message, Button, Divider, Header, Label } from 'semantic';
+import { Link } from 'react-router-dom';
+import { Segment, Button, Divider, Header, Label } from 'semantic';
 
 import screen from 'helpers/screen';
-import Menu from './Menu';
 import { request } from 'utils/api';
-
 import { withSession } from 'stores';
-import { Link } from 'react-router-dom';
+
 import { Layout } from 'components';
 import LoadButton from 'components/LoadButton';
+import ErrorMessage from 'components/ErrorMessage';
+
+import Menu from './Menu';
 
 @screen
 @withSession
@@ -91,7 +93,7 @@ export default class Security extends React.Component {
             </Layout>
           </Segment>
           <Segment>
-            {error && <Message error content={error.message} />}
+            <ErrorMessage error={error} />
             <Layout horizontal spread>
               <div>
                 <Header

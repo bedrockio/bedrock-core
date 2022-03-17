@@ -2,6 +2,7 @@ const path = require('path');
 const { kebabCase } = require('lodash');
 const config = require('@bedrockio/config');
 const roleDefinitions = require('../../roles.json');
+const { convertRelativeTime } = require('./time');
 
 const ENV = config.getAll();
 const { ADMIN_EMAIL, ADMIN_PASSWORD } = ENV;
@@ -16,11 +17,15 @@ const CUSTOM_TRANSFORMS = {
     return ENV[key];
   },
   async ref(key, meta, context) {
-    return await context.importFixtures(key, meta);
+    const doc = await context.importFixtures(key, meta);
+    return doc.id;
   },
   async obj(key, meta, context) {
     const doc = await context.importFixtures(key, meta);
     return doc.toObject();
+  },
+  rel(key) {
+    return convertRelativeTime(key);
   },
 };
 

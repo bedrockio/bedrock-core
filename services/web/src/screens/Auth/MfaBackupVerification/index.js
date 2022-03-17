@@ -1,12 +1,13 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { Segment, Form, Header } from 'semantic';
 import { request } from 'utils/api';
-import { Segment, Form, Header, Message } from 'semantic';
 import { withSession } from 'stores';
 import screen from 'helpers/screen';
 import { APP_SUPPORT_EMAIL } from 'utils/env';
 
 import Logo from 'components/LogoTitle';
-import { Link } from 'react-router-dom';
+import ErrorMessage from 'components/ErrorMessage';
 
 @screen
 @withSession
@@ -100,7 +101,7 @@ export default class MfaBackupVerification extends React.Component {
           <Segment padded>
             <Form error={!!error} size="large" onSubmit={this.onSubmit}>
               <Header>Use Your Backup Codes</Header>
-              {error && <Message error content={error.message} />}
+              <ErrorMessage error={error} />
               <p>Please enter one of your unused backup verification codes:</p>
               <Form.Input
                 value={this.state.code}
