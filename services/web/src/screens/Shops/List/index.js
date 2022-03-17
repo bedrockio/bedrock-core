@@ -5,12 +5,9 @@ import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
 import { HelpTip, Breadcrumbs, Layout } from 'components';
-<<<<<<< HEAD
 import { SearchProvider, Filters, Status, Export } from 'components/search';
-=======
-import { SearchProvider, Filters } from 'components/search';
 import ErrorMessage from 'components/ErrorMessage';
->>>>>>> master
+
 // --- Generator: list-imports
 import { Link } from 'react-router-dom';
 import allCountries from 'utils/countries';
