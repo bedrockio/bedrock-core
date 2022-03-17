@@ -36,7 +36,7 @@ export default class SearchProvider extends React.Component {
     });
 
     setTimeout(() => {
-      this.loadFilterFromUrl();
+      this.updateFilterFromSearchParams();
     }, 0);
   }
 
@@ -51,7 +51,7 @@ export default class SearchProvider extends React.Component {
     }
   }
 
-  loadFilterFromUrl = () => {
+  updateFilterFromSearchParams = () => {
     const params = new URLSearchParams(this.props.history.location.search);
     const filters = {};
     const fields = this.state.fields;

@@ -1,6 +1,7 @@
 import React from 'react';
 import SearchContext from './Context';
 import { Loader, Message, Segment, Dimmer } from 'semantic';
+import ErrorMessage from 'components/ErrorMessage';
 
 export default class SearchStatus extends React.Component {
   static contextType = SearchContext;
@@ -19,11 +20,7 @@ export default class SearchStatus extends React.Component {
     }
 
     if (error) {
-      return (
-        <Segment>
-          <Message error content={error.message} />
-        </Segment>
-      );
+      return <ErrorMessage error={error} />;
     }
 
     if (items.length === 0) {

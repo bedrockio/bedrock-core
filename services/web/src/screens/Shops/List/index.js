@@ -84,6 +84,7 @@ export default class ShopList extends React.Component {
                             countries.find((c) => c.value === id).text,
                         })}
                       />
+
                       <Filters.Dropdown
                         onDataNeeded={this.fetchOwners}
                         search
