@@ -1,8 +1,16 @@
 import React from 'react';
-import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Button } from 'semantic';
 import PropTypes from 'prop-types';
+
+import bash from 'react-syntax-highlighter/dist/esm/languages/prism/bash';
+import json from 'react-syntax-highlighter/dist/esm/languages/prism/json';
+import swift from 'react-syntax-highlighter/dist/esm/languages/prism/swift';
+
+SyntaxHighlighter.registerLanguage('bash', bash);
+SyntaxHighlighter.registerLanguage('json', json);
+SyntaxHighlighter.registerLanguage('swift', swift);
 
 atomDark['pre[class*="language-"]'].marginBottom = '1em';
 
