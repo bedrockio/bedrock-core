@@ -208,10 +208,11 @@ export default class SearchProvider extends React.Component {
     };
   };
 
-  setFilters = (filters, params = this.state.params) => {
+  setFilters = (filters) => {
+    const newFilters = convertFilters(filters);
+    this.updateUrlSearchParams(newFilters);
     this.setState({
-      filters: convertFilters(filters),
-      params,
+      filters: newFilters,
     });
   };
 
@@ -222,7 +223,6 @@ export default class SearchProvider extends React.Component {
     });
 
     this.setFilters(newFilters);
-    this.updateUrlSearchParams(newFilters);
   };
 
   render() {
