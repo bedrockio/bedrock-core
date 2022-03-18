@@ -1,7 +1,7 @@
 import React from 'react';
-import { Image } from 'semantic-ui-react';
+import { Image, Segment } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import { Table, Button, Message, Divider, Loader, Confirm } from 'semantic';
+import { Table, Button, Divider, Confirm } from 'semantic';
 
 import { formatDateTime } from 'utils/date';
 import { urlForUpload } from 'utils/uploads';
@@ -10,9 +10,7 @@ import { request } from 'utils/api';
 import screen from 'helpers/screen';
 
 import { HelpTip, Breadcrumbs, Layout } from 'components';
-import { SearchProvider, Filters } from 'components/search';
-import ErrorMessage from 'components/ErrorMessage';
-
+import { SearchProvider, Filters, Export, Status } from 'components/search';
 import EditProduct from 'modals/EditProduct';
 
 @screen
@@ -28,31 +26,15 @@ export default class ProductList extends React.Component {
   render() {
     return (
       <SearchProvider onDataNeeded={this.onDataNeeded}>
-        {({ items: products, getSorted, setSort, reload, loading, error }) => {
+        {({ items: products, getSorted, setSort, reload, registerParam }) => {
           return (
             <React.Fragment>
               <Breadcrumbs active="Products" />
+
               <Layout horizontal center spread>
                 <h1>Products</h1>
                 <Layout.Group>
-                  <Filters.Modal>
-                    <Filters.Search name="keyword" label="Keyword" />
-                    <Filters.Checkbox name="isFeatured" label="Is Featured" />
-                    <Filters.Number name="priceUsd" label="Price Usd" />
-                    <Filters.DateRange
-                      time
-                      name="expiresAt"
-                      label="Expires At"
-                    />
-                    <Filters.Dropdown
-                      search
-                      multiple
-                      selection
-                      allowAdditions
-                      name="sellingPoints"
-                      label="Selling Points"
-                    />
-                  </Filters.Modal>
+                  <Export filename="products" />
                   <EditProduct
                     trigger={
                       <Button primary content="New Product" icon="plus" />
@@ -61,12 +43,58 @@ export default class ProductList extends React.Component {
                   />
                 </Layout.Group>
               </Layout>
-              <ErrorMessage error={error} />
-              {loading ? (
-                <Loader active />
-              ) : products.length === 0 ? (
-                <Message>No products created yet</Message>
-              ) : (
+              <Segment>
+                <Layout horizontal center spread stackable>
+                  <Layout horizontal>
+                    <Filters.Modal>
+                      <Filters.Checkbox
+                        {...registerParam({
+                          name: 'isFeatured',
+                          label: 'Is Featured',
+                          type: 'boolean',
+                        })}
+                      />
+                      <Filters.Number
+                        {...registerParam({
+                          name: 'priceUsd',
+                          label: 'Price Usd',
+                          type: 'currency',
+                        })}
+                      />
+                      <Filters.DateRange
+                        time
+                        {...registerParam({
+                          name: 'expiresAt',
+                          label: 'Expires At',
+                          type: 'date',
+                        })}
+                      />
+                      <Filters.Dropdown
+                        search
+                        multiple
+                        selection
+                        allowAdditions
+                        {...registerParam({
+                          name: 'sellingPoints',
+                          label: 'Selling Points',
+                        })}
+                      />
+                    </Filters.Modal>
+                    <Filters.Overview />
+                  </Layout>
+
+                  <Layout.Group>
+                    <Filters.Search
+                      placeholder="Enter name or id"
+                      {...registerParam({
+                        name: 'keyword',
+                      })}
+                    />
+                  </Layout.Group>
+                </Layout>
+              </Segment>
+              <Status />
+              {products.length !== 0 && (
                 <Table celled sortable>
                   <Table.Header>
                     <Table.Row>

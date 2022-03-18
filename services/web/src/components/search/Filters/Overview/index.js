@@ -3,7 +3,7 @@ import React from 'react';
 import Label from './Label';
 import SearchContext from '../../Context';
 
-export default class OverviewLabel extends React.Component {
+export default class Overview extends React.Component {
   static contextType = SearchContext;
 
   clearFilter = () => {
@@ -14,13 +14,15 @@ export default class OverviewLabel extends React.Component {
   };
 
   render() {
-    const { filters, fields } = this.context;
-    const filtersKeys = Object.keys(filters);
+    const { filters, params = {} } = this.context;
+    const filtersKeys = Object.keys(filters).filter(
+      (key) => params[key]?.label
+    );
 
     return (
       <>
         {filtersKeys.slice(0, 3).map((key) => (
-          <Label key={key} name={key} field={fields[key]} />
+          <Label key={key} name={key} param={params[key]} />
         ))}
       </>
     );

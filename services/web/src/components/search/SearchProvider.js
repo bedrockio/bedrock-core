@@ -6,7 +6,13 @@ import SearchContext from './Context';
 import Pagination from './Pagination';
 import { withRouter } from 'react-router';
 
-const deplayedFieldsFields = {};
+const delayedParams = {};
+
+function convertFilters(filters) {
+  return pickBy(filters, (val) => {
+    return Array.isArray(val) ? val.length : val;
+  });
+}
 
 @withRouter
 export default class SearchProvider extends React.Component {
@@ -16,11 +22,12 @@ export default class SearchProvider extends React.Component {
     super(props);
     this.state = {
       id: uniqueId('search'),
+      ready: false,
       loading: true,
       items: [],
       error: null,
-      fields: props.fields || {},
-      filters: props.filters,
+      params: props.params || {},
+      filters: props.filters || {},
       limit: props.limit,
       page: props.page,
       sort: props.sort,
@@ -28,14 +35,9 @@ export default class SearchProvider extends React.Component {
   }
 
   componentDidMount() {
-    this.fetch();
-
-    this.setState({
-      fields: deplayedFieldsFields[this.state.id],
-    });
-
+    // because we calling registerParams in the render method, we need to wait for the render to finish
     setTimeout(() => {
-      this.updateFilterFromSearchParams();
+      this.boot();
     }, 0);
   }
 
@@ -45,23 +47,44 @@ export default class SearchProvider extends React.Component {
       this.setState({
         ...changedProps,
       });
-    } else if (this.hasChanged(this.state, lastState)) {
+    } else if (this.hasChanged(this.state, lastState) && this.state.ready) {
       this.fetch();
     }
   }
 
-  updateFilterFromSearchParams = () => {
-    const params = new URLSearchParams(this.props.history.location.search);
+  boot = () => {
+    // get registered params
+    const params = delayedParams[this.state.id];
+    /// load filters from url
+    const urlParams = new URLSearchParams(this.props.history.location.search);
     const filters = {};
-    const fields = this.state.fields;
 
-    for (let [key, value] of params) {
-      if (fields[key]) {
+    for (let [key, value] of urlParams) {
+      if (params[key]) {
         filters[key] = value;
       }
     }
-    this.setFilters(filters);
+
+    this.setState(
+      {
+        filters: convertFilters(filters),
+        params,
+      },
+      () => this.fetch(true)
+    );
   };
+
+  updateUrlSearchParams(filters) {
+    const queryObject = {};
+    for (const key of Object.keys(filters)) {
+      queryObject[key] = filters[key]?.id || filters[key];
+    }
+
+    this.props.history.push({
+      pathname: this.props.history.location.pathname,
+      search: '?' + new URLSearchParams(queryObject).toString(),
+    });
+  }
 
   hasChanged(current, last) {
     return !!this.getChanged(current, last);
@@ -95,11 +118,13 @@ export default class SearchProvider extends React.Component {
 
   // Actions
 
-  fetch = async () => {
-    this.setState({
-      error: null,
-      loading: true,
-    });
+  fetch = async (initial) => {
+    if (!initial) {
+      this.setState({
+        error: null,
+        loading: true,
+      });
+    }
     try {
       const { page, limit, sort, filters } = this.state;
       const { data, meta } = await this.props.onDataNeeded({
@@ -109,12 +134,14 @@ export default class SearchProvider extends React.Component {
         ...filters,
       });
       this.setState({
+        ready: true,
         loading: false,
         items: data,
         meta: Object.assign({}, this.state.meta, meta),
       });
     } catch (error) {
       this.setState({
+        ready: true,
         loading: false,
         error,
       });
@@ -169,50 +196,33 @@ export default class SearchProvider extends React.Component {
     });
   };
 
-  registerField = ({ name, ...props }) => {
-    const fields = deplayedFieldsFields[this.state.id] || {};
-    deplayedFieldsFields[this.state.id] = {
-      ...fields,
+  registerParam = ({ name, ...props }) => {
+    const params = delayedParams[this.state.id] || {};
+    delayedParams[this.state.id] = {
+      ...params,
       [name]: props,
     };
-
     return {
       name,
       label: props.label,
     };
   };
 
-  setFilters = (filters) => {
-    filters = pickBy(filters, (val) => {
-      return Array.isArray(val) ? val.length : val;
-    });
-
+  setFilters = (filters, params = this.state.params) => {
     this.setState({
-      filters,
-    });
-
-    const queryObject = {};
-    for (const key of Object.keys(filters)) {
-      queryObject[key] = filters[key]?.id || filters[key];
-    }
-
-    this.props.history.push({
-      pathname: this.props.history.location.pathname,
-      search: '?' + new URLSearchParams(queryObject).toString(),
+      filters: convertFilters(filters),
+      params,
     });
   };
 
   onFilterChange = ({ name, value }) => {
-    const filters = pickBy(
-      {
-        ...this.state.filters,
-        [name]: value,
-      },
-      (val) => {
-        return Array.isArray(val) ? val.length : val;
-      }
-    );
-    this.setFilters(filters);
+    const newFilters = convertFilters({
+      ...this.state.filters,
+      [name]: value,
+    });
+
+    this.setFilters(newFilters);
+    this.updateUrlSearchParams(newFilters);
   };
 
   render() {
@@ -227,7 +237,7 @@ export default class SearchProvider extends React.Component {
       updateItems: this.updateItems,
       onPageChange: this.onPageChange,
       onFilterChange: this.onFilterChange,
-      registerField: this.registerField,
+      registerParam: this.registerParam,
       onDataNeeded: this.props.onDataNeeded,
     };
     return (

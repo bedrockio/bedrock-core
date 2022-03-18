@@ -31,13 +31,11 @@ export default class ShopList extends React.Component {
     });
   };
 
-  fetchOwners = async (name) => {
+  fetchOwners = async (props) => {
     const { data } = await request({
       method: 'POST',
       path: '/1/users/search',
-      body: {
-        name,
-      },
+      body: props,
     });
     return data;
   };
@@ -45,7 +43,7 @@ export default class ShopList extends React.Component {
   render() {
     return (
       <SearchProvider onDataNeeded={this.onDataNeeded}>
-        {({ items: shops, getSorted, setSort, reload, registerField }) => {
+        {({ items: shops, getSorted, setSort, reload, registerParam }) => {
           return (
             <React.Fragment>
               <Breadcrumbs active="Shops" />
@@ -69,7 +67,7 @@ export default class ShopList extends React.Component {
                       <Filters.Dropdown
                         options={countries}
                         search
-                        {...registerField({
+                        {...registerParam({
                           name: 'country',
                           label: 'Country',
                           getDisplayValue: (id) =>
@@ -78,9 +76,9 @@ export default class ShopList extends React.Component {
                       />
 
                       <Filters.Dropdown
-                        onDataNeeded={this.fetchOwners}
+                        onDataNeeded={(name) => this.fetchOwners({ name })}
                         search
-                        {...registerField({
+                        {...registerParam({
                           name: 'owner',
                           label: 'Owner',
                           getDisplayValue: (id) =>
@@ -98,7 +96,7 @@ export default class ShopList extends React.Component {
                   <Layout.Group>
                     <Filters.Search
                       placeholder="Enter name or id"
-                      {...registerField({
+                      {...registerParam({
                         name: 'keyword',
                       })}
                     />

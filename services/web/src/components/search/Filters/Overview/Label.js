@@ -21,19 +21,20 @@ export default class OverviewLabel extends React.Component {
 
   componentDidUpdate() {
     const filteredValue = this.context.filters[this.props.name];
-    if (this.state.filteredValue != filteredValue) {
+    if (this.state.filteredValue !== filteredValue) {
       this.updateLabel(filteredValue);
     }
   }
 
   async updateLabel(filteredValue) {
+    const { param } = this.props;
     this.setState({
       filteredValue: filteredValue,
       loading: true,
     });
 
     try {
-      const value = await this.props.field.getDisplayValue(
+      const value = await param.getDisplayValue(
         filteredValue?.id || filteredValue
       );
       this.setState({
@@ -48,7 +49,7 @@ export default class OverviewLabel extends React.Component {
 
   render() {
     const { value } = this.state;
-    const field = this.props.field;
+    const param = this.props.param;
 
     return (
       <Label
@@ -61,7 +62,7 @@ export default class OverviewLabel extends React.Component {
           cursor: 'pointer',
         }}
         onClick={() => this.clearFilter()}>
-        {field.label}: {value}
+        {param.label}: {value}
         <Icon style={{ marginTop: '5px' }} name="delete" />
       </Label>
     );
