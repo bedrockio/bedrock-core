@@ -14,6 +14,46 @@ function convertFilters(filters) {
   });
 }
 
+function parseValue(type, value) {
+  if (type === 'date') {
+    return new Date(value);
+  } else if (type === 'number') {
+    return Number(value);
+  } else if (type === 'boolean') {
+    return Boolean(value);
+  }
+  return value;
+}
+
+function parseParamByType(param, value) {
+  const type = param.type;
+  if (param.multiple) {
+    value = value.split('_');
+    return value.map((value) => parseValue(type, value));
+  }
+
+  if (param.range) {
+    value = value.split('/');
+    return {
+      gte: parseValue(type, value[0]),
+      lte: parseValue(type, value[1]),
+    };
+  }
+
+  return parseValue(type, value);
+}
+
+function convertValue(type, value) {
+  if (type === 'date') {
+    return new Date(value).toISOString();
+  } else if (type === 'number') {
+    return Number(value);
+  } else if (type === 'boolean') {
+    return Boolean(value);
+  }
+  return value?.id || value;
+}
+
 @withRouter
 export default class SearchProvider extends React.Component {
   static Pagination = Pagination;
@@ -61,9 +101,11 @@ export default class SearchProvider extends React.Component {
 
     for (let [key, value] of urlParams) {
       if (params[key]) {
-        filters[key] = value;
+        filters[key] = parseParamByType(params[key], value);
       }
     }
+
+    console.log(filters);
 
     this.setState(
       {
@@ -77,7 +119,20 @@ export default class SearchProvider extends React.Component {
   updateUrlSearchParams(filters) {
     const queryObject = {};
     for (const key of Object.keys(filters)) {
-      queryObject[key] = filters[key]?.id || filters[key];
+      const value = filters[key]?.id || filters[key];
+      const param = this.state.params[key];
+      if (param.multiple) {
+        queryObject[key] = value
+          .map((value) => convertValue(param.type, value))
+          .join('_');
+      } else if (param.range) {
+        queryObject[key] = [
+          convertValue(param.type, value.gte),
+          convertValue(param.type, value.lte),
+        ].join('/');
+      } else {
+        queryObject[key] = convertValue(param.type, value);
+      }
     }
 
     this.props.history.push({
@@ -205,6 +260,7 @@ export default class SearchProvider extends React.Component {
     return {
       name,
       label: props.label,
+      multiple: props.multiple,
     };
   };
 

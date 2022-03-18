@@ -65,9 +65,11 @@ export default class SearchDropdown extends React.Component {
   getOptions() {
     return this.getAllItems().map((item) => {
       const { getOptionLabel, getOptionValue } = this.props;
+      const value = getOptionValue(item);
       return {
+        key: value,
         text: getOptionLabel(item),
-        value: getOptionValue(item),
+        value: value,
       };
     });
   }
@@ -75,7 +77,7 @@ export default class SearchDropdown extends React.Component {
   getValue() {
     const { multiple, value } = this.props;
     if (multiple) {
-      return value.map((obj) => obj.id);
+      return value.map((obj) => obj.id || obj);
     } else {
       return value?.id || value;
     }
@@ -83,6 +85,7 @@ export default class SearchDropdown extends React.Component {
 
   render() {
     const { loading, error } = this.state;
+
     return (
       <Dropdown
         {...omit(this.props, Object.keys(SearchDropdown.propTypes))}
@@ -109,5 +112,5 @@ SearchDropdown.propTypes = {
 
 SearchDropdown.defaultProps = {
   getOptionLabel: (item) => item.name,
-  getOptionValue: (item) => item.id,
+  getOptionValue: (item) => item.id || item,
 };

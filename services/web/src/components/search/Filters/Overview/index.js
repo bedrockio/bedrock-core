@@ -19,6 +19,11 @@ export default class Overview extends React.Component {
       (key) => params[key]?.label
     );
 
+    if (!this.context.ready) {
+      return null;
+    }
+    console.log('read', this.context);
+
     return (
       <>
         {filtersKeys.slice(0, 3).map((key) => (

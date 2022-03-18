@@ -3,14 +3,32 @@ import React from 'react';
 import { Label, Icon } from 'semantic';
 import SearchContext from '../../Context';
 
+import { formatDate } from 'utils/date';
+
+function renderValue(type, value) {
+  switch (type) {
+    case 'boolean':
+      return value ? 'Yes' : 'No';
+    case 'date':
+      return formatDate(value);
+    default:
+      return value;
+  }
+}
+
 export default class OverviewLabel extends React.Component {
   static contextType = SearchContext;
 
   state = {
     loading: false,
-    value: null,
+    value: this.context.filters[this.props.name],
     label: null,
+    filteredValue: this.context.filters[this.props.name],
   };
+
+  componentDidMount() {
+    this.updateLabel(this.state.filteredValue);
+  }
 
   clearFilter = () => {
     this.context.onFilterChange({
@@ -28,6 +46,15 @@ export default class OverviewLabel extends React.Component {
 
   async updateLabel(filteredValue) {
     const { param } = this.props;
+    if (!param.getDisplayValue) {
+      this.setState({
+        filteredValue: filteredValue,
+        value: filteredValue,
+        loading: false,
+      });
+      return;
+    }
+
     this.setState({
       filteredValue: filteredValue,
       loading: true,
@@ -35,10 +62,14 @@ export default class OverviewLabel extends React.Component {
 
     try {
       const value = await param.getDisplayValue(
-        filteredValue?.id || filteredValue
+        Array.isArray(filteredValue)
+          ? filteredValue.map((item) => item.id || item)
+          : filteredValue?.id || filteredValue
       );
+
       this.setState({
         value,
+        loading: false,
       });
     } catch (e) {
       this.setState({
@@ -48,9 +79,6 @@ export default class OverviewLabel extends React.Component {
   }
 
   render() {
-    const { value } = this.state;
-    const param = this.props.param;
-
     return (
       <Label
         basic
@@ -62,9 +90,33 @@ export default class OverviewLabel extends React.Component {
           cursor: 'pointer',
         }}
         onClick={() => this.clearFilter()}>
-        {param.label}: {value}
+        {this.state.loading ? '...' : this.renderLabelContent()}
         <Icon style={{ marginTop: '5px' }} name="delete" />
       </Label>
     );
+  }
+
+  renderLabelContent() {
+    const { param } = this.props;
+    const { value } = this.state;
+
+    if (param.format) {
+      return param.format(value);
+    }
+
+    if (param.range) {
+      return `${param.label}: ${[
+        renderValue(param.type, value.gte),
+        renderValue(param.type, value.lte),
+      ].join(' - ')}`;
+    }
+
+    if (param.multiple && Array.isArray(value)) {
+      return `${param.label}: ${value
+        .map((v) => renderValue(param.type, v))
+        .join(', ')}`;
+    }
+
+    return [param.label, renderValue(param.type, value)].join(': ');
   }
 }

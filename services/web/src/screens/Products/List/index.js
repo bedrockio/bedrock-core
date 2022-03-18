@@ -58,7 +58,6 @@ export default class ProductList extends React.Component {
                         {...registerParam({
                           name: 'priceUsd',
                           label: 'Price Usd',
-                          type: 'currency',
                         })}
                       />
                       <Filters.DateRange
@@ -67,16 +66,17 @@ export default class ProductList extends React.Component {
                           name: 'expiresAt',
                           label: 'Expires At',
                           type: 'date',
+                          range: true,
                         })}
                       />
                       <Filters.Dropdown
                         search
-                        multiple
                         selection
                         allowAdditions
                         {...registerParam({
                           name: 'sellingPoints',
                           label: 'Selling Points',
+                          multiple: true,
                         })}
                       />
                     </Filters.Modal>
