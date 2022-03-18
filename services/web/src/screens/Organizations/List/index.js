@@ -39,6 +39,7 @@ export default class OrganizationList extends React.Component {
           return (
             <React.Fragment>
               <Breadcrumbs active="Organizations" />
+
               <Layout horizontal center spread>
                 <h1>Organizations</h1>
                 <Layout.Group>

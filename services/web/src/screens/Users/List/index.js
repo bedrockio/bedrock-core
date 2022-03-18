@@ -1,16 +1,7 @@
 import React from 'react';
 import { memoize } from 'lodash';
 import { Link } from 'react-router-dom';
-import {
-  Table,
-  Button,
-  Message,
-  Label,
-  Divider,
-  Loader,
-  Confirm,
-  Segment,
-} from 'semantic';
+import { Table, Button, Label, Divider, Confirm, Segment } from 'semantic';
 
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
@@ -19,7 +10,6 @@ import { formatRoles } from 'utils/permissions';
 
 import { HelpTip, Breadcrumbs, Layout } from 'components';
 import { SearchProvider, Filters, Export, Status } from 'components/search';
-import ErrorMessage from 'components/ErrorMessage';
 
 import EditUser from 'modals/EditUser';
 
@@ -61,7 +51,6 @@ export default class UserList extends React.Component {
         });
       }
     }
-    console.log('roles', roles);
     return roles;
   });
 

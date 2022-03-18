@@ -22,11 +22,10 @@ export default class Overview extends React.Component {
     if (!this.context.ready) {
       return null;
     }
-    console.log('read', this.context);
 
     return (
       <>
-        {filtersKeys.slice(0, 3).map((key) => (
+        {filtersKeys.map((key) => (
           <Label key={key} name={key} param={params[key]} />
         ))}
       </>
