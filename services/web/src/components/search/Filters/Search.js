@@ -1,18 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form } from 'semantic';
-
 import SearchContext from '../Context';
 
 export default class SearchFilter extends React.Component {
   static contextType = SearchContext;
 
   state = {
-    value: this.context.getFilterValue(this.props.name),
+    value: this.context.filters[this.props.name] || '',
   };
 
-  componentDidUpdate(prevProps, prevState) {
-    const newValue = this.context.getFilterValue(this.props.name);
+  getSnapshotBeforeUpdate() {
+    return this.context;
+  }
+
+  componentDidUpdate(lastProps, lastState, lastContext) {
+    if (
+      lastContext.filters[this.props.name] !=
+      this.context.filters[this.props.name]
+    ) {
+      this.setState({
+        value: this.props.context.filters[this.props.name],
+      });
+    }
   }
 
   render() {
@@ -50,7 +60,7 @@ export default class SearchFilter extends React.Component {
           this.setState({
             value: '',
           });
-          this.context.onFilterChange(evt, { name, value: '' });
+          this.context.onFilterChange({ name, value: '' });
         }
         evt.target.closest('.input').querySelector('input').focus();
       },

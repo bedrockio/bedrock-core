@@ -15,7 +15,7 @@ export default class DropdownFilter extends React.Component {
 
   getValue() {
     const { name } = this.props;
-    return this.context.getFilterValue(name) || this.getDefaultValue();
+    return this.context.filters[name] || this.getDefaultValue();
   }
 
   getOptions() {

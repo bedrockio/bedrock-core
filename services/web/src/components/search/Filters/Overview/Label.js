@@ -20,7 +20,7 @@ export default class OverviewLabel extends React.Component {
   };
 
   componentDidUpdate() {
-    const filteredValue = this.context.getFilterValue(this.props.name);
+    const filteredValue = this.context.filters[this.props.name];
     if (this.state.filteredValue != filteredValue) {
       this.updateLabel(filteredValue);
     }

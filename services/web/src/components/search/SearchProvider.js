@@ -24,7 +24,6 @@ export default class SearchProvider extends React.Component {
       limit: props.limit,
       page: props.page,
       sort: props.sort,
-      pending: {},
     };
   }
 
@@ -213,16 +212,8 @@ export default class SearchProvider extends React.Component {
         return Array.isArray(val) ? val.length : val;
       }
     );
-
     this.setFilters(filters);
   };
-
-  getFilterValue = (name) => {
-    const { pending, filters } = this.state;
-    return pending[name] || filters[name];
-  };
-
-  // Utils
 
   render() {
     const context = {
@@ -236,7 +227,6 @@ export default class SearchProvider extends React.Component {
       updateItems: this.updateItems,
       onPageChange: this.onPageChange,
       onFilterChange: this.onFilterChange,
-      getFilterValue: this.getFilterValue,
       registerField: this.registerField,
       onDataNeeded: this.props.onDataNeeded,
     };

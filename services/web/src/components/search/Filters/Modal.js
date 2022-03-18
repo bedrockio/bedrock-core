@@ -17,17 +17,6 @@ export default class FilterModal extends React.Component {
     this.formRef = React.createRef();
   }
 
-  getFilterCount = () => {
-    const keys = Object.keys(this.context.filters);
-    return keys.filter((key) => {
-      return this.state.filters[key] !== undefined;
-    }).length;
-  };
-
-  getFilterValue = (name) => {
-    return this.state.filters[name];
-  };
-
   onModalOpen = () => {
     this.setState({
       open: true,
@@ -46,14 +35,8 @@ export default class FilterModal extends React.Component {
     });
   };
 
-  onFilterChange = ({ name, value, label }) => {
+  onFilterChange = ({ name, value }) => {
     this.setState({
-      fields: {
-        ...this.state.fields,
-        [name]: {
-          label,
-        },
-      },
       filters: {
         ...this.state.filters,
         [name]: value,
@@ -105,8 +88,8 @@ export default class FilterModal extends React.Component {
                 <SearchContext.Provider
                   value={{
                     ...this.context,
+                    filters: this.state.filters,
                     onFilterChange: this.onFilterChange,
-                    getFilterValue: this.getFilterValue,
                   }}>
                   {this.props.children}
                 </SearchContext.Provider>
