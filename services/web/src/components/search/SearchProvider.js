@@ -105,8 +105,6 @@ export default class SearchProvider extends React.Component {
       }
     }
 
-    console.log(filters);
-
     this.setState(
       {
         filters: convertFilters(filters),
