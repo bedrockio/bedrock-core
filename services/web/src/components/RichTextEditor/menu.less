@@ -1,0 +1,26 @@
+.rich-text-editor-menu {
+  padding: 8px 4px 8px 8px !important;
+  white-space: nowrap;
+
+  > .icon {
+    opacity: 0.5 !important;
+  }
+
+  &.active > .icon,
+  &:not(.disabled):hover > .icon {
+    opacity: 1 !important;
+  }
+
+  &--toggled > .icon {
+    opacity: 1 !important;
+    background-color: #f4f4f4 !important;
+  }
+
+  &.disabled > .icon {
+    opacity: 0.15 !important;
+  }
+
+  .item {
+    padding: 0 !important;
+  }
+}
