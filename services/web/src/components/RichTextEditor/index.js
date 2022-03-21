@@ -85,7 +85,7 @@ class RichTextEditor extends React.Component {
     const { markdown } = this.props;
     const { markdown: lastMarkdown } = lastProps;
     if (mode === 'markdown' && markdown !== lastMarkdown) {
-      this.updateState(this.getStateFromMarkdown(markdown));
+      this.setEditorState(this.getStateFromMarkdown(markdown));
       this.resizeTextArea();
     }
   }
@@ -154,7 +154,11 @@ class RichTextEditor extends React.Component {
   };
 
   onStateChange = (editorState) => {
-    this.updateState(editorState);
+    this.updateEditorState(editorState);
+  };
+
+  updateEditorState = (editorState) => {
+    this.setEditorState(editorState);
     const markdown = this.getMarkdownFromState(editorState);
     if (markdown !== this.props.markdown) {
       // Required as this is a fake onChange event.
@@ -166,7 +170,7 @@ class RichTextEditor extends React.Component {
     }
   };
 
-  updateState = (editorState) => {
+  setEditorState = (editorState) => {
     this.setState({
       editorState,
     });
@@ -181,7 +185,7 @@ class RichTextEditor extends React.Component {
     }
     newState = RichUtils.handleKeyCommand(editorState, command);
     if (newState) {
-      this.updateState(newState);
+      this.updateEditorState(newState);
       return 'handled';
     }
     return 'not-handled';
@@ -209,7 +213,7 @@ class RichTextEditor extends React.Component {
         value={{
           ...this.state,
           setMode: this.setMode,
-          updateState: this.updateState,
+          updateEditorState: this.updateEditorState,
         }}>
         <div className={this.getBlockClass()}>
           {this.renderPresets()}

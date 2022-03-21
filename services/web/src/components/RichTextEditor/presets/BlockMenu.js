@@ -19,8 +19,8 @@ class RichTextEditorAlignmentMenu extends React.Component {
             <Menu.Item
               key={value}
               onClick={() => {
-                const { editorState, updateState } = this.context;
-                updateState(toggleBlockType(editorState, value));
+                const { editorState, updateEditorState } = this.context;
+                updateEditorState(toggleBlockType(editorState, value));
               }}>
               <div style={{ padding: '10px 20px' }}>{text}</div>
             </Menu.Item>

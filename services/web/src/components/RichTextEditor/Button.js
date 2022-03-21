@@ -51,19 +51,19 @@ class RichTextEditorButton extends React.Component {
   onClick = () => {
     const { type } = this.props;
     const { style, block, alignment } = BUTTON_STYLES[type];
-    const { editorState, updateState } = this.context;
+    const { editorState, updateEditorState } = this.context;
     if (type === 'markdown') {
       this.context.toggleMarkdown();
     } else if (type === 'undo') {
-      updateState(undo(editorState));
+      updateEditorState(undo(editorState));
     } else if (type === 'redo') {
-      updateState(redo(editorState));
+      updateEditorState(redo(editorState));
     } else if (style) {
-      updateState(toggleInlineStyle(editorState, style));
+      updateEditorState(toggleInlineStyle(editorState, style));
     } else if (block) {
-      updateState(toggleBlockType(editorState, block));
+      updateEditorState(toggleBlockType(editorState, block));
     } else if (alignment) {
-      updateState(setAlignment(editorState, alignment));
+      updateEditorState(setAlignment(editorState, alignment));
     }
   };
 

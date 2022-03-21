@@ -167,6 +167,54 @@
       "inlineStyleRanges": []
     },
     {
+      "type": "unstyled",
+      "text": "Left Aligned",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "Center Aligned",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "data": {
+        "alignment": "center"
+      }
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "Right Aligned",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "data": {
+        "alignment": "right"
+      }
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
       "type": "header-two",
       "text": "Header 2",
       "depth": 0,

@@ -22,6 +22,10 @@ const FENCED_CODE_BLOCK_REG = /^```$([^`]+?)^```$/gm;
 const TABLE_REG = /(^\|.+\|$)/gms;
 const TABLE_PLACEHOLDER_REG = /^%%TABLE%%$/;
 
+// Alignment
+
+const ALIGN_REG = /^<p style="text-align:(center|right)">(.+?)<\/p>$/gms;
+
 export default function markdownToDraft(str) {
   let entityKey = 0;
   const tables = [];
@@ -124,6 +128,14 @@ export default function markdownToDraft(str) {
     text = replaceMarkdown(text, ESCAPE_CHAR_REG, (groups) => {
       const [char] = groups;
       return `%%ESCAPE(${char.codePointAt(0)})%%`;
+    });
+
+    text = replaceMarkdown(text, ALIGN_REG, (groups) => {
+      const [alignment, content] = groups;
+      block.data = {
+        alignment,
+      };
+      return content;
     });
 
     text = replaceMarkdown(text, INLINE_REG, (groups, offset) => {

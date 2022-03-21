@@ -1,6 +1,6 @@
 import React from 'react';
-import { addImage } from './utils';
 
+import { addImage } from './utils';
 import AddImageModal from './modals/AddImage';
 import Button from './Button';
 
@@ -27,8 +27,8 @@ export default class ImageButton extends React.Component {
   };
 
   onSubmit = (evt, { url, title }) => {
-    const { editorState, updateState } = this.context;
-    updateState(addImage(editorState, { url, title }));
+    const { editorState, updateEditorState } = this.context;
+    updateEditorState(addImage(editorState, { url, title }));
   };
 
   render() {

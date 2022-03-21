@@ -1,6 +1,6 @@
 import React from 'react';
-import { addLink, toggleLink, currentBlockContainsLink } from './utils';
 
+import { addLink, toggleLink, currentBlockContainsLink } from './utils';
 import AddLinkModal from './modals/AddLink';
 import Button from './Button';
 
@@ -15,10 +15,10 @@ export default class ImageButton extends React.Component {
   }
 
   onClick = () => {
-    const { editorState, updateState } = this.context;
+    const { editorState, updateEditorState } = this.context;
     const selection = editorState.getSelection();
     if (currentBlockContainsLink(editorState)) {
-      updateState(toggleLink(editorState, selection, null));
+      updateEditorState(toggleLink(editorState, selection, null));
     } else if (!selection.isCollapsed()) {
       this.setState({
         selection,
@@ -33,9 +33,9 @@ export default class ImageButton extends React.Component {
   };
 
   onSubmit = (evt, { value }) => {
-    const { editorState, updateState } = this.context;
+    const { editorState, updateEditorState } = this.context;
     const { selection } = this.state;
-    updateState(
+    updateEditorState(
       addLink(editorState, {
         url: value,
         selection,

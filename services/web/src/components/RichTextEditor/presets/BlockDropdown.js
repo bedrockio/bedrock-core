@@ -1,6 +1,8 @@
 import React from 'react';
 import { Dropdown } from 'semantic';
+
 import bem from 'helpers/bem';
+
 import {
   getCurrentBlockType,
   toggleBlockType,
@@ -19,8 +21,8 @@ const IMAGE_OPTION = {
 export default class RichTextEditorBlockDropdown extends React.Component {
   onChange = (evt, { value }) => {
     if (value !== 'atomic') {
-      const { editorState, updateState } = this.context;
-      updateState(toggleBlockType(editorState, value));
+      const { editorState, updateEditorState } = this.context;
+      updateEditorState(toggleBlockType(editorState, value));
     }
   };
 

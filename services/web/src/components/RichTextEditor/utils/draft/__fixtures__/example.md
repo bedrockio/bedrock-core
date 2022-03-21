@@ -16,6 +16,12 @@ A relative [link](/page).
 
 An absolute [link](https://foo.com).
 
+Left Aligned
+
+<p style="text-align:center">Center Aligned</p>
+
+<p style="text-align:right">Right Aligned</p>
+
 ## Header 2
 
 ![Absolute Image](https://foo.com/image.jpg)

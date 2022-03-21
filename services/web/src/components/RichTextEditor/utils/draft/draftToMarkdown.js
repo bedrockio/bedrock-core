@@ -177,17 +177,30 @@ function processBlock(str, block, blocks, orderedIndex) {
         str += '\\';
       }
     }
-    let prefix = getMarkdownBlock(block.type);
+    let prefix = getMarkdownPrefix(block.type);
     prefix = prefix.replace(/^n\./, `${orderedIndex}.`);
     const indent = block.type.endsWith('list-item') ? '   ' : '';
     str = str.replace(/\n/g, '\\\n' + indent);
-    return prefix + str;
+    str = prefix + str;
+    str = wrapAlignment(str, block);
+    return str;
   }
 }
 
-function getMarkdownBlock(type) {
+function getMarkdownPrefix(type) {
   const header = MARKDOWN_BLOCKS[type];
   return header ? header + ' ' : '';
+}
+
+function wrapAlignment(str, block) {
+  const { type, data } = block;
+  if (type === 'unstyled' && data?.alignment) {
+    const { alignment } = data;
+    if (alignment === 'center' || alignment === 'right') {
+      str = `<p style="text-align:${alignment}">${str}</p>`;
+    }
+  }
+  return str;
 }
 
 function groupArray(arr, fn) {
