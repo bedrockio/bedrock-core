@@ -1,0 +1,17 @@
+.code-copy {
+  &-container {
+    position: relative;
+  }
+
+  &-button {
+    display: none;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: #1d1f21;
+
+    .code-copy-container:hover & {
+      display: block;
+    }
+  }
+}

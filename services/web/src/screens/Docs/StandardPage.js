@@ -1,8 +1,7 @@
 import React from 'react';
-import ReactMarkdown from 'react-markdown';
-import gfm from 'remark-gfm';
-import CodeBlock from 'screens/Docs/CodeBlock';
 import RequestBlock from 'screens/Docs/RequestBlock';
+import Markdown from 'components/Markdown';
+import Code from 'components/Markdown/Code';
 import Heading from './Heading';
 import 'github-markdown-css';
 import { enrichMarkdown, executeOpenApiMacros } from 'utils/markdown';
@@ -12,17 +11,19 @@ import { API_URL } from 'utils/env';
 
 export default class StandardPage extends React.Component {
   renderCodeBlock = (props) => {
-    if (props.language && props.language.includes('request')) {
+    const { className = '', children } = props;
+    if (className.includes('request')) {
+      const value = Array.isArray(children) ? children[0] : children;
       return (
         <RequestBlock
           authToken={'<token>'}
-          request={JSON.parse(props.value)}
+          request={JSON.parse(value)}
           baseUrl={API_URL}
         />
       );
     }
 
-    return <CodeBlock {...props} />;
+    return <Code {...props} allowCopy />;
   };
 
   render() {
@@ -32,11 +33,9 @@ export default class StandardPage extends React.Component {
 
     return (
       <div className="docs markdown-body">
-        <ReactMarkdown
-          allowDangerousHtml
+        <Markdown
           source={markdown}
-          plugins={[gfm]}
-          renderers={{
+          components={{
             code: this.renderCodeBlock,
             heading: Heading,
           }}

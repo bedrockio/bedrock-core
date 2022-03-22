@@ -105,11 +105,6 @@ module.exports = {
     ],
   },
   plugins: [
-    // Required for react-markdown -> unified -> vfile which assumes
-    // node "process" to exist. Webpack 5 no longer shims these globals.
-    new webpack.ProvidePlugin({
-      process: 'process/browser',
-    }),
     new CircularDependencyPlugin({
       exclude: /node_modules/,
       failOnError: true,

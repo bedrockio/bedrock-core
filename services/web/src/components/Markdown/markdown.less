@@ -1,0 +1,92 @@
+.markdown {
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  ul,
+  ol,
+  img {
+    margin-top: 0.8em;
+    margin-bottom: 0.8em;
+  }
+
+  li {
+    margin-bottom: 0.3em;
+    margin-left: 20px;
+  }
+
+  p {
+    &.text > a > .icon {
+      display: none;
+    }
+  }
+
+  iframe {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16/9;
+
+    &:not(:last-child) {
+      margin-bottom: 20px;
+    }
+  }
+
+  table {
+    border-collapse: collapse;
+    margin-bottom: 1.2em;
+
+    th,
+    td {
+      text-align: left;
+      padding: 0.2em 0.8em;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+
+      &:first-child {
+        border-left: 0;
+      }
+      &:last-child {
+        border-right: 0;
+      }
+    }
+    thead tr:first-child th {
+      border-top: 0;
+    }
+    tbody tr:last-child td {
+      border-bottom: 0;
+    }
+  }
+
+  :not(img) {
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .atomic a {
+    display: block;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  a {
+    text-decoration: underline;
+    color: #4d659e;
+  }
+
+  .math-inline {
+    display: inline-block;
+    max-width: 100%;
+    overflow: auto;
+  }
+}

@@ -88,22 +88,22 @@ export const BUTTON_STYLES = {
     alignment: 'justify',
   },
   'image-align-left': {
-    icon: 'image-align-left custom',
+    icon: 'align-left',
     title: 'Align image left.',
     alignment: 'left',
   },
   'image-align-center': {
-    icon: 'image-align-center custom',
+    icon: 'align-center',
     title: 'Align image center.',
     alignment: 'center',
   },
   'image-align-right': {
-    icon: 'image-align-right custom',
+    icon: 'align-right',
     title: 'Align image right.',
     alignment: 'right',
   },
   'image-align-default': {
-    icon: 'image-align-default custom',
+    icon: 'square-full',
     title: 'Use default image alignment.',
     alignment: 'default',
   },
@@ -123,7 +123,7 @@ export const BUTTON_STYLES = {
     label: 'Edit Inline',
   },
   'mode-markdown': {
-    icon: 'markdown custom',
+    icon: 'markdown brand',
     title: 'Edit raw markdown.',
     label: 'Edit Markdown',
   },

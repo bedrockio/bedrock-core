@@ -10,10 +10,7 @@ import Menu from '../Menu';
 class RichTextEditorAlignmentMenu extends React.Component {
   render() {
     return (
-      <Menu
-        trigger={
-          <Icon name="block-style custom" style={{ marginRight: '4px' }} />
-        }>
+      <Menu trigger={<Icon name="paragraph" style={{ marginRight: '4px' }} />}>
         {Object.values(BLOCK_OPTIONS).map(({ text, value }) => {
           return (
             <Menu.Item
