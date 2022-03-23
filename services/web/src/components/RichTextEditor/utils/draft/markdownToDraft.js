@@ -2,13 +2,13 @@ import { DRAFT_BLOCKS, DRAFT_INLINE } from './const';
 
 // Block matching
 const CODE_REG = /^( {4,}|\t+)/g;
-const IMAGE_REG = /^!\[.+\]\(.+\)|<img ([^>]+?)>$/;
+const LINK_REG = /\[([^\]]+)\]\(([^)]+)\)/g;
+const IMAGE_REG = /!\[(.+)\]\((.+)\)|<img ([^>]+?)>/g;
 const BLOCK_REG = /^(#{1,6}|\d+\.|[-*+>]) /g;
 const LINE_BREAK_REG = / {2}|\\$/g;
 
 // Inline matching
-const LINK_REG = /(!)?\[([^\]]+)\]\(([^)]+)\)/g;
-const INLINE_REG = /([_*]{1,3}|`)(.+?)(\1)|<img ([^>]+?)>/g;
+const INLINE_REG = /(_+|\*+|`)(.+?)(\1)/g;
 
 // Escape matching
 const ESCAPE_CHAR_REG = /\\([`*_])/g;
@@ -138,58 +138,45 @@ export default function markdownToDraft(str) {
       return content;
     });
 
-    text = replaceMarkdown(text, INLINE_REG, (groups, offset) => {
-      const [start, str, , img] = groups;
-      if (start) {
-        const style = DRAFT_INLINE[start.replace(/_/g, '*')];
-        block.inlineStyleRanges.push({
-          style,
-          offset,
-          length: str.length,
-        });
-        return str;
-      } else if (img) {
-        const { src, alt: title, style = {} } = getAttrs(img);
-        const { width, float, margin } = style;
-        const data = {
-          src,
-          title,
-        };
-        if (width) {
-          data.width = parseInt(width);
-        }
-        if (float) {
-          data.alignment = float;
-        } else {
-          data.alignment = margin === '0 auto' ? 'center' : 'default';
-        }
-        addImage(block, {
-          offset,
-          data,
-        });
-        return ' ';
+    text = replaceInlineRanges(text, block);
+
+    text = replaceMarkdown(text, IMAGE_REG, (groups, offset) => {
+      let [title, src, attrs] = groups;
+      let style = {};
+      if (attrs) {
+        const parsed = getAttrs(attrs);
+        src = parsed.src;
+        title = parsed.alt;
+        style = parsed.style;
       }
+      const { width, float, margin } = style;
+      const data = {
+        src,
+        title,
+      };
+      if (width) {
+        data.width = parseInt(width);
+      }
+      if (float) {
+        data.alignment = float;
+      } else {
+        data.alignment = margin === '0 auto' ? 'center' : 'default';
+      }
+      addImage(block, {
+        offset,
+        data,
+      });
+      return ' ';
     });
 
     text = replaceMarkdown(text, LINK_REG, (groups, offset) => {
-      const [img, str, url] = groups;
-      if (img) {
-        addImage(block, {
-          offset,
-          data: {
-            src: url,
-            title: str,
-          },
-        });
-        return ' ';
-      } else {
-        addLink(block, {
-          url,
-          offset,
-          length: str.length,
-        });
-        return str;
-      }
+      const [str, url] = groups;
+      addLink(block, {
+        url,
+        offset,
+        length: str.length,
+      });
+      return str;
     });
 
     text = replaceMarkdown(text, TABLE_PLACEHOLDER_REG, () => {
@@ -265,7 +252,7 @@ function getBlockMeta(text) {
     return '';
   });
   const isEmpty = !text.trim();
-  const isImage = IMAGE_REG.test(text);
+  const isImage = !!text.match(IMAGE_REG);
   const spacer = hasLineBreak ? '\n' : ' ';
 
   const isCollapsable =
@@ -319,6 +306,28 @@ function getStyles(str) {
 }
 
 // Replace helpers
+
+function replaceInlineRanges(str, block, ranges, index = 0) {
+  ranges ||= block.inlineStyleRanges;
+  return replaceMarkdown(str, INLINE_REG, (groups, offset) => {
+    const nestedRanges = [];
+    let [token, str] = groups;
+
+    offset += index;
+    str = replaceInlineRanges(str, block, nestedRanges, offset);
+
+    const style = DRAFT_INLINE[token.replace(/_/g, '*')];
+    ranges.push({
+      style,
+      offset,
+      length: str.length,
+    });
+    for (let range of nestedRanges) {
+      ranges.push(range);
+    }
+    return str;
+  });
+}
 
 function replaceMarkdown(str, reg, fn) {
   let shift = 0;

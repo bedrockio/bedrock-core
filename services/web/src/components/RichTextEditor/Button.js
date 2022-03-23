@@ -13,6 +13,8 @@ import {
   toggleBlockType,
   toggleInlineStyle,
   getCurrentBlockType,
+  canToggleInlineStyle,
+  hasCurrentInlineStyle,
 } from './utils';
 import { BUTTON_STYLES } from './const';
 
@@ -32,17 +34,20 @@ class RichTextEditorButton extends React.Component {
     } else if (block) {
       return getCurrentBlockType(editorState) === block;
     } else {
-      return editorState.getCurrentInlineStyle().has(style);
+      return hasCurrentInlineStyle(editorState, style);
     }
   }
 
   isDisabled() {
     const { type, disabled } = this.props;
+    const { style } = BUTTON_STYLES[type];
     const { editorState } = this.context;
     if (type === 'undo') {
       return !canUndo(editorState);
     } else if (type === 'redo') {
       return !canRedo(editorState);
+    } else if (style) {
+      return !canToggleInlineStyle(editorState, style);
     } else {
       return disabled;
     }

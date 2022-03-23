@@ -58,36 +58,44 @@ function getBlockType(block) {
 
 function processRanges(str, block, entityMap) {
   const { inlineStyleRanges, entityRanges } = block;
-  const inserts = [...inlineStyleRanges, ...entityRanges]
+  const ranges = [...inlineStyleRanges, ...entityRanges]
     .filter((range) => {
       // Some basic filtering to ensure bad data doesn't somehow get through.
       return range.style || range.key != null;
     })
-    .flatMap((range) => {
-      const { offset } = range;
-      const [prefix, suffix, length] = processRange(range, entityMap);
-      return [
-        {
-          index: offset,
-          text: prefix,
-        },
-        {
-          index: offset + length,
-          text: suffix,
-        },
-      ];
-    })
-    .sort((a, b) => {
-      return a.index - b.index;
+    .map((range) => {
+      // Clone range as it will be modified later.
+      return { ...range };
     });
 
-  let offset = 0;
-  for (let insert of inserts) {
-    let { index, text } = insert;
-    index += offset;
-    str = str.slice(0, index) + text + str.slice(index);
-    offset += text.length;
-  }
+  ranges.sort((a, b) => {
+    return a.offset - b.offset;
+  });
+
+  ranges.forEach((range, i) => {
+    const [prefix, suffix, length] = processRange(range, entityMap);
+    const start = range.offset;
+    const end = range.offset + length;
+    const pLength = prefix.length;
+    const sLength = suffix.length;
+
+    str = str.slice(0, start) + prefix + str.slice(start);
+    str = str.slice(0, end + pLength) + suffix + str.slice(end + pLength);
+
+    // Shift subsequent ranges if their
+    // offset is after inserted offsets.
+    for (let next of ranges.slice(i + 1)) {
+      let shift = 0;
+      if (next.offset >= start) {
+        shift += pLength;
+      }
+      if (next.offset >= end) {
+        shift += sLength;
+      }
+      next.offset += shift;
+    }
+  });
+
   return str;
 }
 
@@ -107,8 +115,8 @@ function processRange(range, entityMap) {
       const { url } = data;
       return ['[', `](${url})`, length];
     } else if (type === 'IMAGE') {
-      const { title = 'Image', src, width, alignment } = data;
-      if (width || alignment) {
+      const { title = 'Image', src, width, alignment = 'default' } = data;
+      if (width || alignment !== 'default') {
         const styles = [];
         if (width) {
           styles.push(`width: ${width}%;`);

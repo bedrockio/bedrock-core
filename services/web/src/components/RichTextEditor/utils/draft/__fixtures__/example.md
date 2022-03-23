@@ -10,6 +10,18 @@ A literal \$1000 dollar figure.
 
 _italic line_
 
+_italic line with bold at **the end**_
+
+_**italic line** with bold at the beginning_
+
+_**italic and bold line**_
+
+**_bold and italic line_**
+
+italic _**and**_ bold word
+
+bold **_and_** italic word
+
 # Alternate Header 1
 
 A relative [link](/page).

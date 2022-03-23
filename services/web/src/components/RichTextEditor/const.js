@@ -141,3 +141,12 @@ export const BUTTON_STYLES = {
     title: 'Redo action.',
   },
 };
+
+export const INLINE_STYLES = [
+  'BOLD',
+  'ITALIC',
+  'UNDERLINE',
+  'STRIKETHROUGH',
+  'CODE',
+  'LINK',
+];

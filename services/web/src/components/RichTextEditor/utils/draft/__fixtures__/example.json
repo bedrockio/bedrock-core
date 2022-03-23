@@ -113,6 +113,156 @@
       "inlineStyleRanges": []
     },
     {
+      "type": "unstyled",
+      "text": "italic line with bold at the end",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [
+        {
+          "style": "ITALIC",
+          "offset": 0,
+          "length": 32
+        },
+        {
+          "style": "BOLD",
+          "offset": 25,
+          "length": 7
+        }
+      ]
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "italic line with bold at the beginning",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [
+        {
+          "style": "ITALIC",
+          "offset": 0,
+          "length": 38
+        },
+        {
+          "style": "BOLD",
+          "offset": 0,
+          "length": 11
+        }
+      ]
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "italic and bold line",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [
+        {
+          "style": "ITALIC",
+          "offset": 0,
+          "length": 20
+        },
+        {
+          "style": "BOLD",
+          "offset": 0,
+          "length": 20
+        }
+      ]
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "bold and italic line",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [
+        {
+          "style": "BOLD",
+          "offset": 0,
+          "length": 20
+        },
+        {
+          "style": "ITALIC",
+          "offset": 0,
+          "length": 20
+        }
+      ]
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "italic and bold word",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [
+        {
+          "style": "ITALIC",
+          "offset": 7,
+          "length": 3
+        },
+        {
+          "style": "BOLD",
+          "offset": 7,
+          "length": 3
+        }
+      ]
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "bold and italic word",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [
+        {
+          "style": "BOLD",
+          "offset": 5,
+          "length": 3
+        },
+        {
+          "style": "ITALIC",
+          "offset": 5,
+          "length": 3
+        }
+      ]
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
       "type": "header-one",
       "text": "Alternate Header 1",
       "depth": 0,
@@ -807,16 +957,18 @@
       "type": "IMAGE",
       "mutability": "IMMUTABLE",
       "data": {
+        "src": "https://foo.com/image.jpg",
         "title": "Absolute Image",
-        "src": "https://foo.com/image.jpg"
+        "alignment": "default"
       }
     },
     "3": {
       "type": "IMAGE",
       "mutability": "IMMUTABLE",
       "data": {
+        "src": "/image.jpg",
         "title": "Relative Image",
-        "src": "/image.jpg"
+        "alignment": "default"
       }
     },
     "4": {

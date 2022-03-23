@@ -2,12 +2,17 @@ import React from 'react';
 import { omit } from 'lodash';
 import PropTypes from 'prop-types';
 import Editor from '@draft-js-plugins/editor';
-import { EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
+import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 
 import bem from 'helpers/bem';
 
 import Markdown from 'components/Markdown';
 
+import {
+  getCurrentBlockType,
+  toggleBlockType,
+  handleKeyCommand,
+} from './utils';
 import { markdownToDraft, draftToMarkdown } from './utils/draft';
 import Button from './Button';
 import Divider from './Divider';
@@ -183,7 +188,7 @@ class RichTextEditor extends React.Component {
     } else if (command === 'enter-key-submit') {
       return 'handled';
     }
-    newState = RichUtils.handleKeyCommand(editorState, command);
+    newState = handleKeyCommand(editorState, command);
     if (newState) {
       this.updateEditorState(newState);
       return 'handled';
@@ -201,9 +206,9 @@ class RichTextEditor extends React.Component {
 
   removeCurrentBlockType = (editorState) => {
     // Draft-js doesn't do this for some reason
-    const blockType = RichUtils.getCurrentBlockType(editorState);
+    const blockType = getCurrentBlockType(editorState);
     if (blockType) {
-      return RichUtils.toggleBlockType(editorState, blockType);
+      return toggleBlockType(editorState, blockType);
     }
   };
 
