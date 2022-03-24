@@ -33,6 +33,10 @@ tmp = tmp.replace(
   'Paragraph **6**\nwith **new** [line](#line)',
   'Paragraph **6** with **new** [line](#line)'
 );
+tmp = tmp.replace(
+  /\ncontent adjacent to table/,
+  '\n\ncontent adjacent to table'
+);
 
 const markdownNormalized = tmp;
 

@@ -19,7 +19,7 @@ const ALTERNATE_HEADER_REG = /^(.+)\n^([=-])+$/gm;
 const FENCED_CODE_BLOCK_REG = /^```$([^`]+?)^```$/gm;
 
 // Tables
-const TABLE_REG = /(^\|.+\|$)/gms;
+const TABLE_REG = /(\n?)(\|.+?\|)($|\n[^|])/gs;
 const TABLE_PLACEHOLDER_REG = /^%%TABLE%%$/;
 
 // Alignment
@@ -85,36 +85,52 @@ export default function markdownToDraft(str) {
       .join('\n');
   });
 
-  str = replaceMarkdown(str, TABLE_REG, ([content]) => {
-    return content
-      .split('\n\n')
-      .map((block) => {
-        const lines = block.split('\n');
-        const rows = lines.map((line) => {
-          line = line.replace(/^\|(.+)\|/, '$1');
-          return line.split(/\s*\|\s*/).map((str) => {
-            return str.trim();
-          });
-        });
-        if (rows.length > 2) {
-          const colLength = rows[0].length;
-          const even = rows.every((cols) => {
-            return cols.length === colLength;
-          });
-          const separated = rows[1].every((col) => {
-            return /^-{3,}$/.test(col);
-          });
-          if (even && separated) {
-            tables.push({
-              head: rows[0],
-              body: rows.slice(2),
-            });
-            block = '%%TABLE%%';
+  str = replaceMarkdown(str, TABLE_REG, ([prev, content, next]) => {
+    const lines = content.split('\n');
+    const rows = lines.map((line) => {
+      line = line.replace(/^\|(.+)\|/, '$1');
+      return line.split(/\s*\|\s*/).map((str) => {
+        return str.trim();
+      });
+    });
+    let align = [];
+    if (rows.length > 2) {
+      const colLength = rows[0].length;
+      const even = rows.every((cols) => {
+        return cols.length === colLength;
+      });
+      const separator = rows[1].every((col) => {
+        const match = col.trim().match(/^(:)?-{1,}(:)?$/);
+        if (match) {
+          const [, l, r] = match;
+          if (l && r) {
+            align.push('center');
+          } else if (r) {
+            align.push('right');
+          } else if (l) {
+            align.push('left');
+          } else {
+            align.push('default');
           }
+          return true;
         }
-        return block;
-      })
-      .join('\n\n');
+      });
+      const hasAlignment = align.some((a) => {
+        return a !== 'default';
+      });
+      if (even && separator) {
+        tables.push({
+          head: rows[0],
+          body: rows.slice(2),
+          ...(hasAlignment && { align }),
+        });
+        if (next.trim() !== '') {
+          next = '\n' + next;
+        }
+        return prev + '%%TABLE%%' + next;
+      }
+    }
+    return prev + content + next;
   });
 
   const blocks = getBlocks(str);

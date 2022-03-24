@@ -932,9 +932,36 @@
     },
     {
       "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
       "text": "content adjacent to table",
       "depth": 0,
       "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "atomic",
+      "text": " ",
+      "depth": 0,
+      "entityRanges": [
+        {
+          "key": 14,
+          "offset": 0,
+          "length": 1
+        }
+      ],
       "inlineStyleRanges": []
     }
   ],
@@ -1102,6 +1129,44 @@
             "Row 2 Cell 1",
             "Row 2 Cell 2"
           ]
+        ]
+      },
+      "mutability": "IMMUTABLE",
+      "type": "TABLE"
+    },
+    "14": {
+      "data": {
+        "head": [
+          "Tables",
+          "Are",
+          "Cool",
+          "N"
+        ],
+        "body": [
+          [
+            "col 1 is",
+            "left-aligned",
+            "$1600",
+            "1"
+          ],
+          [
+            "col 2 is",
+            "centered",
+            "$12",
+            "1"
+          ],
+          [
+            "col 3 is",
+            "right-aligned",
+            "$1",
+            "1"
+          ]
+        ],
+        "align": [
+          "default",
+          "center",
+          "right",
+          "default"
         ]
       },
       "mutability": "IMMUTABLE",

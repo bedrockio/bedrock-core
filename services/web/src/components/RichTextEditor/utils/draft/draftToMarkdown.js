@@ -1,4 +1,4 @@
-import { invert } from 'lodash';
+import { invert, pad, padStart, padEnd } from 'lodash';
 
 import { DRAFT_BLOCKS, DRAFT_INLINE } from './const';
 
@@ -141,27 +141,46 @@ function processRange(range, entityMap) {
         return [`![${title}]`, `(${src})`, 0];
       }
     } else if (type === 'TABLE') {
-      const { head, body } = data;
+      const { head, body, align = [] } = data;
       const colLength = head.length;
-      const rows = [head, new Array(colLength).fill('---'), ...body];
+      const rows = [head, new Array(colLength).fill('-'), ...body];
       const colMax = [];
       for (let i = 0; i < colLength; i++) {
         let max = 0;
         for (let row of rows) {
-          max = Math.max(length, row[i].length);
+          max = Math.max(max, row[i].length);
         }
         colMax.push(max);
       }
       const md = rows
         .map((cols, i) => {
+          const isSeparator = i === 1;
           const row = cols
             .map((str, j) => {
-              const max = colMax[j];
-              const fill = i === 1 ? '-' : ' ';
-              return str.padEnd(max, fill);
+              let max = colMax[j];
+              const colAlign = align[j] || 'default';
+              const isLeft = colAlign === 'left';
+              const isRight = colAlign === 'right';
+              const isCenter = colAlign === 'center';
+              const isDefault = colAlign === 'default';
+              if (isSeparator) {
+                const l = isLeft || isCenter ? ':' : '';
+                const r = isRight || isCenter ? ':' : '';
+                max -= l.length;
+                max -= r.length;
+                return ` ${l}${pad(str, max, '-')}${r} `;
+              } else {
+                if (isDefault || isLeft) {
+                  return ` ${padEnd(str, max)} `;
+                } else if (isRight) {
+                  return ` ${padStart(str, max)} `;
+                } else {
+                  return ` ${pad(str, max)} `;
+                }
+              }
             })
-            .join(' | ');
-          return `| ${row} |`;
+            .join('|');
+          return `|${row}|`;
         })
         .join('\n');
       return [md, '', 0];
