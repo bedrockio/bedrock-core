@@ -71,6 +71,7 @@ class RichTextEditor extends React.Component {
       mode: props.mode,
       editorState: this.getStateFromMarkdown(markdown),
     };
+    this.editorRef = React.createRef();
     this.textAreaRef = React.createRef();
   }
 
@@ -83,15 +84,32 @@ class RichTextEditor extends React.Component {
     this.checkModeChange(lastProps, lastState);
   }
 
-  // Update editor state and resize text are if markdown has changed. Only do
-  // this in markdown mode as the editor will lose selection state when inline.
-  checkMarkdownChange(lastProps) {
+  focus() {
+    this.getCurrentRef().current.focus();
+  }
+
+  blur() {
+    this.getCurrentRef().current.blur();
+  }
+
+  getCurrentRef() {
+    const { mode } = this.state;
+    return mode === 'markdown' ? this.textAreaRef : this.editorRef;
+  }
+
+  // Update editor state if props do not match cached markdown.
+  // Storing a cached copy here so we don't have to constantly
+  // rebuild an editor state that already existed.
+  // Resize the text area if in markdown mode.
+  checkMarkdownChange() {
     const { mode } = this.state;
     const { markdown } = this.props;
-    const { markdown: lastMarkdown } = lastProps;
-    if (mode === 'markdown' && markdown !== lastMarkdown) {
+    if (markdown !== this.cachedMarkdown) {
       this.setEditorState(this.getStateFromMarkdown(markdown));
-      this.resizeTextArea();
+      this.setCachedMarkdown(markdown);
+      if (mode === 'markdown') {
+        this.resizeTextArea();
+      }
     }
   }
 
@@ -165,6 +183,7 @@ class RichTextEditor extends React.Component {
   updateEditorState = (editorState) => {
     this.setEditorState(editorState);
     const markdown = this.getMarkdownFromState(editorState);
+    this.setCachedMarkdown(markdown);
     if (markdown !== this.props.markdown) {
       // Required as this is a fake onChange event.
       const evt = new CustomEvent('change');
@@ -179,6 +198,10 @@ class RichTextEditor extends React.Component {
     this.setState({
       editorState,
     });
+  };
+
+  setCachedMarkdown = (markdown) => {
+    this.cachedMarkdown = markdown;
   };
 
   handleKeyCommand = (command, editorState) => {
@@ -252,6 +275,7 @@ class RichTextEditor extends React.Component {
           onChange={this.onStateChange}
           handleKeyCommand={this.handleKeyCommand}
           keyBindingFn={this.onKeyDown}
+          ref={this.editorRef}
           readOnly={disabled}
         />
       );

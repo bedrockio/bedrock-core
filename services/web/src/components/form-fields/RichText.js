@@ -5,11 +5,11 @@ import RichTextEditor from 'components/RichTextEditor';
 
 export default class RichTextField extends React.Component {
   render() {
-    const { label, value, ...rest } = this.props;
+    const { label, value, forwardRef, ...rest } = this.props;
     return (
       <Form.Field>
         {label && <label>{label}</label>}
-        <RichTextEditor markdown={value} {...rest} toolbar />
+        <RichTextEditor ref={forwardRef} markdown={value} {...rest} toolbar />
       </Form.Field>
     );
   }
