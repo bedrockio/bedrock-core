@@ -44,7 +44,7 @@ describe('/1/auth', () => {
     });
 
     it('should throttle a few seconds after 5 bad attempts', async () => {
-      mockTime();
+      mockTime('2020-01-01');
 
       const password = '123password!';
       const user = await createUser({
@@ -67,7 +67,7 @@ describe('/1/auth', () => {
     });
 
     it('should throttle 1 hour after 10 bad attempts', async () => {
-      mockTime();
+      mockTime('2020-01-01');
 
       const password = '123password!';
       const user = await createUser({
@@ -89,7 +89,7 @@ describe('/1/auth', () => {
     });
 
     it('should not throttle after successful login attempt', async () => {
-      mockTime();
+      mockTime('2020-01-01');
 
       const password = '123password!';
       const user = await createUser({
