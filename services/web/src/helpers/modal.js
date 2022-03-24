@@ -18,12 +18,16 @@ export default function modal(Component) {
 
     onClose = () => {
       this.setState({ open: false });
-      if (this.props.onClose) this.props.onClose();
+      if (this.props.onClose) {
+        this.props.onClose();
+      }
     };
 
     onOpen = () => {
       this.setState({ open: true });
-      if (this.props.onOpen) this.props.onOpen();
+      if (this.props.onOpen) {
+        this.props.onOpen();
+      }
     };
 
     trapNativeEvents = (evt) => {

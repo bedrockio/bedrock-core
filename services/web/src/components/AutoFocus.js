@@ -14,7 +14,9 @@ export default class AutoFocus extends React.Component {
     });
 
     const testNode = allElements[0];
-    if (!testNode) return [];
+    if (!testNode) {
+      return [];
+    }
 
     if (testNode.sourceIndex) {
       allElements.sort(function (a, b) {
@@ -30,9 +32,13 @@ export default class AutoFocus extends React.Component {
 
   componentDidMount() {
     const node = this.container.current;
-    if (!node) return;
+    if (!node) {
+      return;
+    }
     const inputs = AutoFocus.getElementsByTagNames(node, ['textarea', 'input']);
-    if (!inputs.length) return;
+    if (!inputs.length) {
+      return;
+    }
     inputs[0].focus();
   }
 

@@ -16,7 +16,9 @@ export default (props) => {
       size="large"
       onSubmit={() => {
         setTouched(true);
-        if (!accepted) return;
+        if (!accepted) {
+          return;
+        }
 
         props.onSubmit({
           firstName,

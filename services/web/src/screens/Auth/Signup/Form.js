@@ -28,7 +28,9 @@ export default (props) => {
         onSubmit={() => {
           setTouched(true);
           const { accepted, ...rest } = fields;
-          if (!accepted) return;
+          if (!accepted) {
+            return;
+          }
 
           props.onSubmit(rest);
         }}>

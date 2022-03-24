@@ -17,7 +17,9 @@ function extractGoogleAddressComponent(
 }
 
 function composeDefaultLookupValue(address) {
-  if (!address || !address.line1) return '';
+  if (!address || !address.line1) {
+    return '';
+  }
   const components = [address.line1];
   if (address.city) {
     components.push(address.city);
@@ -63,7 +65,8 @@ export default class Address extends React.Component {
   }
 
   initializeLookup() {
-    this.autocompleteService = new window.google.maps.places.AutocompleteService();
+    this.autocompleteService =
+      new window.google.maps.places.AutocompleteService();
     this.geocoderService = new window.google.maps.Geocoder();
   }
 

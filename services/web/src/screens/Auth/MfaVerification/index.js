@@ -34,7 +34,9 @@ export default class MfaVerification extends React.Component {
 
   getMfaSessionData() {
     const data = window.sessionStorage.getItem('mfa-auth');
-    if (!data) return null;
+    if (!data) {
+      return null;
+    }
     try {
       return JSON.parse(data);
     } catch (e) {
