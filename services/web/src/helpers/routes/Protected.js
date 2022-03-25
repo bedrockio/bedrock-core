@@ -14,7 +14,7 @@ export default class Protected extends React.Component {
     } = this.props;
     return (
       <AuthSwitch
-        capture
+        captureRedirect
         denied={DeniedComponent}
         loggedIn={AllowedComponent}
         loggedOut={LoggedOutComponent}

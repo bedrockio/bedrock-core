@@ -125,8 +125,8 @@ export class SessionProvider extends React.PureComponent {
     return redirect;
   };
 
-  logout = async (capture) => {
-    if (capture) {
+  logout = async (redirect) => {
+    if (redirect) {
       this.pushRedirect();
     }
     if (hasToken()) {

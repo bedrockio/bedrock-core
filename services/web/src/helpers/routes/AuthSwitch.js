@@ -38,7 +38,7 @@ export default class AuthSwitch extends React.Component {
   render() {
     const { loading, error } = this.context;
     const {
-      capture,
+      captureRedirect,
       loggedIn: LoggedInComponent,
       loggedOut: LoggedOutComponent,
       denied: DeniedComponent,
@@ -64,7 +64,7 @@ export default class AuthSwitch extends React.Component {
         {...routeProps}
         render={(props) => {
           if (!this.context.isLoggedIn()) {
-            if (capture) {
+            if (captureRedirect) {
               this.context.pushRedirect();
             }
             return <LoggedOutComponent {...props} {...passedProps} />;
@@ -82,7 +82,7 @@ export default class AuthSwitch extends React.Component {
 AuthSwitch.propTypes = {
   admin: PropTypes.bool,
   roles: PropTypes.array,
-  capture: PropTypes.bool,
+  captureRedirect: PropTypes.bool,
   denied: PropTypes.elementType,
   loggedIn: PropTypes.elementType.isRequired,
   loggedOut: PropTypes.elementType.isRequired,
@@ -90,6 +90,6 @@ AuthSwitch.propTypes = {
 
 AuthSwitch.defaultProps = {
   admin: false,
-  capture: false,
+  captureRedirect: false,
   roles: [],
 };

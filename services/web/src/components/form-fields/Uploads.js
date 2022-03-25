@@ -27,6 +27,8 @@ const ICONS = {
   zip: 'file-archive',
 };
 
+import './uploads.less';
+
 export default class Uploads extends React.Component {
   constructor(props) {
     super(props);
