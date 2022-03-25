@@ -24,6 +24,10 @@ const CUSTOM_TRANSFORMS = {
     const doc = await context.importFixtures(key, meta);
     return doc.toObject();
   },
+  async upload(file, meta, context) {
+    return await context.importUpload(file, meta);
+  },
+
   rel(key) {
     return convertRelativeTime(key);
   },
