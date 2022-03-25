@@ -3,6 +3,7 @@ import { pick, omit } from 'lodash';
 import PropTypes from 'prop-types';
 import { Route, Link } from 'react-router-dom';
 import { Loader, Message } from 'semantic';
+
 import { withSession } from 'stores';
 import ErrorScreen from 'screens/Error';
 
@@ -19,11 +20,12 @@ const ROUTE_PROP_TYPES = [
   'strict',
 ];
 
-class AuthSwitch extends React.Component {
+@withSession
+export default class AuthSwitch extends React.Component {
   hasAccess() {
     const { admin, roles } = this.props;
-    const { user, isAdmin, hasRoles } = this.context;
-    if (!user) {
+    const { isLoggedIn, isAdmin, hasRoles } = this.context;
+    if (!isLoggedIn()) {
       return false;
     } else if (admin) {
       return isAdmin();
@@ -36,8 +38,10 @@ class AuthSwitch extends React.Component {
   render() {
     const { loading, error } = this.context;
     const {
+      capture,
       loggedIn: LoggedInComponent,
       loggedOut: LoggedOutComponent,
+      denied: DeniedComponent,
     } = this.props;
     if (loading) {
       return <Loader active>Loading</Loader>;
@@ -59,11 +63,16 @@ class AuthSwitch extends React.Component {
       <Route
         {...routeProps}
         render={(props) => {
-          return this.hasAccess() ? (
-            <LoggedInComponent {...props} {...passedProps} />
-          ) : (
-            <LoggedOutComponent {...props} {...passedProps} />
-          );
+          if (!this.context.isLoggedIn()) {
+            if (capture) {
+              this.context.pushRedirect();
+            }
+            return <LoggedOutComponent {...props} {...passedProps} />;
+          } else if (!this.hasAccess()) {
+            return <DeniedComponent {...props} {...passedProps} />;
+          } else {
+            return <LoggedInComponent {...props} {...passedProps} />;
+          }
         }}
       />
     );
@@ -73,13 +82,14 @@ class AuthSwitch extends React.Component {
 AuthSwitch.propTypes = {
   admin: PropTypes.bool,
   roles: PropTypes.array,
+  capture: PropTypes.bool,
+  denied: PropTypes.elementType,
   loggedIn: PropTypes.elementType.isRequired,
   loggedOut: PropTypes.elementType.isRequired,
 };
 
 AuthSwitch.defaultProps = {
   admin: false,
+  capture: false,
   roles: [],
 };
-
-export default withSession(AuthSwitch);

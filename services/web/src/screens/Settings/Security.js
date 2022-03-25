@@ -37,7 +37,7 @@ export default class Security extends React.Component {
         method: 'DELETE',
         path: '/1/mfa/disable',
       });
-      await this.context.reloadUser();
+      await this.context.bootstrap();
     } catch (e) {
       if (e.status === 403) {
         this.props.history.push(

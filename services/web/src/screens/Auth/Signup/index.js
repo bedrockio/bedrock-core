@@ -18,6 +18,12 @@ export default class Signup extends React.Component {
     loading: false,
   };
 
+  componentDidMount() {
+    if (this.context.isLoggedIn()) {
+      this.props.history.push('/');
+    }
+  }
+
   onSubmit = async (body) => {
     try {
       this.setState({
@@ -29,7 +35,7 @@ export default class Signup extends React.Component {
         path: '/1/auth/register',
         body,
       });
-      await this.context.authenticate(data.token);
+      this.props.history.push(await this.context.authenticate(data.token));
     } catch (error) {
       this.setState({
         error,

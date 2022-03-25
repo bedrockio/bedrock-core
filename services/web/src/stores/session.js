@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { merge, omit } from 'lodash';
 import { withRouter } from 'react-router-dom';
+
 import { request, hasToken, setToken } from 'utils/api';
 import { trackSession } from 'utils/analytics';
 import { captureError } from 'utils/sentry';
@@ -22,7 +23,7 @@ export class SessionProvider extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.load();
+    this.bootstrap();
     this.attachHistory();
   }
 
@@ -48,7 +49,7 @@ export class SessionProvider extends React.PureComponent {
     return this.hasRoles([role]);
   };
 
-  load = async () => {
+  bootstrap = async () => {
     if (hasToken()) {
       this.setState({
         loading: true,
@@ -59,10 +60,13 @@ export class SessionProvider extends React.PureComponent {
           method: 'GET',
           path: '/1/users/me',
         });
+
         const organization = await this.loadOrganization();
+
         // Uncomment this line if you want to set up
         // User-Id tracking. https://bit.ly/2DKQYEN.
-        // setUserId(data.id);
+        // setUserId(user.id);
+
         this.setState({
           user,
           organization,
@@ -70,8 +74,7 @@ export class SessionProvider extends React.PureComponent {
         });
       } catch (error) {
         if (error.type === 'token') {
-          setToken(null);
-          await this.logout();
+          await this.logout(true);
         } else {
           this.setState({
             error,
@@ -85,17 +88,6 @@ export class SessionProvider extends React.PureComponent {
         loading: false,
       });
     }
-  };
-
-  // TODO: this shouldn't be needed
-  reloadUser = async () => {
-    const { data } = await request({
-      method: 'GET',
-      path: '/1/users/me',
-    });
-    this.setState({
-      user: data,
-    });
   };
 
   updateUser = (data) => {
@@ -113,10 +105,29 @@ export class SessionProvider extends React.PureComponent {
 
   // Authentication
 
+  login = async (body) => {
+    this.setState({
+      isLoggingIn: true,
+    });
+    const { data } = await request({
+      method: 'POST',
+      path: '/1/auth/login',
+      body,
+    });
+    if (data.mfaRequired) {
+      window.sessionStorage.setItem('mfa-auth', JSON.stringify(data));
+      return '/login/verification';
+    }
+    const redirect = await this.authenticate(data.token);
+    this.setState({
+      isLoggingIn: false,
+    });
+    return redirect;
+  };
+
   logout = async (capture) => {
     if (capture) {
-      const { pathname, search } = window.location;
-      this.setStored('redirect', pathname + search);
+      this.pushRedirect();
     }
     if (hasToken()) {
       try {
@@ -129,14 +140,30 @@ export class SessionProvider extends React.PureComponent {
       }
       setToken(null);
     }
-    await this.load();
+    await this.bootstrap();
     this.props.history.push('/');
   };
 
   authenticate = async (token) => {
     setToken(token);
-    await this.load();
-    this.props.history.push(this.popStored('redirect') || '/');
+    await this.bootstrap();
+    return this.popRedirect() || '/';
+  };
+
+  popRedirect = () => {
+    const url = localStorage.getItem('redirect');
+    localStorage.removeItem('redirect');
+    return url;
+  };
+
+  pushRedirect = () => {
+    const { pathname, search } = window.location;
+    localStorage.setItem('redirect', pathname + search);
+  };
+
+  isLoggedIn = () => {
+    const { isLoggingIn } = this.state;
+    return hasToken() && !isLoggingIn;
   };
 
   // Organizations
@@ -242,18 +269,20 @@ export class SessionProvider extends React.PureComponent {
       <SessionContext.Provider
         value={{
           ...this.state,
-          load: this.load,
+          bootstrap: this.bootstrap,
           setStored: this.setStored,
           removeStored: this.removeStored,
           clearStored: this.clearStored,
           updateUser: this.updateUser,
           clearUser: this.clearUser,
-          reloadUser: this.reloadUser,
+          login: this.login,
+          isLoggedIn: this.isLoggedIn,
           authenticate: this.authenticate,
           logout: this.logout,
           hasRoles: this.hasRoles,
           hasRole: this.hasRole,
           isAdmin: this.isAdmin,
+          pushRedirect: this.pushRedirect,
           setOrganization: this.setOrganization,
           getOrganization: this.getOrganization,
         }}>
