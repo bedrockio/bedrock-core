@@ -29,7 +29,7 @@ export default class Applications extends React.Component {
               />
 
               <Layout horizontal center spread>
-                <h1>My applications</h1>
+                <h1>My Applications</h1>
                 <Layout.Group>
                   <EditApplication
                     trigger={

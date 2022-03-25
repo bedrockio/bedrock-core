@@ -83,15 +83,19 @@ export default class DashboardLayout extends React.Component {
                   permission: 'read',
                   scope: 'global',
                 }) && (
-                  <Sidebar.Link to="/applications">
-                    <Icon name="terminal" />
-                    Applications
-                  </Sidebar.Link>
+                  <React.Fragment>
+                    <Sidebar.Link to="/applications">
+                      <Icon name="terminal" />
+                      Applications
+                    </Sidebar.Link>
+                    <Sidebar.Accordion active="/applications">
+                      <Sidebar.Link to="/docs">
+                        <Icon name="book-open" />
+                        API Docs
+                      </Sidebar.Link>
+                    </Sidebar.Accordion>
+                  </React.Fragment>
                 )}
-                <Sidebar.Link to="/docs">
-                  <Icon name="book-open" />
-                  Docs
-                </Sidebar.Link>
                 <Sidebar.Link to="/logout">
                   <Icon name="sign-out-alt" />
                   Log Out

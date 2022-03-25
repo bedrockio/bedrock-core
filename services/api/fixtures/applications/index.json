@@ -2,13 +2,13 @@
   "mobile": {
     "name": "Mobile App",
     "apiKey": "mobile",
-    "description": "API access for the mobile app",
+    "description": "API tracking for the mobile app",
     "user": "<ref:users/admin>"
   },
   "web": {
     "name": "Web App",
     "apiKey": "web",
-    "description": "API access for the web app",
+    "description": "API tracking for the web app",
     "user": "<ref:users/admin>"
   }
 }
