@@ -22,7 +22,9 @@ import ShowRequest from 'modals/ShowRequest';
 import { withRouter } from 'react-router-dom';
 
 function getStateromQueryString(search) {
-  if (!search) return;
+  if (!search) {
+    return;
+  }
   const params = new URLSearchParams(search);
   return {
     keyword: params.get('requestId'),
