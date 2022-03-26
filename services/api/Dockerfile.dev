@@ -5,18 +5,17 @@ FROM node:16.13.0-alpine
 # Update & install required packages
 RUN apk add --update bash curl;
 
-COPY scripts/install_githooks /service/scripts/install_githooks
+# Set work directory
+WORKDIR /service
 
-# Install app dependencies
-COPY package.json /service/package.json
-COPY yarn.lock /service/yarn.lock
-RUN cd /service; yarn install;
+COPY scripts/install_githooks scripts/install_githooks
+
+# Install dependencies and store yarn cache
+COPY package.json yarn.lock ./
+RUN --mount=type=cache,target=/root/.yarn YARN_CACHE_FOLDER=/root/.yarn yarn install --frozen-lockfile
 
 # Copy app source
-COPY . /service
-
-# Set work directory to /api
-WORKDIR /service
+COPY . .
 
 # Set your port
 ENV PORT 2300

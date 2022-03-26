@@ -31,7 +31,7 @@ spec:
               value: "https://bedrock.foundation"
             - name: POSTMARK_FROM
               value: "no-reply@bedrock.foundation"
-            - name: POSTMARK_APIKEY
+            - name: POSTMARK_API_KEY
               value: "abc"
             - name: UPLOADS_STORE
               value: "gcs"

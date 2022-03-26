@@ -39,7 +39,9 @@ app
   .use(templateMiddleware({ apps: ['/'] }));
 
 app.listen(SERVER_PORT, SERVER_HOST, (err) => {
-  if (err) throw err;
+  if (err) {
+    throw err;
+  }
   // eslint-disable-next-line
   console.info(
     `🐬  Prod App server listening at http://${SERVER_HOST}:${SERVER_PORT} 🐬\r\n\r\n`

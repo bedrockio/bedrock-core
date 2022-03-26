@@ -20,11 +20,7 @@ const layouts = {
 export default function (Component) {
   const Wrapped = getWrappedComponent(Component);
   const title = Wrapped.title || startCase(Wrapped.name.replace(/Screen$/, ''));
-  const Layout = layouts[Wrapped.layout || 'dashboard'];
-
-  if (!Layout) {
-    throw new Error(`No layout "${Wrapped.layout}".`);
-  }
+  const Layout = layouts[Wrapped.layout || 'dashboard'] || React.Fragment;
 
   class Screen extends React.PureComponent {
     render() {

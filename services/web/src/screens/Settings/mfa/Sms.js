@@ -1,14 +1,16 @@
 import React from 'react';
-import { Form, Message, Button, Segment, Header, Divider } from 'semantic';
+import { Link } from 'react-router-dom';
+import { Form, Button, Segment, Header, Divider } from 'semantic';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
 import allCountries from 'utils/countries';
 
-import Finalize from './Finalize';
-import LogoTitle from 'components/LogoTitle';
-import { Link } from 'react-router-dom';
-import Code from 'components/form-fields/Code';
 import { Layout } from 'components';
+import LogoTitle from 'components/LogoTitle';
+import Code from 'components/form-fields/Code';
+import ErrorMessage from 'components/ErrorMessage';
+
+import Finalize from './Finalize';
 
 const countryCallingCodes = allCountries.map(({ nameEn, callingCode }) => ({
   value: nameEn,
@@ -146,7 +148,7 @@ export default class Sms extends React.Component {
             <Header size="small">1. What’s your mobile phone number?</Header>
             <p>Authentication codes will be sent to it.</p>
             <Form onSubmit={this.triggerSms} error={touched && !!error}>
-              {error && <Message error content={error.message} />}
+              <ErrorMessage error={error} />
               <Form.Select
                 options={countryCallingCodes}
                 search

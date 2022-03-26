@@ -17,15 +17,14 @@ RUN wget https://github.com/mikefarah/yq/releases/download/v4.6.3/yq_linux_386.t
 # Needed for Gcloud Storage resumable file uploads
 RUN mkdir -p /root/.config
 
-COPY package.json /service/package.json
-COPY yarn.lock /service/yarn.lock
+# Set work directory
+WORKDIR /service
 
-RUN cd /service; yarn install --frozen-lockfile;
+# Install dependencies and store yarn cache
+COPY package.json yarn.lock ./
+RUN --mount=type=cache,target=/root/.yarn YARN_CACHE_FOLDER=/root/.yarn yarn install --frozen-lockfile
 
 # Copy app source
-COPY . /service
-
-# Set work directory to /api
-WORKDIR /service
+COPY . .
 
 CMD ["./scripts/entrypoints/jobs.sh", "jobs/default.yml"]

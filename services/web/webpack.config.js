@@ -105,11 +105,6 @@ module.exports = {
     ],
   },
   plugins: [
-    // Required for react-markdown -> unified -> vfile which assumes
-    // node "process" to exist. Webpack 5 no longer shims these globals.
-    new webpack.ProvidePlugin({
-      process: 'process/browser',
-    }),
     new CircularDependencyPlugin({
       exclude: /node_modules/,
       failOnError: true,
@@ -187,11 +182,13 @@ module.exports = {
     },
   },
   performance: {
-    // Optimistically set ~300kb file size limit and 2x that
-    // as an entrypoint limit, assuming ~20% compression.
-    // Mostly to shut up the warnings so they mean something.
-    maxAssetSize: 1500000,
-    maxEntrypointSize: 3000000,
+    // 10mb limit to warn about insanity happening but as a
+    // general rule we do no care about build sizes by default.
+    maxAssetSize: 10_000_000,
+    maxEntrypointSize: 10_000_000,
+  },
+  cache: {
+    type: 'filesystem',
   },
 };
 

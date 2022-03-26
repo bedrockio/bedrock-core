@@ -46,11 +46,11 @@ spec:
                 secretKeyRef:
                   name: secrets
                   key: JWT_SECRET
-            - name: POSTMARK_APIKEY
+            - name: POSTMARK_API_KEY
               valueFrom:
                 secretKeyRef:
                   name: secrets
-                  key: POSTMARK_APIKEY
+                  key: POSTMARK_API_KEY
           volumeMounts:
             - name: jobs-cache
               mountPath: /workdir/data

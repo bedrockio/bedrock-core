@@ -1,14 +1,14 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { Segment, Form, Header, Divider } from 'semantic';
 import { request } from 'utils/api';
-import { Segment, Form, Header, Message, Divider } from 'semantic';
 import { withSession } from 'stores';
 import screen from 'helpers/screen';
 
-import Logo from 'components/LogoTitle';
-import { Link } from 'react-router-dom';
-import Code from 'components/form-fields/Code';
-
 import { Layout } from 'components';
+import Logo from 'components/LogoTitle';
+import Code from 'components/form-fields/Code';
+import ErrorMessage from 'components/ErrorMessage';
 
 @screen
 @withSession
@@ -34,7 +34,9 @@ export default class MfaVerification extends React.Component {
 
   getMfaSessionData() {
     const data = window.sessionStorage.getItem('mfa-auth');
-    if (!data) return null;
+    if (!data) {
+      return null;
+    }
     try {
       return JSON.parse(data);
     } catch (e) {
@@ -103,7 +105,7 @@ export default class MfaVerification extends React.Component {
         <Segment.Group>
           <Segment padded>
             <Header>Two-factor Verification</Header>
-            {error && <Message error content={error.message} />}
+            <ErrorMessage error={error} />
             {mfaSessionData.mfaMethod === 'otp' && (
               <React.Fragment>
                 <p>

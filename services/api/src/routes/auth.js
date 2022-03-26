@@ -7,6 +7,8 @@ const { sendTemplatedMail } = require('../utils/mailer');
 const { User, Invite, AuditEntry } = require('../models');
 
 const mfa = require('../utils/mfa');
+const { verifyLoginAttempts, verifyPassword } = require('../utils/auth');
+
 const router = new Router();
 
 const passwordField = Joi.string()
@@ -41,9 +43,8 @@ router
       });
 
       await sendTemplatedMail({
-        to: user.name,
-        template: 'welcome.md',
-        subject: 'Welcome to {{appName}}',
+        user,
+        file: 'welcome.md',
       });
 
       ctx.body = {
@@ -60,37 +61,33 @@ router
 
     async (ctx) => {
       const { email, password } = ctx.request.body;
-      const user = await User.findOneAndUpdate(
-        { email },
-        {
-          lastLoginAttemptAt: new Date(),
-          $inc: { loginAttempts: 1 },
-        }
-      );
+      const user = await User.findOne({ email });
 
       if (!user) {
         ctx.throw(401, 'Incorrect password');
       }
 
-      if (!user.verifyLoginAttempts()) {
+      try {
+        await verifyLoginAttempts(user);
+      } catch (error) {
         await AuditEntry.append('reached max authentication attempts', ctx, {
           type: 'security',
           object: user,
           user: user.id,
         });
-        ctx.throw(401, 'Too many login attempts');
+        ctx.throw(401, error);
       }
 
-      if (!(await user.verifyPassword(password))) {
+      try {
+        await verifyPassword(user, password);
+      } catch (error) {
         await AuditEntry.append('failed authentication', ctx, {
           type: 'security',
           object: user,
           user: user.id,
         });
-        ctx.throw(401, 'Incorrect password');
+        ctx.throw(401, error);
       }
-
-      user.loginAttempts = 0;
 
       if (await mfa.requireChallenge(ctx, user)) {
         const tokenId = generateTokenId();
@@ -133,26 +130,35 @@ router
       const { authUser } = ctx.state;
       const { password } = ctx.request.body;
 
-      if (!authUser.verifyLoginAttempts()) {
-        await AuditEntry.append('reached max authentication attempts', ctx, {
+      try {
+        await verifyLoginAttempts(authUser);
+      } catch (error) {
+        await AuditEntry.append('Reached max authentication attempts', ctx, {
           type: 'security',
           object: authUser,
           user: authUser.id,
         });
-        ctx.throw(401, 'Too many attempts');
+        ctx.throw(401, error);
       }
 
-      if (!(await authUser.verifyPassword(password))) {
-        await AuditEntry.append('failed authentication (confirm-access)', ctx, {
+      try {
+        await verifyPassword(authUser, password);
+      } catch (error) {
+        await AuditEntry.append('Failed authentication (confirm-access)', ctx, {
           type: 'security',
           object: authUser,
           user: authUser.id,
         });
-        ctx.throw(401, 'Incorrect password');
+        ctx.throw(401, error);
       }
+
+      await AuditEntry.append('successfully authenticated (confirm-access)', ctx, {
+        object: authUser,
+        user: authUser.id,
+      });
+
       authUser.accessConfirmedAt = new Date();
       await authUser.save();
-
       ctx.status = 204;
     }
   )
@@ -227,11 +233,10 @@ router
       await user.updateOne({ tempTokenId: tokenId });
 
       await sendTemplatedMail({
-        to: [user.name, email].join(' '),
-        template: 'reset-password.md',
-        subject: 'Password Reset Request',
-        token,
+        user,
         email,
+        token,
+        file: 'reset-password.md',
       });
 
       ctx.status = 204;

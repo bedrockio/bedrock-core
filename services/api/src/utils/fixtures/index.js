@@ -1,6 +1,7 @@
 // Check out the README!
 
 const path = require('path');
+const glob = require('glob');
 const fs = require('fs/promises');
 const mongoose = require('mongoose');
 const { get, memoize, cloneDeep, mapKeys, camelCase, kebabCase } = require('lodash');
@@ -56,7 +57,7 @@ async function importRoot(meta) {
 }
 
 async function importDirectory(base, meta) {
-  const names = await readFixturesDirectory(base);
+  const names = await loadDirectoryFixtures(base);
   return await buildFixtures(names, async (name) => {
     return {
       [name]: await importFixtures(join(base, name), meta),
@@ -65,13 +66,20 @@ async function importDirectory(base, meta) {
 }
 
 async function importFixture(id, meta) {
-  // Imported attributes will be mutated, so clone here.
-  const attributes = cloneDeep(await loadModule(id));
-  return await runImport(id, attributes, meta);
+  try {
+    // Imported attributes will be mutated, so clone here.
+    const attributes = cloneDeep(await loadModule(id));
+    return await runImport(id, attributes, meta);
+  } catch (error) {
+    const sup = meta ? ` (imported from "${meta.id}")` : '';
+    logger.error(`Bad fixture or reference: "${id}"${sup}`);
+    throw error;
+  }
 }
 
 async function runImport(id, attributes, meta) {
-  const model = getModelByName(path.dirname(id));
+  const [root] = id.split(path.sep);
+  const model = getModelByName(root);
   meta = { id, model, meta, base: attributes };
   return createDocument(id, attributes, meta);
 }
@@ -121,6 +129,20 @@ async function transformProperty(keys, value, meta) {
     // Iterate over both arrays and objects transforming them.
     await Promise.all(
       Object.entries(value).map(async ([k, v]) => {
+        // Keys in mixed object structures may sometimes also
+        // contain references that must be transformed to
+        // ObjectIds. for example:
+        //
+        // "map": {
+        //   "user-1": "user-2"
+        // }
+        //
+
+        if (CUSTOM_TRANSFORM_REG.test(k)) {
+          const resolved = await transformCustom(k, meta);
+          delete value[k];
+          k = resolved;
+        }
         value[k] = await transformProperty([...keys, k], v, meta);
       })
     );
@@ -143,10 +165,10 @@ const INLINE_CONTENT_TYPES_REG = /\.(md|html)$/;
 async function transformFile(keys, value, meta) {
   if (isReferenceField(keys, meta)) {
     value = await importUpload(value, meta);
-  } else if (isStringField(keys, meta)) {
-    value = await importContent(value, meta);
   } else if (isBufferField(keys, meta)) {
     value = await importBuffer(value, meta);
+  } else {
+    value = await importContent(value, meta);
   }
   return value;
 }
@@ -170,7 +192,7 @@ const importContentOnce = memoize(async (file, meta) => {
 async function inlineContentFiles(content, meta) {
   return await stringReplaceAsync(content, INLINE_CONTENT_REG, async (all, open, file, close) => {
     const upload = await importUpload(file, meta);
-    const url = `${API_URL}/1/uploads/${upload.id}/(raw|image)`;
+    const url = `${API_URL}/1/uploads/${upload.id}/raw`;
     return `${open}${url}${close}`;
   });
 }
@@ -208,6 +230,7 @@ async function transformCustom(value, meta) {
     throw new Error(`Custom transform "${func}" not recognized.`);
   }
   return await transform(token, meta, {
+    importUpload,
     importFixtures,
   });
 }
@@ -254,11 +277,6 @@ async function resolveRelativeFile(file, meta) {
 function isReferenceField(keys, meta) {
   const schemaType = getSchemaType(keys, meta);
   return schemaType instanceof mongoose.Schema.Types.ObjectId;
-}
-
-function isStringField(keys, meta) {
-  const schemaType = getSchemaType(keys, meta);
-  return schemaType instanceof mongoose.Schema.Types.String;
 }
 
 function isBufferField(keys, meta) {
@@ -461,7 +479,7 @@ async function loadFixtureModules(id) {
   if (generated) {
     return generated;
   }
-  const names = await readFixturesDirectory(base);
+  const names = await loadDirectoryFixtures(base);
   return await buildFixtures(names, async (name) => {
     return {
       [name]: await loadModule(join(base, name)),
@@ -623,25 +641,43 @@ async function fileExists(file) {
 }
 
 async function getModelSubdirectories() {
-  const names = await readFixturesDirectory();
-  return names.filter((name) => {
-    return getModelByName(name, false);
-  });
-}
-
-async function readFixturesDirectory(dir = '') {
-  const entries = await fs.readdir(path.resolve(BASE_DIR, dir), { withFileTypes: true });
+  const entries = await fs.readdir(BASE_DIR, { withFileTypes: true });
   return entries
     .filter((entry) => {
-      if (entry.isDirectory()) {
-        return true;
-      } else {
-        return dir && path.extname(entry.name) === '.json';
-      }
+      return entry.isDirectory() && getModelByName(entry.name, false);
     })
     .map((entry) => {
-      return path.basename(entry.name, '.json');
+      return entry.name;
     });
+}
+
+// Note: must return fixtures names without file extension:
+// ie. users/admin not users/admin.json
+async function loadDirectoryFixtures(dir) {
+  return await new Promise((resolve, reject) => {
+    dir = path.resolve(BASE_DIR, dir);
+    const gl = path.resolve(dir, '**/*.{json,js}');
+    glob(gl, (err, files) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(
+          files.map((file) => {
+            file = path.relative(dir, file);
+            let dirname = path.dirname(file);
+            let basename = path.basename(file);
+            basename = path.basename(basename, '.js');
+            basename = path.basename(basename, '.json');
+            if (basename === 'index') {
+              return dirname;
+            } else {
+              return path.join(dirname, basename);
+            }
+          })
+        );
+      }
+    });
+  });
 }
 
 // Fixture id helpers
@@ -651,10 +687,8 @@ function join(base, name) {
 }
 
 function getIdComponents(id) {
-  const [base, name, ...rest] = id.split('/');
-  if (rest.length) {
-    throw new Error(`Invalid fixture id: ${id}`);
-  }
+  const [base, ...rest] = id.split('/');
+  const name = rest.join('/');
   return { base, name };
 }
 

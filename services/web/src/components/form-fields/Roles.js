@@ -1,9 +1,11 @@
 import React from 'react';
-import { request } from 'utils/api';
-import { Form, Loader, Popup, Icon, Message, Modal, Button } from 'semantic';
-import SearchDropdown from 'components/SearchDropdown';
-import FetchObject from 'components/FetchObject';
 import { union } from 'lodash';
+import { request } from 'utils/api';
+import { Form, Loader, Popup, Icon, Modal, Button } from 'semantic';
+
+import SearchDropdown from 'components/SearchDropdown';
+import ErrorMessage from 'components/ErrorMessage';
+import FetchObject from 'components/FetchObject';
 
 export default class Roles extends React.Component {
   constructor(props) {
@@ -130,8 +132,12 @@ export default class Roles extends React.Component {
     const { error, loading, scopedOrganizationIds, showAddOrganizationModal } =
       this.state;
     const { enableOrganizationScopes } = this.props;
-    if (loading) return <Loader />;
-    if (error) return <Message error content={error.message} />;
+    if (loading) {
+      return <Loader />;
+    }
+    if (error) {
+      return <ErrorMessage error={error} />;
+    }
     return (
       <>
         <Form.Dropdown

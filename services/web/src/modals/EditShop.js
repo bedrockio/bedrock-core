@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Modal, Message, Button } from 'semantic';
+import { Form, Modal, Button } from 'semantic';
 import { request } from 'utils/api';
 import AutoFocus from 'components/AutoFocus';
 import modal from 'helpers/modal';
@@ -8,6 +8,7 @@ import UploadsField from 'components/form-fields/Uploads';
 import CategoriesField from 'components/form-fields/Categories';
 import CountriesField from 'components/form-fields/Countries';
 import AddressField from 'components/form-fields/Address';
+import ErrorMessage from 'components/ErrorMessage';
 
 @modal
 export default class EditShop extends React.Component {
@@ -85,7 +86,7 @@ export default class EditShop extends React.Component {
               id="edit-shop"
               error={!!error}
               onSubmit={this.onSubmit}>
-              {error && <Message error content={error.message} />}
+              <ErrorMessage error={error} />
               <Form.Input
                 required
                 type="text"

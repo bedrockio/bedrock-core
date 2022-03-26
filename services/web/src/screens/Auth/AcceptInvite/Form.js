@@ -1,5 +1,7 @@
 import React from 'react';
-import { Form, Button, Message } from 'semantic';
+import { Form, Button } from 'semantic';
+
+import ErrorMessage from 'components/ErrorMessage';
 
 export default (props) => {
   const { error, loading } = props;
@@ -14,7 +16,9 @@ export default (props) => {
       size="large"
       onSubmit={() => {
         setTouched(true);
-        if (!accepted) return;
+        if (!accepted) {
+          return;
+        }
 
         props.onSubmit({
           firstName,
@@ -22,7 +26,7 @@ export default (props) => {
           password,
         });
       }}>
-      {error && <Message error content={error.message} />}
+      <ErrorMessage error={error} />
       <Form.Input
         type="text"
         name="firstName"

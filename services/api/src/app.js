@@ -53,6 +53,7 @@ app.on('error', (err, ctx) => {
 if (config.has('SENTRY_DSN')) {
   Sentry.init({
     dsn: config.get('SENTRY_DSN'),
+    environment: ENV_NAME,
   });
 }
 

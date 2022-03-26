@@ -1,6 +1,8 @@
 import React from 'react';
-import { Form, Button, Message } from 'semantic';
+import { Form, Button } from 'semantic';
+
 import AutoFocus from 'components/AutoFocus';
+import ErrorMessage from 'components/ErrorMessage';
 
 export default (props) => {
   const { loading, error } = props;
@@ -19,7 +21,7 @@ export default (props) => {
             repeat,
           });
         }}>
-        {error && <Message error content={error.message} />}
+        <ErrorMessage error={error} />
         <Form.Input
           name="password"
           icon="lock"

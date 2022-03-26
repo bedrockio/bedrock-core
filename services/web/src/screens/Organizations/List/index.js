@@ -4,8 +4,10 @@ import { Table, Button, Message, Divider, Loader, Confirm } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
+
 import { HelpTip, Breadcrumbs, Layout } from 'components';
 import { SearchProvider, Filters } from 'components/search';
+import ErrorMessage from 'components/ErrorMessage';
 
 import EditOrganization from 'modals/EditOrganization';
 
@@ -55,10 +57,9 @@ export default class OrganizationList extends React.Component {
                   />
                 </Layout.Group>
               </Layout>
+              <ErrorMessage error={error} />
               {loading ? (
                 <Loader active />
-              ) : error ? (
-                <Message error content={error.message} />
               ) : organizations.length === 0 ? (
                 <Message>No organizations created yet</Message>
               ) : (

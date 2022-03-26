@@ -1,3 +1,4 @@
+const { assertMailSent } = require('postmark');
 const { setupDb, teardownDb, request, createUser, createAdminUser } = require('../../utils/testing');
 const { User, Invite } = require('../../models');
 
@@ -44,6 +45,7 @@ describe('/1/invites', () => {
         { user }
       );
       expect(response.status).toBe(204);
+      assertMailSent({ to: 'new@platform.com' });
     });
 
     it('should throw an error if user already exists', async () => {

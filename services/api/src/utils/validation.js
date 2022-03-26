@@ -90,7 +90,12 @@ function getObjectSchema(obj, options) {
 function getSchemaForField(field, options = {}) {
   const type = getFieldType(field);
   if (type === 'Array') {
-    return getArraySchema(field, options);
+    // Nested array fields may not skip required
+    // validations as they are a new context.
+    return getArraySchema(field, {
+      ...options,
+      skipRequired: false,
+    });
   } else if (type === 'Object') {
     return getObjectSchema(field, options);
   }

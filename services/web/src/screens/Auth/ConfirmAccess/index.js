@@ -1,12 +1,12 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { Segment, Grid, Form } from 'semantic';
 import { request } from 'utils/api';
-import { Segment, Grid, Message, Form } from 'semantic';
 import { withSession } from 'stores';
 import screen from 'helpers/screen';
 
 import LogoTitle from 'components/LogoTitle';
-
-import { Link } from 'react-router-dom';
+import ErrorMessage from 'components/ErrorMessage';
 import Password from 'components/form-fields/Password';
 
 @screen
@@ -56,8 +56,7 @@ export default class ConfirmAccess extends React.Component {
         <Segment.Group>
           <Segment padded>
             <Form error={!!error} size="large" onSubmit={() => this.onSubmit()}>
-              {error && <Message error content={error.message} />}
-
+              <ErrorMessage error={error} />
               <Password
                 value={password}
                 onChange={(e, { value }) => this.setState({ password: value })}

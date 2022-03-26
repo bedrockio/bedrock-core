@@ -1,11 +1,13 @@
 import React from 'react';
-import { Segment, Message, Form, Button, Divider } from 'semantic';
-import screen from 'helpers/screen';
-import Menu from './Menu';
-import { request } from 'utils/api';
 import { pick } from 'lodash';
-
+import { Segment, Form, Button, Divider } from 'semantic';
+import screen from 'helpers/screen';
+import { request } from 'utils/api';
 import { withSession } from 'stores';
+
+import ErrorMessage from 'components/ErrorMessage';
+
+import Menu from './Menu';
 
 @screen
 @withSession
@@ -55,12 +57,14 @@ export default class Account extends React.Component {
   render() {
     const { user, error, loading } = this.state;
 
-    if (!this.context.user) return <div></div>;
+    if (!this.context.user) {
+      return <div></div>;
+    }
     return (
       <React.Fragment>
         <Menu />
         <Divider hidden />
-        {error && <Message error content={error.message} />}
+        <ErrorMessage error={error} />
         <Form onSubmit={() => this.save()}>
           <Segment>
             <Form.Input

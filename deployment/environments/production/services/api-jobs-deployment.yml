@@ -33,7 +33,7 @@ spec:
               value: "mongodb://mongo:27017/bedrock_production"
             - name: POSTMARK_FROM
               value: "no-reply@bedrock.foundation"
-            - name: POSTMARK_APIKEY
+            - name: POSTMARK_API_KEY
               value: "abc"
           volumeMounts:
             - name: cache

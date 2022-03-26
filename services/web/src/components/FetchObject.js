@@ -1,6 +1,7 @@
 import React from 'react';
 import { request } from 'utils/api';
-import { Message } from 'semantic';
+
+import ErrorMessage from './ErrorMessage';
 
 export default class FetchObject extends React.Component {
   state = {
@@ -28,8 +29,12 @@ export default class FetchObject extends React.Component {
 
   render() {
     const { loading, error, data } = this.state;
-    if (loading) return <p>loading</p>;
-    if (error) return <Message error content={error.message} />;
+    if (loading) {
+      return <p>loading</p>;
+    }
+    if (error) {
+      return <ErrorMessage error={error} />;
+    }
     return this.props.children(data);
   }
 }

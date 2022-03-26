@@ -2,8 +2,10 @@ import React from 'react';
 import { Form, Modal, Button, TextArea, Message } from 'semantic';
 import { request } from 'utils/api';
 import { emailRegexp } from 'utils/validate';
-import AutoFocus from 'components/AutoFocus';
 import modal from 'helpers/modal';
+
+import AutoFocus from 'components/AutoFocus';
+import ErrorMessage from 'components/ErrorMessage';
 
 @modal
 export default class InviteUser extends React.Component {
@@ -73,7 +75,7 @@ export default class InviteUser extends React.Component {
         <Modal.Content>
           <AutoFocus>
             <Form error={touched && !!error}>
-              {error && <Message error content={error.message} />}
+              <ErrorMessage error={error} />
               {touched && invalidEmails.length > 0 && (
                 <Message negative>Invalid: {invalidEmails.join(', ')}</Message>
               )}

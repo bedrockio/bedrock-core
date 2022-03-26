@@ -27,6 +27,9 @@ function transformField(obj, schema, options) {
       transformField(el, schema, options);
     }
   } else if (isPlainObject(obj)) {
+    if (!obj.id && obj._id) {
+      obj.id = obj._id;
+    }
     for (let [key, val] of Object.entries(obj)) {
       // Omit any key with a private prefix "_" or marked
       // with "readScopes" in the schema.
@@ -419,7 +422,13 @@ function resolveField(schema, key) {
   if (Array.isArray(field)) {
     field = field[0];
   }
-  if (typeof field?.type === 'object') {
+  // A literal "type" field may be defined as:
+  //  "type": {
+  //    "type": "String",
+  //    "required": true,
+  //  }
+  const type = field?.type;
+  if (typeof type === 'object' && !type.type) {
     field = field.type;
   }
   return field;

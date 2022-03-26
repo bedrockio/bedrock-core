@@ -122,7 +122,7 @@ describe('/1/mfa', () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       expect(response.status).toBe(401);
-      expect(response.body.error.message).toBe('Too many attempts');
+      expect(response.body.error.message).toBe('Too many attempts. Try again in 15 minute(s)');
     });
   });
 

@@ -2,7 +2,9 @@ import { API_URL, APP_NAME } from 'utils/env';
 import { flatten } from 'lodash';
 
 function formatTypeSummary(schema) {
-  if (!schema) return 'unknown';
+  if (!schema) {
+    return 'unknown';
+  }
   if (schema.type === 'array' && schema.items && schema.items.type) {
     return `[]${schema.items.type}`;
   }
@@ -22,7 +24,9 @@ class OpenApiMacros {
     const definition = this.paths.find(
       (d) => d.method === method && d.path === path
     );
-    if (!definition) return `\`Could not find API call for ${method} ${path}\``;
+    if (!definition) {
+      return `\`Could not find API call for ${method} ${path}\``;
+    }
     const parameterType = definition.requestBody
       ? 'JSON Body'
       : 'Request Query';
@@ -32,7 +36,9 @@ class OpenApiMacros {
       '|--|--|--|--|',
     ];
     const params = definition.requestBody || definition.requestQuery || [];
-    if (!params || !params.length) return '';
+    if (!params || !params.length) {
+      return '';
+    }
     params.forEach(({ name, schema, required, description }) => {
       const typeStr = formatTypeSummary(schema);
       const requiredStr = required ? 'Yes' : 'No';
@@ -50,9 +56,13 @@ class OpenApiMacros {
     const definition = this.paths.find(
       (d) => d.method === method && d.path === path
     );
-    if (!definition) return `\`Could not find API call for ${method} ${path}\``;
+    if (!definition) {
+      return `\`Could not find API call for ${method} ${path}\``;
+    }
     const { responseBody } = definition;
-    if (!responseBody || !responseBody.length) return '';
+    if (!responseBody || !responseBody.length) {
+      return '';
+    }
     let markdown = [
       `\nResponse Body:\n`,
       '| Key | Type | Description |',
@@ -72,9 +82,13 @@ class OpenApiMacros {
     const definition = this.paths.find(
       (d) => d.method === method && d.path === path
     );
-    if (!definition) return `\`Could not find API call for ${method} ${path}\``;
+    if (!definition) {
+      return `\`Could not find API call for ${method} ${path}\``;
+    }
     const { examples } = definition;
-    if (!examples || !examples.length) return '';
+    if (!examples || !examples.length) {
+      return '';
+    }
     const markdown = [];
     examples.forEach(({ name, requestPath, requestBody, responseBody }) => {
       markdown.push(`\n#### Example: ${name || ''}`);
@@ -125,7 +139,9 @@ class OpenApiMacros {
   }
   objectSummary({ name }) {
     const definition = this.objects.find((d) => d.name === name);
-    if (!definition) return `\`Could not find object for ${name}\``;
+    if (!definition) {
+      return `\`Could not find object for ${name}\``;
+    }
     let markdown = [
       `Attributes:\n`,
       '| Key | Type | Always Set? | Description |',

@@ -3,11 +3,13 @@ import { Table, Button, Message, Loader, Divider } from 'semantic';
 import { request } from 'utils/api';
 import { formatDateTime } from 'utils/date';
 import screen from 'helpers/screen';
+import InviteUser from 'modals/InviteUser';
+
+import { Breadcrumbs } from 'components';
 import { SearchProvider } from 'components/search';
 import { Layout } from 'components/Layout';
-import InviteUser from 'modals/InviteUser';
 import LoadButton from 'components/LoadButton';
-import { Breadcrumbs } from 'components';
+import ErrorMessage from 'components/ErrorMessage';
 
 @screen
 export default class Home extends React.Component {
@@ -40,10 +42,9 @@ export default class Home extends React.Component {
               </Layout>
               <Divider hidden />
               <div className="list">
+                <ErrorMessage error={error} />
                 {loading ? (
                   <Loader active />
-                ) : error ? (
-                  <Message error content={error.message} />
                 ) : items.length === 0 ? (
                   <Message>No invitations yet</Message>
                 ) : (
