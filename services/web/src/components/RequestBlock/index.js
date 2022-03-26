@@ -114,6 +114,7 @@ export default class RequestBlock extends React.Component {
         <Code
           language={option.language}
           source={option.template(this.getData())}
+          allowCopy
         />
       </>
     );

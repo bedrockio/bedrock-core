@@ -17,7 +17,7 @@ import { set, truncate } from 'lodash';
 import Menu from './Menu';
 
 import { formatDateTime } from 'utils/date';
-import CodeBlock from 'screens/Docs/CodeBlock';
+import CodeBlock from 'components/Markdown/Code';
 import ShowRequest from 'modals/ShowRequest';
 import { withRouter } from 'react-router-dom';
 
@@ -284,11 +284,12 @@ export default class ApplicationLogs extends React.Component {
                             <CodeBlock
                               height="500px"
                               language="json"
-                              value={JSON.stringify(
+                              source={JSON.stringify(
                                 selectedItem.response.body,
                                 null,
                                 2
                               )}
+                              allowCopy
                             />
                           </>
                         )}

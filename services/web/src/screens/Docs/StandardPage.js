@@ -1,8 +1,8 @@
 import React from 'react';
-import RequestBlock from 'screens/Docs/RequestBlock';
+import RequestBlock from 'components/RequestBlock';
 import Markdown from 'components/Markdown';
 import Code from 'components/Markdown/Code';
-import Heading from './Docs/Heading';
+import Heading from './Heading';
 import 'github-markdown-css';
 import { enrichMarkdown, executeOpenApiMacros } from 'utils/markdown';
 
