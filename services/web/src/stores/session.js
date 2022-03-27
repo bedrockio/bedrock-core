@@ -158,7 +158,10 @@ export class SessionProvider extends React.PureComponent {
 
   pushRedirect = () => {
     const { pathname, search } = window.location;
-    localStorage.setItem('redirect', pathname + search);
+    const url = pathname + search;
+    if (url !== '/') {
+      localStorage.setItem('redirect', url);
+    }
   };
 
   isLoggedIn = () => {
