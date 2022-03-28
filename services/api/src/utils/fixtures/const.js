@@ -25,7 +25,8 @@ const CUSTOM_TRANSFORMS = {
     return doc.toObject();
   },
   async upload(file, meta, context) {
-    return await context.importUpload(file, meta);
+    const upload = await context.importUpload(file, meta);
+    return upload.id;
   },
 
   rel(key) {
