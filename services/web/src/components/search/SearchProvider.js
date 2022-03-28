@@ -6,8 +6,6 @@ import SearchContext from './Context';
 import Pagination from './Pagination';
 import { withRouter } from 'react-router';
 
-const delayedParams = {};
-
 function convertFilters(filters) {
   return pickBy(filters, (val) => {
     return Array.isArray(val) ? val.length : val;
@@ -108,18 +106,18 @@ export default class SearchProvider extends React.Component {
     const queryObject = {};
     for (const key of Object.keys(filters)) {
       const value = filters[key]?.id || filters[key];
-      const param = this.state.params[key];
-      if (param.multiple) {
+      const mapping = this.state.filterMapping[key];
+      if (mapping.multiple) {
         queryObject[key] = value
-          .map((value) => convertValue(param.type, value))
+          .map((value) => convertValue(mapping.type, value))
           .join('_');
-      } else if (param.range) {
+      } else if (mapping.range) {
         queryObject[key] = [
-          convertValue(param.type, value.gte),
-          convertValue(param.type, value.lte),
+          convertValue(mapping.type, value.gte),
+          convertValue(mapping.type, value.lte),
         ].join('/');
       } else {
-        queryObject[key] = convertValue(param.type, value);
+        queryObject[key] = convertValue(mapping.type, value);
       }
     }
 
@@ -239,19 +237,6 @@ export default class SearchProvider extends React.Component {
     });
   };
 
-  registerParam = ({ name, ...props }) => {
-    const params = delayedParams[this.state.id] || {};
-    delayedParams[this.state.id] = {
-      ...params,
-      [name]: props,
-    };
-    return {
-      name,
-      label: props.label,
-      multiple: props.multiple,
-    };
-  };
-
   setFilters = (filters) => {
     const newFilters = convertFilters(filters);
     this.updateUrlSearchParams(newFilters);
@@ -281,7 +266,6 @@ export default class SearchProvider extends React.Component {
       updateItems: this.updateItems,
       onPageChange: this.onPageChange,
       onFilterChange: this.onFilterChange,
-      registerParam: this.registerParam,
       onDataNeeded: this.props.onDataNeeded,
     };
     return (

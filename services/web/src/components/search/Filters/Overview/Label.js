@@ -45,8 +45,8 @@ export default class OverviewLabel extends React.Component {
   }
 
   async updateLabel(filteredValue) {
-    const { param } = this.props;
-    if (!param.getDisplayValue) {
+    const { mapping } = this.props;
+    if (!mapping.getDisplayValue) {
       this.setState({
         filteredValue: filteredValue,
         value: filteredValue,
@@ -61,7 +61,7 @@ export default class OverviewLabel extends React.Component {
     });
 
     try {
-      const value = await param.getDisplayValue(
+      const value = await mapping.getDisplayValue(
         Array.isArray(filteredValue)
           ? filteredValue.map((item) => item.id || item)
           : filteredValue?.id || filteredValue
@@ -97,26 +97,26 @@ export default class OverviewLabel extends React.Component {
   }
 
   renderLabelContent() {
-    const { param } = this.props;
+    const { mapping } = this.props;
     const { value } = this.state;
 
-    if (param.format) {
-      return param.format(value);
+    if (mapping.format) {
+      return mapping.format(value);
     }
 
-    if (param.range) {
-      return `${param.label}: ${[
-        renderValue(param.type, value.gte),
-        renderValue(param.type, value.lte),
+    if (mapping.range) {
+      return `${mapping.label}: ${[
+        renderValue(mapping.type, value.gte),
+        renderValue(mapping.type, value.lte),
       ].join(' - ')}`;
     }
 
-    if (param.multiple && Array.isArray(value)) {
-      return `${param.label}: ${value
-        .map((v) => renderValue(param.type, v))
+    if (mapping.multiple && Array.isArray(value)) {
+      return `${mapping.label}: ${value
+        .map((v) => renderValue(mapping.type, v))
         .join(', ')}`;
     }
 
-    return [param.label, renderValue(param.type, value)].join(': ');
+    return [mapping.label, renderValue(mapping.type, value)].join(': ');
   }
 }

@@ -14,9 +14,9 @@ export default class Overview extends React.Component {
   };
 
   render() {
-    const { filters, params = {} } = this.context;
+    const { filters, filterMapping = {} } = this.context;
     const filtersKeys = Object.keys(filters).filter(
-      (key) => params[key]?.label
+      (key) => filterMapping[key]?.label
     );
 
     if (!this.context.ready) {
@@ -26,7 +26,7 @@ export default class Overview extends React.Component {
     return (
       <>
         {filtersKeys.map((key) => (
-          <Label key={key} name={key} param={params[key]} />
+          <Label key={key} name={key} mapping={filterMapping[key]} />
         ))}
       </>
     );
