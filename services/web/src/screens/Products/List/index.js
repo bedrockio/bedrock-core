@@ -23,10 +23,34 @@ export default class ProductList extends React.Component {
     });
   };
 
+  getFilterMapping() {
+    return {
+      isFeatured: {
+        label: 'Is Featured',
+        type: 'boolean',
+      },
+      priceUsd: {
+        label: 'Price Usd',
+      },
+      expiresAt: {
+        label: 'Expires At',
+        type: 'date',
+        range: true,
+      },
+      sellingPoints: {
+        label: 'Selling Points',
+        multiple: true,
+      },
+      keyword: {},
+    };
+  }
+
   render() {
     return (
-      <SearchProvider onDataNeeded={this.onDataNeeded}>
-        {({ items: products, getSorted, setSort, reload, registerParam }) => {
+      <SearchProvider
+        onDataNeeded={this.onDataNeeded}
+        filterMapping={this.getFilterMapping()}>
+        {({ items: products, getSorted, setSort, reload }) => {
           return (
             <React.Fragment>
               <Breadcrumbs active="Products" />
@@ -47,49 +71,27 @@ export default class ProductList extends React.Component {
                 <Layout horizontal center spread stackable>
                   <Layout horizontal>
                     <Filters.Modal>
-                      <Filters.Checkbox
-                        {...registerParam({
-                          name: 'isFeatured',
-                          label: 'Is Featured',
-                          type: 'boolean',
-                        })}
-                      />
-                      <Filters.Number
-                        {...registerParam({
-                          name: 'priceUsd',
-                          label: 'Price Usd',
-                        })}
-                      />
+                      <Filters.Checkbox name="isFeatured" label="Is Featured" />
+                      <Filters.Number name="priceUsd" label="Price Usd" />
                       <Filters.DateRange
                         time
-                        {...registerParam({
-                          name: 'expiresAt',
-                          label: 'Expires At',
-                          type: 'date',
-                          range: true,
-                        })}
+                        name="expiresAt"
+                        label="Expires At"
                       />
                       <Filters.Dropdown
                         search
+                        multiple
                         selection
                         allowAdditions
-                        {...registerParam({
-                          name: 'sellingPoints',
-                          label: 'Selling Points',
-                          multiple: true,
-                        })}
+                        name="sellingPoints"
+                        label="Selling Points"
                       />
                     </Filters.Modal>
                     <Filters.Overview />
                   </Layout>
 
                   <Layout.Group>
-                    <Filters.Search
-                      placeholder="Enter name or id"
-                      {...registerParam({
-                        name: 'keyword',
-                      })}
-                    />
+                    <Filters.Search name="keyword" />
                   </Layout.Group>
                 </Layout>
               </Segment>

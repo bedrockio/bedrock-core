@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { pickBy, uniqueId } from 'lodash';
+import { pickBy } from 'lodash';
 
 import SearchContext from './Context';
 import Pagination from './Pagination';
@@ -52,7 +52,7 @@ function convertValue(type, value) {
   return value?.id || value;
 }
 
-function getFiltersFromSearchParams(urlParams, filterMapping) {
+function getFiltersFromSearchParams(urlParams, filterMapping = {}) {
   const filters = {};
   for (let [key, value] of urlParams) {
     if (filterMapping[key]) {
@@ -70,12 +70,11 @@ export default class SearchProvider extends React.Component {
     super(props);
 
     this.state = {
-      id: uniqueId('search'),
       ready: false,
       loading: true,
       items: [],
       error: null,
-      filterMapping: props.filterMapping || {},
+      filterMapping: props.filterMapping,
       filters: getFiltersFromSearchParams(
         new URLSearchParams(this.props.history.location.search),
         props.filterMapping
@@ -103,10 +102,17 @@ export default class SearchProvider extends React.Component {
   }
 
   updateUrlSearchParams(filters) {
+    if (!this.state.filterMapping) {
+      return;
+    }
     const queryObject = {};
     for (const key of Object.keys(filters)) {
       const value = filters[key]?.id || filters[key];
       const mapping = this.state.filterMapping[key];
+      if (!mapping) {
+        console.warn('[SearchProvider] no mapping for filter', key);
+        continue;
+      }
       if (mapping.multiple) {
         queryObject[key] = value
           .map((value) => convertValue(mapping.type, value))
@@ -246,12 +252,10 @@ export default class SearchProvider extends React.Component {
   };
 
   onFilterChange = ({ name, value }) => {
-    const newFilters = convertFilters({
+    this.setFilters({
       ...this.state.filters,
       [name]: value,
     });
-
-    this.setFilters(newFilters);
   };
 
   render() {

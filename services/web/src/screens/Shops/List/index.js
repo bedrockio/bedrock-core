@@ -55,6 +55,7 @@ export default class ShopList extends React.Component {
           return owners[0].name;
         },
       },
+      keyword: {},
     };
   }
 

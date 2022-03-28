@@ -24,10 +24,7 @@ export default class FilterModal extends React.Component {
   }
 
   hasFilters = () => {
-    return (
-      !Object.keys(this.context.filterMapping).length &&
-      this.getFilterCount() > 0
-    );
+    return !this.context.filterMapping && this.getFilterCount() > 0;
   };
 
   getFilterCount = () => {
@@ -38,9 +35,9 @@ export default class FilterModal extends React.Component {
   };
 
   onModalOpen = () => {
-    this.prevFilters = this.state.filters;
     this.setState({
       open: true,
+      filters: this.context.filters,
     });
     setTimeout(() => {
       const input = this.formRef.current.querySelector('input[name]');
