@@ -29,6 +29,7 @@ export default class SearchFilter extends React.Component {
       <Form.Input
         name={name}
         loading={loading}
+        placeholder="Search by keyword"
         icon={this.renderIcon()}
         value={this.state.value || ''}
         onChange={(e, { value }) => this.setState({ value })}

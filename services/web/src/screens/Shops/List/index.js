@@ -40,10 +40,30 @@ export default class ShopList extends React.Component {
     return data;
   };
 
+  getFilterMapping() {
+    return {
+      country: {
+        label: 'Country',
+        getDisplayValue: (id) => countries.find((c) => c.value === id).text,
+      },
+      owner: {
+        label: 'Owner',
+        getDisplayValue: async (id) => {
+          const owners = await this.fetchOwners({
+            ids: [id],
+          });
+          return owners[0].name;
+        },
+      },
+    };
+  }
+
   render() {
     return (
-      <SearchProvider onDataNeeded={this.onDataNeeded}>
-        {({ items: shops, getSorted, setSort, reload, registerParam }) => {
+      <SearchProvider
+        onDataNeeded={this.onDataNeeded}
+        filterMapping={this.getFilterMapping()}>
+        {({ items: shops, getSorted, setSort, reload }) => {
           return (
             <React.Fragment>
               <Breadcrumbs active="Shops" />
@@ -67,25 +87,15 @@ export default class ShopList extends React.Component {
                       <Filters.Dropdown
                         options={countries}
                         search
-                        {...registerParam({
-                          name: 'country',
-                          label: 'Country',
-                          getDisplayValue: (id) =>
-                            countries.find((c) => c.value === id).text,
-                        })}
+                        name="country"
+                        label="Country"
                       />
 
                       <Filters.Dropdown
                         onDataNeeded={(name) => this.fetchOwners({ name })}
                         search
-                        {...registerParam({
-                          name: 'owner',
-                          label: 'Owner',
-                          getDisplayValue: (id) =>
-                            this.fetchOwners({
-                              ids: [id],
-                            }).then((data) => data[0].name),
-                        })}
+                        name="owner"
+                        label="Owner"
                       />
 
                       {/* --- Generator: end */}
@@ -94,12 +104,7 @@ export default class ShopList extends React.Component {
                   </Layout>
 
                   <Layout.Group>
-                    <Filters.Search
-                      placeholder="Enter name or id"
-                      {...registerParam({
-                        name: 'keyword',
-                      })}
-                    />
+                    <Filters.Search name="keyword" />
                   </Layout.Group>
                 </Layout>
               </Segment>

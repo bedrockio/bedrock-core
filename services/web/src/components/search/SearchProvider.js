@@ -54,20 +54,35 @@ function convertValue(type, value) {
   return value?.id || value;
 }
 
+function getFiltersFromSearchParams(urlParams, filterMapping) {
+  const filters = {};
+  for (let [key, value] of urlParams) {
+    if (filterMapping[key]) {
+      filters[key] = parseParamByType(filterMapping[key], value);
+    }
+  }
+  return filters;
+}
+
 @withRouter
 export default class SearchProvider extends React.Component {
   static Pagination = Pagination;
 
   constructor(props) {
     super(props);
+
     this.state = {
       id: uniqueId('search'),
       ready: false,
       loading: true,
       items: [],
       error: null,
-      params: props.params || {},
-      filters: props.filters || {},
+      filterMapping: props.filterMapping || {},
+      filters: getFiltersFromSearchParams(
+        new URLSearchParams(this.props.history.location.search),
+        props.filterMapping
+      ),
+
       limit: props.limit,
       page: props.page,
       sort: props.sort,
@@ -75,10 +90,7 @@ export default class SearchProvider extends React.Component {
   }
 
   componentDidMount() {
-    // because we calling registerParams in the render method, we need to wait for the render to finish
-    setTimeout(() => {
-      this.boot();
-    }, 0);
+    this.fetch(true);
   }
 
   componentDidUpdate(lastProps, lastState) {
@@ -91,28 +103,6 @@ export default class SearchProvider extends React.Component {
       this.fetch();
     }
   }
-
-  boot = () => {
-    // get registered params
-    const params = delayedParams[this.state.id];
-    /// load filters from url
-    const urlParams = new URLSearchParams(this.props.history.location.search);
-    const filters = {};
-
-    for (let [key, value] of urlParams) {
-      if (params[key]) {
-        filters[key] = parseParamByType(params[key], value);
-      }
-    }
-
-    this.setState(
-      {
-        filters: convertFilters(filters),
-        params,
-      },
-      () => this.fetch(true)
-    );
-  };
 
   updateUrlSearchParams(filters) {
     const queryObject = {};
@@ -145,7 +135,7 @@ export default class SearchProvider extends React.Component {
 
   getChanged(current, last) {
     let changed = null;
-    for (let key of ['page', 'sort', 'limit', 'filters']) {
+    for (let key of ['page', 'sort', 'limit', 'filters', 'filterMapping']) {
       if (last[key] !== current[key]) {
         changed = {
           ...changed,
