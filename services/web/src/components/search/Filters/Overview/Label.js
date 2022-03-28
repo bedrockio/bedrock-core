@@ -30,19 +30,19 @@ export default class OverviewLabel extends React.Component {
     this.updateLabel(this.state.filteredValue);
   }
 
-  clearFilter = () => {
-    this.context.onFilterChange({
-      name: this.props.name,
-      value: undefined,
-    });
-  };
-
   componentDidUpdate() {
     const filteredValue = this.context.filters[this.props.name];
     if (this.state.filteredValue !== filteredValue) {
       this.updateLabel(filteredValue);
     }
   }
+
+  clearFilter = () => {
+    this.context.onFilterChange({
+      name: this.props.name,
+      value: undefined,
+    });
+  };
 
   async updateLabel(filteredValue) {
     const { mapping } = this.props;
@@ -58,6 +58,7 @@ export default class OverviewLabel extends React.Component {
     this.setState({
       filteredValue: filteredValue,
       loading: true,
+      error: null,
     });
 
     try {
@@ -79,6 +80,23 @@ export default class OverviewLabel extends React.Component {
   }
 
   render() {
+    if (this.state.error) {
+      return (
+        <Label
+          basic
+          style={{
+            height: '36px',
+            margin: '0',
+            marginLeft: '0.5em',
+            lineHeight: '21px',
+            cursor: 'pointer',
+          }}
+          onClick={() => this.clearFilter()}
+          icon="exclamation-triangle"
+          title={this.state.error.message}></Label>
+      );
+    }
+
     return (
       <Label
         basic
