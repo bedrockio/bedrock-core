@@ -12,7 +12,7 @@ function convertFilters(filters) {
   });
 }
 
-function parseValue(type, value) {
+function parseParamValue(type, value) {
   if (type === 'date') {
     return new Date(value);
   } else if (type === 'number') {
@@ -27,21 +27,21 @@ function parseParamByType(param, value) {
   const type = param.type;
   if (param.multiple) {
     value = value.split('_');
-    return value.map((value) => parseValue(type, value));
+    return value.map((value) => parseParamValue(type, value));
   }
 
   if (param.range) {
     value = value.split('/');
     return {
-      gte: parseValue(type, value[0]),
-      lte: parseValue(type, value[1]),
+      gte: parseParamValue(type, value[0]),
+      lte: parseParamValue(type, value[1]),
     };
   }
 
-  return parseValue(type, value);
+  return parseParamValue(type, value);
 }
 
-function convertValue(type, value) {
+function convertParamValue(type, value) {
   if (type === 'date') {
     return new Date(value).toISOString();
   } else if (type === 'number') {
@@ -70,7 +70,6 @@ export default class SearchProvider extends React.Component {
     super(props);
 
     this.state = {
-      ready: false,
       loading: true,
       items: [],
       error: null,
@@ -87,7 +86,7 @@ export default class SearchProvider extends React.Component {
   }
 
   componentDidMount() {
-    this.fetch(true);
+    this.fetch();
   }
 
   componentDidUpdate(lastProps, lastState) {
@@ -96,7 +95,7 @@ export default class SearchProvider extends React.Component {
       this.setState({
         ...changedProps,
       });
-    } else if (this.hasChanged(this.state, lastState) && this.state.ready) {
+    } else if (this.hasChanged(this.state, lastState)) {
       this.fetch();
     }
   }
@@ -110,20 +109,19 @@ export default class SearchProvider extends React.Component {
       const value = filters[key]?.id || filters[key];
       const mapping = this.state.filterMapping[key];
       if (!mapping) {
-        console.warn('[SearchProvider] no mapping for filter', key);
         continue;
       }
       if (mapping.multiple) {
         queryObject[key] = value
-          .map((value) => convertValue(mapping.type, value))
+          .map((value) => convertParamValue(mapping.type, value))
           .join('_');
       } else if (mapping.range) {
         queryObject[key] = [
-          convertValue(mapping.type, value.gte),
-          convertValue(mapping.type, value.lte),
+          convertParamValue(mapping.type, value.gte),
+          convertParamValue(mapping.type, value.lte),
         ].join('/');
       } else {
-        queryObject[key] = convertValue(mapping.type, value);
+        queryObject[key] = convertParamValue(mapping.type, value);
       }
     }
 
@@ -165,13 +163,12 @@ export default class SearchProvider extends React.Component {
 
   // Actions
 
-  fetch = async (initial) => {
-    if (!initial) {
-      this.setState({
-        error: null,
-        loading: true,
-      });
-    }
+  fetch = async () => {
+    this.setState({
+      error: null,
+      loading: true,
+    });
+
     try {
       const { page, limit, sort, filters } = this.state;
       const { data, meta } = await this.props.onDataNeeded({
@@ -181,14 +178,12 @@ export default class SearchProvider extends React.Component {
         ...filters,
       });
       this.setState({
-        ready: true,
         loading: false,
         items: data,
         meta: Object.assign({}, this.state.meta, meta),
       });
     } catch (error) {
       this.setState({
-        ready: true,
         loading: false,
         error,
       });

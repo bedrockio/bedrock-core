@@ -19,10 +19,6 @@ export default class Overview extends React.Component {
       (key) => filterMapping[key]?.label
     );
 
-    if (!this.context.ready) {
-      return null;
-    }
-
     return (
       <>
         {filtersKeys.map((key) => (
