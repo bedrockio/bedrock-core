@@ -54,10 +54,26 @@ export default class UserList extends React.Component {
     return roles;
   });
 
+  getFilterMapping() {
+    return {
+      roles: {
+        label: 'Role',
+        multiple: true,
+        getDisplayValue: (ids) =>
+          this.fetchRoles({}).then((roles) =>
+            roles.filter((c) => ids.includes(c.id)).map((c) => c.name)
+          ),
+      },
+      keyword: {},
+    };
+  }
+
   render() {
     return (
-      <SearchProvider onDataNeeded={this.onDataNeeded}>
-        {({ items: users, getSorted, setSort, reload, registerParam }) => {
+      <SearchProvider
+        onDataNeeded={this.onDataNeeded}
+        filterMapping={this.getFilterMapping()}>
+        {({ items: users, getSorted, setSort, reload }) => {
           return (
             <React.Fragment>
               <Breadcrumbs active="Users" />
@@ -79,18 +95,10 @@ export default class UserList extends React.Component {
                       {/* --- Generator: filters */}
 
                       <Filters.Dropdown
-                        onDataNeeded={(name) => this.fetchRoles({ name })}
-                        {...registerParam({
-                          name: 'roles',
-                          label: 'Role',
-                          multiple: true,
-                          getDisplayValue: (ids) =>
-                            this.fetchRoles({}).then((roles) =>
-                              roles
-                                .filter((c) => ids.includes(c.id))
-                                .map((c) => c.name)
-                            ),
-                        })}
+                        multiple
+                        label="Role"
+                        name="roles"
+                        onDataNeeded={this.fetchRoles}
                       />
 
                       {/* --- Generator: end */}
@@ -101,9 +109,7 @@ export default class UserList extends React.Component {
                   <Layout.Group>
                     <Filters.Search
                       placeholder="Enter name, email, or user id"
-                      {...registerParam({
-                        name: 'keyword',
-                      })}
+                      name="keyword"
                     />
                   </Layout.Group>
                 </Layout>
