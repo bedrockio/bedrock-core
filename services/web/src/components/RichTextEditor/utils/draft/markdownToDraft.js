@@ -2,17 +2,28 @@ import { DRAFT_BLOCKS, DRAFT_INLINE } from './const';
 
 // Block matching
 const CODE_REG = /^( {4,}|\t+)/g;
-const LINK_REG = /\[([^\]]+)\]\(([^)]+)\)/g;
 const IMAGE_REG = /!\[(.+)\]\((.+)\)|<img ([^>]+?)>/g;
 const BLOCK_REG = /^(#{1,6}|\d+\.|[-*+>]) /g;
 const LINE_BREAK_REG = / {2}|\\$/g;
 
 // Inline matching
-const INLINE_REG = /(_+|\*+|`)(.+?)(\1)/g;
+const INLINE_REG = /(_+|\*+|`)(.+?)(?:\1)|\[([^\]]+)\]\(([^)]+)\)/g;
+
+// HTML helpers
+const HTML_INLINE_REG = /(<\/?(i|b|em|strong|code)>)/g;
+const HTML_LINK_REG = /<a.*?href="(.+?)">(.+?)<\/a>/gm;
+
+const HTML_INLINE_MAP = {
+  b: '**',
+  i: '_',
+  em: '_',
+  code: '`',
+  strong: '**',
+};
 
 // Escape matching
 const ESCAPE_CHAR_REG = /\\([`*_])/g;
-const ESCAPE_CODE_REG = /%%ESCAPE\((\d+)\)%%/g;
+const ESCAPE_PLACEHOLDER_REG = /%%ESCAPE\((\d+)\)%%/g;
 
 // Alternate block matching
 const ALTERNATE_HEADER_REG = /^(.+)\n^([=-])+$/gm;
@@ -70,6 +81,8 @@ export default function markdownToDraft(str) {
     });
   }
 
+  // Normalize alternate formats
+
   str = replaceMarkdown(str, ALTERNATE_HEADER_REG, ([line, char]) => {
     const prefix = char === '=' ? '#' : '##';
     return `${prefix} ${line}`;
@@ -84,6 +97,17 @@ export default function markdownToDraft(str) {
       })
       .join('\n');
   });
+
+  str = replaceMarkdown(str, HTML_INLINE_REG, ([all, tag]) => {
+    return HTML_INLINE_MAP[tag] || all;
+  });
+
+  str = replaceMarkdown(str, HTML_LINK_REG, ([href, text]) => {
+    return `[${text}](${href})`;
+  });
+
+  // Parse multiline table syntax up front and stores table data.
+  // Replace with a placeholder so that the text is not processed.
 
   str = replaceMarkdown(str, TABLE_REG, ([prev, content, next]) => {
     const lines = content.split('\n');
@@ -141,20 +165,28 @@ export default function markdownToDraft(str) {
     block.entityRanges = [];
     block.inlineStyleRanges = [];
 
+    // Replace escaped chars with a special syntax before
+    // processing text so they don't match. They will be
+    // restored below.
+
     text = replaceMarkdown(text, ESCAPE_CHAR_REG, (groups) => {
       const [char] = groups;
       return `%%ESCAPE(${char.codePointAt(0)})%%`;
     });
 
-    text = replaceMarkdown(text, ALIGN_REG, (groups) => {
-      const [alignment, content] = groups;
+    // Replace html paragraphs next so that text can be
+    // procesed as unstyled.
+
+    text = replaceMarkdown(text, ALIGN_REG, ([alignment, content]) => {
       block.data = {
         alignment,
       };
-      return content;
+      return content.trim();
     });
 
-    text = replaceInlineRanges(text, block);
+    // Replace markdown images with syntax ![alt](src).
+    // Do this before parsing inline ranges as links have a
+    // similar syntax that may cause false positives.
 
     text = replaceMarkdown(text, IMAGE_REG, (groups, offset) => {
       let [title, src, attrs] = groups;
@@ -185,15 +217,19 @@ export default function markdownToDraft(str) {
       return ' ';
     });
 
-    text = replaceMarkdown(text, LINK_REG, (groups, offset) => {
-      const [str, url] = groups;
-      addLink(block, {
-        url,
-        offset,
-        length: str.length,
-      });
-      return str;
+    text = replaceInlineRanges(text, {
+      block,
+      addLink,
     });
+
+    // Restore placeholders for escaped chars.
+
+    text = replaceMarkdown(text, ESCAPE_PLACEHOLDER_REG, (groups) => {
+      const [code] = groups;
+      return String.fromCodePoint(code);
+    });
+
+    // Restore placeholders for tables.
 
     text = replaceMarkdown(text, TABLE_PLACEHOLDER_REG, () => {
       block.type = 'atomic';
@@ -205,11 +241,6 @@ export default function markdownToDraft(str) {
         data: tables.shift(),
       });
       return ' ';
-    });
-
-    text = replaceMarkdown(text, ESCAPE_CODE_REG, (groups) => {
-      const [code] = groups;
-      return String.fromCodePoint(code);
     });
 
     block.text = text;
@@ -323,23 +354,53 @@ function getStyles(str) {
 
 // Replace helpers
 
-function replaceInlineRanges(str, block, ranges, index = 0) {
-  ranges ||= block.inlineStyleRanges;
+// Any combination of nested ranges may be possible
+// so this needs to be done in one go and must be
+// recursive. Examples:
+//
+// _**italic and bold**_
+// **_bold and italic_**
+// [**bold link**](https://foo.com)
+// **[link bold](https://foo.com)**
+
+function replaceInlineRanges(str, options) {
+  let { block, addLink, inlineRanges, entityRanges, index = 0 } = options;
+
+  inlineRanges ||= block.inlineStyleRanges;
+  entityRanges ||= block.entityRanges;
+
   return replaceMarkdown(str, INLINE_REG, (groups, offset) => {
-    const nestedRanges = [];
-    let [token, str] = groups;
+    const nestedInlineRanges = [];
+    const nestedEntityRanges = [];
+    let [style, text, alt, url] = groups;
+    let str = text || alt;
 
     offset += index;
-    str = replaceInlineRanges(str, block, nestedRanges, offset);
-
-    const style = DRAFT_INLINE[token.replace(/_/g, '*')];
-    ranges.push({
-      style,
-      offset,
-      length: str.length,
+    str = replaceInlineRanges(str, {
+      ...options,
+      index: offset,
+      inlineRanges: nestedInlineRanges,
+      entityRanges: nestedEntityRanges,
     });
-    for (let range of nestedRanges) {
-      ranges.push(range);
+
+    if (style) {
+      inlineRanges.push({
+        style: DRAFT_INLINE[style.replace(/_/g, '*')],
+        offset,
+        length: str.length,
+      });
+    } else if (url) {
+      addLink(block, {
+        url,
+        offset,
+        length: str.length,
+      });
+    }
+    for (let range of nestedInlineRanges) {
+      inlineRanges.push(range);
+    }
+    for (let range of nestedEntityRanges) {
+      entityRanges.push(range);
     }
     return str;
   });

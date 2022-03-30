@@ -365,11 +365,40 @@
       "inlineStyleRanges": []
     },
     {
-      "type": "header-two",
-      "text": "Header 2",
+      "type": "unstyled",
+      "text": "Nested strong, em, italic, bold and code.",
       "depth": 0,
       "entityRanges": [],
-      "inlineStyleRanges": []
+      "inlineStyleRanges": [
+        {
+          "style": "BOLD",
+          "offset": 7,
+          "length": 6
+        },
+        {
+          "style": "ITALIC",
+          "offset": 15,
+          "length": 2
+        },
+        {
+          "style": "ITALIC",
+          "offset": 19,
+          "length": 6
+        },
+        {
+          "style": "BOLD",
+          "offset": 27,
+          "length": 4
+        },
+        {
+          "style": "CODE",
+          "offset": 36,
+          "length": 4
+        }
+      ],
+      "data": {
+        "alignment": "center"
+      }
     },
     {
       "type": "unstyled",
@@ -379,29 +408,62 @@
       "inlineStyleRanges": []
     },
     {
-      "type": "atomic",
-      "text": " ",
+      "type": "unstyled",
+      "text": "Nested link",
       "depth": 0,
       "entityRanges": [
         {
           "key": 2,
           "offset": 0,
-          "length": 1
+          "length": 11
         }
       ],
+      "inlineStyleRanges": [],
+      "data": {
+        "alignment": "center"
+      }
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
       "inlineStyleRanges": []
     },
     {
-      "type": "atomic",
-      "text": " ",
+      "type": "unstyled",
+      "text": "Bold link",
       "depth": 0,
       "entityRanges": [
         {
           "key": 3,
           "offset": 0,
-          "length": 1
+          "length": 4
         }
       ],
+      "inlineStyleRanges": [
+        {
+          "style": "BOLD",
+          "offset": 0,
+          "length": 4
+        }
+      ],
+      "data": {
+        "alignment": "center"
+      }
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "header-two",
+      "text": "Header 2",
+      "depth": 0,
+      "entityRanges": [],
       "inlineStyleRanges": []
     },
     {
@@ -435,6 +497,13 @@
           "length": 1
         }
       ],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
       "inlineStyleRanges": []
     },
     {
@@ -483,6 +552,32 @@
       "entityRanges": [
         {
           "key": 9,
+          "offset": 0,
+          "length": 1
+        }
+      ],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "atomic",
+      "text": " ",
+      "depth": 0,
+      "entityRanges": [
+        {
+          "key": 10,
+          "offset": 0,
+          "length": 1
+        }
+      ],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "atomic",
+      "text": " ",
+      "depth": 0,
+      "entityRanges": [
+        {
+          "key": 11,
           "offset": 0,
           "length": 1
         }
@@ -600,7 +695,7 @@
       "depth": 0,
       "entityRanges": [
         {
-          "key": 10,
+          "key": 12,
           "offset": 21,
           "length": 4
         }
@@ -883,47 +978,47 @@
       "depth": 0,
       "entityRanges": [
         {
-          "key": 11,
-          "offset": 0,
-          "length": 1
-        }
-      ],
-      "inlineStyleRanges": []
-    },
-    {
-      "type": "unstyled",
-      "text": "",
-      "depth": 0,
-      "entityRanges": [],
-      "inlineStyleRanges": []
-    },
-    {
-      "type": "atomic",
-      "text": " ",
-      "depth": 0,
-      "entityRanges": [
-        {
-          "key": 12,
-          "offset": 0,
-          "length": 1
-        }
-      ],
-      "inlineStyleRanges": []
-    },
-    {
-      "type": "unstyled",
-      "text": "",
-      "depth": 0,
-      "entityRanges": [],
-      "inlineStyleRanges": []
-    },
-    {
-      "type": "atomic",
-      "text": " ",
-      "depth": 0,
-      "entityRanges": [
-        {
           "key": 13,
+          "offset": 0,
+          "length": 1
+        }
+      ],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "atomic",
+      "text": " ",
+      "depth": 0,
+      "entityRanges": [
+        {
+          "key": 14,
+          "offset": 0,
+          "length": 1
+        }
+      ],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "atomic",
+      "text": " ",
+      "depth": 0,
+      "entityRanges": [
+        {
+          "key": 15,
           "offset": 0,
           "length": 1
         }
@@ -957,7 +1052,7 @@
       "depth": 0,
       "entityRanges": [
         {
-          "key": 14,
+          "key": 16,
           "offset": 0,
           "length": 1
         }
@@ -981,6 +1076,20 @@
       }
     },
     "2": {
+      "type": "LINK",
+      "mutability": "MUTABLE",
+      "data": {
+        "url": "https://foo.com"
+      }
+    },
+    "3": {
+      "type": "LINK",
+      "mutability": "MUTABLE",
+      "data": {
+        "url": "https://foo.com"
+      }
+    },
+    "4": {
       "type": "IMAGE",
       "mutability": "IMMUTABLE",
       "data": {
@@ -989,7 +1098,7 @@
         "alignment": "default"
       }
     },
-    "3": {
+    "5": {
       "type": "IMAGE",
       "mutability": "IMMUTABLE",
       "data": {
@@ -998,7 +1107,7 @@
         "alignment": "default"
       }
     },
-    "4": {
+    "6": {
       "type": "IMAGE",
       "mutability": "IMMUTABLE",
       "data": {
@@ -1008,7 +1117,7 @@
         "width": 30
       }
     },
-    "5": {
+    "7": {
       "type": "IMAGE",
       "mutability": "IMMUTABLE",
       "data": {
@@ -1017,7 +1126,7 @@
         "alignment": "center"
       }
     },
-    "6": {
+    "8": {
       "type": "IMAGE",
       "mutability": "IMMUTABLE",
       "data": {
@@ -1026,7 +1135,7 @@
         "alignment": "right"
       }
     },
-    "7": {
+    "9": {
       "type": "IMAGE",
       "mutability": "IMMUTABLE",
       "data": {
@@ -1035,7 +1144,7 @@
         "alignment": "left"
       }
     },
-    "8": {
+    "10": {
       "type": "IMAGE",
       "mutability": "IMMUTABLE",
       "data": {
@@ -1045,7 +1154,7 @@
         "alignment": "center"
       }
     },
-    "9": {
+    "11": {
       "type": "IMAGE",
       "mutability": "IMMUTABLE",
       "data": {
@@ -1055,14 +1164,14 @@
         "alignment": "left"
       }
     },
-    "10": {
+    "12": {
       "data": {
         "url": "#line"
       },
       "mutability": "MUTABLE",
       "type": "LINK"
     },
-    "11": {
+    "13": {
       "data": {
         "head": [
           "Header 1",
@@ -1094,47 +1203,47 @@
       "mutability": "IMMUTABLE",
       "type": "TABLE"
     },
-    "12": {
-      "data": {
-        "head": [
-          "Header 1",
-          "Header 2"
-        ],
-        "body": [
-          [
-            "Row 1 Cell 1",
-            "Row 1 Cell 2"
-          ],
-          [
-            "Row 2 Cell 1",
-            "Row 2 Cell 2"
-          ]
-        ]
-      },
-      "mutability": "IMMUTABLE",
-      "type": "TABLE"
-    },
-    "13": {
-      "data": {
-        "head": [
-          "Header 1",
-          "Header 2"
-        ],
-        "body": [
-          [
-            "Row 1 Cell 1",
-            "Row 1 Cell 2"
-          ],
-          [
-            "Row 2 Cell 1",
-            "Row 2 Cell 2"
-          ]
-        ]
-      },
-      "mutability": "IMMUTABLE",
-      "type": "TABLE"
-    },
     "14": {
+      "data": {
+        "head": [
+          "Header 1",
+          "Header 2"
+        ],
+        "body": [
+          [
+            "Row 1 Cell 1",
+            "Row 1 Cell 2"
+          ],
+          [
+            "Row 2 Cell 1",
+            "Row 2 Cell 2"
+          ]
+        ]
+      },
+      "mutability": "IMMUTABLE",
+      "type": "TABLE"
+    },
+    "15": {
+      "data": {
+        "head": [
+          "Header 1",
+          "Header 2"
+        ],
+        "body": [
+          [
+            "Row 1 Cell 1",
+            "Row 1 Cell 2"
+          ],
+          [
+            "Row 2 Cell 1",
+            "Row 2 Cell 2"
+          ]
+        ]
+      },
+      "mutability": "IMMUTABLE",
+      "type": "TABLE"
+    },
+    "16": {
       "data": {
         "head": [
           "Tables",

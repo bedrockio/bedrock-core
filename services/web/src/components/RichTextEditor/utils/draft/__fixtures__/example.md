@@ -34,6 +34,15 @@ Left Aligned
 
 <p style="text-align:right">Right Aligned</p>
 
+<p style="text-align:center">
+  Nested <strong>strong</strong>, <em>em</em>, <i>italic</i>,
+  <b>bold</b> and <code>code</code>.
+</p>
+
+<p style="text-align:center"><a href="https://foo.com">Nested link</a></p>
+
+<p style="text-align:center"><strong><a href="https://foo.com">Bold</a></strong> link</p>
+
 ## Header 2
 
 ![Absolute Image](https://foo.com/image.jpg)

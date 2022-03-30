@@ -6,6 +6,14 @@ const MARKDOWN_BLOCKS = invert(DRAFT_BLOCKS);
 const MARKDOWN_INLINE = invert(DRAFT_INLINE);
 const COLLAPSABLE_BLOCKS = ['empty', 'unstyled', 'blockquote'];
 
+const INLINE_HTML_MAP = {
+  BOLD: 'strong',
+  CODE: 'code',
+  ITALIC: 'em',
+};
+
+const HTML_ALIGNMENTS = ['center', 'right', 'justify'];
+
 const ESCAPE_REG = /([`*_])/g;
 
 export default function draftToMarkdown(rawObject) {
@@ -73,7 +81,7 @@ function processRanges(str, block, entityMap) {
   });
 
   ranges.forEach((range, i) => {
-    const [prefix, suffix, length] = processRange(range, entityMap);
+    const [prefix, suffix, length] = processRange(range, block, entityMap);
     const start = range.offset;
     const end = range.offset + length;
     const pLength = prefix.length;
@@ -99,12 +107,17 @@ function processRanges(str, block, entityMap) {
   return str;
 }
 
-function processRange(range, entityMap) {
+function processRange(range, block, entityMap) {
   const { style, length, key } = range;
   if (style) {
     if (style in MARKDOWN_INLINE) {
-      const md = MARKDOWN_INLINE[style];
-      return [md, md, length];
+      if (HTML_ALIGNMENTS.includes(block.data?.alignment)) {
+        const tag = INLINE_HTML_MAP[style];
+        return [`<${tag}>`, `</${tag}>`, length];
+      } else {
+        const md = MARKDOWN_INLINE[style];
+        return [md, md, length];
+      }
     } else {
       // Unknown style so return empty prefix/suffix
       return ['', '', length];
@@ -113,7 +126,11 @@ function processRange(range, entityMap) {
     const { type, data } = entityMap[key];
     if (type === 'LINK') {
       const { url } = data;
-      return ['[', `](${url})`, length];
+      if (HTML_ALIGNMENTS.includes(block.data?.alignment)) {
+        return [`<a href="${url}">`, '</a>', length];
+      } else {
+        return ['[', `](${url})`, length];
+      }
     } else if (type === 'IMAGE') {
       const { title = 'Image', src, width, alignment = 'default' } = data;
       if (width || alignment !== 'default') {
@@ -223,9 +240,37 @@ function wrapAlignment(str, block) {
   const { type, data } = block;
   if (type === 'unstyled' && data?.alignment) {
     const { alignment } = data;
-    if (alignment === 'center' || alignment === 'right') {
-      str = `<p style="text-align:${alignment}">${str}</p>`;
+    if (HTML_ALIGNMENTS.includes(alignment)) {
+      str = `<p style="text-align:${alignment}">${indentParagraph(str)}</p>`;
     }
+  }
+  return str;
+}
+
+const COLS = 80;
+
+function indentParagraph(str) {
+  if (str.length > COLS) {
+    const lines = [];
+    let buffer = '';
+    const words = str.split(' ');
+    while (words.length) {
+      const word = words.shift();
+      if (buffer.length + word.length > COLS) {
+        lines.push(buffer);
+        buffer = word;
+      } else {
+        if (buffer) {
+          buffer += ' ';
+        }
+        buffer += word;
+      }
+    }
+    if (buffer) {
+      lines.push(buffer);
+    }
+    const indented = lines.map((line) => `  ${line}`).join('\n');
+    str = `\n${indented}\n`;
   }
   return str;
 }

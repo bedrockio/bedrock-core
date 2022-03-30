@@ -37,6 +37,8 @@ tmp = tmp.replace(
   /\ncontent adjacent to table/,
   '\n\ncontent adjacent to table'
 );
+tmp = tmp.replace('<i>italic</i>', '<em>italic</em>');
+tmp = tmp.replace('<b>bold</b>', '<strong>bold</strong>');
 
 const markdownNormalized = tmp;
 
