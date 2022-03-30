@@ -263,6 +263,60 @@
       "inlineStyleRanges": []
     },
     {
+      "type": "unstyled",
+      "text": "some strikethrough text",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [
+        {
+          "style": "STRIKETHROUGH",
+          "offset": 5,
+          "length": 13
+        }
+      ]
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "invalid bold with _overlapping_ text",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [
+        {
+          "style": "BOLD",
+          "offset": 8,
+          "length": 22
+        }
+      ]
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "a formula: 1 * 2 * 3 * 4 * 5 = 120",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
       "type": "header-one",
       "text": "Alternate Header 1",
       "depth": 0,
@@ -799,14 +853,42 @@
     },
     {
       "type": "code-block",
-      "text": "A spaced code block!",
+      "text": "",
       "depth": 0,
       "entityRanges": [],
       "inlineStyleRanges": []
     },
     {
       "type": "code-block",
-      "text": "A spaced code line.",
+      "text": "  A fenced code block indented",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "code-block",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "code-block",
+      "text": "  and with new lines.",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "code-block",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "code-block",
+      "text": "",
       "depth": 0,
       "entityRanges": [],
       "inlineStyleRanges": []
@@ -820,14 +902,14 @@
     },
     {
       "type": "code-block",
-      "text": "A tabbed code block!",
+      "text": "A fenced code block with",
       "depth": 0,
       "entityRanges": [],
       "inlineStyleRanges": []
     },
     {
       "type": "code-block",
-      "text": "A tabbed code line.",
+      "text": "literal ``` and literal **.",
       "depth": 0,
       "entityRanges": [],
       "inlineStyleRanges": []
@@ -963,6 +1045,27 @@
       "entityRanges": [],
       "inlineStyleRanges": [],
       "text": "Item 6 with multiple new lines",
+      "type": "ordered-list-item"
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "text": "Item 1",
+      "type": "ordered-list-item"
+    },
+    {
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "text": "Item 1000",
       "type": "ordered-list-item"
     },
     {

@@ -14,7 +14,7 @@ const INLINE_HTML_MAP = {
 
 const HTML_ALIGNMENTS = ['center', 'right', 'justify'];
 
-const ESCAPE_REG = /([`*_])/g;
+const ESCAPE_REG = /(_+|\*+|~+|`)(\S[^_*~`]*?\S?)(?:\1)/g;
 
 export default function draftToMarkdown(rawObject) {
   let { blocks, entityMap } = rawObject;
@@ -31,7 +31,6 @@ export default function draftToMarkdown(rawObject) {
         orderedIndex = 0;
       }
       let str = type === 'atomic' ? '' : text;
-      str = str.replace(ESCAPE_REG, '\\$1');
       str = processRanges(str, block, entityMap);
       str = processBlock(str, block, blocks, orderedIndex);
       return str;
@@ -103,6 +102,25 @@ function processRanges(str, block, entityMap) {
       next.offset += shift;
     }
   });
+
+  if (block.type !== 'code-block') {
+    // Escape literal markdown tokens but only those that do not
+    // belong to inserted ranges.
+    str = str.replace(ESCAPE_REG, (all, token, content, offset) => {
+      const isRange = ranges.some((range) => {
+        return range.offset === offset;
+      });
+      if (!isRange) {
+        token = token
+          .split('')
+          .map((char) => {
+            return `\\${char}`;
+          })
+          .join('');
+      }
+      return token + content + token;
+    });
+  }
 
   return str;
 }

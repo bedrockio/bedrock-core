@@ -82,72 +82,46 @@ export function handleKeyCommand(editorState, command) {
   return RichUtils.handleKeyCommand(editorState, command);
 }
 
-// Applies the inline style if the selection does not have
-// it. RichUtils.toggleInlineStyle does this but it toggles
-// the style off if a selection contains any characters with
-// it, which is effectively the inverse of what we want.
 export function toggleInlineStyle(editorState, style) {
-  if (hasOverlappingRanges(editorState, style)) {
-    return editorState;
+  if (!hasOverlappingRanges(editorState, style)) {
+    return RichUtils.toggleInlineStyle(editorState, style);
   }
-
-  const selection = editorState.getSelection();
-  const content = editorState.getCurrentContent();
-  let newContent;
-
-  if (hasCurrentInlineStyle(editorState, style)) {
-    newContent = Modifier.removeInlineStyle(content, selection, style);
-  } else {
-    newContent = Modifier.applyInlineStyle(content, selection, style);
-  }
-  return EditorState.push(editorState, newContent, 'change-inline-style');
 }
 
 // Returns true if the current selection range is entirely
 // contained by the given style.
 export function hasCurrentInlineStyle(editorState, style) {
-  const selection = editorState.getSelection();
-  if (selection.isCollapsed()) {
-    return editorState.getCurrentInlineStyle().has(style);
-  } else {
-    const edges = getSelectionEdges(editorState, selection);
-    return edges.every((edge) => {
-      const { block, start: edgeStart, end: edgeEnd } = edge;
-      const styledRanges = getBlockStyledRanges(block, (styleMap) => {
-        return styleMap.has(style);
-      });
-      return styledRanges.some((styledRange) => {
-        const { start, end } = styledRange;
-        return edgeStart >= start && edgeEnd <= end;
-      });
-    });
-  }
+  return editorState.getCurrentInlineStyle().has(style);
 }
 
-export function canToggleInlineStyle(editorState) {
-  return !hasOverlappingRanges(editorState);
+export function canToggleInlineStyle(editorState, style) {
+  return !hasOverlappingRanges(editorState, style);
 }
 
 // Returns true if the current selection range has any style
 // ranges that are not completely contained by it.
-function hasOverlappingRanges(editorState) {
+function hasOverlappingRanges(editorState, style) {
   const selection = editorState.getSelection();
-  if (!selection.isCollapsed()) {
+  if (selection.isCollapsed()) {
+    return false;
+  } else {
     const edges = getSelectionEdges(editorState, selection);
     return edges.some((edge) => {
       const { block, start: edgeStart, end: edgeEnd } = edge;
       const styledRanges = getBlockStyledRanges(block, (styleMap) => {
-        return styleMap.size > 1;
+        return styleMap.size > 0 && !styleMap.has(style);
       });
+
       return styledRanges.some((styledRange) => {
         const { start, end } = styledRange;
-        const startContained = start > edgeStart && start < edgeEnd;
-        const endContained = end > edgeStart && end < edgeEnd;
-        return startContained !== endContained;
+        const isBefore = start <= edgeStart && end <= edgeStart;
+        const isAfter = start >= edgeEnd && end >= edgeEnd;
+        const isSurrounding = start <= edgeStart && end >= edgeEnd;
+        const isContained = start >= edgeStart && end <= edgeEnd;
+        return !isBefore && !isAfter && !isSurrounding && !isContained;
       });
     });
   }
-  return false;
 }
 
 function getBlockStyledRanges(block, fn) {

@@ -39,6 +39,7 @@ tmp = tmp.replace(
 );
 tmp = tmp.replace('<i>italic</i>', '<em>italic</em>');
 tmp = tmp.replace('<b>bold</b>', '<strong>bold</strong>');
+tmp = tmp.replace('1000. Item 1000', '2. Item 1000');
 
 const markdownNormalized = tmp;
 

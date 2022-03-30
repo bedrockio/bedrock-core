@@ -22,6 +22,12 @@ italic _**and**_ bold word
 
 bold **_and_** italic word
 
+some ~~strikethrough~~ text
+
+invalid **bold with _overlapping**_ text
+
+a formula: 1 * 2 * 3 * 4 * 5 = 120
+
 # Alternate Header 1
 
 A relative [link](/page).
@@ -86,11 +92,19 @@ A fenced code block!
 A fenced code line.
 ```
 
-    A spaced code block!
-    A spaced code line.
+```
 
-    A tabbed code block!
-    A tabbed code line.
+  A fenced code block indented
+
+  and with new lines.
+
+
+```
+
+```
+A fenced code block with
+literal ``` and literal **.
+```
 
 - Item 1
 - Item 2
@@ -117,6 +131,9 @@ A fenced code line.
    multiple
    new
    lines
+
+1. Item 1
+1000. Item 1000
 
 | Header 1     | Header 2     |
 | ------------ | ------------ |

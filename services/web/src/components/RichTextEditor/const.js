@@ -145,7 +145,6 @@ export const BUTTON_STYLES = {
 export const INLINE_STYLES = [
   'BOLD',
   'ITALIC',
-  'UNDERLINE',
   'STRIKETHROUGH',
   'CODE',
   'LINK',

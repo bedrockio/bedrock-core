@@ -1,13 +1,12 @@
 import { DRAFT_BLOCKS, DRAFT_INLINE } from './const';
 
 // Block matching
-const CODE_REG = /^( {4,}|\t+)/g;
 const IMAGE_REG = /!\[(.+)\]\((.+)\)|<img ([^>]+?)>/g;
 const BLOCK_REG = /^(#{1,6}|\d+\.|[-*+>]) /g;
 const LINE_BREAK_REG = / {2}|\\$/g;
 
 // Inline matching
-const INLINE_REG = /(_+|\*+|`)(.+?)(?:\1)|\[([^\]]+)\]\(([^)]+)\)/g;
+const INLINE_REG = /(_+|\*+|~+|`)(\S.*?\S?)(?:\1)|\[([^\]]+)\]\(([^)]+)\)/g;
 
 // HTML helpers
 const HTML_INLINE_REG = /(<\/?(i|b|em|strong|code)>)/g;
@@ -19,6 +18,7 @@ const HTML_INLINE_MAP = {
   em: '_',
   code: '`',
   strong: '**',
+  strikethrough: '~~',
 };
 
 // Escape matching
@@ -27,7 +27,10 @@ const ESCAPE_PLACEHOLDER_REG = /%%ESCAPE\((\d+)\)%%/g;
 
 // Alternate block matching
 const ALTERNATE_HEADER_REG = /^(.+)\n^([=-])+$/gm;
-const FENCED_CODE_BLOCK_REG = /^```$([^`]+?)^```$/gm;
+
+// Code Blocks
+const FENCED_CODE_BLOCK_REG = /^```\n(.+?)\n```$/gms;
+const CODE_PLACEHOLDER_REG = /^%%CODE%%$/;
 
 // Tables
 const TABLE_REG = /(\n?)(\|.+?\|)($|\n[^|])/gs;
@@ -40,6 +43,7 @@ const ALIGN_REG = /^<p style="text-align:(center|right)">(.+?)<\/p>$/gms;
 export default function markdownToDraft(str) {
   let entityKey = 0;
   const tables = [];
+  const codeBlocks = [];
   const entityMap = {};
 
   function addLink(block, options) {
@@ -88,22 +92,20 @@ export default function markdownToDraft(str) {
     return `${prefix} ${line}`;
   });
 
-  str = replaceMarkdown(str, FENCED_CODE_BLOCK_REG, ([content]) => {
-    return content
-      .trim()
-      .split('\n')
-      .map((line) => {
-        return `    ${line}`;
-      })
-      .join('\n');
-  });
-
   str = replaceMarkdown(str, HTML_INLINE_REG, ([all, tag]) => {
     return HTML_INLINE_MAP[tag] || all;
   });
 
   str = replaceMarkdown(str, HTML_LINK_REG, ([href, text]) => {
     return `[${text}](${href})`;
+  });
+
+  str = replaceMarkdown(str, FENCED_CODE_BLOCK_REG, ([content]) => {
+    const lines = content.split('\n');
+    for (let line of lines) {
+      codeBlocks.push(line);
+    }
+    return lines.map(() => '%%CODE%%').join('\n');
   });
 
   // Parse multiline table syntax up front and stores table data.
@@ -229,6 +231,13 @@ export default function markdownToDraft(str) {
       return String.fromCodePoint(code);
     });
 
+    // Restore placeholders for code.
+
+    text = replaceMarkdown(text, CODE_PLACEHOLDER_REG, () => {
+      block.type = 'code-block';
+      return codeBlocks.shift();
+    });
+
     // Restore placeholders for tables.
 
     text = replaceMarkdown(text, TABLE_PLACEHOLDER_REG, () => {
@@ -282,13 +291,13 @@ function getBlockMeta(text) {
   let type = 'unstyled';
   let hasLineBreak = false;
   text = text.replace(BLOCK_REG, (all, prefix) => {
-    prefix = prefix.replace(/^\d\./, 'n.');
+    prefix = prefix.replace(/^\d+\./, 'n.');
     type = DRAFT_BLOCKS[prefix];
     return '';
   });
-  text = text.replace(CODE_REG, () => {
+  text = text.replace(CODE_PLACEHOLDER_REG, (str) => {
     type = 'code-block';
-    return '';
+    return str;
   });
   text = text.replace(TABLE_PLACEHOLDER_REG, (str) => {
     type = 'atomic';

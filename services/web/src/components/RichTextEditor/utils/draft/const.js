@@ -13,6 +13,7 @@ export const DRAFT_BLOCKS = {
 };
 
 export const DRAFT_INLINE = {
+  '~~': 'STRIKETHROUGH',
   '**': 'BOLD',
   '*': 'ITALIC',
   '`': 'CODE',
