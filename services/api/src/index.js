@@ -11,7 +11,6 @@ if (process.env.NODE_ENV === 'production') {
 const { initialize } = require('./utils/database');
 const { loadFixtures } = require('./utils/fixtures');
 const app = require('./app');
-
 const config = require('@bedrockio/config');
 
 const ENV_NAME = config.get('ENV_NAME');
@@ -23,7 +22,6 @@ module.exports = (async () => {
   if (ENV_NAME === 'development') {
     await loadFixtures();
   }
-
   app.listen(PORT, HOST, () => {
     logger.info(`Started on port //${HOST}:${PORT}`);
     if (ENV_NAME === 'development') {

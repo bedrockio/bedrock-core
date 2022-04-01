@@ -1,5 +1,5 @@
 import React from 'react';
-import RequestBlock from 'screens/Docs/RequestBlock';
+import RequestBlock from 'components/RequestBlock';
 import Markdown from 'components/Markdown';
 import Code from 'components/Markdown/Code';
 import Heading from './Heading';
@@ -8,8 +8,15 @@ import { enrichMarkdown, executeOpenApiMacros } from 'utils/markdown';
 
 import './table.less';
 import { API_URL } from 'utils/env';
+import { Context } from './Context';
 
 export default class StandardPage extends React.Component {
+  static contextType = Context;
+
+  state = {
+    application: undefined,
+  };
+
   renderCodeBlock = (props) => {
     const { className = '', children } = props;
     if (className.includes('request')) {
@@ -17,6 +24,7 @@ export default class StandardPage extends React.Component {
       return (
         <RequestBlock
           authToken={'<token>'}
+          apiKey={this.context.application?.apiKey}
           request={JSON.parse(value)}
           baseUrl={API_URL}
         />

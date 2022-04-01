@@ -147,6 +147,9 @@ export default class SearchDropdown extends React.Component {
     const { loading, error } = this.state;
     return (
       <Dropdown
+        clearable
+        selection
+        search
         {...omit(this.props, [
           ...Object.keys(propTypeShape),
           'onDataNeeded',
@@ -161,9 +164,6 @@ export default class SearchDropdown extends React.Component {
         selectOnBlur={false}
         onSearchChange={this.onSearchChange}
         onFocus={this.onFocus}
-        selection
-        clearable
-        search
       />
     );
   }

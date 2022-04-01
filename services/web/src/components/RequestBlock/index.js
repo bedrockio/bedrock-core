@@ -32,24 +32,29 @@ const OPTIONS = [
 
 export default class RequestBlock extends React.Component {
   static propTypes = {
+    height: PropTypes.string,
+    apiKey: PropTypes.string,
     authToken: PropTypes.string,
     baseUrl: PropTypes.string,
+    header: PropTypes.bool,
+    template: PropTypes.string,
     request: PropTypes.shape({
       path: PropTypes.string.isRequired,
       method: PropTypes.oneOf(['POST', 'GET', 'PATCH', 'DELETE', 'PUT'])
         .isRequired,
       body: PropTypes.object,
       headers: PropTypes.object,
-      file: PropTypes.bool,
     }).isRequired,
   };
 
   static defaultProps = {
     baseUrl: API_URL,
+    header: true,
+    template: 'curl',
   };
 
   state = {
-    current: 'curl',
+    current: this.props.template,
   };
 
   constructor(props) {
@@ -57,49 +62,59 @@ export default class RequestBlock extends React.Component {
     this.templateRef = React.createRef();
   }
 
+  getDefaultHeaders() {
+    const { authToken, apiKey, request } = this.props;
+    const headers = {
+      'API-Key': `${apiKey || '<apiKey>'}`,
+      ...this.props.headers,
+    };
+    if (authToken) {
+      headers['Authorization'] = `Bearer ${authToken}`;
+    }
+
+    if (request?.body && !request?.file) {
+      headers['Content-Type'] = 'application/json';
+    }
+    return headers;
+  }
+
   getData() {
-    const { baseUrl, authToken, request } = this.props;
+    const { baseUrl, request } = this.props;
     const { path, ...rest } = request;
     return {
       ...rest,
       url: baseUrl ? `${baseUrl}${path}` : path,
-      ...(authToken
-        ? {
-            headers: {
-              ...rest.headers,
-              ...(request?.body && !request?.file
-                ? { 'Content-Type': 'application/json' }
-                : {}),
-              Authorization: `Bearer ${authToken}`,
-            },
-          }
-        : {}),
+      headers: this.getDefaultHeaders(),
     };
   }
 
   render() {
     const option = OPTIONS.find((c) => c.value === this.state.current);
     const { method, path } = this.props.request;
+
     return (
       <>
-        <Layout horizontal spread center>
-          <Header style={{ margin: 0 }}>
-            {method} {path}
-          </Header>
-          <Layout.Group>
-            <Dropdown
-              onChange={(e, { value }) => {
-                this.setState({ current: value });
-              }}
-              selection
-              options={OPTIONS}
-              value={this.state.current}
-            />
-          </Layout.Group>
-        </Layout>
+        {this.props.header && (
+          <Layout horizontal spread center>
+            <Header style={{ margin: 0 }}>
+              {method} {path}
+            </Header>
+            <Layout.Group>
+              <Dropdown
+                onChange={(e, { value }) => {
+                  this.setState({ current: value });
+                }}
+                selection
+                options={OPTIONS}
+                value={this.state.current}
+              />
+            </Layout.Group>
+          </Layout>
+        )}
         <Code
           language={option.language}
           source={option.template(this.getData())}
+          allowCopy
         />
       </>
     );

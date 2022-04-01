@@ -47,7 +47,9 @@ router
         file: 'welcome.md',
       });
 
-      ctx.body = { data: { token: createAuthToken(user.id, authTokenId) } };
+      ctx.body = {
+        data: { token: createAuthToken(user.id, authTokenId) },
+      };
     }
   )
   .post(
@@ -56,6 +58,7 @@ router
       email: Joi.string().email().trim().required(),
       password: Joi.string().trim().required(),
     }),
+
     async (ctx) => {
       const { email, password } = ctx.request.body;
       const user = await User.findOne({ email });
@@ -111,7 +114,9 @@ router
         user: user.id,
       });
 
-      ctx.body = { data: { token: createAuthToken(user.id, user.authTokenId) } };
+      ctx.body = {
+        data: { token: createAuthToken(user.id, user.authTokenId) },
+      };
     }
   )
   .post(
@@ -187,7 +192,9 @@ router
 
       if (existingUser) {
         await existingUser.updateOne({ authTokenId });
-        ctx.body = { data: { token: createAuthToken(existingUser.id, authTokenId) } };
+        ctx.body = {
+          data: { token: createAuthToken(existingUser.id, authTokenId) },
+        };
         return;
       }
 
@@ -204,7 +211,9 @@ router
         user: user.id,
       });
 
-      ctx.body = { data: { token: createAuthToken(user.id, authTokenId) } };
+      ctx.body = {
+        data: { token: createAuthToken(user.id, authTokenId) },
+      };
     }
   )
   .post(
@@ -264,7 +273,10 @@ router
         object: user,
         user: user.id,
       });
-      ctx.body = { data: { token: createAuthToken(user.id) } };
+
+      ctx.body = {
+        data: { token: createAuthToken(user.id) },
+      };
     }
   );
 

@@ -486,12 +486,12 @@
   resolved "https://registry.yarnpkg.com/@bedrockio/config/-/config-2.0.4.tgz#7a47405bb7eec08dfeb9c0f73d592b890d3731c9"
   integrity sha512-/ACgwYnX5k0iNIE5Po25E5woZoppc2+fZFzgNDvnCaQlnYjKhjoSzj48mBqamwrJyOv4TGDCpzPXoCD3Ca8JjA==
 
-"@bedrockio/instrumentation@^1.4.15":
-  version "1.4.15"
-  resolved "https://registry.yarnpkg.com/@bedrockio/instrumentation/-/instrumentation-1.4.15.tgz#2b07b300c972138c5a552586961d402586dbac0d"
-  integrity sha512-AlTKMiI2MLqlS6rEATQP9iOxEWA969CSj8YlZemrdSgqZYo17ZXv9B7YqPOl++ewVD1IKFXJg/8euXx5wKAZiQ==
+"@bedrockio/instrumentation@^1.4.18":
+  version "1.4.18"
+  resolved "https://registry.yarnpkg.com/@bedrockio/instrumentation/-/instrumentation-1.4.18.tgz#35d68d55b50e902fe2a33be1d793b0aa8b29121f"
+  integrity sha512-PsTpoO8b8zYTCcV9sAiNPeN3J70Dxh0kFjLu3oZj9UcgtAMJcfMDX7hTgIiX8h2GhInhWeKvVWacOLhNJUUgJQ==
   dependencies:
-    "@google-cloud/opentelemetry-cloud-trace-exporter" "^1.0.0"
+    "@google-cloud/opentelemetry-cloud-trace-exporter" "^1.1.0"
     "@opentelemetry/api" "^1.0.2"
     "@opentelemetry/core" "^1.0.1"
     "@opentelemetry/instrumentation-dns" "^0.27.0"
@@ -579,21 +579,21 @@
     retry-request "^4.1.1"
     teeny-request "^7.0.0"
 
-"@google-cloud/opentelemetry-cloud-trace-exporter@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@google-cloud/opentelemetry-cloud-trace-exporter/-/opentelemetry-cloud-trace-exporter-1.0.0.tgz#85da2f5add3b71a365921eabaff6c1ab0a0f90ad"
-  integrity sha512-hiU1N2mtVMtyU7ViMCNY0etIkmfzRUejIPtEqQj4ErVhQGWV+K48Ay6y9JoovHP9ZeTKXVdxqb8eBWQPjZJgsA==
+"@google-cloud/opentelemetry-cloud-trace-exporter@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@google-cloud/opentelemetry-cloud-trace-exporter/-/opentelemetry-cloud-trace-exporter-1.1.0.tgz#f57c565fbacde3f5f26a8f3da4e61702c5c4b5df"
+  integrity sha512-pAgk5ieNcOOWBO2OQQsgZ7ZXbutVDCdlVg7srfQT7txTf2UlVajT1DlisEveMpMjjNjHeizjf/4P3NZ8btUlFw==
   dependencies:
-    "@google-cloud/opentelemetry-resource-util" "^1.0.0"
+    "@google-cloud/opentelemetry-resource-util" "^1.1.0"
     "@grpc/grpc-js" "^1.1.8"
     "@grpc/proto-loader" "^0.6.0"
     google-auth-library "^7.0.0"
     google-proto-files "^2.1.0"
 
-"@google-cloud/opentelemetry-resource-util@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@google-cloud/opentelemetry-resource-util/-/opentelemetry-resource-util-1.0.0.tgz#06ce710ac1156ea679d6166810b634361572caa0"
-  integrity sha512-43z9Ue+Zqxz5ohF+hhlaSmzRLwB6x3onpIpx16niIPgCaxAVOiJuJ78A+NeidipUIDeX8Mm3Wm41eztx4auG8g==
+"@google-cloud/opentelemetry-resource-util@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@google-cloud/opentelemetry-resource-util/-/opentelemetry-resource-util-1.1.0.tgz#0bd1fe708ba27288f6efc9712fbd3705fd325540"
+  integrity sha512-AXfQiqIxeespEYcRNaotC05ddiy2Vgk2yqY73b7Hl1UoJ75Gt4kSRcswrVn18eoDI0YQkSTBh7Ye9ugfFLN5HA==
 
 "@google-cloud/paginator@^3.0.0":
   version "3.0.5"
@@ -5394,6 +5394,11 @@ mustache@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/mustache/-/mustache-4.1.0.tgz#8c1b042238a982d2eb2d30efc6c14296ae3f699d"
   integrity sha512-0FsgP/WVq4mKyjolIyX+Z9Bd+3WS8GOwoUTyKXT5cTYMGeauNTi2HPCwERqseC1IHAy0Z7MDZnJBfjabd4O8GQ==
+
+nanoid@^3.1.32:
+  version "3.1.32"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.1.32.tgz#8f96069e6239cc0a9ae8c0d3b41a3b4933a88c0a"
+  integrity sha512-F8mf7R3iT9bvThBoW4tGXhXFHCctyCiUUPrWF8WaTqa3h96d9QybkSeba43XVOOE3oiLfkVDe4bT8MeGmkrTxw==
 
 natural-compare@^1.4.0:
   version "1.4.0"
