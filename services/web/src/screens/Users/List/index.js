@@ -8,8 +8,13 @@ import { request } from 'utils/api';
 import screen from 'helpers/screen';
 import { formatRoles } from 'utils/permissions';
 
-import { HelpTip, Breadcrumbs, Layout } from 'components';
-import { SearchProvider, Filters, Export, Status } from 'components/search';
+import {
+  HelpTip,
+  Breadcrumbs,
+  Layout,
+  Search,
+  SearchFilters,
+} from 'components';
 
 import EditUser from 'modals/EditUser';
 
@@ -69,7 +74,7 @@ export default class UserList extends React.Component {
 
   render() {
     return (
-      <SearchProvider
+      <Search.Provider
         onDataNeeded={this.onDataNeeded}
         filterMapping={this.getFilterMapping()}>
         {({ items: users, getSorted, setSort, reload }) => {
@@ -79,7 +84,7 @@ export default class UserList extends React.Component {
               <Layout horizontal center spread>
                 <h1>Users</h1>
                 <Layout.Group>
-                  <Export filename="users" />
+                  <Search.Export filename="users" />
                   <EditUser
                     trigger={<Button primary content="New User" icon="plus" />}
                     onSave={reload}
@@ -90,10 +95,10 @@ export default class UserList extends React.Component {
               <Segment>
                 <Layout horizontal center spread stackable>
                   <Layout horizontal>
-                    <Filters.Modal>
+                    <SearchFilters.Modal>
                       {/* --- Generator: filters */}
 
-                      <Filters.Dropdown
+                      <SearchFilters.Dropdown
                         multiple
                         label="Role"
                         name="roles"
@@ -101,12 +106,12 @@ export default class UserList extends React.Component {
                       />
 
                       {/* --- Generator: end */}
-                    </Filters.Modal>
-                    <Filters.Overview />
+                    </SearchFilters.Modal>
+                    <SearchFilters.Overview />
                   </Layout>
 
                   <Layout.Group>
-                    <Filters.Search
+                    <SearchFilters.Search
                       placeholder="Enter name, email, or user id"
                       name="keyword"
                     />
@@ -114,7 +119,7 @@ export default class UserList extends React.Component {
                 </Layout>
               </Segment>
 
-              <Status />
+              <Search.Status />
 
               {users.length !== 0 && (
                 <Table celled sortable>
@@ -202,11 +207,11 @@ export default class UserList extends React.Component {
                 </Table>
               )}
               <Divider hidden />
-              <SearchProvider.Pagination />
+              <Search.Pagination />
             </React.Fragment>
           );
         }}
-      </SearchProvider>
+      </Search.Provider>
     );
   }
 }

@@ -9,8 +9,14 @@ import { formatUsd } from 'utils/currency';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
 
-import { HelpTip, Breadcrumbs, Layout } from 'components';
-import { SearchProvider, Filters, Export, Status } from 'components/search';
+import {
+  HelpTip,
+  Breadcrumbs,
+  Layout,
+  Search,
+  SearchFilters,
+} from 'components';
+
 import EditProduct from 'modals/EditProduct';
 
 @screen
@@ -19,7 +25,7 @@ export default class ProductList extends React.Component {
     return await request({
       method: 'POST',
       path: '/1/products/search',
-      body: params,
+      body: { params, limit: 10 },
     });
   };
 
@@ -47,7 +53,7 @@ export default class ProductList extends React.Component {
 
   render() {
     return (
-      <SearchProvider
+      <Search.Provider
         onDataNeeded={this.onDataNeeded}
         filterMapping={this.getFilterMapping()}>
         {({ items: products, getSorted, setSort, reload }) => {
@@ -58,7 +64,7 @@ export default class ProductList extends React.Component {
               <Layout horizontal center spread>
                 <h1>Products</h1>
                 <Layout.Group>
-                  <Export filename="products" />
+                  <Search.Export filename="products" />
                   <EditProduct
                     trigger={
                       <Button primary content="New Product" icon="plus" />
@@ -70,15 +76,18 @@ export default class ProductList extends React.Component {
               <Segment>
                 <Layout horizontal center spread stackable>
                   <Layout horizontal>
-                    <Filters.Modal>
-                      <Filters.Checkbox name="isFeatured" label="Is Featured" />
-                      <Filters.Number name="priceUsd" label="Price Usd" />
-                      <Filters.DateRange
+                    <SearchFilters.Modal>
+                      <SearchFilters.Checkbox
+                        name="isFeatured"
+                        label="Is Featured"
+                      />
+                      <SearchFilters.Number name="priceUsd" label="Price Usd" />
+                      <SearchFilters.DateRange
                         time
                         name="expiresAt"
                         label="Expires At"
                       />
-                      <Filters.Dropdown
+                      <SearchFilters.Dropdown
                         search
                         multiple
                         selection
@@ -86,16 +95,16 @@ export default class ProductList extends React.Component {
                         name="sellingPoints"
                         label="Selling Points"
                       />
-                    </Filters.Modal>
-                    <Filters.Overview />
+                    </SearchFilters.Modal>
+                    <SearchFilters.Overview />
                   </Layout>
 
                   <Layout.Group>
-                    <Filters.Search name="keyword" />
+                    <SearchFilters.Search name="keyword" />
                   </Layout.Group>
                 </Layout>
               </Segment>
-              <Status />
+              <Search.Status />
               {products.length !== 0 && (
                 <Table celled sortable>
                   <Table.Header>
@@ -174,11 +183,11 @@ export default class ProductList extends React.Component {
                 </Table>
               )}
               <Divider hidden />
-              <SearchProvider.Pagination />
+              <Search.Pagination />
             </React.Fragment>
           );
         }}
-      </SearchProvider>
+      </Search.Provider>
     );
   }
 }

@@ -4,8 +4,13 @@ import { Table, Button, Divider, Confirm, Segment } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
-import { HelpTip, Breadcrumbs, Layout } from 'components';
-import { SearchProvider, Filters, Status, Export } from 'components/search';
+import {
+  HelpTip,
+  Breadcrumbs,
+  Layout,
+  Search,
+  SearchFilters,
+} from 'components';
 
 // --- Generator: list-imports
 import { Link } from 'react-router-dom';
@@ -61,7 +66,7 @@ export default class ShopList extends React.Component {
 
   render() {
     return (
-      <SearchProvider
+      <Search.Provider
         onDataNeeded={this.onDataNeeded}
         filterMapping={this.getFilterMapping()}>
         {({ items: shops, getSorted, setSort, reload }) => {
@@ -71,7 +76,7 @@ export default class ShopList extends React.Component {
               <Layout horizontal center spread>
                 <h1>Shops</h1>
                 <Layout.Group>
-                  <Export filename="shops" />
+                  <Search.Export filename="shops" />
                   <EditShop
                     trigger={<Button primary content="New Shop" icon="plus" />}
                     onSave={reload}
@@ -82,17 +87,17 @@ export default class ShopList extends React.Component {
               <Segment>
                 <Layout horizontal center spread stackable>
                   <Layout horizontal>
-                    <Filters.Modal>
+                    <SearchFilters.Modal>
                       {/* --- Generator: filters */}
 
-                      <Filters.Dropdown
+                      <SearchFilters.Dropdown
                         options={countries}
                         search
                         name="country"
                         label="Country"
                       />
 
-                      <Filters.Dropdown
+                      <SearchFilters.Dropdown
                         onDataNeeded={(name) => this.fetchOwners({ name })}
                         search
                         name="owner"
@@ -100,16 +105,16 @@ export default class ShopList extends React.Component {
                       />
 
                       {/* --- Generator: end */}
-                    </Filters.Modal>
-                    <Filters.Overview />
+                    </SearchFilters.Modal>
+                    <SearchFilters.Overview />
                   </Layout>
 
                   <Layout.Group>
-                    <Filters.Search name="keyword" />
+                    <SearchFilters.Search name="keyword" />
                   </Layout.Group>
                 </Layout>
               </Segment>
-              <Status />
+              <Search.Status />
               {shops.length !== 0 && (
                 <Table celled sortable>
                   <Table.Header>
@@ -178,11 +183,11 @@ export default class ShopList extends React.Component {
                 </Table>
               )}
               <Divider hidden />
-              <SearchProvider.Pagination />
+              <Search.Pagination />
             </React.Fragment>
           );
         }}
-      </SearchProvider>
+      </Search.Provider>
     );
   }
 }

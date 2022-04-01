@@ -98,16 +98,7 @@ export default class OverviewLabel extends React.Component {
     }
 
     return (
-      <Label
-        basic
-        style={{
-          height: '36px',
-          margin: '0',
-          marginLeft: '0.5em',
-          lineHeight: '21px',
-          cursor: 'pointer',
-        }}
-        onClick={() => this.clearFilter()}>
+      <Label basic onClick={() => this.clearFilter()}>
         {this.state.loading ? '...' : this.renderLabelContent()}
         <Icon style={{ marginTop: '5px' }} name="delete" />
       </Label>

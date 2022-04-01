@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { pickBy } from 'lodash';
 
 import SearchContext from './Context';
-import Pagination from './Pagination';
 import { withRouter } from 'react-router';
 
 function convertFilters(filters) {
@@ -64,8 +63,6 @@ function getFiltersFromSearchParams(urlParams, filterMapping = {}) {
 
 @withRouter
 export default class SearchProvider extends React.Component {
-  static Pagination = Pagination;
-
   constructor(props) {
     super(props);
 
