@@ -44,10 +44,7 @@ export default class EditUser extends React.Component {
         await request({
           method: 'PATCH',
           path: `/1/users/${user.id}`,
-          body: {
-            ...user,
-            roles: undefined,
-          },
+          body: user,
         });
       } else {
         await request({
