@@ -1,0 +1,34 @@
+{
+  "attributes": {
+    "name": {
+      "type": "String",
+      "trim": true,
+      "required": true
+    },
+    "description": {
+      "type": "String",
+      "trim": true
+    },
+    "apiKey": {
+      "type": "String",
+      "trim": true,
+      "required": true,
+      "unique": true,
+      "skipValidation": true,
+      "writeScopes": "none"
+    },
+    "user": {
+      "ref": "User",
+      "type": "ObjectId",
+      "required": true,
+      "autopopulate": false,
+      "skipValidation": true
+    },
+    "requestCount": {
+      "type": "Number",
+      "writeScopes": "none",
+      "skipValidation": true,
+      "default": 0
+    }
+  }
+}

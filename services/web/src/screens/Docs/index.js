@@ -7,9 +7,10 @@ import { Menu as ResponsiveMenu } from 'components/Responsive';
 import { APP_NAME } from 'utils/env';
 
 import StandardPage from './StandardPage';
+import Contenxt from './Context';
 import PageLoader from 'components/PageLoader';
 
-import { request } from '../../utils/api';
+import { request } from 'utils/api';
 import screen from 'helpers/screen';
 
 import DOCS from 'docs';
@@ -142,41 +143,43 @@ export default class Docs extends React.Component {
           </Layout.Group>
           <Layout.Spacer size={1} />
           <Layout.Group>
-            <Ref innerRef={this.contextRef}>
-              <Switch>
-                {PAGES.map((page) => {
-                  return (
+            <Contenxt>
+              <Ref innerRef={this.contextRef}>
+                <Switch>
+                  {PAGES.map((page) => {
+                    return (
+                      <Route
+                        key={page.id}
+                        exact
+                        path={`/docs/${page.id}`}
+                        component={(props) => (
+                          <StandardPage
+                            {...props}
+                            me={me}
+                            openApi={openApi}
+                            page={page}
+                          />
+                        )}
+                      />
+                    );
+                  }).concat([
                     <Route
-                      key={page.id}
+                      key="index"
+                      path="/docs"
                       exact
-                      path={`/docs/${page.id}`}
                       component={(props) => (
                         <StandardPage
                           {...props}
                           me={me}
                           openApi={openApi}
-                          page={page}
+                          page={getDefaultPage()}
                         />
                       )}
-                    />
-                  );
-                }).concat([
-                  <Route
-                    key="index"
-                    path="/docs"
-                    exact
-                    component={(props) => (
-                      <StandardPage
-                        {...props}
-                        me={me}
-                        openApi={openApi}
-                        page={getDefaultPage()}
-                      />
-                    )}
-                  />,
-                ])}
-              </Switch>
-            </Ref>
+                    />,
+                  ])}
+                </Switch>
+              </Ref>
+            </Contenxt>
           </Layout.Group>
         </Layout>
         <Divider hidden />

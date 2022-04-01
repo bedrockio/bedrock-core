@@ -10,6 +10,7 @@ export default class SearchFilter extends React.Component {
   render() {
     const { loading } = this.context;
     const { name, ...rest } = this.props;
+
     return (
       <Form.Input
         name={name}

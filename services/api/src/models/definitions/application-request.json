@@ -1,0 +1,50 @@
+{
+  "attributes": {
+    "application": {
+      "ref": "application",
+      "type": "ObjectId",
+      "required": true
+    },
+    "routeNormalizedPath": {
+      "type": "String"
+    },
+    "routePrefix": {
+      "type": "String"
+    },
+    "requestId": {
+      "type": "String"
+    },
+    "request": {
+      "ip": {
+        "type": "String"
+      },
+      "path": {
+        "type": "String"
+      },
+      "headers": {
+        "type": "Object"
+      },
+      "method": {
+        "type": "String"
+      },
+      "body": {
+        "type": "Object"
+      }
+    },
+    "response": {
+      "status": {
+        "type": "Number"
+      },
+      "body": {
+        "type": "Object"
+      },
+      "headers": {
+        "type": "Object"
+      }
+    }
+  },
+  "search": [
+    "requestId",
+    "routeNormalizedPath"
+  ]
+}

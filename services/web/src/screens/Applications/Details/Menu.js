@@ -3,19 +3,19 @@ import { Menu, Button } from 'semantic';
 import { NavLink, Link } from 'react-router-dom';
 import { Breadcrumbs, Layout } from 'components';
 
-import EditProduct from 'modals/EditProduct';
+import EditApplication from 'modals/EditApplication';
 
-export default ({ product, onSave }) => {
+export default ({ application, onSave }) => {
   return (
     <React.Fragment>
       <Breadcrumbs
-        link={<Link to="/products">Products</Link>}
-        active={product.name}></Breadcrumbs>
+        link={<Link to="/applications">Applications</Link>}
+        active={application.name}></Breadcrumbs>
       <Layout horizontal center spread>
-        <h1>{product.name}</h1>
+        <h1>{application.name}</h1>
         <Layout.Group>
-          <EditProduct
-            product={product}
+          <EditApplication
+            application={application}
             onSave={onSave}
             trigger={<Button primary icon="setting" content="Settings" />}
           />
@@ -24,7 +24,13 @@ export default ({ product, onSave }) => {
       <Menu pointing secondary>
         <Menu.Item
           name="Overview"
-          to={`/products/${product.id}`}
+          to={`/applications/${application.id}`}
+          as={NavLink}
+          exact
+        />
+        <Menu.Item
+          name="Logs"
+          to={`/applications/${application.id}/logs`}
           as={NavLink}
           exact
         />

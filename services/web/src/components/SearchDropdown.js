@@ -85,6 +85,9 @@ export default class SearchDropdown extends React.Component {
     const { loading, error } = this.state;
     return (
       <Dropdown
+        clearable
+        selection
+        search
         {...omit(this.props, Object.keys(SearchDropdown.propTypes))}
         error={!!error}
         loading={loading}
@@ -92,9 +95,6 @@ export default class SearchDropdown extends React.Component {
         options={this.getOptions()}
         onChange={this.onChange}
         onSearchChange={this.onSearchChange}
-        selection
-        clearable
-        search
       />
     );
   }
