@@ -3,6 +3,7 @@ const Koa = require('koa');
 const bodyParser = require('koa-body');
 const errorHandler = require('./utils/middleware/error-handler');
 const corsMiddleware = require('./utils/middleware/cors');
+const { applicationMiddleware } = require('./utils/middleware/application');
 const Sentry = require('@sentry/node');
 const path = require('path');
 const { version } = require('../package.json');
@@ -15,10 +16,20 @@ const app = new Koa();
 
 const ENV_NAME = config.get('ENV_NAME');
 
+app.use(corsMiddleware());
+
+if (['staging', 'development'].includes(ENV_NAME)) {
+  // has to be the added before any middleware that changes the ctx.body
+  app.use(
+    applicationMiddleware({
+      ignorePaths: ['/', '/openapi.json', '/openapi.lite.json', '/1/status', '/1/status/mongodb', /\/1\/applications/],
+    })
+  );
+}
+
 app
   .use(errorHandler)
   .use(loggingMiddleware())
-  .use(corsMiddleware())
   .use(bodyParser({ multipart: true }));
 
 app.on('error', (err, ctx) => {

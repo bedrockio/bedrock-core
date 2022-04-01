@@ -1,4 +1,4 @@
-import { API_URL } from 'utils/env';
+import { API_URL, API_CLIENT_ID } from 'utils/env';
 import { ApiError, ApiParseError } from './errors';
 import { trackRequest } from '../analytics';
 import { fetchWithTimeout } from '../fetch';
@@ -16,6 +16,7 @@ export default async function request(options) {
       ...(token && {
         Authorization: `Bearer ${token}`,
       }),
+      'API-Key': API_CLIENT_ID,
     },
     options.headers
   );

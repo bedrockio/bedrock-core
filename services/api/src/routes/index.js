@@ -10,6 +10,7 @@ const status = require('./status');
 const auditEntries = require('./audit-entries');
 const categories = require('./categories');
 const organizations = require('./organizations');
+const applications = require('./applications');
 
 const router = new Router();
 
@@ -24,5 +25,6 @@ router.use('/invites', invites.routes());
 router.use('/status', status.routes());
 router.use('/categories', categories.routes());
 router.use('/organizations', organizations.routes());
+router.use('/applications', applications.routes());
 
 module.exports = router;

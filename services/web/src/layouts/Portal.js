@@ -4,6 +4,9 @@ import { Menu, Icon, Container, Button } from 'semantic';
 import Footer from 'components/Footer';
 import { Layout } from 'components';
 import bem from 'helpers/bem';
+import { userHasAccess } from 'utils/permissions';
+import { withSession } from 'stores';
+import PortalSettings from 'modals/PortalSettings';
 
 import ConnectionError from 'components/ConnectionError';
 
@@ -12,6 +15,7 @@ import logo from 'assets/logo.svg';
 import './portal.less';
 
 @bem
+@withSession
 export default class PortalLayout extends React.Component {
   render() {
     return (
@@ -27,6 +31,17 @@ export default class PortalLayout extends React.Component {
               <img height="30" src={logo} />
             </NavLink>
             <div>
+              {this.context.user &&
+                userHasAccess(this.context.user, {
+                  endpoint: 'applications',
+                  permission: 'read',
+                  scope: 'global',
+                }) && (
+                  <PortalSettings
+                    trigger={<Button>Settings</Button>}
+                    size="tiny"
+                  />
+                )}
               <Button primary compact as={NavLink} to="/">
                 Dashboard &rarr;
               </Button>
