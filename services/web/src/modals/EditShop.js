@@ -26,7 +26,6 @@ export default class EditShop extends React.Component {
   }
 
   setField = (evt, { name, value }) => {
-    console.log(name, value);
     this.setState({
       shop: {
         ...this.state.shop,

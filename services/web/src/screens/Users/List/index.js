@@ -39,7 +39,6 @@ export default class UserList extends React.Component {
   };
 
   fetchRoles = memoize(async (query) => {
-    console.log('fetching roles', query);
     // No roles search route yet, so improvise.
     const { data } = await request({
       method: 'GET',
