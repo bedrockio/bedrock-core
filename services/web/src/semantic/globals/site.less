@@ -199,3 +199,19 @@ main {
   position: relative;
   min-height: calc(100vh - 95px);
 }
+
+// <em> is reserved for italic emphasis in markdown
+// denoted by _ or *. <strong> provides extra emphasis (bold)
+// denoted by __ or **.
+// <em> and <strong> may be nested so inherit
+// opposing style instead of resetting
+
+em {
+  font-style: italic;
+  font-weight: inherit;
+}
+
+strong {
+  font-weight: bold;
+  font-style: inherit;
+}

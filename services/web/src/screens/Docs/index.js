@@ -103,12 +103,13 @@ export default class Docs extends React.Component {
       return <PageLoader />;
     }
 
-    if (!page)
+    if (!page) {
       return (
         <Container>
           <Message error content="Page not found" />
         </Container>
       );
+    }
 
     return (
       <React.Fragment>

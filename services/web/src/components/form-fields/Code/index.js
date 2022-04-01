@@ -38,7 +38,9 @@ export default function FormFieldCode({
 
   const onItemFocus = (index) => () => {
     setActiveIndex(index);
-    if (codeInputRef.current) codeInputRef.current.focus();
+    if (codeInputRef.current) {
+      codeInputRef.current.focus();
+    }
   };
 
   const onInputKeyUp = ({ key, keyCode }) => {
@@ -72,11 +74,15 @@ export default function FormFieldCode({
 
     // if the key pressed is not a number
     // don't do anything
-    if (Number.isNaN(+key)) return;
+    if (Number.isNaN(+key)) {
+      return;
+    }
 
     // reset the current value
     // and set the new one
-    if (codeInput) codeInput.value = '';
+    if (codeInput) {
+      codeInput.value = '';
+    }
     newValue[activeIndex] = key;
     setValue(newValue);
 
@@ -86,8 +92,12 @@ export default function FormFieldCode({
       return;
     }
 
-    if (codeInput) codeInput.blur();
-    if (currentItem) currentItem.blur();
+    if (codeInput) {
+      codeInput.blur();
+    }
+    if (currentItem) {
+      currentItem.blur();
+    }
 
     setActiveIndex(-1);
   };
@@ -97,14 +107,18 @@ export default function FormFieldCode({
     const { value: changeValue } = e.target;
     const isCode = isCodeRegex.test(changeValue);
 
-    if (!isCode) return;
+    if (!isCode) {
+      return;
+    }
 
     setValue(changeValue.split(''));
     blurItem(activeIndex);
   };
 
   const onInputBlur = () => {
-    if (activeIndex === -1) return;
+    if (activeIndex === -1) {
+      return;
+    }
     blurItem(activeIndex);
     setActiveIndex(-1);
   };
@@ -119,16 +133,22 @@ export default function FormFieldCode({
   // handle pasting
   React.useEffect(() => {
     const codeInput = codeInputRef.current;
-    if (!codeInput) return;
+    if (!codeInput) {
+      return;
+    }
 
     const onPaste = (e) => {
       e.preventDefault();
 
       const pastedString = e.clipboardData?.getData('text');
-      if (!pastedString) return;
+      if (!pastedString) {
+        return;
+      }
 
       const isNumber = !Number.isNaN(+pastedString);
-      if (isNumber) setValue(pastedString.split(''));
+      if (isNumber) {
+        setValue(pastedString.split(''));
+      }
     };
 
     codeInput.addEventListener('paste', onPaste);
@@ -139,18 +159,26 @@ export default function FormFieldCode({
     const stringValue = value.join('');
     const isCompleted = !stringValue.includes(placeholder);
 
-    if (isCompleted) onCompleted(stringValue);
+    if (isCompleted) {
+      onCompleted(stringValue);
+    }
     onChange(stringValue);
   }, [value]);
 
   React.useEffect(() => {
-    if (typeof pValue !== 'string') return;
+    if (typeof pValue !== 'string') {
+      return;
+    }
 
     // avoid infinite loop
-    if (pValue === '' && value.join('') === emptyValue.join('')) return;
+    if (pValue === '' && value.join('') === emptyValue.join('')) {
+      return;
+    }
 
     // keep internal and external states in sync
-    if (pValue !== value.join('')) setValue(pValue.split(''));
+    if (pValue !== value.join('')) {
+      setValue(pValue.split(''));
+    }
   }, [pValue]);
 
   return (

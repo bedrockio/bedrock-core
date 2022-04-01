@@ -42,8 +42,7 @@ export default class UserList extends React.Component {
 
     for (let [key, val] of Object.entries(data)) {
       const { name } = val;
-
-      if (!query.name || RegExp(query.name, 'i').test(name)) {
+      if (!query?.keyword || RegExp(query.keyword, 'i').test(name)) {
         roles.push({
           key: key,
           id: key,
@@ -51,7 +50,7 @@ export default class UserList extends React.Component {
         });
       }
     }
-    return roles;
+    return { data: roles };
   });
 
   getFilterMapping() {

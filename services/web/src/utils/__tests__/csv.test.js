@@ -57,7 +57,9 @@ const chargeSessionsImportMapping = {
     required: true,
     exactMatches: ['Charge_Point_Country', 'Country'],
     parseFn: (value) => {
-      if (value === 'NLD') return 'NL';
+      if (value === 'NLD') {
+        return 'NL';
+      }
       return value;
     },
   },

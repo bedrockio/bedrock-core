@@ -26,10 +26,11 @@ export function parseType(type, rawValue) {
   }
   if (type === 'europeanOrAmericanNumber') {
     if (rawValue.match(/\./)) {
-      if (rawValue.match(/,/))
+      if (rawValue.match(/,/)) {
         throw new Error(
           'Could not autodetect european or american number format for kwh'
         );
+      }
       return parseFloat(rawValue, 10);
     }
     return parseFloat(rawValue.replace(/\./g, '').replace(/,/, '.'), 10);
@@ -40,8 +41,9 @@ export function parseType(type, rawValue) {
   if (type === 'duration') {
     // 07:45:12
     const value = rawValue.split(':');
-    if (value.length !== 3)
+    if (value.length !== 3) {
       throw new Error(`Unknown duration format: "${rawValue}"`);
+    }
     return (
       parseInt(value[0], 10) * 3600 +
       parseInt(value[1], 10) * 60 +
@@ -128,7 +130,9 @@ export function matchColumns(columnMapping, fields) {
     };
     for (let i = 0; fields.length > i; i += 1) {
       const field = fields[i];
-      if (!field || !field.length) continue;
+      if (!field || !field.length) {
+        continue;
+      }
       if (
         configuration.exactMatches &&
         configuration.exactMatches.includes(field)
@@ -148,15 +152,19 @@ export function matchColumns(columnMapping, fields) {
             break;
           }
         }
-        if (hasMatch) break;
+        if (hasMatch) {
+          break;
+        }
       }
     }
     if (configuration.required && !result.destinationColumn) {
       let examples = [];
-      if (configuration.matches)
+      if (configuration.matches) {
         examples = examples.concat(configuration.matches);
-      if (configuration.exactMatches)
+      }
+      if (configuration.exactMatches) {
         examples = examples.concat(configuration.exactMatches);
+      }
       throw new Error(
         `Could not find required column ${key} (${examples.join(', ')})`
       );
@@ -269,7 +277,9 @@ function generateExportMapping(data) {
 
 export function downloadCsv(data, mapping = null, filename = 'export.csv') {
   let csvContent = 'data:text/csv;charset=utf-8,';
-  if (!mapping) mapping = generateExportMapping(data);
+  if (!mapping) {
+    mapping = generateExportMapping(data);
+  }
   csvContent += `${Object.keys(mapping).join(',')}\r\n`;
   csvContent += data
     .map((row) => {

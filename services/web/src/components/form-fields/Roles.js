@@ -132,8 +132,12 @@ export default class Roles extends React.Component {
     const { error, loading, scopedOrganizationIds, showAddOrganizationModal } =
       this.state;
     const { enableOrganizationScopes } = this.props;
-    if (loading) return <Loader />;
-    if (error) return <ErrorMessage error={error} />;
+    if (loading) {
+      return <Loader />;
+    }
+    if (error) {
+      return <ErrorMessage error={error} />;
+    }
     return (
       <>
         <Form.Dropdown

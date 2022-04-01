@@ -230,6 +230,7 @@ async function transformCustom(value, meta) {
     throw new Error(`Custom transform "${func}" not recognized.`);
   }
   return await transform(token, meta, {
+    importUpload,
     importFixtures,
   });
 }

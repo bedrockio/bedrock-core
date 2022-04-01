@@ -9,7 +9,8 @@ import ErrorMessage from 'components/ErrorMessage';
 import DateField from 'components/form-fields/Date';
 import UploadsField from 'components/form-fields/Uploads';
 import CurrencyField from 'components/form-fields/Currency';
-import ReferenceField from 'components/form-fields/Reference';
+
+import SearchDropdown from 'components/form-fields/SearchDropdown';
 // --- Generator: end
 
 @modal
@@ -160,12 +161,12 @@ export default class EditProduct extends React.Component {
                 onError={(error) => this.setState({ error })}
               />
               {!this.props.shop && (
-                <ReferenceField
+                <SearchDropdown
                   required
                   name="shop"
                   label="Shop"
                   value={product.shop}
-                  path="/1/shops/search"
+                  searchPath="/1/shops/search"
                   placeholder="Search Shops"
                   onChange={this.setField}
                 />

@@ -57,7 +57,9 @@ export default class Account extends React.Component {
   render() {
     const { user, error, loading } = this.state;
 
-    if (!this.context.user) return <div></div>;
+    if (!this.context.user) {
+      return <div></div>;
+    }
     return (
       <React.Fragment>
         <Menu />

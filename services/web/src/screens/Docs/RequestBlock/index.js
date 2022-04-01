@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Header, Dropdown } from 'semantic';
 import { Layout } from 'components/Layout';
-import CodeBlock from '../CodeBlock';
+import Code from 'components/Markdown/Code';
 import templateCurl from './templates/curl';
 import templateFetch from './templates/fetch';
 import templateSwift from './templates/swift';
@@ -97,9 +97,10 @@ export default class RequestBlock extends React.Component {
             />
           </Layout.Group>
         </Layout>
-        <CodeBlock
+        <Code
           language={option.language}
-          value={option.template(this.getData())}></CodeBlock>
+          source={option.template(this.getData())}
+        />
       </>
     );
   }

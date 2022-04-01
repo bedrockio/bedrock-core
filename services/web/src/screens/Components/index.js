@@ -25,6 +25,7 @@ import {
 import screen from 'helpers/screen';
 import { Layout } from 'components/Layout';
 import Breadcrumbs from 'components/Breadcrumbs';
+import RichTextField from 'components/form-fields/RichText';
 import { Menu as ResponsiveMenu } from 'components/Responsive';
 import { JumpLink, ExternalLink } from 'components/Link';
 
@@ -47,7 +48,21 @@ export default class ComponentsScreen extends React.Component {
 
   contextRef = React.createRef();
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      markdown: '',
+    };
+  }
+
+  onFieldChange = (evt, { name, value }) => {
+    this.setState({
+      [name]: value,
+    });
+  };
+
   render() {
+    const { markdown } = this.state;
     return (
       <React.Fragment>
         <Breadcrumb size="mini">
@@ -259,6 +274,14 @@ export default class ComponentsScreen extends React.Component {
                         placeholder="Placeholder text..."
                       />
                     </Form.Field>
+
+                    <Header size="medium">Rich Text Editor</Header>
+                    <RichTextField
+                      name="markdown"
+                      label="Rich Text"
+                      value={markdown}
+                      onChange={this.onFieldChange}
+                    />
                   </Form>
                 </JumpLink.Target>
 

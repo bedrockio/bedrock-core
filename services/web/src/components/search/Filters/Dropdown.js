@@ -36,6 +36,7 @@ export default class DropdownFilter extends React.Component {
   render() {
     if (this.props.onDataNeeded) {
       const { label, disabled, error, ...rest } = this.props;
+      console.log('setting value', this.getValue());
       return (
         <Form.Field disabled={disabled} error={error}>
           <label>{label}</label>
