@@ -5,10 +5,10 @@ import AutoFocus from 'components/AutoFocus';
 import modal from 'helpers/modal';
 
 import UploadsField from 'components/form-fields/Uploads';
-import CategoriesField from 'components/form-fields/Categories';
 import CountriesField from 'components/form-fields/Countries';
 import AddressField from 'components/form-fields/Address';
 import ErrorMessage from 'components/ErrorMessage';
+import SearchDropdown from 'components/form-fields/SearchDropdown';
 
 @modal
 export default class EditShop extends React.Component {
@@ -26,6 +26,7 @@ export default class EditShop extends React.Component {
   }
 
   setField = (evt, { name, value }) => {
+    console.log(name, value);
     this.setState({
       shop: {
         ...this.state.shop,
@@ -108,10 +109,13 @@ export default class EditShop extends React.Component {
                 value={shop.country || ''}
                 onChange={this.setField}
               />
-              <CategoriesField
+              <SearchDropdown
                 name="categories"
                 value={shop.categories || []}
+                multiple
                 onChange={this.setField}
+                searchPath="/1/categories/search"
+                label="Categories"
               />
               <UploadsField
                 name="images"
