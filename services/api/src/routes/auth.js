@@ -12,6 +12,7 @@ const { verifyLoginAttempts, verifyPassword } = require('../utils/auth');
 const router = new Router();
 
 const passwordField = Joi.string()
+  .trim()
   .min(12)
   .message('Your password must be at least 12 characters long. Please try another.');
 
