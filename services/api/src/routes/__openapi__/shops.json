@@ -18,6 +18,48 @@
           }
         },
         {
+          "name": "address",
+          "description": "Address of the Shop",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "line1": {
+                "type": "string"
+              },
+              "line2": {
+                "type": "string"
+              },
+              "postalCode": {
+                "type": "string"
+              },
+              "city": {
+                "type": "string"
+              },
+              "region": {
+                "type": "string"
+              },
+              "countryCode": {
+                "type": "string"
+              },
+              "geometry": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "default": "Point"
+                  },
+                  "coordinates": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
           "name": "description",
           "description": "Description of the Shop",
           "schema": {
@@ -180,7 +222,10 @@
             },
             "additionalProperties": false,
             "patterns": [],
-            "required": ["field", "order"]
+            "required": [
+              "field",
+              "order"
+            ]
           }
         },
         {
