@@ -109,7 +109,7 @@ describe('/1/applications', () => {
   });
 
   describe('DELETE /:application', () => {
-    it('should list audit logs', async () => {
+    it('should delete application', async () => {
       const admin = await createAdminUser();
       const application = await Application.create({
         name: 'patch-application',
