@@ -68,6 +68,7 @@ describe('/1/mfa', () => {
         { code: 'bad code' },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      console.log(response.body);
       expect(response.status).toBe(400);
       expect(response.body.error.message).toBe('Not a valid code');
     });
