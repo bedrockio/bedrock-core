@@ -1,19 +1,32 @@
 import React, { createRef } from 'react';
 import { Switch, Route, Link, NavLink } from 'react-router-dom';
 import { startCase, kebabCase } from 'lodash';
-import { Breadcrumb, Container, Divider, Menu, Message, Ref } from 'semantic';
+import {
+  Breadcrumb,
+  Container,
+  Divider,
+  Menu,
+  Message,
+  Ref,
+  Button,
+  Icon,
+} from 'semantic';
+
 import { Layout } from 'components/Layout';
 import { Menu as ResponsiveMenu } from 'components/Responsive';
 import { APP_NAME } from 'utils/env';
 
 import StandardPage from './StandardPage';
-import Contenxt from './Context';
+import Context from './Context';
 import PageLoader from 'components/PageLoader';
 
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
 
 import DOCS from 'docs';
+import PortalSettings from 'modals/PortalSettings';
+import { userHasAccess } from 'utils/permissions';
+import { withSession } from 'stores';
 
 const DEFAULT_PAGE_ID = 'getting-started';
 
@@ -39,6 +52,7 @@ function getDefaultPage() {
   });
 }
 
+@withSession
 @screen
 export default class Docs extends React.Component {
   static layout = 'portal';
@@ -113,8 +127,28 @@ export default class Docs extends React.Component {
     }
 
     return (
-      <React.Fragment>
-        <h1 className="primary">{APP_NAME} API v1</h1>
+      <Context>
+        <h1 className="primary">
+          {APP_NAME} API v1
+          {this.context.user &&
+            userHasAccess(this.context.user, {
+              endpoint: 'applications',
+              permission: 'read',
+              scope: 'global',
+            }) && (
+              <PortalSettings
+                trigger={
+                  <Button
+                    icon={<Icon name="cog" />}
+                    content="Settings"
+                    floated="right"
+                  />
+                }
+                size="tiny"
+              />
+            )}
+        </h1>
+
         <Divider hidden />
         <Breadcrumb size="mini">
           <Breadcrumb.Section link as={Link} to="/docs">
@@ -142,48 +176,47 @@ export default class Docs extends React.Component {
             </ResponsiveMenu>
           </Layout.Group>
           <Layout.Spacer size={1} />
+
           <Layout.Group>
-            <Contenxt>
-              <Ref innerRef={this.contextRef}>
-                <Switch>
-                  {PAGES.map((page) => {
-                    return (
-                      <Route
-                        key={page.id}
-                        exact
-                        path={`/docs/${page.id}`}
-                        component={(props) => (
-                          <StandardPage
-                            {...props}
-                            me={me}
-                            openApi={openApi}
-                            page={page}
-                          />
-                        )}
-                      />
-                    );
-                  }).concat([
+            <Ref innerRef={this.contextRef}>
+              <Switch>
+                {PAGES.map((page) => {
+                  return (
                     <Route
-                      key="index"
-                      path="/docs"
+                      key={page.id}
                       exact
+                      path={`/docs/${page.id}`}
                       component={(props) => (
                         <StandardPage
                           {...props}
                           me={me}
                           openApi={openApi}
-                          page={getDefaultPage()}
+                          page={page}
                         />
                       )}
-                    />,
-                  ])}
-                </Switch>
-              </Ref>
-            </Contenxt>
+                    />
+                  );
+                }).concat([
+                  <Route
+                    key="index"
+                    path="/docs"
+                    exact
+                    component={(props) => (
+                      <StandardPage
+                        {...props}
+                        me={me}
+                        openApi={openApi}
+                        page={getDefaultPage()}
+                      />
+                    )}
+                  />,
+                ])}
+              </Switch>
+            </Ref>
           </Layout.Group>
         </Layout>
         <Divider hidden />
-      </React.Fragment>
+      </Context>
     );
   }
 }
