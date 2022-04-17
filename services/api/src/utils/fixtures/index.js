@@ -13,8 +13,8 @@ const { exportFixtures } = require('./export');
 const { pluralCamel, pluralKebab } = require('./utils');
 const models = require('./models');
 
-const ADMIN_EMAIL = config.get("ADMIN_EMAIL");
-const API_URL = config.get("API_URL");
+const ADMIN_EMAIL = config.get('ADMIN_EMAIL');
+const API_URL = config.get('API_URL');
 
 const { BASE_DIR, CUSTOM_TRANSFORMS, MODEL_TRANSFORMS, ADMIN_FIXTURE_ID } = require('./const');
 
