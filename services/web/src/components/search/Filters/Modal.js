@@ -5,6 +5,7 @@ import { Modal, Form, Ref, Icon, Button, Label, Popup } from 'semantic';
 import Overview from './Overview';
 
 import SearchContext from '../Context';
+import { Layout } from 'components/Layout';
 
 export default class FilterModal extends React.Component {
   static contextType = SearchContext;
@@ -85,63 +86,64 @@ export default class FilterModal extends React.Component {
   render() {
     const { size } = this.props;
     return (
-      <Modal
-        closeIcon
-        size={size || 'small'}
-        open={this.state.open}
-        onOpen={this.onModalOpen}
-        onClose={this.onModalClose}
-        trigger={
-          this.hasFilters() ? (
-            <Popup
-              offset={[0, 10]}
-              on={['hover', 'click']}
-              style={{ marginLeft: 0 }}
-              hoverable
-              position="bottom center"
-              flowing
-              trigger={
-                <Label as="a" pointing="left">
-                  {this.getFilterCount()} Filters
-                </Label>
-              }>
-              <div
-                style={{
-                  paddingBottom: '4px',
-                  fontWeight: 500,
-                  borderBottom: '1px solid #ccc',
-                }}>
-                Enabled Filters
-              </div>
-              <Overview />
-            </Popup>
-          ) : (
+      <div>
+        <Modal
+          closeIcon
+          size={size || 'small'}
+          open={this.state.open}
+          onOpen={this.onModalOpen}
+          onClose={this.onModalClose}
+          trigger={
             <Button basic primary size={size}>
               <Icon name="filter" />
               Filter
             </Button>
-          )
-        }>
-        <Modal.Header>Filter</Modal.Header>
-        <Modal.Content>
-          <Ref innerRef={this.formRef}>
-            <Form id="filters" onSubmit={this.onSubmit}>
-              <SearchContext.Provider
-                value={{
-                  ...this.context,
-                  filters: this.state.filters,
-                  onFilterChange: this.onFilterChange,
-                }}>
-                {this.props.children}
-              </SearchContext.Provider>
-            </Form>
-          </Ref>
-        </Modal.Content>
-        <Modal.Actions>
-          <Button content="Reset" onClick={this.onReset} />
-          <Button primary form="filters" content="Apply" />
-        </Modal.Actions>
-      </Modal>
+          }>
+          <Modal.Header>Filter</Modal.Header>
+          <Modal.Content>
+            <Ref innerRef={this.formRef}>
+              <Form id="filters" onSubmit={this.onSubmit}>
+                <SearchContext.Provider
+                  value={{
+                    ...this.context,
+                    filters: this.state.filters,
+                    onFilterChange: this.onFilterChange,
+                  }}>
+                  {this.props.children}
+                </SearchContext.Provider>
+              </Form>
+            </Ref>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button content="Reset" onClick={this.onReset} />
+            <Button primary form="filters" content="Apply" />
+          </Modal.Actions>
+        </Modal>
+        {this.getFilterCount() > 0 && (
+          <Popup
+            offset={[0, 10]}
+            on={['hover', 'click']}
+            style={{ marginLeft: 0 }}
+            hoverable
+            position="bottom center"
+            flowing
+            trigger={
+              <Label as="a" pointing="left">
+                {this.getFilterCount()} Filters
+              </Label>
+            }>
+            <div
+              style={{
+                paddingBottom: '4px',
+                fontWeight: 500,
+                borderBottom: '1px solid #ccc',
+              }}>
+              Enabled Filters
+            </div>
+            <Overview />
+          </Popup>
+        )}
+      </div>
     );
   }
 }
