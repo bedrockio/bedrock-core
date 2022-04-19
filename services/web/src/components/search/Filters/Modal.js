@@ -1,7 +1,8 @@
 import React from 'react';
 import { omit } from 'lodash';
 import PropTypes from 'prop-types';
-import { Modal, Form, Ref, Icon, Button, Label } from 'semantic';
+import { Modal, Form, Ref, Icon, Button, Label, Popup } from 'semantic';
+import Overview from './Overview';
 
 import SearchContext from '../Context';
 
@@ -92,15 +93,28 @@ export default class FilterModal extends React.Component {
         onClose={this.onModalClose}
         trigger={
           this.hasFilters() ? (
-            <Button as="div" labelPosition="right">
-              <Button basic primary size={size}>
-                <Icon name="filter" />
-                Filter
-              </Button>
-              <Label as="a" pointing="left">
-                {this.getFilterCount()}
-              </Label>
-            </Button>
+            <Popup
+              offset={[0, 10]}
+              on={['hover', 'click']}
+              style={{ marginLeft: 0 }}
+              hoverable
+              position="bottom center"
+              flowing
+              trigger={
+                <Label as="a" pointing="left">
+                  {this.getFilterCount()} Filters
+                </Label>
+              }>
+              <div
+                style={{
+                  paddingBottom: '4px',
+                  fontWeight: 500,
+                  borderBottom: '1px solid #ccc',
+                }}>
+                Enabled Filters
+              </div>
+              <Overview />
+            </Popup>
           ) : (
             <Button basic primary size={size}>
               <Icon name="filter" />

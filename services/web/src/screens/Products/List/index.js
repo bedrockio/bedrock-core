@@ -25,7 +25,7 @@ export default class ProductList extends React.Component {
     return await request({
       method: 'POST',
       path: '/1/products/search',
-      body: { params, limit: 10 },
+      body: { ...params, limit: 10 },
     });
   };
 
@@ -74,36 +74,35 @@ export default class ProductList extends React.Component {
                 </Layout.Group>
               </Layout>
               <Segment>
-                <Layout horizontal center spread stackable>
-                  <Layout horizontal>
-                    <SearchFilters.Modal>
-                      <SearchFilters.Checkbox
-                        name="isFeatured"
-                        label="Is Featured"
-                      />
-                      <SearchFilters.Number name="priceUsd" label="Price Usd" />
-                      <SearchFilters.DateRange
-                        time
-                        name="expiresAt"
-                        label="Expires At"
-                      />
-                      <SearchFilters.Dropdown
-                        search
-                        multiple
-                        selection
-                        allowAdditions
-                        name="sellingPoints"
-                        label="Selling Points"
-                      />
-                    </SearchFilters.Modal>
-                    <SearchFilters.Overview />
-                  </Layout>
-
-                  <Layout.Group>
+                <Layout horizontal spread stackable>
+                  <SearchFilters.Modal>
+                    <SearchFilters.Checkbox
+                      name="isFeatured"
+                      label="Is Featured"
+                    />
+                    <SearchFilters.Number name="priceUsd" label="Price Usd" />
+                    <SearchFilters.DateRange
+                      time
+                      name="expiresAt"
+                      label="Expires At"
+                    />
+                    <SearchFilters.Dropdown
+                      search
+                      multiple
+                      selection
+                      allowAdditions
+                      name="sellingPoints"
+                      label="Selling Points"
+                    />
+                  </SearchFilters.Modal>
+                  <Layout.Group horizontal center spread stackable>
+                    <Search.Total />
+                    <Divider vertical hidden></Divider>
                     <SearchFilters.Search name="keyword" />
                   </Layout.Group>
                 </Layout>
               </Segment>
+
               <Search.Status />
               {products.length !== 0 && (
                 <Table celled sortable>
