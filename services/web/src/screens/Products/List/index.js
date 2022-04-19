@@ -61,7 +61,7 @@ export default class ProductList extends React.Component {
             <React.Fragment>
               <Breadcrumbs active="Products" />
 
-              <Layout horizontal center spread>
+              <Layout horizontal center spread stackable>
                 <h1>Products</h1>
                 <Layout.Group>
                   <Search.Export filename="products" />
@@ -74,7 +74,7 @@ export default class ProductList extends React.Component {
                 </Layout.Group>
               </Layout>
               <Segment>
-                <Layout horizontal spread stackable>
+                <Layout horizontal spread stackable grow>
                   <SearchFilters.Modal>
                     <SearchFilters.Checkbox
                       name="isFeatured"
@@ -95,10 +95,11 @@ export default class ProductList extends React.Component {
                       label="Selling Points"
                     />
                   </SearchFilters.Modal>
-                  <Layout.Group horizontal center spread stackable>
-                    <Search.Total />
-                    <Divider vertical hidden></Divider>
-                    <SearchFilters.Search name="keyword" />
+                  <Layout.Group>
+                    <Layout horizontal stackable center>
+                      <Search.Total />
+                      <SearchFilters.Search name="keyword" />
+                    </Layout>
                   </Layout.Group>
                 </Layout>
               </Segment>

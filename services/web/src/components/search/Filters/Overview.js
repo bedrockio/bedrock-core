@@ -1,7 +1,7 @@
 import React from 'react';
 import { List, Icon } from 'semantic';
 
-import SearchContext from '../../Context';
+import SearchContext from '../Context';
 import { Layout } from 'components/Layout';
 
 export default class Overview extends React.Component {
@@ -22,8 +22,16 @@ export default class Overview extends React.Component {
 
     return (
       <>
+        <div
+          style={{
+            fontWeight: 500,
+            padding: '10px',
+            textAlign: 'center',
+          }}>
+          Enabled Filters
+        </div>
         <List
-          style={{ marginTop: '5px', marginBottom: '5px' }}
+          style={{ margin: 0, padding: '0px 10px 10px 10px' }}
           verticalAlign="middle">
           {filtersKeys.map((key) => {
             const mapping = filterMapping[key];
@@ -40,11 +48,11 @@ export default class Overview extends React.Component {
                   cursor: 'pointer',
                   color: '#000',
                   width: '200px',
-                  padding: '10px 0px 10px 0px',
+                  padding: '6px 0px 6px 0px',
                 }}>
                 <Layout horizontal center spread>
                   {mapping.label}
-                  <Icon name="close" />
+                  <Icon fitted name="close" style={{ top: 0 }} />
                 </Layout>
               </List.Item>
             );

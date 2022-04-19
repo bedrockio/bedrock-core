@@ -27,7 +27,6 @@ export default class SearchFilter extends React.Component {
 
     return (
       <Form.Input
-        name={name}
         loading={loading}
         type="search"
         placeholder="Search by keyword"

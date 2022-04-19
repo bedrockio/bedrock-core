@@ -3,9 +3,9 @@ import { omit } from 'lodash';
 import PropTypes from 'prop-types';
 import { Modal, Form, Ref, Icon, Button, Label, Popup } from 'semantic';
 import Overview from './Overview';
+import './modal.less';
 
 import SearchContext from '../Context';
-import { Layout } from 'components/Layout';
 
 export default class FilterModal extends React.Component {
   static contextType = SearchContext;
@@ -30,10 +30,8 @@ export default class FilterModal extends React.Component {
   };
 
   getFilterCount = () => {
-    const keys = Object.keys(this.context.filters);
-    return keys.filter((key) => {
-      return this.state.filters[key] !== undefined;
-    }).length;
+    return Object.keys(this.context.filters).filter((c) => c !== 'keyword')
+      .length;
   };
 
   onModalOpen = () => {
@@ -86,7 +84,7 @@ export default class FilterModal extends React.Component {
   render() {
     const { size } = this.props;
     return (
-      <div>
+      <div className="search-filters-modal">
         <Modal
           closeIcon
           size={size || 'small'}
@@ -122,24 +120,16 @@ export default class FilterModal extends React.Component {
         {this.getFilterCount() > 0 && (
           <Popup
             offset={[0, 10]}
-            on={['hover', 'click']}
-            style={{ marginLeft: 0 }}
-            hoverable
+            on={['click']}
+            style={{ padding: 0 }}
+            pinned
             position="bottom center"
             flowing
             trigger={
-              <Label as="a" pointing="left">
+              <Label style={{ cursor: 'pointer' }} pointing="left">
                 {this.getFilterCount()} Filters
               </Label>
             }>
-            <div
-              style={{
-                paddingBottom: '4px',
-                fontWeight: 500,
-                borderBottom: '1px solid #ccc',
-              }}>
-              Enabled Filters
-            </div>
             <Overview />
           </Popup>
         )}
