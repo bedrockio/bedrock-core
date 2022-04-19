@@ -66,18 +66,19 @@ export default class SearchProvider extends React.Component {
   constructor(props) {
     super(props);
 
+    const urlParams = new URLSearchParams(this.props.history.location.search);
+    const page = urlParams.get('page') ? Number(urlParams.get('page')) : 0;
+
+    const filters = getFiltersFromSearchParams(urlParams, props.filterMapping);
+
     this.state = {
       loading: true,
       items: [],
       error: null,
       filterMapping: props.filterMapping,
-      filters: getFiltersFromSearchParams(
-        new URLSearchParams(this.props.history.location.search),
-        props.filterMapping
-      ),
-
+      filters,
       limit: props.limit,
-      page: props.page,
+      page: page || props.page,
       sort: props.sort,
     };
   }
@@ -97,28 +98,31 @@ export default class SearchProvider extends React.Component {
     }
   }
 
-  updateUrlSearchParams(filters) {
-    if (!this.state.filterMapping) {
-      return;
-    }
-    const queryObject = {};
-    for (const key of Object.keys(filters)) {
-      const value = filters[key]?.id || filters[key];
-      const mapping = this.state.filterMapping[key];
-      if (!mapping) {
-        continue;
-      }
-      if (mapping.multiple) {
-        queryObject[key] = value
-          .map((value) => convertParamValue(mapping.type, value))
-          .join('_');
-      } else if (mapping.range) {
-        queryObject[key] = [
-          convertParamValue(mapping.type, value.gte),
-          convertParamValue(mapping.type, value.lte),
-        ].join('/');
-      } else {
-        queryObject[key] = convertParamValue(mapping.type, value);
+  updateUrlSearchParams() {
+    const { filters, filterMapping } = this.state;
+    const queryObject = {
+      page: this.state.page,
+    };
+
+    if (filterMapping) {
+      for (const key of Object.keys(filters)) {
+        const value = filters[key]?.id || filters[key];
+        const mapping = filterMapping[key];
+        if (!mapping) {
+          continue;
+        }
+        if (mapping.multiple) {
+          queryObject[key] = value
+            .map((value) => convertParamValue(mapping.type, value))
+            .join('_');
+        } else if (mapping.range) {
+          queryObject[key] = [
+            convertParamValue(mapping.type, value.gte),
+            convertParamValue(mapping.type, value.lte),
+          ].join('/');
+        } else {
+          queryObject[key] = convertParamValue(mapping.type, value);
+        }
       }
     }
 
@@ -152,9 +156,12 @@ export default class SearchProvider extends React.Component {
     if (this.props.onPageChange) {
       this.props.onPageChange(evt, page);
     } else {
-      this.setState({
-        page,
-      });
+      this.setState(
+        {
+          page,
+        },
+        () => this.updateUrlSearchParams()
+      );
     }
   };
 
@@ -237,10 +244,13 @@ export default class SearchProvider extends React.Component {
 
   setFilters = (filters) => {
     const newFilters = convertFilters(filters);
-    this.updateUrlSearchParams(newFilters);
-    this.setState({
-      filters: newFilters,
-    });
+
+    this.setState(
+      {
+        filters: newFilters,
+      },
+      () => this.updateUrlSearchParams()
+    );
   };
 
   onFilterChange = ({ name, value }) => {

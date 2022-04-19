@@ -25,7 +25,7 @@ export default class ProductList extends React.Component {
     return await request({
       method: 'POST',
       path: '/1/products/search',
-      body: { ...params, limit: 10 },
+      body: { ...params },
     });
   };
 
@@ -54,6 +54,7 @@ export default class ProductList extends React.Component {
   render() {
     return (
       <Search.Provider
+        limit={10}
         onDataNeeded={this.onDataNeeded}
         filterMapping={this.getFilterMapping()}>
         {({ items: products, getSorted, setSort, reload }) => {
@@ -74,7 +75,7 @@ export default class ProductList extends React.Component {
                 </Layout.Group>
               </Layout>
               <Segment>
-                <Layout horizontal spread stackable grow>
+                <Layout horizontal spread stackable>
                   <SearchFilters.Modal>
                     <SearchFilters.Checkbox
                       name="isFeatured"
