@@ -241,7 +241,6 @@ export default class Roles extends React.Component {
                 </Form.Field>
                 <Button
                   primary
-                  submit
                   content="Add"
                   onClick={(e) => {
                     e.preventDefault();

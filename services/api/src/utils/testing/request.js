@@ -39,7 +39,7 @@ module.exports = async function handleRequest(httpMethod, url, bodyOrQuery = {},
         .send({ ...bodyOrQuery });
     } else if (httpMethod === 'PUT') {
       promise = request(app.callback())
-        .patch(url)
+        .put(url)
         .set(headers)
         .send({ ...bodyOrQuery });
     } else if (httpMethod === 'DELETE') {

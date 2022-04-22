@@ -39,7 +39,7 @@ export default class PortalSettings extends React.Component {
                 fluid
                 clearable
                 placeholder="Viewing all applications"
-                value={this.context.application}
+                value={this.context?.application}
                 onDataNeeded={this.fetchApplications}
                 onChange={this.onChange}
               />
