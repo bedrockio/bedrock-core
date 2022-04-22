@@ -67,7 +67,9 @@ export default class SearchProvider extends React.Component {
     super(props);
 
     const urlParams = new URLSearchParams(this.props.history.location.search);
-    const page = urlParams.get('page') ? Number(urlParams.get('page')) : 0;
+    const page = urlParams.get('page')
+      ? Number(urlParams.get('page'))
+      : props.page;
 
     const filters = getFiltersFromSearchParams(urlParams, props.filterMapping);
 
@@ -78,7 +80,7 @@ export default class SearchProvider extends React.Component {
       filterMapping: props.filterMapping,
       filters,
       limit: props.limit,
-      page: page || props.page,
+      page: page,
       sort: props.sort,
     };
   }
@@ -100,9 +102,11 @@ export default class SearchProvider extends React.Component {
 
   updateUrlSearchParams() {
     const { filters, filterMapping } = this.state;
-    const queryObject = {
-      page: this.state.page,
-    };
+    const queryObject = {};
+
+    if (this.state.page > 1) {
+      queryObject.page = this.state.page;
+    }
 
     if (filterMapping) {
       for (const key of Object.keys(filters)) {
@@ -247,6 +251,7 @@ export default class SearchProvider extends React.Component {
 
     this.setState(
       {
+        page: 1, // set page to 1 when filters change
         filters: newFilters,
       },
       () => this.updateUrlSearchParams()

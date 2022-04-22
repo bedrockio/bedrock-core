@@ -86,35 +86,35 @@ export default class ShopList extends React.Component {
 
               <Segment>
                 <Layout horizontal center spread stackable>
-                  <Layout horizontal>
-                    <SearchFilters.Modal>
-                      {/* --- Generator: filters */}
+                  <SearchFilters.Modal>
+                    {/* --- Generator: filters */}
 
-                      <SearchFilters.Dropdown
-                        options={countries}
-                        search
-                        name="country"
-                        label="Country"
-                      />
+                    <SearchFilters.Dropdown
+                      options={countries}
+                      search
+                      name="country"
+                      label="Country"
+                    />
 
-                      <SearchFilters.Dropdown
-                        onDataNeeded={(name) => this.fetchOwners({ name })}
-                        search
-                        name="owner"
-                        label="Owner"
-                      />
+                    <SearchFilters.Dropdown
+                      onDataNeeded={(name) => this.fetchOwners({ name })}
+                      search
+                      name="owner"
+                      label="Owner"
+                    />
 
-                      {/* --- Generator: end */}
-                    </SearchFilters.Modal>
-                    <SearchFilters.Overview />
-                  </Layout>
+                    {/* --- Generator: end */}
+                  </SearchFilters.Modal>
 
-                  <Layout.Group>
+                  <Layout horizontal stackable center right>
+                    <Search.Total />
                     <SearchFilters.Search name="keyword" />
-                  </Layout.Group>
+                  </Layout>
                 </Layout>
               </Segment>
+
               <Search.Status />
+
               {shops.length !== 0 && (
                 <Table celled sortable>
                   <Table.Header>

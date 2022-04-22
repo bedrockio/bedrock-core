@@ -6,6 +6,7 @@ import Overview from './Overview';
 import './modal.less';
 
 import SearchContext from '../Context';
+import AutoFocus from 'components/AutoFocus';
 
 export default class FilterModal extends React.Component {
   static contextType = SearchContext;
@@ -39,10 +40,6 @@ export default class FilterModal extends React.Component {
       open: true,
       filters: this.context.filters,
     });
-    setTimeout(() => {
-      const input = this.formRef.current.querySelector('input[name]');
-      input?.focus();
-    });
   };
 
   onModalClose = () => {
@@ -66,6 +63,7 @@ export default class FilterModal extends React.Component {
       ...this.context.filters,
       ...this.state.filters,
     });
+
     this.setState({
       open: false,
     });
@@ -107,7 +105,7 @@ export default class FilterModal extends React.Component {
                     filters: this.state.filters,
                     onFilterChange: this.onFilterChange,
                   }}>
-                  {this.props.children}
+                  <AutoFocus>{this.props.children}</AutoFocus>
                 </SearchContext.Provider>
               </Form>
             </Ref>
@@ -120,15 +118,13 @@ export default class FilterModal extends React.Component {
         {this.getFilterCount() > 0 && (
           <Popup
             offset={[0, 10]}
-            on={['click']}
+            on={['hover', 'click']}
             style={{ padding: 0 }}
-            pinned
+            hoverable
             position="bottom center"
             flowing
             trigger={
-              <Label style={{ cursor: 'pointer' }} pointing="left">
-                {this.getFilterCount()} Filters
-              </Label>
+              <Label pointing="left">{this.getFilterCount()} Filters</Label>
             }>
             <Overview />
           </Popup>

@@ -22,13 +22,15 @@ export default class SearchFilter extends React.Component {
 
   render() {
     const { loading, onFilterChange } = this.props.context;
-    const { name, ...rest } = this.props;
+    const { name, context, ...rest } = this.props;
     const { value } = this.state;
 
     return (
       <Form.Input
+        fluid
         loading={loading}
         type="search"
+        style={{ minWidth: '220px' }}
         placeholder="Search by keyword"
         icon={this.renderIcon()}
         value={this.state.value || ''}

@@ -54,14 +54,12 @@ export default class ProductList extends React.Component {
   render() {
     return (
       <Search.Provider
-        limit={10}
         onDataNeeded={this.onDataNeeded}
         filterMapping={this.getFilterMapping()}>
         {({ items: products, getSorted, setSort, reload }) => {
           return (
             <React.Fragment>
               <Breadcrumbs active="Products" />
-
               <Layout horizontal center spread stackable>
                 <h1>Products</h1>
                 <Layout.Group>
@@ -74,6 +72,7 @@ export default class ProductList extends React.Component {
                   />
                 </Layout.Group>
               </Layout>
+
               <Segment>
                 <Layout horizontal spread stackable>
                   <SearchFilters.Modal>
@@ -96,16 +95,16 @@ export default class ProductList extends React.Component {
                       label="Selling Points"
                     />
                   </SearchFilters.Modal>
-                  <Layout.Group>
-                    <Layout horizontal stackable center>
-                      <Search.Total />
-                      <SearchFilters.Search name="keyword" />
-                    </Layout>
-                  </Layout.Group>
+
+                  <Layout horizontal stackable center right>
+                    <Search.Total />
+                    <SearchFilters.Search name="keyword" />
+                  </Layout>
                 </Layout>
               </Segment>
 
               <Search.Status />
+
               {products.length !== 0 && (
                 <Table celled sortable>
                   <Table.Header>
