@@ -141,7 +141,7 @@ export default class SearchDropdown extends React.Component {
   getValue() {
     const { multiple, value } = this.props;
     if (multiple) {
-      return value.map((obj) => obj.id || value);
+      return value.map((obj) => obj.id || obj);
     } else {
       return value?.id || value;
     }
