@@ -26,10 +26,6 @@ export default class FilterModal extends React.Component {
     });
   }
 
-  hasFilters = () => {
-    return !this.context.filterMapping && this.getFilterCount() > 0;
-  };
-
   getFilterCount = () => {
     return Object.keys(this.context.filters).filter((c) => c !== 'keyword')
       .length;
@@ -80,20 +76,34 @@ export default class FilterModal extends React.Component {
   };
 
   render() {
-    const { size } = this.props;
+    const { size = 'small' } = this.props;
     return (
       <div className="search-filters-modal">
         <Modal
           closeIcon
-          size={size || 'small'}
+          size={size}
           open={this.state.open}
           onOpen={this.onModalOpen}
           onClose={this.onModalClose}
           trigger={
-            <Button basic primary size={size}>
-              <Icon name="filter" />
-              Filter
-            </Button>
+            this.context.filterMapping ? (
+              <Button basic primary size={size}>
+                <Icon name="filter" />
+                Filter
+              </Button>
+            ) : (
+              <Button as="div" labelPosition="right">
+                <Button basic primary size={size}>
+                  <Icon name="filter" />
+                  Filter
+                </Button>
+                {this.getFilterCount() > 0 && (
+                  <Label as="a" pointing="left">
+                    {this.getFilterCount()}
+                  </Label>
+                )}
+              </Button>
+            )
           }>
           <Modal.Header>Filter</Modal.Header>
           <Modal.Content>
@@ -115,7 +125,8 @@ export default class FilterModal extends React.Component {
             <Button primary form="filters" content="Apply" />
           </Modal.Actions>
         </Modal>
-        {this.getFilterCount() > 0 && (
+
+        {this.context.filterMapping && this.getFilterCount() > 0 && (
           <Popup
             offset={[0, 10]}
             on={['hover', 'click']}

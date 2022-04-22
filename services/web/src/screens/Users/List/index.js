@@ -93,29 +93,27 @@ export default class UserList extends React.Component {
               </Layout>
 
               <Segment>
-                <Layout horizontal center spread stackable>
-                  <Layout horizontal>
-                    <SearchFilters.Modal>
-                      {/* --- Generator: filters */}
+                <Layout horizontal spread stackable>
+                  <SearchFilters.Modal>
+                    {/* --- Generator: filters */}
 
-                      <SearchFilters.Dropdown
-                        multiple
-                        label="Role"
-                        name="roles"
-                        onDataNeeded={this.fetchRoles}
-                      />
+                    <SearchFilters.Dropdown
+                      multiple
+                      label="Role"
+                      name="roles"
+                      onDataNeeded={this.fetchRoles}
+                    />
 
-                      {/* --- Generator: end */}
-                    </SearchFilters.Modal>
-                    <SearchFilters.Overview />
-                  </Layout>
+                    {/* --- Generator: end */}
+                  </SearchFilters.Modal>
 
-                  <Layout.Group>
+                  <Layout horizontal stackable center right>
+                    <Search.Total />
                     <SearchFilters.Search
                       placeholder="Enter name, email, or user id"
                       name="keyword"
                     />
-                  </Layout.Group>
+                  </Layout>
                 </Layout>
               </Segment>
 

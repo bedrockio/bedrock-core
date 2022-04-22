@@ -54,6 +54,7 @@ export default class ProductList extends React.Component {
   render() {
     return (
       <Search.Provider
+        limit={5}
         onDataNeeded={this.onDataNeeded}
         filterMapping={this.getFilterMapping()}>
         {({ items: products, getSorted, setSort, reload }) => {

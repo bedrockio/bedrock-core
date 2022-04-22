@@ -40,7 +40,6 @@ export default class OrganizationList extends React.Component {
               <Layout horizontal center spread>
                 <h1>Organizations</h1>
                 <Layout.Group>
-                  <Search.Export filename="users" />
                   <EditOrganization
                     trigger={
                       <Button primary content="New Organization" icon="plus" />
@@ -51,17 +50,15 @@ export default class OrganizationList extends React.Component {
               </Layout>
               <Segment>
                 <Layout horizontal center spread stackable>
-                  <Layout horizontal></Layout>
-
-                  <Layout.Group>
-                    <SearchFilters.Search
-                      placeholder="Enter name, email, or user id"
-                      name="keyword"
-                    />
-                  </Layout.Group>
+                  <Layout horizontal stackable center right>
+                    <Search.Total />
+                    <SearchFilters.Search name="keyword" />
+                  </Layout>
                 </Layout>
               </Segment>
+
               <Search.Status />
+
               {organizations.length !== 0 && (
                 <Table celled sortable>
                   <Table.Header>

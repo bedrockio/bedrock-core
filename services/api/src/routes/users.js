@@ -74,7 +74,7 @@ router
       const { format, filename, ...params } = ctx.request.body;
       const { data, meta } = await User.search(params);
       if (format === 'csv') {
-        return csvExport(ctx, data);
+        return csvExport(ctx, data, { filename });
       }
       ctx.body = {
         data: data.map((item) => expandRoles(item)),

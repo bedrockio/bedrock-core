@@ -15,7 +15,6 @@ export default class ExportButton extends React.Component {
   handleSubmit = async () => {
     this.setState({ loading: true, error: null });
     const body = this.props.body || {};
-
     try {
       await this.context.onDataNeeded({
         format: 'csv',

@@ -37,7 +37,9 @@ export default class Home extends React.Component {
                 </Layout.Group>
               </Layout>
               <Divider hidden />
+
               <Search.Status />
+
               {items.length !== 0 && (
                 <Table celled sortable>
                   <Table.Header>
