@@ -159,6 +159,7 @@ export default class SearchDropdown extends React.Component {
           'onDataNeeded',
           'searchPath',
           'searchBody',
+          'keywordField',
         ])}
         error={!!error}
         loading={loading}
