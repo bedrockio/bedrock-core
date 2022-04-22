@@ -85,7 +85,11 @@ export default class SearchDropdown extends React.Component {
   }
 
   onSearchChange = debounce((evt, { searchQuery }) => {
-    this.fetchItems({ keyword: searchQuery });
+    const options = {};
+    if (searchQuery) {
+      options[this.props.keywordField] = searchQuery;
+    }
+    this.fetchItems(options);
   }, 200);
 
   onChange = (evt, { value, ...rest }) => {
@@ -191,6 +195,7 @@ SearchDropdown.propTypes = PropTypes.oneOfType([
 ]).isRequired;
 
 SearchDropdown.defaultProps = {
+  keywordField: 'keyword',
   objectMode: true,
   getOptionLabel: (item) => item?.name || item,
   getOptionValue: (item) => item?.id || item,
