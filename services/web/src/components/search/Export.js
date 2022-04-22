@@ -18,7 +18,7 @@ export default class ExportButton extends React.Component {
     try {
       await this.context.onDataNeeded({
         format: 'csv',
-        limit: 10000,
+        limit: this.props.limit,
         filename: this.props.filename
           ? `${safeFileName(this.props.filename.replace('.csv', ''))}.csv`
           : 'export.csv',
@@ -40,18 +40,24 @@ export default class ExportButton extends React.Component {
     const { loading, error } = this.state;
     const { meta } = this.context;
 
+    const tooManyRows = meta?.total > this.props.limit;
+
     return (
       <Button
         loading={loading}
-        disabled={meta?.total === 0 || loading}
+        disabled={meta?.total === 0 || loading || tooManyRows}
         negative={error}
         title={error?.message}
         primary
         basic
-        icon={error ? 'exclamation-triangle' : 'download'}
-        content={'Export'}
+        icon={error || tooManyRows ? 'exclamation-triangle' : 'download'}
+        content={tooManyRows ? 'Too many rows' : 'Export'}
         onClick={this.handleSubmit}
       />
     );
   }
 }
+
+ExportButton.defaultProps = {
+  limit: 10000,
+};
