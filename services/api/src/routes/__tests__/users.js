@@ -1,5 +1,6 @@
 const { setupDb, teardownDb, request, createUser, createAdminUser } = require('../../utils/testing');
 const { User } = require('../../models');
+const { assertMailSent } = require('postmark');
 
 beforeAll(async () => {
   await setupDb();
@@ -73,9 +74,28 @@ describe('/1/users', () => {
       );
       const data = response.body.data;
       expect(response.status).toBe(200);
+      expect(data.status).toBe('activated');
       expect(data.firstName).toBe('Mellow');
       expect(data.lastName).toBe('Yellow');
       expect(data.name).toBe('Mellow Yellow');
+    });
+
+    it('should send an invite if password is not provided', async () => {
+      const user = await createAdminUser({});
+      const response = await request(
+        'POST',
+        '/1/users',
+        {
+          email: 'hello-invite@platform.com',
+          firstName: 'Mellow',
+          lastName: 'Yellow',
+        },
+        { user }
+      );
+      expect(response.status).toBe(200);
+      const data = response.body.data;
+      expect(data.status).toBe('invited');
+      assertMailSent({ to: 'hello-invite@platform.com' });
     });
 
     it('should deny access to non-admins', async () => {
@@ -257,6 +277,38 @@ describe('/1/users', () => {
       const user1 = await createUser({ firstName: 'Neo', lastName: 'One' });
       const response = await request('DELETE', `/1/users/${user1.id}`, {}, { user });
       expect(response.status).toBe(401);
+    });
+  });
+
+  describe('POST /invite', () => {
+    it('should be able to invite multiple users', async () => {
+      const user = await createAdminUser();
+      const response = await request(
+        'POST',
+        '/1/users/invite',
+        {
+          emails: ['new@platform.com'],
+          role: 'superAdmin',
+        },
+        { user }
+      );
+      expect(response.status).toBe(204);
+
+      const dbUser = await User.findOne({ email: 'new@platform.com' });
+      expect(dbUser.roles.find((role) => role.role === 'superAdmin')).toBeDefined();
+      expect(dbUser.status).toBe('invited');
+
+      assertMailSent({ to: 'new@platform.com' });
+    });
+  });
+
+  describe('POST /:user/re-invite', () => {
+    it('should be able to re-invite', async () => {
+      const admin = await createAdminUser();
+      const user = await createUser({ firstName: 'Neo', status: 'invited', lastName: 'One' });
+      const response = await request('POST', `/1/users/${user.id}/re-invite`, {}, { user: admin });
+      expect(response.status).toBe(204);
+      assertMailSent({ to: user.email });
     });
   });
 });

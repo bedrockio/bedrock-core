@@ -9,7 +9,6 @@ export default async function request(options) {
   let { body } = options;
 
   const token = options.token || getToken();
-
   const headers = Object.assign(
     {
       Accept: 'application/json',

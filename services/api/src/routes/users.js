@@ -9,8 +9,19 @@ const { User } = require('../models');
 const { expandRoles } = require('./../utils/permissions');
 const roles = require('./../roles.json');
 const permissions = require('./../permissions.json');
+const { sendTemplatedMail } = require('../utils/mailer');
+const { createTemporaryToken } = require('../utils/tokens');
 
 const router = new Router();
+
+function sendInvite(sender, user) {
+  return sendTemplatedMail({
+    to: user.email,
+    file: 'invite.md',
+    sender,
+    token: createTemporaryToken({ type: 'invite', sub: user._id, email: user.email }),
+  });
+}
 
 const passwordField = Joi.string()
   .min(6)
@@ -88,24 +99,80 @@ router
     };
   })
   .use(requirePermissions({ endpoint: 'users', permission: 'write', scope: 'global' }))
+  .post('/:userId/re-invite', async (ctx) => {
+    const { user, authUser } = ctx.state;
+    if (user.status !== 'invited') {
+      ctx.throw(400, `You can't invite a user that has the status ${user.status}`);
+    }
+    await sendInvite(authUser, user);
+    ctx.status = 204;
+  })
   .post(
     '/',
     validateBody(
       User.getCreateValidation({
-        password: passwordField.required(),
+        password: passwordField,
       })
     ),
     async (ctx) => {
-      const { email } = ctx.request.body;
+      const { email, password } = ctx.request.body;
       const existingUser = await User.findOne({ email });
       if (existingUser) {
         ctx.throw(400, 'A user with that email already exists');
       }
-      const user = await User.create(ctx.request.body);
+      const userFields = ctx.request.body;
+      userFields.status = password ? 'activated' : 'invited';
+
+      const user = await User.create(userFields);
+      if (!password) {
+        await sendInvite(ctx.status.authUser, user);
+      }
 
       ctx.body = {
         data: user,
       };
+    }
+  )
+  .post(
+    '/invite',
+    validateBody({
+      emails: Joi.array().items(Joi.string().email()).required(),
+      role: Joi.string()
+        .valid(...Object.keys(roles))
+        .required(),
+    }),
+    async (ctx) => {
+      const { authUser } = ctx.state;
+      const { emails, role } = ctx.request.body;
+
+      let userRoles = [];
+      if (role) {
+        const def = roles[role];
+        if (def.allowScopes.includes('global')) {
+          userRoles = [{ role, scope: 'global' }];
+        } else {
+          // TODO: allow for multiple scopes, leaving it up to the implementor to decide
+          // roles.roles = [{ role, scope: 'organization', scopeRef: organization.id }];
+        }
+      }
+
+      for (let email of [...new Set(emails)]) {
+        // NOTE: slight problem here, if a user is already invited to a different org,
+        // we are overwrite the roles for that user. (until they have accepted the invite)
+        const user = await User.findOneAndUpdate(
+          {
+            email,
+            status: 'invited',
+          },
+          { status: 'invited', roles: userRoles, deleted: false, email, $unset: { deletedAt: 1 } },
+          {
+            new: true,
+            upsert: true,
+          }
+        );
+        await sendInvite(authUser, user);
+      }
+      ctx.status = 204;
     }
   )
   .patch(

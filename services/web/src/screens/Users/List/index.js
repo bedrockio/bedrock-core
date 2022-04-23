@@ -9,6 +9,7 @@ import {
   Divider,
   Loader,
   Confirm,
+  Dropdown,
 } from 'semantic';
 
 import { formatDateTime } from 'utils/date';
@@ -19,7 +20,7 @@ import { formatRoles } from 'utils/permissions';
 import { HelpTip, Breadcrumbs, Layout } from 'components';
 import { SearchProvider, Filters } from 'components/search';
 import ErrorMessage from 'components/ErrorMessage';
-
+import InviteUser from 'modals/InviteUser';
 import EditUser from 'modals/EditUser';
 
 @screen
@@ -81,6 +82,19 @@ export default class UserList extends React.Component {
                       onDataNeeded={this.fetchRoles}
                     />
                   </Filters.Modal>
+
+                  <InviteUser
+                    size="tiny"
+                    onSave={reload}
+                    trigger={
+                      <Button
+                        basic
+                        primary
+                        content="Invite Users"
+                        icon="plus"
+                      />
+                    }
+                  />
                   <EditUser
                     trigger={<Button primary content="New User" icon="plus" />}
                     onSave={reload}
@@ -108,16 +122,17 @@ export default class UserList extends React.Component {
                         Email
                       </Table.HeaderCell>
                       <Table.HeaderCell
-                        onClick={() => setSort('roles')}
-                        sorted={getSorted('roles')}>
-                        Roles
+                        onClick={() => setSort('status')}
+                        sorted={getSorted('status')}>
+                        Status
                       </Table.HeaderCell>
+                      <Table.HeaderCell>Roles</Table.HeaderCell>
                       <Table.HeaderCell
                         onClick={() => setSort('createdAt')}
                         sorted={getSorted('createdAt')}>
-                        Joined
+                        Created
                         <HelpTip
-                          title="Joined"
+                          title="Created"
                           text="This is the date and time the user was created."
                         />
                       </Table.HeaderCell>
@@ -131,9 +146,12 @@ export default class UserList extends React.Component {
                       return (
                         <Table.Row key={user.id}>
                           <Table.Cell>
-                            <Link to={`/users/${user.id}`}>{user.name}</Link>
+                            <Link to={`/users/${user.id}`}>
+                              {user.name || 'N/A'}
+                            </Link>
                           </Table.Cell>
                           <Table.Cell>{user.email}</Table.Cell>
+                          <Table.Cell>{user.status}</Table.Cell>
                           <Table.Cell>
                             {formatRoles(user.roles).map((label) => (
                               <Label
@@ -151,25 +169,52 @@ export default class UserList extends React.Component {
                             {formatDateTime(user.createdAt)}
                           </Table.Cell>
                           <Table.Cell textAlign="center" singleLine>
-                            <EditUser
-                              user={user}
-                              trigger={<Button basic icon="edit" />}
-                              onSave={reload}
-                            />
-                            <Confirm
-                              negative
-                              confirmButton="Delete"
-                              header={`Are you sure you want to delete "${user.name}"?`}
-                              content="All data will be permanently deleted"
-                              trigger={<Button basic icon="trash" />}
-                              onConfirm={async () => {
-                                await request({
-                                  method: 'DELETE',
-                                  path: `/1/users/${user.id}`,
-                                });
-                                reload();
-                              }}
-                            />
+                            <Dropdown button basic text="More">
+                              <Dropdown.Menu direction="left">
+                                <EditUser
+                                  user={user}
+                                  trigger={
+                                    <Dropdown.Item text="Edit" icon="edit" />
+                                  }
+                                  onSave={reload}
+                                />
+                                <Confirm
+                                  negative
+                                  confirmButton="Delete"
+                                  header={`Are you sure you want to delete "${user.email}"?`}
+                                  content="All data will be permanently deleted"
+                                  trigger={
+                                    <Dropdown.Item text="Delete" icon="trash" />
+                                  }
+                                  onConfirm={async () => {
+                                    await request({
+                                      method: 'DELETE',
+                                      path: `/1/users/${user.id}`,
+                                    });
+                                    reload();
+                                  }}
+                                />
+
+                                <Confirm
+                                  confirmButton="Re-invite"
+                                  header={`Are you sure you want to invite "${user.email}"?`}
+                                  trigger={
+                                    <Dropdown.Item
+                                      disabled={user.status !== 'invited'}
+                                      text="Re-invite"
+                                      icon="mail"
+                                    />
+                                  }
+                                  onConfirm={async () => {
+                                    await request({
+                                      method: 'POST',
+                                      path: `/1/users/${user.id}/re-invite`,
+                                    });
+                                    reload();
+                                  }}
+                                />
+                              </Dropdown.Menu>
+                            </Dropdown>
                           </Table.Cell>
                         </Table.Row>
                       );

@@ -64,6 +64,10 @@ router
       const { email, password } = ctx.request.body;
       const user = await User.findOne({ email });
 
+      if (user.status !== 'activated') {
+        ctx.throw(400, 'Your account has not been activated yet. Please check your email for the invitation.');
+      }
+
       if (!user) {
         ctx.throw(401, 'Incorrect password');
       }
@@ -181,32 +185,24 @@ router
     }),
     authenticate({ type: 'invite' }),
     async (ctx) => {
-      const { firstName, lastName, password } = ctx.request.body;
-      const invite = await Invite.findByIdAndUpdate(ctx.state.jwt.inviteId, {
-        $set: { status: 'accepted' },
-      });
-      if (!invite) {
-        return ctx.throw(400, 'Invite could not be found');
-      }
       const authTokenId = generateTokenId();
-      const existingUser = await User.findOne({ email: invite.email });
+      const user = await User.findById(ctx.state.jwt.sub);
 
-      if (existingUser) {
-        await existingUser.updateOne({ authTokenId });
-        ctx.body = {
-          data: { token: createAuthToken(existingUser.id, authTokenId) },
-        };
-        return;
+      if (!user) {
+        ctx.throw(400, 'The user for the invite doesn`t exists anymore!');
       }
 
-      const user = await User.create({
-        firstName,
-        lastName,
-        email: invite.email,
-        password,
+      if (user.status !== 'invited') {
+        ctx.throw(400, 'The invite has already been used');
+      }
+
+      user.assign({
+        status: 'activated',
         authTokenId,
+        ...ctx.request.body,
       });
 
+      await user.save();
       await AuditEntry.append('registered', ctx, {
         object: user,
         user: user.id,
@@ -227,6 +223,10 @@ router
       const user = await User.findOne({ email });
       if (!user) {
         ctx.throw(400, 'Unknown email address.');
+      }
+
+      if (user.status !== 'activated') {
+        ctx.throw(400, 'Your account has not been activated yet. Please check your email for the invitation.');
       }
 
       const tokenId = generateTokenId();

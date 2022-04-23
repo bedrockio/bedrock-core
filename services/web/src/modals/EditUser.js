@@ -1,18 +1,17 @@
 import React from 'react';
-import { Form, Modal, Button } from 'semantic';
+import { Form, Modal, Button, Message } from 'semantic';
 import { request } from 'utils/api';
 import modal from 'helpers/modal';
 
-import AutoFocus from 'components/AutoFocus';
 import Roles from 'components/form-fields/Roles';
 import ErrorMessage from 'components/ErrorMessage';
+import AutoFocus from 'components/AutoFocus';
 
 @modal
 export default class EditUser extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      touched: false,
       loading: false,
       error: null,
       user: props.user || {},
@@ -64,18 +63,15 @@ export default class EditUser extends React.Component {
   };
 
   render() {
-    const { user, touched, loading, error } = this.state;
+    const { user, loading, error } = this.state;
     return (
       <>
         <Modal.Header>
-          {this.isUpdate() ? `Edit "${user.name}"` : 'New User'}
+          {this.isUpdate() ? `Edit "${user.name || user.email}"` : 'New User'}
         </Modal.Header>
         <Modal.Content>
-          <AutoFocus>
-            <Form
-              id="edit-user"
-              onSubmit={this.onSubmit}
-              error={touched && !!error}>
+          <Form id="edit-user" onSubmit={this.onSubmit}>
+            <AutoFocus>
               <ErrorMessage error={error} />
               <Form.Input
                 value={user.firstName || ''}
@@ -102,18 +98,20 @@ export default class EditUser extends React.Component {
               />
               {!this.isUpdate() && (
                 <Form.Input
-                  required
                   label="Password"
                   value={user.password || ''}
                   onChange={(e, { value }) => this.setField('password', value)}
                 />
               )}
+              {!this.isUpdate() && !this.state.password && (
+                <Message content="Not setting a password, will trigger an invitation to the user" />
+              )}
               <Roles
                 value={user.roles || []}
                 onChange={(e, { value }) => this.setField('roles', value)}
               />
-            </Form>
-          </AutoFocus>
+            </AutoFocus>
+          </Form>
         </Modal.Content>
         <Modal.Actions>
           <Button

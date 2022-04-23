@@ -28,6 +28,7 @@ export default (props) => {
       }}>
       <ErrorMessage error={error} />
       <Form.Input
+        disabled={props.disabled}
         type="text"
         name="firstName"
         value={firstName}

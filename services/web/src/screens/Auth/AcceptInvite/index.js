@@ -1,12 +1,11 @@
 import React from 'react';
-import { Segment, Grid } from 'semantic';
+import { Segment, Message } from 'semantic';
 import { request } from 'utils/api';
 import { withSession } from 'stores';
 import screen from 'helpers/screen';
 import LogoTitle from 'components/LogoTitle';
 
 import Form from './Form';
-import { Link } from 'react-router-dom';
 import { getUrlToken } from 'utils/token';
 
 @screen
@@ -49,22 +48,31 @@ export default class AcceptInvite extends React.Component {
 
   render() {
     const { payload, error, loading } = this.state;
+
     return (
       <React.Fragment>
         <LogoTitle title="Accept Invite" />
         <Segment.Group>
           <Segment padded>
-            <div className="wrapper">
-              <p>This invite is intended for {payload?.email}</p>
-              <Form onSubmit={this.onSubmit} error={error} loading={loading} />
-            </div>
-          </Segment>
-          <Segment secondary>
-            <Grid>
-              <Grid.Column floated="left" width={12}>
-                Already have an account? <Link to="/login">Login</Link>
-              </Grid.Column>
-            </Grid>
+            {!payload?.email && (
+              <Message error>
+                <Message.Header>No valid token found</Message.Header>
+                <Message.Content>
+                  Please ensure you either click the email link in the email or
+                  <br /> copy paste the link in full.
+                </Message.Content>
+              </Message>
+            )}
+            {payload?.email && (
+              <div className="wrapper">
+                <p>This invite is intended for {payload?.email}</p>
+                <Form
+                  onSubmit={this.onSubmit}
+                  error={error}
+                  loading={loading}
+                />
+              </div>
+            )}
           </Segment>
         </Segment.Group>
       </React.Fragment>

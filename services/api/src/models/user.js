@@ -9,7 +9,7 @@ definition.attributes.roles[0].scope.enum = validScopes;
 const schema = createSchema(definition);
 
 schema.virtual('name').get(function () {
-  return [this.firstName, this.lastName].join(' ');
+  return [this.firstName, this.lastName].filter(Boolean).join(' ');
 });
 
 schema.virtual('password').set(function (password) {

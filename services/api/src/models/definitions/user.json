@@ -23,14 +23,21 @@
         }
       }
     ],
+    "status": {
+      "type": "String",
+      "writeScopes": "none",
+      "enum": [
+        "disabled",
+        "activated",
+        "invited"
+      ]
+    },
     "firstName": {
       "type": "String",
-      "required": true,
       "trim": true
     },
     "lastName": {
       "type": "String",
-      "required": true,
       "trim": true
     },
     "timeZone": {

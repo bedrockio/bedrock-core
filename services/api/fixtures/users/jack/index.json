@@ -1,4 +1,5 @@
 {
   "name": "Jack Sparrow",
-  "role": "viewer"
+  "role": "viewer",
+  "status": "activated"
 }

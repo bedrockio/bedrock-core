@@ -58,12 +58,6 @@ export default class DashboardLayout extends React.Component {
                     <Icon name="users" />
                     Users
                   </Sidebar.Link>
-                  <Sidebar.Accordion active="/users">
-                    <Sidebar.Link to="/users/invites">
-                      <Icon name="envelope" />
-                      Invites
-                    </Sidebar.Link>
-                  </Sidebar.Accordion>
                 </Protected>
                 <Protected endpoint="organizations">
                   <Sidebar.Link to="/organizations">
