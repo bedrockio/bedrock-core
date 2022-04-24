@@ -32,6 +32,7 @@ async function createUser(attributes = {}) {
     email: `${uniqueId('email')}@platform.com`,
     firstName: 'Test',
     lastName: 'User',
+    status: 'activated',
     ...attributes,
   });
 }

@@ -3,7 +3,7 @@ const { assertMailSent } = require('postmark');
 const { createTemporaryToken, generateTokenId } = require('../../utils/tokens');
 const { setupDb, teardownDb, request, createUser } = require('../../utils/testing');
 const { mockTime, unmockTime, advanceTime } = require('../../utils/testing/time');
-const { User, Invite } = require('../../models');
+const { User } = require('../../models');
 const { verifyPassword } = require('../../utils/auth');
 
 beforeAll(async () => {
@@ -197,12 +197,9 @@ describe('/1/auth', () => {
   });
 
   describe('POST /accept-invite', () => {
-    it('should send an email to the registered user', async () => {
-      const invite = await Invite.create({
-        email: 'some@email.com',
-        status: 'invited',
-      });
-      const token = createTemporaryToken({ type: 'invite', inviteId: invite.id, email: invite.email });
+    it('should accept an invite', async () => {
+      const user = await createUser({ status: 'invited' });
+      const token = createTemporaryToken({ type: 'invite', sub: user._id, email: user.email });
       const response = await request(
         'POST',
         '/1/auth/accept-invite',
@@ -224,15 +221,16 @@ describe('/1/auth', () => {
       expect(payload).toHaveProperty('kid', 'user');
       expect(payload).toHaveProperty('type', 'user');
 
-      const user = await User.findById(payload.sub);
-      expect(user.firstName).toBe('Bob');
-      expect(user.lastName).toBe('Johnson');
+      const dbUser = await User.findById(payload.sub);
+      expect(dbUser.firstName).toBe('Bob');
+      expect(dbUser.lastName).toBe('Johnson');
+      expect(dbUser.status).toBe('activated');
     });
   });
 
   describe('POST /request-password', () => {
     it('should send an email to the registered user', async () => {
-      const user = await createUser();
+      const user = await createUser({});
       const response = await request('POST', '/1/auth/request-password', {
         email: user.email,
       });
@@ -241,7 +239,7 @@ describe('/1/auth', () => {
     });
 
     it('should set a temporary token id', async () => {
-      let user = await createUser();
+      let user = await createUser({});
       await request('POST', '/1/auth/request-password', {
         email: user.email,
       });
