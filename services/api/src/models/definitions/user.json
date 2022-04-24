@@ -27,7 +27,6 @@
       "type": "String",
       "writeScopes": "none",
       "enum": [
-        "disabled",
         "activated",
         "invited"
       ]

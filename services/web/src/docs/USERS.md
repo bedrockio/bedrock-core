@@ -1,6 +1,7 @@
 # Users API
 
-This API provides self-management capabilities for users as well as admin-only user management capabilities.
+This API provides self-management capabilities for users as well as admin-only
+user management capabilities.
 
 ## User Object
 
@@ -16,13 +17,16 @@ callSummary({method: 'GET', path: '/1/users/me'})
 
 ## Update Self
 
-Update the user object for the user associated with the JWT token. All fields in the User object can be updated using this.
+Update the user object for the user associated with the JWT token. All fields in
+the User object can be updated using this.
 
 callSummary({method: 'PATCH', path: '/1/users/me'})
 
 ## Create User
 
 Create a new user object. Requires admin permissions.
+
+Note if the password is not provided, an invite is sent to the user.
 
 callSummary({method: 'POST', path: '/1/users'})
 
@@ -49,3 +53,15 @@ callSummary({method: 'PATCH', path: '/1/users/:userId'})
 Delete user by ID. Requires admin permissions.
 
 callSummary({method: 'DELETE', path: '/1/users/:userId'})
+
+## Re-invite User
+
+Re sents the invite for a given user.
+
+callSummary({method: 'POST', path: '/1/users/:userId/re-invite'})
+
+## Invite Users
+
+Invite multiple users to the platform.
+
+callSummary({method: 'POST', path: '/1/users/invite'})

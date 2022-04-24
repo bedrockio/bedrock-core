@@ -9,7 +9,6 @@ import { useSession } from 'stores';
 import Dashboard from 'screens/Dashboard';
 import Docs from 'screens/Docs';
 import Components from 'screens/Components';
-import Invites from 'screens/Invites';
 import NotFound from 'screens/NotFound';
 import Settings from 'screens/Settings';
 import Shops from 'screens/Shops';
@@ -43,7 +42,6 @@ const App = () => {
       <Protected path="/shops/:id?" allowed={Shops} />
       <Protected path="/products/:id?" allowed={Products} />
       <Protected path="/settings/:id?" allowed={Settings} exact />
-      <Protected path="/users/invites" allowed={Invites} exact />
       <Protected path="/organizations/:id?" allowed={Organizations} />
       <Protected path="/users/:id?" allowed={Users} />
       <Route path="/docs/ui" component={Components} exact />
