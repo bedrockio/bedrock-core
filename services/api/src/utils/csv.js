@@ -16,7 +16,7 @@ function csvExport(ctx, data, options = {}) {
     csvStream.write(exportItem(item, options));
   });
 
-  ctx.set('Content-Disposition', `attachment; filename=\"${filename}\"`);
+  ctx.set('Content-Disposition', `attachment; filename="${filename}"`);
   ctx.set('Content-Type', 'text/csv');
 
   csvStream.end();
