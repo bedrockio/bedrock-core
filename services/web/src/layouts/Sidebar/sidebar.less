@@ -18,6 +18,11 @@
     background-color: @mainMenuBackground;
     border-right: 1px solid rgba(0, 0, 0, 0.05);
 
+    .dark-theme & {
+      background-color: @invertedMainMenuBackground;
+      border-right-color: rgba(255,255,255,0.1);
+    }
+
     &-wrap {
       padding-left: 25px;
     }
@@ -49,6 +54,10 @@
     color: #abadb3;
     font-weight: bold;
     margin: 5px 0 5px 25px;
+
+    .dark-theme & {
+      color: @invertedUnselectedTextColor;
+    }
   }
 
   &-link {
@@ -79,6 +88,19 @@
     .sidebar-layout-accordion & {
       padding-left: 40px;
     }
+
+    .dark-theme & {
+      color: @invertedMutedTextColor;
+
+      &:hover {
+        color: @invertedMutedTextColor;
+        background-color: rgba(255,255,255,0.05);
+      }
+
+      &.active {
+        background-color: rgba(@primaryColor, 0.2);
+      }
+    }
   }
 
   &-item {
@@ -107,6 +129,15 @@
       top: 3px;
       margin-right: 5px;
     }
+
+    .dark-theme & {
+      color: @invertedMutedTextColor;
+      border-bottom-color: @invertedBorderColor;
+
+      &:hover {
+        border-color: rgba(255,255,255,.2);
+      }
+    }
   }
 
   &-accordion {
@@ -121,6 +152,10 @@
     height: 1px;
     margin: 0 0 15px -@menuPadding;
     background-color: #ccc;
+
+    .dark-theme & {
+      background-color: @invertedBorderColor;
+    }
   }
 
   &-content {
@@ -140,6 +175,11 @@
 
     @media @desktop {
       display: none;
+    }
+
+    .dark-theme & {
+      background: @invertedMainMenuBackground;
+      border-bottom-color: rgba(255,255,255,0.1);
     }
   }
 
@@ -166,6 +206,10 @@
     &--open {
       opacity: 1;
       pointer-events: auto;
+    }
+
+    .dark-theme & {
+      background-color: rgba(mix(#000, @invertedMainMenuBackground, 50%), .7);
     }
   }
 }

@@ -34,6 +34,11 @@ body {
   font-size: @fontSize;
   line-height: @lineHeight;
   color: @textColor;
+
+  &.dark-theme {
+    color: @invertedTextColor;
+    background: @invertedPageBackground;
+  }
 }
 
 /*******************************
@@ -98,6 +103,14 @@ a {
     color: @linkHoverColor;
     text-decoration: @linkHoverUnderline;
   }
+
+  .dark-theme & {
+    color: @invertedLinkColor;
+
+    &:hover {
+      color: @invertedLinkHoverColor;
+    }
+  }
 }
 
 /*******************************
@@ -110,34 +123,42 @@ body ::-webkit-scrollbar {
   width: @customScrollbarWidth;
   height: @customScrollbarHeight;
 }
-body ::-webkit-scrollbar-track {
+body ::-webkit-scrollbar-track,
+body.dark-theme .ui.inverted::-webkit-scrollbar-track {
   background: @trackBackground;
   border-radius: @trackBorderRadius;
 }
-body ::-webkit-scrollbar-thumb {
+body ::-webkit-scrollbar-thumb,
+body.dark-theme .ui.inverted::-webkit-scrollbar-thumb {
   cursor: pointer;
   border-radius: @thumbBorderRadius;
   background: @thumbBackground;
   transition: @thumbTransition;
 }
-body ::-webkit-scrollbar-thumb:window-inactive {
+body ::-webkit-scrollbar-thumb:window-inactive,
+body.dark-theme  .ui.inverted::-webkit-scrollbar-thumb:window-inactive {
   background: @thumbInactiveBackground;
 }
-body ::-webkit-scrollbar-thumb:hover {
+body ::-webkit-scrollbar-thumb:hover,
+body.dark-theme .ui.inverted::-webkit-scrollbar-thumb:hover {
   background: @thumbHoverBackground;
 }
 
 /* Inverted UI */
-body .ui.inverted::-webkit-scrollbar-track {
+body .ui.inverted::-webkit-scrollbar-track,
+body.dark-theme ::-webkit-scrollbar-track {
   background: @trackInvertedBackground;
 }
-body .ui.inverted::-webkit-scrollbar-thumb {
+body .ui.inverted::-webkit-scrollbar-thumb,
+body.dark-theme ::-webkit-scrollbar-thumb {
   background: @thumbInvertedBackground;
 }
-body .ui.inverted::-webkit-scrollbar-thumb:window-inactive {
+body .ui.inverted::-webkit-scrollbar-thumb:window-inactive,
+body.dark-theme ::-webkit-scrollbar-thumb:window-inactive {
   background: @thumbInvertedInactiveBackground;
 }
-body .ui.inverted::-webkit-scrollbar-thumb:hover {
+body .ui.inverted::-webkit-scrollbar-thumb:hover,
+body.dark-theme ::-webkit-scrollbar-thumb:hover {
   background: @thumbInvertedHoverBackground;
 }
 

@@ -2,7 +2,7 @@
        Fonts
 --------------------*/
 
-@baseFontFamily    : -apple-system, system-ui, Helvetica Neue, Arial, Helvetica, sans-serif;
+@baseFontFamily    : -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
 @headerFont        : @baseFontFamily;
 @pageFont          : @baseFontFamily;
 
@@ -113,12 +113,14 @@
 @lineHeight          : 1.4285em;
 @textColor           : #111827;
 
+@invertedPageBackground: hsl(hue(@pageBackground), (saturation(@pageBackground) / 2), lightness(@textColor));// spin(@pageBackground, 180); //mix(@textColor, #333, 75);
+
 /*-------------------
         Sidebar Main Menu & Portal Main Menu
 --------------------*/
 
 @mainMenuBackground      : #f4f0eb;
-
+@invertedMainMenuBackground : hsl(hue(@mainMenuBackground), (saturation(@mainMenuBackground) / 2), (lightness(@textColor) + (lightness(@mainMenuBackground) - 100%) / 2)); // lighter option: hsl(hue(@mainMenuBackground), (saturation(@mainMenuBackground) / 2), (100% - lightness(@mainMenuBackground) + (lightness(@textColor)*0.75)));
 
 /*-------------------
       Paragraph
@@ -136,6 +138,8 @@
 @linkHoverColor      : darken(saturate(@linkColor, 20), 15, relative);
 @linkHoverUnderline  : @linkUnderline;
 
+@invertedLinkColor   : hsl(hue(@linkColor), saturation(@linkColor), if((lightness(@linkColor) > 50%), (100% - lightness(@linkColor)), lightness(@linkColor)));
+@invertedLinkHoverColor : lighten(saturate(@linkColor, 20), 10, relative);
 /*-------------------
     Scroll Bars
 --------------------*/
@@ -475,6 +479,8 @@
 
 @solidWhiteBorderColor         : #555555;
 @selectedSolidWhiteBorderColor : #999999;
+
+@invertedBorderColor       : hsl(hue(@borderColor), saturation(@borderColor), (100% - lightness(@borderColor)));
 
 
 /*-------------------
