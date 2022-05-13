@@ -289,22 +289,40 @@ h5.ui.header .sub.header {
       Inverted
 --------------------*/
 
+.dark-theme .ui.inverted.header {
+  color: @textColor;
+}
+.dark-theme .ui.inverted.header .sub.header {
+  color: @subHeadingColor;
+}
+.dark-theme .ui.inverted.attached.header {
+  background: @attachedBackground;
+  box-shadow: @attachedBoxShadow;
+  border-color: @attachedBorder;
+}
+.dark-theme .ui.inverted.block.header {
+  background: @blockBackground;
+  box-shadow: @blockBoxShadow;
+  border: @blockBorder;
+}
+.dark-theme .ui.header,
 .ui.inverted.header {
   color: @invertedColor;
 }
+.dark-theme .ui.header .sub.header,
 .ui.inverted.header .sub.header {
   color: @invertedSubHeaderColor;
 }
+.dark-theme .ui.attached.header,
 .ui.inverted.attached.header {
   background: @invertedAttachedBackground;
   box-shadow: none;
   border-color: transparent;
 }
+.dark-theme .ui.block.header,
 .ui.inverted.block.header {
   background: @invertedBlockBackground;
   box-shadow: none;
-}
-.ui.inverted.block.header {
   border-bottom: none;
 }
 
@@ -313,10 +331,12 @@ h5.ui.header .sub.header {
 --------------------*/
 
 /*--- Red ---*/
-.ui.red.header {
+.ui.red.header,
+.dark-theme .ui.inverted.red.header {
   color: @red !important;
 }
-a.ui.red.header:hover {
+a.ui.red.header:hover,
+.dark-theme a.ui.inverted.red.header:hover {
   color: @redHover !important;
 }
 .ui.red.dividing.header {
@@ -324,207 +344,253 @@ a.ui.red.header:hover {
 }
 
 /* Inverted */
+.dark-theme .ui.red.header,
 .ui.inverted.red.header {
   color: @lightRed !important;
 }
+.dark-theme a.ui.red.header:hover,
 a.ui.inverted.red.header:hover {
   color: @lightRedHover !important;
 }
 
 /*--- Orange ---*/
-.ui.orange.header {
+.ui.orange.header,
+.dark-theme .ui.inverted.orange.header {
   color: @orange !important;
 }
-a.ui.orange.header:hover {
+a.ui.orange.header:hover,
+.dark-theme a.ui.inverted.orange.header:hover {
   color: @orangeHover !important;
 }
 .ui.orange.dividing.header {
   border-bottom: @dividedColoredBorderWidth solid @orange;
 }
 /* Inverted */
+.dark-theme .ui.orange.header,
 .ui.inverted.orange.header {
   color: @lightOrange !important;
 }
+.dark-theme a.ui.orange.header:hover,
 a.ui.inverted.orange.header:hover {
   color: @lightOrangeHover !important;
 }
 
 /*--- Olive ---*/
-.ui.olive.header {
+.ui.olive.header,
+.dark-theme .ui.inverted.olive.header {
   color: @olive !important;
 }
-a.ui.olive.header:hover {
+a.ui.olive.header:hover,
+.dark-theme a.ui.inverted.olive.header:hover {
   color: @oliveHover !important;
 }
 .ui.olive.dividing.header {
   border-bottom: @dividedColoredBorderWidth solid @olive;
 }
 /* Inverted */
+.dark-theme .ui.olive.header,
 .ui.inverted.olive.header {
   color: @lightOlive !important;
 }
+.dark-theme a.ui.olive.header:hover,
 a.ui.inverted.olive.header:hover {
   color: @lightOliveHover !important;
 }
 
 /*--- Yellow ---*/
-.ui.yellow.header {
+.ui.yellow.header,
+.dark-theme .ui.inverted.yellow.header {
   color: @yellow !important;
 }
-a.ui.yellow.header:hover {
+a.ui.yellow.header:hover,
+.dark-theme a.ui.inverted.yellow.header:hover {
   color: @yellowHover !important;
 }
 .ui.yellow.dividing.header {
   border-bottom: @dividedColoredBorderWidth solid @yellow;
 }
 /* Inverted */
+.dark-theme .ui.yellow.header,
 .ui.inverted.yellow.header {
   color: @lightYellow !important;
 }
+.dark-theme a.ui.yellow.header:hover,
 a.ui.inverted.yellow.header:hover {
   color: @lightYellowHover !important;
 }
 
 /*--- Green ---*/
-.ui.green.header {
+.ui.green.header,
+.dark-theme .ui.inverted.green.header {
   color: @green !important;
 }
-a.ui.green.header:hover {
+a.ui.green.header:hover,
+.dark-theme a.ui.inverted.green.header:hover {
   color: @greenHover !important;
 }
 .ui.green.dividing.header {
   border-bottom: @dividedColoredBorderWidth solid @green;
 }
 /* Inverted */
+.dark-theme .ui.green.header,
 .ui.inverted.green.header {
   color: @lightGreen !important;
 }
+.dark-theme a.ui.green.header:hover,
 a.ui.inverted.green.header:hover {
   color: @lightGreenHover !important;
 }
 
 /*--- Teal ---*/
-.ui.teal.header {
+.ui.teal.header,
+.dark-theme .ui.inverted.teal.header {
   color: @teal !important;
 }
-a.ui.teal.header:hover {
+a.ui.teal.header:hover,
+.dark-theme a.ui.teal.header:hover {
   color: @tealHover !important;
 }
 .ui.teal.dividing.header {
   border-bottom: @dividedColoredBorderWidth solid @teal;
 }
 /* Inverted */
+.dark-theme .ui.teal.header,
 .ui.inverted.teal.header {
   color: @lightTeal !important;
 }
+.dark-theme a.ui.teal.header:hover,
 a.ui.inverted.teal.header:hover {
   color: @lightTealHover !important;
 }
 
 /*--- Blue ---*/
-.ui.blue.header {
+.ui.blue.header,
+.dark-theme .ui.inverted.blue.header {
   color: @blue !important;
 }
-a.ui.blue.header:hover {
+a.ui.blue.header:hover,
+.dark-theme a.ui.inverted.blue.header:hover {
   color: @blueHover !important;
 }
 .ui.blue.dividing.header {
   border-bottom: @dividedColoredBorderWidth solid @blue;
 }
 /* Inverted */
+.dark-theme .ui.blue.header,
 .ui.inverted.blue.header {
   color: @lightBlue !important;
 }
+.dark-theme a.ui.blue.header:hover,
 a.ui.inverted.blue.header:hover {
   color: @lightBlueHover !important;
 }
 
 /*--- Violet ---*/
-.ui.violet.header {
+.ui.violet.header,
+.dark-theme .u.inverted.violet.header {
   color: @violet !important;
 }
-a.ui.violet.header:hover {
+a.ui.violet.header:hover,
+.dark-theme a.ui.inverted.violet.header:hover {
   color: @violetHover !important;
 }
 .ui.violet.dividing.header {
   border-bottom: @dividedColoredBorderWidth solid @violet;
 }
 /* Inverted */
+.dark-theme .ui.violet.header,
 .ui.inverted.violet.header {
   color: @lightViolet !important;
 }
+.dark-theme a.ui.violet.header:hover,
 a.ui.inverted.violet.header:hover {
   color: @lightVioletHover !important;
 }
 
 /*--- Purple ---*/
-.ui.purple.header {
+.ui.purple.header,
+.dark-theme .ui.inverted.purple.header {
   color: @purple !important;
 }
-a.ui.purple.header:hover {
+a.ui.purple.header:hover,
+.dark-theme a.ui.inverted.purple.header:hover {
   color: @purpleHover !important;
 }
 .ui.purple.dividing.header {
   border-bottom: @dividedColoredBorderWidth solid @purple;
 }
 /* Inverted */
+.dark-theme .ui.purple.header,
 .ui.inverted.purple.header {
   color: @lightPurple !important;
 }
+.dark-theme a.ui.purple.header:hover,
 a.ui.inverted.purple.header:hover {
   color: @lightPurpleHover !important;
 }
 
 /*--- Pink ---*/
-.ui.pink.header {
+.ui.pink.header,
+.dark-theme .ui.inverted.pink.header {
   color: @pink !important;
 }
-a.ui.pink.header:hover {
+a.ui.pink.header:hover,
+.dark-theme a.ui.inverted.pink.header:hover {
   color: @pinkHover !important;
 }
 .ui.pink.dividing.header {
   border-bottom: @dividedColoredBorderWidth solid @pink;
 }
 /* Inverted */
+.dark-theme .ui.pink.header,
 .ui.inverted.pink.header {
   color: @lightPink !important;
 }
+.dark-theme a.ui.pink.header,
 a.ui.inverted.pink.header:hover {
   color: @lightPinkHover !important;
 }
 
 /*--- Brown ---*/
-.ui.brown.header {
+.ui.brown.header,
+.dark-theme .ui.inverted.brown.header {
   color: @brown !important;
 }
-a.ui.brown.header:hover {
+a.ui.brown.header:hover,
+.dark-theme a.ui.inverted.brown.header:hover {
   color: @brownHover !important;
 }
 .ui.brown.dividing.header {
   border-bottom: @dividedColoredBorderWidth solid @brown;
 }
 /* Inverted */
+.dark-theme .ui.brown.header,
 .ui.inverted.brown.header {
   color: @lightBrown !important;
 }
+.dark-theme a.ui.brown.header:hover,
 a.ui.inverted.brown.header:hover {
   color: @lightBrownHover !important;
 }
 
 /*--- Grey ---*/
-.ui.grey.header {
+.ui.grey.header,
+.dark-theme .ui.inverted.grey.header {
   color: @grey !important;
 }
-a.ui.grey.header:hover {
+a.ui.grey.header:hover,
+.dark-theme a.ui.inverted.grey.header:hover {
   color: @greyHover !important;
 }
 .ui.grey.dividing.header {
   border-bottom: @dividedColoredBorderWidth solid @grey;
 }
 /* Inverted */
+.dark-theme .ui.grey.header,
 .ui.inverted.grey.header {
   color: @lightGrey !important;
 }
+.dark-theme a.ui.grey.heade:hover,
 a.ui.inverted.grey.header:hover {
   color: @lightGreyHover !important;
 }
