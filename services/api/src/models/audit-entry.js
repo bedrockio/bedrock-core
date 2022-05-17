@@ -52,7 +52,7 @@ schema.statics.getObjectFields = function getObjectFields(object, fields = []) {
 schema.statics.append = function (activity, ctx, { object, fields, type, ...options }) {
   const fromContext = this.getContextFields(ctx);
 
-  if (options.object) {
+  if (object) {
     Object.assign(options, this.getObjectFields(object, fields), options);
   }
 
