@@ -38,7 +38,7 @@ export default class AcceptInvite extends React.Component {
         token,
         body,
       });
-      await this.context.authenticate(data.token);
+      this.props.history.push(await this.context.authenticate(data.token));
     } catch (error) {
       this.setState({
         error,

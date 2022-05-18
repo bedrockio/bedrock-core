@@ -22,13 +22,17 @@ export default class MfaVerification extends React.Component {
   };
 
   componentDidMount() {
-    const data = this.getMfaSessionData();
-    if (!data) {
-      this.props.history.push('/login');
-      return;
-    }
-    if (data.mfaMethod === 'sms') {
-      this.triggerToken();
+    if (this.context.isLoggedIn()) {
+      this.props.history.push('/');
+    } else {
+      const data = this.getMfaSessionData();
+      if (!data) {
+        this.props.history.push('/login');
+        return;
+      }
+      if (data.mfaMethod === 'sms') {
+        this.triggerToken();
+      }
     }
   }
 
@@ -86,7 +90,7 @@ export default class MfaVerification extends React.Component {
         },
       });
 
-      await this.context.authenticate(data.token);
+      this.props.history.push(await this.context.authenticate(data.token));
     } catch (error) {
       this.setState({
         error,
