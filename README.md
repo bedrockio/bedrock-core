@@ -11,7 +11,7 @@ More documentation about specific services and components can be found in the fo
 Using Docker Compose you can build and run all services and dependencies as follows:
 
 ```bash
-docker-compose up
+docker compose up
 ```
 
 Open the dashboard at http://localhost:2200/ - Admin login credentials can be seen in the API output.
