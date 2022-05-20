@@ -5,5 +5,8 @@
       "trim": true,
       "required": true
     }
-  }
+  },
+  "search": [
+    "name"
+  ]
 }

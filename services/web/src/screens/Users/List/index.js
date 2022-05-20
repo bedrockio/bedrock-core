@@ -48,14 +48,14 @@ export default class UserList extends React.Component {
     const roles = [];
     for (let [key, val] of Object.entries(data)) {
       const { name } = val;
-      if (!query || RegExp(query, 'i').test(name)) {
+      if (!query?.keyword || RegExp(query.keyword, 'i').test(name)) {
         roles.push({
           id: key,
           name: val.name,
         });
       }
     }
-    return roles;
+    return { data: roles };
   });
 
   render() {
