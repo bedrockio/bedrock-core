@@ -138,7 +138,7 @@ describe('/1/organizations', () => {
         name: 'org',
       });
       const response = await request('DELETE', `/1/organizations/${organization.id}`, {}, { user });
-      expect(response.status).toBe(401);
+      expect(response.status).toBe(403);
     });
   });
 

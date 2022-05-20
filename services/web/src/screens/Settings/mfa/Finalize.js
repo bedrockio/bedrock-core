@@ -32,7 +32,7 @@ export default class Finalize extends React.Component {
         path: '/1/mfa/enable',
         body: this.props.requestBody,
       });
-      await this.context.reloadUser();
+      await this.context.bootstrap();
       this.props.history.push(`/settings/security`);
     } catch (error) {
       if (error.status == 403) {

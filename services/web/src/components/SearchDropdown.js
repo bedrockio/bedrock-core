@@ -85,7 +85,11 @@ export default class SearchDropdown extends React.Component {
   }
 
   onSearchChange = debounce((evt, { searchQuery }) => {
-    this.fetchItems({ keyword: searchQuery });
+    const options = {};
+    if (searchQuery) {
+      options[this.props.keywordField] = searchQuery;
+    }
+    this.fetchItems(options);
   }, 200);
 
   onChange = (evt, { value, ...rest }) => {
@@ -139,7 +143,7 @@ export default class SearchDropdown extends React.Component {
   getValue() {
     const { multiple, value } = this.props;
     if (multiple) {
-      return value.map((obj) => obj.id || value);
+      return value.map((obj) => obj.id || obj);
     } else {
       return value?.id || value;
     }
@@ -158,6 +162,7 @@ export default class SearchDropdown extends React.Component {
           'onDataNeeded',
           'searchPath',
           'searchBody',
+          'keywordField',
         ])}
         error={!!error}
         loading={loading}
@@ -194,6 +199,7 @@ SearchDropdown.propTypes = PropTypes.oneOfType([
 ]).isRequired;
 
 SearchDropdown.defaultProps = {
+  keywordField: 'keyword',
   objectMode: true,
   getOptionLabel: (item) => item?.name || item,
   getOptionValue: (item) => item?.id || item,

@@ -92,7 +92,7 @@ describe('/1/users', () => {
         },
         { user }
       );
-      expect(response.status).toBe(401);
+      expect(response.status).toBe(403);
     });
   });
 
@@ -109,7 +109,7 @@ describe('/1/users', () => {
       const user = await createUser({});
       const user1 = await createUser({ firstName: 'New', lastName: 'Name' });
       const response = await request('GET', `/1/users/${user1.id}`, {}, { user });
-      expect(response.status).toBe(401);
+      expect(response.status).toBe(403);
     });
   });
 
@@ -151,7 +151,7 @@ describe('/1/users', () => {
     it('should deny access to non-admins', async () => {
       const user = await createUser({});
       const response = await request('POST', '/1/users/search', {}, { user });
-      expect(response.status).toBe(401);
+      expect(response.status).toBe(403);
     });
   });
 
@@ -176,7 +176,7 @@ describe('/1/users', () => {
       const user = await createUser({});
       const user1 = await createUser({ firstName: 'New', lastName: 'Name' });
       const response = await request('PATCH', `/1/users/${user1.id}`, { name: 'new name' }, { user });
-      expect(response.status).toBe(401);
+      expect(response.status).toBe(403);
     });
 
     it('should be able to update user roles', async () => {
@@ -256,7 +256,7 @@ describe('/1/users', () => {
       const user = await createUser({});
       const user1 = await createUser({ firstName: 'Neo', lastName: 'One' });
       const response = await request('DELETE', `/1/users/${user1.id}`, {}, { user });
-      expect(response.status).toBe(401);
+      expect(response.status).toBe(403);
     });
   });
 });
