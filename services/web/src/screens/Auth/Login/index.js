@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Segment, Grid, Form } from 'semantic';
-import { request } from 'utils/api';
 import { withSession } from 'stores';
 import screen from 'helpers/screen';
 
