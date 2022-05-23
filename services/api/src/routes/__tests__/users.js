@@ -74,7 +74,7 @@ describe('/1/users', () => {
       );
       const data = response.body.data;
       expect(response.status).toBe(200);
-      expect(data.status).toBe('activated');
+      expect(data.status).toBe('activate');
       expect(data.firstName).toBe('Mellow');
       expect(data.lastName).toBe('Yellow');
       expect(data.name).toBe('Mellow Yellow');
@@ -94,12 +94,12 @@ describe('/1/users', () => {
       );
       expect(response.status).toBe(200);
       const data = response.body.data;
-      expect(data.status).toBe('invited');
+      expect(data.status).toBe('invite');
       assertMailSent({ to: 'hello-invite@platform.com' });
     });
 
     it('should deny access to non-admins', async () => {
-      const user = await createUser({});
+      const user = await createUser();
       const response = await request(
         'POST',
         '/1/users',
@@ -126,7 +126,7 @@ describe('/1/users', () => {
       expect(response.body.data.lastName).toBe(user1.lastName);
     });
     it('should deny access to non-admins', async () => {
-      const user = await createUser({});
+      const user = await createUser();
       const user1 = await createUser({ firstName: 'New', lastName: 'Name' });
       const response = await request('GET', `/1/users/${user1.id}`, {}, { user });
       expect(response.status).toBe(401);
@@ -169,7 +169,7 @@ describe('/1/users', () => {
     });
 
     it('should deny access to non-admins', async () => {
-      const user = await createUser({});
+      const user = await createUser();
       const response = await request('POST', '/1/users/search', {}, { user });
       expect(response.status).toBe(401);
     });
@@ -193,7 +193,7 @@ describe('/1/users', () => {
     });
 
     it('should deny access to non-admins', async () => {
-      const user = await createUser({});
+      const user = await createUser();
       const user1 = await createUser({ firstName: 'New', lastName: 'Name' });
       const response = await request('PATCH', `/1/users/${user1.id}`, { name: 'new name' }, { user });
       expect(response.status).toBe(401);
@@ -273,7 +273,7 @@ describe('/1/users', () => {
     });
 
     it('should deny access to non-admins', async () => {
-      const user = await createUser({});
+      const user = await createUser();
       const user1 = await createUser({ firstName: 'Neo', lastName: 'One' });
       const response = await request('DELETE', `/1/users/${user1.id}`, {}, { user });
       expect(response.status).toBe(401);
@@ -296,7 +296,7 @@ describe('/1/users', () => {
 
       const dbUser = await User.findOne({ email: 'new@platform.com' });
       expect(dbUser.roles.find((role) => role.role === 'superAdmin')).toBeDefined();
-      expect(dbUser.status).toBe('invited');
+      expect(dbUser.status).toBe('invite');
 
       assertMailSent({ to: 'new@platform.com' });
     });
@@ -305,7 +305,7 @@ describe('/1/users', () => {
   describe('POST /:user/re-invite', () => {
     it('should be able to re-invite', async () => {
       const admin = await createAdminUser();
-      const user = await createUser({ firstName: 'Neo', status: 'invited', lastName: 'One' });
+      const user = await createUser({ firstName: 'Neo', status: 'invite', lastName: 'One' });
       const response = await request('POST', `/1/users/${user.id}/re-invite`, {}, { user: admin });
       expect(response.status).toBe(204);
       assertMailSent({ to: user.email });

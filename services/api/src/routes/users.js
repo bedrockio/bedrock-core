@@ -101,7 +101,7 @@ router
   .use(requirePermissions({ endpoint: 'users', permission: 'write', scope: 'global' }))
   .post('/:userId/re-invite', async (ctx) => {
     const { user, authUser } = ctx.state;
-    if (user.status !== 'invited') {
+    if (user.status !== 'invite') {
       ctx.throw(400, `You can't invite a user that has the status ${user.status}`);
     }
     await sendInvite(authUser, user);
@@ -121,7 +121,7 @@ router
         ctx.throw(400, 'A user with that email already exists');
       }
       const userFields = ctx.request.body;
-      userFields.status = password ? 'activated' : 'invited';
+      userFields.status = password ? 'activate' : 'invite';
 
       const user = await User.create(userFields);
       if (!password) {
@@ -156,15 +156,16 @@ router
         }
       }
 
-      for (let email of [...new Set(emails)]) {
+      const uniqueEmails = new Set(emails);
+      for (const email of uniqueEmails) {
         // NOTE: slight problem here, if a user is already invited to a different org,
         // we are overwrite the roles for that user. (until they have accepted the invite)
         const user = await User.findOneAndUpdate(
           {
             email,
-            status: 'invited',
+            status: 'invite',
           },
-          { status: 'invited', roles: userRoles, deleted: false, email, $unset: { deletedAt: 1 } },
+          { status: 'invite', roles: userRoles, deleted: false, email, $unset: { deletedAt: 1 } },
           {
             new: true,
             upsert: true,

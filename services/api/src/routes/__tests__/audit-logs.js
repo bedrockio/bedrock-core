@@ -17,7 +17,7 @@ describe('/1/audit-entries', () => {
     });
 
     it('should deny access to non-admins', async () => {
-      const user = await createUser({});
+      const user = await createUser();
       const response = await request('POST', '/1/audit-entries/search', {}, { user });
       expect(response.status).toBe(401);
     });

@@ -74,7 +74,7 @@ describe('/1/mfa', () => {
 
     it('should failed with bad backup code', async () => {
       const badBackupCode = '12345-16123';
-      const user = await createUser({});
+      const user = await createUser();
       await user.save();
       const token = createTemporaryToken({ type: 'mfa', sub: user.id, jti: user.tempTokenId });
       const response = await request(
@@ -261,7 +261,7 @@ describe('/1/mfa', () => {
 
   describe('POST /mfa/generate-backup-codes', () => {
     it('should generate new codes', async () => {
-      const user = await createUser({});
+      const user = await createUser();
       const response = await request('POST', `/1/mfa/generate-backup-codes`, {}, { user });
       expect(response.status).toBe(200);
       expect(response.body.data.codes[0]).toBeDefined();
@@ -270,7 +270,7 @@ describe('/1/mfa', () => {
 
   describe('POST /check-code', () => {
     it('should verify a code', async () => {
-      const user = await createUser({});
+      const user = await createUser();
       const secret = generateSecret();
       const code = generateToken(secret);
 

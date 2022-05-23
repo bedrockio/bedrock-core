@@ -335,8 +335,8 @@
           "schema": {
             "type": "string",
             "enum": [
-              "activated",
-              "invited"
+              "activate",
+              "invite"
             ]
           }
         },

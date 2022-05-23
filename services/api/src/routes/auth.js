@@ -64,7 +64,7 @@ router
       const { email, password } = ctx.request.body;
       const user = await User.findOne({ email });
 
-      if (user.status !== 'activated') {
+      if (user.status !== 'activate') {
         ctx.throw(400, 'Your account has not been activated yet. Please check your email for the invitation.');
       }
 
@@ -192,12 +192,12 @@ router
         ctx.throw(400, 'The user for the invite doesn`t exists anymore!');
       }
 
-      if (user.status !== 'invited') {
+      if (user.status !== 'invite') {
         ctx.throw(400, 'The invite has already been used');
       }
 
       user.assign({
-        status: 'activated',
+        status: 'activate',
         authTokenId,
         ...ctx.request.body,
       });
@@ -225,7 +225,7 @@ router
         ctx.throw(400, 'Unknown email address.');
       }
 
-      if (user.status !== 'activated') {
+      if (user.status !== 'activate') {
         ctx.throw(400, 'Your account has not been activated yet. Please check your email for the invitation.');
       }
 

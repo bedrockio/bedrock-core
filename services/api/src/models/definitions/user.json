@@ -27,8 +27,8 @@
       "type": "String",
       "writeScopes": "none",
       "enum": [
-        "activated",
-        "invited"
+        "activate",
+        "invite"
       ]
     },
     "firstName": {

@@ -198,7 +198,7 @@ describe('/1/auth', () => {
 
   describe('POST /accept-invite', () => {
     it('should accept an invite', async () => {
-      const user = await createUser({ status: 'invited' });
+      const user = await createUser({ status: 'invite' });
       const token = createTemporaryToken({ type: 'invite', sub: user._id, email: user.email });
       const response = await request(
         'POST',
@@ -224,13 +224,13 @@ describe('/1/auth', () => {
       const dbUser = await User.findById(payload.sub);
       expect(dbUser.firstName).toBe('Bob');
       expect(dbUser.lastName).toBe('Johnson');
-      expect(dbUser.status).toBe('activated');
+      expect(dbUser.status).toBe('activate');
     });
   });
 
   describe('POST /request-password', () => {
     it('should send an email to the registered user', async () => {
-      const user = await createUser({});
+      const user = await createUser();
       const response = await request('POST', '/1/auth/request-password', {
         email: user.email,
       });
