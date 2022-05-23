@@ -200,7 +200,7 @@ export default class UserList extends React.Component {
                                   header={`Are you sure you want to invite "${user.email}"?`}
                                   trigger={
                                     <Dropdown.Item
-                                      disabled={user.status !== 'invited'}
+                                      disabled={user.status !== 'invite'}
                                       text="Re-invite"
                                       icon="mail"
                                     />
