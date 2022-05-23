@@ -62,8 +62,16 @@ export default class EditUser extends React.Component {
     }
   };
 
+  getButtonLabel() {
+    if (!this.isUpdate() && !this.state.user.password) {
+      return 'Invite';
+    }
+    return this.isUpdate() ? 'Update' : 'Create';
+  }
+
   render() {
     const { user, loading, error } = this.state;
+
     return (
       <>
         <Modal.Header>
@@ -119,7 +127,7 @@ export default class EditUser extends React.Component {
             form="edit-user"
             loading={loading}
             disabled={loading}
-            content={this.isUpdate() ? 'Update' : 'Create'}
+            content={this.getButtonLabel()}
           />
         </Modal.Actions>
       </>

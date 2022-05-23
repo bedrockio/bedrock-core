@@ -3,10 +3,10 @@ const Joi = require('joi');
 const mongoose = require('mongoose');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
-const { requirePermissions, mergeRoles } = require('../utils/middleware/permissions');
+const { requirePermissions } = require('../utils/middleware/permissions');
 const { exportValidation, csvExport } = require('../utils/csv');
 const { User } = require('../models');
-const { expandRoles } = require('./../utils/permissions');
+const { expandRoles, mergeRoles } = require('./../utils/permissions');
 const roles = require('./../roles.json');
 const permissions = require('./../permissions.json');
 const { sendTemplatedMail } = require('../utils/mailer');
@@ -152,14 +152,15 @@ router
           userRoles = [{ role, scope: 'global' }];
         } else {
           // TODO: allow for multiple scopes, leaving it up to the implementor to decide
-          // roles.roles = [{ role, scope: 'organization', scopeRef: organization.id }];
+          // userRoles = [{ role, scope: 'organization', scopeRef: organization.id }];
         }
       }
 
       const uniqueEmails = new Set(emails);
       for (const email of uniqueEmails) {
-        const user = await User.findOne({ email, status: 'invite' });
-        user.roles = mergeRoles(user.roles, ...userRoles);
+        let user = await User.findOne({ email, status: 'invite' });
+        if (!user) user = new User({ email, status: 'invite' });
+        user.roles = mergeRoles([...user.roles, ...userRoles]);
         await user.save();
         await sendInvite(authUser, user);
       }

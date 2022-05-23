@@ -185,31 +185,27 @@ describe('permissions', () => {
 
   describe('mergeRoles', () => {
     it('should merge roles correctly', () => {
-      const roles1 = [
-        {
-          scope: 'global',
-          role: 'admin',
-        },
-        {
-          scope: 'organization',
-          role: 'admin',
-          scopeRef: '123',
-        },
-      ];
-
       expect(
-        mergeRoles(
+        mergeRoles([
           {
             scope: 'global',
             role: 'admin',
           },
-          ...roles1,
+          {
+            scope: 'global',
+            role: 'admin',
+          },
+          {
+            scope: 'organization',
+            role: 'admin',
+            scopeRef: '123',
+          },
           {
             scope: 'organization',
             role: 'admin',
             scopeRef: '1234',
-          }
-        )
+          },
+        ])
       ).toEqual([
         {
           role: 'admin',

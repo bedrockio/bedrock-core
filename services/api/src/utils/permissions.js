@@ -103,7 +103,7 @@ function expandRoles(user) {
   };
 }
 
-function mergeRoles(...roles) {
+function mergeRoles(roles) {
   const mergedRoles = {};
 
   for (const role of roles) {
