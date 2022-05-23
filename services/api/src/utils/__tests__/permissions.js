@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { setupDb, teardownDb } = require('../testing');
 const { User } = require('./../../models');
-const { validatePermissions, userHasAccess } = require('../permissions');
+const { validatePermissions, userHasAccess, mergeRoles } = require('../permissions');
 
 beforeAll(async () => {
   await setupDb();
@@ -181,5 +181,47 @@ describe('permissions', () => {
         scopeRef: organization1Id,
       })
     ).toBe(false);
+  });
+
+  describe('mergeRoles', () => {
+    it('should merge roles correctly', () => {
+      const roles1 = [
+        {
+          scope: 'global',
+          role: 'admin',
+        },
+        {
+          scope: 'organization',
+          role: 'admin',
+          scopeRef: '123',
+        },
+      ];
+
+      expect(
+        mergeRoles(
+          {
+            scope: 'global',
+            role: 'admin',
+          },
+          ...roles1,
+          {
+            scope: 'organization',
+            role: 'admin',
+            scopeRef: '1234',
+          }
+        )
+      ).toEqual([
+        {
+          role: 'admin',
+          scope: 'global',
+        },
+        { role: 'admin', scope: 'organization', scopeRef: '123' },
+        {
+          role: 'admin',
+          scope: 'organization',
+          scopeRef: '1234',
+        },
+      ]);
+    });
   });
 });

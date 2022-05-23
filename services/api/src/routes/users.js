@@ -3,7 +3,7 @@ const Joi = require('joi');
 const mongoose = require('mongoose');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
-const { requirePermissions } = require('../utils/middleware/permissions');
+const { requirePermissions, mergeRoles } = require('../utils/middleware/permissions');
 const { exportValidation, csvExport } = require('../utils/csv');
 const { User } = require('../models');
 const { expandRoles } = require('./../utils/permissions');
@@ -158,19 +158,9 @@ router
 
       const uniqueEmails = new Set(emails);
       for (const email of uniqueEmails) {
-        // NOTE: slight problem here, if a user is already invited to a different org,
-        // we are overwrite the roles for that user. (until they have accepted the invite)
-        const user = await User.findOneAndUpdate(
-          {
-            email,
-            status: 'invite',
-          },
-          { status: 'invite', roles: userRoles, deleted: false, email, $unset: { deletedAt: 1 } },
-          {
-            new: true,
-            upsert: true,
-          }
-        );
+        const user = await User.findOne({ email, status: 'invite' });
+        user.roles = mergeRoles(user.roles, ...userRoles);
+        await user.save();
         await sendInvite(authUser, user);
       }
       ctx.status = 204;

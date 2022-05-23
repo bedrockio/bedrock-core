@@ -103,6 +103,16 @@ function expandRoles(user) {
   };
 }
 
+function mergeRoles(...roles) {
+  const mergedRoles = {};
+
+  for (const role of roles) {
+    mergedRoles[`${role.role}${role.scope}${role.scopeRef || ''}`] = role;
+  }
+
+  return Object.values(mergedRoles);
+}
+
 module.exports = {
   validScopes,
   endpointDefinitions,
@@ -115,4 +125,5 @@ module.exports = {
   validatePermissions,
   userHasAccess,
   expandRoles,
+  mergeRoles,
 };
