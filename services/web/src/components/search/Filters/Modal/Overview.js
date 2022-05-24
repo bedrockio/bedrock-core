@@ -1,8 +1,9 @@
 import React from 'react';
 import { List, Icon } from 'semantic';
 
-import SearchContext from '../Context';
+import SearchContext from '../../Context';
 import { Layout } from 'components/Layout';
+import DisplayValue from './DisplayValue';
 
 export default class Overview extends React.Component {
   static contextType = SearchContext;
@@ -31,7 +32,11 @@ export default class Overview extends React.Component {
           Enabled Filters
         </div>
         <List
-          style={{ margin: 0, padding: '0px 10px 10px 10px' }}
+          style={{
+            margin: 0,
+            padding: '0px 10px 10px 10px',
+            width: '100%',
+          }}
           verticalAlign="middle">
           {filtersKeys.map((key) => {
             const mapping = filterMapping[key];
@@ -47,11 +52,12 @@ export default class Overview extends React.Component {
                 style={{
                   cursor: 'pointer',
                   color: '#000',
-                  width: '200px',
-                  padding: '6px 0px 6px 0px',
+                  borderTop: '0.5px solid #eee',
+                  padding: '10px 0px 10px 0px',
                 }}>
                 <Layout horizontal center spread>
-                  {mapping.label}
+                  {mapping.label}:{' '}
+                  <DisplayValue mapping={mapping} value={filters[key]} />
                   <Icon fitted name="close" style={{ top: 0 }} />
                 </Layout>
               </List.Item>

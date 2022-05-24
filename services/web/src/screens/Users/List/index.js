@@ -63,10 +63,14 @@ export default class UserList extends React.Component {
       roles: {
         label: 'Role',
         multiple: true,
-        getDisplayValue: (ids) =>
-          this.fetchRoles({}).then((roles) =>
-            roles.filter((c) => ids.includes(c.id)).map((c) => c.name)
-          ),
+        getDisplayValue: async (ids) => {
+          const { data: allRoles } = await this.fetchRoles();
+
+          return allRoles
+            .filter((role) => ids.includes(role.id))
+            .map((role) => role.name)
+            .join(', ');
+        },
       },
       keyword: {},
     };

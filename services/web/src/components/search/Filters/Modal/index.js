@@ -5,7 +5,7 @@ import { Modal, Form, Ref, Icon, Button, Label, Popup } from 'semantic';
 import Overview from './Overview';
 import './modal.less';
 
-import SearchContext from '../Context';
+import SearchContext from '../../Context';
 import AutoFocus from 'components/AutoFocus';
 
 export default class FilterModal extends React.Component {
@@ -127,8 +127,8 @@ export default class FilterModal extends React.Component {
         {this.context.filterMapping && this.getFilterCount() > 0 && (
           <Popup
             offset={[0, 10]}
-            on={['hover', 'click']}
-            style={{ padding: 0 }}
+            on={['click', 'hover']}
+            style={{ padding: 0, minWidth: '280px' }}
             hoverable
             position="bottom center"
             flowing

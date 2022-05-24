@@ -40,6 +40,7 @@ export default class DropdownFilter extends React.Component {
         <Form.Field disabled={disabled} error={error}>
           <label>{label}</label>
           <SearchDropdown
+            objectMode={false}
             value={this.getValue()}
             onChange={(e, { name, value }) => {
               this.context.onFilterChange({

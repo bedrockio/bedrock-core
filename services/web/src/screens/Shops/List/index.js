@@ -49,7 +49,7 @@ export default class ShopList extends React.Component {
     return {
       country: {
         label: 'Country',
-        getDisplayValue: (id) => countries.find((c) => c.value === id).text,
+        getDisplayValue: (id) => countries.find((c) => c.value === id)?.text,
       },
       owner: {
         label: 'Owner',
