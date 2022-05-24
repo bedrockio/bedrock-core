@@ -10,7 +10,7 @@ export default class Total extends React.Component {
       return null;
     }
     return (
-      <div size="small" style={{ color: '#6C727F', marginRight: '1em' }}>
+      <div style={{ color: '#6C727F', marginRight: '1em' }}>
         {meta?.total ? meta?.total : 'No'} {this.props.itemName || 'results'}{' '}
         found
       </div>

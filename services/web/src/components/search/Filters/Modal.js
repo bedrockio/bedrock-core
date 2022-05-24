@@ -98,9 +98,7 @@ export default class FilterModal extends React.Component {
                   Filter
                 </Button>
                 {this.getFilterCount() > 0 && (
-                  <Label as="a" pointing="left">
-                    {this.getFilterCount()}
-                  </Label>
+                  <Label pointing="left">{this.getFilterCount()}</Label>
                 )}
               </Button>
             )
