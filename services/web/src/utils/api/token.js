@@ -8,13 +8,13 @@ export function hasToken() {
 }
 
 export function getToken() {
-  return localStorage.getItem(KEY);
+  return localStorage.getItem(JWT_KEY);
 }
 
 export function setToken(token) {
   if (token) {
-    localStorage.setItem(KEY, token);
+    localStorage.setItem(JWT_KEY, token);
   } else {
-    localStorage.removeItem(KEY);
+    localStorage.removeItem(JWT_KEY);
   }
 }
