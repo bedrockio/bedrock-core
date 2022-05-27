@@ -61,8 +61,19 @@ function getFiltersFromSearchParams(urlParams, filterMapping = {}) {
   return filters;
 }
 
-@withRouter
-export default class SearchProvider extends React.Component {
+// withRouter and ref doesnt work well together, we need todo forward ref manually
+// and this wont be resolved as long as we using components with react-router
+const withRouterForwardRef = (Component) => {
+  const WithRouter = withRouter(({ forwardedRef, ...props }) => (
+    <Component ref={forwardedRef} {...props} />
+  ));
+
+  return React.forwardRef((props, ref) => (
+    <WithRouter {...props} forwardedRef={ref} />
+  ));
+};
+
+class SearchProvider extends React.Component {
   constructor(props) {
     super(props);
 
@@ -312,3 +323,5 @@ SearchProvider.defaultProps = {
   },
   filters: {},
 };
+
+export default withRouterForwardRef(SearchProvider);
