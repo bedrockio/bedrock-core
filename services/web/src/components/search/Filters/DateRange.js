@@ -40,7 +40,6 @@ export default class DateRangeFilter extends React.Component {
             value={this.context.filters[name]?.gte}
             placeholder="No Start"
             onChange={this.onChange}
-            clearable
           />
           <span className="divider">&ndash;</span>
           <DateField

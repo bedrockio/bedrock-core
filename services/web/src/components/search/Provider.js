@@ -32,8 +32,8 @@ function parseParamByType(param, value) {
   if (param.range) {
     value = value.split('/');
     return {
-      gte: parseParamValue(type, value[0]),
-      lte: parseParamValue(type, value[1]),
+      gte: value[0] ? parseParamValue(type, value[0]) : undefined,
+      lte: value[1] ? parseParamValue(type, value[1]) : undefined,
     };
   }
 
@@ -121,9 +121,11 @@ export default class SearchProvider extends React.Component {
             .join('_');
         } else if (mapping.range) {
           queryObject[key] = [
-            convertParamValue(mapping.type, value.gte),
-            convertParamValue(mapping.type, value.lte),
-          ].join('/');
+            value.gte && convertParamValue(mapping.type, value.gte),
+            value.lte && convertParamValue(mapping.type, value.lte),
+          ]
+            .filter(Boolean)
+            .join('/');
         } else {
           queryObject[key] = convertParamValue(mapping.type, value);
         }
