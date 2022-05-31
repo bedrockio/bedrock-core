@@ -29,11 +29,13 @@ export default class Overview extends React.Component {
       this.setState({ value: this.props.value ? 'Checked' : 'Unchecked' });
     } else if (type === 'date') {
       const { value } = this.props;
-      if (value.gte && value.lte) {
+      if (value.gte) {
         this.setState({
           value: `${value.gte.toLocaleDateString(undefined, {
             dateStyle: 'short',
-          })} - ${value.lte.toLocaleDateString(undefined, {})}`,
+          })} - ${
+            value.lte ? value.lte.toLocaleDateString(undefined, {}) : 'Present'
+          }`,
         });
       } else if (value) {
         this.setState({ value });

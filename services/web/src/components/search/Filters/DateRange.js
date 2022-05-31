@@ -14,9 +14,17 @@ export default class DateRangeFilter extends React.Component {
     const { name } = this.props;
 
     const range = this.context.filters[name] || {};
+    if (name === 'gte' && value === null) {
+      delete range['lte'];
+    }
+
     if (value) {
       range[part] = value;
     } else {
+      // start = null => reset range to avoid
+      if (part === 'gte') {
+        delete range['lte'];
+      }
       delete range[part];
     }
 
@@ -38,14 +46,15 @@ export default class DateRangeFilter extends React.Component {
           <DateField
             name="gte"
             value={this.context.filters[name]?.gte}
-            placeholder="No Start"
+            placeholder="Start"
             onChange={this.onChange}
+            clearable
           />
           <span className="divider">&ndash;</span>
           <DateField
             name="lte"
             value={this.context.filters[name]?.lte}
-            placeholder="No End"
+            placeholder="Present"
             onChange={this.onChange}
             clearable
           />
