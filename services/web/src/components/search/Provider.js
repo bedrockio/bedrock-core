@@ -283,7 +283,9 @@ export default class SearchProvider extends React.Component {
     };
     return (
       <SearchContext.Provider value={context}>
-        {this.props.children(context)}
+        {typeof this.props.children === 'function'
+          ? this.props.children(context)
+          : this.props.children}
       </SearchContext.Provider>
     );
   }
