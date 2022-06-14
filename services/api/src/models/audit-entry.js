@@ -67,7 +67,7 @@ schema.statics.append = function (activity, ctx, { object, fields, type, ...opti
     objectId: options.objectId,
     objectType: options.objectType,
     objectBefore: options.objectBefore,
-    objectAfter: options.objectBefore,
+    objectAfter: options.objectAfter,
     type,
     user: options.user || fromContext.user,
   });
