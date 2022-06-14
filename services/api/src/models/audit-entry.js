@@ -26,15 +26,18 @@ schema.statics.getObjectFields = function getObjectFields(object, fields = []) {
   };
 
   if (fields.length) {
-    const { original, pathsModified } = object.$locals;
+    const { original, pathsModified, isNew } = object.$locals;
     // the mongoose's Document.directModifiedPaths() returns falsely the objectId modified (quite possible due to autopopulate)
     // this corrects any issues that happens when comparing with objectIds
-    const filteredPaths = intersection(pathsModified, fields).filter((field) => {
-      if (!object.get(field).equals) return true;
-      return !object.get(field).equals(get(original, field));
-    });
+    // if isNew then just take all fields, as they will all be new
+    const filteredPaths = isNew
+      ? fields
+      : intersection(pathsModified, fields).filter((field) => {
+          if (!object.get(field).equals) return true;
+          return !object.get(field).equals(get(original, field));
+        });
 
-    if (object?.$locals?.isNew) {
+    if (isNew) {
       objectFields.objectAfter = pick(object.toObject({ depopulate: true }), filteredPaths);
     } else {
       const after = pick(object.toObject({ depopulate: true }), filteredPaths);
