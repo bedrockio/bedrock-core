@@ -43,6 +43,9 @@
 @lightPrimaryColor   : @lightBlue;
 @lightSecondaryColor : @lightBlack;
 
+@nocturnalPrimaryColor    : @primaryColor;
+@nocturnalSecondaryColor  : @secondaryColor;
+
 /*--------------
   Page Heading
 ---------------*/
@@ -113,14 +116,14 @@
 @lineHeight          : 1.4285em;
 @textColor           : #111827;
 
-@invertedPageBackground: hsl(hue(@pageBackground), (saturation(@pageBackground) / 2), lightness(@textColor));// spin(@pageBackground, 180); //mix(@textColor, #333, 75);
+@nocturnalPageBackground: hsl(hue(@pageBackground), (saturation(@pageBackground) / 2), lightness(@textColor));// spin(@pageBackground, 180); //mix(@textColor, #333, 75);
 
 /*-------------------
         Sidebar Main Menu & Portal Main Menu
 --------------------*/
 
 @mainMenuBackground      : #f4f0eb;
-@invertedMainMenuBackground : hsl(hue(@mainMenuBackground), (saturation(@mainMenuBackground) / 2), (lightness(@textColor) + (lightness(@mainMenuBackground) - 100%) / 2)); // lighter option: hsl(hue(@mainMenuBackground), (saturation(@mainMenuBackground) / 2), (100% - lightness(@mainMenuBackground) + (lightness(@textColor)*0.75)));
+@nocturnalMainMenuBackground : hsl(hue(@mainMenuBackground), (saturation(@mainMenuBackground) / 2), (lightness(@textColor) + (lightness(@mainMenuBackground) - 100%) / 2)); // lighter option: hsl(hue(@mainMenuBackground), (saturation(@mainMenuBackground) / 2), (100% - lightness(@mainMenuBackground) + (lightness(@textColor)*0.75)));
 
 /*-------------------
       Paragraph
@@ -138,8 +141,8 @@
 @linkHoverColor      : darken(saturate(@linkColor, 20), 15, relative);
 @linkHoverUnderline  : @linkUnderline;
 
-@invertedLinkColor   : hsl(hue(@linkColor), saturation(@linkColor), if((lightness(@linkColor) > 50%), (100% - lightness(@linkColor)), lightness(@linkColor)));
-@invertedLinkHoverColor : lighten(saturate(@linkColor, 20), 10, relative);
+@nocturnalLinkColor   : hsl(hue(@linkColor), saturation(@linkColor), if((lightness(@linkColor) > 50%), (100% - lightness(@linkColor)), lightness(@linkColor)));
+@nocturnalLinkHoverColor : lighten(saturate(@linkColor, 20), 10, relative);
 /*-------------------
     Scroll Bars
 --------------------*/
@@ -444,6 +447,10 @@
 @invertedSelectedTextColor   : rgba(255, 255, 255, 1);
 @invertedDisabledTextColor   : rgba(255, 255, 255, 0.2);
 
+@nocturnalTextColor          : @invertedTextColor;
+@nocturnalMutedTextColor     : @invertedMutedTextColor;
+@nocturnalUnselectedTextColor: @invertedUnselectedTextColor;
+
 /*-------------------
      Brand Colors
 --------------------*/
@@ -480,7 +487,7 @@
 @solidWhiteBorderColor         : #555555;
 @selectedSolidWhiteBorderColor : #999999;
 
-@invertedBorderColor       : hsl(hue(@borderColor), saturation(@borderColor), (100% - lightness(@borderColor)));
+@nocturnalBorderColor       : hsl(hue(@borderColor), saturation(@borderColor), (100% - lightness(@borderColor)));
 
 
 /*-------------------

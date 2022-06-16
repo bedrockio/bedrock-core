@@ -34,10 +34,12 @@ body {
   font-size: @fontSize;
   line-height: @lineHeight;
   color: @textColor;
+  color-scheme: light;
 
-  &.dark-theme {
-    color: @invertedTextColor;
-    background: @invertedPageBackground;
+  &.nocturnal-theme {
+    color: @nocturnalTextColor;
+    background: @nocturnalPageBackground;
+    color-scheme: dark;
   }
 }
 
@@ -104,11 +106,11 @@ a {
     text-decoration: @linkHoverUnderline;
   }
 
-  .dark-theme & {
-    color: @invertedLinkColor;
+  .nocturnal-theme & {
+    color: @nocturnalLinkColor;
 
     &:hover {
-      color: @invertedLinkHoverColor;
+      color: @nocturnalLinkHoverColor;
     }
   }
 }
@@ -124,41 +126,41 @@ body ::-webkit-scrollbar {
   height: @customScrollbarHeight;
 }
 body ::-webkit-scrollbar-track,
-body.dark-theme .ui.inverted::-webkit-scrollbar-track {
+body.nocturnal-theme .ui.inverted::-webkit-scrollbar-track {
   background: @trackBackground;
   border-radius: @trackBorderRadius;
 }
 body ::-webkit-scrollbar-thumb,
-body.dark-theme .ui.inverted::-webkit-scrollbar-thumb {
+body.nocturnal-theme .ui.inverted::-webkit-scrollbar-thumb {
   cursor: pointer;
   border-radius: @thumbBorderRadius;
   background: @thumbBackground;
   transition: @thumbTransition;
 }
 body ::-webkit-scrollbar-thumb:window-inactive,
-body.dark-theme  .ui.inverted::-webkit-scrollbar-thumb:window-inactive {
+body.nocturnal-theme  .ui.inverted::-webkit-scrollbar-thumb:window-inactive {
   background: @thumbInactiveBackground;
 }
 body ::-webkit-scrollbar-thumb:hover,
-body.dark-theme .ui.inverted::-webkit-scrollbar-thumb:hover {
+body.nocturnal-theme .ui.inverted::-webkit-scrollbar-thumb:hover {
   background: @thumbHoverBackground;
 }
 
 /* Inverted UI */
 body .ui.inverted::-webkit-scrollbar-track,
-body.dark-theme ::-webkit-scrollbar-track {
+body.nocturnal-theme ::-webkit-scrollbar-track {
   background: @trackInvertedBackground;
 }
 body .ui.inverted::-webkit-scrollbar-thumb,
-body.dark-theme ::-webkit-scrollbar-thumb {
+body.nocturnal-theme ::-webkit-scrollbar-thumb {
   background: @thumbInvertedBackground;
 }
 body .ui.inverted::-webkit-scrollbar-thumb:window-inactive,
-body.dark-theme ::-webkit-scrollbar-thumb:window-inactive {
+body.nocturnal-theme ::-webkit-scrollbar-thumb:window-inactive {
   background: @thumbInvertedInactiveBackground;
 }
 body .ui.inverted::-webkit-scrollbar-thumb:hover,
-body.dark-theme ::-webkit-scrollbar-thumb:hover {
+body.nocturnal-theme ::-webkit-scrollbar-thumb:hover {
   background: @thumbInvertedHoverBackground;
 }
 
@@ -235,4 +237,10 @@ em {
 strong {
   font-weight: bold;
   font-style: inherit;
+}
+
+// Tone down the images
+// Opinionated adjustment, can remove if users find this too harsh or images shouldn’t be adjusted.
+.nocturnal-theme img {
+  filter: brightness(.8) contrast(1.2);
 }
