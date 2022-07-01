@@ -1,0 +1,5 @@
+$$
+\Sigma
+$$
+
+with trailing line

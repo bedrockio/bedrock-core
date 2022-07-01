@@ -1,0 +1,205 @@
+{
+  "blocks": [
+    {
+      "data": {
+        "type": "iframe",
+        "src": "https://worldquantuniversity.shinyapps.io/module-06-lesson-02/?_ga=2.140656695.464303481.1646949693-961608302.1646769994"
+      },
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "text": "",
+      "type": "atomic"
+    },
+    {
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "text": "",
+      "type": "unstyled"
+    },
+    {
+      "data": {
+        "src": "https://player.vimeo.com/video/622474186?h=786fd78a28&badge=0&autopause=0&player_id=0&app_id=58479",
+        "type": "iframe",
+        "allow": "autoplay; fullscreen; picture-in-picture"
+      },
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "text": "",
+      "type": "atomic"
+    },
+    {
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "text": "",
+      "type": "unstyled"
+    },
+    {
+      "data": {
+        "src": "",
+        "type": "iframe"
+      },
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "text": "",
+      "type": "atomic"
+    },
+    {
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [],
+      "text": "",
+      "type": "unstyled"
+    },
+    {
+      "text": "some underlined text",
+      "type": "unstyled",
+      "depth": 0,
+      "inlineStyleRanges": [
+        {
+          "offset": 5,
+          "length": 10,
+          "style": "UNDERLINE"
+        }
+      ],
+      "entityRanges": []
+    },
+    {
+      "depth": 0,
+      "text": "",
+      "type": "unstyled",
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "text": "some unknown style",
+      "type": "unstyled",
+      "depth": 0,
+      "inlineStyleRanges": [
+        {
+          "offset": 5,
+          "length": 7,
+          "style": "UNKNOWN"
+        }
+      ],
+      "entityRanges": []
+    },
+    {
+      "depth": 0,
+      "text": "",
+      "type": "unstyled",
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "depth": 0,
+      "type": "blockquote",
+      "text": "blockquote with bold\nand new line",
+      "entityRanges": [],
+      "inlineStyleRanges": [
+        {
+          "offset": 11,
+          "length": 4,
+          "style": "BOLD"
+        },
+        {
+          "offset": 25,
+          "length": 3,
+          "style": "BOLD"
+        }
+      ]
+    },
+    {
+      "depth": 0,
+      "text": "",
+      "type": "unstyled",
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "depth": 0,
+      "text": "You can find the answers at the end of the lesson1.",
+      "type": "unstyled",
+      "entityRanges": [
+        {
+          "key": 0,
+          "offset": 49,
+          "length": 1
+        }
+      ],
+      "inlineStyleRanges": [
+        {
+          "offset": 49,
+          "length": 1,
+          "style": "SUPERSCRIPT"
+        }
+      ]
+    },
+    {
+      "depth": 0,
+      "text": "",
+      "type": "unstyled",
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "depth": 0,
+      "text": "You can find the answers at the end of the lesson1.",
+      "type": "unstyled",
+      "entityRanges": [
+        {
+          "key": 1,
+          "offset": 49,
+          "length": 1
+        }
+      ],
+      "inlineStyleRanges": [
+        {
+          "offset": 49,
+          "length": 1,
+          "style": "SUPERSCRIPT"
+        }
+      ]
+    },
+    {
+      "depth": 0,
+      "text": "",
+      "type": "unstyled",
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "depth": 0,
+      "text": "Just some subscript text.",
+      "type": "unstyled",
+      "entityRanges": [],
+      "inlineStyleRanges": [
+        {
+          "offset": 10,
+          "length": 9,
+          "style": "SUBSCRIPT"
+        }
+      ]
+    }
+  ],
+  "entityMap": {
+    "0": {
+      "data": {
+        "url": "#footnotes"
+      },
+      "mutability": "MUTABLE",
+      "type": "LINK"
+    },
+    "1": {
+      "data": {
+        "url": "#footnotes"
+      },
+      "mutability": "MUTABLE",
+      "type": "LINK"
+    }
+  }
+}
