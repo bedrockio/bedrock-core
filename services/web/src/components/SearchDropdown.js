@@ -67,7 +67,7 @@ export default class SearchDropdown extends React.Component {
 
   async fetchItems(query) {
     this.setState({
-      loading: false,
+      loading: true,
       error: null,
     });
     try {
