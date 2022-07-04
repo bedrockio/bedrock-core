@@ -103,7 +103,8 @@ function createSchema(definition, options = {}) {
     if (keyword) {
       Object.assign(query, buildKeywordQuery(keyword, definition));
     }
-    Object.assign(query, flattenQuery(rest, schema.obj));
+
+    Object.assign(query, normalizeQuery(rest, schema.obj));
 
     const mQuery = this.find(query)
       .sort(sort && { [sort.field]: sort.order === 'desc' ? -1 : 1 })
@@ -138,7 +139,13 @@ function createSchema(definition, options = {}) {
 
   schema.method('assign', function assign(fields) {
     unsetReferenceFields(fields, schema.obj);
-    this.set(fields);
+    for (let [path, value] of Object.entries(flattenObject(fields))) {
+      if (value === null) {
+        this.set(path, undefined);
+      } else {
+        this.set(path, value);
+      }
+    }
   });
 
   schema.static('findByIdOrSlug', function findByIdOrSlug(str) {
@@ -489,11 +496,31 @@ function unsetReferenceFields(fields, schema = {}) {
   }
 }
 
-// Flattens nested queries to a dot syntax.
+// Flattens nested objects to a dot syntax.
 // Effectively the inverse of lodash get:
 // { foo: { bar: 3 } } -> { 'foo.bar': 3 }
-// Will not flatten mongo operator objects.
-function flattenQuery(query, schema, root = {}, rootPath = []) {
+function flattenObject(obj, root = {}, rootPath = []) {
+  for (let [key, val] of Object.entries(obj)) {
+    const path = [...rootPath, key];
+    if (isPlainObject(val)) {
+      flattenObject(val, root, path);
+    } else {
+      root[path.join('.')] = val;
+    }
+  }
+  return root;
+}
+
+// Normalizes mongo queries. Flattens plain nested paths
+// to dot syntax while preserving mongo operators and
+// handling specialed query syntax:
+// ranges:
+//  path: { min: n, max n }
+// regex:
+//  path: "/reg/"
+// array:
+//  path; [1,2,3]
+function normalizeQuery(query, schema, root = {}, rootPath = []) {
   for (let [key, value] of Object.entries(query)) {
     const path = [...rootPath, key];
     if (isRangeQuery(schema, key, value)) {
@@ -501,7 +528,7 @@ function flattenQuery(query, schema, root = {}, rootPath = []) {
         root[path.join('.')] = mapOperatorQuery(value);
       }
     } else if (isNestedQuery(key, value)) {
-      flattenQuery(value, resolveField(schema, key), root, path);
+      normalizeQuery(value, resolveField(schema, key), root, path);
     } else if (isRegexQuery(key, value)) {
       root[path.join('.')] = parseRegexQuery(value);
     } else if (isArrayQuery(key, value)) {
@@ -587,9 +614,10 @@ function buildKeywordQuery(keyword, definition) {
 
 function buildRegexQuery(keyword, definition) {
   const queries = definition.search.map((field) => {
+    const regexKeyword = keyword.replace(/\+/g, '\\+');
     return {
       [field]: {
-        $regex: `${keyword}`,
+        $regex: `${regexKeyword}`,
         $options: 'i',
       },
     };
