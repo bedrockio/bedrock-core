@@ -142,6 +142,7 @@ function createSchema(definition, options = {}) {
     for (let [path, value] of Object.entries(flattenObject(fields))) {
       if (value === null) {
         this.set(path, undefined);
+        this.markModified(path);
       } else {
         this.set(path, value);
       }
