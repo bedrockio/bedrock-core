@@ -292,7 +292,7 @@ export default class SearchProvider extends React.Component {
 }
 
 SearchProvider.propTypes = {
-  children: PropTypes.func.isRequired,
+  children: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired,
   onDataNeeded: PropTypes.func.isRequired,
   limit: PropTypes.number,
   page: PropTypes.number,
