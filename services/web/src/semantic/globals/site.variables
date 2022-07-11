@@ -68,11 +68,15 @@
 @inputVerticalPadding   : @relative11px;
 @inputHorizontalPadding : @relative14px;
 @inputPadding           : @inputVerticalPadding @inputHorizontalPadding;
+@nocturnalInputBackground: rgba(255,255,255,.05);
 
 /* Input Text Color */
-@inputColor: #6C727F;
-@inputPlaceholderColor: lighten(@inputColor, 0);
-@inputPlaceholderFocusColor: lighten(@inputColor, 0);
+@inputColor: @textColor;
+@inputPlaceholderColor: #6C727F;
+@inputPlaceholderFocusColor: darken(@inputPlaceholderColor, 0);
+@nocturnalInputColor: @nocturnalTextColor;
+@nocturnalInputPlaceholderColor: darken(@nocturnalInputColor, 60);
+@nocturnalInputPlaceholderFocusColor: darken(@nocturnalInputColor, 50);
 
 /* Line Height Default For Inputs in Browser (Descenders are 17px at 14px base em) */
 @inputLineHeight: unit((17 / 14), em);
@@ -83,9 +87,11 @@
 
 /* Used on inputs, textarea etc */
 @focusedFormBorderColor: #3B82F6;
+@nocturnalFocusedFormBorderColor: rgba(saturate(lighten(@focusedFormBorderColor, 8), 20, relative), .67);
 
 /* Used on dropdowns, other larger blocks */
 @focusedFormMutedBorderColor: #3B82F6;
+@nocturnalFocusedFormMutedBorderColor: rgba(saturate(lighten(@focusedFormMutedBorderColor, 8), 20, relative), .67);
 
 /*-------------------
         Sizes
@@ -325,10 +331,11 @@
 
 /* Differentiating Neutrals */
 @subtleGradient: linear-gradient(transparent, @transparentBlack);
+@nocturnalSubtleGradient: linear-gradient(@transparentWhite, transparent);
 
 /* Differentiating Layers */
 @subtleShadow:
-  0px 1px 2px 0 @borderColor
+  0px 1px 2px 0 rgba(34,36,38,.12),
 ;
 @floatingShadow:
   0px 2px 4px 0px rgba(34, 36, 38, 0.12),
@@ -450,6 +457,8 @@
 @nocturnalTextColor          : @invertedTextColor;
 @nocturnalMutedTextColor     : @invertedMutedTextColor;
 @nocturnalUnselectedTextColor: @invertedUnselectedTextColor;
+@nocturnalHoveredTextColor   : @invertedHoveredTextColor;
+@nocturnalSelectedTextColor  : @invertedSelectedTextColor;
 
 /*-------------------
      Brand Colors
@@ -487,8 +496,8 @@
 @solidWhiteBorderColor         : #555555;
 @selectedSolidWhiteBorderColor : #999999;
 
-@nocturnalBorderColor       : hsl(hue(@borderColor), saturation(@borderColor), (100% - lightness(@borderColor)));
-
+@nocturnalBorderColor       : rgba(255,255,255,.2); // hsl(hue(@borderColor), saturation(@borderColor), (100% - lightness(@borderColor)) * 2);
+@nocturnalSelectedBorderColor: rgba(255,255,255,.30);
 
 /*-------------------
     Derived Values
@@ -803,6 +812,8 @@
 @secondaryColorFocus      : saturate(lighten(@secondaryColor, 8), 20, relative);
 @lightPrimaryColorFocus   : saturate(darken(@lightPrimaryColor, 8), 20, relative);
 @lightSecondaryColorFocus : saturate(lighten(@lightSecondaryColor, 8), 20, relative);
+
+@nocturnalPrimaryColorFocus: saturate(lighten(@nocturnalPrimaryColor, 8), 20, relative);
 
 @redFocus                 : saturate(darken(@red, 8), 20, relative);
 @orangeFocus              : saturate(darken(@orange, 8), 20, relative);

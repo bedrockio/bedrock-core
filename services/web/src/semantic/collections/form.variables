@@ -28,6 +28,7 @@
 @labelFontWeight: @bold;
 @labelTextTransform: none;
 @labelColor: @textColor;
+@nocturnalLabelColor: @nocturnalTextColor;
 
 /* Input */
 @inputFont: @pageFont;
@@ -36,12 +37,14 @@
 @inputPadding: (@inputVerticalPadding + ((1em - @inputLineHeight) / 2)) @inputHorizontalPadding;
 @inputBorder: 1px solid @borderColor;
 @inputBorderRadius: @absoluteBorderRadius;
-@inputColor: @textColor;
+// @inputColor: @textColor; // ✝ already defined in site.variables
 @inputTransition:
   color @defaultDuration @defaultEasing,
   border-color @defaultDuration @defaultEasing
 ;
 @inputBoxShadow: 0em 0em 0em 0em transparent inset;
+@nocturnalInputBorderColor: @nocturnalBorderColor;
+@nocturnalInputBoxShadow: none;
 
 /* Select */
 @selectBackground: @white;
@@ -51,6 +54,10 @@
 @selectBoxShadow: @inputBoxShadow;
 @selectTransition: @inputTransition;
 @selectColor: @inputColor;
+@nocturnalSelectBorderColor: @nocturnalInputBorderColor;
+@nocturnalSelectBackground: @nocturnalInputBackground;
+@nocturnalSelectBoxShadow: @nocturnalInputBoxShadow;
+@nocturnalSelectColor: @nocturnalInputColor;
 
 /* Text Area */
 @textAreaPadding: @inputVerticalPadding @inputHorizontalPadding;
@@ -63,6 +70,8 @@
 @textAreaBorder: @inputBorder;
 @textAreaFontSize: @inputFontSize;
 @textAreaTransition: @inputTransition;
+@nocturnalTextAreaBackground: @nocturnalInputBackground;
+@nocturnalTextAreaBorderColor: @nocturnalInputBorderColor;
 
 /* Checkbox */
 @checkboxVerticalAlign: top;
@@ -76,6 +85,7 @@
 @promptTextColor: @formErrorColor;
 @inlinePromptMargin: -0.25em 0em -0.5em 0.5em;
 @inlinePromptBorderWidth: 1px;
+// @todo: nocturnal
 
 /*-------------------
         States
@@ -98,6 +108,20 @@
 @textAreaFocusBoxShadow: @inputFocusBoxShadow;
 @textAreaFocusBorderRadius: @inputFocusBorderRadius;
 
+/* Nocturnal theme focus */
+@nocturnalInputFocusBackground: @nocturnalInputBackground + rgba(255,255,255,.025);
+@nocturnalInputFocusBorderColor: @nocturnalFocusedFormBorderColor;
+@nocturnalInputFocusColor: @nocturnalTextColor;
+@nocturnalInputFocusBoxShadow: @inputFocusPointerSize 0em 0em 0em rgba(0,0,0,.25) inset;
+// @nocturnalInputFocusBorderRadius: @inputBorderRadius;
+
+/* Nocturnal theme Text Area Focus */
+@nocturnalTextAreaFocusBackground: @nocturnalInputFocusBackground;
+@nocturnalTextAreaFocusBorderColor: @nocturnalInputFocusBorderColor;
+@nocturnalTextAreaFocusColor: @nocturnalInputFocusColor;
+@nocturnalTextAreaFocusBoxShadow: @nocturnalInputFocusBoxShadow;
+// @nocturnalTextAreaFocusBorderRadius: @nocturnalInputFocusBorderRadius;
+
 /* Disabled */
 @disabledLabelOpacity: @disabledOpacity;
 
@@ -106,6 +130,10 @@
 @formErrorBorder: @negativeBorderColor;
 @formErrorBackground: @negativeBackgroundColor;
 
+@nocturnalFormErrorColor: rgb(hsl(hue(@negativeTextColor), saturation(@negativeTextColor), (100% - (lightness(@negativeTextColor) * .75))));
+@nocturnalFormErrorBorder: rgba(@negativeBorderColor, .2);
+@nocturnalFormErrorBackground: rgba(@negativeTextColor, .25);
+
 /* AutoFill */
 @inputAutoFillBackground: #FFFFF0;
 @inputAutoFillBorder: #E5DFA1;
@@ -113,7 +141,7 @@
 @inputAutoFillFocusBorder: #D5C315;
 @inputAutoFillErrorBackground: #FFFAF0;
 @inputAutoFillErrorBorder: #E0B4B4;
-
+// @todo: nocturnal
 
 /* Input Error */
 @inputErrorBorderRadius: '';
@@ -132,9 +160,17 @@
 @inputErrorFocusBorder: @negativeBorderColor;
 @inputErrorFocusBoxShadow: none;
 
+@nocturnalInputErrorFocusBackground: rgba(@negativeTextColor, .33);
+@nocturnalInputErrorFocusColor: rgb(hsl(hue(@negativeTextColor), saturation(@negativeTextColor), (100% - (lightness(@negativeTextColor) * .75))));
+@nocturnalInputErrorFocusBorder: rgba(@negativeBorderColor, .3);
+@nocturnalInputErrorFocusBoxShadow: none;
+
 /* Placeholder Error */
 @inputErrorPlaceholderColor: lighten(@formErrorColor, 40);
 @inputErrorPlaceholderFocusColor: lighten(@formErrorColor, 30);
+
+@nocturnalInputErrorPlaceholderColor: darken(@formErrorColor, 0);
+@nocturnalInputErrorPlaceholderFocusColor: lighten(@formErrorColor, 10);
 
 /* Loading Dimmer */
 @loaderDimmerColor: rgba(255, 255, 255, 0.8);

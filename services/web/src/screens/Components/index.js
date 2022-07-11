@@ -238,6 +238,11 @@ export default class ComponentsScreen extends React.Component {
                       <Input placeholder="Search" type="search" icon="search" />
                     </Form.Field>
 
+                    <Header size="medium">Select</Header>
+                    <Form.Field>
+                      <Form.Select options={options} placeholder="Placeholder" />
+                    </Form.Field>
+
                     <Header size="medium">Checkbox</Header>
                     <Form.Field>
                       <Form.Checkbox label="Checkbox 1" />
