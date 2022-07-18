@@ -56,6 +56,12 @@
   transition: @menuTransition;
   z-index: @menuZIndex;
   will-change: transform, opacity;
+
+  .nocturnal-theme & {
+    background: @nocturnalMenuBackground;
+    box-shadow: @nocturnalMenuBoxShadow;
+    border: @nocturnalMenuBorder;
+  }
 }
 
 .ui.dropdown .menu > * {
@@ -120,6 +126,13 @@
   font-weight: @itemFontWeight;
   box-shadow: @itemBoxShadow;
   -webkit-touch-callout: none;
+
+  .nocturnal-theme & {
+    border: @nocturnalItemBorder;
+    border-top: @nocturnalItemDivider;
+    color: @nocturnalItemColor;
+    box-shadow: @nocturnalItemBoxShadow;
+  }
 }
 .ui.dropdown .menu > .item:first-child {
   border-top-width: 0px;
@@ -160,12 +173,20 @@
   font-size: @menuHeaderFontSize;
   font-weight: @menuHeaderFontWeight;
   text-transform: @menuHeaderTextTransform;
+
+  .nocturnal-theme & {
+    color: @nocturnalMenuHeaderColor;
+  }
 }
 
 .ui.dropdown .menu > .divider {
   border-top: @menuDividerBorder;
   height: 0em;
   margin: @menuDividerMargin;
+
+  .nocturnal-theme & {
+    border-top-color: @nocturnalMenuDividerColor;
+  }
 }
 
 .ui.dropdown.dropdown .menu > .input {
@@ -196,6 +217,10 @@
   float: @itemDescriptionFloat;
   margin: @itemDescriptionMargin;
   color: @itemDescriptionColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalItemDescriptionColor;
+  }
 }
 
 /*-----------------
@@ -208,6 +233,10 @@
 }
 .ui.dropdown .menu > .message:not(.ui) {
   color: @messageColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalMessageColor;
+  }
 }
 
 /*--------------
@@ -355,6 +384,13 @@
   border: @selectionBorder;
   border-radius: @selectionBorderRadius;
   transition: @selectionTransition;
+
+  .nocturnal-theme & {
+    background: @nocturnalSelectionBackground;
+    color: @nocturnalSelectionTextColor;
+    box-shadow: @nocturnalSelectionBoxShadow;
+    border-color: @nocturnalBorderColor;
+  }
 }
 .ui.selection.dropdown.visible,
 .ui.selection.dropdown.active {
@@ -401,6 +437,10 @@ select.ui.dropdown {
   border-radius: @selectionMenuBorderRadius;
   box-shadow: @selectionMenuBoxShadow;
   transition: @selectionMenuTransition;
+
+  .nocturnal-theme & {
+    box-shadow: @nocturnalSelectionMenuBoxShadow;
+  }
 }
 .ui.selection.dropdown .menu:after,
 .ui.selection.dropdown .menu:before {
@@ -442,6 +482,10 @@ select.ui.dropdown {
   padding: @selectionItemPadding !important;
   white-space: normal;
   word-wrap: normal;
+
+  .nocturnal-theme & {
+    border-top: @nocturnalSelectionItemDivider;
+  }
 }
 
 /* User Item */
@@ -453,42 +497,81 @@ select.ui.dropdown {
 .ui.selection.dropdown:hover {
   border-color: @selectionHoverBorderColor;
   box-shadow: @selectionHoverBoxShadow;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalSelectionHoverBorderColor;
+    box-shadow: @nocturnalSelectionHoverBoxShadow;
+  }
 }
 
 /* Active */
 .ui.selection.active.dropdown {
   border-color: @selectionVisibleBorderColor;
   box-shadow: @selectionVisibleBoxShadow;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalSelectionVisibleBorderColor;
+    box-shadow: @nocturnalSelectionVisibleBoxShadow;
+  }
 }
 .ui.selection.active.dropdown .menu {
   border-color: @selectionVisibleBorderColor;
   box-shadow: @selectionVisibleMenuBoxShadow;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalSelectionVisibleBorderColor;
+    box-shadow: @nocturnalSelectionVisibleMenuBoxShadow;
+  }
 }
 
 /* Focus */
 .ui.selection.dropdown:focus {
   border-color: @selectionFocusBorderColor;
   box-shadow: @selectionFocusBoxShadow;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalSelectionFocusBorderColor;
+    box-shadow: @nocturnalSelectionFocusBoxShadow;
+  }
 }
 .ui.selection.dropdown:focus .menu {
   border-color: @selectionFocusBorderColor;
   box-shadow: @selectionFocusMenuBoxShadow;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalSelectionFocusBorderColor;
+    box-shadow: @nocturnalSelectionFocusMenuBoxSahdow;
+  }
 }
 
 /* Visible */
 .ui.selection.visible.dropdown > .text:not(.default) {
   font-weight: @selectionVisibleTextFontWeight;
   color: @selectionVisibleTextColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalSelectionVisibleTextColor;
+  }
 }
 
 /* Visible Hover */
 .ui.selection.active.dropdown:hover {
   border-color: @selectionActiveHoverBorderColor;
   box-shadow: @selectionActiveHoverBoxShadow;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalSelectionActiveHoverBorderColor;
+    box-shadow: @nocturnalSelectionActiveHoverBoxShadow;
+  }
 }
 .ui.selection.active.dropdown:hover .menu {
   border-color: @selectionActiveHoverBorderColor;
   box-shadow: @selectionActiveHoverMenuBoxShadow;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalSelectionActiveHoverBorderColor;
+    box-shadow: @nocturnalSelectionActiveHoverMenuBoxShadow;
+  }
 }
 
 /* Dropdown Icon */
@@ -508,10 +591,20 @@ select.ui.dropdown {
 .ui.active.empty.selection.dropdown {
   border-radius: @selectionBorderRadius !important;
   box-shadow: @selectionBoxShadow !important;
+
+  .nocturnal-theme & {
+    box-shadow: @nocturnalSelectionBoxShadow !important;
+  }
 }
 .ui.active.empty.selection.dropdown .menu {
   border: none !important;
   box-shadow: none !important;
+
+  // specifity
+  .nocturnal-theme & {
+    border: none !important;
+    box-shadow: none !important;
+  }
 }
 
 /*--------------
@@ -580,6 +673,10 @@ select.ui.dropdown {
 }
 .ui.active.search.dropdown input.search:focus + .text {
   color: @selectionTextUnderlayColor !important;
+
+  .nocturnal-theme & {
+    color: @nocturnalSelectionTextUnderlayColor !important;
+  }
 }
 
 /* Search Menu */
@@ -638,6 +735,10 @@ select.ui.dropdown {
   padding: @labelPadding;
   margin: @labelMargin;
   box-shadow: @labelBoxShadow;
+
+  .nocturnal-theme & {
+    box-shadow: @nocturnalLabelBoxShadow;
+  }
 }
 
 /* Dropdown Icon */
@@ -698,6 +799,10 @@ select.ui.dropdown {
   cursor: pointer;
   display: inline-block;
   color: @inlineTextColor;
+
+  // .nocturnal-theme & {
+  //   color: @inlineTextColor;
+  // }
 }
 .ui.inline.dropdown .dropdown.icon {
   margin: @inlineIconMargin;
@@ -727,6 +832,12 @@ select.ui.dropdown {
   color: @activeItemColor;
   box-shadow: @activeItemBoxShadow;
   z-index: @activeItemZIndex;
+
+  .nocturnal-theme & {
+    background: @nocturnalActiveItemBackground;
+    color: @nocturnalActiveItemColor;
+    box-shadow: @nocturnalActiveItemBoxShadow;
+  }
 }
 
 /*--------------------
@@ -738,6 +849,11 @@ select.ui.dropdown {
   background: @hoveredItemBackground;
   color: @hoveredItemColor;
   z-index: @hoveredZIndex;
+
+  .nocturnal-theme & {
+    background: @nocturnalHoveredItemBackground;
+    color: @nocturnalHoveredItemColor;
+  }
 }
 
 /*--------------------
@@ -760,6 +876,10 @@ select.ui.dropdown {
 
   border-radius: @circularRadius;
   border: @loaderLineWidth solid @loaderFillColor;
+
+  .nocturnal-theme & {
+    border: @loaderLineWidth solid @nocturnalLoaderFillColor;
+  }
 }
 
 .ui.loading.dropdown:after {
@@ -781,6 +901,10 @@ select.ui.dropdown {
   border-color: @loaderLineColor transparent transparent;
   border-style: solid;
   border-width: @loaderLineWidth;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalLoaderLineColor transparent transparent;
+  }
 }
 
 /* Coupling */
@@ -805,10 +929,18 @@ select.ui.dropdown {
 .ui.dropdown:not(.button) > .default.text,
 .ui.default.dropdown:not(.button) > .text {
   color: @defaultTextColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalDefaultTextColor;
+  }
 }
 .ui.dropdown:not(.button) > input:focus ~ .default.text,
 .ui.default.dropdown:not(.button) > input:focus ~ .text {
   color: @defaultTextFocusColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalDefaultTextFocusColor;
+  }
 }
 /*--------------------
         Loading
@@ -842,6 +974,11 @@ select.ui.dropdown {
 .ui.dropdown .menu .selected.item {
   background: @selectedBackground;
   color: @selectedColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalSelectedBackground;
+    color: @nocturnalSelectedColor;
+  }
 }
 
 /*--------------------
@@ -864,35 +1001,70 @@ select.ui.dropdown {
 .ui.dropdown.error > .text,
 .ui.dropdown.error > .default.text {
   color: @errorTextColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalErrorTextColor;
+  }
 }
 
 .ui.selection.dropdown.error {
   background: @errorBackgroundColor;
   border-color: @errorBorderColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalErrorBackgroundColor;
+    border-color: @nocturnalErrorBorderColor;
+  }
 }
 .ui.selection.dropdown.error:hover {
   border-color: @errorBorderColor;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalErrorBorderColor;
+  }
 }
 
 .ui.dropdown.error > .menu,
-.ui.dropdown.error > .menu .menu {
+.ui.dropdown.error > .menu .menu,
+.ui.dropdown.selection.error > .menu {
   border-color: @errorBorderColor;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalErrorBorderColor;
+  }
 }
 .ui.dropdown.error > .menu > .item {
   color: @errorItemTextColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalErrorItemTextColor;
+    background: @nocturnalErrorBackgroundColor;
+  }
 }
 .ui.multiple.selection.error.dropdown > .label {
   border-color: @errorBorderColor;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalErrorBorderColor;
+  }
 }
 
 /* Item Hover */
 .ui.dropdown.error > .menu > .item:hover {
   background-color: @errorItemHoverBackground;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalErrorItemHoverBackground;
+  }
 }
 
 /* Item Active */
 .ui.dropdown.error > .menu .active.item {
   background-color: @errorItemActiveBackground;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalErrorItemActiveBackground;
+  }
 }
 
 /*--------------------
@@ -1056,6 +1228,10 @@ select.ui.dropdown {
   min-width: 100% !important;
   width: auto !important;
   border-top: @menuBorder;
+
+  .nocturnal-theme & {
+    border-top: @nocturnalMenuBorder;
+  }
 }
 .ui.scrolling.dropdown .menu .item.item.item,
 .ui.dropdown .scrolling.menu > .item.item.item {

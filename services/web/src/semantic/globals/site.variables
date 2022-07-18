@@ -196,6 +196,9 @@
 @invertedLoaderFillColor : rgba(255, 255, 255, 0.15);
 @invertedLoaderLineColor : @white;
 
+@nocturnalLoaderFillColor: @invertedLoaderFillColor;
+@nocturnalLoaderLineColor: @invertedLoaderLineColor;
+
 /*-------------------
         Grid
 --------------------*/
@@ -358,12 +361,24 @@
 @positiveHeaderColor     : #1A531B;
 @positiveTextColor       : #2C662D;
 
+@nocturnalPositiveColor           : @positiveColor;
+@nocturnalPositiveBackgroundColor : @positiveHeaderColor;
+@nocturnalPositiveBorderColor     : @positiveTextColor;
+@nocturnalPositiveHeaderColor     : @positiveBackgroundColor;
+@nocturnalPositiveTextColor       : @positiveBorderColor;
+
 /* Negative */
 @negativeColor           : @red;
 @negativeBackgroundColor : #FFF6F6;
 @negativeBorderColor     : #E0B4B4;
 @negativeHeaderColor     : #912D2B;
 @negativeTextColor       : #9F3A38;
+
+@nocturnalNegativeColor           : @negativeColor;
+@nocturnalNegativeBackgroundColor : @negativeHeaderColor;
+@nocturnalNegativeBorderColor     : @negativeTextColor;
+@nocturnalNegativeHeaderColor     : @negativeBackgroundColor;
+@nocturnalNegativeTextColor       : @negativeBorderColor;
 
 /* Info */
 @infoColor              : #31CCEC;
@@ -372,12 +387,24 @@
 @infoHeaderColor        : #0E566C;
 @infoTextColor          : #276F86;
 
+@nocturnalInfoColor               : @infoColor;
+@nocturnalInfoBackgroundColor     : @infoHeaderColor;
+@nocturnalInfoBorderColor         : @infoTextColor;
+@nocturnalInfoHeaderColor         : @infoBackgroundColor;
+@nocturnalInfoTextColor           : @infoBorderColor;
+
 /* Warning */
 @warningColor           : #F2C037;
 @warningBorderColor     : #C9BA9B;
 @warningBackgroundColor : #FFFAF3;
 @warningHeaderColor     : #794B02;
 @warningTextColor       : #573A08;
+
+@nocturnalWarningColor            : @warningColor;
+@nocturnalWarningBackgroundColor  : @warningHeaderColor;
+@nocturnalWarningBorderColor      : @warningTextColor;
+@nocturnalWarningHeaderColor      : @warningBackgroundColor;
+@nocturnalWarningTextColor        : @warningBorderColor;
 
 /*-------------------
         Paths
@@ -456,6 +483,7 @@
 
 @nocturnalTextColor          : @invertedTextColor;
 @nocturnalMutedTextColor     : @invertedMutedTextColor;
+@nocturnalLightTextColor     : @invertedLightTextColor;
 @nocturnalUnselectedTextColor: @invertedUnselectedTextColor;
 @nocturnalHoveredTextColor   : @invertedHoveredTextColor;
 @nocturnalSelectedTextColor  : @invertedSelectedTextColor;
@@ -497,7 +525,10 @@
 @selectedSolidWhiteBorderColor : #999999;
 
 @nocturnalBorderColor       : rgba(255,255,255,.2); // hsl(hue(@borderColor), saturation(@borderColor), (100% - lightness(@borderColor)) * 2);
+@nocturnalInternalBorderColor: rgba(255,255,255,.3);
 @nocturnalSelectedBorderColor: rgba(255,255,255,.30);
+
+@nocturnalSolidInternalBorderColor: lighten(@nocturnalPageBackground, 2);
 
 /*-------------------
     Derived Values
@@ -532,11 +563,23 @@
 @successHeaderColor     : @positiveHeaderColor;
 @successTextColor       : @positiveTextColor;
 
+@nocturnalSuccessBackgroundColor : @nocturnalPositiveBackgroundColor;
+@nocturnalSuccessColor           : @nocturnalPositiveColor;
+@nocturnalSuccessBorderColor     : @nocturnalPositiveBorderColor;
+@nocturnalSuccessHeaderColor     : @nocturnalPositiveHeaderColor;
+@nocturnalSuccessTextColor       : @nocturnalPositiveTextColor;
+
 @errorBackgroundColor   : @negativeBackgroundColor;
 @errorColor             : @negativeColor;
 @errorBorderColor       : @negativeBorderColor;
 @errorHeaderColor       : @negativeHeaderColor;
 @errorTextColor         : @negativeTextColor;
+
+@nocturnalErrorBackgroundColor   : @nocturnalNegativeBackgroundColor;
+@nocturnalErrorColor             : @nocturnalNegativeColor;
+@nocturnalErrorBorderColor       : @nocturnalNegativeBorderColor;
+@nocturnalErrorHeaderColor       : @nocturnalNegativeHeaderColor;
+@nocturnalErrorTextColor         : @nocturnalNegativeTextColor;
 
 
 /* Responsive */
