@@ -22,6 +22,10 @@
   overflow: hidden;
   background: @background;
   padding-bottom: @widescreenRatio;
+
+  .nocturnal-theme & {
+    background: @nocturnalBackground;
+  }
 }
 
 /*-----------------
@@ -62,6 +66,10 @@
   width: 100%;
   height: 100%;
   background-color: @placeholderBackground;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalPlaceholderBackground;
+  }
 }
 
 /*--------------
@@ -88,6 +96,10 @@
   background: @placeholderBackground;
   opacity: @placeholderBackgroundOpacity;
   transition: @placeholderBackgroundTransition;
+
+  .nocturnal-theme & {
+    background: @nocturnalPlaceholderBackground;
+  }
 }
 .ui.embed > .icon:before {
   position: absolute;
@@ -98,9 +110,15 @@
 
   color: @iconColor;
   font-size: @iconSize;
-  text-shadow: @iconShadow;
+  text-shadow: @iconShadow; //@todo verify
   transition: @iconTransition;
   z-index: @iconZIndex;
+
+  .nocturnal-theme & {
+    color: @nocturnalIconColor;
+    text-shadow: @nocturnalIconShadow;
+
+  }
 }
 
 /*******************************
@@ -114,9 +132,17 @@
 .ui.embed .icon:hover:after {
   background: @hoverPlaceholderBackground;
   opacity: @hoverPlaceholderBackgroundOpacity;
+
+  .nocturnal-theme & {
+    background: @nocturnalHoverPlaceholderBackground;
+  }
 }
 .ui.embed .icon:hover:before {
   color: @hoverIconColor;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalHoverIconColor;
+  }
 }
 
 /*--------------
