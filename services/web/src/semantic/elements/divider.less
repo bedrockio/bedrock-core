@@ -16,7 +16,7 @@
 
 .ui.divider {
   height: 1px;
-  background-color: #dbdbda;
+  background-color: @highlightColor;
   margin: @margin;
 
   &.horizontal,
@@ -35,7 +35,7 @@
     &:before,
     &:after {
       content: '';
-      background-color: #dbdbda;
+      background-color: @highlightColor;
       flex: auto;
     }
   }
@@ -112,41 +112,36 @@
 /*--------------
     Inverted
 ---------------*/
-/*
-.nocturnal-theme .ui.divider.inverted,
-.nocturnal-theme .ui.vertical.inverted.divider,
-.nocturnal-theme .ui.horizontal.inverted.divider {
- color: #dbdbda;
-}
-
-.nocturnal-theme .ui.divider.inverted,
-.nocturnal-theme .ui.divider.inverted:after,
-.nocturnal-theme .ui.divider.inverted:before {
-  border-top-color: #dbdbda !important;
-  border-left-color: #dbdbda !important;
-  border-bottom-color: #dbdbda !important;
-  border-right-color: #dbdbda !important;
-}
-*/
 
 .nocturnal-theme .ui.divider,
-.nocturnal-theme .ui.vertical.divider,
-.nocturnal-theme .ui.horizontal.divider,
-.ui.divider.inverted,
-.ui.vertical.inverted.divider,
-.ui.horizontal.inverted.divider {
-  color: @invertedTextColor;
+.ui.inverted.divider {
+  background-color: @invertedHighlightColor;
+
+  &.vertical,
+  &.horizontal {
+    background: transparent;
+    color: @invertedTextColor;
+
+    &:before,
+    &:after {
+      background-color: @invertedHighlightColor;
+    }
+  }
 }
-.nocturnal-theme .ui.divider,
-.nocturnal-theme .ui.divider:after,
-.nocturnal-theme .ui.divider:before,
-.ui.divider.inverted,
-.ui.divider.inverted:after,
-.ui.divider.inverted:before {
-  border-top-color: @invertedShadowColor !important;
-  border-left-color: @invertedShadowColor !important;
-  border-bottom-color: @invertedHighlightColor !important;
-  border-right-color: @invertedHighlightColor !important;
+
+.nocturnal-theme .ui.inverted.divider {
+  background-color: @highlightColor;
+
+  &.vertical,
+  &.horizontal {
+    background: transparent;
+    color: @color;
+
+    &:before,
+    &:after {
+      background-color: @highlightColor;
+    }
+  }
 }
 
 /*--------------
