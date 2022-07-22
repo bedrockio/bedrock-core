@@ -14,6 +14,7 @@
 @imageHorizontalMargin: 0.25rem;
 @imageVerticalMargin: 0.5rem;
 @imageBorder: 1px solid rgba(0, 0, 0, 0.1);
+@nocturnalImageBorder: 1px solid rgba(255, 255, 255, 0.2);
 
 /*-------------------
        Types
