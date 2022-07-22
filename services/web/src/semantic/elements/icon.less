@@ -120,10 +120,14 @@ svg.circular.icon {
 
   width: @circularSize !important;
   height: @circularSize !important;
+
+  .nocturnal-theme & {
+    box-shadow: @nocturnalCircularShadow;
+  }
 }
 svg.circular.inverted.icon {
-  border: none;
-  box-shadow: none;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 /*-------------------
@@ -164,10 +168,14 @@ svg.bordered.icon {
   height: @borderedSize;
   padding: @borderedVerticalPadding @borderedHorizontalPadding !important;
   box-shadow: @borderedShadow;
+
+  .nocturnal-theme & {
+    box-shadow: @nocturnalBorderedShadow;
+  }
 }
 svg.bordered.inverted.icon {
-  border: none;
-  box-shadow: none;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 /*-------------------
@@ -178,16 +186,25 @@ svg.bordered.inverted.icon {
 svg.inverted.bordered.icon,
 svg.inverted.circular.icon {
   background-color: @black !important;
-  color: @white !important;
+  color: @invertedTextColor !important;
+
+  .nocturnal-theme & {
+    background-color: @invertedMutedTextColor !important;
+    color: @black !important;
+  }
 }
 
 svg.inverted.icon {
-  color: @white;
+  color: @invertedTextColor;
+
+  .nocturnal-theme & {
+    color: @black;
+  }
 }
 
-.nocturnal-theme svg.icon {
-  color: inherit;
-}
+// .nocturnal-theme svg.icon {
+//   color: inherit;
+// }
 
 /*-------------------
        Colors
@@ -205,7 +222,7 @@ svg.inverted.red.icon,
 svg.inverted.bordered.red.icon,
 svg.inverted.circular.red.icon {
   background-color: @red !important;
-  color: @white !important;
+  color: @invertedTextColor !important;
 }
 
 /* Orange */
@@ -220,7 +237,7 @@ svg.inverted.orange.icon,
 svg.inverted.bordered.orange.icon,
 svg.inverted.circular.orange.icon {
   background-color: @orange !important;
-  color: @white !important;
+  color: @invertedTextColor !important;
 }
 
 /* Yellow */
@@ -235,7 +252,7 @@ svg.inverted.yellow.icon,
 svg.inverted.bordered.yellow.icon,
 svg.inverted.circular.yellow.icon {
   background-color: @yellow !important;
-  color: @white !important;
+  color: @invertedTextColor !important;
 }
 
 /* Olive */
@@ -250,7 +267,7 @@ svg.inverted.olive.icon,
 svg.inverted.bordered.olive.icon,
 svg.inverted.circular.olive.icon {
   background-color: @olive !important;
-  color: @white !important;
+  color: @invertedTextColor !important;
 }
 
 /* Green */
@@ -265,7 +282,7 @@ svg.inverted.green.icon,
 svg.inverted.bordered.green.icon,
 svg.inverted.circular.green.icon {
   background-color: @green !important;
-  color: @white !important;
+  color: @invertedTextColor !important;
 }
 
 /* Teal */
@@ -280,7 +297,7 @@ svg.inverted.teal.icon,
 svg.inverted.bordered.teal.icon,
 svg.inverted.circular.teal.icon {
   background-color: @teal !important;
-  color: @white !important;
+  color: @invertedTextColor !important;
 }
 
 /* Blue */
@@ -295,7 +312,7 @@ svg.inverted.blue.icon,
 svg.inverted.bordered.blue.icon,
 svg.inverted.circular.blue.icon {
   background-color: @blue !important;
-  color: @white !important;
+  color: @invertedTextColor !important;
 }
 
 /* Violet */
@@ -310,7 +327,7 @@ svg.inverted.violet.icon,
 svg.inverted.bordered.violet.icon,
 svg.inverted.circular.violet.icon {
   background-color: @violet !important;
-  color: @white !important;
+  color: @invertedTextColor !important;
 }
 
 /* Purple */
@@ -340,7 +357,7 @@ svg.inverted.pink.icon,
 svg.inverted.bordered.pink.icon,
 svg.inverted.circular.pink.icon {
   background-color: @pink !important;
-  color: @white !important;
+  color: @invertedTextColor !important;
 }
 
 /* Brown */
@@ -355,7 +372,7 @@ svg.inverted.brown.icon,
 svg.inverted.bordered.brown.icon,
 svg.inverted.circular.brown.icon {
   background-color: @brown !important;
-  color: @white !important;
+  color: @invertedTextColor !important;
 }
 
 /* Grey */
@@ -370,7 +387,7 @@ svg.inverted.grey.icon,
 svg.inverted.bordered.grey.icon,
 svg.inverted.circular.grey.icon {
   background-color: @grey !important;
-  color: @white !important;
+  color: @invertedTextColor !important;
 }
 
 /* Black */
@@ -385,7 +402,7 @@ svg.inverted.black.icon,
 svg.inverted.bordered.black.icon,
 svg.inverted.circular.black.icon {
   background-color: @black !important;
-  color: @white !important;
+  color: @invertedTextColor !important;
 }
 
 /*-------------------
