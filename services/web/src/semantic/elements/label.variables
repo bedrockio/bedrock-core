@@ -21,6 +21,9 @@
 @fontWeight: @bold;
 @borderWidth: 1px;
 @border: 0px solid transparent;
+@nocturnalBackgroundColor: hsl(hue(@pageBackground), (saturation(@pageBackground) / 2), (lightness(@textColor) + (100% - lightness(@backgroundColor))));
+@nocturnalColor: @nocturnalMutedTextColor;
+@nocturnalBackgroundImage: @backgroundImage;
 
 @lineHeightOffset: -(@verticalPadding / 2);
 
@@ -71,6 +74,7 @@
 @imageLabelBorderRadius: @borderRadius;
 @imageLabelBoxShadow: none;
 @imageLabelPadding: @imageLabelVerticalPadding @imageLabelHorizontalPadding @imageLabelVerticalPadding @imageLabelTextDistance;
+@nocturnalImageLabelBackground: @nocturnalBackgroundColor;
 
 @imageLabelImageMargin: -@verticalPadding @imageLabelTextDistance -@verticalPadding -@imageLabelTextDistance;
 @imageLabelImageBorderRadius: @imageLabelBorderRadius 0em 0em @imageLabelBorderRadius;
@@ -79,6 +83,7 @@
 @imageLabelDetailBackground: @strongTransparentBlack;
 @imageLabelDetailPadding: @imageLabelVerticalPadding @imageLabelHorizontalPadding;
 @imageLabelDetailMargin: -@imageLabelVerticalPadding -@imageLabelHorizontalPadding -@imageLabelVerticalPadding @imageLabelDetailDistance;
+@nocturnalImageLabelDetailBackground: @strongTransparentWhite;
 
 /*-------------------
         States
@@ -88,17 +93,25 @@
 @labelHoverBackgroundColor: #E0E0E0;
 @labelHoverBackgroundImage: none;
 @labelHoverTextColor: @hoveredTextColor;
+@nocturnalLabelHoverBackgroundColor: hsl(hue(@pageBackground), (saturation(@pageBackground) / 2), (lightness(@textColor) + (100% - lightness(@labelHoverBackgroundColor))));
+@nocturnalLabelHoverBackgroundImage: @labelHoverBackgroundImage;
+@nocturnalLabelHoverTextColor: @nocturnalHoveredTextColor;
 
 /* Active */
 @labelActiveBackgroundColor: #D0D0D0;
 @labelActiveBackgroundImage: none;
 @labelActiveTextColor: @selectedTextColor;
+@nocturnalLabelActiveBackgroundColor: hsl(hue(@pageBackground), (saturation(@pageBackground) / 2), (lightness(@textColor) + (100% - lightness(@labelActiveBackgroundColor))));
+@nocturnalLabelActiveBackgroundImage: @labelActiveBackgroundImage;
+@nocturnalLabelActiveTextColor: @nocturnalSelectedTextColor;
 
 /* Active Hover */
 @labelActiveHoverBackgroundColor: #C8C8C8;
 @labelActiveHoverBackgroundImage: none;
 @labelActiveHoverTextColor: @selectedTextColor;
-
+@nocturnalLabelActiveHoverBackgroundColor: hsl(hue(@pageBackground), (saturation(@pageBackground) / 2), (lightness(@textColor) + (100% - lightness(@labelActiveHoverBackgroundColor))));
+@nocturnalLabelActiveHoverBackgroundImage: @labelActiveHoverBackgroundImage;
+@nocturnalLabelActiveHoverTextColor: @nocturnalSelectedTextColor;
 
 /*-------------------
       Variations
@@ -110,11 +123,19 @@
 @basicBorder: @basicBorderWidth solid @borderColor;
 @basicColor: @textColor;
 @basicBoxShadow: none;
+@nocturnalBasicBackground: @nocturnalInputBackground;
+@nocturnalBasicBorder: @basicBorderWidth solid @nocturnalBorderColor;
+@nocturnalBasicColor: @nocturnalTextColor;
+@nocturnalBasicBoxShadow: @basicBoxShadow;
 
 @basicHoverBackground: @basicBackground;
 @basicHoverColor: @linkHoverColor;
 @basicHoverBorder: @basicBorder;
 @basicHoverBoxShadow: @basicBoxShadow;
+@nocturnalBasicHoverBackground: @nocturnalBasicBackground;
+@nocturnalBasicHoverColor: @nocturnalLinkHoverColor;
+@nocturnalBasicHoverBorder: @nocturnalBasicBorder;
+@nocturnalBasicHoverBoxShadow: @nocturnalBasicBoxShadow;
 
 /* Tag */
 @tagCircleColor: @white;
@@ -126,10 +147,14 @@
 @tagTriangleSize: 1.56em;
 @tagTriangleBackgroundImage: none;
 @tagTransition: none; /* Avoids error with background: inherit; on animation */
+@nocturnalTagCircleColor: @nocturnalPageBackground;
+@nocturnalTagCircleBoxShadow: @tagCircleBoxShadow;
+@nocturnalTagTriangleBackgroundImage: @tagTriangleBackgroundImage;
 
 /* Ribbon */
 @ribbonTriangleSize: 1.2em;
 @ribbonShadowColor: rgba(0, 0, 0, 0.15);
+@nocturnalRibbonShadowColor: @ribbonShadowColor;
 
 @ribbonMargin: 1rem;
 @ribbonOffset: calc(-@ribbonMargin - @ribbonTriangleSize);
