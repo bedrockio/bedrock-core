@@ -45,6 +45,8 @@
     "favicons-webpack-plugin": "^5.0.2",
     "github-markdown-css": "^4.0.0",
     "google-map-react": "^2.1.10",
+    "hast-util-sanitize": "^4.0.0",
+    "hast-util-to-mdast": "^8.3.1",
     "html-loader": "^2.1.2",
     "html-webpack-plugin": "^5.3.2",
     "koa": "^2.11.0",
