@@ -809,6 +809,59 @@ describe('createSchema', () => {
       expect(shop.products[0].name).toBe('conditioner');
       expect(shop.products[1].name).toBe('body wash');
     });
+
+    it('should not overwrite mixed content fields', async () => {
+      const User = createTestModel(
+        createSchemaFromAttributes({
+          profile: 'Object',
+        })
+      );
+
+      const user = await User.create({
+        profile: {
+          foo: 'foo',
+        },
+      });
+
+      user.assign({
+        profile: {
+          bar: 'bar',
+        },
+      });
+      await user.save();
+
+      expect(user.profile).toEqual({
+        foo: 'foo',
+        bar: 'bar',
+      });
+    });
+
+    it('should delete mixed content fields with null', async () => {
+      const User = createTestModel(
+        createSchemaFromAttributes({
+          profile: 'Object',
+        })
+      );
+
+      let user = await User.create({
+        profile: {
+          name: 'Bob',
+          age: 30,
+        },
+      });
+
+      user.assign({
+        profile: {
+          age: null,
+        },
+      });
+      await user.save();
+
+      user = await User.findById(user.id);
+
+      expect(user.profile.name).toBe('Bob');
+      expect('age' in user.profile).toBe(false);
+    });
   });
 
   describe('autopopulate', () => {

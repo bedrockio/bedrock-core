@@ -1,8 +1,11 @@
+const mongoose = require('mongoose');
 const AuditEntry = require('../audit-entry');
 const User = require('../user');
+
 const Koa = require('koa');
 const Router = require('@koa/router');
 const request = require('supertest');
+const { createSchema } = require('../../utils/schema');
 
 const { setupDb, teardownDb, createUser } = require('../../utils/testing');
 
@@ -45,6 +48,34 @@ describe('AuditEntry', () => {
       expect(fields.objectId).toBe(user.id);
       expect(fields.objectType).toBe('User');
       expect(fields.objectAfter.email).toBe('bob@new.com');
+      expect(fields.objectBefore).not.toBeDefined();
+    });
+
+    it('should return a diff object for objectId (new object)', async () => {
+      const user = await createUser({
+        us: 'bob@new.com',
+      });
+
+      const schema = createSchema({
+        attributes: {
+          user: {
+            ref: 'User',
+            type: 'ObjectId',
+          },
+        },
+      });
+
+      const NewModel = mongoose.model('NewModel', schema);
+
+      const newModel = await NewModel.create({
+        user: user.id,
+      });
+
+      const fields = AuditEntry.getObjectFields(newModel, ['user']);
+
+      expect(fields.objectId).toBe(newModel.id);
+      expect(fields.objectType).toBe('NewModel');
+      expect(fields.objectAfter.user.toString()).toBe(user.id.toString());
       expect(fields.objectBefore).not.toBeDefined();
     });
 
