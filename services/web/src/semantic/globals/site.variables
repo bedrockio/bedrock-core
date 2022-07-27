@@ -487,6 +487,7 @@
 @nocturnalUnselectedTextColor: @invertedUnselectedTextColor;
 @nocturnalHoveredTextColor   : @invertedHoveredTextColor;
 @nocturnalSelectedTextColor  : @invertedSelectedTextColor;
+@nocturnalDisabledTextColor  : @invertedDisabledTextColor;
 
 /*-------------------
      Brand Colors
