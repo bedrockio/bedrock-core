@@ -36,7 +36,7 @@ describe('/1/applications', () => {
     it('should deny access to users with no access', async () => {
       const user = await createUser();
       const response = await request('POST', '/1/applications/mine/search', {}, { user });
-      expect(response.status).toBe(401);
+      expect(response.status).toBe(403);
     });
   });
 

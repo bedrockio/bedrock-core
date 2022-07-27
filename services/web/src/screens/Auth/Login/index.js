@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Segment, Grid, Form } from 'semantic';
-import { request } from 'utils/api';
 import { withSession } from 'stores';
 import screen from 'helpers/screen';
 
@@ -20,29 +19,23 @@ export default class Login extends React.Component {
     password: '',
   };
 
+  componentDidMount() {
+    if (this.context.isLoggedIn()) {
+      this.props.history.push('/');
+    }
+  }
+
   onSubmit = async () => {
     try {
       this.setState({
         error: null,
         loading: true,
       });
-
-      const { data } = await request({
-        method: 'POST',
-        path: '/1/auth/login',
-        body: {
-          email: this.state.email,
-          password: this.state.password,
-        },
-      });
-
-      if (data.mfaRequired) {
-        window.sessionStorage.setItem('mfa-auth', JSON.stringify(data));
-        this.props.history.push('/login/verification');
-        return;
-      }
-
-      await this.context.authenticate(data.token);
+      const body = {
+        email: this.state.email,
+        password: this.state.password,
+      };
+      this.props.history.push(await this.context.login(body));
     } catch (error) {
       this.setState({
         error,

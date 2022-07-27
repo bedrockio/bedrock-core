@@ -12,7 +12,7 @@ const MIME_TYPES = {
   text: 'text/*',
   pdf: 'application/pdf',
   csv: 'text/csv,application/vnd.ms-excel',
-  zip: 'application/zip,application/octet-stream',
+  zip: 'application/zip,application/x-zip-compressed,application/octet-stream',
 };
 
 const MEDIA_TYPES = ['image', 'video', 'audio'];

@@ -2,8 +2,8 @@ import { hot } from 'react-hot-loader/root';
 
 import React from 'react';
 
-import { Switch, Route, Redirect } from 'react-router-dom';
-import { AuthSwitch, Protected } from 'helpers/routes';
+import { Switch, Route } from 'react-router-dom';
+import { Protected } from 'helpers/routes';
 import { useSession } from 'stores';
 
 import Dashboard from 'screens/Dashboard';
@@ -38,7 +38,7 @@ const App = () => {
   }
   return (
     <Switch>
-      <AuthSwitch path="/" loggedIn={Dashboard} loggedOut={Login} exact />
+      <Protected path="/" allowed={Dashboard} exact />
       <Protected path="/shops/:id?" allowed={Shops} />
       <Protected path="/products/:id?" allowed={Products} />
       <Protected path="/settings/:id?" allowed={Settings} exact />
@@ -48,30 +48,14 @@ const App = () => {
       <Route path="/docs/:id?" component={Docs} />
       <Route path="/applications/:id?" component={Applications} />
       <Route path="/logout" component={Logout} exact />
-      <AuthSwitch
-        path="/login/verification"
-        loggedOut={MfaVerification}
-        loggedIn={() => <Redirect to="/" />}
-        exact
-      />
-      <AuthSwitch
+      <Route path="/login/verification" component={MfaVerification} exact />
+      <Route
         path="/login/verification/backup"
-        loggedOut={MfaBackupVerification}
-        loggedIn={() => <Redirect to="/" />}
+        component={MfaBackupVerification}
         exact
       />
-      <AuthSwitch
-        path="/login"
-        loggedOut={Login}
-        loggedIn={() => <Redirect to="/" />}
-        exact
-      />
-      <AuthSwitch
-        path="/signup"
-        loggedOut={Signup}
-        loggedIn={() => <Redirect to="/" />}
-        exact
-      />
+      <Route path="/login" component={Login} exact />
+      <Route path="/signup" component={Signup} exact />
       <Route path="/accept-invite" component={AcceptInvite} exact />
       <Route path="/forgot-password" component={ForgotPassword} exact />
       <Route path="/reset-password" component={ResetPassword} exact />

@@ -42,6 +42,7 @@ export default class StandardPage extends React.Component {
     return (
       <div className="docs markdown-body">
         <Markdown
+          trusted
           source={markdown}
           components={{
             code: this.renderCodeBlock,
