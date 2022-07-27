@@ -11,8 +11,8 @@ import {
 } from 'semantic';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
-import { Layout } from 'components';
-import { SearchProvider, Filters } from 'components/search';
+import { Layout, Search, SearchFilters } from 'components';
+
 import { set, truncate } from 'lodash';
 import Menu from './Menu';
 
@@ -91,7 +91,7 @@ export default class ApplicationLogs extends React.Component {
     return (
       <React.Fragment>
         <Menu {...this.props} />
-        <SearchProvider
+        <Search.Provider
           filters={this.state.initialFilters}
           limit={15}
           onDataNeeded={this.onDataNeeded}>
@@ -102,7 +102,7 @@ export default class ApplicationLogs extends React.Component {
                   <Grid.Row>
                     <Grid.Column width={9}>
                       <Layout horizontal>
-                        <Filters.Search
+                        <SearchFilters.Search
                           style={{
                             width: '300px',
                           }}
@@ -110,7 +110,7 @@ export default class ApplicationLogs extends React.Component {
                           placeholder="Filter by Path or Request Id"
                         />
                         <Divider hidden vertical />
-                        <Filters.Dropdown
+                        <SearchFilters.Dropdown
                           style={{
                             width: '120px',
                           }}
@@ -134,7 +134,7 @@ export default class ApplicationLogs extends React.Component {
                           ]}
                         />
                         <Divider hidden vertical />
-                        <Filters.Dropdown
+                        <SearchFilters.Dropdown
                           label=""
                           name="request.method"
                           placeholder="Method"
@@ -222,7 +222,7 @@ export default class ApplicationLogs extends React.Component {
                             })}
                           </Grid>
                           <Divider hidden />
-                          <SearchProvider.Pagination />
+                          <Search.Pagination />
                         </>
                       )}
                     </Grid.Column>
@@ -302,7 +302,7 @@ export default class ApplicationLogs extends React.Component {
               </React.Fragment>
             );
           }}
-        </SearchProvider>
+        </Search.Provider>
       </React.Fragment>
     );
   }

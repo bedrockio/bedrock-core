@@ -1,0 +1,21 @@
+@import '../../../../semantic/globals/site.variables';
+@import 'styles/responsive';
+
+.search-filters-modal {
+  @media @mobile {
+    margin-bottom: 10px;
+    > .label {
+      cursor: text;
+    }
+  }
+
+  > .label {
+    cursor: pointer;
+    background: @primaryColor;
+    border-color: @primaryColor;
+    color: #fff;
+    &:hover {
+      background: @primaryColor;
+    }
+  }
+}

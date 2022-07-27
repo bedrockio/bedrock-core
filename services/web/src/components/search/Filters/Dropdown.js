@@ -15,7 +15,7 @@ export default class DropdownFilter extends React.Component {
 
   getValue() {
     const { name } = this.props;
-    return this.context.getFilterValue(name) || this.getDefaultValue();
+    return this.context.filters[name] || this.getDefaultValue();
   }
 
   getOptions() {
@@ -25,6 +25,7 @@ export default class DropdownFilter extends React.Component {
       const arr = Array.isArray(value) ? value : [value];
       return arr.map((value) => {
         return {
+          key: value,
           value,
           text: value,
         };
@@ -39,8 +40,14 @@ export default class DropdownFilter extends React.Component {
         <Form.Field disabled={disabled} error={error}>
           <label>{label}</label>
           <SearchDropdown
+            objectMode={false}
             value={this.getValue()}
-            onChange={this.context.onFilterChange}
+            onChange={(e, { name, value }) => {
+              this.context.onFilterChange({
+                value: value,
+                name,
+              });
+            }}
             {...rest}
           />
         </Form.Field>
@@ -50,7 +57,12 @@ export default class DropdownFilter extends React.Component {
         <Form.Dropdown
           value={this.getValue()}
           options={this.getOptions()}
-          onChange={this.context.onFilterChange}
+          onChange={(e, { value, name }) => {
+            this.context.onFilterChange({
+              value,
+              name,
+            });
+          }}
           {...this.props}
         />
       );
