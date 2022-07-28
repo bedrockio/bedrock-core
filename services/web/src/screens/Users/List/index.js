@@ -72,6 +72,10 @@ export default class UserList extends React.Component {
             .join(', ');
         },
       },
+      isDeveloper: {
+        label: 'Is Developer',
+        type: 'boolean',
+      },
       keyword: {},
     };
   }
@@ -106,6 +110,11 @@ export default class UserList extends React.Component {
                       label="Role"
                       name="roles"
                       onDataNeeded={this.fetchRoles}
+                    />
+
+                    <SearchFilters.Checkbox
+                      label="Is Developer"
+                      name="isDeveloper"
                     />
 
                     {/* --- Generator: end */}
