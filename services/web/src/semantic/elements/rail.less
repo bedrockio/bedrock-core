@@ -68,11 +68,19 @@
   padding: 0em @splitDividingDistance 0em 0em;
   margin: 0em @splitDividingDistance 0em 0em;
   border-right: @dividingBorder;
+
+  .nocturnal-theme & {
+    border-right: @nocturnalDividingBorder;
+  }
 }
 .ui.right.dividing.rail {
   border-left: @dividingBorder;
   padding: 0em 0em 0em @splitDividingDistance;
   margin: 0em 0em 0em @splitDividingDistance;
+
+  .nocturnal-theme & {
+    border-left: @nocturnalDividingBorder;
+  }
 }
 
 /*--------------
