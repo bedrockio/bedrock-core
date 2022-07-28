@@ -13,10 +13,18 @@ export default class DateRangeFilter extends React.Component {
   onChange = (evt, { name: part, value }) => {
     const { name } = this.props;
 
-    const range = this.context.getFilterValue(name) || {};
+    const range = this.context.filters[name] || {};
+    if (name === 'gte' && value === null) {
+      delete range['lte'];
+    }
+
     if (value) {
       range[part] = value;
     } else {
+      // start = null => reset range to avoid
+      if (part === 'gte') {
+        delete range['lte'];
+      }
       delete range[part];
     }
 
@@ -25,7 +33,7 @@ export default class DateRangeFilter extends React.Component {
     if (this.props.onChange) {
       this.props.onChange(evt, { name, value });
     } else {
-      this.context.onFilterChange(evt, { name, value });
+      this.context.onFilterChange({ name, value });
     }
   };
 
@@ -37,16 +45,16 @@ export default class DateRangeFilter extends React.Component {
         <Form.Group>
           <DateField
             name="gte"
-            value={this.context.getFilterValue(name)?.gte}
-            placeholder="No Start"
+            value={this.context.filters[name]?.gte}
+            placeholder="Start"
             onChange={this.onChange}
             clearable
           />
           <span className="divider">&ndash;</span>
           <DateField
             name="lte"
-            value={this.context.getFilterValue(name)?.lte}
-            placeholder="No End"
+            value={this.context.filters[name]?.lte}
+            placeholder="Present"
             onChange={this.onChange}
             clearable
           />

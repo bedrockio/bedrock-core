@@ -1,2 +1,14 @@
 import React from 'react';
-export default React.createContext();
+const Context = React.createContext();
+
+export default Context;
+
+export function withSearchProvider(Component) {
+  return function WrapperComponent(props) {
+    return (
+      <Context.Consumer>
+        {(state) => <Component {...props} context={state} />}
+      </Context.Consumer>
+    );
+  };
+}

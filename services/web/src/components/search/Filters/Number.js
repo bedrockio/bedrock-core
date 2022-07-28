@@ -7,17 +7,16 @@ import SearchContext from '../Context';
 export default class NumberFilter extends React.Component {
   static contextType = SearchContext;
 
-  onChange = (evt, { value, ...rest }) => {
-    this.context.onFilterChange(evt, {
-      ...rest,
-      type: 'text',
+  onChange = (evt, { name, value }) => {
+    this.context.onFilterChange({
+      name,
       value: Number(value),
     });
   };
 
   render() {
     const { name, min, max } = this.props;
-    const value = this.context.getFilterValue(name);
+    const value = this.context.filters[name];
     return (
       <Form.Input
         id={name}
@@ -30,7 +29,7 @@ export default class NumberFilter extends React.Component {
             link: true,
             onClick: (evt) => {
               if (value) {
-                this.context.onFilterChange(evt, { name, value: '' });
+                this.context.onFilterChange({ name, value: '' });
               }
               evt.target.closest('.input').querySelector('input').focus();
             },

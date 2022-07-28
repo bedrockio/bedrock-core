@@ -4,12 +4,11 @@ import { Link } from 'react-router-dom';
 import {
   Table,
   Button,
-  Message,
   Label,
   Divider,
-  Loader,
   Confirm,
   Dropdown,
+  Segment,
 } from 'semantic';
 
 import { formatDateTime } from 'utils/date';
@@ -17,9 +16,14 @@ import { request } from 'utils/api';
 import screen from 'helpers/screen';
 import { formatRoles } from 'utils/permissions';
 
-import { HelpTip, Breadcrumbs, Layout } from 'components';
-import { SearchProvider, Filters } from 'components/search';
-import ErrorMessage from 'components/ErrorMessage';
+import {
+  HelpTip,
+  Breadcrumbs,
+  Layout,
+  Search,
+  SearchFilters,
+} from 'components';
+
 import InviteUser from 'modals/InviteUser';
 import EditUser from 'modals/EditUser';
 
@@ -33,24 +37,28 @@ export default class UserList extends React.Component {
       body: {
         ...rest,
         roles: roles && {
-          role: roles.map(({ id }) => id),
+          role: roles.map((role) => role.id || role),
         },
       },
     });
   };
 
-  fetchRoles = memoize(async (query) => {
+  fetchRoles = memoize(async (query = {}) => {
     // No roles search route yet, so improvise.
     const { data } = await request({
       method: 'GET',
       path: `/1/users/roles`,
     });
-    // TODO: ok maybe we finally need a non-id field for SearchDropdown
+
     const roles = [];
+
+    // TODO: ok maybe we finally need a non-id field for SearchDropdown
+
     for (let [key, val] of Object.entries(data)) {
       const { name } = val;
       if (!query?.keyword || RegExp(query.keyword, 'i').test(name)) {
         roles.push({
+          key: key,
           id: key,
           name: val.name,
         });
@@ -59,30 +67,36 @@ export default class UserList extends React.Component {
     return { data: roles };
   });
 
+  getFilterMapping() {
+    return {
+      roles: {
+        label: 'Role',
+        multiple: true,
+        getDisplayValue: async (ids) => {
+          const { data: allRoles } = await this.fetchRoles();
+
+          return allRoles
+            .filter((role) => ids.includes(role.id))
+            .map((role) => role.name)
+            .join(', ');
+        },
+      },
+      keyword: {},
+    };
+  }
+
   render() {
     return (
-      <SearchProvider onDataNeeded={this.onDataNeeded}>
-        {({ items: users, getSorted, setSort, reload, loading, error }) => {
+      <Search.Provider
+        onDataNeeded={this.onDataNeeded}
+        filterMapping={this.getFilterMapping()}>
+        {({ items: users, getSorted, setSort, reload }) => {
           return (
             <React.Fragment>
               <Breadcrumbs active="Users" />
               <Layout horizontal center spread>
                 <h1>Users</h1>
                 <Layout.Group>
-                  <Filters.Modal>
-                    <Filters.Search
-                      label="Search"
-                      name="keyword"
-                      placeholder="Enter name, email, or user id"
-                    />
-                    <Filters.Dropdown
-                      multiple
-                      label="Role"
-                      name="roles"
-                      onDataNeeded={this.fetchRoles}
-                    />
-                  </Filters.Modal>
-
                   <InviteUser
                     size="tiny"
                     onSave={reload}
@@ -101,12 +115,35 @@ export default class UserList extends React.Component {
                   />
                 </Layout.Group>
               </Layout>
-              <ErrorMessage error={error} />
-              {loading ? (
-                <Loader active />
-              ) : users.length === 0 ? (
-                <Message>No users created yet</Message>
-              ) : (
+
+              <Segment>
+                <Layout horizontal spread stackable>
+                  <SearchFilters.Modal>
+                    {/* --- Generator: filters */}
+
+                    <SearchFilters.Dropdown
+                      multiple
+                      label="Role"
+                      name="roles"
+                      onDataNeeded={this.fetchRoles}
+                    />
+
+                    {/* --- Generator: end */}
+                  </SearchFilters.Modal>
+
+                  <Layout horizontal stackable center right>
+                    <Search.Total />
+                    <SearchFilters.Search
+                      placeholder="Enter name, email, or user id"
+                      name="keyword"
+                    />
+                  </Layout>
+                </Layout>
+              </Segment>
+
+              <Search.Status />
+
+              {users.length !== 0 && (
                 <Table celled sortable>
                   <Table.Header>
                     <Table.Row>
@@ -223,11 +260,11 @@ export default class UserList extends React.Component {
                 </Table>
               )}
               <Divider hidden />
-              <SearchProvider.Pagination />
+              <Search.Pagination />
             </React.Fragment>
           );
         }}
-      </SearchProvider>
+      </Search.Provider>
     );
   }
 }

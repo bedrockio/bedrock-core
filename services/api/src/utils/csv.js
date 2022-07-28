@@ -6,7 +6,7 @@ const { ObjectId } = mongoose.Types;
 
 const formatter = Intl.NumberFormat('us');
 
-function csvExport(ctx, data, options) {
+function csvExport(ctx, data, options = {}) {
   const { filename } = options;
   const csvStream = csv.format({ headers: true, objectMode: true });
 
@@ -16,8 +16,9 @@ function csvExport(ctx, data, options) {
     csvStream.write(exportItem(item, options));
   });
 
-  ctx.set('Content-Disposition', `attachment; filename=${filename}`);
+  ctx.set('Content-Disposition', `attachment; filename="${filename}"`);
   ctx.set('Content-Type', 'text/csv');
+
   csvStream.end();
 }
 

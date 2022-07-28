@@ -131,9 +131,11 @@ export default class SearchDropdown extends React.Component {
   getOptions() {
     return this.getAllItems().map((item) => {
       const { getOptionLabel, getOptionValue } = this.props;
+      const value = getOptionValue(item);
       return {
+        key: value,
         text: getOptionLabel(item),
-        value: getOptionValue(item),
+        value: value,
       };
     });
   }
@@ -149,6 +151,7 @@ export default class SearchDropdown extends React.Component {
 
   render() {
     const { loading, error } = this.state;
+
     return (
       <Dropdown
         clearable

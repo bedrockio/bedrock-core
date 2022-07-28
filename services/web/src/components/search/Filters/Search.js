@@ -1,37 +1,64 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form } from 'semantic';
+import { withSearchProvider } from '../Context';
 
-import SearchContext from '../Context';
-
+@withSearchProvider
 export default class SearchFilter extends React.Component {
-  static contextType = SearchContext;
+  state = {
+    value: this.props.context.filters[this.props.name],
+  };
+
+  componentDidUpdate(lastProps) {
+    if (
+      lastProps.context.filters[this.props.name] !==
+      this.props.context.filters[this.props.name]
+    ) {
+      this.setState({
+        value: this.props.context.filters[this.props.name],
+      });
+    }
+  }
 
   render() {
-    const { loading } = this.context;
-    const { name, ...rest } = this.props;
+    const { loading, onFilterChange } = this.props.context;
+    const { name, context, ...rest } = this.props;
+    const { value } = this.state;
 
     return (
       <Form.Input
-        name={name}
+        fluid
         loading={loading}
+        type="search"
+        style={{ minWidth: '220px' }}
+        placeholder="Search by keyword"
         icon={this.renderIcon()}
-        value={this.context.getFilterValue(name) || ''}
-        onChange={this.context.onFilterChange}
+        value={this.state.value || ''}
+        onChange={(e, { value }) => this.setState({ value })}
+        onKeyPress={(event) => {
+          if (event.key === 'Enter') {
+            this.setState({ value: value }, () => {
+              onFilterChange({ value, name });
+            });
+          }
+        }}
         {...rest}
       />
     );
   }
 
   renderIcon() {
-    const { name } = this.props;
-    const value = this.context.getFilterValue(name);
+    const { name, context } = this.props;
+    const value = this.state.value;
     return {
       name: value ? 'close' : 'search',
       link: true,
       onClick: (evt) => {
         if (value) {
-          this.context.onFilterChange(evt, { name, value: '' });
+          this.setState({
+            value: '',
+          });
+          context.onFilterChange({ name, value: '' });
         }
         evt.target.closest('.input').querySelector('input').focus();
       },

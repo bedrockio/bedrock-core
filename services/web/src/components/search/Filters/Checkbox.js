@@ -8,7 +8,7 @@ export default class CheckboxFilter extends React.Component {
   static contextType = SearchContext;
 
   onChange = (evt, { checked, ...rest }) => {
-    this.context.onFilterChange(evt, {
+    this.context.onFilterChange({
       ...rest,
       value: checked,
     });
@@ -20,7 +20,7 @@ export default class CheckboxFilter extends React.Component {
       <Form.Checkbox
         id={name}
         name={name}
-        checked={this.context.getFilterValue(name) || false}
+        checked={this.context.filters[name] || false}
         onChange={this.onChange}
         {...rest}
       />
