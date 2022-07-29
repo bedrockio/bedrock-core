@@ -17,6 +17,7 @@ import {
 } from 'components';
 
 import EditUser from 'modals/EditUser';
+import LoginAsUser from 'modals/LoginAsUser';
 
 @screen
 export default class UserList extends React.Component {
@@ -186,6 +187,10 @@ export default class UserList extends React.Component {
                               user={user}
                               trigger={<Button basic icon="edit" />}
                               onSave={reload}
+                            />
+                            <LoginAsUser
+                              user={user}
+                              trigger={<Button icon="user-secret" />}
                             />
                             <Confirm
                               negative

@@ -7,8 +7,17 @@ export function hasToken() {
   return !!getToken();
 }
 
+let searchParams = new URLSearchParams(window.location.search);
+
+// doing this little dance to tranfer the token without having it appear in the url
+if (searchParams.get('tmpToken')) {
+  const tmpToken = localStorage.getItem('tmpToken');
+  localStorage.removeItem('tmpToken');
+  sessionStorage.setItem(JWT_KEY, tmpToken);
+}
+
 export function getToken() {
-  return localStorage.getItem(JWT_KEY);
+  return sessionStorage.getItem(JWT_KEY) || localStorage.getItem(JWT_KEY);
 }
 
 export function setToken(token) {
