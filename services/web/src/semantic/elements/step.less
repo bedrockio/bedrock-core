@@ -138,6 +138,9 @@
   line-height: 1;
   font-size: @iconSize;
   margin: 0em @iconDistance 0em 0em;
+  // svg icons
+  width: 1em;
+  height: 1em;
 }
 .ui.steps .step > .icon,
 .ui.steps .step > .icon ~ .content {
@@ -146,13 +149,14 @@
   align-self: @iconAlign;
 }
 .ui.steps .step > .icon ~ .content {
-  flex-grow: 1 0 auto;
+  flex: 1 0 auto;
 }
 
 /* Horizontal Icon */
-.ui.steps:not(.vertical) .step > .icon {
-  width: auto;
-}
+// ✝ 2022-08-01 Not relevant with svg icons
+// .ui.steps:not(.vertical) .step > .icon {
+//   // width: auto;
+// }
 
 /* Link */
 .ui.steps .link.step,

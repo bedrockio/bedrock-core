@@ -21,6 +21,7 @@ import {
   Statistic,
   Table,
   TextArea,
+  Step
 } from 'semantic';
 import screen from 'helpers/screen';
 import { Layout } from 'components/Layout';
@@ -545,6 +546,43 @@ export default class ComponentsScreen extends React.Component {
                       Action
                     </Button>
                   </Segment>
+                </JumpLink.Target>
+
+                <div
+                  style={{
+                    margin: '50px 0 20px 0',
+                    borderBottom: '1px solid #ccc',
+                  }}
+                />
+
+                <JumpLink.Target id="step">
+                  <Header size="large">Step</Header>
+
+                  <Step.Group>
+                    <Step>
+                      <Icon name="truck" />
+                      <Step.Content>
+                        <Step.Title>Shipping</Step.Title>
+                        <Step.Description>Choose your shipping options Choose your shipping options Choose your shipping options</Step.Description>
+                      </Step.Content>
+                    </Step>
+
+                    <Step active>
+                      <Icon name="credit-card" />
+                      <Step.Content>
+                        <Step.Title>Billing</Step.Title>
+                        <Step.Description>Enter billing information</Step.Description>
+                      </Step.Content>
+                    </Step>
+
+                    <Step disabled>
+                      <Icon name="info" />
+                      <Step.Content>
+                        <Step.Title>Confirm order</Step.Title>
+                      </Step.Content>
+                    </Step>
+                  </Step.Group>
+
                 </JumpLink.Target>
 
                 <div
