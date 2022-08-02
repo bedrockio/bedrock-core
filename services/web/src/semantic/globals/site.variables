@@ -487,6 +487,7 @@
 @nocturnalLightTextColor     : @invertedLightTextColor;
 @nocturnalUnselectedTextColor: @invertedUnselectedTextColor;
 @nocturnalHoveredTextColor   : @invertedHoveredTextColor;
+@nocturnalPressedTextColor   : @invertedPressedTextColor;
 @nocturnalSelectedTextColor  : @invertedSelectedTextColor;
 @nocturnalDisabledTextColor  : @invertedDisabledTextColor;
 

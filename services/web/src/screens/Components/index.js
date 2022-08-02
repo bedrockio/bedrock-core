@@ -563,7 +563,7 @@ export default class ComponentsScreen extends React.Component {
                       <Icon name="truck" />
                       <Step.Content>
                         <Step.Title>Shipping</Step.Title>
-                        <Step.Description>Choose your shipping options Choose your shipping options Choose your shipping options</Step.Description>
+                        <Step.Description>Choose your shipping options</Step.Description>
                       </Step.Content>
                     </Step>
 

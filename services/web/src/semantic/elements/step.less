@@ -28,6 +28,12 @@
   line-height: @lineHeight;
   border-radius: @stepsBorderRadius;
   border: @stepsBorder;
+
+  .nocturnal-theme & {
+    background: @nocturnalStepsBackground;
+    box-shadow: @nocturnalStepsBoxShadow;
+    border: @nocturnalStepsBorder;
+  }
 }
 
 /* First Steps */
@@ -63,6 +69,14 @@
   border: @border;
   border-right: @divider;
   transition: @transition;
+
+  .nocturnal-theme & {
+    background: @nocturnalBackground;
+    color: @nocturnalTextColor;
+    box-shadow: @nocturnalBoxShadow;
+    border: @nocturnalBorder;
+    border-right: @nocturnalDivider;
+  }
 }
 
 /* Arrow */
@@ -84,6 +98,11 @@
 
   transition: @transition;
   transform: translateY(-50%) translateX(50%) rotate(-45deg);
+
+  .nocturnal-theme & {
+    background-color: @nocturnalArrowBackgroundColor;
+    border-color: @nocturnalBorderColor;
+  }
 }
 
 /* First Step */
@@ -125,6 +144,10 @@
   font-weight: @descriptionFontWeight;
   font-size: @descriptionFontSize;
   color: @descriptionColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalDescriptionColor;
+  }
 }
 .ui.steps .step > .description {
   width: 100%;
@@ -297,6 +320,11 @@
 .ui.steps a.step:hover {
   background: @hoverBackground;
   color: @hoverColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalHoverBackground;
+    color: @nocturnalHoverColor;
+  }
 }
 
 /* Link Down */
@@ -306,22 +334,43 @@
 .ui.steps a.step:active {
   background: @downBackground;
   color: @downColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalDownBackground;
+    color: @nocturnalDownColor;
+  }
 }
 
 /* Active */
 .ui.steps .step.active {
   cursor: auto;
   background: @activeBackground;
+
+  .nocturnal-theme & {
+    background: @nocturnalActiveBackground;
+  }
 }
 .ui.steps .step.active:after {
   background: @activeBackground;
+
+  .nocturnal-theme & {
+    background: @nocturnalActiveBackground;
+  }
 }
 .ui.steps .step.active .title {
   color: @activeColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalActiveColor;
+  }
 }
 .ui.ordered.steps .step.active:before,
 .ui.steps .active.step .icon {
   color: @activeIconColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalActiveIconColor;
+  }
 }
 
 /* Active Arrow */
@@ -346,12 +395,21 @@
   cursor: pointer;
   background: @activeHoverBackground;
   color: @activeHoverColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalActiveHoverBackground;
+    color: @nocturnalActiveHoverColor;
+  }
 }
 
 /* Completed */
-.ui.steps .step.completed > .icon:before,
+.ui.steps .step.completed > .icon,
 .ui.ordered.steps .step.completed:before {
   color: @completedColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalCompletedColor;
+  }
 }
 
 /* Disabled */
@@ -359,14 +417,26 @@
   cursor: auto;
   background: @disabledBackground;
   pointer-events: none;
+
+  .nocturnal-theme & {
+    background: @nocturnalDisabledBackground;
+  }
 }
 .ui.steps .disabled.step,
 .ui.steps .disabled.step .title,
 .ui.steps .disabled.step .description {
   color: @disabledColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalDisabledColor;
+  }
 }
 .ui.steps .disabled.step:after {
   background: @disabledBackground;
+
+  .nocturnal-theme & {
+    background: @nocturnalDisabledBackground;
+  }
 }
 
 /*******************************
