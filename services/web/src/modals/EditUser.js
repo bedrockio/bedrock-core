@@ -112,6 +112,13 @@ export default class EditUser extends React.Component {
                 value={user.roles || []}
                 onChange={(e, { value }) => this.setField('roles', value)}
               />
+              <Form.Checkbox
+                checked={user.isDeveloper || false}
+                label="Is Developer"
+                onChange={(e, { checked }) =>
+                  this.setField('isDeveloper', checked)
+                }
+              />
             </Form>
           </AutoFocus>
         </Modal.Content>
