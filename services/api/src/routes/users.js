@@ -7,6 +7,8 @@ const { requirePermissions } = require('../utils/middleware/permissions');
 const { exportValidation, csvExport } = require('../utils/csv');
 const { User } = require('../models');
 const { expandRoles } = require('./../utils/permissions');
+const { generateTokenId, createAuthToken } = require('../utils/tokens');
+
 const roles = require('./../roles.json');
 const permissions = require('./../permissions.json');
 
@@ -49,6 +51,15 @@ router
       await authUser.save();
       ctx.body = {
         data: expandRoles(authUser),
+      };
+    }
+  )
+  .get(
+    '/:userId/token',
+    requirePermissions({ endpoint: 'users', permission: 'write', scope: 'global' }),
+    async (ctx) => {
+      ctx.body = {
+        data: { token: createAuthToken(ctx.state.user, ctx.state.user.authTokenId || generateTokenId(), '120m') },
       };
     }
   )

@@ -25,7 +25,7 @@ function createTemporaryToken(claims) {
   );
 }
 
-function createAuthToken(sub, jti) {
+function createAuthToken(sub, jti, setExpiresIn) {
   return jwt.sign(
     {
       sub,
@@ -35,7 +35,7 @@ function createAuthToken(sub, jti) {
     },
     secrets.user,
     {
-      expiresIn: expiresIn.regular,
+      expiresIn: setExpiresIn || expiresIn.regular,
     }
   );
 }

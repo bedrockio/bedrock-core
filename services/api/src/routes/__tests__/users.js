@@ -113,6 +113,22 @@ describe('/1/users', () => {
     });
   });
 
+  describe('GET /:user/token', () => {
+    it('should be able to access user', async () => {
+      const superAdmin = await createAdminUser();
+      const user1 = await createUser({ firstName: 'Neo', lastName: 'One', authTokenId: '123123' });
+      const response = await request('GET', `/1/users/${user1.id}/token`, {}, { user: superAdmin });
+      expect(response.status).toBe(200);
+      expect(!!response.body.data.token).toBe(true);
+    });
+    it('should deny access to non-admins', async () => {
+      const user = await createUser({});
+      const user1 = await createUser({ firstName: 'New', lastName: 'Name' });
+      const response = await request('GET', `/1/users/${user1.id}/token`, {}, { user });
+      expect(response.status).toBe(403);
+    });
+  });
+
   describe('POST /search', () => {
     it('should list out users', async () => {
       const admin = await createAdminUser();

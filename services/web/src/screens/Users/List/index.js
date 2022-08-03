@@ -190,7 +190,7 @@ export default class UserList extends React.Component {
                             />
                             <LoginAsUser
                               user={user}
-                              trigger={<Button icon="user-secret" />}
+                              trigger={<Button basic icon="user-secret" />}
                             />
                             <Confirm
                               negative
