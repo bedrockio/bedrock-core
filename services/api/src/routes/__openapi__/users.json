@@ -287,6 +287,13 @@
           }
         },
         {
+          "name": "isDeveloper",
+          "description": "Is the user a developer?",
+          "schema": {
+            "type": "boolean"
+          }
+        },
+        {
           "name": "email",
           "description": "E-mail address of user",
           "required": true,
