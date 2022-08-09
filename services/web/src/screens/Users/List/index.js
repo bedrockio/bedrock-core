@@ -1,7 +1,7 @@
 import React from 'react';
 import { memoize } from 'lodash';
 import { Link } from 'react-router-dom';
-import { Table, Button, Label, Divider, Confirm, Segment } from 'semantic';
+import { Table, Button, Label, Divider, Segment } from 'semantic';
 
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
@@ -14,6 +14,7 @@ import {
   Layout,
   Search,
   SearchFilters,
+  Confirm,
 } from 'components';
 
 import EditUser from 'modals/EditUser';

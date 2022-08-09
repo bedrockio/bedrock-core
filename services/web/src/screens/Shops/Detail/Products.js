@@ -1,17 +1,9 @@
 import React from 'react';
-import {
-  Table,
-  Message,
-  Loader,
-  Button,
-  Header,
-  Divider,
-  Confirm,
-} from 'semantic';
+import { Table, Message, Loader, Button, Header, Divider } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
-import { Layout, HelpTip, Search, SearchFilters } from 'components';
+import { Layout, HelpTip, Search, SearchFilters, Confirm } from 'components';
 
 import ErrorMessage from 'components/ErrorMessage';
 // --- Generator: subscreen-imports

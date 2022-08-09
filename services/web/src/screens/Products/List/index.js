@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image, Segment } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import { Table, Button, Divider, Confirm } from 'semantic';
+import { Table, Button, Divider } from 'semantic';
 
 import { formatDateTime } from 'utils/date';
 import { urlForUpload } from 'utils/uploads';
@@ -15,6 +15,7 @@ import {
   Layout,
   Search,
   SearchFilters,
+  Confirm,
 } from 'components';
 
 import EditProduct from 'modals/EditProduct';

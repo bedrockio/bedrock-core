@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Button, Divider, Confirm, Segment } from 'semantic';
+import { Table, Button, Divider, Segment } from 'semantic';
 
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
@@ -10,6 +10,7 @@ import {
   Layout,
   Search,
   SearchFilters,
+  Confirm,
 } from 'components';
 
 // --- Generator: list-imports
