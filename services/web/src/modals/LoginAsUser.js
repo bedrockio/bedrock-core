@@ -41,9 +41,9 @@ export default class LoginAsUser extends React.Component {
         <Modal.Header>Login As User</Modal.Header>
         <Modal.Content>
           {error && <Message error content={error.message} />}
-          Are you sure you want to log in as {user.email}? The current admin
-          login session will be terminated (incognito session recommended). The
-          session will be valid for 2 hours only.
+          Are you sure you want to log in as {user.email}? This will start a
+          authenticate session for the given user in a new tab. The session will
+          be valid for 2 hours only.
         </Modal.Content>
         <Modal.Actions>
           <Button
