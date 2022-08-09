@@ -9,21 +9,24 @@ export function hasToken() {
 
 let searchParams = new URLSearchParams(window.location.search);
 
+let storage = window.localStorage;
+
 // doing this little dance to tranfer the token without having it appear in the url
-if (searchParams.get('tmpToken')) {
+if (searchParams.get('switch-account')) {
   const tmpToken = localStorage.getItem('tmpToken');
-  localStorage.removeItem('tmpToken');
   sessionStorage.setItem(JWT_KEY, tmpToken);
+  localStorage.removeItem('tmpToken');
+  storage = window.sessionStorage;
 }
 
 export function getToken() {
-  return sessionStorage.getItem(JWT_KEY) || localStorage.getItem(JWT_KEY);
+  return storage.getItem(JWT_KEY);
 }
 
 export function setToken(token) {
   if (token) {
-    localStorage.setItem(JWT_KEY, token);
+    storage.setItem(JWT_KEY, token);
   } else {
-    localStorage.removeItem(JWT_KEY);
+    storage.removeItem(JWT_KEY);
   }
 }

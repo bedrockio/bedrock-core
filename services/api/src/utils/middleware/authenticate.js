@@ -64,6 +64,7 @@ async function fetchUser(ctx, next) {
     const { jwt } = ctx.state;
     const { User } = mongoose.models;
     const user = await User.findById(jwt.sub);
+
     if (!user || (jwt.jti && jwt.jti !== user.authTokenId)) {
       throw new TokenError('user associated to token could not be found');
     }

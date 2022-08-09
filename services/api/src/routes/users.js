@@ -58,8 +58,13 @@ router
     '/:userId/token',
     requirePermissions({ endpoint: 'users', permission: 'write', scope: 'global' }),
     async (ctx) => {
+      const { user } = ctx.state;
+      if (!user.authTokenId) {
+        user.authTokenId = generateTokenId();
+        await user.save();
+      }
       ctx.body = {
-        data: { token: createAuthToken(ctx.state.user, ctx.state.user.authTokenId || generateTokenId(), '120m') },
+        data: { token: createAuthToken(user.id, user.authTokenId, '120m') },
       };
     }
   )

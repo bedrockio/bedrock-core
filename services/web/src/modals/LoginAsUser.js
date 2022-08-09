@@ -26,9 +26,8 @@ export default class LoginAsUser extends React.Component {
         method: 'GET',
         path: `/1/users/${user.id}/token`,
       });
-
       window.localStorage.setItem('tmpToken', data.token);
-      window.open(`?tmpToken=true`, '_blank');
+      window.open(`/?switch-account=true`, '_blank');
       this.props.close();
     } catch (error) {
       this.setState({ error, loading: false });
