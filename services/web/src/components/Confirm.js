@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Button, Message, Confirm } from 'semantic';
-import LoadButton from './LoadButton';
+
 import modal from '../helpers/modal';
 import PropTypes from 'prop-types';
 
@@ -21,6 +21,7 @@ export default class ConfirmComponent extends React.Component {
       this.setState({
         loading: false,
       });
+      this.props.close();
     } catch (e) {
       this.setState({
         error: e,
@@ -60,7 +61,7 @@ export default class ConfirmComponent extends React.Component {
           <Button basic onClick={this.props.close}>
             Cancel
           </Button>
-          <LoadButton
+          <Button
             content={confirmButton || 'Confirm'}
             primary
             negative={negative}
