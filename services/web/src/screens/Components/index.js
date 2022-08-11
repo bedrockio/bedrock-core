@@ -149,14 +149,7 @@ export default class ComponentsScreen extends React.Component {
                   <Button content="Standard" />
                   <Button circular content="Circular" />
                   <Button basic content="Basic" />
-                  <Button label="Label" content="Labeled" />
                   <Button inverted content="Inverted" />
-                  <Button basic inverted content="Basic inverted" />
-                  <Button.Group>
-                    <Button>Cancel</Button>
-                    <Button.Or />
-                    <Button positive>Save</Button>
-                  </Button.Group>
 
                   <Header size="medium">Sizes</Header>
                   <Button size="tiny" content="Tiny" />
