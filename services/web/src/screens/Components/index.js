@@ -103,6 +103,9 @@ export default class ComponentsScreen extends React.Component {
               <JumpLink className="item" to="segment">
                 Segment
               </JumpLink>
+              <JumpLink className="item" to="step">
+                Step
+              </JumpLink>
               <JumpLink className="item" to="container-grid">
                 Container & Grid
               </JumpLink>
@@ -146,6 +149,14 @@ export default class ComponentsScreen extends React.Component {
                   <Button content="Standard" />
                   <Button circular content="Circular" />
                   <Button basic content="Basic" />
+                  <Button label="Label" content="Labeled" />
+                  <Button inverted content="Inverted" />
+                  <Button basic inverted content="Basic inverted" />
+                  <Button.Group>
+                    <Button>Cancel</Button>
+                    <Button.Or />
+                    <Button positive>Save</Button>
+                  </Button.Group>
 
                   <Header size="medium">Sizes</Header>
                   <Button size="tiny" content="Tiny" />

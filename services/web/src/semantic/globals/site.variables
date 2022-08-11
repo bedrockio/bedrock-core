@@ -122,7 +122,7 @@
 @lineHeight          : 1.4285em;
 @textColor           : #111827;
 
-@nocturnalPageBackground: hsl(hue(@pageBackground), (saturation(@pageBackground) / 2), lightness(@textColor));// spin(@pageBackground, 180); //mix(@textColor, #333, 75);
+@nocturnalPageBackground: #201c19; //hsl(hue(@pageBackground), (saturation(@pageBackground) / 2), lightness(@textColor));// spin(@pageBackground, 180); //mix(@textColor, #333, 75);
 
 /*-------------------
         Sidebar Main Menu & Portal Main Menu
@@ -530,6 +530,7 @@
 @nocturnalBorderColor       : rgba(255,255,255,.2); // hsl(hue(@borderColor), saturation(@borderColor), (100% - lightness(@borderColor)) * 2);
 @nocturnalInternalBorderColor: rgba(255,255,255,.3);
 @nocturnalSelectedBorderColor: rgba(255,255,255,.30);
+@nocturnalDisabledBorderColor: rgba(255,255,255,.45);
 
 @nocturnalSolidInternalBorderColor: lighten(@nocturnalPageBackground, 2);
 

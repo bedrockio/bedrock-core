@@ -15,6 +15,9 @@
 @backgroundImage: none;
 @background: @backgroundColor @backgroundImage;
 @lineHeight: 1em;
+@nocturnalBackgroundColor: @nocturnalPrimaryColor;
+@nocturnalBackgroundImage: @backgroundImage;
+@nocturnalBackground: @nocturnalBackgroundColor @nocturnalBackgroundImage;
 
 /* Button defaults to using same height as input globally */
 @verticalPadding: @inputVerticalPadding;
@@ -24,18 +27,21 @@
 @textTransform: none;
 @tapColor: transparent;
 @fontWeight: @bold;
-@textColor: @invertedTextColor;
+@textColor: @invertedTextColor; // rgba(0, 0, 0, 0.6);
 @textColorWhite: @invertedTextColor;
 @textColorBlack: #2a2a2a;
 @textShadow: none;
 @invertedTextShadow: @textShadow;
 @borderRadius: @defaultBorderRadius;
 @verticalAlign: baseline;
+@nocturnalTextColor: @textColorBlack; //#111827; // @todo not required
+@nocturnalTextShadow: @textShadow;
 
 /* Internal Shadow */
 @shadowDistance: 0em;
 @shadowOffset: (@shadowDistance / 2);
 @shadowBoxShadow: 0px -@shadowDistance 0px 0px @borderColor inset;
+@nocturnalShadowBoxShadow: 0px -@shadowDistance 0px 0px @nocturnalBorderColor inset;
 
 /* Box Shadow */
 @borderBoxShadowColor: transparent;
@@ -45,6 +51,7 @@
   @borderBoxShadow,
   @shadowBoxShadow
 ;
+@nocturnalBoxShadow: @borderBoxShadow, @nocturnalShadowBoxShadow;
 
 /* Icon */
 @iconOpacity: 1;
@@ -56,6 +63,7 @@
 
 /* Loader */
 @invertedLoaderFillColor: rgba(0, 0, 0, 0.15);
+// @nocturnalLoaderFillColor: rgba(255, 255, 255, 0.15);
 
 @transition:
   opacity @defaultDuration @defaultEasing,
@@ -78,6 +86,7 @@
 @verticalBoxShadow: none;
 @groupButtonOffset: 0px 0px 0px 0px;
 @verticalGroupOffset: 0px 0px 0px 0px;
+@nocturnalGroupButtonBoxShadow: @nocturnalBoxShadow;
 
 /*-------------------
         States
@@ -89,6 +98,7 @@
 @hoverBoxShadow: @boxShadow;
 @hoverColor: @invertedTextColor;
 @iconHoverOpacity: 1;
+@nocturnalHoverBoxShadow: @nocturnalBoxShadow;
 
 /* Focused */
 @focusBackgroundColor: @hoverBackgroundColor;
@@ -96,6 +106,8 @@
 @focusBoxShadow: '';
 @focusColor: @invertedTextColor;
 @iconFocusOpacity: 1;
+@nocturnalFocusBackgroundImage: '';
+@nocturnalFocusBoxShadow: '';
 
 /* Disabled */
 @disabledBackgroundImage: none;
@@ -110,18 +122,32 @@
   @downPressedShadow
 ;
 @downColor: @invertedTextColor;
+@nocturnalDownBackgroundImage: '';
+@nocturnalDownPressedShadow: none;
+@nocturnalDownBoxShadow:
+  @borderBoxShadow,
+  @nocturnalDownPressedShadow
+;
 
 /* Active */
-@activeBackgroundColor: darken(@primaryColor, 50%);
+@activeBackgroundColor: darken(@primaryColor, 20%);
 @activeBackgroundImage: none;
 @activeColor: @invertedTextColor;
 @activeBoxShadow: @borderBoxShadow;
+@nocturnalActiveBackgroundColor: darken(@nocturnalPrimaryColor, 20%);
+@nocturnalActiveBackgroundImage: none;
+@nocturnalActiveColor: @invertedTextColor;
+@nocturnalActiveBoxShadow: @borderBoxShadow;
 
 /* Active + Hovered */
 @activeHoverBackgroundColor: @activeBackgroundColor;
 @activeHoverBackgroundImage: none;
 @activeHoverColor: @activeColor;
 @activeHoverBoxShadow: @activeBoxShadow;
+@nocturnalActiveHoverBackgroundColor: @nocturnalActiveBackgroundColor;
+@nocturnalActiveHoverBackgroundImage: none;
+@nocturnalActiveHoverColor: @nocturnalActiveColor;
+@nocturnalActiveHoverBoxShadow: @nocturnalActiveBoxShadow;
 
 /* Loading */
 @loadingOpacity: 1;
@@ -146,6 +172,7 @@
 @orCircleSize: @orHeight - @orCircleDistanceToEdge;
 @orLineHeight: (@orCircleSize);
 @orBoxShadow: @borderBoxShadow;
+@nocturnalOrBoxShadow: @borderBoxShadow;
 
 @orVerticalOffset: -(@orCircleSize / 2);
 @orHorizontalOffset: -(@orCircleSize / 2);
@@ -155,6 +182,9 @@
 @orTextStyle: @normal;
 @orTextWeight: @bold;
 @orTextColor: @lightTextColor;
+@nocturnalOrBackgroundColor: @nocturnalPageBackground;
+@nocturnalOrTextShadow: @invertedTextShadow;
+@nocturnalOrTextColor: @nocturnalLightTextColor;
 
 
 @orSpacerHeight: @verticalPadding;
@@ -172,6 +202,7 @@
 @labeledLabelBorderOffset: -@borderBoxShadowWidth;
 @labeledTagLabelSize: 1.85em; /* hypotenuse of triangle */
 @labeledIconMargin: 0em;
+@noctrunalLabeledLabelBorderColor: @nocturnalBorderColor;
 
 /* Labeled Icon */
 @labeledIconWidth: 1em + (@verticalPadding * 2);
@@ -179,15 +210,21 @@
 @labeledIconPadding: (@horizontalPadding + @labeledIconWidth);
 @labeledIconBorder: transparent;
 @labeledIconColor: '';
+@nocturnalLabeledIconBackgroundColor: rgba(255, 255, 255, 0.05);
+@nocturnalLabeledIconBorder: transparent;
+@nocturnalLabeledIconColor: '';
 
 @labeledIconLeftShadow: -1px 0px 0px 0px @labeledIconBorder inset;
 @labeledIconRightShadow: 1px 0px 0px 0px @labeledIconBorder inset;
+@nocturnalLabeledIconLeftShadow: -1px 0px 0px 0px @nocturnalLabeledIconBorder inset;
+@nocturnalLabeledIconRightShadow: 1px 0px 0px 0px @nocturnalLabeledIconBorder inset;
 
 
 /* Inverted */
 @invertedBorderSize: 2px;
 @invertedTextColor: @white;
-@invertedTextHoverColor: @hoverColor;
+@invertedTextHoverColor: @hoveredTextColor;
+@invertedTextFocusColor: @hoveredTextColor;
 @invertedGroupButtonOffset: 0px 0px 0px -(@invertedBorderSize);
 @invertedVerticalGroupButtonOffset: 0px 0px -(@invertedBorderSize) 0px;
 
@@ -196,6 +233,7 @@
 @basicBorderSize: 1px;
 @basicTextColor: @textColorBlack;
 @basicColoredBorderSize: 1px;
+@nocturnalBasicTextColor: @textColorWhite;
 
 @basicBackground: transparent none;
 @basicFontWeight: @normal;
@@ -203,6 +241,9 @@
 @basicBoxShadow: 0px 0px 0px @basicBorderSize @borderColor inset;
 @basicLoadingColor: @offWhite;
 @basicTextTransform: none;
+@nocturnalBasicBackground: transparent none;
+@nocturnalBasicBorder: 1px solid @nocturnalBorderColor;
+@nocturnalBasicBoxShadow: 0px 0px 0px @basicBorderSize @nocturnalBorderColor inset;
 
 /* Basic Hover */
 @basicHoverBackground: #FFFFFF;
@@ -211,10 +252,20 @@
   0px 0px 0px @basicBorderSize @selectedBorderColor inset,
   0px 0px 0px 0px @borderColor inset
 ;
+@nocturnalBasicHoverBackground: rgba(255, 255, 255, .15);
+@nocturnalBasicHoverTextColor: @textColorWhite;
+@nocturnalBasicHoverBoxShadow:
+  0px 0px 0px @basicBorderSize @nocturnalSelectedBorderColor inset,
+  0px 0px 0px 0px @nocturnalBorderColor inset
+;
+
 /* Basic Focus */
 @basicFocusBackground: @basicHoverBackground;
 @basicFocusTextColor: @basicHoverTextColor;
 @basicFocusBoxShadow: @basicHoverBoxShadow;
+@nocturnalBasicFocusBackground: @nocturnalBasicHoverBackground;
+@nocturnalBasicFocusTextColor: @nocturnalBasicHoverTextColor;
+@nocturnalBasicFocusBoxShadow: @nocturnalBasicHoverBoxShadow;
 
 /* Basic Down */
 @basicDownBackground: #F8F8F8;
@@ -223,10 +274,20 @@
   0px 0px 0px @basicBorderSize rgba(0, 0, 0, 0.15) inset,
   0px 1px 4px 0px @borderColor inset
 ;
+@nocturnalBasicDownBackground: rgba(255, 255, 255, .10);
+@nocturnalBasicDownTextColor: @nocturnalBasicHoverTextColor;
+@nocturnalBasicDownBoxShadow:
+  0px 0px 0px @basicBorderSize rgba(255, 255, 255, 0.4) inset,
+  0px 1px 4px 0px @transparentBlack inset
+;
+
 /* Basic Active */
 @basicActiveBackground: @transparentBlack;
 @basicActiveBoxShadow: '';
 @basicActiveTextColor: @selectedTextColor;
+@nocturnalBasicActiveBackground: rgba(255, 255, 255, .15);
+@nocturnalBasicActiveBoxShadow: '';
+@nocturnalBasicActiveTextColor: @textColorWhite;
 
 /* Basic Inverted */
 @basicInvertedBackground: transparent;
@@ -249,6 +310,8 @@
 /* Basic Group */
 @basicGroupBorder: @basicBorderSize solid @borderColor;
 @basicGroupBoxShadow: none;
+@nocturnalBasicGroupBorder: @basicBorderSize solid @nocturnalBorderColor;
+@nocturnalBasicGroupBoxShadow: none;
 
 /*-------------------
       Variations
@@ -347,6 +410,7 @@
 @attachedBoxShadow: 0px 0px 0px 1px @borderColor;
 @attachedHorizontalPadding: 0.75em;
 @attachedZIndex: 2;
+@nocturnalAttachedBoxShadow: 0px 0px 0px 1px @nocturnalBorderColor;
 
 /* Floated */
 @floatedMargin: 0.25em;
