@@ -518,7 +518,7 @@
 @disabledBorderColor       : rgba(34, 36, 38, 0.5);
 
 @solidInternalBorderColor  : #FAFAFA;
-@solidBorderColor          : #D4D4D5;
+@solidBorderColor          : #d4d4d5;
 @solidSelectedBorderColor  : #BCBDBD;
 
 @whiteBorderColor              : rgba(255, 255, 255, 0.1);
@@ -533,6 +533,7 @@
 @nocturnalDisabledBorderColor: rgba(255,255,255,.45);
 
 @nocturnalSolidInternalBorderColor: lighten(@nocturnalPageBackground, 2);
+@nocturnalSolidBorderColor: lighten(@nocturnalPageBackground, 15);
 
 /*-------------------
     Derived Values
