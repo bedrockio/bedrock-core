@@ -224,7 +224,7 @@ describe('/1/auth', () => {
       const dbUser = await User.findById(payload.sub);
       expect(dbUser.firstName).toBe('Bob');
       expect(dbUser.lastName).toBe('Johnson');
-      expect(dbUser.status).toBe('activate');
+      expect(dbUser.status).toBe('active');
     });
   });
 

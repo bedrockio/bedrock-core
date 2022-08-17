@@ -2,5 +2,5 @@
   "name": "<env:ADMIN_NAME>",
   "email": "<env:ADMIN_EMAIL>",
   "role": "superAdmin",
-  "status": "activate"
+  "status": "active"
 }

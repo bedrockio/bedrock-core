@@ -74,7 +74,7 @@ describe('/1/users', () => {
       );
       const data = response.body.data;
       expect(response.status).toBe(200);
-      expect(data.status).toBe('activate');
+      expect(data.status).toBe('active');
       expect(data.firstName).toBe('Mellow');
       expect(data.lastName).toBe('Yellow');
       expect(data.name).toBe('Mellow Yellow');
@@ -277,28 +277,6 @@ describe('/1/users', () => {
       const user1 = await createUser({ firstName: 'Neo', lastName: 'One' });
       const response = await request('DELETE', `/1/users/${user1.id}`, {}, { user });
       expect(response.status).toBe(403);
-    });
-  });
-
-  describe('POST /invite', () => {
-    it('should be able to invite multiple users', async () => {
-      const user = await createAdminUser();
-      const response = await request(
-        'POST',
-        '/1/users/invite',
-        {
-          emails: ['new@platform.com'],
-          role: 'superAdmin',
-        },
-        { user }
-      );
-      expect(response.status).toBe(204);
-
-      const dbUser = await User.findOne({ email: 'new@platform.com' });
-      expect(dbUser.roles.find((role) => role.role === 'superAdmin')).toBeDefined();
-      expect(dbUser.status).toBe('invite');
-
-      assertMailSent({ to: 'new@platform.com' });
     });
   });
 

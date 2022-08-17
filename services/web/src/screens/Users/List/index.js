@@ -24,7 +24,6 @@ import {
   SearchFilters,
 } from 'components';
 
-import InviteUser from 'modals/InviteUser';
 import EditUser from 'modals/EditUser';
 
 @screen
@@ -85,6 +84,10 @@ export default class UserList extends React.Component {
         label: 'Is Developer',
         type: 'boolean',
       },
+      status: {
+        label: 'Status',
+        type: 'string',
+      },
       keyword: {},
     };
   }
@@ -101,18 +104,6 @@ export default class UserList extends React.Component {
               <Layout horizontal center spread>
                 <h1>Users</h1>
                 <Layout.Group>
-                  <InviteUser
-                    size="tiny"
-                    onSave={reload}
-                    trigger={
-                      <Button
-                        basic
-                        primary
-                        content="Invite Users"
-                        icon="plus"
-                      />
-                    }
-                  />
                   <EditUser
                     trigger={<Button primary content="New User" icon="plus" />}
                     onSave={reload}
@@ -124,6 +115,21 @@ export default class UserList extends React.Component {
                 <Layout horizontal spread stackable>
                   <SearchFilters.Modal>
                     {/* --- Generator: filters */}
+
+                    <SearchFilters.Dropdown
+                      label="Status"
+                      name="status"
+                      options={[
+                        {
+                          value: 'active',
+                          text: 'Active',
+                        },
+                        {
+                          value: 'invite',
+                          text: 'Invite',
+                        },
+                      ]}
+                    />
 
                     <SearchFilters.Dropdown
                       multiple

@@ -342,7 +342,7 @@
           "schema": {
             "type": "string",
             "enum": [
-              "activate",
+              "active",
               "invite"
             ]
           }

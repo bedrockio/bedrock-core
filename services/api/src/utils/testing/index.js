@@ -32,7 +32,7 @@ async function createUser(attributes = {}) {
     email: `${mongoose.Types.ObjectId()}@platform.com`,
     firstName: 'Test',
     lastName: 'User',
-    status: 'activate',
+    status: 'active',
     ...attributes,
   });
 

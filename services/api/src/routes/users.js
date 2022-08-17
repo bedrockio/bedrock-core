@@ -121,7 +121,7 @@ router
         ctx.throw(400, 'A user with that email already exists');
       }
       const userFields = ctx.request.body;
-      userFields.status = password ? 'activate' : 'invite';
+      userFields.status = password ? 'active' : 'invite';
 
       const user = await User.create(userFields);
       if (!password) {
@@ -131,40 +131,6 @@ router
       ctx.body = {
         data: user,
       };
-    }
-  )
-  .post(
-    '/invite',
-    validateBody({
-      emails: Joi.array().items(Joi.string().email()).required(),
-      role: Joi.string()
-        .valid(...Object.keys(roles))
-        .required(),
-    }),
-    async (ctx) => {
-      const { authUser } = ctx.state;
-      const { emails, role } = ctx.request.body;
-
-      let userRoles = [];
-      if (role) {
-        const def = roles[role];
-        if (def.allowScopes.includes('global')) {
-          userRoles = [{ role, scope: 'global' }];
-        } else {
-          // TODO: allow for multiple scopes, leaving it up to the implementor to decide
-          // userRoles = [{ role, scope: 'organization', scopeRef: organization.id }];
-        }
-      }
-
-      const uniqueEmails = new Set(emails);
-      for (const email of uniqueEmails) {
-        let user = await User.findOne({ email, status: 'invite' });
-        if (!user) user = new User({ email, status: 'invite' });
-        user.roles = mergeRoles([...user.roles, ...userRoles]);
-        await user.save();
-        await sendInvite(authUser, user);
-      }
-      ctx.status = 204;
     }
   )
   .patch(

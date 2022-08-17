@@ -64,7 +64,7 @@ router
       const { email, password } = ctx.request.body;
       const user = await User.findOne({ email });
 
-      if (user.status !== 'activate') {
+      if (user.status !== 'active') {
         ctx.throw(400, 'Your account has not been activated yet. Please check your email for the invitation.');
       }
 
@@ -225,7 +225,7 @@ router
         ctx.throw(400, 'Unknown email address.');
       }
 
-      if (user.status !== 'activate') {
+      if (user.status !== 'active') {
         ctx.throw(400, 'Your account has not been activated yet. Please check your email for the invitation.');
       }
 

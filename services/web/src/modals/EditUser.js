@@ -6,6 +6,7 @@ import modal from 'helpers/modal';
 import Roles from 'components/form-fields/Roles';
 import ErrorMessage from 'components/ErrorMessage';
 import AutoFocus from 'components/AutoFocus';
+import Password from 'components/form-fields/Password';
 
 @modal
 export default class EditUser extends React.Component {
@@ -105,14 +106,16 @@ export default class EditUser extends React.Component {
                 onChange={(e, { value }) => this.setField('email', value)}
               />
               {!this.isUpdate() && (
-                <Form.Input
+                <Password
                   label="Password"
                   value={user.password || ''}
-                  onChange={(e, { value }) => this.setField('password', value)}
+                  onChange={(e, { value }) =>
+                    this.setField('password', value ? value : undefined)
+                  }
                 />
               )}
               {!this.isUpdate() && !this.state.password && (
-                <Message content="Not setting a password, will trigger an invitation to the user" />
+                <Message content="Not setting a password, will send an invitation to the user" />
               )}
               <Roles
                 value={user.roles || []}
