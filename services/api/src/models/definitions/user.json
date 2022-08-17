@@ -42,6 +42,10 @@
     "timeZone": {
       "type": "String"
     },
+    "isDeveloper": {
+      "type": "Boolean",
+      "default": false
+    },
     "hashedPassword": {
       "type": "String",
       "readScopes": "none",
