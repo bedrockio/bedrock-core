@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Button, Divider, Confirm, Segment } from 'semantic';
+import { Table, Button, Divider, Dropdown, Segment } from 'semantic';
 
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
@@ -15,6 +15,7 @@ import {
 // --- Generator: list-imports
 import { Link } from 'react-router-dom';
 import allCountries from 'utils/countries';
+import ShopActions from '../Actions';
 
 const countries = allCountries.map(({ countryCode, nameEn }) => ({
   value: countryCode,
@@ -161,20 +162,11 @@ export default class ShopList extends React.Component {
                               trigger={<Button basic icon="edit" />}
                               onSave={reload}
                             />
-                            <Confirm
-                              negative
-                              confirmButton="Delete"
-                              header={`Are you sure you want to delete "${shop.name}"?`}
-                              content="All data will be permanently deleted"
-                              trigger={<Button basic icon="trash" />}
-                              onConfirm={async () => {
-                                await request({
-                                  method: 'DELETE',
-                                  path: `/1/shops/${shop.id}`,
-                                });
-                                reload();
-                              }}
-                            />
+                            <Dropdown button basic text="More">
+                              <Dropdown.Menu direction="left">
+                                <ShopActions item={shop} reload={reload} />
+                              </Dropdown.Menu>
+                            </Dropdown>
                           </Table.Cell>
                         </Table.Row>
                       );

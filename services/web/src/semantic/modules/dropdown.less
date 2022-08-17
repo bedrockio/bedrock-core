@@ -371,12 +371,23 @@ select.ui.dropdown {
 .ui.dropdown > .delete.icon,
 .ui.dropdown > .dropdown.icon {
   cursor: pointer;
-  position: absolute;
-  top: 50%;
-  right: 10px;
+  //position: absolute;
+
   z-index: @selectionIconZIndex;
   opacity: @selectionIconOpacity;
   transition: @selectionIconTransition;
+  right: -0.75em;
+  margin: 0;
+}
+
+.ui.selection.dropdown > .dropdown.icon {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  z-index: 3;
+  opacity: 0.8;
+  transition: opacity 0.1s ease;
   transform: translateY(-50%);
 }
 
