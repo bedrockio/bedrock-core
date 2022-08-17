@@ -60,10 +60,10 @@ router
     async (ctx) => {
       const { user } = ctx.state;
 
-      // Check access dont allow an superAdmin to emitate another admin
-      // This should be modified to fit the permissions system required for your project
-      const hasHighAccess = (user.roles || []).find((c) => c.role === 'superAdmin');
-      if (hasHighAccess) {
+      // Dont allow an superAdmin to emitate another superAdmin
+      // This should be modified to fit the permissions system required for your project, its somewhat basic in its default state
+      const isViewer = [...user.roles].every((c) => c.role === 'viewer');
+      if (!isViewer) {
         ctx.throw(403, 'You do not have permission to create tokens for this user');
       }
 

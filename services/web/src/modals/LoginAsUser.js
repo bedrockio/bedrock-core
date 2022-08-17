@@ -23,8 +23,8 @@ export default class LoginAsUser extends React.Component {
     });
     try {
       const { data } = await request({
-        method: 'GET',
-        path: `/1/users/${user.id}/token`,
+        method: 'POST',
+        path: `/1/users/${user.id}/create-token`,
       });
       window.localStorage.setItem('tmpToken', data.token);
       window.open(`/?switch-account=true`, '_blank');
@@ -41,9 +41,11 @@ export default class LoginAsUser extends React.Component {
         <Modal.Header>Login As User</Modal.Header>
         <Modal.Content>
           {error && <Message error content={error.message} />}
-          Are you sure you want to log in as {user.email}? This will start a
-          authenticate session for the given user in a new tab. The session will
-          be valid for 2 hours only.
+          <p>
+            Are you sure you want to log in as {user.email}? This will start a
+            authenticate session for the given user in a new tab. The session
+            will be valid for 2 hours only.
+          </p>
         </Modal.Content>
         <Modal.Actions>
           <Button

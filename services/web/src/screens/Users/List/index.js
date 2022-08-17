@@ -190,7 +190,17 @@ export default class UserList extends React.Component {
                             />
                             <LoginAsUser
                               user={user}
-                              trigger={<Button basic icon="user-secret" />}
+                              trigger={
+                                <Button
+                                  basic
+                                  disabled={
+                                    !user.roles?.every(
+                                      (role) => role.role === 'viewer'
+                                    )
+                                  }
+                                  icon="user-secret"
+                                />
+                              }
                             />
                             <Confirm
                               negative

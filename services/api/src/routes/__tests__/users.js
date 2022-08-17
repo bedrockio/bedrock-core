@@ -116,13 +116,23 @@ describe('/1/users', () => {
   describe('POST /:user/create-token', () => {
     it('should be able to access user', async () => {
       const superAdmin = await createAdminUser();
-      const user1 = await createUser({ firstName: 'Neo', lastName: 'One', authTokenId: '123123' });
+      const user1 = await createUser({
+        firstName: 'Neo',
+        lastName: 'One',
+        authTokenId: '123123',
+        roles: [
+          {
+            scope: 'organization',
+            role: 'viewer',
+          },
+        ],
+      });
       const response = await request('POST', `/1/users/${user1.id}/create-token`, {}, { user: superAdmin });
       expect(response.status).toBe(200);
       expect(!!response.body.data.token).toBe(true);
     });
 
-    it('dont allow an superAdmin to emitate another superAdmin', async () => {
+    it('dont allow an superAdmin to emitate another admin', async () => {
       const superAdmin = await createAdminUser();
       const user = await createAdminUser();
       const response = await request('POST', `/1/users/${user.id}/create-token`, {}, { user: superAdmin });
