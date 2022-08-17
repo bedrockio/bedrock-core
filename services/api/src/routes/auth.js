@@ -197,7 +197,7 @@ router
       }
 
       user.assign({
-        status: 'activate',
+        status: 'active',
         authTokenId,
         ...ctx.request.body,
       });
