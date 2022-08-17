@@ -54,15 +54,24 @@ router
       };
     }
   )
-  .get(
-    '/:userId/token',
+  .post(
+    '/:userId/create-token',
     requirePermissions({ endpoint: 'users', permission: 'write', scope: 'global' }),
     async (ctx) => {
       const { user } = ctx.state;
+
+      // Check access dont allow an superAdmin to emitate another admin
+      // This should be modified to fit the permissions system required for your project
+      const hasHighAccess = (user.roles || []).find((c) => c.role === 'superAdmin');
+      if (hasHighAccess) {
+        ctx.throw(403, 'You do not have permission to create tokens for this user');
+      }
+
       if (!user.authTokenId) {
         user.authTokenId = generateTokenId();
         await user.save();
       }
+
       ctx.body = {
         data: { token: createAuthToken(user.id, user.authTokenId, '120m') },
       };
