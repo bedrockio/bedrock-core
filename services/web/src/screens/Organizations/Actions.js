@@ -4,12 +4,12 @@ import { Dropdown, Confirm } from 'semantic';
 import { request } from 'utils/api';
 import InspectObject from 'modals/InspectObject';
 
-export default function UserActions({ item, reload } = {}) {
+export default function OrganizationActions({ item, reload } = {}) {
   return (
     <Dropdown button basic text="More">
       <Dropdown.Menu direction="left">
         <InspectObject
-          name="Shop"
+          name="Organization"
           object={item}
           trigger={<Dropdown.Item text="Inspect" icon="code" />}
         />
@@ -22,7 +22,7 @@ export default function UserActions({ item, reload } = {}) {
           onConfirm={async () => {
             await request({
               method: 'DELETE',
-              path: `/1/users/${item.id}`,
+              path: `/1/organizations/${item.id}`,
             });
             reload();
           }}

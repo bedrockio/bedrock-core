@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, Dropdown, Button } from 'semantic';
+import { Menu, Button } from 'semantic';
 import { NavLink } from 'react-router-dom';
 import { Breadcrumbs } from 'components';
 
@@ -19,16 +19,7 @@ export default () => {
       <Layout horizontal center spread>
         <h1 style={{ textTransform: 'capitalize' }}>{item.name} User</h1>
         <Layout.Group>
-          <Dropdown
-            button
-            basic
-            disabled={!item}
-            text="More"
-            style={{ marginTop: '-5px' }}>
-            <Dropdown.Menu direction="left">
-              {item && <Actions item={item} reload={reload} />}
-            </Dropdown.Menu>
-          </Dropdown>
+          <Actions item={item} reload={reload} />
           <EditUser
             user={item}
             trigger={<Button primary content="Edit" icon="edit" />}

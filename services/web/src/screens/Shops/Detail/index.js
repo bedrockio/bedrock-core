@@ -24,21 +24,21 @@ export default class ShopDetail extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchShop();
+    this.fetchItem();
   }
 
   componentDidUpdate(lastProps) {
     const { id } = this.props.match.params;
     if (id !== lastProps.match.params.id) {
-      this.fetchShop();
+      this.fetchItem();
     }
   }
 
   onReload = () => {
-    this.fetchShop();
+    this.fetchItem();
   };
 
-  async fetchShop() {
+  async fetchItem() {
     const { id } = this.props.match.params;
     this.setState({
       error: null,

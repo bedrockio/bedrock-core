@@ -1,7 +1,7 @@
 import React from 'react';
 import { memoize } from 'lodash';
 import { Link } from 'react-router-dom';
-import { Table, Button, Label, Divider, Segment, Dropdown } from 'semantic';
+import { Table, Button, Label, Divider, Segment } from 'semantic';
 
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
@@ -17,7 +17,7 @@ import {
 } from 'components';
 
 import EditUser from 'modals/EditUser';
-import UserActions from '../Actions';
+import Actions from '../Actions';
 
 @screen
 export default class UserList extends React.Component {
@@ -199,11 +199,7 @@ export default class UserList extends React.Component {
                               }
                               onSave={reload}
                             />
-                            <Dropdown button basic text="More">
-                              <Dropdown.Menu direction="left">
-                                <UserActions item={user} reload={reload} />
-                              </Dropdown.Menu>
-                            </Dropdown>
+                            <Actions item={user} reload={reload} />
                           </Table.Cell>
                         </Table.Row>
                       );

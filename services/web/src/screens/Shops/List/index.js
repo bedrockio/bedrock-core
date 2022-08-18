@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Button, Divider, Dropdown, Segment } from 'semantic';
+import { Table, Button, Divider, Segment } from 'semantic';
 
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
@@ -15,7 +15,7 @@ import {
 // --- Generator: list-imports
 import { Link } from 'react-router-dom';
 import allCountries from 'utils/countries';
-import ShopActions from '../Actions';
+import Actions from '../Actions';
 
 const countries = allCountries.map(({ countryCode, nameEn }) => ({
   value: countryCode,
@@ -162,11 +162,7 @@ export default class ShopList extends React.Component {
                               trigger={<Button basic icon="edit" />}
                               onSave={reload}
                             />
-                            <Dropdown button basic text="More">
-                              <Dropdown.Menu direction="left">
-                                <ShopActions item={shop} reload={reload} />
-                              </Dropdown.Menu>
-                            </Dropdown>
+                            <Actions item={shop} reload={reload} />
                           </Table.Cell>
                         </Table.Row>
                       );
