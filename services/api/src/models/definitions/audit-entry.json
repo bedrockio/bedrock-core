@@ -8,9 +8,6 @@
       "type": "String",
       "required": true
     },
-    "routePrefix": {
-      "type": "String"
-    },
     "routeNormalizedPath": {
       "type": "String"
     },

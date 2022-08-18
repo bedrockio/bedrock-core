@@ -104,7 +104,6 @@ describe('AuditEntry', () => {
           requestMethod: 'GET',
           requestUrl: '/1/products/id',
           routeNormalizedPath: '/1/products/:id',
-          routePrefix: '/1/products',
           user: user.id,
         })
       );

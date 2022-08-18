@@ -12,7 +12,6 @@ schema.statics.getContextFields = function (ctx) {
     requestMethod: ctx.request.method,
     requestUrl: ctx.request.url,
     routeNormalizedPath: ctx.routerPath,
-    routePrefix: ctx.router.opts.prefix,
   };
 };
 

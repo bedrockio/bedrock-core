@@ -119,7 +119,6 @@ function applicationMiddleware({ ignorePaths = [] }) {
     await ApplicationRequest.create({
       application: application.id,
       routeNormalizedPath: ctx.routerPath,
-      routePrefix: ctx.router?.opts.prefix,
       requestId,
       request: {
         ip: request.ip,
