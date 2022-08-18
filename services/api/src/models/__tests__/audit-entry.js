@@ -117,7 +117,7 @@ describe('AuditEntry', () => {
       const ctx = await getContext(user);
 
       await AuditEntry.append('did something', ctx, {
-        type: 'security',
+        category: 'security',
         objectId: user.id,
         objectType: 'user',
       });
@@ -142,7 +142,7 @@ describe('AuditEntry', () => {
       const ctx = await getContext(user);
 
       await AuditEntry.append('did something', ctx, {
-        type: 'security',
+        category: 'security',
         objectId: user.id,
         objectType: 'user',
         objectAfter: {},

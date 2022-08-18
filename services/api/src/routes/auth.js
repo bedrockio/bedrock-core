@@ -38,7 +38,7 @@ router
         ...ctx.request.body,
       });
 
-      await AuditEntry.append('registered', ctx, {
+      await AuditEntry.append('Registered', ctx, {
         object: user,
         user: user.id,
       });
@@ -71,8 +71,8 @@ router
       try {
         await verifyLoginAttempts(user);
       } catch (error) {
-        await AuditEntry.append('reached max authentication attempts', ctx, {
-          type: 'security',
+        await AuditEntry.append('Reached max authentication attempts', ctx, {
+          category: 'security',
           object: user,
           user: user.id,
         });
@@ -82,8 +82,8 @@ router
       try {
         await verifyPassword(user, password);
       } catch (error) {
-        await AuditEntry.append('failed authentication', ctx, {
-          type: 'security',
+        await AuditEntry.append('Failed authentication', ctx, {
+          category: 'security',
           object: user,
           user: user.id,
         });
@@ -110,7 +110,7 @@ router
       user.authTokenId = authTokenId;
       await user.save();
 
-      await AuditEntry.append('successfully authenticated', ctx, {
+      await AuditEntry.append('Successfully authenticated', ctx, {
         object: user,
         user: user.id,
       });
@@ -135,7 +135,7 @@ router
         await verifyLoginAttempts(authUser);
       } catch (error) {
         await AuditEntry.append('Reached max authentication attempts', ctx, {
-          type: 'security',
+          category: 'security',
           object: authUser,
           user: authUser.id,
         });
@@ -146,14 +146,14 @@ router
         await verifyPassword(authUser, password);
       } catch (error) {
         await AuditEntry.append('Failed authentication (confirm-access)', ctx, {
-          type: 'security',
+          category: 'security',
           object: authUser,
           user: authUser.id,
         });
         ctx.throw(401, error);
       }
 
-      await AuditEntry.append('successfully authenticated (confirm-access)', ctx, {
+      await AuditEntry.append('Successfully authenticated (confirm-access)', ctx, {
         object: authUser,
         user: authUser.id,
       });
@@ -165,6 +165,12 @@ router
   )
   .post('/logout', authenticate({ type: 'user' }), fetchUser, async (ctx) => {
     const user = ctx.state.authUser;
+
+    await AuditEntry.append('Deauthentication', ctx, {
+      object: user,
+      user: user.id,
+    });
+
     await user.updateOne({
       $unset: {
         authTokenId: true,
@@ -207,7 +213,7 @@ router
         authTokenId,
       });
 
-      await AuditEntry.append('registered', ctx, {
+      await AuditEntry.append('Registered', ctx, {
         object: user,
         user: user.id,
       });
@@ -256,8 +262,8 @@ router
       if (!user) {
         ctx.throw(400, 'User does not exist');
       } else if (user.tempTokenId !== jwt.jti) {
-        await AuditEntry.append('attempted reset password', ctx, {
-          type: 'security',
+        await AuditEntry.append('Attempted reset password', ctx, {
+          category: 'security',
           object: user,
           user: user.id,
         });
@@ -270,7 +276,7 @@ router
 
       await user.save();
 
-      await AuditEntry.append('reset password', ctx, {
+      await AuditEntry.append('Reset password', ctx, {
         object: user,
         user: user.id,
       });

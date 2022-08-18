@@ -30,13 +30,18 @@
     "objectType": {
       "type": "String"
     },
-    "type": {
-      "type": "String"
+    "category": {
+      "type": "String",
+      "default": "default"
     },
     "user": {
       "type": "ObjectId",
       "ref": "User",
-      "required": true
+      "required": true,
+      "autopopulate": true
     }
-  }
+  },
+  "search": [
+    "objectId"
+  ]
 }
