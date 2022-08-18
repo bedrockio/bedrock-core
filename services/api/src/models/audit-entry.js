@@ -63,6 +63,7 @@ schema.statics.append = function (activity, ctx, { object, fields, category, ...
     return;
   }
 
+  console.log('options.user || fromContext.user', options.user || fromContext.user);
   return this.create({
     ...fromContext,
     activity,
@@ -75,6 +76,6 @@ schema.statics.append = function (activity, ctx, { object, fields, category, ...
   });
 };
 
-schema.index({  category: 1, objectType: 1, createdAt: 1, activity: 1, routeNormalizedPath: 1 });
+schema.index({ category: 1, objectType: 1, createdAt: 1, activity: 1, routeNormalizedPath: 1 });
 
 module.exports = mongoose.models.AuditEntry || mongoose.model('AuditEntry', schema);

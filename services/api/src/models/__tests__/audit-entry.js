@@ -112,7 +112,9 @@ describe('AuditEntry', () => {
 
   describe('append', () => {
     it('should write to the db', async () => {
-      const user = new User({ email: 'bob@gmail.com' });
+      const user = await createUser({
+        email: 'audit@log.com',
+      });
       const ctx = await getContext(user);
 
       await AuditEntry.append('did something', ctx, {
@@ -125,7 +127,7 @@ describe('AuditEntry', () => {
       expect(logs.length).toBe(1);
 
       const log = logs[0];
-      expect(log.type).toBe('security');
+      expect(log.category).toBe('security');
       expect(log.activity).toBe('did something');
       expect(log.objectId.toString()).toBe(user.id);
       expect(log.objectType).toBe('user');
@@ -133,7 +135,7 @@ describe('AuditEntry', () => {
       expect(log.requestUrl).toBe('/1/products/id');
       expect(log.routeNormalizedPath).toBe('/1/products/:id');
       expect(log.createdAt).toBeDefined();
-      expect(log.user.toString()).toBe(user.id);
+      expect(log.user.id).toBe(user.id);
     });
 
     it('should not change, if nothing was changed', async () => {
