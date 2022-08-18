@@ -53,7 +53,7 @@ export default class AuditTrailList extends React.Component {
   render() {
     return (
       <Search.Provider onDataNeeded={this.onDataNeeded}>
-        {({ items, getSorted, setSort, reload }) => {
+        {({ items, getSorted, setSort }) => {
           return (
             <React.Fragment>
               <Breadcrumbs active="Organizations" />
