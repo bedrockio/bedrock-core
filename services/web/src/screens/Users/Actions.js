@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Dropdown, Confirm } from 'semantic';
 import { request } from 'utils/api';
-import EditUser from 'modals/EditUser';
+
 
 export default function UserActions({ item, reload } = {}) {
   return (
