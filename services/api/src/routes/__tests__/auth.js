@@ -118,13 +118,11 @@ describe('/1/auth', () => {
         password,
       });
 
-      let response;
-
-      response = await request('POST', '/1/auth/login', { email: user.email, password });
+      const response = await request('POST', '/1/auth/login', { email: user.email, password });
       expect(response.status).toBe(200);
-
-      user = await User.findById(user.id);
-      expect(user.authTokenId).not.toBeUndefined();
+      const decodeToken = jwt.decode(response.body.data.token, { complete: true });
+      const updatedUser = await User.findById(user.id);
+      expect(updatedUser.authTokenIds).toContain(decodeToken.payload.jti);
     });
   });
 

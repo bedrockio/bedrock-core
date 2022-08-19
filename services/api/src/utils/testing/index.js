@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const { logger } = require('@bedrockio/instrumentation');
 const { User, Upload } = require('../../models');
+const { generateTokenId } = require('../tokens');
 
 const context = require('./context');
 const request = require('./request');
@@ -32,6 +33,7 @@ async function createUser(attributes = {}) {
     email: `${mongoose.Types.ObjectId()}@platform.com`,
     firstName: 'Test',
     lastName: 'User',
+    authTokenIds: [generateTokenId()],
     ...attributes,
   });
 

@@ -16,7 +16,7 @@ schema.virtual('password').set(function (password) {
   this._password = password;
 });
 
-schema.method.addAuthTokenId = function (authTokenId) {
+schema.methods.addAuthTokenId = function (authTokenId) {
   this.authTokenIds.push(authTokenId);
   if (this.authTokenIds.length > 10) {
     this.authTokenIds.slice(-10);

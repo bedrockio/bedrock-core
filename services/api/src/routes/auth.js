@@ -107,7 +107,7 @@ router
       }
 
       const authTokenId = generateTokenId();
-      user.authTokenId = authTokenId;
+      user.addAuthTokenId(authTokenId);
       await user.save();
 
       await AuditEntry.append('successfully authenticated', ctx, {
@@ -116,7 +116,7 @@ router
       });
 
       ctx.body = {
-        data: { token: createAuthToken(user.id, user.authTokenId) },
+        data: { token: createAuthToken(user.id, authTokenId) },
       };
     }
   )
@@ -163,15 +163,34 @@ router
       ctx.status = 204;
     }
   )
-  .post('/logout', authenticate({ type: 'user' }), fetchUser, async (ctx) => {
-    const user = ctx.state.authUser;
-    await user.updateOne({
-      $unset: {
-        authTokenId: true,
-      },
-    });
-    ctx.status = 204;
-  })
+  .post(
+    '/logout',
+    validateBody({
+      all: Joi.boolean(),
+    }),
+    authenticate({ type: 'user' }),
+    fetchUser,
+    async (ctx) => {
+      const user = ctx.state.authUser;
+      const { all } = ctx.request.body;
+
+      await user.updateOne(
+        all
+          ? {
+              $set: {
+                authTokenIds: [],
+              },
+            }
+          : {
+              $pull: {
+                authTokenIds: ctx.state.jwt.jti,
+              },
+            }
+      );
+
+      ctx.status = 204;
+    }
+  )
   .post(
     '/accept-invite',
     validateBody({
@@ -192,7 +211,8 @@ router
       const existingUser = await User.findOne({ email: invite.email });
 
       if (existingUser) {
-        await existingUser.updateOne({ authTokenId });
+        existingUser.addAuthTokenId(authTokenId);
+        await existingUser.save();
         ctx.body = {
           data: { token: createAuthToken(existingUser.id, authTokenId) },
         };
@@ -204,7 +224,7 @@ router
         lastName,
         email: invite.email,
         password,
-        authTokenId,
+        authTokenIds: [authTokenId],
       });
 
       await AuditEntry.append('registered', ctx, {
