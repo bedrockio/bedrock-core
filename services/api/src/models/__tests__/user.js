@@ -66,8 +66,7 @@ describe('User', () => {
         email: 'good@email.com',
       });
       user.addAuthTokenId('12345');
-
-      expect(user.authTokenIds).toContain('12345');
+      expect([...user.authTokenIds]).toEqual(['12345']);
     });
     it('should remove the oldest authtoken', () => {
       const user = new User({
