@@ -16,6 +16,13 @@ schema.virtual('password').set(function (password) {
   this._password = password;
 });
 
+schema.method.addAuthTokenId = function (authTokenId) {
+  this.authTokenIds.push(authTokenId);
+  if (this.authTokenIds.length > 10) {
+    this.authTokenIds.slice(-10);
+  }
+};
+
 schema.pre('save', async function preSave(next) {
   if (this._password) {
     const salt = await bcrypt.genSalt(12);

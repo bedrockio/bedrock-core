@@ -60,11 +60,13 @@
       "type": "Date",
       "writeScopes": "none"
     },
-    "authTokenId": {
-      "type": "String",
-      "readScopes": "none",
-      "writeScopes": "none"
-    },
+    "authTokenIds": [
+      {
+        "type": "String",
+        "readScopes": "none",
+        "writeScopes": "none"
+      }
+    ],
     "tempTokenId": {
       "type": "String",
       "readScopes": "none",

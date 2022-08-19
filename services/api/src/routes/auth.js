@@ -34,7 +34,7 @@ router
 
       const authTokenId = generateTokenId();
       const user = await User.create({
-        authTokenId,
+        authTokenIds: [authTokenId],
         ...ctx.request.body,
       });
 
