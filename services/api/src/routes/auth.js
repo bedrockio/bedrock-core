@@ -287,7 +287,8 @@ router
       user.loginAttempts = 0;
       user.password = password;
       user.tempTokenId = undefined;
-
+      const authTokenId = generateTokenId();
+      user.authTokenIds = [authTokenId];
       await user.save();
 
       await AuditEntry.append('reset password', ctx, {
@@ -296,7 +297,7 @@ router
       });
 
       ctx.body = {
-        data: { token: createAuthToken(user.id) },
+        data: { token: createAuthToken(user.id, authTokenId) },
       };
     }
   );

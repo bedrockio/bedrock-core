@@ -284,9 +284,10 @@ describe('/1/auth', () => {
       expect(payload).toHaveProperty('type', 'user');
 
       const updatedUser = await User.findById(user.id);
-      await expect(async () => {
-        await verifyPassword(updatedUser, password);
-      }).not.toThrow();
+      await expect(verifyPassword(updatedUser, password)).resolves.not.toThrow();
+      expect(updatedUser.tempTokenId).not.toBeDefined();
+      expect(updatedUser.authTokenIds).toHaveLength(1);
+      expect(updatedUser.authTokenIds).toContain(payload.jti);
     });
 
     it('should error when user is not found', async () => {

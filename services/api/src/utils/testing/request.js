@@ -7,7 +7,7 @@ module.exports = async function handleRequest(httpMethod, url, bodyOrQuery = {},
   const headers = options.headers || {};
   if (options.user && !headers.Authorization) {
     const { user } = options;
-    headers.Authorization = `Bearer ${createAuthToken(user.id, options.authTokenId || user.authTokenIds[0])}`;
+    headers.Authorization = `Bearer ${createAuthToken(user.id, user.authTokenIds[0])}`;
   }
   if (options.organization) {
     headers.organization = options.organization.id;
