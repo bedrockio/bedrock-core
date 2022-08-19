@@ -18,8 +18,10 @@ schema.virtual('password').set(function (password) {
 
 schema.methods.addAuthTokenId = function (authTokenId) {
   this.authTokenIds.push(authTokenId);
+  // pushes out old token that most likely expired
+  // we dont want this collection to keep growing + we dont have users to have that many valid tokens
   if (this.authTokenIds.length > 10) {
-    this.authTokenIds.slice(-10);
+    this.authTokenIds = this.authTokenIds.slice(1);
   }
 };
 

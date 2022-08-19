@@ -57,4 +57,27 @@ describe('User', () => {
       expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);
     });
   });
+
+  describe('addAuthTokenId', () => {
+    it('should add a authToken', () => {
+      const user = new User({
+        firstName: 'Neo',
+        lastName: 'One',
+        email: 'good@email.com',
+      });
+      user.addAuthTokenId('12345');
+
+      expect(user.authTokenIds).toContain('12345');
+    });
+    it('should remove the oldest authtoken', () => {
+      const user = new User({
+        firstName: 'Neo',
+        lastName: 'One',
+        email: 'good@email.com',
+        authTokenIds: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+      });
+      user.addAuthTokenId('11');
+      expect([...user.authTokenIds]).toEqual(['2', '3', '4', '5', '6', '7', '8', '9', '10', '11']);
+    });
+  });
 });
