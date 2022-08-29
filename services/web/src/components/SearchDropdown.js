@@ -164,6 +164,10 @@ export default class SearchDropdown extends React.Component {
           'searchBody',
           'keywordField',
         ])}
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
         error={!!error}
         loading={loading}
         value={this.getValue()}
