@@ -68,6 +68,7 @@ describe('User', () => {
       user.addAuthTokenId('12345');
       expect([...user.authTokenIds]).toEqual(['12345']);
     });
+
     it('should remove the oldest authtoken', () => {
       const user = new User({
         firstName: 'Neo',
