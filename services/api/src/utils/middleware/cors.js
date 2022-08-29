@@ -11,7 +11,7 @@ const cors = require('@koa/cors');
 // header to be overridden it is still possible to spoof.
 
 const DEFAULTS = {
-  exposeHeaders: ['content-length'],
+  exposeHeaders: ['content-length', 'content-disposition'],
   maxAge: 600,
 };
 

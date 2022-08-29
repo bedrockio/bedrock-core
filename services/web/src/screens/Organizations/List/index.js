@@ -1,13 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Table, Button, Message, Divider, Loader, Confirm } from 'semantic';
+import { Table, Button, Segment, Divider, Confirm } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
 
-import { HelpTip, Breadcrumbs, Layout } from 'components';
-import { SearchProvider, Filters } from 'components/search';
-import ErrorMessage from 'components/ErrorMessage';
+import {
+  HelpTip,
+  Breadcrumbs,
+  Layout,
+  Search,
+  SearchFilters,
+} from 'components';
 
 import EditOrganization from 'modals/EditOrganization';
 
@@ -27,28 +31,15 @@ export default class OrganizationList extends React.Component {
 
   render() {
     return (
-      <SearchProvider onDataNeeded={this.onDataNeeded}>
-        {({
-          items: organizations,
-          getSorted,
-          setSort,
-          reload,
-          loading,
-          error,
-        }) => {
+      <Search.Provider onDataNeeded={this.onDataNeeded}>
+        {({ items: organizations, getSorted, setSort, reload }) => {
           return (
             <React.Fragment>
               <Breadcrumbs active="Organizations" />
+
               <Layout horizontal center spread>
                 <h1>Organizations</h1>
                 <Layout.Group>
-                  <Filters.Modal>
-                    <Filters.Search
-                      name="keyword"
-                      label="Name"
-                      placeholder="Enter name"
-                    />
-                  </Filters.Modal>
                   <EditOrganization
                     trigger={
                       <Button primary content="New Organization" icon="plus" />
@@ -57,12 +48,18 @@ export default class OrganizationList extends React.Component {
                   />
                 </Layout.Group>
               </Layout>
-              <ErrorMessage error={error} />
-              {loading ? (
-                <Loader active />
-              ) : organizations.length === 0 ? (
-                <Message>No organizations created yet</Message>
-              ) : (
+              <Segment>
+                <Layout horizontal center spread stackable>
+                  <Layout horizontal stackable center right>
+                    <Search.Total />
+                    <SearchFilters.Search name="keyword" />
+                  </Layout>
+                </Layout>
+              </Segment>
+
+              <Search.Status />
+
+              {organizations.length !== 0 && (
                 <Table celled sortable>
                   <Table.Header>
                     <Table.Row>
@@ -125,11 +122,11 @@ export default class OrganizationList extends React.Component {
                 </Table>
               )}
               <Divider hidden />
-              <SearchProvider.Pagination />
+              <Search.Pagination />
             </React.Fragment>
           );
         }}
-      </SearchProvider>
+      </Search.Provider>
     );
   }
 }

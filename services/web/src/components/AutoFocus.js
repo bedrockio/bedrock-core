@@ -14,7 +14,16 @@ export default class AutoFocus extends React.Component {
     });
 
     const testNode = allElements[0];
+
     if (!testNode) {
+      return [];
+    }
+
+    // dont focus first element is a combo box / dropdown
+    if (
+      testNode.parentNode &&
+      testNode.parentNode.getAttribute('role') === 'combobox'
+    ) {
       return [];
     }
 

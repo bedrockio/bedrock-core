@@ -11,8 +11,8 @@ import {
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
-import { Layout, HelpTip } from 'components';
-import { SearchProvider, Filters } from 'components/search';
+import { Layout, HelpTip, Search, SearchFilters } from 'components';
+
 import ErrorMessage from 'components/ErrorMessage';
 // --- Generator: subscreen-imports
 import { Link } from 'react-router-dom';
@@ -41,7 +41,7 @@ export default class ShopProducts extends React.Component {
   render() {
     const { shop } = this.props;
     return (
-      <SearchProvider onDataNeeded={this.onDataNeeded}>
+      <Search.Provider onDataNeeded={this.onDataNeeded}>
         {({ items: products, getSorted, setSort, reload, loading, error }) => {
           return (
             <React.Fragment>
@@ -49,13 +49,13 @@ export default class ShopProducts extends React.Component {
               <Layout horizontal center spread>
                 <Header as="h2">Products</Header>
                 <Layout.Group>
-                  <Filters.Modal size="small">
-                    <Filters.Search
+                  <SearchFilters.Modal size="small">
+                    <SearchFilters.Search
                       label="Search"
                       name="keyword"
                       placeholder="Enter name or product id"
                     />
-                  </Filters.Modal>
+                  </SearchFilters.Modal>
                   <EditProduct
                     shop={shop}
                     onSave={reload}
@@ -156,11 +156,11 @@ export default class ShopProducts extends React.Component {
                 </Table>
               )}
               <Divider hidden />
-              <SearchProvider.Pagination />
+              <Search.Pagination />
             </React.Fragment>
           );
         }}
-      </SearchProvider>
+      </Search.Provider>
     );
   }
 }

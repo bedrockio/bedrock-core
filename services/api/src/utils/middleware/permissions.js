@@ -23,7 +23,7 @@ function requirePermissions({ endpoint, permission, scope = 'global' }) {
       if (hasGlobalAccess) return next();
     }
     return ctx.throw(
-      401,
+      403,
       `You don't have the right permission for endpoint ${endpoint} (required permission: ${scope}/${permission})`
     );
   };

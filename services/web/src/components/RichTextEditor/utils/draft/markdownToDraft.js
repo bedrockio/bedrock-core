@@ -1,258 +1,302 @@
-import { DRAFT_BLOCKS, DRAFT_INLINE } from './const';
+import { fromMarkdown } from 'mdast-util-from-markdown';
+import { gfmFromMarkdown } from 'mdast-util-gfm';
+import { toHast } from 'mdast-util-to-hast';
+import { gfm } from 'micromark-extension-gfm';
+import { sanitize, defaultSchema } from 'hast-util-sanitize';
+import { raw } from 'hast-util-raw';
 
-// Block matching
-const IMAGE_REG = /!\[(.+)\]\((.+)\)|<img ([^>]+?)>/g;
-const BLOCK_REG = /^(#{1,6}|\d+\.|[-*+>]) /g;
-const LINE_BREAK_REG = / {2}|\\$/g;
+import { hastToMarkdown } from './utils';
+import { escapeMathTokens } from './math';
 
-// Inline matching
-const INLINE_REG = /(_+|\*+|~+|`)(\S.*?\S?)(?:\1)|\[([^\]]+)\]\(([^)]+)\)/g;
-
-// HTML helpers
-const HTML_INLINE_REG = /(<\/?(i|b|em|strong|code)>)/g;
-const HTML_LINK_REG = /<a.*?href="(.+?)">(.+?)<\/a>/gm;
-
-const HTML_INLINE_MAP = {
-  b: '**',
-  i: '_',
-  em: '_',
-  code: '`',
-  strong: '**',
-  strikethrough: '~~',
+const HAST_BLOCKS_TO_DRAFT = {
+  p: 'unstyled',
+  h1: 'header-one',
+  h2: 'header-two',
+  h3: 'header-three',
+  h4: 'header-four',
+  h5: 'header-five',
+  h6: 'header-six',
+  blockquote: 'blockquote',
 };
 
-// Escape matching
-const ESCAPE_CHAR_REG = /\\([`*_])/g;
-const ESCAPE_PLACEHOLDER_REG = /%%ESCAPE\((\d+)\)%%/g;
+const HAST_INLINE_TO_DRAFT = {
+  del: 'STRIKETHROUGH',
+  sup: 'SUPERSCRIPT',
+  sub: 'SUBSCRIPT',
+  strong: 'BOLD',
+  code: 'CODE',
+  em: 'ITALIC',
+  i: 'ITALIC',
+  b: 'BOLD',
+};
 
-// Alternate block matching
-const ALTERNATE_HEADER_REG = /^(.+)\n^([=-])+$/gm;
+const BLOCK_NODES = [
+  'root',
+  'table',
+  'thead',
+  'tbody',
+  'blockquote',
+  'ul',
+  'ol',
+  'li',
+  'tr',
+  'p',
+];
 
-// Code Blocks
-const FENCED_CODE_BLOCK_REG = /^```\n(.+?)\n```$/gms;
-const CODE_PLACEHOLDER_REG = /^%%CODE%%$/;
+const ALIGNMENTS = ['left', 'right', 'center', 'float-left', 'float-right'];
 
-// Tables
-const TABLE_REG = /(\n?)(\|.+?\|)($|\n[^|])/gs;
-const TABLE_PLACEHOLDER_REG = /^%%TABLE%%$/;
+export default function markdownToDraft(md) {
+  md = escapeMathTokens(md);
 
-// Alignment
+  // Get trailing lines before markdown is converted.
+  // These will be added to the blocks so that new
+  // lines can be preserved.
+  const trailingLines = getTrailingLines(md);
 
-const ALIGN_REG = /^<p style="text-align:(center|right)">(.+?)<\/p>$/gms;
+  let mdast = fromMarkdown(md, {
+    extensions: [gfm()],
+    mdastExtensions: [gfmFromMarkdown()],
+  });
 
-export default function markdownToDraft(str) {
-  let entityKey = 0;
-  const tables = [];
-  const codeBlocks = [];
+  // Convert mdast to hast tree allowing HTML
+  let hast = toHast(mdast, {
+    allowDangerousHtml: true,
+  });
+
+  // Convert raw html into nodes
+  hast = raw(hast);
+
+  // Sanitize converted html nodes
+  hast = sanitize(hast, {
+    ...defaultSchema,
+    tagNames: [...defaultSchema.tagNames, 'iframe'],
+    attributes: {
+      ...defaultSchema.attributes,
+      iframe: ['src', 'allow'],
+      code: ['className'],
+      img: ['src', 'alt', 'style', 'className'],
+      h1: ['className'],
+      h2: ['className'],
+      h3: ['className'],
+      h4: ['className'],
+      h5: ['className'],
+      h6: ['className'],
+      p: ['className'],
+    },
+  });
+
+  return hastRootToDraft(hast, trailingLines);
+}
+
+function hastRootToDraft(root, trailingLines) {
+  const blocks = [];
   const entityMap = {};
 
-  function addLink(block, options) {
-    const { url, ...rest } = options;
-    addEntity(block, {
-      type: 'LINK',
-      mutability: 'MUTABLE',
+  let currentBlock;
+  let currentRanges;
+  let currentPosition;
+  let currentBlockType;
+  let openListTypes = [];
+  let entityKey = 0;
+
+  function pushBlock(type, append) {
+    const block = {
+      type,
+      text: '',
+      depth: 0,
+      entityRanges: [],
+      inlineStyleRanges: [],
+      ...append,
+    };
+    blocks.push(block);
+    return block;
+  }
+
+  function openBlock(type, append) {
+    const block = pushBlock(type, append);
+    currentBlock = block;
+    currentRanges = [];
+    currentPosition = 0;
+  }
+
+  function closeBlock() {
+    currentBlock = null;
+  }
+
+  function pushInlineStyleRange(style) {
+    const range = {
+      style,
+      length: 0,
+      offset: currentPosition,
+    };
+    currentBlock.inlineStyleRanges.push(range);
+    currentRanges.push(range);
+  }
+
+  function pushEntityRange(entity) {
+    const key = entityKey++;
+    const { mutability } = entity;
+    const isImmutable = mutability === 'IMMUTABLE';
+    const range = {
+      key,
+      length: isImmutable ? 1 : 0,
+      offset: currentPosition,
+    };
+    entityMap[key] = entity;
+    currentBlock.entityRanges.push(range);
+    currentRanges.push(range);
+    if (isImmutable) {
+      currentBlock.type = 'atomic';
+      currentBlock.text = ' ';
+    }
+  }
+
+  function pushLink(url) {
+    pushEntityRange({
       data: {
         url,
       },
-      ...rest,
+      mutability: 'MUTABLE',
+      type: 'LINK',
     });
   }
 
-  function addImage(block, options) {
-    const { offset, data } = options;
-    block.type = 'atomic';
-    addEntity(block, {
-      type: 'IMAGE',
+  function pushImage(data) {
+    pushEntityRange({
+      data,
       mutability: 'IMMUTABLE',
-      length: 1,
-      offset,
-      data,
+      type: 'IMAGE',
     });
   }
 
-  function addEntity(block, options) {
-    const { type, mutability, data, offset, length } = options;
-    const key = entityKey++;
-    entityMap[key] = {
-      type,
-      mutability,
-      data,
-    };
-    block.entityRanges.push({
-      key,
-      offset,
-      length,
-    });
-  }
-
-  // Normalize alternate formats
-
-  str = replaceMarkdown(str, ALTERNATE_HEADER_REG, ([line, char]) => {
-    const prefix = char === '=' ? '#' : '##';
-    return `${prefix} ${line}`;
-  });
-
-  str = replaceMarkdown(str, HTML_INLINE_REG, ([all, tag]) => {
-    return HTML_INLINE_MAP[tag] || all;
-  });
-
-  str = replaceMarkdown(str, HTML_LINK_REG, ([href, text]) => {
-    return `[${text}](${href})`;
-  });
-
-  str = replaceMarkdown(str, FENCED_CODE_BLOCK_REG, ([content]) => {
-    const lines = content.split('\n');
-    for (let line of lines) {
-      codeBlocks.push(line);
-    }
-    return lines.map(() => '%%CODE%%').join('\n');
-  });
-
-  // Parse multiline table syntax up front and stores table data.
-  // Replace with a placeholder so that the text is not processed.
-
-  str = replaceMarkdown(str, TABLE_REG, ([prev, content, next]) => {
-    const lines = content.split('\n');
-    const rows = lines.map((line) => {
-      line = line.replace(/^\|(.+)\|/, '$1');
-      return line.split(/\s*\|\s*/).map((str) => {
-        return str.trim();
-      });
-    });
-    let align = [];
-    if (rows.length > 2) {
-      const colLength = rows[0].length;
-      const even = rows.every((cols) => {
-        return cols.length === colLength;
-      });
-      const separator = rows[1].every((col) => {
-        const match = col.trim().match(/^(:)?-{1,}(:)?$/);
-        if (match) {
-          const [, l, r] = match;
-          if (l && r) {
-            align.push('center');
-          } else if (r) {
-            align.push('right');
-          } else if (l) {
-            align.push('left');
-          } else {
-            align.push('default');
-          }
-          return true;
+  walkNodes(root, (node, next, depth) => {
+    let { type, tagName, value } = node;
+    if (type === 'text') {
+      if (depth === 1) {
+        pushBlock('unstyled');
+      } else if (currentBlock) {
+        currentBlock.text += value;
+        currentPosition += value.length;
+        for (let range of currentRanges) {
+          range.length += value.length;
         }
-      });
-      const hasAlignment = align.some((a) => {
-        return a !== 'default';
-      });
-      if (even && separator) {
-        tables.push({
-          head: rows[0],
-          body: rows.slice(2),
-          ...(hasAlignment && { align }),
+      }
+      next();
+    } else if (type === 'element') {
+      if (tagName === 'ol') {
+        openListTypes.push('ordered');
+        next();
+        openListTypes.pop();
+      } else if (tagName === 'ul') {
+        openListTypes.push('unordered');
+        next();
+        openListTypes.pop();
+      } else if (tagName === 'li') {
+        const currentListType = openListTypes[openListTypes.length - 1];
+        const depth = openListTypes.length - 1;
+        openBlock(`${currentListType}-list-item`, {
+          depth,
         });
-        if (next.trim() !== '') {
-          next = '\n' + next;
+        next();
+        closeBlock();
+      } else if (tagName === 'pre') {
+        const [code] = node.children;
+        const { className = [] } = code.properties;
+        const language =
+          className
+            .map((str) => {
+              return str.match(/language-(\w+)/)?.[1];
+            })
+            .find((lang) => lang) || '';
+        const data = {
+          language,
+        };
+        const text = getNodeTextContent(node).slice(0, -1);
+        for (let line of text.split('\n')) {
+          pushBlock('code-block', {
+            text: line,
+            data,
+          });
         }
-        return prev + '%%TABLE%%' + next;
+      } else if (tagName === 'code') {
+        pushInlineStyleRange('CODE');
+        next();
+        currentRanges.pop();
+      } else {
+        const blockType = HAST_BLOCKS_TO_DRAFT[tagName];
+        const inlineStyle = HAST_INLINE_TO_DRAFT[tagName];
+        if (blockType) {
+          if (currentBlock) {
+            next();
+          } else {
+            openBlock(blockType, proseNodeToData(node));
+            next();
+            closeBlock();
+          }
+        } else if (inlineStyle) {
+          pushInlineStyleRange(inlineStyle);
+          next();
+          currentRanges.pop();
+        } else if (tagName === 'a') {
+          pushLink(node.properties.href);
+          next();
+          currentRanges.pop();
+        } else if (tagName === 'img') {
+          if (!currentBlock) {
+            openBlock('unstyled');
+          }
+          pushImage(imageNodeToData(node));
+          next();
+          currentRanges.pop();
+          closeBlock();
+        } else if (tagName === 'table') {
+          // Tables allow flow content within cells which is simply too complex for
+          // draft to handle properly, so convert the node back to raw markdown and
+          // define a new type of atomic block that will render it from the raw source.
+          pushBlock('atomic', {
+            data: {
+              type: 'markdown',
+              source: hastToMarkdown(node).trim(),
+            },
+          });
+        } else if (tagName === 'br') {
+          next();
+        } else if (tagName === 'li') {
+          openBlock(currentBlockType);
+          next();
+          closeBlock();
+        } else if (tagName === 'hr') {
+          pushBlock('atomic', {
+            data: {
+              type: 'horizontal-rule',
+            },
+          });
+        } else if (tagName === 'iframe') {
+          const { src = '', allow } = node.properties || {};
+          pushBlock('atomic', {
+            data: {
+              src,
+              type: 'iframe',
+              ...(allow && {
+                allow,
+              }),
+            },
+          });
+        } else {
+          // eslint-disable-next-line
+          console.error(`Unsupported tag ${tagName}.`);
+        }
       }
+    } else if (type === 'root') {
+      next();
+    } else {
+      // eslint-disable-next-line
+      console.error(`Unsupported type ${type}.`);
     }
-    return prev + content + next;
   });
 
-  const blocks = getBlocks(str);
-
-  for (let block of blocks) {
-    let { text } = block;
-    block.depth = 0;
-    block.entityRanges = [];
-    block.inlineStyleRanges = [];
-
-    // Replace escaped chars with a special syntax before
-    // processing text so they don't match. They will be
-    // restored below.
-
-    text = replaceMarkdown(text, ESCAPE_CHAR_REG, (groups) => {
-      const [char] = groups;
-      return `%%ESCAPE(${char.codePointAt(0)})%%`;
-    });
-
-    // Replace html paragraphs next so that text can be
-    // procesed as unstyled.
-
-    text = replaceMarkdown(text, ALIGN_REG, ([alignment, content]) => {
-      block.data = {
-        alignment,
-      };
-      return content.trim();
-    });
-
-    // Replace markdown images with syntax ![alt](src).
-    // Do this before parsing inline ranges as links have a
-    // similar syntax that may cause false positives.
-
-    text = replaceMarkdown(text, IMAGE_REG, (groups, offset) => {
-      let [title, src, attrs] = groups;
-      let style = {};
-      if (attrs) {
-        const parsed = getAttrs(attrs);
-        src = parsed.src;
-        title = parsed.alt;
-        style = parsed.style;
-      }
-      const { width, float, margin } = style;
-      const data = {
-        src,
-        title,
-      };
-      if (width) {
-        data.width = parseInt(width);
-      }
-      if (float) {
-        data.alignment = float;
-      } else {
-        data.alignment = margin === '0 auto' ? 'center' : 'default';
-      }
-      addImage(block, {
-        offset,
-        data,
-      });
-      return ' ';
-    });
-
-    text = replaceInlineRanges(text, {
-      block,
-      addLink,
-    });
-
-    // Restore placeholders for escaped chars.
-
-    text = replaceMarkdown(text, ESCAPE_PLACEHOLDER_REG, (groups) => {
-      const [code] = groups;
-      return String.fromCodePoint(code);
-    });
-
-    // Restore placeholders for code.
-
-    text = replaceMarkdown(text, CODE_PLACEHOLDER_REG, () => {
-      block.type = 'code-block';
-      return codeBlocks.shift();
-    });
-
-    // Restore placeholders for tables.
-
-    text = replaceMarkdown(text, TABLE_PLACEHOLDER_REG, () => {
-      block.type = 'atomic';
-      addEntity(block, {
-        type: 'TABLE',
-        mutability: 'IMMUTABLE',
-        length: 1,
-        offset: 0,
-        data: tables.shift(),
-      });
-      return ' ';
-    });
-
-    block.text = text;
+  for (let i = 0; i < trailingLines - 1; i++) {
+    pushBlock('unstyled');
   }
 
   return {
@@ -261,167 +305,92 @@ export default function markdownToDraft(str) {
   };
 }
 
-// Block helpers
-
-function getBlocks(str) {
-  const blocks = [];
-  const lines = str.split('\n');
-  let current;
-  for (let line of lines) {
-    const meta = getBlockMeta(line);
-    let { type, text, isEmpty } = meta;
-    const isUnstyled = type === 'unstyled';
-    if (isUnstyled && !isEmpty && current?.isCollapsable) {
-      current.block.text += current.spacer + meta.text.trimStart();
-    } else {
-      current = {
-        ...meta,
-        block: {
-          type,
-          text,
-        },
-      };
-      blocks.push(current.block);
-    }
-  }
-  return blocks;
+function getTrailingLines(md) {
+  return md.match(/\s*$/)[0].split('\n').length - 1;
 }
 
-function getBlockMeta(text) {
-  let type = 'unstyled';
-  let hasLineBreak = false;
-  text = text.replace(BLOCK_REG, (all, prefix) => {
-    prefix = prefix.replace(/^\d+\./, 'n.');
-    type = DRAFT_BLOCKS[prefix];
-    return '';
-  });
-  text = text.replace(CODE_PLACEHOLDER_REG, (str) => {
-    type = 'code-block';
-    return str;
-  });
-  text = text.replace(TABLE_PLACEHOLDER_REG, (str) => {
-    type = 'atomic';
-    return str;
-  });
-  text = text.replace(LINE_BREAK_REG, () => {
-    hasLineBreak = true;
-    return '';
-  });
-  const isEmpty = !text.trim();
-  const isImage = !!text.match(IMAGE_REG);
-  const spacer = hasLineBreak ? '\n' : ' ';
+function walkNodes(node, fn, depth = 0) {
+  let { children = [] } = node;
 
-  const isCollapsable =
-    !isEmpty &&
-    !isImage &&
-    (isListType(type) || (isParagraphType(type) && !hasLineBreak));
-
-  return {
-    type,
-    text,
-    spacer,
-    isEmpty,
-    isCollapsable,
-  };
-}
-
-function isListType(type) {
-  return type === 'unordered-list-item' || type === 'ordered-list-item';
-}
-
-function isParagraphType(type) {
-  return type === 'unstyled' || type === 'blockquote';
-}
-
-// Inline helpers
-
-const ATTR_REG = /(\w+)="(.+?)"/g;
-
-function getAttrs(str) {
-  const map = {};
-  for (let match of str.matchAll(ATTR_REG)) {
-    let [, attr, value] = match;
-    if (attr === 'style') {
-      map[attr] = getStyles(value);
-    } else {
-      map[attr] = value;
-    }
-  }
-  return map;
-}
-
-function getStyles(str) {
-  const styles = {};
-  for (let dec of str.trim().split(';')) {
-    const [prop, value] = dec.trim().split(/:\s?/);
-    if (prop && value) {
-      styles[prop] = value;
-    }
-  }
-  return styles;
-}
-
-// Replace helpers
-
-// Any combination of nested ranges may be possible
-// so this needs to be done in one go and must be
-// recursive. Examples:
-//
-// _**italic and bold**_
-// **_bold and italic_**
-// [**bold link**](https://foo.com)
-// **[link bold](https://foo.com)**
-
-function replaceInlineRanges(str, options) {
-  let { block, addLink, inlineRanges, entityRanges, index = 0 } = options;
-
-  inlineRanges ||= block.inlineStyleRanges;
-  entityRanges ||= block.entityRanges;
-
-  return replaceMarkdown(str, INLINE_REG, (groups, offset) => {
-    const nestedInlineRanges = [];
-    const nestedEntityRanges = [];
-    let [style, text, alt, url] = groups;
-    let str = text || alt;
-
-    offset += index;
-    str = replaceInlineRanges(str, {
-      ...options,
-      index: offset,
-      inlineRanges: nestedInlineRanges,
-      entityRanges: nestedEntityRanges,
+  // If the parent is block-level trim and
+  // filter out text nodes at the edges.
+  if (isBlockNode(node)) {
+    children = children.filter((child, i, arr) => {
+      if (child.type === 'text') {
+        if (i === 0) {
+          if (isBlockNode(arr[i + 1])) {
+            child.value = child.value.trimEnd();
+          }
+        } else if (i === arr.length - 1) {
+          if (isBlockNode(arr[i - 1])) {
+            child.value = child.value.trimStart();
+          }
+        }
+        return child.value;
+      }
+      return true;
     });
+  }
 
-    if (style) {
-      inlineRanges.push({
-        style: DRAFT_INLINE[style.replace(/_/g, '*')],
-        offset,
-        length: str.length,
-      });
-    } else if (url) {
-      addLink(block, {
-        url,
-        offset,
-        length: str.length,
-      });
+  function next() {
+    for (let child of children) {
+      walkNodes(child, fn, depth + 1);
     }
-    for (let range of nestedInlineRanges) {
-      inlineRanges.push(range);
-    }
-    for (let range of nestedEntityRanges) {
-      entityRanges.push(range);
-    }
-    return str;
+  }
+  fn(node, next, depth);
+}
+
+function isBlockNode(node) {
+  return BLOCK_NODES.includes(node?.tagName || node?.type);
+}
+
+function imageNodeToData(node) {
+  const { src, alt, style, className } = node.properties || {};
+  const data = { src };
+  const width = getImageWidth(style);
+  const alignment = getAlignment(className);
+  if (alt) {
+    data.title = alt;
+  }
+  if (width) {
+    data.width = width;
+  }
+  if (alignment) {
+    data.alignment = alignment;
+  }
+  return data;
+}
+
+function proseNodeToData(node) {
+  const { className } = node.properties || {};
+  const alignment = getAlignment(className);
+  if (alignment) {
+    return {
+      data: {
+        alignment,
+      },
+    };
+  }
+}
+
+function getImageWidth(style = '') {
+  const match = style.match(/width:\s*(\d+)%/);
+  return match ? parseInt(match[1]) : null;
+}
+
+function getAlignment(className = []) {
+  return className.find((name) => {
+    return ALIGNMENTS.includes(name);
   });
 }
 
-function replaceMarkdown(str, reg, fn) {
-  let shift = 0;
-  return str.replace(reg, (match, ...args) => {
-    const groups = args.slice(0, -2);
-    const [offset] = args.slice(-2);
-    const str = fn(groups, offset - shift);
-    shift += match.length - str.length;
-    return str;
+function getNodeTextContent(parent) {
+  let text = '';
+  walkNodes(parent, (node, next) => {
+    if (node.type === 'text') {
+      text += node.value;
+    }
+    next();
   });
+  return text;
 }

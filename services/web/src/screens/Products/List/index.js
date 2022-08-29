@@ -1,7 +1,7 @@
 import React from 'react';
-import { Image } from 'semantic-ui-react';
+import { Image, Segment } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import { Table, Button, Message, Divider, Loader, Confirm } from 'semantic';
+import { Table, Button, Divider, Confirm } from 'semantic';
 
 import { formatDateTime } from 'utils/date';
 import { urlForUpload } from 'utils/uploads';
@@ -9,9 +9,13 @@ import { formatUsd } from 'utils/currency';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
 
-import { HelpTip, Breadcrumbs, Layout } from 'components';
-import { SearchProvider, Filters } from 'components/search';
-import ErrorMessage from 'components/ErrorMessage';
+import {
+  HelpTip,
+  Breadcrumbs,
+  Layout,
+  Search,
+  SearchFilters,
+} from 'components';
 
 import EditProduct from 'modals/EditProduct';
 
@@ -21,38 +25,45 @@ export default class ProductList extends React.Component {
     return await request({
       method: 'POST',
       path: '/1/products/search',
-      body: params,
+      body: { ...params },
     });
   };
 
+  getFilterMapping() {
+    return {
+      isFeatured: {
+        label: 'Is Featured',
+        type: 'boolean',
+      },
+      priceUsd: {
+        label: 'Price Usd',
+      },
+      expiresAt: {
+        label: 'Expires At',
+        type: 'date',
+        range: true,
+      },
+      sellingPoints: {
+        label: 'Selling Points',
+        multiple: true,
+      },
+      keyword: {},
+    };
+  }
+
   render() {
     return (
-      <SearchProvider onDataNeeded={this.onDataNeeded}>
-        {({ items: products, getSorted, setSort, reload, loading, error }) => {
+      <Search.Provider
+        onDataNeeded={this.onDataNeeded}
+        filterMapping={this.getFilterMapping()}>
+        {({ items: products, getSorted, setSort, reload }) => {
           return (
             <React.Fragment>
               <Breadcrumbs active="Products" />
-              <Layout horizontal center spread>
+              <Layout horizontal center spread stackable>
                 <h1>Products</h1>
                 <Layout.Group>
-                  <Filters.Modal>
-                    <Filters.Search name="keyword" label="Keyword" />
-                    <Filters.Checkbox name="isFeatured" label="Is Featured" />
-                    <Filters.Number name="priceUsd" label="Price Usd" />
-                    <Filters.DateRange
-                      time
-                      name="expiresAt"
-                      label="Expires At"
-                    />
-                    <Filters.Dropdown
-                      search
-                      multiple
-                      selection
-                      allowAdditions
-                      name="sellingPoints"
-                      label="Selling Points"
-                    />
-                  </Filters.Modal>
+                  <Search.Export filename="products" />
                   <EditProduct
                     trigger={
                       <Button primary content="New Product" icon="plus" />
@@ -61,12 +72,40 @@ export default class ProductList extends React.Component {
                   />
                 </Layout.Group>
               </Layout>
-              <ErrorMessage error={error} />
-              {loading ? (
-                <Loader active />
-              ) : products.length === 0 ? (
-                <Message>No products created yet</Message>
-              ) : (
+
+              <Segment>
+                <Layout horizontal spread stackable>
+                  <SearchFilters.Modal>
+                    <SearchFilters.Checkbox
+                      name="isFeatured"
+                      label="Is Featured"
+                    />
+                    <SearchFilters.Number name="priceUsd" label="Price Usd" />
+                    <SearchFilters.DateRange
+                      time
+                      name="expiresAt"
+                      label="Expires At"
+                    />
+                    <SearchFilters.Dropdown
+                      search
+                      multiple
+                      selection
+                      allowAdditions
+                      name="sellingPoints"
+                      label="Selling Points"
+                    />
+                  </SearchFilters.Modal>
+
+                  <Layout horizontal stackable center right>
+                    <Search.Total />
+                    <SearchFilters.Search name="keyword" />
+                  </Layout>
+                </Layout>
+              </Segment>
+
+              <Search.Status />
+
+              {products.length !== 0 && (
                 <Table celled sortable>
                   <Table.Header>
                     <Table.Row>
@@ -144,11 +183,11 @@ export default class ProductList extends React.Component {
                 </Table>
               )}
               <Divider hidden />
-              <SearchProvider.Pagination />
+              <Search.Pagination />
             </React.Fragment>
           );
         }}
-      </SearchProvider>
+      </Search.Provider>
     );
   }
 }

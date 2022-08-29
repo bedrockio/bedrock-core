@@ -12,7 +12,10 @@ const LOGIN_THROTTLE = {
 
 async function verifyLoginAttempts(user) {
   const { triesMin, triesMax, timeMax } = LOGIN_THROTTLE;
-  const dt = new Date() - (user.lastLoginAttemptAt || Date.now());
+  // Fixed random failing test where the Date.now() was a fraction later than new Date, resulting in negative number
+  // const dt = new Date() - (user.lastLoginAttemptAt || Date.now());
+  const now = new Date();
+  const dt = now - (user.lastLoginAttemptAt || now);
   const threshold = mapExponential(user.loginAttempts || 0, triesMin, triesMax, 0, timeMax);
 
   if (dt >= threshold) {

@@ -1,0 +1,46 @@
+{
+  "blocks": [
+    {
+      "type": "unstyled",
+      "text": "line 1",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "line 2",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "line 1",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": []
+    },
+    {
+      "type": "unstyled",
+      "text": "line two with bold",
+      "depth": 0,
+      "entityRanges": [],
+      "inlineStyleRanges": [
+        {
+          "offset": 5,
+          "length": 3,
+          "style": "BOLD"
+        }
+      ]
+    }
+  ],
+  "entityMap": {}
+}

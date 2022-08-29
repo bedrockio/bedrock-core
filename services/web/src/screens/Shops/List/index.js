@@ -1,11 +1,17 @@
 import React from 'react';
-import { Table, Button, Message, Divider, Loader, Confirm } from 'semantic';
+import { Table, Button, Divider, Confirm, Segment } from 'semantic';
+
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
-import { HelpTip, Breadcrumbs, Layout } from 'components';
-import { SearchProvider, Filters } from 'components/search';
-import ErrorMessage from 'components/ErrorMessage';
+import {
+  HelpTip,
+  Breadcrumbs,
+  Layout,
+  Search,
+  SearchFilters,
+} from 'components';
+
 // --- Generator: list-imports
 import { Link } from 'react-router-dom';
 import allCountries from 'utils/countries';
@@ -22,51 +28,94 @@ import EditShop from 'modals/EditShop';
 
 @screen
 export default class ShopList extends React.Component {
-  onDataNeeded = async (params) => {
-    return await request({
+  onDataNeeded = (body) => {
+    return request({
       method: 'POST',
       path: '/1/shops/search',
-      body: params,
+      body,
     });
   };
 
+  fetchOwners = async (props) => {
+    const { data } = await request({
+      method: 'POST',
+      path: '/1/users/search',
+      body: props,
+    });
+    return data;
+  };
+
+  getFilterMapping() {
+    return {
+      country: {
+        label: 'Country',
+        getDisplayValue: (id) => countries.find((c) => c.value === id)?.text,
+      },
+      owner: {
+        label: 'Owner',
+        getDisplayValue: async (id) => {
+          const owners = await this.fetchOwners({
+            ids: [id],
+          });
+          return owners[0].name;
+        },
+      },
+      keyword: {},
+    };
+  }
+
   render() {
     return (
-      <SearchProvider onDataNeeded={this.onDataNeeded}>
-        {({ items: shops, getSorted, setSort, reload, loading, error }) => {
+      <Search.Provider
+        onDataNeeded={this.onDataNeeded}
+        filterMapping={this.getFilterMapping()}>
+        {({ items: shops, getSorted, setSort, reload }) => {
           return (
             <React.Fragment>
               <Breadcrumbs active="Shops" />
               <Layout horizontal center spread>
                 <h1>Shops</h1>
                 <Layout.Group>
-                  <Filters.Modal>
-                    {/* --- Generator: filters */}
-                    <Filters.Search
-                      label="Search"
-                      name="keyword"
-                      placeholder="Enter name or shop id"
-                    />
-                    <Filters.Dropdown
-                      label="Country"
-                      name="country"
-                      options={countries}
-                      search
-                    />
-                    {/* --- Generator: end */}
-                  </Filters.Modal>
+                  <Search.Export filename="shops" />
                   <EditShop
                     trigger={<Button primary content="New Shop" icon="plus" />}
                     onSave={reload}
                   />
                 </Layout.Group>
               </Layout>
-              <ErrorMessage error={error} />
-              {loading ? (
-                <Loader active />
-              ) : shops.length === 0 ? (
-                <Message>No shops created yet</Message>
-              ) : (
+
+              <Segment>
+                <Layout horizontal center spread stackable>
+                  <SearchFilters.Modal>
+                    {/* --- Generator: filters */}
+
+                    <SearchFilters.Dropdown
+                      options={countries}
+                      search
+                      name="country"
+                      label="Country"
+                    />
+
+                    <SearchFilters.Dropdown
+                      onDataNeeded={(name) => this.fetchOwners({ name })}
+                      search
+                      name="owner"
+                      label="Owner"
+                    />
+
+                    {/* --- Generator: end */}
+                  </SearchFilters.Modal>
+
+                  <Layout horizontal stackable center right>
+                    <Search.Total />
+                    <SearchFilters.Search name="keyword" />
+                  </Layout>
+                </Layout>
+              </Segment>
+
+              <Search.Status />
+
+              {shops.length !== 0 && (
                 <Table celled sortable>
                   <Table.Header>
                     <Table.Row>
@@ -134,11 +183,11 @@ export default class ShopList extends React.Component {
                 </Table>
               )}
               <Divider hidden />
-              <SearchProvider.Pagination />
+              <Search.Pagination />
             </React.Fragment>
           );
         }}
-      </SearchProvider>
+      </Search.Provider>
     );
   }
 }

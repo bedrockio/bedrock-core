@@ -2,9 +2,9 @@ import React from 'react';
 import { Table, Button, Message, Divider, Loader, Confirm } from 'semantic';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
-import { SearchProvider } from 'components/search';
+
 import EditApplication from 'modals/EditApplication';
-import { Breadcrumbs, Layout } from 'components';
+import { Breadcrumbs, Layout, Search } from 'components';
 import { Link } from 'react-router-dom';
 
 @screen
@@ -19,7 +19,7 @@ export default class Applications extends React.Component {
 
   render() {
     return (
-      <SearchProvider onDataNeeded={this.onDataNeeded}>
+      <Search.Provider onDataNeeded={this.onDataNeeded}>
         {({ items, getSorted, setSort, reload, loading, error }) => {
           return (
             <React.Fragment>
@@ -105,11 +105,11 @@ export default class Applications extends React.Component {
                 </Table>
               )}
               <Divider hidden />
-              <SearchProvider.Pagination />
+              <Search.Pagination />
             </React.Fragment>
           );
         }}
-      </SearchProvider>
+      </Search.Provider>
     );
   }
 }

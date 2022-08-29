@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Route, Redirect } from 'react-router-dom';
+
 import AuthSwitch from './AuthSwitch';
 
 export default class Protected extends React.Component {
@@ -8,12 +9,15 @@ export default class Protected extends React.Component {
     const {
       allowed: AllowedComponent,
       denied: DeniedComponent,
+      loggedOut: LoggedOutComponent,
       ...rest
     } = this.props;
     return (
       <AuthSwitch
+        captureRedirect
+        denied={DeniedComponent}
         loggedIn={AllowedComponent}
-        loggedOut={DeniedComponent}
+        loggedOut={LoggedOutComponent}
         {...rest}
       />
     );
@@ -29,5 +33,10 @@ Protected.propTypes = {
 };
 
 Protected.defaultProps = {
-  denied: () => <Redirect to="/" />,
+  loggedOut: () => {
+    return <Redirect to="/login" />;
+  },
+  denied: () => {
+    return <Redirect to="/" />;
+  },
 };

@@ -1,20 +1,20 @@
 import { APP_NAME } from 'utils/env';
 import { snakeCase } from 'lodash';
 
-const KEY = `${snakeCase(APP_NAME)}_jwt`;
+export const JWT_KEY = `${snakeCase(APP_NAME)}_jwt`;
 
 export function hasToken() {
   return !!getToken();
 }
 
 export function getToken() {
-  return localStorage.getItem(KEY);
+  return localStorage.getItem(JWT_KEY);
 }
 
 export function setToken(token) {
   if (token) {
-    localStorage.setItem(KEY, token);
+    localStorage.setItem(JWT_KEY, token);
   } else {
-    localStorage.removeItem(KEY);
+    localStorage.removeItem(JWT_KEY);
   }
 }
