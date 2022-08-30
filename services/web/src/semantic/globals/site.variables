@@ -344,7 +344,13 @@
   0px 2px 4px 0px rgba(34, 36, 38, 0.12),
   0px 2px 10px 0px rgba(34, 36, 38, 0.15)
 ;
-// todo: nocturnal pure black variants
+@nocturnalSubtleShadow:
+  0px 1px 2px 0 rgba(0, 0, 0, 0.12)
+;
+@nocturnalFloatingShadow:
+  0px 2px 4px 0 rgba(0, 0, 0, 0.12),
+  0px 2px 10px 0 rgba(0, 0, 0, 0.15)
+;
 
 /*******************************
            Power-User
