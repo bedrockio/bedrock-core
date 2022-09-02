@@ -7,7 +7,7 @@ const { User, AuditEntry } = require('../models');
 
 const mfa = require('../utils/mfa');
 const sms = require('../utils/sms');
-const { createAuthToken, generateTokenId } = require('../utils/tokens');
+const { createAuthToken } = require('../utils/tokens');
 const { sendTemplatedMail } = require('../utils/mailer');
 const { validateBody } = require('../utils/middleware/validate');
 const { verifyLoginAttempts } = require('../utils/auth');
@@ -96,12 +96,12 @@ router
         user: user.id,
       });
 
-      const authTokenId = generateTokenId();
-      user.addAuthTokenId(authTokenId);
+      const { token, payload } = createAuthToken(user);
+      user.addAuthToken(payload);
       await user.save();
 
       ctx.body = {
-        data: { token: createAuthToken(user.id, authTokenId) },
+        data: { token: token },
       };
     }
   );

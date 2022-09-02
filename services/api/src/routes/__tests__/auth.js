@@ -122,7 +122,10 @@ describe('/1/auth', () => {
       expect(response.status).toBe(200);
       const decodeToken = jwt.decode(response.body.data.token, { complete: true });
       const updatedUser = await User.findById(user.id);
-      expect(updatedUser.authTokenIds).toContain(decodeToken.payload.jti);
+      expect(updatedUser.authTokens).toHaveLength(1);
+      const entry = updatedUser.authTokens[0];
+      expect(entry.jti).toBe(decodeToken.payload.jti);
+      expect(entry.exp.valueOf()).toBe(decodeToken.payload.exp * 1000);
     });
   });
 
@@ -286,8 +289,8 @@ describe('/1/auth', () => {
       const updatedUser = await User.findById(user.id);
       await expect(verifyPassword(updatedUser, password)).resolves.not.toThrow();
       expect(updatedUser.tempTokenId).not.toBeDefined();
-      expect(updatedUser.authTokenIds).toHaveLength(1);
-      expect(updatedUser.authTokenIds).toContain(payload.jti);
+      expect(updatedUser.authTokens).toHaveLength(1);
+      expect(updatedUser.authTokens[0].jti).toContain(payload.jti);
     });
 
     it('should error when user is not found', async () => {
@@ -348,7 +351,7 @@ describe('/1/auth', () => {
       const tokenId = generateTokenId();
       const token = createTemporaryToken({ type: 'password', sub: user.id, jti: tokenId });
       user.tempTokenId = 'different id';
-      user.save();
+      await user.save();
 
       let response = await request(
         'POST',

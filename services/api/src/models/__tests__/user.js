@@ -1,5 +1,6 @@
 const User = require('../user');
 const mongoose = require('mongoose');
+const { omit } = require('lodash');
 
 describe('User', () => {
   describe('serialization', () => {
@@ -58,26 +59,33 @@ describe('User', () => {
     });
   });
 
-  describe('addAuthTokenId', () => {
+  describe('addAuthToken', () => {
     it('should add a authToken', () => {
       const user = new User({
         firstName: 'Neo',
         lastName: 'One',
         email: 'good@email.com',
       });
-      user.addAuthTokenId('12345');
-      expect([...user.authTokenIds]).toEqual(['12345']);
+      const exp = new Date();
+      user.addAuthToken({ exp: exp / 1000, jti: 'abc' });
+      const authTokens = [...user.authTokens].map((t) => omit(t.toObject(), ['_id']));
+      expect(authTokens).toEqual([{ exp, jti: 'abc' }]);
     });
 
-    it('should remove the oldest authtoken', () => {
+    it('should remove the expired entries', () => {
       const user = new User({
         firstName: 'Neo',
         lastName: 'One',
         email: 'good@email.com',
-        authTokenIds: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+        authTokens: [
+          {
+            jti: 'a',
+            exp: new Date(0),
+          },
+        ],
       });
-      user.addAuthTokenId('11');
-      expect([...user.authTokenIds]).toEqual(['2', '3', '4', '5', '6', '7', '8', '9', '10', '11']);
+      user.addAuthToken({ jti: 'b', exp: 10000 });
+      expect([...user.authTokens]).toHaveLength(1);
     });
   });
 });

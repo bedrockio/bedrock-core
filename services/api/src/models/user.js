@@ -16,13 +16,10 @@ schema.virtual('password').set(function (password) {
   this._password = password;
 });
 
-schema.methods.addAuthTokenId = function (authTokenId) {
-  this.authTokenIds.push(authTokenId);
-  // pushes out old token that most likely expired
-  // we dont want this collection to keep growing + we dont have users to have that many valid tokens
-  if (this.authTokenIds.length > 10) {
-    this.authTokenIds = this.authTokenIds.slice(1);
-  }
+schema.methods.addAuthToken = function ({ exp, jti }) {
+  // filter out any expired tokens + prevent that we are not adding a duplicate
+  const authTokens = (this.authTokens || []).filter((token) => token.jti !== jti && token.exp > Date.now());
+  this.authTokens = [...authTokens, { exp: new Date(exp * 1000), jti }];
 };
 
 schema.pre('save', async function preSave(next) {

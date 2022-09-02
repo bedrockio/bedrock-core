@@ -60,11 +60,16 @@
       "type": "Date",
       "writeScopes": "none"
     },
-    "authTokenIds": [
+    "authTokens": [
       {
-        "type": "String",
-        "readScopes": "none",
-        "writeScopes": "none"
+        "jti": {
+          "type": "String",
+          "required": true
+        },
+        "exp": {
+          "type": "Date",
+          "required": true
+        }
       }
     ],
     "tempTokenId": {

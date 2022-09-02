@@ -32,11 +32,12 @@ router
         ctx.throw(400, 'A user with that email already exists');
       }
 
-      const authTokenId = generateTokenId();
-      const user = await User.create({
-        authTokenIds: [authTokenId],
+      const user = new User({
         ...ctx.request.body,
       });
+      const { token, payload } = createAuthToken(user);
+      user.addAuthToken(payload);
+      await user.save();
 
       await AuditEntry.append('registered', ctx, {
         object: user,
@@ -49,7 +50,7 @@ router
       });
 
       ctx.body = {
-        data: { token: createAuthToken(user.id, authTokenId) },
+        data: { token },
       };
     }
   )
@@ -106,8 +107,8 @@ router
         return;
       }
 
-      const authTokenId = generateTokenId();
-      user.addAuthTokenId(authTokenId);
+      const { token, payload } = createAuthToken(user);
+      user.addAuthToken(payload);
       await user.save();
 
       await AuditEntry.append('successfully authenticated', ctx, {
@@ -116,7 +117,7 @@ router
       });
 
       ctx.body = {
-        data: { token: createAuthToken(user.id, authTokenId) },
+        data: { token: token },
       };
     }
   )
@@ -207,25 +208,28 @@ router
       if (!invite) {
         return ctx.throw(400, 'Invite could not be found');
       }
-      const authTokenId = generateTokenId();
+
       const existingUser = await User.findOne({ email: invite.email });
 
       if (existingUser) {
-        existingUser.addAuthTokenId(authTokenId);
+        const { token, payload } = createAuthToken(existingUser);
+        existingUser.addAuthToken(payload);
         await existingUser.save();
         ctx.body = {
-          data: { token: createAuthToken(existingUser.id, authTokenId) },
+          data: { token },
         };
         return;
       }
 
-      const user = await User.create({
+      const user = new User({
         firstName,
         lastName,
         email: invite.email,
         password,
-        authTokenIds: [authTokenId],
       });
+      const { token, payload } = createAuthToken(user);
+      user.addAuthToken(payload);
+      await user.save();
 
       await AuditEntry.append('registered', ctx, {
         object: user,
@@ -233,7 +237,7 @@ router
       });
 
       ctx.body = {
-        data: { token: createAuthToken(user.id, authTokenId) },
+        data: { token },
       };
     }
   )
@@ -287,8 +291,9 @@ router
       user.loginAttempts = 0;
       user.password = password;
       user.tempTokenId = undefined;
-      const authTokenId = generateTokenId();
-      user.authTokenIds = [authTokenId];
+      const { token, payload } = createAuthToken(user);
+
+      user.addAuthToken(payload);
       await user.save();
 
       await AuditEntry.append('reset password', ctx, {
@@ -297,7 +302,7 @@ router
       });
 
       ctx.body = {
-        data: { token: createAuthToken(user.id, authTokenId) },
+        data: { token },
       };
     }
   );
