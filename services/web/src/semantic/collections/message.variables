@@ -16,6 +16,7 @@
 @padding: @verticalPadding @horizontalPadding;
 @background: #F8F8F9;
 @lineHeightOffset: ((@lineHeight - 1em) / 2);
+@nocturnalBackground: rgb(hsl(hue(@pageBackground), (saturation(@pageBackground) / 2), (lightness(@nocturnalPageBackground) + (100% - lightness(@background)) * 2)));
 
 @borderRadius: @defaultBorderRadius;
 @borderWidth: 1px;
@@ -25,6 +26,8 @@
   @borderShadow,
   @shadowShadow
 ;
+@nocturnalBorderShadow: 0px 0px 0px @borderWidth @nocturnalStrongBorderColor inset;
+@nocturnalBoxShadow: @nocturnalBorderShadow, @shadowShadow;
 
 @transition:
   opacity @defaultDuration @defaultEasing,
@@ -80,56 +83,118 @@
   @attachedBoxShadow,
   @subtleShadow
 ;
+@nocturnalAttachedBoxShadow: 0em 0em 0em @borderWidth @nocturnalBorderColor inset;
+@nocturnalAttachedBottomBoxShadow: @nocturnalAttachedBoxShadow, @nocturnalSubtleShadow;
 
 /* Floating */
 @floatingBoxShadow:
   @borderShadow,
   @floatingShadow
 ;
+@nocturnalFloatingBoxShadow:
+  @nocturnalBorderShadow,
+  @nocturnalFloatingShadow
+;
 
 /* Colors */
+@nocturnalRedBackground: rgb(hsl(hue(@redHeaderColor), (saturation(@redBackground)), (lightness(@nocturnalPageBackground) + (100% - lightness(@redBackground)) / 2)));
+@nocturnalOrangeBackground: rgb(hsl(hue(@orangeHeaderColor), (saturation(@orangeBackground)), (lightness(@nocturnalPageBackground) + (100% - lightness(@orangeBackground)) / 2)));
+@nocturnalYellowBackground: rgb(hsl(hue(@yellowHeaderColor), (saturation(@yellowBackground)), (lightness(@nocturnalPageBackground) + (100% - lightness(@yellowBackground)) / 2)));
+@nocturnalOliveBackground: rgb(hsl(hue(@oliveHeaderColor), (saturation(@oliveBackground)), (lightness(@nocturnalPageBackground) + (100% - lightness(@oliveBackground)) / 2)));
+@nocturnalGreenBackground: rgb(hsl(hue(@greenHeaderColor), (saturation(@greenBackground)), (lightness(@nocturnalPageBackground) + (100% - lightness(@greenBackground)) / 2)));
+@nocturnalTealBackground: rgb(hsl(hue(@tealHeaderColor), (saturation(@tealBackground)), (lightness(@nocturnalPageBackground) + (100% - lightness(@tealBackground)) / 2)));
+@nocturnalBlueBackground: rgb(hsl(hue(@blueHeaderColor), (saturation(@blueBackground)), (lightness(@nocturnalPageBackground) + (100% - lightness(@blueBackground)) / 2)));
+@nocturnalVioletBackground: rgb(hsl(hue(@violetHeaderColor), (saturation(@violetBackground)), (lightness(@nocturnalPageBackground) + (100% - lightness(@violetBackground)) / 2)));
+@nocturnalPurpleBackground: rgb(hsl(hue(@purpleHeaderColor), (saturation(@purpleBackground)), (lightness(@nocturnalPageBackground) + (100% - lightness(@purpleBackground)) / 2)));
+@nocturnalPinkBackground: rgb(hsl(hue(@pinkHeaderColor), (saturation(@pinkBackground)), (lightness(@nocturnalPageBackground) + (100% - lightness(@pinkBackground)) / 2)));
+@nocturnalBrownBackground: rgb(hsl(hue(@brownHeaderColor), (saturation(@brownBackground)), (lightness(@nocturnalPageBackground) + (100% - lightness(@brownBackground)) / 2)));
+
 @redBoxShadow:
   0px 0px 0px @borderWidth @redBorderColor inset,
+  @shadowShadow
+;
+@nocturnalRedBoxShadow:
+  0px 0px 0px @borderWidth rgba(@redTextColor, .5) inset,
   @shadowShadow
 ;
 @orangeBoxShadow:
   0px 0px 0px @borderWidth @orangeBorderColor inset,
   @shadowShadow
 ;
+@nocturnalOrangeBoxShadow:
+  0px 0px 0px @borderWidth rgba(@orangeTextColor, .5) inset,
+  @shadowShadow
+;
 @yellowBoxShadow:
   0px 0px 0px @borderWidth @yellowBorderColor inset,
+  @shadowShadow
+;
+@nocturnalYellowBoxShadow:
+  0px 0px 0px @borderWidth rgba(@yellowTextColor, .5) inset,
   @shadowShadow
 ;
 @oliveBoxShadow:
   0px 0px 0px @borderWidth @oliveBorderColor inset,
   @shadowShadow
 ;
+@nocturnalOliveBoxShadow:
+  0px 0px 0px @borderWidth rgba(@oliveTextColor, .5) inset,
+  @shadowShadow
+;
 @greenBoxShadow:
   0px 0px 0px @borderWidth @greenBorderColor inset,
+  @shadowShadow
+;
+@nocturnalGreenBoxShadow:
+  0px 0px 0px @borderWidth rgba(@greenTextColor, .5) inset,
   @shadowShadow
 ;
 @tealBoxShadow:
   0px 0px 0px @borderWidth @tealBorderColor inset,
   @shadowShadow
 ;
+@nocturnalTealBoxShadow:
+  0px 0px 0px @borderWidth rgba(@tealTextColor, .5) inset,
+  @shadowShadow
+;
 @blueBoxShadow:
   0px 0px 0px @borderWidth @blueBorderColor inset,
+  @shadowShadow
+;
+@nocturnalBlueBoxShadow:
+  0px 0px 0px @borderWidth rgba(@blueTextColor, .5) inset,
   @shadowShadow
 ;
 @violetBoxShadow:
   0px 0px 0px @borderWidth @violetBorderColor inset,
   @shadowShadow
 ;
+@nocturnalVioletBoxShadow:
+  0px 0px 0px @borderWidth rgba(@violetTextColor, .5) inset,
+  @shadowShadow
+;
 @purpleBoxShadow:
   0px 0px 0px @borderWidth @purpleBorderColor inset,
+  @shadowShadow
+;
+@nocturnalPurpleBoxShadow:
+  0px 0px 0px @borderWidth rgba(@purpleTextColor, .5) inset,
   @shadowShadow
 ;
 @pinkBoxShadow:
   0px 0px 0px @borderWidth @pinkBorderColor inset,
   @shadowShadow
 ;
+@nocturnalPinkBoxShadow:
+  0px 0px 0px @borderWidth rgba(@pinkTextColor, .5) inset,
+  @shadowShadow
+;
 @brownBoxShadow:
   0px 0px 0px @borderWidth @brownBorderColor inset,
+  @shadowShadow
+;
+@nocturnalBrownBoxShadow:
+  0px 0px 0px @borderWidth rgba(@brownTextColor, .5) inset,
   @shadowShadow
 ;
 
@@ -138,23 +203,47 @@
   0px 0px 0px @borderWidth @positiveBorderColor inset,
   @shadowShadow
 ;
+@nocturnalPositiveBoxShadow:
+  0px 0px 0px @borderWidth @nocturnalPositiveBorderColor inset,
+  @shadowShadow
+;
 @negativeBoxShadow:
   0px 0px 0px @borderWidth @negativeBorderColor inset,
+  @shadowShadow
+;
+@nocturnalNegativeBoxShadow:
+  0px 0px 0px @borderWidth @nocturnalNegativeBorderColor inset,
   @shadowShadow
 ;
 @infoBoxShadow:
   0px 0px 0px @borderWidth @infoBorderColor inset,
   @shadowShadow
 ;
+@nocturnalInfoBoxShadow:
+  0px 0px 0px @borderWidth @nocturnalInfoBorderColor inset,
+  @shadowShadow
+;
 @warningBoxShadow:
   0px 0px 0px @borderWidth @warningBorderColor inset,
+  @shadowShadow
+;
+@nocturnalWarningBoxShadow:
+  0px 0px 0px @borderWidth @nocturnalWarningBorderColor inset,
   @shadowShadow
 ;
 @errorBoxShadow:
   0px 0px 0px @borderWidth @errorBorderColor inset,
   @shadowShadow
 ;
+@nocturnalErrorBoxShadow:
+  0px 0px 0px @borderWidth @nocturnalErrorBorderColor inset,
+  @shadowShadow
+;
 @successBoxShadow:
   0px 0px 0px @borderWidth @successBorderColor inset,
+  @shadowShadow
+;
+@nocturnalSuccessBoxShadow:
+  0px 0px 0px @borderWidth @nocturnalSuccessBorderColor inset,
   @shadowShadow
 ;

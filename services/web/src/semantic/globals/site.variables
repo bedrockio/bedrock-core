@@ -278,15 +278,15 @@
 
 /*--- Colored Headers ---*/
 @redHeaderColor    : darken(@redTextColor, 5);
+@orangeHeaderColor : darken(@orangeTextColor, 5);
+@yellowHeaderColor : darken(@yellowTextColor, 5);
 @oliveHeaderColor  : darken(@oliveTextColor, 5);
 @greenHeaderColor  : darken(@greenTextColor, 5);
-@yellowHeaderColor : darken(@yellowTextColor, 5);
-@blueHeaderColor   : darken(@blueTextColor, 5);
 @tealHeaderColor   : darken(@tealTextColor, 5);
-@pinkHeaderColor   : darken(@pinkTextColor, 5);
+@blueHeaderColor   : darken(@blueTextColor, 5);
 @violetHeaderColor : darken(@violetTextColor, 5);
 @purpleHeaderColor : darken(@purpleTextColor, 5);
-@orangeHeaderColor : darken(@orangeTextColor, 5);
+@pinkHeaderColor   : darken(@pinkTextColor, 5);
 @brownHeaderColor  : darken(@brownTextColor, 5);
 
 /*--- Colored Text ---*/
@@ -534,6 +534,7 @@
 @selectedSolidWhiteBorderColor : #999999;
 
 @nocturnalBorderColor       : rgba(255,255,255,.2); // hsl(hue(@borderColor), saturation(@borderColor), (100% - lightness(@borderColor)) * 2);
+@nocturnalStrongBorderColor  : rgba(255,255,255,.25);
 @nocturnalInternalBorderColor: rgba(255,255,255,.3);
 @nocturnalSelectedBorderColor: rgba(255,255,255,.30);
 @nocturnalDisabledBorderColor: rgba(255,255,255,.45);

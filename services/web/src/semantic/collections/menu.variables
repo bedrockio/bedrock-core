@@ -107,8 +107,6 @@
 @nocturnalArrowVerticalActiveColor: @nocturnalArrowActiveColor;
 @nocturnalArrowVerticalSubMenuColor: @nocturnalBackground;
 
-// todo: nocturnal arrow colors;
-
 /*--------------
     Couplings
 ---------------*/

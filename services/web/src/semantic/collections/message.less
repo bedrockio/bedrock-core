@@ -25,6 +25,12 @@
   transition: @transition;
   border-radius: @borderRadius;
   box-shadow: @boxShadow;
+
+  .nocturnal-theme & {
+    background: @nocturnalBackground;
+    color: @nocturnalTextColor;
+    box-shadow: @nocturnalBoxShadow;
+  }
 }
 
 .ui.message:first-child {
@@ -181,6 +187,10 @@
   box-shadow: @attachedBoxShadow;
   margin-left: @attachedXOffset;
   margin-right: @attachedXOffset;
+
+  .nocturnal-theme & {
+    box-shadow: @nocturnalAttachedBoxShadow;
+  }
 }
 .ui.attached + .ui.attached.message:not(.top):not(.bottom) {
   margin-top: @attachedYOffset;
@@ -190,6 +200,10 @@
   margin-top: @attachedYOffset;
   border-radius: 0em 0em @borderRadius @borderRadius;
   box-shadow: @attachedBottomBoxShadow;
+
+  .nocturnal-theme & {
+    box-shadow: @nocturnalAttachedBottomBoxShadow;
+  }
 }
 .ui.bottom.attached.message:not(:last-child) {
   margin-bottom: @verticalMargin;
@@ -262,6 +276,19 @@
 .ui.positive.message .header {
   color: @positiveHeaderColor;
 }
+.nocturnal-theme {
+  .ui.positive.message {
+    background-color: @nocturnalPositiveBackgroundColor;
+    color: @nocturnalPositiveTextColor;
+  }
+  .ui.positive.message,
+  .ui.attached.positive.message {
+    box-shadow: @nocturnalPositiveBoxShadow;
+  }
+  .ui.positive.message .header {
+    color: @nocturnalPositiveHeaderColor;
+  }
+}
 
 /* Negative */
 .ui.negative.message {
@@ -274,6 +301,19 @@
 }
 .ui.negative.message .header {
   color: @negativeHeaderColor;
+}
+.nocturnal-theme {
+  .ui.negative.message {
+    background-color: @nocturnalNegativeBackgroundColor;
+    color: @nocturnalNegativeTextColor;
+  }
+  .ui.negative.message,
+  .ui.attached.negative.message {
+    box-shadow: @nocturnalNegativeBoxShadow;
+  }
+  .ui.negative.message .header {
+    color: @nocturnalNegativeHeaderColor;
+  }
 }
 
 /* Info */
@@ -288,6 +328,19 @@
 .ui.info.message .header {
   color: @infoHeaderColor;
 }
+.nocturnal-theme {
+  .ui.info.message {
+    background-color: @nocturnalInfoBackgroundColor;
+    color: @nocturnalInfoTextColor;
+  }
+  .ui.info.message,
+  .ui.attached.info.message {
+    box-shadow: @nocturnalInfoBoxShadow;
+  }
+  .ui.info.message .header {
+    color: @nocturnalInfoHeaderColor;
+  }
+}
 
 /* Warning */
 .ui.warning.message {
@@ -300,6 +353,19 @@
 }
 .ui.warning.message .header {
   color: @warningHeaderColor;
+}
+.nocturnal-theme {
+  .ui.warning.message {
+    background-color: @nocturnalWarningBackgroundColor;
+    color: @nocturnalWarningTextColor;
+  }
+  .ui.warning.message,
+  .ui.attached.warning.message {
+    box-shadow: @nocturnalWarningBoxShadow;
+  }
+  .ui.warning.message .header {
+    color: @nocturnalWarningHeaderColor;
+  }
 }
 
 /* Error */
@@ -314,6 +380,19 @@
 .ui.error.message .header {
   color: @errorHeaderColor;
 }
+.nocturnal-theme {
+  .ui.error.message {
+    background-color: @nocturnalErrorBackgroundColor;
+    color: @nocturnalErrorTextColor;
+  }
+  .ui.error.message,
+  .ui.attached.error.message {
+    box-shadow: @nocturnalErrorBoxShadow;
+  }
+  .ui.error.message .header {
+    color: @nocturnalErrorHeaderColor;
+  }
+}
 
 /* Success */
 .ui.success.message {
@@ -327,12 +406,30 @@
 .ui.success.message .header {
   color: @successHeaderColor;
 }
+.nocturnal-theme {
+  .ui.success.message {
+    background-color: @nocturnalSuccessBackgroundColor;
+    color: @nocturnalSuccessTextColor;
+  }
+  .ui.success.message,
+  .ui.attached.success.message {
+    box-shadow: @nocturnalSuccessBoxShadow;
+  }
+  .ui.success.message .header {
+    color: @nocturnalSuccessHeaderColor;
+  }
+}
 
 /* Colors */
 .ui.inverted.message,
 .ui.black.message {
   background-color: @black;
   color: @invertedTextColor;
+
+  .nocturnal-theme & {
+    background-color: @background;
+    color: @textColor;
+  }
 }
 
 .ui.red.message {
@@ -343,6 +440,16 @@
 .ui.red.message .header {
   color: @redHeaderColor;
 }
+.nocturnal-theme & {
+  .ui.red.message {
+    background-color: @nocturnalRedBackground;
+    color: mix(@redBorderColor, @redBackground, 25%);
+    box-shadow: @nocturnalRedBoxShadow;
+  }
+  .ui.red.message .header {
+    color: @redBackground;
+  }
+}
 
 .ui.orange.message {
   background-color: @orangeBackground;
@@ -351,6 +458,16 @@
 }
 .ui.orange.message .header {
   color: @orangeHeaderColor;
+}
+.nocturnal-theme {
+  .ui.orange.message {
+    background-color: @nocturnalOrangeBackground;
+    color: mix(@orangeBorderColor, @orangeBackground, 25%);
+    box-shadow: @nocturnalOrangeBoxShadow;
+  }
+  .ui.orange.message .header {
+    color: @orangeBackground;
+  }
 }
 
 .ui.yellow.message {
@@ -361,6 +478,16 @@
 .ui.yellow.message .header {
   color: @yellowHeaderColor;
 }
+.nocturnal-theme {
+  .ui.yellow.message {
+    background-color: @nocturnalYellowBackground;
+    color: mix(@yellowBorderColor, @yellowBackground, 25%);
+    box-shadow: @nocturnalYellowBoxShadow;
+  }
+  .ui.yellow.message .header {
+    color: @yellowBackground;
+  }
+}
 
 .ui.olive.message {
   background-color: @oliveBackground;
@@ -369,6 +496,16 @@
 }
 .ui.olive.message .header {
   color: @oliveHeaderColor;
+}
+.nocturnal-theme {
+  .ui.olive.message {
+    background-color: @nocturnalOliveBackground;
+    color: mix(@oliveBorderColor, @oliveBackground, 25%);
+    box-shadow: @nocturnalOliveBoxShadow;
+  }
+  .ui.olive.message .header {
+    color: @oliveBackground;
+  }
 }
 
 .ui.green.message {
@@ -379,6 +516,16 @@
 .ui.green.message .header {
   color: @greenHeaderColor;
 }
+.nocturnal-theme {
+  .ui.green.message {
+    background-color: @nocturnalGreenBackground;
+    color: mix(@greenBorderColor, @greenBackground, 25%);
+    box-shadow: @nocturnalGreenBoxShadow;
+  }
+  .ui.green.message .header {
+    color: @greenBackground;
+  }
+}
 
 .ui.teal.message {
   background-color: @tealBackground;
@@ -387,6 +534,16 @@
 }
 .ui.teal.message .header {
   color: @tealHeaderColor;
+}
+.nocturnal-theme {
+  .ui.teal.message {
+    background-color: @nocturnalTealBackground;
+    color: mix(@tealBorderColor, @tealBackground, 25%);
+    box-shadow: @nocturnalTealBoxShadow;
+  }
+  .ui.teal.message .header {
+    color: @tealBackground;
+  }
 }
 
 .ui.blue.message {
@@ -397,6 +554,16 @@
 .ui.blue.message .header {
   color: @blueHeaderColor;
 }
+.nocturnal-theme {
+  .ui.blue.message {
+    background-color: @nocturnalBlueBackground;
+    color: mix(@blueBorderColor, @blueBackground, 25%);
+    box-shadow: @nocturnalBlueBoxShadow;
+  }
+  .ui.blue.message .header {
+    color: @blueBackground;
+  }
+}
 
 .ui.violet.message {
   background-color: @violetBackground;
@@ -405,6 +572,16 @@
 }
 .ui.violet.message .header {
   color: @violetHeaderColor;
+}
+.nocturnal-theme {
+  .ui.violet.message {
+    background-color: @nocturnalVioletBackground;
+    color: mix(@violetBorderColor, @violetBackground, 25%);
+    box-shadow: @nocturnalVioletBoxShadow;
+  }
+  .ui.violet.message .header {
+    color: @violetBackground;
+  }
 }
 
 .ui.purple.message {
@@ -415,6 +592,16 @@
 .ui.purple.message .header {
   color: @purpleHeaderColor;
 }
+.nocturnal-theme {
+  .ui.purple.message {
+    background-color: @nocturnalPurpleBackground;
+    color: mix(@purpleBorderColor, @purpleBackground, 25%);
+    box-shadow: @nocturnalPurpleBoxShadow;
+  }
+  .ui.purple.message .header {
+    color: @purpleBackground;
+  }
+}
 
 .ui.pink.message {
   background-color: @pinkBackground;
@@ -424,6 +611,16 @@
 .ui.pink.message .header {
   color: @pinkHeaderColor;
 }
+.nocturnal-theme {
+  .ui.pink.message {
+    background-color: @nocturnalPinkBackground;
+    color: mix(@pinkBorderColor, @pinkBackground, 25%);
+    box-shadow: @nocturnalPinkBoxShadow;
+  }
+  .ui.pink.message .header {
+    color: @pinkBackground;
+  }
+}
 
 .ui.brown.message {
   background-color: @brownBackground;
@@ -432,6 +629,16 @@
 }
 .ui.brown.message .header {
   color: @brownHeaderColor;
+}
+.nocturnal-theme {
+  .ui.brown.message {
+    background-color: @nocturnalBrownBackground;
+    color: mix(@brownBorderColor, @brownBackground);
+    box-shadow: @nocturnalBrownBoxShadow;
+  }
+  .ui.brown.message .header {
+    color: @brownBackground;
+  }
 }
 
 /*--------------
