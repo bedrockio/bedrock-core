@@ -32,9 +32,9 @@ export default class ShowAuditEntry extends React.Component {
             />
             <Menu.Item
               disabled={!auditEntry.objectAfter || !auditEntry.objectBefore}
-              content="Modifitions"
-              active={this.state.tab === 'modifitions'}
-              onClick={() => this.setState({ tab: 'modifitions' })}
+              content="Modifications"
+              active={this.state.tab === 'modifications'}
+              onClick={() => this.setState({ tab: 'modifications' })}
             />
           </Menu>
           <Divider hidden />
@@ -86,7 +86,7 @@ export default class ShowAuditEntry extends React.Component {
               </Table>
             </>
           )}
-          {this.state.tab === 'modifitions' && (
+          {this.state.tab === 'modifications' && (
             <>
               <h3>Before</h3>
               <CodeBlock
