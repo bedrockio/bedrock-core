@@ -51,6 +51,14 @@ export default class Security extends React.Component {
     }
   };
 
+  logout = async (body) => {
+    return request({
+      method: 'POST',
+      path: '/1/auth/logout',
+      body,
+    });
+  };
+
   render() {
     const { error } = this.state;
     const { mfaMethod, authTokens } = this.context.user;
@@ -146,7 +154,7 @@ export default class Security extends React.Component {
         )}
         <br />
         <br />
-        <Header>Sessions</Header>
+        <Header>Authenticated Sessions</Header>
         <Segment>
           <Table basic="very">
             <Table.Header>
@@ -167,12 +175,12 @@ export default class Security extends React.Component {
                     <Table.Cell>{token.ip}</Table.Cell>
                     <Table.Cell>{formatDateTime(token.iat)}</Table.Cell>
                     <Table.Cell>
-                      <Button
+                      <LoadButton
                         basic
                         size="small"
-                        onClick={() => this.deleteToken(token.id)}>
+                        onClick={() => this.logout({ id: token.id })}>
                         Logout
-                      </Button>
+                      </LoadButton>
                     </Table.Cell>
                   </Table.Row>
                 );
