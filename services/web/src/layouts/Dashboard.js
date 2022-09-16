@@ -84,6 +84,10 @@ export default class DashboardLayout extends React.Component {
                   scope: 'global',
                 }) && (
                   <React.Fragment>
+                    <Sidebar.Link to="/audit-trail">
+                      <Icon name="list-ol" />
+                      Audit Trail
+                    </Sidebar.Link>
                     <Sidebar.Link to="/applications">
                       <Icon name="terminal" />
                       Applications

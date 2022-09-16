@@ -8,9 +8,6 @@
     "routeNormalizedPath": {
       "type": "String"
     },
-    "routePrefix": {
-      "type": "String"
-    },
     "requestId": {
       "type": "String"
     },

@@ -12,7 +12,6 @@ schema.statics.getContextFields = function (ctx) {
     requestMethod: ctx.request.method,
     requestUrl: ctx.request.url,
     routeNormalizedPath: ctx.routerPath,
-    routePrefix: ctx.router.opts.prefix,
   };
 };
 
@@ -52,7 +51,7 @@ schema.statics.getObjectFields = function getObjectFields(object, fields = []) {
   return objectFields;
 };
 
-schema.statics.append = function (activity, ctx, { object, fields, type, ...options }) {
+schema.statics.append = function (activity, ctx, { object, fields, category, ...options }) {
   const fromContext = this.getContextFields(ctx);
 
   if (object) {
@@ -64,6 +63,7 @@ schema.statics.append = function (activity, ctx, { object, fields, type, ...opti
     return;
   }
 
+  console.log('options.user || fromContext.user', options.user || fromContext.user);
   return this.create({
     ...fromContext,
     activity,
@@ -71,9 +71,11 @@ schema.statics.append = function (activity, ctx, { object, fields, type, ...opti
     objectType: options.objectType,
     objectBefore: options.objectBefore,
     objectAfter: options.objectAfter,
-    type,
+    category,
     user: options.user || fromContext.user,
   });
 };
+
+schema.index({ category: 1, objectType: 1, createdAt: 1, activity: 1, routeNormalizedPath: 1 });
 
 module.exports = mongoose.models.AuditEntry || mongoose.model('AuditEntry', schema);
