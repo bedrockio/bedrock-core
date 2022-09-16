@@ -1,5 +1,5 @@
 const { authenticate, fetchUser } = require('../authenticate');
-const { createAuthToken } = require('../../tokens');
+
 const { setupDb, teardownDb, context, createUser } = require('../../testing');
 const jwt = require('jsonwebtoken');
 const config = require('@bedrockio/config');

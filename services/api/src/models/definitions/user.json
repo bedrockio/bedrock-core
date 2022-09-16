@@ -62,8 +62,19 @@
     },
     "authTokens": [
       {
-        "useragent": {
-          "type": "String"
+        "userAgent": {
+          "type": "String",
+          "writeScopes": "none"
+        },
+        "ip": {
+          "type": "String",
+          "required": true,
+          "writeScopes": "none"
+        },
+        "iat": {
+          "type": "Date",
+          "required": true,
+          "writeScopes": "none"
         },
         "jti": {
           "type": "String",
@@ -74,7 +85,7 @@
         "exp": {
           "type": "Date",
           "required": true,
-          "readScopes": "none",
+          "readScopes": "read",
           "writeScopes": "none"
         }
       }

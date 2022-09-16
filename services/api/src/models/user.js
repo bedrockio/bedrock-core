@@ -16,10 +16,20 @@ schema.virtual('password').set(function (password) {
   this._password = password;
 });
 
-schema.methods.addAuthToken = function ({ exp, jti }, useragent) {
+schema.methods.addAuthToken = function ({ exp, jti, iat }, ctx) {
   // filter out any expired tokens + prevent that we are not adding a duplicate
   const authTokens = (this.authTokens || []).filter((token) => token.jti !== jti && token.exp > Date.now());
-  this.authTokens = [...authTokens, { exp: new Date(exp * 1000), jti, useragent }];
+
+  this.authTokens = [
+    ...authTokens,
+    {
+      exp: new Date(exp * 1000),
+      jti,
+      iat: new Date(iat * 1000),
+      ip: ctx.get('x-forwarded-for') || ctx.ip,
+      userAgent: ctx.get('user-agent'),
+    },
+  ];
 };
 
 schema.pre('save', async function preSave(next) {

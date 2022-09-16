@@ -29,6 +29,7 @@ function createAuthToken(user) {
 
   const payload = {
     sub: user.id,
+    iat: Math.floor(Date.now() / 1000),
     jti,
     type: 'user',
     kid: 'user',

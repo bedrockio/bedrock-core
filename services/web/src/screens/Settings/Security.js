@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Segment, Button, Divider, Header, Label } from 'semantic';
+import { Segment, Button, Divider, Header, Label, Table } from 'semantic';
 
 import screen from 'helpers/screen';
 import { request } from 'utils/api';
@@ -9,6 +9,7 @@ import { withSession } from 'stores';
 import { Layout } from 'components';
 import LoadButton from 'components/LoadButton';
 import ErrorMessage from 'components/ErrorMessage';
+import { formatDateTime } from 'utils/date';
 
 import Menu from './Menu';
 
@@ -52,7 +53,7 @@ export default class Security extends React.Component {
 
   render() {
     const { error } = this.state;
-    const { mfaMethod } = this.context.user;
+    const { mfaMethod, authTokens } = this.context.user;
 
     return (
       <React.Fragment>
@@ -143,6 +144,45 @@ export default class Security extends React.Component {
             </Segment>
           </>
         )}
+        <br />
+        <br />
+        <Header>Sessions</Header>
+        <Segment>
+          <Table basic="very">
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell>Device/Agent</Table.HeaderCell>
+                <Table.HeaderCell>Ip</Table.HeaderCell>
+                <Table.HeaderCell>Created At</Table.HeaderCell>
+                <Table.HeaderCell>Action</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {authTokens.map((token) => {
+                return (
+                  <Table.Row key={token.id}>
+                    <Table.Cell>
+                      {token.userAgent || 'No User Agent provided'}
+                    </Table.Cell>
+                    <Table.Cell>{token.ip}</Table.Cell>
+                    <Table.Cell>{formatDateTime(token.iat)}</Table.Cell>
+                    <Table.Cell>
+                      <Button
+                        basic
+                        size="small"
+                        onClick={() => this.deleteToken(token.id)}>
+                        Logout
+                      </Button>
+                    </Table.Cell>
+                  </Table.Row>
+                );
+              })}
+            </Table.Body>
+          </Table>
+        </Segment>
+        <Button primary negative>
+          Logout all sessions
+        </Button>
       </React.Fragment>
     );
   }
