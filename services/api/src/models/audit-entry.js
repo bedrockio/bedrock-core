@@ -63,7 +63,6 @@ schema.statics.append = function (activity, ctx, { object, fields, category, ...
     return;
   }
 
-  console.log('options.user || fromContext.user', options.user || fromContext.user);
   return this.create({
     ...fromContext,
     activity,

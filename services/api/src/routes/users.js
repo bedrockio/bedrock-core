@@ -10,6 +10,8 @@ const { expandRoles } = require('./../utils/permissions');
 const roles = require('./../roles.json');
 const permissions = require('./../permissions.json');
 
+const { AuditEntry } = require('../models');
+
 const router = new Router();
 
 const passwordField = Joi.string()
@@ -103,6 +105,10 @@ router
       }
       const user = await User.create(ctx.request.body);
 
+      await AuditEntry.append('Created User', ctx, {
+        object: user,
+      });
+
       ctx.body = {
         data: user,
       };
@@ -123,7 +129,14 @@ router
     async (ctx) => {
       const { user } = ctx.state;
       user.assign(ctx.request.body);
+
       await user.save();
+
+      await AuditEntry.append('Updated user', ctx, {
+        object: user,
+        fields: ['email', 'roles'],
+      });
+
       ctx.body = {
         data: user,
       };
