@@ -97,7 +97,7 @@ router
       });
 
       const { token, payload } = createAuthToken(user);
-      user.addAuthToken(payload);
+      user.addAuthToken(payload, ctx.get('user-agent'));
       await user.save();
 
       ctx.body = {

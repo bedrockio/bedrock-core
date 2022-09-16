@@ -62,13 +62,20 @@
     },
     "authTokens": [
       {
+        "useragent": {
+          "type": "String"
+        },
         "jti": {
           "type": "String",
-          "required": true
+          "required": true,
+          "readScopes": "none",
+          "writeScopes": "none"
         },
         "exp": {
           "type": "Date",
-          "required": true
+          "required": true,
+          "readScopes": "none",
+          "writeScopes": "none"
         }
       }
     ],

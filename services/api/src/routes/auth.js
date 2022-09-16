@@ -36,7 +36,7 @@ router
         ...ctx.request.body,
       });
       const { token, payload } = createAuthToken(user);
-      user.addAuthToken(payload);
+      user.addAuthToken(payload, ctx.get('user-agent'));
       await user.save();
 
       await AuditEntry.append('registered', ctx, {
@@ -108,7 +108,7 @@ router
       }
 
       const { token, payload } = createAuthToken(user);
-      user.addAuthToken(payload);
+      user.addAuthToken(payload, ctx.get('user-agent'));
       await user.save();
 
       await AuditEntry.append('successfully authenticated', ctx, {
@@ -213,7 +213,7 @@ router
 
       if (existingUser) {
         const { token, payload } = createAuthToken(existingUser);
-        existingUser.addAuthToken(payload);
+        existingUser.addAuthToken(payload, ctx.get('user-agent'));
         await existingUser.save();
         ctx.body = {
           data: { token },
@@ -228,7 +228,7 @@ router
         password,
       });
       const { token, payload } = createAuthToken(user);
-      user.addAuthToken(payload);
+      user.addAuthToken(payload, ctx.get('user-agent'));
       await user.save();
 
       await AuditEntry.append('registered', ctx, {
@@ -293,7 +293,7 @@ router
       user.tempTokenId = undefined;
       const { token, payload } = createAuthToken(user);
 
-      user.addAuthToken(payload);
+      user.addAuthToken(payload, ctx.get('user-agent'));
       await user.save();
 
       await AuditEntry.append('reset password', ctx, {
