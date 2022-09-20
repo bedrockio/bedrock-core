@@ -24,6 +24,9 @@
 @commentLineHeight: 1.2;
 @firstCommentMargin: 0em;
 @firstCommentPadding: 0em;
+@nocturnalCommentBackground: none;
+@nocturnalCommentDivider: none;
+@nocturnalCommentBorder: none;
 
 /* Nested Comment */
 @nestedCommentsMargin: 0em 0em 0.5em 0.5em;
@@ -32,6 +35,9 @@
 @nestedCommentDivider: none;
 @nestedCommentBorder: none;
 @nestedCommentBackground: none;
+@nocturnalNestedCommentDivider: none;
+@nocturnalNestedCommentBorder: none;
+@nocturnalNestedCommentBackground: none;
 
 /* Avatar */
 @avatarDisplay: block;
@@ -50,6 +56,8 @@
 @authorColor: @textColor;
 @authorHoverColor: @linkHoverColor;
 @authorFontWeight: @bold;
+@nocturnalAuthorColor: @nocturnalTextColor;
+@nocturnalAuthorHoverColor: @nocturnalLinkHoverColor;
 
 /* Metadata */
 @metadataDisplay: inline-block;
@@ -57,6 +65,7 @@
 @metadataSpacing: 0.5em;
 @metadataContentSpacing: 0.5em;
 @metadataColor: @lightTextColor;
+@nocturnalMetadataColor: @nocturnalUnselectedTextColor;
 
 /* Text */
 @textFontSize: 1em;
@@ -69,6 +78,8 @@
 @actionContentDistance: 0.75em;
 @actionLinkColor: @unselectedTextColor;
 @actionLinkHoverColor: @hoveredTextColor;
+@nocturnalActionLinkColor: @nocturnalLightTextColor;
+@nocturnalActionLinkHoverColor: @nocturnalHoveredTextColor;
 
 /* Reply */
 @replyDistance: 1em;
@@ -85,6 +96,7 @@
 @threadedCommentMargin: -1.5em 0 -1em  (@avatarWidth / 2);
 @threadedCommentPadding: 3em 0em 2em 2.25em;
 @threadedCommentBoxShadow: -1px 0px 0px @borderColor;
+@nocturnalThreadedCommentBoxShadow: -1px 0px 0px @nocturnalBorderColor;
 
 
 /* Minimal */
