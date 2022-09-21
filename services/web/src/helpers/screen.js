@@ -45,7 +45,8 @@ export default function (Component) {
     }
 
     renderCanonical() {
-      return <link rel="canonical" href={location.pathname} />;
+      const url = `${location.origin}${location.pathname}`;
+      return <link rel="canonical" href={url} />;
     }
   }
   return wrapComponent(Component, Screen);
