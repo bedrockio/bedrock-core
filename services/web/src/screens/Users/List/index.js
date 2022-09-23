@@ -14,6 +14,7 @@ import {
   Layout,
   Search,
   SearchFilters,
+  Confirm,
 } from 'components';
 
 import EditUser from 'modals/EditUser';

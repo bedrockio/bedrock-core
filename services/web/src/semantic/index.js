@@ -49,4 +49,3 @@ import './modules/transition.less';
 
 export * from 'semantic-ui-react';
 export { default as Icon } from './elements/Icon';
-export { default as Confirm } from './addons/Confirm';

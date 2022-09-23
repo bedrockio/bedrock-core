@@ -10,6 +10,7 @@ import {
   Layout,
   Search,
   SearchFilters,
+  Confirm,
 } from 'components';
 
 // --- Generator: list-imports

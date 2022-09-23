@@ -11,6 +11,7 @@ import {
   Layout,
   Search,
   SearchFilters,
+  Confirm,
 } from 'components';
 
 import EditOrganization from 'modals/EditOrganization';
