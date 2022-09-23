@@ -1,7 +1,7 @@
 import React from 'react';
 import { memoize } from 'lodash';
 import { Link } from 'react-router-dom';
-import { Table, Button, Label, Divider, Confirm, Segment } from 'semantic';
+import { Table, Button, Label, Divider, Segment } from 'semantic';
 
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
@@ -17,6 +17,7 @@ import {
 } from 'components';
 
 import EditUser from 'modals/EditUser';
+import Actions from '../Actions';
 
 @screen
 export default class UserList extends React.Component {
@@ -193,23 +194,12 @@ export default class UserList extends React.Component {
                           <Table.Cell textAlign="center" singleLine>
                             <EditUser
                               user={user}
-                              trigger={<Button basic icon="edit" />}
+                              trigger={
+                                <Button basic title="Edit" icon="edit" />
+                              }
                               onSave={reload}
                             />
-                            <Confirm
-                              negative
-                              confirmButton="Delete"
-                              header={`Are you sure you want to delete "${user.name}"?`}
-                              content="All data will be permanently deleted"
-                              trigger={<Button basic icon="trash" />}
-                              onConfirm={async () => {
-                                await request({
-                                  method: 'DELETE',
-                                  path: `/1/users/${user.id}`,
-                                });
-                                reload();
-                              }}
-                            />
+                            <Actions item={user} reload={reload} />
                           </Table.Cell>
                         </Table.Row>
                       );
