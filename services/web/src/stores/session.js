@@ -6,8 +6,11 @@ import { request, hasToken, setToken } from 'utils/api';
 import { trackSession } from 'utils/analytics';
 import { captureError } from 'utils/sentry';
 import { wrapContext } from 'utils/hoc';
+import { getStorage } from 'utils/storage';
 
 const SessionContext = React.createContext();
+
+const localStorage = getStorage();
 
 @withRouter
 export class SessionProvider extends React.PureComponent {
