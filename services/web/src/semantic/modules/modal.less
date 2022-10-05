@@ -30,6 +30,12 @@
   border-radius: @borderRadius;
   user-select: text;
   will-change: top, left, margin, transform, opacity;
+
+  .nocturnal-theme & {
+    background: @nocturnalBackground;
+    border: @nocturnalBorder;
+    box-shadow: @nocturnalBoxShadow;
+  }
 }
 
 .ui.modal > :first-child:not(.icon),
@@ -70,6 +76,13 @@
   border-radius: 50%;
   box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.075);
   border: 1px solid #d1d5db;
+
+  .nocturnal-theme & {
+    color: @nocturnalCloseColor;
+    background: @nocturnalHeaderBackground;
+    box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.15);
+    border: @nocturnalHeaderBorder;
+  }
 }
 .ui.modal > .close:hover {
   opacity: 1;
@@ -89,6 +102,13 @@
 
   color: @headerColor;
   border-bottom: @headerBorder;
+
+  .nocturnal-theme & {
+    background: @nocturnalHeaderBackground;
+    box-shadow: @nocturnalHeaderBoxShadow;
+    color: @nocturnalHeaderColor;
+    border-bottom: @nocturnalHeaderBorder;
+  }
 }
 .ui.modal > .header:not(.ui) {
   font-size: @headerFontSize;
@@ -107,6 +127,10 @@
   line-height: @contentLineHeight;
   padding: @contentPadding;
   background: @contentBackground;
+
+  .nocturnal-theme & {
+    background: @nocturnalContentBackground;
+  }
 }
 .ui.modal > .image.content {
   display: flex;
@@ -164,6 +188,11 @@
   padding: @actionPadding;
   border-top: @actionBorder;
   text-align: @actionAlign;
+
+  .nocturnal-theme & {
+    background: @nocturnalActionBackground;
+    border-top: @nocturnalActionBorder;
+  }
 }
 .ui.modal .actions > .button {
   margin-left: @buttonDistance;
@@ -273,6 +302,10 @@
 
 .ui.inverted.dimmer > .ui.modal {
   box-shadow: @invertedBoxShadow;
+
+  .nocturnal-theme & {
+    box-shadow: @nocturnalInvertedBoxShadow;
+  }
 }
 
 /*******************************
@@ -290,6 +323,7 @@
 .ui.basic.modal > .content,
 .ui.basic.modal > .actions {
   background-color: transparent;
+  border: none;
 }
 .ui.basic.modal > .header {
   color: @basicModalHeaderColor;
@@ -300,10 +334,16 @@
 }
 
 .ui.inverted.dimmer > .basic.modal {
-  color: @basicInvertedModalColor;
+  &,
+  .nocturnal-theme & {
+    color: @basicInvertedModalColor;
+  }
 }
 .ui.inverted.dimmer > .ui.basic.modal > .header {
-  color: @basicInvertedModalHeaderColor;
+  &,
+  .nocturnal-theme & {
+    color: @basicInvertedModalHeaderColor;
+  }
 }
 
 /* Resort to margin positioning if legacy */
