@@ -69,9 +69,12 @@ function getInMemoryStorage() {
   return new Proxy(instance, handler);
 }
 
-export function getStorage(type = 'localStorage') {
+function getStorage(type = 'localStorage') {
   if (storageAvailable(type)) {
     return window[type];
   }
   return getInMemoryStorage();
 }
+
+export const localStorage = getStorage('localStorage');
+export const sessionStorage = getStorage('sessionStorage');
