@@ -18,9 +18,6 @@
 @boxShadow: none;
 @padding: 0em;
 @borderRadius: @defaultBorderRadius;
-@nocturnalBackground: @transparentWhite;
-@nocturnalBorder: none;
-@nocturnalBoxShadow: 0 0 2px 0 rgba(255, 255, 255, .1) inset; //@boxShadow;
 
 /* Bar */
 @barPosition: relative;
