@@ -6,6 +6,7 @@ import { request, hasToken, setToken } from 'utils/api';
 import { trackSession } from 'utils/analytics';
 import { captureError } from 'utils/sentry';
 import { wrapContext } from 'utils/hoc';
+import { localStorage } from 'utils/storage';
 
 const SessionContext = React.createContext();
 

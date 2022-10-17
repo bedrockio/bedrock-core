@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Table, Button, Segment, Divider, Confirm } from 'semantic';
+import { Table, Button, Segment, Divider } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
@@ -11,9 +11,11 @@ import {
   Layout,
   Search,
   SearchFilters,
+  Confirm,
 } from 'components';
 
 import EditOrganization from 'modals/EditOrganization';
+import Actions from '../Actions';
 
 @screen
 export default class OrganizationList extends React.Component {
@@ -100,20 +102,7 @@ export default class OrganizationList extends React.Component {
                               trigger={<Button basic icon="edit" />}
                               onSave={reload}
                             />
-                            <Confirm
-                              negative
-                              confirmButton="Delete"
-                              header={`Are you sure you want to delete "${organization.name}"?`}
-                              content="All data will be permanently deleted"
-                              trigger={<Button basic icon="trash" />}
-                              onConfirm={async () => {
-                                await request({
-                                  method: 'DELETE',
-                                  path: `/1/organizations/${organization.id}`,
-                                });
-                                reload();
-                              }}
-                            />
+                            <Actions item={organization} reload={reload} />
                           </Table.Cell>
                         </Table.Row>
                       );

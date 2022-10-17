@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image, Segment } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import { Table, Button, Divider, Confirm } from 'semantic';
+import { Table, Button, Divider } from 'semantic';
 
 import { formatDateTime } from 'utils/date';
 import { urlForUpload } from 'utils/uploads';
@@ -15,9 +15,11 @@ import {
   Layout,
   Search,
   SearchFilters,
+  Confirm,
 } from 'components';
 
 import EditProduct from 'modals/EditProduct';
+import Actions from '../Actions';
 
 @screen
 export default class ProductList extends React.Component {
@@ -161,20 +163,7 @@ export default class ProductList extends React.Component {
                               trigger={<Button basic icon="edit" />}
                               onSave={reload}
                             />
-                            <Confirm
-                              negative
-                              confirmButton="Delete"
-                              header={`Are you sure you want to delete "${product.name}"?`}
-                              content="All data will be permanently deleted"
-                              trigger={<Button basic icon="trash" />}
-                              onConfirm={async () => {
-                                await request({
-                                  method: 'DELETE',
-                                  path: `/1/products/${product.id}`,
-                                });
-                                reload();
-                              }}
-                            />
+                            <Actions item={product} reload={reload} />
                           </Table.Cell>
                         </Table.Row>
                       );

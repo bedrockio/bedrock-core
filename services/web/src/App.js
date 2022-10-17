@@ -29,6 +29,7 @@ import Loading from 'screens/Loading';
 import Error from 'screens/Error';
 import Products from 'screens/Products';
 import Applications from 'screens/Applications';
+import AuditTrail from 'screens/AuditTrail';
 
 const App = () => {
   const { loading, error } = useSession();
@@ -49,6 +50,7 @@ const App = () => {
       <Route path="/docs/ui" component={Components} exact />
       <Route path="/docs/:id?" component={Docs} />
       <Route path="/applications/:id?" component={Applications} />
+      <Route path="/audit-trail/:id?" component={AuditTrail} />
       <Route path="/logout" component={Logout} exact />
       <Route path="/login/verification" component={MfaVerification} exact />
       <Route

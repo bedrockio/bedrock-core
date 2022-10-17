@@ -1,17 +1,9 @@
 import React from 'react';
-import {
-  Table,
-  Message,
-  Loader,
-  Button,
-  Header,
-  Divider,
-  Confirm,
-} from 'semantic';
+import { Table, Message, Loader, Button, Header, Divider } from 'semantic';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
-import { Layout, HelpTip, Search, SearchFilters } from 'components';
+import { Layout, HelpTip, Search, SearchFilters, Confirm } from 'components';
 
 import ErrorMessage from 'components/ErrorMessage';
 // --- Generator: subscreen-imports
@@ -24,16 +16,20 @@ import EditProduct from 'modals/EditProduct';
 
 import Menu from './Menu';
 
+import DetailsContext from './Context';
+
 @screen
 export default class ShopProducts extends React.Component {
+  static contextType = DetailsContext;
+
   onDataNeeded = async (params) => {
-    const { shop } = this.props;
+    const { item } = this.context;
     return await request({
       method: 'POST',
       path: '/1/products/search',
       body: {
         ...params,
-        shop: shop.id,
+        shop: item.id,
       },
     });
   };
@@ -48,27 +44,10 @@ export default class ShopProducts extends React.Component {
               <Menu {...this.props} />
               <Layout horizontal center spread>
                 <Header as="h2">Products</Header>
-                <Layout.Group>
-                  <SearchFilters.Modal size="small">
-                    <SearchFilters.Search
-                      label="Search"
-                      name="keyword"
-                      placeholder="Enter name or product id"
-                    />
-                  </SearchFilters.Modal>
-                  <EditProduct
-                    shop={shop}
-                    onSave={reload}
-                    trigger={
-                      <Button
-                        primary
-                        size="small"
-                        content="Add Product"
-                        icon="plus"
-                      />
-                    }
-                  />
-                </Layout.Group>
+                <Layout horizontal right center>
+                  <Search.Total />
+                  <SearchFilters.Search name="keyword" />
+                </Layout>
               </Layout>
               <ErrorMessage error={error} />
               {loading ? (
