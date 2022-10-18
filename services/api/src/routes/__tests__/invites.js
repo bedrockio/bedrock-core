@@ -49,7 +49,6 @@ describe('/1/invites', () => {
     });
 
     it('should throw an error if user already exists', async () => {
-      await User.deleteMany({});
       await createUser({
         email: 'fake@fake.com',
       });

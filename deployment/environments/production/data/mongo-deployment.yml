@@ -13,7 +13,7 @@ spec:
         app: mongo
     spec:
       containers:
-        - image: mongo:4.4.4
+        - image: mongo:6.0.2
           name: main
           # resources:
           #   limits:
