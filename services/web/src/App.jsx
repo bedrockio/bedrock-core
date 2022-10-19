@@ -5,7 +5,6 @@ import { Protected } from 'helpers/routes';
 import { useSession } from 'stores';
 
 import Dashboard from 'screens/Dashboard';
-import Docs from 'screens/Docs';
 import Components from 'screens/Components';
 import Invites from 'screens/Invites';
 import NotFound from 'screens/NotFound';
@@ -46,7 +45,6 @@ const App = () => {
       <Protected path="/organizations/:id?" allowed={Organizations} />
       <Protected path="/users/:id?" allowed={Users} />
       <Route path="/docs/ui" component={Components} exact />
-      <Route path="/docs/:id?" component={Docs} />
       <Route path="/applications/:id?" component={Applications} />
       <Route path="/audit-trail/:id?" component={AuditTrail} />
       <Route path="/logout" component={Logout} exact />

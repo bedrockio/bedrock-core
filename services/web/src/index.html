@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="Content-Language" content="en" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-    <title><!-- env:APP_NAME --></title>
-    <%= require('utils/analytics/head.html') %>
-    <!-- env:conf -->
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + React</title>
   </head>
   <body>
     <div id="root"></div>
-    <%= require('utils/analytics/body.html') %>
+    <script type="module" src="index.jsx"></script>
+    <script>
+      window.global = window;
+    </script>
+    <!-- env:conf -->
   </body>
 </html>

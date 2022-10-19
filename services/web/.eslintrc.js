@@ -23,6 +23,9 @@ module.exports = {
     'plugin:bedrock/react',
     'plugin:bedrock/jest',
   ],
+  rules: {
+    'react/react-in-jsx-scope': 'off',
+  },
   globals: {
     __ENV__: 'readonly',
   },

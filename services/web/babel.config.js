@@ -6,11 +6,11 @@ module.exports = (api) => {
 
   return {
     presets: [
-      ['@babel/preset-env'],
       [
-        ...(DEV
-          ? ['@babel/preset-react', { development: true, runtime: 'automatic' }]
-          : ['@babel/preset-react']),
+        '@babel/preset-react',
+        {
+          runtime: 'automatic',
+        },
       ],
     ],
     plugins: [
@@ -18,7 +18,29 @@ module.exports = (api) => {
       ['@babel/plugin-transform-runtime'],
       ['@babel/plugin-proposal-decorators', { legacy: true }],
       ['@babel/plugin-proposal-class-properties'],
-      ...(DEV ? [['react-refresh/babel']] : []),
+      [
+        'module-resolver',
+        {
+          root: ['./src'],
+        },
+      ],
     ],
   };
+  // return {
+  //   presets: [
+  //     ['@babel/preset-env'],
+  //     [
+  //       ...(DEV
+  //         ? ['@babel/preset-react', { development: true, runtime: 'automatic' }]
+  //         : ['@babel/preset-react']),
+  //     ],
+  //   ],
+  //   plugins: [
+  //     ['lodash'],
+  //     ['@babel/plugin-transform-runtime'],
+  //     ['@babel/plugin-proposal-decorators', { legacy: true }],
+  //     ['@babel/plugin-proposal-class-properties'],
+  //     ...(DEV ? [['react-refresh/babel']] : []),
+  //   ],
+  // };
 };
