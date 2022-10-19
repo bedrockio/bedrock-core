@@ -1,9 +1,5 @@
-// react-hot-loader needs to be imported
-// before react and react-dom
-import 'react-hot-loader';
-
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { SessionProvider } from 'stores';
@@ -25,7 +21,9 @@ import ScrollProvider from 'helpers/ScrollProvider';
 
 import App from './App';
 
-const Wrapper = () => (
+const root = createRoot(document.getElementById('root'));
+
+root.render(
   <BrowserRouter>
     <SessionProvider>
       <HelmetProvider>
@@ -36,5 +34,3 @@ const Wrapper = () => (
     </SessionProvider>
   </BrowserRouter>
 );
-
-ReactDOM.render(<Wrapper />, document.getElementById('root'));

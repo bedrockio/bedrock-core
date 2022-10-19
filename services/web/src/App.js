@@ -1,5 +1,3 @@
-import { hot } from 'react-hot-loader/root';
-
 import React from 'react';
 
 import { Switch, Route } from 'react-router-dom';
@@ -69,4 +67,4 @@ const App = () => {
   );
 };
 
-export default hot(App);
+export default App;
