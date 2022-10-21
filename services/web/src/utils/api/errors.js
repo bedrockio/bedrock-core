@@ -1,4 +1,4 @@
-import { CustomError } from 'utils/error';
+import { CustomError } from '/utils/error';
 
 export class ApiError extends CustomError {
   constructor(message, type, status, details) {

@@ -7,8 +7,8 @@ import {
   withLoadedSession,
   SessionProvider,
 } from '../session';
-import screen from 'helpers/screen';
-import { setToken } from 'utils/api';
+import screen from '/helpers/screen';
+import { setToken } from '/utils/api';
 import { render, waitFor } from '@testing-library/react';
 
 jest.mock('utils/api');

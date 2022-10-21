@@ -1,4 +1,4 @@
-import { API_URL, API_KEY } from 'utils/env';
+import { API_URL, API_KEY } from '/utils/env';
 import { ApiError, ApiParseError } from './errors';
 import { trackRequest } from '../analytics';
 import { fetchWithTimeout } from '../fetch';
