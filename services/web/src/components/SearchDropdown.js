@@ -89,6 +89,7 @@ export default class SearchDropdown extends React.Component {
     if (searchQuery) {
       options[this.props.keywordField] = searchQuery;
     }
+    console.info('CHANGED', options);
     this.fetchItems(options);
   }, 200);
 

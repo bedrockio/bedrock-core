@@ -281,7 +281,9 @@ function createSchema(definition, options = {}) {
           }),
         });
         if (count > 0) {
-          throw new Error(`Refusing to delete ${dump(this)} referenced by ${model.modelName}.`);
+          throw new Error(
+            `Refusing to delete ${startCase(modelName).toLowerCase()} ${this.id} referenced by ${model.modelName}.`
+          );
         }
       })
     );
@@ -686,12 +688,6 @@ function getModelReferences(model, targetName) {
     }
   });
   return paths;
-}
-
-// Inspection helpers
-
-function dump(doc) {
-  return `<${doc.constructor.modelName}: ${doc.id}>`;
 }
 
 // Regex queries
