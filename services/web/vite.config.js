@@ -12,7 +12,7 @@ export default function ({ mode }) {
   // https://vitejs.dev/config/
   return defineConfig({
     root: 'src',
-    // plugins: [react()],
+    plugins: [react()],
     server: {
       // host: 'http://localhost',
       port: 2200,
