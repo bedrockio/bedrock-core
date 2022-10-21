@@ -160,7 +160,7 @@ export default class ShopList extends React.Component {
                           <Table.Cell textAlign="center" singleLine>
                             <EditShop
                               shop={shop}
-                              trigger={<Button basic icon="edit" />}
+                              trigger={<Button basic icon="pen-to-square" />}
                               onSave={reload}
                             />
                             <Actions item={shop} reload={reload} />

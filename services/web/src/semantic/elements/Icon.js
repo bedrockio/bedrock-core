@@ -21,16 +21,19 @@ import { createShorthandFactory } from 'semantic-ui-react/dist/commonjs/lib/fact
 
 // Maps internal semantic name references to new icon names.
 const INTERNAL_MAP = {
-  close: 'times',
-  delete: 'times',
-  setting: 'cog',
-  settings: 'cogs',
+  close: 'xmark',
+  delete: 'xmark',
+  setting: 'gear',
+  settings: 'gears',
+  sync: 'rotate',
+  search: 'magnifying-glass',
+  edit: 'pen-to-square',
   dropdown: (props) => {
     // Semantic stupidly overrides icons based on className
     // instead of passing the correct "name" so conditionally
     // handle here.
     if (props.className.split(' ').includes('clear')) {
-      return 'times';
+      return 'xtimes';
     }
     return 'caret-down';
   },

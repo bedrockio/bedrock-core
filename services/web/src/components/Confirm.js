@@ -48,7 +48,7 @@ export default class ConfirmComponent extends React.Component {
                   borderRadius: 0,
                   marginTop: '1em',
                 }}
-                icon="exclamation-triangle"
+                icon="triangle-exclamation"
                 header={'Something went wrong'}
                 error
                 content={error.message}

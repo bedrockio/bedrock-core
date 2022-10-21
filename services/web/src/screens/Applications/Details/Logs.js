@@ -242,7 +242,7 @@ export default class ApplicationLogs extends React.Component {
                               <Button
                                 compact
                                 floated="right"
-                                icon="expand-alt"
+                                icon="up-right-and-down-left-from-center"
                                 basic
                               />
                             }

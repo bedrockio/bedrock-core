@@ -17,7 +17,7 @@ export default (props) => {
         }}>
         <Form.Input
           name="email"
-          icon="mail"
+          icon="envelope"
           iconPosition="left"
           placeholder="E-mail Address"
           type="text"

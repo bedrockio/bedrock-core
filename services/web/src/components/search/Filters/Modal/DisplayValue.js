@@ -50,7 +50,7 @@ export default class Overview extends React.Component {
     if (this.state.error) {
       return (
         <span title={this.state.error}>
-          <Icon name="exclamation-circle" />
+          <Icon name="circle-exclamation" />
         </span>
       );
     }

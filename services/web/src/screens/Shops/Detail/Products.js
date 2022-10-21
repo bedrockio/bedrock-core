@@ -111,7 +111,7 @@ export default class ShopProducts extends React.Component {
                               shop={shop}
                               product={product}
                               onSave={reload}
-                              trigger={<Button basic icon="edit" />}
+                              trigger={<Button basic icon="pen-to-square" />}
                             />
                             <Confirm
                               negative

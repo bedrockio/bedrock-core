@@ -36,7 +36,7 @@ const options = [
 ];
 
 const options2 = [
-  { key: 1, text: 'Apple', value: 1, icon: 'apple-alt' },
+  { key: 1, text: 'Apple', value: 1, icon: 'apple-whole' },
   { key: 2, text: 'Lemon', value: 2, icon: 'lemon' },
   { key: 3, text: 'Carrot', value: 3, icon: 'carrot' },
   { key: 4, text: 'Pepper', value: 4, icon: 'pepper-hot' },
@@ -484,7 +484,7 @@ export default class ComponentsScreen extends React.Component {
                   </Label>
 
                   <Label as="a">
-                    Label as Link <Icon name="times" />
+                    Label as Link <Icon name="xmark" />
                   </Label>
 
                   <Label color="blue">Colored label</Label>
