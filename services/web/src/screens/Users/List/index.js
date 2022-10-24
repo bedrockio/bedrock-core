@@ -196,7 +196,7 @@ export default class UserList extends React.Component {
                             <EditUser
                               user={user}
                               trigger={
-                                <Button basic title="Edit" icon="edit" />
+                                <Button basic title="Edit" icon="pen-to-square" />
                               }
                               onSave={reload}
                             />
