@@ -571,9 +571,7 @@ describe('createSchema', () => {
         const User = createTestModel(
           createSchemaFromAttributes({
             terms: {
-              type: {
-                readScopes: 'none',
-              },
+              readScopes: { type: String, default: 'none' },
               service: Boolean,
               privacy: Boolean,
             },
@@ -585,7 +583,7 @@ describe('createSchema', () => {
             privacy: true,
           },
         });
-        expect(user.terms).toEqual({ service: true, privacy: true });
+        expect(user.terms).toEqual({ service: true, privacy: true, readScopes: 'none' });
         expect(user.toObject().terms).toBeUndefined();
       });
     });
@@ -1196,7 +1194,7 @@ describe('createSchema', () => {
       expect(await User.find()).toEqual([]);
       expect(await User.findOne()).toBe(null);
       expect(await User.findById(deletedUser.id)).toBe(null);
-      expect(await User.exists()).toBe(false);
+      expect(await User.exists()).toBe(null);
       expect(await User.countDocuments()).toBe(0);
     });
 
@@ -1214,7 +1212,7 @@ describe('createSchema', () => {
       expect(await User.findDeleted()).not.toBe(null);
       expect(await User.findOneDeleted()).not.toBe(null);
       expect(await User.findByIdDeleted(deletedUser.id)).not.toBe(null);
-      expect(await User.existsDeleted()).toBe(true);
+      expect(await User.existsDeleted()).toStrictEqual({ _id: deletedUser._id });
       expect(await User.countDocumentsDeleted()).toBe(1);
     });
 
@@ -1224,18 +1222,18 @@ describe('createSchema', () => {
           name: 'String',
         })
       );
-      await User.create({
+      const u = await User.create({
         name: 'foo',
       });
       const deletedUser = await User.create({
-        name: 'bar',
+        name: 'bars',
         deletedAt: new Date(),
         deleted: true,
       });
       expect((await User.findWithDeleted()).length).toBe(2);
-      expect(await User.findOneWithDeleted({ name: 'bar' })).not.toBe(null);
+      expect(await User.findOneWithDeleted({ name: 'bars' })).not.toBe(null);
       expect(await User.findByIdWithDeleted(deletedUser.id)).not.toBe(null);
-      expect(await User.existsWithDeleted({ name: 'bar' })).toBe(true);
+      expect(await User.existsWithDeleted({ name: 'bars' })).not.toBe(null);
       expect(await User.countDocumentsWithDeleted()).toBe(2);
     });
 
@@ -2084,6 +2082,7 @@ describe('search', () => {
       name: 'text',
     });
     const User = createTestModel(schema);
+    await User.createIndexes();
     await Promise.all([User.create({ name: 'Billy' }), User.create({ name: 'Willy' })]);
     const { data, meta } = await User.search({ keyword: 'billy' });
     expect(data).toMatchObject([{ name: 'Billy' }]);

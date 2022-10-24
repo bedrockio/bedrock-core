@@ -146,11 +146,14 @@ export default class AuditTrailList extends React.Component {
                       return (
                         <Table.Row key={item.id}>
                           <Table.Cell>
-                            <Link
-                              title={item.user.email}
-                              to={`/users/${item.user.id}`}>
-                              {item.user.firstName} {item.user.firstName} <br />
-                            </Link>
+                            {item.user && (
+                              <Link
+                                title={item.user.email}
+                                to={`/users/${item.user.id}`}>
+                                {item.user.firstName} {item.user.firstName}{' '}
+                                <br />
+                              </Link>
+                            )}
                           </Table.Cell>
                           <Table.Cell>
                             <Label

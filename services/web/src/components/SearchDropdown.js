@@ -89,6 +89,7 @@ export default class SearchDropdown extends React.Component {
     if (searchQuery) {
       options[this.props.keywordField] = searchQuery;
     }
+    console.info('CHANGED', options);
     this.fetchItems(options);
   }, 200);
 
@@ -100,7 +101,7 @@ export default class SearchDropdown extends React.Component {
     });
 
     if (!this.state.objectMode) {
-      return this.props.onChange(evt,  {
+      return this.props.onChange(evt, {
         ...rest,
         value,
         item: this.props.multiple ? selected : selected[0],
@@ -168,10 +169,10 @@ export default class SearchDropdown extends React.Component {
           'searchBody',
           'keywordField',
         ])}
-        autocomplete="off"
-        autocorrect="off"
-        autocapitalize="off"
-        spellcheck="false"
+        autoComplete="off"
+        autoCorrect="off"
+        autoCapitalize="off"
+        spellCheck="false"
         error={!!error}
         loading={loading}
         value={this.getValue()}

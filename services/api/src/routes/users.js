@@ -144,6 +144,9 @@ router
   )
   .delete('/:userId', async (ctx) => {
     const { user } = ctx.state;
+    await user.assertNoReferences({
+      except: [AuditEntry],
+    });
     await user.delete();
     ctx.status = 204;
   });
