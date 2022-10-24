@@ -58,9 +58,9 @@ export default class Account extends React.Component {
         <ErrorMessage error={error} />
         <Header>Appearance</Header>
         <p>
-          Choose how {APP_NAME} looks to you. Select a single theme, or sync
-          with your system and automatically switch between day and night
-          themes.
+          Choose how {APP_NAME} looks to you. Select a light or dark mode, or
+          sync with your system and automatically switch between light and dark
+          mode.
         </p>
         <Form onSubmit={() => this.save()}>
           <Header as="h5">
