@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { merge, omit } from 'lodash';
 import { withRouter } from 'react-router-dom';
+import { withTheme } from './theme';
 
 import { request, hasToken, setToken } from 'utils/api';
 import { trackSession } from 'utils/analytics';
@@ -10,6 +11,7 @@ import { localStorage } from 'utils/storage';
 
 const SessionContext = React.createContext();
 
+@withTheme
 @withRouter
 export class SessionProvider extends React.PureComponent {
   constructor(props) {
@@ -63,6 +65,10 @@ export class SessionProvider extends React.PureComponent {
         });
 
         const organization = await this.loadOrganization();
+
+        if (user.theme) {
+          this.context.setTheme(user.theme, true);
+        }
 
         // Uncomment this line if you want to set up
         // User-Id tracking. https://bit.ly/2DKQYEN.
