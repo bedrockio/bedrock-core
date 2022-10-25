@@ -17,11 +17,20 @@ function getSystemTheme() {
   return prefersDarkScheme.matches ? 'dark' : 'light';
 }
 
+function getRenderedTheme() {
+  const theme = getDefaultTheme();
+  if (theme === 'system') {
+    return getSystemTheme();
+  }
+  return theme;
+}
+
 export class ThemeProvider extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       theme: getDefaultTheme(),
+      renderedTheme: getRenderedTheme(),
     };
   }
 
@@ -54,6 +63,9 @@ export class ThemeProvider extends React.PureComponent {
     } else {
       document.body.classList.remove('nocturnal-theme');
     }
+    this.setState({
+      renderedTheme: newTheme,
+    });
     if (store) {
       localStorage.setItem('theme', theme);
     }
