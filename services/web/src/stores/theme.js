@@ -56,7 +56,7 @@ export class ThemeProvider extends React.PureComponent {
     }
   };
 
-  setTheme(theme, store) {
+  setTheme = (theme, store) => {
     const newTheme = theme === 'system' ? getSystemTheme() : theme;
     if (newTheme == 'dark') {
       document.body.classList.add('nocturnal-theme');
@@ -69,7 +69,7 @@ export class ThemeProvider extends React.PureComponent {
     if (store) {
       localStorage.setItem('theme', theme);
     }
-  }
+  };
 
   render() {
     return (

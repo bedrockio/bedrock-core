@@ -2,12 +2,14 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Menu, Icon, Container, Button } from 'semantic';
 import Footer from 'components/Footer';
+import ThemedImage from 'components/ThemedImage';
 import { Layout } from 'components';
 import bem from 'helpers/bem';
 
 import ConnectionError from 'components/ConnectionError';
 
 import logo from 'assets/logo.svg';
+import darkLogo from 'assets/logo-inverted.svg';
 
 import './portal.less';
 
@@ -24,7 +26,7 @@ export default class PortalLayout extends React.Component {
             center
             spread>
             <NavLink className="logo" to="/">
-              <img height="30" src={logo} />
+              <ThemedImage height="30" ligthSrc={logo} darkSrc={darkLogo} />
             </NavLink>
             <div>
               <Button primary compact as={NavLink} to="/">
