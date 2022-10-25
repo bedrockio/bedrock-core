@@ -80,16 +80,18 @@ export default class Account extends React.Component {
 
           <Divider hidden />
 
-          <Segment>
-            <Layout horizontal baseline>
-              <Form.Radio
-                disabled={theme === 'system'}
-                checked={theme === 'light'}
-                label="Light Mode"
-                onClick={() => this.setTheme('light')}
-              />
-            </Layout>
-          </Segment>
+          <div className="diurnal-theme" style={{paddingBottom: '1em'}}>
+            <Segment>
+              <Layout horizontal baseline>
+                <Form.Radio
+                  disabled={theme === 'system'}
+                  checked={theme === 'light'}
+                  label="Light Mode"
+                  onClick={() => this.setTheme('light')}
+                />
+              </Layout>
+            </Segment>
+          </div>
 
           <div className="nocturnal-theme">
             <Segment>
