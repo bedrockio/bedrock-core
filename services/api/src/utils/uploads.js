@@ -35,7 +35,7 @@ async function uploadGcs(object) {
 
 async function storeUploadedFile(uploadedFile) {
   // https://github.com/node-formidable/formidable#file
-  const filepath = uploadedFile.filepath;
+  const filepath = uploadedFile.filepath || uploadedFile.path;
   const filename = uploadedFile.originalFilename || path.basename(filepath);
   const mimeType = uploadedFile.mimetype || mime.lookup(filename);
   const hash = crypto.randomBytes(32).toString('hex');
