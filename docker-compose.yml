@@ -38,7 +38,7 @@ services:
       - api
 
   mongo:
-    image: mongo:4.4.4
+    image: mongo:6.0.0
     command: mongod --quiet --logpath /dev/null --serviceExecutor adaptive
     logging:
       driver: none
