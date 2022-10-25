@@ -249,7 +249,7 @@ async function importUpload(file, meta) {
 
 const importUploadOnce = memoize(async (file, meta) => {
   const attributes = await storeUploadedFile({
-    path: file,
+    filepath: file,
   });
   if (meta.id !== ADMIN_FIXTURE_ID) {
     // As a special case to bootstrap the admin user, allow their
