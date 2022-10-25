@@ -175,13 +175,12 @@ export default class Uploads extends React.Component {
               {uploads.map((upload) => (
                 <Card
                   key={this.getUploadId(upload)}
-                  style={{
-                    background: '#888',
-                  }}>
+                  className="upload-card"
+                  >
                   {this.renderUpload(upload)}
                   <Icon
                     fitted
-                    name="delete"
+                    name="circle-xmark"
                     onClick={(evt) => this.delete(evt, upload)}
                   />
                   {upload.filename && (
