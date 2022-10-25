@@ -1,8 +1,9 @@
 import React from 'react';
 
-import { Dropdown, Confirm } from 'semantic';
+import { Dropdown } from 'semantic';
 import { request } from 'utils/api';
 import InspectObject from 'modals/InspectObject';
+import { Confirm } from 'components';
 
 export default function ProductsActions({ item, reload } = {}) {
   return (

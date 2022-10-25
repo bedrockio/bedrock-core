@@ -15,7 +15,6 @@ import {
   Layout,
   Search,
   SearchFilters,
-  Confirm,
 } from 'components';
 
 import EditProduct from 'modals/EditProduct';
