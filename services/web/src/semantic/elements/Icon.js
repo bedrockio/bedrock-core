@@ -33,7 +33,7 @@ const INTERNAL_MAP = {
     // instead of passing the correct "name" so conditionally
     // handle here.
     if (props.className.split(' ').includes('clear')) {
-      return 'xtimes';
+      return 'xmark';
     }
     return 'caret-down';
   },

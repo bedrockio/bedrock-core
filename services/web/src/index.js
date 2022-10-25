@@ -17,7 +17,7 @@ import brandIcons from 'semantic/assets/icons/brands.svg';
 import regularIcons from 'semantic/assets/icons/regular.svg';
 
 Icon.useSet(solidIcons);
-Icon.useSet(brandIcons, 'brand');
+Icon.useSet(brandIcons, 'brands');
 Icon.useSet(regularIcons, 'regular');
 
 // Scrolling
