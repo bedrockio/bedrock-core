@@ -18,7 +18,6 @@ export default class ShopOverview extends React.Component {
 
   render() {
     const { item } = this.context;
-    console.log(item);
     return (
       <React.Fragment>
         <Menu />
