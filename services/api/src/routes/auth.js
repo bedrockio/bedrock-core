@@ -1,5 +1,6 @@
 const Router = require('@koa/router');
 const Joi = require('joi');
+const yd = require('yada');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { createAuthToken, createTemporaryToken, generateTokenId } = require('../utils/tokens');
@@ -56,8 +57,8 @@ router
   .post(
     '/login',
     validateBody({
-      email: Joi.string().email().trim().required(),
-      password: Joi.string().trim().required(),
+      email: yd.string().email().trim().required(),
+      password: yd.string().trim().required(),
     }),
 
     async (ctx) => {
