@@ -1,37 +1,58 @@
-const Joi = require('joi');
+// const Joi = require('joi');
+const yd = require('yada');
 
 const FIXED_SCHEMAS = {
-  email: Joi.string().lowercase().email(),
-  objectId: Joi.string().hex().length(24),
+  email: yd.string().lowercase().email(),
+  objectId: yd.string().mongo(),
 };
 
 function getJoiSchema(attributes, options = {}) {
   const { appendSchema, allowEmpty } = options;
   let schema = getObjectSchema(attributes, options);
   if (!allowEmpty) {
-    schema = schema.min(1);
+    schema = schema.custom((val) => {
+      if (Object.keys(val) === 0) {
+        throw new Error('Object must not be empty');
+      }
+    });
   }
   if (appendSchema) {
-    if (Joi.isSchema(appendSchema)) {
-      schema = schema.concat(appendSchema);
-    } else {
-      schema = schema.append(appendSchema);
-    }
+    schema = schema.append(appendSchema);
   }
   return schema;
 }
 
 function getMongooseValidator(schemaName, field) {
+  //   const validator = (val) => {
+  //     Joi.assert(val, schema);
+  //     return true;
+  //   };
   const schema = getSchemaForField(field);
   const validator = (val) => {
-    Joi.assert(val, schema);
+    schema.validate(val);
     return true;
   };
-  // A named shortcut back to the Joi schema to retrieve it
-  // later when generating validations.
   validator.schemaName = schemaName;
   return validator;
+  // console.info('UHOH', schemaName, field);
+  // return {};
+  // return () => {
+  //   console.info('??');
+  // };
+  // return getFixedSchema(type);
 }
+
+// function getMongooseValidator(schemaName, field) {
+//   const schema = getSchemaForField(field);
+//   const validator = (val) => {
+//     Joi.assert(val, schema);
+//     return true;
+//   };
+//   // A named shortcut back to the Joi schema to retrieve it
+//   // later when generating validations.
+//   validator.schemaName = schemaName;
+//   return validator;
+// }
 
 function getFixedSchema(arg) {
   const name = arg.schemaName || arg;
@@ -50,13 +71,13 @@ function getArraySchema(obj, options) {
     if (options.unwindArrayFields) {
       return getSchemaForField(obj[0], options);
     } else {
-      return Joi.array().items(getSchemaForField(obj[0], options));
+      return yd.array(getSchemaForField(obj[0], options));
     }
   } else {
     // Object/constructor notation implies array of anything:
     // tags: { type: Array }
     // tags: Array
-    return Joi.array();
+    return yd.array();
   }
 }
 
@@ -74,17 +95,14 @@ function getObjectSchema(obj, options) {
       field = transformField(key, field);
     }
     if (field) {
-      if (Joi.isSchema(field)) {
+      if (yd.isSchema(field)) {
         map[key] = field;
       } else {
         map[key] = getSchemaForField(field, options);
       }
     }
   }
-  for (let key of stripFields) {
-    map[key] = Joi.any().strip();
-  }
-  return Joi.object(map);
+  return yd.object(map);
 }
 
 function getSchemaForField(field, options = {}) {
@@ -110,9 +128,7 @@ function getSchemaForField(field, options = {}) {
   if (isRequiredField(field, options)) {
     schema = schema.required();
   } else if (field.writeScopes) {
-    if (field.skipValidation) {
-      schema = Joi.any().strip();
-    } else {
+    if (!field.skipValidation) {
       schema = validateWriteScopes(field.writeScopes);
     }
   } else {
@@ -124,7 +140,7 @@ function getSchemaForField(field, options = {}) {
   }
   if (typeof field === 'object') {
     if (field.enum) {
-      schema = schema.valid(...field.enum);
+      schema = schema.allow(...field.enum);
     }
     if (field.match) {
       schema = schema.pattern(RegExp(field.match));
@@ -140,7 +156,7 @@ function getSchemaForField(field, options = {}) {
     schema = getRangeSchema(schema);
   }
   if (options.allowMultiple) {
-    schema = Joi.alternatives().try(schema, Joi.array().items(schema));
+    schema = yd.allow(schema, yd.array(schema));
   }
   return schema;
 }
@@ -150,7 +166,7 @@ function isRequiredField(field, options) {
 }
 
 function validateWriteScopes(scopes) {
-  return Joi.custom((val, { prefs }) => {
+  return yd.custom((val, { prefs }) => {
     let allowed = false;
     if (scopes === 'all') {
       allowed = true;
@@ -160,37 +176,25 @@ function validateWriteScopes(scopes) {
       });
     }
     if (!allowed) {
-      throw new Error();
+      throw new Error(`Insufficient permissions to write to ???`);
     }
-    return val;
-  }).error((errors) => {
-    for (let error of errors) {
-      const { path } = error;
-      error.message = `Insufficient permissions to write to ${path.join('.')}`;
-      error.local.permissions = true;
-    }
-    return errors;
   });
 }
 
 function getSchemaForType(type) {
   switch (type) {
     case 'String':
-      return Joi.string();
+      return yd.string();
     case 'Number':
-      return Joi.number();
+      return yd.number();
     case 'Boolean':
-      return Joi.boolean();
+      return yd.boolean();
     case 'Date':
-      return Joi.date().iso();
+      return yd.date().iso();
     case 'Mixed':
-      return Joi.object();
+      return yd.object();
     case 'ObjectId':
-      return Joi.custom((val) => {
-        const id = String(val.id || val);
-        Joi.assert(id, FIXED_SCHEMAS['objectId']);
-        return id;
-      });
+      return FIXED_SCHEMAS['objectId'];
     default:
       throw new TypeError(`Unknown schema type ${type}`);
   }
@@ -198,23 +202,23 @@ function getSchemaForType(type) {
 
 function getRangeSchema(schema) {
   if (schema.type === 'number') {
-    schema = Joi.alternatives().try(
+    schema = yd.allow(
       schema,
-      Joi.object({
-        lt: Joi.number(),
-        gt: Joi.number(),
-        lte: Joi.number(),
-        gte: Joi.number(),
+      yd.object({
+        lt: yd.number(),
+        gt: yd.number(),
+        lte: yd.number(),
+        gte: yd.number(),
       })
     );
   } else if (schema.type === 'date') {
-    return Joi.alternatives().try(
+    return yd.allow(
       schema,
-      Joi.object({
-        lt: Joi.date().iso(),
-        gt: Joi.date().iso(),
-        lte: Joi.date().iso(),
-        gte: Joi.date().iso(),
+      yd.object({
+        lt: yd.date().iso(),
+        gt: yd.date().iso(),
+        lte: yd.date().iso(),
+        gte: yd.date().iso(),
       })
     );
   }

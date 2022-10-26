@@ -315,7 +315,7 @@ function getJoiSchemaFromMongoose(schema, options) {
   });
   return getJoiSchema(schema.obj, {
     ...options,
-    stripFields: options.stripReserved ? [...RESERVED_FIELDS, ...getters] : [],
+    // stripFields: options.stripReserved ? [...RESERVED_FIELDS, ...getters] : [],
     transformField: (key, field) => {
       if (isMongooseSchema(field)) {
         return getJoiSchemaFromMongoose(field, options);

@@ -118,7 +118,7 @@ router
   .patch(
     '/:userId',
     validateBody(
-      User.getUpdateValidation().append({
+      User.getUpdateValidation({
         roles: (roles) => {
           return roles.map((role) => {
             const { roleDefinition, ...rest } = role;

@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const yd = require('yada');
 
 const DEFAULT_OPTIONS = {
   stripUnknown: true,
@@ -6,16 +7,22 @@ const DEFAULT_OPTIONS = {
   abortEarly: false,
 };
 
-function validateBody(schema, options) {
-  const validator = getValidator(schema, options);
-  return (ctx, next) => {
-    const { value, error } = validator(ctx.request.body);
-    if (error) {
+function validateBody(arg) {
+  const schema = resolveSchema(arg);
+  // const validator = getValidator(schema, options);
+  return async (ctx, next) => {
+    try {
+      console.info('FUCK', schema.validate);
+      ctx.request.body = await schema.validate(ctx.request.body);
+    } catch (error) {
       ctx.throw(getErrorCode(error), error);
     }
-    ctx.request.body = value;
-    return next();
+    return await next();
   };
+}
+
+function resolveSchema(arg) {
+  return yd.isSchema(arg) ? arg : yd.object(arg);
 }
 
 function validateQuery(schema, options) {
@@ -60,29 +67,29 @@ function validateQuery(schema, options) {
 }
 
 function getValidator(schema, options = {}) {
-  schema = Joi.isSchema(schema) ? schema : Joi.object(schema);
-  options = { ...DEFAULT_OPTIONS, ...options };
-  return (obj = {}) => {
-    const { value, error } = schema.validate(obj, options);
-    if (error) {
-      error.details = error.details.map((detail) => {
-        return {
-          ...detail,
-          meta: {
-            parsedValue: value[detail.path],
-            // Explicitly show it was not provided
-            providedValue: obj[detail.path] || null,
-          },
-        };
-      });
-    }
-    return { value, error };
-  };
+  // schema = Joi.isSchema(schema) ? schema : Joi.object(schema);
+  // options = { ...DEFAULT_OPTIONS, ...options };
+  // return (obj = {}) => {
+  //   const { value, error } = schema.validate(obj, options);
+  //   if (error) {
+  //     error.details = error.details.map((detail) => {
+  //       return {
+  //         ...detail,
+  //         meta: {
+  //           parsedValue: value[detail.path],
+  //           // Explicitly show it was not provided
+  //           providedValue: obj[detail.path] || null,
+  //         },
+  //       };
+  //     });
+  //   }
+  //   return { value, error };
+  // };
 }
 
 function getErrorCode(error) {
   const isPermissions = error.details.every((err) => {
-    return err.context.permissions;
+    return err.context?.permissions;
   });
   return isPermissions ? 401 : 400;
 }
