@@ -11,8 +11,8 @@
 --------------------*/
 
 @verticalMargin: 1em;
-@verticalPadding: 1em;
-@horizontalPadding: 1.5em;
+@verticalPadding: .8em;
+@horizontalPadding: 1.2em;
 @padding: @verticalPadding @horizontalPadding;
 @background: #F8F8F9;
 @lineHeightOffset: ((@lineHeight - 1em) / 2);
