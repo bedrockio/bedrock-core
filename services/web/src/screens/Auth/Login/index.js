@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Segment, Grid, Form } from 'semantic';
 
+import { Segment, Grid, Form, Message } from 'semantic';
 import { withSession } from 'stores';
 import screen from 'helpers/screen';
 import Logo from 'components/LogoTitle';
@@ -52,7 +52,7 @@ export default class Login extends React.Component {
         <Segment.Group>
           <Segment padded>
             <Form error={!!error} size="large" onSubmit={this.onSubmit}>
-              <ErrorMessage error={error} />
+              {!error?.type === 'validation' && <ErrorMessage error={error} />}
               <Form.Field error={error?.hasField?.('email')}>
                 <Form.Input
                   value={email}
@@ -64,6 +64,7 @@ export default class Login extends React.Component {
                   type="email"
                   autoComplete="email"
                 />
+                {this.renderFieldErrors(error, 'email')}
               </Form.Field>
               <Form.Field error={error?.hasField?.('password')}>
                 <Form.Input
@@ -78,6 +79,7 @@ export default class Login extends React.Component {
                   autoComplete="current-password"
                   type="password"
                 />
+                {this.renderFieldErrors(error, 'password')}
               </Form.Field>
               <Form.Button
                 fluid
@@ -102,5 +104,24 @@ export default class Login extends React.Component {
         </Segment.Group>
       </React.Fragment>
     );
+  }
+
+  renderFieldErrors(error, name) {
+    if (error) {
+      const details = error.getFieldDetails(name);
+      if (details) {
+        return (
+          <React.Fragment>
+            <Message size="small" error>
+              <Message.Content>
+                {details.map((d, i) => {
+                  return <div key={i}>{d.message}</div>;
+                })}
+              </Message.Content>
+            </Message>
+          </React.Fragment>
+        );
+      }
+    }
   }
 }
