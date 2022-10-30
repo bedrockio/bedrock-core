@@ -141,7 +141,14 @@
 @inputAutoFillFocusBorder: #D5C315;
 @inputAutoFillErrorBackground: #FFFAF0;
 @inputAutoFillErrorBorder: #E0B4B4;
-// @todo: nocturnal
+
+@nocturnalInputAutoFillBase: @inputAutoFillFocusBorder;
+@nocturnalInputAutoFillBackground: rgba(@nocturnalInputAutoFillBase, 0.10);
+@nocturnalInputAutoFillBorder: rgba(@nocturnalInputAutoFillBase, .4);
+@nocturnalInputAutoFillFocusBackground: @nocturnalInputAutoFillBackground;
+@nocturnalInputAutoFillFocusBorder: rgba(@nocturnalInputAutoFillBase, .6);
+@nocturnalInputAutoFillErrorBackground: mix(@negativeTextColor, @nocturnalPageBackground, 33%);
+@nocturnalInputAutoFillErrorBorder: mix(@negativeTextColor, @nocturnalBorderColor, 50%);
 
 /* Input Error */
 @inputErrorBorderRadius: '';
@@ -153,6 +160,12 @@
 @dropdownErrorActiveBackground: #FDCFCF;
 @dropdownErrorLabelBackground: #EACBCB;
 @dropdownErrorLabelColor: @errorTextColor;
+
+@nocturnalDropdownErrorHoverBackground: rgba(@negativeTextColor, .33);
+@nocturnalDropdownErrorSelectedBackground: @nocturnalDropdownErrorHoverBackground;
+@nocturnalDropdownErrorActiveBackground: rgba(@negativeTextColor, .33);
+@nocturnalDropdownErrorLabelBackground: transparent;
+@nocturnalDropdownErrorLabelColor: @nocturnalErrorBorderColor;
 
 /* Focused Error */
 @inputErrorFocusBackground: @negativeBackgroundColor;

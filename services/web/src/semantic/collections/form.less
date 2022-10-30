@@ -323,18 +323,36 @@
 .ui.form .field.field input:-webkit-autofill {
   box-shadow: 0px 0px 0px 100px @inputAutoFillBackground inset !important;
   border-color: @inputAutoFillBorder !important;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalPageBackground !important;
+    box-shadow: 0px 0px 0px 100px @nocturnalInputAutoFillBackground inset !important;
+    border-color: @nocturnalInputAutoFillBorder !important;
+  }
 }
 
 /* Focus */
 .ui.form .field.field input:-webkit-autofill:focus {
   box-shadow: 0px 0px 0px 100px @inputAutoFillFocusBackground inset !important;
   border-color: @inputAutoFillFocusBorder !important;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalPageBackground !important;
+    box-shadow: 0px 0px 0px 100px @nocturnalInputAutoFillFocusBackground inset !important;
+    border-color: @nocturnalInputAutoFillFocusBorder !important;
+  }
 }
 
 /* Error */
 .ui.form .error.error input:-webkit-autofill {
   box-shadow: 0px 0px 0px 100px @inputAutoFillErrorBackground inset !important;
   border-color: @inputAutoFillErrorBorder !important;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalPageBackground !important;
+    box-shadow: 0px 0px 0px 100px @nocturnalInputAutoFillErrorBackground inset !important;
+    border-color: @nocturnalInputAutoFillErrorBorder !important;
+  }
 }
 
 /*--------------------
@@ -629,40 +647,81 @@
   background: @formErrorBackground;
   color: @formErrorColor;
 }
+.nocturnal-theme .ui.form .fields.error .field .ui.dropdown,
+.nocturnal-theme .ui.form .fields.error .field .ui.dropdown .item,
+.nocturnal-theme .ui.form .field.error .ui.dropdown,
+.nocturnal-theme .ui.form .field.error .ui.dropdown .item {
+  background: @nocturnalFormErrorBackground;
+  color: @nocturnalFormErrorColor;
+}
+.nocturnal-theme .ui.form .field.error .ui.dropdown .text,
+.nocturnal-theme .ui.form .field.error .ui.dropdown .ui.dropdown.icon {
+  color: @nocturnalFormErrorColor;
+  background: none;
+}
 .ui.form .fields.error .field .ui.dropdown,
 .ui.form .field.error .ui.dropdown {
   border-color: @formErrorBorder !important;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalFormErrorBorder !important;
+  }
 }
 .ui.form .fields.error .field .ui.dropdown:hover,
 .ui.form .field.error .ui.dropdown:hover {
   border-color: @formErrorBorder !important;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalFormErrorBorder !important;
+  }
 }
 .ui.form .fields.error .field .ui.dropdown:hover .menu,
 .ui.form .field.error .ui.dropdown:hover .menu {
   border-color: @formErrorBorder;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalFormErrorBorder;
+  }
 }
 .ui.form .fields.error .field .ui.multiple.selection.dropdown > .label,
 .ui.form .field.error .ui.multiple.selection.dropdown > .label {
   background-color: @dropdownErrorLabelBackground;
   color: @dropdownErrorLabelColor;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalDropdownErrorLabelBackground;
+    color: @nocturnalDropdownErrorLabelColor;
+  }
 }
 
 /* Hover */
 .ui.form .fields.error .field .ui.dropdown .menu .item:hover,
 .ui.form .field.error .ui.dropdown .menu .item:hover {
   background-color: @dropdownErrorHoverBackground;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalDropdownErrorHoverBackground;
+  }
 }
 
 /* Selected */
 .ui.form .fields.error .field .ui.dropdown .menu .selected.item,
 .ui.form .field.error .ui.dropdown .menu .selected.item {
   background-color: @dropdownErrorSelectedBackground;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalDropdownErrorSelectedBackground;
+  }
 }
 
 /* Active */
 .ui.form .fields.error .field .ui.dropdown .menu .active.item,
 .ui.form .field.error .ui.dropdown .menu .active.item {
   background-color: @dropdownErrorActiveBackground !important;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalDropdownErrorActiveBackground !important;
+  }
 }
 
 /*--------------------
@@ -674,6 +733,10 @@
 .ui.form .fields.error .field .checkbox:not(.toggle):not(.slider) .box,
 .ui.form .field.error .checkbox:not(.toggle):not(.slider) .box {
   color: @formErrorColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalFormErrorColor;
+  }
 }
 .ui.form .fields.error .field .checkbox:not(.toggle):not(.slider) label:before,
 .ui.form .field.error .checkbox:not(.toggle):not(.slider) label:before,
@@ -681,12 +744,21 @@
 .ui.form .field.error .checkbox:not(.toggle):not(.slider) .box:before {
   background: @formErrorBackground;
   border-color: @formErrorBorder;
+
+  .nocturnal-theme & {
+    background: @nocturnalFormErrorBackground;
+    border-color: @nocturnalFormErrorBorder;
+  }
 }
 .ui.form .fields.error .field .checkbox label:after,
 .ui.form .field.error .checkbox label:after,
 .ui.form .fields.error .field .checkbox .box:after,
 .ui.form .field.error .checkbox .box:after {
   color: @formErrorColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalFormErrorColor;
+  }
 }
 
 /*--------------------
