@@ -28,6 +28,12 @@
   box-shadow: @boxShadow;
   border-radius: @borderRadius;
   min-height: @minHeight;
+
+  .nocturnal-theme & {
+    background: @nocturnalBackground;
+    border: @nocturnalBorder;
+    box-shadow: @nocturnalBoxShadow;
+  }
 }
 
 .ui.menu:after {
@@ -81,6 +87,11 @@
   color: @itemTextColor;
   font-weight: @itemFontWeight;
   transition: @itemTransition;
+
+  .nocturnal-theme & {
+    background: @nocturnalItemBackground;
+    color: @nocturnalItemTextColor;
+  }
 }
 
 .ui.menu > .item:first-child {
@@ -97,6 +108,10 @@
 
   width: @dividerSize;
   background: @dividerBackground;
+
+  .nocturnal-theme & {
+    background: @nocturnalDividerBackground;
+  }
 }
 
 /*--------------
@@ -178,6 +193,10 @@
   background: @headerBackground;
   text-transform: @headerTextTransform;
   font-weight: @headerWeight;
+
+  .nocturnal-theme & {
+    background: @nocturnalHeaderBackground;
+  }
 }
 
 .ui.vertical.menu .item > .header:not(.ui) {
@@ -205,6 +224,11 @@
   margin: @dropdownMenuDistance 0px 0px;
   box-shadow: @dropdownMenuBoxShadow;
   flex-direction: column !important;
+
+  .nocturnal-theme & {
+    background: @nocturnalDropdownBackground;
+    box-shadow: @nocturnalDropdownMenuBoxShadow;
+  }
 }
 
 /* Menu Items */
@@ -219,19 +243,40 @@
   font-weight: @dropdownItemFontWeight !important;
   box-shadow: @dropdownItemBoxShadow !important;
   transition: @dropdownItemTransition !important;
+
+  .nocturnal-theme & {
+    background: @nocturnalDropdownItemBackground !important;
+    color: @nocturnalDropdownItemColor !important;
+    box-shadow: @nocturnalDropdownItemBoxShadow !important;
+  }
 }
 .ui.menu .ui.dropdown .menu > .item:hover {
   background: @dropdownHoveredItemBackground !important;
   color: @dropdownHoveredItemColor !important;
+
+  .nocturnal-theme & {
+    background: @nocturnalDropdownHoveredItemBackground !important;
+    color: @nocturnalDropdownHoveredItemColor !important;
+  }
 }
 .ui.menu .ui.dropdown .menu > .selected.item {
   background: @dropdownSelectedItemBackground !important;
   color: @dropdownSelectedItemColor !important;
+
+  .nocturnal-theme & {
+    background: @nocturnalDropdownSelectedItemBackground !important;
+    color: @nocturnalDropdownSelectedItemColor !important;
+  }
 }
 .ui.menu .ui.dropdown .menu > .active.item {
   background: @dropdownActiveItemBackground !important;
   font-weight: @dropdownActiveItemFontWeight !important;
   color: @dropdownActiveItemColor !important;
+
+  .nocturnal-theme & {
+    background: @nocturnalDropdownActiveItemBackground !important;
+    color: @nocturnalDropdownActiveItemColor !important;
+  }
 }
 
 .ui.menu .ui.dropdown.item .menu .item:not(.filtered) {
@@ -260,6 +305,10 @@
 .ui.inverted.menu .search.dropdown.item > .search,
 .ui.inverted.menu .search.dropdown.item > .text {
   color: @invertedSelectionDropdownColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalInvertedSelectionDropdownColor;
+  }
 }
 
 /* Vertical */
@@ -275,6 +324,10 @@
   box-shadow: @dropdownVerticalMenuBoxShadow;
   border-radius: 0em @dropdownMenuBorderRadius @dropdownMenuBorderRadius
     @dropdownMenuBorderRadius;
+
+  .nocturnal-theme & {
+    box-shadow: @nocturnalDropdownVerticalMenuBoxShadow;
+  }
 }
 .ui.vertical.menu .dropdown.item.upward .menu {
   bottom: 0;
@@ -304,6 +357,11 @@
   color: @labelTextColor;
   margin-left: @labelTextMargin;
   padding: @labelVerticalPadding @labelHorizontalPadding;
+
+  .nocturnal-theme & {
+    background: @nocturnalLabelBackground;
+    color: @nocturnalLabelTextColor;
+  }
 }
 .ui.vertical.menu .item > .label {
   background: @labelBackground;
@@ -311,6 +369,11 @@
   margin-top: @labelOffset;
   margin-bottom: @labelOffset;
   padding: @labelVerticalPadding @labelHorizontalPadding;
+
+  .nocturnal-theme & {
+    background: @nocturnalLabelBackground;
+    color: @nocturnalLabelTextColor;
+  }
 }
 .ui.menu .item > .floating.label {
   padding: @labelVerticalPadding @labelHorizontalPadding;
@@ -375,6 +438,10 @@
     > .container
     > .item:not(.right):not(.borderless):first-child {
     border-left: @dividerSize solid @dividerBackground;
+
+    .nocturnal-theme & {
+      border-left: @dividerSize solid @nocturnalDividerBackground;
+    }
   }
 }
 
@@ -393,6 +460,11 @@
   cursor: pointer;
   background: @hoverItemBackground;
   color: @hoverItemTextColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalHoverItemBackground;
+    color: @nocturnalHoverItemTextColor;
+  }
 }
 
 /*--------------
@@ -404,6 +476,11 @@
 .ui.menu a.item:active {
   background: @pressedItemBackground;
   color: @pressedItemTextColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalPressedItemBackground;
+    color: @nocturnalPressedItemTextColor;
+  }
 }
 
 /*--------------
@@ -415,6 +492,12 @@
   color: @activeItemTextColor;
   font-weight: @activeItemFontWeight;
   box-shadow: @activeItemBoxShadow;
+
+  .nocturnal-theme & {
+    background: @nocturnalActiveItemBackground;
+    color: @nocturnalActiveItemTextColor;
+    box-shadow: @nocturnalActiveItemBoxShadow;
+  }
 }
 .ui.menu .active.item > svg.icon {
   opacity: @activeIconOpacity;
@@ -428,6 +511,11 @@
 .ui.vertical.menu .active.item:hover {
   background-color: @activeHoverItemBackground;
   color: @activeHoverItemColor;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalActiveHoverItemBackground;
+    color: @nocturnalActiveHoverItemColor;
+  }
 }
 
 /*--------------
@@ -439,6 +527,10 @@
   cursor: default !important;
   background-color: transparent !important;
   color: @disabledTextColor !important;
+
+  .nocturnal-theme & {
+    color: @nocturnalDisabledTextColor !important;
+  }
 }
 
 /*******************************
@@ -478,6 +570,11 @@ Floated Menu / Item
   flex-direction: column;
   background: @verticalBackground;
   box-shadow: @verticalBoxShadow;
+
+  .nocturnal-theme & {
+    background: @nocturnalVerticalBackground;
+    box-shadow: @nocturnalVerticalBoxShadow;
+  }
 }
 
 /*--- Item ---*/
@@ -486,6 +583,10 @@ Floated Menu / Item
   background: @verticalItemBackground;
   border-top: none;
   border-right: none;
+
+  .nocturnal-theme & {
+    background: @nocturnalVerticalItemBackground;
+  }
 }
 .ui.vertical.menu > .item:first-child {
   border-radius: @borderRadius @borderRadius 0px 0px;
@@ -520,6 +621,10 @@ Floated Menu / Item
   width: 100%;
   height: @dividerSize;
   background: @verticalDividerBackground;
+
+  .nocturnal-theme & {
+    background: @nocturnalVerticalDividerBackground;
+  }
 }
 
 .ui.vertical.menu .item:first-child:before {
@@ -535,10 +640,18 @@ Floated Menu / Item
   padding: @subMenuVerticalPadding @subMenuHorizontalPadding;
   font-size: @subMenuFontSize;
   color: @subMenuTextColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalSubMenuTextColor;
+  }
 }
 .ui.vertical.menu .item .menu a.item:hover,
 .ui.vertical.menu .item .menu .link.item:hover {
   color: @darkTextColor;
+
+  .nocturnal-theme & {
+    color: @invertedMutedTextColor;
+  }
 }
 .ui.vertical.menu .menu .item:before {
   display: none;
@@ -549,6 +662,11 @@ Floated Menu / Item
   background: @activeItemBackground;
   border-radius: 0em;
   box-shadow: @verticalActiveBoxShadow;
+
+  .nocturnal-theme & {
+    background: @nocturnalActiveItemBackground;
+    box-shadow: @nocturnalVerticalActiveBoxShadow;
+  }
 }
 .ui.vertical.menu > .active.item:first-child {
   border-radius: @borderRadius @borderRadius 0em 0em;
@@ -566,6 +684,11 @@ Floated Menu / Item
   background-color: @subMenuActiveBackground;
   font-weight: @subMenuActiveFontWeight;
   color: @subMenuActiveTextColor;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalSubMenuActiveBackground;
+    color: @nocturnalSubMenuActiveTextColor;
+  }
 }
 
 /*--------------
@@ -578,6 +701,11 @@ Floated Menu / Item
   border: none;
   background: @tabularBackground;
   border-bottom: @tabularBorderWidth solid @tabularBorderColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalTabularBackground;
+    border-bottom: @tabularBorderWidth solid @nocturnalTabularBorderColor;
+  }
 }
 .ui.tabular.fluid.menu {
   width: @tabularFluidWidth !important;
@@ -591,6 +719,10 @@ Floated Menu / Item
   border-top: @tabularOppositeBorderWidth solid transparent;
   padding: @tabularVerticalPadding @tabularHorizontalPadding;
   color: @tabularTextColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalTabularTextColor;
+  }
 }
 .ui.tabular.menu .item:before {
   display: none;
@@ -600,6 +732,10 @@ Floated Menu / Item
 .ui.tabular.menu .item:hover {
   background-color: transparent;
   color: @tabularHoveredTextColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalTabularHoveredTextColor;
+  }
 }
 
 /* Active */
@@ -612,6 +748,13 @@ Floated Menu / Item
   margin-bottom: -@tabularBorderWidth;
   box-shadow: @tabularActiveBoxShadow;
   border-radius: @tabularBorderRadius @tabularBorderRadius 0px 0px !important;
+
+  .nocturnal-theme & {
+    background: @nocturnalTabularActiveBackground;
+    color: @nocturnalTabularActiveColor;
+    border-color: @nocturnalTabularBorderColor;
+    box-shadow: @nocturnalTabularActiveBoxShadow;
+  }
 }
 
 /* Coupling with segment for attachment */
@@ -636,6 +779,11 @@ Floated Menu / Item
   box-shadow: none !important;
   border-bottom: none;
   border-top: @tabularBorderWidth solid @tabularBorderColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalTabularBackground;
+    border-top: @tabularBorderWidth solid @nocturnalTabularBorderColor;
+  }
 }
 .ui.bottom.tabular.menu .item {
   background: none;
@@ -650,6 +798,12 @@ Floated Menu / Item
   border-color: @tabularBorderColor;
   margin: -@tabularBorderWidth 0px 0px 0px;
   border-radius: 0px 0px @tabularBorderRadius @tabularBorderRadius !important;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalTabularActiveBackground;
+    color: @nocturnalTabularActiveColor;
+    border-color: @nocturnalTabularBorderColor;
+  }
 }
 
 /* Vertical Tabular (Left) */
@@ -659,6 +813,11 @@ Floated Menu / Item
   box-shadow: none !important;
   border-bottom: none;
   border-right: @tabularBorderWidth solid @tabularBorderColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalTabularVerticalBackground;
+    border-right: @tabularBorderWidth solid @nocturnalTabularBorderColor;
+  }
 }
 .ui.vertical.tabular.menu .item {
   background: none;
@@ -673,6 +832,12 @@ Floated Menu / Item
   border-color: @tabularBorderColor;
   margin: 0px -@tabularBorderWidth 0px 0px;
   border-radius: @tabularBorderRadius 0px 0px @tabularBorderRadius !important;
+
+  .nocturnal-theme & {
+    background: @nocturnalTabularActiveBackground;
+    color: @nocturnalTabularActiveColor;
+    border-color: @nocturnalTabularBorderColor;
+  }
 }
 
 /* Vertical Right Tabular */
@@ -683,6 +848,11 @@ Floated Menu / Item
   border-bottom: none;
   border-right: none;
   border-left: @tabularBorderWidth solid @tabularBorderColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalTabularVerticalBackground;
+    border-left: @tabularBorderWidth solid @nocturnalTabularBorderColor;
+  }
 }
 .ui.vertical.right.tabular.menu .item {
   background: none;
@@ -697,6 +867,12 @@ Floated Menu / Item
   border-color: @tabularBorderColor;
   margin: 0px 0px 0px -@tabularBorderWidth;
   border-radius: 0px @tabularBorderRadius @tabularBorderRadius 0px !important;
+
+  .nocturnal-theme & {
+    background: @nocturnalTabularActiveBackground;
+    color: @nocturnalTabularActiveColor;
+    border-color: @nocturnalTabularBorderColor;
+  }
 }
 
 /* Dropdown */
@@ -742,6 +918,11 @@ Floated Menu / Item
   background-color: @paginationActiveBackground;
   color: @paginationActiveTextColor;
   box-shadow: none;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalPaginationActiveBackground;
+    color: @nocturnalPaginationActiveTextColor;
+  }
 }
 
 /*--------------
@@ -755,6 +936,10 @@ Floated Menu / Item
   border-radius: 0em;
   border: none;
   box-shadow: none;
+
+  .nocturnal-theme & {
+    background: @nocturnalSecondaryBackground;
+  }
 }
 
 /* Item */
@@ -767,6 +952,10 @@ Floated Menu / Item
   background: @secondaryItemBackground;
   transition: @secondaryItemTransition;
   border-radius: @secondaryItemBorderRadius;
+
+  .nocturnal-theme & {
+    background: @nocturnalSecondaryItemBackground;
+  }
 }
 
 /* No Divider */
@@ -779,6 +968,11 @@ Floated Menu / Item
   border-radius: 0em;
   border-right: @secondaryHeaderBorder;
   background: @secondaryHeaderBackground;
+
+  .nocturnal-theme & {
+    border-right: @nocturnalSecondaryHeaderBorder;
+    background: @nocturnalSecondaryHeaderBackground;
+  }
 }
 
 /* Image */
@@ -792,6 +986,11 @@ Floated Menu / Item
 .ui.secondary.menu a.item:hover {
   background: @secondaryHoverItemBackground;
   color: @secondaryHoverItemColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalSecondaryHoverItemBackground;
+    color: @nocturnalSecondaryHoverItemColor;
+  }
 }
 
 /* Active */
@@ -800,6 +999,11 @@ Floated Menu / Item
   background: @secondaryActiveItemBackground;
   color: @secondaryActiveItemColor;
   border-radius: @secondaryItemBorderRadius;
+
+  .nocturnal-theme & {
+    background: @nocturnalSecondaryActiveItemBackground;
+    color: @nocturnalSecondaryActiveItemColor;
+  }
 }
 
 /* Active Hover */
@@ -807,22 +1011,41 @@ Floated Menu / Item
   box-shadow: none;
   background: @secondaryActiveHoverItemBackground;
   color: @secondaryActiveHoverItemColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalSecondaryActiveHoverItemBackground;
+    color: @nocturnalSecondaryActiveHoverItemColor;
+  }
 }
 
 /* Inverted */
 .ui.secondary.inverted.menu .link.item,
 .ui.secondary.inverted.menu a.item {
   color: @secondaryInvertedColor !important;
+
+  .nocturnal-theme & {
+    color: @nocturnalSecondaryInvertedColor !important;
+  }
 }
 .ui.secondary.inverted.menu .dropdown.item:hover,
 .ui.secondary.inverted.menu .link.item:hover,
 .ui.secondary.inverted.menu a.item:hover {
   background: @secondaryInvertedHoverBackground;
   color: @secondaryInvertedHoverColor !important;
+
+  .nocturnal-theme & {
+    background: @nocturnalSecondaryInvertedHoverBackground;
+    color: @nocturnalSecondaryInvertedHoverColor !important;
+  }
 }
 .ui.secondary.inverted.menu .active.item {
   background: @secondaryInvertedActiveBackground;
   color: @secondaryInvertedActiveColor !important;
+
+  .nocturnal-theme & {
+    background: @nocturnalSecondaryInvertedActiveBackground;
+    color: @nocturnalSecondaryInvertedActiveColor !important;
+  }
 }
 
 /* Fix item margins */
@@ -878,6 +1101,10 @@ Floated Menu / Item
   margin-right: 0em;
   border-bottom: @secondaryPointingBorderWidth solid
     @secondaryPointingBorderColor;
+
+  .nocturnal-theme & {
+    border-bottom: @secondaryPointingBorderWidth solid @nocturnalSecondaryPointingBorderColor;
+  }
 }
 
 .ui.secondary.pointing.menu .item {
@@ -896,6 +1123,10 @@ Floated Menu / Item
 /* Item Types */
 .ui.secondary.pointing.menu .header.item {
   color: @secondaryPointingHeaderColor !important;
+
+  .nocturnal-theme & {
+    color: @nocturnalSecondaryPointingHeaderColor !important;
+  }
 }
 .ui.secondary.pointing.menu .text.item {
   box-shadow: none !important;
@@ -910,6 +1141,10 @@ Floated Menu / Item
 .ui.secondary.pointing.menu a.item:hover {
   background-color: transparent;
   color: @secondaryPointingHoverTextColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalSecondaryPointingHoverTextColor;
+  }
 }
 
 /* Pressed */
@@ -918,6 +1153,10 @@ Floated Menu / Item
 .ui.secondary.pointing.menu a.item:active {
   background-color: transparent;
   border-color: @secondaryPointingBorderColor;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalSecondaryPointingBorderColor;
+  }
 }
 
 /* Active */
@@ -927,17 +1166,32 @@ Floated Menu / Item
   border-color: @secondaryPointingActiveBorderColor;
   font-weight: @secondaryPointingActiveFontWeight;
   color: @secondaryPointingActiveTextColor;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalSecondaryPointingActiveBorderColor;
+    color: @nocturnalSecondaryPointingActiveTextColor;
+  }
 }
 
 /* Active Hover */
 .ui.secondary.pointing.menu .active.item:hover {
   border-color: @secondaryPointingActiveHoverBorderColor;
   color: @secondaryPointingActiveHoverTextColor;
+
+  .nocturnal-theme & {
+    background-color: transparent; // specifity issue
+    border-color: @nocturnalSecondaryPointingActiveHoverBorderColor;
+    color: @nocturnalSecondaryPointingActiveHoverTextColor;
+  }
 }
 
 /* Active Dropdown */
 .ui.secondary.pointing.menu .active.dropdown.item {
   border-color: @secondaryPointingActiveDropdownBorderColor;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalSecondaryPointingActiveDropdownBorderColor;
+  }
 }
 
 /* Vertical Pointing */
@@ -946,6 +1200,10 @@ Floated Menu / Item
   border-right-width: @secondaryPointingBorderWidth;
   border-right-style: solid;
   border-right-color: @secondaryPointingBorderColor;
+
+  .nocturnal-theme & {
+    border-right-color: @nocturnalSecondaryPointingBorderColor;
+  }
 }
 .ui.secondary.vertical.pointing.menu .item {
   border-bottom: none;
@@ -959,34 +1217,63 @@ Floated Menu / Item
 /* Vertical Active */
 .ui.secondary.vertical.pointing.menu .active.item {
   border-color: @secondaryPointingActiveBorderColor;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalSecondaryPointingActiveBorderColor;
+  }
 }
 
 /* Inverted */
 .ui.secondary.inverted.pointing.menu {
   border-color: @secondaryPointingInvertedBorderColor;
+
+  .nocturnal-theme {
+    border-color: @nocturnalSecondaryPointingInvertedBorderColor;
+  }
 }
 
 .ui.secondary.inverted.pointing.menu {
   border-width: @secondaryPointingBorderWidth;
-  border-color: @secondaryPointingBorderColor;
+  border-color: @secondaryPointingInvertedBorderColor;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalSecondaryPointingBorderColor;
+  }
 }
 .ui.secondary.inverted.pointing.menu .item {
   color: @secondaryPointingInvertedItemTextColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalSecondaryPointingInvertedItemTextColor;
+  }
 }
 .ui.secondary.inverted.pointing.menu .header.item {
   color: @secondaryPointingInvertedItemHeaderColor !important;
+
+  .nocturnal-theme & {
+    color: @nocturnalSecondaryPointingInvertedItemHeaderColor !important;
+  }
 }
 
 /* Hover */
 .ui.secondary.inverted.pointing.menu .link.item:hover,
 .ui.secondary.inverted.pointing.menu a.item:hover {
   color: @secondaryPointingInvertedItemHoverTextColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalSecondaryPointingInvertedItemHoverTextColor;
+  }
 }
 
 /* Active */
 .ui.secondary.inverted.pointing.menu .active.item {
   border-color: @secondaryPointingInvertedActiveBorderColor;
   color: @secondaryPointingInvertedActiveColor;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalSecondaryPointingInvertedActiveBorderColor;
+    color: @nocturnalSecondaryPointingInvertedActiveColor;
+  }
 }
 
 /*--------------
@@ -1010,6 +1297,10 @@ Floated Menu / Item
   font-weight: @textMenuItemFontWeight;
   color: @textMenuItemColor;
   transition: @textMenuItemTransition;
+
+  .nocturnal-theme & {
+    color: @nocturnalTextMenuItemColor;
+  }
 }
 
 /* Border */
@@ -1026,6 +1317,10 @@ Floated Menu / Item
   font-size: @textMenuHeaderSize;
   text-transform: @textMenuHeaderTextTransform;
   font-weight: @textMenuHeaderFontWeight;
+
+  .nocturnal-theme & {
+    color: @nocturnalTextMenuHeaderColor;
+  }
 }
 
 /* Image */
@@ -1083,6 +1378,10 @@ Floated Menu / Item
   box-shadow: none;
   font-weight: @textMenuActiveItemFontWeight;
   color: @textMenuActiveItemColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalTextMenuActiveItemColor;
+  }
 }
 
 /*--- active hover ---*/
@@ -1127,6 +1426,10 @@ Floated Menu / Item
   height: auto;
   text-align: @iconMenuTextAlign;
   color: @iconMenuItemColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalIconMenuItemColor;
+  }
 }
 
 /* Icon */
@@ -1157,6 +1460,10 @@ Floated Menu / Item
 /* Inverted */
 .ui.inverted.icon.menu .item {
   color: @iconMenuInvertedItemColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalIconMenuInvertedItemColor;
+  }
 }
 
 /*--------------
@@ -1211,6 +1518,10 @@ Floated Menu / Item
     width: 100%;
     height: @dividerSize;
     background: @verticalDividerBackground;
+
+    .nocturnal-theme & {
+      background: @nocturnalVerticalDividerBackground;
+    }
   }
 
   .ui.stackable.menu .left.menu,
@@ -1302,6 +1613,12 @@ Floated Menu / Item
   border: @invertedBorder;
   background: @invertedBackground;
   box-shadow: @invertedBoxShadow;
+
+  .nocturnal-theme & {
+    border: @nocturnalInvertedBorder;
+    background: @nocturnalInvertedBackground;
+    box-shadow: @nocturnalInvertedBoxShadow;
+  }
 }
 
 /* Menu Item */
@@ -1309,23 +1626,44 @@ Floated Menu / Item
 .ui.inverted.menu .item > a:not(.ui) {
   background: @invertedItemBackground;
   color: @invertedItemTextColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalInvertedItemBackground;
+    color: @nocturnalInvertedItemTextColor;
+  }
 }
 .ui.inverted.menu .item.menu {
   background: @invertedSubMenuBackground;
+
+  .nocturnal-theme & {
+    background: @nocturnalInvertedSubMenuBackground;
+  }
 }
 
 /*--- Border ---*/
 .ui.inverted.menu .item:before {
   background: @invertedDividerBackground;
+
+  .nocturnal-theme & {
+    background: @nocturnalInvertedBackground;
+  }
 }
 .ui.vertical.inverted.menu .item:before {
   background: @invertedVerticalDividerBackground;
+
+  .nocturnal-theme & {
+    background: @nocturnalInvertedVerticalDividerBackground;
+  }
 }
 
 /* Sub Menu */
 .ui.vertical.inverted.menu .menu .item,
 .ui.vertical.inverted.menu .menu .item a:not(.ui) {
   color: @invertedSubMenuColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalInvertedSubMenuColor;
+  }
 }
 
 /* Header */
@@ -1333,12 +1671,21 @@ Floated Menu / Item
   margin: 0em;
   background: @invertedHeaderBackground;
   box-shadow: none;
+
+  .nocturnal-theme & {
+    background: @nocturnalInvertedHeaderBackground;
+    box-shadow: none;
+  }
 }
 
 /* Disabled */
 .ui.inverted.menu .item.disabled,
 .ui.inverted.menu .item.disabled:hover {
   color: @invertedDisabledTextColor;
+
+  .nocturnal-theme & {
+    color: @disabledTextColor;
+  }
 }
 
 /*--- Hover ---*/
@@ -1348,11 +1695,21 @@ Floated Menu / Item
 .ui.inverted.menu a.item:hover {
   background: @invertedHoverBackground;
   color: @invertedHoverColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalInvertedHoverBackground;
+    color: @nocturnalInvertedHoverColor;
+  }
 }
 .ui.vertical.inverted.menu .item .menu a.item:hover,
 .ui.vertical.inverted.menu .item .menu .link.item:hover {
   background: @invertedSubMenuBackground;
   color: @invertedSubMenuHoverColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalInvertedSubMenuBackground;
+    color: @nocturnalInvertedSubMenuHoverColor;
+  }
 }
 
 /*--- Pressed ---*/
@@ -1360,31 +1717,59 @@ Floated Menu / Item
 .ui.inverted.menu .link.item:active {
   background: @invertedMenuPressedBackground;
   color: @invertedMenuPressedColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalInvertedMenuPressedBackground;
+    color: @nocturnalInvertedMenuPressedColor;
+  }
 }
 
 /*--- Active ---*/
 .ui.inverted.menu .active.item {
   background: @invertedActiveBackground;
   color: @invertedActiveColor !important;
+
+  .nocturnal-theme & {
+    background: @nocturnalInvertedActiveBackground;
+    color: @nocturnalInvertedActiveColor !important;
+  }
 }
 .ui.inverted.vertical.menu .item .menu .active.item {
   background: @invertedSubMenuActiveBackground;
   color: @invertedSubMenuActiveColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalInvertedSubMenuActiveBackground;
+    color: @nocturnalInvertedSubMenuActiveColor;
+  }
 }
 .ui.inverted.pointing.menu .active.item:after {
   background: @invertedArrowActiveColor !important;
   margin: 0em !important;
   box-shadow: none !important;
   border: none !important;
+
+  .nocturnal-theme & {
+    background: @nocturnalInvertedArrowActiveColor !important;
+  }
 }
 
 /*--- Active Hover ---*/
 .ui.inverted.menu .active.item:hover {
   background: @invertedActiveHoverBackground;
   color: @invertedActiveHoverColor !important;
+
+  .nocturnal-theme & {
+    background: @nocturnalInvertedActiveHoverBackground;
+    color: @nocturnalInvertedActiveHoverColor !important;
+  }
 }
 .ui.inverted.pointing.menu .active.item:hover:after {
   background: @invertedArrowActiveHoverColor !important;
+
+  .nocturnal-theme & {
+    background: @nocturnalInvertedArrowActiveHoverColor !important;
+  }
 }
 
 /*--------------
@@ -1415,9 +1800,17 @@ Floated Menu / Item
 }
 .ui.inverted.red.menu .item:before {
   background-color: @invertedColoredDividerBackground;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalInvertedColoredDividerBackground;
+  }
 }
 .ui.inverted.red.menu .active.item {
   background-color: @invertedColoredActiveBackground !important;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalInvertedColoredActiveBackground !important;
+  }
 }
 
 /* Orange */
@@ -1427,9 +1820,17 @@ Floated Menu / Item
 }
 .ui.inverted.orange.menu .item:before {
   background-color: @invertedColoredDividerBackground;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalInvertedColoredDividerBackground;
+  }
 }
 .ui.inverted.orange.menu .active.item {
   background-color: @invertedColoredActiveBackground !important;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalInvertedColoredActiveBackground !important;
+  }
 }
 
 /* Yellow */
@@ -1439,9 +1840,17 @@ Floated Menu / Item
 }
 .ui.inverted.yellow.menu .item:before {
   background-color: @invertedColoredDividerBackground;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalInvertedColoredDividerBackground;
+  }
 }
 .ui.inverted.yellow.menu .active.item {
   background-color: @invertedColoredActiveBackground !important;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalInvertedColoredActiveBackground !important;
+  }
 }
 
 /* Olive */
@@ -1451,9 +1860,17 @@ Floated Menu / Item
 }
 .ui.inverted.olive.menu .item:before {
   background-color: @invertedColoredDividerBackground;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalInvertedColoredDividerBackground;
+  }
 }
 .ui.inverted.olive.menu .active.item {
   background-color: @invertedColoredActiveBackground !important;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalInvertedColoredActiveBackground !important;
+  }
 }
 
 /* Green */
@@ -1463,9 +1880,17 @@ Floated Menu / Item
 }
 .ui.inverted.green.menu .item:before {
   background-color: @invertedColoredDividerBackground;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalInvertedColoredDividerBackground;
+  }
 }
 .ui.inverted.green.menu .active.item {
   background-color: @invertedColoredActiveBackground !important;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalInvertedColoredActiveBackground !important;
+  }
 }
 
 /* Teal */
@@ -1475,6 +1900,10 @@ Floated Menu / Item
 }
 .ui.inverted.teal.menu .item:before {
   background-color: @invertedColoredDividerBackground;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalInvertedColoredDividerBackground;
+  }
 }
 .ui.inverted.teal.menu .active.item {
   background-color: @invertedColoredActiveBackground !important;
@@ -1487,6 +1916,10 @@ Floated Menu / Item
 }
 .ui.inverted.blue.menu .item:before {
   background-color: @invertedColoredDividerBackground;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalInvertedColoredDividerBackground;
+  }
 }
 .ui.inverted.blue.menu .active.item {
   background-color: @invertedColoredActiveBackground !important;
@@ -1511,9 +1944,17 @@ Floated Menu / Item
 }
 .ui.inverted.purple.menu .item:before {
   background-color: @invertedColoredDividerBackground;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalInvertedColoredDividerBackground;
+  }
 }
 .ui.inverted.purple.menu .active.item {
   background-color: @invertedColoredActiveBackground !important;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalInvertedColoredActiveBackground !important;
+  }
 }
 
 /* Pink */
@@ -1523,9 +1964,17 @@ Floated Menu / Item
 }
 .ui.inverted.pink.menu .item:before {
   background-color: @invertedColoredDividerBackground;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalInvertedColoredDividerBackground;
+  }
 }
 .ui.inverted.pink.menu .active.item {
   background-color: @invertedColoredActiveBackground !important;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalInvertedColoredActiveBackground !important;
+  }
 }
 
 /* Brown */
@@ -1535,9 +1984,17 @@ Floated Menu / Item
 }
 .ui.inverted.brown.menu .item:before {
   background-color: @invertedColoredDividerBackground;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalInvertedColoredDividerBackground;
+  }
 }
 .ui.inverted.brown.menu .active.item {
   background-color: @invertedColoredActiveBackground !important;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalInvertedColoredActiveBackground !important;
+  }
 }
 
 /* Grey */
@@ -1547,9 +2004,17 @@ Floated Menu / Item
 }
 .ui.inverted.grey.menu .item:before {
   background-color: @invertedColoredDividerBackground;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalInvertedColoredDividerBackground;
+  }
 }
 .ui.inverted.grey.menu .active.item {
   background-color: @invertedColoredActiveBackground !important;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalInvertedColoredActiveBackground !important;
+  }
 }
 
 /*--------------
@@ -1762,6 +2227,11 @@ Floated Menu / Item
 
   z-index: @arrowZIndex;
   transition: @arrowTransition;
+
+  .nocturnal-theme & {
+    border-bottom: @nocturnalArrowBorder;
+    border-right: @nocturnalArrowBorder;
+  }
 }
 .ui.vertical.pointing.menu .item:after {
   position: absolute;
@@ -1776,6 +2246,11 @@ Floated Menu / Item
   border: none;
   border-top: @arrowBorder;
   border-right: @arrowBorder;
+
+  .nocturnal-theme & {
+    border-top: @nocturnalArrowBorder;
+    border-right: @nocturnalArrowBorder;
+  }
 }
 
 /* Active */
@@ -1795,22 +2270,46 @@ Floated Menu / Item
 /* Colors */
 .ui.pointing.menu .active.item:hover:after {
   background-color: @arrowHoverColor;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalArrowHoverColor;
+  }
 }
 .ui.pointing.menu .active.item:after {
   background-color: @arrowActiveColor;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalArrowActiveColor;
+  }
 }
 .ui.pointing.menu .active.item:hover:after {
   background-color: @arrowActiveHoverColor;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalArrowActiveHoverColor;
+  }
 }
 
 .ui.vertical.pointing.menu .active.item:hover:after {
   background-color: @arrowVerticalHoverColor;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalArrowVerticalHoverColor;
+  }
 }
 .ui.vertical.pointing.menu .active.item:after {
   background-color: @arrowVerticalActiveColor;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalArrowVerticalActiveColor;
+  }
 }
 .ui.vertical.pointing.menu .menu .active.item:after {
   background-color: @arrowVerticalSubMenuColor;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalArrowVerticalSubMenuColor;
+  }
 }
 
 /*--------------
@@ -1826,6 +2325,10 @@ Floated Menu / Item
   width: @attachedWidth;
   max-width: @attachedWidth;
   box-shadow: @attachedBoxShadow;
+
+  // .nocturnal-theme & {
+  //   box-shadow: @nocturnalAttachedBoxShadow;
+  // }
 }
 .ui.attached + .ui.attached.menu:not(.top) {
   border-top: none;
@@ -1851,6 +2354,10 @@ Floated Menu / Item
   margin-bottom: @verticalMargin;
   box-shadow: @attachedBottomBoxShadow;
   border-radius: 0em 0em @borderRadius @borderRadius;
+
+  .nocturnal-theme & {
+    box-shadow: @nocturnalAttachedBottomBoxShadow;
+  }
 }
 .ui[class*='bottom attached'].menu:last-child {
   margin-bottom: 0em;
@@ -1867,6 +2374,10 @@ Floated Menu / Item
 /* Tabular Attached */
 .ui.attached.menu:not(.tabular) {
   border: @attachedBorder;
+
+  .nocturnal-theme & {
+    border: @nocturnalAttachedBorder;
+  }
 }
 .ui.attached.inverted.menu {
   border: none;

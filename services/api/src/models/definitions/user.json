@@ -36,6 +36,10 @@
     "timeZone": {
       "type": "String"
     },
+    "theme": {
+      "type": "String",
+      "enum": ["dark", "light", "system"]
+    },
     "isDeveloper": {
       "type": "Boolean",
       "default": false

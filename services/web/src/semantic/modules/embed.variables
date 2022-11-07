@@ -12,14 +12,18 @@
 @background: @lightGrey;
 @transitionDuration: 0.5s;
 @transitionEasing: @defaultEasing;
+// @todo sync up with card background
+@nocturnalBackground: hsl(hue(@mainMenuBackground), (saturation(@mainMenuBackground) / 2), (100% - lightness(@mainMenuBackground) + (lightness(@textColor)*0.75)));
 
 /* Placeholder */
 @placeholderUnderlay: @background;
+@nocturnalPlaceholderUnderlay: @nocturnalBackground;
 
 /* Placeholder Overlayed Background */
 @placeholderBackground: radial-gradient(transparent 45%, rgba(0, 0, 0, 0.3));
 @placeholderBackgroundOpacity: 0.5;
 @placeholderBackgroundTransition: opacity @transitionDuration @transitionEasing;
+@nocturnalPlaceholderBackground: radial-gradient(rgba(255, 255, 255, 0.25), transparent 55%);
 
 /* Icon */
 @iconBackground: @veryStrongTransparentBlack;
@@ -33,6 +37,9 @@
   0px 2px 10px rgba(34, 36, 38, 0.2)
 ;
 @iconZIndex: 10;
+@nocturnalIconBackground: @strongTransparentWhite;
+@nocturnalIconColor: @textColor;
+@nocturnalIconShadow: 0px 2px 10px rgba(255, 255, 255, .2);
 
 /*-------------------
        States
@@ -42,6 +49,8 @@
 @hoverPlaceholderBackground: @placeholderBackground;
 @hoverPlaceholderBackgroundOpacity: 1;
 @hoverIconColor: @white;
+@nocturnalHoverPlaceholderBackground: @nocturnalPlaceholderBackground;
+@nocturnalHoverIconColor: @textColor;
 
 
 /*-------------------

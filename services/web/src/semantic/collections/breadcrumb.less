@@ -17,8 +17,12 @@
 .ui.breadcrumb {
   display: @display;
   vertical-align: @verticalAlign;
-  text-transform: uppercase;
-  color: #abadb3;
+  text-transform: @breadcrumbTextTransform;
+  color: @breadcrumbTextColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalBreadcrumbTextColor;
+  }
 }
 .ui.breadcrumb:first-child {
   margin-top: 0em;
@@ -39,14 +43,26 @@
   color: @dividerColor;
   vertical-align: -0.1em;
   background: transparent;
+
+  .nocturnal-theme & {
+    color: @nocturnalDividerColor;
+  }
 }
 
 /* Link */
 .ui.breadcrumb a {
   color: @breadcrumbLinkColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalBreadcrumbLinkColor;
+  }
 }
 .ui.breadcrumb a:hover {
   color: @breadcrumbLinkColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalBreadcrumbLinkColor;
+  }
 }
 
 /* Section */
@@ -71,7 +87,11 @@
 
 .ui.breadcrumb .active.section {
   font-weight: @activeFontWeight;
-  color: saturate(darken(@breadcrumbLinkColor, 40), 10, relative);
+  color: @breadcrumbActiveColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalBreadcrumbActiveColor;
+  }
 }
 
 /*******************************

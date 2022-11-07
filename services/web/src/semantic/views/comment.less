@@ -42,6 +42,12 @@
   border: @commentBorder;
   border-top: @commentDivider;
   line-height: @commentLineHeight;
+
+  .nocturnal-theme & {
+    background: @nocturnalCommentBackground;
+    border: @nocturnalCommentBorder;
+    border-top: @nocturnalCommentDivider;
+  }
 }
 .ui.comments .comment:first-child {
   margin-top: @firstCommentMargin;
@@ -65,6 +71,12 @@
   border: @nestedCommentBorder;
   border-top: @nestedCommentDivider;
   background: @nestedCommentBackground;
+
+  .nocturnal-theme & {
+    border: @nocturnalNestedCommentBorder;
+    border-top: @nocturnalNestedCommentDivider;
+    background: @nocturnalNestedCommentBackground;
+  }
 }
 
 /*--------------
@@ -107,12 +119,20 @@
   font-size: @authorFontSize;
   color: @authorColor;
   font-weight: @authorFontWeight;
+
+  .nocturnal-theme & {
+    color: @nocturnalAuthorColor;
+  }
 }
 .ui.comments .comment a.author {
   cursor: pointer;
 }
 .ui.comments .comment a.author:hover {
   color: @authorHoverColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalAuthorHoverColor;
+  }
 }
 
 /*--------------
@@ -124,6 +144,10 @@
   margin-left: @metadataSpacing;
   color: @metadataColor;
   font-size: @metadataFontSize;
+
+  .nocturnal-theme & {
+    color: @nocturnalMetadataColor;
+  }
 }
 .ui.comments .comment .metadata > * {
   display: inline-block;
@@ -143,6 +167,10 @@
   word-wrap: @textWordWrap;
   color: @textColor;
   line-height: @textLineHeight;
+
+  .nocturnal-theme & {
+    color: @nocturnalTextColor;
+  }
 }
 
 /*--------------------
@@ -157,6 +185,10 @@
   display: inline-block;
   margin: 0em @actionContentDistance 0em 0em;
   color: @actionLinkColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalActionLinkColor;
+  }
 }
 .ui.comments .comment .actions a:last-child {
   margin-right: 0em;
@@ -164,6 +196,10 @@
 .ui.comments .comment .actions a.active,
 .ui.comments .comment .actions a:hover {
   color: @actionLinkHoverColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalActionLinkHoverColor;
+  }
 }
 
 /*--------------------
@@ -204,6 +240,10 @@
   margin: @threadedCommentMargin;
   padding: @threadedCommentPadding;
   box-shadow: @threadedCommentBoxShadow;
+
+  .nocturnal-theme & {
+    box-shadow: @nocturnalThreadedCommentBoxShadow;
+  }
 }
 
 /*--------------------

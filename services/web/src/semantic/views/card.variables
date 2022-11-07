@@ -11,6 +11,7 @@
 /* Shadow */
 @shadowDistance: 1px;
 @shadowBoxShadow: 0px @shadowDistance 3px 0px @solidBorderColor;
+@nocturnalShadowBoxShadow: 0px @shadowDistance 3px 0px rgba(0,0,0,0.1);
 
 /* Card */
 @display: flex;
@@ -32,6 +33,12 @@
   box-shadow @defaultDuration @defaultEasing,
   transform @defaultDuration @defaultEasing
 ;
+@nocturnalBackground: saturate(lighten(@nocturnalPageBackground, 5), 15, relative);
+@nocturnalBorderShadow: 0px 0px 0px @borderWidth @nocturnalSolidBorderColor;
+@nocturnalBoxShadow:
+  @nocturnalShadowBoxShadow,
+  @nocturnalBorderShadow;
+@nocturnalBorder: none;
 
 /* Card Group */
 @horizontalSpacing: 1em;
@@ -58,6 +65,10 @@
 @imageBorder: none;
 @imageBoxShadow: none;
 @imageBorder: none;
+@nocturnalImageBackground: @transparentBlack;
+@nocturnalImageBorder: none;
+@nocturnalImageBoxShadow: none;
+@nocturnalImageBorder: none;
 
 /* Content */
 @contentDivider: @borderWidth solid @internalBorderColor;
@@ -68,6 +79,10 @@
 @contentBorderRadius: 0em;
 @contentBoxShadow: none;
 @contentBorder: none;
+@nocturnalContentDivider: @borderWidth solid @nocturnalInternalBorderColor;
+@nocturnalContentBackground: none;
+@nocturnalContentBoxShadow: @contentBoxShadow;
+@nocturnalContentBorder: none;
 
 
 /* Header */
@@ -76,11 +91,13 @@
 @headerFontSize: @relativeBig;
 @headerLineHeightOffset: -(@lineHeight - 1em) / 2;
 @headerColor: @darkTextColor;
+@nocturnalHeaderColor: @nocturnalTextColor;
 
 /* Metadata */
 @metaFontSize: @relativeMedium;
 @metaSpacing: 0.3em;
 @metaColor: @lightTextColor;
+@nocturnalMetaColor: @nocturnalUnselectedTextColor;
 
 /* Icons */
 @actionOpacity: 0.75;
@@ -100,13 +117,18 @@
 
 @headerLinkColor: @headerColor;
 @headerLinkHoverColor: @linkHoverColor;
+@nocturnalHeaderLinkColor: @nocturnalHeaderColor;
+@nocturnalHeaderLinkHoverColor: @nocturnalLinkHoverColor;
 
 @metaLinkColor: @lightTextColor;
 @metaLinkHoverColor: @textColor;
+@nocturnalMetaLinkColor: @nocturnalMetaColor;
+@nocturnalMetaLinkHoverColor: @nocturnalTextColor;
 
 /* Description */
 @descriptionDistance: 0.5em;
 @descriptionColor: rgba(0, 0, 0, 0.68);
+@nocturnalDescriptionColor: @nocturnalTextColor;
 
 /* Content Image */
 @contentImageWidth: '';
@@ -122,6 +144,7 @@
 /* Dimmer */
 @dimmerZIndex: 10;
 @dimmerColor: '';
+@nocturnalDimmerColor: '';
 
 /* Additional Content */
 @extraDivider: 1px solid rgba(0, 0, 0, 0.05);
@@ -135,10 +158,16 @@
 @extraBoxShadow: none;
 @extraColor: @lightTextColor;
 @extraTransition: color @defaultDuration @defaultEasing;
+@nocturnalExtraDivider: 1px solid rgba(255, 255, 255, 0.1);
+@nocturnalExtraBackground: none;
+@nocturnalExtraBoxShadow: none;
+@nocturnalExtraColor: @nocturnalUnselectedTextColor;
 
 /* Extra Links */
 @extraLinkColor: @unselectedTextColor;
 @extraLinkHoverColor: @linkHoverColor;
+@nocturnalExtraLinkColor: @nocturnalLightTextColor;
+@nocturnalExtraLinkHoverColor: @nocturnalLinkHoverColor;
 
 /* Buttons */
 @buttonMargin: 0px -@borderWidth;
@@ -154,13 +183,19 @@
 @linkHoverZIndex: 5;
 @linkHoverRaiseDistance: 3px;
 @linkHoverTransform: translateY(-@linkHoverRaiseDistance);
+@nocturnalLinkHoverBackground: saturate(lighten(@nocturnalBackground, 3), 10, relative);
+@nocturnalLinkHoverBorder: @nocturnalBorder;
 
 @shadowHoverBoxShadow: 0px @shadowDistance @linkHoverRaiseDistance 0px @solidSelectedBorderColor;
 @linkHoverBoxShadow:
   @shadowHoverBoxShadow,
   @borderShadow
 ;
-
+@nocturnalShadowHoverBoxShadow: 0px @shadowDistance @linkHoverRaiseDistance 0px rgba(0,0,0,0.15);
+@nocturnalLinkHoverBoxShadow:
+  @nocturnalShadowHoverBoxShadow,
+  @nocturnalBorderShadow
+;
 
 /* Raised */
 @raisedShadow:
@@ -170,6 +205,14 @@
 @raisedShadowHover:
   @borderShadow,
   @floatingShadowHover
+;
+@nocturnalRaisedShadow:
+  @nocturnalBorderShadow,
+  @nocturnalFloatingShadow
+;
+@nocturnalRaisedShadowHover:
+  @nocturnalBorderShadow,
+  @nocturnalFloatingShadowHover
 ;
 
 /* Card Count */

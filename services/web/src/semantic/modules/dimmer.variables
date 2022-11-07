@@ -11,6 +11,7 @@
 @lineHeight: 1;
 @perspective: 2000px;
 @padding: 1em;
+@nocturnalBackgroundColor: rgba(0, 0, 0, 0.85);
 
 @duration: 0.5s;
 @transition:
@@ -19,7 +20,7 @@
 @zIndex: 1000;
 @textAlign: center;
 @verticalAlign: middle;
-@textColor: @white;
+@textColor: rgba(@white, .9);
 @overflow: hidden;
 
 @blurredStartFilter: ~"blur(0px) grayscale(0)";
@@ -58,3 +59,5 @@
 @simpleEndBackgroundColor: @backgroundColor;
 @simpleInvertedStartBackgroundColor: rgba(255, 255, 255, 0);
 @simpleInvertedEndBackgroundColor: @invertedBackgroundColor;
+@nocturnalSimpleStartBackgroundColor: rgba(0, 0, 0, 0);
+@nocturnalSimpleEndBackgroundColor: @nocturnalBackgroundColor;

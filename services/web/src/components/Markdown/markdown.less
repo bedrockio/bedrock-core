@@ -90,3 +90,72 @@
     overflow: auto;
   }
 }
+
+// Nocturnal styles
+
+.nocturnal-theme {
+  .markdown-body {
+    color: rgba(255, 255, 255, 0.9);
+
+    h1, h2, h3, h4, h5, h6 {
+      .octicon-link {
+        color: rgba(255, 255, 255, .8);
+      }
+
+      &:hover .anchor .octicon-link:before {
+        color: rgba(255, 255, 255, .9);
+      }
+    }
+
+    a {
+      color: saturate(lighten(#0366d6, 15), 10);
+    }
+
+    hr {
+      border-bottom-color: rgba(255, 255, 255, .2); //#dfe2e5
+    }
+
+    .border {
+      border: 1px solid rgba(255, 255, 255, .2) !important;
+    }
+
+    .border-bottom {
+      border-bottom: 1px solid rgba(255, 255, 255, .2) !important;
+    }
+
+    hr {
+      background-color: rgba(255, 255, 255, .2) !important;
+    }
+
+    .blockquote {
+      border-left-color: rgba(255, 255, 255, .2);
+    }
+
+    h1, h2 {
+      border-bottom: 1px solid rgba(255, 255, 255, .4);
+    }
+
+    h6 {
+      color: rgba(255, 255, 255, .6);
+    }
+
+    table {
+      td, th {
+        border: 1px solid rgba(255, 255, 255, .2);
+      }
+
+      th {
+        background: #322b25;
+      }
+
+      tr {
+        background: #29231f;
+        border: 1px solid rgba(255, 255, 255, .2);
+      }
+      tr:nth-child(2n) {
+        background: mix(#322b25, #29231f, 50);
+      }
+
+    }
+  }
+}

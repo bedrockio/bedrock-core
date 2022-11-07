@@ -49,12 +49,22 @@
 .ui.rating .icon {
   background: @inactiveBackground;
   color: @inactiveColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalInactiveBackground;
+    color: @nocturnalInactiveColor;
+  }
 }
 
 /* Active Icon */
 .ui.rating .active.icon {
   background: @activeBackground;
   color: @activeColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalActiveBackground;
+    color: @nocturnalActiveColor;
+  }
 }
 
 /* Selected Icon */
@@ -62,6 +72,11 @@
 .ui.rating .icon.selected.active {
   background: @selectedBackground;
   color: @selectedColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalSelectedBackground;
+    color: @nocturnalSelectedColor;
+  }
 }
 
 /*-------------------
@@ -75,6 +90,12 @@
   background: @starInactiveBackground;
   color: @starInactiveColor;
   text-shadow: @starInactiveTextShadow;
+
+  .nocturnal-theme & {
+    background: @nocturnalStarInactiveBackground;
+    color: @nocturnalStarInactiveColor;
+    text-shadow: @nocturnalStarInactiveTextShadow;
+  }
 }
 
 /* Active Star */
@@ -82,6 +103,10 @@
   background: @starActiveBackground !important;
   color: @starActiveColor !important;
   text-shadow: @starActiveTextShadow !important;
+
+  .nocturnal-theme & {
+    background: @nocturnalStarActiveBackground !important;
+  }
 }
 
 /* Selected Star */
@@ -90,6 +115,10 @@
   background: @starSelectedBackground !important;
   color: @starSelectedColor !important;
   text-shadow: @starSelectedTextShadow !important;
+
+  .nocturnal-theme & {
+    background: @nocturnalStarSelectedBackground !important;
+  }
 }
 
 /*-------------------
@@ -101,7 +130,13 @@
   height: @heartIconHeight;
   background: @heartInactiveBackground;
   color: @heartInactiveColor;
-  text-shadow: @heartInactiveTextShadow !important;
+  text-shadow: @heartInactiveTextShadow;
+
+  .nocturnal-theme & {
+    background: @nocturnalHeartInactiveBackground;
+    color: @nocturnalHeartInactiveColor;
+    text-shadow: @nocturnalHeartInactiveTextShadow;
+  }
 }
 
 /* Active Heart */
@@ -109,6 +144,10 @@
   background: @heartActiveBackground !important;
   color: @heartActiveColor !important;
   text-shadow: @heartActiveTextShadow !important;
+
+  .nocturnal-theme & {
+    background: @nocturnalHeartActiveBackground !important;
+  }
 }
 
 /* Selected Heart */
@@ -117,6 +156,10 @@
   background: @heartSelectedBackground !important;
   color: @heartSelectedColor !important;
   text-shadow: @heartSelectedTextShadow !important;
+
+  .nocturnal-theme & {
+    background: @nocturnalHeartSelectedBackground !important;
+  }
 }
 
 /*******************************

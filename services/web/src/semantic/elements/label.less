@@ -32,6 +32,12 @@
   border: @border;
   border-radius: @borderRadius;
   transition: @transition;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalBackgroundColor;
+    background-image: @nocturnalBackgroundImage;
+    color: @nocturnalColor;
+  }
 }
 
 .ui.label:first-child {
@@ -99,7 +105,9 @@ a.ui.label {
   top: 0;
   vertical-align: top;
 }
-.ui.label > .delete.icon:hover {
+.ui.label > .close.icon:hover,
+.ui.label > .delete.icon:hover,
+.ui.label > .times.icon:hover {
   opacity: 1;
 }
 
@@ -161,6 +169,10 @@ a.ui.label {
   padding: @imageLabelPadding;
   border-radius: @imageLabelBorderRadius;
   box-shadow: @imageLabelBoxShadow;
+
+  .nocturnal-theme  & {
+    background: @nocturnalImageLabelBackground;
+  }
 }
 
 .ui.image.label img {
@@ -177,6 +189,10 @@ a.ui.label {
   margin: @imageLabelDetailMargin;
   padding: @imageLabelDetailPadding;
   border-radius: 0em @imageLabelBorderRadius @imageLabelBorderRadius 0em;
+
+  .nocturnal-theme & {
+    background: @nocturnalImageLabelDetailBackground;
+  }
 }
 
 /*-------------------
@@ -208,6 +224,10 @@ a.ui.label {
   width: @tagTriangleSize;
   height: @tagTriangleSize;
   transition: @tagTransition;
+
+  .nocturnal-theme & {
+    background-image: @nocturnalTagTriangleBackgroundImage;
+  }
 }
 
 .ui.tag.labels .label:after,
@@ -224,6 +244,11 @@ a.ui.label {
 
   box-shadow: @tagCircleBoxShadow;
   border-radius: @circularRadius;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalTagCircleColor !important;
+    box-shadow: @nocturnalTagCircleBoxShadow;
+  }
 }
 
 /*-------------------
@@ -244,6 +269,10 @@ a.ui.label {
   height: @cornerTriangleSize;
   z-index: @cornerTriangleZIndex;
   transition: @cornerTriangleTransition;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalBackgroundColor;
+  }
 }
 
 /* Icon Label */
@@ -317,6 +346,10 @@ a.ui.label {
   min-width: max-content;
   border-radius: 0em @borderRadius @borderRadius 0em;
   border-color: @ribbonShadowColor;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalRibbonShadowColor;
+  }
 }
 
 .ui.ribbon.label:after {
@@ -461,10 +494,21 @@ a.ui.label:hover {
 
   background-image: @labelHoverBackgroundImage;
   color: @labelHoverTextColor;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalLabelHoverBackgroundColor;
+    border-color: @nocturnalLabelHoverBackgroundColor;
+    background-image: @nocturnalLabelHoverBackgroundImage;
+    color: @nocturnalLabelHoverTextColor;
+  }
 }
 .ui.labels a.label:hover:before,
 a.ui.label:hover:before {
   color: @labelHoverTextColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalLabelHoverTextColor;
+  }
 }
 
 /*-------------------
@@ -477,11 +521,24 @@ a.ui.label:hover:before {
 
   background-image: @labelActiveBackgroundImage;
   color: @labelActiveTextColor;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalLabelActiveBackgroundColor;
+    border-color: @nocturnalLabelActiveBackgroundColor;
+    background-image: @nocturnalLabelActiveBackgroundImage;
+    color: @nocturnalLabelActiveTextColor;
+  }
 }
 .ui.active.label:before {
   background-color: @labelActiveBackgroundColor;
   background-image: @labelActiveBackgroundImage;
   color: @labelActiveTextColor;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalLabelActiveBackgroundColor;
+    background-image: @nocturnalLabelActiveBackgroundImage;
+    color: @nocturnalLabelActiveTextColor;
+  }
 }
 
 /*-------------------
@@ -495,12 +552,25 @@ a.ui.active.label:hover {
 
   background-image: @labelActiveHoverBackgroundImage;
   color: @labelActiveHoverTextColor;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalLabelActiveHoverBackgroundColor;
+    border-color: @nocturnalLabelActiveHoverBackgroundColor;
+    background-image: @nocturnalLabelActiveHoverBackgroundImage;
+    color: @nocturnalLabelActiveHoverTextColor;
+  }
 }
 .ui.labels a.active.label:activehover:before,
 a.ui.active.label:activehover:before {
   background-color: @labelActiveHoverBackgroundColor;
   background-image: @labelActiveHoverBackgroundImage;
   color: @labelActiveHoverTextColor;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalLabelActiveHoverBackgroundColor;
+    background-image: @nocturnalLabelActiveHoverBackgroundImage;
+    color: @nocturnalLabelActiveHoverTextColor;
+  }
 }
 
 /*-------------------
@@ -1006,6 +1076,13 @@ a.ui.basic.black.label:hover {
   border: @basicBorder;
   color: @basicColor;
   box-shadow: @basicBoxShadow;
+
+  .nocturnal-theme & {
+    background: @nocturnalBasicBackground;
+    border: @nocturnalBasicBorder;
+    color: @nocturnalBasicColor;
+    box-shadow: @nocturnalBasicBoxShadow;
+  }
 }
 
 /* Link */
@@ -1013,8 +1090,15 @@ a.ui.basic.label:hover {
   text-decoration: none;
   background: @basicHoverBackground;
   color: @basicHoverColor;
-  box-shadow: @basicHoverBorder;
+  border: @basicHoverBorder;
   box-shadow: @basicHoverBoxShadow;
+
+  .nocturnal-theme & {
+    background: @nocturnalBasicHoverBackground;
+    color: @nocturnalBasicHoverColor;
+    border: @nocturnalBasicHoverBorder;
+    box-shadow: @nocturnalBasicHoverBoxShadow;
+  }
 }
 
 /* Pointing */
@@ -1039,6 +1123,10 @@ a.ui.basic.label:hover {
 .ui.inverted.labels .label,
 .ui.inverted.label {
   color: @invertedTextColor !important;
+
+  .nocturnal-theme & {
+    color: @color !important;
+  }
 }
 
 /*-------------------

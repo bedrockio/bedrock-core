@@ -15,6 +15,7 @@
 @borderRadius: @defaultBorderRadius;
 
 @raisedShadow: 0px 2px 3px 0px @borderColor;
+@nocturnalRaisedShadow: 0px 2px 3px 0px rgba(34,36,38,.12);
 
 /*-------------------
        Content
@@ -33,6 +34,7 @@
 @menuPadding: 0em 0em;
 @menuTop: 100%;
 @menuTextAlign: left;
+@nocturnalMenuBackground: saturate(lighten(@nocturnalPageBackground, 8), 20, relative);
 
 @menuBorderWidth: 1px;
 @menuBorderColor: @borderColor;
@@ -42,6 +44,9 @@
 @menuTransition: opacity @defaultDuration @defaultEasing;
 @menuMinWidth: ~"calc(100% + "(@menuBorderWidth * 2)~")";
 @menuZIndex: 11;
+@nocturnalMenuBorderColor: @nocturnalBorderColor;
+@nocturnalMenuBorder: @menuBorderWidth solid @nocturnalMenuBorderColor;
+@nocturnalMenuBoxShadow: @nocturnalRaisedShadow;
 
 /* Text */
 @textLineHeight: 1em;
@@ -63,6 +68,10 @@
 @itemLineHeightOffset: (@itemLineHeight - 1em);
 @itemTextTransform: none;
 @itemBoxShadow: none;
+@nocturnalItemBorder: none;
+@nocturnalItemDivider: none;
+@nocturnalItemColor: @nocturnalTextColor;
+@nocturnalItemBoxShadow: none;
 
 /* Sub Menu */
 @subMenuTop: 0%;
@@ -80,12 +89,15 @@
 @menuHeaderTextTransform: uppercase;
 @menuHeaderMargin: 1rem 0rem 0.75rem;
 @menuHeaderPadding: 0em @itemHorizontalPadding;
+@nocturnalMenuHeaderColor: @nocturnalTextColor;
 
 /* Menu Divider */
 @menuDividerMargin: 0.5em 0em;
 @menuDividerColor: @internalBorderColor;
 @menuDividerSize: 1px;
 @menuDividerBorder: @menuDividerSize solid @menuDividerColor;
+@nocturnalMenuDividerColor: @nocturnalInternalBorderColor;
+@nocturnalMenuDividerBorder: @menuDividerSize solid @nocturnalMenuDividerColor;
 
 /* Menu Input */
 @menuInputMargin: @large @mini;
@@ -111,11 +123,13 @@
 @itemDescriptionFloat: right;
 @itemDescriptionMargin: 0em 0em 0em 1em;
 @itemDescriptionColor: @lightTextColor;
+@nocturnalItemDescriptionColor: @nocturnalLightTextColor;
 
 /* Message */
 @messagePadding: @selectionItemPadding;
 @messageFontWeight: @normal;
 @messageColor: @unselectedTextColor;
+@nocturnalMessageColor: @nocturnalUnselectedTextColor;
 
 /* Floated Content */
 @floatedDistance: 1em;
@@ -131,16 +145,18 @@
 @selectionMinWidth: 14em;
 @selectionVerticalPadding: @inputVerticalPadding;
 @selectionHorizontalPadding: @inputHorizontalPadding;
-@selectionBorderEmWidth:  @relative1px;
+@selectionBorderEmWidth: @relative1px;
 @selectionMinHeight: @inputLineHeight + (@selectionVerticalPadding * 2) - @selectionBorderEmWidth;
 @selectionBackground: @inputBackground;
 @selectionDisplay: inline-block;
 @selectionIconDistance: @inputHorizontalPadding + @glyphWidth;
 @selectionPadding: @selectionVerticalPadding @selectionIconDistance @selectionVerticalPadding @selectionHorizontalPadding;
 @selectionZIndex: 10;
+@nocturnalSelectionBackground: @nocturnalInputBackground;
 
 @selectionItemDivider: 1px solid @solidInternalBorderColor;
 @selectionMessagePadding: @selectionItemPadding;
+@nocturnalSelectionItemDivider: 1px solid @nocturnalSolidInternalBorderColor;
 
 /* <select> */
 @selectBorder: 1px solid @borderColor;
@@ -149,14 +165,18 @@
 @selectHeight: 38px;
 
 @selectionTextColor: @textColor;
+@nocturnalSelectionTextColor: @nocturnalTextColor;
 
 @selectionTextUnderlayIconOpacity: @disabledOpacity;
 @selectionTextUnderlayColor: @inputPlaceholderFocusColor;
+@nocturnalSelectionTextUnderlayColor: @nocturnalInputPlaceholderFocusColor;
 
 @selectionBoxShadow: none;
 @selectionBorderColor: @borderColor;
 @selectionBorder: 1px solid @selectionBorderColor;
 @selectionBorderRadius: @borderRadius;
+@nocturnalSelectionBoxShadow: @selectionBoxShadow;
+@nocturnalSelectionBorderColor: @nocturnalBorderColor;
 
 @selectionIconOpacity: 0.8;
 @selectionIconZIndex: 3;
@@ -168,6 +188,7 @@
 @selectionMenuBorderRadius: 0em 0em @borderRadius @borderRadius;
 @selectionMenuBoxShadow: @raisedShadow;
 @selectionMenuItemBoxShadow: none;
+@nocturnalSelectionMenuBoxShadow: @nocturnalRaisedShadow;
 
 @selectionItemHorizontalPadding: @itemHorizontalPadding;
 @selectionItemVerticalPadding: @itemVerticalPadding;
@@ -193,24 +214,36 @@
 /* Hover */
 @selectionHoverBorderColor: @selectedBorderColor;
 @selectionHoverBoxShadow: none;
+@nocturnalSelectionHoverBorderColor: @nocturnalSelectedBorderColor;
+@nocturnalSelectionHoverBoxShadow: @selectionHoverBoxShadow;
 
 /* Focus */
 @selectionFocusBorderColor: @focusedFormMutedBorderColor;
 @selectionFocusBoxShadow: none;
 @selectionFocusMenuBoxShadow: @raisedShadow;
+@nocturnalSelectionFocusBorderColor: @nocturnalFocusedFormMutedBorderColor;
+@nocturnalSelectionFocusBoxShadow: @selectionFocusBoxShadow;
+@nocturnalSelectionFocusMenuBoxSahdow: @nocturnalRaisedShadow;
 
 /* Visible */
 @selectionVisibleTextFontWeight: @normal;
 @selectionVisibleTextColor: @hoveredTextColor;
+@nocturnalSelectionVisibleTextColor: @nocturnalHoveredTextColor;
 
 @selectionVisibleBorderColor: @focusedFormMutedBorderColor;
 @selectionVisibleBoxShadow: @raisedShadow;
 @selectionVisibleMenuBoxShadow: @raisedShadow;
+@nocturnalSelectionVisibleBorderColor: @nocturnalFocusedFormMutedBorderColor;
+@nocturnalSelectionVisibleBoxShadow: @nocturnalRaisedShadow;
+@nocturnalSelectionVisibleMenuBoxShadow: @nocturnalRaisedShadow;
 
 /* Visible Hover */
 @selectionActiveHoverBorderColor: @focusedFormMutedBorderColor;
 @selectionActiveHoverBoxShadow: @selectionVisibleBoxShadow;
 @selectionActiveHoverMenuBoxShadow: @selectionVisibleMenuBoxShadow;
+@nocturnalSelectionActiveHoverBorderColor: @nocturnalFocusedFormMutedBorderColor;
+@nocturnalSelectionActiveHoverBoxShadow: @nocturnalSelectionVisibleBoxShadow;
+@nocturnalSelectionActiveHoverMenuBoxShadow: @nocturnalSelectionVisibleMenuBoxShadow;
 
 @selectionVisibleConnectingBorder: 0em;
 @selectionVisibleIconOpacity: '';
@@ -271,6 +304,7 @@
 @labelMargin: @labelVerticalMargin @labelHorizontalMargin @labelVerticalMargin 0em;
 @labelBorderWidth: 1px;
 @labelBoxShadow: 0px 0px 0px @labelBorderWidth @borderColor inset;
+@nocturnalLabelBoxShadow: 0px 0px 0px @labelBorderWidth @nocturnalBorderColor inset;
 
 @labelVerticalPadding: @relative5px;
 @labelHorizontalPadding: @relativeMini;
@@ -284,10 +318,14 @@
 @hoveredItemBackground: @transparentBlack;
 @hoveredItemColor: @selectedTextColor;
 @hoveredZIndex: @menuZIndex + 2;
+@nocturnalHoveredItemBackground: @subtleTransparentWhite;
+@nocturnalHoveredItemColor: @nocturnalSelectedTextColor;
 
 /* Default Text */
 @defaultTextColor: @inputPlaceholderColor;
 @defaultTextFocusColor: @inputPlaceholderFocusColor;
+@nocturnalDefaultTextColor: @nocturnalInputPlaceholderColor;
+@nocturnalDefaultTextFocusColor: @nocturnalInputPlaceholderFocusColor;
 
 /* Loading */
 @loadingZIndex: -1;
@@ -298,18 +336,28 @@
 @activeItemBoxShadow: none;
 @activeItemFontWeight: @bold;
 @activeItemColor: @selectedTextColor;
+@nocturnalActiveItemBackground: transparent;
+@nocturnalActiveItemBoxShadow: @activeItemBoxShadow;
+@nocturnalActiveItemColor: @nocturnalSelectedTextColor;
 
 /* Selected */
 @selectedBackground: @subtleTransparentBlack;
 @selectedColor: @selectedTextColor;
+@nocturnalSelectedBackground: @subtleTransparentWhite;
+@nocturnalSelectedColor: @nocturnalSelectedTextColor;
 
 /* Error */
 @errorLabelBackground: #EACBCB;
 @errorLabelColor: @errorTextColor;
+@nocturnalErrorLabelBackground: @errorLabelColor;
+@nocturnalErrorLabelColor: @errorLabelBackground;
 
 @errorItemTextColor: @errorTextColor;
 @errorItemHoverBackground: #FFF2F2;
 @errorItemActiveBackground: #FDCFCF;
+@nocturnalErrorItemTextColor: @nocturnalErrorTextColor;
+@nocturnalErrorItemHoverBackground: saturate(lighten(@nocturnalErrorBackgroundColor, 2), 4, relative);
+@nocturnalErrorItemActiveBackground: darken(@nocturnalErrorBackgroundColor, 4);
 
 /* Clearable */
 @clearableIconOpacity: 0.8;

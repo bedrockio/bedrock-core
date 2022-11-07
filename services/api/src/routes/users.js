@@ -44,6 +44,7 @@ router
       firstName: Joi.string(),
       lastName: Joi.string(),
       timeZone: Joi.string(),
+      theme: Joi.string(),
     }),
     async (ctx) => {
       const { authUser } = ctx.state;
