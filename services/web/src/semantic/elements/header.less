@@ -289,22 +289,40 @@ h5.ui.header .sub.header {
       Inverted
 --------------------*/
 
+.nocturnal-theme .ui.inverted.header {
+  color: @textColor;
+}
+.nocturnal-theme .ui.inverted.header .sub.header {
+  color: @subHeadingColor;
+}
+.nocturnal-theme .ui.inverted.attached.header {
+  background: @attachedBackground;
+  box-shadow: @attachedBoxShadow;
+  border-color: @attachedBorder;
+}
+.nocturnal-theme .ui.inverted.block.header {
+  background: @blockBackground;
+  box-shadow: @blockBoxShadow;
+  border: @blockBorder;
+}
+.nocturnal-theme .ui.header,
 .ui.inverted.header {
   color: @invertedColor;
 }
+.nocturnal-theme .ui.header .sub.header,
 .ui.inverted.header .sub.header {
   color: @invertedSubHeaderColor;
 }
+.nocturnal-theme .ui.attached.header,
 .ui.inverted.attached.header {
   background: @invertedAttachedBackground;
   box-shadow: none;
   border-color: transparent;
 }
+.nocturnal-theme .ui.block.header,
 .ui.inverted.block.header {
   background: @invertedBlockBackground;
   box-shadow: none;
-}
-.ui.inverted.block.header {
   border-bottom: none;
 }
 
@@ -313,10 +331,12 @@ h5.ui.header .sub.header {
 --------------------*/
 
 /*--- Red ---*/
-.ui.red.header {
+.ui.red.header,
+.nocturnal-theme .ui.inverted.red.header {
   color: @red !important;
 }
-a.ui.red.header:hover {
+a.ui.red.header:hover,
+.nocturnal-theme a.ui.inverted.red.header:hover {
   color: @redHover !important;
 }
 .ui.red.dividing.header {
@@ -324,207 +344,253 @@ a.ui.red.header:hover {
 }
 
 /* Inverted */
+.nocturnal-theme .ui.red.header,
 .ui.inverted.red.header {
   color: @lightRed !important;
 }
+.nocturnal-theme a.ui.red.header:hover,
 a.ui.inverted.red.header:hover {
   color: @lightRedHover !important;
 }
 
 /*--- Orange ---*/
-.ui.orange.header {
+.ui.orange.header,
+.nocturnal-theme .ui.inverted.orange.header {
   color: @orange !important;
 }
-a.ui.orange.header:hover {
+a.ui.orange.header:hover,
+.nocturnal-theme a.ui.inverted.orange.header:hover {
   color: @orangeHover !important;
 }
 .ui.orange.dividing.header {
   border-bottom: @dividedColoredBorderWidth solid @orange;
 }
 /* Inverted */
+.nocturnal-theme .ui.orange.header,
 .ui.inverted.orange.header {
   color: @lightOrange !important;
 }
+.nocturnal-theme a.ui.orange.header:hover,
 a.ui.inverted.orange.header:hover {
   color: @lightOrangeHover !important;
 }
 
 /*--- Olive ---*/
-.ui.olive.header {
+.ui.olive.header,
+.nocturnal-theme .ui.inverted.olive.header {
   color: @olive !important;
 }
-a.ui.olive.header:hover {
+a.ui.olive.header:hover,
+.nocturnal-theme a.ui.inverted.olive.header:hover {
   color: @oliveHover !important;
 }
 .ui.olive.dividing.header {
   border-bottom: @dividedColoredBorderWidth solid @olive;
 }
 /* Inverted */
+.nocturnal-theme .ui.olive.header,
 .ui.inverted.olive.header {
   color: @lightOlive !important;
 }
+.nocturnal-theme a.ui.olive.header:hover,
 a.ui.inverted.olive.header:hover {
   color: @lightOliveHover !important;
 }
 
 /*--- Yellow ---*/
-.ui.yellow.header {
+.ui.yellow.header,
+.nocturnal-theme .ui.inverted.yellow.header {
   color: @yellow !important;
 }
-a.ui.yellow.header:hover {
+a.ui.yellow.header:hover,
+.nocturnal-theme a.ui.inverted.yellow.header:hover {
   color: @yellowHover !important;
 }
 .ui.yellow.dividing.header {
   border-bottom: @dividedColoredBorderWidth solid @yellow;
 }
 /* Inverted */
+.nocturnal-theme .ui.yellow.header,
 .ui.inverted.yellow.header {
   color: @lightYellow !important;
 }
+.nocturnal-theme a.ui.yellow.header:hover,
 a.ui.inverted.yellow.header:hover {
   color: @lightYellowHover !important;
 }
 
 /*--- Green ---*/
-.ui.green.header {
+.ui.green.header,
+.nocturnal-theme .ui.inverted.green.header {
   color: @green !important;
 }
-a.ui.green.header:hover {
+a.ui.green.header:hover,
+.nocturnal-theme a.ui.inverted.green.header:hover {
   color: @greenHover !important;
 }
 .ui.green.dividing.header {
   border-bottom: @dividedColoredBorderWidth solid @green;
 }
 /* Inverted */
+.nocturnal-theme .ui.green.header,
 .ui.inverted.green.header {
   color: @lightGreen !important;
 }
+.nocturnal-theme a.ui.green.header:hover,
 a.ui.inverted.green.header:hover {
   color: @lightGreenHover !important;
 }
 
 /*--- Teal ---*/
-.ui.teal.header {
+.ui.teal.header,
+.nocturnal-theme .ui.inverted.teal.header {
   color: @teal !important;
 }
-a.ui.teal.header:hover {
+a.ui.teal.header:hover,
+.nocturnal-theme a.ui.teal.header:hover {
   color: @tealHover !important;
 }
 .ui.teal.dividing.header {
   border-bottom: @dividedColoredBorderWidth solid @teal;
 }
 /* Inverted */
+.nocturnal-theme .ui.teal.header,
 .ui.inverted.teal.header {
   color: @lightTeal !important;
 }
+.nocturnal-theme a.ui.teal.header:hover,
 a.ui.inverted.teal.header:hover {
   color: @lightTealHover !important;
 }
 
 /*--- Blue ---*/
-.ui.blue.header {
+.ui.blue.header,
+.nocturnal-theme .ui.inverted.blue.header {
   color: @blue !important;
 }
-a.ui.blue.header:hover {
+a.ui.blue.header:hover,
+.nocturnal-theme a.ui.inverted.blue.header:hover {
   color: @blueHover !important;
 }
 .ui.blue.dividing.header {
   border-bottom: @dividedColoredBorderWidth solid @blue;
 }
 /* Inverted */
+.nocturnal-theme .ui.blue.header,
 .ui.inverted.blue.header {
   color: @lightBlue !important;
 }
+.nocturnal-theme a.ui.blue.header:hover,
 a.ui.inverted.blue.header:hover {
   color: @lightBlueHover !important;
 }
 
 /*--- Violet ---*/
-.ui.violet.header {
+.ui.violet.header,
+.nocturnal-theme .u.inverted.violet.header {
   color: @violet !important;
 }
-a.ui.violet.header:hover {
+a.ui.violet.header:hover,
+.nocturnal-theme a.ui.inverted.violet.header:hover {
   color: @violetHover !important;
 }
 .ui.violet.dividing.header {
   border-bottom: @dividedColoredBorderWidth solid @violet;
 }
 /* Inverted */
+.nocturnal-theme .ui.violet.header,
 .ui.inverted.violet.header {
   color: @lightViolet !important;
 }
+.nocturnal-theme a.ui.violet.header:hover,
 a.ui.inverted.violet.header:hover {
   color: @lightVioletHover !important;
 }
 
 /*--- Purple ---*/
-.ui.purple.header {
+.ui.purple.header,
+.nocturnal-theme .ui.inverted.purple.header {
   color: @purple !important;
 }
-a.ui.purple.header:hover {
+a.ui.purple.header:hover,
+.nocturnal-theme a.ui.inverted.purple.header:hover {
   color: @purpleHover !important;
 }
 .ui.purple.dividing.header {
   border-bottom: @dividedColoredBorderWidth solid @purple;
 }
 /* Inverted */
+.nocturnal-theme .ui.purple.header,
 .ui.inverted.purple.header {
   color: @lightPurple !important;
 }
+.nocturnal-theme a.ui.purple.header:hover,
 a.ui.inverted.purple.header:hover {
   color: @lightPurpleHover !important;
 }
 
 /*--- Pink ---*/
-.ui.pink.header {
+.ui.pink.header,
+.nocturnal-theme .ui.inverted.pink.header {
   color: @pink !important;
 }
-a.ui.pink.header:hover {
+a.ui.pink.header:hover,
+.nocturnal-theme a.ui.inverted.pink.header:hover {
   color: @pinkHover !important;
 }
 .ui.pink.dividing.header {
   border-bottom: @dividedColoredBorderWidth solid @pink;
 }
 /* Inverted */
+.nocturnal-theme .ui.pink.header,
 .ui.inverted.pink.header {
   color: @lightPink !important;
 }
+.nocturnal-theme a.ui.pink.header,
 a.ui.inverted.pink.header:hover {
   color: @lightPinkHover !important;
 }
 
 /*--- Brown ---*/
-.ui.brown.header {
+.ui.brown.header,
+.nocturnal-theme .ui.inverted.brown.header {
   color: @brown !important;
 }
-a.ui.brown.header:hover {
+a.ui.brown.header:hover,
+.nocturnal-theme a.ui.inverted.brown.header:hover {
   color: @brownHover !important;
 }
 .ui.brown.dividing.header {
   border-bottom: @dividedColoredBorderWidth solid @brown;
 }
 /* Inverted */
+.nocturnal-theme .ui.brown.header,
 .ui.inverted.brown.header {
   color: @lightBrown !important;
 }
+.nocturnal-theme a.ui.brown.header:hover,
 a.ui.inverted.brown.header:hover {
   color: @lightBrownHover !important;
 }
 
 /*--- Grey ---*/
-.ui.grey.header {
+.ui.grey.header,
+.nocturnal-theme .ui.inverted.grey.header {
   color: @grey !important;
 }
-a.ui.grey.header:hover {
+a.ui.grey.header:hover,
+.nocturnal-theme a.ui.inverted.grey.header:hover {
   color: @greyHover !important;
 }
 .ui.grey.dividing.header {
   border-bottom: @dividedColoredBorderWidth solid @grey;
 }
 /* Inverted */
+.nocturnal-theme .ui.grey.header,
 .ui.inverted.grey.header {
   color: @lightGrey !important;
 }
+.nocturnal-theme a.ui.grey.heade:hover,
 a.ui.inverted.grey.header:hover {
   color: @lightGreyHover !important;
 }

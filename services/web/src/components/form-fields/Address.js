@@ -201,7 +201,7 @@ export default class Address extends React.Component {
               type="text"
               name="line1"
               label="Address Line 1"
-              value={get(value, 'line1')}
+              value={get(value, 'line1', '')}
               onChange={this.setField}
               autoComplete={this.getAutoCompleteName('line1')}
             />
@@ -210,7 +210,7 @@ export default class Address extends React.Component {
               type="text"
               name="line2"
               label="Address Line 2 (Optional)"
-              value={get(value, 'line2')}
+              value={get(value, 'line2', '')}
               onChange={this.setField}
               autoComplete={this.getAutoCompleteName('line2')}
             />
@@ -218,21 +218,21 @@ export default class Address extends React.Component {
               type="text"
               name="city"
               label="City/Town"
-              value={get(value, 'city')}
+              value={get(value, 'city', '')}
               onChange={this.setField}
               autoComplete={this.getAutoCompleteName('city')}
             />
             <CountriesField
               label="Country Code"
               name="countryCode"
-              value={get(value, 'countryCode')}
+              value={get(value, 'countryCode', '')}
               onChange={this.setField}
               autoComplete={this.getAutoCompleteName('countryCode')}
             />
             {get(value, 'countryCode') === 'US' ? (
               <UsStates
                 name="region"
-                value={get(value, 'region')}
+                value={get(value, 'region', '')}
                 onChange={this.setField}
                 autoComplete={this.getAutoCompleteName('region')}
               />
@@ -241,7 +241,7 @@ export default class Address extends React.Component {
                 type="text"
                 name="region"
                 label="State/Province"
-                value={get(value, 'region')}
+                value={get(value, 'region', '')}
                 onChange={this.setField}
                 autoComplete={this.getAutoCompleteName('region')}
               />
@@ -252,7 +252,7 @@ export default class Address extends React.Component {
               label={
                 get(value, 'countryCode') === 'US' ? 'Zip Code' : 'Postal Code'
               }
-              value={get(value, 'postalCode')}
+              value={get(value, 'postalCode', '')}
               onChange={this.setField}
               autoComplete={this.getAutoCompleteName('postalCode')}
             />

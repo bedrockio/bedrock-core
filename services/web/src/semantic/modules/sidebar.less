@@ -84,6 +84,10 @@
 /* Whole Page */
 body.pushable {
   background: @canvasBackground !important;
+
+  &.nocturnal-theme {
+    background: @nocturnalCansvasBackground !important;
+  }
 }
 
 /* Page Context */
@@ -125,6 +129,9 @@ body.pushable {
 body.pushable > .pusher {
   background: @pageBackground;
 }
+body.nocturnal-theme.pushable > .pusher {
+  background: @nocturnalPageBackground;
+}
 
 /* Pusher should inherit background from context */
 .pushable > .pusher {
@@ -146,6 +153,9 @@ body.pushable > .pusher {
   transition: @dimmerTransition;
   will-change: opacity;
   z-index: @dimmerLayer;
+}
+.nocturnal-theme.pushable > .pusher {
+  background-color: @nocturnalDimmerColor;
 }
 
 /*--------------
@@ -191,10 +201,18 @@ body.pushable > .pusher {
 .ui.left.visible.sidebar,
 .ui.right.visible.sidebar {
   box-shadow: @horizontalBoxShadow;
+
+  .nocturnal-theme & {
+    box-shadow: @nocturnalHorizontalBoxShadow;
+  }
 }
 .ui.top.visible.sidebar,
 .ui.bottom.visible.sidebar {
   box-shadow: @verticalBoxShadow;
+
+  .nocturnal-theme & {
+    box-shadow: @nocturnalVerticalBoxShadow;
+  }
 }
 
 /* Visible On Load */

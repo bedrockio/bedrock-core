@@ -1,11 +1,11 @@
 import React from 'react';
-import { Modal, Button, Message, Confirm } from 'semantic';
+import { Modal, Button, Message, Confirm as SemanticConfirm } from 'semantic';
 
 import modal from '../helpers/modal';
 import PropTypes from 'prop-types';
 
 @modal
-export default class ConfirmComponent extends React.Component {
+export default class Confirm extends React.Component {
   state = {
     loading: false,
     error: null,
@@ -74,12 +74,12 @@ export default class ConfirmComponent extends React.Component {
   }
 }
 
-ConfirmComponent.propTypes = {
-  ...Confirm.propTypes,
+Confirm.propTypes = {
+  ...SemanticConfirm.propTypes,
   negative: PropTypes.bool,
 };
 
-ConfirmComponent.defaultProps = {
+Confirm.defaultProps = {
   confirmButton: 'OK',
   negative: false,
   onConfirm: () => {},

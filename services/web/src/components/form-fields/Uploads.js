@@ -1,4 +1,5 @@
 import React from 'react';
+import { uniq } from 'lodash';
 import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
 import { Form, Image, Icon, Label, Card } from 'semantic';
@@ -6,13 +7,34 @@ import { request } from 'utils/api';
 import { urlForUpload } from 'utils/uploads';
 
 const MIME_TYPES = {
-  image: 'image/*',
-  video: 'video/*',
-  audio: 'audio/*',
-  text: 'text/*',
-  pdf: 'application/pdf',
-  csv: 'text/csv,application/vnd.ms-excel',
-  zip: 'application/zip,application/x-zip-compressed,application/octet-stream',
+  image: {
+    mime: 'image/*',
+    extensions: ['.jpg', '.jpeg', '.gif', '.svg', '.png'],
+  },
+  video: {
+    mime: 'video/*',
+    extensions: ['.mp4', '.mov'],
+  },
+  audio: {
+    mime: 'audio/*',
+    extensions: ['.mp3', '.ogg'],
+  },
+  text: {
+    mime: 'text/*',
+    extensions: ['.txt'],
+  },
+  pdf: {
+    mime: 'application/pdf',
+    extensions: ['.pdf'],
+  },
+  csv: {
+    mime: 'text/csv,application/vnd.ms-excel',
+    extensions: ['.csv'],
+  },
+  zip: {
+    mime: 'application/zip,application/x-zip-compressed,application/octet-stream',
+    extensions: ['.zip'],
+  },
 };
 
 const MEDIA_TYPES = ['image', 'video', 'audio'];
@@ -44,8 +66,22 @@ export default class Uploads extends React.Component {
         acceptedFiles = acceptedFiles.slice(0, 1);
       }
       if (rejectedFiles.length) {
-        const [err] = rejectedFiles[0].errors;
-        throw new Error(err.message);
+        const messages = rejectedFiles.flatMap((rejectedFile) => {
+          return rejectedFile.errors.map((error) => {
+            let { code, message } = error;
+            if (code === 'file-invalid-type') {
+              const types = this.getTypes();
+              const formatted = new Intl.ListFormat('en', {
+                style: 'short',
+                type: 'disjunction',
+              }).format(types);
+              message = `File must be of ${formatted} type.`;
+            }
+            return message;
+          });
+        });
+        const message = uniq(messages).join(' ');
+        throw new Error(message);
       }
       this.setState({
         loading: true,
@@ -148,11 +184,12 @@ export default class Uploads extends React.Component {
   }
 
   getMimeTypes() {
-    return this.getTypes()
-      .map((type) => {
-        return MIME_TYPES[type];
-      })
-      .join(',');
+    const allowedTypes = {};
+    for (let type of this.getTypes()) {
+      const { mime, extensions } = MIME_TYPES[type];
+      allowedTypes[mime] = extensions;
+    }
+    return allowedTypes;
   }
 
   hasMedia() {

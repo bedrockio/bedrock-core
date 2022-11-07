@@ -322,12 +322,16 @@ ol.ui.list ol li,
 --------------------*/
 
 .ui.list .list > .disabled.item,
-.ui.list > .disabled.item {
+.ui.list > .disabled.item,
+.nocturnal-theme .ui.inverted.list .list > .disabled.item,
+.nocturnal-theme .ui.inverted.list > .disabled.item {
   pointer-events: none;
   color: @disabledColor !important;
 }
 .ui.inverted.list .list > .disabled.item,
-.ui.inverted.list > .disabled.item {
+.ui.inverted.list > .disabled.item,
+.nocturnal-theme .ui.list .list > .disabled.item,
+.nocturnal-theme .ui.list > .disabled.item {
   color: @invertedDisabledColor !important;
 }
 
@@ -348,35 +352,75 @@ ol.ui.list ol li,
        Inverted
 --------------------*/
 
+// @todo nocturnal inverted
+
 .ui.inverted.list .list > a.item > .icon,
-.ui.inverted.list > a.item > .icon {
+.ui.inverted.list > a.item > .icon,
+.nocturnal-theme .ui.list .list > a.item > .icon,
+.nocturnal-theme .ui.list > a.item > .icon {
   color: @invertedIconLinkColor;
 }
+.nocturnal-theme .inverted.list .list > a.item > .icon,
+.nocturnal-theme .ui.inverted.list > a.item > .icon {
+  color: @itemLinkIconColor;
+}
 .ui.inverted.list .list > .item .header,
-.ui.inverted.list > .item .header {
+.ui.inverted.list > .item .header,
+.nocturnal-theme .ui.list .list > .item .header,
+.nocturnal-theme .ui.list > .item .header {
   color: @invertedHeaderColor;
 }
+.nocturnal-theme .ui.inverted.list .list > .item .header,
+.nocturnal-theme .ui.inverted.list > .item .header {
+  color: @itemHeaderColor;
+}
+.nocturnal-theme .ui.inverted.list .list > .item .description,
+.nocturnal-theme .ui.inverted.list > .item .description {
+  color: @itemDescriptionColor;
+}
 .ui.inverted.list .list > .item .description,
-.ui.inverted.list > .item .description {
+.ui.inverted.list > .item .description,
+.nocturnal-theme .ui.list .list > .item .description,
+.nocturnal-theme .ui.list > .item .description {
   color: @invertedDescriptionColor;
 }
 
 /* Item Link */
+.nocturnal-theme .ui.inverted.list .list > a.item,
+.nocturnal-theme .ui.inverted.list > a.item {
+  color: @itemLinkColor;
+}
 .ui.inverted.list .list > a.item,
-.ui.inverted.list > a.item {
+.ui.inverted.list > a.item,
+.nocturnal-theme .ui.list .list > a.item,
+.nocturnal-theme .ui.list > a.item {
   cursor: pointer;
   color: @invertedItemLinkColor;
 }
 .ui.inverted.list .list > a.item:hover,
 .ui.inverted.list > a.item:hover {
+  color: @itemLinkHoverColor;
+}
+.ui.inverted.list .list > a.item:hover,
+.ui.inverted.list > a.item:hover,
+.nocturnal-theme .ui.list .list > a.item:hover,
+.nocturnal-theme .ui.list > a.item:hover {
   color: @invertedItemLinkHoverColor;
 }
 
 /* Linking Content */
-.ui.inverted.list .item a:not(.ui) {
+.nocturnal-theme .ui.inverted.list .item a:not(.ui) {
+  color: @itemLinkColor !important;
+}
+.ui.inverted.list .item a:not(.ui),
+.nocturnal-theme .ui.list .item a:not(.ui) {
   color: @invertedItemLinkColor !important;
 }
-.ui.inverted.list .item a:not(.ui):hover {
+.nocturnal-theme .ui.inverted.list .item a:not(.ui):hover {
+  color: @itemLinkHoverColor !important;
+}
+.ui.inverted.list .item a:not(.ui):hover,
+.nocturnal-theme .ui.list .item a:not(.ui) {
   color: @invertedItemLinkHoverColor !important;
 }
 
@@ -406,39 +450,57 @@ ol.ui.list ol li,
 
 .ui.link.list .item,
 .ui.link.list a.item,
-.ui.link.list .item a:not(.ui) {
+.ui.link.list .item a:not(.ui),
+.nocturnal-theme .ui.inverted.link.list .item,
+.nocturnal-theme .ui.inverted.link.list a.item,
+.nocturnal-theme .ui.inverted.link.list .item a:not(.ui) {
   color: @linkListItemColor;
   transition: @linkListTransition;
 }
 .ui.link.list.list a.item:hover,
-.ui.link.list.list .item a:not(.ui):hover {
+.ui.link.list.list .item a:not(.ui):hover,
+.nocturnal-theme .ui.inverted.link.list.list a.item:hover,
+.nocturnal-theme .ui.inverted.link.list.list .item a:not(.ui):hover {
   color: @linkListItemHoverColor;
 }
 .ui.link.list.list a.item:active,
-.ui.link.list.list .item a:not(.ui):active {
+.ui.link.list.list .item a:not(.ui):active,
+.nocturnal-theme .ui.inverted.link.list.list a.item:active,
+.nocturnal-theme .ui.inverted.link.list.list .item a:not(.ui):active {
   color: @linkListItemDownColor;
 }
 .ui.link.list.list .active.item,
-.ui.link.list.list .active.item a:not(.ui) {
+.ui.link.list.list .active.item a:not(.ui),
+.nocturnal-theme .ui.link.list.list .active.item,
+.nocturnal-theme .ui.link.list.list .active.item a:not(.ui) {
   color: @linkListItemActiveColor;
 }
 
 /* Inverted */
 .ui.inverted.link.list .item,
 .ui.inverted.link.list a.item,
-.ui.inverted.link.list .item a:not(.ui) {
+.ui.inverted.link.list .item a:not(.ui),
+.nocturnal-theme .ui.link.list .item,
+.nocturnal-theme .ui.link.list a.item,
+.nocturnal-theme .ui.link.list .item a:not(.ui) {
   color: @invertedLinkListItemColor;
 }
 .ui.inverted.link.list.list a.item:hover,
-.ui.inverted.link.list.list .item a:not(.ui):hover {
+.ui.inverted.link.list.list .item a:not(.ui):hover,
+.nocturnal-theme .ui.link.list.list a.item:hover,
+.nocturnal-theme .ui.link.list.list .item a:not(.ui):hover {
   color: @invertedLinkListItemHoverColor;
 }
 .ui.inverted.link.list.list a.item:active,
-.ui.inverted.link.list.list .item a:not(.ui):active {
+.ui.inverted.link.list.list .item a:not(.ui):active,
+.nocturnal-theme .ui.link.list.list a.item:active,
+.nocturnal-theme .ui.link.list.list .item a:not(.ui):active {
   color: @invertedLinkListItemDownColor;
 }
 .ui.inverted.link.list.list a.active.item,
-.ui.inverted.link.list.list .active.item a:not(.ui) {
+.ui.inverted.link.list.list .active.item a:not(.ui),
+.nocturnal-theme .ui.link.list.list .active.item,
+.nocturnal-theme .link.list.list .active.item a:not(.ui) {
   color: @invertedLinkListItemActiveColor;
 }
 
@@ -456,44 +518,63 @@ ol.ui.list ol li,
   border-radius: @selectionListItemBorderRadius;
   transition: @selectionListTransition;
 }
+.nocturnal-theme .ui.inverted.selection.list .list > .item,
+.nocturnal-theme .ui.inverted.selection.list > .item {
+  background: @selectionListBackground;
+  color: @selectionListColor;
+}
 .ui.selection.list .list > .item:last-child,
 .ui.selection.list > .item:last-child {
   margin-bottom: 0em;
 }
-.ui.selection.list.list > .item:hover,
-.ui.selection.list > .item:hover {
+.ui.selection.list .list > .item:hover,
+.ui.selection.list > .item:hover,
+.nocturnal-theme .ui.inverted.selection.list .list > .item:hover,
+.nocturnal-theme .ui.inverted.selection.list > .item:hover {
   background: @selectionListHoverBackground;
   color: @selectionListHoverColor;
 }
 .ui.selection.list .list > .item:active,
-.ui.selection.list > .item:active {
+.ui.selection.list > .item:active,
+.nocturnal-theme .ui.inverted.selection.list .list > .item:active,
+.nocturnal-theme .ui.inverted.selection.list > .item:active {
   background: @selectionListDownBackground;
   color: @selectionListDownColor;
 }
 .ui.selection.list .list > .item.active,
-.ui.selection.list > .item.active {
+.ui.selection.list > .item.active,
+.nocturnal-theme .ui.inverted.selection.list .list > .item.active,
+.nocturnal-theme .ui.inverted.selection.list > .item.active {
   background: @selectionListActiveBackground;
   color: @selectionListActiveColor;
 }
 
 /* Inverted */
+.ui.inverted.selection.list .list > .item,
 .ui.inverted.selection.list > .item,
-.ui.inverted.selection.list > .item {
+.nocturnal-theme .ui.selection.list .list > .item,
+.nocturnal-theme .ui.selection.list > .item {
   background: @invertedSelectionListBackground;
   color: @invertedSelectionListColor;
 }
+.ui.inverted.selection.list .list > .item:hover,
 .ui.inverted.selection.list > .item:hover,
-.ui.inverted.selection.list > .item:hover {
+.nocturnal-theme .ui.inverted.selection.list .list > .item:hover,
+.nocturnal-theme .ui.inverted.selection.list > .item:hover {
   background: @invertedSelectionListHoverBackground;
   color: @invertedSelectionListHoverColor;
 }
+.ui.inverted.selection.list .list > .item:active,
 .ui.inverted.selection.list > .item:active,
-.ui.inverted.selection.list > .item:active {
+.nocturnal-theme .ui.selection.list .list > .item:active,
+.nocturnal-theme .ui.selection.list > .item:active {
   background: @invertedSelectionListDownBackground;
   color: @invertedSelectionListDownColor;
 }
+.ui.inverted.selection.list .list > .item.active,
 .ui.inverted.selection.list > .item.active,
-.ui.inverted.selection.list > .item.active {
+.nocturnal-theme .ui.selection.list .list > .item.active,
+.nocturnal-theme .ui.selection.list > .item.active {
   background: @invertedSelectionListActiveBackground;
   color: @invertedSelectionListActiveColor;
 }
@@ -627,10 +708,18 @@ ol.ui.list li:before,
   vertical-align: @orderedCountVerticalAlign;
   opacity: @orderedCountOpacity;
 }
+.nocturnal-theme ol.ui.inverted.list li:before,
+.nocturnal-theme .ui.ordered.inverted.list .list > .item:before,
+.nocturnal-theme .ui.ordered.inverted.list > .item:before {
+  color: @orderedCountColor;
+}
 
 ol.ui.inverted.list li:before,
 .ui.ordered.inverted.list .list > .item:before,
-.ui.ordered.inverted.list > .item:before {
+.ui.ordered.inverted.list > .item:before,
+.nocturnal-theme ol.ui.list li:before,
+.nocturnal-theme .ui.ordered.list .list > .item:before,
+.nocturnal-theme .ui.ordered.list > .item:before {
   color: @orderedInvertedCountColor;
 }
 
@@ -742,9 +831,17 @@ ol.ui.horizontal.list li:before,
   border-left: none;
 }
 /* Inverted */
+.nocturnal-theme .ui.divided.inverted.list > .item,
+.nocturnal-theme .ui.divided.inverted.list > .list,
+.nocturnal-theme .ui.divided.inverted.horizontal.list > .item {
+  border-color: @borderColor;
+}
 .ui.divided.inverted.list > .item,
 .ui.divided.inverted.list > .list,
-.ui.divided.inverted.horizontal.list > .item {
+.ui.divided.inverted.horizontal.list > .item,
+.nocturnal-theme .ui.divided.list > .item,
+.nocturnal-theme .ui.divided.list > .list,
+.nocturnal-theme .ui.divided.horizontal.list > .item {
   border-color: @dividedInvertedBorderColor;
 }
 
@@ -829,12 +926,26 @@ ol.ui.horizontal.list li:before,
 }
 
 /* Inverted */
+
+.nocturnal-theme .ui.celled.inverted.list > .item,
+.nocturnal-theme .ui.celled.inverted.list > .list {
+  border-color: @borderColor;
+}
+.nocturnal-theme .ui.celled.inverted.horizontal.list .list > .item,
+.nocturnal-theme .ui.celled.inverted.horizontal.list > .item {
+  border-color: @borderColor;
+}
+
 .ui.celled.inverted.list > .item,
-.ui.celled.inverted.list > .list {
+.ui.celled.inverted.list > .list,
+.nocturnal-theme .ui.celled.list > .item,
+.nocturnal-theme .ui.celled.list > .list {
   border-color: @celledInvertedBorder;
 }
 .ui.celled.inverted.horizontal.list .list > .item,
-.ui.celled.inverted.horizontal.list > .item {
+.ui.celled.inverted.horizontal.list > .item,
+.nocturnal-theme .ui.celled.horizontal.list .list > .item,
+.nocturnal-theme .ui.celled.horizontal.list > .item {
   border-color: @celledInvertedBorder;
 }
 

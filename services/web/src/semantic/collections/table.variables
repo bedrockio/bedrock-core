@@ -24,6 +24,10 @@
 @border: @borderWidth solid @borderColor;
 @boxShadow: none;
 @textAlign: left;
+@nocturnalBackground: saturate(lighten(@nocturnalPageBackground, 3), 10, relative); // 3, 10
+@nocturnalColor: @nocturnalTextColor;
+@nocturnalBorder: @borderWidth solid @nocturnalBorderColor;
+@nocturnalBoxShadow: @boxShadow;
 
 /*--------------
      Parts
@@ -31,6 +35,7 @@
 
 /* Table Row */
 @rowBorder: 1px solid @internalBorderColor;
+@nocturnalRowBorder: 1px solid @nocturnalInternalBorderColor;
 
 /* Table Cell */
 @cellVerticalPadding: @relativeMini;
@@ -38,6 +43,7 @@
 @cellVerticalAlign: inherit;
 @cellTextAlign: inherit;
 @cellBorder: 1px solid @internalBorderColor;
+@nocturnalCellBorder: 1px solid @nocturnalInternalBorderColor;
 
 /* Table Header */
 @headerBorder: 1px solid @internalBorderColor;
@@ -52,6 +58,11 @@
 @headerFontWeight: 500;
 @headerTextTransform: uppercase;
 @headerBoxShadow: none;
+@nocturnalHeaderDivider: none;
+@nocturnalHeaderBorder: 1px solid @nocturnalInternalBorderColor;
+@nocturnalHeaderBackground: saturate(lighten(@nocturnalBackground, 3), 10, relative);
+@nocturnalHeaderColor: @nocturnalUnselectedTextColor;
+@nocturnalHeaderBoxShadow: @headerBoxShadow;
 
 /* Table Footer */
 @footerBoxShadow: none;
@@ -66,6 +77,11 @@
 @footerFontStyle: @normal;
 @footerFontWeight: @normal;
 @footerTextTransform: none;
+@nocturnalFooterBoxShadow: none;
+@nocturnalFooterBorder: 1px solid @nocturnalBorderColor;
+@nocturnalFooterDivider: none;
+@nocturnalFooterBackground: saturate(lighten(@nocturnalBackground, 3), 10, relative);
+@nocturnalFooterColor: @nocturnalLightTextColor;
 
 /* Responsive Size */
 @responsiveHeaderDisplay: block;
@@ -76,6 +92,8 @@
 @responsiveCellHorizontalPadding: 0.75em;
 @responsiveCellBoxShadow: none !important;
 @responsiveCellHeaderFontWeight: @bold;
+@nocturnalResponsiveRowBoxShadow: 0px -1px 0px 0px rgba(255,255,255,.1) inset !important;
+@nocturnalResponsiveCellBoxShadow: none !important;
 
 /*-------------------
        Types
@@ -83,14 +101,19 @@
 
 /* Definition */
 @definitionPageBackground: @pageBackground;
+@nocturnalDefinitionPageBackground: @nocturnalPageBackground;
 
 @definitionHeaderBackground: @pageBackground;
 @definitionHeaderColor: @unselectedTextColor;
 @definitionHeaderFontWeight: @normal;
+@nocturnalDefinitionHeaderBackground: @nocturnalPageBackground;
+@nocturnalDefinitionHeaderColor: @nocturnalHeaderColor;
 
 @definitionFooterBackground: @definitionHeaderBackground;
 @definitionFooterColor: @definitionHeaderColor;
 @definitionFooterFontWeight: @definitionHeaderFontWeight;
+@nocturnalDefinitionFooterBackground: @nocturnalDefinitionHeaderBackground;
+@nocturnalDefinitionFooterColor: @nocturnalDefinitionHeaderColor;
 
 @definitionColumnBackground: @subtleTransparentBlack;
 @definitionColumnFontWeight: @bold;
@@ -100,6 +123,9 @@
 @definitionColumnBoxShadow: '';
 @definitionColumnTextAlign: '';
 @definitionColumnHorizontalPadding: '';
+@nocturnalDefinitionColumnBackground: @subtleTransparentWhite;
+@nocturnalDefinitionColumnColor: @nocturnalSelectedTextColor;
+@nocturnalDefinitionColumnBoxShadow: @definitionColumnBoxShadow;
 
 
 /*--------------
@@ -120,11 +146,23 @@
 @positiveBackgroundHover: darken(@positiveBackgroundColor, 3);
 @positiveColorHover: darken(@positiveColor, 3);
 
+@nocturnalPositiveColor: @positiveBorderColor;
+@nocturnalPositiveBoxShadow: @stateMarkerWidth 0px 0px @positiveTextColor inset;
+@nocturnalPositiveCellBackground:  rgb(hsl(hue(@positiveHeaderColor), (saturation(@positiveBackgroundColor) / 2), (lightness(@nocturnalPageBackground) + (100% - lightness(@positiveBackgroundColor)) / 2)));
+@nocturnalPositiveBackgroundHover: lighten(@nocturnalPositiveCellBackground, 3);
+@nocturnalPositiveColorHover: lighten(@nocturnalPositiveColor, 3);
+
 /* Negative */
 @negativeColor: @negativeTextColor;
 @negativeBoxShadow: @stateMarkerWidth 0px 0px @negativeBorderColor inset;
 @negativeBackgroundHover: darken(@negativeBackgroundColor, 3);
 @negativeColorHover: darken(@negativeColor, 3);
+
+@nocturnalNegativeColor: @negativeBorderColor;
+@nocturnalNegativeBoxShadow: @stateMarkerWidth 0px 0px @negativeTextColor inset;
+@nocturnalNegativeCellBackground:  rgb(hsl(hue(@negativeHeaderColor), (saturation(@negativeBackgroundColor)), (lightness(@nocturnalPageBackground) + (100% - lightness(@negativeBackgroundColor)) / 2)));
+@nocturnalNegativeBackgroundHover: lighten(@nocturnalNegativeCellBackground, 3);
+@nocturnalNegativeColorHover: lighten(@nocturnalNegativeColor, 3);
 
 /* Error */
 @errorColor: @errorTextColor;
@@ -132,11 +170,23 @@
 @errorBackgroundHover: darken(@errorBackgroundColor, 3);
 @errorColorHover: darken(@errorColor, 3);
 
+@nocturnalErrorColor: @errorBorderColor;
+@nocturnalErrorBoxShadow: @stateMarkerWidth 0px 0px @errorTextColor inset;
+@nocturnalErrorCellBackground:  rgb(hsl(hue(@errorHeaderColor), (saturation(@errorBackgroundColor)), (lightness(@nocturnalPageBackground) + (100% - lightness(@errorBackgroundColor)) / 2)));
+@nocturnalErrorBackgroundHover: lighten(@nocturnalErrorCellBackground, 3);
+@nocturnalErrorColorHover: lighten(@nocturnalErrorColor, 3);
+
 /* Warning */
 @warningColor: @warningTextColor;
 @warningBoxShadow: @stateMarkerWidth 0px 0px @warningBorderColor inset;
 @warningBackgroundHover: darken(@warningBackgroundColor, 3);
 @warningColorHover: darken(@warningColor, 3);
+
+@nocturnalWarningColor: @warningBorderColor;
+@nocturnalWarningBoxShadow: @stateMarkerWidth 0px 0px @warningTextColor inset;
+@nocturnalWarningCellBackground:  rgb(hsl(hue(@warningHeaderColor), (saturation(@warningBackgroundColor)), (lightness(@nocturnalPageBackground) + (100% - lightness(@warningBackgroundColor)) / 2)));
+@nocturnalWarningBackgroundHover: lighten(@nocturnalWarningCellBackground, 3);
+@nocturnalWarningColorHover: lighten(@nocturnalWarningColor, 3);
 
 /* Active */
 @activeColor: @textColor;
@@ -145,6 +195,12 @@
 
 @activeBackgroundHover: #EFEFEF;
 @activeColorHover: @selectedTextColor;
+
+@nocturnalActiveColor: @nocturnalSelectedTextColor;
+@nocturnalActiveBoxShadow: @stateMarkerWidth 0px 0px @activeBackgroundColor inset;
+@nocturnalActiveCellBackground:  saturate(lighten(@nocturnalBackground, 3), 10, relative);
+@nocturnalActiveBackgroundHover: lighten(@nocturnalActiveCellBackground, 3);
+@nocturnalActiveColorHover: lighten(@nocturnalActiveColor, 3);
 
 /*--------------
      Types
@@ -161,10 +217,17 @@
   @boxShadow,
   @attachedBoxShadow
 ;
+@nocturnalAttachedBoxShadow: @attachedBoxShadow;
+@nocturnalAttachedBorder: @borderWidth solid @nocturnalSolidBorderColor;
+@nocturnalAttachedBottomBoxShadow:
+  @nocturnalBoxShadow,
+  @nocturnalAttachedBoxShadow
+;
 
 /* Striped */
 @stripedBackground: rgba(0, 0, 50, 0.02);
-@invertedStripedBackground: rgba(255, 255, 255, 0.05);
+@invertedStripedBackground: rgba(255, 255, 255, 0.02);
+@nocturnalStripedBackground: @invertedStripedBackground;
 
 /* Selectable */
 @selectableBackground: @transparentBlack;
@@ -175,6 +238,8 @@
 /* Sortable */
 @sortableBackground: '';
 @sortableColor: #565C66;
+@nocturnalSortableBackground: '';
+@nocturnalSortableColor: rgba(255, 255, 255, 0.4);
 
 @sortableBorder: 1px solid @borderColor;
 @sortableIconWidth: auto;
@@ -183,15 +248,23 @@
 @sortableIconAscending: '▴';
 @sortableIconDescending: '▾';
 @sortableDisabledColor: @disabledTextColor;
+@nocturnalSortableBorder: 1px solid @nocturnalBorderColor;
+@nocturnalSortableDisabledColor: @nocturnalDisabledTextColor;
 
 @sortableHoverBackground: rgba(74,99,142,0.06);
 @sortableHoverColor: @hoveredTextColor;
+@nocturnalSortableHoverBackground: rgba(255,255,255,0.02);
+@nocturnalSortableHoverColor: @nocturnalHoveredTextColor;
 
 @sortableActiveBackground: rgba(74,99,142,0.08);
 @sortableActiveColor: @selectedTextColor;
+@nocturnalSortableActiveBackground: rgba(255,255,255,0.04);
+@nocturnalSortableActiveColor: @nocturnalSelectedTextColor;
 
 @sortableActiveHoverBackground: rgba(74,99,142,0.08);
 @sortableActiveHoverColor: @selectedTextColor;
+@nocturnalSortableActiveHoverBackground: rgba(255,255,255,0.05);
+@nocturnalSortableActiveHoverColor: @nocturnalSelectedTextColor;
 
 @sortableInvertedBorderColor: transparent;
 @sortableInvertedHoverBackground: @transparentWhite @subtleGradient;
@@ -208,19 +281,31 @@
 @invertedBorder: none;
 @invertedCellBorderColor: @whiteBorderColor;
 @invertedCellColor: @invertedTextColor;
+@nocturnalInvertedBackground: hsl(hue(@nocturnalPageBackground), saturation(@nocturnalPageBackground), (100% - lightness(@invertedBackground)));
+@nocturnalInvertedBorder: none;
+@nocturnalInvertedCellBorderColor: rgba(0,0,0,.1);
+@nocturnalInvertedCellColor: @color;
 
 @invertedHeaderBackground: @veryStrongTransparentBlack;
 @invertedHeaderColor: @invertedTextColor;
 @invertedHeaderBorderColor: @invertedCellBorderColor;
+@nocturnalInvertedHeaderBackground: fade(@headerBackground, 25%);
+@nocturnalInvertedHeaderColor: @headerColor;
+@nocturnalInvertedHeaderBorderColor: @nocturnalInvertedCellBorderColor;
 
 @invertedDefinitionColumnBackground: @subtleTransparentWhite;
 @invertedDefinitionColumnColor: @invertedSelectedTextColor;
 @invertedDefinitionColumnFontWeight: @bold;
+@nocturnalInvertedDefinitionColumnBackground: @subtleTransparentBlack;
+@nocturnalInvertedDefinitionColumnColor: @selectedTextColor;
 
 /* Basic */
 @basicTableBackground: transparent;
 @basicTableBorder: @borderWidth solid @borderColor;
 @basicBoxShadow: none;
+@nocturnalBasicTableBackground: transparent;
+@nocturnalBasicTableBorder: @borderWidth solid @nocturnalBorderColor;
+@nocturnalBasicBoxShadow: @basicBoxShadow;
 
 @basicTableHeaderBackground: transparent;
 @basicTableCellBackground: transparent;
@@ -228,6 +313,12 @@
 @basicTableCellBorder: 1px solid rgba(0, 0, 0, 0.1);
 @basicTableCellPadding: '';
 @basicTableStripedBackground: @transparentBlack;
+@nocturnalBasicTableHeaderBackground: transparent;
+@nocturnalBasicTableHeaderDivider: none;
+@nocturnalBasicTableCellBackground: transparent;
+@nocturnalBasicTableHeaderDivider: none;
+@nocturnalBasicTableCellBorder: 1px solid rgba(255, 255, 255, 0.15);
+@nocturnalBasicTableStripedBackground: @transparentWhite;
 
 /* Padded */
 @paddedVerticalPadding: 1em;

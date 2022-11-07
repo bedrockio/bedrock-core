@@ -20,6 +20,8 @@
 @eventMargin: 0em;
 @eventBackground: none;
 @eventDivider: none;
+@nocturnalEventBackground: none;
+@nocturnalEventDivider: none;
 
 /* Event Label */
 @labelWidth: 2.5em;
@@ -36,6 +38,10 @@
 @iconLabelBorderRadius: none;
 @iconLabelBorder: none;
 @iconLabelColor: rgba(0, 0, 0, 0.6);
+@nocturnalIconLabelBackground: none;
+@nocturnalIconLabelBorder: none;
+@nocturnalIconLabelColor: @nocturnalUnselectedTextColor;
+
 
 /* Image Label */
 @imageLabelWidth: 100%;
@@ -58,12 +64,14 @@
 @dateFontSize: @relativeMedium;
 @dateFontWeight: @normal;
 @dateFontStyle: @normal;
+@nocturnalDateColor: @nocturnalUnselectedTextColor;
 
 /* Summary */
 @summaryMargin: 0em;
 @summaryFontSize: @relativeMedium;
 @summaryFontWeight: @bold;
 @summaryColor: @textColor;
+@nocturnalSummaryColor: @nocturnalTextColor;
 
 /* Summary Image */
 @summaryImageWidth: auto;
@@ -81,6 +89,7 @@
 @summaryDateFontWeight: @dateFontWeight;
 @summaryDateFontStyle: @dateFontStyle;
 @summaryDateColor: @dateColor;
+@nocturnalSummaryDateColor: @nocturnalDateColor;
 
 /* User */
 @userFontWeight: @bold;
@@ -95,6 +104,7 @@
 @extraBackground: none;
 @extraPadding: 0em;
 @extraColor: @textColor;
+@nocturnalExtraColor: @nocturnalTextColor;
 
 /* Extra Images */
 @extraImageMargin: 0em 0.25em 0em 0em;
@@ -117,6 +127,10 @@
 @metadataBoxShadow: none;
 @metadataPadding: 0em;
 @metadataColor: rgba(0, 0, 0, 0.6);
+@nocturnalMetadataBackground: none;
+@nocturnalMetadataBorder: none;
+@nocturnalMetadataBoxShadow: none;
+@nocturnalMetadataColor: @nocturnalUnselectedTextColor;
 
 @metadataElementSpacing: 0.75em;
 
@@ -130,13 +144,16 @@
 @metadataDivider: '';
 @metadataDividerColor: rgba(0, 0, 0, 0.2);
 @metadataDividerOffset: -1em;
+@nocturnalMetadataDividerColor: rgba(255, 255, 255, 0.25);
 
 @metadataActionCursor: pointer;
 @metadataActionOpacity: 1;
 @metadataActionColor: rgba(0, 0, 0, 0.5);
 @metadataActionTransition: color @defaultDuration @defaultEasing;
+@nocturnalMetadataActionColor: @nocturnalUnselectedTextColor;
 
 @metadataActionHoverColor: @selectedTextColor;
+@nocturnalMetadataActionHoverColor: @nocturnalSelectedTextColor;
 
 /*-------------------
       Variations

@@ -11,6 +11,7 @@
 @titlePadding: 0.5em 0em;
 @titleFontSize: 1em;
 @titleColor: @textColor;
+@nocturnalTitleColor: @nocturnalTextColor;
 
 /* Icon */
 @iconOpacity: 1;
@@ -64,6 +65,11 @@
   @subtleShadow,
   0px 0px 0px 1px @borderColor
 ;
+@nocturnalStyledBackground: saturate(lighten(@nocturnalPageBackground, 5), 15, relative);
+@nocturnalStyledBoxShadow:
+  @nocturnalSubtleShadow,
+  0px 0px 0px 1px @nocturnalBorderColor
+;
 
 /* Content */
 @styledContentMargin: 0em;
@@ -84,19 +90,30 @@
   background @defaultDuration @defaultEasing,
   color @defaultDuration @defaultEasing
 ;
+@nocturnalStyledTitleColor: @nocturnalUnselectedTextColor;
+@nocturnalStyledTitleBorder: 1px solid @nocturnalBorderColor;
 
 /* Styled Title States */
 @styledTitleHoverBackground: transparent;
 @styledTitleHoverColor: @textColor;
 @styledActiveTitleBackground: transparent;
 @styledActiveTitleColor: @selectedTextColor;
+@nocturnalStyledTitleHoverBackground: transparent;
+@nocturnalStyledTitleHoverColor: @nocturnalTextColor;
+@nocturnalStyledActiveTitleBackground: transparent;
+@nocturnalStyledActiveTitleColor: @nocturnalSelectedTextColor;
 
 /* Styled Child Title States */
 @styledHoverChildTitleBackground: @styledTitleHoverBackground;
 @styledHoverChildTitleColor: @styledTitleHoverColor;
 @styledActiveChildTitleBackground: @styledActiveTitleBackground;
 @styledActiveChildTitleColor: @styledActiveTitleColor;
+@nocturnalStyledHoverChildTitleBackground: @nocturnalStyledTitleHoverBackground;
+@nocturnalStyledHoverChildTitleColor: @nocturnalStyledTitleHoverColor;
+@nocturnalStyledActiveChildTitleBackground: @nocturnalStyledActiveTitleBackground;
+@nocturnalStyledActiveChildTitleColor: @nocturnalStyledActiveTitleColor;
 
 /* Inverted */
 @invertedTitleColor: @invertedTextColor;
+@nocturnalInvertedTitleColor: @textColor;
 

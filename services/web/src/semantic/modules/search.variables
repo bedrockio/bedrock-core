@@ -21,6 +21,10 @@
   border-color @defaultDuration @defaultEasing
 ;
 @promptBoxShadow: 0em 0em 0em 0em transparent inset;
+@nocturnalPromptBackground: @nocturnalInputBackground;
+@nocturnalPromptBorder: 1px solid @nocturnalBorderColor;
+@nocturnalPromptColor: @nocturnalTextColor;
+@nocturnalPromptBoxShadow: @promptBoxShadow;
 
 /* Mobile */
 @mobileMaxWidth: ~"calc(100vw - 2rem)";
@@ -32,6 +36,9 @@
 @resultsBorderRadius: @defaultBorderRadius;
 @resultsBorder: 1px solid @solidBorderColor;
 @resultsBoxShadow: @floatingShadow;
+@nocturnalResultsBackground: saturate(lighten(@nocturnalPageBackground, 5), 15, relative);
+@nocturnalResultsBorder: 1px solid @nocturnalSolidBorderColor;
+@nocturnalResultsBoxShadow: @nocturnalFloatingShadow;
 
 /* Result */
 @resultFontSize: 1em;
@@ -42,6 +49,8 @@
 @resultLineHeight: 1.33;
 @resultDivider: 1px solid @internalBorderColor;
 @resultLastDivider: none;
+@nocturnalResultTextColor: @nocturnalTextColor;
+@nocturnalResultDivider: 1px solid @nocturnalInternalBorderColor;
 
 /* Result Image */
 @resultImageFloat: right;
@@ -50,6 +59,7 @@
 @resultImageHeight: 3em;
 @resultImageBorderRadius: 0.25em;
 @resultImageMargin: 0em 6em 0em 0em;
+@nocturnalResultImageBackground: none;
 
 /* Result Content */
 @resultTitleFont: @headerFont;
@@ -57,15 +67,18 @@
 @resultTitleFontWeight: @bold;
 @resultTitleFontSize: @relativeMedium;
 @resultTitleColor: @darkTextColor;
+@nocturnalResultTitleColor: @nocturnalTextColor;
 
 /* Description */
 @resultDescriptionFontSize: @relativeSmall;
 @resultDescriptionDistance: 0;
 @resultDescriptionColor: @lightTextColor;
+@nocturnalResultDescriptionColor: @nocturnalLightTextColor;
 
 /* Price */
 @resultPriceFloat: right;
 @resultPriceColor: @green;
+@nocturnalResultPriceColor: @lightGreen;
 
 /* Special Message */
 @messageVerticalPadding: 1em;
@@ -76,6 +89,8 @@
 @messageDescriptionDistance: 0.25rem;
 @messageDescriptionFontSize: 1em;
 @messageDescriptionColor: @textColor;
+@nocturnalMessageHeaderColor: @nocturnalTextColor;
+@nocturnalMessageDescriptionColor: @nocturnalTextColor;
 
 /* All Results Link */
 @actionBorder: none;
@@ -84,6 +99,9 @@
 @actionColor: @textColor;
 @actionFontWeight: @bold;
 @actionAlign: center;
+@nocturnalActionBorder: none;
+@nocturnalActionBackground: @nocturnalPageBackground;
+@nocturnalActionColor: @nocturnalTextColor;
 
 
 /*******************************
@@ -94,17 +112,25 @@
 @promptFocusBackground: @promptBackground;
 @promptFocusBorderColor: @selectedBorderColor;
 @promptFocusColor: @selectedTextColor;
+@nocturnalPromptFocusBackground: @nocturnalPromptBackground;
+@nocturnalPromptFocusBorderColor: @nocturnalSelectedBorderColor;
+@nocturnalPromptFocusColor: @nocturnalSelectedTextColor;
 
 /* Hover */
 @resultHoverBackground: @offWhite;
 @actionHoverBackground: #E0E0E0;
+@nocturnalResultHoverBackground: saturate(lighten(@nocturnalPageBackground, 3), 10, relative);
+@nocturnalActionHoverBackground: saturate(lighten(@nocturnalPageBackground, 3), 10, relative);
 
 /* Loading */
 @invertedLoaderFillColor: rgba(0, 0, 0, 0.15);
+@nocturnalInvertedLoaderFillColor: @loaderFillColor;
 
 /* Active Category */
 @categoryActiveBackground: @darkWhite;
 @categoryNameActiveColor: @textColor;
+@nocturnalCategoryActiveBackground: @nocturnalPageBackground;
+@nocturnalCategoryActiveColor: @nocturnalTextColor;
 
 /* Active Result */
 @resultActiveBorderLeft: @internalBorderColor;
@@ -113,6 +139,11 @@
 @resultActiveTitleColor: @darkTextColor;
 @resultActiveDescriptionColor: @darkTextColor;
 @resultsZIndex: 998;
+@nocturnalResultActiveBorderLeft: @nocturnalInternalBorderColor;
+@nocturnalResultActiveBackground: @nocturnalPageBackground;
+@nocturnalResultActiveBoxShadow: @resultActiveBoxShadow;
+@nocturnalResultActiveTitleColor: @nocturnalTextColor;
+@nocturnalResultActiveDescriptionColor: @nocturnalTextColor;
 
 
 /*******************************
@@ -132,6 +163,8 @@
 @selectionCloseIconColor: '';
 @selectionCloseIconHoverOpacity: 1;
 @selectionCloseIconHoverColor: @red;
+@nocturnalSelectionCloseIconColor: '';
+@nocturnalSelectionCloseIconHoverColor: @selectionCloseIconHoverColor;
 
 @selectionCloseIconInputRight: 1.85714em;
 
@@ -143,6 +176,9 @@
   background @defaultDuration @defaultEasing,
   border-color @defaultDuration @defaultEasing
 ;
+@nocturnalCategoryBackground: @nocturnalPageBackground;
+@nocturnalCategoryBoxShadow: @categoryBoxShadow;
+@nocturnalCategoryDivider: 1px solid @nocturnalInternalBorderColor;
 
 @categoryResultsWidth: 28em;
 
@@ -152,6 +188,10 @@
 @categoryResultLastDivider: none;
 @categoryResultPadding: @resultPadding;
 @categoryResultTransition: @categoryTransition;
+@nocturnalCategoryResultBackground: saturate(lighten(@nocturnalPageBackground, 5), 15, relative);
+@nocturnalCategoryResultLeftBorder: 1px solid @nocturnalBorderColor;
+@nocturnalCategoryResultDivider: @nocturnalResultDivider;
+@nocturnalCategoryResultLastDivider: none;
 
 @categoryNameWidth: 100px;
 @categoryNameBackground: transparent;
@@ -161,3 +201,5 @@
 @categoryNamePadding: 0.4em 1em;
 @categoryNameFontWeight: @bold;
 @categoryNameColor: @lightTextColor;
+@nocturnalCategoryNameBackground: transparent;
+@nocturnalCategoryNameColor: @nocturnalLightTextColor;

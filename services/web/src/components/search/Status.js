@@ -12,9 +12,7 @@ export default class SearchStatus extends React.Component {
     if (loading) {
       return (
         <Segment style={{ height: '100px' }}>
-          <Dimmer active inverted>
-            <Loader>Loading</Loader>
-          </Dimmer>
+          <Loader>Loading</Loader>
         </Segment>
       );
     }

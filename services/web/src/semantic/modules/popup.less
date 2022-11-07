@@ -197,22 +197,26 @@
 ---------------*/
 
 /* Arrow */
+.nocturnal-theme [data-tooltip]:before,
 [data-tooltip][data-inverted]:before {
   box-shadow: none !important;
 }
 
 /* Arrow Position */
+.nocturnal-theme [data-tooltip]:before,
 [data-tooltip][data-inverted]:before {
   background: @invertedArrowBottomBackground;
 }
 
 /* Popup  */
+.nocturnal-theme [data-tooltip]::after,
 [data-tooltip][data-inverted]:after {
   background: @tooltipInvertedBackground;
   color: @tooltipInvertedColor;
   border: @tooltipInvertedBorder;
   box-shadow: @tooltipInvertedBoxShadow;
 }
+.nocturnal-theme [data-tooltip] .header,
 [data-tooltip][data-inverted]:after .header {
   background-color: @tooltipInvertedHeaderBackground;
   color: @tooltipInvertedHeaderColor;
@@ -641,16 +645,19 @@
 ---------------*/
 
 /* Inverted colors  */
+.nocturnal-theme .ui.popup,
 .ui.inverted.popup {
   background: @invertedBackground;
   color: @invertedColor;
   border: @invertedBorder;
   box-shadow: @invertedBoxShadow;
 }
+.nocturnal-theme .ui.popup .header,
 .ui.inverted.popup .header {
   background-color: @invertedHeaderBackground;
   color: @invertedHeaderColor;
 }
+.nocturnal-theme .ui.popup:before,
 .ui.inverted.popup:before {
   background-color: @invertedArrowColor;
   box-shadow: none !important;

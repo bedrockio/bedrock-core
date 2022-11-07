@@ -21,6 +21,7 @@
 
 @shapeBorderColor: @loaderLineColor transparent transparent;
 @invertedShapeBorderColor: @invertedLoaderLineColor transparent transparent;
+@nocturnalShapeBorderColor: @nocturnalLoaderLineColor transparent transparent;
 
 /*-------------------
         Types

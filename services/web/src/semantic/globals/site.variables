@@ -2,7 +2,7 @@
        Fonts
 --------------------*/
 
-@baseFontFamily    : -apple-system, system-ui, Helvetica Neue, Arial, Helvetica, sans-serif;
+@baseFontFamily    : -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
 @headerFont        : @baseFontFamily;
 @pageFont          : @baseFontFamily;
 
@@ -43,6 +43,9 @@
 @lightPrimaryColor   : @lightBlue;
 @lightSecondaryColor : @lightBlack;
 
+@nocturnalPrimaryColor    : @primaryColor;
+@nocturnalSecondaryColor  : @secondaryColor;
+
 /*--------------
   Page Heading
 ---------------*/
@@ -65,11 +68,15 @@
 @inputVerticalPadding   : @relative11px;
 @inputHorizontalPadding : @relative14px;
 @inputPadding           : @inputVerticalPadding @inputHorizontalPadding;
+@nocturnalInputBackground: rgba(255,255,255,.05);
 
 /* Input Text Color */
-@inputColor: #6C727F;
-@inputPlaceholderColor: lighten(@inputColor, 0);
-@inputPlaceholderFocusColor: lighten(@inputColor, 0);
+@inputColor: @textColor;
+@inputPlaceholderColor: #6C727F;
+@inputPlaceholderFocusColor: darken(@inputPlaceholderColor, 0);
+@nocturnalInputColor: @nocturnalTextColor;
+@nocturnalInputPlaceholderColor: darken(@nocturnalInputColor, 60);
+@nocturnalInputPlaceholderFocusColor: darken(@nocturnalInputColor, 50);
 
 /* Line Height Default For Inputs in Browser (Descenders are 17px at 14px base em) */
 @inputLineHeight: unit((17 / 14), em);
@@ -80,9 +87,11 @@
 
 /* Used on inputs, textarea etc */
 @focusedFormBorderColor: #3B82F6;
+@nocturnalFocusedFormBorderColor: rgba(saturate(lighten(@focusedFormBorderColor, 8), 20, relative), .67);
 
 /* Used on dropdowns, other larger blocks */
 @focusedFormMutedBorderColor: #3B82F6;
+@nocturnalFocusedFormMutedBorderColor: rgba(saturate(lighten(@focusedFormMutedBorderColor, 8), 20, relative), .67);
 
 /*-------------------
         Sizes
@@ -113,12 +122,14 @@
 @lineHeight          : 1.4285em;
 @textColor           : #111827;
 
+@nocturnalPageBackground: #201c19; //hsl(hue(@pageBackground), (saturation(@pageBackground) / 2), lightness(@textColor));// spin(@pageBackground, 180); //mix(@textColor, #333, 75);
+
 /*-------------------
         Sidebar Main Menu & Portal Main Menu
 --------------------*/
 
 @mainMenuBackground      : #f4f0eb;
-
+@nocturnalMainMenuBackground : hsl(hue(@mainMenuBackground), (saturation(@mainMenuBackground) / 2), (lightness(@textColor) + (lightness(@mainMenuBackground) - 100%) / 2)); // lighter option: hsl(hue(@mainMenuBackground), (saturation(@mainMenuBackground) / 2), (100% - lightness(@mainMenuBackground) + (lightness(@textColor)*0.75)));
 
 /*-------------------
       Paragraph
@@ -136,6 +147,8 @@
 @linkHoverColor      : darken(saturate(@linkColor, 20), 15, relative);
 @linkHoverUnderline  : @linkUnderline;
 
+@nocturnalLinkColor   : hsl(hue(@linkColor), saturation(@linkColor), if((lightness(@linkColor) > 50%), (100% - lightness(@linkColor)), lightness(@linkColor)));
+@nocturnalLinkHoverColor : lighten(saturate(@linkColor, 20), 10, relative);
 /*-------------------
     Scroll Bars
 --------------------*/
@@ -182,6 +195,9 @@
 
 @invertedLoaderFillColor : rgba(255, 255, 255, 0.15);
 @invertedLoaderLineColor : @white;
+
+@nocturnalLoaderFillColor: @invertedLoaderFillColor;
+@nocturnalLoaderLineColor: @invertedLoaderLineColor;
 
 /*-------------------
         Grid
@@ -262,15 +278,15 @@
 
 /*--- Colored Headers ---*/
 @redHeaderColor    : darken(@redTextColor, 5);
+@orangeHeaderColor : darken(@orangeTextColor, 5);
+@yellowHeaderColor : darken(@yellowTextColor, 5);
 @oliveHeaderColor  : darken(@oliveTextColor, 5);
 @greenHeaderColor  : darken(@greenTextColor, 5);
-@yellowHeaderColor : darken(@yellowTextColor, 5);
-@blueHeaderColor   : darken(@blueTextColor, 5);
 @tealHeaderColor   : darken(@tealTextColor, 5);
-@pinkHeaderColor   : darken(@pinkTextColor, 5);
+@blueHeaderColor   : darken(@blueTextColor, 5);
 @violetHeaderColor : darken(@violetTextColor, 5);
 @purpleHeaderColor : darken(@purpleTextColor, 5);
-@orangeHeaderColor : darken(@orangeTextColor, 5);
+@pinkHeaderColor   : darken(@pinkTextColor, 5);
 @brownHeaderColor  : darken(@brownTextColor, 5);
 
 /*--- Colored Text ---*/
@@ -318,14 +334,22 @@
 
 /* Differentiating Neutrals */
 @subtleGradient: linear-gradient(transparent, @transparentBlack);
+@nocturnalSubtleGradient: linear-gradient(@transparentWhite, transparent);
 
 /* Differentiating Layers */
 @subtleShadow:
-  0px 1px 2px 0 @borderColor
+  0px 1px 2px 0 rgba(34,36,38,.12),
 ;
 @floatingShadow:
   0px 2px 4px 0px rgba(34, 36, 38, 0.12),
   0px 2px 10px 0px rgba(34, 36, 38, 0.15)
+;
+@nocturnalSubtleShadow:
+  0px 1px 2px 0 rgba(0, 0, 0, 0.12)
+;
+@nocturnalFloatingShadow:
+  0px 2px 4px 0 rgba(0, 0, 0, 0.12),
+  0px 2px 10px 0 rgba(0, 0, 0, 0.15)
 ;
 
 /*******************************
@@ -344,12 +368,24 @@
 @positiveHeaderColor     : #1A531B;
 @positiveTextColor       : #2C662D;
 
+@nocturnalPositiveColor           : @positiveColor;
+@nocturnalPositiveBackgroundColor : @positiveHeaderColor;
+@nocturnalPositiveBorderColor     : @positiveTextColor;
+@nocturnalPositiveHeaderColor     : @positiveBackgroundColor;
+@nocturnalPositiveTextColor       : @positiveBorderColor;
+
 /* Negative */
 @negativeColor           : @red;
 @negativeBackgroundColor : #FFF6F6;
 @negativeBorderColor     : #E0B4B4;
 @negativeHeaderColor     : #912D2B;
 @negativeTextColor       : #9F3A38;
+
+@nocturnalNegativeColor           : @negativeColor;
+@nocturnalNegativeBackgroundColor : @negativeHeaderColor;
+@nocturnalNegativeBorderColor     : @negativeTextColor;
+@nocturnalNegativeHeaderColor     : @negativeBackgroundColor;
+@nocturnalNegativeTextColor       : @negativeBorderColor;
 
 /* Info */
 @infoColor              : #31CCEC;
@@ -358,12 +394,24 @@
 @infoHeaderColor        : #0E566C;
 @infoTextColor          : #276F86;
 
+@nocturnalInfoColor               : @infoColor;
+@nocturnalInfoBackgroundColor     : @infoHeaderColor;
+@nocturnalInfoBorderColor         : @infoTextColor;
+@nocturnalInfoHeaderColor         : @infoBackgroundColor;
+@nocturnalInfoTextColor           : @infoBorderColor;
+
 /* Warning */
 @warningColor           : #F2C037;
 @warningBorderColor     : #C9BA9B;
 @warningBackgroundColor : #FFFAF3;
 @warningHeaderColor     : #794B02;
 @warningTextColor       : #573A08;
+
+@nocturnalWarningColor            : @warningColor;
+@nocturnalWarningBackgroundColor  : @warningHeaderColor;
+@nocturnalWarningBorderColor      : @warningTextColor;
+@nocturnalWarningHeaderColor      : @warningBackgroundColor;
+@nocturnalWarningTextColor        : @warningBorderColor;
 
 /*-------------------
         Paths
@@ -440,6 +488,15 @@
 @invertedSelectedTextColor   : rgba(255, 255, 255, 1);
 @invertedDisabledTextColor   : rgba(255, 255, 255, 0.2);
 
+@nocturnalTextColor          : @invertedTextColor;
+@nocturnalMutedTextColor     : @invertedMutedTextColor;
+@nocturnalLightTextColor     : @invertedLightTextColor;
+@nocturnalUnselectedTextColor: @invertedUnselectedTextColor;
+@nocturnalHoveredTextColor   : @invertedHoveredTextColor;
+@nocturnalPressedTextColor   : @invertedPressedTextColor;
+@nocturnalSelectedTextColor  : @invertedSelectedTextColor;
+@nocturnalDisabledTextColor  : @invertedDisabledTextColor;
+
 /*-------------------
      Brand Colors
 --------------------*/
@@ -467,7 +524,7 @@
 @disabledBorderColor       : rgba(34, 36, 38, 0.5);
 
 @solidInternalBorderColor  : #FAFAFA;
-@solidBorderColor          : #D4D4D5;
+@solidBorderColor          : #d4d4d5;
 @solidSelectedBorderColor  : #BCBDBD;
 
 @whiteBorderColor              : rgba(255, 255, 255, 0.1);
@@ -476,6 +533,14 @@
 @solidWhiteBorderColor         : #555555;
 @selectedSolidWhiteBorderColor : #999999;
 
+@nocturnalBorderColor       : rgba(255,255,255,.2); // hsl(hue(@borderColor), saturation(@borderColor), (100% - lightness(@borderColor)) * 2);
+@nocturnalStrongBorderColor  : rgba(255,255,255,.25);
+@nocturnalInternalBorderColor: rgba(255,255,255,.3);
+@nocturnalSelectedBorderColor: rgba(255,255,255,.30);
+@nocturnalDisabledBorderColor: rgba(255,255,255,.45);
+
+@nocturnalSolidInternalBorderColor: lighten(@nocturnalPageBackground, 2);
+@nocturnalSolidBorderColor: lighten(@nocturnalPageBackground, 15);
 
 /*-------------------
     Derived Values
@@ -510,11 +575,23 @@
 @successHeaderColor     : @positiveHeaderColor;
 @successTextColor       : @positiveTextColor;
 
+@nocturnalSuccessBackgroundColor : @nocturnalPositiveBackgroundColor;
+@nocturnalSuccessColor           : @nocturnalPositiveColor;
+@nocturnalSuccessBorderColor     : @nocturnalPositiveBorderColor;
+@nocturnalSuccessHeaderColor     : @nocturnalPositiveHeaderColor;
+@nocturnalSuccessTextColor       : @nocturnalPositiveTextColor;
+
 @errorBackgroundColor   : @negativeBackgroundColor;
 @errorColor             : @negativeColor;
 @errorBorderColor       : @negativeBorderColor;
 @errorHeaderColor       : @negativeHeaderColor;
 @errorTextColor         : @negativeTextColor;
+
+@nocturnalErrorBackgroundColor   : @nocturnalNegativeBackgroundColor;
+@nocturnalErrorColor             : @nocturnalNegativeColor;
+@nocturnalErrorBorderColor       : @nocturnalNegativeBorderColor;
+@nocturnalErrorHeaderColor       : @nocturnalNegativeHeaderColor;
+@nocturnalErrorTextColor         : @nocturnalNegativeTextColor;
 
 
 /* Responsive */
@@ -724,6 +801,11 @@
   0px 2px 4px 0px rgba(34, 36, 38, 0.15),
   0px 2px 10px 0px rgba(34, 36, 38, 0.25)
 ;
+@nocturnalFloatingShadowHover:
+  0px 2px 4px 0px rgba(0, 0, 0, 0.15),
+  0px 2px 10px 0px rgba(0, 0, 0, 0.25)
+;
+
 
 /*---  Colors  ---*/
 @primaryColorHover        : saturate(darken(@primaryColor, 5), 10, relative);
@@ -790,6 +872,8 @@
 @secondaryColorFocus      : saturate(lighten(@secondaryColor, 8), 20, relative);
 @lightPrimaryColorFocus   : saturate(darken(@lightPrimaryColor, 8), 20, relative);
 @lightSecondaryColorFocus : saturate(lighten(@lightSecondaryColor, 8), 20, relative);
+
+@nocturnalPrimaryColorFocus: saturate(lighten(@nocturnalPrimaryColor, 8), 20, relative);
 
 @redFocus                 : saturate(darken(@red, 8), 20, relative);
 @orangeFocus              : saturate(darken(@orange, 8), 20, relative);

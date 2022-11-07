@@ -32,6 +32,7 @@
 @valueLineHeight: 1em;
 @valueColor: @textColor;
 @valueTextTransform: uppercase;
+@nocturnalValueColor: @nocturnalMutedTextColor; // slightly lighter than text color
 
 /* Label */
 @labelSize: @relativeMedium;
@@ -42,6 +43,7 @@
 @labelColor: @grey;
 @labelLineHeight: @relativeLarge;
 @labelTextTransform: uppercase;
+@nocturnalLabelColor: @nocturnalUnselectedTextColor;
 
 /* Text */
 @textValueLineHeight: 1em;
@@ -70,6 +72,9 @@
 /* Inverted */
 @invertedValueColor: @white;
 @invertedLabelColor: @invertedTextColor;
+@nocturnalInvertedValueColor: @black;
+@nocturnalInvertedLabelColor: @labelColor;
+
 
 /* Item Width */
 @itemGroupMargin: 0em 0em -@rowSpacing;

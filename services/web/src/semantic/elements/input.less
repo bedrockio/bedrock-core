@@ -24,6 +24,10 @@
   font-style: normal;
   display: inline-flex;
   color: @inputColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalInputColor;
+  }
 }
 .ui.input > input {
   margin: 0em;
@@ -44,6 +48,13 @@
   transition: @transition;
 
   box-shadow: @boxShadow;
+
+  .nocturnal-theme & {
+    background: @nocturnalBackground;
+    border: @nocturnalBorder;
+    color: @nocturnalInputColor;
+    box-shadow: @nocturnalBoxShadow;
+  }
 }
 
 /*--------------------
@@ -60,6 +71,18 @@
 }
 .ui.input > input:-ms-input-placeholder {
   color: @placeholderColor;
+}
+
+.nocturnal-theme {
+  .ui.input > input::-webkit-input-placeholder {
+    color: @nocturnalPlaceholderColor;
+  }
+  .ui.input > input::-moz-placeholder {
+    color: @nocturnalPlaceholderColor;
+  }
+  .ui.input > input:-ms-input-placeholder {
+    color: @nocturnalPlaceholderColor;
+  }
 }
 
 /*******************************
@@ -90,6 +113,13 @@
   background: @downBackground;
   color: @downColor;
   box-shadow: @downBoxShadow;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalDownBorderColor;
+    background: @nocturnalDownBackground;
+    color: @nocturnalDownColor;
+    box-shadow: @nocturnalDownBoxShadow;
+  }
 }
 
 /*--------------------
@@ -108,6 +138,10 @@
 
   border-radius: @circularRadius;
   border: @loaderLineWidth solid @loaderFillColor;
+
+  .nocturnal-theme & {
+    border: @loaderLineWidth solid @nocturnalLoaderFillColor;
+  }
 }
 .ui.loading.loading.input > svg.icon:after {
   position: absolute;
@@ -129,6 +163,10 @@
   border-width: @loaderLineWidth;
 
   box-shadow: 0px 0px 0px 1px transparent;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalLoaderLineColor transparent transparent;
+  }
 }
 
 /*--------------------
@@ -141,6 +179,13 @@
   background: @focusBackground;
   color: @focusColor;
   box-shadow: @focusBoxShadow;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalFocusBorderColor;
+    background: @nocturnalFocusBackground;
+    color: @nocturnalFocusColor;
+    box-shadow: @nocturnalFocusBoxShadow;
+  }
 }
 .ui.input.focus > input::-webkit-input-placeholder,
 .ui.input > input:focus::-webkit-input-placeholder {
@@ -154,6 +199,20 @@
 .ui.input > input:focus:-ms-input-placeholder {
   color: @placeholderFocusColor;
 }
+.nocturnal-theme {
+  .ui.input.focus > input::-webkit-input-placeholder,
+  .ui.input > input:focus::-webkit-input-placeholder {
+    color: @nocturnalPlaceholderFocusColor;
+  }
+  .ui.input.focus > input::-moz-placeholder,
+  .ui.input > input:focus::-moz-placeholder {
+    color: @nocturnalPlaceholderFocusColor;
+  }
+  .ui.input.focus > input:-ms-input-placeholder,
+  .ui.input > input:focus:-ms-input-placeholder {
+    color: @nocturnalPlaceholderFocusColor;
+  }
+}
 
 /*--------------------
         Error
@@ -164,6 +223,13 @@
   border-color: @errorBorder;
   color: @errorColor;
   box-shadow: @errorBoxShadow;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalErrorBackground;
+    border-color: @nocturnalErrorBorder;
+    color: @nocturnalErrorColor;
+    box-shadow: @nocturnalErrorBoxShadow;
+  }
 }
 
 /* Error Placeholder */
@@ -177,6 +243,18 @@
   color: @placeholderErrorColor !important;
 }
 
+.nocturnal-theme {
+  .ui.input.error > input::-webkit-input-placeholder {
+    color: @nocturnalPlaceholderErrorColor;
+  }
+  .ui.input.error > input::-moz-placeholder {
+    color: @nocturnalPlaceholderErrorColor;
+  }
+  .ui.input.error > input:-ms-input-placeholder {
+    color: @nocturnalPlaceholderErrorColor !important;
+  }
+}
+
 /* Focused Error Placeholder */
 .ui.input.error > input:focus::-webkit-input-placeholder {
   color: @placeholderErrorFocusColor;
@@ -186,6 +264,18 @@
 }
 .ui.input.error > input:focus:-ms-input-placeholder {
   color: @placeholderErrorFocusColor !important;
+}
+
+.nocturnal-theme {
+  .ui.input.error > input:focus::-webkit-input-placeholder {
+    color: @nocturnalPlaceholderErrorFocusColor;
+  }
+  .ui.input.error > input:focus::-moz-placeholder {
+    color: @nocturnalPlaceholderErrorFocusColor;
+  }
+  .ui.input.error > input:focus:-ms-input-placeholder {
+    color: @nocturnalPlaceholderErrorFocusColor !important;
+  }
 }
 
 /*******************************
@@ -220,6 +310,10 @@
 /* Transparent Inverted */
 .ui.transparent.inverted.input {
   color: @transparentInvertedColor;
+
+  .nocturnal-theme & {
+    color: @inputColor;
+  }
 }
 .ui.transparent.inverted.input > input {
   color: inherit;
@@ -233,6 +327,18 @@
 }
 .ui.transparent.inverted.input > input:-ms-input-placeholder {
   color: @transparentInvertedPlaceholderColor;
+}
+
+.nocturnal-theme {
+  .ui.transparent.inverted.input > input::-webkit-input-placeholder {
+    color: @placeholderColor;
+  }
+  .ui.transparent.inverted.input > input::-moz-placeholder {
+    color: @placeholderColor;
+  }
+  .ui.transparent.inverted.input > input:-ms-input-placeholder {
+    color: @placeholderColor;
+  }
 }
 
 /*--------------------
@@ -310,6 +416,10 @@
   margin: 0;
   font-size: @relativeMedium;
   border: 1px solid @borderColor;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalBorderColor;
+  }
 }
 .ui.labeled.input > .label:not(.corner) {
   padding-top: @verticalPadding;
@@ -330,6 +440,10 @@
   .label:first-child
   + input:focus {
   border-left-color: @focusBorderColor;
+
+  .nocturnal-theme & {
+    border-left-color: @nocturnalFocusBorderColor;
+  }
 }
 
 /* Regular Label on Right */
@@ -345,6 +459,10 @@
 
 .ui[class*='right labeled'].input > input:focus {
   border-right-color: @focusBorderColor !important;
+
+  .nocturnal-theme & {
+    border-right-color: @nocturnalFocusBorderColor !important;
+  }
 }
 
 /* Corner Label */
@@ -429,6 +547,10 @@
 /* Input Focus */
 .ui.action.input:not([class*='left action']) > input:focus {
   border-right-color: @focusBorderColor !important;
+
+  .nocturnal-theme & {
+    border-right-color: @nocturnalBorderColor !important;
+  }
 }
 
 /* Button on Left */
@@ -450,6 +572,10 @@
 /* Input Focus */
 .ui[class*='left action'].input > input:focus {
   border-left-color: @focusBorderColor !important;
+
+  .nocturnal-theme & {
+    border-left-color: @nocturnalFocusBorderColor !important;
+  }
 }
 
 /*--------------------

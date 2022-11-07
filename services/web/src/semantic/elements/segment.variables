@@ -11,11 +11,15 @@
 @background: @white;
 @borderWidth: 1px;
 @border: @borderWidth solid @borderColor;
+@nocturnalBackground: saturate(lighten(@nocturnalPageBackground, 5), 15, relative);
+@nocturnalBorder: @borderWidth solid @nocturnalBorderColor;
+
 
 @boxShadow: @subtleShadow;
 @verticalPadding: 1em;
 @horizontalPadding: 1em;
 @padding: @verticalPadding @horizontalPadding;
+@nocturnalBoxShadow: 0 1px 2px 0 @strongTransparentBlack;
 
 @verticalMargin: 1rem;
 @horizontalMargin: 0em;
@@ -30,6 +34,8 @@
 @groupedBorder: @border;
 @groupedBoxShadow: @boxShadow;
 @groupedBorderRadius: @borderRadius;
+@nocturnalGroupedBorder: @nocturnalBorder;
+@nocturnalGroupedBoxShadow: @nocturnalBoxShadow;
 
 @nestedGroupMargin: @verticalMargin @verticalMargin;
 
@@ -38,6 +44,9 @@
 @groupedSegmentMargin: 0em;
 @groupedSegmentWidth: auto;
 @groupedSegmentBoxShadow: none;
+@nocturnalGroupedSegmentBorder: @groupedSegmentBorder;
+@nocturnalGroupedSegmentDivider: @nocturnalBorder;
+@nocturnalGroupedSegmentBoxShadow: @groupedSegmentBoxShadow;
 
 /*-------------------
        Coupling
@@ -58,6 +67,9 @@
 @placeholderMinHeight: 18rem;
 @placeholderContentMaxWidth: 15rem;
 @placeholderContentInlineButtonMargin: 0px @5px 0px 0px;
+@nocturnalPlaceholderBackground: @nocturnalPageBackground;
+@nocturnalPlaceholderBorderColor: @nocturnalBorderColor;
+@nocturnalPlaceholderBoxShadow: 0 2px 25px 0 rgba(0, 0, 0, 0.20) inset;
 
 
 /* Piled */
@@ -66,6 +78,8 @@
 @piledBoxShadow: '';
 @piledDegrees: 1.2deg;
 @piledBorder: @border;
+@nocturnalPiledBorder: @nocturnalBorder;
+@nocturnalPiledBoxShadow: @piledBoxShadow;
 
 /* Circular */
 @circularPadding: 2em;
@@ -75,6 +89,7 @@
 @stackedPageBackground: @subtleTransparentBlack;
 @stackedPadding: @verticalPadding + (0.4em);
 @tallStackedPadding: @verticalPadding + (0.8em);
+@nocturnalStackedPageBackground: @subtleTransparentBlack;
 
 /*******************************
             States
@@ -83,6 +98,7 @@
 /* Loading Dimmer */
 @loaderDimmerColor: rgba(255, 255, 255, 0.8);
 @loaderDimmerZIndex: 100;
+@nocturnalLoaderDimmerColor: fade(@nocturnalPageBackground, 80%);
 
 /* Loading Spinner */
 @loaderSize: 3em;
@@ -96,6 +112,9 @@
 
 /* Raised */
 @raisedBoxShadow: @floatingShadow;
+@nocturnalRaisedBoxShadow:
+  0px 2px 4px 0px rgba(0, 0, 0, .1),
+  0px 2px 10px 0px rgba(0, 0, 0, .15);
 
 /* Padded */
 @paddedSegmentPadding: 1.5em;
@@ -112,9 +131,13 @@
   @boxShadow,
   @attachedBoxShadow
 ;
+@nocturnalAttachedBoxShadow: @attachedBoxShadow;
+@nocturnalAttachedBorder: @borderWidth solid @nocturnalBorderColor;
+@nocturnalAttachedBottomBoxShadow: @nocturnalBoxShadow, @nocturnalAttachedBoxShadow;
 
 /* Inverted */
 @invertedBackground: @black;
+@nocturnalInvertedBackground: @background;
 
 /* Floated */
 @floatedDistance: 1em;
@@ -131,9 +154,13 @@
 /* Ordinality */
 @secondaryBackground: @darkWhite;
 @secondaryColor: @mutedTextColor;
+@nocturnalSecondaryBackground: saturate(lighten(@nocturnalPageBackground, 3), 10, relative);
+@nocturnalSecondaryColor: @nocturnalMutedTextColor;
 
-@tertiaryBackground:  @midWhite;
+@tertiaryBackground: @midWhite;
 @tertiaryColor: @mutedTextColor;
+@nocturnalTertiaryBackground: saturate(lighten(@nocturnalPageBackground, 0), 0, relative);
+@nocturnalTertiaryColor: @nocturnalMutedTextColor;
 
 @secondaryInvertedLightness: 0.2;
 @secondaryInvertedBackground:
@@ -144,6 +171,14 @@
   )
 ;
 @secondaryInvertedColor: @invertedMutedTextColor;
+@nocturnalSecondaryInvertedBackground:
+  lighten(@black, 40)
+  linear-gradient(
+    rgba(255, 255, 255, .40) 0%,
+    rgba(255, 255, 255, 0.40) 100%
+  );
+@nocturnalSecondaryInvertedColor: @mutedTextColor;
+
 
 @tertiaryInvertedLightness: 0.35;
 @tertiaryInvertedBackground:
@@ -154,3 +189,10 @@
   )
 ;
 @tertiaryInvertedColor: @invertedMutedTextColor;
+@nocturnalTertiaryInvertedBackground:
+  lighten(@black, 20)
+  linear-gradient(
+    rgba(255, 255, 255, 0.20) 0%,
+    rgba(255, 255, 255, 0.20) 100%
+  );
+@nocturnalTertiaryInvertedColor: @mutedTextColor;

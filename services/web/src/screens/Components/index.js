@@ -21,6 +21,7 @@ import {
   Statistic,
   Table,
   TextArea,
+  Step
 } from 'semantic';
 import screen from 'helpers/screen';
 import { Layout } from 'components/Layout';
@@ -102,6 +103,9 @@ export default class ComponentsScreen extends React.Component {
               <JumpLink className="item" to="segment">
                 Segment
               </JumpLink>
+              <JumpLink className="item" to="step">
+                Step
+              </JumpLink>
               <JumpLink className="item" to="container-grid">
                 Container & Grid
               </JumpLink>
@@ -145,6 +149,7 @@ export default class ComponentsScreen extends React.Component {
                   <Button content="Standard" />
                   <Button circular content="Circular" />
                   <Button basic content="Basic" />
+                  <Button inverted content="Inverted" />
 
                   <Header size="medium">Sizes</Header>
                   <Button size="tiny" content="Tiny" />
@@ -236,6 +241,11 @@ export default class ComponentsScreen extends React.Component {
 
                     <Form.Field>
                       <Input placeholder="Search" type="search" icon="search" />
+                    </Form.Field>
+
+                    <Header size="medium">Select</Header>
+                    <Form.Field>
+                      <Form.Select options={options} placeholder="Placeholder" />
                     </Form.Field>
 
                     <Header size="medium">Checkbox</Header>
@@ -540,6 +550,43 @@ export default class ComponentsScreen extends React.Component {
                       Action
                     </Button>
                   </Segment>
+                </JumpLink.Target>
+
+                <div
+                  style={{
+                    margin: '50px 0 20px 0',
+                    borderBottom: '1px solid #ccc',
+                  }}
+                />
+
+                <JumpLink.Target id="step">
+                  <Header size="large">Step</Header>
+
+                  <Step.Group>
+                    <Step>
+                      <Icon name="truck" />
+                      <Step.Content>
+                        <Step.Title>Shipping</Step.Title>
+                        <Step.Description>Choose your shipping options</Step.Description>
+                      </Step.Content>
+                    </Step>
+
+                    <Step active>
+                      <Icon name="credit-card" />
+                      <Step.Content>
+                        <Step.Title>Billing</Step.Title>
+                        <Step.Description>Enter billing information</Step.Description>
+                      </Step.Content>
+                    </Step>
+
+                    <Step disabled>
+                      <Icon name="info" />
+                      <Step.Content>
+                        <Step.Title>Confirm order</Step.Title>
+                      </Step.Content>
+                    </Step>
+                  </Step.Group>
+
                 </JumpLink.Target>
 
                 <div

@@ -46,6 +46,10 @@
   user-select: none;
   will-change: opacity;
   z-index: @zIndex;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalBackgroundColor;
+  }
 }
 
 /* Dimmer Content */
@@ -178,7 +182,8 @@ body.dimmable > .dimmer {
     Inverted
 ---------------*/
 
-.ui.inverted.dimmer {
+.ui.inverted.dimmer,
+.nocturnal-theme .ui.inverted.dimmer {
   background-color: @invertedBackgroundColor;
 }
 .ui.inverted.dimmer > .content > * {
@@ -198,6 +203,10 @@ body.dimmable > .dimmer {
   height: 0%;
   z-index: -100;
   background-color: @simpleStartBackgroundColor;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalSimpleStartBackgroundColor;
+  }
 }
 .dimmed.dimmable > .ui.simple.dimmer {
   overflow: visible;
@@ -206,6 +215,10 @@ body.dimmable > .dimmer {
   height: 100%;
   background-color: @simpleEndBackgroundColor;
   z-index: @simpleZIndex;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalSimpleEndBackgroundColor;
+  }
 }
 
 .ui.simple.inverted.dimmer {
