@@ -38,6 +38,10 @@ const INTERNAL_MAP = {
     return 'caret-down';
   },
   mail: 'envelope',
+  'message-bubble': 'message',
+  'log-out': 'right-from-bracket',
+  'table-full': 'table',
+  'message-bubble regular': 'message regular',
 };
 const CLASS_PROPS = ['name', 'size', 'color', 'corner', 'flipped', 'rotated'];
 
@@ -89,11 +93,12 @@ export default class Icon extends React.Component {
 
   resolveName() {
     let { name } = this.props;
-    name = INTERNAL_MAP[name] || name;
-    if (typeof name === 'function') {
-      name = name(this.props);
+    let _name = name ? name.trim() : "";
+    let iconName = INTERNAL_MAP[_name] || _name;
+    if (typeof iconName === 'function') {
+      return iconName(this.props);
     }
-    return name;
+    return iconName;
   }
 
   render() {
