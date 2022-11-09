@@ -43,10 +43,10 @@ const ICONS = {
   image: 'file-image',
   video: 'file-video',
   audio: 'file-audio',
-  text: 'file-alt',
+  text: 'file-lines',
   pdf: 'file-pdf',
   csv: 'file-excel',
-  zip: 'file-archive',
+  zip: 'file-zipper',
 };
 
 export default class Uploads extends React.Component {
@@ -212,13 +212,12 @@ export default class Uploads extends React.Component {
               {uploads.map((upload) => (
                 <Card
                   key={this.getUploadId(upload)}
-                  style={{
-                    background: '#888',
-                  }}>
+                  className="upload-card"
+                  >
                   {this.renderUpload(upload)}
                   <Icon
                     fitted
-                    name="delete"
+                    name="circle-xmark"
                     onClick={(evt) => this.delete(evt, upload)}
                   />
                   {upload.filename && (
@@ -257,7 +256,7 @@ export default class Uploads extends React.Component {
                 }
                 style={{ cursor: 'pointer', outline: 0 }}>
                 {loading ? (
-                  <Icon name="sync-alt" loading />
+                  <Icon name="rotate" loading />
                 ) : (
                   this.renderIconForType()
                 )}

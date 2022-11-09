@@ -51,7 +51,7 @@ export default class SearchFilter extends React.Component {
     const { name, context } = this.props;
     const value = this.state.value;
     return {
-      name: value ? 'close' : 'search',
+      name: value ? 'close' : 'magnifying-glass',
       link: true,
       onClick: (evt) => {
         if (value) {

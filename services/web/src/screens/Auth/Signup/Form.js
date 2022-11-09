@@ -60,7 +60,7 @@ export default (props) => {
           <Input
             value={fields.email}
             name="email"
-            icon="mail"
+            icon="envelope"
             iconPosition="left"
             placeholder="E-mail Address"
             type="email"

@@ -237,7 +237,7 @@ export default class ImportProducts extends React.Component {
         <Modal.Actions>
           <Button
             content="Reset"
-            icon="redo"
+            icon="arrow-rotate-right"
             disabled={step === 1 || step > 2}
             onClick={() => {
               this.setState({
@@ -248,7 +248,7 @@ export default class ImportProducts extends React.Component {
           {step === 2 && (
             <Button
               content="Import"
-              icon="checkmark"
+              icon="check"
               primary
               disabled={loading}
               onClick={() => {

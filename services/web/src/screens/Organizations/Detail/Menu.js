@@ -23,7 +23,7 @@ export default () => {
           <EditOrganization
             organization={item}
             onSave={reload}
-            trigger={<Button primary icon="setting" content="Settings" />}
+            trigger={<Button primary icon="gear" content="Settings" />}
           />
         </Layout.Group>
       </Layout>

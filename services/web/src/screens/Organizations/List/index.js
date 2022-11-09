@@ -99,7 +99,7 @@ export default class OrganizationList extends React.Component {
                           <Table.Cell textAlign="center">
                             <EditOrganization
                               organization={organization}
-                              trigger={<Button basic icon="edit" />}
+                              trigger={<Button basic icon="pen-to-square" />}
                               onSave={reload}
                             />
                             <Actions item={organization} reload={reload} />

@@ -174,7 +174,7 @@ export default class AuditTrailList extends React.Component {
                           <Table.Cell textAlign="center">
                             <ShowAuditEntry
                               auditEntry={item}
-                              trigger={<Button basic icon="search" />}
+                              trigger={<Button basic icon="magnifying-glass" />}
                             />
                           </Table.Cell>
                         </Table.Row>

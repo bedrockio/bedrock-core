@@ -139,7 +139,7 @@ export default class Docs extends React.Component {
               <PortalSettings
                 trigger={
                   <Button
-                    icon={<Icon name="cog" />}
+                    icon={<Icon name="gear" />}
                     content="Settings"
                     floated="right"
                   />

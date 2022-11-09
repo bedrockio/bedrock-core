@@ -155,7 +155,7 @@ export default class Roles extends React.Component {
                       cursor: 'pointer',
                       color: '#cccccc',
                     }}
-                    name="question-circle"
+                    name="circle-question"
                   />
                 }
               />

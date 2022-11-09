@@ -64,7 +64,7 @@ export default class DateField extends React.Component {
             />
             {clearable && (
               <Icon
-                name="x"
+                name="xmark"
                 color="grey"
                 style={{
                   position: 'absolute',

@@ -80,7 +80,7 @@ export default class Applications extends React.Component {
                           <Table.Cell textAlign="center">
                             <EditApplication
                               application={item}
-                              trigger={<Button basic icon="edit" />}
+                              trigger={<Button basic icon="pen-to-square" />}
                               onSave={reload}
                             />
                             <Confirm

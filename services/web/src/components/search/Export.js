@@ -50,7 +50,7 @@ export default class ExportButton extends React.Component {
         title={error?.message}
         primary
         basic
-        icon={error || tooManyRows ? 'exclamation-triangle' : 'download'}
+        icon={error || tooManyRows ? 'triangle-exclamation' : 'download'}
         content={tooManyRows ? 'Too many rows' : 'Export'}
         onClick={this.handleSubmit}
       />

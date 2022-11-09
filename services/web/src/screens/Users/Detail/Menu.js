@@ -22,7 +22,7 @@ export default () => {
           <Actions item={item} reload={reload} />
           <EditUser
             user={item}
-            trigger={<Button primary content="Edit" icon="edit" />}
+            trigger={<Button primary content="Edit" icon="pen-to-square" />}
             onSave={reload}
           />
         </Layout.Group>

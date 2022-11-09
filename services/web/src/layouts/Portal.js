@@ -45,6 +45,9 @@ export default class PortalLayout extends React.Component {
               <Menu.Item as={NavLink} to="/docs/ui">
                 <Icon name="cube" /> UI Components
               </Menu.Item>
+              <Menu.Item as={NavLink} to="/docs/icons">
+                <Icon name="icons" /> Icons
+              </Menu.Item>
             </Container>
           </Menu>
         </Layout>

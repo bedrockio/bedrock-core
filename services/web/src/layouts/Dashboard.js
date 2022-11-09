@@ -77,7 +77,7 @@ export default class DashboardLayout extends React.Component {
               <Layout.Group>
                 <Sidebar.Divider />
                 <Sidebar.Link to="/settings">
-                  <Icon name="cog" />
+                  <Icon name="gear" />
                   Settings
                 </Sidebar.Link>
                 {userHasAccess(this.context.user, {
@@ -103,7 +103,7 @@ export default class DashboardLayout extends React.Component {
                   </React.Fragment>
                 )}
                 <Sidebar.Link to="/logout">
-                  <Icon name="sign-out-alt" />
+                  <Icon name="right-from-bracket" />
                   Log Out
                 </Sidebar.Link>
               </Layout.Group>
