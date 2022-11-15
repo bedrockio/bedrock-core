@@ -35,10 +35,10 @@ export default class ShopProducts extends React.Component {
   };
 
   render() {
-    const { shop } = this.props;
+    const { item: shop } = this.context;
     return (
       <Search.Provider onDataNeeded={this.onDataNeeded}>
-        {({ items: products, getSorted, setSort, reload, loading, error }) => {
+        {({ items, getSorted, setSort, reload, loading, error }) => {
           return (
             <React.Fragment>
               <Menu {...this.props} />
@@ -52,7 +52,7 @@ export default class ShopProducts extends React.Component {
               <ErrorMessage error={error} />
               {loading ? (
                 <Loader active />
-              ) : products.length === 0 ? (
+              ) : items.length === 0 ? (
                 <Message>No products added yet</Message>
               ) : (
                 <Table sortable celled>
@@ -84,45 +84,43 @@ export default class ShopProducts extends React.Component {
                     </Table.Row>
                   </Table.Header>
                   <Table.Body>
-                    {products.map((product) => {
+                    {items.map((item) => {
                       return (
-                        <Table.Row key={product.id}>
+                        <Table.Row key={item.id}>
                           {/* --- Generator: list-body-cells */}
                           <Table.Cell>
-                            {product.images[0] && (
+                            {item.images[0] && (
                               <Image
                                 style={{ width: '100%' }}
-                                src={urlForUpload(product.images[0])}
+                                src={urlForUpload(item.images[0])}
                               />
                             )}
                           </Table.Cell>
                           <Table.Cell>
-                            <Link to={`/products/${product.id}`}>
-                              {product.name}
-                            </Link>
+                            <Link to={`/products/${item.id}`}>{item.name}</Link>
                           </Table.Cell>
-                          <Table.Cell>{product.description}</Table.Cell>
+                          <Table.Cell>{item.description}</Table.Cell>
                           {/* --- Generator: end */}
                           <Table.Cell>
-                            {formatDateTime(product.createdAt)}
+                            {formatDateTime(item.createdAt)}
                           </Table.Cell>
                           <Table.Cell textAlign="center">
                             <EditProduct
                               shop={shop}
-                              product={product}
+                              product={item}
                               onSave={reload}
                               trigger={<Button basic icon="pen-to-square" />}
                             />
                             <Confirm
                               negative
                               confirmButton="Delete"
-                              header={`Are you sure you want to delete "${product.name}"?`}
+                              header={`Are you sure you want to delete "${item.name}"?`}
                               content="All data will be permanently deleted"
                               trigger={<Button basic icon="trash" />}
                               onConfirm={async () => {
                                 await request({
                                   method: 'DELETE',
-                                  path: `/1/products/${product.id}`,
+                                  path: `/1/products/${item.id}`,
                                 });
                                 reload();
                               }}
