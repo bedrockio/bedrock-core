@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DayPickerInput from 'react-day-picker/DayPickerInput';
-import 'react-day-picker/lib/style.css';
+import DateInput from '../DateInput';
 import { Form, Label, Input, Icon } from 'semantic';
 import { formatDate } from 'utils/date';
 import { Layout } from '../Layout';
@@ -51,17 +50,27 @@ export default class DateField extends React.Component {
         {label && <label htmlFor={id}>{label}</label>}
         <Layout horizontal center>
           <Layout.Group style={{ position: 'relative' }}>
+            <DateInput
+              id={id}
+              value={date}
+              formatDate={this.formatDate}
+              placeholder={placeholder}
+              onChange={this.onDayChange}
+              style={{
+                width: '140px',
+              }}
+            />
+            {/*
             <DayPickerInput
               id={id}
               value={date}
               placeholder={placeholder}
               formatDate={this.formatDate}
               dayPickerProps={{ selectedDays: date }}
-              style={{
-                width: '140px',
-              }}
+
               onDayChange={this.onDayChange}
             />
+            */}
             {clearable && (
               <Icon
                 name="xmark"
