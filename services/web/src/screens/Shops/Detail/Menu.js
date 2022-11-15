@@ -13,9 +13,7 @@ export default () => {
 
   return (
     <React.Fragment>
-      <Breadcrumbs
-        link={<Link to="/shops">Shops</Link>}
-        active={item.name}></Breadcrumbs>
+      <Breadcrumbs link={<Link to="/shops">Shops</Link>} active={item.name} />
       <Layout horizontal center spread>
         <h1>{item.name}</h1>
         <Layout.Group>

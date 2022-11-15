@@ -10,23 +10,19 @@ import {
   Layout,
   Search,
   SearchFilters,
-  Confirm,
 } from 'components';
+import Actions from '../Actions';
+import EditShop from 'modals/EditShop';
 
 // --- Generator: list-imports
 import { Link } from 'react-router-dom';
 import allCountries from 'utils/countries';
-import Actions from '../Actions';
-
 const countries = allCountries.map(({ countryCode, nameEn }) => ({
   value: countryCode,
   text: nameEn,
   key: countryCode,
 }));
-
 // --- Generator: end
-
-import EditShop from 'modals/EditShop';
 
 @screen
 export default class ShopList extends React.Component {
@@ -38,6 +34,7 @@ export default class ShopList extends React.Component {
     });
   };
 
+  // --- Generator: exclude
   fetchOwners = async (props) => {
     const { data } = await request({
       method: 'POST',
@@ -46,9 +43,11 @@ export default class ShopList extends React.Component {
     });
     return data;
   };
+  // --- Generator: end
 
   getFilterMapping() {
     return {
+      // --- Generator: exclude
       country: {
         label: 'Country',
         getDisplayValue: (id) => countries.find((c) => c.value === id)?.text,
@@ -62,6 +61,7 @@ export default class ShopList extends React.Component {
           return owners[0].name;
         },
       },
+      // --- Generator: end
       keyword: {},
     };
   }
@@ -71,7 +71,7 @@ export default class ShopList extends React.Component {
       <Search.Provider
         onDataNeeded={this.onDataNeeded}
         filterMapping={this.getFilterMapping()}>
-        {({ items: shops, getSorted, setSort, reload }) => {
+        {({ items, getSorted, setSort, reload }) => {
           return (
             <React.Fragment>
               <Breadcrumbs active="Shops" />
@@ -90,21 +90,18 @@ export default class ShopList extends React.Component {
                 <Layout horizontal center spread stackable>
                   <SearchFilters.Modal>
                     {/* --- Generator: filters */}
-
                     <SearchFilters.Dropdown
                       options={countries}
                       search
                       name="country"
                       label="Country"
                     />
-
                     <SearchFilters.Dropdown
                       onDataNeeded={(name) => this.fetchOwners({ name })}
                       search
                       name="owner"
                       label="Owner"
                     />
-
                     {/* --- Generator: end */}
                   </SearchFilters.Modal>
 
@@ -117,7 +114,7 @@ export default class ShopList extends React.Component {
 
               <Search.Status />
 
-              {shops.length !== 0 && (
+              {items.length !== 0 && (
                 <Table celled sortable>
                   <Table.Header>
                     <Table.Row>
@@ -145,25 +142,25 @@ export default class ShopList extends React.Component {
                     </Table.Row>
                   </Table.Header>
                   <Table.Body>
-                    {shops.map((shop) => {
+                    {items.map((item) => {
                       return (
-                        <Table.Row key={shop.id}>
+                        <Table.Row key={item.id}>
                           {/* --- Generator: list-body-cells */}
                           <Table.Cell>
-                            <Link to={`/shops/${shop.id}`}>{shop.name}</Link>
+                            <Link to={`/shops/${item.id}`}>{item.name}</Link>
                           </Table.Cell>
-                          <Table.Cell>{shop.description}</Table.Cell>
+                          <Table.Cell>{item.description}</Table.Cell>
                           {/* --- Generator: end */}
                           <Table.Cell>
-                            {formatDateTime(shop.createdAt)}
+                            {formatDateTime(item.createdAt)}
                           </Table.Cell>
                           <Table.Cell textAlign="center" singleLine>
                             <EditShop
-                              shop={shop}
+                              shop={item}
                               trigger={<Button basic icon="pen-to-square" />}
                               onSave={reload}
                             />
-                            <Actions item={shop} reload={reload} />
+                            <Actions item={item} reload={reload} />
                           </Table.Cell>
                         </Table.Row>
                       );
