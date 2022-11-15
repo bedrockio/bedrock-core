@@ -38,8 +38,8 @@ services:
       - api
 
   mongo:
-    image: mongo:6.0.0
-    command: mongod --quiet --logpath /dev/null --serviceExecutor adaptive
+    image: mongo:6.0.2
+    command: mongod --quiet --logpath /dev/null
     logging:
       driver: none
     ports:
