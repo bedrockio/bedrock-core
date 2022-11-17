@@ -21,7 +21,7 @@ import {
   Statistic,
   Table,
   TextArea,
-  Step
+  Step,
 } from 'semantic';
 import screen from 'helpers/screen';
 import { Layout } from 'components/Layout';
@@ -72,6 +72,10 @@ export default class ComponentsScreen extends React.Component {
           </Breadcrumb.Section>
           <Breadcrumb.Divider icon="chevron-right" />
           <Breadcrumb.Section>UI Components</Breadcrumb.Section>
+          <Breadcrumb.Divider icon="chevron-right" />
+          <Breadcrumb.Section link as={Link} to="/docs/icons">
+            Icons
+          </Breadcrumb.Section>
         </Breadcrumb>
         <Divider hidden />
         <Layout horizontal top stackable>
@@ -245,7 +249,10 @@ export default class ComponentsScreen extends React.Component {
 
                     <Header size="medium">Select</Header>
                     <Form.Field>
-                      <Form.Select options={options} placeholder="Placeholder" />
+                      <Form.Select
+                        options={options}
+                        placeholder="Placeholder"
+                      />
                     </Form.Field>
 
                     <Header size="medium">Checkbox</Header>
@@ -567,7 +574,9 @@ export default class ComponentsScreen extends React.Component {
                       <Icon name="truck" />
                       <Step.Content>
                         <Step.Title>Shipping</Step.Title>
-                        <Step.Description>Choose your shipping options</Step.Description>
+                        <Step.Description>
+                          Choose your shipping options
+                        </Step.Description>
                       </Step.Content>
                     </Step>
 
@@ -575,7 +584,9 @@ export default class ComponentsScreen extends React.Component {
                       <Icon name="credit-card" />
                       <Step.Content>
                         <Step.Title>Billing</Step.Title>
-                        <Step.Description>Enter billing information</Step.Description>
+                        <Step.Description>
+                          Enter billing information
+                        </Step.Description>
                       </Step.Content>
                     </Step>
 
@@ -586,7 +597,6 @@ export default class ComponentsScreen extends React.Component {
                       </Step.Content>
                     </Step>
                   </Step.Group>
-
                 </JumpLink.Target>
 
                 <div
