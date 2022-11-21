@@ -29,7 +29,6 @@ export default function DateInput({
   const handleInputChange = (e) => {
     setInputValue(e.currentTarget.value);
     const date = parse(e.currentTarget.value, 'y-MM-dd', new Date());
-    console.log(1);
     if (isValid(date)) {
       setSelected(date);
       onChange(date);
