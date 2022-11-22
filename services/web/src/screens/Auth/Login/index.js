@@ -58,7 +58,7 @@ export default class Login extends React.Component {
                   value={email}
                   onChange={(e, { value }) => this.setState({ email: value })}
                   name="email"
-                  icon="mail"
+                  icon="envelope"
                   iconPosition="left"
                   placeholder="E-mail Address"
                   type="email"

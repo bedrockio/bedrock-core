@@ -21,6 +21,7 @@ import {
   Statistic,
   Table,
   TextArea,
+  Step,
 } from 'semantic';
 import screen from 'helpers/screen';
 import { Layout } from 'components/Layout';
@@ -36,7 +37,7 @@ const options = [
 ];
 
 const options2 = [
-  { key: 1, text: 'Apple', value: 1, icon: 'apple-alt' },
+  { key: 1, text: 'Apple', value: 1, icon: 'apple-whole' },
   { key: 2, text: 'Lemon', value: 2, icon: 'lemon' },
   { key: 3, text: 'Carrot', value: 3, icon: 'carrot' },
   { key: 4, text: 'Pepper', value: 4, icon: 'pepper-hot' },
@@ -71,6 +72,10 @@ export default class ComponentsScreen extends React.Component {
           </Breadcrumb.Section>
           <Breadcrumb.Divider icon="chevron-right" />
           <Breadcrumb.Section>UI Components</Breadcrumb.Section>
+          <Breadcrumb.Divider icon="chevron-right" />
+          <Breadcrumb.Section link as={Link} to="/docs/icons">
+            Icons
+          </Breadcrumb.Section>
         </Breadcrumb>
         <Divider hidden />
         <Layout horizontal top stackable>
@@ -101,6 +106,9 @@ export default class ComponentsScreen extends React.Component {
               </JumpLink>
               <JumpLink className="item" to="segment">
                 Segment
+              </JumpLink>
+              <JumpLink className="item" to="step">
+                Step
               </JumpLink>
               <JumpLink className="item" to="container-grid">
                 Container & Grid
@@ -145,6 +153,7 @@ export default class ComponentsScreen extends React.Component {
                   <Button content="Standard" />
                   <Button circular content="Circular" />
                   <Button basic content="Basic" />
+                  <Button inverted content="Inverted" />
 
                   <Header size="medium">Sizes</Header>
                   <Button size="tiny" content="Tiny" />
@@ -236,6 +245,14 @@ export default class ComponentsScreen extends React.Component {
 
                     <Form.Field>
                       <Input placeholder="Search" type="search" icon="search" />
+                    </Form.Field>
+
+                    <Header size="medium">Select</Header>
+                    <Form.Field>
+                      <Form.Select
+                        options={options}
+                        placeholder="Placeholder"
+                      />
                     </Form.Field>
 
                     <Header size="medium">Checkbox</Header>
@@ -484,7 +501,7 @@ export default class ComponentsScreen extends React.Component {
                   </Label>
 
                   <Label as="a">
-                    Label as Link <Icon name="times" />
+                    Label as Link <Icon name="xmark" />
                   </Label>
 
                   <Label color="blue">Colored label</Label>
@@ -540,6 +557,46 @@ export default class ComponentsScreen extends React.Component {
                       Action
                     </Button>
                   </Segment>
+                </JumpLink.Target>
+
+                <div
+                  style={{
+                    margin: '50px 0 20px 0',
+                    borderBottom: '1px solid #ccc',
+                  }}
+                />
+
+                <JumpLink.Target id="step">
+                  <Header size="large">Step</Header>
+
+                  <Step.Group>
+                    <Step>
+                      <Icon name="truck" />
+                      <Step.Content>
+                        <Step.Title>Shipping</Step.Title>
+                        <Step.Description>
+                          Choose your shipping options
+                        </Step.Description>
+                      </Step.Content>
+                    </Step>
+
+                    <Step active>
+                      <Icon name="credit-card" />
+                      <Step.Content>
+                        <Step.Title>Billing</Step.Title>
+                        <Step.Description>
+                          Enter billing information
+                        </Step.Description>
+                      </Step.Content>
+                    </Step>
+
+                    <Step disabled>
+                      <Icon name="info" />
+                      <Step.Content>
+                        <Step.Title>Confirm order</Step.Title>
+                      </Step.Content>
+                    </Step>
+                  </Step.Group>
                 </JumpLink.Target>
 
                 <div

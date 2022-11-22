@@ -93,15 +93,19 @@ export default class SearchDropdown extends React.Component {
   }, 200);
 
   onChange = (evt, { value, ...rest }) => {
-    if (!this.state.objectMode) {
-      return this.props.onChange(evt, { value, ...rest });
-    }
-
     const ids = Array.isArray(value) ? value : [value];
     const items = this.getAllItems();
     const selected = ids.map((id) => {
       return items.find((item) => item.id === id);
     });
+
+    if (!this.state.objectMode) {
+      return this.props.onChange(evt, {
+        ...rest,
+        value,
+        item: this.props.multiple ? selected : selected[0],
+      });
+    }
 
     value = this.props.multiple ? selected : selected[0];
     this.props.onChange(evt, { value, ...rest });
@@ -164,6 +168,10 @@ export default class SearchDropdown extends React.Component {
           'searchBody',
           'keywordField',
         ])}
+        autoComplete="off"
+        autoCorrect="off"
+        autoCapitalize="off"
+        spellCheck="false"
         error={!!error}
         loading={loading}
         value={this.getValue()}

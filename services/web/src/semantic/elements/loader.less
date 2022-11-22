@@ -37,6 +37,10 @@
 
   border-radius: @circularRadius;
   border: @loaderLineWidth solid @loaderFillColor;
+
+  .nocturnal-theme & {
+    border: @loaderLineWidth solid @nocturnalLoaderFillColor;
+  }
 }
 
 /* Active Shape */
@@ -58,6 +62,10 @@
   border-width: @loaderLineWidth;
 
   box-shadow: 0px 0px 0px 1px transparent;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalShapeBorderColor;
+  }
 }
 
 /* Active Animation */
@@ -130,24 +138,30 @@
 }
 
 /* Black Dimmer */
-.ui.dimmer .ui.loader {
+.ui.dimmer .ui.loader,
+.nocturnal-theme .ui.dimmer .ui.loader {
   color: @invertedLoaderTextColor;
 }
-.ui.dimmer .ui.loader:before {
+.ui.dimmer .ui.loader:before,
+.nocturnal-theme .ui.dimmer .ui.loader:before {
   border-color: @invertedLoaderFillColor;
 }
-.ui.dimmer .ui.loader:after {
+.ui.dimmer .ui.loader:after,
+.nocturnal-theme .ui.dimmer .ui.loader:after {
   border-color: @invertedShapeBorderColor;
 }
 
 /* White Dimmer (Inverted) */
-.ui.inverted.dimmer .ui.loader {
+.ui.inverted.dimmer .ui.loader,
+.nocturnal-theme .ui.inverted.dimmer .ui.loader {
   color: @loaderTextColor;
 }
-.ui.inverted.dimmer .ui.loader:before {
+.ui.inverted.dimmer .ui.loader:before,
+.nocturnal-theme .ui.inverted.dimmer .ui.loader:before {
   border-color: @loaderFillColor;
 }
-.ui.inverted.dimmer .ui.loader:after {
+.ui.inverted.dimmer .ui.loader:after,
+.nocturnal-theme .ui.inverted.dimmer .ui.loader:after {
   border-color: @shapeBorderColor;
 }
 
@@ -280,13 +294,16 @@
        Inverted
 --------------------*/
 
-.ui.inverted.loader {
+.ui.inverted.loader,
+.nocturnal-theme .ui.inverted.loader {
   color: @invertedLoaderTextColor;
 }
-.ui.inverted.loader:before {
+.ui.inverted.loader:before,
+.nocturnal-theme .ui.inverted.loader:before {
   border-color: @invertedLoaderFillColor;
 }
-.ui.inverted.loader:after {
+.ui.inverted.loader:after,
+.nocturnal-theme .ui.inverted.loader:after {
   border-top-color: @invertedLoaderLineColor;
 }
 

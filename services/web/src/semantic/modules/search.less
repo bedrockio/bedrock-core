@@ -37,6 +37,13 @@
   color: @promptColor;
   box-shadow: @promptBoxShadow;
   transition: @promptTransition;
+
+  .nocturnal-theme & {
+    background: @nocturnalPromptBackground;
+    border: @nocturnalPromptBorder;
+    color: @nocturnalPromptColor;
+    box-shadow: @nocturnalPromptBoxShadow;
+  }
 }
 
 .ui.search .prompt {
@@ -75,6 +82,12 @@
   box-shadow: @resultsBoxShadow;
   border: @resultsBorder;
   z-index: @resultsZIndex;
+
+  .nocturnal-theme & {
+    background: @nocturnalResultsBackground;
+    box-shadow: @nocturnalResultsBoxShadow;
+    border: @nocturnalResultsBorder;
+  }
 }
 .ui.search > .results > :first-child {
   border-radius: @resultsBorderRadius @resultsBorderRadius 0em 0em;
@@ -96,9 +109,17 @@
   color: @resultTextColor;
   line-height: @resultLineHeight;
   border-bottom: @resultDivider;
+
+  .nocturnal-theme & {
+    color: @nocturnalResultTextColor;
+    border-bottom: @nocturnalResultDivider;
+  }
 }
 .ui.search > .results .result:last-child {
-  border-bottom: @resultLastDivider !important;
+  &,
+  .nocturnal-theme & {
+    border-bottom: @resultLastDivider !important;
+  }
 }
 
 /* Image */
@@ -109,6 +130,10 @@
   width: @resultImageWidth;
   height: @resultImageHeight;
   border-radius: @resultImageBorderRadius;
+
+  .nocturnal-theme & {
+    background: @nocturnalResultImageBackground;
+  }
 }
 .ui.search > .results .result .image img {
   display: block;
@@ -130,15 +155,27 @@
   font-weight: @resultTitleFontWeight;
   font-size: @resultTitleFontSize;
   color: @resultTitleColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalResultTitleColor;
+  }
 }
 .ui.search > .results .result .description {
   margin-top: @resultDescriptionDistance;
   font-size: @resultDescriptionFontSize;
   color: @resultDescriptionColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalResultDescriptionColor;
+  }
 }
 .ui.search > .results .result .price {
   float: @resultPriceFloat;
   color: @resultPriceColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalResultPriceColor;
+  }
 }
 
 /*--------------
@@ -153,11 +190,19 @@
   font-size: @messageHeaderFontSize;
   font-weight: @messageHeaderFontWeight;
   color: @messageHeaderColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalMessageHeaderColor;
+  }
 }
 .ui.search > .results > .message .description {
   margin-top: @messageDescriptionDistance;
   font-size: @messageDescriptionFontSize;
   color: @messageDescriptionColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalMessageDescriptionColor;
+  }
 }
 
 /* View All Results */
@@ -169,6 +214,12 @@
   color: @actionColor;
   font-weight: @actionFontWeight;
   text-align: @actionAlign;
+
+  .nocturnal-theme & {
+    border-top: @nocturnalActionBorder;
+    background: @nocturnalActionBackground;
+    color: @nocturnalActionColor;
+  }
 }
 
 /*******************************
@@ -183,6 +234,12 @@
   border-color: @promptFocusBorderColor;
   background: @promptFocusBackground;
   color: @promptFocusColor;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalPromptFocusBorderColor;
+    background: @nocturnalPromptFocusBackground;
+    color: @nocturnalPromptFocusColor;
+  }
 }
 
 /*--------------------
@@ -201,6 +258,10 @@
 
   border-radius: @circularRadius;
   border: @loaderLineWidth solid @loaderFillColor;
+
+  .nocturnal-theme & {
+    border: @loaderLineWidth solid @nocturnalLoaderFillColor;
+  }
 }
 .ui.loading.search .input > svg.icon:after {
   position: absolute;
@@ -222,6 +283,10 @@
   border-width: @loaderLineWidth;
 
   box-shadow: 0px 0px 0px 1px transparent;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalLoaderLineColor transparent transparent;
+  }
 }
 
 /*--------------
@@ -231,9 +296,17 @@
 .ui.search > .results .result:hover,
 .ui.category.search > .results .category .result:hover {
   background: @resultHoverBackground;
+
+  .nocturnal-theme & {
+    background: @nocturnalResultHoverBackground;
+  }
 }
 .ui.search .action:hover {
   background: @actionHoverBackground;
+
+  .nocturnal-theme & {
+    background: @nocturnalActionHoverBackground;
+  }
 }
 
 /*--------------
@@ -242,9 +315,17 @@
 
 .ui.category.search > .results .category.active {
   background: @categoryActiveBackground;
+
+  .nocturnal-theme & {
+    background: @nocturnalCategoryActiveBackground;
+  }
 }
 .ui.category.search > .results .category.active > .name {
   color: @categoryNameActiveColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalCategoryNameColor;
+  }
 }
 
 .ui.search > .results .result.active,
@@ -253,12 +334,25 @@
   border-left-color: @resultActiveBorderLeft;
   background: @resultActiveBackground;
   box-shadow: @resultActiveBoxShadow;
+
+  .nocturnal-theme & {
+    border-left-color: @nocturnalResultActiveBorderLeft;
+    box-shadow: @nocturnalResultActiveBoxShadow;
+  }
 }
 .ui.search > .results .result.active .title {
   color: @resultActiveTitleColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalResultActiveTitleColor;
+  }
 }
 .ui.search > .results .result.active .description {
   color: @resultActiveDescriptionColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalResultActiveDescriptionColor;
+  }
 }
 
 /*--------------------
@@ -294,6 +388,10 @@
   top: @selectionCloseTop;
   right: @selectionCloseRight;
   transition: @selectionCloseTransition;
+
+  .nocturnal-theme & {
+    color: @nocturnalSelectionCloseIconColor;
+  }
 }
 .ui.search.selection > .icon.input > .active.remove.icon {
   cursor: pointer;
@@ -309,6 +407,10 @@
 .ui.search.selection > .icon.input > .remove.icon:hover {
   opacity: @selectionCloseIconHoverOpacity;
   color: @selectionCloseIconHoverColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalSelectionCloseIconHoverColor;
+  }
 }
 
 /*--------------
@@ -330,6 +432,11 @@
   background: @categoryBackground;
   box-shadow: @categoryBoxShadow;
   transition: @categoryTransition;
+
+  .nocturnal-theme & {
+    background: @nocturnalCategoryBackground;
+    box-shadow: @nocturnalCategoryBoxShadow;
+  }
 }
 
 /* Last Category */
@@ -358,6 +465,12 @@
   font-weight: @categoryNameFontWeight;
   color: @categoryNameColor;
   border-bottom: @categoryDivider;
+
+  .nocturnal-theme & {
+    background: @nocturnalCategoryNameBackground;
+    color: @nocturnalCategoryNameColor;
+    border-bottom: @nocturnalCategoryDivider;
+  }
 }
 
 /* Category Result */
@@ -366,11 +479,21 @@
   background: @categoryResultBackground;
   border-left: @categoryResultLeftBorder;
   border-bottom: @categoryDivider;
+
+  .nocturnal-theme & {
+    background: @nocturnalCategoryResultBackground;
+    border-left: @nocturnalCategoryResultLeftBorder;
+    border-bottom: @nocturnalCategoryDivider;
+  }
 }
 .ui.category.search > .results .category .result {
   border-bottom: @categoryResultDivider;
   transition: @categoryResultTransition;
   padding: @categoryResultPadding;
+
+  .nocturnal-theme & {
+    border-bottom: @nocturnalCategoryResultDivider;
+  }
 }
 
 /*******************************

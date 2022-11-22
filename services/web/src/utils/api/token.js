@@ -1,4 +1,5 @@
 import { APP_NAME } from 'utils/env';
+import { localStorage } from 'utils/storage';
 import { snakeCase } from 'lodash';
 
 export const JWT_KEY = `${snakeCase(APP_NAME)}_jwt`;

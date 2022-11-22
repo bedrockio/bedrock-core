@@ -1,4 +1,5 @@
 const Router = require('@koa/router');
+const Joi = require('joi');
 
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
@@ -29,6 +30,20 @@ router
         meta,
       };
     }
-  );
+  )
+  .post(
+    '/search-options',
+    validateBody({
+      field: Joi.string().allow("routeNormalizedPath", "objectType", "activity", "category").required()
+    }),
+    async (ctx) => {
+      const values = await AuditEntry.distinct(ctx.request.body.field);
+
+      ctx.body = {
+        data: values,
+      };
+    }
+  )
+
 
 module.exports = router;

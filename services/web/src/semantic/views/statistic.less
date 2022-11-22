@@ -86,6 +86,10 @@
   color: @valueColor;
   text-transform: @valueTextTransform;
   text-align: @textAlign;
+
+  .nocturnal-theme & {
+    color: @nocturnalValueColor;
+  }
 }
 
 /*--------------
@@ -100,6 +104,10 @@
   color: @labelColor;
   text-transform: @labelTextTransform;
   text-align: @textAlign;
+
+  .nocturnal-theme & {
+    color: @nocturnalLabelColor;
+  }
 }
 
 /* Top Label */
@@ -356,10 +364,18 @@
 .ui.inverted.statistics .statistic > .value,
 .ui.inverted.statistic .value {
   color: @invertedValueColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalInvertedValueColor;
+  }
 }
 .ui.inverted.statistics .statistic > .label,
 .ui.inverted.statistic .label {
   color: @invertedLabelColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalInvertedLabelColor;
+  }
 }
 
 .ui.inverted.red.statistics .statistic > .value,

@@ -73,7 +73,7 @@ export default class Home extends React.Component {
                           <Table.Cell textAlign="center">
                             <LoadButton
                               basic
-                              icon="mail"
+                              icon="envelope"
                               title="Resend Invite"
                               onClick={async () => {
                                 await request({

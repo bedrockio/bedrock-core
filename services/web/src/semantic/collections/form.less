@@ -61,6 +61,10 @@
   font-size: @labelFontSize;
   font-weight: @labelFontWeight;
   text-transform: @labelTextTransform;
+
+  .nocturnal-theme & {
+    color: @nocturnalLabelColor;
+  }
 }
 
 /*--------------------
@@ -106,7 +110,7 @@
   margin: 0em;
   outline: none;
   -webkit-appearance: none;
-  tap-highlight-color: rgba(255, 255, 255, 0);
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
 
   line-height: @inputLineHeight;
   padding: @inputPadding;
@@ -118,13 +122,20 @@
   border-radius: @inputBorderRadius;
   box-shadow: @inputBoxShadow;
   transition: @inputTransition;
+
+  .nocturnal-theme & {
+    background: @nocturnalInputBackground;
+    border-color: @nocturnalInputBorderColor;
+    color: @nocturnalInputColor;
+    box-shadow: @nocturnalInputBoxShadow;
+  }
 }
 
 /* Text Area */
 .ui.form textarea {
   margin: 0em;
   -webkit-appearance: none;
-  tap-highlight-color: rgba(255, 255, 255, 0);
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
 
   padding: @textAreaPadding;
   font-size: @textAreaFontSize;
@@ -138,6 +149,13 @@
   font-size: @textAreaFontSize;
   line-height: @textAreaLineHeight;
   resize: @textAreaResize;
+
+  .nocturnal-theme & {
+    background: @nocturnalTextAreaBackground;
+    color: @nocturnalInputColor;
+    border-color: @nocturnalTextAreaBorderColor;
+    box-shadow: @nocturnalInputBoxShadow;
+  }
 }
 .ui.form textarea:not([rows]) {
   height: @textAreaHeight;
@@ -151,11 +169,19 @@
 }
 
 .ui.form textarea::placeholder {
-  color: #6c727f;
+  color: @inputPlaceholderColor;
 }
 
 .ui.form textarea::placeholder:focus {
-  color: #6c727f;
+  color: @inputPlaceholderFocusColor;
+}
+
+.nocturnal-theme .ui.form textarea::placeholder {
+  color: @nocturnalInputPlaceholderColor;
+}
+
+.nocturnal-theme .ui.form textarea::placeholder:focus {
+  color: @nocturnalInputPlaceholderFocusColor;
 }
 
 /*--------------------------
@@ -181,6 +207,13 @@
   padding: @selectPadding;
   color: @selectColor;
   transition: @selectTransition;
+
+  .nocturnal-theme & {
+    background: @nocturnalSelectBackground;
+    border-color: @nocturnalSelectBorderColor;
+    box-shadow: @nocturnalSelectBoxShadow;
+    color: @nocturnalSelectColor;
+  }
 }
 
 /*--------------------
@@ -285,26 +318,48 @@
       Autofilled
 ---------------------*/
 
+// @todo: dark theme
+
 .ui.form .field.field input:-webkit-autofill {
   box-shadow: 0px 0px 0px 100px @inputAutoFillBackground inset !important;
   border-color: @inputAutoFillBorder !important;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalPageBackground !important;
+    box-shadow: 0px 0px 0px 100px @nocturnalInputAutoFillBackground inset !important;
+    border-color: @nocturnalInputAutoFillBorder !important;
+  }
 }
 
 /* Focus */
 .ui.form .field.field input:-webkit-autofill:focus {
   box-shadow: 0px 0px 0px 100px @inputAutoFillFocusBackground inset !important;
   border-color: @inputAutoFillFocusBorder !important;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalPageBackground !important;
+    box-shadow: 0px 0px 0px 100px @nocturnalInputAutoFillFocusBackground inset !important;
+    border-color: @nocturnalInputAutoFillFocusBorder !important;
+  }
 }
 
 /* Error */
 .ui.form .error.error input:-webkit-autofill {
   box-shadow: 0px 0px 0px 100px @inputAutoFillErrorBackground inset !important;
   border-color: @inputAutoFillErrorBorder !important;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalPageBackground !important;
+    box-shadow: 0px 0px 0px 100px @nocturnalInputAutoFillErrorBackground inset !important;
+    border-color: @nocturnalInputAutoFillErrorBorder !important;
+  }
 }
 
 /*--------------------
       Placeholder
 ---------------------*/
+
+// @todo: dark theme
 
 /* browsers require these rules separate */
 .ui.form ::-webkit-input-placeholder {
@@ -327,6 +382,26 @@
   color: @inputPlaceholderFocusColor;
 }
 
+.nocturnal-theme .ui.form ::-webkit-input-placeholder {
+  color: @nocturnalInputPlaceholderColor;
+}
+.nocturnal-theme .ui.form :-ms-input-placeholder {
+  color: @nocturnalInputPlaceholderColor !important;
+}
+.nocturnal-theme .ui.form ::-moz-placeholder {
+  color: @nocturnalInputPlaceholderColor;
+}
+
+.nocturnal-theme .ui.form :focus::-webkit-input-placeholder {
+  color: @nocturnalInputPlaceholderFocusColor;
+}
+.nocturnal-theme .ui.form :focus:-ms-input-placeholder {
+  color: @nocturnalInputPlaceholderFocusColor !important;
+}
+.nocturnal-theme .ui.form :focus::-moz-placeholder {
+  color: @nocturnalInputPlaceholderFocusColor;
+}
+
 /* Error Placeholder */
 .ui.form .error ::-webkit-input-placeholder {
   color: @inputErrorPlaceholderColor;
@@ -346,6 +421,26 @@
 }
 .ui.form .error :focus::-moz-placeholder {
   color: @inputErrorPlaceholderFocusColor;
+}
+
+.nocturnal-theme .ui.form .error ::-webkit-input-placeholder {
+  color: @nocturnalInputErrorPlaceholderColor;
+}
+.nocturnal-theme .ui.form .error :-ms-input-placeholder {
+  color: @nocturnalInputErrorPlaceholderColor !important;
+}
+.nocturnal-theme .ui.form .error ::-moz-placeholder {
+  color: @nocturnalInputErrorPlaceholderColor;
+}
+
+.nocturnal-theme .ui.form .error :focus::-webkit-input-placeholder {
+  color: @nocturnalInputErrorPlaceholderFocusColor;
+}
+.nocturnal-theme .ui.form .error :focus:-ms-input-placeholder {
+  color: @nocturnalInputErrorPlaceholderFocusColor !important;
+}
+.nocturnal-theme .ui.form .error :focus::-moz-placeholder {
+  color: @nocturnalInputErrorPlaceholderFocusColor;
 }
 
 /*--------------------
@@ -376,6 +471,31 @@
   border-radius: @textAreaFocusBorderRadius;
   background: @textAreaFocusBackground;
   box-shadow: @textAreaFocusBoxShadow;
+  -webkit-appearance: none;
+}
+
+.nocturnal-theme .ui.form input:not([type]):focus,
+.nocturnal-theme .ui.form input[type='date']:focus,
+.nocturnal-theme .ui.form input[type='datetime-local']:focus,
+.nocturnal-theme .ui.form input[type='email']:focus,
+.nocturnal-theme .ui.form input[type='number']:focus,
+.nocturnal-theme .ui.form input[type='password']:focus,
+.nocturnal-theme .ui.form input[type='search']:focus,
+.nocturnal-theme .ui.form input[type='tel']:focus,
+.nocturnal-theme .ui.form input[type='time']:focus,
+.nocturnal-theme .ui.form input[type='text']:focus,
+.nocturnal-theme .ui.form input[type='file']:focus,
+.nocturnal-theme .ui.form input[type='url']:focus {
+  color: @nocturnalInputFocusColor;
+  border-color: @nocturnalInputFocusBorderColor;
+  background: @nocturnalInputFocusBackground;
+  box-shadow: @nocturnalInputFocusBoxShadow;
+}
+.nocturnal-theme .ui.form textarea:focus {
+  color: @nocturnalTextAreaFocusColor;
+  border-color: @nocturnalTextAreaFocusBorderColor;
+  background: @nocturnalTextAreaFocusBackground;
+  box-shadow: @nocturnalTextAreaFocusBoxShadow;
   -webkit-appearance: none;
 }
 
@@ -430,6 +550,10 @@
 .ui.form .fields.error .field .input,
 .ui.form .field.error .input {
   color: @formErrorColor;
+
+  .nocturnal-theme & {
+    color: lighten(@formErrorColor, 10);
+  }
 }
 
 .ui.form .fields.error .field .corner.label,
@@ -471,6 +595,12 @@
   color: @formErrorColor;
   border-radius: @inputErrorBorderRadius;
   box-shadow: @inputErrorBoxShadow;
+
+  .nocturnal-theme & {
+    background: @nocturnalFormErrorBackground;
+    border-color: @nocturnalFormErrorBorder;
+    color: @nocturnalFormErrorColor;
+  }
 }
 .ui.form .field.error textarea:focus,
 .ui.form .field.error select:focus,
@@ -492,6 +622,12 @@
 
   -webkit-appearance: none;
   box-shadow: @inputErrorFocusBoxShadow;
+
+  .nocturnal-theme & {
+    background: @nocturnalInputErrorFocusBackground;
+    border-color: @nocturnalInputErrorFocusBorder;
+    color: @nocturnalInputErrorFocusColor;
+  }
 }
 
 /* Preserve Native Select Stylings */
@@ -511,40 +647,81 @@
   background: @formErrorBackground;
   color: @formErrorColor;
 }
+.nocturnal-theme .ui.form .fields.error .field .ui.dropdown,
+.nocturnal-theme .ui.form .fields.error .field .ui.dropdown .item,
+.nocturnal-theme .ui.form .field.error .ui.dropdown,
+.nocturnal-theme .ui.form .field.error .ui.dropdown .item {
+  background: @nocturnalFormErrorBackground;
+  color: @nocturnalFormErrorColor;
+}
+.nocturnal-theme .ui.form .field.error .ui.dropdown .text,
+.nocturnal-theme .ui.form .field.error .ui.dropdown .ui.dropdown.icon {
+  color: @nocturnalFormErrorColor;
+  background: none;
+}
 .ui.form .fields.error .field .ui.dropdown,
 .ui.form .field.error .ui.dropdown {
   border-color: @formErrorBorder !important;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalFormErrorBorder !important;
+  }
 }
 .ui.form .fields.error .field .ui.dropdown:hover,
 .ui.form .field.error .ui.dropdown:hover {
   border-color: @formErrorBorder !important;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalFormErrorBorder !important;
+  }
 }
 .ui.form .fields.error .field .ui.dropdown:hover .menu,
 .ui.form .field.error .ui.dropdown:hover .menu {
   border-color: @formErrorBorder;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalFormErrorBorder;
+  }
 }
 .ui.form .fields.error .field .ui.multiple.selection.dropdown > .label,
 .ui.form .field.error .ui.multiple.selection.dropdown > .label {
   background-color: @dropdownErrorLabelBackground;
   color: @dropdownErrorLabelColor;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalDropdownErrorLabelBackground;
+    color: @nocturnalDropdownErrorLabelColor;
+  }
 }
 
 /* Hover */
 .ui.form .fields.error .field .ui.dropdown .menu .item:hover,
 .ui.form .field.error .ui.dropdown .menu .item:hover {
   background-color: @dropdownErrorHoverBackground;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalDropdownErrorHoverBackground;
+  }
 }
 
 /* Selected */
 .ui.form .fields.error .field .ui.dropdown .menu .selected.item,
 .ui.form .field.error .ui.dropdown .menu .selected.item {
   background-color: @dropdownErrorSelectedBackground;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalDropdownErrorSelectedBackground;
+  }
 }
 
 /* Active */
 .ui.form .fields.error .field .ui.dropdown .menu .active.item,
 .ui.form .field.error .ui.dropdown .menu .active.item {
   background-color: @dropdownErrorActiveBackground !important;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalDropdownErrorActiveBackground !important;
+  }
 }
 
 /*--------------------
@@ -556,6 +733,10 @@
 .ui.form .fields.error .field .checkbox:not(.toggle):not(.slider) .box,
 .ui.form .field.error .checkbox:not(.toggle):not(.slider) .box {
   color: @formErrorColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalFormErrorColor;
+  }
 }
 .ui.form .fields.error .field .checkbox:not(.toggle):not(.slider) label:before,
 .ui.form .field.error .checkbox:not(.toggle):not(.slider) label:before,
@@ -563,12 +744,21 @@
 .ui.form .field.error .checkbox:not(.toggle):not(.slider) .box:before {
   background: @formErrorBackground;
   border-color: @formErrorBorder;
+
+  .nocturnal-theme & {
+    background: @nocturnalFormErrorBackground;
+    border-color: @nocturnalFormErrorBorder;
+  }
 }
 .ui.form .fields.error .field .checkbox label:after,
 .ui.form .field.error .checkbox label:after,
 .ui.form .fields.error .field .checkbox .box:after,
 .ui.form .field.error .checkbox .box:after {
   color: @formErrorColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalFormErrorColor;
+  }
 }
 
 /*--------------------

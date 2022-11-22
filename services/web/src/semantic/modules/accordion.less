@@ -35,6 +35,10 @@
   font-family: @titleFont;
   font-size: @titleFontSize;
   color: @titleColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalTitleColor;
+  }
 }
 
 /* Content */
@@ -120,6 +124,11 @@
   border-radius: @styledBorderRadius;
   background: @styledBackground;
   box-shadow: @styledBoxShadow;
+
+  .nocturnal-theme & {
+    background: @nocturnalStyledBackground;
+    box-shadow: @nocturnalStyledBoxShadow;
+  }
 }
 .ui.styled.accordion .title,
 .ui.styled.accordion .accordion .title {
@@ -129,6 +138,11 @@
   font-weight: @styledTitleFontWeight;
   border-top: @styledTitleBorder;
   transition: @styledTitleTransition;
+
+  .nocturnal-theme & {
+    color: @nocturnalStyledTitleColor;
+    border-top: @nocturnalStyledTitleBorder;
+  }
 }
 .ui.styled.accordion > .title:first-child,
 .ui.styled.accordion .accordion .title:first-child {
@@ -158,16 +172,31 @@
 .ui.styled.accordion .accordion .active.title {
   background: @styledHoverChildTitleBackground;
   color: @styledHoverChildTitleColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalStyledHoverChildTitleBackground;
+    color: @nocturnalStyledHoverChildTitleColor;
+  }
 }
 
 /* Active */
 .ui.styled.accordion .active.title {
   background: @styledActiveTitleBackground;
   color: @styledActiveTitleColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalStyledActiveTitleBackground;
+    color: @nocturnalStyledActiveTitleColor;
+  }
 }
 .ui.styled.accordion .accordion .active.title {
   background: @styledActiveChildTitleBackground;
   color: @styledActiveChildTitleColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalStyledActiveChildTitleBackground;
+    color: @nocturnalStyledActiveChildTitleColor;
+  }
 }
 
 /*******************************
@@ -202,6 +231,10 @@
 
 .ui.inverted.accordion .title:not(.ui) {
   color: @invertedTitleColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalInvertedTitleColor;
+  }
 }
 
 /*******************************

@@ -149,19 +149,25 @@ function createSchema(definition, options = {}) {
     }
   });
 
-  schema.static('findByIdOrSlug', function findByIdOrSlug(str) {
-    let query;
+  schema.static('findByIdOrSlug', function findByIdOrSlug(str, query = {}) {
     // There is a non-zero chance of a slug colliding with an ObjectId but
     // is exceedingly rare (run of exactly 24 [a-f0-9] chars together
     // without a hyphen) so this should be acceptable and greatly simplifies
     // the routes. Also enforce 24 chars as 12 is also techincally valid.
     if (str.length === 24 && ObjectId.isValid(str)) {
-      query = { _id: str };
+      query = { ...query, _id: str };
     } else {
-      query = { slug: str };
+      query = { ...query, slug: str };
     }
     return this.findOne({
       ...query,
+    });
+  });
+
+  schema.static('findByIdOrSlugWithDeleted', function findByIdOrSlugWithDeleted(str, query) {
+    return this.findByIdOrSlug(str, {
+      ...query,
+      deleted: { $in: [true, false] },
     });
   });
 
@@ -226,7 +232,7 @@ function createSchema(definition, options = {}) {
     });
   });
 
-  schema.static('findWithDeleted', function findOneWithDeleted(filter) {
+  schema.static('findWithDeleted', function findWithDeleted(filter) {
     return this.find({
       ...filter,
       deleted: { $in: [true, false] },
@@ -260,17 +266,24 @@ function createSchema(definition, options = {}) {
     });
   });
 
-  schema.method('assertNoReferences', async function () {
+  schema.method('assertNoReferences', async function (options = {}) {
+    const { except = [] } = options;
     const { modelName } = this.constructor;
     await Promise.all(
       getAllReferences(modelName).map(async ({ model, paths }) => {
+        if (except.includes(model)) {
+          return;
+        }
+
         const count = await model.countDocuments({
           $or: paths.map((path) => {
             return { [path]: this.id };
           }),
         });
         if (count > 0) {
-          throw new Error(`Refusing to delete ${dump(this)} referenced by ${model.modelName}.`);
+          throw new Error(
+            `Refusing to delete ${startCase(modelName).toLowerCase()} ${this.id} referenced by ${model.modelName}.`
+          );
         }
       })
     );
@@ -675,12 +688,6 @@ function getModelReferences(model, targetName) {
     }
   });
   return paths;
-}
-
-// Inspection helpers
-
-function dump(doc) {
-  return `<${doc.constructor.modelName}: ${doc.id}>`;
 }
 
 // Regex queries
