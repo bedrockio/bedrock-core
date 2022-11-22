@@ -1,6 +1,7 @@
 const User = require('../user');
 const mongoose = require('mongoose');
 const { omit } = require('lodash');
+const { context } = require('../../utils/testing');
 
 describe('User', () => {
   describe('serialization', () => {
@@ -67,9 +68,9 @@ describe('User', () => {
         email: 'good@email.com',
       });
       const exp = new Date();
-      user.addAuthToken({ exp: exp / 1000, jti: 'abc' });
+      user.addAuthToken({ exp: exp / 1000, jti: 'abc' }, context({}));
       const authTokens = [...user.authTokens].map((t) => omit(t.toObject(), ['_id']));
-      expect(authTokens).toEqual([{ exp, jti: 'abc' }]);
+      expect(authTokens).toEqual([{ exp, jti: 'abc', ip: '127.0.0.1', userAgent: '' }]);
     });
 
     it('should remove the expired entries', () => {
@@ -84,7 +85,7 @@ describe('User', () => {
           },
         ],
       });
-      user.addAuthToken({ jti: 'b', exp: 10000 });
+      user.addAuthToken({ jti: 'b', exp: 10000 }, context({}));
       expect([...user.authTokens]).toHaveLength(1);
     });
   });

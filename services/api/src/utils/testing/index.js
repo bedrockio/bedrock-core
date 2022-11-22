@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const { logger } = require('@bedrockio/instrumentation');
 const { User, Upload } = require('../../models');
-const { generateTokenId } = require('../tokens');
 
 const context = require('./context');
 const request = require('./request');
@@ -28,15 +27,14 @@ async function teardownDb() {
 }
 
 async function createUser(attributes = {}) {
-  const user = await User.create({
+  const user = new User({
     // using an objectId to ensure when tests are executed in parallel, there is no overlap
     email: `${mongoose.Types.ObjectId()}@platform.com`,
     firstName: 'Test',
     lastName: 'User',
-    authTokenIds: [generateTokenId()],
     ...attributes,
   });
-
+  await user.save();
   return user;
 }
 

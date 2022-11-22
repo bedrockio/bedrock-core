@@ -178,7 +178,7 @@ export default class Security extends React.Component {
                       <LoadButton
                         basic
                         size="small"
-                        onClick={() => this.logout({ id: token.id })}>
+                        onClick={() => this.logout({ jti: token.jti })}>
                         Logout
                       </LoadButton>
                     </Table.Cell>

@@ -2,12 +2,16 @@ const request = require('supertest'); //eslint-disable-line
 const app = require('../../app');
 const qs = require('querystring');
 const { createAuthToken } = require('../tokens');
+const context = require('./context');
 
 module.exports = async function handleRequest(httpMethod, url, bodyOrQuery = {}, options = {}) {
   const headers = options.headers || {};
   if (options.user && !headers.Authorization) {
     const { user } = options;
-    headers.Authorization = `Bearer ${createAuthToken(user).token}`;
+    const { payload, token } = createAuthToken(user);
+    user.addAuthToken(payload, context({}));
+    await user.save();
+    headers.Authorization = `Bearer ${token}`;
   }
   if (options.organization) {
     headers.organization = options.organization.id;

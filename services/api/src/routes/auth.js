@@ -168,39 +168,20 @@ router
     '/logout',
     validateBody({
       all: Joi.boolean(),
-      id: Joi.string(),
+      jti: Joi.string(),
     }),
     authenticate({ type: 'user' }),
     fetchUser,
     async (ctx) => {
       const user = ctx.state.authUser;
-      const { all, id } = ctx.request.body;
-      let command = {
-        $pull: {
-          authTokenIds: ctx.state.jwt.jti,
-        },
-      };
-
-
-
-      // NOT working
+      const { all, jti } = ctx.request.body;
       if (all) {
-        command = {
-          $pull: {
-            authTokenIds: ctx.state.jwt.jti,
-          },
-        };
-      } else if (id) {
-        command = {
-          authTokenIds: {
-            $pull: {
-              id,
-            },
-          },
-        };
+        user.authTokens = [];
+      } else if (jti) {
+        user.authTokens = user.authTokens.filter((token) => token.jti !== jti);
       }
-
-      await user.updateOne(command);
+      console.log(user.authTokens, jti);
+      await user.save();
 
       await AuditEntry.append('Deauthentication', ctx, {
         object: user,

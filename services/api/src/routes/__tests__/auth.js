@@ -188,12 +188,12 @@ describe('/1/auth', () => {
   });
 
   describe('POST /logout', () => {
-    it('should changed authTokenId on logout', async () => {
+    it('should remove all tokens', async () => {
       const user = await createUser();
-      const response = await request('POST', '/1/auth/logout', {}, { user });
+      const response = await request('POST', '/1/auth/logout', { all: true }, { user });
       expect(response.status).toBe(204);
       const updatedUser = await User.findById(user.id);
-      expect(updatedUser.authTokenId).not.toBeDefined();
+      expect(updatedUser.authTokens).toHaveLength(0);
     });
   });
 
