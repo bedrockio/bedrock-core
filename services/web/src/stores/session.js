@@ -80,6 +80,8 @@ export class SessionProvider extends React.PureComponent {
           loading: false,
         });
       } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(error);
         if (error.type === 'token') {
           await this.logout(true);
         } else {
