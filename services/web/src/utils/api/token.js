@@ -9,8 +9,7 @@ export function hasToken() {
 }
 
 export function getToken() {
-  const token = localStorage.getItem(JWT_KEY);
-  return token;
+  return localStorage.getItem(JWT_KEY);
 }
 
 export function setToken(token) {
