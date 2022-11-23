@@ -38,7 +38,11 @@
     },
     "theme": {
       "type": "String",
-      "enum": ["dark", "light", "system"]
+      "enum": [
+        "dark",
+        "light",
+        "system"
+      ]
     },
     "isDeveloper": {
       "type": "Boolean",
@@ -83,7 +87,6 @@
         "jti": {
           "type": "String",
           "required": true,
-          "readScopes": "none",
           "writeScopes": "none"
         },
         "exp": {

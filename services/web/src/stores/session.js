@@ -80,7 +80,6 @@ export class SessionProvider extends React.PureComponent {
           loading: false,
         });
       } catch (error) {
-        console.log(error);
         if (error.type === 'token') {
           await this.logout(true);
         } else {

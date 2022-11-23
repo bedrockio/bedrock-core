@@ -174,13 +174,13 @@ router
     fetchUser,
     async (ctx) => {
       const user = ctx.state.authUser;
-      const { all, jti } = ctx.request.body;
-      if (all) {
+      const { body } = ctx.request;
+      const jti = body.jti || ctx.state.jwt.jti;
+      if (body.all) {
         user.authTokens = [];
       } else if (jti) {
         user.authTokens = user.authTokens.filter((token) => token.jti !== jti);
       }
-      console.log(user.authTokens, jti);
       await user.save();
 
       await AuditEntry.append('Deauthentication', ctx, {

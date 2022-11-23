@@ -9,7 +9,14 @@ module.exports = async function handleRequest(httpMethod, url, bodyOrQuery = {},
   if (options.user && !headers.Authorization) {
     const { user } = options;
     const { payload, token } = createAuthToken(user);
-    user.addAuthToken(payload, context({}));
+    user.addAuthToken(
+      payload,
+      context({
+        headers: {
+          'user-agent': 'testing library',
+        },
+      })
+    );
     await user.save();
     headers.Authorization = `Bearer ${token}`;
   }

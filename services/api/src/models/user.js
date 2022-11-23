@@ -21,7 +21,6 @@ schema.methods.addAuthToken = function ({ exp, jti, iat }, ctx) {
   const authTokens = (this.authTokens || []).filter((token) => token.jti !== jti && token.exp > Date.now());
 
   this.authTokens = [
-    ...authTokens,
     {
       exp: new Date(exp * 1000),
       jti,
@@ -29,6 +28,7 @@ schema.methods.addAuthToken = function ({ exp, jti, iat }, ctx) {
       ip: ctx.get('x-forwarded-for') || ctx.ip,
       userAgent: ctx.get('user-agent'),
     },
+    ...authTokens,
   ];
 };
 

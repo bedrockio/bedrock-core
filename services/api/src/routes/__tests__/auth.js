@@ -190,10 +190,48 @@ describe('/1/auth', () => {
   describe('POST /logout', () => {
     it('should remove all tokens', async () => {
       const user = await createUser();
+
       const response = await request('POST', '/1/auth/logout', { all: true }, { user });
       expect(response.status).toBe(204);
       const updatedUser = await User.findById(user.id);
       expect(updatedUser.authTokens).toHaveLength(0);
+    });
+
+    it('should remove current session if nothing is set', async () => {
+      const user = await createUser({
+        authTokens: [
+          {
+            jti: 'old session not expired',
+            iat: '123',
+            ip: '123',
+            exp: new Date(Date.now() + 5000), // 5 seconds from now
+          },
+        ],
+      });
+      const response = await request('POST', '/1/auth/logout', {}, { user });
+      expect(response.status).toBe(204);
+      const updatedUser = await User.findById(user.id);
+      expect(updatedUser.authTokens).toHaveLength(1);
+      expect(updatedUser.authTokens[0].jti).toBe('old session not expired');
+    });
+
+    it('should remove token by jit', async () => {
+      const user = await createUser({
+        authTokens: [
+          {
+            jti: 'targeted jti',
+            iat: '123',
+            ip: '123',
+            exp: new Date(Date.now() + 5000), // 5 seconds from now
+          },
+        ],
+      });
+      const response = await request('POST', '/1/auth/logout', { jti: 'targeted jti' }, { user });
+      expect(response.status).toBe(204);
+      const updatedUser = await User.findById(user.id);
+      expect(updatedUser.authTokens).toHaveLength(1);
+      // confirming that only authToken is from triggering the above request
+      expect(updatedUser.authTokens[0].userAgent).toBe('testing library');
     });
   });
 

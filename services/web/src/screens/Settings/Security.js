@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { Segment, Button, Divider, Header, Label, Table } from 'semantic';
 
 import screen from 'helpers/screen';
-import { request } from 'utils/api';
+import { getToken, request } from 'utils/api';
+import { parseToken } from 'utils/token';
 import { withSession } from 'stores';
 
 import { Layout } from 'components';
@@ -52,16 +53,18 @@ export default class Security extends React.Component {
   };
 
   logout = async (body) => {
-    return request({
+    await request({
       method: 'POST',
       path: '/1/auth/logout',
       body,
     });
+    await this.context.bootstrap();
   };
 
   render() {
     const { error } = this.state;
     const { mfaMethod, authTokens } = this.context.user;
+    const { jti: currentJTi } = parseToken(getToken());
 
     return (
       <React.Fragment>
@@ -170,17 +173,22 @@ export default class Security extends React.Component {
                 return (
                   <Table.Row key={token.id}>
                     <Table.Cell>
-                      {token.userAgent || 'No User Agent provided'}
+                      {token.userAgent || 'No User Agent provided'}{' '}
+                      {token.jti === currentJTi && (
+                        <Label horizontal>Current Session</Label>
+                      )}
                     </Table.Cell>
                     <Table.Cell>{token.ip}</Table.Cell>
                     <Table.Cell>{formatDateTime(token.iat)}</Table.Cell>
                     <Table.Cell>
-                      <LoadButton
-                        basic
-                        size="small"
-                        onClick={() => this.logout({ jti: token.jti })}>
-                        Logout
-                      </LoadButton>
+                      {token.jti !== currentJTi && (
+                        <LoadButton
+                          basic
+                          size="small"
+                          onClick={() => this.logout({ jti: token.jti })}>
+                          Logout
+                        </LoadButton>
+                      )}
                     </Table.Cell>
                   </Table.Row>
                 );
