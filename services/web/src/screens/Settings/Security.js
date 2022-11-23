@@ -181,14 +181,13 @@ export default class Security extends React.Component {
                     <Table.Cell>{token.ip}</Table.Cell>
                     <Table.Cell>{formatDateTime(token.iat)}</Table.Cell>
                     <Table.Cell>
-                      {token.jti !== currentJTi && (
-                        <LoadButton
-                          basic
-                          size="small"
-                          onClick={() => this.logout({ jti: token.jti })}>
-                          Logout
-                        </LoadButton>
-                      )}
+                      <LoadButton
+                        disabled={token.jti === currentJTi}
+                        basic
+                        size="small"
+                        onClick={() => this.logout({ jti: token.jti })}>
+                        Logout
+                      </LoadButton>
                     </Table.Cell>
                   </Table.Row>
                 );
@@ -196,7 +195,7 @@ export default class Security extends React.Component {
             </Table.Body>
           </Table>
         </Segment>
-        <Button primary negative>
+        <Button primary negative onClick={() => this.logout({ all: true })}>
           Logout all sessions
         </Button>
       </React.Fragment>
