@@ -142,11 +142,22 @@ describe('fetchUser', () => {
   });
 
   it('should fetch the authUser', async () => {
-    const user = await createUser();
-    const ctx = context();
-    ctx.state.jwt = { sub: user.id };
+    const user = await createUser({
+      authTokens: [
+        {
+          jti: 'someid',
+          ip: '123.12.1.2',
+          exp: new Date(Date.now() + 10000),
+          iat: new Date(),
+        },
+      ],
+    });
+
+    const ctx = context({ headers: { ip: '12.12.12.12' } });
+    ctx.state.jwt = { sub: user.id, jti: 'someid' };
     await fetchUser(ctx, () => {
       expect(ctx.state.authUser.id).toBe(user.id);
+      expect(ctx.state.authUser.authTokens[0].ip).toBe('127.0.0.1');
     });
   });
 
@@ -158,7 +169,16 @@ describe('fetchUser', () => {
   });
 
   it('should not fetch the user twice when called with the same context', async () => {
-    const user = await createUser();
+    const user = await createUser({
+      authTokens: [
+        {
+          jti: 'jti-id',
+          ip: '123.12.1.2',
+          exp: new Date(Date.now() + 10000),
+          iat: new Date(),
+        },
+      ],
+    });
     const ctx = context();
     let tmp;
     let count = 0;
@@ -170,7 +190,7 @@ describe('fetchUser', () => {
         tmp = user;
         count++;
       },
-      jwt: { sub: user.id },
+      jwt: { sub: user.id, jti: 'jti-id' },
     };
     await fetchUser(ctx, () => {});
     await fetchUser(ctx, () => {});

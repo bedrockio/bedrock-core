@@ -64,9 +64,17 @@ async function fetchUser(ctx, next) {
     const { jwt } = ctx.state;
     const { User } = mongoose.models;
     const user = await User.findById(jwt.sub);
-    if (!user || (jwt.jti && !user.authTokens.find((token) => token.jti === jwt.jti))) {
-      throw new TokenError('user associated to token could not be found');
+    const token = user.authTokens.find((token) => token.jti === jwt.jti);
+    if (!user || !token) {
+      throw new TokenError('User associated to token could not be found');
     }
+
+    const ip = ctx.get('x-forwarded-for') || ctx.ip;
+    if (token && token.ip !== ip) {
+      token.ip = ip;
+      await user.save();
+    }
+
     ctx.state.authUser = user;
   }
   await next();
