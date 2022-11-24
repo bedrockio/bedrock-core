@@ -14,7 +14,6 @@ import {
   Layout,
   Search,
   SearchFilters,
-  Confirm,
 } from 'components';
 
 import EditUser from 'modals/EditUser';
@@ -196,7 +195,11 @@ export default class UserList extends React.Component {
                             <EditUser
                               user={user}
                               trigger={
-                                <Button basic title="Edit" icon="pen-to-square" />
+                                <Button
+                                  basic
+                                  title="Edit"
+                                  icon="pen-to-square"
+                                />
                               }
                               onSave={reload}
                             />

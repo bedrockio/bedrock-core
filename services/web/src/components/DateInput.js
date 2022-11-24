@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { format, isValid, parse } from 'date-fns';
+import { isValid, parse } from 'date-fns';
 
 import { DayPicker } from 'react-day-picker';
 import { Popup, Input } from 'semantic';
@@ -29,7 +29,6 @@ export default function DateInput({
   const handleInputChange = (e) => {
     setInputValue(e.currentTarget.value);
     const date = parse(e.currentTarget.value, 'y-MM-dd', new Date());
-    console.log(1);
     if (isValid(date)) {
       setSelected(date);
       onChange(date);
