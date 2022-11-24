@@ -64,7 +64,7 @@ export default class Security extends React.Component {
   render() {
     const { error } = this.state;
     const { mfaMethod, authTokens } = this.context.user;
-    const { jti: currentJTi } = parseToken(getToken());
+    const { jti } = parseToken(getToken());
 
     return (
       <React.Fragment>
@@ -163,7 +163,7 @@ export default class Security extends React.Component {
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell>Device/Agent</Table.HeaderCell>
-                <Table.HeaderCell>Ip</Table.HeaderCell>
+                <Table.HeaderCell>IP</Table.HeaderCell>
                 <Table.HeaderCell>Created At</Table.HeaderCell>
                 <Table.HeaderCell>Action</Table.HeaderCell>
               </Table.Row>
@@ -174,7 +174,7 @@ export default class Security extends React.Component {
                   <Table.Row key={token.id}>
                     <Table.Cell>
                       {token.userAgent || 'No User Agent provided'}{' '}
-                      {token.jti === currentJTi && (
+                      {token.jti === jti && (
                         <Label horizontal>Current Session</Label>
                       )}
                     </Table.Cell>
@@ -182,7 +182,7 @@ export default class Security extends React.Component {
                     <Table.Cell>{formatDateTime(token.iat)}</Table.Cell>
                     <Table.Cell>
                       <LoadButton
-                        disabled={token.jti === currentJTi}
+                        disabled={token.jti === jti}
                         basic
                         size="small"
                         onClick={() => this.logout({ jti: token.jti })}>
