@@ -24,11 +24,11 @@ function createTemporaryToken(claims) {
   );
 }
 
-function createAuthToken(user) {
+function createAuthToken(userId) {
   const jti = generateTokenId();
 
   const payload = {
-    sub: user.id,
+    sub: userId,
     iat: Math.floor(Date.now() / 1000),
     jti,
     type: 'user',

@@ -2,7 +2,7 @@ const Router = require('@koa/router');
 const Joi = require('joi');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
-const { createAuthToken, createTemporaryToken, generateTokenId } = require('../utils/tokens');
+const { createTemporaryToken, generateTokenId } = require('../utils/tokens');
 const { sendTemplatedMail } = require('../utils/mailer');
 const { User, Invite, AuditEntry } = require('../models');
 
@@ -35,8 +35,10 @@ router
       const user = new User({
         ...ctx.request.body,
       });
-      const { token, payload } = createAuthToken(user);
-      user.addAuthToken(payload, ctx);
+      const token = user.newAuthToken({
+        ip: ctx.get('x-forwarded-for') || ctx.ip,
+        userAgent: ctx.get('user-agent'),
+      });
       await user.save();
 
       await AuditEntry.append('Registered', ctx, {
@@ -107,8 +109,10 @@ router
         return;
       }
 
-      const { token, payload } = createAuthToken(user);
-      user.addAuthToken(payload, ctx);
+      const token = user.newAuthToken({
+        ip: ctx.get('x-forwarded-for') || ctx.ip,
+        userAgent: ctx.get('user-agent'),
+      });
       await user.save();
 
       await AuditEntry.append('Successfully authenticated', ctx, {
@@ -211,8 +215,10 @@ router
       const existingUser = await User.findOne({ email: invite.email });
 
       if (existingUser) {
-        const { token, payload } = createAuthToken(existingUser);
-        existingUser.addAuthToken(payload, ctx);
+        const token = existingUser.newAuthToken({
+          ip: ctx.get('x-forwarded-for') || ctx.ip,
+          userAgent: ctx.get('user-agent'),
+        });
         await existingUser.save();
         ctx.body = {
           data: { token },
@@ -226,8 +232,10 @@ router
         email: invite.email,
         password,
       });
-      const { token, payload } = createAuthToken(user);
-      user.addAuthToken(payload, ctx);
+      const token = user.addAuthToken({
+        ip: ctx.get('x-forwarded-for') || ctx.ip,
+        userAgent: ctx.get('user-agent'),
+      });
       await user.save();
 
       await AuditEntry.append('Registered', ctx, {
@@ -290,9 +298,10 @@ router
       user.loginAttempts = 0;
       user.password = password;
       user.tempTokenId = undefined;
-      const { token, payload } = createAuthToken(user);
-
-      user.addAuthToken(payload, ctx);
+      const token = user.newAuthToken({
+        ip: ctx.get('x-forwarded-for') || ctx.ip,
+        userAgent: ctx.get('user-agent'),
+      });
       await user.save();
 
       await AuditEntry.append('Reset password', ctx, {
