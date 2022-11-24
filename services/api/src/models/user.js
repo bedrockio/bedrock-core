@@ -17,7 +17,11 @@ schema.virtual('password').set(function (password) {
   this._password = password;
 });
 
-schema.methods.newAuthToken = function ({ ip, userAgent }) {
+schema.methods.removeAuthToken = function (jti) {
+  this.authTokens = this.authTokens.filter((token) => token.jti !== jti);
+};
+
+schema.methods.addAuthToken = function ({ ip, userAgent }) {
   const { token, payload } = createAuthToken(this.id);
 
   this.authTokens = [

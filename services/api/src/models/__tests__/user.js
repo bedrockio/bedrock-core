@@ -66,7 +66,7 @@ describe('User', () => {
         email: 'good@email.com',
       });
 
-      user.newAuthToken({ ip: '122.312.31.2', userAgent: 'test' });
+      user.addAuthToken({ ip: '122.312.31.2', userAgent: 'test' });
       const authTokens = user.authTokens;
       expect(authTokens[0].ip).toEqual('122.312.31.2');
       expect(authTokens[0].userAgent).toEqual('test');

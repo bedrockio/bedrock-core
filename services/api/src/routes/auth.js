@@ -35,7 +35,7 @@ router
       const user = new User({
         ...ctx.request.body,
       });
-      const token = user.newAuthToken({
+      const token = user.addAuthToken({
         ip: ctx.get('x-forwarded-for') || ctx.ip,
         userAgent: ctx.get('user-agent'),
       });
@@ -109,7 +109,7 @@ router
         return;
       }
 
-      const token = user.newAuthToken({
+      const token = user.addAuthToken({
         ip: ctx.get('x-forwarded-for') || ctx.ip,
         userAgent: ctx.get('user-agent'),
       });
@@ -183,7 +183,7 @@ router
       if (body.all) {
         user.authTokens = [];
       } else if (jti) {
-        user.authTokens = user.authTokens.filter((token) => token.jti !== jti);
+        user.removeAuthToken(jti);
       }
       await user.save();
 
@@ -215,7 +215,7 @@ router
       const existingUser = await User.findOne({ email: invite.email });
 
       if (existingUser) {
-        const token = existingUser.newAuthToken({
+        const token = existingUser.addAuthToken({
           ip: ctx.get('x-forwarded-for') || ctx.ip,
           userAgent: ctx.get('user-agent'),
         });
@@ -298,7 +298,7 @@ router
       user.loginAttempts = 0;
       user.password = password;
       user.tempTokenId = undefined;
-      const token = user.newAuthToken({
+      const token = user.addAuthToken({
         ip: ctx.get('x-forwarded-for') || ctx.ip,
         userAgent: ctx.get('user-agent'),
       });
