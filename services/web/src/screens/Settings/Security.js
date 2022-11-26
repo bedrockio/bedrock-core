@@ -10,7 +10,7 @@ import { withSession } from 'stores';
 import { Layout } from 'components';
 import LoadButton from 'components/LoadButton';
 import ErrorMessage from 'components/ErrorMessage';
-import { formatDateTime } from 'utils/date';
+import { formatDateTime, fromNow } from 'utils/date';
 
 import Menu from './Menu';
 
@@ -164,7 +164,7 @@ export default class Security extends React.Component {
               <Table.Row>
                 <Table.HeaderCell>Device/Agent</Table.HeaderCell>
                 <Table.HeaderCell>IP</Table.HeaderCell>
-                <Table.HeaderCell>Created At</Table.HeaderCell>
+                <Table.HeaderCell>Last used</Table.HeaderCell>
                 <Table.HeaderCell>Action</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
@@ -179,7 +179,7 @@ export default class Security extends React.Component {
                       )}
                     </Table.Cell>
                     <Table.Cell>{token.ip}</Table.Cell>
-                    <Table.Cell>{formatDateTime(token.iat)}</Table.Cell>
+                    <Table.Cell>{fromNow(token.lastUsedAt)}</Table.Cell>
                     <Table.Cell>
                       <LoadButton
                         disabled={token.jti === jti}
