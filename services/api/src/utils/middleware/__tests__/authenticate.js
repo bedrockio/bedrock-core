@@ -149,15 +149,15 @@ describe('fetchUser', () => {
           ip: '123.12.1.2',
           exp: new Date(Date.now() + 10000),
           iat: new Date(),
+          lastUsedAt: new Date(),
         },
       ],
     });
 
-    const ctx = context({ headers: { ip: '12.12.12.12' } });
+    const ctx = context({});
     ctx.state.jwt = { sub: user.id, jti: 'someid' };
     await fetchUser(ctx, () => {
       expect(ctx.state.authUser.id).toBe(user.id);
-      expect(ctx.state.authUser.authTokens[0].ip).toBe('127.0.0.1');
     });
   });
 
@@ -176,6 +176,7 @@ describe('fetchUser', () => {
           ip: '123.12.1.2',
           exp: new Date(Date.now() + 10000),
           iat: new Date(),
+          lastUsedAt: new Date(),
         },
       ],
     });

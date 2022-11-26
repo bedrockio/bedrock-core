@@ -69,12 +69,6 @@ async function fetchUser(ctx, next) {
       throw new TokenError('User associated to token could not be found');
     }
 
-    const ip = ctx.get('x-forwarded-for') || ctx.ip;
-    if (token && token.ip !== ip) {
-      token.ip = ip;
-      await user.save();
-    }
-
     ctx.state.authUser = user;
   }
   await next();

@@ -1222,7 +1222,7 @@ describe('createSchema', () => {
           name: 'String',
         })
       );
-      const u = await User.create({
+      await User.create({
         name: 'foo',
       });
       const deletedUser = await User.create({

@@ -30,7 +30,8 @@ schema.methods.addAuthToken = function ({ ip, userAgent }) {
       jti: payload.jti,
       iat: new Date(payload.iat * 1000),
       ip,
-      userAgent,
+      userAgent: userAgent,
+      lastUsedAt: new Date(),
     },
     // filter out any tokens that might have the same jti, very unlikely but possible
     ...this.authTokens.filter((existing) => existing.jti !== payload.jti),

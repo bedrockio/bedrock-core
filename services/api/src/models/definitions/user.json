@@ -70,8 +70,14 @@
     },
     "authTokens": [
       {
+        "lastUsedAt": {
+          "type": "Date",
+          "required": true,
+          "writeScopes": "none"
+        },
         "userAgent": {
           "type": "String",
+          "required": false,
           "writeScopes": "none"
         },
         "ip": {

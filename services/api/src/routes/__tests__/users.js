@@ -42,6 +42,27 @@ describe('/1/users', () => {
       expect(response.body.data._password).toBeUndefined();
       expect(response.body.data.hashedPassword).toBeUndefined();
     });
+    it('should update the ip of the current authToken', async () => {
+      const user = await createUser({
+        password: 'fake password',
+      });
+      const response = await request(
+        'GET',
+        '/1/users/me',
+        {},
+        {
+          user,
+          headers: {
+            'x-forwarded-for': '123.123.123.0',
+          },
+        }
+      );
+      expect(response.status).toBe(200);
+      expect(response.body.data._password).toBeUndefined();
+      expect(response.body.data.hashedPassword).toBeUndefined();
+      expect(response.body.data.authTokens[0].ip).toBe('123.123.123.0');
+      expect((await User.findById(user.id)).authTokens[0].ip).toBe('123.123.123.0');
+    });
   });
 
   describe('PATCH /me', () => {

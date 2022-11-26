@@ -205,6 +205,7 @@ describe('/1/auth', () => {
             iat: '123',
             ip: '123',
             exp: new Date(Date.now() + 5000), // 5 seconds from now
+            lastUsedAt: new Date(Date.now() - 1000),
           },
         ],
       });
@@ -223,6 +224,7 @@ describe('/1/auth', () => {
             iat: '123',
             ip: '123',
             exp: new Date(Date.now() + 5000), // 5 seconds from now
+            lastUsedAt: new Date(Date.now() - 1000),
           },
         ],
       });
@@ -354,7 +356,7 @@ describe('/1/auth', () => {
       const tokenId = generateTokenId();
       const token = createTemporaryToken({ type: 'password', sub: user.id, jti: tokenId });
       user.tempTokenId = tokenId;
-      user.save();
+      await user.save();
       let response = await request(
         'POST',
         '/1/auth/set-password',
