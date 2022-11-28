@@ -95,8 +95,9 @@ router
         user: user.id,
       });
 
-      const token = user.addAuthToken({
+      const token = user.addAuthInfo({
         ip: ctx.get('x-forwarded-for') || ctx.ip,
+        ipContry: ctx.get('cf-ipcountry'),
         userAgent: ctx.get('user-agent'),
       });
       await user.save();

@@ -35,7 +35,7 @@ router
   .get('/me', async (ctx) => {
     const { authUser, jwt } = ctx.state;
     // updating the users ip address
-    const token = authUser.authTokens.find((token) => token.jti === jwt.jti);
+    const token = authUser.authInfo.find((token) => token.jti === jwt.jti);
     const ip = ctx.get('x-forwarded-for') || ctx.ip;
     if (token && token.ip !== ip) {
       token.ip = ip;

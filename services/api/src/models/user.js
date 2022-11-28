@@ -18,30 +18,31 @@ schema.virtual('password').set(function (password) {
 });
 
 schema.methods.removeAuthToken = function (jti) {
-  this.authTokens = this.authTokens.filter((token) => token.jti !== jti);
+  this.authInfo = this.authInfo.filter((token) => token.jti !== jti);
 };
 
-schema.methods.addAuthToken = function ({ ip, userAgent }) {
+schema.methods.addAuthInfo = function ({ ip, userAgent, ipCountry }) {
   const { token, payload } = createAuthToken(this.id);
 
-  this.authTokens = [
+  this.authInfo = [
     {
       exp: new Date(payload.exp * 1000),
       jti: payload.jti,
       iat: new Date(payload.iat * 1000),
       ip,
+      ipCountry,
       userAgent: userAgent,
       lastUsedAt: new Date(),
     },
     // filter out any tokens that might have the same jti, very unlikely but possible
-    ...this.authTokens.filter((existing) => existing.jti !== payload.jti),
+    ...this.authInfo.filter((existing) => existing.jti !== payload.jti),
   ];
   return token;
 };
 
 schema.pre('save', async function preSave(next) {
   // filter out expired token references
-  this.authTokens = this.authTokens.filter((token) => token.exp > Date.now());
+  this.authInfo = this.authInfo.filter((token) => token.exp > Date.now());
 
   if (this._password) {
     const salt = await bcrypt.genSalt(12);

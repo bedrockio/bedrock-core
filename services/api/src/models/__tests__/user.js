@@ -58,7 +58,7 @@ describe('User', () => {
     });
   });
 
-  describe('addAuthToken', () => {
+  describe('addAuthInfo', () => {
     it('should add an authToken', () => {
       const user = new User({
         firstName: 'Neo',
@@ -66,11 +66,11 @@ describe('User', () => {
         email: 'good@email.com',
       });
 
-      user.addAuthToken({ ip: '122.312.31.2', userAgent: 'test' });
-      const authTokens = user.authTokens;
-      expect(authTokens[0].ip).toEqual('122.312.31.2');
-      expect(authTokens[0].userAgent).toEqual('test');
-      expect(authTokens.length).toBe(1);
+      user.addAuthInfo({ ip: '122.312.31.2', userAgent: 'test' });
+      const authInfo = user.authInfo;
+      expect(authInfo[0].ip).toEqual('122.312.31.2');
+      expect(authInfo[0].userAgent).toEqual('test');
+      expect(authInfo.length).toBe(1);
     });
   });
 });

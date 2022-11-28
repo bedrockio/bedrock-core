@@ -143,7 +143,7 @@ describe('fetchUser', () => {
 
   it('should fetch the authUser', async () => {
     const user = await createUser({
-      authTokens: [
+      authInfo: [
         {
           jti: 'someid',
           ip: '123.12.1.2',
@@ -170,7 +170,7 @@ describe('fetchUser', () => {
 
   it('should not fetch the user twice when called with the same context', async () => {
     const user = await createUser({
-      authTokens: [
+      authInfo: [
         {
           jti: 'jti-id',
           ip: '123.12.1.2',

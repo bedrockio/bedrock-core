@@ -10,7 +10,8 @@ import { withSession } from 'stores';
 import { Layout } from 'components';
 import LoadButton from 'components/LoadButton';
 import ErrorMessage from 'components/ErrorMessage';
-import { formatDateTime, fromNow } from 'utils/date';
+import { fromNow } from 'utils/date';
+import countries from 'utils/countries';
 
 import Menu from './Menu';
 
@@ -63,7 +64,7 @@ export default class Security extends React.Component {
 
   render() {
     const { error } = this.state;
-    const { mfaMethod, authTokens } = this.context.user;
+    const { mfaMethod, authInfo } = this.context.user;
     const { jti } = parseToken(getToken());
 
     return (
@@ -163,29 +164,35 @@ export default class Security extends React.Component {
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell>Device/Agent</Table.HeaderCell>
-                <Table.HeaderCell>IP</Table.HeaderCell>
+                <Table.HeaderCell>Country</Table.HeaderCell>
                 <Table.HeaderCell>Last used</Table.HeaderCell>
                 <Table.HeaderCell>Action</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {authTokens.map((token) => {
+              {authInfo.map((info) => {
+                const country = countries.find(
+                  (country) => country.countryCode === info.ipCountry
+                );
+
                 return (
-                  <Table.Row key={token.id}>
+                  <Table.Row key={info.id}>
                     <Table.Cell>
-                      {token.userAgent || 'No User Agent provided'}{' '}
-                      {token.jti === jti && (
+                      {info.userAgent || 'No User Agent provided'}{' '}
+                      {info.jti === jti && (
                         <Label horizontal>Current Session</Label>
                       )}
                     </Table.Cell>
-                    <Table.Cell>{token.ip}</Table.Cell>
-                    <Table.Cell>{fromNow(token.lastUsedAt)}</Table.Cell>
+                    <Table.Cell>
+                      {country?.nameEn || 'N / A'} ({info.ip})
+                    </Table.Cell>
+                    <Table.Cell>{fromNow(info.lastUsedAt)}</Table.Cell>
                     <Table.Cell>
                       <LoadButton
-                        disabled={token.jti === jti}
+                        disabled={info.jti === jti}
                         basic
                         size="small"
-                        onClick={() => this.logout({ jti: token.jti })}>
+                        onClick={() => this.logout({ jti: info.jti })}>
                         Logout
                       </LoadButton>
                     </Table.Cell>

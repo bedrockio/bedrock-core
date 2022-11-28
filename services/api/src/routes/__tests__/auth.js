@@ -122,8 +122,8 @@ describe('/1/auth', () => {
       expect(response.status).toBe(200);
       const decodeToken = jwt.decode(response.body.data.token, { complete: true });
       const updatedUser = await User.findById(user.id);
-      expect(updatedUser.authTokens).toHaveLength(1);
-      const entry = updatedUser.authTokens[0];
+      expect(updatedUser.authInfo).toHaveLength(1);
+      const entry = updatedUser.authInfo[0];
       expect(entry.jti).toBe(decodeToken.payload.jti);
       expect(entry.exp.valueOf()).toBe(decodeToken.payload.exp * 1000);
     });
@@ -194,12 +194,12 @@ describe('/1/auth', () => {
       const response = await request('POST', '/1/auth/logout', { all: true }, { user });
       expect(response.status).toBe(204);
       const updatedUser = await User.findById(user.id);
-      expect(updatedUser.authTokens).toHaveLength(0);
+      expect(updatedUser.authInfo).toHaveLength(0);
     });
 
     it('should remove current session if nothing is set', async () => {
       const user = await createUser({
-        authTokens: [
+        authInfo: [
           {
             jti: 'old session not expired',
             iat: '123',
@@ -212,13 +212,13 @@ describe('/1/auth', () => {
       const response = await request('POST', '/1/auth/logout', {}, { user });
       expect(response.status).toBe(204);
       const updatedUser = await User.findById(user.id);
-      expect(updatedUser.authTokens).toHaveLength(1);
-      expect(updatedUser.authTokens[0].jti).toBe('old session not expired');
+      expect(updatedUser.authInfo).toHaveLength(1);
+      expect(updatedUser.authInfo[0].jti).toBe('old session not expired');
     });
 
     it('should remove token by jit', async () => {
       const user = await createUser({
-        authTokens: [
+        authInfo: [
           {
             jti: 'targeted jti',
             iat: '123',
@@ -231,9 +231,9 @@ describe('/1/auth', () => {
       const response = await request('POST', '/1/auth/logout', { jti: 'targeted jti' }, { user });
       expect(response.status).toBe(204);
       const updatedUser = await User.findById(user.id);
-      expect(updatedUser.authTokens).toHaveLength(1);
+      expect(updatedUser.authInfo).toHaveLength(1);
       // confirming that only authToken is from triggering the above request
-      expect(updatedUser.authTokens[0].userAgent).toBe('testing library');
+      expect(updatedUser.authInfo[0].userAgent).toBe('testing library');
     });
   });
 
@@ -329,8 +329,8 @@ describe('/1/auth', () => {
       const updatedUser = await User.findById(user.id);
       await expect(verifyPassword(updatedUser, password)).resolves.not.toThrow();
       expect(updatedUser.tempTokenId).not.toBeDefined();
-      expect(updatedUser.authTokens).toHaveLength(1);
-      expect(updatedUser.authTokens[0].jti).toContain(payload.jti);
+      expect(updatedUser.authInfo).toHaveLength(1);
+      expect(updatedUser.authInfo[0].jti).toContain(payload.jti);
     });
 
     it('should error when user is not found', async () => {

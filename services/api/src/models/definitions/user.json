@@ -68,7 +68,7 @@
       "type": "Date",
       "writeScopes": "none"
     },
-    "authTokens": [
+    "authInfo": [
       {
         "lastUsedAt": {
           "type": "Date",
@@ -83,6 +83,10 @@
         "ip": {
           "type": "String",
           "required": true,
+          "writeScopes": "none"
+        },
+        "ipCountry": {
+          "type": "String",
           "writeScopes": "none"
         },
         "iat": {

@@ -60,8 +60,8 @@ describe('/1/users', () => {
       expect(response.status).toBe(200);
       expect(response.body.data._password).toBeUndefined();
       expect(response.body.data.hashedPassword).toBeUndefined();
-      expect(response.body.data.authTokens[0].ip).toBe('123.123.123.0');
-      expect((await User.findById(user.id)).authTokens[0].ip).toBe('123.123.123.0');
+      expect(response.body.data.authInfo[0].ip).toBe('123.123.123.0');
+      expect((await User.findById(user.id)).authInfo[0].ip).toBe('123.123.123.0');
     });
   });
 

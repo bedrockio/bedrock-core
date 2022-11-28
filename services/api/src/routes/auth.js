@@ -35,8 +35,9 @@ router
       const user = new User({
         ...ctx.request.body,
       });
-      const token = user.addAuthToken({
+      const token = user.addAuthInfo({
         ip: ctx.get('x-forwarded-for') || ctx.ip,
+        ipContry: ctx.get('cf-ipcountry'),
         userAgent: ctx.get('user-agent'),
       });
       await user.save();
@@ -109,8 +110,9 @@ router
         return;
       }
 
-      const token = user.addAuthToken({
+      const token = user.addAuthInfo({
         ip: ctx.get('x-forwarded-for') || ctx.ip,
+        ipContry: ctx.get('cf-ipcountry'),
         userAgent: ctx.get('user-agent'),
       });
       await user.save();
@@ -181,7 +183,7 @@ router
       const { body } = ctx.request;
       const jti = body.jti || ctx.state.jwt.jti;
       if (body.all) {
-        user.authTokens = [];
+        user.authInfo = [];
       } else if (jti) {
         user.removeAuthToken(jti);
       }
@@ -215,8 +217,9 @@ router
       const existingUser = await User.findOne({ email: invite.email });
 
       if (existingUser) {
-        const token = existingUser.addAuthToken({
+        const token = existingUser.addAuthInfo({
           ip: ctx.get('x-forwarded-for') || ctx.ip,
+          ipContry: ctx.get('cf-ipcountry'),
           userAgent: ctx.get('user-agent'),
         });
         await existingUser.save();
@@ -232,8 +235,9 @@ router
         email: invite.email,
         password,
       });
-      const token = user.addAuthToken({
+      const token = user.addAuthInfo({
         ip: ctx.get('x-forwarded-for') || ctx.ip,
+        ipContry: ctx.get('cf-ipcountry'),
         userAgent: ctx.get('user-agent'),
       });
       await user.save();
@@ -298,8 +302,9 @@ router
       user.loginAttempts = 0;
       user.password = password;
       user.tempTokenId = undefined;
-      const token = user.addAuthToken({
+      const token = user.addAuthInfo({
         ip: ctx.get('x-forwarded-for') || ctx.ip,
+        ipContry: ctx.get('cf-ipcountry'),
         userAgent: ctx.get('user-agent'),
       });
       await user.save();
