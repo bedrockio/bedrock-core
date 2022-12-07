@@ -1,17 +1,16 @@
-// const Joi = require('joi');
-const yd = require('yada');
+const yd = require('@bedrockio/yada');
 
 const FIXED_SCHEMAS = {
   email: yd.string().lowercase().email(),
-  objectId: yd.string().mongo(),
+  ObjectId: yd.string().mongo(),
 };
 
-function getJoiSchema(attributes, options = {}) {
-  const { appendSchema, allowEmpty } = options;
+function getValidationSchema(attributes, options = {}) {
+  const { allowEmpty, appendSchema, stripUnknown } = options;
   let schema = getObjectSchema(attributes, options);
   if (!allowEmpty) {
     schema = schema.custom((val) => {
-      if (Object.keys(val) === 0) {
+      if (Object.keys(val).length === 0) {
         throw new Error('Object must not be empty');
       }
     });
@@ -19,76 +18,49 @@ function getJoiSchema(attributes, options = {}) {
   if (appendSchema) {
     schema = schema.append(appendSchema);
   }
+  if (stripUnknown) {
+    schema = schema.stripUnknown();
+  }
   return schema;
 }
 
-function getMongooseValidator(schemaName, field) {
-  //   const validator = (val) => {
-  //     Joi.assert(val, schema);
-  //     return true;
-  //   };
+// Returns an async function that will error on failure.
+//
+// Note that mongoose validator functions will not be called
+// if the field is optional and not set or unset with undefined.
+// If the field is not optional the "required" field will also
+// perform valdation so no additional checks are necessary.
+//
+// Also note that throwing an error inside a validator and passing
+// the "message" field result in an identical error message. In this
+// case we want the schema error messages to trickle down so using
+// the first style here.
+//
+// https://mongoosejs.com/docs/api/schematype.html#schematype_SchemaType-validate
+//
+function getMongooseValidator(field) {
   const schema = getSchemaForField(field);
-  const validator = (val) => {
-    schema.validate(val);
-    return true;
+
+  const validator = async (val) => {
+    await schema.validate(val);
   };
-  validator.schemaName = schemaName;
+  validator.schemaName = field.validate;
+
   return validator;
-  // console.info('UHOH', schemaName, field);
-  // return {};
-  // return () => {
-  //   console.info('??');
-  // };
-  // return getFixedSchema(type);
-}
-
-// function getMongooseValidator(schemaName, field) {
-//   const schema = getSchemaForField(field);
-//   const validator = (val) => {
-//     Joi.assert(val, schema);
-//     return true;
-//   };
-//   // A named shortcut back to the Joi schema to retrieve it
-//   // later when generating validations.
-//   validator.schemaName = schemaName;
-//   return validator;
-// }
-
-function getFixedSchema(arg) {
-  const name = arg.schemaName || arg;
-  const schema = FIXED_SCHEMAS[name];
-  if (!schema) {
-    throw new Error(`Cannot find schema for ${name}.`);
-  }
-  return schema;
-}
-
-function getArraySchema(obj, options) {
-  if (Array.isArray(obj)) {
-    // Array notation allows further specification
-    // of array fields:
-    // tags: [{ name: String }]
-    if (options.unwindArrayFields) {
-      return getSchemaForField(obj[0], options);
-    } else {
-      return yd.array(getSchemaForField(obj[0], options));
-    }
-  } else {
-    // Object/constructor notation implies array of anything:
-    // tags: { type: Array }
-    // tags: Array
-    return yd.array();
-  }
 }
 
 function getObjectSchema(obj, options) {
   const map = {};
-  const { transformField, stripFields = [] } = options;
+  const { transformField } = options;
   for (let [key, field] of Object.entries(obj)) {
     if (key === 'type' && !field.type) {
       // Ignore "type" field unless it's defining a field
       // named "type":
       // type: { type: String }
+      continue;
+    } else if (field.skipValidation) {
+      // Also skip fields that explicitly flag skipping
+      // validation.
       continue;
     }
     if (transformField) {
@@ -103,6 +75,39 @@ function getObjectSchema(obj, options) {
     }
   }
   return yd.object(map);
+}
+
+function getArraySchema(obj, options) {
+  if (Array.isArray(obj)) {
+    // Array further further specifies array fields:
+    // tags: [{ name: String }]
+
+    // "required" is a special field in this case which
+    // means that an empty array is not allowed:
+    // tags: [{
+    //   name: String,
+    //   requried: true
+    //  }]
+    obj = obj[0];
+
+    let schema;
+    if (options.unwindArrayFields) {
+      // Allow array "unwinding". This is used for search validation:
+      // { tag: 'one' }
+      schema = getSchemaForField(obj, options);
+    } else {
+      schema = yd.array(getSchemaForField(obj, options));
+    }
+    if (obj.required) {
+      schema = schema.min(1);
+    }
+    return schema;
+  } else {
+    // Object/constructor notation implies array of anything:
+    // tags: { type: Array }
+    // tags: Array
+    return yd.array();
+  }
 }
 
 function getSchemaForField(field, options = {}) {
@@ -128,22 +133,22 @@ function getSchemaForField(field, options = {}) {
   if (isRequiredField(field, options)) {
     schema = schema.required();
   } else if (field.writeScopes) {
-    if (!field.skipValidation) {
-      schema = validateWriteScopes(field.writeScopes);
-    }
-  } else {
-    // TODO: for now we allow both empty strings and null
-    // as a potential signal for "set but non-existent".
-    // Is this ok? Do we not want any falsy fields in the
-    // db whatsoever?
-    schema = schema.allow('', null);
+    // if (!field.skipValidation) {
+    schema = validateWriteScopes(field.writeScopes);
+    // }
+    // } else {
+    //   // TODO: for now we allow both empty strings and null
+    //   // as a potential signal for "set but non-existent".
+    //   // Is this ok? Do we not want any falsy fields in the
+    //   // db whatsoever?
+    //   schema = schema.allow('', null);
   }
   if (typeof field === 'object') {
     if (field.enum) {
       schema = schema.allow(...field.enum);
     }
     if (field.match) {
-      schema = schema.pattern(RegExp(field.match));
+      schema = schema.match(RegExp(field.match));
     }
     if (field.min != null || field.minLength != null) {
       schema = schema.min(field.min ?? field.minLength);
@@ -153,7 +158,7 @@ function getSchemaForField(field, options = {}) {
     }
   }
   if (options.allowRanges) {
-    schema = getRangeSchema(schema);
+    schema = getRangeSchema(schema, type);
   }
   if (options.allowMultiple) {
     schema = yd.allow(schema, yd.array(schema));
@@ -165,14 +170,14 @@ function isRequiredField(field, options) {
   return field.required && !field.default && !field.skipValidation && !options.skipRequired;
 }
 
-function validateWriteScopes(scopes) {
-  return yd.custom((val, { prefs }) => {
+function validateWriteScopes(allowedScopes) {
+  return yd.custom((val, { scopes }) => {
     let allowed = false;
-    if (scopes === 'all') {
+    if (allowedScopes === 'all') {
       allowed = true;
-    } else if (Array.isArray(scopes)) {
-      allowed = scopes.some((scope) => {
-        return prefs.scopes?.includes(scope);
+    } else if (Array.isArray(allowedScopes)) {
+      allowed = allowedScopes.some((scope) => {
+        return scopes?.includes(scope);
       });
     }
     if (!allowed) {
@@ -194,14 +199,18 @@ function getSchemaForType(type) {
     case 'Mixed':
       return yd.object();
     case 'ObjectId':
-      return FIXED_SCHEMAS['objectId'];
+      return yd.custom(async (val) => {
+        const id = String(val.id || val);
+        await FIXED_SCHEMAS['ObjectId'].validate(id);
+        return id;
+      });
     default:
       throw new TypeError(`Unknown schema type ${type}`);
   }
 }
 
-function getRangeSchema(schema) {
-  if (schema.type === 'number') {
+function getRangeSchema(schema, type) {
+  if (type === 'Number') {
     schema = yd.allow(
       schema,
       yd.object({
@@ -211,7 +220,7 @@ function getRangeSchema(schema) {
         gte: yd.number(),
       })
     );
-  } else if (schema.type === 'date') {
+  } else if (type === 'Date') {
     return yd.allow(
       schema,
       yd.object({
@@ -221,6 +230,15 @@ function getRangeSchema(schema) {
         gte: yd.date().iso(),
       })
     );
+  }
+  return schema;
+}
+
+function getFixedSchema(arg) {
+  const name = arg.schemaName || arg;
+  const schema = FIXED_SCHEMAS[name];
+  if (!schema) {
+    throw new Error(`Cannot find schema for ${name}.`);
   }
   return schema;
 }
@@ -256,6 +274,6 @@ function getFieldType(field) {
 }
 
 module.exports = {
-  getJoiSchema,
+  getValidationSchema,
   getMongooseValidator,
 };

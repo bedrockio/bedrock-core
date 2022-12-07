@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const yd = require('@bedrockio/yada');
 const csv = require('fast-csv');
 const mongoose = require('mongoose');
 const PassThrough = require('stream').PassThrough;
@@ -25,8 +25,8 @@ function csvExport(ctx, data, options = {}) {
 function exportValidation(options = {}) {
   const { filename = 'export.csv' } = options;
   return {
-    filename: Joi.string().default(filename),
-    format: Joi.string().allow('json', 'csv').default('json'),
+    filename: yd.string().default(filename),
+    format: yd.string().allow('json', 'csv').default('json'),
   };
 }
 

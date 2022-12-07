@@ -1,4 +1,4 @@
-const yd = require('yada');
+const yd = require('@bedrockio/yada');
 
 const DEFAULT_LIMIT = 50;
 const DEFAULT_SORT = { field: 'createdAt', order: 'desc' };

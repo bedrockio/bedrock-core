@@ -11,7 +11,8 @@ Bedrock models are based on [Mongoose](https://mongoosejs.com/) but provide a la
 
 ## Definitions
 
-Keeping all model information in JSON allows multiple systems to re-use this valuable meta data. These JSON files can either be manually used and attached to Mongoose (see `user.js`) or they can be loaded automatically.
+Keeping all model information in JSON allows multiple systems to re-use this valuable meta data. These JSON files can
+either be manually used and attached to Mongoose (see `user.js`) or they can be loaded automatically.
 
 The following JSON definition `definitions/category.json`:
 
@@ -23,7 +24,8 @@ The following JSON definition `definitions/category.json`:
 }
 ```
 
-Will be loaded as a `mongoose.models.Category` object. Models automatically populate reference objects (type = "ObjectId") and have `updatedAt` and `createdAt` timestamps.
+Will be loaded as a `mongoose.models.Category` object. Models automatically populate reference objects (type =
+"ObjectId") and have `updatedAt` and `createdAt` timestamps.
 
 All model definition options:
 
@@ -34,7 +36,8 @@ All model definition options:
 
 ## Attribute Flags
 
-The attributes are the standard Mongoose Schema definition: https://mongoosejs.com/docs/guide.html - but we allow for some extensions:
+The attributes are the standard Mongoose Schema definition: https://mongoosejs.com/docs/guide.html - but we allow for
+some extensions:
 
 | Key      | Type   | Description                                          |
 | -------- | ------ | ---------------------------------------------------- |
@@ -42,7 +45,8 @@ The attributes are the standard Mongoose Schema definition: https://mongoosejs.c
 
 ## Autopopulate
 
-Bedrock uses the [`mongoose-autopopulate`](https://plugins.mongoosejs.io/plugins/autopopulate) plugin to automatically popluate `ObjectId` references. To enable this specify the `"autopopulate"` option inside the definition files:
+Bedrock uses the [`mongoose-autopopulate`](https://plugins.mongoosejs.io/plugins/autopopulate) plugin to automatically
+popluate `ObjectId` references. To enable this specify the `"autopopulate"` option inside the definition files:
 
 ```json
 "field": {
@@ -52,7 +56,8 @@ Bedrock uses the [`mongoose-autopopulate`](https://plugins.mongoosejs.io/plugins
 }
 ```
 
-By default population is limited to a depth of `1` to avoid explosive queries. To override this the `maxDepth` be specified:
+By default population is limited to a depth of `1` to avoid explosive queries. To override this the `maxDepth` be
+specified:
 
 ```json
 "field": {
@@ -66,7 +71,10 @@ By default population is limited to a depth of `1` to avoid explosive queries. T
 
 ## Soft Deletion
 
-In addition to the defualt timestamps `createdAt` and `updatedAt`, Bedrock attaches a `deletedAt` flag that provides soft delete functionality. Calling `doc.delete()` on a document will perform a soft delete. To perform a hard delete on a model instead call `doc.destroy()`. Additionally all `find` methods will exclude soft-deleted documents, however the following methods allow deleted documents to be queried:
+In addition to the defualt timestamps `createdAt` and `updatedAt`, Bedrock attaches a `deletedAt` flag that provides
+soft delete functionality. Calling `doc.delete()` on a document will perform a soft delete. To perform a hard delete on
+a model instead call `doc.destroy()`. Additionally all `find` methods will exclude soft-deleted documents, however the
+following methods allow deleted documents to be queried:
 
 - `findDeleted`
 - `findOneDeleted`
@@ -84,13 +92,15 @@ To query both the following methods are also provided:
 
 ## Validation
 
-Bedrock uses [Joi](https://joi.dev/) for validation in routes, and this validation is generated from the definition files. The following methods are provided:
+Bedrock uses [Yada](https://github.com/bedrockio/yada) for validation in routes, and this validation is generated from
+the definition files. The following methods are provided:
 
 - `getCreateValidation`
 - `getUpdateValidation`
 - `getSearchValidation`
 
-These methods are used with the `validateBody` [middleware](../utils/middleware/validate.js) to dynamically generate validation in the routes:
+These methods are used with the `validateBody` [middleware](../utils/middleware/validate.js) to dynamically generate
+validation in the routes:
 
 ```js
 .post('/', validateBody(Model.getCreateValidation()), async (ctx) => {
@@ -108,7 +118,8 @@ Additional validation can be mixed in by passing an object to these methods:
 });
 ```
 
-`getUpdateValidation` will strip out virtuals and reserved fields like `id` allowing a serialized object to be passed in with updated fields.
+`getUpdateValidation` will strip out virtuals and reserved fields like `id` allowing a serialized object to be passed in
+with updated fields.
 
 `getSearchValidation` allows a variety of alternate valid parameters for searching:
 
@@ -128,7 +139,9 @@ Additional validation can be mixed in by passing an object to these methods:
 
 ## Search
 
-The `Model.search` method is provided as a counterpart to `find` that allows complex search functionality and is designed to be directly a request body that is validated by `Model.getSearchValidation`. It returns an object with the search results as `data` and metadata about the search with `meta`:
+The `Model.search` method is provided as a counterpart to `find` that allows complex search functionality and is
+designed to be directly a request body that is validated by `Model.getSearchValidation`. It returns an object with the
+search results as `data` and metadata about the search with `meta`:
 
 ```js
 .post('/', validateBody(Model.getSearchValidation()), async (ctx) => {
@@ -139,7 +152,9 @@ The `Model.search` method is provided as a counterpart to `find` that allows com
 
 A number of fields can be sent into this method to customize the search:
 
-- `keyword`: A field that aggregates text fields into a single search. To use this field either a text index must be created on the model or a `"search"` field supplied in the model definition that is an array of text fields to be searched on. Valid `ObjectId` strings will also search on the `_id`. field.
+- `keyword`: A field that aggregates text fields into a single search. To use this field either a text index must be
+  created on the model or a `"search"` field supplied in the model definition that is an array of text fields to be
+  searched on. Valid `ObjectId` strings will also search on the `_id`. field.
 - `ids`: An array of ids to search on.
 - `skip`: Passed to the mongoose `.skip()` method to allow pagination.
 - `limit`: Query limiting. Defaults to `50`.
@@ -148,7 +163,8 @@ A number of fields can be sent into this method to customize the search:
   - `sort.field`: The field to sort on. Default is `createdAt`.
   - `sort.order`: Either `asc` or `desc`. Default is `desc`.
 
-The `search` method returns the mongoose `query` objects just like `find` so they can be further refined with `.populate` etc.
+The `search` method returns the mongoose `query` objects just like `find` so they can be further refined with
+`.populate` etc.
 
 ```js
 await Model.search().populate('field');
@@ -207,7 +223,8 @@ becomes:
 }
 ```
 
-Finally, `search` may be passed other search related options such as ranges for number or date fields (described [above](#validation)).
+Finally, `search` may be passed other search related options such as ranges for number or date fields (described
+[above](#validation)).
 
 ```json
 {
@@ -229,7 +246,8 @@ becomes:
 
 ## Assign
 
-An `assign` methods is provided to update documents, and supports deeply setting nested values. In addition it allows deletion of reference fields and is designed to be passed a request body:
+An `assign` methods is provided to update documents, and supports deeply setting nested values. In addition it allows
+deletion of reference fields and is designed to be passed a request body:
 
 ```js
 .patch('/', validateBody(Model.getUpdateValidation()), async (ctx) => {
