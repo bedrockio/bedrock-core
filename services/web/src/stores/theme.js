@@ -9,7 +9,7 @@ function getDefaultTheme() {
   if (['dark', 'light', 'system'].includes(theme)) {
     return theme;
   }
-  return 'system';
+  return 'light';
 }
 
 function getSystemTheme() {
