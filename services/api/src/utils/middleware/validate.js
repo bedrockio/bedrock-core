@@ -1,37 +1,28 @@
-const Joi = require('joi');
-const yd = require('yada');
-
-const DEFAULT_OPTIONS = {
-  stripUnknown: true,
-  allowUnknown: false,
-  abortEarly: false,
-};
+const yd = require('@bedrockio/yada');
 
 function validateBody(arg) {
   const schema = resolveSchema(arg);
-  // const validator = getValidator(schema, options);
   return async (ctx, next) => {
     try {
-      console.info('FUCK', schema.validate);
       ctx.request.body = await schema.validate(ctx.request.body);
     } catch (error) {
-      ctx.throw(getErrorCode(error), error);
+      ctx.throw(error.code || 400, error);
     }
     return await next();
   };
 }
 
-function resolveSchema(arg) {
-  return yd.isSchema(arg) ? arg : yd.object(arg);
-}
-
-function validateQuery(schema, options) {
-  const validator = getValidator(schema, options);
-  return (ctx, next) => {
-    const { value, error } = validator(ctx.request.query);
-    if (error) {
-      ctx.throw(getErrorCode(error), error);
+function validateQuery(arg) {
+  const schema = resolveSchema(arg);
+  return async (ctx, next) => {
+    let query;
+    try {
+      query = await schema.validate(ctx.request.query);
+    } catch (error) {
+      ctx.throw(error.code || 400, error);
     }
+
+    // TODO: is this needed??
 
     // Koa (and the koa-qs module) uses a setter which causes the
     // query object to be stringified into a querystring when setting it
@@ -44,17 +35,17 @@ function validateQuery(schema, options) {
     // default query getter so it returns the converted object instead of the
     // idiotic stringified object if nothing about the querystring was changed:
 
-    const originalQueryGetter = ctx.request.query;
+    const originalQueryGetter = query;
     const src = {
       get orginalQuery() {
         return originalQueryGetter;
       },
       get query() {
         // https://github.com/koajs/koa/blob/9cef2db87e3066759afb9f002790cc24677cc913/lib/request.js#L168
-        if (!this._querycache && Object.keys(value || {}).length) {
-          return value;
+        if (!this._querycache && Object.keys(query || {}).length) {
+          return query;
         }
-        return this._querycache && this._querycache[this.querystring] ? value : originalQueryGetter;
+        return this._querycache && this._querycache[this.querystring] ? query : originalQueryGetter;
       },
     };
     Object.getOwnPropertyNames(src).forEach((name) => {
@@ -66,32 +57,8 @@ function validateQuery(schema, options) {
   };
 }
 
-function getValidator(schema, options = {}) {
-  // schema = Joi.isSchema(schema) ? schema : Joi.object(schema);
-  // options = { ...DEFAULT_OPTIONS, ...options };
-  // return (obj = {}) => {
-  //   const { value, error } = schema.validate(obj, options);
-  //   if (error) {
-  //     error.details = error.details.map((detail) => {
-  //       return {
-  //         ...detail,
-  //         meta: {
-  //           parsedValue: value[detail.path],
-  //           // Explicitly show it was not provided
-  //           providedValue: obj[detail.path] || null,
-  //         },
-  //       };
-  //     });
-  //   }
-  //   return { value, error };
-  // };
-}
-
-function getErrorCode(error) {
-  const isPermissions = error.details.every((err) => {
-    return err.context?.permissions;
-  });
-  return isPermissions ? 401 : 400;
+function resolveSchema(arg) {
+  return yd.isSchema(arg) ? arg : yd.object(arg);
 }
 
 module.exports = {

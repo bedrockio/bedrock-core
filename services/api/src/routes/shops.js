@@ -3,7 +3,6 @@ const Router = require('@koa/router');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { Shop } = require('../models');
-const yd = require('yada');
 
 const { exportValidation, csvExport } = require('../utils/csv');
 const router = new Router();

@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const yd = require('@bedrockio/yada');
 const { validateBody, validateQuery } = require('../validate');
 const { context } = require('../../testing');
 
@@ -12,7 +12,7 @@ describe('validateBody', () => {
   it('should reject a request with invalid params', () => {
     // Require test param, but don't provide it in ctx object:
     const middleware = validateBody({
-      test: Joi.number().required(),
+      test: yd.number().required(),
     });
     const ctx = context();
     expect(() => middleware(ctx, () => {})).toThrow('"test" is required');
@@ -20,7 +20,7 @@ describe('validateBody', () => {
 
   it('should accept a valid request', () => {
     const middleware = validateBody({
-      test: Joi.string().required(),
+      test: yd.string().required(),
     });
     const ctx = context({ url: '/' });
     ctx.request.body = { test: 'something' };
@@ -32,7 +32,7 @@ describe('validateBody', () => {
 
   it('should support the light syntax', () => {
     const middleware = validateBody({
-      test: Joi.string().required(),
+      test: yd.string().required(),
     });
     const ctx = context({ url: '/' });
     ctx.request.body = { test: 'something' };
@@ -44,7 +44,7 @@ describe('validateBody', () => {
 
   it('should strip unknown fields', () => {
     const middleware = validateBody({
-      test: Joi.string().required(),
+      test: yd.string().required(),
     });
     const ctx = context({ url: '/' });
     ctx.request.body = { test: 'something', foo: 'bar' };
@@ -59,7 +59,7 @@ describe('validateBody', () => {
 describe('validateQuery', () => {
   it('should do type conversion for query', () => {
     const middleware = validateQuery({
-      convertToNumber: Joi.number().required(),
+      convertToNumber: yd.number().required(),
     });
     const ctx = context({ url: '/' });
     ctx.request.query = {
@@ -73,7 +73,7 @@ describe('validateQuery', () => {
 
   it('should strip attributes that are not defined', () => {
     const middleware = validateQuery({
-      somethingExisting: Joi.string(),
+      somethingExisting: yd.string(),
     });
 
     const ctx = context({ url: '/' });

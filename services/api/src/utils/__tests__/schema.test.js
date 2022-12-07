@@ -1,6 +1,6 @@
-const { createSchema, loadModel, loadModelDir } = require('../schema');
-const Joi = require('joi');
 const mongoose = require('mongoose');
+const yd = require('@bedrockio/yada');
+const { createSchema, loadModel, loadModelDir } = require('../schema');
 const { setupDb, teardownDb } = require('../testing');
 
 beforeAll(async () => {
@@ -30,9 +30,7 @@ describe('createSchema', () => {
         })
       );
       const user = new User({ name: 'foo' });
-
       expect(user.name).toBe('foo');
-
       await expect(async () => {
         user.name = 'FOO';
         await user.save();
@@ -1061,7 +1059,7 @@ describe('createSchema', () => {
   });
 
   describe('mongoose validation shortcuts', () => {
-    it('should validate an email field', () => {
+    it('should validate an email field', async () => {
       let user;
       const User = createTestModel(
         createSchemaFromAttributes({
@@ -1072,33 +1070,39 @@ describe('createSchema', () => {
         })
       );
 
-      // TODO: for now we allow both empty strings and null
-      // as a potential signal for "set but non-existent".
-      // Is this ok? Do we not want any falsy fields in the
-      // db whatsoever?
+      await expect(async () => {
+        user = new User();
+        await user.validate();
+      }).not.toThrow();
 
-      user = new User({
-        email: '',
-      });
-      expect(user.validateSync()).toBeUndefined();
+      await expect(async () => {
+        user = new User({
+          email: 'good@email.com',
+        });
+        await user.validate();
+      }).not.toThrow();
 
-      user = new User({
-        email: null,
-      });
-      expect(user.validateSync()).toBeUndefined();
+      await expect(async () => {
+        // Note that null is expected to error here as it
+        // will fail the type validation. To allow "null"
+        // to be a JSON readable signal to unset a field
+        // in mongoose it must be converted to "undefined".
+        // This is part of why the "assign" method exists.
+        user = new User({
+          email: null,
+        });
+        await user.validate();
+      }).rejects.toThrow(mongoose.Error.ValidationError);
 
-      user = new User({
-        email: 'good@email.com',
-      });
-      expect(user.validateSync()).toBeUndefined();
-
-      user = new User({
-        email: 'bad@email',
-      });
-      expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);
+      await expect(async () => {
+        user = new User({
+          email: 'bad@email',
+        });
+        await user.validate();
+      }).rejects.toThrow(mongoose.Error.ValidationError);
     });
 
-    it('should validate a required email field', () => {
+    it('should validate a required email field', async () => {
       let user;
       const User = createTestModel(
         createSchemaFromAttributes({
@@ -1110,23 +1114,29 @@ describe('createSchema', () => {
         })
       );
 
-      user = new User({
-        email: 'good@email.com',
-      });
-      expect(user.validateSync()).toBeUndefined();
+      await expect(async () => {
+        user = new User({
+          email: 'good@email.com',
+        });
+        await user.validate();
+      }).not.toThrow();
 
-      user = new User({
-        email: 'bad@email',
-      });
-      expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);
+      await expect(async () => {
+        user = new User({
+          email: 'bad@email',
+        });
+        await user.validate();
+      }).rejects.toThrow();
 
-      user = new User({
-        email: '',
-      });
-      expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);
+      await expect(async () => {
+        user = new User({
+          email: '',
+        });
+        await user.validate();
+      }).rejects.toThrow(mongoose.Error.ValidationError);
     });
 
-    it('should validate a nested email field', () => {
+    it('should validate a nested email field', async () => {
       let user;
       const User = createTestModel(
         createSchemaFromAttributes({
@@ -1139,15 +1149,19 @@ describe('createSchema', () => {
         })
       );
 
-      user = new User({
-        emails: ['good@email.com'],
-      });
-      expect(user.validateSync()).toBeUndefined();
+      await expect(async () => {
+        user = new User({
+          emails: ['good@email.com'],
+        });
+        await user.validate();
+      }).not.toThrow();
 
-      user = new User({
-        emails: ['bad@email'],
-      });
-      expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);
+      await expect(async () => {
+        user = new User({
+          emails: ['bad@email'],
+        });
+        await user.validate();
+      }).rejects.toThrow(mongoose.Error.ValidationError);
     });
   });
 
@@ -1222,7 +1236,7 @@ describe('createSchema', () => {
           name: 'String',
         })
       );
-      const u = await User.create({
+      await User.create({
         name: 'foo',
       });
       const deletedUser = await User.create({
@@ -1284,7 +1298,6 @@ describe('loadModelDir', () => {
     expect(!!mongoose.models.CustomModel).toBe(false);
     loadModelDir(__dirname + '/../__fixtures__');
     expect(!!mongoose.models.SpecialCategory).toBe(true);
-    //expect(!!mongoose.models.CustomModel).toBe(false);
     const { SpecialCategory } = mongoose.models;
     await SpecialCategory.deleteMany({});
     const someRef = mongoose.Types.ObjectId();
@@ -1298,19 +1311,16 @@ describe('loadModelDir', () => {
 });
 
 describe('validation', () => {
-  function assertPass(schema, obj, options) {
-    expect(() => {
-      Joi.assert(obj, schema, options);
-    }).not.toThrow();
+  async function assertPass(schema, obj, options) {
+    await expect(schema.validate(obj, options)).resolves.not.toThrow();
   }
-  function assertFail(schema, obj, options) {
-    expect(() => {
-      Joi.assert(obj, schema, options);
-    }).toThrow();
+
+  async function assertFail(schema, obj, options) {
+    await expect(schema.validate(obj, options)).rejects.toThrow();
   }
 
   describe('getCreateValidation', () => {
-    it('should get a basic Joi create schema', () => {
+    it('should get a basic create schema', async () => {
       const User = createTestModel(
         createSchemaFromAttributes({
           name: {
@@ -1324,24 +1334,24 @@ describe('validation', () => {
         })
       );
       const schema = User.getCreateValidation();
-      expect(Joi.isSchema(schema)).toBe(true);
-      assertPass(schema, {
+      expect(yd.isSchema(schema)).toBe(true);
+      await assertPass(schema, {
         name: 'foo',
         count: 10,
       });
-      assertFail(schema, {
+      await assertFail(schema, {
         name: 'foo',
       });
-      assertFail(schema, {
+      await assertFail(schema, {
         name: 10,
         count: 10,
       });
-      assertFail(schema, {
+      await assertFail(schema, {
         foo: 'bar',
       });
     });
 
-    it('should be able to append schemas', () => {
+    it('should be able to append schemas', async () => {
       const User = createTestModel(
         createSchemaFromAttributes({
           name: {
@@ -1351,13 +1361,13 @@ describe('validation', () => {
         })
       );
       const schema = User.getCreateValidation({
-        count: Joi.number().required(),
+        count: yd.number().required(),
       });
-      expect(Joi.isSchema(schema)).toBe(true);
-      assertFail(schema, {
+      expect(yd.isSchema(schema)).toBe(true);
+      await assertFail(schema, {
         name: 'foo',
       });
-      assertPass(schema, {
+      await assertPass(schema, {
         name: 'foo',
         count: 10,
       });
@@ -1390,18 +1400,18 @@ describe('validation', () => {
         },
       });
       const schema = User.getCreateValidation();
-      assertPass(schema, {
+      await assertPass(schema, {
         geoLocation: {
           type: 'Line',
           coordinates: [35, 95],
         },
       });
-      assertFail(schema, {
+      await assertFail(schema, {
         geoLocation: 'Line',
       });
     });
 
-    it('should not require a field with a default', () => {
+    it('should not require a field with a default', async () => {
       const User = createTestModel(
         createSchemaFromAttributes({
           name: {
@@ -1417,8 +1427,8 @@ describe('validation', () => {
         })
       );
       const schema = User.getCreateValidation();
-      expect(Joi.isSchema(schema)).toBe(true);
-      assertPass(schema, {
+      expect(yd.isSchema(schema)).toBe(true);
+      await assertPass(schema, {
         name: 'foo',
       });
     });
@@ -1438,15 +1448,27 @@ describe('validation', () => {
         })
       );
       const schema = User.getCreateValidation();
-      expect(Joi.isSchema(schema)).toBe(true);
-      assertPass(schema, {
+      expect(yd.isSchema(schema)).toBe(true);
+      await assertPass(schema, {
         name: 'foo',
       });
     });
   });
 
   describe('getUpdateValidation', () => {
-    it('should skip required fields', () => {
+    it('should fail on empty object', async () => {
+      const User = createTestModel(
+        createSchemaFromAttributes({
+          name: {
+            type: String,
+          },
+        })
+      );
+      const schema = User.getUpdateValidation();
+      await assertFail(schema, {});
+    });
+
+    it('should skip required fields', async () => {
       const User = createTestModel(
         createSchemaFromAttributes({
           name: {
@@ -1460,17 +1482,16 @@ describe('validation', () => {
         })
       );
       const schema = User.getUpdateValidation();
-      expect(Joi.isSchema(schema)).toBe(true);
-      assertPass(schema, {
+      expect(yd.isSchema(schema)).toBe(true);
+      await assertPass(schema, {
         name: 'foo',
       });
-      assertPass(schema, {
+      await assertPass(schema, {
         count: 10,
       });
-      assertFail(schema, {});
     });
 
-    it('should not enforce a schema on unstructured objects', () => {
+    it('should not enforce a schema on unstructured objects', async () => {
       const User = createTestModel(
         createSchemaFromAttributes({
           profile: {
@@ -1484,8 +1505,8 @@ describe('validation', () => {
         })
       );
       const schema = User.getUpdateValidation();
-      expect(Joi.isSchema(schema)).toBe(true);
-      assertPass(schema, {
+      expect(yd.isSchema(schema)).toBe(true);
+      await assertPass(schema, {
         devices: [
           {
             id: 'id',
@@ -1494,7 +1515,7 @@ describe('validation', () => {
           },
         ],
       });
-      assertPass(schema, {
+      await assertPass(schema, {
         profile: {
           name: 'foo',
         },
@@ -1506,7 +1527,7 @@ describe('validation', () => {
           },
         ],
       });
-      assertFail(schema, {
+      await assertFail(schema, {
         profile: {
           foo: 'bar',
         },
@@ -1520,7 +1541,7 @@ describe('validation', () => {
       });
     });
 
-    it('should strip reserved fields', () => {
+    it('should strip reserved fields', async () => {
       const User = createTestModel(
         createSchemaFromAttributes({
           name: {
@@ -1530,7 +1551,7 @@ describe('validation', () => {
         })
       );
       const schema = User.getUpdateValidation();
-      assertPass(schema, {
+      await assertPass(schema, {
         name: 'foo',
         id: 'id',
         createdAt: 'createdAt',
@@ -1539,7 +1560,7 @@ describe('validation', () => {
       });
     });
 
-    it('should strip virtuals', () => {
+    it('should strip virtuals', async () => {
       const userSchema = createSchemaFromAttributes({
         firstName: {
           type: String,
@@ -1566,16 +1587,14 @@ describe('validation', () => {
         fullName: 'John Doe',
       });
       const schema = User.getUpdateValidation();
-      assertPass(schema, data);
-      expect(schema.validate(data)).toEqual({
-        value: {
-          firstName: 'John',
-          lastName: 'Doe',
-        },
+      await assertPass(schema, data);
+      expect(await schema.validate(data)).toEqual({
+        firstName: 'John',
+        lastName: 'Doe',
       });
     });
 
-    it('should strip nested virtuals', () => {
+    it('should strip nested virtuals', async () => {
       const profileSchema = createSchemaFromAttributes({
         firstName: {
           type: String,
@@ -1611,13 +1630,11 @@ describe('validation', () => {
         },
       });
       const schema = User.getUpdateValidation();
-      assertPass(schema, data);
-      expect(schema.validate(data)).toEqual({
-        value: {
-          profile: {
-            firstName: 'John',
-            lastName: 'Doe',
-          },
+      await assertPass(schema, data);
+      expect(await schema.validate(data)).toEqual({
+        profile: {
+          firstName: 'John',
+          lastName: 'Doe',
         },
       });
     });
@@ -1636,10 +1653,10 @@ describe('validation', () => {
           })
         );
         const schema = User.getUpdateValidation();
-        assertPass(schema, {
+        await assertPass(schema, {
           name: 'Barry',
         });
-        assertFail(schema, {
+        await assertFail(schema, {
           name: 'Barry',
           password: 'fake password',
         });
@@ -1659,11 +1676,11 @@ describe('validation', () => {
           })
         );
         const schema = User.getUpdateValidation();
-        assertPass(schema, {
+        await assertPass(schema, {
           name: 'Barry',
         });
 
-        const { value } = schema.validate({
+        const value = await schema.validate({
           name: 'Barry',
           password: 'fake password',
         });
@@ -1684,14 +1701,14 @@ describe('validation', () => {
           })
         );
         const schema = User.getUpdateValidation();
-        assertPass(schema, {
+        await assertPass(schema, {
           name: 'Barry',
         });
-        assertFail(schema, {
+        await assertFail(schema, {
           name: 'Barry',
           password: 'fake password',
         });
-        assertPass(
+        await assertPass(
           schema,
           {
             name: 'Barry',
@@ -1721,28 +1738,28 @@ describe('validation', () => {
         const schema = User.getUpdateValidation();
 
         // With ['foo'] scopes
-        assertPass(
+        await assertPass(
           schema,
           {
             foo: 'foo!',
           },
           { scopes: ['foo'] }
         );
-        assertFail(
+        await assertFail(
           schema,
           {
             bar: 'bar!',
           },
           { scopes: ['foo'] }
         );
-        assertPass(
+        await assertPass(
           schema,
           {
             foobar: 'foobar!',
           },
           { scopes: ['foo'] }
         );
-        assertPass(
+        await assertPass(
           schema,
           {
             foo: 'foo!',
@@ -1750,7 +1767,7 @@ describe('validation', () => {
           },
           { scopes: ['foo'] }
         );
-        assertFail(
+        await assertFail(
           schema,
           {
             foo: 'foo!',
@@ -1761,28 +1778,28 @@ describe('validation', () => {
         );
 
         // With ['bar'] scopes
-        assertFail(
+        await assertFail(
           schema,
           {
             foo: 'foo!',
           },
           { scopes: ['bar'] }
         );
-        assertPass(
+        await assertPass(
           schema,
           {
             bar: 'bar!',
           },
           { scopes: ['bar'] }
         );
-        assertPass(
+        await assertPass(
           schema,
           {
             foobar: 'foobar!',
           },
           { scopes: ['bar'] }
         );
-        assertFail(
+        await assertFail(
           schema,
           {
             foo: 'foo!',
@@ -1790,7 +1807,7 @@ describe('validation', () => {
           },
           { scopes: ['bar'] }
         );
-        assertFail(
+        await assertFail(
           schema,
           {
             foo: 'foo!',
@@ -1801,28 +1818,28 @@ describe('validation', () => {
         );
 
         // With ['foo', 'bar'] scopes
-        assertPass(
+        await assertPass(
           schema,
           {
             foo: 'foo!',
           },
           { scopes: ['foo', 'bar'] }
         );
-        assertPass(
+        await assertPass(
           schema,
           {
             bar: 'bar!',
           },
           { scopes: ['foo', 'bar'] }
         );
-        assertPass(
+        await assertPass(
           schema,
           {
             foobar: 'foobar!',
           },
           { scopes: ['foo', 'bar'] }
         );
-        assertPass(
+        await assertPass(
           schema,
           {
             foo: 'foo!',
@@ -1830,7 +1847,7 @@ describe('validation', () => {
           },
           { scopes: ['foo', 'bar'] }
         );
-        assertPass(
+        await assertPass(
           schema,
           {
             foo: 'foo!',
@@ -1842,7 +1859,7 @@ describe('validation', () => {
       });
     });
 
-    it('should allow search on a nested field', () => {
+    it('should allow search on a nested field', async () => {
       const User = createTestModel(
         createSchemaFromAttributes({
           roles: [
@@ -1854,14 +1871,14 @@ describe('validation', () => {
         })
       );
       const schema = User.getSearchValidation();
-      assertPass(schema, {
+      await assertPass(schema, {
         roles: {
           role: 'test',
         },
       });
     });
 
-    it('should not strip validation with skip flag', async () => {
+    it('should strip validation with skip flag', async () => {
       const User = createTestModel(
         createSchemaFromAttributes({
           name: {
@@ -1877,19 +1894,19 @@ describe('validation', () => {
         })
       );
       const schema = User.getUpdateValidation();
-      expect(Joi.isSchema(schema)).toBe(true);
-      assertPass(schema, {
+      expect(yd.isSchema(schema)).toBe(true);
+      await assertPass(schema, {
         name: 'foo',
         age: 25,
       });
-      const { value } = schema.validate({
+      const value = await schema.validate({
         name: 'foo',
         age: 25,
       });
-      expect(value.age).toBe(25);
+      expect(value.age).toBeUndefined();
     });
 
-    it('should not skip required validations in array fields', () => {
+    it('should not skip required validations in array fields', async () => {
       const User = createTestModel(
         createSchemaFromAttributes({
           users: [
@@ -1906,15 +1923,15 @@ describe('validation', () => {
         })
       );
       const schema = User.getUpdateValidation();
-      expect(Joi.isSchema(schema)).toBe(true);
-      assertPass(schema, {
+      expect(yd.isSchema(schema)).toBe(true);
+      await assertPass(schema, {
         users: [
           {
             name: 'foo',
           },
         ],
       });
-      assertPass(schema, {
+      await assertPass(schema, {
         users: [
           {
             name: 'foo',
@@ -1922,10 +1939,10 @@ describe('validation', () => {
           },
         ],
       });
-      assertFail(schema, {
+      await assertFail(schema, {
         users: [{}],
       });
-      assertFail(schema, {
+      await assertFail(schema, {
         users: [
           {
             count: 1,
@@ -1936,7 +1953,7 @@ describe('validation', () => {
   });
 
   describe('getSearchValidation', () => {
-    it('should get a basic search schema allowing empty', () => {
+    it('should get a basic search schema allowing empty', async () => {
       const User = createTestModel(
         createSchemaFromAttributes({
           name: {
@@ -1946,14 +1963,14 @@ describe('validation', () => {
         })
       );
       const schema = User.getSearchValidation();
-      expect(Joi.isSchema(schema)).toBe(true);
-      assertPass(schema, {
+      expect(yd.isSchema(schema)).toBe(true);
+      await assertPass(schema, {
         name: 'foo',
       });
-      assertPass(schema, {});
+      await assertPass(schema, {});
     });
 
-    it('should mixin default search schema', () => {
+    it('should mixin default search schema', async () => {
       const User = createTestModel(
         createSchemaFromAttributes({
           name: {
@@ -1963,7 +1980,7 @@ describe('validation', () => {
         })
       );
       const schema = User.getSearchValidation();
-      assertPass(schema, {
+      await assertPass(schema, {
         name: 'foo',
         keyword: 'keyword',
         skip: 1,
@@ -1977,7 +1994,7 @@ describe('validation', () => {
       });
     });
 
-    it('should allow an array for a string field', () => {
+    it('should allow an array for a string field', async () => {
       const User = createTestModel(
         createSchemaFromAttributes({
           name: {
@@ -1987,14 +2004,14 @@ describe('validation', () => {
         })
       );
       const schema = User.getSearchValidation();
-      expect(Joi.isSchema(schema)).toBe(true);
-      assertPass(schema, {
+      expect(yd.isSchema(schema)).toBe(true);
+      await assertPass(schema, {
         name: ['foo', 'bar'],
       });
-      assertPass(schema, {});
+      await assertPass(schema, {});
     });
 
-    it('should allow range based search', () => {
+    it('should allow range based search', async () => {
       const User = createTestModel(
         createSchemaFromAttributes({
           age: Number,
@@ -2002,14 +2019,14 @@ describe('validation', () => {
         })
       );
       const schema = User.getSearchValidation();
-      expect(Joi.isSchema(schema)).toBe(true);
-      assertPass(schema, {
+      expect(yd.isSchema(schema)).toBe(true);
+      await assertPass(schema, {
         age: { gte: 5 },
       });
-      assertPass(schema, {
+      await assertPass(schema, {
         date: { gte: '2020-01-01' },
       });
-      assertPass(schema, {});
+      await assertPass(schema, {});
     });
   });
 
@@ -2029,25 +2046,25 @@ describe('validation', () => {
       })
     );
     const schema = Review.getSearchValidation();
-    assertPass(schema, {
+    await assertPass(schema, {
       age: 50,
     });
-    assertFail(schema, {
+    await assertFail(schema, {
       age: -50,
     });
-    assertFail(schema, {
+    await assertFail(schema, {
       age: 150,
     });
-    assertPass(schema, {
+    await assertPass(schema, {
       date: '2020-06-01',
     });
-    assertFail(schema, {
+    await assertFail(schema, {
       date: '2019-01-01',
     });
-    assertFail(schema, {
+    await assertFail(schema, {
       date: '2022-01-01',
     });
-    assertPass(schema, {});
+    await assertPass(schema, {});
   });
 });
 

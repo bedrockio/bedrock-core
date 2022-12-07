@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Router = require('@koa/router');
-const Joi = require('joi');
+const yd = require('@bedrockio/yada');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
@@ -51,7 +51,7 @@ router
   .post(
     '/',
     validateBody({
-      emails: Joi.array().items(Joi.string().email()).required(),
+      emails: yd.array(yd.string().email()).required(),
     }),
     async (ctx) => {
       const { authUser } = ctx.state;

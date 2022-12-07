@@ -1,5 +1,5 @@
 const Router = require('@koa/router');
-const Joi = require('joi');
+const yd = require('@bedrockio/yada');
 const mongoose = require('mongoose');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
@@ -13,10 +13,6 @@ const permissions = require('./../permissions.json');
 const { AuditEntry } = require('../models');
 
 const router = new Router();
-
-const passwordField = Joi.string()
-  .min(6)
-  .message('Your password must be at least 6 characters long. Please try another.');
 
 router
   .use(authenticate({ type: 'user' }))
@@ -41,10 +37,10 @@ router
   .patch(
     '/me',
     validateBody({
-      firstName: Joi.string(),
-      lastName: Joi.string(),
-      timeZone: Joi.string(),
-      theme: Joi.string(),
+      firstName: yd.string(),
+      lastName: yd.string(),
+      timeZone: yd.string(),
+      theme: yd.string(),
     }),
     async (ctx) => {
       const { authUser } = ctx.state;
@@ -95,7 +91,7 @@ router
     '/',
     validateBody(
       User.getCreateValidation({
-        password: passwordField.required(),
+        password: yd.string().password().required(),
       })
     ),
     async (ctx) => {
