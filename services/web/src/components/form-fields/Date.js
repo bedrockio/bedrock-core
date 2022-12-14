@@ -14,6 +14,15 @@ export default class DateField extends React.Component {
   }
 
   onDayChange = (date) => {
+    if (!this.props.time) {
+      if (this.props.end) {
+        date.setHours(23);
+        date.setMinutes(59, 59, 999);
+      } else if (this.props.start) {
+        date.setHours(0);
+        date.setMinutes(0, 0, 0);
+      }
+    }
     this.setDate(null, date);
   };
 
@@ -60,17 +69,6 @@ export default class DateField extends React.Component {
                 width: '140px',
               }}
             />
-            {/*
-            <DayPickerInput
-              id={id}
-              value={date}
-              placeholder={placeholder}
-              formatDate={this.formatDate}
-              dayPickerProps={{ selectedDays: date }}
-
-              onDayChange={this.onDayChange}
-            />
-            */}
             {clearable && (
               <Icon
                 name="xmark"
@@ -121,6 +119,8 @@ export default class DateField extends React.Component {
 }
 
 DateField.propTypes = {
+  start: PropTypes.bool,
+  end: PropTypes.bool,
   time: PropTypes.bool,
   label: PropTypes.node,
   required: PropTypes.bool,

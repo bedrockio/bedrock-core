@@ -44,6 +44,7 @@ export default class DateRangeFilter extends React.Component {
         <label>{label}</label>
         <Form.Group>
           <DateField
+            start
             name="gte"
             value={this.context.filters[name]?.gte}
             placeholder="Start"
@@ -52,6 +53,7 @@ export default class DateRangeFilter extends React.Component {
           />
           <span className="divider">&ndash;</span>
           <DateField
+            end
             name="lte"
             value={this.context.filters[name]?.lte}
             placeholder="Present"
