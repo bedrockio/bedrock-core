@@ -85,7 +85,7 @@
           "required": true,
           "writeScopes": "none"
         },
-        "ipCountry": {
+        "country": {
           "type": "String",
           "writeScopes": "none"
         },

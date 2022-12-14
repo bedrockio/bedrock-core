@@ -35,9 +35,9 @@ router
       const user = new User({
         ...ctx.request.body,
       });
-      const token = user.addAuthInfo({
+      const token = user.createAuthToken({
         ip: ctx.get('x-forwarded-for') || ctx.ip,
-        ipContry: ctx.get('cf-ipcountry'),
+        country: ctx.get('cf-ipcountry'),
         userAgent: ctx.get('user-agent'),
       });
       await user.save();
@@ -110,9 +110,9 @@ router
         return;
       }
 
-      const token = user.addAuthInfo({
+      const token = user.createAuthToken({
         ip: ctx.get('x-forwarded-for') || ctx.ip,
-        ipContry: ctx.get('cf-ipcountry'),
+        country: ctx.get('cf-ipcountry'),
         userAgent: ctx.get('user-agent'),
       });
       await user.save();
@@ -217,9 +217,9 @@ router
       const existingUser = await User.findOne({ email: invite.email });
 
       if (existingUser) {
-        const token = existingUser.addAuthInfo({
+        const token = existingUser.createAuthToken({
           ip: ctx.get('x-forwarded-for') || ctx.ip,
-          ipContry: ctx.get('cf-ipcountry'),
+          country: ctx.get('cf-ipcountry'),
           userAgent: ctx.get('user-agent'),
         });
         await existingUser.save();
@@ -235,9 +235,9 @@ router
         email: invite.email,
         password,
       });
-      const token = user.addAuthInfo({
+      const token = user.createAuthToken({
         ip: ctx.get('x-forwarded-for') || ctx.ip,
-        ipContry: ctx.get('cf-ipcountry'),
+        country: ctx.get('cf-ipcountry'),
         userAgent: ctx.get('user-agent'),
       });
       await user.save();
@@ -302,9 +302,9 @@ router
       user.loginAttempts = 0;
       user.password = password;
       user.tempTokenId = undefined;
-      const token = user.addAuthInfo({
+      const token = user.createAuthToken({
         ip: ctx.get('x-forwarded-for') || ctx.ip,
-        ipContry: ctx.get('cf-ipcountry'),
+        country: ctx.get('cf-ipcountry'),
         userAgent: ctx.get('user-agent'),
       });
       await user.save();

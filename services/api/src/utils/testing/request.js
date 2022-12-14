@@ -7,7 +7,7 @@ module.exports = async function handleRequest(httpMethod, url, bodyOrQuery = {},
   if (options.user && !headers.Authorization) {
     const { user } = options;
 
-    const token = user.addAuthInfo({
+    const token = user.createAuthToken({
       ip: '127.0.0.1',
       userAgent: 'testing library',
     });

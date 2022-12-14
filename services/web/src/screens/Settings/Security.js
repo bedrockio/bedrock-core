@@ -172,7 +172,7 @@ export default class Security extends React.Component {
             <Table.Body>
               {authInfo.map((info) => {
                 const country = countries.find(
-                  (country) => country.countryCode === info.ipCountry
+                  (country) => country.countryCode === info.country
                 );
 
                 return (
