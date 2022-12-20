@@ -85,7 +85,6 @@ function createSchema(definition, options = {}) {
 
   schema.static('getSearchValidation', function getSearchValidation(searchOptions) {
     return getSchemaFromMongoose(schema, {
-      allowEmpty: true,
       allowRanges: true,
       skipRequired: true,
       allowMultiple: true,

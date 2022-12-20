@@ -5,16 +5,11 @@ const FIXED_SCHEMAS = {
   ObjectId: yd.string().mongo(),
 };
 
+class PermissionsError extends Error {}
+
 function getValidationSchema(attributes, options = {}) {
-  const { allowEmpty, appendSchema, stripUnknown } = options;
+  const { appendSchema, stripUnknown } = options;
   let schema = getObjectSchema(attributes, options);
-  if (!allowEmpty) {
-    schema = schema.custom((val) => {
-      if (Object.keys(val).length === 0) {
-        throw new Error('Object must not be empty');
-      }
-    });
-  }
   if (appendSchema) {
     schema = schema.append(appendSchema);
   }
@@ -134,7 +129,7 @@ function getSchemaForField(field, options = {}) {
     schema = schema.required();
   } else if (field.writeScopes) {
     // if (!field.skipValidation) {
-    schema = validateWriteScopes(field.writeScopes);
+    schema = validateWriteScopes(schema, field.writeScopes);
     // }
     // } else {
     //   // TODO: for now we allow both empty strings and null
@@ -170,8 +165,8 @@ function isRequiredField(field, options) {
   return field.required && !field.default && !field.skipValidation && !options.skipRequired;
 }
 
-function validateWriteScopes(allowedScopes) {
-  return yd.custom((val, { scopes }) => {
+function validateWriteScopes(schema, allowedScopes) {
+  return schema.custom((val, { scopes }) => {
     let allowed = false;
     if (allowedScopes === 'all') {
       allowed = true;
@@ -181,7 +176,7 @@ function validateWriteScopes(allowedScopes) {
       });
     }
     if (!allowed) {
-      throw new Error(`Insufficient permissions to write to ???`);
+      throw new PermissionsError('requires write permissions');
     }
   });
 }
@@ -274,6 +269,7 @@ function getFieldType(field) {
 }
 
 module.exports = {
+  PermissionsError,
   getValidationSchema,
   getMongooseValidator,
 };

@@ -1,5 +1,14 @@
 const User = require('../user');
 const mongoose = require('mongoose');
+const { setupDb, teardownDb } = require('../../utils/testing');
+
+beforeAll(async () => {
+  await setupDb();
+});
+
+afterAll(async () => {
+  await teardownDb();
+});
 
 describe('User', () => {
   describe('serialization', () => {
@@ -32,7 +41,7 @@ describe('User', () => {
   });
 
   describe('validation', () => {
-    it('should validate email field', () => {
+    it('should validate email field', async () => {
       let user;
 
       user = new User({
@@ -40,21 +49,21 @@ describe('User', () => {
         lastName: 'One',
         email: 'good@email.com',
       });
-      expect(user.validateSync()).toBeUndefined();
+      await expect(user.validate()).resolves.not.toThrow();
 
       user = new User({
         firstName: 'Neo',
         lastName: 'One',
         email: 'bad@email',
       });
-      expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);
+      await expect(user.validate()).rejects.toThrow(mongoose.Error.ValidationError);
 
       user = new User({
         firstName: 'Neo',
         lastName: 'One',
         email: null,
       });
-      expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);
+      await expect(user.validate()).rejects.toThrow(mongoose.Error.ValidationError);
     });
   });
 });
