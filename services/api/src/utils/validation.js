@@ -8,13 +8,10 @@ const FIXED_SCHEMAS = {
 class PermissionsError extends Error {}
 
 function getValidationSchema(attributes, options = {}) {
-  const { appendSchema, stripUnknown } = options;
+  const { appendSchema } = options;
   let schema = getObjectSchema(attributes, options);
   if (appendSchema) {
     schema = schema.append(appendSchema);
-  }
-  if (stripUnknown) {
-    schema = schema.stripUnknown();
   }
   return schema;
 }
@@ -45,6 +42,7 @@ function getMongooseValidator(field) {
 }
 
 function getObjectSchema(obj, options) {
+  const { stripUnknown } = options;
   const map = {};
   const { transformField } = options;
   for (let [key, field] of Object.entries(obj)) {
@@ -69,7 +67,14 @@ function getObjectSchema(obj, options) {
       }
     }
   }
-  return yd.object(map);
+
+  let schema = yd.object(map);
+
+  if (stripUnknown) {
+    schema = schema.stripUnknown();
+  }
+
+  return schema;
 }
 
 function getArraySchema(obj, options) {
