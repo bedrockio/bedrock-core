@@ -1456,7 +1456,7 @@ describe('validation', () => {
   });
 
   describe('getUpdateValidation', () => {
-    it('should fail on empty object', async () => {
+    it('should not fail on empty object', async () => {
       const User = createTestModel(
         createSchemaFromAttributes({
           name: {
@@ -1465,7 +1465,28 @@ describe('validation', () => {
         })
       );
       const schema = User.getUpdateValidation();
-      await assertFail(schema, {});
+      await assertPass(schema, {});
+    });
+
+    it('should skip unknown in nested validations', async () => {
+      const User = createTestModel(
+        createSchemaFromAttributes({
+          names: [
+            {
+              first: String,
+            },
+          ],
+        })
+      );
+      const schema = User.getUpdateValidation();
+      await assertPass(schema, {
+        names: [
+          {
+            id: 'fake id',
+            first: 'First',
+          },
+        ],
+      });
     });
 
     it('should skip required fields', async () => {
@@ -1527,9 +1548,23 @@ describe('validation', () => {
           },
         ],
       });
-      await assertFail(schema, {
+
+      const result = await schema.validate({
         profile: {
+          name: 'name',
           foo: 'bar',
+        },
+        devices: [
+          {
+            id: 'id',
+            name: 'name',
+            class: 'class',
+          },
+        ],
+      });
+      expect(result).toEqual({
+        profile: {
+          name: 'name',
         },
         devices: [
           {
