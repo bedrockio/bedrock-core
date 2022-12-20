@@ -111,34 +111,21 @@ router
       };
     }
   )
-  .patch(
-    '/:userId',
-    validateBody(
-      User.getUpdateValidation({
-        roles: (roles) => {
-          return roles.map((role) => {
-            const { roleDefinition, ...rest } = role;
-            return rest;
-          });
-        },
-      })
-    ),
-    async (ctx) => {
-      const { user } = ctx.state;
-      user.assign(ctx.request.body);
+  .patch('/:userId', validateBody(User.getUpdateValidation()), async (ctx) => {
+    const { user } = ctx.state;
+    user.assign(ctx.request.body);
 
-      await user.save();
+    await user.save();
 
-      await AuditEntry.append('Updated user', ctx, {
-        object: user,
-        fields: ['email', 'roles'],
-      });
+    await AuditEntry.append('Updated user', ctx, {
+      object: user,
+      fields: ['email', 'roles'],
+    });
 
-      ctx.body = {
-        data: user,
-      };
-    }
-  )
+    ctx.body = {
+      data: user,
+    };
+  })
   .delete('/:userId', async (ctx) => {
     const { user } = ctx.state;
     await user.assertNoReferences({

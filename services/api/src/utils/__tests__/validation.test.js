@@ -60,9 +60,25 @@ describe('getValidationSchema', () => {
   });
 
   describe('basic functionality', () => {
-    it('should fail if no keys set by default', async () => {
+    it('should validate basic fields', async () => {
       const schema = getValidationSchema({
-        name: String,
+        name: {
+          type: String,
+          required: true,
+        },
+        count: {
+          type: Number,
+        },
+      });
+      await assertPass(schema, {
+        name: 'foo',
+      });
+      await assertPass(schema, {
+        name: 'foo',
+        count: 10,
+      });
+      await assertFail(schema, {
+        count: 10,
       });
       await assertFail(schema, {});
     });
@@ -100,7 +116,7 @@ describe('getValidationSchema', () => {
       );
       await assertPass(schema, { name: 'foo' });
       await assertPass(schema, { count: 5 });
-      await assertFail(schema, {});
+      await assertPass(schema, {});
     });
 
     it('should not skip required inside nested arrays', async () => {
@@ -493,7 +509,7 @@ describe('getValidationSchema', () => {
         await assertFail(schema, {
           id: '5fd396fac80fa73203bd9554',
         });
-        await assertFail(schema, {});
+        await assertPass(schema, {});
       });
 
       it('should transform a deeply nested array ObjectId', async () => {
@@ -577,7 +593,7 @@ describe('getValidationSchema', () => {
         await assertFail(schema, {
           id: '5fd396fac80fa73203bd9554',
         });
-        await assertFail(schema, {});
+        await assertPass(schema, {});
       });
     });
   });

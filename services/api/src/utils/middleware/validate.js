@@ -1,4 +1,5 @@
 const yd = require('@bedrockio/yada');
+const { PermissionsError } = require('../validation');
 
 function validateBody(arg) {
   const schema = resolveSchema(arg);
@@ -6,7 +7,7 @@ function validateBody(arg) {
     try {
       ctx.request.body = await schema.validate(ctx.request.body);
     } catch (error) {
-      ctx.throw(error.code || 400, error);
+      ctx.throw(getErrorCode(error), error);
     }
     return await next();
   };
@@ -17,9 +18,11 @@ function validateQuery(arg) {
   return async (ctx, next) => {
     let query;
     try {
-      query = await schema.validate(ctx.request.query);
+      query = await schema.validate(ctx.request.query, {
+        cast: true,
+      });
     } catch (error) {
-      ctx.throw(error.code || 400, error);
+      ctx.throw(getErrorCode(error), error);
     }
 
     // TODO: is this needed??
@@ -59,6 +62,18 @@ function validateQuery(arg) {
 
 function resolveSchema(arg) {
   return yd.isSchema(arg) ? arg : yd.object(arg);
+}
+
+function getErrorCode(error) {
+  return isPermissionsError(error) ? 401 : 400;
+}
+
+function isPermissionsError(error) {
+  if (error.details) {
+    return error.details.every(isPermissionsError);
+  } else if (error.original) {
+    return error.original instanceof PermissionsError;
+  }
 }
 
 module.exports = {
