@@ -49,7 +49,9 @@ describe('validateBody', () => {
         .object({
           test: yd.string().required(),
         })
-        .stripUnknown()
+        .options({
+          stripUnknown: true,
+        })
     );
     const ctx = context({ url: '/' });
     ctx.request.body = { test: 'something', foo: 'bar' };
