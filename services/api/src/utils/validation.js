@@ -71,7 +71,9 @@ function getObjectSchema(obj, options) {
   let schema = yd.object(map);
 
   if (stripUnknown) {
-    schema = schema.stripUnknown();
+    schema = schema.options({
+      stripUnknown: true,
+    });
   }
 
   return schema;
