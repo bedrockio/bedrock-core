@@ -21,11 +21,11 @@ import Actions from '../Actions';
 
 @screen
 export default class ProductList extends React.Component {
-  onDataNeeded = async (params) => {
+  onDataNeeded = async (body) => {
     return await request({
       method: 'POST',
       path: '/1/products/search',
-      body: { ...params },
+      body,
     });
   };
 

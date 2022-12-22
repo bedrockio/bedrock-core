@@ -1,9 +1,10 @@
 import { API_KEY, API_URL } from 'utils/env';
 
+
 import { trackRequest } from '../analytics';
 import { fetchWithTimeout } from '../fetch';
-
 import { ApiError, ApiParseError } from './errors';
+import { stringifyParams } from './params';
 import { getToken } from './token';
 
 export default async function request(options) {
@@ -24,7 +25,10 @@ export default async function request(options) {
   );
 
   const url = new URL(path, API_URL);
-  url.search = new URLSearchParams(params);
+
+  if (params) {
+    url.search = stringifyParams(params);
+  }
 
   if (files) {
     const data = new FormData();
