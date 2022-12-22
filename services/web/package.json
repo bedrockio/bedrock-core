@@ -44,7 +44,6 @@
     "express-to-koa": "^2.0.0",
     "favicons": "^7.0.1",
     "favicons-webpack-plugin": "^6.0.0-alpha.1",
-    "github-markdown-css": "^5.1.0",
     "google-map-react": "^2.2.0",
     "hast-util-sanitize": "^4.0.0",
     "hast-util-to-mdast": "^8.4.1",
