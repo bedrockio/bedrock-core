@@ -667,7 +667,7 @@ describe('createSchema', () => {
       expect(user.date.getTime()).toBe(now);
     });
 
-    it('should delete falsy values for reference fields', async () => {
+    it('should delete null values for reference fields', async () => {
       const User = createTestModel();
       const Shop = createTestModel(
         createSchemaFromAttributes({
@@ -703,9 +703,9 @@ describe('createSchema', () => {
         },
       });
       shop.assign({
-        user: '',
+        user: null,
         nested: {
-          user: '',
+          user: null,
         },
       });
       await shop.save();
@@ -714,6 +714,42 @@ describe('createSchema', () => {
       expect(data.user).toBeUndefined();
       expect(data.nested).toEqual({
         name: 'fake',
+      });
+    });
+
+    it('should not unset non-null falsy values', async () => {
+      const User = createTestModel(
+        createSchemaFromAttributes({
+          bool: Boolean,
+          str: String,
+          num: Number,
+        })
+      );
+      const user = await User.create({
+        bool: true,
+        str: 'str',
+        num: 1,
+      });
+      await user.save();
+
+      let data = JSON.parse(JSON.stringify(user));
+      expect(data).toMatchObject({
+        bool: true,
+        str: 'str',
+        num: 1,
+      });
+      user.assign({
+        bool: false,
+        str: '',
+        num: 0,
+      });
+      await user.save();
+
+      data = JSON.parse(JSON.stringify(user));
+      expect(data).toMatchObject({
+        bool: false,
+        str: '',
+        num: 0,
       });
     });
 

@@ -31,4 +31,4 @@ router.use('/categories', categories.routes());
 router.use('/organizations', organizations.routes());
 router.use('/applications', applications.routes());
 
-module.exports = router;
+module.exports = router.routes();

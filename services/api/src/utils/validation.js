@@ -135,15 +135,7 @@ function getSchemaForField(field, options = {}) {
   if (isRequiredField(field, options)) {
     schema = schema.required();
   } else if (field.writeScopes) {
-    // if (!field.skipValidation) {
     schema = validateWriteScopes(schema, field.writeScopes);
-    // }
-    // } else {
-    //   // TODO: for now we allow both empty strings and null
-    //   // as a potential signal for "set but non-existent".
-    //   // Is this ok? Do we not want any falsy fields in the
-    //   // db whatsoever?
-    //   schema = schema.allow('', null);
   }
   if (typeof field === 'object') {
     if (field.enum) {
@@ -159,12 +151,11 @@ function getSchemaForField(field, options = {}) {
       schema = schema.max(field.max ?? field.maxLength);
     }
   }
-  if (options.allowRanges) {
-    schema = getRangeSchema(schema, type);
+
+  if (options.allowSearch) {
+    schema = getSearchSchema(schema, type);
   }
-  if (options.allowMultiple) {
-    schema = yd.allow(schema, yd.array(schema));
-  }
+
   return schema;
 }
 
@@ -197,7 +188,10 @@ function getSchemaForType(type) {
     case 'Boolean':
       return yd.boolean();
     case 'Date':
-      return yd.date().iso();
+      return yd.date().iso().tag({
+        'x-schema': 'DateTime',
+        description: `A \`string\` in [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format.`,
+      });
     case 'Mixed':
       return yd.object();
     case 'ObjectId':
@@ -211,29 +205,46 @@ function getSchemaForType(type) {
   }
 }
 
-function getRangeSchema(schema, type) {
+function getSearchSchema(schema, type) {
   if (type === 'Number') {
-    schema = yd.allow(
-      schema,
-      yd.object({
-        lt: yd.number(),
-        gt: yd.number(),
-        lte: yd.number(),
-        gte: yd.number(),
-      })
-    );
+    return yd
+      .allow(
+        schema,
+        yd.array(schema),
+        yd
+          .object({
+            lt: yd.number().description('Select values less than.'),
+            gt: yd.number().description('Select values greater than.'),
+            lte: yd.number().description('Select values less than or equal.'),
+            gte: yd.number().description('Select values greater than or equal.'),
+          })
+          .tag({
+            'x-schema': 'NumberRange',
+          })
+      )
+      .description('Allows searching by a value, array of values, or a numeric range.');
   } else if (type === 'Date') {
-    return yd.allow(
-      schema,
-      yd.object({
-        lt: yd.date().iso(),
-        gt: yd.date().iso(),
-        lte: yd.date().iso(),
-        gte: yd.date().iso(),
-      })
-    );
+    return yd
+      .allow(
+        schema,
+        yd.array(schema),
+        yd
+          .object({
+            lt: yd.date().iso().description('Select dates occurring before.'),
+            gt: yd.date().iso().description('Select dates occurring after.'),
+            lte: yd.date().iso().description('Select dates occurring on or before.'),
+            gte: yd.date().iso().description('Select dates occurring on or after.'),
+          })
+          .tag({
+            'x-schema': 'DateRange',
+          })
+      )
+      .description('Allows searching by a date, array of dates, or a range.');
+  } else if (type === 'String' || type === 'ObjectId') {
+    return yd.allow(schema, yd.array(schema)).description('Allows searching by a value or array of values.');
+  } else {
+    return schema;
   }
-  return schema;
 }
 
 function getFixedSchema(arg) {

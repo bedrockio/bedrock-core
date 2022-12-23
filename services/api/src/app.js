@@ -1,5 +1,6 @@
 const Router = require('@koa/router');
 const Koa = require('koa');
+const { version } = require('../package.json');
 const bodyParser = require('koa-body');
 const errorHandler = require('./utils/middleware/error-handler');
 const corsMiddleware = require('./utils/middleware/cors');
@@ -19,7 +20,7 @@ if (['staging', 'development'].includes(ENV_NAME)) {
   // has to be the added before any middleware that changes the ctx.body
   app.use(
     applicationMiddleware({
-      ignorePaths: ['/', '/openapi.json', '/openapi.lite.json', '/1/status', '/1/status/mongodb', /\/1\/applications/],
+      ignorePaths: ['/', '/1/status', '/1/status/mongodb', /\/1\/applications/],
     })
   );
 }
@@ -55,9 +56,19 @@ if (config.has('SENTRY_DSN')) {
 }
 
 const router = new Router();
-app.router = router;
 
-app.use(routes.routes());
-app.use(routes.allowedMethods());
+router.get('/', (ctx) => {
+  ctx.body = {
+    version,
+    environment: ENV_NAME,
+    // TODO: what should this be?
+    // openapiPath: '/openapi.json',
+    servedAt: new Date(),
+  };
+});
+router.use(routes);
+
+app.use(router.routes());
+app.use(router.allowedMethods());
 
 module.exports = app;

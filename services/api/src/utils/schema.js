@@ -85,9 +85,8 @@ function createSchema(definition, options = {}) {
 
   schema.static('getSearchValidation', function getSearchValidation(searchOptions) {
     return getSchemaFromMongoose(schema, {
-      allowRanges: true,
+      allowSearch: true,
       skipRequired: true,
-      allowMultiple: true,
       unwindArrayFields: true,
       appendSchema: searchValidation(searchOptions),
     });

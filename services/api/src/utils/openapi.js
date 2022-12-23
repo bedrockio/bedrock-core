@@ -58,10 +58,10 @@ async function generateDefinition() {
   return definition;
 }
 
-function generatePaths(router) {
+function generatePaths(routes) {
   const paths = {};
 
-  for (let layer of router.stack) {
+  for (let layer of routes.router.stack) {
     const item = {};
     const { path: koaPath, methods } = layer;
     const [method] = without(methods, 'HEAD');

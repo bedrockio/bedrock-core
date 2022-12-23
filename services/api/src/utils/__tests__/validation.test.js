@@ -253,21 +253,6 @@ describe('getValidationSchema', () => {
       await assertFail(schema, { name: 'baz' });
     });
 
-    it('should optionally allow an array on an enum field', async () => {
-      const schema = getValidationSchema(
-        {
-          name: {
-            type: String,
-            enum: ['foo', 'bar'],
-          },
-        },
-        {
-          allowMultiple: true,
-        }
-      );
-      await assertPass(schema, { name: ['foo', 'bar'] });
-    });
-
     it('should validate minimum length', async () => {
       const schema = getValidationSchema({
         name: {
@@ -800,14 +785,29 @@ describe('getValidationSchema', () => {
     });
   });
 
-  describe('ranges', () => {
+  describe('allowSearch', () => {
+    it('should optionally allow an array on an enum field', async () => {
+      const schema = getValidationSchema(
+        {
+          name: {
+            type: String,
+            enum: ['foo', 'bar'],
+          },
+        },
+        {
+          allowSearch: true,
+        }
+      );
+      await assertPass(schema, { name: ['foo', 'bar'] });
+    });
+
     it('should be able to append a date range schema', async () => {
       const schema = getValidationSchema(
         {
           startsAt: { type: Date },
         },
         {
-          allowRanges: true,
+          allowSearch: true,
         }
       );
       await assertPass(schema, { startsAt: '2020-01-01' });
@@ -827,7 +827,7 @@ describe('getValidationSchema', () => {
           age: { type: Number },
         },
         {
-          allowRanges: true,
+          allowSearch: true,
         }
       );
       await assertPass(schema, { age: 5 });
