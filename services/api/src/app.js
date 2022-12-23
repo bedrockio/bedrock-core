@@ -5,11 +5,8 @@ const errorHandler = require('./utils/middleware/error-handler');
 const corsMiddleware = require('./utils/middleware/cors');
 const { applicationMiddleware } = require('./utils/middleware/application');
 const Sentry = require('@sentry/node');
-const path = require('path');
-const { version } = require('../package.json');
 const routes = require('./routes');
 const config = require('@bedrockio/config');
-const { loadOpenApiDefinitions, expandOpenApi } = require('./utils/openapi');
 const { loggingMiddleware } = require('@bedrockio/instrumentation');
 
 const app = new Koa();
@@ -59,28 +56,8 @@ if (config.has('SENTRY_DSN')) {
 
 const router = new Router();
 app.router = router;
-router.get('/', (ctx) => {
-  ctx.body = {
-    environment: ENV_NAME,
-    version,
-    openapiPath: '/openapi.json',
-    servedAt: new Date(),
-  };
-});
 
-const openApiLiteDefinition = loadOpenApiDefinitions(path.join(__dirname, '/routes/__openapi__'), '/1');
-router.get('/openapi.lite.json', (ctx) => {
-  ctx.body = openApiLiteDefinition;
-});
-
-const openApiDefinition = expandOpenApi(openApiLiteDefinition);
-router.get('/openapi.json', (ctx) => {
-  ctx.body = openApiDefinition;
-});
-
-router.use('/1', routes.routes());
-
-app.use(router.routes());
-app.use(router.allowedMethods());
+app.use(routes.routes());
+app.use(routes.allowedMethods());
 
 module.exports = app;

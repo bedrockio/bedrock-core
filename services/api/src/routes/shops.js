@@ -10,7 +10,7 @@ const router = new Router();
 router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
-  .param('shopId', async (id, ctx, next) => {
+  .param('id', async (id, ctx, next) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       ctx.throw(404, 'ObjectId in path is not valid');
     }
@@ -27,7 +27,7 @@ router
       data: shop,
     };
   })
-  .get('/:shopId', async (ctx) => {
+  .get('/:id', async (ctx) => {
     const shop = ctx.state.shop;
     ctx.body = {
       data: shop,
@@ -54,7 +54,7 @@ router
       };
     }
   )
-  .patch('/:shopId', validateBody(Shop.getUpdateValidation()), async (ctx) => {
+  .patch('/:id', validateBody(Shop.getUpdateValidation()), async (ctx) => {
     const shop = ctx.state.shop;
     shop.assign(ctx.request.body);
     await shop.save();
@@ -62,7 +62,7 @@ router
       data: shop,
     };
   })
-  .delete('/:shopId', async (ctx) => {
+  .delete('/:id', async (ctx) => {
     await ctx.state.shop.delete();
     ctx.status = 204;
   });

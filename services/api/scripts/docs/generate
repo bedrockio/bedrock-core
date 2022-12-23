@@ -1,0 +1,12 @@
+#!/usr/bin/env node
+
+const { initialize } = require('../../src/utils/database');
+const { logger } = require('@bedrockio/instrumentation');
+const { generateDefinition, DEFINITION_FILE } = require('../../src/utils/openapi');
+
+(async () => {
+  await initialize();
+  await generateDefinition();
+  logger.info(`Generated: ${DEFINITION_FILE}`);
+  process.exit(0);
+})();

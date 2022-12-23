@@ -1,5 +1,6 @@
 {
   "name": "bedrock-api",
+  "description":"Bedrock API",
   "version": "0.0.1",
   "license": "MIT",
   "engines": {
@@ -14,7 +15,8 @@
     "test:watch": "jest --watch -i",
     "fixtures:load": "./scripts/fixtures/load",
     "fixtures:reload": "./scripts/fixtures/reload",
-    "fixtures:export": "./scripts/fixtures/export"
+    "fixtures:export": "./scripts/fixtures/export",
+    "docs:generate": "./scripts/docs/generate"
   },
   "dependencies": {
     "@bedrockio/config": "^2.2.2",

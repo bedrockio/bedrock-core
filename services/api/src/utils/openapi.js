@@ -1,95 +1,210 @@
-const fs = require('fs');
+const fs = require('fs/promises');
+const path = require('path');
+const mongoose = require('mongoose');
+const { set, without, camelCase, kebabCase, startCase, mergeWith, isEqual } = require('lodash');
 const config = require('@bedrockio/config');
 
-function loadOpenApiDefinitions(dir, rootPath) {
-  return fs
-    .readdirSync(dir)
-    .filter((path) => path.match(/\.json$/))
-    .map((path) => {
-      const routerName = path.replace('.json', '');
-      const routerDefinition = JSON.parse(fs.readFileSync(`${dir}/${path}`).toString());
-      return {
-        name: routerName,
-        paths: routerDefinition.paths.map((definition) => {
-          let definitionPath = definition.path;
-          if (definitionPath.slice(-1) === '/') {
-            definitionPath = definitionPath.slice(0, -1);
-          }
-          definition.path = `${rootPath}/${routerName}${definitionPath}`;
-          return definition;
-        }),
-        objects: routerDefinition.objects,
-      };
-    });
+const pluralize = mongoose.pluralize();
+
+const PACKAGE_FILE = path.resolve(__dirname, '../../package.json');
+const DEFINITION_FILE = path.resolve(__dirname, '../../openapi.json');
+
+let definition;
+
+async function loadDefinition() {
+  try {
+    definition = require(DEFINITION_FILE);
+  } catch {
+    definition = {};
+  }
+  return definition;
 }
 
-// This is just for OpenAPI/Swagger compatibility purposes
-function expandOpenApi(definitions) {
-  const allPaths = {};
-  definitions.forEach((module) => {
-    const { paths } = module;
-    if (paths) {
-      paths.forEach((call) => {
-        const { method, path, requestBody, examples } = call;
-        if (!allPaths[path]) {
-          allPaths[path] = {};
-        }
-        const object = {
-          summary: `${method} ${path}`,
-          operationId: `${method} ${path}`,
-          tags: [module.name],
-        };
-        if (requestBody) {
-          const properties = {};
-          requestBody.forEach((param) => {
-            properties[param.name] = {
-              type: param.schema ? param.schema.type : 'object',
-              description: param.description,
-            };
-          });
-          object.requestBody = {
-            required: true,
-            content: {
-              'application/json': {
-                schema: {
-                  type: 'object',
-                  properties,
-                },
-                required: requestBody.filter((p) => p.required).map((p) => p.name),
-              },
-            },
-          };
-        }
-        if (examples && examples[0] && examples[0].responseBody) {
-          object.responses = {
-            200: {
-              'application/json': {
-                default: {
-                  value: examples[0].responseBody,
-                },
-              },
-            },
-          };
-        }
-        allPaths[path][method.toLowerCase()] = object;
-      });
+async function saveDefinition(updated) {
+  await fs.writeFile(DEFINITION_FILE, JSON.stringify(updated, null, 2), 'utf-8');
+  definition = updated;
+}
+
+async function generateDefinition() {
+  const definition = await loadDefinition();
+  const { version, description } = require(PACKAGE_FILE);
+  definition.openapi = '3.1.0';
+  definition.info = {
+    version,
+    title: description,
+    ...definition.info,
+  };
+  definition.servers = [
+    {
+      url: config.get('API_URL'),
+    },
+  ];
+
+  const paths = generatePaths(require('../routes'));
+
+  mergeWith(paths, definition.paths, (target, source) => {
+    if (Array.isArray(target) && Array.isArray(source)) {
+      if (!isEqual(target, source)) {
+        // TODO: how should array merging be handled?
+      }
     }
   });
-  return {
-    openapi: '3.0.3',
-    info: {
-      title: `${config.get('APP_NAME')} API`,
-      version: '1',
-      contact: {
-        url: config.get('APP_URL'),
-        email: config.get('APP_SUPPORT_EMAIL'),
-      },
-    },
-    paths: allPaths,
-  };
+
+  definition.paths = paths;
+
+  extractComponents(definition);
+
+  await saveDefinition(definition);
+  return definition;
+}
+
+function generatePaths(router) {
+  const paths = {};
+
+  for (let layer of router.stack) {
+    const item = {};
+    const { path: koaPath, methods } = layer;
+    const [method] = without(methods, 'HEAD');
+
+    if (!method) {
+      continue;
+    }
+
+    const validation = layer.stack.find((item) => {
+      return item.schema;
+    });
+
+    const schema = validation?.schema;
+
+    Object.assign(item, getPathMeta(koaPath, method));
+
+    if (schema) {
+      item.requestBody = {
+        content: {
+          'application/json': {
+            schema: schema.toOpenApi(),
+          },
+        },
+      };
+    }
+    const path = koaPath
+      .split('/')
+      .map((part) => {
+        if (part.startsWith(':')) {
+          part = part.slice(1);
+          if (part.endsWith('?')) {
+            part = part.slice(0, -1);
+          }
+          part = `{${part}}`;
+        }
+        return part;
+      })
+      .join('/');
+
+    const parameters = layer.paramNames.map((param) => {
+      const { name, modifier } = param;
+      const required = modifier !== '?';
+      return {
+        name,
+        in: 'path',
+        required,
+      };
+    });
+
+    if (parameters.length) {
+      item.parameters = parameters;
+    }
+
+    if (!paths[path]) {
+      paths[path] = {};
+    }
+
+    paths[path][method.toLowerCase()] = item;
+  }
+  return paths;
+}
+
+function getPathMeta(koaPath, method) {
+  const meta = {};
+
+  let split = koaPath.split('/').slice(1);
+
+  if (/^\d+/.test(split[0])) {
+    split = split.slice(1);
+  }
+
+  const [base, operation] = split;
+
+  if (split.length < 3) {
+    let modelName;
+    let modelNameCamel;
+    let modelNamePlural;
+    for (let name of Object.keys(mongoose.models)) {
+      const kebab = kebabCase(name);
+      const plural = pluralize(kebab);
+      if (plural === base) {
+        modelName = startCase(name).toLowerCase();
+        modelNameCamel = camelCase(name);
+        modelNamePlural = startCase(plural).toLowerCase();
+      }
+    }
+
+    if (modelName) {
+      const isId = operation === `:${modelNameCamel}Id`;
+      if (method === 'GET' && isId) {
+        meta.summary = `Gets ${inflect(modelName)} by id.`;
+      } else if (method === 'POST' && !operation) {
+        meta.summary = `Creates a new ${modelName}.`;
+      } else if (method === 'PATCH' && isId) {
+        meta.summary = `Updates ${inflect(modelName)}.`;
+      } else if (method === 'DELETE' && isId) {
+        meta.summary = `Deletes ${inflect(modelName)}.`;
+      } else if (method === 'POST' && operation === 'search') {
+        meta.summary = `Searches for ${modelNamePlural}.`;
+      }
+    }
+  }
+  meta.tags = [startCase(base)];
+  return meta;
+}
+
+function extractComponents(definition) {
+  walkFields(definition, (path, value) => {
+    const schema = value['x-schema'];
+    if (schema) {
+      const { ...clone } = value;
+      delete clone['x-schema'];
+      set(definition, ['components', 'schemas', schema], clone);
+      return {
+        $ref: `#/components/schemas/${schema}`,
+      };
+    }
+  });
+}
+
+function walkFields(arg, fn, path = []) {
+  if (arg && typeof arg === 'object') {
+    for (let [key, value] of Object.entries(arg)) {
+      const p = [...path, key];
+      walkFields(value, fn, p);
+      const ret = fn(p, value);
+      if (ret !== undefined) {
+        arg[key] = ret;
+      }
+    }
+  }
+}
+
+const VOWELS_REG = /^[aeiou]/;
+
+function inflect(str) {
+  const a = VOWELS_REG.test(str) ? 'an' : 'a';
+  return `${a} ${str}`;
 }
 
 module.exports = {
-  loadOpenApiDefinitions,
-  expandOpenApi,
+  DEFINITION_FILE,
+  loadDefinition,
+  saveDefinition,
+  generateDefinition,
 };

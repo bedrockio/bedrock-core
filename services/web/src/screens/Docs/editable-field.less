@@ -1,0 +1,23 @@
+.docs-editable-field {
+  position: relative;
+
+  &--editable {
+    cursor: pointer;
+
+    &:hover {
+      background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%2388acd2' stroke-width='3' stroke-dasharray='2%2c 5' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+    }
+  }
+
+  &--empty {
+    background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23ccc' stroke-width='3' stroke-dasharray='2%2c 5' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+  }
+
+  &__prompt {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 12px;
+    padding: 4px 12px;
+    color: #b8b8b8;
+  }
+}

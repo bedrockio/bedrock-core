@@ -1,4 +1,5 @@
 const Router = require('@koa/router');
+const docs = require('./docs');
 const auth = require('./auth');
 const mfa = require('./mfa');
 const users = require('./users');
@@ -12,8 +13,11 @@ const categories = require('./categories');
 const organizations = require('./organizations');
 const applications = require('./applications');
 
-const router = new Router();
+const router = new Router({
+  prefix: '/1',
+});
 
+router.use('/docs', docs.routes());
 router.use('/auth', auth.routes());
 router.use('/mfa', mfa.routes());
 router.use('/audit-entries', auditEntries.routes());
