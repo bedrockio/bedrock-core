@@ -3,8 +3,7 @@ import { Icon, Popup } from 'semantic';
 
 export default class HelpTip extends React.Component {
   render() {
-    const { title, text } = this.props;
-
+    const { title, text, icon } = this.props;
     return (
       <div
         style={{
@@ -16,14 +15,19 @@ export default class HelpTip extends React.Component {
         <Popup
           content={text}
           header={title}
-          trigger={
-            <Icon
-              name="circle-question"
-              style={{ color: '#ccc', cursor: 'pointer' }}
-            />
-          }
+          position="top center"
+          trigger={icon || this.renderIcon()}
         />
       </div>
+    );
+  }
+
+  renderIcon() {
+    return (
+      <Icon
+        name="circle-question"
+        style={{ color: '#ccc', cursor: 'pointer' }}
+      />
     );
   }
 }

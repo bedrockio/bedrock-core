@@ -116,55 +116,6 @@ a {
 }
 
 /*******************************
-         Scrollbars
-*******************************/
-
-/* Force Simple Scrollbars */
-body ::-webkit-scrollbar {
-  -webkit-appearance: none;
-  width: @customScrollbarWidth;
-  height: @customScrollbarHeight;
-}
-body ::-webkit-scrollbar-track,
-body.nocturnal-theme .ui.inverted::-webkit-scrollbar-track {
-  background: @trackBackground;
-  border-radius: @trackBorderRadius;
-}
-body ::-webkit-scrollbar-thumb,
-body.nocturnal-theme .ui.inverted::-webkit-scrollbar-thumb {
-  cursor: pointer;
-  border-radius: @thumbBorderRadius;
-  background: @thumbBackground;
-  transition: @thumbTransition;
-}
-body ::-webkit-scrollbar-thumb:window-inactive,
-body.nocturnal-theme  .ui.inverted::-webkit-scrollbar-thumb:window-inactive {
-  background: @thumbInactiveBackground;
-}
-body ::-webkit-scrollbar-thumb:hover,
-body.nocturnal-theme .ui.inverted::-webkit-scrollbar-thumb:hover {
-  background: @thumbHoverBackground;
-}
-
-/* Inverted UI */
-body .ui.inverted::-webkit-scrollbar-track,
-body.nocturnal-theme ::-webkit-scrollbar-track {
-  background: @trackInvertedBackground;
-}
-body .ui.inverted::-webkit-scrollbar-thumb,
-body.nocturnal-theme ::-webkit-scrollbar-thumb {
-  background: @thumbInvertedBackground;
-}
-body .ui.inverted::-webkit-scrollbar-thumb:window-inactive,
-body.nocturnal-theme ::-webkit-scrollbar-thumb:window-inactive {
-  background: @thumbInvertedInactiveBackground;
-}
-body .ui.inverted::-webkit-scrollbar-thumb:hover,
-body.nocturnal-theme ::-webkit-scrollbar-thumb:hover {
-  background: @thumbInvertedHoverBackground;
-}
-
-/*******************************
           Highlighting
 *******************************/
 
@@ -242,5 +193,5 @@ strong {
 // Tone down the images
 // Opinionated adjustment, can remove if users find this too harsh or images shouldn’t be adjusted.
 .nocturnal-theme img {
-  filter: brightness(.8) contrast(1.2);
+  filter: brightness(0.8) contrast(1.2);
 }

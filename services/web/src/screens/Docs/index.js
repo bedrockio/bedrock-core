@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { kebabCase, get, set } from 'lodash';
 import { Button, Divider, Icon, Loader, Table } from 'semantic';
+import { Container, Divider, Loader, Table, Icon } from 'semantic';
 
 import screen from 'helpers/screen';
 import { request } from 'utils/api';
@@ -11,6 +12,7 @@ import { JumpLink } from 'components/Link';
 import ErrorMessage from 'components/ErrorMessage';
 
 import EditableField from './EditableField';
+import ScrollWaypoint from 'components/ScrollWaypoint';
 
 const PARAMS_PATH = [
   'requestBody',
@@ -32,13 +34,58 @@ export default class Docs extends React.Component {
     this.state = {
       mode: 'view',
       docs: null,
+      focused: null,
       loading: true,
     };
+    this.pageRef = React.createRef();
+    this.focusedItems = new Map();
   }
 
   componentDidMount() {
     this.load();
   }
+
+  componentDidUpdate(lastProps, lastState) {
+    this.checkPageChange(lastProps);
+    this.checkLinkFocus(lastState);
+  }
+
+  checkPageChange(lastProps) {
+    const { location } = this.props;
+    const { pathname: path, hash } = location;
+    const { pathname: lastPath, hash: lastHash } = lastProps?.location || {};
+    if (path !== lastPath) {
+      this.focusedItems = new Map();
+    }
+    if (hash && hash !== lastHash) {
+      const el = document.querySelector(hash);
+      el.scrollIntoView(true);
+    }
+  }
+
+  checkLinkFocus(lastState) {
+    const { focused } = this.state;
+    const { focused: lastFocused } = lastState;
+    if (focused && focused !== lastFocused) {
+      const link = document.querySelector(`[data-path="${focused.verbPath}"]`);
+      if (link) {
+        link.scrollIntoView(true);
+      }
+    }
+  }
+
+  updateFocused = () => {
+    const entries = Array.from(this.focusedItems);
+    entries.sort((a, b) => {
+      const [, el1] = a;
+      const [, el2] = b;
+      return el1.offsetTop - el2.offsetTop;
+    });
+    const [entry] = entries;
+    this.setState({
+      focused: entry ? entry[0] : null,
+    });
+  };
 
   load = async () => {
     try {
@@ -54,6 +101,7 @@ export default class Docs extends React.Component {
         docs: expandDocs(data),
         loading: false,
       });
+      this.checkPageChange();
     } catch (error) {
       this.setState({
         error,
@@ -93,95 +141,142 @@ export default class Docs extends React.Component {
   };
 
   render() {
-    const { docs, mode, loading, error } = this.state;
+    const { docs, loading } = this.state;
     if (loading) {
       return <Loader active />;
     }
     return (
       <div className={this.getBlockClass()}>
-        <ErrorMessage error={error} />
-        <h1>
-          {docs.info.title}
+        {this.renderSidebar(docs)}
+        {this.renderPage(docs)}
+      </div>
+    );
+  }
+
+  renderSidebar(docs) {
+    const { mode, focused } = this.state;
+    const pages = Object.values(docs.pagesByUrl);
+    pages.sort((a, b) => {
+      return a.name.localeCompare(b.name);
+    });
+    return (
+      <aside className={this.getElementClass('sidebar')}>
+        <h2>{docs.info.title}</h2>
+        <ul className={this.getElementClass('sidebar-scroll')}>
+          {pages.map((group) => {
+            const { name, url, items } = group;
+            return (
+              <li key={name}>
+                <Link to={url} className={this.getElementClass('sidebar-link')}>
+                  {name}
+                </Link>
+                <ul>
+                  {items
+                    .map((item) => {
+                      const { summary } = item;
+                      const isFocused = focused === item;
+                      if (summary) {
+                        return (
+                          <Link
+                            to={item.url}
+                            key={item.verbPath}
+                            data-path={item.verbPath}
+                            className={this.getElementClass(
+                              'sidebar-sublink',
+                              isFocused ? 'active' : null
+                            )}>
+                            {summary}
+                          </Link>
+                        );
+                      }
+                    })
+                    .filter((el) => el)}
+                </ul>
+              </li>
+            );
+          })}
+        </ul>
+
+        <div className={this.getElementClass('edit-buttons')}>
           <Icon
             link
             name="pencil"
-            style={{
-              verticalAlign: 'middle',
-              marginLeft: '20px',
-            }}
+            className={this.getElementClass('edit-link')}
             onClick={() => {
               this.setState({
                 mode: mode === 'view' ? 'edit' : 'view',
               });
             }}
           />
-        </h1>
-        <Button primary onClick={this.onGenerateClick}>
-          Generate
-        </Button>
-        <ul>
-          {Object.values(docs.pagesByUrl).map((group) => {
-            const { name, url } = group;
-            return (
-              <li key={name}>
-                <Link to={url}>{name}</Link>
-              </li>
-            );
-          })}
-        </ul>
-        {this.renderPage(docs)}
-      </div>
+          <Icon
+            link
+            name="gear"
+            className={this.getElementClass('edit-generate')}
+            onClick={this.onGenerateClick}
+          />
+        </div>
+      </aside>
     );
   }
 
   renderPage(docs) {
-    const { mode } = this.state;
+    const { mode, error } = this.state;
     const { pathname } = this.props.location;
     const page = docs.pagesByUrl[pathname];
     if (page) {
       const { name, items } = page;
       return (
-        <React.Fragment>
-          <h1>{name}</h1>
-          <Divider />
-          <Divider hidden />
-          {items.map((item) => {
-            const { verbPath } = item;
-            // requestBody // : // {content: {…}}
-            // summary // : // "Create a new shop."
-            // tags // : // ['Shops']
-            // verbPath // : // "POST /1/shops"
-            return (
-              <React.Fragment key={verbPath}>
-                <h2>
-                  <code>{verbPath}</code>
-                </h2>
-                <Divider />
-                <h3>
+        <main ref={this.pageRef} className={this.getElementClass('page')}>
+          <Container>
+            <ErrorMessage error={error} />
+            <h1>{name}</h1>
+            <Divider />
+            <Divider hidden />
+            {items.map((item) => {
+              const { verbPath } = item;
+              return (
+                <ScrollWaypoint
+                  id={item.slug}
+                  key={item.slug}
+                  className={this.getElementClass('item')}
+                  onEnter={(el) => {
+                    this.focusedItems.set(item, el);
+                    this.updateFocused();
+                  }}
+                  onLeave={() => {
+                    this.focusedItems.delete(item);
+                    this.updateFocused();
+                  }}>
+                  <h2>
+                    <code>{verbPath}</code>
+                  </h2>
+                  <Divider />
+                  <h3>
+                    <EditableField
+                      mode={mode}
+                      path={item.path}
+                      name="summary"
+                      value={item.summary}
+                      onSave={this.onFieldSave}
+                    />
+                  </h3>
                   <EditableField
+                    markdown
                     mode={mode}
                     path={item.path}
-                    name="summary"
-                    value={item.summary}
+                    name="description"
+                    value={item.description}
                     onSave={this.onFieldSave}
                   />
-                </h3>
-                <EditableField
-                  markdown
-                  mode={mode}
-                  path={item.path}
-                  name="description"
-                  value={item.description}
-                  onSave={this.onFieldSave}
-                />
-                <Divider hidden />
-                <h3>Request Body</h3>
-                {this.renderParams([...item.path, ...PARAMS_PATH])}
-              </React.Fragment>
-            );
-          })}
-          {this.renderComponents()}
-        </React.Fragment>
+                  <Divider hidden />
+                  <h3>Request Body</h3>
+                  {this.renderParams([...item.path, ...PARAMS_PATH])}
+                </ScrollWaypoint>
+              );
+            })}
+            {this.renderComponents()}
+          </Container>
+        </main>
       );
     }
   }
@@ -196,10 +291,10 @@ export default class Docs extends React.Component {
       <Table>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell>Name</Table.HeaderCell>
-            <Table.HeaderCell>Type</Table.HeaderCell>
-            <Table.HeaderCell>Required</Table.HeaderCell>
-            <Table.HeaderCell width={1}>Default</Table.HeaderCell>
+            <Table.HeaderCell width={5}>Name</Table.HeaderCell>
+            <Table.HeaderCell width={4}>Type</Table.HeaderCell>
+            <Table.HeaderCell width={3}>Required</Table.HeaderCell>
+            <Table.HeaderCell width={2}>Default</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -207,7 +302,7 @@ export default class Docs extends React.Component {
             const { description, required, default: defaultValue } = desc;
             return (
               <Table.Row key={name}>
-                <Table.Cell>
+                <Table.Cell width={5}>
                   <div style={{ fontSize: '16px' }}>{name}</div>
                   <div style={{ marginTop: '10px' }}>
                     <EditableField
@@ -220,13 +315,15 @@ export default class Docs extends React.Component {
                     />
                   </div>
                 </Table.Cell>
-                <Table.Cell>
+                <Table.Cell width={4}>
                   <div className={this.getElementClass('types')}>
                     {this.renderType(desc)}
                   </div>
                 </Table.Cell>
-                <Table.Cell>{required ? 'required' : 'optional'}</Table.Cell>
-                <Table.Cell>
+                <Table.Cell width={3}>
+                  {required ? 'required' : 'optional'}
+                </Table.Cell>
+                <Table.Cell width={2}>
                   <pre>
                     <code>{JSON.stringify(defaultValue, null, 2)}</code>
                   </pre>
@@ -265,15 +362,6 @@ export default class Docs extends React.Component {
         })
         .filter((el) => {
           return el;
-        })
-        .map((el, i, arr) => {
-          const comma = i < arr.length - 1 ? ' | ' : '';
-          return (
-            <React.Fragment key={i}>
-              <span>{el}</span>
-              {comma}
-            </React.Fragment>
-          );
         });
     }
     return <code>{type}</code>;
@@ -289,7 +377,6 @@ export default class Docs extends React.Component {
           {Array.from(this.visitedComponents).map(($ref) => {
             const { name, path } = expandRef($ref);
             const { description } = get(docs, path);
-            console.info('ohh', description);
             return (
               <div key={path} id={name}>
                 <h3>{name}</h3>
@@ -325,6 +412,8 @@ function expandDocs(docs) {
       const pageUrl = `/docs/${path.split('/')[2]}`;
       const itemUrl = `${pageUrl}#${slug}`;
 
+      item.slug = slug;
+      item.url = itemUrl;
       pagesByUrl[pageUrl] ||= {
         url: pageUrl,
         name: item.tags.join(' '),

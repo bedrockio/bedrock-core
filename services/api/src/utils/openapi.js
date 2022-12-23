@@ -152,15 +152,15 @@ function getPathMeta(koaPath, method) {
     if (modelName) {
       const isId = operation === `:${modelNameCamel}Id`;
       if (method === 'GET' && isId) {
-        meta.summary = `Gets ${inflect(modelName)} by id.`;
+        meta.summary = `Get ${modelName} by id`;
       } else if (method === 'POST' && !operation) {
-        meta.summary = `Creates a new ${modelName}.`;
+        meta.summary = `Create new ${modelName}`;
       } else if (method === 'PATCH' && isId) {
-        meta.summary = `Updates ${inflect(modelName)}.`;
+        meta.summary = `Update ${modelName}`;
       } else if (method === 'DELETE' && isId) {
-        meta.summary = `Deletes ${inflect(modelName)}.`;
+        meta.summary = `Delete ${modelName}`;
       } else if (method === 'POST' && operation === 'search') {
-        meta.summary = `Searches for ${modelNamePlural}.`;
+        meta.summary = `Search ${modelNamePlural}`;
       }
     }
   }
@@ -193,13 +193,6 @@ function walkFields(arg, fn, path = []) {
       }
     }
   }
-}
-
-const VOWELS_REG = /^[aeiou]/;
-
-function inflect(str) {
-  const a = VOWELS_REG.test(str) ? 'an' : 'a';
-  return `${a} ${str}`;
 }
 
 module.exports = {

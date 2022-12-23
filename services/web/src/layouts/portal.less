@@ -1,24 +1,34 @@
 @import '../semantic/globals/site.variables';
 
 .portal-layout {
+  --header-height: 100px;
+
   &__menu {
     background: @mainMenuBackground;
     position: fixed;
     width: 100%;
     z-index: 1000;
+    height: var(--header-height);
+    border: none;
+    border-bottom: 1px solid #dbdbdb;
+
+    .logo {
+      display: block;
+      margin-left: 14px;
+    }
 
     &-top {
-      padding: 20px 25px 0 25px;
+      padding: 10px 15px 0 15px;
     }
 
     &-bottom {
-      margin: 0;
-      padding: 0 15px;
+      margin: 2px 0 0 0 !important;
+      padding: 0 !important;
     }
   }
 
   &__content {
-    padding: 131px 15px 0 15px;
+    padding: var(--header-height) 0 0 0;
   }
 }
 

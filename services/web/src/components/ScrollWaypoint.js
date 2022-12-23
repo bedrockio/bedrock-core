@@ -1,4 +1,5 @@
 import React from 'react';
+import { omit } from 'lodash';
 import PropTypes from 'prop-types';
 
 import bem from 'helpers/bem';
@@ -48,7 +49,7 @@ export default class ScrollWaypoint extends React.Component {
       const { threshold } = this.props;
       this.observer = new IntersectionObserver(this.onElementObserve, {
         threshold,
-        rootMargin: '0% 0% 0% 0%',
+        rootMargin: '25% 25% 25% 25%',
       });
       this.observer.observe(el);
     }
@@ -68,17 +69,18 @@ export default class ScrollWaypoint extends React.Component {
     const entered = entry.isIntersecting;
     if (entered !== this.entered) {
       if (entered) {
-        this.props.onEnter();
+        this.props.onEnter(entry.target);
       } else {
-        this.props.onLeave();
+        this.props.onLeave(entry.target);
       }
       this.entered = entered;
     }
   };
 
   render() {
+    const props = omit(this.props, Object.keys(ScrollWaypoint.propTypes));
     return (
-      <div ref={this.ref} className={this.getBlockClass()}>
+      <div {...props} ref={this.ref} className={this.getBlockClass()}>
         {this.props.children}
       </div>
     );
@@ -94,5 +96,5 @@ ScrollWaypoint.propTypes = {
 ScrollWaypoint.defaultProps = {
   onEnter: () => {},
   onLeave: () => {},
-  threshold: 0.5,
+  threshold: 0.1,
 };

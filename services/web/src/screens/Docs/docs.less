@@ -1,14 +1,98 @@
+@import '../../styles/responsive';
 // TODO: clean this up
 
 .docs {
+  display: flex;
+  --sidebar-width: 220px;
+  height: calc(100vh - var(--header-height));
+  overflow-y: auto;
+
   .ui.table td {
     vertical-align: top;
   }
 
-  &__types {
+  &__sidebar {
+    position: fixed;
+    z-index: 1;
+    top: var(--header-height);
+    width: var(--sidebar-width);
+    padding: 15px 2px 5px 0;
+    border-right: 1px solid #dbdbda;
+    height: calc(100% - var(--header-height));
     display: flex;
-    gap: 0.5em;
+    flex-flow: column;
+    gap: 10px;
 
+    @media @mobile {
+      display: none;
+    }
+
+    h2 {
+      margin: 0 15px;
+      font-weight: 600;
+    }
+
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    &-scroll {
+      overflow-y: auto;
+    }
+
+    &-link {
+      display: block;
+      font-size: 16px;
+      margin-bottom: 0.6em;
+      padding-left: 15px;
+      margin-right: 10px;
+      color: #1f1f1f;
+      margin-top: 0.5em;
+
+      &:hover {
+        color: #6a903e;
+      }
+    }
+
+    &-sublink {
+      display: block;
+      font-size: 13px;
+      margin-right: 15px;
+      padding: 0.1em 10px 0.1em 25px;
+      margin-bottom: 0.2em;
+      color: #1f1f1f;
+      border-radius: 0 4px 4px 0;
+      font-weight: 500;
+
+      &:hover {
+        color: #6a903e;
+      }
+
+      &--active {
+        background-color: #6a9b33;
+        &,
+        &:hover {
+          color: #fff;
+        }
+      }
+    }
+  }
+
+  &__page {
+    padding-top: 10px;
+    padding-left: calc(var(--sidebar-width) + 20px);
+    padding-right: 20px;
+    flex: auto;
+    min-width: 0;
+  }
+
+  &__item {
+    padding-top: 15px;
+  }
+
+  &__types {
     code {
       padding: 0.3em 0.4em;
       background-color: #f1f1f1;
@@ -18,6 +102,20 @@
         Liberation Mono, monospace;
       font-weight: 500;
       line-height: 1;
+      margin-right: 0.5em;
+    }
+  }
+
+  &__edit {
+    &-buttons {
+      display: flex;
+      justify-content: right;
+      gap: 6px;
+
+      .icon {
+        width: 16px;
+        height: 16px;
+      }
     }
   }
 }
