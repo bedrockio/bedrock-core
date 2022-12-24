@@ -1,4 +1,5 @@
 import history from '../history';
+
 const { createFakeKoaContext } = require('koa');
 
 jest.mock('koa');

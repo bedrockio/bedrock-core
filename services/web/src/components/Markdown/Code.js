@@ -43,7 +43,7 @@ class CodeBlock extends PureComponent {
     }
   }
   onCopyClick = () => {
-    navigator.clipboard.writeText(this.props.value);
+    navigator.clipboard.writeText(this.props.source);
   };
 
   render() {

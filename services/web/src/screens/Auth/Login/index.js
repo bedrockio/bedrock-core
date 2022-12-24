@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { Segment, Grid, Form, Message } from 'semantic';
+
 import { withSession } from 'stores';
 import screen from 'helpers/screen';
 import Logo from 'components/LogoTitle';
