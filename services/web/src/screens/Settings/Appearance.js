@@ -1,14 +1,14 @@
 import React from 'react';
 import { Segment, Form, Button, Divider, Header } from 'semantic';
+
 import screen from 'helpers/screen';
 import { request } from 'utils/api';
 import { withTheme } from 'stores';
-
 import ErrorMessage from 'components/ErrorMessage';
-
-import Menu from './Menu';
 import { APP_NAME } from 'utils/env';
 import { Layout } from 'components';
+
+import Menu from './Menu';
 
 @screen
 @withTheme

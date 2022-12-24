@@ -47,5 +47,7 @@ import './modules/sticky.less';
 import './modules/tab.less';
 import './modules/transition.less';
 
+// eslint-disable-next-line
 export * from 'semantic-ui-react';
+// eslint-disable-next-line
 export { default as Icon } from './elements/Icon';

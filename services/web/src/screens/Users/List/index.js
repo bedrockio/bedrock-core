@@ -7,17 +7,15 @@ import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
 import { formatRoles } from 'utils/permissions';
-
 import {
   HelpTip,
   Breadcrumbs,
   Layout,
   Search,
   SearchFilters,
-  Confirm,
 } from 'components';
-
 import EditUser from 'modals/EditUser';
+
 import Actions from '../Actions';
 
 @screen
@@ -196,7 +194,11 @@ export default class UserList extends React.Component {
                             <EditUser
                               user={user}
                               trigger={
-                                <Button basic title="Edit" icon="pen-to-square" />
+                                <Button
+                                  basic
+                                  title="Edit"
+                                  icon="pen-to-square"
+                                />
                               }
                               onSave={reload}
                             />

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Button } from 'semantic';
 import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import atomDark from 'react-syntax-highlighter/dist/esm/styles/prism/atom-dark';
-
 import bash from 'react-syntax-highlighter/dist/esm/languages/prism/bash';
 import json from 'react-syntax-highlighter/dist/esm/languages/prism/json';
 import swift from 'react-syntax-highlighter/dist/esm/languages/prism/swift';

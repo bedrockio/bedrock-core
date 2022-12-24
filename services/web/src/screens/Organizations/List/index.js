@@ -1,20 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Table, Button, Segment, Divider } from 'semantic';
+
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
-
 import {
   HelpTip,
   Breadcrumbs,
   Layout,
   Search,
   SearchFilters,
-  Confirm,
 } from 'components';
-
 import EditOrganization from 'modals/EditOrganization';
+
 import Actions from '../Actions';
 
 @screen

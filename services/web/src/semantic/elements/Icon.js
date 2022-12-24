@@ -11,13 +11,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Icon as SemanticIcon } from 'semantic-ui-react';
-import IconGroup from './IconGroup';
 import { omit } from 'lodash';
 
 // Note Jest is too convoluted to be able to
 // load this file from modules. This can move to src
 // when esm support lands.
 import { createShorthandFactory } from 'semantic-ui-react/dist/commonjs/lib/factories';
+
+import IconGroup from './IconGroup';
 
 // Maps internal semantic name references to new icon names.
 const INTERNAL_MAP = {

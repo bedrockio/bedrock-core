@@ -5,7 +5,6 @@ import { Segment, Button, Divider, Header, Label } from 'semantic';
 import screen from 'helpers/screen';
 import { request } from 'utils/api';
 import { withSession } from 'stores';
-
 import { Layout } from 'components';
 import LoadButton from 'components/LoadButton';
 import ErrorMessage from 'components/ErrorMessage';

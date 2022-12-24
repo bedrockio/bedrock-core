@@ -9,17 +9,18 @@ import {
   Button,
   Segment,
 } from 'semantic';
+import { set, truncate } from 'lodash';
+import { withRouter } from 'react-router-dom';
+
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
 import { Layout, Search, SearchFilters } from 'components';
-
-import { set, truncate } from 'lodash';
-import Menu from './Menu';
-
 import { formatDateTime } from 'utils/date';
 import CodeBlock from 'components/Markdown/Code';
 import ShowRequest from 'modals/ShowRequest';
-import { withRouter } from 'react-router-dom';
+
+import Menu from './Menu';
+
 
 function getStateromQueryString(search) {
   if (!search) {

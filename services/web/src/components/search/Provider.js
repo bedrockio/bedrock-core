@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { pickBy } from 'lodash';
+import { withRouter } from 'react-router';
 
 import SearchContext from './Context';
-import { withRouter } from 'react-router';
 
 function convertFilters(filters) {
   return pickBy(filters, (val) => {

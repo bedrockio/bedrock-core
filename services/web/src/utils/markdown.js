@@ -1,5 +1,6 @@
-import { API_URL, APP_NAME } from 'utils/env';
 import { flatten } from 'lodash';
+
+import { API_URL, APP_NAME } from 'utils/env';
 
 function formatTypeSummary(schema) {
   if (!schema) {

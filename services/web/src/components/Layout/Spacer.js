@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { SIZE_TYPE, getSizeStyles } from './utils';
 
 import './spacer.less';

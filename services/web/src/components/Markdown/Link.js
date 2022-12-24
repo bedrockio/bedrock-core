@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { ContentLink } from 'components/Link';
 
 export default class LinkNode extends React.Component {

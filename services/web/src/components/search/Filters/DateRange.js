@@ -1,8 +1,9 @@
 import React from 'react';
 import { Form } from 'semantic';
 import PropTypes from 'prop-types';
-import DateField from 'components/form-fields/Date';
 import { isEmpty } from 'lodash';
+
+import DateField from 'components/form-fields/Date';
 
 import SearchContext from '../Context';
 import './date-range.less';

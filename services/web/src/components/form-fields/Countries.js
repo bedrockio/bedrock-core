@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form, Select } from 'semantic';
+
 import allCountries from 'utils/countries';
 
 const countries = allCountries.map(({ countryCode, nameEn }) => ({

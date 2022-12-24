@@ -1,7 +1,7 @@
 import React from 'react';
-import InspectObject from 'modals/InspectObject';
-
 import { Dropdown } from 'semantic';
+
+import InspectObject from 'modals/InspectObject';
 import { request } from 'utils/api';
 import { Confirm } from 'components';
 

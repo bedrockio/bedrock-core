@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from 'semantic';
+
 import { safeFileName } from 'utils/formatting';
 
 import SearchContext from './Context';

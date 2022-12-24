@@ -4031,10 +4031,10 @@ eslint-module-utils@^2.7.3:
   dependencies:
     debug "^3.2.7"
 
-eslint-plugin-bedrock@^1.0.9:
-  version "1.0.17"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-bedrock/-/eslint-plugin-bedrock-1.0.17.tgz#82d5b1e7bb9ebff5a1b63d1a9ca7a430f23c450c"
-  integrity sha512-EIp52AFTq32X1FupXGAMIOx0+Lfq0x0WMIxdQZFUQJ2CgW7v3ZH8ZDDd2UtHVfLBlqvjN5fOw3iTkind3XnCOA==
+eslint-plugin-bedrock@^1.0.18:
+  version "1.0.18"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-bedrock/-/eslint-plugin-bedrock-1.0.18.tgz#34e18f5d8a8d36fa5cf587740a1760011e73ba3f"
+  integrity sha512-/WkPkNmpXsAnEfwlAsIURvdt8xwy7cBVCU3gbw7eCT5y4VXx33HsE2ljKY9TaibnO8STX46mwwBjd6zt9gKgPg==
   dependencies:
     eslint-import-resolver-webpack "^0.13.2"
     eslint-plugin-import "^2.25.3"

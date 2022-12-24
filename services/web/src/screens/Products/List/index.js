@@ -8,7 +8,6 @@ import { urlForUpload } from 'utils/uploads';
 import { formatUsd } from 'utils/currency';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
-
 import {
   HelpTip,
   Breadcrumbs,
@@ -16,8 +15,8 @@ import {
   Search,
   SearchFilters,
 } from 'components';
-
 import EditProduct from 'modals/EditProduct';
+
 import Actions from '../Actions';
 
 @screen

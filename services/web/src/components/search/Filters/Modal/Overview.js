@@ -1,8 +1,10 @@
 import React from 'react';
 import { List, Icon } from 'semantic';
 
-import SearchContext from '../../Context';
 import { Layout } from 'components/Layout';
+
+import SearchContext from '../../Context';
+
 import DisplayValue from './DisplayValue';
 
 export default class Overview extends React.Component {

@@ -1,7 +1,9 @@
 import React from 'react';
-import SearchContext from './Context';
-import { Loader, Message, Segment, Dimmer } from 'semantic';
+import { Loader, Message, Segment } from 'semantic';
+
 import ErrorMessage from 'components/ErrorMessage';
+
+import SearchContext from './Context';
 
 export default class SearchStatus extends React.Component {
   static contextType = SearchContext;

@@ -2,7 +2,6 @@ import React from 'react';
 import { Modal, Form, Button } from 'semantic';
 
 import modal from 'helpers/modal';
-
 import AutoFocus from 'components/AutoFocus';
 import UrlField from 'components/form-fields/UrlField';
 import ErrorMessage from 'components/ErrorMessage';

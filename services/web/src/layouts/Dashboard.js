@@ -1,20 +1,20 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Icon, Container } from 'semantic';
+
 import Footer from 'components/Footer';
 import { Layout } from 'components';
 import Protected from 'components/Protected';
 import ThemedImage from 'components/ThemedImage';
 import Organization from 'modals/Organization';
-import Sidebar from './Sidebar';
 import { withSession } from 'stores';
-import { userCanSwitchOrganizations } from 'utils/permissions';
-import { userHasAccess } from 'utils/permissions';
+import { userCanSwitchOrganizations , userHasAccess } from 'utils/permissions';
 import ConnectionError from 'components/ConnectionError';
-
 import logo from 'assets/logo.svg';
 import darkLogo from 'assets/logo-inverted.svg';
 import favicon from 'assets/favicon.svg';
+
+import Sidebar from './Sidebar';
 
 @withSession
 export default class DashboardLayout extends React.Component {

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import { SIZE_TYPE, getSizeStyles } from './utils';
 
 import './group.less';

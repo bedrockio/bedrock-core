@@ -1,8 +1,8 @@
 import React from 'react';
 import { Form, Modal, Button } from 'semantic';
+
 import { request } from 'utils/api';
 import modal from 'helpers/modal';
-
 import AutoFocus from 'components/AutoFocus';
 import Roles from 'components/form-fields/Roles';
 import ErrorMessage from 'components/ErrorMessage';

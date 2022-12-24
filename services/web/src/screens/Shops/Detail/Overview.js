@@ -1,13 +1,15 @@
 import React from 'react';
 import { Table, Header, Divider } from 'semantic';
-import screen from 'helpers/screen';
-import Menu from './Menu';
 
 // --- Generator: overview-imports
 import { Image, Label } from 'semantic';
+
+import screen from 'helpers/screen';
 import { formatDateTime } from 'utils/date';
 import { formatAddress } from 'utils/formatting';
 import { urlForUpload } from 'utils/uploads';
+
+import Menu from './Menu';
 // --- Generator: end
 
 import DetailsContext from './Context';

@@ -1,6 +1,7 @@
 import React from 'react';
 import GoogleMapReact from 'google-map-react';
 import { Transition } from 'semantic-ui-react';
+
 import { GOOGLE_API_KEY } from 'utils/env';
 
 const Marker = (props) => (
