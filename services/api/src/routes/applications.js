@@ -13,11 +13,13 @@ router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
   .use(requirePermissions({ endpoint: 'applications', permission: 'read', scope: 'global' }))
-  .param('application', async (id, ctx, next) => {
+  .param('id', async (id, ctx, next) => {
     const application = await Application.findOne({ _id: id, user: ctx.state.authUser.id });
     ctx.state.application = application;
     if (!application) {
       ctx.throw(404);
+    } else if (ctx.state.authUser.id != application.user) {
+      ctx.throw(401);
     }
     return next();
   })
@@ -33,7 +35,7 @@ router
     };
   })
   .post(
-    '/:application/logs/search',
+    '/:id/logs/search',
     validateBody(
       ApplicationRequest.getSearchValidation({
         ...exportValidation(),
@@ -57,7 +59,7 @@ router
       };
     }
   )
-  .get('/:application', async (ctx) => {
+  .get('/:id', async (ctx) => {
     ctx.body = {
       data: ctx.state.application,
     };
@@ -80,7 +82,7 @@ router
       data: application,
     };
   })
-  .patch('/:application', validateBody(Application.getUpdateValidation()), async (ctx) => {
+  .patch('/:id', validateBody(Application.getUpdateValidation()), async (ctx) => {
     const application = ctx.state.application;
     application.assign(ctx.request.body);
     await application.save();
@@ -88,7 +90,7 @@ router
       data: application,
     };
   })
-  .delete('/:application', async (ctx) => {
+  .delete('/:id', async (ctx) => {
     await ctx.state.application.delete();
     ctx.status = 204;
   });

@@ -119,7 +119,7 @@
 @pageBackground      : #FCFBFA;
 @pageOverflowX       : hidden;
 
-@lineHeight          : 1.4285em;
+@lineHeight          : 1.4285;
 @textColor           : #111827;
 
 @nocturnalPageBackground: #201c19; //hsl(hue(@pageBackground), (saturation(@pageBackground) / 2), lightness(@textColor));// spin(@pageBackground, 180); //mix(@textColor, #333, 75);

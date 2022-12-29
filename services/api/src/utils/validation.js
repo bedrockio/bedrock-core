@@ -2,8 +2,25 @@ const yd = require('@bedrockio/yada');
 
 const FIXED_SCHEMAS = {
   email: yd.string().lowercase().email(),
-  ObjectId: yd.string().mongo(),
+  objectId: yd.string().mongo(),
 };
+
+const OBJECT_ID_DESCRIPTION = `
+A 24 character hexadecimal string representing a Mongo [ObjectId](https://bit.ly/3YPtGlU).
+An object with an \`id\` field may also be passed, which will be converted into a string.
+`;
+
+const OBJECT_ID_SCHEMA = yd
+  .custom(async (val) => {
+    const id = String(val.id || val);
+    await FIXED_SCHEMAS['objectId'].validate(id);
+    return id;
+  })
+  .tag({
+    type: 'ObjectId',
+    'x-schema': 'ObjectId',
+    description: OBJECT_ID_DESCRIPTION.trim(),
+  });
 
 class PermissionsError extends Error {}
 
@@ -98,7 +115,7 @@ function getArraySchema(obj, options) {
       // { tag: 'one' }
       schema = getSchemaForField(obj, options);
     } else {
-      schema = yd.array(getSchemaForField(obj, options));
+      schema = yd.array(getSchemaForField(obj, options)).description(obj.description);
     }
     if (obj.required) {
       schema = schema.min(1);
@@ -156,6 +173,10 @@ function getSchemaForField(field, options = {}) {
     schema = getSearchSchema(schema, type);
   }
 
+  if (field.description) {
+    schema = schema.description(field.description);
+  }
+
   return schema;
 }
 
@@ -190,16 +211,12 @@ function getSchemaForType(type) {
     case 'Date':
       return yd.date().iso().tag({
         'x-schema': 'DateTime',
-        description: `A \`string\` in [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format.`,
+        description: 'A `string` in [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format.',
       });
     case 'Mixed':
       return yd.object();
     case 'ObjectId':
-      return yd.custom(async (val) => {
-        const id = String(val.id || val);
-        await FIXED_SCHEMAS['ObjectId'].validate(id);
-        return id;
-      });
+      return OBJECT_ID_SCHEMA;
     default:
       throw new TypeError(`Unknown schema type ${type}`);
   }
@@ -220,6 +237,7 @@ function getSearchSchema(schema, type) {
           })
           .tag({
             'x-schema': 'NumberRange',
+            description: 'An object representing numbers falling within a range.',
           })
       )
       .description('Allows searching by a value, array of values, or a numeric range.');
@@ -237,11 +255,12 @@ function getSearchSchema(schema, type) {
           })
           .tag({
             'x-schema': 'DateRange',
+            description: 'An object representing dates falling within a range.',
           })
       )
       .description('Allows searching by a date, array of dates, or a range.');
   } else if (type === 'String' || type === 'ObjectId') {
-    return yd.allow(schema, yd.array(schema)).description('Allows searching by a value or array of values.');
+    return yd.allow(schema, yd.array(schema));
   } else {
     return schema;
   }
@@ -287,6 +306,7 @@ function getFieldType(field) {
 }
 
 module.exports = {
+  OBJECT_ID_SCHEMA,
   PermissionsError,
   getValidationSchema,
   getMongooseValidator,

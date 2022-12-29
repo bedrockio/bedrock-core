@@ -1,27 +1,46 @@
-export default function templateFetch({ url, file, body, ...rest }) {
-  const code = [];
-  if (file) {
-    code.push('const form = new FormData();');
-    code.push('form.append("file", new Blob(["file data"]));');
-    if (body) {
-      for (let [key, value] of Object.entries(body || {})) {
-        code.push(
-          `form.append("${key}", ${
-            typeof value === 'string' ? `"${value}"` : value
-          })`
-        );
+const JSON_TEMPLATE = `
+const url = '%url%';
+
+const { data, meta } = await fetch(url, {
+  method: '%method%',
+  headers: {
+    'Api-Key': '%apiKey%',
+    'Authorization': 'Bearer <token>',
+    'Content-Type': 'application/json',
+  },
+  body: %body%
+})
+`;
+
+const FORM_TEMPLATE = `
+const url = '%url%';
+
+const data = new FormData();
+data.append('file', blob);
+
+const { data, meta } = await fetch(url, {
+  method: '%method%',
+  headers: {
+    'Api-Key': '%apiKey%',
+    'Authorization': 'Bearer <token>',
+    'Content-Type': 'application/json',
+  },
+  body
+})
+`;
+
+const TEMPLATE_REG = /%(\w+)%/g;
+
+export default function templateFetch(props) {
+  let code = props.file ? FORM_TEMPLATE : JSON_TEMPLATE;
+  code = code
+    .replace(TEMPLATE_REG, (match, token) => {
+      let value = props[token];
+      if (value && typeof value === 'object') {
+        value = JSON.stringify(value, null, 2).replace(/^/gm, '  ').trim();
       }
-    }
-    code.push('');
-    code.push(`const options = ${JSON.stringify(rest, null, 2)}`);
-    code.push('options.body = form;');
-    code.push('');
-  } else {
-    code.push(`const options = ${JSON.stringify(rest, null, 2)}`);
-  }
-  code.push(`fetch("${url}", options)`);
-  code.push('  .then((response) => response.json())');
-  code.push('  .then((response) => console.log(response))');
-  code.push('  .then((error) => console.error(error));');
-  return code.join('\n');
+      return value || 'UNKNOWN';
+    })
+    .trim();
+  return code;
 }

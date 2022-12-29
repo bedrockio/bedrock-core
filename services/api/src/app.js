@@ -4,6 +4,7 @@ const { version } = require('../package.json');
 const bodyParser = require('koa-body');
 const errorHandler = require('./utils/middleware/error-handler');
 const corsMiddleware = require('./utils/middleware/cors');
+const recordMiddleware = require('./utils/middleware/record');
 const { applicationMiddleware } = require('./utils/middleware/application');
 const Sentry = require('@sentry/node');
 const routes = require('./routes');
@@ -23,6 +24,10 @@ if (['staging', 'development'].includes(ENV_NAME)) {
       ignorePaths: ['/', '/1/status', '/1/status/mongodb', /\/1\/applications/],
     })
   );
+}
+
+if (['development'].includes(ENV_NAME)) {
+  app.use(recordMiddleware);
 }
 
 app

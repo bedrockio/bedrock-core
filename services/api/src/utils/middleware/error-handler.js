@@ -11,7 +11,7 @@ async function errorHandler(ctx, next) {
     if (isSchemaError(err)) {
       message = err.getFullMessage({
         delimiter: '\n',
-        labels: 'natural',
+        natural: true,
       });
     }
 

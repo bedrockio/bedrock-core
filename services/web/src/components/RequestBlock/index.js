@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Header, Dropdown } from 'semantic';
+import { Dropdown, Header } from 'semantic';
 
 import { Layout } from 'components/Layout';
 import Code from 'components/Markdown/Code';
@@ -10,22 +10,25 @@ import templateCurl from './templates/curl';
 import templateFetch from './templates/fetch';
 import templateSwift from './templates/swift';
 
+const TEMPLATES = {
+  curl: templateCurl,
+  fetch: templateFetch,
+  swift: templateSwift,
+};
+
 const OPTIONS = [
   {
-    template: templateCurl,
     value: 'curl',
     text: 'cURL',
     language: 'bash',
   },
   {
-    template: templateFetch,
     value: 'fetch',
     text: 'Fetch',
     language: 'js',
   },
 
   {
-    template: templateSwift,
     value: 'swift',
     text: 'Swift',
     language: 'swift',
@@ -51,18 +54,14 @@ export default class RequestBlock extends React.Component {
 
   static defaultProps = {
     baseUrl: API_URL,
-    header: true,
     template: 'curl',
+    header: false,
+    selector: true,
   };
 
   state = {
     current: this.props.template,
   };
-
-  constructor(props) {
-    super(props);
-    this.templateRef = React.createRef();
-  }
 
   getDefaultHeaders() {
     const { authToken, apiKey, request } = this.props;
@@ -91,34 +90,46 @@ export default class RequestBlock extends React.Component {
   }
 
   render() {
+    const { header, selector } = this.props;
+    const { current } = this.state;
     const option = OPTIONS.find((c) => c.value === this.state.current);
     const { method, path } = this.props.request;
 
+    const template = TEMPLATES[current];
+
     return (
-      <>
-        {this.props.header && (
+      <React.Fragment>
+        {(header || selector) && (
           <Layout horizontal spread center>
-            <Header style={{ margin: 0 }}>
-              {method} {path}
-            </Header>
             <Layout.Group>
-              <Dropdown
-                onChange={(e, { value }) => {
-                  this.setState({ current: value });
-                }}
-                selection
-                options={OPTIONS}
-                value={this.state.current}
-              />
+              {header && (
+                <Header style={{ margin: 0 }}>
+                  {method} {path}
+                </Header>
+              )}
+            </Layout.Group>
+            <Layout.Group>
+              {selector && (
+                <React.Fragment>
+                  <Dropdown
+                    onChange={(e, { value }) => {
+                      this.setState({ current: value });
+                    }}
+                    selection
+                    options={OPTIONS}
+                    value={this.state.current}
+                  />
+                </React.Fragment>
+              )}
             </Layout.Group>
           </Layout>
         )}
         <Code
+          source={template(this.getData())}
           language={option.language}
-          source={option.template(this.getData())}
           allowCopy
         />
-      </>
+      </React.Fragment>
     );
   }
 }

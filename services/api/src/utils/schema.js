@@ -11,7 +11,8 @@ const { searchValidation, DEFAULT_SORT, DEFAULT_LIMIT } = require('./search');
 const { ObjectId } = mongoose.Types;
 const { ObjectId: SchemaObjectId, Date: SchemaDate, Number: SchemaNumber } = mongoose.Schema.Types;
 
-const RESERVED_FIELDS = ['createdAt', 'updatedAt', 'deletedAt', 'deleted'];
+const DELETED_FIELDS = ['deleted', 'deletedAt'];
+const RESERVED_FIELDS = ['createdAt', 'updatedAt', ...DELETED_FIELDS];
 
 const serializeOptions = {
   getters: true,
@@ -70,7 +71,7 @@ function createSchema(definition, options = {}) {
   schema.static('getCreateValidation', function getCreateValidation(appendSchema) {
     return getSchemaFromMongoose(schema, {
       appendSchema,
-      stripReserved: true,
+      strip: RESERVED_FIELDS,
     });
   });
 
@@ -78,8 +79,8 @@ function createSchema(definition, options = {}) {
     return getSchemaFromMongoose(schema, {
       appendSchema,
       skipRequired: true,
-      stripReserved: true,
       stripUnknown: true,
+      strip: RESERVED_FIELDS,
     });
   });
 
@@ -89,7 +90,12 @@ function createSchema(definition, options = {}) {
       skipRequired: true,
       unwindArrayFields: true,
       appendSchema: searchValidation(searchOptions),
+      strip: DELETED_FIELDS,
     });
+  });
+
+  schema.static('getBaseSchema', function getBaseSchema() {
+    return getSchemaFromMongoose(schema);
   });
 
   schema.static('search', function search(body = {}) {
@@ -309,10 +315,10 @@ function createSchema(definition, options = {}) {
   return schema;
 }
 
-function getSchemaFromMongoose(schema, options) {
+function getSchemaFromMongoose(schema, options = {}) {
   let { obj } = schema;
-  if (options.stripReserved) {
-    obj = omit(obj, RESERVED_FIELDS);
+  if (options.strip) {
+    obj = omit(obj, options.strip);
   }
   return getValidationSchema(obj, {
     ...options,

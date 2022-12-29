@@ -1,18 +1,22 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { kebabCase, get, set } from 'lodash';
-import { Button, Divider, Icon, Loader, Table } from 'semantic';
-import { Container, Divider, Loader, Table, Icon } from 'semantic';
+import { get, kebabCase, set } from 'lodash';
+import { Container, Dimmer, Divider, Icon, Loader } from 'semantic';
 
+import bem from 'helpers/bem';
 import screen from 'helpers/screen';
 import { request } from 'utils/api';
-import bem from 'helpers/bem';
 
+import { Layout, Confirm } from 'components';
 import { JumpLink } from 'components/Link';
 import ErrorMessage from 'components/ErrorMessage';
-
-import EditableField from './EditableField';
+import RequestBlock from 'components/RequestBlock';
 import ScrollWaypoint from 'components/ScrollWaypoint';
+import { toggleRecording, isRecording } from 'utils/api/record';
+import CodeBlock from 'components/Markdown/Code';
+
+import RequestBuilder from './RequestBuilder';
+import EditableField from './EditableField';
 
 const PARAMS_PATH = [
   'requestBody',
@@ -36,6 +40,7 @@ export default class Docs extends React.Component {
       docs: null,
       focused: null,
       loading: true,
+      recording: isRecording(),
     };
     this.pageRef = React.createRef();
     this.focusedItems = new Map();
@@ -59,7 +64,7 @@ export default class Docs extends React.Component {
     }
     if (hash && hash !== lastHash) {
       const el = document.querySelector(hash);
-      el.scrollIntoView(true);
+      el?.scrollIntoView(true);
     }
   }
 
@@ -68,9 +73,7 @@ export default class Docs extends React.Component {
     const { focused: lastFocused } = lastState;
     if (focused && focused !== lastFocused) {
       const link = document.querySelector(`[data-path="${focused.verbPath}"]`);
-      if (link) {
-        link.scrollIntoView(true);
-      }
+      link?.scrollIntoView(true);
     }
   }
 
@@ -103,6 +106,7 @@ export default class Docs extends React.Component {
       });
       this.checkPageChange();
     } catch (error) {
+      console.error(error);
       this.setState({
         error,
         loading: false,
@@ -119,8 +123,23 @@ export default class Docs extends React.Component {
     });
   };
 
-  onGenerateClick = async () => {
+  toggleRecordMode = (on) => {
+    toggleRecording(on);
+    this.setState({
+      recording: on,
+    });
+  };
+
+  onEditClick = () => {
+    const { mode } = this.state;
+    this.setState({
+      mode: mode === 'view' ? 'edit' : 'view',
+    });
+  };
+
+  onGenerateConfirm = async (close) => {
     try {
+      close();
       this.setState({
         loading: true,
       });
@@ -142,13 +161,19 @@ export default class Docs extends React.Component {
 
   render() {
     const { docs, loading } = this.state;
-    if (loading) {
-      return <Loader active />;
-    }
     return (
       <div className={this.getBlockClass()}>
-        {this.renderSidebar(docs)}
-        {this.renderPage(docs)}
+        {loading && (
+          <Dimmer inverted active>
+            <Loader />
+          </Dimmer>
+        )}
+        {docs && (
+          <React.Fragment>
+            {this.renderSidebar(docs)}
+            {this.renderPage(docs)}
+          </React.Fragment>
+        )}
       </div>
     );
   }
@@ -161,7 +186,7 @@ export default class Docs extends React.Component {
     });
     return (
       <aside className={this.getElementClass('sidebar')}>
-        <h2>{docs.info.title}</h2>
+        <h2>{docs.info?.title}</h2>
         <ul className={this.getElementClass('sidebar-scroll')}>
           {pages.map((group) => {
             const { name, url, items } = group;
@@ -196,25 +221,7 @@ export default class Docs extends React.Component {
             );
           })}
         </ul>
-
-        <div className={this.getElementClass('edit-buttons')}>
-          <Icon
-            link
-            name="pencil"
-            className={this.getElementClass('edit-link')}
-            onClick={() => {
-              this.setState({
-                mode: mode === 'view' ? 'edit' : 'view',
-              });
-            }}
-          />
-          <Icon
-            link
-            name="gear"
-            className={this.getElementClass('edit-generate')}
-            onClick={this.onGenerateClick}
-          />
-        </div>
+        {this.renderEditButtons()}
       </aside>
     );
   }
@@ -231,7 +238,6 @@ export default class Docs extends React.Component {
             <ErrorMessage error={error} />
             <h1>{name}</h1>
             <Divider />
-            <Divider hidden />
             {items.map((item) => {
               const { verbPath } = item;
               return (
@@ -248,10 +254,6 @@ export default class Docs extends React.Component {
                     this.updateFocused();
                   }}>
                   <h2>
-                    <code>{verbPath}</code>
-                  </h2>
-                  <Divider />
-                  <h3>
                     <EditableField
                       mode={mode}
                       path={item.path}
@@ -259,7 +261,21 @@ export default class Docs extends React.Component {
                       value={item.summary}
                       onSave={this.onFieldSave}
                     />
-                  </h3>
+                  </h2>
+                  <Divider hidden />
+                  <Layout horizontal center spread>
+                    <code className={this.getElementClass('item-name')}>
+                      {verbPath}
+                    </code>
+                    <RequestBuilder
+                      docs={docs}
+                      operation={item}
+                      path={item.apiPath}
+                      method={item.method}
+                      trigger={<Icon name="play" link />}
+                    />
+                  </Layout>
+                  <Divider hidden />
                   <EditableField
                     markdown
                     mode={mode}
@@ -268,9 +284,20 @@ export default class Docs extends React.Component {
                     value={item.description}
                     onSave={this.onFieldSave}
                   />
-                  <Divider hidden />
-                  <h3>Request Body</h3>
                   {this.renderParams([...item.path, ...PARAMS_PATH])}
+
+                  <div className={this.getElementClass('divider')} />
+                  {this.renderExamples(item)}
+                  {/*
+                  <RequestBlock
+                    authToken={'<token>'}
+                    method={item.method}
+                    request={{
+                      path: item.apiPath,
+                      method: 'POST',
+                    }}
+                  />
+                  */}
                 </ScrollWaypoint>
               );
             })}
@@ -287,84 +314,201 @@ export default class Docs extends React.Component {
     if (!params) {
       return;
     }
+    const entries = Object.entries(params);
+    entries.sort((a, b) => {
+      const aRequired = a[1].required || false;
+      const bRequired = b[1].required || false;
+      return bRequired - aRequired;
+    });
     return (
-      <Table>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell width={5}>Name</Table.HeaderCell>
-            <Table.HeaderCell width={4}>Type</Table.HeaderCell>
-            <Table.HeaderCell width={3}>Required</Table.HeaderCell>
-            <Table.HeaderCell width={2}>Default</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {Object.entries(params).map(([name, desc]) => {
+      <table className={this.getElementClass('params')}>
+        <tbody>
+          {entries.map(([name, desc]) => {
             const { description, required, default: defaultValue } = desc;
             return (
-              <Table.Row key={name}>
-                <Table.Cell width={5}>
-                  <div style={{ fontSize: '16px' }}>{name}</div>
-                  <div style={{ marginTop: '10px' }}>
-                    <EditableField
-                      markdown
-                      mode={mode}
-                      path={[...path, name]}
-                      name="description"
-                      value={description}
-                      onSave={this.onFieldSave}
-                    />
-                  </div>
-                </Table.Cell>
-                <Table.Cell width={4}>
+              <tr key={name}>
+                <td className={this.getElementClass('param-pointer')} />
+                <td className={this.getElementClass('param-name')}>
+                  <code>{name}</code>
+                </td>
+                <td className={this.getElementClass('param-description')}>
                   <div className={this.getElementClass('types')}>
                     {this.renderType(desc)}
                   </div>
-                </Table.Cell>
-                <Table.Cell width={3}>
-                  {required ? 'required' : 'optional'}
-                </Table.Cell>
-                <Table.Cell width={2}>
-                  <pre>
-                    <code>{JSON.stringify(defaultValue, null, 2)}</code>
-                  </pre>
-                </Table.Cell>
-              </Table.Row>
+
+                  {required && (
+                    <div className={this.getElementClass('param-required')}>
+                      Required
+                    </div>
+                  )}
+                  {description && (
+                    <div className={this.getElementClass('divider')} />
+                  )}
+
+                  <EditableField
+                    markdown
+                    mode={mode}
+                    path={[...path, name]}
+                    name="description"
+                    value={description}
+                    onSave={this.onFieldSave}
+                  />
+                  {defaultValue !== undefined && (
+                    <div className={this.getElementClass('divider')} />
+                  )}
+                  {this.renderDefault(defaultValue)}
+                </td>
+              </tr>
             );
           })}
-        </Table.Body>
-      </Table>
+        </tbody>
+      </table>
     );
   }
 
-  renderType(desc) {
-    const { oneOf, type } = desc;
+  renderType(desc, suffix = '') {
+    const { type, $ref, oneOf, enum: allowed } = desc;
     if (oneOf) {
-      return oneOf
-        .map((entry) => {
-          const { type, items, $ref } = entry;
-          let str;
-          if ($ref) {
-            const { name } = expandRef($ref);
-            str = <JumpLink to={name}>{name}</JumpLink>;
-            this.visitedComponents.add($ref);
-          } else if (type === 'array') {
-            if (items?.type) {
-              str = `[${items.type}]`;
-            } else {
-              str = 'array';
-            }
-          } else {
-            str = entry.type;
-          }
-          if (str) {
-            return <code key={str}>{str}</code>;
-          }
-        })
-        .filter((el) => {
-          return el;
-        });
+      return oneOf.map((entry, i) => {
+        const comma = i > 0 ? ', ' : '';
+        return (
+          <React.Fragment key={i}>
+            {comma}
+            {this.renderType(entry)}
+          </React.Fragment>
+        );
+      });
+    } else if (type === 'array') {
+      return this.renderType(desc.items, '[]');
+    } else if ($ref) {
+      this.visitedComponents.add($ref);
+      const { name } = expandRef($ref);
+      return (
+        <JumpLink to={name}>
+          {name}
+          {suffix}
+        </JumpLink>
+      );
+    } else if (allowed) {
+      return allowed.map((val, i) => {
+        return (
+          <React.Fragment key={val}>
+            {i > 0 && ', '}
+            <code className={this.getElementClass('foo')}>
+              {JSON.stringify(val)}
+            </code>
+          </React.Fragment>
+        );
+      });
+    } else if (type) {
+      return (
+        <span>
+          {type}
+          {suffix}
+        </span>
+      );
+    } else {
+      console.warn('UKNOWN TYPE', desc);
+      return 'UNKNOWN';
     }
-    return <code>{type}</code>;
+  }
+
+  renderAllowed(desc) {
+    const allowed = desc?.enum;
+    if (allowed) {
+      return (
+        <div className={this.getElementClass('param-allowed')}>
+          <span className={this.getElementClass('param-allowed-title')}>
+            Allowed:{' '}
+          </span>
+          {allowed.map((val, i) => {
+            return (
+              <React.Fragment key={val}>
+                {i > 0 && ', '}
+                {<code>{JSON.stringify(val)}</code>}
+              </React.Fragment>
+            );
+          })}
+        </div>
+      );
+    }
+  }
+
+  renderDefault(defaultValue) {
+    if (defaultValue && typeof defaultValue === 'object') {
+      return (
+        <div className={this.getElementClass('param-default')}>
+          <div className={this.getElementClass('param-default-title')}>
+            Default:
+          </div>
+          <pre>
+            <code>{JSON.stringify(defaultValue, null, 2)}</code>
+          </pre>
+        </div>
+      );
+    } else if (defaultValue !== undefined) {
+      return (
+        <div className={this.getElementClass('param-default')}>
+          <span className={this.getElementClass('param-default-title')}>
+            Default:
+          </span>{' '}
+          <code>{JSON.stringify(defaultValue, null, 2)}</code>
+        </div>
+      );
+    }
+  }
+
+  renderExamples(item) {
+    const items = Object.entries(item.responses || {})
+      .flatMap(([status, response]) => {
+        status = parseInt(status);
+        const { schema, examples = {} } = get(
+          response,
+          ['content', 'application/json'],
+          {}
+        );
+        if (schema?.$ref) {
+          this.visitedComponents.add(schema.$ref);
+        }
+        const exampleResponses = Object.entries(examples).map(
+          ([id, example]) => {
+            const examples = get(
+              item,
+              ['requestBody', 'content', 'application/json', 'examples'],
+              {}
+            );
+            return {
+              status,
+              schema,
+              requestBody: examples[id]?.value,
+              responseBody: example.value,
+            };
+          }
+        );
+        if (exampleResponses.length) {
+          return exampleResponses;
+        } else {
+          return [
+            {
+              status,
+              schema,
+            },
+          ];
+        }
+      })
+      .sort((a, b) => {
+        return a.status < b.status;
+      });
+    if (items.length) {
+      return (
+        <React.Fragment>
+          <h4>Examples:</h4>
+          {items.map((item, i) => {
+            return <DocsExample key={i} item={item} />;
+          })}
+        </React.Fragment>
+      );
+    }
   }
 
   renderComponents() {
@@ -378,7 +522,10 @@ export default class Docs extends React.Component {
             const { name, path } = expandRef($ref);
             const { description } = get(docs, path);
             return (
-              <div key={path} id={name}>
+              <div
+                id={name}
+                key={name}
+                className={this.getElementClass('component')}>
                 <h3>{name}</h3>
                 <EditableField
                   markdown
@@ -389,10 +536,149 @@ export default class Docs extends React.Component {
                   onSave={this.onFieldSave}
                 />
                 {this.renderParams([...path, 'properties'])}
+                <Divider />
               </div>
             );
           })}
         </React.Fragment>
+      );
+    }
+  }
+
+  renderEditButtons() {
+    return (
+      <div className={this.getElementClass('edit-buttons')}>
+        {this.renderRecordButton()}
+        <Icon
+          link
+          name="pencil"
+          title="Toggle Edit Mode"
+          onClick={this.onEditClick}
+        />
+        <Confirm
+          size="small"
+          confirmButton="Generate"
+          header="Generate Documentation"
+          content="Generates OpenApi documentation based on schemas and route validation. This will not overwrite current documentation."
+          trigger={
+            <Icon link name="arrows-rotate" title="Generate Documentation" />
+          }
+          onConfirm={this.onGenerateConfirm}
+        />
+      </div>
+    );
+  }
+
+  renderRecordButton() {
+    const { recording } = this.state;
+    if (recording) {
+      return (
+        <Icon
+          link
+          name="circle"
+          className={this.getElementClass('edit-buttons-record', 'active')}
+          onClick={() => {
+            this.toggleRecordMode(false);
+          }}
+        />
+      );
+    } else {
+      return (
+        <Confirm
+          size="small"
+          confirmButton="Enable"
+          header="Record Mode"
+          content="Turn on record mode. Requests performed will be recorded to documentation."
+          trigger={
+            <Icon
+              link
+              name="circle"
+              className={this.getElementClass('edit-buttons-record')}
+            />
+          }
+          onConfirm={() => {
+            this.toggleRecordMode(true);
+          }}
+        />
+      );
+    }
+  }
+}
+
+@bem
+class DocsExample extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false,
+    };
+  }
+
+  isGood() {
+    const { status } = this.props.item;
+    return status >= 200 && status <= 300;
+  }
+
+  onToggleClick = () => {
+    this.setState({
+      open: !this.state.open,
+    });
+  };
+
+  render() {
+    const { open } = this.state;
+    const { status, schema, requestBody, responseBody } = this.props.item;
+    return (
+      <div className={this.getBlockClass()}>
+        <Layout
+          horizontal
+          center
+          spread
+          className={this.getElementClass(
+            'title',
+            this.isGood() ? 'good' : 'bad'
+          )}
+          onClick={this.onToggleClick}>
+          <Layout.Group>{status}</Layout.Group>
+          <Layout.Group>
+            <Icon size="small" name={open ? 'minus' : 'plus'} link />
+          </Layout.Group>
+        </Layout>
+        {open && (
+          <React.Fragment>
+            {this.renderSchema(schema)}
+            {this.renderBody('Request Body:', requestBody)}
+            {this.renderBody('Response Body:', responseBody)}
+          </React.Fragment>
+        )}
+      </div>
+    );
+  }
+
+  renderSchema(schema) {
+    if (schema) {
+      const { $ref } = schema;
+      const { name } = expandRef($ref);
+      return (
+        <div className={this.getElementClass('schema')}>
+          Returns: <JumpLink to={name}>{name}</JumpLink>
+        </div>
+      );
+    }
+  }
+
+  renderBody(title, body = {}) {
+    const keys = Object.keys(body);
+    if (keys.length) {
+      return (
+        <div className={this.getElementClass('body')}>
+          <div>{title}</div>
+          <CodeBlock
+            language="json"
+            source={JSON.stringify(body, null, 2)}
+            allowCopy
+          />
+        </div>
       );
     }
   }
@@ -401,22 +687,27 @@ export default class Docs extends React.Component {
 function expandDocs(docs) {
   const pagesByUrl = {};
   const itemsByUrl = {};
-  for (let [path, pathItem] of Object.entries(docs.paths || {})) {
+  for (let [apiPath, pathItem] of Object.entries(docs.paths || {})) {
     for (let [method, item] of Object.entries(pathItem || {})) {
-      item.path = ['paths', path, method];
-      item.verbPath = `${method.toUpperCase()} ${toRouterParams(path)}`;
+      item.path = ['paths', apiPath, method];
+
+      method = method.toUpperCase();
+
+      item.method = method;
+      item.apiPath = apiPath;
+      item.verbPath = `${method} ${apiPath}`;
 
       let slug = kebabCase(item.summary);
-      slug ||= `${method}-${path.split('/').join('-')}`;
+      slug ||= `${method}-${apiPath.split('/').join('-')}`;
 
-      const pageUrl = `/docs/${path.split('/')[2]}`;
+      const pageUrl = `/docs/${apiPath.split('/')[2]}`;
       const itemUrl = `${pageUrl}#${slug}`;
 
       item.slug = slug;
       item.url = itemUrl;
       pagesByUrl[pageUrl] ||= {
         url: pageUrl,
-        name: item.tags.join(' '),
+        name: item['x-group'] || '<GROUP>',
         items: [],
       };
       pagesByUrl[pageUrl].items.push(item);
@@ -437,10 +728,4 @@ function expandRef($ref) {
     name: split.at(-1),
     path: split.slice(1),
   };
-}
-
-const ROUTER_PARAMS_REG = /\{(.+)}/g;
-
-function toRouterParams(path) {
-  return path.replace(ROUTER_PARAMS_REG, ':$1');
 }

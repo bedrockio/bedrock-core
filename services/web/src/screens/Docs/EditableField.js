@@ -2,18 +2,17 @@ import { startCase } from 'lodash';
 import React from 'react';
 
 import bem from 'helpers/bem';
+import Markdown from 'components/Markdown';
 
 import EditFieldModal from './EditFieldModal';
 
 import './editable-field.less';
 
-import Markdown from 'components/Markdown';
-
 @bem
 export default class DocsEditableField extends React.Component {
   getModifiers() {
     const { mode, value } = this.props;
-    return [mode === 'edit' ? 'editable' : null, value ? null : 'empty'];
+    return [mode === 'edit' ? 'editable' : null, value ? 'filled' : 'empty'];
   }
 
   render() {

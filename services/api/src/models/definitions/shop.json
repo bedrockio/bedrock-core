@@ -13,6 +13,7 @@
       {
         "type": "ObjectId",
         "ref": "Upload",
+        "description": "An upload object `id`.",
         "autopopulate": true
       }
     ],
@@ -50,10 +51,12 @@
           "type": "String",
           "default": "Point"
         },
-        "coordinates": {
-          "type": "Array",
-          "default": []
-        }
+        "coordinates": [
+          {
+            "type": "Number",
+            "default": []
+          }
+        ]
       }
     },
     "owner": {

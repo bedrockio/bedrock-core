@@ -1,10 +1,10 @@
 import { API_KEY, API_URL } from 'utils/env';
 
-
 import { trackRequest } from '../analytics';
 import { fetchWithTimeout } from '../fetch';
 import { ApiError, ApiParseError } from './errors';
 import { stringifyParams } from './params';
+import { isRecording } from './record';
 import { getToken } from './token';
 
 export default async function request(options) {
@@ -18,6 +18,9 @@ export default async function request(options) {
       Accept: 'application/json',
       ...(token && {
         Authorization: `Bearer ${token}`,
+      }),
+      ...(isRecording() && {
+        'Api-Record': 'on',
       }),
       'API-Key': API_KEY,
     },

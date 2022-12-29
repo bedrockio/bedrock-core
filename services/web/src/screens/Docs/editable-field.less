@@ -1,12 +1,19 @@
 .docs-editable-field {
+  display: none;
   position: relative;
+  margin-top: 8px;
 
   &--editable {
+    display: block;
     cursor: pointer;
 
     &:hover {
       background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%2388acd2' stroke-width='3' stroke-dasharray='2%2c 5' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
     }
+  }
+
+  &--filled {
+    display: block;
   }
 
   &--empty {

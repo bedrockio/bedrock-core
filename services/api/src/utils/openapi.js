@@ -1,8 +1,9 @@
+const crypto = require('crypto');
 const fs = require('fs/promises');
 const path = require('path');
 const mongoose = require('mongoose');
-const { set, without, camelCase, kebabCase, startCase, mergeWith, isEqual } = require('lodash');
 const config = require('@bedrockio/config');
+const { get, set, without, camelCase, kebabCase, startCase } = require('lodash');
 
 const pluralize = mongoose.pluralize();
 
@@ -26,36 +27,24 @@ async function saveDefinition(updated) {
 }
 
 async function generateDefinition() {
-  const definition = await loadDefinition();
   const { version, description } = require(PACKAGE_FILE);
-  definition.openapi = '3.1.0';
-  definition.info = {
-    version,
-    title: description,
-    ...definition.info,
-  };
-  definition.servers = [
-    {
-      url: config.get('API_URL'),
+  const data = {
+    openapi: '3.1.0',
+    info: {
+      version,
+      title: description,
     },
-  ];
-
-  const paths = generatePaths(require('../routes'));
-
-  mergeWith(paths, definition.paths, (target, source) => {
-    if (Array.isArray(target) && Array.isArray(source)) {
-      if (!isEqual(target, source)) {
-        // TODO: how should array merging be handled?
-      }
-    }
-  });
-
-  definition.paths = paths;
-
-  extractComponents(definition);
-
-  await saveDefinition(definition);
-  return definition;
+    servers: [
+      {
+        url: config.get('API_URL'),
+      },
+    ],
+    paths: generatePaths(require('../routes')),
+    components: {
+      schemas: generateModelSchemas(),
+    },
+  };
+  return await updateDefinition(data);
 }
 
 function generatePaths(routes) {
@@ -87,19 +76,6 @@ function generatePaths(routes) {
         },
       };
     }
-    const path = koaPath
-      .split('/')
-      .map((part) => {
-        if (part.startsWith(':')) {
-          part = part.slice(1);
-          if (part.endsWith('?')) {
-            part = part.slice(0, -1);
-          }
-          part = `{${part}}`;
-        }
-        return part;
-      })
-      .join('/');
 
     const parameters = layer.paramNames.map((param) => {
       const { name, modifier } = param;
@@ -115,12 +91,13 @@ function generatePaths(routes) {
       item.parameters = parameters;
     }
 
-    if (!paths[path]) {
-      paths[path] = {};
+    if (!paths[koaPath]) {
+      paths[koaPath] = {};
     }
 
-    paths[path][method.toLowerCase()] = item;
+    paths[koaPath][method.toLowerCase()] = item;
   }
+
   return paths;
 }
 
@@ -150,7 +127,7 @@ function getPathMeta(koaPath, method) {
     }
 
     if (modelName) {
-      const isId = operation === `:${modelNameCamel}Id`;
+      const isId = operation === ':id' || operation === `:${modelNameCamel}Id`;
       if (method === 'GET' && isId) {
         meta.summary = `Get ${modelName} by id`;
       } else if (method === 'POST' && !operation) {
@@ -164,35 +141,160 @@ function getPathMeta(koaPath, method) {
       }
     }
   }
-  meta.tags = [startCase(base)];
+  meta['x-group'] = startCase(base);
   return meta;
 }
 
-function extractComponents(definition) {
-  walkFields(definition, (path, value) => {
-    const schema = value['x-schema'];
+function extractSchemas(definition) {
+  walkFields(definition, ({ value, path }) => {
+    const schema = value?.['x-schema'];
     if (schema) {
-      const { ...clone } = value;
-      delete clone['x-schema'];
-      set(definition, ['components', 'schemas', schema], clone);
-      return {
+      set(definition, ['components', 'schemas', schema], {
+        ...value,
+        'x-schema': undefined,
+      });
+      set(definition, path, {
         $ref: `#/components/schemas/${schema}`,
-      };
+      });
     }
   });
 }
 
 function walkFields(arg, fn, path = []) {
-  if (arg && typeof arg === 'object') {
+  if (isObject(arg)) {
     for (let [key, value] of Object.entries(arg)) {
       const p = [...path, key];
-      walkFields(value, fn, p);
-      const ret = fn(p, value);
-      if (ret !== undefined) {
-        arg[key] = ret;
+      const ret = fn({
+        key,
+        value,
+        path: p,
+      });
+      if (ret === false) {
+        continue;
       }
+      walkFields(value, fn, p);
     }
   }
+}
+
+async function recordRequest(ctx) {
+  const { method, routerPath } = ctx;
+  const { type: requestType, body: requestBody } = ctx.request;
+  const { type: responseType, headers: responseHeaders, status } = ctx.response;
+  const requestId = getRequestId(ctx);
+  const schema = getResponseSchema(ctx);
+
+  // Ensure the body is properly converted to raw data.
+  const responseBody = JSON.parse(JSON.stringify(ctx.response.body || {}));
+
+  const hasRequest = requestType && !isEmpty(requestBody);
+  const hasResponse = responseType && !isEmpty(responseBody);
+
+  const data = {
+    paths: {
+      [routerPath]: {
+        [method.toLowerCase()]: {
+          requestBody: {
+            ...(hasRequest && {
+              content: {
+                [requestType]: {
+                  examples: {
+                    [requestId]: {
+                      value: requestBody,
+                    },
+                  },
+                },
+              },
+            }),
+          },
+          responses: {
+            [status]: {
+              headers: {
+                ...responseHeaders,
+                'access-control-allow-origin': '<Origin>',
+                'request-id': '<RequestId>',
+              },
+              ...(hasResponse && {
+                content: {
+                  [responseType]: {
+                    ...(schema && {
+                      schema,
+                    }),
+                    examples: {
+                      [requestId]: {
+                        value: responseBody,
+                      },
+                    },
+                  },
+                },
+              }),
+            },
+          },
+        },
+      },
+    },
+  };
+  await updateDefinition(data);
+}
+
+function getRequestId(ctx) {
+  // Note that although in real-life applications responses may
+  // vary as a function of time, for the purposes of documentation
+  // we are assuming that they do not so any request with the same
+  // signature will always generate the same request id.
+  const obj = {
+    method: ctx.method,
+    path: ctx.path,
+    body: ctx.request.body,
+  };
+  return crypto.createHash('md5').update(JSON.stringify(obj)).digest('hex');
+}
+
+function getResponseSchema(ctx) {
+  const modelName = ctx.response.body?.data?.constructor?.modelName;
+  if (modelName) {
+    return {
+      $ref: `#/components/schemas/${modelName}`,
+    };
+  }
+}
+
+async function updateDefinition(data) {
+  const definition = mergeDeep(await loadDefinition(), data);
+  extractSchemas(definition);
+  await saveDefinition(definition);
+  return definition;
+}
+
+const RESERVED_FIELDS = ['summary', 'description'];
+
+function mergeDeep(target, source) {
+  walkFields(source, ({ key, path, value }) => {
+    if (RESERVED_FIELDS.includes(key)) {
+      return;
+    } else if (!isObject(get(target, path))) {
+      set(target, path, value);
+      return false;
+    }
+  });
+  return target;
+}
+
+function isObject(arg) {
+  return arg && typeof arg === 'object' && !Array.isArray(arg);
+}
+
+function isEmpty(obj = {}) {
+  return Object.keys(obj).length === 0;
+}
+
+function generateModelSchemas() {
+  const schemas = {};
+  for (let model of Object.values(mongoose.models)) {
+    const { modelName } = model;
+    schemas[modelName] = model.getBaseSchema().toOpenApi();
+  }
+  return schemas;
 }
 
 module.exports = {
@@ -200,4 +302,5 @@ module.exports = {
   loadDefinition,
   saveDefinition,
   generateDefinition,
+  recordRequest,
 };

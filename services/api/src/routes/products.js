@@ -11,7 +11,7 @@ const router = new Router();
 router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
-  .param('productId', async (id, ctx, next) => {
+  .param('id', async (id, ctx, next) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       ctx.throw(404);
     }
@@ -28,7 +28,7 @@ router
       data: product,
     };
   })
-  .get('/:productId', async (ctx) => {
+  .get('/:id', async (ctx) => {
     const { product } = await ctx.state;
     ctx.body = {
       data: product,
@@ -55,7 +55,7 @@ router
       };
     }
   )
-  .patch('/:productId', validateBody(Product.getUpdateValidation()), async (ctx) => {
+  .patch('/:id', validateBody(Product.getUpdateValidation()), async (ctx) => {
     const product = ctx.state.product;
     product.assign(ctx.request.body);
 
@@ -65,7 +65,7 @@ router
       data: product,
     };
   })
-  .delete('/:productId', async (ctx) => {
+  .delete('/:id', async (ctx) => {
     const product = ctx.state.product;
     await product.delete();
     ctx.status = 204;
