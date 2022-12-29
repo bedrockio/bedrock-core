@@ -150,16 +150,21 @@ function getPathMeta(koaPath, method) {
 function extractSchemas(definition) {
   walkFields(definition, ({ value, path }) => {
     const schema = value?.['x-schema'];
+    const ref = schema || value?.['x-ref'];
+    let halt = false;
     if (schema) {
       set(definition, ['components', 'schemas', schema], {
         ...value,
         'x-schema': undefined,
       });
-      set(definition, path, {
-        $ref: `#/components/schemas/${schema}`,
-      });
-      return false;
+      halt = true;
     }
+    if (ref) {
+      set(definition, [...path, '$ref'], `#/components/schemas/${ref}`);
+      set(definition, [...path, 'x-ref'], undefined);
+      halt = true;
+    }
+    return !halt;
   });
 }
 

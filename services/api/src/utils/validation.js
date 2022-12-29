@@ -22,6 +22,11 @@ const OBJECT_ID_SCHEMA = yd
     description: OBJECT_ID_DESCRIPTION.trim(),
   });
 
+const DATE_SCHEMA = yd.date().iso().tag({
+  'x-schema': 'DateTime',
+  description: 'A `string` in [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format.',
+});
+
 class PermissionsError extends Error {}
 
 function getValidationSchema(attributes, options = {}) {
@@ -209,14 +214,11 @@ function getSchemaForType(type) {
     case 'Boolean':
       return yd.boolean();
     case 'Date':
-      return yd.date().iso().tag({
-        'x-schema': 'DateTime',
-        description: 'A `string` in [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format.',
-      });
-    case 'Mixed':
-      return yd.object();
+      return DATE_SCHEMA;
     case 'ObjectId':
       return OBJECT_ID_SCHEMA;
+    case 'Mixed':
+      return yd.object();
     default:
       throw new TypeError(`Unknown schema type ${type}`);
   }
@@ -248,10 +250,22 @@ function getSearchSchema(schema, type) {
         yd.array(schema),
         yd
           .object({
-            lt: yd.date().iso().description('Select dates occurring before.'),
-            gt: yd.date().iso().description('Select dates occurring after.'),
-            lte: yd.date().iso().description('Select dates occurring on or before.'),
-            gte: yd.date().iso().description('Select dates occurring on or after.'),
+            lt: yd.date().iso().tag({
+              'x-ref': 'DateTime',
+              description: 'Select dates occurring before.',
+            }),
+            gt: yd.date().iso().tag({
+              'x-ref': 'DateTime',
+              description: 'Select dates occurring after.',
+            }),
+            lte: yd.date().iso().tag({
+              'x-ref': 'DateTime',
+              description: 'Select dates occurring on or before.',
+            }),
+            gte: yd.date().iso().tag({
+              'x-ref': 'DateTime',
+              description: 'Select dates occurring on or after.',
+            }),
           })
           .tag({
             'x-schema': 'DateRange',

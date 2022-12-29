@@ -539,7 +539,7 @@ function flattenObject(obj, root = {}, rootPath = []) {
 // regex:
 //  path: "/reg/"
 // array:
-//  path; [1,2,3]
+//  path: [1,2,3]
 function normalizeQuery(query, schema, root = {}, rootPath = []) {
   for (let [key, value] of Object.entries(query)) {
     const path = [...rootPath, key];

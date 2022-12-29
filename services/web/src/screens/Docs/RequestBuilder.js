@@ -1,9 +1,10 @@
 import React from 'react';
 import { get, set } from 'lodash';
-import { Form, Input, Icon, Dimmer, Loader } from 'semantic';
+import { Form, Input, Checkbox, Tab, Icon, Dimmer, Loader } from 'semantic';
 
 import { request } from 'utils/api';
 import CodeBlock from 'components/Markdown/Code';
+import RequestBlock from 'components/RequestBlock';
 
 import bem from 'helpers/bem';
 
@@ -34,6 +35,7 @@ export default class RequestBuilder extends React.Component {
       visible: false,
       loading: false,
       request: {},
+      activeTab: 0,
     };
   }
 
@@ -41,6 +43,20 @@ export default class RequestBuilder extends React.Component {
     const { active } = this.state;
     return [active ? 'active' : null];
   }
+
+  getPath() {
+    const { request } = this.state;
+    return this.props.path.replace(/:(\w+)/g, (m, key) => {
+      const val = request?.path?.[key];
+      return val ? encodeURIComponent(val) : `:${key}`;
+    });
+  }
+
+  onTabChange = (evt, { activeIndex }) => {
+    this.setState({
+      activeTab: activeIndex,
+    });
+  };
 
   onTriggerClick = () => {
     this.setState({
@@ -58,9 +74,11 @@ export default class RequestBuilder extends React.Component {
   onPlayClick = async () => {
     try {
       this.setState({
+        error: null,
         loading: true,
       });
-      const { method, path } = this.props;
+      const path = this.getPath();
+      const { method } = this.props;
       const { request: options } = this.state;
       const response = await request({
         ...options,
@@ -71,11 +89,13 @@ export default class RequestBuilder extends React.Component {
       this.setState({
         loading: false,
         response,
+        activeTab: 1,
       });
     } catch (error) {
       this.setState({
         error,
         loading: false,
+        activeTab: 1,
       });
     }
   };
@@ -101,7 +121,7 @@ export default class RequestBuilder extends React.Component {
         <div
           className={this.getBlockClass()}
           onTransitionEnd={this.onTransitionEnd}>
-          {visible && this.renderPanel()}
+          {visible && this.renderMain()}
         </div>
       </React.Fragment>
     );
@@ -114,9 +134,9 @@ export default class RequestBuilder extends React.Component {
     });
   }
 
-  renderPanel() {
-    const { method, path } = this.props;
-    const { loading, error } = this.state;
+  renderMain() {
+    const { method } = this.props;
+    const { activeTab, loading } = this.state;
     return (
       <React.Fragment>
         <Dimmer inverted active={loading}>
@@ -127,19 +147,35 @@ export default class RequestBuilder extends React.Component {
         </div>
         <div className={this.getElementClass('header')}>
           <h3>
-            {method} {path}
+            {method} {this.getPath()}
           </h3>
         </div>
-        <div className={this.getElementClass('body')}>
-          <Form autoComplete="off" autoCorrect="off">
-            <ErrorMessage error={error} />
-            <h4>Parameters</h4>
-            {this.renderParameters()}
-            <h4>Body</h4>
-            {this.renderBody()}
-            {this.renderResponse()}
-          </Form>
-        </div>
+        <Tab
+          activeIndex={activeTab}
+          onTabChange={this.onTabChange}
+          className={this.getElementClass('main')}
+          menu={{ secondary: true }}
+          panes={[
+            {
+              menuItem: 'Request',
+              render: () => {
+                return <Tab.Pane>{this.renderRequestPanel()}</Tab.Pane>;
+              },
+            },
+            {
+              menuItem: 'Response',
+              render: () => {
+                return <Tab.Pane>{this.renderResponsePanel()}</Tab.Pane>;
+              },
+            },
+            {
+              menuItem: 'Output',
+              render: () => {
+                return <Tab.Pane>{this.renderOutputPanel()}</Tab.Pane>;
+              },
+            },
+          ]}
+        />
         <div className={this.getElementClass('footer')}>
           <Icon name="circle" color="red" onClick={this.onRecordClick} />
           <Icon name="play" onClick={this.onPlayClick} />
@@ -148,14 +184,44 @@ export default class RequestBuilder extends React.Component {
     );
   }
 
-  renderParameters() {
-    <div>adf</div>;
+  renderRequestPanel() {
+    return (
+      <Form autoComplete="off" autoCorrect="off">
+        {this.renderParameters('Path', 'path')}
+        {this.renderBody()}
+      </Form>
+    );
+  }
+
+  renderParameters(title, type) {
+    const { operation } = this.props;
+    const parameters = (operation.parameters || []).filter((p) => {
+      return p.in === type;
+    });
+    if (parameters.length) {
+      return (
+        <React.Fragment>
+          <h4>{title}</h4>
+          {parameters.map((param, i) => {
+            const path = ['path', param.name];
+            return <Form.Field key={i}>{this.renderInput(path)}</Form.Field>;
+          })}
+        </React.Fragment>
+      );
+    }
   }
 
   renderBody() {
     const { operation } = this.props;
     const schema = get(operation, BODY_PATH);
-    return this.renderSchema(schema, ['body']);
+    if (schema) {
+      return (
+        <React.Fragment>
+          <h4>Body</h4>
+          {this.renderSchema(schema, ['body'])}
+        </React.Fragment>
+      );
+    }
   }
 
   renderSchema(schema, path, options) {
@@ -169,6 +235,8 @@ export default class RequestBuilder extends React.Component {
         return this.renderArraySchema(schema, path, options);
       case 'number':
         return this.renderNumberSchema(schema, path, options);
+      case 'boolean':
+        return this.renderBooleanSchema(schema, path, options);
       case 'string':
       case 'ObjectId':
         return this.renderStringSchema(schema, path, options);
@@ -288,7 +356,10 @@ export default class RequestBuilder extends React.Component {
     );
   }
 
-  setField = (evt, { path, value }) => {
+  setField = (evt, { type, path, value, checked }) => {
+    if (type === 'checkbox') {
+      value = checked;
+    }
     const request = { ...this.state.request };
     set(request, path, value);
     this.setState({
@@ -307,6 +378,10 @@ export default class RequestBuilder extends React.Component {
     });
   }
 
+  renderBooleanSchema(schema, path, options) {
+    return this.renderCheckbox(path, options);
+  }
+
   renderInput(path, options) {
     const { request } = this.state;
     const value = get(request, path);
@@ -322,21 +397,51 @@ export default class RequestBuilder extends React.Component {
     );
   }
 
-  renderResponse() {
-    const { response } = this.state;
-    if (response) {
+  renderCheckbox(path, options) {
+    const { request } = this.state;
+    const value = get(request, path);
+    return (
+      <Checkbox
+        toggle
+        path={path}
+        checked={value || false}
+        onChange={this.setField}
+        {...options}
+      />
+    );
+  }
+
+  renderResponsePanel() {
+    const { response, error } = this.state;
+    if (response || error) {
       return (
         <React.Fragment>
-          <h4>Response</h4>
-          <CodeBlock
-            height="60vh"
-            language="json"
-            source={JSON.stringify(response, null, 2)}
-            allowCopy
-          />
+          <ErrorMessage error={error} />
+          {response && (
+            <CodeBlock
+              height="60vh"
+              language="json"
+              source={JSON.stringify(response, null, 2)}
+              allowCopy
+            />
+          )}
         </React.Fragment>
       );
     }
+  }
+
+  renderOutputPanel() {
+    const { method } = this.props;
+    const { request } = this.state;
+    return (
+      <RequestBlock
+        request={{
+          method,
+          path: this.getPath(),
+          body: request?.body,
+        }}
+      />
+    );
   }
 }
 

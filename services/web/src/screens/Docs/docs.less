@@ -119,22 +119,28 @@
     }
   }
 
-  &__edit {
-    &-buttons {
-      display: flex;
-      justify-content: right;
-      padding: 5px;
-      gap: 8px;
+  &__buttons {
+    display: flex;
+    justify-content: right;
+    padding: 5px;
+    gap: 1px;
 
-      .icon {
-        width: 16px;
-        height: 16px;
+    .icon {
+      width: 24px;
+      height: 24px;
+      padding: 4px;
+      border-radius: 2px;
+    }
+
+    &-record {
+      &--active {
+        color: red;
       }
+    }
 
-      &-record {
-        &--active {
-          color: red;
-        }
+    &-edit {
+      &--active {
+        color: red;
       }
     }
   }

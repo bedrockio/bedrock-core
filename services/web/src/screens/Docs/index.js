@@ -10,7 +10,6 @@ import { request } from 'utils/api';
 import { Layout, Confirm } from 'components';
 import { JumpLink } from 'components/Link';
 import ErrorMessage from 'components/ErrorMessage';
-import RequestBlock from 'components/RequestBlock';
 import ScrollWaypoint from 'components/ScrollWaypoint';
 import { toggleRecording, isRecording } from 'utils/api/record';
 import CodeBlock from 'components/Markdown/Code';
@@ -106,7 +105,6 @@ export default class Docs extends React.Component {
       });
       this.checkPageChange();
     } catch (error) {
-      console.error(error);
       this.setState({
         error,
         loading: false,
@@ -179,7 +177,7 @@ export default class Docs extends React.Component {
   }
 
   renderSidebar(docs) {
-    const { mode, focused } = this.state;
+    const { focused } = this.state;
     const pages = Object.values(docs.pagesByUrl);
     pages.sort((a, b) => {
       return a.name.localeCompare(b.name);
@@ -221,7 +219,7 @@ export default class Docs extends React.Component {
             );
           })}
         </ul>
-        {this.renderEditButtons()}
+        {this.renderButtons()}
       </aside>
     );
   }
@@ -241,54 +239,54 @@ export default class Docs extends React.Component {
             {items.map((item) => {
               const { verbPath } = item;
               return (
-                <ScrollWaypoint
-                  id={item.slug}
-                  key={item.slug}
-                  className={this.getElementClass('item')}
-                  onEnter={(el) => {
-                    this.focusedItems.set(item, el);
-                    this.updateFocused();
-                  }}
-                  onLeave={() => {
-                    this.focusedItems.delete(item);
-                    this.updateFocused();
-                  }}>
-                  <h2>
+                <React.Fragment key={item.slug}>
+                  <ScrollWaypoint
+                    id={item.slug}
+                    className={this.getElementClass('item')}
+                    onEnter={(el) => {
+                      this.focusedItems.set(item, el);
+                      this.updateFocused();
+                    }}
+                    onLeave={() => {
+                      this.focusedItems.delete(item);
+                      this.updateFocused();
+                    }}>
+                    <h2>
+                      <EditableField
+                        mode={mode}
+                        path={item.path}
+                        name="summary"
+                        value={item.summary}
+                        onSave={this.onFieldSave}
+                      />
+                    </h2>
+                    <Divider hidden />
+                    <Layout horizontal center spread>
+                      <code className={this.getElementClass('item-name')}>
+                        {verbPath}
+                      </code>
+                      <RequestBuilder
+                        docs={docs}
+                        operation={item}
+                        path={item.apiPath}
+                        method={item.method}
+                        trigger={<Icon name="play" link />}
+                      />
+                    </Layout>
+                    <Divider hidden />
                     <EditableField
+                      markdown
                       mode={mode}
                       path={item.path}
-                      name="summary"
-                      value={item.summary}
+                      name="description"
+                      value={item.description}
                       onSave={this.onFieldSave}
                     />
-                  </h2>
-                  <Divider hidden />
-                  <Layout horizontal center spread>
-                    <code className={this.getElementClass('item-name')}>
-                      {verbPath}
-                    </code>
-                    <RequestBuilder
-                      docs={docs}
-                      operation={item}
-                      path={item.apiPath}
-                      method={item.method}
-                      trigger={<Icon name="play" link />}
-                    />
-                  </Layout>
-                  <Divider hidden />
-                  <EditableField
-                    markdown
-                    mode={mode}
-                    path={item.path}
-                    name="description"
-                    value={item.description}
-                    onSave={this.onFieldSave}
-                  />
-                  {this.renderParams([...item.path, ...PARAMS_PATH])}
+                    {this.renderParams([...item.path, ...PARAMS_PATH])}
 
-                  <div className={this.getElementClass('divider')} />
-                  {this.renderExamples(item)}
-                  {/*
+                    <div className={this.getElementClass('divider')} />
+                    {this.renderExamples(item)}
+                    {/*
                   <RequestBlock
                     authToken={'<token>'}
                     method={item.method}
@@ -298,7 +296,9 @@ export default class Docs extends React.Component {
                     }}
                   />
                   */}
-                </ScrollWaypoint>
+                  </ScrollWaypoint>
+                  <Divider />
+                </React.Fragment>
               );
             })}
             {this.renderComponents()}
@@ -366,7 +366,7 @@ export default class Docs extends React.Component {
     );
   }
 
-  renderType(desc, suffix = '') {
+  renderType(desc, isArray = false) {
     const { type, $ref, oneOf, enum: allowed } = desc;
     if (oneOf) {
       return oneOf.map((entry, i) => {
@@ -383,30 +383,32 @@ export default class Docs extends React.Component {
     } else if ($ref) {
       this.visitedComponents.add($ref);
       const { name } = expandRef($ref);
-      return (
-        <JumpLink to={name}>
-          {name}
-          {suffix}
-        </JumpLink>
-      );
+      return <JumpLink to={name}>{isArray ? `[${name}]` : name}</JumpLink>;
     } else if (allowed) {
-      return allowed.map((val, i) => {
+      if (isArray) {
         return (
-          <React.Fragment key={val}>
-            {i > 0 && ', '}
-            <code className={this.getElementClass('foo')}>
-              {JSON.stringify(val)}
-            </code>
-          </React.Fragment>
+          <code>
+            [
+            {allowed
+              .map((val) => {
+                return JSON.stringify(val);
+              })
+              .join(' | ')}
+            ]
+          </code>
         );
-      });
+      } else {
+        return allowed.map((val, i) => {
+          return (
+            <React.Fragment key={val}>
+              {i > 0 && ', '}
+              <code>{JSON.stringify(val)}</code>
+            </React.Fragment>
+          );
+        });
+      }
     } else if (type) {
-      return (
-        <span>
-          {type}
-          {suffix}
-        </span>
-      );
+      return <span>{isArray ? `[${type}]` : type}</span>;
     } else {
       return <span>any</span>;
     }
@@ -544,16 +546,11 @@ export default class Docs extends React.Component {
     }
   }
 
-  renderEditButtons() {
+  renderButtons() {
     return (
-      <div className={this.getElementClass('edit-buttons')}>
+      <div className={this.getElementClass('buttons')}>
         {this.renderRecordButton()}
-        <Icon
-          link
-          name="pencil"
-          title="Toggle Edit Mode"
-          onClick={this.onEditClick}
-        />
+        {this.renderEditButton()}
         <Confirm
           size="small"
           confirmButton="Generate"
@@ -568,6 +565,22 @@ export default class Docs extends React.Component {
     );
   }
 
+  renderEditButton() {
+    const { mode } = this.state;
+    return (
+      <Icon
+        link
+        name="pencil"
+        title="Toggle Edit Mode"
+        className={this.getElementClass(
+          'buttons-edit',
+          mode === 'edit' ? 'active' : null
+        )}
+        onClick={this.onEditClick}
+      />
+    );
+  }
+
   renderRecordButton() {
     const { recording } = this.state;
     if (recording) {
@@ -575,7 +588,7 @@ export default class Docs extends React.Component {
         <Icon
           link
           name="circle"
-          className={this.getElementClass('edit-buttons-record', 'active')}
+          className={this.getElementClass('buttons-record', 'active')}
           onClick={() => {
             this.toggleRecordMode(false);
           }}
@@ -592,7 +605,7 @@ export default class Docs extends React.Component {
             <Icon
               link
               name="circle"
-              className={this.getElementClass('edit-buttons-record')}
+              className={this.getElementClass('buttons-record')}
             />
           }
           onConfirm={() => {
