@@ -8,7 +8,7 @@ const { storeUploadedFile } = require('../utils/uploads');
 const router = new Router();
 
 router
-  .param('uploadId', async (id, ctx, next) => {
+  .param('id', async (id, ctx, next) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       ctx.throw(404);
     }
@@ -58,7 +58,7 @@ router
       data: uploads,
     };
   })
-  .delete('/:uploadId', async (ctx) => {
+  .delete('/:id', async (ctx) => {
     const { upload } = ctx.state;
     await upload.delete();
     ctx.status = 204;

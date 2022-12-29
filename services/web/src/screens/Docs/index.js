@@ -408,8 +408,7 @@ export default class Docs extends React.Component {
         </span>
       );
     } else {
-      console.warn('UKNOWN TYPE', desc);
-      return 'UNKNOWN';
+      return <span>any</span>;
     }
   }
 

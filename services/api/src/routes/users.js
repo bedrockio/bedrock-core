@@ -17,7 +17,7 @@ const router = new Router();
 router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
-  .param('userId', async (id, ctx, next) => {
+  .param('id', async (id, ctx, next) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       ctx.throw(404);
     }
@@ -81,7 +81,7 @@ router
       };
     }
   )
-  .get('/:userId', async (ctx) => {
+  .get('/:id', async (ctx) => {
     ctx.body = {
       data: expandRoles(ctx.state.user),
     };
@@ -111,7 +111,7 @@ router
       };
     }
   )
-  .patch('/:userId', validateBody(User.getUpdateValidation()), async (ctx) => {
+  .patch('/:id', validateBody(User.getUpdateValidation()), async (ctx) => {
     const { user } = ctx.state;
     user.assign(ctx.request.body);
 
@@ -126,7 +126,7 @@ router
       data: user,
     };
   })
-  .delete('/:userId', async (ctx) => {
+  .delete('/:id', async (ctx) => {
     const { user } = ctx.state;
     await user.assertNoReferences({
       except: [AuditEntry],

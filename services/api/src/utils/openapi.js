@@ -110,35 +110,37 @@ function getPathMeta(koaPath, method) {
     split = split.slice(1);
   }
 
-  const [base, operation] = split;
+  const [base, ...rest] = split;
 
-  if (split.length < 3) {
-    let modelName;
-    let modelNameCamel;
-    let modelNamePlural;
-    for (let name of Object.keys(mongoose.models)) {
-      const kebab = kebabCase(name);
-      const plural = pluralize(kebab);
-      if (plural === base) {
-        modelName = startCase(name).toLowerCase();
-        modelNameCamel = camelCase(name);
-        modelNamePlural = startCase(plural).toLowerCase();
-      }
+  const suffix = rest.join('/');
+
+  let modelName;
+  let modelNameCamel;
+  let modelNamePlural;
+  for (let name of Object.keys(mongoose.models)) {
+    const kebab = kebabCase(name);
+    const plural = pluralize(kebab);
+    if (plural === base) {
+      modelName = startCase(name).toLowerCase();
+      modelNameCamel = camelCase(name);
+      modelNamePlural = startCase(plural).toLowerCase();
     }
+  }
 
-    if (modelName) {
-      const isId = operation === ':id' || operation === `:${modelNameCamel}Id`;
-      if (method === 'GET' && isId) {
-        meta.summary = `Get ${modelName} by id`;
-      } else if (method === 'POST' && !operation) {
-        meta.summary = `Create new ${modelName}`;
-      } else if (method === 'PATCH' && isId) {
-        meta.summary = `Update ${modelName}`;
-      } else if (method === 'DELETE' && isId) {
-        meta.summary = `Delete ${modelName}`;
-      } else if (method === 'POST' && operation === 'search') {
-        meta.summary = `Search ${modelNamePlural}`;
-      }
+  if (modelName) {
+    const isId = suffix === ':id' || suffix === `:${modelNameCamel}Id`;
+    if (method === 'GET' && isId) {
+      meta.summary = `Get ${modelName} by id`;
+    } else if (method === 'POST' && !suffix) {
+      meta.summary = `Create new ${modelName}`;
+    } else if (method === 'PATCH' && isId) {
+      meta.summary = `Update ${modelName}`;
+    } else if (method === 'DELETE' && isId) {
+      meta.summary = `Delete ${modelName}`;
+    } else if (method === 'POST' && suffix === 'search') {
+      meta.summary = `Search ${modelNamePlural}`;
+    } else if (method === 'POST' && suffix === 'mine/search') {
+      meta.summary = `Search ${modelNamePlural} for authenticated user.`;
     }
   }
   meta['x-group'] = startCase(base);
@@ -156,12 +158,13 @@ function extractSchemas(definition) {
       set(definition, path, {
         $ref: `#/components/schemas/${schema}`,
       });
+      return false;
     }
   });
 }
 
 function walkFields(arg, fn, path = []) {
-  if (isObject(arg)) {
+  if (arg && typeof arg === 'object') {
     for (let [key, value] of Object.entries(arg)) {
       const p = [...path, key];
       const ret = fn({

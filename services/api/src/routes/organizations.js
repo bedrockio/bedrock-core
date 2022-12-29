@@ -10,7 +10,7 @@ const router = new Router();
 router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
-  .param('organizationId', async (id, ctx, next) => {
+  .param('id', async (id, ctx, next) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       ctx.throw(404);
     }
@@ -43,7 +43,7 @@ router
       meta,
     };
   })
-  .get('/:organizationId', async (ctx) => {
+  .get('/:id', async (ctx) => {
     const organization = ctx.state.organization;
     ctx.body = {
       data: organization,
@@ -64,7 +64,7 @@ router
       data: organization,
     };
   })
-  .patch('/:organizationId', validateBody(Organization.getUpdateValidation()), async (ctx) => {
+  .patch('/:id', validateBody(Organization.getUpdateValidation()), async (ctx) => {
     const organization = ctx.state.organization;
     organization.assign(ctx.request.body);
     await organization.save();
@@ -72,7 +72,7 @@ router
       data: organization,
     };
   })
-  .delete('/:organizationId', async (ctx) => {
+  .delete('/:id', async (ctx) => {
     await ctx.state.organization.delete();
     ctx.status = 204;
   });

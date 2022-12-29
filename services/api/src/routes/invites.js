@@ -25,7 +25,7 @@ function sendInvite(sender, invite) {
 }
 
 router
-  .param('inviteId', async (id, ctx, next) => {
+  .param('id', async (id, ctx, next) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       ctx.throw(404);
     }
@@ -77,12 +77,12 @@ router
       ctx.status = 204;
     }
   )
-  .post('/:inviteId/resend', async (ctx) => {
+  .post('/:id/resend', async (ctx) => {
     const { invite, authUser } = ctx.state;
     await sendInvite(authUser, invite);
     ctx.status = 204;
   })
-  .delete('/:inviteId', async (ctx) => {
+  .delete('/:id', async (ctx) => {
     const { invite } = ctx.state;
     await invite.delete();
     ctx.status = 204;
