@@ -88,6 +88,10 @@ module.exports = {
         type: 'asset/source',
       },
       {
+        test: /\.mdx$/,
+        loader: '@mdx-js/loader',
+      },
+      {
         test: /\.html$/i,
         loader: 'html-loader',
         exclude: templatePath,

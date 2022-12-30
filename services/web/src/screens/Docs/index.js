@@ -14,8 +14,12 @@ import ScrollWaypoint from 'components/ScrollWaypoint';
 import { toggleRecording, isRecording } from 'utils/api/record';
 import CodeBlock from 'components/Markdown/Code';
 
+import { COMPONENTS } from 'components/Markdown';
+
 import RequestBuilder from './RequestBuilder';
 import EditableField from './EditableField';
+
+import PAGES from './pages';
 
 const PARAMS_PATH = [
   'requestBody',
@@ -60,6 +64,7 @@ export default class Docs extends React.Component {
     const { pathname: lastPath, hash: lastHash } = lastProps?.location || {};
     if (path !== lastPath) {
       this.focusedItems = new Map();
+      this.visitedComponents = new Set();
     }
     if (hash && hash !== lastHash) {
       const el = document.querySelector(hash);
@@ -99,8 +104,42 @@ export default class Docs extends React.Component {
         path: '/1/docs',
       });
       this.visitedComponents = new Set();
+      const docs = expandDocs(data);
+
+      const staticPagesByUrl = {};
+      for (let [key, page] of Object.entries(PAGES)) {
+        const slug = kebabCase(page.title || key);
+        const url = `/docs/${slug}`;
+        staticPagesByUrl[url] = {
+          url,
+          type: 'static',
+          order: page.order,
+          title: page.title,
+          Component: page.default,
+        };
+      }
+
+      const pagesByUrl = {
+        ...staticPagesByUrl,
+        ...docs.pagesByUrl,
+      };
+
+      const pages = Object.values(pagesByUrl);
+      pages.sort((a, b) => {
+        const { order: aOrder = 0, title: aTitle } = a;
+        const { order: bOrder = 0, title: bTitle } = b;
+
+        if (aOrder === bOrder) {
+          return aTitle.localeCompare(bTitle);
+        } else {
+          return aOrder - bOrder;
+        }
+      });
+
       this.setState({
-        docs: expandDocs(data),
+        docs,
+        pages,
+        pagesByUrl,
         loading: false,
       });
       this.checkPageChange();
@@ -158,7 +197,7 @@ export default class Docs extends React.Component {
   };
 
   render() {
-    const { docs, loading } = this.state;
+    const { docs, loading, error } = this.state;
     return (
       <div className={this.getBlockClass()}>
         {loading && (
@@ -169,7 +208,12 @@ export default class Docs extends React.Component {
         {docs && (
           <React.Fragment>
             {this.renderSidebar(docs)}
-            {this.renderPage(docs)}
+            <main ref={this.pageRef} className={this.getElementClass('page')}>
+              <Container>
+                <ErrorMessage error={error} />
+                {this.renderPage(docs)}
+              </Container>
+            </main>
           </React.Fragment>
         )}
       </div>
@@ -177,44 +221,45 @@ export default class Docs extends React.Component {
   }
 
   renderSidebar(docs) {
-    const { focused } = this.state;
-    const pages = Object.values(docs.pagesByUrl);
-    pages.sort((a, b) => {
-      return a.name.localeCompare(b.name);
-    });
+    const { pages, focused } = this.state;
+    if (!pages) {
+      return;
+    }
     return (
       <aside className={this.getElementClass('sidebar')}>
         <h2>{docs.info?.title}</h2>
         <ul className={this.getElementClass('sidebar-scroll')}>
           {pages.map((group) => {
-            const { name, url, items } = group;
+            const { title, url, items } = group;
             return (
-              <li key={name}>
+              <li key={url}>
                 <Link to={url} className={this.getElementClass('sidebar-link')}>
-                  {name}
+                  {title}
                 </Link>
-                <ul>
-                  {items
-                    .map((item) => {
-                      const { summary } = item;
-                      const isFocused = focused === item;
-                      if (summary) {
-                        return (
-                          <Link
-                            to={item.url}
-                            key={item.verbPath}
-                            data-path={item.verbPath}
-                            className={this.getElementClass(
-                              'sidebar-sublink',
-                              isFocused ? 'active' : null
-                            )}>
-                            {summary}
-                          </Link>
-                        );
-                      }
-                    })
-                    .filter((el) => el)}
-                </ul>
+                {items && (
+                  <ul>
+                    {items
+                      .map((item) => {
+                        const { summary } = item;
+                        const isFocused = focused === item;
+                        if (summary) {
+                          return (
+                            <Link
+                              to={item.url}
+                              key={item.verbPath}
+                              data-path={item.verbPath}
+                              className={this.getElementClass(
+                                'sidebar-sublink',
+                                isFocused ? 'active' : null
+                              )}>
+                              {summary}
+                            </Link>
+                          );
+                        }
+                      })
+                      .filter((el) => el)}
+                  </ul>
+                )}
               </li>
             );
           })}
@@ -225,68 +270,77 @@ export default class Docs extends React.Component {
   }
 
   renderPage(docs) {
-    const { mode, error } = this.state;
+    const { pagesByUrl } = this.state;
     const { pathname } = this.props.location;
-    const page = docs.pagesByUrl[pathname];
-    if (page) {
-      const { name, items } = page;
-      return (
-        <main ref={this.pageRef} className={this.getElementClass('page')}>
-          <Container>
-            <ErrorMessage error={error} />
-            <h1>{name}</h1>
-            <Divider />
-            {items.map((item) => {
-              const { verbPath } = item;
-              return (
-                <React.Fragment key={item.slug}>
-                  <ScrollWaypoint
-                    id={item.slug}
-                    className={this.getElementClass('item')}
-                    onEnter={(el) => {
-                      this.focusedItems.set(item, el);
-                      this.updateFocused();
-                    }}
-                    onLeave={() => {
-                      this.focusedItems.delete(item);
-                      this.updateFocused();
-                    }}>
-                    <h2>
-                      <EditableField
-                        mode={mode}
-                        path={item.path}
-                        name="summary"
-                        value={item.summary}
-                        onSave={this.onFieldSave}
-                      />
-                    </h2>
-                    <Divider hidden />
-                    <Layout horizontal center spread>
-                      <code className={this.getElementClass('item-name')}>
-                        {verbPath}
-                      </code>
-                      <RequestBuilder
-                        docs={docs}
-                        operation={item}
-                        path={item.apiPath}
-                        method={item.method}
-                        trigger={<Icon name="play" link />}
-                      />
-                    </Layout>
-                    <Divider hidden />
-                    <EditableField
-                      markdown
-                      mode={mode}
-                      path={item.path}
-                      name="description"
-                      value={item.description}
-                      onSave={this.onFieldSave}
-                    />
-                    {this.renderParams([...item.path, ...PARAMS_PATH])}
+    const page = pagesByUrl[pathname];
 
-                    <div className={this.getElementClass('divider')} />
-                    {this.renderExamples(item)}
-                    {/*
+    if (page?.type === 'docs') {
+      return this.renderDocsPage(docs, page);
+    } else if (page?.type === 'static') {
+      return this.renderStaticPage(page);
+    } else {
+      return this.renderEmptyPage();
+    }
+  }
+
+  renderDocsPage(docs, page) {
+    const { mode } = this.state;
+    const { title, items } = page;
+    return (
+      <React.Fragment>
+        <h1>{title}</h1>
+        <Divider />
+        {items.map((item) => {
+          const { verbPath } = item;
+          return (
+            <React.Fragment key={item.slug}>
+              <ScrollWaypoint
+                id={item.slug}
+                className={this.getElementClass('item')}
+                onEnter={(el) => {
+                  this.focusedItems.set(item, el);
+                  this.updateFocused();
+                }}
+                onLeave={() => {
+                  this.focusedItems.delete(item);
+                  this.updateFocused();
+                }}>
+                <h2>
+                  <EditableField
+                    mode={mode}
+                    path={item.path}
+                    name="summary"
+                    value={item.summary}
+                    onSave={this.onFieldSave}
+                  />
+                </h2>
+                <Divider hidden />
+                <Layout horizontal center spread>
+                  <code className={this.getElementClass('item-name')}>
+                    {verbPath}
+                  </code>
+                  <RequestBuilder
+                    docs={docs}
+                    operation={item}
+                    path={item.apiPath}
+                    method={item.method}
+                    trigger={<Icon name="play" link />}
+                  />
+                </Layout>
+                <Divider hidden />
+                <EditableField
+                  markdown
+                  mode={mode}
+                  path={item.path}
+                  name="description"
+                  value={item.description}
+                  onSave={this.onFieldSave}
+                />
+                {this.renderParams([...item.path, ...PARAMS_PATH])}
+
+                <div className={this.getElementClass('divider')} />
+                {this.renderExamples(item)}
+                {/*
                   <RequestBlock
                     authToken={'<token>'}
                     method={item.method}
@@ -296,16 +350,14 @@ export default class Docs extends React.Component {
                     }}
                   />
                   */}
-                  </ScrollWaypoint>
-                  <Divider />
-                </React.Fragment>
-              );
-            })}
-            {this.renderComponents()}
-          </Container>
-        </main>
-      );
-    }
+              </ScrollWaypoint>
+              <Divider />
+            </React.Fragment>
+          );
+        })}
+        {this.renderComponents()}
+      </React.Fragment>
+    );
   }
 
   renderParams(path) {
@@ -615,6 +667,23 @@ export default class Docs extends React.Component {
       );
     }
   }
+
+  renderStaticPage(page) {
+    const { title, Component } = page;
+    // TODO: cleanup and somehow remove the unneeded div here
+    return (
+      <React.Fragment>
+        <h1>{title}</h1>
+        <div className="markdown">
+          <Component components={COMPONENTS} />
+        </div>
+      </React.Fragment>
+    );
+  }
+
+  renderEmptyPage() {
+    return <div>Empty!</div>;
+  }
 }
 
 @bem
@@ -719,7 +788,8 @@ function expandDocs(docs) {
       item.url = itemUrl;
       pagesByUrl[pageUrl] ||= {
         url: pageUrl,
-        name: item['x-group'] || '<GROUP>',
+        type: 'docs',
+        title: item['x-group'] || '<GROUP>',
         items: [],
       };
       pagesByUrl[pageUrl].items.push(item);
