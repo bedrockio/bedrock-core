@@ -4,6 +4,8 @@ import rehypeRaw from 'rehype-raw';
 import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
 
+import Code from 'components/Code';
+
 import bem from 'helpers/bem';
 
 import Link from './Link';
@@ -12,8 +14,6 @@ import Link from './Link';
 
 import 'styles/github-markdown.less';
 import './markdown.less';
-
-import Highlighter from './Highlighter';
 
 export const COMPONENTS = {
   a: Link,
@@ -30,9 +30,7 @@ export const COMPONENTS = {
       (child?.props?.className || '').startsWith('language-');
     if (isCode) {
       const language = child.props.className.match(/^language-(\w+)$/)?.[1];
-      return (
-        <Highlighter language={language}>{child.props.children}</Highlighter>
-      );
+      return <Code language={language}>{child.props.children}</Code>;
     } else {
       return <pre {...props} />;
     }

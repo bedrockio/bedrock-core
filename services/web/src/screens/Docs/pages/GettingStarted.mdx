@@ -1,5 +1,5 @@
 import { APP_NAME, API_URL } from 'utils/env';
-import CodeBlock from 'components/Markdown/Code';
+import Code from 'components/Code';
 
 export const title = 'Getting Started';
 export const order = -1;
@@ -13,24 +13,23 @@ credentials can be managed with a full RBAC permissioning layer.
 
 Main production URL:
 
-<CodeBlock source={`${API_URL}/`} />
+<Code>{`${API_URL}/`}</Code>
 
 ### API Key
 
 Each client using using the api must provide use an API key to identify itself.
 You can provide your API key via an header (`API-Key: <apiKey>`):
 
-<CodeBlock language="bash" source={`curl -H 'API-Key: <apiKey>' ${API_URL}/`} />
+<Code language="bash">{`curl -H 'API-Key: <apiKey>' ${API_URL}/`}</Code>
 
 ### Authorization
 
 JWT is used for all authentication. You can provide your API token in a standard
 bearer token request (`Authorization: Bearer <token>`) like so:
 
-<CodeBlock
-  language="bash"
-  source={`curl -H 'Authorization: Bearer <token>' ${API_URL}/`}
-/>
+<Code language="bash">
+  {`curl -H 'Authorization: Bearer <token>' ${API_URL}/`}
+</Code>
 
 _When receiving a 401 status code, the client should clear any stored JWT
 tokens - this will enable authentication reset and expiry behavior_
@@ -43,19 +42,14 @@ used to obtain objects.
 Search/List API calls are done using POST to allow reliable JSON parameters.
 Example search:
 
-foo [foo](https://foo.com)
-
-www.example.com, https://example.com, and contact@example.com.
-
-<CodeBlock
-  language="bash"
-  source={`curl
-  -X POST ${API_URL}/1/users/search \
-  -d '{"limit": 100, "skip": 0}' \
-  -H 'Authorization: Bearer <token>' \
-  -H 'APIKey: <apikey>' \
+<Code language="bash">
+  {`curl \\
+  -X POST ${API_URL}/1/users/search \\
+  -d '{"limit": 100, "skip": 0}' \\
+  -H 'Authorization: Bearer <token>' \\
+  -H 'APIKey: <apikey>' \\
   -H 'Content-Type: application/json'`}
-/>
+</Code>
 
 ### Responses
 

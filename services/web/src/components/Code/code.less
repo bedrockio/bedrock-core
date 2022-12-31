@@ -1,0 +1,28 @@
+.code {
+  // TODO: this needs cleanup (colors etc);
+  position: relative;
+  overflow: auto;
+
+  &--scroll {
+    max-height: 500px;
+  }
+
+  &__copy-button {
+    position: absolute;
+    top: 0;
+    right: 3px;
+    padding: 10px;
+    color: #fff;
+    opacity: 0.15;
+
+    &--clickable:hover {
+      cursor: pointer;
+      opacity: 1;
+    }
+
+    .icon {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}

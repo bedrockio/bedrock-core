@@ -12,7 +12,7 @@ import { JumpLink } from 'components/Link';
 import ErrorMessage from 'components/ErrorMessage';
 import ScrollWaypoint from 'components/ScrollWaypoint';
 import { toggleRecording, isRecording } from 'utils/api/record';
-import CodeBlock from 'components/Markdown/Code';
+import Code from 'components/Code';
 
 import { COMPONENTS } from 'components/Markdown';
 
@@ -754,11 +754,7 @@ class DocsExample extends React.Component {
       return (
         <div className={this.getElementClass('body')}>
           <div>{title}</div>
-          <CodeBlock
-            language="json"
-            source={JSON.stringify(body, null, 2)}
-            allowCopy
-          />
+          <Code language="json">{JSON.stringify(body, null, 2)}</Code>
         </div>
       );
     }

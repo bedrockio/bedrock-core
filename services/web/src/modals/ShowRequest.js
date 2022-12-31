@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, Table, Menu, Divider } from 'semantic';
 
 import modal from 'helpers/modal';
-import CodeBlock from 'components/Markdown/Code';
+import Code from 'components/Code';
 import RequestBlock from 'components/RequestBlock';
 import { API_URL } from 'utils/env';
 
@@ -69,11 +69,9 @@ export default class ShowRequest extends React.Component {
               {rest.body && (
                 <>
                   <h3>Body</h3>
-                  <CodeBlock
-                    source={JSON.stringify(rest.body, null, 2)}
-                    language="json"
-                    allowCopy
-                  />
+                  <Code language="json">
+                    {JSON.stringify(rest.body, null, 2)}
+                  </Code>
                 </>
               )}
               <h3>Headers</h3>

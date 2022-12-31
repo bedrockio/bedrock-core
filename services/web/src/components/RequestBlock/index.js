@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown, Header } from 'semantic';
 
-import { Layout } from 'components/Layout';
-import Code from 'components/Markdown/Code';
 import { API_URL } from 'utils/env';
+import { Layout } from 'components/Layout';
+import Code from 'components/Code';
 
 import templateCurl from './templates/curl';
 import templateFetch from './templates/fetch';
@@ -124,11 +124,7 @@ export default class RequestBlock extends React.Component {
             </Layout.Group>
           </Layout>
         )}
-        <Code
-          source={template(this.getData())}
-          language={option.language}
-          allowCopy
-        />
+        <Code language={option.language}>{template(this.getData())}</Code>
       </React.Fragment>
     );
   }
