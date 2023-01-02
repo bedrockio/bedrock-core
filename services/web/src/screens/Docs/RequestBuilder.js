@@ -1,9 +1,18 @@
 import React from 'react';
 import { get, set } from 'lodash';
-import { Form, Input, Checkbox, Tab, Icon, Dimmer, Loader } from 'semantic';
+import {
+  Form,
+  Input,
+  Dropdown,
+  Checkbox,
+  Tab,
+  Icon,
+  Dimmer,
+  Loader,
+} from 'semantic';
 
 import { request } from 'utils/api';
-import CodeBlock from 'components/Markdown/Code';
+import Code from 'components/Code';
 import RequestBlock from 'components/RequestBlock';
 
 import bem from 'helpers/bem';
@@ -14,7 +23,18 @@ import ErrorMessage from 'components/ErrorMessage';
 // TODO: make nicer
 const BODY_PATH = ['requestBody', 'content', 'application/json', 'schema'];
 
-const PROP_ORDER = ['string', 'ObjectId', 'object', 'array'];
+const NAME_RANK = {
+  keyword: 0,
+  default: 1,
+};
+
+const TYPE_RANK = {
+  boolean: 1,
+  default: 2,
+  ObjectId: 3,
+  object: 4,
+  array: 5,
+};
 
 function resolveRefs(docs, schema) {
   const { $ref } = schema;
@@ -37,6 +57,7 @@ export default class RequestBuilder extends React.Component {
       request: {},
       activeTab: 0,
     };
+    this.ref = React.createRef();
   }
 
   getModifiers() {
@@ -104,8 +125,11 @@ export default class RequestBuilder extends React.Component {
     console.info('RECORD');
   };
 
-  onTransitionEnd = () => {
-    if (!this.state.active) {
+  onTransitionEnd = (evt) => {
+    if (
+      !this.state.active &&
+      (!this.ref.current || this.ref.current === evt.target)
+    ) {
       this.setState({
         visible: false,
       });
@@ -119,6 +143,7 @@ export default class RequestBuilder extends React.Component {
         {this.renderTrigger()}
         <Dimmer page active={visible} onClick={this.onCloseClick} />
         <div
+          ref={this.ref}
           className={this.getBlockClass()}
           onTransitionEnd={this.onTransitionEnd}>
           {visible && this.renderMain()}
@@ -227,7 +252,17 @@ export default class RequestBuilder extends React.Component {
   renderSchema(schema, path, options) {
     const { docs } = this.props;
     schema = resolveRefs(docs, schema);
-    const { type } = schema;
+    const { type, oneOf } = schema;
+    if (oneOf) {
+      return (
+        <OneOfSchema
+          schema={schema}
+          renderSchema={(schema) => {
+            return this.renderSchema(schema, path, options);
+          }}
+        />
+      );
+    }
     switch (type) {
       case 'object':
         return this.renderObjectSchema(schema, path, options);
@@ -250,9 +285,17 @@ export default class RequestBuilder extends React.Component {
     const { properties } = schema;
     const entries = Object.entries(properties);
     entries.sort((a, b) => {
+      const aName = a[0];
+      const bName = b[0];
       const { type: aType } = resolveRefs(docs, a[1]);
       const { type: bType } = resolveRefs(docs, b[1]);
-      return PROP_ORDER.indexOf(aType) - PROP_ORDER.indexOf(bType);
+      const aN = getRank(aName, NAME_RANK);
+      const bN = getRank(bName, NAME_RANK);
+      if (aN !== bN) {
+        return aN - bN;
+      } else {
+        return getRank(aType, TYPE_RANK) - getRank(bType, TYPE_RANK);
+      }
     });
     return entries.map(([key, schema]) => {
       schema = resolveRefs(docs, schema);
@@ -357,11 +400,13 @@ export default class RequestBuilder extends React.Component {
   }
 
   setField = (evt, { type, path, value, checked }) => {
-    if (type === 'checkbox') {
+    if (type === 'number') {
+      value = Number(value);
+    } else if (type === 'checkbox') {
       value = checked;
     }
     const request = { ...this.state.request };
-    set(request, path, value);
+    set(request, path, value || undefined);
     this.setState({
       request,
     });
@@ -418,12 +463,7 @@ export default class RequestBuilder extends React.Component {
         <React.Fragment>
           <ErrorMessage error={error} />
           {response && (
-            <CodeBlock
-              height="60vh"
-              language="json"
-              source={JSON.stringify(response, null, 2)}
-              allowCopy
-            />
+            <Code language="json">{JSON.stringify(response, null, 2)}</Code>
           )}
         </React.Fragment>
       );
@@ -467,4 +507,48 @@ class Collapsable extends React.Component {
       toggle: this.toggle,
     });
   }
+}
+
+class OneOfSchema extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      selected: 0,
+    };
+  }
+
+  onDropdownChange = (evt, { value }) => {
+    this.setState({
+      selected: value,
+    });
+  };
+
+  render() {
+    const { schema, renderSchema } = this.props;
+    const { oneOf = [] } = schema;
+    const { selected } = this.state;
+    return (
+      <React.Fragment>
+        <Dropdown
+          value={selected}
+          options={oneOf.map((schema, i) => {
+            return {
+              text: schema.type,
+              value: i,
+            };
+          })}
+          onChange={this.onDropdownChange}
+        />
+        {renderSchema(oneOf[selected])}
+      </React.Fragment>
+    );
+  }
+}
+
+function getRank(key, obj) {
+  let rank = obj[key];
+  if (typeof rank !== 'number') {
+    rank = obj['default'];
+  }
+  return rank;
 }

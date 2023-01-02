@@ -103,39 +103,8 @@ export default class Docs extends React.Component {
         method: 'GET',
         path: '/1/docs',
       });
+      const { docs, pages, pagesByUrl } = this.getFullDocs(data);
       this.visitedComponents = new Set();
-      const docs = expandDocs(data);
-
-      const staticPagesByUrl = {};
-      for (let [key, page] of Object.entries(PAGES)) {
-        const slug = kebabCase(page.title || key);
-        const url = `/docs/${slug}`;
-        staticPagesByUrl[url] = {
-          url,
-          type: 'static',
-          order: page.order,
-          title: page.title,
-          Component: page.default,
-        };
-      }
-
-      const pagesByUrl = {
-        ...staticPagesByUrl,
-        ...docs.pagesByUrl,
-      };
-
-      const pages = Object.values(pagesByUrl);
-      pages.sort((a, b) => {
-        const { order: aOrder = 0, title: aTitle } = a;
-        const { order: bOrder = 0, title: bTitle } = b;
-
-        if (aOrder === bOrder) {
-          return aTitle.localeCompare(bTitle);
-        } else {
-          return aOrder - bOrder;
-        }
-      });
-
       this.setState({
         docs,
         pages,
@@ -150,6 +119,45 @@ export default class Docs extends React.Component {
       });
     }
   };
+
+  getFullDocs(data) {
+    const docs = expandDocs(data);
+
+    const staticPagesByUrl = {};
+    for (let [key, page] of Object.entries(PAGES)) {
+      const slug = kebabCase(page.title || key);
+      const url = `/docs/${slug}`;
+      staticPagesByUrl[url] = {
+        url,
+        type: 'static',
+        order: page.order,
+        title: page.title,
+        Component: page.default,
+      };
+    }
+
+    const pagesByUrl = {
+      ...staticPagesByUrl,
+      ...docs.pagesByUrl,
+    };
+
+    const pages = Object.values(pagesByUrl);
+    pages.sort((a, b) => {
+      const { order: aOrder = 0, title: aTitle } = a;
+      const { order: bOrder = 0, title: bTitle } = b;
+      if (aOrder === bOrder) {
+        return aTitle.localeCompare(bTitle);
+      } else {
+        return aOrder - bOrder;
+      }
+    });
+
+    return {
+      docs,
+      pages,
+      pagesByUrl,
+    };
+  }
 
   onFieldSave = ({ path, value }) => {
     const docs = { ...this.state.docs };
@@ -184,10 +192,15 @@ export default class Docs extends React.Component {
         method: 'POST',
         path: '/1/docs/generate',
       });
+      const { docs, pages, pagesByUrl } = this.getFullDocs(data);
+      this.visitedComponents = new Set();
       this.setState({
-        docs: expandDocs(data),
+        docs,
+        pages,
+        pagesByUrl,
         loading: false,
       });
+      this.checkPageChange();
     } catch (error) {
       this.setState({
         error,
@@ -360,7 +373,8 @@ export default class Docs extends React.Component {
     );
   }
 
-  renderParams(path) {
+  renderParams(path, options = {}) {
+    const { skipRequired } = options;
     const { docs, mode } = this.state;
     const params = get(docs, path);
     if (!params) {
@@ -388,7 +402,7 @@ export default class Docs extends React.Component {
                     {this.renderType(desc)}
                   </div>
 
-                  {required && (
+                  {required && !skipRequired && (
                     <div className={this.getElementClass('param-required')}>
                       Required
                     </div>
@@ -588,7 +602,9 @@ export default class Docs extends React.Component {
                   value={description}
                   onSave={this.onFieldSave}
                 />
-                {this.renderParams([...path, 'properties'])}
+                {this.renderParams([...path, 'properties'], {
+                  skipRequired: true,
+                })}
                 <Divider />
               </div>
             );
@@ -763,7 +779,6 @@ class DocsExample extends React.Component {
 
 function expandDocs(docs) {
   const pagesByUrl = {};
-  const itemsByUrl = {};
   for (let [apiPath, pathItem] of Object.entries(docs.paths || {})) {
     for (let [method, item] of Object.entries(pathItem || {})) {
       item.path = ['paths', apiPath, method];
@@ -782,6 +797,7 @@ function expandDocs(docs) {
 
       item.slug = slug;
       item.url = itemUrl;
+
       pagesByUrl[pageUrl] ||= {
         url: pageUrl,
         type: 'docs',
@@ -789,13 +805,10 @@ function expandDocs(docs) {
         items: [],
       };
       pagesByUrl[pageUrl].items.push(item);
-
-      itemsByUrl[itemUrl] = item;
     }
   }
   return {
     pagesByUrl,
-    itemsByUrl,
     ...docs,
   };
 }

@@ -19,12 +19,12 @@ const OBJECT_ID_SCHEMA = yd
   .tag({
     type: 'ObjectId',
     'x-schema': 'ObjectId',
-    description: OBJECT_ID_DESCRIPTION.trim(),
+    'x-description': OBJECT_ID_DESCRIPTION.trim(),
   });
 
 const DATE_SCHEMA = yd.date().iso().tag({
   'x-schema': 'DateTime',
-  description: 'A `string` in [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format.',
+  'x-description': 'A `string` in [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format.',
 });
 
 class PermissionsError extends Error {}
@@ -239,7 +239,7 @@ function getSearchSchema(schema, type) {
           })
           .tag({
             'x-schema': 'NumberRange',
-            description: 'An object representing numbers falling within a range.',
+            'x-description': 'An object representing numbers falling within a range.',
           })
       )
       .description('Allows searching by a value, array of values, or a numeric range.');
@@ -269,7 +269,7 @@ function getSearchSchema(schema, type) {
           })
           .tag({
             'x-schema': 'DateRange',
-            description: 'An object representing dates falling within a range.',
+            'x-description': 'An object representing dates falling within a range.',
           })
       )
       .description('Allows searching by a date, array of dates, or a range.');

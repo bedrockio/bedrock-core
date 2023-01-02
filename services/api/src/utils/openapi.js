@@ -155,13 +155,17 @@ function extractSchemas(definition) {
     if (schema) {
       set(definition, ['components', 'schemas', schema], {
         ...value,
+        description: value['x-description'],
         'x-schema': undefined,
+        'x-description': undefined,
       });
       halt = true;
     }
     if (ref) {
-      set(definition, [...path, '$ref'], `#/components/schemas/${ref}`);
-      set(definition, [...path, 'x-ref'], undefined);
+      set(definition, path, {
+        $ref: `#/components/schemas/${ref}`,
+        description: value?.description,
+      });
       halt = true;
     }
     return !halt;
