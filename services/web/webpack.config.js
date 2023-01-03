@@ -24,7 +24,7 @@ module.exports = {
   mode: BUILD ? 'production' : 'development',
   devtool: BUILD ? 'source-map' : 'eval-cheap-module-source-map',
   entry: {
-    public: ['webpack-hot-middleware/client', './src/index.js'],
+    public: getEntryPoint('./src/index.js'),
   },
   output: {
     publicPath: '/',
@@ -34,6 +34,7 @@ module.exports = {
   },
   resolve: {
     alias: {
+      lodash: 'lodash-es',
       'react-dom': '@hot-loader/react-dom',
     },
     extensions: ['.js', '.json', '.jsx'],
@@ -81,7 +82,7 @@ module.exports = {
       {
         test: /\.html$/i,
         loader: 'html-loader',
-        exclude: './src/index.html',
+        exclude: path.resolve(__dirname, './src/index.html'),
         options: {
           esModule: false,
           preprocessor: (source, ctx) => {
@@ -187,6 +188,15 @@ module.exports = {
     type: 'filesystem',
   },
 };
+
+function getEntryPoint(path) {
+  const entry = [];
+  if (!BUILD) {
+    entry.push('webpack-hot-middleware/client');
+  }
+  entry.push(path);
+  return entry;
+}
 
 function getOptionalPlugins() {
   const plugins = [];

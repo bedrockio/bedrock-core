@@ -259,7 +259,6 @@ export default class Docs extends React.Component {
         <ul className={this.getElementClass('sidebar-scroll')}>
           {pages.map((group) => {
             const { title, url, items } = group;
-            console.info('OHHBOY');
             return (
               <li key={url}>
                 <Link to={url} className={this.getElementClass('sidebar-link')}>
