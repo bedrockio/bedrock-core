@@ -2033,7 +2033,7 @@ const icons = [
 ];
 
 @screen
-export default class ComponentsScreen extends React.Component {
+export default class IconSheetScreen extends React.Component {
   static layout = 'portal';
 
   contextRef = React.createRef();

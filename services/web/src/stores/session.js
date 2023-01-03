@@ -20,6 +20,7 @@ export class SessionProvider extends React.PureComponent {
     this.state = {
       user: null,
       error: null,
+      ready: false,
       loading: true,
       stored: this.loadStored(),
       organization: null,
@@ -79,6 +80,7 @@ export class SessionProvider extends React.PureComponent {
           user,
           organization,
           loading: false,
+          ready: true,
         });
       } catch (error) {
         // eslint-disable-next-line no-console
@@ -90,6 +92,7 @@ export class SessionProvider extends React.PureComponent {
           this.setState({
             error,
             loading: false,
+            ready: true,
           });
         }
       }

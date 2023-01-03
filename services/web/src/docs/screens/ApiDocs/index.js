@@ -124,15 +124,28 @@ export default class Docs extends React.Component {
     const docs = expandDocs(data);
 
     const staticPagesByUrl = {};
-    for (let [key, page] of Object.entries(PAGES)) {
-      const slug = kebabCase(page.title || key);
+    for (let [key, data] of Object.entries(PAGES)) {
+      const slug = kebabCase(data.title || key);
       const url = `/docs/${slug}`;
-      staticPagesByUrl[url] = {
+      const page = {
         url,
         type: 'static',
-        order: page.order,
-        title: page.title,
-        Component: page.default,
+        order: data.order,
+        title: data.title,
+        group: data.group,
+        Component: data.default,
+      };
+      if (data.group) {
+        const slug = kebabCase(data.group);
+        const groupUrl = `/docs/${slug}`;
+        staticPagesByUrl[groupUrl] ||= {
+          items: [],
+        };
+        staticPagesByUrl[groupUrl].items.push(page);
+      }
+      staticPagesByUrl[url] = {
+        ...staticPagesByUrl[url],
+        ...page,
       };
     }
 
@@ -141,7 +154,9 @@ export default class Docs extends React.Component {
       ...docs.pagesByUrl,
     };
 
-    const pages = Object.values(pagesByUrl);
+    const pages = Object.values(pagesByUrl).filter((page) => {
+      return !page.group;
+    });
     pages.sort((a, b) => {
       const { order: aOrder = 0, title: aTitle } = a;
       const { order: bOrder = 0, title: bTitle } = b;
@@ -244,6 +259,7 @@ export default class Docs extends React.Component {
         <ul className={this.getElementClass('sidebar-scroll')}>
           {pages.map((group) => {
             const { title, url, items } = group;
+            console.info('OHHBOY');
             return (
               <li key={url}>
                 <Link to={url} className={this.getElementClass('sidebar-link')}>
@@ -253,7 +269,7 @@ export default class Docs extends React.Component {
                   <ul>
                     {items
                       .map((item) => {
-                        const { summary } = item;
+                        const { title, summary } = item;
                         const isFocused = focused === item;
                         if (summary) {
                           return (
@@ -266,6 +282,17 @@ export default class Docs extends React.Component {
                                 isFocused ? 'active' : null
                               )}>
                               {summary}
+                            </Link>
+                          );
+                        } else if (title) {
+                          return (
+                            <Link
+                              to={item.url}
+                              key={item.url}
+                              className={this.getElementClass(
+                                'sidebar-sublink'
+                              )}>
+                              {title}
                             </Link>
                           );
                         }

@@ -1,6 +1,5 @@
 const path = require('path');
 
-const yargs = require('yargs');
 const webpack = require('webpack');
 const config = require('@bedrockio/config');
 
@@ -12,18 +11,6 @@ const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { template: compileTemplate } = require('lodash');
 
-// To enable multiple builds, place each app in a folder inside src,
-// add it below, and move src/index.html to src/common/index.html.
-const APPS = ['public'];
-
-// webpack v5 no longer passes command line flags so hooking into
-// "name" flag instead of "app".
-const argv = yargs.option('name', {
-  array: true,
-  alias: 'apps',
-  default: APPS,
-}).argv;
-
 // Note that webpack has deprecated the -p flag and now uses "mode".
 // Additionally NODE_ENV seems to affect the build as well.
 const BUILD = process.env.NODE_ENV === 'production';
@@ -33,12 +20,12 @@ const PARAMS = {
   ...config.getAll(),
 };
 
-const templatePath = getTemplatePath();
-
 module.exports = {
   mode: BUILD ? 'production' : 'development',
   devtool: BUILD ? 'source-map' : 'eval-cheap-module-source-map',
-  entry: getEntryPoints(),
+  entry: {
+    public: ['webpack-hot-middleware/client', './src/index.js'],
+  },
   output: {
     publicPath: '/',
     filename: 'assets/[name].[contenthash].js',
@@ -94,7 +81,7 @@ module.exports = {
       {
         test: /\.html$/i,
         loader: 'html-loader',
-        exclude: templatePath,
+        exclude: './src/index.html',
         options: {
           esModule: false,
           preprocessor: (source, ctx) => {
@@ -110,12 +97,27 @@ module.exports = {
     ],
   },
   plugins: [
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      templateParameters: {
+        ...PARAMS,
+      },
+      minify: {
+        collapseWhitespace: true,
+        keepClosingSlash: true,
+        removeComments: false,
+        removeRedundantAttributes: true,
+        removeScriptTypeAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        useShortDoctype: true,
+      },
+      inject: true,
+    }),
     new CircularDependencyPlugin({
       exclude: /node_modules/,
       failOnError: true,
       cwd: process.cwd(),
     }),
-    ...getTemplatePlugins(),
     ...getOptionalPlugins(),
 
     // Favicons plugin occasionally makes webpack build fail due with error:
@@ -174,15 +176,6 @@ module.exports = {
         }).apply(compiler);
       },
     ],
-    splitChunks: {
-      cacheGroups: {
-        commons: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendor',
-          chunks: 'all',
-        },
-      },
-    },
   },
   performance: {
     // 10mb limit to warn about insanity happening but as a
@@ -194,66 +187,6 @@ module.exports = {
     type: 'filesystem',
   },
 };
-
-function getEntryPoints() {
-  const entryPoints = {};
-  if (isMultiEntry()) {
-    for (let app of argv.apps) {
-      entryPoints[app] = getEntryPoint(`src/${app}/index.js`);
-    }
-  } else {
-    entryPoints['public'] = getEntryPoint('src/index.js');
-  }
-  return entryPoints;
-}
-
-// koa-webpack -> webpack-hot-client requires this to be wrapped in an array
-// https://github.com/webpack-contrib/webpack-hot-client/issues/11
-// TODO: manually loading this for now
-function getEntryPoint(relPath) {
-  const entry = [];
-  if (!BUILD) {
-    entry.push('webpack-hot-middleware/client');
-  }
-  entry.push(path.resolve(relPath));
-  return entry;
-}
-
-function getTemplatePath() {
-  if (isMultiEntry()) {
-    return path.resolve(__dirname, 'src/common/index.html');
-  } else {
-    return path.resolve(__dirname, 'src/index.html');
-  }
-}
-
-function isMultiEntry() {
-  return APPS.length > 1;
-}
-
-function getTemplatePlugins() {
-  return argv.apps.map((app) => {
-    return new HtmlWebpackPlugin({
-      template: templatePath,
-      chunks: [app, 'vendor'],
-      templateParameters: {
-        app,
-        ...PARAMS,
-      },
-      minify: {
-        collapseWhitespace: true,
-        keepClosingSlash: true,
-        removeComments: false,
-        removeRedundantAttributes: true,
-        removeScriptTypeAttributes: true,
-        removeStyleLinkTypeAttributes: true,
-        useShortDoctype: true,
-      },
-      filename: path.join(app === 'public' ? '' : app, 'index.html'),
-      inject: true,
-    });
-  });
-}
 
 function getOptionalPlugins() {
   const plugins = [];

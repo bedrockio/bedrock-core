@@ -3,11 +3,7 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
 import { Protected } from 'helpers/routes';
-import { useSession } from 'stores';
 import Dashboard from 'screens/Dashboard';
-import Docs from 'screens/Docs';
-import Components from 'screens/Components';
-import IconSheet from 'screens/Components/IconSheet';
 import Invites from 'screens/Invites';
 import NotFound from 'screens/NotFound';
 import Settings from 'screens/Settings';
@@ -23,19 +19,11 @@ import Login from 'screens/Auth/Login';
 import Logout from 'screens/Auth/Logout';
 import Signup from 'screens/Auth/Signup';
 import Organizations from 'screens/Organizations';
-import Loading from 'screens/Loading';
-import Error from 'screens/Error';
 import Products from 'screens/Products';
 import Applications from 'screens/Applications';
 import AuditTrail from 'screens/AuditTrail';
 
 const App = () => {
-  const { loading, error } = useSession();
-  if (loading) {
-    return <Loading />;
-  } else if (error) {
-    return <Error error={error} />;
-  }
   return (
     <Switch>
       <Protected path="/" allowed={Dashboard} exact />
@@ -45,12 +33,8 @@ const App = () => {
       <Protected path="/users/invites" allowed={Invites} exact />
       <Protected path="/organizations/:id?" allowed={Organizations} />
       <Protected path="/users/:id?" allowed={Users} />
-      <Protected path="/audit-trail/:id?" allowed={AuditTrail} />
       <Protected path="/applications/:id?" allowed={Applications} />
-
-      <Route path="/docs/ui" component={Components} exact />
-      <Route path="/docs/icons" component={IconSheet} exact />
-      <Route path="/docs/:id?" component={Docs} />
+      <Protected path="/audit-trail/:id?" allowed={AuditTrail} />
       <Route path="/logout" component={Logout} exact />
       <Route path="/login/verification" component={MfaVerification} exact />
       <Route
