@@ -13,8 +13,14 @@ afterAll(async () => {
 
 let counter = 0;
 
-function createTestModel(schema) {
-  return mongoose.model(`SchemaTestModel${counter++}`, schema || createSchemaFromAttributes());
+function createTestModel(schema, modelName) {
+  modelName ||= getTestModelName();
+  schema ||= createSchemaFromAttributes();
+  return mongoose.model(modelName, schema);
+}
+
+function getTestModelName() {
+  return `SchemaTestModel${counter++}`;
 }
 
 function createSchemaFromAttributes(attributes = {}) {
@@ -1057,6 +1063,32 @@ describe('createSchema', () => {
       expect(product.shop.user).toMatchObject({
         name: 'Marlon',
       });
+    });
+
+    it('should apply default maxDepth when not defined on object', async () => {
+      const shopModelName = getTestModelName();
+
+      const Shop = createTestModel(
+        createSchemaFromAttributes({
+          name: 'String',
+          shop: {
+            ref: shopModelName,
+            type: 'ObjectId',
+            autopopulate: {
+              select: '-name',
+            },
+          },
+        }),
+        shopModelName
+      );
+
+      const shop = new Shop({
+        name: 'test',
+      });
+      shop.shop = shop.id;
+      await shop.save();
+      expect(shop.shop.shop.toString()).toBe(shop.id);
+      expect(shop.shop.name).toBeUndefined();
     });
   });
 
