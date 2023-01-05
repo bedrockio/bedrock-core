@@ -70,11 +70,10 @@ async function fetchUser(ctx, next) {
       throw new TokenError('User associated to token could not be found');
     }
 
-    console.log('jere', token.lastUsedAt, Date.now() - 1000 * 30);
+    const ip = ctx.get('x-forwarded-for') || ctx.ip;
     // update update the user if the token hasnt been updated in the last 30 seconds
-    if (token.lastUsedAt < Date.now() - 1000 * 30) {
-      // update the user's ip address
-      const ip = ctx.get('x-forwarded-for') || ctx.ip;
+    // or the ip address has changed
+    if (token && (token.lastUsedAt < Date.now() - 1000 * 30 || token.ip !== ip)) {
       if (token && token.ip !== ip) {
         token.ip = ip;
       }
