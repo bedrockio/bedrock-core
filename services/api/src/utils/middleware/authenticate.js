@@ -74,9 +74,7 @@ async function fetchUser(ctx, next) {
     // update update the user if the token hasnt been updated in the last 30 seconds
     // or the ip address has changed
     if (token && (token.lastUsedAt < Date.now() - 1000 * 30 || token.ip !== ip)) {
-      if (token && token.ip !== ip) {
-        token.ip = ip;
-      }
+      token.ip = ip;
       token.lastUsedAt = new Date();
       await User.updateOne(
         { _id: user.id, 'authInfo._id': token.id },
