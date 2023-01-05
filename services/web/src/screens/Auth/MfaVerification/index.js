@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Segment, Form, Header, Divider } from 'semantic';
+
 import { request } from 'utils/api';
 import { withSession } from 'stores';
 import screen from 'helpers/screen';
-
 import { Layout } from 'components';
 import Logo from 'components/LogoTitle';
 import Code from 'components/form-fields/Code';

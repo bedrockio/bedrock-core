@@ -10,7 +10,7 @@ import Code from './Code';
 import Link from './Link';
 import Paragraph from './Paragraph';
 
-import 'github-markdown-css';
+import 'styles/github-markdown.less';
 import './markdown.less';
 
 @bem

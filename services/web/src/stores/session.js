@@ -1,13 +1,14 @@
 import React, { useContext } from 'react';
 import { merge, omit } from 'lodash';
 import { withRouter } from 'react-router-dom';
-import { withTheme } from './theme';
 
 import { request, hasToken, setToken } from 'utils/api';
 import { trackSession } from 'utils/analytics';
 import { captureError } from 'utils/sentry';
 import { wrapContext } from 'utils/hoc';
 import { localStorage } from 'utils/storage';
+
+import { withTheme } from './theme';
 
 const SessionContext = React.createContext();
 
@@ -82,6 +83,7 @@ export class SessionProvider extends React.PureComponent {
       } catch (error) {
         // eslint-disable-next-line no-console
         console.log(error);
+        captureError(error);
         if (error.type === 'token') {
           await this.logout(true);
         } else {

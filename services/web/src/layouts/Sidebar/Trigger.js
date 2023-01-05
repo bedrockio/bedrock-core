@@ -1,4 +1,5 @@
 import React from 'react';
+
 import bem from 'helpers/bem';
 
 @bem

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Modal } from 'semantic';
+
 import { withSession } from 'stores';
 import { request } from 'utils/api';
 import { userHasAccess } from 'utils/permissions';

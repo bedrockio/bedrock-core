@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form } from 'semantic';
+
 import SearchDropdown from 'components/SearchDropdown';
 
 import SearchContext from '../Context';

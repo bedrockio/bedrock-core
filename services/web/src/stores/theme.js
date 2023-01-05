@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+
 import { wrapContext } from 'utils/hoc';
 import { localStorage } from 'utils/storage';
 
@@ -9,7 +10,7 @@ function getDefaultTheme() {
   if (['dark', 'light', 'system'].includes(theme)) {
     return theme;
   }
-  return 'system';
+  return 'light';
 }
 
 function getSystemTheme() {

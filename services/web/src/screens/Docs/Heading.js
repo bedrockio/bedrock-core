@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Icon } from 'semantic';
 import { kebabCase } from 'lodash';
+
 import { JumpLink } from 'components/Link';
 
 function flatten(text, child) {

@@ -6,7 +6,6 @@ import screen from 'helpers/screen';
 import { getToken, request } from 'utils/api';
 import { parseToken } from 'utils/token';
 import { withSession } from 'stores';
-
 import { Layout } from 'components';
 import LoadButton from 'components/LoadButton';
 import ErrorMessage from 'components/ErrorMessage';

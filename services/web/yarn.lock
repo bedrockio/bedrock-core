@@ -4031,10 +4031,10 @@ eslint-module-utils@^2.7.3:
   dependencies:
     debug "^3.2.7"
 
-eslint-plugin-bedrock@^1.0.9:
-  version "1.0.17"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-bedrock/-/eslint-plugin-bedrock-1.0.17.tgz#82d5b1e7bb9ebff5a1b63d1a9ca7a430f23c450c"
-  integrity sha512-EIp52AFTq32X1FupXGAMIOx0+Lfq0x0WMIxdQZFUQJ2CgW7v3ZH8ZDDd2UtHVfLBlqvjN5fOw3iTkind3XnCOA==
+eslint-plugin-bedrock@^1.0.18:
+  version "1.0.18"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-bedrock/-/eslint-plugin-bedrock-1.0.18.tgz#34e18f5d8a8d36fa5cf587740a1760011e73ba3f"
+  integrity sha512-/WkPkNmpXsAnEfwlAsIURvdt8xwy7cBVCU3gbw7eCT5y4VXx33HsE2ljKY9TaibnO8STX46mwwBjd6zt9gKgPg==
   dependencies:
     eslint-import-resolver-webpack "^0.13.2"
     eslint-plugin-import "^2.25.3"
@@ -4667,11 +4667,6 @@ github-from-package@0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/github-from-package/-/github-from-package-0.0.0.tgz#97fb5d96bfde8973313f20e8288ef9a167fa64ce"
   integrity sha512-SyHy3T1v2NUXn29OsWdxmK6RwHD+vkj3v8en8AOBZ1wBQ/hCAQ5bAQTD02kW4W9tUp/3Qh6J8r9EvntiyCmOOw==
-
-github-markdown-css@^5.1.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/github-markdown-css/-/github-markdown-css-5.1.0.tgz#a96281cd90a8969e3c13b9d3ca6a733a523a00a6"
-  integrity sha512-QLtORwHHtUHhPMHu7i4GKfP6Vx5CWZn+NKQXe+cBhslY1HEt0CTEkP4d/vSROKV0iIJSpl4UtlQ16AD8C6lMug==
 
 glob-parent@^5.1.2:
   version "5.1.2"

@@ -1,8 +1,9 @@
 import React from 'react';
 import { Form } from 'semantic';
 import PropTypes from 'prop-types';
-import DateField from 'components/form-fields/Date';
 import { isEmpty } from 'lodash';
+
+import DateField from 'components/form-fields/Date';
 
 import SearchContext from '../Context';
 import './date-range.less';
@@ -44,6 +45,7 @@ export default class DateRangeFilter extends React.Component {
         <label>{label}</label>
         <Form.Group>
           <DateField
+            start
             name="gte"
             value={this.context.filters[name]?.gte}
             placeholder="Start"
@@ -52,6 +54,7 @@ export default class DateRangeFilter extends React.Component {
           />
           <span className="divider">&ndash;</span>
           <DateField
+            end
             name="lte"
             value={this.context.filters[name]?.lte}
             placeholder="Present"

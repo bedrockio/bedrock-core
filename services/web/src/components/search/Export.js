@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from 'semantic';
+
 import { safeFileName } from 'utils/formatting';
 
 import SearchContext from './Context';
@@ -42,8 +43,10 @@ export default class ExportButton extends React.Component {
 
     const tooManyRows = meta?.total > this.props.limit;
 
+    const As = this.props.as || Button;
+
     return (
-      <Button
+      <As
         loading={loading}
         disabled={meta?.total === 0 || loading || tooManyRows}
         negative={error}

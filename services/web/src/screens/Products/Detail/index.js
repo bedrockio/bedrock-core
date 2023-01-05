@@ -1,10 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Switch, Route } from 'react-router-dom';
-import { Protected } from 'helpers/routes';
+import { Link , Switch, Route } from 'react-router-dom';
 import { Loader } from 'semantic';
-import { request } from 'utils/api';
 
+import { Protected } from 'helpers/routes';
+import { request } from 'utils/api';
 import NotFound from 'screens/NotFound';
 
 import Overview from './Overview';

@@ -1,6 +1,6 @@
 import React from 'react';
-import { isImageSelected } from '../utils';
 
+import { isImageSelected } from '../utils';
 import Button from '../Button';
 import ImageButton from '../ImageButton';
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Menu, Button } from 'semantic';
 import { NavLink, Link } from 'react-router-dom';
-import { Breadcrumbs, Layout } from 'components';
 
+import { Breadcrumbs, Layout } from 'components';
 import EditApplication from 'modals/EditApplication';
 
 export default ({ application, onSave }) => {

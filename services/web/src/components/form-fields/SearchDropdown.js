@@ -1,7 +1,8 @@
 import React from 'react';
 import { Form } from 'semantic';
-import SearchDropdown from '../SearchDropdown';
 import { omit } from 'lodash';
+
+import SearchDropdown from '../SearchDropdown';
 
 export default class FormSearchDropdown extends React.Component {
   render() {

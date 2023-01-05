@@ -1,12 +1,14 @@
 import React from 'react';
 import { omit } from 'lodash';
 import PropTypes from 'prop-types';
-import { Modal, Form, Ref, Icon, Button, Label, Popup } from 'semantic';
-import Overview from './Overview';
-import './modal.less';
+import { Button, Form, Icon, Label, Modal, Popup, Ref } from 'semantic';
+
+import AutoFocus from 'components/AutoFocus';
 
 import SearchContext from '../../Context';
-import AutoFocus from 'components/AutoFocus';
+import Overview from './Overview';
+
+import './modal.less';
 
 export default class FilterModal extends React.Component {
   static contextType = SearchContext;

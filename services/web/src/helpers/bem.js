@@ -3,6 +3,7 @@
 
 import React from 'react';
 import { kebabCase } from 'lodash';
+
 import { wrapComponent, getWrappedComponent } from 'utils/hoc';
 
 export default function (Component) {

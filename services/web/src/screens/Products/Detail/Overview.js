@@ -1,10 +1,11 @@
 import React from 'react';
 import { Table, Image, Divider } from 'semantic';
-import screen from 'helpers/screen';
-import Menu from './Menu';
 
+import screen from 'helpers/screen';
 import { formatDateTime } from 'utils/date';
 import { urlForUpload } from 'utils/uploads';
+
+import Menu from './Menu';
 import DetailsContext from './Context';
 
 @screen

@@ -1,6 +1,7 @@
 import React from 'react';
 import { MemoryRouter, withRouter } from 'react-router-dom';
 import { render } from '@testing-library/react';
+
 import bem from '../bem';
 
 describe('class components', () => {

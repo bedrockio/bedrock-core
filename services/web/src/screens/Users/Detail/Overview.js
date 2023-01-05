@@ -1,10 +1,10 @@
 import React from 'react';
 import { Header, Table, Loader } from 'semantic';
+
 import screen from 'helpers/screen';
 import { formatDateTime } from 'utils/date';
 
 import Menu from './Menu';
-
 import DetailsContext from './Context';
 
 @screen

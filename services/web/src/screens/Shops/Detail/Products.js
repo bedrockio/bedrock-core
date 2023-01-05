@@ -1,21 +1,19 @@
 import React from 'react';
-import { Table, Message, Loader, Button, Header, Divider } from 'semantic';
+import { Table, Message, Loader, Button, Header, Divider , Image } from 'semantic';
+import { Link } from 'react-router-dom';
+
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
 import { Layout, HelpTip, Search, SearchFilters, Confirm } from 'components';
-
 import ErrorMessage from 'components/ErrorMessage';
 // --- Generator: subscreen-imports
-import { Link } from 'react-router-dom';
-import { Image } from 'semantic';
 import { urlForUpload } from 'utils/uploads';
 // --- Generator: end
 
 import EditProduct from 'modals/EditProduct';
 
 import Menu from './Menu';
-
 import DetailsContext from './Context';
 
 @screen

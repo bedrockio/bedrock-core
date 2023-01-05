@@ -372,10 +372,9 @@ function isMongooseSchema(obj) {
 
 function getAutopopulateOptions(val) {
   if (val === true) {
-    val = {
-      maxDepth: 1,
-    };
+    val = {};
   }
+  val.maxDepth ??= 1;
   return val;
 }
 

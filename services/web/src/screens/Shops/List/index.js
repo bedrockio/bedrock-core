@@ -1,5 +1,6 @@
 import React from 'react';
 import { Table, Button, Divider, Segment } from 'semantic';
+import { Link } from 'react-router-dom';
 
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
@@ -11,12 +12,12 @@ import {
   Search,
   SearchFilters,
 } from 'components';
-import Actions from '../Actions';
 import EditShop from 'modals/EditShop';
 
 // --- Generator: list-imports
-import { Link } from 'react-router-dom';
 import allCountries from 'utils/countries';
+
+import Actions from '../Actions';
 const countries = allCountries.map(({ countryCode, nameEn }) => ({
   value: countryCode,
   text: nameEn,

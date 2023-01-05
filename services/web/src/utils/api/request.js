@@ -1,7 +1,9 @@
-import { API_URL, API_KEY } from 'utils/env';
-import { ApiError, ApiParseError } from './errors';
+import { API_KEY, API_URL } from 'utils/env';
+
 import { trackRequest } from '../analytics';
 import { fetchWithTimeout } from '../fetch';
+
+import { ApiError, ApiParseError } from './errors';
 import { getToken } from './token';
 
 export default async function request(options) {

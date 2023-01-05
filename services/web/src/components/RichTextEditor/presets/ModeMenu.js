@@ -1,7 +1,7 @@
 import React from 'react';
 import { Icon } from 'semantic';
-import { BUTTON_STYLES } from '../const';
 
+import { BUTTON_STYLES } from '../const';
 import Menu from '../Menu';
 
 export default class RichTextEditorModeMenu extends React.Component {
