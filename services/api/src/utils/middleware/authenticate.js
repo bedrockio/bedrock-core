@@ -60,6 +60,7 @@ function authenticate({ type, optional = false } = {}) {
 }
 
 async function fetchUser(ctx, next) {
+  console.log('jere', ctx.state.jwt);
   if (!ctx.state.authUser && ctx.state.jwt) {
     const { jwt } = ctx.state;
     const { User } = mongoose.models;
@@ -67,6 +68,26 @@ async function fetchUser(ctx, next) {
     const token = user.authInfo.find((token) => token.jti === jwt.jti);
     if (!user || !token) {
       throw new TokenError('User associated to token could not be found');
+    }
+
+    console.log('jere', token.lastUsedAt, Date.now() - 1000 * 30);
+    // update update the user if the token hasnt been updated in the last 30 seconds
+    if (token.lastUsedAt < Date.now() - 1000 * 30) {
+      // update the user's ip address
+      const ip = ctx.get('x-forwarded-for') || ctx.ip;
+      if (token && token.ip !== ip) {
+        token.ip = ip;
+      }
+      token.lastUsedAt = new Date();
+      await User.updateOne(
+        { _id: user.id, 'authInfo._id': token.id },
+        {
+          $set: {
+            'authInfo.$.ip': ip,
+            'authInfo.$.lastUsedAt': token.lastUsedAt,
+          },
+        }
+      );
     }
 
     ctx.state.authUser = user;

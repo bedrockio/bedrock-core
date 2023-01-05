@@ -3,6 +3,7 @@ const { authenticate, fetchUser } = require('../authenticate');
 const { setupDb, teardownDb, context, createUser } = require('../../testing');
 const jwt = require('jsonwebtoken');
 const config = require('@bedrockio/config');
+const { User } = require('../../../models');
 
 describe('authenticate', () => {
   it('should trigger an error if jwt token can not be found', async () => {
@@ -196,5 +197,60 @@ describe('fetchUser', () => {
     await fetchUser(ctx, () => {});
     await fetchUser(ctx, () => {});
     expect(count).toBe(1);
+  });
+
+  it('should update user`s ip and lastUsedAt for a given token', async () => {
+    const user = await createUser({
+      authInfo: [
+        {
+          jti: 'jti-id',
+          ip: '123.12.1.2',
+          exp: new Date(Date.now() + 10000),
+          iat: new Date(),
+          lastUsedAt: new Date(0),
+        },
+      ],
+    });
+    const ctx = context({
+      headers: {
+        'x-forwarded-for': '11.11.1.1',
+      },
+    });
+    ctx.state = {
+      jwt: { sub: user.id, jti: 'jti-id' },
+    };
+
+    await fetchUser(ctx, () => {});
+    const dbUser = await User.findById(user.id);
+    expect(dbUser.authInfo[0].ip).toBe('11.11.1.1');
+    expect(dbUser.authInfo[0].lastUsedAt.valueOf()).not.toEqual(0);
+    expect(dbUser.authInfo).toHaveLength(1);
+  });
+
+  it('should NOT update user`s ip if it was recently updated', async () => {
+    const user = await createUser({
+      authInfo: [
+        {
+          jti: 'jti-id',
+          ip: '123.12.1.2',
+          exp: new Date(Date.now() + 10000),
+          iat: new Date(),
+          lastUsedAt: new Date(),
+        },
+      ],
+    });
+    const ctx = context({
+      headers: {
+        'x-forwarded-for': '11.11.1.1',
+      },
+    });
+    ctx.state = {
+      jwt: { sub: user.id, jti: 'jti-id' },
+    };
+
+    await fetchUser(ctx, () => {});
+    const dbUser = await User.findById(user.id);
+    expect(dbUser.authInfo[0].ip).toBe('123.12.1.2');
+    expect(dbUser.authInfo).toHaveLength(1);
   });
 });
