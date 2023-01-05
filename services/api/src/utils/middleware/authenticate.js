@@ -60,7 +60,6 @@ function authenticate({ type, optional = false } = {}) {
 }
 
 async function fetchUser(ctx, next) {
-  console.log('jere', ctx.state.jwt);
   if (!ctx.state.authUser && ctx.state.jwt) {
     const { jwt } = ctx.state;
     const { User } = mongoose.models;

@@ -241,7 +241,7 @@ describe('fetchUser', () => {
     });
     const ctx = context({
       headers: {
-        'x-forwarded-for': '11.11.1.1',
+        'x-forwarded-for': '123.12.1.2',
       },
     });
     ctx.state = {
