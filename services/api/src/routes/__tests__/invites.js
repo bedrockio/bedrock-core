@@ -1,6 +1,6 @@
 const { assertMailSent } = require('postmark');
 const { setupDb, teardownDb, request, createUser, createAdminUser } = require('../../utils/testing');
-const { User, Invite } = require('../../models');
+const { Invite } = require('../../models');
 
 beforeAll(async () => {
   await setupDb();

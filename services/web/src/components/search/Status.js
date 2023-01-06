@@ -1,6 +1,6 @@
 import React from 'react';
-import { Loader, Message, Segment } from 'semantic';
 
+import { Loader, Message, Segment } from 'semantic';
 import ErrorMessage from 'components/ErrorMessage';
 
 import SearchContext from './Context';

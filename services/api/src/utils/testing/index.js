@@ -27,15 +27,13 @@ async function teardownDb() {
 }
 
 async function createUser(attributes = {}) {
-  const user = await User.create({
+  return User.create({
     // using an objectId to ensure when tests are executed in parallel, there is no overlap
     email: `${mongoose.Types.ObjectId()}@platform.com`,
     firstName: 'Test',
     lastName: 'User',
     ...attributes,
   });
-
-  return user;
 }
 
 async function createAdminUser(attributes) {
