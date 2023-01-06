@@ -12,8 +12,7 @@
     "images": [
       {
         "type": "ObjectId",
-        "ref": "Upload",
-        "autopopulate": true
+        "ref": "Upload"
       }
     ],
     "categories": [
