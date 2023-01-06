@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const { initialize } = require('../../src/utils/database');
 const { exportFixtures } = require('../../src/utils/fixtures');
-const { logger } = require('@bedrockio/instrumentation');
+const logger = require('@bedrockio/logger');
 
 (async () => {
   const options = {};

@@ -53,7 +53,8 @@ This command will automatically populate MongoDB fixtures when and empty DB is f
 
 ## Configuration
 
-All configuration is done using environment variables. The default values in `.env` can be overwritten using environment variables.
+All configuration is done using environment variables. The default values in `.env` can be overwritten using environment
+variables.
 
 - `SERVER_HOST` - Host to bind to, defaults to `"0.0.0.0"`
 - `SERVER_PORT` - Port to bind to, defaults to `2300`
@@ -76,7 +77,8 @@ All configuration is done using environment variables. The default values in `.e
 
 ## Secrets
 
-No production secrets should ever be checked into your repository. Instead, use the deployment [secrets](../../deployment#secrets) facility to store secrets remotely.
+No production secrets should ever be checked into your repository. Instead, use the deployment
+[secrets](../../deployment#secrets) facility to store secrets remotely.
 
 ## Building the Container
 
@@ -88,7 +90,9 @@ See [../../deployment](../../deployment/) for more info
 
 ## Configuring Background Jobs
 
-The API provides a simple Docker container for running Cronjobs. The container uses [Yacron](https://github.com/gjcarneiro/yacron) to provide a reliable cron job system with added features such as timezones, concurrency policies, retry policies and Sentry error monitoring.
+The API provides a simple Docker container for running Cronjobs. The container uses
+[Yacron](https://github.com/gjcarneiro/yacron) to provide a reliable cron job system with added features such as
+timezones, concurrency policies, retry policies and Sentry error monitoring.
 
 Example configuration of a 10 minute job `jobs/default.yml`:
 
@@ -129,7 +133,8 @@ curl -s -XPOST localhost:2600/jobs/example/start
 
 ## Fixtures
 
-Fixtures are set up automatically from structured data in the `fixtures` directory and loaded when first running the development server. For more on how to set this up see the [readme](src/utils/fixtures/README.md).
+Fixtures are set up automatically from structured data in the `fixtures` directory and loaded when first running the
+development server. For more on how to set this up see the [readme](src/utils/fixtures/README.md).
 
 You can force reload fixtures with the command:
 
@@ -137,17 +142,22 @@ You can force reload fixtures with the command:
 yarn fixtures:reload
 ```
 
-_Note: In the staging environment this script can be run by obtaining a shell into the API CLI pod (see [../../deployment](../../deployment/README.md))_
+_Note: In the staging environment this script can be run by obtaining a shell into the API CLI pod (see
+[../../deployment](../../deployment/README.md))_
 
 ## Multi Tenancy
 
 The API is "multi tenant ready" and can be modified to accommodate specific tenancy patterns:
 
 - Single Tenant per platform deployment: Organization model could be removed.
-- Basic Multi Tenancy: Each request will result in a "Default" organization to be set. This can be overriden using the "Organization" header.
-- Managed Multi Tenancy: Manually add new organizations in the "Organizations" CRUD UI in the dashboard. Suitable for smaller enterprise use cases.
-- Self Serve Multi Tenancy; Requires changes to the register mechanism to create a new Organization for each signup. Suitable for broad SaaS.
-- Advanced Multi Tenancy; Allow users to self signup and also be invited into multiple organizations. Requires expaning the user model and invite mechanism to allow for multiple organizations.
+- Basic Multi Tenancy: Each request will result in a "Default" organization to be set. This can be overriden using the
+  "Organization" header.
+- Managed Multi Tenancy: Manually add new organizations in the "Organizations" CRUD UI in the dashboard. Suitable for
+  smaller enterprise use cases.
+- Self Serve Multi Tenancy; Requires changes to the register mechanism to create a new Organization for each signup.
+  Suitable for broad SaaS.
+- Advanced Multi Tenancy; Allow users to self signup and also be invited into multiple organizations. Requires expaning
+  the user model and invite mechanism to allow for multiple organizations.
 
 Example Create API call with multi tenancy enabled:
 
@@ -180,10 +190,9 @@ router
 
 ## Updating E-Mail Templates
 
-E-mail templates can be found in `emails`.
-There is a layout.html that contains the styling and default layout, and a template for each email, that gets injected into the layout.
-Multiple layouts are supported, just make sure you specify what layout to use when calling
-`template({ layout: "other-layout.html", template: "..." })`
+E-mail templates can be found in `emails`. There is a layout.html that contains the styling and default layout, and a
+template for each email, that gets injected into the layout. Multiple layouts are supported, just make sure you specify
+what layout to use when calling `template({ layout: "other-layout.html", template: "..." })`
 
 You can either use markdown or full html templates. Both are run though https://mustache.github.io/ for templating
 
@@ -203,31 +212,35 @@ This translates to
 
 ### Recall to unescape `APP_URL`
 
-We are using mustache for templating, it will attempt to escape the http:`//` which causes issues.
-So when using the the `APP_URL` write `{{&APP_URL}}`
+We are using mustache for templating, it will attempt to escape the http:`//` which causes issues. So when using the the
+`APP_URL` write `{{&APP_URL}}`
 
 ## Logging
 
-`@bedrockio/instrumentation` provides log levels via [pino](https://getpino.io/) as well as optimizations for [Google Cloud Loggin](https://cloud.google.com/logging/) which requires certain fields to be set for http logging.
+`@bedrockio/logger` provides structured logging in the console and both [logging](https://cloud.google.com/logging/) and
+[tracing](https://cloud.google.com/trace) in Google Cloud environments.
 
-The http logging is center to rest api logging, as all executed code (besides a few exeptions like scripts/jobs) are executed in the context of a http request. Making it important to be able to "trace" (https://cloud.google.com/trace/) the log output to a given request.
+The http logging is center to rest api logging, as all executed code (besides a few exeptions like scripts/jobs) are
+executed in the context of a http request. Making it important to be able to "trace" (https://cloud.google.com/trace/)
+the log output to a given request.
 
 By default the log level in `development` is set to trace, but can be overwritten via env flags (LOG_LEVEL).
 
 Within a Koa request prefer `ctx.logger` as this provides extra logging specific to HTTP requests, otherwise use:
 
-```
-const { logger } = require('@bedrockio/instrumentation');
+```js
+const logger = require('@bedrockio/logger');
+logger.info('something');
 
-// Inside job, etc.
-logger.info("something")
-
+// Set up cloud logging and tracing.
+const tracer = logger.useGoogleCloudTracing();
+logger.useGoogleCloud(tracer);
 ```
 
 ## Auto-generating API Documentation
 
-Good API documentation needs love, so make sure to take the time to describe parameters, create examples, etc.
-The [Bedrock CLI](https://github.com/bedrockio/bedrock-cli) can generate documentation using the command:
+Good API documentation needs love, so make sure to take the time to describe parameters, create examples, etc. The
+[Bedrock CLI](https://github.com/bedrockio/bedrock-cli) can generate documentation using the command:
 
 ```
 bedrock generate docs
@@ -240,7 +253,8 @@ services/api/src/routes/__openapi__/resource.json
 services/web/src/docs/RESOURCE.md
 ```
 
-The format in `src/routes/__openapi__` is using a slimmed down version of the OpenAPI spec to make editing easier. API calls can be defined in the `paths` array and Object definitions can be defined in the `objects` array.
+The format in `src/routes/__openapi__` is using a slimmed down version of the OpenAPI spec to make editing easier. API
+calls can be defined in the `paths` array and Object definitions can be defined in the `objects` array.
 
 Here's an example of an API call definition:
 
@@ -293,15 +307,18 @@ Here's an example of an API call definition:
 }
 ```
 
-All information in `src/routes/__openapi__` is exposed through the API and used by the Markdown-powered documentation portal in `/services/web/src/docs`.
+All information in `src/routes/__openapi__` is exposed through the API and used by the Markdown-powered documentation
+portal in `/services/web/src/docs`.
 
 See [../../services/web](../../services/web) for more info on customizing documentation.
 
 ## Multi factor authentication
 
-By default multi factor authentication with a authenticator app (1password, lastpassword etc) works out of the box, but for sms verification you have to have a [Twilio](https://www.twilio.com/) account.
+By default multi factor authentication with a authenticator app (1password, lastpassword etc) works out of the box, but
+for sms verification you have to have a [Twilio](https://www.twilio.com/) account.
 
-In Twilio you need to create an account, that will generate the (TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN) to get TWILIO_MESSAGING_SERVICE_SID
-you have to create a [messaging service](https://support.twilio.com/hc/en-us/articles/223181308-Getting-started-with-Messaging-Services).
+In Twilio you need to create an account, that will generate the (TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN) to get
+TWILIO_MESSAGING_SERVICE_SID you have to create a
+[messaging service](https://support.twilio.com/hc/en-us/articles/223181308-Getting-started-with-Messaging-Services).
 
 To disable mfa: Update the login endpoint to not check for `mfa.requireChallenge`

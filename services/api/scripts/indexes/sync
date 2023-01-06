@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
-const models = require('../../src/models');
-const { capitalize, camelCase } = require('lodash');
-const { initialize } = require('../../src/utils/database');
-const { logger } = require('@bedrockio/instrumentation');
 const readline = require('readline');
+const logger = require('@bedrockio/logger');
+const { capitalize, camelCase } = require('lodash');
+const models = require('../../src/models');
+const { initialize } = require('../../src/utils/database');
 
 const rl = readline.createInterface({
   input: process.stdin,

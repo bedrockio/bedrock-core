@@ -3,7 +3,7 @@ const { promises: fs } = require('fs');
 const path = require('path');
 const os = require('os');
 const crypto = require('crypto');
-const { logger } = require('@bedrockio/instrumentation');
+const logger = require('@bedrockio/logger');
 const mime = require('mime-types');
 
 async function uploadLocal(object) {

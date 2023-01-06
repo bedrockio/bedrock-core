@@ -3,7 +3,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const autopopulate = require('mongoose-autopopulate');
 const { get, uniq, startCase, isEmpty, isPlainObject } = require('lodash');
-const { logger } = require('@bedrockio/instrumentation');
+const logger = require('@bedrockio/logger');
 
 const { getJoiSchema, getMongooseValidator } = require('./validation');
 const { searchValidation, DEFAULT_SORT, DEFAULT_LIMIT } = require('./search');

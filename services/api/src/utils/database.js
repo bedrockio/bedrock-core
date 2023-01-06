@@ -1,6 +1,11 @@
-const config = require('@bedrockio/config');
 const mongoose = require('mongoose');
-const { logger } = require('@bedrockio/instrumentation');
+const config = require('@bedrockio/config');
+const logger = require('@bedrockio/logger');
+
+if (process.env.NODE_ENV === 'production') {
+  const tracer = logger.useGoogleCloudTracing();
+  logger.useGoogleCloud(tracer);
+}
 
 mongoose.Promise = Promise;
 
