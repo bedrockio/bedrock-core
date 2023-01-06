@@ -2,11 +2,6 @@ const mongoose = require('mongoose');
 const config = require('@bedrockio/config');
 const logger = require('@bedrockio/logger');
 
-if (process.env.NODE_ENV === 'production') {
-  const tracer = logger.useGoogleCloudTracing();
-  logger.useGoogleCloud(tracer);
-}
-
 mongoose.Promise = Promise;
 
 // https://mongoosejs.com/docs/migrating_to_6.html#no-more-deprecation-warning-options

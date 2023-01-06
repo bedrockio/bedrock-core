@@ -4,6 +4,7 @@ const { initialize } = require('../../src/utils/database');
 const { sleep } = require('../../src/utils/sleep');
 
 async function run() {
+  logger.setupGoogleCloud();
   await initialize();
   logger.info('Running example job');
   await sleep(30 * 1000);

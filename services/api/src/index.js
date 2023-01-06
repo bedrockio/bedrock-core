@@ -9,6 +9,10 @@ const ENV_NAME = config.get('ENV_NAME');
 const PORT = config.get('SERVER_PORT', 'number');
 const HOST = config.get('SERVER_HOST');
 
+if (process.env.NODE_ENV === 'production') {
+  logger.setupGoogleCloud();
+}
+
 module.exports = (async () => {
   await initialize();
   if (ENV_NAME === 'development') {
