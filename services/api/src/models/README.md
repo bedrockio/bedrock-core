@@ -112,7 +112,7 @@ Additional validation can be mixed in by passing an object to these methods:
 
 ```js
 .post('/', validateBody(Model.getCreateValidation({
-  category: Joi.string(),
+  category: yd.string(),
 })), async (ctx) => {
   // ...
 });
