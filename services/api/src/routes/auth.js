@@ -168,8 +168,8 @@ router
   .post(
     '/logout',
     validateBody({
-      all: Joi.boolean(),
-      jti: Joi.string(),
+      all: yd.boolean(),
+      jti: yd.string(),
     }),
     authenticate({ type: 'user' }),
     fetchUser,
