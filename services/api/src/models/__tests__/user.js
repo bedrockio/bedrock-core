@@ -57,4 +57,20 @@ describe('User', () => {
       expect(user.validateSync()).toBeInstanceOf(mongoose.Error.ValidationError);
     });
   });
+
+  describe('createAuthToken', () => {
+    it('should add an authToken', () => {
+      const user = new User({
+        firstName: 'Neo',
+        lastName: 'One',
+        email: 'good@email.com',
+      });
+
+      user.createAuthToken({ ip: '122.312.31.2', userAgent: 'test' });
+      const authInfo = user.authInfo;
+      expect(authInfo[0].ip).toEqual('122.312.31.2');
+      expect(authInfo[0].userAgent).toEqual('test');
+      expect(authInfo.length).toBe(1);
+    });
+  });
 });

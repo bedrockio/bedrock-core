@@ -34,7 +34,7 @@ router
   .post(
     '/search-options',
     validateBody({
-      field: Joi.string().allow("routeNormalizedPath", "objectType", "activity", "category").required()
+      field: Joi.string().allow('routeNormalizedPath', 'objectType', 'activity', 'category').required(),
     }),
     async (ctx) => {
       const values = await AuditEntry.distinct(ctx.request.body.field);
@@ -43,7 +43,6 @@ router
         data: values,
       };
     }
-  )
-
+  );
 
 module.exports = router;
