@@ -1,8 +1,10 @@
 import React from 'react';
 import { Header } from 'semantic';
 import { Link } from 'react-router-dom';
+
 import Logo from 'assets/logo.svg';
 import DarkLogo from 'assets/logo-inverted.svg';
+
 import ThemedImage from './ThemedImage';
 
 export default ({ title }) => {

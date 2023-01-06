@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form, Input, Checkbox, Message } from 'semantic';
+
 import AutoFocus from 'components/AutoFocus';
 import ErrorMessage from 'components/ErrorMessage';
 

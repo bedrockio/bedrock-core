@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Label } from 'semantic';
+
 import { getCurrencySymbol } from 'utils/currency';
 
 export default class CurrencyField extends React.Component {

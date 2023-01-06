@@ -1,7 +1,9 @@
 import React from 'react';
-import { Layout } from './Layout';
+
 import logo from 'assets/logo.svg';
 import darkLogo from 'assets/logo-inverted.svg';
+
+import { Layout } from './Layout';
 import ThemedImage from './ThemedImage';
 
 export default class Footer extends React.Component {

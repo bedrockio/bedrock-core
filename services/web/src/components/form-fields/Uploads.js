@@ -3,6 +3,7 @@ import { uniq } from 'lodash';
 import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
 import { Form, Image, Icon, Label, Card } from 'semantic';
+
 import { request } from 'utils/api';
 import { urlForUpload } from 'utils/uploads';
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Modal, Button, Message, Confirm as SemanticConfirm } from 'semantic';
+import PropTypes from 'prop-types';
 
 import modal from '../helpers/modal';
-import PropTypes from 'prop-types';
 
 @modal
 export default class Confirm extends React.Component {

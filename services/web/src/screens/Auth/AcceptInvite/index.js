@@ -1,13 +1,14 @@
 import React from 'react';
 import { Segment, Grid } from 'semantic';
+import { Link } from 'react-router-dom';
+
 import { request } from 'utils/api';
 import { withSession } from 'stores';
 import screen from 'helpers/screen';
 import LogoTitle from 'components/LogoTitle';
+import { getUrlToken } from 'utils/token';
 
 import Form from './Form';
-import { Link } from 'react-router-dom';
-import { getUrlToken } from 'utils/token';
 
 @screen
 @withSession

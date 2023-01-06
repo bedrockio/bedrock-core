@@ -1,11 +1,9 @@
 import { hot } from 'react-hot-loader/root';
-
 import React from 'react';
-
 import { Switch, Route } from 'react-router-dom';
+
 import { Protected } from 'helpers/routes';
 import { useSession } from 'stores';
-
 import Dashboard from 'screens/Dashboard';
 import Docs from 'screens/Docs';
 import Components from 'screens/Components';
@@ -15,7 +13,6 @@ import NotFound from 'screens/NotFound';
 import Settings from 'screens/Settings';
 import Shops from 'screens/Shops';
 import Users from 'screens/Users';
-
 import AcceptInvite from 'screens/Auth/AcceptInvite';
 import ForgotPassword from 'screens/Auth/ForgotPassword';
 import ResetPassword from 'screens/Auth/ResetPassword';

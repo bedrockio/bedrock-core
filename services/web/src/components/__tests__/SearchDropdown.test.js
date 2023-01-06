@@ -1,7 +1,8 @@
 import React from 'react';
-import SearchDropdown from '../SearchDropdown';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+
+import SearchDropdown from '../SearchDropdown';
 
 function fetchCategories() {
   return [

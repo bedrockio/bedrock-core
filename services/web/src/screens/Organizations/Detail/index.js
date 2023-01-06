@@ -1,13 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Switch, Route } from 'react-router-dom';
-import { Protected } from 'helpers/routes';
+import { Link , Switch, Route } from 'react-router-dom';
 import { Loader } from 'semantic';
+
+import { Protected } from 'helpers/routes';
 import { request } from 'utils/api';
-
 import NotFound from 'screens/NotFound';
-import DetailsContext from './Context';
 
+import DetailsContext from './Context';
 import Overview from './Overview';
 
 export default class OrganizationDetail extends React.Component {

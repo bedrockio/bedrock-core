@@ -1,14 +1,13 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link , NavLink } from 'react-router-dom';
 import { Menu, Button } from 'semantic';
-import { NavLink } from 'react-router-dom';
-import { Breadcrumbs } from 'components';
 
-import { Layout } from 'components';
+import { Breadcrumbs , Layout } from 'components';
+import EditUser from 'modals/EditUser';
+
+import Actions from '../Actions';
 
 import DetailsContext from './Context';
-import Actions from '../Actions';
-import EditUser from 'modals/EditUser';
 
 export default () => {
   const { item, reload } = useContext(DetailsContext);

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form, Button } from 'semantic';
+
 import AutoFocus from 'components/AutoFocus';
 
 export default (props) => {

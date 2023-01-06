@@ -38,7 +38,11 @@
     },
     "theme": {
       "type": "String",
-      "enum": ["dark", "light", "system"]
+      "enum": [
+        "dark",
+        "light",
+        "system"
+      ]
     },
     "isDeveloper": {
       "type": "Boolean",
@@ -64,11 +68,45 @@
       "type": "Date",
       "writeScopes": "none"
     },
-    "authTokenId": {
-      "type": "String",
-      "readScopes": "none",
-      "writeScopes": "none"
-    },
+    "authInfo": [
+      {
+        "lastUsedAt": {
+          "type": "Date",
+          "required": true,
+          "writeScopes": "none"
+        },
+        "userAgent": {
+          "type": "String",
+          "required": false,
+          "writeScopes": "none"
+        },
+        "ip": {
+          "type": "String",
+          "required": true,
+          "writeScopes": "none"
+        },
+        "country": {
+          "type": "String",
+          "writeScopes": "none"
+        },
+        "iat": {
+          "type": "Date",
+          "required": true,
+          "writeScopes": "none"
+        },
+        "jti": {
+          "type": "String",
+          "required": true,
+          "writeScopes": "none"
+        },
+        "exp": {
+          "type": "Date",
+          "required": true,
+          "readScopes": "read",
+          "writeScopes": "none"
+        }
+      }
+    ],
     "tempTokenId": {
       "type": "String",
       "readScopes": "none",

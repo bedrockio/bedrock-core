@@ -1,6 +1,8 @@
 import React from 'react';
-import SearchContext from './Context';
+
 import { formatNumber } from 'utils/formatting';
+
+import SearchContext from './Context';
 
 export default class Total extends React.Component {
   static contextType = SearchContext;

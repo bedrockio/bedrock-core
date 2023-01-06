@@ -2,9 +2,9 @@ import React from 'react';
 import { Modal, Form } from 'semantic';
 
 import { request } from 'utils/api';
-
 import SearchDropdown from 'components/SearchDropdown';
 import modal from 'helpers/modal';
+
 import { Context } from '../screens/Docs/Context';
 
 @modal

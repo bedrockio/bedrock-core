@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown } from 'semantic';
 import { debounce, uniqBy, isEmpty, omit } from 'lodash';
+
 import { request } from 'utils/api';
 
 function isValueObject(props) {

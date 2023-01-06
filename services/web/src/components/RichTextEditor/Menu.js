@@ -1,5 +1,6 @@
 import React from 'react';
 import { Dropdown, Icon } from 'semantic';
+
 import bem from 'helpers/bem';
 
 import './menu.less';

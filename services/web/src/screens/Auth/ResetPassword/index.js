@@ -1,13 +1,14 @@
 import React from 'react';
 import { Segment, Message } from 'semantic';
+import { Link } from 'react-router-dom';
+
 import { withSession } from 'stores';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
-
 import LogoTitle from 'components/LogoTitle';
-import Form from './Form';
-import { Link } from 'react-router-dom';
 import { getUrlToken } from 'utils/token';
+
+import Form from './Form';
 
 @screen
 @withSession

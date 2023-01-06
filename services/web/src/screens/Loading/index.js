@@ -1,5 +1,6 @@
 import React from 'react';
 import { Loader } from 'semantic';
+
 import screen from 'helpers/screen';
 
 @screen
