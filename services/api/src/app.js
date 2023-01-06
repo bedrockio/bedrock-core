@@ -28,8 +28,8 @@ if (['staging', 'development'].includes(ENV_NAME)) {
 }
 
 app
-  .use(logger.middleware)
   .use(errorHandler)
+  .use(logger.middleware())
   .use(bodyParser({ multipart: true }));
 
 app.on('error', (err, ctx) => {
