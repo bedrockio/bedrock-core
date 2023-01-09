@@ -116,7 +116,7 @@ describe('/1/users', () => {
   describe('POST /:user/create-token', () => {
     it('should be able to access user', async () => {
       const superAdmin = await createAdminUser();
-      const user1 = await createUser({
+      const user = await createUser({
         firstName: 'Neo',
         lastName: 'One',
         authTokenId: '123123',
@@ -127,7 +127,7 @@ describe('/1/users', () => {
           },
         ],
       });
-      const response = await request('POST', `/1/users/${user1.id}/create-token`, {}, { user: superAdmin });
+      const response = await request('POST', `/1/users/${user.id}/create-token`, {}, { user: superAdmin });
       expect(response.status).toBe(200);
       expect(!!response.body.data.token).toBe(true);
     });
@@ -140,9 +140,9 @@ describe('/1/users', () => {
     });
 
     it('should deny access to non-admins', async () => {
-      const user = await createUser({});
-      const user1 = await createUser({ firstName: 'New', lastName: 'Name' });
-      const response = await request('POST', `/1/users/${user1.id}/create-token`, {}, { user });
+      const authUser = await createUser({});
+      const user = await createUser({ firstName: 'New', lastName: 'Name' });
+      const response = await request('POST', `/1/users/${user.id}/create-token`, {}, { user: authUser });
       expect(response.status).toBe(403);
     });
   });
