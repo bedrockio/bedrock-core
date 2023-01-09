@@ -74,9 +74,13 @@ router
       const { user } = ctx.state;
 
       // Don't allow an superAdmin to imitate another superAdmin
-      // This should be modified to fit the permissions system required for your project, its somewhat basic in its default state
-      const isViewer = [...user.roles].every((c) => c.role === 'viewer');
-      if (!isViewer) {
+      const allowedRoles = expandRoles(ctx.state.authUser).roles.reduce(
+        (result, { roleDefinition }) => result.concat(roleDefinition.canImpersonateRoles || []),
+        []
+      );
+
+      const isAllowed = [...user.roles].every(({ role }) => allowedRoles.includes(role));
+      if (!isAllowed) {
         ctx.throw(403, 'You do not have permission to create tokens for this user');
       }
 
