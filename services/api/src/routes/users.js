@@ -12,6 +12,8 @@ const { generateTokenId, createAuthToken } = require('../utils/tokens');
 const roles = require('./../roles.json');
 const permissions = require('./../permissions.json');
 
+const { AuditEntry } = require('../models');
+
 const router = new Router();
 
 const passwordField = Joi.string()
@@ -32,8 +34,17 @@ router
     ctx.state.user = user;
     return next();
   })
-  .get('/me', (ctx) => {
-    const { authUser } = ctx.state;
+  .get('/me', async (ctx) => {
+    const { authUser, jwt } = ctx.state;
+    // updating the authUser's ip address
+    const token = authUser.authInfo.find((token) => token.jti === jwt.jti);
+    const ip = ctx.get('x-forwarded-for') || ctx.ip;
+    if (token && token.ip !== ip) {
+      token.ip = ip;
+    }
+    token.lastUsedAt = new Date();
+    await authUser.save();
+
     ctx.body = {
       data: expandRoles(authUser),
     };
@@ -44,10 +55,12 @@ router
       firstName: Joi.string(),
       lastName: Joi.string(),
       timeZone: Joi.string(),
+      theme: Joi.string(),
     }),
     async (ctx) => {
       const { authUser } = ctx.state;
       authUser.assign(ctx.request.body);
+
       await authUser.save();
       ctx.body = {
         data: expandRoles(authUser),
@@ -128,6 +141,10 @@ router
       }
       const user = await User.create(ctx.request.body);
 
+      await AuditEntry.append('Created User', ctx, {
+        object: user,
+      });
+
       ctx.body = {
         data: user,
       };
@@ -148,7 +165,14 @@ router
     async (ctx) => {
       const { user } = ctx.state;
       user.assign(ctx.request.body);
+
       await user.save();
+
+      await AuditEntry.append('Updated user', ctx, {
+        object: user,
+        fields: ['email', 'roles'],
+      });
+
       ctx.body = {
         data: user,
       };
@@ -156,6 +180,9 @@ router
   )
   .delete('/:userId', async (ctx) => {
     const { user } = ctx.state;
+    await user.assertNoReferences({
+      except: [AuditEntry],
+    });
     await user.delete();
     ctx.status = 204;
   });

@@ -10,7 +10,7 @@ export default class ExternalLink extends React.Component {
         target="_blank"
         rel="external noopener noreferrer"
         {...rest}>
-        {icon && <Icon name="external-link-alt" />}
+        {icon && <Icon name="up-right-from-square" />}
         {children || href}
       </a>
     );

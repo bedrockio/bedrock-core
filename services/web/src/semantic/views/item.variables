@@ -22,6 +22,9 @@
 @border: none;
 @zIndex: '';
 @transition: box-shadow @defaultDuration @defaultEasing;
+@nocturnalBackground: transparent;
+@nocturnalBoxShadow: none;
+@nocturnalBorder: none;
 
 /* Responsive */
 @itemSpacing: 1em;
@@ -52,7 +55,8 @@
 @imageBorder: none;
 @imageBorderRadius: 0.125rem;
 @imageBoxShadow: none;
-@imageBorder: none;
+@nocturnalImageBorder: none;
+@nocturnalImageBoxShadow: none;
 
 /* Content */
 @contentDisplay: block;
@@ -67,12 +71,16 @@
 @contentBorder: none;
 @contentBorderRadius: 0em;
 @contentBoxShadow: none;
+@nocturnalContentBackground: none;
+@nocturnalContentBorder: none;
+@nocturnalContentBoxShadow: none;
 
 /* Header */
 @headerMargin: -@lineHeightOffset 0em 0em;
 @headerFontWeight: @bold;
 @headerFontSize: @relativeBig;
 @headerColor: @darkTextColor;
+@nocturnalHeaderColor: @nocturnalTextColor;
 
 /* Metadata */
 @metaMargin: 0.5em 0em 0.5em;
@@ -80,6 +88,7 @@
 @metaLineHeight: 1em;
 @metaSpacing: 0.3em;
 @metaColor: rgba(0, 0, 0, 0.6);
+@nocturnalMetaColor: @nocturnalUnselectedTextColor;
 
 /* Icons */
 @actionOpacity: 0.75;
@@ -100,7 +109,12 @@
 @contentLinkColor: '';
 @contentLinkHoverColor: '';
 @contentLinkTransition: color @defaultDuration @defaultEasing;
-
+@nocturnalContentLinkColor: '';
+@nocturnalContentLinkHoverColor: '';
+@nocturnalMetaLinkColor: @nocturnalUnselectedTextColor;
+@nocturnalMetaLinkHoverColor: @nocturnalSelectedTextColor;
+@nocturnalHeaderLinkColor: @nocturnalHeaderColor;
+@nocturnalHeaderLinkHoverColor: @nocturnalLinkHoverColor;
 
 /* Description */
 @descriptionDistance: 0.6em;
@@ -108,6 +122,7 @@
 @descriptionFontSize: 1em;
 @descriptionLineHeight: @lineHeight;
 @descriptionColor: @textColor;
+@nocturnalDescriptionColor: @nocturnalTextColor;
 
 /* Content Image */
 @contentImageWidth: '';
@@ -124,6 +139,7 @@
 @extraDivider: none;
 @extraHorizontalSpacing: 0.5rem;
 @extraRowSpacing: 0.5rem;
+@nocturnalExtraDivider: none;
 
 @extraBackground: none;
 @extraDisplay: block;
@@ -136,6 +152,10 @@
 @extraBoxShadow: none;
 @extraColor: @lightTextColor;
 @extraTransition: color @defaultDuration @defaultEasing;
+@nocturnalExtraBackground: none;
+@nocturnalExtraBoxShadow: none;
+@nocturnalExtraColor: @nocturnalUnselectedTextColor;
+
 
 /*-------------------
       Variations
@@ -149,6 +169,7 @@
 @dividedBorder: 1px solid @borderColor;
 @dividedMargin: 0em;
 @dividedPadding: 1em 0em;
+@nocturnalDividedBorder: 1px solid @nocturnalBorderColor;
 
 @dividedFirstLastMargin: 0em;
 @dividedFirstLastPadding: 0em;

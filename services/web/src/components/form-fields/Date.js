@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DayPickerInput from 'react-day-picker/DayPickerInput';
-import 'react-day-picker/lib/style.css';
 import { Form, Label, Input, Icon } from 'semantic';
+
 import { formatDate } from 'utils/date';
+
+import DateInput from '../DateInput';
 import { Layout } from '../Layout';
 
 export default class DateField extends React.Component {
@@ -15,6 +16,15 @@ export default class DateField extends React.Component {
   }
 
   onDayChange = (date) => {
+    if (!this.props.time) {
+      if (this.props.end) {
+        date.setHours(23);
+        date.setMinutes(59, 59, 999);
+      } else if (this.props.start) {
+        date.setHours(0);
+        date.setMinutes(0, 0, 0);
+      }
+    }
     this.setDate(null, date);
   };
 
@@ -51,20 +61,19 @@ export default class DateField extends React.Component {
         {label && <label htmlFor={id}>{label}</label>}
         <Layout horizontal center>
           <Layout.Group style={{ position: 'relative' }}>
-            <DayPickerInput
+            <DateInput
               id={id}
               value={date}
-              placeholder={placeholder}
               formatDate={this.formatDate}
-              dayPickerProps={{ selectedDays: date }}
+              placeholder={placeholder}
+              onChange={this.onDayChange}
               style={{
                 width: '140px',
               }}
-              onDayChange={this.onDayChange}
             />
             {clearable && (
               <Icon
-                name="x"
+                name="xmark"
                 color="grey"
                 style={{
                   position: 'absolute',
@@ -112,6 +121,8 @@ export default class DateField extends React.Component {
 }
 
 DateField.propTypes = {
+  start: PropTypes.bool,
+  end: PropTypes.bool,
   time: PropTypes.bool,
   label: PropTypes.node,
   required: PropTypes.bool,

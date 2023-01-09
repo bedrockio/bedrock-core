@@ -1,40 +1,40 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Switch, Route } from 'react-router-dom';
-import { Protected } from 'helpers/routes';
+import { Link , Switch, Route } from 'react-router-dom';
 import { Loader } from 'semantic';
-import { request } from 'utils/api';
 
+import { Protected } from 'helpers/routes';
+import { request } from 'utils/api';
 import NotFound from 'screens/NotFound';
 
 import Overview from './Overview';
+import DetailsContext from './Context';
 
 export default class ProductDetail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      product: null,
+      item: null,
       error: null,
       loading: true,
     };
   }
 
-  onSave = () => {
-    this.fetchProduct();
+  onReload = () => {
+    this.fetchItem();
   };
 
   componentDidMount() {
-    this.fetchProduct();
+    this.fetchItem();
   }
 
   componentDidUpdate(lastProps) {
     const { id } = this.props.match.params;
     if (id !== lastProps.match.params.id) {
-      this.fetchProduct();
+      this.fetchItem();
     }
   }
 
-  async fetchProduct() {
+  async fetchItem() {
     const { id } = this.props.match.params;
     try {
       this.setState({
@@ -46,7 +46,7 @@ export default class ProductDetail extends React.Component {
         path: `/1/products/${id}`,
       });
       this.setState({
-        product: data,
+        item: data,
         loading: false,
       });
     } catch (error) {
@@ -71,16 +71,16 @@ export default class ProductDetail extends React.Component {
     }
 
     return (
-      <Switch>
-        <Protected
-          exact
-          path="/products/:id"
-          allowed={Overview}
-          onSave={this.onSave}
-          {...this.state}
-        />
-        <Route component={NotFound} />
-      </Switch>
+      <DetailsContext.Provider
+        value={{
+          ...this.state,
+          reload: this.onReload,
+        }}>
+        <Switch>
+          <Protected exact path="/products/:id" allowed={Overview} />
+          <Route component={NotFound} />
+        </Switch>
+      </DetailsContext.Provider>
     );
   }
 }

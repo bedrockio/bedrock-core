@@ -6,9 +6,13 @@ import { request, hasToken, setToken } from 'utils/api';
 import { trackSession } from 'utils/analytics';
 import { captureError } from 'utils/sentry';
 import { wrapContext } from 'utils/hoc';
+import { localStorage } from 'utils/storage';
+
+import { withTheme } from './theme';
 
 const SessionContext = React.createContext();
 
+@withTheme
 @withRouter
 export class SessionProvider extends React.PureComponent {
   constructor(props) {
@@ -63,6 +67,10 @@ export class SessionProvider extends React.PureComponent {
 
         const organization = await this.loadOrganization();
 
+        if (user.theme) {
+          this.context.setTheme(user.theme, true);
+        }
+
         // Uncomment this line if you want to set up
         // User-Id tracking. https://bit.ly/2DKQYEN.
         // setUserId(user.id);
@@ -73,6 +81,9 @@ export class SessionProvider extends React.PureComponent {
           loading: false,
         });
       } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(error);
+        captureError(error);
         if (error.type === 'token') {
           await this.logout(true);
         } else {

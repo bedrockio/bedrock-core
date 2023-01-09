@@ -1,10 +1,10 @@
 import React from 'react';
 import { Modal, Icon, Progress, Table, Button } from 'semantic';
 import Dropzone from 'react-dropzone';
+
 import { request } from 'utils/api';
 import modal from 'helpers/modal';
 import { processFile } from 'utils/csv';
-
 import ErrorMessage from 'components/ErrorMessage';
 
 export const productsImportMapping = {
@@ -237,7 +237,7 @@ export default class ImportProducts extends React.Component {
         <Modal.Actions>
           <Button
             content="Reset"
-            icon="redo"
+            icon="arrow-rotate-right"
             disabled={step === 1 || step > 2}
             onClick={() => {
               this.setState({
@@ -248,7 +248,7 @@ export default class ImportProducts extends React.Component {
           {step === 2 && (
             <Button
               content="Import"
-              icon="checkmark"
+              icon="check"
               primary
               disabled={loading}
               onClick={() => {

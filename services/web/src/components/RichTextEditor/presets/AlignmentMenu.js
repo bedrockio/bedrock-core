@@ -1,9 +1,10 @@
 import React from 'react';
-import bem from 'helpers/bem';
 import { Icon } from 'semantic';
+
+import bem from 'helpers/bem';
+
 import { isImageSelected, getSelectedAlignment } from '../utils';
 import { BUTTON_STYLES } from '../const';
-
 import Menu from '../Menu';
 import Button from '../Button';
 

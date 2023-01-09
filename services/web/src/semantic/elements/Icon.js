@@ -11,7 +11,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Icon as SemanticIcon } from 'semantic-ui-react';
-import IconGroup from './IconGroup';
 import { omit } from 'lodash';
 
 // Note Jest is too convoluted to be able to
@@ -19,22 +18,31 @@ import { omit } from 'lodash';
 // when esm support lands.
 import { createShorthandFactory } from 'semantic-ui-react/dist/commonjs/lib/factories';
 
+import IconGroup from './IconGroup';
+
 // Maps internal semantic name references to new icon names.
 const INTERNAL_MAP = {
-  close: 'times',
-  delete: 'times',
-  setting: 'cog',
-  settings: 'cogs',
+  close: 'xmark',
+  delete: 'xmark',
+  setting: 'gear',
+  settings: 'gears',
+  sync: 'rotate',
+  search: 'magnifying-glass',
+  edit: 'pen-to-square',
   dropdown: (props) => {
     // Semantic stupidly overrides icons based on className
     // instead of passing the correct "name" so conditionally
     // handle here.
     if (props.className.split(' ').includes('clear')) {
-      return 'times';
+      return 'xmark';
     }
     return 'caret-down';
   },
   mail: 'envelope',
+  'message-bubble': 'message',
+  'log-out': 'right-from-bracket',
+  'table-full': 'table',
+  'message-bubble regular': 'message regular',
 };
 const CLASS_PROPS = ['name', 'size', 'color', 'corner', 'flipped', 'rotated'];
 
@@ -86,11 +94,12 @@ export default class Icon extends React.Component {
 
   resolveName() {
     let { name } = this.props;
-    name = INTERNAL_MAP[name] || name;
-    if (typeof name === 'function') {
-      name = name(this.props);
+    let _name = name ? name.trim() : "";
+    let iconName = INTERNAL_MAP[_name] || _name;
+    if (typeof iconName === 'function') {
+      return iconName(this.props);
     }
-    return name;
+    return iconName;
   }
 
   render() {

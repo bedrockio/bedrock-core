@@ -1,40 +1,40 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Switch, Route } from 'react-router-dom';
-import { Protected } from 'helpers/routes';
+import { Link , Switch, Route } from 'react-router-dom';
 import { Loader } from 'semantic';
-import { request } from 'utils/api';
 
+import { Protected } from 'helpers/routes';
+import { request } from 'utils/api';
 import NotFound from 'screens/NotFound';
 
+import DetailsContext from './Context';
 import Overview from './Overview';
 
 export default class OrganizationDetail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      organization: null,
+      item: null,
       error: null,
       loading: true,
     };
   }
 
   onSave = () => {
-    this.fetchOrganization();
+    this.fetchItem();
   };
 
   componentDidMount() {
-    this.fetchOrganization();
+    this.fetchItem();
   }
 
   componentDidUpdate(lastProps) {
     const { id } = this.props.match.params;
     if (id !== lastProps.match.params.id) {
-      this.fetchOrganization();
+      this.fetchItem();
     }
   }
 
-  async fetchOrganization() {
+  async fetchItem() {
     const { id } = this.props.match.params;
     try {
       this.setState({
@@ -46,7 +46,7 @@ export default class OrganizationDetail extends React.Component {
         path: `/1/organizations/${id}`,
       });
       this.setState({
-        organization: data,
+        item: data,
         loading: false,
       });
     } catch (error) {
@@ -71,16 +71,22 @@ export default class OrganizationDetail extends React.Component {
     }
 
     return (
-      <Switch>
-        <Protected
-          exact
-          path="/organizations/:id"
-          allowed={Overview}
-          onSave={this.onSave}
-          {...this.state}
-        />
-        <Route component={NotFound} />
-      </Switch>
+      <DetailsContext.Provider
+        value={{
+          ...this.state,
+          reload: this.onReload,
+        }}>
+        <Switch>
+          <Protected
+            exact
+            path="/organizations/:id"
+            allowed={Overview}
+            onSave={this.onSave}
+            {...this.state}
+          />
+          <Route component={NotFound} />
+        </Switch>
+      </DetailsContext.Provider>
     );
   }
 }

@@ -2,7 +2,7 @@ const Router = require('@koa/router');
 const Joi = require('joi');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
-const { createAuthToken, createTemporaryToken, generateTokenId } = require('../utils/tokens');
+const { createTemporaryToken, generateTokenId } = require('../utils/tokens');
 const { sendTemplatedMail } = require('../utils/mailer');
 const { User, Invite, AuditEntry } = require('../models');
 
@@ -32,13 +32,17 @@ router
         ctx.throw(400, 'A user with that email already exists');
       }
 
-      const authTokenId = generateTokenId();
-      const user = await User.create({
-        authTokenId,
+      const user = new User({
         ...ctx.request.body,
       });
+      const token = user.createAuthToken({
+        ip: ctx.get('x-forwarded-for') || ctx.ip,
+        country: ctx.get('cf-ipcountry'),
+        userAgent: ctx.get('user-agent'),
+      });
+      await user.save();
 
-      await AuditEntry.append('registered', ctx, {
+      await AuditEntry.append('Registered', ctx, {
         object: user,
         user: user.id,
       });
@@ -49,7 +53,7 @@ router
       });
 
       ctx.body = {
-        data: { token: createAuthToken(user.id, authTokenId) },
+        data: { token },
       };
     }
   )
@@ -71,8 +75,8 @@ router
       try {
         await verifyLoginAttempts(user);
       } catch (error) {
-        await AuditEntry.append('reached max authentication attempts', ctx, {
-          type: 'security',
+        await AuditEntry.append('Reached max authentication attempts', ctx, {
+          category: 'security',
           object: user,
           user: user.id,
         });
@@ -82,8 +86,8 @@ router
       try {
         await verifyPassword(user, password);
       } catch (error) {
-        await AuditEntry.append('failed authentication', ctx, {
-          type: 'security',
+        await AuditEntry.append('Failed authentication', ctx, {
+          category: 'security',
           object: user,
           user: user.id,
         });
@@ -106,17 +110,20 @@ router
         return;
       }
 
-      const authTokenId = generateTokenId();
-      user.authTokenId = authTokenId;
+      const token = user.createAuthToken({
+        ip: ctx.get('x-forwarded-for') || ctx.ip,
+        country: ctx.get('cf-ipcountry'),
+        userAgent: ctx.get('user-agent'),
+      });
       await user.save();
 
-      await AuditEntry.append('successfully authenticated', ctx, {
+      await AuditEntry.append('Successfully authenticated', ctx, {
         object: user,
         user: user.id,
       });
 
       ctx.body = {
-        data: { token: createAuthToken(user.id, user.authTokenId) },
+        data: { token: token },
       };
     }
   )
@@ -135,7 +142,7 @@ router
         await verifyLoginAttempts(authUser);
       } catch (error) {
         await AuditEntry.append('Reached max authentication attempts', ctx, {
-          type: 'security',
+          category: 'security',
           object: authUser,
           user: authUser.id,
         });
@@ -146,14 +153,14 @@ router
         await verifyPassword(authUser, password);
       } catch (error) {
         await AuditEntry.append('Failed authentication (confirm-access)', ctx, {
-          type: 'security',
+          category: 'security',
           object: authUser,
           user: authUser.id,
         });
         ctx.throw(401, error);
       }
 
-      await AuditEntry.append('successfully authenticated (confirm-access)', ctx, {
+      await AuditEntry.append('Successfully authenticated (confirm-access)', ctx, {
         object: authUser,
         user: authUser.id,
       });
@@ -163,15 +170,33 @@ router
       ctx.status = 204;
     }
   )
-  .post('/logout', authenticate({ type: 'user' }), fetchUser, async (ctx) => {
-    const user = ctx.state.authUser;
-    await user.updateOne({
-      $unset: {
-        authTokenId: true,
-      },
-    });
-    ctx.status = 204;
-  })
+  .post(
+    '/logout',
+    validateBody({
+      all: Joi.boolean(),
+      jti: Joi.string(),
+    }),
+    authenticate({ type: 'user' }),
+    fetchUser,
+    async (ctx) => {
+      const user = ctx.state.authUser;
+      const { body } = ctx.request;
+      const jti = body.jti || ctx.state.jwt.jti;
+      if (body.all) {
+        user.authInfo = [];
+      } else if (jti) {
+        user.removeAuthToken(jti);
+      }
+      await user.save();
+
+      await AuditEntry.append('Deauthentication', ctx, {
+        object: user,
+        user: user.id,
+      });
+
+      ctx.status = 204;
+    }
+  )
   .post(
     '/accept-invite',
     validateBody({
@@ -188,32 +213,42 @@ router
       if (!invite) {
         return ctx.throw(400, 'Invite could not be found');
       }
-      const authTokenId = generateTokenId();
+
       const existingUser = await User.findOne({ email: invite.email });
 
       if (existingUser) {
-        await existingUser.updateOne({ authTokenId });
+        const token = existingUser.createAuthToken({
+          ip: ctx.get('x-forwarded-for') || ctx.ip,
+          country: ctx.get('cf-ipcountry'),
+          userAgent: ctx.get('user-agent'),
+        });
+        await existingUser.save();
         ctx.body = {
-          data: { token: createAuthToken(existingUser.id, authTokenId) },
+          data: { token },
         };
         return;
       }
 
-      const user = await User.create({
+      const user = new User({
         firstName,
         lastName,
         email: invite.email,
         password,
-        authTokenId,
       });
+      const token = user.createAuthToken({
+        ip: ctx.get('x-forwarded-for') || ctx.ip,
+        country: ctx.get('cf-ipcountry'),
+        userAgent: ctx.get('user-agent'),
+      });
+      await user.save();
 
-      await AuditEntry.append('registered', ctx, {
+      await AuditEntry.append('Registered', ctx, {
         object: user,
         user: user.id,
       });
 
       ctx.body = {
-        data: { token: createAuthToken(user.id, authTokenId) },
+        data: { token },
       };
     }
   )
@@ -256,8 +291,8 @@ router
       if (!user) {
         ctx.throw(400, 'User does not exist');
       } else if (user.tempTokenId !== jwt.jti) {
-        await AuditEntry.append('attempted reset password', ctx, {
-          type: 'security',
+        await AuditEntry.append('Attempted reset password', ctx, {
+          category: 'security',
           object: user,
           user: user.id,
         });
@@ -267,16 +302,20 @@ router
       user.loginAttempts = 0;
       user.password = password;
       user.tempTokenId = undefined;
-
+      const token = user.createAuthToken({
+        ip: ctx.get('x-forwarded-for') || ctx.ip,
+        country: ctx.get('cf-ipcountry'),
+        userAgent: ctx.get('user-agent'),
+      });
       await user.save();
 
-      await AuditEntry.append('reset password', ctx, {
+      await AuditEntry.append('Reset password', ctx, {
         object: user,
         user: user.id,
       });
 
       ctx.body = {
-        data: { token: createAuthToken(user.id) },
+        data: { token },
       };
     }
   );

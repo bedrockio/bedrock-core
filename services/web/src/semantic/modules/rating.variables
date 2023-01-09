@@ -26,12 +26,18 @@
 /* Standard */
 @inactiveBackground: transparent;
 @inactiveColor: rgba(0, 0, 0, 0.15);
+@nocturnalInactiveBackground: transparent;
+@nocturnalInactiveColor: rgba(255, 255, 255, 0.2);
 
 @selectedBackground: @inactiveBackground;
 @selectedColor: @textColor;
+@nocturnalSelectedBackground: @nocturnalInactiveBackground;
+@nocturnalSelectedColor: @nocturnalTextColor;
 
 @activeBackground: @inactiveBackground;
 @activeColor: @darkTextColor;
+@nocturnalActiveBackground: @nocturnalInactiveBackground;
+@nocturnalActiveColor: @nocturnalSelectedTextColor;
 
 /* Star */
 @starIconWidth: @iconWidth;
@@ -41,6 +47,9 @@
 @starInactiveBackground: @inactiveBackground;
 @starInactiveColor: @inactiveColor;
 @starInactiveTextShadow: none;
+@nocturnalStarInactiveBackground: @nocturnalInactiveBackground;
+@nocturnalStarInactiveColor: @nocturnalInactiveColor;
+@nocturnalStarInactiveTextShadow: @starInactiveTextShadow;
 
 @starActiveBackground: @activeBackground;
 @starActiveColor: #FFE623;
@@ -51,6 +60,7 @@
   0px @starShadowWidth 0px @starActiveShadowColor,
   @starShadowWidth 0px 0px @starActiveShadowColor
 ;
+@nocturnalStarActiveBackground: @nocturnalActiveBackground;
 
 @starSelectedBackground: @selectedBackground;
 @starSelectedColor: #FFCC00;
@@ -61,6 +71,7 @@
   0px @starShadowWidth 0px @starSelectedShadowColor,
   @starShadowWidth 0px 0px @starSelectedShadowColor
 ;
+@nocturnalStarSelectedBackground: @nocturnalSelectedBackground;
 
 /* Heart */
 @heartIconWidth: 1.4em;
@@ -70,6 +81,9 @@
 @heartInactiveBackground: @inactiveBackground;
 @heartInactiveColor: @inactiveColor;
 @heartInactiveTextShadow: none;
+@nocturnalHeartInactiveBackground: @nocturnalInactiveBackground;
+@nocturnalHeartInactiveColor: @nocturnalInactiveColor;
+@nocturnalHeartInactiveTextShadow: @heartInactiveTextShadow;
 
 @heartActiveBackground: @activeBackground;
 @heartActiveColor: #FF6D75;
@@ -80,6 +94,7 @@
   0px @heartShadowWidth 0px @heartActiveShadowColor,
   @heartShadowWidth 0px 0px @heartActiveShadowColor
 ;
+@nocturnalHeartActiveBackground: @nocturnalActiveBackground;
 
 @heartSelectedBackground: @selectedBackground;
 @heartSelectedColor: #FF3000;
@@ -90,6 +105,7 @@
   0px @heartShadowWidth 0px @heartSelectedShadowColor,
   @heartShadowWidth 0px 0px @heartSelectedShadowColor
 ;
+@nocturnalHeartSelectedBackground: @nocturnalSelectedBackground;
 
 /*-------------------
         States

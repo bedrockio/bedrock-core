@@ -75,6 +75,16 @@
 
   transition: @checkboxTransition;
   border: @checkboxBorder;
+
+  .nocturnal-theme & {
+    background: @nocturnalCheckboxBackground;
+    border-color: @nocturnalCheckboxBorderColor;
+  }
+
+  .diurnal-theme & {
+    background: @checkboxBackground;
+    border: @checkboxBorder;
+  }
 }
 
 /*--------------
@@ -94,6 +104,14 @@
   opacity: 0;
   color: @checkboxColor;
   transition: @checkboxTransition;
+
+  .nocturnal-theme & {
+    color: @nocturnalCheckboxColor;
+  }
+
+  .diurnal-theme & {
+    color: @checkboxColor;
+  }
 }
 
 /*--------------
@@ -105,6 +123,14 @@
 .ui.checkbox + label {
   color: @labelColor;
   transition: @labelTransition;
+
+  .nocturnal-theme & {
+    color: @nocturnalLabelColor;
+  }
+
+  .diurnal-theme & {
+    color: @labelColor;
+  }
 }
 
 /* Outside */
@@ -124,10 +150,28 @@
 .ui.checkbox label:hover::before {
   background: @checkboxHoverBackground;
   border-color: @checkboxHoverBorderColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalCheckboxHoverBackground;
+    border-color: @nocturnalCheckboxHoverBorderColor;
+  }
+
+  .diurnal-theme & {
+    background: @checkboxHoverBackground;
+    border-color: @checkboxHoverBorderColor;
+  }
 }
 .ui.checkbox label:hover,
 .ui.checkbox + label:hover {
   color: @labelHoverColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalLabelColor;
+  }
+
+  .diurnal-theme & {
+    color: @labelHoverColor;
+  }
 }
 
 /*--------------
@@ -138,13 +182,39 @@
 .ui.checkbox label:active::before {
   background: @checkboxPressedBackground;
   border-color: @checkboxPressedBorderColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalCheckboxPressedBackground;
+    border-color: @nocturnalCheckboxPressedBorderColor;
+  }
+
+  .diurnal-theme & {
+    background: @checkboxPressedBackground;
+    border-color: @checkboxPressedBorderColor;
+  }
 }
 .ui.checkbox .box:active::after,
 .ui.checkbox label:active::after {
   color: @checkboxPressedColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalCheckboxPressedColor;
+  }
+
+  .diurnal-theme & {
+    color: @checkboxPressedColor;
+  }
 }
 .ui.checkbox input:active ~ label {
   color: @labelPressedColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalLabelPressedColor;
+  }
+
+  .diurnal-theme & {
+    color: @labelPressedColor;
+  }
 }
 
 /*--------------
@@ -155,13 +225,39 @@
 .ui.checkbox input:focus ~ label:before {
   background: @checkboxFocusBackground;
   border-color: @checkboxFocusBorderColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalCheckboxFocusBackground;
+    border-color: @nocturnalCheckboxFocusBorderColor;
+  }
+
+  .diurnal-theme & {
+    background-color: @checkboxFocusBackground;
+    border-color: @checkboxFocusBorderColor;
+  }
 }
 .ui.checkbox input:focus ~ .box:after,
 .ui.checkbox input:focus ~ label:after {
   color: @checkboxFocusCheckColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalCheckboxFocusCheckColor;
+  }
+
+  .diurnal-theme & {
+    color: @checkboxFocusCheckColor;
+  }
 }
 .ui.checkbox input:focus ~ label {
   color: @labelFocusColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalLabelFocusColor;
+  }
+
+  .diurnal-theme & {
+    color: @labelFocusColor;
+  }
 }
 
 /*--------------
@@ -172,11 +268,24 @@
 .ui.checkbox input:checked ~ label:before {
   background: @checkboxActiveBackground;
   border-color: @checkboxActiveBorderColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalCheckboxActiveBackground;
+    border-color: @nocturnalCheckboxActiveBorderColor;
+  }
 }
 .ui.checkbox input:checked ~ .box:after,
 .ui.checkbox input:checked ~ label:after {
   opacity: @checkboxActiveCheckOpacity;
   color: @checkboxActiveCheckColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalCheckboxActiveCheckColor;
+  }
+
+  .diurnal-theme & {
+    color: @checkboxActiveCheckColor;
+  }
 }
 
 /*--------------
@@ -204,12 +313,30 @@
 .ui.checkbox input:checked:focus ~ label:before {
   background: @checkboxActiveFocusBackground;
   border-color: @checkboxActiveFocusBorderColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalCheckboxActiveFocusBackground;
+    border-color: @nocturnalCheckboxActiveFocusBorderColor;
+  }
+
+  .diurnal-theme & {
+    background: @checkboxActiveFocusBackground;
+    border-color: @checkboxActiveFocusBorderColor;
+  }
 }
 .ui.checkbox input:not([type='radio']):indeterminate:focus ~ .box:after,
 .ui.checkbox input:not([type='radio']):indeterminate:focus ~ label:after,
 .ui.checkbox input:checked:focus ~ .box:after,
 .ui.checkbox input:checked:focus ~ label:after {
   color: @checkboxActiveFocusCheckColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalCheckboxActiveFocusCheckColor;
+  }
+
+  .diurnal-theme & {
+    color: @checkboxActiveFocusCheckColor;
+  }
 }
 
 /*--------------
@@ -232,6 +359,14 @@
   cursor: default !important;
   opacity: @disabledCheckboxOpacity;
   color: @disabledCheckboxLabelColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalDisabledCheckboxLabelColor;
+  }
+
+  .diurnal-theme & {
+    color: @disabledCheckboxLabelColor;
+  }
 }
 
 /*--------------
@@ -300,16 +435,36 @@
   border-radius: @bulletRadius;
   transform: scale(@bulletScale);
   background-color: @bulletColor;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalBulletColor;
+  }
+
+  .diurnal-theme & {
+    background-color: @bulletColor;
+  }
 }
 
 /* Focus */
 .ui.radio.checkbox input:focus ~ .box:before,
 .ui.radio.checkbox input:focus ~ label:before {
   background-color: @radioFocusBackground;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalRadioFocusBackground;
+  }
 }
 .ui.radio.checkbox input:focus ~ .box:after,
 .ui.radio.checkbox input:focus ~ label:after {
   background-color: @radioFocusBulletColor;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalRadioFocusBulletColor;
+  }
+
+  .diurnal-theme & {
+    background-color: @radioFocusBulletColor;
+  }
 }
 
 /* Indeterminate */
@@ -322,20 +477,52 @@
 .ui.radio.checkbox input:checked ~ .box:before,
 .ui.radio.checkbox input:checked ~ label:before {
   background-color: @radioActiveBackground;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalRadioActiveBackground;
+  }
+
+  .diurnal-theme & {
+    background-color: @radioActiveBackground;
+  }
 }
 .ui.radio.checkbox input:checked ~ .box:after,
 .ui.radio.checkbox input:checked ~ label:after {
   background-color: @radioActiveBulletColor;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalRadioActiveBulletColor;
+  }
+
+  .diurnal-theme & {
+    background-color: @radioActiveBulletColor;
+  }
 }
 
 /* Active Focus */
 .ui.radio.checkbox input:focus:checked ~ .box:before,
 .ui.radio.checkbox input:focus:checked ~ label:before {
   background-color: @radioActiveFocusBackground;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalRadioActiveFocusBackground;
+  }
+
+  .diurnal-theme & {
+    background-color: @radioActiveFocusBackground;
+  }
 }
 .ui.radio.checkbox input:focus:checked ~ .box:after,
 .ui.radio.checkbox input:focus:checked ~ label:after {
   background-color: @radioActiveFocusBulletColor;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalRadioActiveFocusBulletColor;
+  }
+
+  .diurnal-theme & {
+    background-color: @radioActiveFocusBulletColor;
+  }
 }
 
 /*--------------
@@ -358,6 +545,14 @@
   padding-left: @sliderLabelDistance;
   line-height: @sliderLabelLineHeight;
   color: @sliderOffLabelColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalSliderOffLabelColor;
+  }
+
+  .diurnal-theme & {
+    color: @sliderOffLabelColor;
+  }
 }
 
 /* Line */
@@ -380,6 +575,14 @@
   transform: none;
   border-radius: @sliderLineRadius;
   transition: @sliderLineTransition;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalSliderLineColor;
+  }
+
+  .diurnal-theme & {
+    background-color: @sliderLineColor;
+  }
 }
 
 /* Handle */
@@ -401,6 +604,16 @@
 
   border-radius: @circularRadius;
   transition: @sliderHandleTransition;
+
+  .nocturnal-theme & {
+    background: @nocturnalHandleBackground;
+    box-shadow: @nocturnalHandleBoxShadow;
+  }
+
+  .diurnal-theme & {
+    background: @handleBackground;
+    box-shadow: @handleBoxShadow;
+  }
 }
 
 /* Focus */
@@ -408,26 +621,66 @@
 .ui.slider.checkbox input:focus ~ label:before {
   background-color: @toggleFocusColor;
   border: none;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalToggleFocusColor;
+  }
+
+  .diurnal-theme & {
+    background-color: @toggleFocusColor;
+  }
 }
 
 /* Hover */
 .ui.slider.checkbox .box:hover,
 .ui.slider.checkbox label:hover {
   color: @sliderHoverLabelColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalSliderHoverLabelColor;
+  }
+
+  .diurnal-theme & {
+    color: @sliderHoverLabelColor;
+  }
 }
 .ui.slider.checkbox .box:hover::before,
 .ui.slider.checkbox label:hover::before {
   background: @sliderHoverLaneBackground;
+
+  .nocturnal-theme & {
+    background: @nocturnalSliderHoverLaneBackground;
+  }
+
+  .diurnal-theme & {
+    background: @sliderHoverLaneBackground;
+  }
 }
 
 /* Active */
 .ui.slider.checkbox input:checked ~ .box,
 .ui.slider.checkbox input:checked ~ label {
   color: @sliderOnLabelColor !important;
+
+  .nocturnal-theme & {
+    color: @nocturnalSliderOnLabelColor !important;
+  }
+
+  .diurnal-theme & {
+    color: @sliderOnLabelColor !important;
+  }
 }
 .ui.slider.checkbox input:checked ~ .box:before,
 .ui.slider.checkbox input:checked ~ label:before {
   background-color: @sliderOnLineColor !important;
+
+  .nocturnal-theme & {
+    color: @nocturnalSliderOnLineColor !important;
+  }
+
+  .diurnal-theme & {
+    background-color: @sliderOnLineColor !important;
+  }
 }
 .ui.slider.checkbox input:checked ~ .box:after,
 .ui.slider.checkbox input:checked ~ label:after {
@@ -438,10 +691,26 @@
 .ui.slider.checkbox input:focus:checked ~ .box,
 .ui.slider.checkbox input:focus:checked ~ label {
   color: @sliderOnFocusLabelColor !important;
+
+  .nocturnal-theme & {
+    color: @nocturnalSliderOnFocusLabelColor !important;
+  }
+
+  .diurnal-theme & {
+    color: @sliderOnFocusLabelColor !important;
+  }
 }
 .ui.slider.checkbox input:focus:checked ~ .box:before,
 .ui.slider.checkbox input:focus:checked ~ label:before {
   background-color: @sliderOnFocusLineColor !important;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalSliderOnFocusLineColor !important;
+  }
+
+  .diurnal-theme & {
+    background-color: @sliderOnFocusLineColor !important;
+  }
 }
 
 /*--------------
@@ -464,6 +733,10 @@
   min-height: @toggleHandleSize;
   padding-left: @toggleLabelDistance;
   color: @toggleOffLabelColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalToggleOffLabelColor;
+  }
 }
 .ui.toggle.checkbox label {
   padding-top: @toggleLabelOffset;
@@ -486,6 +759,11 @@
   width: @toggleLaneWidth;
   height: @toggleLaneHeight;
   border-radius: @toggleHandleRadius;
+
+  .nocturnal-theme & {
+    background: @nocturnalToggleLaneBackground;
+    box-shadow: @nocturnalToggleLaneBoxShadow;
+  }
 }
 
 /* Handle */
@@ -506,12 +784,21 @@
 
   border-radius: @circularRadius;
   transition: @toggleHandleTransition;
+
+  .nocturnal-theme & {
+    background: @nocturnalHandleBackground;
+    box-shadow: @nocturnalHandleBoxShadow;
+  }
 }
 
 .ui.toggle.checkbox input ~ .box:after,
 .ui.toggle.checkbox input ~ label:after {
   left: @toggleOffOffset;
   box-shadow: @toggleOffHandleBoxShadow;
+
+  .nocturnal-theme & {
+    box-shadow: @nocturnalToggleOffHandleBoxShadow;
+  }
 }
 
 /* Focus */
@@ -519,6 +806,10 @@
 .ui.toggle.checkbox input:focus ~ label:before {
   background-color: @toggleFocusColor;
   border: none;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalToggleFocusColor;
+  }
 }
 
 /* Hover */
@@ -526,31 +817,55 @@
 .ui.toggle.checkbox label:hover::before {
   background-color: @toggleHoverColor;
   border: none;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalToggleHoverColor;
+  }
 }
 
 /* Active */
 .ui.toggle.checkbox input:checked ~ .box,
 .ui.toggle.checkbox input:checked ~ label {
   color: @toggleOnLabelColor !important;
+
+  .nocturnal-theme & {
+    color: @nocturnalToggleOnLabelColor !important;
+  }
 }
 .ui.toggle.checkbox input:checked ~ .box:before,
 .ui.toggle.checkbox input:checked ~ label:before {
   background-color: @toggleOnLaneColor !important;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalToggleOnLaneColor !important;
+  }
 }
 .ui.toggle.checkbox input:checked ~ .box:after,
 .ui.toggle.checkbox input:checked ~ label:after {
   left: @toggleOnOffset;
   box-shadow: @toggleOnHandleBoxShadow;
+
+  .nocturnalTheme & {
+    box-shadow: @nocturnalToggleOnHandleBoxShadow;
+  }
 }
 
 /* Active Focus */
 .ui.toggle.checkbox input:focus:checked ~ .box,
 .ui.toggle.checkbox input:focus:checked ~ label {
   color: @toggleOnFocusLabelColor !important;
+
+  .nocturnal-theme & {
+    color: @nocturnalToggleOnFocusLabelColor !important;
+  }
 }
 .ui.toggle.checkbox input:focus:checked ~ .box:before,
 .ui.toggle.checkbox input:focus:checked ~ label:before {
   background-color: @toggleOnFocusLaneColor !important;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalToggleOnFocusLaneColor !important;
+  }
 }
 
 /*******************************

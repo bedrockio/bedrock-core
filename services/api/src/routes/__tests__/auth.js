@@ -118,13 +118,14 @@ describe('/1/auth', () => {
         password,
       });
 
-      let response;
-
-      response = await request('POST', '/1/auth/login', { email: user.email, password });
+      const response = await request('POST', '/1/auth/login', { email: user.email, password });
       expect(response.status).toBe(200);
-
-      user = await User.findById(user.id);
-      expect(user.authTokenId).not.toBeUndefined();
+      const decodeToken = jwt.decode(response.body.data.token, { complete: true });
+      const updatedUser = await User.findById(user.id);
+      expect(updatedUser.authInfo).toHaveLength(1);
+      const entry = updatedUser.authInfo[0];
+      expect(entry.jti).toBe(decodeToken.payload.jti);
+      expect(entry.exp.valueOf()).toBe(decodeToken.payload.exp * 1000);
     });
   });
 
@@ -187,12 +188,52 @@ describe('/1/auth', () => {
   });
 
   describe('POST /logout', () => {
-    it('should changed authTokenId on logout', async () => {
+    it('should remove all tokens', async () => {
       const user = await createUser();
+
+      const response = await request('POST', '/1/auth/logout', { all: true }, { user });
+      expect(response.status).toBe(204);
+      const updatedUser = await User.findById(user.id);
+      expect(updatedUser.authInfo).toHaveLength(0);
+    });
+
+    it('should remove current session if nothing is set', async () => {
+      const user = await createUser({
+        authInfo: [
+          {
+            jti: 'old session not expired',
+            iat: '123',
+            ip: '123',
+            exp: new Date(Date.now() + 5000), // 5 seconds from now
+            lastUsedAt: new Date(Date.now() - 1000),
+          },
+        ],
+      });
       const response = await request('POST', '/1/auth/logout', {}, { user });
       expect(response.status).toBe(204);
       const updatedUser = await User.findById(user.id);
-      expect(updatedUser.authTokenId).not.toBeDefined();
+      expect(updatedUser.authInfo).toHaveLength(1);
+      expect(updatedUser.authInfo[0].jti).toBe('old session not expired');
+    });
+
+    it('should remove token by jit', async () => {
+      const user = await createUser({
+        authInfo: [
+          {
+            jti: 'targeted jti',
+            iat: '123',
+            ip: '123',
+            exp: new Date(Date.now() + 5000), // 5 seconds from now
+            lastUsedAt: new Date(Date.now() - 1000),
+          },
+        ],
+      });
+      const response = await request('POST', '/1/auth/logout', { jti: 'targeted jti' }, { user });
+      expect(response.status).toBe(204);
+      const updatedUser = await User.findById(user.id);
+      expect(updatedUser.authInfo).toHaveLength(1);
+      // confirming that only authToken is from triggering the above request
+      expect(updatedUser.authInfo[0].userAgent).toBe('testing library');
     });
   });
 
@@ -286,9 +327,10 @@ describe('/1/auth', () => {
       expect(payload).toHaveProperty('type', 'user');
 
       const updatedUser = await User.findById(user.id);
-      await expect(async () => {
-        await verifyPassword(updatedUser, password);
-      }).not.toThrow();
+      await expect(verifyPassword(updatedUser, password)).resolves.not.toThrow();
+      expect(updatedUser.tempTokenId).not.toBeDefined();
+      expect(updatedUser.authInfo).toHaveLength(1);
+      expect(updatedUser.authInfo[0].jti).toContain(payload.jti);
     });
 
     it('should error when user is not found', async () => {
@@ -314,7 +356,7 @@ describe('/1/auth', () => {
       const tokenId = generateTokenId();
       const token = createTemporaryToken({ type: 'password', sub: user.id, jti: tokenId });
       user.tempTokenId = tokenId;
-      user.save();
+      await user.save();
       let response = await request(
         'POST',
         '/1/auth/set-password',
@@ -349,7 +391,7 @@ describe('/1/auth', () => {
       const tokenId = generateTokenId();
       const token = createTemporaryToken({ type: 'password', sub: user.id, jti: tokenId });
       user.tempTokenId = 'different id';
-      user.save();
+      await user.save();
 
       let response = await request(
         'POST',

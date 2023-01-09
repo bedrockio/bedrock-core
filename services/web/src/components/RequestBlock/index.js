@@ -1,12 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Header, Dropdown } from 'semantic';
+
 import { Layout } from 'components/Layout';
 import Code from 'components/Markdown/Code';
+import { API_URL } from 'utils/env';
+
 import templateCurl from './templates/curl';
 import templateFetch from './templates/fetch';
 import templateSwift from './templates/swift';
-import { API_URL } from 'utils/env';
 
 const OPTIONS = [
   {

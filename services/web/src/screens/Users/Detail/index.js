@@ -1,52 +1,54 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Switch, Route } from 'react-router-dom';
-import { Protected } from 'helpers/routes';
+import { Link , Switch, Route } from 'react-router-dom';
 import { Loader } from 'semantic';
-import { request } from 'utils/api';
 
+import { Protected } from 'helpers/routes';
+import { request } from 'utils/api';
 import NotFound from 'screens/NotFound';
 
 import Overview from './Overview';
+import DetailsContext from './Context';
 
 export default class UserDetail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: null,
+      item: null,
       error: null,
       loading: true,
     };
   }
 
   componentDidMount() {
-    this.fetchUser();
+    this.fetchItem();
   }
 
   componentDidUpdate(lastProps) {
     const { id } = this.props.match.params;
     if (id !== lastProps.match.params.id) {
-      this.fetchUser();
+      this.fetchItem();
     }
   }
 
-  onSave = () => {
-    this.fetchUser();
+  onReload = () => {
+    this.fetchItem();
   };
 
-  async fetchUser() {
+  async fetchItem() {
     const { id } = this.props.match.params;
+    this.setState({
+      error: null,
+      loading: true,
+    });
+
     try {
-      this.setState({
-        error: null,
-        loading: true,
-      });
       const { data } = await request({
         method: 'GET',
         path: `/1/users/${id}`,
       });
+
       this.setState({
-        user: data,
+        item: data,
         loading: false,
       });
     } catch (error) {
@@ -69,17 +71,18 @@ export default class UserDetail extends React.Component {
         />
       );
     }
+
     return (
-      <Switch>
-        <Protected
-          exact
-          path="/users/:id"
-          allowed={Overview}
-          onSave={this.onSave}
-          {...this.state}
-        />
-        <Route component={NotFound} />
-      </Switch>
+      <DetailsContext.Provider
+        value={{
+          ...this.state,
+          reload: this.onReload,
+        }}>
+        <Switch>
+          <Protected exact path="/users/:id" allowed={Overview} />
+          <Route component={NotFound} />
+        </Switch>
+      </DetailsContext.Provider>
     );
   }
 }

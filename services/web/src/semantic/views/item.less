@@ -31,6 +31,12 @@
   box-shadow: @boxShadow;
   transition: @transition;
   z-index: @zIndex;
+
+  .nocturnal-theme & {
+    background: @nocturnalBackground;
+    border: @nocturnalBorder;
+    box-shadow: @nocturnalBoxShadow;
+  }
 }
 .ui.items > .item a {
   cursor: pointer;
@@ -90,6 +96,10 @@
   height: auto;
   border-radius: @imageBorderRadius;
   border: @imageBorder;
+
+  .nocturnal-theme & {
+    border: @nocturnalImageBorder;
+  }
 }
 
 .ui.items > .item > .image:only-child > img {
@@ -110,6 +120,12 @@
   font-size: @contentFontSize;
   border: @contentBorder;
   border-radius: @contentBorderRadius;
+
+  .nocturnal-theme & {
+    background: @nocturnalContentBackground;
+    box-shadow: @nocturnalContentBoxShadow;
+    border: @nocturnalContentBorder;
+  }
 }
 .ui.items > .item > .content:after {
   display: block;
@@ -135,6 +151,10 @@
   font-family: @headerFont;
   font-weight: @headerFontWeight;
   color: @headerColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalHeaderColor;
+  }
 }
 /* Default Header Size */
 .ui.items > .item > .content > .header:not(.ui) {
@@ -177,6 +197,10 @@
   font-size: @descriptionFontSize;
   line-height: @descriptionLineHeight;
   color: @descriptionColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalDescriptionColor;
+  }
 }
 
 /*--------------
@@ -199,6 +223,10 @@
   font-size: @metaFontSize;
   line-height: @metaLineHeight;
   color: @metaColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalMetaColor;
+  }
 }
 .ui.items > .item .meta * {
   margin-right: @metaSpacing;
@@ -220,25 +248,49 @@
 .ui.items > .item > .content a:not(.ui) {
   color: @contentLinkColor;
   transition: @contentLinkTransition;
+
+  .nocturnal-theme & {
+    color: @nocturnalContentLinkColor;
+  }
 }
 .ui.items > .item > .content a:not(.ui):hover {
   color: @contentLinkHoverColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalContentLinkHoverColor;
+  }
 }
 
 /* Header */
 .ui.items > .item > .content > a.header {
   color: @headerLinkColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalHeaderLinkColor;
+  }
 }
 .ui.items > .item > .content > a.header:hover {
   color: @headerLinkHoverColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalHeaderLinkHoverColor;
+  }
 }
 
 /* Meta */
 .ui.items > .item .meta > a:not(.ui) {
   color: @metaLinkColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalMetaLinkColor;
+  }
 }
 .ui.items > .item .meta > a:not(.ui):hover {
   color: @metaLinkHoverColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalMetaLinkHoverColor;
+  }
 }
 
 /*--------------
@@ -294,6 +346,13 @@
   box-shadow: @extraBoxShadow;
   transition: @extraTransition;
   border-top: @extraDivider;
+
+  .nocturnal-theme & {
+    background: @nocturnalExtraBackground;
+    color: @nocturnalExtraColor;
+    box-shadow: @nocturnalExtraBoxShadow;
+    border-top: @nocturnalExtraDivider;
+  }
 }
 .ui.items > .item .extra > * {
   margin: (@extraRowSpacing / 2) @extraHorizontalSpacing (@extraRowSpacing / 2)
@@ -396,6 +455,10 @@
   border-top: @dividedBorder;
   margin: @dividedMargin;
   padding: @dividedPadding;
+
+  .nocturnal-theme & {
+    border-top: @nocturnalDividedBorder;
+  }
 }
 .ui.divided.items > .item:first-child {
   border-top: none;
@@ -429,6 +492,10 @@
 .ui.items a.item:hover .content .header,
 .ui.link.items > .item:hover .content .header {
   color: @headerLinkHoverColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalHeaderLinkHoverColor;
+  }
 }
 
 /*--------------

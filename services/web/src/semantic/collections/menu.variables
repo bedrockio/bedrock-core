@@ -20,6 +20,10 @@
 @boxShadow: @subtleShadow;
 @borderRadius: @defaultBorderRadius;
 @minHeight: (@itemVerticalPadding * 2) + 1em;
+@nocturnalBackground: saturate(lighten(@nocturnalPageBackground, 5), 15, relative);
+@nocturnalItemBackground: none;
+@nocturnalBorder: @borderWidth solid @nocturnalBorderColor;
+@nocturnalBoxShadow: @nocturnalSubtleShadow;
 
 /* Menu Item */
 @itemVerticalPadding: @relativeSmall;
@@ -32,16 +36,19 @@
 ;
 @itemFontWeight: @semiBold;
 @itemTextColor: @textColor;
+@nocturnalItemTextColor: @nocturnalMutedTextColor;
 
 /* Divider */
 @dividerSize: 1px;
 @dividerBackground: @internalBorderColor;
+@nocturnalDividerBackground: @nocturnalInternalBorderColor;
 
 /* Sub Menu */
 @subMenuDistance: 0.5em;
 @subMenuMargin: @subMenuDistance -@itemHorizontalPadding 0em;
 @subMenuFontSize: @relativeTiny;
 @subMenuTextColor: rgba(0, 0, 0, 0.5);
+@nocturnalSubMenuTextColor: rgba(255, 255, 255, 0.45);
 
 @subMenuIndent: 0em;
 @subMenuHorizontalPadding: (@itemHorizontalPadding / @tinySize) + @subMenuIndent;
@@ -67,6 +74,7 @@
 @headerBackground: '';
 @headerWeight: @bold;
 @headerTextTransform: @normal;
+@nocturnalHeaderBackground: '';
 
 /* Vertical Icon */
 @verticalIconFloat: left;
@@ -83,14 +91,21 @@
 @arrowBorder: @arrowBorderWidth solid @solidBorderColor;
 @arrowTransition: background @defaultDuration @defaultEasing;
 @arrowZIndex: 2;
+@nocturnalArrowBorder: @arrowBorderWidth solid @nocturnalBorderColor;
 
 @arrowHoverColor: #F2F2F2;
 @arrowActiveColor: @arrowHoverColor;
 @arrowActiveHoverColor: @arrowActiveColor;
+@nocturnalArrowHoverColor: #3D3E3F;
+@nocturnalArrowActiveColor: @nocturnalArrowHoverColor;
+@nocturnalArrowActiveHoverColor: @nocturnalArrowActiveColor;
 
 @arrowVerticalHoverColor: @arrowHoverColor;
 @arrowVerticalActiveColor: @arrowActiveColor;
 @arrowVerticalSubMenuColor: @white;
+@nocturnalArrowVerticalHoverColor: @nocturnalArrowHoverColor;
+@nocturnalArrowVerticalActiveColor: @nocturnalArrowActiveColor;
+@nocturnalArrowVerticalSubMenuColor: @nocturnalBackground;
 
 /*--------------
     Couplings
@@ -117,6 +132,8 @@
 @labelOffset: -0.15em;
 @labelBackground: #999999;
 @labelTextColor: @white;
+@nocturnalLabelBackground: hsl(hue(@pageBackground), (saturation(@pageBackground) / 2), (lightness(@textColor) + (100% - lightness(#E8E8E8))));
+@nocturnalLabelTextColor: @nocturnalMutedTextColor;
 
 @labelTextMargin: 1em;
 @labelVerticalPadding: 0.3em;
@@ -127,10 +144,12 @@
 
 /* Dropdown in Menu */
 @dropdownMenuBoxShadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.08);
+@nocturnalDropdownMenuBoxShadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
 
 @dropdownBackground: #FFFFFF;
 @dropdownMenuDistance: 0em;
 @dropdownMenuBorderRadius: @borderRadius;
+@nocturnalDropdownBackground: @nocturnalBackground;
 
 @dropdownItemFontSize: @relativeMedium;
 @dropdownItemPadding: @relativeMini @relativeLarge;
@@ -140,6 +159,9 @@
 @dropdownItemFontWeight: @normal;
 @dropdownItemBoxShadow: none;
 @dropdownItemTransition: none;
+@nocturnalDropdownItemBackground: transparent;
+@nocturnalDropdownItemColor: @nocturnalItemTextColor;
+@nocturnalDropdownItemBoxShadow: @dropdownItemBoxShadow;
 
 @dropdownItemIconFloat: none;
 @dropdownItemIconFontSize: @relativeMedium;
@@ -147,12 +169,16 @@
 
 @dropdownHoveredItemBackground: @transparentBlack;
 @dropdownHoveredItemColor: @selectedTextColor;
+@nocturnalDropdownHoveredItemBackground: @transparentWhite;
+@nocturnalDropdownHoveredItemColor: @nocturnalTextColor;
 
 /* Dropdown Variations */
 @dropdownVerticalMenuBoxShadow: 0 1px 3px 0px rgba(0, 0, 0, 0.08);
 @secondaryDropdownMenuDistance: @relative5px;
 @pointingDropdownMenuDistance: 0.75em;
 @invertedSelectionDropdownColor: @invertedTextColor;
+@nocturnalDropdownVerticalMenuBoxShadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+@nocturnalInvertedSelectionDropdownColor: @textColor;
 
 /*--------------
      States
@@ -161,11 +187,14 @@
 /* Hovered Item */
 @hoverItemBackground: @subtleTransparentBlack;
 @hoverItemTextColor: @selectedTextColor;
+@nocturnalHoverItemBackground: @subtleTransparentWhite;
+@nocturnalHoverItemTextColor: @nocturnalSelectedTextColor;
 
 /* Pressed Item */
 @pressedItemBackground: @subtleTransparentBlack;
 @pressedItemTextColor: @hoverItemTextColor;
-
+@nocturnalPressedItemBackground: @subtleTransparentWhite;
+@nocturnalPressedItemTextColor: @nocturnalHoverItemTextColor;
 
 /* Active Item */
 @activeItemBackground: @transparentBlack;
@@ -173,24 +202,35 @@
 @activeItemFontWeight: @semiBold;
 @activeIconOpacity: 1;
 @activeItemBoxShadow: none;
+@nocturnalActiveItemBackground: @transparentWhite; //saturate(lighten(@nocturnalPageBackground, 0), 0, relative);
+@nocturnalActiveItemTextColor: @nocturnalSelectedTextColor;
+@nocturnalActiveItemBoxShadow: @activeItemBoxShadow;
 
 /* Active Hovered Item */
 @activeHoverItemBackground: @transparentBlack;
 @activeHoverItemColor: @selectedTextColor;
+@nocturnalActiveHoverItemBackground: @transparentWhite;
+@nocturnalActiveHoverItemColor: @nocturnalSelectedTextColor;
 
 /* Selected Dropdown */
 @dropdownSelectedItemBackground: @transparentBlack;
 @dropdownSelectedItemColor: @selectedTextColor;
+@nocturnalDropdownSelectedItemBackground: @transparentWhite;
+@nocturnalDropdownSelectedItemColor: @nocturnalSelectedTextColor;
 
 /* Active Dropdown */
 @dropdownActiveItemBackground: @subtleTransparentBlack;
 @dropdownActiveItemColor: @selectedTextColor;
 @dropdownActiveItemFontWeight: @bold;
+@nocturnalDropdownActiveItemBackground: @subtleTransparentWhite;
+@nocturnalDropdownActiveItemColor: @nocturnalSelectedTextColor;
 
 /* Active Sub Menu */
 @subMenuActiveBackground: transparent;
 @subMenuActiveTextColor: @activeItemTextColor;
 @subMenuActiveFontWeight: @bold;
+@nocturnalSubMenuActiveBackground: transparent;
+@nocturnalSubMenuActiveTextColor: @nocturnalActiveItemTextColor;
 
 
 /*--------------
@@ -203,8 +243,13 @@
 @verticalBackground: #FFFFFF;
 @verticalItemBackground: none;
 @verticalDividerBackground: @dividerBackground;
+@nocturnalVerticalBoxShadow: @nocturnalBoxShadow;
+@nocturnalVerticalBackground: @nocturnalBackground;
+@nocturnalVerticalItemBackground: none;
+@nocturnalVerticalDividerBackground: @nocturnalDividerBackground;
 
 @verticalActiveBoxShadow: none;
+@nocturnalVerticalActiveBoxShadow: none;
 
 
 /* Secondary */
@@ -219,20 +264,33 @@
 @secondaryItemBorderRadius: @defaultBorderRadius;
 @secondaryItemTransition: color @defaultDuration @defaultEasing;
 @secondaryItemColor: @unselectedTextColor;
+@nocturnalSecondaryBackground: none;
+@nocturnalSecondaryItemBackground: none;
+@nocturnalSecondaryItemColor: @nocturnalUnselectedTextColor;
 
 @secondaryHoverItemBackground: @transparentBlack;
 @secondaryHoverItemColor: @selectedTextColor;
+@nocturnalSecondaryHoverItemBackground: @transparentWhite;
+@nocturnalSecondaryHoverItemColor: @nocturnalSelectedTextColor;
 
 @secondaryActiveItemBackground: @transparentBlack;
 @secondaryActiveItemColor: @selectedTextColor;
 @secondaryActiveHoverItemBackground: @transparentBlack;
 @secondaryActiveHoverItemColor: @selectedTextColor;
+@nocturnalSecondaryActiveItemBackground: @transparentWhite;
+@nocturnalSecondaryActiveItemColor: @nocturnalSelectedTextColor;
+@nocturnalSecondaryActiveHoverItemBackground: @transparentWhite;
+@nocturnalSecondaryActiveHoverItemColor: @nocturnalSelectedTextColor;
 
 @secondaryActiveHoveredItemBackground: @transparentBlack;
 @secondaryActiveHoveredItemColor: @selectedTextColor;
+@nocturnalSecondaryActiveHoveredItemBackground: @transparentWhite;
+@nocturnalSecondaryActiveHoveredItemColor: @nocturnalSelectedTextColor;
 
 @secondaryHeaderBackground: none transparent;
 @secondaryHeaderBorder: none;
+@nocturnalSecondaryHeaderBackground: none transparent;
+@nocturnalSecondaryHeaderBorder: none;
 
 @secondaryItemVerticalSpacing: @secondaryItemSpacing;
 @secondaryVerticalItemMargin: 0em 0em @secondaryItemVerticalSpacing;
@@ -248,30 +306,43 @@
 @secondaryPointingBorderColor: @borderColor;
 @secondaryPointingItemVerticalPadding: @relativeMini;
 @secondaryPointingItemHorizontalPadding: @relative1px;
+@nocturnalSecondaryPointingBorderColor: @nocturnalBorderColor;
 
 @secondaryPointingHoverTextColor: @textColor;
+@nocturnalSecondaryPointingHoverTextColor: @nocturnalTextColor;
 
 @secondaryPointingActiveBorderColor: @primaryColor;
 @secondaryPointingActiveTextColor: @selectedTextColor;
 @secondaryPointingActiveFontWeight: @bold;
+@nocturnalSecondaryPointingActiveBorderColor: @nocturnalPrimaryColor;
+@nocturnalSecondaryPointingActiveTextColor: @nocturnalSelectedTextColor;
 
 @secondaryPointingActiveDropdownBorderColor: transparent;
+@nocturnalSecondaryPointingActiveDropdownBorderColor: transparent;
 
 @secondaryPointingActiveHoverBorderColor: @secondaryPointingActiveBorderColor;
 @secondaryPointingActiveHoverTextColor: @secondaryPointingActiveTextColor;
+@nocturnalSecondaryPointingActiveHoverBorderColor: @nocturnalSecondaryPointingActiveBorderColor;
+@nocturnalSecondaryPointingActiveHoverTextColor: @nocturnalSecondaryPointingActiveTextColor;
 
 @secondaryPointingHeaderColor: @darkTextColor;
 @secondaryVerticalPointingItemMargin: 0em -@secondaryPointingBorderWidth 0em 0em;
+@nocturnalSecondaryPointingHeaderColor: @invertedMutedTextColor;
 
 
 /* Inverted Secondary */
 @secondaryInvertedColor: @invertedLightTextColor;
+@nocturnalSecondaryInvertedColor: @secondaryColor;
 
 @secondaryInvertedHoverBackground: @transparentWhite;
 @secondaryInvertedHoverColor: @invertedSelectedTextColor;
+@nocturnalSecondaryInvertedHoverBackground: @transparentBlack;
+@nocturnalSecondaryInvertedHoverColor: @selectedTextColor;
 
 @secondaryInvertedActiveBackground: @strongTransparentWhite;
 @secondaryInvertedActiveColor: @invertedSelectedTextColor;
+@nocturnalSecondaryInvertedActiveBackground: @strongTransparentBlack;
+@nocturnalSecondaryInvertedActiveColor: @selectedTextColor;
 
 /* Inverted Pointing */
 @secondaryPointingInvertedBorderColor: @whiteBorderColor;
@@ -280,30 +351,45 @@
 @secondaryPointingInvertedItemHoverTextColor: @selectedTextColor;
 @secondaryPointingInvertedActiveBorderColor: @white;
 @secondaryPointingInvertedActiveColor: @invertedSelectedTextColor;
-
+@nocturnalSecondaryPointingInvertedBorderColor: @secondaryPointingBorderColor;
+@nocturnalSecondaryPointingInvertedItemTextColor: @secondaryItemColor;
+@nocturnalSecondaryPointingInvertedItemHeaderColor: @secondaryPointingHeaderColor;
+@nocturnalSecondaryPointingInvertedItemHoverTextColor: @secondaryPointingHoverTextColor;
+@nocturnalSecondaryPointingInvertedActiveBorderColor: @secondaryPointingActiveBorderColor;
+@nocturnalSecondaryPointingInvertedActiveColor: @secondaryPointingActiveTextColor;
 
 /* Tiered */
 @tieredActiveItemBackground: #FCFCFC;
 @tieredActiveMenuBackground: #FCFCFC;
+@nocturnalTieredActiveItemBackground: saturate(lighten(@nocturnalPageBackground, 3), 10, relative);
+@nocturnalTieredActiveMenuBackground: saturate(lighten(@nocturnalPageBackground, 3), 10, relative);
 
 @tieredSubMenuTextTransform: @normal;
 @tieredSubMenuFontWeight: @normal;
 
 @tieredSubMenuColor: @lightTextColor;
+@nocturnalTieredSubMenuColor: @nocturnalLightTextColor;
 
 @tieredSubMenuHoverBackground: none transparent;
 @tieredSubMenuHoverColor: @hoveredTextColor;
+@nocturnalTieredSubMenuHoverBackground: none transparent;
+@nocturnalTieredSubMenuHoverColor: @nocturnalHoveredTextColor;
 
 @tieredSubMenuActiveBackground: none transparent;
 @tieredSubMenuActiveColor: @selectedTextColor;
+@nocturnalTieredSubMenuActiveBackgrouns: none transparent;
+@nocturnalTieredSubMenuActiveColor: @nocturnalSelectedTextColor;
 
 @tieredInvertedSubMenuBackground: rgba(0, 0, 0, 0.2);
+@nocturnalTieredInvertedSubMenuBackground: rgba(255, 255, 255, 0.25);
 
 
 /* Icon */
 @iconMenuTextAlign: center;
 @iconMenuItemColor: @black;
 @iconMenuInvertedItemColor: @white;
+@nocturnalIconMenuItemColor: @iconMenuInvertedItemColor;
+@nocturnalIconMenuInvertedItemColor: @iconMenuItemColor;
 
 
 /* Tabular */
@@ -316,10 +402,16 @@
 @tabularHorizontalPadding: @relativeHuge;
 @tabularBorderRadius: @defaultBorderRadius;
 @tabularTextColor: @itemTextColor;
+@nocturnalTabularBorderColor: @nocturnalBorderColor;
+@nocturnalTabularBackgroundColor: transparent;
+@nocturnalTabularBackground: none @nocturnalTabularBackgroundColor;
+@nocturnalTabularTextColor: @nocturnalItemTextColor;
 
 @tabularHoveredTextColor: @hoveredTextColor;
+@nocturnalTabularHoveredTextColor: @nocturnalHoveredTextColor;
 
 @tabularVerticalBackground: none @tabularBackgroundColor;
+@nocturnalTabularVerticalBackground: none @nocturnalTabularBackgroundColor;
 
 @tabularFluidOffset: 1px;
 @tabularFluidWidth: calc(100% + (@tabularFluidOffset * 2));
@@ -328,13 +420,18 @@
 @tabularActiveColor: @selectedTextColor;
 @tabularActiveBoxShadow: none;
 @tabularActiveWeight: @bold;
-
+@nocturnalTabularActiveBackground: none saturate(lighten(@nocturnalPageBackground, 5), 15, relative);
+@nocturnalTabularActiveColor: @nocturnalSelectedTextColor;
+@nocturnalTabularActiveBoxShadow: @tabularActiveBoxShadow;
 
 
 /* Pagination */
 @paginationMinWidth: 3em;
 @paginationActiveBackground: @transparentBlack;
 @paginationActiveTextColor: @selectedTextColor;
+@nocturnalPaginationActiveBackground: @transparentWhite;
+@nocturnalPaginationActiveTextColor: @nocturnalSelectedTextColor;
+
 
 /* Labeled Icon */
 @labeledIconItemHorizontalPadding: @relativeMassive;
@@ -351,6 +448,7 @@
 @textMenuItemMargin: 0em 0em;
 @textMenuItemPadding: @relative5px @textMenuItemSpacing;
 @textMenuItemTransition: opacity @defaultDuration @defaultEasing;
+@nocturnalTextMenuItemColor: @nocturnalLightTextColor;
 
 @textMenuSubMenuMargin: 0em;
 @textMenuSubMenuItemMargin: 0em;
@@ -358,11 +456,13 @@
 
 @textMenuActiveItemFontWeight: @normal;
 @textMenuActiveItemColor: @selectedTextColor;
+@nocturnalTextMenuActiveItemColor: @nocturnalSelectedTextColor;
 
 @textMenuHeaderSize: @relativeSmall;
 @textMenuHeaderColor: @darkTextColor;
 @textMenuHeaderFontWeight: @bold;
 @textMenuHeaderTextTransform: uppercase;
+@nocturnalTextMenuHeaderColor: @nocturnalMutedTextColor;
 
 @textVerticalMenuMargin: @relativeMedium 0em;
 @textVerticalMenuHeaderMargin: @relative8px 0em @relative10px;
@@ -381,45 +481,71 @@
 @invertedBoxShadow: none;
 @invertedBorder: 0px solid transparent;
 @invertedHeaderBackground: transparent;
+@nocturnalInvertedBackground: #D1D5DB; // = @borderColor
+@nocturnalInvertedBoxShadow: @invertedBoxShadow;
+@nocturnalInvertedBorder: 0px solid transparent;
+@nocturnalInvertedHeaderBackground: transparent;
 
 @invertedItemBackground: transparent;
 @invertedItemTextColor: @invertedTextColor;
+@nocturnalInvertedItemBackground: transparent;
+@nocturnalInvertedItemTextColor: @textColor;
 
 /* Inverted Sub Menu */
 @invertedSubMenuBackground: transparent;
 @invertedSubMenuColor: @invertedUnselectedTextColor;
+@nocturnalInvertedSubMenuBackground: transparent;
+@nocturnalInvertedSubMenuColor: @unselectedTextColor;
 
 /* Inverted Hover */
 @invertedHoverBackground: @transparentWhite;
 @invertedHoverColor: @invertedSelectedTextColor;
+@nocturnalInvertedHoverBackground: @transparentBlack;
+@nocturnalInvertedHoverColor: @selectedTextColor;
 
 @invertedSubMenuHoverBackground: transparent;
 @invertedSubMenuHoverColor: @invertedSelectedTextColor;
+@nocturnalInvertedSubMenuHoverBackground: transparent;
+@nocturnalInvertedSubMenuHoverColor: @selectedTextColor;
 
 /* Pressed */
 @invertedMenuPressedBackground: @transparentWhite;
 @invertedMenuPressedColor: @invertedSelectedTextColor;
+@nocturnalInvertedMenuPressedBackground: @transparentBlack;
+@nocturnalInvertedMenuPressedColor: @selectedTextColor;
 
 /* Inverted Active */
 @invertedActiveBackground: @strongTransparentWhite;
 @invertedActiveColor: @invertedSelectedTextColor;
 @invertedArrowActiveColor: #3D3E3F;
+@nocturnalInvertedActiveBackground: @strongTransparentWhite;
+@nocturnalInvertedActiveColor: @selectedTextColor;
+@nocturnalInvertedArrowActiveColor: @arrowHoverColor;
 
 /* Inverted Active Hover  */
 @invertedActiveHoverBackground: @invertedActiveBackground;
 @invertedActiveHoverColor: @white;
 @invertedArrowActiveHoverColor: @invertedArrowActiveColor;
+@nocturnalInvertedActiveHoverBackground: @nocturnalInvertedActiveBackground;
+@nocturnalInvertedActiveHoverColor: @selectedTextColor;
+@nocturnalInvertedArrowActiveHoverColor: @nocturnalInvertedArrowActiveColor;
 
 @invertedSubMenuActiveBackground: transparent;
 @invertedSubMenuActiveColor: @white;
+@nocturnalInvertedSubMenuActiveBackground: transparent;
+@nocturnalInvertedSubMenuActiveColor: @selectedTextColor;
 
 /* Inverted Menu Divider */
 @invertedDividerBackground: rgba(255, 255, 255, 0.08);
 @invertedVerticalDividerBackground: @invertedDividerBackground;
+@nocturnalInvertedDividerBackground: rgba(0, 0, 0, 0.07);
+@nocturnalInvertedVerticalDividerBackground: @nocturnalInvertedDividerBackground;
 
 /* Inverted Colored */
 @invertedColoredDividerBackground: @dividerBackground;
 @invertedColoredActiveBackground: @strongTransparentBlack;
+@nocturnalInvertedColoredDividerBackground: @nocturnalDividerBackground;
+@nocturnalInvertedColoredActiveBackground: @strongTransparentWhite;
 
 /* Fixed */
 @fixedPrecedingGridMargin: 2.75rem;
@@ -436,6 +562,11 @@
 @attachedBorder: @borderWidth solid @solidBorderColor;
 @attachedBottomBoxShadow:
   @boxShadow,
+  @attachedBoxShadow
+;
+@nocturnalAttachedBorder: @borderWidth solid @nocturnalBorder;
+@nocturnalAttachedBottomBoxShadow:
+  @nocturnalBoxShadow,
   @attachedBoxShadow
 ;
 

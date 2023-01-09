@@ -48,6 +48,13 @@
   will-change: @willChange;
 
   -webkit-tap-highlight-color: @tapColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalBasicBackground;
+    color: @nocturnalBasicTextColor;
+    text-shadow: @nocturnalTextShadow;
+    box-shadow: @nocturnalBoxShadow;
+  }
 }
 
 .ui.button:first-child {
@@ -70,6 +77,12 @@
   background: @basicHoverBackground;
   box-shadow: @hoverBoxShadow;
   color: @basicHoverTextColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalBasicHoverBackground;
+    box-shadow: @nocturnalHoverBoxShadow;
+    color: @nocturnalBasicHoverTextColor;
+  }
 }
 
 .ui.button:hover .icon {
@@ -85,6 +98,13 @@
   color: @basicFocusTextColor;
   background-image: @focusBackgroundImage !important;
   box-shadow: @focusBoxShadow !important;
+
+  .nocturnal-theme & {
+    background: @nocturnalBasicFocusBackground;
+    color: @nocturnalBasicFocusTextColor;
+    background-image: @nocturnalFocusBackgroundImage !important;
+    box-shadow: @nocturnalFocusBoxShadow !important;
+  }
 }
 
 .ui.button:focus .icon {
@@ -101,6 +121,13 @@
   background-image: @downBackgroundImage;
   color: @basicDownTextColor;
   box-shadow: @downBoxShadow;
+
+  .nocturnal-theme & {
+    background: @nocturnalBasicDownBackground;
+    background-image: @nocturnalDownBackgroundImage;
+    color: @nocturnalBasicDownTextColor;
+    box-shadow: @nocturnalDownBoxShadow;
+  }
 }
 
 /*--------------
@@ -112,15 +139,33 @@
   background-image: @activeBackgroundImage;
   box-shadow: @activeBoxShadow;
   color: @activeColor;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalActiveBackgroundColor;
+    background-image: @nocturnalActiveBackgroundImage;
+    box-shadow: @nocturnalActiveBoxShadow;
+    color: @nocturnalActiveColor;
+  }
 }
 .ui.active.button:hover {
   background-color: @activeHoverBackgroundColor;
   background-image: @activeHoverBackgroundImage;
   color: @activeHoverColor;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalActiveHoverBackgroundColor;
+    background-image: @nocturnalActiveHoverBackgroundImage;
+    color: @nocturnalActiveHoverColor;
+  }
 }
 .ui.active.button:active {
   background-color: @activeBackgroundColor;
   background-image: @activeBackgroundImage;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalActiveBackgroundColor;
+    background-image: @nocturnalActiveBackgroundImage;
+  }
 }
 
 /*--------------
@@ -128,7 +173,8 @@
 ---------------*/
 
 /* Specificity hack */
-.ui.loading.loading.loading.loading.loading.loading.button {
+.ui.loading.loading.loading.loading.loading.loading.button,
+.nocturnal-theme .ui.loading.loading.loading.loading.loading.loading.button {
   position: relative;
   cursor: default;
   text-shadow: none !important;
@@ -211,6 +257,10 @@
 /* Basic Group With Disabled */
 .ui.basic.buttons .ui.disabled.button {
   border-color: @disabledBorderColor;
+
+  .nocturnal-theme & {
+    border-color: @nocturnalDisabledBorderColor;
+  }
 }
 
 /*******************************
@@ -357,7 +407,7 @@
 .ui.inverted.button:hover {
   background: @white;
   box-shadow: 0px 0px 0px @invertedBorderSize @white inset !important;
-  color: @hoverColor;
+  color: @invertedTextHoverColor;
 }
 
 /* Active / Focus */
@@ -365,14 +415,14 @@
 .ui.inverted.button.active {
   background: @white;
   box-shadow: 0px 0px 0px @invertedBorderSize @white inset !important;
-  color: @focusColor;
+  color: @invertedTextFocusColor;
 }
 
 /* Active Focus */
 .ui.inverted.button.active:focus {
   background: @midWhite;
   box-shadow: 0px 0px 0px @invertedBorderSize @midWhite inset !important;
-  color: @focusColor;
+  color: @invertedTextFocusColor;
 }
 
 /*-------------------
@@ -399,6 +449,10 @@
   padding: @labeledLabelPadding;
   font-size: @labeledLabelFontSize;
   border-color: @labeledLabelBorderColor;
+
+  .nocturnal-theme & {
+    border-color: @noctrunalLabeledLabelBorderColor;
+  }
 }
 
 /* Tag */
@@ -708,11 +762,22 @@
   text-transform: @basicTextTransform;
   text-shadow: none !important;
   box-shadow: @basicBoxShadow;
+
+  .nocturnal-theme & {
+    background: @nocturnalBasicBackground !important;
+    color: @nocturnalBasicTextColor !important;
+    box-shadow: @nocturnalBasicBoxShadow;
+  }
 }
 .ui.basic.buttons {
   box-shadow: @basicGroupBoxShadow;
   border: @basicGroupBorder;
   border-radius: @borderRadius;
+
+  .nocturnal-theme & {
+    box-shadow: @nocturnalBasicGroupBoxShadow;
+    border: @nocturnalBasicGroupBorder;
+  }
 }
 .ui.basic.buttons .button {
   border-radius: 0em;
@@ -723,39 +788,79 @@
   background: @basicHoverBackground !important;
   color: @basicHoverTextColor !important;
   box-shadow: @basicHoverBoxShadow;
+
+  .nocturnal-theme & {
+    background: @nocturnalBasicHoverBackground !important;
+    color: @nocturnalBasicHoverTextColor !important;
+    box-shadow: @nocturnalBasicHoverBoxShadow;
+  }
 }
 .ui.basic.buttons .button:focus,
 .ui.basic.button:focus {
   background: @basicFocusBackground !important;
   color: @basicFocusTextColor !important;
   box-shadow: @basicFocusBoxShadow;
+
+  .nocturnal-theme & {
+    background: @nocturnalBasicFocusBackground !important;
+    color: @nocturnalBasicFocusTextColor !important;
+    box-shadow: @nocturnalBasicFocusBoxShadow;
+  }
 }
 .ui.basic.buttons .button:active,
 .ui.basic.button:active {
   background: @basicDownBackground !important;
   color: @basicDownTextColor !important;
   box-shadow: @basicDownBoxShadow;
+
+  .nocturnal-theme & {
+    background: @nocturnalBasicDownBackground !important;
+    color: @nocturnalBasicDownTextColor !important;
+    box-shadow: @nocturnalBasicDownBoxShadow;
+  }
 }
 .ui.basic.buttons .active.button,
 .ui.basic.active.button {
   background: @basicActiveBackground !important;
   box-shadow: @basicActiveBoxShadow !important;
   color: @basicActiveTextColor !important;
+
+  .nocturnal-theme & {
+    background: @nocturnalBasicActiveBackground !important;
+    box-shadow: @nocturnalBasicActiveBoxShadow !important;
+    color: @nocturnalBasicActiveTextColor !important;
+  }
 }
 .ui.basic.buttons .active.button:hover,
 .ui.basic.active.button:hover {
   background-color: @transparentBlack;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalBasicActiveBackground;
+  }
 }
 
 /* Vertical */
 .ui.basic.buttons .button:hover {
   box-shadow: @basicHoverBoxShadow inset;
+
+  .nocturnal-theme & {
+    box-shadow: @nocturnalBasicBoxShadow inset;
+  }
 }
 .ui.basic.buttons .button:active {
   box-shadow: @basicDownBoxShadow inset;
+
+  .nocturnal-theme & {
+    box-shadow: @nocturnalBasicDownBoxShadow inset;
+  }
 }
 .ui.basic.buttons .active.button {
   box-shadow: @basicActiveBoxShadow !important;
+
+  .nocturnal-theme & {
+    box-shadow: @nocturnalBasicActiveBoxShadow !important;
+  }
 }
 
 /* Standard Basic Inverted */
@@ -798,6 +903,10 @@
 .ui.basic.buttons .button {
   border-left: @basicGroupBorder;
   box-shadow: none;
+
+  .nocturnal-theme & {
+    border-left: @nocturnalBasicGroupBorder;
+  }
 }
 .ui.basic.vertical.buttons .button {
   border-left: none;
@@ -805,6 +914,10 @@
 .ui.basic.vertical.buttons .button {
   border-left-width: 0px;
   border-top: @basicGroupBorder;
+
+  .nocturnal-theme & {
+    border-top: @nocturnalBasicGroupBorder;
+  }
 }
 .ui.basic.vertical.buttons .button:first-child {
   border-top-width: 0px;
@@ -837,6 +950,12 @@
   background-color: @labeledIconBackgroundColor;
   color: @labeledIconColor;
   box-shadow: @labeledIconLeftShadow;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalLabeledIconBackgroundColor;
+    color: @nocturnalLabeledIconColor;
+    box-shadow: @nocturnalLabeledIconLeftShadow;
+  }
 }
 
 /* Left Labeled */
@@ -858,6 +977,10 @@
   border-top-right-radius: inherit;
   border-bottom-right-radius: inherit;
   box-shadow: @labeledIconRightShadow;
+
+  .nocturnal-theme & {
+    box-shadow: @nocturnalLabeledIconRightShadow;
+  }
 }
 
 .ui.labeled.icon.buttons > .button > .icon:before,
@@ -964,6 +1087,13 @@
   font-weight: @orTextWeight;
 
   box-shadow: @orBoxShadow;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalPageBackground;
+    text-shadow: @nocturnalOrTextShadow;
+    color: @nocturnalOrTextColor;
+    box-shadow: @nocturnalOrBoxShadow;
+  }
 }
 .ui.buttons .or[data-text]:before {
   content: attr(data-text);
@@ -988,6 +1118,10 @@
   margin: 0em;
   border-radius: 0em;
   box-shadow: @attachedBoxShadow !important;
+
+  .nocturnal-theme & {
+    box-shadow: @nocturnalAttachedBoxShadow !important;
+  }
 }
 
 /* Top / Bottom */

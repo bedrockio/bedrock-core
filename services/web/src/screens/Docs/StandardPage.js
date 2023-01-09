@@ -1,13 +1,15 @@
 import React from 'react';
-import RequestBlock from 'components/RequestBlock';
+
+import { API_URL } from 'utils/env';
+import { enrichMarkdown, executeOpenApiMacros } from 'utils/markdown';
 import Markdown from 'components/Markdown';
 import Code from 'components/Markdown/Code';
+import RequestBlock from 'components/RequestBlock';
+
 import Heading from './Heading';
-import 'github-markdown-css';
-import { enrichMarkdown, executeOpenApiMacros } from 'utils/markdown';
 
 import './table.less';
-import { API_URL } from 'utils/env';
+
 import { Context } from './Context';
 
 export default class StandardPage extends React.Component {

@@ -15,18 +15,16 @@ import {
 import { Layout } from 'components/Layout';
 import { Menu as ResponsiveMenu } from 'components/Responsive';
 import { APP_NAME } from 'utils/env';
-
-import StandardPage from './StandardPage';
-import Context from './Context';
 import PageLoader from 'components/PageLoader';
-
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
-
 import DOCS from 'docs';
 import PortalSettings from 'modals/PortalSettings';
 import { userHasAccess } from 'utils/permissions';
 import { withSession } from 'stores';
+
+import DocsProvider from './Context';
+import StandardPage from './StandardPage';
 
 const DEFAULT_PAGE_ID = 'getting-started';
 
@@ -127,7 +125,7 @@ export default class Docs extends React.Component {
     }
 
     return (
-      <Context>
+      <DocsProvider>
         <h1 className="primary">
           {APP_NAME} API v1
           {this.context.user &&
@@ -139,7 +137,7 @@ export default class Docs extends React.Component {
               <PortalSettings
                 trigger={
                   <Button
-                    icon={<Icon name="cog" />}
+                    icon={<Icon name="gear" />}
                     content="Settings"
                     floated="right"
                   />
@@ -216,7 +214,7 @@ export default class Docs extends React.Component {
           </Layout.Group>
         </Layout>
         <Divider hidden />
-      </Context>
+      </DocsProvider>
     );
   }
 }

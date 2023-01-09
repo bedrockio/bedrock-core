@@ -1,6 +1,7 @@
 // Overriding from draft-js
 
 var getWindowForNode = require('draft-js/lib/getWindowForNode');
+
 var getRangeBoundingClientRect = require('./getRangeBoundingClientRect');
 /**
  * Return the bounding ClientRect for the visible DOM selection, if any.

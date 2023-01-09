@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { pickBy } from 'lodash';
+import { withRouter } from 'react-router';
 
 import SearchContext from './Context';
-import { withRouter } from 'react-router';
 
 function convertFilters(filters) {
   return pickBy(filters, (val) => {
@@ -141,6 +141,12 @@ class SearchProvider extends React.Component {
           queryObject[key] = convertParamValue(mapping.type, value);
         }
       }
+    }
+
+    // only update the url if the search params have changed
+    const search = new URLSearchParams(queryObject).toString();
+    if (!search.length) {
+      return;
     }
 
     this.props.history.push({

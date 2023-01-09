@@ -1,13 +1,12 @@
 import React from 'react';
 import { memoize } from 'lodash';
 import { Link } from 'react-router-dom';
-import { Table, Button, Label, Divider, Confirm, Segment } from 'semantic';
+import { Table, Button, Label, Divider, Segment } from 'semantic';
 
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
 import { formatRoles } from 'utils/permissions';
-
 import {
   HelpTip,
   Breadcrumbs,
@@ -15,9 +14,10 @@ import {
   Search,
   SearchFilters,
 } from 'components';
-
 import EditUser from 'modals/EditUser';
 import LoginAsUser from 'modals/LoginAsUser';
+
+import Actions from '../Actions';
 
 @screen
 export default class UserList extends React.Component {
@@ -73,6 +73,10 @@ export default class UserList extends React.Component {
             .join(', ');
         },
       },
+      isDeveloper: {
+        label: 'Is Developer',
+        type: 'boolean',
+      },
       keyword: {},
     };
   }
@@ -107,6 +111,11 @@ export default class UserList extends React.Component {
                       label="Role"
                       name="roles"
                       onDataNeeded={this.fetchRoles}
+                    />
+
+                    <SearchFilters.Checkbox
+                      label="Is Developer"
+                      name="isDeveloper"
                     />
 
                     {/* --- Generator: end */}
@@ -185,37 +194,16 @@ export default class UserList extends React.Component {
                           <Table.Cell textAlign="center" singleLine>
                             <EditUser
                               user={user}
-                              trigger={<Button basic icon="edit" />}
-                              onSave={reload}
-                            />
-                            <LoginAsUser
-                              user={user}
                               trigger={
                                 <Button
                                   basic
-                                  disabled={
-                                    !user.roles?.every(
-                                      (role) => role.role === 'viewer'
-                                    )
-                                  }
-                                  icon="user-secret"
+                                  title="Edit"
+                                  icon="pen-to-square"
                                 />
                               }
+                              onSave={reload}
                             />
-                            <Confirm
-                              negative
-                              confirmButton="Delete"
-                              header={`Are you sure you want to delete "${user.name}"?`}
-                              content="All data will be permanently deleted"
-                              trigger={<Button basic icon="trash" />}
-                              onConfirm={async () => {
-                                await request({
-                                  method: 'DELETE',
-                                  path: `/1/users/${user.id}`,
-                                });
-                                reload();
-                              }}
-                            />
+                            <Actions item={user} reload={reload} />
                           </Table.Cell>
                         </Table.Row>
                       );

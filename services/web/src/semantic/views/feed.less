@@ -37,6 +37,11 @@
   margin: @eventMargin;
   background: @eventBackground;
   border-top: @eventDivider;
+
+  .nocturnal-theme & {
+    background: @nocturnalEventBackground;
+    border-top: @nocturnalEventDivider;
+  }
 }
 .ui.feed > .event:first-child {
   border-top: 0px;
@@ -64,6 +69,12 @@
   border: @iconLabelBorder;
   border-radius: @iconLabelBorderRadius;
   color: @iconLabelColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalIconLabelBackground;
+    border: @nocturnalIconLabelBorder;
+    color: @nocturnalIconLabelColor;
+  }
 }
 .ui.feed > .event > .label img {
   width: @imageLabelWidth;
@@ -102,11 +113,14 @@
 .ui.feed > .event > .content .date {
   margin: @dateMargin;
   padding: @datePadding;
-  color: @dateColor;
   font-weight: @dateFontWeight;
   font-size: @dateFontSize;
   font-style: @dateFontStyle;
   color: @dateColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalDateColor;
+  }
 }
 
 /*--------------
@@ -118,6 +132,10 @@
   font-size: @summaryFontSize;
   font-weight: @summaryFontWeight;
   color: @summaryColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalSummaryColor;
+  }
 }
 
 /* Summary Image */
@@ -159,6 +177,10 @@
   margin: @summaryDateMargin;
   padding: @summaryDatePadding;
   color: @summaryDateColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalSummaryDateColor;
+  }
 }
 
 /*--------------
@@ -170,6 +192,10 @@
   background: @extraBackground;
   padding: @extraPadding;
   color: @extraColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalExtraColor;
+  }
 }
 
 /* Images */
@@ -202,6 +228,13 @@
   box-shadow: @metadataBoxShadow;
   padding: @metadataPadding;
   color: @metadataColor;
+
+  .nocturnal-theme & {
+    background: @nocturnalMetadataBackground;
+    border: @nocturnalMetadataBackground;
+    box-shadow: @nocturnalMetadataBoxShadow;
+    color: @nocturnalMetadataColor;
+  }
 }
 
 .ui.feed > .event > .content .meta > * {
@@ -216,6 +249,10 @@
   opacity: 1;
   position: absolute;
   vertical-align: top;
+
+  .nocturnal-theme & {
+    color: @nocturnalMetadataDividerColor;
+  }
 }
 
 .ui.feed > .event > .content .meta .like {
@@ -244,11 +281,19 @@
   opacity: @metadataActionOpacity;
   color: @metadataActionColor;
   transition: @metadataActionTransition;
+
+  .nocturnal-theme & {
+    color: @nocturnalMetadataActionColor;
+  }
 }
 .ui.feed > .event > .content .meta a:hover,
 .ui.feed > .event > .content .meta a:hover .icon,
 .ui.feed > .event > .content .meta > .icon:hover {
   color: @metadataActionHoverColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalMetadataActionHoverColor;
+  }
 }
 
 /*******************************

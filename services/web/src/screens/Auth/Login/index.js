@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Segment, Grid, Form } from 'semantic';
+
 import { withSession } from 'stores';
 import screen from 'helpers/screen';
-
 import Logo from 'components/LogoTitle';
 import ErrorMessage from 'components/ErrorMessage';
 
@@ -58,7 +58,7 @@ export default class Login extends React.Component {
                   value={email}
                   onChange={(e, { value }) => this.setState({ email: value })}
                   name="email"
-                  icon="mail"
+                  icon="envelope"
                   iconPosition="left"
                   placeholder="E-mail Address"
                   type="email"

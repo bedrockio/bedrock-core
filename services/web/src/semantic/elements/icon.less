@@ -120,10 +120,14 @@ svg.circular.icon {
 
   width: @circularSize !important;
   height: @circularSize !important;
+
+  .nocturnal-theme & {
+    box-shadow: @nocturnalCircularShadow;
+  }
 }
 svg.circular.inverted.icon {
-  border: none;
-  box-shadow: none;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 /*-------------------
@@ -164,10 +168,14 @@ svg.bordered.icon {
   height: @borderedSize;
   padding: @borderedVerticalPadding @borderedHorizontalPadding !important;
   box-shadow: @borderedShadow;
+
+  .nocturnal-theme & {
+    box-shadow: @nocturnalBorderedShadow;
+  }
 }
 svg.bordered.inverted.icon {
-  border: none;
-  box-shadow: none;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 /*-------------------
@@ -178,126 +186,157 @@ svg.bordered.inverted.icon {
 svg.inverted.bordered.icon,
 svg.inverted.circular.icon {
   background-color: @black !important;
-  color: @white !important;
+  color: @invertedTextColor !important;
+
+  .nocturnal-theme & {
+    background-color: @invertedMutedTextColor !important;
+    color: @black !important;
+  }
 }
 
 svg.inverted.icon {
-  color: @white;
+  color: @invertedTextColor;
+
+  .nocturnal-theme & {
+    color: @black;
+  }
 }
+
+// .nocturnal-theme svg.icon {
+//   color: inherit;
+// }
 
 /*-------------------
        Colors
 --------------------*/
 
 /* Red */
-svg.red.icon {
+svg.red.icon,
+.nocturnal-theme svg.red.inverted.icon {
   color: @red !important;
 }
-svg.inverted.red.icon {
+svg.inverted.red.icon,
+.nocturnal-theme svg.red.icon {
   color: @lightRed !important;
 }
 svg.inverted.bordered.red.icon,
 svg.inverted.circular.red.icon {
   background-color: @red !important;
-  color: @white !important;
+  color: @invertedTextColor !important;
 }
 
 /* Orange */
-svg.orange.icon {
+svg.orange.icon,
+.nocturnal-theme svg.inverted.orange.icon {
   color: @orange !important;
 }
-svg.inverted.orange.icon {
+svg.inverted.orange.icon,
+.nocturnal-theme svg.orange.icon {
   color: @lightOrange !important;
 }
 svg.inverted.bordered.orange.icon,
 svg.inverted.circular.orange.icon {
   background-color: @orange !important;
-  color: @white !important;
+  color: @invertedTextColor !important;
 }
 
 /* Yellow */
-svg.yellow.icon {
+svg.yellow.icon,
+.nocturnal-theme svg.inverted.yellow.icon {
   color: @yellow !important;
 }
-svg.inverted.yellow.icon {
+svg.inverted.yellow.icon,
+.nocturnal-theme svg.yellow.icon {
   color: @lightYellow !important;
 }
 svg.inverted.bordered.yellow.icon,
 svg.inverted.circular.yellow.icon {
   background-color: @yellow !important;
-  color: @white !important;
+  color: @invertedTextColor !important;
 }
 
 /* Olive */
-svg.olive.icon {
+svg.olive.icon,
+.nocturnal-theme svg.inverted.olive.icon {
   color: @olive !important;
 }
-svg.inverted.olive.icon {
+svg.inverted.olive.icon,
+.nocturnal-theme svg.olive.icon {
   color: @lightOlive !important;
 }
 svg.inverted.bordered.olive.icon,
 svg.inverted.circular.olive.icon {
   background-color: @olive !important;
-  color: @white !important;
+  color: @invertedTextColor !important;
 }
 
 /* Green */
-svg.green.icon {
+svg.green.icon,
+.nocturnal-theme svg.inverted.green.icon {
   color: @green !important;
 }
-svg.inverted.green.icon {
+svg.inverted.green.icon,
+.nocturnal-theme svg.green.icon {
   color: @lightGreen !important;
 }
 svg.inverted.bordered.green.icon,
 svg.inverted.circular.green.icon {
   background-color: @green !important;
-  color: @white !important;
+  color: @invertedTextColor !important;
 }
 
 /* Teal */
-svg.teal.icon {
+svg.teal.icon
+.nocturnal-theme svg.inverted.teal.icon {
   color: @teal !important;
 }
-svg.inverted.teal.icon {
+svg.inverted.teal.icon,
+.nocturnal-theme svg.teal.icon {
   color: @lightTeal !important;
 }
 svg.inverted.bordered.teal.icon,
 svg.inverted.circular.teal.icon {
   background-color: @teal !important;
-  color: @white !important;
+  color: @invertedTextColor !important;
 }
 
 /* Blue */
-svg.blue.icon {
+svg.blue.icon,
+.nocturnal-theme svg.inverted.blue.icon {
   color: @blue !important;
 }
-svg.inverted.blue.icon {
+svg.inverted.blue.icon,
+.nocturnal-theme svg.blue.icon {
   color: @lightBlue !important;
 }
 svg.inverted.bordered.blue.icon,
 svg.inverted.circular.blue.icon {
   background-color: @blue !important;
-  color: @white !important;
+  color: @invertedTextColor !important;
 }
 
 /* Violet */
-svg.violet.icon {
+svg.violet.icon,
+.nocturnal-theme svg.inverted.violet.icon {
   color: @violet !important;
 }
-svg.inverted.violet.icon {
+svg.inverted.violet.icon,
+.nocturnal-theme svg.violet.icon {
   color: @lightViolet !important;
 }
 svg.inverted.bordered.violet.icon,
 svg.inverted.circular.violet.icon {
   background-color: @violet !important;
-  color: @white !important;
+  color: @invertedTextColor !important;
 }
 
 /* Purple */
-svg.purple.icon {
+svg.purple.icon,
+.nocturnal-theme svg.inverted.purple.icon {
   color: @purple !important;
 }
-svg.inverted.purple.icon {
+svg.inverted.purple.icon,
+.nocturnal-theme svg.purple.icon {
   color: @lightPurple !important;
 }
 svg.inverted.bordered.purple.icon,
@@ -307,55 +346,63 @@ svg.inverted.circular.purple.icon {
 }
 
 /* Pink */
-svg.pink.icon {
+svg.pink.icon,
+.nocturnal-theme svg.inverted.pink.icon {
   color: @pink !important;
 }
-svg.inverted.pink.icon {
+svg.inverted.pink.icon,
+.nocturnal-theme svg.pink.icon {
   color: @lightPink !important;
 }
 svg.inverted.bordered.pink.icon,
 svg.inverted.circular.pink.icon {
   background-color: @pink !important;
-  color: @white !important;
+  color: @invertedTextColor !important;
 }
 
 /* Brown */
-svg.brown.icon {
+svg.brown.icon,
+.nocturnal-theme svg.inverted.brown.icon {
   color: @brown !important;
 }
-svg.inverted.brown.icon {
+svg.inverted.brown.icon,
+.nocturnal-theme svg.brown.icon {
   color: @lightBrown !important;
 }
 svg.inverted.bordered.brown.icon,
 svg.inverted.circular.brown.icon {
   background-color: @brown !important;
-  color: @white !important;
+  color: @invertedTextColor !important;
 }
 
 /* Grey */
-svg.grey.icon {
+svg.grey.icon,
+.nocturnal-theme svg.inverted.grey.icon {
   color: @grey !important;
 }
-svg.inverted.grey.icon {
+svg.inverted.grey.icon,
+.nocturnal-theme svg.grey.icon {
   color: @lightGrey !important;
 }
 svg.inverted.bordered.grey.icon,
 svg.inverted.circular.grey.icon {
   background-color: @grey !important;
-  color: @white !important;
+  color: @invertedTextColor !important;
 }
 
 /* Black */
-svg.black.icon {
+svg.black.icon,
+.nocturnal-theme svg.inverted.black.icon {
   color: @black !important;
 }
-svg.inverted.black.icon {
+svg.inverted.black.icon,
+.nocturnal-theme svg.black.icon {
   color: @lightBlack !important;
 }
 svg.inverted.bordered.black.icon,
 svg.inverted.circular.black.icon {
   background-color: @black !important;
-  color: @white !important;
+  color: @invertedTextColor !important;
 }
 
 /*-------------------

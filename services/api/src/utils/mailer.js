@@ -34,7 +34,7 @@ async function sendTemplatedMail({ file, template, layout = 'layout.html', to, .
   // to html to be injected into the layout.
   let body = templateBody;
   body = interpolate(body, vars);
-  body = marked(body);
+  body = marked.parse(body);
 
   const html = interpolate(layoutBody, {
     ...vars,

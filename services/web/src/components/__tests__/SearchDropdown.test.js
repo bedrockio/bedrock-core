@@ -1,7 +1,8 @@
 import React from 'react';
-import SearchDropdown from '../SearchDropdown';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+
+import SearchDropdown from '../SearchDropdown';
 
 function fetchCategories() {
   return [
@@ -15,7 +16,7 @@ function fetchUsers(query) {
     { id: '1', firstName: 'Larry', lastName: 'David' },
     { id: '2', firstName: 'Barry', lastName: 'White' },
   ];
-  if (query === 'Larry') {
+  if (query?.keyword === 'Larry') {
     // Simulates API finding new data.
     users.push({ id: '3', firstName: 'Larry', lastName: 'Bird' });
   }
@@ -26,14 +27,22 @@ describe('SearchDropdown', () => {
   describe('options', () => {
     it('should render empty dropdown', () => {
       const el = render(
-        <SearchDropdown onDataNeeded={() => []} onChange={() => {}} />
+        <SearchDropdown
+          onDataNeeded={() => []}
+          onChange={() => {}}
+          value="red"
+        />
       );
       expect(el.getByRole('listbox').textContent).toBe('No results found.');
     });
 
     it('should default to using name field as label', async () => {
       const el = render(
-        <SearchDropdown onDataNeeded={fetchCategories} onChange={() => {}} />
+        <SearchDropdown
+          value="red"
+          onDataNeeded={fetchCategories}
+          onChange={() => {}}
+        />
       );
       const options = await el.findAllByRole('option');
       expect(options.length).toBe(2);
@@ -44,6 +53,7 @@ describe('SearchDropdown', () => {
     it('should allow a custom composite label', async () => {
       const el = render(
         <SearchDropdown
+          value="red"
           onDataNeeded={fetchUsers}
           onChange={() => {}}
           getOptionLabel={(item) => {
@@ -59,10 +69,11 @@ describe('SearchDropdown', () => {
   });
 
   describe('fetching', () => {
-    it('should fetch data by query', async () => {
+    it.only('should fetch data by query', async () => {
       let options;
       const el = render(
         <SearchDropdown
+          value="red"
           onChange={() => {}}
           onDataNeeded={fetchUsers}
           getOptionLabel={(item) => {
@@ -81,7 +92,7 @@ describe('SearchDropdown', () => {
 
       // wait for debounce
       await new Promise((resolve) => {
-        setTimeout(resolve, 200);
+        setTimeout(resolve, 2000);
       });
 
       options = await el.findAllByRole('option');

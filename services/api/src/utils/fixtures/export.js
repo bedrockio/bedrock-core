@@ -82,6 +82,11 @@ async function exportDocument(doc, zip) {
     if (isRef) {
       const model = doc.constructor;
       const schemaType = model.schema.path(key);
+
+      if (!schemaType) {
+        return;
+      }
+
       const { ref } = schemaType.options;
       const refModel = models[ref];
       const refDoc = await refModel.findById(val);

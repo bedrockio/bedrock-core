@@ -1,10 +1,10 @@
 import React from 'react';
 import { Table, Button, Divider } from 'semantic';
+
 import { request } from 'utils/api';
 import { formatDateTime } from 'utils/date';
 import screen from 'helpers/screen';
 import InviteUser from 'modals/InviteUser';
-
 import { Search, Layout, LoadButton, Breadcrumbs } from 'components';
 
 @screen
@@ -73,7 +73,7 @@ export default class Home extends React.Component {
                           <Table.Cell textAlign="center">
                             <LoadButton
                               basic
-                              icon="mail"
+                              icon="envelope"
                               title="Resend Invite"
                               onClick={async () => {
                                 await request({

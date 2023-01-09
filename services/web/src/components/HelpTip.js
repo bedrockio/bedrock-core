@@ -18,7 +18,7 @@ export default class HelpTip extends React.Component {
           header={title}
           trigger={
             <Icon
-              name="question-circle"
+              name="circle-question"
               style={{ color: '#ccc', cursor: 'pointer' }}
             />
           }

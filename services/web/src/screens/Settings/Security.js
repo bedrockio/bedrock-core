@@ -1,14 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Segment, Button, Divider, Header, Label } from 'semantic';
+import { Segment, Button, Divider, Header, Label, Table } from 'semantic';
 
 import screen from 'helpers/screen';
-import { request } from 'utils/api';
+import { getToken, request } from 'utils/api';
+import { parseToken } from 'utils/token';
 import { withSession } from 'stores';
-
 import { Layout } from 'components';
 import LoadButton from 'components/LoadButton';
 import ErrorMessage from 'components/ErrorMessage';
+import { fromNow } from 'utils/date';
+import countries from 'utils/countries';
 
 import Menu from './Menu';
 
@@ -50,9 +52,19 @@ export default class Security extends React.Component {
     }
   };
 
+  logout = async (body) => {
+    await request({
+      method: 'POST',
+      path: '/1/auth/logout',
+      body,
+    });
+    await this.context.bootstrap();
+  };
+
   render() {
     const { error } = this.state;
-    const { mfaMethod } = this.context.user;
+    const { mfaMethod, authInfo } = this.context.user;
+    const { jti } = parseToken(getToken());
 
     return (
       <React.Fragment>
@@ -143,6 +155,55 @@ export default class Security extends React.Component {
             </Segment>
           </>
         )}
+        <br />
+        <br />
+        <Header>Authenticated Sessions</Header>
+        <Segment>
+          <Table basic="very">
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell>Device/Agent</Table.HeaderCell>
+                <Table.HeaderCell>Country</Table.HeaderCell>
+                <Table.HeaderCell>Last used</Table.HeaderCell>
+                <Table.HeaderCell>Action</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {authInfo.map((info) => {
+                const country = countries.find(
+                  (country) => country.countryCode === info.country
+                );
+
+                return (
+                  <Table.Row key={info.id}>
+                    <Table.Cell>
+                      {info.userAgent || 'No User Agent provided'}{' '}
+                      {info.jti === jti && (
+                        <Label horizontal>Current Session</Label>
+                      )}
+                    </Table.Cell>
+                    <Table.Cell>
+                      {country?.nameEn || 'N / A'} ({info.ip})
+                    </Table.Cell>
+                    <Table.Cell>{fromNow(info.lastUsedAt)}</Table.Cell>
+                    <Table.Cell>
+                      <LoadButton
+                        disabled={info.jti === jti}
+                        basic
+                        size="small"
+                        onClick={() => this.logout({ jti: info.jti })}>
+                        Logout
+                      </LoadButton>
+                    </Table.Cell>
+                  </Table.Row>
+                );
+              })}
+            </Table.Body>
+          </Table>
+        </Segment>
+        <Button primary negative onClick={() => this.logout({ all: true })}>
+          Logout all sessions
+        </Button>
       </React.Fragment>
     );
   }

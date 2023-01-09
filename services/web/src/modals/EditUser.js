@@ -1,8 +1,8 @@
 import React from 'react';
 import { Form, Modal, Button } from 'semantic';
+
 import { request } from 'utils/api';
 import modal from 'helpers/modal';
-
 import AutoFocus from 'components/AutoFocus';
 import Roles from 'components/form-fields/Roles';
 import ErrorMessage from 'components/ErrorMessage';
@@ -111,6 +111,13 @@ export default class EditUser extends React.Component {
               <Roles
                 value={user.roles || []}
                 onChange={(e, { value }) => this.setField('roles', value)}
+              />
+              <Form.Checkbox
+                checked={user.isDeveloper || false}
+                label="Is Developer"
+                onChange={(e, { checked }) =>
+                  this.setField('isDeveloper', checked)
+                }
               />
             </Form>
           </AutoFocus>

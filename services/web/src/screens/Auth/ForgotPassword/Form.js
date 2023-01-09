@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form, Button } from 'semantic';
+
 import AutoFocus from 'components/AutoFocus';
 
 export default (props) => {
@@ -17,7 +18,7 @@ export default (props) => {
         }}>
         <Form.Input
           name="email"
-          icon="mail"
+          icon="envelope"
           iconPosition="left"
           placeholder="E-mail Address"
           type="text"

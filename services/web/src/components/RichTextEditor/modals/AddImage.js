@@ -1,8 +1,8 @@
 import React from 'react';
 import { Modal, Form, Button } from 'semantic';
+
 import modal from 'helpers/modal';
 import { urlForUpload } from 'utils/uploads';
-
 import UploadsField from 'components/form-fields/Uploads';
 import ErrorMessage from 'components/ErrorMessage';
 

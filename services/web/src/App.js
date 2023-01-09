@@ -1,20 +1,18 @@
 import { hot } from 'react-hot-loader/root';
-
 import React from 'react';
-
 import { Switch, Route } from 'react-router-dom';
+
 import { Protected } from 'helpers/routes';
 import { useSession } from 'stores';
-
 import Dashboard from 'screens/Dashboard';
 import Docs from 'screens/Docs';
 import Components from 'screens/Components';
+import IconSheet from 'screens/Components/IconSheet';
 import Invites from 'screens/Invites';
 import NotFound from 'screens/NotFound';
 import Settings from 'screens/Settings';
 import Shops from 'screens/Shops';
 import Users from 'screens/Users';
-
 import AcceptInvite from 'screens/Auth/AcceptInvite';
 import ForgotPassword from 'screens/Auth/ForgotPassword';
 import ResetPassword from 'screens/Auth/ResetPassword';
@@ -29,6 +27,7 @@ import Loading from 'screens/Loading';
 import Error from 'screens/Error';
 import Products from 'screens/Products';
 import Applications from 'screens/Applications';
+import AuditTrail from 'screens/AuditTrail';
 
 const App = () => {
   const { loading, error } = useSession();
@@ -47,8 +46,10 @@ const App = () => {
       <Protected path="/organizations/:id?" allowed={Organizations} />
       <Protected path="/users/:id?" allowed={Users} />
       <Route path="/docs/ui" component={Components} exact />
+      <Route path="/docs/icons" component={IconSheet} exact />
       <Route path="/docs/:id?" component={Docs} />
       <Route path="/applications/:id?" component={Applications} />
+      <Route path="/audit-trail/:id?" component={AuditTrail} />
       <Route path="/logout" component={Logout} exact />
       <Route path="/login/verification" component={MfaVerification} exact />
       <Route

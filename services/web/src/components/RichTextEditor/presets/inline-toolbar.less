@@ -2,6 +2,7 @@
 
 @shadow: 0 1px 2px rgb(0 0 0 / 20%);
 @borderColor: rgb(0 0 0 / 25%);
+@nocturnalBorderColor: rgba(255, 255, 255, 0.2);
 
 @fade: opacity 100ms linear;
 @scale: transform 100ms @easeInOutBack;
@@ -60,6 +61,17 @@
       border-width: 6px;
       border-style: solid;
       transform: translate(-50%, -1px);
+    }
+  }
+}
+
+.nocturnal-theme .rich-text-editor-inline-toolbar {
+  &__stage {
+    border: 1px solid @nocturnalBorderColor;
+    background: rgba(255, 255, 255, 0.05);
+
+    &:after {
+      border-color:rgba(255, 255, 255, 0.05) transparent transparent;
     }
   }
 }

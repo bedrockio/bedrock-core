@@ -7,6 +7,7 @@
 @checkboxSize: 17px;
 @checkboxColor: @textColor;
 @checkboxLineHeight: @checkboxSize;
+@nocturnalCheckboxColor: @nocturnalTextColor;
 
 
 /* Label */
@@ -22,6 +23,8 @@
   transform @defaultDuration @defaultEasing,
   box-shadow @defaultDuration @defaultEasing
 ;
+@nocturnalCheckboxBackground: @nocturnalInputBackground;
+@nocturnalCheckboxBorderColor: @nocturnalBorderColor;
 
 /* Checkmark */
 @checkboxCheckFontSize: 14px;
@@ -33,6 +36,7 @@
 @labelFontSize: @relativeMedium;
 @labelColor: @textColor;
 @labelTransition: color @defaultDuration @defaultEasing;
+@nocturnalLabelColor: darken(@nocturnalTextColor, 10);
 
 /*-------------------
         States
@@ -43,17 +47,31 @@
 @checkboxHoverBorderColor: @selectedBorderColor;
 @labelHoverColor: @hoveredTextColor;
 
+@nocturnalCheckboxHoverBackground: @nocturnalCheckboxBackground;
+@nocturnalCheckboxHoverBorderColor: @nocturnalSelectedBorderColor;
+@nocturnalLabelHoverColor: @invertedHoveredTextColor;
+
 /* Pressed */
 @checkboxPressedBackground: @offWhite;
 @checkboxPressedBorderColor: @selectedBorderColor;
 @checkboxPressedColor: @selectedTextColor;
 @labelPressedColor: @selectedTextColor;
 
+@nocturnalCheckboxPressedBackground: lighten(@nocturnalCheckboxBackground, 5);
+@nocturnalCheckboxPressedBorderColor: @nocturnalSelectedBorderColor;
+@nocturnalCheckboxPressedColor: @nocturnalSelectedTextColor;
+@nocturnalLabelPressedColor: @nocturnalSelectedTextColor;
+
 /* Focus */
 @checkboxFocusBackground: @white;
 @checkboxFocusBorderColor: @focusedFormMutedBorderColor;
 @checkboxFocusCheckColor: @selectedTextColor;
 @labelFocusColor: @selectedTextColor;
+
+@nocturnalCheckboxFocusBackground: @nocturnalInputBackground + rgba(255,255,255,.025);
+@nocturnalCheckboxFocusBorderColor: @nocturnalFocusedFormBorderColor;
+@nocturnalCheckboxFocusCheckColor: @nocturnalSelectedTextColor;
+@nocturnalLabelFocusColor: @nocturnalSelectedTextColor;
 
 /* Active */
 @labelActiveColor: @selectedTextColor;
@@ -62,10 +80,19 @@
 @checkboxActiveCheckColor: @selectedTextColor;
 @checkboxActiveCheckOpacity: 1;
 
+@nocturnalLabelActiveColor: @nocturnalSelectedTextColor;
+@nocturnalCheckboxActiveBackground: @nocturnalCheckboxBackground;
+@nocturnalCheckboxActiveBorderColor: @nocturnalSelectedBorderColor;
+@nocturnalCheckboxActiveCheckColor: @nocturnalSelectedTextColor;
+
 /* Active Focus */
 @checkboxActiveFocusBackground: @white;
 @checkboxActiveFocusBorderColor: @checkboxFocusBorderColor;
 @checkboxActiveFocusCheckColor: @selectedTextColor;
+
+@nocturnalCheckboxActiveFocusBackground: @nocturnalCheckboxFocusBackground;
+@nocturnalCheckboxActiveFocusBorderColor: @nocturnalCheckboxFocusBorderColor;
+@nocturnalCheckboxActiveFocusCheckColor: @nocturnalSelectedTextColor;
 
 /* Indeterminate */
 @checkboxIndeterminateBackground: @checkboxActiveBackground;
@@ -76,6 +103,8 @@
 /* Disabled */
 @disabledCheckboxOpacity: 0.5;
 @disabledCheckboxLabelColor: rgba(0, 0, 0, 1);
+
+@nocturnalDisabledCheckboxLabelColor: @nocturnalTextColor;
 
 /*-------------------
         Types
@@ -94,15 +123,22 @@
 @bulletScale: (7 / 15); /* 7px as unitless value from radio size */
 @bulletColor: @textColor;
 @bulletRadius: @circularRadius;
+@nocturnalBulletColor: @nocturnalTextColor;
 
 @radioFocusBackground: @checkboxFocusBackground;
 @radioFocusBulletColor: @checkboxFocusCheckColor;
+@nocturnalRadioFocusBackground: @nocturnalCheckboxFocusBackground;
+@nocturnalRadioFocusBulletColor: @nocturnalCheckboxFocusCheckColor;
 
 @radioActiveBackground: @checkboxActiveBackground;
 @radioActiveBulletColor: @checkboxActiveCheckColor;
+@nocturnalRadioActiveBackground: @nocturnalCheckboxActiveBackground;
+@nocturnalRadioActiveBulletColor: @nocturnalCheckboxActiveCheckColor;
 
 @radioActiveFocusBackground: @checkboxActiveFocusBackground;
 @radioActiveFocusBulletColor: @checkboxActiveFocusCheckColor;
+@nocturnalRadioActiveFocusBackground: @nocturnalCheckboxActiveFocusBackground;
+@nocturnalRadioActiveFocusBulletColor: @nocturnalCheckboxActiveFocusCheckColor;
 
 /* Slider & Toggle Handle */
 @handleBackground: @white @subtleGradient;
@@ -110,6 +146,10 @@
   @subtleShadow,
   0px 0px 0px 1px @borderColor inset
 ;
+@nocturnalHandleBackground: hsl(hue(@pageBackground), (saturation(@pageBackground) / 2), lightness(@borderColor)) @nocturnalSubtleGradient;
+@nocturnalHandleBoxShadow:
+  0px 1px 2px 0 @strongBorderColor,
+  0px 0px 0px 1px @strongBorderColor inset;
 
 /* Slider */
 @sliderHandleSize: 1.5rem;
@@ -127,24 +167,31 @@
 @sliderLineColor: @transparentBlack;
 @sliderLineRadius: @circularRadius;
 @sliderLineTransition: background @sliderTransitionDuration @defaultEasing;
+@nocturnalSliderLineColor: @transparentWhite;
 
 @sliderTravelDistance: @sliderLineWidth - @sliderHandleSize;
 
 @sliderLabelDistance: @sliderLineWidth + 1rem;
 @sliderOffLabelColor: @unselectedTextColor;
+@nocturnalSliderOffLabelColor: @nocturnalUnselectedTextColor;
 
 @sliderLabelLineHeight: 1rem;
 
 /* Slider States */
 @sliderHoverLaneBackground: @veryStrongTransparentBlack;
 @sliderHoverLabelColor: @hoveredTextColor;
+@nocturnalSliderHoverLaneBackground: @strongTransparentWhite;
+@nocturnalSliderHoverLabelColor: @nocturnalHoveredTextColor;
 
 @sliderOnLineColor: @lightBlack;
 @sliderOnLabelColor: @selectedTextColor;
+@nocturnalSliderOnLineColor: @black;
+@nocturnalSliderOnLabelColor: @nocturnalSelectedTextColor;
 
 @sliderOnFocusLineColor: @lightBlackFocus;
 @sliderOnFocusLabelColor: @sliderOnLabelColor;
-
+@nocturnalSliderOnFocusLineColor: saturate(darken(@black, 8), 20, relative);
+@nocturnalSliderOnFocusLabelColor: @nocturnalSliderOnLabelColor;
 
 
 /* Toggle */
@@ -168,6 +215,8 @@
 @toggleLaneVerticalOffset: 0rem;
 @toggleOffOffset: -0.05rem;
 @toggleOnOffset: (@toggleLaneWidth - @toggleHandleSize) + 0.15rem;
+@nocturnalToggleLaneBackground: @transparentWhite;
+@nocturnalToggleLaneBoxShadow: 0px 0px 0px 1px @transparentWhite inset;
 
 @toggleLabelDistance: @toggleLaneWidth + 1rem;
 @toggleLabelLineHeight: 1.5rem;
@@ -176,17 +225,26 @@
 
 @toggleFocusColor: @veryStrongTransparentBlack;
 @toggleHoverColor: @toggleFocusColor;
+@nocturnalToggleFocusColor: @strongTransparentWhite;
+@nocturnalToggleHoverColor: @nocturnalToggleFocusColor;
 
 @toggleOffLabelColor: @checkboxColor;
 @toggleOffHandleBoxShadow: @handleBoxShadow;
+@nocturnalToggleOffLabelColor: @nocturnalCheckboxColor;
+@nocturnalToggleOffHandleBoxShadow: @nocturnalHandleBoxShadow;
 
 @toggleOnLabelColor: @selectedTextColor;
 @toggleOnLaneColor: @primaryColor;
+@nocturnalToggleOnLabelColor: @nocturnalSelectedTextColor;
+@nocturnalToggleOnLaneColor: @nocturnalPrimaryColor;
 
 @toggleOnHandleBoxShadow: @handleBoxShadow;
+@nocturnalToggleOnHandleBoxShadow: @nocturnalHandleBoxShadow;
 
 @toggleOnFocusLaneColor: @primaryColorFocus;
 @toggleOnFocusLabelColor: @toggleOnLabelColor;
+@nocturnalToggleOnFocusLaneColor: @nocturnalPrimaryColorFocus;
+@nocturnalToggleOnFocusLabelColor: @nocturnalToggleOnLabelColor;
 
 
 

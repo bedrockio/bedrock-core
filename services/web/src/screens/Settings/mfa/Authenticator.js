@@ -5,7 +5,6 @@ import { Form, Button, Loader, Header, Segment } from 'semantic';
 import screen from 'helpers/screen';
 import { request } from 'utils/api';
 import { APP_NAME } from 'utils/env';
-
 import { ExternalLink } from 'components/Link';
 import { Layout } from 'components';
 import LogoTitle from 'components/LogoTitle';

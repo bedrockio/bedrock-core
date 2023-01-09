@@ -1,8 +1,8 @@
 import React from 'react';
 import { union } from 'lodash';
-import { request } from 'utils/api';
 import { Form, Loader, Popup, Icon, Modal, Button } from 'semantic';
 
+import { request } from 'utils/api';
 import SearchDropdown from 'components/SearchDropdown';
 import ErrorMessage from 'components/ErrorMessage';
 import FetchObject from 'components/FetchObject';
@@ -155,7 +155,7 @@ export default class Roles extends React.Component {
                       cursor: 'pointer',
                       color: '#cccccc',
                     }}
-                    name="question-circle"
+                    name="circle-question"
                   />
                 }
               />

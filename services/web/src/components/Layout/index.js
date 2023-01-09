@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { omit } from 'lodash';
+
 import Group from './Group';
 import Spacer from './Spacer';
 

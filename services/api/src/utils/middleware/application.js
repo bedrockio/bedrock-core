@@ -56,7 +56,7 @@ function redact(obj, prefix) {
 }
 
 function truncate(body) {
-  if (body.data?.length > 20) {
+  if (body.data?.length > 20 && Array.isArray(body.data)) {
     return {
       ...body,
       data: [...body.data.concat().splice(0, 20), `[${body.data.length - 20} items has been truncated]`],
@@ -119,7 +119,6 @@ function applicationMiddleware({ ignorePaths = [] }) {
     await ApplicationRequest.create({
       application: application.id,
       routeNormalizedPath: ctx.routerPath,
-      routePrefix: ctx.router?.opts.prefix,
       requestId,
       request: {
         ip: request.ip,

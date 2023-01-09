@@ -1,4 +1,5 @@
 const { once } = require('lodash');
+
 const { walkParents, walkSiblings, findParentElement } = require('./dom');
 
 // Gets only the rects of inline elements. This allows a text

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form, Input, Checkbox, Message } from 'semantic';
+
 import AutoFocus from 'components/AutoFocus';
 import ErrorMessage from 'components/ErrorMessage';
 
@@ -60,7 +61,7 @@ export default (props) => {
           <Input
             value={fields.email}
             name="email"
-            icon="mail"
+            icon="envelope"
             iconPosition="left"
             placeholder="E-mail Address"
             type="email"

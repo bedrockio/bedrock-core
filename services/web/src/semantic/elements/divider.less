@@ -16,7 +16,7 @@
 
 .ui.divider {
   height: 1px;
-  background-color: #dbdbda;
+  background-color: @highlightColor;
   margin: @margin;
 
   &.horizontal,
@@ -35,7 +35,7 @@
     &:before,
     &:after {
       content: '';
-      background-color: #dbdbda;
+      background-color: @highlightColor;
       flex: auto;
     }
   }
@@ -113,18 +113,35 @@
     Inverted
 ---------------*/
 
-.ui.divider.inverted,
-.ui.vertical.inverted.divider,
-.ui.horizontal.inverted.divider {
-  color: @invertedTextColor;
+.nocturnal-theme .ui.divider,
+.ui.inverted.divider {
+  background-color: @invertedHighlightColor;
+
+  &.vertical,
+  &.horizontal {
+    background: transparent;
+    color: @invertedTextColor;
+
+    &:before,
+    &:after {
+      background-color: @invertedHighlightColor;
+    }
+  }
 }
-.ui.divider.inverted,
-.ui.divider.inverted:after,
-.ui.divider.inverted:before {
-  border-top-color: @invertedShadowColor !important;
-  border-left-color: @invertedShadowColor !important;
-  border-bottom-color: @invertedHighlightColor !important;
-  border-right-color: @invertedHighlightColor !important;
+
+.nocturnal-theme .ui.inverted.divider {
+  background-color: @highlightColor;
+
+  &.vertical,
+  &.horizontal {
+    background: transparent;
+    color: @color;
+
+    &:before,
+    &:after {
+      background-color: @highlightColor;
+    }
+  }
 }
 
 /*--------------

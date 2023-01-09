@@ -1,11 +1,11 @@
 import React from 'react';
-import { Table, Button, Message, Divider, Loader, Confirm } from 'semantic';
+import { Table, Button, Message, Divider, Loader } from 'semantic';
+import { Link } from 'react-router-dom';
+
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
-
 import EditApplication from 'modals/EditApplication';
-import { Breadcrumbs, Layout, Search } from 'components';
-import { Link } from 'react-router-dom';
+import { Breadcrumbs, Layout, Search, Confirm } from 'components';
 
 @screen
 export default class Applications extends React.Component {
@@ -80,7 +80,7 @@ export default class Applications extends React.Component {
                           <Table.Cell textAlign="center">
                             <EditApplication
                               application={item}
-                              trigger={<Button basic icon="edit" />}
+                              trigger={<Button basic icon="pen-to-square" />}
                               onSave={reload}
                             />
                             <Confirm
