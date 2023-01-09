@@ -89,8 +89,10 @@ router
         await user.save();
       }
 
+      const { token } = createAuthToken(user.id, user.authTokenId, '120m');
+
       ctx.body = {
-        data: { token: createAuthToken(user.id, user.authTokenId, '120m') },
+        data: { token },
       };
     }
   )

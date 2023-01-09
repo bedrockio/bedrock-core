@@ -15,7 +15,6 @@ import {
   SearchFilters,
 } from 'components';
 import EditUser from 'modals/EditUser';
-import LoginAsUser from 'modals/LoginAsUser';
 
 import Actions from '../Actions';
 

@@ -5,10 +5,13 @@ import { request } from 'utils/api';
 import InspectObject from 'modals/InspectObject';
 import { Confirm } from 'components';
 
+import LoginAsUser from 'modals/LoginAsUser';
+
 export default function UserActions({ item, reload } = {}) {
   return (
     <Dropdown button basic text="More">
       <Dropdown.Menu direction="left">
+        <LoginAsUser user={item} trigger={<Dropdown.Item text="Login" />} />
         <InspectObject
           name="Shop"
           object={item}
