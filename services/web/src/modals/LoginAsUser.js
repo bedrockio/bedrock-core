@@ -1,8 +1,11 @@
 import React from 'react';
-import { request } from 'utils/api';
+import { JWT_KEY, request } from 'utils/api';
 
-import { Message, Modal, Button } from 'semantic';
+import { Message, Modal, Button, Segment, Dimmer, Divider } from 'semantic';
 import modal from 'helpers/modal';
+import { Link } from 'react-router-dom';
+import Spacer from 'components/Layout/Spacer';
+import { Layout } from 'components';
 
 @modal
 export default class LoginAsUser extends React.Component {
@@ -15,7 +18,7 @@ export default class LoginAsUser extends React.Component {
     user: this.props.user,
   };
 
-  onConfirm = async () => {
+  onConfigure = async () => {
     const { user } = this.props;
     this.setState({
       loading: true,
@@ -26,43 +29,55 @@ export default class LoginAsUser extends React.Component {
         method: 'POST',
         path: `/1/users/${user.id}/create-token`,
       });
-      window.localStorage.setItem('tmpToken', data.token);
-      window.open(`/?switch-account=true`, '_blank');
-      this.props.close();
+      this.setState({
+        token: data.token,
+      });
     } catch (error) {
       this.setState({ error, loading: false });
     }
   };
 
+  onStart = () => {
+    const tab = window.open(`/`, '_blank');
+    tab.sessionStorage(JWT_KEY, this.state.token);
+    this.props.close();
+  };
+
   render() {
-    const { error, user, loading } = this.state;
+    const { error, user, loading = false, token } = this.state;
+    const isReady = !!token;
     return (
       <>
         <Modal.Header>Login As User</Modal.Header>
         <Modal.Content>
           {error && <Message error content={error.message} />}
           <p>
-            Are you sure you want to log in as {user.email}? This will start a
-            authenticate session for the given user in a new tab. The session
-            will be valid for 2 hours only.
+            Are you sure you want to log in as {user.email}? The session will be
+            valid for 2 hours only.
           </p>
         </Modal.Content>
         <Modal.Actions>
-          <Button
-            basic
-            content="Cancel"
-            onClick={() =>
-              this.setState({
-                open: false,
-              })
-            }
-          />
-          <Button
-            loading={loading}
-            primary
-            content="Start Auth Session"
-            onClick={this.onConfirm}
-          />
+          <Dimmer.Dimmable dimmed={!isReady}>
+            <Dimmer active={!isReady} inverted>
+              <Button
+                primary
+                fluid
+                loading={loading}
+                onClick={this.onConfigure}>
+                Configure Session
+              </Button>
+            </Dimmer>
+
+            <p style={{ textAlign: 'center' }}>
+              Click below to start the session in a new tab. Only that tab will
+              be authenticated as the user. Close the tab to end the session.
+            </p>
+
+            <Button basic={!token} primary={token} fluid onClick={this.onStart}>
+              Start Session
+            </Button>
+            <br />
+          </Dimmer.Dimmable>
         </Modal.Actions>
       </>
     );

@@ -11,7 +11,11 @@ export default function UserActions({ item, reload } = {}) {
   return (
     <Dropdown button basic text="More">
       <Dropdown.Menu direction="left">
-        <LoginAsUser user={item} trigger={<Dropdown.Item text="Login" />} />
+        <LoginAsUser
+          size="tiny"
+          user={item}
+          trigger={<Dropdown.Item text="Login" />}
+        />
         <InspectObject
           name="Shop"
           object={item}
