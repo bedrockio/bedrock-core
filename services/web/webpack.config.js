@@ -1,4 +1,5 @@
 const path = require('path');
+
 const yargs = require('yargs');
 const webpack = require('webpack');
 const config = require('@bedrockio/config');
