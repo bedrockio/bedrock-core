@@ -112,34 +112,38 @@ class SearchProvider extends React.Component {
   }
 
   updateUrlSearchParams() {
-    const { filters, filterMapping } = this.state;
+    const { filters, filterMapping = {} } = this.state;
     const queryObject = {};
+
+    // if there are no filters, dont update the url
+    // this will prevent provider from losing state due to the url changing
+    if (!Object.keys(filterMapping).length) {
+      return;
+    }
 
     if (this.state.page > 1) {
       queryObject.page = this.state.page;
     }
 
-    if (filterMapping) {
-      for (const key of Object.keys(filters)) {
-        const value = filters[key]?.id || filters[key];
-        const mapping = filterMapping[key];
-        if (!mapping) {
-          continue;
-        }
-        if (mapping.multiple) {
-          queryObject[key] = value
-            .map((value) => convertParamValue(mapping.type, value))
-            .join('_');
-        } else if (mapping.range) {
-          queryObject[key] = [
-            value.gte && convertParamValue(mapping.type, value.gte),
-            value.lte && convertParamValue(mapping.type, value.lte),
-          ]
-            .filter(Boolean)
-            .join('/');
-        } else {
-          queryObject[key] = convertParamValue(mapping.type, value);
-        }
+    for (const key of Object.keys(filters)) {
+      const value = filters[key]?.id || filters[key];
+      const mapping = filterMapping[key];
+      if (!mapping) {
+        continue;
+      }
+      if (mapping.multiple) {
+        queryObject[key] = value
+          .map((value) => convertParamValue(mapping.type, value))
+          .join('_');
+      } else if (mapping.range) {
+        queryObject[key] = [
+          value.gte && convertParamValue(mapping.type, value.gte),
+          value.lte && convertParamValue(mapping.type, value.lte),
+        ]
+          .filter(Boolean)
+          .join('/');
+      } else {
+        queryObject[key] = convertParamValue(mapping.type, value);
       }
     }
 

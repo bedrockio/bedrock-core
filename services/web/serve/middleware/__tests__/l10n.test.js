@@ -1,5 +1,6 @@
-const l10nMiddleware = require('../l10n');
 const { createFakeKoaContext } = require('koa');
+
+const l10nMiddleware = require('../l10n');
 
 jest.mock('koa');
 
