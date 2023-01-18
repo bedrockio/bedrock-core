@@ -14,8 +14,9 @@ export default function UserActions({ item, reload } = {}) {
         <LoginAsUser
           size="tiny"
           user={item}
-          trigger={<Dropdown.Item text="Login" />}
+          trigger={<Dropdown.Item icon="user-secret" text="Login as User" />}
         />
+
         <InspectObject
           name="Shop"
           object={item}

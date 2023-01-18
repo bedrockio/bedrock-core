@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { JWT_KEY, request } from 'utils/api';
 import { Message, Modal, Button, Dimmer } from 'semantic';
+
+import { JWT_KEY, request } from 'utils/api';
 
 import modal from 'helpers/modal';
 
@@ -37,7 +38,7 @@ export default class LoginAsUser extends React.Component {
 
   onStart = () => {
     const tab = window.open(`/`, '_blank');
-    tab.sessionStorage(JWT_KEY, this.state.token);
+    tab.sessionStorage.setItem(JWT_KEY, this.state.token);
     this.props.close();
   };
 

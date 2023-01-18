@@ -36,6 +36,12 @@
       "ref": "User",
       "required": true,
       "autopopulate": true
+    },
+    "imitateUser": {
+      "type": "ObjectId",
+      "ref": "User",
+      "required": true,
+      "autopopulate": true
     }
   },
   "search": [

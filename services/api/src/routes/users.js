@@ -7,7 +7,6 @@ const { requirePermissions } = require('../utils/middleware/permissions');
 const { exportValidation, csvExport } = require('../utils/csv');
 const { User } = require('../models');
 const { expandRoles } = require('./../utils/permissions');
-const { generateTokenId, createAuthToken } = require('../utils/tokens');
 
 const roles = require('./../roles.json');
 const permissions = require('./../permissions.json');
@@ -68,13 +67,14 @@ router
     }
   )
   .post(
-    '/:userId/create-token',
+    '/:userId/imitate',
     requirePermissions({ endpoint: 'users', permission: 'write', scope: 'global' }),
     async (ctx) => {
       const { user } = ctx.state;
+      const authUser = ctx.state.authUser;
 
       // Don't allow an superAdmin to imitate another superAdmin
-      const allowedRoles = expandRoles(ctx.state.authUser).roles.reduce(
+      const allowedRoles = expandRoles(authUser).roles.reduce(
         (result, { roleDefinition }) => result.concat(roleDefinition.canImpersonateRoles || []),
         []
       );
@@ -84,12 +84,23 @@ router
         ctx.throw(403, 'You do not have permission to create tokens for this user');
       }
 
-      if (!user.authTokenId) {
-        user.authTokenId = generateTokenId();
-        await user.save();
-      }
+      //XXX log this into the audit log
 
-      const { token } = createAuthToken(user.id, user.authTokenId, '120m');
+      // attached the spoof token to authUser
+      const token = authUser.createAuthToken(
+        {
+          ip: ctx.get('x-forwarded-for') || ctx.ip,
+          country: ctx.get('cf-ipcountry'),
+          userAgent: ctx.get('user-agent'),
+        },
+        {
+          // setting user id to the user that we are spoofing
+          imitatedUser: user.id,
+          // expires in 2 hours (in seconds)
+          exp: Math.floor(Date.now() / 1000) + 120 * 60,
+        }
+      );
+      await authUser.save();
 
       ctx.body = {
         data: { token },

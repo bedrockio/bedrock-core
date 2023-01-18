@@ -63,7 +63,6 @@ router
       email: Joi.string().email().trim().required(),
       password: Joi.string().trim().required(),
     }),
-
     async (ctx) => {
       const { email, password } = ctx.request.body;
       const user = await User.findOne({ email });

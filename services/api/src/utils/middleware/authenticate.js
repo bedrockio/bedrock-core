@@ -63,7 +63,12 @@ async function fetchUser(ctx, next) {
   if (!ctx.state.authUser && ctx.state.jwt) {
     const { jwt } = ctx.state;
     const { User } = mongoose.models;
-    const user = await User.findById(jwt.sub);
+    const user = await User.findById(jwt.imitatedUser || jwt.sub);
+
+    // store that user is being imitated
+    if (jwt.imitatedUser) {
+      ctx.state.imitatedUser = jwt.imitatedUser;
+    }
 
     const token = user.authInfo.find((token) => token.jti === jwt.jti);
     if (!user || !token) {
@@ -76,6 +81,7 @@ async function fetchUser(ctx, next) {
     if (token && (token.lastUsedAt < Date.now() - 1000 * 30 || token.ip !== ip)) {
       token.ip = ip;
       token.lastUsedAt = new Date();
+
       await User.updateOne(
         { _id: user.id, 'authInfo._id': token.id },
         {
@@ -86,7 +92,6 @@ async function fetchUser(ctx, next) {
         }
       );
     }
-
     ctx.state.authUser = user;
   }
   await next();

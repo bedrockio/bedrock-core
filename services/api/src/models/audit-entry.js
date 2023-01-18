@@ -7,12 +7,21 @@ const definition = require('./definitions/audit-entry.json');
 const schema = createSchema(definition);
 
 schema.statics.getContextFields = function (ctx) {
-  return {
+  const { imitatedUser } = ctx.state;
+
+  const fields = {
     user: ctx.state.authUser?.id,
     requestMethod: ctx.request.method,
     requestUrl: ctx.request.url,
     routeNormalizedPath: ctx.routerPath,
   };
+
+  // swap the user and imitatedUser if the user is impersonating another user
+  if (imitatedUser) {
+    fields.imitatedUser = ctx.state.authUser?.id;
+    fields.user = imitatedUser;
+  }
+  return fields;
 };
 
 schema.statics.getObjectFields = function getObjectFields(object, fields = []) {

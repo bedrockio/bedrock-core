@@ -21,13 +21,14 @@ schema.methods.removeAuthToken = function (jti) {
   this.authInfo = this.authInfo.filter((token) => token.jti !== jti);
 };
 
-schema.methods.createAuthToken = function ({ ip, userAgent, country }) {
-  const { token, payload } = createAuthToken(this.id);
+schema.methods.createAuthToken = function ({ ip, userAgent, country }, tokenOption = {}) {
+  const { token, payload } = createAuthToken({ sub: this.id, ...tokenOption });
 
   this.authInfo = [
     {
       exp: new Date(payload.exp * 1000),
       jti: payload.jti,
+      type: payload.type,
       iat: new Date(payload.iat * 1000),
       ip,
       country: country?.toUpperCase(),
