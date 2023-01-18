@@ -129,13 +129,12 @@ describe('/1/users', () => {
       });
       const response = await request('POST', `/1/users/${user.id}/impersonate`, {}, { user: superAdmin });
       expect(response.status).toBe(200);
-      expect(!!response.body.data.token).toBe(true);
+      expect(response.body.data.token).toBeTruthy();
 
       const auditEntry = await AuditEntry.findOne({
         superAdmin: user._id,
         activity: 'Impersonated user',
       });
-      expect(auditEntry).toBeTruthy();
       expect(auditEntry.objectType).toBe('User');
       expect(auditEntry.objectId).toBe(user.id);
     });
@@ -145,6 +144,7 @@ describe('/1/users', () => {
       const user = await createAdminUser();
       const response = await request('POST', `/1/users/${user.id}/impersonate`, {}, { user: superAdmin });
       expect(response.status).toBe(403);
+      expect(response.body.error).toBe('You do not have permission to create tokens for this user');
     });
 
     it('should deny access to non-admins', async () => {

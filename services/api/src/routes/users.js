@@ -66,16 +66,15 @@ router
 
       // Don't allow an superAdmin to imitate another superAdmin
       const allowedRoles = expandRoles(authUser).roles.reduce(
-        (result, { roleDefinition }) => result.concat(roleDefinition.canImpersonateRoles || []),
+        (result, { roleDefinition }) => result.concat(roleDefinition.impersonateRoles || []),
         []
       );
 
       const isAllowed = [...user.roles].every(({ role }) => allowedRoles.includes(role));
       if (!isAllowed) {
-        ctx.throw(403, 'You do not have permission to create tokens for this user');
+        ctx.throw(403, 'You are not allowed to impersonate this user');
       }
 
-      // attached the spoof token to authUser
       const token = authUser.createAuthToken(
         {
           ip: ctx.get('x-forwarded-for') || ctx.ip,

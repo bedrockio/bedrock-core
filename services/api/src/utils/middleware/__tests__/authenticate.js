@@ -199,7 +199,7 @@ describe('fetchUser', () => {
     expect(count).toBe(1);
   });
 
-  it('should update user`s ip and lastUsedAt and remove expire entries for a given token', async () => {
+  it('should update user`s ip and lastUsedAt and remove expire entries', async () => {
     const user = await createUser({
       authInfo: [
         {

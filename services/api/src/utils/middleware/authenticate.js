@@ -67,7 +67,6 @@ async function fetchUser(ctx, next) {
 
     const token = user.authInfo.find((token) => token.jti === jwt.jti);
 
-    // if the user is not an impostor
     if (!user || !token) {
       throw new TokenError('User associated to token could not be found');
     }

@@ -14,10 +14,8 @@ let storage = localStorage;
 // If we have a JWT_KEY in sessionStorage, use that instead
 // used by LoginAsUser modal
 if (sessionStorage.getItem(JWT_KEY)) {
-  console.log('Using sessionStorage for JWT_KEY');
   storage = sessionStorage;
 }
-console.log('Using localStorage for JWT_KEY');
 
 export function getToken() {
   return storage.getItem(JWT_KEY);

@@ -7,14 +7,13 @@ const definition = require('./definitions/audit-entry.json');
 const schema = createSchema(definition);
 
 schema.statics.getContextFields = function (ctx) {
-  const fields = {
+  return {
     sessionId: ctx.state.jwt?.jti,
     user: ctx.state.authUser?.id,
     requestMethod: ctx.request.method,
     requestUrl: ctx.request.url,
     routeNormalizedPath: ctx.routerPath,
   };
-  return fields;
 };
 
 schema.statics.getObjectFields = function getObjectFields(object, fields = []) {

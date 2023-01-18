@@ -6,15 +6,34 @@ import InspectObject from 'modals/InspectObject';
 import { Confirm } from 'components';
 
 import LoginAsUser from 'modals/LoginAsUser';
+import { useSession } from 'stores/session';
 
 export default function UserActions({ item, reload } = {}) {
+  const { user } = useSession();
+
+  const impersonateRoles = user.roles.reduce(
+    (result, { roleDefinition }) =>
+      result.concat(roleDefinition.impersonateRoles || []),
+    []
+  );
+
+  const canImpersonate = [...item.roles].every(({ role }) =>
+    impersonateRoles.includes(role)
+  );
+
   return (
     <Dropdown button basic text="More">
       <Dropdown.Menu direction="left">
         <LoginAsUser
           size="tiny"
           user={item}
-          trigger={<Dropdown.Item icon="user-secret" text="Login as User" />}
+          trigger={
+            <Dropdown.Item
+              disabled={!canImpersonate}
+              icon="user-secret"
+              text="Login as User"
+            />
+          }
         />
 
         <InspectObject
