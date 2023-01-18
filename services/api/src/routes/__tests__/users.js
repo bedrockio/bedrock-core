@@ -1,5 +1,5 @@
 const { setupDb, teardownDb, request, createUser, createAdminUser } = require('../../utils/testing');
-const { User } = require('../../models');
+const { User, AuditEntry } = require('../../models');
 
 beforeAll(async () => {
   await setupDb();
@@ -113,8 +113,8 @@ describe('/1/users', () => {
     });
   });
 
-  describe('POST /:user/create-token', () => {
-    it('should be able to access user', async () => {
+  describe('POST /:user/impersonate', () => {
+    it('should be able to impersonate user', async () => {
       const superAdmin = await createAdminUser();
       const user = await createUser({
         firstName: 'Neo',
@@ -127,22 +127,30 @@ describe('/1/users', () => {
           },
         ],
       });
-      const response = await request('POST', `/1/users/${user.id}/create-token`, {}, { user: superAdmin });
+      const response = await request('POST', `/1/users/${user.id}/impersonate`, {}, { user: superAdmin });
       expect(response.status).toBe(200);
       expect(!!response.body.data.token).toBe(true);
+
+      const auditEntry = await AuditEntry.findOne({
+        superAdmin: user._id,
+        activity: 'Impersonated user',
+      });
+      expect(auditEntry).toBeTruthy();
+      expect(auditEntry.objectType).toBe('User');
+      expect(auditEntry.objectId).toBe(user.id);
     });
 
-    it('dont allow an superAdmin to emitate another admin', async () => {
+    it('dont allow an superAdmin to impersonate another admin', async () => {
       const superAdmin = await createAdminUser();
       const user = await createAdminUser();
-      const response = await request('POST', `/1/users/${user.id}/create-token`, {}, { user: superAdmin });
+      const response = await request('POST', `/1/users/${user.id}/impersonate`, {}, { user: superAdmin });
       expect(response.status).toBe(403);
     });
 
     it('should deny access to non-admins', async () => {
       const authUser = await createUser({});
       const user = await createUser({ firstName: 'New', lastName: 'Name' });
-      const response = await request('POST', `/1/users/${user.id}/create-token`, {}, { user: authUser });
+      const response = await request('POST', `/1/users/${user.id}/impersonate`, {}, { user: authUser });
       expect(response.status).toBe(403);
     });
   });

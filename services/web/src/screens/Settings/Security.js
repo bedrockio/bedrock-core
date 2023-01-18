@@ -169,35 +169,39 @@ export default class Security extends React.Component {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {authInfo.map((info) => {
-                const country = countries.find(
-                  (country) => country.countryCode === info.country
-                );
+              {authInfo
+                .sort((a, b) => {
+                  return new Date(b.lastUsedAt) - new Date(a.lastUsedAt);
+                })
+                .map((info) => {
+                  const country = countries.find(
+                    (country) => country.countryCode === info.country
+                  );
 
-                return (
-                  <Table.Row key={info.id}>
-                    <Table.Cell>
-                      {info.userAgent || 'No User Agent provided'}{' '}
-                      {info.jti === jti && (
-                        <Label horizontal>Current Session</Label>
-                      )}
-                    </Table.Cell>
-                    <Table.Cell>
-                      {country?.nameEn || 'N / A'} ({info.ip})
-                    </Table.Cell>
-                    <Table.Cell>{fromNow(info.lastUsedAt)}</Table.Cell>
-                    <Table.Cell>
-                      <LoadButton
-                        disabled={info.jti === jti}
-                        basic
-                        size="small"
-                        onClick={() => this.logout({ jti: info.jti })}>
-                        Logout
-                      </LoadButton>
-                    </Table.Cell>
-                  </Table.Row>
-                );
-              })}
+                  return (
+                    <Table.Row key={info.id}>
+                      <Table.Cell>
+                        {info.userAgent || 'No User Agent provided'}{' '}
+                        {info.jti === jti && (
+                          <Label horizontal>Current Session</Label>
+                        )}
+                      </Table.Cell>
+                      <Table.Cell>
+                        {country?.nameEn || 'N / A'} ({info.ip})
+                      </Table.Cell>
+                      <Table.Cell>{fromNow(info.lastUsedAt)}</Table.Cell>
+                      <Table.Cell>
+                        <LoadButton
+                          disabled={info.jti === jti}
+                          basic
+                          size="small"
+                          onClick={() => this.logout({ jti: info.jti })}>
+                          Logout
+                        </LoadButton>
+                      </Table.Cell>
+                    </Table.Row>
+                  );
+                })}
             </Table.Body>
           </Table>
         </Segment>

@@ -77,7 +77,7 @@ router
         backupCodes.splice(foundBackupCode, 1);
         user.mfaBackupCodes = backupCodes;
         await user.save();
-        await AuditEntry.append('Successfully authenticated (mfa using backup code)', ctx, {
+        await AuditEntry.append('Authenticated (mfa using backup code)', ctx, {
           object: user,
           user: user.id,
         });
@@ -90,7 +90,7 @@ router
         ctx.throw(400, 'Not a valid code');
       }
 
-      await AuditEntry.append('Successfully authenticated (mfa)', ctx, {
+      await AuditEntry.append('Authenticated (mfa)', ctx, {
         object: user,
         user: user.id,
       });

@@ -45,6 +45,7 @@ function createAuthToken(fields) {
 }
 
 function generateTokenId() {
+  // https://zelark.github.io/nano-id-cc/ 15 chars ~ 158 years with 1k/s
   return nanoid(15);
 }
 

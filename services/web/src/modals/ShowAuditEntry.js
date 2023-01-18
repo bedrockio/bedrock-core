@@ -71,8 +71,14 @@ export default class ShowAuditEntry extends React.Component {
                   )}
                   {auditEntry.objectId && (
                     <Table.Row>
-                      <Table.Cell width={4}>ObjectId</Table.Cell>
+                      <Table.Cell width={4}>Object Id</Table.Cell>
                       <Table.Cell>{auditEntry.objectId}</Table.Cell>
+                    </Table.Row>
+                  )}
+                  {auditEntry.sessionId && (
+                    <Table.Row>
+                      <Table.Cell width={4}>Session Id</Table.Cell>
+                      <Table.Cell>{auditEntry.sessionId}</Table.Cell>
                     </Table.Row>
                   )}
                   <Table.Row>

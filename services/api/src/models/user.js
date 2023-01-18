@@ -28,7 +28,6 @@ schema.methods.createAuthToken = function ({ ip, userAgent, country }, tokenOpti
     {
       exp: new Date(payload.exp * 1000),
       jti: payload.jti,
-      type: payload.type,
       iat: new Date(payload.iat * 1000),
       ip,
       country: country?.toUpperCase(),
@@ -42,9 +41,6 @@ schema.methods.createAuthToken = function ({ ip, userAgent, country }, tokenOpti
 };
 
 schema.pre('save', async function preSave(next) {
-  // filter out expired token references
-  this.authInfo = this.authInfo.filter((token) => token.exp > Date.now());
-
   if (this._password) {
     const salt = await bcrypt.genSalt(12);
     this.hashedPassword = await bcrypt.hash(this._password, salt);

@@ -34,16 +34,7 @@ router
     return next();
   })
   .get('/me', async (ctx) => {
-    const { authUser, jwt } = ctx.state;
-    // updating the authUser's ip address
-    const token = authUser.authInfo.find((token) => token.jti === jwt.jti);
-    const ip = ctx.get('x-forwarded-for') || ctx.ip;
-    if (token && token.ip !== ip) {
-      token.ip = ip;
-    }
-    token.lastUsedAt = new Date();
-    await authUser.save();
-
+    const { authUser } = ctx.state;
     ctx.body = {
       data: expandRoles(authUser),
     };
@@ -67,7 +58,7 @@ router
     }
   )
   .post(
-    '/:userId/imitate',
+    '/:userId/impersonate',
     requirePermissions({ endpoint: 'users', permission: 'write', scope: 'global' }),
     async (ctx) => {
       const { user } = ctx.state;
@@ -84,8 +75,6 @@ router
         ctx.throw(403, 'You do not have permission to create tokens for this user');
       }
 
-      //XXX log this into the audit log
-
       // attached the spoof token to authUser
       const token = authUser.createAuthToken(
         {
@@ -94,13 +83,18 @@ router
           userAgent: ctx.get('user-agent'),
         },
         {
-          // setting user id to the user that we are spoofing
-          imitatedUser: user.id,
+          // setting user id to the user we are impersonating
+          impersonatedUser: user.id,
           // expires in 2 hours (in seconds)
           exp: Math.floor(Date.now() / 1000) + 120 * 60,
         }
       );
       await authUser.save();
+
+      await AuditEntry.append('Impersonated user', ctx, {
+        object: user,
+        user: authUser,
+      });
 
       ctx.body = {
         data: { token },

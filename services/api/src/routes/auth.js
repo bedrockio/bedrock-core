@@ -116,7 +116,7 @@ router
       });
       await user.save();
 
-      await AuditEntry.append('Successfully authenticated', ctx, {
+      await AuditEntry.append('Authenticated', ctx, {
         object: user,
         user: user.id,
       });
@@ -159,7 +159,7 @@ router
         ctx.throw(401, error);
       }
 
-      await AuditEntry.append('Successfully authenticated (confirm-access)', ctx, {
+      await AuditEntry.append('Authenticated (confirm-access)', ctx, {
         object: authUser,
         user: authUser.id,
       });
