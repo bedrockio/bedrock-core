@@ -1,11 +1,9 @@
 import React from 'react';
-import { JWT_KEY, request } from 'utils/api';
 
-import { Message, Modal, Button, Segment, Dimmer, Divider } from 'semantic';
+import { JWT_KEY, request } from 'utils/api';
+import { Message, Modal, Button, Dimmer } from 'semantic';
+
 import modal from 'helpers/modal';
-import { Link } from 'react-router-dom';
-import Spacer from 'components/Layout/Spacer';
-import { Layout } from 'components';
 
 @modal
 export default class LoginAsUser extends React.Component {
