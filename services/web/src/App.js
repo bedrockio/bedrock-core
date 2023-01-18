@@ -45,8 +45,8 @@ const App = () => {
       <Protected path="/users/invites" allowed={Invites} exact />
       <Protected path="/organizations/:id?" allowed={Organizations} />
       <Protected path="/users/:id?" allowed={Users} />
-      <Protected path="/audit-trail/:id?" component={AuditTrail} />
-      <Protected path="/applications/:id?" component={Applications} />
+      <Protected path="/audit-trail/:id?" allowed={AuditTrail} />
+      <Protected path="/applications/:id?" allowed={Applications} />
 
       <Route path="/docs/ui" component={Components} exact />
       <Route path="/docs/icons" component={IconSheet} exact />
