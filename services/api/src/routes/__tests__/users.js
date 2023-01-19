@@ -139,7 +139,7 @@ describe('/1/users', () => {
       expect(auditEntry.objectId).toBe(user.id);
     });
 
-    it('dont allow an superAdmin to authenticate another admin', async () => {
+    it('dont allow an superAdmin to authenticate as another admin', async () => {
       const superAdmin = await createAdminUser();
       const user = await createAdminUser();
       const response = await request('POST', `/1/users/${user.id}/authenticate`, {}, { user: superAdmin });
