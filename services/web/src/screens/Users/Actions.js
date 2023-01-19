@@ -11,14 +11,14 @@ import { useSession } from 'stores/session';
 export default function UserActions({ item, reload } = {}) {
   const { user } = useSession();
 
-  const impersonateRoles = user.roles.reduce(
+  const authenticatableRoles = user.roles.reduce(
     (result, { roleDefinition }) =>
-      result.concat(roleDefinition.impersonateRoles || []),
+      result.concat(roleDefinition.allowAuthenticationOnRoles || []),
     []
   );
 
-  const canImpersonate = [...item.roles].every(({ role }) =>
-    impersonateRoles.includes(role)
+  const canAuthenticate = [...item.roles].every(({ role }) =>
+    authenticatableRoles.includes(role)
   );
 
   return (
@@ -29,7 +29,7 @@ export default function UserActions({ item, reload } = {}) {
           user={item}
           trigger={
             <Dropdown.Item
-              disabled={!canImpersonate}
+              disabled={!canAuthenticate}
               icon="user-secret"
               text="Login as User"
             />

@@ -58,7 +58,7 @@ router
     }
   )
   .post(
-    '/:userId/impersonate',
+    '/:userId/authenticate',
     requirePermissions({ endpoint: 'users', permission: 'write', scope: 'global' }),
     async (ctx) => {
       const { user } = ctx.state;
@@ -66,13 +66,13 @@ router
 
       // Don't allow an superAdmin to imitate another superAdmin
       const allowedRoles = expandRoles(authUser).roles.reduce(
-        (result, { roleDefinition }) => result.concat(roleDefinition.impersonateRoles || []),
+        (result, { roleDefinition }) => result.concat(roleDefinition.allowAuthenticationOnRoles || []),
         []
       );
 
       const isAllowed = [...user.roles].every(({ role }) => allowedRoles.includes(role));
       if (!isAllowed) {
-        ctx.throw(403, 'You are not allowed to impersonate this user');
+        ctx.throw(403, 'You are not allowed to authenticate as this user');
       }
 
       const token = authUser.createAuthToken(
@@ -83,14 +83,15 @@ router
         },
         {
           // setting user id to the user we are impersonating
-          impersonatedUser: user.id,
+          // this is a special case not to be use for other purposes `sub` is reserved for the user id normally
+          authenticateUser: user.id,
           // expires in 2 hours (in seconds)
           exp: Math.floor(Date.now() / 1000) + 120 * 60,
         }
       );
       await authUser.save();
 
-      await AuditEntry.append('Impersonated user', ctx, {
+      await AuditEntry.append('Authenticate as user', ctx, {
         object: user,
         user: authUser,
       });

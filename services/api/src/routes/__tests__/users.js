@@ -113,8 +113,8 @@ describe('/1/users', () => {
     });
   });
 
-  describe('POST /:user/impersonate', () => {
-    it('should be able to impersonate user', async () => {
+  describe('POST /:user/autheticate', () => {
+    it('should be able to authenticate as another user', async () => {
       const superAdmin = await createAdminUser();
       const user = await createUser({
         firstName: 'Neo',
@@ -127,30 +127,30 @@ describe('/1/users', () => {
           },
         ],
       });
-      const response = await request('POST', `/1/users/${user.id}/impersonate`, {}, { user: superAdmin });
+      const response = await request('POST', `/1/users/${user.id}/authenticate`, {}, { user: superAdmin });
       expect(response.status).toBe(200);
       expect(response.body.data.token).toBeTruthy();
 
       const auditEntry = await AuditEntry.findOne({
         superAdmin: user._id,
-        activity: 'Impersonated user',
+        activity: 'Authenticate as user',
       });
       expect(auditEntry.objectType).toBe('User');
       expect(auditEntry.objectId).toBe(user.id);
     });
 
-    it('dont allow an superAdmin to impersonate another admin', async () => {
+    it('dont allow an superAdmin to authenticate another admin', async () => {
       const superAdmin = await createAdminUser();
       const user = await createAdminUser();
-      const response = await request('POST', `/1/users/${user.id}/impersonate`, {}, { user: superAdmin });
+      const response = await request('POST', `/1/users/${user.id}/authenticate`, {}, { user: superAdmin });
       expect(response.status).toBe(403);
-      expect(response.body.error.message).toBe('You are not allowed to impersonate this user');
+      expect(response.body.error.message).toBe('You are not allowed to authenticate as this user');
     });
 
     it('should deny access to non-admins', async () => {
       const authUser = await createUser({});
       const user = await createUser({ firstName: 'New', lastName: 'Name' });
-      const response = await request('POST', `/1/users/${user.id}/impersonate`, {}, { user: authUser });
+      const response = await request('POST', `/1/users/${user.id}/authenticate`, {}, { user: authUser });
       expect(response.status).toBe(403);
     });
   });

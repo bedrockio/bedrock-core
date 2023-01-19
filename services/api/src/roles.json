@@ -12,7 +12,7 @@
       "organizations": "read-write",
       "applications": "read-write"
     },
-    "impersonateRoles": [
+    "allowAuthenticationOnRoles": [
       "admin",
       "viewer"
     ]
