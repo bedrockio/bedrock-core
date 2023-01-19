@@ -27,7 +27,7 @@
 --------------------*/
 
 /* Value */
-@valueFont: @pageFont;
+@valueFont: @headerFont;
 @valueFontWeight: @bold;
 @valueLineHeight: 1em;
 @valueColor: @textColor;
@@ -38,7 +38,7 @@
 @labelSize: @relativeMedium;
 @topLabelDistance: 0rem;
 @bottomLabelDistance: 0rem;
-@labelFont: @headerFont;
+@labelFont: @baseFontFamily;
 @labelFontWeight: @bold;
 @labelColor: @grey;
 @labelLineHeight: @relativeLarge;
@@ -74,7 +74,6 @@
 @invertedLabelColor: @invertedTextColor;
 @nocturnalInvertedValueColor: @black;
 @nocturnalInvertedLabelColor: @labelColor;
-
 
 /* Item Width */
 @itemGroupMargin: 0em 0em -@rowSpacing;

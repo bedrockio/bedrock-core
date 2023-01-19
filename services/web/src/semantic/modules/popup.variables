@@ -93,8 +93,6 @@
 @tooltipInvertedHeaderBackground: @invertedHeaderBackground;
 @tooltipInvertedHeaderColor: @invertedHeaderColor;
 
-// nocturnal popups are all inverted
-
 /* Arrow */
 @tooltipArrowVerticalOffset: -@2px;
 @tooltipArrowHorizontalOffset: -@1px;

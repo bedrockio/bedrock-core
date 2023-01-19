@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Message, Modal, Button, Dimmer } from 'semantic';
+import { Message, Modal, Button } from 'semantic';
 
 import { JWT_KEY, request } from 'utils/api';
 
@@ -26,7 +26,7 @@ export default class LoginAsUser extends React.Component {
     try {
       const { data } = await request({
         method: 'POST',
-        path: `/1/users/${user.id}/impersonate`,
+        path: `/1/users/${user.id}/authenticate`,
       });
       this.setState({
         token: data.token,
@@ -56,27 +56,30 @@ export default class LoginAsUser extends React.Component {
           </p>
         </Modal.Content>
         <Modal.Actions>
-          <Dimmer.Dimmable dimmed={!isReady}>
-            <Dimmer active={!isReady} inverted>
-              <Button
-                primary
-                fluid
-                loading={loading}
-                onClick={this.onConfigure}>
-                Authenticate
-              </Button>
-            </Dimmer>
-
-            <p style={{ textAlign: 'center' }}>
-              Click below to start the session in a new tab. Only that tab will
-              be authenticated as the user. Close the tab to end the session.
-            </p>
-
-            <Button basic={!token} primary={token} fluid onClick={this.onStart}>
-              Open window
+          {!isReady && (
+            <Button primary fluid loading={loading} onClick={this.onConfigure}>
+              Authenticate
             </Button>
-            <br />
-          </Dimmer.Dimmable>
+          )}
+
+          {isReady && (
+            <>
+              <p style={{ textAlign: 'center' }}>
+                Click below to start the session in a new tab. Only that tab
+                will be authenticated as the user. Close the tab to end the
+                session.
+              </p>
+
+              <Button
+                basic={!token}
+                primary={token}
+                fluid
+                onClick={this.onStart}>
+                Open window
+              </Button>
+            </>
+          )}
+          <br />
         </Modal.Actions>
       </>
     );

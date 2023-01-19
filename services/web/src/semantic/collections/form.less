@@ -110,7 +110,7 @@
   margin: 0em;
   outline: none;
   -webkit-appearance: none;
-  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  tap-highlight-color: rgba(255, 255, 255, 0);
 
   line-height: @inputLineHeight;
   padding: @inputPadding;
@@ -135,7 +135,7 @@
 .ui.form textarea {
   margin: 0em;
   -webkit-appearance: none;
-  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  tap-highlight-color: rgba(255, 255, 255, 0);
 
   padding: @textAreaPadding;
   font-size: @textAreaFontSize;
@@ -318,8 +318,6 @@
       Autofilled
 ---------------------*/
 
-// @todo: dark theme
-
 .ui.form .field.field input:-webkit-autofill {
   box-shadow: 0px 0px 0px 100px @inputAutoFillBackground inset !important;
   border-color: @inputAutoFillBorder !important;
@@ -358,8 +356,6 @@
 /*--------------------
       Placeholder
 ---------------------*/
-
-// @todo: dark theme
 
 /* browsers require these rules separate */
 .ui.form ::-webkit-input-placeholder {
@@ -1150,6 +1146,10 @@
   font-weight: @inlineLabelFontWeight;
   color: @inlineLabelColor;
   text-transform: @inlineLabelTextTransform;
+
+  .nocturnal-theme & {
+    color: @nocturnalInlineLabelColor;
+  }
 }
 
 /* Grouped Inline Label */
