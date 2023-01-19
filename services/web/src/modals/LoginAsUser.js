@@ -63,7 +63,7 @@ export default class LoginAsUser extends React.Component {
                 fluid
                 loading={loading}
                 onClick={this.onConfigure}>
-                Configure Session
+                Authenticate
               </Button>
             </Dimmer>
 
@@ -73,7 +73,7 @@ export default class LoginAsUser extends React.Component {
             </p>
 
             <Button basic={!token} primary={token} fluid onClick={this.onStart}>
-              Start Session
+              Open window
             </Button>
             <br />
           </Dimmer.Dimmable>
