@@ -103,6 +103,16 @@ export default class AuditTrailList extends React.Component {
                       name="objectType"
                       label="ObjectType"
                     />
+
+                    <SearchFilters.Dropdown
+                      onDataNeeded={() =>
+                        this.fetchSearchOptions({
+                          field: 'sessionId',
+                        })
+                      }
+                      name="sessionId"
+                      label="Session Id"
+                    />
                   </SearchFilters.Modal>
                   <Layout horizontal stackable center right>
                     <Search.Total />
