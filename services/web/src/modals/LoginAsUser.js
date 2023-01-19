@@ -26,7 +26,7 @@ export default class LoginAsUser extends React.Component {
     try {
       const { data } = await request({
         method: 'POST',
-        path: `/1/users/${user.id}/impersonate`,
+        path: `/1/users/${user.id}/authenticate`,
       });
       this.setState({
         token: data.token,
