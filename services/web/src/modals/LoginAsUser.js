@@ -57,7 +57,7 @@ export default class LoginAsUser extends React.Component {
         </Modal.Content>
         <Modal.Actions>
           <Dimmer.Dimmable dimmed={!isReady}>
-            <Dimmer active={!isReady} inverted>
+            {!isReady && (
               <Button
                 primary
                 fluid
@@ -65,16 +65,25 @@ export default class LoginAsUser extends React.Component {
                 onClick={this.onConfigure}>
                 Authenticate
               </Button>
-            </Dimmer>
+            )}
 
-            <p style={{ textAlign: 'center' }}>
-              Click below to start the session in a new tab. Only that tab will
-              be authenticated as the user. Close the tab to end the session.
-            </p>
+            {isReady && (
+              <>
+                <p style={{ textAlign: 'center' }}>
+                  Click below to start the session in a new tab. Only that tab
+                  will be authenticated as the user. Close the tab to end the
+                  session.
+                </p>
 
-            <Button basic={!token} primary={token} fluid onClick={this.onStart}>
-              Open window
-            </Button>
+                <Button
+                  basic={!token}
+                  primary={token}
+                  fluid
+                  onClick={this.onStart}>
+                  Open window
+                </Button>
+              </>
+            )}
             <br />
           </Dimmer.Dimmable>
         </Modal.Actions>

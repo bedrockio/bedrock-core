@@ -14,7 +14,6 @@
 @nocturnalBackground: saturate(lighten(@nocturnalPageBackground, 5), 15, relative);
 @nocturnalBorder: @borderWidth solid @nocturnalBorderColor;
 
-
 @boxShadow: @subtleShadow;
 @verticalPadding: 1em;
 @horizontalPadding: 1em;

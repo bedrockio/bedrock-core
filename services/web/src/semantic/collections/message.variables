@@ -60,7 +60,7 @@
 
 /* Close Icon */
 @closeTopDistance: @verticalPadding - @lineHeightOffset;
-@closeRightDistance: 0.5em;
+@closeRightDistance: 1em;
 @closeOpacity: 0.7;
 @closeTransition: opacity @defaultDuration @defaultEasing;
 
