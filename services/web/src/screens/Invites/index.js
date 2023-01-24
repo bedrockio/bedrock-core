@@ -1,11 +1,17 @@
 import React from 'react';
-import { Table, Button, Divider } from 'semantic';
+import { Table, Button, Divider, Segment } from 'semantic';
 
 import { request } from 'utils/api';
 import { formatDateTime } from 'utils/date';
 import screen from 'helpers/screen';
 import InviteUser from 'modals/InviteUser';
-import { Search, Layout, LoadButton, Breadcrumbs } from 'components';
+import {
+  Search,
+  Layout,
+  LoadButton,
+  Breadcrumbs,
+  SearchFilters,
+} from 'components';
 
 @screen
 export default class Home extends React.Component {
@@ -17,9 +23,26 @@ export default class Home extends React.Component {
     });
   };
 
+  getFilterMapping() {
+    return {
+      status: {
+        label: 'Status',
+        multiple: true,
+      },
+      createdAt: {
+        label: 'Created At',
+        type: 'date',
+        range: true,
+      },
+      keyword: {},
+    };
+  }
+
   render() {
     return (
-      <Search.Provider onDataNeeded={this.onDataNeeded}>
+      <Search.Provider
+        filterMapping={this.getFilterMapping()}
+        onDataNeeded={this.onDataNeeded}>
         {({ items, getSorted, setSort, reload }) => {
           return (
             <div>
@@ -36,7 +59,41 @@ export default class Home extends React.Component {
                   />
                 </Layout.Group>
               </Layout>
+
               <Divider hidden />
+
+              <Segment>
+                <Layout horizontal spread stackable>
+                  <SearchFilters.Modal>
+                    <SearchFilters.Dropdown
+                      search
+                      multiple
+                      selection
+                      name="status"
+                      label="Status"
+                      options={[
+                        {
+                          value: 'invited',
+                          text: 'Invited',
+                        },
+                        {
+                          value: 'Accepted',
+                          text: 'Accepted',
+                        },
+                      ]}
+                    />
+                    <SearchFilters.DateRange
+                      name="createdAt"
+                      label="Created At"
+                    />
+                  </SearchFilters.Modal>
+
+                  <Layout horizontal stackable center right>
+                    <Search.Total />
+                    <SearchFilters.Search name="keyword" />
+                  </Layout>
+                </Layout>
+              </Segment>
 
               <Search.Status />
 

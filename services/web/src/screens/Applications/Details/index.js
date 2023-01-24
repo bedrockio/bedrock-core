@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link , Switch, Route } from 'react-router-dom';
+import { Link, Switch, Route } from 'react-router-dom';
 import { Loader } from 'semantic';
 
 import { Protected } from 'helpers/routes';
