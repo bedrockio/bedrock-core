@@ -269,6 +269,12 @@ export default class ApplicationLogs extends React.Component {
                               </Table.Cell>
                             </Table.Row>
                             <Table.Row>
+                              <Table.Cell>Session</Table.Cell>
+                              <Table.Cell>
+                                <code>{selectedItem.request.sessionId}</code>
+                              </Table.Cell>
+                            </Table.Row>
+                            <Table.Row>
                               <Table.Cell>Time</Table.Cell>
                               <Table.Cell>
                                 <code>
