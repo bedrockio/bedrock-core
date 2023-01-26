@@ -2,16 +2,16 @@ const fs = require('fs');
 const path = require('path');
 const mongoose = require('mongoose');
 const autopopulate = require('mongoose-autopopulate');
-const { get, uniq, startCase, isEmpty, isPlainObject } = require('lodash');
+const { get, uniq, omit, startCase, isEmpty, isPlainObject } = require('lodash');
 const logger = require('@bedrockio/logger');
 
-const { getJoiSchema, getMongooseValidator } = require('./validation');
+const { getValidationSchema, getMongooseValidator } = require('./validation');
 const { searchValidation, DEFAULT_SORT, DEFAULT_LIMIT } = require('./search');
 
 const { ObjectId } = mongoose.Types;
 const { ObjectId: SchemaObjectId, Date: SchemaDate, Number: SchemaNumber } = mongoose.Schema.Types;
 
-const RESERVED_FIELDS = ['id', 'createdAt', 'updatedAt', 'deletedAt', 'deleted'];
+const RESERVED_FIELDS = ['createdAt', 'updatedAt', 'deletedAt', 'deleted'];
 
 const serializeOptions = {
   getters: true,
@@ -68,22 +68,23 @@ function createSchema(definition, options = {}) {
   );
 
   schema.static('getCreateValidation', function getCreateValidation(appendSchema) {
-    return getJoiSchemaFromMongoose(schema, {
+    return getSchemaFromMongoose(schema, {
       appendSchema,
-    });
-  });
-
-  schema.static('getUpdateValidation', function getUpdateValidation(appendSchema) {
-    return getJoiSchemaFromMongoose(schema, {
-      appendSchema,
-      skipRequired: true,
       stripReserved: true,
     });
   });
 
+  schema.static('getUpdateValidation', function getUpdateValidation(appendSchema) {
+    return getSchemaFromMongoose(schema, {
+      appendSchema,
+      skipRequired: true,
+      stripReserved: true,
+      stripUnknown: true,
+    });
+  });
+
   schema.static('getSearchValidation', function getSearchValidation(searchOptions) {
-    return getJoiSchemaFromMongoose(schema, {
-      allowEmpty: true,
+    return getSchemaFromMongoose(schema, {
       allowRanges: true,
       skipRequired: true,
       allowMultiple: true,
@@ -309,16 +310,16 @@ function createSchema(definition, options = {}) {
   return schema;
 }
 
-function getJoiSchemaFromMongoose(schema, options) {
-  const getters = Object.keys(schema.virtuals).filter((key) => {
-    return schema.virtuals[key].getters.length > 0;
-  });
-  return getJoiSchema(schema.obj, {
+function getSchemaFromMongoose(schema, options) {
+  let { obj } = schema;
+  if (options.stripReserved) {
+    obj = omit(obj, RESERVED_FIELDS);
+  }
+  return getValidationSchema(obj, {
     ...options,
-    stripFields: options.stripReserved ? [...RESERVED_FIELDS, ...getters] : [],
     transformField: (key, field) => {
       if (isMongooseSchema(field)) {
-        return getJoiSchemaFromMongoose(field, options);
+        return getSchemaFromMongoose(field, options);
       } else {
         return field;
       }
@@ -344,8 +345,8 @@ function attributesToMongoose(attributes, path = []) {
         // Convert match field to RegExp that cannot be expressed in JSON.
         val = RegExp(val);
       } else if (key === 'validate' && type === 'string') {
-        // Allow custom mongoose validation function that derives from the Joi schema.
-        val = getMongooseValidator(val, attributes);
+        // Allow custom mongoose validation function that derives from the schema.
+        val = getMongooseValidator(attributes);
       } else if (key === 'autopopulate') {
         val = getAutopopulateOptions(val);
       }

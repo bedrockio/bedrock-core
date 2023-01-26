@@ -1,5 +1,5 @@
 const Router = require('@koa/router');
-const Joi = require('joi');
+const yd = require('@bedrockio/yada');
 const mongoose = require('mongoose');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
@@ -14,10 +14,6 @@ const permissions = require('./../permissions.json');
 const { AuditEntry } = require('../models');
 
 const router = new Router();
-
-const passwordField = Joi.string()
-  .min(6)
-  .message('Your password must be at least 6 characters long. Please try another.');
 
 router
   .use(authenticate({ type: 'user' }))
@@ -42,10 +38,10 @@ router
   .patch(
     '/me',
     validateBody({
-      firstName: Joi.string(),
-      lastName: Joi.string(),
-      timeZone: Joi.string(),
-      theme: Joi.string(),
+      firstName: yd.string(),
+      lastName: yd.string(),
+      timeZone: yd.string(),
+      theme: yd.string(),
     }),
     async (ctx) => {
       const { authUser } = ctx.state;
@@ -141,7 +137,7 @@ router
     '/',
     validateBody(
       User.getCreateValidation({
-        password: passwordField.required(),
+        password: yd.string().password().required(),
       })
     ),
     async (ctx) => {
@@ -161,34 +157,21 @@ router
       };
     }
   )
-  .patch(
-    '/:userId',
-    validateBody(
-      User.getUpdateValidation().append({
-        roles: (roles) => {
-          return roles.map((role) => {
-            const { roleDefinition, ...rest } = role;
-            return rest;
-          });
-        },
-      })
-    ),
-    async (ctx) => {
-      const { user } = ctx.state;
-      user.assign(ctx.request.body);
+  .patch('/:userId', validateBody(User.getUpdateValidation()), async (ctx) => {
+    const { user } = ctx.state;
+    user.assign(ctx.request.body);
 
-      await user.save();
+    await user.save();
 
-      await AuditEntry.append('Updated user', ctx, {
-        object: user,
-        fields: ['email', 'roles'],
-      });
+    await AuditEntry.append('Updated user', ctx, {
+      object: user,
+      fields: ['email', 'roles'],
+    });
 
-      ctx.body = {
-        data: user,
-      };
-    }
-  )
+    ctx.body = {
+      data: user,
+    };
+  })
   .delete('/:userId', async (ctx) => {
     const { user } = ctx.state;
     await user.assertNoReferences({
