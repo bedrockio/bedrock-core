@@ -1,6 +1,6 @@
-const config = require('@bedrockio/config');
 const mongoose = require('mongoose');
-const { logger } = require('@bedrockio/instrumentation');
+const config = require('@bedrockio/config');
+const logger = require('@bedrockio/logger');
 
 mongoose.Promise = Promise;
 

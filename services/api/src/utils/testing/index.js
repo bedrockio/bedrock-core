@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { logger } = require('@bedrockio/instrumentation');
+const logger = require('@bedrockio/logger');
 const { User, Upload } = require('../../models');
 
 const context = require('./context');

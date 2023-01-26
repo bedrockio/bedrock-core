@@ -10,7 +10,7 @@ const { version } = require('../package.json');
 const routes = require('./routes');
 const config = require('@bedrockio/config');
 const { loadOpenApiDefinitions, expandOpenApi } = require('./utils/openapi');
-const { loggingMiddleware } = require('@bedrockio/instrumentation');
+const logger = require('@bedrockio/logger');
 
 const app = new Koa();
 
@@ -29,7 +29,7 @@ if (['staging', 'development'].includes(ENV_NAME)) {
 
 app
   .use(errorHandler)
-  .use(loggingMiddleware())
+  .use(logger.middleware())
   .use(bodyParser({ multipart: true }));
 
 app.on('error', (err, ctx) => {
@@ -40,7 +40,7 @@ app.on('error', (err, ctx) => {
   }
   // dont output stacktraces of errors that is throw with status as they are known
   if (!err.status || err.status === 500) {
-    ctx.logger.error(err);
+    logger.error(err);
     Sentry.withScope(function (scope) {
       scope.addEventProcessor(function (event) {
         return Sentry.Handlers.parseRequest(event, ctx.request);

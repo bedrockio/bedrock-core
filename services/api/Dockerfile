@@ -30,4 +30,4 @@ ENV PORT 2300
 EXPOSE 2300
 
 # Start production server
-CMD ["yarn", "start:production"]
+CMD ["yarn", "-s", "start:production"]

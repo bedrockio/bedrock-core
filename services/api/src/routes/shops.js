@@ -33,21 +33,27 @@ router
       data: shop,
     };
   })
-  .post('/search', validateBody(Shop.getSearchValidation({
-      ...exportValidation(),
-  })), async (ctx) => {
-    const { format, filename, ...params } = ctx.request.body;
-    const { data, meta } = await Shop.search(params);
+  .post(
+    '/search',
+    validateBody(
+      Shop.getSearchValidation({
+        ...exportValidation(),
+      })
+    ),
+    async (ctx) => {
+      const { format, filename, ...params } = ctx.request.body;
+      const { data, meta } = await Shop.search(params);
 
-    if (format === 'csv') {
-      return csvExport(ctx, data, { filename });
+      if (format === 'csv') {
+        return csvExport(ctx, data, { filename });
+      }
+
+      ctx.body = {
+        data,
+        meta,
+      };
     }
-
-    ctx.body = {
-      data,
-      meta,
-    };
-  })
+  )
   .patch('/:shopId', validateBody(Shop.getUpdateValidation()), async (ctx) => {
     const shop = ctx.state.shop;
     shop.assign(ctx.request.body);
