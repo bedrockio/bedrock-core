@@ -5,11 +5,17 @@ const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { createTemporaryToken, generateTokenId } = require('../utils/tokens');
 const { sendTemplatedMail } = require('../utils/mailer');
 const { User, Invite, AuditEntry } = require('../models');
+const { parsePhoneNumber } = require('libphonenumber-js');
+const config = require('@bedrockio/config');
 
 const mfa = require('../utils/mfa');
+const sms = require('../utils/sms');
+
 const { verifyLoginAttempts, verifyPassword } = require('../utils/auth');
 
 const router = new Router();
+
+const APP_NAME = config.get('APP_NAME');
 
 const passwordField = Joi.string()
   .trim()
@@ -21,15 +27,31 @@ router
     '/register',
     validateBody({
       email: Joi.string().lowercase().email().required(),
+      country: Joi.string(),
+      phone: Joi.string(),
+      phoneNumber: Joi.string().trim(),
       firstName: Joi.string().required(),
       lastName: Joi.string().required(),
       password: passwordField.required(),
     }),
     async (ctx) => {
-      const { email } = ctx.request.body;
-      const existingUser = await User.findOne({ email });
-      if (existingUser) {
+      const { email, phoneNumber } = ctx.request.body;
+
+      if (await User.exists({ email })) {
         ctx.throw(400, 'A user with that email already exists');
+      }
+
+      if (phoneNumber) {
+        // We assume US phone numbers for now
+        // If you want to support other countries, you'll need to add a country field to user model
+        const parsedPhoneNo = parsePhoneNumber(phoneNumber, 'US');
+        if (!parsedPhoneNo.isValid()) {
+          ctx.throw(400, 'Invalid phone number');
+        }
+
+        if (await User.exists({ phoneNumber: parsedPhoneNo.number })) {
+          ctx.throw(400, 'A user with that phone number already exists');
+        }
       }
 
       const user = new User({
@@ -124,6 +146,114 @@ router
       ctx.body = {
         data: { token: token },
       };
+    }
+  )
+  .post(
+    '/login/send-sms',
+    validateBody({
+      phoneNumber: Joi.string().required(),
+    }),
+    async (ctx) => {
+      const { phoneNumber } = ctx.request.body;
+      // We assume US phone numbers for now
+      // If you want to support other countries, you'll need to add a country field to user model
+      const parsedPhoneNo = parsePhoneNumber(phoneNumber, 'US');
+      if (!parsedPhoneNo.isValid()) {
+        ctx.throw(400, 'Invalid phone number');
+      }
+
+      const user = await User.findOne({ phoneNo: parsedPhoneNo.number });
+      // TODO: avoid leaking that a user exists with that phone number
+      if (!user) {
+        ctx.throw(400, 'Could not find a user with that phone number, try again!');
+      }
+
+      // this is just here to avoid sending more sms than necessary
+      // no need to send if the user has been blocked
+      try {
+        await verifyLoginAttempts(user);
+      } catch (error) {
+        await AuditEntry.append('Reached max authentication attempts', ctx, {
+          category: 'security',
+          object: user,
+          user: user.id,
+        });
+        ctx.throw(401, error);
+      }
+
+      if (!user.smsSecret) {
+        const secret = mfa.generateSecret();
+        user.smsSecret = secret;
+        await user.save();
+      }
+      await sms.sendMessage(user.phoneNumber, `Your ${APP_NAME} login code is: ${mfa.generateToken(user.loginSecret)}`);
+      ctx.status = 204;
+    }
+  )
+  .post(
+    '/login/verify-sms',
+    validateBody({
+      phoneNumber: Joi.string().required(),
+      code: Joi.string().required(),
+    }),
+    async (ctx) => {
+      const { phoneNumber, code } = ctx.request.body;
+
+      const user = await User.findOne({ phoneNumber });
+      if (!user) {
+        ctx.throw(400, 'Invalid login code');
+      }
+
+      try {
+        await verifyLoginAttempts(user);
+      } catch (error) {
+        await AuditEntry.append('Reached max authentication attempts', ctx, {
+          category: 'security',
+          object: user,
+          user: user.id,
+        });
+        ctx.throw(401, error);
+      }
+
+      if (!mfa.verifyToken(user.smsSecret, 'sms', code)) {
+        await AuditEntry.append('Failed authentication', ctx, {
+          category: 'security',
+          object: user,
+          user: user.id,
+        });
+        ctx.throw(400, 'Invalid login code');
+      }
+
+      // just because the user has successful verified their phone number doesn't mean they get to bypass mfa
+      if (await mfa.requireChallenge(ctx, user)) {
+        const tokenId = generateTokenId();
+        const mfaToken = createTemporaryToken({ type: 'mfa', sub: user.id, jti: tokenId });
+        user.tempTokenId = tokenId;
+        await user.save();
+        ctx.body = {
+          data: {
+            mfaToken,
+            mfaRequired: true,
+            mfaMethod: user.mfaMethod,
+            mfaPhoneNumber: user.mfaPhoneNumber?.slice(-4),
+          },
+        };
+        return;
+      }
+
+      const token = user.createAuthToken({
+        ip: ctx.get('x-forwarded-for') || ctx.ip,
+        country: ctx.get('cf-ipcountry'),
+        userAgent: ctx.get('user-agent'),
+      });
+      await user.save();
+
+      await AuditEntry.append('Authenticated', ctx, {
+        object: user,
+        user: user.id,
+      });
+
+      ctx.body = { data: { token } };
     }
   )
   .post(

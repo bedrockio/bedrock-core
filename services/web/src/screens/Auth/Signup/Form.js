@@ -3,6 +3,7 @@ import { Form, Input, Checkbox, Message } from 'semantic';
 
 import AutoFocus from 'components/AutoFocus';
 import ErrorMessage from 'components/ErrorMessage';
+import PhoneNumber from 'components/form-fields/PhoneNumber';
 
 export default (props) => {
   const { error, loading } = props;
@@ -66,6 +67,12 @@ export default (props) => {
             placeholder="E-mail Address"
             type="email"
             autoComplete="email"
+            onChange={(e, { value, name }) => setField(name, value)}
+          />
+        </Form.Field>
+        <Form.Field>
+          <PhoneNumber
+            name="phoneCountryCode"
             onChange={(e, { value, name }) => setField(name, value)}
           />
         </Form.Field>

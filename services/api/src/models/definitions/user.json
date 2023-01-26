@@ -33,8 +33,9 @@
       "required": true,
       "trim": true
     },
-    "timeZone": {
-      "type": "String"
+    "phoneNumber": {
+      "type": "String",
+      "trim": true
     },
     "theme": {
       "type": "String",
@@ -112,6 +113,11 @@
       "readScopes": "none",
       "writeScopes": "none"
     },
+    "smsSecret": {
+      "type": "String",
+      "readScopes": "none",
+      "writeScopes": "none"
+    },
     "mfaBackupCodes": [
       {
         "type": "String",
@@ -140,6 +146,7 @@
   "search": [
     "firstName",
     "lastName",
-    "email"
+    "email",
+    "phoneNumber"
   ]
 }
