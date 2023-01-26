@@ -6,6 +6,25 @@
 
 See http://localhost:2200/docs for full documentation on this API (requires running the web interface).
 
+---
+
+- [Directory Structure](#directory-structure)
+- [Dependencies](#dependencies)
+- [Testing](#testing)
+- [Running in Development](#running-in-development)
+- [Configuration](#configuration)
+- [Secrets](#secrets)
+- [Deployment](#deployment)
+- [Background Jobs](#background-jobs)
+- [Fixtures](#fixures)
+- [Multi Tenancy](#multi-tenancy)
+- [Email Templates](#email-templates)
+- [Logging](#logging)
+- [Documentation](#documentation)
+- [Multi Factor Authentication](#multi-factor-authentication)
+
+---
+
 ## Directory Structure
 
 - `.env` - Default configuration values (override via environment)
@@ -21,7 +40,7 @@ See http://localhost:2200/docs for full documentation on this API (requires runn
 - `scripts` - Scripts and jobs
 - `fixtures` - Database [fixtures](#fixtures).
 
-## Install Dependencies
+## Dependencies
 
 Ensure Node.js version uniformity using Volta:
 
@@ -35,7 +54,7 @@ Install dependencies: (will install correct Node.js version)
 yarn install
 ```
 
-## Testing & Linting
+## Testing
 
 ```
 yarn test
@@ -80,15 +99,11 @@ variables.
 No production secrets should ever be checked into your repository. Instead, use the deployment
 [secrets](../../deployment#secrets) facility to store secrets remotely.
 
-## Building the Container
+## Deployment
 
-```
-docker build -t bedrock-api .
-```
+See [../../deployment](../../deployment/).
 
-See [../../deployment](../../deployment/) for more info
-
-## Configuring Background Jobs
+## Background Jobs
 
 The API provides a simple Docker container for running Cronjobs. The container uses
 [Yacron](https://github.com/gjcarneiro/yacron) to provide a reliable cron job system with added features such as
@@ -188,7 +203,7 @@ router
   );
 ```
 
-## Updating E-Mail Templates
+## E-Mail Templates
 
 E-mail templates can be found in `emails`. There is a layout.html that contains the styling and default layout, and a
 template for each email, that gets injected into the layout. Multiple layouts are supported, just make sure you specify
@@ -218,26 +233,32 @@ We are using mustache for templating, it will attempt to escape the http:`//` wh
 ## Logging
 
 `@bedrockio/logger` provides structured logging in the console and both [logging](https://cloud.google.com/logging/) and
-[tracing](https://cloud.google.com/trace) in Google Cloud environments.
-
-The http logging is center to rest api logging, as all executed code (besides a few exeptions like scripts/jobs) are
-executed in the context of a http request. Making it important to be able to "trace" (https://cloud.google.com/trace/)
-the log output to a given request.
-
-By default the log level in `development` is set to trace, but can be overwritten via env flags (LOG_LEVEL).
-
-Within a Koa request prefer `ctx.logger` as this provides extra logging specific to HTTP requests, otherwise use:
+[tracing](https://cloud.google.com/trace) in Google Cloud environments:
 
 ```js
-const logger = require('@bedrockio/logger');
-logger.info('something');
-
-// Set up cloud logging and tracing.
-const tracer = logger.useGoogleCloudTracing();
-logger.useGoogleCloud(tracer);
+if (process.env.NODE_ENV === 'production') {
+  logger.setupGoogleCloud();
+}
 ```
 
-## Auto-generating API Documentation
+In Google Cloud environments generally the server and jobs (`jobs/`) should use the above initialization to allow
+structured error reporting in the cloud console. Development environments and scripts (`scripts/`) meant to be run in a
+terminal do not require this setup step.
+
+The logger allows multiple log levels:
+
+```js
+logger.trace('Very verbose message.');
+logger.debug('Less verbose message.');
+logger.info('Normal message.');
+logger.warning('Warning message.');
+logger.error('Error message.');
+```
+
+In development environments the default level is `info`, hiding `trace` and `debug` messages. This can be overridden
+with `LOG_LEVEL`. In Google Cloud environments all levels are output.
+
+## Documentation
 
 Good API documentation needs love, so make sure to take the time to describe parameters, create examples, etc. The
 [Bedrock CLI](https://github.com/bedrockio/bedrock-cli) can generate documentation using the command:
@@ -312,7 +333,7 @@ portal in `/services/web/src/docs`.
 
 See [../../services/web](../../services/web) for more info on customizing documentation.
 
-## Multi factor authentication
+## Multi Factor Authentication
 
 By default multi factor authentication with a authenticator app (1password, lastpassword etc) works out of the box, but
 for sms verification you have to have a [Twilio](https://www.twilio.com/) account.
