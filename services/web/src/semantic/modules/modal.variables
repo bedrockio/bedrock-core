@@ -12,7 +12,7 @@
 @boxShadow: 0 0 5px 1px rgba(0, 0, 0, 0.075);
 @nocturnalBackground: @nocturnalPageBackground;
 @nocturnalBorder: none;
-@nocturnalBoxShadow: 0 0 5px 1px rgba(0, 0, 0, 0.15);
+@nocturnalBoxShadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
 
 /* Close Icon */
 @closeOpacity: 1;
@@ -64,7 +64,7 @@
 /* Modal Actions */
 @actionBorder: 1px solid @borderColor;
 @actionBackground: #fff;
-@actionPadding: 1.5rem;
+@actionPadding: 1rem 1rem;
 @actionAlign: right;
 @nocturnalActionBorder: 1px solid @nocturnalBorderColor;
 @nocturnalActionBackground: @nocturnalHeaderBackground;

@@ -14,6 +14,10 @@
              Site
 *******************************/
 
+// Google fonts import
+@import (css)
+  url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=fallback');
+
 html,
 body,
 #root {
@@ -220,7 +224,7 @@ footer {
 
 main {
   position: relative;
-  min-height: calc(100vh - 95px);
+  // min-height: calc(100vh - 169px); // fuzzy numbers
 }
 
 // <em> is reserved for italic emphasis in markdown
@@ -239,8 +243,139 @@ strong {
   font-style: inherit;
 }
 
+.footer {
+  &.ui.segment.ui.segment {
+    padding: 25px 25px 15px 25px;
+    margin: 0 -10px -15px;
+
+    @media only screen and (min-width: 768px) {
+      // refer to sidebar.less for sizes
+      padding: 25px 25px 19px 25px;
+      margin: 0 -25px -10px;
+    }
+  }
+
+  .ui.list > a.item {
+    color: #999;
+
+    &:hover,
+    &:active {
+      color: lighten(#999, 10);
+    }
+
+    .nocturnal-theme & {
+      color: rgba(255, 255, 255, .5);
+
+      &:hover,
+      &:active {
+        color: rgba(255, 255, 255, .6);
+      }
+    }
+  }
+}
+
 // Tone down the images
 // Opinionated adjustment, can remove if users find this too harsh or images shouldn’t be adjusted.
 .nocturnal-theme img {
   filter: brightness(.8) contrast(1.2);
+}
+
+
+// Tectonic
+
+body {
+  --tnic-primary-color: @primaryColor; 
+  --tnic-primary-color-hover: darken(@primaryColor, 20%);;
+
+  --tnic-text-color: @textColor;
+  --tnic-background: @pageBackground;
+  --tnic-background-hover: #f5f5f5;
+  --tnic-border: #cccccc;
+  --tnic-box-shadow: rgba(34, 36, 38, 0.15);
+  --tnic-button-color: #ffffff;
+  --tnic-table-border: rgba(34, 36, 38, 0.10);
+  --tnic-input-background: @inputBackground;
+  --tnic-input-border: @borderColor;
+  --tnic-message-background: #f8f8f9; 
+  --tnic-message-border: @strongBorderColor;
+  --tnic-error-color: #9f3a38;
+  --tnic-error-background: #fff6f6;
+  --tnic-error-border: #e0b4b4;
+}
+
+body.nocturnal-theme {
+  --tnic-primary-color: @nocturnalPrimaryColor; 
+  --tnic-primary-color-hover: darken(@nocturnalPrimaryColor, 20%);
+
+  --tnic-text-color: @nocturnalTextColor;
+  --tnic-background: @nocturnalPageBackground;
+  --tnic-background-hover: lighten(@nocturnalPageBackground, 15%);
+  --tnic-border: #cccccc;
+  --tnic-box-shadow: rgba(0, 0, 0, 0.05);
+  --tnic-button-color: @white;
+  --tnic-table-border: rgba(255, 255, 255, 0.10);
+  --tnic-input-background: @nocturnalInputBackground;
+  --tnic-input-border: @nocturnalBorderColor;
+  --tnic-message-background: lighten(@nocturnalPageBackground, 10%);
+  --tnic-message-border: @nocturnalStrongBorderColor;
+  --tnic-error-color: #e0b4b4;
+  --tnic-error-background: #9f3a38;
+  --tnic-error-border: #fff6f6;
+}
+
+// Tectonic hotfixes for nocturnal theme
+// These will need to be properly integrated in tectonic repo
+
+// Date picker background & border fix
+.nocturnal-theme .tnic-overlay,
+.nocturnal-theme .tnic-dropdown .tnic-dropdown--menu {
+  background-color: saturate(lighten(@nocturnalPageBackground, 5), 15, relative);
+  // border: 1px solid @nocturnalStrongBorderColor;
+}
+
+// White border on donut charts
+.nocturnal-theme .recharts-surface .recharts-pie .recharts-pie-sector {
+  path[stroke="#fff"],
+  path[stroke="#ffffff"] {
+    stroke: var(--tnic-background) !important;
+  }
+}
+
+// Tooltip background
+.nocturnal-theme .recharts-wrapper .recharts-tooltip-wrapper .recharts-default-tooltip {
+  background-color: saturate(lighten(@nocturnalPageBackground, 5), 15, relative) !important;
+  border-color: @nocturnalBorderColor !important;
+
+  .recharts-tooltip-item[style*="color: rgb(0, 0, 0)"] {
+    color: @nocturnalTextColor !important;
+  }
+}
+.nocturnal-theme .recharts-wrapper .recharts-tooltip-wrapper > div[style*="background-color: rgb(255, 255, 255)"] {
+  background-color: saturate(lighten(@nocturnalPageBackground, 5), 15, relative) !important;
+}
+
+// Table dividers (/analytics/msp/equipment)
+.nocturnal-theme .ui.celled.very.basic.table td[style*="border-top: 1px solid rgba(34, 36, 38, 0.1)"] {
+  border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+// Recharts graph axis and labels
+.nocturnal-theme .recharts-wrapper {
+  // Axis
+  .recharts-cartesian-axis-line,
+  .recharts-cartesian-axis-tick-line {
+    stroke: lighten(@nocturnalPageBackground, 40);
+  }
+
+  // Labels
+  .recharts-text {
+    fill: rgba(255, 255, 255, .9);
+  }
+}
+
+// Compensate table headers for scrollbar offset
+.tnic-chartContainer  .tnic-table {
+  thead tr {
+    padding-right: 10px;
+  }
 }

@@ -67,6 +67,7 @@
 @nocturnalCelledRowDivider: 0px (-@celledWidth) 0px 0px @nocturnalCelledBorderColor;
 @nocturnalCelledColumnDivider: (-@celledWidth) 0px 0px 0px @nocturnalCelledBorderColor;
 
+
 /*--------------
     Stackable
 ---------------*/

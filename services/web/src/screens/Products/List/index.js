@@ -47,6 +47,11 @@ export default class ProductList extends React.Component {
         label: 'Selling Points',
         multiple: true,
       },
+      createdAt: {
+        label: 'Created At',
+        type: 'date',
+        range: true,
+      },
       keyword: {},
     };
   }
@@ -90,9 +95,13 @@ export default class ProductList extends React.Component {
                       search
                       multiple
                       selection
-                      allowAdditions
                       name="sellingPoints"
                       label="Selling Points"
+                    />
+                    <SearchFilters.DateRange
+                      time
+                      name="createdAt"
+                      label="Created At"
                     />
                   </SearchFilters.Modal>
 

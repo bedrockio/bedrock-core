@@ -11,6 +11,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Icon as SemanticIcon } from 'semantic-ui-react';
+
 import { omit } from 'lodash';
 
 // Note Jest is too convoluted to be able to
@@ -26,9 +27,6 @@ const INTERNAL_MAP = {
   delete: 'xmark',
   setting: 'gear',
   settings: 'gears',
-  sync: 'rotate',
-  search: 'magnifying-glass',
-  edit: 'pen-to-square',
   dropdown: (props) => {
     // Semantic stupidly overrides icons based on className
     // instead of passing the correct "name" so conditionally
@@ -39,6 +37,9 @@ const INTERNAL_MAP = {
     return 'caret-down';
   },
   mail: 'envelope',
+  edit: 'pen-to-square',
+  sync: 'arrows-rotate',
+  search: 'magnifying-glass',
   'message-bubble': 'message',
   'log-out': 'right-from-bracket',
   'table-full': 'table',
@@ -94,7 +95,7 @@ export default class Icon extends React.Component {
 
   resolveName() {
     let { name } = this.props;
-    let _name = name ? name.trim() : "";
+    let _name = name ? name.trim() : '';
     let iconName = INTERNAL_MAP[_name] || _name;
     if (typeof iconName === 'function') {
       return iconName(this.props);

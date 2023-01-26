@@ -1,5 +1,5 @@
 const { setupDb, teardownDb, request, createUser, createAdminUser } = require('../../utils/testing');
-const { User } = require('../../models');
+const { User, AuditEntry } = require('../../models');
 
 beforeAll(async () => {
   await setupDb();
@@ -109,6 +109,48 @@ describe('/1/users', () => {
       const user = await createUser({});
       const user1 = await createUser({ firstName: 'New', lastName: 'Name' });
       const response = await request('GET', `/1/users/${user1.id}`, {}, { user });
+      expect(response.status).toBe(403);
+    });
+  });
+
+  describe('POST /:user/autheticate', () => {
+    it('should be able to authenticate as another user', async () => {
+      const superAdmin = await createAdminUser();
+      const user = await createUser({
+        firstName: 'Neo',
+        lastName: 'One',
+        authTokenId: '123123',
+        roles: [
+          {
+            scope: 'organization',
+            role: 'viewer',
+          },
+        ],
+      });
+      const response = await request('POST', `/1/users/${user.id}/authenticate`, {}, { user: superAdmin });
+      expect(response.status).toBe(200);
+      expect(response.body.data.token).toBeTruthy();
+
+      const auditEntry = await AuditEntry.findOne({
+        superAdmin: user._id,
+        activity: 'Authenticate as user',
+      });
+      expect(auditEntry.objectType).toBe('User');
+      expect(auditEntry.objectId).toBe(user.id);
+    });
+
+    it('dont allow an superAdmin to authenticate as another admin', async () => {
+      const superAdmin = await createAdminUser();
+      const user = await createAdminUser();
+      const response = await request('POST', `/1/users/${user.id}/authenticate`, {}, { user: superAdmin });
+      expect(response.status).toBe(403);
+      expect(response.body.error.message).toBe('You are not allowed to authenticate as this user');
+    });
+
+    it('should deny access to non-admins', async () => {
+      const authUser = await createUser({});
+      const user = await createUser({ firstName: 'New', lastName: 'Name' });
+      const response = await request('POST', `/1/users/${user.id}/authenticate`, {}, { user: authUser });
       expect(response.status).toBe(403);
     });
   });

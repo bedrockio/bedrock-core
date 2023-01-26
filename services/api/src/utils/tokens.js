@@ -5,7 +5,7 @@ const { nanoid } = require('nanoid');
 
 // All expires are expressed in seconds (jwt spec)
 const expiresIn = {
-  temporary: 24 * 60 * 60 * 1000, // 1 day
+  temporary: 24 * 60 * 60, // 1 day
   regular: 30 * 24 * 60 * 60, // 30 days
 };
 
@@ -24,16 +24,16 @@ function createTemporaryToken(claims) {
   );
 }
 
-function createAuthToken(userId) {
+function createAuthToken(fields) {
   const jti = generateTokenId();
 
   const payload = {
-    sub: userId,
     iat: Math.floor(Date.now() / 1000),
     jti,
     type: 'user',
     kid: 'user',
     exp: Math.floor(Date.now() / 1000) + expiresIn.regular,
+    ...fields,
   };
 
   const token = jwt.sign(payload, secrets.user);
@@ -45,6 +45,7 @@ function createAuthToken(userId) {
 }
 
 function generateTokenId() {
+  // https://zelark.github.io/nano-id-cc/ 15 chars ~ 158 years with 1k/s
   return nanoid(15);
 }
 

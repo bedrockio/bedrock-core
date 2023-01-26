@@ -41,11 +41,9 @@ export default class ExportButton extends React.Component {
     const { loading, error } = this.state;
     const { meta } = this.context;
 
-    const tooManyRows = true || meta?.total > this.props.limit;
-
     const As = this.props.as || Button;
 
-    if (tooManyRows) {
+    if (!loading && meta?.total > this.props.limit) {
       return (
         <Popup
           content="Too many rows to export, narrow your search"

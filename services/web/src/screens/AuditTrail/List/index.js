@@ -49,9 +49,41 @@ export default class AuditTrailList extends React.Component {
     return 'green';
   };
 
+  getFilterMapping() {
+    return {
+      user: {
+        label: 'User',
+        getDisplayValue: async (id) => {
+          const data = await this.fetchUsers({ ids: [id] });
+          return data[0].name;
+        },
+      },
+      category: {
+        label: 'Category',
+      },
+      activity: {
+        label: 'Activity',
+      },
+      objectType: {
+        label: 'Object Type',
+      },
+      sessionId: {
+        label: 'Session Id',
+      },
+      createdAt: {
+        label: 'Created At',
+        type: 'date',
+        range: true,
+      },
+      keyword: {},
+    };
+  }
+
   render() {
     return (
-      <Search.Provider onDataNeeded={this.onDataNeeded}>
+      <Search.Provider
+        filterMapping={this.getFilterMapping()}
+        onDataNeeded={this.onDataNeeded}>
         {({ items, getSorted, setSort }) => {
           return (
             <React.Fragment>
@@ -84,15 +116,6 @@ export default class AuditTrailList extends React.Component {
                       name="activity"
                       label="Activity"
                     />
-                    <SearchFilters.Dropdown
-                      onDataNeeded={() =>
-                        this.fetchSearchOptions({
-                          field: 'routeNormalizedPath',
-                        })
-                      }
-                      name="routeNormalizedPath"
-                      label="Route Normalized Path"
-                    />
 
                     <SearchFilters.Dropdown
                       onDataNeeded={() =>
@@ -102,6 +125,16 @@ export default class AuditTrailList extends React.Component {
                       }
                       name="objectType"
                       label="ObjectType"
+                    />
+
+                    <SearchFilters.Dropdown
+                      onDataNeeded={() =>
+                        this.fetchSearchOptions({
+                          field: 'sessionId',
+                        })
+                      }
+                      name="sessionId"
+                      label="Session Id"
                     />
                   </SearchFilters.Modal>
                   <Layout horizontal stackable center right>

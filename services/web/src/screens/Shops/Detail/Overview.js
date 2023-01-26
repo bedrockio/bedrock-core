@@ -1,7 +1,9 @@
 import React from 'react';
+/* eslint-disable-next-line */
 import { Table, Header, Divider } from 'semantic';
 
 // --- Generator: overview-imports
+/* eslint-disable-next-line */
 import { Image, Label } from 'semantic';
 
 import screen from 'helpers/screen';

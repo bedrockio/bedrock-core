@@ -12,6 +12,9 @@
       "type": "String"
     },
     "request": {
+      "sessionId": {
+        "type": "String"
+      },
       "ip": {
         "type": "String"
       },

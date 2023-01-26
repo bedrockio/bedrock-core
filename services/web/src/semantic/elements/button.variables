@@ -27,14 +27,14 @@
 @textTransform: none;
 @tapColor: transparent;
 @fontWeight: @bold;
-@textColor: @invertedTextColor; // rgba(0, 0, 0, 0.6);
+@textColor: @invertedTextColor;
 @textColorWhite: @invertedTextColor;
 @textColorBlack: #2a2a2a;
 @textShadow: none;
 @invertedTextShadow: @textShadow;
 @borderRadius: @defaultBorderRadius;
 @verticalAlign: baseline;
-@nocturnalTextColor: @textColorBlack; //#111827; // @todo not required
+@nocturnalTextColor: @invertedTextColor; //#111827; // @todo not required
 @nocturnalTextShadow: @textShadow;
 
 /* Internal Shadow */
@@ -98,7 +98,9 @@
 @hoverBoxShadow: @boxShadow;
 @hoverColor: @invertedTextColor;
 @iconHoverOpacity: 1;
+@nocturnalHoverBackgroundColor: darken(@nocturnalBackgroundColor, 20%);
 @nocturnalHoverBoxShadow: @nocturnalBoxShadow;
+@nocturnalHoverColor: @nocturnalTextColor;
 
 /* Focused */
 @focusBackgroundColor: @hoverBackgroundColor;
@@ -106,8 +108,10 @@
 @focusBoxShadow: '';
 @focusColor: @invertedTextColor;
 @iconFocusOpacity: 1;
+@nocturnalFocusBackgroundColor: @nocturnalHoverBackgroundColor;
 @nocturnalFocusBackgroundImage: '';
 @nocturnalFocusBoxShadow: '';
+@nocturnalFocusColor: @nocturnalHoverColor;
 
 /* Disabled */
 @disabledBackgroundImage: none;
@@ -122,15 +126,17 @@
   @downPressedShadow
 ;
 @downColor: @invertedTextColor;
+@nocturnalDownBackgroundColor: darken(@nocturnalBackgroundColor, 50%);
 @nocturnalDownBackgroundImage: '';
 @nocturnalDownPressedShadow: none;
 @nocturnalDownBoxShadow:
   @borderBoxShadow,
   @nocturnalDownPressedShadow
 ;
+@nocturnalDownColor: @nocturnalTextColor;
 
 /* Active */
-@activeBackgroundColor: darken(@primaryColor, 20%);
+@activeBackgroundColor: darken(@primaryColor, 50%);
 @activeBackgroundImage: none;
 @activeColor: @invertedTextColor;
 @activeBoxShadow: @borderBoxShadow;
@@ -223,7 +229,7 @@
 /* Inverted */
 @invertedBorderSize: 2px;
 @invertedTextColor: @white;
-@invertedTextHoverColor: @hoveredTextColor;
+@invertedTextHoverColor: @hoveredTextColor; // @hoverColor;
 @invertedTextFocusColor: @hoveredTextColor;
 @invertedGroupButtonOffset: 0px 0px 0px -(@invertedBorderSize);
 @invertedVerticalGroupButtonOffset: 0px 0px -(@invertedBorderSize) 0px;
@@ -384,6 +390,12 @@
 @lightPrimaryTextColor: @invertedTextColor;
 @primaryTextShadow: @invertedTextShadow;
 @primaryBoxShadow: @coloredBoxShadow;
+
+@nocturnalPrimaryBackgroundImage: @coloredBackgroundImage;
+@nocturnalPrimaryTextColor: @nocturnalTextColor;
+@nocturnalLightPrimaryTextColor: @nocturnalTextColor;
+@nocturnalPrimaryTextShadow: @primaryTextShadow;
+@nocturnalPrimaryBoxShadow: @primaryBoxShadow;
 
 @secondaryBackgroundImage: @coloredBackgroundImage;
 @secondaryTextColor: @invertedTextColor;

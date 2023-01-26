@@ -2,11 +2,11 @@ const Koa = require('koa');
 const webpack = require('webpack');
 const e2k = require('express-to-koa');
 const config = require('@bedrockio/config');
+const webpackDevMiddleware = require('webpack-dev-middleware');
+const webpackHotMiddleware = require('webpack-hot-middleware');
 
 const envMiddleware = require('./middleware/env');
 const historyMiddleware = require('./middleware/history');
-const webpackDevMiddleware = require('webpack-dev-middleware');
-const webpackHotMiddleware = require('webpack-hot-middleware');
 
 const SERVER_PORT = config.get('SERVER_PORT');
 const SERVER_HOST = config.get('SERVER_HOST');

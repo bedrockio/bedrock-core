@@ -213,7 +213,7 @@
 .ui.menu .item > svg.dropdown.icon {
   padding: 0em;
   float: @dropdownIconFloat;
-  margin: 0em 0em 0em @dropdownIconDistance;
+  margin: 0 0.5em 0 0.25em; // 0em 0em 0em @dropdownIconDistance;
 }
 
 /* Menu */
@@ -1509,6 +1509,13 @@ Floated Menu / Item
   .ui.stackable.menu .item {
     width: 100% !important;
   }
+  // This fixes margin applied to stackable pointing items when horizontal
+  .ui.secondary.stackable.pointing.menu .item {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: @relativeMini;
+    padding-right: @relativeMini;
+  }
   .ui.stackable.menu .item:before {
     position: absolute;
     content: '';
@@ -2326,9 +2333,9 @@ Floated Menu / Item
   max-width: @attachedWidth;
   box-shadow: @attachedBoxShadow;
 
-  // .nocturnal-theme & {
-  //   box-shadow: @nocturnalAttachedBoxShadow;
-  // }
+  .nocturnal-theme & {
+    box-shadow: @nocturnalAttachedBoxShadow;
+  }
 }
 .ui.attached + .ui.attached.menu:not(.top) {
   border-top: none;

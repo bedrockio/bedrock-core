@@ -237,6 +237,8 @@
 @inlineLabelFontWeight: @labelFontWeight;
 @inlineLabelTextTransform: @labelTextTransform;
 
+@nocturnalInlineLabelColor: @nocturnalLabelColor;
+
 @groupedInlineLabelMargin: 0.035714em 1em 0em 0em;
 
 /*-------------------

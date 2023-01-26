@@ -815,7 +815,7 @@
 .ui.inverted.striped.table > tr:nth-child(2n),
 .ui.inverted.striped.table tbody tr:nth-child(2n),
 .nocturnal-theme .ui.striped.table > tr:nth-child(2n),
-.nocturnal-theme .ui.striped.table tbody tr:nth-child(2n), {
+.nocturnal-theme .ui.striped.table tbody tr:nth-child(2n) {
   background-color: @invertedStripedBackground;
 }
 
@@ -1228,7 +1228,6 @@
 }
 
 /* Inverted */
-// @todo: nocturnal inverted
 .ui.inverted.sortable.table thead th.sorted {
   background: @sortableInvertedActiveBackground;
   color: @sortableInvertedActiveColor;
@@ -1472,4 +1471,14 @@
 /* Large */
 .ui.large.table {
   font-size: @large;
+}
+
+/*--------------
+Custom action cell
+---------------*/
+
+@media only screen and (min-width: @largestSmallMonitor) {
+  .ui.table .action-cell {
+    white-space: nowrap;
+  }
 }

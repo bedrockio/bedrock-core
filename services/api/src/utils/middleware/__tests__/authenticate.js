@@ -199,13 +199,20 @@ describe('fetchUser', () => {
     expect(count).toBe(1);
   });
 
-  it('should update user`s ip and lastUsedAt for a given token', async () => {
+  it('should update user`s ip and lastUsedAt and remove expire entries', async () => {
     const user = await createUser({
       authInfo: [
         {
           jti: 'jti-id',
           ip: '123.12.1.2',
           exp: new Date(Date.now() + 10000),
+          iat: new Date(),
+          lastUsedAt: new Date(0),
+        },
+        {
+          jti: 'jti-44',
+          ip: '123.12.1.2',
+          exp: new Date(Date.now() - 100),
           iat: new Date(),
           lastUsedAt: new Date(0),
         },

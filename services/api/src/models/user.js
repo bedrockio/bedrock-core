@@ -21,8 +21,8 @@ schema.methods.removeAuthToken = function (jti) {
   this.authInfo = this.authInfo.filter((token) => token.jti !== jti);
 };
 
-schema.methods.createAuthToken = function ({ ip, userAgent, country }) {
-  const { token, payload } = createAuthToken(this.id);
+schema.methods.createAuthToken = function ({ ip, userAgent, country }, tokenOption = {}) {
+  const { token, payload } = createAuthToken({ sub: this.id, ...tokenOption });
 
   this.authInfo = [
     {
@@ -41,9 +41,6 @@ schema.methods.createAuthToken = function ({ ip, userAgent, country }) {
 };
 
 schema.pre('save', async function preSave(next) {
-  // filter out expired token references
-  this.authInfo = this.authInfo.filter((token) => token.exp > Date.now());
-
   if (this._password) {
     const salt = await bcrypt.genSalt(12);
     this.hashedPassword = await bcrypt.hash(this._password, salt);

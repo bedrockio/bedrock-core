@@ -11,7 +11,11 @@
       "products": "read-write",
       "organizations": "read-write",
       "applications": "read-write"
-    }
+    },
+    "allowAuthenticationOnRoles": [
+      "admin",
+      "viewer"
+    ]
   },
   "admin": {
     "name": "Admin",

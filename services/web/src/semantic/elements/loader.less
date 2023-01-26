@@ -138,30 +138,31 @@
 }
 
 /* Black Dimmer */
-.ui.dimmer .ui.loader,
-.nocturnal-theme .ui.dimmer .ui.loader {
+.ui.dimmer:not(.modals) .ui.loader,
+.nocturnal-theme .ui.inverted.dimmer:not(.modals) .ui.loader {
+
   color: @invertedLoaderTextColor;
 }
-.ui.dimmer .ui.loader:before,
-.nocturnal-theme .ui.dimmer .ui.loader:before {
+.ui.dimmer:not(.modals) .ui.loader:before,
+.nocturnal-theme .ui.inverted.dimmer:not(.modals) .ui.loader:before {
   border-color: @invertedLoaderFillColor;
 }
-.ui.dimmer .ui.loader:after,
-.nocturnal-theme .ui.dimmer .ui.loader:after {
+.ui.dimmer:not(.modals) .ui.loader:after,
+.nocturnal-theme .ui.inverted.dimmer:not(.modals) .ui.loader:after {
   border-color: @invertedShapeBorderColor;
 }
 
 /* White Dimmer (Inverted) */
-.ui.inverted.dimmer .ui.loader,
-.nocturnal-theme .ui.inverted.dimmer .ui.loader {
+.ui.inverted.dimmer:not(.modals) .ui.loader,
+.nocturnal-theme .ui.dimmer:not(.modals) .ui.loader {
   color: @loaderTextColor;
 }
-.ui.inverted.dimmer .ui.loader:before,
-.nocturnal-theme .ui.inverted.dimmer .ui.loader:before {
+.ui.inverted.dimmer:not(.modals) .ui.loader:before,
+.nocturnal-theme .ui.dimmer:not(.modals) .ui.loader:before {
   border-color: @loaderFillColor;
 }
-.ui.inverted.dimmer .ui.loader:after,
-.nocturnal-theme .ui.inverted.dimmer .ui.loader:after {
+.ui.inverted.dimmer:not(.modals) .ui.loader:after,
+.nocturnal-theme .ui.dimmer:not(.modals) .ui.loader:after {
   border-color: @shapeBorderColor;
 }
 
