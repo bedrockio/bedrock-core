@@ -70,12 +70,14 @@ export default (props) => {
             onChange={(e, { value, name }) => setField(name, value)}
           />
         </Form.Field>
-        <Form.Field>
-          <PhoneNumber
-            name="phoneCountryCode"
-            onChange={(e, { value, name }) => setField(name, value)}
-          />
-        </Form.Field>
+
+        <PhoneNumber
+          name="phoneNumber"
+          value={fields.phoneNumber}
+          placeholder="Phone number"
+          onChange={(e, { value, name }) => setField(name, value)}
+        />
+
         <Form.Field error={error?.hasField?.('password')}>
           <Input
             value={fields.password}
