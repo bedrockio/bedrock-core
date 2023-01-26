@@ -1,5 +1,5 @@
 const Router = require('@koa/router');
-const Joi = require('joi');
+const yd = require('@bedrockio/yada');
 
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
@@ -34,7 +34,7 @@ router
   .post(
     '/search-options',
     validateBody({
-      field: Joi.string().allow('routeNormalizedPath', 'objectType', 'activity', 'category').required(),
+      field: yd.string().allow('routeNormalizedPath', 'objectType', 'activity', 'category').required(),
     }),
     async (ctx) => {
       const values = await AuditEntry.distinct(ctx.request.body.field);

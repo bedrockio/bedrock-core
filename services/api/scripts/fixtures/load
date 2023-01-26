@@ -2,7 +2,7 @@
 
 const { initialize } = require('../../src/utils/database');
 const { loadFixtures } = require('../../src/utils/fixtures');
-const { logger } = require('@bedrockio/instrumentation');
+const logger = require('@bedrockio/logger');
 
 (async () => {
   await initialize();

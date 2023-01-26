@@ -1,82 +1,105 @@
-const { getJoiSchema, getMongooseValidator } = require('../validation');
-const { setupDb, teardownDb } = require('../../utils/testing');
-const Joi = require('joi');
+const { getValidationSchema, getMongooseValidator } = require('../validation');
+const yd = require('@bedrockio/yada');
 
-beforeAll(async () => {
-  await setupDb();
-});
-
-afterAll(async () => {
-  await teardownDb();
-});
-
-function assertPass(schema, obj) {
-  expect(() => {
-    Joi.assert(obj, schema);
-  }).not.toThrow();
-}
-function assertFail(schema, obj) {
-  expect(() => {
-    Joi.assert(obj, schema);
-  }).toThrow();
+async function assertPass(schema, obj, expected) {
+  try {
+    const result = await schema.validate(obj);
+    if (expected) {
+      expect(result).toEqual(expected);
+    } else {
+      expect(true).toBe(true);
+    }
+  } catch (error) {
+    // eslint-disable-next-line
+    console.error(error);
+    throw error;
+  }
 }
 
-describe('getJoiSchema', () => {
+async function assertFail(schema, obj) {
+  try {
+    await schema.validate(obj);
+    throw new Error('Expected failure but passed.');
+  } catch (error) {
+    if (!error.details) {
+      throw error;
+    }
+    expect(error).not.toBeUndefined();
+  }
+}
+
+describe('getValidationSchema', () => {
   describe('alternate type forms', () => {
-    it('should get a schema for a basic string field', () => {
-      const schema = getJoiSchema({
+    it('should get a schema for a basic string field', async () => {
+      const schema = getValidationSchema({
         name: { type: String },
       });
-      expect(Joi.isSchema(schema)).toBe(true);
+      expect(yd.isSchema(schema)).toBe(true);
     });
 
-    it('should get a schema for shorthand string field', () => {
-      const schema = getJoiSchema({
+    it('should get a schema for shorthand string field', async () => {
+      const schema = getValidationSchema({
         name: String,
       });
-      expect(Joi.isSchema(schema)).toBe(true);
+      expect(yd.isSchema(schema)).toBe(true);
     });
 
-    it('should get a schema for string type', () => {
-      const schema = getJoiSchema({
+    it('should get a schema for string type', async () => {
+      const schema = getValidationSchema({
         name: { type: 'String' },
       });
-      expect(Joi.isSchema(schema)).toBe(true);
+      expect(yd.isSchema(schema)).toBe(true);
     });
 
-    it('should get a schema for shorthand string type', () => {
-      const schema = getJoiSchema({
+    it('should get a schema for shorthand string type', async () => {
+      const schema = getValidationSchema({
         name: 'String',
       });
-      expect(Joi.isSchema(schema)).toBe(true);
+      expect(yd.isSchema(schema)).toBe(true);
     });
   });
 
   describe('basic functionality', () => {
-    it('should always fail if no keys set', () => {
-      const schema = getJoiSchema({
-        name: String,
+    it('should validate basic fields', async () => {
+      const schema = getValidationSchema({
+        name: {
+          type: String,
+          required: true,
+        },
+        count: {
+          type: Number,
+        },
       });
-      assertFail(schema, {});
+      await assertPass(schema, {
+        name: 'foo',
+      });
+      await assertPass(schema, {
+        name: 'foo',
+        count: 10,
+      });
+      await assertFail(schema, {
+        count: 10,
+      });
+      await assertFail(schema, {});
     });
 
-    it('should be able to strip specific fields', () => {
-      const schema = getJoiSchema(
+    it('should strip unknown fields', async () => {
+      const schema = getValidationSchema(
         {
           name: String,
         },
         {
-          stripFields: ['id', 'createdAt', 'updatedAt', 'deletedAt'],
+          stripUnknown: true,
         }
       );
-      assertPass(schema, { id: 1, name: 'foo' });
-      assertPass(schema, { createdAt: 'date', name: 'foo' });
-      assertPass(schema, { updatedAt: 'date', name: 'foo' });
-      assertPass(schema, { deletedAt: 'date', name: 'foo' });
+      await assertPass(schema, { id: 1, name: 'foo' }, { name: 'foo' });
+      await assertPass(schema, { createdAt: 'date', name: 'foo' });
+      await assertPass(schema, { updatedAt: 'date', name: 'foo' });
+      await assertPass(schema, { deletedAt: 'date', name: 'foo' });
     });
 
-    it('should be able to override required fields', () => {
-      const schema = getJoiSchema(
+    it('should be able to override required fields', async () => {
+      const schema = getValidationSchema(
         {
           name: {
             type: String,
@@ -91,13 +114,13 @@ describe('getJoiSchema', () => {
           skipRequired: true,
         }
       );
-      assertPass(schema, { name: 'foo' });
-      assertPass(schema, { count: 5 });
-      assertFail(schema, {});
+      await assertPass(schema, { name: 'foo' });
+      await assertPass(schema, { count: 5 });
+      await assertPass(schema, {});
     });
 
-    it('should not skip required inside nested arrays', () => {
-      const schema = getJoiSchema(
+    it('should not skip required inside nested arrays', async () => {
+      const schema = getValidationSchema(
         {
           users: [
             {
@@ -115,7 +138,7 @@ describe('getJoiSchema', () => {
           skipRequired: true,
         }
       );
-      assertPass(schema, {
+      await assertPass(schema, {
         users: [
           {
             name: 'foo',
@@ -123,23 +146,23 @@ describe('getJoiSchema', () => {
           },
         ],
       });
-      assertPass(schema, {
+      await assertPass(schema, {
         users: [
           {
             name: 'foo',
           },
         ],
       });
-      assertPass(schema, {
+      await assertPass(schema, {
         users: [],
       });
-      assertFail(schema, {
+      await assertFail(schema, {
         users: [{}],
       });
     });
 
-    it('should be able to transform fields', () => {
-      const schema = getJoiSchema(
+    it('should be able to transform fields', async () => {
+      const schema = getValidationSchema(
         {
           name: {
             type: String,
@@ -157,12 +180,12 @@ describe('getJoiSchema', () => {
           },
         }
       );
-      assertFail(schema, { name: 'foo' });
-      assertPass(schema, { name: 'fooooo' });
+      await assertFail(schema, { name: 'foo' });
+      await assertPass(schema, { name: 'fooooo' });
     });
 
-    it('should be able to skip fields by returning falsy in transform', () => {
-      const schema = getJoiSchema(
+    it('should be able to disallow fields with custom transform', async () => {
+      const schema = getValidationSchema(
         {
           name: {
             type: String,
@@ -181,12 +204,12 @@ describe('getJoiSchema', () => {
           },
         }
       );
-      assertPass(schema, { name: 'foo' });
-      assertFail(schema, { name: 'foo', password: 'bar' });
+      await assertPass(schema, { name: 'foo' });
+      await assertFail(schema, { name: 'foo', password: 'bar' });
     });
 
-    it('should be able return a schema in transform', () => {
-      const schema = getJoiSchema(
+    it('should be able return a schema in transform', async () => {
+      const schema = getValidationSchema(
         {
           name: {
             type: String,
@@ -195,43 +218,43 @@ describe('getJoiSchema', () => {
         },
         {
           transformField: () => {
-            return Joi.string().min(5);
+            return yd.string().min(5);
           },
         }
       );
-      assertFail(schema, { name: 'foo' });
-      assertPass(schema, { name: 'foooo' });
+      await assertFail(schema, { name: 'foo' });
+      await assertPass(schema, { name: 'foooo' });
     });
   });
 
   describe('global options', () => {
-    it('should validate a required field', () => {
-      const schema = getJoiSchema({
+    it('should validate a required field', async () => {
+      const schema = getValidationSchema({
         name: {
           type: String,
           required: true,
         },
       });
-      assertPass(schema, { name: 'foo' });
-      assertFail(schema, {});
+      await assertPass(schema, { name: 'foo' });
+      await assertFail(schema, {});
     });
   });
 
   describe('string fields', () => {
-    it('should validate an enum field', () => {
-      const schema = getJoiSchema({
+    it('should validate an enum field', async () => {
+      const schema = getValidationSchema({
         name: {
           type: String,
           enum: ['foo', 'bar'],
         },
       });
-      assertPass(schema, { name: 'foo' });
-      assertPass(schema, { name: 'bar' });
-      assertFail(schema, { name: 'baz' });
+      await assertPass(schema, { name: 'foo' });
+      await assertPass(schema, { name: 'bar' });
+      await assertFail(schema, { name: 'baz' });
     });
 
-    it('should optionally allow an array on an enum field', () => {
-      const schema = getJoiSchema(
+    it('should optionally allow an array on an enum field', async () => {
+      const schema = getValidationSchema(
         {
           name: {
             type: String,
@@ -242,168 +265,168 @@ describe('getJoiSchema', () => {
           allowMultiple: true,
         }
       );
-      assertPass(schema, { name: ['foo', 'bar'] });
+      await assertPass(schema, { name: ['foo', 'bar'] });
     });
 
-    it('should validate minimum length', () => {
-      const schema = getJoiSchema({
+    it('should validate minimum length', async () => {
+      const schema = getValidationSchema({
         name: {
           type: String,
           minLength: 3,
         },
       });
-      assertPass(schema, { name: 'foo' });
-      assertFail(schema, { name: 'fo' });
+      await assertPass(schema, { name: 'foo' });
+      await assertFail(schema, { name: 'fo' });
     });
 
-    it('should validate maximum length', () => {
-      const schema = getJoiSchema({
+    it('should validate maximum length', async () => {
+      const schema = getValidationSchema({
         name: {
           type: String,
           maxLength: 3,
         },
       });
-      assertPass(schema, { name: 'foo' });
-      assertFail(schema, { name: 'fooo' });
+      await assertPass(schema, { name: 'foo' });
+      await assertFail(schema, { name: 'fooo' });
     });
 
-    it('should validate minimum and maximum length together', () => {
-      const schema = getJoiSchema({
+    it('should validate minimum and maximum length together', async () => {
+      const schema = getValidationSchema({
         name: {
           type: String,
           minLength: 3,
           maxLength: 5,
         },
       });
-      assertPass(schema, { name: 'foo' });
-      assertPass(schema, { name: 'fooo' });
-      assertFail(schema, { name: 'foooooo' });
+      await assertPass(schema, { name: 'foo' });
+      await assertPass(schema, { name: 'fooo' });
+      await assertFail(schema, { name: 'foooooo' });
     });
 
-    it('should validate a matched field', () => {
-      const schema = getJoiSchema({
+    it('should validate a matched field', async () => {
+      const schema = getValidationSchema({
         name: {
           type: String,
           match: /^foo$/,
         },
       });
-      assertPass(schema, { name: 'foo' });
-      assertFail(schema, { name: 'foo ' });
+      await assertPass(schema, { name: 'foo' });
+      await assertFail(schema, { name: 'foo ' });
     });
 
-    it('should convert string match field to regex', () => {
-      const schema = getJoiSchema({
+    it('should convert string match field to regex', async () => {
+      const schema = getValidationSchema({
         name: {
           type: 'String',
           match: '^foo$',
         },
       });
-      assertPass(schema, { name: 'foo' });
-      assertFail(schema, { name: 'bar' });
+      await assertPass(schema, { name: 'foo' });
+      await assertFail(schema, { name: 'bar' });
     });
   });
 
   describe('number fields', () => {
-    it('should validate an enum field', () => {
-      const schema = getJoiSchema({
+    it('should validate an enum field', async () => {
+      const schema = getValidationSchema({
         count: {
           type: Number,
           enum: [100, 1000],
         },
       });
-      assertPass(schema, { count: 100 });
-      assertPass(schema, { count: 1000 });
-      assertFail(schema, { count: 1001 });
+      await assertPass(schema, { count: 100 });
+      await assertPass(schema, { count: 1000 });
+      await assertFail(schema, { count: 1001 });
     });
 
-    it('should validate a minimum value', () => {
-      const schema = getJoiSchema({
+    it('should validate a minimum value', async () => {
+      const schema = getValidationSchema({
         count: {
           type: Number,
           min: 100,
         },
       });
-      assertPass(schema, { count: 100 });
-      assertFail(schema, { count: 99 });
+      await assertPass(schema, { count: 100 });
+      await assertFail(schema, { count: 99 });
     });
 
-    it('should validate maximum value', () => {
-      const schema = getJoiSchema({
+    it('should validate maximum value', async () => {
+      const schema = getValidationSchema({
         count: {
           type: Number,
           max: 100,
         },
       });
-      assertPass(schema, { count: 100 });
-      assertFail(schema, { count: 101 });
+      await assertPass(schema, { count: 100 });
+      await assertFail(schema, { count: 101 });
     });
 
-    it('should validate minimum and maximum together', () => {
-      const schema = getJoiSchema({
+    it('should validate minimum and maximum together', async () => {
+      const schema = getValidationSchema({
         count: {
           type: Number,
           min: 100,
           max: 200,
         },
       });
-      assertPass(schema, { count: 100 });
-      assertPass(schema, { count: 200 });
-      assertFail(schema, { count: 99 });
-      assertFail(schema, { count: 201 });
+      await assertPass(schema, { count: 100 });
+      await assertPass(schema, { count: 200 });
+      await assertFail(schema, { count: 99 });
+      await assertFail(schema, { count: 201 });
     });
   });
 
   describe('boolean fields', () => {
-    it('should validate boolean field', () => {
-      const schema = getJoiSchema({
+    it('should validate boolean field', async () => {
+      const schema = getValidationSchema({
         isActive: Boolean,
       });
-      assertPass(schema, { isActive: true });
-      assertPass(schema, { isActive: false });
+      await assertPass(schema, { isActive: true });
+      await assertPass(schema, { isActive: false });
     });
   });
 
   describe('date fields', () => {
-    it('should validate date ISO-8601 field', () => {
-      const schema = getJoiSchema({
+    it('should validate date ISO-8601 field', async () => {
+      const schema = getValidationSchema({
         posted: Date,
       });
-      assertPass(schema, { posted: '2020-01-01T00:00:00Z' });
-      assertPass(schema, { posted: '2020-01-01T00:00:00' });
-      assertFail(schema, { posted: 'January 1, 2020' });
+      await assertPass(schema, { posted: '2020-01-01T00:00:00Z' });
+      await assertPass(schema, { posted: '2020-01-01T00:00:00' });
+      await assertFail(schema, { posted: 'January 1, 2020' });
     });
   });
 
   describe('reference fields', () => {
     describe('simple', () => {
-      it('should validate a string reference field', () => {
-        const schema = getJoiSchema({
+      it('should validate a string reference field', async () => {
+        const schema = getValidationSchema({
           image: {
             type: 'ObjectId',
             ref: 'Upload',
           },
         });
-        assertPass(schema, { image: '5fd396fac80fa73203bd9554' });
-        assertFail(schema, { image: 'bad id' });
+        await assertPass(schema, { image: '5fd396fac80fa73203bd9554' });
+        await assertFail(schema, { image: 'bad id' });
       });
 
-      it('should transform an object with a valid id', () => {
-        const schema = getJoiSchema({
+      it('should transform an object with a valid id', async () => {
+        const schema = getValidationSchema({
           image: {
             type: 'ObjectId',
             ref: 'Upload',
           },
         });
-        assertPass(schema, { image: '5fd396fac80fa73203bd9554' });
-        assertPass(schema, { image: { id: '5fd396fac80fa73203bd9554' } });
-        assertFail(schema, { image: { id: '5fd396fac80fa73203bd9xyz' } });
-        assertFail(schema, { image: { id: '5fd396fac80f' } });
-        assertFail(schema, { image: { id: 'bad id' } });
-        assertFail(schema, { image: { id: '' } });
+        await assertPass(schema, { image: '5fd396fac80fa73203bd9554' });
+        await assertPass(schema, { image: { id: '5fd396fac80fa73203bd9554' } });
+        await assertFail(schema, { image: { id: '5fd396fac80fa73203bd9xyz' } });
+        await assertFail(schema, { image: { id: '5fd396fac80f' } });
+        await assertFail(schema, { image: { id: 'bad id' } });
+        await assertFail(schema, { image: { id: '' } });
       });
 
-      it('should transform an array of objects or ids', () => {
-        const schema = getJoiSchema({
+      it('should transform an array of objects or ids', async () => {
+        const schema = getValidationSchema({
           categories: [
             {
               type: 'ObjectId',
@@ -411,9 +434,9 @@ describe('getJoiSchema', () => {
             },
           ],
         });
-        assertPass(schema, { categories: ['5fd396fac80fa73203bd9554'] });
-        assertPass(schema, { categories: [{ id: '5fd396fac80fa73203bd9554' }] });
-        assertPass(schema, {
+        await assertPass(schema, { categories: ['5fd396fac80fa73203bd9554'] });
+        await assertPass(schema, { categories: [{ id: '5fd396fac80fa73203bd9554' }] });
+        await assertPass(schema, {
           categories: [
             '5fd396fac80fa73203bd9554',
             { id: '5fd396fac80fa73203bd9554' },
@@ -422,19 +445,19 @@ describe('getJoiSchema', () => {
             '5fd396fac80fa73203bd9554',
           ],
         });
-        assertFail(schema, {
+        await assertFail(schema, {
           categories: [{ id: '5fd396fac80fa73203bd9554' }, 'bad id'],
         });
-        assertFail(schema, { categories: [{ id: '5fd396fac80fa73203bd9xyz' }] });
-        assertFail(schema, { categories: [{ id: '5fd396fac80f' }] });
-        assertFail(schema, { categories: [{ id: 'bad id' }] });
-        assertFail(schema, { categories: [{ id: '' }] });
+        await assertFail(schema, { categories: [{ id: '5fd396fac80fa73203bd9xyz' }] });
+        await assertFail(schema, { categories: [{ id: '5fd396fac80f' }] });
+        await assertFail(schema, { categories: [{ id: 'bad id' }] });
+        await assertFail(schema, { categories: [{ id: '' }] });
       });
     });
 
     describe('nested', () => {
-      it('should transform a deeply nested ObjectId', () => {
-        const schema = getJoiSchema({
+      it('should transform a deeply nested ObjectId', async () => {
+        const schema = getValidationSchema({
           user: {
             manager: {
               category: {
@@ -444,14 +467,14 @@ describe('getJoiSchema', () => {
             },
           },
         });
-        assertPass(schema, {
+        await assertPass(schema, {
           user: {
             manager: {
               category: '5fd396fac80fa73203bd9554',
             },
           },
         });
-        assertPass(schema, {
+        await assertPass(schema, {
           user: {
             manager: {
               category: {
@@ -460,7 +483,7 @@ describe('getJoiSchema', () => {
             },
           },
         });
-        assertFail(schema, {
+        await assertFail(schema, {
           user: {
             manager: {
               category: {
@@ -471,26 +494,26 @@ describe('getJoiSchema', () => {
             },
           },
         });
-        assertFail(schema, {
+        await assertFail(schema, {
           user: {
             manager: {
               id: '5fd396fac80fa73203bd9554',
             },
           },
         });
-        assertFail(schema, {
+        await assertFail(schema, {
           user: {
             id: '5fd396fac80fa73203bd9554',
           },
         });
-        assertFail(schema, {
+        await assertFail(schema, {
           id: '5fd396fac80fa73203bd9554',
         });
-        assertFail(schema, {});
+        await assertPass(schema, {});
       });
 
-      it('should transform a deeply nested array ObjectId', () => {
-        const schema = getJoiSchema({
+      it('should transform a deeply nested array ObjectId', async () => {
+        const schema = getValidationSchema({
           users: [
             {
               managers: [
@@ -506,7 +529,7 @@ describe('getJoiSchema', () => {
             },
           ],
         });
-        assertPass(schema, {
+        await assertPass(schema, {
           users: [
             {
               managers: [
@@ -517,7 +540,7 @@ describe('getJoiSchema', () => {
             },
           ],
         });
-        assertPass(schema, {
+        await assertPass(schema, {
           users: [
             {
               managers: [
@@ -532,7 +555,7 @@ describe('getJoiSchema', () => {
             },
           ],
         });
-        assertFail(schema, {
+        await assertFail(schema, {
           users: [
             {
               manager: [
@@ -549,7 +572,7 @@ describe('getJoiSchema', () => {
             },
           ],
         });
-        assertFail(schema, {
+        await assertFail(schema, {
           users: [
             {
               managers: [
@@ -560,59 +583,59 @@ describe('getJoiSchema', () => {
             },
           ],
         });
-        assertFail(schema, {
+        await assertFail(schema, {
           users: [
             {
               id: '5fd396fac80fa73203bd9554',
             },
           ],
         });
-        assertFail(schema, {
+        await assertFail(schema, {
           id: '5fd396fac80fa73203bd9554',
         });
-        assertFail(schema, {});
+        await assertPass(schema, {});
       });
     });
   });
 
   describe('array fields', () => {
-    it('should validate array of strings', () => {
-      const schema = getJoiSchema({
+    it('should validate array of strings', async () => {
+      const schema = getValidationSchema({
         categories: [
           {
             type: String,
           },
         ],
       });
-      assertPass(schema, { categories: ['foo'] });
-      assertPass(schema, { categories: [] });
-      assertFail(schema, { categories: 'foo' });
+      await assertPass(schema, { categories: ['foo'] });
+      await assertPass(schema, { categories: [] });
+      await assertFail(schema, { categories: 'foo' });
     });
 
-    it('should validate array type shortcut syntax', () => {
-      const schema = getJoiSchema({
+    it('should validate array type shortcut syntax', async () => {
+      const schema = getValidationSchema({
         categories: [String],
       });
-      assertPass(schema, { categories: ['foo'] });
-      assertPass(schema, { categories: [] });
-      assertFail(schema, { categories: 'foo' });
+      await assertPass(schema, { categories: ['foo'] });
+      await assertPass(schema, { categories: [] });
+      await assertFail(schema, { categories: 'foo' });
     });
 
-    it('should validate array of object ids', () => {
-      const schema = getJoiSchema({
+    it('should validate array of object ids', async () => {
+      const schema = getValidationSchema({
         categories: [
           {
             type: 'ObjectId',
           },
         ],
       });
-      assertPass(schema, { categories: ['5fd396fac80fa73203bd9554'] });
-      assertPass(schema, { categories: [] });
-      assertFail(schema, { categories: ['bad id'] });
+      await assertPass(schema, { categories: ['5fd396fac80fa73203bd9554'] });
+      await assertPass(schema, { categories: [] });
+      await assertFail(schema, { categories: ['bad id'] });
     });
 
-    it('should validate minimum number of elements for required array field', () => {
-      const schema = getJoiSchema({
+    it('should validate minimum number of elements for required array field', async () => {
+      const schema = getValidationSchema({
         categories: [
           {
             type: String,
@@ -620,13 +643,13 @@ describe('getJoiSchema', () => {
           },
         ],
       });
-      assertPass(schema, { categories: ['foo'] });
-      assertFail(schema, { categories: [] });
-      assertFail(schema, { categories: 'foo' });
+      await assertPass(schema, { categories: ['foo'] });
+      await assertFail(schema, { categories: [] });
+      await assertFail(schema, { categories: 'foo' });
     });
 
-    it('should validate nested object array', () => {
-      const schema = getJoiSchema({
+    it('should validate nested object array', async () => {
+      const schema = getValidationSchema({
         roles: [
           {
             role: { type: 'String', required: true },
@@ -635,7 +658,7 @@ describe('getJoiSchema', () => {
           },
         ],
       });
-      assertPass(schema, {
+      await assertPass(schema, {
         roles: [
           {
             role: 'role',
@@ -643,7 +666,7 @@ describe('getJoiSchema', () => {
           },
         ],
       });
-      assertPass(schema, {
+      await assertPass(schema, {
         roles: [
           {
             role: 'role1',
@@ -655,7 +678,7 @@ describe('getJoiSchema', () => {
           },
         ],
       });
-      assertPass(schema, {
+      await assertPass(schema, {
         roles: [
           {
             role: 'role',
@@ -664,14 +687,14 @@ describe('getJoiSchema', () => {
           },
         ],
       });
-      assertFail(schema, {
+      await assertFail(schema, {
         roles: [
           {
             role: 'role',
           },
         ],
       });
-      assertFail(schema, {
+      await assertFail(schema, {
         roles: [
           {
             scope: 'scope',
@@ -680,106 +703,106 @@ describe('getJoiSchema', () => {
       });
     });
 
-    it('should allow explit array string type', () => {
-      const schema = getJoiSchema({
+    it('should allow explit array string type', async () => {
+      const schema = getValidationSchema({
         tags: 'Array',
       });
-      assertPass(schema, {
+      await assertPass(schema, {
         tags: ['foo', 'bar'],
       });
-      assertFail(schema, {
+      await assertFail(schema, {
         tags: 'foo',
       });
     });
 
-    it('should allow explit array function type', () => {
-      const schema = getJoiSchema({
+    it('should allow explit array function type', async () => {
+      const schema = getValidationSchema({
         tags: Array,
       });
-      assertPass(schema, {
+      await assertPass(schema, {
         tags: ['foo', 'bar'],
       });
-      assertFail(schema, {
+      await assertFail(schema, {
         tags: 'foo',
       });
     });
   });
 
   describe('nested fields', () => {
-    it('should validate nested field', () => {
-      const schema = getJoiSchema({
+    it('should validate nested field', async () => {
+      const schema = getValidationSchema({
         counts: {
           view: Number,
         },
       });
-      assertPass(schema, { counts: { view: 1 } });
-      assertFail(schema, { counts: { view: 'bad number' } });
+      await assertPass(schema, { counts: { view: 1 } });
+      await assertFail(schema, { counts: { view: 'bad number' } });
     });
 
-    it('should not validate mixed type', () => {
-      const schema = getJoiSchema({
+    it('should not validate mixed type', async () => {
+      const schema = getValidationSchema({
         counts: 'Mixed',
       });
-      assertPass(schema, { counts: { foo: 'bar' } });
-      assertPass(schema, { counts: { name: 'foo' } });
+      await assertPass(schema, { counts: { foo: 'bar' } });
+      await assertPass(schema, { counts: { name: 'foo' } });
     });
 
-    it('should not validate explicit mixed type', () => {
-      const schema = getJoiSchema({
+    it('should not validate explicit mixed type', async () => {
+      const schema = getValidationSchema({
         counts: {
           type: 'Mixed',
         },
       });
-      assertPass(schema, { counts: { foo: 'bar' } });
-      assertPass(schema, { counts: { name: 'foo' } });
+      await assertPass(schema, { counts: { foo: 'bar' } });
+      await assertPass(schema, { counts: { name: 'foo' } });
     });
 
-    it('should validate mixed with nested type object', () => {
-      const schema = getJoiSchema({
+    it('should validate mixed with nested type object', async () => {
+      const schema = getValidationSchema({
         type: { type: String, required: true },
       });
-      assertPass(schema, { type: 'foo' });
-      assertFail(schema, { type: { type: 'foo' } });
-      assertFail(schema, {});
+      await assertPass(schema, { type: 'foo' });
+      await assertFail(schema, { type: { type: 'foo' } });
+      await assertFail(schema, {});
     });
   });
 
   describe('appendSchema', () => {
-    it('should be able to append plain objects as schemas', () => {
-      const schema = getJoiSchema(
+    it('should be able to append plain objects as schemas', async () => {
+      const schema = getValidationSchema(
         {
           type: { type: String, required: true },
         },
         {
           appendSchema: {
-            count: Joi.number().required(),
+            count: yd.number().required(),
           },
         }
       );
-      assertFail(schema, { type: 'foo' });
-      assertPass(schema, { type: 'foo', count: 10 });
+      await assertFail(schema, { type: 'foo' });
+      await assertPass(schema, { type: 'foo', count: 10 });
     });
 
-    it('should be able to merge Joi schemas', () => {
-      const schema = getJoiSchema(
+    it('should be able to merge schemas', async () => {
+      const schema = getValidationSchema(
         {
           type: { type: String, required: true },
           count: { type: Number, required: true },
         },
         {
-          appendSchema: Joi.object({
-            count: Joi.number().optional(),
+          appendSchema: yd.object({
+            count: yd.number(),
           }),
         }
       );
-      assertPass(schema, { type: 'foo' });
-      assertPass(schema, { type: 'foo', count: 10 });
+      await assertPass(schema, { type: 'foo' });
+      await assertPass(schema, { type: 'foo', count: 10 });
     });
   });
 
   describe('ranges', () => {
-    it('should be able to append a date range schema', () => {
-      const schema = getJoiSchema(
+    it('should be able to append a date range schema', async () => {
+      const schema = getValidationSchema(
         {
           startsAt: { type: Date },
         },
@@ -787,19 +810,19 @@ describe('getJoiSchema', () => {
           allowRanges: true,
         }
       );
-      assertPass(schema, { startsAt: '2020-01-01' });
-      assertPass(schema, { startsAt: { lte: '2020-01-01' } });
-      assertPass(schema, { startsAt: { gte: '2019-01-01' } });
-      assertPass(schema, { startsAt: { gte: '2019-01-01', lte: '2020-01-01' } });
-      assertPass(schema, { startsAt: { lt: '2020-01-01' } });
-      assertPass(schema, { startsAt: { gt: '2019-01-01' } });
-      assertPass(schema, { startsAt: { gt: '2019-01-01', lt: '2020-01-01' } });
-      assertPass(schema, { startsAt: {} });
-      assertFail(schema, { startsAt: { lte: 'bad' } });
+      await assertPass(schema, { startsAt: '2020-01-01' });
+      await assertPass(schema, { startsAt: { lte: '2020-01-01' } });
+      await assertPass(schema, { startsAt: { gte: '2019-01-01' } });
+      await assertPass(schema, { startsAt: { gte: '2019-01-01', lte: '2020-01-01' } });
+      await assertPass(schema, { startsAt: { lt: '2020-01-01' } });
+      await assertPass(schema, { startsAt: { gt: '2019-01-01' } });
+      await assertPass(schema, { startsAt: { gt: '2019-01-01', lt: '2020-01-01' } });
+      await assertPass(schema, { startsAt: {} });
+      await assertFail(schema, { startsAt: { lte: 'bad' } });
     });
 
-    it('should be able to append a number range schema', () => {
-      const schema = getJoiSchema(
+    it('should be able to append a number range schema', async () => {
+      const schema = getValidationSchema(
         {
           age: { type: Number },
         },
@@ -807,48 +830,27 @@ describe('getJoiSchema', () => {
           allowRanges: true,
         }
       );
-      assertPass(schema, { age: 5 });
-      assertPass(schema, { age: { lte: 5 } });
-      assertPass(schema, { age: { gte: 5 } });
-      assertPass(schema, { age: { gte: 5, lte: 5 } });
-      assertPass(schema, { age: { lt: 5 } });
-      assertPass(schema, { age: { gt: 5 } });
-      assertPass(schema, { age: { gt: 5, lt: 5 } });
-      assertPass(schema, { age: {} });
-      assertFail(schema, { age: { lte: 'bad' } });
+      await assertPass(schema, { age: 5 });
+      await assertPass(schema, { age: { lte: 5 } });
+      await assertPass(schema, { age: { gte: 5 } });
+      await assertPass(schema, { age: { gte: 5, lte: 5 } });
+      await assertPass(schema, { age: { lt: 5 } });
+      await assertPass(schema, { age: { gt: 5 } });
+      await assertPass(schema, { age: { gt: 5, lt: 5 } });
+      await assertPass(schema, { age: {} });
+      await assertFail(schema, { age: { lte: 'bad' } });
     });
   });
 });
 
 describe('getMongooseValidator', () => {
-  it('should get an email validator', () => {
+  it('should get an email validator', async () => {
     const field = {
       type: 'String',
       validate: 'email',
     };
-    const emailValidator = getMongooseValidator('email', field);
-    expect(emailValidator('foo@bar.com')).toBe(true);
-    expect(emailValidator('')).toBe(true);
-    expect(emailValidator.schemaName).toBe('email');
-    expect(() => {
-      emailValidator('bad@email');
-    }).toThrow();
-  });
-
-  it('should require an email when the schema is required', () => {
-    const field = {
-      type: 'String',
-      validate: 'email',
-      required: true,
-    };
-    const emailValidator = getMongooseValidator('email', field);
-    expect(emailValidator('foo@bar.com')).toBe(true);
-    expect(emailValidator.schemaName).toBe('email');
-    expect(() => {
-      emailValidator('');
-    }).toThrow();
-    expect(() => {
-      emailValidator('bad@email');
-    }).toThrow();
+    const emailValidator = getMongooseValidator(field);
+    await expect(emailValidator('foo@bar.com')).resolves.not.toThrow();
+    await expect(emailValidator('bad@email')).rejects.toThrow();
   });
 });

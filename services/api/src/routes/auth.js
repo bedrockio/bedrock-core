@@ -1,5 +1,5 @@
 const Router = require('@koa/router');
-const Joi = require('joi');
+const yd = require('@bedrockio/yada');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { createTemporaryToken, generateTokenId } = require('../utils/tokens');
@@ -17,22 +17,15 @@ const router = new Router();
 
 const APP_NAME = config.get('APP_NAME');
 
-const passwordField = Joi.string()
-  .trim()
-  .min(12)
-  .message('Your password must be at least 12 characters long. Please try another.');
-
 router
   .post(
     '/register',
     validateBody({
-      email: Joi.string().lowercase().email().required(),
-      country: Joi.string(),
-      phone: Joi.string(),
-      phoneNumber: Joi.string().trim(),
-      firstName: Joi.string().required(),
-      lastName: Joi.string().required(),
-      password: passwordField.required(),
+      email: yd.string().lowercase().email().required(),
+      firstName: yd.string().required(),
+      lastName: yd.string().required(),
+      password: yd.string().password().required(),
+      phoneNumber: yd.string(),
     }),
     async (ctx) => {
       const { email, phoneNumber } = ctx.request.body;
@@ -82,8 +75,8 @@ router
   .post(
     '/login',
     validateBody({
-      email: Joi.string().email().trim().required(),
-      password: Joi.string().trim().required(),
+      email: yd.string().email().trim().required(),
+      password: yd.string().password().required(),
     }),
     async (ctx) => {
       const { email, password } = ctx.request.body;
@@ -151,7 +144,7 @@ router
   .post(
     '/login/send-sms',
     validateBody({
-      phoneNumber: Joi.string().required(),
+      phoneNumber: yd.string(),
     }),
     async (ctx) => {
       const { phoneNumber } = ctx.request.body;
@@ -193,8 +186,8 @@ router
   .post(
     '/login/verify-sms',
     validateBody({
-      phoneNumber: Joi.string().required(),
-      code: Joi.string().required(),
+      phoneNumber: yd.string(),
+      code: yd.string(),
     }),
     async (ctx) => {
       const { phoneNumber, code } = ctx.request.body;
@@ -259,7 +252,7 @@ router
   .post(
     '/confirm-access',
     validateBody({
-      password: Joi.string(),
+      password: yd.string().password(),
     }),
     authenticate({ type: 'user' }),
     fetchUser,
@@ -302,8 +295,8 @@ router
   .post(
     '/logout',
     validateBody({
-      all: Joi.boolean(),
-      jti: Joi.string(),
+      all: yd.boolean(),
+      jti: yd.string(),
     }),
     authenticate({ type: 'user' }),
     fetchUser,
@@ -329,9 +322,9 @@ router
   .post(
     '/accept-invite',
     validateBody({
-      firstName: Joi.string().required(),
-      lastName: Joi.string().required(),
-      password: passwordField.required(),
+      firstName: yd.string().required(),
+      lastName: yd.string().required(),
+      password: yd.string().password().required(),
     }),
     authenticate({ type: 'invite' }),
     async (ctx) => {
@@ -384,7 +377,7 @@ router
   .post(
     '/request-password',
     validateBody({
-      email: Joi.string().email().required(),
+      email: yd.string().email().required(),
     }),
     async (ctx) => {
       const { email } = ctx.request.body;
@@ -410,7 +403,7 @@ router
   .post(
     '/set-password',
     validateBody({
-      password: passwordField.required(),
+      password: yd.string().password().required(),
     }),
     authenticate({ type: 'password' }),
     async (ctx) => {

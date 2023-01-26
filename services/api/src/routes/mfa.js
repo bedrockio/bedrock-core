@@ -1,6 +1,6 @@
 const Router = require('@koa/router');
 const config = require('@bedrockio/config');
-const Joi = require('joi');
+const yd = require('@bedrockio/yada');
 const router = new Router();
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { User, AuditEntry } = require('../models');
@@ -43,7 +43,7 @@ router
   .post(
     '/verify',
     validateBody({
-      code: Joi.string().required(),
+      code: yd.string().required(),
     }),
     authenticate({ type: 'mfa' }),
     async (ctx) => {
@@ -128,8 +128,8 @@ router
   .post(
     '/setup',
     validateBody({
-      method: Joi.string().allow('sms', 'otp').required(),
-      phoneNumber: Joi.string(),
+      method: yd.string().allow('sms', 'otp').required(),
+      phoneNumber: yd.string(),
     }),
     checkPasswordVerification,
     async (ctx) => {
@@ -165,9 +165,9 @@ router
   .post(
     '/check-code',
     validateBody({
-      code: Joi.string().required(),
-      secret: Joi.string().required(),
-      method: Joi.string().allow('sms', 'otp').required(),
+      code: yd.string().required(),
+      secret: yd.string().required(),
+      method: yd.string().allow('sms', 'otp').required(),
     }),
     async (ctx) => {
       const { secret, code, method } = ctx.request.body;
@@ -181,10 +181,10 @@ router
   .post(
     '/enable',
     validateBody({
-      secret: Joi.string(),
-      method: Joi.string().allow('sms', 'otp').required(),
-      phoneNumber: Joi.string(),
-      backupCodes: Joi.array().items(Joi.string()).required(),
+      secret: yd.string(),
+      method: yd.string().allow('sms', 'otp').required(),
+      phoneNumber: yd.string(),
+      backupCodes: yd.array(yd.string()).required(),
     }),
     checkPasswordVerification,
     async (ctx) => {

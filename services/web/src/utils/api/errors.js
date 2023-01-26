@@ -8,14 +8,29 @@ export class ApiError extends CustomError {
     this.details = details;
   }
 
-  getField(field) {
+  getField(name) {
     return this.details?.find((d) => {
-      return d.context.key === field;
+      return d.field === name;
     });
   }
 
-  hasField(field) {
-    return !!this.getField(field);
+  getFieldDetails(name) {
+    const field = this.getField(name);
+    if (field) {
+      return getAllDetails(field);
+    }
+  }
+
+  hasField(name) {
+    return !!this.getField(name);
+  }
+}
+
+function getAllDetails(error) {
+  if (error.details) {
+    return error.details.flatMap(getAllDetails);
+  } else {
+    return [error];
   }
 }
 

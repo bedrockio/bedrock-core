@@ -98,7 +98,7 @@
     "webpack-bundle-analyzer": "^4.5.0"
   },
   "volta": {
-    "node": "16.13.0",
+    "node": "18.13.0",
     "yarn": "1.22.17"
   },
   "prettier": "@bedrockio/prettier-config"

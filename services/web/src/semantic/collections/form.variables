@@ -135,10 +135,10 @@
 @nocturnalFormErrorBackground: rgba(@negativeTextColor, .25);
 
 /* AutoFill */
-@inputAutoFillBackground: #FFFFF0;
-@inputAutoFillBorder: #E5DFA1;
+@inputAutoFillBackground: #fff;
+@inputAutoFillBorder: #D1D5DB;
 @inputAutoFillFocusBackground: @inputAutoFillBackground;
-@inputAutoFillFocusBorder: #D5C315;
+@inputAutoFillFocusBorder: #D1D5DB;
 @inputAutoFillErrorBackground: #FFFAF0;
 @inputAutoFillErrorBorder: #E0B4B4;
 

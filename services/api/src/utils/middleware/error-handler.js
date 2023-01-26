@@ -1,20 +1,24 @@
 const config = require('@bedrockio/config');
+const { isSchemaError } = require('@bedrockio/yada');
 const ENV_NAME = config.get('ENV_NAME');
 
 async function errorHandler(ctx, next) {
   try {
     await next();
   } catch (err) {
-    let { status = 500, type = 'error', message, details, expose } = err;
+    let { status = 500, type = 'other', message, details, expose } = err;
+
+    if (isSchemaError(err)) {
+      message = err.getFullMessage({
+        delimiter: '\n',
+        labels: 'natural',
+      });
+    }
 
     if (!expose) {
       if (ENV_NAME === 'production') {
         message = 'An unexpected error occurred. Please try again later.';
       }
-    }
-
-    if (err.isJoi) {
-      message = details.map((d) => d.message).join('\n');
     }
 
     ctx.type = 'json';
