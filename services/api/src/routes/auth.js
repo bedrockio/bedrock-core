@@ -5,7 +5,6 @@ const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { createTemporaryToken, generateTokenId } = require('../utils/tokens');
 const { sendTemplatedMail } = require('../utils/mailer');
 const { User, Invite, AuditEntry } = require('../models');
-const { parsePhoneNumber } = require('libphonenumber-js');
 const config = require('@bedrockio/config');
 
 const mfa = require('../utils/mfa');
@@ -25,26 +24,13 @@ router
       firstName: yd.string().required(),
       lastName: yd.string().required(),
       password: yd.string().password().required(),
-      phoneNumber: yd.string(),
+      phoneNumber: User.validators.phoneNumber.required(),
     }),
     async (ctx) => {
-      const { email, phoneNumber } = ctx.request.body;
+      const { email } = ctx.request.body;
 
       if (await User.exists({ email })) {
         ctx.throw(400, 'A user with that email already exists');
-      }
-
-      if (phoneNumber) {
-        // We assume US phone numbers for now
-        // If you want to support other countries, you'll need to add a country field to user model
-        const parsedPhoneNo = parsePhoneNumber(phoneNumber, 'US');
-        if (!parsedPhoneNo.isValid()) {
-          ctx.throw(400, 'Invalid phone number');
-        }
-
-        if (await User.exists({ phoneNumber: parsedPhoneNo.number })) {
-          ctx.throw(400, 'A user with that phone number already exists');
-        }
       }
 
       const user = new User({

@@ -27,7 +27,9 @@ export default class PhoneCountryCode extends React.Component {
           }}
           country={placeholder ? [] : ['us']}
           placeholder={placeholder}
-          onChange={onChange}
+          onChange={(value, e, c) => {
+            onChange(e, { name, value });
+          }}
         />
       </Form.Field>
     );
