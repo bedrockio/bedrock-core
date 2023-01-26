@@ -30,6 +30,7 @@ export default class SearchFilter extends React.Component {
       <Form.Input
         fluid
         loading={loading}
+        disabled={loading}
         type="search"
         style={{ minWidth: '220px' }}
         placeholder="Search by keyword"

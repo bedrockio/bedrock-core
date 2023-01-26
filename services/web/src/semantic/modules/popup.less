@@ -373,18 +373,22 @@
 }
 
 /* Inverted Arrow Color */
+.nocturnal-theme [data-position~='bottom'][data-tooltip]:before,
 [data-inverted][data-position~='bottom'][data-tooltip]:before {
   background: @invertedArrowTopBackground;
   box-shadow: @bottomArrowBoxShadow;
 }
+.nocturnal-theme [data-position='left center'][data-tooltip]:before,
 [data-inverted][data-position='left center'][data-tooltip]:before {
   background: @invertedArrowCenterBackground;
   box-shadow: @leftArrowBoxShadow;
 }
+.nocturnal-theme [data-position='right center'][data-tooltip]:before,
 [data-inverted][data-position='right center'][data-tooltip]:before {
   background: @invertedArrowCenterBackground;
   box-shadow: @rightArrowBoxShadow;
 }
+.nocturnal-theme [data-position~='top'][data-tooltip]:before,
 [data-inverted][data-position~='top'][data-tooltip]:before {
   background: @invertedArrowBottomBackground;
 }
@@ -560,13 +564,17 @@
 }
 
 /* Inverted Arrow Color */
+.nocturnal-theme .ui.bottom.popup:before,
 .ui.inverted.bottom.popup:before {
   background: @invertedArrowTopBackground;
 }
+.nocturnal-theme .ui.right.center.popup:before,
+.nocturnal-theme .ui.left.center.popup:before,
 .ui.inverted.right.center.popup:before,
 .ui.inverted.left.center.popup:before {
   background: @invertedArrowCenterBackground;
 }
+.nocturnal-theme .ui.top.popup:before,
 .ui.inverted.top.popup:before {
   background: @invertedArrowBottomBackground;
 }

@@ -3,7 +3,7 @@ const { kebabCase } = require('lodash');
 
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
-const { Application, ApplicationRequest } = require('../models');
+const { Application, ApplicationRequest, AuditEntry } = require('../models');
 const { exportValidation, csvExport } = require('../utils/csv');
 const { requirePermissions } = require('../utils/middleware/permissions');
 
@@ -76,6 +76,11 @@ router
       user: ctx.state.authUser,
     });
 
+    await AuditEntry.append('Created Application', ctx, {
+      object: application,
+      user: ctx.state.authUser,
+    });
+
     ctx.body = {
       data: application,
     };
@@ -83,7 +88,15 @@ router
   .patch('/:application', validateBody(Application.getUpdateValidation()), async (ctx) => {
     const application = ctx.state.application;
     application.assign(ctx.request.body);
+
     await application.save();
+
+    await AuditEntry.append('Updated Application', ctx, {
+      object: application,
+      user: ctx.state.authUser,
+      fields: ['name', 'description', 'apiKey'],
+    });
+
     ctx.body = {
       data: application,
     };

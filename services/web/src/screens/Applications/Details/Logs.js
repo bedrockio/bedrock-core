@@ -21,7 +21,6 @@ import ShowRequest from 'modals/ShowRequest';
 
 import Menu from './Menu';
 
-
 function getStateromQueryString(search) {
   if (!search) {
     return;
@@ -94,7 +93,6 @@ export default class ApplicationLogs extends React.Component {
         <Menu {...this.props} />
         <Search.Provider
           filters={this.state.initialFilters}
-          limit={15}
           onDataNeeded={this.onDataNeeded}>
           {({ items, loading, error }) => {
             return (
@@ -268,6 +266,12 @@ export default class ApplicationLogs extends React.Component {
                               <Table.Cell>IP Address</Table.Cell>
                               <Table.Cell>
                                 <code>{selectedItem.request.ip}</code>
+                              </Table.Cell>
+                            </Table.Row>
+                            <Table.Row>
+                              <Table.Cell>Session</Table.Cell>
+                              <Table.Cell>
+                                <code>{selectedItem.request.sessionId}</code>
                               </Table.Cell>
                             </Table.Row>
                             <Table.Row>

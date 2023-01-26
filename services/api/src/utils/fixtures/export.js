@@ -1,13 +1,15 @@
 const path = require('path');
+const { Writable } = require('stream');
+const { createWriteStream, promises: fs } = require('fs');
+
 const Zip = require('jszip');
 const fetch = require('node-fetch');
 const mongoose = require('mongoose');
-const { Writable } = require('stream');
-const { camelUpper, kebabCase, pluralKebab, pluralCamel } = require('./utils');
-const { createWriteStream, promises: fs } = require('fs');
-const { stringReplaceAsync } = require('../string');
+const logger = require('@bedrockio/logger');
 const { memoize, set, isPlainObject } = require('lodash');
-const { logger } = require('@bedrockio/instrumentation');
+
+const { camelUpper, kebabCase, pluralKebab, pluralCamel } = require('./utils');
+const { stringReplaceAsync } = require('../string');
 
 const models = require('./models');
 

@@ -214,6 +214,49 @@
 @greyRibbonShadow: darken(@grey, 10);
 @blackRibbonShadow: darken(@black, 10);
 
+// @todo: maybe move to site.variables
+@nocturnalRed: darken(@red, 10);
+@nocturnalOrange: darken(@orange, 10);
+@nocturnalYellow: darken(@yellow, 15);
+@nocturnalOlive: darken(@olive, 10);
+@nocturnalGreen: darken(@green, 10);
+@nocturnalTeal: darken(@teal, 10);
+@nocturnalBlue: darken(@blue, 10);
+@nocturnalViolet: darken(@violet, 10);
+@nocturnalPurple: darken(@purple, 10);
+@nocturnalPink: darken(@pink, 10);
+@nocturnalBrown: darken(@brown, 10);
+@nocturnalGrey: darken(@grey, 10);
+@nocturnalBlack: darken(@black, 10);
+
+@nocturnalRedHover: saturate(darken(@nocturnalRed, 5), 10, relative);
+@nocturnalOrangeHover: saturate(darken(@nocturnalOrange, 5), 10, relative);
+@nocturnalYellowHover: saturate(darken(@nocturnalYellow, 5), 10, relative);
+@nocturnalOliveHover: saturate(darken(@nocturnalOlive, 5), 10, relative);
+@nocturnalGreenHover: saturate(darken(@nocturnalGreen, 5), 10, relative);
+@nocturnalTealHover: saturate(darken(@nocturnalTeal, 5), 10, relative);
+@nocturnalBlueHover: saturate(darken(@nocturnalBlue, 5), 10, relative);
+@nocturnalVioletHover: saturate(darken(@nocturnalViolet, 5), 10, relative);
+@nocturnalPurpleHover: saturate(darken(@nocturnalPurple, 5), 10, relative);
+@nocturnalPinkHover: saturate(darken(@nocturnalPink, 5), 10, relative);
+@nocturnalBrownHover: saturate(darken(@nocturnalBrown, 5), 10, relative);
+@nocturnalGreyHover: saturate(darken(@nocturnalGrey, 5), 10, relative);
+@nocturnalBlackHover: saturate(darken(@nocturnalBlack, 5), 10, relative);
+
+@nocturnalRedRibbonShadow: darken(@nocturnalRed, 10);
+@nocturnalOrangeRibbonShadow: darken(@nocturnalOrange, 10);
+@nocturnalYellowRibbonShadow: darken(@nocturnalYellow, 10);
+@nocturnalOliveRibbonShadow: darken(@nocturnalOlive, 10);
+@nocturnalGreenRibbonShadow: darken(@nocturnalGreen, 10);
+@nocturnalTealRibbonShadow: darken(@nocturnalTeal, 10);
+@nocturnalBlueRibbonShadow: darken(@nocturnalBlue, 10);
+@nocturnalVioletRibbonShadow: darken(@nocturnalViolet, 10);
+@nocturnalPurpleRibbonShadow: darken(@nocturnalPurple, 10);
+@nocturnalPinkRibbonShadow: darken(@nocturnalPink, 10);
+@nocturnalBrownRibbonShadow: darken(@nocturnalBrown, 10);
+@nocturnalGreyRibbonShadow: darken(@nocturnalGrey, 10);
+@nocturnalBlackRibbonShadow: darken(@nocturnalBlack, 10);
+
 /* Attached */
 @attachedSegmentPadding: 2rem;
 @attachedVerticalPadding: 0.75em;

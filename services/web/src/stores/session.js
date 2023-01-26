@@ -140,6 +140,7 @@ export class SessionProvider extends React.PureComponent {
     if (redirect) {
       this.pushRedirect();
     }
+
     if (hasToken()) {
       try {
         await request({

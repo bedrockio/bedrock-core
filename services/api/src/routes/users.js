@@ -7,6 +7,7 @@ const { requirePermissions } = require('../utils/middleware/permissions');
 const { exportValidation, csvExport } = require('../utils/csv');
 const { User } = require('../models');
 const { expandRoles } = require('./../utils/permissions');
+
 const roles = require('./../roles.json');
 const permissions = require('./../permissions.json');
 
@@ -29,16 +30,7 @@ router
     return next();
   })
   .get('/me', async (ctx) => {
-    const { authUser, jwt } = ctx.state;
-    // updating the authUser's ip address
-    const token = authUser.authInfo.find((token) => token.jti === jwt.jti);
-    const ip = ctx.get('x-forwarded-for') || ctx.ip;
-    if (token && token.ip !== ip) {
-      token.ip = ip;
-    }
-    token.lastUsedAt = new Date();
-    await authUser.save();
-
+    const { authUser } = ctx.state;
     ctx.body = {
       data: expandRoles(authUser),
     };
@@ -58,6 +50,50 @@ router
       await authUser.save();
       ctx.body = {
         data: expandRoles(authUser),
+      };
+    }
+  )
+  .post(
+    '/:userId/authenticate',
+    requirePermissions({ endpoint: 'users', permission: 'write', scope: 'global' }),
+    async (ctx) => {
+      const { user } = ctx.state;
+      const authUser = ctx.state.authUser;
+
+      // Don't allow an superAdmin to imitate another superAdmin
+      const allowedRoles = expandRoles(authUser).roles.reduce(
+        (result, { roleDefinition }) => result.concat(roleDefinition.allowAuthenticationOnRoles || []),
+        []
+      );
+
+      const isAllowed = [...user.roles].every(({ role }) => allowedRoles.includes(role));
+      if (!isAllowed) {
+        ctx.throw(403, 'You are not allowed to authenticate as this user');
+      }
+
+      const token = authUser.createAuthToken(
+        {
+          ip: ctx.get('x-forwarded-for') || ctx.ip,
+          country: ctx.get('cf-ipcountry'),
+          userAgent: ctx.get('user-agent'),
+        },
+        {
+          // setting user id to the user we are impersonating
+          // this is a special case not to be use for other purposes `sub` is reserved for the user id normally
+          authenticateUser: user.id,
+          // expires in 2 hours (in seconds)
+          exp: Math.floor(Date.now() / 1000) + 120 * 60,
+        }
+      );
+      await authUser.save();
+
+      await AuditEntry.append('Authenticate as user', ctx, {
+        object: user,
+        user: authUser,
+      });
+
+      ctx.body = {
+        data: { token },
       };
     }
   )

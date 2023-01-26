@@ -62,6 +62,11 @@ export default class ShopList extends React.Component {
           return owners[0].name;
         },
       },
+      createdAt: {
+        label: 'Created At',
+        type: 'date',
+        range: true,
+      },
       // --- Generator: end
       keyword: {},
     };
@@ -102,6 +107,10 @@ export default class ShopList extends React.Component {
                       search
                       name="owner"
                       label="Owner"
+                    />
+                    <SearchFilters.DateRange
+                      label="Created At"
+                      name="createdAt"
                     />
                     {/* --- Generator: end */}
                   </SearchFilters.Modal>

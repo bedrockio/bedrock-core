@@ -7,7 +7,7 @@ const fs = require('fs').promises;
 const path = require('path');
 
 const config = require('@bedrockio/config');
-const { logger } = require('@bedrockio/instrumentation');
+const logger = require('@bedrockio/logger');
 
 const ENV = config.getAll();
 const { ENV_NAME, POSTMARK_FROM, POSTMARK_API_KEY, POSTMARK_DEV_TO } = ENV;

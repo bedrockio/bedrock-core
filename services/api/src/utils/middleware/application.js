@@ -121,6 +121,7 @@ function applicationMiddleware({ ignorePaths = [] }) {
       routeNormalizedPath: ctx.routerPath,
       requestId,
       request: {
+        sessionId: ctx.state.jwt?.jti,
         ip: request.ip,
         method: request.method,
         path: request.url,

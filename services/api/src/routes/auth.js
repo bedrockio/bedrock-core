@@ -58,7 +58,6 @@ router
       email: yd.string().email().trim().required(),
       password: yd.string().password().required(),
     }),
-
     async (ctx) => {
       const { email, password } = ctx.request.body;
       const user = await User.findOne({ email });
@@ -112,7 +111,7 @@ router
       });
       await user.save();
 
-      await AuditEntry.append('Successfully authenticated', ctx, {
+      await AuditEntry.append('Authenticated', ctx, {
         object: user,
         user: user.id,
       });
@@ -155,7 +154,7 @@ router
         ctx.throw(401, error);
       }
 
-      await AuditEntry.append('Successfully authenticated (confirm-access)', ctx, {
+      await AuditEntry.append('Authenticated (confirm-access)', ctx, {
         object: authUser,
         user: authUser.id,
       });

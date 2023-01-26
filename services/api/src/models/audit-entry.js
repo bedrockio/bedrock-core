@@ -8,6 +8,7 @@ const schema = createSchema(definition);
 
 schema.statics.getContextFields = function (ctx) {
   return {
+    sessionId: ctx.state.jwt?.jti,
     user: ctx.state.authUser?.id,
     requestMethod: ctx.request.method,
     requestUrl: ctx.request.url,

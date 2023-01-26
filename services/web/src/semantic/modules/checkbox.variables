@@ -146,7 +146,7 @@
   @subtleShadow,
   0px 0px 0px 1px @borderColor inset
 ;
-@nocturnalHandleBackground: hsl(hue(@pageBackground), (saturation(@pageBackground) / 2), lightness(@borderColor)) @nocturnalSubtleGradient;
+@nocturnalHandleBackground: hsl(hue(@pageBackground), (saturation(@pageBackground) / 2), 82.5%) @nocturnalSubtleGradient;
 @nocturnalHandleBoxShadow:
   0px 1px 2px 0 @strongBorderColor,
   0px 0px 0px 1px @strongBorderColor inset;

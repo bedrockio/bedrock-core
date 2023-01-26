@@ -1,4 +1,5 @@
 const cors = require('@koa/cors');
+const logger = require('@bedrockio/logger');
 
 // Note: "allowedOrigins" can be passed into the options here to
 // enable whitelisting domains here for added security layer.
@@ -21,7 +22,7 @@ function restrictOrigins(allowed) {
     if (allowed.includes(origin)) {
       return origin;
     } else {
-      ctx.logger.warn(`Invalid Origin header for CORS request: ${origin}.`);
+      logger.warn(`Invalid Origin header for CORS request: ${origin}.`);
       return allowed[0];
     }
   };

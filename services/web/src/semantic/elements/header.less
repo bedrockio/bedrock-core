@@ -56,6 +56,12 @@
   vertical-align: @iconAlignment;
 }
 
+.ui.header > svg.icon {
+  // size per font-size value
+  width: 1em;
+  height: 1em;
+}
+
 /* With Text Node */
 .ui.header .icon:only-child {
   display: inline-block;
@@ -246,8 +252,8 @@ h5.ui.header .sub.header {
 .ui.icon.header .icon {
   float: none;
   display: block;
-  width: @iconHeaderSize;
-  height: @iconHeaderSize;
+  // width: @iconHeaderSize;
+  // height: @iconHeaderSize;
   line-height: 1;
   padding: 0em;
   font-size: @iconHeaderSize;
@@ -649,12 +655,15 @@ a.ui.inverted.grey.header:hover {
 .ui.dividing.header {
   padding-bottom: @dividedBorderPadding;
   border-bottom: @dividedBorder;
+  display: flex;
+  align-items: center;
 }
 .ui.dividing.header .sub.header {
   padding-bottom: @dividedSubHeaderPadding;
 }
 .ui.dividing.header .icon {
   margin-bottom: @dividedIconPadding;
+  margin-left: 1rem;
 }
 
 .ui.inverted.dividing.header {

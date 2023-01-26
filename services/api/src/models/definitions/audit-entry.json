@@ -36,6 +36,10 @@
       "ref": "User",
       "required": true,
       "autopopulate": true
+    },
+    "sessionId": {
+      "type": "String",
+      "required": false
     }
   },
   "search": [

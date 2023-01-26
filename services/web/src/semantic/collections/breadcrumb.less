@@ -15,10 +15,14 @@
 *******************************/
 
 .ui.breadcrumb {
+  line-height: 1;
   display: @display;
+  margin: @verticalMargin 0em;
   vertical-align: @verticalAlign;
-  text-transform: @breadcrumbTextTransform;
   color: @breadcrumbTextColor;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-weight: 500;
 
   .nocturnal-theme & {
     color: @nocturnalBreadcrumbTextColor;
@@ -40,13 +44,25 @@
   display: inline-block;
   opacity: @dividerOpacity;
   margin: 0em @dividerSpacing 0em;
+
+  font-size: @dividerSize;
   color: @dividerColor;
-  vertical-align: -0.1em;
-  background: transparent;
+  vertical-align: @dividerVerticalAlign;
 
   .nocturnal-theme & {
     color: @nocturnalDividerColor;
   }
+}
+
+/* Icon Divider */
+.ui.breadcrumb .icon.divider {
+  font-size: @iconDividerSize;
+  vertical-align: @iconDividerVerticalAlign;
+  height: 1em;
+  margin-top: @1px;
+  // @todo: revise; semantic is weird
+  border-top-color: transparent;
+  border-bottom-color: transparent;
 }
 
 /* Link */

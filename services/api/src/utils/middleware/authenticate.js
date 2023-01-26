@@ -64,7 +64,9 @@ async function fetchUser(ctx, next) {
     const { jwt } = ctx.state;
     const { User } = mongoose.models;
     const user = await User.findById(jwt.sub);
+
     const token = user.authInfo.find((token) => token.jti === jwt.jti);
+
     if (!user || !token) {
       throw new TokenError('User associated to token could not be found');
     }
@@ -72,21 +74,49 @@ async function fetchUser(ctx, next) {
     const ip = ctx.get('x-forwarded-for') || ctx.ip;
     // update update the user if the token hasnt been updated in the last 30 seconds
     // or the ip address has changed
-    if (token && (token.lastUsedAt < Date.now() - 1000 * 30 || token.ip !== ip)) {
+    if (token.lastUsedAt < Date.now() - 1000 * 30 || token.ip !== ip) {
       token.ip = ip;
       token.lastUsedAt = new Date();
-      await User.updateOne(
-        { _id: user.id, 'authInfo._id': token.id },
-        {
-          $set: {
-            'authInfo.$.ip': ip,
-            'authInfo.$.lastUsedAt': token.lastUsedAt,
+
+      await Promise.all([
+        // updates ip + lastUsedAt
+        User.updateOne(
+          { _id: user.id, 'authInfo._id': token.id },
+          {
+            $set: {
+              'authInfo.$.ip': ip,
+              'authInfo.$.lastUsedAt': token.lastUsedAt,
+            },
+          }
+        ),
+        // removes expired tokens
+        User.updateOne(
+          {
+            _id: user.id,
           },
-        }
-      );
+          {
+            $pull: {
+              authInfo: {
+                exp: {
+                  $lt: new Date(),
+                },
+              },
+            },
+          }
+        ),
+      ]);
     }
 
-    ctx.state.authUser = user;
+    let authUser = user;
+    if (jwt.impersonatedUser) {
+      authUser = await User.findById(jwt.impersonatedUser);
+      ctx.state.imposter = user;
+      if (!authUser) {
+        throw new TokenError('User associated to token could not be found');
+      }
+    }
+
+    ctx.state.authUser = authUser;
   }
   await next();
 }

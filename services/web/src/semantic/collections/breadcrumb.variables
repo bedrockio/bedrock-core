@@ -23,7 +23,7 @@
 @dividerSpacing: @3px;
 @dividerOpacity: 0.5;
 @dividerColor: @lightTextColor;
-@nocturnalDividerColor: @invertedUnselectedTextColor;
+@nocturnalDividerColor: @nocturnalUnselectedTextColor;
 
 @dividerSize: @relativeSmall;
 @dividerVerticalAlign: top;
@@ -37,6 +37,8 @@
 /* Coupling */
 @segmentPadding: @relativeMini @relativeMedium;
 
+/* Link Color */
+@breadcrumbLinkColor: #ABADB3;
 
 /*-------------------
        States

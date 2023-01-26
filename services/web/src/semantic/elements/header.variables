@@ -40,6 +40,8 @@
 @subHeaderColor: @mutedTextColor;
 
 /* Icon */
+// @iconBaseSize: 14px; // from icons.variables
+
 @iconOpacity: 1;
 @iconSize: 1.5em;
 @iconOffset: 0em;
@@ -109,7 +111,7 @@
 
 @dividedBorderPadding: @3px;
 @dividedSubHeaderPadding: @3px;
-@dividedIconPadding: 0em;
+@dividedIconPadding: @3px;
 
 /* Block */
 @blockBackground: @darkWhite;

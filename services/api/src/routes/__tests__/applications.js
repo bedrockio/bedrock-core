@@ -1,6 +1,6 @@
 const { setupDb, teardownDb, request, createUser, createAdminUser } = require('../../utils/testing');
 const { uniqueId } = require('lodash');
-const { Application } = require('../../models');
+const { Application, AuditEntry } = require('../../models');
 
 beforeAll(async () => {
   await setupDb();
@@ -81,6 +81,10 @@ describe('/1/applications', () => {
       expect(response.status).toBe(200);
       const application = await Application.findOne({ _id: response.body.data.id });
       expect(application.name).toBe('bob');
+
+      const auditEntry = await AuditEntry.findOne({ objectId: application.id });
+      expect(auditEntry.activity).toBe('Created Application');
+      expect(auditEntry.user.id).toBe(admin.id);
     });
   });
 
@@ -105,6 +109,16 @@ describe('/1/applications', () => {
       expect(response.body.data.name).toBe('bob');
       const dbApplication = await Application.findOne({ _id: response.body.data.id });
       expect(dbApplication.name).toBe('bob');
+
+      const auditEntry = await AuditEntry.findOne({ objectId: application.id });
+      expect(auditEntry.activity).toBe('Updated Application');
+      expect(auditEntry.user.id).toBe(admin.id);
+      expect(auditEntry.objectBefore).toEqual({
+        name: 'patch-application',
+      });
+      expect(auditEntry.objectAfter).toEqual({
+        name: 'bob',
+      });
     });
   });
 
