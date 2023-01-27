@@ -49,6 +49,7 @@
     "hast-util-to-mdast": "^8.4.1",
     "html-loader": "^4.2.0",
     "html-webpack-plugin": "^5.5.0",
+    "intl-tel-input": "^17.0.19",
     "koa": "^2.13.4",
     "koa-basic-auth": "^4.0.0",
     "koa-mount": "^4.0.0",

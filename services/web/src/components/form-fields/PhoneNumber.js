@@ -1,37 +1,54 @@
-import PhoneInput from 'react-phone-input-2';
-import 'react-phone-input-2/lib/semantic-ui.css';
+import intlTelInput from 'intl-tel-input';
+import 'intl-tel-input/build/css/intlTelInput.css';
 
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Form } from 'semantic';
 
-export default class PhoneCountryCode extends React.Component {
-  render() {
-    const {
-      required,
-      label,
-      name,
-      placeholder,
-      onChange = () => {},
-    } = this.props;
-    return (
-      <Form.Field required={required}>
-        {label && <label>{label}</label>}
-        <PhoneInput
-          inputProps={{
-            name,
-            required,
-            style: {
-              paddingLeft: '48px',
-              height: 'auto',
-            },
+export default function PhoneNumber(props) {
+  const inputRef = useRef(null);
+  const [iti, setIntlTel] = useState(null);
+  const [error, setError] = useState(false);
+  useEffect(() => {
+    if (inputRef.current) {
+      const instance = intlTelInput(inputRef.current, {
+        preferredCountries: ['us'],
+        separateDialCode: true,
+        utilsScript:
+          'https://cdn.jsdelivr.net/npm/intl-tel-input/build/js/utils.js',
+      });
+      setIntlTel(instance);
+      return () => {
+        instance.destroy();
+      };
+    }
+  }, [inputRef.current]);
+
+  useEffect(() => {
+    if (iti && props.value) {
+      iti.setNumber(props.value);
+    }
+  }, [iti, props.value]);
+
+  return (
+    <Form.Field error={error}>
+      <label>{props.label}</label>
+      <div className="ui input">
+        <input
+          style={{ width: 'auto' }}
+          name={props.name}
+          type="tel"
+          ref={inputRef}
+          onBlur={() => {
+            setError(!iti.isValidNumber());
           }}
-          country={placeholder ? [] : ['us']}
-          placeholder={placeholder}
-          onChange={(value, e, c) => {
-            onChange(e, { name, value });
+          onChange={(e) => {
+            props.onChange(e, {
+              name: props.name,
+              value: iti.getNumber(),
+            });
           }}
         />
-      </Form.Field>
-    );
-  }
+      </div>
+    </Form.Field>
+  );
 }

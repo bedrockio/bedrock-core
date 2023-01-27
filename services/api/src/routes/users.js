@@ -15,6 +15,8 @@ const { AuditEntry } = require('../models');
 
 const router = new Router();
 
+console.log(User.getUpdateValidation());
+
 router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
@@ -35,24 +37,15 @@ router
       data: expandRoles(authUser),
     };
   })
-  .patch(
-    '/me',
-    validateBody({
-      firstName: yd.string(),
-      lastName: yd.string(),
-      timeZone: yd.string(),
-      theme: yd.string(),
-    }),
-    async (ctx) => {
-      const { authUser } = ctx.state;
-      authUser.assign(ctx.request.body);
+  .patch('/me', validateBody(User.getUpdateValidation()), async (ctx) => {
+    const { authUser } = ctx.state;
+    authUser.assign(ctx.request.body);
 
-      await authUser.save();
-      ctx.body = {
-        data: expandRoles(authUser),
-      };
-    }
-  )
+    await authUser.save();
+    ctx.body = {
+      data: expandRoles(authUser),
+    };
+  })
   .post(
     '/:userId/authenticate',
     requirePermissions({ endpoint: 'users', permission: 'write', scope: 'global' }),

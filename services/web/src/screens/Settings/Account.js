@@ -14,7 +14,12 @@ import Menu from './Menu';
 @withSession
 export default class Account extends React.Component {
   state = {
-    user: pick(this.context.user, ['firstName', 'lastName', 'timeZone']),
+    user: pick(this.context.user, [
+      'firstName',
+      'lastName',
+      'timeZone',
+      'phoneNumber',
+    ]),
   };
 
   setField = (evt, { name, value }) => {
@@ -57,10 +62,11 @@ export default class Account extends React.Component {
 
   render() {
     const { user, error, loading } = this.state;
-
+    console.log('user', user);
     if (!this.context.user) {
-      return <div></div>;
+      return null;
     }
+
     return (
       <React.Fragment>
         <Menu />
@@ -84,8 +90,8 @@ export default class Account extends React.Component {
             />
             <PhoneNumber
               label="Phone Number"
-              mame="phoneNumber1"
-              value={user.phoneNumber1 || ''}
+              name="phoneNumber"
+              value={user.phoneNumber || ''}
               onChange={this.setField}
             />
           </Segment>

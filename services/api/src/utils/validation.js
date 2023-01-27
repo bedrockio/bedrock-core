@@ -1,7 +1,16 @@
 const yd = require('@bedrockio/yada');
 
+const parsePhoneNumber = require('libphonenumber-js');
+
 const FIXED_SCHEMAS = {
   email: yd.string().lowercase().email(),
+  phoneNumber: yd.string().custom(async (val) => {
+    const parsedPhoneNo = parsePhoneNumber(val);
+    if (!parsedPhoneNo.isValid()) {
+      throw Error('Invalid phone number');
+    }
+    return parsedPhoneNo.number;
+  }),
   ObjectId: yd.string().mongo(),
 };
 

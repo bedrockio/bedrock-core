@@ -24,7 +24,7 @@ router
       firstName: yd.string().required(),
       lastName: yd.string().required(),
       password: yd.string().password().required(),
-      phoneNumber: User.validators.phoneNumber.required(),
+      phoneNumber: yd.string().phoneNumber().required(),
     }),
     async (ctx) => {
       const { email } = ctx.request.body;

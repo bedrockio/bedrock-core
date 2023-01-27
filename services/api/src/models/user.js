@@ -1,12 +1,10 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
-const parsePhoneNumber = require('libphonenumber-js');
 const { createSchema } = require('../utils/schema');
 const { validScopes } = require('../utils/permissions');
 const { createAuthToken } = require('../utils/tokens');
 const definition = require('./definitions/user.json');
-const yd = require('@bedrockio/yada');
 
 definition.attributes.roles[0].scope.enum = validScopes;
 const schema = createSchema(definition);
@@ -21,23 +19,6 @@ schema.virtual('password').set(function (password) {
 
 schema.methods.removeAuthToken = function (jti) {
   this.authInfo = this.authInfo.filter((token) => token.jti !== jti);
-};
-
-schema.statics.validators = {
-  phoneNumber: yd
-    .string()
-    .custom(async (val) => {
-      const parsedPhoneNo = parsePhoneNumber(`+${val}`);
-      if (!parsedPhoneNo.isValid()) {
-        throw Error('Invalid phone number');
-      }
-      return parsedPhoneNo.number;
-    })
-    .custom(async (val) => {
-      if (await mongoose.models.User.exists({ phoneNumber: val })) {
-        throw Error('A user with that phone number already exists');
-      }
-    }),
 };
 
 schema.methods.createAuthToken = function ({ ip, userAgent, country }, tokenOption = {}) {

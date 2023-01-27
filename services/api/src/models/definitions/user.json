@@ -35,6 +35,8 @@
     },
     "phoneNumber": {
       "type": "String",
+      "required": true,
+      "validate": "phoneNumber",
       "trim": true
     },
     "theme": {
