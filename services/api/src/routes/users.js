@@ -15,8 +15,6 @@ const { AuditEntry } = require('../models');
 
 const router = new Router();
 
-console.log(User.getUpdateValidation());
-
 router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
