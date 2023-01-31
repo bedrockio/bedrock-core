@@ -62,10 +62,11 @@ export default class Account extends React.Component {
 
   render() {
     const { user, error, loading } = this.state;
-    console.log('user', user);
     if (!this.context.user) {
       return null;
     }
+
+    console.log(user.phoneNumber);
 
     return (
       <React.Fragment>

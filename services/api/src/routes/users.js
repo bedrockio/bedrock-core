@@ -37,6 +37,7 @@ router
   })
   .patch('/me', validateBody(User.getUpdateValidation()), async (ctx) => {
     const { authUser } = ctx.state;
+    console.log('b', ctx.request.body);
     authUser.assign(ctx.request.body);
 
     await authUser.save();

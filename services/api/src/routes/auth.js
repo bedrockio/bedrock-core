@@ -16,19 +16,27 @@ const router = new Router();
 
 const APP_NAME = config.get('APP_NAME');
 
+//XXX: reuse the FIXED_SCHEMA validation from the valadation.js file?
+const phone = yd.string().custom(async (val) => {
+  // E.164 format
+  if (!val.match(/^\+[1-9]\d{1,14}$/)) {
+    throw new Error('Not a valid phone number');
+  }
+  return val;
+});
+
 router
   .post(
     '/register',
-    validateBody({
-      email: yd.string().lowercase().email().required(),
-      firstName: yd.string().required(),
-      lastName: yd.string().required(),
-      password: yd.string().password().required(),
-      phoneNumber: yd.string().phoneNumber().required(),
-    }),
+    validateBody(
+      User.getCreateValidation({
+        password: yd.string().password().required(),
+      })
+    ),
     async (ctx) => {
       const { email } = ctx.request.body;
 
+      // XXX to be removed once we have enforce a unique email constraint
       if (await User.exists({ email })) {
         ctx.throw(400, 'A user with that email already exists');
       }
@@ -36,6 +44,7 @@ router
       const user = new User({
         ...ctx.request.body,
       });
+
       const token = user.createAuthToken({
         ip: ctx.get('x-forwarded-for') || ctx.ip,
         country: ctx.get('cf-ipcountry'),
@@ -130,18 +139,12 @@ router
   .post(
     '/login/send-sms',
     validateBody({
-      phoneNumber: yd.string(),
+      phoneNumber: phone.required(),
     }),
     async (ctx) => {
       const { phoneNumber } = ctx.request.body;
-      // We assume US phone numbers for now
-      // If you want to support other countries, you'll need to add a country field to user model
-      const parsedPhoneNo = parsePhoneNumber(phoneNumber, 'US');
-      if (!parsedPhoneNo.isValid()) {
-        ctx.throw(400, 'Invalid phone number');
-      }
 
-      const user = await User.findOne({ phoneNo: parsedPhoneNo.number });
+      const user = await User.findOne({ phoneNumber });
       // TODO: avoid leaking that a user exists with that phone number
       if (!user) {
         ctx.throw(400, 'Could not find a user with that phone number, try again!');
@@ -165,15 +168,15 @@ router
         user.smsSecret = secret;
         await user.save();
       }
-      await sms.sendMessage(user.phoneNumber, `Your ${APP_NAME} login code is: ${mfa.generateToken(user.loginSecret)}`);
+      await sms.sendMessage(user.phone, `Your ${APP_NAME} login code is: ${mfa.generateToken(user.loginSecret)}`);
       ctx.status = 204;
     }
   )
   .post(
     '/login/verify-sms',
     validateBody({
-      phoneNumber: yd.string(),
-      code: yd.string(),
+      phoneNumber: phone.required(),
+      code: yd.string().required(),
     }),
     async (ctx) => {
       const { phoneNumber, code } = ctx.request.body;
@@ -203,7 +206,7 @@ router
         ctx.throw(400, 'Invalid login code');
       }
 
-      // just because the user has successful verified their phone number doesn't mean they get to bypass mfa
+      // just because the user has successful verified their phone doesn't mean they get to bypass mfa
       if (await mfa.requireChallenge(ctx, user)) {
         const tokenId = generateTokenId();
         const mfaToken = createTemporaryToken({ type: 'mfa', sub: user.id, jti: tokenId });
@@ -343,6 +346,7 @@ router
         email: invite.email,
         password,
       });
+
       const token = user.createAuthToken({
         ip: ctx.get('x-forwarded-for') || ctx.ip,
         country: ctx.get('cf-ipcountry'),
