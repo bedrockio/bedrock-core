@@ -265,7 +265,7 @@
       "attributes": [
         {
           "name": "firstName",
-          "description": "First name of user",
+          "description": "First name of the user",
           "required": true,
           "schema": {
             "type": "string"
@@ -273,8 +273,15 @@
         },
         {
           "name": "lastName",
-          "description": "Last name of user",
+          "description": "Last name of the user",
           "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "phoneNumber",
+          "description": "Phone number (E.164) of the user",
           "schema": {
             "type": "string"
           }
