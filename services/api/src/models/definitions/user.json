@@ -48,7 +48,7 @@
     "isDeveloper": {
       "type": "Boolean",
       "default": false,
-      "writeScopes": "admin"
+      "writeScopes": "users"
     },
     "hashedPassword": {
       "type": "String",
