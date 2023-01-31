@@ -9,7 +9,7 @@ import LogoTitle from 'components/LogoTitle';
 import Code from 'components/form-fields/Code';
 import ErrorMessage from 'components/ErrorMessage';
 
-import PhoneNumber from 'components/form-fields/PhoneNumber';
+import PhoneNumber from 'components/PhoneNumber';
 
 import Finalize from './Finalize';
 
@@ -140,14 +140,17 @@ export default class Sms extends React.Component {
             <Form onSubmit={this.triggerSms} error={touched && !!error}>
               <ErrorMessage error={error} />
 
-              <PhoneNumber
-                value={phoneNumber}
-                label="Phone number"
-                required
-                onChange={(e, { value }) =>
-                  this.setState({ phoneNumber: value })
-                }
-              />
+              <Form.Field>
+                <label>Phone Number</label>
+                <PhoneNumber
+                  value={phoneNumber}
+                  label="Phone number"
+                  required
+                  onChange={(e, { value }) =>
+                    this.setState({ phoneNumber: value })
+                  }
+                />
+              </Form.Field>
 
               <Layout horizontal center>
                 <Form.Button

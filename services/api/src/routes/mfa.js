@@ -20,6 +20,15 @@ const checkPasswordVerification = (ctx, next) => {
   return next();
 };
 
+//XXX: reuse the FIXED_SCHEMA validator from the validation.js file?
+const phone = yd.string().custom(async (val) => {
+  // E.164 format
+  if (!val.match(/^\+[1-9]\d{1,14}$/)) {
+    throw new Error('Not a valid phone number');
+  }
+  return val;
+});
+
 router
   .post('/send-code', authenticate({ type: 'mfa' }), async (ctx) => {
     const { jwt } = ctx.state;
@@ -129,7 +138,7 @@ router
     '/setup',
     validateBody({
       method: yd.string().allow('sms', 'otp').required(),
-      phoneNumber: yd.string(),
+      phoneNumber: phone,
     }),
     checkPasswordVerification,
     async (ctx) => {
@@ -183,7 +192,7 @@ router
     validateBody({
       secret: yd.string(),
       method: yd.string().allow('sms', 'otp').required(),
-      phoneNumber: yd.string(),
+      phoneNumber: phone,
       backupCodes: yd.array(yd.string()).required(),
     }),
     checkPasswordVerification,

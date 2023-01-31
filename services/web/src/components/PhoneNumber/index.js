@@ -45,29 +45,27 @@ export default function PhoneNumber({
   }, [value]);
 
   return (
-    <Form.Field error={error}>
-      <label>{label}</label>
-      <div className="ui input">
-        <input
-          type="tel"
-          autoComplete="tel"
-          ref={inputRef}
-          onChange={(e) => {
-            // only trigger on change if is valid number
-            if (iti.isValidNumber()) {
-              onChange(e, {
-                name: props.name,
-                value: iti.getNumber(),
-              });
-              setError(false);
-            } else {
-              setError(true);
-              setValue(iti.getNumber());
-            }
-          }}
-          {...props}
-        />
-      </div>
-    </Form.Field>
+    <div
+      className={['ui', error && 'error', 'input'].filter(Boolean).join(' ')}>
+      <input
+        type="tel"
+        autoComplete="tel"
+        ref={inputRef}
+        onChange={(e) => {
+          // only trigger on change if is valid number
+          if (iti.isValidNumber()) {
+            onChange(e, {
+              name: props.name,
+              value: iti.getNumber(),
+            });
+            setError(false);
+          } else {
+            setError(e.target.value.length ? true : false);
+            setValue(iti.getNumber());
+          }
+        }}
+        {...props}
+      />
+    </div>
   );
 }

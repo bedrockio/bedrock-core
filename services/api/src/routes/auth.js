@@ -16,7 +16,7 @@ const router = new Router();
 
 const APP_NAME = config.get('APP_NAME');
 
-//XXX: reuse the FIXED_SCHEMA validation from the valadation.js file?
+//TODO: reuse the FIXED_SCHEMA validator from the validation.js file?
 const phone = yd.string().custom(async (val) => {
   // E.164 format
   if (!val.match(/^\+[1-9]\d{1,14}$/)) {
@@ -34,11 +34,16 @@ router
       })
     ),
     async (ctx) => {
-      const { email } = ctx.request.body;
+      const { email, phoneNumber } = ctx.request.body;
 
-      // XXX to be removed once we have enforce a unique email constraint
+      // TODO: Avoid leaking that a user exists with that email/phone-number
+      // TODO: To be removed once we have enforce a constraint
       if (await User.exists({ email })) {
         ctx.throw(400, 'A user with that email already exists');
+      }
+      // TODO: to be removed once we have enforce a constraint
+      if (await User.exists({ phoneNumber })) {
+        ctx.throw(400, 'A user with that phone number already exists');
       }
 
       const user = new User({

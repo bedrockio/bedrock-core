@@ -35,7 +35,6 @@
     },
     "phoneNumber": {
       "type": "String",
-      "required": true,
       "validate": "phone"
     },
     "theme": {
@@ -48,7 +47,8 @@
     },
     "isDeveloper": {
       "type": "Boolean",
-      "default": false
+      "default": false,
+      "writeScopes": "admin"
     },
     "hashedPassword": {
       "type": "String",
