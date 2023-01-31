@@ -4,19 +4,14 @@ import { Form, Button, Segment, Header, Divider } from 'semantic';
 
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
-import allCountries from 'utils/countries';
 import { Layout } from 'components';
 import LogoTitle from 'components/LogoTitle';
 import Code from 'components/form-fields/Code';
 import ErrorMessage from 'components/ErrorMessage';
 
-import Finalize from './Finalize';
+import PhoneNumber from 'components/form-fields/PhoneNumber';
 
-const countryCallingCodes = allCountries.map(({ nameEn, callingCode }) => ({
-  value: nameEn,
-  text: `${nameEn} (+${callingCode})`,
-  key: `${nameEn}-${callingCode}`,
-}));
+import Finalize from './Finalize';
 
 @screen
 export default class Sms extends React.Component {
@@ -27,20 +22,17 @@ export default class Sms extends React.Component {
     loading: false,
     error: null,
     phoneNumber: '',
-    country: '',
     code: '',
     smsSent: false,
   };
 
   triggerSms = async () => {
-    const { country, phoneNumber } = this.state;
+    const { phoneNumber } = this.state;
     this.setState({
       smsSent: false,
       error: null,
       smsLoading: true,
     });
-
-    const { callingCode } = allCountries.find((c) => c.nameEn === country);
 
     try {
       const { data } = await request({
@@ -48,7 +40,7 @@ export default class Sms extends React.Component {
         path: '/1/mfa/setup',
         body: {
           method: 'sms',
-          phoneNumber: `+${callingCode}${phoneNumber}`,
+          phoneNumber,
         },
       });
 
@@ -115,7 +107,7 @@ export default class Sms extends React.Component {
       touched,
       loading,
       error,
-      country,
+
       phoneNumber,
       code,
       codes,
@@ -124,15 +116,13 @@ export default class Sms extends React.Component {
     } = this.state;
 
     if (verified) {
-      const { callingCode } = allCountries.find((c) => c.nameEn === country);
-
       return (
         <Finalize
           method="sms"
           requestBody={{
             secret,
             method: 'sms',
-            phoneNumber: `+${callingCode}${phoneNumber}`,
+            phoneNumber,
             backupCodes: codes,
           }}
           codes={codes}
@@ -149,24 +139,13 @@ export default class Sms extends React.Component {
             <p>Authentication codes will be sent to it.</p>
             <Form onSubmit={this.triggerSms} error={touched && !!error}>
               <ErrorMessage error={error} />
-              <Form.Select
-                options={countryCallingCodes}
-                search
-                value={country}
-                label="Country Code"
-                required
-                type="text"
-                autoComplete="tel-country-code"
-                onChange={(e, { value }) => this.setState({ country: value })}
-              />
-              <Form.Input
+
+              <PhoneNumber
                 value={phoneNumber}
                 label="Phone number"
                 required
-                type="tel"
-                autoComplete="tel-local"
                 onChange={(e, { value }) =>
-                  this.setState({ phoneNumber: value.replace(/ /g, '') })
+                  this.setState({ phoneNumber: value })
                 }
               />
 
@@ -174,7 +153,7 @@ export default class Sms extends React.Component {
                 <Form.Button
                   type="submit"
                   basic
-                  disabled={!phoneNumber || !country}
+                  disabled={!phoneNumber}
                   loading={this.state.smsLoading}>
                   Send authentication Code
                 </Form.Button>

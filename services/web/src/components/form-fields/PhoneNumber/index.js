@@ -1,5 +1,6 @@
 import intlTelInput from 'intl-tel-input';
 import 'intl-tel-input/build/css/intlTelInput.css';
+import './phone-number.less';
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Form } from 'semantic';
@@ -48,20 +49,19 @@ export default function PhoneNumber({
       <label>{label}</label>
       <div className="ui input">
         <input
-          style={{ width: 'auto' }}
           type="tel"
+          autoComplete="tel"
           ref={inputRef}
-          onBlur={() => {
-            // setError(!iti.isValidNumber());
-          }}
           onChange={(e) => {
+            // only trigger on change if is valid number
             if (iti.isValidNumber()) {
-              console.log('is valid number');
               onChange(e, {
                 name: props.name,
                 value: iti.getNumber(),
               });
+              setError(false);
             } else {
+              setError(true);
               setValue(iti.getNumber());
             }
           }}

@@ -66,8 +66,6 @@ export default class Account extends React.Component {
       return null;
     }
 
-    console.log(user.phoneNumber);
-
     return (
       <React.Fragment>
         <Menu />
