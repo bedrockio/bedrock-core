@@ -21,6 +21,7 @@
               "roles": [
                 "admin"
               ],
+              "phoneNumber": "+31612345678",
               "firstName": "John",
               "lastName": "Doe",
               "email": "john.doe@gmail.com",
@@ -70,6 +71,13 @@
           "name": "lastName",
           "description": "Last name of user",
           "required": false,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "phoneNumber",
+          "description": "Phone number (E.164) of the user",
           "schema": {
             "type": "string"
           }
@@ -212,6 +220,14 @@
           }
         },
         {
+          "name": "phoneNumber",
+          "description": "Phone number (E.164) of user",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
           "name": "roles",
           "description": "List of roles for user",
           "required": false,
@@ -244,6 +260,7 @@
               "id": "5e6a9c000fc676447dc9936a",
               "firstName": "New Name",
               "lastName": "Doe",
+              "phoneNumber": "+15555555555",
               "email": "john.doe@gmail.com",
               "createdAt": "2020-03-12T20:30:56.062Z",
               "updatedAt": "2020-03-12T20:30:56.062Z"
