@@ -14,12 +14,7 @@ import Menu from './Menu';
 @withSession
 export default class Account extends React.Component {
   state = {
-    user: pick(this.context.user, [
-      'firstName',
-      'lastName',
-      'timeZone',
-      'phoneNumber',
-    ]),
+    user: pick(this.context.user, ['firstName', 'lastName', 'phoneNumber']),
   };
 
   setField = (evt, { name, value }) => {

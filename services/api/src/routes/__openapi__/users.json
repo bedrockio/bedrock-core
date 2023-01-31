@@ -304,13 +304,6 @@
           }
         },
         {
-          "name": "timeZone",
-          "description": "Timezone in TZ Database standard (e.g. Europe/Amsterdam)",
-          "schema": {
-            "type": "string"
-          }
-        },
-        {
           "name": "isDeveloper",
           "description": "Is the user a developer?",
           "schema": {
