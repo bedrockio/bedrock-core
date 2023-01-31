@@ -3,7 +3,6 @@ import 'intl-tel-input/build/css/intlTelInput.css';
 import './phone-number.less';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Form } from 'semantic';
 
 export default function PhoneNumber({
   preferredCountries = ['us'],
