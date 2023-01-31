@@ -3,7 +3,6 @@ const { Writable } = require('stream');
 const { createWriteStream, promises: fs } = require('fs');
 
 const Zip = require('jszip');
-const fetch = require('node-fetch');
 const mongoose = require('mongoose');
 const logger = require('@bedrockio/logger');
 const { memoize, set, isPlainObject } = require('lodash');

@@ -87,7 +87,7 @@ const categories = require('../../categores');
 module.exports = {
   name: 'Demo',
   description: `
-  
+
     A longer description
     with multiple lines.
 
@@ -99,8 +99,6 @@ module.exports = {
 Additionally, modules that export a function will be resolved asynchronously, opening up more flexibility:
 
 ```js
-const fetch = require('node-fetch');
-
 module.exports = async () => {
   return await fetch('https://jsonplaceholder.typicode.com/users/1');
 };
