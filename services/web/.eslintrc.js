@@ -20,7 +20,7 @@ module.exports = {
   },
   extends: [
     'plugin:bedrock/recommended',
-    'plugin:bedrock/imports',
+    'plugin:bedrock/imports-webpack',
     'plugin:bedrock/react',
     'plugin:bedrock/jest',
   ],
