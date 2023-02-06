@@ -37,6 +37,11 @@ const logger = require('@bedrockio/logger');
     ids = ids.split(',');
   }
 
+  if (!modelNames) {
+    logger.error('Must pass model names with --model(s).');
+    process.exit(1);
+  }
+
   let stdout = options.stdout;
 
   await initialize();
