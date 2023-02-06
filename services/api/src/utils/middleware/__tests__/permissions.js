@@ -1,10 +1,5 @@
 const { requirePermissions } = require('../permissions');
 const { createUser, context } = require('../../testing');
-const { User } = require('./../../../models');
-
-beforeAll(async () => {
-  await User.deleteMany({});
-});
 
 describe('permissions', () => {
   it('should trigger an error if no auth user is set', async () => {

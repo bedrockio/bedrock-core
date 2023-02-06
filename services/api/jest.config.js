@@ -2,7 +2,7 @@ process.env.ENV_NAME = 'test';
 process.env.LOG_LEVEL = 'warn';
 module.exports = {
   preset: '@shelf/jest-mongodb',
-  setupFilesAfterEnv: ['<rootDir>/src/utils/testing/setup'],
+  setupFilesAfterEnv: ['<rootDir>/src/utils/testing/setup', '<rootDir>/src/utils/testing/autoclear'],
   // Only run on changed files without extra arguments.
   watchPlugins: ['./src/utils/testing/ChangedFilesPlugin'],
   // https://github.com/shelfio/jest-mongodb#6-jest-watch-mode-gotcha

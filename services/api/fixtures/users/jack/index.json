@@ -1,4 +1,5 @@
 {
-  "name": "Jack Sparrow",
+  "firstName": "Jack",
+  "lastName": "Sparrow",
   "role": "viewer"
 }

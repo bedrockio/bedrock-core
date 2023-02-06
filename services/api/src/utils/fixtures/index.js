@@ -11,7 +11,8 @@ const { storeUploadedFile } = require('../uploads');
 const { stringReplaceAsync } = require('../string');
 const { exportFixtures } = require('./export');
 const { pluralCamel, pluralKebab } = require('./utils');
-const models = require('./models');
+
+const { models } = mongoose;
 
 const ADMIN_EMAIL = config.get('ADMIN_EMAIL');
 const API_URL = config.get('API_URL');
@@ -92,7 +93,10 @@ const createDocument = memoize(async (id, attributes, meta) => {
   // Create the document
   await transformAttributes(attributes, meta);
   await applyModelTransforms(attributes, meta);
-  const doc = await meta.model.create(attributes);
+
+  const doc = new meta.model(attributes);
+  createdDocuments.add(doc);
+  await doc.save();
 
   // Post import phase
   setDocumentForPlaceholder(doc, meta.id);
@@ -504,6 +508,7 @@ let placeholdersById = new Map();
 let documentsByPlaceholder = new Map();
 let referencedPlaceholders = new Map();
 let unresolvedDocuments = new Set();
+let createdDocuments = new Set();
 
 function queuePlaceholderResolve(doc) {
   unresolvedDocuments.add(doc);
@@ -582,6 +587,7 @@ function cleanupPlaceholders() {
   placeholdersById = new Map();
   documentsByPlaceholder = new Map();
   referencedPlaceholders = new Map();
+  createdDocuments = new Set();
   unresolvedDocuments = new Set();
   getPlaceholderForId.cache.clear();
 }
@@ -607,24 +613,29 @@ const loadModule = memoize(async (id, args) => {
 
 // Model helpers
 
-const modelsByName = {};
+// Defer this in case file is required
+// before models are loaded.
+const getModelsByName = memoize(() => {
+  const modelsByName = {};
 
-for (let [name, model] of Object.entries(models)) {
-  Object.assign(modelsByName, {
-    // For mapping singular properties.
-    // ie. user or userProfile
-    [camelCase(name)]: model,
-    // For mapping pluralized properties.
-    // ie. users or userProfiles
-    [pluralCamel(name)]: model,
-    // For mapping directories.
-    // ie. users or user-profiles
-    [pluralKebab(name)]: model,
-  });
-}
+  for (let [name, model] of Object.entries(models)) {
+    Object.assign(modelsByName, {
+      // For mapping singular properties.
+      // ie. user or userProfile
+      [camelCase(name)]: model,
+      // For mapping pluralized properties.
+      // ie. users or userProfiles
+      [pluralCamel(name)]: model,
+      // For mapping directories.
+      // ie. users or user-profiles
+      [pluralKebab(name)]: model,
+    });
+  }
+  return modelsByName;
+});
 
 function getModelByName(name, assert = true) {
-  const model = modelsByName[name];
+  const model = getModelsByName()[name];
   if (!model && assert) {
     throw new Error(`Could not find model "${name}".`);
   }
@@ -772,9 +783,14 @@ async function buildFixtures(arr, fn) {
   return fixtures;
 }
 
+function isFixture(doc) {
+  return createdDocuments.has(doc);
+}
+
 module.exports = {
   loadFixtures,
   resetFixtures,
   importFixtures,
   exportFixtures,
+  isFixture,
 };

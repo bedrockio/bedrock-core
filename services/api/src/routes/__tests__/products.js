@@ -39,8 +39,6 @@ describe('/1/products', () => {
   describe('POST /search', () => {
     it('should list out products', async () => {
       const user = await createUser();
-      await Product.deleteMany({});
-
       const product1 = await Product.create({
         name: 'test 1',
         description: 'Some description',

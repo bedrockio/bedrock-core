@@ -10,7 +10,7 @@ const { memoize, set, isPlainObject } = require('lodash');
 const { camelUpper, kebabCase, pluralKebab, pluralCamel } = require('./utils');
 const { stringReplaceAsync } = require('../string');
 
-const models = require('./models');
+const { models } = mongoose;
 
 const EXPORT_FILE = 'export.zip';
 
