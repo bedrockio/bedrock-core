@@ -1,12 +1,4 @@
-const { setupDb, teardownDb, request, createUser } = require('../../utils/testing');
-
-beforeAll(async () => {
-  await setupDb();
-});
-
-afterAll(async () => {
-  await teardownDb();
-});
+const { request, createUser } = require('../../utils/testing');
 
 describe('/1/status', () => {
   describe('GET /', () => {

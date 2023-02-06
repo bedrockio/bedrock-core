@@ -1,6 +1,6 @@
 const { authenticate, fetchUser } = require('../authenticate');
 
-const { setupDb, teardownDb, context, createUser } = require('../../testing');
+const { context, createUser } = require('../../testing');
 const jwt = require('jsonwebtoken');
 const config = require('@bedrockio/config');
 const { User } = require('../../../models');
@@ -134,14 +134,6 @@ describe('authenticate', () => {
 });
 
 describe('fetchUser', () => {
-  beforeAll(async () => {
-    await setupDb();
-  });
-
-  afterAll(async () => {
-    await teardownDb();
-  });
-
   it('should fetch the authUser', async () => {
     const user = await createUser({
       authInfo: [

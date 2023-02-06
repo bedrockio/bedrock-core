@@ -1,15 +1,6 @@
 const mongoose = require('mongoose');
 const yd = require('@bedrockio/yada');
 const { createSchema, loadModel, loadModelDir } = require('../schema');
-const { setupDb, teardownDb } = require('../testing');
-
-beforeAll(async () => {
-  await setupDb();
-});
-
-afterAll(async () => {
-  await teardownDb();
-});
 
 let counter = 0;
 

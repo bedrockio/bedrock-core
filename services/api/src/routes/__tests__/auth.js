@@ -1,18 +1,10 @@
 const jwt = require('jsonwebtoken');
 const { assertMailSent } = require('postmark');
 const { createTemporaryToken, generateTokenId } = require('../../utils/tokens');
-const { setupDb, teardownDb, request, createUser } = require('../../utils/testing');
+const { request, createUser } = require('../../utils/testing');
 const { mockTime, unmockTime, advanceTime } = require('../../utils/testing/time');
 const { User, Invite } = require('../../models');
 const { verifyPassword } = require('../../utils/auth');
-
-beforeAll(async () => {
-  await setupDb();
-});
-
-afterAll(async () => {
-  await teardownDb();
-});
 
 describe('/1/auth', () => {
   describe('POST login', () => {

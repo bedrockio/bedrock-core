@@ -1,15 +1,6 @@
 const mongoose = require('mongoose');
-const { setupDb, teardownDb } = require('../testing');
 const { User } = require('./../../models');
 const { validatePermissions, userHasAccess } = require('../permissions');
-
-beforeAll(async () => {
-  await setupDb();
-});
-
-afterAll(async () => {
-  await teardownDb();
-});
 
 describe('permissions', () => {
   it('validatePermissions', () => {

@@ -1,16 +1,7 @@
-const { setupDb, teardownDb } = require('../../../utils/testing');
 const { importFixtures } = require('../');
 
 jest.mock('../const');
 jest.mock('../models');
-
-beforeAll(async () => {
-  await setupDb();
-});
-
-afterAll(async () => {
-  await teardownDb();
-});
 
 describe('importFixtures', () => {
   it('should load root fixtures', async () => {

@@ -1,14 +1,9 @@
 const { requirePermissions } = require('../permissions');
-const { setupDb, teardownDb, createUser, context } = require('../../testing');
+const { createUser, context } = require('../../testing');
 const { User } = require('./../../../models');
 
 beforeAll(async () => {
-  await setupDb();
   await User.deleteMany({});
-});
-
-afterAll(async () => {
-  await teardownDb();
 });
 
 describe('permissions', () => {

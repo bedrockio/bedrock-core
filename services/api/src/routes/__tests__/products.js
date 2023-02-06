@@ -1,15 +1,7 @@
 const mongoose = require('mongoose');
 
-const { setupDb, teardownDb, request, createUser } = require('../../utils/testing');
+const { request, createUser } = require('../../utils/testing');
 const { Product } = require('../../models');
-
-beforeAll(async () => {
-  await setupDb();
-});
-
-afterAll(async () => {
-  await teardownDb();
-});
 
 describe('/1/products', () => {
   describe('POST /', () => {

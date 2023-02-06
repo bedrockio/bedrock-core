@@ -1,14 +1,6 @@
-const { setupDb, teardownDb, request, createUser, createAdminUser } = require('../../utils/testing');
+const { request, createUser, createAdminUser } = require('../../utils/testing');
 const { uniqueId } = require('lodash');
 const { Application, AuditEntry } = require('../../models');
-
-beforeAll(async () => {
-  await setupDb();
-});
-
-afterAll(async () => {
-  await teardownDb();
-});
 
 describe('/1/applications', () => {
   describe('POST /mine/search', () => {

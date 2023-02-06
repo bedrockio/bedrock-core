@@ -7,15 +7,7 @@ const Router = require('@koa/router');
 const request = require('supertest');
 const { createSchema } = require('../../utils/schema');
 
-const { setupDb, teardownDb, createUser } = require('../../utils/testing');
-
-beforeAll(async () => {
-  await setupDb();
-});
-
-afterAll(async () => {
-  await teardownDb();
-});
+const { createUser } = require('../../utils/testing');
 
 async function getContext(user) {
   const app = new Koa();
