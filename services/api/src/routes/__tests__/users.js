@@ -132,7 +132,7 @@ describe('/1/users', () => {
       expect(response.body.data.token).toBeTruthy();
 
       const auditEntry = await AuditEntry.findOne({
-        superAdmin: user._id,
+        user: superAdmin.id,
         activity: 'Authenticate as user',
       });
       expect(auditEntry.objectType).toBe('User');

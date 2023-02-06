@@ -15,6 +15,7 @@ async function setupDb() {
   const mongoURL = 'mongodb://' + global.__MONGO_URI__.split('/')[2] + '/' + global.__MONGO_DB_NAME__;
 
   try {
+    mongoose.set('strictQuery', false);
     await mongoose.connect(mongoURL, flags);
   } catch (err) {
     logger.error(err);
