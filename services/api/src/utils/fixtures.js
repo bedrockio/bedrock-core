@@ -2,9 +2,6 @@ const { loadFixtures, importFixtures, exportFixtures, isFixture, setOptions } = 
 const { storeUploadedFile } = require('./uploads');
 const roles = require('../roles.json');
 
-// Ensure models are loaded.
-require('../models');
-
 setOptions({
   getRoles() {
     return roles;
