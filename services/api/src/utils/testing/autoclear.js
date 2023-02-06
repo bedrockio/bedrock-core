@@ -1,12 +1,37 @@
+/* eslint no-console: 0 */
+
 const mongoose = require('mongoose');
 const { isFixture } = require('../fixtures');
 
 let stored;
 
 function autoclear(schema) {
+  schema.pre('save', function () {
+    if (isFixture(this) && !this.isNew) {
+      if (this.deleted) {
+        console.error('Fixtures cannot be deleted as they may be used in other tests.');
+      } else {
+        console.error(
+          [
+            'Fixtures cannot be directly updated as they may be used in other tests.',
+            'Instead create a new document or use $clone.',
+          ].join('\n')
+        );
+      }
+      throw new Error('Exited due to fixture update.');
+    }
+  });
+
   schema.post('save', function () {
     if (!isFixture(this)) {
       stored.add(this);
+    }
+  });
+
+  schema.pre('remove', function () {
+    if (isFixture(this)) {
+      console.error('Fixtures cannot be deleted as they may be used in other tests.');
+      throw new Error('Exited due to attempt to delete fixture.');
     }
   });
 
@@ -15,7 +40,6 @@ function autoclear(schema) {
     const keys = Object.keys(filter);
     if (!keys.length) {
       const { modelName } = this.model;
-      // eslint-disable-next-line
       console.error(
         [
           `${modelName}.deleteMany() cannot be called in tests without a filter as this will`,
