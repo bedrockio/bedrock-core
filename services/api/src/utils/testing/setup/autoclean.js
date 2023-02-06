@@ -1,6 +1,5 @@
 /* eslint no-console: 0 */
 
-console.info('RUNNING????????????/');
 const mongoose = require('mongoose');
 const { isFixture } = require('../../fixtures');
 
