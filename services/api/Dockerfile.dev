@@ -1,4 +1,4 @@
-FROM node:18.13.0-alpine
+FROM node:18.14.0-alpine
 
 # Note layers should be ordered from less to more likely to change.
 
@@ -19,8 +19,7 @@ COPY . .
 
 # Set your port
 ENV PORT 2300
-
-# Expose the port to outside world
+18.14pose the port to outside world
 EXPOSE 2300
 
 # Start production server
