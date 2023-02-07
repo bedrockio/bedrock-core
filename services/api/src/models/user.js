@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const { createSchema } = require('@bedrockio/model');
 
-const { createSchema } = require('../utils/schema');
 const { validScopes } = require('../utils/permissions');
 const { createAuthToken } = require('../utils/tokens');
 const definition = require('./definitions/user.json');

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { createSchema } = require('../utils/schema');
+const { createSchema } = require('@bedrockio/model');
 const { get, pick, isEmpty, intersection } = require('lodash');
 
 const definition = require('./definitions/audit-entry.json');

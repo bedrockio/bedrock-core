@@ -1,4 +1,4 @@
-const { loadModelDir } = require('../utils/schema');
+const { loadModelDir } = require('@bedrockio/model');
 
 module.exports = {
   User: require('./user'),

@@ -5,7 +5,7 @@ const User = require('../user');
 const Koa = require('koa');
 const Router = require('@koa/router');
 const request = require('supertest');
-const { createSchema } = require('../../utils/schema');
+const { createSchema } = require('@bedrockio/schema');
 
 const { createUser } = require('../../utils/testing');
 

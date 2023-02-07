@@ -1,6 +1,6 @@
 const qs = require('qs');
 const yd = require('@bedrockio/yada');
-const { PermissionsError } = require('../validation');
+const { PermissionsError } = require('@bedrockio/model');
 
 function validateBody(arg) {
   const schema = resolveSchema(arg);

@@ -1073,12 +1073,12 @@
   resolved "https://registry.yarnpkg.com/@bedrockio/prettier-config/-/prettier-config-1.0.2.tgz#89878381d3059b810f97514ee6b69f946a6d1654"
   integrity sha512-Ebcx/D9FcV6WEQH2gXA4SkN62fus/aVMW46MYFm1/y+S0GVYj+OCuBbRMM4F8YAq9ntJ+B/z9fLiOheNpEpRzA==
 
-"@bedrockio/yada@1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@bedrockio/yada/-/yada-1.0.2.tgz#5cbc5ce0a1a72b3e83d84e52504a66ea118b1abe"
-  integrity sha512-E/xB1t2nQTlbvzy/COR4vIkgLNnCjbAjOpYcXblDLrZk/fXzBByu5a3svAMWCxEN391mgKEkqXp4Bo4FRX17nQ==
+"@bedrockio/yada@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@bedrockio/yada/-/yada-1.0.5.tgz#638bb81bbc53d637089541231b675fb2d8b55e29"
+  integrity sha512-fR9ZhERYh16FWlvoi1+zhdDowo+YBh+MIbFh65LeQqFo5QVwlzsObKyLyp7/QmTblUn00w54ByDfyXewCz9kNw==
   dependencies:
-    validator "^13.7.0"
+    validator "^13.9.0"
 
 "@eslint/eslintrc@^1.4.1":
   version "1.4.1"
@@ -6220,7 +6220,7 @@ v8-to-istanbul@^9.0.1:
     "@types/istanbul-lib-coverage" "^2.0.1"
     convert-source-map "^1.6.0"
 
-validator@^13.7.0:
+validator@^13.9.0:
   version "13.9.0"
   resolved "https://registry.yarnpkg.com/validator/-/validator-13.9.0.tgz#33e7b85b604f3bbce9bb1a05d5c3e22e1c2ff855"
   integrity sha512-B+dGG8U3fdtM0/aNK4/X8CXq/EcxU2WPrPEkJGslb47qyHsxmbggTWK0yEA4qnYVNF+nxNlN88o14hIcPmSIEA==
