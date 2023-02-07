@@ -36,7 +36,6 @@
     "lodash": "^4.17.21",
     "marked": "^4.1.1",
     "mongoose": "^6.9.0",
-    "mongoose-autopopulate": "^0.17.1",
     "mustache": "^4.2.0",
     "nanoid": "3.3.4",
     "notp": "^2.0.3",

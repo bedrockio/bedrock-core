@@ -48,6 +48,9 @@ export default class ShopDetail extends React.Component {
       const { data } = await request({
         method: 'GET',
         path: `/1/shops/${id}`,
+        params: {
+          include: 'categories',
+        },
       });
       this.setState({
         item: data,

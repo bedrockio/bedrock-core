@@ -1,6 +1,6 @@
 const Router = require('@koa/router');
 const yd = require('@bedrockio/yada');
-const mongoose = require('mongoose');
+const { fetchByParam } = require('../utils/middleware/params');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
@@ -18,17 +18,7 @@ const router = new Router();
 router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
-  .param('userId', async (id, ctx, next) => {
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      ctx.throw(404);
-    }
-    const user = await User.findById(id);
-    if (!user) {
-      ctx.throw(404);
-    }
-    ctx.state.user = user;
-    return next();
-  })
+  .param('id', fetchByParam(User))
   .get('/me', async (ctx) => {
     const { authUser } = ctx.state;
     ctx.body = {
@@ -54,7 +44,7 @@ router
     }
   )
   .post(
-    '/:userId/authenticate',
+    '/:id/authenticate',
     requirePermissions({ endpoint: 'users', permission: 'write', scope: 'global' }),
     async (ctx) => {
       const { user } = ctx.state;
@@ -87,7 +77,8 @@ router
       );
       await authUser.save();
 
-      await AuditEntry.append('Authenticate as user', ctx, {
+      await AuditEntry.append('Authenticate as user', {
+        ctx,
         object: user,
         user: authUser,
       });
@@ -127,7 +118,7 @@ router
       };
     }
   )
-  .get('/:userId', async (ctx) => {
+  .get('/:id', async (ctx) => {
     ctx.body = {
       data: expandRoles(ctx.state.user),
     };
@@ -148,7 +139,8 @@ router
       }
       const user = await User.create(ctx.request.body);
 
-      await AuditEntry.append('Created User', ctx, {
+      await AuditEntry.append('Created User', {
+        ctx,
         object: user,
       });
 
@@ -157,13 +149,14 @@ router
       };
     }
   )
-  .patch('/:userId', validateBody(User.getUpdateValidation()), async (ctx) => {
+  .patch('/:id', validateBody(User.getUpdateValidation()), async (ctx) => {
     const { user } = ctx.state;
+    const snapshot = new User(user);
     user.assign(ctx.request.body);
-
     await user.save();
-
-    await AuditEntry.append('Updated user', ctx, {
+    await AuditEntry.append('Updated user', {
+      ctx,
+      snapshot,
       object: user,
       fields: ['email', 'roles'],
     });
@@ -172,7 +165,7 @@ router
       data: user,
     };
   })
-  .delete('/:userId', async (ctx) => {
+  .delete('/:id', async (ctx) => {
     const { user } = ctx.state;
     await user.assertNoReferences({
       except: [AuditEntry],

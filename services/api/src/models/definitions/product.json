@@ -30,8 +30,7 @@
     "shop": {
       "ref": "Shop",
       "type": "ObjectId",
-      "required": true,
-      "autopopulate": true
+      "required": true
     },
     "images": [
       {

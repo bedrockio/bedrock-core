@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
 const Router = require('@koa/router');
 const yd = require('@bedrockio/yada');
+const { fetchByParam } = require('../utils/middleware/params');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
@@ -25,21 +25,10 @@ function sendInvite(sender, invite) {
 }
 
 router
-  .param('inviteId', async (id, ctx, next) => {
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      ctx.throw(404);
-    }
-    const invite = await Invite.findById(id);
-    if (!invite) {
-      ctx.throw(404);
-    }
-    ctx.state.invite = invite;
-
-    return next();
-  })
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
   .use(requirePermissions({ endpoint: 'users', permission: 'read', scope: 'global' }))
+  .param('id', fetchByParam(Invite))
   .post('/search', validateBody(Invite.getSearchValidation()), async (ctx) => {
     const { data, meta } = await Invite.search(ctx.request.body);
     ctx.body = {
@@ -77,12 +66,12 @@ router
       ctx.status = 204;
     }
   )
-  .post('/:inviteId/resend', async (ctx) => {
+  .post('/:id/resend', async (ctx) => {
     const { invite, authUser } = ctx.state;
     await sendInvite(authUser, invite);
     ctx.status = 204;
   })
-  .delete('/:inviteId', async (ctx) => {
+  .delete('/:id', async (ctx) => {
     const { invite } = ctx.state;
     await invite.delete();
     ctx.status = 204;

@@ -1074,9 +1074,9 @@
   integrity sha512-Ebcx/D9FcV6WEQH2gXA4SkN62fus/aVMW46MYFm1/y+S0GVYj+OCuBbRMM4F8YAq9ntJ+B/z9fLiOheNpEpRzA==
 
 "@bedrockio/yada@^1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@bedrockio/yada/-/yada-1.0.5.tgz#638bb81bbc53d637089541231b675fb2d8b55e29"
-  integrity sha512-fR9ZhERYh16FWlvoi1+zhdDowo+YBh+MIbFh65LeQqFo5QVwlzsObKyLyp7/QmTblUn00w54ByDfyXewCz9kNw==
+  version "1.0.16"
+  resolved "https://registry.yarnpkg.com/@bedrockio/yada/-/yada-1.0.16.tgz#4d86ae788744435db09bdd774d9275308a92e4a1"
+  integrity sha512-k19w0n19qacorl6I0MGzCXtAacw4XiSJWG00Uj5Q838oJP2PzOuZYfI/khEuRH7A84IdkIMvTYgdUP2ABqkPww==
   dependencies:
     validator "^13.9.0"
 
@@ -5034,11 +5034,6 @@ mongodb@^4.13.0:
   optionalDependencies:
     "@aws-sdk/credential-providers" "^3.186.0"
     saslprep "^1.0.3"
-
-mongoose-autopopulate@^0.17.1:
-  version "0.17.1"
-  resolved "https://registry.yarnpkg.com/mongoose-autopopulate/-/mongoose-autopopulate-0.17.1.tgz#1beff684ae427076186383e07191e059ef3c6316"
-  integrity sha512-a2EzHvvol0L9k4XVR+ekzRVdiW+7mqCUTvhStPh2yr00cMV3/g/Z7o29ilQh2RMBFszRO+97wsy+1S8Z3Zf+sg==
 
 mongoose@^6.9.0:
   version "6.9.1"

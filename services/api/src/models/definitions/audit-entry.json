@@ -15,17 +15,17 @@
       "type": "String",
       "required": true
     },
-    "objectBefore": {
-      "type": "Mixed"
-    },
-    "objectAfter": {
-      "type": "Mixed"
-    },
     "objectId": {
       "type": "String"
     },
     "objectType": {
       "type": "String"
+    },
+    "objectBefore": {
+      "type": "Mixed"
+    },
+    "objectAfter": {
+      "type": "Mixed"
     },
     "category": {
       "type": "String",
@@ -34,12 +34,7 @@
     "user": {
       "type": "ObjectId",
       "ref": "User",
-      "required": true,
-      "autopopulate": true
-    },
-    "sessionId": {
-      "type": "String",
-      "required": false
+      "required": true
     }
   },
   "search": [

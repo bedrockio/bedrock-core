@@ -21,7 +21,6 @@
       "ref": "User",
       "type": "ObjectId",
       "required": true,
-      "autopopulate": false,
       "skipValidation": true
     },
     "requestCount": {

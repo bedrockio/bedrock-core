@@ -20,7 +20,10 @@ export default class AuditTrailList extends React.Component {
     return await request({
       method: 'POST',
       path: '/1/audit-entries/search',
-      body: params,
+      body: {
+        ...params,
+        include: 'user',
+      },
     });
   };
 
