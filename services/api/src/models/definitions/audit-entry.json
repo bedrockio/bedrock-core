@@ -37,7 +37,9 @@
       "required": true
     }
   },
-  "search": [
-    "objectId"
-  ]
+  "search": {
+    "fields": [
+      "objectId"
+    ]
+  }
 }

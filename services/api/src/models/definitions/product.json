@@ -39,7 +39,9 @@
       }
     ]
   },
-  "search": [
-    "name"
-  ]
+  "search": {
+    "fields": [
+      "name"
+    ]
+  }
 }

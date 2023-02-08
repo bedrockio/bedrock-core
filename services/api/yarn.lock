@@ -1073,7 +1073,7 @@
   resolved "https://registry.yarnpkg.com/@bedrockio/prettier-config/-/prettier-config-1.0.2.tgz#89878381d3059b810f97514ee6b69f946a6d1654"
   integrity sha512-Ebcx/D9FcV6WEQH2gXA4SkN62fus/aVMW46MYFm1/y+S0GVYj+OCuBbRMM4F8YAq9ntJ+B/z9fLiOheNpEpRzA==
 
-"@bedrockio/yada@^1.0.5":
+"@bedrockio/yada@^1.0.6":
   version "1.0.16"
   resolved "https://registry.yarnpkg.com/@bedrockio/yada/-/yada-1.0.16.tgz#4d86ae788744435db09bdd774d9275308a92e4a1"
   integrity sha512-k19w0n19qacorl6I0MGzCXtAacw4XiSJWG00Uj5Q838oJP2PzOuZYfI/khEuRH7A84IdkIMvTYgdUP2ABqkPww==
@@ -5035,7 +5035,7 @@ mongodb@^4.13.0:
     "@aws-sdk/credential-providers" "^3.186.0"
     saslprep "^1.0.3"
 
-mongoose@^6.9.0:
+mongoose@^6.9.1:
   version "6.9.1"
   resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-6.9.1.tgz#4c6648806fb89b8d8aa4fc60ddc490442c971057"
   integrity sha512-hOz1ZWV0w6WEVLrj89Wpk7PXDYtDDF6k7/NX79lY5iKqeFtZsceBXW8xW59YFNcW5O3cH32hQ8IbDlhgyBsDMA==

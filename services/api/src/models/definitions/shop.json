@@ -59,7 +59,9 @@
       "ref": "User"
     }
   },
-  "search": [
-    "name"
-  ]
+  "search": {
+    "fields": [
+      "name"
+    ]
+  }
 }

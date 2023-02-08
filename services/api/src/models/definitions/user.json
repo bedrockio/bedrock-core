@@ -137,9 +137,11 @@
       "writeScopes": "none"
     }
   },
-  "search": [
-    "firstName",
-    "lastName",
-    "email"
-  ]
+  "search": {
+    "fields": [
+      "firstName",
+      "lastName",
+      "email"
+    ]
+  }
 }
