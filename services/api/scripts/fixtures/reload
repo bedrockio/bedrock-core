@@ -29,11 +29,11 @@ function prompt(message) {
     throw new Error(`Not allowed in ENV_NAME other than ${allowedEnvironments.join(', ')} (ENV_NAME=${ENV_NAME})`);
   }
   logger.warn(`
--------------------------------------------------------------------
+----------------------------------------------------------------------
 
   Warning: This will delete ALL DATA for the ${ENV_NAME} environment
 
--------------------------------------------------------------------
+----------------------------------------------------------------------
 
 `);
   const answer = await prompt('Are you sure sure? [y|n] ');

@@ -11,6 +11,8 @@ const HOST = config.get('SERVER_HOST');
 
 if (process.env.NODE_ENV === 'production') {
   logger.setupGoogleCloud();
+} else {
+  logger.useFormatted();
 }
 
 module.exports = (async () => {
