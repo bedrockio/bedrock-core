@@ -1,12 +1,14 @@
 const qs = require('qs');
 const yd = require('@bedrockio/yada');
-const { PermissionsError } = require('@bedrockio/model');
+const { PermissionsError, ImplementationError } = require('@bedrockio/model');
 
 function validateBody(arg) {
   const schema = resolveSchema(arg);
   return async (ctx, next) => {
     try {
-      ctx.request.body = await schema.validate(ctx.request.body);
+      ctx.request.body = await schema.validate(ctx.request.body, {
+        ...ctx.state,
+      });
     } catch (error) {
       ctx.throw(getErrorCode(error), error);
     }
@@ -20,6 +22,7 @@ function validateQuery(arg) {
     try {
       const parsed = qs.parse(ctx.request.query);
       const result = await schema.validate(parsed, {
+        ...ctx.state,
         cast: true,
       });
       // ctx.request.query is a getter/setter so override
@@ -38,7 +41,13 @@ function resolveSchema(arg) {
 }
 
 function getErrorCode(error) {
-  return isPermissionsError(error) ? 401 : 400;
+  if (isImplementationError(error)) {
+    return 500;
+  } else if (isPermissionsError(error)) {
+    return 401;
+  } else {
+    return 400;
+  }
 }
 
 function isPermissionsError(error) {
@@ -46,6 +55,14 @@ function isPermissionsError(error) {
     return error.details.every(isPermissionsError);
   } else if (error.original) {
     return error.original instanceof PermissionsError;
+  }
+}
+
+function isImplementationError(error) {
+  if (error.details) {
+    return error.details.some(isImplementationError);
+  } else if (error.original) {
+    return error.original instanceof ImplementationError;
   }
 }
 
