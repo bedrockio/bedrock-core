@@ -6,11 +6,13 @@ function validateBody(arg) {
   const schema = resolveSchema(arg);
   return async (ctx, next) => {
     try {
+      const { authUser } = ctx.state;
       ctx.request.body = await schema.validate(ctx.request.body, {
         ...ctx.state,
+        scopes: authUser?.getScopes(),
       });
     } catch (error) {
-      ctx.throw(getErrorCode(error), error);
+      throwError(ctx, error);
     }
     return await next();
   };
@@ -20,9 +22,11 @@ function validateQuery(arg) {
   const schema = resolveSchema(arg);
   return async (ctx, next) => {
     try {
+      const { authUser } = ctx.state;
       const parsed = qs.parse(ctx.request.query);
       const result = await schema.validate(parsed, {
         ...ctx.state,
+        scopes: authUser?.getScopes(),
         cast: true,
       });
       // ctx.request.query is a getter/setter so override
@@ -30,7 +34,7 @@ function validateQuery(arg) {
         value: result,
       });
     } catch (error) {
-      ctx.throw(getErrorCode(error), error);
+      throwError(ctx, error);
     }
     return next();
   };
@@ -40,13 +44,13 @@ function resolveSchema(arg) {
   return yd.isSchema(arg) ? arg : yd.object(arg);
 }
 
-function getErrorCode(error) {
+function throwError(ctx, error) {
   if (isImplementationError(error)) {
-    return 500;
+    ctx.throw(500, error.getFullMessage());
   } else if (isPermissionsError(error)) {
-    return 401;
+    ctx.throw(401, error);
   } else {
-    return 400;
+    ctx.throw(400, error);
   }
 }
 

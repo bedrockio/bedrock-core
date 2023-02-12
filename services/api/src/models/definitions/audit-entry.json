@@ -22,10 +22,10 @@
       "type": "String"
     },
     "objectBefore": {
-      "type": "Mixed"
+      "type": "Object"
     },
     "objectAfter": {
-      "type": "Mixed"
+      "type": "Object"
     },
     "category": {
       "type": "String",

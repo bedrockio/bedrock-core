@@ -167,11 +167,15 @@ router
   })
   .delete('/:id', async (ctx) => {
     const { user } = ctx.state;
-    await user.assertNoReferences({
-      except: [AuditEntry],
-    });
-    await user.delete();
-    ctx.status = 204;
+    try {
+      await user.assertNoReferences({
+        except: [AuditEntry],
+      });
+      await user.delete();
+      ctx.status = 204;
+    } catch (err) {
+      ctx.throw(400, err);
+    }
   });
 
 module.exports = router;

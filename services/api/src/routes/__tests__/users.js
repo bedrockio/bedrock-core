@@ -261,9 +261,9 @@ describe('/1/users', () => {
       expect(dbUser.name).toEqual('New Name');
     });
 
-    it('should fail when trying to set hashed password', async () => {
+    it('should strip out hashed password', async () => {
       const admin = await createAdminUser();
-      const user = await createUser({ name: 'new name' });
+      let user = await createUser({ name: 'new name' });
       const response = await request(
         'PATCH',
         `/1/users/${user.id}`,
@@ -272,7 +272,9 @@ describe('/1/users', () => {
         },
         { user: admin }
       );
-      expect(response.status).toBe(401);
+      expect(response.status).toBe(200);
+      user = await User.findById(user.id);
+      expect(user.hashedPassword).toBeUndefined();
     });
   });
 

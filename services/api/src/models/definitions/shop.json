@@ -48,10 +48,9 @@
           "type": "String",
           "default": "Point"
         },
-        "coordinates": {
-          "type": "Array",
-          "default": []
-        }
+        "coordinates": [
+          "Number"
+        ]
       }
     },
     "owner": {

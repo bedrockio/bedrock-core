@@ -12,22 +12,20 @@
     "apiKey": {
       "type": "String",
       "trim": true,
-      "required": true,
       "unique": true,
-      "skipValidation": true,
-      "writeScopes": "none"
+      "required": true,
+      "writeAccess": "none"
     },
     "user": {
       "ref": "User",
       "type": "ObjectId",
       "required": true,
-      "skipValidation": true
+      "writeAccess": "none"
     },
     "requestCount": {
       "type": "Number",
-      "writeScopes": "none",
-      "skipValidation": true,
-      "default": 0
+      "default": 0,
+      "writeAccess": "none"
     }
   }
 }

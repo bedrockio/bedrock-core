@@ -50,15 +50,12 @@ describe('AuditEntry', () => {
         us: 'bob@new.com',
       });
 
-      const NewModel = createTestModel(
-        {
-          user: {
-            ref: 'User',
-            type: 'ObjectId',
-          },
+      const NewModel = createTestModel('NewModel', {
+        user: {
+          ref: 'User',
+          type: 'ObjectId',
         },
-        'NewModel'
-      );
+      });
 
       const newModel = await NewModel.create({
         user: user.id,

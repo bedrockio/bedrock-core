@@ -84,12 +84,9 @@ describe('fetchByParam', () => {
 });
 
 describe('fetchByParamWithSlug', () => {
-  const Post = createTestModel(
-    {
-      slug: 'String',
-    },
-    'Post'
-  );
+  const Post = createTestModel('Post', {
+    slug: 'String',
+  });
 
   it('should find the document by slug', async () => {
     const post = await Post.create({
