@@ -22,7 +22,7 @@ router
   .get('/me', async (ctx) => {
     const { authUser } = ctx.state;
     ctx.body = {
-      data: expandRoles(authUser),
+      data: expandRoles(authUser, ctx),
     };
   })
   .patch(
@@ -39,7 +39,7 @@ router
 
       await authUser.save();
       ctx.body = {
-        data: expandRoles(authUser),
+        data: expandRoles(authUser, ctx),
       };
     }
   )
@@ -51,7 +51,7 @@ router
       const authUser = ctx.state.authUser;
 
       // Don't allow an superAdmin to imitate another superAdmin
-      const allowedRoles = expandRoles(authUser).roles.reduce(
+      const allowedRoles = expandRoles(authUser, ctx).roles.reduce(
         (result, { roleDefinition }) => result.concat(roleDefinition.allowAuthenticationOnRoles || []),
         []
       );
@@ -113,14 +113,14 @@ router
         return csvExport(ctx, data, { filename });
       }
       ctx.body = {
-        data: data.map((item) => expandRoles(item)),
+        data: data.map((item) => expandRoles(item, ctx)),
         meta,
       };
     }
   )
   .get('/:id', async (ctx) => {
     ctx.body = {
-      data: expandRoles(ctx.state.user),
+      data: expandRoles(ctx.state.user, ctx),
     };
   })
   .use(requirePermissions({ endpoint: 'users', permission: 'write', scope: 'global' }))

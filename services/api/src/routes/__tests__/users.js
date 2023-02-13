@@ -173,13 +173,17 @@ describe('/1/users', () => {
         '/1/users/search',
         {
           ids: [user1.id, user2.id],
+          sort: {
+            field: 'firstName',
+            order: 'asc',
+          },
         },
         { user: admin }
       );
       expect(response.status).toBe(200);
       expect(response.body.data.length).toBe(2);
-      expect(response.body.data[0].id).toBe(user2.id);
-      expect(response.body.data[1].id).toBe(user1.id);
+      expect(response.body.data[0].id).toBe(user1.id);
+      expect(response.body.data[1].id).toBe(user2.id);
     });
 
     it('should deny access to non-admins', async () => {
