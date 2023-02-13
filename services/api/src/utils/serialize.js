@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { Stream } = require('node:stream');
 
 function serializeDocument(doc, ctx) {
   const { authUser } = ctx.state;
@@ -9,7 +10,9 @@ function serializeDocument(doc, ctx) {
 }
 
 function serializeObject(obj, ctx) {
-  if (obj instanceof mongoose.Model) {
+  if (obj instanceof Stream) {
+    return obj;
+  } else if (obj instanceof mongoose.Model) {
     return serializeDocument(obj, ctx);
   } else if (Array.isArray(obj)) {
     return obj.map((el) => {
