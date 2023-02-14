@@ -18,8 +18,8 @@
   },
   "dependencies": {
     "@bedrockio/config": "^2.2.2",
-    "@bedrockio/logger": "^1.0.3",
     "@bedrockio/fixtures": "^1.0.0",
+    "@bedrockio/logger": "^1.0.5",
     "@bedrockio/model": "^0.1.0",
     "@bedrockio/yada": "^1.0.12",
     "@google-cloud/storage": "^6.5.4",

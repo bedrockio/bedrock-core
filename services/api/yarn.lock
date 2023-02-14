@@ -1068,6 +1068,26 @@
     kleur "^4.1.5"
     stdout-stream "^2.0.0"
 
+"@bedrockio/logger@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@bedrockio/logger/-/logger-1.0.5.tgz#a39501c9ac6ff04262b4e480c805d2df1d71dd25"
+  integrity sha512-2L2ANJwsXZs1P2aMSmER6myZKMNsIhiYDfdGtuqzw0EGPk5JMjQ9v0GNwDVwDetq1fV24HAXcrpwRJTgHzj2kQ==
+  dependencies:
+    "@google-cloud/opentelemetry-cloud-trace-exporter" "^2.0.0"
+    "@opentelemetry/api" "^1.4.0"
+    "@opentelemetry/core" "^1.9.1"
+    "@opentelemetry/instrumentation" "^0.35.1"
+    "@opentelemetry/instrumentation-http" "^0.35.1"
+    "@opentelemetry/instrumentation-koa" "^0.34.0"
+    "@opentelemetry/instrumentation-mongoose" "^0.32.0"
+    "@opentelemetry/resources" "^1.9.1"
+    "@opentelemetry/sdk-trace-base" "^1.9.1"
+    "@opentelemetry/sdk-trace-node" "^1.9.1"
+    "@opentelemetry/semantic-conventions" "^1.9.1"
+    bytes "^3.1.2"
+    kleur "^4.1.5"
+    stdout-stream "^2.0.0"
+
 "@bedrockio/model@^0.1.0":
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/@bedrockio/model/-/model-0.1.0.tgz#adee99da7b0577385ee05a5c0f1e5c76b732c6f7"
