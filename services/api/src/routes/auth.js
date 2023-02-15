@@ -234,7 +234,7 @@ router
 
       await AuditEntry.append('Registered', {
         ctx,
-        object: user,
+        user,
       });
 
       ctx.body = {
