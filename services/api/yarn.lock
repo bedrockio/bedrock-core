@@ -1038,7 +1038,7 @@
   resolved "https://registry.yarnpkg.com/@bedrockio/config/-/config-2.2.2.tgz#751b9fb1500c9baa343308c394a3f876f61a0de6"
   integrity sha512-t8HtO7bH3DBYgdONFZ4fxi7qlnwnvKyPRXWC7KFwbRqyr+QNqUhv7B2tBLSm4wy/jFvRBmmaaU94xJ8jVJoacQ==
 
-"@bedrockio/fixtures@^1.0.0":
+"@bedrockio/fixtures@^1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@bedrockio/fixtures/-/fixtures-1.0.2.tgz#77795006b946d7b818cabff212a46e9ba7c18958"
   integrity sha512-8Rje0pWymNm24v/t9EVOji8tKO7wphy+Fb1tML1Wz3FSuyVVjhLRvW+6U8bFjgKmzZaimH4n8aeY4YZlYN+Z3A==
@@ -1048,27 +1048,7 @@
     jszip "^3.10.1"
     lodash "^4.17.21"
 
-"@bedrockio/logger@^1.0.3":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@bedrockio/logger/-/logger-1.0.5.tgz#a39501c9ac6ff04262b4e480c805d2df1d71dd25"
-  integrity sha512-2L2ANJwsXZs1P2aMSmER6myZKMNsIhiYDfdGtuqzw0EGPk5JMjQ9v0GNwDVwDetq1fV24HAXcrpwRJTgHzj2kQ==
-  dependencies:
-    "@google-cloud/opentelemetry-cloud-trace-exporter" "^2.0.0"
-    "@opentelemetry/api" "^1.4.0"
-    "@opentelemetry/core" "^1.9.1"
-    "@opentelemetry/instrumentation" "^0.35.1"
-    "@opentelemetry/instrumentation-http" "^0.35.1"
-    "@opentelemetry/instrumentation-koa" "^0.34.0"
-    "@opentelemetry/instrumentation-mongoose" "^0.32.0"
-    "@opentelemetry/resources" "^1.9.1"
-    "@opentelemetry/sdk-trace-base" "^1.9.1"
-    "@opentelemetry/sdk-trace-node" "^1.9.1"
-    "@opentelemetry/semantic-conventions" "^1.9.1"
-    bytes "^3.1.2"
-    kleur "^4.1.5"
-    stdout-stream "^2.0.0"
-
-"@bedrockio/logger@^1.0.5":
+"@bedrockio/logger@^1.0.3", "@bedrockio/logger@^1.0.5":
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@bedrockio/logger/-/logger-1.0.5.tgz#a39501c9ac6ff04262b4e480c805d2df1d71dd25"
   integrity sha512-2L2ANJwsXZs1P2aMSmER6myZKMNsIhiYDfdGtuqzw0EGPk5JMjQ9v0GNwDVwDetq1fV24HAXcrpwRJTgHzj2kQ==
@@ -1102,7 +1082,7 @@
   resolved "https://registry.yarnpkg.com/@bedrockio/prettier-config/-/prettier-config-1.0.2.tgz#89878381d3059b810f97514ee6b69f946a6d1654"
   integrity sha512-Ebcx/D9FcV6WEQH2gXA4SkN62fus/aVMW46MYFm1/y+S0GVYj+OCuBbRMM4F8YAq9ntJ+B/z9fLiOheNpEpRzA==
 
-"@bedrockio/yada@^1.0.12", "@bedrockio/yada@^1.0.9":
+"@bedrockio/yada@^1.0.16", "@bedrockio/yada@^1.0.9":
   version "1.0.16"
   resolved "https://registry.yarnpkg.com/@bedrockio/yada/-/yada-1.0.16.tgz#4d86ae788744435db09bdd774d9275308a92e4a1"
   integrity sha512-k19w0n19qacorl6I0MGzCXtAacw4XiSJWG00Uj5Q838oJP2PzOuZYfI/khEuRH7A84IdkIMvTYgdUP2ABqkPww==
@@ -3033,7 +3013,7 @@ eslint-module-utils@^2.7.4:
   dependencies:
     debug "^3.2.7"
 
-eslint-plugin-bedrock@^1.0.20:
+eslint-plugin-bedrock@^1.0.24:
   version "1.0.24"
   resolved "https://registry.yarnpkg.com/eslint-plugin-bedrock/-/eslint-plugin-bedrock-1.0.24.tgz#25fb01f381aff38163a2d063f8dd9c0e2b209e4a"
   integrity sha512-/J/UtGq4rrEVBadWysG378GFvjK1sbIuhPZvUduUSOi2TbtBRCjwAETuXscwej8U41xUkEUq5Nc9hZ9oylVwxA==
@@ -3124,7 +3104,7 @@ eslint-visitor-keys@^3.1.0, eslint-visitor-keys@^3.3.0:
   resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-3.3.0.tgz#f6480fa6b1f30efe2d1968aa8ac745b862469826"
   integrity sha512-mQ+suqKJVyeuwGYHAdjMFqjCyfl8+Ldnxuyp3ldiMBFKkvytrXUZWaiPCEav8qDHKty44bD+qV1IP4T+w+xXRA==
 
-eslint@^8.33.0, eslint@^8.7.0:
+eslint@^8.34.0, eslint@^8.7.0:
   version "8.34.0"
   resolved "https://registry.yarnpkg.com/eslint/-/eslint-8.34.0.tgz#fe0ab0ef478104c1f9ebc5537e303d25a8fb22d6"
   integrity sha512-1Z8iFsucw+7kSqXNZVslXS8Ioa4u2KM7GPwuKtkTFAqZ/cHMcEaR+1+Br0wLlot49cNxIiZk5wp8EAbPcYZxTg==
@@ -5434,7 +5414,7 @@ prettier-eslint@^15.0.1:
     typescript "^4.5.4"
     vue-eslint-parser "^8.0.1"
 
-prettier@^2.5.1, prettier@^2.8.3:
+prettier@^2.5.1, prettier@^2.8.4:
   version "2.8.4"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.4.tgz#34dd2595629bfbb79d344ac4a91ff948694463c3"
   integrity sha512-vIS4Rlc2FNh0BySk3Wkd6xmwxB0FpOndW5fisM5H8hsZSxU2VWVB5CWIkIjWvrHjIhxk2g3bfMKM87zNTrZddw==
