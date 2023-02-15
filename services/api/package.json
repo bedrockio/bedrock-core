@@ -19,6 +19,7 @@
   "dependencies": {
     "@bedrockio/config": "^2.2.2",
     "@bedrockio/logger": "^1.0.3",
+    "@bedrockio/fixtures": "^1.0.0",
     "@bedrockio/yada": "1.0.2",
     "@google-cloud/storage": "^6.5.4",
     "@koa/cors": "^4.0.0",

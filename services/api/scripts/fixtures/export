@@ -3,6 +3,9 @@ const { initialize } = require('../../src/utils/database');
 const { exportFixtures } = require('../../src/utils/fixtures');
 const logger = require('@bedrockio/logger');
 
+// Ensure models are loaded.
+require('../../src/models');
+
 (async () => {
   const options = {};
   for (let arg of process.argv.slice(2)) {
@@ -35,6 +38,11 @@ const logger = require('@bedrockio/logger');
   let ids = options.id || options.ids;
   if (ids) {
     ids = ids.split(',');
+  }
+
+  if (!modelNames) {
+    logger.error('Must pass model names with --model(s).');
+    process.exit(1);
   }
 
   let stdout = options.stdout;
