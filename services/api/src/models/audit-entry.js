@@ -6,10 +6,8 @@ const definition = require('./definitions/audit-entry.json');
 
 const schema = createSchema(definition);
 
-schema.statics.getContextFields = function (options) {
-  const { ctx } = options;
+schema.statics.getContextFields = function (ctx) {
   return {
-    user: options.user?.id || ctx.state.authUser?.id,
     requestMethod: ctx.request.method,
     requestUrl: ctx.request.url,
     routeNormalizedPath: ctx.routerPath,
@@ -60,7 +58,7 @@ schema.statics.getObjectFields = function (options) {
 };
 
 schema.statics.append = function (activity, options) {
-  const { category } = options;
+  const { ctx, category } = options;
 
   const objectFields = this.getObjectFields(options);
 
@@ -70,8 +68,9 @@ schema.statics.append = function (activity, options) {
   }
 
   return this.create({
-    ...this.getContextFields(options),
+    ...this.getContextFields(ctx),
     ...objectFields,
+    user: options.user?.id || ctx.state.authUser?.id,
     activity,
     category,
   });

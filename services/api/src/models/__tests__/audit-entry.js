@@ -97,12 +97,11 @@ describe('AuditEntry', () => {
       const user = new User({});
       const ctx = await getContext(user);
 
-      expect(AuditEntry.getContextFields({ ctx })).toEqual(
+      expect(AuditEntry.getContextFields(ctx)).toEqual(
         expect.objectContaining({
           requestMethod: 'GET',
           requestUrl: '/1/products/id',
           routeNormalizedPath: '/1/products/:id',
-          user: user.id,
         })
       );
     });
