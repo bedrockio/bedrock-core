@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
+const logger = require('@bedrockio/logger');
 const { initialize } = require('../../src/utils/database');
-const { logger } = require('@bedrockio/instrumentation');
 const { generateDefinition, DEFINITION_FILE } = require('../../src/utils/openapi');
 
 (async () => {

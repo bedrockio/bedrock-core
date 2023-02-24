@@ -1,14 +1,5 @@
 const User = require('../user');
 const mongoose = require('mongoose');
-const { setupDb, teardownDb } = require('../../utils/testing');
-
-beforeAll(async () => {
-  await setupDb();
-});
-
-afterAll(async () => {
-  await teardownDb();
-});
 
 describe('User', () => {
   describe('serialization', () => {
