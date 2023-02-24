@@ -18,8 +18,7 @@
     "categories": [
       {
         "type": "ObjectId",
-        "ref": "Category",
-        "autopopulate": true
+        "ref": "Category"
       }
     ],
     "country": {
@@ -49,19 +48,19 @@
           "type": "String",
           "default": "Point"
         },
-        "coordinates": {
-          "type": "Array",
-          "default": []
-        }
+        "coordinates": [
+          "Number"
+        ]
       }
     },
     "owner": {
       "type": "ObjectId",
-      "ref": "User",
-      "autopopulate": true
+      "ref": "User"
     }
   },
-  "search": [
-    "name"
-  ]
+  "search": {
+    "fields": [
+      "name"
+    ]
+  }
 }

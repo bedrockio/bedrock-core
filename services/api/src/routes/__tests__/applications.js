@@ -74,7 +74,10 @@ describe('/1/applications', () => {
       const application = await Application.findOne({ _id: response.body.data.id });
       expect(application.name).toBe('bob');
 
-      const auditEntry = await AuditEntry.findOne({ objectId: application.id });
+      const auditEntry = await AuditEntry.findOne({
+        objectId: application.id,
+        include: 'user',
+      });
       expect(auditEntry.activity).toBe('Created Application');
       expect(auditEntry.user.id).toBe(admin.id);
     });
@@ -102,7 +105,10 @@ describe('/1/applications', () => {
       const dbApplication = await Application.findOne({ _id: response.body.data.id });
       expect(dbApplication.name).toBe('bob');
 
-      const auditEntry = await AuditEntry.findOne({ objectId: application.id });
+      const auditEntry = await AuditEntry.findOne({
+        objectId: application.id,
+        include: 'user',
+      });
       expect(auditEntry.activity).toBe('Updated Application');
       expect(auditEntry.user.id).toBe(admin.id);
       expect(auditEntry.objectBefore).toEqual({

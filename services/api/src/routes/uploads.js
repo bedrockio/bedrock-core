@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
 const Router = require('@koa/router');
 const { createReadStream } = require('fs');
+const { fetchByParam } = require('../utils/middleware/params');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { Upload } = require('../models');
 const { storeUploadedFile } = require('../utils/uploads');
@@ -8,19 +8,18 @@ const { storeUploadedFile } = require('../utils/uploads');
 const router = new Router();
 
 router
-  .param('uploadId', async (id, ctx, next) => {
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      ctx.throw(404);
-    }
-    const upload = await Upload.findById(id);
-    if (!upload) {
-      ctx.throw(404);
-    } else if (ctx.state.authUser.id != upload.owner) {
-      ctx.throw(401);
-    }
-    ctx.state.upload = upload;
-    return next();
-  })
+  .param(
+    'id',
+    fetchByParam(Upload, {
+      hasAccess: (ctx, doc) => {
+        if (ctx.method === 'GET') {
+          return true;
+        } else {
+          return doc.owner?.equals(ctx.state.authUser.id);
+        }
+      },
+    })
+  )
   .get('/:id', async (ctx) => {
     const upload = await Upload.findById(ctx.params.id);
     ctx.body = {
@@ -58,7 +57,7 @@ router
       data: uploads,
     };
   })
-  .delete('/:uploadId', async (ctx) => {
+  .delete('/:id', async (ctx) => {
     const { upload } = ctx.state;
     await upload.delete();
     ctx.status = 204;

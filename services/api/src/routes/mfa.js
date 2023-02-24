@@ -61,10 +61,10 @@ router
       try {
         await verifyLoginAttempts(user);
       } catch (error) {
-        await AuditEntry.append('Reached max mfa challenge attempts', ctx, {
+        await AuditEntry.append('Reached max mfa challenge attempts', {
+          ctx,
+          user,
           category: 'security',
-          object: user,
-          user: user.id,
         });
         ctx.throw(401, error);
       }
@@ -77,22 +77,22 @@ router
         backupCodes.splice(foundBackupCode, 1);
         user.mfaBackupCodes = backupCodes;
         await user.save();
-        await AuditEntry.append('Authenticated (mfa using backup code)', ctx, {
-          object: user,
-          user: user.id,
+        await AuditEntry.append('Successfully authenticated (mfa using backup code)', {
+          ctx,
+          user,
         });
       } else if (!mfa.verifyToken(user.mfaSecret, user.mfaMethod, code)) {
-        await AuditEntry.append('Failed mfa challenge', ctx, {
+        await AuditEntry.append('Failed mfa challenge', {
+          ctx,
+          user,
           category: 'security',
-          object: user,
-          user: user.id,
         });
         ctx.throw(400, 'Not a valid code');
       }
 
-      await AuditEntry.append('Authenticated (mfa)', ctx, {
-        object: user,
-        user: user.id,
+      await AuditEntry.append('Successfully authenticated (mfa)', {
+        ctx,
+        user,
       });
 
       const token = user.createAuthToken({

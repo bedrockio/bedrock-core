@@ -18,9 +18,10 @@
   },
   "dependencies": {
     "@bedrockio/config": "^2.2.2",
-    "@bedrockio/logger": "^1.0.3",
-    "@bedrockio/fixtures": "^1.0.0",
-    "@bedrockio/yada": "1.0.2",
+    "@bedrockio/fixtures": "^1.0.2",
+    "@bedrockio/logger": "^1.0.5",
+    "@bedrockio/model": "^0.1.0",
+    "@bedrockio/yada": "^1.0.16",
     "@google-cloud/storage": "^6.5.4",
     "@koa/cors": "^4.0.0",
     "@koa/router": "^12.0.0",
@@ -35,8 +36,7 @@
     "koa-body": "^5.0.0",
     "lodash": "^4.17.21",
     "marked": "^4.1.1",
-    "mongoose": "^6.9.0",
-    "mongoose-autopopulate": "^0.17.1",
+    "mongoose": "^6.9.1",
     "mustache": "^4.2.0",
     "nanoid": "3.3.4",
     "notp": "^2.0.3",
@@ -48,19 +48,19 @@
     "@bedrockio/prettier-config": "^1.0.2",
     "@shelf/jest-mongodb": "^4.1.6",
     "@sinonjs/fake-timers": "^10.0.2",
-    "eslint": "^8.33.0",
-    "eslint-plugin-bedrock": "^1.0.20",
+    "eslint": "^8.34.0",
+    "eslint-plugin-bedrock": "^1.0.24",
     "jest": "^29.4.1",
     "jest-changed-files": "^29.4.0",
     "jest-environment-node": "^29.4.1",
     "jest-util": "^29.4.1",
     "mongodb": "^4.13.0",
-    "prettier": "^2.8.3",
+    "prettier": "^2.8.4",
     "prettier-eslint": "^15.0.1",
     "supertest": "^6.3.3"
   },
   "volta": {
     "node": "18.14.0",
-    "yarn": "1.22.17"
+    "yarn": "1.22.19"
   }
 }

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Router = require('@koa/router');
+const { fetchByParam } = require('../utils/middleware/params');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
@@ -10,17 +11,7 @@ const router = new Router();
 router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
-  .param('organizationId', async (id, ctx, next) => {
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      ctx.throw(404);
-    }
-    const organization = await Organization.findById(id);
-    ctx.state.organization = organization;
-    if (!organization) {
-      ctx.throw(404);
-    }
-    return next();
-  })
+  .param('id', fetchByParam(Organization))
   .post('/mine/search', async (ctx) => {
     const { authUser } = ctx.state;
     const { body } = ctx.request;
@@ -43,7 +34,7 @@ router
       meta,
     };
   })
-  .get('/:organizationId', async (ctx) => {
+  .get('/:id', async (ctx) => {
     const organization = ctx.state.organization;
     ctx.body = {
       data: organization,
@@ -64,7 +55,7 @@ router
       data: organization,
     };
   })
-  .patch('/:organizationId', validateBody(Organization.getUpdateValidation()), async (ctx) => {
+  .patch('/:id', validateBody(Organization.getUpdateValidation()), async (ctx) => {
     const organization = ctx.state.organization;
     organization.assign(ctx.request.body);
     await organization.save();
@@ -72,7 +63,7 @@ router
       data: organization,
     };
   })
-  .delete('/:organizationId', async (ctx) => {
+  .delete('/:id', async (ctx) => {
     await ctx.state.organization.delete();
     ctx.status = 204;
   });

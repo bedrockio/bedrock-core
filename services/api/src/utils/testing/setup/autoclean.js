@@ -24,7 +24,9 @@ function autoclear(schema) {
 
   schema.post('save', function () {
     if (!isFixture(this)) {
-      stored.add(this);
+      if (this.destroy) {
+        stored.add(this);
+      }
     }
   });
 
@@ -60,7 +62,7 @@ afterEach(async () => {
   if (stored) {
     await Promise.all(
       Array.from(stored).map((doc) => {
-        return doc.remove();
+        return doc.destroy();
       })
     );
   }

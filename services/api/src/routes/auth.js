@@ -37,9 +37,9 @@ router
       });
       await user.save();
 
-      await AuditEntry.append('Registered', ctx, {
-        object: user,
-        user: user.id,
+      await AuditEntry.append('Registered', {
+        ctx,
+        user,
       });
 
       await sendTemplatedMail({
@@ -69,10 +69,10 @@ router
       try {
         await verifyLoginAttempts(user);
       } catch (error) {
-        await AuditEntry.append('Reached max authentication attempts', ctx, {
+        await AuditEntry.append('Reached max authentication attempts', {
+          ctx,
+          user,
           category: 'security',
-          object: user,
-          user: user.id,
         });
         ctx.throw(401, error);
       }
@@ -80,10 +80,10 @@ router
       try {
         await verifyPassword(user, password);
       } catch (error) {
-        await AuditEntry.append('Failed authentication', ctx, {
+        await AuditEntry.append('Failed authentication', {
+          ctx,
+          user,
           category: 'security',
-          object: user,
-          user: user.id,
         });
         ctx.throw(401, error);
       }
@@ -111,9 +111,9 @@ router
       });
       await user.save();
 
-      await AuditEntry.append('Authenticated', ctx, {
-        object: user,
-        user: user.id,
+      await AuditEntry.append('Successfully authenticated', {
+        ctx,
+        user,
       });
 
       ctx.body = {
@@ -135,10 +135,9 @@ router
       try {
         await verifyLoginAttempts(authUser);
       } catch (error) {
-        await AuditEntry.append('Reached max authentication attempts', ctx, {
+        await AuditEntry.append('Reached max authentication attempts', {
+          ctx,
           category: 'security',
-          object: authUser,
-          user: authUser.id,
         });
         ctx.throw(401, error);
       }
@@ -146,17 +145,15 @@ router
       try {
         await verifyPassword(authUser, password);
       } catch (error) {
-        await AuditEntry.append('Failed authentication (confirm-access)', ctx, {
+        await AuditEntry.append('Failed authentication (confirm-access)', {
+          ctx,
           category: 'security',
-          object: authUser,
-          user: authUser.id,
         });
         ctx.throw(401, error);
       }
 
-      await AuditEntry.append('Authenticated (confirm-access)', ctx, {
-        object: authUser,
-        user: authUser.id,
+      await AuditEntry.append('Successfully authenticated (confirm-access)', {
+        ctx,
       });
 
       authUser.accessConfirmedAt = new Date();
@@ -183,9 +180,8 @@ router
       }
       await user.save();
 
-      await AuditEntry.append('Deauthentication', ctx, {
-        object: user,
-        user: user.id,
+      await AuditEntry.append('Deauthentication', {
+        ctx,
       });
 
       ctx.status = 204;
@@ -236,9 +232,9 @@ router
       });
       await user.save();
 
-      await AuditEntry.append('Registered', ctx, {
-        object: user,
-        user: user.id,
+      await AuditEntry.append('Registered', {
+        ctx,
+        user,
       });
 
       ctx.body = {
@@ -285,10 +281,10 @@ router
       if (!user) {
         ctx.throw(400, 'User does not exist');
       } else if (user.tempTokenId !== jwt.jti) {
-        await AuditEntry.append('Attempted reset password', ctx, {
+        await AuditEntry.append('Attempted reset password', {
+          ctx,
+          user,
           category: 'security',
-          object: user,
-          user: user.id,
         });
         ctx.throw(400, 'Token is invalid (jti)');
       }
@@ -303,9 +299,9 @@ router
       });
       await user.save();
 
-      await AuditEntry.append('Reset password', ctx, {
-        object: user,
-        user: user.id,
+      await AuditEntry.append('Reset password', {
+        ctx,
+        user,
       });
 
       ctx.body = {
