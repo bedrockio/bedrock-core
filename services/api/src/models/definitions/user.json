@@ -72,41 +72,38 @@
         }
       }
     },
-    "$readOnly": {
-      "type": "Scope",
+    "authInfo": {
+      "type": "Array",
+      "readAccess": "self",
       "writeAccess": "none",
       "attributes": {
-        "authInfo": [
-          {
-            "lastUsedAt": {
-              "type": "Date",
-              "required": true
-            },
-            "userAgent": {
-              "type": "String",
-              "required": false
-            },
-            "ip": {
-              "type": "String",
-              "required": true
-            },
-            "country": {
-              "type": "String"
-            },
-            "iat": {
-              "type": "Date",
-              "required": true
-            },
-            "jti": {
-              "type": "String",
-              "required": true
-            },
-            "exp": {
-              "type": "Date",
-              "required": true
-            }
-          }
-        ]
+        "lastUsedAt": {
+          "type": "Date",
+          "required": true
+        },
+        "userAgent": {
+          "type": "String",
+          "required": false
+        },
+        "ip": {
+          "type": "String",
+          "required": true
+        },
+        "country": {
+          "type": "String"
+        },
+        "iat": {
+          "type": "Date",
+          "required": true
+        },
+        "jti": {
+          "type": "String",
+          "required": true
+        },
+        "exp": {
+          "type": "Date",
+          "required": true
+        }
       }
     },
     "mfaMethod": {
