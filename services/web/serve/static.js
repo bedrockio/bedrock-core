@@ -1,10 +1,10 @@
 const Koa = require('koa');
 
-const { loggingMiddleware } = require('@bedrockio/instrumentation');
 const koaMount = require('koa-mount');
 const koaBasicAuth = require('koa-basic-auth');
 
 const config = require('@bedrockio/config');
+const logger = require('@bedrockio/logger');
 
 const envMiddleware = require('./middleware/env');
 const assetsMiddleware = require('./middleware/assets');
@@ -33,7 +33,7 @@ if (config.has('HTTP_BASIC_AUTH_PATH')) {
 
 app
   .use(koaMount('/assets/', assetsMiddleware('./dist/assets')))
-  .use(loggingMiddleware())
+  .use(logger.middleware())
   .use(envMiddleware())
   .use(historyMiddleware({ apps: ['/'] }))
   .use(templateMiddleware({ apps: ['/'] }));

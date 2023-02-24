@@ -99,6 +99,7 @@ export class SessionProvider extends React.PureComponent {
     } else {
       this.setState({
         user: null,
+        ready: true,
         loading: false,
       });
     }
