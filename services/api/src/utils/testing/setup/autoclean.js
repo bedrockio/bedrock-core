@@ -5,7 +5,7 @@ const { isFixture } = require('../../fixtures');
 
 let stored;
 
-function autoclear(schema) {
+function autoclean(schema) {
   schema.pre('save', function () {
     if (isFixture(this) && !this.isNew) {
       if (this.deleted) {
@@ -68,4 +68,4 @@ afterEach(async () => {
   }
 });
 
-mongoose.plugin(autoclear);
+mongoose.plugin(autoclean);

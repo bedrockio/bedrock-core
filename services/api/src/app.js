@@ -18,6 +18,7 @@ const app = new Koa();
 const ENV_NAME = config.get('ENV_NAME');
 
 app.use(corsMiddleware());
+app.use(errorHandler);
 
 if (['staging', 'development'].includes(ENV_NAME)) {
   // has to be the added before any middleware that changes the ctx.body
@@ -29,7 +30,6 @@ if (['staging', 'development'].includes(ENV_NAME)) {
 }
 
 app
-  .use(errorHandler)
   .use(serializeMiddleware)
   .use(logger.middleware())
   .use(bodyParser({ multipart: true }));

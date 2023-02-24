@@ -1,8 +1,17 @@
 import React from 'react';
-import { Table, Message, Loader, Button, Header, Divider , Image } from 'semantic';
+import {
+  Table,
+  Message,
+  Loader,
+  Button,
+  Header,
+  Divider,
+  Image,
+} from 'semantic';
 import { Link } from 'react-router-dom';
 
 import { formatDateTime } from 'utils/date';
+import { formatUsd } from 'utils/currency';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
 import { Layout, HelpTip, Search, SearchFilters, Confirm } from 'components';
@@ -13,6 +22,7 @@ import { urlForUpload } from 'utils/uploads';
 
 import EditProduct from 'modals/EditProduct';
 
+import Actions from '../Actions';
 import Menu from './Menu';
 import DetailsContext from './Context';
 
@@ -57,17 +67,20 @@ export default class ShopProducts extends React.Component {
                   <Table.Header>
                     <Table.Row>
                       {/* --- Generator: list-header-cells */}
-                      <Table.HeaderCell width={2}>Image</Table.HeaderCell>
                       <Table.HeaderCell
                         width={3}
                         sorted={getSorted('name')}
                         onClick={() => setSort('name')}>
                         Name
                       </Table.HeaderCell>
-                      <Table.HeaderCell width={3}>Description</Table.HeaderCell>
                       {/* --- Generator: end */}
+                      <Table.HeaderCell width={2}>Image</Table.HeaderCell>
                       <Table.HeaderCell
-                        width={3}
+                        onClick={() => setSort('priceUsd')}
+                        sorted={getSorted('priceUsd')}>
+                        Price
+                      </Table.HeaderCell>
+                      <Table.HeaderCell
                         sorted={getSorted('createdAt')}
                         onClick={() => setSort('createdAt')}>
                         Created
@@ -87,6 +100,10 @@ export default class ShopProducts extends React.Component {
                         <Table.Row key={item.id}>
                           {/* --- Generator: list-body-cells */}
                           <Table.Cell>
+                            <Link to={`/products/${item.id}`}>{item.name}</Link>
+                          </Table.Cell>
+                          {/* --- Generator: end */}
+                          <Table.Cell>
                             {item.images[0] && (
                               <Image
                                 style={{ width: '100%' }}
@@ -94,11 +111,7 @@ export default class ShopProducts extends React.Component {
                               />
                             )}
                           </Table.Cell>
-                          <Table.Cell>
-                            <Link to={`/products/${item.id}`}>{item.name}</Link>
-                          </Table.Cell>
-                          <Table.Cell>{item.description}</Table.Cell>
-                          {/* --- Generator: end */}
+                          <Table.Cell>{formatUsd(item.priceUsd)}</Table.Cell>
                           <Table.Cell>
                             {formatDateTime(item.createdAt)}
                           </Table.Cell>
@@ -109,20 +122,7 @@ export default class ShopProducts extends React.Component {
                               onSave={reload}
                               trigger={<Button basic icon="pen-to-square" />}
                             />
-                            <Confirm
-                              negative
-                              confirmButton="Delete"
-                              header={`Are you sure you want to delete "${item.name}"?`}
-                              content="All data will be permanently deleted"
-                              trigger={<Button basic icon="trash" />}
-                              onConfirm={async () => {
-                                await request({
-                                  method: 'DELETE',
-                                  path: `/1/products/${item.id}`,
-                                });
-                                reload();
-                              }}
-                            />
+                            <Actions item={item} reload={reload} />
                           </Table.Cell>
                         </Table.Row>
                       );

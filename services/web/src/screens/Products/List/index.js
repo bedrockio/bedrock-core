@@ -123,7 +123,7 @@ export default class ProductList extends React.Component {
                         onClick={() => setSort('name')}>
                         Name
                       </Table.HeaderCell>
-                      <Table.HeaderCell>Images</Table.HeaderCell>
+                      <Table.HeaderCell>Image</Table.HeaderCell>
                       <Table.HeaderCell
                         onClick={() => setSort('priceUsd')}
                         sorted={getSorted('priceUsd')}>
@@ -145,6 +145,7 @@ export default class ProductList extends React.Component {
                   </Table.Header>
                   <Table.Body>
                     {products.map((product) => {
+                      const [image] = product.images;
                       return (
                         <Table.Row key={product.id}>
                           <Table.Cell>
@@ -153,10 +154,10 @@ export default class ProductList extends React.Component {
                             </Link>
                           </Table.Cell>
                           <Table.Cell textAlign="center">
-                            {product.images[0] && (
+                            {image && (
                               <Image
                                 size="tiny"
-                                src={urlForUpload(product.images[0], true)}
+                                src={urlForUpload(image, true)}
                               />
                             )}
                           </Table.Cell>

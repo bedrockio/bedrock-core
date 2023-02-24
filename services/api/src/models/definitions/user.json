@@ -62,18 +62,20 @@
         },
         "loginAttempts": {
           "type": "Number",
-          "default": 0,
-          "readAccess": "none",
-          "writeAccess": "none"
+          "default": 0
         },
         "lastLoginAttemptAt": {
-          "type": "Date",
-          "readAccess": "none",
-          "writeAccess": "none"
+          "type": "Date"
         },
         "tempTokenId": {
           "type": "String"
-        },
+        }
+      }
+    },
+    "$readOnly": {
+      "type": "Scope",
+      "writeAccess": "none",
+      "attributes": {
         "authInfo": [
           {
             "lastUsedAt": {

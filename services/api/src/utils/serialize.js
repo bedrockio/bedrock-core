@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { Stream } = require('node:stream');
+const { isPlainObject } = require('lodash');
 
 function serializeDocument(doc, ctx) {
   const { authUser } = ctx.state;
@@ -18,7 +19,7 @@ function serializeObject(obj, ctx) {
     return obj.map((el) => {
       return serializeObject(el, ctx);
     });
-  } else if (typeof obj === 'object') {
+  } else if (isPlainObject(obj)) {
     const mapped = {};
     for (let [key, val] of Object.entries(obj || {})) {
       mapped[key] = serializeObject(val, ctx);
