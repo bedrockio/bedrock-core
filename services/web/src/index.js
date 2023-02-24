@@ -40,4 +40,4 @@ const Wrapper = () => (
   </BrowserRouter>
 );
 
-ReactDOM.createRoot(<Wrapper />, document.getElementById('root'));
+ReactDOM.render(<Wrapper />, document.getElementById('root'));
