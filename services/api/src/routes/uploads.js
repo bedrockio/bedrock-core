@@ -11,11 +11,11 @@ router
   .param(
     'id',
     fetchByParam(Upload, {
-      hasAccess: (ctx, doc) => {
+      hasAccess: (ctx, upload) => {
         if (ctx.method === 'GET') {
           return true;
         } else {
-          return doc.owner?.equals(ctx.state.authUser.id);
+          return upload.owner?.equals(ctx.state.authUser.id);
         }
       },
     })

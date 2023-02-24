@@ -49,6 +49,7 @@
           "default": "Point"
         },
         "coordinates": [
+          "Number",
           "Number"
         ]
       }
