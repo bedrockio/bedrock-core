@@ -1,25 +1,32 @@
 const qs = require('qs');
 const yd = require('@bedrockio/yada');
-const { PermissionsError } = require('../validation');
+const { PermissionsError, ImplementationError } = require('@bedrockio/model');
 
 function validateBody(arg) {
-  const schema = yd.isSchema(arg) ? arg : yd.object(arg);
-  return wrapMiddleware(schema, async (ctx, next) => {
+  const schema = resolveSchema(arg);
+  return async (ctx, next) => {
     try {
-      ctx.request.body = await schema.validate(ctx.request.body);
+      const { authUser } = ctx.state;
+      ctx.request.body = await schema.validate(ctx.request.body, {
+        ...ctx.state,
+        scopes: authUser?.getScopes(),
+      });
     } catch (error) {
-      ctx.throw(getErrorCode(error), error);
+      throwError(ctx, error);
     }
     return await next();
-  });
+  };
 }
 
 function validateQuery(arg) {
-  const schema = yd.isSchema(arg) ? arg : yd.object(arg);
-  return wrapMiddleware(schema, async (ctx, next) => {
+  const schema = resolveSchema(arg);
+  return async (ctx, next) => {
     try {
+      const { authUser } = ctx.state;
       const parsed = qs.parse(ctx.request.query);
       const result = await schema.validate(parsed, {
+        ...ctx.state,
+        scopes: authUser?.getScopes(),
         cast: true,
       });
       // ctx.request.query is a getter/setter so override
@@ -27,20 +34,24 @@ function validateQuery(arg) {
         value: result,
       });
     } catch (error) {
-      ctx.throw(getErrorCode(error), error);
+      throwError(ctx, error);
     }
     return next();
-  });
+  };
 }
 
-function wrapMiddleware(schema, fn) {
-  // Expose schema to document generator.
-  fn.schema = schema;
-  return fn;
+function resolveSchema(arg) {
+  return yd.isSchema(arg) ? arg : yd.object(arg);
 }
 
-function getErrorCode(error) {
-  return isPermissionsError(error) ? 401 : 400;
+function throwError(ctx, error) {
+  if (isImplementationError(error)) {
+    ctx.throw(500, error.getFullMessage());
+  } else if (isPermissionsError(error)) {
+    ctx.throw(401, error);
+  } else {
+    ctx.throw(400, error);
+  }
 }
 
 function isPermissionsError(error) {
@@ -48,6 +59,14 @@ function isPermissionsError(error) {
     return error.details.every(isPermissionsError);
   } else if (error.original) {
     return error.original instanceof PermissionsError;
+  }
+}
+
+function isImplementationError(error) {
+  if (error.details) {
+    return error.details.some(isImplementationError);
+  } else if (error.original) {
+    return error.original instanceof ImplementationError;
   }
 }
 

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
 import { Segment, Grid, Form, Message } from 'semantic';
 
 import { withSession } from 'stores';

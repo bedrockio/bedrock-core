@@ -1,12 +1,13 @@
 const Router = require('@koa/router');
 const yd = require('@bedrockio/yada');
-const mongoose = require('mongoose');
+const { fetchByParam } = require('../utils/middleware/params');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
 const { exportValidation, csvExport } = require('../utils/csv');
 const { User } = require('../models');
 const { expandRoles } = require('./../utils/permissions');
+
 const roles = require('./../roles.json');
 const permissions = require('./../permissions.json');
 
@@ -17,21 +18,11 @@ const router = new Router();
 router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
-  .param('id', async (id, ctx, next) => {
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      ctx.throw(404);
-    }
-    const user = await User.findById(id);
-    if (!user) {
-      ctx.throw(404);
-    }
-    ctx.state.user = user;
-    return next();
-  })
-  .get('/me', (ctx) => {
+  .param('id', fetchByParam(User))
+  .get('/me', async (ctx) => {
     const { authUser } = ctx.state;
     ctx.body = {
-      data: expandRoles(authUser),
+      data: expandRoles(authUser, ctx),
     };
   })
   .patch(
@@ -45,9 +36,55 @@ router
     async (ctx) => {
       const { authUser } = ctx.state;
       authUser.assign(ctx.request.body);
+
       await authUser.save();
       ctx.body = {
-        data: expandRoles(authUser),
+        data: expandRoles(authUser, ctx),
+      };
+    }
+  )
+  .post(
+    '/:id/authenticate',
+    requirePermissions({ endpoint: 'users', permission: 'write', scope: 'global' }),
+    async (ctx) => {
+      const { user } = ctx.state;
+      const authUser = ctx.state.authUser;
+
+      // Don't allow an superAdmin to imitate another superAdmin
+      const allowedRoles = expandRoles(authUser, ctx).roles.reduce(
+        (result, { roleDefinition }) => result.concat(roleDefinition.allowAuthenticationOnRoles || []),
+        []
+      );
+
+      const isAllowed = [...user.roles].every(({ role }) => allowedRoles.includes(role));
+      if (!isAllowed) {
+        ctx.throw(403, 'You are not allowed to authenticate as this user');
+      }
+
+      const token = authUser.createAuthToken(
+        {
+          ip: ctx.get('x-forwarded-for') || ctx.ip,
+          country: ctx.get('cf-ipcountry'),
+          userAgent: ctx.get('user-agent'),
+        },
+        {
+          // setting user id to the user we are impersonating
+          // this is a special case not to be use for other purposes `sub` is reserved for the user id normally
+          authenticateUser: user.id,
+          // expires in 2 hours (in seconds)
+          exp: Math.floor(Date.now() / 1000) + 120 * 60,
+        }
+      );
+      await authUser.save();
+
+      await AuditEntry.append('Authenticate as user', {
+        ctx,
+        object: user,
+        user: authUser,
+      });
+
+      ctx.body = {
+        data: { token },
       };
     }
   )
@@ -76,14 +113,14 @@ router
         return csvExport(ctx, data, { filename });
       }
       ctx.body = {
-        data: data.map((item) => expandRoles(item)),
+        data: data.map((item) => expandRoles(item, ctx)),
         meta,
       };
     }
   )
   .get('/:id', async (ctx) => {
     ctx.body = {
-      data: expandRoles(ctx.state.user),
+      data: expandRoles(ctx.state.user, ctx),
     };
   })
   .use(requirePermissions({ endpoint: 'users', permission: 'write', scope: 'global' }))
@@ -102,7 +139,8 @@ router
       }
       const user = await User.create(ctx.request.body);
 
-      await AuditEntry.append('Created User', ctx, {
+      await AuditEntry.append('Created User', {
+        ctx,
         object: user,
       });
 
@@ -113,11 +151,12 @@ router
   )
   .patch('/:id', validateBody(User.getUpdateValidation()), async (ctx) => {
     const { user } = ctx.state;
+    const snapshot = new User(user);
     user.assign(ctx.request.body);
-
     await user.save();
-
-    await AuditEntry.append('Updated user', ctx, {
+    await AuditEntry.append('Updated user', {
+      ctx,
+      snapshot,
       object: user,
       fields: ['email', 'roles'],
     });
@@ -128,11 +167,15 @@ router
   })
   .delete('/:id', async (ctx) => {
     const { user } = ctx.state;
-    await user.assertNoReferences({
-      except: [AuditEntry],
-    });
-    await user.delete();
-    ctx.status = 204;
+    try {
+      await user.assertNoReferences({
+        except: [AuditEntry],
+      });
+      await user.delete();
+      ctx.status = 204;
+    } catch (err) {
+      ctx.throw(400, err);
+    }
   });
 
 module.exports = router;

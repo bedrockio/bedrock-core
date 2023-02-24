@@ -7,7 +7,6 @@ const { User, AuditEntry } = require('../models');
 
 const mfa = require('../utils/mfa');
 const sms = require('../utils/sms');
-const { createAuthToken } = require('../utils/tokens');
 const { sendTemplatedMail } = require('../utils/mailer');
 const { validateBody } = require('../utils/middleware/validate');
 const { verifyLoginAttempts } = require('../utils/auth');
@@ -62,10 +61,10 @@ router
       try {
         await verifyLoginAttempts(user);
       } catch (error) {
-        await AuditEntry.append('Reached max mfa challenge attempts', ctx, {
+        await AuditEntry.append('Reached max mfa challenge attempts', {
+          ctx,
+          user,
           category: 'security',
-          object: user,
-          user: user.id,
         });
         ctx.throw(401, error);
       }
@@ -78,26 +77,33 @@ router
         backupCodes.splice(foundBackupCode, 1);
         user.mfaBackupCodes = backupCodes;
         await user.save();
-        await AuditEntry.append('Successfully authenticated (mfa using backup code)', ctx, {
-          object: user,
-          user: user.id,
+        await AuditEntry.append('Successfully authenticated (mfa using backup code)', {
+          ctx,
+          user,
         });
       } else if (!mfa.verifyToken(user.mfaSecret, user.mfaMethod, code)) {
-        await AuditEntry.append('Failed mfa challenge', ctx, {
+        await AuditEntry.append('Failed mfa challenge', {
+          ctx,
+          user,
           category: 'security',
-          object: user,
-          user: user.id,
         });
         ctx.throw(400, 'Not a valid code');
       }
 
-      await AuditEntry.append('Successfully authenticated (mfa)', ctx, {
-        object: user,
-        user: user.id,
+      await AuditEntry.append('Successfully authenticated (mfa)', {
+        ctx,
+        user,
       });
 
+      const token = user.createAuthToken({
+        ip: ctx.get('x-forwarded-for') || ctx.ip,
+        country: ctx.get('cf-ipcountry'),
+        userAgent: ctx.get('user-agent'),
+      });
+      await user.save();
+
       ctx.body = {
-        data: { token: createAuthToken(user.id, user.authTokenId) },
+        data: { token: token },
       };
     }
   );

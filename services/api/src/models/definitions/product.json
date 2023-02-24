@@ -30,18 +30,18 @@
     "shop": {
       "ref": "Shop",
       "type": "ObjectId",
-      "required": true,
-      "autopopulate": true
+      "required": true
     },
     "images": [
       {
         "type": "ObjectId",
-        "ref": "Upload",
-        "autopopulate": true
+        "ref": "Upload"
       }
     ]
   },
-  "search": [
-    "name"
-  ]
+  "search": {
+    "fields": [
+      "name"
+    ]
+  }
 }

@@ -5,17 +5,19 @@ const bodyParser = require('koa-body');
 const errorHandler = require('./utils/middleware/error-handler');
 const corsMiddleware = require('./utils/middleware/cors');
 const recordMiddleware = require('./utils/middleware/record');
+const serializeMiddleware = require('./utils/middleware/serialize');
 const { applicationMiddleware } = require('./utils/middleware/application');
 const Sentry = require('@sentry/node');
 const routes = require('./routes');
 const config = require('@bedrockio/config');
-const { loggingMiddleware } = require('@bedrockio/instrumentation');
+const logger = require('@bedrockio/logger');
 
 const app = new Koa();
 
 const ENV_NAME = config.get('ENV_NAME');
 
 app.use(corsMiddleware());
+app.use(errorHandler);
 
 if (['staging', 'development'].includes(ENV_NAME)) {
   // has to be the added before any middleware that changes the ctx.body
@@ -31,8 +33,8 @@ if (['development'].includes(ENV_NAME)) {
 }
 
 app
-  .use(errorHandler)
-  .use(loggingMiddleware())
+  .use(serializeMiddleware)
+  .use(logger.middleware())
   .use(bodyParser({ multipart: true }));
 
 app.on('error', (err, ctx) => {
@@ -43,7 +45,7 @@ app.on('error', (err, ctx) => {
   }
   // dont output stacktraces of errors that is throw with status as they are known
   if (!err.status || err.status === 500) {
-    ctx.logger.error(err);
+    logger.error(err);
     Sentry.withScope(function (scope) {
       scope.addEventProcessor(function (event) {
         return Sentry.Handlers.parseRequest(event, ctx.request);

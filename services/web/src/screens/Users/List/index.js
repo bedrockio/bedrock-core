@@ -76,6 +76,11 @@ export default class UserList extends React.Component {
         label: 'Is Developer',
         type: 'boolean',
       },
+      createdAt: {
+        label: 'Created At',
+        type: 'date',
+        range: true,
+      },
       keyword: {},
     };
   }
@@ -103,8 +108,6 @@ export default class UserList extends React.Component {
               <Segment>
                 <Layout horizontal spread stackable>
                   <SearchFilters.Modal>
-                    {/* --- Generator: filters */}
-
                     <SearchFilters.Dropdown
                       multiple
                       label="Role"
@@ -117,7 +120,10 @@ export default class UserList extends React.Component {
                       name="isDeveloper"
                     />
 
-                    {/* --- Generator: end */}
+                    <SearchFilters.DateRange
+                      label="Created At"
+                      name="createdAt"
+                    />
                   </SearchFilters.Modal>
 
                   <Layout horizontal stackable center right>

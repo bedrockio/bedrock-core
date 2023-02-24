@@ -1,8 +1,7 @@
-const mongoose = require('mongoose');
 const Router = require('@koa/router');
+const { fetchByParam } = require('../utils/middleware/params');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
-
 const { exportValidation, csvExport } = require('../utils/csv');
 const { Product } = require('../models');
 
@@ -11,17 +10,7 @@ const router = new Router();
 router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
-  .param('id', async (id, ctx, next) => {
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      ctx.throw(404);
-    }
-    const product = await Product.findById(id);
-    if (!product) {
-      ctx.throw(404);
-    }
-    ctx.state.product = product;
-    return next();
-  })
+  .param('id', fetchByParam(Product))
   .post('/', validateBody(Product.getCreateValidation()), async (ctx) => {
     const product = await Product.create(ctx.request.body);
     ctx.body = {

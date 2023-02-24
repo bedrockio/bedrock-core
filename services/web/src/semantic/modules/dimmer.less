@@ -185,9 +185,17 @@ body.dimmable > .dimmer {
 .ui.inverted.dimmer,
 .nocturnal-theme .ui.inverted.dimmer {
   background-color: @invertedBackgroundColor;
+
+  .nocturnal-theme & {
+    background-color: @nocturnalInvertedBackgroundColor;
+  }
 }
 .ui.inverted.dimmer > .content > * {
   color: @invertedTextColor;
+
+  .nocturnal-theme & {
+    color: @nocturnalInvertedTextColor;
+  }
 }
 
 /*--------------
@@ -223,7 +231,15 @@ body.dimmable > .dimmer {
 
 .ui.simple.inverted.dimmer {
   background-color: @simpleInvertedStartBackgroundColor;
+
+  .nocturnal-theme & {
+    background-color: @simpleStartBackgroundColor;
+  }
 }
 .dimmed.dimmable > .ui.simple.inverted.dimmer {
   background-color: @simpleInvertedEndBackgroundColor;
+
+  .nocturnal-theme & {
+    background-color: @simpleEndBackgroundColor;
+  }
 }

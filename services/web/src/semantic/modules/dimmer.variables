@@ -11,7 +11,7 @@
 @lineHeight: 1;
 @perspective: 2000px;
 @padding: 1em;
-@nocturnalBackgroundColor: rgba(0, 0, 0, 0.85);
+@nocturnalBackgroundColor: rgba(mix(@nocturnalPageBackground, #000, 50), .7);
 
 @duration: 0.5s;
 @transition:
@@ -20,7 +20,7 @@
 @zIndex: 1000;
 @textAlign: center;
 @verticalAlign: middle;
-@textColor: rgba(@white, .9);
+@textColor: rgba(@white, .9); // = @invertedTextColor
 @overflow: hidden;
 
 @blurredStartFilter: ~"blur(0px) grayscale(0)";
@@ -51,7 +51,9 @@
 
 /* Inverted */
 @invertedBackgroundColor: rgba(255, 255, 255, 0.85);
-@invertedTextColor: @textColor;
+@invertedTextColor: rgba(0, 0, 0, 0.87); // = global @textColor
+@nocturnalInvertedBackgroundColor: rgba(0, 0, 0, 0.35);
+@nocturnalInvertedTextColor: rgba(@white, .9);
 
 /* Simple */
 @simpleZIndex: 1;

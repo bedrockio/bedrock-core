@@ -1,14 +1,6 @@
 const { assertMailSent } = require('postmark');
-const { setupDb, teardownDb, request, createUser, createAdminUser } = require('../../utils/testing');
-const { User, Invite } = require('../../models');
-
-beforeAll(async () => {
-  await setupDb();
-});
-
-afterAll(async () => {
-  await teardownDb();
-});
+const { request, createUser, createAdminUser } = require('../../utils/testing');
+const { Invite } = require('../../models');
 
 describe('/1/invites', () => {
   describe('POST /search', () => {

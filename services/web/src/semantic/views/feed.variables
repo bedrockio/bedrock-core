@@ -42,7 +42,6 @@
 @nocturnalIconLabelBorder: none;
 @nocturnalIconLabelColor: @nocturnalUnselectedTextColor;
 
-
 /* Image Label */
 @imageLabelWidth: 100%;
 @imageLabelHeight: auto;

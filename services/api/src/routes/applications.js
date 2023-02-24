@@ -1,9 +1,9 @@
 const Router = require('@koa/router');
 const { kebabCase } = require('lodash');
-
+const { fetchByParam } = require('../utils/middleware/params');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
-const { Application, ApplicationRequest } = require('../models');
+const { Application, ApplicationRequest, AuditEntry } = require('../models');
 const { exportValidation, csvExport } = require('../utils/csv');
 const { requirePermissions } = require('../utils/middleware/permissions');
 
@@ -13,16 +13,7 @@ router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
   .use(requirePermissions({ endpoint: 'applications', permission: 'read', scope: 'global' }))
-  .param('id', async (id, ctx, next) => {
-    const application = await Application.findOne({ _id: id, user: ctx.state.authUser.id });
-    ctx.state.application = application;
-    if (!application) {
-      ctx.throw(404);
-    } else if (ctx.state.authUser.id != application.user) {
-      ctx.throw(401);
-    }
-    return next();
-  })
+  .param('id', fetchByParam(Application))
   .post('/mine/search', validateBody(Application.getSearchValidation()), async (ctx) => {
     const { body } = ctx.request;
     const { data, meta } = await Application.search({
@@ -78,14 +69,31 @@ router
       user: ctx.state.authUser,
     });
 
+    await AuditEntry.append('Created Application', {
+      ctx,
+      object: application,
+      user: ctx.state.authUser,
+    });
+
     ctx.body = {
       data: application,
     };
   })
   .patch('/:id', validateBody(Application.getUpdateValidation()), async (ctx) => {
     const application = ctx.state.application;
+    const snapshot = new Application(application);
+
     application.assign(ctx.request.body);
     await application.save();
+
+    await AuditEntry.append('Updated Application', {
+      ctx,
+      object: application,
+      user: ctx.state.authUser,
+      fields: ['name', 'description', 'apiKey'],
+      snapshot,
+    });
+
     ctx.body = {
       data: application,
     };

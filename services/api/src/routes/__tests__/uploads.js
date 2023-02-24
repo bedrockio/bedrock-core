@@ -1,13 +1,5 @@
-const { setupDb, teardownDb, request, createUpload, createUser } = require('../../utils/testing');
+const { request, createUpload, createUser } = require('../../utils/testing');
 const { Upload } = require('../../models');
-
-beforeAll(async () => {
-  await setupDb();
-});
-
-afterAll(async () => {
-  await teardownDb();
-});
 
 const file = __dirname + '/../__fixtures__/test.png';
 

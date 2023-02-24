@@ -1,7 +1,6 @@
 const config = require('@bedrockio/config');
 const { URLSearchParams } = require('url');
-const fetch = require('node-fetch');
-const { logger } = require('@bedrockio/instrumentation');
+const logger = require('@bedrockio/logger');
 
 const TWILIO_AUTH_TOKEN = config.get('TWILIO_AUTH_TOKEN');
 const TWILIO_ACCOUNT_SID = config.get('TWILIO_ACCOUNT_SID');

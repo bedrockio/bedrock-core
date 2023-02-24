@@ -38,49 +38,74 @@
     },
     "theme": {
       "type": "String",
-      "enum": ["dark", "light", "system"]
+      "enum": [
+        "dark",
+        "light",
+        "system"
+      ]
     },
     "isDeveloper": {
       "type": "Boolean",
       "default": false
     },
-    "hashedPassword": {
-      "type": "String",
-      "readScopes": "none",
-      "writeScopes": "none"
-    },
-    "loginAttempts": {
-      "type": "Number",
-      "default": 0,
-      "readScopes": "none",
-      "writeScopes": "none"
-    },
-    "lastLoginAttemptAt": {
-      "type": "Date",
-      "readScopes": "none",
-      "writeScopes": "none"
-    },
     "accessConfirmedAt": {
       "type": "Date",
-      "writeScopes": "none"
+      "writeAccess": "none"
     },
-    "authTokenId": {
-      "type": "String",
-      "readScopes": "none",
-      "writeScopes": "none"
-    },
-    "tempTokenId": {
-      "type": "String",
-      "readScopes": "none",
-      "writeScopes": "none"
-    },
-    "mfaBackupCodes": [
-      {
-        "type": "String",
-        "readScopes": "none",
-        "writeScopes": "none"
+    "$private": {
+      "type": "Scope",
+      "readAccess": "none",
+      "writeAccess": "none",
+      "attributes": {
+        "hashedPassword": {
+          "type": "String"
+        },
+        "loginAttempts": {
+          "type": "Number",
+          "default": 0
+        },
+        "lastLoginAttemptAt": {
+          "type": "Date"
+        },
+        "tempTokenId": {
+          "type": "String"
+        }
       }
-    ],
+    },
+    "authInfo": {
+      "type": "Array",
+      "readAccess": "self",
+      "writeAccess": "none",
+      "attributes": {
+        "lastUsedAt": {
+          "type": "Date",
+          "required": true
+        },
+        "userAgent": {
+          "type": "String",
+          "required": false
+        },
+        "ip": {
+          "type": "String",
+          "required": true
+        },
+        "country": {
+          "type": "String"
+        },
+        "iat": {
+          "type": "Date",
+          "required": true
+        },
+        "jti": {
+          "type": "String",
+          "required": true
+        },
+        "exp": {
+          "type": "Date",
+          "required": true
+        }
+      }
+    },
     "mfaMethod": {
       "type": "String",
       "enum": [
@@ -88,20 +113,27 @@
         "otp"
       ]
     },
+    "mfaBackupCodes": [
+      {
+        "type": "String"
+      }
+    ],
     "mfaSecret": {
       "type": "String",
-      "readScopes": "none",
-      "writeScopes": "none"
+      "readAccess": "none",
+      "writeAccess": "none"
     },
     "mfaPhoneNumber": {
       "type": "String",
-      "readScopes": "none",
-      "writeScopes": "none"
+      "readAccess": "none",
+      "writeAccess": "none"
     }
   },
-  "search": [
-    "firstName",
-    "lastName",
-    "email"
-  ]
+  "search": {
+    "fields": [
+      "firstName",
+      "lastName",
+      "email"
+    ]
+  }
 }

@@ -1,26 +1,16 @@
-const mongoose = require('mongoose');
 const Router = require('@koa/router');
+const { fetchByParam } = require('../utils/middleware/params');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
-const { Shop } = require('../models');
-
+const { Shop, AuditEntry } = require('../models');
 const { exportValidation, csvExport } = require('../utils/csv');
+
 const router = new Router();
 
 router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
-  .param('id', async (id, ctx, next) => {
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      ctx.throw(404, 'ObjectId in path is not valid');
-    }
-    const shop = await Shop.findById(id);
-    if (!shop) {
-      ctx.throw(404);
-    }
-    ctx.state.shop = shop;
-    return next();
-  })
+  .param('id', fetchByParam(Shop))
   .post('/', validateBody(Shop.getCreateValidation()), async (ctx) => {
     const shop = await Shop.create(ctx.request.body);
     ctx.body = {
@@ -63,8 +53,16 @@ router
     };
   })
   .delete('/:id', async (ctx) => {
-    await ctx.state.shop.delete();
-    ctx.status = 204;
+    const { shop } = ctx.state;
+    try {
+      await shop.assertNoReferences({
+        except: [AuditEntry],
+      });
+      await shop.delete();
+      ctx.status = 204;
+    } catch (err) {
+      ctx.throw(400, err);
+    }
   });
 
 module.exports = router;

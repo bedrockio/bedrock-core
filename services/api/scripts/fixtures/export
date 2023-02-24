@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 const { initialize } = require('../../src/utils/database');
 const { exportFixtures } = require('../../src/utils/fixtures');
-const { logger } = require('@bedrockio/instrumentation');
+const logger = require('@bedrockio/logger');
+
+// Ensure models are loaded.
+require('../../src/models');
 
 (async () => {
   const options = {};
@@ -35,6 +38,11 @@ const { logger } = require('@bedrockio/instrumentation');
   let ids = options.id || options.ids;
   if (ids) {
     ids = ids.split(',');
+  }
+
+  if (!modelNames) {
+    logger.error('Must pass model names with --model(s).');
+    process.exit(1);
   }
 
   let stdout = options.stdout;

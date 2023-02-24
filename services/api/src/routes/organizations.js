@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
 const Router = require('@koa/router');
+const { fetchByParam } = require('../utils/middleware/params');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
@@ -10,17 +10,7 @@ const router = new Router();
 router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
-  .param('id', async (id, ctx, next) => {
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      ctx.throw(404);
-    }
-    const organization = await Organization.findById(id);
-    ctx.state.organization = organization;
-    if (!organization) {
-      ctx.throw(404);
-    }
-    return next();
-  })
+  .param('id', fetchByParam(Organization))
   .post('/mine/search', async (ctx) => {
     const { authUser } = ctx.state;
     const { body } = ctx.request;

@@ -12,6 +12,9 @@
       "type": "String"
     },
     "request": {
+      "sessionId": {
+        "type": "String"
+      },
       "ip": {
         "type": "String"
       },
@@ -40,8 +43,10 @@
       }
     }
   },
-  "search": [
-    "requestId",
-    "routeNormalizedPath"
-  ]
+  "search": {
+    "fields": [
+      "requestId",
+      "routeNormalizedPath"
+    ]
+  }
 }

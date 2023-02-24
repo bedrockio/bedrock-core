@@ -9,8 +9,7 @@ export default class HelpTip extends React.Component {
         style={{
           display: 'inline-block',
           marginLeft: '0.5em',
-          verticalAlign: 'top',
-          marginTop: '-1px',
+          verticalAlign: 'sub',
         }}>
         <Popup
           content={text}

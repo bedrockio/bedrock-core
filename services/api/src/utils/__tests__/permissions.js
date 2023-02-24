@@ -1,15 +1,6 @@
 const mongoose = require('mongoose');
-const { setupDb, teardownDb } = require('../testing');
 const { User } = require('./../../models');
 const { validatePermissions, userHasAccess } = require('../permissions');
-
-beforeAll(async () => {
-  await setupDb();
-});
-
-afterAll(async () => {
-  await teardownDb();
-});
 
 describe('permissions', () => {
   it('validatePermissions', () => {
@@ -28,7 +19,6 @@ describe('permissions', () => {
   });
 
   it('should validate correctly for super admin', async () => {
-    await User.deleteMany({});
     const superAdmin = await User.create({
       email: 'admin@permissions.com',
       firstName: 'John',
@@ -50,7 +40,6 @@ describe('permissions', () => {
   });
 
   it('should validate correctly for organization admin', async () => {
-    await User.deleteMany({});
     const organization1Id = new mongoose.Types.ObjectId();
     const organization2Id = new mongoose.Types.ObjectId();
     const admin = await User.create({

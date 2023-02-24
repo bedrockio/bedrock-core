@@ -1,8 +1,9 @@
 import React from 'react';
-import { Table, Button, Divider, Segment } from 'semantic';
+import { Table, Image, Button, Divider, Segment } from 'semantic';
 import { Link } from 'react-router-dom';
 
 import { formatDateTime } from 'utils/date';
+import { urlForUpload } from 'utils/uploads';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
 import {
@@ -62,6 +63,11 @@ export default class ShopList extends React.Component {
           return owners[0].name;
         },
       },
+      createdAt: {
+        label: 'Created At',
+        type: 'date',
+        range: true,
+      },
       // --- Generator: end
       keyword: {},
     };
@@ -103,6 +109,10 @@ export default class ShopList extends React.Component {
                       name="owner"
                       label="Owner"
                     />
+                    <SearchFilters.DateRange
+                      label="Created At"
+                      name="createdAt"
+                    />
                     {/* --- Generator: end */}
                   </SearchFilters.Modal>
 
@@ -126,7 +136,7 @@ export default class ShopList extends React.Component {
                         sorted={getSorted('name')}>
                         Name
                       </Table.HeaderCell>
-                      <Table.HeaderCell width={3}>Description</Table.HeaderCell>
+                      <Table.HeaderCell>Image</Table.HeaderCell>
                       {/* --- Generator: end */}
                       <Table.HeaderCell
                         onClick={() => setSort('createdAt')}
@@ -144,14 +154,22 @@ export default class ShopList extends React.Component {
                   </Table.Header>
                   <Table.Body>
                     {items.map((item) => {
+                      const [image] = item.images;
                       return (
                         <Table.Row key={item.id}>
                           {/* --- Generator: list-body-cells */}
                           <Table.Cell>
                             <Link to={`/shops/${item.id}`}>{item.name}</Link>
                           </Table.Cell>
-                          <Table.Cell>{item.description}</Table.Cell>
                           {/* --- Generator: end */}
+                          <Table.Cell>
+                            {image && (
+                              <Image
+                                size="tiny"
+                                src={urlForUpload(image, true)}
+                              />
+                            )}
+                          </Table.Cell>
                           <Table.Cell>
                             {formatDateTime(item.createdAt)}
                           </Table.Cell>

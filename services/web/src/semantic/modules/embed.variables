@@ -12,7 +12,6 @@
 @background: @lightGrey;
 @transitionDuration: 0.5s;
 @transitionEasing: @defaultEasing;
-// @todo sync up with card background
 @nocturnalBackground: hsl(hue(@mainMenuBackground), (saturation(@mainMenuBackground) / 2), (100% - lightness(@mainMenuBackground) + (lightness(@textColor)*0.75)));
 
 /* Placeholder */

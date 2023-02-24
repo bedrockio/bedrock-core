@@ -84,7 +84,8 @@
 .ui.dropdown > .dropdown.icon {
   position: relative;
   font-size: @dropdownIconSize;
-  margin: @dropdownIconMargin;
+  margin: 0; // @dropdownIconMargin;
+  right: -0.75em;
 }
 .ui.dropdown .menu > .item .dropdown.icon {
   float: @itemDropdownIconFloat;
@@ -421,9 +422,9 @@ select.ui.dropdown {
   position: absolute;
   top: 50%;
   right: 10px;
-  z-index: 3;
-  opacity: 0.8;
-  transition: opacity 0.1s ease;
+  z-index: @selectionIconZIndex;
+  opacity: @selectionIconOpacity;
+  transition: @selectionIconTransition;
   transform: translateY(-50%);
 }
 

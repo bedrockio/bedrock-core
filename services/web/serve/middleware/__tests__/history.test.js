@@ -1,6 +1,6 @@
-import history from '../history';
-
 const { createFakeKoaContext } = require('koa');
+
+const history = require('../history');
 
 jest.mock('koa');
 

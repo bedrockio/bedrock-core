@@ -1,15 +1,5 @@
 const { requirePermissions } = require('../permissions');
-const { setupDb, teardownDb, createUser, context } = require('../../testing');
-const { User } = require('./../../../models');
-
-beforeAll(async () => {
-  await setupDb();
-  await User.deleteMany({});
-});
-
-afterAll(async () => {
-  await teardownDb();
-});
+const { createUser, context } = require('../../testing');
 
 describe('permissions', () => {
   it('should trigger an error if no auth user is set', async () => {

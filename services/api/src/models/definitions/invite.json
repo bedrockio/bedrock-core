@@ -7,7 +7,11 @@
       "required": true
     },
     "status": {
-      "type": "String"
+      "type": "String",
+      "emum": [
+        "accepted",
+        "invited"
+      ]
     }
   }
 }

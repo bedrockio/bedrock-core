@@ -96,7 +96,7 @@ function applicationMiddleware({ ignorePaths = [] }) {
     );
 
     if (!application) {
-      return ctx.throw(404, `The "ApiKey" did not match any known applications`);
+      return ctx.throw(400, `The "ApiKey" did not match any known applications`);
     }
 
     const requestId = `${application.apiKey}-${nanoid()}`;
@@ -121,6 +121,7 @@ function applicationMiddleware({ ignorePaths = [] }) {
       routeNormalizedPath: ctx.routerPath,
       requestId,
       request: {
+        sessionId: ctx.state.jwt?.jti,
         ip: request.ip,
         method: request.method,
         path: request.url,

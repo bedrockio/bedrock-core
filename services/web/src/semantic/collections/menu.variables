@@ -564,6 +564,7 @@
   @boxShadow,
   @attachedBoxShadow
 ;
+@nocturnalAttachedBoxShadow: @attachedBoxShadow;
 @nocturnalAttachedBorder: @borderWidth solid @nocturnalBorder;
 @nocturnalAttachedBottomBoxShadow:
   @nocturnalBoxShadow,

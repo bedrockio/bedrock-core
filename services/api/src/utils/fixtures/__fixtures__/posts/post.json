@@ -1,6 +1,0 @@
-{
-  "content": "../files/content.md",
-  "nested": {
-    "nestedContent": "../files/content.md"
-  }
-}

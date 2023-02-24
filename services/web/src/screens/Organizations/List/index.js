@@ -30,9 +30,22 @@ export default class OrganizationList extends React.Component {
     });
   };
 
+  getFilterMapping() {
+    return {
+      createdAt: {
+        label: 'Created At',
+        type: 'date',
+        range: true,
+      },
+      keyword: {},
+    };
+  }
+
   render() {
     return (
-      <Search.Provider onDataNeeded={this.onDataNeeded}>
+      <Search.Provider
+        filterMapping={this.getFilterMapping()}
+        onDataNeeded={this.onDataNeeded}>
         {({ items: organizations, getSorted, setSort, reload }) => {
           return (
             <React.Fragment>
@@ -51,6 +64,13 @@ export default class OrganizationList extends React.Component {
               </Layout>
               <Segment>
                 <Layout horizontal center spread stackable>
+                  <SearchFilters.Modal>
+                    <SearchFilters.DateRange
+                      time
+                      name="createdAt"
+                      label="Created At"
+                    />
+                  </SearchFilters.Modal>
                   <Layout horizontal stackable center right>
                     <Search.Total />
                     <SearchFilters.Search name="keyword" />

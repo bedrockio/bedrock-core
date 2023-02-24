@@ -12,16 +12,13 @@
     "images": [
       {
         "type": "ObjectId",
-        "ref": "Upload",
-        "description": "An upload object `id`.",
-        "autopopulate": true
+        "ref": "Upload"
       }
     ],
     "categories": [
       {
         "type": "ObjectId",
-        "ref": "Category",
-        "autopopulate": true
+        "ref": "Category"
       }
     ],
     "country": {
@@ -52,20 +49,18 @@
           "default": "Point"
         },
         "coordinates": [
-          {
-            "type": "Number",
-            "default": []
-          }
+          "Number"
         ]
       }
     },
     "owner": {
       "type": "ObjectId",
-      "ref": "User",
-      "autopopulate": true
+      "ref": "User"
     }
   },
-  "search": [
-    "name"
-  ]
+  "search": {
+    "fields": [
+      "name"
+    ]
+  }
 }
