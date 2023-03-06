@@ -5,11 +5,10 @@ metadata:
   labels:
     name: web
 spec:
-  type: LoadBalancer
+  type: NodePort
+  selector:
+    app: web
   ports:
     - port: 80
       targetPort: 2200
       protocol: TCP
-  selector:
-    app: web
-  loadBalancerIP: 104.196.209.11

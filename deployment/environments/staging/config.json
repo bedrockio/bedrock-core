@@ -9,8 +9,9 @@
       "nodePoolCount": 1,
       "minNodeCount": 1,
       "maxNodeCount": 3,
-      "machineType": "n2-standard-2"
+      "machineType": "n2d-standard-2"
     },
+    "ingresses": ["single"],
     "label": "app"
   }
 }
