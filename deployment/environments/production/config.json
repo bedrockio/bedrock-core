@@ -11,7 +11,7 @@
       "maxNodeCount": 4,
       "machineType": "n2d-standard-2"
     },
-    "ingresses": ["single"],
+    "ingresses": ["api", "web"],
     "label": "app"
   }
 }

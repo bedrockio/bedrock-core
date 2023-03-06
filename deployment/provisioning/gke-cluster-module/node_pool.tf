@@ -19,11 +19,6 @@ resource "google_container_node_pool" "default" {
     }
 
     oauth_scopes = [
-      "https://www.googleapis.com/auth/logging.write",
-      "https://www.googleapis.com/auth/monitoring",
-      "https://www.googleapis.com/auth/compute", # is required for mounting persistent storage on your nodes.
-      "https://www.googleapis.com/auth/devstorage.full_control", # Allows full control over data (buckets, gcr.io, etc)
-      "https://www.googleapis.com/auth/trace.append", # Required for bedrock.io intrumentation
       "https://www.googleapis.com/auth/cloud-platform" # Give full access to all cloud services
     ]
   }
