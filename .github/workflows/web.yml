@@ -1,4 +1,4 @@
-name: WEB
+name: Web
 on:
   push:
     branches: [master]
