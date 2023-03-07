@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const Router = require('@koa/router');
 const { fetchByParam } = require('../utils/middleware/params');
 const { validateBody } = require('../utils/middleware/validate');

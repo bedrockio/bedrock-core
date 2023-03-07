@@ -35,9 +35,3 @@ spec:
               value: "no-reply@bedrock.foundation"
             - name: POSTMARK_API_KEY
               value: "abc"
-          volumeMounts:
-            - name: cache
-              mountPath: /service/data
-      volumes:
-        - name: cache
-          emptyDir: {}
