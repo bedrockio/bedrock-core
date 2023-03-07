@@ -14,7 +14,7 @@ import { formatDateTime } from 'utils/date';
 import { formatUsd } from 'utils/currency';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
-import { Layout, HelpTip, Search, SearchFilters, Confirm } from 'components';
+import { Layout, HelpTip, Search, SearchFilters } from 'components';
 import ErrorMessage from 'components/ErrorMessage';
 // --- Generator: subscreen-imports
 import { urlForUpload } from 'utils/uploads';
