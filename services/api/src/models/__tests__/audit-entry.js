@@ -1,21 +1,12 @@
-const mongoose = require('mongoose');
 const AuditEntry = require('../audit-entry');
 const User = require('../user');
 
 const Koa = require('koa');
 const Router = require('@koa/router');
 const request = require('supertest');
-const { createSchema } = require('../../utils/schema');
+const { createTestModel } = require('@bedrockio/model');
 
-const { setupDb, teardownDb, createUser } = require('../../utils/testing');
-
-beforeAll(async () => {
-  await setupDb();
-});
-
-afterAll(async () => {
-  await teardownDb();
-});
+const { createUser } = require('../../utils/testing');
 
 async function getContext(user) {
   const app = new Koa();
@@ -44,7 +35,10 @@ describe('AuditEntry', () => {
         email: 'bob@new.com',
       });
       await user.save();
-      const fields = AuditEntry.getObjectFields(user, ['email']);
+      const fields = AuditEntry.getObjectFields({
+        object: user,
+        fields: ['email'],
+      });
       expect(fields.objectId).toBe(user.id);
       expect(fields.objectType).toBe('User');
       expect(fields.objectAfter.email).toBe('bob@new.com');
@@ -56,22 +50,21 @@ describe('AuditEntry', () => {
         us: 'bob@new.com',
       });
 
-      const schema = createSchema({
-        attributes: {
-          user: {
-            ref: 'User',
-            type: 'ObjectId',
-          },
+      const NewModel = createTestModel('NewModel', {
+        user: {
+          ref: 'User',
+          type: 'ObjectId',
         },
       });
-
-      const NewModel = mongoose.model('NewModel', schema);
 
       const newModel = await NewModel.create({
         user: user.id,
       });
 
-      const fields = AuditEntry.getObjectFields(newModel, ['user']);
+      const fields = AuditEntry.getObjectFields({
+        fields: ['user'],
+        object: newModel,
+      });
 
       expect(fields.objectId).toBe(newModel.id);
       expect(fields.objectType).toBe('NewModel');
@@ -84,9 +77,14 @@ describe('AuditEntry', () => {
         email: 'hugo@old.com',
       });
       const dbUser = await User.findById(user.id);
+      const snapshot = new User(dbUser);
       dbUser.email = 'hugo@new.com';
       await dbUser.save();
-      const fields = AuditEntry.getObjectFields(dbUser, ['email']);
+      const fields = AuditEntry.getObjectFields({
+        fields: ['email'],
+        object: dbUser,
+        snapshot,
+      });
       expect(fields.objectId).toBe(dbUser.id);
       expect(fields.objectType).toBe('User');
       expect(fields.objectBefore.email).toBe('hugo@old.com');
@@ -104,7 +102,6 @@ describe('AuditEntry', () => {
           requestMethod: 'GET',
           requestUrl: '/1/products/id',
           routeNormalizedPath: '/1/products/:id',
-          user: user.id,
         })
       );
     });
@@ -117,20 +114,23 @@ describe('AuditEntry', () => {
       });
       const ctx = await getContext(user);
 
-      await AuditEntry.append('did something', ctx, {
+      await AuditEntry.append('did something', {
+        ctx,
+        object: user,
         category: 'security',
-        objectId: user.id,
-        objectType: 'user',
       });
 
-      const logs = await AuditEntry.find({ objectId: user.id });
+      const logs = await AuditEntry.find({
+        objectId: user.id,
+        include: 'user',
+      });
       expect(logs.length).toBe(1);
 
       const log = logs[0];
       expect(log.category).toBe('security');
       expect(log.activity).toBe('did something');
       expect(log.objectId.toString()).toBe(user.id);
-      expect(log.objectType).toBe('user');
+      expect(log.objectType).toBe('User');
       expect(log.requestMethod).toBe('GET');
       expect(log.requestUrl).toBe('/1/products/id');
       expect(log.routeNormalizedPath).toBe('/1/products/:id');
@@ -142,7 +142,8 @@ describe('AuditEntry', () => {
       const user = new User({ email: 'bob@gmail.com' });
       const ctx = await getContext(user);
 
-      await AuditEntry.append('did something', ctx, {
+      await AuditEntry.append('did something', {
+        ctx,
         category: 'security',
         objectId: user.id,
         objectType: 'user',

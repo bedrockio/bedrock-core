@@ -1,16 +1,8 @@
 const { generateSecret, generateToken } = require('../../utils/mfa');
 const { createTemporaryToken, generateTokenId } = require('../../utils/tokens');
-const { setupDb, teardownDb, request, createUser } = require('../../utils/testing');
+const { request, createUser } = require('../../utils/testing');
 const { User } = require('../../models');
 const jwt = require('jsonwebtoken');
-
-beforeAll(async () => {
-  await setupDb();
-});
-
-afterAll(async () => {
-  await teardownDb();
-});
 
 describe('/1/mfa', () => {
   describe('POST /verify', () => {

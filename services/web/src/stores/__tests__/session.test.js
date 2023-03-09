@@ -13,7 +13,6 @@ import {
   SessionProvider,
 } from '../session';
 
-
 jest.mock('utils/api');
 jest.mock('utils/env');
 
@@ -64,22 +63,26 @@ describe('hoc', () => {
 
     describe('withRouter interop', () => {
       it('should allow withRouter first', async () => {
-        setToken('fake');
-        const App = wrapProviders(withSession(withRouter(createComponent())));
-        const { container } = await render(<App />);
-        await render(<App />);
-        await waitFor(() => {
-          expect(container.textContent).toBe('Bob');
+        await waitFor(async () => {
+          setToken('fake');
+          const App = wrapProviders(withSession(withRouter(createComponent())));
+          const { container } = await render(<App />);
+          await render(<App />);
+          await waitFor(() => {
+            expect(container.textContent).toBe('Bob');
+          });
         });
       });
 
       it('should allow withRouter last', async () => {
-        setToken('fake');
-        const App = wrapProviders(withRouter(withSession(createComponent())));
-        const { container } = await render(<App />);
-        await render(<App />);
-        await waitFor(() => {
-          expect(container.textContent).toBe('Bob');
+        await waitFor(async () => {
+          setToken('fake');
+          const App = wrapProviders(withRouter(withSession(createComponent())));
+          const { container } = await render(<App />);
+          await render(<App />);
+          await waitFor(() => {
+            expect(container.textContent).toBe('Bob');
+          });
         });
       });
     });
@@ -98,24 +101,28 @@ describe('hoc', () => {
       });
 
       it('should allow screen first', async () => {
-        setToken('fake');
+        await waitFor(async () => {
+          setToken('fake');
 
-        const App = wrapProviders(withSession(screen(MyScreen)));
-        const { container } = await render(<App />);
-        await render(<App />);
-        await waitFor(() => {
-          expect(container.textContent).toBe('Bob');
+          const App = wrapProviders(withSession(screen(MyScreen)));
+          const { container } = await render(<App />);
+          await render(<App />);
+          await waitFor(() => {
+            expect(container.textContent).toBe('Bob');
+          });
         });
       });
 
       it('should allow screen last', async () => {
-        setToken('fake');
+        await waitFor(async () => {
+          setToken('fake');
 
-        const App = wrapProviders(screen(withSession(MyScreen)));
-        const { container } = await render(<App />);
-        await render(<App />);
-        await waitFor(() => {
-          expect(container.textContent).toBe('Bob');
+          const App = wrapProviders(screen(withSession(MyScreen)));
+          const { container } = await render(<App />);
+          await render(<App />);
+          await waitFor(() => {
+            expect(container.textContent).toBe('Bob');
+          });
         });
       });
     });

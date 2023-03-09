@@ -1,15 +1,7 @@
 const mongoose = require('mongoose');
 
-const { setupDb, teardownDb, request, createUser } = require('../../utils/testing');
+const { request, createUser } = require('../../utils/testing');
 const { Product } = require('../../models');
-
-beforeAll(async () => {
-  await setupDb();
-});
-
-afterAll(async () => {
-  await teardownDb();
-});
 
 describe('/1/products', () => {
   describe('POST /', () => {
@@ -47,8 +39,6 @@ describe('/1/products', () => {
   describe('POST /search', () => {
     it('should list out products', async () => {
       const user = await createUser();
-      await Product.deleteMany({});
-
       const product1 = await Product.create({
         name: 'test 1',
         description: 'Some description',

@@ -6,7 +6,9 @@
       "required": "true"
     }
   },
-  "search": [
-    "name"
-  ]
+  "search": {
+    "fields": [
+      "name"
+    ]
+  }
 }

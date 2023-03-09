@@ -187,7 +187,7 @@ export default class Security extends React.Component {
                         )}
                       </Table.Cell>
                       <Table.Cell>
-                        {country?.nameEn || 'N / A'} ({info.ip})
+                        {country?.nameEn || 'N/A'} ({info.ip})
                       </Table.Cell>
                       <Table.Cell>{fromNow(info.lastUsedAt)}</Table.Cell>
                       <Table.Cell>

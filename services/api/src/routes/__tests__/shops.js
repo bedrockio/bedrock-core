@@ -1,13 +1,5 @@
-const { setupDb, teardownDb, request, createUser } = require('../../utils/testing');
+const { request, createUser } = require('../../utils/testing');
 const { Shop } = require('../../models');
-
-beforeAll(async () => {
-  await setupDb();
-});
-
-afterAll(async () => {
-  await teardownDb();
-});
 
 describe('/1/shops', () => {
   describe('POST /search', () => {

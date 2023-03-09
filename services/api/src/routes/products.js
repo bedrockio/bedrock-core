@@ -1,8 +1,7 @@
-const mongoose = require('mongoose');
 const Router = require('@koa/router');
+const { fetchByParam } = require('../utils/middleware/params');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
-
 const { exportValidation, csvExport } = require('../utils/csv');
 const { Product } = require('../models');
 
@@ -11,24 +10,14 @@ const router = new Router();
 router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
-  .param('productId', async (id, ctx, next) => {
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      ctx.throw(404);
-    }
-    const product = await Product.findById(id);
-    if (!product) {
-      ctx.throw(404);
-    }
-    ctx.state.product = product;
-    return next();
-  })
+  .param('id', fetchByParam(Product))
   .post('/', validateBody(Product.getCreateValidation()), async (ctx) => {
     const product = await Product.create(ctx.request.body);
     ctx.body = {
       data: product,
     };
   })
-  .get('/:productId', async (ctx) => {
+  .get('/:id', async (ctx) => {
     const { product } = await ctx.state;
     ctx.body = {
       data: product,
@@ -55,7 +44,7 @@ router
       };
     }
   )
-  .patch('/:productId', validateBody(Product.getUpdateValidation()), async (ctx) => {
+  .patch('/:id', validateBody(Product.getUpdateValidation()), async (ctx) => {
     const product = ctx.state.product;
     product.assign(ctx.request.body);
 
@@ -65,7 +54,7 @@ router
       data: product,
     };
   })
-  .delete('/:productId', async (ctx) => {
+  .delete('/:id', async (ctx) => {
     const product = ctx.state.product;
     await product.delete();
     ctx.status = 204;

@@ -16,7 +16,7 @@ See http://localhost:2200/docs for full documentation on this API (requires runn
 - [Secrets](#secrets)
 - [Deployment](#deployment)
 - [Background Jobs](#background-jobs)
-- [Fixtures](#fixures)
+- [Fixtures](#fixtures)
 - [Multi Tenancy](#multi-tenancy)
 - [Email Templates](#email-templates)
 - [Logging](#logging)
@@ -33,7 +33,7 @@ See http://localhost:2200/docs for full documentation on this API (requires runn
 - `src/utils` - Various utilities, helpers and middleware extensions
 - `src/routes` - API Routes
 - `src/routes/__openapi__` - OpenAPI descriptions for use in documentation portal
-- `src/models` - Mongoose ORM models (code and JSON) - [Models Documentation](./src/models)
+- `src/models` - Mongoose ORM models (code and JSON) based on [@bedrockio/model](https://github.com/bedrockio/model).
 - `src/app.js` - Entrypoint into API (does not bind, so can be used in unit tests)
 - `src/index.js` - Launch script for the API
 - `emails` - Email templates
@@ -148,8 +148,18 @@ curl -s -XPOST localhost:2600/jobs/example/start
 
 ## Fixtures
 
-Fixtures are set up automatically from structured data in the `fixtures` directory and loaded when first running the
-development server. For more on how to set this up see the [readme](src/utils/fixtures/README.md).
+Fixtures are provided with the [@bedrockio/fixtures](https://github.com/bedrockio/fixtures) package.
+
+Package scripts are the main way of interacting with fixtures:
+
+- `yarn start` - When the development server starts, fixtures will be loaded if the database is empty.
+- `yarn fixtures:reload` - Drops the database and reloads all fixtures.
+- `yarn fixtures:load` - Loads fixtures if the database is empty. Fixtures are not auto-loaded in non-development
+  environments as multiple pods starting up at the same time can cause data duplication, so instead this script is used
+  to provision the data once through the CLI pod.
+- `yarn fixtures:export` - Exports documents as a zip file in a format compatible with the `fixtures` directory.
+
+Additionally, a function `importFixtures` manually imports fixtures for use with testing.
 
 You can force reload fixtures with the command:
 
@@ -159,6 +169,20 @@ yarn fixtures:reload
 
 _Note: In the staging environment this script can be run by obtaining a shell into the API CLI pod (see
 [../../deployment](../../deployment/README.md))_
+
+The `yarn fixtures:export` script exports documents as a zip file in a format compatible with the `fixtures` directory.
+This allows database changes to be "baked" in as fixtures. The following options are accepted:
+
+- `--model(s)`: Comma separated list of model names to export (required).
+- `--id(s)`: Comma separated list of ObjectIds to export.
+- `--stdout`: Write zip binary to stdout.
+
+In addition to baking local changes, an accompanying CLI command `bedrock cloud export` allows fixtures to be exported
+from a remote cloud environment:
+
+`bedrock cloud export [environment]`
+
+Run `bedrock cloud export --help` for usage.
 
 ## Multi Tenancy
 

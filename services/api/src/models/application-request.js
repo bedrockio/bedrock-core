@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
+const { createSchema } = require('@bedrockio/model');
 
-const { createSchema } = require('../utils/schema');
 const definition = require('./definitions/application-request.json');
 
 const schema = createSchema(definition);

@@ -1,3 +1,4 @@
+const { serializeDocument } = require('./serialize');
 const roleDefinitions = require('../roles.json');
 const endpointDefinitions = require('../permissions.json');
 const endpoints = Object.keys(endpointDefinitions);
@@ -91,10 +92,11 @@ function userHasAccess(user, { endpoint, permission, scope, scopeRef }) {
   return hasAccess;
 }
 
-function expandRoles(user) {
+function expandRoles(user, ctx) {
+  user = serializeDocument(user, ctx);
   return {
-    ...user.toJSON(),
-    roles: user.toJSON().roles.map((roleRef) => {
+    ...user,
+    roles: user.roles.map((roleRef) => {
       return {
         ...roleRef,
         roleDefinition: roleDefinitions[roleRef.role],

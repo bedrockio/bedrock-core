@@ -50,69 +50,70 @@
       "default": false,
       "writeScopes": "users"
     },
-    "hashedPassword": {
-      "type": "String",
-      "readScopes": "none",
-      "writeScopes": "none"
-    },
-    "loginAttempts": {
-      "type": "Number",
-      "default": 0,
-      "readScopes": "none",
-      "writeScopes": "none"
-    },
-    "lastLoginAttemptAt": {
-      "type": "Date",
-      "readScopes": "none",
-      "writeScopes": "none"
-    },
     "accessConfirmedAt": {
       "type": "Date",
-      "writeScopes": "none"
+      "writeAccess": "none"
     },
-    "authInfo": [
-      {
+    "$private": {
+      "type": "Scope",
+      "readAccess": "none",
+      "writeAccess": "none",
+      "attributes": {
+        "hashedPassword": {
+          "type": "String"
+        },
+        "loginAttempts": {
+          "type": "Number",
+          "default": 0
+        },
+        "lastLoginAttemptAt": {
+          "type": "Date"
+        },
+        "tempTokenId": {
+          "type": "String"
+        }
+      }
+    },
+    "authInfo": {
+      "type": "Array",
+      "readAccess": "self",
+      "writeAccess": "none",
+      "attributes": {
         "lastUsedAt": {
           "type": "Date",
-          "required": true,
-          "writeScopes": "none"
+          "required": true
         },
         "userAgent": {
           "type": "String",
-          "required": false,
-          "writeScopes": "none"
+          "required": false
         },
         "ip": {
           "type": "String",
-          "required": true,
-          "writeScopes": "none"
+          "required": true
         },
         "country": {
-          "type": "String",
-          "writeScopes": "none"
+          "type": "String"
         },
         "iat": {
           "type": "Date",
-          "required": true,
-          "writeScopes": "none"
+          "required": true
         },
         "jti": {
           "type": "String",
-          "required": true,
-          "writeScopes": "none"
+          "required": true
         },
         "exp": {
           "type": "Date",
-          "required": true,
-          "readScopes": "read",
-          "writeScopes": "none"
+          "required": true
         }
       }
-    ],
-    "tempTokenId": {
+    },
+    "mfaMethod": {
       "type": "String",
-      "readScopes": "none",
-      "writeScopes": "none"
+      "enum": [
+        "sms",
+        "otp"
+      ]
     },
     "smsSecret": {
       "type": "String",
@@ -121,33 +122,26 @@
     },
     "mfaBackupCodes": [
       {
-        "type": "String",
-        "readScopes": "none",
-        "writeScopes": "none"
+        "type": "String"
       }
     ],
-    "mfaMethod": {
-      "type": "String",
-      "enum": [
-        "sms",
-        "otp"
-      ]
-    },
     "mfaSecret": {
       "type": "String",
-      "readScopes": "none",
-      "writeScopes": "none"
+      "readAccess": "none",
+      "writeAccess": "none"
     },
     "mfaPhoneNumber": {
       "type": "String",
-      "readScopes": "none",
-      "writeScopes": "none"
+      "readAccess": "none",
+      "writeAccess": "none"
     }
   },
-  "search": [
-    "firstName",
-    "lastName",
-    "email",
-    "phoneNumber"
-  ]
+  "search": {
+    "fields": [
+      "firstName",
+      "lastName",
+      "email",
+      "phoneNumber"
+    ]
+  }
 }

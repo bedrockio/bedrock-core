@@ -32,7 +32,7 @@ export default class ShopOverview extends React.Component {
         <Header as="h3">Images</Header>
         <Image.Group size="large">
           {item.images.map((image) => (
-            <Image key={image.id} src={urlForUpload(image)} />
+            <Image key={image} src={urlForUpload(image)} />
           ))}
         </Image.Group>
         {/* --- Generator: end */}

@@ -1,16 +1,8 @@
 const { applicationMiddleware } = require('../application');
 const { importFixtures } = require('../../../utils/fixtures');
-const { setupDb, teardownDb, context } = require('../../testing');
+const { context } = require('../../testing');
 
 const { ApplicationRequest } = require('./../../../models');
-
-beforeAll(async () => {
-  await setupDb();
-});
-
-afterAll(async () => {
-  await teardownDb();
-});
 
 describe('application', () => {
   it('should set an request id', async () => {

@@ -43,8 +43,10 @@
       }
     }
   },
-  "search": [
-    "requestId",
-    "routeNormalizedPath"
-  ]
+  "search": {
+    "fields": [
+      "requestId",
+      "routeNormalizedPath"
+    ]
+  }
 }
