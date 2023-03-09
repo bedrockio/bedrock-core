@@ -100,15 +100,9 @@ router
         ctx.throw(400, 'Not a valid code');
       }
 
-<<<<<<< HEAD
-      await AuditEntry.append('Authenticated', ctx, {
-        object: user,
-        user: user.id,
-=======
-      await AuditEntry.append('Successfully authenticated (mfa)', {
+      await AuditEntry.append('Authenticated', {
         ctx,
         user,
->>>>>>> master
       });
 
       const token = user.createAuthToken({
