@@ -102,6 +102,7 @@ export default class EditUser extends React.Component {
                 onChange={(e, { value }) => this.setField('email', value)}
               />
               <Form.Field>
+                <label>Phone Number</label>
                 <PhoneNumber
                   value={user.phoneNumber || ''}
                   required
