@@ -16,7 +16,6 @@ const router = new Router();
 
 const APP_NAME = config.get('APP_NAME');
 
-//TODO: reuse the FIXED_SCHEMA validator from the validation.js file?
 const phone = yd.string().custom(async (val) => {
   // E.164 format
   if (!val.match(/^\+[1-9]\d{1,14}$/)) {
