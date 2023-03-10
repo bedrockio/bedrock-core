@@ -19,7 +19,6 @@ COPY . .
 
 # Set your port
 ENV PORT 2300
-18.14pose the port to outside world
 EXPOSE 2300
 
 # Start production server
