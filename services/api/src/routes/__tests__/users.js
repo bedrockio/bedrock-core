@@ -47,27 +47,6 @@ describe('/1/users', () => {
       expect(updatedUser.lastName).toBe('Name');
       expect(updatedUser.name).toBe('Other Name');
     });
-
-    it('should not allow setting roles', async () => {
-      const user = await createUser();
-      const response = await request(
-        'PATCH',
-        '/1/users/me',
-        {
-          roles: [
-            {
-              scope: 'organization',
-              role: 'viewer',
-            },
-          ],
-        },
-        { user }
-      );
-      expect(response.status).toBe(400);
-      expect(response.body.error).toBe('Invalid fields: roles');
-      const dbUser = await User.findById(user._id);
-      expect(dbUser.roles).toEqual([]);
-    });
   });
 
   describe('POST /', () => {

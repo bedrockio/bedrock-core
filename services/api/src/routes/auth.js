@@ -28,11 +28,13 @@ const phone = yd.string().custom(async (val) => {
 router
   .post(
     '/register',
-    validateBody(
-      User.getCreateValidation({
-        password: yd.string().password().required(),
-      })
-    ),
+    validateBody({
+      email: yd.string().lowercase().email().required(),
+      firstName: yd.string().required(),
+      lastName: yd.string().required(),
+      password: yd.string().password().required(),
+      phoneNumber: phone,
+    }),
     async (ctx) => {
       const { email, phoneNumber } = ctx.request.body;
 
@@ -160,10 +162,11 @@ router
       try {
         await verifyLoginAttempts(user);
       } catch (error) {
-        await AuditEntry.append('Reached max authentication attempts', ctx, {
+        await AuditEntry.append('Reached max authentication attempts', {
+          ctx,
           category: 'security',
           object: user,
-          user: user.id,
+          user: user,
         });
         ctx.throw(401, error);
       }
@@ -194,19 +197,21 @@ router
       try {
         await verifyLoginAttempts(user);
       } catch (error) {
-        await AuditEntry.append('Reached max authentication attempts', ctx, {
+        await AuditEntry.append('Reached max authentication attempts', {
+          ctx,
           category: 'security',
           object: user,
-          user: user.id,
+          user: user,
         });
         ctx.throw(401, error);
       }
 
       if (!mfa.verifyToken(user.smsSecret, 'sms', code)) {
-        await AuditEntry.append('Failed authentication', ctx, {
+        await AuditEntry.append('Failed authentication', {
+          ctx,
           category: 'security',
           object: user,
-          user: user.id,
+          user: user,
         });
         ctx.throw(400, 'Invalid login code');
       }
@@ -235,9 +240,10 @@ router
       });
       await user.save();
 
-      await AuditEntry.append('Authenticated', ctx, {
+      await AuditEntry.append('Authenticated', {
+        ctx,
         object: user,
-        user: user.id,
+        user: user,
       });
 
       ctx.body = { data: { token } };

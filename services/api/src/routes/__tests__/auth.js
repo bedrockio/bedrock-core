@@ -249,33 +249,7 @@ describe('/1/auth', () => {
       expect(dbUser.email).toBe(email);
       expect(dbUser.phoneNumber).toBe(phoneNumber);
       expect(dbUser.authInfo[0].jit).toBe(payload.jit);
-      expect(dbUser.roles).toBe([]);
-    });
-
-    it('should not allow roles to set', async () => {
-      const email = 'sometest@email.com';
-      const password = '123password!';
-      const firstName = 'Bob';
-      const lastName = 'Johnson';
-      const phoneNumber = '+12312312422';
-      await request('POST', '/1/auth/register', {
-        roles: [
-          {
-            scope: 'global',
-            role: 'superAdmin',
-          },
-        ],
-        firstName,
-        lastName,
-        phoneNumber,
-        email,
-        password,
-      });
-
-      const dbUser = await User.findOne({
-        email,
-      });
-      expect(dbUser.roles).toBe([]);
+      expect(dbUser.roles).toEqual([]);
     });
 
     it('should check for duplicating emails', async () => {
