@@ -106,7 +106,7 @@ describe('/1/auth', () => {
       unmockTime();
     });
 
-    it('should store thew new token payload on the user', async () => {
+    it('should store the new token payload on the user', async () => {
       const password = '123password!';
       let user = await createUser({
         password,
