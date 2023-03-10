@@ -12,7 +12,7 @@ export default function PhoneNumber({
   ...props
 }) {
   const inputRef = useRef(null);
-  const [iti, setIntlTel] = useState(null);
+  const [intlInstance, setIntlInstance] = useState(null);
   const [error, setError] = useState(false);
   const [value, setValue] = useState(propsValue);
 
@@ -24,7 +24,7 @@ export default function PhoneNumber({
         utilsScript:
           'https://cdn.jsdelivr.net/npm/intl-tel-input/build/js/utils.js',
       });
-      setIntlTel(instance);
+      setIntlInstance(instance);
       return () => {
         instance.destroy();
       };
@@ -32,14 +32,14 @@ export default function PhoneNumber({
   }, [inputRef.current]);
 
   useEffect(() => {
-    if (iti && propsValue) {
-      iti.setNumber(propsValue);
+    if (intlInstance && propsValue) {
+      intlInstance.setNumber(propsValue);
     }
-  }, [iti, propsValue]);
+  }, [intlInstance, propsValue]);
 
   useEffect(() => {
-    if (iti && value) {
-      iti.setNumber(value);
+    if (intlInstance && value) {
+      intlInstance.setNumber(value);
     }
   }, [value]);
 
@@ -52,15 +52,15 @@ export default function PhoneNumber({
         ref={inputRef}
         onChange={(e) => {
           // only trigger on change if is valid number
-          if (iti.isValidNumber()) {
+          if (intlInstance.isValidNumber()) {
             onChange(e, {
               name: props.name,
-              value: iti.getNumber(),
+              value: intlInstance.getNumber(),
             });
             setError(false);
           } else {
             setError(e.target.value.length ? true : false);
-            setValue(iti.getNumber());
+            setValue(intlInstance.getNumber());
           }
         }}
         {...props}
