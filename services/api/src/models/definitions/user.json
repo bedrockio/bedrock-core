@@ -69,6 +69,21 @@
         },
         "tempTokenId": {
           "type": "String"
+        },
+        "mfaBackupCodes": [
+          {
+            "type": "String"
+          }
+        ],
+        "mfaSecret": {
+          "type": "String",
+          "readAccess": "none",
+          "writeAccess": "none"
+        },
+        "mfaPhoneNumber": {
+          "type": "String",
+          "readAccess": "none",
+          "writeAccess": "none"
         }
       }
     },
@@ -108,25 +123,11 @@
     },
     "mfaMethod": {
       "type": "String",
+      "writeAccess": "none",
       "enum": [
         "sms",
         "otp"
       ]
-    },
-    "mfaBackupCodes": [
-      {
-        "type": "String"
-      }
-    ],
-    "mfaSecret": {
-      "type": "String",
-      "readAccess": "none",
-      "writeAccess": "none"
-    },
-    "mfaPhoneNumber": {
-      "type": "String",
-      "readAccess": "none",
-      "writeAccess": "none"
     }
   },
   "search": {

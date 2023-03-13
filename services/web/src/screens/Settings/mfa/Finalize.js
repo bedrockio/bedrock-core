@@ -86,7 +86,6 @@ export default class Finalize extends React.Component {
             </Button>
             <div
               style={{
-                backgroundColor: '#f9f9f9',
                 padding: '0.5em',
                 marginTop: '0.5em',
               }}>
