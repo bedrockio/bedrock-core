@@ -47,8 +47,7 @@
     },
     "isDeveloper": {
       "type": "Boolean",
-      "default": false,
-      "writeScopes": "users"
+      "default": false
     },
     "accessConfirmedAt": {
       "type": "Date",
