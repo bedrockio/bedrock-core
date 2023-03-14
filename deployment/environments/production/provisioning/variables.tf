@@ -1,5 +1,5 @@
 variable "project" {
-  default = "bedrock-foundation"
+  default = "bedrock-production"
 }
 
 variable "environment" {
@@ -19,23 +19,27 @@ variable "multi_region" {
 }
 
 variable "bucket_prefix" {
-  default = "bedrock_production"
+  default = "bedrock-production"
 }
 
 variable "cluster_name" {
   default = "cluster-1"
 }
 
+variable "cluster_description" {
+  default = "GKE Cluster"
+}
+
 variable "node_pool_count" {
-  default = 3
+  default = 1
 }
 
 variable "min_node_count" {
-  default = 3
+  default = 1
 }
 
 variable "max_node_count" {
-  default = 6
+  default = 3
 }
 
 variable "preemptible" {
@@ -44,4 +48,24 @@ variable "preemptible" {
 
 variable "machine_type" {
   default = "n2-standard-2"
+}
+
+variable "buckets" {
+  type = set(string)
+
+  default = [
+    "uploads",
+    "uploads-backup",
+    "mongodb-backups",
+  ]
+}
+
+variable "master_authorizaed_networks_cidr_blocks" {
+  type = list(map(string))
+  default = [
+    {
+      display_name = "All",
+      cidr_block = "0.0.0.0/0"
+    }
+  ]
 }

@@ -9,9 +9,10 @@
       "nodePoolCount": 2,
       "minNodeCount": 2,
       "maxNodeCount": 4,
-      "machineType": "n2d-standard-2"
+      "machineType": "n2-standard-2",
+      "preemptible": false
     },
-    "ingresses": ["api", "web"],
-    "label": "app"
+    "label": "app",
+    "ingresses": ["api", "web"]
   }
 }
