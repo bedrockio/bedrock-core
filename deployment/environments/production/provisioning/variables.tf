@@ -11,7 +11,7 @@ variable "region" {
 }
 
 variable "zone" {
-  default = "a"
+  default = "c"
 }
 
 variable "multi_region" {
