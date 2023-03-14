@@ -1,6 +1,10 @@
 #!/bin/bash
 echo "" > /service/crontab.log
-./scripts/fixtures/load
+if [ "$ENV_NAME" == "production" ]; then
+  echo "Skipping fixtures load in production"
+else
+  ./scripts/fixtures/load
+fi
 echo "" > /service/.motd
 echo "Welcome to the API CLI pod. All API code is available here." >> /service/.motd
 echo "" >> /service/.motd
