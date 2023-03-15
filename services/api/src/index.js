@@ -10,7 +10,11 @@ const PORT = config.get('SERVER_PORT', 'number');
 const HOST = config.get('SERVER_HOST');
 
 if (process.env.NODE_ENV === 'production') {
-  logger.setupGoogleCloud();
+  logger.setupGoogleCloud({
+    tracing: {
+      ignoreIncomingPaths: ['/', /^\/1\/status\/*/],
+    },
+  });
 } else {
   logger.useFormatted();
 }
