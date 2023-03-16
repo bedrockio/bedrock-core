@@ -2,7 +2,7 @@
   "gcloud": {
     "envName": "production",
     "bucketPrefix": "bedrock-foundation",
-    "project": "bedrock-foundation",
+    "project": "bedrock-foundation-production",
     "computeZone": "us-east1-c",
     "kubernetes": {
       "clusterName": "cluster-1",

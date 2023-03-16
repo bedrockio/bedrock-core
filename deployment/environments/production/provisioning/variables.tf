@@ -1,5 +1,5 @@
 variable "project" {
-  default = "bedrock-production"
+  default = "bedrock-foundation-production"
 }
 
 variable "environment" {

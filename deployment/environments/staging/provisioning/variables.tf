@@ -1,5 +1,5 @@
 variable "project" {
-  default = "bedrock-staging"
+  default = "bedrock-foundation-staging"
 }
 
 variable "environment" {

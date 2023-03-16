@@ -1,7 +1,7 @@
 {
   "gcloud": {
     "envName": "staging",
-    "bucketPrefix": "bedrock-foundation-staging",
+    "bucketPrefix": "bedrock-foundation",
     "project": "bedrock-foundation-staging",
     "computeZone": "us-east1-c",
     "kubernetes": {
