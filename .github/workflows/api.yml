@@ -1,0 +1,49 @@
+name: API
+on:
+  push:
+    branches: [master]
+    paths: ["services/api/**"]
+  pull_request:
+    branches: [master]
+    paths: ["services/api/**"]
+
+jobs:
+  api:
+    name: Test and Lint
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./services/api
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache yarn
+        uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Run Lint
+        run: yarn lint . || true
+
+      - name: Run Tests
+        run: yarn test --silent

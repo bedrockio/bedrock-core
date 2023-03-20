@@ -1,7 +1,7 @@
 {
   "gcloud": {
     "envName": "staging",
-    "bucketPrefix": "bedrock-foundation-staging",
+    "bucketPrefix": "bedrock-foundation",
     "project": "bedrock-foundation-staging",
     "computeZone": "us-east1-c",
     "kubernetes": {
@@ -9,8 +9,10 @@
       "nodePoolCount": 1,
       "minNodeCount": 1,
       "maxNodeCount": 3,
-      "machineType": "n2-standard-2"
+      "machineType": "n2-standard-2",
+      "preemptible": false
     },
-    "label": "app"
+    "label": "app",
+    "ingresses": ["api", "web"]
   }
 }

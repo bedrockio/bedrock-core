@@ -51,9 +51,3 @@ spec:
                 secretKeyRef:
                   name: secrets
                   key: POSTMARK_API_KEY
-          volumeMounts:
-            - name: jobs-cache
-              mountPath: /workdir/data
-      volumes:
-        - name: jobs-cache
-          emptyDir: {}

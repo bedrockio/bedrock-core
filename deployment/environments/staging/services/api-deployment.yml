@@ -49,9 +49,6 @@ spec:
           ports:
             - name: http-server
               containerPort: 2300
-          volumeMounts:
-            - name: cache
-              mountPath: /service/data
           # https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
           readinessProbe: # readiness probes to know when a container is ready to start accepting traffic
             initialDelaySeconds: 5 # Number of seconds after the container has started before liveness or readiness probes are initiated. Defaults to 0 seconds.
@@ -69,6 +66,3 @@ spec:
             periodSeconds: 5
             timeoutSeconds: 2
             failureThreshold: 2
-      volumes:
-        - name: cache
-          emptyDir: {}

@@ -84,9 +84,9 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.19.1",
     "@bedrockio/prettier-config": "^1.0.2",
-    "@testing-library/dom": "^7.30.3",
-    "@testing-library/react": "^11.2.5",
-    "@testing-library/user-event": "^13.1.1",
+    "@testing-library/dom": "^9.0.0",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.4.3",
     "babel-jest": "^29.4.3",
     "eslint": "^8.33.0",
     "eslint-plugin-bedrock": "^1.0.20",
@@ -98,7 +98,7 @@
   },
   "volta": {
     "node": "18.14.0",
-    "yarn": "1.22.17"
+    "yarn": "1.22.19"
   },
   "prettier": "@bedrockio/prettier-config"
 }
