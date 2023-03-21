@@ -14,7 +14,8 @@ let definition;
 
 async function loadDefinition() {
   try {
-    definition = require(DEFINITION_FILE);
+    const content = await fs.readFile(DEFINITION_FILE, 'utf-8');
+    definition = JSON.parse(content);
   } catch {
     definition = {};
   }
@@ -191,6 +192,7 @@ function walkFields(arg, fn, path = []) {
 
 async function recordRequest(ctx) {
   const { method, routerPath } = ctx;
+  console.info('RECORDINGGGGGGGGGGG', method);
   const { type: requestType, body: requestBody } = ctx.request;
   const { type: responseType, headers: responseHeaders, status } = ctx.response;
   const requestId = getRequestId(ctx);

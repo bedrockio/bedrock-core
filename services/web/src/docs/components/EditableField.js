@@ -5,18 +5,27 @@ import bem from 'helpers/bem';
 import Markdown from 'components/Markdown';
 
 import EditFieldModal from './EditFieldModal';
+import { DocsContext } from '../utils/context';
 
 import './editable-field.less';
 
 @bem
 export default class DocsEditableField extends React.Component {
+  static contextType = DocsContext;
+
+  getMode() {
+    return this.context.mode;
+  }
+
   getModifiers() {
-    const { mode, value } = this.props;
+    const mode = this.getMode();
+    const { value } = this.props;
     return [mode === 'edit' ? 'editable' : null, value ? 'filled' : 'empty'];
   }
 
   render() {
-    const { mode, name } = this.props;
+    const mode = this.getMode();
+    const { name } = this.props;
     const label = startCase(name);
     if (mode === 'edit') {
       return (
@@ -38,7 +47,8 @@ export default class DocsEditableField extends React.Component {
   }
 
   renderValue(label) {
-    const { mode, value, markdown } = this.props;
+    const mode = this.getMode();
+    const { value, markdown } = this.props;
     if (!value && mode === 'edit') {
       return <div className={this.getElementClass('prompt')}>{label}</div>;
     } else if (markdown) {

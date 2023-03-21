@@ -8,8 +8,12 @@ import modal from 'helpers/modal';
 import ErrorMessage from 'components/ErrorMessage';
 import { HelpTip } from 'components';
 
+import { DocsContext } from '../utils/context';
+
 @modal
 export default class EditFieldModal extends React.Component {
+  static contextType = DocsContext;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -44,7 +48,7 @@ export default class EditFieldModal extends React.Component {
       this.setState({
         loading: false,
       });
-      this.props.onSave({
+      this.context.updateDocs({
         path,
         value,
       });

@@ -11,6 +11,14 @@ export default class Confirm extends React.Component {
     error: null,
   };
 
+  componentDidMount() {
+    this.mounted = true;
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
   onClick = async () => {
     this.setState({
       loading: true,
@@ -23,7 +31,7 @@ export default class Confirm extends React.Component {
         closed = true;
       };
       await this.props.onConfirm(close);
-      if (!closed) {
+      if (this.mounted && !closed) {
         this.setState({
           loading: false,
         });

@@ -13,13 +13,17 @@ import ErrorMessage from 'components/ErrorMessage';
 import ScrollWaypoint from 'components/ScrollWaypoint';
 import { toggleRecording, isRecording } from 'utils/api/record';
 import Code from 'components/Code';
+import EditButton from 'docs/components/EditButton';
+import RecordButton from 'docs/components/RecordButton';
 
 import { COMPONENTS } from 'components/Markdown';
 
-import RequestBuilder from './RequestBuilder';
-import EditableField from './EditableField';
+import DocsPath from '../../components/DocsPath';
 
-import PAGES from './pages';
+import RequestBuilder from './RequestBuilder';
+// import EditableField from './EditableField';
+
+import { pagesById, sorted } from './pages';
 
 const PARAMS_PATH = [
   'requestBody',
@@ -42,15 +46,10 @@ export default class Docs extends React.Component {
       mode: 'view',
       docs: null,
       focused: null,
-      loading: true,
       recording: isRecording(),
     };
     this.pageRef = React.createRef();
     this.focusedItems = new Map();
-  }
-
-  componentDidMount() {
-    this.load();
   }
 
   componentDidUpdate(lastProps, lastState) {
@@ -94,94 +93,94 @@ export default class Docs extends React.Component {
     });
   };
 
-  load = async () => {
-    try {
-      this.setState({
-        loading: true,
-      });
-      const { data } = await request({
-        method: 'GET',
-        path: '/1/docs',
-      });
-      const { docs, pages, pagesByUrl } = this.getFullDocs(data);
-      this.visitedComponents = new Set();
-      this.setState({
-        docs,
-        pages,
-        pagesByUrl,
-        loading: false,
-      });
-      this.checkPageChange();
-    } catch (error) {
-      this.setState({
-        error,
-        loading: false,
-      });
-    }
-  };
+  // load = async () => {
+  //   try {
+  //     this.setState({
+  //       loading: true,
+  //     });
+  //     const { data } = await request({
+  //       method: 'GET',
+  //       path: '/1/docs',
+  //     });
+  //     const { docs, pages, pagesByUrl } = this.getFullDocs(data);
+  //     this.visitedComponents = new Set();
+  //     this.setState({
+  //       docs,
+  //       pages,
+  //       pagesByUrl,
+  //       loading: false,
+  //     });
+  //     this.checkPageChange();
+  //   } catch (error) {
+  //     this.setState({
+  //       error,
+  //       loading: false,
+  //     });
+  //   }
+  // };
 
-  getFullDocs(data) {
-    const docs = expandDocs(data);
+  // getFullDocs(data) {
+  //   const docs = expandDocs(data);
 
-    const staticPagesByUrl = {};
-    for (let [key, data] of Object.entries(PAGES)) {
-      const slug = kebabCase(data.title || key);
-      const url = `/docs/${slug}`;
-      const page = {
-        url,
-        type: 'static',
-        order: data.order,
-        title: data.title,
-        group: data.group,
-        Component: data.default,
-      };
-      if (data.group) {
-        const slug = kebabCase(data.group);
-        const groupUrl = `/docs/${slug}`;
-        staticPagesByUrl[groupUrl] ||= {
-          items: [],
-        };
-        staticPagesByUrl[groupUrl].items.push(page);
-      }
-      staticPagesByUrl[url] = {
-        ...staticPagesByUrl[url],
-        ...page,
-      };
-    }
+  //   const staticPagesByUrl = {};
+  //   for (let [key, data] of Object.entries(PAGES)) {
+  //     const slug = kebabCase(data.title || key);
+  //     const url = `/docs/${slug}`;
+  //     const page = {
+  //       url,
+  //       type: 'static',
+  //       order: data.order,
+  //       title: data.title,
+  //       group: data.group,
+  //       Component: data.default,
+  //     };
+  //     if (data.group) {
+  //       const slug = kebabCase(data.group);
+  //       const groupUrl = `/docs/${slug}`;
+  //       staticPagesByUrl[groupUrl] ||= {
+  //         items: [],
+  //       };
+  //       staticPagesByUrl[groupUrl].items.push(page);
+  //     }
+  //     staticPagesByUrl[url] = {
+  //       ...staticPagesByUrl[url],
+  //       ...page,
+  //     };
+  //   }
 
-    const pagesByUrl = {
-      ...staticPagesByUrl,
-      ...docs.pagesByUrl,
-    };
+  //   const pagesByUrl = {
+  //     ...staticPagesByUrl,
+  //     ...docs.pagesByUrl,
+  //   };
 
-    const pages = Object.values(pagesByUrl).filter((page) => {
-      return !page.group;
-    });
-    pages.sort((a, b) => {
-      const { order: aOrder = 0, title: aTitle } = a;
-      const { order: bOrder = 0, title: bTitle } = b;
-      if (aOrder === bOrder) {
-        return aTitle.localeCompare(bTitle);
-      } else {
-        return aOrder - bOrder;
-      }
-    });
+  //   const pages = Object.values(pagesByUrl).filter((page) => {
+  //     return !page.group;
+  //   });
+  //   pages.sort((a, b) => {
+  //     const { order: aOrder = 0, title: aTitle } = a;
+  //     const { order: bOrder = 0, title: bTitle } = b;
+  //     if (aOrder === bOrder) {
+  //       return aTitle.localeCompare(bTitle);
+  //     } else {
+  //       return aOrder - bOrder;
+  //     }
+  //   });
 
-    return {
-      docs,
-      pages,
-      pagesByUrl,
-    };
-  }
+  //   return {
+  //     docs,
+  //     pages,
+  //     pagesByUrl,
+  //   };
+  // }
 
-  onFieldSave = ({ path, value }) => {
-    const docs = { ...this.state.docs };
-    set(docs, path, value);
+  // onFieldSave = ({ path, value }) => {
+  //   const docs = { ...this.state.docs };
+  //   set(docs, path, value);
 
-    this.setState({
-      docs,
-    });
-  };
+  //   this.setState({
+  //     docs,
+  //   });
+  // };
 
   toggleRecordMode = (on) => {
     toggleRecording(on);
@@ -225,76 +224,51 @@ export default class Docs extends React.Component {
   };
 
   render() {
-    const { docs, loading, error } = this.state;
     return (
       <div className={this.getBlockClass()}>
-        {loading && (
-          <Dimmer inverted active>
-            <Loader />
-          </Dimmer>
-        )}
-        {docs && (
-          <React.Fragment>
-            {this.renderSidebar(docs)}
-            <main ref={this.pageRef} className={this.getElementClass('page')}>
-              <Container>
-                <ErrorMessage error={error} />
-                {this.renderPage(docs)}
-              </Container>
-            </main>
-          </React.Fragment>
-        )}
+        {this.renderSidebar()}
+        <main ref={this.pageRef} className={this.getElementClass('page')}>
+          <Container>{this.renderPage()}</Container>
+        </main>
       </div>
     );
   }
 
-  renderSidebar(docs) {
-    const { pages, focused } = this.state;
-    if (!pages) {
-      return;
-    }
+  renderSidebar() {
+    const { focused } = this.state;
     return (
       <aside className={this.getElementClass('sidebar')}>
-        <h2>{docs.info?.title}</h2>
+        <h2>
+          <DocsPath path="info.title" />
+        </h2>
         <ul className={this.getElementClass('sidebar-scroll')}>
-          {pages.map((group) => {
-            const { title, url, items } = group;
+          {sorted.map((page) => {
+            const { id, title, pages } = page;
+            const url = `/docs/${id}`;
             return (
-              <li key={url}>
+              <li key={id}>
                 <Link to={url} className={this.getElementClass('sidebar-link')}>
                   {title}
                 </Link>
-                {items && (
+                {pages.length > 0 && (
                   <ul>
-                    {items
-                      .map((item) => {
-                        const { title, summary } = item;
-                        const isFocused = focused === item;
-                        if (summary) {
-                          return (
-                            <Link
-                              to={item.url}
-                              key={item.verbPath}
-                              data-path={item.verbPath}
-                              className={this.getElementClass(
-                                'sidebar-sublink',
-                                isFocused ? 'active' : null
-                              )}>
-                              {summary}
-                            </Link>
-                          );
-                        } else if (title) {
-                          return (
-                            <Link
-                              to={item.url}
-                              key={item.url}
-                              className={this.getElementClass(
-                                'sidebar-sublink'
-                              )}>
-                              {title}
-                            </Link>
-                          );
-                        }
+                    {pages
+                      .map((subpage) => {
+                        const { title, id } = subpage;
+                        const isFocused = focused === subpage;
+                        const url = `/docs/${id}`;
+
+                        return (
+                          <Link
+                            to={url}
+                            key={id}
+                            className={this.getElementClass(
+                              'sidebar-sublink',
+                              isFocused ? 'active' : null
+                            )}>
+                            {title}
+                          </Link>
+                        );
                       })
                       .filter((el) => el)}
                   </ul>
@@ -308,17 +282,23 @@ export default class Docs extends React.Component {
     );
   }
 
-  renderPage(docs) {
-    const { pagesByUrl } = this.state;
-    const { pathname } = this.props.location;
-    const page = pagesByUrl[pathname];
+  renderPage() {
+    const { id } = this.props.match.params;
+    const page = pagesById[id];
 
-    if (page?.type === 'docs') {
-      return this.renderDocsPage(docs, page);
-    } else if (page?.type === 'static') {
-      return this.renderStaticPage(page);
+    if (page) {
+      const { title, Component } = page;
+      // TODO: cleanup and somehow remove the unneeded div here
+      return (
+        <React.Fragment>
+          <h1>{title}</h1>
+          <div className="markdown">
+            <Component components={COMPONENTS} />
+          </div>
+        </React.Fragment>
+      );
     } else {
-      return this.renderEmptyPage();
+      return <div>Not Found!</div>;
     }
   }
 
@@ -332,9 +312,9 @@ export default class Docs extends React.Component {
         {items.map((item) => {
           const { verbPath } = item;
           return (
-            <React.Fragment key={item.slug}>
+            <React.Fragment key={item.id}>
               <ScrollWaypoint
-                id={item.slug}
+                id={item.id}
                 className={this.getElementClass('item')}
                 onEnter={(el) => {
                   this.focusedItems.set(item, el);
@@ -345,13 +325,13 @@ export default class Docs extends React.Component {
                   this.updateFocused();
                 }}>
                 <h2>
-                  <EditableField
+                  {/* <EditableField
                     mode={mode}
                     path={item.path}
                     name="summary"
                     value={item.summary}
                     onSave={this.onFieldSave}
-                  />
+                  /> */}
                 </h2>
                 <Divider hidden />
                 <Layout horizontal center spread>
@@ -367,18 +347,17 @@ export default class Docs extends React.Component {
                   />
                 </Layout>
                 <Divider hidden />
-                <EditableField
+                {/* <EditableField
                   markdown
                   mode={mode}
                   path={item.path}
                   name="description"
                   value={item.description}
                   onSave={this.onFieldSave}
-                />
+                /> */}
                 {this.renderParams([...item.path, ...PARAMS_PATH])}
 
                 <div className={this.getElementClass('divider')} />
-                {this.renderExamples(item)}
                 {/*
                   <RequestBlock
                     authToken={'<token>'}
@@ -397,113 +376,6 @@ export default class Docs extends React.Component {
         {this.renderComponents()}
       </React.Fragment>
     );
-  }
-
-  renderParams(path, options = {}) {
-    const { skipRequired } = options;
-    const { docs, mode } = this.state;
-    const params = get(docs, path);
-    if (!params) {
-      return;
-    }
-    const entries = Object.entries(params);
-    entries.sort((a, b) => {
-      const aRequired = a[1].required || false;
-      const bRequired = b[1].required || false;
-      return bRequired - aRequired;
-    });
-    return (
-      <table className={this.getElementClass('params')}>
-        <tbody>
-          {entries.map(([name, desc]) => {
-            const { description, required, default: defaultValue } = desc;
-            return (
-              <tr key={name}>
-                <td className={this.getElementClass('param-pointer')} />
-                <td className={this.getElementClass('param-name')}>
-                  <code>{name}</code>
-                </td>
-                <td className={this.getElementClass('param-description')}>
-                  <div className={this.getElementClass('types')}>
-                    {this.renderType(desc)}
-                  </div>
-
-                  {required && !skipRequired && (
-                    <div className={this.getElementClass('param-required')}>
-                      Required
-                    </div>
-                  )}
-                  {description && (
-                    <div className={this.getElementClass('divider')} />
-                  )}
-
-                  <EditableField
-                    markdown
-                    mode={mode}
-                    path={[...path, name]}
-                    name="description"
-                    value={description}
-                    onSave={this.onFieldSave}
-                  />
-                  {defaultValue !== undefined && (
-                    <div className={this.getElementClass('divider')} />
-                  )}
-                  {this.renderDefault(defaultValue)}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    );
-  }
-
-  renderType(desc, isArray = false) {
-    const { type, $ref, oneOf, enum: allowed } = desc;
-    if (oneOf) {
-      return oneOf.map((entry, i) => {
-        const comma = i > 0 ? ', ' : '';
-        return (
-          <React.Fragment key={i}>
-            {comma}
-            {this.renderType(entry)}
-          </React.Fragment>
-        );
-      });
-    } else if (type === 'array') {
-      return this.renderType(desc.items, '[]');
-    } else if ($ref) {
-      this.visitedComponents.add($ref);
-      const { name } = expandRef($ref);
-      return <JumpLink to={name}>{isArray ? `[${name}]` : name}</JumpLink>;
-    } else if (allowed) {
-      if (isArray) {
-        return (
-          <code>
-            [
-            {allowed
-              .map((val) => {
-                return JSON.stringify(val);
-              })
-              .join(' | ')}
-            ]
-          </code>
-        );
-      } else {
-        return allowed.map((val, i) => {
-          return (
-            <React.Fragment key={val}>
-              {i > 0 && ', '}
-              <code>{JSON.stringify(val)}</code>
-            </React.Fragment>
-          );
-        });
-      }
-    } else if (type) {
-      return <span>{isArray ? `[${type}]` : type}</span>;
-    } else {
-      return <span>any</span>;
-    }
   }
 
   renderAllowed(desc) {
@@ -527,83 +399,6 @@ export default class Docs extends React.Component {
     }
   }
 
-  renderDefault(defaultValue) {
-    if (defaultValue && typeof defaultValue === 'object') {
-      return (
-        <div className={this.getElementClass('param-default')}>
-          <div className={this.getElementClass('param-default-title')}>
-            Default:
-          </div>
-          <pre>
-            <code>{JSON.stringify(defaultValue, null, 2)}</code>
-          </pre>
-        </div>
-      );
-    } else if (defaultValue !== undefined) {
-      return (
-        <div className={this.getElementClass('param-default')}>
-          <span className={this.getElementClass('param-default-title')}>
-            Default:
-          </span>{' '}
-          <code>{JSON.stringify(defaultValue, null, 2)}</code>
-        </div>
-      );
-    }
-  }
-
-  renderExamples(item) {
-    const items = Object.entries(item.responses || {})
-      .flatMap(([status, response]) => {
-        status = parseInt(status);
-        const { schema, examples = {} } = get(
-          response,
-          ['content', 'application/json'],
-          {}
-        );
-        if (schema?.$ref) {
-          this.visitedComponents.add(schema.$ref);
-        }
-        const exampleResponses = Object.entries(examples).map(
-          ([id, example]) => {
-            const examples = get(
-              item,
-              ['requestBody', 'content', 'application/json', 'examples'],
-              {}
-            );
-            return {
-              status,
-              schema,
-              requestBody: examples[id]?.value,
-              responseBody: example.value,
-            };
-          }
-        );
-        if (exampleResponses.length) {
-          return exampleResponses;
-        } else {
-          return [
-            {
-              status,
-              schema,
-            },
-          ];
-        }
-      })
-      .sort((a, b) => {
-        return a.status < b.status;
-      });
-    if (items.length) {
-      return (
-        <React.Fragment>
-          <h4>Examples:</h4>
-          {items.map((item, i) => {
-            return <DocsExample key={i} item={item} />;
-          })}
-        </React.Fragment>
-      );
-    }
-  }
-
   renderComponents() {
     const { mode, docs } = this.state;
     if (this.visitedComponents.size) {
@@ -620,14 +415,14 @@ export default class Docs extends React.Component {
                 key={name}
                 className={this.getElementClass('component')}>
                 <h3>{name}</h3>
-                <EditableField
+                {/* <EditableField
                   markdown
                   mode={mode}
                   path={path}
                   name="description"
                   value={description}
                   onSave={this.onFieldSave}
-                />
+                /> */}
                 {this.renderParams([...path, 'properties'], {
                   skipRequired: true,
                 })}
@@ -643,8 +438,8 @@ export default class Docs extends React.Component {
   renderButtons() {
     return (
       <div className={this.getElementClass('buttons')}>
-        {this.renderRecordButton()}
-        {this.renderEditButton()}
+        <RecordButton />
+        <EditButton />
         <Confirm
           size="small"
           confirmButton="Generate"
@@ -709,134 +504,6 @@ export default class Docs extends React.Component {
       );
     }
   }
-
-  renderStaticPage(page) {
-    const { title, Component } = page;
-    // TODO: cleanup and somehow remove the unneeded div here
-    return (
-      <React.Fragment>
-        <h1>{title}</h1>
-        <div className="markdown">
-          <Component components={COMPONENTS} />
-        </div>
-      </React.Fragment>
-    );
-  }
-
-  renderEmptyPage() {
-    return <div>Empty!</div>;
-  }
-}
-
-@bem
-class DocsExample extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      open: false,
-    };
-  }
-
-  isGood() {
-    const { status } = this.props.item;
-    return status >= 200 && status <= 300;
-  }
-
-  onToggleClick = () => {
-    this.setState({
-      open: !this.state.open,
-    });
-  };
-
-  render() {
-    const { open } = this.state;
-    const { status, schema, requestBody, responseBody } = this.props.item;
-    return (
-      <div className={this.getBlockClass()}>
-        <Layout
-          horizontal
-          center
-          spread
-          className={this.getElementClass(
-            'title',
-            this.isGood() ? 'good' : 'bad'
-          )}
-          onClick={this.onToggleClick}>
-          <Layout.Group>{status}</Layout.Group>
-          <Layout.Group>
-            <Icon size="small" name={open ? 'minus' : 'plus'} link />
-          </Layout.Group>
-        </Layout>
-        {open && (
-          <React.Fragment>
-            {this.renderSchema(schema)}
-            {this.renderBody('Request Body:', requestBody)}
-            {this.renderBody('Response Body:', responseBody)}
-          </React.Fragment>
-        )}
-      </div>
-    );
-  }
-
-  renderSchema(schema) {
-    if (schema) {
-      const { $ref } = schema;
-      const { name } = expandRef($ref);
-      return (
-        <div className={this.getElementClass('schema')}>
-          Returns: <JumpLink to={name}>{name}</JumpLink>
-        </div>
-      );
-    }
-  }
-
-  renderBody(title, body = {}) {
-    const keys = Object.keys(body);
-    if (keys.length) {
-      return (
-        <div className={this.getElementClass('body')}>
-          <div>{title}</div>
-          <Code language="json">{JSON.stringify(body, null, 2)}</Code>
-        </div>
-      );
-    }
-  }
-}
-
-function expandDocs(docs) {
-  const pagesByUrl = {};
-  for (let [apiPath, pathItem] of Object.entries(docs.paths || {})) {
-    for (let [method, item] of Object.entries(pathItem || {})) {
-      item.path = ['paths', apiPath, method];
-
-      method = method.toUpperCase();
-
-      item.method = method;
-      item.apiPath = apiPath;
-      item.verbPath = `${method} ${apiPath}`;
-
-      let slug = kebabCase(item.summary);
-      slug ||= `${method}-${apiPath.split('/').join('-')}`;
-
-      const pageUrl = `/docs/${apiPath.split('/')[2]}`;
-      const itemUrl = `${pageUrl}#${slug}`;
-
-      item.slug = slug;
-      item.url = itemUrl;
-
-      pagesByUrl[pageUrl] ||= {
-        url: pageUrl,
-        type: 'docs',
-        title: item['x-group'] || '<GROUP>',
-        items: [],
-      };
-      pagesByUrl[pageUrl].items.push(item);
-    }
-  }
-  return {
-    pagesByUrl,
-    ...docs,
-  };
 }
 
 function expandRef($ref) {

@@ -14,8 +14,6 @@ SyntaxHighlighter.registerLanguage('bash', bash);
 SyntaxHighlighter.registerLanguage('json', json);
 SyntaxHighlighter.registerLanguage('swift', swift);
 
-// atomDark['pre[class*="language-"]'].marginBottom = '1em';
-
 import './code.less';
 
 @bem

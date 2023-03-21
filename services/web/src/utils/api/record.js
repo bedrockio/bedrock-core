@@ -1,4 +1,4 @@
-const STORAGE_KEY = 'recording';
+const STORAGE_KEY = 'api-recording';
 
 let recording = localStorage.getItem(STORAGE_KEY) === 'on';
 

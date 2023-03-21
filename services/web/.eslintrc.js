@@ -23,10 +23,6 @@ module.exports = {
   ],
   overrides: [
     {
-      files: '*.js',
-      extends: ['plugin:bedrock/imports'],
-    },
-    {
       files: '*.mdx',
       extends: ['plugin:mdx/recommended'],
       rules: {

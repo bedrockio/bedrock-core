@@ -39,6 +39,10 @@ export default function (Component) {
   }
 }
 
+export function useClass(base, ...modifiers) {
+  return getClassNames(base, modifiers);
+}
+
 function getClassNames(base, modifiers, extra) {
   const classes = [
     base,
