@@ -108,9 +108,9 @@ async function fetchUser(ctx, next) {
     }
 
     let authUser = user;
-    if (jwt.impersonatedUser) {
-      authUser = await User.findById(jwt.impersonatedUser);
-      ctx.state.imposter = user;
+
+    if (jwt.authenticateUser) {
+      authUser = await User.findById(jwt.authenticateUser);
       if (!authUser) {
         throw new TokenError('User associated to token could not be found');
       }

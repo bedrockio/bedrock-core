@@ -1,9 +1,9 @@
 output "endpoint" {
-  value = module.gke-cluster.endpoint
+  value = google_container_cluster.default.endpoint
 }
 
 output "master_version" {
-  value = module.gke-cluster.master_version
+  value = google_container_cluster.default.master_version
 }
 
 output "cli_connect" {
