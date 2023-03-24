@@ -53,9 +53,6 @@ app.on('error', (err, ctx) => {
       });
       Sentry.captureException(err);
     });
-    if (ENV_NAME === 'production') {
-      ctx.body = {};
-    }
   }
 });
 
