@@ -45,7 +45,11 @@ app.on('error', (err, ctx) => {
     logger.error(err);
     Sentry.withScope(function (scope) {
       scope.addEventProcessor(function (event) {
-        return Sentry.Handlers.parseRequest(event, ctx.request);
+        return Sentry.addRequestDataToEvent(event, ctx.request, {
+          include: {
+            user: false,
+          },
+        });
       });
       Sentry.captureException(err);
     });
