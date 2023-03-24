@@ -116,12 +116,14 @@
     },
     "smsSecret": {
       "type": "String",
-      "readScopes": "none",
-      "writeScopes": "none"
+      "readAccess": "none",
+      "writeAccess": "none"
     },
     "mfaBackupCodes": [
       {
-        "type": "String"
+        "type": "String",
+        "readAccess": "none",
+        "writeAccess": "none"
       }
     ],
     "mfaSecret": {
