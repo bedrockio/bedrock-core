@@ -27,6 +27,12 @@ export default class UserOverview extends React.Component {
                   <Table.Cell>Email</Table.Cell>
                   <Table.Cell>{item.email}</Table.Cell>
                 </Table.Row>
+                {item.phoneNumber && (
+                  <Table.Row>
+                    <Table.Cell>Phone Number</Table.Cell>
+                    <Table.Cell>{item.phoneNumber}</Table.Cell>
+                  </Table.Row>
+                )}
                 <Table.Row>
                   <Table.Cell>Roles</Table.Cell>
                   <Table.Cell>

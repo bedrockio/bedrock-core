@@ -159,7 +159,7 @@ describe('/1/mfa', () => {
         `/1/mfa/setup`,
         {
           method: 'sms',
-          phoneNumber: '1231231',
+          phoneNumber: '+4539406027',
         },
         { user }
       );
@@ -176,7 +176,7 @@ describe('/1/mfa', () => {
         `/1/mfa/setup`,
         {
           method: 'sms',
-          phoneNumber: '1231231',
+          phoneNumber: '+4539186027',
         },
         { user }
       );
@@ -209,7 +209,7 @@ describe('/1/mfa', () => {
     });
 
     it('should allow mfa to be enabled (sms)', async () => {
-      const phoneNumber = '123123123';
+      const phoneNumber = '+4539386027';
       const user = await createUser({
         accessConfirmedAt: new Date(),
       });

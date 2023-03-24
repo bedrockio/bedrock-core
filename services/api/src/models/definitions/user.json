@@ -33,8 +33,9 @@
       "required": true,
       "trim": true
     },
-    "timeZone": {
-      "type": "String"
+    "phoneNumber": {
+      "type": "String",
+      "validate": "phone"
     },
     "theme": {
       "type": "String",
@@ -113,9 +114,16 @@
         "otp"
       ]
     },
+    "smsSecret": {
+      "type": "String",
+      "readAccess": "none",
+      "writeAccess": "none"
+    },
     "mfaBackupCodes": [
       {
-        "type": "String"
+        "type": "String",
+        "readAccess": "none",
+        "writeAccess": "none"
       }
     ],
     "mfaSecret": {
@@ -133,7 +141,8 @@
     "fields": [
       "firstName",
       "lastName",
-      "email"
+      "email",
+      "phoneNumber"
     ]
   }
 }

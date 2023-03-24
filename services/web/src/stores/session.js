@@ -64,7 +64,6 @@ export class SessionProvider extends React.PureComponent {
           method: 'GET',
           path: '/1/users/me',
         });
-
         const organization = await this.loadOrganization();
 
         if (user.theme) {

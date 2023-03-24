@@ -164,7 +164,7 @@
         },
         {
           "name": "phoneNumber",
-          "description": "PhoneNumber required for method=sms",
+          "description": "Phone Number (E.164) required for method=sms",
           "schema": {
             "type": "string"
           }

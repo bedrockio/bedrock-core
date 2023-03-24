@@ -3,6 +3,7 @@ import { Form, Input, Checkbox, Message } from 'semantic';
 
 import AutoFocus from 'components/AutoFocus';
 import ErrorMessage from 'components/ErrorMessage';
+import PhoneNumber from 'components/PhoneNumber';
 
 export default (props) => {
   const { error, loading } = props;
@@ -12,6 +13,7 @@ export default (props) => {
   const [fields, setFields] = React.useState({
     firstName: '',
     lastName: '',
+    phoneNumber: '',
     email: '',
     password: '',
     accepted: false,
@@ -69,6 +71,16 @@ export default (props) => {
             onChange={(e, { value, name }) => setField(name, value)}
           />
         </Form.Field>
+
+        <Form.Field error={error?.hasField?.('phoneNumber')}>
+          <PhoneNumber
+            name="phoneNumber"
+            value={fields.phoneNumber}
+            placeholder="Phone number"
+            onChange={(e, { value, name }) => setField(name, value)}
+          />
+        </Form.Field>
+
         <Form.Field error={error?.hasField?.('password')}>
           <Input
             value={fields.password}

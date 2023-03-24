@@ -15,6 +15,14 @@ const { AuditEntry } = require('../models');
 
 const router = new Router();
 
+const phone = yd.string().custom(async (val) => {
+  // E.164 format
+  if (!val.match(/^\+[1-9]\d{1,14}$/)) {
+    throw new Error('Not a valid phone number');
+  }
+  return val;
+});
+
 router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
@@ -32,6 +40,7 @@ router
       lastName: yd.string(),
       timeZone: yd.string(),
       theme: yd.string(),
+      phoneNumber: phone,
     }),
     async (ctx) => {
       const { authUser } = ctx.state;
