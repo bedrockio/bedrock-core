@@ -41,7 +41,7 @@ app.on('error', (err, ctx) => {
     return;
   }
   // dont output stacktraces of errors that is throw with status as they are known
-  if (!err.status || err.status === 500) {
+  if (!err.status || err.status >= 500) {
     logger.error(err);
     Sentry.withScope(function (scope) {
       scope.addEventProcessor(function (event) {
@@ -49,6 +49,9 @@ app.on('error', (err, ctx) => {
       });
       Sentry.captureException(err);
     });
+    if (ENV_NAME === 'production') {
+      ctx.body = {};
+    }
   }
 });
 
