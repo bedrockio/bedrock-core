@@ -49,15 +49,14 @@
       "type": "Boolean",
       "default": false
     },
-    "accessConfirmedAt": {
-      "type": "Date",
-      "writeAccess": "none"
-    },
     "$private": {
       "type": "Scope",
       "readAccess": "none",
       "writeAccess": "none",
       "attributes": {
+        "accessConfirmedAt": {
+          "type": "Date"
+        },
         "hashedPassword": {
           "type": "String"
         },
@@ -69,6 +68,20 @@
           "type": "Date"
         },
         "tempTokenId": {
+          "type": "String"
+        },
+        "smsSecret": {
+          "type": "String"
+        },
+        "mfaBackupCodes": [
+          {
+            "type": "String"
+          }
+        ],
+        "mfaSecret": {
+          "type": "String"
+        },
+        "mfaPhoneNumber": {
           "type": "String"
         }
       }
@@ -113,28 +126,6 @@
         "sms",
         "otp"
       ]
-    },
-    "smsSecret": {
-      "type": "String",
-      "readAccess": "none",
-      "writeAccess": "none"
-    },
-    "mfaBackupCodes": [
-      {
-        "type": "String",
-        "readAccess": "none",
-        "writeAccess": "none"
-      }
-    ],
-    "mfaSecret": {
-      "type": "String",
-      "readAccess": "none",
-      "writeAccess": "none"
-    },
-    "mfaPhoneNumber": {
-      "type": "String",
-      "readAccess": "none",
-      "writeAccess": "none"
     }
   },
   "search": {
