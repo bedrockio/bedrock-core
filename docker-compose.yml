@@ -6,9 +6,9 @@ services:
       - MONGO_URI=mongodb://mongo/bedrock_dev
     build:
       context: ./services/api
-      dockerfile: Dockerfile.dev
       args:
         NODE_ENV: development
+    command: yarn start
     volumes:
       - ./services/api/src:/service/src
       - ./services/api/emails:/service/emails
@@ -26,7 +26,6 @@ services:
   web:
     build:
       context: ./services/web
-      dockerfile: Dockerfile.dev
       args:
         NODE_ENV: development
     command: yarn start
