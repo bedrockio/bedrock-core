@@ -65,9 +65,11 @@ function truncate(body) {
   return body;
 }
 
-function applicationMiddleware({ ignorePaths = [] }) {
+function applicationMiddleware({ router, ignorePaths = [] }) {
   return async (ctx, next) => {
     const path = ctx.url;
+
+    // if no route is matched, dont check anything
     const isPathIgnored = ignorePaths.find((ignorePath) => {
       if (ignorePath instanceof RegExp) {
         return ignorePath.test(path);
@@ -81,6 +83,10 @@ function applicationMiddleware({ ignorePaths = [] }) {
 
     const apiKey = ctx.get('apikey') || ctx.get('api-key') || ctx.get('api_key');
     if (!apiKey) {
+      // check that we hit a route otherwise we dont care
+      if (!router.match(ctx.path, ctx.method).match) {
+        return next();
+      }
       return ctx.throw(400, 'Missing "ApiKey" header');
     }
 

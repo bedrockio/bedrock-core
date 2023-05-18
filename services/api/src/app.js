@@ -14,6 +14,7 @@ const { loadOpenApiDefinitions, expandOpenApi } = require('./utils/openapi');
 const logger = require('@bedrockio/logger');
 
 const app = new Koa();
+const router = new Router();
 
 const ENV_NAME = config.get('ENV_NAME');
 
@@ -24,6 +25,7 @@ if (['staging', 'development'].includes(ENV_NAME)) {
   // has to be the added before any middleware that changes the ctx.body
   app.use(
     applicationMiddleware({
+      router,
       ignorePaths: [
         '/',
         '/openapi.json',
@@ -72,7 +74,6 @@ if (config.has('SENTRY_DSN')) {
   });
 }
 
-const router = new Router();
 app.router = router;
 router.get('/', (ctx) => {
   ctx.body = {
