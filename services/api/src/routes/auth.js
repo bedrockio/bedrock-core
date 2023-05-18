@@ -156,20 +156,6 @@ router
         ctx.throw(400, 'Could not find a user with that phone number, try again!');
       }
 
-      // this is just here to avoid sending more sms than necessary
-      // no need to send if the user has been blocked
-      try {
-        await verifyLoginAttempts(user);
-      } catch (error) {
-        await AuditEntry.append('Reached max authentication attempts', {
-          ctx,
-          category: 'security',
-          object: user,
-          user: user,
-        });
-        ctx.throw(401, error);
-      }
-
       if (!user.smsSecret) {
         const secret = mfa.generateSecret();
         user.smsSecret = secret;
