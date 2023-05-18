@@ -24,7 +24,15 @@ if (['staging', 'development'].includes(ENV_NAME)) {
   // has to be the added before any middleware that changes the ctx.body
   app.use(
     applicationMiddleware({
-      ignorePaths: ['/', '/openapi.json', '/openapi.lite.json', '/1/status', '/1/status/mongodb', /\/1\/applications/],
+      ignorePaths: [
+        '/',
+        '/openapi.json',
+        '/openapi.lite.json',
+        '/1/status',
+        '/1/status/mongodb',
+        /\/1\/applications/,
+        /\/1\/uploads/,
+      ],
     })
   );
 }
