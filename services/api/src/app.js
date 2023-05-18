@@ -31,7 +31,8 @@ if (['staging', 'development'].includes(ENV_NAME)) {
         '/1/status',
         '/1/status/mongodb',
         /\/1\/applications/,
-        /\/1\/uploads/,
+        /\/1\/uploads\/[a-f0-9]{24}\/image$/,
+        /\/1\/uploads\/[a-f0-9]{24}\/raw$/,
       ],
     })
   );

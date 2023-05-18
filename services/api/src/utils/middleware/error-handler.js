@@ -20,7 +20,6 @@ async function errorHandler(ctx, next) {
         message = 'An unexpected error occurred. Please try again later.';
       }
     }
-
     ctx.type = 'json';
     ctx.status = status;
     ctx.body = {
