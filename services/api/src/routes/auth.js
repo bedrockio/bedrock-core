@@ -175,7 +175,8 @@ router
         user.smsSecret = secret;
         await user.save();
       }
-      await sms.sendMessage(user.phoneNumber, `Your ${APP_NAME} login code is: ${mfa.generateToken(user.loginSecret)}`);
+
+      await sms.sendMessage(user.phoneNumber, `Your ${APP_NAME} login code is: ${mfa.generateToken(user.smsSecret)}`);
       ctx.status = 204;
     }
   )
