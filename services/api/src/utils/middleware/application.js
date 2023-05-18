@@ -69,7 +69,6 @@ function applicationMiddleware({ router, ignorePaths = [] }) {
   return async (ctx, next) => {
     const path = ctx.url;
 
-    // if no route is matched, dont check anything
     const isPathIgnored = ignorePaths.find((ignorePath) => {
       if (ignorePath instanceof RegExp) {
         return ignorePath.test(path);
@@ -85,7 +84,7 @@ function applicationMiddleware({ router, ignorePaths = [] }) {
     if (!apiKey) {
       // check that we hit a route otherwise we dont care
       if (!router.match(ctx.path, ctx.method).match) {
-        return next();
+        return;
       }
       return ctx.throw(400, 'Missing "ApiKey" header');
     }
