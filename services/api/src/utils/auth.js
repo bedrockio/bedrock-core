@@ -10,7 +10,7 @@ const LOGIN_THROTTLE = {
   timeMax: 60 * 60 * 1000,
 };
 
-async function verifyLoginAttempts(user) {
+async function verifyLoginAttempts(user, { updateUser = true } = {}) {
   const { triesMin, triesMax, timeMax } = LOGIN_THROTTLE;
   // Fixed random failing test where the Date.now() was a fraction later than new Date, resulting in negative number
   // const dt = new Date() - (user.lastLoginAttemptAt || Date.now());
@@ -19,11 +19,13 @@ async function verifyLoginAttempts(user) {
   const threshold = mapExponential(user.loginAttempts || 0, triesMin, triesMax, 0, timeMax);
 
   if (dt >= threshold) {
-    user.set({
-      lastLoginAttemptAt: new Date(),
-      loginAttempts: user.loginAttempts + 1,
-    });
-    await user.save();
+    if (updateUser) {
+      user.set({
+        lastLoginAttemptAt: new Date(),
+        loginAttempts: user.loginAttempts + 1,
+      });
+      await user.save();
+    }
     return;
   }
 
