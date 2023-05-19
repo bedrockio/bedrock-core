@@ -24,55 +24,69 @@ const phone = yd.string().custom(async (val) => {
   return val;
 });
 
+const registerValidator = yd
+  .object({
+    email: yd
+      .string()
+      .lowercase()
+      .email()
+      .custom((val, { root }) => {
+        if (val && !root.password) {
+          throw new Error('password is required when email is provided');
+        }
+      }),
+    phoneNumber: phone,
+    firstName: yd.string().required(),
+    lastName: yd.string().required(),
+    password: yd.string().password(),
+  })
+  .custom((val) => {
+    if (!val.email && !val.phoneNumber) {
+      throw new Error('email or phoneNumber is required');
+    }
+  });
+
 router
-  .post(
-    '/register',
-    validateBody({
-      email: yd.string().lowercase().email().required(),
-      firstName: yd.string().required(),
-      lastName: yd.string().required(),
-      password: yd.string().password().required(),
-      phoneNumber: phone,
-    }),
-    async (ctx) => {
-      const { email, phoneNumber } = ctx.request.body;
+  .post('/register', validateBody(registerValidator), async (ctx) => {
+    const { email, phoneNumber } = ctx.request.body;
 
-      // TODO: Avoid leaking that a user exists with that email/phone-number
-      // TODO: To be removed once we have enforce a constraint
-      if (await User.exists({ email })) {
-        ctx.throw(400, 'A user with that email already exists');
-      }
-      // TODO: to be removed once we have enforce a constraint
-      if (await User.exists({ phoneNumber })) {
-        ctx.throw(400, 'A user with that phone number already exists');
-      }
+    // TODO: Avoid leaking that a user exists with that email/phone-number
+    // TODO: To be removed once we have enforce a constraint
+    if (email && (await User.exists({ email }))) {
+      ctx.throw(400, 'A user with that email already exists');
+    }
+    // TODO: to be removed once we have enforce a constraint
+    if (phoneNumber && (await User.exists({ phoneNumber }))) {
+      ctx.throw(400, 'A user with that phone number already exists');
+    }
 
-      const user = new User({
-        ...ctx.request.body,
-      });
+    const user = new User({
+      ...ctx.request.body,
+    });
 
-      const token = user.createAuthToken({
-        ip: ctx.get('x-forwarded-for') || ctx.ip,
-        country: ctx.get('cf-ipcountry'),
-        userAgent: ctx.get('user-agent'),
-      });
-      await user.save();
+    const token = user.createAuthToken({
+      ip: ctx.get('x-forwarded-for') || ctx.ip,
+      country: ctx.get('cf-ipcountry'),
+      userAgent: ctx.get('user-agent'),
+    });
+    await user.save();
 
-      await AuditEntry.append('Registered', {
-        ctx,
-        user,
-      });
+    await AuditEntry.append('Registered', {
+      ctx,
+      user,
+    });
 
+    if (email) {
       await sendTemplatedMail({
         user,
         file: 'welcome.md',
       });
-
-      ctx.body = {
-        data: { token },
-      };
     }
-  )
+
+    ctx.body = {
+      data: { token },
+    };
+  })
   .post(
     '/login',
     validateBody({

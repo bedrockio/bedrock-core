@@ -96,7 +96,6 @@ export default class EditUser extends React.Component {
               />
               <Form.Input
                 value={user.email || ''}
-                required
                 type="email"
                 label="Email"
                 onChange={(e, { value }) => this.setField('email', value)}
@@ -105,7 +104,6 @@ export default class EditUser extends React.Component {
                 <label>Phone Number</label>
                 <PhoneNumber
                   value={user.phoneNumber || ''}
-                  required
                   onChange={(e, { value }) =>
                     this.setField('phoneNumber', value)
                   }
@@ -113,7 +111,6 @@ export default class EditUser extends React.Component {
               </Form.Field>
               {!this.isUpdate() && (
                 <Form.Input
-                  required
                   label="Password"
                   value={user.password || ''}
                   onChange={(e, { value }) => this.setField('password', value)}

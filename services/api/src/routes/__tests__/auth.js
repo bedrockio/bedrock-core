@@ -280,6 +280,40 @@ describe('/1/auth', () => {
       expect(response.status).toBe(400);
       expect(response.body.error.message).toBe('A user with that phone number already exists');
     });
+
+    it('should allow just phonenumber without email/password', async () => {
+      const firstName = 'Bob';
+      const lastName = 'Johnson';
+      const phoneNumber = '+12312342422';
+
+      let response = await request('POST', '/1/auth/register', { firstName, lastName, phoneNumber });
+      expect(response.status).toBe(200);
+      const { payload } = jwt.decode(response.body.data.token, { complete: true });
+      expect(payload).toHaveProperty('kid', 'user');
+      expect(payload).toHaveProperty('type', 'user');
+
+      const dbUser = await User.findOne({
+        phoneNumber,
+      });
+
+      expect(dbUser.phoneNumber).toBe(phoneNumber);
+      expect(dbUser.authInfo[0].jit).toBe(payload.jit);
+      expect(dbUser.roles).toEqual([]);
+    });
+
+    it('should check required fields', async () => {
+      const email = 'some2@email.com';
+      const firstName = 'Bob';
+      const lastName = 'Johnson';
+
+      let response = await request('POST', '/1/auth/register', { email, firstName, lastName });
+      expect(response.status).toBe(400);
+      expect(response.body.error.message).toBe('"email" password is required when email is provided');
+
+      response = await request('POST', '/1/auth/register', { firstName, lastName });
+      expect(response.status).toBe(400);
+      expect(response.body.error.message).toBe('email or phoneNumber is required');
+    });
   });
 
   describe('POST /confirm-access', () => {

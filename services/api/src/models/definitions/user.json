@@ -3,8 +3,12 @@
     "email": {
       "type": "String",
       "validate": "email",
-      "required": true,
       "lowercase": true,
+      "trim": true
+    },
+    "phoneNumber": {
+      "type": "String",
+      "validate": "phone",
       "trim": true
     },
     "roles": [
@@ -32,10 +36,6 @@
       "type": "String",
       "required": true,
       "trim": true
-    },
-    "phoneNumber": {
-      "type": "String",
-      "validate": "phone"
     },
     "theme": {
       "type": "String",
