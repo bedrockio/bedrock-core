@@ -12,6 +12,8 @@ const PAGES = {
   Mfa,
 };
 
+export const DEFAULT_PAGE_ID = 'getting-started';
+
 const root = {};
 const pagesById = {};
 

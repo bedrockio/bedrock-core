@@ -1,20 +1,17 @@
+import { get } from 'lodash';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { get, kebabCase, set } from 'lodash';
-import { Container, Dimmer, Divider, Icon, Loader } from 'semantic';
+import { Container, Divider, Icon } from 'semantic';
 
 import bem from 'helpers/bem';
 import screen from 'helpers/screen';
 import { request } from 'utils/api';
 
-import { Layout, Confirm } from 'components';
-import { JumpLink } from 'components/Link';
-import ErrorMessage from 'components/ErrorMessage';
+import { Confirm, Layout } from 'components';
 import ScrollWaypoint from 'components/ScrollWaypoint';
-import { toggleRecording, isRecording } from 'utils/api/record';
-import Code from 'components/Code';
 import EditButton from 'docs/components/EditButton';
 import RecordButton from 'docs/components/RecordButton';
+import { isRecording, toggleRecording } from 'utils/api/record';
 
 import { COMPONENTS } from 'components/Markdown';
 
@@ -23,7 +20,7 @@ import DocsPath from '../../components/DocsPath';
 import RequestBuilder from './RequestBuilder';
 // import EditableField from './EditableField';
 
-import { pagesById, sorted } from './pages';
+import { DEFAULT_PAGE_ID, pagesById, sorted } from './pages';
 
 const PARAMS_PATH = [
   'requestBody',
@@ -63,7 +60,6 @@ export default class Docs extends React.Component {
     const { pathname: lastPath, hash: lastHash } = lastProps?.location || {};
     if (path !== lastPath) {
       this.focusedItems = new Map();
-      this.visitedComponents = new Set();
     }
     if (hash && hash !== lastHash) {
       const el = document.querySelector(hash);
@@ -103,7 +99,6 @@ export default class Docs extends React.Component {
   //       path: '/1/docs',
   //     });
   //     const { docs, pages, pagesByUrl } = this.getFullDocs(data);
-  //     this.visitedComponents = new Set();
   //     this.setState({
   //       docs,
   //       pages,
@@ -207,7 +202,6 @@ export default class Docs extends React.Component {
         path: '/1/docs/generate',
       });
       const { docs, pages, pagesByUrl } = this.getFullDocs(data);
-      this.visitedComponents = new Set();
       this.setState({
         docs,
         pages,
@@ -284,26 +278,27 @@ export default class Docs extends React.Component {
 
   renderPage() {
     const { id } = this.props.match.params;
-    const page = pagesById[id];
-
-    if (page) {
-      const { title, Component } = page;
-      // TODO: cleanup and somehow remove the unneeded div here
-      return (
-        <React.Fragment>
-          <h1>{title}</h1>
-          <div className="markdown">
-            <Component components={COMPONENTS} />
-          </div>
-        </React.Fragment>
-      );
+    if (id) {
+      const page = pagesById[id];
+      if (page) {
+        const { Component } = page;
+        // TODO: cleanup and somehow remove the unneeded div here
+        return (
+          <React.Fragment>
+            <div className="markdown">
+              <Component components={COMPONENTS} />
+            </div>
+          </React.Fragment>
+        );
+      } else {
+        return <div>Not Found!</div>;
+      }
     } else {
-      return <div>Not Found!</div>;
+      this.props.history.replace(`/docs/${DEFAULT_PAGE_ID}`);
     }
   }
 
   renderDocsPage(docs, page) {
-    const { mode } = this.state;
     const { title, items } = page;
     return (
       <React.Fragment>
@@ -395,42 +390,6 @@ export default class Docs extends React.Component {
             );
           })}
         </div>
-      );
-    }
-  }
-
-  renderComponents() {
-    const { mode, docs } = this.state;
-    if (this.visitedComponents.size) {
-      return (
-        <React.Fragment>
-          <h3>Components</h3>
-          <Divider />
-          {Array.from(this.visitedComponents).map(($ref) => {
-            const { name, path } = expandRef($ref);
-            const { description } = get(docs, path);
-            return (
-              <div
-                id={name}
-                key={name}
-                className={this.getElementClass('component')}>
-                <h3>{name}</h3>
-                {/* <EditableField
-                  markdown
-                  mode={mode}
-                  path={path}
-                  name="description"
-                  value={description}
-                  onSave={this.onFieldSave}
-                /> */}
-                {this.renderParams([...path, 'properties'], {
-                  skipRequired: true,
-                })}
-                <Divider />
-              </div>
-            );
-          })}
-        </React.Fragment>
       );
     }
   }

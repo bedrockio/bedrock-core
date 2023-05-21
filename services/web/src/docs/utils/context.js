@@ -13,6 +13,8 @@ export function DocsProvider(props) {
   const [recording, setRecording] = useState(isRecording());
   const [loading, setLoading] = useState(false);
 
+  const visitedComponents = new Set();
+
   function updateDocs(options) {
     const { path, value } = options;
     const updated = {
@@ -47,6 +49,7 @@ export function DocsProvider(props) {
         loading,
         recording,
         setRecording,
+        visitedComponents,
       }}>
       {props.children}
     </DocsContext.Provider>

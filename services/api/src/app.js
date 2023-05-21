@@ -13,7 +13,6 @@ const config = require('@bedrockio/config');
 const logger = require('@bedrockio/logger');
 
 const app = new Koa();
-const router = new Router();
 
 const ENV_NAME = config.get('ENV_NAME');
 
@@ -24,14 +23,7 @@ if (['staging', 'development'].includes(ENV_NAME)) {
   // has to be the added before any middleware that changes the ctx.body
   app.use(
     applicationMiddleware({
-      router,
-      ignorePaths: [
-        '/',
-        '/1/status',
-        '/1/status/mongodb',
-        /\/1\/applications/,
-        /\/1\/uploads\/[a-f0-9]{24}\/raw$/,
-      ],
+      ignorePaths: ['/', '/1/status', '/1/status/mongodb', /\/1\/applications/, /\/1\/uploads\/[a-f0-9]{24}\/raw$/],
     })
   );
 }

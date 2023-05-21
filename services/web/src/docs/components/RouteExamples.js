@@ -1,5 +1,6 @@
 import React from 'react';
 import { get } from 'lodash';
+import { Message } from 'semantic';
 
 import { DocsContext } from '../utils/context';
 
@@ -22,55 +23,60 @@ export default class RouteExamples extends React.Component {
 
     const item = get(docs, path);
 
-    const items = Object.entries(item.responses || {})
-      .flatMap(([status, response]) => {
-        status = parseInt(status);
-        const { schema, examples = {} } = get(
-          response,
-          ['content', 'application/json'],
-          {}
-        );
-        if (schema?.$ref) {
-          this.visitedComponents.add(schema.$ref);
-        }
-        const exampleResponses = Object.entries(examples).map(
-          ([id, example]) => {
-            const examples = get(
-              item,
-              ['requestBody', 'content', 'application/json', 'examples'],
-              {}
-            );
-            return {
-              status,
-              schema,
-              requestBody: examples[id]?.value,
-              responseBody: example.value,
-            };
+    if (item) {
+      const items = Object.entries(item.responses || {})
+        .flatMap(([status, response]) => {
+          status = parseInt(status);
+          const { schema, examples = {} } = get(
+            response,
+            ['content', 'application/json'],
+            {}
+          );
+          if (schema?.$ref) {
+            this.context.visitedComponents.add(schema.$ref);
           }
+          const exampleResponses = Object.entries(examples).map(
+            ([id, example]) => {
+              const examples = get(
+                item,
+                ['requestBody', 'content', 'application/json', 'examples'],
+                {}
+              );
+              return {
+                status,
+                schema,
+                requestBody: examples[id]?.value,
+                responseBody: example.value,
+              };
+            }
+          );
+          if (exampleResponses.length) {
+            return exampleResponses;
+          } else {
+            return [
+              {
+                status,
+                schema,
+              },
+            ];
+          }
+        })
+        .sort((a, b) => {
+          return a.status < b.status;
+        });
+      if (items.length) {
+        return (
+          <React.Fragment>
+            <h4>Examples:</h4>
+            {items.map((item, i) => {
+              return <DocsExample key={i} item={item} />;
+            })}
+          </React.Fragment>
         );
-        if (exampleResponses.length) {
-          return exampleResponses;
-        } else {
-          return [
-            {
-              status,
-              schema,
-            },
-          ];
-        }
-      })
-      .sort((a, b) => {
-        return a.status < b.status;
-      });
-    if (items.length) {
-      return (
-        <React.Fragment>
-          <h4>Examples:</h4>
-          {items.map((item, i) => {
-            return <DocsExample key={i} item={item} />;
-          })}
-        </React.Fragment>
-      );
+      }
     }
+    return (
+      <Message error>Cannot find examples for {this.props.route}.</Message>
+    );
   }
 }

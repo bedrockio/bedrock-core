@@ -8,6 +8,8 @@ import bash from 'react-syntax-highlighter/dist/esm/languages/prism/bash';
 import json from 'react-syntax-highlighter/dist/esm/languages/prism/json';
 import swift from 'react-syntax-highlighter/dist/esm/languages/prism/swift';
 
+atomDark['pre[class*="language-"]'].margin = '0';
+
 import bem from 'helpers/bem';
 
 SyntaxHighlighter.registerLanguage('bash', bash);

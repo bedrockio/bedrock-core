@@ -1,14 +1,31 @@
 import RouteParams from 'docs/components/RouteParams';
 import RouteExamples from 'docs/components/RouteExamples';
+import VisitedSchemas from 'docs/components/VisitedSchemas';
+
+import Code from 'components/Code';
 
 export const title = 'Products';
 
-# PRODUCTSSSSSSSSSSSS
+# Products API
 
-## Parameters
+## Get a Product
 
-<RouteParams route="PATCH /1/users/me" />
+Retrieves a product by its id.
+
+<Code>GET /1/products/:id</Code>
+
+## Create a Product
+
+Creates a new product.
+
+<Code>POST /1/products</Code>
+
+### Parameters
+
+<RouteParams route="POST /1/products" />
 
 ## Examples:
 
 <RouteExamples route="GET /1/users/me" />
+
+<VisitedSchemas />
