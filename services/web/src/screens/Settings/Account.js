@@ -6,6 +6,7 @@ import screen from 'helpers/screen';
 import { request } from 'utils/api';
 import { withSession } from 'stores';
 import ErrorMessage from 'components/ErrorMessage';
+import PhoneNumber from 'components/PhoneNumber';
 
 import Menu from './Menu';
 
@@ -13,7 +14,7 @@ import Menu from './Menu';
 @withSession
 export default class Account extends React.Component {
   state = {
-    user: pick(this.context.user, ['firstName', 'lastName', 'timeZone']),
+    user: pick(this.context.user, ['firstName', 'lastName', 'phoneNumber']),
   };
 
   setField = (evt, { name, value }) => {
@@ -56,10 +57,10 @@ export default class Account extends React.Component {
 
   render() {
     const { user, error, loading } = this.state;
-
     if (!this.context.user) {
-      return <div></div>;
+      return null;
     }
+
     return (
       <React.Fragment>
         <Menu />
@@ -81,6 +82,15 @@ export default class Account extends React.Component {
               value={user.lastName || ''}
               onChange={this.setField}
             />
+            <Form.Field>
+              <label>Phone Number</label>
+              <PhoneNumber
+                label="Phone Number"
+                name="phoneNumber"
+                value={user.phoneNumber || ''}
+                onChange={this.setField}
+              />
+            </Form.Field>
           </Segment>
           <div>
             <Button

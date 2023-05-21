@@ -28,6 +28,7 @@ router
   })
   .get('/:id/raw', async (ctx) => {
     const upload = await Upload.findById(ctx.params.id);
+    if (!upload) return ctx.throw(404, 'Upload not found');
     const url = upload.rawUrl;
     if (upload.storageType === 'local') {
       ctx.set('Content-Type', upload.mimeType);

@@ -4,6 +4,8 @@ export const title = 'Authentication';
 export const group = 'Getting Started';
 export const order = -2;
 
+# Authentication API
+
 This API can be used for signing up new users, obtaining tokens and performing
 user self-administration such as resetting of password.
 
@@ -24,6 +26,23 @@ token can be used for authentication on all subsequent API calls (See Getting
 Started). Unless the user has mfa enabled.
 
 <RequestBlock request={{ method: 'POST', path: '/1/auth/login' }} />
+
+Note if the user has mfa enabled the mfaToken is required for POST /1/mfa/verify
+
+## Login with sms
+
+### Send sms
+
+This sends a one time login code to the user's phone number. Returns status code
+204 on success.
+
+<RequestBlock request={{ method: 'POST', path: '/1/auth/login/send-sms' }} />
+
+### Verify sms
+
+This verifies the user's one time code and returns a `data.token` on success
+
+<RequestBlock request={{ method: 'POST', path: '/1/auth/login/verify-sms' }} />
 
 Note if the user has mfa enabled the mfaToken is required for POST /1/mfa/verify
 

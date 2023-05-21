@@ -13,6 +13,7 @@ const config = require('@bedrockio/config');
 const logger = require('@bedrockio/logger');
 
 const app = new Koa();
+const router = new Router();
 
 const ENV_NAME = config.get('ENV_NAME');
 
@@ -23,7 +24,14 @@ if (['staging', 'development'].includes(ENV_NAME)) {
   // has to be the added before any middleware that changes the ctx.body
   app.use(
     applicationMiddleware({
-      ignorePaths: ['/', '/1/status', '/1/status/mongodb', /\/1\/applications/],
+      router,
+      ignorePaths: [
+        '/',
+        '/1/status',
+        '/1/status/mongodb',
+        /\/1\/applications/,
+        /\/1\/uploads\/[a-f0-9]{24}\/raw$/,
+      ],
     })
   );
 }
@@ -44,11 +52,15 @@ app.on('error', (err, ctx) => {
     return;
   }
   // dont output stacktraces of errors that is throw with status as they are known
-  if (!err.status || err.status === 500) {
+  if (!err.status || err.status >= 500) {
     logger.error(err);
     Sentry.withScope(function (scope) {
       scope.addEventProcessor(function (event) {
-        return Sentry.Handlers.parseRequest(event, ctx.request);
+        return Sentry.addRequestDataToEvent(event, ctx.request, {
+          include: {
+            user: false,
+          },
+        });
       });
       Sentry.captureException(err);
     });

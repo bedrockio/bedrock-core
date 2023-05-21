@@ -48,7 +48,7 @@ const App = () => {
       <Route path="/forgot-password" component={ForgotPassword} exact />
       <Route path="/reset-password" component={ResetPassword} exact />
       <Protected path="/confirm-access" allowed={ConfirmAccess} exact />
-      <Route component={NotFound} />
+      <Protected allowed={NotFound} />
     </Switch>
   );
 };

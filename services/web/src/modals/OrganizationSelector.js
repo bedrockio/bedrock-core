@@ -10,7 +10,7 @@ import modal from 'helpers/modal';
 @modal
 @withSession
 export default class OrganizationSelector extends React.Component {
-  fetchOrganizations = async (keyword) => {
+  fetchOrganizations = async (body) => {
     const { user } = this.context;
     if (
       userHasAccess(user, {
@@ -22,18 +22,14 @@ export default class OrganizationSelector extends React.Component {
       const { data } = await request({
         method: 'POST',
         path: '/1/organizations/search',
-        body: {
-          keyword,
-        },
+        body,
       });
       return data;
     } else {
       const { data } = await request({
         method: 'POST',
         path: '/1/organizations/mine/search',
-        body: {
-          keyword,
-        },
+        body,
       });
       return data;
     }

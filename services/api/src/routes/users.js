@@ -15,6 +15,14 @@ const { AuditEntry } = require('../models');
 
 const router = new Router();
 
+const phone = yd.string().custom(async (val) => {
+  // E.164 format
+  if (!val.match(/^\+[1-9]\d{1,14}$/)) {
+    throw new Error('Not a valid phone number');
+  }
+  return val;
+});
+
 router
   .use(authenticate({ type: 'user' }))
   .use(fetchUser)
@@ -128,14 +136,20 @@ router
     '/',
     validateBody(
       User.getCreateValidation({
-        password: yd.string().password().required(),
+        password: yd.string().password(),
+      }).custom((val) => {
+        if (!val.email && !val.phoneNumber) {
+          throw new Error('email or phoneNumber is required');
+        }
       })
     ),
     async (ctx) => {
-      const { email } = ctx.request.body;
-      const existingUser = await User.findOne({ email });
-      if (existingUser) {
+      const { email, phoneNumber } = ctx.request.body;
+      if (email && (await User.findOne({ email }))) {
         ctx.throw(400, 'A user with that email already exists');
+      }
+      if (phoneNumber && (await User.findOne({ phoneNumber }))) {
+        ctx.throw(400, 'A user with that phoneNumber already exists');
       }
       const user = await User.create(ctx.request.body);
 

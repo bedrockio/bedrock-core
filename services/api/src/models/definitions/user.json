@@ -3,8 +3,12 @@
     "email": {
       "type": "String",
       "validate": "email",
-      "required": true,
       "lowercase": true,
+      "trim": true
+    },
+    "phoneNumber": {
+      "type": "String",
+      "validate": "phone",
       "trim": true
     },
     "roles": [
@@ -33,9 +37,6 @@
       "required": true,
       "trim": true
     },
-    "timeZone": {
-      "type": "String"
-    },
     "theme": {
       "type": "String",
       "enum": [
@@ -48,15 +49,14 @@
       "type": "Boolean",
       "default": false
     },
-    "accessConfirmedAt": {
-      "type": "Date",
-      "writeAccess": "none"
-    },
     "$private": {
       "type": "Scope",
       "readAccess": "none",
       "writeAccess": "none",
       "attributes": {
+        "accessConfirmedAt": {
+          "type": "Date"
+        },
         "hashedPassword": {
           "type": "String"
         },
@@ -68,6 +68,20 @@
           "type": "Date"
         },
         "tempTokenId": {
+          "type": "String"
+        },
+        "smsSecret": {
+          "type": "String"
+        },
+        "mfaBackupCodes": [
+          {
+            "type": "String"
+          }
+        ],
+        "mfaSecret": {
+          "type": "String"
+        },
+        "mfaPhoneNumber": {
           "type": "String"
         }
       }
@@ -112,28 +126,14 @@
         "sms",
         "otp"
       ]
-    },
-    "mfaBackupCodes": [
-      {
-        "type": "String"
-      }
-    ],
-    "mfaSecret": {
-      "type": "String",
-      "readAccess": "none",
-      "writeAccess": "none"
-    },
-    "mfaPhoneNumber": {
-      "type": "String",
-      "readAccess": "none",
-      "writeAccess": "none"
     }
   },
   "search": {
     "fields": [
       "firstName",
       "lastName",
-      "email"
+      "email",
+      "phoneNumber"
     ]
   }
 }

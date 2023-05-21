@@ -8,3 +8,4 @@ export * as Search from './search';
 export { default as SearchFilters } from './search/Filters';
 export { default as Protected } from './Protected';
 export { default as Confirm } from './Confirm';
+export { default as PhoneNumber } from './PhoneNumber';

@@ -53,8 +53,7 @@ export default class Overview extends React.Component {
                 key={key}
                 style={{
                   cursor: 'pointer',
-                  color: '#000',
-                  borderTop: '0.5px solid #eee',
+                  borderTop: '0.5px solid rgba(127, 127, 127, .25)',
                   padding: '10px 0px 10px 0px',
                 }}>
                 <Layout horizontal center spread>

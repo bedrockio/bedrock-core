@@ -6,6 +6,7 @@ import modal from 'helpers/modal';
 import AutoFocus from 'components/AutoFocus';
 import Roles from 'components/form-fields/Roles';
 import ErrorMessage from 'components/ErrorMessage';
+import { PhoneNumber } from 'components';
 
 @modal
 export default class EditUser extends React.Component {
@@ -95,14 +96,21 @@ export default class EditUser extends React.Component {
               />
               <Form.Input
                 value={user.email || ''}
-                required
                 type="email"
                 label="Email"
                 onChange={(e, { value }) => this.setField('email', value)}
               />
+              <Form.Field>
+                <label>Phone Number</label>
+                <PhoneNumber
+                  value={user.phoneNumber || ''}
+                  onChange={(e, { value }) =>
+                    this.setField('phoneNumber', value)
+                  }
+                />
+              </Form.Field>
               {!this.isUpdate() && (
                 <Form.Input
-                  required
                   label="Password"
                   value={user.password || ''}
                   onChange={(e, { value }) => this.setField('password', value)}

@@ -179,7 +179,7 @@ export default class Security extends React.Component {
                   );
 
                   return (
-                    <Table.Row key={info.id}>
+                    <Table.Row key={info.jti}>
                       <Table.Cell>
                         {info.userAgent || 'No User Agent provided'}{' '}
                         {info.jti === jti && (

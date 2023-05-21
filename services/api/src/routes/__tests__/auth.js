@@ -6,6 +6,8 @@ const { mockTime, unmockTime, advanceTime } = require('../../utils/testing/time'
 const { User, Invite } = require('../../models');
 const { verifyPassword } = require('../../utils/auth');
 
+const { generateSecret, generateToken } = require('../../utils/mfa');
+
 describe('/1/auth', () => {
   describe('POST login', () => {
     it('should log in a user in', async () => {
@@ -104,7 +106,7 @@ describe('/1/auth', () => {
       unmockTime();
     });
 
-    it('should set the authTokenId on login', async () => {
+    it('should store the new token payload on the user', async () => {
       const password = '123password!';
       let user = await createUser({
         password,
@@ -121,13 +123,118 @@ describe('/1/auth', () => {
     });
   });
 
+  describe('POST /login/send-sms', () => {
+    it('should send a sms', async () => {
+      const phoneNumber = '+12312312422';
+      const user = await createUser({
+        phoneNumber,
+      });
+
+      let response = await request('POST', '/1/auth/login/send-sms', { phoneNumber }, {});
+      expect(response.status).toBe(204);
+      const dbUser = await User.findById(user.id);
+      expect(dbUser.smsSecret).toBeTruthy();
+    });
+
+    it('should fail if no user is found', async () => {
+      const phoneNumber = '+12312312324';
+      let response = await request('POST', '/1/auth/login/send-sms', { phoneNumber }, {});
+      expect(response.status).toBe(400);
+      expect(response.body.error.message).toBe('Could not find a user with that phone number, try again!');
+    });
+
+    it('should block user if limit is reached', async () => {
+      const phoneNumber = '+12318312324';
+      await createUser({
+        lastLoginAttemptAt: new Date(),
+        loginAttempts: 10,
+        phoneNumber,
+      });
+      let response = await request('POST', '/1/auth/login/send-sms', { phoneNumber });
+      expect(response.status).toBe(401);
+      expect(response.body.error.message).toBe('Too many attempts. Try again in 15 minute(s)');
+    });
+  });
+
+  describe('POST /login/verify-sms', () => {
+    it('should return a jwt token on success', async () => {
+      const phoneNumber = '+123123123';
+      const user = await createUser({
+        phoneNumber,
+        smsSecret: generateSecret(),
+      });
+
+      const response = await request(
+        'POST',
+        '/1/auth/login/verify-sms',
+        { phoneNumber, code: generateToken(user.smsSecret) },
+        {}
+      );
+      expect(response.status).toBe(200);
+      const { payload } = jwt.decode(response.body.data.token, { complete: true });
+      expect(payload).toHaveProperty('kid', 'user');
+      expect(payload).toHaveProperty('type', 'user');
+      const dbUser = await User.findById(user.id);
+      expect(dbUser.authInfo[0].jti).toBe(payload.jti);
+    });
+
+    it('should failed with bad code', async () => {
+      const phoneNumber = '+123123423';
+      await createUser({
+        phoneNumber,
+        smsSecret: generateSecret(),
+      });
+
+      const response = await request('POST', '/1/auth/login/verify-sms', { phoneNumber, code: 'bad code' }, {});
+      expect(response.status).toBe(400);
+      expect(response.body.error.message).toBe('Invalid login code');
+    });
+
+    it('should block user if limit is reached', async () => {
+      const phoneNumber = '+18182191291';
+      await createUser({
+        lastLoginAttemptAt: new Date(),
+        loginAttempts: 10,
+        phoneNumber,
+      });
+      let response = await request('POST', '/1/auth/login/verify-sms', { phoneNumber, code: 'bad code' }, {});
+      expect(response.status).toBe(401);
+      expect(response.body.error.message).toBe('Too many attempts. Try again in 15 minute(s)');
+    });
+
+    it('should handle mfa', async () => {
+      const phoneNumber = '+18182191290';
+      const user = await createUser({
+        phoneNumber,
+        smsSecret: generateSecret(),
+        mfaMethod: 'otp',
+      });
+
+      const response = await request(
+        'POST',
+        '/1/auth/login/verify-sms',
+        { phoneNumber, code: generateToken(user.smsSecret) },
+        {}
+      );
+      expect(response.status).toBe(200);
+      expect(response.body.data.mfaRequired).toBe(true);
+    });
+  });
+
   describe('POST /register', () => {
     it('should handle success', async () => {
       const email = 'some@email.com';
       const password = '123password!';
       const firstName = 'Bob';
       const lastName = 'Johnson';
-      let response = await request('POST', '/1/auth/register', { firstName, lastName, email, password });
+      const phoneNumber = '+12312312422';
+      let response = await request('POST', '/1/auth/register', {
+        firstName,
+        lastName,
+        phoneNumber,
+        email,
+        password,
+      });
       expect(response.status).toBe(200);
 
       assertMailSent({ to: email });
@@ -136,14 +243,76 @@ describe('/1/auth', () => {
       expect(payload).toHaveProperty('kid', 'user');
       expect(payload).toHaveProperty('type', 'user');
 
-      const updatedUser = await User.findOne({
+      const dbUser = await User.findOne({
         email,
       });
+      expect(dbUser.email).toBe(email);
+      expect(dbUser.phoneNumber).toBe(phoneNumber);
+      expect(dbUser.authInfo[0].jit).toBe(payload.jit);
+      expect(dbUser.roles).toEqual([]);
+    });
 
-      expect(updatedUser.email).toBe(email);
+    it('should check for duplicating emails', async () => {
+      const email = 'some@email.com';
+      const password = '123password!';
+      const firstName = 'Bob';
+      const lastName = 'Johnson';
+      await createUser({
+        email: email,
+      });
 
-      response = await request('POST', '/1/auth/register', { firstName, lastName, email, password });
+      let response = await request('POST', '/1/auth/register', { firstName, lastName, email, password });
       expect(response.status).toBe(400);
+      expect(response.body.error.message).toBe('A user with that email already exists');
+    });
+
+    it('should check for duplicating phoneNumber', async () => {
+      const email = 'some@email.com';
+      const password = '123password!';
+      const firstName = 'Bob';
+      const lastName = 'Johnson';
+      const phoneNumber = '+12312312422';
+      await createUser({
+        phoneNumber,
+      });
+
+      let response = await request('POST', '/1/auth/register', { firstName, lastName, phoneNumber, email, password });
+      expect(response.status).toBe(400);
+      expect(response.body.error.message).toBe('A user with that phone number already exists');
+    });
+
+    it('should allow just phonenumber without email/password', async () => {
+      const firstName = 'Bob';
+      const lastName = 'Johnson';
+      const phoneNumber = '+12312342422';
+
+      let response = await request('POST', '/1/auth/register', { firstName, lastName, phoneNumber });
+      expect(response.status).toBe(200);
+      const { payload } = jwt.decode(response.body.data.token, { complete: true });
+      expect(payload).toHaveProperty('kid', 'user');
+      expect(payload).toHaveProperty('type', 'user');
+
+      const dbUser = await User.findOne({
+        phoneNumber,
+      });
+
+      expect(dbUser.phoneNumber).toBe(phoneNumber);
+      expect(dbUser.authInfo[0].jit).toBe(payload.jit);
+      expect(dbUser.roles).toEqual([]);
+    });
+
+    it('should check required fields', async () => {
+      const email = 'some2@email.com';
+      const firstName = 'Bob';
+      const lastName = 'Johnson';
+
+      let response = await request('POST', '/1/auth/register', { email, firstName, lastName });
+      expect(response.status).toBe(400);
+      expect(response.body.error.message).toBe('"email" password is required when email is provided');
+
+      response = await request('POST', '/1/auth/register', { firstName, lastName });
+      expect(response.status).toBe(400);
+      expect(response.body.error.message).toBe('email or phoneNumber is required');
     });
   });
 

@@ -73,25 +73,28 @@ const withRouterForwardRef = (Component) => {
   ));
 };
 
+function getStateFromQueryString(search, filterMapping) {
+  const urlParams = new URLSearchParams(search);
+  const page = urlParams.get('page') ? Number(urlParams.get('page')) : 1;
+
+  const filters = getFiltersFromSearchParams(urlParams, filterMapping);
+  return {
+    filters,
+    page,
+  };
+}
+
 class SearchProvider extends React.Component {
   constructor(props) {
     super(props);
-
-    const urlParams = new URLSearchParams(this.props.history.location.search);
-    const page = urlParams.get('page')
-      ? Number(urlParams.get('page'))
-      : props.page;
-
-    const filters = getFiltersFromSearchParams(urlParams, props.filterMapping);
 
     this.state = {
       loading: true,
       items: [],
       error: null,
+      ...getStateFromQueryString(props.location.search, props.filterMapping),
       filterMapping: props.filterMapping,
-      filters,
       limit: props.limit,
-      page: page,
       sort: props.sort,
     };
   }
@@ -101,12 +104,25 @@ class SearchProvider extends React.Component {
   }
 
   componentDidUpdate(lastProps, lastState) {
-    const changedProps = this.getChanged(this.props, lastProps);
-    if (changedProps) {
+    // checking if props has been changed
+    const changedProps = this.getChanged(this.props, lastProps) || {};
+
+    // check if the search query has been changed
+    if (lastProps.location.search != this.props.location.search) {
+      const { page, filters } = getStateFromQueryString(
+        this.props.location.search,
+        this.props.filterMapping
+      );
+      changedProps.page = page;
+      changedProps.filters = filters;
+    }
+
+    if (Object.keys(changedProps).length) {
       this.setState({
         ...changedProps,
       });
-    } else if (this.hasChanged(this.state, lastState)) {
+      // checking if the state has been changed
+    } else if (this.getChanged(this.state, lastState)) {
       this.fetch();
     }
   }
@@ -121,7 +137,7 @@ class SearchProvider extends React.Component {
       return;
     }
 
-    if (this.state.page > 1) {
+    if (this.state.page) {
       queryObject.page = this.state.page;
     }
 
@@ -159,14 +175,11 @@ class SearchProvider extends React.Component {
     });
   }
 
-  hasChanged(current, last) {
-    return !!this.getChanged(current, last);
-  }
-
   getChanged(current, last) {
     let changed = null;
     for (let key of ['page', 'sort', 'limit', 'filters', 'filterMapping']) {
-      if (last[key] !== current[key]) {
+      // JSON.stringify just to avoid rerender problems around the filterMapping
+      if (JSON.stringify(last[key]) !== JSON.stringify(current[key])) {
         changed = {
           ...changed,
           [key]: current[key],
