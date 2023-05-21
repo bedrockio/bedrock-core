@@ -12,6 +12,7 @@ import ScrollWaypoint from 'components/ScrollWaypoint';
 import EditButton from 'docs/components/EditButton';
 import RecordButton from 'docs/components/RecordButton';
 import { isRecording, toggleRecording } from 'utils/api/record';
+import { DocsContext } from 'docs/utils/context';
 
 import { COMPONENTS } from 'components/Markdown';
 
@@ -36,6 +37,7 @@ import './docs.less';
 @screen
 export default class Docs extends React.Component {
   static layout = 'portal';
+  static contextType = DocsContext;
 
   constructor(props) {
     super(props);
@@ -197,17 +199,7 @@ export default class Docs extends React.Component {
       this.setState({
         loading: true,
       });
-      const { data } = await request({
-        method: 'POST',
-        path: '/1/docs/generate',
-      });
-      const { docs, pages, pagesByUrl } = this.getFullDocs(data);
-      this.setState({
-        docs,
-        pages,
-        pagesByUrl,
-        loading: false,
-      });
+      await this.context.generateDocs();
       this.checkPageChange();
     } catch (error) {
       this.setState({

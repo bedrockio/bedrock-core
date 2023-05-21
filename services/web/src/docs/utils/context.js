@@ -24,6 +24,14 @@ export function DocsProvider(props) {
     setDocs(updated);
   }
 
+  async function generateDocs() {
+    const { data } = await request({
+      method: 'POST',
+      path: '/1/docs/generate',
+    });
+    setDocs(data);
+  }
+
   useEffect(async () => {
     setLoading(true);
     const { data } = await request({
@@ -46,6 +54,7 @@ export function DocsProvider(props) {
         setDocs,
         setMode,
         updateDocs,
+        generateDocs,
         loading,
         recording,
         setRecording,
