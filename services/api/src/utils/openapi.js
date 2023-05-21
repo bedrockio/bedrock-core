@@ -192,7 +192,6 @@ function walkFields(arg, fn, path = []) {
 
 async function recordRequest(ctx) {
   const { method, routerPath } = ctx;
-  console.info('RECORDINGGGGGGGGGGG', method);
   const { type: requestType, body: requestBody } = ctx.request;
   const { type: responseType, headers: responseHeaders, status } = ctx.response;
   const requestId = getRequestId(ctx);
@@ -237,6 +236,7 @@ async function recordRequest(ctx) {
                     examples: {
                       [requestId]: {
                         value: responseBody,
+                        'x-path': ctx.path,
                       },
                     },
                   },

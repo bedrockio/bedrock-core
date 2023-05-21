@@ -3,7 +3,7 @@ import { get } from 'lodash';
 
 import { Divider } from 'semantic';
 
-import { expandRef } from 'docs/utils/refs';
+import { expandRef } from 'docs/utils';
 
 import { DocsContext } from '../utils/context';
 

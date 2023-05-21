@@ -4,8 +4,11 @@ const { recordRequest } = require('../openapi');
 
 async function record(ctx, next) {
   if (ctx.get('Api-Record')) {
-    await next();
-    await recordRequest(ctx);
+    try {
+      await next();
+    } finally {
+      await recordRequest(ctx);
+    }
   } else {
     return await next();
   }

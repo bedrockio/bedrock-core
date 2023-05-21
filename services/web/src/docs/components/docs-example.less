@@ -1,0 +1,50 @@
+.docs-example {
+  border-radius: 3px;
+  margin-bottom: 10px;
+  background-color: #2e2e2e;
+  color: #fff;
+
+  a {
+    font-weight: 600;
+    color: #317bc1;
+  }
+
+  &__title {
+    padding: 5px 10px;
+    border-radius: inherit;
+    font-weight: 500;
+    color: #fff;
+    cursor: pointer;
+
+    &--good {
+      background-color: #3da738;
+    }
+
+    &--bad {
+      background-color: #d54242;
+    }
+  }
+
+  &__schema {
+    padding: 10px 20px;
+  }
+
+  &__path {
+    padding: 5px 20px;
+  }
+
+  &__body {
+    padding: 5px 20px;
+
+    pre {
+      color: #fff;
+      background-color: #1f1f1f;
+      font-size: 13px;
+      padding: 5px 10px;
+      font-family: Menlo, Monaco, Consolas, 'Roboto Mono', monospace;
+      -webkit-font-smoothing: antialiased;
+      border-radius: 2px;
+      max-height: 50vh !important;
+    }
+  }
+}

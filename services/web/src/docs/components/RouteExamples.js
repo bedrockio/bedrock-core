@@ -2,6 +2,8 @@ import React from 'react';
 import { get } from 'lodash';
 import { Message } from 'semantic';
 
+import { getRoutePath } from 'docs/utils';
+
 import { DocsContext } from '../utils/context';
 
 import DocsExample from './DocsExample';
@@ -9,22 +11,16 @@ import DocsExample from './DocsExample';
 export default class RouteExamples extends React.Component {
   static contextType = DocsContext;
 
-  getPath() {
-    const [method, url] = this.props.route.split(' ');
-    return ['paths', url, method.toLowerCase()];
-  }
-
   render() {
-    const path = this.getPath();
     const { docs } = this.context;
     if (!docs) {
       return null;
     }
 
-    const item = get(docs, path);
+    const data = get(docs, getRoutePath(this.props.route));
 
-    if (item) {
-      const items = Object.entries(item.responses || {})
+    if (data) {
+      const items = Object.entries(data.responses || {})
         .flatMap(([status, response]) => {
           status = parseInt(status);
           const { schema, examples = {} } = get(
@@ -38,13 +34,14 @@ export default class RouteExamples extends React.Component {
           const exampleResponses = Object.entries(examples).map(
             ([id, example]) => {
               const examples = get(
-                item,
+                data,
                 ['requestBody', 'content', 'application/json', 'examples'],
                 {}
               );
               return {
                 status,
                 schema,
+                path: example['x-path'],
                 requestBody: examples[id]?.value,
                 responseBody: example.value,
               };

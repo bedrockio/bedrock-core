@@ -17,6 +17,12 @@ const app = new Koa();
 const ENV_NAME = config.get('ENV_NAME');
 
 app.use(corsMiddleware());
+
+// Must be before errorHandler
+if (['development'].includes(ENV_NAME)) {
+  app.use(recordMiddleware);
+}
+
 app.use(errorHandler);
 
 if (['staging', 'development'].includes(ENV_NAME)) {
@@ -26,10 +32,6 @@ if (['staging', 'development'].includes(ENV_NAME)) {
       ignorePaths: ['/', '/1/status', '/1/status/mongodb', /\/1\/applications/, /\/1\/uploads\/[a-f0-9]{24}\/raw$/],
     })
   );
-}
-
-if (['development'].includes(ENV_NAME)) {
-  app.use(recordMiddleware);
 }
 
 app

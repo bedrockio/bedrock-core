@@ -18,7 +18,7 @@ import { COMPONENTS } from 'components/Markdown';
 
 import DocsPath from '../../components/DocsPath';
 
-import RequestBuilder from './RequestBuilder';
+// import RequestBuilder from './RequestBuilder';
 // import EditableField from './EditableField';
 
 import { DEFAULT_PAGE_ID, pagesById, sorted } from './pages';
@@ -325,13 +325,13 @@ export default class Docs extends React.Component {
                   <code className={this.getElementClass('item-name')}>
                     {verbPath}
                   </code>
-                  <RequestBuilder
+                  {/* <RequestBuilder
                     docs={docs}
                     operation={item}
                     path={item.apiPath}
                     method={item.method}
                     trigger={<Icon name="play" link />}
-                  />
+                  /> */}
                 </Layout>
                 <Divider hidden />
                 {/* <EditableField

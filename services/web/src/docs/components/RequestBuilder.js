@@ -14,6 +14,8 @@ import {
 import { request } from 'utils/api';
 import Code from 'components/Code';
 import RequestBlock from 'components/RequestBlock';
+import { DocsContext } from 'docs/utils/context';
+import { expandRoute, getParametersPath } from 'docs/utils';
 
 import bem from 'helpers/bem';
 
@@ -48,6 +50,8 @@ function resolveRefs(docs, schema) {
 
 @bem
 export default class RequestBuilder extends React.Component {
+  static contextType = DocsContext;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -65,12 +69,13 @@ export default class RequestBuilder extends React.Component {
     return [active ? 'active' : null];
   }
 
-  getPath() {
-    const { request } = this.state;
-    return this.props.path.replace(/:(\w+)/g, (m, key) => {
-      const val = request?.path?.[key];
-      return val ? encodeURIComponent(val) : `:${key}`;
+  expandRoute(values) {
+    let { method, path } = expandRoute(this.props.route);
+    path = path.replace(/:(\w+)/g, (m, key) => {
+      const value = values?.[key];
+      return value ? encodeURIComponent(value) : `:${key}`;
     });
+    return { method, path };
   }
 
   onTabChange = (evt, { activeIndex }) => {
@@ -92,16 +97,26 @@ export default class RequestBuilder extends React.Component {
     });
   };
 
-  onPlayClick = async () => {
+  onPlayClick = () => {
+    this.performRequest();
+  };
+
+  onRecordClick = () => {
+    this.performRequest({
+      record: true,
+    });
+  };
+
+  performRequest = async (options) => {
     try {
       this.setState({
         error: null,
         loading: true,
       });
-      const path = this.getPath();
-      const { method } = this.props;
-      const { request: options } = this.state;
+      const { method, path } = this.expandRoute(this.state.request?.path);
+
       const response = await request({
+        ...this.state.request,
         ...options,
         method,
         path,
@@ -119,10 +134,6 @@ export default class RequestBuilder extends React.Component {
         activeTab: 1,
       });
     }
-  };
-
-  onRecordClick = () => {
-    console.info('RECORD');
   };
 
   onTransitionEnd = (evt) => {
@@ -146,7 +157,7 @@ export default class RequestBuilder extends React.Component {
           ref={this.ref}
           className={this.getBlockClass()}
           onTransitionEnd={this.onTransitionEnd}>
-          {visible && this.renderMain()}
+          {visible && this.renderPanel()}
         </div>
       </React.Fragment>
     );
@@ -159,8 +170,8 @@ export default class RequestBuilder extends React.Component {
     });
   }
 
-  renderMain() {
-    const { method } = this.props;
+  renderPanel() {
+    const { route } = this.props;
     const { activeTab, loading } = this.state;
     return (
       <React.Fragment>
@@ -171,9 +182,7 @@ export default class RequestBuilder extends React.Component {
           <Icon link name="xmark" size="large" onClick={this.onCloseClick} />
         </div>
         <div className={this.getElementClass('header')}>
-          <h3>
-            {method} {this.getPath()}
-          </h3>
+          <h3>{route}</h3>
         </div>
         <Tab
           activeIndex={activeTab}
@@ -184,19 +193,19 @@ export default class RequestBuilder extends React.Component {
             {
               menuItem: 'Request',
               render: () => {
-                return <Tab.Pane>{this.renderRequestPanel()}</Tab.Pane>;
+                return <Tab.Pane>{this.renderRequestPane()}</Tab.Pane>;
               },
             },
             {
               menuItem: 'Response',
               render: () => {
-                return <Tab.Pane>{this.renderResponsePanel()}</Tab.Pane>;
+                return <Tab.Pane>{this.renderResponsePane()}</Tab.Pane>;
               },
             },
             {
               menuItem: 'Output',
               render: () => {
-                return <Tab.Pane>{this.renderOutputPanel()}</Tab.Pane>;
+                return <Tab.Pane>{this.renderOutputPane()}</Tab.Pane>;
               },
             },
           ]}
@@ -209,27 +218,34 @@ export default class RequestBuilder extends React.Component {
     );
   }
 
-  renderRequestPanel() {
+  renderRequestPane() {
     return (
       <Form autoComplete="off" autoCorrect="off">
-        {this.renderParameters('Path', 'path')}
+        {this.renderParameters()}
         {this.renderBody()}
       </Form>
     );
   }
 
-  renderParameters(title, type) {
-    const { operation } = this.props;
-    const parameters = (operation.parameters || []).filter((p) => {
-      return p.in === type;
+  renderParameters() {
+    const { route } = this.props;
+    const { docs } = this.context;
+    let parameters = get(docs, getParametersPath(route));
+    parameters = parameters.filter((p) => {
+      return p.in === 'path';
     });
     if (parameters.length) {
       return (
         <React.Fragment>
-          <h4>{title}</h4>
-          {parameters.map((param, i) => {
+          <h4>Path</h4>
+          {parameters.map((param) => {
             const path = ['path', param.name];
-            return <Form.Field key={i}>{this.renderInput(path)}</Form.Field>;
+            return (
+              <Form.Field key={param.name}>
+                <label>{param.name}</label>
+                {this.renderInput(path)}
+              </Form.Field>
+            );
           })}
         </React.Fragment>
       );
@@ -456,7 +472,7 @@ export default class RequestBuilder extends React.Component {
     );
   }
 
-  renderResponsePanel() {
+  renderResponsePane() {
     const { response, error } = this.state;
     if (response || error) {
       return (
@@ -470,14 +486,14 @@ export default class RequestBuilder extends React.Component {
     }
   }
 
-  renderOutputPanel() {
-    const { method } = this.props;
+  renderOutputPane() {
     const { request } = this.state;
+    const { method, path } = this.expandRoute();
     return (
       <RequestBlock
         request={{
           method,
-          path: this.getPath(),
+          path,
           body: request?.body,
         }}
       />

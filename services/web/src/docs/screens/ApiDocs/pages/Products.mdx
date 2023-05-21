@@ -1,3 +1,4 @@
+import Route from 'docs/components/Route';
 import RouteParams from 'docs/components/RouteParams';
 import RouteExamples from 'docs/components/RouteExamples';
 import VisitedSchemas from 'docs/components/VisitedSchemas';
@@ -12,7 +13,9 @@ export const title = 'Products';
 
 Retrieves a product by its id.
 
-<Code>GET /1/products/:id</Code>
+<Route route="GET /1/products/:id" />
+
+<RouteExamples route="GET /1/products/:id" />
 
 ## Create a Product
 
@@ -23,9 +26,5 @@ Creates a new product.
 ### Parameters
 
 <RouteParams route="POST /1/products" />
-
-## Examples:
-
-<RouteExamples route="GET /1/users/me" />
 
 <VisitedSchemas />

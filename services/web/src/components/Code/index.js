@@ -50,7 +50,16 @@ export default class Code extends React.Component {
     return (
       <div className={this.getBlockClass()}>
         <SyntaxHighlighter style={atomDark} {...rest} />
-        {this.renderCopyButton()}
+        {this.renderAction()}
+      </div>
+    );
+  }
+
+  renderAction() {
+    const { action } = this.props;
+    return (
+      <div className={this.getElementClass('action')}>
+        {action || this.renderCopyButton()}
       </div>
     );
   }
@@ -72,5 +81,6 @@ export default class Code extends React.Component {
 
 Code.propTypes = {
   scroll: PropTypes.bool,
+  action: PropTypes.node,
   children: PropTypes.string.isRequired,
 };

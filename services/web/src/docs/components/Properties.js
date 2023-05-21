@@ -7,8 +7,8 @@ import { Message } from 'semantic';
 import { JumpLink } from 'components/Link';
 import bem from 'helpers/bem';
 
+import { expandRef } from '../utils';
 import { DocsContext } from '../utils/context';
-import { expandRef } from '../utils/refs';
 import EditableField from './EditableField';
 
 import './properties.less';

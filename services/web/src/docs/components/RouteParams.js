@@ -1,25 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { getPropertiesPath } from 'docs/utils';
+
 import Properties from './Properties';
 
 export default class RouteParams extends React.Component {
-  getOpenApiPath() {
-    const [method, url] = this.props.route.split(' ');
-    return [
-      'paths',
-      url,
-      method.toLowerCase(),
-      'requestBody',
-      'content',
-      'application/json',
-      'schema',
-      'properties',
-    ];
-  }
-
   render() {
-    return <Properties path={this.getOpenApiPath()} />;
+    return <Properties path={getPropertiesPath(this.props.route)} />;
   }
 }
 

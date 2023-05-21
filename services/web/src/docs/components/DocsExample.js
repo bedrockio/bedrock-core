@@ -6,6 +6,8 @@ import { Layout } from 'components';
 import Code from 'components/Code';
 import bem from 'helpers/bem';
 
+import './docs-example.less';
+
 @bem
 export default class DocsExample extends React.Component {
   constructor(props) {
@@ -28,7 +30,7 @@ export default class DocsExample extends React.Component {
 
   render() {
     const { open } = this.state;
-    const { status, schema, requestBody, responseBody } = this.props.item;
+    const { status, schema, path, requestBody, responseBody } = this.props.item;
     return (
       <div className={this.getBlockClass()}>
         <Layout
@@ -47,6 +49,7 @@ export default class DocsExample extends React.Component {
         </Layout>
         {open && (
           <React.Fragment>
+            {this.renderPath(path)}
             {this.renderSchema(schema)}
             {this.renderBody('Request Body:', requestBody)}
             {this.renderBody('Response Body:', responseBody)}
@@ -54,6 +57,17 @@ export default class DocsExample extends React.Component {
         )}
       </div>
     );
+  }
+
+  renderPath(path) {
+    if (path) {
+      return (
+        <div className={this.getElementClass('path')}>
+          <div>Path:</div>
+          <Code>{path}</Code>
+        </div>
+      );
+    }
   }
 
   renderSchema(schema) {

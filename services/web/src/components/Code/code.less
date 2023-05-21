@@ -7,15 +7,17 @@
     max-height: 500px;
   }
 
-  &__copy-button {
+  &__action {
     position: absolute;
-    top: 0;
-    right: 3px;
-    padding: 10px;
+    inset: 0 0 auto auto;
+    padding: 12px;
     color: #fff;
+  }
+
+  &__copy-button {
     opacity: 0.15;
 
-    &--clickable:hover {
+    &:hover {
       cursor: pointer;
       opacity: 1;
     }
