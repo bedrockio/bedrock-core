@@ -116,13 +116,15 @@ function getPathMeta(koaPath, method) {
   const suffix = rest.join('/');
 
   let modelName;
+  let modelNameLower;
   let modelNameCamel;
   let modelNamePlural;
   for (let name of Object.keys(mongoose.models)) {
     const kebab = kebabCase(name);
     const plural = pluralize(kebab);
     if (plural === base) {
-      modelName = startCase(name).toLowerCase();
+      modelName = name;
+      modelNameLower = startCase(name).toLowerCase();
       modelNameCamel = camelCase(name);
       modelNamePlural = startCase(plural).toLowerCase();
     }
@@ -131,20 +133,20 @@ function getPathMeta(koaPath, method) {
   if (modelName) {
     const isId = suffix === ':id' || suffix === `:${modelNameCamel}Id`;
     if (method === 'GET' && isId) {
-      meta.summary = `Get ${modelName} by id`;
+      meta.summary = `Get ${modelNameLower} by id`;
     } else if (method === 'POST' && !suffix) {
-      meta.summary = `Create new ${modelName}`;
+      meta.summary = `Create new ${modelNameLower}`;
     } else if (method === 'PATCH' && isId) {
-      meta.summary = `Update ${modelName}`;
+      meta.summary = `Update ${modelNameLower}`;
     } else if (method === 'DELETE' && isId) {
-      meta.summary = `Delete ${modelName}`;
+      meta.summary = `Delete ${modelNameLower}`;
     } else if (method === 'POST' && suffix === 'search') {
       meta.summary = `Search ${modelNamePlural}`;
     } else if (method === 'POST' && suffix === 'mine/search') {
       meta.summary = `Search ${modelNamePlural} for authenticated user.`;
     }
   }
-  meta['x-group'] = startCase(base);
+  meta['x-model'] = modelName;
   return meta;
 }
 

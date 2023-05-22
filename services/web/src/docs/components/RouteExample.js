@@ -2,10 +2,12 @@ import React from 'react';
 
 import { Icon } from 'semantic';
 
+import { JumpLink } from 'components/Link';
+
 import { Confirm, Layout } from 'components';
 import Code from 'components/Code';
 import bem from 'helpers/bem';
-import { getRoutePath } from 'docs/utils';
+import { getRoutePath, expandRef } from 'docs/utils';
 
 import { DocsContext } from '../utils/context';
 
@@ -111,15 +113,15 @@ export default class RouteExample extends React.Component {
   }
 
   renderSchema(schema) {
-    if (schema) {
-      return <div>TODO</div>;
-      // const { $ref } = schema;
-      // const { name } = expandRef($ref);
-      // return (
-      //   <div className={this.getElementClass('schema')}>
-      //     Returns: <JumpLink to={name}>{name}</JumpLink>
-      //   </div>
-      // );
+    if (schema?.$ref) {
+      const { name } = expandRef(schema.$ref);
+      return (
+        <div className={this.getElementClass('schema')}>
+          <div className={this.getElementClass('header')}>
+            Returns: <JumpLink to={name}>{name}</JumpLink>
+          </div>{' '}
+        </div>
+      );
     }
   }
 

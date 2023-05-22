@@ -23,6 +23,10 @@ export function getPropertiesPath(route) {
   return [...getSchemaPath(route), 'properties'];
 }
 
+export function getModelPath(route) {
+  return [...getRoutePath(route), 'x-model'];
+}
+
 export function getRoutePath(route) {
   const { method, path } = expandRoute(route);
   return ['paths', path, method.toLowerCase()];

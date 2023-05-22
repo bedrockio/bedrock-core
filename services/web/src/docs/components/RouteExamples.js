@@ -1,6 +1,5 @@
 import React from 'react';
 import { get } from 'lodash';
-import { Message } from 'semantic';
 
 import { getRoutePath } from 'docs/utils';
 

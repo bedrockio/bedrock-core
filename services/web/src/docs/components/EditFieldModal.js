@@ -19,6 +19,7 @@ export default class EditFieldModal extends React.Component {
       error: null,
       loading: false,
       value: props.value,
+      updateModel: true,
     };
   }
 
@@ -33,9 +34,15 @@ export default class EditFieldModal extends React.Component {
       loading: true,
     });
     try {
-      const { name } = this.props;
-      const { value } = this.state;
-      const path = [...this.props.path, name];
+      const { name, type, model } = this.props;
+      const { value, updateModel } = this.state;
+
+      let path;
+      if (model && updateModel) {
+        path = ['components', 'schemas', model, 'properties', name, type];
+      } else {
+        path = [...this.props.path, name, type];
+      }
       await this.context.updatePath(path, value);
       this.setState({
         loading: false,
@@ -94,6 +101,7 @@ export default class EditFieldModal extends React.Component {
                   onChange={this.setField}
                 />
               )}
+              {this.renderUpdateModel()}
             </Form>
           </AutoFocus>
         </Modal.Content>
@@ -108,5 +116,23 @@ export default class EditFieldModal extends React.Component {
         </Modal.Actions>
       </React.Fragment>
     );
+  }
+
+  renderUpdateModel() {
+    const { model, label } = this.props;
+    if (model) {
+      const { updateModel } = this.state;
+      return (
+        <Form.Checkbox
+          label={`Update base ${model.toLowerCase()} ${label.toLowerCase()}.`}
+          checked={updateModel}
+          onChange={(evt, { checked }) => {
+            this.setState({
+              updateModel: checked,
+            });
+          }}
+        />
+      );
+    }
   }
 }

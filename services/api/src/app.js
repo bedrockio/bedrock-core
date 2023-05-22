@@ -17,8 +17,11 @@ const app = new Koa();
 const ENV_NAME = config.get('ENV_NAME');
 
 app.use(corsMiddleware());
+app.use(serializeMiddleware);
 
-// Must be before errorHandler
+// Record middleware must be placed after serialization
+// to derive model names but before errorHandler to capture
+// error responses.
 if (['development'].includes(ENV_NAME)) {
   app.use(recordMiddleware);
 }
@@ -34,10 +37,7 @@ if (['staging', 'development'].includes(ENV_NAME)) {
   );
 }
 
-app
-  .use(serializeMiddleware)
-  .use(logger.middleware())
-  .use(bodyParser({ multipart: true }));
+app.use(logger.middleware()).use(bodyParser({ multipart: true }));
 
 app.on('error', (err, ctx) => {
   if (err.code === 'EPIPE' || err.code === 'ECONNRESET') {

@@ -19,7 +19,7 @@ export default class DocsProperties extends React.Component {
 
   render() {
     const { docs, loading } = this.context;
-    const { path } = this.props;
+    const { path, model } = this.props;
     if (!docs) {
       return null;
     }
@@ -63,12 +63,7 @@ export default class DocsProperties extends React.Component {
                   <div className={this.getElementClass('divider')} />
                 )}
 
-                <EditableField
-                  markdown
-                  path={[...path, name]}
-                  name="description"
-                  value={description}
-                />
+                <EditableField markdown name={name} path={path} model={model} />
 
                 {defaultValue !== undefined && (
                   <div className={this.getElementClass('divider')} />

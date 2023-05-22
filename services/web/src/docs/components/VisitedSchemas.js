@@ -30,7 +30,6 @@ export default class VisitedSchemas extends React.Component {
                   <EditableField
                     markdown
                     path={path}
-                    name="description"
                     value={data.description}
                   />
                   {data.properties && (
