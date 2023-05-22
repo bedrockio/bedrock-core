@@ -5,7 +5,7 @@ import { Icon } from 'semantic';
 import { Confirm, Layout } from 'components';
 import Code from 'components/Code';
 import bem from 'helpers/bem';
-import { expandRoute, getRoutePath } from 'docs/utils';
+import { getRoutePath } from 'docs/utils';
 
 import { DocsContext } from '../utils/context';
 

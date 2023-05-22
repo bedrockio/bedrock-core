@@ -16,15 +16,17 @@ import { request } from 'utils/api';
 import Code from 'components/Code';
 import RequestBlock from 'components/RequestBlock';
 import { DocsContext } from 'docs/utils/context';
-import { expandRoute, getParametersPath } from 'docs/utils';
+import {
+  expandRoute,
+  getParametersPath,
+  getSchemaPath,
+  resolveRefs,
+} from 'docs/utils';
 
 import bem from 'helpers/bem';
 
 import './request-builder.less';
 import ErrorMessage from 'components/ErrorMessage';
-
-// TODO: make nicer
-const BODY_PATH = ['requestBody', 'content', 'application/json', 'schema'];
 
 const NAME_RANK = {
   keyword: 0,
@@ -38,16 +40,6 @@ const TYPE_RANK = {
   object: 4,
   array: 5,
 };
-
-function resolveRefs(docs, schema) {
-  const { $ref } = schema;
-  if ($ref) {
-    const path = $ref.split('/').slice(1).join('.');
-    return get(docs, path);
-  } else {
-    return schema;
-  }
-}
 
 @bem
 export default class RequestBuilder extends React.Component {
@@ -269,9 +261,11 @@ export default class RequestBuilder extends React.Component {
   }
 
   renderBody() {
-    const { operation } = this.props;
-    const schema = get(operation, BODY_PATH);
-    if (schema) {
+    const { route } = this.props;
+    const { docs } = this.context;
+
+    const schema = get(docs, getSchemaPath(route), {});
+    if (schema?.properties) {
       return (
         <React.Fragment>
           <h4>Body</h4>
@@ -282,7 +276,7 @@ export default class RequestBuilder extends React.Component {
   }
 
   renderSchema(schema, path, options) {
-    const { docs } = this.props;
+    const { docs } = this.context;
     schema = resolveRefs(docs, schema);
     const { type, oneOf } = schema;
     if (oneOf) {
@@ -308,12 +302,12 @@ export default class RequestBuilder extends React.Component {
       case 'ObjectId':
         return this.renderStringSchema(schema, path, options);
       default:
-        throw new Error('NO TYPE' + type);
+        throw new Error(`Cannot find type ${type}.`);
     }
   }
 
   renderObjectSchema(schema, path) {
-    const { docs } = this.props;
+    const { docs } = this.context;
     const { properties } = schema;
     const entries = Object.entries(properties);
     entries.sort((a, b) => {

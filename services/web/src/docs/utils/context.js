@@ -18,6 +18,10 @@ export function DocsProvider(props) {
 
   const visitedComponents = new Set();
 
+  function toggleMode() {
+    setMode(mode === 'edit' ? 'view ' : 'edit');
+  }
+
   function setDocsPath(path, value) {
     const updated = { ...docs };
     set(updated, path, value);
@@ -45,11 +49,13 @@ export function DocsProvider(props) {
   }
 
   async function generateDocs() {
+    setLoading(true);
     const { data } = await request({
       method: 'POST',
       path: '/1/docs/generate',
     });
     setDocs(data);
+    setLoading(false);
   }
 
   async function updatePath(path, value) {
@@ -88,6 +94,7 @@ export function DocsProvider(props) {
         docs,
         setDocs,
         setMode,
+        toggleMode,
         updatePath,
         unsetPath,
         loadDocs,

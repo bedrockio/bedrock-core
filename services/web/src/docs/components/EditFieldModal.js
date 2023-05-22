@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button, Form, Modal, Icon } from 'semantic';
 
-import { request } from 'utils/api';
 import AutoFocus from 'components/AutoFocus';
 import modal from 'helpers/modal';
 

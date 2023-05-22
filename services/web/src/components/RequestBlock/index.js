@@ -118,6 +118,9 @@ export default class RequestBlock extends React.Component {
                     selection
                     options={OPTIONS}
                     value={this.state.current}
+                    style={{
+                      marginBottom: '0.5em',
+                    }}
                   />
                 </React.Fragment>
               )}

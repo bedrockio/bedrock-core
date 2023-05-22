@@ -1,7 +1,7 @@
 @import 'styles/responsive';
 // TODO: clean this up
 
-.docs {
+.api-docs {
   --sidebar-width: 220px;
   height: calc(100vh - var(--header-height));
 
@@ -14,7 +14,7 @@
     z-index: 1;
     top: var(--header-height);
     width: var(--sidebar-width);
-    padding: 15px 2px 5px 0;
+    padding: 15px 0 5px 0;
     border-right: 1px solid #dbdbda;
     height: calc(100% - var(--header-height));
     display: flex;
@@ -44,26 +44,8 @@
     &-link {
       display: block;
       font-size: 16px;
-      margin-bottom: 0.6em;
-      padding-left: 15px;
-      margin-right: 10px;
       color: #1f1f1f;
-      margin-top: 0.5em;
-
-      &:hover {
-        color: #6a903e;
-      }
-    }
-
-    &-sublink {
-      display: block;
-      font-size: 13px;
-      margin-right: 15px;
-      padding: 0.1em 10px 0.1em 25px;
-      margin-bottom: 0.2em;
-      color: #1f1f1f;
-      border-radius: 0 4px 4px 0;
-      font-weight: 500;
+      padding: 0.2em 1em;
 
       &:hover {
         color: #6a903e;
@@ -76,6 +58,10 @@
           color: #fff !important;
         }
       }
+    }
+
+    &-subpages .api-docs__sidebar-link {
+      padding-left: 30px;
     }
   }
 
