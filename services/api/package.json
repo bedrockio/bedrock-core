@@ -16,7 +16,7 @@
     "fixtures:load": "./scripts/fixtures/load",
     "fixtures:reload": "./scripts/fixtures/reload",
     "fixtures:export": "./scripts/fixtures/export",
-    "docs:build": "./scripts/docs/build"
+    "docs:generate": "./scripts/docs/generate"
   },
   "dependencies": {
     "@bedrockio/config": "^2.2.2",
