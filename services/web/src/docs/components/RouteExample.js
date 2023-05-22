@@ -103,7 +103,7 @@ export default class RouteExample extends React.Component {
     if (path) {
       return (
         <div className={this.getElementClass('path')}>
-          <div>Path:</div>
+          <div className={this.getElementClass('header')}>Path:</div>
           <Code>{path}</Code>
         </div>
       );
@@ -128,7 +128,7 @@ export default class RouteExample extends React.Component {
     if (keys.length) {
       return (
         <div className={this.getElementClass('body')}>
-          <div>{title}</div>
+          <div className={this.getElementClass('header')}>{title}</div>
           <Code language="json">{JSON.stringify(body, null, 2)}</Code>
         </div>
       );

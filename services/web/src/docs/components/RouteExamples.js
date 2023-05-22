@@ -70,8 +70,6 @@ export default class RouteExamples extends React.Component {
         );
       }
     }
-    return (
-      <Message error>Cannot find examples for {this.props.route}.</Message>
-    );
+    return null;
   }
 }

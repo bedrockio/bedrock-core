@@ -12,19 +12,39 @@ export const title = 'Products';
 Retrieves a product by its id.
 
 <Route route="GET /1/products/:id" />
-
 <RouteExamples route="GET /1/products/:id" />
+
+## Search Products
+
+Searches products.
+
+<Route route="POST /1/products/search" />
+<RouteExamples route="POST /1/products/search" />
+<RouteParams route="POST /1/products/search" />
 
 ## Create a Product
 
 Creates a new product.
 
 <Route route="POST /1/products" />
-
 <RouteExamples route="POST /1/products" />
-
-### Parameters
-
 <RouteParams route="POST /1/products" />
+
+## Update a Product
+
+Updates a product.
+
+<Route route="PATCH /1/products/:id" />
+<RouteExamples route="POST /1/products/:id" />
+<RouteParams route="PATCH /1/products/:id" />
+
+## Delete a Product
+
+Deletes a product.
+
+<Route route="DELETE /1/products/:id" />
+<RouteExamples route="POST /1/products/:id" />
+
+---
 
 <VisitedSchemas />
