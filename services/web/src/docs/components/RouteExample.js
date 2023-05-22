@@ -2,14 +2,19 @@ import React from 'react';
 
 import { Icon } from 'semantic';
 
-import { Layout } from 'components';
+import { Confirm, Layout } from 'components';
 import Code from 'components/Code';
 import bem from 'helpers/bem';
+import { expandRoute, getRoutePath } from 'docs/utils';
 
-import './docs-example.less';
+import { DocsContext } from '../utils/context';
+
+import './route-example.less';
 
 @bem
-export default class DocsExample extends React.Component {
+export default class RouteExample extends React.Component {
+  static contextType = DocsContext;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -28,6 +33,22 @@ export default class DocsExample extends React.Component {
     });
   };
 
+  onDeleteConfirm = () => {
+    const { id, status } = this.props.item;
+
+    const path = [
+      ...getRoutePath(this.props.route),
+      'responses',
+      status.toString(),
+      'content',
+      'application/json',
+      'examples',
+      id,
+    ];
+
+    this.context.unsetPath(path);
+  };
+
   render() {
     const { open } = this.state;
     const { status, schema, path, requestBody, responseBody } = this.props.item;
@@ -44,6 +65,25 @@ export default class DocsExample extends React.Component {
           onClick={this.onToggleClick}>
           <Layout.Group>{status}</Layout.Group>
           <Layout.Group>
+            {this.context.canEditDocs() && (
+              <Confirm
+                negative
+                size="small"
+                confirmButton="Delete"
+                header="Delete this example?"
+                trigger={
+                  <Icon
+                    size="small"
+                    name="trash"
+                    link
+                    onClick={(evt) => {
+                      evt.stopPropagation();
+                    }}
+                  />
+                }
+                onConfirm={this.onDeleteConfirm}
+              />
+            )}
             <Icon size="small" name={open ? 'minus' : 'plus'} link />
           </Layout.Group>
         </Layout>

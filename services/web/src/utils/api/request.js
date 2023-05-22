@@ -83,19 +83,18 @@ export default async function request(options) {
     let type = 'error';
     let message = res.statusText;
     let status = res.status;
-    let details;
+    let response;
     try {
-      const data = await res.clone().json();
-      if (data.error) {
-        type = data.error.type;
-        message = data.error.message;
-        status = data.error.status;
-        details = data.error.details;
+      response = await res.clone().json();
+      if (response.error) {
+        type = response.error.type;
+        message = response.error.message;
+        status = response.error.status;
       }
     } catch (err) {
       message = await res.clone().text();
     }
-    throw new ApiError(message, type, status, details);
+    throw new ApiError(message, type, status, response);
   }
 
   try {

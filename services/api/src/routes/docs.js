@@ -21,12 +21,14 @@ router
       value: yd.any(),
     }),
     async (ctx) => {
-      const { path, value } = ctx.request.body;
+      let { path, value } = ctx.request.body;
       const definition = await loadDefinition();
       if (!path) {
         ctx.throw(400, 'Path required.');
-      } else if (value == null) {
-        ctx.throw(400, 'Value required.');
+      }
+      if (value === null) {
+        // Unset field using undefined here.
+        value = undefined;
       }
       set(definition, path, value);
       await saveDefinition(definition);

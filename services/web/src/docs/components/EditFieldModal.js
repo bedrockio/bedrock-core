@@ -37,20 +37,9 @@ export default class EditFieldModal extends React.Component {
       const { name } = this.props;
       const { value } = this.state;
       const path = [...this.props.path, name];
-      await request({
-        method: 'PATCH',
-        path: '/1/docs',
-        body: {
-          path,
-          value,
-        },
-      });
+      await this.context.updatePath(path, value);
       this.setState({
         loading: false,
-      });
-      this.context.updateDocs({
-        path,
-        value,
       });
       this.props.close();
     } catch (error) {

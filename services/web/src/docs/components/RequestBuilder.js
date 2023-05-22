@@ -9,6 +9,7 @@ import {
   Icon,
   Dimmer,
   Loader,
+  Divider,
 } from 'semantic';
 
 import { request } from 'utils/api';
@@ -58,6 +59,7 @@ export default class RequestBuilder extends React.Component {
       active: false,
       visible: false,
       loading: false,
+      recorded: false,
       request: {},
       activeTab: 0,
     };
@@ -69,10 +71,12 @@ export default class RequestBuilder extends React.Component {
     return [active ? 'active' : null];
   }
 
-  expandRoute(values) {
+  expandRoute() {
+    const { request } = this.state;
     let { method, path } = expandRoute(this.props.route);
+
     path = path.replace(/:(\w+)/g, (m, key) => {
-      const value = values?.[key];
+      const value = request?.path?.[key];
       return value ? encodeURIComponent(value) : `:${key}`;
     });
     return { method, path };
@@ -101,10 +105,11 @@ export default class RequestBuilder extends React.Component {
     this.performRequest();
   };
 
-  onRecordClick = () => {
-    this.performRequest({
+  onRecordClick = async () => {
+    await this.performRequest({
       record: true,
     });
+    await this.context.loadDocs();
   };
 
   performRequest = async (options) => {
@@ -112,8 +117,9 @@ export default class RequestBuilder extends React.Component {
       this.setState({
         error: null,
         loading: true,
+        recorded: false,
       });
-      const { method, path } = this.expandRoute(this.state.request?.path);
+      const { method, path } = this.expandRoute();
 
       const response = await request({
         ...this.state.request,
@@ -126,12 +132,15 @@ export default class RequestBuilder extends React.Component {
         loading: false,
         response,
         activeTab: 1,
+        recorded: options?.record,
       });
     } catch (error) {
       this.setState({
-        error,
+        response: error.response,
+        error: !error.response && error,
         loading: false,
         activeTab: 1,
+        recorded: options?.record,
       });
     }
   };
@@ -202,17 +211,22 @@ export default class RequestBuilder extends React.Component {
                 return <Tab.Pane>{this.renderResponsePane()}</Tab.Pane>;
               },
             },
-            {
-              menuItem: 'Output',
-              render: () => {
-                return <Tab.Pane>{this.renderOutputPane()}</Tab.Pane>;
-              },
-            },
           ]}
         />
         <div className={this.getElementClass('footer')}>
-          <Icon name="circle" color="red" onClick={this.onRecordClick} />
-          <Icon name="play" onClick={this.onPlayClick} />
+          {this.context.canEditDocs() && (
+            <Icon
+              name="circle"
+              color="red"
+              title="Perform request and record as example"
+              onClick={this.onRecordClick}
+            />
+          )}
+          <Icon
+            name="play"
+            onClick={this.onPlayClick}
+            title="Perform request"
+          />
         </div>
       </React.Fragment>
     );
@@ -223,6 +237,8 @@ export default class RequestBuilder extends React.Component {
       <Form autoComplete="off" autoCorrect="off">
         {this.renderParameters()}
         {this.renderBody()}
+        <Divider />
+        {this.renderOutput()}
       </Form>
     );
   }
@@ -230,7 +246,7 @@ export default class RequestBuilder extends React.Component {
   renderParameters() {
     const { route } = this.props;
     const { docs } = this.context;
-    let parameters = get(docs, getParametersPath(route));
+    let parameters = get(docs, getParametersPath(route), []);
     parameters = parameters.filter((p) => {
       return p.in === 'path';
     });
@@ -472,21 +488,7 @@ export default class RequestBuilder extends React.Component {
     );
   }
 
-  renderResponsePane() {
-    const { response, error } = this.state;
-    if (response || error) {
-      return (
-        <React.Fragment>
-          <ErrorMessage error={error} />
-          {response && (
-            <Code language="json">{JSON.stringify(response, null, 2)}</Code>
-          )}
-        </React.Fragment>
-      );
-    }
-  }
-
-  renderOutputPane() {
+  renderOutput() {
     const { request } = this.state;
     const { method, path } = this.expandRoute();
     return (
@@ -498,6 +500,25 @@ export default class RequestBuilder extends React.Component {
         }}
       />
     );
+  }
+
+  renderResponsePane() {
+    const { response, recorded, error } = this.state;
+    if (response || error) {
+      return (
+        <React.Fragment>
+          <ErrorMessage error={error} />
+          {response && (
+            <Code language="json">{JSON.stringify(response, null, 2)}</Code>
+          )}
+          {recorded && (
+            <div className={this.getElementClass('response-recorded')}>
+              Response Recorded
+            </div>
+          )}
+        </React.Fragment>
+      );
+    }
   }
 }
 

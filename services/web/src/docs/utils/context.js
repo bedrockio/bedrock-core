@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { set } from 'lodash';
+
+import { set, unset } from 'lodash';
+
+import { ENV_NAME } from 'utils/env';
 
 import { isRecording, toggleRecording } from 'utils/api/record';
 
@@ -15,13 +18,30 @@ export function DocsProvider(props) {
 
   const visitedComponents = new Set();
 
-  function updateDocs(options) {
-    const { path, value } = options;
-    const updated = {
-      ...docs,
-    };
+  function setDocsPath(path, value) {
+    const updated = { ...docs };
     set(updated, path, value);
     setDocs(updated);
+  }
+
+  function unsetDocsPath(path) {
+    const updated = { ...docs };
+    unset(updated, path);
+    setDocs(updated);
+  }
+
+  function canEditDocs() {
+    return ENV_NAME === 'development';
+  }
+
+  async function loadDocs() {
+    setLoading(true);
+    const { data } = await request({
+      method: 'GET',
+      path: '/1/docs',
+    });
+    setDocs(data);
+    setLoading(false);
   }
 
   async function generateDocs() {
@@ -32,14 +52,29 @@ export function DocsProvider(props) {
     setDocs(data);
   }
 
-  useEffect(async () => {
-    setLoading(true);
-    const { data } = await request({
-      method: 'GET',
+  async function updatePath(path, value) {
+    await updateRemotePath(path, value);
+    setDocsPath(path, value);
+  }
+
+  async function unsetPath(path) {
+    await updateRemotePath(path, null);
+    unsetDocsPath(path);
+  }
+
+  async function updateRemotePath(path, value) {
+    await request({
+      method: 'PATCH',
       path: '/1/docs',
+      body: {
+        path,
+        value,
+      },
     });
-    setDocs(data);
-    setLoading(false);
+  }
+
+  useEffect(() => {
+    loadDocs();
   }, []);
 
   useEffect(() => {
@@ -53,12 +88,15 @@ export function DocsProvider(props) {
         docs,
         setDocs,
         setMode,
-        updateDocs,
+        updatePath,
+        unsetPath,
+        loadDocs,
         generateDocs,
         loading,
         recording,
         setRecording,
         visitedComponents,
+        canEditDocs,
       }}>
       {props.children}
     </DocsContext.Provider>

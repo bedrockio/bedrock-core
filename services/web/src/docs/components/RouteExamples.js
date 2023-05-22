@@ -6,7 +6,7 @@ import { getRoutePath } from 'docs/utils';
 
 import { DocsContext } from '../utils/context';
 
-import DocsExample from './DocsExample';
+import RouteExample from './RouteExample';
 
 export default class RouteExamples extends React.Component {
   static contextType = DocsContext;
@@ -39,6 +39,7 @@ export default class RouteExamples extends React.Component {
                 {}
               );
               return {
+                id,
                 status,
                 schema,
                 path: example['x-path'],
@@ -50,12 +51,7 @@ export default class RouteExamples extends React.Component {
           if (exampleResponses.length) {
             return exampleResponses;
           } else {
-            return [
-              {
-                status,
-                schema,
-              },
-            ];
+            return [];
           }
         })
         .sort((a, b) => {
@@ -66,7 +62,9 @@ export default class RouteExamples extends React.Component {
           <React.Fragment>
             <h4>Examples:</h4>
             {items.map((item, i) => {
-              return <DocsExample key={i} item={item} />;
+              return (
+                <RouteExample key={i} item={item} route={this.props.route} />
+              );
             })}
           </React.Fragment>
         );

@@ -387,6 +387,9 @@ export default class Docs extends React.Component {
   }
 
   renderButtons() {
+    if (!this.context.canEditDocs()) {
+      return;
+    }
     return (
       <div className={this.getElementClass('buttons')}>
         <RecordButton />
