@@ -8,12 +8,6 @@ const { loadDefinition, saveDefinition, generateDefinition } = require('../utils
 const router = new Router();
 
 router
-  .get('/', async (ctx) => {
-    const definition = await loadDefinition();
-    ctx.body = {
-      data: definition,
-    };
-  })
   .patch(
     '/',
     validateBody({

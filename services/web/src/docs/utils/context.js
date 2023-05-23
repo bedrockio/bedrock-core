@@ -42,7 +42,7 @@ export function DocsProvider(props) {
     setLoading(true);
     const { data } = await request({
       method: 'GET',
-      path: '/1/docs',
+      path: '/openapi.json',
     });
     setDocs(data);
     setLoading(false);

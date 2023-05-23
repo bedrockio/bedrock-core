@@ -1,16 +1,14 @@
 import React from 'react';
-import gfm from 'remark-gfm';
-import rehypeRaw from 'rehype-raw';
 import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
+import gfm from 'remark-gfm';
 
 import Code from 'components/Code';
 
 import bem from 'helpers/bem';
 
 import Link from './Link';
-// import Code from './Code';
-// import Paragraph from './Paragraph';
 
 import 'styles/github-markdown.less';
 import './markdown.less';

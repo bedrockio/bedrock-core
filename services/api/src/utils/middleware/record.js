@@ -10,7 +10,7 @@ async function record(ctx, next) {
       await recordRequest(ctx);
     }
   } else {
-    return await next();
+    return next();
   }
 }
 
