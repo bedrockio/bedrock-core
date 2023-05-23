@@ -14,27 +14,19 @@ export default class VisitedSchemas extends React.Component {
   static contextType = DocsContext;
 
   render() {
-    const { docs, visitedComponents } = this.context;
+    const { visitedComponents } = this.context;
     if (visitedComponents) {
       return (
         <React.Fragment>
           {Array.from(visitedComponents).map(($ref, i) => {
             const { name, path } = expandRef($ref);
-
-            const data = get(docs, path);
             return (
               <React.Fragment key={name}>
                 {i > 0 && <Divider />}
                 <div id={name}>
                   <h3>{name}</h3>
-                  <EditableField
-                    markdown
-                    path={path}
-                    value={data.description}
-                  />
-                  {data.properties && (
-                    <Properties path={[...path, 'properties']} />
-                  )}
+                  <EditableField type="description" path={path} />
+                  <Properties path={[...path, 'properties']} />
                 </div>
               </React.Fragment>
             );

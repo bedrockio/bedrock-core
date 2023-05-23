@@ -1,4 +1,5 @@
 import React from 'react';
+import { get } from 'lodash';
 import { Button, Form, Modal, Icon } from 'semantic';
 
 import AutoFocus from 'components/AutoFocus';
@@ -18,9 +19,23 @@ export default class EditFieldModal extends React.Component {
     this.state = {
       error: null,
       loading: false,
+      updateModel: false,
       value: props.value,
-      updateModel: true,
     };
+  }
+
+  componentDidMount() {
+    this.setState({
+      updateModel: !this.isShadowedValue(),
+    });
+  }
+
+  isShadowedValue() {
+    const { docs } = this.context;
+    const { value, type, modelPath } = this.props;
+    const modelValue = get(docs, [...modelPath, type]);
+    // undefined, null, and empty strings are all considered equal here
+    return (value || null) !== (modelValue || null);
   }
 
   setField = (evt, { value }) => {
@@ -34,14 +49,14 @@ export default class EditFieldModal extends React.Component {
       loading: true,
     });
     try {
-      const { name, type, model } = this.props;
+      const { type, modelPath } = this.props;
       const { value, updateModel } = this.state;
 
       let path;
-      if (model && updateModel) {
-        path = ['components', 'schemas', model, 'properties', name, type];
+      if (updateModel && modelPath) {
+        path = [...modelPath, type];
       } else {
-        path = [...this.props.path, name, type];
+        path = [...this.props.path, type];
       }
       await this.context.updatePath(path, value);
       this.setState({
@@ -69,7 +84,7 @@ export default class EditFieldModal extends React.Component {
     return (
       <React.Fragment>
         <Modal.Header>
-          Edit {label}
+          {label}
           {markdown && (
             <HelpTip
               icon={
@@ -119,12 +134,12 @@ export default class EditFieldModal extends React.Component {
   }
 
   renderUpdateModel() {
-    const { model, label } = this.props;
+    const { model } = this.props;
     if (model) {
       const { updateModel } = this.state;
       return (
         <Form.Checkbox
-          label={`Update base ${model.toLowerCase()} ${label.toLowerCase()}.`}
+          label={`Update base ${model.toLowerCase()}.`}
           checked={updateModel}
           onChange={(evt, { checked }) => {
             this.setState({

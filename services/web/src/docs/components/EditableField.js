@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { get, startCase } from 'lodash';
 
 import bem from 'helpers/bem';
@@ -15,63 +16,54 @@ export default class DocsEditableField extends React.Component {
 
   getValue() {
     const { docs } = this.context;
-    const { type, name, path, model } = this.props;
-    let value = get(docs, [...path, name, type]);
-    if (!value && model) {
-      value = get(docs, [
-        'components',
-        'schemas',
-        model,
-        'properties',
-        name,
-        type,
-      ]);
+    const { type, path, modelPath } = this.props;
+    let value = get(docs, [...path, type]);
+    if (!value && modelPath) {
+      value = get(docs, [...modelPath, type]);
     }
     return value;
   }
 
-  getMode() {
-    return this.context.mode;
+  allowsMarkdown() {
+    return this.props.type === 'description';
   }
 
   getModifiers() {
-    const mode = this.getMode();
+    const { mode } = this.context;
     const value = this.getValue();
     return [mode === 'edit' ? 'editable' : null, value ? 'filled' : 'empty'];
   }
 
   render() {
-    const mode = this.getMode();
+    const { mode } = this.context;
+    const { type } = this.props;
     const value = this.getValue();
-    const { name } = this.props;
-    const label = startCase(name);
+    const label = `Edit ${startCase(type)}`;
     if (mode === 'edit') {
       return (
         <EditFieldModal
           {...this.props}
           value={value}
           label={label}
-          trigger={this.renderTrigger(label)}
+          trigger={this.renderTrigger()}
         />
       );
     } else {
-      return this.renderTrigger(label);
+      return this.renderTrigger();
     }
   }
 
-  renderTrigger(label) {
-    return (
-      <div className={this.getBlockClass()}>{this.renderValue(label)}</div>
-    );
+  renderTrigger() {
+    return <div className={this.getBlockClass()}>{this.renderValue()}</div>;
   }
 
-  renderValue(label) {
-    const { markdown } = this.props;
-    const mode = this.getMode();
+  renderValue() {
+    const { mode } = this.context;
+    const { type } = this.props;
     const value = this.getValue();
     if (!value && mode === 'edit') {
-      return <div className={this.getElementClass('prompt')}>{label}</div>;
-    } else if (markdown) {
+      return <div className={this.getElementClass('prompt')}>{type}</div>;
+    } else if (this.allowsMarkdown()) {
       return <Markdown source={value} />;
     } else if (value) {
       return value;
@@ -79,6 +71,9 @@ export default class DocsEditableField extends React.Component {
   }
 }
 
-DocsEditableField.defaultProps = {
-  type: 'description',
+DocsEditableField.propTypes = {
+  path: PropTypes.array.isRequired,
+  type: PropTypes.oneOf(['title', 'summary', 'description']).isRequired,
+  modelPath: PropTypes.array,
+  model: PropTypes.string,
 };

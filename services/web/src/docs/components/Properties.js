@@ -17,9 +17,16 @@ import './properties.less';
 export default class DocsProperties extends React.Component {
   static contextType = DocsContext;
 
+  getModelPath(name) {
+    const { model } = this.props;
+    if (model) {
+      return ['components', 'schemas', model, 'properties', name];
+    }
+  }
+
   render() {
     const { docs, loading } = this.context;
-    const { path, model } = this.props;
+    const { required, path, model } = this.props;
     if (!docs) {
       return null;
     }
@@ -29,7 +36,11 @@ export default class DocsProperties extends React.Component {
     if (loading) {
       return null;
     } else if (!data) {
-      return <Message error>No OpenApi entry found.</Message>;
+      if (required) {
+        return <Message error>No OpenApi entry found.</Message>;
+      } else {
+        return null;
+      }
     }
     let skipRequired = false;
 
@@ -63,7 +74,12 @@ export default class DocsProperties extends React.Component {
                   <div className={this.getElementClass('divider')} />
                 )}
 
-                <EditableField markdown name={name} path={path} model={model} />
+                <EditableField
+                  type="description"
+                  model={model}
+                  path={[...path, name]}
+                  modelPath={this.getModelPath(name)}
+                />
 
                 {defaultValue !== undefined && (
                   <div className={this.getElementClass('divider')} />
@@ -149,5 +165,10 @@ export default class DocsProperties extends React.Component {
 }
 
 DocsProperties.propTypes = {
+  required: PropTypes.bool,
   path: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+};
+
+DocsProperties.defaultProps = {
+  required: false,
 };

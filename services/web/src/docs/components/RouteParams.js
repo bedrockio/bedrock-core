@@ -16,7 +16,7 @@ export default class RouteParams extends React.Component {
     const { docs } = this.context;
     const path = getPropertiesPath(route);
     const model = get(docs, getModelPath(route));
-    return <Properties path={path} model={model} />;
+    return <Properties path={path} model={model} required />;
   }
 }
 
