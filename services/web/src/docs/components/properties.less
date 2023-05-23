@@ -2,15 +2,25 @@
   display: table;
   width: 100%;
 
+  // Required to allow elements inside
+  // table cells to be 100% height.
+  // https://stackoverflow.com/questions/3215553/make-a-div-fill-an-entire-table-cell
+  height: fit-content;
+
   &__param {
     display: table-row;
+
+    &-group {
+      // Lends only it's structure to allow :last-child to target.
+      display: contents;
+    }
   }
 
   &__name,
-  &__pointer,
   &__description {
     display: table-cell;
     padding: 12px 20px 12px 0;
+    vertical-align: top;
   }
 
   &__name {
@@ -22,33 +32,48 @@
   }
 
   &__pointer {
-    position: relative;
-    width: 41px;
+    &-group {
+      display: flex;
+      gap: 10px;
+      height: 100%;
+    }
+
     --pointer-color: #b3c399;
     --pointer-width: 1.5px;
+    --top-offset: 14px;
+    --bottom-offset: -38px;
+
+    position: relative;
+    width: 30px;
+    margin-left: calc(var(--level) * 15px);
 
     &:before {
       content: '';
       position: absolute;
-      top: 17px;
-      right: 14px;
-      height: 12px;
-      border-right: var(--pointer-width) solid var(--pointer-color);
+
+      top: var(--top-offset);
+      bottom: var(--bottom-offset);
+      left: 0;
+      right: 0;
+      border-left: var(--pointer-width) solid var(--pointer-color);
+      border-top: var(--pointer-width) solid var(--pointer-color);
+
+      .docs-properties__param--grouped &,
+      .docs-properties__param:last-child & {
+        border-left: none;
+      }
     }
 
     &:after {
-      content: '';
-      position: absolute;
-      top: 22px;
-      right: 14px;
-      bottom: -22px;
-      width: 25px;
-      border-top: var(--pointer-width) solid var(--pointer-color);
-      border-left: var(--pointer-width) solid var(--pointer-color);
-    }
-
-    .docs-properties__param:last-child &:after {
-      border-left: none;
+      .docs-properties__param--grouped & {
+        content: '';
+        position: absolute;
+        left: 50%;
+        width: var(--pointer-width);
+        top: var(--top-offset);
+        bottom: var(--bottom-offset);
+        background: var(--pointer-color);
+      }
     }
   }
 

@@ -26,7 +26,7 @@ export default class DocsProperties extends React.Component {
 
   render() {
     const { docs, loading } = this.context;
-    const { required, path, model } = this.props;
+    const { required, path } = this.props;
     if (!docs) {
       return null;
     }
@@ -42,53 +42,90 @@ export default class DocsProperties extends React.Component {
         return null;
       }
     }
-    let skipRequired = false;
 
-    const entries = Object.entries(data);
+    return (
+      <div className={this.getBlockClass()}>
+        {this.renderParams(data, path)}
+      </div>
+    );
+  }
+
+  renderParams(data, path, options = {}) {
+    const { level = 0 } = options;
+    let entries = Object.entries(data);
     entries.sort((a, b) => {
       const aRequired = a[1].required || false;
       const bRequired = b[1].required || false;
       return bRequired - aRequired;
     });
-    return (
-      <div className={this.getBlockClass()}>
-        {entries.map(([name, desc]) => {
-          const { description, required, default: defaultValue } = desc;
-          return (
-            <div key={name} className={this.getElementClass('param')}>
-              <div className={this.getElementClass('pointer')} />
-              <div className={this.getElementClass('name')}>
-                <code>{name}</code>
-              </div>
-              <div className={this.getElementClass('description')}>
-                <div className={this.getElementClass('types')}>
-                  {this.renderType(desc)}
-                </div>
 
-                {required && !skipRequired && (
-                  <div className={this.getElementClass('required')}>
-                    Required
-                  </div>
-                )}
-                {description && (
-                  <div className={this.getElementClass('divider')} />
-                )}
-
-                <EditableField
-                  type="description"
-                  model={model}
-                  path={[...path, name]}
-                  modelPath={this.getModelPath(name)}
-                />
-
-                {defaultValue !== undefined && (
-                  <div className={this.getElementClass('divider')} />
-                )}
-                {this.renderDefault(defaultValue)}
-              </div>
+    return entries.map(([name, desc]) => {
+      if (desc.properties) {
+        return (
+          <React.Fragment key={name}>
+            {this.renderParam(name, desc, path, {
+              ...options,
+              level,
+              grouped: true,
+            })}
+            <div className={this.getElementClass('param-group')}>
+              {this.renderParams(desc.properties, [...path, name], {
+                ...options,
+                level: level + 1,
+              })}
             </div>
-          );
-        })}
+          </React.Fragment>
+        );
+      } else {
+        return this.renderParam(name, desc, path, {
+          ...options,
+          level,
+        });
+      }
+    });
+  }
+
+  renderParam(name, desc, path, options) {
+    const { grouped, level } = options;
+    const { model } = this.props;
+    const { description, required, default: defaultValue } = desc;
+    return (
+      <div
+        key={name}
+        style={{
+          '--level': level,
+        }}
+        className={this.getElementClass('param', grouped ? 'grouped' : null)}>
+        <div className={this.getElementClass('name')}>
+          <div className={this.getElementClass('pointer-group')}>
+            <div className={this.getElementClass('pointer')} />
+            <div>
+              <code>{name}</code>
+            </div>
+          </div>
+        </div>
+        <div className={this.getElementClass('description')}>
+          <div className={this.getElementClass('types')}>
+            {this.renderType(desc)}
+          </div>
+
+          {required && (
+            <div className={this.getElementClass('required')}>Required</div>
+          )}
+          {description && <div className={this.getElementClass('divider')} />}
+
+          <EditableField
+            type="description"
+            model={model}
+            path={[...path, name]}
+            modelPath={this.getModelPath(name)}
+          />
+
+          {defaultValue !== undefined && (
+            <div className={this.getElementClass('divider')} />
+          )}
+          {this.renderDefault(defaultValue)}
+        </div>
       </div>
     );
   }
