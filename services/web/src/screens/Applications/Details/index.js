@@ -64,8 +64,8 @@ export default class ApplicationDetail extends React.Component {
     } else if (error) {
       return (
         <NotFound
-          link={<Link to="/products">Application</Link>}
-          message="Sorry that product wasn't found."
+          link={<Link to="/applications">Application</Link>}
+          message="Sorry that application wasn't found."
         />
       );
     }
