@@ -5,12 +5,8 @@ import { request } from 'utils/api';
 import SearchDropdown from 'components/SearchDropdown';
 import modal from 'helpers/modal';
 
-import { Context } from '../screens/Docs/Context';
-
 @modal
 export default class PortalSettings extends React.Component {
-  static contextType = Context;
-
   fetchApplications = async (keyword) => {
     const { data } = await request({
       method: 'POST',

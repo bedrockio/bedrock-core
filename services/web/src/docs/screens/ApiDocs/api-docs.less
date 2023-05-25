@@ -1,0 +1,133 @@
+@import 'styles/responsive';
+// TODO: clean this up
+
+.api-docs {
+  --sidebar-width: 220px;
+  height: calc(100vh - var(--header-height));
+
+  .ui.table td {
+    vertical-align: top;
+  }
+
+  &__sidebar {
+    position: fixed;
+    z-index: 1;
+    top: var(--header-height);
+    width: var(--sidebar-width);
+    padding: 15px 0 5px 0;
+    border-right: 1px solid #dbdbda;
+    height: calc(100% - var(--header-height));
+    display: flex;
+    flex-flow: column;
+    gap: 10px;
+
+    @media @mobile {
+      display: none;
+    }
+
+    h2 {
+      margin: 0 15px;
+      font-weight: 600;
+    }
+
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    &-scroll {
+      overflow-y: auto;
+      flex: auto;
+    }
+
+    &-link {
+      display: block;
+      font-size: 16px;
+      color: #1f1f1f;
+      padding: 0.2em 1em;
+
+      &:hover {
+        color: #6a903e;
+      }
+
+      &--active {
+        background-color: #6a9b33;
+        &,
+        &:hover {
+          color: #fff !important;
+        }
+      }
+    }
+
+    &-subpages .api-docs__sidebar-link {
+      padding-left: 30px;
+    }
+  }
+
+  &__page {
+    padding-top: 20px;
+    padding-left: calc(var(--sidebar-width) + 30px);
+    padding-bottom: 80px;
+    padding-right: 30px;
+    height: 100%;
+    overflow-y: auto;
+    min-width: 0;
+    min-height: 0;
+    font-size: 16px;
+
+    @media @mobile {
+      padding-left: 20px;
+    }
+
+    a,
+    span.link {
+      color: #387bb1;
+      cursor: pointer;
+    }
+
+    .code-copy-container {
+      font-size: 14px;
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    justify-content: right;
+    padding: 5px;
+    gap: 1px;
+
+    .icon {
+      width: 24px;
+      height: 24px;
+      padding: 4px;
+      border-radius: 2px;
+    }
+
+    .record-button {
+      &--active {
+        color: #6a9b33;
+      }
+    }
+
+    .edit-button {
+      &--active {
+        color: #6a9b33;
+      }
+    }
+  }
+
+  &__item {
+    margin-top: 20px;
+    margin-bottom: 30px;
+
+    &-name {
+      font-size: 20px;
+    }
+  }
+
+  &__component {
+    margin-top: -10px;
+    padding-top: 10px;
+  }
+}

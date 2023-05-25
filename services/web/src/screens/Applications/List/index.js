@@ -27,7 +27,6 @@ export default class Applications extends React.Component {
                 link={<Link to="/applications">Applications</Link>}
                 active="Applications"
               />
-
               <Layout horizontal center spread>
                 <h1>My Applications</h1>
                 <Layout.Group>

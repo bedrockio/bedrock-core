@@ -16,8 +16,8 @@ import { request } from 'utils/api';
 import screen from 'helpers/screen';
 import { Layout, Search, SearchFilters } from 'components';
 import { formatDateTime } from 'utils/date';
-import CodeBlock from 'components/Markdown/Code';
 import ShowRequest from 'modals/ShowRequest';
+import Code from 'components/Code';
 
 import Menu from './Menu';
 
@@ -288,16 +288,13 @@ export default class ApplicationLogs extends React.Component {
                         {selectedItem.response.body && (
                           <>
                             <h3>Response Body</h3>
-                            <CodeBlock
-                              height="500px"
-                              language="json"
-                              source={JSON.stringify(
+                            <Code language="json" scroll>
+                              {JSON.stringify(
                                 selectedItem.response.body,
                                 null,
                                 2
                               )}
-                              allowCopy
-                            />
+                            </Code>
                           </>
                         )}
                       </Grid.Column>

@@ -11,17 +11,32 @@ export default class Confirm extends React.Component {
     error: null,
   };
 
+  componentDidMount() {
+    this.mounted = true;
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
   onClick = async () => {
     this.setState({
       loading: true,
       error: null,
     });
     try {
-      await this.props.onConfirm();
-      this.setState({
-        loading: false,
-      });
-      this.props.close();
+      let closed = false;
+      const close = () => {
+        this.props.close();
+        closed = true;
+      };
+      await this.props.onConfirm(close);
+      if (this.mounted && !closed) {
+        this.setState({
+          loading: false,
+        });
+        this.props.close();
+      }
     } catch (e) {
       this.setState({
         error: e,
@@ -38,7 +53,6 @@ export default class Confirm extends React.Component {
     return (
       <>
         <Modal.Header>{header}</Modal.Header>
-
         <Modal.Content>
           <>
             {content}

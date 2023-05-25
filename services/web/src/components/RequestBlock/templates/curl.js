@@ -1,30 +1,57 @@
-import { escapeQoutes } from './utils/escape';
-export default function templateCurl({
-  method,
-  url,
-  file,
-  headers = {},
-  body = {},
-}) {
-  const code = [];
-  code.push(`curl "${url}" -X ${method}`);
+const FORM_TEMPLATE = `
+curl '%url%' \\
+  -X '%method%' \\
+  -H 'Api-Key: %apiKey%' \\
+  -H 'Authorization: Bearer <token>' \\
+  -H 'Content-Type: application/json' \\
+  -F 'file: <PATH_TO_FILE>' \\
+  %body%
+`;
 
-  if (file) {
-    code.push(`  -F file=@path-to-file-you-want-to-upload`);
-    Object.keys(body).forEach((key) => {
-      code.push(`  -F ${escapeQoutes(key)}=${escapeQoutes(body[key])}`);
-    });
-    // headers goes last otherwise file upload doesnt work
-    Object.keys(headers).forEach((key) => {
-      code.push(`  -H "${escapeQoutes(key)}: ${escapeQoutes(headers[key])}"`);
-    });
+const JSON_TEMPLATE = `
+curl '%url%' \\
+  -X '%method%' \\
+  -H 'Api-Key: <apiKey>' \\
+  -H 'Authorization: Bearer <token>' \\
+  -H 'Content-Type: application/json' \\
+  --data-raw $'%body%'
+`;
+
+const TEMPLATE_REG = /%(\w+)%/g;
+
+export default function templateCurl(props) {
+  let code;
+
+  if (props.file) {
+    code = FORM_TEMPLATE;
+    code = code
+      .replace(TEMPLATE_REG, (match, token) => {
+        let value = props[token];
+        if (token === 'body') {
+          value = Object.entries(value).map(([key, value]) => {
+            return `-F ${quotes(key)}=${quotes(value)}`;
+          });
+        }
+        return value || 'UNKNOWN';
+      })
+      .trim();
   } else {
-    Object.keys(headers).forEach((key) => {
-      code.push(`  -H "${escapeQoutes(key)}: ${escapeQoutes(headers[key])}"`);
-    });
-    if (Object.keys(body).length) {
-      code.push(`  -d "${JSON.stringify(body).replace(/"/g, '\\"')}"`);
-    }
+    code = JSON_TEMPLATE;
+    code = code
+      .replace(TEMPLATE_REG, (match, token) => {
+        let value = props[token];
+        if (value && typeof value === 'object') {
+          value = quotes(JSON.stringify(value));
+        }
+        return value || 'UNKNOWN';
+      })
+      .trim();
   }
-  return code.join('\\\n');
+  return code;
+}
+
+function quotes(str) {
+  str = str.replace(/"/g, '\\"');
+  str = str.replace(/'/g, "\\'");
+  return str;
 }

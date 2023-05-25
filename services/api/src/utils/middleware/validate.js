@@ -4,7 +4,7 @@ const { PermissionsError, ImplementationError } = require('@bedrockio/model');
 
 function validateBody(arg) {
   const schema = resolveSchema(arg);
-  return async (ctx, next) => {
+  return wrapSchema(schema, async (ctx, next) => {
     try {
       const { authUser } = ctx.state;
       ctx.request.body = await schema.validate(ctx.request.body, {
@@ -15,12 +15,12 @@ function validateBody(arg) {
       throwError(ctx, error);
     }
     return await next();
-  };
+  });
 }
 
 function validateQuery(arg) {
   const schema = resolveSchema(arg);
-  return async (ctx, next) => {
+  return wrapSchema(schema, async (ctx, next) => {
     try {
       const { authUser } = ctx.state;
       const parsed = qs.parse(ctx.request.query);
@@ -37,7 +37,14 @@ function validateQuery(arg) {
       throwError(ctx, error);
     }
     return next();
-  };
+  });
+}
+
+function wrapSchema(schema, fn) {
+  // Allows docs to see the schema on the middleware
+  // layer to generate an OpenApi definition for it.
+  fn.schema = schema;
+  return fn;
 }
 
 function resolveSchema(arg) {

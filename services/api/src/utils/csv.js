@@ -25,7 +25,7 @@ function csvExport(ctx, data, options = {}) {
 function exportValidation(options = {}) {
   const { filename = 'export.csv' } = options;
   return {
-    filename: yd.string().default(filename),
+    filename: yd.string().default(filename).description('Applies only when `format` is `"csv"`.'),
     format: yd.string().allow('json', 'csv').default('json'),
   };
 }

@@ -17,7 +17,10 @@ const app = new Koa();
   // Manually loading webpack-dev-middleware and webpack-hot-middleware
   // until support for webpack v5 lands in koa-webpack:
   // https://github.com/shellscape/koa-webpack/issues/126
-  const webpackConfig = require('../webpack.config.js');
+  let webpackConfig = require('../webpack.config.js');
+  if (typeof webpackConfig === 'function') {
+    webpackConfig = await webpackConfig();
+  }
   const compiler = webpack({
     ...webpackConfig,
   });

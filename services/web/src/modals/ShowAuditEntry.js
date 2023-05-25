@@ -3,7 +3,7 @@ import { Modal, Table, Menu, Divider } from 'semantic';
 import { Link } from 'react-router-dom';
 
 import modal from 'helpers/modal';
-import CodeBlock from 'components/Markdown/Code';
+import Code from 'components/Code';
 import { formatDateTime } from 'utils/date';
 
 @modal
@@ -94,17 +94,13 @@ export default class ShowAuditEntry extends React.Component {
           {this.state.tab === 'modifications' && (
             <>
               <h3>Before</h3>
-              <CodeBlock
-                source={JSON.stringify(auditEntry.objectBefore || {}, null, 2)}
-                language="json"
-                allowCopy
-              />
+              <Code language="json">
+                {JSON.stringify(auditEntry.objectBefore || {}, null, 2)}
+              </Code>
               <h3>After</h3>
-              <CodeBlock
-                source={JSON.stringify(auditEntry.objectAfter || {}, null, 2)}
-                language="json"
-                allowCopy
-              />
+              <Code language="json">
+                {JSON.stringify(auditEntry.objectAfter || {}, null, 2)}
+              </Code>
             </>
           )}
         </Modal.Content>

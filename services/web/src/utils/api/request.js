@@ -4,10 +4,11 @@ import { trackRequest } from '../analytics';
 import { fetchWithTimeout } from '../fetch';
 import { ApiError, ApiParseError } from './errors';
 import { stringifyParams } from './params';
+import { isRecording } from './record';
 import { getToken } from './token';
 
 export default async function request(options) {
-  const { method = 'GET', path, files, params } = options;
+  const { method = 'GET', path, files, params, record } = options;
   let { body } = options;
 
   const token = options.token || getToken();
@@ -17,6 +18,9 @@ export default async function request(options) {
       Accept: 'application/json',
       ...(token && {
         Authorization: `Bearer ${token}`,
+      }),
+      ...((record || isRecording()) && {
+        'Api-Record': 'on',
       }),
       'API-Key': API_KEY,
     },
@@ -79,19 +83,18 @@ export default async function request(options) {
     let type = 'error';
     let message = res.statusText;
     let status = res.status;
-    let details;
+    let response;
     try {
-      const data = await res.clone().json();
-      if (data.error) {
-        type = data.error.type;
-        message = data.error.message;
-        status = data.error.status;
-        details = data.error.details;
+      response = await res.clone().json();
+      if (response.error) {
+        type = response.error.type;
+        message = response.error.message;
+        status = response.error.status;
       }
     } catch (err) {
       message = await res.clone().text();
     }
-    throw new ApiError(message, type, status, details);
+    throw new ApiError(message, type, status, response);
   }
 
   try {

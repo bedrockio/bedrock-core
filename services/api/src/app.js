@@ -1,16 +1,16 @@
 const Router = require('@koa/router');
 const Koa = require('koa');
+const { version } = require('../package.json');
 const bodyParser = require('koa-body');
 const errorHandler = require('./utils/middleware/error-handler');
 const corsMiddleware = require('./utils/middleware/cors');
+const recordMiddleware = require('./utils/middleware/record');
 const serializeMiddleware = require('./utils/middleware/serialize');
 const { applicationMiddleware } = require('./utils/middleware/application');
+const { loadDefinition } = require('./utils/openapi');
 const Sentry = require('@sentry/node');
-const path = require('path');
-const { version } = require('../package.json');
 const routes = require('./routes');
 const config = require('@bedrockio/config');
-const { loadOpenApiDefinitions, expandOpenApi } = require('./utils/openapi');
 const logger = require('@bedrockio/logger');
 
 const app = new Koa();
@@ -19,6 +19,15 @@ const router = new Router();
 const ENV_NAME = config.get('ENV_NAME');
 
 app.use(corsMiddleware());
+app.use(serializeMiddleware);
+
+// Record middleware must occur before serialization to
+// derive model names but after errorHandler to capture
+// error responses.
+if (['development'].includes(ENV_NAME)) {
+  app.use(recordMiddleware);
+}
+
 app.use(errorHandler);
 
 if (['staging', 'development'].includes(ENV_NAME)) {
@@ -29,7 +38,6 @@ if (['staging', 'development'].includes(ENV_NAME)) {
       ignorePaths: [
         '/',
         '/openapi.json',
-        '/openapi.lite.json',
         '/1/status',
         '/1/status/mongodb',
         /\/1\/applications/,
@@ -39,10 +47,7 @@ if (['staging', 'development'].includes(ENV_NAME)) {
   );
 }
 
-app
-  .use(serializeMiddleware)
-  .use(logger.middleware())
-  .use(bodyParser({ multipart: true }));
+app.use(logger.middleware()).use(bodyParser({ multipart: true }));
 
 app.on('error', (err, ctx) => {
   if (err.code === 'EPIPE' || err.code === 'ECONNRESET') {
@@ -73,27 +78,22 @@ if (config.has('SENTRY_DSN')) {
   });
 }
 
-app.router = router;
 router.get('/', (ctx) => {
   ctx.body = {
-    environment: ENV_NAME,
     version,
+    environment: ENV_NAME,
     openapiPath: '/openapi.json',
     servedAt: new Date(),
   };
 });
 
-const openApiLiteDefinition = loadOpenApiDefinitions(path.join(__dirname, '/routes/__openapi__'), '/1');
-router.get('/openapi.lite.json', (ctx) => {
-  ctx.body = openApiLiteDefinition;
+router.get('/openapi.json', async (ctx) => {
+  ctx.body = {
+    data: await loadDefinition(),
+  };
 });
 
-const openApiDefinition = expandOpenApi(openApiLiteDefinition);
-router.get('/openapi.json', (ctx) => {
-  ctx.body = openApiDefinition;
-});
-
-router.use('/1', routes.routes());
+router.use(routes);
 
 app.use(router.routes());
 app.use(router.allowedMethods());

@@ -1,0 +1,31 @@
+.code {
+  // TODO: this needs cleanup (colors etc);
+  position: relative;
+  overflow: auto;
+
+  &--scroll {
+    max-height: 500px;
+  }
+
+  &__action {
+    position: absolute;
+    inset: 0 0 auto auto;
+    padding: 12px;
+    color: #fff;
+    background-color: #1d1f21;
+  }
+
+  &__copy-button {
+    opacity: 0.15;
+
+    &:hover {
+      cursor: pointer;
+      opacity: 1;
+    }
+
+    .icon {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}

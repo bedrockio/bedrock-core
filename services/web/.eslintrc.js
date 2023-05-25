@@ -5,9 +5,6 @@ module.exports = {
     node: true,
     browser: true,
   },
-  settings: {
-    jest: { version: 26 },
-  },
   parser: '@babel/eslint-parser',
   parserOptions: {
     sourceType: 'module',
@@ -23,6 +20,19 @@ module.exports = {
     'plugin:bedrock/imports-webpack',
     'plugin:bedrock/react',
     'plugin:bedrock/jest',
+  ],
+  overrides: [
+    {
+      files: '*.mdx',
+      extends: ['plugin:mdx/recommended'],
+      rules: {
+        semi: 0,
+        'no-unused-expressions': 0,
+      },
+      settings: {
+        'mdx/code-blocks': true,
+      },
+    },
   ],
   globals: {
     __ENV__: 'readonly',

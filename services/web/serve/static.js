@@ -2,9 +2,9 @@ const Koa = require('koa');
 
 const koaMount = require('koa-mount');
 const koaBasicAuth = require('koa-basic-auth');
-const logger = require('@bedrockio/logger');
 
 const config = require('@bedrockio/config');
+const logger = require('@bedrockio/logger');
 
 const envMiddleware = require('./middleware/env');
 const assetsMiddleware = require('./middleware/assets');

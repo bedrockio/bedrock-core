@@ -104,10 +104,11 @@ export default class Icon extends React.Component {
   }
 
   render() {
-    const props = omit(this.props, Object.keys(Icon.propTypes));
+    const { title, ...props } = omit(this.props, Object.keys(Icon.propTypes));
     const { url, name } = this.resolveIcon();
     return (
       <svg {...props} className={this.getClassName()}>
+        {title && <title>{title}</title>}
         <use xlinkHref={`${url}#${name}`}></use>
       </svg>
     );

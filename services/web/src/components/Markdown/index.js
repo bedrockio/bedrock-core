@@ -1,17 +1,39 @@
 import React from 'react';
-import gfm from 'remark-gfm';
-import rehypeRaw from 'rehype-raw';
 import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
+import gfm from 'remark-gfm';
+
+import Code from 'components/Code';
 
 import bem from 'helpers/bem';
 
-import Code from './Code';
 import Link from './Link';
-import Paragraph from './Paragraph';
 
 import 'styles/github-markdown.less';
 import './markdown.less';
+
+export const COMPONENTS = {
+  a: Link,
+  script: () => {
+    // Strip script tags even if we have flagged
+    // the source as trusted just in case.
+    return <em>removed</em>;
+  },
+  pre: (props) => {
+    const child = props.children;
+    const isCode =
+      child?.type === 'code' &&
+      typeof child?.props?.children === 'string' &&
+      (child?.props?.className || '').startsWith('language-');
+    if (isCode) {
+      const language = child.props.className.match(/^language-(\w+)$/)?.[1];
+      return <Code language={language}>{child.props.children}</Code>;
+    } else {
+      return <pre {...props} />;
+    }
+  },
+};
 
 @bem
 export default class Markdown extends React.Component {
@@ -28,24 +50,7 @@ export default class Markdown extends React.Component {
         <ReactMarkdown
           remarkPlugins={[gfm]}
           rehypePlugins={[...(trusted ? [rehypeRaw] : [])]}
-          components={{
-            a: Link,
-            script: () => {
-              // Strip script tags even if we have flagged
-              // the source as trusted just in case.
-              return <em>removed</em>;
-            },
-            p: (props) => {
-              return <Paragraph {...this.props} {...props} />;
-            },
-            pre: (props) => {
-              // Don't render a pre tag as the syntax highlighter will do
-              // this as well and styles will conflict.
-              return props.children;
-            },
-            code: Code,
-            ...this.props.components,
-          }}>
+          components={COMPONENTS}>
           {source}
         </ReactMarkdown>
       </Element>
