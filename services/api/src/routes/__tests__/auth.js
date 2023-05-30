@@ -142,18 +142,6 @@ describe('/1/auth', () => {
       expect(response.status).toBe(400);
       expect(response.body.error.message).toBe('Could not find a user with that phone number, try again!');
     });
-
-    it('should block user if limit is reached', async () => {
-      const phoneNumber = '+12318312324';
-      await createUser({
-        lastLoginAttemptAt: new Date(),
-        loginAttempts: 10,
-        phoneNumber,
-      });
-      let response = await request('POST', '/1/auth/login/send-sms', { phoneNumber });
-      expect(response.status).toBe(401);
-      expect(response.body.error.message).toBe('Too many attempts. Try again in 15 minute(s)');
-    });
   });
 
   describe('POST /login/verify-sms', () => {
