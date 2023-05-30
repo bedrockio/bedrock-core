@@ -28,7 +28,6 @@ function generateToken(secret) {
   if (!secret || !secret.length) return null;
   const unformatted = secret.replace(/\W+/g, '').toUpperCase();
   const bin = b32.decode(unformatted);
-
   return notp.totp.gen(bin);
 }
 

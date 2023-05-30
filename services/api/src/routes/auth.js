@@ -170,18 +170,6 @@ router
         ctx.throw(400, 'Could not find a user with that phone number, try again!');
       }
 
-      try {
-        await verifyLoginAttempts(user, { updateUser: false });
-      } catch (error) {
-        await AuditEntry.append('Reached max authentication attempts', {
-          ctx,
-          category: 'security',
-          object: user,
-          user: user,
-        });
-        ctx.throw(401, error);
-      }
-
       if (!user.smsSecret) {
         const secret = mfa.generateSecret();
         user.smsSecret = secret;
