@@ -8,13 +8,17 @@ function fetchByParam(Model, options) {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       ctx.throw(404);
     }
-    const doc = await Model.findById(id).include(include);
-    if (!doc) {
-      ctx.throw(404);
-    } else if (!(await checkAccess(ctx, doc, options))) {
-      ctx.throw(401);
+    try {
+      const doc = await Model.findById(id).include(include);
+      if (!doc) {
+        ctx.throw(404);
+      } else if (!(await checkAccess(ctx, doc, options))) {
+        ctx.throw(401);
+      }
+      ctx.state[docName] = doc;
+    } catch (error) {
+      ctx.throw(400, error);
     }
-    ctx.state[docName] = doc;
     return next();
   };
 }
