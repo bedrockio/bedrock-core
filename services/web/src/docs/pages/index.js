@@ -20,9 +20,13 @@ const root = {};
 const pagesById = {};
 
 for (let [key, mod] of Object.entries(PAGES)) {
-  const { default: Component, group, ...rest } = mod;
+  const { default: Component, group, hide, ...rest } = mod;
   const title = mod.title || key;
   const id = kebabCase(title);
+
+  if (hide) {
+    continue;
+  }
 
   const page = {
     id,

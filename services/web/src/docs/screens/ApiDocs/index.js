@@ -24,6 +24,13 @@ export default class ApiDocs extends React.Component {
   static layout = 'portal';
   static contextType = DocsContext;
 
+  componentDidMount() {
+    const { id } = this.props.match.params;
+    if (!id) {
+      this.props.history.replace(`/docs/${DEFAULT_PAGE_ID}`);
+    }
+  }
+
   render() {
     return (
       <div className={this.getBlockClass()}>
@@ -97,8 +104,6 @@ export default class ApiDocs extends React.Component {
       } else {
         return <div>Not Found!</div>;
       }
-    } else {
-      this.props.history.replace(`/docs/${DEFAULT_PAGE_ID}`);
     }
   }
 
