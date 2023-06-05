@@ -16,14 +16,6 @@ const router = new Router();
 
 const APP_NAME = config.get('APP_NAME');
 
-const phone = yd.string().custom(async (val) => {
-  // E.164 format
-  if (!val.match(/^\+[1-9]\d{1,14}$/)) {
-    throw new Error('Not a valid phone number');
-  }
-  return val;
-});
-
 const registerValidator = yd
   .object({
     email: yd
@@ -35,7 +27,7 @@ const registerValidator = yd
           throw new Error('password is required when email is provided');
         }
       }),
-    phoneNumber: phone,
+    phoneNumber: yd.string().phone(),
     firstName: yd.string().required(),
     lastName: yd.string().required(),
     password: yd.string().password(),
@@ -159,7 +151,7 @@ router
   .post(
     '/login/send-sms',
     validateBody({
-      phoneNumber: phone.required(),
+      phoneNumber: yd.string().phone().required(),
     }),
     async (ctx) => {
       const { phoneNumber } = ctx.request.body;
@@ -183,7 +175,7 @@ router
   .post(
     '/login/verify-sms',
     validateBody({
-      phoneNumber: phone.required(),
+      phoneNumber: yd.string().phone().required(),
       code: yd.string().required(),
     }),
     async (ctx) => {
