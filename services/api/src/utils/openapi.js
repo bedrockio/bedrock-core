@@ -203,7 +203,7 @@ async function recordRequest(ctx) {
   const responseBody = JSON.parse(JSON.stringify(ctx.response.body || {}));
 
   const hasRequest = requestType && !isEmpty(requestBody);
-  const hasResponse = responseType && !isEmpty(responseBody);
+  const hasResponse = status < 500;
 
   const data = {
     paths: {
@@ -287,6 +287,13 @@ const RESERVED_FIELDS = ['summary', 'description'];
 function mergeDeep(target, source) {
   walkFields(source, ({ key, path, value }) => {
     if (RESERVED_FIELDS.includes(key)) {
+      const gPath = [...path.slice(0, -1), 'x-generated'];
+      const isGenerated = get(target, gPath);
+      const existing = get(target, path);
+      if (isGenerated || !existing) {
+        set(target, path, value);
+        set(target, gPath, true);
+      }
       return;
     } else if (!isObject(get(target, path))) {
       set(target, path, value);
