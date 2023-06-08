@@ -3,9 +3,7 @@ const { storeUploadedFile } = require('./uploads');
 const roles = require('../roles.json');
 
 setOptions({
-  getRoles() {
-    return roles;
-  },
+  roles,
   storeUploadedFile,
 });
 

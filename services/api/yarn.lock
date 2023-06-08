@@ -1039,11 +1039,12 @@
   resolved "https://registry.yarnpkg.com/@bedrockio/config/-/config-2.2.2.tgz#751b9fb1500c9baa343308c394a3f876f61a0de6"
   integrity sha512-t8HtO7bH3DBYgdONFZ4fxi7qlnwnvKyPRXWC7KFwbRqyr+QNqUhv7B2tBLSm4wy/jFvRBmmaaU94xJ8jVJoacQ==
 
-"@bedrockio/fixtures@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@bedrockio/fixtures/-/fixtures-1.0.2.tgz#77795006b946d7b818cabff212a46e9ba7c18958"
-  integrity sha512-8Rje0pWymNm24v/t9EVOji8tKO7wphy+Fb1tML1Wz3FSuyVVjhLRvW+6U8bFjgKmzZaimH4n8aeY4YZlYN+Z3A==
+"@bedrockio/fixtures@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@bedrockio/fixtures/-/fixtures-1.0.4.tgz#0420648e1c6cead21d3631cecaa5a8c611003f43"
+  integrity sha512-Nb7KjiwUQMMP/PSXEl1i1MQv7lewgAlaw4P0x09rzD81qym6lTEOCTqYCA6oVL0FPl6GLf9nvJgVUMOD/IQKLg==
   dependencies:
+    "@bedrockio/config" "^2.2.2"
     "@bedrockio/logger" "^1.0.3"
     glob "^8.1.0"
     jszip "^3.10.1"
