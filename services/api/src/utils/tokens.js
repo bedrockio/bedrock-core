@@ -13,10 +13,10 @@ const secrets = {
   user: config.get('JWT_SECRET'),
 };
 
-function createTemporaryToken(claims) {
+function createTemporaryToken(payload) {
   return jwt.sign(
     {
-      ...claims,
+      ...payload,
       kid: 'user',
       exp: Math.floor(Date.now() / 1000) + expiresIn.temporary,
     },
@@ -24,23 +24,18 @@ function createTemporaryToken(claims) {
   );
 }
 
-function createAuthToken(fields) {
-  const jti = generateTokenId();
+function createAuthToken(payload) {
+  return jwt.sign(payload, secrets.user);
+}
 
-  const payload = {
+function createAuthTokenPayload(fields) {
+  return {
+    jti: generateTokenId(),
     iat: Math.floor(Date.now() / 1000),
-    jti,
     type: 'user',
     kid: 'user',
     exp: Math.floor(Date.now() / 1000) + expiresIn.regular,
     ...fields,
-  };
-
-  const token = jwt.sign(payload, secrets.user);
-
-  return {
-    token,
-    payload,
   };
 }
 
@@ -50,7 +45,8 @@ function generateTokenId() {
 }
 
 module.exports = {
-  createTemporaryToken,
   createAuthToken,
   generateTokenId,
+  createTemporaryToken,
+  createAuthTokenPayload,
 };

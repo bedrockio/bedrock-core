@@ -2,7 +2,8 @@ const Router = require('@koa/router');
 const config = require('@bedrockio/config');
 const yd = require('@bedrockio/yada');
 const router = new Router();
-const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
+const { validateToken } = require('../utils/middleware/tokens');
+const { authenticate } = require('../utils/middleware/authenticate');
 const { User, AuditEntry } = require('../models');
 
 const mfa = require('../utils/mfa');
@@ -21,7 +22,7 @@ const checkPasswordVerification = (ctx, next) => {
 };
 
 router
-  .post('/send-code', authenticate({ type: 'mfa' }), async (ctx) => {
+  .post('/send-code', validateToken({ type: 'mfa' }), async (ctx) => {
     const { jwt } = ctx.state;
     const user = await User.findOne({ _id: jwt.sub });
 
@@ -45,7 +46,7 @@ router
     validateBody({
       code: yd.string().required(),
     }),
-    authenticate({ type: 'mfa' }),
+    validateToken({ type: 'mfa' }),
     async (ctx) => {
       const { jwt } = ctx.state;
       const { code } = ctx.request.body;
@@ -110,8 +111,7 @@ router
   );
 
 router
-  .use(authenticate({ type: 'user' }))
-  .use(fetchUser)
+  .use(authenticate())
   .delete('/disable', checkPasswordVerification, async (ctx) => {
     const { authUser } = ctx.state;
     authUser.mfaSecret = undefined;

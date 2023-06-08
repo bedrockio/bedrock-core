@@ -1,10 +1,18 @@
 const { request, createUser, createAdminUser } = require('../../utils/testing');
 const { User, AuditEntry } = require('../../models');
+const { importFixtures } = require('../../utils/fixtures');
 
 describe('/1/users', () => {
   describe('GET /me', () => {
     it('should return the logged in user', async () => {
       const user = await createUser();
+      const response = await request('GET', '/1/users/me', {}, { user });
+      expect(response.status).toBe(200);
+      expect(response.body.data.email).toBe(user.email);
+    });
+
+    it('should return the logged in user for fixture data', async () => {
+      const user = await importFixtures('users/admin');
       const response = await request('GET', '/1/users/me', {}, { user });
       expect(response.status).toBe(200);
       expect(response.body.data.email).toBe(user.email);

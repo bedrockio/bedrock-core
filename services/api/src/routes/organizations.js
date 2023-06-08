@@ -1,15 +1,14 @@
 const Router = require('@koa/router');
 const { fetchByParam } = require('../utils/middleware/params');
 const { validateBody } = require('../utils/middleware/validate');
-const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
+const { authenticate } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
 const { Organization } = require('../models');
 
 const router = new Router();
 
 router
-  .use(authenticate({ type: 'user' }))
-  .use(fetchUser)
+  .use(authenticate())
   .param('id', fetchByParam(Organization))
   .post('/mine/search', async (ctx) => {
     const { authUser } = ctx.state;

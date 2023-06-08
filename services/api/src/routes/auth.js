@@ -1,7 +1,8 @@
 const Router = require('@koa/router');
 const yd = require('@bedrockio/yada');
 const { validateBody } = require('../utils/middleware/validate');
-const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
+const { validateToken } = require('../utils/middleware/tokens');
+const { authenticate } = require('../utils/middleware/authenticate');
 const { createTemporaryToken, generateTokenId } = require('../utils/tokens');
 const { sendTemplatedMail } = require('../utils/mailer');
 const { User, Invite, AuditEntry } = require('../models');
@@ -246,8 +247,7 @@ router
     validateBody({
       password: yd.string().password(),
     }),
-    authenticate({ type: 'user' }),
-    fetchUser,
+    authenticate(),
     async (ctx) => {
       const { authUser } = ctx.state;
       const { password } = ctx.request.body;
@@ -287,8 +287,7 @@ router
       all: yd.boolean(),
       jti: yd.string(),
     }),
-    authenticate({ type: 'user' }),
-    fetchUser,
+    authenticate(),
     async (ctx) => {
       const user = ctx.state.authUser;
       const { body } = ctx.request;
@@ -314,7 +313,7 @@ router
       lastName: yd.string().required(),
       password: yd.string().password().required(),
     }),
-    authenticate({ type: 'invite' }),
+    validateToken({ type: 'invite' }),
     async (ctx) => {
       const { firstName, lastName, password } = ctx.request.body;
       const invite = await Invite.findByIdAndUpdate(ctx.state.jwt.inviteId, {
@@ -394,7 +393,7 @@ router
     validateBody({
       password: yd.string().password().required(),
     }),
-    authenticate({ type: 'password' }),
+    validateToken({ type: 'password' }),
     async (ctx) => {
       const { jwt } = ctx.state;
       const { password } = ctx.request.body;

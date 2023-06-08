@@ -2,7 +2,7 @@ const Router = require('@koa/router');
 const yd = require('@bedrockio/yada');
 const { fetchByParam } = require('../utils/middleware/params');
 const { validateBody } = require('../utils/middleware/validate');
-const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
+const { authenticate } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
 const { Invite, User } = require('../models');
 
@@ -25,8 +25,7 @@ function sendInvite(sender, invite) {
 }
 
 router
-  .use(authenticate({ type: 'user' }))
-  .use(fetchUser)
+  .use(authenticate())
   .use(requirePermissions({ endpoint: 'users', permission: 'read', scope: 'global' }))
   .param('id', fetchByParam(Invite))
   .post('/search', validateBody(Invite.getSearchValidation()), async (ctx) => {

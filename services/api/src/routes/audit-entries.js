@@ -2,15 +2,14 @@ const Router = require('@koa/router');
 const yd = require('@bedrockio/yada');
 
 const { validateBody } = require('../utils/middleware/validate');
-const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
+const { authenticate } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
 const { exportValidation, csvExport } = require('../utils/csv');
 const { AuditEntry } = require('../models');
 const router = new Router();
 
 router
-  .use(authenticate({ type: 'user' }))
-  .use(fetchUser)
+  .use(authenticate())
   .use(requirePermissions({ endpoint: 'auditEntries', permission: 'read', scope: 'global' }))
   .post(
     '/search',

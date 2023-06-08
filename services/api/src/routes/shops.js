@@ -1,15 +1,14 @@
 const Router = require('@koa/router');
 const { fetchByParam } = require('../utils/middleware/params');
 const { validateBody } = require('../utils/middleware/validate');
-const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
+const { authenticate } = require('../utils/middleware/authenticate');
 const { Shop, AuditEntry } = require('../models');
 const { exportValidation, csvExport } = require('../utils/csv');
 
 const router = new Router();
 
 router
-  .use(authenticate({ type: 'user' }))
-  .use(fetchUser)
+  .use(authenticate())
   .param('id', fetchByParam(Shop))
   .post('/', validateBody(Shop.getCreateValidation()), async (ctx) => {
     const shop = await Shop.create(ctx.request.body);

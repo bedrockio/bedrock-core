@@ -1,7 +1,7 @@
 const Router = require('@koa/router');
 const { createReadStream } = require('fs');
 const { fetchByParam } = require('../utils/middleware/params');
-const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
+const { authenticate } = require('../utils/middleware/authenticate');
 const { Upload } = require('../models');
 const { storeUploadedFile } = require('../utils/uploads');
 
@@ -37,8 +37,7 @@ router
       ctx.redirect(url);
     }
   })
-  .use(authenticate({ type: 'user' }))
-  .use(fetchUser)
+  .use(authenticate())
   .post('/', async (ctx) => {
     const { authUser } = ctx.state;
     const file = ctx.request.files.file;

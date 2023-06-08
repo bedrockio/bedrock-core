@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const { createSchema } = require('@bedrockio/model');
 
 const { validScopes } = require('../utils/permissions');
-const { createAuthToken } = require('../utils/tokens');
+const { createAuthToken, createAuthTokenPayload } = require('../utils/tokens');
 const definition = require('./definitions/user.json');
 
 definition.attributes.roles[0].scope.enum = validScopes;
@@ -27,8 +27,9 @@ schema.method('removeAuthToken', function removeAuthToken(jti) {
   this.authInfo = this.authInfo.filter((token) => token.jti !== jti);
 });
 
-schema.method('createAuthToken', function ({ ip, userAgent, country }, tokenOption = {}) {
-  const { token, payload } = createAuthToken({ sub: this.id, ...tokenOption });
+schema.method('createAuthToken', function (options = {}, tokenOptions = {}) {
+  const { ip, userAgent, country } = options;
+  const payload = createAuthTokenPayload({ sub: this.id, ...tokenOptions });
 
   this.authInfo = [
     {
@@ -43,7 +44,7 @@ schema.method('createAuthToken', function ({ ip, userAgent, country }, tokenOpti
     // filter out any tokens that might have the same jti, very unlikely but possible
     ...this.authInfo.filter((existing) => existing.jti !== payload.jti),
   ];
-  return token;
+  return createAuthToken(payload);
 });
 
 schema.pre('save', async function preSave(next) {
