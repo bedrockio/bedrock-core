@@ -201,12 +201,11 @@ The API is "multi tenant ready" and can be modified to accommodate specific tena
 Example Create API call with multi tenancy enabled:
 
 ```js
-const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
+const { authenticate } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
 
 router
-  .use(authenticate({ type: 'user' }))
-  .use(fetchUser)
+  .use(authenticate())
   // Only allow access to users that have write permissions for this organization
   .use(requirePermissions({ endpoint: 'shops', level: 'write', context: 'organization' }))
   .post(
