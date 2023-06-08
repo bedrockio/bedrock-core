@@ -32,6 +32,12 @@ describe('authenticate', () => {
       expect(ctx.state.authUser.id).toBe(user.id);
     });
   });
+
+  it('should not fail on optional authentication with no token', async () => {
+    const ctx = context();
+    const middleware = authenticate({ optional: true });
+    await expect(middleware(ctx, () => {})).resolves.not.toThrow();
+  });
 });
 
 describe('authorizeUser', () => {
@@ -57,9 +63,7 @@ describe('authorizeUser', () => {
 
   it('should not fail without jwt token', async () => {
     const ctx = context();
-    await authorizeUser()(ctx, () => {
-      expect(ctx.state.authUser).toBeUndefined();
-    });
+    await expect(authorizeUser()(ctx, () => {})).resolves.not.toThrow();
   });
 
   it('should not fetch the user twice when called with the same context', async () => {

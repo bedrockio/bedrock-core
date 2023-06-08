@@ -17,72 +17,74 @@ function authenticate(options) {
 
 function authorizeUser() {
   return async (ctx, next) => {
-    if (!ctx.state.authUser && ctx.state.jwt) {
-      const { jwt } = ctx.state;
+    if (ctx.state.authUser || !ctx.state.jwt) {
+      return next();
+    }
 
-      let authUser;
+    const { jwt } = ctx.state;
 
-      if (jwt.authenticateUser) {
-        authUser = await User.findById(jwt.authenticateUser);
-        if (!authUser) {
-          throw new Error('User associated to token could not be found');
-        }
-      } else {
-        authUser = await User.findById(jwt.sub);
+    let authUser;
 
-        if (!authUser) {
-          throw new Error('User associated to token could not be found');
-        }
+    if (jwt.authenticateUser) {
+      authUser = await User.findById(jwt.authenticateUser);
+      if (!authUser) {
+        throw new Error('User associated to token could not be found');
+      }
+    } else {
+      authUser = await User.findById(jwt.sub);
 
-        const token = authUser.authInfo.find((token) => token.jti === jwt.jti);
-
-        if (token) {
-          const ip = ctx.get('x-forwarded-for') || ctx.ip;
-          // update update the user if the token hasnt been updated in the last 30 seconds
-          // or the ip address has changed
-          if (token.lastUsedAt < Date.now() - 1000 * 30 || token.ip !== ip) {
-            token.ip = ip;
-            token.lastUsedAt = new Date();
-
-            await Promise.all([
-              // updates ip + lastUsedAt
-              User.updateOne(
-                {
-                  _id: authUser.id,
-                  'authInfo._id': token.id,
-                },
-                {
-                  $set: {
-                    'authInfo.$.ip': ip,
-                    'authInfo.$.lastUsedAt': token.lastUsedAt,
-                  },
-                }
-              ),
-              // removes expired tokens
-              User.updateOne(
-                {
-                  _id: authUser.id,
-                },
-                {
-                  $pull: {
-                    authInfo: {
-                      exp: {
-                        $lt: new Date(),
-                      },
-                    },
-                  },
-                }
-              ),
-            ]);
-          }
-        } else if (ENV_NAME !== 'test') {
-          throw new Error('User associated to token could not be found');
-        }
+      if (!authUser) {
+        throw new Error('User associated to token could not be found');
       }
 
-      ctx.state.authUser = authUser;
+      const token = authUser.authInfo.find((token) => token.jti === jwt.jti);
+
+      if (token) {
+        const ip = ctx.get('x-forwarded-for') || ctx.ip;
+        // update update the user if the token hasnt been updated in the last 30 seconds
+        // or the ip address has changed
+        if (token.lastUsedAt < Date.now() - 1000 * 30 || token.ip !== ip) {
+          token.ip = ip;
+          token.lastUsedAt = new Date();
+
+          await Promise.all([
+            // updates ip + lastUsedAt
+            User.updateOne(
+              {
+                _id: authUser.id,
+                'authInfo._id': token.id,
+              },
+              {
+                $set: {
+                  'authInfo.$.ip': ip,
+                  'authInfo.$.lastUsedAt': token.lastUsedAt,
+                },
+              }
+            ),
+            // removes expired tokens
+            User.updateOne(
+              {
+                _id: authUser.id,
+              },
+              {
+                $pull: {
+                  authInfo: {
+                    exp: {
+                      $lt: new Date(),
+                    },
+                  },
+                },
+              }
+            ),
+          ]);
+        }
+      } else if (ENV_NAME !== 'test') {
+        throw new Error('User associated to token could not be found');
+      }
     }
-    await next();
+
+    ctx.state.authUser = authUser;
+    return next();
   };
 }
 
