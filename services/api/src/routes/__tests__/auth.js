@@ -236,7 +236,7 @@ describe('/1/auth', () => {
       });
       expect(dbUser.email).toBe(email);
       expect(dbUser.phoneNumber).toBe(phoneNumber);
-      expect(dbUser.authInfo[0].jit).toBe(payload.jit);
+      expect(dbUser.authInfo[0].jti).toBe(payload.jti);
       expect(dbUser.roles).toEqual([]);
     });
 
@@ -285,7 +285,7 @@ describe('/1/auth', () => {
       });
 
       expect(dbUser.phoneNumber).toBe(phoneNumber);
-      expect(dbUser.authInfo[0].jit).toBe(payload.jit);
+      expect(dbUser.authInfo[0].jti).toBe(payload.jti);
       expect(dbUser.roles).toEqual([]);
     });
 
@@ -338,7 +338,17 @@ describe('/1/auth', () => {
 
   describe('POST /logout', () => {
     it('should remove all tokens', async () => {
-      const user = await createUser();
+      const user = await createUser({
+        authInfo: [
+          {
+            jti: 'someid',
+            ip: '123.12.1.2',
+            exp: new Date(Date.now() + 10000),
+            iat: new Date(),
+            lastUsedAt: new Date(),
+          },
+        ],
+      });
 
       const response = await request('POST', '/1/auth/logout', { all: true }, { user });
       expect(response.status).toBe(204);
@@ -365,11 +375,18 @@ describe('/1/auth', () => {
       expect(updatedUser.authInfo[0].jti).toBe('old session not expired');
     });
 
-    it('should remove token by jit', async () => {
+    it('should remove token by jti', async () => {
       const user = await createUser({
         authInfo: [
           {
-            jti: 'targeted jti',
+            jti: 'someid',
+            ip: '123.12.1.2',
+            exp: new Date(Date.now() + 10000),
+            iat: new Date(),
+            lastUsedAt: new Date(),
+          },
+          {
+            jti: 'otherid',
             iat: '123',
             ip: '123',
             exp: new Date(Date.now() + 5000), // 5 seconds from now
@@ -377,12 +394,11 @@ describe('/1/auth', () => {
           },
         ],
       });
-      const response = await request('POST', '/1/auth/logout', { jti: 'targeted jti' }, { user });
+      const response = await request('POST', '/1/auth/logout', { jti: 'otherid' }, { user });
       expect(response.status).toBe(204);
       const updatedUser = await User.findById(user.id);
       expect(updatedUser.authInfo).toHaveLength(1);
-      // confirming that only authToken is from triggering the above request
-      expect(updatedUser.authInfo[0].userAgent).toBe('testing library');
+      expect(updatedUser.authInfo[0].jti).toBe('someid');
     });
   });
 
