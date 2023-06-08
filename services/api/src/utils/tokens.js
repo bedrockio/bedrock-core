@@ -39,15 +39,6 @@ function createAuthTokenPayload(fields) {
   };
 }
 
-function createTestToken(user) {
-  const payload = createAuthTokenPayload({
-    sub: user.id,
-    ip: '127.0.0.1',
-    userAgent: 'testing library',
-  });
-  return createAuthToken(payload);
-}
-
 function generateTokenId() {
   // https://zelark.github.io/nano-id-cc/ 15 chars ~ 158 years with 1k/s
   return nanoid(15);
@@ -58,5 +49,4 @@ module.exports = {
   generateTokenId,
   createTemporaryToken,
   createAuthTokenPayload,
-  createTestToken,
 };
