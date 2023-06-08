@@ -1,0 +1,4182 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "version": "0.0.1",
+    "title": "Bedrock API"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:2300"
+    }
+  ],
+  "paths": {
+    "/1/docs": {
+      "patch": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "value": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/docs/generate": {
+      "post": {}
+    },
+    "/1/auth/register": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "format": "phone"
+                  },
+                  "firstName": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "lastName": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/auth/login": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "required": true,
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/auth/login/send-sms": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phoneNumber": {
+                    "type": "string",
+                    "required": true,
+                    "format": "phone"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/auth/login/verify-sms": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phoneNumber": {
+                    "type": "string",
+                    "required": true,
+                    "format": "phone"
+                  },
+                  "code": {
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/auth/confirm-access": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/auth/logout": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "all": {
+                    "type": "boolean"
+                  },
+                  "jti": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/auth/accept-invite": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "firstName": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "lastName": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "password": {
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/auth/request-password": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "required": true,
+                    "format": "email"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/auth/set-password": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/mfa/send-code": {
+      "post": {}
+    },
+    "/1/mfa/verify": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/mfa/disable": {
+      "delete": {}
+    },
+    "/1/mfa/setup": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "method": {
+                    "type": "string",
+                    "required": true,
+                    "enum": [
+                      "sms",
+                      "otp"
+                    ]
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "format": "phone"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/mfa/generate-backup-codes": {
+      "post": {}
+    },
+    "/1/mfa/check-code": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "secret": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "method": {
+                    "type": "string",
+                    "required": true,
+                    "enum": [
+                      "sms",
+                      "otp"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/mfa/enable": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "secret": {
+                    "type": "string"
+                  },
+                  "method": {
+                    "type": "string",
+                    "required": true,
+                    "enum": [
+                      "sms",
+                      "otp"
+                    ]
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "format": "phone"
+                  },
+                  "backupCodes": {
+                    "type": "array",
+                    "required": true,
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/audit-entries/search": {
+      "post": {
+        "summary": "Search audit entries",
+        "x-model": "AuditEntry",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "requestUrl": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "requestMethod": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "routeNormalizedPath": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "activity": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "objectId": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "objectType": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "objectBefore": {
+                    "type": "object"
+                  },
+                  "objectAfter": {
+                    "type": "object"
+                  },
+                  "category": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "user": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/ObjectId"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/ObjectId"
+                        }
+                      }
+                    ]
+                  },
+                  "createdAt": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "updatedAt": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "deletedAt": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "deleted": {
+                    "type": "boolean"
+                  },
+                  "ids": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ObjectId"
+                    }
+                  },
+                  "keyword": {
+                    "type": "string",
+                    "description": "A keyword to perform a text search against."
+                  },
+                  "include": {
+                    "type": "string",
+                    "description": "Fields to be selected or populated."
+                  },
+                  "skip": {
+                    "type": "number",
+                    "description": "Number of records to skip."
+                  },
+                  "sort": {
+                    "default": {
+                      "field": "createdAt",
+                      "order": "desc"
+                    },
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "description": "An object describing the sort order of results.",
+                        "properties": {
+                          "field": {
+                            "type": "string",
+                            "required": true
+                          },
+                          "order": {
+                            "type": "string",
+                            "required": true,
+                            "enum": [
+                              "desc",
+                              "asc"
+                            ]
+                          }
+                        }
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "description": "An object describing the sort order of results.",
+                          "properties": {
+                            "field": {
+                              "type": "string",
+                              "required": true
+                            },
+                            "order": {
+                              "type": "string",
+                              "required": true,
+                              "enum": [
+                                "desc",
+                                "asc"
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "limit": {
+                    "type": "number",
+                    "default": 50,
+                    "description": "Limits the number of results.",
+                    "minimum": 0
+                  },
+                  "filename": {
+                    "type": "string",
+                    "default": "export.csv",
+                    "description": "Applies only when `format` is `\"csv\"`."
+                  },
+                  "format": {
+                    "type": "string",
+                    "default": "json",
+                    "enum": [
+                      "json",
+                      "csv"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/audit-entries/search-options": {
+      "post": {
+        "x-model": "AuditEntry",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "field": {
+                    "type": "string",
+                    "required": true,
+                    "enum": [
+                      "routeNormalizedPath",
+                      "objectType",
+                      "activity",
+                      "category"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/users/me": {
+      "get": {
+        "x-model": "User"
+      },
+      "patch": {
+        "x-model": "User",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "firstName": {
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "type": "string"
+                  },
+                  "timeZone": {
+                    "type": "string"
+                  },
+                  "theme": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/users/:id/authenticate": {
+      "post": {
+        "x-model": "User",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/1/users/roles": {
+      "get": {
+        "x-model": "User"
+      }
+    },
+    "/1/users/permissions": {
+      "get": {
+        "x-model": "User"
+      }
+    },
+    "/1/users/search": {
+      "post": {
+        "summary": "Search users",
+        "x-model": "User",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "format": "email"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "format": "email"
+                        }
+                      }
+                    ]
+                  },
+                  "phoneNumber": {
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "format": "phone"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "format": "phone"
+                        }
+                      }
+                    ]
+                  },
+                  "roles": {
+                    "type": "object",
+                    "properties": {
+                      "role": {
+                        "oneOf": [
+                          {
+                            "type": "string",
+                            "required": true
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "required": true
+                            }
+                          }
+                        ]
+                      },
+                      "scope": {
+                        "oneOf": [
+                          {
+                            "type": "string",
+                            "required": true,
+                            "enum": [
+                              "global",
+                              "organization"
+                            ]
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "required": true,
+                              "enum": [
+                                "global",
+                                "organization"
+                              ]
+                            }
+                          }
+                        ]
+                      },
+                      "scopeRef": {
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/ObjectId"
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "$ref": "#/components/schemas/ObjectId"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "firstName": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "lastName": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "theme": {
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "dark",
+                          "light",
+                          "system"
+                        ]
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "dark",
+                            "light",
+                            "system"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  "isDeveloper": {
+                    "type": "boolean"
+                  },
+                  "accessConfirmedAt": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "hashedPassword": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "loginAttempts": {
+                    "oneOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/NumberRange"
+                      }
+                    ],
+                    "description": "Allows searching by a value, array of values, or a numeric range."
+                  },
+                  "lastLoginAttemptAt": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "tempTokenId": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "smsSecret": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "mfaBackupCodes": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "mfaSecret": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "mfaPhoneNumber": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "authInfo": {
+                    "type": "object",
+                    "properties": {
+                      "lastUsedAt": {
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/DateTime"
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "$ref": "#/components/schemas/DateTime"
+                            }
+                          },
+                          {
+                            "$ref": "#/components/schemas/DateRange"
+                          }
+                        ],
+                        "description": "Allows searching by a date, array of dates, or a range."
+                      },
+                      "userAgent": {
+                        "oneOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        ]
+                      },
+                      "ip": {
+                        "oneOf": [
+                          {
+                            "type": "string",
+                            "required": true
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "required": true
+                            }
+                          }
+                        ]
+                      },
+                      "country": {
+                        "oneOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        ]
+                      },
+                      "iat": {
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/DateTime"
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "$ref": "#/components/schemas/DateTime"
+                            }
+                          },
+                          {
+                            "$ref": "#/components/schemas/DateRange"
+                          }
+                        ],
+                        "description": "Allows searching by a date, array of dates, or a range."
+                      },
+                      "jti": {
+                        "oneOf": [
+                          {
+                            "type": "string",
+                            "required": true
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "required": true
+                            }
+                          }
+                        ]
+                      },
+                      "exp": {
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/DateTime"
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "$ref": "#/components/schemas/DateTime"
+                            }
+                          },
+                          {
+                            "$ref": "#/components/schemas/DateRange"
+                          }
+                        ],
+                        "description": "Allows searching by a date, array of dates, or a range."
+                      }
+                    }
+                  },
+                  "mfaMethod": {
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "sms",
+                          "otp"
+                        ]
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "sms",
+                            "otp"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  "createdAt": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "updatedAt": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "deletedAt": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "deleted": {
+                    "type": "boolean"
+                  },
+                  "ids": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ObjectId"
+                    }
+                  },
+                  "keyword": {
+                    "type": "string",
+                    "description": "A keyword to perform a text search against."
+                  },
+                  "include": {
+                    "type": "string",
+                    "description": "Fields to be selected or populated."
+                  },
+                  "skip": {
+                    "type": "number",
+                    "description": "Number of records to skip."
+                  },
+                  "sort": {
+                    "default": {
+                      "field": "createdAt",
+                      "order": "desc"
+                    },
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "description": "An object describing the sort order of results.",
+                        "properties": {
+                          "field": {
+                            "type": "string",
+                            "required": true
+                          },
+                          "order": {
+                            "type": "string",
+                            "required": true,
+                            "enum": [
+                              "desc",
+                              "asc"
+                            ]
+                          }
+                        }
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "description": "An object describing the sort order of results.",
+                          "properties": {
+                            "field": {
+                              "type": "string",
+                              "required": true
+                            },
+                            "order": {
+                              "type": "string",
+                              "required": true,
+                              "enum": [
+                                "desc",
+                                "asc"
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "limit": {
+                    "type": "number",
+                    "default": 50,
+                    "description": "Limits the number of results.",
+                    "minimum": 0
+                  },
+                  "filename": {
+                    "type": "string",
+                    "default": "export.csv",
+                    "description": "Applies only when `format` is `\"csv\"`."
+                  },
+                  "format": {
+                    "type": "string",
+                    "default": "json",
+                    "enum": [
+                      "json",
+                      "csv"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/users/:id": {
+      "get": {
+        "summary": "Get user by id",
+        "x-model": "User",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ]
+      },
+      "patch": {
+        "summary": "Update user",
+        "x-model": "User",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "format": "phone"
+                  },
+                  "roles": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "required": true
+                        },
+                        "scope": {
+                          "type": "string",
+                          "required": true,
+                          "enum": [
+                            "global",
+                            "organization"
+                          ]
+                        },
+                        "scopeRef": {
+                          "$ref": "#/components/schemas/ObjectId"
+                        }
+                      }
+                    }
+                  },
+                  "firstName": {
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "type": "string"
+                  },
+                  "theme": {
+                    "type": "string",
+                    "enum": [
+                      "dark",
+                      "light",
+                      "system"
+                    ]
+                  },
+                  "isDeveloper": {
+                    "type": "boolean"
+                  },
+                  "mfaMethod": {
+                    "type": "string",
+                    "enum": [
+                      "sms",
+                      "otp"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Delete user",
+        "x-model": "User",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/1/users": {
+      "post": {
+        "summary": "Create new user",
+        "x-model": "User",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "format": "phone"
+                  },
+                  "roles": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "required": true
+                        },
+                        "scope": {
+                          "type": "string",
+                          "required": true,
+                          "enum": [
+                            "global",
+                            "organization"
+                          ]
+                        },
+                        "scopeRef": {
+                          "$ref": "#/components/schemas/ObjectId"
+                        }
+                      }
+                    }
+                  },
+                  "firstName": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "lastName": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "theme": {
+                    "type": "string",
+                    "enum": [
+                      "dark",
+                      "light",
+                      "system"
+                    ]
+                  },
+                  "isDeveloper": {
+                    "type": "boolean"
+                  },
+                  "mfaMethod": {
+                    "type": "string",
+                    "enum": [
+                      "sms",
+                      "otp"
+                    ]
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/products": {
+      "post": {
+        "summary": "Create new product",
+        "x-model": "Product",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "isFeatured": {
+                    "type": "boolean"
+                  },
+                  "priceUsd": {
+                    "type": "number"
+                  },
+                  "expiresAt": {
+                    "$ref": "#/components/schemas/DateTime"
+                  },
+                  "sellingPoints": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "shop": {
+                    "$ref": "#/components/schemas/ObjectId"
+                  },
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ObjectId"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/products/:id": {
+      "get": {
+        "summary": "Get product by id",
+        "x-model": "Product",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ]
+      },
+      "patch": {
+        "summary": "Update product",
+        "x-model": "Product",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "isFeatured": {
+                    "type": "boolean"
+                  },
+                  "priceUsd": {
+                    "type": "number"
+                  },
+                  "expiresAt": {
+                    "$ref": "#/components/schemas/DateTime"
+                  },
+                  "sellingPoints": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "shop": {
+                    "$ref": "#/components/schemas/ObjectId"
+                  },
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ObjectId"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Delete product",
+        "x-model": "Product",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/1/products/search": {
+      "post": {
+        "summary": "Search products",
+        "x-model": "Product",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "description": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "isFeatured": {
+                    "type": "boolean"
+                  },
+                  "priceUsd": {
+                    "oneOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/NumberRange"
+                      }
+                    ],
+                    "description": "Allows searching by a value, array of values, or a numeric range."
+                  },
+                  "expiresAt": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "sellingPoints": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "shop": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/ObjectId"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/ObjectId"
+                        }
+                      }
+                    ]
+                  },
+                  "images": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/ObjectId"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/ObjectId"
+                        }
+                      }
+                    ]
+                  },
+                  "createdAt": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "updatedAt": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "deletedAt": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "deleted": {
+                    "type": "boolean"
+                  },
+                  "ids": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ObjectId"
+                    }
+                  },
+                  "keyword": {
+                    "type": "string",
+                    "description": "A keyword to perform a text search against."
+                  },
+                  "include": {
+                    "type": "string",
+                    "description": "Fields to be selected or populated."
+                  },
+                  "skip": {
+                    "type": "number",
+                    "description": "Number of records to skip."
+                  },
+                  "sort": {
+                    "default": {
+                      "field": "createdAt",
+                      "order": "desc"
+                    },
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "description": "An object describing the sort order of results.",
+                        "properties": {
+                          "field": {
+                            "type": "string",
+                            "required": true
+                          },
+                          "order": {
+                            "type": "string",
+                            "required": true,
+                            "enum": [
+                              "desc",
+                              "asc"
+                            ]
+                          }
+                        }
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "description": "An object describing the sort order of results.",
+                          "properties": {
+                            "field": {
+                              "type": "string",
+                              "required": true
+                            },
+                            "order": {
+                              "type": "string",
+                              "required": true,
+                              "enum": [
+                                "desc",
+                                "asc"
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "limit": {
+                    "type": "number",
+                    "default": 50,
+                    "description": "Limits the number of results.",
+                    "minimum": 0
+                  },
+                  "filename": {
+                    "type": "string",
+                    "default": "export.csv",
+                    "description": "Applies only when `format` is `\"csv\"`."
+                  },
+                  "format": {
+                    "type": "string",
+                    "default": "json",
+                    "enum": [
+                      "json",
+                      "csv"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/shops": {
+      "post": {
+        "summary": "Create new shop",
+        "x-model": "Shop",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ObjectId"
+                    }
+                  },
+                  "categories": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ObjectId"
+                    }
+                  },
+                  "country": {
+                    "type": "string"
+                  },
+                  "address": {
+                    "type": "object",
+                    "properties": {
+                      "line1": {
+                        "type": "string"
+                      },
+                      "line2": {
+                        "type": "string"
+                      },
+                      "city": {
+                        "type": "string"
+                      },
+                      "postalCode": {
+                        "type": "string"
+                      },
+                      "region": {
+                        "type": "string"
+                      },
+                      "countryCode": {
+                        "type": "string"
+                      },
+                      "geometry": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string"
+                          },
+                          "coordinates": {
+                            "type": "array",
+                            "oneOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "number"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "owner": {
+                    "$ref": "#/components/schemas/ObjectId"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/shops/:id": {
+      "get": {
+        "summary": "Get shop by id",
+        "x-model": "Shop",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ]
+      },
+      "patch": {
+        "summary": "Update shop",
+        "x-model": "Shop",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ObjectId"
+                    }
+                  },
+                  "categories": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ObjectId"
+                    }
+                  },
+                  "country": {
+                    "type": "string"
+                  },
+                  "address": {
+                    "type": "object",
+                    "properties": {
+                      "line1": {
+                        "type": "string"
+                      },
+                      "line2": {
+                        "type": "string"
+                      },
+                      "city": {
+                        "type": "string"
+                      },
+                      "postalCode": {
+                        "type": "string"
+                      },
+                      "region": {
+                        "type": "string"
+                      },
+                      "countryCode": {
+                        "type": "string"
+                      },
+                      "geometry": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string"
+                          },
+                          "coordinates": {
+                            "type": "array",
+                            "oneOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "number"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "owner": {
+                    "$ref": "#/components/schemas/ObjectId"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Delete shop",
+        "x-model": "Shop",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/1/shops/search": {
+      "post": {
+        "summary": "Search shops",
+        "x-model": "Shop",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "description": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "images": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/ObjectId"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/ObjectId"
+                        }
+                      }
+                    ]
+                  },
+                  "categories": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/ObjectId"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/ObjectId"
+                        }
+                      }
+                    ]
+                  },
+                  "country": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "address": {
+                    "type": "object",
+                    "properties": {
+                      "line1": {
+                        "oneOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        ]
+                      },
+                      "line2": {
+                        "oneOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        ]
+                      },
+                      "city": {
+                        "oneOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        ]
+                      },
+                      "postalCode": {
+                        "oneOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        ]
+                      },
+                      "region": {
+                        "oneOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        ]
+                      },
+                      "countryCode": {
+                        "oneOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        ]
+                      },
+                      "geometry": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "oneOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              }
+                            ]
+                          },
+                          "coordinates": {
+                            "type": "array",
+                            "oneOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "number"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "owner": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/ObjectId"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/ObjectId"
+                        }
+                      }
+                    ]
+                  },
+                  "createdAt": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "updatedAt": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "deletedAt": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "deleted": {
+                    "type": "boolean"
+                  },
+                  "ids": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ObjectId"
+                    }
+                  },
+                  "keyword": {
+                    "type": "string",
+                    "description": "A keyword to perform a text search against."
+                  },
+                  "include": {
+                    "type": "string",
+                    "description": "Fields to be selected or populated."
+                  },
+                  "skip": {
+                    "type": "number",
+                    "description": "Number of records to skip."
+                  },
+                  "sort": {
+                    "default": {
+                      "field": "createdAt",
+                      "order": "desc"
+                    },
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "description": "An object describing the sort order of results.",
+                        "properties": {
+                          "field": {
+                            "type": "string",
+                            "required": true
+                          },
+                          "order": {
+                            "type": "string",
+                            "required": true,
+                            "enum": [
+                              "desc",
+                              "asc"
+                            ]
+                          }
+                        }
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "description": "An object describing the sort order of results.",
+                          "properties": {
+                            "field": {
+                              "type": "string",
+                              "required": true
+                            },
+                            "order": {
+                              "type": "string",
+                              "required": true,
+                              "enum": [
+                                "desc",
+                                "asc"
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "limit": {
+                    "type": "number",
+                    "default": 50,
+                    "description": "Limits the number of results.",
+                    "minimum": 0
+                  },
+                  "filename": {
+                    "type": "string",
+                    "default": "export.csv",
+                    "description": "Applies only when `format` is `\"csv\"`."
+                  },
+                  "format": {
+                    "type": "string",
+                    "default": "json",
+                    "enum": [
+                      "json",
+                      "csv"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/uploads/:id": {
+      "get": {
+        "summary": "Get upload by id",
+        "x-model": "Upload",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Delete upload",
+        "x-model": "Upload",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/1/uploads/:id/raw": {
+      "get": {
+        "x-model": "Upload",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/1/uploads": {
+      "post": {
+        "summary": "Create new upload",
+        "x-model": "Upload"
+      }
+    },
+    "/1/invites/search": {
+      "post": {
+        "summary": "Search invites",
+        "x-model": "Invite",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "status": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "createdAt": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "updatedAt": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "deletedAt": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "deleted": {
+                    "type": "boolean"
+                  },
+                  "ids": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ObjectId"
+                    }
+                  },
+                  "keyword": {
+                    "type": "string",
+                    "description": "A keyword to perform a text search against."
+                  },
+                  "include": {
+                    "type": "string",
+                    "description": "Fields to be selected or populated."
+                  },
+                  "skip": {
+                    "type": "number",
+                    "description": "Number of records to skip."
+                  },
+                  "sort": {
+                    "default": {
+                      "field": "createdAt",
+                      "order": "desc"
+                    },
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "description": "An object describing the sort order of results.",
+                        "properties": {
+                          "field": {
+                            "type": "string",
+                            "required": true
+                          },
+                          "order": {
+                            "type": "string",
+                            "required": true,
+                            "enum": [
+                              "desc",
+                              "asc"
+                            ]
+                          }
+                        }
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "description": "An object describing the sort order of results.",
+                          "properties": {
+                            "field": {
+                              "type": "string",
+                              "required": true
+                            },
+                            "order": {
+                              "type": "string",
+                              "required": true,
+                              "enum": [
+                                "desc",
+                                "asc"
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "limit": {
+                    "type": "number",
+                    "default": 50,
+                    "description": "Limits the number of results.",
+                    "minimum": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/invites": {
+      "post": {
+        "summary": "Create new invite",
+        "x-model": "Invite",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "emails": {
+                    "type": "array",
+                    "required": true,
+                    "items": {
+                      "type": "string",
+                      "format": "email"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/invites/:id/resend": {
+      "post": {
+        "x-model": "Invite",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/1/invites/:id": {
+      "delete": {
+        "summary": "Delete invite",
+        "x-model": "Invite",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/1/status": {
+      "get": {}
+    },
+    "/1/status/mongodb": {
+      "get": {}
+    },
+    "/1/categories/search": {
+      "post": {
+        "summary": "Search categories",
+        "x-model": "Category",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "createdAt": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "updatedAt": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "deletedAt": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "deleted": {
+                    "type": "boolean"
+                  },
+                  "ids": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ObjectId"
+                    }
+                  },
+                  "keyword": {
+                    "type": "string",
+                    "description": "A keyword to perform a text search against."
+                  },
+                  "include": {
+                    "type": "string",
+                    "description": "Fields to be selected or populated."
+                  },
+                  "skip": {
+                    "type": "number",
+                    "description": "Number of records to skip."
+                  },
+                  "sort": {
+                    "default": {
+                      "field": "createdAt",
+                      "order": "desc"
+                    },
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "description": "An object describing the sort order of results.",
+                        "properties": {
+                          "field": {
+                            "type": "string",
+                            "required": true
+                          },
+                          "order": {
+                            "type": "string",
+                            "required": true,
+                            "enum": [
+                              "desc",
+                              "asc"
+                            ]
+                          }
+                        }
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "description": "An object describing the sort order of results.",
+                          "properties": {
+                            "field": {
+                              "type": "string",
+                              "required": true
+                            },
+                            "order": {
+                              "type": "string",
+                              "required": true,
+                              "enum": [
+                                "desc",
+                                "asc"
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "limit": {
+                    "type": "number",
+                    "default": 50,
+                    "description": "Limits the number of results.",
+                    "minimum": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/organizations/mine/search": {
+      "post": {
+        "summary": "Search organizations for authenticated user.",
+        "x-model": "Organization"
+      }
+    },
+    "/1/organizations/:id": {
+      "get": {
+        "summary": "Get organization by id",
+        "x-model": "Organization",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ]
+      },
+      "patch": {
+        "summary": "Update organization",
+        "x-model": "Organization",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Delete organization",
+        "x-model": "Organization",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/1/organizations/search": {
+      "post": {
+        "summary": "Search organizations",
+        "x-model": "Organization",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "createdAt": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "updatedAt": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "deletedAt": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "deleted": {
+                    "type": "boolean"
+                  },
+                  "ids": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ObjectId"
+                    }
+                  },
+                  "keyword": {
+                    "type": "string",
+                    "description": "A keyword to perform a text search against."
+                  },
+                  "include": {
+                    "type": "string",
+                    "description": "Fields to be selected or populated."
+                  },
+                  "skip": {
+                    "type": "number",
+                    "description": "Number of records to skip."
+                  },
+                  "sort": {
+                    "default": {
+                      "field": "createdAt",
+                      "order": "desc"
+                    },
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "description": "An object describing the sort order of results.",
+                        "properties": {
+                          "field": {
+                            "type": "string",
+                            "required": true
+                          },
+                          "order": {
+                            "type": "string",
+                            "required": true,
+                            "enum": [
+                              "desc",
+                              "asc"
+                            ]
+                          }
+                        }
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "description": "An object describing the sort order of results.",
+                          "properties": {
+                            "field": {
+                              "type": "string",
+                              "required": true
+                            },
+                            "order": {
+                              "type": "string",
+                              "required": true,
+                              "enum": [
+                                "desc",
+                                "asc"
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "limit": {
+                    "type": "number",
+                    "default": 50,
+                    "description": "Limits the number of results.",
+                    "minimum": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/organizations": {
+      "post": {
+        "summary": "Create new organization",
+        "x-model": "Organization",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/applications/mine/search": {
+      "post": {
+        "summary": "Search applications for authenticated user.",
+        "x-model": "Application",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "description": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "apiKey": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "user": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/ObjectId"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/ObjectId"
+                        }
+                      }
+                    ]
+                  },
+                  "requestCount": {
+                    "oneOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/NumberRange"
+                      }
+                    ],
+                    "description": "Allows searching by a value, array of values, or a numeric range."
+                  },
+                  "createdAt": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "updatedAt": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "deletedAt": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "deleted": {
+                    "type": "boolean"
+                  },
+                  "ids": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ObjectId"
+                    }
+                  },
+                  "keyword": {
+                    "type": "string",
+                    "description": "A keyword to perform a text search against."
+                  },
+                  "include": {
+                    "type": "string",
+                    "description": "Fields to be selected or populated."
+                  },
+                  "skip": {
+                    "type": "number",
+                    "description": "Number of records to skip."
+                  },
+                  "sort": {
+                    "default": {
+                      "field": "createdAt",
+                      "order": "desc"
+                    },
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "description": "An object describing the sort order of results.",
+                        "properties": {
+                          "field": {
+                            "type": "string",
+                            "required": true
+                          },
+                          "order": {
+                            "type": "string",
+                            "required": true,
+                            "enum": [
+                              "desc",
+                              "asc"
+                            ]
+                          }
+                        }
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "description": "An object describing the sort order of results.",
+                          "properties": {
+                            "field": {
+                              "type": "string",
+                              "required": true
+                            },
+                            "order": {
+                              "type": "string",
+                              "required": true,
+                              "enum": [
+                                "desc",
+                                "asc"
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "limit": {
+                    "type": "number",
+                    "default": 50,
+                    "description": "Limits the number of results.",
+                    "minimum": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/applications/:id/logs/search": {
+      "post": {
+        "x-model": "Application",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "application": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/ObjectId"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/ObjectId"
+                        }
+                      }
+                    ]
+                  },
+                  "routeNormalizedPath": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "requestId": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "request": {
+                    "type": "object",
+                    "properties": {
+                      "sessionId": {
+                        "oneOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        ]
+                      },
+                      "ip": {
+                        "oneOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        ]
+                      },
+                      "path": {
+                        "oneOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        ]
+                      },
+                      "headers": {
+                        "type": "object"
+                      },
+                      "method": {
+                        "oneOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        ]
+                      },
+                      "body": {
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "response": {
+                    "type": "object",
+                    "properties": {
+                      "status": {
+                        "oneOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "number"
+                            }
+                          },
+                          {
+                            "$ref": "#/components/schemas/NumberRange"
+                          }
+                        ],
+                        "description": "Allows searching by a value, array of values, or a numeric range."
+                      },
+                      "body": {
+                        "type": "object"
+                      },
+                      "headers": {
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "createdAt": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "updatedAt": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "deletedAt": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "deleted": {
+                    "type": "boolean"
+                  },
+                  "ids": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ObjectId"
+                    }
+                  },
+                  "keyword": {
+                    "type": "string",
+                    "description": "A keyword to perform a text search against."
+                  },
+                  "include": {
+                    "type": "string",
+                    "description": "Fields to be selected or populated."
+                  },
+                  "skip": {
+                    "type": "number",
+                    "description": "Number of records to skip."
+                  },
+                  "sort": {
+                    "default": {
+                      "field": "createdAt",
+                      "order": "desc"
+                    },
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "description": "An object describing the sort order of results.",
+                        "properties": {
+                          "field": {
+                            "type": "string",
+                            "required": true
+                          },
+                          "order": {
+                            "type": "string",
+                            "required": true,
+                            "enum": [
+                              "desc",
+                              "asc"
+                            ]
+                          }
+                        }
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "description": "An object describing the sort order of results.",
+                          "properties": {
+                            "field": {
+                              "type": "string",
+                              "required": true
+                            },
+                            "order": {
+                              "type": "string",
+                              "required": true,
+                              "enum": [
+                                "desc",
+                                "asc"
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "limit": {
+                    "type": "number",
+                    "default": 50,
+                    "description": "Limits the number of results.",
+                    "minimum": 0
+                  },
+                  "filename": {
+                    "type": "string",
+                    "default": "export.csv",
+                    "description": "Applies only when `format` is `\"csv\"`."
+                  },
+                  "format": {
+                    "type": "string",
+                    "default": "json",
+                    "enum": [
+                      "json",
+                      "csv"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/1/applications/:id": {
+      "get": {
+        "summary": "Get application by id",
+        "x-model": "Application",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ]
+      },
+      "patch": {
+        "summary": "Update application",
+        "x-model": "Application",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Delete application",
+        "x-model": "Application",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/1/applications": {
+      "post": {
+        "summary": "Create new application",
+        "x-model": "Application",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "format": "phone"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "type": "string",
+                  "required": true
+                },
+                "scope": {
+                  "type": "string",
+                  "required": true,
+                  "enum": [
+                    "global",
+                    "organization"
+                  ]
+                },
+                "scopeRef": {
+                  "$ref": "#/components/schemas/ObjectId"
+                }
+              }
+            }
+          },
+          "firstName": {
+            "type": "string",
+            "required": true
+          },
+          "lastName": {
+            "type": "string",
+            "required": true
+          },
+          "theme": {
+            "type": "string",
+            "enum": [
+              "dark",
+              "light",
+              "system"
+            ]
+          },
+          "isDeveloper": {
+            "type": "boolean"
+          },
+          "accessConfirmedAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "hashedPassword": {
+            "type": "string"
+          },
+          "loginAttempts": {
+            "type": "number"
+          },
+          "lastLoginAttemptAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "tempTokenId": {
+            "type": "string"
+          },
+          "smsSecret": {
+            "type": "string"
+          },
+          "mfaBackupCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "mfaSecret": {
+            "type": "string"
+          },
+          "mfaPhoneNumber": {
+            "type": "string"
+          },
+          "authInfo": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "lastUsedAt": {
+                  "$ref": "#/components/schemas/DateTime"
+                },
+                "userAgent": {
+                  "type": "string"
+                },
+                "ip": {
+                  "type": "string",
+                  "required": true
+                },
+                "country": {
+                  "type": "string"
+                },
+                "iat": {
+                  "$ref": "#/components/schemas/DateTime"
+                },
+                "jti": {
+                  "type": "string",
+                  "required": true
+                },
+                "exp": {
+                  "$ref": "#/components/schemas/DateTime"
+                }
+              }
+            }
+          },
+          "mfaMethod": {
+            "type": "string",
+            "enum": [
+              "sms",
+              "otp"
+            ]
+          },
+          "createdAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "updatedAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "deletedAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "deleted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "AuditEntry": {
+        "type": "object",
+        "properties": {
+          "requestUrl": {
+            "type": "string",
+            "required": true
+          },
+          "requestMethod": {
+            "type": "string",
+            "required": true
+          },
+          "routeNormalizedPath": {
+            "type": "string"
+          },
+          "activity": {
+            "type": "string",
+            "required": true
+          },
+          "objectId": {
+            "type": "string"
+          },
+          "objectType": {
+            "type": "string"
+          },
+          "objectBefore": {
+            "type": "object"
+          },
+          "objectAfter": {
+            "type": "object"
+          },
+          "category": {
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "createdAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "updatedAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "deletedAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "deleted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ApplicationRequest": {
+        "type": "object",
+        "properties": {
+          "application": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "routeNormalizedPath": {
+            "type": "string"
+          },
+          "requestId": {
+            "type": "string"
+          },
+          "request": {
+            "type": "object",
+            "properties": {
+              "sessionId": {
+                "type": "string"
+              },
+              "ip": {
+                "type": "string"
+              },
+              "path": {
+                "type": "string"
+              },
+              "headers": {
+                "type": "object"
+              },
+              "method": {
+                "type": "string"
+              },
+              "body": {
+                "type": "object"
+              }
+            }
+          },
+          "response": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "number"
+              },
+              "body": {
+                "type": "object"
+              },
+              "headers": {
+                "type": "object"
+              }
+            }
+          },
+          "createdAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "updatedAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "deletedAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "deleted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ApplicationCredential": {
+        "type": "object",
+        "properties": {
+          "apiSecret": {
+            "type": "string",
+            "required": true
+          },
+          "application": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "createdAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "updatedAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "deletedAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "deleted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Application": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "required": true
+          },
+          "description": {
+            "type": "string"
+          },
+          "apiKey": {
+            "type": "string",
+            "required": true
+          },
+          "user": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "requestCount": {
+            "type": "number"
+          },
+          "createdAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "updatedAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "deletedAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "deleted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Category": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "required": true
+          },
+          "createdAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "updatedAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "deletedAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "deleted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Invite": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "required": true
+          },
+          "status": {
+            "type": "string"
+          },
+          "createdAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "updatedAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "deletedAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "deleted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Organization": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "required": true
+          },
+          "createdAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "updatedAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "deletedAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "deleted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Product": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "required": true
+          },
+          "description": {
+            "type": "string"
+          },
+          "isFeatured": {
+            "type": "boolean"
+          },
+          "priceUsd": {
+            "type": "number"
+          },
+          "expiresAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "sellingPoints": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "shop": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          },
+          "createdAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "updatedAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "deletedAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "deleted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Shop": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "required": true
+          },
+          "description": {
+            "type": "string"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          },
+          "country": {
+            "type": "string"
+          },
+          "address": {
+            "type": "object",
+            "properties": {
+              "line1": {
+                "type": "string"
+              },
+              "line2": {
+                "type": "string"
+              },
+              "city": {
+                "type": "string"
+              },
+              "postalCode": {
+                "type": "string"
+              },
+              "region": {
+                "type": "string"
+              },
+              "countryCode": {
+                "type": "string"
+              },
+              "geometry": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string"
+                  },
+                  "coordinates": {
+                    "type": "array",
+                    "oneOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "owner": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "createdAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "updatedAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "deletedAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "deleted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Upload": {
+        "type": "object",
+        "properties": {
+          "filename": {
+            "type": "string",
+            "required": true
+          },
+          "mimeType": {
+            "type": "string",
+            "required": true
+          },
+          "storageType": {
+            "type": "string",
+            "required": true
+          },
+          "rawUrl": {
+            "type": "string",
+            "required": true
+          },
+          "hash": {
+            "type": "string",
+            "required": true
+          },
+          "owner": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "thumbnailUrl": {
+            "type": "string"
+          },
+          "createdAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "updatedAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "deletedAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "deleted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ObjectId": {
+        "required": true,
+        "type": "ObjectId",
+        "description": "A 24 character hexadecimal string representing a Mongo [ObjectId](https://bit.ly/3YPtGlU).\nAn object with an `id` field may also be passed, which will be converted into a string."
+      },
+      "DateTime": {
+        "type": "string",
+        "format": "date-time",
+        "description": "A `string` in [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format."
+      },
+      "DateRange": {
+        "type": "object",
+        "properties": {
+          "lt": {
+            "$ref": "#/components/schemas/DateTime",
+            "description": "Select dates occurring before."
+          },
+          "gt": {
+            "$ref": "#/components/schemas/DateTime",
+            "description": "Select dates occurring after."
+          },
+          "lte": {
+            "$ref": "#/components/schemas/DateTime",
+            "description": "Select dates occurring on or before."
+          },
+          "gte": {
+            "$ref": "#/components/schemas/DateTime",
+            "description": "Select dates occurring on or after."
+          }
+        },
+        "description": "An object representing dates falling within a range."
+      },
+      "NumberRange": {
+        "type": "object",
+        "properties": {
+          "lt": {
+            "type": "number",
+            "description": "Select values less than."
+          },
+          "gt": {
+            "type": "number",
+            "description": "Select values greater than."
+          },
+          "lte": {
+            "type": "number",
+            "description": "Select values less than or equal."
+          },
+          "gte": {
+            "type": "number",
+            "description": "Select values greater than or equal."
+          }
+        },
+        "description": "An object representing numbers falling within a range."
+      }
+    }
+  }
+}

@@ -1,21 +1,17 @@
 import React from 'react';
 
-import { Icon } from 'semantic';
-
-import Code from 'components/Code';
-
-import RequestBuilder from './RequestBuilder';
+import RoutePath from './RoutePath';
+import RouteParams from './RouteParams';
+import RouteExamples from './RouteExamples';
 
 export default class Route extends React.Component {
   render() {
-    const { route } = this.props;
     return (
-      <Code
-        action={
-          <RequestBuilder route={route} trigger={<Icon name="play" link />} />
-        }>
-        {route}
-      </Code>
+      <React.Fragment>
+        <RoutePath {...this.props} />
+        <RouteParams {...this.props} />
+        <RouteExamples {...this.props} />
+      </React.Fragment>
     );
   }
 }

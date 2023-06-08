@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { get } from 'lodash';
 
-import { Message } from 'semantic';
-
 import { JumpLink } from 'components/Link';
 import bem from 'helpers/bem';
 
@@ -26,21 +24,15 @@ export default class DocsProperties extends React.Component {
 
   render() {
     const { docs, loading } = this.context;
-    const { required, path } = this.props;
+    const { path } = this.props;
     if (!docs) {
       return null;
     }
 
     const data = get(docs, path);
 
-    if (loading) {
+    if (loading || !data) {
       return null;
-    } else if (!data) {
-      if (required) {
-        return <Message error>No OpenApi entry found.</Message>;
-      } else {
-        return null;
-      }
     }
 
     return (

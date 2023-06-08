@@ -19,7 +19,7 @@ export function getParametersPath(route) {
   return [...getRoutePath(route), 'parameters'];
 }
 
-export function getPropertiesPath(route) {
+export function getRequestBodyPath(route) {
   return [...getSchemaPath(route), 'properties'];
 }
 

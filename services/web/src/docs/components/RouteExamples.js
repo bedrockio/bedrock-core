@@ -22,36 +22,35 @@ export default class RouteExamples extends React.Component {
       const items = Object.entries(data.responses || {})
         .flatMap(([status, response]) => {
           status = parseInt(status);
-          const { schema, examples = {} } = get(
-            response,
-            ['content', 'application/json'],
-            {}
-          );
-          if (schema?.$ref) {
-            this.context.visitedComponents.add(schema.$ref);
-          }
-          const exampleResponses = Object.entries(examples).map(
-            ([id, example]) => {
-              const examples = get(
-                data,
-                ['requestBody', 'content', 'application/json', 'examples'],
-                {}
-              );
-              return {
-                id,
-                status,
-                schema,
-                path: example['x-path'],
-                requestBody: examples[id]?.value,
-                responseBody: example.value,
-              };
+
+          return Object.values(response.content || {}).flatMap((entry) => {
+            const { schema, examples } = entry;
+            if (schema?.$ref) {
+              this.context.visitedComponents.add(schema.$ref);
             }
-          );
-          if (exampleResponses.length) {
-            return exampleResponses;
-          } else {
-            return [];
-          }
+            const exampleResponses = Object.entries(examples || {}).map(
+              ([id, example]) => {
+                const examples = get(
+                  data,
+                  ['requestBody', 'content', 'application/json', 'examples'],
+                  {}
+                );
+                return {
+                  id,
+                  status,
+                  schema,
+                  path: example['x-path'],
+                  requestBody: examples[id]?.value,
+                  responseBody: example.value,
+                };
+              }
+            );
+            if (exampleResponses.length) {
+              return exampleResponses;
+            } else {
+              return [];
+            }
+          });
         })
         .sort((a, b) => {
           return a.status < b.status;
