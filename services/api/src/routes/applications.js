@@ -2,7 +2,7 @@ const Router = require('@koa/router');
 const { kebabCase } = require('lodash');
 const { fetchByParam } = require('../utils/middleware/params');
 const { validateBody } = require('../utils/middleware/validate');
-const { authenticate, fetchUser } = require('../utils/middleware/authenticate');
+const { authenticate } = require('../utils/middleware/authenticate');
 const { Application, ApplicationRequest, AuditEntry } = require('../models');
 const { exportValidation, csvExport } = require('../utils/csv');
 const { requirePermissions } = require('../utils/middleware/permissions');
@@ -10,8 +10,7 @@ const { requirePermissions } = require('../utils/middleware/permissions');
 const router = new Router();
 
 router
-  .use(authenticate({ type: 'user' }))
-  .use(fetchUser)
+  .use(authenticate())
   .use(requirePermissions({ endpoint: 'applications', permission: 'read', scope: 'global' }))
   .param('id', fetchByParam(Application))
   .post('/mine/search', validateBody(Application.getSearchValidation()), async (ctx) => {

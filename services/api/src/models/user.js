@@ -27,8 +27,9 @@ schema.method('removeAuthToken', function removeAuthToken(jti) {
   this.authInfo = this.authInfo.filter((token) => token.jti !== jti);
 });
 
-schema.method('createAuthToken', function ({ ip, userAgent, country }, tokenOption = {}) {
-  const payload = createAuthTokenPayload({ sub: this.id, ...tokenOption });
+schema.method('createAuthToken', function (options = {}, tokenOptions = {}) {
+  const { ip, userAgent, country } = options;
+  const payload = createAuthTokenPayload({ sub: this.id, ...tokenOptions });
 
   this.authInfo = [
     {
