@@ -28,6 +28,33 @@ export default class ApiDocs extends React.Component {
     const { id } = this.props.match.params;
     if (!id) {
       this.props.history.replace(`/docs/${DEFAULT_PAGE_ID}`);
+    } else {
+      this.checkScroll();
+    }
+  }
+
+  componentDidUpdate(lastProps) {
+    const { pathname } = this.props.location;
+    const { pathname: lastPathname } = lastProps.location;
+    if (pathname !== lastPathname) {
+      this.checkScroll(true);
+    }
+  }
+
+  // TODO: This is hacky, fix later
+  checkScroll(update) {
+    const { hash } = this.props.location;
+    if (hash) {
+      const el = document.getElementById(hash.slice(1));
+      if (el) {
+        el.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      }
+    } else if (update) {
+      const el = document.querySelector('.api-docs__page');
+      el.scrollTo(0, 0);
     }
   }
 

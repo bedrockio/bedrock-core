@@ -51,12 +51,19 @@ async function generateDefinition() {
 function generatePaths(routes) {
   const paths = {};
 
+  let routerAuthentication = null;
+
   for (let layer of routes.router.stack) {
     const item = {};
     const { path: koaPath, methods } = layer;
     const [method] = without(methods, 'HEAD');
 
+    const authentication = getLayerAuthentication(layer) || routerAuthentication;
+
     if (!method) {
+      if (authentication) {
+        routerAuthentication = authentication;
+      }
       continue;
     }
 
@@ -96,10 +103,23 @@ function generatePaths(routes) {
       paths[koaPath] = {};
     }
 
+    if (authentication === 'optional') {
+      item['security'] = [{}, { bearerAuth: [] }];
+    } else if (authentication === 'required') {
+      item['security'] = [{ bearerAuth: [] }];
+    }
+
     paths[koaPath][method.toLowerCase()] = item;
   }
 
   return paths;
+}
+
+function getLayerAuthentication(layer) {
+  const authLayer = layer.stack.find((item) => {
+    return item.authentication;
+  });
+  return authLayer?.authentication;
 }
 
 function getPathMeta(koaPath, method) {

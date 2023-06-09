@@ -5,14 +5,19 @@ const config = require('@bedrockio/config');
 
 const ENV_NAME = config.get('ENV_NAME');
 
-function authenticate(options) {
-  return compose([
+function authenticate(options = {}) {
+  const { optional } = options;
+  const fn = compose([
     validateToken({
       ...options,
       type: 'user',
     }),
     authorizeUser(),
   ]);
+  // Allows docs to see the auth requirement on the middleware
+  // layer to generate an OpenApi entry for it.
+  fn.authentication = optional ? 'optional' : 'required';
+  return fn;
 }
 
 function authorizeUser() {
