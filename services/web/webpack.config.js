@@ -204,6 +204,7 @@ function getOptionalPlugins() {
     plugins.push(
       new MiniCssExtractPlugin({
         filename: 'assets/[name].[contenthash].css',
+        ignoreOrder: true,
       })
     );
   } else {
