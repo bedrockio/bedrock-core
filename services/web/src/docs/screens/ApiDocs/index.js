@@ -10,7 +10,7 @@ import EditButton from 'docs/components/EditButton';
 import RecordButton from 'docs/components/RecordButton';
 import { DocsContext } from 'docs/utils/context';
 
-import { COMPONENTS } from 'components/Markdown';
+import { components as markdownComponents } from 'components/Markdown';
 
 import DocsPath from '../../components/DocsPath';
 
@@ -98,7 +98,7 @@ export default class ApiDocs extends React.Component {
         const { Component } = page;
         return (
           <div className="markdown">
-            <Component components={COMPONENTS} />
+            <Component components={markdownComponents} />
           </div>
         );
       } else {
