@@ -16,41 +16,57 @@ export default class RouteExamples extends React.Component {
       return null;
     }
 
-    const data = get(docs, getRoutePath(this.props.route));
+    const routePath = getRoutePath(this.props.route);
+    const routeData = get(docs, routePath);
 
-    if (data) {
-      const items = Object.entries(data.responses || {})
+    if (routeData) {
+      const items = Object.entries(routeData.responses || {})
         .flatMap(([status, response]) => {
-          status = parseInt(status);
-
-          return Object.values(response.content || {}).flatMap((entry) => {
-            const { schema, examples } = entry;
-            if (schema?.$ref) {
-              this.context.visitedComponents.add(schema.$ref);
-            }
-            const exampleResponses = Object.entries(examples || {}).map(
-              ([id, example]) => {
-                const examples = get(
-                  data,
-                  ['requestBody', 'content', 'application/json', 'examples'],
-                  {}
-                );
-                return {
+          return Object.entries(response.content || {}).flatMap(
+            ([mimeType, entry]) => {
+              const { schema, examples } = entry;
+              if (schema?.$ref) {
+                this.context.visitedComponents.add(schema.$ref);
+              }
+              const exampleResponses = Object.keys(examples || {}).map((id) => {
+                const requestBody = get(docs, [
+                  ...routePath,
+                  'requestBody',
+                  'content',
+                  'application/json',
+                  'examples',
                   id,
+                  'value',
+                ]);
+
+                const examplePath = [
+                  ...routePath,
+                  'responses',
+                  status,
+                  'content',
+                  mimeType,
+                  'examples',
+                  id,
+                ];
+                const responseBody = get(docs, [...examplePath, 'value']);
+                const requestPath = get(docs, [...examplePath, 'x-path']);
+
+                return {
                   status,
                   schema,
-                  path: example['x-path'],
-                  requestBody: examples[id]?.value,
-                  responseBody: example.value,
+                  path: examplePath,
+                  requestBody,
+                  responseBody,
+                  requestPath,
                 };
+              });
+              if (exampleResponses.length) {
+                return exampleResponses;
+              } else {
+                return [];
               }
-            );
-            if (exampleResponses.length) {
-              return exampleResponses;
-            } else {
-              return [];
             }
-          });
+          );
         })
         .sort((a, b) => {
           return a.status < b.status;
@@ -60,9 +76,7 @@ export default class RouteExamples extends React.Component {
           <React.Fragment>
             <h4>Examples:</h4>
             {items.map((item, i) => {
-              return (
-                <RouteExample key={i} item={item} route={this.props.route} />
-              );
+              return <RouteExample key={i} {...item} />;
             })}
           </React.Fragment>
         );

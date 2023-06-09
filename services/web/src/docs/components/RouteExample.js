@@ -7,9 +7,11 @@ import { JumpLink } from 'components/Link';
 import { Confirm, Layout } from 'components';
 import Code from 'components/Code';
 import bem from 'helpers/bem';
-import { getRoutePath, expandRef } from 'docs/utils';
+import { expandRef } from 'docs/utils';
 
 import { DocsContext } from '../utils/context';
+
+import EditableField from './EditableField';
 
 import './route-example.less';
 
@@ -25,7 +27,7 @@ export default class RouteExample extends React.Component {
   }
 
   isGood() {
-    const { status } = this.props.item;
+    const { status } = this.props;
     return status >= 200 && status <= 300;
   }
 
@@ -36,24 +38,14 @@ export default class RouteExample extends React.Component {
   };
 
   onDeleteConfirm = () => {
-    const { id, status } = this.props.item;
-
-    const path = [
-      ...getRoutePath(this.props.route),
-      'responses',
-      status.toString(),
-      'content',
-      'application/json',
-      'examples',
-      id,
-    ];
-
+    const { path } = this.props;
     this.context.unsetPath(path);
   };
 
   render() {
     const { open } = this.state;
-    const { status, schema, path, requestBody, responseBody } = this.props.item;
+    const { path, status, schema, requestPath, requestBody, responseBody } =
+      this.props;
     return (
       <div className={this.getBlockClass()}>
         <Layout
@@ -66,32 +58,54 @@ export default class RouteExample extends React.Component {
           )}
           onClick={this.onToggleClick}>
           <Layout.Group>{status}</Layout.Group>
+          <Layout.Group grow>
+            <EditableField
+              type="summary"
+              path={path}
+              onClick={(evt) => {
+                evt.stopPropagation();
+              }}
+              className={this.getElementClass('summary')}
+              trigger={
+                <Icon
+                  size="small"
+                  name="trash"
+                  link
+                  onClick={(evt) => {
+                    evt.stopPropagation();
+                  }}
+                />
+              }
+            />
+          </Layout.Group>
           <Layout.Group>
             {this.context.canEditDocs() && (
-              <Confirm
-                negative
-                size="small"
-                confirmButton="Delete"
-                header="Delete this example?"
-                trigger={
-                  <Icon
-                    size="small"
-                    name="trash"
-                    link
-                    onClick={(evt) => {
-                      evt.stopPropagation();
-                    }}
-                  />
-                }
-                onConfirm={this.onDeleteConfirm}
-              />
+              <React.Fragment>
+                <Confirm
+                  negative
+                  size="small"
+                  confirmButton="Delete"
+                  header="Delete this example?"
+                  trigger={
+                    <Icon
+                      size="small"
+                      name="trash"
+                      link
+                      onClick={(evt) => {
+                        evt.stopPropagation();
+                      }}
+                    />
+                  }
+                  onConfirm={this.onDeleteConfirm}
+                />
+              </React.Fragment>
             )}
             <Icon size="small" name={open ? 'minus' : 'plus'} link />
           </Layout.Group>
         </Layout>
         {open && (
           <React.Fragment>
-            {this.renderPath(path)}
+            {this.renderRequestPath(requestPath)}
             {this.renderSchema(schema)}
             {this.renderBody('Request Body:', requestBody)}
             {this.renderBody('Response Body:', responseBody)}
@@ -101,10 +115,10 @@ export default class RouteExample extends React.Component {
     );
   }
 
-  renderPath(path) {
+  renderRequestPath(path) {
     if (path) {
       return (
-        <div className={this.getElementClass('path')}>
+        <div className={this.getElementClass('request-path')}>
           <div className={this.getElementClass('header')}>Path:</div>
           <Code>{path}</Code>
         </div>

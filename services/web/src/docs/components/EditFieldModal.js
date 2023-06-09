@@ -32,7 +32,7 @@ export default class EditFieldModal extends React.Component {
 
   isShadowedValue() {
     const { docs } = this.context;
-    const { value, type, modelPath } = this.props;
+    const { value, type, modelPath = [] } = this.props;
     const modelValue = get(docs, [...modelPath, type]);
     // undefined, null, and empty strings are all considered equal here
     return (value || null) !== (modelValue || null);

@@ -54,7 +54,12 @@ export default class DocsEditableField extends React.Component {
   }
 
   renderTrigger() {
-    return <div className={this.getBlockClass()}>{this.renderValue()}</div>;
+    const { onClick } = this.props;
+    return (
+      <div className={this.getBlockClass()} onClick={onClick}>
+        {this.renderValue()}
+      </div>
+    );
   }
 
   renderValue() {
