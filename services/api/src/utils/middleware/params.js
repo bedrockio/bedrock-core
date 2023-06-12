@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const { lowerFirst } = require('lodash');
 
-function fetchByParam(Model, options) {
-  const docName = lowerFirst(Model.modelName);
+function fetchByParam(Model, options = {}) {
+  const docName = options.as || lowerFirst(Model.modelName);
   return async (id, ctx, next) => {
     const { include } = ctx.query;
     if (!mongoose.Types.ObjectId.isValid(id)) {
