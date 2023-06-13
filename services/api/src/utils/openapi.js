@@ -3,14 +3,18 @@ const fs = require('fs/promises');
 const path = require('path');
 const mongoose = require('mongoose');
 const config = require('@bedrockio/config');
-const { get, set, without, camelCase, kebabCase, startCase } = require('lodash');
+const { get, set, merge, isEmpty, without, camelCase, kebabCase, startCase } = require('lodash');
 
 const pluralize = mongoose.pluralize();
 
 const PACKAGE_FILE = path.resolve(__dirname, '../../package.json');
 const DEFINITION_FILE = path.resolve(__dirname, '../../openapi.json');
 
+const GENERATED_FIELDS = ['title', 'summary', 'description'];
+
 let definition;
+
+// Definition read/write
 
 async function loadDefinition() {
   try {
@@ -27,9 +31,27 @@ async function saveDefinition(updated) {
   definition = updated;
 }
 
+// Definition update
+
+async function updateDefinitionPath(path, value) {
+  const definition = await loadDefinition();
+  if (value === null) {
+    // Unset field using undefined here.
+    value = undefined;
+  }
+  const field = path[path.length - 1];
+  set(definition, path, value);
+  if (GENERATED_FIELDS.includes(field)) {
+    set(definition, [...path.slice(0, -1), 'x-generated'], undefined);
+  }
+  await saveDefinition(definition);
+}
+
+// Generation
+
 async function generateDefinition() {
   const { version, description } = require(PACKAGE_FILE);
-  const data = {
+  const definition = {
     openapi: '3.1.0',
     info: {
       version,
@@ -45,8 +67,14 @@ async function generateDefinition() {
       schemas: generateModelSchemas(),
     },
   };
-  return await updateDefinition(data);
+
+  await copyEditableFields(definition);
+  extractSchemas(definition);
+  await saveDefinition(definition);
+  return definition;
 }
+
+// Route generation
 
 function generatePaths(routes) {
   const paths = {};
@@ -79,7 +107,17 @@ function generatePaths(routes) {
       item.requestBody = {
         content: {
           'application/json': {
-            schema: schema.toOpenApi(),
+            schema: schema.toOpenApi({
+              tag: (meta) => {
+                if (meta.format === 'date-time') {
+                  return {
+                    'x-schema': 'DateTime',
+                    'x-description':
+                      'A `string` in [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format.',
+                  };
+                }
+              },
+            }),
           },
         },
       };
@@ -170,6 +208,17 @@ function getPathMeta(koaPath, method) {
   return meta;
 }
 
+// Component generation
+
+function generateModelSchemas() {
+  const schemas = {};
+  for (let model of Object.values(mongoose.models)) {
+    const { modelName } = model;
+    schemas[modelName] = model.getBaseSchema().toOpenApi();
+  }
+  return schemas;
+}
+
 function extractSchemas(definition) {
   walkFields(definition, ({ value, path }) => {
     const schema = value?.['x-schema'];
@@ -195,22 +244,7 @@ function extractSchemas(definition) {
   });
 }
 
-function walkFields(arg, fn, path = []) {
-  if (arg && typeof arg === 'object') {
-    for (let [key, value] of Object.entries(arg)) {
-      const p = [...path, key];
-      const ret = fn({
-        key,
-        value,
-        path: p,
-      });
-      if (ret === false) {
-        continue;
-      }
-      walkFields(value, fn, p);
-    }
-  }
-}
+// Recording
 
 async function recordRequest(ctx) {
   const { method, routerPath } = ctx;
@@ -270,7 +304,10 @@ async function recordRequest(ctx) {
       },
     },
   };
-  await updateDefinition(data);
+
+  const definition = merge(await loadDefinition(), data);
+  await saveDefinition(definition);
+  return definition;
 }
 
 function getRequestId(ctx) {
@@ -286,6 +323,22 @@ function getRequestId(ctx) {
   return crypto.createHash('md5').update(JSON.stringify(obj)).digest('hex');
 }
 
+// Utils
+
+function walkFields(arg, fn, path = []) {
+  if (arg && typeof arg === 'object') {
+    for (let [key, value] of Object.entries(arg)) {
+      const p = [...path, key];
+      walkFields(value, fn, p);
+      fn({
+        key,
+        value,
+        path: p,
+      });
+    }
+  }
+}
+
 function getResponseSchema(ctx) {
   const modelName = ctx.response.body?.data?.constructor?.modelName;
   if (modelName) {
@@ -295,55 +348,72 @@ function getResponseSchema(ctx) {
   }
 }
 
-async function updateDefinition(data) {
-  const definition = mergeDeep(await loadDefinition(), data);
-  extractSchemas(definition);
-  await saveDefinition(definition);
-  return definition;
-}
+// Editable fields
 
-const RESERVED_FIELDS = ['summary', 'description'];
+const JSON_SCHEMA_PRIMITIVE_TYPES = ['string', 'number', 'boolean'];
 
-function mergeDeep(target, source) {
-  walkFields(source, ({ key, path, value }) => {
-    if (RESERVED_FIELDS.includes(key)) {
-      const gPath = [...path.slice(0, -1), 'x-generated'];
-      const isGenerated = get(target, gPath);
-      const existing = get(target, path);
-      if (isGenerated || !existing) {
-        set(target, path, value);
-        set(target, gPath, true);
+async function copyEditableFields(target) {
+  const source = await loadDefinition();
+  walkFields(target, (field) => {
+    const { path } = field;
+    if (isJsonSchemaPrimitive(field)) {
+      const hasSource = GENERATED_FIELDS.some((field) => {
+        return get(source, [...path, field]);
+      });
+      const hasTarget = GENERATED_FIELDS.some((field) => {
+        return get(target, [...path, field]);
+      });
+      const xGenerated = get(source, [...path, 'x-generated']);
+
+      if (hasSource && !xGenerated) {
+        copyField(target, source, path, 'summary');
+        copyField(target, source, path, 'description');
+      } else if (hasTarget) {
+        set(target, [...path, 'x-generated'], true);
       }
-      return;
-    } else if (!isObject(get(target, path))) {
-      set(target, path, value);
-      return false;
+    } else if (isBodyField(field)) {
+      copyField(target, source, path, 'examples');
+    } else if (isOperationField(field)) {
+      copyField(target, source, path, 'responses');
     }
   });
   return target;
 }
 
-function isObject(arg) {
-  return arg && typeof arg === 'object' && !Array.isArray(arg);
+function isJsonSchemaPrimitive(field) {
+  return JSON_SCHEMA_PRIMITIVE_TYPES.includes(field.value?.type);
 }
 
-function isEmpty(obj = {}) {
-  return Object.keys(obj).length === 0;
+function isBodyField(field) {
+  return matchPath(field.path, 'paths|*|*|requestBody|content|*');
 }
 
-function generateModelSchemas() {
-  const schemas = {};
-  for (let model of Object.values(mongoose.models)) {
-    const { modelName } = model;
-    schemas[modelName] = model.getBaseSchema().toOpenApi();
+function isOperationField(field) {
+  return matchPath(field.path, 'paths|*|*');
+}
+
+function matchPath(path, str) {
+  const split = str.split('|');
+  if (split.length !== path.length) {
+    return false;
   }
-  return schemas;
+  return split.every((token, i) => {
+    return token === '*' || path[i] === token;
+  });
+}
+
+function copyField(target, source, path, field) {
+  const fPath = [...path, field];
+  const sValue = get(source, fPath);
+  if (sValue) {
+    set(target, fPath, sValue);
+  }
 }
 
 module.exports = {
   DEFINITION_FILE,
   loadDefinition,
-  saveDefinition,
   generateDefinition,
+  updateDefinitionPath,
   recordRequest,
 };
