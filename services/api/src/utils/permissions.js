@@ -93,12 +93,13 @@ function userHasAccess(user, { endpoint, permission, scope, scopeRef }) {
 }
 
 function expandRoles(user, ctx) {
+  const { roles = [], ...rest } = serializeDocument(user, ctx);
   return {
-    ...serializeDocument(user, ctx),
-    roles: user.roles.map((roleRef) => {
+    ...rest,
+    roles: roles.map((obj) => {
       return {
-        ...roleRef,
-        roleDefinition: roleDefinitions[roleRef.role],
+        ...obj,
+        roleDefinition: roleDefinitions[obj.role],
       };
     }),
   };
