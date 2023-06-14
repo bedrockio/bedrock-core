@@ -19,17 +19,9 @@ const router = new Router();
 const ENV_NAME = config.get('ENV_NAME');
 
 app.use(corsMiddleware());
-app.use(serializeMiddleware);
 
-// Record middleware must occur before serialization to
-// derive model names but after errorHandler to capture
-// error responses.
-if (['development'].includes(ENV_NAME)) {
-  app.use(recordMiddleware);
-}
-
-app.use(errorHandler);
-
+// Application middleware must occur after serialization
+// as it will record a snapshot of the response body.
 if (['staging', 'development'].includes(ENV_NAME)) {
   // has to be the added before any middleware that changes the ctx.body
   app.use(
@@ -46,6 +38,17 @@ if (['staging', 'development'].includes(ENV_NAME)) {
     })
   );
 }
+
+app.use(serializeMiddleware);
+
+// Record middleware must occur before serialization to
+// derive model names but after errorHandler to capture
+// error responses.
+if (['development'].includes(ENV_NAME)) {
+  app.use(recordMiddleware);
+}
+
+app.use(errorHandler);
 
 app.use(logger.middleware()).use(bodyParser({ multipart: true }));
 

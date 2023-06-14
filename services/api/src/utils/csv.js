@@ -3,6 +3,7 @@ const csv = require('fast-csv');
 const mongoose = require('mongoose');
 const PassThrough = require('stream').PassThrough;
 const { ObjectId } = mongoose.Types;
+const { serializeObject } = require('./serialize');
 
 const formatter = Intl.NumberFormat('us');
 
@@ -13,6 +14,7 @@ function csvExport(ctx, data, options = {}) {
   ctx.body = csvStream.pipe(PassThrough());
 
   data.forEach((item) => {
+    item = serializeObject(item, ctx);
     csvStream.write(exportItem(item, options));
   });
 
