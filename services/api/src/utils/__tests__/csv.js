@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const { csvExport } = require('../csv');
 const { dedent: d } = require('../string');
+const { createTestModel } = require('@bedrockio/model');
+const { User } = require('../../models');
 
 const user = {
   firstName: 'John',
@@ -119,13 +121,117 @@ describe('csvExport', () => {
       Frank,${projectId}
     `);
   });
+
+  describe('documents', () => {
+    it('should succeed given an array of documents', async () => {
+      const Shop = createTestModel({
+        name: {
+          type: 'String',
+          required: true,
+        },
+        profits: {
+          type: 'Number',
+          required: true,
+        },
+      });
+
+      const shop = await Shop.create({
+        name: 'Demo',
+        profits: 1000,
+      });
+
+      const csv = await run([shop], {
+        include: ['name', 'profits'],
+      });
+      expect(csv).toBe(d`
+      name,profits
+      Demo,"1,000"
+    `);
+    });
+
+    it('should not expose restricted read access', async () => {
+      const Shop = createTestModel({
+        name: {
+          type: 'String',
+          required: true,
+        },
+        profits: {
+          type: 'Number',
+          required: true,
+          readAccess: 'superAdmin',
+        },
+      });
+
+      const shop = await Shop.create({
+        name: 'Demo',
+        profits: 1000,
+      });
+
+      const user = await User.create({
+        firstName: 'Frank',
+        lastName: 'Reynolds',
+      });
+
+      const csv = await run([shop], {
+        authUser: user,
+        include: ['name', 'profits'],
+      });
+      expect(csv).toBe(d`
+      name
+      Demo
+    `);
+    });
+
+    it('should expose restricted read access when allowed', async () => {
+      const Shop = createTestModel({
+        name: {
+          type: 'String',
+          required: true,
+        },
+        profits: {
+          type: 'Number',
+          required: true,
+          readAccess: 'superAdmin',
+        },
+      });
+
+      const shop = await Shop.create({
+        name: 'Demo',
+        profits: 1000,
+      });
+
+      const admin = await User.create({
+        firstName: 'Frank',
+        lastName: 'Reynolds',
+        roles: [
+          {
+            role: 'superAdmin',
+            scope: 'global',
+          },
+        ],
+      });
+
+      const csv = await run([shop], {
+        authUser: admin,
+        include: ['name', 'profits'],
+      });
+      expect(csv).toBe(d`
+      name,profits
+      Demo,"1,000"
+    `);
+    });
+  });
 });
 
-async function run(arr, options) {
+async function run(arr, options = {}) {
+  const { authUser, ...rest } = options;
   const ctx = {
     set: () => {},
+    state: {
+      authUser,
+    },
   };
-  csvExport(ctx, arr, { filename: 'test.csv', ...options });
+  csvExport(ctx, arr, { filename: 'test.csv', ...rest });
   return await streamToString(ctx.body);
 }
 

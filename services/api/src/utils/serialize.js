@@ -3,7 +3,7 @@ const { Stream } = require('node:stream');
 const { isPlainObject } = require('lodash');
 
 function serializeDocument(doc, ctx) {
-  const { authUser } = ctx.state;
+  const { authUser } = ctx.state || {};
   return doc.toObject({
     ...ctx.state,
     scopes: authUser?.getScopes(),
