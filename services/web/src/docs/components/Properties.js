@@ -43,12 +43,20 @@ export default class DocsProperties extends React.Component {
   }
 
   renderParams(data, path, options = {}) {
+    const { additionalSort } = this.props;
     const { level = 0 } = options;
     let entries = Object.entries(data);
     entries.sort((a, b) => {
       const aRequired = a[1].required || false;
       const bRequired = b[1].required || false;
-      return bRequired - aRequired;
+
+      if (aRequired !== bRequired) {
+        return bRequired - aRequired;
+      } else if (additionalSort) {
+        return additionalSort(a, b, level);
+      } else {
+        return 0;
+      }
     });
 
     return entries.map(([name, desc]) => {
@@ -196,6 +204,7 @@ export default class DocsProperties extends React.Component {
 DocsProperties.propTypes = {
   required: PropTypes.bool,
   path: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+  additionalSort: PropTypes.func,
 };
 
 DocsProperties.defaultProps = {
