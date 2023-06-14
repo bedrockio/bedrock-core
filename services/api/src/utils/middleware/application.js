@@ -27,32 +27,32 @@ function isSimpleValue(value) {
 const protectedFields = /token|password|secret|hash|key|jwt|ping|payment|bank|iban/i;
 
 function redact(obj, prefix) {
-  Object.keys(obj).forEach(function (key) {
-    const value = obj[key];
+  const result = {};
+  for (let [key, value] of Object.entries(obj || {})) {
     const keyMatched = key.match(protectedFields);
     const simpleValue = isSimpleValue(value);
 
     if (keyMatched && simpleValue) {
-      obj[key] = '[redacted]';
+      result[key] = '[redacted]';
     } else if (keyMatched && Array.isArray(value) && typeof value[0] !== 'object') {
-      obj[key] = value.map(() => '[redacted]');
+      result[key] = value.map(() => '[redacted]');
     } else if (simpleValue) {
-      obj[key] = value;
+      result[key] = value;
     } else if (Array.isArray(value)) {
-      obj[key] = value.map((val) => {
+      result[key] = value.map((val) => {
         return isSimpleValue(val) ? val : redact(val);
       });
     } else if (typeof value === 'object') {
-      Object.assign(obj, redact(value, key));
+      Object.assign(result, redact(value, key));
     }
-  }, {});
+  }
 
   if (prefix) {
     return {
-      [prefix]: obj,
+      [prefix]: result,
     };
   }
-  return obj;
+  return result;
 }
 
 function truncate(body) {
