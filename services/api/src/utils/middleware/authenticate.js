@@ -33,13 +33,13 @@ function authorizeUser() {
     if (jwt.authenticateUser) {
       authUser = await User.findById(jwt.authenticateUser);
       if (!authUser) {
-        throw new Error('User associated to token could not be found');
+        return ctx.throw(403, 'User associated to token could not be found');
       }
     } else {
       authUser = await User.findById(jwt.sub);
 
       if (!authUser) {
-        throw new Error('User associated to token could not be found');
+        return ctx.throw(403, 'User associated to token could not be found');
       }
 
       const token = authUser.authInfo.find((token) => token.jti === jwt.jti);
@@ -84,7 +84,7 @@ function authorizeUser() {
           ]);
         }
       } else if (ENV_NAME !== 'test') {
-        throw new Error('User associated to token could not be found');
+        return ctx.throw(403, 'User associated to token could not be found');
       }
     }
 
