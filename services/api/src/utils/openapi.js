@@ -1,8 +1,10 @@
-const crypto = require('crypto');
 const fs = require('fs/promises');
 const path = require('path');
+const crypto = require('crypto');
+const { Stream } = require('node:stream');
 const mongoose = require('mongoose');
 const config = require('@bedrockio/config');
+
 const { get, set, merge, isEmpty, without, camelCase, kebabCase, startCase } = require('lodash');
 
 const pluralize = mongoose.pluralize();
@@ -13,6 +15,8 @@ const DEFINITION_FILE = path.resolve(__dirname, '../../openapi.json');
 const GENERATED_FIELDS = ['title', 'summary', 'description'];
 
 let definition;
+
+applyRouterHack();
 
 // Definition read/write
 
@@ -79,49 +83,40 @@ async function generateDefinition() {
 function generatePaths(routes) {
   const paths = {};
 
-  let routerAuthentication = null;
+  let currentContext = {};
 
   for (let layer of routes.router.stack) {
     const item = {};
     const { path: koaPath, methods } = layer;
     const [method] = without(methods, 'HEAD');
 
-    const authentication = getLayerAuthentication(layer) || routerAuthentication;
+    // If this layer has a new prefix then reset the
+    // context. See "applyRouterHack" below.
+    if (layer.opts.prefix !== currentContext.prefix) {
+      currentContext = {
+        prefix: layer.opts.prefix,
+      };
+    }
 
+    const authentication = getLayerAuthentication(layer) || currentContext.authentication;
+
+    // If there is no method then this is a middleware layer
+    // like authenticate or requirePermissions so do not process.
     if (!method) {
+      // If this is an authentication layer then apply
+      // it to the current context.
       if (authentication) {
-        routerAuthentication = authentication;
+        currentContext.authentication = authentication;
       }
+
       continue;
     }
 
-    const validation = layer.stack.find((item) => {
-      return item.schema;
+    const validationLayer = layer.stack.find((item) => {
+      return item.validation;
     });
 
-    const schema = validation?.schema;
-
     Object.assign(item, getPathMeta(koaPath, method));
-
-    if (schema) {
-      item.requestBody = {
-        content: {
-          'application/json': {
-            schema: schema.toOpenApi({
-              tag: (meta) => {
-                if (meta.format === 'date-time') {
-                  return {
-                    'x-schema': 'DateTime',
-                    'x-description':
-                      'A `string` in [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format.',
-                  };
-                }
-              },
-            }),
-          },
-        },
-      };
-    }
 
     const parameters = layer.paramNames.map((param) => {
       const { name, modifier } = param;
@@ -132,6 +127,47 @@ function generatePaths(routes) {
         required,
       };
     });
+
+    if (validationLayer) {
+      const { type, schema } = validationLayer.validation;
+
+      const openApi = schema.toOpenApi({
+        tag: (meta) => {
+          if (meta.format === 'date-time') {
+            return {
+              'x-schema': 'DateTime',
+              'x-description':
+                'A `string` in [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format.',
+            };
+          }
+        },
+      });
+      if (type === 'body') {
+        item.requestBody = {
+          content: {
+            'application/json': {
+              schema: openApi,
+            },
+          },
+        };
+      } else if (type === 'query') {
+        for (let [key, value] of Object.entries(openApi.properties || {})) {
+          parameters.push({
+            in: 'query',
+            name: key,
+            schema: value,
+          });
+        }
+      } else if (type === 'files') {
+        item.requestBody = {
+          content: {
+            'multipart/form-data': {
+              schema: openApi,
+            },
+          },
+        };
+      }
+    }
 
     if (parameters.length) {
       item.parameters = parameters;
@@ -253,8 +289,14 @@ async function recordRequest(ctx) {
   const requestId = getRequestId(ctx);
   const schema = getResponseSchema(ctx);
 
-  // Ensure the body is properly converted to raw data.
-  const responseBody = JSON.parse(JSON.stringify(ctx.response.body || {}));
+  let { body: responseBody } = ctx.response;
+
+  if (responseBody instanceof Stream) {
+    responseBody = '[Binary Data]';
+  } else {
+    // Ensure the body is properly converted to raw data.
+    responseBody = JSON.parse(JSON.stringify(ctx.response.body || {}));
+  }
 
   const hasRequest = requestType && !isEmpty(requestBody);
   const hasResponse = status < 500;
@@ -408,6 +450,30 @@ function copyField(target, source, path, field) {
   if (sValue) {
     set(target, fPath, sValue);
   }
+}
+
+// Hacks
+
+// Router layers get flattened and do not have a way to
+// disambigute different contexts (ie. middlewares that
+// apply only to a given router). This hack stores the
+// prefix to allow resetting the context later in order
+// to determine if authentication applies to a given
+// layer in the stack or not. This hack will only be
+// applied when generating docs using this script and
+// don't affect actual router functionality.
+function applyRouterHack() {
+  const Router = require('@koa/router');
+  const routerUse = Router.prototype.use;
+
+  Router.prototype.use = function (arg1, arg2) {
+    if (typeof arg1 === 'string' && arg2?.router) {
+      for (let layer of arg2.router.stack) {
+        layer.opts.prefix += arg1;
+      }
+    }
+    return routerUse.apply(this, arguments);
+  };
 }
 
 module.exports = {

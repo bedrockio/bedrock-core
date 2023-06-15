@@ -17,6 +17,9 @@ export default class Route extends React.Component {
 
   authRequired() {
     const auth = this.getAuth();
+    if (auth.length === 0) {
+      return false;
+    }
     return auth.every((entry) => {
       return 'bearerAuth' in entry;
     });
@@ -30,7 +33,11 @@ export default class Route extends React.Component {
   }
 
   render() {
-    return <h4>Authentication: {this.renderAuth()}</h4>;
+    return (
+      <div style={{ marginTop: '1em' }}>
+        <b>Authentication</b>: {this.renderAuth()}
+      </div>
+    );
   }
 
   renderAuth() {

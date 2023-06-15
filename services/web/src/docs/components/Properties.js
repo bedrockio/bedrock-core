@@ -29,7 +29,7 @@ export default class DocsProperties extends React.Component {
       return null;
     }
 
-    const data = get(docs, path);
+    const data = this.props.data || get(docs, path);
 
     if (loading || !data) {
       return null;
@@ -87,7 +87,7 @@ export default class DocsProperties extends React.Component {
 
   renderParam(name, desc, path, options) {
     const { grouped, level } = options;
-    const { model } = this.props;
+    const { model, getPath } = this.props;
     const { description, required, default: defaultValue } = desc;
     return (
       <div
@@ -117,7 +117,7 @@ export default class DocsProperties extends React.Component {
           <EditableField
             type="description"
             model={model}
-            path={[...path, name]}
+            path={path ? [...path, name] : getPath(name)}
             modelPath={this.getModelPath(name)}
           />
 

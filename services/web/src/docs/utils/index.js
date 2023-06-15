@@ -5,22 +5,16 @@ export function expandRoute(route) {
   return { method, path };
 }
 
-export function getSchemaPath(route) {
-  return [
-    ...getRoutePath(route),
-    'requestBody',
-    'content',
-    'application/json',
-    'schema',
-  ];
+export function getSchemaPath(route, mime = 'application/json') {
+  return [...getRoutePath(route), 'requestBody', 'content', mime, 'schema'];
 }
 
 export function getParametersPath(route) {
   return [...getRoutePath(route), 'parameters'];
 }
 
-export function getRequestBodyPath(route) {
-  return [...getSchemaPath(route), 'properties'];
+export function getRequestBodyPath(route, mime) {
+  return [...getSchemaPath(route, mime), 'properties'];
 }
 
 export function getModelPath(route) {

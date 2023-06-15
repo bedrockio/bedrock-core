@@ -63,7 +63,9 @@ export default class RouteExample extends React.Component {
               type="summary"
               path={path}
               onClick={(evt) => {
-                evt.stopPropagation();
+                if (this.context.mode === 'edit') {
+                  evt.stopPropagation();
+                }
               }}
               className={this.getElementClass('summary')}
               trigger={
@@ -104,12 +106,12 @@ export default class RouteExample extends React.Component {
           </Layout.Group>
         </Layout>
         {open && (
-          <React.Fragment>
+          <div className={this.getElementClass('content')}>
             {this.renderRequestPath(requestPath)}
             {this.renderSchema(schema)}
             {this.renderBody('Request Body:', requestBody)}
             {this.renderBody('Response Body:', responseBody)}
-          </React.Fragment>
+          </div>
         )}
       </div>
     );
@@ -139,13 +141,15 @@ export default class RouteExample extends React.Component {
     }
   }
 
-  renderBody(title, body = {}) {
-    const keys = Object.keys(body);
-    if (keys.length) {
+  renderBody(title, body) {
+    if (typeof body === 'object') {
+      body = JSON.stringify(body, null, 2);
+    }
+    if (body) {
       return (
         <div className={this.getElementClass('body')}>
           <div className={this.getElementClass('header')}>{title}</div>
-          <Code language="json">{JSON.stringify(body, null, 2)}</Code>
+          <Code language="json">{body}</Code>
         </div>
       );
     }

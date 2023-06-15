@@ -45,6 +45,12 @@ describe('/1/uploads', () => {
       expect(data[1].filename).toBe('test.png');
       expect(data[1].owner).toBe(user.id);
     });
+
+    it('should error if no file passed', async () => {
+      const user = await createUser();
+      const response = await request('POST', '/1/uploads', {}, { user });
+      expect(response.status).toBe(400);
+    });
   });
 
   describe('DELETE /:upload', () => {

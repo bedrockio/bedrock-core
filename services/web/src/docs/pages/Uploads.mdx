@@ -1,0 +1,31 @@
+import Route from 'docs/components/Route';
+import VisitedSchemas from 'docs/components/VisitedSchemas';
+
+export const title = 'Uploads';
+export const order = 4;
+
+# Uploads API
+
+This API allows files to be uploaded, served, and provide metadata.
+
+## Get an Upload
+
+Retrieves upload metadata including MIME type and storage URL.
+
+<Route route="GET /1/uploads/:id" />
+
+## Get Binary Data
+
+Retrieves the upload binary data.
+
+<Route route="GET /1/uploads/:id/raw" />
+
+## Create an Upload
+
+<Route route="POST /1/uploads" />
+
+## Delete an Upload
+
+<Route route="DELETE /1/uploads/:id" />
+
+<VisitedSchemas />

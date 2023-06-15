@@ -2,6 +2,7 @@ const Router = require('@koa/router');
 const { createReadStream } = require('fs');
 const { fetchByParam } = require('../utils/middleware/params');
 const { authenticate } = require('../utils/middleware/authenticate');
+const { validateFiles } = require('../utils/middleware/validate');
 const { Upload } = require('../models');
 const { storeUploadedFile } = require('../utils/uploads');
 
@@ -38,14 +39,10 @@ router
     }
   })
   .use(authenticate())
-  .post('/', async (ctx) => {
+  .post('/', validateFiles(), async (ctx) => {
     const { authUser } = ctx.state;
-    const file = ctx.request.files.file;
-    if (!file) {
-      ctx.throw(400, 'file is missing');
-    }
-    const isArray = Array.isArray(file);
-    const files = isArray ? file : [file];
+    const { file } = ctx.request.files;
+    const files = Array.isArray(file) ? file : [file];
     const uploads = await Promise.all(
       files.map(async (file) => {
         const params = await storeUploadedFile(file);

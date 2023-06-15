@@ -2521,11 +2521,6 @@
             "in": "path",
             "required": true
           }
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
         ]
       },
       "delete": {
@@ -2554,11 +2549,6 @@
             "in": "path",
             "required": true
           }
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
         ]
       }
     },
@@ -2566,6 +2556,32 @@
       "post": {
         "summary": "Create new upload",
         "x-model": "Upload",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": true,
+                "properties": {
+                  "file": {
+                    "required": true,
+                    "oneOf": [
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "object"
+                        }
+                      },
+                      {
+                        "type": "object"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -2812,22 +2828,10 @@
       }
     },
     "/1/status": {
-      "get": {
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
+      "get": {}
     },
     "/1/status/mongodb": {
-      "get": {
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
+      "get": {}
     },
     "/1/categories/search": {
       "post": {
@@ -4388,13 +4392,11 @@
         }
       },
       "ObjectId": {
-        "$ref": "#/components/schemas/ObjectId",
         "required": true,
         "type": "ObjectId",
         "description": "A 24 character hexadecimal string representing a Mongo [ObjectId](https://bit.ly/3YPtGlU).\nAn object with an `id` field may also be passed, which will be converted into a string."
       },
       "DateTime": {
-        "$ref": "#/components/schemas/DateTime",
         "type": "string",
         "format": "date-time",
         "description": "A `string` in [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format."
@@ -4426,19 +4428,23 @@
         "properties": {
           "lt": {
             "type": "number",
-            "description": "Select values less than."
+            "description": "Select values less than.",
+            "x-generated": true
           },
           "gt": {
             "type": "number",
-            "description": "Select values greater than."
+            "description": "Select values greater than.",
+            "x-generated": true
           },
           "lte": {
             "type": "number",
-            "description": "Select values less than or equal."
+            "description": "Select values less than or equal.",
+            "x-generated": true
           },
           "gte": {
             "type": "number",
-            "description": "Select values greater than or equal."
+            "description": "Select values greater than or equal.",
+            "x-generated": true
           }
         },
         "description": "An object representing numbers falling within a range."

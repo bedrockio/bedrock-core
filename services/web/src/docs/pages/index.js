@@ -3,14 +3,16 @@ import { kebabCase } from 'lodash';
 import * as GettingStarted from './GettingStarted.mdx';
 import * as Authentication from './Authentication.mdx';
 import * as Products from './Products.mdx';
+import * as Uploads from './Uploads.mdx';
 import * as Shops from './Shops.mdx';
 import * as Mfa from './Mfa.mdx';
 
 const PAGES = {
   Authentication,
   GettingStarted,
-  Shops,
   Products,
+  Uploads,
+  Shops,
   Mfa,
 };
 

@@ -4,6 +4,10 @@
   background-color: #2e2e2e;
   color: #fff;
 
+  a {
+    color: #49a2f5 !important;
+  }
+
   .layout-group {
     display: flex;
     gap: 5px;
@@ -17,6 +21,7 @@
   &__header {
     font-size: 14px;
     font-weight: 500;
+    margin-bottom: 0.5em;
   }
 
   &__title {
@@ -42,17 +47,14 @@
     opacity: 0.5;
   }
 
-  &__schema {
-    padding: 10px 20px;
-  }
-
-  &__request-path {
-    padding: 5px 20px;
+  &__content {
+    display: flex;
+    flex-flow: column;
+    gap: 15px;
+    padding: 10px 20px 20px 20px;
   }
 
   &__body {
-    padding: 5px 20px;
-
     pre {
       color: #fff;
       background-color: #1f1f1f;
