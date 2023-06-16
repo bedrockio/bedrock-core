@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { get } from 'lodash';
+import { get, isEqual } from 'lodash';
 
 import { JumpLink } from 'components/Link';
 import bem from 'helpers/bem';
@@ -19,6 +19,27 @@ export default class DocsProperties extends React.Component {
     const { model } = this.props;
     if (model) {
       return ['components', 'schemas', model, 'properties', name];
+    }
+  }
+
+  isArrayVariant(oneOf) {
+    if (oneOf.length === 2) {
+      const { $ref: ref1, enum: enum1 } = oneOf[0];
+      const { $ref: ref2, enum: enum2 } = oneOf[1].items || {};
+      if (ref1 === ref2) {
+        return true;
+      } else if (enum1 && enum2) {
+        return isEqual(enum1, enum2);
+      }
+    }
+  }
+
+  isRangeVariant(oneOf) {
+    if (oneOf.length === 3) {
+      if (this.isArrayVariant(oneOf.slice(0, 2))) {
+        const { $ref = '' } = oneOf[2];
+        return $ref.endsWith('Range');
+      }
     }
   }
 
@@ -133,15 +154,40 @@ export default class DocsProperties extends React.Component {
   renderType(desc, isArray = false) {
     const { type, $ref, oneOf, enum: allowed } = desc;
     if (oneOf) {
-      return oneOf.map((entry, i) => {
-        const comma = i > 0 ? ', ' : '';
+      if (this.isArrayVariant(oneOf)) {
         return (
-          <React.Fragment key={i}>
-            {comma}
-            {this.renderType(entry)}
+          <React.Fragment>
+            {this.renderType(oneOf[0])}
+            <span
+              title="May also be an array."
+              className={this.getElementClass('note')}>
+              *
+            </span>
           </React.Fragment>
         );
-      });
+      } else if (this.isRangeVariant(oneOf)) {
+        this.context.visitedComponents.add(oneOf[2].$ref);
+        return (
+          <React.Fragment>
+            {this.renderType(oneOf[0])}
+            <span
+              title="May also be an array or range (see below)."
+              className={this.getElementClass('note')}>
+              *
+            </span>
+          </React.Fragment>
+        );
+      } else {
+        return oneOf.map((entry, i) => {
+          const comma = i > 0 ? ', ' : '';
+          return (
+            <React.Fragment key={i}>
+              {comma}
+              {this.renderType(entry)}
+            </React.Fragment>
+          );
+        });
+      }
     } else if (type === 'array') {
       return this.renderType(desc.items, '[]');
     } else if ($ref) {
