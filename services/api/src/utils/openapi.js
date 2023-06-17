@@ -258,21 +258,24 @@ function generateModelSchemas() {
 function extractSchemas(definition) {
   walkFields(definition, ({ value, path }) => {
     const schema = value?.['x-schema'];
-    const ref = schema || value?.['x-ref'];
     let halt = false;
     if (schema) {
       set(definition, ['components', 'schemas', schema], {
         ...value,
+        title: value['x-title'],
         description: value['x-description'],
-        'x-schema': undefined,
+        default: undefined,
+        required: undefined,
+        'x-title': undefined,
         'x-description': undefined,
+        'x-schema': undefined,
       });
-      halt = true;
-    }
-    if (ref) {
       set(definition, path, {
-        $ref: `#/components/schemas/${ref}`,
-        description: value?.description,
+        $ref: `#/components/schemas/${schema}`,
+        title: value.title,
+        default: value.default,
+        required: value.required,
+        description: value.description,
       });
       halt = true;
     }

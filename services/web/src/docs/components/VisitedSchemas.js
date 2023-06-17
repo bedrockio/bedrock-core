@@ -15,10 +15,16 @@ export default class VisitedSchemas extends React.Component {
   render() {
     const { visitedComponents } = this.context;
     if (visitedComponents) {
+      const schemas = Array.from(visitedComponents);
+      schemas.sort((a, b) => {
+        const aName = expandRef(a).name;
+        const bName = expandRef(b).name;
+        return aName.localeCompare(bName);
+      });
       return (
         <React.Fragment>
-          {Array.from(visitedComponents).map(($ref, i) => {
-            const { name, path } = expandRef($ref);
+          {schemas.map((ref, i) => {
+            const { name, path } = expandRef(ref);
             return (
               <React.Fragment key={name}>
                 {i > 0 && <Divider />}
