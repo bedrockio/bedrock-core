@@ -10,7 +10,7 @@ const Context = React.createContext();
 export function usePageLoader(fn, dependencies = []) {
   return useMemo(() => {
     return (props) => {
-      const { inline, notFound, children } = props;
+      const { fallback = <DefaultLoader />, notFound, children } = props;
 
       const page = usePage();
       const [data, setData] = useState();
@@ -35,15 +35,7 @@ export function usePageLoader(fn, dependencies = []) {
       }
 
       if (loading) {
-        if (inline) {
-          return <Loader active inline />;
-        } else {
-          return (
-            <Dimmer active inverted>
-              <Loader inverted inline />
-            </Dimmer>
-          );
-        }
+        return fallback;
       }
 
       return (
@@ -71,6 +63,14 @@ function Render(props) {
   } else {
     return props.children;
   }
+}
+
+function DefaultLoader() {
+  return (
+    <Dimmer active inverted>
+      <Loader inverted inline />
+    </Dimmer>
+  );
 }
 
 export function usePage() {
