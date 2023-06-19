@@ -171,7 +171,7 @@ export default class ProductList extends React.Component {
                               trigger={<Button basic icon="pen-to-square" />}
                               onSave={reload}
                             />
-                            <Actions item={product} reload={reload} />
+                            <Actions product={product} reload={reload} />
                           </Table.Cell>
                         </Table.Row>
                       );

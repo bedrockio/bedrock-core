@@ -2,9 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Table, Button, Segment, Divider } from 'semantic';
 
-import { formatDateTime } from 'utils/date';
-import { request } from 'utils/api';
 import screen from 'helpers/screen';
+
 import {
   HelpTip,
   Breadcrumbs,
@@ -13,6 +12,9 @@ import {
   SearchFilters,
 } from 'components';
 import EditOrganization from 'modals/EditOrganization';
+
+import { request } from 'utils/api';
+import { formatDateTime } from 'utils/date';
 
 import Actions from '../Actions';
 
@@ -121,7 +123,10 @@ export default class OrganizationList extends React.Component {
                               trigger={<Button basic icon="pen-to-square" />}
                               onSave={reload}
                             />
-                            <Actions item={organization} reload={reload} />
+                            <Actions
+                              organization={organization}
+                              reload={reload}
+                            />
                           </Table.Cell>
                         </Table.Row>
                       );

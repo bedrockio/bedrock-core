@@ -10,43 +10,44 @@ import {
 } from 'semantic';
 import { Link } from 'react-router-dom';
 
+import { withPage } from 'stores/page';
 import { formatDateTime } from 'utils/date';
 import { formatUsd } from 'utils/currency';
 import { request } from 'utils/api';
 import screen from 'helpers/screen';
 import { Layout, HelpTip, Search, SearchFilters } from 'components';
 import ErrorMessage from 'components/ErrorMessage';
+
 // --- Generator: subscreen-imports
 import { urlForUpload } from 'utils/uploads';
 // --- Generator: end
 
 import EditProduct from 'modals/EditProduct';
 
-import Actions from '../Actions';
+import Actions from 'screens/Products/Actions';
+
 import Menu from './Menu';
-import DetailsContext from './Context';
 
 @screen
+@withPage
 export default class ShopProducts extends React.Component {
-  static contextType = DetailsContext;
-
   onDataNeeded = async (params) => {
-    const { item } = this.context;
+    const { shop } = this.context;
     return await request({
       method: 'POST',
       path: '/1/products/search',
       body: {
         ...params,
-        shop: item.id,
+        shop: shop.id,
       },
     });
   };
 
   render() {
-    const { item: shop } = this.context;
+    const { shop } = this.context;
     return (
       <Search.Provider onDataNeeded={this.onDataNeeded}>
-        {({ items, getSorted, setSort, reload, loading, error }) => {
+        {({ items: products, getSorted, setSort, reload, loading, error }) => {
           return (
             <React.Fragment>
               <Menu {...this.props} />
@@ -60,7 +61,7 @@ export default class ShopProducts extends React.Component {
               <ErrorMessage error={error} />
               {loading ? (
                 <Loader active />
-              ) : items.length === 0 ? (
+              ) : products.length === 0 ? (
                 <Message>No products added yet</Message>
               ) : (
                 <Table sortable celled>
@@ -86,7 +87,7 @@ export default class ShopProducts extends React.Component {
                         Created
                         <HelpTip
                           title="Created"
-                          text="This is the date and time the item was created."
+                          text="This is the date and time the product was created."
                         />
                       </Table.HeaderCell>
                       <Table.HeaderCell textAlign="center">
@@ -95,34 +96,36 @@ export default class ShopProducts extends React.Component {
                     </Table.Row>
                   </Table.Header>
                   <Table.Body>
-                    {items.map((item) => {
+                    {products.map((product) => {
                       return (
-                        <Table.Row key={item.id}>
+                        <Table.Row key={product.id}>
                           {/* --- Generator: list-body-cells */}
                           <Table.Cell>
-                            <Link to={`/products/${item.id}`}>{item.name}</Link>
+                            <Link to={`/products/${product.id}`}>
+                              {product.name}
+                            </Link>
                           </Table.Cell>
                           {/* --- Generator: end */}
                           <Table.Cell>
-                            {item.images[0] && (
+                            {product.images[0] && (
                               <Image
                                 style={{ width: '100%' }}
-                                src={urlForUpload(item.images[0])}
+                                src={urlForUpload(product.images[0])}
                               />
                             )}
                           </Table.Cell>
-                          <Table.Cell>{formatUsd(item.priceUsd)}</Table.Cell>
+                          <Table.Cell>{formatUsd(product.priceUsd)}</Table.Cell>
                           <Table.Cell>
-                            {formatDateTime(item.createdAt)}
+                            {formatDateTime(product.createdAt)}
                           </Table.Cell>
                           <Table.Cell textAlign="center">
                             <EditProduct
                               shop={shop}
-                              product={item}
+                              product={product}
                               onSave={reload}
                               trigger={<Button basic icon="pen-to-square" />}
                             />
-                            <Actions item={item} reload={reload} />
+                            <Actions product={product} reload={reload} />
                           </Table.Cell>
                         </Table.Row>
                       );

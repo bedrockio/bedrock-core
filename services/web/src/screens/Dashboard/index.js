@@ -1,8 +1,7 @@
 import React from 'react';
 
 import { withDashboardLayout } from 'layouts/Dashboard';
-
-import { withSession } from 'stores';
+import { withSession } from 'stores/session';
 import screen from 'helpers/screen';
 
 @screen

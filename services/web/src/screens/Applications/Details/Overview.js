@@ -2,18 +2,20 @@ import React from 'react';
 import { Table, Divider } from 'semantic';
 
 import screen from 'helpers/screen';
+import { withPage } from 'stores/page';
+
 import { formatDateTime } from 'utils/date';
 
 import Menu from './Menu';
 
-
 @screen
+@withPage
 export default class ApplicationOverview extends React.Component {
   render() {
-    const { application } = this.props;
+    const { application } = this.context;
     return (
       <React.Fragment>
-        <Menu {...this.props} />
+        <Menu />
         <Divider hidden />
         <Table definition>
           <Table.Body>

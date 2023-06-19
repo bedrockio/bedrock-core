@@ -2,11 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Form, Grid, Message, Segment } from 'semantic';
 
-import ErrorMessage from 'components/ErrorMessage';
-import Logo from 'components/LogoTitle';
 import screen from 'helpers/screen';
 import { withBasicLayout } from 'layouts/Basic';
-import { withSession } from 'stores';
+import { withSession } from 'stores/session';
+
+import Logo from 'components/LogoTitle';
+import ErrorMessage from 'components/ErrorMessage';
 
 @screen
 @withSession

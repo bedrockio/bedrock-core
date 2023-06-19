@@ -1,11 +1,13 @@
 import React from 'react';
 import { Modal } from 'semantic';
 
-import { withSession } from 'stores';
+import { withSession } from 'stores/session';
+import modal from 'helpers/modal';
+
+import SearchDropdown from 'components/SearchDropdown';
+
 import { request } from 'utils/api';
 import { userHasAccess } from 'utils/permissions';
-import SearchDropdown from 'components/SearchDropdown';
-import modal from 'helpers/modal';
 
 @modal
 @withSession

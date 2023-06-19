@@ -2,10 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Grid, Segment } from 'semantic';
 
-import LogoTitle from 'components/LogoTitle';
 import screen from 'helpers/screen';
 import { withBasicLayout } from 'layouts/Basic';
-import { withSession } from 'stores';
+import { withSession } from 'stores/session';
+
+import LogoTitle from 'components/LogoTitle';
+
 import { request } from 'utils/api';
 import { getUrlToken } from 'utils/token';
 

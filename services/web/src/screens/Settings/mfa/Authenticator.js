@@ -3,14 +3,16 @@ import { Link } from 'react-router-dom';
 import { Form, Button, Loader, Header, Segment } from 'semantic';
 
 import screen from 'helpers/screen';
-import { request } from 'utils/api';
-import { APP_NAME } from 'utils/env';
-import { ExternalLink } from 'components/Link';
-import { Layout } from 'components';
-import LogoTitle from 'components/LogoTitle';
+
 import Code from 'components/form-fields/Code';
 import ErrorMessage from 'components/ErrorMessage';
+import LogoTitle from 'components/LogoTitle';
 import QRCode from 'components/QRCode';
+import { ExternalLink } from 'components/Link';
+import { Layout } from 'components';
+
+import { APP_NAME } from 'utils/env';
+import { request } from 'utils/api';
 
 import Finalize from './Finalize';
 

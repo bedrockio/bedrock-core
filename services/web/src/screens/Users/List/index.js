@@ -1,20 +1,22 @@
 import React from 'react';
 import { memoize } from 'lodash';
 import { Link } from 'react-router-dom';
-import { Table, Button, Label, Divider, Segment } from 'semantic';
+import { Button, Divider, Label, Segment, Table } from 'semantic';
 
-import { formatDateTime } from 'utils/date';
-import { request } from 'utils/api';
 import screen from 'helpers/screen';
-import { formatRoles } from 'utils/permissions';
+
 import {
-  HelpTip,
   Breadcrumbs,
+  HelpTip,
   Layout,
   Search,
   SearchFilters,
 } from 'components';
 import EditUser from 'modals/EditUser';
+
+import { request } from 'utils/api';
+import { formatRoles } from 'utils/permissions';
+import { formatDateTime } from 'utils/date';
 
 import Actions from '../Actions';
 
@@ -214,7 +216,7 @@ export default class UserList extends React.Component {
                               }
                               onSave={reload}
                             />
-                            <Actions item={user} reload={reload} />
+                            <Actions user={user} reload={reload} />
                           </Table.Cell>
                         </Table.Row>
                       );

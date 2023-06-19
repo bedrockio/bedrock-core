@@ -1,4 +1,4 @@
-import { useTheme } from 'stores';
+import { useTheme } from 'stores/theme';
 
 export default function ThemedImage({ darkSrc, ligthSrc, ...props }) {
   const { renderedTheme } = useTheme();

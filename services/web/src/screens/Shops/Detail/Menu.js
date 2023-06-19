@@ -1,26 +1,25 @@
-import React, { useContext } from 'react';
-import { Link , NavLink } from 'react-router-dom';
+import React from 'react';
+import { Link, NavLink } from 'react-router-dom';
 import { Menu, Button } from 'semantic';
 
+import { usePage } from 'stores/page';
 import { Breadcrumbs, Layout } from 'components';
 import EditShop from 'modals/EditShop';
 
 import Actions from '../Actions';
 
-import DetailsContext from './Context';
-
 export default () => {
-  const { item, reload } = useContext(DetailsContext);
+  const { shop, reload } = usePage();
 
   return (
     <React.Fragment>
-      <Breadcrumbs link={<Link to="/shops">Shops</Link>} active={item.name} />
+      <Breadcrumbs link={<Link to="/shops">Shops</Link>} active={shop.name} />
       <Layout horizontal center spread>
-        <h1>{item.name}</h1>
+        <h1>{shop.name}</h1>
         <Layout.Group>
-          <Actions item={item} reload={reload} />
+          <Actions shop={shop} reload={reload} />
           <EditShop
-            shop={item}
+            shop={shop}
             onSave={reload}
             trigger={<Button primary icon="gear" content="Settings" />}
           />
@@ -29,14 +28,14 @@ export default () => {
       <Menu pointing secondary>
         <Menu.Item
           name="Overview"
-          to={`/shops/${item.id}`}
+          to={`/shops/${shop.id}`}
           as={NavLink}
           exact
         />
         {/* --- Generator: menus */}
         <Menu.Item
           name="Products"
-          to={`/shops/${item.id}/products`}
+          to={`/shops/${shop.id}/products`}
           as={NavLink}
           exact
         />

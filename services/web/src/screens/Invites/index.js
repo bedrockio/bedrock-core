@@ -1,12 +1,11 @@
 import React from 'react';
 import { Table, Button, Divider, Segment } from 'semantic';
 
+import screen from 'helpers/screen';
 import { withDashboardLayout } from 'layouts/Dashboard';
 
-import { request } from 'utils/api';
-import { formatDateTime } from 'utils/date';
-import screen from 'helpers/screen';
 import InviteUser from 'modals/InviteUser';
+
 import {
   Search,
   Layout,
@@ -15,9 +14,12 @@ import {
   SearchFilters,
 } from 'components';
 
+import { request } from 'utils/api';
+import { formatDateTime } from 'utils/date';
+
 @screen
 @withDashboardLayout
-export default class Home extends React.Component {
+export default class Invites extends React.Component {
   onDataNeeded = async (params) => {
     return await request({
       method: 'POST',
@@ -46,7 +48,7 @@ export default class Home extends React.Component {
       <Search.Provider
         filterMapping={this.getFilterMapping()}
         onDataNeeded={this.onDataNeeded}>
-        {({ items, getSorted, setSort, reload }) => {
+        {({ items: invites, getSorted, setSort, reload }) => {
           return (
             <div>
               <Breadcrumbs active="Invites" />
@@ -100,7 +102,7 @@ export default class Home extends React.Component {
 
               <Search.Status />
 
-              {items.length !== 0 && (
+              {invites.length !== 0 && (
                 <Table celled sortable>
                   <Table.Header>
                     <Table.Row>
@@ -122,13 +124,13 @@ export default class Home extends React.Component {
                     </Table.Row>
                   </Table.Header>
                   <Table.Body>
-                    {items.map((item) => {
+                    {invites.map((invite) => {
                       return (
-                        <Table.Row key={item.id}>
-                          <Table.Cell>{item.email}</Table.Cell>
-                          <Table.Cell collapsing>{item.status}</Table.Cell>
+                        <Table.Row key={invite.id}>
+                          <Table.Cell>{invite.email}</Table.Cell>
+                          <Table.Cell collapsing>{invite.status}</Table.Cell>
                           <Table.Cell collapsing>
-                            {formatDateTime(item.createdAt)}
+                            {formatDateTime(invite.createdAt)}
                           </Table.Cell>
                           <Table.Cell textAlign="center">
                             <LoadButton
@@ -138,7 +140,7 @@ export default class Home extends React.Component {
                               onClick={async () => {
                                 await request({
                                   method: 'POST',
-                                  path: `/1/invites/${item.id}/resend`,
+                                  path: `/1/invites/${invite.id}/resend`,
                                 });
                                 reload();
                               }}
@@ -150,7 +152,7 @@ export default class Home extends React.Component {
                               onClick={async () => {
                                 await request({
                                   method: 'DELETE',
-                                  path: `/1/invites/${item.id}`,
+                                  path: `/1/invites/${invite.id}`,
                                 });
                                 reload();
                               }}

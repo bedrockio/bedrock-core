@@ -3,14 +3,15 @@ import { Link } from 'react-router-dom';
 import { Segment, Form, Header, Divider } from 'semantic';
 
 import { withBasicLayout } from 'layouts/Basic';
-
-import { request } from 'utils/api';
-import { withSession } from 'stores';
+import { withSession } from 'stores/session';
 import screen from 'helpers/screen';
+
 import { Layout } from 'components';
 import Logo from 'components/LogoTitle';
 import Code from 'components/form-fields/Code';
 import ErrorMessage from 'components/ErrorMessage';
+
+import { request } from 'utils/api';
 
 @screen
 @withSession
