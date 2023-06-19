@@ -89,8 +89,6 @@ describe('hoc', () => {
 
     describe('screen interop', () => {
       class MyScreen extends React.Component {
-        static layout = 'null';
-
         render() {
           return <div>{this.context.user?.name || 'Anonymous'}</div>;
         }

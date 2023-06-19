@@ -11,8 +11,6 @@ import ErrorMessage from 'components/ErrorMessage';
 @withRouter
 @withSession
 export default class Finalize extends React.Component {
-  static layout = 'basic';
-
   state = {
     loading: false,
     error: null,

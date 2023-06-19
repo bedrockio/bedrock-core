@@ -2,6 +2,8 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Button, Icon, Menu } from 'semantic';
 
+import { wrapComponent } from 'utils/hoc';
+
 import { Layout } from 'components';
 import ThemedImage from 'components/ThemedImage';
 import bem from 'helpers/bem';
@@ -53,4 +55,17 @@ export default class PortalLayout extends React.Component {
       </div>
     );
   }
+}
+
+export function withPortalLayout(Component) {
+  class Wrapper extends React.PureComponent {
+    render() {
+      return (
+        <PortalLayout>
+          <Component {...this.props} />
+        </PortalLayout>
+      );
+    }
+  }
+  return wrapComponent(Component, Wrapper);
 }

@@ -15,8 +15,6 @@ import Finalize from './Finalize';
 
 @screen
 export default class Sms extends React.Component {
-  static layout = 'basic';
-
   state = {
     touched: false,
     loading: false,

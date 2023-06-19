@@ -1,19 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Segment, Grid, Form } from 'semantic';
+import { Form, Grid, Segment } from 'semantic';
 
-import { request } from 'utils/api';
-import { withSession } from 'stores';
-import screen from 'helpers/screen';
-import LogoTitle from 'components/LogoTitle';
 import ErrorMessage from 'components/ErrorMessage';
+import LogoTitle from 'components/LogoTitle';
 import Password from 'components/form-fields/Password';
+import screen from 'helpers/screen';
+import { withBasicLayout } from 'layouts/Basic';
+import { withSession } from 'stores';
+import { request } from 'utils/api';
 
 @screen
 @withSession
+@withBasicLayout
 export default class ConfirmAccess extends React.Component {
-  static layout = 'basic';
-
   state = {
     error: null,
     loading: false,

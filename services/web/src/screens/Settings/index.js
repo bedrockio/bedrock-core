@@ -1,12 +1,15 @@
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
+import { withDashboardLayout } from 'layouts/Dashboard';
+
 import Account from './Account';
 import Appearance from './Appearance';
 import Security from './Security';
 import MfaSms from './mfa/Sms';
 import MfaAuthenticator from './mfa/Authenticator';
 
+@withDashboardLayout
 export default class Settings extends React.Component {
   render() {
     return (

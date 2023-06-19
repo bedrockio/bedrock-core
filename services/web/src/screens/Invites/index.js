@@ -1,6 +1,8 @@
 import React from 'react';
 import { Table, Button, Divider, Segment } from 'semantic';
 
+import { withDashboardLayout } from 'layouts/Dashboard';
+
 import { request } from 'utils/api';
 import { formatDateTime } from 'utils/date';
 import screen from 'helpers/screen';
@@ -14,6 +16,7 @@ import {
 } from 'components';
 
 @screen
+@withDashboardLayout
 export default class Home extends React.Component {
   onDataNeeded = async (params) => {
     return await request({

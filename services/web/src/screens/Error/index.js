@@ -9,8 +9,6 @@ import { ENV_NAME } from 'utils/env';
 @screen
 @withSession
 export default class ErrorScreen extends React.Component {
-  static layout = 'basic';
-
   onLogoutClick = async () => {
     await this.context.logout(true);
   };

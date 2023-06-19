@@ -20,7 +20,7 @@ export default class ProductOverview extends React.Component {
         <Divider hidden />
         <Image.Group size="small">
           {item.images.map((image) => (
-            <Image key={image.id} src={urlForUpload(image)} />
+            <Image key={image} src={urlForUpload(image)} />
           ))}
         </Image.Group>
         <Table definition>

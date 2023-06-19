@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Segment, Form, Header, Divider } from 'semantic';
 
+import { withBasicLayout } from 'layouts/Basic';
+
 import { request } from 'utils/api';
 import { withSession } from 'stores';
 import screen from 'helpers/screen';
@@ -12,9 +14,8 @@ import ErrorMessage from 'components/ErrorMessage';
 
 @screen
 @withSession
+@withBasicLayout
 export default class MfaVerification extends React.Component {
-  static layout = 'basic';
-
   state = {
     error: null,
     loading: false,

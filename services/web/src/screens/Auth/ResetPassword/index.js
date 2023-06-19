@@ -1,20 +1,20 @@
 import React from 'react';
-import { Segment, Message } from 'semantic';
 import { Link } from 'react-router-dom';
+import { Message, Segment } from 'semantic';
 
+import LogoTitle from 'components/LogoTitle';
+import screen from 'helpers/screen';
+import { withBasicLayout } from 'layouts/Basic';
 import { withSession } from 'stores';
 import { request } from 'utils/api';
-import screen from 'helpers/screen';
-import LogoTitle from 'components/LogoTitle';
 import { getUrlToken } from 'utils/token';
 
 import Form from './Form';
 
 @screen
 @withSession
+@withBasicLayout
 export default class ResetPassword extends React.Component {
-  static layout = 'basic';
-
   constructor(props) {
     super(props);
     const { token, payload } = getUrlToken();

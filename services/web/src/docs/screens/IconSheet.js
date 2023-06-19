@@ -2034,8 +2034,6 @@ const icons = [
 
 @screen
 export default class IconSheetScreen extends React.Component {
-  static layout = 'portal';
-
   contextRef = React.createRef();
 
   constructor(props) {

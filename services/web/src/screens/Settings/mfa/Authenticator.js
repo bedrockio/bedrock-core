@@ -22,8 +22,6 @@ function getOtpURI(secret) {
 
 @screen
 export default class Authenticator extends React.Component {
-  static layout = 'basic';
-
   state = {
     loading: false,
     error: null,
