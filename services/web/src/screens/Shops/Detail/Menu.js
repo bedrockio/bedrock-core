@@ -3,6 +3,7 @@ import { Link, NavLink } from 'react-router-dom';
 import { Menu, Button } from 'semantic';
 
 import { usePage } from 'stores/page';
+
 import { Breadcrumbs, Layout } from 'components';
 import EditShop from 'modals/EditShop';
 

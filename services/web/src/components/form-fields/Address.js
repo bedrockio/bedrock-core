@@ -3,8 +3,9 @@ import { get, set } from 'lodash';
 import { Form, Segment, Dropdown } from 'semantic';
 import { Loader } from 'semantic-ui-react';
 
-import { loadScript } from 'utils/script';
 import CountriesField from 'components/form-fields/Countries';
+
+import { loadScript } from 'utils/script';
 import { GOOGLE_API_KEY } from 'utils/env';
 
 import UsStates from './UsStates';

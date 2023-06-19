@@ -1,7 +1,8 @@
 import { Icon } from 'semantic';
 
-import { Confirm } from 'components';
 import { useClass } from 'helpers/bem';
+
+import { Confirm } from 'components';
 
 import { useDocs } from '../utils/context';
 

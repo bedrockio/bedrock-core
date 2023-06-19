@@ -2,8 +2,10 @@ import React from 'react';
 import { Modal, Table, Menu, Divider } from 'semantic';
 
 import modal from 'helpers/modal';
+
 import Code from 'components/Code';
 import RequestBlock from 'components/RequestBlock';
+
 import { API_URL } from 'utils/env';
 
 @modal

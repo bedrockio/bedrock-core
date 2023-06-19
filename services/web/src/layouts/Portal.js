@@ -2,16 +2,17 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Button, Icon, Menu } from 'semantic';
 
-import { wrapComponent } from 'utils/hoc';
+import bem from 'helpers/bem';
 
 import { Layout } from 'components';
 import ThemedImage from 'components/ThemedImage';
-import bem from 'helpers/bem';
 
 import ConnectionError from 'components/ConnectionError';
 
 import darkLogo from 'assets/logo-inverted.svg';
 import logo from 'assets/logo.svg';
+
+import { wrapComponent } from 'utils/hoc';
 
 import './portal.less';
 

@@ -2,9 +2,9 @@ import React from 'react';
 
 import { Message, Modal, Button } from 'semantic';
 
-import { JWT_KEY, request } from 'utils/api';
-
 import modal from 'helpers/modal';
+
+import { JWT_KEY, request } from 'utils/api';
 
 @modal
 export default class LoginAsUser extends React.Component {

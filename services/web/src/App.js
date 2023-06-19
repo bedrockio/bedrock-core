@@ -2,6 +2,7 @@ import { hot } from 'react-hot-loader/root';
 import { Switch, Route } from 'react-router-dom';
 
 import { Protected } from 'helpers/routes';
+
 import Dashboard from 'screens/Dashboard';
 import Invites from 'screens/Invites';
 import NotFound from 'screens/NotFound';

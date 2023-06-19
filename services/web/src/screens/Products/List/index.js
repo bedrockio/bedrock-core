@@ -3,11 +3,8 @@ import { Image, Segment } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { Table, Button, Divider } from 'semantic';
 
-import { formatDateTime } from 'utils/date';
-import { urlForUpload } from 'utils/uploads';
-import { formatUsd } from 'utils/currency';
-import { request } from 'utils/api';
 import screen from 'helpers/screen';
+
 import {
   HelpTip,
   Breadcrumbs,
@@ -15,7 +12,13 @@ import {
   Search,
   SearchFilters,
 } from 'components';
+
 import EditProduct from 'modals/EditProduct';
+
+import { formatDateTime } from 'utils/date';
+import { urlForUpload } from 'utils/uploads';
+import { formatUsd } from 'utils/currency';
+import { request } from 'utils/api';
 
 import Actions from '../Actions';
 

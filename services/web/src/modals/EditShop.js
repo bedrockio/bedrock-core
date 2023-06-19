@@ -1,14 +1,16 @@
 import React from 'react';
 import { Form, Modal, Button } from 'semantic';
 
-import { request } from 'utils/api';
-import AutoFocus from 'components/AutoFocus';
 import modal from 'helpers/modal';
+
+import AutoFocus from 'components/AutoFocus';
 import UploadsField from 'components/form-fields/Uploads';
 import CountriesField from 'components/form-fields/Countries';
 import AddressField from 'components/form-fields/Address';
 import ErrorMessage from 'components/ErrorMessage';
 import SearchDropdown from 'components/form-fields/SearchDropdown';
+
+import { request } from 'utils/api';
 
 @modal
 export default class EditShop extends React.Component {

@@ -11,20 +11,23 @@ import {
 import { Link } from 'react-router-dom';
 
 import { withPage } from 'stores/page';
-import { formatDateTime } from 'utils/date';
-import { formatUsd } from 'utils/currency';
-import { request } from 'utils/api';
+
 import screen from 'helpers/screen';
+
 import { Layout, HelpTip, Search, SearchFilters } from 'components';
 import ErrorMessage from 'components/ErrorMessage';
 
 // --- Generator: subscreen-imports
-import { urlForUpload } from 'utils/uploads';
 // --- Generator: end
 
 import EditProduct from 'modals/EditProduct';
 
 import Actions from 'screens/Products/Actions';
+
+import { urlForUpload } from 'utils/uploads';
+import { request } from 'utils/api';
+import { formatUsd } from 'utils/currency';
+import { formatDateTime } from 'utils/date';
 
 import Menu from './Menu';
 

@@ -1,8 +1,9 @@
 import React, { useState, useContext, useMemo, useEffect } from 'react';
 import { Dimmer, Loader } from 'semantic';
 
-import { wrapContext } from 'utils/hoc';
 import ErrorBoundary from 'components/ErrorBoundary';
+
+import { wrapContext } from 'utils/hoc';
 
 const Context = React.createContext();
 

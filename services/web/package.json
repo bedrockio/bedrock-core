@@ -91,7 +91,7 @@
     "babel-jest": "^29.4.3",
     "eslint": "^8.33.0",
     "eslint-import-resolver-webpack": "^0.13.2",
-    "eslint-plugin-bedrock": "^1.0.25",
+    "eslint-plugin-bedrock": "^1.0.26",
     "eslint-plugin-mdx": "^1.17.1",
     "jest": "^29.4.3",
     "jest-environment-jsdom": "^29.5.0",

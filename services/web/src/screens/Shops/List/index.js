@@ -2,10 +2,8 @@ import React from 'react';
 import { Table, Image, Button, Divider, Segment } from 'semantic';
 import { Link } from 'react-router-dom';
 
-import { formatDateTime } from 'utils/date';
-import { urlForUpload } from 'utils/uploads';
-import { request } from 'utils/api';
 import screen from 'helpers/screen';
+
 import {
   HelpTip,
   Breadcrumbs,
@@ -13,7 +11,12 @@ import {
   Search,
   SearchFilters,
 } from 'components';
+
 import EditShop from 'modals/EditShop';
+
+import { formatDateTime } from 'utils/date';
+import { urlForUpload } from 'utils/uploads';
+import { request } from 'utils/api';
 
 // --- Generator: list-imports
 import allCountries from 'utils/countries';

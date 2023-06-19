@@ -3,7 +3,9 @@ import { Modal, Table, Menu, Divider } from 'semantic';
 import { Link } from 'react-router-dom';
 
 import modal from 'helpers/modal';
+
 import Code from 'components/Code';
+
 import { formatDateTime } from 'utils/date';
 
 @modal
