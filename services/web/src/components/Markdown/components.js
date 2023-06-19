@@ -1,4 +1,3 @@
-import React from 'react';
 import { kebabCase, deburr } from 'lodash';
 
 import Code from 'components/Code';

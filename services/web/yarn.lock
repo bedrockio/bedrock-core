@@ -4064,10 +4064,10 @@ eslint-module-utils@^2.7.4:
   dependencies:
     debug "^3.2.7"
 
-eslint-plugin-bedrock@^1.0.24:
-  version "1.0.24"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-bedrock/-/eslint-plugin-bedrock-1.0.24.tgz#25fb01f381aff38163a2d063f8dd9c0e2b209e4a"
-  integrity sha512-/J/UtGq4rrEVBadWysG378GFvjK1sbIuhPZvUduUSOi2TbtBRCjwAETuXscwej8U41xUkEUq5Nc9hZ9oylVwxA==
+eslint-plugin-bedrock@^1.0.25:
+  version "1.0.25"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-bedrock/-/eslint-plugin-bedrock-1.0.25.tgz#815560a386d37471cf25e1b8c7c08b3b1011e281"
+  integrity sha512-Rfmjazzda8p61w2YFbZ72ujXot4jDsjII/vQO7cBKeMMxwFmVr9c+yWrBWYtIViyEYxRoUYMlCfEztZe5purMA==
   dependencies:
     eslint-plugin-import "^2.27.5"
     eslint-plugin-jest "^27.2.1"

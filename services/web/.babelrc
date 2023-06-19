@@ -4,13 +4,13 @@
       "@babel/preset-env"
     ],
     [
-      "@babel/preset-react"
+      "@babel/preset-react",
+      {
+        "runtime": "automatic"
+      }
     ]
   ],
   "plugins": [
-    [
-      "react-hot-loader/babel"
-    ],
     [
       "@babel/plugin-transform-runtime"
     ],

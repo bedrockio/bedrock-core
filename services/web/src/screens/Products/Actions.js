@@ -1,4 +1,3 @@
-import React from 'react';
 import { Dropdown } from 'semantic';
 
 import { request } from 'utils/api';
