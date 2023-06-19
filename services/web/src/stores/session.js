@@ -104,9 +104,14 @@ export class SessionProvider extends React.PureComponent {
     }
   };
 
-  updateUser = (data) => {
+  updateSelf = async (updates) => {
+    const { data } = await request({
+      method: 'PATCH',
+      path: `/1/users/me`,
+      body: updates,
+    });
     this.setState({
-      user: merge({}, this.state.user, data),
+      user: data,
     });
   };
 
@@ -291,7 +296,7 @@ export class SessionProvider extends React.PureComponent {
           setStored: this.setStored,
           removeStored: this.removeStored,
           clearStored: this.clearStored,
-          updateUser: this.updateUser,
+          updateSelf: this.updateSelf,
           clearUser: this.clearUser,
           login: this.login,
           isLoggedIn: this.isLoggedIn,

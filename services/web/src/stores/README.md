@@ -110,7 +110,7 @@ State exposed on the session context:
 ## Methods
 
 - `load()` - Reloads the session data.
-- `updateUser(data)` - Updates the user with `data`.
+- `updateSelf(data)` - Updates the authenticated user with `data`.
 - `setStored(key, value)` - Adds session data. `key` must be a `string` and
   `value` must be serializable. Data is stored using `localStorage`.
 - `removeStored(key)` - Removes stored data. `key` must be a `string`.
