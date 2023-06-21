@@ -1,7 +1,7 @@
 const fs = require('fs/promises');
 const path = require('path');
 const crypto = require('crypto');
-const { Stream } = require('node:stream');
+const { Stream } = require('stream');
 const mongoose = require('mongoose');
 const config = require('@bedrockio/config');
 
