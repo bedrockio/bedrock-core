@@ -1,7 +1,8 @@
 import React from 'react';
 
 import RoutePath from './RoutePath';
-import RouteAuth from './RouteAuth';
+import RoutePermissions from './RoutePermissions';
+import RouteAuthentication from './RouteAuthentication';
 import RouteParams from './RouteParams';
 import RouteExamples from './RouteExamples';
 
@@ -11,7 +12,8 @@ export default class Route extends React.Component {
       <React.Fragment>
         <RoutePath {...this.props} />
         <RouteParams {...this.props} />
-        <RouteAuth {...this.props} />
+        <RouteAuthentication {...this.props} />
+        <RoutePermissions {...this.props} />
         <RouteExamples {...this.props} />
       </React.Fragment>
     );
