@@ -26,14 +26,16 @@ export default (props) => {
           onChange={(e, { value }) => setEmail(value)}
           error={error?.hasField?.('email')}
         />
-        <Button
-          fluid
-          primary
-          size="large"
-          content="Request password"
-          loading={loading}
-          disabled={loading}
-        />
+        <div>
+          <Button
+            fluid
+            primary
+            size="large"
+            content="Request password"
+            loading={loading}
+            disabled={loading}
+          />
+        </div>
       </Form>
     </AutoFocus>
   );
