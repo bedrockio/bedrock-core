@@ -27,17 +27,17 @@
     "objectAfter": {
       "type": "Object"
     },
-    "parentType": {
+    "ownerId": {
       "type": "String"
     },
-    "parentId": {
-      "type": "ObjectId"
+    "ownerType": {
+      "type": "String"
     },
     "category": {
       "type": "String",
       "default": "default"
     },
-    "actor": {
+    "user": {
       "type": "ObjectId",
       "ref": "User",
       "required": true

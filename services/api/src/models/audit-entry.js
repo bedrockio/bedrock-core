@@ -28,6 +28,10 @@ schema.statics.getObjectFields = function (options) {
     let result = {
       objectId: object.id,
       objectType: object.constructor.modelName,
+      owner: object.owner,
+      // mmm how do i get to the owner type?
+      // my thinking is that i need to get to schema to to figure out the owner type
+      ownerType: object.ownerType,
     };
 
     if (fields) {
@@ -67,10 +71,16 @@ schema.statics.append = function (activity, options) {
     return;
   }
 
+  const parentType = options.parentType || options.parent.constructor.modelName;
+  const parentId = options.parentId || options.parent;
+
   return this.create({
     ...this.getContextFields(ctx),
     ...objectFields,
     user: options.user?.id || ctx.state.authUser?.id,
+
+    parentType,
+    parentId,
     activity,
     category,
   });
