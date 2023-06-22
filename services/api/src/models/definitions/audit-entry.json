@@ -27,11 +27,17 @@
     "objectAfter": {
       "type": "Object"
     },
+    "parentType": {
+      "type": "String"
+    },
+    "parentId": {
+      "type": "ObjectId"
+    },
     "category": {
       "type": "String",
       "default": "default"
     },
-    "user": {
+    "actor": {
       "type": "ObjectId",
       "ref": "User",
       "required": true
