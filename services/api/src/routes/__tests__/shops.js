@@ -56,7 +56,7 @@ describe('/1/shops', () => {
       const auditEntry = await AuditEntry.findOne({
         objectId: data.id,
       });
-      expect(auditEntry.activity).toBe('Created Shop');
+      expect(auditEntry.activity).toBe('Created shop');
       expect(auditEntry.actor).toEqual(user._id);
       expect(auditEntry.owner).toEqual(user._id);
       expect(auditEntry.ownerType).toBe('User');

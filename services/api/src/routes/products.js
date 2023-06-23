@@ -12,6 +12,7 @@ router
   .param('id', fetchByParam(Product))
   .post('/', validateBody(Product.getCreateValidation()), async (ctx) => {
     const product = await Product.create(ctx.request.body);
+
     ctx.body = {
       data: product,
     };

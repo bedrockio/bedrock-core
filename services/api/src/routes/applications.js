@@ -68,11 +68,11 @@ router
       user: ctx.state.authUser,
     });
 
-    await AuditEntry.append('Created Application', {
+    await AuditEntry.append('Created application', {
       ctx,
       object: application,
+      fields: ['name', 'user', 'apiKey'],
     });
-    console.log(!23132);
 
     ctx.body = {
       data: application,
@@ -85,11 +85,10 @@ router
     application.assign(ctx.request.body);
     await application.save();
 
-    await AuditEntry.append('Updated Application', {
+    await AuditEntry.append('Updated application', {
       ctx,
       object: application,
-      actor: ctx.state.authUser,
-      fields: ['name', 'description', 'apiKey'],
+      fields: ['name', 'user', 'apiKey'],
       snapshot,
     });
 
@@ -98,7 +97,12 @@ router
     };
   })
   .delete('/:id', async (ctx) => {
-    await ctx.state.application.delete();
+    const application = ctx.state.application;
+    await application.delete();
+    await AuditEntry.append('Deleted application', {
+      ctx,
+      object: application,
+    });
     ctx.status = 204;
   });
 

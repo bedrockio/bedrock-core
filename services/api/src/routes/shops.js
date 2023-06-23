@@ -19,6 +19,7 @@ router
     await AuditEntry.append('Created shop', {
       ctx,
       object: shop,
+      fields: ['name', 'owner', 'country'],
     });
 
     ctx.body = {
@@ -63,7 +64,7 @@ router
     await AuditEntry.append('Updated shop', {
       ctx,
       object: shop,
-      fields: ['name', 'description', 'owner', 'address'],
+      fields: ['name', 'owner', 'country'],
       snapshot,
     });
 

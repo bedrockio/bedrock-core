@@ -106,6 +106,12 @@ export default class AuditTrailList extends React.Component {
                       label="Actor"
                     />
                     <SearchFilters.Dropdown
+                      onDataNeeded={(name) => this.fetchUsers({ name })}
+                      search
+                      name="owner"
+                      label="Owner"
+                    />
+                    <SearchFilters.Dropdown
                       onDataNeeded={() =>
                         this.fetchSearchOptions({ field: 'category' })
                       }
@@ -180,6 +186,15 @@ export default class AuditTrailList extends React.Component {
                         <Table.Row key={item.id}>
                           <Table.Cell>
                             {item.actor && (
+                              <Link
+                                title={item.actor.email}
+                                to={`/users/${item.actor.id}`}>
+                                {item.actor.firstName} {item.actor.lastName}
+                              </Link>
+                            )}
+                          </Table.Cell>
+                          <Table.Cell>
+                            {item.owner && (
                               <Link
                                 title={item.actor.email}
                                 to={`/users/${item.actor.id}`}>

@@ -17,7 +17,6 @@ export default class ShowAuditEntry extends React.Component {
 
   render() {
     const { auditEntry } = this.props;
-
     return (
       <>
         <Modal.Header>{auditEntry.activity}</Modal.Header>
@@ -30,7 +29,7 @@ export default class ShowAuditEntry extends React.Component {
               onClick={() => this.setState({ tab: 'details' })}
             />
             <Menu.Item
-              disabled={!auditEntry.objectAfter || !auditEntry.objectBefore}
+              disabled={!auditEntry.objectAfter && !auditEntry.objectBefore}
               content="Modifications"
               active={this.state.tab === 'modifications'}
               onClick={() => this.setState({ tab: 'modifications' })}
@@ -47,6 +46,17 @@ export default class ShowAuditEntry extends React.Component {
                   </Table.Row>
                   <Table.Row>
                     <Table.Cell width={4}>Actor</Table.Cell>
+                    <Table.Cell>
+                      <Link
+                        title={auditEntry.actor.email}
+                        to={`/users/${auditEntry.actor.id}`}>
+                        {auditEntry.actor.firstName}{' '}
+                        {auditEntry.actor.firstName}
+                      </Link>
+                    </Table.Cell>
+                  </Table.Row>
+                  <Table.Row>
+                    <Table.Cell width={4}>Owner</Table.Cell>
                     <Table.Cell>
                       <Link
                         title={auditEntry.actor.email}
@@ -94,14 +104,22 @@ export default class ShowAuditEntry extends React.Component {
           )}
           {this.state.tab === 'modifications' && (
             <>
-              <h3>Before</h3>
-              <Code language="json">
-                {JSON.stringify(auditEntry.objectBefore || {}, null, 2)}
-              </Code>
-              <h3>After</h3>
-              <Code language="json">
-                {JSON.stringify(auditEntry.objectAfter || {}, null, 2)}
-              </Code>
+              {auditEntry.objectBefore && (
+                <>
+                  <h3>Before</h3>
+                  <Code language="json">
+                    {JSON.stringify(auditEntry.objectBefore || {}, null, 2)}
+                  </Code>
+                </>
+              )}
+              {auditEntry.objectAfter && (
+                <>
+                  <h3>After</h3>
+                  <Code language="json">
+                    {JSON.stringify(auditEntry.objectAfter || {}, null, 2)}
+                  </Code>
+                </>
+              )}
             </>
           )}
         </Modal.Content>

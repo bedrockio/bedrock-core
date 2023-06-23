@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { createSchema } = require('@bedrockio/model');
-const { isEmpty } = require('lodash');
+const { isEmpty, get } = require('lodash');
 
 const definition = require('./definitions/audit-entry.json');
 
@@ -27,9 +27,18 @@ schema.statics.getObjectFields = function (options) {
 
     const paths = object.constructor.schema.paths;
 
-    const schemaField = paths['owner'] || paths['user'];
+    let ownerPath = options.ownerPath;
+
+    if (!ownerPath && paths['owner']) {
+      ownerPath = 'owner';
+    } else if (!ownerPath && paths['user']) {
+      ownerPath = 'user';
+    }
+
+    const schemaField = paths[ownerPath];
     const ownerType = schemaField?.options?.ref;
-    const owner = object.owner || object.user;
+    // keep in mind the ownerPath might be a nested path `location.user`
+    const owner = get(object, ownerPath);
 
     let result = {
       objectId: object.id,
@@ -70,11 +79,6 @@ schema.statics.append = function (activity, options) {
 
   const objectFields = this.getObjectFields(options);
 
-  // Dont append to the log if nothing changed
-  if (objectFields?.objectAfter && isEmpty(objectFields.objectAfter)) {
-    return;
-  }
-
   console.log({
     ...this.getContextFields(ctx),
     ...objectFields,
@@ -82,6 +86,12 @@ schema.statics.append = function (activity, options) {
     activity,
     category,
   });
+
+  // Dont append to the log if nothing changed
+  if (objectFields?.objectAfter && isEmpty(objectFields.objectAfter)) {
+    return;
+  }
+  console.log('appending');
 
   return this.create({
     ...this.getContextFields(ctx),
