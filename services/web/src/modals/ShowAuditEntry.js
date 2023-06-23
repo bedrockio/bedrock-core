@@ -46,12 +46,13 @@ export default class ShowAuditEntry extends React.Component {
                     <Table.Cell>{auditEntry.activity}</Table.Cell>
                   </Table.Row>
                   <Table.Row>
-                    <Table.Cell width={4}>User</Table.Cell>
+                    <Table.Cell width={4}>Actor</Table.Cell>
                     <Table.Cell>
                       <Link
-                        title={auditEntry.user.email}
-                        to={`/users/${auditEntry.user.id}`}>
-                        {auditEntry.user.firstName} {auditEntry.user.firstName}
+                        title={auditEntry.actor.email}
+                        to={`/users/${auditEntry.actor.id}`}>
+                        {auditEntry.actor.firstName}{' '}
+                        {auditEntry.actor.firstName}
                       </Link>
                     </Table.Cell>
                   </Table.Row>
