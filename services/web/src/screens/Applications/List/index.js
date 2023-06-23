@@ -2,10 +2,12 @@ import React from 'react';
 import { Table, Button, Message, Divider, Loader } from 'semantic';
 import { Link } from 'react-router-dom';
 
-import { request } from 'utils/api';
 import screen from 'helpers/screen';
+
 import EditApplication from 'modals/EditApplication';
 import { Breadcrumbs, Layout, Search, Confirm } from 'components';
+
+import { request } from 'utils/api';
 
 @screen
 export default class Applications extends React.Component {
@@ -20,7 +22,7 @@ export default class Applications extends React.Component {
   render() {
     return (
       <Search.Provider onDataNeeded={this.onDataNeeded}>
-        {({ items, getSorted, setSort, reload, loading, error }) => {
+        {({ items: apps, getSorted, setSort, reload, loading, error }) => {
           return (
             <React.Fragment>
               <Breadcrumbs
@@ -43,7 +45,7 @@ export default class Applications extends React.Component {
                 <Loader active />
               ) : error ? (
                 <Message error content={error.message} />
-              ) : items.length === 0 ? (
+              ) : apps.length === 0 ? (
                 <Message>No applications created yet</Message>
               ) : (
                 <Table celled sortable>
@@ -63,35 +65,35 @@ export default class Applications extends React.Component {
                     </Table.Row>
                   </Table.Header>
                   <Table.Body>
-                    {items.map((item) => {
+                    {apps.map((app) => {
                       return (
-                        <Table.Row key={item.id}>
+                        <Table.Row key={app.id}>
                           <Table.Cell>
-                            <Link to={`/applications/${item.id}`}>
-                              {item.name}
+                            <Link to={`/applications/${app.id}`}>
+                              {app.name}
                             </Link>
                           </Table.Cell>
-                          <Table.Cell>{item.description}</Table.Cell>
+                          <Table.Cell>{app.description}</Table.Cell>
                           <Table.Cell>
-                            <code>{item.apiKey}</code>
+                            <code>{app.apiKey}</code>
                           </Table.Cell>
-                          <Table.Cell>{item.requestCount}</Table.Cell>
+                          <Table.Cell>{app.requestCount}</Table.Cell>
                           <Table.Cell textAlign="center">
                             <EditApplication
-                              application={item}
+                              application={app}
                               trigger={<Button basic icon="pen-to-square" />}
                               onSave={reload}
                             />
                             <Confirm
                               negative
                               confirmButton="Delete"
-                              header={`Are you sure you want to delete "${item.name}"?`}
+                              header={`Are you sure you want to delete "${app.name}"?`}
                               content="All data will be permanently deleted"
                               trigger={<Button basic icon="trash" />}
                               onConfirm={async () => {
                                 await request({
                                   method: 'DELETE',
-                                  path: `/1/applications/${item.id}`,
+                                  path: `/1/applications/${app.id}`,
                                 });
                                 reload();
                               }}

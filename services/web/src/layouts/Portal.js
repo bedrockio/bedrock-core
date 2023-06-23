@@ -2,14 +2,17 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Button, Icon, Menu } from 'semantic';
 
+import bem from 'helpers/bem';
+
 import { Layout } from 'components';
 import ThemedImage from 'components/ThemedImage';
-import bem from 'helpers/bem';
 
 import ConnectionError from 'components/ConnectionError';
 
 import darkLogo from 'assets/logo-inverted.svg';
 import logo from 'assets/logo.svg';
+
+import { wrapComponent } from 'utils/hoc';
 
 import './portal.less';
 
@@ -53,4 +56,17 @@ export default class PortalLayout extends React.Component {
       </div>
     );
   }
+}
+
+export function withPortalLayout(Component) {
+  class Wrapper extends React.PureComponent {
+    render() {
+      return (
+        <PortalLayout>
+          <Component {...this.props} />
+        </PortalLayout>
+      );
+    }
+  }
+  return wrapComponent(Component, Wrapper);
 }

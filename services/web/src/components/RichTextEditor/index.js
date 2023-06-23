@@ -5,6 +5,7 @@ import Editor from '@draft-js-plugins/editor';
 import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 
 import bem from 'helpers/bem';
+
 import Markdown from 'components/Markdown';
 
 import {

@@ -2,10 +2,11 @@ import React from 'react';
 import { union } from 'lodash';
 import { Form, Loader, Popup, Icon, Modal, Button } from 'semantic';
 
-import { request } from 'utils/api';
 import SearchDropdown from 'components/SearchDropdown';
 import ErrorMessage from 'components/ErrorMessage';
 import FetchObject from 'components/FetchObject';
+
+import { request } from 'utils/api';
 
 export default class Roles extends React.Component {
   constructor(props) {

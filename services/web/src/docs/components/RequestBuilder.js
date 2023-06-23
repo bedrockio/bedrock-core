@@ -12,7 +12,8 @@ import {
   Divider,
 } from 'semantic';
 
-import { request } from 'utils/api';
+import bem from 'helpers/bem';
+
 import Code from 'components/Code';
 import RequestBlock from 'components/RequestBlock';
 import { DocsContext } from 'docs/utils/context';
@@ -23,10 +24,10 @@ import {
   resolveRefs,
 } from 'docs/utils';
 
-import bem from 'helpers/bem';
-
 import './request-builder.less';
 import ErrorMessage from 'components/ErrorMessage';
+
+import { request } from 'utils/api';
 
 const NAME_RANK = {
   keyword: 0,

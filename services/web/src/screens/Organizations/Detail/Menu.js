@@ -1,29 +1,29 @@
-import React, { useContext } from 'react';
-import { Link , NavLink } from 'react-router-dom';
+import React from 'react';
+import { Link, NavLink } from 'react-router-dom';
 import { Menu, Button } from 'semantic';
+
+import { usePage } from 'stores/page';
 
 import { Breadcrumbs, Layout } from 'components';
 import EditOrganization from 'modals/EditOrganization';
 
 import Actions from '../Actions';
 
-import DetailsContext from './Context';
-
 export default () => {
-  const { item, reload } = useContext(DetailsContext);
+  const { organization, reload } = usePage();
 
   return (
     <React.Fragment>
       <Breadcrumbs
         link={<Link to="/organizations">Organizations</Link>}
-        active={item.name}></Breadcrumbs>
+        active={organization.name}></Breadcrumbs>
       <Layout horizontal center spread>
-        <h1>{item.name} Organization</h1>
+        <h1>{organization.name}</h1>
         <Layout.Group>
-          <Actions item={item} reload={reload} />
+          <Actions organization={organization} reload={reload} />
           <EditOrganization
-            organization={item}
             onSave={reload}
+            organization={organization}
             trigger={<Button primary icon="gear" content="Settings" />}
           />
         </Layout.Group>
@@ -31,7 +31,7 @@ export default () => {
       <Menu pointing secondary>
         <Menu.Item
           name="Overview"
-          to={`/organizations/${item.id}`}
+          to={`/organizations/${organization.id}`}
           as={NavLink}
           exact
         />

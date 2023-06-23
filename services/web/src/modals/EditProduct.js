@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, Form, Button } from 'semantic';
 
 import modal from 'helpers/modal';
-import { request } from 'utils/api';
+
 import AutoFocus from 'components/AutoFocus';
 import ErrorMessage from 'components/ErrorMessage';
 
@@ -11,6 +11,8 @@ import DateField from 'components/form-fields/Date';
 import UploadsField from 'components/form-fields/Uploads';
 import CurrencyField from 'components/form-fields/Currency';
 import SearchDropdown from 'components/form-fields/SearchDropdown';
+
+import { request } from 'utils/api';
 // --- Generator: end
 
 @modal

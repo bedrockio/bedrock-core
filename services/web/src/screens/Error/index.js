@@ -2,15 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Message, Button } from 'semantic';
 
-import { withSession } from 'stores';
+import { withSession } from 'stores/session';
 import screen from 'helpers/screen';
+
+import { withBasicLayout } from 'layouts/Basic';
+
 import { ENV_NAME } from 'utils/env';
 
 @screen
 @withSession
+@withBasicLayout
 export default class ErrorScreen extends React.Component {
-  static layout = 'basic';
-
   onLogoutClick = async () => {
     await this.context.logout(true);
   };

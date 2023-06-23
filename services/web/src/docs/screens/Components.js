@@ -25,6 +25,7 @@ import {
 } from 'semantic';
 
 import screen from 'helpers/screen';
+
 import { Layout } from 'components/Layout';
 import Breadcrumbs from 'components/Breadcrumbs';
 import RichTextField from 'components/form-fields/RichText';
@@ -46,8 +47,6 @@ const options2 = [
 
 @screen
 export default class ComponentsScreen extends React.Component {
-  static layout = 'portal';
-
   contextRef = React.createRef();
 
   constructor(props) {

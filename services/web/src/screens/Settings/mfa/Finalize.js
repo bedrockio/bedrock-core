@@ -2,17 +2,17 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Button, Segment, Header, Form, Message } from 'semantic';
 
-import { request } from 'utils/api';
-import { APP_NAME } from 'utils/env';
-import { withSession } from 'stores';
+import { withSession } from 'stores/session';
+
 import LogoTitle from 'components/LogoTitle';
 import ErrorMessage from 'components/ErrorMessage';
+
+import { APP_NAME } from 'utils/env';
+import { request } from 'utils/api';
 
 @withRouter
 @withSession
 export default class Finalize extends React.Component {
-  static layout = 'basic';
-
   state = {
     loading: false,
     error: null,

@@ -2,8 +2,9 @@ import React from 'react';
 import { get } from 'lodash';
 import { Button, Form, Modal, Icon } from 'semantic';
 
-import AutoFocus from 'components/AutoFocus';
 import modal from 'helpers/modal';
+
+import AutoFocus from 'components/AutoFocus';
 
 import ErrorMessage from 'components/ErrorMessage';
 import { HelpTip } from 'components';

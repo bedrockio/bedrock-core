@@ -1,10 +1,12 @@
 import React from 'react';
 import { Modal, Form, Button } from 'semantic';
 
-import { request } from 'utils/api';
 import modal from 'helpers/modal';
+
 import AutoFocus from 'components/AutoFocus';
 import ErrorMessage from 'components/ErrorMessage';
+
+import { request } from 'utils/api';
 
 @modal
 export default class EditOrganization extends React.Component {

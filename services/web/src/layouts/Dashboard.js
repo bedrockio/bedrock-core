@@ -1,18 +1,23 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Icon, Container } from 'semantic';
+import { Container, Icon } from 'semantic';
 
-import Footer from 'components/Footer';
+import { withSession } from 'stores/session';
+
+import favicon from 'assets/favicon.svg';
+
+import darkLogo from 'assets/logo-inverted.svg';
+import logo from 'assets/logo.svg';
 import { Layout } from 'components';
+import ConnectionError from 'components/ConnectionError';
+import Footer from 'components/Footer';
 import Protected from 'components/Protected';
 import ThemedImage from 'components/ThemedImage';
 import Organization from 'modals/OrganizationSelector';
-import { withSession } from 'stores';
+
+import { wrapComponent } from 'utils/hoc';
+
 import { userCanSwitchOrganizations, userHasAccess } from 'utils/permissions';
-import ConnectionError from 'components/ConnectionError';
-import logo from 'assets/logo.svg';
-import darkLogo from 'assets/logo-inverted.svg';
-import favicon from 'assets/favicon.svg';
 
 import Sidebar from './Sidebar';
 
@@ -133,4 +138,17 @@ export default class DashboardLayout extends React.Component {
       </Sidebar>
     );
   }
+}
+
+export function withDashboardLayout(Component) {
+  class Wrapper extends React.PureComponent {
+    render() {
+      return (
+        <DashboardLayout>
+          <Component {...this.props} />
+        </DashboardLayout>
+      );
+    }
+  }
+  return wrapComponent(Component, Wrapper);
 }

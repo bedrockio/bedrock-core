@@ -21,7 +21,6 @@ import './api-docs.less';
 @bem
 @screen
 export default class ApiDocs extends React.Component {
-  static layout = 'portal';
   static contextType = DocsContext;
 
   componentDidMount() {

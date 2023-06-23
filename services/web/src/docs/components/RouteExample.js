@@ -2,11 +2,12 @@ import React from 'react';
 
 import { Icon } from 'semantic';
 
+import bem from 'helpers/bem';
+
 import { JumpLink } from 'components/Link';
 
 import { Confirm, Layout } from 'components';
 import Code from 'components/Code';
-import bem from 'helpers/bem';
 import { expandRef } from 'docs/utils';
 
 import { DocsContext } from '../utils/context';

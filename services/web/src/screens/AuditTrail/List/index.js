@@ -2,9 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Table, Button, Segment, Divider, Label } from 'semantic';
 
-import { formatDateTime } from 'utils/date';
-import { request } from 'utils/api';
 import screen from 'helpers/screen';
+
 import {
   HelpTip,
   Breadcrumbs,
@@ -13,6 +12,9 @@ import {
   SearchFilters,
 } from 'components';
 import ShowAuditEntry from 'modals/ShowAuditEntry';
+
+import { request } from 'utils/api';
+import { formatDateTime } from 'utils/date';
 
 @screen
 export default class AuditTrailList extends React.Component {

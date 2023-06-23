@@ -4,6 +4,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { render, waitFor } from '@testing-library/react';
 
 import screen from 'helpers/screen';
+
 import { setToken } from 'utils/api';
 
 import {
@@ -89,8 +90,6 @@ describe('hoc', () => {
 
     describe('screen interop', () => {
       class MyScreen extends React.Component {
-        static layout = 'null';
-
         render() {
           return <div>{this.context.user?.name || 'Anonymous'}</div>;
         }

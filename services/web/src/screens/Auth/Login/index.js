@@ -1,17 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Segment, Grid, Form, Message } from 'semantic';
+import { Form, Grid, Message, Segment } from 'semantic';
 
-import { withSession } from 'stores';
 import screen from 'helpers/screen';
+import { withBasicLayout } from 'layouts/Basic';
+import { withSession } from 'stores/session';
+
 import Logo from 'components/LogoTitle';
 import ErrorMessage from 'components/ErrorMessage';
 
 @screen
 @withSession
+@withBasicLayout
 export default class Login extends React.Component {
-  static layout = 'basic';
-
   state = {
     error: null,
     loading: false,

@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { get, isEqual } from 'lodash';
 
-import { JumpLink } from 'components/Link';
 import bem from 'helpers/bem';
+
+import { JumpLink } from 'components/Link';
 
 import { expandRef } from '../utils';
 import { DocsContext } from '../utils/context';

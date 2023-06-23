@@ -1,18 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Segment, Message, Grid } from 'semantic';
+import { Grid, Message, Segment } from 'semantic';
+
+import screen from 'helpers/screen';
+
+import { withBasicLayout } from 'layouts/Basic';
+
+import ErrorMessage from 'components/ErrorMessage';
+import LogoTitle from 'components/LogoTitle';
 
 import { request } from 'utils/api';
-import screen from 'helpers/screen';
-import LogoTitle from 'components/LogoTitle';
-import ErrorMessage from 'components/ErrorMessage';
 
 import Form from './Form';
 
 @screen
+@withBasicLayout
 export default class ForgotPassword extends React.Component {
-  static layout = 'basic';
-
   state = {
     success: false,
     loading: false,

@@ -1,9 +1,11 @@
 import React from 'react';
 import { Modal, Form } from 'semantic';
 
-import { request } from 'utils/api';
-import SearchDropdown from 'components/SearchDropdown';
 import modal from 'helpers/modal';
+
+import SearchDropdown from 'components/SearchDropdown';
+
+import { request } from 'utils/api';
 
 @modal
 export default class PortalSettings extends React.Component {

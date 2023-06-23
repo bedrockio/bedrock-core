@@ -2,11 +2,13 @@ import React from 'react';
 import { Segment, Form, Button, Divider, Header } from 'semantic';
 
 import screen from 'helpers/screen';
-import { request } from 'utils/api';
-import { withTheme } from 'stores';
+import { withTheme } from 'stores/theme';
+
 import ErrorMessage from 'components/ErrorMessage';
-import { APP_NAME } from 'utils/env';
 import { Layout } from 'components';
+
+import { APP_NAME } from 'utils/env';
+import { request } from 'utils/api';
 
 import Menu from './Menu';
 
@@ -80,7 +82,7 @@ export default class Account extends React.Component {
 
           <Divider hidden />
 
-          <div className="diurnal-theme" style={{paddingBottom: '1em'}}>
+          <div className="diurnal-theme" style={{ paddingBottom: '1em' }}>
             <Segment>
               <Layout horizontal baseline>
                 <Form.Radio

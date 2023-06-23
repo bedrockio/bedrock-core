@@ -2,10 +2,13 @@ import React from 'react';
 import { Menu, Button } from 'semantic';
 import { NavLink, Link } from 'react-router-dom';
 
+import { usePage } from 'stores/page';
+
 import { Breadcrumbs, Layout } from 'components';
 import EditApplication from 'modals/EditApplication';
 
-export default ({ application, onSave }) => {
+export default () => {
+  const { application, reload } = usePage();
   return (
     <React.Fragment>
       <Breadcrumbs
@@ -15,8 +18,8 @@ export default ({ application, onSave }) => {
         <h1>{application.name}</h1>
         <Layout.Group>
           <EditApplication
+            onSave={reload}
             application={application}
-            onSave={onSave}
             trigger={<Button primary icon="setting" content="Settings" />}
           />
         </Layout.Group>

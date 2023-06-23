@@ -2,8 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Form, Button, Segment, Header, Divider } from 'semantic';
 
-import { request } from 'utils/api';
 import screen from 'helpers/screen';
+
 import { Layout } from 'components';
 import LogoTitle from 'components/LogoTitle';
 import Code from 'components/form-fields/Code';
@@ -11,12 +11,12 @@ import ErrorMessage from 'components/ErrorMessage';
 
 import PhoneNumber from 'components/PhoneNumber';
 
+import { request } from 'utils/api';
+
 import Finalize from './Finalize';
 
 @screen
 export default class Sms extends React.Component {
-  static layout = 'basic';
-
   state = {
     touched: false,
     loading: false,

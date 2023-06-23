@@ -2,9 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown, Header } from 'semantic';
 
-import { API_URL } from 'utils/env';
 import { Layout } from 'components/Layout';
 import Code from 'components/Code';
+
+import { API_URL } from 'utils/env';
 
 import templateCurl from './templates/curl';
 import templateFetch from './templates/fetch';

@@ -1,10 +1,12 @@
 import React from 'react';
 
-import { withSession } from 'stores';
+import { withDashboardLayout } from 'layouts/Dashboard';
+import { withSession } from 'stores/session';
 import screen from 'helpers/screen';
 
 @screen
 @withSession
+@withDashboardLayout
 export default class Home extends React.Component {
   componentDidMount() {
     this.props.history.replace('/shops');

@@ -2,18 +2,21 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Segment, Form, Header } from 'semantic';
 
-import { request } from 'utils/api';
-import { withSession } from 'stores';
+import { withBasicLayout } from 'layouts/Basic';
+import { withSession } from 'stores/session';
+
 import screen from 'helpers/screen';
-import { APP_SUPPORT_EMAIL } from 'utils/env';
+
 import Logo from 'components/LogoTitle';
 import ErrorMessage from 'components/ErrorMessage';
 
+import { APP_SUPPORT_EMAIL } from 'utils/env';
+import { request } from 'utils/api';
+
 @screen
 @withSession
+@withBasicLayout
 export default class MfaBackupVerification extends React.Component {
-  static layout = 'basic';
-
   state = {
     error: null,
     loading: false,

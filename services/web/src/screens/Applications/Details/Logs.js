@@ -1,23 +1,26 @@
 import React from 'react';
-import {
-  Message,
-  Divider,
-  Loader,
-  Label,
-  Grid,
-  Table,
-  Button,
-  Segment,
-} from 'semantic';
 import { set, truncate } from 'lodash';
 import { withRouter } from 'react-router-dom';
+import {
+  Button,
+  Divider,
+  Grid,
+  Label,
+  Loader,
+  Message,
+  Segment,
+  Table,
+} from 'semantic';
+
+import screen from 'helpers/screen';
+import { withPage } from 'stores/page';
+
+import Code from 'components/Code';
+import ShowRequest from 'modals/ShowRequest';
+import { Layout, Search, SearchFilters } from 'components';
 
 import { request } from 'utils/api';
-import screen from 'helpers/screen';
-import { Layout, Search, SearchFilters } from 'components';
 import { formatDateTime } from 'utils/date';
-import ShowRequest from 'modals/ShowRequest';
-import Code from 'components/Code';
 
 import Menu from './Menu';
 
@@ -31,8 +34,9 @@ function getStateromQueryString(search) {
   };
 }
 
-@withRouter
 @screen
+@withPage
+@withRouter
 export default class ApplicationLogs extends React.Component {
   state = {
     selectedItem: null,
@@ -43,6 +47,8 @@ export default class ApplicationLogs extends React.Component {
     this.setState({
       selectedItem: null,
     });
+
+    const { application } = this.context;
 
     if (body['response.status']) {
       set(
@@ -57,7 +63,7 @@ export default class ApplicationLogs extends React.Component {
 
     const resp = await request({
       method: 'POST',
-      path: `/1/applications/${this.props.application.id}/logs/search`,
+      path: `/1/applications/${application.id}/logs/search`,
       body,
     });
     this.setState(
@@ -86,15 +92,16 @@ export default class ApplicationLogs extends React.Component {
   }
 
   render() {
+    const { application } = this.context;
     const { selectedItem } = this.state;
 
     return (
       <React.Fragment>
-        <Menu {...this.props} />
+        <Menu />
         <Search.Provider
           filters={this.state.initialFilters}
           onDataNeeded={this.onDataNeeded}>
-          {({ items, loading, error }) => {
+          {({ items: entries, loading, error }) => {
             return (
               <React.Fragment>
                 <Grid>
@@ -164,22 +171,22 @@ export default class ApplicationLogs extends React.Component {
                         </Segment>
                       ) : error ? (
                         <Message error content={error.message} />
-                      ) : items.length === 0 ? (
+                      ) : entries.length === 0 ? (
                         <Message>No Results</Message>
                       ) : (
                         <>
                           <Grid padded="horizontally">
-                            {items.map((item) => {
+                            {entries.map((entry) => {
                               return (
                                 <Grid.Row
-                                  key={item.id}
+                                  key={entry.id}
                                   verticalAlign={'middle'}
                                   style={{
                                     borderTop: '1px solid #ccc',
                                     paddingTop: '0.5em',
                                     paddingBottom: '0.5em',
                                     cursor: 'pointer',
-                                    ...(selectedItem?.id === item.id
+                                    ...(selectedItem?.id === entry.id
                                       ? {
                                           borderLeft: '4px solid #ccc',
                                         }
@@ -190,7 +197,7 @@ export default class ApplicationLogs extends React.Component {
                                   onClick={() =>
                                     this.setState(
                                       {
-                                        selectedItem: item,
+                                        selectedItem: entry,
                                       },
                                       () => this.updateQueryString()
                                     )
@@ -198,23 +205,23 @@ export default class ApplicationLogs extends React.Component {
                                   <Grid.Column width={2}>
                                     <Label
                                       color={this.getColorForHttpStatus(
-                                        item.response.status
+                                        entry.response.status
                                       )}>
-                                      {item.response.status}
+                                      {entry.response.status}
                                     </Label>
                                   </Grid.Column>
                                   <Grid.Column width={2}>
                                     <Label>
-                                      {item.request.method.toUpperCase()}
+                                      {entry.request.method.toUpperCase()}
                                     </Label>
                                   </Grid.Column>
                                   <Grid.Column width={7}>
-                                    {truncate(item.request.path, {
+                                    {truncate(entry.request.path, {
                                       length: 30,
                                     })}
                                   </Grid.Column>
                                   <Grid.Column width={5}>
-                                    {formatDateTime(item.createdAt)}
+                                    {formatDateTime(entry.createdAt)}
                                   </Grid.Column>
                                 </Grid.Row>
                               );
@@ -234,7 +241,7 @@ export default class ApplicationLogs extends React.Component {
                           {truncate(selectedItem.request.path, { length: 28 })}
                           <ShowRequest
                             centered={false}
-                            application={this.props.application}
+                            application={application}
                             request={selectedItem.request}
                             requestId={selectedItem.requestId}
                             trigger={

@@ -1,27 +1,27 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Menu, Button } from 'semantic';
 import { NavLink, Link } from 'react-router-dom';
+
+import { usePage } from 'stores/page';
 
 import { Breadcrumbs, Layout } from 'components';
 import EditProduct from 'modals/EditProduct';
 
 import Actions from '../Actions';
 
-import DetailsContext from './Context';
-
 export default () => {
-  const { item, reload } = useContext(DetailsContext);
+  const { product, reload } = usePage();
   return (
     <React.Fragment>
       <Breadcrumbs
         link={<Link to="/products">Products</Link>}
-        active={item.name}></Breadcrumbs>
+        active={product.name}></Breadcrumbs>
       <Layout horizontal center spread>
-        <h1>{item.name}</h1>
+        <h1>{product.name}</h1>
         <Layout.Group>
-          <Actions item={item} reload={reload} />
+          <Actions product={product} reload={reload} />
           <EditProduct
-            product={item}
+            product={product}
             onSave={reload}
             trigger={<Button primary icon="gear" content="Settings" />}
           />
@@ -30,7 +30,7 @@ export default () => {
       <Menu pointing secondary>
         <Menu.Item
           name="Overview"
-          to={`/products/${item.id}`}
+          to={`/products/${product.id}`}
           as={NavLink}
           exact
         />

@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { debounce } from 'lodash';
 
-import { attachEvents } from 'utils/event';
 import bem from 'helpers/bem';
+
+import { attachEvents } from 'utils/event';
 
 import { isImageSelected, getVisibleSelectionRect } from '../utils';
 import Button from '../Button';

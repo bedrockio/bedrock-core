@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { withSession } from 'stores';
+import { withSession } from 'stores/session';
 
 @withSession
 export default class Logout extends React.Component {
