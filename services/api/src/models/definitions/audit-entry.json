@@ -16,7 +16,8 @@
       "required": true
     },
     "objectId": {
-      "type": "String"
+      "type": "ObjectId",
+      "refPath": "objectType"
     },
     "objectType": {
       "type": "String"
@@ -27,7 +28,11 @@
     "objectAfter": {
       "type": "Object"
     },
-    "ownerId": {
+    "owner": {
+      "type": "ObjectId",
+      "refPath": "ownerType"
+    },
+    "ownerType": {
       "type": "String"
     },
     "category": {

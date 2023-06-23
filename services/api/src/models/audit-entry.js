@@ -15,7 +15,7 @@ schema.statics.getContextFields = function (ctx) {
 };
 
 schema.statics.getObjectFields = function (options) {
-  const { fields, object, snapshot = {}, ownerField } = options;
+  const { fields, object, snapshot = {} } = options;
 
   if (object) {
     if (!(object instanceof mongoose.Model)) {
@@ -25,12 +25,17 @@ schema.statics.getObjectFields = function (options) {
     snapshot.depopulate?.();
     object.depopulate?.();
 
+    const paths = object.constructor.schema.paths;
+
+    const schemaField = paths['owner'] || paths['user'];
+    const ownerType = schemaField?.options?.ref;
+    const owner = object.owner || object.user;
+
     let result = {
       objectId: object.id,
       objectType: object.constructor.modelName,
-      ownerId: ownerField ? object[ownerField] : object.owner || object.user,
-      // TODO: ideally we should have ownerType but its not straightforward to get it we need get it from the models schema
-      // so for the moment even though an objectId is NOT unique across collections, its an acceptable tradeoff
+      owner,
+      ownerType,
     };
 
     if (fields) {

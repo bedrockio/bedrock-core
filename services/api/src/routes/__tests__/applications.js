@@ -76,11 +76,10 @@ describe('/1/applications', () => {
 
       const auditEntry = await AuditEntry.findOne({
         objectId: application.id,
-        include: 'actor',
       });
       expect(auditEntry.activity).toBe('Created Application');
-      expect(auditEntry.actor.id).toBe(admin.id);
-      expect(auditEntry.ownerId).toBe(admin.id);
+      expect(auditEntry.actor).toEqual(admin._id);
+      expect(auditEntry.owner).toEqual(admin._id);
     });
   });
 
