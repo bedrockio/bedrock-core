@@ -75,6 +75,14 @@ schema.statics.append = function (activity, options) {
     return;
   }
 
+  console.log({
+    ...this.getContextFields(ctx),
+    ...objectFields,
+    actor: options.actor?.id || ctx.state.authUser?.id,
+    activity,
+    category,
+  });
+
   return this.create({
     ...this.getContextFields(ctx),
     ...objectFields,

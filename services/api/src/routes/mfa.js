@@ -94,7 +94,7 @@ router
 
       await AuditEntry.append('Authenticated', {
         ctx,
-        user,
+        actor: user,
       });
 
       const token = user.createAuthToken({

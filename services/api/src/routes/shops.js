@@ -11,9 +11,12 @@ router
   .use(authenticate())
   .param('id', fetchByParam(Shop))
   .post('/', validateBody(Shop.getCreateValidation()), async (ctx) => {
-    const shop = await Shop.create(ctx.request.body);
+    const shop = await Shop.create({
+      ...ctx.request.body,
+      owner: ctx.state.authUser._id,
+    });
 
-    await AuditEntry.append('Created Shop', {
+    await AuditEntry.append('Created shop', {
       ctx,
       object: shop,
     });
@@ -74,11 +77,15 @@ router
       await shop.assertNoReferences({
         except: [AuditEntry],
       });
-      await shop.delete();
-      ctx.status = 204;
     } catch (err) {
       ctx.throw(400, err);
     }
+    await shop.delete();
+    await AuditEntry.append('Deleted shop', {
+      ctx,
+      object: shop,
+    });
+    ctx.status = 204;
   });
 
 module.exports = router;

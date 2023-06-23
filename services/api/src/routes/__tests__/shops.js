@@ -55,25 +55,34 @@ describe('/1/shops', () => {
 
       const auditEntry = await AuditEntry.findOne({
         objectId: data.id,
-        include: 'actor',
       });
       expect(auditEntry.activity).toBe('Created Shop');
-      expect(auditEntry.actor).toBe(user.id);
-      expect(auditEntry.parentId).toBe(user.id);
+      expect(auditEntry.actor).toEqual(user._id);
+      expect(auditEntry.owner).toEqual(user._id);
+      expect(auditEntry.ownerType).toBe('User');
     });
   });
 
   describe('DELETE /:shop', () => {
     it('should be able to delete shop', async () => {
       const user = await createUser();
+      const owner = await createUser();
       let shop = await Shop.create({
         name: 'test 1',
         description: 'Some description',
+        owner: owner.id,
       });
       const response = await request('DELETE', `/1/shops/${shop.id}`, {}, { user });
       expect(response.status).toBe(204);
       shop = await Shop.findByIdDeleted(shop.id);
       expect(shop.deletedAt).toBeDefined();
+
+      const auditEntry = await AuditEntry.findOne({
+        objectId: shop.id,
+      });
+      expect(auditEntry.activity).toBe('Deleted shop');
+      expect(auditEntry.actor).toEqual(user._id);
+      expect(auditEntry.owner).toEqual(owner._id);
     });
   });
 

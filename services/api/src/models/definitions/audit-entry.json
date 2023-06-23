@@ -20,7 +20,8 @@
       "refPath": "objectType"
     },
     "objectType": {
-      "type": "String"
+      "type": "String",
+      "enum": []
     },
     "objectBefore": {
       "type": "Object"
@@ -33,7 +34,8 @@
       "refPath": "ownerType"
     },
     "ownerType": {
-      "type": "String"
+      "type": "String",
+      "enum": []
     },
     "category": {
       "type": "String",

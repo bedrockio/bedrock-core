@@ -176,11 +176,16 @@ router
       await user.assertNoReferences({
         except: [AuditEntry],
       });
-      await user.delete();
-      ctx.status = 204;
     } catch (err) {
       ctx.throw(400, err);
     }
+    await user.delete();
+    await AuditEntry.append('Deleted user', {
+      ctx,
+      object: user,
+      fields: ['email', 'roles'],
+    });
+    ctx.status = 204;
   });
 
 module.exports = router;
