@@ -22,7 +22,7 @@
     "@bedrockio/config": "^2.2.3",
     "@bedrockio/fixtures": "^1.0.4",
     "@bedrockio/logger": "^1.0.5",
-    "@bedrockio/model": "^0.1.12",
+    "@bedrockio/model": "^0.1.10",
     "@bedrockio/yada": "^1.0.19",
     "@google-cloud/storage": "^6.5.4",
     "@koa/cors": "^4.0.0",

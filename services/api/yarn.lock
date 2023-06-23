@@ -1075,10 +1075,10 @@
     kleur "^4.1.5"
     stdout-stream "^2.0.0"
 
-"@bedrockio/model@^0.1.12":
-  version "0.1.12"
-  resolved "https://registry.yarnpkg.com/@bedrockio/model/-/model-0.1.12.tgz#8971c80d84da791c70440e31fe9337c90cfbce44"
-  integrity sha512-GMCe2fD14us1R1rDB1kIOcP2akJKpbQ+oIbgAGrkPxEsA4VQDgf5lU23GXkbbFUMGBHr86H1+Rdywazn+DyDcA==
+"@bedrockio/model@0.1.10":
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/@bedrockio/model/-/model-0.1.10.tgz#789aa90bb828f1e5d32dd0595cf9ea7b8bfc8968"
+  integrity sha512-+PHYvXlu/gQ+CzjHEM489uUQfCASJmiux5NwbaNlEriZgFizb/NF64SewSa14MEqA6MORSUgEkJMtPrIdOpKUg==
   dependencies:
     "@bedrockio/logger" "^1.0.5"
     lodash "^4.17.21"
@@ -1088,7 +1088,7 @@
   resolved "https://registry.yarnpkg.com/@bedrockio/prettier-config/-/prettier-config-1.0.2.tgz#89878381d3059b810f97514ee6b69f946a6d1654"
   integrity sha512-Ebcx/D9FcV6WEQH2gXA4SkN62fus/aVMW46MYFm1/y+S0GVYj+OCuBbRMM4F8YAq9ntJ+B/z9fLiOheNpEpRzA==
 
-"@bedrockio/yada@^1.0.19":
+"@bedrockio/yada@1.0.19":
   version "1.0.19"
   resolved "https://registry.yarnpkg.com/@bedrockio/yada/-/yada-1.0.19.tgz#9ed8e506f4e9c9feb66428b18e73717e4c5aeca9"
   integrity sha512-Fw4OAqPuWweGG+oMn8W/0pLZeeWsa+e9/pVDJ8AC0y5ej4JGtM98qqAaBc92HcWvb5Hav515d82W+uQfCcrBjg==
