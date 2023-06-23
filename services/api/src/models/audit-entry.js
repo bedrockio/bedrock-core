@@ -38,12 +38,12 @@ schema.statics.getObjectFields = function (options) {
     const schemaField = paths[ownerPath];
     const ownerType = schemaField?.options?.ref;
     // keep in mind the ownerPath might be a nested path `location.user`
-    const owner = get(object, ownerPath);
+    const ownerId = get(object, ownerPath);
 
     let result = {
       objectId: object.id,
       objectType: object.constructor.modelName,
-      owner,
+      ownerId,
       ownerType,
     };
 
@@ -79,19 +79,10 @@ schema.statics.append = function (activity, options) {
 
   const objectFields = this.getObjectFields(options);
 
-  console.log({
-    ...this.getContextFields(ctx),
-    ...objectFields,
-    actor: options.actor?.id || ctx.state.authUser?.id,
-    activity,
-    category,
-  });
-
   // Dont append to the log if nothing changed
   if (objectFields?.objectAfter && isEmpty(objectFields.objectAfter)) {
     return;
   }
-  console.log('appending');
 
   return this.create({
     ...this.getContextFields(ctx),

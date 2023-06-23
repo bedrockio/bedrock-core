@@ -58,7 +58,7 @@ describe('/1/shops', () => {
       });
       expect(auditEntry.activity).toBe('Created shop');
       expect(auditEntry.actor).toEqual(user._id);
-      expect(auditEntry.owner).toEqual(user._id);
+      expect(auditEntry.ownerId).toBe(user.id);
       expect(auditEntry.ownerType).toBe('User');
     });
   });
@@ -82,7 +82,7 @@ describe('/1/shops', () => {
       });
       expect(auditEntry.activity).toBe('Deleted shop');
       expect(auditEntry.actor).toEqual(user._id);
-      expect(auditEntry.owner).toEqual(owner._id);
+      expect(auditEntry.ownerId).toBe(owner.id);
     });
   });
 

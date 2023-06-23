@@ -79,7 +79,7 @@ describe('/1/applications', () => {
       });
       expect(auditEntry.activity).toBe('Created application');
       expect(auditEntry.actor).toEqual(admin._id);
-      expect(auditEntry.owner).toEqual(admin._id);
+      expect(auditEntry.ownerId).toBe(admin.id);
     });
   });
 

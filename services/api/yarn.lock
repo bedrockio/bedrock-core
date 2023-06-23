@@ -1039,6 +1039,11 @@
   resolved "https://registry.yarnpkg.com/@bedrockio/config/-/config-2.2.2.tgz#751b9fb1500c9baa343308c394a3f876f61a0de6"
   integrity sha512-t8HtO7bH3DBYgdONFZ4fxi7qlnwnvKyPRXWC7KFwbRqyr+QNqUhv7B2tBLSm4wy/jFvRBmmaaU94xJ8jVJoacQ==
 
+"@bedrockio/config@^2.2.3":
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/@bedrockio/config/-/config-2.2.3.tgz#bac37d12e36a99ec16668c8b5d1e05dec9658fa9"
+  integrity sha512-jfOcZIs63S0GaWQjh5vVIISr4b2vA0CWgm630N0FDB6wlW+O0Fsjox92Agx5nggVpSnNYWqzjuKaUb5RY3/ECw==
+
 "@bedrockio/fixtures@^1.0.4":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@bedrockio/fixtures/-/fixtures-1.0.4.tgz#0420648e1c6cead21d3631cecaa5a8c611003f43"
@@ -1070,10 +1075,10 @@
     kleur "^4.1.5"
     stdout-stream "^2.0.0"
 
-"@bedrockio/model@^0.1.4":
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/@bedrockio/model/-/model-0.1.4.tgz#489b28922916aec2302c7af272bdd572c06c7142"
-  integrity sha512-AmANWntzdI4zGYiEEw/VNNxHNpdJ1yepuREROdd/T4N3sTsqJy/HxkZNrEUcUKXiqHlwTVcF9ES6M4pixucvZw==
+"@bedrockio/model@^0.1.12":
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/@bedrockio/model/-/model-0.1.12.tgz#8971c80d84da791c70440e31fe9337c90cfbce44"
+  integrity sha512-GMCe2fD14us1R1rDB1kIOcP2akJKpbQ+oIbgAGrkPxEsA4VQDgf5lU23GXkbbFUMGBHr86H1+Rdywazn+DyDcA==
   dependencies:
     "@bedrockio/logger" "^1.0.5"
     lodash "^4.17.21"

@@ -16,12 +16,10 @@
       "required": true
     },
     "objectId": {
-      "type": "ObjectId",
-      "refPath": "objectType"
+      "type": "String"
     },
     "objectType": {
-      "type": "String",
-      "enum": []
+      "type": "String"
     },
     "objectBefore": {
       "type": "Object"
@@ -29,13 +27,11 @@
     "objectAfter": {
       "type": "Object"
     },
-    "owner": {
-      "type": "ObjectId",
-      "refPath": "ownerType"
+    "ownerId": {
+      "type": "String"
     },
     "ownerType": {
-      "type": "String",
-      "enum": []
+      "type": "String"
     },
     "category": {
       "type": "String",
@@ -49,6 +45,8 @@
   },
   "search": {
     "fields": [
+      "actor",
+      "ownerId",
       "objectId"
     ]
   }

@@ -136,7 +136,7 @@ describe('/1/users', () => {
         activity: 'Authenticate as user',
       });
       expect(auditEntry.objectType).toBe('User');
-      expect(auditEntry.objectId).toEqual(user._id);
+      expect(auditEntry.objectId).toBe(user.id);
     });
 
     it('dont allow an superAdmin to authenticate as another admin', async () => {
@@ -304,7 +304,7 @@ describe('/1/users', () => {
         actor: admin.id,
       });
       expect(auditEntry.objectType).toBe('User');
-      expect(auditEntry.objectId).toEqual(user1._id);
+      expect(auditEntry.objectId).toBe(user1.id);
     });
 
     it('should deny access to non-admins', async () => {

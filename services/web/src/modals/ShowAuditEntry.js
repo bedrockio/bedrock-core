@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import modal from 'helpers/modal';
 import Code from 'components/Code';
 import { formatDateTime } from 'utils/date';
+import FetchObject from 'components/FetchObject';
 
 @modal
 export default class ShowAuditEntry extends React.Component {
@@ -50,29 +51,9 @@ export default class ShowAuditEntry extends React.Component {
                       <Link
                         title={auditEntry.actor.email}
                         to={`/users/${auditEntry.actor.id}`}>
-                        {auditEntry.actor.firstName}{' '}
-                        {auditEntry.actor.firstName}
+                        {auditEntry.actor.firstName} {auditEntry.actor.lastName}
                       </Link>
                     </Table.Cell>
-                  </Table.Row>
-                  <Table.Row>
-                    <Table.Cell width={4}>Owner</Table.Cell>
-                    <Table.Cell>
-                      <Link
-                        title={auditEntry.actor.email}
-                        to={`/users/${auditEntry.actor.id}`}>
-                        {auditEntry.actor.firstName}{' '}
-                        {auditEntry.actor.firstName}
-                      </Link>
-                    </Table.Cell>
-                  </Table.Row>
-                  <Table.Row>
-                    <Table.Cell width={4}>Request Method</Table.Cell>
-                    <Table.Cell>{auditEntry.requestMethod}</Table.Cell>
-                  </Table.Row>
-                  <Table.Row>
-                    <Table.Cell width={4}>Request Url</Table.Cell>
-                    <Table.Cell>{auditEntry.requestUrl}</Table.Cell>
                   </Table.Row>
                   {auditEntry.objectType && (
                     <Table.Row>
@@ -86,6 +67,28 @@ export default class ShowAuditEntry extends React.Component {
                       <Table.Cell>{auditEntry.objectId}</Table.Cell>
                     </Table.Row>
                   )}
+                  {auditEntry?.owner?.name && (
+                    <Table.Row>
+                      <Table.Cell width={4}>Object Owner</Table.Cell>
+                      <Table.Cell>
+                        <Link
+                          title={auditEntry.owner.name}
+                          to={`/users/${auditEntry.owner.id}`}>
+                          {auditEntry.owner.firstName}{' '}
+                          {auditEntry.owner.lastName}
+                        </Link>{' '}
+                        - {auditEntry.ownerType}
+                      </Table.Cell>
+                    </Table.Row>
+                  )}
+                  <Table.Row>
+                    <Table.Cell width={4}>Request Method</Table.Cell>
+                    <Table.Cell>{auditEntry.requestMethod}</Table.Cell>
+                  </Table.Row>
+                  <Table.Row>
+                    <Table.Cell width={4}>Request Url</Table.Cell>
+                    <Table.Cell>{auditEntry.requestUrl}</Table.Cell>
+                  </Table.Row>
                   {auditEntry.sessionId && (
                     <Table.Row>
                       <Table.Cell width={4}>Session Id</Table.Cell>
