@@ -65,7 +65,7 @@ function truncate(body) {
   return body;
 }
 
-function applicationMiddleware({ router, ignorePaths = [] }) {
+function applicationMiddleware({ ignorePaths = [] }) {
   return async (ctx, next) => {
     const path = ctx.url;
 
@@ -80,13 +80,10 @@ function applicationMiddleware({ router, ignorePaths = [] }) {
       return next();
     }
 
-    const apiKey = ctx.get('apikey') || ctx.get('api-key') || ctx.get('api_key');
+    const apiKey = ctx.get('api-key');
+
     if (!apiKey) {
-      // check that we hit a route otherwise we dont care
-      if (!router.match(ctx.path, ctx.method).match) {
-        return;
-      }
-      return ctx.throw(400, 'Missing "ApiKey" header');
+      return next();
     }
 
     const application = await Application.findOneAndUpdate(

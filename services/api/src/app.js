@@ -13,10 +13,9 @@ const routes = require('./routes');
 const config = require('@bedrockio/config');
 const logger = require('@bedrockio/logger');
 
-const app = new Koa();
-const router = new Router();
-
 const ENV_NAME = config.get('ENV_NAME');
+
+const app = new Koa();
 
 app.use(corsMiddleware());
 
@@ -26,7 +25,6 @@ if (['staging', 'development'].includes(ENV_NAME)) {
   // has to be the added before any middleware that changes the ctx.body
   app.use(
     applicationMiddleware({
-      router,
       ignorePaths: [
         '/',
         '/openapi.json',
@@ -80,6 +78,8 @@ if (config.has('SENTRY_DSN')) {
     environment: ENV_NAME,
   });
 }
+
+const router = new Router();
 
 router.get('/', (ctx) => {
   ctx.body = {
