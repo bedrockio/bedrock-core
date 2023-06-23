@@ -11,7 +11,7 @@ describe('application', () => {
 
     const ctx = context({
       headers: {
-        apikey: application.apiKey,
+        'api-key': application.apiKey,
       },
     });
 
@@ -28,7 +28,7 @@ describe('application', () => {
     const middleware = applicationMiddleware({ ignorePaths: [] });
     const ctx = context({
       headers: {
-        apikey: application.apiKey,
+        'api-key': application.apiKey,
       },
     });
 
@@ -53,7 +53,7 @@ describe('application', () => {
     const middleware = applicationMiddleware({ ignorePaths: [] });
     const ctx = context({
       headers: {
-        apikey: application.apiKey,
+        'api-key': application.apiKey,
       },
     });
 
@@ -104,5 +104,11 @@ describe('application', () => {
         },
       ],
     });
+  });
+
+  it('should not fail if no key is set', async () => {
+    const middleware = applicationMiddleware({ ignorePaths: [] });
+    const ctx = context();
+    await expect(middleware(ctx, () => {})).resolves.not.toThrow();
   });
 });
