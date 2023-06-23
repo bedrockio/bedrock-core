@@ -12,6 +12,12 @@ router
   .param('id', fetchByParam(Shop))
   .post('/', validateBody(Shop.getCreateValidation()), async (ctx) => {
     const shop = await Shop.create(ctx.request.body);
+
+    await AuditEntry.append('Created Shop', {
+      ctx,
+      object: shop,
+    });
+
     ctx.body = {
       data: shop,
     };
@@ -45,8 +51,19 @@ router
   )
   .patch('/:id', validateBody(Shop.getUpdateValidation()), async (ctx) => {
     const shop = ctx.state.shop;
+    const snapshot = new Shop(shop);
+
     shop.assign(ctx.request.body);
+
     await shop.save();
+
+    await AuditEntry.append('Updated shop', {
+      ctx,
+      object: shop,
+      fields: ['name', 'description', 'owner', 'address'],
+      snapshot,
+    });
+
     ctx.body = {
       data: shop,
     };

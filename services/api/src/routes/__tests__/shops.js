@@ -1,5 +1,5 @@
 const { request, createUser } = require('../../utils/testing');
-const { Shop } = require('../../models');
+const { Shop, AuditEntry } = require('../../models');
 
 describe('/1/shops', () => {
   describe('POST /search', () => {
@@ -52,6 +52,14 @@ describe('/1/shops', () => {
       const data = response.body.data;
       expect(response.status).toBe(200);
       expect(data.name).toBe('shop name');
+
+      const auditEntry = await AuditEntry.findOne({
+        objectId: data.id,
+        include: 'actor',
+      });
+      expect(auditEntry.activity).toBe('Created Shop');
+      expect(auditEntry.actor).toBe(user.id);
+      expect(auditEntry.parentId).toBe(user.id);
     });
   });
 

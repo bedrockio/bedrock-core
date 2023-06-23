@@ -22,7 +22,7 @@ export default class AuditTrailList extends React.Component {
       path: '/1/audit-entries/search',
       body: {
         ...params,
-        include: 'user',
+        include: 'actor',
       },
     });
   };
@@ -54,8 +54,8 @@ export default class AuditTrailList extends React.Component {
 
   getFilterMapping() {
     return {
-      user: {
-        label: 'User',
+      actor: {
+        label: 'Actor',
         getDisplayValue: async (id) => {
           const data = await this.fetchUsers({ ids: [id] });
           return data[0].name;
@@ -102,8 +102,8 @@ export default class AuditTrailList extends React.Component {
                     <SearchFilters.Dropdown
                       onDataNeeded={(name) => this.fetchUsers({ name })}
                       search
-                      name="user"
-                      label="User"
+                      name="actor"
+                      label="Actor"
                     />
                     <SearchFilters.Dropdown
                       onDataNeeded={() =>
@@ -119,7 +119,6 @@ export default class AuditTrailList extends React.Component {
                       name="activity"
                       label="Activity"
                     />
-
                     <SearchFilters.Dropdown
                       onDataNeeded={() =>
                         this.fetchSearchOptions({
@@ -156,10 +155,9 @@ export default class AuditTrailList extends React.Component {
                 <Table celled sortable>
                   <Table.Header>
                     <Table.Row>
-                      <Table.HeaderCell width={2}>User</Table.HeaderCell>
+                      <Table.HeaderCell width={2}>Actor</Table.HeaderCell>
                       <Table.HeaderCell width={1}>Category</Table.HeaderCell>
                       <Table.HeaderCell width={4}>Activity</Table.HeaderCell>
-
                       <Table.HeaderCell width={3}>Request</Table.HeaderCell>
                       <Table.HeaderCell
                         width={4}
@@ -181,11 +179,11 @@ export default class AuditTrailList extends React.Component {
                       return (
                         <Table.Row key={item.id}>
                           <Table.Cell>
-                            {item.user && (
+                            {item.actor && (
                               <Link
-                                title={item.user.email}
-                                to={`/users/${item.user.id}`}>
-                                {item.user.firstName} {item.user.lastName}
+                                title={item.actor.email}
+                                to={`/users/${item.actor.id}`}>
+                                {item.actor.firstName} {item.actor.lastName}
                               </Link>
                             )}
                           </Table.Cell>

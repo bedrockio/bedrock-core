@@ -76,10 +76,11 @@ describe('/1/applications', () => {
 
       const auditEntry = await AuditEntry.findOne({
         objectId: application.id,
-        include: 'user',
+        include: 'actor',
       });
       expect(auditEntry.activity).toBe('Created Application');
-      expect(auditEntry.user.id).toBe(admin.id);
+      expect(auditEntry.actor.id).toBe(admin.id);
+      expect(auditEntry.ownerId).toBe(admin.id);
     });
   });
 
@@ -107,10 +108,10 @@ describe('/1/applications', () => {
 
       const auditEntry = await AuditEntry.findOne({
         objectId: application.id,
-        include: 'user',
+        include: 'actor',
       });
       expect(auditEntry.activity).toBe('Updated Application');
-      expect(auditEntry.user.id).toBe(admin.id);
+      expect(auditEntry.actor.id).toBe(admin.id);
       expect(auditEntry.objectBefore).toEqual({
         name: 'patch-application',
       });

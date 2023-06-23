@@ -30,14 +30,11 @@
     "ownerId": {
       "type": "String"
     },
-    "ownerType": {
-      "type": "String"
-    },
     "category": {
       "type": "String",
       "default": "default"
     },
-    "user": {
+    "actor": {
       "type": "ObjectId",
       "ref": "User",
       "required": true

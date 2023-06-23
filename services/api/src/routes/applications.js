@@ -71,8 +71,8 @@ router
     await AuditEntry.append('Created Application', {
       ctx,
       object: application,
-      user: ctx.state.authUser,
     });
+    console.log(!23132);
 
     ctx.body = {
       data: application,
@@ -88,7 +88,7 @@ router
     await AuditEntry.append('Updated Application', {
       ctx,
       object: application,
-      user: ctx.state.authUser,
+      actor: ctx.state.authUser,
       fields: ['name', 'description', 'apiKey'],
       snapshot,
     });

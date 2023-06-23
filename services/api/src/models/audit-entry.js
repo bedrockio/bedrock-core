@@ -15,7 +15,7 @@ schema.statics.getContextFields = function (ctx) {
 };
 
 schema.statics.getObjectFields = function (options) {
-  const { fields, object, snapshot = {} } = options;
+  const { fields, object, snapshot = {}, ownerField } = options;
 
   if (object) {
     if (!(object instanceof mongoose.Model)) {
@@ -28,10 +28,9 @@ schema.statics.getObjectFields = function (options) {
     let result = {
       objectId: object.id,
       objectType: object.constructor.modelName,
-      owner: object.owner,
-      // mmm how do i get to the owner type?
-      // my thinking is that i need to get to schema to to figure out the owner type
-      ownerType: object.ownerType,
+      ownerId: ownerField ? object[ownerField] : object.owner || object.user,
+      // TODO: ideally we should have ownerType but its not straightforward to get it we need get it from the models schema
+      // so for the moment even though an objectId is NOT unique across collections, its an acceptable tradeoff
     };
 
     if (fields) {
@@ -71,16 +70,10 @@ schema.statics.append = function (activity, options) {
     return;
   }
 
-  const parentType = options.parentType || options.parent.constructor.modelName;
-  const parentId = options.parentId || options.parent;
-
   return this.create({
     ...this.getContextFields(ctx),
     ...objectFields,
-    user: options.user?.id || ctx.state.authUser?.id,
-
-    parentType,
-    parentId,
+    actor: options.actor?.id || ctx.state.authUser?.id,
     activity,
     category,
   });

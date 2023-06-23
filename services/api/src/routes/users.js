@@ -79,7 +79,7 @@ router
       await AuditEntry.append('Authenticate as user', {
         ctx,
         object: user,
-        user: authUser,
+        actor: authUser,
       });
 
       ctx.body = {
