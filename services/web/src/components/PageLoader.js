@@ -1,4 +1,3 @@
-import React from 'react';
 import { Dimmer, Loader } from 'semantic';
 
 import PageCenter from './PageCenter';

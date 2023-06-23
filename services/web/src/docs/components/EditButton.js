@@ -1,4 +1,3 @@
-import React from 'react';
 import { Icon } from 'semantic';
 
 import { useClass } from 'helpers/bem';

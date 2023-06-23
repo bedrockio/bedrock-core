@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { Stream } = require('node:stream');
+const { Stream } = require('stream');
 const { isPlainObject } = require('lodash');
 
 function serializeDocument(doc, ctx) {

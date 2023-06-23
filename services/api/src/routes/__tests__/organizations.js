@@ -50,7 +50,7 @@ describe('/1/organizations', () => {
         '/1/organizations/mine/search',
         {
           sort: {
-            name: 'name',
+            field: 'name',
             order: 'asc',
           },
         },

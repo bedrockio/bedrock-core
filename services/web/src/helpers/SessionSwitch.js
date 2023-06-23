@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { useSession } from 'stores';
 
 import LoadingScreen from 'screens/Loading';

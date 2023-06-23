@@ -1,4 +1,3 @@
-import React from 'react';
 import { Pagination } from 'semantic';
 
 export default ({ page, limit, total, onPageChange, className }) => {

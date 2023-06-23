@@ -50,11 +50,11 @@ async function sendTemplatedMail({ file, template, layout = 'layout.html', to, .
   }
 
   if (ENV_NAME === 'development' && !POSTMARK_DEV_TO) {
-    logger.debug(`Sending email to ${to}`);
-    logger.debug(`Subject: ${subject}`);
-    logger.debug('Body:');
-    logger.debug(body);
-    logger.debug(vars);
+    logger.info(`Sending email to ${to}`);
+    logger.info(`Subject: ${subject}`);
+    logger.info('Body:');
+    logger.info(body);
+    logger.info(vars);
   } else {
     logger.debug(`Sending postmark email to ${to}`);
     await sendMail({

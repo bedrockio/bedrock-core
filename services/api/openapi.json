@@ -556,26 +556,6 @@
                     ],
                     "description": "Allows searching by a date, array of dates, or a range."
                   },
-                  "deletedAt": {
-                    "oneOf": [
-                      {
-                        "$ref": "#/components/schemas/DateTime"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/DateTime"
-                        }
-                      },
-                      {
-                        "$ref": "#/components/schemas/DateRange"
-                      }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
-                  },
-                  "deleted": {
-                    "type": "boolean"
-                  },
                   "ids": {
                     "type": "array",
                     "items": {
@@ -585,10 +565,6 @@
                   "keyword": {
                     "type": "string",
                     "description": "A keyword to perform a text search against."
-                  },
-                  "include": {
-                    "type": "string",
-                    "description": "Fields to be selected or populated."
                   },
                   "skip": {
                     "type": "number",
@@ -659,6 +635,23 @@
                       "json",
                       "csv"
                     ]
+                  },
+                  "include": {
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "description": "Field to be selected or populated.",
+                        "x-generated": true
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "description": "Field to be selected or populated.",
+                          "x-generated": true
+                        }
+                      }
+                    ]
                   }
                 }
               }
@@ -669,7 +662,12 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "x-permissions": {
+          "endpoint": "auditEntries",
+          "permission": "read",
+          "scope": "global"
+        }
       }
     },
     "/1/audit-entries/search-options": {
@@ -700,7 +698,12 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "x-permissions": {
+          "endpoint": "auditEntries",
+          "permission": "read",
+          "scope": "global"
+        }
       }
     },
     "/1/users/me": {
@@ -725,6 +728,10 @@
                   },
                   "lastName": {
                     "type": "string"
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "format": "phone"
                   },
                   "timeZone": {
                     "type": "string"
@@ -758,7 +765,12 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "x-permissions": {
+          "endpoint": "users",
+          "permission": "write",
+          "scope": "global"
+        }
       }
     },
     "/1/users/roles": {
@@ -768,7 +780,12 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "x-permissions": {
+          "endpoint": "users",
+          "permission": "read",
+          "scope": "global"
+        }
       }
     },
     "/1/users/permissions": {
@@ -778,7 +795,12 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "x-permissions": {
+          "endpoint": "users",
+          "permission": "read",
+          "scope": "global"
+        }
       }
     },
     "/1/users/search": {
@@ -1064,12 +1086,14 @@
                       "lastUsedAt": {
                         "oneOf": [
                           {
-                            "$ref": "#/components/schemas/DateTime"
+                            "$ref": "#/components/schemas/DateTime",
+                            "required": true
                           },
                           {
                             "type": "array",
                             "items": {
-                              "$ref": "#/components/schemas/DateTime"
+                              "$ref": "#/components/schemas/DateTime",
+                              "required": true
                             }
                           },
                           {
@@ -1122,12 +1146,14 @@
                       "iat": {
                         "oneOf": [
                           {
-                            "$ref": "#/components/schemas/DateTime"
+                            "$ref": "#/components/schemas/DateTime",
+                            "required": true
                           },
                           {
                             "type": "array",
                             "items": {
-                              "$ref": "#/components/schemas/DateTime"
+                              "$ref": "#/components/schemas/DateTime",
+                              "required": true
                             }
                           },
                           {
@@ -1154,12 +1180,14 @@
                       "exp": {
                         "oneOf": [
                           {
-                            "$ref": "#/components/schemas/DateTime"
+                            "$ref": "#/components/schemas/DateTime",
+                            "required": true
                           },
                           {
                             "type": "array",
                             "items": {
-                              "$ref": "#/components/schemas/DateTime"
+                              "$ref": "#/components/schemas/DateTime",
+                              "required": true
                             }
                           },
                           {
@@ -1225,26 +1253,6 @@
                     ],
                     "description": "Allows searching by a date, array of dates, or a range."
                   },
-                  "deletedAt": {
-                    "oneOf": [
-                      {
-                        "$ref": "#/components/schemas/DateTime"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/DateTime"
-                        }
-                      },
-                      {
-                        "$ref": "#/components/schemas/DateRange"
-                      }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
-                  },
-                  "deleted": {
-                    "type": "boolean"
-                  },
                   "ids": {
                     "type": "array",
                     "items": {
@@ -1254,10 +1262,6 @@
                   "keyword": {
                     "type": "string",
                     "description": "A keyword to perform a text search against."
-                  },
-                  "include": {
-                    "type": "string",
-                    "description": "Fields to be selected or populated."
                   },
                   "skip": {
                     "type": "number",
@@ -1328,6 +1332,23 @@
                       "json",
                       "csv"
                     ]
+                  },
+                  "include": {
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "description": "Field to be selected or populated.",
+                        "x-generated": true
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "description": "Field to be selected or populated.",
+                          "x-generated": true
+                        }
+                      }
+                    ]
                   }
                 }
               }
@@ -1338,7 +1359,12 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "x-permissions": {
+          "endpoint": "users",
+          "permission": "read",
+          "scope": "global"
+        }
       }
     },
     "/1/users/:id": {
@@ -1356,7 +1382,12 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "x-permissions": {
+          "endpoint": "users",
+          "permission": "read",
+          "scope": "global"
+        }
       },
       "patch": {
         "summary": "Update user",
@@ -1393,7 +1424,7 @@
                           ]
                         },
                         "scopeRef": {
-                          "$ref": "#/components/schemas/ObjectId"
+                          "$ref": "#/components/schemas/Reference"
                         }
                       }
                     }
@@ -1438,7 +1469,12 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "x-permissions": {
+          "endpoint": "users",
+          "permission": "write",
+          "scope": "global"
+        }
       },
       "delete": {
         "summary": "Delete user",
@@ -1454,7 +1490,12 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "x-permissions": {
+          "endpoint": "users",
+          "permission": "write",
+          "scope": "global"
+        }
       }
     },
     "/1/users": {
@@ -1493,7 +1534,7 @@
                           ]
                         },
                         "scopeRef": {
-                          "$ref": "#/components/schemas/ObjectId"
+                          "$ref": "#/components/schemas/Reference"
                         }
                       }
                     }
@@ -1526,6 +1567,23 @@
                   },
                   "password": {
                     "type": "string"
+                  },
+                  "include": {
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "description": "Field to be selected or populated.",
+                        "x-generated": true
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "description": "Field to be selected or populated.",
+                          "x-generated": true
+                        }
+                      }
+                    ]
                   }
                 }
               }
@@ -1536,7 +1594,12 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "x-permissions": {
+          "endpoint": "users",
+          "permission": "write",
+          "scope": "global"
+        }
       }
     },
     "/1/products": {
@@ -1572,13 +1635,31 @@
                     }
                   },
                   "shop": {
-                    "$ref": "#/components/schemas/ObjectId"
+                    "$ref": "#/components/schemas/Reference",
+                    "required": true
                   },
                   "images": {
                     "type": "array",
                     "items": {
-                      "$ref": "#/components/schemas/ObjectId"
+                      "$ref": "#/components/schemas/Reference"
                     }
+                  },
+                  "include": {
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "description": "Field to be selected or populated.",
+                        "x-generated": true
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "description": "Field to be selected or populated.",
+                          "x-generated": true
+                        }
+                      }
+                    ]
                   }
                 }
               }
@@ -1640,12 +1721,12 @@
                     }
                   },
                   "shop": {
-                    "$ref": "#/components/schemas/ObjectId"
+                    "$ref": "#/components/schemas/Reference"
                   },
                   "images": {
                     "type": "array",
                     "items": {
-                      "$ref": "#/components/schemas/ObjectId"
+                      "$ref": "#/components/schemas/Reference"
                     }
                   }
                 }
@@ -1829,26 +1910,6 @@
                     ],
                     "description": "Allows searching by a date, array of dates, or a range."
                   },
-                  "deletedAt": {
-                    "oneOf": [
-                      {
-                        "$ref": "#/components/schemas/DateTime"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/DateTime"
-                        }
-                      },
-                      {
-                        "$ref": "#/components/schemas/DateRange"
-                      }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
-                  },
-                  "deleted": {
-                    "type": "boolean"
-                  },
                   "ids": {
                     "type": "array",
                     "items": {
@@ -1858,10 +1919,6 @@
                   "keyword": {
                     "type": "string",
                     "description": "A keyword to perform a text search against."
-                  },
-                  "include": {
-                    "type": "string",
-                    "description": "Fields to be selected or populated."
                   },
                   "skip": {
                     "type": "number",
@@ -1932,6 +1989,23 @@
                       "json",
                       "csv"
                     ]
+                  },
+                  "include": {
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "description": "Field to be selected or populated.",
+                        "x-generated": true
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "description": "Field to be selected or populated.",
+                          "x-generated": true
+                        }
+                      }
+                    ]
                   }
                 }
               }
@@ -1965,13 +2039,13 @@
                   "images": {
                     "type": "array",
                     "items": {
-                      "$ref": "#/components/schemas/ObjectId"
+                      "$ref": "#/components/schemas/Reference"
                     }
                   },
                   "categories": {
                     "type": "array",
                     "items": {
-                      "$ref": "#/components/schemas/ObjectId"
+                      "$ref": "#/components/schemas/Reference"
                     }
                   },
                   "country": {
@@ -2020,7 +2094,24 @@
                     }
                   },
                   "owner": {
-                    "$ref": "#/components/schemas/ObjectId"
+                    "$ref": "#/components/schemas/Reference"
+                  },
+                  "include": {
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "description": "Field to be selected or populated.",
+                        "x-generated": true
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "description": "Field to be selected or populated.",
+                          "x-generated": true
+                        }
+                      }
+                    ]
                   }
                 }
               }
@@ -2069,13 +2160,13 @@
                   "images": {
                     "type": "array",
                     "items": {
-                      "$ref": "#/components/schemas/ObjectId"
+                      "$ref": "#/components/schemas/Reference"
                     }
                   },
                   "categories": {
                     "type": "array",
                     "items": {
-                      "$ref": "#/components/schemas/ObjectId"
+                      "$ref": "#/components/schemas/Reference"
                     }
                   },
                   "country": {
@@ -2124,7 +2215,7 @@
                     }
                   },
                   "owner": {
-                    "$ref": "#/components/schemas/ObjectId"
+                    "$ref": "#/components/schemas/Reference"
                   }
                 }
               }
@@ -2395,26 +2486,6 @@
                     ],
                     "description": "Allows searching by a date, array of dates, or a range."
                   },
-                  "deletedAt": {
-                    "oneOf": [
-                      {
-                        "$ref": "#/components/schemas/DateTime"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/DateTime"
-                        }
-                      },
-                      {
-                        "$ref": "#/components/schemas/DateRange"
-                      }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
-                  },
-                  "deleted": {
-                    "type": "boolean"
-                  },
                   "ids": {
                     "type": "array",
                     "items": {
@@ -2424,10 +2495,6 @@
                   "keyword": {
                     "type": "string",
                     "description": "A keyword to perform a text search against."
-                  },
-                  "include": {
-                    "type": "string",
-                    "description": "Fields to be selected or populated."
                   },
                   "skip": {
                     "type": "number",
@@ -2497,6 +2564,23 @@
                     "enum": [
                       "json",
                       "csv"
+                    ]
+                  },
+                  "include": {
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "description": "Field to be selected or populated.",
+                        "x-generated": true
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "description": "Field to be selected or populated.",
+                          "x-generated": true
+                        }
+                      }
                     ]
                   }
                 }
@@ -2659,26 +2743,6 @@
                     ],
                     "description": "Allows searching by a date, array of dates, or a range."
                   },
-                  "deletedAt": {
-                    "oneOf": [
-                      {
-                        "$ref": "#/components/schemas/DateTime"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/DateTime"
-                        }
-                      },
-                      {
-                        "$ref": "#/components/schemas/DateRange"
-                      }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
-                  },
-                  "deleted": {
-                    "type": "boolean"
-                  },
                   "ids": {
                     "type": "array",
                     "items": {
@@ -2688,10 +2752,6 @@
                   "keyword": {
                     "type": "string",
                     "description": "A keyword to perform a text search against."
-                  },
-                  "include": {
-                    "type": "string",
-                    "description": "Fields to be selected or populated."
                   },
                   "skip": {
                     "type": "number",
@@ -2749,6 +2809,23 @@
                     "default": 50,
                     "description": "Limits the number of results.",
                     "minimum": 0
+                  },
+                  "include": {
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "description": "Field to be selected or populated.",
+                        "x-generated": true
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "description": "Field to be selected or populated.",
+                          "x-generated": true
+                        }
+                      }
+                    ]
                   }
                 }
               }
@@ -2759,7 +2836,12 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "x-permissions": {
+          "endpoint": "users",
+          "permission": "read",
+          "scope": "global"
+        }
       }
     },
     "/1/invites": {
@@ -2789,7 +2871,12 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "x-permissions": {
+          "endpoint": "users",
+          "permission": "write",
+          "scope": "global"
+        }
       }
     },
     "/1/invites/:id/resend": {
@@ -2806,7 +2893,12 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "x-permissions": {
+          "endpoint": "users",
+          "permission": "write",
+          "scope": "global"
+        }
       }
     },
     "/1/invites/:id": {
@@ -2824,7 +2916,12 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "x-permissions": {
+          "endpoint": "users",
+          "permission": "write",
+          "scope": "global"
+        }
       }
     },
     "/1/status": {
@@ -2890,26 +2987,6 @@
                     ],
                     "description": "Allows searching by a date, array of dates, or a range."
                   },
-                  "deletedAt": {
-                    "oneOf": [
-                      {
-                        "$ref": "#/components/schemas/DateTime"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/DateTime"
-                        }
-                      },
-                      {
-                        "$ref": "#/components/schemas/DateRange"
-                      }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
-                  },
-                  "deleted": {
-                    "type": "boolean"
-                  },
                   "ids": {
                     "type": "array",
                     "items": {
@@ -2919,10 +2996,6 @@
                   "keyword": {
                     "type": "string",
                     "description": "A keyword to perform a text search against."
-                  },
-                  "include": {
-                    "type": "string",
-                    "description": "Fields to be selected or populated."
                   },
                   "skip": {
                     "type": "number",
@@ -2980,6 +3053,23 @@
                     "default": 50,
                     "description": "Limits the number of results.",
                     "minimum": 0
+                  },
+                  "include": {
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "description": "Field to be selected or populated.",
+                        "x-generated": true
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "description": "Field to be selected or populated.",
+                          "x-generated": true
+                        }
+                      }
+                    ]
                   }
                 }
               }
@@ -3049,7 +3139,12 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "x-permissions": {
+          "endpoint": "organizations",
+          "permission": "write",
+          "scope": "global"
+        }
       },
       "delete": {
         "summary": "Delete organization",
@@ -3065,7 +3160,12 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "x-permissions": {
+          "endpoint": "organizations",
+          "permission": "write",
+          "scope": "global"
+        }
       }
     },
     "/1/organizations/search": {
@@ -3125,26 +3225,6 @@
                     ],
                     "description": "Allows searching by a date, array of dates, or a range."
                   },
-                  "deletedAt": {
-                    "oneOf": [
-                      {
-                        "$ref": "#/components/schemas/DateTime"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/DateTime"
-                        }
-                      },
-                      {
-                        "$ref": "#/components/schemas/DateRange"
-                      }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
-                  },
-                  "deleted": {
-                    "type": "boolean"
-                  },
                   "ids": {
                     "type": "array",
                     "items": {
@@ -3154,10 +3234,6 @@
                   "keyword": {
                     "type": "string",
                     "description": "A keyword to perform a text search against."
-                  },
-                  "include": {
-                    "type": "string",
-                    "description": "Fields to be selected or populated."
                   },
                   "skip": {
                     "type": "number",
@@ -3215,6 +3291,23 @@
                     "default": 50,
                     "description": "Limits the number of results.",
                     "minimum": 0
+                  },
+                  "include": {
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "description": "Field to be selected or populated.",
+                        "x-generated": true
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "description": "Field to be selected or populated.",
+                          "x-generated": true
+                        }
+                      }
+                    ]
                   }
                 }
               }
@@ -3225,7 +3318,12 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "x-permissions": {
+          "endpoint": "organizations",
+          "permission": "read",
+          "scope": "global"
+        }
       }
     },
     "/1/organizations": {
@@ -3241,6 +3339,23 @@
                   "name": {
                     "type": "string",
                     "required": true
+                  },
+                  "include": {
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "description": "Field to be selected or populated.",
+                        "x-generated": true
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "description": "Field to be selected or populated.",
+                          "x-generated": true
+                        }
+                      }
+                    ]
                   }
                 }
               }
@@ -3251,7 +3366,12 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "x-permissions": {
+          "endpoint": "organizations",
+          "permission": "write",
+          "scope": "global"
+        }
       }
     },
     "/1/applications/mine/search": {
@@ -3367,26 +3487,6 @@
                     ],
                     "description": "Allows searching by a date, array of dates, or a range."
                   },
-                  "deletedAt": {
-                    "oneOf": [
-                      {
-                        "$ref": "#/components/schemas/DateTime"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/DateTime"
-                        }
-                      },
-                      {
-                        "$ref": "#/components/schemas/DateRange"
-                      }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
-                  },
-                  "deleted": {
-                    "type": "boolean"
-                  },
                   "ids": {
                     "type": "array",
                     "items": {
@@ -3396,10 +3496,6 @@
                   "keyword": {
                     "type": "string",
                     "description": "A keyword to perform a text search against."
-                  },
-                  "include": {
-                    "type": "string",
-                    "description": "Fields to be selected or populated."
                   },
                   "skip": {
                     "type": "number",
@@ -3457,6 +3553,23 @@
                     "default": 50,
                     "description": "Limits the number of results.",
                     "minimum": 0
+                  },
+                  "include": {
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "description": "Field to be selected or populated.",
+                        "x-generated": true
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "description": "Field to be selected or populated.",
+                          "x-generated": true
+                        }
+                      }
+                    ]
                   }
                 }
               }
@@ -3467,7 +3580,12 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "x-permissions": {
+          "endpoint": "applications",
+          "permission": "read",
+          "scope": "global"
+        }
       }
     },
     "/1/applications/:id/logs/search": {
@@ -3643,26 +3761,6 @@
                     ],
                     "description": "Allows searching by a date, array of dates, or a range."
                   },
-                  "deletedAt": {
-                    "oneOf": [
-                      {
-                        "$ref": "#/components/schemas/DateTime"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/DateTime"
-                        }
-                      },
-                      {
-                        "$ref": "#/components/schemas/DateRange"
-                      }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
-                  },
-                  "deleted": {
-                    "type": "boolean"
-                  },
                   "ids": {
                     "type": "array",
                     "items": {
@@ -3672,10 +3770,6 @@
                   "keyword": {
                     "type": "string",
                     "description": "A keyword to perform a text search against."
-                  },
-                  "include": {
-                    "type": "string",
-                    "description": "Fields to be selected or populated."
                   },
                   "skip": {
                     "type": "number",
@@ -3746,6 +3840,23 @@
                       "json",
                       "csv"
                     ]
+                  },
+                  "include": {
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "description": "Field to be selected or populated.",
+                        "x-generated": true
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "description": "Field to be selected or populated.",
+                          "x-generated": true
+                        }
+                      }
+                    ]
                   }
                 }
               }
@@ -3763,7 +3874,12 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "x-permissions": {
+          "endpoint": "applications",
+          "permission": "read",
+          "scope": "global"
+        }
       }
     },
     "/1/applications/:id": {
@@ -3781,7 +3897,12 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "x-permissions": {
+          "endpoint": "applications",
+          "permission": "read",
+          "scope": "global"
+        }
       },
       "patch": {
         "summary": "Update application",
@@ -3789,7 +3910,17 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {}
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                }
+              }
             }
           }
         },
@@ -3804,7 +3935,12 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "x-permissions": {
+          "endpoint": "applications",
+          "permission": "write",
+          "scope": "global"
+        }
       },
       "delete": {
         "summary": "Delete application",
@@ -3820,7 +3956,12 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "x-permissions": {
+          "endpoint": "applications",
+          "permission": "write",
+          "scope": "global"
+        }
       }
     },
     "/1/applications": {
@@ -3830,7 +3971,35 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {}
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "include": {
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "description": "Field to be selected or populated.",
+                        "x-generated": true
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "description": "Field to be selected or populated.",
+                          "x-generated": true
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
             }
           }
         },
@@ -3838,7 +4007,12 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "x-permissions": {
+          "endpoint": "applications",
+          "permission": "write",
+          "scope": "global"
+        }
       }
     }
   },
@@ -3933,7 +4107,8 @@
               "type": "object",
               "properties": {
                 "lastUsedAt": {
-                  "$ref": "#/components/schemas/DateTime"
+                  "$ref": "#/components/schemas/DateTime",
+                  "required": true
                 },
                 "userAgent": {
                   "type": "string"
@@ -3946,14 +4121,16 @@
                   "type": "string"
                 },
                 "iat": {
-                  "$ref": "#/components/schemas/DateTime"
+                  "$ref": "#/components/schemas/DateTime",
+                  "required": true
                 },
                 "jti": {
                   "type": "string",
                   "required": true
                 },
                 "exp": {
-                  "$ref": "#/components/schemas/DateTime"
+                  "$ref": "#/components/schemas/DateTime",
+                  "required": true
                 }
               }
             }
@@ -3970,12 +4147,6 @@
           },
           "updatedAt": {
             "$ref": "#/components/schemas/DateTime"
-          },
-          "deletedAt": {
-            "$ref": "#/components/schemas/DateTime"
-          },
-          "deleted": {
-            "type": "boolean"
           }
         }
       },
@@ -4013,19 +4184,14 @@
             "type": "string"
           },
           "user": {
-            "$ref": "#/components/schemas/ObjectId"
+            "$ref": "#/components/schemas/ObjectId",
+            "required": true
           },
           "createdAt": {
             "$ref": "#/components/schemas/DateTime"
           },
           "updatedAt": {
             "$ref": "#/components/schemas/DateTime"
-          },
-          "deletedAt": {
-            "$ref": "#/components/schemas/DateTime"
-          },
-          "deleted": {
-            "type": "boolean"
           }
         }
       },
@@ -4033,7 +4199,8 @@
         "type": "object",
         "properties": {
           "application": {
-            "$ref": "#/components/schemas/ObjectId"
+            "$ref": "#/components/schemas/ObjectId",
+            "required": true
           },
           "routeNormalizedPath": {
             "type": "string"
@@ -4083,12 +4250,6 @@
           },
           "updatedAt": {
             "$ref": "#/components/schemas/DateTime"
-          },
-          "deletedAt": {
-            "$ref": "#/components/schemas/DateTime"
-          },
-          "deleted": {
-            "type": "boolean"
           }
         }
       },
@@ -4100,19 +4261,14 @@
             "required": true
           },
           "application": {
-            "$ref": "#/components/schemas/ObjectId"
+            "$ref": "#/components/schemas/ObjectId",
+            "required": true
           },
           "createdAt": {
             "$ref": "#/components/schemas/DateTime"
           },
           "updatedAt": {
             "$ref": "#/components/schemas/DateTime"
-          },
-          "deletedAt": {
-            "$ref": "#/components/schemas/DateTime"
-          },
-          "deleted": {
-            "type": "boolean"
           }
         }
       },
@@ -4131,7 +4287,8 @@
             "required": true
           },
           "user": {
-            "$ref": "#/components/schemas/ObjectId"
+            "$ref": "#/components/schemas/ObjectId",
+            "required": true
           },
           "requestCount": {
             "type": "number"
@@ -4141,12 +4298,6 @@
           },
           "updatedAt": {
             "$ref": "#/components/schemas/DateTime"
-          },
-          "deletedAt": {
-            "$ref": "#/components/schemas/DateTime"
-          },
-          "deleted": {
-            "type": "boolean"
           }
         }
       },
@@ -4162,12 +4313,6 @@
           },
           "updatedAt": {
             "$ref": "#/components/schemas/DateTime"
-          },
-          "deletedAt": {
-            "$ref": "#/components/schemas/DateTime"
-          },
-          "deleted": {
-            "type": "boolean"
           }
         }
       },
@@ -4186,12 +4331,6 @@
           },
           "updatedAt": {
             "$ref": "#/components/schemas/DateTime"
-          },
-          "deletedAt": {
-            "$ref": "#/components/schemas/DateTime"
-          },
-          "deleted": {
-            "type": "boolean"
           }
         }
       },
@@ -4207,12 +4346,6 @@
           },
           "updatedAt": {
             "$ref": "#/components/schemas/DateTime"
-          },
-          "deletedAt": {
-            "$ref": "#/components/schemas/DateTime"
-          },
-          "deleted": {
-            "type": "boolean"
           }
         }
       },
@@ -4242,7 +4375,8 @@
             }
           },
           "shop": {
-            "$ref": "#/components/schemas/ObjectId"
+            "$ref": "#/components/schemas/ObjectId",
+            "required": true
           },
           "images": {
             "type": "array",
@@ -4255,12 +4389,6 @@
           },
           "updatedAt": {
             "$ref": "#/components/schemas/DateTime"
-          },
-          "deletedAt": {
-            "$ref": "#/components/schemas/DateTime"
-          },
-          "deleted": {
-            "type": "boolean"
           }
         }
       },
@@ -4339,12 +4467,6 @@
           },
           "updatedAt": {
             "$ref": "#/components/schemas/DateTime"
-          },
-          "deletedAt": {
-            "$ref": "#/components/schemas/DateTime"
-          },
-          "deleted": {
-            "type": "boolean"
           }
         }
       },
@@ -4372,7 +4494,8 @@
             "required": true
           },
           "owner": {
-            "$ref": "#/components/schemas/ObjectId"
+            "$ref": "#/components/schemas/ObjectId",
+            "required": true
           },
           "thumbnailUrl": {
             "type": "string"
@@ -4382,19 +4505,13 @@
           },
           "updatedAt": {
             "$ref": "#/components/schemas/DateTime"
-          },
-          "deletedAt": {
-            "$ref": "#/components/schemas/DateTime"
-          },
-          "deleted": {
-            "type": "boolean"
           }
         }
       },
       "ObjectId": {
-        "required": true,
-        "type": "ObjectId",
-        "description": "A 24 character hexadecimal string representing a Mongo [ObjectId](https://bit.ly/3YPtGlU).\nAn object with an `id` field may also be passed, which will be converted into a string."
+        "type": "string",
+        "format": "mongo-object-id",
+        "description": "A 24 character hexadecimal string representing a Mongo [ObjectId](https://bit.ly/3YPtGlU)."
       },
       "DateTime": {
         "type": "string",
@@ -4448,6 +4565,30 @@
           }
         },
         "description": "An object representing numbers falling within a range."
+      },
+      "Reference": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "$ref": "#/components/schemas/ObjectId",
+                "required": true
+              }
+            }
+          }
+        ],
+        "description": "A 24 character hexadecimal string representing a Mongo [ObjectId](https://bit.ly/3YPtGlU).\nAn object with an `id` field may also be passed, which will be converted into a string."
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }

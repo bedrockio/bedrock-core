@@ -4,7 +4,7 @@ function requirePermissions({ endpoint, permission, scope = 'global' }) {
   if (!endpoint || !permission) {
     throw new Error('Need endpoint and permission for requirePermissions');
   }
-  return async (ctx, next) => {
+  const fn = async (ctx, next) => {
     if (!ctx.state.authUser) {
       return ctx.throw(401, `This endpoint requires authentication`);
     }
@@ -27,6 +27,14 @@ function requirePermissions({ endpoint, permission, scope = 'global' }) {
       `You don't have the right permission for endpoint ${endpoint} (required permission: ${scope}/${permission})`
     );
   };
+  // Allows docs to see the permissions on the middleware
+  // layer to generate an OpenApi entry for it.
+  fn.permissions = {
+    endpoint,
+    permission,
+    scope,
+  };
+  return fn;
 }
 
 module.exports = {

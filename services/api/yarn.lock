@@ -1075,10 +1075,10 @@
     kleur "^4.1.5"
     stdout-stream "^2.0.0"
 
-"@bedrockio/model@0.1.4":
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/@bedrockio/model/-/model-0.1.4.tgz#489b28922916aec2302c7af272bdd572c06c7142"
-  integrity sha512-AmANWntzdI4zGYiEEw/VNNxHNpdJ1yepuREROdd/T4N3sTsqJy/HxkZNrEUcUKXiqHlwTVcF9ES6M4pixucvZw==
+"@bedrockio/model@^0.1.10":
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/@bedrockio/model/-/model-0.1.10.tgz#789aa90bb828f1e5d32dd0595cf9ea7b8bfc8968"
+  integrity sha512-+PHYvXlu/gQ+CzjHEM489uUQfCASJmiux5NwbaNlEriZgFizb/NF64SewSa14MEqA6MORSUgEkJMtPrIdOpKUg==
   dependencies:
     "@bedrockio/logger" "^1.0.5"
     lodash "^4.17.21"

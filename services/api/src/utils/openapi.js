@@ -1,7 +1,7 @@
 const fs = require('fs/promises');
 const path = require('path');
 const crypto = require('crypto');
-const { Stream } = require('node:stream');
+const { Stream } = require('stream');
 const mongoose = require('mongoose');
 const config = require('@bedrockio/config');
 
@@ -69,6 +69,15 @@ async function generateDefinition() {
     paths: generatePaths(require('../routes')),
     components: {
       schemas: generateModelSchemas(),
+      // Describes JWT tokens by Bearer
+      // https://swagger.io/docs/specification/authentication/bearer-authentication/
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
     },
   };
 
@@ -99,14 +108,18 @@ function generatePaths(routes) {
     }
 
     const authentication = getLayerAuthentication(layer) || currentContext.authentication;
+    const permissions = getLayerPermissions(layer) || currentContext.permissions;
 
     // If there is no method then this is a middleware layer
     // like authenticate or requirePermissions so do not process.
     if (!method) {
-      // If this is an authentication layer then apply
-      // it to the current context.
+      // If this is an authentication or permissions layer
+      // then apply it to the current context.
       if (authentication) {
         currentContext.authentication = authentication;
+      }
+      if (permissions) {
+        currentContext.permissions = permissions;
       }
 
       continue;
@@ -177,10 +190,20 @@ function generatePaths(routes) {
       paths[koaPath] = {};
     }
 
+    // Authentication description. Note that in OpenAPI 3.0 bearerAuth MUST
+    // be an empty array as scopes only apply to OAuth 2. An empty object means
+    // that no authentication is required.
+    // https://swagger.io/docs/specification/authentication/bearer-authentication/
     if (authentication === 'optional') {
       item['security'] = [{}, { bearerAuth: [] }];
     } else if (authentication === 'required') {
       item['security'] = [{ bearerAuth: [] }];
+    }
+
+    // There is currently no way in OpenAPI 3.0 to describe role based permissions
+    // except using proper OAuth 2, so using an extension here.
+    if (permissions) {
+      item['x-permissions'] = permissions;
     }
 
     paths[koaPath][method.toLowerCase()] = item;
@@ -194,6 +217,13 @@ function getLayerAuthentication(layer) {
     return item.authentication;
   });
   return authLayer?.authentication;
+}
+
+function getLayerPermissions(layer) {
+  const permissionsLayer = layer.stack.find((item) => {
+    return item.permissions;
+  });
+  return permissionsLayer?.permissions;
 }
 
 function getPathMeta(koaPath, method) {
@@ -258,21 +288,24 @@ function generateModelSchemas() {
 function extractSchemas(definition) {
   walkFields(definition, ({ value, path }) => {
     const schema = value?.['x-schema'];
-    const ref = schema || value?.['x-ref'];
     let halt = false;
     if (schema) {
       set(definition, ['components', 'schemas', schema], {
         ...value,
+        title: value['x-title'],
         description: value['x-description'],
-        'x-schema': undefined,
+        default: undefined,
+        required: undefined,
+        'x-title': undefined,
         'x-description': undefined,
+        'x-schema': undefined,
       });
-      halt = true;
-    }
-    if (ref) {
       set(definition, path, {
-        $ref: `#/components/schemas/${ref}`,
-        description: value?.description,
+        $ref: `#/components/schemas/${schema}`,
+        title: value.title,
+        default: value.default,
+        required: value.required,
+        description: value.description,
       });
       halt = true;
     }

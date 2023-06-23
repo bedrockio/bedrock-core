@@ -29,6 +29,7 @@ router
     validateBody({
       firstName: yd.string(),
       lastName: yd.string(),
+      phoneNumber: yd.string().phone(),
       timeZone: yd.string(),
       theme: yd.string(),
     }),

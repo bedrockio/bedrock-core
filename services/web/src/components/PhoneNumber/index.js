@@ -1,8 +1,7 @@
+import { useEffect, useRef, useState } from 'react';
 import intlTelInput from 'intl-tel-input';
 import 'intl-tel-input/build/css/intlTelInput.css';
 import './phone-number.less';
-
-import React, { useEffect, useRef, useState } from 'react';
 
 export default function PhoneNumber({
   preferredCountries = ['us'],
