@@ -17,3 +17,7 @@ globalConfig.json
 .eslintcache
 .vscode
 secrets
+serve/node_modules
+README.md
+__mocks__
+scripts

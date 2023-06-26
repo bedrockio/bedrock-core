@@ -1,7 +1,12 @@
 // Injects environment variables into templates.
 // Note that only public variables should be exposed!
 const config = require('@bedrockio/config');
-const { omitBy } = require('lodash');
+
+function omitBy(object, predicate) {
+  return Object.fromEntries(
+    Object.entries(object).filter(([key, value]) => !predicate(value, key))
+  );
+}
 
 const PUBLIC = omitBy(
   config.getAll(),

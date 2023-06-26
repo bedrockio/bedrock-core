@@ -1,0 +1,21 @@
+{
+  "name": "serve",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "node dev",
+    "static": "node static"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@bedrockio/config": "^2.2.3",
+    "@bedrockio/logger": "^1.0.5",
+    "express-to-koa": "^2.0.0",
+    "koa": "^2.14.2",
+    "koa-basic-auth": "^4.0.0",
+    "koa-mount": "^4.0.0",
+    "koa-static": "^5.0.0",
+    "webpack-dev-middleware": "^6.1.1",
+    "webpack-hot-middleware": "^2.25.4"
+  }
+}
