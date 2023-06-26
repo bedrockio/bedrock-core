@@ -11,13 +11,8 @@ env
 *.code-workspace
 tmp
 /data
-services/api/data
 .terraform/
 globalConfig.json
 .eslintcache
 .vscode
 secrets
-serve/node_modules
-README.md
-__mocks__
-scripts
