@@ -10,11 +10,10 @@ export default class SearchStatus extends React.Component {
 
   render() {
     const { loading, error, items } = this.context;
-
     if (loading) {
       return (
         <Segment style={{ height: '100px' }}>
-          <Loader>Loading</Loader>
+          <Loader active>Loading</Loader>
         </Segment>
       );
     }
