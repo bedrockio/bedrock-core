@@ -35,7 +35,7 @@ if (config.has('HTTP_BASIC_AUTH_PATH')) {
 
 app
   .use(koaMount('/assets/', assetsMiddleware('./dist/assets')))
-  .use(logger.middleware)
+  .use(logger.middleware())
   .use(envMiddleware())
   .use(historyMiddleware({ apps: ['/'] }))
   .use(templateMiddleware({ apps: ['/'] }));
