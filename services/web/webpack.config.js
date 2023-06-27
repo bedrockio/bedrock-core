@@ -186,6 +186,7 @@ module.exports = {
   },
   cache: {
     type: 'filesystem',
+    cacheDirectory: path.resolve(__dirname, '.webpack-cache'),
   },
 };
 

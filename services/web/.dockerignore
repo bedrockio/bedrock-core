@@ -16,3 +16,4 @@ globalConfig.json
 .eslintcache
 .vscode
 secrets
+.webpack-cache
