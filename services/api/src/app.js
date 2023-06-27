@@ -1,7 +1,7 @@
 const Router = require('@koa/router');
 const Koa = require('koa');
 const { version } = require('../package.json');
-const bodyParser = require('koa-body');
+const { koaBody: bodyParser } = require('koa-body');
 const errorHandler = require('./utils/middleware/error-handler');
 const corsMiddleware = require('./utils/middleware/cors');
 const recordMiddleware = require('./utils/middleware/record');

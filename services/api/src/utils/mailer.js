@@ -1,5 +1,5 @@
 const postmark = require('postmark');
-const marked = require('marked');
+const { marked } = require('marked');
 const Mustache = require('mustache');
 const frontmatter = require('front-matter');
 const { memoize, camelCase } = require('lodash');
@@ -34,7 +34,10 @@ async function sendTemplatedMail({ file, template, layout = 'layout.html', to, .
   // to html to be injected into the layout.
   let body = templateBody;
   body = interpolate(body, vars);
-  body = marked.parse(body);
+  body = marked(body, {
+    headerIds: false,
+    mangle: false,
+  });
 
   const html = interpolate(layoutBody, {
     ...vars,
