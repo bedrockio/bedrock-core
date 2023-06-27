@@ -11,7 +11,17 @@ router
   .use(authenticate())
   .param('id', fetchByParam(Shop))
   .post('/', validateBody(Shop.getCreateValidation()), async (ctx) => {
-    const shop = await Shop.create(ctx.request.body);
+    const shop = await Shop.create({
+      ...ctx.request.body,
+      owner: ctx.state.authUser._id,
+    });
+
+    await AuditEntry.append('Created shop', {
+      ctx,
+      object: shop,
+      fields: ['name', 'owner', 'country'],
+    });
+
     ctx.body = {
       data: shop,
     };
@@ -45,8 +55,19 @@ router
   )
   .patch('/:id', validateBody(Shop.getUpdateValidation()), async (ctx) => {
     const shop = ctx.state.shop;
+    const snapshot = new Shop(shop);
+
     shop.assign(ctx.request.body);
+
     await shop.save();
+
+    await AuditEntry.append('Updated shop', {
+      ctx,
+      object: shop,
+      fields: ['name', 'owner', 'country'],
+      snapshot,
+    });
+
     ctx.body = {
       data: shop,
     };
@@ -57,11 +78,15 @@ router
       await shop.assertNoReferences({
         except: [AuditEntry],
       });
-      await shop.delete();
-      ctx.status = 204;
     } catch (err) {
       ctx.throw(400, err);
     }
+    await shop.delete();
+    await AuditEntry.append('Deleted shop', {
+      ctx,
+      object: shop,
+    });
+    ctx.status = 204;
   });
 
 module.exports = router;

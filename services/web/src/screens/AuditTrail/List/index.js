@@ -17,14 +17,52 @@ import ShowAuditEntry from 'modals/ShowAuditEntry';
 @screen
 export default class AuditTrailList extends React.Component {
   onDataNeeded = async (params) => {
-    return await request({
+    const response = await request({
       method: 'POST',
       path: '/1/audit-entries/search',
       body: {
         ...params,
-        include: 'user',
+        include: ['*', 'actor.firstName', 'actor.lastName'],
       },
     });
+
+    const store = {};
+
+    (response.data || []).forEach((item) => {
+      if (!item.ownerId || !item.ownerType) return;
+      const list = store[item.ownerType] || [];
+      list.push(item.ownerId);
+      store[item.ownerType] = list;
+    });
+
+    // its split here because the owner could be a user or another collection
+    const [users] = await Promise.all(
+      Object.keys(store)
+        .map((key) => {
+          if (key === 'User') {
+            const ids = [...new Set(store[key])];
+            if (!ids.length) return null;
+            return this.fetchUsers({
+              ids,
+              include: ['firstName', 'lastName', 'email'],
+            });
+          }
+          // eslint-disable-next-line no-console
+          console.error('[AuditLog] Unknown ownerType', key);
+          return null;
+        })
+        .filter(Boolean)
+    );
+
+    response.data.forEach((item) => {
+      if (item.ownerType === 'User') {
+        const user = users?.find((u) => u.id === item.ownerId);
+        if (!user) return;
+        item.owner = user;
+      }
+    });
+
+    return response;
   };
 
   fetchUsers = async (props) => {
@@ -54,8 +92,15 @@ export default class AuditTrailList extends React.Component {
 
   getFilterMapping() {
     return {
-      user: {
-        label: 'User',
+      actor: {
+        label: 'Actor',
+        getDisplayValue: async (id) => {
+          const data = await this.fetchUsers({ ids: [id] });
+          return data[0].name;
+        },
+      },
+      ownerId: {
+        label: 'Owner',
         getDisplayValue: async (id) => {
           const data = await this.fetchUsers({ ids: [id] });
           return data[0].name;
@@ -102,8 +147,14 @@ export default class AuditTrailList extends React.Component {
                     <SearchFilters.Dropdown
                       onDataNeeded={(name) => this.fetchUsers({ name })}
                       search
-                      name="user"
-                      label="User"
+                      name="actor"
+                      label="Actor"
+                    />
+                    <SearchFilters.Dropdown
+                      onDataNeeded={(name) => this.fetchUsers({ name })}
+                      search
+                      name="ownerId"
+                      label="Owner"
                     />
                     <SearchFilters.Dropdown
                       onDataNeeded={() =>
@@ -119,7 +170,6 @@ export default class AuditTrailList extends React.Component {
                       name="activity"
                       label="Activity"
                     />
-
                     <SearchFilters.Dropdown
                       onDataNeeded={() =>
                         this.fetchSearchOptions({
@@ -156,13 +206,15 @@ export default class AuditTrailList extends React.Component {
                 <Table celled sortable>
                   <Table.Header>
                     <Table.Row>
-                      <Table.HeaderCell width={2}>User</Table.HeaderCell>
+                      <Table.HeaderCell width={2}>Actor</Table.HeaderCell>
                       <Table.HeaderCell width={1}>Category</Table.HeaderCell>
                       <Table.HeaderCell width={4}>Activity</Table.HeaderCell>
-
+                      <Table.HeaderCell width={3}>
+                        Object Owner
+                      </Table.HeaderCell>
                       <Table.HeaderCell width={3}>Request</Table.HeaderCell>
                       <Table.HeaderCell
-                        width={4}
+                        width={3}
                         onClick={() => setSort('createdAt')}
                         sorted={getSorted('createdAt')}>
                         Date
@@ -181,14 +233,15 @@ export default class AuditTrailList extends React.Component {
                       return (
                         <Table.Row key={item.id}>
                           <Table.Cell>
-                            {item.user && (
+                            {item.actor && (
                               <Link
-                                title={item.user.email}
-                                to={`/users/${item.user.id}`}>
-                                {item.user.firstName} {item.user.lastName}
+                                title={item.actor.email}
+                                to={`/users/${item.actor.id}`}>
+                                {item.actor.firstName} {item.actor.lastName}
                               </Link>
                             )}
                           </Table.Cell>
+
                           <Table.Cell>
                             <Label
                               style={{ textTransform: 'capitalize' }}
@@ -197,6 +250,17 @@ export default class AuditTrailList extends React.Component {
                             </Label>
                           </Table.Cell>
                           <Table.Cell>{item.activity}</Table.Cell>
+                          <Table.Cell>
+                            {item.owner && (
+                              <>
+                                <Link
+                                  title={item.owner.email}
+                                  to={`/users/${item.owner.id}`}>
+                                  {item.owner.name}
+                                </Link>
+                              </>
+                            )}
+                          </Table.Cell>
                           <Table.Cell>
                             <code>
                               {item.requestMethod} {item.requestUrl}

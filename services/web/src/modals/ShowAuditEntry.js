@@ -17,7 +17,6 @@ export default class ShowAuditEntry extends React.Component {
 
   render() {
     const { auditEntry } = this.props;
-
     return (
       <>
         <Modal.Header>{auditEntry.activity}</Modal.Header>
@@ -30,7 +29,7 @@ export default class ShowAuditEntry extends React.Component {
               onClick={() => this.setState({ tab: 'details' })}
             />
             <Menu.Item
-              disabled={!auditEntry.objectAfter || !auditEntry.objectBefore}
+              disabled={!auditEntry.objectAfter && !auditEntry.objectBefore}
               content="Modifications"
               active={this.state.tab === 'modifications'}
               onClick={() => this.setState({ tab: 'modifications' })}
@@ -46,22 +45,14 @@ export default class ShowAuditEntry extends React.Component {
                     <Table.Cell>{auditEntry.activity}</Table.Cell>
                   </Table.Row>
                   <Table.Row>
-                    <Table.Cell width={4}>User</Table.Cell>
+                    <Table.Cell width={4}>Actor</Table.Cell>
                     <Table.Cell>
                       <Link
-                        title={auditEntry.user.email}
-                        to={`/users/${auditEntry.user.id}`}>
-                        {auditEntry.user.firstName} {auditEntry.user.firstName}
+                        title={auditEntry.actor.email}
+                        to={`/users/${auditEntry.actor.id}`}>
+                        {auditEntry.actor.firstName} {auditEntry.actor.lastName}
                       </Link>
                     </Table.Cell>
-                  </Table.Row>
-                  <Table.Row>
-                    <Table.Cell width={4}>Request Method</Table.Cell>
-                    <Table.Cell>{auditEntry.requestMethod}</Table.Cell>
-                  </Table.Row>
-                  <Table.Row>
-                    <Table.Cell width={4}>Request Url</Table.Cell>
-                    <Table.Cell>{auditEntry.requestUrl}</Table.Cell>
                   </Table.Row>
                   {auditEntry.objectType && (
                     <Table.Row>
@@ -75,6 +66,27 @@ export default class ShowAuditEntry extends React.Component {
                       <Table.Cell>{auditEntry.objectId}</Table.Cell>
                     </Table.Row>
                   )}
+                  {auditEntry?.owner?.name && (
+                    <Table.Row>
+                      <Table.Cell width={4}>Object Owner</Table.Cell>
+                      <Table.Cell>
+                        <Link
+                          title={auditEntry.owner.name}
+                          to={`/users/${auditEntry.owner.id}`}>
+                          {auditEntry.owner.name}
+                        </Link>{' '}
+                        - {auditEntry.ownerType}
+                      </Table.Cell>
+                    </Table.Row>
+                  )}
+                  <Table.Row>
+                    <Table.Cell width={4}>Request Method</Table.Cell>
+                    <Table.Cell>{auditEntry.requestMethod}</Table.Cell>
+                  </Table.Row>
+                  <Table.Row>
+                    <Table.Cell width={4}>Request Url</Table.Cell>
+                    <Table.Cell>{auditEntry.requestUrl}</Table.Cell>
+                  </Table.Row>
                   {auditEntry.sessionId && (
                     <Table.Row>
                       <Table.Cell width={4}>Session Id</Table.Cell>
@@ -93,14 +105,22 @@ export default class ShowAuditEntry extends React.Component {
           )}
           {this.state.tab === 'modifications' && (
             <>
-              <h3>Before</h3>
-              <Code language="json">
-                {JSON.stringify(auditEntry.objectBefore || {}, null, 2)}
-              </Code>
-              <h3>After</h3>
-              <Code language="json">
-                {JSON.stringify(auditEntry.objectAfter || {}, null, 2)}
-              </Code>
+              {auditEntry.objectBefore && (
+                <>
+                  <h3>Before</h3>
+                  <Code language="json">
+                    {JSON.stringify(auditEntry.objectBefore || {}, null, 2)}
+                  </Code>
+                </>
+              )}
+              {auditEntry.objectAfter && (
+                <>
+                  <h3>After</h3>
+                  <Code language="json">
+                    {JSON.stringify(auditEntry.objectAfter || {}, null, 2)}
+                  </Code>
+                </>
+              )}
             </>
           )}
         </Modal.Content>

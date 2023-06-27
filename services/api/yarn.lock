@@ -1039,6 +1039,11 @@
   resolved "https://registry.yarnpkg.com/@bedrockio/config/-/config-2.2.2.tgz#751b9fb1500c9baa343308c394a3f876f61a0de6"
   integrity sha512-t8HtO7bH3DBYgdONFZ4fxi7qlnwnvKyPRXWC7KFwbRqyr+QNqUhv7B2tBLSm4wy/jFvRBmmaaU94xJ8jVJoacQ==
 
+"@bedrockio/config@^2.2.3":
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/@bedrockio/config/-/config-2.2.3.tgz#bac37d12e36a99ec16668c8b5d1e05dec9658fa9"
+  integrity sha512-jfOcZIs63S0GaWQjh5vVIISr4b2vA0CWgm630N0FDB6wlW+O0Fsjox92Agx5nggVpSnNYWqzjuKaUb5RY3/ECw==
+
 "@bedrockio/fixtures@^1.0.4":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@bedrockio/fixtures/-/fixtures-1.0.4.tgz#0420648e1c6cead21d3631cecaa5a8c611003f43"
@@ -1084,9 +1089,9 @@
   integrity sha512-Ebcx/D9FcV6WEQH2gXA4SkN62fus/aVMW46MYFm1/y+S0GVYj+OCuBbRMM4F8YAq9ntJ+B/z9fLiOheNpEpRzA==
 
 "@bedrockio/yada@^1.0.19":
-  version "1.0.19"
-  resolved "https://registry.yarnpkg.com/@bedrockio/yada/-/yada-1.0.19.tgz#9ed8e506f4e9c9feb66428b18e73717e4c5aeca9"
-  integrity sha512-Fw4OAqPuWweGG+oMn8W/0pLZeeWsa+e9/pVDJ8AC0y5ej4JGtM98qqAaBc92HcWvb5Hav515d82W+uQfCcrBjg==
+  version "1.0.26"
+  resolved "https://registry.yarnpkg.com/@bedrockio/yada/-/yada-1.0.26.tgz#64e414058b2badc4fdd191988e2063d3ed7fc4ca"
+  integrity sha512-LmXVn+SnoLeU78EYyKYUEqYQUjZkugP2ZLFigHf2OOJMsMIvOykuzWc+QhPs5w0gcWl6ZpPRRMb+kYdT0wgpbA==
   dependencies:
     validator "^13.9.0"
 

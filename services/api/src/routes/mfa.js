@@ -64,7 +64,7 @@ router
       } catch (error) {
         await AuditEntry.append('Reached max mfa challenge attempts', {
           ctx,
-          user,
+          actor: user,
           category: 'security',
         });
         ctx.throw(401, error);
@@ -81,12 +81,12 @@ router
 
         await AuditEntry.append('Authenticated', {
           ctx,
-          user,
+          actor: user,
         });
       } else if (!mfa.verifyToken(user.mfaSecret, user.mfaMethod, code)) {
         await AuditEntry.append('Failed mfa challenge', {
           ctx,
-          user,
+          actor: user,
           category: 'security',
         });
         ctx.throw(400, 'Not a valid code');
@@ -94,7 +94,7 @@ router
 
       await AuditEntry.append('Authenticated', {
         ctx,
-        user,
+        actor: user,
       });
 
       const token = user.createAuthToken({

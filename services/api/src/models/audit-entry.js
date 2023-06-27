@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { createSchema } = require('@bedrockio/model');
-const { isEmpty } = require('lodash');
+const { isEmpty, get } = require('lodash');
 
 const definition = require('./definitions/audit-entry.json');
 
@@ -25,9 +25,26 @@ schema.statics.getObjectFields = function (options) {
     snapshot.depopulate?.();
     object.depopulate?.();
 
+    const paths = object.constructor.schema.paths;
+
+    let ownerPath = options.ownerPath;
+
+    if (!ownerPath && paths['owner']) {
+      ownerPath = 'owner';
+    } else if (!ownerPath && paths['user']) {
+      ownerPath = 'user';
+    }
+
+    const schemaField = paths[ownerPath];
+    const ownerType = schemaField?.options?.ref;
+    // keep in mind the ownerPath might be a nested path `location.user`
+    const ownerId = get(object, ownerPath);
+
     let result = {
       objectId: object.id,
       objectType: object.constructor.modelName,
+      ownerId,
+      ownerType,
     };
 
     if (fields) {
@@ -70,7 +87,7 @@ schema.statics.append = function (activity, options) {
   return this.create({
     ...this.getContextFields(ctx),
     ...objectFields,
-    user: options.user?.id || ctx.state.authUser?.id,
+    actor: options.actor?.id || ctx.state.authUser?.id,
     activity,
     category,
   });

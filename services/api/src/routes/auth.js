@@ -66,7 +66,7 @@ router
 
     await AuditEntry.append('Registered', {
       ctx,
-      user,
+      actor: user,
     });
 
     if (email) {
@@ -99,7 +99,7 @@ router
       } catch (error) {
         await AuditEntry.append('Reached max authentication attempts', {
           ctx,
-          user,
+          actor: user,
           category: 'security',
         });
         ctx.throw(401, error);
@@ -110,7 +110,7 @@ router
       } catch (error) {
         await AuditEntry.append('Failed authentication', {
           ctx,
-          user,
+          actor: user,
           category: 'security',
         });
         ctx.throw(401, error);
@@ -141,7 +141,7 @@ router
 
       await AuditEntry.append('Successfully authenticated', {
         ctx,
-        user,
+        actor: user,
       });
 
       ctx.body = {
@@ -194,7 +194,7 @@ router
           ctx,
           category: 'security',
           object: user,
-          user: user,
+          actor: user,
         });
         ctx.throw(401, error);
       }
@@ -204,7 +204,7 @@ router
           ctx,
           category: 'security',
           object: user,
-          user: user,
+          actor: user,
         });
         ctx.throw(400, 'Invalid login code');
       }
@@ -236,7 +236,7 @@ router
       await AuditEntry.append('Authenticated', {
         ctx,
         object: user,
-        user: user,
+        actor: user,
       });
 
       ctx.body = { data: { token } };
@@ -354,7 +354,7 @@ router
 
       await AuditEntry.append('Registered', {
         ctx,
-        user,
+        actor: user,
       });
 
       ctx.body = {
@@ -403,7 +403,7 @@ router
       } else if (user.tempTokenId !== jwt.jti) {
         await AuditEntry.append('Attempted reset password', {
           ctx,
-          user,
+          actor: user,
           category: 'security',
         });
         ctx.throw(400, 'Token is invalid (jti)');
@@ -421,7 +421,7 @@ router
 
       await AuditEntry.append('Reset password', {
         ctx,
-        user,
+        actor: user,
       });
 
       ctx.body = {

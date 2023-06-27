@@ -132,7 +132,7 @@ describe('/1/users', () => {
       expect(response.body.data.token).toBeTruthy();
 
       const auditEntry = await AuditEntry.findOne({
-        user: superAdmin.id,
+        actor: superAdmin.id,
         activity: 'Authenticate as user',
       });
       expect(auditEntry.objectType).toBe('User');
@@ -298,6 +298,13 @@ describe('/1/users', () => {
       expect(response.status).toBe(204);
       const dbUser = await User.findByIdDeleted(user1.id);
       expect(dbUser.deletedAt).toBeDefined();
+
+      const auditEntry = await AuditEntry.findOne({
+        activity: 'Deleted user',
+        actor: admin.id,
+      });
+      expect(auditEntry.objectType).toBe('User');
+      expect(auditEntry.objectId).toBe(user1.id);
     });
 
     it('should deny access to non-admins', async () => {

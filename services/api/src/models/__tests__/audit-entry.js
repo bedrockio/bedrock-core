@@ -122,7 +122,7 @@ describe('AuditEntry', () => {
 
       const logs = await AuditEntry.find({
         objectId: user.id,
-        include: 'user',
+        include: 'actor',
       });
       expect(logs.length).toBe(1);
 
@@ -135,7 +135,7 @@ describe('AuditEntry', () => {
       expect(log.requestUrl).toBe('/1/products/id');
       expect(log.routeNormalizedPath).toBe('/1/products/:id');
       expect(log.createdAt).toBeDefined();
-      expect(log.user.id).toBe(user.id);
+      expect(log.actor.id).toBe(user.id);
     });
 
     it('should not change, if nothing was changed', async () => {

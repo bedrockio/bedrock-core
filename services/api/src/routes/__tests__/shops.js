@@ -1,5 +1,5 @@
 const { request, createUser } = require('../../utils/testing');
-const { Shop } = require('../../models');
+const { Shop, AuditEntry } = require('../../models');
 
 describe('/1/shops', () => {
   describe('POST /search', () => {
@@ -52,20 +52,37 @@ describe('/1/shops', () => {
       const data = response.body.data;
       expect(response.status).toBe(200);
       expect(data.name).toBe('shop name');
+
+      const auditEntry = await AuditEntry.findOne({
+        objectId: data.id,
+      });
+      expect(auditEntry.activity).toBe('Created shop');
+      expect(auditEntry.actor).toEqual(user._id);
+      expect(auditEntry.ownerId).toBe(user.id);
+      expect(auditEntry.ownerType).toBe('User');
     });
   });
 
   describe('DELETE /:shop', () => {
     it('should be able to delete shop', async () => {
       const user = await createUser();
+      const owner = await createUser();
       let shop = await Shop.create({
         name: 'test 1',
         description: 'Some description',
+        owner: owner.id,
       });
       const response = await request('DELETE', `/1/shops/${shop.id}`, {}, { user });
       expect(response.status).toBe(204);
       shop = await Shop.findByIdDeleted(shop.id);
       expect(shop.deletedAt).toBeDefined();
+
+      const auditEntry = await AuditEntry.findOne({
+        objectId: shop.id,
+      });
+      expect(auditEntry.activity).toBe('Deleted shop');
+      expect(auditEntry.actor).toEqual(user._id);
+      expect(auditEntry.ownerId).toBe(owner.id);
     });
   });
 

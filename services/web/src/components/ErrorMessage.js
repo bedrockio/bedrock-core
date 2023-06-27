@@ -39,6 +39,7 @@ export default class ErrorMessage extends React.Component {
     if (!error) {
       return null;
     }
+
     return (
       <Message error size="small">
         <p>{error.message}</p>
