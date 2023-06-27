@@ -73,8 +73,7 @@ export default class ShowAuditEntry extends React.Component {
                         <Link
                           title={auditEntry.owner.name}
                           to={`/users/${auditEntry.owner.id}`}>
-                          {auditEntry.owner.firstName}{' '}
-                          {auditEntry.owner.lastName}
+                          {auditEntry.owner.name}
                         </Link>{' '}
                         - {auditEntry.ownerType}
                       </Table.Cell>

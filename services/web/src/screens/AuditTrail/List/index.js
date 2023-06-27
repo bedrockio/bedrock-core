@@ -256,7 +256,7 @@ export default class AuditTrailList extends React.Component {
                                 <Link
                                   title={item.owner.email}
                                   to={`/users/${item.owner.id}`}>
-                                  {item.owner.firstName} {item.owner.lastName}
+                                  {item.owner.name}
                                 </Link>
                               </>
                             )}
