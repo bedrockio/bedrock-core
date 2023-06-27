@@ -17,7 +17,7 @@ WORKDIR /service
 # Install dependencies and store yarn cache
 COPY package.json yarn.lock ./
 COPY serve/package.json serve/yarn.lock ./serve/
-RUN --mount=type=cache,target=/root/.yarn YARN_CACHE_FOLDER=/root/.yarn yarn install --production --frozen-lockfile
+RUN yarn install --frozen-lockfile --network-timeout 600000
 
 # Copy app source
 COPY . .
@@ -26,7 +26,7 @@ COPY . .
 FROM base as build
 
 # Build and store webpack cache
-RUN --mount=type=cache,target=./node_modules/.cache/webpack yarn build
+RUN yarn build
 
 RUN rm -rf src/
 RUN rm -rf node_modules/
