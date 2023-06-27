@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import modal from 'helpers/modal';
 import Code from 'components/Code';
 import { formatDateTime } from 'utils/date';
-import FetchObject from 'components/FetchObject';
 
 @modal
 export default class ShowAuditEntry extends React.Component {
