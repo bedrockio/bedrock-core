@@ -52,6 +52,4 @@ const App = () => {
   );
 };
 
-console.log(12);
-
 export default hot(App);
