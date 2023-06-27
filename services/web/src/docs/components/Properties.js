@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { get, isEqual } from 'lodash';
 
-import { JumpLink } from 'components/Link';
 import bem from 'helpers/bem';
+
+import { JumpLink } from 'components/Link';
 
 import { expandRef } from '../utils';
 import { DocsContext } from '../utils/context';
@@ -155,16 +156,29 @@ export default class DocsProperties extends React.Component {
     const { type, $ref, oneOf, enum: allowed } = desc;
     if (oneOf) {
       if (this.isArrayVariant(oneOf)) {
-        return (
-          <React.Fragment>
-            {this.renderType(oneOf[0])}
-            <span
-              title="May also be an array."
-              className={this.getElementClass('note')}>
-              *
-            </span>
-          </React.Fragment>
-        );
+        if (this.props.query) {
+          return (
+            <React.Fragment>
+              {this.renderType(oneOf[0])}
+              <span
+                title="May pass multiple parameters in query."
+                className={this.getElementClass('note')}>
+                *
+              </span>
+            </React.Fragment>
+          );
+        } else {
+          return (
+            <React.Fragment>
+              {this.renderType(oneOf[0])}
+              <span
+                title="May also be an array."
+                className={this.getElementClass('note')}>
+                *
+              </span>
+            </React.Fragment>
+          );
+        }
       } else if (this.isRangeVariant(oneOf)) {
         this.context.visitedComponents.add(oneOf[2].$ref);
         return (

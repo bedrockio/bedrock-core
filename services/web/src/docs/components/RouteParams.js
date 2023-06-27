@@ -118,7 +118,7 @@ export default class RouteParams extends React.Component {
       return (
         <React.Fragment>
           <h4>Query Params:</h4>
-          <Properties data={data} getPath={getPath} />
+          <Properties data={data} getPath={getPath} query />
         </React.Fragment>
       );
     } else {
