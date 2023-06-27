@@ -15,6 +15,8 @@ const healthCheckMiddleware = require('./middleware/healthCheck');
 const SERVER_PORT = config.get('SERVER_PORT');
 const SERVER_HOST = config.get('SERVER_HOST');
 
+logger.setupGoogleCloud({});
+
 const app = new Koa();
 
 app.use(healthCheckMiddleware);
@@ -42,8 +44,9 @@ app.listen(SERVER_PORT, SERVER_HOST, (err) => {
   if (err) {
     throw err;
   }
+
   // eslint-disable-next-line
-  console.info(
+  logger.info(
     `🐬  Prod App server listening at http://${SERVER_HOST}:${SERVER_PORT} 🐬\r\n\r\n`
   );
 });

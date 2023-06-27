@@ -1,4 +1,5 @@
-FROM node:18.14.0-alpine
+# Base stage
+FROM node:18.14.0-alpine as base
 
 # Yarn will not install any package listed in devDependencies if the NODE_ENV
 # environment variable is set to production. Use this flag to instruct Yarn to
@@ -15,14 +16,28 @@ WORKDIR /service
 
 # Install dependencies and store yarn cache
 COPY package.json yarn.lock ./
+COPY serve/package.json serve/yarn.lock ./serve/
 RUN --mount=type=cache,target=/root/.yarn YARN_CACHE_FOLDER=/root/.yarn yarn install --frozen-lockfile
 
 # Copy app source
 COPY . .
 
+# build stage
+FROM base as build
+
+
 # Build and store webpack cache
-RUN --mount=type=cache,target=./node_modules/.cache/webpack yarn build
+RUN --mount=type=cache,target=./.webpack-cache yarn build
+
+RUN rm -rf src/
+RUN rm -rf node_modules/
+
+## Default (deployment image)
+FROM node:18.14.0-alpine
+WORKDIR /service
 
 EXPOSE 2200
+
+COPY --from=build /service .
 
 CMD ["yarn", "run", "static"]
