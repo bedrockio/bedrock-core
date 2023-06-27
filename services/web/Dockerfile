@@ -17,7 +17,7 @@ WORKDIR /service
 # Install dependencies and store yarn cache
 COPY package.json yarn.lock ./
 COPY serve/package.json serve/yarn.lock ./serve/
-RUN yarn install --frozen-lockfile
+RUN --mount=type=cache,target=/root/.yarn YARN_CACHE_FOLDER=/root/.yarn yarn install --frozen-lockfile
 
 # Copy app source
 COPY . .
