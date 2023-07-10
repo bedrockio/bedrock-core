@@ -1,8 +1,6 @@
-import React, { useState, useContext, useMemo, useEffect } from 'react';
-import { Dimmer, Loader } from 'semantic';
+import React, { useState, useContext, useMemo } from 'react';
 
-import ErrorBoundary from 'components/ErrorBoundary';
-
+import { useLoader } from 'utils/loader';
 import { wrapContext } from 'utils/hoc';
 
 const Context = React.createContext();
@@ -10,32 +8,16 @@ const Context = React.createContext();
 export function usePageLoader(fn, dependencies = []) {
   return useMemo(() => {
     return (props) => {
-      const { fallback = <DefaultLoader />, notFound, children } = props;
-
       const page = usePage();
       const [data, setData] = useState();
-      const [error, setError] = useState();
-      const [loading, setLoading] = useState(true);
+      const [count, setCount] = useState(0);
 
-      useEffect(() => {
-        load();
-      }, []);
+      const Loader = useLoader(async () => {
+        setData(await fn());
+      }, [count, ...dependencies]);
 
-      async function load() {
-        try {
-          setError(null);
-          setLoading(true);
-          setData(await fn());
-        } catch (error) {
-          setError(error);
-          throw error;
-        } finally {
-          setLoading(false);
-        }
-      }
-
-      if (loading) {
-        return fallback;
+      function reload() {
+        setCount(count + 1);
       }
 
       return (
@@ -43,34 +25,14 @@ export function usePageLoader(fn, dependencies = []) {
           value={{
             ...page,
             ...data,
-            reload: load,
-            reloadPage: page?.reload || load,
+            reload,
+            reloadPage: page?.reload || reload,
           }}>
-          <ErrorBoundary error={error} notFound={notFound}>
-            <Render>{children}</Render>
-          </ErrorBoundary>
+          <Loader {...props} />
         </Context.Provider>
       );
     };
   }, dependencies);
-}
-
-// This component must be broken out to prevent an error with
-// hooks order when using a render prop function.
-function Render(props) {
-  if (typeof props.children === 'function') {
-    return props.children();
-  } else {
-    return props.children;
-  }
-}
-
-function DefaultLoader() {
-  return (
-    <Dimmer active inverted>
-      <Loader inverted inline />
-    </Dimmer>
-  );
 }
 
 export function usePage() {
