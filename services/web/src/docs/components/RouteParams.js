@@ -75,22 +75,38 @@ export default class RouteParams extends React.Component {
         },
       };
     }
-
-    return data;
   }
 
   sortFields = (a, b, level) => {
     if (level === 0 && this.isSearchRoute()) {
       const aName = a[0];
       const bName = b[0];
-      if (aName !== bName) {
+      const rank = this.compareByRank(aName, bName);
+      if (rank !== 0) {
+        return rank;
+      } else if (aName !== bName) {
         return aName === 'keyword' ? -1 : 1;
       }
     }
   };
 
+  compareByRank(aName, bName) {
+    const { sortFields } = this.props;
+    const aIndex = sortFields.indexOf(aName);
+    const bIndex = sortFields.indexOf(bName);
+    if (aIndex === bIndex) {
+      return 0;
+    } else if (aIndex === -1) {
+      return 1;
+    } else if (bIndex === -1) {
+      return -1;
+    } else {
+      return aIndex - bIndex;
+    }
+  }
+
   render() {
-    const { route } = this.props;
+    const { route, hideFields } = this.props;
     const { docs } = this.context;
     const model = get(docs, getModelPath(route));
 
@@ -108,6 +124,7 @@ export default class RouteParams extends React.Component {
           <Properties
             path={path}
             model={model}
+            hideFields={hideFields}
             additionalSort={this.sortFields}
           />
           {this.renderMimeType(mime)}
@@ -140,4 +157,9 @@ export default class RouteParams extends React.Component {
 
 RouteParams.propTypes = {
   route: PropTypes.string.isRequired,
+  sortFields: PropTypes.arrayOf(PropTypes.string),
+};
+
+RouteParams.defaultProps = {
+  sortFields: [],
 };

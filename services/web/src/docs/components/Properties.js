@@ -65,7 +65,7 @@ export default class DocsProperties extends React.Component {
   }
 
   renderParams(data, path, options = {}) {
-    const { additionalSort } = this.props;
+    const { additionalSort, hideFields } = this.props;
     const { level = 0 } = options;
     let entries = Object.entries(data);
     entries.sort((a, b) => {
@@ -81,30 +81,34 @@ export default class DocsProperties extends React.Component {
       }
     });
 
-    return entries.map(([name, desc]) => {
-      if (desc.properties) {
-        return (
-          <React.Fragment key={name}>
-            {this.renderParam(name, desc, path, {
-              ...options,
-              level,
-              grouped: true,
-            })}
-            <div className={this.getElementClass('param-group')}>
-              {this.renderParams(desc.properties, [...path, name], {
+    return entries
+      .filter(([name]) => {
+        return !hideFields.includes(name);
+      })
+      .map(([name, desc]) => {
+        if (desc.properties) {
+          return (
+            <React.Fragment key={name}>
+              {this.renderParam(name, desc, path, {
                 ...options,
-                level: level + 1,
+                level,
+                grouped: true,
               })}
-            </div>
-          </React.Fragment>
-        );
-      } else {
-        return this.renderParam(name, desc, path, {
-          ...options,
-          level,
-        });
-      }
-    });
+              <div className={this.getElementClass('param-group')}>
+                {this.renderParams(desc.properties, [...path, name], {
+                  ...options,
+                  level: level + 1,
+                })}
+              </div>
+            </React.Fragment>
+          );
+        } else {
+          return this.renderParam(name, desc, path, {
+            ...options,
+            level,
+          });
+        }
+      });
   }
 
   renderParam(name, desc, path, options) {
@@ -264,9 +268,11 @@ export default class DocsProperties extends React.Component {
 DocsProperties.propTypes = {
   required: PropTypes.bool,
   path: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+  hideFields: PropTypes.arrayOf(PropTypes.string),
   additionalSort: PropTypes.func,
 };
 
 DocsProperties.defaultProps = {
+  hideFields: [],
   required: false,
 };
