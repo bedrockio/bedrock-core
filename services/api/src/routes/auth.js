@@ -169,7 +169,11 @@ router
         await user.save();
       }
 
-      await sms.sendMessage(user.phoneNumber, `Your ${APP_NAME} login code is: ${mfa.generateToken(user.smsSecret)}`);
+      const smsCode = mfa.generateToken(user.smsSecret);
+      await sms.sendMessage(user.phoneNumber, `Your ${APP_NAME} login code is: ${smsCode}`);
+      if (process.env.ENV_NAME === 'development') {
+        console.info(`SMS code for ${user.phoneNumber}: ${smsCode}`);
+      }
       ctx.status = 204;
     }
   )
