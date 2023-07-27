@@ -13,7 +13,7 @@ function serializeDocument(doc, ctx) {
 function serializeObject(obj, ctx) {
   if (obj instanceof Stream) {
     return obj;
-  } else if (obj instanceof mongoose.Model) {
+  } else if (obj instanceof mongoose.Document) {
     return serializeDocument(obj, ctx);
   } else if (Array.isArray(obj)) {
     return obj.map((el) => {
