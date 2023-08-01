@@ -12,7 +12,8 @@ import {
   Divider,
 } from 'semantic';
 
-import { request } from 'utils/api';
+import bem from 'helpers/bem';
+
 import Code from 'components/Code';
 import RequestBlock from 'components/RequestBlock';
 import { DocsContext } from 'docs/utils/context';
@@ -23,10 +24,10 @@ import {
   resolveRefs,
 } from 'docs/utils';
 
-import bem from 'helpers/bem';
-
 import './request-builder.less';
 import ErrorMessage from 'components/ErrorMessage';
+
+import { request } from 'utils/api';
 
 const NAME_RANK = {
   keyword: 0,
@@ -71,7 +72,19 @@ export default class RequestBuilder extends React.Component {
       const value = request?.path?.[key];
       return value ? encodeURIComponent(value) : `:${key}`;
     });
+
+    path += this.expandQuery(request.query);
+
     return { method, path };
+  }
+
+  expandQuery(query) {
+    const searchParams = new URLSearchParams();
+    for (let [key, value] of Object.entries(query || {})) {
+      searchParams.append(key, value);
+    }
+    const str = searchParams.toString();
+    return str ? `?${str}` : '';
   }
 
   onTabChange = (evt, { activeIndex }) => {
@@ -228,6 +241,7 @@ export default class RequestBuilder extends React.Component {
     return (
       <Form autoComplete="off" autoCorrect="off">
         {this.renderParameters()}
+        {this.renderQuery()}
         {this.renderBody()}
         <Divider />
         {this.renderOutput()}
@@ -248,6 +262,31 @@ export default class RequestBuilder extends React.Component {
           <h4>Path</h4>
           {parameters.map((param) => {
             const path = ['path', param.name];
+            return (
+              <Form.Field key={param.name}>
+                <label>{param.name}</label>
+                {this.renderInput(path)}
+              </Form.Field>
+            );
+          })}
+        </React.Fragment>
+      );
+    }
+  }
+
+  renderQuery() {
+    const { route } = this.props;
+    const { docs } = this.context;
+    let parameters = get(docs, getParametersPath(route), []);
+    parameters = parameters.filter((p) => {
+      return p.in === 'query';
+    });
+    if (parameters.length) {
+      return (
+        <React.Fragment>
+          <h4>Path</h4>
+          {parameters.map((param) => {
+            const path = ['query', param.name];
             return (
               <Form.Field key={param.name}>
                 <label>{param.name}</label>
