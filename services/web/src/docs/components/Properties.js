@@ -12,6 +12,8 @@ import EditableField from './EditableField';
 
 import './properties.less';
 
+const OBJECT_ID_REF = '#/components/schemas/ObjectId';
+
 @bem
 export default class DocsProperties extends React.Component {
   static contextType = DocsContext;
@@ -157,7 +159,7 @@ export default class DocsProperties extends React.Component {
   }
 
   renderType(desc, isArray = false) {
-    const { type, $ref, oneOf, enum: allowed } = desc;
+    const { type, $ref, oneOf, format, enum: allowed } = desc;
     if (oneOf) {
       if (this.isArrayVariant(oneOf)) {
         if (this.props.query) {
@@ -235,6 +237,10 @@ export default class DocsProperties extends React.Component {
           );
         });
       }
+    } else if (format === 'mongo-object-id') {
+      this.context.visitedComponents.add(OBJECT_ID_REF);
+      const { name } = expandRef(OBJECT_ID_REF);
+      return <JumpLink to={name}>{isArray ? `[${name}]` : name}</JumpLink>;
     } else if (type) {
       return <span>{isArray ? `[${type}]` : type}</span>;
     } else {
