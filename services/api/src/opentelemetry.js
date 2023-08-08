@@ -83,16 +83,16 @@ function requestDuration(ctx, next) {
   return next();
 }
 
-const provider = new NodeTracerProvider();
-
-provider.addSpanProcessor(new BatchSpanProcessor(new TraceExporter()));
+// configure tracing
+const nodeTracerProvider = new NodeTracerProvider();
+nodeTracerProvider.addSpanProcessor(new BatchSpanProcessor(new TraceExporter()));
 
 registerInstrumentations({
   instrumentations: [getNodeAutoInstrumentations()],
-  tracerProvider: provider,
+  tracerProvider: nodeTracerProvider,
 });
 
-provider.register();
+nodeTracerProvider.register();
 
 module.exports = {
   requestDuration,
