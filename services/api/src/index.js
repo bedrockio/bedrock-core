@@ -1,5 +1,16 @@
+require('./opentelemetry');
+const { trace, context } = require('@opentelemetry/api');
+
 const logger = require('@bedrockio/logger');
 const config = require('@bedrockio/config');
+
+if (process.env.NODE_ENV === 'production') {
+  logger.useGoogleCloud({
+    getSpanContext: () => trace.getSpanContext(context.active()),
+  });
+} else {
+  logger.useFormatted();
+}
 
 const { initialize } = require('./utils/database');
 const { loadFixtures } = require('./utils/fixtures');
@@ -8,16 +19,6 @@ const app = require('./app');
 const ENV_NAME = config.get('ENV_NAME');
 const PORT = config.get('SERVER_PORT', 'number');
 const HOST = config.get('SERVER_HOST');
-
-if (process.env.NODE_ENV === 'production') {
-  logger.setupGoogleCloud({
-    tracing: {
-      ignoreIncomingPaths: ['/', /^\/1\/status\/*/],
-    },
-  });
-} else {
-  logger.useFormatted();
-}
 
 module.exports = (async () => {
   await initialize();
