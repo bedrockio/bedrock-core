@@ -8,6 +8,7 @@ const recordMiddleware = require('./utils/middleware/record');
 const serializeMiddleware = require('./utils/middleware/serialize');
 const { applicationMiddleware } = require('./utils/middleware/application');
 const { loadDefinition } = require('./utils/openapi');
+const { requestDuration } = require('./opentelemetry');
 const Sentry = require('@sentry/node');
 const routes = require('./routes');
 const config = require('@bedrockio/config');
@@ -17,6 +18,7 @@ const ENV_NAME = config.get('ENV_NAME');
 
 const app = new Koa();
 
+app.use(requestDuration);
 app.use(corsMiddleware());
 
 // Application middleware must occur after serialization
