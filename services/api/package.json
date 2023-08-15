@@ -20,10 +20,10 @@
   },
   "dependencies": {
     "@bedrockio/config": "^2.2.3",
-    "@bedrockio/fixtures": "^1.0.4",
+    "@bedrockio/fixtures": "^1.0.6",
     "@bedrockio/logger": "^1.0.6",
-    "@bedrockio/model": "^0.1.14",
-    "@bedrockio/yada": "^1.0.26",
+    "@bedrockio/model": "^0.1.25",
+    "@bedrockio/yada": "^1.0.29",
     "@google-cloud/storage": "^6.11.0",
     "@koa/cors": "^4.0.0",
     "@koa/router": "^12.0.0",
