@@ -108,7 +108,7 @@ export default class Login extends React.Component {
 
   renderFieldErrors(error, name) {
     if (error) {
-      const details = error.getFieldDetails(name);
+      const details = error.getFieldDetails?.(name);
       if (details) {
         return (
           <React.Fragment>
