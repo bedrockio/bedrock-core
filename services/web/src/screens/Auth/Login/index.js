@@ -52,7 +52,7 @@ export default class Login extends React.Component {
         <Segment.Group>
           <Segment padded>
             <Form error={!!error} size="large" onSubmit={this.onSubmit}>
-              {!error?.type === 'validation' && <ErrorMessage error={error} />}
+              {error?.type !== 'validation' && <ErrorMessage error={error} />}
               <Form.Field error={error?.hasField?.('email')}>
                 <Form.Input
                   value={email}
