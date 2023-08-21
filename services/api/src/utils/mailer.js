@@ -49,7 +49,7 @@ async function sendTemplatedMail({ file, template, layout = 'layout.html', to, .
 
   if (!to && options.user) {
     const { user } = options;
-    to = `"${user.name || 'User'}" <${user.email}>`;
+    to = `"${user.name.replace(/"/g, '') || 'User'}" <${user.email}>`;
   }
 
   if (ENV_NAME === 'development' && !POSTMARK_DEV_TO) {
