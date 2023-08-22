@@ -52,6 +52,22 @@ cat >>/service/job-base.yml <<EOL
 EOL
 fi
 cat >>/service/job-base.yml <<EOL
+logging:
+  version: 1
+  disable_existing_loggers: false
+  formatters:
+    simple:
+      format: '%(message)s'
+  handlers:
+    console:
+      class: logging.StreamHandler
+      level: INFO
+      formatter: simple
+      stream: ext://sys.stdout
+  root:
+    level: INFO
+    handlers:
+      - console
 web:
   listen:
     - http://127.0.0.1:2600
