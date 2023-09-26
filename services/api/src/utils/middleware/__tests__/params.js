@@ -47,7 +47,7 @@ describe('fetchByParam', () => {
       });
       const ctx = context();
       ctx.state.authUser = user;
-      await expect(fn(upload.id, ctx, noop)).rejects.toThrow('Unauthorized');
+      await expect(fn(upload.id, ctx, noop)).rejects.toThrow('Forbidden');
     });
 
     it('should perform complex access check', async () => {
@@ -78,7 +78,7 @@ describe('fetchByParam', () => {
       ctx = context();
       ctx.method = 'POST';
       ctx.state.authUser = user2;
-      await expect(fn(upload.id, ctx, noop)).rejects.toThrow('Unauthorized');
+      await expect(fn(upload.id, ctx, noop)).rejects.toThrow('Forbidden');
     });
   });
 });

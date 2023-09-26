@@ -67,7 +67,7 @@ describe('/1/uploads', () => {
       const user = await createUser();
       const upload = await createUpload();
       const response = await request('DELETE', `/1/uploads/${upload.id}`, {}, { user });
-      expect(response.status).toBe(401);
+      expect(response.status).toBe(403);
     });
   });
 
