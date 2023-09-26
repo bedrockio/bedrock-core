@@ -13,7 +13,7 @@ function fetchByParam(Model, options = {}) {
       if (!doc) {
         ctx.throw(404);
       } else if (!(await checkAccess(ctx, doc, options))) {
-        ctx.throw(401);
+        ctx.throw(403);
       }
       ctx.state[docName] = doc;
     } catch (error) {
