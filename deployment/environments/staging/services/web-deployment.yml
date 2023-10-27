@@ -13,7 +13,7 @@ spec:
         app: web
     spec:
       containers:
-        - image: gcr.io/bedrock-foundation/bedrock-core-services-web
+        - image: gcr.io/peachtree/peachtree-services-web
           imagePullPolicy: Always
           name: main
           # resources:
@@ -26,9 +26,9 @@ spec:
             - name: NODE_ENV
               value: "production"
             - name: DOMAIN
-              value: bedrock.foundation
+              value: ptre.dev
             - name: API_URL
-              value: "https://api.bedrock.foundation"
+              value: "https://api.ptre.dev"
           ports:
             - name: http-server
               containerPort: 2200

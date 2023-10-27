@@ -13,7 +13,7 @@ spec:
         app: api-cli
     spec:
       containers:
-        - image: gcr.io/bedrock-foundation/bedrock-core-services-api-cli
+        - image: gcr.io/peachtree/peachtree-services-api-cli
           imagePullPolicy: Always
           name: api-cli
           # resources:
@@ -26,14 +26,14 @@ spec:
             - name: NODE_ENV
               value: "production"
             - name: MONGO_URI
-              value: "mongodb://mongo:27017/bedrock_staging"
+              value: "mongodb://mongo:27017/peachtree_staging"
             - name: APP_URL
-              value: "https://bedrock.foundation"
+              value: "https://ptre.dev"
             - name: POSTMARK_FROM
-              value: "no-reply@bedrock.foundation"
+              value: "no-reply@ptre.dev"
             - name: POSTMARK_API_KEY
               value: "abc"
             - name: UPLOADS_STORE
               value: "gcs"
             - name: UPLOADS_GCS_BUCKET
-              value: "bedrock-staging-uploads"
+              value: "peachtree-staging-uploads"

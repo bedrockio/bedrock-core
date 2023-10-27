@@ -24,6 +24,6 @@ spec:
             - name: MONGO_HOST
               value: "mongo"
             - name: MONGO_DB
-              value: "bedrock_production"
+              value: "peachtree_production"
             - name: BACKUPS_GS_BUCKET
-              value: "bedrock-foundation-mongodb-backups"
+              value: "peachtree-mongodb-backups"

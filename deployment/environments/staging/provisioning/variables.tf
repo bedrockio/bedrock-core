@@ -1,5 +1,5 @@
 variable "project" {
-  default = "bedrock-foundation-staging"
+  default = ""
 }
 
 variable "environment" {
@@ -19,7 +19,7 @@ variable "multi_region" {
 }
 
 variable "bucket_prefix" {
-  default = "bedrock-staging"
+  default = "peachtree-staging"
 }
 
 variable "cluster_name" {

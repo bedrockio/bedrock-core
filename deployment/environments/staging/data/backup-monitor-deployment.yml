@@ -22,14 +22,14 @@ spec:
           #     memory: "4Gi"
           env:
             - name: GS_BUCKETS
-              value: "bedrock-staging-uploads bedrock-staging-mongodb-backups"
+              value: "peachtree-staging-uploads peachtree-staging-mongodb-backups"
             - name: POSTMARK_API_KEY
               value: "abc"
             - name: POSTMARK_FROM
-              value: "admin@bedrock.foundation"
+              value: "admin@ptre.dev"
             - name: EMAIL_ALERT
-              value: "admin@bedrock.foundation"
+              value: "admin@ptre.dev"
             - name: EMAIL_HEALTH_CHECK
-              value: "admin@bedrock.foundation"
+              value: "admin@ptre.dev"
             - name: ENVIRONMENT
               value: "staging"

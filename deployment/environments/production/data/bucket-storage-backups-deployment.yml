@@ -22,6 +22,6 @@ spec:
           #     memory: "4Gi"
           env:
             - name: SOURCE_GS_BUCKET
-              value: "bedrock-foundation-uploads"
+              value: "peachtree-uploads"
             - name: DESTINATION_GS_BUCKET
-              value: "bedrock-foundation-uploads-backup"
+              value: "peachtree-uploads-backup"

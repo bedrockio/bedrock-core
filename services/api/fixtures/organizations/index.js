@@ -1,11 +1,11 @@
 module.exports = {
   default: {
-    name: 'Bedrock',
+    name: 'Peachtree',
   },
   'bedrock-institute': {
-    name: 'Bedrock Institute',
+    name: 'Peachtree Institute',
   },
   'bedrock-university': {
-    name: 'Bedrock University',
+    name: 'Peachtree University',
   },
 };

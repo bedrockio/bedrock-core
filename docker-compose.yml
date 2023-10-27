@@ -3,7 +3,7 @@ version: "3.8"
 services:
   api:
     environment:
-      - MONGO_URI=mongodb://mongo/bedrock_dev
+      - MONGO_URI=mongodb://mongo/peachtree_dev
     build:
       context: ./services/api
       args:

@@ -1,6 +1,6 @@
-# Bedrock API
+# Peachtree API
 
-![Run Tests](https://github.com/bedrockio/bedrock-core/workflows/Tests/badge.svg)
+![Run Tests](https://github.com//workflows/Tests/badge.svg)
 
 ## API Documentation
 
@@ -77,14 +77,14 @@ variables.
 
 - `SERVER_HOST` - Host to bind to, defaults to `"0.0.0.0"`
 - `SERVER_PORT` - Port to bind to, defaults to `2300`
-- `MONGO_URI` - MongoDB URI to connect to, defaults to `mongodb://localhost/bedrock_dev`
+- `MONGO_URI` - MongoDB URI to connect to, defaults to `mongodb://localhost/peachtree_dev`
 - `JWT_SECRET` - JWT secret used for token signing and encryption
 - `ADMIN_NAME` - Default dashboard admin user name `admin`
-- `ADMIN_EMAIL` - Default dashboard admin user `admin@bedrock.foundation`
+- `ADMIN_EMAIL` - Default dashboard admin user `admin@ptre.dev`
 - `ADMIN_PASSWORD` - Default dashboard admin password
-- `APP_NAME` - Default product name to be used in emails `Bedrock`
+- `APP_NAME` - Default product name to be used in emails `Peachtree`
 - `APP_URL` - URL for app defaults to `http://localhost:2200`
-- `POSTMARK_FROM` - Reply email address `no-reply@bedrock.foundation`
+- `POSTMARK_FROM` - Reply email address `no-reply@ptre.dev`
 - `POSTMARK_API_KEY` - APIKey for Postmark
 - `POSTMARK_DEV_TO` - Email recipient to send development mails for debugging.
 - `UPLOADS_STORE` - Method for uploads. `local` or `gcs` (Google Cloud Storage)
@@ -124,7 +124,7 @@ jobs:
 To build the container:
 
 ```
-docker build -t bedrock-api-jobs -f Dockerfile.jobs .
+docker build -t peachtree-api-jobs -f Dockerfile.jobs .
 ```
 
 Different job configurations can be specified by changing the entry point when running the container. E.g in Kubernetes:
@@ -284,7 +284,7 @@ with `LOG_LEVEL`. In Google Cloud environments all levels are output.
 ## Documentation
 
 Good API documentation needs love, so make sure to take the time to describe parameters, create examples, etc. The
-[Bedrock CLI](https://github.com/bedrockio/bedrock-cli) can generate documentation using the command:
+[Peachtree CLI](https://github.com/bedrockio/bedrock-cli) can generate documentation using the command:
 
 ```
 bedrock generate docs
