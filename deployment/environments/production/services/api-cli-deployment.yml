@@ -13,7 +13,7 @@ spec:
         app: api-cli
     spec:
       containers:
-        - image: gcr.io/peachtree/peachtree-services-api-cli
+        - image: gcr.io/bedrock-foundation/bedrock-core-services-api-cli
           imagePullPolicy: Always
           name: api-cli
           # resources:
@@ -26,19 +26,19 @@ spec:
             - name: NODE_ENV
               value: "production"
             - name: MONGO_URI
-              value: "mongodb://mongo:27017/peachtree_production"
+              value: "mongodb://mongo:27017/bedrock_production"
             - name: APP_URL
-              value: "https://ptre.dev"
+              value: "https://bedrock.foundation"
             - name: ADMIN_EMAIL
-              value: "admin@ptre.dev"
+              value: "admin@bedrock.foundation"
             - name: ADMIN_PASSWORD
               value: "development.now"
             - name: POSTMARK_FROM
-              value: "no-reply@ptre.dev"
+              value: "no-reply@bedrock.foundation"
             - name: UPLOADS_STORE
               value: "gcs"
             - name: UPLOADS_GCS_BUCKET
-              value: "peachtree-production-uploads"
+              value: "bedrock-production-uploads"
             # The `bedrock cloud` command in the CLI will help with
             # the creation and storing of secrets for production.
             - name: JWT_SECRET

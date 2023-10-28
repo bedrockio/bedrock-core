@@ -1,4 +1,4 @@
-# Peachtree Platform
+# Bedrock Platform
 
 More documentation about specific services and components can be found in the following sections:
 

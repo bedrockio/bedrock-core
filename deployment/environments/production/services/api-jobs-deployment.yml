@@ -13,7 +13,7 @@ spec:
         app: api-jobs
     spec:
       containers:
-        - image: gcr.io/peachtree/peachtree-services-api-jobs
+        - image: gcr.io/bedrock-foundation/bedrock-core-services-api-jobs
           imagePullPolicy: Always
           name: main
           # resources:
@@ -30,8 +30,8 @@ spec:
             - name: NODE_ENV
               value: "production"
             - name: MONGO_URI
-              value: "mongodb://mongo:27017/peachtree_production"
+              value: "mongodb://mongo:27017/bedrock_production"
             - name: POSTMARK_FROM
-              value: "no-reply@ptre.dev"
+              value: "no-reply@bedrock.foundation"
             - name: POSTMARK_API_KEY
               value: "abc"

@@ -1,8 +1,8 @@
 {
   "gcloud": {
     "envName": "production",
-    "bucketPrefix": "peachtree",
-    "project": "",
+    "bucketPrefix": "bedrock-foundation",
+    "project": "bedrock-foundation-production",
     "computeZone": "us-east1-c",
     "kubernetes": {
       "clusterName": "cluster-1",

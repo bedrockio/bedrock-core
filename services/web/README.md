@@ -1,4 +1,4 @@
-# Peachtree Web
+# Bedrock Web
 
 - [Components Documentation](src/components)
 - [Utils Documentation](src/utils)

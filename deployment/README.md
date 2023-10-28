@@ -104,8 +104,8 @@ Each environment can be configured in `environments/<environment>/config.json`:
 {
   "gcloud": {
     "envName": "staging", // - Name of the environment, e.g. staging
-    "bucketPrefix": "peachtree", // - Bucket prefix used for GCS bucket creation
-    "project": "peachtree", // - Google Cloud project id for this environment
+    "bucketPrefix": "bedrock-foundation", // - Bucket prefix used for GCS bucket creation
+    "project": "bedrock-foundation", // - Google Cloud project id for this environment
     "computeZone": "us-east1-c", // - Default compute zone for project
     "kubernetes": {
       "clusterName": "cluster-1" // - Name of Kubernetes cluster for deployment
@@ -144,8 +144,8 @@ gcloud auth configure-docker
 Create a Google Cloud project (in the [GC dashboard](https://console.cloud.google.com/home/dashboard)) or:
 
 ```bash
-gcloud projects create peachtree-staging --name="Peachtree Staging"
-gcloud config set project peachtree-staging
+gcloud projects create bedrock-staging --name="Bedrock Staging"
+gcloud config set project bedrock-staging
 ```
 
 Configure: `environments/<environment>/config.json`.
@@ -157,7 +157,7 @@ There is a bootstrap command that automatically takes care of the remaining step
 The following command takes an environment variable and Google Project ID:
 
 ```bash
-bedrock cloud bootstrap staging peachtree-staging
+bedrock cloud bootstrap staging bedrock-staging
 ```
 
 ### Directory Structure
@@ -426,7 +426,7 @@ We do not want to & should not check in sensitive keys into git. We therefore us
 
 We are using env files to attach secrets to our deployment. For example to create one we would enter the key/value pairs into a text file and create it like follows.
 
-Peachtree has the following secret commands:
+Bedrock has the following secret commands:
 
 ```bash
   get [environment] [name]     Get Secret from cluster and store in local <secret-name>.conf file

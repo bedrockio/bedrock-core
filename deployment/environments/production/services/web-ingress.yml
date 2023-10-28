@@ -11,7 +11,7 @@ spec:
       port:
         number: 80
   # rules:
-  #   - host: api.ptre.dev
+  #   - host: api.bedrock.foundation
   #     http:
   #       paths:
   #         - path: /*
@@ -28,7 +28,7 @@ spec:
   #               name: api-long-timeout
   #               port:
   #                 number: 80
-  #   - host: ptre.dev
+  #   - host: bedrock.foundation
   #     http:
   #       paths:
   #         - path: /*
@@ -50,15 +50,15 @@ spec:
 # apiVersion: v1
 # kind: Service
 # metadata:
-#   name: peachtree-api-long-timeout
+#   name: bedrock-api-long-timeout
 #   labels:
-#     name: peachtree-api-long-timeout
+#     name: bedrock-api-long-timeout
 #   annotations:
 #     cloud.google.com/backend-config: '{"ports": {"80":"long-timeout-backendconfig"}}'
 # spec:
 #   type: NodePort
 #   selector:
-#     app: peachtree-api
+#     app: bedrock-api
 #   ports:
 #     - port: 80
 #       targetPort: 2300

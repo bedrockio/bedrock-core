@@ -5,10 +5,10 @@ metadata:
 spec:
   replicas: 2
   strategy:
-    type: RollingUpdate
+    type: RollingUpdate # New pods are added gradually, and old pods are terminated gradually
     rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
+      maxSurge: 1 # The number of pods that can be created above the desired amount of pods during an update
+      maxUnavailable: 1 # The number of pods that can be unavailable during the update process
   selector:
     matchLabels:
       app: api
@@ -18,42 +18,47 @@ spec:
         app: api
     spec:
       containers:
-        - image: gcr.io/peachtree/peachtree-services-api
+        - image: gcr.io/bedrock-foundation/bedrock-core-services-api
           imagePullPolicy: Always
           name: main
+          # resources:
+          #   limits:
+          #     cpu: "1000m"
+          #     memory: "4Gi"
           env:
             - name: ENV_NAME
-              value: staging
+              value: "staging"
             - name: NODE_ENV
-              value: production
+              value: "production"
             - name: MONGO_URI
-              value: mongodb://mongo:27017/peachtree_staging
+              value: "mongodb://mongo:27017/bedrock_staging"
             - name: JWT_SECRET
-              value: NIAJ2+H3UjhGxjCBFIIqLl2Fbnvy6iGr/P+9/duu
+              value: "changeme1234"
             - name: APP_URL
-              value: https://ptre.dev
+              value: "https://bedrock.foundation"
             - name: POSTMARK_FROM
-              value: no-reply@ptre.dev
+              value: "no-reply@bedrock.foundation"
             - name: POSTMARK_API_KEY
-              value: abc
+              value: "abc"
             - name: UPLOADS_STORE
-              value: gcs
+              value: "gcs"
             - name: UPLOADS_GCS_BUCKET
-              value: peachtree-staging-uploads
+              value: "bedrock-staging-uploads"
             - name: LOG_LEVEL
-              value: debug
+              value: "debug"
           ports:
             - name: http-server
               containerPort: 2300
-          readinessProbe:
-            initialDelaySeconds: 5
-            periodSeconds: 5
-            timeoutSeconds: 2
-            failureThreshold: 2
+          # https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+          readinessProbe: # readiness probes to know when a container is ready to start accepting traffic
+            initialDelaySeconds: 5 # Number of seconds after the container has started before liveness or readiness probes are initiated. Defaults to 0 seconds.
+            periodSeconds: 5 # How often (in seconds) to perform the probe. Default to 10 seconds
+            timeoutSeconds: 2 # Number of seconds after which the probe times out. Defaults to 1 second
+            failureThreshold: 2 # When a probe fails, Kubernetes will try failureThreshold times before giving up.
             httpGet:
               path: /1/status/mongodb
               port: 2300
-          livenessProbe:
+          livenessProbe: # liveness probes to know when to restart a container
             httpGet:
               path: /1/status/mongodb
               port: 2300
