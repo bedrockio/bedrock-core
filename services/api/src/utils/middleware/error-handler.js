@@ -15,7 +15,7 @@ async function errorHandler(ctx, next) {
       });
     }
 
-    if (!expose) {
+    if (!expose && status >= 500) {
       if (ENV_NAME === 'production') {
         message = 'An unexpected error occurred. Please try again later.';
       }
