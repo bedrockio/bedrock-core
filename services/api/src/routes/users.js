@@ -174,13 +174,10 @@ router
   .delete('/:id', async (ctx) => {
     const { user } = ctx.state;
     try {
-      await user.assertNoReferences({
-        except: [AuditEntry],
-      });
+      await user.delete();
     } catch (err) {
       ctx.throw(400, err);
     }
-    await user.delete();
     await AuditEntry.append('Deleted user', {
       ctx,
       object: user,

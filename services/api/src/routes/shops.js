@@ -75,13 +75,10 @@ router
   .delete('/:id', async (ctx) => {
     const { shop } = ctx.state;
     try {
-      await shop.assertNoReferences({
-        except: [AuditEntry],
-      });
+      await shop.delete();
     } catch (err) {
       ctx.throw(400, err);
     }
-    await shop.delete();
     await AuditEntry.append('Deleted shop', {
       ctx,
       object: shop,

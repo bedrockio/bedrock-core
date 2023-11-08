@@ -1,5 +1,5 @@
 const { request, createUser, createAdminUser } = require('../../utils/testing');
-const { User, AuditEntry } = require('../../models');
+const { User, Shop, AuditEntry } = require('../../models');
 const { importFixtures } = require('../../utils/fixtures');
 
 describe('/1/users', () => {
@@ -305,6 +305,35 @@ describe('/1/users', () => {
       });
       expect(auditEntry.objectType).toBe('User');
       expect(auditEntry.objectId).toBe(user1.id);
+    });
+
+    it('should throw an error when referenced by a shop', async () => {
+      const user = await createUser();
+      const admin = await createAdminUser();
+
+      await Shop.create({
+        name: 'My Shop',
+        owner: user,
+      });
+
+      const response = await request('DELETE', `/1/users/${user.id}`, {}, { user: admin });
+      expect(response.status).toBe(400);
+      expect(response.body.error.message).toBe('Refusing to delete User referenced by Shop.');
+    });
+
+    it('should not error for allowed refernces', async () => {
+      const user = await createUser();
+      const admin = await createAdminUser();
+
+      await AuditEntry.create({
+        activity: 'fake ',
+        requestMethod: 'fake',
+        requestUrl: 'fake',
+        actor: user,
+      });
+
+      const response = await request('DELETE', `/1/users/${user.id}`, {}, { user: admin });
+      expect(response.status).toBe(204);
     });
 
     it('should deny access to non-admins', async () => {
