@@ -1,9 +1,9 @@
 const Router = require('@koa/router');
 const Koa = require('koa');
 const { version } = require('../package.json');
-const { koaBody: bodyParser } = require('koa-body');
 const errorHandler = require('./utils/middleware/error-handler');
 const corsMiddleware = require('./utils/middleware/cors');
+const bodyMiddleware = require('./utils/middleware/body');
 const recordMiddleware = require('./utils/middleware/record');
 const serializeMiddleware = require('./utils/middleware/serialize');
 const { applicationMiddleware } = require('./utils/middleware/application');
@@ -48,7 +48,7 @@ if (['development'].includes(ENV_NAME)) {
 
 app.use(errorHandler);
 
-app.use(logger.middleware()).use(bodyParser({ multipart: true }));
+app.use(logger.middleware()).use(bodyMiddleware());
 
 app.on('error', (err, ctx) => {
   if (err.code === 'EPIPE' || err.code === 'ECONNRESET') {

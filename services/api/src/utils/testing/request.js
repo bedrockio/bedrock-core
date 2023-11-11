@@ -1,5 +1,4 @@
 const request = require('supertest'); //eslint-disable-line
-const app = require('../../app');
 const qs = require('querystring');
 const { createAuthTokenPayload, createAuthToken } = require('../tokens');
 
@@ -21,6 +20,8 @@ module.exports = async function handleRequest(httpMethod, url, bodyOrQuery = {},
     headers.organization = options.organization.id;
   }
 
+  const app = options.app || require('../../app');
+
   let promise;
 
   if (options.file) {
@@ -30,7 +31,7 @@ module.exports = async function handleRequest(httpMethod, url, bodyOrQuery = {},
       promise = promise.attach('file', file);
     }
     for (let [key, value] of Object.entries(bodyOrQuery)) {
-      promise = promise.field(key, value);
+      promise = promise.field(key, JSON.stringify(value));
     }
   } else {
     if (httpMethod === 'POST') {
