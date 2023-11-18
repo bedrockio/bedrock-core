@@ -16,18 +16,20 @@ describe('User', () => {
       expect(data.__v).toBeUndefined();
     });
 
-    it('should not expose _password or hashedPassword', () => {
+    it('should not expose password hash', async () => {
       const user = new User({
+        firstName: 'Neo',
+        lastName: 'One',
+        email: 'foo@bar.com',
         password: 'fake password',
-        hashedPassword: 'fake hash',
       });
       expect(user._password).toBe('fake password');
-      expect(user.hashedPassword).toBe('fake hash');
+      await user.save();
 
       const data = JSON.parse(JSON.stringify(user));
       expect(data.password).toBeUndefined();
       expect(data._password).toBeUndefined();
-      expect(data.hashedPassword).toBeUndefined();
+      expect(data.authenticators).toBeUndefined();
     });
   });
 
@@ -55,22 +57,6 @@ describe('User', () => {
         email: null,
       });
       await expect(user.validate()).rejects.toThrow(mongoose.Error.ValidationError);
-    });
-  });
-
-  describe('createAuthToken', () => {
-    it('should add an authToken', () => {
-      const user = new User({
-        firstName: 'Neo',
-        lastName: 'One',
-        email: 'good@email.com',
-      });
-
-      user.createAuthToken({ ip: '122.312.31.2', userAgent: 'test' });
-      const authInfo = user.authInfo;
-      expect(authInfo[0].ip).toEqual('122.312.31.2');
-      expect(authInfo[0].userAgent).toEqual('test');
-      expect(authInfo.length).toBe(1);
     });
   });
 });

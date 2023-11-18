@@ -21,6 +21,7 @@ See http://localhost:2200/docs for full documentation on this API (requires runn
 - [Email Templates](#email-templates)
 - [Logging](#logging)
 - [Documentation](#documentation)
+- [Authentication](#authentication)
 - [Multi Factor Authentication](#multi-factor-authentication)
 
 ---
@@ -356,13 +357,84 @@ portal in `/services/web/src/docs`.
 
 See [../../services/web](../../services/web) for more info on customizing documentation.
 
-## Multi Factor Authentication
+## Authentication
 
-By default multi factor authentication with a authenticator app (1password, lastpassword etc) works out of the box, but
-for sms verification you have to have a [Twilio](https://www.twilio.com/) account.
+Bedrock provides a variety of authentication methods out of the box. These can be used together, customized to suit your
+needs, and removed if not needed:
 
-In Twilio you need to create an account, that will generate the (TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN) to get
-TWILIO_MESSAGING_SERVICE_SID you have to create a
-[messaging service](https://support.twilio.com/hc/en-us/articles/223181308-Getting-started-with-Messaging-Services).
+- [Password](#password)
+- [OTP](#otp)
+- [Passkey](#passkey)
+- [Federated](#federated)
 
-To disable mfa: Update the login endpoint to not check for `mfa.requireChallenge`
+### Password
+
+Password is the default authentication method. It can be used alone or in conjunction with the MFA methods:
+
+- OTP by SMS
+- OTP by Email
+- Authenticator App
+
+By default MFA is not required and established per-user in the settings "Sign In" page.
+
+To make MFA required for all users, change the `mfaMethod` default in the `user.json` model definition, and remove the
+settings dropdown that allows users to change it.
+
+If password authentication is not desired at all, remove it from `api/src/routes/auth/index.js` and change login
+entrypoint in `web/src/App.js`.
+
+### OTP
+
+To enable OTP only login, change the login entrypoint in `web/src/App.js` to either `PhoneOtp` or `EmailOtp`. Note that
+OTP only authentication is inherently weaker than other methods, and is more suitable for less secure applications.
+
+To remove OTP support, remove the routes from `api/src/routes/auth/index.js`. The OTP related utils should be left to
+support OTP as a secondary MFA method.
+
+Note that OTP by SMS requires a Twilio account and OTP by Email requires a Postmark account.
+
+### Passkey
+
+Passkey authentication is enabled by changing the login entrypoint in `web/src/App.js` to `Passkey`. Note that passkeys
+are secure and do not require MFA, so with a passkey only setup the settings and fields that control `mfaMethod` can be
+removed.
+
+To remove passkey support, remove the routes from `api/src/routes/auth/index.js`. The web login and settings section can
+also be removed as well as `@simplewebauthn` packages.
+
+### Federated
+
+Bedrock provides federated login for both Google and Apple out of the box. By default federated logins do not have
+entrypoints. Instead they are provided as a secondary login method.
+
+To remove federated login, remove the appropriate routes from `api/src/auth/index.js` as well as the appropriate
+settings in the `settings/sign-in` screen. The appropriate packages `google-auth-library` and `verify-apple-id-token`
+may also be removed.
+
+#### Google
+
+To set up Sign-in with Google, in your project console:
+
+1. Go to "APIs & Services" > "Credentials".
+2. Create a new "OAuth 2.0 Client ID".
+3. Add your domains to "Authorized Javascript origins".
+4. "Authorized redirect URIs" - Not needed.
+5. Copy the "Client ID" to the `.env` files of both `web` and `api`.
+
+#### Apple
+
+To set up Sign-in with Apple, in the developer console:
+
+1. Go to "Certificates, Identifiers & Profiles" > "Identifiers".
+2. Create a new "App ID" and enable "Sign in with Apple".
+3. Create a new "Service ID" and enable "Sign in with Apple".
+4. Set the "Primary App ID" to your App ID, and add your base domains.
+5. Note that localhost is not allowed here. To test locally it is recommended to use cloudflare tunnel and enter the
+   domain here.
+6. Copy the "Service ID" to the `.env` files of both `web` and `api`.
+
+### Custom
+
+Login entrypoints may be replaced or customized as needed, for example a dropdown allowing multiple login methods to be
+chosen from in the same screen, however it is recommended to leave the rest of the flows intact as they have been
+optimized for each method.

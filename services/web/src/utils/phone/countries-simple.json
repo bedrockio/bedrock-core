@@ -1,0 +1,36 @@
+{
+  "ca": {
+    "name": "Canada",
+    "prefix": "+1",
+    "format": "(###) ###-####"
+  },
+  "es": {
+    "name": "Spain",
+    "prefix": "+34"
+  },
+  "fr": {
+    "name": "France",
+    "prefix": "+33",
+    "format": "# ## ## ## ##"
+  },
+  "gb": {
+    "name": "United Kingdom",
+    "prefix": "+44",
+    "format": "## ### ####"
+  },
+  "jp": {
+    "name": "Japan",
+    "prefix": "+81",
+    "format": "## #### ####"
+  },
+  "mx": {
+    "name": "Mexico",
+    "prefix": "+52"
+  },
+  "us": {
+    "name": "United States",
+    "prefix": "+1",
+    "code": "us",
+    "format": "(###) ###-####"
+  }
+}

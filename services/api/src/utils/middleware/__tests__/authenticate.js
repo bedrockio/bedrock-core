@@ -1,7 +1,5 @@
-const jwt = require('jsonwebtoken');
-const config = require('@bedrockio/config');
 const { authenticate, authorizeUser } = require('../authenticate');
-const { createAuthTokenPayload } = require('../../tokens');
+const { getAuthTokenPayload, signAuthToken } = require('../../auth/tokens');
 
 const { context, createUser } = require('../../testing');
 const { User } = require('../../../models');
@@ -9,24 +7,19 @@ const { User } = require('../../../models');
 describe('authenticate', () => {
   it('should authenticate the user with bearer', async () => {
     const user = await createUser({
-      authInfo: [
+      authTokens: [
         {
           jti: 'someid',
           ip: '123.12.1.2',
-          exp: new Date(Date.now() + 10000),
-          iat: new Date(),
+          expiresAt: new Date(Date.now() + 10000),
           lastUsedAt: new Date(),
         },
       ],
     });
 
-    const token = jwt.sign(
-      createAuthTokenPayload({
-        jti: 'someid',
-        sub: user.id,
-      }),
-      config.get('JWT_SECRET')
-    );
+    const payload = getAuthTokenPayload(user);
+    const token = signAuthToken(payload);
+
     const ctx = context({ headers: { authorization: `Bearer ${token}` } });
     await authenticate()(ctx, () => {
       expect(ctx.state.authUser.id).toBe(user.id);
@@ -43,12 +36,11 @@ describe('authenticate', () => {
 describe('authorizeUser', () => {
   it('should fetch the authUser', async () => {
     const user = await createUser({
-      authInfo: [
+      authTokens: [
         {
           jti: 'someid',
           ip: '123.12.1.2',
-          exp: new Date(Date.now() + 10000),
-          iat: new Date(),
+          expiresAt: new Date(Date.now() + 10000),
           lastUsedAt: new Date(),
         },
       ],
@@ -68,12 +60,11 @@ describe('authorizeUser', () => {
 
   it('should not fetch the user twice when called with the same context', async () => {
     const user = await createUser({
-      authInfo: [
+      authTokens: [
         {
           jti: 'jti-id',
           ip: '123.12.1.2',
-          exp: new Date(Date.now() + 10000),
-          iat: new Date(),
+          expiresAt: new Date(Date.now() + 10000),
           lastUsedAt: new Date(),
         },
       ],
@@ -95,21 +86,13 @@ describe('authorizeUser', () => {
     expect(count).toBe(1);
   });
 
-  it('should update user`s ip and lastUsedAt and remove expire entries', async () => {
+  it('should update user ip and lastUsedAt', async () => {
     const user = await createUser({
-      authInfo: [
+      authTokens: [
         {
           jti: 'jti-id',
           ip: '123.12.1.2',
-          exp: new Date(Date.now() + 10000),
-          iat: new Date(),
-          lastUsedAt: new Date(0),
-        },
-        {
-          jti: 'jti-44',
-          ip: '123.12.1.2',
-          exp: new Date(Date.now() - 100),
-          iat: new Date(),
+          expiresAt: new Date(Date.now() + 10000),
           lastUsedAt: new Date(0),
         },
       ],
@@ -120,24 +103,26 @@ describe('authorizeUser', () => {
       },
     });
     ctx.state = {
-      jwt: { sub: user.id, jti: 'jti-id' },
+      jwt: {
+        sub: user.id,
+        jti: 'jti-id',
+      },
     };
 
     await authorizeUser()(ctx, () => {});
     const dbUser = await User.findById(user.id);
-    expect(dbUser.authInfo[0].ip).toBe('11.11.1.1');
-    expect(dbUser.authInfo[0].lastUsedAt.valueOf()).not.toEqual(0);
-    expect(dbUser.authInfo).toHaveLength(1);
+    expect(dbUser.authTokens[0].ip).toBe('11.11.1.1');
+    expect(dbUser.authTokens[0].lastUsedAt.valueOf()).not.toEqual(0);
+    expect(dbUser.authTokens).toHaveLength(1);
   });
 
   it('should NOT update user`s ip if it was recently updated', async () => {
     const user = await createUser({
-      authInfo: [
+      authTokens: [
         {
           jti: 'jti-id',
           ip: '123.12.1.2',
-          exp: new Date(Date.now() + 10000),
-          iat: new Date(),
+          expiresAt: new Date(Date.now() + 10000),
           lastUsedAt: new Date(),
         },
       ],
@@ -153,7 +138,7 @@ describe('authorizeUser', () => {
 
     await authorizeUser()(ctx, () => {});
     const dbUser = await User.findById(user.id);
-    expect(dbUser.authInfo[0].ip).toBe('123.12.1.2');
-    expect(dbUser.authInfo).toHaveLength(1);
+    expect(dbUser.authTokens[0].ip).toBe('123.12.1.2');
+    expect(dbUser.authTokens).toHaveLength(1);
   });
 });

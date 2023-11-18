@@ -1,21 +1,12 @@
-const {
+export const {
   API_URL,
-  APP_NAME,
   APP_URL,
-  APP_SUPPORT_EMAIL,
-  SENTRY_DSN,
-  ENV_NAME,
-  GOOGLE_API_KEY,
   API_KEY,
-} = window.__ENV__ || {};
-
-export {
-  API_URL,
   APP_NAME,
-  APP_URL,
-  APP_SUPPORT_EMAIL,
-  SENTRY_DSN,
   ENV_NAME,
+  SENTRY_DSN,
+  APPLE_SERVICE_ID,
   GOOGLE_API_KEY,
-  API_KEY,
-};
+  GOOGLE_CLIENT_ID,
+  APP_SUPPORT_EMAIL,
+} = window.__ENV__;

@@ -28,20 +28,20 @@ describe('validateToken', () => {
     const middleware = validateToken();
     const token = jwt.sign({ kid: 'not valid kid' }, 'verysecret');
     const ctx = context({ headers: { authorization: `Bearer ${token}` } });
-    await expect(middleware(ctx)).rejects.toHaveProperty('message', 'jwt token does not match supported kid');
+    await expect(middleware(ctx)).rejects.toHaveProperty(
+      'message',
+      'Token type "not valid kid" does not match "user".'
+    );
   });
 
-  it('should confirm that type if specify in middleware', async () => {
+  it('should confirm type specified in options', async () => {
     const middleware = validateToken({
       type: 'sometype',
     });
 
-    const token = jwt.sign({ kid: 'user', type: 'not same type' }, 'verysecret');
+    const token = jwt.sign({ kid: 'user' }, 'verysecret');
     const ctx = context({ headers: { authorization: `Bearer ${token}` } });
-    await expect(middleware(ctx)).rejects.toHaveProperty(
-      'message',
-      'endpoint requires jwt token payload match type "sometype"'
-    );
+    await expect(middleware(ctx)).rejects.toHaveProperty('message', 'Token type "user" does not match "sometype".');
   });
 
   it('should fail if token doesnt have right signature', async () => {
