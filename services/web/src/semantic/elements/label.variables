@@ -11,7 +11,7 @@
 @verticalAlign: baseline;
 @verticalMargin: @relative2px;
 @horizontalMargin: @relative2px;
-@backgroundColor: #E8E8E8;
+@backgroundColor: #f0f0f0;
 @color: @mutedTextColor;
 @backgroundImage: none;
 @verticalPadding: 0.5833em; /* medium is not @emSize custom value required */

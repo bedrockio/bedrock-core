@@ -1,0 +1,788 @@
+{
+  "af": {
+    "name": "Afghanistan",
+    "prefix": "+93"
+  },
+  "al": {
+    "name": "Albania",
+    "prefix": "+355"
+  },
+  "dz": {
+    "name": "Algeria",
+    "prefix": "+213"
+  },
+  "ad": {
+    "name": "Andorra",
+    "prefix": "+376"
+  },
+  "ao": {
+    "name": "Angola",
+    "prefix": "+244"
+  },
+  "ag": {
+    "name": "Antigua and Barbuda",
+    "prefix": "+1268",
+    "format": "###-####"
+  },
+  "ar": {
+    "name": "Argentina",
+    "prefix": "+54"
+  },
+  "am": {
+    "name": "Armenia",
+    "prefix": "+374"
+  },
+  "au": {
+    "name": "Australia",
+    "prefix": "+61"
+  },
+  "at": {
+    "name": "Austria",
+    "prefix": "+43"
+  },
+  "az": {
+    "name": "Azerbaijan",
+    "prefix": "+994"
+  },
+  "bs": {
+    "name": "Bahamas",
+    "prefix": "+1242",
+    "format": "###-####"
+  },
+  "bh": {
+    "name": "Bahrain",
+    "prefix": "+973"
+  },
+  "bd": {
+    "name": "Bangladesh",
+    "prefix": "+880"
+  },
+  "bb": {
+    "name": "Barbados",
+    "prefix": "+1246",
+    "format": "###-####"
+  },
+  "by": {
+    "name": "Belarus",
+    "prefix": "+375"
+  },
+  "be": {
+    "name": "Belgium",
+    "prefix": "+32"
+  },
+  "bz": {
+    "name": "Belize",
+    "prefix": "+501"
+  },
+  "bj": {
+    "name": "Benin",
+    "prefix": "+229"
+  },
+  "bt": {
+    "name": "Bhutan",
+    "prefix": "+975"
+  },
+  "bo": {
+    "name": "Bolivia",
+    "prefix": "+591"
+  },
+  "ba": {
+    "name": "Bosnia and Herzegovina",
+    "prefix": "+387"
+  },
+  "bw": {
+    "name": "Botswana",
+    "prefix": "+267"
+  },
+  "br": {
+    "name": "Brazil",
+    "prefix": "+55"
+  },
+  "bn": {
+    "name": "Brunei",
+    "prefix": "+673"
+  },
+  "bg": {
+    "name": "Bulgaria",
+    "prefix": "+359"
+  },
+  "bf": {
+    "name": "Burkina Faso",
+    "prefix": "+226"
+  },
+  "bi": {
+    "name": "Burundi",
+    "prefix": "+257"
+  },
+  "kh": {
+    "name": "Cambodia",
+    "prefix": "+855"
+  },
+  "cm": {
+    "name": "Cameroon",
+    "prefix": "+237"
+  },
+  "ca": {
+    "name": "Canada",
+    "prefix": "+1",
+    "format": "(###) ###-####"
+  },
+  "cv": {
+    "name": "Cape Verde",
+    "prefix": "+238"
+  },
+  "cf": {
+    "name": "Central African Republic",
+    "prefix": "+236"
+  },
+  "td": {
+    "name": "Chad",
+    "prefix": "+235"
+  },
+  "cl": {
+    "name": "Chile",
+    "prefix": "+56"
+  },
+  "cn": {
+    "name": "China",
+    "prefix": "+86"
+  },
+  "co": {
+    "name": "Colombia",
+    "prefix": "+57"
+  },
+  "km": {
+    "name": "Comoros",
+    "prefix": "+269"
+  },
+  "cg": {
+    "name": "Congo",
+    "prefix": "+242"
+  },
+  "cr": {
+    "name": "Costa Rica",
+    "prefix": "+506"
+  },
+  "hr": {
+    "name": "Croatia",
+    "prefix": "+385"
+  },
+  "cu": {
+    "name": "Cuba",
+    "prefix": "+53"
+  },
+  "cy": {
+    "name": "Cyprus",
+    "prefix": "+357"
+  },
+  "cz": {
+    "name": "Czech Republic",
+    "prefix": "+420"
+  },
+  "dk": {
+    "name": "Denmark",
+    "prefix": "+45"
+  },
+  "dj": {
+    "name": "Djibouti",
+    "prefix": "+253"
+  },
+  "dm": {
+    "name": "Dominica",
+    "prefix": "+1767",
+    "format": "###-####"
+  },
+  "do": {
+    "name": "Dominican Republic",
+    "prefix": "+1",
+    "format": "(###) ###-####"
+  },
+  "ec": {
+    "name": "Ecuador",
+    "prefix": "+593"
+  },
+  "eg": {
+    "name": "Egypt",
+    "prefix": "+20"
+  },
+  "sv": {
+    "name": "El Salvador",
+    "prefix": "+503"
+  },
+  "gq": {
+    "name": "Equatorial Guinea",
+    "prefix": "+240"
+  },
+  "er": {
+    "name": "Eritrea",
+    "prefix": "+291"
+  },
+  "ee": {
+    "name": "Estonia",
+    "prefix": "+372"
+  },
+  "et": {
+    "name": "Ethiopia",
+    "prefix": "+251"
+  },
+  "fj": {
+    "name": "Fiji",
+    "prefix": "+679"
+  },
+  "fi": {
+    "name": "Finland",
+    "prefix": "+358"
+  },
+  "fr": {
+    "name": "France",
+    "prefix": "+33",
+    "format": "# ## ## ## ##"
+  },
+  "ga": {
+    "name": "Gabon",
+    "prefix": "+241"
+  },
+  "gm": {
+    "name": "Gambia",
+    "prefix": "+220"
+  },
+  "ge": {
+    "name": "Georgia",
+    "prefix": "+995"
+  },
+  "de": {
+    "name": "Germany",
+    "prefix": "+49"
+  },
+  "gh": {
+    "name": "Ghana",
+    "prefix": "+233"
+  },
+  "gr": {
+    "name": "Greece",
+    "prefix": "+30"
+  },
+  "gd": {
+    "name": "Grenada",
+    "prefix": "+1473",
+    "format": "###-####"
+  },
+  "gt": {
+    "name": "Guatemala",
+    "prefix": "+502"
+  },
+  "gn": {
+    "name": "Guinea",
+    "prefix": "+224"
+  },
+  "gw": {
+    "name": "Guinea-Bissau",
+    "prefix": "+245"
+  },
+  "gy": {
+    "name": "Guyana",
+    "prefix": "+592"
+  },
+  "ht": {
+    "name": "Haiti",
+    "prefix": "+509"
+  },
+  "hn": {
+    "name": "Honduras",
+    "prefix": "+504"
+  },
+  "hu": {
+    "name": "Hungary",
+    "prefix": "+36"
+  },
+  "is": {
+    "name": "Iceland",
+    "prefix": "+354"
+  },
+  "in": {
+    "name": "India",
+    "prefix": "+91"
+  },
+  "id": {
+    "name": "Indonesia",
+    "prefix": "+62"
+  },
+  "ir": {
+    "name": "Iran",
+    "prefix": "+98"
+  },
+  "iq": {
+    "name": "Iraq",
+    "prefix": "+964"
+  },
+  "ie": {
+    "name": "Ireland",
+    "prefix": "+353"
+  },
+  "il": {
+    "name": "Israel",
+    "prefix": "+972"
+  },
+  "it": {
+    "name": "Italy",
+    "prefix": "+39"
+  },
+  "jm": {
+    "name": "Jamaica",
+    "prefix": "+1876",
+    "format": "###-####"
+  },
+  "jp": {
+    "name": "Japan",
+    "prefix": "+81",
+    "format": "## #### ####"
+  },
+  "jo": {
+    "name": "Jordan",
+    "prefix": "+962"
+  },
+  "kz": {
+    "name": "Kazakhstan",
+    "prefix": "+7"
+  },
+  "ke": {
+    "name": "Kenya",
+    "prefix": "+254"
+  },
+  "ki": {
+    "name": "Kiribati",
+    "prefix": "+686"
+  },
+  "kw": {
+    "name": "Kuwait",
+    "prefix": "+965"
+  },
+  "kg": {
+    "name": "Kyrgyzstan",
+    "prefix": "+996"
+  },
+  "la": {
+    "name": "Laos",
+    "prefix": "+856"
+  },
+  "lv": {
+    "name": "Latvia",
+    "prefix": "+371"
+  },
+  "lb": {
+    "name": "Lebanon",
+    "prefix": "+961"
+  },
+  "ls": {
+    "name": "Lesotho",
+    "prefix": "+266"
+  },
+  "lr": {
+    "name": "Liberia",
+    "prefix": "+231"
+  },
+  "ly": {
+    "name": "Libya",
+    "prefix": "+218"
+  },
+  "li": {
+    "name": "Liechtenstein",
+    "prefix": "+423"
+  },
+  "lt": {
+    "name": "Lithuania",
+    "prefix": "+370"
+  },
+  "lu": {
+    "name": "Luxembourg",
+    "prefix": "+352"
+  },
+  "mg": {
+    "name": "Madagascar",
+    "prefix": "+261"
+  },
+  "mw": {
+    "name": "Malawi",
+    "prefix": "+265"
+  },
+  "my": {
+    "name": "Malaysia",
+    "prefix": "+60"
+  },
+  "mv": {
+    "name": "Maldives",
+    "prefix": "+960"
+  },
+  "ml": {
+    "name": "Mali",
+    "prefix": "+223"
+  },
+  "mt": {
+    "name": "Malta",
+    "prefix": "+356"
+  },
+  "mh": {
+    "name": "Marshall Islands",
+    "prefix": "+692"
+  },
+  "mr": {
+    "name": "Mauritania",
+    "prefix": "+222"
+  },
+  "mu": {
+    "name": "Mauritius",
+    "prefix": "+230"
+  },
+  "mx": {
+    "name": "Mexico",
+    "prefix": "+52"
+  },
+  "fm": {
+    "name": "Micronesia",
+    "prefix": "+691"
+  },
+  "md": {
+    "name": "Moldova",
+    "prefix": "+373"
+  },
+  "mc": {
+    "name": "Monaco",
+    "prefix": "+377"
+  },
+  "mn": {
+    "name": "Mongolia",
+    "prefix": "+976"
+  },
+  "me": {
+    "name": "Montenegro",
+    "prefix": "+382"
+  },
+  "ma": {
+    "name": "Morocco",
+    "prefix": "+212"
+  },
+  "mz": {
+    "name": "Mozambique",
+    "prefix": "+258"
+  },
+  "mm": {
+    "name": "Myanmar",
+    "prefix": "+95"
+  },
+  "na": {
+    "name": "Namibia",
+    "prefix": "+264"
+  },
+  "nr": {
+    "name": "Nauru",
+    "prefix": "+674"
+  },
+  "np": {
+    "name": "Nepal",
+    "prefix": "+977"
+  },
+  "nl": {
+    "name": "Netherlands",
+    "prefix": "+31",
+    "format": "## ### ####"
+  },
+  "nz": {
+    "name": "New Zealand",
+    "prefix": "+64"
+  },
+  "ni": {
+    "name": "Nicaragua",
+    "prefix": "+505"
+  },
+  "ne": {
+    "name": "Niger",
+    "prefix": "+227"
+  },
+  "ng": {
+    "name": "Nigeria",
+    "prefix": "+234"
+  },
+  "kp": {
+    "name": "North Korea",
+    "prefix": "+850"
+  },
+  "mk": {
+    "name": "North Macedonia",
+    "prefix": "+389"
+  },
+  "no": {
+    "name": "Norway",
+    "prefix": "+47"
+  },
+  "om": {
+    "name": "Oman",
+    "prefix": "+968"
+  },
+  "pk": {
+    "name": "Pakistan",
+    "prefix": "+92"
+  },
+  "pw": {
+    "name": "Palau",
+    "prefix": "+680"
+  },
+  "ps": {
+    "name": "Palestine",
+    "prefix": "+970"
+  },
+  "pa": {
+    "name": "Panama",
+    "prefix": "+507"
+  },
+  "pg": {
+    "name": "Papua New Guinea",
+    "prefix": "+675"
+  },
+  "py": {
+    "name": "Paraguay",
+    "prefix": "+595"
+  },
+  "pe": {
+    "name": "Peru",
+    "prefix": "+51"
+  },
+  "ph": {
+    "name": "Philippines",
+    "prefix": "+63"
+  },
+  "pl": {
+    "name": "Poland",
+    "prefix": "+48"
+  },
+  "pt": {
+    "name": "Portugal",
+    "prefix": "+351"
+  },
+  "qa": {
+    "name": "Qatar",
+    "prefix": "+974"
+  },
+  "ro": {
+    "name": "Romania",
+    "prefix": "+40"
+  },
+  "ru": {
+    "name": "Russia",
+    "prefix": "+7"
+  },
+  "rw": {
+    "name": "Rwanda",
+    "prefix": "+250"
+  },
+  "kn": {
+    "name": "Saint Kitts and Nevis",
+    "prefix": "+1869",
+    "format": "###-####"
+  },
+  "lc": {
+    "name": "Saint Lucia",
+    "prefix": "+1758",
+    "format": "###-####"
+  },
+  "vc": {
+    "name": "Saint Vincent and the Grenadines",
+    "prefix": "+1784",
+    "format": "###-####"
+  },
+  "ws": {
+    "name": "Samoa",
+    "prefix": "+685"
+  },
+  "sm": {
+    "name": "San Marino",
+    "prefix": "+378"
+  },
+  "st": {
+    "name": "Sao Tome and Principe",
+    "prefix": "+239"
+  },
+  "sa": {
+    "name": "Saudi Arabia",
+    "prefix": "+966"
+  },
+  "sn": {
+    "name": "Senegal",
+    "prefix": "+221"
+  },
+  "rs": {
+    "name": "Serbia",
+    "prefix": "+381"
+  },
+  "sc": {
+    "name": "Seychelles",
+    "prefix": "+248"
+  },
+  "sl": {
+    "name": "Sierra Leone",
+    "prefix": "+232"
+  },
+  "sg": {
+    "name": "Singapore",
+    "prefix": "+65"
+  },
+  "sk": {
+    "name": "Slovakia",
+    "prefix": "+421"
+  },
+  "si": {
+    "name": "Slovenia",
+    "prefix": "+386"
+  },
+  "sb": {
+    "name": "Solomon Islands",
+    "prefix": "+677"
+  },
+  "so": {
+    "name": "Somalia",
+    "prefix": "+252"
+  },
+  "za": {
+    "name": "South Africa",
+    "prefix": "+27"
+  },
+  "kr": {
+    "name": "South Korea",
+    "prefix": "+82",
+    "format": "## ### ####"
+  },
+  "es": {
+    "name": "Spain",
+    "prefix": "+34"
+  },
+  "lk": {
+    "name": "Sri Lanka",
+    "prefix": "+94"
+  },
+  "sd": {
+    "name": "Sudan",
+    "prefix": "+249"
+  },
+  "sr": {
+    "name": "Suriname",
+    "prefix": "+597"
+  },
+  "se": {
+    "name": "Sweden",
+    "prefix": "+46"
+  },
+  "ch": {
+    "name": "Switzerland",
+    "prefix": "+41"
+  },
+  "sy": {
+    "name": "Syria",
+    "prefix": "+963"
+  },
+  "tw": {
+    "name": "Taiwan",
+    "prefix": "+886"
+  },
+  "tj": {
+    "name": "Tajikistan",
+    "prefix": "+992"
+  },
+  "tz": {
+    "name": "Tanzania",
+    "prefix": "+255"
+  },
+  "th": {
+    "name": "Thailand",
+    "prefix": "+66"
+  },
+  "tl": {
+    "name": "Timor-Leste",
+    "prefix": "+670"
+  },
+  "tg": {
+    "name": "Togo",
+    "prefix": "+228"
+  },
+  "to": {
+    "name": "Tonga",
+    "prefix": "+676"
+  },
+  "tt": {
+    "name": "Trinidad and Tobago",
+    "prefix": "+1868",
+    "format": "###-####"
+  },
+  "tn": {
+    "name": "Tunisia",
+    "prefix": "+216"
+  },
+  "tr": {
+    "name": "Turkey",
+    "prefix": "+90"
+  },
+  "tm": {
+    "name": "Turkmenistan",
+    "prefix": "+993"
+  },
+  "tv": {
+    "name": "Tuvalu",
+    "prefix": "+688"
+  },
+  "ug": {
+    "name": "Uganda",
+    "prefix": "+256"
+  },
+  "ua": {
+    "name": "Ukraine",
+    "prefix": "+380"
+  },
+  "ae": {
+    "name": "United Arab Emirates",
+    "prefix": "+971"
+  },
+  "gb": {
+    "name": "United Kingdom",
+    "prefix": "+44",
+    "format": "## ### ####"
+  },
+  "us": {
+    "name": "United States",
+    "prefix": "+1",
+    "format": "(###) ###-####"
+  },
+  "uy": {
+    "name": "Uruguay",
+    "prefix": "+598"
+  },
+  "uz": {
+    "name": "Uzbekistan",
+    "prefix": "+998"
+  },
+  "vu": {
+    "name": "Vanuatu",
+    "prefix": "+678"
+  },
+  "va": {
+    "name": "Vatican City",
+    "prefix": "+379"
+  },
+  "ve": {
+    "name": "Venezuela",
+    "prefix": "+58"
+  },
+  "vn": {
+    "name": "Vietnam",
+    "prefix": "+84"
+  },
+  "ye": {
+    "name": "Yemen",
+    "prefix": "+967"
+  },
+  "zm": {
+    "name": "Zambia",
+    "prefix": "+260"
+  },
+  "zw": {
+    "name": "Zimbabwe",
+    "prefix": "+263"
+  }
+}

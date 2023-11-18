@@ -6,11 +6,11 @@ import { kebabCase } from 'lodash';
 
 import { wrapComponent, getWrappedComponent } from 'utils/hoc';
 
-export default function (Component) {
+export default function (Component, prefix = '') {
   // Unwrap wrapped components
   const Wrapped = getWrappedComponent(Component);
 
-  const block = kebabCase(Wrapped.name);
+  const block = kebabCase(`${prefix}${Wrapped.name}`);
 
   function getBlockClass(props, modifiers) {
     return getClassNames(block, modifiers, props.className);
@@ -39,8 +39,22 @@ export default function (Component) {
   }
 }
 
-export function useClass(base, ...modifiers) {
-  return getClassNames(base, modifiers);
+export function useClass(block, ...args) {
+  let extra;
+  let modifiers = [];
+  if (args[0] && typeof args[0] === 'object') {
+    extra = args[0].className;
+    modifiers = args.slice(1);
+  } else {
+    modifiers = args;
+  }
+  const className = getClassNames(block, modifiers, extra);
+  return {
+    className,
+    getElementClass(element, ...modifiers) {
+      return getClassNames(`${block}__${element}`, modifiers);
+    },
+  };
 }
 
 function getClassNames(base, modifiers, extra) {

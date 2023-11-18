@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const { csvExport } = require('../csv');
 const { dedent: d } = require('../string');
+const { createUser } = require('../testing/index');
 const { createTestModel } = require('@bedrockio/model');
-const { User } = require('../../models');
 
 const user = {
   firstName: 'John',
@@ -167,7 +167,7 @@ describe('csvExport', () => {
         profits: 1000,
       });
 
-      const user = await User.create({
+      const user = await createUser({
         firstName: 'Frank',
         lastName: 'Reynolds',
       });
@@ -200,7 +200,7 @@ describe('csvExport', () => {
         profits: 1000,
       });
 
-      const admin = await User.create({
+      const admin = await createUser({
         firstName: 'Frank',
         lastName: 'Reynolds',
         roles: [

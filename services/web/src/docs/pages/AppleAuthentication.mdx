@@ -1,0 +1,33 @@
+import Route from 'docs/components/Route';
+
+export const title = 'Apple';
+export const group = 'Authentication';
+export const order = 3;
+
+# Apple Authentication API
+
+Validates Apple tokens for authentication and user registration.
+
+## Login
+
+Verifies a Apple token and authenticates the user.
+
+<Route route="POST /1/auth/apple/login" />
+
+## Register
+
+Verifies a Apple token and creates a new user.
+
+<Route route="POST /1/auth/apple/register" />
+
+## Enable
+
+Verifies a Apple token and registers a Apple authenticator.
+
+<Route route="POST /1/auth/apple/enable" />
+
+## Disable
+
+Removes registered Apple authenticator.
+
+<Route route="POST /1/auth/apple/disable" />

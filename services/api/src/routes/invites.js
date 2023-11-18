@@ -2,29 +2,79 @@ const Router = require('@koa/router');
 const yd = require('@bedrockio/yada');
 const { fetchByParam } = require('../utils/middleware/params');
 const { validateBody } = require('../utils/middleware/validate');
+const { validateToken } = require('../utils/middleware/tokens');
 const { authenticate } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
+
+const { register } = require('../utils/auth');
+const { createAuthToken } = require('../utils/auth/tokens');
 const { Invite, User } = require('../models');
 
-const { sendTemplatedMail } = require('../utils/mailer');
-const { createTemporaryToken } = require('../utils/tokens');
+const mailer = require('../utils/messaging/mailer');
+const { createInviteToken } = require('../utils/auth/tokens');
 
 const router = new Router();
 
-function getToken(invite) {
-  return createTemporaryToken({ type: 'invite', inviteId: invite._id, email: invite.email });
-}
-
 function sendInvite(sender, invite) {
-  return sendTemplatedMail({
+  const token = createInviteToken(invite);
+  return mailer.sendMail({
     to: invite.email,
-    file: 'invite.md',
+    template: 'invite.md',
     sender,
-    token: getToken(invite),
+    token,
   });
 }
 
 router
+  .post(
+    '/accept',
+    validateBody({
+      firstName: yd.string().required(),
+      lastName: yd.string().required(),
+      password: yd.string().password().required(),
+    }),
+    validateToken({ type: 'invite' }),
+    async (ctx) => {
+      const invite = await Invite.findOneAndUpdate(
+        {
+          email: ctx.state.jwt.sub,
+        },
+        {
+          $set: { status: 'accepted' },
+        }
+      );
+      if (!invite) {
+        return ctx.throw(400, 'Invite could not be found');
+      }
+
+      let user = await User.findOne({
+        email: invite.email,
+      });
+
+      if (user) {
+        const token = createAuthToken(user, ctx);
+        await user.save();
+        ctx.body = {
+          data: {
+            token,
+          },
+        };
+      } else {
+        const user = new User({
+          ...ctx.request.body,
+          email: invite.email,
+        });
+
+        const token = await register(user, ctx);
+
+        ctx.body = {
+          data: {
+            token,
+          },
+        };
+      }
+    }
+  )
   .use(authenticate())
   .use(requirePermissions({ endpoint: 'users', permission: 'read', scope: 'global' }))
   .param('id', fetchByParam(Invite))

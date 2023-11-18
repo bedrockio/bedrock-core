@@ -6,13 +6,10 @@ import { withTheme } from 'stores';
 import screen from 'helpers/screen';
 
 import ErrorMessage from 'components/ErrorMessage';
-
 import { Layout } from 'components';
 
 import { request } from 'utils/api';
-
 import { APP_NAME } from 'utils/env';
-
 
 import Menu from './Menu';
 
@@ -62,32 +59,31 @@ export default class Account extends React.Component {
         <Menu />
         <Divider hidden />
         <ErrorMessage error={error} />
-        <Header>Appearance</Header>
-        <p>
-          Choose how {APP_NAME} looks to you. Select a light or dark mode, or
-          sync with your system and automatically switch between light and dark
-          mode.
-        </p>
         <Form onSubmit={() => this.save()}>
-          <Header as="h5">
-            <Form.Checkbox
-              checked={theme === 'system'}
-              onChange={(e, { checked }) =>
-                this.setTheme(checked ? 'system' : undefined)
-              }
-              label="Sync With System"
-            />
-          </Header>
+          <Segment>
+            <p>
+              Choose how {APP_NAME} looks to you. Select a light or dark mode,
+              or sync with your system and automatically switch between light
+              and dark mode.
+            </p>
+            <Header as="h5">
+              <Form.Checkbox
+                checked={theme === 'system'}
+                onChange={(e, { checked }) =>
+                  this.setTheme(checked ? 'system' : undefined)
+                }
+                label="Sync With System"
+              />
+            </Header>
 
-          <p style={{ marginLeft: '1.92em', marginTop: '-0.8em' }}>
-            Sync with OS setting Automatically switch between light and dark
-            themes when your system does.
-          </p>
+            <p style={{ marginLeft: '1.92em', marginTop: '-0.8em' }}>
+              Sync with OS setting Automatically switch between light and dark
+              themes when your system does.
+            </p>
 
-          <Divider hidden />
+            <Divider hidden />
 
-          <div className="diurnal-theme" style={{paddingBottom: '1em'}}>
-            <Segment>
+            <div className="diurnal-theme" style={{ paddingBottom: '1em' }}>
               <Layout horizontal baseline>
                 <Form.Radio
                   disabled={theme === 'system'}
@@ -96,11 +92,9 @@ export default class Account extends React.Component {
                   onClick={() => this.setTheme('light')}
                 />
               </Layout>
-            </Segment>
-          </div>
+            </div>
 
-          <div className="nocturnal-theme">
-            <Segment>
+            <div className="nocturnal-theme">
               <Layout horizontal baseline>
                 <Form.Radio
                   disabled={theme === 'system'}
@@ -109,10 +103,10 @@ export default class Account extends React.Component {
                   onClick={() => this.setTheme('dark')}
                 />
               </Layout>
-            </Segment>
-          </div>
+            </div>
 
-          <Divider hidden />
+            <Divider hidden />
+          </Segment>
           <div>
             <Button
               primary

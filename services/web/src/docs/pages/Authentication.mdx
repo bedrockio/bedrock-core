@@ -1,50 +1,20 @@
 import Route from 'docs/components/Route';
 
 export const title = 'Authentication';
-export const group = 'Getting Started';
-export const order = 0;
 
-# Authentication API
+# Authentication
 
-This API can be used for signing up new users, obtaining tokens and performing
-user self-administration such as resetting of password.
+The authentication APIs provide different way to handle user authentication. The
+following subroutes are provided for each authentication flow:
 
-## Register
+- [Password](/docs/password)
+- [Passkey](/docs/passkey)
+- [Google](/docs/google)
+- [Apple](/docs/apple)
+- [TOTP](/docs/totp)
+- [OTP](/docs/otp)
 
-Creates a new user object in the system. This can be initiated without any
-authentication.
-
-<Route route="POST /1/auth/register" />
-
-_Note: If you want to update other attributes on a User, please see the
-`PATCH /1/users/me` API call_
-
-## Login
-
-This exchanges a user's credentials (email and password) for a JWT token. This
-token can be used for authentication on all subsequent API calls (See Getting
-Started). Unless the user has mfa enabled.
-
-<Route route="POST /1/auth/login" />
-
-Note if the user has mfa enabled the mfaToken is required for POST /1/mfa/verify
-
-## Login with sms
-
-### Send sms
-
-This sends a one time login code to the user's phone number. Returns status code
-204 on success.
-
-<Route route="POST /1/auth/login/send-sms" />
-
-### Verify sms
-
-This verifies the user's one time code and returns a `data.token` on success
-
-<Route route="POST /1/auth/login/verify-sms" />
-
-Note if the user has mfa enabled the mfaToken is required for POST /1/mfa/verify
+Additional routes are provided for general authentication needs:
 
 ## Logout
 
@@ -52,16 +22,9 @@ This deauthenticates all tokens for the given user
 
 <Route route="POST /1/auth/logout" />
 
-## Request Password
+## MFA Method
 
-This call can be used for the user to reset their password. A temporary token
-and link will be mailed to the user's email address if found in the system.
+Updates the MFA method for the user. Note that the methods `sms` or `email` are
+handled by [OTP](/docs/otp) routes and `totp` is handled by [TOTP](/docs/totp).
 
-<Route route="POST /1/auth/request-password" />
-
-## Set Password
-
-This call can be used to use a temporary token (obtained via request-password)
-to set a new password.
-
-<Route route="POST /1/auth/set-password" />
+<Route route="PATCH /1/auth/mfa-method" />
