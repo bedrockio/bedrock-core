@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { get, startCase } from 'lodash';
 
 import bem from 'helpers/bem';
+
 import Markdown from 'components/Markdown';
 
 import EditFieldModal from './EditFieldModal';

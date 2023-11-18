@@ -2,17 +2,21 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Icon, Container } from 'semantic';
 
+import { withSession } from 'stores';
+
 import Footer from 'components/Footer';
 import { Layout } from 'components';
 import Protected from 'components/Protected';
 import ThemedImage from 'components/ThemedImage';
 import Organization from 'modals/OrganizationSelector';
-import { withSession } from 'stores';
-import { userCanSwitchOrganizations, userHasAccess } from 'utils/permissions';
+
+
 import ConnectionError from 'components/ConnectionError';
 import logo from 'assets/logo.svg';
 import darkLogo from 'assets/logo-inverted.svg';
 import favicon from 'assets/favicon.svg';
+
+import { userCanSwitchOrganizations, userHasAccess } from 'utils/permissions';
 
 import Sidebar from './Sidebar';
 

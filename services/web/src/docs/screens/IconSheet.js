@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Breadcrumb, Card, Divider, Grid, Header, Icon, Ref } from 'semantic';
 
 import screen from 'helpers/screen';
+
 import { Layout } from 'components/Layout';
 import { Menu as ResponsiveMenu } from 'components/Responsive';
 import { JumpLink } from 'components/Link';

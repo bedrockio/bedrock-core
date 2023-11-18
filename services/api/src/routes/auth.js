@@ -1,5 +1,6 @@
 const Router = require('@koa/router');
 const yd = require('@bedrockio/yada');
+const logger = require('@bedrockio/logger');
 const { validateBody } = require('../utils/middleware/validate');
 const { validateToken } = require('../utils/middleware/tokens');
 const { authenticate } = require('../utils/middleware/authenticate');
@@ -172,7 +173,7 @@ router
       const smsCode = mfa.generateToken(user.smsSecret);
       await sms.sendMessage(user.phoneNumber, `Your ${APP_NAME} login code is: ${smsCode}`);
       if (process.env.ENV_NAME === 'development') {
-        console.info(`SMS code for ${user.phoneNumber}: ${smsCode}`);
+        logger.info(`SMS code for ${user.phoneNumber}: ${smsCode}`);
       }
       ctx.status = 204;
     }

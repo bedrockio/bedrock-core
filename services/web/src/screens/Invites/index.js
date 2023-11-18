@@ -1,9 +1,8 @@
 import React from 'react';
 import { Table, Button, Divider, Segment } from 'semantic';
 
-import { request } from 'utils/api';
-import { formatDateTime } from 'utils/date';
 import screen from 'helpers/screen';
+
 import InviteUser from 'modals/InviteUser';
 import {
   Search,
@@ -12,6 +11,9 @@ import {
   Breadcrumbs,
   SearchFilters,
 } from 'components';
+
+import { formatDateTime } from 'utils/date';
+import { request } from 'utils/api';
 
 @screen
 export default class Home extends React.Component {

@@ -3,10 +3,8 @@ import { memoize } from 'lodash';
 import { Link } from 'react-router-dom';
 import { Table, Button, Label, Divider, Segment } from 'semantic';
 
-import { formatDateTime } from 'utils/date';
-import { request } from 'utils/api';
 import screen from 'helpers/screen';
-import { formatRoles } from 'utils/permissions';
+
 import {
   HelpTip,
   Breadcrumbs,
@@ -14,7 +12,13 @@ import {
   Search,
   SearchFilters,
 } from 'components';
+
 import EditUser from 'modals/EditUser';
+
+import { formatDateTime } from 'utils/date';
+import { request } from 'utils/api';
+import { formatRoles } from 'utils/permissions';
+
 
 import Actions from '../Actions';
 

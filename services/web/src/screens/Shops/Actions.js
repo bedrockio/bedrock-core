@@ -1,8 +1,10 @@
 import { Dropdown } from 'semantic';
 
 import InspectObject from 'modals/InspectObject';
-import { request } from 'utils/api';
+
 import { Confirm } from 'components';
+
+import { request } from 'utils/api';
 
 export default function ShopsActions({ item, reload } = {}) {
   return (

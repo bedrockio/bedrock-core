@@ -1,11 +1,15 @@
 import { Dropdown } from 'semantic';
 
-import { request } from 'utils/api';
+import { useSession } from 'stores/session';
+
 import InspectObject from 'modals/InspectObject';
+
 import { Confirm } from 'components';
 
 import LoginAsUser from 'modals/LoginAsUser';
-import { useSession } from 'stores/session';
+
+import { request } from 'utils/api';
+
 
 export default function UserActions({ item, reload } = {}) {
   const { user } = useSession();

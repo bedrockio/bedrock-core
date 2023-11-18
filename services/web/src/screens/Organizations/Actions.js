@@ -1,8 +1,9 @@
 import { Dropdown } from 'semantic';
 
-import { request } from 'utils/api';
 import InspectObject from 'modals/InspectObject';
 import { Confirm } from 'components';
+
+import { request } from 'utils/api';
 
 export default function OrganizationActions({ item, reload } = {}) {
   return (

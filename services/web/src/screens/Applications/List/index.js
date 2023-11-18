@@ -2,10 +2,12 @@ import React from 'react';
 import { Table, Button, Message, Divider, Loader } from 'semantic';
 import { Link } from 'react-router-dom';
 
-import { request } from 'utils/api';
 import screen from 'helpers/screen';
+
 import EditApplication from 'modals/EditApplication';
 import { Breadcrumbs, Layout, Search, Confirm } from 'components';
+
+import { request } from 'utils/api';
 
 @screen
 export default class Applications extends React.Component {

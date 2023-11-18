@@ -3,8 +3,10 @@ import { Link , Switch, Route } from 'react-router-dom';
 import { Loader } from 'semantic';
 
 import { Protected } from 'helpers/routes';
-import { request } from 'utils/api';
+
 import NotFound from 'screens/NotFound';
+
+import { request } from 'utils/api';
 
 import DetailsContext from './Context';
 import Overview from './Overview';

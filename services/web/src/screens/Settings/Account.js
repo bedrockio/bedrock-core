@@ -2,11 +2,14 @@ import React from 'react';
 import { pick } from 'lodash';
 import { Segment, Form, Button, Divider } from 'semantic';
 
-import screen from 'helpers/screen';
-import { request } from 'utils/api';
 import { withSession } from 'stores';
+
+import screen from 'helpers/screen';
+
 import ErrorMessage from 'components/ErrorMessage';
 import PhoneNumber from 'components/PhoneNumber';
+
+import { request } from 'utils/api';
 
 import Menu from './Menu';
 

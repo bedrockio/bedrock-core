@@ -28,6 +28,7 @@ module.exports = {
       rules: {
         semi: 0,
         'no-unused-expressions': 0,
+        'no-unused-vars': 0,
       },
       settings: {
         'mdx/code-blocks': true,

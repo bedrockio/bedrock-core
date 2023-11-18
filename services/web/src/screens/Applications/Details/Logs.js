@@ -12,12 +12,15 @@ import {
 import { set, truncate } from 'lodash';
 import { withRouter } from 'react-router-dom';
 
-import { request } from 'utils/api';
 import screen from 'helpers/screen';
+
 import { Layout, Search, SearchFilters } from 'components';
-import { formatDateTime } from 'utils/date';
+
 import ShowRequest from 'modals/ShowRequest';
 import Code from 'components/Code';
+
+import { formatDateTime } from 'utils/date';
+import { request } from 'utils/api';
 
 import Menu from './Menu';
 

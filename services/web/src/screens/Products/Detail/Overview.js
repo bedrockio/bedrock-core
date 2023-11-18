@@ -2,6 +2,7 @@ import React from 'react';
 import { Table, Image, Divider } from 'semantic';
 
 import screen from 'helpers/screen';
+
 import { formatDateTime } from 'utils/date';
 import { urlForUpload } from 'utils/uploads';
 

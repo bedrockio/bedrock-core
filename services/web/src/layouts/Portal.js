@@ -2,9 +2,10 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Button, Icon, Menu } from 'semantic';
 
+import bem from 'helpers/bem';
+
 import { Layout } from 'components';
 import ThemedImage from 'components/ThemedImage';
-import bem from 'helpers/bem';
 
 import ConnectionError from 'components/ConnectionError';
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { Header } from 'semantic';
 
 import screen from 'helpers/screen';
+
 import { Breadcrumbs } from 'components';
 
 @screen

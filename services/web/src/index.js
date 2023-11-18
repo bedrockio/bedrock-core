@@ -11,8 +11,11 @@ import { HelmetProvider } from 'react-helmet-async';
 import { Icon } from 'semantic';
 
 import { SessionProvider, ThemeProvider } from 'stores';
+
 import SessionSwitch from 'helpers/SessionSwitch';
 import 'utils/sentry';
+
+import ScrollProvider from 'helpers/ScrollProvider';
 
 import solidIcons from 'semantic/assets/icons/solid.svg';
 import brandIcons from 'semantic/assets/icons/brands.svg';
@@ -25,7 +28,6 @@ Icon.useSet(regularIcons, 'regular');
 import LoadingScreen from 'screens/Loading';
 
 // Scrolling
-import ScrollProvider from 'helpers/ScrollProvider';
 
 const Wrapper = () => (
   <BrowserRouter>

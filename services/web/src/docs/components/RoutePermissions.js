@@ -1,8 +1,6 @@
 import React from 'react';
 import { get, startCase } from 'lodash';
 
-import { Link } from 'react-router-dom';
-
 import { getRoutePath } from 'docs/utils';
 
 import { DocsContext } from '../utils/context';

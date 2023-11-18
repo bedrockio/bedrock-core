@@ -2,10 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Segment, Message, Grid } from 'semantic';
 
-import { request } from 'utils/api';
 import screen from 'helpers/screen';
+
 import LogoTitle from 'components/LogoTitle';
 import ErrorMessage from 'components/ErrorMessage';
+
+import { request } from 'utils/api';
 
 import Form from './Form';
 

@@ -2,11 +2,12 @@ import React from 'react';
 import { startCase } from 'lodash';
 import { Helmet } from 'react-helmet-async';
 
-import { APP_NAME } from 'utils/env';
-import { wrapComponent, getWrappedComponent } from 'utils/hoc';
 import BasicLayout from 'layouts/Basic';
 import PortalLayout from 'layouts/Portal';
 import DashboardLayout from 'layouts/Dashboard';
+
+import { wrapComponent, getWrappedComponent } from 'utils/hoc';
+import { APP_NAME } from 'utils/env';
 
 // Note: Ideally the screen helper would be agnostic to specific
 // layouts and instead allow them to be defined by an app wiring
