@@ -6,7 +6,7 @@
     "node": ">=10"
   },
   "scripts": {
-    "build": "NODE_ENV=production NODE_OPTIONS=\"--max-old-space-size=4096\" webpack",
+    "build": "NODE_ENV=production webpack",
     "start": "node ./serve/dev",
     "static": "node ./serve/static",
     "lint": "eslint",
