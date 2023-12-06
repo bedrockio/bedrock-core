@@ -5,7 +5,7 @@ const { validateBody } = require('../../../utils/middleware/validate');
 const { authenticate } = require('../../../utils/middleware/authenticate');
 
 const { login, register, signupValidation } = require('../../../utils/auth');
-const { User, AuditEntry } = require('../../../models');
+const { User } = require('../../../models');
 
 const {
   generateRegistrationOptions,
@@ -34,11 +34,6 @@ router
       try {
         const options = await generateAuthenticationOptions(user);
         await user.save();
-
-        await AuditEntry.append('Authenticated with Passkey', {
-          ctx,
-          user,
-        });
 
         ctx.body = {
           data: options,
