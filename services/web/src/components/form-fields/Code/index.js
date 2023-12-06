@@ -1,225 +1,151 @@
-import React from 'react';
+import { useRef } from 'react';
+import { Form } from 'semantic';
+
+import { useClass } from 'helpers/bem';
+
+import { onMount, onUnmount } from 'utils/hooks';
 
 import './code.less';
 
-const KEY_CODE = {
-  BACKSPACE: 8,
-  ARROW_LEFT: 37,
-  ARROW_RIGHT: 39,
-  DELETE: 46,
-};
+const CHAR_REG = /^[a-z0-9]$/i;
 
-export default function FormFieldCode({
-  autoFocus = false,
-  length = 6,
-  onChange = () => {},
-  onCompleted = () => {},
-  placeholder = '',
-  value: pValue,
-}) {
-  const emptyValue = new Array(length).fill(placeholder);
+export default function CodeField(props) {
+  const { value, length, disabled, onChange, onComplete } = props;
 
-  const [activeIndex, setActiveIndex] = React.useState(-1);
-  const [value, setValue] = React.useState(
-    pValue ? pValue.split('') : emptyValue
+  const { className, getElementClass } = useClass(
+    'code-field',
+    disabled ? 'disabled' : null
   );
 
-  const codeInputRef = React.createRef();
-  const itemsRef = React.useMemo(
-    () => new Array(length).fill(null).map(() => React.createRef()),
-    [length]
-  );
+  const characters = Array.from(new Array(length), (el, i) => {
+    return value.charAt(i);
+  });
 
-  const isCodeRegex = new RegExp(`^[0-9]{${length}}$`);
+  function setCharacter(evt, index, val, move = true) {
+    index = Number(index);
+    const newValue = value.slice(0, index) + val + value.slice(index + 1);
+    onChange(evt, { ...props, value: newValue });
 
-  const getItem = (index) => itemsRef[index]?.current;
-  const focusItem = (index) => getItem(index)?.focus();
-  const blurItem = (index) => getItem(index)?.blur();
-
-  const onItemFocus = (index) => () => {
-    setActiveIndex(index);
-    if (codeInputRef.current) {
-      codeInputRef.current.focus();
+    if (newValue.length >= length) {
+      fireOnComplete();
+    } else if (move && val) {
+      focusNext(evt);
+    } else if (move && !val) {
+      focusPrev(evt);
     }
-  };
+  }
 
-  const onInputKeyUp = ({ key, keyCode }) => {
-    const newValue = [...value];
-    const nextIndex = activeIndex + 1;
-    const prevIndex = activeIndex - 1;
-
-    const codeInput = codeInputRef.current;
-    const currentItem = getItem(activeIndex);
-
-    const isLast = nextIndex === length;
-    const isDeleting =
-      keyCode === KEY_CODE.DELETE || keyCode === KEY_CODE.BACKSPACE;
-
-    // keep items focus in sync
-    onItemFocus(activeIndex);
-
-    // on delete, replace the current value
-    // and focus on the previous item
-    if (isDeleting) {
-      newValue[activeIndex] = placeholder;
-      setValue(newValue);
-
-      if (activeIndex > 0) {
-        setActiveIndex(prevIndex);
-        focusItem(prevIndex);
-      }
-
+  function handleKeyDown(evt) {
+    if (disabled) {
+      evt.preventDefault();
       return;
     }
+    const { index } = evt.target.dataset;
+    if (evt.key === 'Backspace') {
+      setCharacter(evt, index, '');
+      evt.preventDefault();
+    } else if (evt.key === 'Delete') {
+      setCharacter(evt, index, '', false);
+      evt.preventDefault();
+    } else if (evt.key === 'ArrowLeft') {
+      focusPrev(evt);
+    } else if (evt.key === 'ArrowRight') {
+      focusNext(evt);
+    } else if (isInputKey(evt)) {
+      setCharacter(evt, index, evt.key);
+    }
+  }
 
-    // if the key pressed is not a number
-    // don't do anything
-    if (Number.isNaN(+key)) {
+  function isInputKey(evt) {
+    return !hasMetaKeys(evt) && isAllowedChar(evt.key);
+  }
+
+  function hasMetaKeys(evt) {
+    return evt.metaKey || evt.altKey || evt.ctrlKey;
+  }
+
+  function isAllowedChar(key) {
+    return CHAR_REG.test(key);
+  }
+
+  function handleOnPaste(evt) {
+    if ('value' in evt.target) {
+      // Don't override pasting into other inputs.
       return;
     }
+    evt.preventDefault();
 
-    // reset the current value
-    // and set the new one
-    if (codeInput) {
-      codeInput.value = '';
+    const value = evt.clipboardData.getData('text').slice(0, length);
+    onChange(evt, { ...props, value });
+
+    if (value.length >= length) {
+      fireOnComplete();
     }
-    newValue[activeIndex] = key;
-    setValue(newValue);
+  }
 
-    if (!isLast) {
-      setActiveIndex(nextIndex);
-      focusItem(nextIndex);
-      return;
+  function fireOnComplete() {
+    setTimeout(onComplete, 0);
+  }
+
+  function focusPrev(evt) {
+    focusSibling(evt, 'prev');
+  }
+
+  function focusNext(evt) {
+    focusSibling(evt, 'next');
+  }
+
+  function focusSibling(evt, type) {
+    const el = evt.target;
+    const sibling = type === 'next' ? el.nextSibling : el.previousSibling;
+    if (sibling) {
+      setTimeout(() => {
+        sibling.focus();
+      }, 0);
+    } else {
+      evt.preventDefault();
     }
+  }
 
-    if (codeInput) {
-      codeInput.blur();
-    }
-    if (currentItem) {
-      currentItem.blur();
-    }
+  const ref = useRef();
 
-    setActiveIndex(-1);
-  };
+  onMount(() => {
+    window.addEventListener('paste', handleOnPaste);
+    ref.current.focus();
+  });
 
-  // handle mobile autocompletion
-  const onInputChange = (e) => {
-    const { value: changeValue } = e.target;
-    const isCode = isCodeRegex.test(changeValue);
-
-    if (!isCode) {
-      return;
-    }
-
-    setValue(changeValue.split(''));
-    blurItem(activeIndex);
-  };
-
-  const onInputBlur = () => {
-    if (activeIndex === -1) {
-      return;
-    }
-    blurItem(activeIndex);
-    setActiveIndex(-1);
-  };
-
-  // autoFocus
-  React.useEffect(() => {
-    if (autoFocus && itemsRef[0].current) {
-      itemsRef[0].current.focus();
-    }
-  }, []);
-
-  // handle pasting
-  React.useEffect(() => {
-    const codeInput = codeInputRef.current;
-    if (!codeInput) {
-      return;
-    }
-
-    const onPaste = (e) => {
-      e.preventDefault();
-
-      const pastedString = e.clipboardData?.getData('text');
-      if (!pastedString) {
-        return;
-      }
-
-      const isNumber = !Number.isNaN(+pastedString);
-      if (isNumber) {
-        setValue(pastedString.split(''));
-      }
-    };
-
-    codeInput.addEventListener('paste', onPaste);
-    return () => codeInput.removeEventListener('paste', onPaste);
-  }, []);
-
-  React.useEffect(() => {
-    const stringValue = value.join('');
-    const isCompleted = !stringValue.includes(placeholder);
-
-    if (isCompleted) {
-      onCompleted(stringValue);
-    }
-    onChange(stringValue);
-  }, [value]);
-
-  React.useEffect(() => {
-    if (typeof pValue !== 'string') {
-      return;
-    }
-
-    // avoid infinite loop
-    if (pValue === '' && value.join('') === emptyValue.join('')) {
-      return;
-    }
-
-    // keep internal and external states in sync
-    if (pValue !== value.join('')) {
-      setValue(pValue.split(''));
-    }
-  }, [pValue]);
+  onUnmount(() => {
+    window.removeEventListener('paste', handleOnPaste);
+  });
 
   return (
-    <>
-      <div
-        className="form-field-code"
-        style={{
-          '--itemsCount': length,
-        }}>
-        <input
-          ref={codeInputRef}
-          className="form-field-code__input"
-          autoComplete="one-time-code"
-          type="text"
-          inputMode="decimal"
-          id="one-time-code"
-          // use onKeyUp rather than onChange for a better control
-          // onChange is still needed to handle the autocompletion
-          // when receiving a code by SMS
-          onChange={onInputChange}
-          onKeyUp={onInputKeyUp}
-          onBlur={onInputBlur}
-          style={{
-            '--activeIndex': activeIndex,
-          }}
-        />
-
-        {itemsRef.map((ref, i) => (
+    <Form.Field
+      className={className}
+      style={{
+        '--itemsCount': length,
+      }}>
+      {characters.map((character, i) => {
+        const tabIndex = i <= value.length ? '0' : '';
+        const className = getElementClass('character');
+        return (
           <div
             key={i}
-            ref={ref}
-            role="button"
-            tabIndex={0}
-            className={`form-field-code__item ${
-              i === activeIndex ? 'is-active' : ''
-            }`}
-            onFocus={onItemFocus(i)}>
-            {value[i] || placeholder}
+            ref={i === 0 ? ref : null}
+            data-index={i}
+            tabIndex={tabIndex}
+            className={className}
+            onKeyDown={handleKeyDown}>
+            {character}
           </div>
-        ))}
-      </div>
-    </>
+        );
+      })}
+    </Form.Field>
   );
 }
+
+CodeField.defaultProps = {
+  value: '',
+  length: 6,
+  onChange: () => {},
+  onComplete: () => {},
+};

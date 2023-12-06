@@ -1,0 +1,32 @@
+import Route from 'docs/components/Route';
+
+export const title = 'OTP';
+export const group = 'Authentication';
+export const order = 5;
+
+# OTP Authentication API
+
+This API performs actions related to passkeys.
+
+## Send Code
+
+Creates and assigns a new OTP code for the user and sends out an SMS or email.
+
+<Route route="POST /1/auth/otp/send-code" />
+
+## Verify Code
+
+Verifies the sent code and authenticates the user. Note that this route is also
+used for verifying codes in an MFA flow. In this flow the password must also be
+recently verified and an error will be thrown if not.
+
+This route also will set the email or phone verified status.
+
+<Route route="POST /1/auth/otp/login" />
+
+## Register
+
+Registers a new user without a password. Note that this route is only used for
+OTP login and not MFA.
+
+<Route route="POST /1/auth/otp/register" />

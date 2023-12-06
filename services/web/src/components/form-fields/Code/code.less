@@ -1,4 +1,4 @@
-.form-field-code {
+.code-field {
   --itemWidth: 4.5rem;
   --itemHeight: 5rem;
   --itemSpacing: 1rem;
@@ -21,6 +21,10 @@
       (var(--itemsCount) - 1)
   );
 
+  &--disabled {
+    opacity: 0.5;
+  }
+
   &__input {
     position: absolute;
     top: 0;
@@ -35,7 +39,7 @@
     height: var(--itemHeight);
   }
 
-  &__item {
+  &__character {
     width: var(--itemWidth);
     height: var(--itemHeight);
     padding: 0;
@@ -46,7 +50,8 @@
     border: 0;
     box-shadow: inset 0 0 0 1px #ccc;
     transition: box-shadow 0.2s ease-out;
-    &.is-active {
+
+    &:focus {
       box-shadow: inset 0 0 0 2px #888;
     }
   }
@@ -54,10 +59,10 @@
 
 .nocturnal-theme .form-field-code {
   &__item {
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, .2) inset;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2) inset;
 
     &.is-active {
-      box-shadow: 0 0 0 1px rgba(255, 255, 255, .35) inset;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35) inset;
     }
   }
 }

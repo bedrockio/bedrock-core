@@ -1,0 +1,3 @@
+Welcome to {{APP_NAME}}!
+
+The {{APP_NAME}} Team - {{{APP_URL}}}

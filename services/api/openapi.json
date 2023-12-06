@@ -24,7 +24,16 @@
                       "type": "string"
                     }
                   },
-                  "value": {}
+                  "value": {
+                    "type": [
+                      "object",
+                      "array",
+                      "string",
+                      "number",
+                      "boolean",
+                      "null"
+                    ]
+                  }
                 }
               }
             }
@@ -35,7 +44,7 @@
     "/1/docs/generate": {
       "post": {}
     },
-    "/1/auth/register": {
+    "/1/auth/otp/send-code": {
       "post": {
         "requestBody": {
           "content": {
@@ -44,22 +53,75 @@
                 "type": "object",
                 "properties": {
                   "email": {
-                    "type": "string",
-                    "format": "email"
+                    "format": "email",
+                    "type": "string"
                   },
-                  "phoneNumber": {
+                  "phone": {
+                    "format": "phone",
+                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
                     "type": "string",
-                    "format": "phone"
+                    "x-generated": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/auth/otp/login": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "format": "email",
+                    "type": "string"
+                  },
+                  "phone": {
+                    "format": "phone",
+                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
+                    "type": "string",
+                    "x-generated": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/auth/otp/register": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "required": true,
+                    "format": "email",
+                    "type": "string"
+                  },
+                  "phone": {
+                    "format": "phone",
+                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
+                    "type": "string",
+                    "x-generated": true
                   },
                   "firstName": {
-                    "type": "string",
-                    "required": true
+                    "required": true,
+                    "type": "string"
                   },
                   "lastName": {
-                    "type": "string",
-                    "required": true
-                  },
-                  "password": {
+                    "required": true,
                     "type": "string"
                   }
                 }
@@ -69,7 +131,7 @@
         }
       }
     },
-    "/1/auth/login": {
+    "/1/auth/totp/login": {
       "post": {
         "requestBody": {
           "content": {
@@ -78,57 +140,13 @@
                 "type": "object",
                 "properties": {
                   "email": {
-                    "type": "string",
                     "required": true,
-                    "format": "email"
-                  },
-                  "password": {
-                    "type": "string",
-                    "required": true
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/1/auth/login/send-sms": {
-      "post": {
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "phoneNumber": {
-                    "type": "string",
-                    "required": true,
-                    "format": "phone"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/1/auth/login/verify-sms": {
-      "post": {
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "phoneNumber": {
-                    "type": "string",
-                    "required": true,
-                    "format": "phone"
+                    "format": "email",
+                    "type": "string"
                   },
                   "code": {
-                    "type": "string",
-                    "required": true
+                    "required": true,
+                    "type": "string"
                   }
                 }
               }
@@ -137,7 +155,453 @@
         }
       }
     },
-    "/1/auth/confirm-access": {
+    "/1/auth/totp/request": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/1/auth/totp/enable": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "secret": {
+                    "required": true,
+                    "type": "string"
+                  },
+                  "code": {
+                    "required": true,
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/1/auth/totp/disable": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/1/auth/apple/login": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "required": true,
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/auth/apple/register": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phone": {
+                    "format": "phone",
+                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
+                    "type": "string",
+                    "x-generated": true
+                  },
+                  "firstName": {
+                    "required": true,
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "required": true,
+                    "type": "string"
+                  },
+                  "token": {
+                    "required": true,
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/auth/apple/enable": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "required": true,
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/1/auth/apple/disable": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/1/auth/google/login": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "required": true,
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/auth/google/register": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phone": {
+                    "format": "phone",
+                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
+                    "type": "string",
+                    "x-generated": true
+                  },
+                  "firstName": {
+                    "required": true,
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "required": true,
+                    "type": "string"
+                  },
+                  "token": {
+                    "required": true,
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/auth/google/enable": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "required": true,
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/1/auth/google/disable": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/1/auth/passkey/login-generate": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "required": true,
+                    "format": "email",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/auth/passkey/login-verify": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "required": true,
+                    "format": "email",
+                    "type": "string"
+                  },
+                  "response": {
+                    "required": true,
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/auth/passkey/register-generate": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "required": true,
+                    "format": "email",
+                    "type": "string"
+                  },
+                  "phone": {
+                    "format": "phone",
+                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
+                    "type": "string",
+                    "x-generated": true
+                  },
+                  "firstName": {
+                    "required": true,
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "required": true,
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/auth/passkey/register-verify": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "required": true,
+                    "format": "email",
+                    "type": "string"
+                  },
+                  "response": {
+                    "required": true,
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/auth/passkey/enable-generate": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/1/auth/passkey/enable-verify": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "response": {
+                    "required": true,
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/1/auth/passkey/disable": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/1/auth/password/register": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "required": true,
+                    "format": "email",
+                    "type": "string"
+                  },
+                  "phone": {
+                    "format": "phone",
+                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
+                    "type": "string",
+                    "x-generated": true
+                  },
+                  "firstName": {
+                    "required": true,
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "required": true,
+                    "type": "string"
+                  },
+                  "password": {
+                    "required": true,
+                    "description": "A password of at least 12 characters.",
+                    "type": "string",
+                    "x-generated": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/auth/password/login": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "required": true,
+                    "format": "email",
+                    "type": "string"
+                  },
+                  "password": {
+                    "required": true,
+                    "description": "A password of at least 12 characters.",
+                    "type": "string",
+                    "x-generated": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/auth/password/request": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "required": true,
+                    "format": "email",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/auth/password/update": {
       "post": {
         "requestBody": {
           "content": {
@@ -146,7 +610,10 @@
                 "type": "object",
                 "properties": {
                   "password": {
-                    "type": "string"
+                    "required": true,
+                    "description": "A password of at least 12 characters.",
+                    "type": "string",
+                    "x-generated": true
                   }
                 }
               }
@@ -186,105 +653,8 @@
         ]
       }
     },
-    "/1/auth/accept-invite": {
-      "post": {
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "firstName": {
-                    "type": "string",
-                    "required": true
-                  },
-                  "lastName": {
-                    "type": "string",
-                    "required": true
-                  },
-                  "password": {
-                    "type": "string",
-                    "required": true
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/1/auth/request-password": {
-      "post": {
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "type": "string",
-                    "required": true,
-                    "format": "email"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/1/auth/set-password": {
-      "post": {
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "password": {
-                    "type": "string",
-                    "required": true
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/1/mfa/send-code": {
-      "post": {}
-    },
-    "/1/mfa/verify": {
-      "post": {
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "code": {
-                    "type": "string",
-                    "required": true
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/1/mfa/disable": {
-      "delete": {
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/1/mfa/setup": {
-      "post": {
+    "/1/auth/mfa-method": {
+      "patch": {
         "requestBody": {
           "content": {
             "application/json": {
@@ -293,59 +663,11 @@
                 "properties": {
                   "method": {
                     "type": "string",
-                    "required": true,
                     "enum": [
+                      "none",
                       "sms",
-                      "otp"
-                    ]
-                  },
-                  "phoneNumber": {
-                    "type": "string",
-                    "format": "phone"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/1/mfa/generate-backup-codes": {
-      "post": {
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/1/mfa/check-code": {
-      "post": {
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "code": {
-                    "type": "string",
-                    "required": true
-                  },
-                  "secret": {
-                    "type": "string",
-                    "required": true
-                  },
-                  "method": {
-                    "type": "string",
-                    "required": true,
-                    "enum": [
-                      "sms",
-                      "otp"
+                      "email",
+                      "totp"
                     ]
                   }
                 }
@@ -358,352 +680,6 @@
             "bearerAuth": []
           }
         ]
-      }
-    },
-    "/1/mfa/enable": {
-      "post": {
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "secret": {
-                    "type": "string"
-                  },
-                  "method": {
-                    "type": "string",
-                    "required": true,
-                    "enum": [
-                      "sms",
-                      "otp"
-                    ]
-                  },
-                  "phoneNumber": {
-                    "type": "string",
-                    "format": "phone"
-                  },
-                  "backupCodes": {
-                    "type": "array",
-                    "required": true,
-                    "items": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/1/audit-entries/search": {
-      "post": {
-        "summary": "Search audit entries",
-        "x-model": "AuditEntry",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "requestUrl": {
-                    "oneOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      }
-                    ]
-                  },
-                  "requestMethod": {
-                    "oneOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      }
-                    ]
-                  },
-                  "routeNormalizedPath": {
-                    "oneOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      }
-                    ]
-                  },
-                  "activity": {
-                    "oneOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      }
-                    ]
-                  },
-                  "objectId": {
-                    "oneOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      }
-                    ]
-                  },
-                  "objectType": {
-                    "oneOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      }
-                    ]
-                  },
-                  "objectBefore": {
-                    "type": "object"
-                  },
-                  "objectAfter": {
-                    "type": "object"
-                  },
-                  "category": {
-                    "oneOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      }
-                    ]
-                  },
-                  "user": {
-                    "oneOf": [
-                      {
-                        "$ref": "#/components/schemas/ObjectId"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/ObjectId"
-                        }
-                      }
-                    ]
-                  },
-                  "createdAt": {
-                    "oneOf": [
-                      {
-                        "$ref": "#/components/schemas/DateTime"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/DateTime"
-                        }
-                      },
-                      {
-                        "$ref": "#/components/schemas/DateRange"
-                      }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
-                  },
-                  "updatedAt": {
-                    "oneOf": [
-                      {
-                        "$ref": "#/components/schemas/DateTime"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/DateTime"
-                        }
-                      },
-                      {
-                        "$ref": "#/components/schemas/DateRange"
-                      }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
-                  },
-                  "ids": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/ObjectId"
-                    }
-                  },
-                  "keyword": {
-                    "type": "string",
-                    "description": "A keyword to perform a text search against."
-                  },
-                  "skip": {
-                    "type": "number",
-                    "description": "Number of records to skip."
-                  },
-                  "sort": {
-                    "default": {
-                      "field": "createdAt",
-                      "order": "desc"
-                    },
-                    "oneOf": [
-                      {
-                        "type": "object",
-                        "description": "An object describing the sort order of results.",
-                        "properties": {
-                          "field": {
-                            "type": "string",
-                            "required": true
-                          },
-                          "order": {
-                            "type": "string",
-                            "required": true,
-                            "enum": [
-                              "desc",
-                              "asc"
-                            ]
-                          }
-                        }
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "description": "An object describing the sort order of results.",
-                          "properties": {
-                            "field": {
-                              "type": "string",
-                              "required": true
-                            },
-                            "order": {
-                              "type": "string",
-                              "required": true,
-                              "enum": [
-                                "desc",
-                                "asc"
-                              ]
-                            }
-                          }
-                        }
-                      }
-                    ]
-                  },
-                  "limit": {
-                    "type": "number",
-                    "default": 50,
-                    "description": "Limits the number of results.",
-                    "minimum": 0
-                  },
-                  "filename": {
-                    "type": "string",
-                    "default": "export.csv",
-                    "description": "Applies only when `format` is `\"csv\"`."
-                  },
-                  "format": {
-                    "type": "string",
-                    "default": "json",
-                    "enum": [
-                      "json",
-                      "csv"
-                    ]
-                  },
-                  "include": {
-                    "oneOf": [
-                      {
-                        "type": "string",
-                        "description": "Field to be selected or populated.",
-                        "x-generated": true
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "string",
-                          "description": "Field to be selected or populated.",
-                          "x-generated": true
-                        }
-                      }
-                    ]
-                  }
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "x-permissions": {
-          "endpoint": "auditEntries",
-          "permission": "read",
-          "scope": "global"
-        }
-      }
-    },
-    "/1/audit-entries/search-options": {
-      "post": {
-        "x-model": "AuditEntry",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "field": {
-                    "type": "string",
-                    "required": true,
-                    "enum": [
-                      "routeNormalizedPath",
-                      "objectType",
-                      "activity",
-                      "category"
-                    ]
-                  }
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "x-permissions": {
-          "endpoint": "auditEntries",
-          "permission": "read",
-          "scope": "global"
-        }
       }
     },
     "/1/users/me": {
@@ -723,15 +699,20 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "phone": {
+                    "format": "phone",
+                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
+                    "type": "string",
+                    "x-generated": true
+                  },
+                  "mfaMethod": {
+                    "type": "string"
+                  },
                   "firstName": {
                     "type": "string"
                   },
                   "lastName": {
                     "type": "string"
-                  },
-                  "phoneNumber": {
-                    "type": "string",
-                    "format": "phone"
                   },
                   "timeZone": {
                     "type": "string"
@@ -813,92 +794,6 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "email": {
-                    "oneOf": [
-                      {
-                        "type": "string",
-                        "format": "email"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "string",
-                          "format": "email"
-                        }
-                      }
-                    ]
-                  },
-                  "phoneNumber": {
-                    "oneOf": [
-                      {
-                        "type": "string",
-                        "format": "phone"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "string",
-                          "format": "phone"
-                        }
-                      }
-                    ]
-                  },
-                  "roles": {
-                    "type": "object",
-                    "properties": {
-                      "role": {
-                        "oneOf": [
-                          {
-                            "type": "string",
-                            "required": true
-                          },
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "string",
-                              "required": true
-                            }
-                          }
-                        ]
-                      },
-                      "scope": {
-                        "oneOf": [
-                          {
-                            "type": "string",
-                            "required": true,
-                            "enum": [
-                              "global",
-                              "organization"
-                            ]
-                          },
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "string",
-                              "required": true,
-                              "enum": [
-                                "global",
-                                "organization"
-                              ]
-                            }
-                          }
-                        ]
-                      },
-                      "scopeRef": {
-                        "oneOf": [
-                          {
-                            "$ref": "#/components/schemas/ObjectId"
-                          },
-                          {
-                            "type": "array",
-                            "items": {
-                              "$ref": "#/components/schemas/ObjectId"
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  },
                   "firstName": {
                     "oneOf": [
                       {
@@ -924,6 +819,102 @@
                         }
                       }
                     ]
+                  },
+                  "email": {
+                    "oneOf": [
+                      {
+                        "format": "email",
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "format": "email",
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "phone": {
+                    "oneOf": [
+                      {
+                        "format": "phone",
+                        "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
+                        "type": "string",
+                        "x-generated": true
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "format": "phone",
+                          "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
+                          "type": "string",
+                          "x-generated": true
+                        }
+                      }
+                    ]
+                  },
+                  "emailVerified": {
+                    "type": "boolean"
+                  },
+                  "phoneVerified": {
+                    "type": "boolean"
+                  },
+                  "roles": {
+                    "type": "object",
+                    "properties": {
+                      "role": {
+                        "oneOf": [
+                          {
+                            "required": true,
+                            "type": "string"
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "required": true,
+                              "type": "string"
+                            }
+                          }
+                        ]
+                      },
+                      "scope": {
+                        "oneOf": [
+                          {
+                            "required": true,
+                            "type": "string",
+                            "enum": [
+                              "global",
+                              "organization"
+                            ]
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "required": true,
+                              "type": "string",
+                              "enum": [
+                                "global",
+                                "organization"
+                              ]
+                            }
+                          }
+                        ]
+                      },
+                      "scopeRef": {
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/ObjectId"
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "$ref": "#/components/schemas/ObjectId"
+                            }
+                          }
+                        ]
+                      }
+                    }
                   },
                   "theme": {
                     "oneOf": [
@@ -951,275 +942,8 @@
                   "isDeveloper": {
                     "type": "boolean"
                   },
-                  "accessConfirmedAt": {
-                    "oneOf": [
-                      {
-                        "$ref": "#/components/schemas/DateTime"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/DateTime"
-                        }
-                      },
-                      {
-                        "$ref": "#/components/schemas/DateRange"
-                      }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
-                  },
-                  "hashedPassword": {
-                    "oneOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      }
-                    ]
-                  },
-                  "loginAttempts": {
-                    "oneOf": [
-                      {
-                        "type": "number"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "number"
-                        }
-                      },
-                      {
-                        "$ref": "#/components/schemas/NumberRange"
-                      }
-                    ],
-                    "description": "Allows searching by a value, array of values, or a numeric range."
-                  },
-                  "lastLoginAttemptAt": {
-                    "oneOf": [
-                      {
-                        "$ref": "#/components/schemas/DateTime"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/DateTime"
-                        }
-                      },
-                      {
-                        "$ref": "#/components/schemas/DateRange"
-                      }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
-                  },
-                  "tempTokenId": {
-                    "oneOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      }
-                    ]
-                  },
-                  "smsSecret": {
-                    "oneOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      }
-                    ]
-                  },
-                  "mfaBackupCodes": {
-                    "oneOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      }
-                    ]
-                  },
-                  "mfaSecret": {
-                    "oneOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      }
-                    ]
-                  },
-                  "mfaPhoneNumber": {
-                    "oneOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      }
-                    ]
-                  },
-                  "authInfo": {
-                    "type": "object",
-                    "properties": {
-                      "lastUsedAt": {
-                        "oneOf": [
-                          {
-                            "$ref": "#/components/schemas/DateTime",
-                            "required": true
-                          },
-                          {
-                            "type": "array",
-                            "items": {
-                              "$ref": "#/components/schemas/DateTime",
-                              "required": true
-                            }
-                          },
-                          {
-                            "$ref": "#/components/schemas/DateRange"
-                          }
-                        ],
-                        "description": "Allows searching by a date, array of dates, or a range."
-                      },
-                      "userAgent": {
-                        "oneOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            }
-                          }
-                        ]
-                      },
-                      "ip": {
-                        "oneOf": [
-                          {
-                            "type": "string",
-                            "required": true
-                          },
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "string",
-                              "required": true
-                            }
-                          }
-                        ]
-                      },
-                      "country": {
-                        "oneOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            }
-                          }
-                        ]
-                      },
-                      "iat": {
-                        "oneOf": [
-                          {
-                            "$ref": "#/components/schemas/DateTime",
-                            "required": true
-                          },
-                          {
-                            "type": "array",
-                            "items": {
-                              "$ref": "#/components/schemas/DateTime",
-                              "required": true
-                            }
-                          },
-                          {
-                            "$ref": "#/components/schemas/DateRange"
-                          }
-                        ],
-                        "description": "Allows searching by a date, array of dates, or a range."
-                      },
-                      "jti": {
-                        "oneOf": [
-                          {
-                            "type": "string",
-                            "required": true
-                          },
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "string",
-                              "required": true
-                            }
-                          }
-                        ]
-                      },
-                      "exp": {
-                        "oneOf": [
-                          {
-                            "$ref": "#/components/schemas/DateTime",
-                            "required": true
-                          },
-                          {
-                            "type": "array",
-                            "items": {
-                              "$ref": "#/components/schemas/DateTime",
-                              "required": true
-                            }
-                          },
-                          {
-                            "$ref": "#/components/schemas/DateRange"
-                          }
-                        ],
-                        "description": "Allows searching by a date, array of dates, or a range."
-                      }
-                    }
-                  },
-                  "mfaMethod": {
-                    "oneOf": [
-                      {
-                        "type": "string",
-                        "enum": [
-                          "sms",
-                          "otp"
-                        ]
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "string",
-                          "enum": [
-                            "sms",
-                            "otp"
-                          ]
-                        }
-                      }
-                    ]
-                  },
                   "createdAt": {
+                    "description": "Allows searching by a date, array of dates, or a range.",
                     "oneOf": [
                       {
                         "$ref": "#/components/schemas/DateTime"
@@ -1233,10 +957,10 @@
                       {
                         "$ref": "#/components/schemas/DateRange"
                       }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
+                    ]
                   },
                   "updatedAt": {
+                    "description": "Allows searching by a date, array of dates, or a range.",
                     "oneOf": [
                       {
                         "$ref": "#/components/schemas/DateTime"
@@ -1250,8 +974,7 @@
                       {
                         "$ref": "#/components/schemas/DateRange"
                       }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
+                    ]
                   },
                   "ids": {
                     "type": "array",
@@ -1260,12 +983,13 @@
                     }
                   },
                   "keyword": {
-                    "type": "string",
-                    "description": "A keyword to perform a text search against."
+                    "description": "A keyword to perform a text search against.",
+                    "type": "string"
                   },
                   "skip": {
-                    "type": "number",
-                    "description": "Number of records to skip."
+                    "description": "Number of records to skip.",
+                    "default": 0,
+                    "type": "number"
                   },
                   "sort": {
                     "default": {
@@ -1274,16 +998,16 @@
                     },
                     "oneOf": [
                       {
-                        "type": "object",
                         "description": "An object describing the sort order of results.",
+                        "type": "object",
                         "properties": {
                           "field": {
-                            "type": "string",
-                            "required": true
+                            "required": true,
+                            "type": "string"
                           },
                           "order": {
-                            "type": "string",
                             "required": true,
+                            "type": "string",
                             "enum": [
                               "desc",
                               "asc"
@@ -1294,16 +1018,16 @@
                       {
                         "type": "array",
                         "items": {
-                          "type": "object",
                           "description": "An object describing the sort order of results.",
+                          "type": "object",
                           "properties": {
                             "field": {
-                              "type": "string",
-                              "required": true
+                              "required": true,
+                              "type": "string"
                             },
                             "order": {
-                              "type": "string",
                               "required": true,
+                              "type": "string",
                               "enum": [
                                 "desc",
                                 "asc"
@@ -1315,19 +1039,19 @@
                     ]
                   },
                   "limit": {
-                    "type": "number",
-                    "default": 50,
                     "description": "Limits the number of results.",
+                    "default": 50,
+                    "type": "number",
                     "minimum": 0
                   },
                   "filename": {
-                    "type": "string",
+                    "description": "Applies only when `format` is `\"csv\"`.",
                     "default": "export.csv",
-                    "description": "Applies only when `format` is `\"csv\"`."
+                    "type": "string"
                   },
                   "format": {
-                    "type": "string",
                     "default": "json",
+                    "type": "string",
                     "enum": [
                       "json",
                       "csv"
@@ -1336,15 +1060,15 @@
                   "include": {
                     "oneOf": [
                       {
-                        "type": "string",
                         "description": "Field to be selected or populated.",
+                        "type": "string",
                         "x-generated": true
                       },
                       {
                         "type": "array",
                         "items": {
-                          "type": "string",
                           "description": "Field to be selected or populated.",
+                          "type": "string",
                           "x-generated": true
                         }
                       }
@@ -1398,13 +1122,27 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "email": {
-                    "type": "string",
-                    "format": "email"
+                  "firstName": {
+                    "type": "string"
                   },
-                  "phoneNumber": {
+                  "lastName": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "format": "email",
+                    "type": "string"
+                  },
+                  "phone": {
+                    "format": "phone",
+                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
                     "type": "string",
-                    "format": "phone"
+                    "x-generated": true
+                  },
+                  "emailVerified": {
+                    "type": "boolean"
+                  },
+                  "phoneVerified": {
+                    "type": "boolean"
                   },
                   "roles": {
                     "type": "array",
@@ -1412,12 +1150,12 @@
                       "type": "object",
                       "properties": {
                         "role": {
-                          "type": "string",
-                          "required": true
+                          "required": true,
+                          "type": "string"
                         },
                         "scope": {
-                          "type": "string",
                           "required": true,
+                          "type": "string",
                           "enum": [
                             "global",
                             "organization"
@@ -1429,12 +1167,6 @@
                       }
                     }
                   },
-                  "firstName": {
-                    "type": "string"
-                  },
-                  "lastName": {
-                    "type": "string"
-                  },
                   "theme": {
                     "type": "string",
                     "enum": [
@@ -1445,13 +1177,6 @@
                   },
                   "isDeveloper": {
                     "type": "boolean"
-                  },
-                  "mfaMethod": {
-                    "type": "string",
-                    "enum": [
-                      "sms",
-                      "otp"
-                    ]
                   }
                 }
               }
@@ -1508,13 +1233,30 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "email": {
-                    "type": "string",
-                    "format": "email"
+                  "firstName": {
+                    "required": true,
+                    "type": "string"
                   },
-                  "phoneNumber": {
+                  "lastName": {
+                    "required": true,
+                    "type": "string"
+                  },
+                  "email": {
+                    "required": true,
+                    "format": "email",
+                    "type": "string"
+                  },
+                  "phone": {
+                    "format": "phone",
+                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
                     "type": "string",
-                    "format": "phone"
+                    "x-generated": true
+                  },
+                  "emailVerified": {
+                    "type": "boolean"
+                  },
+                  "phoneVerified": {
+                    "type": "boolean"
                   },
                   "roles": {
                     "type": "array",
@@ -1522,12 +1264,12 @@
                       "type": "object",
                       "properties": {
                         "role": {
-                          "type": "string",
-                          "required": true
+                          "required": true,
+                          "type": "string"
                         },
                         "scope": {
-                          "type": "string",
                           "required": true,
+                          "type": "string",
                           "enum": [
                             "global",
                             "organization"
@@ -1538,14 +1280,6 @@
                         }
                       }
                     }
-                  },
-                  "firstName": {
-                    "type": "string",
-                    "required": true
-                  },
-                  "lastName": {
-                    "type": "string",
-                    "required": true
                   },
                   "theme": {
                     "type": "string",
@@ -1558,32 +1292,10 @@
                   "isDeveloper": {
                     "type": "boolean"
                   },
-                  "mfaMethod": {
-                    "type": "string",
-                    "enum": [
-                      "sms",
-                      "otp"
-                    ]
-                  },
                   "password": {
-                    "type": "string"
-                  },
-                  "include": {
-                    "oneOf": [
-                      {
-                        "type": "string",
-                        "description": "Field to be selected or populated.",
-                        "x-generated": true
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "string",
-                          "description": "Field to be selected or populated.",
-                          "x-generated": true
-                        }
-                      }
-                    ]
+                    "description": "A password of at least 12 characters.",
+                    "type": "string",
+                    "x-generated": true
                   }
                 }
               }
@@ -1613,8 +1325,8 @@
                 "type": "object",
                 "properties": {
                   "name": {
-                    "type": "string",
-                    "required": true
+                    "required": true,
+                    "type": "string"
                   },
                   "description": {
                     "type": "string"
@@ -1643,23 +1355,6 @@
                     "items": {
                       "$ref": "#/components/schemas/Reference"
                     }
-                  },
-                  "include": {
-                    "oneOf": [
-                      {
-                        "type": "string",
-                        "description": "Field to be selected or populated.",
-                        "x-generated": true
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "string",
-                          "description": "Field to be selected or populated.",
-                          "x-generated": true
-                        }
-                      }
-                    ]
                   }
                 }
               }
@@ -1804,6 +1499,7 @@
                     "type": "boolean"
                   },
                   "priceUsd": {
+                    "description": "Allows searching by a value, array of values, or a numeric range.",
                     "oneOf": [
                       {
                         "type": "number"
@@ -1817,10 +1513,10 @@
                       {
                         "$ref": "#/components/schemas/NumberRange"
                       }
-                    ],
-                    "description": "Allows searching by a value, array of values, or a numeric range."
+                    ]
                   },
                   "expiresAt": {
+                    "description": "Allows searching by a date, array of dates, or a range.",
                     "oneOf": [
                       {
                         "$ref": "#/components/schemas/DateTime"
@@ -1834,8 +1530,7 @@
                       {
                         "$ref": "#/components/schemas/DateRange"
                       }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
+                    ]
                   },
                   "sellingPoints": {
                     "oneOf": [
@@ -1877,6 +1572,7 @@
                     ]
                   },
                   "createdAt": {
+                    "description": "Allows searching by a date, array of dates, or a range.",
                     "oneOf": [
                       {
                         "$ref": "#/components/schemas/DateTime"
@@ -1890,10 +1586,10 @@
                       {
                         "$ref": "#/components/schemas/DateRange"
                       }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
+                    ]
                   },
                   "updatedAt": {
+                    "description": "Allows searching by a date, array of dates, or a range.",
                     "oneOf": [
                       {
                         "$ref": "#/components/schemas/DateTime"
@@ -1907,8 +1603,7 @@
                       {
                         "$ref": "#/components/schemas/DateRange"
                       }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
+                    ]
                   },
                   "ids": {
                     "type": "array",
@@ -1917,12 +1612,13 @@
                     }
                   },
                   "keyword": {
-                    "type": "string",
-                    "description": "A keyword to perform a text search against."
+                    "description": "A keyword to perform a text search against.",
+                    "type": "string"
                   },
                   "skip": {
-                    "type": "number",
-                    "description": "Number of records to skip."
+                    "description": "Number of records to skip.",
+                    "default": 0,
+                    "type": "number"
                   },
                   "sort": {
                     "default": {
@@ -1931,16 +1627,16 @@
                     },
                     "oneOf": [
                       {
-                        "type": "object",
                         "description": "An object describing the sort order of results.",
+                        "type": "object",
                         "properties": {
                           "field": {
-                            "type": "string",
-                            "required": true
+                            "required": true,
+                            "type": "string"
                           },
                           "order": {
-                            "type": "string",
                             "required": true,
+                            "type": "string",
                             "enum": [
                               "desc",
                               "asc"
@@ -1951,16 +1647,16 @@
                       {
                         "type": "array",
                         "items": {
-                          "type": "object",
                           "description": "An object describing the sort order of results.",
+                          "type": "object",
                           "properties": {
                             "field": {
-                              "type": "string",
-                              "required": true
+                              "required": true,
+                              "type": "string"
                             },
                             "order": {
-                              "type": "string",
                               "required": true,
+                              "type": "string",
                               "enum": [
                                 "desc",
                                 "asc"
@@ -1972,19 +1668,19 @@
                     ]
                   },
                   "limit": {
-                    "type": "number",
-                    "default": 50,
                     "description": "Limits the number of results.",
+                    "default": 50,
+                    "type": "number",
                     "minimum": 0
                   },
                   "filename": {
-                    "type": "string",
+                    "description": "Applies only when `format` is `\"csv\"`.",
                     "default": "export.csv",
-                    "description": "Applies only when `format` is `\"csv\"`."
+                    "type": "string"
                   },
                   "format": {
-                    "type": "string",
                     "default": "json",
+                    "type": "string",
                     "enum": [
                       "json",
                       "csv"
@@ -1993,15 +1689,15 @@
                   "include": {
                     "oneOf": [
                       {
-                        "type": "string",
                         "description": "Field to be selected or populated.",
+                        "type": "string",
                         "x-generated": true
                       },
                       {
                         "type": "array",
                         "items": {
-                          "type": "string",
                           "description": "Field to be selected or populated.",
+                          "type": "string",
                           "x-generated": true
                         }
                       }
@@ -2030,8 +1726,8 @@
                 "type": "object",
                 "properties": {
                   "name": {
-                    "type": "string",
-                    "required": true
+                    "required": true,
+                    "type": "string"
                   },
                   "description": {
                     "type": "string"
@@ -2076,6 +1772,7 @@
                         "type": "object",
                         "properties": {
                           "type": {
+                            "default": "Point",
                             "type": "string"
                           },
                           "coordinates": {
@@ -2095,23 +1792,6 @@
                   },
                   "owner": {
                     "$ref": "#/components/schemas/Reference"
-                  },
-                  "include": {
-                    "oneOf": [
-                      {
-                        "type": "string",
-                        "description": "Field to be selected or populated.",
-                        "x-generated": true
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "string",
-                          "description": "Field to be selected or populated.",
-                          "x-generated": true
-                        }
-                      }
-                    ]
                   }
                 }
               }
@@ -2453,6 +2133,7 @@
                     ]
                   },
                   "createdAt": {
+                    "description": "Allows searching by a date, array of dates, or a range.",
                     "oneOf": [
                       {
                         "$ref": "#/components/schemas/DateTime"
@@ -2466,10 +2147,10 @@
                       {
                         "$ref": "#/components/schemas/DateRange"
                       }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
+                    ]
                   },
                   "updatedAt": {
+                    "description": "Allows searching by a date, array of dates, or a range.",
                     "oneOf": [
                       {
                         "$ref": "#/components/schemas/DateTime"
@@ -2483,8 +2164,7 @@
                       {
                         "$ref": "#/components/schemas/DateRange"
                       }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
+                    ]
                   },
                   "ids": {
                     "type": "array",
@@ -2493,12 +2173,13 @@
                     }
                   },
                   "keyword": {
-                    "type": "string",
-                    "description": "A keyword to perform a text search against."
+                    "description": "A keyword to perform a text search against.",
+                    "type": "string"
                   },
                   "skip": {
-                    "type": "number",
-                    "description": "Number of records to skip."
+                    "description": "Number of records to skip.",
+                    "default": 0,
+                    "type": "number"
                   },
                   "sort": {
                     "default": {
@@ -2507,16 +2188,16 @@
                     },
                     "oneOf": [
                       {
-                        "type": "object",
                         "description": "An object describing the sort order of results.",
+                        "type": "object",
                         "properties": {
                           "field": {
-                            "type": "string",
-                            "required": true
+                            "required": true,
+                            "type": "string"
                           },
                           "order": {
-                            "type": "string",
                             "required": true,
+                            "type": "string",
                             "enum": [
                               "desc",
                               "asc"
@@ -2527,16 +2208,16 @@
                       {
                         "type": "array",
                         "items": {
-                          "type": "object",
                           "description": "An object describing the sort order of results.",
+                          "type": "object",
                           "properties": {
                             "field": {
-                              "type": "string",
-                              "required": true
+                              "required": true,
+                              "type": "string"
                             },
                             "order": {
-                              "type": "string",
                               "required": true,
+                              "type": "string",
                               "enum": [
                                 "desc",
                                 "asc"
@@ -2548,19 +2229,19 @@
                     ]
                   },
                   "limit": {
-                    "type": "number",
-                    "default": 50,
                     "description": "Limits the number of results.",
+                    "default": 50,
+                    "type": "number",
                     "minimum": 0
                   },
                   "filename": {
-                    "type": "string",
+                    "description": "Applies only when `format` is `\"csv\"`.",
                     "default": "export.csv",
-                    "description": "Applies only when `format` is `\"csv\"`."
+                    "type": "string"
                   },
                   "format": {
-                    "type": "string",
                     "default": "json",
+                    "type": "string",
                     "enum": [
                       "json",
                       "csv"
@@ -2569,15 +2250,15 @@
                   "include": {
                     "oneOf": [
                       {
-                        "type": "string",
                         "description": "Field to be selected or populated.",
+                        "type": "string",
                         "x-generated": true
                       },
                       {
                         "type": "array",
                         "items": {
-                          "type": "string",
                           "description": "Field to be selected or populated.",
+                          "type": "string",
                           "x-generated": true
                         }
                       }
@@ -2644,8 +2325,8 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "type": "object",
                 "required": true,
+                "type": "object",
                 "properties": {
                   "file": {
                     "required": true,
@@ -2671,6 +2352,36 @@
             "bearerAuth": []
           }
         ]
+      }
+    },
+    "/1/invites/accept": {
+      "post": {
+        "x-model": "Invite",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "firstName": {
+                    "required": true,
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "required": true,
+                    "type": "string"
+                  },
+                  "password": {
+                    "required": true,
+                    "description": "A password of at least 12 characters.",
+                    "type": "string",
+                    "x-generated": true
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/1/invites/search": {
@@ -2710,6 +2421,7 @@
                     ]
                   },
                   "createdAt": {
+                    "description": "Allows searching by a date, array of dates, or a range.",
                     "oneOf": [
                       {
                         "$ref": "#/components/schemas/DateTime"
@@ -2723,10 +2435,10 @@
                       {
                         "$ref": "#/components/schemas/DateRange"
                       }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
+                    ]
                   },
                   "updatedAt": {
+                    "description": "Allows searching by a date, array of dates, or a range.",
                     "oneOf": [
                       {
                         "$ref": "#/components/schemas/DateTime"
@@ -2740,8 +2452,7 @@
                       {
                         "$ref": "#/components/schemas/DateRange"
                       }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
+                    ]
                   },
                   "ids": {
                     "type": "array",
@@ -2750,12 +2461,13 @@
                     }
                   },
                   "keyword": {
-                    "type": "string",
-                    "description": "A keyword to perform a text search against."
+                    "description": "A keyword to perform a text search against.",
+                    "type": "string"
                   },
                   "skip": {
-                    "type": "number",
-                    "description": "Number of records to skip."
+                    "description": "Number of records to skip.",
+                    "default": 0,
+                    "type": "number"
                   },
                   "sort": {
                     "default": {
@@ -2764,16 +2476,16 @@
                     },
                     "oneOf": [
                       {
-                        "type": "object",
                         "description": "An object describing the sort order of results.",
+                        "type": "object",
                         "properties": {
                           "field": {
-                            "type": "string",
-                            "required": true
+                            "required": true,
+                            "type": "string"
                           },
                           "order": {
-                            "type": "string",
                             "required": true,
+                            "type": "string",
                             "enum": [
                               "desc",
                               "asc"
@@ -2784,16 +2496,16 @@
                       {
                         "type": "array",
                         "items": {
-                          "type": "object",
                           "description": "An object describing the sort order of results.",
+                          "type": "object",
                           "properties": {
                             "field": {
-                              "type": "string",
-                              "required": true
+                              "required": true,
+                              "type": "string"
                             },
                             "order": {
-                              "type": "string",
                               "required": true,
+                              "type": "string",
                               "enum": [
                                 "desc",
                                 "asc"
@@ -2805,23 +2517,23 @@
                     ]
                   },
                   "limit": {
-                    "type": "number",
-                    "default": 50,
                     "description": "Limits the number of results.",
+                    "default": 50,
+                    "type": "number",
                     "minimum": 0
                   },
                   "include": {
                     "oneOf": [
                       {
-                        "type": "string",
                         "description": "Field to be selected or populated.",
+                        "type": "string",
                         "x-generated": true
                       },
                       {
                         "type": "array",
                         "items": {
-                          "type": "string",
                           "description": "Field to be selected or populated.",
+                          "type": "string",
                           "x-generated": true
                         }
                       }
@@ -2855,11 +2567,11 @@
                 "type": "object",
                 "properties": {
                   "emails": {
-                    "type": "array",
                     "required": true,
+                    "type": "array",
                     "items": {
-                      "type": "string",
-                      "format": "email"
+                      "format": "email",
+                      "type": "string"
                     }
                   }
                 }
@@ -2954,6 +2666,7 @@
                     ]
                   },
                   "createdAt": {
+                    "description": "Allows searching by a date, array of dates, or a range.",
                     "oneOf": [
                       {
                         "$ref": "#/components/schemas/DateTime"
@@ -2967,10 +2680,10 @@
                       {
                         "$ref": "#/components/schemas/DateRange"
                       }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
+                    ]
                   },
                   "updatedAt": {
+                    "description": "Allows searching by a date, array of dates, or a range.",
                     "oneOf": [
                       {
                         "$ref": "#/components/schemas/DateTime"
@@ -2984,8 +2697,7 @@
                       {
                         "$ref": "#/components/schemas/DateRange"
                       }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
+                    ]
                   },
                   "ids": {
                     "type": "array",
@@ -2994,12 +2706,13 @@
                     }
                   },
                   "keyword": {
-                    "type": "string",
-                    "description": "A keyword to perform a text search against."
+                    "description": "A keyword to perform a text search against.",
+                    "type": "string"
                   },
                   "skip": {
-                    "type": "number",
-                    "description": "Number of records to skip."
+                    "description": "Number of records to skip.",
+                    "default": 0,
+                    "type": "number"
                   },
                   "sort": {
                     "default": {
@@ -3008,16 +2721,16 @@
                     },
                     "oneOf": [
                       {
-                        "type": "object",
                         "description": "An object describing the sort order of results.",
+                        "type": "object",
                         "properties": {
                           "field": {
-                            "type": "string",
-                            "required": true
+                            "required": true,
+                            "type": "string"
                           },
                           "order": {
-                            "type": "string",
                             "required": true,
+                            "type": "string",
                             "enum": [
                               "desc",
                               "asc"
@@ -3028,16 +2741,16 @@
                       {
                         "type": "array",
                         "items": {
-                          "type": "object",
                           "description": "An object describing the sort order of results.",
+                          "type": "object",
                           "properties": {
                             "field": {
-                              "type": "string",
-                              "required": true
+                              "required": true,
+                              "type": "string"
                             },
                             "order": {
-                              "type": "string",
                               "required": true,
+                              "type": "string",
                               "enum": [
                                 "desc",
                                 "asc"
@@ -3049,23 +2762,23 @@
                     ]
                   },
                   "limit": {
-                    "type": "number",
-                    "default": 50,
                     "description": "Limits the number of results.",
+                    "default": 50,
+                    "type": "number",
                     "minimum": 0
                   },
                   "include": {
                     "oneOf": [
                       {
-                        "type": "string",
                         "description": "Field to be selected or populated.",
+                        "type": "string",
                         "x-generated": true
                       },
                       {
                         "type": "array",
                         "items": {
-                          "type": "string",
                           "description": "Field to be selected or populated.",
+                          "type": "string",
                           "x-generated": true
                         }
                       }
@@ -3081,6 +2794,337 @@
             "bearerAuth": []
           }
         ]
+      }
+    },
+    "/1/audit-entries/search": {
+      "post": {
+        "summary": "Search audit entries",
+        "x-model": "AuditEntry",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "requestUrl": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "requestMethod": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "routeNormalizedPath": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "activity": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "objectId": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "objectType": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "objectBefore": {
+                    "type": "object"
+                  },
+                  "objectAfter": {
+                    "type": "object"
+                  },
+                  "ownerId": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "ownerType": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "category": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "actor": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/ObjectId"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/ObjectId"
+                        }
+                      }
+                    ]
+                  },
+                  "createdAt": {
+                    "description": "Allows searching by a date, array of dates, or a range.",
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ]
+                  },
+                  "updatedAt": {
+                    "description": "Allows searching by a date, array of dates, or a range.",
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ]
+                  },
+                  "ids": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ObjectId"
+                    }
+                  },
+                  "keyword": {
+                    "description": "A keyword to perform a text search against.",
+                    "type": "string"
+                  },
+                  "skip": {
+                    "description": "Number of records to skip.",
+                    "default": 0,
+                    "type": "number"
+                  },
+                  "sort": {
+                    "default": {
+                      "field": "createdAt",
+                      "order": "desc"
+                    },
+                    "oneOf": [
+                      {
+                        "description": "An object describing the sort order of results.",
+                        "type": "object",
+                        "properties": {
+                          "field": {
+                            "required": true,
+                            "type": "string"
+                          },
+                          "order": {
+                            "required": true,
+                            "type": "string",
+                            "enum": [
+                              "desc",
+                              "asc"
+                            ]
+                          }
+                        }
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "description": "An object describing the sort order of results.",
+                          "type": "object",
+                          "properties": {
+                            "field": {
+                              "required": true,
+                              "type": "string"
+                            },
+                            "order": {
+                              "required": true,
+                              "type": "string",
+                              "enum": [
+                                "desc",
+                                "asc"
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "limit": {
+                    "description": "Limits the number of results.",
+                    "default": 50,
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "filename": {
+                    "description": "Applies only when `format` is `\"csv\"`.",
+                    "default": "export.csv",
+                    "type": "string"
+                  },
+                  "format": {
+                    "default": "json",
+                    "type": "string",
+                    "enum": [
+                      "json",
+                      "csv"
+                    ]
+                  },
+                  "include": {
+                    "oneOf": [
+                      {
+                        "description": "Field to be selected or populated.",
+                        "type": "string",
+                        "x-generated": true
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "description": "Field to be selected or populated.",
+                          "type": "string",
+                          "x-generated": true
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "x-permissions": {
+          "endpoint": "auditEntries",
+          "permission": "read",
+          "scope": "global"
+        }
+      }
+    },
+    "/1/audit-entries/search-options": {
+      "post": {
+        "x-model": "AuditEntry",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "field": {
+                    "required": true,
+                    "type": "string",
+                    "enum": [
+                      "routeNormalizedPath",
+                      "objectType",
+                      "activity",
+                      "category"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "x-permissions": {
+          "endpoint": "auditEntries",
+          "permission": "read",
+          "scope": "global"
+        }
       }
     },
     "/1/organizations/mine/search": {
@@ -3192,6 +3236,7 @@
                     ]
                   },
                   "createdAt": {
+                    "description": "Allows searching by a date, array of dates, or a range.",
                     "oneOf": [
                       {
                         "$ref": "#/components/schemas/DateTime"
@@ -3205,10 +3250,10 @@
                       {
                         "$ref": "#/components/schemas/DateRange"
                       }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
+                    ]
                   },
                   "updatedAt": {
+                    "description": "Allows searching by a date, array of dates, or a range.",
                     "oneOf": [
                       {
                         "$ref": "#/components/schemas/DateTime"
@@ -3222,8 +3267,7 @@
                       {
                         "$ref": "#/components/schemas/DateRange"
                       }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
+                    ]
                   },
                   "ids": {
                     "type": "array",
@@ -3232,12 +3276,13 @@
                     }
                   },
                   "keyword": {
-                    "type": "string",
-                    "description": "A keyword to perform a text search against."
+                    "description": "A keyword to perform a text search against.",
+                    "type": "string"
                   },
                   "skip": {
-                    "type": "number",
-                    "description": "Number of records to skip."
+                    "description": "Number of records to skip.",
+                    "default": 0,
+                    "type": "number"
                   },
                   "sort": {
                     "default": {
@@ -3246,16 +3291,16 @@
                     },
                     "oneOf": [
                       {
-                        "type": "object",
                         "description": "An object describing the sort order of results.",
+                        "type": "object",
                         "properties": {
                           "field": {
-                            "type": "string",
-                            "required": true
+                            "required": true,
+                            "type": "string"
                           },
                           "order": {
-                            "type": "string",
                             "required": true,
+                            "type": "string",
                             "enum": [
                               "desc",
                               "asc"
@@ -3266,16 +3311,16 @@
                       {
                         "type": "array",
                         "items": {
-                          "type": "object",
                           "description": "An object describing the sort order of results.",
+                          "type": "object",
                           "properties": {
                             "field": {
-                              "type": "string",
-                              "required": true
+                              "required": true,
+                              "type": "string"
                             },
                             "order": {
-                              "type": "string",
                               "required": true,
+                              "type": "string",
                               "enum": [
                                 "desc",
                                 "asc"
@@ -3287,23 +3332,23 @@
                     ]
                   },
                   "limit": {
-                    "type": "number",
-                    "default": 50,
                     "description": "Limits the number of results.",
+                    "default": 50,
+                    "type": "number",
                     "minimum": 0
                   },
                   "include": {
                     "oneOf": [
                       {
-                        "type": "string",
                         "description": "Field to be selected or populated.",
+                        "type": "string",
                         "x-generated": true
                       },
                       {
                         "type": "array",
                         "items": {
-                          "type": "string",
                           "description": "Field to be selected or populated.",
+                          "type": "string",
                           "x-generated": true
                         }
                       }
@@ -3337,25 +3382,8 @@
                 "type": "object",
                 "properties": {
                   "name": {
-                    "type": "string",
-                    "required": true
-                  },
-                  "include": {
-                    "oneOf": [
-                      {
-                        "type": "string",
-                        "description": "Field to be selected or populated.",
-                        "x-generated": true
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "string",
-                          "description": "Field to be selected or populated.",
-                          "x-generated": true
-                        }
-                      }
-                    ]
+                    "required": true,
+                    "type": "string"
                   }
                 }
               }
@@ -3437,6 +3465,7 @@
                     ]
                   },
                   "requestCount": {
+                    "description": "Allows searching by a value, array of values, or a numeric range.",
                     "oneOf": [
                       {
                         "type": "number"
@@ -3450,10 +3479,10 @@
                       {
                         "$ref": "#/components/schemas/NumberRange"
                       }
-                    ],
-                    "description": "Allows searching by a value, array of values, or a numeric range."
+                    ]
                   },
                   "createdAt": {
+                    "description": "Allows searching by a date, array of dates, or a range.",
                     "oneOf": [
                       {
                         "$ref": "#/components/schemas/DateTime"
@@ -3467,10 +3496,10 @@
                       {
                         "$ref": "#/components/schemas/DateRange"
                       }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
+                    ]
                   },
                   "updatedAt": {
+                    "description": "Allows searching by a date, array of dates, or a range.",
                     "oneOf": [
                       {
                         "$ref": "#/components/schemas/DateTime"
@@ -3484,8 +3513,7 @@
                       {
                         "$ref": "#/components/schemas/DateRange"
                       }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
+                    ]
                   },
                   "ids": {
                     "type": "array",
@@ -3494,12 +3522,13 @@
                     }
                   },
                   "keyword": {
-                    "type": "string",
-                    "description": "A keyword to perform a text search against."
+                    "description": "A keyword to perform a text search against.",
+                    "type": "string"
                   },
                   "skip": {
-                    "type": "number",
-                    "description": "Number of records to skip."
+                    "description": "Number of records to skip.",
+                    "default": 0,
+                    "type": "number"
                   },
                   "sort": {
                     "default": {
@@ -3508,16 +3537,16 @@
                     },
                     "oneOf": [
                       {
-                        "type": "object",
                         "description": "An object describing the sort order of results.",
+                        "type": "object",
                         "properties": {
                           "field": {
-                            "type": "string",
-                            "required": true
+                            "required": true,
+                            "type": "string"
                           },
                           "order": {
-                            "type": "string",
                             "required": true,
+                            "type": "string",
                             "enum": [
                               "desc",
                               "asc"
@@ -3528,16 +3557,16 @@
                       {
                         "type": "array",
                         "items": {
-                          "type": "object",
                           "description": "An object describing the sort order of results.",
+                          "type": "object",
                           "properties": {
                             "field": {
-                              "type": "string",
-                              "required": true
+                              "required": true,
+                              "type": "string"
                             },
                             "order": {
-                              "type": "string",
                               "required": true,
+                              "type": "string",
                               "enum": [
                                 "desc",
                                 "asc"
@@ -3549,23 +3578,23 @@
                     ]
                   },
                   "limit": {
-                    "type": "number",
-                    "default": 50,
                     "description": "Limits the number of results.",
+                    "default": 50,
+                    "type": "number",
                     "minimum": 0
                   },
                   "include": {
                     "oneOf": [
                       {
-                        "type": "string",
                         "description": "Field to be selected or populated.",
+                        "type": "string",
                         "x-generated": true
                       },
                       {
                         "type": "array",
                         "items": {
-                          "type": "string",
                           "description": "Field to be selected or populated.",
+                          "type": "string",
                           "x-generated": true
                         }
                       }
@@ -3703,6 +3732,7 @@
                     "type": "object",
                     "properties": {
                       "status": {
+                        "description": "Allows searching by a value, array of values, or a numeric range.",
                         "oneOf": [
                           {
                             "type": "number"
@@ -3716,8 +3746,7 @@
                           {
                             "$ref": "#/components/schemas/NumberRange"
                           }
-                        ],
-                        "description": "Allows searching by a value, array of values, or a numeric range."
+                        ]
                       },
                       "body": {
                         "type": "object"
@@ -3728,6 +3757,7 @@
                     }
                   },
                   "createdAt": {
+                    "description": "Allows searching by a date, array of dates, or a range.",
                     "oneOf": [
                       {
                         "$ref": "#/components/schemas/DateTime"
@@ -3741,10 +3771,10 @@
                       {
                         "$ref": "#/components/schemas/DateRange"
                       }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
+                    ]
                   },
                   "updatedAt": {
+                    "description": "Allows searching by a date, array of dates, or a range.",
                     "oneOf": [
                       {
                         "$ref": "#/components/schemas/DateTime"
@@ -3758,8 +3788,7 @@
                       {
                         "$ref": "#/components/schemas/DateRange"
                       }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
+                    ]
                   },
                   "ids": {
                     "type": "array",
@@ -3768,12 +3797,13 @@
                     }
                   },
                   "keyword": {
-                    "type": "string",
-                    "description": "A keyword to perform a text search against."
+                    "description": "A keyword to perform a text search against.",
+                    "type": "string"
                   },
                   "skip": {
-                    "type": "number",
-                    "description": "Number of records to skip."
+                    "description": "Number of records to skip.",
+                    "default": 0,
+                    "type": "number"
                   },
                   "sort": {
                     "default": {
@@ -3782,16 +3812,16 @@
                     },
                     "oneOf": [
                       {
-                        "type": "object",
                         "description": "An object describing the sort order of results.",
+                        "type": "object",
                         "properties": {
                           "field": {
-                            "type": "string",
-                            "required": true
+                            "required": true,
+                            "type": "string"
                           },
                           "order": {
-                            "type": "string",
                             "required": true,
+                            "type": "string",
                             "enum": [
                               "desc",
                               "asc"
@@ -3802,16 +3832,16 @@
                       {
                         "type": "array",
                         "items": {
-                          "type": "object",
                           "description": "An object describing the sort order of results.",
+                          "type": "object",
                           "properties": {
                             "field": {
-                              "type": "string",
-                              "required": true
+                              "required": true,
+                              "type": "string"
                             },
                             "order": {
-                              "type": "string",
                               "required": true,
+                              "type": "string",
                               "enum": [
                                 "desc",
                                 "asc"
@@ -3823,19 +3853,19 @@
                     ]
                   },
                   "limit": {
-                    "type": "number",
-                    "default": 50,
                     "description": "Limits the number of results.",
+                    "default": 50,
+                    "type": "number",
                     "minimum": 0
                   },
                   "filename": {
-                    "type": "string",
+                    "description": "Applies only when `format` is `\"csv\"`.",
                     "default": "export.csv",
-                    "description": "Applies only when `format` is `\"csv\"`."
+                    "type": "string"
                   },
                   "format": {
-                    "type": "string",
                     "default": "json",
+                    "type": "string",
                     "enum": [
                       "json",
                       "csv"
@@ -3844,15 +3874,15 @@
                   "include": {
                     "oneOf": [
                       {
-                        "type": "string",
                         "description": "Field to be selected or populated.",
+                        "type": "string",
                         "x-generated": true
                       },
                       {
                         "type": "array",
                         "items": {
-                          "type": "string",
                           "description": "Field to be selected or populated.",
+                          "type": "string",
                           "x-generated": true
                         }
                       }
@@ -3975,28 +4005,11 @@
                 "type": "object",
                 "properties": {
                   "name": {
-                    "type": "string",
-                    "required": true
+                    "required": true,
+                    "type": "string"
                   },
                   "description": {
                     "type": "string"
-                  },
-                  "include": {
-                    "oneOf": [
-                      {
-                        "type": "string",
-                        "description": "Field to be selected or populated.",
-                        "x-generated": true
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "string",
-                          "description": "Field to be selected or populated.",
-                          "x-generated": true
-                        }
-                      }
-                    ]
                   }
                 }
               }
@@ -4021,13 +4034,30 @@
       "User": {
         "type": "object",
         "properties": {
-          "email": {
-            "type": "string",
-            "format": "email"
+          "firstName": {
+            "required": true,
+            "type": "string"
           },
-          "phoneNumber": {
+          "lastName": {
+            "required": true,
+            "type": "string"
+          },
+          "email": {
+            "required": true,
+            "format": "email",
+            "type": "string"
+          },
+          "phone": {
+            "format": "phone",
+            "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
             "type": "string",
-            "format": "phone"
+            "x-generated": true
+          },
+          "emailVerified": {
+            "type": "boolean"
+          },
+          "phoneVerified": {
+            "type": "boolean"
           },
           "roles": {
             "type": "array",
@@ -4035,12 +4065,12 @@
               "type": "object",
               "properties": {
                 "role": {
-                  "type": "string",
-                  "required": true
+                  "required": true,
+                  "type": "string"
                 },
                 "scope": {
-                  "type": "string",
                   "required": true,
+                  "type": "string",
                   "enum": [
                     "global",
                     "organization"
@@ -4052,14 +4082,6 @@
               }
             }
           },
-          "firstName": {
-            "type": "string",
-            "required": true
-          },
-          "lastName": {
-            "type": "string",
-            "required": true
-          },
           "theme": {
             "type": "string",
             "enum": [
@@ -4070,77 +4092,6 @@
           },
           "isDeveloper": {
             "type": "boolean"
-          },
-          "accessConfirmedAt": {
-            "$ref": "#/components/schemas/DateTime"
-          },
-          "hashedPassword": {
-            "type": "string"
-          },
-          "loginAttempts": {
-            "type": "number"
-          },
-          "lastLoginAttemptAt": {
-            "$ref": "#/components/schemas/DateTime"
-          },
-          "tempTokenId": {
-            "type": "string"
-          },
-          "smsSecret": {
-            "type": "string"
-          },
-          "mfaBackupCodes": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "mfaSecret": {
-            "type": "string"
-          },
-          "mfaPhoneNumber": {
-            "type": "string"
-          },
-          "authInfo": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "lastUsedAt": {
-                  "$ref": "#/components/schemas/DateTime",
-                  "required": true
-                },
-                "userAgent": {
-                  "type": "string"
-                },
-                "ip": {
-                  "type": "string",
-                  "required": true
-                },
-                "country": {
-                  "type": "string"
-                },
-                "iat": {
-                  "$ref": "#/components/schemas/DateTime",
-                  "required": true
-                },
-                "jti": {
-                  "type": "string",
-                  "required": true
-                },
-                "exp": {
-                  "$ref": "#/components/schemas/DateTime",
-                  "required": true
-                }
-              }
-            }
-          },
-          "mfaMethod": {
-            "type": "string",
-            "enum": [
-              "sms",
-              "otp"
-            ]
           },
           "createdAt": {
             "$ref": "#/components/schemas/DateTime"
@@ -4154,19 +4105,19 @@
         "type": "object",
         "properties": {
           "requestUrl": {
-            "type": "string",
-            "required": true
+            "required": true,
+            "type": "string"
           },
           "requestMethod": {
-            "type": "string",
-            "required": true
+            "required": true,
+            "type": "string"
           },
           "routeNormalizedPath": {
             "type": "string"
           },
           "activity": {
-            "type": "string",
-            "required": true
+            "required": true,
+            "type": "string"
           },
           "objectId": {
             "type": "string"
@@ -4180,10 +4131,16 @@
           "objectAfter": {
             "type": "object"
           },
+          "ownerId": {
+            "type": "string"
+          },
+          "ownerType": {
+            "type": "string"
+          },
           "category": {
             "type": "string"
           },
-          "user": {
+          "actor": {
             "$ref": "#/components/schemas/ObjectId",
             "required": true
           },
@@ -4257,8 +4214,8 @@
         "type": "object",
         "properties": {
           "apiSecret": {
-            "type": "string",
-            "required": true
+            "required": true,
+            "type": "string"
           },
           "application": {
             "$ref": "#/components/schemas/ObjectId",
@@ -4276,15 +4233,15 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": "string",
-            "required": true
+            "required": true,
+            "type": "string"
           },
           "description": {
             "type": "string"
           },
           "apiKey": {
-            "type": "string",
-            "required": true
+            "required": true,
+            "type": "string"
           },
           "user": {
             "$ref": "#/components/schemas/ObjectId",
@@ -4305,8 +4262,8 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": "string",
-            "required": true
+            "required": true,
+            "type": "string"
           },
           "createdAt": {
             "$ref": "#/components/schemas/DateTime"
@@ -4320,8 +4277,8 @@
         "type": "object",
         "properties": {
           "email": {
-            "type": "string",
-            "required": true
+            "required": true,
+            "type": "string"
           },
           "status": {
             "type": "string"
@@ -4338,8 +4295,8 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": "string",
-            "required": true
+            "required": true,
+            "type": "string"
           },
           "createdAt": {
             "$ref": "#/components/schemas/DateTime"
@@ -4353,8 +4310,8 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": "string",
-            "required": true
+            "required": true,
+            "type": "string"
           },
           "description": {
             "type": "string"
@@ -4396,8 +4353,8 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": "string",
-            "required": true
+            "required": true,
+            "type": "string"
           },
           "description": {
             "type": "string"
@@ -4474,24 +4431,24 @@
         "type": "object",
         "properties": {
           "filename": {
-            "type": "string",
-            "required": true
+            "required": true,
+            "type": "string"
           },
           "mimeType": {
-            "type": "string",
-            "required": true
+            "required": true,
+            "type": "string"
           },
           "storageType": {
-            "type": "string",
-            "required": true
+            "required": true,
+            "type": "string"
           },
           "rawUrl": {
-            "type": "string",
-            "required": true
+            "required": true,
+            "type": "string"
           },
           "hash": {
-            "type": "string",
-            "required": true
+            "required": true,
+            "type": "string"
           },
           "owner": {
             "$ref": "#/components/schemas/ObjectId",
@@ -4509,13 +4466,13 @@
         }
       },
       "ObjectId": {
-        "type": "string",
         "format": "mongo-object-id",
+        "type": "string",
         "description": "A 24 character hexadecimal string representing a Mongo [ObjectId](https://bit.ly/3YPtGlU)."
       },
       "DateTime": {
-        "type": "string",
         "format": "date-time",
+        "type": "string",
         "description": "A `string` in [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format."
       },
       "DateRange": {
@@ -4540,32 +4497,6 @@
         },
         "description": "An object representing dates falling within a range."
       },
-      "NumberRange": {
-        "type": "object",
-        "properties": {
-          "lt": {
-            "type": "number",
-            "description": "Select values less than.",
-            "x-generated": true
-          },
-          "gt": {
-            "type": "number",
-            "description": "Select values greater than.",
-            "x-generated": true
-          },
-          "lte": {
-            "type": "number",
-            "description": "Select values less than or equal.",
-            "x-generated": true
-          },
-          "gte": {
-            "type": "number",
-            "description": "Select values greater than or equal.",
-            "x-generated": true
-          }
-        },
-        "description": "An object representing numbers falling within a range."
-      },
       "Reference": {
         "oneOf": [
           {
@@ -4582,6 +4513,32 @@
           }
         ],
         "description": "A 24 character hexadecimal string representing a Mongo [ObjectId](https://bit.ly/3YPtGlU).\nAn object with an `id` field may also be passed, which will be converted into a string."
+      },
+      "NumberRange": {
+        "type": "object",
+        "properties": {
+          "lt": {
+            "description": "Select values less than.",
+            "type": "number",
+            "x-generated": true
+          },
+          "gt": {
+            "description": "Select values greater than.",
+            "type": "number",
+            "x-generated": true
+          },
+          "lte": {
+            "description": "Select values less than or equal.",
+            "type": "number",
+            "x-generated": true
+          },
+          "gte": {
+            "description": "Select values greater than or equal.",
+            "type": "number",
+            "x-generated": true
+          }
+        },
+        "description": "An object representing numbers falling within a range."
       }
     },
     "securitySchemes": {
