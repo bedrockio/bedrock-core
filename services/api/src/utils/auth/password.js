@@ -17,19 +17,6 @@ async function verifyPassword(user, password) {
   user.loginAttempts = 0;
 }
 
-async function setPassword(user, password) {
-  const salt = await bcrypt.genSalt(12);
-  const hash = await bcrypt.hash(password, salt);
-
-  clearAuthenticators(user, 'password');
-
-  user.authenticators.push({
-    type: 'password',
-    verifiedAt: new Date(),
-    secret: hash,
-  });
-}
-
 // To allow OTP login, passwords may be changed to optional.
 function verifyRecentPassword(user) {
   const authenticator = getAuthenticator(user, 'password');
@@ -41,6 +28,19 @@ function verifyRecentPassword(user) {
   if (dt > MFA_THRESHOLD) {
     throw new Error('Password not verified.');
   }
+}
+
+async function setPassword(user, password) {
+  const salt = await bcrypt.genSalt(12);
+  const hash = await bcrypt.hash(password, salt);
+
+  clearAuthenticators(user, 'password');
+
+  user.authenticators.push({
+    type: 'password',
+    verifiedAt: new Date(),
+    secret: hash,
+  });
 }
 
 module.exports = {

@@ -79,7 +79,8 @@ router
         const code = await createOtp(user);
         await sms.sendMessage({
           user,
-          body: `Your login code is: ${code}`,
+          code,
+          template: 'otp',
         });
         next = {
           type: 'otp',
@@ -90,7 +91,7 @@ router
         await mailer.sendMail({
           user,
           code,
-          template: 'otp.md',
+          template: 'otp',
         });
         next = {
           type: 'otp',
