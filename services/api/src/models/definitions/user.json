@@ -128,7 +128,7 @@
       ]
     }
   },
-  "delete": {
+  "onDelete": {
     "errorOnReferenced": {
       "except": [
         "AuditEntry"
