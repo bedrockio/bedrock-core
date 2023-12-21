@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "license": "MIT",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "scripts": {
     "start": "node --watch src/index.js",
@@ -61,7 +61,7 @@
     "supertest": "^6.3.3"
   },
   "volta": {
-    "node": "18.14.0",
-    "yarn": "1.22.19"
+    "node": "20.10.0",
+    "yarn": "1.22.21"
   }
 }

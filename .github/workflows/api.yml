@@ -6,6 +6,7 @@ on:
   pull_request:
     branches: [master]
     paths: ["services/api/**"]
+  workflow_dispatch:
 
 jobs:
   api:
@@ -16,7 +17,7 @@ jobs:
         working-directory: ./services/api
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [20.x]
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
