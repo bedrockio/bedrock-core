@@ -8,6 +8,7 @@ const { createTemporaryToken, generateTokenId } = require('../utils/tokens');
 const { sendTemplatedMail } = require('../utils/mailer');
 const { User, Invite, AuditEntry } = require('../models');
 const config = require('@bedrockio/config');
+const ObjectId = require('mongoose').Types.ObjectId;
 
 const mfa = require('../utils/mfa');
 const sms = require('../utils/sms');
@@ -402,7 +403,7 @@ router
     async (ctx) => {
       const { jwt } = ctx.state;
       const { password } = ctx.request.body;
-      const user = await User.findById(jwt.sub);
+      const user = ObjectId.isValid(jwt.sub) && await User.findById(jwt.sub);
       if (!user) {
         ctx.throw(400, 'User does not exist');
       } else if (user.tempTokenId !== jwt.jti) {

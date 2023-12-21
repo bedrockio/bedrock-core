@@ -296,7 +296,7 @@ describe('/1/auth', () => {
 
       let response = await request('POST', '/1/auth/register', { email, firstName, lastName });
       expect(response.status).toBe(400);
-      expect(response.body.error.message).toBe('"email" password is required when email is provided');
+      expect(response.body.error.message).toBe('password is required when email is provided');
 
       response = await request('POST', '/1/auth/register', { firstName, lastName });
       expect(response.status).toBe(400);
