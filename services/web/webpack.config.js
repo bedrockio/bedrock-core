@@ -157,7 +157,7 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: path.join(__dirname, './src/assets/public'),
+          from: path.join(__dirname, './src/public'),
           to: path.join(__dirname, './dist'),
         },
       ],
