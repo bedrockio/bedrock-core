@@ -2,6 +2,7 @@ const request = require('supertest'); //eslint-disable-line
 const app = require('../../app');
 const qs = require('querystring');
 const { createAuthTokenPayload, createAuthToken } = require('../tokens');
+const { Blob } = require('node:buffer');
 
 module.exports = async function handleRequest(httpMethod, url, bodyOrQuery = {}, options = {}) {
   const headers = options.headers || {};
@@ -27,10 +28,17 @@ module.exports = async function handleRequest(httpMethod, url, bodyOrQuery = {},
     const files = Array.isArray(options.file) ? options.file : [options.file];
     promise = request(app.callback()).post(url).set(headers);
     for (let file of files) {
-      promise = promise.attach('file', file);
+      if (file instanceof Blob) {
+        const buffer = Buffer.from(await file.arrayBuffer());
+        promise = promise.attach('file', buffer, {
+          contentType: file.type,
+        });
+      } else {
+        promise = promise.attach('file', file);
+      }
     }
     for (let [key, value] of Object.entries(bodyOrQuery)) {
-      promise = promise.field(key, value);
+      promise = promise.field(key, JSON.stringify(value));
     }
   } else {
     if (httpMethod === 'POST') {

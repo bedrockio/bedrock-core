@@ -51,6 +51,25 @@ describe('/1/uploads', () => {
       const response = await request('POST', '/1/uploads', {}, { user });
       expect(response.status).toBe(400);
     });
+
+    it('should be able to derive a mimeType if the file has one', async () => {
+      const user = await createUser();
+      const response = await request(
+        'POST',
+        '/1/uploads',
+        {},
+        {
+          user,
+          file: new Blob(['test'], {
+            type: 'text/plain',
+          }),
+        }
+      );
+      expect(response.status).toBe(200);
+      expect(response.body.data[0]).toMatchObject({
+        mimeType: 'text/plain',
+      });
+    });
   });
 
   describe('DELETE /:upload', () => {
