@@ -39,7 +39,7 @@ export default async function request(options) {
       data.append('file', file);
     });
     for (let [key, value] of Object.entries(body || {})) {
-      data.append(key, value);
+      data.append(key, JSON.stringify(value));
     }
     body = data;
   } else if (!(body instanceof FormData)) {
