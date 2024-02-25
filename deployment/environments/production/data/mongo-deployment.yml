@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mongo-deployment
+  name: mongo
 spec:
   replicas: 1
   selector:
@@ -12,8 +12,30 @@ spec:
       labels:
         app: mongo
     spec:
+      initContainers:
+        - name: volume-permissions
+          image: busybox
+          imagePullPolicy: Always
+          command: ["sh", "-c", "chown -R 1000:1000 /data/db"]
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: mongo-persistent-storage
+              mountPath: /data/db
+        - name: sysctl
+          image: busybox
+          imagePullPolicy: Always
+          command: ["sysctl", "-w", "vm.max_map_count=262144"]
+          securityContext:
+            privileged: true
+        - name: ulimit
+          image: busybox
+          imagePullPolicy: Always
+          command: ["sh", "-c", "ulimit -n 65536"]
+          securityContext:
+            privileged: true
       containers:
-        - image: mongo:6.0.2
+        - image: mongo:7.0.4
           name: main
           # resources:
           #   limits:

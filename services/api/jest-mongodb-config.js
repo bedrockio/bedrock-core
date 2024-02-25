@@ -1,10 +1,12 @@
 module.exports = {
   mongodbMemoryServerOptions: {
     binary: {
-      version: '6.0.2',
+      version: '7.0.4',
       skipMD5: true,
     },
     autoStart: false,
-    instance: {},
+    instance: {
+      storageEngine: 'wiredTiger',
+    },
   },
 };
