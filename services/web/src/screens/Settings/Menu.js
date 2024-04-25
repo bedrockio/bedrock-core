@@ -16,7 +16,8 @@ export default () => {
           as={NavLink}
           exact
         />
-        <Menu.Item name="Security" to="/settings/security" as={NavLink} exact />
+        <Menu.Item name="Sign In" to="/settings/sign-in" as={NavLink} exact />
+        <Menu.Item name="Sessions" to="/settings/sessions" as={NavLink} exact />
       </Menu>
     </React.Fragment>
   );

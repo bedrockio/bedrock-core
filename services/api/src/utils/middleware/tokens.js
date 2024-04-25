@@ -1,9 +1,6 @@
 const jwt = require('jsonwebtoken');
-const config = require('@bedrockio/config');
 
-const secrets = {
-  user: config.get('JWT_SECRET'),
-};
+const { verifyAuthToken } = require('../auth/tokens');
 
 class TokenError extends Error {
   type = 'token';
@@ -16,7 +13,7 @@ function validateToken(options = {}) {
       return next();
     }
 
-    const { type, optional } = options;
+    const { type = 'user', optional } = options;
 
     // ignoring signature for the moment
     const token = getToken(ctx);
@@ -37,19 +34,14 @@ function validateToken(options = {}) {
     }
 
     const { payload } = decoded;
-    const keyId = payload.kid;
 
-    if (keyId !== 'user') {
-      throw new TokenError('jwt token does not match supported kid');
-    }
-
-    if (type && payload.type !== type) {
-      throw new TokenError(`endpoint requires jwt token payload match type "${type}"`);
+    if (payload.kid !== type) {
+      throw new TokenError(`Token type "${payload.kid}" does not match "${type}".`);
     }
 
     // confirming signature
     try {
-      jwt.verify(token, secrets[keyId]); // verify will throw
+      verifyAuthToken(token);
       ctx.state.jwt = payload;
       return next();
     } catch (e) {

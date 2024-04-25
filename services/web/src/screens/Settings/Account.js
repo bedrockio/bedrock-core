@@ -7,7 +7,7 @@ import { withSession } from 'stores';
 import screen from 'helpers/screen';
 
 import ErrorMessage from 'components/ErrorMessage';
-import PhoneNumber from 'components/PhoneNumber';
+import PhoneField from 'components/form-fields/Phone';
 
 import { request } from 'utils/api';
 
@@ -85,15 +85,12 @@ export default class Account extends React.Component {
               value={user.lastName || ''}
               onChange={this.setField}
             />
-            <Form.Field>
-              <label>Phone Number</label>
-              <PhoneNumber
-                label="Phone Number"
-                name="phoneNumber"
-                value={user.phoneNumber || ''}
-                onChange={this.setField}
-              />
-            </Form.Field>
+            <PhoneField
+              name="phone"
+              label="Phone Number"
+              value={user.phone || ''}
+              onChange={this.setField}
+            />
           </Segment>
           <div>
             <Button

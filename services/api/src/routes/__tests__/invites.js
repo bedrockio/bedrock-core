@@ -1,8 +1,43 @@
+const jwt = require('jsonwebtoken');
 const { assertMailSent } = require('postmark');
+const { createInviteToken } = require('../../utils/auth/tokens');
 const { request, createUser, createAdminUser } = require('../../utils/testing');
-const { Invite } = require('../../models');
+const { User, Invite } = require('../../models');
 
 describe('/1/invites', () => {
+  describe('POST /accept', () => {
+    it('should send an email to the registered user', async () => {
+      const invite = await Invite.create({
+        email: 'some@email.com',
+        status: 'invited',
+      });
+      const token = createInviteToken(invite);
+      const response = await request(
+        'POST',
+        '/1/invites/accept',
+        {
+          firstName: 'Bob',
+          lastName: 'Johnson',
+          password: '123password!',
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      expect(response.status).toBe(200);
+
+      const { payload } = jwt.decode(response.body.data.token, { complete: true });
+      expect(payload).toHaveProperty('kid', 'user');
+
+      const user = await User.findById(payload.sub);
+      expect(user.firstName).toBe('Bob');
+      expect(user.lastName).toBe('Johnson');
+    });
+  });
+
   describe('POST /search', () => {
     it('should list out invites', async () => {
       const user = await createAdminUser();

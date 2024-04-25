@@ -4,9 +4,11 @@ const { fetchByParam } = require('../utils/middleware/params');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
+
 const { exportValidation, csvExport } = require('../utils/csv');
-const { User } = require('../models');
+const { createImpersonateAuthToken } = require('../utils/auth/tokens');
 const { expandRoles } = require('./../utils/permissions');
+const { User } = require('../models');
 
 const roles = require('./../roles.json');
 const permissions = require('./../permissions.json');
@@ -27,16 +29,16 @@ router
   .patch(
     '/me',
     validateBody({
+      phone: yd.string().phone(),
+      mfaMethod: yd.string(),
       firstName: yd.string(),
       lastName: yd.string(),
-      phoneNumber: yd.string().phone(),
       timeZone: yd.string(),
       theme: yd.string(),
     }),
     async (ctx) => {
       const { authUser } = ctx.state;
       authUser.assign(ctx.request.body);
-
       await authUser.save();
       ctx.body = {
         data: expandRoles(authUser, ctx),
@@ -61,30 +63,19 @@ router
         ctx.throw(403, 'You are not allowed to authenticate as this user');
       }
 
-      const token = authUser.createAuthToken(
-        {
-          ip: ctx.get('x-forwarded-for') || ctx.ip,
-          country: ctx.get('cf-ipcountry'),
-          userAgent: ctx.get('user-agent'),
-        },
-        {
-          // setting user id to the user we are impersonating
-          // this is a special case not to be use for other purposes `sub` is reserved for the user id normally
-          authenticateUser: user.id,
-          // expires in 2 hours (in seconds)
-          exp: Math.floor(Date.now() / 1000) + 120 * 60,
-        }
-      );
+      const token = createImpersonateAuthToken(user, authUser, ctx);
       await authUser.save();
 
-      await AuditEntry.append('Authenticate as user', {
+      await AuditEntry.append('Authenticated as user', {
         ctx,
         object: user,
         actor: authUser,
       });
 
       ctx.body = {
-        data: { token },
+        data: {
+          token,
+        },
       };
     }
   )
@@ -130,18 +121,18 @@ router
       User.getCreateValidation({
         password: yd.string().password(),
       }).custom((val) => {
-        if (!val.email && !val.phoneNumber) {
-          throw new Error('email or phoneNumber is required');
+        if (!val.email && !val.phone) {
+          throw new Error('email or phone number is required');
         }
       })
     ),
     async (ctx) => {
-      const { email, phoneNumber } = ctx.request.body;
+      const { email, phone } = ctx.request.body;
       if (email && (await User.findOne({ email }))) {
         ctx.throw(400, 'A user with that email already exists');
       }
-      if (phoneNumber && (await User.findOne({ phoneNumber }))) {
-        ctx.throw(400, 'A user with that phoneNumber already exists');
+      if (phone && (await User.findOne({ phone }))) {
+        ctx.throw(400, 'A user with that phone number already exists');
       }
       const user = await User.create(ctx.request.body);
 

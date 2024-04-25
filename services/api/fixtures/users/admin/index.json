@@ -1,5 +1,6 @@
 {
   "name": "<env:ADMIN_NAME>",
   "email": "<env:ADMIN_EMAIL>",
+  "phone": "+12223456789",
   "role": "superAdmin"
 }

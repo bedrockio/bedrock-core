@@ -1,0 +1,53 @@
+import Route from 'docs/components/Route';
+
+export const title = 'Passkey';
+export const group = 'Authentication';
+export const order = 1;
+
+# Passkey Authentication API
+
+This API performs actions related to passkeys.
+
+## Register Generate
+
+Gets options to be passed to the client to create a new passkey in registration
+flow. Note that a new user is created in this step.
+
+<Route route="POST /1/auth/passkey/register-generate" />
+
+## Register Verify
+
+Verifies client response to create a new passkey in registration flow.
+
+<Route route="POST /1/auth/passkey/register-verify" />
+
+## Login Generate
+
+Gets options to be passed to the client to authorize a passkey in login flow.
+
+<Route route="POST /1/auth/passkey/login-generate" />
+
+## Login Verify
+
+Verifies client response to authorize a new passkey in login flow.
+
+<Route route="POST /1/auth/passkey/login-verify" />
+
+## Enable Generate
+
+Gets options to be passed to the client to create a new passkey in enable flow.
+
+<Route route="POST /1/auth/passkey/enable-generate" />
+
+## Enable Verify
+
+Verifies client response to authorize a new passkey in enable flow.
+
+<Route route="POST /1/auth/passkey/enable-verify" />
+
+## Disable
+
+Removes registered passkey authenticator. Note that passkeys on the client side
+must be removed by the user.
+
+<Route route="POST /1/auth/passkey/disable" />

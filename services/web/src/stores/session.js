@@ -1,10 +1,11 @@
 import React, { useContext } from 'react';
-import { merge, omit } from 'lodash';
+import { omit } from 'lodash';
 import { withRouter } from 'react-router-dom';
 
 import { request, hasToken, setToken } from 'utils/api';
 import { trackSession } from 'utils/analytics';
 import { captureError } from 'utils/sentry';
+import { merge } from 'utils/object';
 import { wrapContext } from 'utils/hoc';
 import { localStorage } from 'utils/storage';
 
@@ -106,7 +107,7 @@ export class SessionProvider extends React.PureComponent {
 
   updateUser = (data) => {
     this.setState({
-      user: merge({}, this.state.user, data),
+      user: merge(this.state.user, data),
     });
   };
 
@@ -118,26 +119,6 @@ export class SessionProvider extends React.PureComponent {
   };
 
   // Authentication
-
-  login = async (body) => {
-    this.setState({
-      isLoggingIn: true,
-    });
-    const { data } = await request({
-      method: 'POST',
-      path: '/1/auth/login',
-      body,
-    });
-    if (data.mfaRequired) {
-      window.sessionStorage.setItem('mfa-auth', JSON.stringify(data));
-      return '/login/verification';
-    }
-    const redirect = await this.authenticate(data.token);
-    this.setState({
-      isLoggingIn: false,
-    });
-    return redirect;
-  };
 
   logout = async (redirect) => {
     if (redirect) {
@@ -180,8 +161,7 @@ export class SessionProvider extends React.PureComponent {
   };
 
   isLoggedIn = () => {
-    const { isLoggingIn } = this.state;
-    return hasToken() && !isLoggingIn;
+    return hasToken();
   };
 
   // Organizations
@@ -222,7 +202,7 @@ export class SessionProvider extends React.PureComponent {
 
   setStored = (key, data) => {
     this.updateStored(
-      merge({}, this.state.stored, {
+      merge(this.state.stored, {
         [key]: data,
       })
     );

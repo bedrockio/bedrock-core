@@ -1,22 +1,20 @@
 const request = require('supertest'); //eslint-disable-line
 const app = require('../../app');
 const qs = require('querystring');
-const { createAuthTokenPayload, createAuthToken } = require('../tokens');
 const { Blob } = require('node:buffer');
+const { getAuthTokenPayload, signAuthToken } = require('../auth/tokens');
 
 module.exports = async function handleRequest(httpMethod, url, bodyOrQuery = {}, options = {}) {
   const headers = options.headers || {};
-  if (options.user && !headers.Authorization) {
+  if (options.user) {
     const { user } = options;
 
-    const payload = createAuthTokenPayload({
-      sub: user.id,
-      ip: '127.0.0.1',
-      userAgent: 'testing library',
-    });
-    const token = createAuthToken(payload);
+    const payload = getAuthTokenPayload(user);
+    const token = signAuthToken(payload);
 
     headers.Authorization = `Bearer ${token}`;
+  } else if (options.token) {
+    headers.Authorization = `Bearer ${options.token}`;
   }
   if (options.organization) {
     headers.organization = options.organization.id;

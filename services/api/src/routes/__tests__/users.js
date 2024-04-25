@@ -1,4 +1,5 @@
 const { request, createUser, createAdminUser } = require('../../utils/testing');
+const { mockTime, unmockTime, advanceTime } = require('../../utils/testing/time');
 const { User, Shop, AuditEntry } = require('../../models');
 const { importFixtures } = require('../../utils/fixtures');
 
@@ -33,14 +34,18 @@ describe('/1/users', () => {
       expect(response.body.data.__v).toBeUndefined();
     });
 
-    it('should not expose _password or hashedPassword', async () => {
+    it('should not expose _password or hash', async () => {
       const user = await createUser({
         password: 'fake password',
       });
       const response = await request('GET', '/1/users/me', {}, { user });
       expect(response.status).toBe(200);
       expect(response.body.data._password).toBeUndefined();
-      expect(response.body.data.hashedPassword).toBeUndefined();
+      expect(response.body.data.authenticators).toEqual([
+        {
+          type: 'password',
+        },
+      ]);
     });
   });
 
@@ -115,28 +120,89 @@ describe('/1/users', () => {
 
   describe('POST /:user/autheticate', () => {
     it('should be able to authenticate as another user', async () => {
-      const superAdmin = await createAdminUser();
-      const user = await createUser({
+      let response;
+      let superAdmin = await createAdminUser({
+        firstName: 'Joe',
+        lastName: 'Admin',
+      });
+      let user = await createUser({
         firstName: 'Neo',
         lastName: 'One',
-        authTokenId: '123123',
-        roles: [
-          {
-            scope: 'organization',
-            role: 'viewer',
-          },
-        ],
       });
-      const response = await request('POST', `/1/users/${user.id}/authenticate`, {}, { user: superAdmin });
+
+      response = await request(
+        'POST',
+        `/1/users/${user.id}/authenticate`,
+        {},
+        {
+          user: superAdmin,
+        }
+      );
       expect(response.status).toBe(200);
-      expect(response.body.data.token).toBeTruthy();
 
       const auditEntry = await AuditEntry.findOne({
         actor: superAdmin.id,
-        activity: 'Authenticate as user',
+        activity: 'Authenticated as user',
       });
       expect(auditEntry.objectType).toBe('User');
       expect(auditEntry.objectId).toBe(user.id);
+
+      superAdmin = await User.findById(superAdmin.id);
+      user = await User.findById(user.id);
+
+      expect(superAdmin.authTokens.length).toBe(1);
+      expect(user.authTokens.length).toBe(0);
+
+      const { token } = response.body.data;
+      response = await request(
+        'GET',
+        '/1/users/me',
+        {},
+        {
+          token,
+        }
+      );
+      expect(response.body.data.name).toBe('Neo One');
+    });
+
+    it('should not allow impersonation for more than 1 hour', async () => {
+      mockTime('2020-01-01T00:00:00.000Z');
+
+      let response;
+
+      let superAdmin = await createAdminUser({
+        firstName: 'Joe',
+        lastName: 'Admin',
+      });
+      let user = await createUser({
+        firstName: 'Neo',
+        lastName: 'One',
+      });
+
+      response = await request(
+        'POST',
+        `/1/users/${user.id}/authenticate`,
+        {},
+        {
+          user: superAdmin,
+        }
+      );
+      expect(response.status).toBe(200);
+
+      advanceTime(60 * 60 * 1000);
+
+      const { token } = response.body.data;
+      response = await request(
+        'GET',
+        '/1/users/me',
+        {},
+        {
+          token,
+        }
+      );
+      expect(response.status).toBe(401);
+      expect(response.body.error.message).toBe('jwt expired');
+      unmockTime();
     });
 
     it('dont allow an superAdmin to authenticate as another admin', async () => {
@@ -273,20 +339,23 @@ describe('/1/users', () => {
       expect(dbUser.name).toEqual('New Name');
     });
 
-    it('should strip out hashed password', async () => {
+    it('should strip out password', async () => {
       const admin = await createAdminUser();
       let user = await createUser({ name: 'new name' });
       const response = await request(
         'PATCH',
         `/1/users/${user.id}`,
         {
-          hashedPassword: 'new hashed password',
+          password: 'new password',
+          _password: 'new password',
         },
         { user: admin }
       );
       expect(response.status).toBe(200);
       user = await User.findById(user.id);
-      expect(user.hashedPassword).toBeUndefined();
+      expect(user.password).toBeUndefined();
+      expect(user._password).toBeUndefined();
+      expect(user.authenticators).toEqual([]);
     });
   });
 

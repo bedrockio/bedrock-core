@@ -36,10 +36,10 @@ function authorizeUser() {
       } else {
         authUser = await User.findById(jwt.sub);
 
-        const token = authUser.authInfo.find((token) => token.jti === jwt.jti);
+        const token = authUser.authTokens.find((token) => token.jti === jwt.jti);
 
         if (token) {
-          await updateAuthInfo(ctx, authUser, token);
+          await updateAuthToken(ctx, authUser, token);
         } else if (ENV_NAME !== 'test') {
           throw new Error();
         }
@@ -53,44 +53,14 @@ function authorizeUser() {
   };
 }
 
-async function updateAuthInfo(ctx, user, token) {
+async function updateAuthToken(ctx, user, token) {
   const ip = ctx.get('x-forwarded-for') || ctx.ip;
-  // update update the user if the token hasnt been updated in the last 30 seconds
+  // update update the user if the token hasn't been updated in the last 30 seconds
   // or the ip address has changed
   if (token.lastUsedAt < Date.now() - 1000 * 30 || token.ip !== ip) {
     token.ip = ip;
     token.lastUsedAt = new Date();
-
-    await Promise.all([
-      // updates ip + lastUsedAt
-      User.updateOne(
-        {
-          _id: user.id,
-          'authInfo._id': token.id,
-        },
-        {
-          $set: {
-            'authInfo.$.ip': ip,
-            'authInfo.$.lastUsedAt': token.lastUsedAt,
-          },
-        }
-      ),
-      // removes expired tokens
-      User.updateOne(
-        {
-          _id: user.id,
-        },
-        {
-          $pull: {
-            authInfo: {
-              exp: {
-                $lt: new Date(),
-              },
-            },
-          },
-        }
-      ),
-    ]);
+    await user.save();
   }
 }
 

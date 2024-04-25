@@ -59,6 +59,13 @@
       "ref": "User"
     }
   },
+  "onDelete": {
+    "errorOnReferenced": {
+      "except": [
+        "AuditEntry"
+      ]
+    }
+  },
   "search": {
     "fields": [
       "name"
