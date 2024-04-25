@@ -1,5 +1,5 @@
 # Base stage
-FROM node:18.14.0-alpine as base
+FROM node:20.12.2-alpine as base
 
 # Yarn will not install any package listed in devDependencies if the NODE_ENV
 # environment variable is set to production. Use this flag to instruct Yarn to
@@ -33,7 +33,7 @@ RUN rm -rf src/
 RUN rm -rf node_modules/
 
 ## Default (deployment image)
-FROM node:18.14.0-alpine
+FROM node:20.12.2-alpine
 WORKDIR /service
 
 EXPOSE 2200

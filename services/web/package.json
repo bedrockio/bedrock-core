@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "license": "MIT",
   "engines": {
-    "node": ">=10"
+    "node": ">=20"
   },
   "scripts": {
     "build": "NODE_ENV=production webpack",
@@ -96,7 +96,7 @@
     "webpack-bundle-analyzer": "^4.5.0"
   },
   "volta": {
-    "node": "18.14.0",
+    "node": "20.12.2",
     "yarn": "1.22.19"
   },
   "prettier": "@bedrockio/prettier-config"
