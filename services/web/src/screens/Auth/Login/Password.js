@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Segment, Divider, Grid, Form, Message } from 'semantic';
+import { Segment, Grid, Form, Message } from 'semantic';
 
 import { withSession } from 'stores';
 
@@ -113,7 +113,6 @@ export default class PasswordLogin extends React.Component {
                 loading={loading}
                 disabled={loading}
               />
-              <Divider horizontal>Or</Divider>
               <Federated
                 onVerifyStart={this.onVerifyStart}
                 onVerifyStop={this.onVerifyStop}

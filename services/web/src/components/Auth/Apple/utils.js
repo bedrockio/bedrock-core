@@ -7,6 +7,10 @@ import { APP_URL, APPLE_SERVICE_ID } from 'utils/env';
 const SCRIPT_URL =
   'https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js';
 
+export function canShowAppleSignin() {
+  return !!APPLE_SERVICE_ID;
+}
+
 export async function initialize() {
   await loadScript(SCRIPT_URL);
   AppleID.auth.init({

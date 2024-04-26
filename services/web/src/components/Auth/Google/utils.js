@@ -6,6 +6,10 @@ import { request } from 'utils/api';
 
 const SCRIPT_URL = 'https://accounts.google.com/gsi/client?hl=en-US';
 
+export function canShowGoogleSignin() {
+  return !!GOOGLE_CLIENT_ID;
+}
+
 export async function initialize(callback) {
   await loadScript(SCRIPT_URL);
   google.accounts.id.initialize({

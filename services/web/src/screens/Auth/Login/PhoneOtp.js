@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Segment, Divider, Grid, Form } from 'semantic';
+import { Segment, Grid, Form } from 'semantic';
 
 import { withSession } from 'stores';
 
@@ -95,7 +95,6 @@ export default class PhoneOtpLogin extends React.Component {
                 disabled={loading}
               />
             </Form>
-            <Divider horizontal>Or</Divider>
             <Federated />
           </Segment>
           <Segment secondary>

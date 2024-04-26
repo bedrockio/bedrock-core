@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Segment, Grid, Checkbox, Divider } from 'semantic';
+import { Form, Segment, Grid, Checkbox } from 'semantic';
 import { Link } from 'react-router-dom';
 
 import { withSession } from 'stores';
@@ -246,7 +246,6 @@ export default class PasswordSignup extends React.Component {
 
               {!this.isFederated() && (
                 <React.Fragment>
-                  <Divider horizontal>Or</Divider>
                   <Federated
                     onVerifyStart={this.onVerifyStart}
                     onVerifyStop={this.onVerifyStop}
