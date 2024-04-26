@@ -15,7 +15,7 @@ services:
       - ./services/api/.env:/service/.env
       - ./services/api/openapi:/service/openapi
     ports:
-      - '2300:2300'
+      - "2300:2300"
     links:
       - mongo
     depends_on:
@@ -24,13 +24,14 @@ services:
   web:
     build:
       context: ./services/web
+      dockerfile: Dockerfile.dev
       args:
         NODE_ENV: development
     command: yarn start
     volumes:
       - ./services/web/src:/service/src
     ports:
-      - '2200:2200'
+      - "2200:2200"
     depends_on:
       - api
 
