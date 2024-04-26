@@ -7,7 +7,7 @@ const request = require('./request');
 async function createUser(attributes = {}) {
   const user = new User({
     // using an objectId to ensure when tests are executed in parallel, there is no overlap
-    email: `${mongoose.Types.ObjectId()}@platform.com`,
+    email: `${new mongoose.Types.ObjectId()}@platform.com`,
     firstName: 'Test',
     lastName: 'User',
     ...attributes,
@@ -35,7 +35,7 @@ async function createUpload(owner) {
     hash: 'test',
     storageType: 'local',
     mimeType: 'image/png',
-    owner: owner || mongoose.Types.ObjectId(),
+    owner: owner || new mongoose.Types.ObjectId(),
   });
 }
 

@@ -1,10 +1,10 @@
 const { loadFixtures, importFixtures, exportFixtures, isFixture, setOptions } = require('@bedrockio/fixtures');
-const { storeUploadedFile } = require('./uploads');
+const { createUpload } = require('./uploads');
 const roles = require('../roles.json');
 
 setOptions({
   roles,
-  storeUploadedFile,
+  createUpload,
 });
 
 module.exports = {

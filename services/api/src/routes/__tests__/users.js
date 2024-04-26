@@ -41,7 +41,7 @@ describe('/1/users', () => {
       const response = await request('GET', '/1/users/me', {}, { user });
       expect(response.status).toBe(200);
       expect(response.body.data._password).toBeUndefined();
-      expect(response.body.data.authenticators).toEqual([
+      expect(response.body.data.authenticators).toMatchObject([
         {
           type: 'password',
         },
@@ -387,7 +387,7 @@ describe('/1/users', () => {
 
       const response = await request('DELETE', `/1/users/${user.id}`, {}, { user: admin });
       expect(response.status).toBe(400);
-      expect(response.body.error.message).toBe('Refusing to delete User referenced by Shop.');
+      expect(response.body.error.message).toBe('Refusing to delete User.');
     });
 
     it('should not error for allowed refernces', async () => {

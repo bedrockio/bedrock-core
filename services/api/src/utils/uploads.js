@@ -1,10 +1,13 @@
-const config = require('@bedrockio/config');
-const { promises: fs } = require('fs');
-const path = require('path');
 const os = require('os');
-const crypto = require('crypto');
-const logger = require('@bedrockio/logger');
+const path = require('path');
 const mime = require('mime-types');
+const { promises: fs } = require('fs');
+
+const crypto = require('crypto');
+const config = require('@bedrockio/config');
+const logger = require('@bedrockio/logger');
+
+const { Upload } = require('../models');
 
 async function uploadLocal(object) {
   const { filename, filepath, hash } = object;
@@ -58,4 +61,20 @@ async function storeUploadedFile(uploadedFile) {
   return object;
 }
 
-module.exports = { storeUploadedFile };
+async function createUpload(file, options) {
+  const { owner } = options;
+
+  // Note: this function will be passed ids by the
+  // fixture importer so it must be able to accept them.
+  const ownerId = owner.id || owner;
+
+  const params = await storeUploadedFile(file);
+  return await Upload.create({
+    ...params,
+    owner: ownerId,
+  });
+}
+
+module.exports = {
+  createUpload,
+};

@@ -105,8 +105,8 @@ describe('csvExport', () => {
   });
 
   it('should not expose ObjectId or id field unless included', async () => {
-    const userId = mongoose.Types.ObjectId();
-    const projectId = mongoose.Types.ObjectId();
+    const userId = new mongoose.Types.ObjectId();
+    const projectId = new mongoose.Types.ObjectId();
     const obj = {
       id: 'foo',
       name: 'Frank',

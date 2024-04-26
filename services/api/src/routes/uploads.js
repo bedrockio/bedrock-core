@@ -3,8 +3,8 @@ const { createReadStream } = require('fs');
 const { fetchByParam } = require('../utils/middleware/params');
 const { authenticate } = require('../utils/middleware/authenticate');
 const { validateFiles } = require('../utils/middleware/validate');
+const { createUpload } = require('../utils/uploads');
 const { Upload } = require('../models');
-const { storeUploadedFile } = require('../utils/uploads');
 
 const router = new Router();
 
@@ -45,9 +45,9 @@ router
     const files = Array.isArray(file) ? file : [file];
     const uploads = await Promise.all(
       files.map(async (file) => {
-        const params = await storeUploadedFile(file);
-        params.owner = authUser.id;
-        return await Upload.create(params);
+        return await createUpload(file, {
+          owner: authUser,
+        });
       })
     );
     ctx.body = {

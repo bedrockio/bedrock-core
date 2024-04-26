@@ -50,12 +50,22 @@ describe('/1/invites', () => {
         email: 'userb@platform.com',
       });
 
-      const response = await request('POST', '/1/invites/search', {}, { user });
+      const response = await request(
+        'POST',
+        '/1/invites/search',
+        {
+          sort: {
+            field: 'email',
+            order: 'asc',
+          },
+        },
+        { user }
+      );
 
       expect(response.status).toBe(200);
       const body = response.body;
-      expect(body.data[0].email).toBe(invite2.email);
-      expect(body.data[1].email).toBe(invite1.email);
+      expect(body.data[0].email).toBe(invite1.email);
+      expect(body.data[1].email).toBe(invite2.email);
       expect(body.meta.total).toBe(2);
     });
   });
