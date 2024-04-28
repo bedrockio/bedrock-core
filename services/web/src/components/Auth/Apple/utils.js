@@ -2,7 +2,7 @@
 
 import { loadScript } from 'utils/script';
 import { request } from 'utils/api';
-import { APP_URL, APPLE_SERVICE_ID } from 'utils/env';
+import { APPLE_SERVICE_ID, APPLE_RETURN_URL } from 'utils/env';
 
 const SCRIPT_URL =
   'https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js';
@@ -17,7 +17,7 @@ export async function initialize() {
     state: 'initial',
     scope: 'name email',
     clientId: APPLE_SERVICE_ID,
-    redirectURI: APP_URL,
+    redirectURI: APPLE_RETURN_URL,
     usePopup: true,
   });
 }

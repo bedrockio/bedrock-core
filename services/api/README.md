@@ -22,7 +22,6 @@ See http://localhost:2200/docs for full documentation on this API (requires runn
 - [Logging](#logging)
 - [Documentation](#documentation)
 - [Authentication](#authentication)
-- [Multi Factor Authentication](#multi-factor-authentication)
 
 ---
 
@@ -413,25 +412,43 @@ may also be removed.
 
 #### Google
 
-To set up Sign-in with Google, in your project console:
+To set up Sign-in with Google, in your [project console](https://console.cloud.google.com):
 
-1. Go to "APIs & Services" > "Credentials".
-2. Create a new "OAuth 2.0 Client ID".
-3. Add your domains to "Authorized Javascript origins".
-4. "Authorized redirect URIs" - Not needed.
-5. Copy the "Client ID" to the `.env` files of both `web` and `api`.
+- Go to "APIs & Services" > "Credentials".
+- Create a new "OAuth client ID".
+- "Authorized Javascript origins"
+  - Add your domain
+  - Add `http://localhost`.
+  - Add `http://localhost:2200`.
+- "Authorized redirect URIs" - Not needed.
+- Copy the "Client ID" to the `.env` files of both `web` and `api`.
 
 #### Apple
 
-To set up Sign-in with Apple, in the developer console:
+To set up Sign-in with Apple, in the [developer console](https://developer.apple.com/account):
 
-1. Go to "Certificates, Identifiers & Profiles" > "Identifiers".
-2. Create a new "App ID" and enable "Sign in with Apple".
-3. Create a new "Service ID" and enable "Sign in with Apple".
-4. Set the "Primary App ID" to your App ID, and add your base domains.
-5. Note that localhost is not allowed here. To test locally it is recommended to use cloudflare tunnel and enter the
-   domain here.
-6. Copy the "Service ID" to the `.env` files of both `web` and `api`.
+- Go to "Certificates, Identifiers & Profiles" > "Identifiers".
+- Create a new "App ID":
+  - Enter the description.
+  - Enter a unique bundle ID.
+  - Enable "Sign in with Apple".
+  - Continue and Register.
+- Create a new "Services ID":
+
+  - Enter the description.
+  - Enter a unique Identifier (must be different from the App bundle ID).
+  - Continue and Register
+  - Select the service.
+  - Enable "Sign In with Apple" and configure.
+  - Set the "Primary App ID" to your App ID
+  - Enter your base domain (ie. `example.com`).
+  - Enter your base url as the "Return URL" (ie. `https://example.com`).
+  - For local testing, `localhost` is not allowed here, so it is recommended to set up a local tunnel and add that to
+    the return URLs (eg. `https://local.example.com`).
+  - Note that the "Return URL" must be **exact** including the trailing slash.
+
+- Copy the "Service ID" to the `.env` files of both `web` and `api`.
+- Add `APPLE_RETURN_URL` to the `.env` file in `web` (ensure that the URL is exact).
 
 ### Custom
 
