@@ -52,6 +52,26 @@ describe('/1/auth/google', () => {
       ]);
     });
 
+    it('should not add multiple authenticators', async () => {
+      let user = await createUser({
+        email: 'foo@bar.com',
+      });
+      const token = createToken({
+        email: 'foo@bar.com',
+      });
+
+      await request('POST', '/1/auth/google/login', {
+        token,
+      });
+
+      await request('POST', '/1/auth/google/login', {
+        token,
+      });
+
+      user = await User.findById(user.id);
+      expect(user.authenticators.length).toBe(1);
+    });
+
     it('should throw an error on a bad token', async () => {
       const response = await request('POST', '/1/auth/google/login', {
         token: 'bad',

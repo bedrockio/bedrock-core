@@ -23,7 +23,7 @@ async function verifyToken(token) {
 }
 
 function addGoogleAuthenticator(user) {
-  clearAuthenticators(user, 'apple');
+  clearAuthenticators(user, 'google');
   user.authenticators.push({
     type: 'google',
     verifiedAt: new Date(),
