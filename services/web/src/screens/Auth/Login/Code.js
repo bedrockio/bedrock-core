@@ -107,7 +107,7 @@ export default class LoginCode extends React.Component {
   }
 
   renderMessage() {
-    const { type, email, phone } = this.props.location.state;
+    const { type, email, phone } = this.props.location.state || {};
     if (type === 'otp') {
       if (phone) {
         return <Message info>Enter code sent to {formatPhone(phone)}.</Message>;

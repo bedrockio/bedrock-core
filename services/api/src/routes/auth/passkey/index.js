@@ -126,18 +126,15 @@ router
   .post('/enable-generate', async (ctx) => {
     const { authUser } = ctx.state;
 
-    let options;
     try {
-      options = await generateRegistrationOptions(authUser);
+      const options = await generateRegistrationOptions(authUser);
+      await authUser.save();
+      ctx.body = {
+        data: options,
+      };
     } catch (error) {
       ctx.throw(400, error);
     }
-
-    await authUser.save();
-
-    ctx.body = {
-      data: options,
-    };
   })
   .post(
     '/enable-verify',
