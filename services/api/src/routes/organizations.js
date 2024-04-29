@@ -38,7 +38,7 @@ router
       data: organization,
     };
   })
-  .use(requirePermissions({ endpoint: 'organizations', permission: 'read', scope: 'global' }))
+  .use(requirePermissions('organizations.read'))
   .post('/search', validateBody(Organization.getSearchValidation()), async (ctx) => {
     const { data, meta } = await Organization.search(ctx.request.body);
     ctx.body = {
@@ -46,7 +46,7 @@ router
       meta,
     };
   })
-  .use(requirePermissions({ endpoint: 'organizations', permission: 'write', scope: 'global' }))
+  .use(requirePermissions('organizations.write'))
   .post('/', validateBody(Organization.getCreateValidation()), async (ctx) => {
     const organization = await Organization.create(ctx.request.body);
     ctx.body = {

@@ -11,7 +11,6 @@ const { expandRoles } = require('./../utils/permissions');
 const { User } = require('../models');
 
 const roles = require('./../roles.json');
-const permissions = require('./../permissions.json');
 
 const { AuditEntry } = require('../models');
 
@@ -45,41 +44,37 @@ router
       };
     }
   )
-  .post(
-    '/:id/authenticate',
-    requirePermissions({ endpoint: 'users', permission: 'write', scope: 'global' }),
-    async (ctx) => {
-      const { user } = ctx.state;
-      const authUser = ctx.state.authUser;
+  .post('/:id/authenticate', requirePermissions('users.impersonate'), async (ctx) => {
+    const { user } = ctx.state;
+    const authUser = ctx.state.authUser;
 
-      // Don't allow an superAdmin to imitate another superAdmin
-      const allowedRoles = expandRoles(authUser, ctx).roles.reduce(
-        (result, { roleDefinition }) => result.concat(roleDefinition.allowAuthenticationOnRoles || []),
-        []
-      );
+    // Don't allow an superAdmin to imitate another superAdmin
+    const allowedRoles = expandRoles(authUser, ctx).roles.reduce(
+      (result, { roleDefinition }) => result.concat(roleDefinition.allowAuthenticationOnRoles || []),
+      []
+    );
 
-      const isAllowed = [...user.roles].every(({ role }) => allowedRoles.includes(role));
-      if (!isAllowed) {
-        ctx.throw(403, 'You are not allowed to authenticate as this user');
-      }
-
-      const token = createImpersonateAuthToken(user, authUser, ctx);
-      await authUser.save();
-
-      await AuditEntry.append('Authenticated as user', {
-        ctx,
-        object: user,
-        actor: authUser,
-      });
-
-      ctx.body = {
-        data: {
-          token,
-        },
-      };
+    const isAllowed = [...user.roles].every(({ role }) => allowedRoles.includes(role));
+    if (!isAllowed) {
+      ctx.throw(403, 'You are not allowed to authenticate as this user');
     }
-  )
-  .use(requirePermissions({ endpoint: 'users', permission: 'read', scope: 'global' }))
+
+    const token = createImpersonateAuthToken(user, authUser, ctx);
+    await authUser.save();
+
+    await AuditEntry.append('Authenticated as user', {
+      ctx,
+      object: user,
+      actor: authUser,
+    });
+
+    ctx.body = {
+      data: {
+        token,
+      },
+    };
+  })
+  .use(requirePermissions('roles.list'))
   .get('/roles', (ctx) => {
     ctx.body = {
       data: roles,
@@ -87,7 +82,8 @@ router
   })
   .get('/permissions', (ctx) => {
     ctx.body = {
-      data: permissions,
+      // TODO: what is needed here?
+      // data: permissions,
     };
   })
   .post(
@@ -114,7 +110,7 @@ router
       data: expandRoles(ctx.state.user, ctx),
     };
   })
-  .use(requirePermissions({ endpoint: 'users', permission: 'write', scope: 'global' }))
+  .use(requirePermissions('users.create'))
   .post(
     '/',
     validateBody(

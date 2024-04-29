@@ -11,7 +11,7 @@ const router = new Router();
 
 router
   .use(authenticate())
-  .use(requirePermissions({ endpoint: 'applications', permission: 'read', scope: 'global' }))
+  .use(requirePermissions('applications.read'))
   .param('id', fetchByParam(Application))
   .post('/mine/search', validateBody(Application.getSearchValidation()), async (ctx) => {
     const { body } = ctx.request;
@@ -54,7 +54,7 @@ router
       data: ctx.state.application,
     };
   })
-  .use(requirePermissions({ endpoint: 'applications', permission: 'write', scope: 'global' }))
+  .use(requirePermissions('applications.write'))
   .post('/', validateBody(Application.getCreateValidation()), async (ctx) => {
     const { body } = ctx.request;
     const apiKey = kebabCase(body.name);

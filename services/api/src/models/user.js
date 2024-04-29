@@ -1,11 +1,9 @@
 const mongoose = require('mongoose');
 const { createSchema } = require('@bedrockio/model');
-
-const { validScopes } = require('../utils/permissions');
 const { setPassword } = require('../utils/auth/password');
+
 const definition = require('./definitions/user.json');
 
-definition.attributes.roles[0].scope.enum = validScopes;
 const schema = createSchema(definition);
 
 schema.virtual('name').get(function () {

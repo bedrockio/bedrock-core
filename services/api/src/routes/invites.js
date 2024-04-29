@@ -85,7 +85,7 @@ router
     }
   )
   .use(authenticate())
-  .use(requirePermissions({ endpoint: 'users', permission: 'read', scope: 'global' }))
+  .use(requirePermissions('users.read'))
   .param('id', fetchByParam(Invite))
   .post('/search', validateBody(Invite.getSearchValidation()), async (ctx) => {
     const { data, meta } = await Invite.search(ctx.request.body);
@@ -94,7 +94,7 @@ router
       meta,
     };
   })
-  .use(requirePermissions({ endpoint: 'users', permission: 'write', scope: 'global' }))
+  .use(requirePermissions('users.invite'))
   .post(
     '/',
     validateBody({

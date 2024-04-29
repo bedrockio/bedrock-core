@@ -207,7 +207,7 @@ const { requirePermissions } = require('../utils/middleware/permissions');
 router
   .use(authenticate())
   // Only allow access to users that have write permissions for this organization
-  .use(requirePermissions({ endpoint: 'shops', level: 'write', context: 'organization' }))
+  .use(requirePermissions('shops.write', 'organization'))
   .post(
     '/',
     validate({

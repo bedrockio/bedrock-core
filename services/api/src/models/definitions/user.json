@@ -44,7 +44,11 @@
         },
         "scopeRef": {
           "type": "ObjectId",
-          "ref": "Organization"
+          "ref": "Organization",
+          "enum": [
+            "global",
+            "organization"
+          ]
         }
       }
     ],

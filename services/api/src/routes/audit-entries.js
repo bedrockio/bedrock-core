@@ -10,7 +10,7 @@ const router = new Router();
 
 router
   .use(authenticate())
-  .use(requirePermissions({ endpoint: 'auditEntries', permission: 'read', scope: 'global' }))
+  .use(requirePermissions('auditEntries.read'))
   .post(
     '/search',
     validateBody(

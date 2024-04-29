@@ -4,6 +4,7 @@ const { authenticate } = require('../utils/middleware/authenticate');
 const { validateFiles } = require('../utils/middleware/validate');
 const { createUploads, getUploadUrl, createUrlStream } = require('../utils/uploads');
 const { userHasAccess } = require('./../utils/permissions');
+const { isEqual } = require('../utils/document');
 const { Upload } = require('../models');
 
 const router = new Router();
@@ -41,7 +42,7 @@ router
         if (ctx.method === 'GET') {
           return true;
         } else {
-          return upload.owner?.equals(ctx.state.authUser.id);
+          return isEqual(upload.owner, ctx.state.authUser);
         }
       },
     })
