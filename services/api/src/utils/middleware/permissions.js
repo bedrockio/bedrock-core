@@ -1,10 +1,13 @@
 const { userHasAccess } = require('./../permissions');
 
+// This can be changed to "organization" to quickly enable
+// multi-tenancy. Be sure when doing this to lock down global
+// permissions such as searching all users, impersonation, etc.
 const DEFAULT_SCOPE = 'global';
 
 function requirePermissions(...args) {
   const options = resolveOptions(args);
-  const { endpoint, permission, scope = DEFAULT_SCOPE } = options;
+  const { endpoint, permission, scope } = options;
 
   if (!endpoint) {
     throw new Error('Endpoint required.');
@@ -49,16 +52,22 @@ function requirePermissions(...args) {
 }
 
 function resolveOptions(args) {
+  let options;
   if (typeof args[0] === 'string') {
     const [endpoint, permission] = args[0].split('.');
-    return {
+    options = {
       endpoint,
       permission,
       scope: args[1],
     };
   } else {
-    return args[0];
+    options = args[0];
   }
+
+  return {
+    scope: DEFAULT_SCOPE,
+    ...options,
+  };
 }
 
 module.exports = {

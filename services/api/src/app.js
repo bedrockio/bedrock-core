@@ -6,6 +6,7 @@ const corsMiddleware = require('./utils/middleware/cors');
 const bodyMiddleware = require('./utils/middleware/body');
 const recordMiddleware = require('./utils/middleware/record');
 const serializeMiddleware = require('./utils/middleware/serialize');
+const organizationMiddleware = require('./utils/middleware/organization');
 const { applicationMiddleware } = require('./utils/middleware/application');
 const { loadDefinition } = require('./utils/openapi');
 const Sentry = require('@sentry/node');
@@ -38,6 +39,7 @@ if (['staging', 'development'].includes(ENV_NAME)) {
 }
 
 app.use(serializeMiddleware);
+app.use(organizationMiddleware);
 
 // Record middleware must occur before serialization to
 // derive model names but after errorHandler to capture
