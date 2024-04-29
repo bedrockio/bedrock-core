@@ -7,7 +7,6 @@ export function getOrganization() {
 }
 
 export function setOrganization(id) {
-  console.info('SETTTTTTTTTING', id);
   if (id) {
     localStorage.setItem(KEY, id);
   } else {
