@@ -46,6 +46,19 @@ function userHasAccess(user, options) {
   });
 }
 
+function validateUserRoles(user) {
+  const { roles = [] } = user;
+  for (let r of roles) {
+    const { role, scope } = r;
+    const definition = roleDefinitions[role];
+    if (!definition) {
+      throw new Error(`Unknown role "${role}".`);
+    } else if (!definition.allowScopes.includes(scope)) {
+      throw new Error(`Scope "${scope}" is not allowed on ${role}.`);
+    }
+  }
+}
+
 function expandRoles(user, ctx) {
   const { roles = [], ...rest } = serializeDocument(user, ctx);
   return {
@@ -60,6 +73,7 @@ function expandRoles(user, ctx) {
 }
 
 module.exports = {
-  userHasAccess,
   expandRoles,
+  userHasAccess,
+  validateUserRoles,
 };

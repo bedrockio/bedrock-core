@@ -40,15 +40,15 @@
         },
         "scope": {
           "type": "String",
-          "required": true
-        },
-        "scopeRef": {
-          "type": "ObjectId",
-          "ref": "Organization",
+          "required": true,
           "enum": [
             "global",
             "organization"
           ]
+        },
+        "scopeRef": {
+          "type": "ObjectId",
+          "ref": "Organization"
         }
       }
     ],

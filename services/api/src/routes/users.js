@@ -7,7 +7,7 @@ const { requirePermissions } = require('../utils/middleware/permissions');
 
 const { exportValidation, csvExport } = require('../utils/csv');
 const { createImpersonateAuthToken } = require('../utils/auth/tokens');
-const { expandRoles } = require('./../utils/permissions');
+const { expandRoles, validateUserRoles } = require('./../utils/permissions');
 const { User } = require('../models');
 
 const roles = require('./../roles.json');
@@ -116,11 +116,13 @@ router
     validateBody(
       User.getCreateValidation({
         password: yd.string().password(),
-      }).custom((val) => {
-        if (!val.email && !val.phone) {
-          throw new Error('email or phone number is required');
-        }
       })
+        .custom((val) => {
+          if (!val.email && !val.phone) {
+            throw new Error('email or phone number is required');
+          }
+        })
+        .custom(validateUserRoles)
     ),
     async (ctx) => {
       const { email, phone } = ctx.request.body;
@@ -142,7 +144,7 @@ router
       };
     }
   )
-  .patch('/:id', validateBody(User.getUpdateValidation()), async (ctx) => {
+  .patch('/:id', validateBody(User.getUpdateValidation().custom(validateUserRoles)), async (ctx) => {
     const { user } = ctx.state;
     const snapshot = new User(user);
     user.assign(ctx.request.body);

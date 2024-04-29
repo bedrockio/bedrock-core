@@ -99,6 +99,28 @@ describe('/1/users', () => {
       );
       expect(response.status).toBe(403);
     });
+
+    it('should error on invalid roles', async () => {
+      const admin = await createAdminUser();
+      const response = await request(
+        'POST',
+        '/1/users',
+        {
+          email: 'hello@dominiek.com',
+          password: 'verysecurepassword',
+          firstName: 'Mellow',
+          lastName: 'Yellow',
+          roles: [
+            {
+              role: 'superAdmin',
+              scope: 'organization',
+            },
+          ],
+        },
+        { user: admin }
+      );
+      expect(response.status).toBe(400);
+    });
   });
 
   describe('GET /:user', () => {
@@ -300,7 +322,7 @@ describe('/1/users', () => {
         {
           roles: [
             {
-              role: 'limitedAdmin',
+              role: 'admin',
               scope: 'global',
             },
           ],
@@ -309,12 +331,31 @@ describe('/1/users', () => {
       );
       expect(response.status).toBe(200);
       expect(response.body.data.roles.length).toBe(1);
-      expect(response.body.data.roles[0].role).toBe('limitedAdmin');
+      expect(response.body.data.roles[0].role).toBe('admin');
       expect(response.body.data.roles[0].scope).toBe('global');
       const dbUser = await User.findById(user1.id);
       expect(dbUser.roles.length).toBe(1);
-      expect(dbUser.roles[0].role).toBe('limitedAdmin');
+      expect(dbUser.roles[0].role).toBe('admin');
       expect(dbUser.roles[0].scope).toBe('global');
+    });
+
+    it('should error on invalid roles', async () => {
+      const admin = await createAdminUser();
+      const user = await createUser({ firstName: 'New', lastName: 'Name' });
+      const response = await request(
+        'PATCH',
+        `/1/users/${user.id}`,
+        {
+          roles: [
+            {
+              role: 'superAdmin',
+              scope: 'organization',
+            },
+          ],
+        },
+        { user: admin }
+      );
+      expect(response.status).toBe(400);
     });
 
     it('should strip out reserved fields', async () => {

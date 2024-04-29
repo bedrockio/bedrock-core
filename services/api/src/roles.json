@@ -22,7 +22,7 @@
   "admin": {
     "name": "Admin",
     "allowScopes": [
-      "organization"
+      "global"
     ],
     "permissions": {
       "auditEntries": "read",
@@ -37,7 +37,7 @@
   "viewer": {
     "name": "Viewer",
     "allowScopes": [
-      "organization"
+      "global"
     ],
     "permissions": {
       "applications": "read",
