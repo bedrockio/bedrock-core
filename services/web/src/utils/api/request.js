@@ -1,5 +1,7 @@
 import { API_KEY, API_URL } from 'utils/env';
 
+import { getOrganization } from 'utils/organization';
+
 import { trackRequest } from '../analytics';
 import { fetchWithTimeout } from '../fetch';
 import { ApiError, ApiParseError } from './errors';
@@ -12,6 +14,7 @@ export default async function request(options) {
   let { body } = options;
 
   const token = options.token || getToken();
+  const organization = getOrganization();
 
   const headers = Object.assign(
     {
@@ -23,6 +26,9 @@ export default async function request(options) {
         'Api-Record': 'on',
       }),
       'API-Key': API_KEY,
+      ...(organization && {
+        Organization: organization,
+      }),
     },
     options.headers
   );

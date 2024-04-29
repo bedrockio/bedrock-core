@@ -1,21 +1,85 @@
-const mongoose = require('mongoose');
-const { User } = require('./../../models');
 const { userHasAccess } = require('../permissions');
+
+const organization1Id = '662f11c8af6870637eab9f0f';
+const organization2Id = '662f11c8af6870637eab9f0d';
+
+const superAdmin = {
+  email: 'admin@permissions.com',
+  firstName: 'John',
+  lastName: 'Doe',
+  roles: [
+    {
+      scope: 'global',
+      role: 'superAdmin',
+      roleDefinition: {
+        name: 'Super Admin',
+        allowScopes: ['global'],
+        permissions: {
+          applications: 'all',
+          auditEntries: 'all',
+          organizations: 'all',
+          products: 'all',
+          roles: 'all',
+          shops: 'all',
+          users: 'all',
+        },
+        allowAuthenticationOnRoles: ['admin', 'viewer'],
+      },
+    },
+  ],
+};
+
+const admin = {
+  email: 'admin@permissions.com',
+  firstName: 'John',
+  lastName: 'Doe',
+  roles: [
+    {
+      scope: 'organization',
+      role: 'admin',
+      scopeRef: organization1Id,
+      roleDefinition: {
+        name: 'Admin',
+        allowScopes: ['organization'],
+        permissions: {
+          auditEntries: 'read',
+          applications: 'all',
+          products: 'all',
+          roles: 'all',
+          shops: 'all',
+          users: 'all',
+        },
+      },
+    },
+  ],
+};
+
+const viewer = {
+  email: 'viewer@permissions.com',
+  firstName: 'John',
+  lastName: 'Doe',
+  roles: [
+    {
+      scope: 'organization',
+      role: 'viewer',
+      scopeRef: organization1Id,
+      roleDefinition: {
+        name: 'Viewer',
+        allowScopes: ['organization'],
+        permissions: {
+          applications: 'read',
+          auditEntries: 'read',
+          products: 'read',
+          shops: 'read',
+          users: 'read',
+        },
+      },
+    },
+  ],
+};
 
 describe('userHasAccess', () => {
   it('should validate correctly for super admin', async () => {
-    const superAdmin = await User.create({
-      email: 'admin@permissions.com',
-      firstName: 'John',
-      lastName: 'Doe',
-      roles: [
-        {
-          scope: 'global',
-          role: 'superAdmin',
-        },
-      ],
-    });
-
     expect(
       userHasAccess(superAdmin, {
         scope: 'global',
@@ -59,21 +123,6 @@ describe('userHasAccess', () => {
   });
 
   it('should validate correctly for organization admin', async () => {
-    const organization1Id = new mongoose.Types.ObjectId();
-    const organization2Id = new mongoose.Types.ObjectId();
-    const admin = await User.create({
-      email: 'admin@permissions.com',
-      firstName: 'John',
-      lastName: 'Doe',
-      roles: [
-        {
-          scope: 'organization',
-          role: 'admin',
-          scopeRef: organization1Id,
-        },
-      ],
-    });
-
     expect(
       userHasAccess(admin, {
         scope: 'organization',
@@ -139,23 +188,27 @@ describe('userHasAccess', () => {
   });
 
   it('should validate correctly for organization viewer', async () => {
-    const organization1Id = new mongoose.Types.ObjectId();
-    const organization2Id = new mongoose.Types.ObjectId();
-    const viewer = await User.create({
-      email: 'viewer@permissions.com',
-      firstName: 'John',
-      lastName: 'Doe',
-      roles: [
-        {
-          scope: 'organization',
-          role: 'viewer',
-          scopeRef: organization1Id,
-        },
-      ],
-    });
-    expect(userHasAccess(viewer, { scope: 'global', permission: 'read', endpoint: 'users' })).toBe(false);
-    expect(userHasAccess(viewer, { scope: 'global', permission: 'read', endpoint: 'unknown' })).toBe(false);
-    expect(userHasAccess(viewer, { scope: 'global', permission: 'write', endpoint: 'users' })).toBe(false);
+    expect(
+      userHasAccess(viewer, {
+        scope: 'global',
+        permission: 'read',
+        endpoint: 'users',
+      })
+    ).toBe(false);
+    expect(
+      userHasAccess(viewer, {
+        scope: 'global',
+        permission: 'read',
+        endpoint: 'unknown',
+      })
+    ).toBe(false);
+    expect(
+      userHasAccess(viewer, {
+        scope: 'global',
+        permission: 'write',
+        endpoint: 'users',
+      })
+    ).toBe(false);
     expect(
       userHasAccess(viewer, {
         scope: 'organization',
@@ -199,18 +252,6 @@ describe('userHasAccess', () => {
   });
 
   it('should assume global access', async () => {
-    const superAdmin = await User.create({
-      email: 'admin@permissions.com',
-      firstName: 'John',
-      lastName: 'Doe',
-      roles: [
-        {
-          scope: 'global',
-          role: 'superAdmin',
-        },
-      ],
-    });
-
     expect(
       userHasAccess(superAdmin, {
         permission: 'read',

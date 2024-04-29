@@ -3,6 +3,7 @@ import { merge, omit } from 'lodash';
 import { withRouter } from 'react-router-dom';
 
 import { request, hasToken, setToken } from 'utils/api';
+import { getOrganization, setOrganization } from 'utils/organization';
 import { trackSession } from 'utils/analytics';
 import { captureError } from 'utils/sentry';
 import { wrapContext } from 'utils/hoc';
@@ -22,8 +23,8 @@ export class SessionProvider extends React.PureComponent {
       error: null,
       ready: false,
       loading: true,
-      stored: this.loadStored(),
       organization: null,
+      stored: this.loadStored(),
     };
   }
 
@@ -191,35 +192,20 @@ export class SessionProvider extends React.PureComponent {
   // Organizations
 
   loadOrganization = async () => {
-    const organizationId = this.state.stored['organizationId'];
-    if (organizationId) {
+    const organization = getOrganization();
+    if (organization) {
       try {
         const { data } = await request({
           method: 'GET',
-          path: `/1/organizations/${organizationId}`,
+          path: `/1/organizations/${organization}`,
         });
         return data;
       } catch (err) {
         if (err.status < 500) {
-          this.removeStored('organizationId');
+          setOrganization(null);
         }
       }
     }
-  };
-
-  setOrganization = (organization) => {
-    if (organization) {
-      this.setStored('organizationId', organization.id);
-    } else {
-      this.removeStored('organizationId');
-    }
-    // Organizations may affect the context of all pages as well as
-    // persistent header/footer so need to do a hard-reload of the app.
-    window.location.reload();
-  };
-
-  getOrganization = () => {
-    return this.state.organization;
   };
 
   // Session storage
@@ -305,8 +291,6 @@ export class SessionProvider extends React.PureComponent {
           hasRole: this.hasRole,
           isAdmin: this.isAdmin,
           pushRedirect: this.pushRedirect,
-          setOrganization: this.setOrganization,
-          getOrganization: this.getOrganization,
         }}>
         {this.props.children}
       </SessionContext.Provider>

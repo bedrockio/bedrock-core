@@ -1,70 +1,48 @@
-function meetsLevel(permissionValue, permission) {
-  if (permissionValue === 'none') {
+const VALID_SCOPES = ['global', 'organization'];
+
+// Note: this function is derived from the API and meant
+// to be kept in sync. It is slightly modified to not use
+// mongoose utility methods.
+export function userHasAccess(user, options) {
+  if (!user) {
     return false;
   }
-  if (permissionValue === 'read-write' && permission === 'write') {
-    return true;
-  }
-  if (permissionValue === 'read-write' && permission === 'read') {
-    return true;
-  }
-  if (permissionValue === 'read' && permission === 'read') {
-    return true;
-  }
-  return false;
-}
 
-export function userHasAccess(user, { endpoint, permission, scope, scopeRef }) {
+  const { endpoint, permission, scope = 'global', scopeRef } = options;
   if (!endpoint) {
     throw new Error('Expected endpoint (e.g. users)');
-  }
-  if (!permission) {
+  } else if (!permission) {
     throw new Error('Expected permission (e.g. read)');
+  } else if (!scope) {
+    throw new Error('Expected scope (e.g. organization)');
+  } else if (!VALID_SCOPES.includes(scope)) {
+    throw new Error('Invalid scope');
   }
-  if (!scope) {
-    throw new Error('Expected scope (e.g. account)');
-  }
-  const roles = [];
-  // Gather all relevant roles
-  for (const roleRef of user.roles) {
-    if (roleRef.scope === 'global') {
-      const role = roleRef.roleDefinition;
-      if (!role) {
-        continue;
+
+  return user.roles.some((r) => {
+    if (scope === 'global' && r.scope !== 'global') {
+      return false;
+    } else if (scope === 'organization' && r.scope === 'organization') {
+      if (r.scopeRef !== scopeRef) {
+        return false;
       }
-      roles.push(role);
+    }
+
+    const definition = r.roleDefinition;
+    const allowed = definition?.permissions?.[endpoint];
+
+    if (!definition) {
+      throw new Error(`Unknown role "${r.role}".`);
+    }
+
+    if (Array.isArray(allowed)) {
+      return allowed.includes(permission);
+    } else if (allowed === permission || allowed === 'all') {
+      return true;
     } else {
-      if (roleRef.scope !== scope) {
-        continue;
-      }
-      // Only include scopeRef roles (e.g. matching organization ID) when not global scope
-      if (scope !== 'global') {
-        if (!scopeRef) {
-          continue;
-        }
-        if (!roleRef.scopeRef) {
-          continue;
-        }
-        const roleTargetId = roleRef.scopeRef.toString();
-        if (scopeRef.toString() !== roleTargetId) {
-          continue;
-        }
-      }
-      const role = roleRef.roleDefinition;
-      if (!role) {
-        continue;
-      }
-      roles.push(role);
+      return false;
     }
-  }
-  let hasAccess = false;
-  for (const role of roles) {
-    const permissionValue = role.permissions[endpoint] || 'none';
-    if (meetsLevel(permissionValue, permission)) {
-      hasAccess = true;
-    }
-  }
-  return hasAccess;
+  });
 }
 
 export function userCanSwitchOrganizations(user) {

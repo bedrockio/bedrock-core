@@ -5,6 +5,10 @@ const { isEqual } = require('./document');
 const VALID_SCOPES = ['global', 'organization'];
 
 function userHasAccess(user, options) {
+  if (!user) {
+    return false;
+  }
+
   const { endpoint, permission, scope = 'global', scopeRef } = options;
   if (!endpoint) {
     throw new Error('Expected endpoint (e.g. users)');
