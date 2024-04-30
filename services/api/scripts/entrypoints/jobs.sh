@@ -48,7 +48,8 @@ cat >>/service/job-base.yml <<EOL
           - yacron
           - "{{ environment.HOSTNAME }}"
           - "{{ name }}"
-        level: warning
+        level: error
+        environment: $ENV_NAME
 EOL
 fi
 cat >>/service/job-base.yml <<EOL
