@@ -4,7 +4,7 @@ const { authenticate } = require('../utils/middleware/authenticate');
 const { validateFiles } = require('../utils/middleware/validate');
 const { createUploads, getUploadUrl, createUrlStream } = require('../utils/uploads');
 const { userHasAccess } = require('./../utils/permissions');
-const { isEqual } = require('../utils/document');
+const { isEqual } = require('@bedrockio/model');
 const { Upload } = require('../models');
 
 const router = new Router();

@@ -1,6 +1,6 @@
+const { isEqual } = require('@bedrockio/model');
 const roleDefinitions = require('../roles.json');
 const { serializeDocument } = require('./serialize');
-const { isEqual } = require('./document');
 
 const VALID_SCOPES = ['global', 'organization'];
 

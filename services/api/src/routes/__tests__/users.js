@@ -101,7 +101,7 @@ describe('/1/users', () => {
     });
 
     it('should error on invalid roles', async () => {
-      const admin = await createAdminUser();
+      const admin = await createAdmin();
       const response = await request(
         'POST',
         '/1/users',
@@ -340,7 +340,7 @@ describe('/1/users', () => {
     });
 
     it('should error on invalid roles', async () => {
-      const admin = await createAdminUser();
+      const admin = await createAdmin();
       const user = await createUser({ firstName: 'New', lastName: 'Name' });
       const response = await request(
         'PATCH',
