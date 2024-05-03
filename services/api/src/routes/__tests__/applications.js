@@ -1,12 +1,12 @@
-const { request, createUser, createAdminUser } = require('../../utils/testing');
+const { request, createUser, createAdmin } = require('../../utils/testing');
 const { uniqueId } = require('lodash');
 const { Application, AuditEntry } = require('../../models');
 
 describe('/1/applications', () => {
   describe('POST /mine/search', () => {
     it('should list applications for a given user', async () => {
-      const admin = await createAdminUser();
-      const otherAdmin = await createAdminUser();
+      const admin = await createAdmin();
+      const otherAdmin = await createAdmin();
       const application = await Application.create({
         name: 'my application',
         user: admin.id,
@@ -34,7 +34,7 @@ describe('/1/applications', () => {
 
   describe('POST /:application/logs/search', () => {
     it('should list logs', async () => {
-      const admin = await createAdminUser();
+      const admin = await createAdmin();
       const application = await Application.create({
         name: 'my application',
         user: admin.id,
@@ -48,7 +48,7 @@ describe('/1/applications', () => {
 
   describe('GET /:application', () => {
     it('should get an application', async () => {
-      const admin = await createAdminUser();
+      const admin = await createAdmin();
       const application = await Application.create({
         name: 'my application',
         user: admin.id,
@@ -61,7 +61,7 @@ describe('/1/applications', () => {
 
   describe('POST /', () => {
     it('should allow creation', async () => {
-      const admin = await createAdminUser();
+      const admin = await createAdmin();
       const response = await request(
         'POST',
         '/1/applications',
@@ -85,7 +85,7 @@ describe('/1/applications', () => {
 
   describe('PATCH /:application', () => {
     it('should patch an application', async () => {
-      const admin = await createAdminUser();
+      const admin = await createAdmin();
       const application = await Application.create({
         name: 'patch-application',
         user: admin.id,
@@ -122,7 +122,7 @@ describe('/1/applications', () => {
 
   describe('DELETE /:application', () => {
     it('should delete application', async () => {
-      const admin = await createAdminUser();
+      const admin = await createAdmin();
       const application = await Application.create({
         name: 'patch-application',
         user: admin.id,

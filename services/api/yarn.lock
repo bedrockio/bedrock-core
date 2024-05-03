@@ -380,10 +380,10 @@
     kleur "^4.1.5"
     stdout-stream "^2.0.0"
 
-"@bedrockio/model@^0.2.21":
-  version "0.2.21"
-  resolved "https://registry.yarnpkg.com/@bedrockio/model/-/model-0.2.21.tgz#e73b4869666725222d2f68b542a6b99af10cca14"
-  integrity sha512-O8W3nMEthZx6DCFdOWHLbPw3X1KbZaTrU807rQaUmAL+wl7VZQ1My4pb2dqWoIV65fQwn1Xebo1m9EOfHDFx0A==
+"@bedrockio/model@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@bedrockio/model/-/model-0.3.1.tgz#e2b692fb507be3de462b99b92680b9359717ed63"
+  integrity sha512-DjhHWYxjUjXYirqegbFpoqpG7i6u/UHQtXjFOZcdMiSLafU14na5feqqh2FSRr69SXMEX6j0E2R6UolQpJNdKQ==
   dependencies:
     "@bedrockio/logger" "^1.0.6"
     lodash "^4.17.21"

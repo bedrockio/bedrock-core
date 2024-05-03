@@ -16,7 +16,7 @@ async function createUser(attributes = {}) {
   return user;
 }
 
-async function createAdminUser(attributes) {
+async function createAdmin(attributes) {
   return await createUser({
     ...attributes,
     roles: [
@@ -44,5 +44,5 @@ module.exports = {
   request,
   createUser,
   createUpload,
-  createAdminUser,
+  createAdmin,
 };

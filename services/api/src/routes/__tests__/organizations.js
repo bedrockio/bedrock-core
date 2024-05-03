@@ -1,10 +1,10 @@
-const { request, createUser, createAdminUser } = require('../../utils/testing');
+const { request, createUser, createAdmin } = require('../../utils/testing');
 const { Organization } = require('../../models');
 
 describe('/1/organizations', () => {
   describe('POST /search', () => {
     it('should list out organizations', async () => {
-      const user = await createAdminUser();
+      const user = await createAdmin();
       await Organization.create({
         name: 'org 1',
       });
@@ -85,7 +85,7 @@ describe('/1/organizations', () => {
 
   describe('GET /:organization', () => {
     it('should be able to access organization', async () => {
-      const user = await createAdminUser();
+      const user = await createAdmin();
       const organization = await Organization.create({
         name: 'org',
       });
@@ -97,7 +97,7 @@ describe('/1/organizations', () => {
 
   describe('POST /', () => {
     it('should be able to create organization', async () => {
-      const user = await createAdminUser();
+      const user = await createAdmin();
       const response = await request(
         'POST',
         '/1/organizations',
@@ -114,7 +114,7 @@ describe('/1/organizations', () => {
 
   describe('DELETE /:organization', () => {
     it('should be able to delete organization', async () => {
-      const user = await createAdminUser();
+      const user = await createAdmin();
       let organization = await Organization.create({
         name: 'org',
       });
@@ -136,7 +136,7 @@ describe('/1/organizations', () => {
 
   describe('PATCH /:organization', () => {
     it('should be able to update organization', async () => {
-      const user = await createAdminUser();
+      const user = await createAdmin();
       let organization = await Organization.create({
         name: 'org',
       });

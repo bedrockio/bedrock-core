@@ -66,6 +66,18 @@
       ]
     }
   },
+  "access": {
+    "update": [
+      "owner",
+      "admin",
+      "superAdmin"
+    ],
+    "delete": [
+      "owner",
+      "admin",
+      "superAdmin"
+    ]
+  },
   "search": {
     "fields": [
       "name"

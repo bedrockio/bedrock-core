@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { assertMailSent } = require('postmark');
 const { createInviteToken } = require('../../utils/auth/tokens');
-const { request, createUser, createAdminUser } = require('../../utils/testing');
+const { request, createUser, createAdmin } = require('../../utils/testing');
 const { User, Invite } = require('../../models');
 
 describe('/1/invites', () => {
@@ -40,7 +40,7 @@ describe('/1/invites', () => {
 
   describe('POST /search', () => {
     it('should list out invites', async () => {
-      const user = await createAdminUser();
+      const user = await createAdmin();
 
       const invite1 = await Invite.create({
         email: 'usera@platform.com',
@@ -72,7 +72,7 @@ describe('/1/invites', () => {
 
   describe('POST /', () => {
     it('should be able to create invite', async () => {
-      const user = await createAdminUser();
+      const user = await createAdmin();
       const response = await request(
         'POST',
         '/1/invites',
@@ -89,7 +89,7 @@ describe('/1/invites', () => {
       await createUser({
         email: 'fake@fake.com',
       });
-      const user = await createAdminUser();
+      const user = await createAdmin();
       const response = await request(
         'POST',
         '/1/invites',
@@ -104,7 +104,7 @@ describe('/1/invites', () => {
 
   describe('POST /:invite/resend', () => {
     it('should be able to resend invite', async () => {
-      const user = await createAdminUser();
+      const user = await createAdmin();
       const invite = await Invite.create({
         email: 'delete@platform.com',
       });
@@ -115,7 +115,7 @@ describe('/1/invites', () => {
 
   describe('DELETE /:invite', () => {
     it('should be able to delete invite', async () => {
-      const user = await createAdminUser();
+      const user = await createAdmin();
       const invite = await Invite.create({
         email: 'delete@platform.com',
       });

@@ -1,6 +1,6 @@
 const Router = require('@koa/router');
 const { fetchByParam } = require('../utils/middleware/params');
-const { validateBody } = require('../utils/middleware/validate');
+const { validateBody, validateDelete } = require('../utils/middleware/validate');
 const { authenticate } = require('../utils/middleware/authenticate');
 const { Shop, AuditEntry } = require('../models');
 const { exportValidation, csvExport } = require('../utils/csv');
@@ -72,7 +72,7 @@ router
       data: shop,
     };
   })
-  .delete('/:id', async (ctx) => {
+  .delete('/:id', validateDelete(Shop.getDeleteValidation()), async (ctx) => {
     const { shop } = ctx.state;
     try {
       await shop.delete();

@@ -1,4 +1,4 @@
-const { request, createUser, createAdminUser } = require('../../utils/testing');
+const { request, createUser, createAdmin } = require('../../utils/testing');
 const { mockTime, unmockTime, advanceTime } = require('../../utils/testing/time');
 const { User, Shop, AuditEntry } = require('../../models');
 const { importFixtures } = require('../../utils/fixtures');
@@ -64,7 +64,7 @@ describe('/1/users', () => {
 
   describe('POST /', () => {
     it('should be able to create user', async () => {
-      const admin = await createAdminUser();
+      const admin = await createAdmin();
       const response = await request(
         'POST',
         '/1/users',
@@ -103,7 +103,7 @@ describe('/1/users', () => {
 
   describe('GET /:user', () => {
     it('should be able to access user', async () => {
-      const admin = await createAdminUser();
+      const admin = await createAdmin();
       const user1 = await createUser({ firstName: 'Neo', lastName: 'One' });
       const response = await request('GET', `/1/users/${user1.id}`, {}, { user: admin });
       expect(response.status).toBe(200);
@@ -121,7 +121,7 @@ describe('/1/users', () => {
   describe('POST /:user/autheticate', () => {
     it('should be able to authenticate as another user', async () => {
       let response;
-      let superAdmin = await createAdminUser({
+      let superAdmin = await createAdmin({
         firstName: 'Joe',
         lastName: 'Admin',
       });
@@ -170,7 +170,7 @@ describe('/1/users', () => {
 
       let response;
 
-      let superAdmin = await createAdminUser({
+      let superAdmin = await createAdmin({
         firstName: 'Joe',
         lastName: 'Admin',
       });
@@ -206,8 +206,8 @@ describe('/1/users', () => {
     });
 
     it('dont allow an superAdmin to authenticate as another admin', async () => {
-      const superAdmin = await createAdminUser();
-      const user = await createAdminUser();
+      const superAdmin = await createAdmin();
+      const user = await createAdmin();
       const response = await request('POST', `/1/users/${user.id}/authenticate`, {}, { user: superAdmin });
       expect(response.status).toBe(403);
       expect(response.body.error.message).toBe('You are not allowed to authenticate as this user');
@@ -223,7 +223,7 @@ describe('/1/users', () => {
 
   describe('POST /search', () => {
     it('should list out users', async () => {
-      const admin = await createAdminUser();
+      const admin = await createAdmin();
       const user1 = await createUser({ firstName: 'Neo', lastName: 'One' });
       const user2 = await createUser({ firstName: 'Riker', lastName: 'Two' });
 
@@ -237,7 +237,7 @@ describe('/1/users', () => {
     });
 
     it('should be able to search by ids', async () => {
-      const admin = await createAdminUser();
+      const admin = await createAdmin();
 
       const user1 = await createUser({ firstName: 'Neo', lastName: 'One' });
       const user2 = await createUser({ firstName: 'Riker', lastName: 'Two' });
@@ -269,7 +269,7 @@ describe('/1/users', () => {
 
   describe('PATCH /:user', () => {
     it('admins should be able to update user', async () => {
-      const admin = await createAdminUser();
+      const admin = await createAdmin();
       const user1 = await createUser({ firstName: 'Old', lastName: 'Name' });
       const response = await request(
         'PATCH',
@@ -292,7 +292,7 @@ describe('/1/users', () => {
     });
 
     it('should be able to update user roles', async () => {
-      const admin = await createAdminUser();
+      const admin = await createAdmin();
       const user1 = await createUser({ firstName: 'New', lastName: 'Name' });
       const response = await request(
         'PATCH',
@@ -318,7 +318,7 @@ describe('/1/users', () => {
     });
 
     it('should strip out reserved fields', async () => {
-      const admin = await createAdminUser();
+      const admin = await createAdmin();
       const user1 = await createUser({ firstName: 'New', lastName: 'Name' });
       const response = await request(
         'PATCH',
@@ -340,7 +340,7 @@ describe('/1/users', () => {
     });
 
     it('should strip out password', async () => {
-      const admin = await createAdminUser();
+      const admin = await createAdmin();
       let user = await createUser({ name: 'new name' });
       const response = await request(
         'PATCH',
@@ -361,7 +361,7 @@ describe('/1/users', () => {
 
   describe('DELETE /:user', () => {
     it('should be able to delete user', async () => {
-      const admin = await createAdminUser();
+      const admin = await createAdmin();
       const user1 = await createUser({ firstName: 'Neo', lastName: 'One' });
       const response = await request('DELETE', `/1/users/${user1.id}`, {}, { user: admin });
       expect(response.status).toBe(204);
@@ -378,7 +378,7 @@ describe('/1/users', () => {
 
     it('should throw an error when referenced by a shop', async () => {
       const user = await createUser();
-      const admin = await createAdminUser();
+      const admin = await createAdmin();
 
       await Shop.create({
         name: 'My Shop',
@@ -392,7 +392,7 @@ describe('/1/users', () => {
 
     it('should not error for allowed refernces', async () => {
       const user = await createUser();
-      const admin = await createAdminUser();
+      const admin = await createAdmin();
 
       await AuditEntry.create({
         activity: 'fake ',

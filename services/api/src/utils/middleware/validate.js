@@ -40,6 +40,21 @@ function validateQuery(arg) {
   });
 }
 
+function validateDelete(schema) {
+  return wrapSchema(schema, 'delete', async (ctx, next) => {
+    try {
+      const { authUser } = ctx.state;
+      await schema.validate(null, {
+        ...ctx.state,
+        scopes: authUser?.getScopes(),
+      });
+    } catch (error) {
+      throwError(ctx, error);
+    }
+    return next();
+  });
+}
+
 function validateFiles() {
   const schema = yd
     .object({
@@ -100,4 +115,5 @@ module.exports = {
   validateBody,
   validateQuery,
   validateFiles,
+  validateDelete,
 };
