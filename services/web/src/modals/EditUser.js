@@ -123,10 +123,10 @@ export default class EditUser extends React.Component {
                 onChange={(e, { value }) => this.setField('roles', value)}
               />
               <Form.Checkbox
-                checked={user.isDeveloper || false}
-                label="Is Developer"
+                checked={user.isTester || false}
+                label="Is Tester"
                 onChange={(e, { checked }) =>
-                  this.setField('isDeveloper', checked)
+                  this.setField('isTester', checked)
                 }
               />
             </Form>

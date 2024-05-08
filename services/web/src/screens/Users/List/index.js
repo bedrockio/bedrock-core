@@ -19,7 +19,6 @@ import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 import { formatRoles } from 'utils/permissions';
 
-
 import Actions from '../Actions';
 
 @screen
@@ -76,8 +75,8 @@ export default class UserList extends React.Component {
             .join(', ');
         },
       },
-      isDeveloper: {
-        label: 'Is Developer',
+      isTester: {
+        label: 'Is Tester',
         type: 'boolean',
       },
       createdAt: {
@@ -119,10 +118,7 @@ export default class UserList extends React.Component {
                       onDataNeeded={this.fetchRoles}
                     />
 
-                    <SearchFilters.Checkbox
-                      label="Is Developer"
-                      name="isDeveloper"
-                    />
+                    <SearchFilters.Checkbox label="Is Tester" name="isTester" />
 
                     <SearchFilters.DateRange
                       label="Created At"

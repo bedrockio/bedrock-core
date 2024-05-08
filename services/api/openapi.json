@@ -939,7 +939,7 @@
                       }
                     ]
                   },
-                  "isDeveloper": {
+                  "isTester": {
                     "type": "boolean"
                   },
                   "createdAt": {
@@ -1135,37 +1135,116 @@
                   "phone": {
                     "format": "phone",
                     "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
-                    "type": "string",
-                    "x-generated": true
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "enum": [
+                          null
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          ""
+                        ]
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ]
                   },
                   "emailVerified": {
-                    "type": "boolean"
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "enum": [
+                          null
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          ""
+                        ]
+                      },
+                      {
+                        "type": "boolean"
+                      }
+                    ]
                   },
                   "phoneVerified": {
-                    "type": "boolean"
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "enum": [
+                          null
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          ""
+                        ]
+                      },
+                      {
+                        "type": "boolean"
+                      }
+                    ]
                   },
                   "roles": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "role": {
-                          "required": true,
-                          "type": "string"
-                        },
-                        "scope": {
-                          "required": true,
-                          "type": "string",
-                          "enum": [
-                            "global",
-                            "organization"
-                          ]
-                        },
-                        "scopeRef": {
-                          "$ref": "#/components/schemas/Reference"
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "enum": [
+                          null
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          ""
+                        ]
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "role": {
+                              "required": true,
+                              "type": "string"
+                            },
+                            "scope": {
+                              "required": true,
+                              "type": "string",
+                              "enum": [
+                                "global",
+                                "organization"
+                              ]
+                            },
+                            "scopeRef": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "enum": [
+                                    null
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    ""
+                                  ]
+                                },
+                                {
+                                  "$ref": "#/components/schemas/Reference"
+                                }
+                              ]
+                            }
+                          }
                         }
                       }
-                    }
+                    ]
                   },
                   "theme": {
                     "type": "string",
@@ -1175,8 +1254,24 @@
                       "system"
                     ]
                   },
-                  "isDeveloper": {
-                    "type": "boolean"
+                  "isTester": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "enum": [
+                          null
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          ""
+                        ]
+                      },
+                      {
+                        "type": "boolean"
+                      }
+                    ]
                   }
                 }
               }
@@ -1289,7 +1384,7 @@
                       "system"
                     ]
                   },
-                  "isDeveloper": {
+                  "isTester": {
                     "type": "boolean"
                   },
                   "password": {
@@ -1398,31 +1493,159 @@
                     "type": "string"
                   },
                   "description": {
-                    "type": "string"
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "enum": [
+                          null
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          ""
+                        ]
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ]
                   },
                   "isFeatured": {
-                    "type": "boolean"
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "enum": [
+                          null
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          ""
+                        ]
+                      },
+                      {
+                        "type": "boolean"
+                      }
+                    ]
                   },
                   "priceUsd": {
-                    "type": "number"
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "enum": [
+                          null
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          ""
+                        ]
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ]
                   },
                   "expiresAt": {
-                    "$ref": "#/components/schemas/DateTime"
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "enum": [
+                          null
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          ""
+                        ]
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      }
+                    ]
                   },
                   "sellingPoints": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "enum": [
+                          null
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          ""
+                        ]
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "oneOf": [
+                            {
+                              "type": "object",
+                              "enum": [
+                                null
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                ""
+                              ]
+                            },
+                            {
+                              "type": "string"
+                            }
+                          ]
+                        }
+                      }
+                    ]
                   },
                   "shop": {
                     "$ref": "#/components/schemas/Reference"
                   },
                   "images": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/Reference"
-                    }
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "enum": [
+                          null
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          ""
+                        ]
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "oneOf": [
+                            {
+                              "type": "object",
+                              "enum": [
+                                null
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                ""
+                              ]
+                            },
+                            {
+                              "$ref": "#/components/schemas/Reference"
+                            }
+                          ]
+                        }
+                      }
+                    ]
                   }
                 }
               }
@@ -1835,58 +2058,274 @@
                     "type": "string"
                   },
                   "description": {
-                    "type": "string"
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "enum": [
+                          null
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          ""
+                        ]
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ]
                   },
                   "images": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/Reference"
-                    }
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "enum": [
+                          null
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          ""
+                        ]
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "oneOf": [
+                            {
+                              "type": "object",
+                              "enum": [
+                                null
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                ""
+                              ]
+                            },
+                            {
+                              "$ref": "#/components/schemas/Reference"
+                            }
+                          ]
+                        }
+                      }
+                    ]
                   },
                   "categories": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/Reference"
-                    }
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "enum": [
+                          null
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          ""
+                        ]
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "oneOf": [
+                            {
+                              "type": "object",
+                              "enum": [
+                                null
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                ""
+                              ]
+                            },
+                            {
+                              "$ref": "#/components/schemas/Reference"
+                            }
+                          ]
+                        }
+                      }
+                    ]
                   },
                   "country": {
-                    "type": "string"
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "enum": [
+                          null
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          ""
+                        ]
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ]
                   },
                   "address": {
                     "type": "object",
                     "properties": {
                       "line1": {
-                        "type": "string"
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "enum": [
+                              null
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
                       },
                       "line2": {
-                        "type": "string"
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "enum": [
+                              null
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
                       },
                       "city": {
-                        "type": "string"
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "enum": [
+                              null
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
                       },
                       "postalCode": {
-                        "type": "string"
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "enum": [
+                              null
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
                       },
                       "region": {
-                        "type": "string"
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "enum": [
+                              null
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
                       },
                       "countryCode": {
-                        "type": "string"
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "enum": [
+                              null
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              ""
+                            ]
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
                       },
                       "geometry": {
                         "type": "object",
                         "properties": {
                           "type": {
-                            "type": "string"
-                          },
-                          "coordinates": {
-                            "type": "array",
                             "oneOf": [
                               {
-                                "type": "number"
+                                "type": "object",
+                                "enum": [
+                                  null
+                                ]
                               },
                               {
-                                "type": "number"
+                                "type": "string",
+                                "enum": [
+                                  ""
+                                ]
+                              },
+                              {
+                                "type": "string"
+                              }
+                            ]
+                          },
+                          "coordinates": {
+                            "oneOf": [
+                              {
+                                "type": "object",
+                                "enum": [
+                                  null
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  ""
+                                ]
+                              },
+                              {
+                                "type": "array"
                               }
                             ]
                           }
@@ -1895,7 +2334,23 @@
                     }
                   },
                   "owner": {
-                    "$ref": "#/components/schemas/Reference"
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "enum": [
+                          null
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          ""
+                        ]
+                      },
+                      {
+                        "$ref": "#/components/schemas/Reference"
+                      }
+                    ]
                   }
                 }
               }
@@ -3947,7 +4402,23 @@
                     "type": "string"
                   },
                   "description": {
-                    "type": "string"
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "enum": [
+                          null
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          ""
+                        ]
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ]
                   }
                 }
               }
@@ -4090,7 +4561,7 @@
               "system"
             ]
           },
-          "isDeveloper": {
+          "isTester": {
             "type": "boolean"
           },
           "createdAt": {

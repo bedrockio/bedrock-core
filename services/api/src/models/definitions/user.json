@@ -56,7 +56,7 @@
         "system"
       ]
     },
-    "isDeveloper": {
+    "isTester": {
       "type": "Boolean",
       "default": false
     },
