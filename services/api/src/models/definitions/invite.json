@@ -6,6 +6,9 @@
       "lowercase": true,
       "required": true
     },
+    "role": {
+      "type": "String"
+    },
     "status": {
       "type": "String",
       "emum": [

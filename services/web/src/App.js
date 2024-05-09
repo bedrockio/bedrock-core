@@ -14,12 +14,7 @@ import Applications from 'screens/Applications';
 import AuditTrail from 'screens/AuditTrail';
 import Invites from 'screens/Invites';
 
-import Login from 'screens/Auth/Login/Password';
-import Signup from 'screens/Auth/Signup';
-import LoginCode from 'screens/Auth/Login/Code';
 import AcceptInvite from 'screens/Auth/AcceptInvite';
-import ForgotPassword from 'screens/Auth/ForgotPassword';
-import ResetPassword from 'screens/Auth/ResetPassword';
 import Logout from 'screens/Auth/Logout';
 
 const App = () => {
@@ -34,12 +29,7 @@ const App = () => {
       <Protected path="/users/:id?" allowed={Users} />
       <Protected path="/applications/:id?" allowed={Applications} />
       <Protected path="/audit-trail/:id?" allowed={AuditTrail} />
-      <Route path="/login" component={Login} exact />
-      <Route path="/signup" component={Signup} exact />
-      <Route path="/login/code" component={LoginCode} exact />
       <Route path="/accept-invite" component={AcceptInvite} exact />
-      <Route path="/forgot-password" component={ForgotPassword} exact />
-      <Route path="/reset-password" component={ResetPassword} exact />
       <Route path="/logout" component={Logout} exact />
       <Protected allowed={NotFound} />
     </Switch>

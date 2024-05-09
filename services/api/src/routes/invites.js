@@ -60,9 +60,18 @@ router
           },
         };
       } else {
+        const { email, role } = invite;
         const user = new User({
           ...ctx.request.body,
-          email: invite.email,
+          email,
+          ...(role && {
+            roles: [
+              {
+                scope: 'global',
+                role,
+              },
+            ],
+          }),
         });
 
         const token = await register(user, ctx);
@@ -90,10 +99,11 @@ router
     '/',
     validateBody({
       emails: yd.array(yd.string().email()).required(),
+      role: yd.string(),
     }),
     async (ctx) => {
       const { authUser } = ctx.state;
-      const { emails } = ctx.request.body;
+      const { emails, role } = ctx.request.body;
 
       for (let email of [...new Set(emails)]) {
         if ((await User.countDocuments({ email, deleted: false })) > 0) {
@@ -104,7 +114,13 @@ router
             email,
             status: 'invited',
           },
-          { status: 'invited', deleted: false, email, $unset: { deletedAt: 1 } },
+          {
+            status: 'invited',
+            deleted: false,
+            email,
+            role,
+            $unset: { deletedAt: 1 },
+          },
           {
             new: true,
             upsert: true,

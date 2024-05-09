@@ -1,11 +1,10 @@
 import React, { useContext } from 'react';
-import { omit } from 'lodash';
+import { merge, omit } from 'lodash';
 import { withRouter } from 'react-router-dom';
 
 import { request, hasToken, setToken } from 'utils/api';
 import { trackSession } from 'utils/analytics';
 import { captureError } from 'utils/sentry';
-import { merge } from 'utils/object';
 import { wrapContext } from 'utils/hoc';
 import { localStorage } from 'utils/storage';
 
@@ -107,7 +106,7 @@ export class SessionProvider extends React.PureComponent {
 
   updateUser = (data) => {
     this.setState({
-      user: merge(this.state.user, data),
+      user: merge({}, this.state.user, data),
     });
   };
 
@@ -119,6 +118,30 @@ export class SessionProvider extends React.PureComponent {
   };
 
   // Authentication
+
+  login = async (body) => {
+    this.setState({
+      isLoggingIn: true,
+    });
+    try {
+      const { data } = await request({
+        method: 'POST',
+        path: '/1/auth/password/login',
+        body,
+      });
+      const redirect = await this.authenticate(data.token);
+      this.setState({
+        isLoggingIn: false,
+      });
+      return redirect;
+    } catch (error) {
+      this.setState({
+        error,
+        isLoggingIn: false,
+      });
+      throw error;
+    }
+  };
 
   logout = async (redirect) => {
     if (redirect) {
@@ -137,7 +160,7 @@ export class SessionProvider extends React.PureComponent {
       setToken(null);
     }
     await this.bootstrap();
-    this.props.history.push('/');
+    this.props.history.push(this.popRedirect() || '/');
   };
 
   authenticate = async (token) => {
@@ -161,7 +184,8 @@ export class SessionProvider extends React.PureComponent {
   };
 
   isLoggedIn = () => {
-    return hasToken();
+    const { isLoggingIn } = this.state;
+    return hasToken() && !isLoggingIn;
   };
 
   // Organizations
@@ -202,7 +226,7 @@ export class SessionProvider extends React.PureComponent {
 
   setStored = (key, data) => {
     this.updateStored(
-      merge(this.state.stored, {
+      merge({}, this.state.stored, {
         [key]: data,
       })
     );

@@ -10,7 +10,7 @@ import { HelmetProvider } from 'react-helmet-async';
 // Icons
 import { Icon } from 'semantic';
 
-import { SessionProvider, ThemeProvider } from 'stores';
+import { SessionProvider, ThemeProvider, useSession } from 'stores';
 
 import SessionSwitch from 'helpers/SessionSwitch';
 import 'utils/sentry';
@@ -27,7 +27,20 @@ Icon.useSet(regularIcons, 'regular');
 
 import LoadingScreen from 'screens/Loading';
 
-// Scrolling
+import { hasAccess } from 'utils/user';
+
+const App = React.lazy(() => import('./App'));
+const AuthApp = React.lazy(() => import('./auth/App'));
+const DocsApp = React.lazy(() => import('./docs/App'));
+
+function AppSwitch() {
+  const { user } = useSession();
+  if (hasAccess(user)) {
+    return <App />;
+  } else {
+    return <AuthApp />;
+  }
+}
 
 const Wrapper = () => (
   <BrowserRouter>
@@ -38,14 +51,8 @@ const Wrapper = () => (
             <SessionSwitch>
               <Suspense fallback={<LoadingScreen />}>
                 <Switch>
-                  <Route
-                    path="/docs"
-                    component={React.lazy(() => import('./docs/App'))}
-                  />
-                  <Route
-                    path="/"
-                    component={React.lazy(() => import('./App'))}
-                  />
+                  <Route path="/docs" component={DocsApp} />
+                  <Route path="/" component={AppSwitch} />
                 </Switch>
               </Suspense>
             </SessionSwitch>
