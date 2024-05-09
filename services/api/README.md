@@ -392,6 +392,8 @@ support OTP as a secondary MFA method.
 
 Note that OTP by SMS requires a Twilio account and OTP by Email requires a Postmark account.
 
+Note also that users flagged as `isTester` will always receive an OTP of `111111`.
+
 ### Passkey
 
 Passkey authentication is enabled by changing the login entrypoint in `web/src/App.js` to `Passkey`. Note that passkeys

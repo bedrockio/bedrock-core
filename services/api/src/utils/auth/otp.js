@@ -4,13 +4,16 @@ const { clearAuthenticators, getRequiredAuthenticator } = require('./authenticat
 
 const generateCode = customAlphabet('1234567890', 6);
 
+// Hard coded for testers.
+const TESTER_CODE = '111111';
+
 // 1 hour
 const EXPIRE = 60 * 60 * 1000;
 
 async function createOtp(user) {
   clearAuthenticators(user, 'otp');
 
-  const code = generateCode();
+  const code = user.isTester ? TESTER_CODE : generateCode();
 
   user.authenticators.push({
     type: 'otp',

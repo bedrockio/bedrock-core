@@ -84,6 +84,25 @@ describe('/1/auth/otp', () => {
       expect(authenticators.length).toBe(1);
       expect(authenticators[0].code).not.toBe(oldCode);
     });
+
+    it('should be a test code if the user is a tester', async () => {
+      let user = await createUser({
+        email: 'tester@foo.com',
+        isTester: true,
+      });
+      const response = await request('POST', '/1/auth/otp/send-code', {
+        email: 'tester@foo.com',
+      });
+      expect(response.status).toBe(204);
+
+      user = await User.findById(user.id);
+      expect(user.authenticators).toMatchObject([
+        {
+          type: 'otp',
+          code: '111111',
+        },
+      ]);
+    });
   });
 
   describe('POST /login', () => {
