@@ -1,14 +1,29 @@
 const compose = require('koa-compose');
 const { koaBody } = require('koa-body');
 
-module.exports = function () {
+const unparsed = Symbol.for('unparsedBody');
+
+function composeMiddlewares() {
   return compose([
     koaBody({
       multipart: true,
+      includeUnparsed: true,
     }),
+    includeRawBody(),
     parseMultipartBody(),
   ]);
-};
+}
+
+// Allow koa body to parse the body first, then pull
+// out a reference to the raw body and add it to request
+// as it may be lost if other middleware (such as validate)
+// overwrite the body.
+function includeRawBody() {
+  return async (ctx, next) => {
+    ctx.request.rawBody = ctx.request.body[unparsed];
+    return next();
+  };
+}
 
 // Multipart bodies are assumed to be simple key/value pairs.
 // This middleware parses each field as JSON to allow the client
@@ -23,3 +38,5 @@ function parseMultipartBody() {
     return next();
   };
 }
+
+module.exports = composeMiddlewares;
