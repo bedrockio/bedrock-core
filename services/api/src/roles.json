@@ -10,7 +10,8 @@
       "shops": "read-write",
       "products": "read-write",
       "organizations": "read-write",
-      "applications": "read-write"
+      "applications": "read-write",
+      "uploads": "read-write"
     },
     "allowAuthenticationOnRoles": [
       "admin",
@@ -27,7 +28,8 @@
       "users": "read-write",
       "shops": "read-write",
       "products": "read-write",
-      "applications": "read-write"
+      "applications": "read-write",
+      "uploads": "read-write"
     }
   },
   "viewer": {
@@ -40,7 +42,8 @@
       "users": "read",
       "shops": "read",
       "products": "read",
-      "applications": "read"
+      "applications": "read",
+      "uploads": "read"
     }
   }
 }

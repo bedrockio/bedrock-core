@@ -28,14 +28,15 @@ async function createAdmin(attributes) {
   });
 }
 
-async function createUpload(owner) {
+async function createUpload(attributes) {
   return await Upload.create({
     filename: 'test.png',
     rawUrl: 'test.png',
     hash: 'test',
     storageType: 'local',
     mimeType: 'image/png',
-    owner: owner || new mongoose.Types.ObjectId(),
+    owner: new mongoose.Types.ObjectId(),
+    ...attributes,
   });
 }
 

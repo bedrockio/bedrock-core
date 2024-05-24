@@ -4,6 +4,12 @@
       "type": "String",
       "required": true
     },
+    "hash": {
+      "type": "String"
+    },
+    "rawUrl": {
+      "type": "String"
+    },
     "mimeType": {
       "type": "String",
       "required": true
@@ -12,21 +18,14 @@
       "type": "String",
       "required": true
     },
-    "rawUrl": {
-      "type": "String",
-      "required": true
-    },
-    "hash": {
-      "type": "String",
-      "required": true
+    "private": {
+      "type": "Boolean",
+      "default": false
     },
     "owner": {
       "type": "ObjectId",
       "ref": "User",
       "required": true
-    },
-    "thumbnailUrl": {
-      "type": "String"
     }
   }
 }

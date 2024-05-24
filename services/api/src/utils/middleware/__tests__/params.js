@@ -28,7 +28,9 @@ describe('fetchByParam', () => {
 
   it('should allow include in query', async () => {
     const user = await createUser();
-    const upload = await createUpload(user);
+    const upload = await createUpload({
+      owner: user,
+    });
     const fn = fetchByParam(Upload);
     const ctx = context();
     ctx.query = {
@@ -41,7 +43,9 @@ describe('fetchByParam', () => {
   describe('hasAccess', () => {
     it('should reject access', async () => {
       const user = await createUser();
-      const upload = await createUpload(user);
+      const upload = await createUpload({
+        owner: user,
+      });
       const fn = fetchByParam(Upload, {
         hasAccess: () => false,
       });
@@ -54,7 +58,9 @@ describe('fetchByParam', () => {
       let ctx;
       const user1 = await createUser();
       const user2 = await createUser();
-      const upload = await createUpload(user1);
+      const upload = await createUpload({
+        owner: user1,
+      });
       const fn = fetchByParam(Upload, {
         hasAccess: async (ctx, doc) => {
           if (ctx.method === 'GET') {
