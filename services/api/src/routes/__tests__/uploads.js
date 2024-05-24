@@ -41,7 +41,7 @@ describe('/1/uploads', () => {
       expect(response.body.data.filename).toBe('test.png');
     });
 
-    it('should not be able to access private upload as viewer', async () => {
+    it('should be able to access private upload as viewer', async () => {
       const manager = await importFixtures('users/jack');
       const upload = await createUpload({
         private: true,
@@ -54,7 +54,8 @@ describe('/1/uploads', () => {
           user: manager,
         }
       );
-      expect(response.status).toBe(401);
+      expect(response.status).toBe(200);
+      expect(response.body.data.filename).toBe('test.png');
     });
 
     it('should not allow access private upload when unauthenticated', async () => {
