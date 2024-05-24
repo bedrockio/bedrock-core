@@ -14,7 +14,6 @@ async function verifyPassword(user, password) {
     throw Error('Incorrect password.');
   }
   authenticator.verifiedAt = new Date();
-  user.loginAttempts = 0;
 }
 
 // To allow OTP login, passwords may be changed to optional.

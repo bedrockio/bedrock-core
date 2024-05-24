@@ -14,6 +14,7 @@ const LOGIN_THROTTLE = {
 async function login(user, ctx) {
   const token = createAuthToken(user, ctx);
   removeExpiredTokens(user);
+  user.loginAttempts = 0;
   await user.save();
 
   await AuditEntry.append('Logged In', {
