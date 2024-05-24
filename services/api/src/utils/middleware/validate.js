@@ -96,18 +96,18 @@ function throwError(ctx, error) {
 }
 
 function isPermissionsError(error) {
-  if (error.details) {
+  if (error.details?.length) {
     return error.details.every(isPermissionsError);
-  } else if (error.original) {
-    return error.original instanceof PermissionsError;
+  } else {
+    return error instanceof PermissionsError;
   }
 }
 
 function isImplementationError(error) {
-  if (error.details) {
+  if (error.details?.length) {
     return error.details.some(isImplementationError);
-  } else if (error.original) {
-    return error.original instanceof ImplementationError;
+  } else {
+    return error instanceof ImplementationError;
   }
 }
 

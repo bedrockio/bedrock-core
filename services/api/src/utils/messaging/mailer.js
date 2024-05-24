@@ -13,6 +13,7 @@ const APP_NAME = config.get('APP_NAME');
 const POSTMARK_FROM = config.get('POSTMARK_FROM');
 const POSTMARK_API_KEY = config.get('POSTMARK_API_KEY');
 const POSTMARK_DEV_EMAIL = config.get('POSTMARK_DEV_EMAIL');
+const POSTMARK_WEBHOOK_KEY = config.get('POSTMARK_WEBHOOK_KEY');
 
 const TEMPLATE_DIR = path.join(__dirname, '../../emails');
 
@@ -51,28 +52,25 @@ async function sendMail(options) {
     text,
     body,
     subject,
+    template,
   });
 }
 
 async function dispatchMail(options) {
-  let { to, subject, html, text, body } = options;
+  let { to, subject, html, text, body, template } = options;
   if (ENV_NAME === 'development') {
     if (POSTMARK_DEV_EMAIL) {
       to = POSTMARK_DEV_EMAIL;
     } else {
       logger.info(`
-
----------- Email Sent -------------
-To: ${to}
-Body:
-
-${text}
-
---------------------------
-
-      `);
-      return;
+  ---------- Email Sent -------------
+  To: ${to}
+  Body:
+  ${text}
+  --------------------------
+                `);
     }
+    return;
   }
 
   logger.debug(`Sending email to ${to}`);
@@ -85,6 +83,7 @@ ${text}
       Subject: subject,
       TextBody: text,
       HtmlBody: html,
+      template,
       body,
     });
   } catch (error) {
@@ -99,6 +98,7 @@ marked.use({
   walkTokens: (token) => {
     if (token.type === 'paragraph') {
       const tokens = token.tokens || [];
+
       if (tokens.length === 1 && tokens[0].type === 'strong') {
         const strong = tokens[0];
         const strongTokens = strong.tokens || [];
@@ -154,6 +154,16 @@ function convertHtml(str) {
   });
 }
 
+function validateWebhookKey(ctx) {
+  const key = ctx.request.get('x-pm-webhook-key');
+  if (key !== POSTMARK_WEBHOOK_KEY) {
+    logger.warn(`Bad webhook key "${key}".`);
+    logger.warn(`Configured key is ${POSTMARK_WEBHOOK_KEY}`);
+    throw new Error('Invalid Postmark webhook key.');
+  }
+}
+
 module.exports = {
   sendMail,
+  validateWebhookKey,
 };

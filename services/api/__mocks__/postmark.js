@@ -5,7 +5,17 @@ beforeEach(() => {
 });
 
 function assertMailSent(options) {
-  expect(sentMessages).toEqual(expect.arrayContaining([expect.objectContaining(options)]));
+  const { body, ...rest } = options;
+  expect(sentMessages).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({
+        ...rest,
+        ...(body && {
+          body: expect.stringContaining(body),
+        }),
+      }),
+    ])
+  );
 }
 
 function assertMailCount(count) {
@@ -18,9 +28,10 @@ class ServerClient {
       to: normalizeAddress(email.To),
       from: normalizeAddress(email.From),
       subject: email.Subject,
-      body: email.body.trim(),
       text: email.TextBody.trim(),
       html: email.HtmlBody.trim(),
+      body: email.body,
+      template: email.template,
     });
   }
 }
