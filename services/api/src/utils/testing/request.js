@@ -1,5 +1,5 @@
 const request = require('supertest'); //eslint-disable-line
-const app = require('../../app');
+const rootApp = require('../../app');
 const qs = require('querystring');
 const { Blob } = require('node:buffer');
 const { getAuthTokenPayload, signAuthToken } = require('../auth/tokens');
@@ -19,6 +19,8 @@ module.exports = async function handleRequest(httpMethod, url, bodyOrQuery = {},
   if (options.organization) {
     headers.organization = options.organization.id;
   }
+
+  const app = options.app || rootApp;
 
   let promise;
 
