@@ -2,32 +2,23 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form } from 'semantic';
 
-import { withSearchProvider } from '../Context';
+import SearchContext from '../Context';
 
-@withSearchProvider
 export default class SearchFilter extends React.Component {
-  state = {
-    value: this.props.context.filters[this.props.name],
-  };
+  static contextType = SearchContext;
 
-  componentDidUpdate(lastProps) {
-    if (
-      lastProps.context.filters[this.props.name] !==
-      this.props.context.filters[this.props.name]
-    ) {
-      this.setState({
-        value: this.props.context.filters[this.props.name],
-      });
-    }
+  getValue() {
+    const { name } = this.props;
+    const { filters } = this.context;
+    return filters[name] || '';
   }
 
   render() {
-    const { loading, onFilterChange } = this.props.context;
-    const { name, context, ...rest } = this.props;
-    const { value } = this.state;
+    const { loading, onFilterChange } = this.context;
 
     return (
       <Form.Input
+        {...this.props}
         fluid
         loading={loading}
         disabled={loading}
@@ -35,32 +26,23 @@ export default class SearchFilter extends React.Component {
         style={{ minWidth: '220px' }}
         placeholder="Search by keyword"
         icon={this.renderIcon()}
-        value={this.state.value || ''}
-        onChange={(e, { value }) => this.setState({ value })}
-        onKeyPress={(event) => {
-          if (event.key === 'Enter') {
-            this.setState({ value: value }, () => {
-              onFilterChange({ value, name });
-            });
-          }
+        value={this.getValue()}
+        onChange={(evt, data) => {
+          onFilterChange(data);
         }}
-        {...rest}
       />
     );
   }
 
   renderIcon() {
-    const { name, context } = this.props;
-    const value = this.state.value;
+    const { name } = this.props;
+    const value = this.getValue();
     return {
       name: value ? 'close' : 'magnifying-glass',
       link: true,
       onClick: (evt) => {
         if (value) {
-          this.setState({
-            value: '',
-          });
-          context.onFilterChange({ name, value: '' });
+          this.context.onFilterChange({ name, value: '' });
         }
         evt.target.closest('.input').querySelector('input').focus();
       },
