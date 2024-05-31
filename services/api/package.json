@@ -9,6 +9,8 @@
   "scripts": {
     "start": "node --watch src/index.js",
     "debug": "MONGO_DEBUG=true yarn start",
+    "staging": "source .env.staging && node --watch src/index.js",
+    "production": "source .env.production && node --watch src/index.js",
     "start:production": "node src/index",
     "lint": "eslint",
     "test": "jest",
