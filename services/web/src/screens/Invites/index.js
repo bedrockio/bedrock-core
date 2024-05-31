@@ -92,7 +92,7 @@ export default class Home extends React.Component {
 
                   <Layout horizontal stackable center right>
                     <Search.Total />
-                    <SearchFilters.Search name="keyword" />
+                    <SearchFilters.Keyword />
                   </Layout>
                 </Layout>
               </Segment>

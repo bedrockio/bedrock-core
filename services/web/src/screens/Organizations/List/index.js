@@ -75,7 +75,7 @@ export default class OrganizationList extends React.Component {
                   </SearchFilters.Modal>
                   <Layout horizontal stackable center right>
                     <Search.Total />
-                    <SearchFilters.Search name="keyword" />
+                    <SearchFilters.Keyword />
                   </Layout>
                 </Layout>
               </Segment>

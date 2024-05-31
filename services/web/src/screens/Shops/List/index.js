@@ -121,7 +121,7 @@ export default class ShopList extends React.Component {
 
                   <Layout horizontal stackable center right>
                     <Search.Total />
-                    <SearchFilters.Search name="keyword" />
+                    <SearchFilters.Keyword />
                   </Layout>
                 </Layout>
               </Segment>

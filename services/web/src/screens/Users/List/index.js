@@ -128,10 +128,7 @@ export default class UserList extends React.Component {
 
                   <Layout horizontal stackable center right>
                     <Search.Total />
-                    <SearchFilters.Search
-                      placeholder="Enter name, email, phone, or user id"
-                      name="keyword"
-                    />
+                    <SearchFilters.Keyword placeholder="Enter name, email, phone, or user id" />
                   </Layout>
                 </Layout>
               </Segment>

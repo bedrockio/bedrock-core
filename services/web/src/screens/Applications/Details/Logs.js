@@ -104,13 +104,7 @@ export default class ApplicationLogs extends React.Component {
                   <Grid.Row>
                     <Grid.Column width={9}>
                       <Layout horizontal>
-                        <SearchFilters.Search
-                          style={{
-                            width: '300px',
-                          }}
-                          name="keyword"
-                          placeholder="Filter by Path or Request Id"
-                        />
+                        <SearchFilters.Keyword placeholder="Filter by Path or Request Id" />
                         <Divider hidden vertical />
                         <SearchFilters.Dropdown
                           style={{

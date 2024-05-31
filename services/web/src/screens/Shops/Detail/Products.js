@@ -26,7 +26,6 @@ import { request } from 'utils/api';
 import { urlForUpload } from 'utils/uploads';
 // --- Generator: end
 
-
 import Actions from '../Actions';
 import Menu from './Menu';
 import DetailsContext from './Context';
@@ -59,7 +58,7 @@ export default class ShopProducts extends React.Component {
                 <Header as="h2">Products</Header>
                 <Layout horizontal right center>
                   <Search.Total />
-                  <SearchFilters.Search name="keyword" />
+                  <SearchFilters.Keyword />
                 </Layout>
               </Layout>
               <ErrorMessage error={error} />

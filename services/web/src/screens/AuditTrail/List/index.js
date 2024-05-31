@@ -194,10 +194,7 @@ export default class AuditTrailList extends React.Component {
                   </SearchFilters.Modal>
                   <Layout horizontal stackable center right>
                     <Search.Total />
-                    <SearchFilters.Search
-                      name="keyword"
-                      placeholder="Enter ObjectId"
-                    />
+                    <SearchFilters.Keyword placeholder="Enter ObjectId" />
                   </Layout>
                 </Layout>
               </Segment>
