@@ -1,9 +1,0 @@
-{
-  "users": {
-    "name": "Users",
-    "maximums": {
-      "global": "read-write",
-      "organization": "none"
-    }
-  }
-}

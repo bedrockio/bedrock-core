@@ -1,32 +1,46 @@
 const { userHasAccess } = require('./../permissions');
 
-function requirePermissions({ endpoint, permission, scope = 'global' }) {
-  if (!endpoint || !permission) {
-    throw new Error('Need endpoint and permission for requirePermissions');
+// This can be changed to "organization" to quickly enable
+// multi-tenancy. Be sure when doing this to lock down global
+// permissions such as searching all users, impersonation, etc.
+const DEFAULT_SCOPE = 'global';
+
+function requirePermissions(...args) {
+  const options = resolveOptions(args);
+  const { endpoint, permission, scope } = options;
+
+  if (!endpoint) {
+    throw new Error('Endpoint required.');
+  } else if (!permission) {
+    throw new Error('Permission required.');
   }
+
   const fn = async (ctx, next) => {
-    if (!ctx.state.authUser) {
-      return ctx.throw(401, `This endpoint requires authentication`);
+    const { authUser, organization } = ctx.state;
+
+    if (!authUser) {
+      return ctx.throw(401, 'This endpoint requires authentication.');
+    } else if (scope === 'organization' && !organization) {
+      return ctx.throw(500, 'Organization is required for permissions check.');
     }
-    const hasGlobalAccess = userHasAccess(ctx.state.authUser, { scope: 'global', endpoint, permission });
+
+    let allowed;
     if (scope === 'organization') {
-      if (hasGlobalAccess) return next();
-      const organization = ctx.state.organization;
-      const hasOrganizationAccess = userHasAccess(ctx.state.authUser, {
-        scope: 'organization',
-        endpoint,
-        permission,
+      allowed = userHasAccess(authUser, {
+        ...options,
         scopeRef: organization._id,
       });
-      if (hasOrganizationAccess) return next();
-    } else if (scope === 'global') {
-      if (hasGlobalAccess) return next();
+    } else {
+      allowed = userHasAccess(authUser, options);
     }
-    return ctx.throw(
-      403,
-      `You don't have the right permission for endpoint ${endpoint} (required permission: ${scope}/${permission})`
-    );
+
+    if (allowed) {
+      return next();
+    } else {
+      return ctx.throw(403, `You don't have the right permissions (required permission: ${endpoint}.${permission}).`);
+    }
   };
+
   // Allows docs to see the permissions on the middleware
   // layer to generate an OpenApi entry for it.
   fn.permissions = {
@@ -35,6 +49,25 @@ function requirePermissions({ endpoint, permission, scope = 'global' }) {
     scope,
   };
   return fn;
+}
+
+function resolveOptions(args) {
+  let options;
+  if (typeof args[0] === 'string') {
+    const [endpoint, permission] = args[0].split('.');
+    options = {
+      endpoint,
+      permission,
+      scope: args[1],
+    };
+  } else {
+    options = args[0];
+  }
+
+  return {
+    scope: DEFAULT_SCOPE,
+    ...options,
+  };
 }
 
 module.exports = {

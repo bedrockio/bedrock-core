@@ -1,95 +1,62 @@
-const { serializeDocument } = require('./serialize');
+const { isEqual } = require('@bedrockio/model');
 const roleDefinitions = require('../roles.json');
-const endpointDefinitions = require('../permissions.json');
-const endpoints = Object.keys(endpointDefinitions);
-const validScopes = ['global', 'organization'];
-const permissionValues = ['none', 'read', 'read-write'];
-const permissionDefaultValue = 'none';
+const { serializeDocument } = require('./serialize');
 
-function permissionWithinBounds(maximumValue, value) {
-  if (maximumValue === 'none' && value === 'none') return true;
-  if (maximumValue === 'read' && value === 'none') return true;
-  if (maximumValue === 'read' && value === 'read') return true;
-  if (maximumValue === 'read-write' && value === 'none') return true;
-  if (maximumValue === 'read-write' && value === 'read') return true;
-  if (maximumValue === 'read-write' && value === 'read-write') return true;
-  return false;
-}
+const VALID_SCOPES = ['global', 'organization'];
 
-function validatePermissions(scope, permissions) {
-  const endpoints = Object.keys(permissions);
-  for (const endpoint of endpoints) {
-    if (endpoint[0] === '$') continue;
-    const permissionValue = permissions[endpoint] || 'none';
-    const maximumPermissionValue = endpointDefinitions[endpoint].maximums[scope] || 'none';
-    if (!permissionWithinBounds(maximumPermissionValue, permissionValue)) {
-      throw new Error(
-        `Permission ${permissionValue} for endpoint ${endpoint} exceeds maximum permission ${maximumPermissionValue} in scope ${scope}`
-      );
-    }
+function userHasAccess(user, options) {
+  if (!user) {
+    return false;
   }
-  return true;
-}
 
-function createDefaultPermissions() {
-  const defaultPermissions = {};
-  for (const endpoint of endpoints) {
-    defaultPermissions[endpoint] = { type: String, enum: permissionValues, default: permissionDefaultValue };
+  const { endpoint, permission, scope = 'global', scopeRef } = options;
+  if (!endpoint) {
+    throw new Error('Expected endpoint (e.g. users)');
+  } else if (!permission) {
+    throw new Error('Expected permission (e.g. read)');
+  } else if (!scope) {
+    throw new Error('Expected scope (e.g. organization)');
+  } else if (!VALID_SCOPES.includes(scope)) {
+    throw new Error('Invalid scope');
   }
-  return defaultPermissions;
-}
 
-function createMaxPermissions(scope) {
-  const defaultPermissions = {};
-  for (const endpoint of endpoints) {
-    defaultPermissions[endpoint] = endpointDefinitions[endpoint].maximums[scope] || 'none';
-  }
-  return defaultPermissions;
-}
-
-function meetsLevel(permissionValue, requiredPermission) {
-  if (permissionValue === 'none') return false;
-  if (permissionValue === 'read-write' && requiredPermission === 'write') return true;
-  if (permissionValue === 'read-write' && requiredPermission === 'read') return true;
-  if (permissionValue === 'read' && requiredPermission === 'read') return true;
-  return false;
-}
-
-function userHasAccess(user, { endpoint, permission, scope, scopeRef }) {
-  if (!endpoint) throw new Error('Expected endpoint (e.g. users)');
-  if (!permission) throw new Error('Expected permission (e.g. read)');
-  if (!scope) throw new Error('Expected scope (e.g. organization)');
-  if (!validScopes.includes(scope)) throw new Error('Invalid scope');
-  const roles = [];
-  // Gather all relevant roles
-  for (const roleRef of user.roles) {
-    const roleId = roleRef.role.toString();
-    if (roleRef.scope === 'global') {
-      const role = roleDefinitions[roleId];
-      if (!role) continue;
-      roles.push(role);
-    } else {
-      if (roleRef.scope !== scope) continue;
-      // Only include scopeRef roles (e.g. matching organization ID) when not global scope
-      if (scope !== 'global') {
-        if (!scopeRef) continue;
-        if (!roleRef.scopeRef) continue;
-        const roleTargetId = roleRef.scopeRef.toString();
-        if (scopeRef.toString() !== roleTargetId) continue;
+  return user.roles.some((r) => {
+    if (scope === 'global' && r.scope !== 'global') {
+      return false;
+    } else if (scope === 'organization' && r.scope === 'organization') {
+      if (!isEqual(r.scopeRef, scopeRef)) {
+        return false;
       }
-      const role = roleDefinitions[roleId];
-      if (!role) continue;
-      roles.push(role);
+    }
+
+    const definition = roleDefinitions[r.role];
+    const allowed = definition?.permissions?.[endpoint];
+
+    if (!definition) {
+      throw new Error(`Unknown role "${r.role}".`);
+    }
+
+    if (Array.isArray(allowed)) {
+      return allowed.includes(permission);
+    } else if (allowed === permission || allowed === 'all') {
+      return true;
+    } else {
+      return false;
+    }
+  });
+}
+
+function validateUserRoles(user) {
+  const { roles = [] } = user;
+  for (let r of roles) {
+    const { role, scope } = r;
+    const definition = roleDefinitions[role];
+    if (!definition) {
+      throw new Error(`Unknown role "${role}".`);
+    } else if (!definition.allowScopes.includes(scope)) {
+      throw new Error(`Scope "${scope}" is not allowed on ${role}.`);
     }
   }
-  let hasAccess = false;
-  for (const role of roles) {
-    const permissionValue = role.permissions[endpoint] || 'none';
-    if (meetsLevel(permissionValue, permission)) {
-      hasAccess = true;
-    }
-  }
-  return hasAccess;
 }
 
 function expandRoles(user, ctx) {
@@ -106,15 +73,7 @@ function expandRoles(user, ctx) {
 }
 
 module.exports = {
-  validScopes,
-  endpointDefinitions,
-  endpoints,
-  permissionValues,
-  createDefaultPermissions,
-  createMaxPermissions,
-  meetsLevel,
-  permissionDefaultValue,
-  validatePermissions,
-  userHasAccess,
   expandRoles,
+  userHasAccess,
+  validateUserRoles,
 };

@@ -9,19 +9,19 @@ import SearchDropdown from 'components/SearchDropdown';
 
 import { request } from 'utils/api';
 import { userHasAccess } from 'utils/permissions';
+import { getOrganization, setOrganization } from 'utils/organization';
 
 @modal
 @withSession
 export default class OrganizationSelector extends React.Component {
   fetchOrganizations = async (body) => {
     const { user } = this.context;
-    if (
-      userHasAccess(user, {
-        endpoint: 'organizations',
-        permission: 'read',
-        scope: 'global',
-      })
-    ) {
+    const hasGlobal = userHasAccess(user, {
+      endpoint: 'organizations',
+      permission: 'read',
+      scope: 'global',
+    });
+    if (hasGlobal) {
       const { data } = await request({
         method: 'POST',
         path: '/1/organizations/search',
@@ -39,8 +39,8 @@ export default class OrganizationSelector extends React.Component {
   };
 
   onChange = (evt, { value }) => {
-    this.context.setOrganization(value);
     this.props.close();
+    setOrganization(value.id);
   };
 
   render() {
@@ -52,7 +52,7 @@ export default class OrganizationSelector extends React.Component {
             fluid
             clearable
             placeholder="Viewing all organizations"
-            value={this.context.getOrganization()}
+            value={getOrganization()}
             onDataNeeded={this.fetchOrganizations}
             onChange={this.onChange}
           />

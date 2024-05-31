@@ -5,13 +5,14 @@
       "global"
     ],
     "permissions": {
-      "auditEntries": "read",
-      "users": "read-write",
-      "shops": "read-write",
-      "products": "read-write",
-      "organizations": "read-write",
-      "applications": "read-write",
-      "uploads": "read-write"
+      "applications": "all",
+      "auditEntries": "all",
+      "organizations": "all",
+      "products": "all",
+      "roles": "all",
+      "shops": "all",
+      "users": "all",
+      "uploads": "all"
     },
     "allowAuthenticationOnRoles": [
       "admin",
@@ -21,28 +22,29 @@
   "admin": {
     "name": "Admin",
     "allowScopes": [
-      "organization"
+      "global"
     ],
     "permissions": {
       "auditEntries": "read",
-      "users": "read-write",
-      "shops": "read-write",
-      "products": "read-write",
-      "applications": "read-write",
-      "uploads": "read-write"
+      "applications": "all",
+      "products": "all",
+      "roles": "all",
+      "shops": "all",
+      "users": "all",
+      "uploads": "all"
     }
   },
   "viewer": {
     "name": "Viewer",
     "allowScopes": [
-      "organization"
+      "global"
     ],
     "permissions": {
-      "auditEntries": "read",
-      "users": "read",
-      "shops": "read",
-      "products": "read",
       "applications": "read",
+      "auditEntries": "read",
+      "products": "read",
+      "shops": "read",
+      "users": "read",
       "uploads": "read"
     }
   }
