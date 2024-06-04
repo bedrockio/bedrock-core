@@ -20,7 +20,9 @@ function composeMiddlewares() {
 // overwrite the body.
 function includeRawBody() {
   return async (ctx, next) => {
-    ctx.request.rawBody = ctx.request.body[unparsed];
+    if (ctx.request.body) {
+      ctx.request.rawBody = ctx.request.body[unparsed];
+    }
     return next();
   };
 }
