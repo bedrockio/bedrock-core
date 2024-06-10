@@ -7,7 +7,7 @@ import { withSession } from 'stores';
 import screen from 'helpers/screen';
 
 import { ExternalLink } from 'components/Link';
-import { Layout } from 'components';
+import Layout from 'components/Layout';
 import LogoTitle from 'components/LogoTitle';
 import Code from 'components/form-fields/Code';
 import ErrorMessage from 'components/ErrorMessage';

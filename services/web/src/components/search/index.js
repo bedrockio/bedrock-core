@@ -1,7 +1,17 @@
-export { default as Provider } from './Provider';
-export { default as Context } from './Context';
-export { default as Filters } from './Filters';
-export { default as Export } from './Export';
-export { default as Status } from './Status';
-export { default as Pagination } from './Pagination';
-export { default as Total } from './Total';
+import Provider from './Provider';
+import Context from './Context';
+import Filters from './Filters';
+import Export from './Export';
+import Status from './Status';
+import Total from './Total';
+import Pagination from './Pagination';
+
+export default {
+  Provider,
+  Context,
+  Filters,
+  Export,
+  Status,
+  Total,
+  Pagination,
+};

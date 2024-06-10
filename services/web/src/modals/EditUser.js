@@ -6,7 +6,7 @@ import modal from 'helpers/modal';
 import AutoFocus from 'components/AutoFocus';
 import Roles from 'components/form-fields/Roles';
 import ErrorMessage from 'components/ErrorMessage';
-import { PhoneNumber } from 'components';
+import PhoneNumber from 'components/PhoneNumber';
 
 import { request } from 'utils/api';
 

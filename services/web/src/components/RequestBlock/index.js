@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown, Header } from 'semantic';
 
-import { Layout } from 'components/Layout';
+import Layout from 'components/Layout';
 import Code from 'components/Code';
 
 import { API_URL } from 'utils/env';

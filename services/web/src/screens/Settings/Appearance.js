@@ -6,7 +6,7 @@ import { withTheme } from 'stores';
 import screen from 'helpers/screen';
 
 import ErrorMessage from 'components/ErrorMessage';
-import { Layout } from 'components';
+import Layout from 'components/Layout';
 
 import { request } from 'utils/api';
 import { APP_NAME } from 'utils/env';

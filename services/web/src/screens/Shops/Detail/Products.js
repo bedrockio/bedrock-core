@@ -13,7 +13,10 @@ import { Link } from 'react-router-dom';
 import screen from 'helpers/screen';
 import { usePage } from 'stores/page';
 
-import { Layout, HelpTip, Search, SearchFilters } from 'components';
+import Layout from 'components/Layout';
+import HelpTip from 'components/HelpTip';
+import Search from 'components/Search';
+import SearchFilters from 'components/Search/Filters';
 import ErrorMessage from 'components/ErrorMessage';
 import EditProduct from 'modals/EditProduct';
 

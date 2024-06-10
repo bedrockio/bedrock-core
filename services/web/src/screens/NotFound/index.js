@@ -3,7 +3,7 @@ import { Header } from 'semantic';
 
 import screen from 'helpers/screen';
 
-import { Breadcrumbs } from 'components';
+import Breadcrumbs from 'components/Breadcrumbs';
 
 @screen
 export default class NotFound extends React.Component {

@@ -7,7 +7,7 @@ import Spacer from './Spacer';
 
 import './layout.less';
 
-export class Layout extends React.Component {
+export default class Layout extends React.Component {
   static Group = Group;
   static Spacer = Spacer;
 

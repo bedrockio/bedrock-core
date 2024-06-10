@@ -14,7 +14,7 @@ import { withSession } from 'stores';
 
 import screen from 'helpers/screen';
 
-import { Layout } from 'components';
+import Layout from 'components/Layout';
 import ErrorMessage from 'components/ErrorMessage';
 import GoogleSignInButton from 'components/Auth/Google/SignInButton';
 import GoogleDisableButton from 'components/Auth/Google/DisableButton';

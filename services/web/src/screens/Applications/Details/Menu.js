@@ -4,7 +4,8 @@ import { NavLink, Link } from 'react-router-dom';
 
 import { usePage } from 'stores/page';
 
-import { Breadcrumbs, Layout } from 'components';
+import Layout from 'components/Layout';
+import Breadcrumbs from 'components/Breadcrumbs';
 import EditApplication from 'modals/EditApplication';
 
 export default () => {

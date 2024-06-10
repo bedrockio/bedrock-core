@@ -5,7 +5,7 @@ import { Form, Label, Input, Icon } from 'semantic';
 import { formatDate } from 'utils/date';
 
 import DateInput from '../DateInput';
-import { Layout } from '../Layout';
+import Layout from '../Layout';
 
 export default class DateField extends React.Component {
   setDate(evt, date) {

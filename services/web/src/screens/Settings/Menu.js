@@ -2,7 +2,7 @@ import React from 'react';
 import { Menu } from 'semantic';
 import { NavLink } from 'react-router-dom';
 
-import { Breadcrumbs } from 'components';
+import Breadcrumbs from 'components/Breadcrumbs';
 
 export default () => {
   return (

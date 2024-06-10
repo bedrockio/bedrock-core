@@ -16,7 +16,9 @@ import screen from 'helpers/screen';
 
 import { PageContext } from 'stores/page';
 
-import { Layout, Search, SearchFilters } from 'components';
+import SearchFilters from 'components/Search/Filters';
+import Layout from 'components/Layout';
+import Search from 'components/Search';
 import ShowRequest from 'modals/ShowRequest';
 import Code from 'components/Code';
 

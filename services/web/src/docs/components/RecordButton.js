@@ -2,7 +2,7 @@ import { Icon } from 'semantic';
 
 import { useClass } from 'helpers/bem';
 
-import { Confirm } from 'components';
+import Confirm from 'components/Confirm';
 
 import { useDocs } from '../utils/context';
 

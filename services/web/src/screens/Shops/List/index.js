@@ -4,13 +4,11 @@ import { Link } from 'react-router-dom';
 
 import screen from 'helpers/screen';
 
-import {
-  HelpTip,
-  Breadcrumbs,
-  Layout,
-  Search,
-  SearchFilters,
-} from 'components';
+import HelpTip from 'components/HelpTip';
+import Layout from 'components/Layout';
+import Search from 'components/Search';
+import Breadcrumbs from 'components/Breadcrumbs';
+import SearchFilters from 'components/Search/Filters';
 
 import EditShop from 'modals/EditShop';
 

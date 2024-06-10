@@ -4,13 +4,11 @@ import { Table, Button, Segment, Divider, Label } from 'semantic';
 
 import screen from 'helpers/screen';
 
-import {
-  HelpTip,
-  Breadcrumbs,
-  Layout,
-  Search,
-  SearchFilters,
-} from 'components';
+import HelpTip from 'components/HelpTip';
+import Breadcrumbs from 'components/Breadcrumbs';
+import Layout from 'components/Layout';
+import Search from 'components/Search';
+import SearchFilters from 'components/Search/Filters';
 import ShowAuditEntry from 'modals/ShowAuditEntry';
 
 import { request } from 'utils/api';

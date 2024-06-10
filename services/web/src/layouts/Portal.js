@@ -4,9 +4,8 @@ import { Button, Icon, Menu } from 'semantic';
 
 import bem from 'helpers/bem';
 
-import { Layout } from 'components';
+import Layout from 'components/Layout';
 import ThemedImage from 'components/ThemedImage';
-
 import ConnectionError from 'components/ConnectionError';
 
 import darkLogo from 'assets/logo-inverted.svg';

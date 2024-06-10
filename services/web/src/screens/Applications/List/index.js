@@ -4,8 +4,12 @@ import { Link } from 'react-router-dom';
 
 import screen from 'helpers/screen';
 
+import Breadcrumbs from 'components/Breadcrumbs';
+import Layout from 'components/Layout';
+import Search from 'components/Search';
+import Confirm from 'components/Confirm';
+
 import EditApplication from 'modals/EditApplication';
-import { Breadcrumbs, Layout, Search, Confirm } from 'components';
 
 import { request } from 'utils/api';
 

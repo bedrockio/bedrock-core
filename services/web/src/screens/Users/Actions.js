@@ -4,7 +4,7 @@ import { useSession } from 'stores/session';
 
 import InspectObject from 'modals/InspectObject';
 import LoginAsUser from 'modals/LoginAsUser';
-import { Confirm } from 'components';
+import Confirm from 'components/Confirm';
 
 import { request } from 'utils/api';
 

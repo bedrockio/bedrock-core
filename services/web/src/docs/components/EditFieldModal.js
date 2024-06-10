@@ -4,10 +4,9 @@ import { Button, Form, Modal, Icon } from 'semantic';
 
 import modal from 'helpers/modal';
 
+import HelpTip from 'components/HelpTip';
 import AutoFocus from 'components/AutoFocus';
-
 import ErrorMessage from 'components/ErrorMessage';
-import { HelpTip } from 'components';
 
 import { DocsContext } from '../utils/context';
 

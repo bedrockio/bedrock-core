@@ -5,7 +5,7 @@ import { Icon, Container } from 'semantic';
 import { withSession } from 'stores';
 
 import Footer from 'components/Footer';
-import { Layout } from 'components';
+import Layout from 'components/Layout';
 import Protected from 'components/Protected';
 import ThemedImage from 'components/ThemedImage';
 import Organization from 'modals/OrganizationSelector';

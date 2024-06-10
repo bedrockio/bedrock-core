@@ -5,13 +5,11 @@ import { Table, Button, Label, Divider, Segment } from 'semantic';
 
 import screen from 'helpers/screen';
 
-import {
-  HelpTip,
-  Breadcrumbs,
-  Layout,
-  Search,
-  SearchFilters,
-} from 'components';
+import HelpTip from 'components/HelpTip';
+import Breadcrumbs from 'components/Breadcrumbs';
+import Layout from 'components/Layout';
+import Search from 'components/Search';
+import SearchFilters from 'components/Search/Filters';
 
 import EditUser from 'modals/EditUser';
 

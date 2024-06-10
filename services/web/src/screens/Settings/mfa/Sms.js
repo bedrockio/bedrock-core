@@ -4,7 +4,7 @@ import { Form, Button, Segment, Header, Divider } from 'semantic';
 
 import screen from 'helpers/screen';
 
-import { Layout } from 'components';
+import Layout from 'components/Layout';
 import LogoTitle from 'components/LogoTitle';
 import Code from 'components/form-fields/Code';
 import ErrorMessage from 'components/ErrorMessage';

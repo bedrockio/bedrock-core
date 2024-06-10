@@ -16,7 +16,7 @@ import Menu from './Menu';
 // --- Generator: end
 
 function ShopOverview() {
-  const { shop, reload } = usePage();
+  const { shop } = usePage();
   return (
     <React.Fragment>
       <Menu />

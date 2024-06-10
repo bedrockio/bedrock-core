@@ -4,13 +4,11 @@ import { Table, Button, Divider, Segment } from 'semantic';
 import screen from 'helpers/screen';
 
 import InviteUser from 'modals/InviteUser';
-import {
-  Search,
-  Layout,
-  LoadButton,
-  Breadcrumbs,
-  SearchFilters,
-} from 'components';
+import Search from 'components/Search';
+import Layout from 'components/Layout';
+import LoadButton from 'components/LoadButton';
+import Breadcrumbs from 'components/Breadcrumbs';
+import SearchFilters from 'components/Search/Filters';
 
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';

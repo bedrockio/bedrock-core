@@ -26,7 +26,7 @@ import {
 
 import screen from 'helpers/screen';
 
-import { Layout } from 'components/Layout';
+import Layout from 'components/Layout';
 import Breadcrumbs from 'components/Breadcrumbs';
 import RichTextField from 'components/form-fields/RichText';
 import { Menu as ResponsiveMenu } from 'components/Responsive';

@@ -4,7 +4,8 @@ import { Menu, Button } from 'semantic';
 
 import { usePage } from 'stores/page';
 
-import { Breadcrumbs, Layout } from 'components';
+import Breadcrumbs from 'components/Breadcrumbs';
+import Layout from 'components/Layout';
 import EditUser from 'modals/EditUser';
 
 import Actions from '../Actions';

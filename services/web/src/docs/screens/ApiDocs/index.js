@@ -5,7 +5,7 @@ import { Container, Icon } from 'semantic';
 import bem from 'helpers/bem';
 import screen from 'helpers/screen';
 
-import { Confirm } from 'components';
+import Confirm from 'components/Confirm';
 import EditButton from 'docs/components/EditButton';
 import RecordButton from 'docs/components/RecordButton';
 import { DocsContext } from 'docs/utils/context';
