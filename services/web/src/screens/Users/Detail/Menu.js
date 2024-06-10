@@ -1,26 +1,25 @@
-import React, { useContext } from 'react';
-import { Link , NavLink } from 'react-router-dom';
+import React from 'react';
+import { Link, NavLink } from 'react-router-dom';
 import { Menu, Button } from 'semantic';
 
-import { Breadcrumbs , Layout } from 'components';
+import { usePage } from 'stores/page';
+
+import { Breadcrumbs, Layout } from 'components';
 import EditUser from 'modals/EditUser';
 
 import Actions from '../Actions';
 
-import DetailsContext from './Context';
-
 export default () => {
-  const { item, reload } = useContext(DetailsContext);
-
+  const { user, reload } = usePage();
   return (
     <React.Fragment>
-      <Breadcrumbs link={<Link to="/users">Users</Link>} active={item.name} />
+      <Breadcrumbs link={<Link to="/users">Users</Link>} active={user.name} />
       <Layout horizontal center spread>
-        <h1 style={{ textTransform: 'capitalize' }}>{item.name} User</h1>
+        <h1 style={{ textTransform: 'capitalize' }}>{user.name}</h1>
         <Layout.Group>
-          <Actions item={item} reload={reload} />
+          <Actions user={user} reload={reload} />
           <EditUser
-            user={item}
+            user={user}
             trigger={<Button primary content="Edit" icon="pen-to-square" />}
             onSave={reload}
           />
@@ -29,7 +28,7 @@ export default () => {
       <Menu pointing secondary>
         <Menu.Item
           name="Overview"
-          to={`/users/${item.id}`}
+          to={`/users/${user.id}`}
           as={NavLink}
           exact
         />

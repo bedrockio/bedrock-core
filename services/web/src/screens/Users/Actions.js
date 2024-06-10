@@ -3,24 +3,22 @@ import { Dropdown } from 'semantic';
 import { useSession } from 'stores/session';
 
 import InspectObject from 'modals/InspectObject';
-
-import { Confirm } from 'components';
-
 import LoginAsUser from 'modals/LoginAsUser';
+import { Confirm } from 'components';
 
 import { request } from 'utils/api';
 
+export default function UserActions(props) {
+  const { user, reload } = props;
+  const { user: authUser } = useSession();
 
-export default function UserActions({ item, reload } = {}) {
-  const { user } = useSession();
-
-  const authenticatableRoles = user.roles.reduce(
+  const authenticatableRoles = authUser.roles.reduce(
     (result, { roleDefinition }) =>
       result.concat(roleDefinition.allowAuthenticationOnRoles || []),
     []
   );
 
-  const canAuthenticate = [...item.roles].every(({ role }) =>
+  const canAuthenticate = [...user.roles].every(({ role }) =>
     authenticatableRoles.includes(role)
   );
 
@@ -29,7 +27,7 @@ export default function UserActions({ item, reload } = {}) {
       <Dropdown.Menu direction="left">
         <LoginAsUser
           size="tiny"
-          user={item}
+          user={user}
           trigger={
             <Dropdown.Item
               disabled={!canAuthenticate}
@@ -41,19 +39,19 @@ export default function UserActions({ item, reload } = {}) {
 
         <InspectObject
           name="Shop"
-          object={item}
+          object={user}
           trigger={<Dropdown.Item text="Inspect" icon="code" />}
         />
         <Confirm
           negative
           confirmButton="Delete"
-          header={`Are you sure you want to delete "${item.name}"?`}
+          header={`Are you sure you want to delete "${user.name}"?`}
           content="All data will be permanently deleted"
           trigger={<Dropdown.Item text="Delete" icon="trash" />}
           onConfirm={async () => {
             await request({
               method: 'DELETE',
-              path: `/1/users/${item.id}`,
+              path: `/1/users/${user.id}`,
             });
             reload();
           }}

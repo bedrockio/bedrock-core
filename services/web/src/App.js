@@ -2,6 +2,7 @@ import { hot } from 'react-hot-loader/root';
 import { Switch, Route } from 'react-router-dom';
 
 import { Protected } from 'helpers/routes';
+import DashboardLayout from 'layouts/Dashboard';
 
 import Dashboard from 'screens/Dashboard';
 import Shops from 'screens/Shops';
@@ -19,20 +20,22 @@ import Logout from 'screens/Auth/Logout';
 
 const App = () => {
   return (
-    <Switch>
-      <Protected path="/" allowed={Dashboard} exact />
-      <Protected path="/shops/:id?" allowed={Shops} />
-      <Protected path="/products/:id?" allowed={Products} />
-      <Protected path="/settings/:id?" allowed={Settings} exact />
-      <Protected path="/users/invites" allowed={Invites} exact />
-      <Protected path="/organizations/:id?" allowed={Organizations} />
-      <Protected path="/users/:id?" allowed={Users} />
-      <Protected path="/applications/:id?" allowed={Applications} />
-      <Protected path="/audit-trail/:id?" allowed={AuditTrail} />
-      <Route path="/accept-invite" component={AcceptInvite} exact />
-      <Route path="/logout" component={Logout} exact />
-      <Protected allowed={NotFound} />
-    </Switch>
+    <DashboardLayout>
+      <Switch>
+        <Protected path="/" allowed={Dashboard} exact />
+        <Protected path="/shops/:id?" allowed={Shops} />
+        <Protected path="/products/:id?" allowed={Products} />
+        <Protected path="/settings/:id?" allowed={Settings} exact />
+        <Protected path="/users/invites" allowed={Invites} exact />
+        <Protected path="/organizations/:id?" allowed={Organizations} />
+        <Protected path="/users/:id?" allowed={Users} />
+        <Protected path="/applications/:id?" allowed={Applications} />
+        <Protected path="/audit-trail/:id?" allowed={AuditTrail} />
+        <Route path="/accept-invite" component={AcceptInvite} exact />
+        <Route path="/logout" component={Logout} exact />
+        <Protected allowed={NotFound} />
+      </Switch>
+    </DashboardLayout>
   );
 };
 

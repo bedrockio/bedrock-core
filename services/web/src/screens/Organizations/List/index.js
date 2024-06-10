@@ -123,7 +123,10 @@ export default class OrganizationList extends React.Component {
                               trigger={<Button basic icon="pen-to-square" />}
                               onSave={reload}
                             />
-                            <Actions item={organization} reload={reload} />
+                            <Actions
+                              organization={organization}
+                              reload={reload}
+                            />
                           </Table.Cell>
                         </Table.Row>
                       );

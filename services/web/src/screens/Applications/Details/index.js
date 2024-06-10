@@ -1,7 +1,6 @@
-import React from 'react';
 import { Link, Switch, Route } from 'react-router-dom';
-import { Loader } from 'semantic';
 
+import { usePageLoader } from 'stores/page';
 import { Protected } from 'helpers/routes';
 
 import NotFound from 'screens/NotFound';
@@ -11,85 +10,29 @@ import { request } from 'utils/api';
 import Overview from './Overview';
 import Logs from './Logs';
 
-export default class ApplicationDetail extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      application: null,
-      error: null,
-      loading: true,
+export default function ApplicationDetail() {
+  const Loader = usePageLoader(async (params) => {
+    const { data } = await request({
+      method: 'GET',
+      path: `/1/applications/${params.id}`,
+    });
+    return {
+      application: data,
     };
-  }
-
-  onSave = () => {
-    this.fetchApplication();
-  };
-
-  componentDidMount() {
-    this.fetchApplication();
-  }
-
-  componentDidUpdate(lastProps) {
-    const { id } = this.props.match.params;
-    if (id !== lastProps.match.params.id) {
-      this.fetchApplication();
-    }
-  }
-
-  async fetchApplication() {
-    const { id } = this.props.match.params;
-    try {
-      this.setState({
-        error: null,
-        loading: true,
-      });
-      const { data } = await request({
-        method: 'GET',
-        path: `/1/applications/${id}`,
-      });
-      this.setState({
-        application: data,
-        loading: false,
-      });
-    } catch (error) {
-      this.setState({
-        error,
-        loading: false,
-      });
-    }
-  }
-
-  render() {
-    const { loading, error } = this.state;
-    if (loading) {
-      return <Loader active>Loading</Loader>;
-    } else if (error) {
-      return (
+  });
+  return (
+    <Loader
+      notFound={
         <NotFound
-          link={<Link to="/applications">Application</Link>}
+          link={<Link to="/applications">Applications</Link>}
           message="Sorry that application wasn't found."
         />
-      );
-    }
-
-    return (
+      }>
       <Switch>
-        <Protected
-          exact
-          path="/applications/:id"
-          allowed={Overview}
-          onSave={this.onSave}
-          {...this.state}
-        />
-        <Protected
-          exact
-          path="/applications/:id/logs"
-          allowed={Logs}
-          onSave={this.onSave}
-          {...this.state}
-        />
+        <Protected exact path="/applications/:id" allowed={Overview} />
+        <Protected exact path="/applications/:id/logs" allowed={Logs} />
         <Route component={NotFound} />
       </Switch>
-    );
-  }
+    </Loader>
+  );
 }

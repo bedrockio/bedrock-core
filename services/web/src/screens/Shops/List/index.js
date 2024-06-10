@@ -81,7 +81,7 @@ export default class ShopList extends React.Component {
       <Search.Provider
         onDataNeeded={this.onDataNeeded}
         filterMapping={this.getFilterMapping()}>
-        {({ items, getSorted, setSort, reload }) => {
+        {({ items: shops, getSorted, setSort, reload }) => {
           return (
             <React.Fragment>
               <Breadcrumbs active="Shops" />
@@ -128,7 +128,7 @@ export default class ShopList extends React.Component {
 
               <Search.Status />
 
-              {items.length !== 0 && (
+              {shops.length !== 0 && (
                 <Table celled sortable>
                   <Table.Header>
                     <Table.Row>
@@ -156,13 +156,13 @@ export default class ShopList extends React.Component {
                     </Table.Row>
                   </Table.Header>
                   <Table.Body>
-                    {items.map((item) => {
-                      const [image] = item.images;
+                    {shops.map((shop) => {
+                      const [image] = shop.images;
                       return (
-                        <Table.Row key={item.id}>
+                        <Table.Row key={shop.id}>
                           {/* --- Generator: list-body-cells */}
                           <Table.Cell>
-                            <Link to={`/shops/${item.id}`}>{item.name}</Link>
+                            <Link to={`/shops/${shop.id}`}>{shop.name}</Link>
                           </Table.Cell>
                           {/* --- Generator: end */}
                           <Table.Cell>
@@ -174,15 +174,15 @@ export default class ShopList extends React.Component {
                             )}
                           </Table.Cell>
                           <Table.Cell>
-                            {formatDateTime(item.createdAt)}
+                            {formatDateTime(shop.createdAt)}
                           </Table.Cell>
                           <Table.Cell textAlign="center" singleLine>
                             <EditShop
-                              shop={item}
+                              shop={shop}
                               trigger={<Button basic icon="pen-to-square" />}
                               onSave={reload}
                             />
-                            <Actions item={item} reload={reload} />
+                            <Actions shop={shop} reload={reload} />
                           </Table.Cell>
                         </Table.Row>
                       );

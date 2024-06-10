@@ -211,7 +211,7 @@ export default class UserList extends React.Component {
                               }
                               onSave={reload}
                             />
-                            <Actions item={user} reload={reload} />
+                            <Actions user={user} reload={reload} />
                           </Table.Cell>
                         </Table.Row>
                       );

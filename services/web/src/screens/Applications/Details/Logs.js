@@ -14,8 +14,9 @@ import { withRouter } from 'react-router-dom';
 
 import screen from 'helpers/screen';
 
-import { Layout, Search, SearchFilters } from 'components';
+import { PageContext } from 'stores/page';
 
+import { Layout, Search, SearchFilters } from 'components';
 import ShowRequest from 'modals/ShowRequest';
 import Code from 'components/Code';
 
@@ -37,6 +38,8 @@ function getStateromQueryString(search) {
 @withRouter
 @screen
 export default class ApplicationLogs extends React.Component {
+  static contextType = PageContext;
+
   state = {
     selectedItem: null,
     initialFilters: getStateromQueryString(this.props.location.search),
@@ -58,17 +61,16 @@ export default class ApplicationLogs extends React.Component {
       set(body, 'request.method'.split('.'), body['request.method']);
     }
 
+    const { application } = this.context;
+
     const resp = await request({
       method: 'POST',
-      path: `/1/applications/${this.props.application.id}/logs/search`,
+      path: `/1/applications/${application.id}/logs/search`,
       body,
     });
-    this.setState(
-      {
-        selectedItem: resp.data[0],
-      },
-      () => this.updateQueryString()
-    );
+    this.setState({
+      selectedItem: resp.data[0],
+    });
 
     return resp;
   };
@@ -80,15 +82,8 @@ export default class ApplicationLogs extends React.Component {
     return 'green';
   }
 
-  updateQueryString() {
-    const pathName = this.props.location.pathname;
-    const queryString = this.state.selectedItem
-      ? `?requestId=${this.state.selectedItem.requestId}`
-      : '';
-    this.props.history.replace(`${pathName}${queryString}`);
-  }
-
   render() {
+    const { application } = this.context;
     const { selectedItem } = this.state;
 
     return (
@@ -119,7 +114,7 @@ export default class ApplicationLogs extends React.Component {
                                 gte: 200,
                                 lt: 300,
                               }),
-                              text: 'Succeesed',
+                              text: 'Succeeded',
                             },
                             {
                               value: JSON.stringify({
@@ -185,12 +180,9 @@ export default class ApplicationLogs extends React.Component {
                                         }),
                                   }}
                                   onClick={() =>
-                                    this.setState(
-                                      {
-                                        selectedItem: item,
-                                      },
-                                      () => this.updateQueryString()
-                                    )
+                                    this.setState({
+                                      selectedItem: item,
+                                    })
                                   }>
                                   <Grid.Column width={2}>
                                     <Label
@@ -231,7 +223,7 @@ export default class ApplicationLogs extends React.Component {
                           {truncate(selectedItem.request.path, { length: 28 })}
                           <ShowRequest
                             centered={false}
-                            application={this.props.application}
+                            application={application}
                             request={selectedItem.request}
                             requestId={selectedItem.requestId}
                             trigger={

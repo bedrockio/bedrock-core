@@ -5,6 +5,7 @@ import { Message, Button } from 'semantic';
 import { withSession } from 'stores';
 
 import screen from 'helpers/screen';
+import BasicLayout from 'layouts/Basic';
 
 import { ENV_NAME } from 'utils/env';
 
@@ -24,14 +25,14 @@ export default class ErrorScreen extends React.Component {
   render() {
     const { title } = this.props;
     return (
-      <div>
+      <BasicLayout>
         <Message error header={title} content={this.renderErrorBody()} />
         <div>
           <Button size="small" onClick={this.onLogoutClick} primary>
             Logout
           </Button>
         </div>
-      </div>
+      </BasicLayout>
     );
   }
 
