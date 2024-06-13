@@ -11,9 +11,9 @@ import DateField from 'components/form-fields/Date';
 import UploadsField from 'components/form-fields/Uploads';
 import CurrencyField from 'components/form-fields/Currency';
 import SearchDropdown from 'components/form-fields/SearchDropdown';
+// --- Generator: end
 
 import { request } from 'utils/api';
-// --- Generator: end
 
 @modal
 export default class EditProduct extends React.Component {
