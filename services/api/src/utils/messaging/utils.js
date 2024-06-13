@@ -32,21 +32,26 @@ function escapeHtml(str) {
 
 // Templates
 
-const loadTemplate = memoize(async (name, dir) => {
-  if (name) {
-    const raw = await loadTemplateFile(path.join(dir, name));
-    const { body, attributes: meta } = frontmatter(raw);
-    return {
-      body,
-      meta,
-    };
-  } else {
-    return {
-      body: '{{&body}}',
-      meta: {},
-    };
+const loadTemplate = memoize(
+  async (name, dir) => {
+    if (name) {
+      const raw = await loadTemplateFile(path.join(dir, name));
+      const { body, attributes: meta } = frontmatter(raw);
+      return {
+        body,
+        meta,
+      };
+    } else {
+      return {
+        body: '{{&body}}',
+        meta: {},
+      };
+    }
+  },
+  (name, dir) => {
+    return path.join(dir, name || '');
   }
-});
+);
 
 async function loadTemplateFile(file) {
   const ext = path.extname(file);
