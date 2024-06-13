@@ -52,14 +52,6 @@
         }
       }
     ],
-    "theme": {
-      "type": "String",
-      "enum": [
-        "dark",
-        "light",
-        "system"
-      ]
-    },
     "isTester": {
       "type": "Boolean",
       "default": false
@@ -156,13 +148,6 @@
           "type": "Date"
         }
       }
-    }
-  },
-  "onDelete": {
-    "errorOnReferenced": {
-      "except": [
-        "AuditEntry"
-      ]
     }
   },
   "onDelete": {

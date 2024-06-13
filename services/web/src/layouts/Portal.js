@@ -4,12 +4,9 @@ import { Button, Icon, Menu } from 'semantic';
 
 import bem from 'helpers/bem';
 
+import Logo from 'components/Logo';
 import Layout from 'components/Layout';
-import ThemedImage from 'components/ThemedImage';
 import ConnectionError from 'components/ConnectionError';
-
-import darkLogo from 'assets/logo-inverted.svg';
-import logo from 'assets/logo.svg';
 
 import './portal.less';
 
@@ -26,7 +23,7 @@ export default class PortalLayout extends React.Component {
             spread>
             <Layout.Group>
               <NavLink className="logo" to="/">
-                <ThemedImage height="40" ligthSrc={logo} darkSrc={darkLogo} />
+                <Logo height="40" />
               </NavLink>
               <Menu className={this.getElementClass('menu-bottom')} secondary>
                 <Menu.Item as={NavLink} to="/docs/getting-started">

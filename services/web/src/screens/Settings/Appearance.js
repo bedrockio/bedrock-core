@@ -1,122 +1,50 @@
 import React from 'react';
-import { Segment, Form, Button, Divider, Header } from 'semantic';
-
-import { withTheme } from 'stores';
+import { Segment, Form, Divider, Header } from 'semantic';
 
 import screen from 'helpers/screen';
+import { useTheme } from 'stores/theme';
 
-import ErrorMessage from 'components/ErrorMessage';
 import Layout from 'components/Layout';
-
-import { request } from 'utils/api';
-import { APP_NAME } from 'utils/env';
 
 import Menu from './Menu';
 
-@screen
-@withTheme
-export default class Account extends React.Component {
-  state = {
-    theme: this.context.theme,
-  };
-
-  async save() {
-    try {
-      this.setState({
-        loading: true,
-        error: null,
-      });
-      await request({
-        method: 'PATCH',
-        path: `/1/users/me`,
-        body: {
-          theme: this.state.theme,
-        },
-      });
-      this.context.setTheme(this.state.theme, true);
-      this.setState({
-        error: false,
-        loading: false,
-      });
-    } catch (error) {
-      this.setState({
-        error,
-        loading: false,
-      });
-    }
-  }
-
-  setTheme(theme) {
-    this.setState({ theme });
-    this.context.setTheme(theme);
-  }
-
-  render() {
-    const { error, loading, theme } = this.state;
-
-    return (
-      <React.Fragment>
-        <Menu />
+function Appearance() {
+  const { theme, setTheme } = useTheme();
+  return (
+    <React.Fragment>
+      <Menu />
+      <Divider hidden />
+      <Segment>
+        <Header as="h5">Choose the theme for this device</Header>
         <Divider hidden />
-        <ErrorMessage error={error} />
-        <Form onSubmit={() => this.save()}>
-          <Segment>
-            <p>
-              Choose how {APP_NAME} looks to you. Select a light or dark mode,
-              or sync with your system and automatically switch between light
-              and dark mode.
-            </p>
-            <Header as="h5">
-              <Form.Checkbox
-                checked={theme === 'system'}
-                onChange={(e, { checked }) =>
-                  this.setTheme(checked ? 'system' : undefined)
-                }
-                label="Sync With System"
-              />
-            </Header>
+        <Layout vertical>
+          <Form.Radio
+            checked={theme === 'light'}
+            label="Light Mode"
+            onClick={() => {
+              setTheme('light');
+            }}
+          />
+          <Form.Radio
+            checked={theme === 'dark'}
+            label="Dark Mode"
+            onClick={() => {
+              setTheme('dark');
+            }}
+          />
+          <Form.Radio
+            checked={theme === 'system'}
+            label="Sync with System"
+            onClick={() => {
+              setTheme('system');
+            }}
+          />
+        </Layout>
 
-            <p style={{ marginLeft: '1.92em', marginTop: '-0.8em' }}>
-              Sync with OS setting Automatically switch between light and dark
-              themes when your system does.
-            </p>
-
-            <Divider hidden />
-
-            <div className="diurnal-theme" style={{ paddingBottom: '1em' }}>
-              <Layout horizontal baseline>
-                <Form.Radio
-                  disabled={theme === 'system'}
-                  checked={theme === 'light'}
-                  label="Light Mode"
-                  onClick={() => this.setTheme('light')}
-                />
-              </Layout>
-            </div>
-
-            <div className="nocturnal-theme">
-              <Layout horizontal baseline>
-                <Form.Radio
-                  disabled={theme === 'system'}
-                  checked={theme === 'dark'}
-                  label="Dark Mode"
-                  onClick={() => this.setTheme('dark')}
-                />
-              </Layout>
-            </div>
-
-            <Divider hidden />
-          </Segment>
-          <div>
-            <Button
-              primary
-              content="Save"
-              loading={loading}
-              disabled={loading}
-            />
-          </div>
-        </Form>
-      </React.Fragment>
-    );
-  }
+        <Divider hidden />
+      </Segment>
+    </React.Fragment>
+  );
 }
+
+export default screen(Appearance);

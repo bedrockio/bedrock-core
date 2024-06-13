@@ -5,12 +5,8 @@ import { localStorage } from 'utils/storage';
 
 const ThemeContext = React.createContext();
 
-function getDefaultTheme() {
-  const theme = localStorage.getItem('theme');
-  if (['dark', 'light', 'system'].includes(theme)) {
-    return theme;
-  }
-  return 'light';
+function getStoredTheme() {
+  return localStorage.getItem('theme') || 'light';
 }
 
 function getSystemTheme() {
@@ -18,27 +14,19 @@ function getSystemTheme() {
   return prefersDarkScheme.matches ? 'dark' : 'light';
 }
 
-function getRenderedTheme() {
-  const theme = getDefaultTheme();
-  if (theme === 'system') {
-    return getSystemTheme();
-  }
-  return theme;
-}
-
 export class ThemeProvider extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      theme: getDefaultTheme(),
-      renderedTheme: getRenderedTheme(),
+      theme: getStoredTheme(),
+      systemTheme: getSystemTheme(),
     };
+    this.apply();
   }
 
   componentDidMount() {
     this.mediaMonitor = window.matchMedia('(prefers-color-scheme: dark)');
     this.mediaMonitor.addEventListener('change', this.updateSystemTheme);
-    this.bootstrap();
   }
 
   componentWillUnmount() {
@@ -47,29 +35,33 @@ export class ThemeProvider extends React.PureComponent {
     }
   }
 
-  bootstrap() {
-    this.setTheme(this.state.theme);
-  }
-
-  updateSystemTheme = ({ matches }) => {
-    if (this.state.theme === 'system') {
-      this.setTheme(matches ? 'dark' : 'light');
-    }
+  updateSystemTheme = () => {
+    this.setState(
+      {
+        systemTheme: getSystemTheme(),
+      },
+      this.apply
+    );
   };
 
-  setTheme = (theme, store) => {
-    const newTheme = theme === 'system' ? getSystemTheme() : theme;
-    if (newTheme == 'dark') {
-      document.body.classList.add('nocturnal-theme');
-    } else {
-      document.body.classList.remove('nocturnal-theme');
-    }
-    this.setState({
-      renderedTheme: newTheme,
-    });
-    if (store) {
-      localStorage.setItem('theme', theme);
-    }
+  setTheme = (theme) => {
+    this.setState(
+      {
+        theme,
+      },
+      this.apply
+    );
+    localStorage.setItem('theme', theme);
+  };
+
+  apply = () => {
+    const currentTheme = this.getCurrentTheme();
+    document.body.classList.toggle('nocturnal-theme', currentTheme === 'dark');
+  };
+
+  getCurrentTheme = () => {
+    const { theme } = this.state;
+    return theme === 'system' ? getSystemTheme() : theme;
   };
 
   render() {
@@ -78,6 +70,7 @@ export class ThemeProvider extends React.PureComponent {
         value={{
           ...this.state,
           setTheme: this.setTheme,
+          currentTheme: this.getCurrentTheme(),
         }}>
         {this.props.children}
       </ThemeContext.Provider>

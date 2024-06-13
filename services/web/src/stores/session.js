@@ -9,11 +9,8 @@ import { captureError } from 'utils/sentry';
 import { wrapContext } from 'utils/hoc';
 import { localStorage } from 'utils/storage';
 
-import { withTheme } from './theme';
-
 const SessionContext = React.createContext();
 
-@withTheme
 @withRouter
 export class SessionProvider extends React.PureComponent {
   constructor(props) {
@@ -67,10 +64,6 @@ export class SessionProvider extends React.PureComponent {
           path: '/1/users/me',
         });
         const organization = await this.loadOrganization();
-
-        if (user.theme) {
-          this.context.setTheme(user.theme, true);
-        }
 
         // Uncomment this line if you want to set up
         // User-Id tracking. https://bit.ly/2DKQYEN.
