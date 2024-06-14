@@ -8,7 +8,7 @@ spec:
     type: RollingUpdate # New pods are added gradually, and old pods are terminated gradually
     rollingUpdate:
       maxSurge: 1 # The number of pods that can be created above the desired amount of pods during an update
-      maxUnavailable: 1 # The number of pods that can be unavailable during the update process
+      maxUnavailable: 0 # The number of pods that can be unavailable during the update process
   selector:
     matchLabels:
       app: api
@@ -27,25 +27,25 @@ spec:
           #     memory: "4Gi"
           env:
             - name: ENV_NAME
-              value: "staging"
+              value: 'staging'
             - name: NODE_ENV
-              value: "production"
+              value: 'production'
             - name: MONGO_URI
-              value: "mongodb://mongo:27017/bedrock_staging"
+              value: 'mongodb://mongo:27017/bedrock_staging'
             - name: JWT_SECRET
-              value: "changeme1234"
+              value: 'changeme1234'
             - name: APP_URL
-              value: "https://bedrock.foundation"
+              value: 'https://bedrock.foundation'
             - name: POSTMARK_FROM
-              value: "no-reply@bedrock.foundation"
+              value: 'no-reply@bedrock.foundation'
             - name: POSTMARK_API_KEY
-              value: "abc"
+              value: 'abc'
             - name: UPLOADS_STORE
-              value: "gcs"
+              value: 'gcs'
             - name: UPLOADS_GCS_BUCKET
-              value: "bedrock-staging-uploads"
+              value: 'bedrock-staging-uploads'
             - name: LOG_LEVEL
-              value: "debug"
+              value: 'debug'
           ports:
             - name: http-server
               containerPort: 2300
