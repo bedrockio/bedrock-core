@@ -1,5 +1,6 @@
 import React from 'react';
-import { Table, Image, Button, Divider, Segment } from 'semantic';
+/* eslint-disable-next-line */
+import { Table, Button, Divider, Segment } from 'semantic';
 import { Link } from 'react-router-dom';
 
 import screen from 'helpers/screen';
@@ -17,6 +18,8 @@ import { urlForUpload } from 'utils/uploads';
 import { request } from 'utils/api';
 
 // --- Generator: list-imports
+/* eslint-disable-next-line */
+import { Image } from 'semantic';
 import allCountries from 'utils/countries';
 
 const countries = allCountries.map(({ countryCode, nameEn }) => ({
