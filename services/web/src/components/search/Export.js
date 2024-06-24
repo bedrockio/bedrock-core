@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Popup } from 'semantic';
 
 import { safeFileName } from 'utils/formatting';
+import { downloadResponse } from 'utils/download';
 
 import SearchContext from './Context';
 
@@ -17,7 +18,7 @@ export default class ExportButton extends React.Component {
     this.setState({ loading: true, error: null });
     const body = this.props.body || {};
     try {
-      await this.context.onDataNeeded({
+      const res = await this.context.onDataNeeded({
         format: 'csv',
         limit: this.props.limit,
         filename: this.props.filename
@@ -26,6 +27,7 @@ export default class ExportButton extends React.Component {
         ...this.context.filters,
         ...body,
       });
+      await downloadResponse(res);
       this.setState({
         loading: false,
       });

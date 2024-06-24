@@ -1,5 +1,4 @@
 import { API_KEY, API_URL } from 'utils/env';
-
 import { getOrganization } from 'utils/organization';
 
 import { trackRequest } from '../analytics';
@@ -10,34 +9,19 @@ import { isRecording } from './record';
 import { getToken } from './token';
 
 export default async function request(options) {
-  const { method = 'GET', path, files, params, record } = options;
+  Object.assign(options, getIncludes(options));
+
+  const { method = 'GET', path, params, files } = options;
+
   let { body } = options;
-
-  const token = options.token || getToken();
-  const organization = getOrganization();
-
-  const headers = Object.assign(
-    {
-      Accept: 'application/json',
-      ...(token && {
-        Authorization: `Bearer ${token}`,
-      }),
-      ...((record || isRecording()) && {
-        'Api-Record': 'on',
-      }),
-      'API-Key': API_KEY,
-      ...(organization && {
-        Organization: organization,
-      }),
-    },
-    options.headers
-  );
 
   const url = new URL(path, API_URL);
 
-  if (params) {
+  if (method === 'GET') {
     url.search = stringifyParams(params);
   }
+
+  const headers = getHeaders(options);
 
   if (files) {
     const data = new FormData();
@@ -45,7 +29,7 @@ export default async function request(options) {
       data.append('file', file);
     });
     for (let [key, value] of Object.entries(body || {})) {
-      data.append(key, JSON.stringify(value));
+      data.append(key, value);
     }
     body = data;
   } else if (!(body instanceof FormData)) {
@@ -63,35 +47,16 @@ export default async function request(options) {
     return;
   }
 
-  if (
-    ['text/csv', 'application/pdf'].includes(res.headers.get('Content-type'))
-  ) {
-    return res.blob().then((blob) => {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
+  const contentType = getContentType(res);
 
-      const filename = res.headers
-        .get('Content-Disposition')
-        ?.split(';')[1]
-        .replace('filename=', '')
-        .replace(/"/g, '');
-
-      a.download = filename?.trim() || 'export.csv';
-      document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
-      a.click();
-      a.remove();
-      return null;
-    });
-  }
+  let response = res;
 
   if (!res.ok) {
     let type = 'error';
     let message = res.statusText;
     let status = res.status;
-    let response;
     try {
-      response = await res.clone().json();
+      response = await response.clone().json();
       if (response.error) {
         type = response.error.type;
         message = response.error.message;
@@ -103,11 +68,59 @@ export default async function request(options) {
     throw new ApiError(message, type, status, response);
   }
 
-  try {
-    const response = await res.json();
-    trackRequest(options, response.data);
-    return response;
-  } catch (err) {
-    throw new ApiParseError();
+  if (contentType === 'application/json') {
+    try {
+      response = await res.json();
+      trackRequest(options, response.data);
+    } catch (err) {
+      throw new ApiParseError();
+    }
   }
+
+  return response;
+}
+
+function getHeaders(options) {
+  let { headers, token, record } = options;
+  const organization = getOrganization();
+  token ||= getToken();
+  record ||= isRecording();
+  return {
+    Accept: 'application/json',
+    // TODO: casing
+    'API-Key': API_KEY,
+    ...(record && {
+      'Api-Record': 'on',
+    }),
+    ...(token && {
+      Authorization: `Bearer ${token}`,
+    }),
+    ...(organization && {
+      Organization: organization,
+    }),
+    ...headers,
+  };
+}
+
+function getIncludes(options) {
+  const { method = 'GET', params, body, include } = options;
+  if (include && method === 'GET') {
+    return {
+      params: {
+        ...params,
+        include,
+      },
+    };
+  } else if (include) {
+    return {
+      body: {
+        ...body,
+        include,
+      },
+    };
+  }
+}
+
+function getContentType(res) {
+  return res.headers.get('content-type').split(';')[0];
 }
