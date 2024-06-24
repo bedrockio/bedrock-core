@@ -14,13 +14,13 @@ import SearchFilters from 'components/Search/Filters';
 import EditShop from 'modals/EditShop';
 
 import { formatDateTime } from 'utils/date';
-import { urlForUpload } from 'utils/uploads';
 import { request } from 'utils/api';
 
 // --- Generator: list-imports
 /* eslint-disable-next-line */
 import { Image } from 'semantic';
 import allCountries from 'utils/countries';
+import { urlForUpload } from 'utils/uploads';
 
 const countries = allCountries.map(({ countryCode, nameEn }) => ({
   value: countryCode,
