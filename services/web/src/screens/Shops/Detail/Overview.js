@@ -5,11 +5,10 @@ import { Table, Header, Divider } from 'semantic';
 import { usePage } from 'stores/page';
 import screen from 'helpers/screen';
 
-import { arrayToList, formatAddress } from 'utils/formatting';
-
 // --- Generator: overview-imports
 /* eslint-disable-next-line */
-import { Image, Label } from 'semantic';
+import { Image } from 'semantic';
+import { arrayToList, formatAddress } from 'utils/formatting';
 
 import { formatDateTime } from 'utils/date';
 import { urlForUpload } from 'utils/uploads';
