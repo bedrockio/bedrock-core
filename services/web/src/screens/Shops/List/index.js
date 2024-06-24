@@ -156,22 +156,21 @@ export default class ShopList extends React.Component {
                   </Table.Header>
                   <Table.Body>
                     {shops.map((shop) => {
-                      const [image] = shop.images;
                       return (
                         <Table.Row key={shop.id}>
                           {/* --- Generator: list-body-cells */}
                           <Table.Cell>
                             <Link to={`/shops/${shop.id}`}>{shop.name}</Link>
                           </Table.Cell>
-                          {/* --- Generator: end */}
                           <Table.Cell>
-                            {image && (
+                            {shop.image.length > 1 && (
                               <Image
                                 size="tiny"
-                                src={urlForUpload(image, true)}
+                                src={urlForUpload(shop.images[0], true)}
                               />
                             )}
                           </Table.Cell>
+                          {/* --- Generator: end */}
                           <Table.Cell>
                             {formatDateTime(shop.createdAt)}
                           </Table.Cell>
