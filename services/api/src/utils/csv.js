@@ -34,9 +34,6 @@ function exportValidation(options = {}) {
 
 function exportItem(item, options, result = {}, rootPath = []) {
   if (item && typeof item === 'object' && !(item instanceof Date)) {
-    if (item.toObject) {
-      item = item.toObject();
-    }
     const entries = Object.entries(item).map(([key, val]) => {
       const path = [...rootPath, key];
       const fullKey = getFullKey(path);
