@@ -166,7 +166,7 @@ export default class ShopList extends React.Component {
                             <Link to={`/shops/${shop.id}`}>{shop.name}</Link>
                           </Table.Cell>
                           <Table.Cell>
-                            {shop.image.length > 1 && (
+                            {shop.images.length > 1 && (
                               <Image
                                 size="tiny"
                                 src={urlForUpload(shop.images[0], true)}

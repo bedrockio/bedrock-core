@@ -5,12 +5,13 @@ import { Table, Header, Divider } from 'semantic';
 import { usePage } from 'stores/page';
 import screen from 'helpers/screen';
 
+import { arrayToList, formatAddress } from 'utils/formatting';
+
 // --- Generator: overview-imports
 /* eslint-disable-next-line */
 import { Image, Label } from 'semantic';
 
 import { formatDateTime } from 'utils/date';
-import { formatAddress } from 'utils/formatting';
 import { urlForUpload } from 'utils/uploads';
 // --- Generator: end
 
@@ -22,7 +23,6 @@ function ShopOverview() {
     <React.Fragment>
       <Menu />
       <Divider hidden />
-      <Header as="h2">Overview</Header>
       {/* --- Generator: overview-fields */}
       <p>{shop.description}</p>
       <Header as="h3">Images</Header>
@@ -37,11 +37,7 @@ function ShopOverview() {
           {/* --- Generator: overview-rows */}
           <Table.Row>
             <Table.Cell>Categories</Table.Cell>
-            <Table.Cell>
-              {shop.categories.map((category) => (
-                <Label key={category.id} content={category.name} />
-              ))}
-            </Table.Cell>
+            <Table.Cell>{arrayToList(shop.categories)}</Table.Cell>
           </Table.Row>
           <Table.Row>
             <Table.Cell>Address</Table.Cell>

@@ -50,3 +50,16 @@ export function formatAddress(address) {
 export function safeFileName(str) {
   return str.replace(/[^a-z0-9]/gi, '_').toLowerCase();
 }
+
+export function arrayToList(arr, fallback = 'None') {
+  if (!arr?.length) {
+    return fallback;
+  }
+  return (
+    <ul>
+      {arr.map((el, i) => {
+        return <li key={i}>{el}</li>;
+      })}
+    </ul>
+  );
+}
