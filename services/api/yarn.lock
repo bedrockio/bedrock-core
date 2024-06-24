@@ -334,10 +334,10 @@
     kleur "^4.1.5"
     stdout-stream "^2.0.0"
 
-"@bedrockio/model@^0.3.1":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@bedrockio/model/-/model-0.3.1.tgz#e2b692fb507be3de462b99b92680b9359717ed63"
-  integrity sha512-DjhHWYxjUjXYirqegbFpoqpG7i6u/UHQtXjFOZcdMiSLafU14na5feqqh2FSRr69SXMEX6j0E2R6UolQpJNdKQ==
+"@bedrockio/model@^0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@bedrockio/model/-/model-0.3.2.tgz#0345703f5da7e84964ba11c3bdad198b62f437c6"
+  integrity sha512-C2OunXtm7t9PP+HFOcgBb8EAoCFfcNgCCPATbLlXbNa1uDsV+mg5sWz8/o/grjQBIiFXWOER7CTHlA9ErqNfVQ==
   dependencies:
     "@bedrockio/logger" "^1.0.6"
     lodash "^4.17.21"
@@ -4868,10 +4868,10 @@ mongodb@^5.9.1:
   optionalDependencies:
     "@mongodb-js/saslprep" "^1.1.0"
 
-mongoose@^8.3.2:
-  version "8.4.0"
-  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-8.4.0.tgz#b5236cf0a02e40aba3a329148a6ceccc9d9d4ac7"
-  integrity sha512-fgqRMwVEP1qgRYfh+tUe2YBBFnPO35FIg2lfFH+w9IhRGg1/ataWGIqvf/MjwM29cZ60D5vSnqtN2b8Qp0sOZA==
+mongoose@^8.4.3:
+  version "8.4.3"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-8.4.3.tgz#f16ea170eeff60a8c8357bed9968e914a4156d1a"
+  integrity sha512-GxPVLD+I/dxVkgcts2r2QmJJvS62/++btVj3RFt8YnHt+DSOp1Qjj62YEvgZaElwIOTcc4KGJM95X5LlrU1qQg==
   dependencies:
     bson "^6.7.0"
     kareem "2.6.3"
