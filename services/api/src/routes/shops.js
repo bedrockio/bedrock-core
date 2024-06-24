@@ -27,7 +27,7 @@ router
     };
   })
   .get('/:id', async (ctx) => {
-    const shop = ctx.state.shop;
+    const { shop } = ctx.state;
     ctx.body = {
       data: shop,
     };
@@ -54,7 +54,7 @@ router
     }
   )
   .patch('/:id', validateBody(Shop.getUpdateValidation()), async (ctx) => {
-    const shop = ctx.state.shop;
+    const { shop } = ctx.state;
     const snapshot = new Shop(shop);
 
     shop.assign(ctx.request.body);

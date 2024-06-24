@@ -45,7 +45,7 @@ router
     }
   )
   .patch('/:id', validateBody(Product.getUpdateValidation()), async (ctx) => {
-    const product = ctx.state.product;
+    const { product } = ctx.state;
     product.assign(ctx.request.body);
 
     await product.save();
@@ -55,7 +55,7 @@ router
     };
   })
   .delete('/:id', async (ctx) => {
-    const product = ctx.state.product;
+    const { product } = ctx.state;
     await product.delete();
     ctx.status = 204;
   });
