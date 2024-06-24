@@ -1,6 +1,7 @@
 import React from 'react';
 /* eslint-disable-next-line */
 import { Table, Header, Divider } from 'semantic';
+
 import { usePage } from 'stores/page';
 import screen from 'helpers/screen';
 
