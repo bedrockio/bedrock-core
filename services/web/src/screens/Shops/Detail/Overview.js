@@ -1,13 +1,13 @@
 import React from 'react';
 /* eslint-disable-next-line */
-import { Table, Header, Divider } from 'semantic';
+import { Table, Divider } from 'semantic';
 
 import { usePage } from 'stores/page';
 import screen from 'helpers/screen';
 
 // --- Generator: overview-imports
 /* eslint-disable-next-line */
-import { Image } from 'semantic';
+import { Header, Image } from 'semantic';
 import { arrayToList, formatAddress } from 'utils/formatting';
 
 import { formatDateTime } from 'utils/date';
