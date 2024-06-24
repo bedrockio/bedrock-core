@@ -2,11 +2,11 @@ import React from 'react';
 /* eslint-disable-next-line */
 import { Table, Header, Divider } from 'semantic';
 import { usePage } from 'stores/page';
+import screen from 'helpers/screen';
 
 // --- Generator: overview-imports
 /* eslint-disable-next-line */
 import { Image, Label } from 'semantic';
-import screen from 'helpers/screen';
 
 import { formatDateTime } from 'utils/date';
 import { formatAddress } from 'utils/formatting';
