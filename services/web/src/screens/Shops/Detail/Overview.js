@@ -5,15 +5,15 @@ import { Table, Header, Divider } from 'semantic';
 // --- Generator: overview-imports
 /* eslint-disable-next-line */
 import { Image, Label } from 'semantic';
-import screen from 'helpers/screen';
 import { usePage } from 'stores/page';
+import screen from 'helpers/screen';
 
 import { formatDateTime } from 'utils/date';
 import { formatAddress } from 'utils/formatting';
 import { urlForUpload } from 'utils/uploads';
+// --- Generator: end
 
 import Menu from './Menu';
-// --- Generator: end
 
 function ShopOverview() {
   const { shop } = usePage();
