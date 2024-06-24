@@ -4,9 +4,9 @@ import { Menu, Button } from 'semantic';
 
 import { usePage } from 'stores/page';
 
-import Breadcrumbs from 'components/Breadcrumbs';
-import Layout from 'components/Layout';
 import EditShop from 'modals/EditShop';
+import Layout from 'components/Layout';
+import Breadcrumbs from 'components/Breadcrumbs';
 
 import Actions from '../Actions';
 
