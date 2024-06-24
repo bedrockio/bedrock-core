@@ -19,13 +19,14 @@ import { request } from 'utils/api';
 // --- Generator: list-imports
 import allCountries from 'utils/countries';
 
-import Actions from '../Actions';
 const countries = allCountries.map(({ countryCode, nameEn }) => ({
   value: countryCode,
   text: nameEn,
   key: countryCode,
 }));
 // --- Generator: end
+
+import Actions from '../Actions';
 
 @screen
 export default class ShopList extends React.Component {
