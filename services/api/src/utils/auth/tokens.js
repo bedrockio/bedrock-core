@@ -1,8 +1,7 @@
 const jwt = require('jsonwebtoken');
-const config = require('@bedrockio/config');
 const { nanoid } = require('nanoid');
 
-const JWT_SECRET = config.get('JWT_SECRET');
+const { JWT_SECRET } = process.env;
 
 // All expires are expressed in seconds (jwt spec)
 const expiresIn = {
