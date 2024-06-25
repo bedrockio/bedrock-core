@@ -9,12 +9,11 @@ const serializeMiddleware = require('./utils/middleware/serialize');
 const organizationMiddleware = require('./utils/middleware/organization');
 const { applicationMiddleware } = require('./utils/middleware/application');
 const { loadDefinition } = require('./utils/openapi');
+const logger = require('@bedrockio/logger');
 const Sentry = require('@sentry/node');
 const routes = require('./routes');
-const config = require('@bedrockio/config');
-const logger = require('@bedrockio/logger');
 
-const ENV_NAME = config.get('ENV_NAME');
+const { ENV_NAME, SENTRY_DSN } = process.env;
 
 const app = new Koa();
 
@@ -74,9 +73,9 @@ app.on('error', (err, ctx) => {
   }
 });
 
-if (config.has('SENTRY_DSN')) {
+if (SENTRY_DSN) {
   Sentry.init({
-    dsn: config.get('SENTRY_DSN'),
+    dsn: SENTRY_DSN,
     environment: ENV_NAME,
   });
 }
