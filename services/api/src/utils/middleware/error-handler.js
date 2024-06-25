@@ -1,6 +1,6 @@
-const config = require('@bedrockio/config');
 const { isSchemaError } = require('@bedrockio/yada');
-const ENV_NAME = config.get('ENV_NAME');
+
+const { ENV_NAME } = process.env;
 
 async function errorHandler(ctx, next) {
   try {

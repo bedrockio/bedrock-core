@@ -1,8 +1,7 @@
 const crypto = require('crypto');
-const config = require('@bedrockio/config');
 const twilio = jest.requireActual('twilio');
 
-const AUTH_TOKEN = config.get('TWILIO_AUTH_TOKEN');
+const { AUTH_TOKEN } = process.env;
 
 let sentMessages;
 let createdRooms;

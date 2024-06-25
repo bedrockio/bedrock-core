@@ -1,7 +1,6 @@
 const { Organization } = require('../../models');
-const config = require('@bedrockio/config');
 
-const DEFAULT_ORGANIZATION_NAME = config.get('DEFAULT_ORGANIZATION_NAME');
+const { DEFAULT_ORGANIZATION_NAME } = process.env;
 
 async function organization(ctx, next) {
   const identifier = ctx.request.get('organization') || '';
