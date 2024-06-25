@@ -85,22 +85,26 @@ describe('csvExport', () => {
     `);
   });
 
-  it('should call toObject to prevent private field access', async () => {
-    const obj = {
-      user,
-      toObject: () => {
-        return {
-          user: {
-            firstName: 'Frank',
-            lastName: 'Reynolds',
-          },
-        };
+  it('should not export fields with no read access', async () => {
+    const User = createTestModel({
+      name: {
+        type: 'String',
       },
-    };
-    const csv = await run([obj]);
+      secret: {
+        type: 'String',
+        readAccess: 'none',
+      },
+    });
+    const user = await User.create({
+      name: 'Frank',
+      secret: 'secret!!',
+    });
+    const created = user.createdAt.toISOString();
+    const updated = user.updatedAt.toISOString();
+    const csv = await run([user]);
     expect(csv).toBe(d`
-      user.firstName,user.lastName
-      Frank,Reynolds
+      name,createdAt,updatedAt
+      Frank,${created},${updated}
     `);
   });
 
