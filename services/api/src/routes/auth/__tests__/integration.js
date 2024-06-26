@@ -32,7 +32,7 @@ describe('mfa', () => {
       });
 
       assertSmsSent({
-        to: '+12223456789',
+        phone: '+12223456789',
       });
 
       user = await User.findById(user.id);
@@ -81,7 +81,7 @@ describe('mfa', () => {
       });
 
       assertMailSent({
-        to: user.email,
+        email: user.email,
       });
 
       user = await User.findById(user.id);

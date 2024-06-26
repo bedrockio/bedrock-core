@@ -9,16 +9,16 @@ const { requirePermissions } = require('../utils/middleware/permissions');
 const { createAuthToken } = require('../utils/auth/tokens');
 const { Invite, User, AuditEntry } = require('../models');
 
-const { sendMessage, mailer } = require('../utils/messaging');
+const { sendMessage, sendMail } = require('../utils/messaging');
 const { createInviteToken } = require('../utils/auth/tokens');
 
 const router = new Router();
 
 function sendInvite(sender, invite) {
   const token = createInviteToken(invite);
-  return mailer.sendMail({
-    to: invite.email,
-    template: 'invite.md',
+  return sendMail({
+    email: invite.email,
+    template: 'invite',
     sender,
     token,
   });

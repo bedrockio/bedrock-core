@@ -19,7 +19,7 @@ describe('POST /signup', () => {
       expect(response.status).toBe(200);
 
       assertMailSent({
-        to: email,
+        email,
       });
 
       const user = await User.findOne({
@@ -38,7 +38,7 @@ describe('POST /signup', () => {
       ]);
 
       assertMailSent({
-        to: user.email,
+        email: user.email,
         template: 'welcome',
       });
     });
@@ -77,7 +77,7 @@ describe('POST /signup', () => {
       });
 
       assertMailSent({
-        to: email,
+        email,
         template: 'otp-signup-link',
       });
 
@@ -113,7 +113,7 @@ describe('POST /signup', () => {
       });
 
       assertMailSent({
-        to: email,
+        email,
         template: 'otp-signup-code',
       });
 
@@ -163,7 +163,7 @@ describe('POST /signup', () => {
       });
 
       assertSmsSent({
-        to: phone,
+        phone,
         template: 'otp-signup-link',
       });
 
@@ -200,7 +200,7 @@ describe('POST /signup', () => {
       });
 
       assertSmsSent({
-        to: phone,
+        phone,
         template: 'otp-signup-code',
       });
 

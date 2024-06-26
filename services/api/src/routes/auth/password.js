@@ -8,7 +8,7 @@ const { createAuthToken, createTemporaryAuthToken } = require('../../utils/auth/
 const { login, verifyLoginAttempts } = require('../../utils/auth');
 const { verifyPassword } = require('../../utils/auth/password');
 const { sendOtp } = require('../../utils/auth/otp');
-const { mailer } = require('../../utils/messaging');
+const { sendMail } = require('../../utils/messaging');
 const { User, AuditEntry } = require('../../models');
 
 const router = new Router();
@@ -94,11 +94,11 @@ router
         const token = createTemporaryAuthToken(ctx, user);
         await user.save();
 
-        await mailer.sendMail({
+        await sendMail({
           user,
           email,
           token,
-          template: 'reset-password.md',
+          template: 'reset-password',
         });
       }
 

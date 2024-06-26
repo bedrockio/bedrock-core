@@ -37,6 +37,40 @@
       "default": false,
       "writeAccess": "none"
     },
+    "deviceToken": {
+      "type": "String"
+    },
+    "notifications": [
+      {
+        "name": {
+          "type": "String",
+          "required": true
+        },
+        "sms": {
+          "type": "Boolean",
+          "default": false
+        },
+        "push": {
+          "type": "Boolean",
+          "default": false
+        },
+        "email": {
+          "type": "Boolean",
+          "default": false
+        },
+        "sentCount": {
+          "type": "Number",
+          "default": 0,
+          "readAccess": "none",
+          "writeAccess": "none"
+        },
+        "lastSentAt": {
+          "type": "Date",
+          "readAccess": "none",
+          "writeAccess": "none"
+        }
+      }
+    ],
     "roles": [
       {
         "role": {

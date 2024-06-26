@@ -15,17 +15,19 @@ const POSTMARK_API_KEY = config.get('POSTMARK_API_KEY');
 const POSTMARK_DEV_EMAIL = config.get('POSTMARK_DEV_EMAIL');
 const POSTMARK_WEBHOOK_KEY = config.get('POSTMARK_WEBHOOK_KEY');
 
-const TEMPLATE_DIR = path.join(__dirname, '../../emails');
+const TEMPLATE_DIR = path.join(__dirname, '../../templates/emails');
 
 const DEFAULT_LAYOUT = 'layout.html';
 
 async function sendMail(options) {
-  let { template, layout = DEFAULT_LAYOUT, to, ...params } = options;
+  let { layout = DEFAULT_LAYOUT, ...params } = options;
 
-  to ||= getAddresses(to, options);
+  const email = getAddresses(options);
 
-  const { body: templateBody, meta: templateMeta } = await loadTemplate(template, TEMPLATE_DIR);
-  const { body: layoutBody } = await loadTemplate(layout, TEMPLATE_DIR);
+  const { body: templateBody, meta: templateMeta } = await loadTemplate(TEMPLATE_DIR, options);
+  const { body: layoutBody } = await loadTemplate(TEMPLATE_DIR, {
+    file: layout,
+  });
 
   params = {
     ...templateMeta,
@@ -47,24 +49,24 @@ async function sendMail(options) {
   const subject = interpolate(templateMeta.subject || '{{subject}}', params);
 
   await dispatchMail({
-    to,
+    email,
     html,
     text,
     body,
     subject,
-    template,
+    template: params.template,
   });
 }
 
 async function dispatchMail(options) {
-  let { to, subject, html, text, body, template } = options;
+  let { email, subject, html, text, body, template } = options;
   if (ENV_NAME === 'development') {
     if (POSTMARK_DEV_EMAIL) {
-      to = POSTMARK_DEV_EMAIL;
+      email = POSTMARK_DEV_EMAIL;
     } else {
       logger.info(`
   ---------- Email Sent -------------
-  To: ${to}
+  To: ${email}
   Body:
   ${text}
   --------------------------
@@ -73,13 +75,13 @@ async function dispatchMail(options) {
     return;
   }
 
-  logger.debug(`Sending email to ${to}`);
+  logger.debug(`Sending email to ${email}`);
 
   try {
     const client = new postmark.ServerClient(POSTMARK_API_KEY);
     await client.sendEmail({
       From: `${APP_NAME} <${POSTMARK_FROM}>`,
-      To: to,
+      To: email,
       Subject: subject,
       TextBody: text,
       HtmlBody: html,
@@ -87,7 +89,7 @@ async function dispatchMail(options) {
       body,
     });
   } catch (error) {
-    logger.error(`Error happened while sending email to ${to} (${error.message})`);
+    logger.error(`Error happened while sending email to ${email} (${error.message})`);
     logger.error(error);
   }
 }
@@ -124,8 +126,13 @@ marked.use({
   },
 });
 
-function getAddresses(to, options) {
-  let { user, users = [] } = options;
+function getAddresses(options) {
+  let { email, user, users = [] } = options;
+
+  if (email) {
+    return email;
+  }
+
   if (user) {
     users = [user];
   }

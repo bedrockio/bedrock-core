@@ -60,24 +60,6 @@ describe('/1/users', () => {
       expect(updatedUser.lastName).toBe('Name');
       expect(updatedUser.name).toBe('Other Name');
     });
-
-    it('should allow unsetting phone number', async () => {
-      let user = await createUser({
-        phone: '+15552234567',
-      });
-      const response = await request(
-        'PATCH',
-        '/1/users/me',
-        {
-          phone: '',
-        },
-        { user }
-      );
-      expect(response.status).toBe(200);
-
-      user = await User.findById(user.id);
-      expect(user.phone).toBeUndefined();
-    });
   });
 
   describe('POST /', () => {

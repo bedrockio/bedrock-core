@@ -11,6 +11,7 @@ import * as Products from './Products.mdx';
 import * as Uploads from './Uploads.mdx';
 import * as Signup from './Signup.mdx';
 import * as Shops from './Shops.mdx';
+import * as Users from './Users.mdx';
 
 const PAGES = {
   Authentication,
@@ -24,6 +25,7 @@ const PAGES = {
   Uploads,
   Signup,
   Shops,
+  Users,
 };
 
 export const DEFAULT_PAGE_ID = 'getting-started';

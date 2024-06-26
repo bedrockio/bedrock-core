@@ -29,6 +29,7 @@ if (['staging', 'development'].includes(ENV_NAME)) {
       ignorePaths: [
         '/',
         '/openapi.json',
+        '/1/meta',
         '/1/status',
         '/1/status/mongodb',
         /\/1\/applications/,

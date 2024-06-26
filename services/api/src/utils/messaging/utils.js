@@ -33,9 +33,10 @@ function escapeHtml(str) {
 // Templates
 
 const loadTemplate = memoize(
-  async (name, dir) => {
-    if (name) {
-      const raw = await loadTemplateFile(path.join(dir, name));
+  async (dir, options) => {
+    const file = options.file || options.template;
+    if (file) {
+      const raw = await loadTemplateFile(path.join(dir, file));
       const { body, attributes: meta } = frontmatter(raw);
       return {
         body,
@@ -48,8 +49,9 @@ const loadTemplate = memoize(
       };
     }
   },
-  (name, dir) => {
-    return path.join(dir, name || '');
+  (dir, options) => {
+    const file = options.file || options.template;
+    return path.join(dir, file || '');
   }
 );
 

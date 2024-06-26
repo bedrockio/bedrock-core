@@ -1,4 +1,6 @@
 const Router = require('@koa/router');
+
+const meta = require('./meta');
 const docs = require('./docs');
 const auth = require('./auth');
 const users = require('./users');
@@ -17,6 +19,7 @@ const router = new Router({
   prefix: '/1',
 });
 
+router.use('/meta', meta.routes());
 router.use('/docs', docs.routes());
 router.use('/auth', auth.routes());
 router.use('/users', users.routes());

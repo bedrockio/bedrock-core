@@ -34,6 +34,7 @@
     "bcrypt": "^5.1.0",
     "commander": "^12.1.0",
     "fast-csv": "^5.0.1",
+    "firebase-admin": "^12.2.0",
     "front-matter": "^4.0.2",
     "glob": "^11.0.0",
     "google-auth-library": "^9.2.0",

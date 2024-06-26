@@ -25,13 +25,13 @@ function assertMailCount(count) {
 class ServerClient {
   sendEmail(email) {
     sentMessages.push({
-      to: normalizeAddress(email.To),
+      email: normalizeAddress(email.To),
       from: normalizeAddress(email.From),
       subject: email.Subject,
       text: email.TextBody.trim(),
       html: email.HtmlBody.trim(),
-      body: email.body,
       template: email.template,
+      body: email.body,
     });
   }
 }

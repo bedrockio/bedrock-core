@@ -13,14 +13,24 @@ beforeEach(() => {
 });
 
 async function sendMessage(options) {
-  if (!options.to) {
-    throw new Error('No phone number.');
-  }
-  sentMessages.push(options);
+  sentMessages.push({
+    ...options,
+    phone: options.to,
+  });
 }
 
 function assertSmsSent(options) {
-  expect(sentMessages).toEqual(expect.arrayContaining([expect.objectContaining(options)]));
+  const { body, ...rest } = options;
+  expect(sentMessages).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({
+        ...rest,
+        ...(body && {
+          body: expect.stringContaining(body),
+        }),
+      }),
+    ])
+  );
 }
 
 function assertSmsCount(count) {

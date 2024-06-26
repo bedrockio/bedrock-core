@@ -82,7 +82,9 @@ describe('/1/invites', () => {
         { user }
       );
       expect(response.status).toBe(204);
-      assertMailSent({ to: 'new@platform.com' });
+      assertMailSent({
+        email: 'new@platform.com',
+      });
     });
 
     it('should throw an error if user already exists', async () => {

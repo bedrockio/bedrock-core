@@ -1,4 +1,4 @@
-const { sendMessage } = require('../sms');
+const { sendSms } = require('../sms');
 const { assertSmsSent } = require('twilio');
 const { createUser } = require('../../testing');
 
@@ -28,15 +28,15 @@ jest.mock('fs/promises', () => ({
   },
 }));
 
-describe('sendMessage', () => {
+describe('sendSms', () => {
   describe('without template', () => {
     it('should send out a basic sms with body', async () => {
-      await sendMessage({
-        to: '+11111111111',
+      await sendSms({
+        phone: '+11111111111',
         body: 'Hello!',
       });
       assertSmsSent({
-        to: '+11111111111',
+        phone: '+11111111111',
         body: 'Hello!',
       });
     });
@@ -44,49 +44,49 @@ describe('sendMessage', () => {
 
   describe('with template', () => {
     it('send out sms with template', async () => {
-      await sendMessage({
-        to: '+11111111111',
-        template: 'welcome.txt',
+      await sendSms({
+        phone: '+11111111111',
+        file: 'welcome.txt',
       });
       assertSmsSent({
-        to: '+11111111111',
+        phone: '+11111111111',
         body: 'Welcome!',
       });
     });
 
     it('should interpolate variables in template', async () => {
-      await sendMessage({
-        to: '+11111111111',
+      await sendSms({
+        phone: '+11111111111',
         body: 'Hello!',
         url: 'https://foo.com',
         fullName: 'Marlon Brando',
-        template: 'interpolated.txt',
+        file: 'interpolated.txt',
       });
       assertSmsSent({
-        to: '+11111111111',
+        phone: '+11111111111',
         body: 'Hello Marlon Brando. Welcome to https://foo.com.',
       });
     });
 
     it('should assume an extension for a template', async () => {
-      await sendMessage({
-        to: '+11111111111',
+      await sendSms({
+        phone: '+11111111111',
         template: 'welcome',
       });
       assertSmsSent({
-        to: '+11111111111',
+        phone: '+11111111111',
         body: 'Welcome!',
       });
     });
 
     it('should not escape apostrophes', async () => {
-      await sendMessage({
-        to: '+11111111111',
-        template: 'escape.txt',
+      await sendSms({
+        phone: '+11111111111',
+        file: 'escape.txt',
         body: "It's me!",
       });
       assertSmsSent({
-        to: '+11111111111',
+        phone: '+11111111111',
         body: "It's me!",
       });
     });
@@ -94,15 +94,16 @@ describe('sendMessage', () => {
 
   describe('other', () => {
     it('should be able to send an sms to a user without to', async () => {
+      const phone = '+11111111111';
       const user = await createUser({
-        phone: '+15552234567',
+        phone,
       });
-      await sendMessage({
+      await sendSms({
         user,
         body: 'Hello!',
       });
       assertSmsSent({
-        to: user.phone,
+        phone,
         body: 'Hello!',
       });
     });

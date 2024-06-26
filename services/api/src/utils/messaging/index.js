@@ -1,13 +1,14 @@
-const sms = require('./sms');
-const mailer = require('./mailer');
+const { sendSms } = require('./sms');
+const { sendPush } = require('./push');
+const { sendMail } = require('./mail');
 
 async function sendMessage(options) {
   const { user, transport = getTransport(user) } = options;
 
   if (transport === 'email') {
-    await mailer.sendMail(options);
+    await sendMail(options);
   } else if (transport === 'sms') {
-    await sms.sendMessage(options);
+    await sendSms(options);
   } else {
     throw new Error('No transport found to send message.');
   }
@@ -22,7 +23,8 @@ function getTransport(user) {
 }
 
 module.exports = {
-  sms,
-  mailer,
+  sendSms,
+  sendMail,
+  sendPush,
   sendMessage,
 };

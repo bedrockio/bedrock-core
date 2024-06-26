@@ -14,31 +14,31 @@ const TEST_NUMBER = config.get('TWILIO_TEST_NUMBER');
 const FROM_NUMBER = config.get('TWILIO_FROM_NUMBER');
 const WEBHOOK_URL = config.get('TWILIO_WEBHOOK_URL');
 
-const TEMPLATE_DIR = path.join(__dirname, '../../sms');
+const TEMPLATE_DIR = path.join(__dirname, '../../templates/sms');
 
 const client = twilio(ACCOUNT_SID, AUTH_TOKEN);
 
-async function sendMessage(options) {
-  let { to, user, template, ...params } = options;
+async function sendSms(options) {
+  let { phone, user, ...params } = options;
 
-  to ||= user?.phone;
+  phone ||= user?.phone;
 
-  if (!to) {
+  if (!phone) {
     throw new Error('No phone number specified.');
   }
 
-  const { body: templateBody } = await loadTemplate(template, TEMPLATE_DIR);
+  const { body: templateBody } = await loadTemplate(TEMPLATE_DIR, options);
 
   const body = interpolate(templateBody, params);
 
   if (ENV_NAME === 'development') {
     if (TEST_NUMBER) {
-      to = TEST_NUMBER;
+      phone = TEST_NUMBER;
     } else {
       logger.info(`
 
 ---------- SMS Sent -------------
-To: ${to}
+To: ${phone}
 Body: ${body}
 --------------------------
 
@@ -47,13 +47,13 @@ Body: ${body}
     }
   }
 
-  logger.debug(`Sending SMS to ${to}`);
+  logger.debug(`Sending SMS to ${phone}`);
 
   await client.messages.create({
-    ...options,
-    from: FROM_NUMBER,
-    to,
     body,
+    to: phone,
+    from: FROM_NUMBER,
+    template: params.template,
   });
 }
 
@@ -90,7 +90,7 @@ function validateSignature(ctx) {
 }
 
 module.exports = {
-  sendMessage,
+  sendSms,
   getWebhookUrl,
   validateSignature,
 };

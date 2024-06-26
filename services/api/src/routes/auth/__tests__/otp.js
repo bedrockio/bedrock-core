@@ -27,7 +27,7 @@ describe('/1/auth/otp', () => {
         });
 
         assertMailSent({
-          to: email,
+          email,
           template: 'otp-login-link',
         });
       });
@@ -51,7 +51,7 @@ describe('/1/auth/otp', () => {
         });
 
         assertSmsSent({
-          to: phone,
+          phone,
           template: 'otp-login-link',
         });
       });
@@ -78,7 +78,7 @@ describe('/1/auth/otp', () => {
         });
 
         assertSmsSent({
-          to: phone,
+          phone,
           template: 'otp-login-code',
         });
       });

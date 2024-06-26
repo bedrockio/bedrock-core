@@ -1,4 +1,4 @@
-const { sendMail } = require('../mailer');
+const { sendMail } = require('../mail');
 const { assertMailSent } = require('postmark');
 const { createUser } = require('../../testing');
 
@@ -58,11 +58,11 @@ describe('sendMail', () => {
   describe('without template', () => {
     it('should send out a basic mail', async () => {
       await sendMail({
-        to: 'marlon@brando.com',
+        email: 'marlon@brando.com',
         body: 'Hello!',
       });
       assertMailSent({
-        to: 'marlon@brando.com',
+        email: 'marlon@brando.com',
         body: 'Hello!',
         subject: '',
       });
@@ -70,12 +70,12 @@ describe('sendMail', () => {
 
     it('should send out a mail with a subject', async () => {
       await sendMail({
-        to: 'marlon@brando.com',
+        email: 'marlon@brando.com',
         subject: 'Welcome',
         body: 'Hello!',
       });
       assertMailSent({
-        to: 'marlon@brando.com',
+        email: 'marlon@brando.com',
         subject: 'Welcome',
         body: 'Hello!',
       });
@@ -83,34 +83,34 @@ describe('sendMail', () => {
 
     it('should not touch URLs in text body', async () => {
       await sendMail({
-        to: 'marlon@brando.com',
+        email: 'marlon@brando.com',
         body: 'Hello! http://foo.com',
       });
       assertMailSent({
-        to: 'marlon@brando.com',
+        email: 'marlon@brando.com',
         text: 'Hello! http://foo.com',
       });
     });
 
     it('should convert markdown in text body', async () => {
       await sendMail({
-        to: 'marlon@brando.com',
+        email: 'marlon@brando.com',
         body: '**[foo](http://foo.com)**',
         layout: 'full.html',
       });
       assertMailSent({
-        to: 'marlon@brando.com',
+        email: 'marlon@brando.com',
         text: 'foo (http://foo.com)',
       });
     });
 
     it('should convert single paragraph links to buttons', async () => {
       await sendMail({
-        to: 'marlon@brando.com',
+        email: 'marlon@brando.com',
         body: '**[foo](http://foo.com)**',
       });
       assertMailSent({
-        to: 'marlon@brando.com',
+        email: 'marlon@brando.com',
         html: '<body><p><strong><a href="http://foo.com" class="button" target="_blank"><span class="text">foo</span></a></strong></p></body>',
       });
     });
@@ -119,23 +119,23 @@ describe('sendMail', () => {
   describe('with template', () => {
     it('should send out a templated mail', async () => {
       await sendMail({
-        to: 'marlon@brando.com',
-        template: 'welcome.md',
+        email: 'marlon@brando.com',
+        file: 'welcome.md',
       });
       assertMailSent({
-        to: 'marlon@brando.com',
+        email: 'marlon@brando.com',
         body: 'Welcome!',
       });
     });
 
     it('should be able to specify the subject with frontmatter', async () => {
       await sendMail({
-        to: 'marlon@brando.com',
+        email: 'marlon@brando.com',
         name: 'Marlon',
-        template: 'with-subject.md',
+        file: 'with-subject.md',
       });
       assertMailSent({
-        to: 'marlon@brando.com',
+        email: 'marlon@brando.com',
         text: 'Welcome!',
         subject: 'Hello Marlon!',
       });
@@ -143,44 +143,44 @@ describe('sendMail', () => {
 
     it('should convert html body to plain text', async () => {
       await sendMail({
-        to: 'marlon@brando.com',
-        template: 'link.md',
+        email: 'marlon@brando.com',
+        file: 'link.md',
       });
       assertMailSent({
-        to: 'marlon@brando.com',
+        email: 'marlon@brando.com',
         text: "I'm a link (http://example.com) inside the body.",
       });
     });
 
     it('should be able to assert on the text body', async () => {
       await sendMail({
-        to: 'marlon@brando.com',
-        template: 'link.md',
+        email: 'marlon@brando.com',
+        file: 'link.md',
       });
       assertMailSent({
-        to: 'marlon@brando.com',
+        email: 'marlon@brando.com',
         body: "I'm a [link](http://example.com) inside the body.",
       });
     });
 
     it('should assume an extension for a template', async () => {
       await sendMail({
-        to: 'marlon@brando.com',
+        email: 'marlon@brando.com',
         template: 'welcome',
       });
       assertMailSent({
-        to: 'marlon@brando.com',
+        email: 'marlon@brando.com',
         body: 'Welcome!',
       });
     });
 
     it('should escape brackets', async () => {
       await sendMail({
-        to: 'marlon@brando.com',
+        email: 'marlon@brando.com',
         body: '2 > 1',
       });
       assertMailSent({
-        to: 'marlon@brando.com',
+        email: 'marlon@brando.com',
         body: '2 &gt; 1',
       });
     });
@@ -194,7 +194,7 @@ describe('sendMail', () => {
         body: 'Hello!',
       });
       assertMailSent({
-        to: user.email,
+        email: user.email,
         body: 'Hello!',
       });
     });
@@ -207,7 +207,7 @@ describe('sendMail', () => {
         body: 'Hello!',
       });
       assertMailSent({
-        to: `${user1.email},${user2.email}`,
+        email: `${user1.email},${user2.email}`,
         body: 'Hello!',
       });
     });
