@@ -6,7 +6,7 @@ const { login, register, signupValidation, verifyLoginAttempts } = require('../.
 const { verifyRecentPassword } = require('../../../utils/auth/password');
 const { createOtp, verifyOtp } = require('../../../utils/auth/otp');
 
-const { mailer, sms } = require('../../../utils/messaging');
+const { sendMessage } = require('../../../utils/messaging');
 const { User, AuditEntry } = require('../../../models');
 
 const router = new Router();
@@ -40,19 +40,12 @@ router
       // If no user continue on as if code was sent.
       if (user) {
         const code = await createOtp(user);
-        if (phone) {
-          await sms.sendMessage({
-            to: phone,
-            template: 'otp',
-            code,
-          });
-        } else if (email) {
-          await mailer.sendMail({
-            to: email,
-            template: 'otp',
-            code,
-          });
-        }
+        await sendMessage({
+          phone,
+          email,
+          code,
+          template: 'otp',
+        });
       }
 
       ctx.status = 204;

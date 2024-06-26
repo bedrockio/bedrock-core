@@ -25,25 +25,14 @@ router
       data: expandRoles(authUser, ctx),
     };
   })
-  .patch(
-    '/me',
-    validateBody({
-      phone: yd.string().phone(),
-      mfaMethod: yd.string(),
-      firstName: yd.string(),
-      lastName: yd.string(),
-      timeZone: yd.string(),
-      theme: yd.string(),
-    }),
-    async (ctx) => {
-      const { authUser } = ctx.state;
-      authUser.assign(ctx.request.body);
-      await authUser.save();
-      ctx.body = {
-        data: expandRoles(authUser, ctx),
-      };
-    }
-  )
+  .patch('/me', validateBody(User.getUpdateValidation()), async (ctx) => {
+    const { authUser } = ctx.state;
+    authUser.assign(ctx.request.body);
+    await authUser.save();
+    ctx.body = {
+      data: expandRoles(authUser, ctx),
+    };
+  })
   .post('/:id/authenticate', requirePermissions('users.impersonate'), async (ctx) => {
     const { user } = ctx.state;
     const authUser = ctx.state.authUser;

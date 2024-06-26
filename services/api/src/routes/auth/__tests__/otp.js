@@ -18,7 +18,7 @@ describe('/1/auth/otp', () => {
       expect(response.status).toBe(204);
 
       assertSmsSent({
-        to: user.phone,
+        phone: user.phone,
       });
     });
 
@@ -32,7 +32,7 @@ describe('/1/auth/otp', () => {
       expect(response.status).toBe(204);
 
       assertMailSent({
-        to: user.email,
+        email: user.email,
       });
     });
 

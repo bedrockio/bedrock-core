@@ -10,6 +10,9 @@
     }
   ],
   "paths": {
+    "/1/meta": {
+      "get": {}
+    },
     "/1/docs": {
       "patch": {
         "requestBody": {
@@ -699,26 +702,252 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "phone": {
-                    "format": "phone",
-                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
-                    "type": "string",
-                    "x-generated": true
-                  },
-                  "mfaMethod": {
-                    "type": "string"
-                  },
                   "firstName": {
                     "type": "string"
                   },
                   "lastName": {
                     "type": "string"
                   },
-                  "timeZone": {
+                  "email": {
+                    "format": "email",
                     "type": "string"
                   },
-                  "theme": {
-                    "type": "string"
+                  "phone": {
+                    "format": "phone",
+                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "enum": [
+                          null
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          ""
+                        ]
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ]
+                  },
+                  "emailVerified": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "enum": [
+                          null
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          ""
+                        ]
+                      },
+                      {
+                        "type": "boolean"
+                      }
+                    ]
+                  },
+                  "phoneVerified": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "enum": [
+                          null
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          ""
+                        ]
+                      },
+                      {
+                        "type": "boolean"
+                      }
+                    ]
+                  },
+                  "deviceToken": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "enum": [
+                          null
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          ""
+                        ]
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ]
+                  },
+                  "notifications": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "enum": [
+                          null
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          ""
+                        ]
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "required": true,
+                              "type": "string"
+                            },
+                            "sms": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "enum": [
+                                    null
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    ""
+                                  ]
+                                },
+                                {
+                                  "type": "boolean"
+                                }
+                              ]
+                            },
+                            "push": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "enum": [
+                                    null
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    ""
+                                  ]
+                                },
+                                {
+                                  "type": "boolean"
+                                }
+                              ]
+                            },
+                            "email": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "enum": [
+                                    null
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    ""
+                                  ]
+                                },
+                                {
+                                  "type": "boolean"
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "roles": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "enum": [
+                          null
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          ""
+                        ]
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "role": {
+                              "required": true,
+                              "type": "string"
+                            },
+                            "scope": {
+                              "required": true,
+                              "type": "string",
+                              "enum": [
+                                "global",
+                                "organization"
+                              ]
+                            },
+                            "scopeRef": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "enum": [
+                                    null
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    ""
+                                  ]
+                                },
+                                {
+                                  "$ref": "#/components/schemas/Reference"
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "isTester": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "enum": [
+                          null
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          ""
+                        ]
+                      },
+                      {
+                        "type": "boolean"
+                      }
+                    ]
                   }
                 }
               }
@@ -749,8 +978,7 @@
         ],
         "x-permissions": {
           "endpoint": "users",
-          "permission": "write",
-          "scope": "global"
+          "permission": "impersonate"
         }
       }
     },
@@ -763,9 +991,8 @@
           }
         ],
         "x-permissions": {
-          "endpoint": "users",
-          "permission": "read",
-          "scope": "global"
+          "endpoint": "roles",
+          "permission": "list"
         }
       }
     },
@@ -778,9 +1005,8 @@
           }
         ],
         "x-permissions": {
-          "endpoint": "users",
-          "permission": "read",
-          "scope": "global"
+          "endpoint": "roles",
+          "permission": "list"
         }
       }
     },
@@ -860,6 +1086,48 @@
                   "phoneVerified": {
                     "type": "boolean"
                   },
+                  "deviceToken": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "notifications": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "oneOf": [
+                          {
+                            "required": true,
+                            "type": "string"
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "required": true,
+                              "type": "string"
+                            }
+                          }
+                        ]
+                      },
+                      "sms": {
+                        "type": "boolean"
+                      },
+                      "push": {
+                        "type": "boolean"
+                      },
+                      "email": {
+                        "type": "boolean"
+                      }
+                    }
+                  },
                   "roles": {
                     "type": "object",
                     "properties": {
@@ -915,29 +1183,6 @@
                         ]
                       }
                     }
-                  },
-                  "theme": {
-                    "oneOf": [
-                      {
-                        "type": "string",
-                        "enum": [
-                          "dark",
-                          "light",
-                          "system"
-                        ]
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "string",
-                          "enum": [
-                            "dark",
-                            "light",
-                            "system"
-                          ]
-                        }
-                      }
-                    ]
                   },
                   "isTester": {
                     "type": "boolean"
@@ -1085,9 +1330,8 @@
           }
         ],
         "x-permissions": {
-          "endpoint": "users",
-          "permission": "read",
-          "scope": "global"
+          "endpoint": "roles",
+          "permission": "list"
         }
       }
     },
@@ -1108,9 +1352,8 @@
           }
         ],
         "x-permissions": {
-          "endpoint": "users",
-          "permission": "read",
-          "scope": "global"
+          "endpoint": "roles",
+          "permission": "list"
         }
       },
       "patch": {
@@ -1191,6 +1434,110 @@
                       }
                     ]
                   },
+                  "deviceToken": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "enum": [
+                          null
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          ""
+                        ]
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ]
+                  },
+                  "notifications": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "enum": [
+                          null
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          ""
+                        ]
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "required": true,
+                              "type": "string"
+                            },
+                            "sms": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "enum": [
+                                    null
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    ""
+                                  ]
+                                },
+                                {
+                                  "type": "boolean"
+                                }
+                              ]
+                            },
+                            "push": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "enum": [
+                                    null
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    ""
+                                  ]
+                                },
+                                {
+                                  "type": "boolean"
+                                }
+                              ]
+                            },
+                            "email": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "enum": [
+                                    null
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    ""
+                                  ]
+                                },
+                                {
+                                  "type": "boolean"
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
                   "roles": {
                     "oneOf": [
                       {
@@ -1246,14 +1593,6 @@
                       }
                     ]
                   },
-                  "theme": {
-                    "type": "string",
-                    "enum": [
-                      "dark",
-                      "light",
-                      "system"
-                    ]
-                  },
                   "isTester": {
                     "oneOf": [
                       {
@@ -1292,8 +1631,7 @@
         ],
         "x-permissions": {
           "endpoint": "users",
-          "permission": "write",
-          "scope": "global"
+          "permission": "create"
         }
       },
       "delete": {
@@ -1313,8 +1651,7 @@
         ],
         "x-permissions": {
           "endpoint": "users",
-          "permission": "write",
-          "scope": "global"
+          "permission": "create"
         }
       }
     },
@@ -1353,6 +1690,30 @@
                   "phoneVerified": {
                     "type": "boolean"
                   },
+                  "deviceToken": {
+                    "type": "string"
+                  },
+                  "notifications": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "required": true,
+                          "type": "string"
+                        },
+                        "sms": {
+                          "type": "boolean"
+                        },
+                        "push": {
+                          "type": "boolean"
+                        },
+                        "email": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  },
                   "roles": {
                     "type": "array",
                     "items": {
@@ -1376,14 +1737,6 @@
                       }
                     }
                   },
-                  "theme": {
-                    "type": "string",
-                    "enum": [
-                      "dark",
-                      "light",
-                      "system"
-                    ]
-                  },
                   "isTester": {
                     "type": "boolean"
                   },
@@ -1404,8 +1757,7 @@
         ],
         "x-permissions": {
           "endpoint": "users",
-          "permission": "write",
-          "scope": "global"
+          "permission": "create"
         }
       }
     },
@@ -2741,6 +3093,12 @@
             "in": "path",
             "required": true
           }
+        ],
+        "security": [
+          {},
+          {
+            "bearerAuth": []
+          }
         ]
       },
       "delete": {
@@ -2769,12 +3127,54 @@
             "in": "path",
             "required": true
           }
+        ],
+        "security": [
+          {},
+          {
+            "bearerAuth": []
+          }
         ]
       }
     },
     "/1/uploads": {
       "post": {
         "summary": "Create new upload",
+        "x-model": "Upload",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": true,
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "required": true,
+                    "oneOf": [
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "object"
+                        }
+                      },
+                      {
+                        "type": "object"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/1/uploads/private": {
+      "post": {
         "x-model": "Upload",
         "requestBody": {
           "content": {
@@ -2850,6 +3250,19 @@
                 "type": "object",
                 "properties": {
                   "email": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "role": {
                     "oneOf": [
                       {
                         "type": "string"
@@ -3006,8 +3419,7 @@
         ],
         "x-permissions": {
           "endpoint": "users",
-          "permission": "read",
-          "scope": "global"
+          "permission": "read"
         }
       }
     },
@@ -3028,6 +3440,9 @@
                       "format": "email",
                       "type": "string"
                     }
+                  },
+                  "role": {
+                    "type": "string"
                   }
                 }
               }
@@ -3041,8 +3456,7 @@
         ],
         "x-permissions": {
           "endpoint": "users",
-          "permission": "write",
-          "scope": "global"
+          "permission": "invite"
         }
       }
     },
@@ -3063,8 +3477,7 @@
         ],
         "x-permissions": {
           "endpoint": "users",
-          "permission": "write",
-          "scope": "global"
+          "permission": "invite"
         }
       }
     },
@@ -3086,8 +3499,7 @@
         ],
         "x-permissions": {
           "endpoint": "users",
-          "permission": "write",
-          "scope": "global"
+          "permission": "invite"
         }
       }
     },
@@ -3541,8 +3953,7 @@
         ],
         "x-permissions": {
           "endpoint": "auditEntries",
-          "permission": "read",
-          "scope": "global"
+          "permission": "read"
         }
       }
     },
@@ -3577,8 +3988,7 @@
         ],
         "x-permissions": {
           "endpoint": "auditEntries",
-          "permission": "read",
-          "scope": "global"
+          "permission": "read"
         }
       }
     },
@@ -3641,8 +4051,7 @@
         ],
         "x-permissions": {
           "endpoint": "organizations",
-          "permission": "write",
-          "scope": "global"
+          "permission": "write"
         }
       },
       "delete": {
@@ -3662,8 +4071,7 @@
         ],
         "x-permissions": {
           "endpoint": "organizations",
-          "permission": "write",
-          "scope": "global"
+          "permission": "write"
         }
       }
     },
@@ -3821,8 +4229,7 @@
         ],
         "x-permissions": {
           "endpoint": "organizations",
-          "permission": "read",
-          "scope": "global"
+          "permission": "read"
         }
       }
     },
@@ -3852,8 +4259,7 @@
         ],
         "x-permissions": {
           "endpoint": "organizations",
-          "permission": "write",
-          "scope": "global"
+          "permission": "write"
         }
       }
     },
@@ -4067,8 +4473,7 @@
         ],
         "x-permissions": {
           "endpoint": "applications",
-          "permission": "read",
-          "scope": "global"
+          "permission": "read"
         }
       }
     },
@@ -4362,8 +4767,7 @@
         ],
         "x-permissions": {
           "endpoint": "applications",
-          "permission": "read",
-          "scope": "global"
+          "permission": "read"
         }
       }
     },
@@ -4385,8 +4789,7 @@
         ],
         "x-permissions": {
           "endpoint": "applications",
-          "permission": "read",
-          "scope": "global"
+          "permission": "read"
         }
       },
       "patch": {
@@ -4439,8 +4842,7 @@
         ],
         "x-permissions": {
           "endpoint": "applications",
-          "permission": "write",
-          "scope": "global"
+          "permission": "write"
         }
       },
       "delete": {
@@ -4460,8 +4862,7 @@
         ],
         "x-permissions": {
           "endpoint": "applications",
-          "permission": "write",
-          "scope": "global"
+          "permission": "write"
         }
       }
     },
@@ -4494,8 +4895,7 @@
         ],
         "x-permissions": {
           "endpoint": "applications",
-          "permission": "write",
-          "scope": "global"
+          "permission": "write"
         }
       }
     }
@@ -4530,6 +4930,30 @@
           "phoneVerified": {
             "type": "boolean"
           },
+          "deviceToken": {
+            "type": "string"
+          },
+          "notifications": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "required": true,
+                  "type": "string"
+                },
+                "sms": {
+                  "type": "boolean"
+                },
+                "push": {
+                  "type": "boolean"
+                },
+                "email": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
           "roles": {
             "type": "array",
             "items": {
@@ -4552,14 +4976,6 @@
                 }
               }
             }
-          },
-          "theme": {
-            "type": "string",
-            "enum": [
-              "dark",
-              "light",
-              "system"
-            ]
           },
           "isTester": {
             "type": "boolean"
@@ -4751,6 +5167,9 @@
             "required": true,
             "type": "string"
           },
+          "role": {
+            "type": "string"
+          },
           "status": {
             "type": "string"
           },
@@ -4905,6 +5324,12 @@
             "required": true,
             "type": "string"
           },
+          "hash": {
+            "type": "string"
+          },
+          "rawUrl": {
+            "type": "string"
+          },
           "mimeType": {
             "required": true,
             "type": "string"
@@ -4913,20 +5338,12 @@
             "required": true,
             "type": "string"
           },
-          "rawUrl": {
-            "required": true,
-            "type": "string"
-          },
-          "hash": {
-            "required": true,
-            "type": "string"
+          "private": {
+            "type": "boolean"
           },
           "owner": {
             "$ref": "#/components/schemas/ObjectId",
             "required": true
-          },
-          "thumbnailUrl": {
-            "type": "string"
           },
           "createdAt": {
             "$ref": "#/components/schemas/DateTime"
@@ -4940,6 +5357,23 @@
         "format": "mongo-object-id",
         "type": "string",
         "description": "A 24 character hexadecimal string representing a Mongo [ObjectId](https://bit.ly/3YPtGlU)."
+      },
+      "Reference": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "$ref": "#/components/schemas/ObjectId",
+                "required": true
+              }
+            }
+          }
+        ],
+        "description": "A 24 character hexadecimal string representing a Mongo [ObjectId](https://bit.ly/3YPtGlU).\nAn object with an `id` field may also be passed, which will be converted into a string."
       },
       "DateTime": {
         "format": "date-time",
@@ -4967,23 +5401,6 @@
           }
         },
         "description": "An object representing dates falling within a range."
-      },
-      "Reference": {
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/ObjectId"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "id": {
-                "$ref": "#/components/schemas/ObjectId",
-                "required": true
-              }
-            }
-          }
-        ],
-        "description": "A 24 character hexadecimal string representing a Mongo [ObjectId](https://bit.ly/3YPtGlU).\nAn object with an `id` field may also be passed, which will be converted into a string."
       },
       "NumberRange": {
         "type": "object",

@@ -13,10 +13,10 @@ beforeEach(() => {
 });
 
 async function sendMessage(options) {
-  if (!options.to) {
-    throw new Error('No phone number.');
-  }
-  sentMessages.push(options);
+  sentMessages.push({
+    ...options,
+    phone: options.to,
+  });
 }
 
 function assertSmsSent(options) {

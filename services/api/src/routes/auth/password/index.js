@@ -8,7 +8,7 @@ const { createAuthToken, createTemporaryAuthToken } = require('../../../utils/au
 const { register, login, signupValidation, verifyLoginAttempts } = require('../../../utils/auth');
 const { verifyPassword } = require('../../../utils/auth/password');
 const { createOtp } = require('../../../utils/auth/otp');
-const { mailer, sms } = require('../../../utils/messaging');
+const { sendMail, sendSms } = require('../../../utils/messaging');
 const { User, AuditEntry } = require('../../../models');
 
 const router = new Router();
@@ -77,7 +77,7 @@ router
 
       if (mfaMethod === 'sms') {
         const code = await createOtp(user);
-        await sms.sendMessage({
+        await sendSms({
           user,
           code,
           template: 'otp',
@@ -88,7 +88,7 @@ router
         };
       } else if (mfaMethod === 'email') {
         const code = await createOtp(user);
-        await mailer.sendMail({
+        await sendMail({
           user,
           code,
           template: 'otp',
@@ -131,11 +131,11 @@ router
         const token = createTemporaryAuthToken(user, ctx);
         await user.save();
 
-        await mailer.sendMail({
+        await sendMail({
           user,
           email,
           token,
-          template: 'reset-password.md',
+          template: 'reset-password',
         });
       }
 

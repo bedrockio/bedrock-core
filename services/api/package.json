@@ -33,6 +33,7 @@
     "@simplewebauthn/server": "^8.3.5",
     "bcrypt": "^5.1.0",
     "fast-csv": "^4.3.6",
+    "firebase-admin": "^12.2.0",
     "front-matter": "^4.0.2",
     "google-auth-library": "^9.2.0",
     "html-to-text": "^9.0.5",

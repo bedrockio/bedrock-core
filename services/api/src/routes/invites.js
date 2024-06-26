@@ -10,16 +10,16 @@ const { register } = require('../utils/auth');
 const { createAuthToken } = require('../utils/auth/tokens');
 const { Invite, User } = require('../models');
 
-const mailer = require('../utils/messaging/mailer');
+const { sendMail } = require('../utils/messaging');
 const { createInviteToken } = require('../utils/auth/tokens');
 
 const router = new Router();
 
 function sendInvite(sender, invite) {
   const token = createInviteToken(invite);
-  return mailer.sendMail({
-    to: invite.email,
-    template: 'invite.md',
+  return sendMail({
+    email: invite.email,
+    template: 'invite',
     sender,
     token,
   });

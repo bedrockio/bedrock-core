@@ -48,7 +48,7 @@ describe('/1/auth', () => {
       });
 
       assertSmsSent({
-        to: '+12312312422',
+        phone: '+12312312422',
       });
     });
 
@@ -70,7 +70,7 @@ describe('/1/auth', () => {
       });
 
       assertMailSent({
-        to: user.email,
+        email: user.email,
       });
     });
 
@@ -194,7 +194,7 @@ describe('/1/auth', () => {
       });
 
       assertSmsSent({
-        to: '+12223456789',
+        phone: '+12223456789',
       });
     });
 
@@ -234,7 +234,7 @@ describe('/1/auth', () => {
       expect(response.status).toBe(200);
 
       assertMailSent({
-        to: email,
+        email,
       });
 
       const user = await User.findOne({
@@ -364,7 +364,7 @@ describe('/1/auth', () => {
       });
       expect(response.status).toBe(204);
       assertMailSent({
-        to: user.email,
+        email: user.email,
       });
     });
 
