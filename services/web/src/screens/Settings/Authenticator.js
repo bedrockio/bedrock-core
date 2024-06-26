@@ -80,7 +80,7 @@ export default class Authenticator extends React.Component {
         },
       });
       this.context.updateUser(data);
-      this.props.history.push('/settings/sign-in');
+      this.props.history.push('/settings/login');
     } catch (error) {
       this.setState({
         error,
@@ -129,7 +129,7 @@ export default class Authenticator extends React.Component {
             <Segment>
               <Button
                 as={Link}
-                to="/settings/sign-in"
+                to="/settings/login"
                 basic
                 secondary
                 content="Cancel"

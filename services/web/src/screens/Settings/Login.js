@@ -29,28 +29,13 @@ import Menu from './Menu';
 
 @screen
 @withSession
-export default class SignIn extends React.Component {
+export default class Login extends React.Component {
   state = {
     error: null,
     loading: false,
     message: null,
     mfaMethod: null,
   };
-
-  componentDidMount() {
-    // TODO
-    if (
-      Date.parse(this.context.user.accessConfirmedAt) <
-      Date.now() - 20 * 60 * 1000
-    ) {
-      this.props.history.push(
-        `/confirm-access?to=${this.props.location.pathname}`
-      );
-    }
-    this.setState({
-      mfaMethod: this.context.user.mfaMethod,
-    });
-  }
 
   // Federated
 
@@ -68,25 +53,25 @@ export default class SignIn extends React.Component {
 
   onGoogleEnabled = () => {
     this.setState({
-      message: 'Enabled Google Sign-In',
+      message: 'Enabled Google Login',
     });
   };
 
   onGoogleDisabled = () => {
     this.setState({
-      message: 'Disabled Google Sign-In',
+      message: 'Disabled Google Login',
     });
   };
 
   onAppleEnabled = () => {
     this.setState({
-      message: 'Enabled Apple Sign-In',
+      message: 'Enabled Apple Login',
     });
   };
 
   onAppleDisabled = () => {
     this.setState({
-      message: 'Disabled Apple Sign-In',
+      message: 'Disabled Apple Login',
     });
   };
 
@@ -228,10 +213,10 @@ export default class SignIn extends React.Component {
         <Divider hidden />
         {message && <Message info content={message} />}
         <Segment>
-          <Header>Sign in with Google</Header>
+          <Header>Google</Header>
           {this.renderGoogle()}
           <Divider hidden />
-          <Header>Sign in with Apple</Header>
+          <Header>Apple</Header>
           {this.renderApple()}
           <Divider hidden />
           <Header>Passkey</Header>

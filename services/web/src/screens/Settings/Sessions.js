@@ -24,20 +24,6 @@ export default class Security extends React.Component {
     mfaMethod: null,
   };
 
-  componentDidMount() {
-    if (
-      Date.parse(this.context.user.accessConfirmedAt) <
-      Date.now() - 20 * 60 * 1000
-    ) {
-      this.props.history.push(
-        `/confirm-access?to=${this.props.location.pathname}`
-      );
-    }
-    this.setState({
-      mfaMethod: this.context.user.mfaMethod,
-    });
-  }
-
   logout = async (body) => {
     await request({
       method: 'POST',
