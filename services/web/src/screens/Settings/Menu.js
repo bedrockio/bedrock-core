@@ -11,6 +11,12 @@ export default () => {
       <Menu pointing secondary>
         <Menu.Item name="Account" to="/settings/account" as={NavLink} exact />
         <Menu.Item
+          name="Notifications"
+          to="/settings/notifications"
+          as={NavLink}
+          exact
+        />
+        <Menu.Item
           name="Appearance"
           to="/settings/appearance"
           as={NavLink}

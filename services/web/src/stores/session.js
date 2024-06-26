@@ -63,6 +63,10 @@ export class SessionProvider extends React.PureComponent {
           method: 'GET',
           path: '/1/users/me',
         });
+        const { data: meta } = await request({
+          method: 'GET',
+          path: '/1/meta',
+        });
         const organization = await this.loadOrganization();
 
         // Uncomment this line if you want to set up
@@ -71,6 +75,7 @@ export class SessionProvider extends React.PureComponent {
 
         this.setState({
           user,
+          meta,
           organization,
           loading: false,
           ready: true,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { pick } from 'lodash';
-import { Segment, Form, Button, Divider } from 'semantic';
+import { Segment, Form, Button, Message, Divider } from 'semantic';
 
 import { withSession } from 'stores';
 
@@ -17,6 +17,7 @@ import Menu from './Menu';
 @withSession
 export default class Account extends React.Component {
   state = {
+    message: null,
     user: pick(this.context.user, ['firstName', 'lastName', 'phoneNumber']),
   };
 
@@ -33,12 +34,13 @@ export default class Account extends React.Component {
     this.setField(evt, { name, value: checked });
   };
 
-  async save() {
+  onSubmit = async () => {
     const { user } = this.state;
     try {
       this.setState({
         loading: true,
         error: null,
+        message: null,
       });
       const { data } = await request({
         method: 'PATCH',
@@ -49,6 +51,7 @@ export default class Account extends React.Component {
       this.setState({
         error: false,
         loading: false,
+        message: 'Settings Updated',
       });
     } catch (error) {
       this.setState({
@@ -56,10 +59,10 @@ export default class Account extends React.Component {
         loading: false,
       });
     }
-  }
+  };
 
   render() {
-    const { user, error, loading } = this.state;
+    const { user, error, loading, message } = this.state;
     if (!this.context.user) {
       return null;
     }
@@ -69,7 +72,8 @@ export default class Account extends React.Component {
         <Menu />
         <Divider hidden />
         <ErrorMessage error={error} />
-        <Form onSubmit={() => this.save()}>
+        <Form onSubmit={this.onSubmit}>
+          {message && <Message success>{message}</Message>}
           <Segment>
             <Form.Input
               type="text"
@@ -92,7 +96,7 @@ export default class Account extends React.Component {
               onChange={this.setField}
             />
           </Segment>
-          <div>
+          <div style={{ textAlign: 'right' }}>
             <Button
               primary
               content="Save"

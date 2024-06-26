@@ -11,6 +11,7 @@ import * as TotpAuthentication from './TotpAuthentication.mdx';
 import * as Products from './Products.mdx';
 import * as Uploads from './Uploads.mdx';
 import * as Shops from './Shops.mdx';
+import * as Users from './Users.mdx';
 
 const PAGES = {
   Authentication,
@@ -24,6 +25,7 @@ const PAGES = {
   Products,
   Uploads,
   Shops,
+  Users,
 };
 
 export const DEFAULT_PAGE_ID = 'getting-started';

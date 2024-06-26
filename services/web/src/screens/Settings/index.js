@@ -1,10 +1,11 @@
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
-import Account from './Account';
-import Appearance from './Appearance';
 import Login from './Login';
+import Account from './Account';
 import Sessions from './Sessions';
+import Appearance from './Appearance';
+import Notifications from './Notifications';
 import Authenticator from './Authenticator';
 
 export default class Settings extends React.Component {
@@ -12,6 +13,7 @@ export default class Settings extends React.Component {
     return (
       <Switch>
         <Route exact path="/settings/account" component={Account} />
+        <Route exact path="/settings/notifications" component={Notifications} />
         <Route exact path="/settings/appearance" component={Appearance} />
         <Route exact path="/settings/login" component={Login} />
         <Route exact path="/settings/sessions" component={Sessions} />
