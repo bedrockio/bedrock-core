@@ -4,7 +4,6 @@ const { authenticate } = require('../utils/middleware/authenticate');
 const { validateFiles } = require('../utils/middleware/validate');
 const { createUploads, getUploadUrl, createUrlStream } = require('../utils/uploads');
 const { userHasAccess } = require('./../utils/permissions');
-const { isEqual } = require('@bedrockio/model');
 const { Upload } = require('../models');
 
 const router = new Router();
@@ -42,7 +41,7 @@ router
         if (ctx.method === 'GET') {
           return true;
         } else {
-          return isEqual(upload.owner, ctx.state.authUser);
+          return upload.owner?.equals(ctx.state.authUser.id);
         }
       },
     })
@@ -61,6 +60,9 @@ router
 
     try {
       const url = await getUploadUrl(upload);
+
+      ctx.set('Content-Type', upload.mimeType);
+      ctx.set('Content-Disposition', `attachment; filename="${upload.filename}"`);
 
       if (upload.storageType === 'gcs') {
         if (upload.private) {
@@ -82,7 +84,6 @@ router
           ctx.redirect(url);
         }
       } else {
-        ctx.set('Content-Type', upload.mimeType);
         ctx.body = createUrlStream(url);
       }
     } catch (error) {

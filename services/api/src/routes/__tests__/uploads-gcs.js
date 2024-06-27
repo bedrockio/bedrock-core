@@ -10,9 +10,7 @@ let createReadStream = fs.createReadStream;
 
 function mockReadStream() {
   fs.createReadStream = (url) => {
-    return {
-      url,
-    };
+    return url;
   };
 }
 
@@ -44,7 +42,22 @@ describe('/1/uploads', () => {
       const response = await request('GET', `/1/uploads/${upload.id}/raw`, {}, { user });
 
       expect(response.status).toBe(200);
-      expect(response.body.url).toBe('PrivateUrl');
+      expect(response.body.toString()).toBe('PrivateUrl');
+      unmockReadStream();
+    });
+
+    it('should include correct headers', async () => {
+      mockReadStream();
+      const user = await createUser();
+      const upload = await createUpload({
+        private: true,
+        storageType: 'gcs',
+        owner: user,
+      });
+
+      const response = await request('GET', `/1/uploads/${upload.id}/raw`, {}, { user });
+      expect(response.headers['content-type']).toBe('image/png');
+
       unmockReadStream();
     });
   });

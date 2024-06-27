@@ -11,9 +11,7 @@ let createReadStream = fs.createReadStream;
 
 function mockReadStream() {
   fs.createReadStream = (url) => {
-    return {
-      url,
-    };
+    return url;
   };
 }
 
@@ -94,7 +92,18 @@ describe('/1/uploads', () => {
       const response = await request('GET', `/1/uploads/${upload.id}/raw`, {}, { user });
 
       expect(response.status).toBe(200);
-      expect(response.body.url.startsWith(os.tmpdir())).toBe(true);
+      expect(response.body.toString().startsWith(os.tmpdir())).toBe(true);
+      unmockReadStream();
+    });
+
+    it('should include correct headers', async () => {
+      mockReadStream();
+      const user = await createUser();
+      const upload = await createUpload();
+
+      const response = await request('GET', `/1/uploads/${upload.id}/raw`, {}, { user });
+
+      expect(response.headers['content-type']).toBe('image/png');
       unmockReadStream();
     });
   });
