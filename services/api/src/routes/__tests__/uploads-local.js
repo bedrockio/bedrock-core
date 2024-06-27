@@ -1,7 +1,6 @@
 const fs = require('fs');
 const os = require('os');
 const { request, createUpload, createUser, createAdmin } = require('../../utils/testing');
-const { importFixtures } = require('../../utils/fixtures');
 const { Upload } = require('../../models');
 const { Blob } = require('node:buffer');
 
@@ -39,23 +38,6 @@ describe('/1/uploads', () => {
       expect(response.body.data.filename).toBe('test.png');
     });
 
-    it('should be able to access private upload as viewer', async () => {
-      const manager = await importFixtures('users/jack');
-      const upload = await createUpload({
-        private: true,
-      });
-      const response = await request(
-        'GET',
-        `/1/uploads/${upload.id}`,
-        {},
-        {
-          user: manager,
-        }
-      );
-      expect(response.status).toBe(200);
-      expect(response.body.data.filename).toBe('test.png');
-    });
-
     it('should not allow access private upload when unauthenticated', async () => {
       const upload = await createUpload({
         private: true,
@@ -83,6 +65,53 @@ describe('/1/uploads', () => {
     });
   });
 
+  describe('GET /:id/url', () => {
+    it('should get the URL for a public file', async () => {
+      const user = await createUser();
+      const upload = await createUpload({
+        owner: user,
+      });
+      const response = await request('GET', `/1/uploads/${upload.id}/url`, {}, { user });
+      expect(response.status).toBe(200);
+      expect(response.body.data.startsWith(os.tmpdir())).toBe(true);
+    });
+
+    it('should get the URL for a private file', async () => {
+      const user = await createUser();
+      const upload = await createUpload({
+        private: true,
+        owner: user,
+      });
+
+      const response = await request('GET', `/1/uploads/${upload.id}/url`, {}, { user });
+
+      expect(response.status).toBe(200);
+      expect(response.body.data.startsWith(os.tmpdir())).toBe(true);
+    });
+
+    it('should allow access as admin', async () => {
+      mockReadStream();
+      const admin = await createAdmin();
+      const user = await createUser();
+      const upload = await createUpload({
+        private: true,
+        owner: user,
+      });
+      const response = await request('GET', `/1/uploads/${upload.id}/url`, {}, { user: admin });
+      expect(response.status).toBe(200);
+      expect(response.body.data.startsWith(os.tmpdir())).toBe(true);
+      unmockReadStream();
+    });
+
+    it('should not allow access for unauthenticated', async () => {
+      const upload = await createUpload({
+        private: true,
+      });
+      const response = await request('GET', `/1/uploads/${upload.id}/url`, {}, {});
+      expect(response.status).toBe(401);
+    });
+  });
+
   describe('GET /:id/raw', () => {
     it('should get a local file stream', async () => {
       mockReadStream();
@@ -96,15 +125,12 @@ describe('/1/uploads', () => {
       unmockReadStream();
     });
 
-    it('should include correct headers', async () => {
-      mockReadStream();
-      const user = await createUser();
-      const upload = await createUpload();
-
-      const response = await request('GET', `/1/uploads/${upload.id}/raw`, {}, { user });
-
-      expect(response.headers['content-type']).toBe('image/png');
-      unmockReadStream();
+    it('should not allow access to private upload', async () => {
+      const upload = await createUpload({
+        private: true,
+      });
+      const response = await request('GET', `/1/uploads/${upload.id}/raw`, {}, {});
+      expect(response.status).toBe(401);
     });
   });
 

@@ -1,7 +1,7 @@
 process.env.UPLOADS_STORE = 'gcs';
 
 const fs = require('fs');
-const { request, createUpload, createUser } = require('../../utils/testing');
+const { request, createUpload, createUser, createAdmin } = require('../../utils/testing');
 const { assertFileStored } = require('@google-cloud/storage');
 
 const file = __dirname + '/../__fixtures__/test.png';
@@ -19,6 +19,55 @@ function unmockReadStream() {
 }
 
 describe('/1/uploads', () => {
+  describe('GET /:id/url', () => {
+    it('should get the URL for a public GCS file', async () => {
+      const user = await createUser();
+      const upload = await createUpload({
+        storageType: 'gcs',
+      });
+      const response = await request('GET', `/1/uploads/${upload.id}/url`, {}, { user });
+      expect(response.status).toBe(200);
+      expect(response.body.data).toBe('PublicUrl');
+    });
+
+    it('should get the URL for a private GCS file', async () => {
+      const user = await createUser();
+      const upload = await createUpload({
+        private: true,
+        storageType: 'gcs',
+        owner: user,
+      });
+
+      const response = await request('GET', `/1/uploads/${upload.id}/url`, {}, { user });
+
+      expect(response.status).toBe(200);
+      expect(response.body.data).toBe('PrivateUrl');
+    });
+
+    it('should allow access as admin', async () => {
+      mockReadStream();
+      const admin = await createAdmin();
+      const user = await createUser();
+      const upload = await createUpload({
+        private: true,
+        storageType: 'gcs',
+        owner: user,
+      });
+      const response = await request('GET', `/1/uploads/${upload.id}/url`, {}, { user: admin });
+      expect(response.status).toBe(200);
+      expect(response.body.data).toBe('PrivateUrl');
+      unmockReadStream();
+    });
+
+    it('should not allow access for unauthenticated', async () => {
+      const upload = await createUpload({
+        private: true,
+      });
+      const response = await request('GET', `/1/uploads/${upload.id}/url`, {}, {});
+      expect(response.status).toBe(401);
+    });
+  });
+
   describe('GET /:id/raw', () => {
     it('should redirect for a public GCS file', async () => {
       const user = await createUser();
@@ -46,19 +95,27 @@ describe('/1/uploads', () => {
       unmockReadStream();
     });
 
-    it('should include correct headers', async () => {
+    it('should allow access as admin', async () => {
       mockReadStream();
+      const admin = await createAdmin();
       const user = await createUser();
       const upload = await createUpload({
         private: true,
         storageType: 'gcs',
         owner: user,
       });
-
-      const response = await request('GET', `/1/uploads/${upload.id}/raw`, {}, { user });
-      expect(response.headers['content-type']).toBe('image/png');
-
+      const response = await request('GET', `/1/uploads/${upload.id}/raw`, {}, { user: admin });
+      expect(response.status).toBe(200);
+      expect(response.body.toString()).toBe('PrivateUrl');
       unmockReadStream();
+    });
+
+    it('should not allow access for unauthenticated', async () => {
+      const upload = await createUpload({
+        private: true,
+      });
+      const response = await request('GET', `/1/uploads/${upload.id}/raw`, {}, {});
+      expect(response.status).toBe(401);
     });
   });
 

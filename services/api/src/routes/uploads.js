@@ -54,6 +54,18 @@ router
       data: upload,
     };
   })
+  .get('/:id/url', async (ctx) => {
+    const { upload } = ctx.state;
+    validateAccess(ctx, upload);
+
+    try {
+      ctx.body = {
+        data: await getUploadUrl(upload),
+      };
+    } catch (error) {
+      ctx.throw(400, error);
+    }
+  })
   .get('/:id/raw', async (ctx) => {
     const { upload } = ctx.state;
     validateAccess(ctx, upload);
