@@ -1,4 +1,4 @@
-// Component for use with isPriivate uploads.
+// Component for use with private uploads.
 
 import React from 'react';
 import PropTypes from 'prop-types';
