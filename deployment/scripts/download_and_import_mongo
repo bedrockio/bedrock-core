@@ -8,10 +8,11 @@ if [ "$ENVIRONMENT" == "" ]; then
   echo "Usage: $0 <ENV>"
   exit 1
 fi
-DB="rove_nutrition_$ENVIRONMENT"
 
 # Get the directory where the script is located
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+PROJECT_NAME=$(echo "$SCRIPT_DIR" | rev | cut -d'/' -f3 | rev | tr '-' '_')
+DB="${PROJECT_NAME}_${ENVIRONMENT}"
 
 # Ensure the script runs in api
 API_DIR="$SCRIPT_DIR/../../services/api"
