@@ -1,5 +1,5 @@
 process.env.ENV_NAME = 'test';
-process.env.LOG_LEVEL = 'warn';
+process.env.LOG_LEVEL ||= 'warn';
 module.exports = {
   preset: '@shelf/jest-mongodb',
   setupFilesAfterEnv: ['<rootDir>/src/utils/testing/setup/database', '<rootDir>/src/utils/testing/setup/autoclean'],
