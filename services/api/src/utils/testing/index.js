@@ -22,6 +22,18 @@ async function createAdmin(attributes) {
     roles: [
       {
         scope: 'global',
+        role: 'admin',
+      },
+    ],
+  });
+}
+
+async function createSuperAdmin(attributes) {
+  return await createUser({
+    ...attributes,
+    roles: [
+      {
+        scope: 'global',
         role: 'superAdmin',
       },
     ],
@@ -46,4 +58,5 @@ module.exports = {
   createUser,
   createUpload,
   createAdmin,
+  createSuperAdmin,
 };

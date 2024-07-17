@@ -507,7 +507,7 @@ describe('csvExport', () => {
         age: {
           type: 'Number',
           required: true,
-          readAccess: 'superAdmin',
+          readAccess: 'admin',
         },
       });
 
