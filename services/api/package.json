@@ -32,7 +32,7 @@
     "@sentry/node": "^7.56.0",
     "@simplewebauthn/server": "^8.3.5",
     "bcrypt": "^5.1.0",
-    "fast-csv": "^4.3.6",
+    "fast-csv": "^5.0.1",
     "front-matter": "^4.0.2",
     "google-auth-library": "^9.2.0",
     "html-to-text": "^9.0.5",
@@ -68,7 +68,7 @@
     "supertest": "^6.3.3"
   },
   "volta": {
-    "node": "20.12.2",
-    "yarn": "1.22.19"
+    "node": "20.15.1",
+    "yarn": "1.22.22"
   }
 }
