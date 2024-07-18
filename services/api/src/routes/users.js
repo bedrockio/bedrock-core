@@ -33,7 +33,6 @@ router
       firstName: yd.string(),
       lastName: yd.string(),
       timeZone: yd.string(),
-      theme: yd.string(),
     }),
     async (ctx) => {
       const { authUser } = ctx.state;

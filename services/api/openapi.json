@@ -716,9 +716,6 @@
                   },
                   "timeZone": {
                     "type": "string"
-                  },
-                  "theme": {
-                    "type": "string"
                   }
                 }
               }
@@ -749,8 +746,7 @@
         ],
         "x-permissions": {
           "endpoint": "users",
-          "permission": "write",
-          "scope": "global"
+          "permission": "impersonate"
         }
       }
     },
@@ -763,9 +759,8 @@
           }
         ],
         "x-permissions": {
-          "endpoint": "users",
-          "permission": "read",
-          "scope": "global"
+          "endpoint": "roles",
+          "permission": "list"
         }
       }
     },
@@ -778,9 +773,8 @@
           }
         ],
         "x-permissions": {
-          "endpoint": "users",
-          "permission": "read",
-          "scope": "global"
+          "endpoint": "roles",
+          "permission": "list"
         }
       }
     },
@@ -915,29 +909,6 @@
                         ]
                       }
                     }
-                  },
-                  "theme": {
-                    "oneOf": [
-                      {
-                        "type": "string",
-                        "enum": [
-                          "dark",
-                          "light",
-                          "system"
-                        ]
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "string",
-                          "enum": [
-                            "dark",
-                            "light",
-                            "system"
-                          ]
-                        }
-                      }
-                    ]
                   },
                   "isTester": {
                     "type": "boolean"
@@ -1085,9 +1056,8 @@
           }
         ],
         "x-permissions": {
-          "endpoint": "users",
-          "permission": "read",
-          "scope": "global"
+          "endpoint": "roles",
+          "permission": "list"
         }
       }
     },
@@ -1108,9 +1078,8 @@
           }
         ],
         "x-permissions": {
-          "endpoint": "users",
-          "permission": "read",
-          "scope": "global"
+          "endpoint": "roles",
+          "permission": "list"
         }
       },
       "patch": {
@@ -1246,14 +1215,6 @@
                       }
                     ]
                   },
-                  "theme": {
-                    "type": "string",
-                    "enum": [
-                      "dark",
-                      "light",
-                      "system"
-                    ]
-                  },
                   "isTester": {
                     "oneOf": [
                       {
@@ -1292,8 +1253,7 @@
         ],
         "x-permissions": {
           "endpoint": "users",
-          "permission": "write",
-          "scope": "global"
+          "permission": "create"
         }
       },
       "delete": {
@@ -1313,8 +1273,7 @@
         ],
         "x-permissions": {
           "endpoint": "users",
-          "permission": "write",
-          "scope": "global"
+          "permission": "create"
         }
       }
     },
@@ -1376,14 +1335,6 @@
                       }
                     }
                   },
-                  "theme": {
-                    "type": "string",
-                    "enum": [
-                      "dark",
-                      "light",
-                      "system"
-                    ]
-                  },
                   "isTester": {
                     "type": "boolean"
                   },
@@ -1404,8 +1355,7 @@
         ],
         "x-permissions": {
           "endpoint": "users",
-          "permission": "write",
-          "scope": "global"
+          "permission": "create"
         }
       }
     },
@@ -2741,6 +2691,12 @@
             "in": "path",
             "required": true
           }
+        ],
+        "security": [
+          {},
+          {
+            "bearerAuth": []
+          }
         ]
       },
       "delete": {
@@ -2760,6 +2716,24 @@
         ]
       }
     },
+    "/1/uploads/:id/url": {
+      "get": {
+        "x-model": "Upload",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "security": [
+          {},
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
     "/1/uploads/:id/raw": {
       "get": {
         "x-model": "Upload",
@@ -2769,12 +2743,54 @@
             "in": "path",
             "required": true
           }
+        ],
+        "security": [
+          {},
+          {
+            "bearerAuth": []
+          }
         ]
       }
     },
     "/1/uploads": {
       "post": {
         "summary": "Create new upload",
+        "x-model": "Upload",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": true,
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "required": true,
+                    "oneOf": [
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "object"
+                        }
+                      },
+                      {
+                        "type": "object"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/1/uploads/private": {
+      "post": {
         "x-model": "Upload",
         "requestBody": {
           "content": {
@@ -2850,6 +2866,19 @@
                 "type": "object",
                 "properties": {
                   "email": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "role": {
                     "oneOf": [
                       {
                         "type": "string"
@@ -3006,8 +3035,7 @@
         ],
         "x-permissions": {
           "endpoint": "users",
-          "permission": "read",
-          "scope": "global"
+          "permission": "read"
         }
       }
     },
@@ -3028,6 +3056,9 @@
                       "format": "email",
                       "type": "string"
                     }
+                  },
+                  "role": {
+                    "type": "string"
                   }
                 }
               }
@@ -3041,8 +3072,7 @@
         ],
         "x-permissions": {
           "endpoint": "users",
-          "permission": "write",
-          "scope": "global"
+          "permission": "invite"
         }
       }
     },
@@ -3063,8 +3093,7 @@
         ],
         "x-permissions": {
           "endpoint": "users",
-          "permission": "write",
-          "scope": "global"
+          "permission": "invite"
         }
       }
     },
@@ -3086,8 +3115,7 @@
         ],
         "x-permissions": {
           "endpoint": "users",
-          "permission": "write",
-          "scope": "global"
+          "permission": "invite"
         }
       }
     },
@@ -3541,8 +3569,7 @@
         ],
         "x-permissions": {
           "endpoint": "auditEntries",
-          "permission": "read",
-          "scope": "global"
+          "permission": "read"
         }
       }
     },
@@ -3577,8 +3604,7 @@
         ],
         "x-permissions": {
           "endpoint": "auditEntries",
-          "permission": "read",
-          "scope": "global"
+          "permission": "read"
         }
       }
     },
@@ -3641,8 +3667,7 @@
         ],
         "x-permissions": {
           "endpoint": "organizations",
-          "permission": "write",
-          "scope": "global"
+          "permission": "write"
         }
       },
       "delete": {
@@ -3662,8 +3687,7 @@
         ],
         "x-permissions": {
           "endpoint": "organizations",
-          "permission": "write",
-          "scope": "global"
+          "permission": "write"
         }
       }
     },
@@ -3821,8 +3845,7 @@
         ],
         "x-permissions": {
           "endpoint": "organizations",
-          "permission": "read",
-          "scope": "global"
+          "permission": "read"
         }
       }
     },
@@ -3852,8 +3875,7 @@
         ],
         "x-permissions": {
           "endpoint": "organizations",
-          "permission": "write",
-          "scope": "global"
+          "permission": "write"
         }
       }
     },
@@ -4067,8 +4089,7 @@
         ],
         "x-permissions": {
           "endpoint": "applications",
-          "permission": "read",
-          "scope": "global"
+          "permission": "read"
         }
       }
     },
@@ -4362,8 +4383,7 @@
         ],
         "x-permissions": {
           "endpoint": "applications",
-          "permission": "read",
-          "scope": "global"
+          "permission": "read"
         }
       }
     },
@@ -4385,8 +4405,7 @@
         ],
         "x-permissions": {
           "endpoint": "applications",
-          "permission": "read",
-          "scope": "global"
+          "permission": "read"
         }
       },
       "patch": {
@@ -4439,8 +4458,7 @@
         ],
         "x-permissions": {
           "endpoint": "applications",
-          "permission": "write",
-          "scope": "global"
+          "permission": "write"
         }
       },
       "delete": {
@@ -4460,8 +4478,7 @@
         ],
         "x-permissions": {
           "endpoint": "applications",
-          "permission": "write",
-          "scope": "global"
+          "permission": "write"
         }
       }
     },
@@ -4494,8 +4511,7 @@
         ],
         "x-permissions": {
           "endpoint": "applications",
-          "permission": "write",
-          "scope": "global"
+          "permission": "write"
         }
       }
     }
@@ -4552,14 +4568,6 @@
                 }
               }
             }
-          },
-          "theme": {
-            "type": "string",
-            "enum": [
-              "dark",
-              "light",
-              "system"
-            ]
           },
           "isTester": {
             "type": "boolean"
@@ -4751,6 +4759,9 @@
             "required": true,
             "type": "string"
           },
+          "role": {
+            "type": "string"
+          },
           "status": {
             "type": "string"
           },
@@ -4905,6 +4916,12 @@
             "required": true,
             "type": "string"
           },
+          "hash": {
+            "type": "string"
+          },
+          "rawUrl": {
+            "type": "string"
+          },
           "mimeType": {
             "required": true,
             "type": "string"
@@ -4913,20 +4930,12 @@
             "required": true,
             "type": "string"
           },
-          "rawUrl": {
-            "required": true,
-            "type": "string"
-          },
-          "hash": {
-            "required": true,
-            "type": "string"
+          "private": {
+            "type": "boolean"
           },
           "owner": {
             "$ref": "#/components/schemas/ObjectId",
             "required": true
-          },
-          "thumbnailUrl": {
-            "type": "string"
           },
           "createdAt": {
             "$ref": "#/components/schemas/DateTime"
