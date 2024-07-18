@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Segment } from 'semantic';
 
-import { withSession } from 'stores';
+import { withSession } from 'stores/session';
 
 @withSession
 export default class Lockout extends React.Component {

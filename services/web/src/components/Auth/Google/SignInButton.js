@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { noop } from 'lodash';
 
-import { withSession } from 'stores';
+import { withSession } from 'stores/session';
 
 import { renderButton, login, enable } from './utils';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { withSession } from 'stores';
+import { withSession } from 'stores/session';
 
 import screen from 'helpers/screen';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal } from 'semantic';
 
-import { withSession } from 'stores';
+import { withSession } from 'stores/session';
 
 import modal from 'helpers/modal';
 

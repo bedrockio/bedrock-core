@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { omit, noop } from 'lodash';
 import { Button } from 'semantic';
 
-import { withSession } from 'stores';
+import { withSession } from 'stores/session';
 
 import { disable } from './utils';
 

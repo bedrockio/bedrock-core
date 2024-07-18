@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Route, Link } from 'react-router-dom';
 import { Loader, Message } from 'semantic';
 
-import { withSession } from 'stores';
+import { withSession } from 'stores/session';
 
 import ErrorScreen from 'screens/Error';
 

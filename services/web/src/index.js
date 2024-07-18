@@ -10,7 +10,8 @@ import { HelmetProvider } from 'react-helmet-async';
 // Icons
 import { Icon } from 'semantic';
 
-import { SessionProvider, ThemeProvider, useSession } from 'stores';
+import { SessionProvider, useSession } from 'stores/session';
+import { ThemeProvider } from 'stores/theme';
 
 import SessionSwitch from 'helpers/SessionSwitch';
 import 'utils/sentry';

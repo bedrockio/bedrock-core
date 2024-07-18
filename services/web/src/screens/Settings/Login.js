@@ -10,7 +10,7 @@ import {
   Loader,
 } from 'semantic';
 
-import { withSession } from 'stores';
+import { withSession } from 'stores/session';
 
 import screen from 'helpers/screen';
 
