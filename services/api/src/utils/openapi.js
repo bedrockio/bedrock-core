@@ -258,19 +258,24 @@ function getPathMeta(koaPath, method) {
     const isId = suffix === ':id' || suffix === `:${modelNameCamel}Id`;
     if (method === 'GET' && isId) {
       meta.summary = `Get ${modelNameLower} by id`;
+      meta['x-model'] = modelName;
     } else if (method === 'POST' && !suffix) {
       meta.summary = `Create new ${modelNameLower}`;
+      meta['x-model'] = modelName;
     } else if (method === 'PATCH' && isId) {
       meta.summary = `Update ${modelNameLower}`;
+      meta['x-model'] = modelName;
     } else if (method === 'DELETE' && isId) {
       meta.summary = `Delete ${modelNameLower}`;
+      meta['x-model'] = modelName;
     } else if (method === 'POST' && suffix === 'search') {
       meta.summary = `Search ${modelNamePlural}`;
+      meta['x-model'] = modelName;
     } else if (method === 'POST' && suffix === 'mine/search') {
       meta.summary = `Search ${modelNamePlural} for authenticated user.`;
+      meta['x-model'] = modelName;
     }
   }
-  meta['x-model'] = modelName;
   return meta;
 }
 
@@ -431,6 +436,7 @@ async function copyEditableFields(target) {
   const source = await loadDefinition();
   walkFields(target, (field) => {
     const { path } = field;
+
     if (isJsonSchemaPrimitive(field)) {
       const hasSource = GENERATED_FIELDS.some((field) => {
         return get(source, [...path, field]);
@@ -515,4 +521,5 @@ module.exports = {
   generateDefinition,
   updateDefinitionPath,
   recordRequest,
+  saveDefinition,
 };
