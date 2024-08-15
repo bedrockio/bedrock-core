@@ -12,7 +12,7 @@ const pluralize = mongoose.pluralize();
 const PACKAGE_FILE = path.resolve(__dirname, '../../package.json');
 const DEFINITION_FILE = path.resolve(__dirname, '../../openapi.json');
 
-const GENERATED_FIELDS = ['title', 'summary', 'description'];
+const EDITABLE_FIELDS = ['title', 'summary', 'description'];
 
 let definition;
 
@@ -45,7 +45,7 @@ async function updateDefinitionPath(path, value) {
   }
   const field = path[path.length - 1];
   set(definition, path, value);
-  if (GENERATED_FIELDS.includes(field)) {
+  if (EDITABLE_FIELDS.includes(field)) {
     set(definition, [...path.slice(0, -1), 'x-generated'], undefined);
   }
   await saveDefinition(definition);
@@ -438,10 +438,10 @@ async function copyEditableFields(target) {
     const { path } = field;
 
     if (isJsonSchemaPrimitive(field)) {
-      const hasSource = GENERATED_FIELDS.some((field) => {
+      const hasSource = EDITABLE_FIELDS.some((field) => {
         return get(source, [...path, field]);
       });
-      const hasTarget = GENERATED_FIELDS.some((field) => {
+      const hasTarget = EDITABLE_FIELDS.some((field) => {
         return get(target, [...path, field]);
       });
       const xGenerated = get(source, [...path, 'x-generated']);
