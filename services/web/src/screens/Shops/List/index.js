@@ -50,6 +50,15 @@ export default class ShopList extends React.Component {
     });
     return data;
   };
+
+  fetchCategories = async (props) => {
+    const { data } = await request({
+      method: 'POST',
+      path: '/1/categories/search',
+      body: props,
+    });
+    return data;
+  };
   // --- Generator: end
 
   getFilterMapping() {
@@ -109,10 +118,17 @@ export default class ShopList extends React.Component {
                       label="Country"
                     />
                     <SearchFilters.Dropdown
-                      onDataNeeded={(name) => this.fetchOwners({ name })}
                       search
+                      onDataNeeded={this.fetchOwners}
                       name="owner"
                       label="Owner"
+                    />
+                    <SearchFilters.Dropdown
+                      search
+                      multiple
+                      onDataNeeded={this.fetchCategories}
+                      name="categories"
+                      label="Categories"
                     />
                     <SearchFilters.DateRange
                       label="Created At"

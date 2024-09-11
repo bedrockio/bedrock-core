@@ -46,12 +46,15 @@ export default class SearchDropdown extends React.Component {
   };
 
   async fetchSelectedItems() {
+    const { value } = this.props;
+    if (Array.isArray(value) && !value.length) {
+      return;
+    }
     try {
       const selected = await this.fetch({
-        ids: (Array.isArray(this.props.value)
-          ? this.props.value
-          : [this.props.value]
-        ).map((item) => this.props.getOptionValue(item)),
+        ids: (Array.isArray(value) ? value : [value]).map((item) =>
+          this.props.getOptionValue(item)
+        ),
       });
 
       this.setState({
