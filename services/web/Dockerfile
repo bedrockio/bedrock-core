@@ -1,5 +1,5 @@
 # Base stage
-FROM node:20.12.2-alpine as base
+FROM node:20.12.2-alpine AS base
 
 # Yarn will not install any package listed in devDependencies if the NODE_ENV
 # environment variable is set to production. Use this flag to instruct Yarn to
@@ -23,7 +23,7 @@ RUN --mount=type=cache,target=/root/.yarn YARN_CACHE_FOLDER=/root/.yarn yarn ins
 COPY . .
 
 # build stage
-FROM base as build
+FROM base AS build
 
 
 # Build and store webpack cache
