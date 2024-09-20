@@ -184,8 +184,8 @@ export default class UserList extends React.Component {
                           <Table.Cell>
                             {formatRoles(user.roles).map((label) => (
                               <Label
-                                key={label.key}
                                 {...label}
+                                key={label.key}
                                 style={{
                                   marginBottom: '3px',
                                   marginLeft: 0,

@@ -41,6 +41,7 @@ export default class Roles extends React.Component {
   }
 
   setGlobalValues(values) {
+    const { name } = this.props;
     const otherRoles = this.state.roles.filter(
       (role) => role.scope !== 'global'
     );
@@ -55,7 +56,7 @@ export default class Roles extends React.Component {
     this.setState({
       roles,
     });
-    this.props.onChange(undefined, { value: roles });
+    this.props.onChange(undefined, { name, value: roles });
   }
 
   getGlobalValues() {

@@ -33,8 +33,6 @@ export default class PhoneField extends React.Component {
     value = value.trim();
     if (value) {
       value = `${this.getPrefix()}${value}`;
-    } else {
-      value = undefined;
     }
     this.props.onChange(evt, {
       ...rest,

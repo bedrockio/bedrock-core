@@ -6,7 +6,7 @@ import modal from 'helpers/modal';
 import AutoFocus from 'components/AutoFocus';
 import Roles from 'components/form-fields/Roles';
 import ErrorMessage from 'components/ErrorMessage';
-import PhoneNumber from 'components/PhoneNumber';
+import PhoneField from 'components/form-fields/Phone';
 
 import { request } from 'utils/api';
 
@@ -18,7 +18,9 @@ export default class EditUser extends React.Component {
       touched: false,
       loading: false,
       error: null,
-      user: props.user || {},
+      user: {
+        ...props.user,
+      },
     };
   }
 
@@ -26,14 +28,19 @@ export default class EditUser extends React.Component {
     return !!this.props.user;
   }
 
-  setField(name, value) {
+  setField = (evt, { name, value }) => {
+    console.info('ohai', name, value);
     this.setState({
       user: {
         ...this.state.user,
         [name]: value,
       },
     });
-  }
+  };
+
+  setCheckedField = (evt, { name, checked }) => {
+    this.setField(evt, { name, value: checked });
+  };
 
   onSubmit = async () => {
     const { user } = this.state;
@@ -81,53 +88,54 @@ export default class EditUser extends React.Component {
               error={touched && !!error}>
               <ErrorMessage error={error} />
               <Form.Input
-                value={user.firstName || ''}
-                label="First Name"
                 required
+                value={user.firstName || ''}
+                name="firstName"
+                label="First Name"
                 type="text"
                 autoComplete="given-name"
-                onChange={(e, { value }) => this.setField('firstName', value)}
+                onChange={this.setField}
               />
               <Form.Input
+                required
+                name="lastName"
                 value={user.lastName || ''}
                 label="Last Name"
-                required
                 type="text"
                 autoComplete="family-name"
-                onChange={(e, { value }) => this.setField('lastName', value)}
+                onChange={this.setField}
               />
               <Form.Input
                 value={user.email || ''}
                 type="email"
+                name="email"
                 label="Email"
-                onChange={(e, { value }) => this.setField('email', value)}
+                onChange={this.setField}
               />
-              <Form.Field>
-                <label>Phone Number</label>
-                <PhoneNumber
-                  value={user.phoneNumber || ''}
-                  onChange={(e, { value }) =>
-                    this.setField('phoneNumber', value)
-                  }
-                />
-              </Form.Field>
+              <PhoneField
+                name="phone"
+                value={user.phone || ''}
+                onChange={this.setField}
+                error={error}
+              />
               {!this.isUpdate() && (
                 <Form.Input
+                  name="password"
                   label="Password"
                   value={user.password || ''}
-                  onChange={(e, { value }) => this.setField('password', value)}
+                  onChange={this.setField}
                 />
               )}
               <Roles
+                name="roles"
                 value={user.roles || []}
-                onChange={(e, { value }) => this.setField('roles', value)}
+                onChange={this.setField}
               />
               <Form.Checkbox
                 checked={user.isTester || false}
+                name="isTester"
                 label="Is Tester"
-                onChange={(e, { checked }) =>
-                  this.setField('isTester', checked)
-                }
+                onChange={this.setCheckedField}
               />
             </Form>
           </AutoFocus>
