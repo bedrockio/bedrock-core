@@ -4,7 +4,7 @@ import { omit } from 'lodash';
 
 import { Form, Input, Message, Dropdown, Flag } from 'semantic';
 
-import { COUNTRIES, formatPhone } from 'utils/phone';
+import { COUNTRIES, getFormatLength, formatPhone } from 'utils/phone';
 
 export default class PhoneField extends React.Component {
   constructor(props) {
@@ -27,10 +27,15 @@ export default class PhoneField extends React.Component {
   }
 
   onChange = (evt, { value, ...rest }) => {
+    const { country } = this.state;
+    const maxLength = getFormatLength(country);
+
     value = value.replace(/[ ()@.+-]/g, '');
-    value = value.replace(/^[01](\d)/, '$1');
+    value = value.replace(/^1(\d)/, '$1');
     value = value.replace(/[a-z]/gi, '');
     value = value.trim();
+    value = value.slice(0, maxLength);
+
     if (value) {
       value = `${this.getPrefix()}${value}`;
     }

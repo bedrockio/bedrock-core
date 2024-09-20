@@ -12,12 +12,16 @@ export function formatPhone(phone, country) {
   }
   if (country) {
     const { prefix, format } = country;
-    if (prefix === '+1') {
-      phone = phone.replace(prefix, '');
-    }
+    phone = phone.replace(prefix, '');
     phone = applyFormat(phone, format);
   }
   return phone;
+}
+
+export function getFormatLength(code) {
+  const country = COUNTRIES[code];
+  const digits = country.format.replace(/[^#]/g, '');
+  return digits.length;
 }
 
 function getCountry(phone) {

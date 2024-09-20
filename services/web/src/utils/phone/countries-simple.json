@@ -21,7 +21,7 @@
   "jp": {
     "name": "Japan",
     "prefix": "+81",
-    "format": "## #### ####"
+    "format": "### #### ####"
   },
   "mx": {
     "name": "Mexico",

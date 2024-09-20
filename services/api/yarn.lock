@@ -303,10 +303,10 @@
   resolved "https://registry.yarnpkg.com/@bedrockio/config/-/config-2.2.3.tgz#bac37d12e36a99ec16668c8b5d1e05dec9658fa9"
   integrity sha512-jfOcZIs63S0GaWQjh5vVIISr4b2vA0CWgm630N0FDB6wlW+O0Fsjox92Agx5nggVpSnNYWqzjuKaUb5RY3/ECw==
 
-"@bedrockio/fixtures@^1.1.0":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@bedrockio/fixtures/-/fixtures-1.1.1.tgz#d6774e34a3b4778ffb77c7c2968cfc1d6b418525"
-  integrity sha512-dCWkwGApejxwffqdxuXfD9Gnie/rXcN2qHX+nTwyTEJHivo98NMCgzUMh0Yzha1uQbzcidI+dRKQeIZm/sqHvA==
+"@bedrockio/fixtures@^1.2.3":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@bedrockio/fixtures/-/fixtures-1.2.3.tgz#c9fd1a75a59f9b9ecec6bc847f73f77314246121"
+  integrity sha512-bgch7q3KdUdY5ppz4T48R6tODohPAHdZy7TvfiCVU+QZoSmNRhbXqkeMwc9jSW/Q2sqYjyB7T0+vEz8idtgRTA==
   dependencies:
     "@bedrockio/config" "^2.2.2"
     "@bedrockio/logger" "^1.0.3"
@@ -334,10 +334,10 @@
     kleur "^4.1.5"
     stdout-stream "^2.0.0"
 
-"@bedrockio/model@^0.3.2":
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/@bedrockio/model/-/model-0.3.2.tgz#0345703f5da7e84964ba11c3bdad198b62f437c6"
-  integrity sha512-C2OunXtm7t9PP+HFOcgBb8EAoCFfcNgCCPATbLlXbNa1uDsV+mg5sWz8/o/grjQBIiFXWOER7CTHlA9ErqNfVQ==
+"@bedrockio/model@^0.7.3":
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/@bedrockio/model/-/model-0.7.3.tgz#ebbf7d2288018a4a2d6a1ac7d7d1e1fad98d92f4"
+  integrity sha512-ET2myGL56YU0l27kqWK1nW2HSq2QsSgARRGGiKTVGABjBvT5ByCGAJKNygBSkdeg7rxOyxYlTUbvf2sxhSoRZQ==
   dependencies:
     "@bedrockio/logger" "^1.0.6"
     lodash "^4.17.21"
@@ -347,10 +347,10 @@
   resolved "https://registry.yarnpkg.com/@bedrockio/prettier-config/-/prettier-config-1.0.2.tgz#89878381d3059b810f97514ee6b69f946a6d1654"
   integrity sha512-Ebcx/D9FcV6WEQH2gXA4SkN62fus/aVMW46MYFm1/y+S0GVYj+OCuBbRMM4F8YAq9ntJ+B/z9fLiOheNpEpRzA==
 
-"@bedrockio/yada@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@bedrockio/yada/-/yada-1.1.1.tgz#fea824ba0658bf1ee79215c487364184bf463f55"
-  integrity sha512-IByiuIU3sLvqs/e1NvDVKYBlbpctB19vhfcieQaibcu5m0Y899WtpDm5Iw24Fnr13YHm4gar/4WFPGYc64Mlnw==
+"@bedrockio/yada@^1.2.3":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@bedrockio/yada/-/yada-1.2.3.tgz#6b6d650b2a348f597e7d3ccc61f736371e7725b5"
+  integrity sha512-yTGICYsurRpyiz2GznXOcUcKIfrqU0Hyf1ADXLhO3D2oeuo3V7pS72TgzoVr5KOzTlpGwTs6s5nWkkdUiRGW3w==
   dependencies:
     validator "^13.9.0"
 
@@ -4841,10 +4841,10 @@ mongodb-memory-server@9.2.0:
     mongodb-memory-server-core "9.2.0"
     tslib "^2.6.2"
 
-mongodb@6.6.2, mongodb@^6.5.0:
-  version "6.6.2"
-  resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-6.6.2.tgz#7ecdd788e9162f6c5726cef40bdd2813cc01e56c"
-  integrity sha512-ZF9Ugo2JCG/GfR7DEb4ypfyJJyiKbg5qBYKRintebj8+DNS33CyGMkWbrS9lara+u+h+yEOGSRiLhFO/g1s1aw==
+mongodb@6.8.0:
+  version "6.8.0"
+  resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-6.8.0.tgz#680450f113cdea6d2d9f7121fe57cd29111fd2ce"
+  integrity sha512-HGQ9NWDle5WvwMnrvUxsFYPd3JEbqD3RgABHBQRuoCEND0qzhsd0iH5ypHsf1eJ+sXmvmyKpP+FLOKY8Il7jMw==
   dependencies:
     "@mongodb-js/saslprep" "^1.1.5"
     bson "^6.7.0"
@@ -4861,14 +4861,23 @@ mongodb@^5.9.1:
   optionalDependencies:
     "@mongodb-js/saslprep" "^1.1.0"
 
-mongoose@^8.4.3:
-  version "8.4.3"
-  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-8.4.3.tgz#f16ea170eeff60a8c8357bed9968e914a4156d1a"
-  integrity sha512-GxPVLD+I/dxVkgcts2r2QmJJvS62/++btVj3RFt8YnHt+DSOp1Qjj62YEvgZaElwIOTcc4KGJM95X5LlrU1qQg==
+mongodb@^6.5.0:
+  version "6.6.2"
+  resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-6.6.2.tgz#7ecdd788e9162f6c5726cef40bdd2813cc01e56c"
+  integrity sha512-ZF9Ugo2JCG/GfR7DEb4ypfyJJyiKbg5qBYKRintebj8+DNS33CyGMkWbrS9lara+u+h+yEOGSRiLhFO/g1s1aw==
+  dependencies:
+    "@mongodb-js/saslprep" "^1.1.5"
+    bson "^6.7.0"
+    mongodb-connection-string-url "^3.0.0"
+
+mongoose@^8.6.3:
+  version "8.6.3"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-8.6.3.tgz#fdc1f4defd4de87dc3f5c18aacaf811cafcfcfbe"
+  integrity sha512-++yRmm7hjMbqVA/8WeiygTnEfrFbiy+OBjQi49GFJIvCQuSYE56myyQWo4j5hbpcHjhHQU8NukMNGTwAWFWjIw==
   dependencies:
     bson "^6.7.0"
     kareem "2.6.3"
-    mongodb "6.6.2"
+    mongodb "6.8.0"
     mpath "0.9.0"
     mquery "5.0.0"
     ms "2.1.3"

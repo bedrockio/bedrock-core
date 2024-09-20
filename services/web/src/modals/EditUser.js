@@ -29,7 +29,6 @@ export default class EditUser extends React.Component {
   }
 
   setField = (evt, { name, value }) => {
-    console.info('ohai', name, value);
     this.setState({
       user: {
         ...this.state.user,
