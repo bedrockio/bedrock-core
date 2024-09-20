@@ -20,7 +20,7 @@
     },
     "phone": {
       "type": "String",
-      "validate": "phone:US",
+      "validate": "phone",
       "unique": true,
       "trim": true
     },
