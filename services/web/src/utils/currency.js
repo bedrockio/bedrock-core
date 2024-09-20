@@ -6,6 +6,9 @@ const SYMBOLS = {
 };
 
 export function formatUsd(val) {
+  if (!val) {
+    return '';
+  }
   return formatCurrency(val, 'USD');
 }
 

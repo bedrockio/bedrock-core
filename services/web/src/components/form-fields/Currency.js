@@ -1,31 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, Label } from 'semantic';
+import { Label } from 'semantic';
 
 import { getCurrencySymbol } from 'utils/currency';
 
-export default class CurrencyField extends React.Component {
-  onChange = (evt, { name, value }) => {
-    value = parseInt(value);
-    this.props.onChange(evt, { name, value });
-  };
+import NumberField from './Number';
 
+export default class CurrencyField extends React.Component {
   render() {
-    let { value, cents, currency, onChange, ...rest } = this.props;
+    let { value, cents, currency, ...rest } = this.props;
     if (cents) {
       value /= 100;
     }
     return (
-      <Form.Input
-        type="number"
-        value={value}
-        labelPosition="right"
-        onChange={this.onChange}
-        {...rest}>
+      <NumberField value={value} labelPosition="right" {...rest}>
         <Label basic>{getCurrencySymbol(currency)}</Label>
         <input />
         {currency === 'USD' && <Label>.00</Label>}
-      </Form.Input>
+      </NumberField>
     );
   }
 }
