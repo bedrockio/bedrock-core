@@ -63,7 +63,7 @@ describe('/1/users', () => {
 
     it('should allow unsetting phone number', async () => {
       let user = await createUser({
-        phone: '+15551234567',
+        phone: '+15552234567',
       });
       const response = await request(
         'PATCH',

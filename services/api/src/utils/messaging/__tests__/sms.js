@@ -95,7 +95,7 @@ describe('sendMessage', () => {
   describe('other', () => {
     it('should be able to send an sms to a user without to', async () => {
       const user = await createUser({
-        phone: '+11111111111',
+        phone: '+15552234567',
       });
       await sendMessage({
         user,
