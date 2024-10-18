@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@bedrockio/config": "^2.2.3",
-    "@bedrockio/fixtures": "^1.2.3",
+    "@bedrockio/fixtures": "^1.2.5",
     "@bedrockio/logger": "^1.0.8",
     "@bedrockio/model": "^0.7.3",
     "@bedrockio/yada": "^1.2.3",

@@ -5,6 +5,7 @@ const roles = require('../roles.json');
 setOptions({
   roles,
   createUpload,
+  warnCircularReferences: true,
 });
 
 module.exports = {
