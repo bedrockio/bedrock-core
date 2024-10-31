@@ -91,7 +91,7 @@ async function uploadGcs(file, upload) {
     });
   }
 
-  if (!upload.private) {
+  if (upload.private === false) {
     await gcsFile.makePublic();
   }
 }
