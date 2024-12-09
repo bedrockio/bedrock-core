@@ -19,8 +19,8 @@ resource "google_container_node_pool" "pool_1" {
   node_config {
     spot  = var.preemptible
     machine_type = var.machine_type
-    disk_type = "pd-standard"
-    disk_size_gb = 100
+    disk_type = var.disk_type
+    disk_size_gb = var.disk_size
 
     metadata = {
       disable-legacy-endpoints = "true"

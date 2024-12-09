@@ -46,6 +46,14 @@ variable "preemptible" {
   default = false
 }
 
+variable "disk_size" {
+  default = 100
+}
+
+variable "disk_type" {
+  default = "pd-standard"
+}
+
 variable "machine_type" {
   default = "n2-standard-2"
 }
