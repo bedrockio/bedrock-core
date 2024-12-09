@@ -20,30 +20,23 @@ spec:
         - image: gcr.io/bedrock-foundation/bedrock-core-services-api
           imagePullPolicy: Always
           name: main
-          # resources:
-          #   limits:
-          #     cpu: "1000m"
-          #     memory: "4Gi"
-          #   requests:
-          #     cpu: "250m"
-          #     memory: "100Mi"
           env:
             - name: ENV_NAME
-              value: 'production'
+              value: "production"
             - name: NODE_ENV
-              value: 'production'
+              value: "production"
             - name: MONGO_URI
-              value: 'mongodb://mongo:27017/bedrock_production'
+              value: "mongodb://mongo:27017/bedrock_production"
             - name: APP_URL
-              value: 'https://bedrock.foundation'
+              value: "https://bedrock.foundation"
             - name: POSTMARK_FROM
-              value: 'no-reply@bedrock.foundation'
+              value: "no-reply@bedrock.foundation"
             - name: UPLOADS_STORE
-              value: 'gcs'
+              value: "gcs"
             - name: UPLOADS_GCS_BUCKET
-              value: 'bedrock-production-uploads'
+              value: "bedrock-production-uploads"
             - name: LOG_LEVEL
-              value: 'debug'
+              value: "debug"
             # The `bedrock cloud` command in the CLI will help with
             # the creation and storing of secrets for production.
             - name: JWT_SECRET
