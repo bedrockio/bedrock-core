@@ -5,6 +5,8 @@ FROM node:20.12.2-alpine
 # ignore NODE_ENV and take its production-or-not status from this flag instead.
 ARG NODE_ENV=production
 
+RUN apk add mongodb-tools;
+
 # Note layers should be ordered from less to more likely to change.
 
 # Update & install required packages
