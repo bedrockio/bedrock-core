@@ -24,7 +24,7 @@ RUN --mount=type=cache,target=/root/.yarn YARN_CACHE_FOLDER=/root/.yarn yarn ins
 COPY . .
 
 # Set your port
-ENV PORT 2300
+ENV PORT=2300
 
 # Expose the port to outside world
 EXPOSE 2300
