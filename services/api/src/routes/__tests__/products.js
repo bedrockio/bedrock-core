@@ -51,12 +51,22 @@ describe('/1/products', () => {
         shop: new mongoose.Types.ObjectId(),
       });
 
-      const response = await request('POST', '/1/products/search', {}, { user });
+      const response = await request(
+        'POST',
+        '/1/products/search',
+        {
+          sort: {
+            field: 'name',
+            order: 'asc',
+          },
+        },
+        { user }
+      );
 
       expect(response.status).toBe(200);
       const body = response.body;
-      expect(body.data[1].name).toBe(product1.name);
-      expect(body.data[0].name).toBe(product2.name);
+      expect(body.data[0].name).toBe(product1.name);
+      expect(body.data[1].name).toBe(product2.name);
 
       expect(body.meta.total).toBe(2);
     });
