@@ -684,7 +684,6 @@
     },
     "/1/users/me": {
       "get": {
-        "x-model": "User",
         "security": [
           {
             "bearerAuth": []
@@ -692,7 +691,6 @@
         ]
       },
       "patch": {
-        "x-model": "User",
         "requestBody": {
           "content": {
             "application/json": {
@@ -731,7 +729,6 @@
     },
     "/1/users/:id/authenticate": {
       "post": {
-        "x-model": "User",
         "parameters": [
           {
             "name": "id",
@@ -752,7 +749,6 @@
     },
     "/1/users/roles": {
       "get": {
-        "x-model": "User",
         "security": [
           {
             "bearerAuth": []
@@ -766,7 +762,6 @@
     },
     "/1/users/permissions": {
       "get": {
-        "x-model": "User",
         "security": [
           {
             "bearerAuth": []
@@ -834,6 +829,7 @@
                       {
                         "format": "phone",
                         "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
+                        "nullable": true,
                         "type": "string",
                         "x-generated": true
                       },
@@ -842,6 +838,7 @@
                         "items": {
                           "format": "phone",
                           "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
+                          "nullable": true,
                           "type": "string",
                           "x-generated": true
                         }
@@ -898,12 +895,20 @@
                       "scopeRef": {
                         "oneOf": [
                           {
-                            "$ref": "#/components/schemas/ObjectId"
+                            "oneOf": [
+                              {
+                                "$ref": "#/components/schemas/ObjectId"
+                              }
+                            ]
                           },
                           {
                             "type": "array",
                             "items": {
-                              "$ref": "#/components/schemas/ObjectId"
+                              "oneOf": [
+                                {
+                                  "$ref": "#/components/schemas/ObjectId"
+                                }
+                              ]
                             }
                           }
                         ]
@@ -1104,135 +1109,50 @@
                   "phone": {
                     "format": "phone",
                     "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
-                    "oneOf": [
-                      {
-                        "type": "object",
-                        "enum": [
-                          null
-                        ]
-                      },
-                      {
-                        "type": "string",
-                        "enum": [
-                          ""
-                        ]
-                      },
-                      {
-                        "type": "string"
-                      }
-                    ]
+                    "nullable": true,
+                    "type": "string"
                   },
                   "emailVerified": {
-                    "oneOf": [
-                      {
-                        "type": "object",
-                        "enum": [
-                          null
-                        ]
-                      },
-                      {
-                        "type": "string",
-                        "enum": [
-                          ""
-                        ]
-                      },
-                      {
-                        "type": "boolean"
-                      }
-                    ]
+                    "type": "boolean"
                   },
                   "phoneVerified": {
-                    "oneOf": [
-                      {
-                        "type": "object",
-                        "enum": [
-                          null
-                        ]
-                      },
-                      {
-                        "type": "string",
-                        "enum": [
-                          ""
-                        ]
-                      },
-                      {
-                        "type": "boolean"
-                      }
-                    ]
+                    "type": "boolean"
                   },
                   "roles": {
-                    "oneOf": [
-                      {
-                        "type": "object",
-                        "enum": [
-                          null
-                        ]
-                      },
-                      {
-                        "type": "string",
-                        "enum": [
-                          ""
-                        ]
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "role": {
-                              "required": true,
-                              "type": "string"
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "required": true,
+                          "type": "string"
+                        },
+                        "scope": {
+                          "required": true,
+                          "type": "string",
+                          "enum": [
+                            "global",
+                            "organization"
+                          ]
+                        },
+                        "scopeRef": {
+                          "oneOf": [
+                            {
+                              "$ref": "#/components/schemas/Reference"
                             },
-                            "scope": {
-                              "required": true,
+                            {
                               "type": "string",
                               "enum": [
-                                "global",
-                                "organization"
-                              ]
-                            },
-                            "scopeRef": {
-                              "oneOf": [
-                                {
-                                  "type": "object",
-                                  "enum": [
-                                    null
-                                  ]
-                                },
-                                {
-                                  "type": "string",
-                                  "enum": [
-                                    ""
-                                  ]
-                                },
-                                {
-                                  "$ref": "#/components/schemas/Reference"
-                                }
+                                ""
                               ]
                             }
-                          }
+                          ]
                         }
                       }
-                    ]
+                    }
                   },
                   "isTester": {
-                    "oneOf": [
-                      {
-                        "type": "object",
-                        "enum": [
-                          null
-                        ]
-                      },
-                      {
-                        "type": "string",
-                        "enum": [
-                          ""
-                        ]
-                      },
-                      {
-                        "type": "boolean"
-                      }
-                    ]
+                    "type": "boolean"
                   }
                 }
               }
@@ -1443,159 +1363,44 @@
                     "type": "string"
                   },
                   "description": {
-                    "oneOf": [
-                      {
-                        "type": "object",
-                        "enum": [
-                          null
-                        ]
-                      },
-                      {
-                        "type": "string",
-                        "enum": [
-                          ""
-                        ]
-                      },
-                      {
-                        "type": "string"
-                      }
-                    ]
+                    "nullable": true,
+                    "type": "string"
                   },
                   "isFeatured": {
-                    "oneOf": [
-                      {
-                        "type": "object",
-                        "enum": [
-                          null
-                        ]
-                      },
-                      {
-                        "type": "string",
-                        "enum": [
-                          ""
-                        ]
-                      },
-                      {
-                        "type": "boolean"
-                      }
-                    ]
+                    "type": "boolean"
                   },
                   "priceUsd": {
-                    "oneOf": [
-                      {
-                        "type": "object",
-                        "enum": [
-                          null
-                        ]
-                      },
-                      {
-                        "type": "string",
-                        "enum": [
-                          ""
-                        ]
-                      },
-                      {
-                        "type": "number"
-                      }
-                    ]
+                    "nullable": true,
+                    "type": "number"
                   },
                   "expiresAt": {
-                    "oneOf": [
-                      {
-                        "type": "object",
-                        "enum": [
-                          null
-                        ]
-                      },
-                      {
-                        "type": "string",
-                        "enum": [
-                          ""
-                        ]
-                      },
-                      {
-                        "$ref": "#/components/schemas/DateTime"
-                      }
-                    ]
+                    "$ref": "#/components/schemas/DateTime"
                   },
                   "sellingPoints": {
-                    "oneOf": [
-                      {
-                        "type": "object",
-                        "enum": [
-                          null
-                        ]
-                      },
-                      {
-                        "type": "string",
-                        "enum": [
-                          ""
-                        ]
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "oneOf": [
-                            {
-                              "type": "object",
-                              "enum": [
-                                null
-                              ]
-                            },
-                            {
-                              "type": "string",
-                              "enum": [
-                                ""
-                              ]
-                            },
-                            {
-                              "type": "string"
-                            }
-                          ]
-                        }
-                      }
-                    ]
+                    "type": "array",
+                    "items": {
+                      "nullable": true,
+                      "type": "string"
+                    }
                   },
                   "shop": {
                     "$ref": "#/components/schemas/Reference"
                   },
                   "images": {
-                    "oneOf": [
-                      {
-                        "type": "object",
-                        "enum": [
-                          null
-                        ]
-                      },
-                      {
-                        "type": "string",
-                        "enum": [
-                          ""
-                        ]
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "oneOf": [
-                            {
-                              "type": "object",
-                              "enum": [
-                                null
-                              ]
-                            },
-                            {
-                              "type": "string",
-                              "enum": [
-                                ""
-                              ]
-                            },
-                            {
-                              "$ref": "#/components/schemas/Reference"
-                            }
+                    "type": "array",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "$ref": "#/components/schemas/Reference"
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            ""
                           ]
                         }
-                      }
-                    ]
+                      ]
+                    }
                   }
                 }
               }
@@ -1658,11 +1463,13 @@
                   "description": {
                     "oneOf": [
                       {
+                        "nullable": true,
                         "type": "string"
                       },
                       {
                         "type": "array",
                         "items": {
+                          "nullable": true,
                           "type": "string"
                         }
                       }
@@ -1675,11 +1482,13 @@
                     "description": "Allows searching by a value, array of values, or a numeric range.",
                     "oneOf": [
                       {
+                        "nullable": true,
                         "type": "number"
                       },
                       {
                         "type": "array",
                         "items": {
+                          "nullable": true,
                           "type": "number"
                         }
                       },
@@ -1708,11 +1517,13 @@
                   "sellingPoints": {
                     "oneOf": [
                       {
+                        "nullable": true,
                         "type": "string"
                       },
                       {
                         "type": "array",
                         "items": {
+                          "nullable": true,
                           "type": "string"
                         }
                       }
@@ -1734,12 +1545,20 @@
                   "images": {
                     "oneOf": [
                       {
-                        "$ref": "#/components/schemas/ObjectId"
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/ObjectId"
+                          }
+                        ]
                       },
                       {
                         "type": "array",
                         "items": {
-                          "$ref": "#/components/schemas/ObjectId"
+                          "oneOf": [
+                            {
+                              "$ref": "#/components/schemas/ObjectId"
+                            }
+                          ]
                         }
                       }
                     ]
@@ -2008,274 +1827,87 @@
                     "type": "string"
                   },
                   "description": {
-                    "oneOf": [
-                      {
-                        "type": "object",
-                        "enum": [
-                          null
-                        ]
-                      },
-                      {
-                        "type": "string",
-                        "enum": [
-                          ""
-                        ]
-                      },
-                      {
-                        "type": "string"
-                      }
-                    ]
+                    "nullable": true,
+                    "type": "string"
                   },
                   "images": {
-                    "oneOf": [
-                      {
-                        "type": "object",
-                        "enum": [
-                          null
-                        ]
-                      },
-                      {
-                        "type": "string",
-                        "enum": [
-                          ""
-                        ]
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "oneOf": [
-                            {
-                              "type": "object",
-                              "enum": [
-                                null
-                              ]
-                            },
-                            {
-                              "type": "string",
-                              "enum": [
-                                ""
-                              ]
-                            },
-                            {
-                              "$ref": "#/components/schemas/Reference"
-                            }
+                    "type": "array",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "$ref": "#/components/schemas/Reference"
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            ""
                           ]
                         }
-                      }
-                    ]
+                      ]
+                    }
                   },
                   "categories": {
-                    "oneOf": [
-                      {
-                        "type": "object",
-                        "enum": [
-                          null
-                        ]
-                      },
-                      {
-                        "type": "string",
-                        "enum": [
-                          ""
-                        ]
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "oneOf": [
-                            {
-                              "type": "object",
-                              "enum": [
-                                null
-                              ]
-                            },
-                            {
-                              "type": "string",
-                              "enum": [
-                                ""
-                              ]
-                            },
-                            {
-                              "$ref": "#/components/schemas/Reference"
-                            }
+                    "type": "array",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "$ref": "#/components/schemas/Reference"
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            ""
                           ]
                         }
-                      }
-                    ]
+                      ]
+                    }
                   },
                   "country": {
-                    "oneOf": [
-                      {
-                        "type": "object",
-                        "enum": [
-                          null
-                        ]
-                      },
-                      {
-                        "type": "string",
-                        "enum": [
-                          ""
-                        ]
-                      },
-                      {
-                        "type": "string"
-                      }
-                    ]
+                    "nullable": true,
+                    "type": "string"
                   },
                   "address": {
                     "type": "object",
                     "properties": {
                       "line1": {
-                        "oneOf": [
-                          {
-                            "type": "object",
-                            "enum": [
-                              null
-                            ]
-                          },
-                          {
-                            "type": "string",
-                            "enum": [
-                              ""
-                            ]
-                          },
-                          {
-                            "type": "string"
-                          }
-                        ]
+                        "nullable": true,
+                        "type": "string"
                       },
                       "line2": {
-                        "oneOf": [
-                          {
-                            "type": "object",
-                            "enum": [
-                              null
-                            ]
-                          },
-                          {
-                            "type": "string",
-                            "enum": [
-                              ""
-                            ]
-                          },
-                          {
-                            "type": "string"
-                          }
-                        ]
+                        "nullable": true,
+                        "type": "string"
                       },
                       "city": {
-                        "oneOf": [
-                          {
-                            "type": "object",
-                            "enum": [
-                              null
-                            ]
-                          },
-                          {
-                            "type": "string",
-                            "enum": [
-                              ""
-                            ]
-                          },
-                          {
-                            "type": "string"
-                          }
-                        ]
+                        "nullable": true,
+                        "type": "string"
                       },
                       "postalCode": {
-                        "oneOf": [
-                          {
-                            "type": "object",
-                            "enum": [
-                              null
-                            ]
-                          },
-                          {
-                            "type": "string",
-                            "enum": [
-                              ""
-                            ]
-                          },
-                          {
-                            "type": "string"
-                          }
-                        ]
+                        "nullable": true,
+                        "type": "string"
                       },
                       "region": {
-                        "oneOf": [
-                          {
-                            "type": "object",
-                            "enum": [
-                              null
-                            ]
-                          },
-                          {
-                            "type": "string",
-                            "enum": [
-                              ""
-                            ]
-                          },
-                          {
-                            "type": "string"
-                          }
-                        ]
+                        "nullable": true,
+                        "type": "string"
                       },
                       "countryCode": {
-                        "oneOf": [
-                          {
-                            "type": "object",
-                            "enum": [
-                              null
-                            ]
-                          },
-                          {
-                            "type": "string",
-                            "enum": [
-                              ""
-                            ]
-                          },
-                          {
-                            "type": "string"
-                          }
-                        ]
+                        "nullable": true,
+                        "type": "string"
                       },
                       "geometry": {
                         "type": "object",
                         "properties": {
                           "type": {
-                            "oneOf": [
-                              {
-                                "type": "object",
-                                "enum": [
-                                  null
-                                ]
-                              },
-                              {
-                                "type": "string",
-                                "enum": [
-                                  ""
-                                ]
-                              },
-                              {
-                                "type": "string"
-                              }
-                            ]
+                            "nullable": true,
+                            "type": "string"
                           },
                           "coordinates": {
+                            "type": "array",
                             "oneOf": [
                               {
-                                "type": "object",
-                                "enum": [
-                                  null
-                                ]
+                                "type": "number"
                               },
                               {
-                                "type": "string",
-                                "enum": [
-                                  ""
-                                ]
-                              },
-                              {
-                                "type": "array"
+                                "type": "number"
                               }
                             ]
                           }
@@ -2286,19 +1918,13 @@
                   "owner": {
                     "oneOf": [
                       {
-                        "type": "object",
-                        "enum": [
-                          null
-                        ]
+                        "$ref": "#/components/schemas/Reference"
                       },
                       {
                         "type": "string",
                         "enum": [
                           ""
                         ]
-                      },
-                      {
-                        "$ref": "#/components/schemas/Reference"
                       }
                     ]
                   }
@@ -2363,11 +1989,13 @@
                   "description": {
                     "oneOf": [
                       {
+                        "nullable": true,
                         "type": "string"
                       },
                       {
                         "type": "array",
                         "items": {
+                          "nullable": true,
                           "type": "string"
                         }
                       }
@@ -2376,12 +2004,20 @@
                   "images": {
                     "oneOf": [
                       {
-                        "$ref": "#/components/schemas/ObjectId"
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/ObjectId"
+                          }
+                        ]
                       },
                       {
                         "type": "array",
                         "items": {
-                          "$ref": "#/components/schemas/ObjectId"
+                          "oneOf": [
+                            {
+                              "$ref": "#/components/schemas/ObjectId"
+                            }
+                          ]
                         }
                       }
                     ]
@@ -2389,12 +2025,20 @@
                   "categories": {
                     "oneOf": [
                       {
-                        "$ref": "#/components/schemas/ObjectId"
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/ObjectId"
+                          }
+                        ]
                       },
                       {
                         "type": "array",
                         "items": {
-                          "$ref": "#/components/schemas/ObjectId"
+                          "oneOf": [
+                            {
+                              "$ref": "#/components/schemas/ObjectId"
+                            }
+                          ]
                         }
                       }
                     ]
@@ -2402,11 +2046,13 @@
                   "country": {
                     "oneOf": [
                       {
+                        "nullable": true,
                         "type": "string"
                       },
                       {
                         "type": "array",
                         "items": {
+                          "nullable": true,
                           "type": "string"
                         }
                       }
@@ -2418,11 +2064,13 @@
                       "line1": {
                         "oneOf": [
                           {
+                            "nullable": true,
                             "type": "string"
                           },
                           {
                             "type": "array",
                             "items": {
+                              "nullable": true,
                               "type": "string"
                             }
                           }
@@ -2431,11 +2079,13 @@
                       "line2": {
                         "oneOf": [
                           {
+                            "nullable": true,
                             "type": "string"
                           },
                           {
                             "type": "array",
                             "items": {
+                              "nullable": true,
                               "type": "string"
                             }
                           }
@@ -2444,11 +2094,13 @@
                       "city": {
                         "oneOf": [
                           {
+                            "nullable": true,
                             "type": "string"
                           },
                           {
                             "type": "array",
                             "items": {
+                              "nullable": true,
                               "type": "string"
                             }
                           }
@@ -2457,11 +2109,13 @@
                       "postalCode": {
                         "oneOf": [
                           {
+                            "nullable": true,
                             "type": "string"
                           },
                           {
                             "type": "array",
                             "items": {
+                              "nullable": true,
                               "type": "string"
                             }
                           }
@@ -2470,11 +2124,13 @@
                       "region": {
                         "oneOf": [
                           {
+                            "nullable": true,
                             "type": "string"
                           },
                           {
                             "type": "array",
                             "items": {
+                              "nullable": true,
                               "type": "string"
                             }
                           }
@@ -2483,11 +2139,13 @@
                       "countryCode": {
                         "oneOf": [
                           {
+                            "nullable": true,
                             "type": "string"
                           },
                           {
                             "type": "array",
                             "items": {
+                              "nullable": true,
                               "type": "string"
                             }
                           }
@@ -2499,11 +2157,13 @@
                           "type": {
                             "oneOf": [
                               {
+                                "nullable": true,
                                 "type": "string"
                               },
                               {
                                 "type": "array",
                                 "items": {
+                                  "nullable": true,
                                   "type": "string"
                                 }
                               }
@@ -2527,12 +2187,20 @@
                   "owner": {
                     "oneOf": [
                       {
-                        "$ref": "#/components/schemas/ObjectId"
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/ObjectId"
+                          }
+                        ]
                       },
                       {
                         "type": "array",
                         "items": {
-                          "$ref": "#/components/schemas/ObjectId"
+                          "oneOf": [
+                            {
+                              "$ref": "#/components/schemas/ObjectId"
+                            }
+                          ]
                         }
                       }
                     ]
@@ -2718,7 +2386,6 @@
     },
     "/1/uploads/:id/url": {
       "get": {
-        "x-model": "Upload",
         "parameters": [
           {
             "name": "id",
@@ -2736,7 +2403,6 @@
     },
     "/1/uploads/:id/raw": {
       "get": {
-        "x-model": "Upload",
         "parameters": [
           {
             "name": "id",
@@ -2791,7 +2457,6 @@
     },
     "/1/uploads/private": {
       "post": {
-        "x-model": "Upload",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -2827,7 +2492,6 @@
     },
     "/1/invites/accept": {
       "post": {
-        "x-model": "Invite",
         "requestBody": {
           "content": {
             "application/json": {
@@ -2881,11 +2545,13 @@
                   "role": {
                     "oneOf": [
                       {
+                        "nullable": true,
                         "type": "string"
                       },
                       {
                         "type": "array",
                         "items": {
+                          "nullable": true,
                           "type": "string"
                         }
                       }
@@ -2894,11 +2560,13 @@
                   "status": {
                     "oneOf": [
                       {
+                        "nullable": true,
                         "type": "string"
                       },
                       {
                         "type": "array",
                         "items": {
+                          "nullable": true,
                           "type": "string"
                         }
                       }
@@ -3078,7 +2746,6 @@
     },
     "/1/invites/:id/resend": {
       "post": {
-        "x-model": "Invite",
         "parameters": [
           {
             "name": "id",
@@ -3318,11 +2985,13 @@
                   "routeNormalizedPath": {
                     "oneOf": [
                       {
+                        "nullable": true,
                         "type": "string"
                       },
                       {
                         "type": "array",
                         "items": {
+                          "nullable": true,
                           "type": "string"
                         }
                       }
@@ -3344,11 +3013,13 @@
                   "objectId": {
                     "oneOf": [
                       {
+                        "nullable": true,
                         "type": "string"
                       },
                       {
                         "type": "array",
                         "items": {
+                          "nullable": true,
                           "type": "string"
                         }
                       }
@@ -3357,30 +3028,36 @@
                   "objectType": {
                     "oneOf": [
                       {
+                        "nullable": true,
                         "type": "string"
                       },
                       {
                         "type": "array",
                         "items": {
+                          "nullable": true,
                           "type": "string"
                         }
                       }
                     ]
                   },
                   "objectBefore": {
+                    "nullable": true,
                     "type": "object"
                   },
                   "objectAfter": {
+                    "nullable": true,
                     "type": "object"
                   },
                   "ownerId": {
                     "oneOf": [
                       {
+                        "nullable": true,
                         "type": "string"
                       },
                       {
                         "type": "array",
                         "items": {
+                          "nullable": true,
                           "type": "string"
                         }
                       }
@@ -3389,11 +3066,13 @@
                   "ownerType": {
                     "oneOf": [
                       {
+                        "nullable": true,
                         "type": "string"
                       },
                       {
                         "type": "array",
                         "items": {
+                          "nullable": true,
                           "type": "string"
                         }
                       }
@@ -3402,11 +3081,13 @@
                   "category": {
                     "oneOf": [
                       {
+                        "nullable": true,
                         "type": "string"
                       },
                       {
                         "type": "array",
                         "items": {
+                          "nullable": true,
                           "type": "string"
                         }
                       }
@@ -3575,7 +3256,6 @@
     },
     "/1/audit-entries/search-options": {
       "post": {
-        "x-model": "AuditEntry",
         "requestBody": {
           "content": {
             "application/json": {
@@ -3905,11 +3585,13 @@
                   "description": {
                     "oneOf": [
                       {
+                        "nullable": true,
                         "type": "string"
                       },
                       {
                         "type": "array",
                         "items": {
+                          "nullable": true,
                           "type": "string"
                         }
                       }
@@ -3945,11 +3627,13 @@
                     "description": "Allows searching by a value, array of values, or a numeric range.",
                     "oneOf": [
                       {
+                        "nullable": true,
                         "type": "number"
                       },
                       {
                         "type": "array",
                         "items": {
+                          "nullable": true,
                           "type": "number"
                         }
                       },
@@ -4095,7 +3779,6 @@
     },
     "/1/applications/:id/logs/search": {
       "post": {
-        "x-model": "Application",
         "requestBody": {
           "content": {
             "application/json": {
@@ -4118,11 +3801,13 @@
                   "routeNormalizedPath": {
                     "oneOf": [
                       {
+                        "nullable": true,
                         "type": "string"
                       },
                       {
                         "type": "array",
                         "items": {
+                          "nullable": true,
                           "type": "string"
                         }
                       }
@@ -4131,11 +3816,13 @@
                   "requestId": {
                     "oneOf": [
                       {
+                        "nullable": true,
                         "type": "string"
                       },
                       {
                         "type": "array",
                         "items": {
+                          "nullable": true,
                           "type": "string"
                         }
                       }
@@ -4147,11 +3834,13 @@
                       "sessionId": {
                         "oneOf": [
                           {
+                            "nullable": true,
                             "type": "string"
                           },
                           {
                             "type": "array",
                             "items": {
+                              "nullable": true,
                               "type": "string"
                             }
                           }
@@ -4160,11 +3849,13 @@
                       "ip": {
                         "oneOf": [
                           {
+                            "nullable": true,
                             "type": "string"
                           },
                           {
                             "type": "array",
                             "items": {
+                              "nullable": true,
                               "type": "string"
                             }
                           }
@@ -4173,33 +3864,39 @@
                       "path": {
                         "oneOf": [
                           {
+                            "nullable": true,
                             "type": "string"
                           },
                           {
                             "type": "array",
                             "items": {
+                              "nullable": true,
                               "type": "string"
                             }
                           }
                         ]
                       },
                       "headers": {
+                        "nullable": true,
                         "type": "object"
                       },
                       "method": {
                         "oneOf": [
                           {
+                            "nullable": true,
                             "type": "string"
                           },
                           {
                             "type": "array",
                             "items": {
+                              "nullable": true,
                               "type": "string"
                             }
                           }
                         ]
                       },
                       "body": {
+                        "nullable": true,
                         "type": "object"
                       }
                     }
@@ -4211,11 +3908,13 @@
                         "description": "Allows searching by a value, array of values, or a numeric range.",
                         "oneOf": [
                           {
+                            "nullable": true,
                             "type": "number"
                           },
                           {
                             "type": "array",
                             "items": {
+                              "nullable": true,
                               "type": "number"
                             }
                           },
@@ -4225,9 +3924,11 @@
                         ]
                       },
                       "body": {
+                        "nullable": true,
                         "type": "object"
                       },
                       "headers": {
+                        "nullable": true,
                         "type": "object"
                       }
                     }
@@ -4421,23 +4122,8 @@
                     "type": "string"
                   },
                   "description": {
-                    "oneOf": [
-                      {
-                        "type": "object",
-                        "enum": [
-                          null
-                        ]
-                      },
-                      {
-                        "type": "string",
-                        "enum": [
-                          ""
-                        ]
-                      },
-                      {
-                        "type": "string"
-                      }
-                    ]
+                    "nullable": true,
+                    "type": "string"
                   }
                 }
               }
@@ -4680,25 +4366,6 @@
                 "type": "object"
               }
             }
-          },
-          "createdAt": {
-            "$ref": "#/components/schemas/DateTime"
-          },
-          "updatedAt": {
-            "$ref": "#/components/schemas/DateTime"
-          }
-        }
-      },
-      "ApplicationCredential": {
-        "type": "object",
-        "properties": {
-          "apiSecret": {
-            "required": true,
-            "type": "string"
-          },
-          "application": {
-            "$ref": "#/components/schemas/ObjectId",
-            "required": true
           },
           "createdAt": {
             "$ref": "#/components/schemas/DateTime"
@@ -4978,6 +4645,7 @@
         "description": "An object representing dates falling within a range."
       },
       "Reference": {
+        "nullable": true,
         "oneOf": [
           {
             "$ref": "#/components/schemas/ObjectId"
