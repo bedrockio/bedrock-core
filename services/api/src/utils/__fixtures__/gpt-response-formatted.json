@@ -1,0 +1,23 @@
+{
+  "id": "chatcmpl-9dy8si0kRlF27OZiDtA4Y38u4lfO1",
+  "object": "chat.completion",
+  "created": 1719313006,
+  "model": "gpt-4o-2024-05-13",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```json\n{\n  \"name\": \"banana\",\n  \"color\": \"yellow\",\n  \"calories\": 105\n}\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 134,
+    "completion_tokens": 79,
+    "total_tokens": 213
+  },
+  "system_fingerprint": "fp_3e7d703517"
+}
