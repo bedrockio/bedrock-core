@@ -1,0 +1,12 @@
+{
+  "collection": "uploads",
+  "pipeline": [
+    {
+      "$match": {
+        "private": {
+          "$ne": true
+        }
+      }
+    }
+  ]
+}

@@ -4,61 +4,43 @@ set -u # crash on missing env
 set -e # stop on any error
 
 ENVIRONMENT=$1
+
 if [ "$ENVIRONMENT" == "" ]; then
   echo "Usage: $0 <ENV>"
   exit 1
 fi
 
-# Get the directory where the script is located
-SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
-PROJECT_NAME=$(echo "$SCRIPT_DIR" | rev | cut -d'/' -f3 | rev | tr '-' '_')
-DB="${PROJECT_NAME}_${ENVIRONMENT}"
-
-# Ensure the script runs in api
-API_DIR="$SCRIPT_DIR/../../services/api"
-
-# Save the current directory and change to the target directory
-pushd "$API_DIR" > /dev/null || { echo "Failed to change directory to $API_DIR"; exit 1; }
-
-if [ ! -f "./scripts/anonymize-database.js" ]; then
-  echo "Expecting ./scripts/anonymize-database.js"
-  exit 1
-fi
+DB="bedrock_${ENVIRONMENT}"
 
 bedrock cloud authorize $ENVIRONMENT
-API_CLI_POD=`bedrock cloud status $ENVIRONMENT 2> /dev/null | grep api-cli-deployment | grep -i running | awk '{print $1}'`
+API_CLI_POD=`kubectl get pods | grep api-cli-deployment | grep -i running | awk '{print $1}'`
 echo "Using API_CLI pod $API_CLI_POD and database $DB"
 
 function exec_remote() {
   kubectl exec -it $API_CLI_POD -- /bin/bash -c "$*"
 }
 
-rm -f dump.tar.gz
-rm -rf dump
-echo "Creating export on CLI pod"
-exec_remote "rm -rf /export; mkdir -p /export"
+echo "Exporting on CLI pod"
 
-exec_remote "cd /export; mongodump --host=\"mongo:27017\" -d $DB; tar cfzv dump.tar.gz dump"
-exec_remote "md5sum /export/dump.tar.gz"
-echo "Transfering dump file"
-#kubectl cp $API_CLI_POD:/export/dump.tar.gz dump.tar.gz
-# Ghetto hack because the above is not stable for large files (EOF during transfer. Due to Kubernetes shortcomings)
-# Note if you run into md5 mismatch issues increase the sleep below...
-kubectl exec $API_CLI_POD --  bash -c 'cat /export/dump.tar.gz && sleep 20' > dump.tar.gz
-md5 dump.tar.gz
-echo "Cleaning up CLI pod"
-exec_remote "rm -rf /export"
-tar xfzv dump.tar.gz
-echo "Restoring dump locally"
-cd dump; mongorestore --drop $DB -d $DB; cd ..
-echo "Cleaning up locally"
-rm -rf dump
-rm -f dump.tar.gz
+# Pass through arguments past the env
+shift
 
-if [ "$ENVIRONMENT" == "production" ]; then
-  echo "Anonymizing data"
-  MONGO_URI=mongodb://localhost/$DB node scripts/anonymize-database.js
+# Capture and display the output simultaneously
+OUTPUT=$(exec_remote "node scripts/database/prepare-export.js --out=/export $@" | tee /dev/tty)
+
+# Check if the output contains help message keywords
+if echo "$OUTPUT" | grep -q "Usage:"; then
+  exit 0
 fi
 
-# Return to the original directory
-popd > /dev/null
+echo "Transfering export"
+rm -rf ./export
+kubectl cp $API_CLI_POD:/export ./export
+
+echo "Cleaning up CLI pod"
+exec_remote "rm -rf /export"
+
+echo "Restoring dump locally"
+mongorestore --drop --gzip --nsInclude="$DB.*" --nsFrom="*.*_sanitized" --nsTo="*.*" ./export
+echo "Cleaning up locally"
+rm -rf ./export
