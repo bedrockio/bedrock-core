@@ -13,7 +13,7 @@ spec:
         app: api-cli
     spec:
       containers:
-        - image: gcr.io/bedrock-foundation/bedrock-core-services-api-cli
+        - image: gcr.io/bedrock-foundation-production/bedrock-core-services-api-cli
           imagePullPolicy: Always
           name: api-cli
           env:

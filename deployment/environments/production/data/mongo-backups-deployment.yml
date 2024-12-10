@@ -22,4 +22,4 @@ spec:
             - name: MONGO_DB
               value: "bedrock_production"
             - name: BACKUPS_GS_BUCKET
-              value: "bedrock-foundation-mongodb-backups"
+              value: "bedrock-foundation-production-mongodb-backups"

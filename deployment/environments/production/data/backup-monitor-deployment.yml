@@ -18,7 +18,7 @@ spec:
           name: main
           env:
             - name: GS_BUCKETS
-              value: "bedrock-foundation-uploads-backup bedrock-foundation-mongodb-backups"
+              value: "bedrock-foundation-production-uploads-backup bedrock-foundation-production-mongodb-backups"
             - name: POSTMARK_API_KEY
               value: "abc"
             - name: POSTMARK_FROM

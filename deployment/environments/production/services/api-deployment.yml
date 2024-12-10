@@ -17,7 +17,7 @@ spec:
         app: api
     spec:
       containers:
-        - image: gcr.io/bedrock-foundation/bedrock-core-services-api
+        - image: gcr.io/bedrock-foundation-production/bedrock-core-services-api
           imagePullPolicy: Always
           name: main
           env:

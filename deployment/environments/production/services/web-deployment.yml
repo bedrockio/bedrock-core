@@ -13,7 +13,7 @@ spec:
         app: web
     spec:
       containers:
-        - image: gcr.io/bedrock-foundation/bedrock-core-services-web
+        - image: gcr.io/bedrock-foundation-production/bedrock-core-services-web
           imagePullPolicy: Always
           name: main
           env:

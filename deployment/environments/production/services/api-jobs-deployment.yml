@@ -13,7 +13,7 @@ spec:
         app: api-jobs
     spec:
       containers:
-        - image: gcr.io/bedrock-foundation/bedrock-core-services-api-jobs
+        - image: gcr.io/bedrock-foundation-production/bedrock-core-services-api-jobs
           imagePullPolicy: Always
           name: main
           command:
