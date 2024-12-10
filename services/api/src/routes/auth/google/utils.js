@@ -1,10 +1,9 @@
 const { OAuth2Client } = require('google-auth-library');
-const config = require('@bedrockio/config');
 const { clearAuthenticators } = require('../../../utils/auth/authenticators');
 
 const client = new OAuth2Client();
 
-const GOOGLE_CLIENT_ID = config.get('GOOGLE_CLIENT_ID');
+const { GOOGLE_CLIENT_ID } = process.env;
 
 async function verifyToken(token) {
   const ticket = await client.verifyIdToken({

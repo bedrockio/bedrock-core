@@ -1,18 +1,10 @@
 const path = require('path');
 const twilio = require('twilio');
-const config = require('@bedrockio/config');
 const logger = require('@bedrockio/logger');
 
 const { interpolate, loadTemplate } = require('./utils');
 
-const API_URL = config.get('API_URL');
-const ENV_NAME = config.get('ENV_NAME');
-
-const AUTH_TOKEN = config.get('TWILIO_AUTH_TOKEN');
-const ACCOUNT_SID = config.get('TWILIO_ACCOUNT_SID');
-const TEST_NUMBER = config.get('TWILIO_TEST_NUMBER');
-const FROM_NUMBER = config.get('TWILIO_FROM_NUMBER');
-const WEBHOOK_URL = config.get('TWILIO_WEBHOOK_URL');
+const { API_URL, ENV_NAME, AUTH_TOKEN, ACCOUNT_SID, TEST_NUMBER, FROM_NUMBER, WEBHOOK_URL } = process.env;
 
 const TEMPLATE_DIR = path.join(__dirname, '../../sms');
 

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
-const config = require('@bedrockio/config');
 const logger = require('@bedrockio/logger');
+
+const { MONGO_URI, MONGO_DEBUG } = process.env;
 
 mongoose.Promise = Promise;
 
@@ -25,9 +26,9 @@ exports.flags = flags;
 
 exports.initialize = async function initialize() {
   mongoose.set('strictQuery', false);
-  await mongoose.connect(config.get('MONGO_URI'), flags);
+  await mongoose.connect(MONGO_URI, flags);
 
-  if (config.get('MONGO_DEBUG', 'boolean')) {
+  if (MONGO_DEBUG) {
     mongoose.set('debug', true);
   }
 
