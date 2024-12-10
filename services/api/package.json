@@ -9,8 +9,8 @@
   "scripts": {
     "start": "node --env-file=.env --watch src/index.js",
     "debug": "MONGO_DEBUG=true yarn start",
-    "staging": "node --env-file=.env.staging --watch src/index.js",
-    "production": "node --env-file=.env.production --watch src/index.js",
+    "staging": "node --env-file=.env --env-file=.env.staging --watch src/index.js",
+    "production": "node --env-file=.env --env-file=.env.production --watch src/index.js",
     "start:production": "node --env-file=.env src/index",
     "lint": "eslint",
     "test": "jest",
@@ -21,7 +21,7 @@
     "docs:generate": "./scripts/docs/generate"
   },
   "dependencies": {
-    "@bedrockio/fixtures": "^1.2.5",
+    "@bedrockio/fixtures": "^1.3.0",
     "@bedrockio/logger": "^1.0.8",
     "@bedrockio/model": "^0.7.3",
     "@bedrockio/yada": "^1.2.3",

@@ -298,17 +298,11 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@bedrockio/config@^2.2.2":
-  version "2.2.3"
-  resolved "https://registry.yarnpkg.com/@bedrockio/config/-/config-2.2.3.tgz#bac37d12e36a99ec16668c8b5d1e05dec9658fa9"
-  integrity sha512-jfOcZIs63S0GaWQjh5vVIISr4b2vA0CWgm630N0FDB6wlW+O0Fsjox92Agx5nggVpSnNYWqzjuKaUb5RY3/ECw==
-
-"@bedrockio/fixtures@^1.2.5":
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/@bedrockio/fixtures/-/fixtures-1.2.5.tgz#43aed9428d49bcec25a60a0fb39cb70643db7025"
-  integrity sha512-4gt5dZQuDT8Eu2IJK92XbhpCpL/9Vyc1esypjuB5O8Mt/SEKwL8R4Hjj50WcJ8qfAohLJIU7KIQOFUDR/9YVkg==
+"@bedrockio/fixtures@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@bedrockio/fixtures/-/fixtures-1.3.0.tgz#80b2154a0c4f858b2628c4f708caf846e6ab4f2d"
+  integrity sha512-JrJEsIULg+0nXVZZyFAE4DKsMxz3MMbXvNXJowoC8rDwVK2ZBXdT+pe7biDlKoNmsRGdzosIBM24EUgFEo1vmg==
   dependencies:
-    "@bedrockio/config" "^2.2.2"
     "@bedrockio/logger" "^1.0.3"
     glob "^8.1.0"
     jszip "^3.10.1"
