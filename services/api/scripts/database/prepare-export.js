@@ -13,6 +13,8 @@ const logger = require('@bedrockio/logger');
 const { User } = require('../../src/models');
 const { initialize } = require('../../src/utils/database');
 
+const MONGO_URI = config.get('MONGO_URI');
+
 program
   .description(
     `
@@ -33,8 +35,6 @@ program
 
 program.parse(process.argv);
 const options = program.opts();
-
-const MONGO_URI = config.get('MONGO_URI');
 
 async function run() {
   const db = await initialize();
@@ -120,12 +120,7 @@ async function getSanitizations(options) {
   if (options.raw) {
     return [];
   }
-  const manual = await getManualSanitizations();
-  const auto = await getAutoSanitizations();
-  return [...manual, ...auto];
-}
 
-async function getManualSanitizations() {
   const gl = path.resolve(__dirname, 'sanitizations/*.{json,js}');
   const files = await glob(gl);
   const result = [];
@@ -149,49 +144,6 @@ async function getManualSanitizations() {
     });
   }
 
-  return result;
-}
-
-async function getAutoSanitizations() {
-  const result = [];
-
-  for (let model of Object.values(mongoose.models)) {
-    const collection = model.collection.name;
-
-    if (isPluginCollection(collection)) {
-      continue;
-    }
-
-    const fields = {};
-
-    for (let [name, path] of Object.entries(model.schema.paths)) {
-      const sanitize = path.options?.sanitize;
-      const remove = sanitize === true;
-      if (sanitize) {
-        fields[name] = {
-          $cond: {
-            if: {
-              $ne: [`$${name}`, null],
-            },
-            then: remove ? '$$REMOVE' : sanitize,
-            // Effectively doesn't set the field if it does not exist.
-            else: '$$REMOVE',
-          },
-        };
-      }
-    }
-    if (Object.keys(fields).length > 0) {
-      result.push({
-        name: getSanitizedName(collection),
-        collection,
-        pipeline: [
-          {
-            $set: fields,
-          },
-        ],
-      });
-    }
-  }
   return result;
 }
 

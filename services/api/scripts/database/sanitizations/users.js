@@ -1,10 +1,3 @@
-// Note that this is an example of a complex sanitization pipeline.
-// For a simple case the "sanitize" key can be set on individual fields
-// in a model definition:
-
-// - When `true` the value will be stripped from all documents.
-// - When a string the value will be set to a literal for all documents.
-
 const bcrypt = require('bcrypt');
 
 // Development password. Note this is hard
