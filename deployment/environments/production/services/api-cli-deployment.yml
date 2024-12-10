@@ -34,7 +34,7 @@ spec:
             - name: UPLOADS_STORE
               value: "gcs"
             - name: UPLOADS_GCS_BUCKET
-              value: "bedrock-production-uploads"
+              value: "bedrock-foundation-production-uploads"
             # The `bedrock cloud` command in the CLI will help with
             # the creation and storing of secrets for production.
             - name: JWT_SECRET

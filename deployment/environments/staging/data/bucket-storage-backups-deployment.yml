@@ -18,6 +18,6 @@ spec:
           name: main
           env:
             - name: SOURCE_GS_BUCKET
-              value: "bedrock-staging-uploads"
+              value: "bedrock-foundation-staging-uploads"
             - name: DESTINATION_GS_BUCKET
-              value: "bedrock-staging-uploads-backup"
+              value: "bedrock-foundation-staging-uploads-backup"

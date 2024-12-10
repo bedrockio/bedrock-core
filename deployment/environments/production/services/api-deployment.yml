@@ -34,7 +34,7 @@ spec:
             - name: UPLOADS_STORE
               value: "gcs"
             - name: UPLOADS_GCS_BUCKET
-              value: "bedrock-production-uploads"
+              value: "bedrock-foundation-production-uploads"
             - name: LOG_LEVEL
               value: "debug"
             # The `bedrock cloud` command in the CLI will help with

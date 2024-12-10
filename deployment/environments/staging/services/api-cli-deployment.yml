@@ -32,4 +32,4 @@ spec:
             - name: UPLOADS_STORE
               value: "gcs"
             - name: UPLOADS_GCS_BUCKET
-              value: "bedrock-staging-uploads"
+              value: "bedrock-foundation-staging-uploads"

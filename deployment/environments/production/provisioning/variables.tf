@@ -19,7 +19,7 @@ variable "multi_region" {
 }
 
 variable "bucket_prefix" {
-  default = "bedrock-production"
+  default = "bedrock-foundation-production"
 }
 
 variable "cluster_name" {
