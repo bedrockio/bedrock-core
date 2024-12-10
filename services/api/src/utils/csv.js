@@ -2,6 +2,7 @@ const { PassThrough } = require('stream');
 
 const csv = require('fast-csv');
 const yd = require('@bedrockio/yada');
+const config = require('@bedrockio/config');
 const mongoose = require('mongoose');
 const { get, startCase } = require('lodash');
 
@@ -9,7 +10,7 @@ const { serializeObject } = require('./serialize');
 
 const formatter = Intl.NumberFormat('us');
 
-const { API_URL } = process.env;
+const API_URL = config.get('API_URL');
 
 const DEFAULT_OPTIONS = {
   readableHeaders: true,

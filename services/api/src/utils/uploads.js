@@ -4,17 +4,19 @@ const path = require('path');
 const https = require('https');
 const { copyFile, writeFile } = require('fs/promises');
 
+const config = require('@bedrockio/config');
 const logger = require('@bedrockio/logger');
 const mime = require('mime-types');
 const Readable = require('stream').Readable;
 const { Storage } = require('@google-cloud/storage');
 const { Upload } = require('../models');
 
-const { UPLOADS_STORE, UPLOADS_GCS_BUCKET } = process.env;
+const BUCKET_NAME = config.get('UPLOADS_GCS_BUCKET');
+const UPLOADS_STORE = config.get('UPLOADS_STORE');
 
 const storage = new Storage();
 
-const bucket = storage.bucket(UPLOADS_GCS_BUCKET);
+const bucket = storage.bucket(BUCKET_NAME);
 
 async function createUploads(arg, options) {
   const files = Array.isArray(arg) ? arg : [arg];
@@ -79,7 +81,7 @@ async function uploadGcs(file, upload) {
   const destination = getUploadFilename(upload);
   const gcsFile = bucket.file(destination);
 
-  logger.info('Uploading gcs %s -> gs://%s/%s', filename, UPLOADS_GCS_BUCKET, destination);
+  logger.info('Uploading gcs %s -> gs://%s/%s', filename, BUCKET_NAME, destination);
 
   if (buffer) {
     await gcsFile.save(buffer);
@@ -124,7 +126,7 @@ function getUploadFilename(upload) {
 }
 
 function getGcsFile(upload) {
-  const bucket = storage.bucket(UPLOADS_GCS_BUCKET);
+  const bucket = storage.bucket(BUCKET_NAME);
   return bucket.file(getUploadFilename(upload));
 }
 

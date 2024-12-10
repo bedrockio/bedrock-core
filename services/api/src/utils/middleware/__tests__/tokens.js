@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
+const config = require('@bedrockio/config');
 
-const { JWT_SECRET } = process.env;
 const { validateToken } = require('../tokens');
 
 const { context } = require('../../testing');
@@ -53,14 +53,14 @@ describe('validateToken', () => {
 
   it('should fail if expired', async () => {
     const middleware = validateToken();
-    const token = jwt.sign({ kid: 'user' }, JWT_SECRET, { expiresIn: 0 });
+    const token = jwt.sign({ kid: 'user' }, config.get('JWT_SECRET'), { expiresIn: 0 });
     const ctx = context({ headers: { authorization: `Bearer ${token}` } });
     await expect(middleware(ctx)).rejects.toHaveProperty('message', 'jwt expired');
   });
 
   it('should work with valid secret and not expired', async () => {
     const middleware = validateToken();
-    const token = jwt.sign({ kid: 'user', attribute: 'value' }, JWT_SECRET);
+    const token = jwt.sign({ kid: 'user', attribute: 'value' }, config.get('JWT_SECRET'));
     const ctx = context({ headers: { authorization: `Bearer ${token}` } });
     await middleware(ctx, () => {
       expect(ctx.state.jwt.attribute).toBe('value');
@@ -69,7 +69,7 @@ describe('validateToken', () => {
 
   it('should only validate the token once when called multiple times', async () => {
     const middleware = validateToken();
-    const token = jwt.sign({ kid: 'user', attribute: 'value' }, JWT_SECRET);
+    const token = jwt.sign({ kid: 'user', attribute: 'value' }, config.get('JWT_SECRET'));
     const ctx = context({ headers: { authorization: `Bearer ${token}` } });
 
     let tmp;
@@ -92,7 +92,7 @@ describe('validateToken', () => {
   describe('optional validation', () => {
     it('should validateToken when token exists', async () => {
       const middleware = validateToken({ optional: true });
-      const token = jwt.sign({ kid: 'user', attribute: 'value' }, JWT_SECRET);
+      const token = jwt.sign({ kid: 'user', attribute: 'value' }, config.get('JWT_SECRET'));
       const ctx = context({ headers: { authorization: `Bearer ${token}` } });
       await middleware(ctx, () => {
         expect(ctx.state.jwt.attribute).toBe('value');
@@ -111,7 +111,7 @@ describe('validateToken', () => {
       const optional = validateToken({ optional: true });
       const required = validateToken();
 
-      const token = jwt.sign({ kid: 'user', attribute: 'value' }, JWT_SECRET);
+      const token = jwt.sign({ kid: 'user', attribute: 'value' }, config.get('JWT_SECRET'));
       const ctx = context({ headers: { authorization: `Bearer ${token}` } });
 
       await optional(ctx, () => {});

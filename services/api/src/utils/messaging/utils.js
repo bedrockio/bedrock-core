@@ -2,11 +2,12 @@ const fs = require('fs/promises');
 const path = require('path');
 const Mustache = require('mustache');
 const frontmatter = require('front-matter');
+const config = require('@bedrockio/config');
 const { memoize } = require('lodash');
 
 // Environment vars
 
-const ENV = process.env;
+const ENV = config.getAll();
 
 // Mustache utils
 

@@ -1,7 +1,10 @@
 const SimpleWebAuthn = require('@simplewebauthn/server');
+const config = require('@bedrockio/config');
+
 const { clearAuthenticators, getRequiredAuthenticator } = require('../../../utils/auth/authenticators');
 
-const { APP_NAME, APP_URL } = process.env;
+const APP_NAME = config.get('APP_NAME');
+const APP_URL = config.get('APP_URL');
 
 // Human-readable app name.
 const rpName = APP_NAME;
@@ -11,7 +14,7 @@ const rpName = APP_NAME;
 const rpID = new URL(APP_URL).hostname;
 
 // The URL at which registrations and authentications should occur
-const origin = APP_URL;
+const origin = config.get('APP_URL');
 
 async function generateRegistrationOptions(user) {
   // Only allow a single passkey at a time.

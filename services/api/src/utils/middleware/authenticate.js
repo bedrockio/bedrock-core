@@ -1,8 +1,9 @@
 const { validateToken } = require('./tokens');
 const { User } = require('../../models');
 const compose = require('koa-compose');
+const config = require('@bedrockio/config');
 
-const { ENV_NAME } = process.env;
+const ENV_NAME = config.get('ENV_NAME');
 
 function authenticate(options = {}) {
   const { optional } = options;

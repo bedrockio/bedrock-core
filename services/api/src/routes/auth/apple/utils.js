@@ -1,8 +1,9 @@
 const verifyAppleToken = require('verify-apple-id-token').default;
+const config = require('@bedrockio/config');
 
 const { clearAuthenticators } = require('../../../utils/auth/authenticators');
 
-const { APPLE_SERVICE_ID } = process.env;
+const APPLE_SERVICE_ID = config.get('APPLE_SERVICE_ID');
 
 async function verifyToken(token) {
   const payload = await verifyAppleToken({

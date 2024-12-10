@@ -1,8 +1,9 @@
 const speakeasy = require('speakeasy');
+const config = require('@bedrockio/config');
 
 const { clearAuthenticators, getRequiredAuthenticator } = require('../../../utils/auth/authenticators');
 
-const { APP_NAME } = process.env;
+const APP_NAME = config.get('APP_NAME');
 
 function generateTotp() {
   const secret = createSecret();

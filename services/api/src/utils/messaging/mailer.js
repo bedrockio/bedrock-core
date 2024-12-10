@@ -5,9 +5,15 @@ const htmlToText = require('html-to-text');
 
 const { loadTemplate, interpolate, escapeHtml } = require('./utils');
 
+const config = require('@bedrockio/config');
 const logger = require('@bedrockio/logger');
 
-const { ENV_NAME, APP_NAME, POSTMARK_API_KEY, POSTMARK_FROM, POSTMARK_DEV_EMAIL, POSTMARK_WEBHOOK_KEY } = process.env;
+const ENV_NAME = config.get('ENV_NAME');
+const APP_NAME = config.get('APP_NAME');
+const POSTMARK_FROM = config.get('POSTMARK_FROM');
+const POSTMARK_API_KEY = config.get('POSTMARK_API_KEY');
+const POSTMARK_DEV_EMAIL = config.get('POSTMARK_DEV_EMAIL');
+const POSTMARK_WEBHOOK_KEY = config.get('POSTMARK_WEBHOOK_KEY');
 
 const TEMPLATE_DIR = path.join(__dirname, '../../emails');
 

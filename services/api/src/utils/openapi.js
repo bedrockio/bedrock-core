@@ -3,6 +3,8 @@ const path = require('path');
 const crypto = require('crypto');
 const { Stream } = require('stream');
 const mongoose = require('mongoose');
+const config = require('@bedrockio/config');
+
 const { get, set, merge, isEmpty, without, camelCase, kebabCase, startCase } = require('lodash');
 
 const pluralize = mongoose.pluralize();
@@ -11,7 +13,6 @@ const PACKAGE_FILE = path.resolve(__dirname, '../../package.json');
 const DEFINITION_FILE = path.resolve(__dirname, '../../openapi.json');
 
 const EDITABLE_FIELDS = ['title', 'summary', 'description'];
-const { API_URL } = process.env;
 
 let definition;
 
@@ -62,7 +63,7 @@ async function generateDefinition() {
     },
     servers: [
       {
-        url: API_URL,
+        url: config.get('API_URL'),
       },
     ],
     paths: generatePaths(require('../routes')),
