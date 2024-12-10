@@ -75,8 +75,9 @@ async function uploadLocal(file, upload) {
 }
 
 async function uploadGcs(file, upload) {
-  const { filename, filepath, buffer } = file;
+  const { filepath, buffer } = file;
 
+  const filename = path.basename(filepath);
   const destination = getUploadFilename(upload);
   const gcsFile = bucket.file(destination);
 
