@@ -27,6 +27,7 @@ program
   )
   .option('-a, --created-after [date]', 'Limit to users created after a certain date. Can be any parseable date.')
   .option('-b, --created-before [date]', 'Limit to users created before a certain date. Can be any parseable date.')
+  .option('-l, --limit [number]', 'Limit to a fixed number of users from the most recently created.')
   .option('-u, --user-id [string...]', 'Limit to users by ID (can be multiple).')
   .option('-m, --email [string...]', 'Limit to users by email (can be multiple).')
   .option('-e, --exclude [string...]', 'Exclude collections.', [])
@@ -54,6 +55,12 @@ async function run() {
 }
 
 async function getUserIds() {
+  const filtered = await getFilteredUserIds();
+  const limited = await getLimitedUserIds();
+  return [...filtered, ...limited];
+}
+
+async function getFilteredUserIds() {
   const { createdAfter, createdBefore, userId: userIds, email: emails } = options;
 
   const $or = [];
@@ -108,6 +115,19 @@ async function getUserIds() {
   if (!data.length) {
     throw new Error('No users found');
   }
+
+  return data.map((u) => {
+    return String(u._id);
+  });
+}
+
+async function getLimitedUserIds() {
+  const { limit } = options;
+  if (!limit) {
+    return [];
+  }
+
+  const data = await User.find().limit(limit).lean();
 
   return data.map((u) => {
     return String(u._id);
