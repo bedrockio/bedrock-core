@@ -13,7 +13,7 @@ spec:
         app: bucket-storage-backups
     spec:
       containers:
-        - image: dominiek/bucket-storage-backups
+        - image: bedrockio/bucket-storage-backups
           imagePullPolicy: Always
           name: main
           env:
