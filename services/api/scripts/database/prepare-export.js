@@ -15,6 +15,8 @@ const { initialize } = require('../../src/utils/database');
 
 const MONGO_URI = config.get('MONGO_URI');
 
+const DEFAULT_EXCLUDES = [];
+
 program
   .description(
     `
@@ -30,7 +32,7 @@ program
   .option('-l, --limit [number]', 'Limit to a fixed number of users from the most recently created.')
   .option('-u, --user-id [string...]', 'Limit to users by ID (can be multiple).')
   .option('-m, --email [string...]', 'Limit to users by email (can be multiple).')
-  .option('-e, --exclude [string...]', 'Exclude collections.', [])
+  .option('-e, --exclude [string...]', 'Exclude collections.', DEFAULT_EXCLUDES)
   .option('-r, --raw [boolean]', 'Skip sanitizations. Only use this when necessary.', false)
   .option('-o, --out [string]', 'The directory to export the export to.', 'export');
 
@@ -38,18 +40,18 @@ program.parse(process.argv);
 const options = program.opts();
 
 async function run() {
-  const db = await initialize();
+  const connection = await initialize();
 
   const userIds = await getUserIds();
 
   const sanitizations = await getSanitizations(options);
-  await runSanitizations(db, sanitizations);
+  await runSanitizations(connection, sanitizations);
 
   await exec('rm', ['-rf', options.out]);
   await exportCollections({
     ...options,
-    db,
     userIds,
+    connection,
     sanitizations,
   });
 }
@@ -167,7 +169,7 @@ async function getSanitizations(options) {
   return result;
 }
 
-async function runSanitizations(db, sanitizations) {
+async function runSanitizations(connection, sanitizations) {
   for (let sanitization of sanitizations) {
     const { collection, pipeline } = sanitization;
     if (!collection) {
@@ -180,14 +182,14 @@ async function runSanitizations(db, sanitizations) {
 
     try {
       // Attempt to modify the view
-      await db.db.command({
+      await connection.db.command({
         collMod: sanitizedName,
         viewOn: collection,
         pipeline,
       });
     } catch {
       // View not created yet so create it
-      await db.createCollection(sanitizedName, {
+      await connection.createCollection(sanitizedName, {
         viewOn: collection,
         pipeline,
       });
@@ -202,7 +204,7 @@ function getSanitizedName(collection) {
 // Exporting
 
 async function exportCollections(options) {
-  const { db, exclude, sanitizations, userIds } = options;
+  const { connection, exclude, sanitizations, userIds } = options;
 
   const promises = [];
 
@@ -284,7 +286,7 @@ async function exportCollections(options) {
   if (options.raw) {
     // Exclude sanitized views which may have been
     // previously created if dumping raw documents.
-    const collections = await db.listCollections();
+    const collections = await connection.db.listCollections().toArray();
     for (let collection of collections) {
       const { name } = collection;
       if (name.endsWith('_sanitized')) {
