@@ -74,85 +74,6 @@ describe('/1/auth', () => {
       });
     });
 
-    it('should throttle a few seconds after 5 bad attempts', async () => {
-      mockTime('2020-01-01');
-
-      const password = '123password!';
-      const user = await createUser({
-        password,
-        loginAttempts: 5,
-        lastLoginAttemptAt: new Date(),
-      });
-      let response;
-
-      response = await request('POST', '/1/auth/password/login', {
-        email: user.email,
-        password: 'bad password',
-      });
-      expect(response.status).toBe(401);
-
-      response = await request('POST', '/1/auth/password/login', {
-        email: user.email,
-        password,
-      });
-      expect(response.status).toBe(401);
-
-      advanceTime(60 * 1000);
-      response = await request('POST', '/1/auth/password/login', {
-        email: user.email,
-        password,
-      });
-      expect(response.status).toBe(200);
-
-      unmockTime();
-    });
-
-    it('should throttle 1 hour after 10 bad attempts', async () => {
-      mockTime('2020-01-01');
-
-      const password = '123password!';
-      const user = await createUser({
-        password,
-        loginAttempts: 9,
-        lastLoginAttemptAt: new Date(),
-      });
-      let response;
-
-      response = await request('POST', '/1/auth/password/login', { email: user.email, password });
-      expect(response.status).toBe(401);
-
-      advanceTime(60 * 60 * 1000);
-
-      response = await request('POST', '/1/auth/password/login', { email: user.email, password });
-      expect(response.status).toBe(200);
-
-      unmockTime();
-    });
-
-    it('should not throttle after successful login attempt', async () => {
-      mockTime('2020-01-01');
-
-      const password = '123password!';
-      const user = await createUser({
-        password,
-        loginAttempts: 10,
-        lastLoginAttemptAt: new Date(),
-      });
-      let response;
-
-      advanceTime(60 * 60 * 1000);
-
-      response = await request('POST', '/1/auth/password/login', { email: user.email, password });
-      expect(response.status).toBe(200);
-
-      advanceTime(1000);
-
-      response = await request('POST', '/1/auth/password/login', { email: user.email, password });
-      expect(response.status).toBe(200);
-
-      unmockTime();
-    });
-
     it('should store the new token payload on the user', async () => {
       mockTime('2020-01-01T00:00:00.000Z');
       const password = '123password!';
@@ -218,6 +139,107 @@ describe('/1/auth', () => {
       expect(user.authTokens.length).toBe(1);
 
       unmockTime();
+    });
+
+    describe('login throttling', () => {
+      it('should not throttle up to 5 attempts', async () => {
+        mockTime('2020-01-01');
+
+        let response;
+
+        const password = '123password!';
+        const user = await createUser({
+          password,
+          loginAttempts: 4,
+          lastLoginAttemptAt: new Date(),
+        });
+
+        response = await request('POST', '/1/auth/password/login', { email: user.email, password });
+        expect(response.status).toBe(200);
+
+        unmockTime();
+      });
+
+      it('should throttle 1 minute up to 10 attempts', async () => {
+        mockTime('2020-01-01');
+
+        let response;
+
+        const password = '123password!';
+        const user = await createUser({
+          password,
+          loginAttempts: 6,
+          lastLoginAttemptAt: new Date(),
+        });
+
+        response = await request('POST', '/1/auth/password/login', { email: user.email, password });
+        expect(response.status).toBe(401);
+
+        advanceTime(59 * 1000);
+        user.loginAttempts = 9;
+        await user.save();
+
+        response = await request('POST', '/1/auth/password/login', { email: user.email, password });
+        expect(response.status).toBe(401);
+
+        advanceTime(60 * 1000);
+        response = await request('POST', '/1/auth/password/login', { email: user.email, password });
+        expect(response.status).toBe(200);
+
+        unmockTime();
+      });
+
+      it('should throttle 1 hour after 10 attempts', async () => {
+        mockTime('2020-01-01');
+
+        let response;
+
+        const password = '123password!';
+        const user = await createUser({
+          password,
+          loginAttempts: 10,
+          lastLoginAttemptAt: new Date(),
+        });
+
+        response = await request('POST', '/1/auth/password/login', { email: user.email, password });
+        expect(response.status).toBe(401);
+
+        advanceTime(59 * 60 * 1000);
+        await user.save();
+
+        response = await request('POST', '/1/auth/password/login', { email: user.email, password });
+        expect(response.status).toBe(401);
+
+        advanceTime(60 * 60 * 1000);
+        response = await request('POST', '/1/auth/password/login', { email: user.email, password });
+        expect(response.status).toBe(200);
+
+        unmockTime();
+      });
+
+      it('should not throttle after successful login attempt', async () => {
+        mockTime('2020-01-01');
+
+        const password = '123password!';
+        const user = await createUser({
+          password,
+          loginAttempts: 10,
+          lastLoginAttemptAt: new Date(),
+        });
+        let response;
+
+        advanceTime(60 * 60 * 1000);
+
+        response = await request('POST', '/1/auth/password/login', { email: user.email, password });
+        expect(response.status).toBe(200);
+
+        advanceTime(1000);
+
+        response = await request('POST', '/1/auth/password/login', { email: user.email, password });
+        expect(response.status).toBe(200);
+
+        unmockTime();
+      });
     });
   });
 
