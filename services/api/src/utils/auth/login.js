@@ -1,15 +1,21 @@
 const { AuditEntry } = require('../../models');
-const { mapExponential } = require('../math');
 const { createAuthToken, removeExpiredTokens } = require('./tokens');
 
-const LOGIN_THROTTLE = {
-  // Apply lockout after 5 tries
-  triesMin: 5,
-  // Scale to max at 10 tries
-  triesMax: 12,
-  // 1 hour lockout maximum
-  timeMax: 60 * 60 * 1000,
-};
+const LOGIN_TIMEOUT_RULES = [
+  {
+    timeout: 0,
+    maxAttempts: 5,
+  },
+  {
+    minAttempts: 6,
+    maxAttempts: 10,
+    timeout: 60 * 1000,
+  },
+  {
+    minAttempts: 11,
+    timeout: 60 * 60 * 1000,
+  },
+];
 
 async function login(user, ctx) {
   const token = createAuthToken(user, ctx);
@@ -26,24 +32,33 @@ async function login(user, ctx) {
 }
 
 async function verifyLoginAttempts(user, ctx) {
-  const { triesMin, triesMax, timeMax } = LOGIN_THROTTLE;
+  let { loginAttempts = 0, lastLoginAttemptAt } = user;
 
-  // Fixed random failing test where the Date.now() was a fraction later than new Date, resulting in negative number
-  // const dt = new Date() - (user.lastLoginAttemptAt || Date.now());
-  const now = new Date();
-  const dt = now - (user.lastLoginAttemptAt || now);
-  const threshold = mapExponential(user.loginAttempts || 0, triesMin, triesMax, 0, timeMax);
+  await user.updateOne({
+    lastLoginAttemptAt: new Date(),
+    $inc: {
+      loginAttempts: 1,
+    },
+  });
 
-  if (dt >= threshold) {
-    user.lastLoginAttemptAt = new Date();
-    user.loginAttempts += 1;
-  } else {
+  if (!lastLoginAttemptAt) {
+    return;
+  }
+
+  const rule = LOGIN_TIMEOUT_RULES.find((r) => {
+    const { minAttempts = 0, maxAttempts = Infinity } = r;
+    return loginAttempts >= minAttempts && loginAttempts <= maxAttempts;
+  });
+
+  const dt = new Date() - lastLoginAttemptAt;
+
+  if (dt < rule?.timeout) {
     await AuditEntry.append('Reached max authentication attempts', {
       ctx,
       actor: user,
       category: 'security',
     });
-    throw Error(`Too many attempts. Try again in ${Math.max(1, Math.floor(threshold / (60 * 1000)))} minute(s)`);
+    throw Error('Too many login attempts. Please wait a bit and try again.');
   }
 }
 
