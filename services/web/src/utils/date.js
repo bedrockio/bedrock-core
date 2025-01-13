@@ -12,17 +12,46 @@ const DATETIME_MED = {
   minute: 'numeric',
 };
 
-export function formatDate(arg, locale) {
-  return getFormatted(arg, locale, DATE_MED);
+export function formatDate(arg, options) {
+  if (arguments.length > 0 && arg == null) {
+    return null;
+  }
+  return getFormatted(arg, {
+    ...DATE_MED,
+    ...options,
+  });
 }
 
-export function formatDateTime(arg, locale) {
-  return getFormatted(arg, locale, DATETIME_MED);
-}
-
-function getFormatted(arg, locale, options) {
+export function formatDateCompact(arg, locale) {
+  // MM/DD/YYYY
   const date = typeof arg === 'string' ? new Date(arg) : arg;
-  return new Intl.DateTimeFormat(locale, options).format(date);
+  return new Intl.DateTimeFormat(locale, {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(date);
+}
+
+export function formatDateTime(arg, options) {
+  return getFormatted(arg, {
+    ...DATETIME_MED,
+    ...options,
+  });
+}
+
+export function formatTime(arg, options) {
+  return getFormatted(arg, {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    ...options,
+  });
+}
+
+function getFormatted(arg, options = {}) {
+  const { locale, ...rest } = options;
+  const date = typeof arg === 'string' ? new Date(arg) : arg;
+  return new Intl.DateTimeFormat(locale, rest).format(date);
 }
 
 export function fromNow(
