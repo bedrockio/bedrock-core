@@ -20,7 +20,7 @@ export default class DateField extends React.Component {
     });
   }
 
-  onDayChange = (date) => {
+  onDayChange = (evt, date) => {
     if (!this.props.time) {
       if (this.props.end) {
         date.setUTCHours(23);
@@ -30,7 +30,7 @@ export default class DateField extends React.Component {
         date.setUTCMinutes(0, 0, 0);
       }
     }
-    this.setDate(null, date);
+    this.setDate(evt, date);
   };
 
   onDayCommit = (valid) => {

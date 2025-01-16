@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState, useMemo } from 'react';
 
 // eslint-disable-next-line
 import { isValid } from 'date-fns';
@@ -41,43 +41,36 @@ export default function DateInput(props) {
   const { value, onChange, onCommit, ...rest } = props;
 
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState(value);
   const [inputValue, setInputValue] = useState('');
 
-  useEffect(() => {
-    setSelected(value);
+  const date = useMemo(() => {
+    return value ? new Date(value) : null;
   }, [value]);
-
-  useEffect(() => {
-    if (selected !== value) {
-      onChange(selected || null);
-    }
-  }, [selected]);
 
   const onInputChange = (evt, { value }) => {
     setInputValue(value);
-    setSelected(null);
+    onChange(evt, null);
   };
 
-  const onSelect = (date) => {
+  const onSelect = (date, prev, modifiers, evt) => {
     // A date without an associated time should be in UTC time,
     // so remove the timezone offset here.
     date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
 
     setInputValue('');
-    setSelected(date);
     onCommit(true);
     setOpen(false);
+    onChange(evt, date);
   };
 
   const getValue = () => {
     if (inputValue) {
       return inputValue;
-    } else if (selected) {
+    } else if (date) {
       // The date without an associated time should be
       // considered UTC so ensure that any timezone defaults
       // are overridden here.
-      return formatDate(selected, {
+      return formatDate(date, {
         timeZone: 'UTC',
       });
     } else {
@@ -85,16 +78,15 @@ export default function DateInput(props) {
     }
   };
 
-  function onBlur() {
+  function onBlur(evt) {
     if (inputValue) {
       const date = parse(inputValue);
-
       if (isValid(date)) {
         setInputValue('');
-        setSelected(date);
+        onChange(evt, date);
         onCommit(true);
       } else {
-        setSelected(null);
+        onChange(evt, null);
         onCommit(false);
       }
     }
@@ -129,8 +121,8 @@ export default function DateInput(props) {
           content={
             <DayPicker
               mode="single"
-              month={selected}
-              selected={selected}
+              month={date}
+              selected={date}
               onSelect={onSelect}
             />
           }
