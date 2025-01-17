@@ -13,7 +13,7 @@ import { formatDate } from 'utils/date';
 import 'react-day-picker/style.css';
 import './date-input.less';
 
-const DISALLOWED_REG = /^\d+[-/]?$/;
+const DEFAULT_YEAR_REG = /\d{4}|[-/]\d{2}/;
 
 // Allow any dates parseable by Javascript, however
 // exclude odd results that may be caused by partial
@@ -23,11 +23,14 @@ const DISALLOWED_REG = /^\d+[-/]?$/;
 function parse(str) {
   str = str.trim();
 
-  if (DISALLOWED_REG.test(str)) {
-    return null;
+  const date = new Date(str);
+
+  if (date.getFullYear() === 2001) {
+    if (!DEFAULT_YEAR_REG.test(str)) {
+      date.setFullYear(new Date().getFullYear());
+    }
   }
 
-  const date = new Date(str);
   const year = date.getFullYear();
 
   if (year < 1800 || year > 9999) {
@@ -35,6 +38,12 @@ function parse(str) {
   }
 
   return date;
+}
+
+// A date without an associated time should be in UTC time,
+// so remove the timezone offset here.
+function resetTime(date) {
+  date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
 }
 
 export default function DateInput(props) {
@@ -53,10 +62,7 @@ export default function DateInput(props) {
   };
 
   const onSelect = (date, prev, modifiers, evt) => {
-    // A date without an associated time should be in UTC time,
-    // so remove the timezone offset here.
-    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-
+    resetTime(date);
     setInputValue('');
     onCommit(true);
     setOpen(false);
@@ -82,6 +88,7 @@ export default function DateInput(props) {
     if (inputValue) {
       const date = parse(inputValue);
       if (isValid(date)) {
+        resetTime(date);
         setInputValue('');
         onChange(evt, date);
         onCommit(true);
