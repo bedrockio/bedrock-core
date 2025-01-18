@@ -7,11 +7,11 @@
     "node": ">=20"
   },
   "scripts": {
-    "start": "node --watch src/index.js",
+    "start": "node --disable-warning=DEP0040 --watch src/index.js",
     "debug": "MONGO_DEBUG=true yarn start",
     "staging": "source .env.staging && node --watch src/index.js",
     "production": "source .env.production && node --watch src/index.js",
-    "start:production": "node src/index",
+    "start:production": "node --disable-warning=DEP0040 src/index",
     "lint": "eslint",
     "test": "jest",
     "test:watch": "jest --watch -i",
@@ -70,7 +70,7 @@
     "supertest": "^6.3.3"
   },
   "volta": {
-    "node": "20.15.1",
+    "node": "22.13.0",
     "yarn": "1.22.22"
   }
 }

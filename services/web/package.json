@@ -7,8 +7,8 @@
   },
   "scripts": {
     "build": "NODE_ENV=production webpack",
-    "start": "node ./serve/dev",
-    "static": "node ./serve/static",
+    "start": "node --trace-deprecation --disable-warning=DEP0040 ./serve/dev",
+    "static": "node --disable-warning=DEP0040 ./serve/static",
     "lint": "eslint",
     "test": "jest",
     "generate": "cd ../../generator && yarn install && yarn generate",
@@ -37,7 +37,6 @@
     "@simplewebauthn/browser": "^8.3.4",
     "autoprefixer": "^10.4.12",
     "babel-loader": "^8.2.5",
-    "circular-dependency-plugin": "^5.2.2",
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.7.1",
     "cssnano": "^5.1.15",
@@ -95,7 +94,7 @@
     "webpack-bundle-analyzer": "^4.5.0"
   },
   "volta": {
-    "node": "20.12.2",
+    "node": "22.13.0",
     "yarn": "1.22.19"
   },
   "prettier": "@bedrockio/prettier-config"

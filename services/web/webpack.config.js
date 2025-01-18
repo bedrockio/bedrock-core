@@ -6,7 +6,6 @@ const config = require('@bedrockio/config');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CircularDependencyPlugin = require('circular-dependency-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { template: compileTemplate } = require('lodash');
@@ -113,11 +112,6 @@ module.exports = {
         useShortDoctype: true,
       },
       inject: true,
-    }),
-    new CircularDependencyPlugin({
-      exclude: /node_modules/,
-      failOnError: true,
-      cwd: process.cwd(),
     }),
     ...getOptionalPlugins(),
 
