@@ -1,16 +1,16 @@
-function generateAuthenticationOptions(options) {
-  const { allowCredentials } = options;
-  const id = allowCredentials[0].id.toString();
+function generateAuthenticationOptions() {
   return {
-    ...options,
-    challenge: `${id}-challenge`,
-    allowCredentials: allowCredentials.map((credential) => {
-      return {
-        ...credential,
-        id: credential.id.toString('base64url'),
-      };
-    }),
+    rpId: 'rpID',
+    challenge: 'challenge',
+    allowCredentials: [
+      {
+        id: 'id',
+        type: 'public-key',
+        transports: ['hybrid', 'internal'],
+      },
+    ],
     timeout: 60000,
+    userVerification: 'preferred',
   };
 }
 
@@ -30,20 +30,29 @@ function verifyAuthenticationResponse(options) {
 
 function generateRegistrationOptions(options) {
   return {
-    challenge: 'register-challenge',
+    challenge: 'challenge',
     rp: {
-      id: options.rpID,
-      name: options.rpName,
+      name: 'Bedrock',
+      id: 'rpID',
     },
     user: {
-      id: options.userID,
+      id: 'id',
       name: options.userName,
-      displayName: options.userDisplayName,
+      displayName: options.userName,
     },
     pubKeyCredParams: [
-      { alg: -8, type: 'public-key' },
-      { alg: -7, type: 'public-key' },
-      { alg: -257, type: 'public-key' },
+      {
+        alg: -8,
+        type: 'public-key',
+      },
+      {
+        alg: -7,
+        type: 'public-key',
+      },
+      {
+        alg: -257,
+        type: 'public-key',
+      },
     ],
     timeout: 60000,
     attestation: 'none',
@@ -56,6 +65,7 @@ function generateRegistrationOptions(options) {
     extensions: {
       credProps: true,
     },
+    hints: [],
   };
 }
 
@@ -65,9 +75,13 @@ function verifyRegistrationResponse(options) {
     return {
       verified: true,
       registrationInfo: {
-        counter: 0,
-        credentialID: 'credential-id',
-        credentialPublicKey: 'credential-public-key',
+        credential: {
+          id: 'id',
+          type: 'public-key',
+          transports: ['hybrid', 'internal'],
+        },
+        credentialDeviceType: 'credentialDeviceType',
+        credentialBackedUp: true,
       },
     };
   } else {

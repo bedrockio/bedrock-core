@@ -65,7 +65,10 @@ export async function disablePasskey() {
 
 async function register(options) {
   try {
-    return await startRegistration(options);
+    return await startRegistration({
+      optionsJSON: options,
+      useAutoRegister: true,
+    });
   } catch (error) {
     if (error.code === 'ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY') {
       throw new Error('Operation was canceled or timed out.');
@@ -76,7 +79,9 @@ async function register(options) {
 
 async function authenticate(options) {
   try {
-    return await startAuthentication(options);
+    return await startAuthentication({
+      optionsJSON: options,
+    });
   } catch (error) {
     if (error.code === 'ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY') {
       throw new Error('Operation was canceled or timed out.');

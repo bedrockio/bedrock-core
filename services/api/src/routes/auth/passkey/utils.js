@@ -9,9 +9,9 @@ const APP_URL = config.get('APP_URL');
 // Human-readable app name.
 const rpName = APP_NAME;
 
-// A unique identifier for your website. Note that
-// for SSO this should be the root domain.
-const rpID = new URL(APP_URL).hostname;
+// A unique identifier for your website.
+// For SSO this should be the root domain.
+const rpID = getRootDomain(APP_URL);
 
 // The URL at which registrations and authentications should occur
 const origin = config.get('APP_URL');
@@ -23,9 +23,7 @@ async function generateRegistrationOptions(user) {
   const options = await SimpleWebAuthn.generateRegistrationOptions({
     rpID,
     rpName,
-    userID: user.id,
-    userName: user.email,
-    userDisplayName: user.name,
+    userName: user.name,
     // Don't prompt users for additional information about the authenticator
     // (Recommended for smoother UX)
     attestationType: 'none',
@@ -33,7 +31,7 @@ async function generateRegistrationOptions(user) {
 
   user.authenticators.push({
     type: 'passkey',
-    secret: options.challenge,
+    info: options,
   });
 
   return options;
@@ -41,37 +39,50 @@ async function generateRegistrationOptions(user) {
 
 async function verifyRegistrationResponse(user, response) {
   const passkey = getRequiredAuthenticator(user, 'passkey');
+
   const { registrationInfo } = await SimpleWebAuthn.verifyRegistrationResponse({
     response,
-    expectedChallenge: passkey.secret,
+    expectedChallenge: passkey.info.challenge,
     expectedOrigin: origin,
     expectedRPID: rpID,
   });
 
-  const { counter, credentialID, credentialPublicKey } = registrationInfo;
+  const { credential, credentialDeviceType, credentialBackedUp } = registrationInfo;
 
-  Object.assign(passkey, {
-    id: Buffer.from(credentialID).toString('base64url'),
-    publicKey: Buffer.from(credentialPublicKey).toString('base64url'),
-    counter,
-  });
+  passkey.info = {
+    ...passkey.info,
+    // A unique identifier for the credential
+    id: credential.id,
+    // The public key bytes, used for subsequent authentication signature verification
+    publicKey: credential.publicKey,
+    // The number of times the authenticator has been used on this site so far
+    counter: credential.counter,
+    // How the browser can talk with this credential's authenticator
+    transports: credential.transports,
+    // Whether the passkey is single-device or multi-device
+    deviceType: credentialDeviceType,
+    // Whether the passkey has been backed up in some way
+    backedUp: credentialBackedUp,
+  };
 }
 
 async function generateAuthenticationOptions(user) {
   const passkey = getRequiredAuthenticator(user, 'passkey');
   const options = await SimpleWebAuthn.generateAuthenticationOptions({
+    rpID,
     allowCredentials: [
       {
-        id: Buffer.from(passkey.id, 'base64url'),
-        type: 'public-key',
-        // Optional
-        // transports: authenticator.transports,
+        id: passkey.info.id,
+        transports: passkey.info.transports,
       },
     ],
     userVerification: 'preferred',
   });
+  passkey.info = {
+    ...passkey.info,
+    challenge: options.challenge,
+  };
 
-  passkey.secret = options.challenge;
   return options;
 }
 
@@ -79,23 +90,33 @@ async function verifyAuthenticationResponse(user, response) {
   const passkey = getRequiredAuthenticator(user, 'passkey');
   const { verified, authenticationInfo } = await SimpleWebAuthn.verifyAuthenticationResponse({
     response,
-    expectedChallenge: passkey.secret,
+    expectedChallenge: passkey.info.challenge,
     expectedOrigin: origin,
     expectedRPID: rpID,
-    authenticator: {
-      credentialID: Buffer.from(passkey.id, 'base64url'),
-      credentialPublicKey: Buffer.from(passkey.publicKey, 'base64url'),
-      counter: passkey.counter,
+    credential: {
+      id: passkey.info.id,
+      counter: passkey.info.counter,
+      transports: passkey.info.transports,
+      publicKey: new Uint8Array(passkey.info.publicKey.buffer),
     },
   });
   if (!verified) {
     throw new Error('Could not verify authentication response.');
   }
-  passkey.counter = authenticationInfo.newCounter;
+
+  passkey.info = {
+    ...passkey.info,
+    counter: authenticationInfo.newCounter,
+  };
 }
 
 function removePasskey(user) {
   clearAuthenticators(user, 'passkey');
+}
+
+function getRootDomain() {
+  const { hostname } = new URL(APP_URL);
+  return hostname.split('.').slice(-2).join('.');
 }
 
 module.exports = {

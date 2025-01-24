@@ -87,12 +87,8 @@
               "type": "String",
               "readAccess": "none"
             },
-            "publicKey": {
-              "type": "String",
-              "readAccess": "none"
-            },
-            "counter": {
-              "type": "Number",
+            "info": {
+              "type": "Object",
               "readAccess": "none"
             },
             "verifiedAt": {

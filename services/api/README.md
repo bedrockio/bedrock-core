@@ -403,6 +403,9 @@ removed.
 To remove passkey support, remove the routes from `api/src/routes/auth/index.js`. The web login and settings section can
 also be removed as well as `@simplewebauthn` packages.
 
+> [!WARNING] Note that passkeys require a secure connection. The simplest way to test locally is to set up a
+> [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/).
+
 ### Federated
 
 Bedrock provides federated login for both Google and Apple out of the box. By default federated logins do not have

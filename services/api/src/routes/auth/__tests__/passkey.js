@@ -5,8 +5,10 @@ const { User } = require('../../../models');
 function getPasskey() {
   return {
     type: 'passkey',
-    id: Buffer.from('id').toString('base64url'),
-    publicKey: Buffer.from('public-key').toString('base64url'),
+    info: {
+      id: 'id',
+      publicKey: Buffer.from('public-key').toString('base64url'),
+    },
   };
 }
 
@@ -22,11 +24,13 @@ describe('/1/auth/passkeys', () => {
       });
       expect(response.status).toBe(200);
       expect(response.body.data).toEqual({
-        challenge: `id-challenge`,
+        rpId: 'rpID',
+        challenge: 'challenge',
         allowCredentials: [
           {
-            id: 'aWQ',
+            id: 'id',
             type: 'public-key',
+            transports: ['hybrid', 'internal'],
           },
         ],
         userVerification: 'preferred',
@@ -118,10 +122,10 @@ describe('/1/auth/passkeys', () => {
       });
 
       expect(response.body.data).toMatchObject({
-        challenge: 'register-challenge',
+        challenge: 'challenge',
         user: {
-          id: user.id,
-          name: user.email,
+          id: 'id',
+          name: user.name,
           displayName: user.name,
         },
         timeout: 60000,
@@ -208,11 +212,10 @@ describe('/1/auth/passkeys', () => {
       );
       expect(response.status).toBe(200);
       expect(response.body.data).toMatchObject({
-        challenge: 'register-challenge',
+        challenge: 'challenge',
         user: {
-          id: user.id,
-          name: user.email,
-          displayName: user.name,
+          id: 'id',
+          name: user.name,
         },
         timeout: 60000,
       });
@@ -235,9 +238,15 @@ describe('/1/auth/passkeys', () => {
 
       user = await User.findById(user.id);
       expect(user.authenticators.length).toBe(1);
-      expect(user.authenticators[0]).toMatchObject({
+      expect(user.authenticators[0].toObject()).toMatchObject({
         type: 'passkey',
-        secret: 'register-challenge',
+        info: {
+          user: {
+            id: 'id',
+            name: user.name,
+            displayName: user.name,
+          },
+        },
       });
     });
 
