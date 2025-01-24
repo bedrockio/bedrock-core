@@ -125,7 +125,7 @@ describe('/1/auth', () => {
       let user = await createUser({
         password,
       });
-      createAuthToken(user, context());
+      createAuthToken(context(), user);
       await user.save();
 
       // 2 months
@@ -420,7 +420,7 @@ describe('/1/auth', () => {
     it('should allow a user to set a password', async () => {
       let user = await createUser();
       const password = 'very new password';
-      const token = createTemporaryAuthToken(user, context());
+      const token = createTemporaryAuthToken(context(), user);
       await user.save();
 
       const response = await request(
@@ -460,7 +460,7 @@ describe('/1/auth', () => {
     it('should only be valid for 1 hour', async () => {
       mockTime('2020-01-01T00:00:00.000Z');
       const user = await createUser();
-      const token = createTemporaryAuthToken(user, context());
+      const token = createTemporaryAuthToken(context(), user);
       await user.save();
 
       let response = await request(
@@ -492,7 +492,7 @@ describe('/1/auth', () => {
 
     it('should not consume token on unsuccessful attempt', async () => {
       let user = await createUser();
-      const token = createTemporaryAuthToken(user, context());
+      const token = createTemporaryAuthToken(context(), user);
       await user.save();
 
       let response = await request(

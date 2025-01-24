@@ -57,7 +57,7 @@ router
 
       ctx.body = {
         data: {
-          token: await login(user, ctx),
+          token: await login(ctx, user),
         },
       };
     }

@@ -62,7 +62,7 @@ router
 
         ctx.body = {
           data: {
-            token: await login(user, ctx),
+            token: await login(ctx, user),
           },
         };
       } catch (error) {
@@ -110,7 +110,7 @@ router
 
       try {
         await verifyRegistrationResponse(user, response);
-        const token = await register(user, ctx);
+        const token = await register(ctx, user);
 
         ctx.body = {
           data: {

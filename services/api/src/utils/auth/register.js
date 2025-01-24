@@ -2,8 +2,8 @@ const { AuditEntry } = require('../../models');
 const { createAuthToken } = require('./tokens');
 const { sendMessage } = require('../messaging');
 
-async function register(user, ctx) {
-  const token = createAuthToken(user, ctx);
+async function register(ctx, user) {
+  const token = createAuthToken(ctx, user);
   await user.save();
 
   await AuditEntry.append('Registered', {

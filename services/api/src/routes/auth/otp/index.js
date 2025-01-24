@@ -106,7 +106,7 @@ router
 
       ctx.body = {
         data: {
-          token: await login(user, ctx),
+          token: await login(ctx, user),
         },
       };
     }
@@ -116,7 +116,7 @@ router
       const user = new User(ctx.request.body);
       ctx.body = {
         data: {
-          token: await register(user, ctx),
+          token: await register(ctx, user),
         },
       };
     } catch (error) {

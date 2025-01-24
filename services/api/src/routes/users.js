@@ -58,7 +58,7 @@ router
       ctx.throw(403, 'You are not allowed to authenticate as this user');
     }
 
-    const token = createImpersonateAuthToken(user, authUser, ctx);
+    const token = createImpersonateAuthToken(ctx, user, authUser);
     await authUser.save();
 
     await AuditEntry.append('Authenticated as user', {

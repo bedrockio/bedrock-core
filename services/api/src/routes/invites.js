@@ -52,7 +52,7 @@ router
       });
 
       if (user) {
-        const token = createAuthToken(user, ctx);
+        const token = createAuthToken(ctx, user);
         await user.save();
         ctx.body = {
           data: {
@@ -74,7 +74,7 @@ router
           }),
         });
 
-        const token = await register(user, ctx);
+        const token = await register(ctx, user);
 
         ctx.body = {
           data: {

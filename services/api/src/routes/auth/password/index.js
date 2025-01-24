@@ -26,7 +26,7 @@ router
         const user = new User(ctx.request.body);
         ctx.body = {
           data: {
-            token: await register(user, ctx),
+            token: await register(ctx, user),
           },
         };
       } catch (error) {
@@ -104,7 +104,7 @@ router
         };
       } else {
         try {
-          token = await login(user, ctx);
+          token = await login(ctx, user);
         } catch (error) {
           ctx.throw(401, error);
         }
@@ -128,7 +128,7 @@ router
       const user = await User.findOne({ email });
 
       if (user) {
-        const token = createTemporaryAuthToken(user, ctx);
+        const token = createTemporaryAuthToken(ctx, user);
         await user.save();
 
         await mailer.sendMail({
@@ -154,7 +154,7 @@ router
       authUser.password = password;
       authUser.loginAttempts = 0;
 
-      const token = createAuthToken(authUser, ctx);
+      const token = createAuthToken(ctx, authUser);
       await authUser.save();
 
       await AuditEntry.append('Reset password', {

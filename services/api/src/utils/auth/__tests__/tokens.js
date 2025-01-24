@@ -17,7 +17,7 @@ describe('createAuthToken', () => {
       },
     });
 
-    createAuthToken(user, ctx);
+    createAuthToken(ctx, user);
     expect(user.authTokens).toMatchObject([
       {
         ip: '122.312.31.2',

@@ -11,7 +11,7 @@ const expiresIn = {
   temporary: 60 * 60, // 1 hour
 };
 
-function createAuthToken(user, ctx, options = {}) {
+function createAuthToken(ctx, user, options = {}) {
   // Auth tokens are typically created for oneself except
   // in cases where admin are impersonating other users.
   const { type = 'regular', authUser = user } = options;
@@ -39,14 +39,14 @@ function createAuthToken(user, ctx, options = {}) {
   return signAuthToken(payload, JWT_SECRET);
 }
 
-function createTemporaryAuthToken(user, ctx) {
-  return createAuthToken(user, ctx, {
+function createTemporaryAuthToken(ctx, user) {
+  return createAuthToken(ctx, user, {
     type: 'temporary',
   });
 }
 
-function createImpersonateAuthToken(user, authUser, ctx) {
-  return createAuthToken(user, ctx, {
+function createImpersonateAuthToken(ctx, user, authUser) {
+  return createAuthToken(ctx, user, {
     authUser,
     type: 'temporary',
   });

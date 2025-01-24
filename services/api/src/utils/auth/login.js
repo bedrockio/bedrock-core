@@ -17,8 +17,8 @@ const LOGIN_TIMEOUT_RULES = [
   },
 ];
 
-async function login(user, ctx) {
-  const token = createAuthToken(user, ctx);
+async function login(ctx, user) {
+  const token = createAuthToken(ctx, user);
   removeExpiredTokens(user);
   user.loginAttempts = 0;
   await user.save();
