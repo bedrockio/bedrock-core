@@ -2,31 +2,27 @@
   "attributes": {
     "firstName": {
       "type": "String",
-      "required": true,
-      "trim": true
+      "required": true
     },
     "lastName": {
       "type": "String",
-      "required": true,
-      "trim": true
+      "required": true
     },
     "email": {
       "type": "String",
       "validate": "email",
       "lowercase": true,
       "required": true,
-      "unique": true,
-      "trim": true
-    },
-    "phone": {
-      "type": "String",
-      "validate": "phone",
-      "unique": true,
-      "trim": true
+      "unique": true
     },
     "emailVerified": {
       "type": "Boolean",
       "default": false
+    },
+    "phone": {
+      "type": "String",
+      "validate": "phone",
+      "unique": true
     },
     "phoneVerified": {
       "type": "Boolean",

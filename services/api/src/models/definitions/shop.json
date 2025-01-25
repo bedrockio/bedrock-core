@@ -2,12 +2,10 @@
   "attributes": {
     "name": {
       "type": "String",
-      "trim": true,
       "required": true
     },
     "description": {
-      "type": "String",
-      "trim": true
+      "type": "String"
     },
     "images": [
       {
