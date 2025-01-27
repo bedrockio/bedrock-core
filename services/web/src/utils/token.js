@@ -10,7 +10,7 @@ export function getUrlToken(param = 'token') {
 export function parseToken(token) {
   try {
     return JSON.parse(atob(token.split('.')[1]));
-  } catch (err) {
+  } catch {
     return null;
   }
 }

@@ -1,9 +1,9 @@
 import { useTheme } from 'stores/theme';
 
+import { APP_NAME } from 'utils/env';
+
 import logoLight from 'assets/logo-light.svg';
 import logoDark from 'assets/logo-dark.svg';
-
-import { APP_NAME } from 'utils/env';
 
 export default function Logo(props) {
   const { currentTheme } = useTheme();

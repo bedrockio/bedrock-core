@@ -45,7 +45,6 @@ app.listen(SERVER_PORT, SERVER_HOST, (err) => {
     throw err;
   }
 
-  // eslint-disable-next-line
   logger.info(
     `🐬  Prod App server listening at http://${SERVER_HOST}:${SERVER_PORT} 🐬\r\n\r\n`
   );

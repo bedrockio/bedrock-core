@@ -1,15 +1,12 @@
 import { useState, useMemo } from 'react';
 
-// eslint-disable-next-line
 import { isValid } from 'date-fns';
-// eslint-disable-next-line
 import { DayPicker } from 'react-day-picker';
 
 import { Popup, Input, Icon } from 'semantic';
 
 import { formatDate } from 'utils/date';
 
-// eslint-disable-next-line
 import 'react-day-picker/style.css';
 import './date-input.less';
 

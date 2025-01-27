@@ -2087,7 +2087,8 @@ export default class IconSheetScreen extends React.Component {
                 <p>
                   <a
                     href="https://fontawesome.com/search?o=r&m=free&f=brands"
-                    target="_blank">
+                    target="_blank"
+                    rel="noreferrer">
                     Font Awesome Free
                   </a>{' '}
                   6.2.0

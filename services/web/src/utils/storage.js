@@ -5,7 +5,7 @@ function storageAvailable(type) {
     storage.setItem(x, x);
     storage.removeItem(x);
     return true;
-  } catch (e) {
+  } catch {
     return false;
   }
 }

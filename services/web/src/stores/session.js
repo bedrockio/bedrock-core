@@ -148,7 +148,7 @@ export class SessionProvider extends React.PureComponent {
           method: 'POST',
           path: '/1/auth/logout',
         });
-      } catch (err) {
+      } catch {
         // JWT token errors may throw here
       }
       setToken(null);
@@ -236,7 +236,7 @@ export class SessionProvider extends React.PureComponent {
       if (str) {
         data = JSON.parse(str);
       }
-    } catch (err) {
+    } catch {
       localStorage.removeItem('session');
     }
     return data || {};

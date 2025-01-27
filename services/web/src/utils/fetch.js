@@ -58,7 +58,7 @@ async function fetchWithNetworkError(url, options) {
     // as bad CORS headers etc will still reject asynchoronously,
     // so this could potentially be better.
     return await promise;
-  } catch (err) {
+  } catch {
     throw new NetworkError();
   }
 }

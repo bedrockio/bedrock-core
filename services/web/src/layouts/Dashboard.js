@@ -9,13 +9,13 @@ import Footer from 'components/Footer';
 import Layout from 'components/Layout';
 import Protected from 'components/Protected';
 import Organization from 'modals/OrganizationSelector';
-
 import ConnectionError from 'components/ConnectionError';
-import favicon from 'assets/favicon.svg';
 
 import { userCanSwitchOrganizations } from 'utils/permissions';
 
 import Sidebar from './Sidebar';
+
+import favicon from 'assets/favicon.svg';
 
 @withSession
 export default class DashboardLayout extends React.Component {

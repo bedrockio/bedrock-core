@@ -64,4 +64,5 @@ const Wrapper = () => (
   </BrowserRouter>
 );
 
+// eslint-disable-next-line
 ReactDOM.render(<Wrapper />, document.getElementById('root'));
