@@ -28,10 +28,8 @@ function autoclean(schema) {
   });
 
   schema.post('save', function () {
-    if (!isFixture(this)) {
-      if (this.destroy) {
-        stored.add(this);
-      }
+    if (canAddToStored(this)) {
+      stored.set(this.id, this);
     }
   });
 
@@ -59,14 +57,21 @@ function autoclean(schema) {
   });
 }
 
+function canAddToStored(doc) {
+  if (isFixture(doc) || !doc.destroy) {
+    return false;
+  }
+  return !stored.has(doc.id);
+}
+
 beforeEach(async () => {
-  stored = new Set();
+  stored = new Map();
 });
 
 afterEach(async () => {
   if (stored) {
     await Promise.all(
-      Array.from(stored).map((doc) => {
+      Array.from(stored.values()).map((doc) => {
         return doc.destroy();
       })
     );
