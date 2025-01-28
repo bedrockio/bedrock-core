@@ -85,8 +85,7 @@ function getHeaders(options) {
   token ||= getToken();
   return {
     Accept: 'application/json',
-    // TODO: casing
-    'API-Key': API_KEY,
+    'Api-Key': API_KEY,
     ...(token && {
       Authorization: `Bearer ${token}`,
     }),
