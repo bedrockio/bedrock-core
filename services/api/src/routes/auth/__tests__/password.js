@@ -6,6 +6,7 @@ const { mockTime, unmockTime, advanceTime } = require('../../../utils/testing/ti
 const { createAuthToken, createTemporaryAuthToken } = require('../../../utils/auth/tokens');
 const { verifyPassword } = require('../../../utils/auth/password');
 const { assertAuthToken } = require('../../../utils/testing/tokens');
+const { getAuthenticator } = require('../../../utils/auth/authenticators');
 const { User } = require('../../../models');
 
 function getJti(token) {
@@ -42,9 +43,12 @@ describe('/1/auth', () => {
       });
 
       expect(response.status).toBe(200);
-      expect(response.body.data.next).toEqual({
-        type: 'otp',
-        phone: '+12312312422',
+      expect(response.body.data).toEqual({
+        challenge: {
+          type: 'code',
+          transport: 'sms',
+          phone: user.phone,
+        },
       });
 
       assertSmsSent({
@@ -64,14 +68,59 @@ describe('/1/auth', () => {
       });
 
       expect(response.status).toBe(200);
-      expect(response.body.data.next).toEqual({
-        type: 'otp',
-        email: user.email,
+      expect(response.body.data).toEqual({
+        challenge: {
+          type: 'code',
+          transport: 'email',
+          email: user.email,
+        },
       });
 
       assertMailSent({
         to: user.email,
       });
+    });
+
+    it('should challenge with totp via authenticator', async () => {
+      const user = await createUser({
+        password: '123password!',
+        mfaMethod: 'totp',
+      });
+
+      const response = await request('POST', '/1/auth/password/login', {
+        email: user.email,
+        password: '123password!',
+      });
+
+      expect(response.status).toBe(200);
+      expect(response.body.data).toEqual({
+        challenge: {
+          type: 'code',
+          transport: 'authenticator',
+          email: user.email,
+        },
+      });
+    });
+
+    it('should verify the password on challenge', async () => {
+      mockTime('2020-01-01T00:00:00.000Z');
+
+      let user = await createUser({
+        password: '123password!',
+        mfaMethod: 'totp',
+      });
+
+      advanceTime(1000);
+
+      await request('POST', '/1/auth/password/login', {
+        email: user.email,
+        password: '123password!',
+      });
+
+      user = await User.findById(user);
+      const authenticator = getAuthenticator(user, 'password');
+      expect(authenticator.lastUsedAt).toEqual(new Date('2020-01-01T00:00:01.000Z'));
+      unmockTime();
     });
 
     it('should store the new token payload on the user', async () => {
@@ -109,9 +158,12 @@ describe('/1/auth', () => {
         password,
       });
       expect(response.status).toBe(200);
-      expect(response.body.data.next).toEqual({
-        type: 'otp',
-        phone: '+12223456789',
+      expect(response.body.data).toEqual({
+        challenge: {
+          type: 'code',
+          transport: 'sms',
+          phone: user.phone,
+        },
       });
 
       assertSmsSent({
@@ -240,141 +292,6 @@ describe('/1/auth', () => {
 
         unmockTime();
       });
-    });
-  });
-
-  describe('POST /register', () => {
-    it('should be able to register with email', async () => {
-      const email = 'foo@bar.com';
-
-      const response = await request('POST', '/1/auth/password/register', {
-        firstName: 'Bob',
-        lastName: 'Johnson',
-        password: '123password!',
-        email,
-      });
-      expect(response.status).toBe(200);
-
-      assertMailSent({
-        to: email,
-      });
-
-      const user = await User.findOne({
-        email,
-      });
-
-      assertAuthToken(user, response.body.data.token);
-      expect(user.email).toBe(email);
-    });
-
-    it('should error on duplicated emails', async () => {
-      await createUser({
-        email: 'foo@bar.com',
-      });
-
-      const response = await request('POST', '/1/auth/password/register', {
-        firstName: 'Bob',
-        lastName: 'Johnson',
-        password: '123password!',
-        email: 'foo@bar.com',
-      });
-
-      expect(response.status).toBe(400);
-      expect(response.body.error.message).toBe('A user with that email already exists.');
-    });
-
-    it('should error on duplicated emails with different casing', async () => {
-      await createUser({
-        email: 'foo@bar.com',
-      });
-
-      const response = await request('POST', '/1/auth/password/register', {
-        firstName: 'Bob',
-        lastName: 'Johnson',
-        password: '123password!',
-        email: 'FOO@BAR.COM',
-      });
-
-      expect(response.status).toBe(400);
-      expect(response.body.error.message).toBe('A user with that email already exists.');
-    });
-
-    it('should not hint at existing emails on production', async () => {
-      process.env.ENV_NAME = 'production';
-      await createUser({
-        email: 'foo@bar.com',
-      });
-
-      const response = await request('POST', '/1/auth/password/register', {
-        firstName: 'Bob',
-        lastName: 'Johnson',
-        password: '123password!',
-        email: 'foo@bar.com',
-      });
-
-      expect(response.status).toBe(400);
-      expect(response.body.error.message).toBe('An error occurred.');
-
-      process.env.ENV_NAME = 'test';
-    });
-
-    it('should error on duplicated phone number', async () => {
-      await createUser({
-        phone: '+12223456789',
-      });
-
-      const response = await request('POST', '/1/auth/password/register', {
-        firstName: 'Bob',
-        lastName: 'Johnson',
-        password: '123password!',
-        email: 'foo@bar.com',
-        phone: '+12223456789',
-      });
-
-      expect(response.status).toBe(400);
-      expect(response.body.error.message).toBe('A user with that phone number already exists.');
-    });
-
-    it('should not hint at existing phone numbers on production', async () => {
-      process.env.ENV_NAME = 'production';
-      await createUser({
-        phone: '+12223456789',
-      });
-
-      const response = await request('POST', '/1/auth/password/register', {
-        firstName: 'Bob',
-        lastName: 'Johnson',
-        password: '123password!',
-        email: 'foo@bar.com',
-        phone: '+12223456789',
-      });
-
-      expect(response.status).toBe(400);
-      expect(response.body.error.message).toBe('An error occurred.');
-
-      process.env.ENV_NAME = 'test';
-    });
-
-    it('should add to authenticators', async () => {
-      mockTime('2020-01-01');
-      await request('POST', '/1/auth/password/register', {
-        firstName: 'Bob',
-        lastName: 'Johnson',
-        password: '123password!',
-        email: 'foo@bar.com',
-      });
-
-      const user = await User.findOne({
-        email: 'foo@bar.com',
-      });
-
-      expect(user.authenticators).toMatchObject([
-        {
-          type: 'password',
-          verifiedAt: new Date('2020-01-01'),
-        },
-      ]);
-      unmockTime();
     });
   });
 

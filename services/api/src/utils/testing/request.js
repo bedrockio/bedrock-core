@@ -2,7 +2,7 @@ const request = require('supertest'); //eslint-disable-line
 const rootApp = require('../../app');
 const qs = require('querystring');
 const { Blob } = require('node:buffer');
-const { getAuthTokenPayload, signAuthToken } = require('../auth/tokens');
+const { getAuthTokenPayload, signToken } = require('../auth/tokens');
 
 module.exports = async function handleRequest(httpMethod, url, bodyOrQuery = {}, options = {}) {
   const headers = options.headers || {};
@@ -10,7 +10,7 @@ module.exports = async function handleRequest(httpMethod, url, bodyOrQuery = {},
     const { user } = options;
 
     const payload = getAuthTokenPayload(user);
-    const token = signAuthToken(payload);
+    const token = signToken(payload);
 
     headers.Authorization = `Bearer ${token}`;
   } else if (options.token) {

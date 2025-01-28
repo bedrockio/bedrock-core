@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { merge, omit } from 'lodash';
+import { omit } from 'lodash';
 import { withRouter } from 'react-router-dom';
 
 import { request, hasToken, setToken } from 'utils/api';
@@ -8,6 +8,7 @@ import { trackSession } from 'utils/analytics';
 import { captureError } from 'utils/sentry';
 import { wrapContext } from 'utils/hoc';
 import { localStorage } from 'utils/storage';
+import { merge } from 'utils/object';
 
 const SessionContext = React.createContext();
 
@@ -100,7 +101,7 @@ export class SessionProvider extends React.PureComponent {
 
   updateUser = (data) => {
     this.setState({
-      user: merge({}, this.state.user, data),
+      user: merge(this.state.user, data),
     });
   };
 

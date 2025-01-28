@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { Form } from 'semantic';
 
 import { useClass } from 'helpers/bem';
@@ -21,21 +21,25 @@ export default function CodeField(props) {
     return value.charAt(i);
   });
 
+  useEffect(() => {
+    if (value.length >= length) {
+      onComplete();
+    }
+  }, [value]);
+
   function setCharacter(evt, index, val, move = true) {
     index = Number(index);
     const newValue = value.slice(0, index) + val + value.slice(index + 1);
     onChange(evt, { ...props, value: newValue });
 
-    if (newValue.length >= length) {
-      fireOnComplete();
-    } else if (move && val) {
+    if (move && val) {
       focusNext(evt);
     } else if (move && !val) {
       focusPrev(evt);
     }
   }
 
-  function handleKeyDown(evt) {
+  function onKeyDown(evt) {
     if (disabled) {
       evt.preventDefault();
       return;
@@ -77,14 +81,6 @@ export default function CodeField(props) {
 
     const value = evt.clipboardData.getData('text').slice(0, length);
     onChange(evt, { ...props, value });
-
-    if (value.length >= length) {
-      fireOnComplete();
-    }
-  }
-
-  function fireOnComplete() {
-    setTimeout(onComplete, 0);
   }
 
   function focusPrev(evt) {
@@ -107,8 +103,6 @@ export default function CodeField(props) {
     }
   }
 
-  const ref = useRef();
-
   onMount(() => {
     window.addEventListener('paste', handleOnPaste);
     ref.current.focus();
@@ -117,6 +111,8 @@ export default function CodeField(props) {
   onUnmount(() => {
     window.removeEventListener('paste', handleOnPaste);
   });
+
+  const ref = useRef();
 
   return (
     <Form.Field
@@ -134,7 +130,7 @@ export default function CodeField(props) {
             data-index={i}
             tabIndex={tabIndex}
             className={className}
-            onKeyDown={handleKeyDown}>
+            onKeyDown={onKeyDown}>
             {character}
           </div>
         );

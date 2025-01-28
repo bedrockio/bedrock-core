@@ -4,11 +4,25 @@ function getAuthenticator(user, type) {
   });
 }
 
+function getAuthenticators(user, type) {
+  return user.authenticators.filter((authenticator) => {
+    return authenticator.type === type;
+  });
+}
+
 function hasAuthenticator(user, type) {
   return !!getAuthenticator(user, type);
 }
 
-function getRequiredAuthenticator(user, type) {
+function addAuthenticator(user, attributes) {
+  user.authenticators.push({
+    createdAt: new Date(),
+    lastUsedAt: new Date(),
+    ...attributes,
+  });
+}
+
+function assertAuthenticator(user, type) {
   const authenticator = getAuthenticator(user, type);
   if (!authenticator) {
     throw Error(`No ${type} set.`);
@@ -16,7 +30,26 @@ function getRequiredAuthenticator(user, type) {
   return authenticator;
 }
 
-// Clear existing authenticators of a given type.
+// Create
+
+function upsertAuthenticator(user, attributes) {
+  const { type } = attributes;
+  let authenticator = getAuthenticator(user, type);
+  if (authenticator) {
+    authenticator.lastUsedAt = new Date();
+  } else {
+    addAuthenticator(user, attributes);
+  }
+}
+
+// Delete
+
+function removeAuthenticator(user, id) {
+  user.authenticators = user.authenticators.filter((authenticator) => {
+    return authenticator.id !== id;
+  });
+}
+
 function clearAuthenticators(user, type) {
   user.authenticators = user.authenticators.filter((authenticator) => {
     return authenticator.type !== type;
@@ -24,8 +57,12 @@ function clearAuthenticators(user, type) {
 }
 
 module.exports = {
+  addAuthenticator,
   getAuthenticator,
   hasAuthenticator,
+  getAuthenticators,
   clearAuthenticators,
-  getRequiredAuthenticator,
+  removeAuthenticator,
+  assertAuthenticator,
+  upsertAuthenticator,
 };

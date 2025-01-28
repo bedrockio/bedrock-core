@@ -12,8 +12,6 @@ import { request } from 'utils/api';
 
 @screen
 export default class ForgotPassword extends React.Component {
-  static layout = 'basic';
-
   state = {
     success: false,
     loading: false,
@@ -110,7 +108,6 @@ export default class ForgotPassword extends React.Component {
           name="email"
           value={body.email || ''}
           onChange={this.setField}
-          error={error}
         />
         <div>
           <Button

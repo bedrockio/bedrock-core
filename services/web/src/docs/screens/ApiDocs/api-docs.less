@@ -127,4 +127,26 @@
     margin-top: -10px;
     padding-top: 10px;
   }
+
+  h2[id] {
+    position: relative;
+    scroll-margin-top: 15px;
+
+    > a {
+      display: inline-flex;
+      visibility: hidden;
+      margin-left: -0.8em;
+      padding-right: 0.2em;
+      text-decoration: none;
+
+      .icon-link::after {
+        content: '#';
+        color: @linkHoverColor;
+      }
+    }
+
+    &:hover a {
+      visibility: visible;
+    }
+  }
 }

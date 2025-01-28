@@ -2,12 +2,14 @@ const speakeasy = require('speakeasy');
 const { request, createUser } = require('../../../utils/testing');
 const { assertAuthToken } = require('../../../utils/testing/tokens');
 const { mockTime, unmockTime, advanceTime } = require('../../../utils/testing/time');
-const { createSecret, enableTotp } = require('../totp/utils');
+const { createSecret, enableTotp } = require('../../../utils/auth/totp');
 const { User } = require('../../../models');
 
 describe('/1/auth/totp', () => {
   describe('POST /login', () => {
     it('should verify a code', async () => {
+      mockTime('2020-01-01T00:00:00.000Z');
+
       let user = await createUser();
 
       const secret = createSecret();
@@ -17,6 +19,8 @@ describe('/1/auth/totp', () => {
       const code = speakeasy.totp({
         secret,
       });
+
+      advanceTime(1000);
 
       const response = await request(
         'POST',
@@ -31,6 +35,16 @@ describe('/1/auth/totp', () => {
       );
       expect(response.status).toBe(200);
       assertAuthToken(user, response.body.data.token);
+
+      user = await User.findById(user.id);
+      expect(user.authenticators.toObject()).toMatchObject([
+        {
+          type: 'totp',
+          lastUsedAt: new Date('2020-01-01T00:00:01.000Z'),
+        },
+      ]);
+
+      unmockTime();
     });
 
     it('should throttle logins', async () => {
@@ -98,6 +112,8 @@ describe('/1/auth/totp', () => {
 
   describe('POST /enable', () => {
     it('should enable a totp authenticator', async () => {
+      mockTime('2020-01-01');
+
       let user = await createUser();
       const secret = createSecret();
       const code = speakeasy.totp({
@@ -118,14 +134,15 @@ describe('/1/auth/totp', () => {
       expect(response.status).toBe(200);
 
       user = await User.findById(user.id);
-      expect(user.authenticators).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            type: 'totp',
-            secret,
-          }),
-        ])
-      );
+      expect(user.authenticators.toObject()).toMatchObject([
+        {
+          type: 'totp',
+          secret,
+          createdAt: new Date('2020-01-01'),
+        },
+      ]);
+
+      unmockTime();
     });
 
     it('should request authentication', async () => {
@@ -152,6 +169,7 @@ describe('/1/auth/totp', () => {
       expect(response.status).toBe(200);
 
       user = await User.findById(user.id);
+      expect(user.mfaMethod).toBe('none');
       expect(user.authenticators).not.toEqual(
         expect.arrayContaining([
           expect.objectContaining({

@@ -1,46 +1,95 @@
-const { createToken } = require('google-auth-library');
+const { createCode } = require('google-auth-library');
 const { request, createUser } = require('../../../utils/testing');
 const { assertAuthToken } = require('../../../utils/testing/tokens');
+const { upsertGoogleAuthenticator } = require('../../../utils/auth/google');
 const { hasAuthenticator } = require('../../../utils/auth/authenticators');
-const { addGoogleAuthenticator } = require('../google/utils');
+const { mockTime, unmockTime, advanceTime } = require('../../../utils/testing/time');
 const { User } = require('../../../models');
 
 describe('/1/auth/google', () => {
-  describe('POST login', () => {
-    it('should verify a token for new user', async () => {
-      const token = createToken({
-        email: 'foo@bar.com',
+  describe('POST /', () => {
+    it('should sign up a new user', async () => {
+      const email = 'foo@bar.com';
+
+      const code = createCode({
+        email,
+        given_name: 'Frank',
+        family_name: 'Reynolds',
       });
-      const response = await request('POST', '/1/auth/google/login', {
-        token,
+
+      const response = await request('POST', '/1/auth/google', {
+        code,
       });
       expect(response.status).toBe(200);
-      expect(response.body.data.next).toBe('signup');
+      expect(response.body.data.result).toBe('signup');
+
+      const user = await User.findOne({
+        email,
+      });
+
+      assertAuthToken(user, response.body.data.token);
+      expect(user.email).toBe(email);
     });
 
     it('should verify a token for an existing user', async () => {
-      const user = await createUser({
+      mockTime('2020-01-01');
+
+      let user = await createUser({
+        email: 'foo@bar.com',
+        authenticators: [
+          {
+            type: 'google',
+          },
+        ],
+      });
+      const code = createCode({
         email: 'foo@bar.com',
       });
-      const token = createToken({
-        email: 'foo@bar.com',
-      });
-      const response = await request('POST', '/1/auth/google/login', {
-        token,
+      advanceTime(1000);
+
+      const response = await request('POST', '/1/auth/google', {
+        code,
       });
       expect(response.status).toBe(200);
       assertAuthToken(user, response.body.data.token);
+      expect(response.body.data.result).toBe('login');
+
+      user = await User.findById(user.id);
+
+      const { lastUsedAt } = user.authenticators.find((authenticator) => {
+        return authenticator.type === 'google';
+      });
+
+      expect(lastUsedAt).toEqual(new Date('2020-01-01T00:00:01.000Z'));
+      unmockTime();
+    });
+
+    it('should not be able to register with an unverified email', async () => {
+      const code = createCode({
+        givenName: 'Bob',
+        familyName: 'Johnson',
+        email: 'foo@bar.com',
+        email_verified: false,
+      });
+      const response = await request('POST', '/1/auth/google', {
+        firstName: 'Frank',
+        lastName: 'Reynolds',
+        code,
+      });
+      expect(response.status).toBe(400);
     });
 
     it('should add authenticator if none', async () => {
+      mockTime('2020-01-01');
+
       let user = await createUser({
         email: 'foo@bar.com',
       });
-      const token = createToken({
+      const code = createCode({
         email: 'foo@bar.com',
       });
-      const response = await request('POST', '/1/auth/google/login', {
-        token,
+      const response = await request('POST', '/1/auth/google', {
+        code,
       });
 
       expect(response.status).toBe(200);
@@ -48,24 +97,27 @@ describe('/1/auth/google', () => {
       expect(user.authenticators).toMatchObject([
         {
           type: 'google',
+          createdAt: new Date('2020-01-01'),
         },
       ]);
+
+      unmockTime();
     });
 
     it('should not add multiple authenticators', async () => {
       let user = await createUser({
         email: 'foo@bar.com',
       });
-      const token = createToken({
+      const code = createCode({
         email: 'foo@bar.com',
       });
 
-      await request('POST', '/1/auth/google/login', {
-        token,
+      await request('POST', '/1/auth/google', {
+        code,
       });
 
-      await request('POST', '/1/auth/google/login', {
-        token,
+      await request('POST', '/1/auth/google', {
+        code,
       });
 
       user = await User.findById(user.id);
@@ -73,172 +125,19 @@ describe('/1/auth/google', () => {
     });
 
     it('should throw an error on a bad token', async () => {
-      const response = await request('POST', '/1/auth/google/login', {
+      const response = await request('POST', '/1/auth/google', {
         token: 'bad',
       });
       expect(response.status).toBe(400);
     });
   });
 
-  describe('POST register', () => {
-    it('should be able to sign up', async () => {
-      const token = createToken({
-        givenName: 'Bob',
-        familyName: 'Johnson',
-        email: 'foo@bar.com',
-      });
-      const response = await request('POST', '/1/auth/google/register', {
-        firstName: 'Bob',
-        lastName: 'Johnson',
-        token,
-      });
-      expect(response.status).toBe(200);
-      const user = await User.findOne({
-        email: 'foo@bar.com',
-      });
-      expect(user).toMatchObject({
-        firstName: 'Bob',
-        lastName: 'Johnson',
-        email: 'foo@bar.com',
-      });
-    });
-
-    it('should be able to override provided name', async () => {
-      const token = createToken({
-        givenName: 'Bob',
-        familyName: 'Johnson',
-        email: 'foo@bar.com',
-      });
-      const response = await request('POST', '/1/auth/google/register', {
-        firstName: 'Frank',
-        lastName: 'Reynolds',
-        token,
-      });
-      expect(response.status).toBe(200);
-      const user = await User.findOne({
-        email: 'foo@bar.com',
-      });
-      expect(user).toMatchObject({
-        firstName: 'Frank',
-        lastName: 'Reynolds',
-        email: 'foo@bar.com',
-      });
-    });
-
-    it('should not be able to override provided email', async () => {
-      const token = createToken({
-        givenName: 'Bob',
-        familyName: 'Johnson',
-        email: 'foo@bar.com',
-      });
-      const response = await request('POST', '/1/auth/google/register', {
-        firstName: 'Frank',
-        lastName: 'Reynolds',
-        email: 'bar@foo.com',
-        token,
-      });
-      expect(response.status).toBe(400);
-    });
-
-    it('should not be able to register with an unverified email', async () => {
-      const token = createToken({
-        givenName: 'Bob',
-        familyName: 'Johnson',
-        email: 'foo@bar.com',
-        email_verified: false,
-      });
-      const response = await request('POST', '/1/auth/google/register', {
-        firstName: 'Frank',
-        lastName: 'Reynolds',
-        token,
-      });
-      expect(response.status).toBe(400);
-    });
-
-    it('should throw an error on a bad token', async () => {
-      const response = await request('POST', '/1/auth/google/register', {
-        firstName: 'Frank',
-        lastName: 'Reynolds',
-        token: 'bad',
-      });
-      expect(response.status).toBe(400);
-    });
-
-    it('should add an authenticator', async () => {
-      const token = createToken({
-        givenName: 'Bob',
-        familyName: 'Johnson',
-        email: 'foo@bar.com',
-      });
-      const response = await request('POST', '/1/auth/google/register', {
-        firstName: 'Frank',
-        lastName: 'Reynolds',
-        token,
-      });
-      expect(response.status).toBe(200);
-      const user = await User.findOne({
-        email: 'foo@bar.com',
-      });
-
-      expect(user.authenticators).toMatchObject([
-        {
-          type: 'google',
-        },
-      ]);
-    });
-  });
-
-  describe('POST enable', () => {
-    it('should add authenticator', async () => {
-      let user = await createUser({
-        email: 'foo@bar.com',
-      });
-      const token = createToken({
-        givenName: 'Bob',
-        familyName: 'Johnson',
-        email: 'foo@bar.com',
-      });
-      const response = await request(
-        'POST',
-        '/1/auth/google/enable',
-        {
-          token,
-        },
-        {
-          user,
-        }
-      );
-      expect(response.status).toBe(200);
-      expect(response.body.data.id).toBe(user.id);
-
-      user = await User.findById(user.id);
-      expect(hasAuthenticator(user, 'google')).toBe(true);
-    });
-
-    it('should validate token', async () => {
-      let user = await createUser({
-        email: 'foo@bar.com',
-      });
-      const response = await request(
-        'POST',
-        '/1/auth/google/enable',
-        {
-          token: 'bad-token',
-        },
-        {
-          user,
-        }
-      );
-      expect(response.status).toBe(400);
-    });
-  });
-
-  describe('POST disable', () => {
+  describe('POST /disable', () => {
     it('should remove authenticator', async () => {
       let user = await createUser({
         email: 'foo@bar.com',
       });
-      addGoogleAuthenticator(user);
+      upsertGoogleAuthenticator(user);
       await user.save();
 
       const response = await request(

@@ -1,0 +1,1 @@
+Sign in to your account: {{APP_URL}}/confirm-code?code={{{code}}}

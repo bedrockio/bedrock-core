@@ -1,15 +1,9 @@
-function generateAuthenticationOptions() {
+function generateAuthenticationOptions(options) {
   return {
-    rpId: 'rpID',
-    challenge: 'challenge',
-    allowCredentials: [
-      {
-        id: 'id',
-        type: 'public-key',
-        transports: ['hybrid', 'internal'],
-      },
-    ],
+    ...options,
+    rpID: 'rpID',
     timeout: 60000,
+    challenge: 'challenge',
     userVerification: 'preferred',
   };
 }
@@ -85,7 +79,7 @@ function verifyRegistrationResponse(options) {
       },
     };
   } else {
-    throw new Error('Bad register response.');
+    throw new Error('Bad registration response.');
   }
 }
 

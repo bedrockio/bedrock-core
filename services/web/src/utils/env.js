@@ -10,4 +10,7 @@ export const {
   GOOGLE_API_KEY,
   GOOGLE_CLIENT_ID,
   APP_SUPPORT_EMAIL,
+  AUTH_TYPE,
+  AUTH_PASSKEY,
+  AUTH_TRANSPORT,
 } = window.__ENV__;

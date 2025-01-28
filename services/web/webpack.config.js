@@ -20,6 +20,10 @@ const PARAMS = {
   ...config.getAll(),
 };
 
+const { default: remarkGfm } = require('remark-gfm');
+const { default: rehypeSlug } = require('rehype-slug');
+const { default: rehypeAutolinkHeadings } = require('rehype-autolink-headings');
+
 module.exports = {
   mode: BUILD ? 'production' : 'development',
   devtool: BUILD ? 'source-map' : 'eval-cheap-module-source-map',
@@ -78,6 +82,10 @@ module.exports = {
       {
         test: /\.mdx$/,
         loader: '@mdx-js/loader',
+        options: {
+          remarkPlugins: [remarkGfm],
+          rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
+        },
       },
       {
         test: /\.html$/i,

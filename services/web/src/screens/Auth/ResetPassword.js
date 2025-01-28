@@ -16,8 +16,6 @@ import { getUrlToken } from 'utils/token';
 @screen
 @withSession
 export default class ResetPassword extends React.Component {
-  static layout = 'basic';
-
   constructor(props) {
     super(props);
     const { token, payload } = getUrlToken();

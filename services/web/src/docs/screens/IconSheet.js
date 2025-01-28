@@ -30,9 +30,8 @@ const SETS = [
 
 @bem
 @screen
-export default class IconSheet extends React.Component {
+export default class IconSheetScreen extends React.Component {
   static layout = 'portal';
-
   contextRef = React.createRef();
 
   constructor(props) {

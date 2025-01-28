@@ -44,7 +44,7 @@
     "/1/docs/generate": {
       "post": {}
     },
-    "/1/auth/otp/send-code": {
+    "/1/auth/otp/send": {
       "post": {
         "requestBody": {
           "content": {
@@ -52,6 +52,22 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "type": {
+                    "default": "link",
+                    "type": "string",
+                    "enum": [
+                      "link",
+                      "code"
+                    ]
+                  },
+                  "transport": {
+                    "default": "email",
+                    "type": "string",
+                    "enum": [
+                      "email",
+                      "sms"
+                    ]
+                  },
                   "email": {
                     "format": "email",
                     "type": "string"
@@ -78,6 +94,7 @@
                 "type": "object",
                 "properties": {
                   "code": {
+                    "required": true,
                     "type": "string"
                   },
                   "email": {
@@ -89,40 +106,6 @@
                     "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
                     "type": "string",
                     "x-generated": true
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/1/auth/otp/register": {
-      "post": {
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "required": true,
-                    "format": "email",
-                    "type": "string"
-                  },
-                  "phone": {
-                    "format": "phone",
-                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
-                    "type": "string",
-                    "x-generated": true
-                  },
-                  "firstName": {
-                    "required": true,
-                    "type": "string"
-                  },
-                  "lastName": {
-                    "required": true,
-                    "type": "string"
                   }
                 }
               }
@@ -139,8 +122,13 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "phone": {
+                    "format": "phone",
+                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
+                    "type": "string",
+                    "x-generated": true
+                  },
                   "email": {
-                    "required": true,
                     "format": "email",
                     "type": "string"
                   },
@@ -201,7 +189,7 @@
         ]
       }
     },
-    "/1/auth/apple/login": {
+    "/1/auth/apple": {
       "post": {
         "requestBody": {
           "content": {
@@ -212,38 +200,11 @@
                   "token": {
                     "required": true,
                     "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/1/auth/apple/register": {
-      "post": {
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "phone": {
-                    "format": "phone",
-                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
-                    "type": "string",
-                    "x-generated": true
                   },
                   "firstName": {
-                    "required": true,
                     "type": "string"
                   },
                   "lastName": {
-                    "required": true,
-                    "type": "string"
-                  },
-                  "token": {
-                    "required": true,
                     "type": "string"
                   }
                 }
@@ -286,7 +247,7 @@
         ]
       }
     },
-    "/1/auth/google/login": {
+    "/1/auth/google": {
       "post": {
         "requestBody": {
           "content": {
@@ -294,7 +255,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "token": {
+                  "code": {
                     "required": true,
                     "type": "string"
                   }
@@ -303,63 +264,6 @@
             }
           }
         }
-      }
-    },
-    "/1/auth/google/register": {
-      "post": {
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "phone": {
-                    "format": "phone",
-                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
-                    "type": "string",
-                    "x-generated": true
-                  },
-                  "firstName": {
-                    "required": true,
-                    "type": "string"
-                  },
-                  "lastName": {
-                    "required": true,
-                    "type": "string"
-                  },
-                  "token": {
-                    "required": true,
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/1/auth/google/enable": {
-      "post": {
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "token": {
-                    "required": true,
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
       }
     },
     "/1/auth/google/disable": {
@@ -371,27 +275,10 @@
         ]
       }
     },
-    "/1/auth/passkey/login-generate": {
-      "post": {
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "required": true,
-                    "format": "email",
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+    "/1/auth/passkey/generate-login": {
+      "post": {}
     },
-    "/1/auth/passkey/login-verify": {
+    "/1/auth/passkey/verify-login": {
       "post": {
         "requestBody": {
           "content": {
@@ -399,72 +286,15 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "email": {
+                  "token": {
                     "required": true,
-                    "format": "email",
-                    "type": "string"
-                  },
-                  "response": {
-                    "required": true,
-                    "type": "object"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/1/auth/passkey/register-generate": {
-      "post": {
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "required": true,
-                    "format": "email",
-                    "type": "string"
-                  },
-                  "phone": {
-                    "format": "phone",
-                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
                     "type": "string",
-                    "x-generated": true
-                  },
-                  "firstName": {
-                    "required": true,
-                    "type": "string"
-                  },
-                  "lastName": {
-                    "required": true,
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/1/auth/passkey/register-verify": {
-      "post": {
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "required": true,
-                    "format": "email",
-                    "type": "string"
+                    "description": "The token from `generate-login`."
                   },
                   "response": {
                     "required": true,
-                    "type": "object"
+                    "type": "object",
+                    "description": "Client options generated by the browser. See [SimpleWebAuthN](https://simplewebauthn.dev/docs/packages/browser) for more."
                   }
                 }
               }
@@ -473,7 +303,7 @@
         }
       }
     },
-    "/1/auth/passkey/enable-generate": {
+    "/1/auth/passkey/generate-new": {
       "post": {
         "security": [
           {
@@ -482,7 +312,7 @@
         ]
       }
     },
-    "/1/auth/passkey/enable-verify": {
+    "/1/auth/passkey/verify-new": {
       "post": {
         "requestBody": {
           "content": {
@@ -490,9 +320,15 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "token": {
+                    "required": true,
+                    "type": "string",
+                    "description": "The token from `generate-new`."
+                  },
                   "response": {
                     "required": true,
-                    "type": "object"
+                    "type": "object",
+                    "description": "Client options generated by the browser. See [SimpleWebAuthN](https://simplewebauthn.dev/docs/packages/browser) for more."
                   }
                 }
               }
@@ -506,53 +342,20 @@
         ]
       }
     },
-    "/1/auth/passkey/disable": {
-      "post": {
+    "/1/auth/passkey/:id": {
+      "delete": {
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
         "security": [
           {
             "bearerAuth": []
           }
         ]
-      }
-    },
-    "/1/auth/password/register": {
-      "post": {
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "required": true,
-                    "format": "email",
-                    "type": "string"
-                  },
-                  "phone": {
-                    "format": "phone",
-                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
-                    "type": "string",
-                    "x-generated": true
-                  },
-                  "firstName": {
-                    "required": true,
-                    "type": "string"
-                  },
-                  "lastName": {
-                    "required": true,
-                    "type": "string"
-                  },
-                  "password": {
-                    "required": true,
-                    "description": "A password of at least 12 characters.",
-                    "type": "string",
-                    "x-generated": true
-                  }
-                }
-              }
-            }
-          }
-        }
       }
     },
     "/1/auth/password/login": {
@@ -813,16 +616,21 @@
                     "oneOf": [
                       {
                         "format": "email",
+                        "nullable": true,
                         "type": "string"
                       },
                       {
                         "type": "array",
                         "items": {
                           "format": "email",
+                          "nullable": true,
                           "type": "string"
                         }
                       }
                     ]
+                  },
+                  "emailVerified": {
+                    "type": "boolean"
                   },
                   "phone": {
                     "oneOf": [
@@ -844,9 +652,6 @@
                         }
                       }
                     ]
-                  },
-                  "emailVerified": {
-                    "type": "boolean"
                   },
                   "phoneVerified": {
                     "type": "boolean"
@@ -1102,22 +907,6 @@
                   "lastName": {
                     "type": "string"
                   },
-                  "email": {
-                    "format": "email",
-                    "type": "string"
-                  },
-                  "phone": {
-                    "format": "phone",
-                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
-                    "nullable": true,
-                    "type": "string"
-                  },
-                  "emailVerified": {
-                    "type": "boolean"
-                  },
-                  "phoneVerified": {
-                    "type": "boolean"
-                  },
                   "roles": {
                     "type": "array",
                     "items": {
@@ -1214,23 +1003,6 @@
                   "lastName": {
                     "required": true,
                     "type": "string"
-                  },
-                  "email": {
-                    "required": true,
-                    "format": "email",
-                    "type": "string"
-                  },
-                  "phone": {
-                    "format": "phone",
-                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
-                    "type": "string",
-                    "x-generated": true
-                  },
-                  "emailVerified": {
-                    "type": "boolean"
-                  },
-                  "phoneVerified": {
-                    "type": "boolean"
                   },
                   "roles": {
                     "type": "array",
@@ -2792,6 +2564,171 @@
     "/1/status/mongodb": {
       "get": {}
     },
+    "/1/signup": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "default": "link",
+                    "type": "string",
+                    "enum": [
+                      "link",
+                      "code",
+                      "password"
+                    ]
+                  },
+                  "transport": {
+                    "default": "email",
+                    "type": "string",
+                    "enum": [
+                      "email",
+                      "sms"
+                    ]
+                  },
+                  "firstName": {
+                    "required": true,
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "required": true,
+                    "type": "string"
+                  },
+                  "password": {
+                    "description": "A password of at least 12 characters. Required when `type` is `password`.",
+                    "type": "string",
+                    "x-generated": true
+                  },
+                  "email": {
+                    "format": "email",
+                    "type": "string",
+                    "description": "Required when `transport` is `email`."
+                  },
+                  "phone": {
+                    "format": "phone",
+                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format. Required when `transport` is `sms`.",
+                    "type": "string",
+                    "x-generated": true
+                  }
+                }
+              },
+              "examples": {
+                "7e8e3a23d61ed35c3a67f35f60f9a65d": {
+                  "value": {
+                    "type": "code",
+                    "transport": "email",
+                    "firstName": "Bedrock",
+                    "lastName": "User",
+                    "email": "user@bedrock.foundation"
+                  }
+                },
+                "c77a182214923d06a78096d515931c03": {
+                  "value": {
+                    "type": "password",
+                    "firstName": "Bedrock",
+                    "lastName": "User"
+                  }
+                },
+                "7f224651f863d77eefff3c13e5b3be6a": {
+                  "value": {
+                    "type": "password",
+                    "firstName": "Bedrock",
+                    "lastName": "User",
+                    "password": "this is my password",
+                    "email": "user@bedrock.foundation"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "headers": {
+              "vary": "Origin",
+              "access-control-allow-origin": "<Origin>",
+              "access-control-expose-headers": "content-length,content-disposition",
+              "request-id": "<RequestId>",
+              "content-type": "application/json; charset=utf-8"
+            },
+            "content": {
+              "application/json": {
+                "examples": {
+                  "7f224651f863d77eefff3c13e5b3be6a": {
+                    "value": {
+                      "data": {
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJraWQiOiJ1c2VyIiwic3ViIjoiNjc5OTNlOGIwMDE3OTY2ZTJjYzI5NjExIiwianRpIjoidl9TNTBlMUdnM18xeW9mIiwiaWF0IjoxNzM4MDk2MjY3LCJleHAiOjE3NDA2ODgyNjd9.xKYE1a1AQol-Nc9JbYPDcdCvxNVixAjAxYmnPz1Cj3g"
+                      }
+                    },
+                    "x-path": "/1/signup"
+                  },
+                  "7e8e3a23d61ed35c3a67f35f60f9a65d": {
+                    "value": {
+                      "data": {
+                        "challenge": {
+                          "type": "code",
+                          "transport": "email",
+                          "email": "user@bedrock.foundation"
+                        }
+                      }
+                    },
+                    "x-path": "/1/signup"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "headers": {
+              "vary": "Origin",
+              "access-control-allow-origin": "<Origin>",
+              "access-control-expose-headers": "content-length,content-disposition",
+              "request-id": "<RequestId>",
+              "content-type": "application/json; charset=utf-8"
+            },
+            "content": {
+              "application/json": {
+                "examples": {
+                  "c77a182214923d06a78096d515931c03": {
+                    "value": {
+                      "error": {
+                        "type": "validation",
+                        "message": "Password is required.",
+                        "status": 400,
+                        "details": [
+                          {
+                            "type": "field",
+                            "details": [
+                              {
+                                "message": "Password is required."
+                              }
+                            ],
+                            "field": "password"
+                          }
+                        ]
+                      }
+                    },
+                    "x-path": "/1/signup"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "headers": {
+              "vary": "Origin",
+              "access-control-allow-origin": "<Origin>",
+              "access-control-expose-headers": "content-length,content-disposition",
+              "request-id": "<RequestId>",
+              "content-type": "application/json; charset=utf-8"
+            }
+          }
+        }
+      }
+    },
     "/1/categories/search": {
       "post": {
         "summary": "Search categories",
@@ -4216,18 +4153,17 @@
             "type": "string"
           },
           "email": {
-            "required": true,
             "format": "email",
             "type": "string"
+          },
+          "emailVerified": {
+            "type": "boolean"
           },
           "phone": {
             "format": "phone",
             "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
             "type": "string",
             "x-generated": true
-          },
-          "emailVerified": {
-            "type": "boolean"
           },
           "phoneVerified": {
             "type": "boolean"

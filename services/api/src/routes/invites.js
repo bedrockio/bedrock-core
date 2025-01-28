@@ -6,11 +6,10 @@ const { validateToken } = require('../utils/middleware/tokens');
 const { authenticate } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
 
-const { register } = require('../utils/auth');
 const { createAuthToken } = require('../utils/auth/tokens');
-const { Invite, User } = require('../models');
+const { Invite, User, AuditEntry } = require('../models');
 
-const mailer = require('../utils/messaging/mailer');
+const { sendMessage, mailer } = require('../utils/messaging');
 const { createInviteToken } = require('../utils/auth/tokens');
 
 const router = new Router();
@@ -74,7 +73,18 @@ router
           }),
         });
 
-        const token = await register(ctx, user);
+        const token = createAuthToken(ctx, user);
+        await user.save();
+
+        await AuditEntry.append('Registered by Invite', {
+          ctx,
+          actor: user,
+        });
+
+        await sendMessage({
+          user,
+          template: 'welcome',
+        });
 
         ctx.body = {
           data: {

@@ -17,15 +17,18 @@ const LOGIN_TIMEOUT_RULES = [
   },
 ];
 
-async function login(ctx, user) {
+async function login(ctx, user, options = {}) {
+  const { message = 'Logged In' } = options;
+
   const token = createAuthToken(ctx, user);
   removeExpiredTokens(user);
   user.loginAttempts = 0;
   await user.save();
 
-  await AuditEntry.append('Logged In', {
+  await AuditEntry.append(message, {
     ctx,
     actor: user,
+    category: 'auth',
   });
 
   return token;

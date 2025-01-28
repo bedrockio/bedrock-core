@@ -1,0 +1,1 @@
+Complete your account registration: {{APP_URL}}/confirm-code?code={{{code}}}

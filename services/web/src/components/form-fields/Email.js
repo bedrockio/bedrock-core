@@ -5,9 +5,10 @@ import { Form, Input, Message } from 'semantic';
 
 export default class EmailField extends React.Component {
   render() {
-    const { error, ...rest } = this.props;
+    const { error, label, ...rest } = this.props;
     return (
-      <Form.Field error={error?.hasField?.('email')}>
+      <Form.Field error={error?.hasField?.('email')} disabled={rest.disabled}>
+        {label && <label>{label}</label>}
         <Input
           name="email"
           type="email"

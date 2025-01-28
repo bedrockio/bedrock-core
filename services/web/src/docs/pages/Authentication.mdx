@@ -4,17 +4,19 @@ export const title = 'Authentication';
 
 # Authentication
 
-The authentication APIs provide different way to handle user authentication. The
-following subroutes are provided for each authentication flow:
+| Type                                        | Login | Signup | MFA Challenge | MFA Validator |
+| ------------------------------------------- | ----- | ------ | ------------- | ------------- |
+| [Password](/docs/authentication/password)   | Yes   | No     | Yes           | No            |
+| [Federated](/docs/authentication/federated) | Yes   | Yes    | No            | No            |
+| [Passkey](/docs/authentication/passkey)     | Yes   | No     | No            | No            |
+| [TOTP](/docs/authentication/totp)           | No    | No     | No            | Yes           |
+| [OTP](/docs/authentication/otp)             | Yes   | No     | No            | Yes           |
 
-- [Password](/docs/password)
-- [Passkey](/docs/passkey)
-- [Google](/docs/google)
-- [Apple](/docs/apple)
-- [TOTP](/docs/totp)
-- [OTP](/docs/otp)
+## Signup
 
-Additional routes are provided for general authentication needs:
+Note that new user registration often has special requirements and is separate
+from this API, however signup allows for an OTP challenge to be validated
+[here](/docs/authentication/otp#login).
 
 ## Logout
 

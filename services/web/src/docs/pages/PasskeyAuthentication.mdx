@@ -2,52 +2,47 @@ import Route from 'docs/components/Route';
 
 export const title = 'Passkey';
 export const group = 'Authentication';
-export const order = 1;
+export const order = 3;
 
-# Passkey Authentication API
+# Passkey Authentication
 
-This API performs actions related to passkeys.
+This API provides the challenge/response flows allowing the use of passkeys. It
+is set up to provide "seamless" authentication, meaning no information
+(username/email) is required to authenticate the user. Responses are designed
+specifically to work with [SimpleWebAuthn](https://simplewebauthn.dev/).
 
-## Register Generate
+Passkeys will **not** be met with MFA challenges as they are inherently more
+secure.
 
-Gets options to be passed to the client to create a new passkey in registration
-flow. Note that a new user is created in this step.
+## Generate Login
 
-<Route route="POST /1/auth/passkey/register-generate" />
+Gets options to be passed to the client to authorize a passkey in a login flow.
+The resulting `token` should be passed back into `verify-login`.
 
-## Register Verify
+<Route route="POST /1/auth/passkey/generate-login" />
 
-Verifies client response to create a new passkey in registration flow.
+## Verify Login
 
-<Route route="POST /1/auth/passkey/register-verify" />
+Verifies client response to authorize a new passkey in a login flow.
 
-## Login Generate
+<Route route="POST /1/auth/passkey/verify-login" />
 
-Gets options to be passed to the client to authorize a passkey in login flow.
+## Generate New Passkey
 
-<Route route="POST /1/auth/passkey/login-generate" />
+Gets options to be passed to the client to create a new passkey. The resulting
+`token` should be passed back into `verify-new`.
 
-## Login Verify
+<Route route="POST /1/auth/passkey/generate-new" />
 
-Verifies client response to authorize a new passkey in login flow.
+## Verify New Passkey
 
-<Route route="POST /1/auth/passkey/login-verify" />
+Verifies client response and stores a new passkey.
 
-## Enable Generate
-
-Gets options to be passed to the client to create a new passkey in enable flow.
-
-<Route route="POST /1/auth/passkey/enable-generate" />
-
-## Enable Verify
-
-Verifies client response to authorize a new passkey in enable flow.
-
-<Route route="POST /1/auth/passkey/enable-verify" />
+<Route route="POST /1/auth/passkey/verify-new" />
 
 ## Disable
 
-Removes registered passkey authenticator. Note that passkeys on the client side
-must be removed by the user.
+Deletes a passkey. Note that passkeys on the client side must be removed by the
+user.
 
-<Route route="POST /1/auth/passkey/disable" />
+<Route route="DELETE /1/auth/passkey/:id" />

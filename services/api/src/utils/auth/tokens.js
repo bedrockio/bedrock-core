@@ -1,14 +1,14 @@
+const ms = require('ms');
 const jwt = require('jsonwebtoken');
 const config = require('@bedrockio/config');
 const { nanoid } = require('nanoid');
 
 const JWT_SECRET = config.get('JWT_SECRET');
 
-// All expires are expressed in seconds (jwt spec)
-const expiresIn = {
-  invite: 24 * 60 * 60, // 1 day
-  regular: 30 * 24 * 60 * 60, // 30 days
-  temporary: 60 * 60, // 1 hour
+const DURATIONS = {
+  invite: '1d',
+  regular: '30d',
+  temporary: '1h',
 };
 
 function createAuthToken(ctx, user, options = {}) {
@@ -20,7 +20,8 @@ function createAuthToken(ctx, user, options = {}) {
   const country = ctx.get('cf-ipcountry')?.toUpperCase();
   const userAgent = ctx.get('user-agent');
 
-  const payload = getAuthTokenPayload(user, type);
+  const payload = getAuthTokenPayload(user);
+  const duration = DURATIONS[type];
   const { jti } = payload;
 
   authUser.authTokens = [
@@ -31,12 +32,12 @@ function createAuthToken(ctx, user, options = {}) {
       jti,
       country,
       userAgent,
-      expiresAt: new Date(payload.exp * 1000),
+      expiresAt: new Date(Date.now() + ms(duration)),
       lastUsedAt: new Date(),
     },
   ];
 
-  return signAuthToken(payload, JWT_SECRET);
+  return signToken(payload, duration);
 }
 
 function createTemporaryAuthToken(ctx, user) {
@@ -52,8 +53,27 @@ function createImpersonateAuthToken(ctx, user, authUser) {
   });
 }
 
-function verifyAuthToken(token) {
-  jwt.verify(token, JWT_SECRET);
+function createInviteToken(invite) {
+  const duration = DURATIONS.invite;
+  return signToken(
+    {
+      kid: 'invite',
+      sub: invite.email,
+      jti: generateTokenId(),
+    },
+    duration
+  );
+}
+
+function createPasskeyToken(payload) {
+  return signToken({
+    kid: 'passkey',
+    ...payload,
+  });
+}
+
+function verifyToken(token) {
+  return jwt.verify(token, JWT_SECRET);
 }
 
 function removeAuthToken(user, jti) {
@@ -65,28 +85,18 @@ function removeExpiredTokens(user) {
   user.authTokens = user.authTokens.filter((token) => token.expiresAt > now);
 }
 
-function createInviteToken(invite) {
-  return signAuthToken({
-    kid: 'invite',
-    sub: invite.email,
-    jti: generateTokenId(),
-    exp: Math.floor(Date.now() / 1000) + expiresIn.invite,
+function signToken(payload, duration) {
+  duration ||= DURATIONS.temporary;
+  return jwt.sign(payload, JWT_SECRET, {
+    expiresIn: duration,
   });
 }
 
-function signAuthToken(payload) {
-  return jwt.sign(payload, JWT_SECRET);
-}
-
-function getAuthTokenPayload(user, type) {
-  const { regular, temporary } = expiresIn;
-  const duration = type === 'regular' ? regular : temporary;
+function getAuthTokenPayload(user) {
   return {
     kid: 'user',
     sub: user.id,
     jti: generateTokenId(),
-    iat: Math.floor(Date.now() / 1000),
-    exp: Math.floor(Date.now() / 1000) + duration,
   };
 }
 
@@ -96,13 +106,14 @@ function generateTokenId() {
 }
 
 module.exports = {
+  verifyToken,
   createAuthToken,
-  verifyAuthToken,
   removeAuthToken,
   getAuthTokenPayload,
   createInviteToken,
+  createPasskeyToken,
   removeExpiredTokens,
   createTemporaryAuthToken,
   createImpersonateAuthToken,
-  signAuthToken,
+  signToken,
 };

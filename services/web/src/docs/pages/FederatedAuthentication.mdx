@@ -1,0 +1,58 @@
+import Route from 'docs/components/Route';
+
+export const title = 'Federated';
+export const group = 'Authentication';
+export const order = 2;
+
+# Federated Authentication
+
+Works with OAuth2 federated providers, currently
+[Google](https://developers.google.com/identity/sign-in/web/sign-in) and
+[Apple](https://developer.apple.com/help/account/configure-app-capabilities/about-sign-in-with-apple/).
+
+Note that federated authentication may result in a signup when authenticating
+for the first time. If additional required fields are added to the user model
+then this will fail as only `email`, `firstName`, and `lastName` are provided.
+In this case your options are:
+
+1. Make additional fields optional and instead use client side logic to redirect
+   to an onboarding flow.
+2. Remove signup buttons from the registration page and only allow login. Note
+   that login attempts will be met with an error if the provided `email` does
+   not exist.
+
+Note that federated flows are not met with an MFA challenge.
+
+Note that Google and Apple flows are nearly identical with the exception that
+the Google API accepts a `code` that will be exchanged for a token, where the
+Apple API accepts a `token` directly.
+
+## Google
+
+### Authenticate
+
+Verifies a Google code and authenticates or creates the user.
+
+<Route route="POST /1/auth/google" />
+
+### Disable
+
+Removes registered Google authenticator.
+
+<Route route="POST /1/auth/google/disable" />
+
+---
+
+## Apple
+
+### Authenticate
+
+Verifies an Apple token and authenticates or creates the user.
+
+<Route route="POST /1/auth/apple" />
+
+### Disable
+
+Removes registered Apple authenticator.
+
+<Route route="POST /1/auth/apple/disable" />

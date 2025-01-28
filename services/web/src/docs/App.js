@@ -15,7 +15,7 @@ function App() {
         <Switch>
           <Route path="/docs/ui" component={Components} exact />
           <Route path="/docs/icons" component={IconSheet} exact />
-          <Route path="/docs/:id?" component={ApiDocs} />
+          <Route path="/docs" component={ApiDocs} />
         </Switch>
       </PortalLayout>
     </DocsProvider>

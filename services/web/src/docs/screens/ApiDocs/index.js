@@ -13,19 +13,18 @@ import { components as markdownComponents } from 'components/Markdown';
 
 import DocsPath from '../../components/DocsPath';
 
-import { DEFAULT_PAGE_ID, pagesById, sorted } from '../../pages';
+import { DEFAULT_PAGE_ID, pagesByPath, sorted } from '../../pages';
 
 import './api-docs.less';
 
 @bem
 @screen
 export default class ApiDocs extends React.Component {
-  static layout = 'portal';
   static contextType = DocsContext;
 
   componentDidMount() {
-    const { id } = this.props.match.params;
-    if (!id) {
+    const path = this.getDocsPath();
+    if (!path) {
       this.props.history.replace(`/docs/${DEFAULT_PAGE_ID}`);
     } else {
       this.checkScroll();
@@ -33,11 +32,16 @@ export default class ApiDocs extends React.Component {
   }
 
   componentDidUpdate(lastProps) {
-    const { pathname } = this.props.location;
-    const { pathname: lastPathname } = lastProps.location;
-    if (pathname !== lastPathname) {
+    const { pathname, hash } = this.props.location;
+    const { pathname: lastPathname, hash: lastHash } = lastProps.location;
+    if (pathname !== lastPathname || hash !== lastHash) {
       this.checkScroll(true);
     }
+  }
+
+  getDocsPath() {
+    const { pathname } = this.props.location;
+    return pathname.split('/').slice(2).filter(Boolean).join('/');
   }
 
   // TODO: This is hacky, fix later
@@ -48,7 +52,6 @@ export default class ApiDocs extends React.Component {
       if (el) {
         el.scrollIntoView({
           behavior: 'smooth',
-          block: 'start',
         });
       }
     } else if (update) {
@@ -82,13 +85,19 @@ export default class ApiDocs extends React.Component {
                 {this.renderSidebarLink(page)}
                 {pages.length > 0 && (
                   <ul className={this.getElementClass('sidebar-subpages')}>
-                    {pages.map((subpage) => {
-                      return (
-                        <React.Fragment key={subpage.id}>
-                          {this.renderSidebarLink(subpage)}
-                        </React.Fragment>
-                      );
-                    })}
+                    {pages
+                      .filter((subpage) => {
+                        const [prefix] = subpage.path.split('/');
+                        const { pathname } = this.props.location;
+                        return pathname.startsWith(`/docs/${prefix}`);
+                      })
+                      .map((subpage) => {
+                        return (
+                          <React.Fragment key={subpage.id}>
+                            {this.renderSidebarLink(subpage)}
+                          </React.Fragment>
+                        );
+                      })}
                   </ul>
                 )}
               </li>
@@ -101,12 +110,13 @@ export default class ApiDocs extends React.Component {
   }
 
   renderSidebarLink(page) {
-    const { id, title } = page;
-    const path = `/docs/${id}`;
-    const isFocused = this.props.history.location.pathname === path;
+    const { title, path } = page;
+    const { pathname } = this.props.location;
+    const full = `/docs/${path}`;
+    const isFocused = pathname === full;
     return (
       <Link
-        to={path}
+        to={full}
         className={this.getElementClass(
           'sidebar-link',
           isFocused ? 'active' : null
@@ -117,9 +127,9 @@ export default class ApiDocs extends React.Component {
   }
 
   renderPage() {
-    const { id } = this.props.match.params;
-    if (id) {
-      const page = pagesById[id];
+    const path = this.getDocsPath();
+    if (path) {
+      const page = pagesByPath[path];
       if (page) {
         const { Component } = page;
         return (

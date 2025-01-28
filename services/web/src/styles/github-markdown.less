@@ -86,7 +86,7 @@ body:not(.nocturnal-theme) {
     --color-fg-muted: #57606a;
     --color-fg-subtle: #6e7781;
     --color-canvas-default: #ffffff;
-    --color-canvas-subtle: #f6f8fa;
+    --color-canvas-subtle: #f7f7f7;
     --color-border-default: #d0d7de;
     --color-border-muted: hsla(210, 18%, 87%, 1);
     --color-neutral-muted: rgba(175, 184, 193, 0.2);
@@ -306,10 +306,16 @@ body:not(.nocturnal-theme) {
 .markdown table {
   border-spacing: 0;
   border-collapse: collapse;
+  border: 1px solid var(--color-border-muted);
+  border-radius: 4px;
   display: block;
   width: max-content;
   max-width: 100%;
   overflow: auto;
+}
+
+.markdown table thead tr:first-child {
+  border-top: 0;
 }
 
 .markdown td,
@@ -396,7 +402,8 @@ body:not(.nocturnal-theme) {
 .markdown ol {
   margin-top: 0;
   margin-bottom: 0;
-  padding-left: 2em;
+  padding-left: 1em;
+  padding-right: 1em;
 }
 
 .markdown ol ol,
@@ -757,6 +764,7 @@ body:not(.nocturnal-theme) {
 
 .markdown table th {
   font-weight: 600;
+  font-size: 15px;
 }
 
 .markdown table th,

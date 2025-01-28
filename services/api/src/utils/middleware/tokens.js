@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const { verifyAuthToken } = require('../auth/tokens');
+const { verifyToken } = require('../auth/tokens');
 
 class TokenError extends Error {
   type = 'token';
@@ -41,7 +41,7 @@ function validateToken(options = {}) {
 
     // confirming signature
     try {
-      verifyAuthToken(token);
+      verifyToken(token);
       ctx.state.jwt = payload;
       return next();
     } catch (e) {

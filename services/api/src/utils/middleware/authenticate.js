@@ -55,7 +55,7 @@ function authorizeUser() {
 
 async function updateAuthToken(ctx, user, token) {
   const ip = ctx.get('x-forwarded-for') || ctx.ip;
-  // update update the user if the token hasn't been updated in the last 30 seconds
+  // update the user if the token hasn't been updated in the last 30 seconds
   // or the ip address has changed
   if (token.lastUsedAt < Date.now() - 1000 * 30 || token.ip !== ip) {
     token.ip = ip;

@@ -4,37 +4,38 @@ import * as GettingStarted from './GettingStarted.mdx';
 import * as Authentication from './Authentication.mdx';
 import * as PasswordAuthentication from './PasswordAuthentication.mdx';
 import * as PasskeyAuthentication from './PasskeyAuthentication.mdx';
-import * as GoogleAuthentication from './GoogleAuthentication.mdx';
-import * as AppleAuthentication from './AppleAuthentication.mdx';
+import * as FederatedAuthentication from './FederatedAuthentication.mdx';
 import * as OtpAuthentication from './OtpAuthentication.mdx';
 import * as TotpAuthentication from './TotpAuthentication.mdx';
 import * as Products from './Products.mdx';
 import * as Uploads from './Uploads.mdx';
+import * as Signup from './Signup.mdx';
 import * as Shops from './Shops.mdx';
 
 const PAGES = {
   Authentication,
   PasswordAuthentication,
   PasskeyAuthentication,
-  GoogleAuthentication,
-  AppleAuthentication,
+  FederatedAuthentication,
   TotpAuthentication,
   OtpAuthentication,
   GettingStarted,
   Products,
   Uploads,
+  Signup,
   Shops,
 };
 
 export const DEFAULT_PAGE_ID = 'getting-started';
 
 const root = {};
-const pagesById = {};
+const pagesByPath = {};
 
 for (let [key, mod] of Object.entries(PAGES)) {
   const { default: Component, group, hide, ...rest } = mod;
   const title = mod.title || key;
   const id = kebabCase(title);
+  const path = [kebabCase(group), id].filter(Boolean).join('/');
 
   if (hide) {
     continue;
@@ -43,11 +44,12 @@ for (let [key, mod] of Object.entries(PAGES)) {
   const page = {
     id,
     title,
+    path,
     Component,
     ...rest,
   };
 
-  pagesById[id] = page;
+  pagesByPath[path] = page;
 
   if (group) {
     root[group] ||= {
@@ -65,13 +67,9 @@ for (let [key, mod] of Object.entries(PAGES)) {
 function getSorted(obj = {}) {
   const pages = Object.values(obj);
   pages.sort((a, b) => {
-    const { order: aOrder, title: aTitle } = a;
-    const { order: bOrder, title: bTitle } = b;
-    if (aOrder == null && bOrder != null) {
-      return 1;
-    } else if (aOrder != null && bOrder == null) {
-      return -1;
-    } else if (aOrder === bOrder) {
+    const { order: aOrder = 100, title: aTitle } = a;
+    const { order: bOrder = 100, title: bTitle } = b;
+    if (aOrder === bOrder) {
       return aTitle.localeCompare(bTitle);
     } else {
       return aOrder - bOrder;
@@ -87,4 +85,4 @@ function getSorted(obj = {}) {
 
 const sorted = getSorted(root);
 
-export { sorted, pagesById };
+export { sorted, pagesByPath };

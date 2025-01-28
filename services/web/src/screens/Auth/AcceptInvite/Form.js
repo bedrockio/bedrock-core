@@ -2,14 +2,13 @@ import React from 'react';
 import { Form, Button } from 'semantic';
 
 import ErrorMessage from 'components/ErrorMessage';
+import OptionalPassword from 'components/Auth/OptionalPassword';
 
 export default (props) => {
   const { payload, error, loading } = props;
   const [firstName, setFirstName] = React.useState('');
   const [lastName, setLastName] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [touched, setTouched] = React.useState(false);
-  const [accepted, setAccepted] = React.useState(false);
 
   // Note that the disabled email field here is only to ensure
   // that browsers don't incorrectly save the last name as the
@@ -19,14 +18,8 @@ export default (props) => {
 
   return (
     <Form
-      error={touched}
       size="large"
       onSubmit={() => {
-        setTouched(true);
-        if (!accepted) {
-          return;
-        }
-
         props.onSubmit({
           firstName,
           lastName,
@@ -57,7 +50,7 @@ export default (props) => {
         autoComplete="username"
         disabled
       />
-      <Form.Input
+      <OptionalPassword
         placeholder="Password"
         autoComplete="new-password"
         name="password"
@@ -67,20 +60,6 @@ export default (props) => {
         value={password}
         onChange={(e, { value }) => setPassword(value)}
         error={error?.hasField?.('password')}
-      />
-      <Form.Checkbox
-        error={touched && !accepted}
-        name="acceptTerms"
-        checked={accepted}
-        label={
-          <label>
-            I agree to the{' '}
-            <a target="_blank" href="/terms">
-              Terms of Service
-            </a>
-          </label>
-        }
-        onChange={(e, { checked }) => setAccepted(checked)}
       />
       <Button
         fluid

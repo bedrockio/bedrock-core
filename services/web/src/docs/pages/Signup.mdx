@@ -1,0 +1,19 @@
+import Route from 'docs/components/Route';
+import VisitedSchemas from 'docs/components/VisitedSchemas';
+
+export const title = 'Signup';
+
+# Signup
+
+### Create a new user
+
+When `type` is `password` and all other requirements are fulfilled, a new user
+will be created and a `token` will be returned for
+[authentication](/docs/getting-started#authentication). Otherwise, a `challenge`
+will be returned with details about the next step.
+
+<Route route="POST /1/signup" />
+
+---
+
+<VisitedSchemas />

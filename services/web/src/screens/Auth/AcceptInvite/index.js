@@ -16,8 +16,6 @@ import Form from './Form';
 @screen
 @withSession
 export default class AcceptInvite extends React.Component {
-  static layout = 'basic';
-
   constructor(props) {
     super(props);
     const { token, payload } = getUrlToken();

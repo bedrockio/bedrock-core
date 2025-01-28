@@ -298,17 +298,16 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@bedrockio/config@^2.2.2", "@bedrockio/config@^2.2.3":
+"@bedrockio/config@^2.2.3":
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/@bedrockio/config/-/config-2.2.3.tgz#bac37d12e36a99ec16668c8b5d1e05dec9658fa9"
   integrity sha512-jfOcZIs63S0GaWQjh5vVIISr4b2vA0CWgm630N0FDB6wlW+O0Fsjox92Agx5nggVpSnNYWqzjuKaUb5RY3/ECw==
 
-"@bedrockio/fixtures@^1.2.5":
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/@bedrockio/fixtures/-/fixtures-1.2.5.tgz#43aed9428d49bcec25a60a0fb39cb70643db7025"
-  integrity sha512-4gt5dZQuDT8Eu2IJK92XbhpCpL/9Vyc1esypjuB5O8Mt/SEKwL8R4Hjj50WcJ8qfAohLJIU7KIQOFUDR/9YVkg==
+"@bedrockio/fixtures@^1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@bedrockio/fixtures/-/fixtures-1.3.2.tgz#7ce7d2937cadb284aed7bba61728b2ff877a2b76"
+  integrity sha512-KqUwOTQWTRuOPge5QUWwo23toEwrzvsObACg3fI+B0D3jspHt/PzJqzj+VmIkAr9Qgdh5glXCu3tdHkF13nruQ==
   dependencies:
-    "@bedrockio/config" "^2.2.2"
     "@bedrockio/logger" "^1.0.3"
     glob "^8.1.0"
     jszip "^3.10.1"
@@ -354,10 +353,10 @@
     kleur "^4.1.5"
     stdout-stream "^2.0.0"
 
-"@bedrockio/model@^0.8.2":
-  version "0.8.2"
-  resolved "https://registry.yarnpkg.com/@bedrockio/model/-/model-0.8.2.tgz#0faffaadfd8e0588ff49b082b5480a7bd14a34cb"
-  integrity sha512-CNg6pddk1knK0zWC8Kk7/RDsuT+bseh+KNUvpExOvYSTdvxojYHPXhjxt5pBiD6g8zr7/Q39VYPsxOJ9y/mBaQ==
+"@bedrockio/model@^0.8.4":
+  version "0.8.4"
+  resolved "https://registry.yarnpkg.com/@bedrockio/model/-/model-0.8.4.tgz#abf8036db5343187f3017cf4bd05c85c97bd2c19"
+  integrity sha512-3X2JNN8YETN6/W0In4ee4Wqdtrkuo8QAgwO0AtebIECN3ZY/24vq+PAr8J5g3v5STTSs0DMzUVBJaLInt8Nb8g==
   dependencies:
     "@bedrockio/logger" "^1.1.1"
     lodash "^4.17.21"
@@ -367,10 +366,10 @@
   resolved "https://registry.yarnpkg.com/@bedrockio/prettier-config/-/prettier-config-1.0.2.tgz#89878381d3059b810f97514ee6b69f946a6d1654"
   integrity sha512-Ebcx/D9FcV6WEQH2gXA4SkN62fus/aVMW46MYFm1/y+S0GVYj+OCuBbRMM4F8YAq9ntJ+B/z9fLiOheNpEpRzA==
 
-"@bedrockio/yada@^1.2.3":
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/@bedrockio/yada/-/yada-1.2.3.tgz#6b6d650b2a348f597e7d3ccc61f736371e7725b5"
-  integrity sha512-yTGICYsurRpyiz2GznXOcUcKIfrqU0Hyf1ADXLhO3D2oeuo3V7pS72TgzoVr5KOzTlpGwTs6s5nWkkdUiRGW3w==
+"@bedrockio/yada@^1.2.8":
+  version "1.2.8"
+  resolved "https://registry.yarnpkg.com/@bedrockio/yada/-/yada-1.2.8.tgz#a0cb33aeaeade93aab29c84e0382514171df0f7f"
+  integrity sha512-HPiN8zl+zV9r3MqLw9QRXya2uwNk4aM//h5r/RjjvEphrdjR06691wHrmttM/Z3g6O7jAjA2JLJIk695W8WPxw==
   dependencies:
     validator "^13.9.0"
 

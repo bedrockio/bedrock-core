@@ -7,16 +7,16 @@ import Breadcrumbs from 'components/Breadcrumbs';
 export default () => {
   return (
     <React.Fragment>
-      <Breadcrumbs active="Account settings"></Breadcrumbs>
+      <Breadcrumbs active="Settings"></Breadcrumbs>
       <Menu pointing secondary>
-        <Menu.Item name="Account" to="/settings/account" as={NavLink} exact />
+        <Menu.Item name="Profile" to="/settings/profile" as={NavLink} exact />
         <Menu.Item
           name="Appearance"
           to="/settings/appearance"
           as={NavLink}
           exact
         />
-        <Menu.Item name="Login" to="/settings/login" as={NavLink} exact />
+        <Menu.Item name="Security" to="/settings/security" as={NavLink} exact />
         <Menu.Item name="Sessions" to="/settings/sessions" as={NavLink} exact />
       </Menu>
     </React.Fragment>

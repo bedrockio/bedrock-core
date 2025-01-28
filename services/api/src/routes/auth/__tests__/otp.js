@@ -1,5 +1,5 @@
 const { assertSmsSent, assertSmsCount } = require('twilio');
-const { assertMailSent } = require('postmark');
+const { assertMailSent, assertMailCount } = require('postmark');
 const { createOtp } = require('../../../utils/auth/otp');
 const { request, createUser } = require('../../../utils/testing');
 const { assertAuthToken } = require('../../../utils/testing/tokens');
@@ -7,40 +7,95 @@ const { mockTime, unmockTime, advanceTime } = require('../../../utils/testing/ti
 const { User } = require('../../../models');
 
 describe('/1/auth/otp', () => {
-  describe('POST /send-code', () => {
-    it('should send an otp code via sms', async () => {
-      const user = await createUser({
-        phone: '+12223456789',
-      });
-      const response = await request('POST', '/1/auth/otp/send-code', {
-        phone: user.phone,
-      });
-      expect(response.status).toBe(204);
+  describe('POST /send', () => {
+    describe('links', () => {
+      it('should send an otp link via email by default', async () => {
+        const email = 'foo@bar.com';
+        await createUser({
+          email,
+        });
+        const response = await request('POST', '/1/auth/otp/send', {
+          email,
+        });
+        expect(response.status).toBe(200);
+        expect(response.body.data).toEqual({
+          challenge: {
+            type: 'link',
+            transport: 'email',
+            email,
+          },
+        });
 
-      assertSmsSent({
-        to: user.phone,
+        assertMailSent({
+          to: email,
+          template: 'otp-login-link',
+        });
+      });
+
+      it('should send an otp link via sms', async () => {
+        const phone = '+15551234567';
+        await createUser({
+          phone,
+        });
+        const response = await request('POST', '/1/auth/otp/send', {
+          phone,
+          transport: 'sms',
+        });
+        expect(response.status).toBe(200);
+        expect(response.body.data).toEqual({
+          challenge: {
+            type: 'link',
+            transport: 'sms',
+            phone,
+          },
+        });
+
+        assertSmsSent({
+          to: phone,
+          template: 'otp-login-link',
+        });
       });
     });
 
-    it('should send an otp code via email', async () => {
-      const user = await createUser({
-        email: 'foo@bar.com',
-      });
-      const response = await request('POST', '/1/auth/otp/send-code', {
-        email: user.email,
-      });
-      expect(response.status).toBe(204);
+    describe('raw code', () => {
+      it('should send a code to sms', async () => {
+        const phone = '+15551234567';
+        await createUser({
+          phone,
+        });
+        const response = await request('POST', '/1/auth/otp/send', {
+          phone,
+          type: 'code',
+          transport: 'sms',
+        });
+        expect(response.status).toBe(200);
+        expect(response.body.data).toEqual({
+          challenge: {
+            type: 'code',
+            transport: 'sms',
+            phone,
+          },
+        });
 
-      assertMailSent({
-        to: user.email,
+        assertSmsSent({
+          to: phone,
+          template: 'otp-login-code',
+        });
       });
     });
 
     it('should return empty response without sending if no user exists', async () => {
-      const response = await request('POST', '/1/auth/otp/send-code', {
+      const response = await request('POST', '/1/auth/otp/send', {
         email: 'foo@bar.com',
       });
-      expect(response.status).toBe(204);
+      expect(response.status).toBe(200);
+      expect(response.body.data).toEqual({
+        challenge: {
+          email: 'foo@bar.com',
+          transport: 'email',
+          type: 'link',
+        },
+      });
 
       assertSmsCount(0);
     });
@@ -49,10 +104,10 @@ describe('/1/auth/otp', () => {
       let user = await createUser({
         phone: '+12223456789',
       });
-      const response = await request('POST', '/1/auth/otp/send-code', {
+      const response = await request('POST', '/1/auth/otp/send', {
         phone: '+12223456789',
       });
-      expect(response.status).toBe(204);
+      expect(response.status).toBe(200);
 
       user = await User.findById(user.id);
 
@@ -71,10 +126,10 @@ describe('/1/auth/otp', () => {
       });
       const oldCode = await createOtp(user);
 
-      const response = await request('POST', '/1/auth/otp/send-code', {
+      const response = await request('POST', '/1/auth/otp/send', {
         phone: '+12223456789',
       });
-      expect(response.status).toBe(204);
+      expect(response.status).toBe(200);
 
       user = await User.findById(user.id);
 
@@ -85,23 +140,32 @@ describe('/1/auth/otp', () => {
       expect(authenticators[0].code).not.toBe(oldCode);
     });
 
-    it('should be a test code if the user is a tester', async () => {
+    it('should return a test code if the user is a tester', async () => {
+      mockTime('2020-01-01');
+
+      let response;
+
       let user = await createUser({
         email: 'tester@foo.com',
         isTester: true,
       });
-      const response = await request('POST', '/1/auth/otp/send-code', {
+      response = await request('POST', '/1/auth/otp/send', {
         email: 'tester@foo.com',
       });
-      expect(response.status).toBe(204);
+      expect(response.status).toBe(200);
+      expect(response.body.data.challenge.code).toBe('111111');
+
+      response = await request('POST', '/1/auth/otp/login', {
+        email: user.email,
+        code: '111111',
+      });
+
+      expect(response.status).toBe(200);
 
       user = await User.findById(user.id);
-      expect(user.authenticators).toMatchObject([
-        {
-          type: 'otp',
-          code: '111111',
-        },
-      ]);
+      assertMailCount(0);
+
+      unmockTime();
     });
   });
 
@@ -283,21 +347,6 @@ describe('/1/auth/otp', () => {
         expect(response.body.error.message).toBe('Password not verified.');
         unmockTime();
       });
-    });
-  });
-
-  describe('POST /register', () => {
-    it('should create a new user without a password', async () => {
-      const response = await request('POST', '/1/auth/otp/register', {
-        firstName: 'Frank',
-        lastName: 'Reynolds',
-        email: 'foo@bar.com',
-      });
-      const user = await User.findOne({
-        email: 'foo@bar.com',
-      });
-      expect(response.status).toBe(200);
-      assertAuthToken(user, response.body.data.token);
     });
   });
 });

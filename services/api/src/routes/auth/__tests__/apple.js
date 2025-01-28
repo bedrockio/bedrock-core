@@ -2,20 +2,30 @@ const { createToken } = require('verify-apple-id-token');
 const { request, createUser } = require('../../../utils/testing');
 const { assertAuthToken } = require('../../../utils/testing/tokens');
 const { hasAuthenticator } = require('../../../utils/auth/authenticators');
-const { addAppleAuthenticator } = require('../apple/utils');
+const { upsertAppleAuthenticator } = require('../../../utils/auth/apple');
+const { mockTime, unmockTime } = require('../../../utils/testing/time');
 const { User } = require('../../../models');
 
 describe('/1/auth/apple', () => {
-  describe('POST login', () => {
+  describe('POST /', () => {
     it('should verify a token for new user', async () => {
+      const email = 'foo@bar.com';
       const token = createToken({
-        email: 'foo@bar.com',
+        email,
       });
-      const response = await request('POST', '/1/auth/apple/login', {
+      const response = await request('POST', '/1/auth/apple', {
         token,
+        firstName: 'Frank',
+        lastName: 'Reynolds',
       });
       expect(response.status).toBe(200);
-      expect(response.body.data.next).toBe('signup');
+      expect(response.body.data.result).toBe('signup');
+
+      const user = await User.findOne({
+        email,
+      });
+
+      expect(user.email).toBe(email);
     });
 
     it('should verify a token for an existing user', async () => {
@@ -25,21 +35,39 @@ describe('/1/auth/apple', () => {
       const token = createToken({
         email: 'foo@bar.com',
       });
-      const response = await request('POST', '/1/auth/apple/login', {
+      const response = await request('POST', '/1/auth/apple', {
         token,
       });
       expect(response.status).toBe(200);
       assertAuthToken(user, response.body.data.token);
+      expect(response.body.data.result).toBe('login');
+    });
+
+    it('should not be able to register with an unverified email', async () => {
+      const token = createToken({
+        givenName: 'Frank',
+        familyName: 'Reynolds',
+        email: 'foo@bar.com',
+        email_verified: false,
+      });
+      const response = await request('POST', '/1/auth/apple', {
+        firstName: 'Frank',
+        lastName: 'Reynolds',
+        token,
+      });
+      expect(response.status).toBe(400);
     });
 
     it('should add authenticator if none', async () => {
+      mockTime('2020-01-01');
+
       let user = await createUser({
         email: 'foo@bar.com',
       });
       const token = createToken({
         email: 'foo@bar.com',
       });
-      const response = await request('POST', '/1/auth/apple/login', {
+      const response = await request('POST', '/1/auth/apple', {
         token,
       });
 
@@ -48,8 +76,11 @@ describe('/1/auth/apple', () => {
       expect(user.authenticators).toMatchObject([
         {
           type: 'apple',
+          createdAt: new Date('2020-01-01'),
         },
       ]);
+
+      unmockTime();
     });
 
     it('should not add multiple authenticators', async () => {
@@ -60,11 +91,11 @@ describe('/1/auth/apple', () => {
         email: 'foo@bar.com',
       });
 
-      await request('POST', '/1/auth/apple/login', {
+      await request('POST', '/1/auth/apple', {
         token,
       });
 
-      await request('POST', '/1/auth/apple/login', {
+      await request('POST', '/1/auth/apple', {
         token,
       });
 
@@ -73,129 +104,21 @@ describe('/1/auth/apple', () => {
     });
 
     it('should throw an error on a bad token', async () => {
-      const response = await request('POST', '/1/auth/apple/login', {
+      const response = await request('POST', '/1/auth/apple', {
         token: 'bad',
       });
       expect(response.status).toBe(400);
     });
   });
 
-  describe('POST register', () => {
-    it('should be able to sign up', async () => {
-      const token = createToken({
-        givenName: 'Bob',
-        familyName: 'Johnson',
-        email: 'foo@bar.com',
-      });
-      const response = await request('POST', '/1/auth/apple/register', {
-        firstName: 'Bob',
-        lastName: 'Johnson',
-        token,
-      });
-      expect(response.status).toBe(200);
-      const user = await User.findOne({
-        email: 'foo@bar.com',
-      });
-      expect(user).toMatchObject({
-        firstName: 'Bob',
-        lastName: 'Johnson',
-        email: 'foo@bar.com',
-      });
-    });
-
-    it('should be able to override provided name', async () => {
-      const token = createToken({
-        givenName: 'Bob',
-        familyName: 'Johnson',
-        email: 'foo@bar.com',
-      });
-      const response = await request('POST', '/1/auth/apple/register', {
-        firstName: 'Frank',
-        lastName: 'Reynolds',
-        token,
-      });
-      expect(response.status).toBe(200);
-      const user = await User.findOne({
-        email: 'foo@bar.com',
-      });
-      expect(user).toMatchObject({
-        firstName: 'Frank',
-        lastName: 'Reynolds',
-        email: 'foo@bar.com',
-      });
-    });
-
-    it('should not be able to override provided email', async () => {
-      const token = createToken({
-        givenName: 'Bob',
-        familyName: 'Johnson',
-        email: 'foo@bar.com',
-      });
-      const response = await request('POST', '/1/auth/apple/register', {
-        firstName: 'Frank',
-        lastName: 'Reynolds',
-        email: 'bar@foo.com',
-        token,
-      });
-      expect(response.status).toBe(400);
-    });
-
-    it('should not be able to register with an unverified email', async () => {
-      const token = createToken({
-        givenName: 'Bob',
-        familyName: 'Johnson',
-        email: 'foo@bar.com',
-        email_verified: false,
-      });
-      const response = await request('POST', '/1/auth/apple/register', {
-        firstName: 'Frank',
-        lastName: 'Reynolds',
-        token,
-      });
-      expect(response.status).toBe(400);
-    });
-
-    it('should throw an error on a bad token', async () => {
-      const response = await request('POST', '/1/auth/apple/register', {
-        firstName: 'Frank',
-        lastName: 'Reynolds',
-        token: 'bad',
-      });
-      expect(response.status).toBe(400);
-    });
-
-    it('should add an authenticator', async () => {
-      const token = createToken({
-        givenName: 'Bob',
-        familyName: 'Johnson',
-        email: 'foo@bar.com',
-      });
-      const response = await request('POST', '/1/auth/apple/register', {
-        firstName: 'Frank',
-        lastName: 'Reynolds',
-        token,
-      });
-      expect(response.status).toBe(200);
-      const user = await User.findOne({
-        email: 'foo@bar.com',
-      });
-
-      expect(user.authenticators).toMatchObject([
-        {
-          type: 'apple',
-        },
-      ]);
-    });
-  });
-
-  describe('POST enable', () => {
+  describe('POST /enable', () => {
     it('should add authenticator', async () => {
       let user = await createUser({
         email: 'foo@bar.com',
       });
       const token = createToken({
-        givenName: 'Bob',
-        familyName: 'Johnson',
+        givenName: 'Frank',
+        familyName: 'Reynolds',
         email: 'foo@bar.com',
       });
       const response = await request(
@@ -238,7 +161,7 @@ describe('/1/auth/apple', () => {
       let user = await createUser({
         email: 'foo@bar.com',
       });
-      addAppleAuthenticator(user);
+      upsertAppleAuthenticator(user);
       await user.save();
 
       const response = await request(

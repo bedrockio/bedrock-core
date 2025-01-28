@@ -32,7 +32,7 @@ export default class PhoneField extends React.Component {
 
     value = value.replace(/[ ()@.+-]/g, '');
     value = value.replace(/^1(\d)/, '$1');
-    value = value.replace(/[a-z]/gi, '');
+    value = value.replace(/[^\d-]/gi, '');
     value = value.trim();
     value = value.slice(0, maxLength);
 
@@ -48,7 +48,10 @@ export default class PhoneField extends React.Component {
   render() {
     const { required, label, error } = this.props;
     return (
-      <Form.Field required={required} error={error?.hasField?.('phone')}>
+      <Form.Field
+        required={required}
+        disabled={this.props.disabled}
+        error={error?.hasField?.('phone')}>
         {label && <label>{label}</label>}
         <Input
           {...omit(this.props, Object.keys(PhoneField.propTypes))}

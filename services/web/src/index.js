@@ -31,8 +31,9 @@ import LoadingScreen from 'screens/Loading';
 import { hasAccess } from 'utils/user';
 
 const App = React.lazy(() => import('./App'));
-const AuthApp = React.lazy(() => import('./auth/App'));
+const AuthApp = React.lazy(() => import('./AuthApp'));
 const DocsApp = React.lazy(() => import('./docs/App'));
+const OnboardApp = React.lazy(() => import('./OnboardApp'));
 
 function AppSwitch() {
   const { user } = useSession();
@@ -52,6 +53,7 @@ const Wrapper = () => (
             <SessionSwitch>
               <Suspense fallback={<LoadingScreen />}>
                 <Switch>
+                  <Route path="/onboard" component={OnboardApp} />
                   <Route path="/docs" component={DocsApp} />
                   <Route path="/" component={AppSwitch} />
                 </Switch>

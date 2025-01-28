@@ -1,6 +1,6 @@
 const { assertSmsSent } = require('twilio');
 const { assertMailSent } = require('postmark');
-const { getOtp, createOtp } = require('../../../utils/auth/otp');
+const { createOtp } = require('../../../utils/auth/otp');
 const { request, createUser } = require('../../../utils/testing');
 const { assertAuthToken } = require('../../../utils/testing/tokens');
 const { mockTime, unmockTime, advanceTime } = require('../../../utils/testing/time');
@@ -24,9 +24,10 @@ describe('mfa', () => {
       });
       expect(response.status).toBe(200);
       expect(response.body.data).toEqual({
-        next: {
-          type: 'otp',
-          phone: '+12223456789',
+        challenge: {
+          type: 'code',
+          transport: 'sms',
+          phone: user.phone,
         },
       });
 
@@ -35,7 +36,10 @@ describe('mfa', () => {
       });
 
       user = await User.findById(user.id);
-      const code = getOtp(user);
+
+      const { code } = user.authenticators.find((authenticator) => {
+        return authenticator.type === 'otp';
+      });
 
       // First attempt at submitting code failed
       response = await request('POST', '/1/auth/otp/login', {
@@ -69,8 +73,9 @@ describe('mfa', () => {
       });
       expect(response.status).toBe(200);
       expect(response.body.data).toEqual({
-        next: {
-          type: 'otp',
+        challenge: {
+          type: 'code',
+          transport: 'email',
           email: user.email,
         },
       });
@@ -80,7 +85,10 @@ describe('mfa', () => {
       });
 
       user = await User.findById(user.id);
-      const code = getOtp(user);
+
+      const { code } = user.authenticators.find((authenticator) => {
+        return authenticator.type === 'otp';
+      });
 
       // First attempt at submitting code failed
       response = await request('POST', '/1/auth/otp/login', {

@@ -18,8 +18,6 @@ import { request } from 'utils/api';
 @screen
 @withSession
 export default class Authenticator extends React.Component {
-  static layout = 'basic';
-
   constructor(props) {
     super(props);
     this.state = {
@@ -80,7 +78,7 @@ export default class Authenticator extends React.Component {
         },
       });
       this.context.updateUser(data);
-      this.props.history.push('/settings/login');
+      this.props.history.push('/settings/security');
     } catch (error) {
       this.setState({
         error,
@@ -129,7 +127,7 @@ export default class Authenticator extends React.Component {
             <Segment>
               <Button
                 as={Link}
-                to="/settings/login"
+                to="/settings/security"
                 basic
                 secondary
                 content="Cancel"

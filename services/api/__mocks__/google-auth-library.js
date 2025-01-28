@@ -1,4 +1,11 @@
 class MockClient {
+  getToken(code) {
+    return {
+      tokens: {
+        id_token: code,
+      },
+    };
+  }
   verifyIdToken(options) {
     const { idToken } = options;
 
@@ -16,7 +23,7 @@ class MockClient {
   }
 }
 
-function createToken(payload) {
+function createCode(payload) {
   payload.givenName ||= 'First Name';
   payload.familyName ||= 'Last Name';
   payload.email_verified ??= true;
@@ -25,5 +32,5 @@ function createToken(payload) {
 
 module.exports = {
   OAuth2Client: MockClient,
-  createToken,
+  createCode,
 };

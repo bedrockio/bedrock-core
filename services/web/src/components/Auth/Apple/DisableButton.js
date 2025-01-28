@@ -5,7 +5,7 @@ import { Button } from 'semantic';
 
 import { withSession } from 'stores/session';
 
-import { disable } from './utils';
+import { disable } from 'utils/auth/apple';
 
 @withSession
 export default class DisableButton extends React.Component {

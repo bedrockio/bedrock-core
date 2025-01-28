@@ -11,22 +11,31 @@
     "email": {
       "type": "String",
       "validate": "email",
+      "unique": true,
       "lowercase": true,
-      "required": true,
-      "unique": true
+      "writeAccess": [
+        "admin",
+        "superAdmin"
+      ]
     },
     "emailVerified": {
       "type": "Boolean",
-      "default": false
+      "default": false,
+      "writeAccess": "none"
     },
     "phone": {
       "type": "String",
       "validate": "phone",
-      "unique": true
+      "unique": true,
+      "writeAccess": [
+        "admin",
+        "superAdmin"
+      ]
     },
     "phoneVerified": {
       "type": "Boolean",
-      "default": false
+      "default": false,
+      "writeAccess": "none"
     },
     "roles": [
       {
@@ -71,9 +80,14 @@
                 "password"
               ]
             },
-            "id": {
-              "type": "String",
-              "readAccess": "none"
+            "name": {
+              "type": "String"
+            },
+            "createdAt": {
+              "type": "Date"
+            },
+            "lastUsedAt": {
+              "type": "Date"
             },
             "code": {
               "type": "String",
@@ -85,10 +99,6 @@
             },
             "info": {
               "type": "Object",
-              "readAccess": "none"
-            },
-            "verifiedAt": {
-              "type": "Date",
               "readAccess": "none"
             },
             "expiresAt": {

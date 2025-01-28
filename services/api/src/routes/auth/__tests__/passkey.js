@@ -1,5 +1,7 @@
 const { request, createUser } = require('../../../utils/testing');
+const { createPasskeyToken } = require('../../../utils/auth/tokens');
 const { assertAuthToken } = require('../../../utils/testing/tokens');
+const { mockTime, unmockTime } = require('../../../utils/testing/time');
 const { User } = require('../../../models');
 
 function getPasskey() {
@@ -13,261 +15,138 @@ function getPasskey() {
 }
 
 describe('/1/auth/passkeys', () => {
-  describe('POST /login-generate', () => {
-    it('should return authentication options for existing user', async () => {
-      const user = await createUser({
-        authenticators: [getPasskey()],
-      });
-
-      const response = await request('POST', '/1/auth/passkey/login-generate', {
-        email: user.email,
-      });
+  describe('POST /generate-login', () => {
+    it('should return authentication options', async () => {
+      const response = await request('POST', '/1/auth/passkey/generate-login', {});
       expect(response.status).toBe(200);
-      expect(response.body.data).toEqual({
-        rpId: 'rpID',
+      expect(response.body.data.options).toEqual({
+        rpID: 'rpID',
         challenge: 'challenge',
-        allowCredentials: [
-          {
-            id: 'id',
-            type: 'public-key',
-            transports: ['hybrid', 'internal'],
-          },
-        ],
+        allowCredentials: [],
         userVerification: 'preferred',
         timeout: 60000,
       });
     });
-
-    it('should error for non-existing user', async () => {
-      const response = await request('POST', '/1/auth/passkey/login-generate', {
-        email: 'foo@bar.com',
-      });
-      expect(response.status).toBe(404);
-    });
-
-    it('should error if existing user does not have a passkey', async () => {
-      const user = await createUser();
-      const response = await request('POST', '/1/auth/passkey/login-generate', {
-        email: user.email,
-      });
-      expect(response.status).toBe(400);
-      expect(response.body.error.message).toBe('No passkey set.');
-    });
   });
 
-  describe('POST /login-verify', () => {
+  describe('POST /verify-login', () => {
     it('should verify a good response', async () => {
-      const user = await createUser({
-        authenticators: [getPasskey()],
-      });
-
-      const response = await request('POST', '/1/auth/passkey/login-verify', {
-        email: user.email,
-        response: {
-          type: 'good',
-        },
-      });
-      expect(response.status).toBe(200);
-      assertAuthToken(user, response.body.data.token);
-    });
-
-    it('should error on a bad response', async () => {
-      const user = await createUser({
-        authenticators: [getPasskey()],
-      });
-
-      const response = await request('POST', '/1/auth/passkey/login-verify', {
-        email: user.email,
-        response: {
-          type: 'bad',
-        },
-      });
-      expect(response.status).toBe(400);
-    });
-
-    it('should error if user does not exist', async () => {
-      const response = await request('POST', '/1/auth/passkey/login-verify', {
-        email: 'foo@bar.com',
-        response: {
-          type: 'good',
-        },
-      });
-      expect(response.status).toBe(400);
-    });
-
-    it('should error if user does not have passkey', async () => {
-      const user = await createUser();
-
-      const response = await request('POST', '/1/auth/passkey/login-verify', {
-        email: user.email,
-        response: {
-          type: 'good',
-        },
-      });
-      expect(response.status).toBe(400);
-    });
-  });
-
-  describe('POST /register-generate', () => {
-    it('should return register options', async () => {
-      const response = await request('POST', '/1/auth/passkey/register-generate', {
-        firstName: 'Frank',
-        lastName: 'Reynolds',
-        email: 'foo@bar.com',
-      });
-      expect(response.status).toBe(200);
-
-      const user = await User.findOne({
-        email: 'foo@bar.com',
-      });
-
-      expect(response.body.data).toMatchObject({
-        challenge: 'challenge',
-        user: {
-          id: 'id',
-          name: user.name,
-          displayName: user.name,
-        },
-        timeout: 60000,
-      });
-    });
-
-    it('should error error if user exists', async () => {
-      await createUser({
-        email: 'foo@bar.com',
-      });
-      const response = await request('POST', '/1/auth/passkey/register-generate', {
-        firstName: 'Frank',
-        lastName: 'Reynolds',
-        email: 'foo@bar.com',
-      });
-      expect(response.status).toBe(400);
-    });
-  });
-
-  describe('POST /register-verify', () => {
-    it('should verify a good response', async () => {
-      const user = await createUser({
-        authenticators: [getPasskey()],
-      });
-
-      const response = await request('POST', '/1/auth/passkey/register-verify', {
-        email: user.email,
-        response: {
-          type: 'good',
-        },
-      });
-      expect(response.status).toBe(200);
-      assertAuthToken(user, response.body.data.token);
-    });
-
-    it('should error on a bad response', async () => {
-      const user = await createUser({
-        authenticators: [getPasskey()],
-      });
-
-      const response = await request('POST', '/1/auth/passkey/register-verify', {
-        email: user.email,
-        response: {
-          type: 'bad',
-        },
-      });
-      expect(response.status).toBe(400);
-    });
-
-    it('should error if user does not exist', async () => {
-      const response = await request('POST', '/1/auth/passkey/register-verify', {
-        email: 'foo@bar.com',
-        response: {
-          type: 'good',
-        },
-      });
-      expect(response.status).toBe(400);
-    });
-
-    it('should error if user does not have passkey', async () => {
-      const user = await createUser();
-
-      const response = await request('POST', '/1/auth/passkey/register-verify', {
-        email: user.email,
-        response: {
-          type: 'good',
-        },
-      });
-      expect(response.status).toBe(400);
-    });
-  });
-
-  describe('POST /enable-generate', () => {
-    it('should return authentication options for authenticated user', async () => {
-      const user = await createUser();
-
-      const response = await request(
-        'POST',
-        '/1/auth/passkey/enable-generate',
-        {},
-        {
-          user,
-        }
-      );
-      expect(response.status).toBe(200);
-      expect(response.body.data).toMatchObject({
-        challenge: 'challenge',
-        user: {
-          id: 'id',
-          name: user.name,
-        },
-        timeout: 60000,
-      });
-    });
-
-    it('should clear existing passkeys', async () => {
-      const passkey = getPasskey();
+      mockTime('2020-01-01');
       let user = await createUser({
-        authenticators: [passkey],
+        authenticators: [getPasskey()],
       });
-      const response = await request(
-        'POST',
-        '/1/auth/passkey/enable-generate',
-        {},
-        {
-          user,
-        }
-      );
+
+      const token = createPasskeyToken({
+        challenge: 'challenge',
+      });
+
+      const response = await request('POST', '/1/auth/passkey/verify-login', {
+        token,
+        response: {
+          id: 'id',
+          type: 'good',
+        },
+      });
+
       expect(response.status).toBe(200);
+      assertAuthToken(user, response.body.data.token);
 
       user = await User.findById(user.id);
-      expect(user.authenticators.length).toBe(1);
-      expect(user.authenticators[0].toObject()).toMatchObject({
-        type: 'passkey',
-        info: {
-          user: {
-            id: 'id',
-            name: user.name,
-            displayName: user.name,
-          },
+
+      expect(user.authenticators.toObject()).toMatchObject([
+        {
+          type: 'passkey',
+          lastUsedAt: new Date(),
+        },
+      ]);
+      unmockTime();
+    });
+
+    it('should error on a bad response', async () => {
+      const user = await createUser({
+        authenticators: [getPasskey()],
+      });
+
+      const response = await request('POST', '/1/auth/passkey/verify-login', {
+        email: user.email,
+        response: {
+          type: 'bad',
         },
       });
+      expect(response.status).toBe(400);
+    });
+
+    it('should error if user does not exist', async () => {
+      const response = await request('POST', '/1/auth/passkey/verify-login', {
+        email: 'foo@bar.com',
+        response: {
+          type: 'good',
+        },
+      });
+      expect(response.status).toBe(400);
+    });
+
+    it('should error if user does not have passkey', async () => {
+      const user = await createUser();
+
+      const response = await request('POST', '/1/auth/passkey/verify-login', {
+        email: user.email,
+        response: {
+          type: 'good',
+        },
+      });
+      expect(response.status).toBe(400);
+    });
+  });
+
+  describe('POST /generate-new', () => {
+    it('should return authentication options for authenticated user', async () => {
+      let user = await createUser();
+
+      const response = await request(
+        'POST',
+        '/1/auth/passkey/generate-new',
+        {},
+        {
+          user,
+        }
+      );
+      expect(response.status).toBe(200);
+      expect(response.body.data.options).toMatchObject({
+        challenge: 'challenge',
+        user: {
+          id: 'id',
+          name: user.email,
+        },
+        timeout: 60000,
+      });
+
+      user = await User.findById(user.id);
+      expect(user.authenticators.length).toBe(0);
     });
 
     it('should error without authentication', async () => {
-      const response = await request('POST', '/1/auth/passkey/enable-generate', {
+      const response = await request('POST', '/1/auth/passkey/generate-new', {
         email: 'foo@bar.com',
       });
       expect(response.status).toBe(401);
     });
   });
 
-  describe('POST /enable-verify', () => {
+  describe('POST /verify-new', () => {
     it('should verify a good response', async () => {
-      const user = await createUser({
-        authenticators: [getPasskey()],
+      mockTime('2020-01-01');
+      let user = await createUser();
+
+      const token = createPasskeyToken({
+        challenge: 'challenge',
       });
 
       const response = await request(
         'POST',
-        '/1/auth/passkey/enable-verify',
+        '/1/auth/passkey/verify-new',
         {
+          token,
           response: {
             type: 'good',
           },
@@ -280,18 +159,67 @@ describe('/1/auth/passkeys', () => {
       expect(response.body.data).toMatchObject({
         id: user.id,
       });
+
+      user = await User.findById(user.id);
+      expect(user.authenticators.toObject()).toMatchObject([
+        {
+          type: 'passkey',
+          name: 'Passkey 1',
+          createdAt: new Date('2020-01-01'),
+          info: {
+            id: 'id',
+          },
+        },
+      ]);
+      unmockTime();
+    });
+
+    it('should derive name from platform', async () => {
+      let user = await createUser();
+
+      const token = createPasskeyToken({
+        challenge: 'challenge',
+      });
+
+      await request(
+        'POST',
+        '/1/auth/passkey/verify-new',
+        {
+          token,
+          response: {
+            type: 'good',
+          },
+        },
+        {
+          user,
+          headers: {
+            'sec-ch-ua-platform': '"macOS"',
+          },
+        }
+      );
+
+      user = await User.findById(user.id);
+      expect(user.authenticators.toObject()).toMatchObject([
+        {
+          type: 'passkey',
+          name: 'macOS',
+        },
+      ]);
     });
 
     it('should error on a bad response', async () => {
+      const token = createPasskeyToken({
+        challenge: 'challenge',
+      });
       const user = await createUser({
         authenticators: [getPasskey()],
       });
 
       const response = await request(
         'POST',
-        '/1/auth/passkey/enable-verify',
+        '/1/auth/passkey/verify-new',
         {
-          email: user.email,
+          token,
           response: {
             type: 'bad',
           },
@@ -300,46 +228,30 @@ describe('/1/auth/passkeys', () => {
           user,
         }
       );
-      expect(response.status).toBe(400);
+      expect(response.body.error.message).toBe('Bad registration response.');
     });
 
     it('should error if not authenticated', async () => {
-      const response = await request('POST', '/1/auth/passkey/enable-verify', {
+      const response = await request('POST', '/1/auth/passkey/verify-new', {
         response: {
           type: 'good',
         },
       });
       expect(response.status).toBe(401);
     });
-
-    it('should error if user does not have passkey', async () => {
-      const user = await createUser();
-
-      const response = await request(
-        'POST',
-        '/1/auth/passkey/enable-verify',
-        {
-          response: {
-            type: 'good',
-          },
-        },
-        {
-          user,
-        }
-      );
-      expect(response.status).toBe(400);
-    });
   });
 
-  describe('POST /disable', () => {
-    it('should remove passkey authenticators', async () => {
+  describe('DELETE /:id', () => {
+    it('should delete a passkey', async () => {
       let user = await createUser({
         authenticators: [getPasskey()],
       });
 
+      const id = user.authenticators[0].id;
+
       const response = await request(
-        'POST',
-        '/1/auth/passkey/disable',
+        'DELETE',
+        `/1/auth/passkey/${id}`,
         {},
         {
           user,
@@ -348,11 +260,11 @@ describe('/1/auth/passkeys', () => {
       expect(response.status).toBe(200);
 
       user = await User.findById(user.id);
-      expect(user.authenticators).toEqual([]);
+      expect(user.authenticators.toObject()).toEqual([]);
     });
 
     it('should error if not authenticated', async () => {
-      const response = await request('POST', '/1/auth/passkey/disable', {});
+      const response = await request('DELETE', '/1/auth/passkey/id', {});
       expect(response.status).toBe(401);
     });
   });

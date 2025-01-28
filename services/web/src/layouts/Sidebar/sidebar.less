@@ -9,18 +9,18 @@
 .sidebar-layout {
   &-menu {
     position: fixed;
-    z-index: 2;
+    z-index: 1000;
     top: 0;
     left: 0;
     width: @menuWidth;
-    height: 100vh;
+    height: 100dvh;
     padding: 15px 0;
     background-color: @mainMenuBackground;
     border-right: 1px solid rgba(0, 0, 0, 0.05);
 
     .nocturnal-theme & {
       background-color: @nocturnalMainMenuBackground;
-      border-right-color: rgba(255,255,255,0.1);
+      border-right-color: rgba(255, 255, 255, 0.1);
     }
 
     &-wrap {
@@ -94,7 +94,7 @@
 
       &:hover {
         color: @nocturnalMutedTextColor;
-        background-color: rgba(255,255,255,0.05);
+        background-color: rgba(255, 255, 255, 0.05);
       }
 
       &.active {
@@ -135,7 +135,7 @@
       border-bottom-color: @nocturnalBorderColor;
 
       &:hover {
-        border-color: rgba(255,255,255,.2);
+        border-color: rgba(255, 255, 255, 0.2);
       }
     }
   }
@@ -179,7 +179,7 @@
 
     .nocturnal-theme & {
       background: @nocturnalMainMenuBackground;
-      border-bottom-color: rgba(255,255,255,0.1);
+      border-bottom-color: rgba(255, 255, 255, 0.1);
     }
   }
 
@@ -209,7 +209,7 @@
     }
 
     .nocturnal-theme & {
-      background-color: rgba(mix(#000, @nocturnalMainMenuBackground, 50%), .7);
+      background-color: rgba(mix(#000, @nocturnalMainMenuBackground, 50%), 0.7);
     }
   }
 }

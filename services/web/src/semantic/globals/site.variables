@@ -797,7 +797,7 @@
       Disabled
 --------------------*/
 
-@disabledOpacity: 0.45;
+@disabledOpacity: 0.6;
 @disabledTextColor: rgba(40, 40, 40, 0.3);
 @invertedDisabledTextColor: rgba(225, 225, 225, 0.3);
 

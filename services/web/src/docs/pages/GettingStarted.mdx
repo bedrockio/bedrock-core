@@ -12,20 +12,20 @@ available for specific endpoints. All communication is enforced over HTTPS (with
 support for TLS 1.3) and protected by CloudFlare. Using the dashboard API
 credentials can be managed with a full RBAC permissioning layer.
 
-### URL
+## URL
 
 Main production URL:
 
 <Code>{`${API_URL}/`}</Code>
 
-### API Key
+## API Key
 
 Each client using using the api must provide use an API key to identify itself.
 You can provide your API key via an header (`Api-Key: <apiKey>`):
 
 <Code language="bash">{`curl -H 'Api-Key: <apiKey>' ${API_URL}/`}</Code>
 
-### Authentication
+## Authentication
 
 JWT is used for all authentication. You can provide your API token in a standard
 bearer token request (`Authorization: Bearer <token>`) like so:
@@ -37,7 +37,7 @@ bearer token request (`Authorization: Bearer <token>`) like so:
 _When receiving a 401 status code, the client should clear any stored JWT
 tokens - this will enable authentication reset and expiry behavior_
 
-### Requests
+## Requests
 
 A pragmatic RESTful style is enforced on all API calls. GET requests are only
 used to obtain objects.
@@ -54,7 +54,7 @@ Example search:
   -H 'Content-Type: application/json'`}
 </Code>
 
-### Responses
+## Responses
 
 A standard successful response envelope has a `data` attribute containing the
 result. An optional `meta` response can be given to provide supplementary
@@ -74,7 +74,7 @@ information such as pagination information:
 Mutation operations (PATCH and DELETE) may contain a `success` boolean in the
 response.
 
-### Errors
+## Errors
 
 Errors are returned as follows:
 

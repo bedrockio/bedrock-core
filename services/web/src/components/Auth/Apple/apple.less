@@ -1,0 +1,34 @@
+.apple {
+  &-login-button,
+  &-signup-button {
+    cursor: pointer;
+    font-weight: 500;
+    color: #fff;
+    background: #000;
+  }
+
+  &-login-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 44px;
+
+    &__logo {
+      position: relative;
+      top: -1px;
+    }
+  }
+
+  &-signup-button {
+    display: grid;
+    grid-template-columns: 50px 1fr 50px;
+    place-items: center;
+    font-size: 16px;
+    border-radius: 4px;
+    height: 2.3em;
+
+    &__logo {
+      height: 1.2em;
+    }
+  }
+}

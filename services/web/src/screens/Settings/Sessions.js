@@ -38,7 +38,7 @@ export default class Security extends React.Component {
     const { jti } = parseToken(getToken());
 
     authTokens.sort((a, b) => {
-      return new Date(b.lastUsedAt) - new Date(a.lastUsedAt);
+      return new Date(b.lastLoginAt) - new Date(a.lastLoginAt);
     });
 
     return (
@@ -72,7 +72,7 @@ export default class Security extends React.Component {
                     <Table.Cell>
                       {country?.nameEn || 'N/A'} ({token.ip})
                     </Table.Cell>
-                    <Table.Cell>{fromNow(token.lastUsedAt)}</Table.Cell>
+                    <Table.Cell>{fromNow(token.lastLoginAt)}</Table.Cell>
                     <Table.Cell textAlign="center">
                       <LoadButton
                         basic
