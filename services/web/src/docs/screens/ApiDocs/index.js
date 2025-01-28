@@ -7,7 +7,6 @@ import screen from 'helpers/screen';
 
 import Confirm from 'components/Confirm';
 import EditButton from 'docs/components/EditButton';
-import RecordButton from 'docs/components/RecordButton';
 import { DocsContext } from 'docs/utils/context';
 
 import { components as markdownComponents } from 'components/Markdown';
@@ -138,7 +137,6 @@ export default class ApiDocs extends React.Component {
     if (this.context.canEditDocs()) {
       return (
         <div className={this.getElementClass('buttons')}>
-          <RecordButton />
           <EditButton />
           <Confirm
             size="small"

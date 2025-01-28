@@ -112,7 +112,9 @@ export default class RequestBuilder extends React.Component {
 
   onRecordClick = async () => {
     await this.performRequest({
-      record: true,
+      headers: {
+        'Api-Record': 'on',
+      },
     });
     await this.context.loadDocs();
   };

@@ -4,8 +4,6 @@ import { set, unset } from 'lodash';
 
 import { ENV_NAME } from 'utils/env';
 
-import { isRecording, toggleRecording } from 'utils/api/record';
-
 import { request } from 'utils/api';
 
 export const DocsContext = React.createContext({});
@@ -13,7 +11,6 @@ export const DocsContext = React.createContext({});
 export function DocsProvider(props) {
   const [mode, setMode] = useState('view');
   const [docs, setDocs] = useState(null);
-  const [recording, setRecording] = useState(isRecording());
   const [loading, setLoading] = useState(false);
 
   const visitedComponents = new Set();
@@ -83,10 +80,6 @@ export function DocsProvider(props) {
     loadDocs();
   }, []);
 
-  useEffect(() => {
-    toggleRecording(recording);
-  }, [recording]);
-
   return (
     <DocsContext.Provider
       value={{
@@ -100,8 +93,6 @@ export function DocsProvider(props) {
         loadDocs,
         generateDocs,
         loading,
-        recording,
-        setRecording,
         visitedComponents,
         canEditDocs,
       }}>

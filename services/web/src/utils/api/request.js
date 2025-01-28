@@ -5,7 +5,6 @@ import { trackRequest } from '../analytics';
 import { fetchWithTimeout } from '../fetch';
 import { ApiError, ApiParseError } from './errors';
 import { stringifyParams } from './params';
-import { isRecording } from './record';
 import { getToken } from './token';
 
 export default async function request(options) {
@@ -81,17 +80,13 @@ export default async function request(options) {
 }
 
 function getHeaders(options) {
-  let { headers, token, record } = options;
+  let { headers, token } = options;
   const organization = getOrganization();
   token ||= getToken();
-  record ||= isRecording();
   return {
     Accept: 'application/json',
     // TODO: casing
     'API-Key': API_KEY,
-    ...(record && {
-      'Api-Record': 'on',
-    }),
     ...(token && {
       Authorization: `Bearer ${token}`,
     }),
