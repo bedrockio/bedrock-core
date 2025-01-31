@@ -84,6 +84,8 @@
     "@testing-library/dom": "^9.0.0",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
+    "@types/lodash": "^4.17.15",
+    "@types/react-router-dom": "^5.3.3",
     "babel-jest": "^29.4.3",
     "eslint": "^9.19.0",
     "eslint-import-resolver-webpack": "^0.13.10",

@@ -1,8 +1,15 @@
 {
   "compilerOptions": {
-    "experimentalDecorators": true,
     "baseUrl": "./src",
+    "jsx": "react-jsx",
     "checkJs": false,
-    "jsx": "react-jsx"
-  }
+    "module": "nodenext",
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+  },
+  "exclude": [
+    "dist",
+    "build",
+    "node_modules",
+  ]
 }
