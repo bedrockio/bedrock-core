@@ -1,4 +1,5 @@
 import React from 'react';
+// eslint-disable-next-line
 import { Table, Divider } from 'semantic';
 
 import { usePage } from 'stores/page';

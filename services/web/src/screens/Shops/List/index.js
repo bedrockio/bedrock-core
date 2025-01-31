@@ -1,4 +1,5 @@
 import React from 'react';
+// eslint-disable-next-line
 import { Table, Button, Divider, Segment } from 'semantic';
 import { Link } from 'react-router-dom';
 

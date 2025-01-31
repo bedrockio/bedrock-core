@@ -8,9 +8,11 @@ const {
 } = require('@bedrockio/eslint-plugin');
 
 module.exports = [
-  recommended,
-  jest,
   mdx,
+  jest,
+  react,
+  recommended,
+  webpackImports,
   {
     files: ['src/**/*.js'],
     languageOptions: {
@@ -18,25 +20,7 @@ module.exports = [
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
-        ecmaFeatures: {
-          jsx: true,
-        },
-        babelOptions: {
-          plugins: [['@babel/plugin-proposal-decorators', { legacy: true }]],
-        },
       },
-    },
-    plugins: {
-      ...react.plugins,
-      ...webpackImports.plugins,
-    },
-    settings: {
-      ...react.settings,
-      ...webpackImports.settings,
-    },
-    rules: {
-      ...react.rules,
-      ...webpackImports.rules,
     },
   },
 ];
