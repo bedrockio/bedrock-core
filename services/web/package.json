@@ -37,6 +37,7 @@
     "@simplewebauthn/browser": "^8.3.4",
     "autoprefixer": "^10.4.12",
     "babel-loader": "^8.2.5",
+    "circular-dependency-plugin": "^5.2.2",
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.7.1",
     "cssnano": "^5.1.15",
