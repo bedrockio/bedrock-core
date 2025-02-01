@@ -7,8 +7,8 @@
   },
   "scripts": {
     "build": "NODE_ENV=production webpack",
-    "start": "node --trace-deprecation --disable-warning=DEP0040 ./serve/dev",
-    "static": "node --disable-warning=DEP0040 ./serve/static",
+    "start": "node ./serve/dev",
+    "static": "node ./serve/static",
     "lint": "eslint",
     "test": "jest",
     "generate": "cd ../../generator && yarn install && yarn generate",
