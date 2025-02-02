@@ -22,6 +22,7 @@ See http://localhost:2200/docs for full documentation on this API (requires runn
 - [Logging](#logging)
 - [Documentation](#documentation)
 - [Authentication](#authentication)
+- [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -460,3 +461,16 @@ To set up Sign-in with Apple, in the [developer console](https://developer.apple
 Login entrypoints may be replaced or customized as needed, for example a dropdown allowing multiple login methods to be
 chosen from in the same screen, however it is recommended to leave the rest of the flows intact as they have been
 optimized for each method.
+
+## Troubleshooting
+
+##### I get warnings like `The punycode module is deprecated`. What is this?
+
+This warning comes from later node versions and is usually deep in the dependency chain. Add this to your `package.json`
+and re-run `yarn install` and it should fix it:
+
+```json
+"resolutions": {
+  "whatwg-url": "14.1.0"
+},
+```
