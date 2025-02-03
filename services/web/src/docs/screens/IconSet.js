@@ -1,9 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { memoize } from 'lodash';
+import { memoize, throttle } from 'lodash';
 
 import { Icon, Input, Divider } from 'semantic';
 
 import { useClass } from 'helpers/bem';
+
+import { ICON_MATCHES } from './const';
 
 import './icon-set.less';
 
@@ -16,25 +18,42 @@ export default function IconSet(props) {
   const { className, getElementClass } = useClass('icon-set');
 
   const [query, setQuery] = useState('');
+  const [filtered, setFiltered] = useState(null);
 
   useEffect(() => {
     loadSet();
+  }, [url]);
+
+  const deferredFilter = useMemo(() => {
+    return throttle(filterIcons, 200);
+  }, [ids]);
+
+  useEffect(() => {
+    deferredFilter(query);
   }, [url, query]);
 
-  const filtered = useMemo(() => {
-    return ids.filter((id) => {
-      if (query) {
-        return id.includes(query);
-      } else {
-        return true;
-      }
-    });
-  }, [query, ids]);
+  function filterIcons(q) {
+    let filtered;
+    if (q) {
+      filtered = ids.filter((id) => {
+        if (q) {
+          return id.includes(q) || matchTags(q, id);
+        } else {
+          return true;
+        }
+      });
+    } else {
+      filtered = null;
+    }
+    setFiltered(filtered);
+  }
 
   async function loadSet() {
     setIds([]);
+    setFiltered([]);
     const ids = await loadIconSet(url);
     setIds(ids);
+    setFiltered(ids);
   }
 
   function onSearchChange(evt, { value }) {
@@ -54,7 +73,7 @@ export default function IconSet(props) {
       <Input fluid label="Search" value={query} onChange={onSearchChange} />
       <Divider hidden />
       <ul className={className}>
-        {filtered.map((id) => {
+        {(filtered || ids).map((id) => {
           const isCopied = id === copied;
           return (
             <li
@@ -74,6 +93,18 @@ export default function IconSet(props) {
       </ul>
     </React.Fragment>
   );
+}
+
+function matchTags(query, id) {
+  const match = ICON_MATCHES.find((match) => {
+    return match.tags.some((tag) => {
+      return tag.includes(query);
+    });
+  });
+  if (!match) {
+    return false;
+  }
+  return id.includes(match.match);
 }
 
 const loadIconSet = memoize(async (url) => {
@@ -111,7 +142,7 @@ function copyToClipboard(text) {
     textarea.select();
     try {
       document.execCommand('copy');
-    } catch (err) {
+    } catch {
       alert('Copy failed');
     }
     document.body.removeChild(textarea);
