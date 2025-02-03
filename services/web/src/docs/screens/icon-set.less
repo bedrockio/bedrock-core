@@ -1,0 +1,45 @@
+.icon-set {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  place-items: start center;
+  text-align: center;
+  gap: 30px 5px;
+
+  .ui.icon.message {
+    all: unset;
+  }
+
+  &__icon {
+    margin-bottom: 0.5em;
+
+    .icon {
+      margin: 0 !important;
+      width: 28px !important;
+      height: 28px !important;
+    }
+  }
+
+  &__name {
+    border: 1px solid #ddd;
+    padding: 0.1em 0.2em;
+    font-size: 13px;
+    max-width: 140px;
+  }
+
+  &__copied {
+    position: absolute;
+    inset: 0;
+    font-size: 38px;
+    background: rgb(255 255 255 / 80%);
+    color: black;
+    display: block;
+    pointer-events: none;
+    place-content: center;
+  }
+
+  li {
+    cursor: pointer;
+    position: relative;
+    list-style: none;
+  }
+}
