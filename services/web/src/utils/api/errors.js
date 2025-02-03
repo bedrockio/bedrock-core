@@ -5,20 +5,11 @@ export class ApiError extends CustomError {
     super(message);
     this.type = type;
     this.status = status;
-    this.response = response;
+    this.fields = flattenFields(response?.error);
   }
 
   getField(name) {
-    return this.response?.error?.details?.find((d) => {
-      return d.field === name;
-    });
-  }
-
-  getFieldDetails(name) {
-    const field = this.getField(name);
-    if (field) {
-      return getAllDetails(field);
-    }
+    return this.fields[name];
   }
 
   hasField(name) {
@@ -26,11 +17,26 @@ export class ApiError extends CustomError {
   }
 }
 
-function getAllDetails(error) {
-  if (error.details) {
-    return error.details.flatMap(getAllDetails);
-  } else {
-    return [error];
+function flattenFields(error) {
+  const result = {};
+  setFields(error?.details, result);
+  return result;
+}
+
+function setFields(details, result, path = []) {
+  if (details) {
+    for (let error of details) {
+      if (error.type === 'field') {
+        setFields(error.details, result, [...path, error.field]);
+      } else if (error.type === 'element') {
+        setFields(error.details, result, [...path, error.index]);
+      } else if (error.details) {
+        setFields(error.details, result, path);
+      } else {
+        const key = path.join('.');
+        result[key] = error.message;
+      }
+    }
   }
 }
 
