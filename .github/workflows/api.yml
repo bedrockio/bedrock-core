@@ -2,10 +2,10 @@ name: API
 on:
   push:
     branches: [master]
-    paths: ['services/api/**']
+    paths: ["services/api/**"]
   pull_request:
     branches: [master]
-    paths: ['services/api/**']
+    paths: ["services/api/**"]
 
 jobs:
   api:
@@ -16,7 +16,7 @@ jobs:
         working-directory: ./services/api
     strategy:
       matrix:
-        node-version: [20.x]
+        node-version: [22.x]
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
