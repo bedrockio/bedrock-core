@@ -1,5 +1,5 @@
 const { AuditEntry } = require('../../models');
-const { createAuthToken, removeExpiredTokens } = require('./tokens');
+const { createAuthToken, removeExpiredTokens, removeCappedTokens } = require('./tokens');
 
 const LOGIN_TIMEOUT_RULES = [
   {
@@ -20,6 +20,7 @@ const LOGIN_TIMEOUT_RULES = [
 async function login(ctx, user) {
   const token = createAuthToken(ctx, user);
   removeExpiredTokens(user);
+  removeCappedTokens(user);
   user.loginAttempts = 0;
   await user.save();
 

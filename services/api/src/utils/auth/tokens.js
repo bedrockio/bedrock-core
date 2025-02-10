@@ -65,6 +65,13 @@ function removeExpiredTokens(user) {
   user.authTokens = user.authTokens.filter((token) => token.expiresAt > now);
 }
 
+function removeCappedTokens(user, cap = 10) {
+  // Cap the collection to the specified count by keeping only the newest tokens
+  if (user.authTokens?.length > cap) {
+    user.authTokens = user.authTokens.sort((a, b) => b.lastUsedAt - a.lastUsedAt).slice(0, cap);
+  }
+}
+
 function createInviteToken(invite) {
   return signAuthToken({
     kid: 'invite',
@@ -101,6 +108,7 @@ module.exports = {
   removeAuthToken,
   getAuthTokenPayload,
   createInviteToken,
+  removeCappedTokens,
   removeExpiredTokens,
   createTemporaryAuthToken,
   createImpersonateAuthToken,
