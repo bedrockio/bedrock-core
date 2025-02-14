@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Routes, Route } from '@bedrockio/router';
 
 import List from './List';
 import Detail from './Detail';
@@ -7,10 +7,10 @@ import Detail from './Detail';
 export default class Organizations extends React.Component {
   render() {
     return (
-      <Switch>
-        <Route path="/organizations" component={List} exact />
-        <Route path="/organizations/:id" component={Detail} />
-      </Switch>
+      <Routes>
+        <Route path="/organizations" render={List} exact />
+        <Route path="/organizations/:id" render={Detail} />
+      </Routes>
     );
   }
 }

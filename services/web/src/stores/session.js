@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
+import { withRouter } from '@bedrockio/router';
 import { omit } from 'lodash';
-import { withRouter } from 'react-router-dom';
 
 import { request, hasToken, setToken } from 'utils/api';
 import { getOrganization, setOrganization } from 'utils/organization';
@@ -28,7 +28,10 @@ export class SessionProvider extends React.PureComponent {
 
   componentDidMount() {
     this.bootstrap();
-    this.attachHistory();
+  }
+
+  componentDidUpdate(lastProps) {
+    this.checkHistoryChange(lastProps);
   }
 
   componentDidCatch(error) {
@@ -261,9 +264,11 @@ export class SessionProvider extends React.PureComponent {
 
   // History
 
-  attachHistory = () => {
-    this.props.history.listen(this.onHistoryChange);
-  };
+  checkHistoryChange(lastProps) {
+    if (this.props.location !== lastProps.location) {
+      this.onHistoryChange();
+    }
+  }
 
   onHistoryChange = () => {
     this.setState({

@@ -1,5 +1,5 @@
 import { hot } from 'react-hot-loader/root';
-import { Route, Switch } from 'react-router-dom';
+import { Routes, Route } from '@bedrockio/router';
 
 import PortalLayout from 'layouts/Portal';
 
@@ -12,11 +12,11 @@ function App() {
   return (
     <DocsProvider>
       <PortalLayout>
-        <Switch>
-          <Route path="/docs/ui" component={Components} exact />
-          <Route path="/docs/icons" component={IconSheet} exact />
-          <Route path="/docs" component={ApiDocs} />
-        </Switch>
+        <Routes>
+          <Route path="/docs/ui" render={Components} exact />
+          <Route path="/docs/icons" render={IconSheet} exact />
+          <Route path="/docs" render={ApiDocs} />
+        </Routes>
       </PortalLayout>
     </DocsProvider>
   );

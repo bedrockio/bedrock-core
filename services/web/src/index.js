@@ -4,7 +4,7 @@ import 'react-hot-loader';
 
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from '@bedrockio/router';
 import { HelmetProvider } from 'react-helmet-async';
 
 // Icons
@@ -15,8 +15,6 @@ import { ThemeProvider } from 'stores/theme';
 
 import SessionSwitch from 'helpers/SessionSwitch';
 import 'utils/sentry';
-
-import ScrollProvider from 'helpers/ScrollProvider';
 
 import solidIcons from 'semantic/assets/icons/solid.svg';
 import brandIcons from 'semantic/assets/icons/brands.svg';
@@ -48,19 +46,17 @@ const Wrapper = () => (
   <BrowserRouter>
     <ThemeProvider>
       <HelmetProvider>
-        <ScrollProvider>
-          <SessionProvider>
-            <SessionSwitch>
-              <Suspense fallback={<LoadingScreen />}>
-                <Switch>
-                  <Route path="/onboard" component={OnboardApp} />
-                  <Route path="/docs" component={DocsApp} />
-                  <Route path="/" component={AppSwitch} />
-                </Switch>
-              </Suspense>
-            </SessionSwitch>
-          </SessionProvider>
-        </ScrollProvider>
+        <SessionProvider>
+          <SessionSwitch>
+            <Suspense fallback={<LoadingScreen />}>
+              <Routes>
+                <Route path="/onboard" render={OnboardApp} />
+                <Route path="/docs" render={DocsApp} />
+                <Route path="/" render={AppSwitch} />
+              </Routes>
+            </Suspense>
+          </SessionSwitch>
+        </SessionProvider>
       </HelmetProvider>
     </ThemeProvider>
   </BrowserRouter>

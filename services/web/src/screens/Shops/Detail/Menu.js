@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink } from '@bedrockio/router';
 import { Menu, Button } from 'semantic';
 
 import { usePage } from 'stores/page';

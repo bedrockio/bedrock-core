@@ -10,7 +10,7 @@ import {
   Segment,
 } from 'semantic';
 import { set, truncate } from 'lodash';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from '@bedrockio/router';
 
 import screen from 'helpers/screen';
 

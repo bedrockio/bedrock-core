@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Table, Menu, Divider } from 'semantic';
-import { Link } from 'react-router-dom';
+import { Link } from '@bedrockio/router';
 
 import modal from 'helpers/modal';
 

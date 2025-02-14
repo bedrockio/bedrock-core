@@ -1,7 +1,7 @@
-import React from 'react';
+import { useState } from 'react';
 import { Container } from 'semantic';
 
-import bem from 'helpers/bem';
+import { useClass } from 'helpers/bem';
 import screen from 'helpers/screen';
 
 import brandIcons from 'semantic/assets/icons/brands.svg';
@@ -28,49 +28,38 @@ const SETS = [
   },
 ];
 
-@bem
-@screen
-export default class IconSheetScreen extends React.Component {
-  static layout = 'portal';
-  contextRef = React.createRef();
+function IconSheet() {
+  const { className, getElementClass } = useClass('icon-sheet');
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      current: 'Solid',
-    };
-  }
+  const [current, setCurrent] = useState('Solid');
 
-  render() {
+  function render() {
     return (
-      <div className={this.getBlockClass()}>
-        {this.renderSidebar()}
-        <main className={this.getElementClass('page')}>
-          <Container>{this.renderCurrentSet()}</Container>
+      <div className={className}>
+        {renderSidebar()}
+        <main className={getElementClass('page')}>
+          <Container>{renderCurrentSet()}</Container>
         </main>
       </div>
     );
   }
 
-  renderSidebar() {
-    const { current } = this.state;
+  function renderSidebar() {
     return (
-      <aside className={this.getElementClass('sidebar')}>
+      <aside className={getElementClass('sidebar')}>
         <h2>Icons</h2>
-        <ul className={this.getElementClass('sidebar-scroll')}>
+        <ul className={getElementClass('sidebar-scroll')}>
           {SETS.map((set) => {
             const isActive = set.name === current;
             return (
               <li key={set.name}>
                 <div
-                  className={this.getElementClass(
+                  className={getElementClass(
                     'sidebar-link',
                     isActive ? 'active' : null
                   )}
                   onClick={() => {
-                    this.setState({
-                      current: set.name,
-                    });
+                    setCurrent(set.name);
                   }}>
                   {set.name}
                 </div>
@@ -82,8 +71,7 @@ export default class IconSheetScreen extends React.Component {
     );
   }
 
-  renderCurrentSet() {
-    const { current } = this.state;
+  function renderCurrentSet() {
     const set = SETS.find((set) => {
       return set.name === current;
     });
@@ -92,4 +80,8 @@ export default class IconSheetScreen extends React.Component {
     }
     return <IconSet {...set} />;
   }
+
+  return render();
 }
+
+export default screen(IconSheet);

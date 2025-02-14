@@ -1,6 +1,6 @@
 import React from 'react';
 import { Header } from 'semantic';
-import { Link } from 'react-router-dom';
+import { Link } from '@bedrockio/router';
 
 import Logo from 'components/Logo';
 

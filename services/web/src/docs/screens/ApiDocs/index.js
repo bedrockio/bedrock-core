@@ -1,13 +1,13 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
 import { Container, Icon } from 'semantic';
+import { Link, useLocation, useNavigate } from '@bedrockio/router';
 
-import bem from 'helpers/bem';
+import { useClass } from 'helpers/bem';
 import screen from 'helpers/screen';
 
 import Confirm from 'components/Confirm';
 import EditButton from 'docs/components/EditButton';
-import { DocsContext } from 'docs/utils/context';
+import { useDocs } from 'docs/utils/context';
 
 import { components as markdownComponents } from 'components/Markdown';
 
@@ -17,36 +17,29 @@ import { DEFAULT_PAGE_ID, pagesByPath, sorted } from '../../pages';
 
 import './api-docs.less';
 
-@bem
-@screen
-export default class ApiDocs extends React.Component {
-  static contextType = DocsContext;
+function ApiDocs() {
+  const { className, getElementClass } = useClass('api-docs');
 
-  componentDidMount() {
-    const path = this.getDocsPath();
+  const { pathname, hash } = useLocation();
+  const navigate = useNavigate();
+
+  const { canEditDocs, generateDocs } = useDocs();
+
+  useEffect(() => {
+    const path = getDocsPath();
     if (!path) {
-      this.props.history.replace(`/docs/${DEFAULT_PAGE_ID}`);
+      navigate.replace(`/docs/${DEFAULT_PAGE_ID}`);
     } else {
-      this.checkScroll();
+      checkScroll();
     }
-  }
+  }, [pathname, hash]);
 
-  componentDidUpdate(lastProps) {
-    const { pathname, hash } = this.props.location;
-    const { pathname: lastPathname, hash: lastHash } = lastProps.location;
-    if (pathname !== lastPathname || hash !== lastHash) {
-      this.checkScroll(true);
-    }
-  }
-
-  getDocsPath() {
-    const { pathname } = this.props.location;
+  function getDocsPath() {
     return pathname.split('/').slice(2).filter(Boolean).join('/');
   }
 
   // TODO: This is hacky, fix later
-  checkScroll(update) {
-    const { hash } = this.props.location;
+  function checkScroll() {
     if (hash) {
       const el = document.getElementById(hash.slice(1));
       if (el) {
@@ -54,47 +47,46 @@ export default class ApiDocs extends React.Component {
           behavior: 'smooth',
         });
       }
-    } else if (update) {
+    } else {
       const el = document.querySelector('.api-docs__page');
       el.scrollTo(0, 0);
     }
   }
 
-  render() {
+  function render() {
     return (
-      <div className={this.getBlockClass()}>
-        {this.renderSidebar()}
-        <main className={this.getElementClass('page')}>
-          <Container>{this.renderPage()}</Container>
+      <div className={className}>
+        {renderSidebar()}
+        <main className={getElementClass('page')}>
+          <Container>{renderPage()}</Container>
         </main>
       </div>
     );
   }
 
-  renderSidebar() {
+  function renderSidebar() {
     return (
-      <aside className={this.getElementClass('sidebar')}>
+      <aside className={getElementClass('sidebar')}>
         <h2>
           <DocsPath path="info.title" />
         </h2>
-        <ul className={this.getElementClass('sidebar-scroll')}>
+        <ul className={getElementClass('sidebar-scroll')}>
           {sorted.map((page) => {
             const { id, pages } = page;
             return (
               <li key={id}>
-                {this.renderSidebarLink(page)}
+                {renderSidebarLink(page)}
                 {pages.length > 0 && (
-                  <ul className={this.getElementClass('sidebar-subpages')}>
+                  <ul className={getElementClass('sidebar-subpages')}>
                     {pages
                       .filter((subpage) => {
                         const [prefix] = subpage.path.split('/');
-                        const { pathname } = this.props.location;
                         return pathname.startsWith(`/docs/${prefix}`);
                       })
                       .map((subpage) => {
                         return (
                           <React.Fragment key={subpage.id}>
-                            {this.renderSidebarLink(subpage)}
+                            {renderSidebarLink(subpage)}
                           </React.Fragment>
                         );
                       })}
@@ -104,20 +96,19 @@ export default class ApiDocs extends React.Component {
             );
           })}
         </ul>
-        {this.renderActions()}
+        {renderActions()}
       </aside>
     );
   }
 
-  renderSidebarLink(page) {
+  function renderSidebarLink(page) {
     const { title, path } = page;
-    const { pathname } = this.props.location;
     const full = `/docs/${path}`;
     const isFocused = pathname === full;
     return (
       <Link
         to={full}
-        className={this.getElementClass(
+        className={getElementClass(
           'sidebar-link',
           isFocused ? 'active' : null
         )}>
@@ -126,8 +117,8 @@ export default class ApiDocs extends React.Component {
     );
   }
 
-  renderPage() {
-    const path = this.getDocsPath();
+  function renderPage() {
+    const path = getDocsPath();
     if (path) {
       const page = pagesByPath[path];
       if (page) {
@@ -143,10 +134,10 @@ export default class ApiDocs extends React.Component {
     }
   }
 
-  renderActions() {
-    if (this.context.canEditDocs()) {
+  function renderActions() {
+    if (canEditDocs()) {
       return (
-        <div className={this.getElementClass('buttons')}>
+        <div className={getElementClass('buttons')}>
           <EditButton />
           <Confirm
             size="small"
@@ -156,10 +147,14 @@ export default class ApiDocs extends React.Component {
             trigger={
               <Icon link name="arrows-rotate" title="Generate Documentation" />
             }
-            onConfirm={this.context.generateDocs}
+            onConfirm={generateDocs}
           />
         </div>
       );
     }
   }
+
+  return render();
 }
+
+export default screen(ApiDocs);

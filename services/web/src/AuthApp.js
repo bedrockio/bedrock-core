@@ -1,5 +1,5 @@
 import { hot } from 'react-hot-loader/root';
-import { Switch, Route } from 'react-router-dom';
+import { Routes, Route } from '@bedrockio/router';
 
 import BasicLayout from 'layouts/Basic';
 
@@ -16,16 +16,16 @@ import ConfirmCode from 'screens/Auth/ConfirmCode';
 function App() {
   return (
     <BasicLayout>
-      <Switch>
-        <Route path="/signup" component={Signup} />
-        <Route path="/login" component={Login} />
-        <Route path="/logout" component={Logout} />
-        <Route path="/confirm-code" component={ConfirmCode} exact />
-        <Route path="/accept-invite" component={AcceptInvite} exact />
-        <Route path="/forgot-password" component={ForgotPassword} exact />
-        <Route path="/reset-password" component={ResetPassword} exact />
-        <Route path="*" component={Lockout} exact />
-      </Switch>
+      <Routes>
+        <Route path="/signup" render={Signup} />
+        <Route path="/login" render={Login} />
+        <Route path="/logout" render={Logout} />
+        <Route path="/confirm-code" render={ConfirmCode} exact />
+        <Route path="/accept-invite" render={AcceptInvite} exact />
+        <Route path="/forgot-password" render={ForgotPassword} exact />
+        <Route path="/reset-password" render={ResetPassword} exact />
+        <Route path="*" render={Lockout} exact />
+      </Routes>
     </BasicLayout>
   );
 }

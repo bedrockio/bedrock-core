@@ -1,7 +1,7 @@
 import React from 'react';
 // eslint-disable-next-line
 import { Table, Button, Divider, Segment } from 'semantic';
-import { Link } from 'react-router-dom';
+import { Link } from '@bedrockio/router';
 
 import screen from 'helpers/screen';
 

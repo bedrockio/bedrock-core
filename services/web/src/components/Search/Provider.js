@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { pickBy } from 'lodash';
-import { withRouter } from 'react-router';
+import { withRouter } from '@bedrockio/router';
 
 import SearchContext from './Context';
 
@@ -62,7 +62,6 @@ function getFiltersFromSearchParams(urlParams, filterMapping = {}) {
 }
 
 // withRouter and ref doesnt work well together, we need todo forward ref manually
-// and this wont be resolved as long as we using components with react-router
 const withRouterForwardRef = (Component) => {
   const WithRouter = withRouter(({ forwardedRef, ...props }) => (
     <Component ref={forwardedRef} {...props} />

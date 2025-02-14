@@ -1,6 +1,6 @@
 import React from 'react';
 import { Segment, Grid, Button } from 'semantic';
-import { Link } from 'react-router-dom';
+import { Link } from '@bedrockio/router';
 
 import { withSession } from 'stores/session';
 

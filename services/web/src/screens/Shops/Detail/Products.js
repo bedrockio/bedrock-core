@@ -8,7 +8,7 @@ import {
   Divider,
   Image,
 } from 'semantic';
-import { Link } from 'react-router-dom';
+import { Link } from '@bedrockio/router';
 
 import screen from 'helpers/screen';
 import { usePage } from 'stores/page';

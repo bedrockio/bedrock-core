@@ -1,42 +1,26 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Route, Redirect } from 'react-router-dom';
+// Note, you probably don't need this for simple authentication.
+// Instead, having different app boundaries for authenticated vs
+// unauthenticated makes things simpler to just use <Route>.
 
-import AuthSwitch from './AuthSwitch';
+import { Redirect } from '@bedrockio/router';
 
-export default class Protected extends React.Component {
-  render() {
-    const {
-      allowed: AllowedComponent,
-      denied: DeniedComponent,
-      loggedOut: LoggedOutComponent,
-      ...rest
-    } = this.props;
-    return (
-      <AuthSwitch
-        captureRedirect
-        denied={DeniedComponent}
-        loggedIn={AllowedComponent}
-        loggedOut={LoggedOutComponent}
-        {...rest}
-      />
-    );
-  }
-}
+import { useSession } from 'stores/session';
 
-Protected.propTypes = {
-  admin: PropTypes.bool,
-  roles: PropTypes.array,
-  allowed: PropTypes.elementType.isRequired,
-  denied: PropTypes.oneOfType([PropTypes.elementType, PropTypes.string]),
-  ...Route.propTypes,
-};
+import { userHasAccess } from 'utils/permissions';
 
-Protected.defaultProps = {
-  loggedOut: () => {
-    return <Redirect to="/login" />;
-  },
-  denied: () => {
+export default function ProtectedRoute(props) {
+  const { endpoint, permission, scope } = props;
+
+  const { user } = useSession();
+  const hasAccess = userHasAccess(user, {
+    scope,
+    endpoint,
+    permission,
+  });
+
+  if (!hasAccess) {
     return <Redirect to="/" />;
-  },
-};
+  }
+
+  return props.children;
+}

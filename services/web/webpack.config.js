@@ -201,6 +201,7 @@ module.exports = {
 function getEntryPoint(path) {
   const entry = [];
   if (!BUILD) {
+    entry.push('react-hot-loader/patch');
     entry.push('webpack-hot-middleware/client');
   }
   entry.push(path);
