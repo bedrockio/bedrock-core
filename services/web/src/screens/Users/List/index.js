@@ -1,6 +1,6 @@
 import React from 'react';
 import { memoize } from 'lodash';
-import { Link } from 'react-router-dom';
+import { Link } from '@bedrockio/router';
 import { Table, Button, Label, Divider, Segment } from 'semantic';
 
 import screen from 'helpers/screen';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@bedrockio/router';
 import { Form, Button, Loader, Header, Segment } from 'semantic';
 
 import { withSession } from 'stores/session';

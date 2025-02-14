@@ -1,9 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { withRouter, Link } from '@bedrockio/router';
 import { Button, Segment } from 'semantic';
 
 import { withSession } from 'stores/session';
 
+@withRouter
 @withSession
 export default class Lockout extends React.Component {
   componentDidMount() {

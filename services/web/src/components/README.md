@@ -10,7 +10,8 @@ Helper components designed to simplify and quickly iterate on layouts.
 
 ## Search Provider
 
-Component that leverages render props to simplify loading tables or lists with pagination. Basic Usage:
+Component that leverages render props to simplify loading tables or lists with
+pagination. Basic Usage:
 
 ```jsx
 
@@ -29,31 +30,39 @@ onDataNeeded = async () => {
 
 ### Props
 
-- `children` A function that renders the list or table. Takes a single argument that provides the following:
+- `children` A function that renders the list or table. Takes a single argument
+  that provides the following:
   - `items` The result provided from `onDataNeeded`
   - `reload` A function that reloads the data set.
-  - `setSort` Sets the currently sorted field. If already sorting on that field flips the `order` flag.
-  - `getSorted` Returns either `ascending` or `descending`. For compatibility with Semantic UI.
+  - `setSort` Sets the currently sorted field. If already sorting on that field
+    flips the `order` flag.
+  - `getSorted` Returns either `ascending` or `descending`. For compatibility
+    with Semantic UI.
   - `setFilters` Sets the currently sorted filters.
   - `filters` Current applied filters.
   - `loading` True when fetching data. Useful for manually handling loaders.
   - `error` An error object when an error occurs.
   - `page`: The current page. Useful when manually handling pagination.
-  - `sort` The current sorting. Useful when manually handling pagination. Object composed of:
+  - `sort` The current sorting. Useful when manually handling pagination. Object
+    composed of:
     - `field` Field to sort on.
     - `order` Order to be applied. Can be `asc` (default) or `desc`.
-- `onDataNeeded` An async function that fetches data. Called on mount, on setting filters, sort, etc.
+- `onDataNeeded` An async function that fetches data. Called on mount, on
+  setting filters, sort, etc.
 - `limit` The default search limit.
 - `page` The default page.
 - `sort` The default sort. An object composed of:
   - `field` Field to sort on.
   - `order` Order to be applied. Can be `asc` (default) or `desc`.
-- `loader` Boolean allowing `SearchProvider` to show a loader. Default is `true`.
-- `pagination`: Boolean allowing `SearchProvider` to show a pagination component. Default is `true`.
+- `loader` Boolean allowing `SearchProvider` to show a loader. Default is
+  `true`.
+- `pagination`: Boolean allowing `SearchProvider` to show a pagination
+  component. Default is `true`.
 
 ## Filters
 
-A modal that allows filters to be used in conjunction with `SearchProvider`. Props will be passed down to Semantic UI form elements. Usage:
+A modal that allows filters to be used in conjunction with `SearchProvider`.
+Props will be passed down to Semantic UI form elements. Usage:
 
 ```jsx
 <Filters onSave={setFilters} filters={filters}>
@@ -67,13 +76,20 @@ A modal that allows filters to be used in conjunction with `SearchProvider`. Pro
 
 - `onSave` A function called when filters are saved.
 - `filters` An arbitrary object describing currently applied filters.
-- `Filters.Text` Props handed off to [`Form.Input`](https://react.semantic-ui.com/collections/form/). `name` is required.
-- `Filters.Number` Props handed off to [`Form.Input`](https://react.semantic-ui.com/collections/form/) with `type="number"`. `name` is required.
-- `Filters.Dropdown` Props handed off to [`Form.Dropdown`](https://react.semantic-ui.com/collections/form/). `name` is required.
+- `Filters.Text` Props handed off to
+  [`Form.Input`](https://react.semantic-ui.com/collections/form/). `name` is
+  required.
+- `Filters.Number` Props handed off to
+  [`Form.Input`](https://react.semantic-ui.com/collections/form/) with
+  `type="number"`. `name` is required.
+- `Filters.Dropdown` Props handed off to
+  [`Form.Dropdown`](https://react.semantic-ui.com/collections/form/). `name` is
+  required.
 
 ## Layout
 
-A layout helper that wraps simple flexbox layouts. Component that wraps simple flexbox layouts:
+A layout helper that wraps simple flexbox layouts. Component that wraps simple
+flexbox layouts:
 
 - Simple horizontal layout that aligns its children vertically center:
 
@@ -102,7 +118,8 @@ A layout helper that wraps simple flexbox layouts. Component that wraps simple f
 // justify-content: space-between;
 ```
 
-- A perfectly centered layout that aligns both vertically and horizontally center:
+- A perfectly centered layout that aligns both vertically and horizontally
+  center:
 
 ```jsx
 <Layout center>
@@ -144,7 +161,8 @@ A layout helper that wraps simple flexbox layouts. Component that wraps simple f
 
   - `stackable` - Like semantic UI stacks on mobile.
   - `wrap` - Allows wrapping of content.
-  - `stretch` - Applied align-items: stretch (children grow vertically or horizontally).
+  - `stretch` - Applied align-items: stretch (children grow vertically or
+    horizontally).
   - `padded` - Applies padding between items.
   - `extra padded` - Applies extra padding.
   - `baseline` - Applies align-items: baseline.
@@ -152,13 +170,21 @@ A layout helper that wraps simple flexbox layouts. Component that wraps simple f
 
 ## Links
 
-Link helpers handle the complexities of external linking and browser discrepancies:
+Link helpers handle the complexities of external linking and browser
+discrepancies:
 
-- `ExternalLink` - External links that open in a new tab. Takes a single `href` prop.
-- `MailLink` - Links to an external email application. Takes a single `mail` prop.
+- `ExternalLink` - External links that open in a new tab. Takes a single `href`
+  prop.
+- `MailLink` - Links to an external email application. Takes a single `mail`
+  prop.
 - `TelLink` - Links to an external phone application. Takes a single `tel` prop.
-- `ContentLink` - Catch-all helper when link type is unknown. Takes a single `href` prop. Falls back to `react-router-dom` when link is relative.
+- `ContentLink` - Catch-all helper when link type is unknown. Takes a single
+  `href` prop. Falls back to router when link is relative.
 
 ### Icons
 
-We use a custom SVG-based icon component that follows [Semantic UI props](https://react.semantic-ui.com/elements/icon/), however the icon set itself is the latest Font Awesome icons which means the `name` prop differs. To find a specific icon, use the [main icon search](https://fontawesome.com/icons) on the Font Awesome site.
+We use a custom SVG-based icon component that follows
+[Semantic UI props](https://react.semantic-ui.com/elements/icon/), however the
+icon set itself is the latest Font Awesome icons which means the `name` prop
+differs. To find a specific icon, use the
+[main icon search](https://fontawesome.com/icons) on the Font Awesome site.

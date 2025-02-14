@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from '@bedrockio/router';
 
 import { APP_URL, APP_NAME } from 'utils/env';
 

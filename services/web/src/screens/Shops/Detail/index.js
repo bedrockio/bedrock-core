@@ -1,6 +1,5 @@
-import { Link, Switch, Route } from 'react-router-dom';
+import { Link, Routes, Route } from '@bedrockio/router';
 
-import { Protected } from 'helpers/routes';
 import { usePageLoader } from 'stores/page';
 
 import NotFound from 'screens/NotFound';
@@ -31,13 +30,13 @@ export default function ShopDetail() {
           message="Sorry that shop wasn't found."
         />
       }>
-      <Switch>
-        <Protected exact path="/shops/:id" allowed={Overview} />
+      <Routes>
+        <Route exact path="/shops/:id" render={Overview} />
         {/* --- Generator: routes */}
-        <Protected exact path="/shops/:id/products" allowed={Products} />
+        <Route exact path="/shops/:id/products" render={Products} />
         {/* --- Generator: end */}
-        <Route component={NotFound} />
-      </Switch>
+        <Route render={NotFound} />
+      </Routes>
     </Loader>
   );
 }

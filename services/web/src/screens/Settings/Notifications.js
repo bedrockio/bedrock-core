@@ -152,7 +152,7 @@ export default class Notifications extends React.Component {
                   const { value, label } = channel;
                   const isActive = config?.[value] || false;
                   return (
-                    <React.Fragment key={name}>
+                    <React.Fragment key={name + value}>
                       <Label
                         circular
                         color={isActive ? 'blue' : null}

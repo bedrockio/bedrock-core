@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@bedrockio/router';
 import { Form, Button, Segment, Message, Grid } from 'semantic';
 
 import screen from 'helpers/screen';

@@ -1,30 +1,16 @@
-import React from 'react';
-
-import { withSession } from 'stores/session';
+import { useSession } from 'stores/session';
 
 import { userHasAccess } from 'utils/permissions';
 
-@withSession
-export default class Protected extends React.Component {
-  render() {
-    const { user } = this.context;
-    const {
-      children,
-      endpoint,
-      permission = 'read',
-      scope = 'global',
-    } = this.props;
+export default function Protected(props) {
+  const { children, ...rest } = props;
 
-    const hasAccess = userHasAccess(user, {
-      endpoint,
-      permission,
-      scope,
-    });
+  const { user } = useSession();
+  const hasAccess = userHasAccess(user, rest);
 
-    if (hasAccess) {
-      return children;
-    } else {
-      return null;
-    }
+  if (hasAccess) {
+    return children;
+  } else {
+    return null;
   }
 }

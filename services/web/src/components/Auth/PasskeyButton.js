@@ -1,7 +1,7 @@
 import React from 'react';
 import { noop } from 'lodash';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from '@bedrockio/router';
 
 import { Button } from 'semantic';
 

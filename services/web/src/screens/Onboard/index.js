@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect } from '@bedrockio/router';
 import { Form, Segment } from 'semantic';
 import { startCase, pick } from 'lodash';
 

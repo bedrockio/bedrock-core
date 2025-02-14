@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Routes, Route, Redirect } from '@bedrockio/router';
 
 import Profile from './Profile';
 import Security from './Security';
@@ -11,15 +11,15 @@ import Authenticator from './Authenticator';
 export default class Settings extends React.Component {
   render() {
     return (
-      <Switch>
-        <Route exact path="/settings/profile" component={Profile} />
-        <Route exact path="/settings/notifications" component={Notifications} />
-        <Route exact path="/settings/appearance" component={Appearance} />
-        <Route exact path="/settings/security" component={Security} />
-        <Route exact path="/settings/sessions" component={Sessions} />
-        <Route exact path="/settings/authenticator" component={Authenticator} />
+      <Routes>
+        <Route exact path="/settings/profile" render={Profile} />
+        <Route exact path="/settings/notifications" render={Notifications} />
+        <Route exact path="/settings/appearance" render={Appearance} />
+        <Route exact path="/settings/security" render={Security} />
+        <Route exact path="/settings/sessions" render={Sessions} />
+        <Route exact path="/settings/authenticator" render={Authenticator} />
         <Redirect exact to="/settings/profile" />
-      </Switch>
+      </Routes>
     );
   }
 }
