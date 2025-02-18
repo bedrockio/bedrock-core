@@ -95,7 +95,7 @@ function getPasskeyName(user, options) {
       throw new Error();
     }
     return name;
-  } catch (error) {
+  } catch {
     const authenticators = getAuthenticators(user, 'passkey');
     const number = authenticators.length + 1;
     return `Passkey ${number}`;

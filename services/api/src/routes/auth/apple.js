@@ -47,7 +47,7 @@ router
             firstName,
             lastName,
           });
-        } catch (err) {
+        } catch {
           ctx.throw('Signup failed. Remove your Apple registration.');
         }
 
