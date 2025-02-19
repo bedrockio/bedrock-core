@@ -1,6 +1,20 @@
 .docs-properties {
+  --line-color: #b3c399;
+  --level-width: 30px;
+
   display: table;
   width: 100%;
+  position: relative;
+  padding-left: 14px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 25px;
+    left: 0;
+    bottom: 28px;
+    border-left: 1px solid var(--line-color);
+  }
 
   // Required to allow elements inside
   // table cells to be 100% height.
@@ -9,11 +23,43 @@
 
   &__param {
     display: table-row;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      height: 1px;
+      top: -18px;
+      left: calc(-14px + var(--level-width) * var(--level));
+      width: 14px;
+      height: 44px;
+      border-left: 1px solid var(--line-color);
+      border-bottom: 1px solid var(--line-color);
+    }
+
+    &:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      height: 1px;
+      top: 26px;
+      left: calc(-14px + var(--level-width) * var(--level));
+      width: 14px;
+      height: 100%;
+      border-left: 1px solid var(--line-color);
+    }
 
     &-group {
       // Lends only it's structure to allow :last-child to target.
       display: contents;
     }
+  }
+
+  > .docs-properties__param:first-child::before {
+    border-left: none;
+  }
+
+  &__name {
+    padding-left: calc(var(--level-width) * var(--level)) !important;
   }
 
   &__name,
@@ -31,52 +77,6 @@
   &__description {
     .docs-properties__param:not(:last-child) & {
       border-bottom: 1px solid #e9e9e9;
-    }
-  }
-
-  &__pointer {
-    &-group {
-      display: flex;
-      gap: 10px;
-      height: 100%;
-    }
-
-    --pointer-color: #b3c399;
-    --pointer-width: 1.5px;
-    --top-offset: 14px;
-    --bottom-offset: -38px;
-
-    position: relative;
-    width: 30px;
-    margin-left: calc(var(--level) * 15px);
-
-    &:before {
-      content: '';
-      position: absolute;
-
-      top: var(--top-offset);
-      bottom: var(--bottom-offset);
-      left: 0;
-      right: 0;
-      border-left: var(--pointer-width) solid var(--pointer-color);
-      border-top: var(--pointer-width) solid var(--pointer-color);
-
-      .docs-properties__param--grouped &,
-      .docs-properties__param:last-child & {
-        border-left: none;
-      }
-    }
-
-    &:after {
-      .docs-properties__param--grouped & {
-        content: '';
-        position: absolute;
-        left: 50%;
-        width: var(--pointer-width);
-        top: var(--top-offset);
-        bottom: var(--bottom-offset);
-        background: var(--pointer-color);
-      }
     }
   }
 

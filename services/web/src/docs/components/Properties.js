@@ -94,7 +94,6 @@ export default class DocsProperties extends React.Component {
               {this.renderParam(name, desc, path, {
                 ...options,
                 level,
-                grouped: true,
               })}
               <div className={this.getElementClass('param-group')}>
                 {this.renderParams(desc.properties, [...path, name], {
@@ -114,7 +113,7 @@ export default class DocsProperties extends React.Component {
   }
 
   renderParam(name, desc, path, options) {
-    const { grouped, level } = options;
+    const { level } = options;
     const { model, getPath } = this.props;
     const { description, required, default: defaultValue } = desc;
     return (
@@ -123,14 +122,9 @@ export default class DocsProperties extends React.Component {
         style={{
           '--level': level,
         }}
-        className={this.getElementClass('param', grouped ? 'grouped' : null)}>
+        className={this.getElementClass('param')}>
         <div className={this.getElementClass('name')}>
-          <div className={this.getElementClass('pointer-group')}>
-            <div className={this.getElementClass('pointer')} />
-            <div>
-              <code>{name}</code>
-            </div>
-          </div>
+          <code>{name}</code>
         </div>
         <div className={this.getElementClass('description')}>
           <div className={this.getElementClass('types')}>
