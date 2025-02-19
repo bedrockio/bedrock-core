@@ -4640,22 +4640,16 @@
             "required": true,
             "type": "string"
           },
-          "hash": {
-            "type": "string"
-          },
-          "rawUrl": {
-            "type": "string"
-          },
           "mimeType": {
-            "required": true,
-            "type": "string"
-          },
-          "storageType": {
             "required": true,
             "type": "string"
           },
           "private": {
             "type": "boolean"
+          },
+          "storageType": {
+            "required": true,
+            "type": "string"
           },
           "owner": {
             "$ref": "#/components/schemas/ObjectId",

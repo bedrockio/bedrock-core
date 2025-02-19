@@ -43,8 +43,6 @@ async function createSuperAdmin(attributes) {
 async function createUpload(attributes) {
   return await Upload.create({
     filename: 'test.png',
-    rawUrl: 'test.png',
-    hash: 'test',
     storageType: 'local',
     mimeType: 'image/png',
     owner: new mongoose.Types.ObjectId(),
