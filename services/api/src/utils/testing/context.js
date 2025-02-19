@@ -1,5 +1,3 @@
-/* eslint-disable no-param-reassign, no-return-assign */
-
 const Stream = require('stream');
 const Koa = require('koa');
 

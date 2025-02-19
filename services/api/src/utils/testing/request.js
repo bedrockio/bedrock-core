@@ -1,4 +1,4 @@
-const request = require('supertest'); //eslint-disable-line
+const request = require('supertest');
 const rootApp = require('../../app');
 const qs = require('querystring');
 const { Blob } = require('node:buffer');
