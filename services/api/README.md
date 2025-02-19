@@ -223,7 +223,7 @@ router
       ctx.body = {
         data: shop,
       };
-    }
+    },
   );
 ```
 
@@ -257,13 +257,8 @@ We are using mustache for templating, it will attempt to escape the http:`//` wh
 ## Logging
 
 `@bedrockio/logger` provides structured logging in the console and both [logging](https://cloud.google.com/logging/) and
-[tracing](https://cloud.google.com/trace) in Google Cloud environments:
-
-```js
-if (process.env.NODE_ENV === 'production') {
-  logger.setupGoogleCloud();
-}
-```
+[tracing](https://cloud.google.com/trace) in Google Cloud environments. Importing it will by default enable tracing in a
+GCP environment.
 
 In Google Cloud environments generally the server and jobs (`jobs/`) should use the above initialization to allow
 structured error reporting in the cloud console. Development environments and scripts (`scripts/`) meant to be run in a
