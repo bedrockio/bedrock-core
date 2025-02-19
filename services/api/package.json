@@ -66,9 +66,9 @@
     "jest-changed-files": "^29.7.0",
     "jest-environment-node": "^29.7.0",
     "jest-util": "^29.5.0",
-    "mongodb": "^6.5.0",
+    "mongodb": "^6.13.0",
     "prettier": "^3.5.1",
-    "supertest": "^6.3.3"
+    "supertest": "^7.0.0"
   },
   "volta": {
     "node": "22.14.0",
