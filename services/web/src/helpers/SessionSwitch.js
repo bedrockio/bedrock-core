@@ -1,4 +1,4 @@
-import { useSession } from 'stores/session';
+import { useSession } from 'contexts/session';
 
 import LoadingScreen from 'screens/Loading';
 import ErrorScreen from 'screens/Error';

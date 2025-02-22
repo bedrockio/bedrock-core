@@ -2,7 +2,7 @@ import React from 'react';
 import { Form, Button, Segment, Message } from 'semantic';
 import { Link } from 'react-router-dom';
 
-import { withSession } from 'stores/session';
+import { withSession } from 'contexts/session';
 
 import screen from 'helpers/screen';
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { Table, Divider } from 'semantic';
 
 import screen from 'helpers/screen';
-import { usePage } from 'stores/page';
+import { usePage } from 'contexts/page';
 
 import { formatDateTime } from 'utils/date';
 

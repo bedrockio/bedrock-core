@@ -1,7 +1,7 @@
 import React from 'react';
 import { Segment, Button, Divider, Label, Table } from 'semantic';
 
-import { withSession } from 'stores/session';
+import { withSession } from 'contexts/session';
 
 import screen from 'helpers/screen';
 

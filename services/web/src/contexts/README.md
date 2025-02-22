@@ -27,7 +27,7 @@ case when components need to load data on `componentDidMount` another HOC
 until the session has been bootstrapped.
 
 ```jsx
-import { withSession } from 'stores/session';
+import { withSession } from 'contexts/session';
 
 class MyComponent extends React.Component {
   componentDidMount() {
@@ -50,7 +50,7 @@ export default withSession(MyComponent);
 ```
 
 ```jsx
-import { withLoadedSession } from 'stores/session';
+import { withLoadedSession } from 'contexts/session';
 
 class MyComponent extends React.Component {
   // Using withLoadedSession lets you immediately take
@@ -71,7 +71,7 @@ export default withLoadedSession(MyComponent);
 ```
 
 ```jsx
-import { withSession } from 'stores/session';
+import { withSession } from 'contexts/session';
 
 // Using the decorator pattern
 @withSession
@@ -83,7 +83,7 @@ class MyComponent extends React.Component {}
 Hooks allow access to the session store via the `useSession` hook.
 
 ```jsx
-import { useSession } from 'stores/session';
+import { useSession } from 'contexts/session';
 
 export default function MyComponent() {
   const { user, loading } = useSession();

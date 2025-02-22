@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Icon, Container } from 'semantic';
 
-import { withSession } from 'stores/session';
+import { withSession } from 'contexts/session';
 
 import Logo from 'components/Logo';
 import Footer from 'components/Footer';
@@ -110,7 +110,7 @@ export default class DashboardLayout extends React.Component {
             <Layout horizontal spread center>
               <Layout.Group>
                 <NavLink to="/">
-                  <img src={favicon} height="15" />
+                  <img src={'/123123132'} height="15" />
                 </NavLink>
               </Layout.Group>
               <Layout.Group>

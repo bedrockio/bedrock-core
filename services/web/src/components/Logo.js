@@ -1,4 +1,4 @@
-import { useTheme } from 'stores/theme';
+import { useTheme } from 'contexts/theme';
 
 import { APP_NAME } from 'utils/env';
 

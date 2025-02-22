@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table, Divider } from 'semantic';
 
-import { PageContext } from 'stores/page';
+import { PageContext } from 'contexts/page';
 import screen from 'helpers/screen';
 
 import { formatDateTime } from 'utils/date';

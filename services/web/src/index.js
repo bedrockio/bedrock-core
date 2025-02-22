@@ -1,68 +1,47 @@
-// react-hot-loader needs to be imported
-// before react and react-dom
-import 'react-hot-loader';
+import '@mantine/core/styles.css';
+import { MantineProvider } from '@mantine/core';
+import { theme } from './theme';
 
-import React, { Suspense } from 'react';
-import ReactDOM from 'react-dom';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import { HelmetProvider } from 'react-helmet-async';
+import { Switch, Route } from 'react-router-dom';
 
-// Icons
-import { Icon } from 'semantic';
+import { Protected } from 'helpers/routes';
+import DashboardLayout from 'layouts/Dashboard';
 
-import { SessionProvider, useSession } from 'stores/session';
-import { ThemeProvider } from 'stores/theme';
+import Dashboard from 'screens/Dashboard';
+import Shops from 'screens/Shops';
+import Products from 'screens/Products';
+import Users from 'screens/Users';
+import NotFound from 'screens/NotFound';
+import Settings from 'screens/Settings';
+import Organizations from 'screens/Organizations';
+import Applications from 'screens/Applications';
+import AuditTrail from 'screens/AuditTrail';
+import Invites from 'screens/Invites';
 
-import SessionSwitch from 'helpers/SessionSwitch';
-import 'utils/sentry';
+import AcceptInvite from 'screens/Auth/AcceptInvite';
+import Logout from 'screens/Auth/Logout';
 
-import ScrollProvider from 'helpers/ScrollProvider';
+import 'styles/vars.less';
 
-import solidIcons from 'semantic/assets/icons/solid.svg';
-import brandIcons from 'semantic/assets/icons/brands.svg';
-import regularIcons from 'semantic/assets/icons/regular.svg';
-
-Icon.useSet(solidIcons);
-Icon.useSet(brandIcons, 'brands');
-Icon.useSet(regularIcons, 'regular');
-
-import LoadingScreen from 'screens/Loading';
-
-import { hasAccess } from 'utils/user';
-
-const App = React.lazy(() => import('./App'));
-const AuthApp = React.lazy(() => import('./auth/App'));
-const DocsApp = React.lazy(() => import('./docs/App'));
-
-function AppSwitch() {
-  const { user } = useSession();
-  if (hasAccess(user)) {
-    return <App />;
-  } else {
-    return <AuthApp />;
-  }
+export default function App() {
+  return (
+    <MantineProvider theme={theme}>
+      <DashboardLayout>
+        <Switch>
+          <Protected path="/" allowed={Dashboard} exact />
+          <Protected path="/shops/:id?" allowed={Shops} />
+          <Protected path="/products/:id?" allowed={Products} />
+          <Protected path="/settings/:id?" allowed={Settings} exact />
+          <Protected path="/users/invites" allowed={Invites} exact />
+          <Protected path="/organizations/:id?" allowed={Organizations} />
+          <Protected path="/users/:id?" allowed={Users} />
+          <Protected path="/applications/:id?" allowed={Applications} />
+          <Protected path="/audit-trail/:id?" allowed={AuditTrail} />
+          <Route path="/accept-invite" component={AcceptInvite} exact />
+          <Route path="/logout" component={Logout} exact />
+          <Protected allowed={NotFound} />
+        </Switch>
+      </DashboardLayout>
+    </MantineProvider>
+  );
 }
-
-const Wrapper = () => (
-  <BrowserRouter>
-    <ThemeProvider>
-      <HelmetProvider>
-        <ScrollProvider>
-          <SessionProvider>
-            <SessionSwitch>
-              <Suspense fallback={<LoadingScreen />}>
-                <Switch>
-                  <Route path="/docs" component={DocsApp} />
-                  <Route path="/" component={AppSwitch} />
-                </Switch>
-              </Suspense>
-            </SessionSwitch>
-          </SessionProvider>
-        </ScrollProvider>
-      </HelmetProvider>
-    </ThemeProvider>
-  </BrowserRouter>
-);
-
-// eslint-disable-next-line
-ReactDOM.render(<Wrapper />, document.getElementById('root'));

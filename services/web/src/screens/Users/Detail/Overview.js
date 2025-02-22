@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table } from 'semantic';
 
-import { usePage } from 'stores/page';
+import { usePage } from 'contexts/page';
 import screen from 'helpers/screen';
 
 import { formatDateTime } from 'utils/date';

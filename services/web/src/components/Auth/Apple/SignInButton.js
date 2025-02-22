@@ -2,7 +2,7 @@ import React from 'react';
 import { noop } from 'lodash';
 import { withRouter } from 'react-router-dom';
 
-import { withSession } from 'stores/session';
+import { withSession } from 'contexts/session';
 
 import { initialize, login, enable } from './utils';
 

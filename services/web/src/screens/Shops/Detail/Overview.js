@@ -2,7 +2,7 @@ import React from 'react';
 // eslint-disable-next-line
 import { Table, Divider } from 'semantic';
 
-import { usePage } from 'stores/page';
+import { usePage } from 'contexts/page';
 import screen from 'helpers/screen';
 
 // --- Generator: overview-imports

@@ -2,7 +2,7 @@ import React from 'react';
 import { pick } from 'lodash';
 import { Segment, Form, Button, Divider } from 'semantic';
 
-import { withSession } from 'stores/session';
+import { withSession } from 'contexts/session';
 
 import screen from 'helpers/screen';
 

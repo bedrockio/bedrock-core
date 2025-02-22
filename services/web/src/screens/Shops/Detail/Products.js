@@ -11,7 +11,7 @@ import {
 import { Link } from 'react-router-dom';
 
 import screen from 'helpers/screen';
-import { usePage } from 'stores/page';
+import { usePage } from 'contexts/page';
 
 import Layout from 'components/Layout';
 import HelpTip from 'components/HelpTip';

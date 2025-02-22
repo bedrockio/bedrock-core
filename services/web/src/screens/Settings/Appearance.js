@@ -2,7 +2,7 @@ import React from 'react';
 import { Segment, Form, Divider, Header } from 'semantic';
 
 import screen from 'helpers/screen';
-import { useTheme } from 'stores/theme';
+import { useTheme } from 'contexts/theme';
 
 import Layout from 'components/Layout';
 

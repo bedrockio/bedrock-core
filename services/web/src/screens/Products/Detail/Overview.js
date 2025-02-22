@@ -3,7 +3,7 @@ import { Table, Image, Divider } from 'semantic';
 
 import screen from 'helpers/screen';
 
-import { PageContext } from 'stores/page';
+import { PageContext } from 'contexts/page';
 
 import { formatDateTime } from 'utils/date';
 import { urlForUpload } from 'utils/uploads';

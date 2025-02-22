@@ -1,6 +1,6 @@
 import { Link, Switch, Route } from 'react-router-dom';
 
-import { usePageLoader } from 'stores/page';
+import { usePageLoader } from 'contexts/page';
 import { Protected } from 'helpers/routes';
 
 import NotFound from 'screens/NotFound';

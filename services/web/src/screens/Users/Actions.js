@@ -1,6 +1,6 @@
 import { Dropdown } from 'semantic';
 
-import { useSession } from 'stores/session';
+import { useSession } from 'contexts/session';
 
 import InspectObject from 'modals/InspectObject';
 import LoginAsUser from 'modals/LoginAsUser';

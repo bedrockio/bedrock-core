@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 import { Route, Link } from 'react-router-dom';
 import { Loader, Message } from 'semantic';
 
-import { withSession } from 'stores/session';
+import { useSession } from 'contexts/session';
 
 import ErrorScreen from 'screens/Error';
 
-// Need to hard-code these as react-router
+// XXX Need to hard-code these as react-router
 // strips them in production 👎
 const ROUTE_PROP_TYPES = [
   'children',
@@ -21,11 +21,19 @@ const ROUTE_PROP_TYPES = [
   'strict',
 ];
 
-@withSession
-export default class AuthSwitch extends React.Component {
-  hasAccess() {
-    const { admin, roles } = this.props;
-    const { isLoggedIn, isAdmin, hasRoles } = this.context;
+const AuthSwitch = ({
+  admin,
+  roles,
+  captureRedirect,
+  loggedIn: LoggedInComponent,
+  loggedOut: LoggedOutComponent,
+  denied: DeniedComponent,
+  ...props
+}) => {
+  const { loading, error, isLoggedIn, isAdmin, hasRoles, pushRedirect } =
+    useSession();
+
+  const hasAccess = () => {
     if (!isLoggedIn()) {
       return false;
     } else if (admin) {
@@ -34,51 +42,40 @@ export default class AuthSwitch extends React.Component {
       return hasRoles(roles);
     }
     return true;
-  }
+  };
 
-  render() {
-    const { loading, error } = this.context;
-    const {
-      captureRedirect,
-      loggedIn: LoggedInComponent,
-      loggedOut: LoggedOutComponent,
-      denied: DeniedComponent,
-    } = this.props;
-    if (loading) {
-      return <Loader active>Loading</Loader>;
-    } else if (error) {
-      return (
-        <ErrorScreen>
-          <Message
-            error
-            header="Something went wrong"
-            content={error.message}
-          />
-          <Link to="/logout">Logout</Link>
-        </ErrorScreen>
-      );
-    }
-    const routeProps = pick(this.props, ROUTE_PROP_TYPES);
-    const passedProps = omit(this.props, Object.keys(AuthSwitch.propTypes));
+  if (loading) {
+    return <Loader active>Loading</Loader>;
+  } else if (error) {
     return (
-      <Route
-        {...routeProps}
-        render={(props) => {
-          if (!this.context.isLoggedIn()) {
-            if (captureRedirect) {
-              this.context.pushRedirect();
-            }
-            return <LoggedOutComponent {...props} {...passedProps} />;
-          } else if (!this.hasAccess()) {
-            return <DeniedComponent {...props} {...passedProps} />;
-          } else {
-            return <LoggedInComponent {...props} {...passedProps} />;
-          }
-        }}
-      />
+      <ErrorScreen>
+        <Message error header="Something went wrong" content={error.message} />
+        <Link to="/logout">Logout</Link>
+      </ErrorScreen>
     );
   }
-}
+
+  const routeProps = pick(props, ROUTE_PROP_TYPES);
+  const passedProps = omit(props, Object.keys(AuthSwitch.propTypes));
+
+  return (
+    <Route
+      {...routeProps}
+      render={(routeProps) => {
+        if (!isLoggedIn()) {
+          if (captureRedirect) {
+            pushRedirect();
+          }
+          return <LoggedOutComponent {...routeProps} {...passedProps} />;
+        } else if (!hasAccess()) {
+          return <DeniedComponent {...routeProps} {...passedProps} />;
+        } else {
+          return <LoggedInComponent {...routeProps} {...passedProps} />;
+        }
+      }}
+    />
+  );
+};
 
 AuthSwitch.propTypes = {
   admin: PropTypes.bool,

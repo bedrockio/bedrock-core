@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { Menu, Button } from 'semantic';
 
-import { usePage } from 'stores/page';
+import { usePage } from 'contexts/page';
 
 import EditShop from 'modals/EditShop';
 import Layout from 'components/Layout';

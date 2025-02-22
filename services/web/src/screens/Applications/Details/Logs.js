@@ -14,7 +14,7 @@ import { withRouter } from 'react-router-dom';
 
 import screen from 'helpers/screen';
 
-import { PageContext } from 'stores/page';
+import { PageContext } from 'contexts/page';
 
 import SearchFilters from 'components/Search/Filters';
 import Layout from 'components/Layout';
