@@ -1,6 +1,6 @@
 import React from 'react';
 import { get } from 'lodash';
-import { Link } from 'react-router-dom';
+import { Link } from '@bedrockio/router';
 
 import { getRoutePath } from 'docs/utils';
 

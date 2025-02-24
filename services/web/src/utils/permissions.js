@@ -8,7 +8,7 @@ export function userHasAccess(user, options) {
     return false;
   }
 
-  const { endpoint, permission, scope = 'global', scopeRef } = options;
+  const { scope = 'global', permission = 'read', endpoint, scopeRef } = options;
   if (!endpoint) {
     throw new Error('Expected endpoint (e.g. users)');
   } else if (!permission) {

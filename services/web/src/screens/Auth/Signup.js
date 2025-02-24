@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Segment, Grid } from 'semantic';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from '@bedrockio/router';
 
 import { useSession } from 'stores/session';
 
@@ -17,7 +17,7 @@ import { request } from 'utils/api';
 import { AUTH_TYPE, AUTH_TRANSPORT } from 'utils/env';
 
 function SignupPassword() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { authenticate } = useSession();
 
   const [loading, setLoading] = useState(false);
@@ -63,9 +63,9 @@ function SignupPassword() {
 
       if (token) {
         await authenticate(data.token);
-        history.push('/onboard');
+        navigate('/onboard');
       } else if (challenge) {
-        history.push('/confirm-code', challenge);
+        navigate('/confirm-code', challenge);
       }
     } catch (error) {
       setError(error);

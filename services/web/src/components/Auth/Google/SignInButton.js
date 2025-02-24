@@ -1,4 +1,4 @@
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from '@bedrockio/router';
 
 import { useSession } from 'stores/session';
 import { useClass } from 'helpers/bem';
@@ -15,7 +15,7 @@ export default function GoogleSignInButton(props) {
 
   const { className, getElementClass } = useClass(`google-${type}-button`);
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const { authenticate } = useSession();
 
   async function onClick() {
@@ -28,7 +28,7 @@ export default function GoogleSignInButton(props) {
         if (response.result === 'signup') {
           path = '/onboard';
         }
-        history.push(path);
+        navigate(path);
       }
     } catch (error) {
       onError(error);

@@ -1,7 +1,6 @@
 import { hot } from 'react-hot-loader/root';
-import { Switch, Route } from 'react-router-dom';
+import { Routes, Route } from '@bedrockio/router';
 
-import { Protected } from 'helpers/routes';
 import DashboardLayout from 'layouts/Dashboard';
 
 import Dashboard from 'screens/Dashboard';
@@ -23,20 +22,20 @@ import 'styles/vars.less';
 const App = () => {
   return (
     <DashboardLayout>
-      <Switch>
-        <Protected path="/" allowed={Dashboard} exact />
-        <Protected path="/shops/:id?" allowed={Shops} />
-        <Protected path="/products/:id?" allowed={Products} />
-        <Protected path="/settings/:id?" allowed={Settings} exact />
-        <Protected path="/users/invites" allowed={Invites} exact />
-        <Protected path="/organizations/:id?" allowed={Organizations} />
-        <Protected path="/users/:id?" allowed={Users} />
-        <Protected path="/applications/:id?" allowed={Applications} />
-        <Protected path="/audit-trail/:id?" allowed={AuditTrail} />
-        <Route path="/accept-invite" component={AcceptInvite} exact />
-        <Route path="/logout" component={Logout} exact />
-        <Protected allowed={NotFound} />
-      </Switch>
+      <Routes>
+        <Route path="/" render={Dashboard} exact />
+        <Route path="/shops/:id?" render={Shops} />
+        <Route path="/products/:id?" render={Products} />
+        <Route path="/settings/:id?" render={Settings} exact />
+        <Route path="/users/invites" render={Invites} exact />
+        <Route path="/organizations/:id?" render={Organizations} />
+        <Route path="/users/:id?" render={Users} />
+        <Route path="/applications/:id?" render={Applications} />
+        <Route path="/audit-trail/:id?" render={AuditTrail} />
+        <Route path="/accept-invite" render={AcceptInvite} exact />
+        <Route path="/logout" render={Logout} exact />
+        <Route render={NotFound} />
+      </Routes>
     </DashboardLayout>
   );
 };

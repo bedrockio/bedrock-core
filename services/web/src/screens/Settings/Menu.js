@@ -1,6 +1,6 @@
 import React from 'react';
 import { Menu } from 'semantic';
-import { NavLink } from 'react-router-dom';
+import { NavLink } from '@bedrockio/router';
 
 import Breadcrumbs from 'components/Breadcrumbs';
 

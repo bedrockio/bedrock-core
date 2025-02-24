@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from '@bedrockio/router';
 
 @withRouter
 export default class URLParamWatcher extends React.Component {

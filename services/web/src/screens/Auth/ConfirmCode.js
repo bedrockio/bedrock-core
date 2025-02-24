@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Redirect, Link, useHistory, useLocation } from 'react-router-dom';
+import { Redirect, Link, useNavigate, useLocation } from '@bedrockio/router';
 import { Dimmer, Form, Grid, Loader, Message, Segment } from 'semantic';
 
 import screen from 'helpers/screen';
@@ -16,7 +16,7 @@ import { request } from 'utils/api';
 function ConfirmCode() {
   const { authenticate } = useSession();
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
 
   const state = useMemo(() => {
@@ -56,7 +56,7 @@ function ConfirmCode() {
       });
 
       await authenticate(data.token);
-      history.push('/onboard');
+      navigate('/onboard');
     } catch (error) {
       setError(error);
       setLoading(false);

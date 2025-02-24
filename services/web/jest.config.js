@@ -14,4 +14,5 @@ module.exports = {
     '\\.md$': '<rootDir>/__mocks__/rawTransform.js',
     '\\.[jt]sx?$': 'babel-jest',
   },
+  transformIgnorePatterns: ['/node_modules/(?!(@bedrockio/router)/)'],
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table, Button, Message, Divider, Loader } from 'semantic';
-import { Link } from 'react-router-dom';
+import { Link } from '@bedrockio/router';
 
 import screen from 'helpers/screen';
 

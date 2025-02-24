@@ -1,7 +1,6 @@
 import { hot } from 'react-hot-loader/root';
-import { Switch, Redirect } from 'react-router-dom';
+import { Routes, Route, Redirect } from '@bedrockio/router';
 
-import { Protected } from 'helpers/routes';
 import BasicLayout from 'layouts/Basic';
 
 import Onboard from 'screens/Onboard';
@@ -9,10 +8,10 @@ import Onboard from 'screens/Onboard';
 function App() {
   return (
     <BasicLayout>
-      <Switch>
-        <Protected path="/onboard" allowed={Onboard} />
+      <Routes>
+        <Route path="/onboard" render={Onboard} />
         <Redirect to="/onboard" />
-      </Switch>
+      </Routes>
     </BasicLayout>
   );
 }

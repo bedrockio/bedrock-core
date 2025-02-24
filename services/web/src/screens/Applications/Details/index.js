@@ -1,7 +1,6 @@
-import { Link, Switch, Route } from 'react-router-dom';
+import { Link, Routes, Route } from '@bedrockio/router';
 
 import { usePageLoader } from 'stores/page';
-import { Protected } from 'helpers/routes';
 
 import NotFound from 'screens/NotFound';
 
@@ -28,11 +27,11 @@ export default function ApplicationDetail() {
           message="Sorry that application wasn't found."
         />
       }>
-      <Switch>
-        <Protected exact path="/applications/:id" allowed={Overview} />
-        <Protected exact path="/applications/:id/logs" allowed={Logs} />
-        <Route component={NotFound} />
-      </Switch>
+      <Routes>
+        <Route path="/applications/:id" render={Overview} exact />
+        <Route path="/applications/:id/logs" render={Logs} exact />
+        <Route render={NotFound} />
+      </Routes>
     </Loader>
   );
 }

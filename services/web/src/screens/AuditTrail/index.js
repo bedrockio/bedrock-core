@@ -1,14 +1,14 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Routes, Route } from '@bedrockio/router';
 
 import List from './List';
 
 export default class Organizations extends React.Component {
   render() {
     return (
-      <Switch>
-        <Route path="/audit-trail" component={List} exact />
-      </Switch>
+      <Routes>
+        <Route path="/audit-trail" render={List} exact />
+      </Routes>
     );
   }
 }
