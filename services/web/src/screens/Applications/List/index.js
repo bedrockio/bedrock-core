@@ -13,8 +13,7 @@ import EditApplication from 'modals/EditApplication';
 
 import { request } from 'utils/api';
 
-@screen
-export default class Applications extends React.Component {
+class Applications extends React.Component {
   onDataNeeded = async (body) => {
     return await request({
       method: 'POST',
@@ -118,3 +117,5 @@ export default class Applications extends React.Component {
     );
   }
 }
+
+export default screen(Applications);

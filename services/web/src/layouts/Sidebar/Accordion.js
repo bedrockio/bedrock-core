@@ -1,15 +1,13 @@
-import React from 'react';
+import { useClass } from 'helpers/bem';
 
-import bem from 'helpers/bem';
+export default function SidebarLayoutAccordion(props) {
+  const { children } = props;
+  const active = location.pathname.startsWith(props.active);
 
-@bem
-export default class SidebarLayoutAccordion extends React.Component {
-  getModifiers() {
-    const active = location.pathname.startsWith(this.props.active);
-    return [active ? 'active' : null];
-  }
+  const { className } = useClass(
+    'sidebar-layout-accordion',
+    active ? 'active' : null
+  );
 
-  render() {
-    return <div className={this.getBlockClass()}>{this.props.children}</div>;
-  }
+  return <div className={className}>{children}</div>;
 }

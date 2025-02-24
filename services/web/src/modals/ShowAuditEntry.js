@@ -8,8 +8,7 @@ import Code from 'components/Code';
 
 import { formatDateTime } from 'utils/date';
 
-@modal
-export default class ShowAuditEntry extends React.Component {
+class ShowAuditEntry extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -130,3 +129,4 @@ export default class ShowAuditEntry extends React.Component {
     );
   }
 }
+export default modal(ShowAuditEntry);

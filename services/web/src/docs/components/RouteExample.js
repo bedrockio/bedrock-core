@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Icon } from 'semantic';
 
-import bem from 'helpers/bem';
+import { useClass } from 'helpers/bem';
 
 import Code from 'components/Code';
 import { JumpLink } from 'components/Link';
@@ -9,65 +9,54 @@ import { expandRef } from 'docs/utils';
 import Confirm from 'components/Confirm';
 import Layout from 'components/Layout';
 
-import { DocsContext } from '../utils/context';
+import { useDocs } from '../utils/context';
 
 import EditableField from './EditableField';
 
 import './route-example.less';
 
-@bem
-export default class RouteExample extends React.Component {
-  static contextType = DocsContext;
+export default function RouteExample(props) {
+  const { path, status, schema, requestPath, requestBody, responseBody } =
+    props;
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      open: false,
-    };
-  }
+  const { mode, unsetPath, canEditDocs } = useDocs();
 
-  isGood() {
-    const { status } = this.props;
+  const { className, getElementClass } = useClass('route-example');
+
+  const [open, setOpen] = useState(false);
+
+  function isGood() {
     return status >= 200 && status <= 300;
   }
 
-  onToggleClick = () => {
-    this.setState({
-      open: !this.state.open,
-    });
-  };
+  function onToggleClick() {
+    setOpen(!open);
+  }
 
-  onDeleteConfirm = () => {
-    const { path } = this.props;
-    this.context.unsetPath(path);
-  };
+  function onDeleteConfirm() {
+    unsetPath(path);
+  }
 
-  render() {
-    const { open } = this.state;
-    const { path, status, schema, requestPath, requestBody, responseBody } =
-      this.props;
+  function render() {
     return (
-      <div className={this.getBlockClass()}>
+      <div className={className}>
         <Layout
           horizontal
           center
           spread
-          className={this.getElementClass(
-            'title',
-            this.isGood() ? 'good' : 'bad'
-          )}
-          onClick={this.onToggleClick}>
+          className={getElementClass('title', isGood() ? 'good' : 'bad')}
+          onClick={onToggleClick}>
           <Layout.Group>{status}</Layout.Group>
           <Layout.Group grow>
             <EditableField
               type="summary"
               path={path}
               onClick={(evt) => {
-                if (this.context.mode === 'edit') {
+                if (mode === 'edit') {
                   evt.stopPropagation();
                 }
               }}
-              className={this.getElementClass('summary')}
+              className={getElementClass('summary')}
               trigger={
                 <Icon
                   size="small"
@@ -81,7 +70,7 @@ export default class RouteExample extends React.Component {
             />
           </Layout.Group>
           <Layout.Group>
-            {this.context.canEditDocs() && (
+            {canEditDocs() && (
               <React.Fragment>
                 <Confirm
                   negative
@@ -98,7 +87,7 @@ export default class RouteExample extends React.Component {
                       }}
                     />
                   }
-                  onConfirm={this.onDeleteConfirm}
+                  onConfirm={onDeleteConfirm}
                 />
               </React.Fragment>
             )}
@@ -106,34 +95,34 @@ export default class RouteExample extends React.Component {
           </Layout.Group>
         </Layout>
         {open && (
-          <div className={this.getElementClass('content')}>
-            {this.renderRequestPath(requestPath)}
-            {this.renderSchema(schema)}
-            {this.renderBody('Request Body:', requestBody)}
-            {this.renderBody('Response Body:', responseBody)}
+          <div className={getElementClass('content')}>
+            {renderRequestPath(requestPath)}
+            {renderSchema(schema)}
+            {renderBody('Request Body:', requestBody)}
+            {renderBody('Response Body:', responseBody)}
           </div>
         )}
       </div>
     );
   }
 
-  renderRequestPath(path) {
+  function renderRequestPath(path) {
     if (path) {
       return (
-        <div className={this.getElementClass('request-path')}>
-          <div className={this.getElementClass('header')}>Path:</div>
+        <div className={getElementClass('request-path')}>
+          <div className={getElementClass('header')}>Path:</div>
           <Code>{path}</Code>
         </div>
       );
     }
   }
 
-  renderSchema(schema) {
+  function renderSchema(schema) {
     if (schema?.$ref) {
       const { name } = expandRef(schema.$ref);
       return (
-        <div className={this.getElementClass('schema')}>
-          <div className={this.getElementClass('header')}>
+        <div className={getElementClass('schema')}>
+          <div className={getElementClass('header')}>
             Returns: <JumpLink to={name}>{name}</JumpLink>
           </div>{' '}
         </div>
@@ -141,17 +130,19 @@ export default class RouteExample extends React.Component {
     }
   }
 
-  renderBody(title, body) {
+  function renderBody(title, body) {
     if (typeof body === 'object') {
       body = JSON.stringify(body, null, 2);
     }
     if (body) {
       return (
-        <div className={this.getElementClass('body')}>
-          <div className={this.getElementClass('header')}>{title}</div>
+        <div className={getElementClass('body')}>
+          <div className={getElementClass('header')}>{title}</div>
           <Code language="json">{body}</Code>
         </div>
       );
     }
   }
+
+  return render();
 }

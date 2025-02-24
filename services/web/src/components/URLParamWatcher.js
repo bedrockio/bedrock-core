@@ -2,8 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from '@bedrockio/router';
 
-@withRouter
-export default class URLParamWatcher extends React.Component {
+class URLParamWatcher extends React.Component {
   constructor(props) {
     super(props);
     this.lastParams = null;
@@ -58,3 +57,5 @@ URLParamWatcher.propTypes = {
 URLParamWatcher.defaultProps = {
   onChange: () => {},
 };
+
+export default withRouter(URLParamWatcher);

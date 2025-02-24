@@ -1,8 +1,7 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'semantic';
 
-import bem from 'helpers/bem';
+import { useClass } from 'helpers/bem';
 
 import {
   undo,
@@ -16,21 +15,27 @@ import {
   canToggleInlineStyle,
   hasCurrentInlineStyle,
 } from './utils';
+
 import { BUTTON_STYLES } from './const';
+import { useRichTextEditor } from './context';
 
 import './button.less';
 
-class RichTextEditorButton extends React.Component {
-  getModifiers() {
-    return [this.isToggled() ? 'toggled' : null];
-  }
+export default function RichTextEditorButton(props) {
+  const { type, toggled, disabled, ...rest } = props;
 
-  isToggled() {
-    const { editorState } = this.context;
-    const { type } = this.props;
+  const { editorState, showMarkdown, toggleMarkdown, updateEditorState } =
+    useRichTextEditor();
+
+  const { className } = useClass(
+    'rich-text-editor-button',
+    isToggled() ? 'toggled' : null
+  );
+
+  function isToggled() {
     const { block, style } = BUTTON_STYLES[type];
     if (type === 'markdown') {
-      return this.context.showMarkdown;
+      return showMarkdown;
     } else if (block) {
       return getCurrentBlockType(editorState) === block;
     } else {
@@ -38,10 +43,8 @@ class RichTextEditorButton extends React.Component {
     }
   }
 
-  isDisabled() {
-    const { type, disabled } = this.props;
+  function isDisabled() {
     const { style } = BUTTON_STYLES[type];
-    const { editorState } = this.context;
     if (type === 'undo') {
       return !canUndo(editorState);
     } else if (type === 'redo') {
@@ -53,12 +56,10 @@ class RichTextEditorButton extends React.Component {
     }
   }
 
-  onClick = () => {
-    const { type } = this.props;
+  function onClick() {
     const { style, block, alignment } = BUTTON_STYLES[type];
-    const { editorState, updateEditorState } = this.context;
     if (type === 'markdown') {
-      this.context.toggleMarkdown();
+      toggleMarkdown();
     } else if (type === 'undo') {
       updateEditorState(undo(editorState));
     } else if (type === 'redo') {
@@ -70,24 +71,25 @@ class RichTextEditorButton extends React.Component {
     } else if (alignment) {
       updateEditorState(setAlignment(editorState, alignment));
     }
-  };
+  }
 
-  render() {
-    const { type, toggled, disabled, onClick, ...rest } = this.props;
+  function render() {
     const { icon, title, label } = BUTTON_STYLES[type];
     return (
       <Button
+        {...rest}
         icon={icon}
         type="button"
         title={title}
         content={label}
-        onClick={onClick || this.onClick}
-        className={this.getBlockClass()}
-        disabled={this.isDisabled()}
-        {...rest}
+        onClick={props.onClick || onClick}
+        className={className}
+        disabled={isDisabled()}
       />
     );
   }
+
+  return render();
 }
 
 RichTextEditorButton.propTypes = {
@@ -100,5 +102,3 @@ RichTextEditorButton.defaultProps = {
   toggled: false,
   disabled: false,
 };
-
-export default bem(RichTextEditorButton);

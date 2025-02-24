@@ -1,12 +1,8 @@
-import React from 'react';
-
-import bem from 'helpers/bem';
+import { useClass } from 'helpers/bem';
 
 import './divider.less';
 
-@bem
-export default class RichTextEditorDivider extends React.Component {
-  render() {
-    return <div className={this.getBlockClass()} />;
-  }
+export default function RichTextEditorDivider() {
+  const { className } = useClass('rich-text-editor-divider');
+  return <div className={className} />;
 }

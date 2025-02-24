@@ -1,90 +1,90 @@
-import React from 'react';
+import { useRef, useEffect } from 'react';
 import { omit } from 'lodash';
 import PropTypes from 'prop-types';
 
-import bem from 'helpers/bem';
+import { useClass } from 'helpers/bem';
 
 const SUPPORTED = !!window.IntersectionObserver;
 
-@bem
-export default class ScrollWaypoint extends React.Component {
-  static queued = 0;
+let queued = 0;
 
-  // Ensures that when many components are
-  // mounted at a time the order in which they
-  // are mounted will be respected with a timeout
-  // for them all to resolve in a staggered fashion.
-  static getGlobalDelay() {
-    this.queued++;
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        this.queued--;
-        resolve();
-      }, this.queued * 200);
-    });
-  }
+// Ensures that when many components are
+// mounted at a time the order in which they
+// are mounted will be respected with a timeout
+// for them all to resolve in a staggered fashion.
+function getGlobalDelay() {
+  queued++;
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      queued--;
+      resolve();
+    }, queued * 200);
+  });
+}
 
-  constructor(props) {
-    super(props);
-    this.ref = React.createRef();
-    this.entered = false;
-  }
+export default function ScrollWaypoint(props) {
+  const { threshold, onEnter, onLeave } = props;
+
+  const ref = useRef();
+
+  const { className } = useClass('scroll-waypoint');
 
   // Lifecycle
 
-  componentDidMount() {
-    this.createObserver();
-  }
+  useEffect(() => {
+    const observer = createObserver();
 
-  componentWillUnmount() {
-    this.destroyObserver();
-  }
+    return () => {
+      destroyObserver(observer);
+    };
+  }, []);
 
   // Observer
 
-  async createObserver() {
-    const { current: el } = this.ref;
+  async function createObserver() {
+    const { current: el } = ref;
+    let observer;
     if (SUPPORTED && el) {
-      await ScrollWaypoint.getGlobalDelay();
-      const { threshold } = this.props;
-      this.observer = new IntersectionObserver(this.onElementObserve, {
+      await getGlobalDelay();
+      observer = new IntersectionObserver(onElementObserve, {
         threshold,
         rootMargin: '25% 25% 25% 25%',
       });
-      this.observer.observe(el);
+      observer.observe(el);
     }
+
+    return observer;
   }
 
-  destroyObserver() {
-    if (SUPPORTED && this.observer) {
-      this.observer.disconnect();
-      this.observer = null;
+  function destroyObserver(observer) {
+    if (SUPPORTED && observer) {
+      observer.disconnect();
+      observer = null;
     }
   }
 
   // Events
 
-  onElementObserve = (entries) => {
+  function onElementObserve(entries) {
     const [entry] = entries;
     const entered = entry.isIntersecting;
-    if (entered !== this.entered) {
-      if (entered) {
-        this.props.onEnter(entry.target);
-      } else {
-        this.props.onLeave(entry.target);
-      }
-      this.entered = entered;
+    if (entered) {
+      onEnter(entry.target);
+    } else {
+      onLeave(entry.target);
     }
-  };
+  }
 
-  render() {
-    const props = omit(this.props, Object.keys(ScrollWaypoint.propTypes));
+  function render() {
+    const props = omit(props, Object.keys(ScrollWaypoint.propTypes));
     return (
-      <div {...props} ref={this.ref} className={this.getBlockClass()}>
-        {this.props.children}
+      <div {...props} ref={ref} className={className}>
+        {props.children}
       </div>
     );
   }
+
+  return render();
 }
 
 ScrollWaypoint.propTypes = {

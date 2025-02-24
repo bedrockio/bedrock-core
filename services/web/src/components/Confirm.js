@@ -4,8 +4,7 @@ import PropTypes from 'prop-types';
 
 import modal from '../helpers/modal';
 
-@modal
-export default class Confirm extends React.Component {
+class Confirm extends React.Component {
   state = {
     loading: false,
     error: null,
@@ -98,3 +97,5 @@ Confirm.defaultProps = {
   negative: false,
   onConfirm: () => {},
 };
+
+export default modal(Confirm);

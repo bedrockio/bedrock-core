@@ -1,24 +1,22 @@
-import React from 'react';
 import { Dropdown, Icon } from 'semantic';
 
-import bem from 'helpers/bem';
+import { useClass } from 'helpers/bem';
 
 import './menu.less';
 
-class RichTextEditorMenu extends React.Component {
-  static Item = Dropdown.Item;
+export default function RichTextEditorMenu(props) {
+  const { trigger, children } = props;
 
-  render() {
-    const { trigger, children } = this.props;
-    return (
-      <Dropdown
-        icon={<Icon name="caret-down" size="small" fitted />}
-        trigger={trigger}
-        className={this.getBlockClass()}>
-        <Dropdown.Menu>{children}</Dropdown.Menu>
-      </Dropdown>
-    );
-  }
+  const { className } = useClass('rich-text-editor-menu');
+
+  return (
+    <Dropdown
+      icon={<Icon name="caret-down" size="small" fitted />}
+      trigger={trigger}
+      className={className}>
+      <Dropdown.Menu>{children}</Dropdown.Menu>
+    </Dropdown>
+  );
 }
 
-export default bem(RichTextEditorMenu);
+RichTextEditorMenu.Item = Dropdown.Item;

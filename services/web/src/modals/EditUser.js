@@ -10,8 +10,7 @@ import PhoneField from 'components/form-fields/Phone';
 
 import { request } from 'utils/api';
 
-@modal
-export default class EditUser extends React.Component {
+class EditUser extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -152,3 +151,5 @@ export default class EditUser extends React.Component {
     );
   }
 }
+
+export default modal(EditUser);

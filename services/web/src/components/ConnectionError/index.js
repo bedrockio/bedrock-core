@@ -1,54 +1,33 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 
-import bem from 'helpers/bem';
+import { useClass } from 'helpers/bem';
 
 import './connection-error.less';
 
-let stable = true;
+export default function ConnectionError() {
+  const [stable, setStable] = useState(true);
 
-@bem
-export default class ConnectionError extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      stable,
+  const { className } = useClass('connection-error', stable ? null : 'active');
+
+  useEffect(() => {
+    const onStable = () => {
+      setStable(true);
     };
-  }
 
-  componentDidMount() {
-    window.addEventListener('connectionstable', this.onStable);
-    window.addEventListener('connectionunstable', this.onUnstable);
-  }
+    const onUnstable = () => {
+      setStable(false);
+    };
 
-  componentWillUnmount() {
-    window.removeEventListener('connectionstable', this.onStable);
-    window.removeEventListener('connectionunstable', this.onUnstable);
-  }
+    window.addEventListener('connectionstable', onStable);
+    window.addEventListener('connectionunstable', onUnstable);
 
-  getModifiers() {
-    const { stable } = this.state;
-    return [stable ? null : 'active'];
-  }
+    return () => {
+      window.removeEventListener('connectionstable', onStable);
+      window.removeEventListener('connectionunstable', onUnstable);
+    };
+  }, []);
 
-  onStable = () => {
-    stable = true;
-    this.setState({
-      stable,
-    });
-  };
-
-  onUnstable = () => {
-    stable = false;
-    this.setState({
-      stable,
-    });
-  };
-
-  render() {
-    return (
-      <div className={this.getBlockClass()}>
-        Your network connection may be unstable.
-      </div>
-    );
-  }
+  return (
+    <div className={className}>Your network connection may be unstable.</div>
+  );
 }

@@ -14,9 +14,7 @@ import { request } from 'utils/api';
 
 import Menu from './Menu';
 
-@screen
-@withSession
-export default class Profile extends React.Component {
+class Profile extends React.Component {
   state = {
     user: pick(this.context.user, ['firstName', 'lastName', 'phone', 'email']),
     message: null,
@@ -121,3 +119,4 @@ export default class Profile extends React.Component {
     );
   }
 }
+export default screen(withSession(Profile));

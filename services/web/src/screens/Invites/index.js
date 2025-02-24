@@ -13,8 +13,7 @@ import SearchFilters from 'components/Search/Filters';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 
-@screen
-export default class Home extends React.Component {
+class Invites extends React.Component {
   onDataNeeded = async (params) => {
     return await request({
       method: 'POST',
@@ -169,3 +168,5 @@ export default class Home extends React.Component {
     );
   }
 }
+
+export default screen(Invites);

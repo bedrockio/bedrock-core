@@ -6,9 +6,7 @@ import modal from 'helpers/modal';
 
 import { JWT_KEY, request } from 'utils/api';
 
-
-@modal
-export default class LoginAsUser extends React.Component {
+class LoginAsUser extends React.Component {
   static defaultProps = {
     initialValues: {},
   };
@@ -94,3 +92,5 @@ export default class LoginAsUser extends React.Component {
     );
   }
 }
+
+export default modal(LoginAsUser);

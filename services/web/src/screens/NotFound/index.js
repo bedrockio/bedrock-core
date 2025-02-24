@@ -5,8 +5,7 @@ import screen from 'helpers/screen';
 
 import Breadcrumbs from 'components/Breadcrumbs';
 
-@screen
-export default class NotFound extends React.Component {
+class NotFound extends React.Component {
   render() {
     const { message, ...rest } = this.props;
     return (
@@ -19,3 +18,5 @@ export default class NotFound extends React.Component {
     );
   }
 }
+
+export default screen(NotFound);

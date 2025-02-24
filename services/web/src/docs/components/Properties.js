@@ -2,30 +2,33 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { get, isEqual } from 'lodash';
 
-import bem from 'helpers/bem';
+import { useClass } from 'helpers/bem';
 
 import { JumpLink } from 'components/Link';
 
 import { expandRef } from '../utils';
-import { DocsContext } from '../utils/context';
+import { useDocs } from '../utils/context';
 import EditableField from './EditableField';
 
 import './properties.less';
 
 const OBJECT_ID_REF = '#/components/schemas/ObjectId';
 
-@bem
-export default class DocsProperties extends React.Component {
-  static contextType = DocsContext;
+export default function DocsProperties(props) {
+  const { path, model, getPath, hideFields, additionalSort } = props;
 
-  getModelPath(name) {
-    const { model } = this.props;
+  const { className, getElementClass } = useClass('docs-properties');
+  // static contextType = DocsContext;
+  //
+  const { docs, loading, visitedComponents } = useDocs();
+
+  function getModelPath(name) {
     if (model) {
       return ['components', 'schemas', model, 'properties', name];
     }
   }
 
-  isArrayVariant(oneOf) {
+  function isArrayVariant(oneOf) {
     if (oneOf.length === 2) {
       const { $ref: ref1, enum: enum1 } = oneOf[0];
       const { $ref: ref2, enum: enum2 } = oneOf[1].items || {};
@@ -37,37 +40,30 @@ export default class DocsProperties extends React.Component {
     }
   }
 
-  isRangeVariant(oneOf) {
+  function isRangeVariant(oneOf) {
     if (oneOf.length === 3) {
-      if (this.isArrayVariant(oneOf.slice(0, 2))) {
+      if (isArrayVariant(oneOf.slice(0, 2))) {
         const { $ref = '' } = oneOf[2];
         return $ref.endsWith('Range');
       }
     }
   }
 
-  render() {
-    const { docs, loading } = this.context;
-    const { path } = this.props;
+  function render() {
     if (!docs) {
       return null;
     }
 
-    const data = this.props.data || get(docs, path);
+    const data = props.data || get(docs, path);
 
     if (loading || !data) {
       return null;
     }
 
-    return (
-      <div className={this.getBlockClass()}>
-        {this.renderParams(data, path)}
-      </div>
-    );
+    return <div className={className}>{renderParams(data, path)}</div>;
   }
 
-  renderParams(data, path, options = {}) {
-    const { additionalSort, hideFields } = this.props;
+  function renderParams(data, path, options = {}) {
     const { level = 0 } = options;
     let entries = Object.entries(data);
     entries.sort((a, b) => {
@@ -91,12 +87,12 @@ export default class DocsProperties extends React.Component {
         if (desc.properties) {
           return (
             <React.Fragment key={name}>
-              {this.renderParam(name, desc, path, {
+              {renderParam(name, desc, path, {
                 ...options,
                 level,
               })}
-              <div className={this.getElementClass('param-group')}>
-                {this.renderParams(desc.properties, [...path, name], {
+              <div className={getElementClass('param-group')}>
+                {renderParams(desc.properties, [...path, name], {
                   ...options,
                   level: level + 1,
                 })}
@@ -104,7 +100,7 @@ export default class DocsProperties extends React.Component {
             </React.Fragment>
           );
         } else {
-          return this.renderParam(name, desc, path, {
+          return renderParam(name, desc, path, {
             ...options,
             level,
           });
@@ -112,9 +108,8 @@ export default class DocsProperties extends React.Component {
       });
   }
 
-  renderParam(name, desc, path, options) {
+  function renderParam(name, desc, path, options) {
     const { level } = options;
-    const { model, getPath } = this.props;
     const { description, required, default: defaultValue } = desc;
     return (
       <div
@@ -122,47 +117,45 @@ export default class DocsProperties extends React.Component {
         style={{
           '--level': level,
         }}
-        className={this.getElementClass('param')}>
-        <div className={this.getElementClass('name')}>
+        className={getElementClass('param')}>
+        <div className={getElementClass('name')}>
           <code>{name}</code>
         </div>
-        <div className={this.getElementClass('description')}>
-          <div className={this.getElementClass('types')}>
-            {this.renderType(desc)}
-          </div>
+        <div className={getElementClass('description')}>
+          <div className={getElementClass('types')}>{renderType(desc)}</div>
 
           {required && (
-            <div className={this.getElementClass('required')}>Required</div>
+            <div className={getElementClass('required')}>Required</div>
           )}
-          {description && <div className={this.getElementClass('divider')} />}
+          {description && <div className={getElementClass('divider')} />}
 
           <EditableField
             type="description"
             model={model}
             path={path ? [...path, name] : getPath(name)}
-            modelPath={this.getModelPath(name)}
+            modelPath={getModelPath(name)}
           />
 
           {defaultValue !== undefined && (
-            <div className={this.getElementClass('divider')} />
+            <div className={getElementClass('divider')} />
           )}
-          {this.renderDefault(defaultValue)}
+          {renderDefault(defaultValue)}
         </div>
       </div>
     );
   }
 
-  renderType(desc, isArray = false) {
+  function renderType(desc, isArray = false) {
     const { type, $ref, oneOf, format, enum: allowed } = desc;
     if (oneOf) {
-      if (this.isArrayVariant(oneOf)) {
-        if (this.props.query) {
+      if (isArrayVariant(oneOf)) {
+        if (props.query) {
           return (
             <React.Fragment>
-              {this.renderType(oneOf[0])}
+              {renderType(oneOf[0])}
               <span
                 title="May pass multiple parameters in query."
-                className={this.getElementClass('note')}>
+                className={getElementClass('note')}>
                 *
               </span>
             </React.Fragment>
@@ -170,23 +163,23 @@ export default class DocsProperties extends React.Component {
         } else {
           return (
             <React.Fragment>
-              {this.renderType(oneOf[0])}
+              {renderType(oneOf[0])}
               <span
                 title="May also be an array."
-                className={this.getElementClass('note')}>
+                className={getElementClass('note')}>
                 *
               </span>
             </React.Fragment>
           );
         }
-      } else if (this.isRangeVariant(oneOf)) {
-        this.context.visitedComponents.add(oneOf[2].$ref);
+      } else if (isRangeVariant(oneOf)) {
+        visitedComponents.add(oneOf[2].$ref);
         return (
           <React.Fragment>
-            {this.renderType(oneOf[0])}
+            {renderType(oneOf[0])}
             <span
               title="May also be an array or range (see below)."
-              className={this.getElementClass('note')}>
+              className={getElementClass('note')}>
               *
             </span>
           </React.Fragment>
@@ -197,15 +190,15 @@ export default class DocsProperties extends React.Component {
           return (
             <React.Fragment key={i}>
               {comma}
-              {this.renderType(entry)}
+              {renderType(entry)}
             </React.Fragment>
           );
         });
       }
     } else if (type === 'array') {
-      return this.renderType(desc.items, '[]');
+      return renderType(desc.items, '[]');
     } else if ($ref) {
-      this.context.visitedComponents.add($ref);
+      visitedComponents.add($ref);
       const { name } = expandRef($ref);
       return <JumpLink to={name}>{isArray ? `[${name}]` : name}</JumpLink>;
     } else if (allowed) {
@@ -232,7 +225,7 @@ export default class DocsProperties extends React.Component {
         });
       }
     } else if (format === 'mongo-object-id') {
-      this.context.visitedComponents.add(OBJECT_ID_REF);
+      visitedComponents.add(OBJECT_ID_REF);
       const { name } = expandRef(OBJECT_ID_REF);
       return <JumpLink to={name}>{isArray ? `[${name}]` : name}</JumpLink>;
     } else if (type) {
@@ -242,11 +235,11 @@ export default class DocsProperties extends React.Component {
     }
   }
 
-  renderDefault(defaultValue) {
+  function renderDefault(defaultValue) {
     if (defaultValue && typeof defaultValue === 'object') {
       return (
-        <div className={this.getElementClass('default')}>
-          <div className={this.getElementClass('default-title')}>Default:</div>
+        <div className={getElementClass('default')}>
+          <div className={getElementClass('default-title')}>Default:</div>
           <pre>
             <code>{JSON.stringify(defaultValue, null, 2)}</code>
           </pre>
@@ -254,15 +247,15 @@ export default class DocsProperties extends React.Component {
       );
     } else if (defaultValue !== undefined) {
       return (
-        <div className={this.getElementClass('default')}>
-          <span className={this.getElementClass('default-title')}>
-            Default:
-          </span>{' '}
+        <div className={getElementClass('default')}>
+          <span className={getElementClass('default-title')}>Default:</span>{' '}
           <code>{JSON.stringify(defaultValue, null, 2)}</code>
         </div>
       );
     }
   }
+
+  return render();
 }
 
 DocsProperties.propTypes = {

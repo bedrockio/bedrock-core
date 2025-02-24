@@ -1,33 +1,35 @@
-import React from 'react';
 import { Icon } from 'semantic';
 
 import { BUTTON_STYLES } from '../const';
+import { useRichTextEditor } from '../context';
 import Menu from '../Menu';
 
-export default class RichTextEditorModeMenu extends React.Component {
-  getStyles(mode = this.context.mode) {
+export default function RichTextEditorModeMenu() {
+  const { mode: docsMode, setMode } = useRichTextEditor();
+
+  function getStyles(mode = docsMode) {
     return BUTTON_STYLES[`mode-${mode}`];
   }
 
-  render() {
-    const { icon } = this.getStyles();
+  function render() {
+    const { icon } = getStyles();
     return (
       <Menu
         trigger={<Icon name={icon} style={{ marginRight: '4px' }} fitted />}>
-        {this.renderItem('inline')}
-        {this.renderItem('markdown')}
-        {this.renderItem('preview')}
+        {renderItem('inline')}
+        {renderItem('markdown')}
+        {renderItem('preview')}
       </Menu>
     );
   }
 
-  renderItem(mode) {
-    const { icon, title, label } = this.getStyles(mode);
-    const active = mode === this.context.mode;
+  function renderItem(mode) {
+    const { icon, title, label } = getStyles(mode);
+    const active = mode === docsMode;
     return (
       <Menu.Item
         onClick={() => {
-          this.context.setMode(mode);
+          setMode(mode);
         }}
         active={active}
         title={title}>
@@ -37,4 +39,6 @@ export default class RichTextEditorModeMenu extends React.Component {
       </Menu.Item>
     );
   }
+
+  return render();
 }

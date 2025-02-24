@@ -1,10 +1,6 @@
-import React from 'react';
+import { useClass } from 'helpers/bem';
 
-import bem from 'helpers/bem';
-
-@bem
-export default class SidebarLayoutItem extends React.Component {
-  render() {
-    return <div className={this.getBlockClass()} {...this.props} />;
-  }
+export default function SidebarLayoutItem(props) {
+  const { className } = useClass('sidebar-layout-item');
+  return <div className={className} {...props} />;
 }

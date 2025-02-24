@@ -8,8 +8,7 @@ import ErrorMessage from 'components/ErrorMessage';
 
 import { request } from 'utils/api';
 
-@modal
-export default class EditOrganization extends React.Component {
+class EditOrganization extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -109,3 +108,5 @@ export default class EditOrganization extends React.Component {
     );
   }
 }
+
+export default modal(EditOrganization);

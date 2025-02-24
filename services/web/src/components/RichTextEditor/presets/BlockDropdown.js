@@ -1,7 +1,8 @@
-import React from 'react';
 import { Dropdown } from 'semantic';
 
-import bem from 'helpers/bem';
+import { useClass } from 'helpers/bem';
+
+import { useRichTextEditor } from '../context';
 
 import {
   getCurrentBlockType,
@@ -17,24 +18,25 @@ const IMAGE_OPTION = {
   value: 'atomic',
 };
 
-@bem
-export default class RichTextEditorBlockDropdown extends React.Component {
-  onChange = (evt, { value }) => {
+export default function RichTextEditorBlockDropdown() {
+  const { editorState, updateEditorState } = useRichTextEditor();
+
+  const { className } = useClass('rich-text-editor-block-dropdown');
+
+  function onChange(evt, { value }) {
     if (value !== 'atomic') {
-      const { editorState, updateEditorState } = this.context;
       updateEditorState(toggleBlockType(editorState, value));
     }
-  };
+  }
 
-  render() {
-    const { editorState } = this.context;
+  function render() {
     return (
       <Dropdown
         selection
         size="small"
-        onChange={this.onChange}
+        onChange={onChange}
         value={getCurrentBlockType(editorState)}
-        className={this.getBlockClass()}
+        className={className}
         options={[
           ...BLOCK_OPTIONS,
           ...(isImageSelected(editorState) ? [IMAGE_OPTION] : []),
@@ -42,4 +44,6 @@ export default class RichTextEditorBlockDropdown extends React.Component {
       />
     );
   }
+
+  return render();
 }

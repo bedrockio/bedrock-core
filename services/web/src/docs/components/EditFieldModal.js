@@ -10,8 +10,7 @@ import ErrorMessage from 'components/ErrorMessage';
 
 import { DocsContext } from '../utils/context';
 
-@modal
-export default class EditFieldModal extends React.Component {
+class EditFieldModal extends React.Component {
   static contextType = DocsContext;
 
   constructor(props) {
@@ -151,3 +150,5 @@ export default class EditFieldModal extends React.Component {
     }
   }
 }
+
+export default modal(EditFieldModal);

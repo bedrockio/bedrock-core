@@ -8,8 +8,7 @@ import ErrorMessage from 'components/ErrorMessage';
 
 import { urlForUpload } from 'utils/uploads';
 
-@modal
-export default class AddImage extends React.Component {
+class AddImage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -80,3 +79,5 @@ export default class AddImage extends React.Component {
     );
   }
 }
+
+export default modal(AddImage);

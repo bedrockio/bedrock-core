@@ -1,16 +1,16 @@
 import React from 'react';
 import { Icon } from 'semantic';
 
-import bem from 'helpers/bem';
-
 import { isImageSelected, getSelectedAlignment } from '../utils';
+import { useRichTextEditor } from '../context';
 import { BUTTON_STYLES } from '../const';
 import Menu from '../Menu';
 import Button from '../Button';
 
-class RichTextEditorAlignmentMenu extends React.Component {
-  render() {
-    const { editorState } = this.context;
+export default function RichTextEditorAlignmentMenu() {
+  const { editorState } = useRichTextEditor();
+
+  function render() {
     const imageSelected = isImageSelected(editorState);
     const alignment = getSelectedAlignment(editorState);
     const name = `align-${alignment}`;
@@ -20,30 +20,30 @@ class RichTextEditorAlignmentMenu extends React.Component {
         trigger={<Icon name={icon} style={{ marginRight: '4px' }} fitted />}>
         {imageSelected ? (
           <React.Fragment>
-            {this.renderItem('image-align-left')}
-            {this.renderItem('image-align-center')}
-            {this.renderItem('image-align-right')}
-            {this.renderItem('image-align-default')}
+            {renderItem('image-align-left')}
+            {renderItem('image-align-center')}
+            {renderItem('image-align-right')}
+            {renderItem('image-align-default')}
           </React.Fragment>
         ) : (
           <React.Fragment>
-            {this.renderItem('align-left')}
-            {this.renderItem('align-center')}
-            {this.renderItem('align-right')}
-            {this.renderItem('align-justify')}
+            {renderItem('align-left')}
+            {renderItem('align-center')}
+            {renderItem('align-right')}
+            {renderItem('align-justify')}
           </React.Fragment>
         )}
       </Menu>
     );
   }
 
-  renderItem(type) {
+  function renderItem(type) {
     return (
       <Menu.Item>
         <Button type={type} />
       </Menu.Item>
     );
   }
-}
 
-export default bem(RichTextEditorAlignmentMenu);
+  return render();
+}

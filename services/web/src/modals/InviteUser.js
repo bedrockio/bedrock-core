@@ -17,8 +17,7 @@ import ErrorMessage from 'components/ErrorMessage';
 import { emailRegexp } from 'utils/validate';
 import { request } from 'utils/api';
 
-@modal
-export default class InviteUser extends React.Component {
+class InviteUser extends React.Component {
   state = {
     touched: false,
     role: '',
@@ -148,3 +147,4 @@ export default class InviteUser extends React.Component {
     );
   }
 }
+export default modal(InviteUser);

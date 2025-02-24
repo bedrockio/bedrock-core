@@ -2,8 +2,7 @@ import React from 'react';
 
 import { withSession } from 'stores/session';
 
-@withSession
-export default class Logout extends React.Component {
+class Logout extends React.Component {
   async componentDidMount() {
     await this.context.logout();
   }
@@ -12,3 +11,5 @@ export default class Logout extends React.Component {
     return <div />;
   }
 }
+
+export default withSession(Logout);

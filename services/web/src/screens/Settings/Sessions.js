@@ -15,9 +15,7 @@ import countries from 'utils/countries';
 
 import Menu from './Menu';
 
-@screen
-@withSession
-export default class Security extends React.Component {
+class Sessions extends React.Component {
   state = {
     error: null,
     loading: false,
@@ -94,3 +92,5 @@ export default class Security extends React.Component {
     );
   }
 }
+
+export default screen(withSession(Sessions));

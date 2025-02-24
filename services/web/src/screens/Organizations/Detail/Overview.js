@@ -8,8 +8,7 @@ import { formatDateTime } from 'utils/date';
 
 import Menu from './Menu';
 
-@screen
-export default class OrganizationOverview extends React.Component {
+class OrganizationOverview extends React.Component {
   static contextType = PageContext;
 
   render() {
@@ -34,3 +33,5 @@ export default class OrganizationOverview extends React.Component {
     );
   }
 }
+
+export default screen(OrganizationOverview);

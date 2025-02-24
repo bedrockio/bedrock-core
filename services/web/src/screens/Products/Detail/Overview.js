@@ -10,8 +10,7 @@ import { urlForUpload } from 'utils/uploads';
 
 import Menu from './Menu';
 
-@screen
-export default class ProductOverview extends React.Component {
+class ProductOverview extends React.Component {
   static contextType = PageContext;
 
   render() {
@@ -65,3 +64,5 @@ export default class ProductOverview extends React.Component {
     );
   }
 }
+
+export default screen(ProductOverview);

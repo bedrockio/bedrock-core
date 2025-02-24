@@ -1,14 +1,11 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 
-import bem from 'helpers/bem';
+import { useClass } from 'helpers/bem';
 
-@bem
-export default class SidebarLayoutDivider extends React.Component {
-  render() {
-    const { as: Element, ...rest } = this.props;
-    return <Element className={this.getBlockClass()} {...rest} />;
-  }
+export default function SidebarLayoutDivider(props) {
+  const { as: Component, ...rest } = props;
+  const { className } = useClass('sidebar-layout-divider');
+  return <Component className={className} {...rest} />;
 }
 
 SidebarLayoutDivider.propTypes = {

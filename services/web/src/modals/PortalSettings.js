@@ -7,8 +7,7 @@ import SearchDropdown from 'components/SearchDropdown';
 
 import { request } from 'utils/api';
 
-@modal
-export default class PortalSettings extends React.Component {
+class PortalSettings extends React.Component {
   fetchApplications = async (keyword) => {
     const { data } = await request({
       method: 'POST',
@@ -48,3 +47,4 @@ export default class PortalSettings extends React.Component {
     );
   }
 }
+export default modal(PortalSettings);

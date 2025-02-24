@@ -10,8 +10,7 @@ import EmailField from 'components/form-fields/Email';
 
 import { request } from 'utils/api';
 
-@screen
-export default class ForgotPassword extends React.Component {
+class ForgotPassword extends React.Component {
   state = {
     success: false,
     loading: false,
@@ -123,3 +122,5 @@ export default class ForgotPassword extends React.Component {
     );
   }
 }
+
+export default screen(ForgotPassword);

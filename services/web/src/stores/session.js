@@ -12,8 +12,7 @@ import { merge } from 'utils/object';
 
 const SessionContext = React.createContext();
 
-@withRouter
-export class SessionProvider extends React.PureComponent {
+class SessionProvider extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -301,6 +300,10 @@ export class SessionProvider extends React.PureComponent {
     );
   }
 }
+
+const Provider = withRouter(SessionProvider);
+
+export { Provider as SessionProvider };
 
 export function useSession() {
   return useContext(SessionContext);

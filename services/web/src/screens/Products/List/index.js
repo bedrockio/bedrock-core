@@ -20,8 +20,7 @@ import { request } from 'utils/api';
 
 import Actions from '../Actions';
 
-@screen
-export default class ProductList extends React.Component {
+class ProductList extends React.Component {
   onDataNeeded = async (body) => {
     return await request({
       method: 'POST',
@@ -189,3 +188,5 @@ export default class ProductList extends React.Component {
     );
   }
 }
+
+export default screen(ProductList);

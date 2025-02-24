@@ -1,16 +1,11 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 
-import bem from 'helpers/bem';
+import { useClass } from 'helpers/bem';
 
-@bem
-export default class SidebarLayoutHeader extends React.Component {
-  render() {
-    const Element = this.props.as;
-    return (
-      <Element className={this.getBlockClass()}>{this.props.children}</Element>
-    );
-  }
+export default function SidebarLayoutHeader(props) {
+  const { as: Component, ...rest } = props;
+  const { className } = useClass('sidebar-layout-header');
+  return <Component className={className} {...rest} />;
 }
 
 SidebarLayoutHeader.propTypes = {

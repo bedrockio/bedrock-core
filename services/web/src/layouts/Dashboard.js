@@ -17,8 +17,7 @@ import Sidebar from './Sidebar';
 
 import favicon from 'assets/favicon.svg';
 
-@withSession
-export default class DashboardLayout extends React.Component {
+class DashboardLayout extends React.Component {
   render() {
     const { user, organization } = this.context;
     return (
@@ -129,3 +128,5 @@ export default class DashboardLayout extends React.Component {
     );
   }
 }
+
+export default withSession(DashboardLayout);

@@ -17,8 +17,7 @@ import { formatDateTime } from 'utils/date';
 
 import Actions from '../Actions';
 
-@screen
-export default class OrganizationList extends React.Component {
+class OrganizationList extends React.Component {
   onDataNeeded = async (params) => {
     const { category, ...rest } = params;
     return await request({
@@ -142,3 +141,5 @@ export default class OrganizationList extends React.Component {
     );
   }
 }
+
+export default screen(OrganizationList);

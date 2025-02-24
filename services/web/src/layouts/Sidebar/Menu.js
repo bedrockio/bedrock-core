@@ -1,13 +1,14 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 
-import bem from 'helpers/bem';
+import { useClass } from 'helpers/bem';
 
-@bem
-export default class SidebarLayoutMenu extends React.Component {
-  getModifiers() {
-    const { dark } = this.props;
-    const { offscreen, open } = this.context;
+import { useSidebar } from './context';
+
+export default function SidebarLayoutMenu(props) {
+  const { as: Component, dark, children } = props;
+  const { offscreen, open } = useSidebar();
+
+  function getModifiers() {
     return [
       dark ? 'dark' : null,
       open ? 'open' : null,
@@ -15,12 +16,9 @@ export default class SidebarLayoutMenu extends React.Component {
     ];
   }
 
-  render() {
-    const Element = this.props.as;
-    return (
-      <Element className={this.getBlockClass()}>{this.props.children}</Element>
-    );
-  }
+  const { className } = useClass('sidebar-layout-menu', ...getModifiers());
+
+  return <Component className={className}>{children}</Component>;
 }
 
 SidebarLayoutMenu.propTypes = {

@@ -7,8 +7,7 @@ import AutoFocus from 'components/AutoFocus';
 import UrlField from 'components/form-fields/UrlField';
 import ErrorMessage from 'components/ErrorMessage';
 
-@modal
-export default class AddLink extends React.Component {
+class AddLink extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -56,3 +55,5 @@ export default class AddLink extends React.Component {
     );
   }
 }
+
+export default modal(AddLink);

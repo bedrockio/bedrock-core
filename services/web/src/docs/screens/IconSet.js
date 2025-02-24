@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { memoize, throttle } from 'lodash';
-
 import { Icon, Input, Divider } from 'semantic';
 
 import { useClass } from 'helpers/bem';
+
+import { copyToClipboard } from 'utils/copy';
 
 import { ICON_MATCHES } from './const';
 
@@ -125,29 +126,3 @@ const loadIconSet = memoize(async (url) => {
     });
   return ids;
 });
-
-// Needed for insecure contexts as often this page
-// is most useful on local dev.
-function copyToClipboard(text) {
-  if (navigator.clipboard && window.isSecureContext) {
-    // Use Clipboard API
-    return navigator.clipboard.writeText(text);
-  } else {
-    // Fallback for non-HTTPS
-    const textarea = document.createElement('textarea');
-    textarea.value = text;
-    textarea.style.position = 'fixed'; // Prevent scrolling
-    document.body.appendChild(textarea);
-    textarea.focus();
-    textarea.select();
-    try {
-      document.execCommand('copy');
-    } catch {
-      alert('Copy failed');
-    }
-    document.body.removeChild(textarea);
-    return Promise.resolve();
-  }
-}
-
-copyToClipboard('Hello, local dev!');

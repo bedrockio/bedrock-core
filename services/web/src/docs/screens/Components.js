@@ -45,8 +45,7 @@ const options2 = [
   { key: 4, text: 'Pepper', value: 4, icon: 'pepper-hot' },
 ];
 
-@screen
-export default class ComponentsScreen extends React.Component {
+class ComponentsScreen extends React.Component {
   contextRef = React.createRef();
 
   constructor(props) {
@@ -913,3 +912,5 @@ export default class ComponentsScreen extends React.Component {
     );
   }
 }
+
+export default screen(ComponentsScreen);

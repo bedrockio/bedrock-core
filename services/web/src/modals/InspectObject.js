@@ -8,8 +8,7 @@ import modal from 'helpers/modal';
 
 SyntaxHighlighter.registerLanguage('json', json);
 
-@modal
-export default class InspectObject extends React.Component {
+class InspectObject extends React.Component {
   render() {
     const { object, name = 'Object' } = this.props;
     return (
@@ -27,3 +26,4 @@ export default class InspectObject extends React.Component {
     );
   }
 }
+export default modal(InspectObject);

@@ -1,6 +1,8 @@
 import React from 'react';
 
-import bem from 'helpers/bem';
+import { useClass } from 'helpers/bem';
+
+import { useRichTextEditor } from '../context';
 
 import Button from '../Button';
 import Divider from '../Divider';
@@ -13,22 +15,25 @@ import AlignmentMenu from './AlignmentMenu';
 
 import './toolbar.less';
 
-class RichTextEditorToolbar extends React.Component {
-  onMouseDown = (evt) => {
-    evt.preventDefault();
-  };
+export default function RichTextEditorToolbar(props) {
+  const { children } = props;
 
-  render() {
-    const { children } = this.props;
+  const { className } = useClass('rich-text-editor-toolbar');
+  const { mode } = useRichTextEditor();
+
+  function onMouseDown(evt) {
+    evt.preventDefault();
+  }
+
+  function render() {
     return (
-      <div onMouseDown={this.onMouseDown} className={this.getBlockClass()}>
-        {children || this.renderDefault()}
+      <div onMouseDown={onMouseDown} className={className}>
+        {children || renderDefault()}
       </div>
     );
   }
 
-  renderDefault() {
-    const { mode } = this.context;
+  function renderDefault() {
     return (
       <React.Fragment>
         <ModeMenu />
@@ -54,8 +59,6 @@ class RichTextEditorToolbar extends React.Component {
       </React.Fragment>
     );
   }
+
+  return render();
 }
-
-RichTextEditorToolbar.propTypes = {};
-
-export default bem(RichTextEditorToolbar);

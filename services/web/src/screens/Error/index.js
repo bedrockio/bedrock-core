@@ -9,9 +9,7 @@ import BasicLayout from 'layouts/Basic';
 
 import { ENV_NAME } from 'utils/env';
 
-@screen
-@withSession
-export default class ErrorScreen extends React.Component {
+class ErrorScreen extends React.Component {
   onLogoutClick = async () => {
     await this.context.logout(true);
   };
@@ -71,3 +69,5 @@ ErrorScreen.propTypes = {
 ErrorScreen.defaultProps = {
   title: 'Something went wrong',
 };
+
+export default screen(withSession(ErrorScreen));

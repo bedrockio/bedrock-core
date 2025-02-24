@@ -8,8 +8,7 @@ import RequestBlock from 'components/RequestBlock';
 
 import { API_URL } from 'utils/env';
 
-@modal
-export default class ShowRequest extends React.Component {
+class ShowRequest extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -106,3 +105,5 @@ export default class ShowRequest extends React.Component {
     );
   }
 }
+
+export default modal(ShowRequest);

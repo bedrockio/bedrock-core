@@ -1,19 +1,18 @@
-import React from 'react';
+import { useClass } from 'helpers/bem';
 
-import bem from 'helpers/bem';
+import { useSidebar } from './context';
 
-@bem
-export default class SidebarLayoutContent extends React.Component {
-  getModifiers() {
-    const { offscreen } = this.context;
-    return [offscreen ? null : 'offset'];
-  }
+export default function SidebarLayoutContent(props) {
+  const { offscreen, close } = useSidebar();
 
-  render() {
-    return (
-      <div className={this.getBlockClass()} onClick={this.context.close}>
-        {this.props.children}
-      </div>
-    );
-  }
+  const { className } = useClass(
+    'sidebar-layout-content',
+    offscreen ? null : 'offset'
+  );
+
+  return (
+    <div className={className} onClick={close}>
+      {props.children}
+    </div>
+  );
 }

@@ -7,8 +7,7 @@ import { withSession } from 'stores/session';
 
 import { disable } from 'utils/auth/google';
 
-@withSession
-export default class DisableButton extends React.Component {
+class DisableButton extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -61,3 +60,5 @@ DisableButton.defaultProps = {
   onError: noop,
   onDisabled: noop,
 };
+
+export default withSession(DisableButton);

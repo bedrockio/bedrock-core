@@ -7,8 +7,7 @@ import AutoFocus from 'components/AutoFocus';
 
 import { request } from 'utils/api';
 
-@modal
-export default class EditApplication extends React.Component {
+class EditApplication extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -114,3 +113,5 @@ export default class EditApplication extends React.Component {
     );
   }
 }
+
+export default modal(EditApplication);

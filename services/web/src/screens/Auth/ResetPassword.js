@@ -13,9 +13,7 @@ import PasswordField from 'components/form-fields/Password';
 import { request } from 'utils/api';
 import { getUrlToken } from 'utils/token';
 
-@screen
-@withSession
-export default class ResetPassword extends React.Component {
+class ResetPassword extends React.Component {
   constructor(props) {
     super(props);
     const { token, payload } = getUrlToken();
@@ -142,3 +140,4 @@ export default class ResetPassword extends React.Component {
     );
   }
 }
+export default screen(withSession(ResetPassword));

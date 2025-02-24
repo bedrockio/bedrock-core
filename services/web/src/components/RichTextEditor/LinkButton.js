@@ -1,71 +1,57 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { addLink, toggleLink, currentBlockContainsLink } from './utils';
+import { useRichTextEditor } from './context';
 import AddLinkModal from './modals/AddLink';
 import Button from './Button';
 
 import './button.less';
 
-export default class ImageButton extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selection: null,
-    };
-  }
+export default function ImageButton() {
+  const [selection, setSelection] = useState(null);
+  const { editorState, updateEditorState } = useRichTextEditor();
 
-  onClick = () => {
-    const { editorState, updateEditorState } = this.context;
+  function onClick() {
     const selection = editorState.getSelection();
     if (currentBlockContainsLink(editorState)) {
       updateEditorState(toggleLink(editorState, selection, null));
     } else if (!selection.isCollapsed()) {
-      this.setState({
-        selection,
-      });
+      setSelection(selection);
     }
-  };
+  }
 
-  onClose = () => {
-    this.setState({
-      selection: null,
-    });
-  };
+  function onClose() {
+    setSelection(null);
+  }
 
-  onSubmit = (evt, { value }) => {
-    const { editorState, updateEditorState } = this.context;
-    const { selection } = this.state;
+  function onSubmit(evt, { value }) {
     updateEditorState(
       addLink(editorState, {
         url: value,
         selection,
       })
     );
-  };
+  }
 
-  render() {
-    const { editorState } = this.context;
+  function render() {
     return (
       <React.Fragment>
         <Button
           type="link"
-          onClick={this.onClick}
+          onClick={onClick}
           toggled={currentBlockContainsLink(editorState)}
           disabled={editorState.getSelection().isCollapsed()}
         />
-        {this.renderLinkModal()}
+        {renderLinkModal()}
       </React.Fragment>
     );
   }
 
-  renderLinkModal() {
-    const { selection } = this.state;
+  function renderLinkModal() {
     return (
-      <AddLinkModal
-        open={!!selection}
-        onClose={this.onClose}
-        onSubmit={this.onSubmit}
-      />
+      <AddLinkModal open={!!selection} onClose={onClose} onSubmit={onSubmit} />
     );
   }
+
+  return render();
 }

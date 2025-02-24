@@ -9,9 +9,7 @@ import { withSession } from 'stores/session';
 
 import { login } from 'utils/auth/passkey';
 
-@withRouter
-@withSession
-export default class PasskeyButton extends React.Component {
+class PasskeyButton extends React.Component {
   onClick = async () => {
     try {
       this.props.onAuthStart();
@@ -58,3 +56,5 @@ PasskeyButton.defaultProps = {
   onAuthStop: noop,
   onComplete: noop,
 };
+
+export default withRouter(withSession(PasskeyButton));

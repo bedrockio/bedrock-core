@@ -31,8 +31,7 @@ const countries = allCountries.map(({ countryCode, nameEn }) => ({
 
 import Actions from '../Actions';
 
-@screen
-export default class ShopList extends React.Component {
+class ShopList extends React.Component {
   onDataNeeded = (body) => {
     return request({
       method: 'POST',
@@ -216,3 +215,5 @@ export default class ShopList extends React.Component {
     );
   }
 }
+
+export default screen(ShopList);

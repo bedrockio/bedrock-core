@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Icon } from 'semantic';
 
@@ -8,9 +8,11 @@ import bash from 'react-syntax-highlighter/dist/esm/languages/prism/bash';
 import json from 'react-syntax-highlighter/dist/esm/languages/prism/json';
 import swift from 'react-syntax-highlighter/dist/esm/languages/prism/swift';
 
-atomDark['pre[class*="language-"]'].margin = '0';
+import { useClass } from 'helpers/bem';
 
-import bem from 'helpers/bem';
+import { copyToClipboard } from 'utils/copy';
+
+atomDark['pre[class*="language-"]'].margin = '0';
 
 SyntaxHighlighter.registerLanguage('bash', bash);
 SyntaxHighlighter.registerLanguage('json', json);
@@ -18,65 +20,54 @@ SyntaxHighlighter.registerLanguage('swift', swift);
 
 import './code.less';
 
-@bem
-export default class Code extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      copied: false,
-    };
-  }
+export default function Code(props) {
+  const { scroll, action } = props;
 
-  getModifiers() {
-    const { scroll } = this.props;
-    return [scroll ? 'scroll' : null];
-  }
+  const [copied, setCopied] = useState();
 
-  onCopyClick = async () => {
-    navigator.clipboard.writeText(this.props.children);
-    this.setState({
-      copied: true,
-    });
+  const { className, getElementClass } = useClass(
+    'code',
+    scroll ? 'scroll' : null
+  );
+
+  async function onCopyClick() {
+    copyToClipboard(props.children);
+    setCopied(true);
     await new Promise((resolve) => {
       setTimeout(resolve, 2000);
     });
-    this.setState({
-      copied: false,
-    });
-  };
+    setCopied(false);
+  }
 
-  render() {
-    const { copy, scroll, ...rest } = this.props;
+  function render() {
+    const { copy, scroll, ...rest } = props;
     return (
-      <div className={this.getBlockClass()}>
+      <div className={className}>
         <SyntaxHighlighter style={atomDark} {...rest} />
-        {this.renderAction()}
+        {renderAction()}
       </div>
     );
   }
 
-  renderAction() {
-    const { action } = this.props;
+  function renderAction() {
     return (
-      <div className={this.getElementClass('action')}>
-        {action || this.renderCopyButton()}
+      <div className={getElementClass('action')}>
+        {action || renderCopyButton()}
       </div>
     );
   }
 
-  renderCopyButton() {
-    const { copied } = this.state;
+  function renderCopyButton() {
     return (
       <div
-        onClick={this.onCopyClick}
-        className={this.getElementClass(
-          'copy-button',
-          copied ? null : 'clickable'
-        )}>
+        onClick={onCopyClick}
+        className={getElementClass('copy-button', copied ? null : 'clickable')}>
         <Icon name={copied ? 'check' : 'copy'} fitted />
       </div>
     );
   }
+
+  return render();
 }
 
 Code.propTypes = {

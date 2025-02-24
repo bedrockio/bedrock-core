@@ -1,8 +1,7 @@
 import React from 'react';
 import { withRouter } from '@bedrockio/router';
 
-@withRouter
-export default class ScrollProvider extends React.Component {
+class ScrollProvider extends React.Component {
   componentDidMount() {
     this.detach = this.props.history.listen(this.onRouteChange);
     this.pathname = this.props.location.pathname;
@@ -26,3 +25,5 @@ export default class ScrollProvider extends React.Component {
     return this.props.children;
   }
 }
+
+export default withRouter(ScrollProvider);

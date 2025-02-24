@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { debounce } from 'lodash';
 
-import bem from 'helpers/bem';
+import { useClass } from 'helpers/bem';
 
 import { attachEvents } from 'utils/event';
+
+import { useRichTextEditor } from '../context';
 
 import { isImageSelected, getVisibleSelectionRect } from '../utils';
 import Button from '../Button';
@@ -17,143 +19,127 @@ import AlignmentMenu from './AlignmentMenu';
 
 import './inline-toolbar.less';
 
-class RichTextEditorInlineToolbar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      active: false,
-      sliding: false,
-      top: 0,
-      left: 0,
-      linkSelection: null,
-      showImageModal: false,
-    };
-    this.ref = React.createRef();
-  }
+export default function RichTextEditorInlineToolbar(props) {
+  const [active, setActive] = useState(false);
+  const [sliding, setSliding] = useState(false);
+  const [top, setTop] = useState(0);
+  const [left, setLeft] = useState(0);
+
+  const { editorState } = useRichTextEditor();
+
+  const { className, getElementClass } = useClass(
+    'rich-text-editor-inline-toolbar',
+    active ? 'active' : null,
+    sliding ? 'sliding' : null
+  );
+
+  const ref = useRef();
 
   // Lifecycle
 
-  componentDidMount() {
-    this.events = attachEvents({
-      onLongPress: this.onDocLongPress,
-      onMouseDown: this.onDocMouseDown,
-      onMouseUp: this.onDocMouseUp,
-      onKeyDown: this.onDocKeyDown,
+  useEffect(() => {
+    // Debouncing these functions to allow selection to clear
+    // also to have a bit of a pause before showing the toolbar.
+
+    function onDocMouseDown() {
+      unsetActive();
+    }
+
+    const onDocMouseUp = debounce((evt, meta) => {
+      const selection = getSelection();
+      if (selection.getHasFocus()) {
+        if (!selection.isCollapsed() || isImageSelected(editorState)) {
+          setRectActive(meta.relatedTarget || evt.target);
+        }
+      }
+    }, 100);
+
+    const onDocLongPress = debounce((evt) => {
+      const selection = this.getSelection();
+      if (selection.isCollapsed() && selection.getHasFocus()) {
+        this.setActive(evt.target);
+      }
+    }, 100);
+
+    const onDocKeyDown = debounce((evt) => {
+      const selection = this.getSelection();
+      if (!selection.isCollapsed() && selection.getHasFocus()) {
+        this.setActive(evt.target);
+      } else {
+        this.unsetActive();
+      }
+    }, 500);
+
+    const events = attachEvents({
+      onLongPress: onDocLongPress,
+      onMouseDown: onDocMouseDown,
+      onMouseUp: onDocMouseUp,
+      onKeyDown: onDocKeyDown,
     });
-  }
 
-  componentWillUnmount() {
-    this.events.remove();
-  }
-
-  // Bem
-
-  getModifiers() {
-    const { active, sliding } = this.state;
-    return [active ? 'active' : null, sliding ? 'sliding' : null];
-  }
+    return () => {
+      events.remove();
+    };
+  }, []);
 
   // Helpers
 
-  getSelection() {
-    return this.context.editorState.getSelection();
+  function getSelection() {
+    return editorState.getSelection();
   }
 
-  setActive(el) {
+  function setRectActive(el) {
     const rect = getVisibleSelectionRect(el);
     if (rect) {
       const { top: offsetTop, left: offsetLeft } =
         el.offsetParent.getBoundingClientRect();
-      this.setState({
-        active: true,
-        top: rect.top - offsetTop,
-        left: rect.left - offsetLeft + rect.width / 2,
-      });
+      setActive(true);
+      setTop(rect.top - offsetTop);
+      setLeft(rect.left - offsetLeft + rect.width / 2);
       setTimeout(() => {
-        this.setState({
-          sliding: true,
-        });
+        setSliding(true);
       });
     }
   }
 
-  unsetActive() {
-    this.setState({
-      active: false,
-      sliding: false,
-    });
+  function unsetActive() {
+    setActive(false);
+    setSliding(false);
   }
 
   // Events
 
-  onMouseDown = (evt) => {
+  function onMouseDown(evt) {
     evt.stopPropagation();
     evt.preventDefault();
-  };
+  }
 
-  onMouseUp = (evt) => {
+  function onMouseUp(evt) {
     evt.stopPropagation();
     evt.preventDefault();
-  };
+  }
 
-  // Document Events
-  //
-  // Debouncing these functions to allow selection to clear
-  // also to have a bit of a pause before showing the toolbar.
-
-  onDocMouseDown = () => {
-    this.unsetActive();
-  };
-
-  onDocMouseUp = debounce((evt, meta) => {
-    const { editorState } = this.context;
-    const selection = this.getSelection();
-    if (selection.getHasFocus()) {
-      if (!selection.isCollapsed() || isImageSelected(editorState)) {
-        this.setActive(meta.relatedTarget || evt.target);
-      }
-    }
-  }, 100);
-
-  onDocLongPress = debounce((evt) => {
-    const selection = this.getSelection();
-    if (selection.isCollapsed() && selection.getHasFocus()) {
-      this.setActive(evt.target);
-    }
-  }, 100);
-
-  onDocKeyDown = debounce((evt) => {
-    const selection = this.getSelection();
-    if (!selection.isCollapsed() && selection.getHasFocus()) {
-      this.setActive(evt.target);
-    } else {
-      this.unsetActive();
-    }
-  }, 500);
-
-  render() {
+  function render() {
     return (
-      <div
-        ref={this.ref}
-        className={this.getBlockClass()}
-        style={this.renderStyles()}>
+      <div ref={ref} className={className} style={renderStyles()}>
         <div
-          onMouseDown={this.onMouseDown}
-          onMouseUp={this.onMouseUp}
-          className={this.getElementClass('stage')}>
-          {this.props.children}
+          onMouseDown={onMouseDown}
+          onMouseUp={onMouseUp}
+          className={getElementClass('stage')}>
+          {props.children}
         </div>
       </div>
     );
   }
 
-  renderStyles() {
-    const { top, left } = this.state;
+  function renderStyles() {
     return {
       top: `${top}px`,
       left: `${left}px`,
     };
   }
+
+  return render();
 }
 
 RichTextEditorInlineToolbar.propTypes = {
@@ -180,5 +166,3 @@ RichTextEditorInlineToolbar.defaultProps = {
     </React.Fragment>
   ),
 };
-
-export default bem(RichTextEditorInlineToolbar);

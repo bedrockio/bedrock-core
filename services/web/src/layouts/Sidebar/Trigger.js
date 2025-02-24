@@ -1,19 +1,20 @@
-import React from 'react';
+import { useClass } from 'helpers/bem';
 
-import bem from 'helpers/bem';
+import { useSidebar } from './context';
 
-@bem
-export default class SidebarLayoutTrigger extends React.Component {
-  onClick = (evt) => {
+export default function SidebarLayoutTrigger(props) {
+  const { toggle } = useSidebar();
+
+  function onClick(evt) {
     evt.stopPropagation();
-    this.context.toggle();
-  };
-
-  render() {
-    return (
-      <div className={this.getBlockClass()} onClick={this.onClick}>
-        {this.props.children}
-      </div>
-    );
+    toggle();
   }
+
+  const { className } = useClass('sidebar-layout-trigger');
+
+  return (
+    <div className={className} onClick={onClick}>
+      {props.children}
+    </div>
+  );
 }

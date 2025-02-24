@@ -1,53 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { addImage } from './utils';
 import AddImageModal from './modals/AddImage';
 import Button from './Button';
+import { useRichTextEditor } from './context';
 
 import './button.less';
 
-export default class ImageButton extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      showModal: false,
-    };
+export default function ImageButton() {
+  const [showModal, setShowModal] = useState(false);
+  const { editorState, updateEditorState } = useRichTextEditor();
+
+  function onClick() {
+    setShowModal(true);
   }
 
-  onClick = () => {
-    this.setState({
-      showModal: true,
-    });
-  };
+  function onClose() {
+    setShowModal(false);
+  }
 
-  onClose = () => {
-    this.setState({
-      showModal: false,
-    });
-  };
-
-  onSubmit = (evt, { url, title }) => {
-    const { editorState, updateEditorState } = this.context;
+  function onSubmit(evt, { url, title }) {
     updateEditorState(addImage(editorState, { url, title }));
-  };
+  }
 
-  render() {
+  function render() {
     return (
       <React.Fragment>
-        <Button type="image" onClick={this.onClick} />
-        {this.renderImageModal()}
+        <Button type="image" onClick={onClick} />
+        {renderImageModal()}
       </React.Fragment>
     );
   }
 
-  renderImageModal() {
-    const { showModal } = this.state;
+  function renderImageModal() {
     return (
-      <AddImageModal
-        open={showModal}
-        onClose={this.onClose}
-        onSubmit={this.onSubmit}
-      />
+      <AddImageModal open={showModal} onClose={onClose} onSubmit={onSubmit} />
     );
   }
+
+  return render();
 }

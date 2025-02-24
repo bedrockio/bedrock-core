@@ -19,8 +19,7 @@ import { formatRoles } from 'utils/permissions';
 
 import Actions from '../Actions';
 
-@screen
-export default class UserList extends React.Component {
+class UserList extends React.Component {
   onDataNeeded = async (params) => {
     const { roles, ...rest } = params;
     return await request({
@@ -226,3 +225,5 @@ export default class UserList extends React.Component {
     );
   }
 }
+
+export default screen(UserList);

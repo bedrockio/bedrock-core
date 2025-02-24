@@ -70,14 +70,6 @@ class MyComponent extends React.Component {
 export default withLoadedSession(MyComponent);
 ```
 
-```jsx
-import { withSession } from 'stores/session';
-
-// Using the decorator pattern
-@withSession
-class MyComponent extends React.Component {}
-```
-
 ## Hooks
 
 Hooks allow access to the session store via the `useSession` hook.

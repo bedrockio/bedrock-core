@@ -5,11 +5,11 @@
 // Note that Semantic UI's sidebar component always pushes or overlays content
 // and so can't be used as a base layout component when the menu is always visible.
 
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { throttle } from 'lodash';
 import PropTypes from 'prop-types';
 
-import bem from 'helpers/bem';
+import { useClass } from 'helpers/bem';
 
 import Menu from './Menu';
 import Link from './Link';
@@ -21,6 +21,8 @@ import Trigger from './Trigger';
 import Divider from './Divider';
 import Accordion from './Accordion';
 
+import { SidebarContext } from './context';
+
 import './sidebar.less';
 
 const BREAKPOINTS = {
@@ -29,101 +31,79 @@ const BREAKPOINTS = {
   desktop: 1128,
 };
 
-const Context = React.createContext();
+export default function SidebarLayout(props) {
+  const { dimmer } = props;
 
-Menu.contextType = Context;
-Link.contextType = Context;
-Header.contextType = Context;
-Mobile.contextType = Context;
-Content.contextType = Context;
-Trigger.contextType = Context;
-Divider.contextType = Context;
-Accordion.contextType = Context;
+  const [open, setOpen] = useState(false);
+  const [offscreen, setOffscreen] = useState(isOffscreen());
 
-@bem
-export default class SidebarLayout extends React.Component {
-  static Menu = Menu;
-  static Link = Link;
-  static Item = Item;
-  static Header = Header;
-  static Mobile = Mobile;
-  static Content = Content;
-  static Trigger = Trigger;
-  static Divider = Divider;
-  static Accordion = Accordion;
+  const { className, getElementClass } = useClass('sidebar-layout');
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      offscreen: this.isOffscreen(),
-      open: false,
+  useEffect(() => {
+    const onResize = throttle(() => {
+      const offscreen = isOffscreen();
+      setOffscreen(offscreen);
+      setOpen(offscreen && open);
+    }, 200);
+
+    window.addEventListener('resize', onResize);
+    return () => {
+      window.removeEventListener('resize', onResize);
     };
-  }
-
-  // Lifecycle
-
-  componentDidMount() {
-    window.addEventListener('resize', this.onResize);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.onResize);
-  }
+  }, []);
 
   // Events
 
-  onResize = throttle(() => {
-    const offscreen = this.isOffscreen();
-    this.setState({
-      offscreen,
-      open: offscreen && this.state.open,
-    });
-  }, 200);
+  function toggle(next = !open) {
+    setOpen(next);
+  }
 
-  toggle = (open = !this.state.open) => {
-    this.setState({
-      open,
-    });
-  };
-
-  close = () => {
-    this.toggle(false);
-  };
+  function close() {
+    setOpen(false);
+  }
 
   // Other
 
-  isOffscreen() {
-    return window.innerWidth <= this.resolveBreakpoint();
+  function isOffscreen() {
+    return window.innerWidth <= resolveBreakpoint();
   }
 
-  resolveBreakpoint() {
-    const { open } = this.props;
-    return BREAKPOINTS[open] || open;
+  function resolveBreakpoint() {
+    return BREAKPOINTS[props.open];
   }
 
-  render() {
+  function render() {
     return (
-      <Context.Provider
-        value={{ ...this.state, toggle: this.toggle, close: this.close }}>
-        <div className={this.getBlockClass()}>{this.props.children}</div>
-        {this.renderDimmer()}
-      </Context.Provider>
+      <SidebarContext.Provider value={{ open, offscreen, toggle, close }}>
+        <div className={className}>{props.children}</div>
+        {renderDimmer()}
+      </SidebarContext.Provider>
     );
   }
 
-  renderDimmer() {
-    const { dimmer } = this.props;
-    const { offscreen, open } = this.state;
+  function renderDimmer() {
     if (dimmer && offscreen) {
       return (
         <div
-          className={this.getElementClass('dimmer', open ? 'open' : null)}
-          onClick={this.close}
+          className={getElementClass('dimmer', open ? 'open' : null)}
+          onClick={close}
         />
       );
     }
   }
+
+  return render();
 }
+
+SidebarLayout.Menu = Menu;
+SidebarLayout.Link = Link;
+SidebarLayout.Item = Item;
+SidebarLayout.Header = Header;
+SidebarLayout.Mobile = Mobile;
+SidebarLayout.Content = Content;
+SidebarLayout.Trigger = Trigger;
+SidebarLayout.Divider = Divider;
+SidebarLayout.Accordion = Accordion;
 
 SidebarLayout.propTypes = {
   open: PropTypes.oneOfType([

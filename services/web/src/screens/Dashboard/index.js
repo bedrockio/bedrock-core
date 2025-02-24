@@ -5,10 +5,7 @@ import { withSession } from 'stores/session';
 
 import screen from 'helpers/screen';
 
-@screen
-@withRouter
-@withSession
-export default class Dashboard extends React.Component {
+class Dashboard extends React.Component {
   componentDidMount() {
     this.props.history.replace('/shops');
   }
@@ -22,3 +19,5 @@ export default class Dashboard extends React.Component {
     );
   }
 }
+
+export default screen(withRouter(withSession(Dashboard)));

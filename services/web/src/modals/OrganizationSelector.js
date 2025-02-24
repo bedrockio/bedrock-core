@@ -11,9 +11,7 @@ import { request } from 'utils/api';
 import { userHasAccess } from 'utils/permissions';
 import { getOrganization, setOrganization } from 'utils/organization';
 
-@modal
-@withSession
-export default class OrganizationSelector extends React.Component {
+class OrganizationSelector extends React.Component {
   fetchOrganizations = async (body) => {
     const { user } = this.context;
     const hasGlobal = userHasAccess(user, {
@@ -61,3 +59,5 @@ export default class OrganizationSelector extends React.Component {
     );
   }
 }
+
+export default modal(withSession(OrganizationSelector));

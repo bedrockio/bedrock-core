@@ -1,12 +1,14 @@
-import React from 'react';
 import { omit } from 'lodash';
 import PropTypes from 'prop-types';
+import { useState, useEffect, useRef } from 'react';
 import Editor from '@draft-js-plugins/editor';
 import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 
-import bem from 'helpers/bem';
+import { useClass } from 'helpers/bem';
 
 import Markdown from 'components/Markdown';
+
+import { RichTextEditorContext } from './context';
 
 import {
   getCurrentBlockType,
@@ -31,130 +33,63 @@ import plugins from './plugins';
 
 import './rich-text-editor.less';
 
-const Context = React.createContext();
+export default function RichTextEditor(props) {
+  const {
+    markdown,
+    short,
+    scroll,
+    disabled,
+    children,
+    toolbar,
+    onChange,
+    onEnterSubmit,
+  } = props;
 
-Button.contextType = Context;
-Divider.contextType = Context;
-LinkButton.contextType = Context;
-ImageButton.contextType = Context;
+  const [mode, setMode] = useState(props.mode);
+  const [editorState, setEditorState] = useState(
+    getStateFromMarkdown(markdown)
+  );
 
-Toolbar.contextType = Context;
-ModeMenu.contextType = Context;
-BlockMenu.contextType = Context;
-ImageButtons.contextType = Context;
-StateButtons.contextType = Context;
-InlineToolbar.contextType = Context;
-BlockDropdown.contextType = Context;
-AlignmentMenu.contextType = Context;
-AlignmentButtons.contextType = Context;
+  const editorRef = useRef();
+  const textAreaRef = useRef();
 
-class RichTextEditor extends React.Component {
-  static Button = Button;
-  static Divider = Divider;
-  static LinkButton = LinkButton;
-  static ImageButton = ImageButton;
+  const { className, getElementClass } = useClass(
+    'rich-text-editor',
+    short ? 'short' : null,
+    scroll ? 'scroll' : null,
+    disabled ? 'disabled' : null
+  );
 
-  static Toolbar = Toolbar;
-  static ModeMenu = ModeMenu;
-  static BlockMenu = BlockMenu;
-  static ImageButtons = ImageButtons;
-  static StateButtons = StateButtons;
-  static BlockDropdown = BlockDropdown;
-  static InlineToolbar = InlineToolbar;
-  static AlignmentMenu = AlignmentMenu;
-  static AlignmentButtons = AlignmentButtons;
+  useEffect(() => {
+    resizeTextArea();
+  }, []);
 
-  constructor(props) {
-    super(props);
-    const { markdown } = props;
-    this.state = {
-      mode: props.mode,
-      editorState: this.getStateFromMarkdown(markdown),
-    };
-    this.editorRef = React.createRef();
-    this.textAreaRef = React.createRef();
-  }
-
-  componentDidMount() {
-    this.resizeTextArea();
-  }
-
-  componentDidUpdate(lastProps, lastState) {
-    this.checkMarkdownChange(lastProps);
-    this.checkModeChange(lastProps, lastState);
-  }
-
-  focus() {
-    this.getCurrentRef().current.focus();
-  }
-
-  blur() {
-    this.getCurrentRef().current.blur();
-  }
-
-  getCurrentRef() {
-    const { mode } = this.state;
-    return mode === 'markdown' ? this.textAreaRef : this.editorRef;
-  }
-
-  // Update editor state if props do not match cached markdown.
-  // Storing a cached copy here so we don't have to constantly
-  // rebuild an editor state that already existed.
-  // Resize the text area if in markdown mode.
-  checkMarkdownChange() {
-    const { mode } = this.state;
-    const { markdown } = this.props;
-    if (markdown !== this.cachedMarkdown) {
-      this.setEditorState(this.getStateFromMarkdown(markdown));
-      this.setCachedMarkdown(markdown);
-      if (mode === 'markdown') {
-        this.resizeTextArea();
-      }
+  useEffect(() => {
+    setEditorState(getStateFromMarkdown(markdown));
+    if (mode === 'markdown') {
+      resizeTextArea();
     }
-  }
+  }, [markdown]);
 
-  checkModeChange(lastProps, lastState) {
-    if (this.props.mode !== lastProps.mode) {
-      this.setState({
-        mode: this.props.mode,
-      });
-    } else if (this.state.mode !== lastState.mode) {
-      if (this.state.mode === 'markdown') {
-        this.resizeTextArea();
-      }
-    }
-  }
+  useEffect(() => {
+    setMode(props.mode);
+    resizeTextArea();
+  }, [props.mode]);
 
-  setMode = (mode) => {
-    this.setState({
-      mode,
-    });
-  };
-
-  getModifiers() {
-    const { short, scroll, disabled } = this.props;
-    return [
-      short ? 'short' : null,
-      scroll ? 'scroll' : null,
-      disabled ? 'disabled' : null,
-    ];
-  }
-
-  getStateFromMarkdown(str) {
+  function getStateFromMarkdown(str) {
     const rawObject = markdownToDraft(str);
     return EditorState.createWithContent(convertFromRaw(rawObject));
   }
 
-  getMarkdownFromState(editorState) {
+  function getMarkdownFromState(editorState) {
     const rawObject = convertToRaw(editorState.getCurrentContent());
     return draftToMarkdown(rawObject);
   }
 
-  resizeTextArea = () => {
-    if (this.state.mode === 'markdown') {
-      const { scroll } = this.props;
+  function resizeTextArea() {
+    if (mode === 'markdown') {
       if (!scroll) {
-        const el = this.textAreaRef.current;
+        const el = textAreaRef.current;
         // Reset to auto to force a reflow.
         el.style.height = '';
         // Then set the height to the element scroll height.
@@ -164,95 +99,81 @@ class RichTextEditor extends React.Component {
         el.style.height = `${el.scrollHeight + 1}px`;
       }
     }
-  };
+  }
 
   // Events
 
-  onMarkdownChange = (evt) => {
+  function onMarkdownChange(evt) {
     const { name, value } = evt.target;
-    this.props.onChange(evt, {
+    onChange(evt, {
       name,
       value,
     });
-  };
+  }
 
-  onStateChange = (editorState) => {
-    this.updateEditorState(editorState);
-  };
+  function onStateChange(editorState) {
+    updateEditorState(editorState);
+  }
 
-  updateEditorState = (editorState) => {
-    this.setEditorState(editorState);
-    const markdown = this.getMarkdownFromState(editorState);
-    this.setCachedMarkdown(markdown);
-    if (markdown !== this.props.markdown) {
+  function updateEditorState(editorState) {
+    setEditorState(editorState);
+    const markdown = getMarkdownFromState(editorState);
+    if (markdown !== props.markdown) {
       // Required as this is a fake onChange event.
       const evt = new CustomEvent('change');
-      this.props.onChange(evt, {
-        ...this.props,
+      onChange(evt, {
+        ...props,
         value: markdown,
       });
     }
-  };
+  }
 
-  setEditorState = (editorState) => {
-    this.setState({
-      editorState,
-    });
-  };
-
-  setCachedMarkdown = (markdown) => {
-    this.cachedMarkdown = markdown;
-  };
-
-  handleKeyCommand = (command, editorState) => {
+  function handleKey(command, editorState) {
     let newState = editorState;
     if (command === 'backspace') {
-      newState = this.removeCurrentBlockType(editorState);
+      newState = removeCurrentBlockType(editorState);
     } else if (command === 'enter-key-submit') {
       return 'handled';
     }
     newState = handleKeyCommand(editorState, command);
     if (newState) {
-      this.updateEditorState(newState);
+      updateEditorState(newState);
       return 'handled';
     }
     return 'not-handled';
-  };
+  }
 
-  onKeyDown = (evt) => {
-    const { onEnterSubmit } = this.props;
+  function onKeyDown(evt) {
     if (onEnterSubmit && evt.key === 'Enter' && evt.metaKey) {
       onEnterSubmit(evt);
       return 'enter-key-submit';
     }
-  };
+  }
 
-  removeCurrentBlockType = (editorState) => {
+  function removeCurrentBlockType(editorState) {
     // Draft-js doesn't do this for some reason
     const blockType = getCurrentBlockType(editorState);
     if (blockType) {
       return toggleBlockType(editorState, blockType);
     }
-  };
+  }
 
-  render() {
+  function render() {
     return (
-      <Context.Provider
+      <RichTextEditorContext.Provider
         value={{
-          ...this.state,
-          setMode: this.setMode,
-          updateEditorState: this.updateEditorState,
+          setMode,
+          updateEditorState,
         }}>
-        <div className={this.getBlockClass()}>
-          {this.renderPresets()}
-          {this.renderEditor()}
+        <div className={className}>
+          {renderPresets()}
+          {renderEditor()}
         </div>
-      </Context.Provider>
+      </RichTextEditorContext.Provider>
     );
   }
 
-  renderPresets() {
-    const { children, toolbar } = this.props;
+  function renderPresets() {
     if (children) {
       return children;
     } else if (toolbar) {
@@ -262,20 +183,18 @@ class RichTextEditor extends React.Component {
     }
   }
 
-  renderEditor() {
-    const { markdown, disabled } = this.props;
-    const { mode, editorState } = this.state;
-    const props = omit(this.props, Object.keys(RichTextEditor.propTypes));
+  function renderEditor() {
+    const props = omit(props, Object.keys(RichTextEditor.propTypes));
     if (mode === 'inline') {
       return (
         <Editor
           {...props}
           plugins={plugins}
           editorState={editorState}
-          onChange={this.onStateChange}
-          handleKeyCommand={this.handleKeyCommand}
-          keyBindingFn={this.onKeyDown}
-          ref={this.editorRef}
+          onChange={onStateChange}
+          handleKeyCommand={handleKey}
+          keyBindingFn={onKeyDown}
+          ref={editorRef}
           readOnly={disabled}
         />
       );
@@ -283,22 +202,39 @@ class RichTextEditor extends React.Component {
       return (
         <textarea
           {...props}
-          ref={this.textAreaRef}
-          onChange={this.onMarkdownChange}
-          onKeyDown={this.onKeyDown}
+          ref={textAreaRef}
+          onChange={onMarkdownChange}
+          onKeyDown={onKeyDown}
           spellCheck={false}
           value={markdown}
         />
       );
     } else if (mode === 'preview') {
       return (
-        <div {...props} className={this.getElementClass('preview')}>
+        <div {...props} className={getElementClass('preview')}>
           <Markdown source={markdown} trusted />
         </div>
       );
     }
   }
+
+  return render();
 }
+
+RichTextEditor.Button = Button;
+RichTextEditor.Divider = Divider;
+RichTextEditor.LinkButton = LinkButton;
+RichTextEditor.ImageButton = ImageButton;
+
+RichTextEditor.Toolbar = Toolbar;
+RichTextEditor.ModeMenu = ModeMenu;
+RichTextEditor.BlockMenu = BlockMenu;
+RichTextEditor.ImageButtons = ImageButtons;
+RichTextEditor.StateButtons = StateButtons;
+RichTextEditor.BlockDropdown = BlockDropdown;
+RichTextEditor.InlineToolbar = InlineToolbar;
+RichTextEditor.AlignmentMenu = AlignmentMenu;
+RichTextEditor.AlignmentButtons = AlignmentButtons;
 
 RichTextEditor.propTypes = {
   markdown: PropTypes.string,
@@ -315,5 +251,3 @@ RichTextEditor.defaultProps = {
   scroll: false,
   toolbar: false,
 };
-
-export default bem(RichTextEditor);

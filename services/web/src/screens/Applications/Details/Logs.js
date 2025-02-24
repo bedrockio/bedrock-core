@@ -37,9 +37,7 @@ function getStateromQueryString(search) {
   };
 }
 
-@withRouter
-@screen
-export default class ApplicationLogs extends React.Component {
+class ApplicationLogs extends React.Component {
   static contextType = PageContext;
 
   state = {
@@ -300,3 +298,5 @@ export default class ApplicationLogs extends React.Component {
     );
   }
 }
+
+export default withRouter(screen(ApplicationLogs));

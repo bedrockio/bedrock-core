@@ -14,8 +14,7 @@ import ShowAuditEntry from 'modals/ShowAuditEntry';
 import { request } from 'utils/api';
 import { formatDateTime } from 'utils/date';
 
-@screen
-export default class AuditTrailList extends React.Component {
+class AuditTrailList extends React.Component {
   onDataNeeded = async (params) => {
     const response = await request({
       method: 'POST',
@@ -287,3 +286,5 @@ export default class AuditTrailList extends React.Component {
     );
   }
 }
+
+export default screen(AuditTrailList);

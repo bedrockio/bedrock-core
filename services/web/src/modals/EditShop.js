@@ -12,8 +12,7 @@ import SearchDropdown from 'components/form-fields/SearchDropdown';
 
 import { request } from 'utils/api';
 
-@modal
-export default class EditShop extends React.Component {
+class EditShop extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -147,3 +146,5 @@ export default class EditShop extends React.Component {
     );
   }
 }
+
+export default modal(EditShop);

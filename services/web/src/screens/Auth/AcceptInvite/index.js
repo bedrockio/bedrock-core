@@ -13,9 +13,7 @@ import { getUrlToken } from 'utils/token';
 
 import Form from './Form';
 
-@screen
-@withSession
-export default class AcceptInvite extends React.Component {
+class AcceptInvite extends React.Component {
   constructor(props) {
     super(props);
     const { token, payload } = getUrlToken();
@@ -106,3 +104,5 @@ export default class AcceptInvite extends React.Component {
     );
   }
 }
+
+export default screen(withSession(AcceptInvite));

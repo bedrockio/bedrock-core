@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { get, set } from 'lodash';
 import {
   Form,
@@ -12,11 +12,11 @@ import {
   Divider,
 } from 'semantic';
 
-import bem from 'helpers/bem';
+import { useClass } from 'helpers/bem';
 
 import Code from 'components/Code';
 import RequestBlock from 'components/RequestBlock';
-import { DocsContext } from 'docs/utils/context';
+import { useDocs } from 'docs/utils/context';
 import {
   expandRoute,
   getParametersPath,
@@ -42,43 +42,41 @@ const TYPE_RANK = {
   array: 5,
 };
 
-@bem
-export default class RequestBuilder extends React.Component {
-  static contextType = DocsContext;
+export default function RequestBuilder(props) {
+  const { route, trigger } = props;
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      active: false,
-      visible: false,
-      loading: false,
-      recorded: false,
-      request: {},
-      activeTab: 0,
-    };
-    this.ref = React.createRef();
-  }
+  const { docs, loadDocs, canEditDocs } = useDocs();
 
-  getModifiers() {
-    const { active } = this.state;
-    return [active ? 'active' : null];
-  }
+  const [error, setError] = useState(null);
+  const [active, setActive] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [recorded, setRecorded] = useState(false);
+  const [req, setReq] = useState({});
+  const [res, setRes] = useState({});
+  const [activeTab, setActiveTab] = useState(0);
 
-  expandRoute() {
-    const { request } = this.state;
-    let { method, path } = expandRoute(this.props.route);
+  const { className, getElementClass } = useClass(
+    'request-builder',
+    active ? 'active' : null
+  );
+
+  const ref = useRef();
+
+  function resolveRoute() {
+    let { method, path } = expandRoute(props.route);
 
     path = path.replace(/:(\w+)/g, (m, key) => {
-      const value = request?.path?.[key];
+      const value = req?.path?.[key];
       return value ? encodeURIComponent(value) : `:${key}`;
     });
 
-    path += this.expandQuery(request.query);
+    path += expandQuery(req.query);
 
     return { method, path };
   }
 
-  expandQuery(query) {
+  function expandQuery(query) {
     const searchParams = new URLSearchParams();
     for (let [key, value] of Object.entries(query || {})) {
       searchParams.append(key, value);
@@ -87,173 +85,143 @@ export default class RequestBuilder extends React.Component {
     return str ? `?${str}` : '';
   }
 
-  onTabChange = (evt, { activeIndex }) => {
-    this.setState({
-      activeTab: activeIndex,
-    });
-  };
+  function onTabChange(evt, { activeIndex }) {
+    setActiveTab(activeIndex);
+  }
 
-  onTriggerClick = () => {
-    this.setState({
-      active: true,
-      visible: true,
-    });
-  };
+  function onTriggerClick() {
+    setActive(true);
+    setVisible(true);
+  }
 
-  onCloseClick = () => {
-    this.setState({
-      active: false,
-    });
-  };
+  function onCloseClick() {
+    setActive(false);
+  }
 
-  onPlayClick = () => {
-    this.performRequest();
-  };
+  function onPlayClick() {
+    performRequest();
+  }
 
-  onRecordClick = async () => {
-    await this.performRequest({
+  async function onRecordClick() {
+    await performRequest({
       headers: {
         'Api-Record': 'on',
       },
     });
-    await this.context.loadDocs();
-  };
+    await loadDocs();
+  }
 
-  performRequest = async (options) => {
+  async function performRequest(options) {
     try {
-      this.setState({
-        error: null,
-        loading: true,
-        recorded: false,
-      });
-      const { method, path } = this.expandRoute();
+      setError(null);
+      setLoading(true);
+      setRecorded(false);
+      const { method, path } = resolveRoute();
 
       const response = await request({
-        ...this.state.request,
+        ...req,
         ...options,
         method,
         path,
       });
 
-      this.setState({
-        loading: false,
-        response,
-        activeTab: 1,
-        recorded: options?.record,
-      });
+      setLoading(false);
+      setRes(response);
+      setActiveTab(1);
+      setRecorded(options?.record);
     } catch (error) {
-      this.setState({
-        response: error.response,
-        error: !error.response && error,
-        loading: false,
-        activeTab: 1,
-        recorded: options?.record,
-      });
+      setLoading(false);
+      setRes(error.response);
+      setActiveTab(1);
+      setRecorded(options?.record);
+      setError(!error.response && error);
     }
-  };
+  }
 
-  onTransitionEnd = (evt) => {
-    if (
-      !this.state.active &&
-      (!this.ref.current || this.ref.current === evt.target)
-    ) {
-      this.setState({
-        visible: false,
-      });
+  function onTransitionEnd(evt) {
+    if (!active && (!ref.current || ref.current === evt.target)) {
+      setVisible(false);
     }
-  };
+  }
 
-  render() {
-    const { visible } = this.state;
+  function render() {
     return (
       <React.Fragment>
-        {this.renderTrigger()}
-        <Dimmer page active={visible} onClick={this.onCloseClick} />
-        <div
-          ref={this.ref}
-          className={this.getBlockClass()}
-          onTransitionEnd={this.onTransitionEnd}>
-          {visible && this.renderPanel()}
+        {renderTrigger()}
+        <Dimmer page active={visible} onClick={onCloseClick} />
+        <div ref={ref} className={className} onTransitionEnd={onTransitionEnd}>
+          {visible && renderPanel()}
         </div>
       </React.Fragment>
     );
   }
 
-  renderTrigger() {
-    const { trigger } = this.props;
+  function renderTrigger() {
     return React.cloneElement(trigger, {
-      onClick: this.onTriggerClick,
+      onClick: onTriggerClick,
     });
   }
 
-  renderPanel() {
-    const { route } = this.props;
-    const { activeTab, loading } = this.state;
+  function renderPanel() {
     return (
       <React.Fragment>
         <Dimmer inverted active={loading}>
           <Loader />
         </Dimmer>
-        <div className={this.getElementClass('close-button')}>
-          <Icon link name="xmark" size="large" onClick={this.onCloseClick} />
+        <div className={getElementClass('close-button')}>
+          <Icon link name="xmark" size="large" onClick={onCloseClick} />
         </div>
-        <div className={this.getElementClass('header')}>
+        <div className={getElementClass('header')}>
           <h3>{route}</h3>
         </div>
         <Tab
           activeIndex={activeTab}
-          onTabChange={this.onTabChange}
-          className={this.getElementClass('main')}
+          onTabChange={onTabChange}
+          className={getElementClass('main')}
           menu={{ secondary: true }}
           panes={[
             {
               menuItem: 'Request',
               render: () => {
-                return <Tab.Pane>{this.renderRequestPane()}</Tab.Pane>;
+                return <Tab.Pane>{renderRequestPane()}</Tab.Pane>;
               },
             },
             {
               menuItem: 'Response',
               render: () => {
-                return <Tab.Pane>{this.renderResponsePane()}</Tab.Pane>;
+                return <Tab.Pane>{renderResponsePane()}</Tab.Pane>;
               },
             },
           ]}
         />
-        <div className={this.getElementClass('footer')}>
-          {this.context.canEditDocs() && (
+        <div className={getElementClass('footer')}>
+          {canEditDocs() && (
             <Icon
               name="circle"
               color="red"
               title="Perform request and record as example"
-              onClick={this.onRecordClick}
+              onClick={onRecordClick}
             />
           )}
-          <Icon
-            name="play"
-            onClick={this.onPlayClick}
-            title="Perform request"
-          />
+          <Icon name="play" onClick={onPlayClick} title="Perform request" />
         </div>
       </React.Fragment>
     );
   }
 
-  renderRequestPane() {
+  function renderRequestPane() {
     return (
       <Form autoComplete="off" autoCorrect="off">
-        {this.renderParameters()}
-        {this.renderQuery()}
-        {this.renderBody()}
+        {renderParameters()}
+        {renderQuery()}
+        {renderBody()}
         <Divider />
-        {this.renderOutput()}
+        {renderOutput()}
       </Form>
     );
   }
 
-  renderParameters() {
-    const { route } = this.props;
-    const { docs } = this.context;
+  function renderParameters() {
     let parameters = get(docs, getParametersPath(route), []);
     parameters = parameters.filter((p) => {
       return p.in === 'path';
@@ -267,7 +235,7 @@ export default class RequestBuilder extends React.Component {
             return (
               <Form.Field key={param.name}>
                 <label>{param.name}</label>
-                {this.renderInput(path)}
+                {renderInput(path)}
               </Form.Field>
             );
           })}
@@ -276,9 +244,7 @@ export default class RequestBuilder extends React.Component {
     }
   }
 
-  renderQuery() {
-    const { route } = this.props;
-    const { docs } = this.context;
+  function renderQuery() {
     let parameters = get(docs, getParametersPath(route), []);
     parameters = parameters.filter((p) => {
       return p.in === 'query';
@@ -292,7 +258,7 @@ export default class RequestBuilder extends React.Component {
             return (
               <Form.Field key={param.name}>
                 <label>{param.name}</label>
-                {this.renderInput(path)}
+                {renderInput(path)}
               </Form.Field>
             );
           })}
@@ -301,23 +267,19 @@ export default class RequestBuilder extends React.Component {
     }
   }
 
-  renderBody() {
-    const { route } = this.props;
-    const { docs } = this.context;
-
+  function renderBody() {
     const schema = get(docs, getSchemaPath(route), {});
     if (schema?.properties) {
       return (
         <React.Fragment>
           <h4>Body</h4>
-          {this.renderSchema(schema, ['body'])}
+          {renderSchema(schema, ['body'])}
         </React.Fragment>
       );
     }
   }
 
-  renderSchema(schema, path, options) {
-    const { docs } = this.context;
+  function renderSchema(schema, path, options) {
     schema = resolveRefs(docs, schema);
     const { type, oneOf } = schema;
     if (oneOf) {
@@ -325,30 +287,29 @@ export default class RequestBuilder extends React.Component {
         <OneOfSchema
           schema={schema}
           renderSchema={(schema) => {
-            return this.renderSchema(schema, path, options);
+            return renderSchema(schema, path, options);
           }}
         />
       );
     }
     switch (type) {
       case 'object':
-        return this.renderObjectSchema(schema, path, options);
+        return renderObjectSchema(schema, path, options);
       case 'array':
-        return this.renderArraySchema(schema, path, options);
+        return renderArraySchema(schema, path, options);
       case 'number':
-        return this.renderNumberSchema(schema, path, options);
+        return renderNumberSchema(schema, path, options);
       case 'boolean':
-        return this.renderBooleanSchema(schema, path, options);
+        return renderBooleanSchema(schema, path, options);
       case 'string':
       case 'ObjectId':
-        return this.renderStringSchema(schema, path, options);
+        return renderStringSchema(schema, path, options);
       default:
         throw new Error(`Cannot find type ${type}.`);
     }
   }
 
-  renderObjectSchema(schema, path) {
-    const { docs } = this.context;
+  function renderObjectSchema(schema, path) {
     const { properties } = schema;
     const entries = Object.entries(properties);
     entries.sort((a, b) => {
@@ -385,7 +346,7 @@ export default class RequestBuilder extends React.Component {
                     </label>
                     {open && (
                       <div className="indent lined">
-                        {this.renderSchema(schema, [...path, key])}
+                        {renderSchema(schema, [...path, key])}
                       </div>
                     )}
                   </React.Fragment>
@@ -405,23 +366,18 @@ export default class RequestBuilder extends React.Component {
                   }}
                   onClick={() => {
                     const p = [...path, key];
-                    const { request } = this.state;
-                    const values = get(request, p, []);
-                    set(request, p, [...values, undefined]);
-                    this.setState({
-                      request: {
-                        ...this.state.request,
-                      },
-                    });
+                    const values = get(req, p, []);
+                    set(req, p, [...values, undefined]);
+                    setReq({ ...req });
                   }}
                 />
               </label>
-              {this.renderSchema(schema, [...path, key])}
+              {renderSchema(schema, [...path, key])}
             </React.Fragment>
           ) : (
             <React.Fragment>
               <label>{key}</label>
-              {this.renderSchema(schema, [...path, key])}
+              {renderSchema(schema, [...path, key])}
             </React.Fragment>
           )}
         </Form.Field>
@@ -429,16 +385,15 @@ export default class RequestBuilder extends React.Component {
     });
   }
 
-  renderArraySchema(schema, path, options) {
-    const { request } = this.state;
+  function renderArraySchema(schema, path, options) {
     const { items } = schema;
-    const values = get(request, path, []);
+    const values = get(req, path, []);
     return (
       <React.Fragment>
         {values.map((value, i) => {
           return (
             <Form.Field key={i}>
-              {this.renderSchema(items, [...path, i], {
+              {renderSchema(items, [...path, i], {
                 ...options,
                 icon: (
                   <Icon
@@ -449,12 +404,8 @@ export default class RequestBuilder extends React.Component {
                       const updated = values.filter((value, j) => {
                         return j !== i;
                       });
-                      set(request, path, updated);
-                      this.setState({
-                        request: {
-                          ...this.state.request,
-                        },
-                      });
+                      set(req, path, updated);
+                      setReq({ ...req });
                     }}
                   />
                 ),
@@ -466,88 +417,79 @@ export default class RequestBuilder extends React.Component {
     );
   }
 
-  setField = (evt, { type, path, value, checked }) => {
+  function setField(evt, { type, path, value, checked }) {
     if (type === 'number') {
       value = Number(value);
     } else if (type === 'checkbox') {
       value = checked;
     }
-    const request = { ...this.state.request };
-    set(request, path, value || undefined);
-    this.setState({
-      request,
-    });
-  };
-
-  renderStringSchema(schema, path, options) {
-    return this.renderInput(path, options);
+    set(req, path, value || undefined);
+    setReq({ ...req });
   }
 
-  renderNumberSchema(schema, path, options) {
-    return this.renderInput(path, {
+  function renderStringSchema(schema, path, options) {
+    return renderInput(path, options);
+  }
+
+  function renderNumberSchema(schema, path, options) {
+    return renderInput(path, {
       ...options,
       type: 'number',
     });
   }
 
-  renderBooleanSchema(schema, path, options) {
-    return this.renderCheckbox(path, options);
+  function renderBooleanSchema(schema, path, options) {
+    return renderCheckbox(path, options);
   }
 
-  renderInput(path, options) {
-    const { request } = this.state;
-    const value = get(request, path);
+  function renderInput(path, options) {
+    const value = get(req, path);
     return (
       <Input
         {...options}
         path={path}
         value={value || ''}
-        onChange={this.setField}
+        onChange={setField}
         autoComplete="chrome-off"
         spellCheck="false"
       />
     );
   }
 
-  renderCheckbox(path, options) {
-    const { request } = this.state;
-    const value = get(request, path);
+  function renderCheckbox(path, options) {
+    const value = get(req, path);
     return (
       <Checkbox
         toggle
         path={path}
         checked={value || false}
-        onChange={this.setField}
+        onChange={setField}
         {...options}
       />
     );
   }
 
-  renderOutput() {
-    const { request } = this.state;
-    const { method, path } = this.expandRoute();
+  function renderOutput() {
+    const { method, path } = resolveRoute();
     return (
       <RequestBlock
         request={{
           method,
           path,
-          body: request?.body,
+          body: req?.body,
         }}
       />
     );
   }
 
-  renderResponsePane() {
-    const { response, recorded, error } = this.state;
-    if (response || error) {
+  function renderResponsePane() {
+    if (res || error) {
       return (
         <React.Fragment>
           <ErrorMessage error={error} />
-          {response && (
-            <Code language="json">{JSON.stringify(response, null, 2)}</Code>
-          )}
+          {res && <Code language="json">{JSON.stringify(res, null, 2)}</Code>}
           {recorded && (
-            <div className={this.getElementClass('response-recorded')}>
+            <div className={getElementClass('response-recorded')}>
               Response Recorded
             </div>
           )}
@@ -555,50 +497,40 @@ export default class RequestBuilder extends React.Component {
       );
     }
   }
+
+  return render();
 }
 
-class Collapsable extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      open: false,
-    };
+function Collapsable(props) {
+  const { children } = props;
+
+  const [open, setOpen] = useState(false);
+
+  function toggle() {
+    setOpen(!open);
   }
 
-  toggle = () => {
-    this.setState({
-      open: !this.state.open,
-    });
-  };
-
-  render() {
-    const { children } = this.props;
-    const { open } = this.state;
+  function render() {
     return children({
       open,
-      toggle: this.toggle,
+      toggle,
     });
   }
+
+  return render();
 }
 
-class OneOfSchema extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selected: 0,
-    };
+function OneOfSchema(props) {
+  const { schema, renderSchema } = props;
+
+  const [selected, setSelected] = useState(0);
+
+  function onDropdownChange(evt, { value }) {
+    setSelected(value);
   }
 
-  onDropdownChange = (evt, { value }) => {
-    this.setState({
-      selected: value,
-    });
-  };
-
-  render() {
-    const { schema, renderSchema } = this.props;
+  function render() {
     const { oneOf = [] } = schema;
-    const { selected } = this.state;
     return (
       <React.Fragment>
         <Dropdown
@@ -609,12 +541,14 @@ class OneOfSchema extends React.Component {
               value: i,
             };
           })}
-          onChange={this.onDropdownChange}
+          onChange={onDropdownChange}
         />
         {renderSchema(oneOf[selected])}
       </React.Fragment>
     );
   }
+
+  return render();
 }
 
 function getRank(key, obj) {

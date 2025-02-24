@@ -15,9 +15,7 @@ import QRCode from 'components/QRCode';
 
 import { request } from 'utils/api';
 
-@screen
-@withSession
-export default class Authenticator extends React.Component {
+class Authenticator extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -164,3 +162,5 @@ export default class Authenticator extends React.Component {
     }
   }
 }
+
+export default screen(withSession(Authenticator));

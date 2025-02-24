@@ -34,9 +34,7 @@ const CHANNELS = [
   },
 ];
 
-@screen
-@withSession
-export default class Notifications extends React.Component {
+class Notifications extends React.Component {
   state = {
     message: null,
     configs: this.context.user.notifications,
@@ -184,3 +182,5 @@ export default class Notifications extends React.Component {
     );
   }
 }
+
+export default screen(withSession(Notifications));
