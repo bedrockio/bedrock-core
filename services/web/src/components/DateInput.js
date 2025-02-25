@@ -125,9 +125,9 @@ export default function DateInput(props) {
           content={
             <DayPicker
               mode="single"
-              month={date}
               selected={date}
               onSelect={onSelect}
+              defaultMonth={date}
             />
           }
         />
