@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { get, isEqual } from 'lodash';
+import { Popup } from 'semantic';
 
 import { useClass } from 'helpers/bem';
 
@@ -179,11 +180,13 @@ export default function DocsProperties(props) {
           return (
             <React.Fragment>
               {renderType(oneOf[0])}
-              <span
-                title="May also be an array."
-                className={getElementClass('note')}>
-                *
-              </span>
+              <Popup
+                position="right center"
+                trigger={
+                  <span className={this.getElementClass('note')}>*</span>
+                }>
+                May also be an array.
+              </Popup>
             </React.Fragment>
           );
         }
