@@ -99,6 +99,21 @@ export default function DocsProperties(props) {
               </div>
             </React.Fragment>
           );
+        } else if (desc.items?.properties) {
+          return (
+            <React.Fragment key={name}>
+              {renderParam(name, desc, path, {
+                ...options,
+                level,
+              })}
+              <div className={getElementClass('param-group')}>
+                {renderParams(desc.items.properties, [...path, name], {
+                  ...options,
+                  level: level + 1,
+                })}
+              </div>
+            </React.Fragment>
+          );
         } else {
           return renderParam(name, desc, path, {
             ...options,
