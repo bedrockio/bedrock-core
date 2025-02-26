@@ -17,10 +17,16 @@ function autoclean(schema) {
         console.error('Fixtures cannot be deleted as they may be used in other tests.');
       } else {
         console.error(
-          [
-            'Fixtures cannot be directly updated as they may be used in other tests.',
-            'Instead create a new document or use $clone.',
-          ].join('\n')
+          `
+Attempt to update fixture failed:
+
+Model: ${this.constructor.modelName}
+Paths: ${this.modifiedPaths().join(', ')}
+
+Fixtures cannot be directly updated as they may be used in other tests.
+Instead create a new document or use $clone.
+
+`.trim(),
         );
       }
       throw new Error('Exited due to fixture update.');
@@ -50,7 +56,7 @@ function autoclean(schema) {
           `${modelName}.deleteMany() cannot be called in tests without a filter as this will`,
           'result in a loss of fixture data. Non-fixture documents created during',
           'tests are removed after each test has finished.',
-        ].join('\n')
+        ].join('\n'),
       );
       throw new Error('Exited due to deleteMany call.');
     }
@@ -73,7 +79,7 @@ afterEach(async () => {
     await Promise.all(
       Array.from(stored.values()).map((doc) => {
         return doc.destroy();
-      })
+      }),
     );
   }
 });
