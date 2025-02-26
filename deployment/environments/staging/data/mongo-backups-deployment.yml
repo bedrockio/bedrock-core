@@ -13,13 +13,13 @@ spec:
         app: mongo-backups
     spec:
       containers:
-        - image: dominiek/mongodb-backups
+        - image: bedrockio/mongodb-backups
           imagePullPolicy: Always
           name: main
           env:
             - name: MONGO_HOST
-              value: "mongo"
+              value: 'mongo'
             - name: MONGO_DB
-              value: "bedrock_staging"
+              value: 'bedrock_staging'
             - name: BACKUPS_GS_BUCKET
-              value: "bedrock-foundation-staging-mongodb-backups"
+              value: 'bedrock-foundation-staging-mongodb-backups'
