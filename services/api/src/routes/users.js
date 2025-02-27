@@ -1,6 +1,6 @@
 const Router = require('@koa/router');
 const yd = require('@bedrockio/yada');
-const { fetchByParam } = require('../utils/middleware/params');
+const { fetchByParam, isSelf } = require('../utils/middleware/params');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
@@ -19,13 +19,13 @@ const router = new Router();
 router
   .use(authenticate())
   .param('id', fetchByParam(User))
-  .get('/me', async (ctx) => {
+  .get('/me', isSelf, async (ctx) => {
     const { authUser } = ctx.state;
     ctx.body = {
       data: expandRoles(authUser, ctx),
     };
   })
-  .patch('/me', validateBody(User.getUpdateValidation()), async (ctx) => {
+  .patch('/me', isSelf, validateBody(User.getUpdateValidation()), async (ctx) => {
     const { authUser } = ctx.state;
     authUser.assign(ctx.request.body);
     await authUser.save();
@@ -40,7 +40,7 @@ router
     // Don't allow an superAdmin to imitate another superAdmin
     const allowedRoles = expandRoles(authUser, ctx).roles.reduce(
       (result, { roleDefinition }) => result.concat(roleDefinition.allowAuthenticationOnRoles || []),
-      []
+      [],
     );
 
     const isAllowed = [...user.roles].every(({ role }) => allowedRoles.includes(role));
@@ -80,7 +80,7 @@ router
     validateBody(
       User.getSearchValidation({
         ...exportValidation(),
-      })
+      }),
     ),
     async (ctx) => {
       const { format, filename, ...params } = ctx.request.body;
@@ -92,7 +92,7 @@ router
         data: data.map((item) => expandRoles(item, ctx)),
         meta,
       };
-    }
+    },
   )
   .get('/:id', async (ctx) => {
     ctx.body = {
@@ -111,7 +111,7 @@ router
             throw new Error('email or phone number is required');
           }
         })
-        .custom(validateUserRoles)
+        .custom(validateUserRoles),
     ),
     async (ctx) => {
       const { email, phone } = ctx.request.body;
@@ -131,7 +131,7 @@ router
       ctx.body = {
         data: user,
       };
-    }
+    },
   )
   .patch('/:id', validateBody(User.getUpdateValidation().custom(validateUserRoles)), async (ctx) => {
     const { user } = ctx.state;

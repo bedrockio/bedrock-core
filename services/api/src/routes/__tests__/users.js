@@ -60,6 +60,23 @@ describe('/1/users', () => {
       expect(updatedUser.lastName).toBe('Name');
       expect(updatedUser.name).toBe('Other Name');
     });
+
+    it('should be able to patch the device token', async () => {
+      let user = await createUser();
+      const response = await request(
+        'PATCH',
+        '/1/users/me',
+        {
+          deviceToken: 'new-token',
+        },
+        { user },
+      );
+
+      expect(response.status).toBe(200);
+      expect(response.body.data.email).toBe(user.email);
+      user = await User.findById(user._id);
+      expect(user.deviceToken).toBe('new-token');
+    });
   });
 
   describe('POST /', () => {
@@ -74,7 +91,7 @@ describe('/1/users', () => {
           firstName: 'Mellow',
           lastName: 'Yellow',
         },
-        { user: admin }
+        { user: admin },
       );
       const data = response.body.data;
       expect(response.status).toBe(200);
@@ -95,7 +112,7 @@ describe('/1/users', () => {
           firstName: 'Mellow',
           lastName: 'Yellow',
         },
-        { user }
+        { user },
       );
       expect(response.status).toBe(403);
     });
@@ -117,7 +134,7 @@ describe('/1/users', () => {
             },
           ],
         },
-        { user: admin }
+        { user: admin },
       );
       expect(response.status).toBe(400);
     });
@@ -158,7 +175,7 @@ describe('/1/users', () => {
         {},
         {
           user: superAdmin,
-        }
+        },
       );
       expect(response.status).toBe(200);
 
@@ -182,7 +199,7 @@ describe('/1/users', () => {
         {},
         {
           token,
-        }
+        },
       );
       expect(response.body.data.name).toBe('Neo One');
     });
@@ -207,7 +224,7 @@ describe('/1/users', () => {
         {},
         {
           user: superAdmin,
-        }
+        },
       );
       expect(response.status).toBe(200);
 
@@ -220,7 +237,7 @@ describe('/1/users', () => {
         {},
         {
           token,
-        }
+        },
       );
       expect(response.status).toBe(401);
       expect(response.body.error.message).toBe('jwt expired');
@@ -274,7 +291,7 @@ describe('/1/users', () => {
             order: 'asc',
           },
         },
-        { user: admin }
+        { user: admin },
       );
       expect(response.status).toBe(200);
       expect(response.body.data.length).toBe(2);
@@ -297,7 +314,7 @@ describe('/1/users', () => {
         'PATCH',
         `/1/users/${user1.id}`,
         { firstName: 'New', lastName: 'Name' },
-        { user: admin }
+        { user: admin },
       );
       expect(response.status).toBe(200);
       expect(response.body.data.firstName).toBe('New');
@@ -327,7 +344,7 @@ describe('/1/users', () => {
             },
           ],
         },
-        { user: admin }
+        { user: admin },
       );
       expect(response.status).toBe(200);
       expect(response.body.data.roles.length).toBe(1);
@@ -353,7 +370,7 @@ describe('/1/users', () => {
             },
           ],
         },
-        { user: admin }
+        { user: admin },
       );
       expect(response.status).toBe(400);
     });
@@ -371,7 +388,7 @@ describe('/1/users', () => {
           createdAt: '2020-01-01T00:00:00Z',
           updatedAt: '2020-01-01T00:00:00Z',
         },
-        { user: admin }
+        { user: admin },
       );
       expect(response.status).toBe(200);
       expect(response.body.data.firstName).toBe('New');
@@ -390,7 +407,7 @@ describe('/1/users', () => {
           password: 'new password',
           _password: 'new password',
         },
-        { user: admin }
+        { user: admin },
       );
       expect(response.status).toBe(200);
       user = await User.findById(user.id);

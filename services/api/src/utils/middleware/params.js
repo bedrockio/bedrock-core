@@ -43,7 +43,16 @@ async function checkAccess(ctx, doc, options = {}) {
   return await hasAccess(ctx, doc);
 }
 
+// Middleware setting the user to authUser.
+// This is for interop with the validate middleware
+// when performing "self" checks for "writeAccess".
+function isSelf(ctx, next) {
+  ctx.state.user = ctx.state.authUser;
+  return next();
+}
+
 module.exports = {
+  isSelf,
   fetchByParam,
   fetchByParamWithSlug,
 };
