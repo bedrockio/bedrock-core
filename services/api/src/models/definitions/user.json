@@ -38,7 +38,9 @@
       "writeAccess": "none"
     },
     "deviceToken": {
-      "type": "String"
+      "type": "String",
+      "readAccess": "none",
+      "writeAccess": "self"
     },
     "notifications": [
       {
