@@ -9,6 +9,8 @@ async function sendMessage(options) {
     await sendMail(options);
   } else if (transport === 'sms') {
     await sendSms(options);
+  } else if (transport === 'push') {
+    await sendPush(options);
   } else {
     throw new Error('No transport found to send message.');
   }
@@ -19,6 +21,8 @@ function getTransport(user) {
     return 'email';
   } else if (user.phone) {
     return 'sms';
+  } else if (user.deviceToken) {
+    return 'push';
   }
 }
 

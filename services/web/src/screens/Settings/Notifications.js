@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Segment,
   Label,
@@ -10,8 +10,7 @@ import {
   Message,
 } from 'semantic';
 
-import screen from 'helpers/screen';
-import { withSession } from 'stores/session';
+import { useSession } from 'stores/session';
 
 import ErrorMessage from 'components/ErrorMessage';
 
@@ -34,40 +33,47 @@ const CHANNELS = [
   },
 ];
 
-class Notifications extends React.Component {
-  state = {
-    message: null,
-    configs: this.context.user.notifications,
-  };
+export default function Notifications() {
+  const { user, meta, updateUser } = useSession();
 
-  updateConfig = (newConfig) => {
-    const configs = [...this.state.configs];
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState(null);
+  const [configs, setConfigs] = useState(() => {
+    return meta.notifications.map((base) => {
+      const config = user.notifications.find((c) => {
+        return c.name === base.name;
+      });
+      return {
+        ...base,
+        ...config,
+      };
+    });
+  });
 
-    const index = configs.findIndex((config) => {
+  function updateConfig(newConfig) {
+    const newConfigs = [...configs];
+
+    const index = newConfigs.findIndex((config) => {
       return config.type === newConfig.type;
     });
     if (index === -1) {
-      configs.push(newConfig);
+      newConfigs.push(newConfig);
     } else {
-      configs[index] = {
-        ...configs[index],
+      newConfigs[index] = {
+        ...newConfigs[index],
         ...newConfig,
       };
     }
 
-    this.setState({
-      configs,
-    });
-  };
+    setConfigs(newConfigs);
+  }
 
-  onSubmit = async () => {
+  async function onSubmit() {
     try {
-      this.setState({
-        message: null,
-        loading: true,
-        error: null,
-      });
-      const { configs } = this.state;
+      setMessage(null);
+      setLoading(true);
+      setError(null);
       const { data } = await request({
         method: 'PATCH',
         path: `/1/users/me`,
@@ -75,22 +81,18 @@ class Notifications extends React.Component {
           notifications: configs,
         },
       });
-      this.context.updateUser(data);
-      this.setState({
-        error: false,
-        loading: false,
-        message: 'Settings Updated',
-      });
-    } catch (error) {
-      this.setState({
-        error,
-        loading: false,
-      });
-    }
-  };
 
-  render() {
-    const { error, loading, message } = this.state;
+      updateUser(data);
+
+      setMessage('Settings Updated');
+      setLoading(false);
+    } catch (error) {
+      setError(error);
+      setLoading(false);
+    }
+  }
+
+  function render() {
     return (
       <React.Fragment>
         <Menu />
@@ -104,7 +106,7 @@ class Notifications extends React.Component {
                 <Loader />
               </Dimmer>
             )}
-            {this.renderSettings()}
+            {renderSettings()}
           </Segment>
           <div style={{ textAlign: 'right' }}>
             <Button
@@ -112,7 +114,7 @@ class Notifications extends React.Component {
               content="Save"
               loading={loading}
               disabled={loading}
-              onClick={this.onSubmit}
+              onClick={onSubmit}
             />
           </div>
         </Form>
@@ -120,12 +122,10 @@ class Notifications extends React.Component {
     );
   }
 
-  renderSettings() {
-    const { user, meta } = this.context;
+  function renderSettings() {
     if (!user || !meta) {
       return;
     }
-    const { configs } = this.state;
     const { notifications } = meta;
     if (!notifications.length) {
       return <div>No notification settings.</div>;
@@ -158,7 +158,7 @@ class Notifications extends React.Component {
                           cursor: 'pointer',
                         }}
                         onClick={() => {
-                          this.updateConfig({
+                          updateConfig({
                             ...config,
                             name,
                             [value]: !isActive,
@@ -181,6 +181,6 @@ class Notifications extends React.Component {
       </React.Fragment>
     );
   }
-}
 
-export default screen(withSession(Notifications));
+  return render();
+}
