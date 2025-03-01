@@ -71,8 +71,7 @@ export default async function request(options) {
     try {
       response = await res.json();
       trackRequest(options, response);
-    } catch (e) {
-      console.error(e);
+    } catch {
       throw new ApiParseError();
     }
   }

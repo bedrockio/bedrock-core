@@ -1,18 +1,11 @@
-const babelParser = require('@babel/eslint-parser');
-const {
-  mdx,
-  jest,
-  react,
-  recommended,
-  webpackImports,
-} = require('@bedrockio/eslint-plugin');
+import babelParser from '@babel/eslint-parser';
+import { mdx, jest, react, recommended } from '@bedrockio/eslint-plugin';
 
-module.exports = [
+export default [
   mdx,
   jest,
   react,
   recommended,
-  webpackImports,
   {
     files: ['src/**/*.js'],
     languageOptions: {

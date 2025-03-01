@@ -1,5 +1,4 @@
 import React from 'react';
-// eslint-disable-next-line
 import { Table, Button, Divider, Segment } from 'semantic';
 import { Link } from '@bedrockio/router';
 
@@ -17,7 +16,6 @@ import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 
 // --- Generator: list-imports
-/* eslint-disable-next-line */
 import { Image } from 'semantic';
 import allCountries from 'utils/countries';
 import { urlForUpload } from 'utils/uploads';
