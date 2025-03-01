@@ -1,7 +1,7 @@
 // Overriding from draft-js to use getRangeInlineRects
 // instead of getRangeClientRects for more accurate selections.
 
-var getRangeInlineRects = require('./getRangeInlineRects');
+import getRangeInlineRects from './getRangeInlineRects';
 
 /**
  * Like range.getBoundingClientRect() but normalizes for browser bugs.
@@ -57,4 +57,4 @@ function getRangeBoundingClientRect(range) {
   };
 }
 
-module.exports = getRangeBoundingClientRect;
+export default getRangeBoundingClientRect;

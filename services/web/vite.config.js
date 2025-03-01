@@ -1,7 +1,8 @@
 import path from 'path';
 
-import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { mdx } from '@cyco130/vite-plugin-mdx';
+import { defineConfig } from 'vite';
 
 import config from '@bedrockio/config';
 
@@ -12,14 +13,19 @@ const PUBLIC = omitBy(
   (_, key) => key.startsWith('SERVER') || key.startsWith('HTTP')
 );
 
+const ENV_REG = /(?:<!-- |{{)env:(\w+)(?: -->|}})/g;
+
 const htmlPlugin = () => {
   return {
     name: 'html-transform',
     transformIndexHtml(html) {
-      return html.replace(
-        '<!-- env:conf -->',
-        `__ENV__ = ${JSON.stringify(PUBLIC)}`
-      );
+      return html.replace(ENV_REG, (all, name) => {
+        if (name === 'conf') {
+          return `<script>window.__ENV__ = ${JSON.stringify(PUBLIC)};</script>`;
+        } else {
+          return PUBLIC[name] || '';
+        }
+      });
     },
   };
 };
@@ -30,7 +36,8 @@ export default defineConfig({
     port: 2200,
     strictPort: true,
   },
-  plugins: [react(), htmlPlugin()],
+  // mdx has to go before react
+  plugins: [mdx(), react(), htmlPlugin()],
   envPrefix: 'PUBLIC',
 
   resolve: {
@@ -45,6 +52,7 @@ export default defineConfig({
       utils: path.resolve(__dirname, './src/utils'),
       modals: path.resolve(__dirname, './src/modals'),
       assets: path.resolve(__dirname, './src/assets'),
+      docs: path.resolve(__dirname, './src/docs'),
     },
   },
 

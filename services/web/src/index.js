@@ -18,6 +18,9 @@ import solidIcons from 'semantic/assets/icons/solid.svg';
 import brandIcons from 'semantic/assets/icons/brands.svg';
 import regularIcons from 'semantic/assets/icons/regular.svg';
 
+// this is to handle some issue rich editor
+window.global = window;
+
 Icon.useSet(solidIcons);
 Icon.useSet(brandIcons, 'brands');
 Icon.useSet(regularIcons, 'regular');

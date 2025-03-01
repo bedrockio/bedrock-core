@@ -23,6 +23,7 @@
     "@bedrockio/config": "^2.2.2",
     "@bedrockio/logger": "^1.0.5",
     "@bedrockio/router": "^0.1.2",
+    "@cyco130/vite-plugin-mdx": "^2.1.7",
     "@draft-js-plugins/alignment": "^5.0.3",
     "@draft-js-plugins/anchor": "^4.2.0",
     "@draft-js-plugins/drag-n-drop": "^4.2.2",

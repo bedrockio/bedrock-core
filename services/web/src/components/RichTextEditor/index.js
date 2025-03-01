@@ -184,11 +184,11 @@ export default function RichTextEditor(props) {
   }
 
   function renderEditor() {
-    const props = omit(props, Object.keys(RichTextEditor.propTypes));
+    const _props = omit(props, Object.keys(RichTextEditor.propTypes));
     if (mode === 'inline') {
       return (
         <Editor
-          {...props}
+          {..._props}
           plugins={plugins}
           editorState={editorState}
           onChange={onStateChange}
@@ -201,7 +201,7 @@ export default function RichTextEditor(props) {
     } else if (mode === 'markdown') {
       return (
         <textarea
-          {...props}
+          {..._props}
           ref={textAreaRef}
           onChange={onMarkdownChange}
           onKeyDown={onKeyDown}
@@ -211,7 +211,7 @@ export default function RichTextEditor(props) {
       );
     } else if (mode === 'preview') {
       return (
-        <div {...props} className={getElementClass('preview')}>
+        <div {..._props} className={getElementClass('preview')}>
           <Markdown source={markdown} trusted />
         </div>
       );

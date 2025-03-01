@@ -70,8 +70,9 @@ export default async function request(options) {
   if (contentType === 'application/json') {
     try {
       response = await res.json();
-      trackRequest(options, response.data);
-    } catch {
+      trackRequest(options, response);
+    } catch (e) {
+      console.error(e);
       throw new ApiParseError();
     }
   }

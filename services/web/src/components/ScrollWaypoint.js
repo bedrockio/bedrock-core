@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { omit } from 'lodash';
 import PropTypes from 'prop-types';
 
@@ -29,15 +29,21 @@ export default function ScrollWaypoint(props) {
 
   const { className } = useClass('scroll-waypoint');
 
+  const [observer, setObserver] = useState();
+
   // Lifecycle
 
   useEffect(() => {
-    const observer = createObserver();
-
-    return () => {
-      destroyObserver(observer);
-    };
+    createObserver();
   }, []);
+
+  useEffect(() => {
+    if (observer) {
+      return () => {
+        destroyObserver(observer);
+      };
+    }
+  }, [observer]);
 
   // Observer
 
@@ -53,7 +59,7 @@ export default function ScrollWaypoint(props) {
       observer.observe(el);
     }
 
-    return observer;
+    setObserver(observer);
   }
 
   function destroyObserver(observer) {
@@ -75,16 +81,12 @@ export default function ScrollWaypoint(props) {
     }
   }
 
-  function render() {
-    const props = omit(props, Object.keys(ScrollWaypoint.propTypes));
-    return (
-      <div {...props} ref={ref} className={className}>
-        {props.children}
-      </div>
-    );
-  }
-
-  return render();
+  const divProps = omit(props, Object.keys(ScrollWaypoint.propTypes));
+  return (
+    <div {...divProps} ref={ref} className={className}>
+      {props.children}
+    </div>
+  );
 }
 
 ScrollWaypoint.propTypes = {
