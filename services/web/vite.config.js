@@ -5,11 +5,12 @@ import react from '@vitejs/plugin-react';
 
 import config from '@bedrockio/config';
 
-import { template as compileTemplate } from 'lodash-es';
+import { omitBy } from 'lodash-es';
 
-const PARAMS = {
-  ...config.getAll(),
-};
+const PUBLIC = omitBy(
+  config.getAll(),
+  (_, key) => key.startsWith('SERVER') || key.startsWith('HTTP')
+);
 
 const htmlPlugin = () => {
   return {
@@ -17,11 +18,12 @@ const htmlPlugin = () => {
     transformIndexHtml(html) {
       return html.replace(
         '<!-- env:conf -->',
-        `__ENV__ = ${JSON.stringify(PARAMS)}`
+        `__ENV__ = ${JSON.stringify(PUBLIC)}`
       );
     },
   };
 };
+
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
