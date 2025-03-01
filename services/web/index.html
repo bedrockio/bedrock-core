@@ -6,7 +6,7 @@
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-    <title>%PUBLIC_APP_NAME%</title>
+    <title><!-- env:APP_NAME --></title>
 
     <!-- Google Tag Manager -->
     <script>
@@ -20,7 +20,13 @@
         j.async = true;
         j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
         f.parentNode.insertBefore(j, f);
-      })(window, document, 'script', 'dataLayer', '%PUBLIC_GTM_CONTAINER_ID%');
+      })(
+        window,
+        document,
+        'script',
+        'dataLayer',
+        '<!-- env:GTM_CONTAINER_ID -->'
+      );
     </script>
     <!-- End Google Tag Manager -->
 
