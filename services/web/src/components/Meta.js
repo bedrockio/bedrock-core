@@ -7,6 +7,8 @@ export default function Meta(props) {
   const { title, children } = props;
   const { pathname } = useLocation();
 
+  return children;
+
   return (
     <Helmet>
       <link rel="canonical" href={APP_URL + pathname} />

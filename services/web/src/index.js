@@ -1,8 +1,6 @@
-// react-hot-loader needs to be imported
-// before react and react-dom
-import 'react-hot-loader';
+import React, { StrictMode, Suspense } from 'react';
+import { createRoot } from 'react-dom/client';
 
-import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Routes, Route } from '@bedrockio/router';
 import { HelmetProvider } from 'react-helmet-async';
@@ -62,5 +60,8 @@ const Wrapper = () => (
   </BrowserRouter>
 );
 
-// eslint-disable-next-line
-ReactDOM.render(<Wrapper />, document.getElementById('root'));
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <Wrapper />
+  </StrictMode>
+);

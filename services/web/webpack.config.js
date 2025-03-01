@@ -1,3 +1,4 @@
+/*
 const path = require('path');
 
 const webpack = require('webpack');
@@ -222,3 +223,4 @@ function getOptionalPlugins() {
   }
   return plugins;
 }
+*/
