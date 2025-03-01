@@ -16,8 +16,8 @@
     "postinstall": "cd serve && yarn install"
   },
   "dependencies": {
-    "@bedrockio/config": "^2.2.2",
-    "@bedrockio/logger": "^1.0.5",
+    "@bedrockio/config": "^2.2.3",
+    "@bedrockio/logger": "^1.1.3",
     "@bedrockio/router": "^0.1.2",
     "@cyco130/vite-plugin-mdx": "^2.1.7",
     "@draft-js-plugins/alignment": "^5.0.3",
@@ -28,11 +28,9 @@
     "@draft-js-plugins/image": "^4.1.3",
     "@draft-js-plugins/mention": "^5.2.1",
     "@draft-js-plugins/resizeable": "^5.0.3",
-    "@mdx-js/loader": "^2.2.1",
-    "@sentry/browser": "^7.16.0",
+    "@sentry/browser": "^9.3.0",
     "@simplewebauthn/browser": "^13.1.0",
     "@vitejs/plugin-react": "^4.3.4",
-    "autoprefixer": "^10.4.20",
     "date-fns": "^4.1.0",
     "draft-js": "^0.11.7",
     "google-map-react": "^2.2.0",
@@ -48,7 +46,6 @@
     "react-dom": "^18.3.1",
     "react-dropzone": "^14.2.3",
     "react-helmet-async": "^1.3.0",
-    "react-hot-loader": "^4.13.0",
     "react-markdown": "^8.0.3",
     "react-syntax-highlighter": "^15.5.0",
     "rehype-autolink-headings": "^7.1.0",
@@ -59,16 +56,11 @@
     "vite": "^6.2.0"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.26.8",
     "@bedrockio/eslint-plugin": "^1.1.3",
     "@bedrockio/prettier-config": "^1.0.2",
-    "@testing-library/dom": "^9.0.0",
-    "@testing-library/react": "^14.0.0",
-    "@testing-library/user-event": "^14.4.3",
-    "@types/lodash": "^4.17.15",
     "eslint": "^9.19.0",
     "eslint-plugin-mdx": "^3.1.5",
-    "prettier": "^2.8.1"
+    "prettier": "^3.5.2"
   },
   "volta": {
     "node": "22.14.0",
