@@ -30,7 +30,7 @@ import { hasAccess } from 'utils/user';
 
 const App = React.lazy(() => import('./App'));
 const AuthApp = React.lazy(() => import('./AuthApp'));
-const DocsApp = React.lazy(() => import('./docs/App'));
+const DocsApp = React.lazy(() => import('./Docs'));
 const OnboardApp = React.lazy(() => import('./OnboardApp'));
 
 function AppSwitch() {
@@ -65,5 +65,5 @@ const Wrapper = () => (
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Wrapper />
-  </StrictMode>
+  </StrictMode>,
 );

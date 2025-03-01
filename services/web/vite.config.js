@@ -10,7 +10,7 @@ import { omitBy } from 'lodash-es';
 
 const PUBLIC = omitBy(
   config.getAll(),
-  (_, key) => key.startsWith('SERVER') || key.startsWith('HTTP')
+  (_, key) => key.startsWith('SERVER') || key.startsWith('HTTP'),
 );
 
 const ENV_REG = /(?:<!-- |{{)env:(\w+)(?: -->|}})/g;
