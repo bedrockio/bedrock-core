@@ -16,9 +16,16 @@ const PUBLIC = omitBy(
 const ENV_REG = /(?:<!-- |{{)env:(\w+)(?: -->|}})/g;
 
 const htmlPlugin = () => {
+  let mode = '';
   return {
     name: 'html-transform',
+    configResolved(config) {
+      mode = config.mode;
+    },
     transformIndexHtml(html) {
+      if (mode !== 'development') {
+        return html;
+      }
       return html.replace(ENV_REG, (all, name) => {
         if (name === 'conf') {
           return `<script>window.__ENV__ = ${JSON.stringify(PUBLIC)};</script>`;
