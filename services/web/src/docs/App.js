@@ -1,4 +1,3 @@
-import { hot } from 'react-hot-loader/root';
 import { Routes, Route } from '@bedrockio/router';
 
 import PortalLayout from 'layouts/Portal';
@@ -22,4 +21,4 @@ function App() {
   );
 }
 
-export default hot(App);
+export default App;

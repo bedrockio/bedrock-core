@@ -1,4 +1,3 @@
-import { hot } from 'react-hot-loader/root';
 import { Routes, Route, Redirect } from '@bedrockio/router';
 
 import BasicLayout from 'layouts/Basic';
@@ -16,4 +15,4 @@ function App() {
   );
 }
 
-export default hot(App);
+export default App;
