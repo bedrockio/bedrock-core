@@ -143,7 +143,7 @@ function PasswordLogin() {
                 onAuthError={onAuthError}
               />
 
-              <Group justify="space-between">
+              <Group mt="md" justify="space-between">
                 <Anchor
                   to="/signup"
                   component="button"
@@ -152,7 +152,7 @@ function PasswordLogin() {
                   size="sm">
                   Don't have an account? Register
                 </Anchor>
-                <Button type="submit" radius="xl">
+                <Button variant="filled" type="submit">
                   Login
                 </Button>
               </Group>
