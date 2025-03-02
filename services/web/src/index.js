@@ -1,9 +1,13 @@
+import '@mantine/core/styles.css';
+
 import React, { StrictMode, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 
+import { MantineProvider } from '@mantine/core';
 import { BrowserRouter, Routes, Route } from '@bedrockio/router';
 import { HelmetProvider } from 'react-helmet-async';
 
+import { theme } from './theme';
 // Icons
 import { Icon } from 'semantic';
 
@@ -13,16 +17,16 @@ import { ThemeProvider } from 'stores/theme';
 import SessionSwitch from 'helpers/SessionSwitch';
 import 'utils/sentry';
 
-import solidIcons from 'semantic/assets/icons/solid.svg';
-import brandIcons from 'semantic/assets/icons/brands.svg';
-import regularIcons from 'semantic/assets/icons/regular.svg';
+//import solidIcons from 'semantic/assets/icons/solid.svg';
+//import brandIcons from 'semantic/assets/icons/brands.svg';
+//import regularIcons from 'semantic/assets/icons/regular.svg';
 
 // this is to handle some issue rich editor
 window.global = window;
 
-Icon.useSet(solidIcons);
-Icon.useSet(brandIcons, 'brands');
-Icon.useSet(regularIcons, 'regular');
+//Icon.useSet(solidIcons);
+//Icon.useSet(brandIcons, 'brands');
+//Icon.useSet(regularIcons, 'regular');
 
 import LoadingScreen from 'screens/Loading';
 
@@ -43,23 +47,25 @@ function AppSwitch() {
 }
 
 const Wrapper = () => (
-  <BrowserRouter>
-    <ThemeProvider>
-      <HelmetProvider>
-        <SessionProvider>
-          <SessionSwitch>
-            <Suspense fallback={<LoadingScreen />}>
-              <Routes>
-                <Route path="/onboard" render={OnboardApp} />
-                <Route path="/docs" render={DocsApp} />
-                <Route path="/" render={AppSwitch} />
-              </Routes>
-            </Suspense>
-          </SessionSwitch>
-        </SessionProvider>
-      </HelmetProvider>
-    </ThemeProvider>
-  </BrowserRouter>
+  <MantineProvider theme={theme}>
+    <BrowserRouter>
+      <ThemeProvider>
+        <HelmetProvider>
+          <SessionProvider>
+            <SessionSwitch>
+              <Suspense fallback={<LoadingScreen />}>
+                <Routes>
+                  <Route path="/onboard" render={OnboardApp} />
+                  <Route path="/docs" render={DocsApp} />
+                  <Route path="/" render={AppSwitch} />
+                </Routes>
+              </Suspense>
+            </SessionSwitch>
+          </SessionProvider>
+        </HelmetProvider>
+      </ThemeProvider>
+    </BrowserRouter>
+  </MantineProvider>
 );
 
 createRoot(document.getElementById('root')).render(

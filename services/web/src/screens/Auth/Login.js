@@ -1,3 +1,17 @@
+import {
+  Anchor,
+  Button,
+  Checkbox,
+  Divider,
+  Group,
+  Paper,
+  PasswordInput,
+  Stack,
+  Text,
+  TextInput,
+  Container,
+} from '@mantine/core';
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from '@bedrockio/router';
 import { Form, Grid, Segment } from 'semantic';
@@ -9,10 +23,10 @@ import Federated from 'components/Auth/Federated';
 import ErrorMessage from 'components/ErrorMessage';
 import EmailField from 'components/form-fields/Email';
 import OptionalPassword from 'components/Auth/OptionalPassword';
-import Logo from 'components/LogoTitle';
+import Logo from 'components/Logo';
 
 import { request } from 'utils/api';
-import { AUTH_TYPE, AUTH_TRANSPORT } from 'utils/env';
+import { AUTH_TYPE, AUTH_TRANSPORT, APP_NAME } from 'utils/env';
 
 function PasswordLogin() {
   const navigate = useNavigate();
@@ -92,10 +106,12 @@ function PasswordLogin() {
     });
   }
 
-  function render() {
-    return (
-      <React.Fragment>
-        <Logo title="Login" />
+  return (
+    <Container w={{ base: '100%', sm: 550 }} px="md">
+      <Logo title="Login" />
+      <Paper p="xl" radius="md" withBorder>
+        <Text size="lg">Welcome to {APP_NAME}</Text>
+
         <Form
           size="large"
           error={!!error}
@@ -146,11 +162,9 @@ function PasswordLogin() {
             </Segment>
           </Segment.Group>
         </Form>
-      </React.Fragment>
-    );
-  }
-
-  return render();
+      </Paper>
+    </Container>
+  );
 }
 
 export default screen(PasswordLogin);

@@ -1,15 +1,18 @@
 import React from 'react';
 
-import PageCenter from 'components/PageCenter';
+import { Center, Stack } from '@mantine/core';
+
 import ConnectionError from 'components/ConnectionError';
 
 export default class BasicLayout extends React.Component {
   render() {
     return (
-      <PageCenter>
-        <ConnectionError />
-        {this.props.children}
-      </PageCenter>
+      <Center style={{ height: '100vh' }}>
+        <Stack>
+          <ConnectionError />
+          {this.props.children}
+        </Stack>
+      </Center>
     );
   }
 }

@@ -15,7 +15,7 @@ export default function Federated(props) {
   const isSignup = type === 'signup';
 
   const showApple = canShowAppleSignin();
-  const showGoogle = canShowGoogleSignin();
+  const showGoogle = true; // canShowGoogleSignin();
   const showPasskey = !isSignup && canShowPasskey();
 
   if (!showApple && !showGoogle && !showPasskey) {
