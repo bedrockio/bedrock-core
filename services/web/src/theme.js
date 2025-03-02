@@ -15,6 +15,11 @@ export const theme = createTheme({
       '#669136',
       '#567e29',
     ],
+    error: DEFAULT_THEME.colors.red,
+    info: DEFAULT_THEME.colors.blue,
+    success: DEFAULT_THEME.colors.green,
+    warning: DEFAULT_THEME.colors.orange,
+
     ...DEFAULT_THEME.colors,
   },
 });

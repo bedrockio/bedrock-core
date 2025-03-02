@@ -5,6 +5,7 @@ import { omit } from 'lodash';
 import { Form, Input, Message, Dropdown, Flag } from 'semantic';
 
 import { COUNTRIES, getFormatLength, formatPhone } from 'utils/phone';
+import { TextInput } from '@mantine/core';
 
 export default class PhoneField extends React.Component {
   constructor(props) {
@@ -26,7 +27,7 @@ export default class PhoneField extends React.Component {
     return COUNTRIES[country].prefix;
   }
 
-  onChange = (evt, { value, ...rest }) => {
+  onChange = (evt, { value = '', ...rest }) => {
     const { country } = this.state;
     const maxLength = getFormatLength(country);
 
@@ -48,22 +49,17 @@ export default class PhoneField extends React.Component {
   render() {
     const { required, label, error } = this.props;
     return (
-      <Form.Field
+      <TextInput
         required={required}
         disabled={this.props.disabled}
-        error={error?.hasField?.('phone')}>
-        {label && <label>{label}</label>}
-        <Input
-          {...omit(this.props, Object.keys(PhoneField.propTypes))}
-          {...this.renderLabelProps()}
-          type="tel"
-          autoComplete="tel"
-          value={this.renderFormattedValue()}
-          onChange={this.onChange}
-          ref={this.ref}
-        />
-        {this.renderFieldErrors()}
-      </Form.Field>
+        error={error?.hasField?.('phone')}
+        label={label}
+        type="tel"
+        autoComplete="tel"
+        value={this.renderFormattedValue()}
+        onChange={this.onChange}
+        ref={this.ref}
+      />
     );
   }
 
@@ -111,7 +107,7 @@ export default class PhoneField extends React.Component {
   }
 
   renderFormattedValue() {
-    const { value } = this.props;
+    const { value = '' } = this.props;
     const country = COUNTRIES[this.state.country];
     return formatPhone(value, country);
   }

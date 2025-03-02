@@ -8,9 +8,10 @@ import {
   Stack,
   TextInput,
   Title,
+  Text,
 } from '@mantine/core';
 
-import { hasLength, isEmail, useForm } from '@mantine/form';
+import { isEmail, useForm } from '@mantine/form';
 
 import React, { useState } from 'react';
 import { Link, useNavigate } from '@bedrockio/router';
@@ -22,7 +23,7 @@ import Federated from 'components/Auth/Federated';
 import ErrorMessage from 'components/ErrorMessage';
 import Logo from 'components/Logo';
 
-import { request } from 'utils/api';
+import { request, useRequest } from 'utils/api';
 import { AUTH_TYPE, AUTH_TRANSPORT, APP_NAME } from 'utils/env';
 
 function login(values) {
@@ -60,7 +61,7 @@ function PasswordLogin() {
   const form = useForm({
     mode: 'uncontrolled',
     initialValues: {
-      passwword: '',
+      password: '',
       email: '',
     },
     validate: {
@@ -89,7 +90,7 @@ function PasswordLogin() {
       setError(null);
       setLoading(true);
 
-      const { data } = await login();
+      const { data } = await login(values);
       const { token, challenge } = data;
 
       if (token) {
@@ -122,19 +123,21 @@ function PasswordLogin() {
                 placeholder="Email"
                 {...form.getInputProps('email')}
               />
-              <PasswordInput
-                required
-                label="Password"
-                type="password"
-                description={
-                  <>
-                    Forgot you password{' '}
-                    <Link to="/forgot-password">click here</Link>
-                  </>
-                }
-                placeholder="Password"
-                {...form.getInputProps('password')}
-              />
+              {AUTH_TYPE === 'password' && (
+                <PasswordInput
+                  required
+                  label="Password"
+                  type="password"
+                  description={
+                    <>
+                      Forgot you password{' '}
+                      <Link to="/forgot-password">click here</Link>
+                    </>
+                  }
+                  placeholder="Password"
+                  {...form.getInputProps('password')}
+                />
+              )}
 
               <Federated
                 type="login"
@@ -143,19 +146,18 @@ function PasswordLogin() {
                 onAuthError={onAuthError}
               />
 
-              <Group mt="md" justify="space-between">
-                <Anchor
-                  to="/signup"
-                  component="button"
-                  type="button"
-                  c="dimmed"
-                  size="sm">
-                  Don't have an account? Register
-                </Anchor>
-                <Button variant="filled" type="submit">
-                  Login
-                </Button>
-              </Group>
+              <Button
+                fullWidth
+                loading={loading}
+                disabled={loading}
+                variant="filled"
+                type="submit">
+                Login
+              </Button>
+
+              <Text>
+                Don't have an account? <Link to="/signup">Register</Link>
+              </Text>
             </Stack>
           </form>
         </Stack>
