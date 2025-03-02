@@ -3,35 +3,32 @@
     "baseUrl": "./src",
     "jsx": "react-jsx",
     "checkJs": false,
-    "module": "ES6",
-    "target": "ES6",
-    "allowSyntheticDefaultImports": true
-  },
-  "paths": {
-    "helpers": [
-      "./src/helpers/**"
-    ],
-    "components": [
-      "./src/components/**"
-    ],
-    "screens": [
-      "./src/screens/**"
-    ],
-    "docs": [
-      "./src/docs/**"
-    ],
-    "utils": [
-      "./src/utils/**"
-    ],
-    "layouts": [
-      "./src/layouts/**"
-    ],
-    "stores": [
-      "./src/stores/**"
-    ],
-    "styles": [
-      "./src/styles/**"
-    ]
+    "paths": {
+      "helpers": [
+        "./src/helpers/*"
+      ],
+      "components": [
+        "./src/components/*"
+      ],
+      "screens": [
+        "./src/screens/*"
+      ],
+      "docs": [
+        "./src/docs/*"
+      ],
+      "utils": [
+        "./src/utils/*"
+      ],
+      "layouts": [
+        "./src/layouts/*"
+      ],
+      "stores": [
+        "src/stores/*"
+      ],
+      "styles": [
+        "./src/styles/*"
+      ]
+    }
   },
   "exclude": [
     "dist",
