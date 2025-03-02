@@ -1,4 +1,4 @@
-import { createTheme } from '@mantine/core';
+import { createTheme, DEFAULT_THEME } from '@mantine/core';
 
 export const theme = createTheme({
   primaryColor: 'primary',
@@ -15,5 +15,6 @@ export const theme = createTheme({
       '#669136',
       '#567e29',
     ],
+    ...DEFAULT_THEME.colors,
   },
 });
