@@ -149,8 +149,8 @@ function PasswordLogin() {
                   component="button"
                   type="button"
                   c="dimmed"
-                  size="xs">
-                  "Don't have an account? Register"
+                  size="sm">
+                  Don't have an account? Register
                 </Anchor>
                 <Button type="submit" radius="xl">
                   Login
