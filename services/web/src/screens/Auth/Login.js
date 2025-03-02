@@ -106,7 +106,7 @@ function PasswordLogin() {
 
   return (
     <Stack w={{ base: '100%', sm: 550 }} align="center">
-      <Center mt={10} mb={40}>
+      <Center mt={10} mb={20}>
         <Logo maw={200} title="Login" />
       </Center>
       <Paper miw={380} w="100%" p="xl" radius="md" withBorder>
