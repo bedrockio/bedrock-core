@@ -1,5 +1,5 @@
 import React from 'react';
-import { Divider } from 'semantic';
+import { Divider } from '@mantine/core';
 
 import { canShowGoogleSignin } from 'utils/auth/google';
 import { canShowAppleSignin } from 'utils/auth/apple';
@@ -15,7 +15,7 @@ export default function Federated(props) {
   const isSignup = type === 'signup';
 
   const showApple = canShowAppleSignin();
-  const showGoogle = true; // canShowGoogleSignin();
+  const showGoogle = canShowGoogleSignin();
   const showPasskey = !isSignup && canShowPasskey();
 
   if (!showApple && !showGoogle && !showPasskey) {
@@ -24,7 +24,7 @@ export default function Federated(props) {
 
   return (
     <React.Fragment>
-      <Divider horizontal>Or</Divider>
+      <Divider labelPosition="center" label={<>OR</>} />
       <Container {...props}>
         {showPasskey && <PasskeyButton {...props} />}
         {showGoogle && <GoogleButton {...props} />}

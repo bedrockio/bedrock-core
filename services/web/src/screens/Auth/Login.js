@@ -1,42 +1,75 @@
 import {
   Anchor,
   Button,
-  Checkbox,
-  Divider,
+  Center,
   Group,
   Paper,
   PasswordInput,
   Stack,
-  Text,
   TextInput,
-  Container,
+  Title,
 } from '@mantine/core';
+
+import { hasLength, isEmail, useForm } from '@mantine/form';
 
 import React, { useState } from 'react';
 import { Link, useNavigate } from '@bedrockio/router';
-import { Form, Grid, Segment } from 'semantic';
 
 import screen from 'helpers/screen';
 import { useSession } from 'stores/session';
 
 import Federated from 'components/Auth/Federated';
 import ErrorMessage from 'components/ErrorMessage';
-import EmailField from 'components/form-fields/Email';
-import OptionalPassword from 'components/Auth/OptionalPassword';
 import Logo from 'components/Logo';
 
 import { request } from 'utils/api';
 import { AUTH_TYPE, AUTH_TRANSPORT, APP_NAME } from 'utils/env';
 
+function login(values) {
+  if (AUTH_TYPE === 'password') {
+    return loginPassword(values);
+  } else {
+    return loginOtp(values);
+  }
+}
+
+async function loginPassword(body) {
+  return await request({
+    method: 'POST',
+    path: `/1/auth/password/login`,
+    body,
+  });
+}
+
+async function loginOtp(body) {
+  return await request({
+    method: 'POST',
+    path: `/1/auth/otp/send`,
+    body: {
+      ...body,
+      type: AUTH_TYPE,
+      transport: AUTH_TRANSPORT,
+    },
+  });
+}
+
 function PasswordLogin() {
   const navigate = useNavigate();
   const { authenticate } = useSession();
 
+  const form = useForm({
+    mode: 'uncontrolled',
+    initialValues: {
+      passwword: '',
+      email: '',
+    },
+    validate: {
+      email: isEmail('Invalid email'),
+    },
+  });
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [body, setBody] = useState({
-    email: '',
-  });
 
   function onAuthStart() {
     setLoading(true);
@@ -51,14 +84,7 @@ function PasswordLogin() {
     setLoading(false);
   }
 
-  function setField(evt, { name, value }) {
-    setBody({
-      ...body,
-      [name]: value,
-    });
-  }
-
-  async function onSubmit() {
+  async function onSubmit(values) {
     try {
       setError(null);
       setLoading(true);
@@ -78,92 +104,63 @@ function PasswordLogin() {
     }
   }
 
-  function login() {
-    if (AUTH_TYPE === 'password') {
-      return loginPassword();
-    } else {
-      return loginOtp();
-    }
-  }
-
-  async function loginPassword() {
-    return await request({
-      method: 'POST',
-      path: `/1/auth/password/login`,
-      body,
-    });
-  }
-
-  async function loginOtp() {
-    return await request({
-      method: 'POST',
-      path: `/1/auth/otp/send`,
-      body: {
-        ...body,
-        type: AUTH_TYPE,
-        transport: AUTH_TRANSPORT,
-      },
-    });
-  }
-
   return (
-    <Container w={{ base: '100%', sm: 550 }} px="md">
-      <Logo title="Login" />
-      <Paper p="xl" radius="md" withBorder>
-        <Text size="lg">Welcome to {APP_NAME}</Text>
+    <Stack w={{ base: '100%', sm: 550 }} align="center">
+      <Center mt={10} mb={40}>
+        <Logo maw={200} title="Login" />
+      </Center>
+      <Paper miw={380} w="100%" p="xl" radius="md" withBorder>
+        <Stack gap="md">
+          <Title order={4}>Login to {APP_NAME}</Title>
+          <ErrorMessage error={error} />
+          <form onSubmit={form.onSubmit(onSubmit)}>
+            <Stack gap="md">
+              <TextInput
+                required
+                label="Email"
+                type="email"
+                placeholder="Email"
+                {...form.getInputProps('email')}
+              />
+              <PasswordInput
+                required
+                label="Password"
+                type="password"
+                description={
+                  <>
+                    Forgot you password{' '}
+                    <Link to="/forgot-password">click here</Link>
+                  </>
+                }
+                placeholder="Password"
+                {...form.getInputProps('password')}
+              />
 
-        <Form
-          size="large"
-          error={!!error}
-          loading={loading}
-          onSubmit={onSubmit}>
-          <Segment.Group>
-            <Segment padded>
-              <ErrorMessage error={error} />
-              <EmailField
-                name="email"
-                error={error}
-                value={body.email || ''}
-                onChange={setField}
-              />
-              <OptionalPassword
-                current
-                name="password"
-                error={error}
-                value={body.password || ''}
-                onChange={setField}
-              />
-              <Form.Button
-                fluid
-                primary
-                size="large"
-                content="Login"
-                loading={loading}
-                disabled={loading}
-              />
               <Federated
                 type="login"
                 onAuthStop={onAuthStop}
                 onAuthStart={onAuthStart}
                 onAuthError={onAuthError}
               />
-            </Segment>
-            <Segment secondary>
-              <Grid>
-                <Grid.Column floated="left" width={8}>
-                  <Link to="/signup">Signup</Link>
-                </Grid.Column>
-                {AUTH_TYPE === 'password' && (
-                  <Grid.Column floated="right" width={8} textAlign="right">
-                    <Link to="/forgot-password">Forgot Password</Link>
-                  </Grid.Column>
-                )}
-              </Grid>
-            </Segment>
-          </Segment.Group>
-        </Form>
+
+              <Group justify="space-between">
+                <Anchor
+                  to="/signup"
+                  component="button"
+                  type="button"
+                  c="dimmed"
+                  size="xs">
+                  "Don't have an account? Register"
+                </Anchor>
+                <Button type="submit" radius="xl">
+                  Login
+                </Button>
+              </Group>
+            </Stack>
+          </form>
+        </Stack>
       </Paper>
-    </Container>
+    </Stack>
   );
 }
 
