@@ -27,6 +27,10 @@ export default function ConnectionError() {
     };
   }, []);
 
+  if (stable) {
+    return null;
+  }
+
   return (
     <div className={className}>Your network connection may be unstable.</div>
   );
