@@ -2,9 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { omit } from 'lodash';
 
-import { Form, Input, Message, Dropdown, Flag } from 'semantic';
+import { Input, Dropdown, Flag } from 'semantic';
 
-import { COUNTRIES, getFormatLength, formatPhone } from 'utils/phone';
+import { COUNTRIES, formatPhone } from 'utils/phone';
+
+import Field from './Field';
 
 export default class PhoneField extends React.Component {
   constructor(props) {
@@ -27,17 +29,14 @@ export default class PhoneField extends React.Component {
   }
 
   onChange = (evt, { value, ...rest }) => {
-    const { country } = this.state;
-    const maxLength = getFormatLength(country);
-
     value = value.replace(/[ ()@.+-]/g, '');
-    value = value.replace(/^1(\d)/, '$1');
-    value = value.replace(/[^\d-]/gi, '');
+    value = value.replace(/^[01](\d)/, '$1');
+    value = value.replace(/[a-z]/gi, '');
     value = value.trim();
-    value = value.slice(0, maxLength);
-
     if (value) {
       value = `${this.getPrefix()}${value}`;
+    } else {
+      value = undefined;
     }
     this.props.onChange(evt, {
       ...rest,
@@ -46,15 +45,13 @@ export default class PhoneField extends React.Component {
   };
 
   render() {
-    const { required, label, error } = this.props;
+    const { label } = this.props;
+    const props = omit(this.props, Object.keys(PhoneField.propTypes));
     return (
-      <Form.Field
-        required={required}
-        disabled={this.props.disabled}
-        error={error?.hasField?.('phone')}>
+      <Field {...props}>
         {label && <label>{label}</label>}
         <Input
-          {...omit(this.props, Object.keys(PhoneField.propTypes))}
+          {...Field.getInnerProps(props)}
           {...this.renderLabelProps()}
           type="tel"
           autoComplete="tel"
@@ -62,8 +59,7 @@ export default class PhoneField extends React.Component {
           onChange={this.onChange}
           ref={this.ref}
         />
-        {this.renderFieldErrors()}
-      </Form.Field>
+      </Field>
     );
   }
 
@@ -115,24 +111,6 @@ export default class PhoneField extends React.Component {
     const country = COUNTRIES[this.state.country];
     return formatPhone(value, country);
   }
-
-  renderFieldErrors() {
-    const { error } = this.props;
-    const details = error?.getFieldDetails?.('phone');
-    if (details) {
-      return (
-        <React.Fragment>
-          <Message size="small" error>
-            <Message.Content>
-              {details.map((d, i) => {
-                return <div key={i}>{d.message}</div>;
-              })}
-            </Message.Content>
-          </Message>
-        </React.Fragment>
-      );
-    }
-  }
 }
 
 PhoneField.propTypes = {
@@ -147,5 +125,4 @@ PhoneField.defaultProps = {
   intl: false,
   icon: 'phone',
   country: 'us',
-  placeholder: 'Phone Number',
 };
