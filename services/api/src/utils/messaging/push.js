@@ -23,6 +23,9 @@ async function sendPush(options) {
   const title = interpolate(meta.title || '{{subject}}', params);
 
   if (ENV_NAME === 'development') {
+    if (!FIREBASE_DEV_TOKEN) {
+      throw new Error('No Firebase development token exists.');
+    }
     // To test locally download the service account key and set
     // GOOGLE_APPLICATION_CREDENTIALS to its path. Then set the
     // FIREBASE_DEV_TOKEN to a registered device token id.
