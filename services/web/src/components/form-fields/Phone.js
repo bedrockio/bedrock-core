@@ -27,7 +27,9 @@ export default class PhoneField extends React.Component {
     return COUNTRIES[country].prefix;
   }
 
-  onChange = (evt, { value = '', ...rest }) => {
+  onChange = (evt) => {
+    let value = evt.target.value;
+
     const { country } = this.state;
     const maxLength = getFormatLength(country);
 
@@ -40,14 +42,19 @@ export default class PhoneField extends React.Component {
     if (value) {
       value = `${this.getPrefix()}${value}`;
     }
-    this.props.onChange(evt, {
-      ...rest,
-      value,
+
+    const newEvent = new Event('input', { bubbles: true });
+    Object.defineProperty(newEvent, 'target', {
+      value: { ...evt.target, value },
+      writable: false,
     });
+
+    this.props.onChange(newEvent);
   };
 
   render() {
     const { required, label, error } = this.props;
+    console.log(this.props);
     return (
       <TextInput
         required={required}
@@ -107,7 +114,8 @@ export default class PhoneField extends React.Component {
   }
 
   renderFormattedValue() {
-    const { value = '' } = this.props;
+    const { value } = this.props;
+    console.log('f', value);
     const country = COUNTRIES[this.state.country];
     return formatPhone(value, country);
   }

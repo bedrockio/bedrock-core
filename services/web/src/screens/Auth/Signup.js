@@ -39,7 +39,7 @@ function SignupPassword() {
   const [error, setError] = useState(null);
 
   const form = useForm({
-    mode: 'uncontrolled',
+    mode: 'controlled',
     initialValues: {
       firstName: '',
       lastName: '',
@@ -123,7 +123,6 @@ function SignupPassword() {
               name="lastName"
               placeholder="Last Name"
               autoComplete="family-name"
-              onChange={setField}
               error={error?.hasField?.('lastName')}
               {...form.getInputProps('lastName')}
             />
@@ -133,7 +132,6 @@ function SignupPassword() {
               placeholder="Email"
               autoComplete="email"
               name="email"
-              onChange={setField}
               error={error}
               {...form.getInputProps('email')}
             />
@@ -141,7 +139,6 @@ function SignupPassword() {
             <PhoneField
               label="Phone"
               placeholder="Phone"
-              onChange={setField}
               error={error}
               {...form.getInputProps('phone')}
             />
