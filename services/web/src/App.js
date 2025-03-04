@@ -1,4 +1,3 @@
-import { hot } from 'react-hot-loader/root';
 import { Routes, Route } from '@bedrockio/router';
 
 import DashboardLayout from 'layouts/Dashboard';
@@ -40,4 +39,4 @@ const App = () => {
   );
 };
 
-export default hot(App);
+export default App;

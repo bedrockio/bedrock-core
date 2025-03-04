@@ -9,7 +9,7 @@
 ## Directory Structure
 
 - `package.json` - Configure dependencies
-- `webpack.config.js` - Bundling and build configuration
+- `vite.config.js` - Bundling and build configuration
 - `.env` - Enviroment variables
 - `src/components` - Home of reuseable components
 - `src/utils` - Home of specific JS helper utilities
@@ -65,10 +65,8 @@ object `window.__env_conf`.
 
 ## Frameworks Used
 
-- [Babel](https://babeljs.io/)
 - [React Semantic UI](http://react.semantic-ui.com/)
-- [Webpack](http://webpack.github.io/)
-- [ES6](https://babeljs.io/docs/learn-es2015/)
+- [Vite](https://vite.dev/)
 - [React](https://facebook.github.io/react/)
 - [Bedrock Router](https://github.com/bedrockio/router)
 - [Prettier](https://prettier.io/)
