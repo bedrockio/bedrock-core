@@ -45,7 +45,7 @@ function matchSubdomainApp(subdomains, apps) {
   return null;
 }
 
-module.exports = function historyMiddleware(opt) {
+export default function historyMiddleware(opt) {
   const apps = opt.apps;
   // Sort to ensure longer urls are tested first.
   apps.sort((a, b) => b.length - a.length);
@@ -74,4 +74,4 @@ module.exports = function historyMiddleware(opt) {
     }
     return next();
   };
-};
+}

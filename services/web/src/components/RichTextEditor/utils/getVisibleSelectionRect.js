@@ -1,8 +1,8 @@
 // Overriding from draft-js
+import getWindowForNode from 'draft-js/lib/getWindowForNode';
 
-var getWindowForNode = require('draft-js/lib/getWindowForNode');
+import getRangeBoundingClientRect from './getRangeBoundingClientRect';
 
-var getRangeBoundingClientRect = require('./getRangeBoundingClientRect');
 /**
  * Return the bounding ClientRect for the visible DOM selection, if any.
  * In cases where there are no selected ranges or the bounding rect is
@@ -35,4 +35,4 @@ function getVisibleSelectionRect(node) {
   return boundingRect;
 }
 
-module.exports = getVisibleSelectionRect;
+export default getVisibleSelectionRect;

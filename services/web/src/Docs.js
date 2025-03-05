@@ -1,12 +1,11 @@
-import { hot } from 'react-hot-loader/root';
 import { Routes, Route } from '@bedrockio/router';
 
 import PortalLayout from 'layouts/Portal';
 
-import Components from './screens/Components';
-import IconSheet from './screens/IconSheet';
-import ApiDocs from './screens/ApiDocs';
-import { DocsProvider } from './utils/context';
+import Components from 'docs/screens/Components.js';
+import IconSheet from 'docs/screens/IconSheet.js';
+import ApiDocs from 'docs/screens/ApiDocs/index.js';
+import { DocsProvider } from 'docs/utils/context.js';
 
 function App() {
   return (
@@ -22,4 +21,4 @@ function App() {
   );
 }
 
-export default hot(App);
+export default App;

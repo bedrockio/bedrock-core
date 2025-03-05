@@ -182,9 +182,7 @@ export default function DocsProperties(props) {
               {renderType(oneOf[0])}
               <Popup
                 position="right center"
-                trigger={
-                  <span className={this.getElementClass('note')}>*</span>
-                }>
+                trigger={<span className={getElementClass('note')}>*</span>}>
                 May also be an array.
               </Popup>
             </React.Fragment>

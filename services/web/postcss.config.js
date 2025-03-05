@@ -1,15 +1,3 @@
-module.exports = {
-  plugins: {
-    autoprefixer: {},
-    cssnano: {
-      preset: [
-        'default',
-        {
-          discardComments: {
-            removeAll: true,
-          },
-        },
-      ],
-    },
-  },
+export default {
+  plugins: {},
 };

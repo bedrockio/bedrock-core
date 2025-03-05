@@ -18,8 +18,8 @@
 // /admin/  no      404     dist/index.html
 //
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 let templateCache;
 
@@ -46,7 +46,7 @@ function getTemplate(urlPath) {
   return templateCache[urlPath];
 }
 
-module.exports = function templateMiddleware(opts) {
+export default function templateMiddleware(opts) {
   templateCache = loadTemplates('', {}, opts);
   return (ctx, next) => {
     const template = getTemplate(ctx.url);
@@ -59,4 +59,4 @@ module.exports = function templateMiddleware(opts) {
     }
     return next();
   };
-};
+}
