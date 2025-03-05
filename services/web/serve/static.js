@@ -1,16 +1,16 @@
-const Koa = require('koa');
+import Koa from 'koa';
 
-const koaMount = require('koa-mount');
-const koaBasicAuth = require('koa-basic-auth');
+import koaMount from 'koa-mount';
+import koaBasicAuth from 'koa-basic-auth';
 
-const config = require('@bedrockio/config');
-const logger = require('@bedrockio/logger');
+import config from '@bedrockio/config';
+import logger from '@bedrockio/logger';
 
-const envMiddleware = require('./middleware/env');
-const assetsMiddleware = require('./middleware/assets');
-const historyMiddleware = require('./middleware/history');
-const templateMiddleware = require('./middleware/template');
-const healthCheckMiddleware = require('./middleware/healthCheck');
+import envMiddleware from './middleware/env.js';
+import assetsMiddleware from './middleware/assets.js';
+import historyMiddleware from './middleware/history.js';
+import templateMiddleware from './middleware/template.js';
+import healthCheckMiddleware from './middleware/healthCheck.js';
 
 const SERVER_PORT = config.get('SERVER_PORT');
 const SERVER_HOST = config.get('SERVER_HOST');
@@ -28,8 +28,8 @@ if (config.has('HTTP_BASIC_AUTH_PATH')) {
       koaBasicAuth({
         user: config.get('HTTP_BASIC_AUTH_USER'),
         pass: config.get('HTTP_BASIC_AUTH_PASS'),
-      })
-    )
+      }),
+    ),
   );
 }
 
@@ -46,6 +46,6 @@ app.listen(SERVER_PORT, SERVER_HOST, (err) => {
   }
 
   logger.info(
-    `🐬  Prod App server listening at http://${SERVER_HOST}:${SERVER_PORT} 🐬\r\n\r\n`
+    `🐬  Prod App server listening at http://${SERVER_HOST}:${SERVER_PORT} 🐬\r\n\r\n`,
   );
 });
