@@ -10,7 +10,7 @@ export default function Meta(props) {
   return (
     <Helmet>
       <link rel="canonical" href={APP_URL + pathname} />
-      <title>{`${title} | ${APP_NAME}`}`</title>
+      <title>{`${title} | ${APP_NAME}`}</title>
       {children}
     </Helmet>
   );
