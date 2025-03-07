@@ -18,7 +18,7 @@
 
 const DEFAULT_CODE = 'en-US';
 
-module.exports = function contentLanguageMiddleware(localeCodes, defaultCode) {
+export default function contentLanguageMiddleware(localeCodes, defaultCode) {
   localeCodes = localeCodes || [DEFAULT_CODE];
   defaultCode = defaultCode || DEFAULT_CODE;
 
@@ -42,4 +42,4 @@ module.exports = function contentLanguageMiddleware(localeCodes, defaultCode) {
     ctx.append('Content-Language', code);
     return next();
   };
-};
+}

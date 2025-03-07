@@ -2,19 +2,20 @@ import React from 'react';
 import { Table, Divider } from 'semantic';
 
 import { PageContext } from 'stores/page';
-import screen from 'helpers/screen';
 
 import { formatDateTime } from 'utils/date';
 
 import Menu from './Menu';
+import Meta from 'components/Meta';
 
-class OrganizationOverview extends React.Component {
+export default class OrganizationOverview extends React.Component {
   static contextType = PageContext;
 
   render() {
     const { organization } = this.context;
     return (
       <React.Fragment>
+        <Meta title={organization.name} />
         <Menu />
         <Divider hidden />
         <Table definition>
@@ -33,5 +34,3 @@ class OrganizationOverview extends React.Component {
     );
   }
 }
-
-export default screen(OrganizationOverview);

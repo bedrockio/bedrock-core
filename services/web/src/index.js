@@ -1,9 +1,6 @@
-// react-hot-loader needs to be imported
-// before react and react-dom
-import 'react-hot-loader';
+import React, { StrictMode, Suspense } from 'react';
+import { createRoot } from 'react-dom/client';
 
-import React, { Suspense } from 'react';
-import ReactDOM from 'react-dom';
 import { BrowserRouter, Routes, Route } from '@bedrockio/router';
 import { HelmetProvider } from 'react-helmet-async';
 
@@ -20,6 +17,9 @@ import solidIcons from 'semantic/assets/icons/solid.svg';
 import brandIcons from 'semantic/assets/icons/brands.svg';
 import regularIcons from 'semantic/assets/icons/regular.svg';
 
+// this is to handle some issue rich editor
+window.global = window;
+
 Icon.useSet(solidIcons);
 Icon.useSet(brandIcons, 'brands');
 Icon.useSet(regularIcons, 'regular');
@@ -30,7 +30,7 @@ import { hasAccess } from 'utils/user';
 
 const App = React.lazy(() => import('./App'));
 const AuthApp = React.lazy(() => import('./AuthApp'));
-const DocsApp = React.lazy(() => import('./docs/App'));
+const DocsApp = React.lazy(() => import('./Docs'));
 const OnboardApp = React.lazy(() => import('./OnboardApp'));
 
 function AppSwitch() {
@@ -62,5 +62,8 @@ const Wrapper = () => (
   </BrowserRouter>
 );
 
-// eslint-disable-next-line
-ReactDOM.render(<Wrapper />, document.getElementById('root'));
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <Wrapper />
+  </StrictMode>,
+);

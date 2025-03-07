@@ -11,18 +11,6 @@ export default function RichTextEditorModeMenu() {
     return BUTTON_STYLES[`mode-${mode}`];
   }
 
-  function render() {
-    const { icon } = getStyles();
-    return (
-      <Menu
-        trigger={<Icon name={icon} style={{ marginRight: '4px' }} fitted />}>
-        {renderItem('inline')}
-        {renderItem('markdown')}
-        {renderItem('preview')}
-      </Menu>
-    );
-  }
-
   function renderItem(mode) {
     const { icon, title, label } = getStyles(mode);
     const active = mode === docsMode;
@@ -40,5 +28,16 @@ export default function RichTextEditorModeMenu() {
     );
   }
 
-  return render();
+  const styles = getStyles();
+
+  return (
+    <Menu
+      trigger={
+        <Icon name={styles?.icon} style={{ marginRight: '4px' }} fitted />
+      }>
+      {renderItem('inline')}
+      {renderItem('markdown')}
+      {renderItem('preview')}
+    </Menu>
+  );
 }

@@ -1,4 +1,5 @@
-import { processText } from '../csv';
+import { expect, describe, it } from 'vitest';
+import { processText } from './csv';
 
 const tokensImportMapping = {
   uid: {
@@ -131,7 +132,7 @@ describe('utils/csv', () => {
 `;
     const { items, numColumnsMatched } = processText(
       chargeSessionsImportMapping,
-      csv
+      csv,
     );
     expect(items.length).toBe(4);
     expect(numColumnsMatched).toBe(15);
@@ -157,7 +158,7 @@ NLLMS4145553,2019-01-01 02:14,2019-01-01 16:21,14:06:38,22.17,"Hongarenburg nabi
 `;
     const { items, numColumnsMatched } = processText(
       chargeSessionsImportMapping,
-      csv
+      csv,
     );
     expect(items.length).toBe(4);
     expect(numColumnsMatched).toBe(17);

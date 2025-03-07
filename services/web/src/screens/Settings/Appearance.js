@@ -1,17 +1,18 @@
 import React from 'react';
 import { Segment, Form, Divider, Header } from 'semantic';
 
-import screen from 'helpers/screen';
 import { useTheme } from 'stores/theme';
 
 import Layout from 'components/Layout';
 
 import Menu from './Menu';
+import Meta from 'components/Meta';
 
-function Appearance() {
+export default function Appearance() {
   const { theme, setTheme } = useTheme();
   return (
     <React.Fragment>
+      <Meta title="Appearance" />
       <Menu />
       <Divider hidden />
       <Segment>
@@ -46,5 +47,3 @@ function Appearance() {
     </React.Fragment>
   );
 }
-
-export default screen(Appearance);

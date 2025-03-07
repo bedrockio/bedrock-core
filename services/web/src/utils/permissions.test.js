@@ -1,4 +1,5 @@
-const { userHasAccess } = require('../permissions');
+import { describe, expect, it } from 'vitest';
+import { userHasAccess } from './permissions';
 
 const organization1Id = '662f11c8af6870637eab9f0f';
 const organization2Id = '662f11c8af6870637eab9f0d';
@@ -85,7 +86,7 @@ describe('userHasAccess', () => {
         scope: 'global',
         permission: 'read',
         endpoint: 'users',
-      })
+      }),
     ).toBe(true);
 
     expect(
@@ -94,7 +95,7 @@ describe('userHasAccess', () => {
         permission: 'read',
         endpoint: 'users',
         scopeRef: '123',
-      })
+      }),
     ).toBe(true);
 
     expect(
@@ -102,7 +103,7 @@ describe('userHasAccess', () => {
         scope: 'global',
         permission: 'read',
         endpoint: 'unknown',
-      })
+      }),
     ).toBe(false);
 
     expect(
@@ -110,7 +111,7 @@ describe('userHasAccess', () => {
         scope: 'global',
         permission: 'write',
         endpoint: 'users',
-      })
+      }),
     ).toBe(true);
 
     expect(
@@ -118,7 +119,7 @@ describe('userHasAccess', () => {
         scope: 'global',
         permission: 'write',
         endpoint: 'users',
-      })
+      }),
     ).toBe(true);
   });
 
@@ -129,7 +130,7 @@ describe('userHasAccess', () => {
         permission: 'read',
         endpoint: 'users',
         scopeRef: organization1Id,
-      })
+      }),
     ).toBe(true);
 
     expect(
@@ -138,7 +139,7 @@ describe('userHasAccess', () => {
         permission: 'read',
         endpoint: 'users',
         scopeRef: organization1Id,
-      })
+      }),
     ).toBe(false);
 
     expect(
@@ -147,7 +148,7 @@ describe('userHasAccess', () => {
         permission: 'read',
         endpoint: 'users',
         scopeRef: organization2Id,
-      })
+      }),
     ).toBe(false);
 
     expect(
@@ -156,7 +157,7 @@ describe('userHasAccess', () => {
         permission: 'read',
         endpoint: 'unknown',
         scopeRef: organization1Id,
-      })
+      }),
     ).toBe(false);
 
     expect(
@@ -165,7 +166,7 @@ describe('userHasAccess', () => {
         permission: 'write',
         endpoint: 'users',
         scopeRef: organization1Id,
-      })
+      }),
     ).toBe(true);
 
     expect(
@@ -174,7 +175,7 @@ describe('userHasAccess', () => {
         permission: 'write',
         endpoint: 'users',
         scopeRef: organization2Id,
-      })
+      }),
     ).toBe(false);
 
     expect(
@@ -183,7 +184,7 @@ describe('userHasAccess', () => {
         permission: 'read',
         endpoint: 'users',
         scopeRef: organization2Id,
-      })
+      }),
     ).toBe(false);
   });
 
@@ -193,21 +194,21 @@ describe('userHasAccess', () => {
         scope: 'global',
         permission: 'read',
         endpoint: 'users',
-      })
+      }),
     ).toBe(false);
     expect(
       userHasAccess(viewer, {
         scope: 'global',
         permission: 'read',
         endpoint: 'unknown',
-      })
+      }),
     ).toBe(false);
     expect(
       userHasAccess(viewer, {
         scope: 'global',
         permission: 'write',
         endpoint: 'users',
-      })
+      }),
     ).toBe(false);
     expect(
       userHasAccess(viewer, {
@@ -215,7 +216,7 @@ describe('userHasAccess', () => {
         permission: 'read',
         endpoint: 'users',
         scopeRef: organization1Id,
-      })
+      }),
     ).toBe(true);
     expect(
       userHasAccess(viewer, {
@@ -223,7 +224,7 @@ describe('userHasAccess', () => {
         permission: 'read',
         endpoint: 'users',
         scopeRef: organization2Id,
-      })
+      }),
     ).toBe(false);
     expect(
       userHasAccess(viewer, {
@@ -231,7 +232,7 @@ describe('userHasAccess', () => {
         permission: 'read',
         endpoint: 'unknown',
         scopeRef: organization1Id,
-      })
+      }),
     ).toBe(false);
     expect(
       userHasAccess(viewer, {
@@ -239,7 +240,7 @@ describe('userHasAccess', () => {
         permission: 'write',
         endpoint: 'users',
         scopeRef: organization1Id,
-      })
+      }),
     ).toBe(false);
     expect(
       userHasAccess(viewer, {
@@ -247,7 +248,7 @@ describe('userHasAccess', () => {
         permission: 'write',
         endpoint: 'users',
         scopeRef: organization1Id,
-      })
+      }),
     ).toBe(false);
   });
 
@@ -256,14 +257,14 @@ describe('userHasAccess', () => {
       userHasAccess(superAdmin, {
         permission: 'read',
         endpoint: 'users',
-      })
+      }),
     ).toBe(true);
 
     expect(
       userHasAccess(superAdmin, {
         permission: 'read',
         endpoint: 'unknown',
-      })
+      }),
     ).toBe(false);
   });
 
@@ -273,7 +274,7 @@ describe('userHasAccess', () => {
         scope: 'global',
         permission: 'read',
         endpoint: 'users',
-      })
+      }),
     ).toBe(false);
   });
 });

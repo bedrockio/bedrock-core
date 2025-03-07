@@ -1,17 +1,17 @@
 import React from 'react';
 import { Table, Divider } from 'semantic';
 
-import screen from 'helpers/screen';
 import { usePage } from 'stores/page';
 
 import { formatDateTime } from 'utils/date';
-
+import Meta from 'components/Meta';
 import Menu from './Menu';
 
-function ApplicationOverview() {
+export default function ApplicationOverview() {
   const { application } = usePage();
   return (
     <React.Fragment>
+      <Meta title={application.name} />
       <Menu />
       <Divider hidden />
       <Table definition>
@@ -49,5 +49,3 @@ function ApplicationOverview() {
     </React.Fragment>
   );
 }
-
-export default screen(ApplicationOverview);

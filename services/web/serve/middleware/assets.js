@@ -1,8 +1,8 @@
 // Serves assets with cache control headers and sane defaults.
 
-const koaStatic = require('koa-static');
+import koaStatic from 'koa-static';
 
-module.exports = function assetsMiddleware(path) {
+export default function assetsMiddleware(path) {
   const serve = koaStatic(path, {
     index: false,
     // koa-static uses koa-send which takes this value in ms
@@ -20,4 +20,4 @@ module.exports = function assetsMiddleware(path) {
       ctx.response.set('Cache-Control', 'no-cache');
     }
   };
-};
+}

@@ -1,6 +1,6 @@
-const { once } = require('lodash');
+import { once } from 'lodash';
 
-const { walkParents, walkSiblings, findParentElement } = require('./dom');
+import { walkParents, walkSiblings, findParentElement } from './dom';
 
 // Gets only the rects of inline elements. This allows a text
 // range bounding box to not fill out to with of parent block
@@ -78,4 +78,4 @@ const getCanvasContext = once(() => {
   return canvas.getContext('2d');
 });
 
-module.exports = getRangeInlineRects;
+export default getRangeInlineRects;

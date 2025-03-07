@@ -1,21 +1,21 @@
 // Injects environment variables into templates.
 // Note that only public variables should be exposed!
-const config = require('@bedrockio/config');
+import config from '@bedrockio/config';
 
 function omitBy(object, predicate) {
   return Object.fromEntries(
-    Object.entries(object).filter(([key, value]) => !predicate(value, key))
+    Object.entries(object).filter(([key, value]) => !predicate(value, key)),
   );
 }
 
 const PUBLIC = omitBy(
   config.getAll(),
-  (_, key) => key.startsWith('SERVER') || key.startsWith('HTTP')
+  (_, key) => key.startsWith('SERVER') || key.startsWith('HTTP'),
 );
 
 const ENV_REG = /(?:<!-- |{{)env:(\w+)(?: -->|}})/g;
 
-module.exports = function envMiddleware() {
+export default function envMiddleware() {
   const env = JSON.stringify(PUBLIC);
   return async (ctx, next) => {
     await next();
@@ -29,4 +29,4 @@ module.exports = function envMiddleware() {
       });
     }
   };
-};
+}

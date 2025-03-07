@@ -1,12 +1,10 @@
 import React from 'react';
-// eslint-disable-next-line
 import { Table, Divider } from 'semantic';
 
 import { usePage } from 'stores/page';
-import screen from 'helpers/screen';
+import Meta from 'components/Meta';
 
 // --- Generator: overview-imports
-// eslint-disable-next-line
 import { Header, Image } from 'semantic';
 import { arrayToList, formatAddress } from 'utils/formatting';
 
@@ -16,10 +14,11 @@ import { urlForUpload } from 'utils/uploads';
 
 import Menu from './Menu';
 
-function ShopOverview() {
+export default function ShopOverview() {
   const { shop } = usePage();
   return (
     <React.Fragment>
+      <Meta title={shop.name} />
       <Menu />
       <Divider hidden />
       {/* --- Generator: overview-fields */}
@@ -56,5 +55,3 @@ function ShopOverview() {
     </React.Fragment>
   );
 }
-
-export default screen(ShopOverview);

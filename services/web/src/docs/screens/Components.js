@@ -24,13 +24,12 @@ import {
   Step,
 } from 'semantic';
 
-import screen from 'helpers/screen';
-
 import Layout from 'components/Layout';
 import Breadcrumbs from 'components/Breadcrumbs';
 import RichTextField from 'components/form-fields/RichText';
 import { Menu as ResponsiveMenu } from 'components/Responsive';
 import { JumpLink, ExternalLink } from 'components/Link';
+import Meta from 'components/Meta';
 
 const options = [
   { key: 1, text: 'Choice 1', value: 1 },
@@ -45,7 +44,7 @@ const options2 = [
   { key: 4, text: 'Pepper', value: 4, icon: 'pepper-hot' },
 ];
 
-class ComponentsScreen extends React.Component {
+export default class ComponentsScreen extends React.Component {
   contextRef = React.createRef();
 
   constructor(props) {
@@ -65,6 +64,7 @@ class ComponentsScreen extends React.Component {
     const { markdown } = this.state;
     return (
       <React.Fragment>
+        <Meta title="Components" />
         <Breadcrumb size="mini">
           <Breadcrumb.Section link as={Link} to="/docs">
             Docs
@@ -912,5 +912,3 @@ class ComponentsScreen extends React.Component {
     );
   }
 }
-
-export default screen(ComponentsScreen);

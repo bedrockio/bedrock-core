@@ -3,13 +3,13 @@ import { Container, Icon } from 'semantic';
 import { Link, useLocation, useNavigate } from '@bedrockio/router';
 
 import { useClass } from 'helpers/bem';
-import screen from 'helpers/screen';
 
 import Confirm from 'components/Confirm';
 import EditButton from 'docs/components/EditButton';
 import { useDocs } from 'docs/utils/context';
 
 import { components as markdownComponents } from 'components/Markdown';
+import Meta from 'components/Meta';
 
 import DocsPath from '../../components/DocsPath';
 
@@ -17,7 +17,7 @@ import { DEFAULT_PAGE_ID, pagesByPath, sorted } from '../../pages';
 
 import './api-docs.less';
 
-function ApiDocs() {
+export default function ApiDocs() {
   const { className, getElementClass } = useClass('api-docs');
 
   const { pathname, hash } = useLocation();
@@ -56,6 +56,7 @@ function ApiDocs() {
   function render() {
     return (
       <div className={className}>
+        <Meta title="Api Docs" />
         {renderSidebar()}
         <main className={getElementClass('page')}>
           <Container>{renderPage()}</Container>
@@ -110,7 +111,7 @@ function ApiDocs() {
         to={full}
         className={getElementClass(
           'sidebar-link',
-          isFocused ? 'active' : null
+          isFocused ? 'active' : null,
         )}>
         {title}
       </Link>
@@ -156,5 +157,3 @@ function ApiDocs() {
 
   return render();
 }
-
-export default screen(ApiDocs);

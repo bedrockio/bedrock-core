@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Container } from 'semantic';
 
 import { useClass } from 'helpers/bem';
-import screen from 'helpers/screen';
+import Meta from 'components/Meta';
 
 import brandIcons from 'semantic/assets/icons/brands.svg';
 import regularIcons from 'semantic/assets/icons/regular.svg';
@@ -28,7 +28,7 @@ const SETS = [
   },
 ];
 
-function IconSheet() {
+export default function IconSheet() {
   const { className, getElementClass } = useClass('icon-sheet');
 
   const [current, setCurrent] = useState('Solid');
@@ -36,6 +36,7 @@ function IconSheet() {
   function render() {
     return (
       <div className={className}>
+        <Meta title="Icons" />
         {renderSidebar()}
         <main className={getElementClass('page')}>
           <Container>{renderCurrentSet()}</Container>
@@ -56,7 +57,7 @@ function IconSheet() {
                 <div
                   className={getElementClass(
                     'sidebar-link',
-                    isActive ? 'active' : null
+                    isActive ? 'active' : null,
                   )}
                   onClick={() => {
                     setCurrent(set.name);
@@ -83,5 +84,3 @@ function IconSheet() {
 
   return render();
 }
-
-export default screen(IconSheet);
