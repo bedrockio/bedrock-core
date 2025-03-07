@@ -3,9 +3,8 @@ import { Segment, Button, Divider, Label, Table } from 'semantic';
 
 import { withSession } from 'stores/session';
 
-import screen from 'helpers/screen';
-
 import LoadButton from 'components/LoadButton';
+import Meta from 'components/Meta';
 
 import { parseToken } from 'utils/token';
 import { getToken, request } from 'utils/api';
@@ -41,6 +40,7 @@ class Sessions extends React.Component {
 
     return (
       <React.Fragment>
+        <Meta title="Sessions" />
         <Menu />
         <Divider hidden />
         <Segment>
@@ -56,7 +56,7 @@ class Sessions extends React.Component {
             <Table.Body>
               {authTokens.map((token) => {
                 const country = countries.find(
-                  (country) => country.countryCode === token.country
+                  (country) => country.countryCode === token.country,
                 );
 
                 return (
@@ -93,4 +93,4 @@ class Sessions extends React.Component {
   }
 }
 
-export default screen(withSession(Sessions));
+export default withSession(Sessions);

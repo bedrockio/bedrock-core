@@ -2,16 +2,17 @@ import React from 'react';
 import { Table } from 'semantic';
 
 import { usePage } from 'stores/page';
-import screen from 'helpers/screen';
+import Meta from 'components/Meta';
 
 import { formatDateTime } from 'utils/date';
 
 import Menu from './Menu';
 
-function UserOverview() {
+export default function UserOverview() {
   const { user } = usePage();
   return (
     <React.Fragment>
+      <Meta title={user.name} />
       <Menu />
       <Table definition>
         <Table.Body>
@@ -44,5 +45,3 @@ function UserOverview() {
     </React.Fragment>
   );
 }
-
-export default screen(UserOverview);

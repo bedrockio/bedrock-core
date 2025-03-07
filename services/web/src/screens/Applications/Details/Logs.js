@@ -12,8 +12,6 @@ import {
 import { set, truncate } from 'lodash';
 import { withRouter } from '@bedrockio/router';
 
-import screen from 'helpers/screen';
-
 import { PageContext } from 'stores/page';
 
 import SearchFilters from 'components/Search/Filters';
@@ -26,6 +24,7 @@ import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 
 import Menu from './Menu';
+import Meta from 'components/Meta';
 
 function getStateromQueryString(search) {
   if (!search) {
@@ -54,7 +53,7 @@ class ApplicationLogs extends React.Component {
       set(
         body,
         'response.status'.split('.'),
-        JSON.parse(body['response.status'])
+        JSON.parse(body['response.status']),
       );
     }
     if (body['request.method']) {
@@ -88,6 +87,7 @@ class ApplicationLogs extends React.Component {
 
     return (
       <React.Fragment>
+        <Meta title="Logs" />
         <Menu {...this.props} />
         <Search.Provider
           filters={this.state.initialFilters}
@@ -187,7 +187,7 @@ class ApplicationLogs extends React.Component {
                                   <Grid.Column width={2}>
                                     <Label
                                       color={this.getColorForHttpStatus(
-                                        item.response.status
+                                        item.response.status,
                                       )}>
                                       {item.response.status}
                                     </Label>
@@ -281,7 +281,7 @@ class ApplicationLogs extends React.Component {
                               {JSON.stringify(
                                 selectedItem.response.body,
                                 null,
-                                2
+                                2,
                               )}
                             </Code>
                           </>
@@ -299,4 +299,4 @@ class ApplicationLogs extends React.Component {
   }
 }
 
-export default withRouter(screen(ApplicationLogs));
+export default withRouter(ApplicationLogs);

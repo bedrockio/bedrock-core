@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from '@bedrockio/router';
 import { Form, Grid, Segment } from 'semantic';
 
-import screen from 'helpers/screen';
 import { useSession } from 'stores/session';
+import Meta from 'components/Meta';
 
 import Federated from 'components/Auth/Federated';
 import ErrorMessage from 'components/ErrorMessage';
@@ -14,7 +14,7 @@ import Logo from 'components/LogoTitle';
 import { request } from 'utils/api';
 import { AUTH_TYPE, AUTH_TRANSPORT } from 'utils/env';
 
-function PasswordLogin() {
+export default function PasswordLogin() {
   const navigate = useNavigate();
   const { authenticate } = useSession();
 
@@ -95,6 +95,7 @@ function PasswordLogin() {
   function render() {
     return (
       <React.Fragment>
+        <Meta title="Login" />
         <Logo title="Login" />
         <Form
           size="large"
@@ -152,5 +153,3 @@ function PasswordLogin() {
 
   return render();
 }
-
-export default screen(PasswordLogin);

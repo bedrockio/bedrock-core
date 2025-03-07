@@ -4,19 +4,18 @@ import { Link, useNavigate } from '@bedrockio/router';
 
 import { useSession } from 'stores/session';
 
-import screen from 'helpers/screen';
-
 import LogoTitle from 'components/LogoTitle';
 import ErrorMessage from 'components/ErrorMessage';
 import EmailField from 'components/form-fields/Email';
 import PhoneField from 'components/form-fields/Phone';
 import OptionalPassword from 'components/Auth/OptionalPassword';
 import Federated from 'components/Auth/Federated';
+import Meta from 'components/Meta';
 
 import { request } from 'utils/api';
 import { AUTH_TYPE, AUTH_TRANSPORT } from 'utils/env';
 
-function SignupPassword() {
+export default function SignupPassword() {
   const navigate = useNavigate();
   const { authenticate } = useSession();
 
@@ -76,6 +75,7 @@ function SignupPassword() {
   function render() {
     return (
       <React.Fragment>
+        <Meta title="Signup" />
         <LogoTitle title="Create your account" />
         <Form size="large" loading={loading} onSubmit={onSubmit}>
           <Segment.Group>
@@ -145,5 +145,3 @@ function SignupPassword() {
 
   return render();
 }
-
-export default screen(SignupPassword);

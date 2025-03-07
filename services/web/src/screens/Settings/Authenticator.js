@@ -4,14 +4,13 @@ import { Form, Button, Loader, Header, Segment } from 'semantic';
 
 import { withSession } from 'stores/session';
 
-import screen from 'helpers/screen';
-
 import { ExternalLink } from 'components/Link';
 import Layout from 'components/Layout';
 import LogoTitle from 'components/LogoTitle';
 import Code from 'components/form-fields/Code';
 import ErrorMessage from 'components/ErrorMessage';
 import QRCode from 'components/QRCode';
+import Meta from 'components/Meta';
 
 import { request } from 'utils/api';
 
@@ -90,6 +89,7 @@ class Authenticator extends React.Component {
 
     return (
       <React.Fragment>
+        <Meta title="Set up app authentication" />
         <LogoTitle title="Set up app authentication" />
         <Segment.Group>
           <Segment>
@@ -163,4 +163,4 @@ class Authenticator extends React.Component {
   }
 }
 
-export default screen(withSession(Authenticator));
+export default withSession(Authenticator);

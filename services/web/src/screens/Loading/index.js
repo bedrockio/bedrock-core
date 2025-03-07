@@ -1,12 +1,15 @@
 import React from 'react';
 import { Loader } from 'semantic';
 
-import screen from 'helpers/screen';
+import Meta from 'components/Meta';
 
-class LoadingScreen extends React.Component {
+export default class LoadingScreen extends React.Component {
   render() {
-    return <Loader active />;
+    return (
+      <>
+        <Meta title="Loading..." />
+        <Loader active />
+      </>
+    );
   }
 }
-
-export default screen(LoadingScreen);

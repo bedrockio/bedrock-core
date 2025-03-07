@@ -12,8 +12,7 @@ import {
 
 import { withSession } from 'stores/session';
 
-import screen from 'helpers/screen';
-
+import Meta from 'components/Meta';
 import Layout from 'components/Layout';
 import ErrorMessage from 'components/ErrorMessage';
 import AppleDisableButton from 'components/Auth/Apple/DisableButton';
@@ -198,6 +197,7 @@ class Security extends React.Component {
 
     return (
       <React.Fragment>
+        <Meta title="Security" />
         <Menu />
         {loading && (
           <Dimmer inverted active>
@@ -368,4 +368,4 @@ class Security extends React.Component {
   }
 }
 
-export default screen(withSession(Security));
+export default withSession(Security);

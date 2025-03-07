@@ -2,8 +2,6 @@ import React from 'react';
 import { Link } from '@bedrockio/router';
 import { Table, Button, Segment, Divider, Label } from 'semantic';
 
-import screen from 'helpers/screen';
-
 import HelpTip from 'components/HelpTip';
 import Breadcrumbs from 'components/Breadcrumbs';
 import Layout from 'components/Layout';
@@ -13,8 +11,9 @@ import ShowAuditEntry from 'modals/ShowAuditEntry';
 
 import { request } from 'utils/api';
 import { formatDateTime } from 'utils/date';
+import Meta from 'components/Meta';
 
-class AuditTrailList extends React.Component {
+export default class AuditTrailList extends React.Component {
   onDataNeeded = async (params) => {
     const response = await request({
       method: 'POST',
@@ -50,7 +49,7 @@ class AuditTrailList extends React.Component {
           console.error('[AuditLog] Unknown ownerType', key);
           return null;
         })
-        .filter(Boolean)
+        .filter(Boolean),
     );
 
     response.data.forEach((item) => {
@@ -128,163 +127,166 @@ class AuditTrailList extends React.Component {
 
   render() {
     return (
-      <Search.Provider
-        filterMapping={this.getFilterMapping()}
-        onDataNeeded={this.onDataNeeded}>
-        {({ items, getSorted, setSort }) => {
-          return (
-            <React.Fragment>
-              <Breadcrumbs active="Organizations" />
+      <>
+        <Meta title="Audit Logs" />
+        <Search.Provider
+          filterMapping={this.getFilterMapping()}
+          onDataNeeded={this.onDataNeeded}>
+          {({ items, getSorted, setSort }) => {
+            return (
+              <React.Fragment>
+                <Breadcrumbs active="Organizations" />
 
-              <Layout horizontal center spread>
-                <h1>Audit Trail</h1>
-                <Layout.Group></Layout.Group>
-              </Layout>
-              <Segment>
-                <Layout horizontal center spread stackable>
-                  <SearchFilters.Modal>
-                    <SearchFilters.Dropdown
-                      onDataNeeded={(name) => this.fetchUsers({ name })}
-                      search
-                      name="actor"
-                      label="Actor"
-                    />
-                    <SearchFilters.Dropdown
-                      onDataNeeded={(name) => this.fetchUsers({ name })}
-                      search
-                      name="ownerId"
-                      label="Owner"
-                    />
-                    <SearchFilters.Dropdown
-                      onDataNeeded={() =>
-                        this.fetchSearchOptions({ field: 'category' })
-                      }
-                      name="category"
-                      label="Category"
-                    />
-                    <SearchFilters.Dropdown
-                      onDataNeeded={() =>
-                        this.fetchSearchOptions({ field: 'activity' })
-                      }
-                      name="activity"
-                      label="Activity"
-                    />
-                    <SearchFilters.Dropdown
-                      onDataNeeded={() =>
-                        this.fetchSearchOptions({
-                          field: 'objectType',
-                        })
-                      }
-                      name="objectType"
-                      label="ObjectType"
-                    />
-
-                    <SearchFilters.Dropdown
-                      onDataNeeded={() =>
-                        this.fetchSearchOptions({
-                          field: 'sessionId',
-                        })
-                      }
-                      name="sessionId"
-                      label="Session Id"
-                    />
-                  </SearchFilters.Modal>
-                  <Layout horizontal stackable center right>
-                    <Search.Total />
-                    <SearchFilters.Keyword placeholder="Enter ObjectId" />
-                  </Layout>
+                <Layout horizontal center spread>
+                  <h1>Audit Trail</h1>
+                  <Layout.Group></Layout.Group>
                 </Layout>
-              </Segment>
+                <Segment>
+                  <Layout horizontal center spread stackable>
+                    <SearchFilters.Modal>
+                      <SearchFilters.Dropdown
+                        onDataNeeded={(name) => this.fetchUsers({ name })}
+                        search
+                        name="actor"
+                        label="Actor"
+                      />
+                      <SearchFilters.Dropdown
+                        onDataNeeded={(name) => this.fetchUsers({ name })}
+                        search
+                        name="ownerId"
+                        label="Owner"
+                      />
+                      <SearchFilters.Dropdown
+                        onDataNeeded={() =>
+                          this.fetchSearchOptions({ field: 'category' })
+                        }
+                        name="category"
+                        label="Category"
+                      />
+                      <SearchFilters.Dropdown
+                        onDataNeeded={() =>
+                          this.fetchSearchOptions({ field: 'activity' })
+                        }
+                        name="activity"
+                        label="Activity"
+                      />
+                      <SearchFilters.Dropdown
+                        onDataNeeded={() =>
+                          this.fetchSearchOptions({
+                            field: 'objectType',
+                          })
+                        }
+                        name="objectType"
+                        label="ObjectType"
+                      />
 
-              <Search.Status />
+                      <SearchFilters.Dropdown
+                        onDataNeeded={() =>
+                          this.fetchSearchOptions({
+                            field: 'sessionId',
+                          })
+                        }
+                        name="sessionId"
+                        label="Session Id"
+                      />
+                    </SearchFilters.Modal>
+                    <Layout horizontal stackable center right>
+                      <Search.Total />
+                      <SearchFilters.Keyword placeholder="Enter ObjectId" />
+                    </Layout>
+                  </Layout>
+                </Segment>
 
-              {items.length !== 0 && (
-                <Table celled sortable>
-                  <Table.Header>
-                    <Table.Row>
-                      <Table.HeaderCell width={2}>Actor</Table.HeaderCell>
-                      <Table.HeaderCell width={1}>Category</Table.HeaderCell>
-                      <Table.HeaderCell width={4}>Activity</Table.HeaderCell>
-                      <Table.HeaderCell width={3}>
-                        Object Owner
-                      </Table.HeaderCell>
-                      <Table.HeaderCell width={3}>Request</Table.HeaderCell>
-                      <Table.HeaderCell
-                        width={3}
-                        onClick={() => setSort('createdAt')}
-                        sorted={getSorted('createdAt')}>
-                        Date
-                        <HelpTip
-                          title="Created"
-                          text="This is the date and time the organization was created."
-                        />
-                      </Table.HeaderCell>
-                      <Table.HeaderCell textAlign="center">
-                        Actions
-                      </Table.HeaderCell>
-                    </Table.Row>
-                  </Table.Header>
-                  <Table.Body>
-                    {items.map((item) => {
-                      return (
-                        <Table.Row key={item.id}>
-                          <Table.Cell>
-                            {item.actor && (
-                              <Link
-                                title={item.actor.email}
-                                to={`/users/${item.actor.id}`}>
-                                {item.actor.firstName} {item.actor.lastName}
-                              </Link>
-                            )}
-                          </Table.Cell>
+                <Search.Status />
 
-                          <Table.Cell>
-                            <Label
-                              style={{ textTransform: 'capitalize' }}
-                              color={this.getColorForCategory(item.category)}>
-                              {item.category || 'default'}
-                            </Label>
-                          </Table.Cell>
-                          <Table.Cell>{item.activity}</Table.Cell>
-                          <Table.Cell>
-                            {item.owner && (
-                              <>
+                {items.length !== 0 && (
+                  <Table celled sortable>
+                    <Table.Header>
+                      <Table.Row>
+                        <Table.HeaderCell width={2}>Actor</Table.HeaderCell>
+                        <Table.HeaderCell width={1}>Category</Table.HeaderCell>
+                        <Table.HeaderCell width={4}>Activity</Table.HeaderCell>
+                        <Table.HeaderCell width={3}>
+                          Object Owner
+                        </Table.HeaderCell>
+                        <Table.HeaderCell width={3}>Request</Table.HeaderCell>
+                        <Table.HeaderCell
+                          width={3}
+                          onClick={() => setSort('createdAt')}
+                          sorted={getSorted('createdAt')}>
+                          Date
+                          <HelpTip
+                            title="Created"
+                            text="This is the date and time the organization was created."
+                          />
+                        </Table.HeaderCell>
+                        <Table.HeaderCell textAlign="center">
+                          Actions
+                        </Table.HeaderCell>
+                      </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                      {items.map((item) => {
+                        return (
+                          <Table.Row key={item.id}>
+                            <Table.Cell>
+                              {item.actor && (
                                 <Link
-                                  title={item.owner.email}
-                                  to={`/users/${item.owner.id}`}>
-                                  {item.owner.name}
+                                  title={item.actor.email}
+                                  to={`/users/${item.actor.id}`}>
+                                  {item.actor.firstName} {item.actor.lastName}
                                 </Link>
-                              </>
-                            )}
-                          </Table.Cell>
-                          <Table.Cell>
-                            <code>
-                              {item.requestMethod} {item.requestUrl}
-                            </code>
-                          </Table.Cell>
-                          <Table.Cell>
-                            {formatDateTime(item.createdAt)}
-                          </Table.Cell>
-                          <Table.Cell textAlign="center">
-                            <ShowAuditEntry
-                              auditEntry={item}
-                              trigger={<Button basic icon="magnifying-glass" />}
-                            />
-                          </Table.Cell>
-                        </Table.Row>
-                      );
-                    })}
-                  </Table.Body>
-                </Table>
-              )}
-              <Divider hidden />
-              <Search.Pagination />
-            </React.Fragment>
-          );
-        }}
-      </Search.Provider>
+                              )}
+                            </Table.Cell>
+
+                            <Table.Cell>
+                              <Label
+                                style={{ textTransform: 'capitalize' }}
+                                color={this.getColorForCategory(item.category)}>
+                                {item.category || 'default'}
+                              </Label>
+                            </Table.Cell>
+                            <Table.Cell>{item.activity}</Table.Cell>
+                            <Table.Cell>
+                              {item.owner && (
+                                <>
+                                  <Link
+                                    title={item.owner.email}
+                                    to={`/users/${item.owner.id}`}>
+                                    {item.owner.name}
+                                  </Link>
+                                </>
+                              )}
+                            </Table.Cell>
+                            <Table.Cell>
+                              <code>
+                                {item.requestMethod} {item.requestUrl}
+                              </code>
+                            </Table.Cell>
+                            <Table.Cell>
+                              {formatDateTime(item.createdAt)}
+                            </Table.Cell>
+                            <Table.Cell textAlign="center">
+                              <ShowAuditEntry
+                                auditEntry={item}
+                                trigger={
+                                  <Button basic icon="magnifying-glass" />
+                                }
+                              />
+                            </Table.Cell>
+                          </Table.Row>
+                        );
+                      })}
+                    </Table.Body>
+                  </Table>
+                )}
+                <Divider hidden />
+                <Search.Pagination />
+              </React.Fragment>
+            );
+          }}
+        </Search.Provider>
+      </>
     );
   }
 }
-
-export default screen(AuditTrailList);

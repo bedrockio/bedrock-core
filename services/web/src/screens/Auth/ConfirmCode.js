@@ -2,18 +2,18 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Redirect, Link, useNavigate, useLocation } from '@bedrockio/router';
 import { Dimmer, Form, Grid, Loader, Message, Segment } from 'semantic';
 
-import screen from 'helpers/screen';
 import { useSession } from 'stores/session';
 
 import LogoTitle from 'components/LogoTitle';
 import CodeField from 'components/form-fields/Code';
 import ErrorMessage from 'components/ErrorMessage';
+import Meta from 'components/Meta';
 
 import { formatPhone } from 'utils/phone';
 
 import { request } from 'utils/api';
 
-function ConfirmCode() {
+export default function ConfirmCode() {
   const { authenticate } = useSession();
 
   const navigate = useNavigate();
@@ -80,6 +80,7 @@ function ConfirmCode() {
   function render() {
     return (
       <React.Fragment>
+        <Meta title="Confirm Code" />
         <LogoTitle title="Confirm Code" />
         <Segment.Group>
           {loading && (
@@ -163,5 +164,3 @@ function ConfirmCode() {
 
   return render();
 }
-
-export default screen(ConfirmCode);

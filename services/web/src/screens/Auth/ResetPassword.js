@@ -4,14 +4,13 @@ import { Link } from '@bedrockio/router';
 
 import { withSession } from 'stores/session';
 
-import screen from 'helpers/screen';
-
 import LogoTitle from 'components/LogoTitle';
 import ErrorMessage from 'components/ErrorMessage';
 import PasswordField from 'components/form-fields/Password';
 
 import { request } from 'utils/api';
 import { getUrlToken } from 'utils/token';
+import Meta from 'components/Meta';
 
 class ResetPassword extends React.Component {
   constructor(props) {
@@ -73,6 +72,7 @@ class ResetPassword extends React.Component {
   render() {
     return (
       <React.Fragment>
+        <Meta title="Reset Password" />
         <LogoTitle title="Reset Password" />
         <Segment.Group>
           <Segment padded>{this.renderBody()}</Segment>
@@ -140,4 +140,4 @@ class ResetPassword extends React.Component {
     );
   }
 }
-export default screen(withSession(ResetPassword));
+export default withSession(ResetPassword);
