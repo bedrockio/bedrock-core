@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from '@bedrockio/router';
 
 import {
@@ -21,7 +21,7 @@ import PhoneField from 'components/form-fields/Phone';
 import Federated from 'components/Auth/Federated';
 import Meta from 'components/Meta';
 
-import { request } from 'utils/api';
+import { useRequest } from 'utils/api';
 import { AUTH_TYPE, AUTH_TRANSPORT } from 'utils/env';
 
 export default function SignupPassword() {
@@ -30,6 +30,26 @@ export default function SignupPassword() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const signupRequest = useRequest({
+    method: 'POST',
+    path: '/1/signup',
+    autoInvoke: false,
+    onSuccess: ({ data }) => {
+      const { token, challenge } = data;
+      if (token) {
+        authenticate(token).then(() => {
+          navigate('/onboard');
+        });
+      } else if (challenge) {
+        navigate('/confirm-code', challenge);
+      }
+    },
+    onError: (err) => {
+      setError(err);
+      setLoading(false);
+    },
+  });
 
   const form = useForm({
     mode: 'controlled',
@@ -58,34 +78,6 @@ export default function SignupPassword() {
     setLoading(false);
   }
 
-  async function onSubmit() {
-    try {
-      setError(null);
-      setLoading(true);
-
-      const { data } = await request({
-        method: 'POST',
-        path: '/1/signup',
-        body: {
-          type: AUTH_TYPE,
-          transport: AUTH_TRANSPORT,
-        },
-      });
-
-      const { token, challenge } = data;
-
-      if (token) {
-        await authenticate(data.token);
-        navigate('/onboard');
-      } else if (challenge) {
-        navigate('/confirm-code', challenge);
-      }
-    } catch (error) {
-      setError(error);
-      setLoading(false);
-    }
-  }
-
   return (
     <Stack w={{ base: '100%', sm: 550 }} align="center">
       <Meta title="Signup" />
@@ -93,9 +85,16 @@ export default function SignupPassword() {
         <Logo maw={200} title="Login" />
       </Center>
       <Paper miw={380} w="100%" p="xl" radius="md" withBorder>
-        <form onSubmit={form.onSubmit(onSubmit)}>
+        <form
+          onSubmit={form.onSubmit((formValues) => {
+            signupRequest.request({
+              body: formValues,
+            });
+          })}>
           <Stack spacing="md">
-            {error?.type !== 'validation' && <ErrorMessage error={error} />}
+            {signupRequest.error?.type !== 'validation' && (
+              <ErrorMessage error={error} />
+            )}
 
             <TextInput
               label="First Name"

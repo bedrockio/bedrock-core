@@ -1,40 +1,55 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-export default function useRequest(url, { autoInvoke = true, ...options }) {
+import request from './request';
+
+export default function useRequest({
+  autoInvoke = true,
+  onSuccess = () => {},
+  onError = () => {},
+  ...options
+}) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const controller = useRef(null);
 
-  const refetch = useCallback(() => {
-    if (!url) {
-      return;
-    }
+  const _request = useCallback(
+    (args) => {
+      const requestArgs = { ...options, ...args };
+      console.log(args);
+      if (!requestArgs.path) {
+        return;
+      }
 
-    if (controller.current) {
-      controller.current.abort();
-    }
+      if (controller.current) {
+        controller.current.abort();
+      }
 
-    controller.current = new AbortController();
+      controller.current = new AbortController();
 
-    setLoading(true);
+      setLoading(true);
 
-    return request(url, { signal: controller.current.signal, ...options })
-      .then((res) => {
-        setData(res);
-        setLoading(false);
-        return res;
-      })
-      .catch((err) => {
-        setLoading(false);
+      return request({ signal: controller.current.signal, ...requestArgs })
+        .then(async (res) => {
+          await onSuccess(res);
+          setData(res);
+          setLoading(false);
 
-        if (err.name !== 'AbortError') {
-          setError(err);
-        }
+          return res;
+        })
+        .catch(async (err) => {
+          await onError(err);
+          setLoading(false);
 
-        return err;
-      });
-  }, [url]);
+          if (err.name !== 'AbortError') {
+            setError(err);
+          }
+
+          return err;
+        });
+    },
+    [options.path, options.body, options.params],
+  );
 
   const abort = useCallback(() => {
     if (controller.current) {
@@ -44,7 +59,7 @@ export default function useRequest(url, { autoInvoke = true, ...options }) {
 
   useEffect(() => {
     if (autoInvoke) {
-      refetch();
+      _request();
     }
 
     return () => {
@@ -52,7 +67,7 @@ export default function useRequest(url, { autoInvoke = true, ...options }) {
         controller.current.abort('');
       }
     };
-  }, [refetch, autoInvoke]);
+  }, [_request, autoInvoke]);
 
-  return { data, loading, error, refetch, abort };
+  return { data, loading, error, request: _request, abort };
 }
