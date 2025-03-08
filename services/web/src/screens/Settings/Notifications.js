@@ -17,6 +17,7 @@ import ErrorMessage from 'components/ErrorMessage';
 import { request } from 'utils/api';
 
 import Menu from './Menu';
+import Meta from 'components/Meta';
 
 const CHANNELS = [
   {
@@ -95,6 +96,7 @@ export default function Notifications() {
   function render() {
     return (
       <React.Fragment>
+        <Meta title="Notifications" />
         <Menu />
         <Divider hidden />
         <ErrorMessage error={error} />

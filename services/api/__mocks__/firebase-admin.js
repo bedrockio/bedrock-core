@@ -5,16 +5,17 @@ beforeEach(() => {
 });
 
 function assertPushSent(options) {
-  const { body, ...rest } = options;
+  const { user, body, ...rest } = options;
   expect(sentMessages).toEqual(
     expect.arrayContaining([
       expect.objectContaining({
         ...rest,
+        token: user.deviceToken,
         ...(body && {
           body: expect.stringContaining(body),
         }),
       }),
-    ])
+    ]),
   );
 }
 

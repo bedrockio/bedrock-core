@@ -2,15 +2,14 @@ import React from 'react';
 import { Link } from '@bedrockio/router';
 import { Form, Button, Segment, Message, Grid } from 'semantic';
 
-import screen from 'helpers/screen';
-
 import LogoTitle from 'components/LogoTitle';
 import ErrorMessage from 'components/ErrorMessage';
 import EmailField from 'components/form-fields/Email';
+import Meta from 'components/Meta';
 
 import { request } from 'utils/api';
 
-class ForgotPassword extends React.Component {
+export default class ForgotPassword extends React.Component {
   state = {
     success: false,
     loading: false,
@@ -55,6 +54,7 @@ class ForgotPassword extends React.Component {
   render() {
     return (
       <React.Fragment>
+        <Meta title="Forgot Password" />
         <LogoTitle title="Forgot Password" />
         <Segment.Group>
           <Segment padded>{this.renderBody()}</Segment>
@@ -122,5 +122,3 @@ class ForgotPassword extends React.Component {
     );
   }
 }
-
-export default screen(ForgotPassword);

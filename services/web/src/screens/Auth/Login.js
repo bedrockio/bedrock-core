@@ -1,8 +1,8 @@
+import { useState } from 'react';
+
 import {
-  Anchor,
   Button,
   Center,
-  Group,
   Paper,
   PasswordInput,
   Stack,
@@ -13,11 +13,10 @@ import {
 
 import { isEmail, useForm } from '@mantine/form';
 
-import React, { useState } from 'react';
 import { Link, useNavigate } from '@bedrockio/router';
 
-import screen from 'helpers/screen';
 import { useSession } from 'stores/session';
+import Meta from 'components/Meta';
 
 import Federated from 'components/Auth/Federated';
 import ErrorMessage from 'components/ErrorMessage';
@@ -54,7 +53,7 @@ async function loginOtp(body) {
   });
 }
 
-function PasswordLogin() {
+export default function PasswordLogin() {
   const navigate = useNavigate();
   const { authenticate } = useSession();
 
@@ -107,6 +106,7 @@ function PasswordLogin() {
 
   return (
     <Stack w={{ base: '100%', sm: 550 }} align="center">
+      <Meta title="Login" />
       <Center mt={10} mb={20}>
         <Logo maw={200} title="Login" />
       </Center>
@@ -165,5 +165,3 @@ function PasswordLogin() {
     </Stack>
   );
 }
-
-export default screen(PasswordLogin);

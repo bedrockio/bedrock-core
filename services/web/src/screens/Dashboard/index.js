@@ -3,7 +3,7 @@ import { withRouter } from '@bedrockio/router';
 
 import { withSession } from 'stores/session';
 
-import screen from 'helpers/screen';
+import Meta from 'components/Meta';
 
 class Dashboard extends React.Component {
   componentDidMount() {
@@ -14,10 +14,11 @@ class Dashboard extends React.Component {
     const { user } = this.context;
     return (
       <div>
+        <Meta title="Dashboard" />
         Hello {user.name} ({user.email}) from dashboard
       </div>
     );
   }
 }
 
-export default screen(withRouter(withSession(Dashboard)));
+export default withRouter(withSession(Dashboard));

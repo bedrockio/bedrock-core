@@ -1,17 +1,13 @@
-import React, { useState } from 'react';
-import { Form, Segment, Grid } from 'semantic';
+import { useState } from 'react';
 import { Link, useNavigate } from '@bedrockio/router';
 
 import {
-  Anchor,
   Button,
   Center,
-  Group,
   Paper,
   PasswordInput,
   Stack,
   TextInput,
-  Title,
   Text,
 } from '@mantine/core';
 
@@ -19,19 +15,16 @@ import { useForm, isEmail } from '@mantine/form';
 
 import { useSession } from 'stores/session';
 
-import screen from 'helpers/screen';
-
 import Logo from 'components/Logo';
 import ErrorMessage from 'components/ErrorMessage';
-import EmailField from 'components/form-fields/Email';
 import PhoneField from 'components/form-fields/Phone';
-import OptionalPassword from 'components/Auth/OptionalPassword';
 import Federated from 'components/Auth/Federated';
+import Meta from 'components/Meta';
 
 import { request } from 'utils/api';
 import { AUTH_TYPE, AUTH_TRANSPORT } from 'utils/env';
 
-function SignupPassword() {
+export default function SignupPassword() {
   const navigate = useNavigate();
   const { authenticate } = useSession();
 
@@ -65,13 +58,6 @@ function SignupPassword() {
     setLoading(false);
   }
 
-  function setField(evt, { name, value }) {
-    setBody({
-      ...body,
-      [name]: value,
-    });
-  }
-
   async function onSubmit() {
     try {
       setError(null);
@@ -81,7 +67,6 @@ function SignupPassword() {
         method: 'POST',
         path: '/1/signup',
         body: {
-          ...body,
           type: AUTH_TYPE,
           transport: AUTH_TRANSPORT,
         },
@@ -103,6 +88,7 @@ function SignupPassword() {
 
   return (
     <Stack w={{ base: '100%', sm: 550 }} align="center">
+      <Meta title="Signup" />
       <Center mt={10} mb={20}>
         <Logo maw={200} title="Login" />
       </Center>
@@ -178,5 +164,3 @@ function SignupPassword() {
     </Stack>
   );
 }
-
-export default screen(SignupPassword);

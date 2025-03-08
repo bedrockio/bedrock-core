@@ -4,9 +4,8 @@ import { Link } from '@bedrockio/router';
 
 import { withSession } from 'stores/session';
 
-import screen from 'helpers/screen';
-
 import LogoTitle from 'components/LogoTitle';
+import Meta from 'components/Meta';
 
 import { request } from 'utils/api';
 import { getUrlToken } from 'utils/token';
@@ -53,11 +52,14 @@ class AcceptInvite extends React.Component {
   };
 
   render() {
-    if (this.context.isLoggedIn()) {
-      return this.renderLoggedIn();
-    } else {
-      return this.renderLoggedOut();
-    }
+    return (
+      <React.Fragment>
+        <Meta title="Accept Invite" />
+        {this.context.isLoggedIn()
+          ? this.renderLoggedIn()
+          : this.renderLoggedOut()}
+      </React.Fragment>
+    );
   }
 
   renderLoggedIn() {
@@ -105,4 +107,4 @@ class AcceptInvite extends React.Component {
   }
 }
 
-export default screen(withSession(AcceptInvite));
+export default withSession(AcceptInvite);

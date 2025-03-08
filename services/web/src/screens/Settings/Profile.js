@@ -4,7 +4,7 @@ import { Segment, Form, Button, Message, Divider } from 'semantic';
 
 import { withSession } from 'stores/session';
 
-import screen from 'helpers/screen';
+import Meta from 'components/Meta';
 
 import ErrorMessage from 'components/ErrorMessage';
 import PhoneField from 'components/form-fields/Phone';
@@ -68,6 +68,7 @@ class Profile extends React.Component {
 
     return (
       <React.Fragment>
+        <Meta title="Profile" />
         <Menu />
         <Divider hidden />
         <ErrorMessage error={error} />
@@ -119,4 +120,4 @@ class Profile extends React.Component {
     );
   }
 }
-export default screen(withSession(Profile));
+export default withSession(Profile);

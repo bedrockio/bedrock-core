@@ -42,6 +42,7 @@ export default defineConfig({
   server: {
     port: 2200,
     strictPort: true,
+    allowedHosts: true,
   },
   // mdx has to go before react
   plugins: [mdx(), react(), htmlPlugin()],

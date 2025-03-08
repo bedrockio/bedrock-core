@@ -47,7 +47,7 @@
 const COOKIE_NAME = 'hl';
 const DEFAULT_CODE = 'en-US';
 
-module.exports = function l10nMiddleware(localeCodes, defaultCode) {
+export default function l10nMiddleware(localeCodes, defaultCode) {
   localeCodes = localeCodes || [DEFAULT_CODE];
   defaultCode = defaultCode || DEFAULT_CODE;
 
@@ -131,4 +131,4 @@ module.exports = function l10nMiddleware(localeCodes, defaultCode) {
     };
     return next();
   };
-};
+}

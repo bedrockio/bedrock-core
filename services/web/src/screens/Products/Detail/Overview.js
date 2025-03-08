@@ -1,22 +1,22 @@
 import React from 'react';
 import { Table, Image, Divider } from 'semantic';
 
-import screen from 'helpers/screen';
-
 import { PageContext } from 'stores/page';
 
 import { formatDateTime } from 'utils/date';
 import { urlForUpload } from 'utils/uploads';
+import Meta from 'components/Meta';
 
 import Menu from './Menu';
 
-class ProductOverview extends React.Component {
+export default class ProductOverview extends React.Component {
   static contextType = PageContext;
 
   render() {
     const { product } = this.context;
     return (
       <React.Fragment>
+        <Meta title={product.name} />
         <Menu />
         <Divider hidden />
         <Image.Group size="small">
@@ -64,5 +64,3 @@ class ProductOverview extends React.Component {
     );
   }
 }
-
-export default screen(ProductOverview);

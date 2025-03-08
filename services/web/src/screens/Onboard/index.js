@@ -3,13 +3,13 @@ import { Redirect } from '@bedrockio/router';
 import { Form, Segment } from 'semantic';
 import { startCase, pick } from 'lodash';
 
-import screen from 'helpers/screen';
 import { useSession } from 'stores/session';
 
 import ErrorMessage from 'components/ErrorMessage';
 import EmailField from 'components/form-fields/Email';
 import PhoneField from 'components/form-fields/Phone';
 import LogoTitle from 'components/LogoTitle';
+import Meta from 'components/Meta';
 
 import { request } from 'utils/api';
 
@@ -20,13 +20,13 @@ const FIELDS = [
   },
 ];
 
-function OnboardScreen() {
+export default function OnboardScreen() {
   const { user, updateUser } = useSession();
 
   const [body, setBody] = useState(() => {
     return pick(
       user,
-      FIELDS.map((f) => f.name)
+      FIELDS.map((f) => f.name),
     );
   });
 
@@ -80,6 +80,7 @@ function OnboardScreen() {
   function render() {
     return (
       <React.Fragment>
+        <Meta title="Tell Us More" />
         <LogoTitle title="Tell Us More" />
         <Form loading={loading} onSubmit={onSubmit} noValidate>
           <Segment.Group>
@@ -122,5 +123,3 @@ function OnboardScreen() {
 
   return render();
 }
-
-export default screen(OnboardScreen);

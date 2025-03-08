@@ -2,7 +2,7 @@ import React from 'react';
 import { Table, Divider } from 'semantic';
 
 import { usePage } from 'stores/page';
-import screen from 'helpers/screen';
+import Meta from 'components/Meta';
 
 // --- Generator: overview-imports
 import { Header, Image } from 'semantic';
@@ -14,10 +14,11 @@ import { urlForUpload } from 'utils/uploads';
 
 import Menu from './Menu';
 
-function ShopOverview() {
+export default function ShopOverview() {
   const { shop } = usePage();
   return (
     <React.Fragment>
+      <Meta title={shop.name} />
       <Menu />
       <Divider hidden />
       {/* --- Generator: overview-fields */}
@@ -54,5 +55,3 @@ function ShopOverview() {
     </React.Fragment>
   );
 }
-
-export default screen(ShopOverview);

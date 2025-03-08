@@ -8,8 +8,6 @@ import { BrowserRouter, Routes, Route } from '@bedrockio/router';
 import { HelmetProvider } from 'react-helmet-async';
 
 import { theme } from './theme';
-// Icons
-import { Icon } from 'semantic';
 
 import { SessionProvider, useSession } from 'stores/session';
 import { ThemeProvider } from 'stores/theme';
