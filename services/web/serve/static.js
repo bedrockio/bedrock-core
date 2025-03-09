@@ -21,13 +21,13 @@ const app = new Koa();
 
 app.use(healthCheckMiddleware);
 
-if (config.has('HTTP_BASIC_AUTH_PATH')) {
+if (config.has('SERVER_AUTH_PATH')) {
   app.use(
     koaMount(
-      config.get('HTTP_BASIC_AUTH_PATH'),
+      config.get('SERVER_AUTH_PATH'),
       koaBasicAuth({
-        user: config.get('HTTP_BASIC_AUTH_USER'),
-        pass: config.get('HTTP_BASIC_AUTH_PASS'),
+        user: config.get('SERVER_AUTH_USER'),
+        pass: config.get('SERVER_AUTH_PASS'),
       }),
     ),
   );

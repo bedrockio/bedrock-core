@@ -1,5 +1,4 @@
 import React, { StrictMode, Suspense } from 'react';
-import { createRoot } from 'react-dom/client';
 
 import { BrowserRouter, Routes, Route } from '@bedrockio/router';
 import { HelmetProvider } from 'react-helmet-async';
@@ -28,10 +27,10 @@ import LoadingScreen from 'screens/Loading';
 
 import { hasAccess } from 'utils/user';
 
-const App = React.lazy(() => import('./App'));
-const AuthApp = React.lazy(() => import('./AuthApp'));
-const DocsApp = React.lazy(() => import('./Docs'));
-const OnboardApp = React.lazy(() => import('./OnboardApp'));
+const App = React.lazy(() => import('./App.js'));
+const AuthApp = React.lazy(() => import('./AuthApp.js'));
+const DocsApp = React.lazy(() => import('./Docs.js'));
+const OnboardApp = React.lazy(() => import('./OnboardApp.js'));
 
 function AppSwitch() {
   const { user } = useSession();
@@ -42,28 +41,26 @@ function AppSwitch() {
   }
 }
 
-const Wrapper = () => (
-  <BrowserRouter>
-    <ThemeProvider>
-      <HelmetProvider>
-        <SessionProvider>
-          <SessionSwitch>
-            <Suspense fallback={<LoadingScreen />}>
-              <Routes>
-                <Route path="/onboard" render={OnboardApp} />
-                <Route path="/docs" render={DocsApp} />
-                <Route path="/" render={AppSwitch} />
-              </Routes>
-            </Suspense>
-          </SessionSwitch>
-        </SessionProvider>
-      </HelmetProvider>
-    </ThemeProvider>
-  </BrowserRouter>
-);
-
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <Wrapper />
-  </StrictMode>,
-);
+export default function Wrapper() {
+  return (
+    <StrictMode>
+      <BrowserRouter>
+        <ThemeProvider>
+          <HelmetProvider>
+            <SessionProvider>
+              <SessionSwitch>
+                <Suspense fallback={<LoadingScreen />}>
+                  <Routes>
+                    <Route path="/onboard" render={OnboardApp} />
+                    <Route path="/docs" render={DocsApp} />
+                    <Route path="/" render={AppSwitch} />
+                  </Routes>
+                </Suspense>
+              </SessionSwitch>
+            </SessionProvider>
+          </HelmetProvider>
+        </ThemeProvider>
+      </BrowserRouter>
+    </StrictMode>
+  );
+}
