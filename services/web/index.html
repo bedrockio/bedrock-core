@@ -3,36 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="Content-Language" content="en" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/png" href="/src/assets/favicon.svg" />
-
-    <title><!-- env:APP_NAME --></title>
-
-    <!-- Google Tag Manager -->
-    <script>
-      (function (w, d, s, l, i) {
-        if (!i) return; // PUBLIC_GTM_CONTAINER_ID is not set
-        w[l] = w[l] || [];
-        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-        var f = d.getElementsByTagName(s)[0],
-          j = d.createElement(s),
-          dl = l != 'dataLayer' ? '&l=' + l : '';
-        j.async = true;
-        j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-        f.parentNode.insertBefore(j, f);
-      })(
-        window,
-        document,
-        'script',
-        'dataLayer',
-        '<!-- env:GTM_CONTAINER_ID -->',
-      );
-    </script>
-    <!-- End Google Tag Manager -->
-
     <!-- env:conf -->
+    <!-- require('utils/analytics/head.html') -->
   </head>
   <body>
     <div id="root"></div>

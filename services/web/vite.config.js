@@ -1,9 +1,11 @@
 import path from 'path';
+import { readFileSync } from 'fs';
 import react from '@vitejs/plugin-react';
-import { mdx } from '@cyco130/vite-plugin-mdx';
+
+import { omitBy, template } from 'lodash-es';
 import { defineConfig } from 'vite';
+import { mdx } from '@cyco130/vite-plugin-mdx';
 import config from '@bedrockio/config';
-import { omitBy } from 'lodash-es';
 
 const { SERVER_PORT, ...rest } = config.getAll();
 
@@ -16,7 +18,7 @@ export default defineConfig({
     port: SERVER_PORT,
   },
   // mdx has to go before react
-  plugins: [mdx(), react(), env()],
+  plugins: [mdx(), react(), env(), partials()],
   envPrefix: 'PUBLIC',
 
   resolve: {
@@ -56,7 +58,7 @@ const ENV_REG = /(?:<!-- |{{)env:(\w+)(?: -->|}})/g;
 function env() {
   let mode = '';
   return {
-    name: 'html-transform',
+    name: 'env-transform',
     configResolved(config) {
       mode = config.mode;
     },
@@ -70,6 +72,26 @@ function env() {
         } else {
           return ENV[name] || '';
         }
+      });
+    },
+  };
+}
+
+const PARTIAL_REG = /<!-- require\('(.+)'\) -->/g;
+
+function partials() {
+  let mode;
+  return {
+    name: 'template-injector',
+    order: 'pre',
+    configResolved(config) {
+      mode = config.mode;
+    },
+    async transformIndexHtml(html) {
+      return html.replace(PARTIAL_REG, (_, file) => {
+        const p = path.resolve('src', file);
+        const t = template(readFileSync(p, 'utf-8'));
+        return t({ BUILD: mode === 'production' });
       });
     },
   };
