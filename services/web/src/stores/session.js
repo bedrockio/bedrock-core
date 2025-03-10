@@ -66,6 +66,7 @@ class SessionProvider extends React.PureComponent {
           method: 'GET',
           path: '/1/users/me',
         });
+
         const { data: meta } = await request({
           method: 'GET',
           path: '/1/meta',
@@ -215,7 +216,7 @@ class SessionProvider extends React.PureComponent {
     this.updateStored(
       merge({}, this.state.stored, {
         [key]: data,
-      })
+      }),
     );
     trackSession('add', key, data);
   };

@@ -33,6 +33,7 @@
     "@mantine/hooks": "^7.17.1",
     "@sentry/browser": "^9.3.0",
     "@simplewebauthn/browser": "^13.1.0",
+    "@tabler/icons-react": "^3.31.0",
     "@vitejs/plugin-react": "^4.3.4",
     "date-fns": "^4.1.0",
     "draft-js": "^0.11.7",

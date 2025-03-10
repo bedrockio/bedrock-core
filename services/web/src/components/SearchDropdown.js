@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Dropdown } from 'semantic';
+import { Select, MultiSelect, Loader } from '@mantine/core';
 import { debounce, uniqBy, isEmpty, omit } from 'lodash';
 
 import { request } from 'utils/api';
@@ -53,7 +53,7 @@ export default class SearchDropdown extends React.Component {
     try {
       const selected = await this.fetch({
         ids: (Array.isArray(value) ? value : [value]).map((item) =>
-          this.props.getOptionValue(item)
+          this.props.getOptionValue(item),
         ),
       });
 
@@ -88,7 +88,7 @@ export default class SearchDropdown extends React.Component {
     }
   }
 
-  onSearchChange = debounce((evt, { searchQuery }) => {
+  onSearchChange = debounce((searchQuery) => {
     const options = {};
     if (searchQuery) {
       options[this.props.keywordField] = searchQuery;
@@ -96,7 +96,7 @@ export default class SearchDropdown extends React.Component {
     this.fetchItems(options);
   }, 200);
 
-  onChange = (evt, { value, ...rest }) => {
+  onChange = (value) => {
     const ids = Array.isArray(value) ? value : [value];
     const items = this.getAllItems();
     const selected = ids.map((id) => {
@@ -104,15 +104,11 @@ export default class SearchDropdown extends React.Component {
     });
 
     if (!this.state.objectMode) {
-      return this.props.onChange(evt, {
-        ...rest,
-        value,
-        item: this.props.multiple ? selected : selected[0],
-      });
+      return this.props.onChange(value);
     }
 
     value = this.props.multiple ? selected : selected[0];
-    this.props.onChange(evt, { value, ...rest });
+    this.props.onChange(value);
   };
 
   onFocus = () => {
@@ -141,8 +137,7 @@ export default class SearchDropdown extends React.Component {
       const { getOptionLabel, getOptionValue } = this.props;
       const value = getOptionValue(item);
       return {
-        key: value,
-        text: getOptionLabel(item),
+        label: getOptionLabel(item),
         value: value,
       };
     });
@@ -151,7 +146,7 @@ export default class SearchDropdown extends React.Component {
   getValue() {
     const { multiple, value } = this.props;
     if (multiple) {
-      return value.map((obj) => obj.id || obj);
+      return (value?.length ? value : []).map((obj) => obj.id || obj);
     } else {
       return value?.id || value;
     }
@@ -159,12 +154,14 @@ export default class SearchDropdown extends React.Component {
 
   render() {
     const { loading, error } = this.state;
+    const { multiple } = this.props;
+
+    const Component = multiple ? MultiSelect : Select;
 
     return (
-      <Dropdown
+      <Component
         clearable
-        selection
-        search
+        searchable
         {...omit(this.props, [
           ...Object.keys(propTypeShape),
           'onDataNeeded',
@@ -172,16 +169,11 @@ export default class SearchDropdown extends React.Component {
           'searchBody',
           'keywordField',
         ])}
-        autoComplete="off"
-        autoCorrect="off"
-        autoCapitalize="off"
-        spellCheck="false"
         error={!!error}
-        loading={loading}
+        rightSection={loading ? <Loader size={16} /> : null}
         value={this.getValue()}
-        options={this.getOptions()}
+        data={this.getOptions()}
         onChange={this.onChange}
-        selectOnBlur={false}
         onSearchChange={this.onSearchChange}
         onFocus={this.onFocus}
       />
@@ -198,12 +190,12 @@ const propTypeShape = {
 
 SearchDropdown.propTypes = PropTypes.oneOfType([
   PropTypes.shape({
-    ...Dropdown.propTypes,
+    ...Select.propTypes,
     ...propTypeShape,
     onDataNeeded: PropTypes.func.isRequired,
   }),
   PropTypes.shape({
-    ...Dropdown.propTypes,
+    ...Select.propTypes,
     ...propTypeShape,
     searchPath: PropTypes.string.isRequired,
     searchBody: PropTypes.object,

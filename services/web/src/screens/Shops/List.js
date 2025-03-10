@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Button, Divider, Segment } from 'semantic';
+import { Table, Divider, Segment } from 'semantic';
 import { Link } from '@bedrockio/router';
 
 import Meta from 'components/Meta';
@@ -26,7 +26,9 @@ const countries = allCountries.map(({ countryCode, nameEn }) => ({
 }));
 // --- Generator: end
 
-import Actions from '../Actions';
+import Actions from './Actions';
+import { Button } from '@mantine/core';
+import { IconPlus } from '@tabler/icons-react';
 
 export default class ShopList extends React.Component {
   onDataNeeded = (body) => {
@@ -98,12 +100,12 @@ export default class ShopList extends React.Component {
                   <h1>Shops</h1>
                   <Layout.Group>
                     <Search.Export filename="shops" />
-                    <EditShop
-                      trigger={
-                        <Button primary content="New Shop" icon="plus" />
-                      }
-                      onSave={reload}
-                    />
+                    <Button
+                      component={Link}
+                      to="/shops/new"
+                      rightSection={<IconPlus size={14} />}>
+                      New Shop
+                    </Button>
                   </Layout.Group>
                 </Layout>
 

@@ -1,5 +1,4 @@
 import React from 'react';
-import { Table, Divider } from 'semantic';
 
 import { PageContext } from 'stores/page';
 
@@ -7,30 +6,33 @@ import { formatDateTime } from 'utils/date';
 
 import Menu from './Menu';
 import Meta from 'components/Meta';
+import { Table, Divider } from '@mantine/core';
+import { useContext } from 'react';
 
-export default class OrganizationOverview extends React.Component {
-  static contextType = PageContext;
+export default function OrganizationOverview() {
+  const { organization } = useContext(PageContext);
 
-  render() {
-    const { organization } = this.context;
-    return (
-      <React.Fragment>
-        <Meta title={organization.name} />
-        <Menu />
-        <Divider hidden />
-        <Table definition>
-          <Table.Body>
-            <Table.Row>
-              <Table.Cell>Created At</Table.Cell>
-              <Table.Cell>{formatDateTime(organization.createdAt)}</Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell>Updated At</Table.Cell>
-              <Table.Cell>{formatDateTime(organization.updatedAt)}</Table.Cell>
-            </Table.Row>
-          </Table.Body>
-        </Table>
-      </React.Fragment>
-    );
-  }
+  return (
+    <React.Fragment>
+      <Meta title={organization.name} />
+      <Menu />
+      <Divider hidden />
+      <Table variant="vertical" layout="fixed">
+        <Table.Tbody>
+          <Table.Tr>
+            <Table.Td w={160}>Name</Table.Td>
+            <Table.Td>{organization.name}</Table.Td>
+          </Table.Tr>
+          <Table.Tr>
+            <Table.Td w={160}>Created At</Table.Td>
+            <Table.Td>{formatDateTime(organization.createdAt)}</Table.Td>
+          </Table.Tr>
+          <Table.Tr>
+            <Table.Td>Updated At</Table.Td>
+            <Table.Td>{formatDateTime(organization.updatedAt)}</Table.Td>
+          </Table.Tr>
+        </Table.Tbody>
+      </Table>
+    </React.Fragment>
+  );
 }

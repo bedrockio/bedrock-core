@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, NavLink } from '@bedrockio/router';
+
 import { Menu, Button } from 'semantic';
 
 import { usePage } from 'stores/page';
@@ -10,7 +10,9 @@ import EditOrganization from 'modals/EditOrganization';
 
 import Actions from '../Actions';
 
-export default () => {
+import { Link, NavLink } from '@bedrockio/router';
+
+export default function OrganizationMenu() {
   const { organization, reload } = usePage();
 
   return (
@@ -39,4 +41,4 @@ export default () => {
       </Menu>
     </React.Fragment>
   );
-};
+}
