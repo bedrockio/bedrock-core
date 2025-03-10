@@ -2,11 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { omit } from 'lodash';
 
-import { Input, Dropdown, Flag } from 'semantic';
+import { Form, Input, Dropdown, Flag } from 'semantic';
 
 import { COUNTRIES, formatPhone } from 'utils/phone';
-
-import Field from './Field';
 
 export default class PhoneField extends React.Component {
   constructor(props) {
@@ -48,10 +46,9 @@ export default class PhoneField extends React.Component {
     const { label } = this.props;
     const props = omit(this.props, Object.keys(PhoneField.propTypes));
     return (
-      <Field {...props}>
+      <Form.Field {...props}>
         {label && <label>{label}</label>}
         <Input
-          {...Field.getInnerProps(props)}
           {...this.renderLabelProps()}
           type="tel"
           autoComplete="tel"
@@ -59,7 +56,7 @@ export default class PhoneField extends React.Component {
           onChange={this.onChange}
           ref={this.ref}
         />
-      </Field>
+      </Form.Field>
     );
   }
 

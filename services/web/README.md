@@ -51,9 +51,9 @@ All configuration is done using environment variables. The default values in
 
 - `SERVER_HOST` - Host to bind to, defaults to `"0.0.0.0"`
 - `SERVER_PORT` - Port to bind to, defaults to `2300`
-- `HTTP_BASIC_AUTH_PATH` - Basic Auth: Path to protect
-- `HTTP_BASIC_AUTH_USER` - Basic Auth: Username
-- `HTTP_BASIC_AUTH_PASS` - Basic Auth: Password
+- `SERVER_AUTH_PATH` - Basic Auth: Path to protect
+- `SERVER_AUTH_USER` - Basic Auth: Username
+- `SERVER_AUTH_PASS` - Basic Auth: Password
 - `ENV_NAME` - Node environment `development`
 - `APP_NAME` - Default product name to be used in views
 - `API_URL` - URL for API defaults to `http://localhost:2300`
