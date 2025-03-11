@@ -34,7 +34,7 @@ program
   .option('-m, --email [string...]', 'Limit to users by email (can be multiple).')
   .option('-e, --exclude [string...]', 'Exclude collections.', DEFAULT_EXCLUDES)
   .option('-r, --raw [boolean]', 'Skip sanitizations. Only use this when necessary.', false)
-  .option('-o, --out [string]', 'The directory to export the export to.', 'export');
+  .option('-o, --out [string]', 'The directory to export the export to.', '/export');
 
 program.parse(process.argv);
 const options = program.opts();
