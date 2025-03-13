@@ -1,6 +1,6 @@
 import React from 'react';
 import { get, set } from 'lodash';
-import { Form, Segment, Dropdown } from 'semantic';
+import { Paper, TextInput } from '@mantine/core';
 import { Loader } from 'semantic-ui-react';
 
 import CountriesField from 'components/form-fields/Countries';
@@ -13,7 +13,7 @@ import UsStates from './UsStates';
 function extractGoogleAddressComponent(
   addressComponents,
   type,
-  attribute = 'long_name'
+  attribute = 'long_name',
 ) {
   const result = addressComponents.filter((c) => c.types.includes(type))[0];
   return result ? result[attribute] : '';
@@ -61,7 +61,7 @@ export default class Address extends React.Component {
       return;
     }
     await loadScript(
-      `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_API_KEY}&libraries=places`
+      `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_API_KEY}&libraries=places`,
     );
     this.initializeLookup();
     this.setState({ initializing: false });
@@ -73,7 +73,8 @@ export default class Address extends React.Component {
     this.geocoderService = new window.google.maps.Geocoder();
   }
 
-  setField = (e, { name, value }) => {
+  setField = (e) => {
+    const { name, value } = e.target;
     const currentValue = this.props.value || {};
     set(currentValue, name, value);
     this.props.onChange(e, { name: this.props.name, value: currentValue });
@@ -104,14 +105,14 @@ export default class Address extends React.Component {
         { input: searchQuery },
         (placeOptions) => {
           this.setState({ placeOptions });
-        }
+        },
       );
     }
   }
 
   onLookupResultChange(value) {
     let placeOption = this.state.placeOptions.filter(
-      (o) => o.description === value
+      (o) => o.description === value,
     )[0];
     const geoCodeOptions = placeOption
       ? { placeId: placeOption.place_id }
@@ -129,22 +130,22 @@ export default class Address extends React.Component {
             geometry,
             line1: `${extractGoogleAddressComponent(
               address_components,
-              'street_number'
+              'street_number',
             )} ${extractGoogleAddressComponent(address_components, 'route')}`,
             city: extractGoogleAddressComponent(address_components, 'locality'),
             region: extractGoogleAddressComponent(
               address_components,
               'administrative_area_level_1',
-              'short_name'
+              'short_name',
             ),
             countryCode: extractGoogleAddressComponent(
               address_components,
               'country',
-              'short_name'
+              'short_name',
             ),
             postalCode: extractGoogleAddressComponent(
               address_components,
-              'postal_code'
+              'postal_code',
             ),
           };
           this.props.onChange(null, { name: this.props.name, value: address });
@@ -200,7 +201,7 @@ export default class Address extends React.Component {
         {this.autocompleteService && this.renderLookupDropdown()}
         {manualEntry ? (
           <>
-            <Form.Input
+            <TextInput
               type="text"
               name="line1"
               label="Address Line 1"
@@ -209,7 +210,7 @@ export default class Address extends React.Component {
               autoComplete={this.getAutoCompleteName('line1')}
             />
 
-            <Form.Input
+            <TextInput
               type="text"
               name="line2"
               label="Address Line 2 (Optional)"
@@ -217,7 +218,7 @@ export default class Address extends React.Component {
               onChange={this.setField}
               autoComplete={this.getAutoCompleteName('line2')}
             />
-            <Form.Input
+            <TextInput
               type="text"
               name="city"
               label="City/Town"
@@ -240,7 +241,7 @@ export default class Address extends React.Component {
                 autoComplete={this.getAutoCompleteName('region')}
               />
             ) : (
-              <Form.Input
+              <TextInput
                 type="text"
                 name="region"
                 label="State/Province"
@@ -249,7 +250,7 @@ export default class Address extends React.Component {
                 autoComplete={this.getAutoCompleteName('region')}
               />
             )}
-            <Form.Input
+            <TextInput
               type="text"
               name="postalCode"
               label={
@@ -277,9 +278,7 @@ export default class Address extends React.Component {
     return (
       <>
         <h4>{label}</h4>
-        <Segment>
-          {initializing ? <Loader active /> : this.renderFields()}
-        </Segment>
+        {initializing ? <Loader active /> : this.renderFields()}
       </>
     );
   }
