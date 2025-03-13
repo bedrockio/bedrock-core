@@ -1,9 +1,9 @@
 import React from 'react';
 import { Routes, Route } from '@bedrockio/router';
 
-import List from './List';
-import Detail from './Detail';
-import Edit from './Edit';
+import List from './List.js';
+import Detail from './Detail/index.js';
+import Edit from './Edit.js';
 
 export default class Shops extends React.Component {
   render() {

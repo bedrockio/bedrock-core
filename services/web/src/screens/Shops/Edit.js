@@ -1,10 +1,14 @@
 import React from 'react';
 
-import UploadsField from 'components/form-fields/Uploads';
-import CountriesField from 'components/form-fields/Countries';
-import AddressField from 'components/form-fields/Address';
-import ErrorMessage from 'components/ErrorMessage';
-import SearchDropdown from 'components/SearchDropdown';
+import UploadsField from 'components/form-fields/Uploads.js';
+import CountriesField from 'components/form-fields/Countries.js';
+import AddressField from 'components/form-fields/Address.js';
+import ErrorMessage from 'components/ErrorMessage.js';
+import SearchDropdown from 'components/SearchDropdown.js';
+import Meta from 'components/Meta.js';
+import PageHeader from 'components/PageHeader.js';
+
+import { request } from 'utils/api';
 
 import {
   Button,
@@ -19,12 +23,6 @@ import {
 } from '@mantine/core';
 
 import { useForm } from '@mantine/form';
-
-import Meta from 'components/Meta';
-
-import PageHeader from 'components/PageHeader';
-
-import { request } from 'utils/api';
 
 const items = [
   { title: 'Dashboard', href: '/' },
@@ -90,7 +88,7 @@ export default function EditShop() {
 
                     <AddressField
                       value={shop.address}
-                      //onChange={this.setField}
+                      onChange={(c) => console.log(c, 'Address changed')}
                       name="address"
                       autoComplete="off"
                     />

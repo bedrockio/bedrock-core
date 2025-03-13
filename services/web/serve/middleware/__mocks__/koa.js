@@ -25,7 +25,6 @@ export function createFakeKoaContext(mockReq = {}, mockRes = {}) {
     httpMocks.createRequest(mockReq),
     httpMocks.createResponse(mockRes),
   );
-  console.log('123123', ctx);
 
   // Something internal to the http module breaks if we don't set this.
   ctx.cookies = new FakeCookies(mockReq.cookies);

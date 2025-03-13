@@ -1,51 +1,24 @@
 import path from 'path';
-
+import { readFileSync } from 'fs';
 import react from '@vitejs/plugin-react';
-import { mdx } from '@cyco130/vite-plugin-mdx';
-import { defineConfig } from 'vite';
 
+import { omitBy, template } from 'lodash-es';
+import { defineConfig } from 'vite';
+import { mdx } from '@cyco130/vite-plugin-mdx';
 import config from '@bedrockio/config';
 
-import { omitBy } from 'lodash-es';
-
-const PUBLIC = omitBy(
-  config.getAll(),
-  (_, key) => key.startsWith('SERVER') || key.startsWith('HTTP'),
-);
-
-const ENV_REG = /(?:<!-- |{{)env:(\w+)(?: -->|}})/g;
-
-const htmlPlugin = () => {
-  let mode = '';
-  return {
-    name: 'html-transform',
-    configResolved(config) {
-      mode = config.mode;
-    },
-    transformIndexHtml(html) {
-      if (mode !== 'development') {
-        return html;
-      }
-      return html.replace(ENV_REG, (all, name) => {
-        if (name === 'conf') {
-          return `<script>window.__ENV__ = ${JSON.stringify(PUBLIC)};</script>`;
-        } else {
-          return PUBLIC[name] || '';
-        }
-      });
-    },
-  };
-};
+const { SERVER_PORT, ...rest } = config.getAll();
 
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
-    port: 2200,
+    host: true,
     strictPort: true,
     allowedHosts: true,
+    port: SERVER_PORT,
   },
   // mdx has to go before react
-  plugins: [mdx(), react(), htmlPlugin()],
+  plugins: [mdx(), react(), env(), partials()],
   envPrefix: 'PUBLIC',
 
   resolve: {
@@ -78,3 +51,48 @@ export default defineConfig({
     },
   },
 });
+
+const ENV = omitBy(rest, (_, key) => key.startsWith('SERVER'));
+const ENV_REG = /(?:<!-- |{{)env:(\w+)(?: -->|}})/g;
+
+function env() {
+  let mode = '';
+  return {
+    name: 'env-transform',
+    configResolved(config) {
+      mode = config.mode;
+    },
+    transformIndexHtml(html) {
+      if (mode !== 'development') {
+        return html;
+      }
+      return html.replace(ENV_REG, (all, name) => {
+        if (name === 'conf') {
+          return `<script>window.__ENV__ = ${JSON.stringify(ENV)};</script>`;
+        } else {
+          return ENV[name] || '';
+        }
+      });
+    },
+  };
+}
+
+const PARTIAL_REG = /<!-- require\('(.+)'\) -->/g;
+
+function partials() {
+  let mode;
+  return {
+    name: 'template-injector',
+    order: 'pre',
+    configResolved(config) {
+      mode = config.mode;
+    },
+    async transformIndexHtml(html) {
+      return html.replace(PARTIAL_REG, (_, file) => {
+        const p = path.resolve('src', file);
+        const t = template(readFileSync(p, 'utf-8'));
+        return t({ BUILD: mode === 'production' });
+      });
+    },
+  };
+}

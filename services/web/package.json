@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "vite build",
-    "start": "vite --port 2200",
+    "start": "vite",
     "static": "node ./serve/static",
     "lint": "eslint",
     "test": "vitest",

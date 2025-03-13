@@ -1,6 +1,6 @@
 import React from 'react';
 import { get, set } from 'lodash';
-import { Paper, TextInput } from '@mantine/core';
+import { TextInput } from '@mantine/core';
 import { Loader } from 'semantic-ui-react';
 
 import CountriesField from 'components/form-fields/Countries';
@@ -77,7 +77,8 @@ export default class Address extends React.Component {
     const { name, value } = e.target;
     const currentValue = this.props.value || {};
     set(currentValue, name, value);
-    this.props.onChange(e, { name: this.props.name, value: currentValue });
+    console.log(1);
+    this.props.onChange(e);
   };
 
   getAutoCompleteName(key) {
@@ -154,6 +155,7 @@ export default class Address extends React.Component {
     });
   }
 
+  /*
   renderLookupDropdown() {
     const { placeOptions, error, lookupValue } = this.state;
 
@@ -192,13 +194,14 @@ export default class Address extends React.Component {
       </Form.Field>
     );
   }
+  */
 
   renderFields() {
     const { manualEntry } = this.state;
     const { value } = this.props;
     return (
       <>
-        {this.autocompleteService && this.renderLookupDropdown()}
+        {/*this.autocompleteService && this.renderLookupDropdown()*/}
         {manualEntry ? (
           <>
             <TextInput
