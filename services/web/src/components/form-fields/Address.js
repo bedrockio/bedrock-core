@@ -74,11 +74,11 @@ export default class Address extends React.Component {
   }
 
   setField = (e) => {
+    console.log(e);
     const { name, value } = e.target;
     const currentValue = this.props.value || {};
     set(currentValue, name, value);
-    console.log(1);
-    this.props.onChange(e);
+    this.props.onChange(currentValue);
   };
 
   getAutoCompleteName(key) {

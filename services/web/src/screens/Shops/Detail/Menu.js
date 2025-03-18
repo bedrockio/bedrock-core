@@ -1,12 +1,14 @@
 import React from 'react';
 import { Link, NavLink } from '@bedrockio/router';
-import { Menu, Button } from 'semantic';
+import { Menu } from 'semantic';
 
 import { usePage } from 'stores/page';
 
-import EditShop from 'modals/EditShop';
 import Layout from 'components/Layout';
 import Breadcrumbs from 'components/Breadcrumbs';
+
+import { Button } from '@mantine/core';
+import { IconPencil } from '@tabler/icons-react';
 
 import Actions from '../Actions';
 
@@ -20,11 +22,12 @@ export default () => {
         <h1>{shop.name}</h1>
         <Layout.Group>
           <Actions shop={shop} reload={reload} />
-          <EditShop
-            shop={shop}
-            onSave={reload}
-            trigger={<Button primary icon="gear" content="Settings" />}
-          />
+          <Button
+            component={Link}
+            to={`/shops/${shop.id}/edit`}
+            rightSection={<IconPencil size={14} />}>
+            Edit
+          </Button>
         </Layout.Group>
       </Layout>
       <Menu pointing secondary>

@@ -7,10 +7,8 @@ import NotFound from 'screens/NotFound';
 import { request } from 'utils/api';
 
 import Overview from './Overview';
-
-// --- Generator: detail-imports
 import Products from './Products';
-// --- Generator: end
+import EditShop from './Edit';
 
 export default function ShopDetail() {
   const Loader = usePageLoader(async (params) => {
@@ -32,9 +30,8 @@ export default function ShopDetail() {
       }>
       <Routes>
         <Route exact path="/shops/:id" render={Overview} />
-        {/* --- Generator: routes */}
+        <Route exact path="/shops/:id/edit" render={EditShop} />
         <Route exact path="/shops/:id/products" render={Products} />
-        {/* --- Generator: end */}
         <Route render={NotFound} />
       </Routes>
     </Loader>

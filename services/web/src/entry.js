@@ -1,4 +1,4 @@
-import { createRoot, StrictMode } from 'react-dom/client';
+import { createRoot } from 'react-dom/client';
 import Wrapper from './Wrapper';
 
 const root = createRoot(document.getElementById('root'));
@@ -13,10 +13,6 @@ if (import.meta.hot) {
   // does still re-render the entire React root.
   import.meta.hot.accept('./Wrapper.js', (newModule) => {
     const NextWrapper = newModule.default;
-    root.render(
-      <StrictMode>
-        <NextWrapper />
-      </StrictMode>,
-    );
+    root.render(<NextWrapper />);
   });
 }

@@ -1,12 +1,20 @@
 import React from 'react';
 
 import UploadsField from 'components/form-fields/Uploads.js';
-import CountriesField from 'components/form-fields/Countries.js';
-import AddressField from 'components/form-fields/Address.js';
 import ErrorMessage from 'components/ErrorMessage.js';
 import SearchDropdown from 'components/SearchDropdown.js';
 import Meta from 'components/Meta.js';
 import PageHeader from 'components/PageHeader.js';
+
+import allCountries from 'utils/countries';
+
+import { usePage } from 'stores/page';
+
+const countries = allCountries.map(({ countryCode, nameEn }) => ({
+  value: countryCode,
+  label: nameEn,
+  key: countryCode,
+}));
 
 import { request } from 'utils/api';
 
@@ -20,12 +28,14 @@ import {
   TextInput,
   Paper,
   Textarea,
+  Title,
+  Select,
 } from '@mantine/core';
 
 import { useForm } from '@mantine/form';
 
 const items = [
-  { title: 'Dashboard', href: '/' },
+  { title: 'Shops', href: '/shops' },
   { title: 'Settings', href: '/settings' },
 ].map((item, index) => (
   <Anchor href={item.href} key={index}>
@@ -34,15 +44,15 @@ const items = [
 ));
 
 export default function EditShop() {
-  const { error, loading } = {};
+  const { shop } = usePage();
+
   const isUpdate = false;
-  const shop = {};
+
+  const error = {};
 
   const form = useForm({
     mode: 'controlled',
-    initialValues: {
-      categories: [],
-    },
+    initialValues: shop,
   });
 
   return (
@@ -58,7 +68,6 @@ export default function EditShop() {
               <Grid>
                 <Grid.Col span={{ base: 12, md: 6 }}>
                   <Stack gap="xs">
-                    <ErrorMessage error={error} />
                     <TextInput
                       required
                       type="text"
@@ -72,11 +81,6 @@ export default function EditShop() {
                       {...form.getInputProps('description')}
                       //onChange={this.setField}
                     />
-                    <CountriesField
-                      label="Country"
-                      {...form.getInputProps('country')}
-                      //onChange={this.setField}
-                    />
                     <SearchDropdown
                       name="categories"
                       multiple
@@ -85,12 +89,23 @@ export default function EditShop() {
                       label="Categories"
                       {...form.getInputProps('categories')}
                     />
-
-                    <AddressField
-                      value={shop.address}
-                      onChange={(c) => console.log(c, 'Address changed')}
-                      name="address"
-                      autoComplete="off"
+                    <Title>Address</Title>
+                    <TextInput
+                      label="Address Line 1"
+                      {...form.getInputProps('address.line1')}
+                    />
+                    <TextInput
+                      label="Address Line 2 (Optional)"
+                      {...form.getInputProps('address.line2')}
+                    />
+                    <TextInput
+                      label="City/Town"
+                      {...form.getInputProps('address.city')}
+                    />
+                    <Select
+                      {...form.getInputProps('address.countryCode')}
+                      label="Country"
+                      data={countries}
                     />
                   </Stack>
                 </Grid.Col>
@@ -106,7 +121,8 @@ export default function EditShop() {
                   </Box>
                 </Grid.Col>
               </Grid>
-              <Box mt="md">
+              <Box mt="md" gap="md">
+                <ErrorMessage error={error} mb="md" />
                 <Button type="submit" onClick={() => scrollTo({ y: 0 })}>
                   {isUpdate ? 'Update' : 'Create New'} Shop
                 </Button>

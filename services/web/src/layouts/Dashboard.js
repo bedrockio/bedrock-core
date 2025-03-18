@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink } from '@bedrockio/router';
 import { Icon, Container } from 'semantic';
 
-import { useSession, withSession } from 'stores/session';
+import { useSession } from 'stores/session';
 
 import Logo from 'components/Logo';
 import Footer from 'components/Footer';
@@ -32,12 +32,12 @@ import {
   IconUsersGroup,
 } from '@tabler/icons-react';
 
-import { AppShell, Burger, Code, Flex, TextInput } from '@mantine/core';
+import { AppShell, Burger, Flex } from '@mantine/core';
 
 import { useMediaQuery } from '@mantine/hooks';
 
-import classes from './Dashboard.module.css';
 import { LinksGroup } from './components/LinksGroup';
+import { ModalTrigger } from 'components/ModalTrigger';
 
 const links = [
   { icon: IconBuildingStore, href: '/shops', label: 'Shops' },
@@ -107,6 +107,16 @@ export default function DashboardLayout({ children }) {
         </NavLink>
         {userCanSwitchOrganizations(user) && (
           <Sidebar.Item>
+            <ModalTrigger
+              trigger={
+                <div>
+                  <Icon name="building" />
+                  {organization?.name || 'Select Organization'}
+                  <Icon name="caret-down" className="right" />
+                </div>
+              }>
+              <Organization />
+            </ModalTrigger>
             <Organization
               trigger={
                 <div>
@@ -119,37 +129,33 @@ export default function DashboardLayout({ children }) {
             />
           </Sidebar.Item>
         )}
-        <div className={classes.section} />
 
-        <div className={classes.section}>
-          <div className={classes.mainLinks}>{mainLinks}</div>
-        </div>
-        <div className={classes.sectionBottom}>
-          <Sidebar.Link to="/settings">
-            <Icon name="gear" />
-            Settings
+        <div>{mainLinks}</div>
+        <div style={{}}></div>
+        <Sidebar.Link to="/settings">
+          <Icon name="gear" />
+          Settings
+        </Sidebar.Link>
+        <Protected endpoint="applications">
+          <Sidebar.Link to="/audit-trail">
+            <Icon name="list-ol" />
+            Audit Trail
           </Sidebar.Link>
-          <Protected endpoint="applications">
-            <Sidebar.Link to="/audit-trail">
-              <Icon name="list-ol" />
-              Audit Trail
+          <Sidebar.Link to="/applications">
+            <Icon name="terminal" />
+            Applications
+          </Sidebar.Link>
+          <Sidebar.Accordion active="/applications">
+            <Sidebar.Link to="/docs">
+              <Icon name="book-open" />
+              API Docs
             </Sidebar.Link>
-            <Sidebar.Link to="/applications">
-              <Icon name="terminal" />
-              Applications
-            </Sidebar.Link>
-            <Sidebar.Accordion active="/applications">
-              <Sidebar.Link to="/docs">
-                <Icon name="book-open" />
-                API Docs
-              </Sidebar.Link>
-            </Sidebar.Accordion>
-            <Sidebar.Link to="/logout">
-              <Icon name="right-from-bracket" />
-              Log Out
-            </Sidebar.Link>
-          </Protected>
-        </div>
+          </Sidebar.Accordion>
+          <Sidebar.Link to="/logout">
+            <Icon name="right-from-bracket" />
+            Log Out
+          </Sidebar.Link>
+        </Protected>
       </AppShell.Navbar>
       <AppShell.Main>{children}</AppShell.Main>
     </AppShell>

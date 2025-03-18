@@ -13,6 +13,7 @@ export function LinksGroup({
 }) {
   const hasLinks = Array.isArray(links);
   const [opened, setOpened] = useState(initiallyOpened || false);
+
   const items = (hasLinks ? links : []).map((link) => (
     <MantineNavLink
       leftSection={<Icon size={16} stroke={1.5} />}

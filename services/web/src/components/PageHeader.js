@@ -1,7 +1,6 @@
 import {
   Breadcrumbs,
   Divider,
-  Paper,
   Stack,
   Title,
   rem,
@@ -39,8 +38,8 @@ const PageHeader = (props) => {
   return (
     <>
       <Stack gap="sm">
-        <Title order={3}>{title}</Title>
         <Breadcrumbs {...BREADCRUMBS_PROPS}>{breadcrumbItems}</Breadcrumbs>
+        <Title order={3}>{title}</Title>
       </Stack>
 
       <Divider />

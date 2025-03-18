@@ -1,6 +1,6 @@
 import '@mantine/core/styles.css';
 
-import React, { Suspense } from 'react';
+import React, { StrictMode, Suspense } from 'react';
 
 import { MantineProvider } from '@mantine/core';
 import { BrowserRouter, Routes, Route } from '@bedrockio/router';
@@ -45,24 +45,26 @@ function AppSwitch() {
 
 export default function Wrapper() {
   return (
-    <MantineProvider theme={theme}>
-      <BrowserRouter>
-        <ThemeProvider>
-          <HelmetProvider>
-            <SessionProvider>
-              <SessionSwitch>
-                <Suspense fallback={<LoadingScreen />}>
-                  <Routes>
-                    <Route path="/onboard" render={OnboardApp} />
-                    <Route path="/docs" render={DocsApp} />
-                    <Route path="/" render={AppSwitch} />
-                  </Routes>
-                </Suspense>
-              </SessionSwitch>
-            </SessionProvider>
-          </HelmetProvider>
-        </ThemeProvider>
-      </BrowserRouter>
-    </MantineProvider>
+    <StrictMode>
+      <MantineProvider theme={theme}>
+        <BrowserRouter>
+          <ThemeProvider>
+            <HelmetProvider>
+              <SessionProvider>
+                <SessionSwitch>
+                  <Suspense fallback={<LoadingScreen />}>
+                    <Routes>
+                      <Route path="/onboard" render={OnboardApp} />
+                      <Route path="/docs" render={DocsApp} />
+                      <Route path="/" render={AppSwitch} />
+                    </Routes>
+                  </Suspense>
+                </SessionSwitch>
+              </SessionProvider>
+            </HelmetProvider>
+          </ThemeProvider>
+        </BrowserRouter>
+      </MantineProvider>
+    </StrictMode>
   );
 }

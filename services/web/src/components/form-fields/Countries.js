@@ -9,5 +9,5 @@ const countries = allCountries.map(({ countryCode, nameEn }) => ({
 }));
 
 export default function Countries(props) {
-  return <Select {...props} data={countries} />;
+  return <Select data={countries} {...props} />;
 }

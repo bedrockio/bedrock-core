@@ -9,8 +9,6 @@ import Search from 'components/Search';
 import Breadcrumbs from 'components/Breadcrumbs';
 import SearchFilters from 'components/Search/Filters';
 
-import EditShop from 'modals/EditShop';
-
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 
@@ -196,11 +194,6 @@ export default class ShopList extends React.Component {
                               {formatDateTime(shop.createdAt)}
                             </Table.Cell>
                             <Table.Cell textAlign="center" singleLine>
-                              <EditShop
-                                shop={shop}
-                                trigger={<Button basic icon="pen-to-square" />}
-                                onSave={reload}
-                              />
                               <Actions shop={shop} reload={reload} />
                             </Table.Cell>
                           </Table.Row>

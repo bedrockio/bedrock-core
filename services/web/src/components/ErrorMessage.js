@@ -35,13 +35,13 @@ export default class ErrorMessage extends React.Component {
   }
 
   render() {
-    const { error } = this.props;
+    const { error, ...props } = this.props;
     if (!error) {
       return null;
     }
 
     return (
-      <Alert color="error" size="small">
+      <Alert color="error" size="small" {...props}>
         {error.message || 'An error occurred'}
       </Alert>
     );

@@ -1,56 +1,64 @@
 import React from 'react';
-import { Table, Divider } from 'semantic';
+import { Table, Title, Image, Paper, Anchor } from '@mantine/core';
 
 import { usePage } from 'stores/page';
 import Meta from 'components/Meta';
 
-// --- Generator: overview-imports
-import { Header, Image } from 'semantic';
+import { Header } from 'semantic';
 import { arrayToList, formatAddress } from 'utils/formatting';
 
 import { formatDateTime } from 'utils/date';
 import { urlForUpload } from 'utils/uploads';
-// --- Generator: end
 
 import Menu from './Menu';
+
+const items = [
+  { title: 'Shops', href: '/shops' },
+  { title: 'Settings', href: '/settings' },
+].map((item, index) => (
+  <Anchor href={item.href} key={index}>
+    {item.title}
+  </Anchor>
+));
 
 export default function ShopOverview() {
   const { shop } = usePage();
   return (
     <React.Fragment>
+      <PageHeader title="Edit Shop" breadcrumbItems={items} />
+
       <Meta title={shop.name} />
       <Menu />
-      <Divider hidden />
+
       {/* --- Generator: overview-fields */}
       <p>{shop.description}</p>
-      <Header as="h3">Images</Header>
-      <Image.Group size="large">
+      <Title as="h3">Images</Title>
+
+      <Paper>
         {shop.images.map((image) => (
           <Image key={image} src={urlForUpload(image)} />
         ))}
-      </Image.Group>
-      {/* --- Generator: end */}
-      <Table definition>
-        <Table.Body>
-          {/* --- Generator: overview-rows */}
-          <Table.Row>
-            <Table.Cell>Categories</Table.Cell>
-            <Table.Cell>{arrayToList(shop.categories)}</Table.Cell>
-          </Table.Row>
-          <Table.Row>
-            <Table.Cell>Address</Table.Cell>
-            <Table.Cell>{formatAddress(shop.address)}</Table.Cell>
-          </Table.Row>
-          {/* --- Generator: end */}
-          <Table.Row>
-            <Table.Cell>Created At</Table.Cell>
-            <Table.Cell>{formatDateTime(shop.createdAt)}</Table.Cell>
-          </Table.Row>
-          <Table.Row>
-            <Table.Cell>Updated At</Table.Cell>
-            <Table.Cell>{formatDateTime(shop.updatedAt)}</Table.Cell>
-          </Table.Row>
-        </Table.Body>
+      </Paper>
+
+      <Table variant="vertical" layout="fixed">
+        <Table.Tbody>
+          <Table.Tr>
+            <Table.Td>Categories</Table.Td>
+            <Table.Td>{arrayToList(shop.categories)}</Table.Td>
+          </Table.Tr>
+          <Table.Tr>
+            <Table.Td>Address</Table.Td>
+            <Table.Td>{formatAddress(shop.address)}</Table.Td>
+          </Table.Tr>
+          <Table.Tr>
+            <Table.Td>Created At</Table.Td>
+            <Table.Td>{formatDateTime(shop.createdAt)}</Table.Td>
+          </Table.Tr>
+          <Table.Tr>
+            <Table.Td>Updated At</Table.Td>
+            <Table.Td>{formatDateTime(shop.updatedAt)}</Table.Td>
+          </Table.Tr>
+        </Table.Tbody>
       </Table>
     </React.Fragment>
   );
