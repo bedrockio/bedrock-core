@@ -68,7 +68,7 @@ describe('/1/applications', () => {
         {
           name: 'bob',
         },
-        { user: admin }
+        { user: admin },
       );
       expect(response.status).toBe(200);
       const application = await Application.findOne({ _id: response.body.data.id });
@@ -98,7 +98,7 @@ describe('/1/applications', () => {
         {
           name: 'bob',
         },
-        { user: admin }
+        { user: admin },
       );
       expect(response.status).toBe(200);
       expect(response.body.data.name).toBe('bob');
@@ -113,9 +113,11 @@ describe('/1/applications', () => {
       expect(auditEntry.actor.id).toBe(admin.id);
       expect(auditEntry.objectBefore).toEqual({
         name: 'patch-application',
+        user: admin._id,
       });
       expect(auditEntry.objectAfter).toEqual({
         name: 'bob',
+        user: admin._id,
       });
     });
   });

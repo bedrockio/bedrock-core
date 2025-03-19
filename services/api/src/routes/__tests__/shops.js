@@ -1,4 +1,4 @@
-const { request, createUser, createAdmin } = require('../../utils/testing');
+const { request, createUser, createAdmin, createUpload } = require('../../utils/testing');
 const { Shop, AuditEntry } = require('../../models');
 
 describe('/1/shops', () => {
@@ -27,7 +27,7 @@ describe('/1/shops', () => {
   });
 
   describe('GET /:shop', () => {
-    it('should be able to access shop', async () => {
+    it('should access shop', async () => {
       const user = await createUser();
       const shop = await Shop.create({
         name: 'new shop',
@@ -36,10 +36,29 @@ describe('/1/shops', () => {
       expect(response.status).toBe(200);
       expect(response.body.data.name).toBe(shop.name);
     });
+
+    it('should populate images', async () => {
+      const user = await createUser();
+      const image = await createUpload();
+      const shop = await Shop.create({
+        name: 'new shop',
+        images: [image],
+      });
+      const response = await request(
+        'GET',
+        `/1/shops/${shop.id}`,
+        {
+          include: 'images',
+        },
+        { user },
+      );
+      expect(response.status).toBe(200);
+      expect(response.body.data.images[0].id).toBe(image.id);
+    });
   });
 
   describe('POST /', () => {
-    it('should be able to create shop', async () => {
+    it('should create shop', async () => {
       const user = await createUser();
       const response = await request(
         'POST',
@@ -47,7 +66,7 @@ describe('/1/shops', () => {
         {
           name: 'shop name',
         },
-        { user }
+        { user },
       );
       const data = response.body.data;
       expect(response.status).toBe(200);
@@ -64,7 +83,7 @@ describe('/1/shops', () => {
   });
 
   describe('PATCH /:shop', () => {
-    it('should be able to update shop as admin', async () => {
+    it('should update shop as admin', async () => {
       const admin = await createAdmin();
       let shop = await Shop.create({
         name: 'shop name',
@@ -78,7 +97,7 @@ describe('/1/shops', () => {
       expect(shop.name).toEqual('new name');
     });
 
-    it('should be able to update shop as owner', async () => {
+    it('should update shop as owner', async () => {
       const owner = await createAdmin();
       let shop = await Shop.create({
         name: 'shop name',
@@ -102,6 +121,27 @@ describe('/1/shops', () => {
       shop.name = 'new name';
       const response = await request('PATCH', `/1/shops/${shop.id}`, shop.toJSON(), { user });
       expect(response.status).toBe(401);
+    });
+
+    it('should populate by request body', async () => {
+      const admin = await createAdmin();
+      const image = await createUpload();
+      const shop = await Shop.create({
+        name: 'shop',
+        images: [image],
+      });
+
+      const response = await request(
+        'PATCH',
+        `/1/shops/${shop.id}`,
+        {
+          name: 'new shop',
+          include: 'images',
+        },
+        { user: admin },
+      );
+      expect(response.status).toBe(200);
+      expect(response.body.data.images[0].id).toBe(image.id);
     });
   });
 

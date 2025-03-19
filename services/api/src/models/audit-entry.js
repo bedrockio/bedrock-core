@@ -15,12 +15,15 @@ schema.statics.getContextFields = function (ctx) {
 };
 
 schema.statics.getObjectFields = function (options) {
-  const { fields, object, snapshot = {} } = options;
+  let { fields, object, snapshot = {} } = options;
 
   if (object) {
     if (!(object instanceof mongoose.Model)) {
       throw Error('AuditEntry.getObjectFields only works with mongoose documents');
     }
+
+    // Depopulate mutates the object so clone it here.
+    object = object.$clone();
 
     snapshot.depopulate?.();
     object.depopulate?.();
