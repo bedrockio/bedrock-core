@@ -16,7 +16,6 @@ export default function useRequest({
   const _request = useCallback(
     (args) => {
       const requestArgs = { ...options, ...args };
-      console.log(args);
       if (!requestArgs.path) {
         return;
       }

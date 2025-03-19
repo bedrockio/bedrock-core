@@ -117,11 +117,9 @@ export default function ShopProducts() {
                                 component={Link}
                                 to={`/products/${product.id}/edit`}
                                 variant="default"
-                                text="Edit"
                                 leftSection={<IconPencil size={14} />}>
                                 Edit
                               </Button>
-
                               <Actions product={product} reload={reload} />
                             </Table.Td>
                           </Table.Tr>
