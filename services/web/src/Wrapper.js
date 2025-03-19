@@ -5,6 +5,7 @@ import React, { StrictMode, Suspense } from 'react';
 import { MantineProvider } from '@mantine/core';
 import { BrowserRouter, Routes, Route } from '@bedrockio/router';
 import { HelmetProvider } from 'react-helmet-async';
+import { ModalsProvider } from '@mantine/modals';
 
 import { theme } from './theme';
 
@@ -47,23 +48,25 @@ export default function Wrapper() {
   return (
     <StrictMode>
       <MantineProvider theme={theme}>
-        <BrowserRouter>
-          <ThemeProvider>
-            <HelmetProvider>
-              <SessionProvider>
-                <SessionSwitch>
-                  <Suspense fallback={<LoadingScreen />}>
-                    <Routes>
-                      <Route path="/onboard" render={OnboardApp} />
-                      <Route path="/docs" render={DocsApp} />
-                      <Route path="/" render={AppSwitch} />
-                    </Routes>
-                  </Suspense>
-                </SessionSwitch>
-              </SessionProvider>
-            </HelmetProvider>
-          </ThemeProvider>
-        </BrowserRouter>
+        <ModalsProvider>
+          <BrowserRouter>
+            <ThemeProvider>
+              <HelmetProvider>
+                <SessionProvider>
+                  <SessionSwitch>
+                    <Suspense fallback={<LoadingScreen />}>
+                      <Routes>
+                        <Route path="/onboard" render={OnboardApp} />
+                        <Route path="/docs" render={DocsApp} />
+                        <Route path="/" render={AppSwitch} />
+                      </Routes>
+                    </Suspense>
+                  </SessionSwitch>
+                </SessionProvider>
+              </HelmetProvider>
+            </ThemeProvider>
+          </BrowserRouter>
+        </ModalsProvider>
       </MantineProvider>
     </StrictMode>
   );

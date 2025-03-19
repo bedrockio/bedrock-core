@@ -1,24 +1,31 @@
+import { Link, useLocation, useNavigate } from '@bedrockio/router';
 import {
   Breadcrumbs,
-  Divider,
+  Tabs,
   Stack,
   Title,
   rem,
+  Group,
   useMantineTheme,
 } from '@mantine/core';
 
 import { useColorScheme } from '@mantine/hooks';
 
-const PageHeader = (props) => {
-  const { withActions, breadcrumbItems, title, invoiceAction, ...others } =
-    props;
+const PageHeader = ({
+  tabs = [],
+  breadcrumbItems = [],
+  title,
+  rightSection,
+}) => {
   const theme = useMantineTheme();
   const colorScheme = useColorScheme();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const BREADCRUMBS_PROPS = {
     style: {
       a: {
-        padding: rem(8),
+        padding: rem(4),
         borderRadius: theme.radius.sm,
         fontWeight: 500,
         color: colorScheme === 'dark' ? theme.white : theme.black,
@@ -37,12 +44,46 @@ const PageHeader = (props) => {
 
   return (
     <>
-      <Stack gap="sm">
-        <Breadcrumbs {...BREADCRUMBS_PROPS}>{breadcrumbItems}</Breadcrumbs>
-        <Title order={3}>{title}</Title>
-      </Stack>
+      <Stack>
+        <Stack gap="xs">
+          <Breadcrumbs {...BREADCRUMBS_PROPS}>
+            {breadcrumbItems.map((item, index) =>
+              item?.href ? (
+                <Link to={item.href} key={index}>
+                  {item.title}
+                </Link>
+              ) : (
+                item.title
+              ),
+            )}
+          </Breadcrumbs>
 
-      <Divider />
+          <Group justify="space-between">
+            <Title order={2}>{title}</Title>
+            <Group>{rightSection}</Group>
+          </Group>
+        </Stack>
+
+        {tabs.length > 0 && (
+          <Tabs
+            value={location.pathname}
+            styles={{
+              tab: {
+                padding: 'var(--mantine-spacing-xs) 0',
+                marginRight: 'var(--mantine-spacing-md)',
+              },
+            }}
+            onChange={(value) => navigate(value)}>
+            <Tabs.List mb="md">
+              {tabs.map((tab, index) => (
+                <Tabs.Tab key={index} value={tab.href}>
+                  {tab.title}
+                </Tabs.Tab>
+              ))}
+            </Tabs.List>
+          </Tabs>
+        )}
+      </Stack>
     </>
   );
 };

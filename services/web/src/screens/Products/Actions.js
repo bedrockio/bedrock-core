@@ -1,6 +1,6 @@
 import { Dropdown } from 'semantic';
 
-import InspectObject from 'modals/InspectObject';
+import InspectObject from 'components/InspectObject';
 import Confirm from 'components/Confirm';
 
 import { request } from 'utils/api';

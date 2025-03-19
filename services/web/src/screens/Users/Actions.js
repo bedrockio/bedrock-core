@@ -2,7 +2,7 @@ import { Dropdown } from 'semantic';
 
 import { useSession } from 'stores/session';
 
-import InspectObject from 'modals/InspectObject';
+import InspectObject from 'components/InspectObject';
 import LoginAsUser from 'modals/LoginAsUser';
 import Confirm from 'components/Confirm';
 
@@ -15,11 +15,11 @@ export default function UserActions(props) {
   const authenticatableRoles = authUser.roles.reduce(
     (result, { roleDefinition }) =>
       result.concat(roleDefinition.allowAuthenticationOnRoles || []),
-    []
+    [],
   );
 
   const canAuthenticate = [...user.roles].every(({ role }) =>
-    authenticatableRoles.includes(role)
+    authenticatableRoles.includes(role),
   );
 
   return (

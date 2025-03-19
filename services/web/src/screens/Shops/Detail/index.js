@@ -14,12 +14,13 @@ export default function ShopDetail() {
   const Loader = usePageLoader(async (params) => {
     const { data } = await request({
       method: 'GET',
-      path: `/1/shops/${params.id}`,
+      path: `/1/shops/${params.id}?includes=categories`,
     });
     return {
       shop: data,
     };
   });
+
   return (
     <Loader
       notFound={

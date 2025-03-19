@@ -37,7 +37,7 @@ import { AppShell, Burger, Flex } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 
 import { LinksGroup } from './components/LinksGroup';
-import { ModalTrigger } from 'components/ModalTrigger';
+import ModalTrigger from 'components/ModalTrigger';
 
 const links = [
   { icon: IconBuildingStore, href: '/shops', label: 'Shops' },
