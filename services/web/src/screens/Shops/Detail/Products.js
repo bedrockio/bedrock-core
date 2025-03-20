@@ -11,8 +11,6 @@ import HelpTip from 'components/HelpTip';
 import Search from 'components/Search';
 import SearchFilters from 'components/Search/Filters';
 import ErrorMessage from 'components/ErrorMessage';
-import EditProduct from 'modals/EditProduct';
-
 import Actions from 'screens/Products/Actions';
 
 import { formatDateTime } from 'utils/date';

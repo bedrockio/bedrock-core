@@ -1,4 +1,5 @@
 import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
 
 import React, { StrictMode, Suspense } from 'react';
 
@@ -6,6 +7,7 @@ import { MantineProvider } from '@mantine/core';
 import { BrowserRouter, Routes, Route } from '@bedrockio/router';
 import { HelmetProvider } from 'react-helmet-async';
 import { ModalsProvider } from '@mantine/modals';
+import { Notifications } from '@mantine/notifications';
 
 import { theme } from './theme';
 
@@ -15,16 +17,8 @@ import { ThemeProvider } from 'stores/theme';
 import SessionSwitch from 'helpers/SessionSwitch';
 import 'utils/sentry';
 
-//import solidIcons from 'semantic/assets/icons/solid.svg';
-//import brandIcons from 'semantic/assets/icons/brands.svg';
-//import regularIcons from 'semantic/assets/icons/regular.svg';
-
-// this is to handle some issue rich editor
+// this is to handle some issue with rich editor
 window.global = window;
-
-//Icon.useSet(solidIcons);
-//Icon.useSet(brandIcons, 'brands');
-//Icon.useSet(regularIcons, 'regular');
 
 import LoadingScreen from 'screens/Loading';
 
@@ -48,6 +42,7 @@ export default function Wrapper() {
   return (
     <StrictMode>
       <MantineProvider theme={theme}>
+        <Notifications />
         <ModalsProvider>
           <BrowserRouter>
             <ThemeProvider>

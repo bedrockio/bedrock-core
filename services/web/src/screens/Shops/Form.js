@@ -1,20 +1,8 @@
-import React from 'react';
-
 import UploadsField from 'components/form-fields/Uploads.js';
 import ErrorMessage from 'components/ErrorMessage.js';
 import SearchDropdown from 'components/SearchDropdown.js';
-import Meta from 'components/Meta.js';
-import PageHeader from 'components/PageHeader.js';
 
 import allCountries from 'utils/countries';
-
-import { usePage } from 'stores/page';
-
-const countries = allCountries.map(({ countryCode, nameEn }) => ({
-  value: countryCode,
-  label: nameEn,
-  key: countryCode,
-}));
 
 import { useRequest } from 'utils/api';
 
@@ -30,10 +18,16 @@ import {
 } from '@mantine/core';
 
 import { useForm } from '@mantine/form';
-import { li } from 'hast-util-to-mdast/lib/handlers/li';
+import { showNotification } from '@mantine/notifications';
 
-export default function ShopForm({ shop }) {
-  const isUpdate = shop ? true : false;
+const countries = allCountries.map(({ countryCode, nameEn }) => ({
+  value: countryCode,
+  label: nameEn,
+  key: countryCode,
+}));
+
+export default function ShopForm({ shop, onSuccess = () => {} }) {
+  const isUpdate = !!shop;
 
   const form = useForm({
     mode: 'controlled',
@@ -41,7 +35,7 @@ export default function ShopForm({ shop }) {
       name: '',
       description: '',
       categories: [],
-
+      images: [],
       address: {
         line1: '',
         line2: '',
@@ -63,7 +57,16 @@ export default function ShopForm({ shop }) {
         }),
     autoInvoke: false,
     onSuccess: ({ data }) => {
-      console.log(data);
+      showNotification({
+        position: 'top-right',
+        title: isUpdate
+          ? `${shop.name} was successfully updated.`
+          : `${shop.name} was successfully created.`,
+        color: 'green',
+      });
+      setTimeout(() => {
+        onSuccess(data);
+      }, 200);
     },
   });
 
@@ -75,23 +78,14 @@ export default function ShopForm({ shop }) {
       <Grid>
         <Grid.Col span={{ base: 12, md: 6 }}>
           <Stack gap="xs">
-            <TextInput
-              required
-              type="text"
-              label="Name"
-              {...form.getInputProps('name')}
-              //onChange={this.setField}
-            />
+            <TextInput required label="Name" {...form.getInputProps('name')} />
             <Textarea
               label="Description"
-              type="text"
               {...form.getInputProps('description')}
-              //onChange={this.setField}
             />
             <SearchDropdown
               name="categories"
               multiple
-              // onChange={this.setField}
               searchPath="/1/categories/search"
               label="Categories"
               {...form.getInputProps('categories')}
@@ -117,15 +111,11 @@ export default function ShopForm({ shop }) {
           </Stack>
         </Grid.Col>
         <Grid.Col span={{ base: 12, md: 6 }}>
-          <Box p="md">
-            <UploadsField
-              name="images"
-              label="Images"
-              value={shop?.images || []}
-              //onChange={this.setField}
-              onError={(error) => this.setState({ error })}
-            />
-          </Box>
+          <UploadsField
+            label="Images"
+            //onError={(error) => this.setState({ error })}
+            {...form.getInputProps('images')}
+          />
         </Grid.Col>
       </Grid>
       <Box mt="md" gap="md">

@@ -2,10 +2,14 @@ import React from 'react';
 import { uniq } from 'lodash';
 import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
-import { Form, Image, Icon, Label, Card } from 'semantic';
+
+import { Input, SimpleGrid, Image, Paper, Text } from '@mantine/core';
+import { Icon, Label } from 'semantic';
 
 import { request } from 'utils/api';
 import { urlForUpload } from 'utils/uploads';
+import { IconTrash } from '@tabler/icons-react';
+import { onChange } from 'utils/hooks';
 
 const MIME_TYPES = {
   image: {
@@ -97,17 +101,12 @@ export default class Uploads extends React.Component {
       });
 
       if (this.isMultiple()) {
-        this.props.onChange(evt, {
-          name,
-          value: [...value, ...data],
-        });
+        this.props.onChange([...value, ...data]);
       } else {
-        this.props.onChange(evt, {
-          name,
-          value: data[0],
-        });
+        this.props.onChange(data[0]);
       }
     } catch (error) {
+      console.log(error);
       this.setState({
         loading: false,
       });
@@ -134,21 +133,18 @@ export default class Uploads extends React.Component {
     return Array.isArray(this.props.value);
   }
 
-  delete(evt, upload) {
-    const { name, value } = this.props;
+  delete(upload) {
+    const { value } = this.props;
+    console.log(this.props);
     if (this.isMultiple()) {
       const removeId = this.getUploadId(upload);
-      this.props.onChange(evt, {
-        name,
-        value: value.filter((obj) => {
+      this.props.onChange(
+        value.filter((obj) => {
           return this.getUploadId(obj) !== removeId;
         }),
-      });
+      );
     } else {
-      this.props.onChange(evt, {
-        name,
-        value: null,
-      });
+      this.props.onChange(value);
     }
   }
 
@@ -205,28 +201,45 @@ export default class Uploads extends React.Component {
     const { loading } = this.state;
     const uploads = this.getUploads();
     return (
-      <Form.Field required={required}>
-        {label && <label>{label}</label>}
+      <Input.Wrapper label={label} required={required}>
         {uploads.length > 0 &&
           (this.hasMedia() ? (
-            <Card.Group itemsPerRow={4}>
+            <SimpleGrid cols={4}>
               {uploads.map((upload) => (
-                <Card
+                <Paper
+                  style={{ position: 'relative' }}
+                  shadow="xl"
                   key={this.getUploadId(upload)}
-                  className="upload-card"
-                  >
+                  className="upload-card">
                   {this.renderUpload(upload)}
-                  <Icon
-                    fitted
-                    name="circle-xmark"
-                    onClick={(evt) => this.delete(evt, upload)}
+                  <IconTrash
+                    style={{
+                      position: 'absolute',
+                      top: 5,
+                      right: 5,
+                      cursor: 'pointer',
+                    }}
+                    size="14"
+                    onClick={() => this.delete(upload)}
                   />
                   {upload.filename && (
-                    <div className="caption">{upload.filename}</div>
+                    <Text
+                      style={{
+                        position: 'absolute',
+                        bottom: 0,
+                        left: 0,
+                        width: '100%',
+                        color: '#fff',
+                        padding: '4px 8px',
+                        background: 'rgba(0, 0, 0, 0.5)',
+                        overflow: 'ellipsis',
+                      }}>
+                      {upload.filename}
+                    </Text>
                   )}
-                </Card>
+                </Paper>
               ))}
-            </Card.Group>
+            </SimpleGrid>
           ) : (
             <Label.Group color="blue">
               {uploads.map((upload) => (
@@ -283,7 +296,7 @@ export default class Uploads extends React.Component {
             );
           }}
         </Dropzone>
-      </Form.Field>
+      </Input.Wrapper>
     );
   }
 

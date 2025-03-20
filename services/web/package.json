@@ -32,6 +32,7 @@
     "@mantine/form": "^7.17.1",
     "@mantine/hooks": "^7.17.1",
     "@mantine/modals": "^7.17.2",
+    "@mantine/notifications": "^7.17.2",
     "@sentry/browser": "^9.3.0",
     "@simplewebauthn/browser": "^13.1.0",
     "@tabler/icons-react": "^3.31.0",

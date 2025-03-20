@@ -140,6 +140,13 @@
   dependencies:
     regenerator-runtime "^0.14.0"
 
+"@babel/runtime@^7.5.5", "@babel/runtime@^7.8.7":
+  version "7.26.10"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.26.10.tgz#a07b4d8fa27af131a633d7b3524db803eb4764c2"
+  integrity sha512-2WJMeRQPHKSPemqk/awGrAiuFfzBmOIPXKizAsVhWH9YJqLZ0H+HS4c8loHGgW6utJ3E/ejXQUsiGaQy2NZ9Fw==
+  dependencies:
+    regenerator-runtime "^0.14.0"
+
 "@babel/template@^7.26.9":
   version "7.26.9"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.26.9.tgz#4577ad3ddf43d194528cff4e1fa6b232fa609bb2"
@@ -704,6 +711,19 @@
   version "7.17.2"
   resolved "https://registry.yarnpkg.com/@mantine/modals/-/modals-7.17.2.tgz#c9314d0a8f9f3588e6851bdbab0a1d0ed88cc708"
   integrity sha512-Ms8MYLJCZcxRnGfIQr4riGK2g5mpklxiEAU84vbptoAlQ2d5Iqu+CQ0XpDfamCQl/ltmPmYJYkrq52zhQWIS3w==
+
+"@mantine/notifications@^7.17.2":
+  version "7.17.2"
+  resolved "https://registry.yarnpkg.com/@mantine/notifications/-/notifications-7.17.2.tgz#f534a1387d187b605c2840d85c56da03282bdba2"
+  integrity sha512-vg0L8cmihz0ODg4WJ9MAyK06WPt/6g67ksIUFxd4F8RfdJbIMLTsNG9yWoSfuhtXenUg717KaA917IWLjDSaqw==
+  dependencies:
+    "@mantine/store" "7.17.2"
+    react-transition-group "4.4.5"
+
+"@mantine/store@7.17.2":
+  version "7.17.2"
+  resolved "https://registry.yarnpkg.com/@mantine/store/-/store-7.17.2.tgz#c954d23aab2c208a39c129131f2d7d109578753f"
+  integrity sha512-UoMUYQK/z58hMueCkpDIXc49gPgrVO/zcpb0k+B7MFU51EIUiFzHLxLFBmWrgCAM6rzJORqN8JjyCd/PB9j4aw==
 
 "@mapbox/point-geometry@^0.1.0":
   version "0.1.0"
@@ -1980,6 +2000,11 @@ cssesc@^3.0.0:
   resolved "https://registry.yarnpkg.com/cssesc/-/cssesc-3.0.0.tgz#37741919903b868565e1c09ea747445cd18983ee"
   integrity sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==
 
+csstype@^3.0.2:
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.3.tgz#d80ff294d114fb0e6ac500fbf85b60137d7eff81"
+  integrity sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==
+
 data-view-buffer@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/data-view-buffer/-/data-view-buffer-1.0.2.tgz#211a03ba95ecaf7798a8c7198d79536211f88570"
@@ -2107,6 +2132,14 @@ doctrine@^2.1.0:
   integrity sha512-35mSku4ZXK0vfCuHEDAwt55dg2jNajHZ1odvF+8SSr82EsZY4QmXfuWso8oEd8zRhVObSN18aM0CjSdoBX7zIw==
   dependencies:
     esutils "^2.0.2"
+
+dom-helpers@^5.0.1:
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/dom-helpers/-/dom-helpers-5.2.1.tgz#d9400536b2bf8225ad98fe052e029451ac40e902"
+  integrity sha512-nRCa7CK3VTrM2NmGkIy4cbK7IZlgBE/PYMn55rrXefr5xXDP0LdtfPnblFDoVdcAfslJ7or6iqAUnx0CCGIWQA==
+  dependencies:
+    "@babel/runtime" "^7.8.7"
+    csstype "^3.0.2"
 
 draft-js@^0.11.7:
   version "0.11.7"
@@ -5503,6 +5536,16 @@ react-textarea-autosize@8.5.6:
     "@babel/runtime" "^7.20.13"
     use-composed-ref "^1.3.0"
     use-latest "^1.2.1"
+
+react-transition-group@4.4.5:
+  version "4.4.5"
+  resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-4.4.5.tgz#e53d4e3f3344da8521489fbef8f2581d42becdd1"
+  integrity sha512-pZcd1MCJoiKiBR2NRxeCRg13uCXbydPnmB4EOeRrY7480qNWO8IIgQG6zlDkm6uRMsURXPuKq0GWtiM59a5Q6g==
+  dependencies:
+    "@babel/runtime" "^7.5.5"
+    dom-helpers "^5.0.1"
+    loose-envify "^1.4.0"
+    prop-types "^15.6.2"
 
 react@^18.3.1:
   version "18.3.1"

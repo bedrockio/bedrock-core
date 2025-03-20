@@ -1,19 +1,29 @@
 import React from 'react';
-import { Table, Divider, Segment } from 'semantic';
 import { Link } from '@bedrockio/router';
+import {
+  Paper,
+  Group,
+  Title,
+  Table,
+  Button,
+  Image,
+  Divider,
+} from '@mantine/core';
+import { IconPlus } from '@tabler/icons-react';
 
 import Meta from 'components/Meta';
+import PageHeader from 'components/PageHeader';
 import HelpTip from 'components/HelpTip';
 import Layout from 'components/Layout';
 import Search from 'components/Search';
-import Breadcrumbs from 'components/Breadcrumbs';
+
 import SearchFilters from 'components/Search/Filters';
+import ErrorMessage from 'components/ErrorMessage';
 
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 
 // --- Generator: list-imports
-import { Image } from 'semantic';
 import allCountries from 'utils/countries';
 import { urlForUpload } from 'utils/uploads';
 
@@ -25,39 +35,37 @@ const countries = allCountries.map(({ countryCode, nameEn }) => ({
 // --- Generator: end
 
 import Actions from './Actions';
-import { Button } from '@mantine/core';
-import { IconPlus } from '@tabler/icons-react';
 
-export default class ShopList extends React.Component {
-  onDataNeeded = (body) => {
-    return request({
+export default function ShopList() {
+  async function onDataNeeded(body) {
+    return await request({
       method: 'POST',
       path: '/1/shops/search',
       body,
     });
-  };
+  }
 
   // --- Generator: exclude
-  fetchOwners = async (props) => {
+  async function fetchOwners(props) {
     const { data } = await request({
       method: 'POST',
       path: '/1/users/search',
       body: props,
     });
     return data;
-  };
+  }
 
-  fetchCategories = async (props) => {
+  async function fetchCategories(props) {
     const { data } = await request({
       method: 'POST',
       path: '/1/categories/search',
       body: props,
     });
     return data;
-  };
+  }
   // --- Generator: end
 
-  getFilterMapping() {
+  function getFilterMapping() {
     return {
       // --- Generator: exclude
       country: {
@@ -67,7 +75,7 @@ export default class ShopList extends React.Component {
       owner: {
         label: 'Owner',
         getDisplayValue: async (id) => {
-          const owners = await this.fetchOwners({
+          const owners = await fetchOwners({
             ids: [id],
           });
           return owners[0].name;
@@ -83,20 +91,28 @@ export default class ShopList extends React.Component {
     };
   }
 
-  render() {
-    return (
-      <>
-        <Meta title="Shops" />
-        <Search.Provider
-          onDataNeeded={this.onDataNeeded}
-          filterMapping={this.getFilterMapping()}>
-          {({ items: shops, getSorted, setSort, reload }) => {
-            return (
-              <React.Fragment>
-                <Breadcrumbs active="Shops" />
-                <Layout horizontal center spread>
-                  <h1>Shops</h1>
-                  <Layout.Group>
+  return (
+    <>
+      <Meta title="Shops" />
+      <Search.Provider
+        onDataNeeded={onDataNeeded}
+        filterMapping={getFilterMapping()}>
+        {({ items: shops, getSorted, setSort, reload, loading, error }) => {
+          return (
+            <React.Fragment>
+              <PageHeader
+                title="Shops"
+                breadcrumbItems={[
+                  {
+                    href: '/',
+                    title: 'Home',
+                  },
+                  {
+                    title: 'Shops',
+                  },
+                ]}
+                rightSection={
+                  <>
                     <Search.Export filename="shops" />
                     <Button
                       component={Link}
@@ -104,10 +120,12 @@ export default class ShopList extends React.Component {
                       rightSection={<IconPlus size={14} />}>
                       New Shop
                     </Button>
-                  </Layout.Group>
-                </Layout>
+                  </>
+                }
+              />
 
-                <Segment>
+              <Paper mt="md" shadow="md" p="md" withBorder>
+                <Group>
                   <Layout horizontal center spread stackable>
                     <SearchFilters.Modal>
                       {/* --- Generator: filters */}
@@ -119,14 +137,14 @@ export default class ShopList extends React.Component {
                       />
                       <SearchFilters.Dropdown
                         search
-                        onDataNeeded={this.fetchOwners}
+                        onDataNeeded={fetchOwners}
                         name="owner"
                         label="Owner"
                       />
                       <SearchFilters.Dropdown
                         search
                         multiple
-                        onDataNeeded={this.fetchCategories}
+                        onDataNeeded={fetchCategories}
                         name="categories"
                         label="Categories"
                       />
@@ -142,73 +160,74 @@ export default class ShopList extends React.Component {
                       <SearchFilters.Keyword />
                     </Layout>
                   </Layout>
-                </Segment>
+                </Group>
 
                 <Search.Status />
+                <ErrorMessage error={error} />
 
                 {shops.length !== 0 && (
-                  <Table celled sortable>
-                    <Table.Header>
-                      <Table.Row>
+                  <Table stickyHeader striped mt="md">
+                    <Table.Thead>
+                      <Table.Tr>
                         {/* --- Generator: list-header-cells */}
-                        <Table.HeaderCell
-                          width={3}
-                          onClick={() => setSort('name')}
-                          sorted={getSorted('name')}>
+                        <Table.Th
+                          width="30%"
+                          sorted={getSorted('name')}
+                          onClick={() => setSort('name')}>
                           Name
-                        </Table.HeaderCell>
-                        <Table.HeaderCell>Image</Table.HeaderCell>
+                        </Table.Th>
+                        <Table.Th>Image</Table.Th>
                         {/* --- Generator: end */}
-                        <Table.HeaderCell
-                          onClick={() => setSort('createdAt')}
-                          sorted={getSorted('createdAt')}>
+                        <Table.Th
+                          sorted={getSorted('createdAt')}
+                          onClick={() => setSort('createdAt')}>
                           Created
                           <HelpTip
                             title="Created"
                             text="This is the date and time the shop was created."
                           />
-                        </Table.HeaderCell>
-                        <Table.HeaderCell textAlign="center">
-                          Actions
-                        </Table.HeaderCell>
-                      </Table.Row>
-                    </Table.Header>
-                    <Table.Body>
+                        </Table.Th>
+                        <Table.Th width={200}>Actions</Table.Th>
+                      </Table.Tr>
+                    </Table.Thead>
+                    <Table.Tbody>
                       {shops.map((shop) => {
                         return (
-                          <Table.Row key={shop.id}>
+                          <Table.Tr key={shop.id}>
                             {/* --- Generator: list-body-cells */}
-                            <Table.Cell>
+                            <Table.Td>
                               <Link to={`/shops/${shop.id}`}>{shop.name}</Link>
-                            </Table.Cell>
-                            <Table.Cell>
-                              {shop.images.length > 1 && (
+                            </Table.Td>
+                            <Table.Td>
+                              {shop.images.length > 0 && (
                                 <Image
-                                  size="tiny"
+                                  h={50}
+                                  w={50}
+                                  objectFit="contain"
                                   src={urlForUpload(shop.images[0], true)}
                                 />
                               )}
-                            </Table.Cell>
+                            </Table.Td>
                             {/* --- Generator: end */}
-                            <Table.Cell>
+                            <Table.Td>
                               {formatDateTime(shop.createdAt)}
-                            </Table.Cell>
-                            <Table.Cell textAlign="center" singleLine>
+                            </Table.Td>
+                            <Table.Td textAlign="center">
                               <Actions shop={shop} reload={reload} />
-                            </Table.Cell>
-                          </Table.Row>
+                            </Table.Td>
+                          </Table.Tr>
                         );
                       })}
-                    </Table.Body>
+                    </Table.Tbody>
                   </Table>
                 )}
-                <Divider hidden />
+                <Divider my="md" />
                 <Search.Pagination />
-              </React.Fragment>
-            );
-          }}
-        </Search.Provider>
-      </>
-    );
-  }
+              </Paper>
+            </React.Fragment>
+          );
+        }}
+      </Search.Provider>
+    </>
+  );
 }
