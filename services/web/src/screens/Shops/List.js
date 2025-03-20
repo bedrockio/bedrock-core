@@ -1,15 +1,7 @@
 import React from 'react';
 import { Link } from '@bedrockio/router';
-import {
-  Paper,
-  Group,
-  Title,
-  Table,
-  Button,
-  Image,
-  Divider,
-} from '@mantine/core';
-import { IconPlus } from '@tabler/icons-react';
+import { Paper, Group, Table, Button, Image, Divider } from '@mantine/core';
+import { IconPlus, IconPencil } from '@tabler/icons-react';
 
 import Meta from 'components/Meta';
 import PageHeader from 'components/PageHeader';
@@ -213,7 +205,16 @@ export default function ShopList() {
                               {formatDateTime(shop.createdAt)}
                             </Table.Td>
                             <Table.Td textAlign="center">
-                              <Actions shop={shop} reload={reload} />
+                              <Group gap="md">
+                                <Button
+                                  component={Link}
+                                  to={`/shops/${shop.id}/edit`}
+                                  variant="default"
+                                  leftSection={<IconPencil size={14} />}>
+                                  Edit
+                                </Button>
+                                <Actions shop={shop} reload={reload} />
+                              </Group>
                             </Table.Td>
                           </Table.Tr>
                         );
