@@ -16,7 +16,7 @@ const countries = allCountries.map(({ countryCode, nameEn }) => ({
   key: countryCode,
 }));
 
-import { request } from 'utils/api';
+import { request, useRequest } from 'utils/api';
 
 import {
   Button,
@@ -39,11 +39,25 @@ export default function EditShop() {
 
   const isUpdate = false;
 
-  const error = {};
-
   const form = useForm({
     mode: 'controlled',
     initialValues: shop,
+  });
+
+  const editRequest = useRequest({
+    ...(shop
+      ? {
+          method: 'PATCH',
+          path: `/1/shops/${shop.id}`,
+        }
+      : {
+          method: 'POST',
+          path: '/1/shops',
+        }),
+    autoInvoke: false,
+    onSuccess: ({ data }) => {
+      console.log(data);
+    },
   });
 
   return (
@@ -62,7 +76,8 @@ export default function EditShop() {
           ]}
         />
         <Paper shadow="md" p="md" withBorder>
-          <form>
+          <form
+            onSubmit={form.onSubmit((values) => editRequest.invoke(values))}>
             <Grid>
               <Grid.Col span={{ base: 12, md: 6 }}>
                 <Stack gap="xs">
@@ -120,7 +135,7 @@ export default function EditShop() {
               </Grid.Col>
             </Grid>
             <Box mt="md" gap="md">
-              <ErrorMessage error={error} mb="md" />
+              <ErrorMessage error={editRequest.error} mb="md" />
               <Button type="submit" onClick={() => scrollTo({ y: 0 })}>
                 {isUpdate ? 'Update' : 'Create New'} Shop
               </Button>

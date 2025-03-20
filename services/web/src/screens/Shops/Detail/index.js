@@ -12,6 +12,11 @@ import EditShop from './Edit';
 
 export default function ShopDetail() {
   const Loader = usePageLoader(async (params) => {
+    if (params.id === 'new') {
+      return {
+        shop: null,
+      };
+    }
     const { data } = await request({
       method: 'GET',
       path: `/1/shops/${params.id}?includes=categories`,

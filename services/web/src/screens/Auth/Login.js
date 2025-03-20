@@ -22,7 +22,7 @@ import Federated from 'components/Auth/Federated';
 import ErrorMessage from 'components/ErrorMessage';
 import Logo from 'components/Logo';
 
-import { request, useRequest } from 'utils/api';
+import { request } from 'utils/api';
 import { AUTH_TYPE, AUTH_TRANSPORT, APP_NAME } from 'utils/env';
 
 function login(values) {

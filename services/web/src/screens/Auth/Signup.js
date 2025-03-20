@@ -87,7 +87,7 @@ export default function SignupPassword() {
       <Paper miw={380} w="100%" p="xl" radius="md" withBorder>
         <form
           onSubmit={form.onSubmit((formValues) => {
-            signupRequest.request({
+            signupRequest.invoke({
               body: formValues,
             });
           })}>

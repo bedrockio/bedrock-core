@@ -1,4 +1,3 @@
-import React from 'react';
 import { Table, Title, Image, Stack, Group, Paper, Text } from '@mantine/core';
 
 import { usePage } from 'stores/page';

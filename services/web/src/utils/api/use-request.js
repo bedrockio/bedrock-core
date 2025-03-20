@@ -13,7 +13,7 @@ export default function useRequest({
   const [error, setError] = useState(null);
   const controller = useRef(null);
 
-  const _request = useCallback(
+  const invoke = useCallback(
     (args) => {
       const requestArgs = { ...options, ...args };
       if (!requestArgs.path) {
@@ -58,7 +58,7 @@ export default function useRequest({
 
   useEffect(() => {
     if (autoInvoke) {
-      _request();
+      invoke();
     }
 
     return () => {
@@ -66,7 +66,7 @@ export default function useRequest({
         controller.current.abort('');
       }
     };
-  }, [_request, autoInvoke]);
+  }, [invoke, autoInvoke]);
 
-  return { data, loading, error, request: _request, abort };
+  return { data, loading, error, invoke, abort };
 }
