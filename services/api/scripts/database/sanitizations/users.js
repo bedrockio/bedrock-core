@@ -53,8 +53,31 @@ module.exports = async () => {
               else: 'Doe',
             },
           },
-          hashedPassword: {
-            $literal: hashedPassword,
+          // Update the "secret" of the password
+          // authenticator to be the new password.
+          authenticators: {
+            $map: {
+              input: '$authenticators',
+              as: 'authenticator',
+              in: {
+                $cond: {
+                  if: {
+                    $eq: ['$$authenticator.type', 'password'],
+                  },
+                  then: {
+                    $mergeObjects: [
+                      '$$authenticator',
+                      {
+                        secret: {
+                          $literal: hashedPassword,
+                        },
+                      },
+                    ],
+                  },
+                  else: '$$authenticator',
+                },
+              },
+            },
           },
         },
       },
