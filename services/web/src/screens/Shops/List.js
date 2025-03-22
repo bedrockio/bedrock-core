@@ -1,11 +1,19 @@
 import React from 'react';
 import { Link } from '@bedrockio/router';
-import { Paper, Group, Table, Button, Image, Divider } from '@mantine/core';
-import { IconPlus, IconPencil } from '@tabler/icons-react';
+import {
+  Paper,
+  Group,
+  Table,
+  Button,
+  Image,
+  Divider,
+  Tooltip,
+} from '@mantine/core';
+import { IconPlus, IconPencil, IconHelp } from '@tabler/icons-react';
 
 import Meta from 'components/Meta';
 import PageHeader from 'components/PageHeader';
-import HelpTip from 'components/HelpTip';
+
 import Layout from 'components/Layout';
 import Search from 'components/Search';
 
@@ -27,6 +35,7 @@ const countries = allCountries.map(({ countryCode, nameEn }) => ({
 // --- Generator: end
 
 import Actions from './Actions';
+import SortableTh from 'components/Table/SortableTh';
 
 export default function ShopList() {
   async function onDataNeeded(body) {
@@ -147,10 +156,10 @@ export default function ShopList() {
                       {/* --- Generator: end */}
                     </SearchFilters.Modal>
 
-                    <Layout horizontal stackable center right>
+                    <Group>
                       <Search.Total />
                       <SearchFilters.Keyword />
-                    </Layout>
+                    </Group>
                   </Layout>
                 </Group>
 
@@ -162,23 +171,27 @@ export default function ShopList() {
                     <Table.Thead>
                       <Table.Tr>
                         {/* --- Generator: list-header-cells */}
-                        <Table.Th
-                          width="30%"
+                        <SortableTh
                           sorted={getSorted('name')}
                           onClick={() => setSort('name')}>
                           Name
-                        </Table.Th>
-                        <Table.Th>Image</Table.Th>
+                        </SortableTh>
+                        <Table.Th width={60}>Image</Table.Th>
                         {/* --- Generator: end */}
-                        <Table.Th
+                        <SortableTh
                           sorted={getSorted('createdAt')}
-                          onClick={() => setSort('createdAt')}>
-                          Created
-                          <HelpTip
-                            title="Created"
-                            text="This is the date and time the shop was created."
-                          />
-                        </Table.Th>
+                          onClick={() => setSort('createdAt')}
+                          width={280}>
+                          <Group>
+                            Created
+                            <Tooltip
+                              withArrow
+                              multiline={true}
+                              label="This is the date and time the item was created.">
+                              <IconHelp size={14} />
+                            </Tooltip>
+                          </Group>
+                        </SortableTh>
                         <Table.Th width={200}>Actions</Table.Th>
                       </Table.Tr>
                     </Table.Thead>

@@ -3,20 +3,18 @@ import React from 'react';
 import { formatNumber } from 'utils/formatting';
 
 import SearchContext from './Context';
+import { Text } from '@mantine/core';
 
-export default class Total extends React.Component {
-  static contextType = SearchContext;
-
-  render() {
-    const { meta } = this.context;
-    if (!meta) {
-      return null;
-    }
-    return (
-      <div style={{ color: '#6C727F', marginRight: '1em' }}>
-        {meta?.total ? formatNumber(meta?.total) : 'No'}{' '}
-        {this.props.itemName || 'results'} found
-      </div>
-    );
+export default function Total({ itemName }) {
+  const { meta } = React.useContext(SearchContext);
+  if (!meta) {
+    return null;
   }
+
+  return (
+    <Text style={{ color: '#6C727F' }}>
+      {meta?.total ? formatNumber(meta?.total) : 'No'} {itemName || 'results'}{' '}
+      found
+    </Text>
+  );
 }

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Form } from 'semantic';
 
 import SearchContext from '../Context';
+import { TextInput } from '@mantine/core';
 
 export default class KeywordFilter extends React.Component {
   static contextType = SearchContext;
@@ -20,7 +20,8 @@ export default class KeywordFilter extends React.Component {
     });
   }
 
-  onChange = (evt, { value }) => {
+  onChange = (e) => {
+    const { value } = e.currentTarget;
     this.setState({
       keyword: value,
     });
@@ -42,7 +43,7 @@ export default class KeywordFilter extends React.Component {
     const { loading } = this.context;
 
     return (
-      <Form.Input
+      <TextInput
         {...this.props}
         fluid
         loading={loading}
@@ -80,5 +81,5 @@ export default class KeywordFilter extends React.Component {
 }
 
 KeywordFilter.propTypes = {
-  ...Form.Input.propTypes,
+  ...TextInput.propTypes,
 };

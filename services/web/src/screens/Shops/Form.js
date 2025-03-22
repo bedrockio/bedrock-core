@@ -58,7 +58,7 @@ export default function ShopForm({ shop, onSuccess = () => {} }) {
     autoInvoke: false,
     onSuccess: ({ data }) => {
       showNotification({
-        position: 'top-right',
+        position: 'top-center',
         title: isUpdate
           ? `${shop.name} was successfully updated.`
           : `${shop.name} was successfully created.`,
@@ -111,11 +111,7 @@ export default function ShopForm({ shop, onSuccess = () => {} }) {
           </Stack>
         </Grid.Col>
         <Grid.Col span={{ base: 12, md: 6 }}>
-          <UploadsField
-            label="Images"
-            //onError={(error) => this.setState({ error })}
-            {...form.getInputProps('images')}
-          />
+          <UploadsField label="Images" {...form.getInputProps('images')} />
         </Grid.Col>
       </Grid>
       <Box mt="md" gap="md">

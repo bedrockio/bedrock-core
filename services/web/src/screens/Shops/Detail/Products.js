@@ -1,12 +1,21 @@
 import React from 'react';
-import { Message, Loader, Divider } from 'semantic';
+import { Loader, Divider } from 'semantic';
 import { Link } from '@bedrockio/router';
-import { Paper, Group, Title, Table, Button, Image } from '@mantine/core';
+import {
+  Paper,
+  Group,
+  Title,
+  Table,
+  Button,
+  Image,
+  Stack,
+  Text,
+  Tooltip,
+} from '@mantine/core';
 
-import { IconPencil } from '@tabler/icons-react';
+import { IconHelp, IconPencil } from '@tabler/icons-react';
 import { usePage } from 'stores/page';
 
-import Layout from 'components/Layout';
 import HelpTip from 'components/HelpTip';
 import Search from 'components/Search';
 import SearchFilters from 'components/Search/Filters';
@@ -21,6 +30,7 @@ import { urlForUpload } from 'utils/uploads';
 
 import Menu from './Menu';
 import Meta from 'components/Meta';
+import SortableTh from 'components/Table/SortableTh';
 
 export default function ShopProducts() {
   const { shop } = usePage();
@@ -39,54 +49,71 @@ export default function ShopProducts() {
   return (
     <>
       <Meta title="Products" />
-      <Search.Provider onDataNeeded={onDataNeeded}>
-        {({ items: products, getSorted, setSort, reload, loading, error }) => {
-          return (
-            <React.Fragment>
-              <Menu />
-              <Paper shadow="md" p="md" withBorder>
-                <Group>
-                  <Title order={2}>Products</Title>
-                  <Layout horizontal right center>
-                    <Search.Total />
-                    <SearchFilters.Keyword />
-                  </Layout>
-                </Group>
-                <ErrorMessage error={error} />
-                {loading ? (
-                  <Loader active />
-                ) : products.length === 0 ? (
-                  <Message>No products added yet</Message>
-                ) : (
+      <Menu />
+      <Paper shadow="md" p="md" withBorder>
+        <Stack spacing="md">
+          <Search.Provider onDataNeeded={onDataNeeded}>
+            {({
+              items: products,
+              getSorted,
+              setSort,
+              reload,
+              loading,
+              error,
+            }) => {
+              return (
+                <React.Fragment>
+                  <Group justify="space-between">
+                    <Title order={2}>Products</Title>
+                    <Group>
+                      <Search.Total />
+                      <SearchFilters.Keyword />
+                    </Group>
+                  </Group>
+                  <ErrorMessage error={error} />
+                  {loading && <Loader active />}
+
                   <Table stickyHeader striped>
                     <Table.Thead>
                       <Table.Tr>
-                        {/* --- Generator: list-header-cells */}
-                        <Table.Th
+                        <SortableTh
                           sorted={getSorted('name')}
                           onClick={() => setSort('name')}>
                           Name
-                        </Table.Th>
+                        </SortableTh>
                         {/* --- Generator: end */}
                         <Table.Th width={50}>Image</Table.Th>
-                        <Table.Th
-                          onClick={() => setSort('priceUsd')}
-                          sorted={getSorted('priceUsd')}>
+                        <SortableTh
+                          sorted={getSorted('priceUsd')}
+                          onClick={() => setSort('priceUsd')}>
                           Price
-                        </Table.Th>
-                        <Table.Th
+                        </SortableTh>
+                        <SortableTh
                           sorted={getSorted('createdAt')}
                           onClick={() => setSort('createdAt')}>
-                          Created
-                          <HelpTip
-                            title="Created"
-                            text="This is the date and time the item was created."
-                          />
-                        </Table.Th>
+                          <Group>
+                            Created
+                            <Tooltip
+                              withArrow
+                              multiline={true}
+                              label="This is the date and time the item was created.">
+                              <IconHelp size={14} />
+                            </Tooltip>
+                          </Group>
+                        </SortableTh>
                         <Table.Th width={200}>Actions</Table.Th>
                       </Table.Tr>
                     </Table.Thead>
                     <Table.Tbody>
+                      {products.length === 0 && (
+                        <Table.Tr>
+                          <Table.Td colSpan={5}>
+                            <Text p="md" fw={500} ta="center">
+                              No products found.
+                            </Text>
+                          </Table.Td>
+                        </Table.Tr>
+                      )}
                       {products.map((product) => {
                         return (
                           <Table.Tr key={product.id}>
@@ -125,14 +152,15 @@ export default function ShopProducts() {
                       })}
                     </Table.Tbody>
                   </Table>
-                )}
-                <Divider hidden />
-                <Search.Pagination />
-              </Paper>
-            </React.Fragment>
-          );
-        }}
-      </Search.Provider>
+
+                  <Divider hidden />
+                  <Search.Pagination />
+                </React.Fragment>
+              );
+            }}
+          </Search.Provider>
+        </Stack>
+      </Paper>
     </>
   );
 }

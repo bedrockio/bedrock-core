@@ -7,6 +7,7 @@ import {
   rem,
   Group,
   useMantineTheme,
+  Text,
 } from '@mantine/core';
 
 import { useColorScheme } from '@mantine/hooks';
@@ -50,10 +51,12 @@ const PageHeader = ({
             {breadcrumbItems.map((item, index) =>
               item?.href ? (
                 <Link to={item.href} key={index}>
-                  {item.title}
+                  <Text size="sm">{item.title}</Text>
                 </Link>
               ) : (
-                item.title
+                <Text key={index} size="sm">
+                  {item.title}
+                </Text>
               ),
             )}
           </Breadcrumbs>
@@ -77,7 +80,7 @@ const PageHeader = ({
             <Tabs.List mb="md">
               {tabs.map((tab, index) => (
                 <Tabs.Tab key={index} value={tab.href}>
-                  {tab.title}
+                  <Text size="sm">{tab.title}</Text>
                 </Tabs.Tab>
               ))}
             </Tabs.List>
