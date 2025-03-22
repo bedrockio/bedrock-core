@@ -110,7 +110,7 @@ class SearchProvider extends React.Component {
     if (lastProps.location.search != this.props.location.search) {
       const { page, filters } = getStateFromQueryString(
         this.props.location.search,
-        this.props.filterMapping
+        this.props.filterMapping,
       );
       changedProps.page = page;
       changedProps.filters = filters;
@@ -163,15 +163,13 @@ class SearchProvider extends React.Component {
     }
 
     // only update the url if the search params have changed
-    const search = new URLSearchParams(queryObject).toString();
-    if (!search.length) {
+    const params = new URLSearchParams(queryObject);
+
+    if (!params.size) {
       return;
     }
 
-    this.props.history.push({
-      pathname: this.props.history.location.pathname,
-      search: '?' + new URLSearchParams(queryObject).toString(),
-    });
+    this.props.history.push('?' + params);
   }
 
   getChanged(current, last) {
@@ -199,7 +197,7 @@ class SearchProvider extends React.Component {
         {
           page,
         },
-        () => this.updateUrlSearchParams()
+        () => this.updateUrlSearchParams(),
       );
     }
   };
@@ -289,7 +287,7 @@ class SearchProvider extends React.Component {
         page: 1, // set page to 1 when filters change
         filters: newFilters,
       },
-      () => this.updateUrlSearchParams()
+      () => this.updateUrlSearchParams(),
     );
   };
 

@@ -34,7 +34,7 @@ class URLParamWatcher extends React.Component {
 
   parse = () => {
     const params = Object.fromEntries(
-      new URLSearchParams(this.props.history.location.search)
+      new URLSearchParams(this.props.location.search),
     );
 
     if (this.hasChanged(params)) {
