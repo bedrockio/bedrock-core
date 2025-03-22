@@ -9,7 +9,6 @@ import { Icon, Label } from 'semantic';
 import { request } from 'utils/api';
 import { urlForUpload } from 'utils/uploads';
 import { IconTrash } from '@tabler/icons-react';
-import { onChange } from 'utils/hooks';
 
 const MIME_TYPES = {
   image: {
@@ -135,7 +134,6 @@ export default class Uploads extends React.Component {
 
   delete(upload) {
     const { value } = this.props;
-    console.log(this.props);
     if (this.isMultiple()) {
       const removeId = this.getUploadId(upload);
       this.props.onChange(

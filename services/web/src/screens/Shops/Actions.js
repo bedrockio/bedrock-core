@@ -1,7 +1,6 @@
 import { Button, Menu, Text } from '@mantine/core';
 
 import InspectObject from 'components/InspectObject';
-import Confirm from 'components/Confirm';
 
 import { modals } from '@mantine/modals';
 
