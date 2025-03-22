@@ -12,7 +12,7 @@ export default function Total({ itemName }) {
   }
 
   return (
-    <Text style={{ color: '#6C727F' }}>
+    <Text size="sm" style={{ color: '#6C727F' }}>
       {meta?.total ? formatNumber(meta?.total) : 'No'} {itemName || 'results'}{' '}
       found
     </Text>
