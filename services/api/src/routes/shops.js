@@ -37,7 +37,7 @@ router
     validateBody(
       Shop.getSearchValidation({
         ...exportValidation(),
-      })
+      }),
     ),
     async (ctx) => {
       const { format, filename, ...params } = ctx.request.body;
@@ -51,7 +51,7 @@ router
         data,
         meta,
       };
-    }
+    },
   )
   .patch('/:id', validateBody(Shop.getUpdateValidation()), async (ctx) => {
     const { shop } = ctx.state;
