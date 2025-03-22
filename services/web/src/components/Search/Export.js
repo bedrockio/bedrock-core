@@ -1,84 +1,78 @@
-import React from 'react';
-import { Button, Popup } from 'semantic';
+import { Button, Tooltip } from '@mantine/core';
 
 import { safeFileName } from 'utils/formatting';
 import { downloadResponse } from 'utils/download';
 
 import SearchContext from './Context';
+import { IconDownload } from '@tabler/icons-react';
+import { useContext, useState } from 'react';
+import { showNotification } from '@mantine/notifications';
 
-export default class ExportButton extends React.Component {
-  static contextType = SearchContext;
+export default function ExportButton({
+  body = {},
+  limit = 10000,
+  filename,
+  as: As = Button,
+  children = 'Export',
+  ...props
+}) {
+  const [loading, setLoading] = useState(false);
 
-  state = {
-    loading: false,
-    error: null,
-  };
+  const context = useContext(SearchContext);
 
-  handleSubmit = async () => {
-    this.setState({ loading: true, error: null });
-    const body = this.props.body || {};
+  const handleSubmit = async () => {
+    setLoading(true);
     try {
-      const res = await this.context.onDataNeeded({
+      const res = await context.onDataNeeded({
         format: 'csv',
-        limit: this.props.limit,
-        filename: this.props.filename
-          ? `${safeFileName(this.props.filename.replace('.csv', ''))}.csv`
+        limit,
+        filename: filename
+          ? `${safeFileName(filename.replace('.csv', ''))}.csv`
           : 'export.csv',
-        ...this.context.filters,
+        ...context.filters,
         ...body,
       });
       await downloadResponse(res);
-      this.setState({
-        loading: false,
-      });
+      setLoading(false);
     } catch (err) {
-      this.setState({
-        loading: false,
-        error: err,
+      setLoading(false);
+      showNotification({
+        position: 'top-center',
+        title: 'Error exporting data',
+        message: err.message,
+        color: 'red',
       });
     }
   };
 
-  render() {
-    const { loading, error } = this.state;
-    const { meta } = this.context;
-
-    const As = this.props.as || Button;
-
-    if (!loading && meta?.total > this.props.limit) {
-      return (
-        <Popup
-          content="Too many rows to export, narrow your search"
-          on="click"
-          trigger={
-            <As
-              loading={loading}
-              primary
-              basic
-              icon={error || 'download'}
-              content={'Export'}
-            />
-          }
-        />
-      );
-    }
-
+  if (!loading && context.meta?.total > limit) {
     return (
-      <As
-        loading={loading}
-        disabled={meta?.total === 0 || loading}
-        negative={error}
-        title={error?.message}
-        primary
-        basic
-        icon={error || 'download'}
-        content={'Export'}
-        onClick={this.handleSubmit}
+      <Tooltip
+        multiline
+        w={220}
+        label="Too many rows to export, narrow your search"
+        trigger={
+          <As
+            loading={loading}
+            disabled
+            variant="default"
+            rightSection={<IconDownload size={14} />}
+            {...props}>
+            {children}
+          </As>
+        }
       />
     );
   }
-}
 
-ExportButton.defaultProps = {
-  limit: 100000,
-};
+  return (
+    <As
+      variant="default"
+      rightSection={<IconDownload size={14} />}
+      loading={loading}
+      disabled={context.meta?.total === 0 || loading}
+      onClick={handleSubmit}>
+      {children}
+    </As>
+  );
+}
