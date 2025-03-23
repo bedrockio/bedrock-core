@@ -163,15 +163,13 @@ class SearchProvider extends React.Component {
     }
 
     // only update the url if the search params have changed
-    const search = new URLSearchParams(queryObject).toString();
-    if (!search.length) {
+    const params = new URLSearchParams(queryObject);
+
+    if (!params.size) {
       return;
     }
 
-    this.props.history.push({
-      pathname: this.props.history.location.pathname,
-      search: '?' + new URLSearchParams(queryObject).toString(),
-    });
+    this.props.history.push('?' + params);
   }
 
   getChanged(current, last) {
