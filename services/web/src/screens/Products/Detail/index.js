@@ -18,6 +18,7 @@ export default function ProductDetail() {
       product: data,
     };
   });
+
   return (
     <Loader
       notFound={

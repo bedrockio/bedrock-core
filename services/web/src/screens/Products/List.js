@@ -9,6 +9,7 @@ import {
   Divider,
   Tooltip,
   Anchor,
+  Loader,
 } from '@mantine/core';
 import { IconPlus, IconHelp, IconPencil } from '@tabler/icons-react';
 
@@ -69,10 +70,10 @@ export default function ProductList() {
     <>
       <Meta title="Products" />
       <Search.Provider
-        limit={4}
+        limit={1}
         onDataNeeded={onDataNeeded}
         filterMapping={getFilterMapping()}>
-        {({ items: products, getSorted, setSort, reload, error }) => {
+        {({ items: products, getSorted, setSort, reload, error, loading }) => {
           return (
             <React.Fragment>
               <PageHeader
@@ -89,14 +90,13 @@ export default function ProductList() {
                 rightSection={
                   <>
                     <Search.Export filename="products" />
-                    <EditProduct
-                      trigger={
-                        <Button rightSection={<IconPlus size={14} />}>
-                          New Product
-                        </Button>
-                      }
-                      onSave={reload}
-                    />
+
+                    <Button
+                      component={Link}
+                      to="/products/new"
+                      rightSection={<IconPlus size={14} />}>
+                      New Product
+                    </Button>
                   </>
                 }
               />
@@ -128,7 +128,7 @@ export default function ProductList() {
                         label="Created At"
                       />
                     </SearchFilters.Modal>
-                    <Search.Status />
+                    {loading && <Loader size={'sm'} />}
                   </Group>
 
                   <Group>
@@ -200,18 +200,6 @@ export default function ProductList() {
                           </Table.Td>
                           <Table.Td>
                             <Group gap="md">
-                              <EditProduct
-                                product={product}
-                                trigger={
-                                  <Button
-                                    variant="subtle"
-                                    size="xs"
-                                    leftSection={<IconPencil size={14} />}>
-                                    Edit
-                                  </Button>
-                                }
-                                onSave={reload}
-                              />
                               <Actions product={product} reload={reload} />
                             </Group>
                           </Table.Td>
@@ -220,9 +208,7 @@ export default function ProductList() {
                     })}
                   </Table.Tbody>
                 </Table>
-
                 <Divider my="md" />
-
                 <Search.Pagination />
               </Paper>
             </React.Fragment>

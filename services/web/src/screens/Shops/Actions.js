@@ -1,5 +1,6 @@
 import { Button, Menu, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
+
 import {
   IconChevronDown,
   IconTrash,
@@ -9,6 +10,8 @@ import {
 import { Link } from '@bedrockio/router';
 
 import InspectObject from 'components/InspectObject';
+import { request } from 'utils/api';
+import ErrorMessage from 'components/ErrorMessage';
 
 export default function ShopsActions({ shop, reload }) {
   const openInspectModal = () => {
@@ -20,24 +23,35 @@ export default function ShopsActions({ shop, reload }) {
   };
 
   const openDeleteModel = () => {
-    modals.open({
-      title: `Delete ${shop.name}`,
+    modals.openConfirmModal({
+      title: `Delete Shop`,
       children: (
         <Text>
           Are you sure you want to delete <strong>{shop.name}</strong>?
         </Text>
       ),
-      footer: (
-        <Button
-          variant="danger"
-          onClick={async () => {
-            await shop.delete();
-            reload();
-            modals.close();
-          }}>
-          Delete
-        </Button>
-      ),
+      labels: {
+        cancel: 'Cancel',
+        confirm: 'Delete Shope',
+      },
+      confirmProps: {
+        color: 'red',
+      },
+      onConfirm: async () => {
+        try {
+          await request({
+            method: 'DELETE',
+            path: `/1/shops/${shop.id}`,
+          });
+          reload();
+          modals.close();
+        } catch (error) {
+          modals.open({
+            title: `Failed to delete shop ${shop.name}`,
+            children: <ErrorMessage error={error} />,
+          });
+        }
+      },
     });
   };
 

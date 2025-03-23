@@ -4,14 +4,12 @@ import {
   Tabs,
   Stack,
   Title,
-  rem,
   Group,
-  useMantineTheme,
   Text,
   Anchor,
 } from '@mantine/core';
 
-import { useColorScheme } from '@mantine/hooks';
+import Meta from './Meta';
 
 const PageHeader = ({
   tabs = [],
@@ -24,6 +22,7 @@ const PageHeader = ({
 
   return (
     <>
+      <Meta title={title} />
       <Stack>
         <Stack gap="xs">
           <Breadcrumbs>

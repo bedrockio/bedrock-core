@@ -1,14 +1,10 @@
 import { useState, useMemo } from 'react';
 
 import { isValid } from 'date-fns';
-import { DayPicker } from 'react-day-picker';
 
 import { Popup, Input, Icon } from 'semantic';
 
 import { formatDate } from 'utils/date';
-
-import 'react-day-picker/style.css';
-import './date-input.less';
 
 const DEFAULT_YEAR_REG = /\d{4}|[-/]\d{2}/;
 
@@ -122,14 +118,7 @@ export default function DateInput(props) {
               }}
             />
           }
-          content={
-            <DayPicker
-              mode="single"
-              selected={date}
-              onSelect={onSelect}
-              defaultMonth={date}
-            />
-          }
+          content={<div mode="single" selected={date} onSelect={onSelect} />}
         />
       }
     />

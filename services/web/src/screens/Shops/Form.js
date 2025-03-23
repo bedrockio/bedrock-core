@@ -90,7 +90,9 @@ export default function ShopForm({ shop, onSuccess = () => {} }) {
               label="Categories"
               {...form.getInputProps('categories')}
             />
-            <Title>Address</Title>
+            <Title order={4} mt="md">
+              Address
+            </Title>
             <TextInput
               label="Address Line 1"
               {...form.getInputProps('address.line1')}

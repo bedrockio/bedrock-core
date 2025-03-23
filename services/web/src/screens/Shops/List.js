@@ -36,6 +36,7 @@ const countries = allCountries.map(({ countryCode, nameEn }) => ({
 
 import Actions from './Actions';
 import SortableTh from 'components/Table/SortableTh';
+import { Loader } from 'semantic-ui-react';
 
 export default function ShopList() {
   async function onDataNeeded(body) {
@@ -90,11 +91,10 @@ export default function ShopList() {
 
   return (
     <>
-      <Meta title="Shops" />
       <Search.Provider
         onDataNeeded={onDataNeeded}
         filterMapping={getFilterMapping()}>
-        {({ items: shops, getSorted, setSort, reload, error }) => {
+        {({ items: shops, getSorted, setSort, reload, error, loading }) => {
           return (
             <React.Fragment>
               <PageHeader
@@ -149,7 +149,7 @@ export default function ShopList() {
                         name="createdAt"
                       />
                     </SearchFilters.Modal>
-                    <Search.Status />
+                    {loading && <Loader size={'sm'} />}
                   </Group>
 
                   <Group>

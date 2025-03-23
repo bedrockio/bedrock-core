@@ -1,3 +1,4 @@
+import Meta from 'components/Meta';
 import PageHeader from 'components/PageHeader';
 
 import Form from './Form';
@@ -9,8 +10,9 @@ export default function NewShop() {
 
   return (
     <>
+      <Meta title="New Product" />
       <PageHeader
-        title="New Shop"
+        title="New Product"
         breadcrumbItems={[
           { title: 'Home', href: '/' },
           { title: 'Shops', href: '/shops' },
@@ -19,8 +21,8 @@ export default function NewShop() {
       />
       <Paper shadow="md" p="md" withBorder mt="md">
         <Form
-          onSuccess={(shop) => {
-            navigate(`/shops/${shop.id}`);
+          onSuccess={(product) => {
+            navigate(`/products/${product.id}`);
           }}
         />
       </Paper>

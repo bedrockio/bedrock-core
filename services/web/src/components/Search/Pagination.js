@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Group, Pagination } from '@mantine/core';
+import { Pagination } from '@mantine/core';
 
 import SearchContext from './Context';
 
@@ -20,6 +20,9 @@ const SearchPagination = () => {
 
   return (
     <Pagination
+      boundaries={2}
+      siblings={2}
+      disabled={loading}
       loading={loading}
       value={page}
       onChange={handlePageChange}

@@ -237,11 +237,6 @@
     source-map "^0.7.4"
     vfile "^6.0.3"
 
-"@date-fns/tz@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@date-fns/tz/-/tz-1.2.0.tgz#81cb3211693830babaf3b96aff51607e143030a6"
-  integrity sha512-LBrd7MiJZ9McsOgxqWX7AaxrDjcFVjWH/tIKJd7pnR7McaslGYOP1QmmiBXdJH/H/yLCT+rcQ7FaPBUxRGUtrg==
-
 "@draft-js-plugins/alignment@^5.0.3":
   version "5.0.4"
   resolved "https://registry.yarnpkg.com/@draft-js-plugins/alignment/-/alignment-5.0.4.tgz#70bb0fe352166b137b38712fadad71d0da69b396"
@@ -682,10 +677,10 @@
   resolved "https://registry.yarnpkg.com/@js-sdsl/ordered-map/-/ordered-map-4.4.2.tgz#9299f82874bab9e4c7f9c48d865becbfe8d6907c"
   integrity sha512-iUKgm52T8HOE/makSxjqoWhe95ZJA1/G1sYsGev2JDKUSS14KAgg1LHb+Ba+IPow0xflbnSkOsZcO08C7w1gYw==
 
-"@mantine/core@^7.17.1":
-  version "7.17.1"
-  resolved "https://registry.yarnpkg.com/@mantine/core/-/core-7.17.1.tgz#4f136f017d798117b0eacc8b8c1194047c3797e2"
-  integrity sha512-V8O3Ftq4la4I4wNDkTfH4Slkt/pCEU32pTE/DkO46zua0VFxfOAJeLjaol0s11//T+bXx82DtjMsd9APWPuFhA==
+"@mantine/core@^7.17.2":
+  version "7.17.2"
+  resolved "https://registry.yarnpkg.com/@mantine/core/-/core-7.17.2.tgz#027fe3c8d43abefc318b7b9229a8e5146635c7b8"
+  integrity sha512-R6MYhitJ0JEgrhadd31Nw9FhRaQwDHjXUs5YIlitKH/fTOz9gKSxKjzmNng3bEBQCcbEDOkZj3FRcBgTUh/F0Q==
   dependencies:
     "@floating-ui/react" "^0.26.28"
     clsx "^2.1.1"
@@ -693,6 +688,13 @@
     react-remove-scroll "^2.6.2"
     react-textarea-autosize "8.5.6"
     type-fest "^4.27.0"
+
+"@mantine/dates@^7.17.2":
+  version "7.17.2"
+  resolved "https://registry.yarnpkg.com/@mantine/dates/-/dates-7.17.2.tgz#4cd7834fcb6e338c359796bf23eb60ba78ab8737"
+  integrity sha512-7bB992j8f+uEi280jab0/8i5yfsN/3oSrMDFwatZ+7XSDUwiP0YFib/FVX0pNSSqdFpbXhUmsZEECX71QtHw+Q==
+  dependencies:
+    clsx "^2.1.1"
 
 "@mantine/form@^7.17.1":
   version "7.17.1"
@@ -702,10 +704,10 @@
     fast-deep-equal "^3.1.3"
     klona "^2.0.6"
 
-"@mantine/hooks@^7.17.1":
-  version "7.17.1"
-  resolved "https://registry.yarnpkg.com/@mantine/hooks/-/hooks-7.17.1.tgz#7a7cedcd3656430985ab93b3b9b3d34d9aaab303"
-  integrity sha512-mkHLrXMPd5xdI5WD7UOLwNEpdh/i6A7HaRDTXvjDE2/S0N8VmAE+BlvdyvWRMi7ODp2zVqJdP8cF1tgUn+Z0fA==
+"@mantine/hooks@^7.17.2":
+  version "7.17.2"
+  resolved "https://registry.yarnpkg.com/@mantine/hooks/-/hooks-7.17.2.tgz#bfd10e65cb5a83326ecfdd339e56558ea6045c44"
+  integrity sha512-tbErVcGZu0E4dSmE6N0k6Tv1y9R3SQmmQgwqorcc+guEgKMdamc36lucZGlJnSGUmGj+WLUgELkEQ0asdfYBDA==
 
 "@mantine/modals@^7.17.2":
   version "7.17.2"
@@ -2032,15 +2034,15 @@ data-view-byte-offset@^1.0.1:
     es-errors "^1.3.0"
     is-data-view "^1.0.1"
 
-date-fns-jalali@^4.1.0-0:
-  version "4.1.0-0"
-  resolved "https://registry.yarnpkg.com/date-fns-jalali/-/date-fns-jalali-4.1.0-0.tgz#9c7fb286004fab267a300d3e9f1ada9f10b4b6b0"
-  integrity sha512-hTIP/z+t+qKwBDcmmsnmjWTduxCg+5KfdqWQvb2X/8C9+knYY6epN/pfxdDuyVlSVeFz0sM5eEfwIUQ70U4ckg==
-
 date-fns@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-4.1.0.tgz#64b3d83fff5aa80438f5b1a633c2e83b8a1c2d14"
   integrity sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==
+
+dayjs@^1.11.13:
+  version "1.11.13"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.13.tgz#92430b0139055c3ebb60150aa13e860a4b5a366c"
+  integrity sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==
 
 debug@4, debug@^4.0.0, debug@^4.1.0, debug@^4.3.1, debug@^4.3.2, debug@^4.3.4, debug@^4.3.5, debug@^4.4.0:
   version "4.4.0"
@@ -5397,15 +5399,6 @@ queue-microtask@^1.2.2:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/queue-microtask/-/queue-microtask-1.2.3.tgz#4929228bbc724dfac43e0efb058caf7b6cfb6243"
   integrity sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==
-
-react-day-picker@^9.5.0:
-  version "9.5.1"
-  resolved "https://registry.yarnpkg.com/react-day-picker/-/react-day-picker-9.5.1.tgz#ec40acdcc3ffbf7c0b9bfea8b6f97924249ea974"
-  integrity sha512-PxuK8inYLlYgM2zZUVBPsaBM5jI40suPeG+naKyx7kpyF032RRlEAUEjkpW9/poTASh/vyWAOVqjGuGw+47isw==
-  dependencies:
-    "@date-fns/tz" "^1.2.0"
-    date-fns "^4.1.0"
-    date-fns-jalali "^4.1.0-0"
 
 react-dom@^18.3.1:
   version "18.3.1"

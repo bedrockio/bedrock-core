@@ -10,6 +10,8 @@ import {
   Tooltip,
   Anchor,
   Text,
+  Title,
+  Loader,
 } from '@mantine/core';
 
 import { IconHelp, IconPencil } from '@tabler/icons-react';
@@ -60,9 +62,10 @@ export default function ShopProducts() {
             return (
               <React.Fragment>
                 <Group justify="space-between">
-                  <Text size="xl" fw={700}>
-                    Products
-                  </Text>
+                  <Group>
+                    <Title order={4}>Products</Title>
+                    {loading && <Loader size="sm" />}
+                  </Group>
                   <Group>
                     <Search.Total />
                     <SearchFilters.Keyword />
@@ -123,30 +126,18 @@ export default function ShopProducts() {
                           </Anchor>
                         </Table.Td>
                         <Table.Td>
-                          {product.images[0] ? (
-                            <Image
-                              radius={4}
-                              h={40}
-                              w={40}
-                              objectFit="contain"
-                              src={urlForUpload(product.images[0])}
-                            />
-                          ) : (
-                            <Paper h={40} w={40} />
-                          )}
+                          <Image
+                            radius={4}
+                            h={40}
+                            w={40}
+                            objectFit="contain"
+                            src={urlForUpload(product.images[0])}
+                          />
                         </Table.Td>
                         <Table.Td>{formatUsd(product.priceUsd)}</Table.Td>
                         <Table.Td>{formatDateTime(product.createdAt)}</Table.Td>
                         <Table.Td textAlign="center">
                           <Group gap="md">
-                            <Button
-                              component={Link}
-                              to={`/products/${product.id}/edit`}
-                              variant="default"
-                              size="xs"
-                              leftSection={<IconPencil size={14} />}>
-                              Edit
-                            </Button>
                             <Actions product={product} reload={reload} />
                           </Group>
                         </Table.Td>
