@@ -1,3 +1,4 @@
+/*
 import './globals/reset.less';
 import './globals/site.less';
 
@@ -46,6 +47,7 @@ import './modules/sidebar.less';
 import './modules/sticky.less';
 import './modules/tab.less';
 import './modules/transition.less';
+*/
 
 export * from 'semantic-ui-react';
 export { default as Icon } from './elements/Icon';

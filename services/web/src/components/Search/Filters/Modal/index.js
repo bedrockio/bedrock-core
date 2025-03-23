@@ -1,7 +1,10 @@
 import React from 'react';
 import { omit } from 'lodash';
 import PropTypes from 'prop-types';
-import { Button, Form, Icon, Label, Modal, Popup, Ref } from 'semantic';
+import { Form, Icon, Label, Modal, Popup, Ref } from 'semantic';
+import { Button } from '@mantine/core';
+
+import { IconAdjustmentsHorizontal, IconFilter } from '@tabler/icons-react';
 
 import AutoFocus from 'components/AutoFocus';
 
@@ -9,6 +12,7 @@ import SearchContext from '../../Context';
 import Overview from './Overview';
 
 import './modal.less';
+import ModalTrigger from 'components/ModalTrigger';
 
 export default class FilterModal extends React.Component {
   static contextType = SearchContext;
@@ -79,52 +83,45 @@ export default class FilterModal extends React.Component {
 
   render() {
     const { size = 'small' } = this.props;
+
     return (
-      <div className="search-filters-modal">
-        <Modal
-          closeIcon
-          size={size}
-          open={this.state.open}
-          onOpen={this.onModalOpen}
-          onClose={this.onModalClose}
+      <>
+        <ModalTrigger
+          title="Filters"
           trigger={
             this.context.filterMapping ? (
-              <Button basic primary size={size}>
-                <Icon name="filter" />
+              <Button
+                variant="outline"
+                rightSection={<IconAdjustmentsHorizontal size={18} />}>
                 Filter
               </Button>
             ) : (
-              <Button as="div" labelPosition="right">
-                <Button basic primary size={size}>
+              <>
+                <Button variant="outline" primary size={size}>
                   <Icon name="filter" />
                   Filter
                 </Button>
                 {this.getFilterCount() > 0 && (
                   <Label pointing="left">{this.getFilterCount()}</Label>
                 )}
-              </Button>
+              </>
             )
           }>
-          <Modal.Header>Filter</Modal.Header>
-          <Modal.Content>
-            <Ref innerRef={this.formRef}>
-              <Form id="filters" onSubmit={this.onSubmit}>
-                <SearchContext.Provider
-                  value={{
-                    ...this.context,
-                    filters: this.state.filters,
-                    onFilterChange: this.onFilterChange,
-                  }}>
-                  <AutoFocus>{this.props.children}</AutoFocus>
-                </SearchContext.Provider>
-              </Form>
-            </Ref>
-          </Modal.Content>
-          <Modal.Actions>
-            <Button content="Reset" onClick={this.onReset} />
-            <Button primary form="filters" content="Apply" />
-          </Modal.Actions>
-        </Modal>
+          <Ref innerRef={this.formRef}>
+            <Form id="filters" onSubmit={this.onSubmit}>
+              <SearchContext.Provider
+                value={{
+                  ...this.context,
+                  filters: this.state.filters,
+                  onFilterChange: this.onFilterChange,
+                }}>
+                <AutoFocus>{this.props.children}</AutoFocus>
+              </SearchContext.Provider>
+            </Form>
+          </Ref>
+          <Button content="Reset" onClick={this.onReset} />
+          <Button primary form="filters" content="Apply" />
+        </ModalTrigger>
 
         {this.context.filterMapping && this.getFilterCount() > 0 && (
           <Popup
@@ -140,7 +137,7 @@ export default class FilterModal extends React.Component {
             <Overview />
           </Popup>
         )}
-      </div>
+      </>
     );
   }
 }

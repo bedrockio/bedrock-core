@@ -8,7 +8,7 @@ import Logo from 'components/Logo';
 import Footer from 'components/Footer';
 import Layout from 'components/Layout';
 import Protected from 'components/Protected';
-import Organization from 'modals/OrganizationSelector';
+import OrganizationSelector from 'components/OrganizationSelector';
 import ConnectionError from 'components/ConnectionError';
 
 import { userCanSwitchOrganizations } from 'utils/permissions';
@@ -32,7 +32,7 @@ import {
   IconUsersGroup,
 } from '@tabler/icons-react';
 
-import { AppShell, Burger, Flex } from '@mantine/core';
+import { AppShell, Burger, Flex, TextInput, Stack } from '@mantine/core';
 
 import { useMediaQuery } from '@mantine/hooks';
 
@@ -102,60 +102,51 @@ export default function DashboardLayout({ children }) {
         </Flex>
       </AppShell.Header>
       <AppShell.Navbar p="md">
-        <NavLink to="/">
-          <Logo mb="md" w="160px" />
-        </NavLink>
-        {userCanSwitchOrganizations(user) && (
-          <Sidebar.Item>
+        <Stack gap="md">
+          <NavLink to="/">
+            <Logo mb="md" w="160px" />
+          </NavLink>
+          {userCanSwitchOrganizations(user) && (
             <ModalTrigger
+              title="Select Organization"
               trigger={
-                <div>
-                  <Icon name="building" />
-                  {organization?.name || 'Select Organization'}
-                  <Icon name="caret-down" className="right" />
-                </div>
+                <TextInput
+                  m={0}
+                  placeholder={organization?.name || 'Select Organization'}
+                  leftSection={<IconBuildingStore size={14} />}
+                  rightSection={<IconPlus size={14} />}
+                />
               }>
-              <Organization />
+              <OrganizationSelector />
             </ModalTrigger>
-            <Organization
-              trigger={
-                <div>
-                  <Icon name="building" />
-                  {organization?.name || 'Select Organization'}
-                  <Icon name="caret-down" className="right" />
-                </div>
-              }
-              size="tiny"
-            />
-          </Sidebar.Item>
-        )}
+          )}
 
-        <div>{mainLinks}</div>
-        <div style={{}}></div>
-        <Sidebar.Link to="/settings">
-          <Icon name="gear" />
-          Settings
-        </Sidebar.Link>
-        <Protected endpoint="applications">
-          <Sidebar.Link to="/audit-trail">
-            <Icon name="list-ol" />
-            Audit Trail
+          <div>{mainLinks}</div>
+          <Sidebar.Link to="/settings">
+            <Icon name="gear" />
+            Settings
           </Sidebar.Link>
-          <Sidebar.Link to="/applications">
-            <Icon name="terminal" />
-            Applications
-          </Sidebar.Link>
-          <Sidebar.Accordion active="/applications">
-            <Sidebar.Link to="/docs">
-              <Icon name="book-open" />
-              API Docs
+          <Protected endpoint="applications">
+            <Sidebar.Link to="/audit-trail">
+              <Icon name="list-ol" />
+              Audit Trail
             </Sidebar.Link>
-          </Sidebar.Accordion>
-          <Sidebar.Link to="/logout">
-            <Icon name="right-from-bracket" />
-            Log Out
-          </Sidebar.Link>
-        </Protected>
+            <Sidebar.Link to="/applications">
+              <Icon name="terminal" />
+              Applications
+            </Sidebar.Link>
+            <Sidebar.Accordion active="/applications">
+              <Sidebar.Link to="/docs">
+                <Icon name="book-open" />
+                API Docs
+              </Sidebar.Link>
+            </Sidebar.Accordion>
+            <Sidebar.Link to="/logout">
+              <Icon name="right-from-bracket" />
+              Log Out
+            </Sidebar.Link>
+          </Protected>
+        </Stack>
       </AppShell.Navbar>
       <AppShell.Main>{children}</AppShell.Main>
     </AppShell>

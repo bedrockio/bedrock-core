@@ -8,6 +8,7 @@ import {
   Group,
   useMantineTheme,
   Text,
+  Anchor,
 } from '@mantine/core';
 
 import { useColorScheme } from '@mantine/hooks';
@@ -18,41 +19,19 @@ const PageHeader = ({
   title,
   rightSection,
 }) => {
-  const theme = useMantineTheme();
-  const colorScheme = useColorScheme();
   const location = useLocation();
   const navigate = useNavigate();
-
-  const BREADCRUMBS_PROPS = {
-    style: {
-      a: {
-        padding: rem(4),
-        borderRadius: theme.radius.sm,
-        fontWeight: 500,
-        color: colorScheme === 'dark' ? theme.white : theme.black,
-
-        '&:hover': {
-          transition: 'all ease 150ms',
-          backgroundColor:
-            colorScheme === 'dark'
-              ? theme.colors.dark[5]
-              : theme.colors.gray[2],
-          textDecoration: 'none',
-        },
-      },
-    },
-  };
 
   return (
     <>
       <Stack>
         <Stack gap="xs">
-          <Breadcrumbs {...BREADCRUMBS_PROPS}>
+          <Breadcrumbs>
             {breadcrumbItems.map((item, index) =>
               item?.href ? (
-                <Link to={item.href} key={index}>
+                <Anchor component={Link} to={item.href} key={index}>
                   <Text size="sm">{item.title}</Text>
-                </Link>
+                </Anchor>
               ) : (
                 <Text key={index} size="sm">
                   {item.title}
@@ -70,17 +49,14 @@ const PageHeader = ({
         {tabs.length > 0 && (
           <Tabs
             value={location.pathname}
-            styles={{
-              tab: {
-                padding: 'var(--mantine-spacing-xs) 0',
-                marginRight: 'var(--mantine-spacing-md)',
-              },
-            }}
+            variant="pills"
             onChange={(value) => navigate(value)}>
             <Tabs.List mb="md">
               {tabs.map((tab, index) => (
                 <Tabs.Tab key={index} value={tab.href}>
-                  <Text size="sm">{tab.title}</Text>
+                  <Text size="xs" fw="bold">
+                    {tab.title}
+                  </Text>
                 </Tabs.Tab>
               ))}
             </Tabs.List>

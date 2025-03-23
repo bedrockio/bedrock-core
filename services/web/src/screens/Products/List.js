@@ -17,7 +17,7 @@ import { urlForUpload } from 'utils/uploads';
 import { formatUsd } from 'utils/currency';
 import { request } from 'utils/api';
 
-import Actions from '../Actions';
+import Actions from './Actions';
 
 export default class ProductList extends React.Component {
   onDataNeeded = async (body) => {

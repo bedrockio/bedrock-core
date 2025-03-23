@@ -8,8 +8,10 @@ import {
   Image,
   Divider,
   Tooltip,
+  Anchor,
+  Text,
 } from '@mantine/core';
-import { IconPlus, IconPencil, IconHelp } from '@tabler/icons-react';
+import { IconPlus, IconHelp } from '@tabler/icons-react';
 
 import Meta from 'components/Meta';
 import PageHeader from 'components/PageHeader';
@@ -23,7 +25,6 @@ import ErrorMessage from 'components/ErrorMessage';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 
-// --- Generator: list-imports
 import allCountries from 'utils/countries';
 import { urlForUpload } from 'utils/uploads';
 
@@ -32,7 +33,6 @@ const countries = allCountries.map(({ countryCode, nameEn }) => ({
   text: nameEn,
   key: countryCode,
 }));
-// --- Generator: end
 
 import Actions from './Actions';
 import SortableTh from 'components/Table/SortableTh';
@@ -46,7 +46,6 @@ export default function ShopList() {
     });
   }
 
-  // --- Generator: exclude
   async function fetchOwners(props) {
     const { data } = await request({
       method: 'POST',
@@ -64,11 +63,9 @@ export default function ShopList() {
     });
     return data;
   }
-  // --- Generator: end
 
   function getFilterMapping() {
     return {
-      // --- Generator: exclude
       country: {
         label: 'Country',
         getDisplayValue: (id) => countries.find((c) => c.value === id)?.text,
@@ -87,7 +84,6 @@ export default function ShopList() {
         type: 'date',
         range: true,
       },
-      // --- Generator: end
       keyword: {},
     };
   }
@@ -98,7 +94,7 @@ export default function ShopList() {
       <Search.Provider
         onDataNeeded={onDataNeeded}
         filterMapping={getFilterMapping()}>
-        {({ items: shops, getSorted, setSort, reload, loading, error }) => {
+        {({ items: shops, getSorted, setSort, reload, error }) => {
           return (
             <React.Fragment>
               <PageHeader
@@ -129,7 +125,6 @@ export default function ShopList() {
                 <Group>
                   <Layout horizontal center spread stackable>
                     <SearchFilters.Modal>
-                      {/* --- Generator: filters */}
                       <SearchFilters.Dropdown
                         options={countries}
                         search
@@ -153,7 +148,6 @@ export default function ShopList() {
                         label="Created At"
                         name="createdAt"
                       />
-                      {/* --- Generator: end */}
                     </SearchFilters.Modal>
 
                     <Group>
@@ -166,75 +160,79 @@ export default function ShopList() {
                 <Search.Status />
                 <ErrorMessage error={error} />
 
-                {shops.length !== 0 && (
-                  <Table stickyHeader striped mt="md">
-                    <Table.Thead>
+                <Table stickyHeader striped mt="md">
+                  <Table.Thead>
+                    <Table.Tr>
+                      {/* --- Generator: list-header-cells */}
+                      <SortableTh
+                        sorted={getSorted('name')}
+                        onClick={() => setSort('name')}>
+                        Name
+                      </SortableTh>
+                      <Table.Th width={60}>Image</Table.Th>
+                      {/* --- Generator: end */}
+                      <SortableTh
+                        sorted={getSorted('createdAt')}
+                        onClick={() => setSort('createdAt')}
+                        width={280}>
+                        <Group>
+                          Created
+                          <Tooltip
+                            withArrow
+                            multiline={true}
+                            label="This is the date and time the item was created.">
+                            <IconHelp size={14} />
+                          </Tooltip>
+                        </Group>
+                      </SortableTh>
+                      <Table.Th width={120}>Actions</Table.Th>
+                    </Table.Tr>
+                  </Table.Thead>
+                  <Table.Tbody>
+                    {shops.length === 0 && (
                       <Table.Tr>
-                        {/* --- Generator: list-header-cells */}
-                        <SortableTh
-                          sorted={getSorted('name')}
-                          onClick={() => setSort('name')}>
-                          Name
-                        </SortableTh>
-                        <Table.Th width={60}>Image</Table.Th>
-                        {/* --- Generator: end */}
-                        <SortableTh
-                          sorted={getSorted('createdAt')}
-                          onClick={() => setSort('createdAt')}
-                          width={280}>
-                          <Group>
-                            Created
-                            <Tooltip
-                              withArrow
-                              multiline={true}
-                              label="This is the date and time the item was created.">
-                              <IconHelp size={14} />
-                            </Tooltip>
-                          </Group>
-                        </SortableTh>
-                        <Table.Th width={200}>Actions</Table.Th>
+                        <Table.Td colSpan={5}>
+                          <Text p="md" fw={500} ta="center">
+                            No shops found.
+                          </Text>
+                        </Table.Td>
                       </Table.Tr>
-                    </Table.Thead>
-                    <Table.Tbody>
-                      {shops.map((shop) => {
-                        return (
-                          <Table.Tr key={shop.id}>
-                            {/* --- Generator: list-body-cells */}
-                            <Table.Td>
-                              <Link to={`/shops/${shop.id}`}>{shop.name}</Link>
-                            </Table.Td>
-                            <Table.Td>
-                              {shop.images.length > 0 && (
-                                <Image
-                                  h={50}
-                                  w={50}
-                                  objectFit="contain"
-                                  src={urlForUpload(shop.images[0], true)}
-                                />
-                              )}
-                            </Table.Td>
-                            {/* --- Generator: end */}
-                            <Table.Td>
-                              {formatDateTime(shop.createdAt)}
-                            </Table.Td>
-                            <Table.Td textAlign="center">
-                              <Group gap="md">
-                                <Button
-                                  component={Link}
-                                  to={`/shops/${shop.id}/edit`}
-                                  variant="default"
-                                  leftSection={<IconPencil size={14} />}>
-                                  Edit
-                                </Button>
-                                <Actions shop={shop} reload={reload} />
-                              </Group>
-                            </Table.Td>
-                          </Table.Tr>
-                        );
-                      })}
-                    </Table.Tbody>
-                  </Table>
-                )}
+                    )}
+                    {shops.map((shop) => {
+                      return (
+                        <Table.Tr key={shop.id}>
+                          {/* --- Generator: list-body-cells */}
+                          <Table.Td>
+                            <Anchor
+                              size="sm"
+                              component={Link}
+                              to={`/shops/${shop.id}`}>
+                              {shop.name}
+                            </Anchor>
+                          </Table.Td>
+                          <Table.Td>
+                            {shop.images.length > 0 && (
+                              <Image
+                                radius={4}
+                                h={40}
+                                w={40}
+                                objectFit="contain"
+                                src={urlForUpload(shop.images[0], true)}
+                              />
+                            )}
+                          </Table.Td>
+                          <Table.Td>{formatDateTime(shop.createdAt)}</Table.Td>
+                          <Table.Td textAlign="center">
+                            <Group gap="md">
+                              <Actions shop={shop} reload={reload} />
+                            </Group>
+                          </Table.Td>
+                        </Table.Tr>
+                      );
+                    })}
+                  </Table.Tbody>
+                </Table>
+
                 <Divider my="md" />
                 <Search.Pagination />
               </Paper>

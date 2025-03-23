@@ -3,12 +3,13 @@
 }
 
 .control {
+  border-radius: var(--mantine-radius-xs);
   width: 100%;
   padding: var(--mantine-spacing-xs) var(--mantine-spacing-xs);
 }
 
 .control:hover {
-  background-color: var(--mantine-color-gray-0);
+  background-color: var(--mantine-color-primary-light-hover);
 }
 
 .icon {

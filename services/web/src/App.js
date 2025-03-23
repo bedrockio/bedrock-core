@@ -5,9 +5,10 @@ import DashboardLayout from 'layouts/Dashboard';
 import Dashboard from 'screens/Dashboard';
 import Shops from 'screens/Shops';
 import Products from 'screens/Products';
+import NotFound from 'screens/NotFound';
 /*
 import Users from 'screens/Users';
-import NotFound from 'screens/NotFound';
+
 import Settings from 'screens/Settings';
 import Organizations from 'screens/Organizations';
 import Applications from 'screens/Applications';
@@ -18,7 +19,7 @@ import Invites from 'screens/Invites';
 import AcceptInvite from 'screens/Auth/AcceptInvite';
 import Logout from 'screens/Auth/Logout';
 
-import 'styles/vars.less';
+//import 'styles/vars.less';
 
 const App = () => {
   return (
@@ -36,8 +37,9 @@ const App = () => {
         <Route path="/audit-trail/:id?" render={AuditTrail} />
         <Route path="/accept-invite" render={AcceptInvite} exact />
         <Route path="/logout" render={Logout} exact />
-        <Route render={NotFound} />
+       
         */}
+        <Route render={NotFound} />
       </Routes>
     </DashboardLayout>
   );

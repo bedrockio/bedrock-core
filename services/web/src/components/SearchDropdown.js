@@ -160,7 +160,6 @@ export default class SearchDropdown extends React.Component {
 
     return (
       <Component
-        clearable
         searchable
         {...omit(this.props, [
           ...Object.keys(propTypeShape),
@@ -169,6 +168,7 @@ export default class SearchDropdown extends React.Component {
           'searchBody',
           'keywordField',
         ])}
+        onClear={() => this.onChange(multiple ? [] : null)}
         error={!!error}
         rightSection={loading ? <Loader size={16} /> : null}
         value={this.getValue()}

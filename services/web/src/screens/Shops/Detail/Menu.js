@@ -12,10 +12,7 @@ import Actions from '../Actions';
 export default () => {
   const { shop, reload } = usePage();
 
-  const items = [
-    { title: 'Shops', href: '/shops' },
-    { title: shop.name, href: `/shops/${shop.id}` },
-  ];
+  const items = [{ title: 'Shops', href: '/shops' }, { title: shop.name }];
 
   const tabs = [
     { title: 'Overview', href: `/shops/${shop.id}` },

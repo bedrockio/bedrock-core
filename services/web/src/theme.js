@@ -2,6 +2,8 @@ import { createTheme, DEFAULT_THEME } from '@mantine/core';
 
 export const theme = createTheme({
   primaryColor: 'primary',
+
+  autoContrast: true,
   colors: {
     primary: [
       '#f3fbea',

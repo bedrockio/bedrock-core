@@ -2,7 +2,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { Modal } from '@mantine/core';
 import { cloneElement, isValidElement } from 'react';
 
-export default function ModalTrigger({ trigger, modal, title }) {
+export default function ModalTrigger({ trigger, children, title }) {
   const [opened, { open, close }] = useDisclosure(false);
 
   return (
@@ -12,7 +12,7 @@ export default function ModalTrigger({ trigger, modal, title }) {
         : trigger}
 
       <Modal opened={opened} onClose={close} title={title} centered>
-        {modal}
+        {children}
       </Modal>
     </>
   );
