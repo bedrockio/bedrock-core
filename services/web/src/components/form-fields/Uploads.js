@@ -76,8 +76,8 @@ export default class Uploads extends React.Component {
 
   // Events
 
-  onDrop = async (acceptedFiles, rejectedFiles, evt) => {
-    const { name, value } = this.props;
+  onDrop = async (acceptedFiles, rejectedFiles) => {
+    const { value } = this.props;
     try {
       if (!this.isMultiple()) {
         acceptedFiles = acceptedFiles.slice(0, 1);

@@ -11,9 +11,8 @@ import {
   Anchor,
   Loader,
 } from '@mantine/core';
-import { IconPlus, IconHelp, IconPencil } from '@tabler/icons-react';
+import { IconPlus, IconHelp } from '@tabler/icons-react';
 
-import Meta from 'components/Meta';
 import PageHeader from 'components/PageHeader';
 
 import Search from 'components/Search';
@@ -26,7 +25,6 @@ import { urlForUpload } from 'utils/uploads';
 import { formatUsd } from 'utils/currency';
 import { request } from 'utils/api';
 
-import EditProduct from 'modals/EditProduct';
 import Actions from './Actions';
 import SortableTh from 'components/Table/SortableTh';
 
@@ -68,9 +66,7 @@ export default function ProductList() {
 
   return (
     <>
-      <Meta title="Products" />
       <Search.Provider
-        limit={1}
         onDataNeeded={onDataNeeded}
         filterMapping={getFilterMapping()}>
         {({ items: products, getSorted, setSort, reload, error, loading }) => {
@@ -139,7 +135,7 @@ export default function ProductList() {
 
                 <ErrorMessage error={error} />
 
-                <Table stickyHeader striped mt="md">
+                <Table stickyHeader mt="md">
                   <Table.Thead>
                     <Table.Tr>
                       <SortableTh

@@ -50,7 +50,7 @@ const PageHeader = ({
             value={location.pathname}
             variant="pills"
             onChange={(value) => navigate(value)}>
-            <Tabs.List mb="md">
+            <Tabs.List>
               {tabs.map((tab, index) => (
                 <Tabs.Tab key={index} value={tab.href}>
                   <Text size="xs" fw="bold">

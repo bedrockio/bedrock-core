@@ -10,7 +10,6 @@ export default function NewShop() {
 
   return (
     <>
-      <Meta title="New Product" />
       <PageHeader
         title="New Product"
         breadcrumbItems={[

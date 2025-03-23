@@ -2,6 +2,11 @@ import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 import '@mantine/dates/styles.css';
 
+// part of integration with mantine
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
+
 import React, { StrictMode, Suspense } from 'react';
 
 import { MantineProvider } from '@mantine/core';

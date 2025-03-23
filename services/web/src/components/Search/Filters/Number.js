@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import { Form } from 'semantic';
 
 import SearchContext from '../Context';
+import { NumberInput } from '@mantine/core';
 
 export default class NumberFilter extends React.Component {
   static contextType = SearchContext;
 
-  onChange = (evt, { name, value }) => {
+  onChange = (value) => {
     this.context.onFilterChange({
-      name,
+      name: this.props.name,
       value: Number(value),
     });
   };
@@ -18,7 +19,7 @@ export default class NumberFilter extends React.Component {
     const { name, min, max } = this.props;
     const value = this.context.filters[name];
     return (
-      <Form.Input
+      <NumberInput
         id={name}
         type="number"
         min={min}

@@ -14,9 +14,8 @@ export default function ShopOverview() {
   const { shop } = usePage();
   return (
     <>
-      <Meta title={shop.name} />
       <Menu />
-      <Paper shadow="md" p="md" withBorder>
+      <Paper mt="md" shadow="md" p="md" withBorder>
         <Stack spacing="md">
           <Text fz="md" lh="md">
             {shop.description}

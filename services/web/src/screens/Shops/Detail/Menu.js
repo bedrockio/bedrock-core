@@ -12,7 +12,14 @@ import Actions from '../Actions';
 export default () => {
   const { shop, reload } = usePage();
 
-  const items = [{ title: 'Shops', href: '/shops' }, { title: shop.name }];
+  const items = [
+    {
+      title: 'Home',
+      href: '/',
+    },
+    { title: 'Shops', href: '/shops' },
+    { title: shop.name },
+  ];
 
   const tabs = [
     { title: 'Overview', href: `/shops/${shop.id}` },
@@ -27,12 +34,6 @@ export default () => {
         rightSection={
           <>
             <Actions shop={shop} reload={reload} />
-            <Button
-              component={Link}
-              to={`/shops/${shop.id}/edit`}
-              rightSection={<IconPencil size={14} />}>
-              Edit
-            </Button>
           </>
         }
         tabs={tabs}

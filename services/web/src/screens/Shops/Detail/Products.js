@@ -47,7 +47,6 @@ export default function ShopProducts() {
 
   return (
     <>
-      <Meta title="Products" />
       <Menu />
       <Paper mt="md" shadow="md" p="md" withBorder>
         <Search.Provider onDataNeeded={onDataNeeded}>

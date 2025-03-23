@@ -6,7 +6,8 @@ import NotFound from 'screens/NotFound';
 
 import { request } from 'utils/api';
 
-import Overview from './Overview';
+import Overview from './Overview.js';
+import Edit from './Edit.js';
 
 export default function ProductDetail() {
   const Loader = usePageLoader(async (params) => {
@@ -28,7 +29,9 @@ export default function ProductDetail() {
         />
       }>
       <Routes>
+        <Route path="/products/:id/edit" render={Edit} exact />
         <Route path="/products/:id" render={Overview} exact />
+
         <Route render={NotFound} />
       </Routes>
     </Loader>

@@ -1,12 +1,10 @@
 import React from 'react';
 import { omit } from 'lodash';
 import PropTypes from 'prop-types';
-import { Form, Icon, Label, Modal, Popup, Ref } from 'semantic';
-import { Button } from '@mantine/core';
+import { Form, Icon, Label, Popup, Ref } from 'semantic';
+import { Button, Stack, Group } from '@mantine/core';
 
-import { IconAdjustmentsHorizontal, IconFilter } from '@tabler/icons-react';
-
-import AutoFocus from 'components/AutoFocus';
+import { IconAdjustmentsHorizontal } from '@tabler/icons-react';
 
 import SearchContext from '../../Context';
 import Overview from './Overview';
@@ -115,12 +113,18 @@ export default class FilterModal extends React.Component {
                   filters: this.state.filters,
                   onFilterChange: this.onFilterChange,
                 }}>
-                <AutoFocus>{this.props.children}</AutoFocus>
+                <Stack gap="md">{this.props.children}</Stack>
               </SearchContext.Provider>
             </Form>
           </Ref>
-          <Button content="Reset" onClick={this.onReset} />
-          <Button primary form="filters" content="Apply" />
+          <Group mt="md">
+            <Button form="filters" onClick={this.onSubmit}>
+              Apply
+            </Button>
+            <Button variant="default" onClick={this.onReset}>
+              Reset
+            </Button>
+          </Group>
         </ModalTrigger>
 
         {this.context.filterMapping && this.getFilterCount() > 0 && (

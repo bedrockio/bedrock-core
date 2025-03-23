@@ -5,6 +5,7 @@ import { Form } from 'semantic';
 import SearchDropdown from 'components/SearchDropdown';
 
 import SearchContext from '../Context';
+import { Select } from '@mantine/core';
 
 export default class DropdownFilter extends React.Component {
   static contextType = SearchContext;
@@ -36,32 +37,30 @@ export default class DropdownFilter extends React.Component {
 
   render() {
     if (this.props.onDataNeeded) {
-      const { label, disabled, error, ...rest } = this.props;
+      const { label, ...rest } = this.props;
       return (
-        <Form.Field disabled={disabled} error={error}>
-          <label>{label}</label>
-          <SearchDropdown
-            objectMode={false}
-            value={this.getValue()}
-            onChange={(e, { name, value }) => {
-              this.context.onFilterChange({
-                value: value,
-                name,
-              });
-            }}
-            {...rest}
-          />
-        </Form.Field>
+        <SearchDropdown
+          label={label}
+          objectMode={false}
+          value={this.getValue()}
+          onChange={(value) => {
+            this.context.onFilterChange({
+              value: value,
+              name: this.props.name,
+            });
+          }}
+          {...rest}
+        />
       );
     } else {
       return (
-        <Form.Dropdown
+        <Select
           value={this.getValue()}
           options={this.getOptions()}
-          onChange={(e, { value, name }) => {
+          onChange={(value) => {
             this.context.onFilterChange({
               value,
-              name,
+              name: this.props.name,
             });
           }}
           {...this.props}

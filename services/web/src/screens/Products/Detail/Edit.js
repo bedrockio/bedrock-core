@@ -6,27 +6,27 @@ import { usePage } from 'stores/page';
 import { Stack, Paper } from '@mantine/core';
 import { useNavigate } from '@bedrockio/router';
 
-export default function EditShop() {
-  const { shop, reload } = usePage();
+export default function EditProduct() {
+  const { product, reload } = usePage();
   const navigate = useNavigate();
 
   return (
     <>
       <Stack gap="lg">
         <PageHeader
-          title="Edit Shop"
+          title="Edit Product"
           breadcrumbItems={[
             { title: 'Home', href: '/' },
-            { title: 'Shops', href: '/shops' },
-            { title: shop.name },
+            { title: 'Products', href: '/products' },
+            { title: product.name },
           ]}
         />
         <Paper shadow="md" p="md" withBorder>
           <Form
-            shop={shop}
+            product={product}
             onSuccess={() => {
               reload();
-              navigate(`/shops/${shop.id}`);
+              navigate(`/products/${product.id}`);
             }}
           />
         </Paper>
