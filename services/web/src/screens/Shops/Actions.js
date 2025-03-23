@@ -7,9 +7,8 @@ import {
   IconPencil,
 } from '@tabler/icons-react';
 import { Link } from '@bedrockio/router';
-import ErrorMessage from 'components/ErrorMessage';
+
 import InspectObject from 'components/InspectObject';
-import { request } from 'utils/api';
 
 export default function ShopsActions({ shop, reload }) {
   const openInspectModal = () => {
@@ -21,29 +20,24 @@ export default function ShopsActions({ shop, reload }) {
   };
 
   const openDeleteModel = () => {
-    modals.openConfirmModal({
-      title: `Delete Shop`,
+    modals.open({
+      title: `Delete ${shop.name}`,
       children: (
-        <Text size="sm">
+        <Text>
           Are you sure you want to delete <strong>{shop.name}</strong>?
         </Text>
       ),
-      labels: { confirm: 'Delete', cancel: 'Cancel' },
-      confirmProps: { color: 'red' },
-      onConfirm: async () => {
-        try {
-          await request({
-            method: 'DELETE',
-            path: `/1/shops/${shop.id}`,
-          });
-        } catch (error) {
-          modals.open({
-            title: 'Failed to delete shop',
-            children: <ErrorMessage error={error} />,
-          });
-        }
-        reload();
-      },
+      footer: (
+        <Button
+          variant="danger"
+          onClick={async () => {
+            await shop.delete();
+            reload();
+            modals.close();
+          }}>
+          Delete
+        </Button>
+      ),
     });
   };
 

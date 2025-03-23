@@ -106,7 +106,7 @@ export default function ShopProducts() {
                     {products.length === 0 && (
                       <Table.Tr>
                         <Table.Td colSpan={5}>
-                          <Text p="md" fw={500} ta="center">
+                          <Text p="md" fw="bold" ta="center">
                             No products found.
                           </Text>
                         </Table.Td>

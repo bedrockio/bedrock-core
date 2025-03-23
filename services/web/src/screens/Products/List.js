@@ -1,34 +1,44 @@
 import React from 'react';
-import { Image, Segment } from 'semantic-ui-react';
 import { Link } from '@bedrockio/router';
-import { Table, Button, Divider } from 'semantic';
+import {
+  Paper,
+  Group,
+  Table,
+  Button,
+  Image,
+  Divider,
+  Tooltip,
+  Anchor,
+} from '@mantine/core';
+import { IconPlus, IconHelp, IconPencil } from '@tabler/icons-react';
 
-import HelpTip from 'components/HelpTip';
-import Search from 'components/Search';
-import Layout from 'components/Layout';
-import Breadcrumbs from 'components/Breadcrumbs';
-import SearchFilters from 'components/Search/Filters';
 import Meta from 'components/Meta';
+import PageHeader from 'components/PageHeader';
 
-import EditProduct from 'modals/EditProduct';
+import Search from 'components/Search';
+
+import SearchFilters from 'components/Search/Filters';
+import ErrorMessage from 'components/ErrorMessage';
 
 import { formatDateTime } from 'utils/date';
 import { urlForUpload } from 'utils/uploads';
 import { formatUsd } from 'utils/currency';
 import { request } from 'utils/api';
 
+import EditProduct from 'modals/EditProduct';
 import Actions from './Actions';
+import SortableTh from 'components/Table/SortableTh';
 
-export default class ProductList extends React.Component {
-  onDataNeeded = async (body) => {
+export default function ProductList() {
+  async function onDataNeeded(body) {
     return await request({
       method: 'POST',
       path: '/1/products/search',
       body,
     });
-  };
+  }
 
-  getFilterMapping() {
+  function getFilterMapping() {
     return {
       isFeatured: {
         label: 'Is Featured',
@@ -55,32 +65,45 @@ export default class ProductList extends React.Component {
     };
   }
 
-  render() {
-    return (
-      <>
-        <Meta title="Products" />
-        <Search.Provider
-          onDataNeeded={this.onDataNeeded}
-          filterMapping={this.getFilterMapping()}>
-          {({ items: products, getSorted, setSort, reload }) => {
-            return (
-              <React.Fragment>
-                <Breadcrumbs active="Products" />
-                <Layout horizontal center spread stackable>
-                  <h1>Products</h1>
-                  <Layout.Group>
+  return (
+    <>
+      <Meta title="Products" />
+      <Search.Provider
+        limit={4}
+        onDataNeeded={onDataNeeded}
+        filterMapping={getFilterMapping()}>
+        {({ items: products, getSorted, setSort, reload, error }) => {
+          return (
+            <React.Fragment>
+              <PageHeader
+                title="Products"
+                breadcrumbItems={[
+                  {
+                    href: '/',
+                    title: 'Home',
+                  },
+                  {
+                    title: 'Products',
+                  },
+                ]}
+                rightSection={
+                  <>
                     <Search.Export filename="products" />
                     <EditProduct
                       trigger={
-                        <Button primary content="New Product" icon="plus" />
+                        <Button rightSection={<IconPlus size={14} />}>
+                          New Product
+                        </Button>
                       }
                       onSave={reload}
                     />
-                  </Layout.Group>
-                </Layout>
+                  </>
+                }
+              />
 
-                <Segment>
-                  <Layout horizontal spread stackable>
+              <Paper mt="md" shadow="md" p="md" withBorder>
+                <Group justify="space-between">
+                  <Group>
                     <SearchFilters.Modal>
                       <SearchFilters.Checkbox
                         name="isFeatured"
@@ -105,90 +128,107 @@ export default class ProductList extends React.Component {
                         label="Created At"
                       />
                     </SearchFilters.Modal>
+                    <Search.Status />
+                  </Group>
 
-                    <Layout horizontal stackable center right>
-                      <Search.Total />
-                      <SearchFilters.Keyword />
-                    </Layout>
-                  </Layout>
-                </Segment>
+                  <Group>
+                    <Search.Total />
+                    <SearchFilters.Keyword />
+                  </Group>
+                </Group>
 
-                <Search.Status />
+                <ErrorMessage error={error} />
 
-                {products.length !== 0 && (
-                  <Table celled sortable>
-                    <Table.Header>
-                      <Table.Row>
-                        <Table.HeaderCell
-                          sorted={getSorted('name')}
-                          onClick={() => setSort('name')}>
-                          Name
-                        </Table.HeaderCell>
-                        <Table.HeaderCell>Image</Table.HeaderCell>
-                        <Table.HeaderCell
-                          onClick={() => setSort('priceUsd')}
-                          sorted={getSorted('priceUsd')}>
-                          Price
-                        </Table.HeaderCell>
-                        <Table.HeaderCell
-                          onClick={() => setSort('createdAt')}
-                          sorted={getSorted('createdAt')}>
+                <Table stickyHeader striped mt="md">
+                  <Table.Thead>
+                    <Table.Tr>
+                      <SortableTh
+                        sorted={getSorted('name')}
+                        onClick={() => setSort('name')}>
+                        Name
+                      </SortableTh>
+                      <Table.Th width={60}>Image</Table.Th>
+                      <SortableTh
+                        sorted={getSorted('priceUsd')}
+                        onClick={() => setSort('priceUsd')}>
+                        Price
+                      </SortableTh>
+                      <SortableTh
+                        sorted={getSorted('createdAt')}
+                        onClick={() => setSort('createdAt')}
+                        width={280}>
+                        <Group>
                           Created
-                          <HelpTip
-                            title="Created"
-                            text="This is the date and time the product was created."
-                          />
-                        </Table.HeaderCell>
-                        <Table.HeaderCell textAlign="center">
-                          Actions
-                        </Table.HeaderCell>
-                      </Table.Row>
-                    </Table.Header>
-                    <Table.Body>
-                      {products.map((product) => {
-                        const [image] = product.images;
-                        return (
-                          <Table.Row key={product.id}>
-                            <Table.Cell>
-                              <Link to={`/products/${product.id}`}>
-                                {product.name}
-                              </Link>
-                            </Table.Cell>
-                            <Table.Cell textAlign="center">
-                              {image && (
-                                <Image
-                                  size="tiny"
-                                  src={urlForUpload(image, true)}
-                                />
-                              )}
-                            </Table.Cell>
-                            <Table.Cell>
-                              {formatUsd(product.priceUsd)}
-                            </Table.Cell>
-                            <Table.Cell>
-                              {formatDateTime(product.createdAt)}
-                            </Table.Cell>
-                            <Table.Cell textAlign="center" singleLine>
+                          <Tooltip
+                            withArrow
+                            multiline={true}
+                            label="This is the date and time the product was created.">
+                            <IconHelp size={14} />
+                          </Tooltip>
+                        </Group>
+                      </SortableTh>
+                      <Table.Th width={120}>Actions</Table.Th>
+                    </Table.Tr>
+                  </Table.Thead>
+                  <Table.Tbody>
+                    {products.map((product) => {
+                      const [image] = product.images;
+                      return (
+                        <Table.Tr key={product.id}>
+                          <Table.Td>
+                            <Anchor
+                              size="sm"
+                              component={Link}
+                              to={`/products/${product.id}`}>
+                              {product.name}
+                            </Anchor>
+                          </Table.Td>
+                          <Table.Td>
+                            {image && (
+                              <Image
+                                radius={4}
+                                h={40}
+                                w={40}
+                                objectFit="contain"
+                                src={urlForUpload(image, true)}
+                              />
+                            )}
+                          </Table.Td>
+                          <Table.Td>{formatUsd(product.priceUsd)}</Table.Td>
+                          <Table.Td>
+                            {formatDateTime(product.createdAt)}
+                          </Table.Td>
+                          <Table.Td>
+                            <Group gap="md">
                               <EditProduct
                                 product={product}
-                                trigger={<Button basic icon="pen-to-square" />}
+                                trigger={
+                                  <Button
+                                    variant="subtle"
+                                    size="xs"
+                                    leftSection={<IconPencil size={14} />}>
+                                    Edit
+                                  </Button>
+                                }
                                 onSave={reload}
                               />
                               <Actions product={product} reload={reload} />
-                            </Table.Cell>
-                          </Table.Row>
-                        );
-                      })}
-                    </Table.Body>
-                  </Table>
-                )}
-                <Divider hidden />
+                            </Group>
+                          </Table.Td>
+                        </Table.Tr>
+                      );
+                    })}
+                  </Table.Tbody>
+                </Table>
+
+                <Divider my="md" />
+
                 <Search.Pagination />
-              </React.Fragment>
-            );
-          }}
-        </Search.Provider>
-      </>
-    );
-  }
+              </Paper>
+            </React.Fragment>
+          );
+        }}
+      </Search.Provider>
+    </>
+  );
 }

@@ -1,35 +1,38 @@
 import React from 'react';
-import { Loader, Message, Segment } from 'semantic';
+import { Loader, Box, Paper, Alert, Table } from '@mantine/core';
 
 import ErrorMessage from 'components/ErrorMessage';
 
 import SearchContext from './Context';
 
-export default class SearchStatus extends React.Component {
-  static contextType = SearchContext;
+function TableWrapper({ colSpan, children }) {
+  return (
+    <Table.Tr>
+      <Table.Td p="md" ta="center" colSpan={colSpan}>
+        {children}
+      </Table.Td>
+    </Table.Tr>
+  );
+}
+function PaperWrapper({ children }) {
+  return <Box p="md">{children}</Box>;
+}
 
-  render() {
-    const { loading, error, items } = this.context;
-    if (loading) {
-      return (
-        <Segment style={{ height: '100px' }}>
-          <Loader active>Loading</Loader>
-        </Segment>
-      );
-    }
+export default function SearchStatus({}) {
+  const context = React.useContext(SearchContext);
+  const {
+    loading,
+    error = { message: 'something went wrong' },
+    items,
+  } = context;
 
-    if (error) {
-      return <ErrorMessage error={error} />;
-    }
-
-    if (items.length === 0) {
-      return (
-        <Segment>
-          <Message>{this.props.noResults || 'No results found'}</Message>
-        </Segment>
-      );
-    }
-
-    return null;
+  if (loading) {
+    return <Loader size="sm" />;
   }
+
+  if (error) {
+    return <ErrorMessage error={error} />;
+  }
+
+  return null;
 }

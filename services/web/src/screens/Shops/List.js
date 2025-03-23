@@ -122,8 +122,8 @@ export default function ShopList() {
               />
 
               <Paper mt="md" shadow="md" p="md" withBorder>
-                <Group>
-                  <Layout horizontal center spread stackable>
+                <Group justify="space-between">
+                  <Group>
                     <SearchFilters.Modal>
                       <SearchFilters.Dropdown
                         options={countries}
@@ -149,15 +149,15 @@ export default function ShopList() {
                         name="createdAt"
                       />
                     </SearchFilters.Modal>
+                    <Search.Status />
+                  </Group>
 
-                    <Group>
-                      <Search.Total />
-                      <SearchFilters.Keyword />
-                    </Group>
-                  </Layout>
+                  <Group>
+                    <Search.Total />
+                    <SearchFilters.Keyword />
+                  </Group>
                 </Group>
 
-                <Search.Status />
                 <ErrorMessage error={error} />
 
                 <Table stickyHeader striped mt="md">
@@ -189,15 +189,6 @@ export default function ShopList() {
                     </Table.Tr>
                   </Table.Thead>
                   <Table.Tbody>
-                    {shops.length === 0 && (
-                      <Table.Tr>
-                        <Table.Td colSpan={5}>
-                          <Text p="md" fw={500} ta="center">
-                            No shops found.
-                          </Text>
-                        </Table.Td>
-                      </Table.Tr>
-                    )}
                     {shops.map((shop) => {
                       return (
                         <Table.Tr key={shop.id}>

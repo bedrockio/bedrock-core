@@ -1,3 +1,7 @@
+Use Mantine for UI components whenever possible. Always check for reusable
+Mantine components before creating custom ones. Use function declarations
+instead of arrow functions for better debugging.
+
 # Stores
 
 Components can inject a session store, allowing them to access and react to
