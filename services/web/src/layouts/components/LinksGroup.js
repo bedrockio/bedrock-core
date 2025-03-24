@@ -7,7 +7,6 @@ import { NavLink } from '@bedrockio/router';
 export function LinksGroup({ icon: Icon, label, href, links }) {
   const hasLinks = Array.isArray(links);
 
-
   const items = (hasLinks ? links : []).map((link) => (
     <MantineNavLink
       leftSection={<Icon size={16} stroke={1.5} />}

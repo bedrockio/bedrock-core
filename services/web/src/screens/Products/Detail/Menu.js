@@ -28,12 +28,6 @@ export default () => {
         rightSection={
           <>
             <Actions product={product} reload={reload} />
-            <Button
-              component={Link}
-              to={`/products/${product.id}/edit`}
-              rightSection={<IconPencil size={14} />}>
-              Edit
-            </Button>
           </>
         }
       />

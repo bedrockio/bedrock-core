@@ -34,6 +34,12 @@ export default () => {
         rightSection={
           <>
             <Actions shop={shop} reload={reload} />
+            <Button
+              component={Link}
+              to={`/shops/${shop.id}/edit`}
+              rightSection={<IconPencil size={14} />}>
+              Edit
+            </Button>
           </>
         }
         tabs={tabs}

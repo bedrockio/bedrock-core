@@ -45,18 +45,12 @@ const links = [
   {
     icon: IconUsersGroup,
     label: 'Users',
-    links: [
-      {
-        icon: IconUsersGroup,
-        label: 'Users',
-        href: '/users',
-      },
-      {
-        icon: IconOutbound,
-        label: 'Invites',
-        href: '/users/invites',
-      },
-    ],
+    href: '/users',
+  },
+  {
+    icon: IconOutbound,
+    label: 'Invites',
+    href: '/users/invites',
   },
   { icon: IconComponents, href: '/organizations', label: 'Organizations' },
 ];
