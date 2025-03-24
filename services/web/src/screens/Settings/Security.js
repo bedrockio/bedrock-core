@@ -72,7 +72,7 @@ class Security extends React.Component {
         const { data } = result;
         this.context.updateUser(data);
         this.setState({
-          message: 'Passkey enabled',
+          message: 'Passkey added.',
         });
       }
       this.setState({
