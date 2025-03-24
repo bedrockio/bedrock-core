@@ -207,13 +207,13 @@ export default function ShopList() {
                                 radius={4}
                                 h={40}
                                 w={40}
-                                objectFit="contain"
+                                fit
                                 src={urlForUpload(shop.images[0], true)}
                               />
                             )}
                           </Table.Td>
                           <Table.Td>{formatDateTime(shop.createdAt)}</Table.Td>
-                          <Table.Td textAlign="center">
+                          <Table.Td align="center">
                             <Group gap="md">
                               <Actions shop={shop} reload={reload} />
                             </Group>

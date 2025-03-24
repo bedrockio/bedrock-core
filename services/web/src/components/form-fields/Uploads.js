@@ -287,12 +287,12 @@ export default class Uploads extends React.Component {
                   ) : isDragActive ? (
                     <Text>Drop files here...</Text>
                   ) : this.isMultiple() ? (
-                    <Text>
+                    <Text size="sm">
                       Try dropping some files here, or click to select files to
                       upload.
                     </Text>
                   ) : (
-                    <Text>
+                    <Text size="sm">
                       Try dropping a file here, or click to select a file to
                       upload.
                     </Text>

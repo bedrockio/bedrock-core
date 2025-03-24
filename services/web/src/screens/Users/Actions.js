@@ -1,62 +1,88 @@
-import { Dropdown } from 'semantic';
+import { Button, Menu, Text } from '@mantine/core';
+import { modals } from '@mantine/modals';
 
-import { useSession } from 'stores/session';
+import {
+  IconChevronDown,
+  IconTrash,
+  IconCode,
+  IconPencil,
+} from '@tabler/icons-react';
+import { Link } from '@bedrockio/router';
 
 import InspectObject from 'components/InspectObject';
-import LoginAsUser from 'modals/LoginAsUser';
-import Confirm from 'components/Confirm';
-
 import { request } from 'utils/api';
+import ErrorMessage from 'components/ErrorMessage';
 
-export default function UserActions(props) {
-  const { user, reload } = props;
-  const { user: authUser } = useSession();
+export default function UserActions({ user, reload }) {
+  const openInspectModal = () => {
+    modals.open({
+      title: `Inspect ${user.name}`,
+      children: <InspectObject object={user} name="user" />,
+      size: 'lg',
+    });
+  };
 
-  const authenticatableRoles = authUser.roles.reduce(
-    (result, { roleDefinition }) =>
-      result.concat(roleDefinition.allowAuthenticationOnRoles || []),
-    [],
-  );
-
-  const canAuthenticate = [...user.roles].every(({ role }) =>
-    authenticatableRoles.includes(role),
-  );
+  const openDeleteModel = () => {
+    modals.openConfirmModal({
+      title: `Delete User`,
+      children: (
+        <Text>
+          Are you sure you want to delete <strong>{user.name}</strong>?
+        </Text>
+      ),
+      labels: {
+        cancel: 'Cancel',
+        confirm: 'Delete User',
+      },
+      confirmProps: {
+        color: 'red',
+      },
+      onConfirm: async () => {
+        try {
+          await request({
+            method: 'DELETE',
+            path: `/1/users/${user.id}`,
+          });
+          reload();
+          modals.close();
+        } catch (error) {
+          modals.open({
+            title: `Failed to delete user ${user.name}`,
+            children: <ErrorMessage error={error} />,
+          });
+        }
+      },
+    });
+  };
 
   return (
-    <Dropdown button basic text="More">
-      <Dropdown.Menu direction="left">
-        <LoginAsUser
-          size="tiny"
-          user={user}
-          trigger={
-            <Dropdown.Item
-              disabled={!canAuthenticate}
-              icon="user-secret"
-              text="Login as User"
-            />
-          }
-        />
+    <Menu shadow="md">
+      <Menu.Target>
+        <Button variant="default" rightSection={<IconChevronDown size={14} />}>
+          More
+        </Button>
+      </Menu.Target>
 
-        <InspectObject
-          name="Shop"
-          object={user}
-          trigger={<Dropdown.Item text="Inspect" icon="code" />}
-        />
-        <Confirm
-          negative
-          confirmButton="Delete"
-          header={`Are you sure you want to delete "${user.name}"?`}
-          content="All data will be permanently deleted"
-          trigger={<Dropdown.Item text="Delete" icon="trash" />}
-          onConfirm={async () => {
-            await request({
-              method: 'DELETE',
-              path: `/1/users/${user.id}`,
-            });
-            reload();
-          }}
-        />
-      </Dropdown.Menu>
-    </Dropdown>
+      <Menu.Dropdown>
+        <Menu.Item
+          component={Link}
+          to={`/users/${user.id}/edit`}
+          leftSection={<IconPencil size={14} />}>
+          Edit
+        </Menu.Item>
+
+        <Menu.Item
+          onClick={openInspectModal}
+          leftSection={<IconCode size={14} />}>
+          Inspect
+        </Menu.Item>
+
+        <Menu.Item
+          onClick={openDeleteModel}
+          leftSection={<IconTrash size={14} />}>
+          Delete
+        </Menu.Item>
+      </Menu.Dropdown>
+    </Menu>
   );
 }

@@ -5,14 +5,12 @@ import {
   Group,
   Table,
   Button,
-  Image,
+  Badge,
   Divider,
   Tooltip,
   Anchor,
-  Loader,
 } from '@mantine/core';
 import { IconPlus, IconHelp } from '@tabler/icons-react';
-
 import PageHeader from 'components/PageHeader';
 
 import Search from 'components/Search';
@@ -21,39 +19,39 @@ import SearchFilters from 'components/Search/Filters';
 import ErrorMessage from 'components/ErrorMessage';
 
 import { formatDateTime } from 'utils/date';
-import { urlForUpload } from 'utils/uploads';
-import { formatUsd } from 'utils/currency';
 import { request } from 'utils/api';
+
+import allCountries from 'utils/countries';
+import { formatRoles } from 'utils/permissions';
+
+const countries = allCountries.map(({ countryCode, nameEn }) => ({
+  value: countryCode,
+  text: nameEn,
+  key: countryCode,
+}));
 
 import Actions from './Actions';
 import SortableTh from 'components/Table/SortableTh';
+import { Loader } from 'semantic-ui-react';
 
-export default function ProductList() {
+export default function UserList() {
   async function onDataNeeded(body) {
     return await request({
       method: 'POST',
-      path: '/1/products/search',
+      path: '/1/users/search',
       body,
     });
   }
 
   function getFilterMapping() {
     return {
-      isFeatured: {
-        label: 'Is Featured',
-        type: 'boolean',
+      country: {
+        label: 'Country',
+        getDisplayValue: (id) => countries.find((c) => c.value === id)?.text,
       },
-      priceUsd: {
-        label: 'Price Usd',
-      },
-      expiresAt: {
-        label: 'Expires At',
-        type: 'date',
-        range: true,
-      },
-      sellingPoints: {
-        label: 'Selling Points',
-        multiple: true,
+      role: {
+        label: 'Role',
+        getDisplayValue: (role) => role,
       },
       createdAt: {
         label: 'Created At',
@@ -69,29 +67,28 @@ export default function ProductList() {
       <Search.Provider
         onDataNeeded={onDataNeeded}
         filterMapping={getFilterMapping()}>
-        {({ items: products, getSorted, setSort, reload, error, loading }) => {
+        {({ items: users, getSorted, setSort, reload, error, loading }) => {
           return (
             <React.Fragment>
               <PageHeader
-                title="Products"
+                title="Users"
                 breadcrumbItems={[
                   {
                     href: '/',
                     title: 'Home',
                   },
                   {
-                    title: 'Products',
+                    title: 'Users',
                   },
                 ]}
                 rightSection={
                   <>
-                    <Search.Export filename="products" />
-
+                    <Search.Export filename="users" />
                     <Button
                       component={Link}
-                      to="/products/new"
+                      to="/users/new"
                       rightSection={<IconPlus size={14} />}>
-                      New Product
+                      New User
                     </Button>
                   </>
                 }
@@ -101,27 +98,23 @@ export default function ProductList() {
                 <Group justify="space-between">
                   <Group>
                     <SearchFilters.Modal>
-                      <SearchFilters.Checkbox
-                        name="isFeatured"
-                        label="Is Featured"
-                      />
-                      <SearchFilters.Number name="priceUsd" label="Price Usd" />
-                      <SearchFilters.DateRange
-                        time
-                        name="expiresAt"
-                        label="Expires At"
+                      <SearchFilters.Dropdown
+                        options={countries}
+                        search
+                        name="country"
+                        label="Country"
                       />
                       <SearchFilters.Dropdown
-                        search
-                        multiple
-                        selection
-                        name="sellingPoints"
-                        label="Selling Points"
+                        options={[
+                          { value: 'admin', text: 'Admin' },
+                          { value: 'user', text: 'User' },
+                        ]}
+                        name="role"
+                        label="Role"
                       />
                       <SearchFilters.DateRange
-                        time
-                        name="createdAt"
                         label="Created At"
+                        name="createdAt"
                       />
                     </SearchFilters.Modal>
                     {loading && <Loader size={'sm'} />}
@@ -135,20 +128,20 @@ export default function ProductList() {
 
                 <ErrorMessage error={error} />
 
-                <Table stickyHeader mt="md">
+                <Table stickyHeader striped mt="md">
                   <Table.Thead>
                     <Table.Tr>
+                      <Table.Th width={200}>Name</Table.Th>
                       <SortableTh
-                        sorted={getSorted('name')}
-                        onClick={() => setSort('name')}>
-                        Name
+                        sorted={getSorted('email')}
+                        onClick={() => setSort('email')}>
+                        Email
                       </SortableTh>
-                      <Table.Th width={60}>Image</Table.Th>
-                      <SortableTh
-                        sorted={getSorted('priceUsd')}
-                        onClick={() => setSort('priceUsd')}>
-                        Price
-                      </SortableTh>
+                      <Table.Th
+                        sorted={getSorted('role')}
+                        onClick={() => setSort('role')}>
+                        Role
+                      </Table.Th>
                       <SortableTh
                         sorted={getSorted('createdAt')}
                         onClick={() => setSort('createdAt')}
@@ -158,7 +151,7 @@ export default function ProductList() {
                           <Tooltip
                             withArrow
                             multiline={true}
-                            label="This is the date and time the product was created.">
+                            label="This is the date and time the item was created.">
                             <IconHelp size={14} />
                           </Tooltip>
                         </Group>
@@ -167,36 +160,33 @@ export default function ProductList() {
                     </Table.Tr>
                   </Table.Thead>
                   <Table.Tbody>
-                    {products.map((product) => {
-                      const [image] = product.images;
+                    {users.map((user) => {
                       return (
-                        <Table.Tr key={product.id}>
+                        <Table.Tr key={user.id}>
                           <Table.Td>
                             <Anchor
                               size="sm"
                               component={Link}
-                              to={`/products/${product.id}`}>
-                              {product.name}
+                              to={`/users/${user.id}`}>
+                              {user.name}
                             </Anchor>
                           </Table.Td>
+                          <Table.Td>{user.email}</Table.Td>
                           <Table.Td>
-                            {image && (
-                              <Image
-                                radius={4}
-                                h={40}
-                                w={40}
-                                fit
-                                src={urlForUpload(image, true)}
-                              />
-                            )}
+                            {formatRoles(user.roles).map((label) => {
+                              return (
+                                <Badge
+                                  leftSection={<label.icon size={14} />}
+                                  key={label.key}>
+                                  {label.content}
+                                </Badge>
+                              );
+                            })}
                           </Table.Td>
-                          <Table.Td>{formatUsd(product.priceUsd)}</Table.Td>
-                          <Table.Td>
-                            {formatDateTime(product.createdAt)}
-                          </Table.Td>
-                          <Table.Td>
+                          <Table.Td>{formatDateTime(user.createdAt)}</Table.Td>
+                          <Table.Td align="center">
                             <Group gap="md">
-                              <Actions product={product} reload={reload} />
+                              <Actions user={user} reload={reload} />
                             </Group>
                           </Table.Td>
                         </Table.Tr>
@@ -204,6 +194,7 @@ export default function ProductList() {
                     })}
                   </Table.Tbody>
                 </Table>
+
                 <Divider my="md" />
                 <Search.Pagination />
               </Paper>

@@ -7,6 +7,7 @@ import NotFound from 'screens/NotFound';
 import { request } from 'utils/api';
 
 import Overview from './Overview';
+import EditUser from './Edit';
 
 export default function UserDetail() {
   const Loader = usePageLoader(async (params) => {
@@ -18,6 +19,7 @@ export default function UserDetail() {
       user: data,
     };
   });
+
   return (
     <Loader
       notFound={
@@ -27,7 +29,8 @@ export default function UserDetail() {
         />
       }>
       <Routes>
-        <Route path="/users/:id" render={Overview} exact />
+        <Route exact path="/users/:id" render={Overview} />
+        <Route exact path="/users/:id/edit" render={EditUser} />
         <Route render={NotFound} />
       </Routes>
     </Loader>

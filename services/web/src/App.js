@@ -6,9 +6,9 @@ import Dashboard from 'screens/Dashboard';
 import Shops from 'screens/Shops';
 import Products from 'screens/Products';
 import NotFound from 'screens/NotFound';
-/*
 import Users from 'screens/Users';
 
+/*
 import Settings from 'screens/Settings';
 import Organizations from 'screens/Organizations';
 import Applications from 'screens/Applications';
@@ -28,11 +28,13 @@ const App = () => {
         <Route path="/" render={Dashboard} exact />
         <Route path="/shops/:id?" render={Shops} />
         <Route path="/products/:id?" render={Products} />
+        <Route path="/users/:id?" render={Users} />
+
         {/*}
         <Route path="/settings/:id?" render={Settings} exact />
         <Route path="/users/invites" render={Invites} exact />
         <Route path="/organizations/:id?" render={Organizations} />
-        <Route path="/users/:id?" render={Users} />
+        
         <Route path="/applications/:id?" render={Applications} />
         <Route path="/audit-trail/:id?" render={AuditTrail} />
         <Route path="/accept-invite" render={AcceptInvite} exact />

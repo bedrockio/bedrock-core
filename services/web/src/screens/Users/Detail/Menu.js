@@ -1,39 +1,46 @@
 import React from 'react';
-import { Link, NavLink } from '@bedrockio/router';
-import { Menu, Button } from 'semantic';
+import { Link } from '@bedrockio/router';
 
 import { usePage } from 'stores/page';
 
-import Breadcrumbs from 'components/Breadcrumbs';
-import Layout from 'components/Layout';
-import EditUser from 'modals/EditUser';
+import { Button } from '@mantine/core';
+import { IconPencil } from '@tabler/icons-react';
 
+import PageHeader from 'components/PageHeader.js';
 import Actions from '../Actions';
 
 export default () => {
   const { user, reload } = usePage();
+
+  const items = [
+    {
+      title: 'Home',
+      href: '/',
+    },
+    { title: 'Users', href: '/users' },
+    { title: user.name },
+  ];
+
+  const tabs = [{ title: 'Overview', href: `/users/${user.id}` }];
+
   return (
     <React.Fragment>
-      <Breadcrumbs link={<Link to="/users">Users</Link>} active={user.name} />
-      <Layout horizontal center spread>
-        <h1 style={{ textTransform: 'capitalize' }}>{user.name}</h1>
-        <Layout.Group>
-          <Actions user={user} reload={reload} />
-          <EditUser
-            user={user}
-            trigger={<Button primary content="Edit" icon="pen-to-square" />}
-            onSave={reload}
-          />
-        </Layout.Group>
-      </Layout>
-      <Menu pointing secondary>
-        <Menu.Item
-          name="Overview"
-          to={`/users/${user.id}`}
-          as={NavLink}
-          exact
-        />
-      </Menu>
+      <PageHeader
+        title={user.name}
+        breadcrumbItems={items}
+        rightSection={
+          <>
+            <Actions user={user} reload={reload} />
+            <Button
+              component={Link}
+              to={`/users/${user.id}/edit`}
+              rightSection={<IconPencil size={14} />}>
+              Edit
+            </Button>
+          </>
+        }
+        tabs={tabs}
+      />
     </React.Fragment>
   );
 };
