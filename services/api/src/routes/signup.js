@@ -14,7 +14,7 @@ router.post(
   '/',
   validateBody({
     type: yd.string().allow('link', 'code', 'password').default('password'),
-    transport: yd.string().allow('email', 'sms').default('email'),
+    channel: yd.string().allow('email', 'sms').default('email'),
     firstName: yd.string().required(),
     lastName: yd.string().required(),
     password: yd
@@ -34,7 +34,7 @@ router.post(
         }
       })
       .missing(({ root }) => {
-        if (root.transport === 'email') {
+        if (root.channel === 'email') {
           throw new Error('Email is required.');
         }
       }),
@@ -47,13 +47,13 @@ router.post(
         }
       })
       .missing(({ root }) => {
-        if (root.transport === 'sms') {
+        if (root.channel === 'sms') {
           throw new Error('Phone is required.');
         }
       }),
   }),
   async (ctx) => {
-    const { type, transport, password, ...rest } = ctx.request.body;
+    const { type, channel, password, ...rest } = ctx.request.body;
     const user = await User.create({
       ...rest,
       password,
@@ -77,7 +77,7 @@ router.post(
     } else {
       challenge = await sendOtp(user, {
         type,
-        transport,
+        channel,
         phase: 'signup',
       });
     }
@@ -88,7 +88,7 @@ router.post(
         challenge,
       },
     };
-  }
+  },
 );
 
 module.exports = router;

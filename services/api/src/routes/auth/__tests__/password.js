@@ -46,7 +46,7 @@ describe('/1/auth', () => {
       expect(response.body.data).toEqual({
         challenge: {
           type: 'code',
-          transport: 'sms',
+          channel: 'sms',
           phone: user.phone,
         },
       });
@@ -71,7 +71,7 @@ describe('/1/auth', () => {
       expect(response.body.data).toEqual({
         challenge: {
           type: 'code',
-          transport: 'email',
+          channel: 'email',
           email: user.email,
         },
       });
@@ -96,7 +96,7 @@ describe('/1/auth', () => {
       expect(response.body.data).toEqual({
         challenge: {
           type: 'code',
-          transport: 'authenticator',
+          channel: 'authenticator',
           email: user.email,
         },
       });
@@ -161,7 +161,7 @@ describe('/1/auth', () => {
       expect(response.body.data).toEqual({
         challenge: {
           type: 'code',
-          transport: 'sms',
+          channel: 'sms',
           phone: user.phone,
         },
       });
@@ -348,7 +348,7 @@ describe('/1/auth', () => {
         },
         {
           token,
-        }
+        },
       );
 
       expect(response.status).toBe(200);
@@ -388,7 +388,7 @@ describe('/1/auth', () => {
         },
         {
           token,
-        }
+        },
       );
       expect(response.status).toBe(200);
 
@@ -401,7 +401,7 @@ describe('/1/auth', () => {
         },
         {
           token,
-        }
+        },
       );
       expect(response.status).toBe(401);
       unmockTime();
@@ -420,7 +420,7 @@ describe('/1/auth', () => {
         },
         {
           token: 'bad token',
-        }
+        },
       );
       expect(response.status).toBe(401);
 
@@ -442,7 +442,7 @@ describe('/1/auth', () => {
         },
         {
           token: 'bad',
-        }
+        },
       );
       expect(response.status).toBe(401);
       expect(response.body.error.type).toBe('token');

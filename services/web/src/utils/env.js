@@ -12,5 +12,5 @@ export const {
   APP_SUPPORT_EMAIL,
   AUTH_TYPE,
   AUTH_PASSKEY,
-  AUTH_TRANSPORT,
+  AUTH_CHANNEL,
 } = window.__ENV__;

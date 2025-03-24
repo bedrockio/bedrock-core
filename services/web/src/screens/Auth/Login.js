@@ -12,7 +12,7 @@ import OptionalPassword from 'components/Auth/OptionalPassword';
 import Logo from 'components/LogoTitle';
 
 import { request } from 'utils/api';
-import { AUTH_TYPE, AUTH_TRANSPORT } from 'utils/env';
+import { AUTH_TYPE, AUTH_CHANNEL } from 'utils/env';
 
 export default function PasswordLogin() {
   const navigate = useNavigate();
@@ -87,7 +87,7 @@ export default function PasswordLogin() {
       body: {
         ...body,
         type: AUTH_TYPE,
-        transport: AUTH_TRANSPORT,
+        channel: AUTH_CHANNEL,
       },
     });
   }

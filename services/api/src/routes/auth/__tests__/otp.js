@@ -21,7 +21,7 @@ describe('/1/auth/otp', () => {
         expect(response.body.data).toEqual({
           challenge: {
             type: 'link',
-            transport: 'email',
+            channel: 'email',
             email,
           },
         });
@@ -39,13 +39,13 @@ describe('/1/auth/otp', () => {
         });
         const response = await request('POST', '/1/auth/otp/send', {
           phone,
-          transport: 'sms',
+          channel: 'sms',
         });
         expect(response.status).toBe(200);
         expect(response.body.data).toEqual({
           challenge: {
             type: 'link',
-            transport: 'sms',
+            channel: 'sms',
             phone,
           },
         });
@@ -66,13 +66,13 @@ describe('/1/auth/otp', () => {
         const response = await request('POST', '/1/auth/otp/send', {
           phone,
           type: 'code',
-          transport: 'sms',
+          channel: 'sms',
         });
         expect(response.status).toBe(200);
         expect(response.body.data).toEqual({
           challenge: {
             type: 'code',
-            transport: 'sms',
+            channel: 'sms',
             phone,
           },
         });
@@ -92,7 +92,7 @@ describe('/1/auth/otp', () => {
       expect(response.body.data).toEqual({
         challenge: {
           email: 'foo@bar.com',
-          transport: 'email',
+          channel: 'email',
           type: 'link',
         },
       });
@@ -116,7 +116,7 @@ describe('/1/auth/otp', () => {
           expect.objectContaining({
             type: 'otp',
           }),
-        ])
+        ]),
       );
     });
 
@@ -251,7 +251,7 @@ describe('/1/auth/otp', () => {
             expect.objectContaining({
               type: 'otp',
             }),
-          ])
+          ]),
         );
       });
 
