@@ -38,7 +38,6 @@ function parseUser(user) {
 export default function UserForm({ user, onSuccess = () => {} }) {
   const isUpdate = !!user;
 
-  console.log(parseUser(user));
   const form = useForm({
     mode: 'controlled',
     initialValues: parseUser(user) || {

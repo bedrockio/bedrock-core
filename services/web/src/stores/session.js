@@ -26,6 +26,7 @@ class SessionProvider extends React.PureComponent {
   }
 
   componentDidMount() {
+    console.log(123123);
     this.bootstrap();
   }
 
@@ -84,6 +85,7 @@ class SessionProvider extends React.PureComponent {
           loading: false,
           ready: true,
         });
+        console.log('ready');
       } catch (error) {
         // eslint-disable-next-line no-console
         console.log(error);

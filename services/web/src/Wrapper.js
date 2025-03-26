@@ -36,8 +36,10 @@ const DocsApp = React.lazy(() => import('./Docs.js'));
 const OnboardApp = React.lazy(() => import('./OnboardApp.js'));
 
 function AppSwitch() {
-  const { user } = useSession();
-  if (hasAccess(user)) {
+  const { user, ready, loading } = useSession();
+
+  if (hasAccess(user) && ready) {
+    console.log('er', user, ready);
     return <App />;
   } else {
     return <AuthApp />;
@@ -46,29 +48,27 @@ function AppSwitch() {
 
 export default function Wrapper() {
   return (
-    <StrictMode>
+    <SessionProvider>
       <MantineProvider theme={theme} defaultColorScheme="dark">
         <Notifications />
         <ModalsProvider>
           <BrowserRouter>
             <ThemeProvider>
               <HelmetProvider>
-                <SessionProvider>
-                  <SessionSwitch>
-                    <Suspense fallback={<LoadingScreen />}>
-                      <Routes>
-                        <Route path="/onboard" render={OnboardApp} />
-                        <Route path="/docs" render={DocsApp} />
-                        <Route path="/" render={AppSwitch} />
-                      </Routes>
-                    </Suspense>
-                  </SessionSwitch>
-                </SessionProvider>
+                <SessionSwitch>
+                  <Suspense fallback={<LoadingScreen />}>
+                    <Routes>
+                      <Route path="/onboard" render={OnboardApp} />
+                      <Route path="/docs" render={DocsApp} />
+                      <Route path="/" render={AppSwitch} />
+                    </Routes>
+                  </Suspense>
+                </SessionSwitch>
               </HelmetProvider>
             </ThemeProvider>
           </BrowserRouter>
         </ModalsProvider>
       </MantineProvider>
-    </StrictMode>
+    </SessionProvider>
   );
 }

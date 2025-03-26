@@ -176,6 +176,8 @@ export default function UserList() {
                             {formatRoles(user.roles).map((label) => {
                               return (
                                 <Badge
+                                  size="md"
+                                  radius="md"
                                   leftSection={<label.icon size={14} />}
                                   key={label.key}>
                                   {label.content}

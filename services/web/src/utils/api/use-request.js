@@ -57,6 +57,7 @@ export default function useRequest({
   }, []);
 
   useEffect(() => {
+    console.log(options.path, autoInvoke);
     if (autoInvoke) {
       invoke();
     }
@@ -66,7 +67,7 @@ export default function useRequest({
         controller.current.abort('');
       }
     };
-  }, [invoke, autoInvoke]);
+  }, [options.path, autoInvoke]);
 
   return { response, loading, error, invoke, abort };
 }

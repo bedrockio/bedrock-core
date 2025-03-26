@@ -47,8 +47,8 @@ const PageHeader = ({
 
         {tabs.length > 0 && (
           <Tabs
+            variant="outline"
             value={location.pathname}
-            variant="pills"
             onChange={(value) => navigate(value)}>
             <Tabs.List>
               {tabs.map((tab, index) => (

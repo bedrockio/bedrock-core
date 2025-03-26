@@ -21,15 +21,14 @@ export default function EditShop() {
             { title: shop.name },
           ]}
         />
-        <Paper shadow="md" p="md" withBorder>
-          <Form
-            shop={shop}
-            onSuccess={() => {
-              reload();
-              navigate(`/shops/${shop.id}`);
-            }}
-          />
-        </Paper>
+
+        <Form
+          shop={shop}
+          onSuccess={() => {
+            reload();
+            navigate(`/shops/${shop.id}`);
+          }}
+        />
       </Stack>
     </>
   );
