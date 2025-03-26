@@ -8,7 +8,7 @@ export default function useRequest({
   onError = () => {},
   ...options
 }) {
-  const [data, setData] = useState(null);
+  const [response, setResponse] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const controller = useRef(null);
@@ -31,7 +31,7 @@ export default function useRequest({
       return request({ signal: controller.current.signal, ...requestArgs })
         .then(async (res) => {
           await onSuccess(res);
-          setData(res);
+          setResponse(res);
           setLoading(false);
 
           return res;
@@ -68,5 +68,5 @@ export default function useRequest({
     };
   }, [invoke, autoInvoke]);
 
-  return { data, loading, error, invoke, abort };
+  return { response, loading, error, invoke, abort };
 }

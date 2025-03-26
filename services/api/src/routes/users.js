@@ -66,7 +66,12 @@ router
   .use(requirePermissions('roles.list'))
   .get('/roles', (ctx) => {
     ctx.body = {
-      data: roles,
+      data: Object.keys(roles).map((id) => {
+        return {
+          id,
+          ...roles[id],
+        };
+      }),
     };
   })
   .get('/permissions', (ctx) => {

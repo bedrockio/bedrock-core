@@ -1,7 +1,6 @@
 import UploadsField from 'components/form-fields/Uploads.js';
 import ErrorMessage from 'components/ErrorMessage.js';
-
-import allCountries from 'utils/countries';
+import PhoneField from 'components/form-fields/Phone';
 
 import { useRequest } from 'utils/api';
 
@@ -11,42 +10,46 @@ import {
   Grid,
   Box,
   TextInput,
-  Title,
-  Select,
   PasswordInput,
+  Checkbox,
+  Select,
+  Anchor,
+  Text,
 } from '@mantine/core';
 
 import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 
-const countries = allCountries.map(({ countryCode, nameEn }) => ({
-  value: countryCode,
-  label: nameEn,
-  key: countryCode,
-}));
-
-const roleOptions = [
-  { value: 'admin', label: 'Admin' },
-  { value: 'user', label: 'User' },
-];
+function parseUser(user) {
+  if (!user) {
+    return null;
+  }
+  return {
+    ...user,
+    globalRoles: user.roles
+      .filter((r) => r.scope === 'global')
+      .map((r) => r.role),
+    organizationRoles: user.roles
+      .filter((r) => r.scope === 'organization')
+      .map((r) => r.role),
+  };
+}
 
 export default function UserForm({ user, onSuccess = () => {} }) {
   const isUpdate = !!user;
 
+  console.log(parseUser(user));
   const form = useForm({
     mode: 'controlled',
-    initialValues: user || {
-      name: '',
+    initialValues: parseUser(user) || {
+      firstName: '',
+      lastName: '',
       email: '',
-      role: 'user',
-      avatar: null,
+      phone: '',
       password: '',
-      address: {
-        line1: '',
-        line2: '',
-        city: '',
-        countryCode: '',
-      },
+      globalRoles: [],
+      organizationRoles: [],
+      isTester: false,
     },
   });
 
@@ -75,6 +78,13 @@ export default function UserForm({ user, onSuccess = () => {} }) {
     },
   });
 
+  const rolesRequest = useRequest({
+    method: 'GET',
+    path: '/1/users/roles',
+  });
+
+  console.log();
+
   return (
     <form
       onSubmit={form.onSubmit((values) =>
@@ -83,17 +93,73 @@ export default function UserForm({ user, onSuccess = () => {} }) {
       <Grid>
         <Grid.Col span={{ base: 12, md: 6 }}>
           <Stack gap="xs">
-            <TextInput required label="Name" {...form.getInputProps('name')} />
+            <TextInput
+              required
+              label="First Name"
+              {...form.getInputProps('firstName')}
+            />
+            <TextInput
+              required
+              label="Last Name"
+              {...form.getInputProps('lastName')}
+            />
             <TextInput
               required
               label="Email"
               {...form.getInputProps('email')}
             />
-            <Select
-              label="Role"
-              data={roleOptions}
-              {...form.getInputProps('role')}
+            <PhoneField
+              name="phone"
+              label="Phone Number"
+              {...form.getInputProps('phone')}
             />
+            {!rolesRequest.loading && (
+              <Select
+                value={'superAdmin'}
+                label="Global Roles"
+                disabled={rolesRequest.loading}
+                multiple
+                description="Global scoped roles give a user permissions across all organizations."
+                data={
+                  rolesRequest?.response?.data
+                    .filter((c) => c.allowScopes.includes('global'))
+                    .map((c) => {
+                      return {
+                        id: c.id,
+                        value: c.id,
+                        label: c.name,
+                      };
+                    }) || []
+                }
+              />
+            )}
+
+            <Select
+              disabled={rolesRequest.loading}
+              label="Organization Roles"
+              description={
+                <>
+                  <Text size="xs">
+                    Organization scoped roles give a user permissions for a
+                    single organization. You can only change the roles for the
+                    current organization. <Anchor size={'xs'}>View</Anchor>
+                  </Text>
+                </>
+              }
+              multiple
+              data={
+                rolesRequest?.response?.data
+                  .filter((c) => c.allowScopes.includes('organization'))
+                  .map((c) => {
+                    return {
+                      value: c.id,
+                      label: c.name,
+                    };
+                  }) || []
+              }
+              {...form.getInputProps('organizationRoles')}
+            />
+
             {!isUpdate && (
               <PasswordInput
                 required
@@ -101,25 +167,9 @@ export default function UserForm({ user, onSuccess = () => {} }) {
                 {...form.getInputProps('password')}
               />
             )}
-            <Title order={4} mt="md">
-              Address
-            </Title>
-            <TextInput
-              label="Address Line 1"
-              {...form.getInputProps('address.line1')}
-            />
-            <TextInput
-              label="Address Line 2 (Optional)"
-              {...form.getInputProps('address.line2')}
-            />
-            <TextInput
-              label="City/Town"
-              {...form.getInputProps('address.city')}
-            />
-            <Select
-              label="Country"
-              data={countries}
-              {...form.getInputProps('address.countryCode')}
+            <Checkbox
+              label="Is Tester"
+              {...form.getInputProps('password', { type: 'checkbox' })}
             />
           </Stack>
         </Grid.Col>

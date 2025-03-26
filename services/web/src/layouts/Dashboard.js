@@ -44,13 +44,19 @@ const links = [
   { icon: IconPackage, href: '/products', label: 'Products' },
   {
     icon: IconUsersGroup,
-    label: 'Users',
-    href: '/users',
-  },
-  {
-    icon: IconOutbound,
-    label: 'Invites',
-    href: '/users/invites',
+    label: 'Accounts',
+    links: [
+      {
+        icon: IconUsersGroup,
+        label: 'Users',
+        href: '/users',
+      },
+      {
+        icon: IconOutbound,
+        label: 'Invites',
+        href: '/users/invites',
+      },
+    ],
   },
   { icon: IconComponents, href: '/organizations', label: 'Organizations' },
 ];

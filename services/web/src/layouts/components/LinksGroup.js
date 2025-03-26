@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import { NavLink as MantineNavLink } from '@mantine/core';
 
 import { NavLink } from '@bedrockio/router';
