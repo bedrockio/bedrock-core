@@ -3,33 +3,24 @@ import Form from '../Form.js';
 
 import { usePage } from 'stores/page';
 
-import { Stack, Paper } from '@mantine/core';
+import { Stack } from '@mantine/core';
 import { useNavigate } from '@bedrockio/router';
+import Menu from './Menu';
 
 export default function EditShop() {
   const { shop, reload } = usePage();
   const navigate = useNavigate();
 
   return (
-    <>
-      <Stack gap="lg">
-        <PageHeader
-          title="Edit Shop"
-          breadcrumbItems={[
-            { title: 'Home', href: '/' },
-            { title: 'Shops', href: '/shops' },
-            { title: shop.name },
-          ]}
-        />
-
-        <Form
-          shop={shop}
-          onSuccess={() => {
-            reload();
-            navigate(`/shops/${shop.id}`);
-          }}
-        />
-      </Stack>
-    </>
+    <Stack gap="lg">
+      <Menu />
+      <Form
+        shop={shop}
+        onSuccess={() => {
+          reload();
+          navigate(`/shops/${shop.id}`);
+        }}
+      />
+    </Stack>
   );
 }

@@ -52,7 +52,11 @@ const PageHeader = ({
             onChange={(value) => navigate(value)}>
             <Tabs.List>
               {tabs.map((tab, index) => (
-                <Tabs.Tab key={index} value={tab.href}>
+                <Tabs.Tab
+                  leftSection={tab.icon}
+                  key={index}
+                  value={tab.href}
+                  color="primary">
                   <Text size="xs" fw="bold">
                     {tab.title}
                   </Text>

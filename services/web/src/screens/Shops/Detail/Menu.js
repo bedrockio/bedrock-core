@@ -24,6 +24,11 @@ export default () => {
   const tabs = [
     { title: 'Overview', href: `/shops/${shop.id}` },
     { title: 'Products', href: `/shops/${shop.id}/products` },
+    {
+      icon: <IconPencil size={12} />,
+      title: 'Edit',
+      href: `/shops/${shop.id}/edit`,
+    },
   ];
 
   return (
@@ -31,17 +36,7 @@ export default () => {
       <PageHeader
         title={shop.name}
         breadcrumbItems={items}
-        rightSection={
-          <>
-            <Actions shop={shop} reload={reload} />
-            <Button
-              component={Link}
-              to={`/shops/${shop.id}/edit`}
-              rightSection={<IconPencil size={14} />}>
-              Edit
-            </Button>
-          </>
-        }
+        rightSection={<Actions shop={shop} reload={reload} />}
         tabs={tabs}
       />
     </React.Fragment>

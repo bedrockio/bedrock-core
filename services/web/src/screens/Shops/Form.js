@@ -15,6 +15,7 @@ import {
   Textarea,
   Title,
   Select,
+  Fieldset,
 } from '@mantine/core';
 
 import { useForm } from '@mantine/form';
@@ -78,43 +79,55 @@ export default function ShopForm({ shop, onSuccess = () => {} }) {
       )}>
       <Grid>
         <Grid.Col span={{ base: 12, md: 6 }}>
-          <Stack gap="xs">
-            <TextInput required label="Name" {...form.getInputProps('name')} />
-            <Textarea
-              label="Description"
-              {...form.getInputProps('description')}
-            />
-            <SearchDropdown
-              name="categories"
-              multiple
-              searchPath="/1/categories/search"
-              label="Categories"
-              {...form.getInputProps('categories')}
-            />
-            <Title order={4} mt="md">
-              Address
-            </Title>
-            <TextInput
-              label="Address Line 1"
-              {...form.getInputProps('address.line1')}
-            />
-            <TextInput
-              label="Address Line 2 (Optional)"
-              {...form.getInputProps('address.line2')}
-            />
-            <TextInput
-              label="City/Town"
-              {...form.getInputProps('address.city')}
-            />
-            <Select
-              label="Country"
-              data={countries}
-              {...form.getInputProps('address.countryCode')}
-            />
+          <Stack gap="md">
+            <Fieldset variant="filled" legend="Shop Details">
+              <Stack gap="xs">
+                <TextInput
+                  required
+                  label="Name"
+                  {...form.getInputProps('name')}
+                />
+                <Textarea
+                  label="Description"
+                  {...form.getInputProps('description')}
+                />
+                <SearchDropdown
+                  name="categories"
+                  multiple
+                  searchPath="/1/categories/search"
+                  label="Categories"
+                  {...form.getInputProps('categories')}
+                />
+              </Stack>
+            </Fieldset>
+
+            <Fieldset variant="filled" legend="Address">
+              <Stack gap="xs">
+                <TextInput
+                  label="Address Line 1"
+                  {...form.getInputProps('address.line1')}
+                />
+                <TextInput
+                  label="Address Line 2 (Optional)"
+                  {...form.getInputProps('address.line2')}
+                />
+                <TextInput
+                  label="City/Town"
+                  {...form.getInputProps('address.city')}
+                />
+                <Select
+                  label="Country"
+                  data={countries}
+                  {...form.getInputProps('address.countryCode')}
+                />
+              </Stack>
+            </Fieldset>
           </Stack>
         </Grid.Col>
         <Grid.Col span={{ base: 12, md: 6 }}>
-          <UploadsField label="Images" {...form.getInputProps('images')} />
+          <Fieldset variant="filled" legend="Images">
+            <UploadsField {...form.getInputProps('images')} />
+          </Fieldset>
         </Grid.Col>
       </Grid>
       <Box mt="md" gap="md">

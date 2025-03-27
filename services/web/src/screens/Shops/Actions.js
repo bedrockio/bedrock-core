@@ -1,12 +1,7 @@
-import { Button, Menu, Text } from '@mantine/core';
+import { ActionIcon, Menu, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
 
-import {
-  IconChevronDown,
-  IconTrash,
-  IconCode,
-  IconPencil,
-} from '@tabler/icons-react';
+import { IconTrash, IconCode, IconPencil, IconDots } from '@tabler/icons-react';
 import { Link } from '@bedrockio/router';
 
 import InspectObject from 'components/InspectObject';
@@ -58,9 +53,9 @@ export default function ShopsActions({ shop, reload }) {
   return (
     <Menu shadow="md">
       <Menu.Target>
-        <Button variant="default" rightSection={<IconChevronDown size={14} />}>
-          More
-        </Button>
+        <ActionIcon variant="default">
+          <IconDots size={20} />
+        </ActionIcon>
       </Menu.Target>
 
       <Menu.Dropdown>

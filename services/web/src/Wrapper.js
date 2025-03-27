@@ -36,10 +36,9 @@ const DocsApp = React.lazy(() => import('./Docs.js'));
 const OnboardApp = React.lazy(() => import('./OnboardApp.js'));
 
 function AppSwitch() {
-  const { user, ready, loading } = useSession();
+  const { user, ready } = useSession();
 
   if (hasAccess(user) && ready) {
-    console.log('er', user, ready);
     return <App />;
   } else {
     return <AuthApp />;

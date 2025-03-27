@@ -97,7 +97,7 @@ export default function ProductList() {
                 }
               />
 
-              <Group mt="md" justify="space-between">
+              <Group mt="lg" justify="space-between">
                 <Group>
                   <SearchFilters.Modal>
                     <SearchFilters.Checkbox
