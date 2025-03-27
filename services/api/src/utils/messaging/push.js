@@ -1,7 +1,7 @@
-const path = require('path');
 const config = require('@bedrockio/config');
 const logger = require('@bedrockio/logger');
 const admin = require('firebase-admin');
+const { getInterpolator } = require('./utils');
 
 const ENV_NAME = config.get('ENV_NAME');
 const FIREBASE_DEV_TOKEN = config.get('FIREBASE_DEV_TOKEN');
@@ -10,30 +10,38 @@ const client = admin.initializeApp({
   credential: admin.credential.applicationDefault(),
 });
 
-const { interpolate, loadTemplate } = require('./utils');
-const TEMPLATE_DIR = path.join(__dirname, '../../templates/push');
+const interpolate = getInterpolator('push');
 
 async function sendPush(options) {
-  const { user, ...params } = options;
-  let { deviceToken } = user;
+  let { token, ...params } = options;
 
-  const { body: templateBody, meta } = await loadTemplate(TEMPLATE_DIR, options);
+  token ||= params.user?.deviceToken;
 
-  const body = interpolate(templateBody, params);
-  const title = interpolate(meta.title || '{{subject}}', params);
+  const { body, title, image } = await interpolate(options);
 
   if (ENV_NAME === 'development') {
-    if (!FIREBASE_DEV_TOKEN) {
-      throw new Error('No Firebase development token exists.');
-    }
     // To test locally download the service account key and set
     // GOOGLE_APPLICATION_CREDENTIALS to its path. Then set the
     // FIREBASE_DEV_TOKEN to a registered device token id.
-    deviceToken = FIREBASE_DEV_TOKEN;
+    if (FIREBASE_DEV_TOKEN) {
+      token = FIREBASE_DEV_TOKEN;
+    } else {
+      const to = params.user?.name || token;
+      logger.info(`
+---------- Push Sent -------------
+To: ${to || ''}
+Title: ${title || ''}
+Image: ${image || ''}
+
+${body}
+--------------------------
+      `);
+      return;
+    }
   }
 
-  if (!deviceToken) {
-    throw new Error(`No device token for ${user.id}.`);
+  if (!token) {
+    throw new Error(`No device token passed.`);
   }
 
   try {
@@ -44,8 +52,11 @@ async function sendPush(options) {
       notification: {
         title,
         body,
+        ...(image && {
+          imageUrl: image,
+        }),
       },
-      token: deviceToken,
+      token: token,
     });
   } catch (error) {
     const { code } = error;

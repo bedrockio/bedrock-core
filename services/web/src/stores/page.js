@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from 'react';
 import { useLocation, useParams } from '@bedrockio/router';
 import { Loader } from 'semantic';
 
@@ -31,37 +37,41 @@ export function useQueryLoader(arg, fn) {
 }
 
 function useLoader(names, params, fn) {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [state, setState] = useState({});
-
-  const parent = usePage();
-
   const deps = names.map((name) => {
     return params[name];
   });
 
-  useEffect(() => {
-    loadPage();
-  }, deps);
+  const PageLoader = useCallback((props) => {
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [state, setState] = useState({});
 
-  async function loadPage() {
-    setLoading(true);
-    setError(null);
-    try {
-      const newState = await fn(params);
+    const parent = usePage();
+
+    useEffect(() => {
+      loadPage();
+    }, []);
+
+    async function loadPage() {
+      setLoading(true);
+      setError(null);
+      try {
+        const newState = await fn(params);
+        updatePage(newState);
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
+    }
+
+    function updatePage(newState) {
       setState({
         ...state,
         ...newState,
       });
-      setLoading(false);
-    } catch (error) {
-      setError(error);
-      setLoading(false);
     }
-  }
 
-  function PageLoader(props) {
     const { fallback, notFound } = props;
     if (loading) {
       return fallback || <Loader active />;
@@ -79,11 +89,12 @@ function useLoader(names, params, fn) {
           ...parent,
           ...state,
           reload: loadPage,
+          update: updatePage,
         }}>
         {props.children}
       </PageContext.Provider>
     );
-  }
+  }, deps);
 
   return PageLoader;
 }

@@ -166,6 +166,41 @@ describe('requirePermissions', () => {
       await expect(middleware(ctx, () => {})).resolves.not.toThrow();
     });
 
+    it('should allow top level as a shortcut to require all', async () => {
+      let ctx;
+
+      const superAdmin = await createUser({
+        email: 'admin@permissions.com',
+        roles: [
+          {
+            scope: 'global',
+            role: 'superAdmin',
+          },
+        ],
+      });
+
+      const viewer = await createUser({
+        email: 'viewer@permissions.com',
+        roles: [
+          {
+            scope: 'global',
+            role: 'viewer',
+          },
+        ],
+      });
+
+      const middleware = requirePermissions('users');
+      ctx = context({});
+
+      // Admins pass all permissions checks.
+      ctx.state = { authUser: superAdmin };
+      await expect(middleware(ctx, () => {})).resolves.not.toThrow();
+
+      // Viewers only have "read" permissions.
+      ctx.state = { authUser: viewer };
+      await expect(middleware(ctx, () => {})).rejects.toThrow();
+    });
+
     it('should be able to pass a scope', async () => {
       let ctx;
 

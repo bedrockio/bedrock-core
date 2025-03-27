@@ -1,10 +1,10 @@
-const { assertMailCount } = require('postmark');
+const { assertMailCount, assertMailSent } = require('postmark');
 const { assertSmsCount } = require('twilio');
 const { assertPushCount } = require('firebase-admin');
-const { createUser } = require('./testing');
-const { sendNotification } = require('./notifications');
-const { mockTime, unmockTime } = require('./testing/time');
-const { User } = require('../models');
+const { createUser, createTemplate } = require('../../utils/testing');
+const { sendNotification } = require('../notifications');
+const { mockTime, unmockTime } = require('../../utils/testing/time');
+const { User } = require('../../models');
 
 jest.mock('../lib/notifications/types', () => {
   return [
@@ -156,5 +156,32 @@ describe('sendNotification', () => {
     ]);
 
     unmockTime();
+  });
+
+  it('should include unsubscribe link', async () => {
+    await createTemplate({
+      name: 'product-updated',
+      email: 'Your product was updated.',
+    });
+    const user = await createUser({
+      notifications: [
+        {
+          name: 'product-updated',
+          email: true,
+        },
+      ],
+    });
+
+    await sendNotification({
+      type: 'product-updated',
+      template: 'product-updated',
+      user,
+    });
+
+    assertMailSent({
+      email: user.email,
+      body: 'Your product was updated.',
+      html: 'http://localhost:2300/1/notifications/unsubscribe?type=product-updated&token=',
+    });
   });
 });

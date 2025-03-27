@@ -9,6 +9,7 @@ const DURATIONS = {
   invite: '1d',
   regular: '30d',
   temporary: '1h',
+  mail: '30d',
 };
 
 function createAuthToken(ctx, user, options = {}) {
@@ -61,7 +62,18 @@ function createInviteToken(invite) {
       sub: invite.email,
       jti: generateTokenId(),
     },
-    duration
+    duration,
+  );
+}
+
+function createMailToken(user) {
+  const duration = DURATIONS.mail;
+  return signToken(
+    {
+      kid: 'mail',
+      sub: user.email,
+    },
+    duration,
   );
 }
 
@@ -115,5 +127,6 @@ module.exports = {
   removeExpiredTokens,
   createTemporaryAuthToken,
   createImpersonateAuthToken,
+  createMailToken,
   signToken,
 };

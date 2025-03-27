@@ -73,6 +73,34 @@ class DashboardLayout extends React.Component {
                     Organizations
                   </Sidebar.Link>
                 </Protected>
+                <Sidebar.Accordion
+                  trigger={
+                    <Sidebar.Link>
+                      <Icon name="server" />
+                      System
+                    </Sidebar.Link>
+                  }>
+                  <Sidebar.Link to="/docs">
+                    <Icon name="book-open" />
+                    API Docs
+                  </Sidebar.Link>
+                  <Protected endpoint="applications">
+                    <Sidebar.Link to="/applications">
+                      <Icon name="terminal" />
+                      Applications
+                    </Sidebar.Link>
+                  </Protected>
+                  <Protected endpoint="auditEntries">
+                    <Sidebar.Link to="/audit-trail">
+                      <Icon name="fingerprint" />
+                      Audit Trail
+                    </Sidebar.Link>
+                  </Protected>
+                  <Sidebar.Link to="/templates">
+                    <Icon name="file-lines regular" />
+                    Templates
+                  </Sidebar.Link>
+                </Sidebar.Accordion>
               </Layout.Group>
               <Layout.Group>
                 <Sidebar.Divider />
@@ -80,22 +108,6 @@ class DashboardLayout extends React.Component {
                   <Icon name="gear" />
                   Settings
                 </Sidebar.Link>
-                <Protected endpoint="applications">
-                  <Sidebar.Link to="/audit-trail">
-                    <Icon name="list-ol" />
-                    Audit Trail
-                  </Sidebar.Link>
-                  <Sidebar.Link to="/applications">
-                    <Icon name="terminal" />
-                    Applications
-                  </Sidebar.Link>
-                  <Sidebar.Accordion active="/applications">
-                    <Sidebar.Link to="/docs">
-                      <Icon name="book-open" />
-                      API Docs
-                    </Sidebar.Link>
-                  </Sidebar.Accordion>
-                </Protected>
                 <Sidebar.Link to="/logout">
                   <Icon name="right-from-bracket" />
                   Log Out

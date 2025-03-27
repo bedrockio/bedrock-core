@@ -18,7 +18,7 @@ See http://localhost:2200/docs for full documentation on this API (requires runn
 - [Background Jobs](#background-jobs)
 - [Fixtures](#fixtures)
 - [Multi Tenancy](#multi-tenancy)
-- [Email Templates](#email-templates)
+- [Templates](#templates)
 - [Logging](#logging)
 - [Documentation](#documentation)
 - [Authentication](#authentication)
@@ -37,7 +37,7 @@ See http://localhost:2200/docs for full documentation on this API (requires runn
 - `src/models` - Mongoose ORM models (code and JSON) based on [@bedrockio/model](https://github.com/bedrockio/model).
 - `src/app.js` - Entrypoint into API (does not bind, so can be used in unit tests)
 - `src/index.js` - Launch script for the API
-- `emails` - Email templates
+- `templates` - Templates
 - `scripts` - Scripts and jobs
 - `fixtures` - Database [fixtures](#fixtures).
 
@@ -227,32 +227,81 @@ router
   );
 ```
 
-## E-Mail Templates
+## Templates
 
-E-mail templates can be found in `emails`. There is a layout.html that contains the styling and default layout, and a
-template for each email, that gets injected into the layout. Multiple layouts are supported, just make sure you specify
-what layout to use when calling `template({ layout: "other-layout.html", template: "..." })`
+Templates for email/sms/push messages can be found in `templates`. For emails `layout.html` defines the overall template
+that contains styles and default layout. In code templates are specified by name:
 
-You can either use markdown or full html templates. Both are run though https://mustache.github.io/ for templating
-
-### To create a button in markdown
-
-```
-**[Reset Password]({{{APP_URL}}}/reset-password?token={{token}})**
-```
-
-This translates to
-
-```
-<p><a class="button" href="{{{APP_URL}}}/reset-password?token={{token}}">Reset Pasword</a/</p>
+```js
+sendMail({
+  template: 'welcome',
+});
+sendSms({
+  template: 'welcome',
+});
 ```
 
-(note this only works if the `strong` link is the only element inside the paragraph)
+### Template Metadata
 
-### Recall to unescape `APP_URL`
+Templates can have metadata in the form of a [frontmatter YAML](https://www.npmjs.com/package/front-matter) config:
 
-We are using mustache for templating, it will attempt to escape the http:`//` which causes issues. So when using the the
-`APP_URL` write `{{&APP_URL}}`
+```
+---
+subject: Subject here.
+image: "{{imageUrl user.profileImage}}"
+---
+Body here.
+```
+
+### Template Authoring
+
+Templates use [handlebars](https://www.npmjs.com/package/handlebars) under the hood:
+
+Conditional Rendering:
+
+```
+{{#if user}}
+  Your name is {{user.name}}.
+{{/if}}
+```
+
+Image Helpers:
+
+```
+{{image user.profileImage}}
+{{image user.profileImage type=avatar}}
+{{image user.profileImage width=150 height=150}}
+{{image user.profileImage blur=50}}
+{{imageUrl user.profileImage}}
+```
+
+The `image` helper will be converted into a full `<img>` tag (for email) while `imageUrl` is only for the URL (sms,
+push).
+
+Date/Time helpers:
+
+```
+{{date startsAt}}
+{{time startsAt}}
+{{rtime startsAt}}
+```
+
+`rtime` is relative time such as "in 2 hours" or "1 week ago". Note that relative time will be fixed when generated and
+will not be dynamic withing the context of the message.
+
+Create an email button:
+
+```
+{{button url}}
+```
+
+### User Templates
+
+While file based templates are simple they don't allow for flexibility in editing. For this a `Templates` model is
+provided. Template documents with the same `name` as the `template` requested will be discovered and prioritized to be
+used before files. They follow identical patterns with the fields `email`, `sms`, and `push` mapping to the different
+template directories allowing different content for each channel. The user template facility also allows email previews
+and real time sending of messages to test (not this assumes API keys are configured).
 
 ## Logging
 

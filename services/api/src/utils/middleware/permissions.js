@@ -54,7 +54,7 @@ function requirePermissions(...args) {
 function resolveOptions(args) {
   let options;
   if (typeof args[0] === 'string') {
-    const [endpoint, permission] = args[0].split('.');
+    const [endpoint, permission = 'all'] = args[0].split('.');
     options = {
       endpoint,
       permission,

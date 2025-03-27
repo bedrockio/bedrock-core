@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { User, Upload } = require('../../models');
+const { User, Upload, Template } = require('../../models');
 
 const context = require('./context');
 const request = require('./request');
@@ -10,6 +10,7 @@ async function createUser(attributes = {}) {
     email: `${new mongoose.Types.ObjectId()}@platform.com`,
     firstName: 'Test',
     lastName: 'User',
+    deviceToken: 'test token',
     ...attributes,
   });
   await user.save();
@@ -50,11 +51,23 @@ async function createUpload(attributes) {
   });
 }
 
+async function createTemplate(attributes) {
+  return await Template.create({
+    type: ['email', 'sms', 'push'],
+    name: 'template',
+    email: 'email',
+    sms: 'sms',
+    push: 'push',
+    ...attributes,
+  });
+}
+
 module.exports = {
   context,
   request,
   createUser,
   createUpload,
   createAdmin,
+  createTemplate,
   createSuperAdmin,
 };

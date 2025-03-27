@@ -12,7 +12,8 @@
       "roles": "all",
       "shops": "all",
       "users": "all",
-      "uploads": "all"
+      "uploads": "all",
+      "templates": "all"
     },
     "allowAuthenticationOnRoles": [
       "admin",
@@ -31,7 +32,8 @@
       "roles": "all",
       "shops": "all",
       "users": "all",
-      "uploads": "all"
+      "uploads": "all",
+      "templates": "all"
     }
   },
   "viewer": {
@@ -45,7 +47,8 @@
       "products": "read",
       "shops": "read",
       "users": "read",
-      "uploads": "read"
+      "uploads": "read",
+      "templates": "read"
     }
   }
 }

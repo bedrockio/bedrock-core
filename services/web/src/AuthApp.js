@@ -11,6 +11,7 @@ import ForgotPassword from 'screens/Auth/ForgotPassword';
 import ResetPassword from 'screens/Auth/ResetPassword';
 import AcceptInvite from 'screens/Auth/AcceptInvite';
 import ConfirmCode from 'screens/Auth/ConfirmCode';
+import Unsubscribe from 'screens/Unsubscribe';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/accept-invite" render={AcceptInvite} exact />
         <Route path="/forgot-password" render={ForgotPassword} exact />
         <Route path="/reset-password" render={ResetPassword} exact />
+        <Route path="/unsubscribe" component={Unsubscribe} exact />
         <Route path="*" render={Lockout} exact />
       </Routes>
     </BasicLayout>

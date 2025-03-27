@@ -11,7 +11,9 @@ import Settings from 'screens/Settings';
 import Organizations from 'screens/Organizations';
 import Applications from 'screens/Applications';
 import AuditTrail from 'screens/AuditTrail';
+import Templates from 'screens/Templates';
 import Invites from 'screens/Invites';
+import Unsubscribe from 'screens/Unsubscribe';
 
 import AcceptInvite from 'screens/Auth/AcceptInvite';
 import Logout from 'screens/Auth/Logout';
@@ -32,6 +34,8 @@ const App = () => {
         <Route path="/applications/:id?" render={Applications} />
         <Route path="/audit-trail/:id?" render={AuditTrail} />
         <Route path="/accept-invite" render={AcceptInvite} exact />
+        <Route path="/unsubscribe" component={Unsubscribe} exact />
+        <Route path="/templates" render={Templates} />
         <Route path="/logout" render={Logout} exact />
         <Route render={NotFound} />
       </Routes>

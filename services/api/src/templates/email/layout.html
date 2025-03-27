@@ -328,6 +328,16 @@
                         {{APP_COMPANY_NAME}}
                         <br />{{APP_COMPANY_ADDRESS}}
                       </p>
+
+                      {{#if unsubscribeUrl}}
+                      <p>
+                        <a href="{{{unsubscribeUrl}}}">Unsubscribe</a>
+                        {{#if NOTIFICATIONS_URL}}
+                        <span>|</span>
+                        <a href="{{NOTIFICATIONS_URL}}">Manage Preferences</a>
+                        {{/if}}
+                      </p>
+                      {{/if}}
                     </td>
                   </tr>
                 </table>
