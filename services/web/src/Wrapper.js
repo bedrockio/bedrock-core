@@ -1,4 +1,4 @@
-import React, { StrictMode, Suspense } from 'react';
+import React, { Suspense } from 'react';
 
 import { BrowserRouter, Routes, Route } from '@bedrockio/router';
 import { HelmetProvider } from 'react-helmet-async';
@@ -43,24 +43,22 @@ function AppSwitch() {
 
 export default function Wrapper() {
   return (
-    <StrictMode>
-      <BrowserRouter>
-        <ThemeProvider>
-          <HelmetProvider>
-            <SessionProvider>
-              <SessionSwitch>
-                <Suspense fallback={<LoadingScreen />}>
-                  <Routes>
-                    <Route path="/onboard" render={OnboardApp} />
-                    <Route path="/docs" render={DocsApp} />
-                    <Route path="/" render={AppSwitch} />
-                  </Routes>
-                </Suspense>
-              </SessionSwitch>
-            </SessionProvider>
-          </HelmetProvider>
-        </ThemeProvider>
-      </BrowserRouter>
-    </StrictMode>
+    <BrowserRouter>
+      <ThemeProvider>
+        <HelmetProvider>
+          <SessionProvider>
+            <SessionSwitch>
+              <Suspense fallback={<LoadingScreen />}>
+                <Routes>
+                  <Route path="/onboard" render={OnboardApp} />
+                  <Route path="/docs" render={DocsApp} />
+                  <Route path="/" render={AppSwitch} />
+                </Routes>
+              </Suspense>
+            </SessionSwitch>
+          </SessionProvider>
+        </HelmetProvider>
+      </ThemeProvider>
+    </BrowserRouter>
   );
 }
