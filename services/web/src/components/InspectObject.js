@@ -1,19 +1,16 @@
-import React from 'react';
-import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
-import atomDark from 'react-syntax-highlighter/dist/esm/styles/prism/atom-dark';
-import json from 'react-syntax-highlighter/dist/esm/languages/prism/json';
+import { CodeHighlight } from '@mantine/code-highlight';
+import '@mantine/code-highlight/styles.css';
 
-SyntaxHighlighter.registerLanguage('json', json);
-
-export default class InspectObject extends React.Component {
-  render() {
-    const { object } = this.props;
-    return (
-      <>
-        <SyntaxHighlighter language="json" style={atomDark}>
-          {JSON.stringify(object || {}, null, 2)}
-        </SyntaxHighlighter>
-      </>
-    );
-  }
+export default function InspectObject({ object }) {
+  return (
+    <>
+      <CodeHighlight
+        style={{
+          borderRadius: 'var(--mantine-radius-md)',
+        }}
+        language="json"
+        code={JSON.stringify(object || {}, null, 2)}
+      />
+    </>
+  );
 }

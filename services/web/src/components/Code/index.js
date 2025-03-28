@@ -1,3 +1,4 @@
+/*
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Icon } from 'semantic';
@@ -75,3 +76,5 @@ Code.propTypes = {
   action: PropTypes.node,
   children: PropTypes.string.isRequired,
 };
+
+*/
