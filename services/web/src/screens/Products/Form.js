@@ -87,6 +87,7 @@ export default function ProductForm({ product, shop, onSuccess = () => {} }) {
         <Grid.Col span={{ base: 12, md: 6 }}>
           <Stack gap="xs">
             <TextInput required label="Name" {...form.getInputProps('name')} />
+
             <Textarea
               label="Description"
               {...form.getInputProps('description')}

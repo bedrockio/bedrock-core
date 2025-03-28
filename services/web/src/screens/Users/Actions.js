@@ -1,8 +1,8 @@
-import { Button, Menu, Text } from '@mantine/core';
+import { ActionIcon, Menu, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
 
 import {
-  IconChevronDown,
+  IconDotsVertical,
   IconTrash,
   IconCode,
   IconPencil,
@@ -58,9 +58,9 @@ export default function UserActions({ user, reload }) {
   return (
     <Menu shadow="md">
       <Menu.Target>
-        <Button variant="default" rightSection={<IconChevronDown size={14} />}>
-          More
-        </Button>
+        <ActionIcon variant="default">
+          <IconDotsVertical size={20} />
+        </ActionIcon>
       </Menu.Target>
 
       <Menu.Dropdown>

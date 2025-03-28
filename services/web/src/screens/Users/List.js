@@ -137,6 +137,11 @@ export default function UserList() {
                         onClick={() => setSort('email')}>
                         Email
                       </SortableTh>
+                      <SortableTh
+                        sorted={getSorted('phone')}
+                        onClick={() => setSort('phone')}>
+                        Phone
+                      </SortableTh>
                       <Table.Th
                         sorted={getSorted('role')}
                         onClick={() => setSort('role')}>
@@ -156,7 +161,7 @@ export default function UserList() {
                           </Tooltip>
                         </Group>
                       </SortableTh>
-                      <Table.Th width={120}>Actions</Table.Th>
+                      <Table.Th width={60}>Actions</Table.Th>
                     </Table.Tr>
                   </Table.Thead>
                   <Table.Tbody>
@@ -186,10 +191,8 @@ export default function UserList() {
                             })}
                           </Table.Td>
                           <Table.Td>{formatDateTime(user.createdAt)}</Table.Td>
-                          <Table.Td align="center">
-                            <Group gap="md">
-                              <Actions user={user} reload={reload} />
-                            </Group>
+                          <Table.Td align="right">
+                            <Actions user={user} reload={reload} />
                           </Table.Td>
                         </Table.Tr>
                       );
