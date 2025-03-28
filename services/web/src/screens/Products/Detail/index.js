@@ -29,7 +29,7 @@ export default function ProductDetail() {
       }>
       <Routes>
         <Route path="/products/:id/edit" render={Edit} exact />
-        <Redirect from="/products/:id" to="/products/:id/edit" />
+        <Redirect path="/products/:id" to="/products/:id/edit" />
         <Route render={NotFound} />
       </Routes>
     </Loader>
