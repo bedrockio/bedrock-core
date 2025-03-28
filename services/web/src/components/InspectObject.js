@@ -1,7 +1,8 @@
 import { CodeHighlight } from '@mantine/code-highlight';
 import '@mantine/code-highlight/styles.css';
+import { Button } from '@mantine/core';
 
-export default function InspectObject({ object }) {
+export default function InspectObject({ context, object, ...props }) {
   return (
     <>
       <CodeHighlight

@@ -1,18 +1,18 @@
-import React from 'react';
 import { usePage } from 'stores/page';
 import {
-  Paper,
-  Group,
-  Image,
+  Badge,
   Stack,
   Text,
-  Title,
+  Box,
   SimpleGrid,
+  Card,
+  Divider,
 } from '@mantine/core';
 
 import Menu from './Menu';
-import { urlForUpload } from 'utils/uploads';
 import { formatDateTime } from 'utils/date';
+
+import { formatRoles } from 'utils/permissions';
 
 export default function UserOverview() {
   const { user } = usePage();
@@ -20,54 +20,73 @@ export default function UserOverview() {
   return (
     <>
       <Menu />
-      <Paper shadow="md" p="xl" withBorder mt="md">
-        <SimpleGrid cols={{ base: 1, md: 2 }} spacing="xl">
-          <Stack>
-            <Title order={4}>User Details</Title>
-            <Group>
-              <Text fw={500}>Name:</Text>
+
+      <SimpleGrid mt="md" cols={{ base: 1, md: 2 }} spacing="xl">
+        <Card withBorder>
+          <Stack spacing="xs">
+            <Text size="md" weight="bold">
+              User Information
+            </Text>
+            <Divider />
+
+            <Box>
+              <Text size="xs" c="dimmed">
+                Name
+              </Text>
               <Text>{user.name}</Text>
-            </Group>
-            <Group>
-              <Text fw={500}>Email:</Text>
+            </Box>
+
+            <Box>
+              <Text size="xs" c="dimmed">
+                Email
+              </Text>
               <Text>{user.email}</Text>
-            </Group>
-            <Group>
-              <Text fw={500}>Role:</Text>
-              <Text>{user.role}</Text>
-            </Group>
-            <Group>
-              <Text fw={500}>Created:</Text>
+            </Box>
+
+            <Box>
+              <Text size="xs" c="dimmed">
+                Roles
+              </Text>
+              <Box mt={3}>
+                {formatRoles(user.roles).map((label) => {
+                  return (
+                    <Badge
+                      size="md"
+                      radius="md"
+                      leftSection={<label.icon size={14} />}
+                      key={label.key}>
+                      {label.content}
+                    </Badge>
+                  );
+                })}
+              </Box>
+            </Box>
+
+            <Box>
+              <Text size="xs" c="dimmed">
+                Phone
+              </Text>
+              <Text>{user.phone || 'N / A'}</Text>
+            </Box>
+
+            <Box>
+              <Text size="xs" c="dimmed">
+                Created At
+              </Text>
               <Text>{formatDateTime(user.createdAt)}</Text>
-            </Group>
+            </Box>
           </Stack>
-          <Stack>
-            {user.avatar && (
-              <>
-                <Title order={4}>Avatar</Title>
-                <Image
-                  radius="md"
-                  h={200}
-                  w="auto"
-                  fit="contain"
-                  src={urlForUpload(user.avatar)}
-                />
-              </>
-            )}
-            {user.address && user.address.line1 && (
-              <>
-                <Title order={4}>Address</Title>
-                <Text>{user.address.line1}</Text>
-                {user.address.line2 && <Text>{user.address.line2}</Text>}
-                <Text>
-                  {user.address.city}
-                  {user.address.countryCode && `, ${user.address.countryCode}`}
-                </Text>
-              </>
-            )}
+        </Card>
+
+        <Card withBorder>
+          <Stack spacing="xs">
+            <Text size="md" weight="bold">
+              User Activity
+            </Text>
+            <Divider />
           </Stack>
-        </SimpleGrid>
-      </Paper>
+        </Card>
+      </SimpleGrid>
     </>
   );
 }

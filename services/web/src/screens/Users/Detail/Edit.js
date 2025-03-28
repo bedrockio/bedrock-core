@@ -1,10 +1,10 @@
-import PageHeader from 'components/PageHeader.js';
 import Form from '../Form.js';
 
 import { usePage } from 'stores/page';
 
-import { Stack, Paper } from '@mantine/core';
+import { Stack } from '@mantine/core';
 import { useNavigate } from '@bedrockio/router';
+import Menu from './Menu';
 
 export default function EditUser() {
   const { user, reload } = usePage();
@@ -13,23 +13,14 @@ export default function EditUser() {
   return (
     <>
       <Stack gap="lg">
-        <PageHeader
-          title="Edit User"
-          breadcrumbItems={[
-            { title: 'Home', href: '/' },
-            { title: 'Users', href: '/users' },
-            { title: user.name },
-          ]}
+        <Menu />
+        <Form
+          user={user}
+          onSuccess={() => {
+            reload();
+            navigate(`/users/${user.id}`);
+          }}
         />
-        <Paper shadow="md" p="md" withBorder>
-          <Form
-            user={user}
-            onSuccess={() => {
-              reload();
-              navigate(`/users/${user.id}`);
-            }}
-          />
-        </Paper>
       </Stack>
     </>
   );

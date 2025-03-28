@@ -177,6 +177,7 @@ export default function UserList() {
                             </Anchor>
                           </Table.Td>
                           <Table.Td>{user.email}</Table.Td>
+                          <Table.Td>{user.phone}</Table.Td>
                           <Table.Td>
                             {formatRoles(user.roles).map((label) => {
                               return (

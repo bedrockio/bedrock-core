@@ -6,14 +6,37 @@ import {
   IconTrash,
   IconCode,
   IconPencil,
+  IconUserCode,
 } from '@tabler/icons-react';
 import { Link } from '@bedrockio/router';
+import { useSession } from 'stores/session';
 
 import InspectObject from 'components/InspectObject';
 import { request } from 'utils/api';
 import ErrorMessage from 'components/ErrorMessage';
+import LoginAsUser from 'components/LoginAsUser';
 
 export default function UserActions({ user, reload }) {
+  const { user: authUser } = useSession();
+
+  const authenticatableRoles = authUser.roles.reduce(
+    (result, { roleDefinition }) =>
+      result.concat(roleDefinition.allowAuthenticationOnRoles || []),
+    [],
+  );
+
+  const canAuthenticate = [...user.roles].every(({ role }) =>
+    authenticatableRoles.includes(role),
+  );
+
+  const openLoginAsUserModal = () => {
+    modals.open({
+      title: `Login as ${user.name}`,
+      children: <LoginAsUser user={user} />,
+      size: 'lg',
+    });
+  };
+
   const openInspectModal = () => {
     modals.open({
       title: `Inspect ${user.name}`,
@@ -64,6 +87,13 @@ export default function UserActions({ user, reload }) {
       </Menu.Target>
 
       <Menu.Dropdown>
+        <Menu.Item
+          disabled={!canAuthenticate}
+          onClick={() => openLoginAsUserModal()}
+          leftSection={<IconUserCode size={14} />}>
+          Login as User
+        </Menu.Item>
+
         <Menu.Item
           component={Link}
           to={`/users/${user.id}/edit`}

@@ -21,24 +21,21 @@ export default () => {
     { title: user.name },
   ];
 
-  const tabs = [{ title: 'Overview', href: `/users/${user.id}` }];
+  const tabs = [
+    { title: 'Overview', href: `/users/${user.id}` },
+    {
+      icon: <IconPencil size={12} />,
+      title: 'Edit',
+      href: `/users/${user.id}/edit`,
+    },
+  ];
 
   return (
     <React.Fragment>
       <PageHeader
         title={user.name}
         breadcrumbItems={items}
-        rightSection={
-          <>
-            <Actions user={user} reload={reload} />
-            <Button
-              component={Link}
-              to={`/users/${user.id}/edit`}
-              rightSection={<IconPencil size={14} />}>
-              Edit
-            </Button>
-          </>
-        }
+        rightSection={<Actions user={user} reload={reload} />}
         tabs={tabs}
       />
     </React.Fragment>

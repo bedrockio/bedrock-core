@@ -15,6 +15,7 @@ import {
   Select,
   Anchor,
   Text,
+  Fieldset,
 } from '@mantine/core';
 
 import { useForm } from '@mantine/form';
@@ -82,8 +83,6 @@ export default function UserForm({ user, onSuccess = () => {} }) {
     path: '/1/users/roles',
   });
 
-  console.log();
-
   return (
     <form
       onSubmit={form.onSubmit((values) =>
@@ -91,73 +90,31 @@ export default function UserForm({ user, onSuccess = () => {} }) {
       )}>
       <Grid>
         <Grid.Col span={{ base: 12, md: 6 }}>
-          <Stack gap="xs">
-            <TextInput
-              required
-              label="First Name"
-              {...form.getInputProps('firstName')}
-            />
-            <TextInput
-              required
-              label="Last Name"
-              {...form.getInputProps('lastName')}
-            />
-            <TextInput
-              required
-              label="Email"
-              {...form.getInputProps('email')}
-            />
-            <PhoneField
-              name="phone"
-              label="Phone Number"
-              {...form.getInputProps('phone')}
-            />
-            {!rolesRequest.loading && (
-              <Select
-                value={'superAdmin'}
-                label="Global Roles"
-                disabled={rolesRequest.loading}
-                multiple
-                description="Global scoped roles give a user permissions across all organizations."
-                data={
-                  rolesRequest?.response?.data
-                    .filter((c) => c.allowScopes.includes('global'))
-                    .map((c) => {
-                      return {
-                        id: c.id,
-                        value: c.id,
-                        label: c.name,
-                      };
-                    }) || []
-                }
-              />
-            )}
-
-            <Select
-              disabled={rolesRequest.loading}
-              label="Organization Roles"
-              description={
-                <>
-                  <Text size="xs">
-                    Organization scoped roles give a user permissions for a
-                    single organization. You can only change the roles for the
-                    current organization. <Anchor size={'xs'}>View</Anchor>
-                  </Text>
-                </>
-              }
-              multiple
-              data={
-                rolesRequest?.response?.data
-                  .filter((c) => c.allowScopes.includes('organization'))
-                  .map((c) => {
-                    return {
-                      value: c.id,
-                      label: c.name,
-                    };
-                  }) || []
-              }
-              {...form.getInputProps('organizationRoles')}
-            />
+          <Stack gap="md">
+            <Fieldset variant="filled" legend="Basic Information">
+              <Stack gap="md">
+                <TextInput
+                  required
+                  label="First Name"
+                  {...form.getInputProps('firstName')}
+                />
+                <TextInput
+                  required
+                  label="Last Name"
+                  {...form.getInputProps('lastName')}
+                />
+                <TextInput
+                  required
+                  label="Email"
+                  {...form.getInputProps('email')}
+                />
+                <PhoneField
+                  name="phone"
+                  label="Phone Number"
+                  {...form.getInputProps('phone')}
+                />
+              </Stack>
+            </Fieldset>
 
             {!isUpdate && (
               <PasswordInput
@@ -166,18 +123,63 @@ export default function UserForm({ user, onSuccess = () => {} }) {
                 {...form.getInputProps('password')}
               />
             )}
-            <Checkbox
-              label="Is Tester"
-              {...form.getInputProps('password', { type: 'checkbox' })}
-            />
           </Stack>
         </Grid.Col>
         <Grid.Col span={{ base: 12, md: 6 }}>
-          <UploadsField
-            label="Avatar"
-            maxFiles={1}
-            {...form.getInputProps('avatar')}
-          />
+          <Fieldset variant="filled" legend="Roles & Flags">
+            <Stack gap="md">
+              {!rolesRequest.loading && (
+                <Select
+                  value={'superAdmin'}
+                  label="Global Roles"
+                  disabled={rolesRequest.loading}
+                  multiple
+                  description="Global scoped roles give a user permissions across all organizations."
+                  data={
+                    rolesRequest?.response?.data
+                      .filter((c) => c.allowScopes.includes('global'))
+                      .map((c) => {
+                        return {
+                          id: c.id,
+                          value: c.id,
+                          label: c.name,
+                        };
+                      }) || []
+                  }
+                />
+              )}
+
+              <Select
+                disabled={rolesRequest.loading}
+                label="Organization Roles"
+                description={
+                  <>
+                    <Text size="xs">
+                      Organization scoped roles give a user permissions for a
+                      single organization. You can only change the roles for the
+                      current organization. <Anchor size={'xs'}>View</Anchor>
+                    </Text>
+                  </>
+                }
+                multiple
+                data={
+                  rolesRequest?.response?.data
+                    .filter((c) => c.allowScopes.includes('organization'))
+                    .map((c) => {
+                      return {
+                        value: c.id,
+                        label: c.name,
+                      };
+                    }) || []
+                }
+                {...form.getInputProps('organizationRoles')}
+              />
+              <Checkbox
+                label="Is Tester"
+                {...form.getInputProps('password', { type: 'checkbox' })}
+              />
+            </Stack>
+          </Fieldset>
         </Grid.Col>
       </Grid>
       <Box mt="md" gap="md">
