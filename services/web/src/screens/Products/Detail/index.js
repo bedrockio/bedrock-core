@@ -1,4 +1,4 @@
-import { Link, Routes, Route } from '@bedrockio/router';
+import { Link, Routes, Route, Redirect } from '@bedrockio/router';
 
 import { usePageLoader } from 'stores/page';
 
@@ -6,7 +6,6 @@ import NotFound from 'screens/NotFound';
 
 import { request } from 'utils/api';
 
-import Overview from './Overview.js';
 import Edit from './Edit.js';
 
 export default function ProductDetail() {
@@ -30,8 +29,7 @@ export default function ProductDetail() {
       }>
       <Routes>
         <Route path="/products/:id/edit" render={Edit} exact />
-        <Route path="/products/:id" render={Overview} exact />
-
+        <Redirect from="/products/:id" to="/products/:id/edit" />
         <Route render={NotFound} />
       </Routes>
     </Loader>

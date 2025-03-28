@@ -26,9 +26,9 @@ const App = () => {
     <DashboardLayout>
       <Routes>
         <Route path="/" render={Dashboard} exact />
-        <Route path="/shops/:id?" render={Shops} />
-        <Route path="/products/:id?" render={Products} />
-        <Route path="/users/:id?" render={Users} />
+        <Route path="/shops" render={Shops} />
+        <Route path="/products" render={Products} />
+        <Route path="/users" render={Users} />
 
         {/*}
         <Route path="/settings/:id?" render={Settings} exact />

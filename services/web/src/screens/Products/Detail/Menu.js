@@ -1,9 +1,7 @@
 import React from 'react';
 import PageHeader from 'components/PageHeader.js';
 
-import { Button } from '@mantine/core';
 import { usePage } from 'stores/page';
-import { Link } from '@bedrockio/router';
 import Actions from '../Actions';
 
 import { IconPencil } from '@tabler/icons-react';
@@ -25,11 +23,14 @@ export default () => {
       <PageHeader
         title={product.name}
         breadcrumbItems={items}
-        rightSection={
-          <>
-            <Actions product={product} reload={reload} />
-          </>
-        }
+        tabs={[
+          {
+            icon: <IconPencil size={12} />,
+            title: 'Edit',
+            href: `/products/${product.id}`,
+          },
+        ]}
+        rightSection={<Actions product={product} reload={reload} />}
       />
     </React.Fragment>
   );

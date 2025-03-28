@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from '@bedrockio/router';
 import {
-  Paper,
   Group,
   Table,
   Button,
@@ -162,7 +161,7 @@ export default function ProductList() {
                         </Tooltip>
                       </Group>
                     </SortableTh>
-                    <Table.Th width={120}>Actions</Table.Th>
+                    <Table.Th width={50}>Actions</Table.Th>
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>
@@ -191,10 +190,8 @@ export default function ProductList() {
                         </Table.Td>
                         <Table.Td>{formatUsd(product.priceUsd)}</Table.Td>
                         <Table.Td>{formatDateTime(product.createdAt)}</Table.Td>
-                        <Table.Td>
-                          <Group gap="md">
-                            <Actions product={product} reload={reload} />
-                          </Group>
+                        <Table.Td align="right">
+                          <Actions product={product} reload={reload} />
                         </Table.Td>
                       </Table.Tr>
                     );
