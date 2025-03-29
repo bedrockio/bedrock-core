@@ -1,38 +1,20 @@
-import React from 'react';
 import { NavLink } from '@bedrockio/router';
-import { Icon, Container } from 'semantic';
-
 import { useSession } from 'stores/session';
-
 import Logo from 'components/Logo';
-import Footer from 'components/Footer';
-import Layout from 'components/Layout';
-import Protected from 'components/Protected';
 import OrganizationSelector from 'components/OrganizationSelector';
-import ConnectionError from 'components/ConnectionError';
-
 import { userCanSwitchOrganizations } from 'utils/permissions';
-
-import Sidebar from './Sidebar';
-
-import favicon from 'assets/favicon.svg';
-
 import { useDisclosure } from '@mantine/hooks';
 
 import {
   IconBuildingStore,
-  IconBulb,
-  IconCheckbox,
   IconComponents,
   IconOutbound,
   IconPackage,
   IconPlus,
-  IconSearch,
-  IconUser,
   IconUsersGroup,
 } from '@tabler/icons-react';
 
-import { AppShell, Burger, Flex, TextInput, Stack } from '@mantine/core';
+import { AppShell, Burger, Flex, TextInput, ScrollArea } from '@mantine/core';
 
 import { useMediaQuery } from '@mantine/hooks';
 
@@ -44,7 +26,7 @@ const links = [
   { icon: IconPackage, href: '/products', label: 'Products' },
   {
     icon: IconUsersGroup,
-    label: 'Accounts',
+    label: 'People',
     links: [
       {
         icon: IconUsersGroup,
@@ -54,7 +36,7 @@ const links = [
       {
         icon: IconOutbound,
         label: 'Invites',
-        href: '/users/invites',
+        href: '/invites',
       },
     ],
   },
@@ -75,14 +57,6 @@ export default function DashboardLayout({ children }) {
       links={link.links}
     />
   ));
-  /*
-  <UnstyledButton key={link.label} className={classes.mainLink}>
-      <div className={classes.mainLinkInner}>
-        <link.icon size={20} className={classes.mainLinkIcon} stroke={1.5} />
-        <span>{link.label}</span>
-      </div>
-    </UnstyledButton>
-    */
 
   return (
     <AppShell
@@ -102,7 +76,7 @@ export default function DashboardLayout({ children }) {
         </Flex>
       </AppShell.Header>
       <AppShell.Navbar p="md">
-        <Stack gap="md">
+        <AppShell.Section>
           <NavLink to="/">
             <Logo mb="md" w="160px" />
           </NavLink>
@@ -120,8 +94,16 @@ export default function DashboardLayout({ children }) {
               <OrganizationSelector />
             </ModalTrigger>
           )}
+        </AppShell.Section>
+        <AppShell.Section grow my="md" component={ScrollArea}>
+          {mainLinks}
+        </AppShell.Section>
+        <AppShell.Section>
+          Navbar footer – always at the bottom
+        </AppShell.Section>
 
-          <div>{mainLinks}</div>
+        {/*
+        <Stack gap="md">
           <Sidebar.Link to="/settings">
             <Icon name="gear" />
             Settings
@@ -147,12 +129,14 @@ export default function DashboardLayout({ children }) {
             </Sidebar.Link>
           </Protected>
         </Stack>
+        */}
       </AppShell.Navbar>
       <AppShell.Main>{children}</AppShell.Main>
     </AppShell>
   );
 }
 
+/*
 class DashboardLayoutOld extends React.Component {
   render() {
     const { user, organization } = this.context;
@@ -250,3 +234,4 @@ class DashboardLayoutOld extends React.Component {
     );
   }
 }
+*/

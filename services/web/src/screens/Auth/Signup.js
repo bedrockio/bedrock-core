@@ -34,7 +34,7 @@ export default function SignupPassword() {
   const signupRequest = useRequest({
     method: 'POST',
     path: '/1/signup',
-    autoInvoke: false,
+    manual: true,
     onSuccess: ({ data }) => {
       const { token, challenge } = data;
       if (token) {
@@ -87,7 +87,7 @@ export default function SignupPassword() {
       <Paper miw={380} w="100%" p="xl" radius="md" withBorder>
         <form
           onSubmit={form.onSubmit((formValues) => {
-            signupRequest.invoke({
+            signupRequest.request({
               body: formValues,
             });
           })}>

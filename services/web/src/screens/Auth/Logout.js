@@ -1,15 +1,16 @@
-import React from 'react';
+import { useEffect } from 'react';
+import { useSession } from 'stores/session';
 
-import { withSession } from 'stores/session';
+export default function Logout() {
+  const session = useSession();
 
-class Logout extends React.Component {
-  async componentDidMount() {
-    await this.context.logout();
-  }
+  useEffect(() => {
+    const logoutUser = async () => {
+      await session.logout();
+    };
 
-  render() {
-    return <div />;
-  }
+    logoutUser();
+  }, [session]);
+
+  return <div />;
 }
-
-export default withSession(Logout);

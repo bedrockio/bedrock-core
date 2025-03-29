@@ -7,13 +7,14 @@ import Shops from 'screens/Shops';
 import Products from 'screens/Products';
 import NotFound from 'screens/NotFound';
 import Users from 'screens/Users';
+import Invites from 'screens/Invites';
 
 /*
 import Settings from 'screens/Settings';
 import Organizations from 'screens/Organizations';
 import Applications from 'screens/Applications';
 import AuditTrail from 'screens/AuditTrail';
-import Invites from 'screens/Invites';
+
 */
 
 import AcceptInvite from 'screens/Auth/AcceptInvite';
@@ -29,10 +30,11 @@ const App = () => {
         <Route path="/shops" render={Shops} />
         <Route path="/products" render={Products} />
         <Route path="/users" render={Users} />
+        <Route path="/invites" render={Invites} />
 
         {/*}
         <Route path="/settings/:id?" render={Settings} exact />
-        <Route path="/users/invites" render={Invites} exact />
+       
         <Route path="/organizations/:id?" render={Organizations} />
         
         <Route path="/applications/:id?" render={Applications} />

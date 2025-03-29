@@ -48,7 +48,7 @@ function AppSwitch() {
 export default function Wrapper() {
   return (
     <SessionProvider>
-      <MantineProvider theme={theme} defaultColorScheme="dark">
+      <MantineProvider theme={theme}>
         <Notifications />
         <ModalsProvider>
           <BrowserRouter>

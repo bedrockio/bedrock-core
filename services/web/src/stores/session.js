@@ -9,6 +9,7 @@ import { captureError } from 'utils/sentry';
 import { wrapContext } from 'utils/hoc';
 import { localStorage } from 'utils/storage';
 import { merge } from 'utils/object';
+import { userHasAccess } from 'utils/permissions';
 
 const SessionContext = React.createContext();
 
@@ -26,7 +27,6 @@ class SessionProvider extends React.PureComponent {
   }
 
   componentDidMount() {
-    console.log(123123);
     this.bootstrap();
   }
 
@@ -54,6 +54,15 @@ class SessionProvider extends React.PureComponent {
 
   hasRole = (role) => {
     return this.hasRoles([role]);
+  };
+
+  hasAccess = (endpoint, permission, scope) => {
+    return userHasAccess(this.state.user, {
+      endpoint,
+      permission,
+      scope: scope || 'organization',
+      scopeRef: this.state.organization?.id,
+    });
   };
 
   bootstrap = async () => {
@@ -295,6 +304,7 @@ class SessionProvider extends React.PureComponent {
           logout: this.logout,
           hasRoles: this.hasRoles,
           hasRole: this.hasRole,
+          hasAccess: this.hasAccess,
           isAdmin: this.isAdmin,
           pushRedirect: this.pushRedirect,
         }}>

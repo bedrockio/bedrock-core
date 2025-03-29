@@ -1,31 +1,51 @@
 import React from 'react';
-import { Table, Button, Divider, Segment } from 'semantic';
+import {
+  Group,
+  Table,
+  Button,
+  Badge,
+  Divider,
+  Text,
+  Tooltip,
+} from '@mantine/core';
+import { IconPlus, IconHelp, IconTrash } from '@tabler/icons-react';
 
-import InviteUser from 'modals/InviteUser';
 import Search from 'components/Search';
-import Layout from 'components/Layout';
-import LoadButton from 'components/LoadButton';
-import Breadcrumbs from 'components/Breadcrumbs';
+import PageHeader from 'components/PageHeader';
 import SearchFilters from 'components/Search/Filters';
-import Meta from 'components/Meta';
+import ErrorMessage from 'components/ErrorMessage';
+import SortableTh from 'components/Table/SortableTh';
+import InviteForm from './Form';
+
+import { modals } from '@mantine/modals';
 
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
+import { Loader } from 'semantic-ui-react';
 
-export default class Invites extends React.Component {
-  onDataNeeded = async (params) => {
+export default function Invites() {
+  const openInvite = () => {
+    modals.open({
+      title: 'Invite Users',
+      children: <InviteForm name="shop" onSuccess={() => modals.close()} />,
+      size: 'md',
+    });
+  };
+
+  async function onDataNeeded(params) {
     return await request({
       method: 'POST',
       path: '/1/invites/search',
       body: params,
     });
-  };
+  }
 
-  getFilterMapping() {
+  function getFilterMapping() {
     return {
       status: {
         label: 'Status',
         multiple: true,
+        getDisplayValue: (status) => status,
       },
       createdAt: {
         label: 'Created At',
@@ -36,101 +56,124 @@ export default class Invites extends React.Component {
     };
   }
 
-  render() {
-    return (
-      <>
-        <Meta title="Invites" />
-        <Search.Provider
-          filterMapping={this.getFilterMapping()}
-          onDataNeeded={this.onDataNeeded}>
-          {({ items, getSorted, setSort, reload }) => {
-            return (
-              <div>
-                <Breadcrumbs active="Invites" />
-                <Layout horizontal center spread>
-                  <h1>Invites</h1>
-                  <Layout.Group>
-                    <InviteUser
-                      size="tiny"
-                      onSave={reload}
-                      trigger={
-                        <Button primary content="Invite User" icon="plus" />
-                      }
+  return (
+    <>
+      <Search.Provider
+        filterMapping={getFilterMapping()}
+        onDataNeeded={onDataNeeded}>
+        {({ items, getSorted, setSort, reload, error, loading }) => {
+          return (
+            <React.Fragment>
+              <PageHeader
+                title="Invites"
+                breadcrumbItems={[
+                  {
+                    href: '/',
+                    title: 'Home',
+                  },
+                  {
+                    title: 'Invites',
+                  },
+                ]}
+                rightSection={
+                  <Button
+                    onClick={() => {
+                      openInvite();
+                    }}
+                    rightSection={<IconPlus size={14} />}>
+                    Invite User
+                  </Button>
+                }
+              />
+
+              <Group justify="space-between" mt="md">
+                <Group>
+                  <SearchFilters.Modal>
+                    <SearchFilters.Dropdown
+                      search
+                      multiple
+                      name="status"
+                      label="Status"
+                      options={[
+                        {
+                          value: 'invited',
+                          text: 'Invited',
+                        },
+                        {
+                          value: 'Accepted',
+                          text: 'Accepted',
+                        },
+                      ]}
                     />
-                  </Layout.Group>
-                </Layout>
+                    <SearchFilters.DateRange
+                      name="createdAt"
+                      label="Created At"
+                    />
+                  </SearchFilters.Modal>
+                  {loading && <Loader size={'sm'} />}
+                </Group>
 
-                <Divider hidden />
+                <Group>
+                  <Search.Total />
+                  <SearchFilters.Keyword />
+                </Group>
+              </Group>
 
-                <Segment>
-                  <Layout horizontal spread stackable>
-                    <SearchFilters.Modal>
-                      <SearchFilters.Dropdown
-                        search
-                        multiple
-                        selection
-                        name="status"
-                        label="Status"
-                        options={[
-                          {
-                            value: 'invited',
-                            text: 'Invited',
-                          },
-                          {
-                            value: 'Accepted',
-                            text: 'Accepted',
-                          },
-                        ]}
-                      />
-                      <SearchFilters.DateRange
-                        name="createdAt"
-                        label="Created At"
-                      />
-                    </SearchFilters.Modal>
+              <ErrorMessage mt="md" error={error} />
 
-                    <Layout horizontal stackable center right>
-                      <Search.Total />
-                      <SearchFilters.Keyword />
-                    </Layout>
-                  </Layout>
-                </Segment>
-
-                <Search.Status />
-
-                {items.length !== 0 && (
-                  <Table celled sortable>
-                    <Table.Header>
-                      <Table.Row>
-                        <Table.HeaderCell>Email</Table.HeaderCell>
-                        <Table.HeaderCell
-                          onClick={() => setSort('status')}
-                          sorted={getSorted('status')}>
-                          Status
-                        </Table.HeaderCell>
-                        <Table.HeaderCell
-                          width={3}
-                          onClick={() => setSort('createdAt')}
-                          sorted={getSorted('createdAt')}>
+              <Table.ScrollContainer minWidth={300} mt="md">
+                <Table stickyHeader striped>
+                  <Table.Thead>
+                    <Table.Tr>
+                      <Table.Th>Email</Table.Th>
+                      <SortableTh
+                        sorted={getSorted('status')}
+                        onClick={() => setSort('status')}>
+                        Status
+                      </SortableTh>
+                      <SortableTh
+                        sorted={getSorted('createdAt')}
+                        onClick={() => setSort('createdAt')}
+                        width={280}>
+                        <Group>
                           Invited At
-                        </Table.HeaderCell>
-                        <Table.HeaderCell textAlign="center">
-                          Actions
-                        </Table.HeaderCell>
-                      </Table.Row>
-                    </Table.Header>
-                    <Table.Body>
-                      {items.map((item) => {
-                        return (
-                          <Table.Row key={item.id}>
-                            <Table.Cell>{item.email}</Table.Cell>
-                            <Table.Cell collapsing>{item.status}</Table.Cell>
-                            <Table.Cell collapsing>
-                              {formatDateTime(item.createdAt)}
-                            </Table.Cell>
-                            <Table.Cell textAlign="center">
-                              <LoadButton
-                                basic
-                                icon="envelope"
+                          <Tooltip
+                            withArrow
+                            multiline={true}
+                            label="This is the date and time the invite was created.">
+                            <IconHelp size={14} />
+                          </Tooltip>
+                        </Group>
+                      </SortableTh>
+                      <Table.Th width={120}>Actions</Table.Th>
+                    </Table.Tr>
+                  </Table.Thead>
+                  <Table.Tbody>
+                    {items.length === 0 && (
+                      <Table.Tr>
+                        <Table.Td colSpan={5}>
+                          <Text p="md" fw="bold" ta="center">
+                            No invites found.
+                          </Text>
+                        </Table.Td>
+                      </Table.Tr>
+                    )}
+                    {items.map((item) => {
+                      return (
+                        <Table.Tr key={item.id}>
+                          <Table.Td>{item.email}</Table.Td>
+                          <Table.Td>
+                            <Badge radius="md" size="md">
+                              {item.status}
+                            </Badge>
+                          </Table.Td>
+                          <Table.Td>{formatDateTime(item.createdAt)}</Table.Td>
+                          <Table.Td>
+                            <Group>
+                              <Button
+                                variant="outline"
+                                size="xs"
+                                //leftSection={<IconEnvelope size={14} />}
                                 title="Resend Invite"
                                 onClick={async () => {
                                   await request({
@@ -140,9 +183,11 @@ export default class Invites extends React.Component {
                                   reload();
                                 }}
                               />
-                              <LoadButton
-                                basic
-                                icon="trash"
+                              <Button
+                                variant="outline"
+                                size="xs"
+                                color="red"
+                                leftSection={<IconTrash size={14} />}
                                 title="Delete"
                                 onClick={async () => {
                                   await request({
@@ -152,21 +197,21 @@ export default class Invites extends React.Component {
                                   reload();
                                 }}
                               />
-                            </Table.Cell>
-                          </Table.Row>
-                        );
-                      })}
-                    </Table.Body>
-                  </Table>
-                )}
+                            </Group>
+                          </Table.Td>
+                        </Table.Tr>
+                      );
+                    })}
+                  </Table.Tbody>
+                </Table>
+              </Table.ScrollContainer>
 
-                <Divider hidden />
-                <Search.Pagination />
-              </div>
-            );
-          }}
-        </Search.Provider>
-      </>
-    );
-  }
+              <Divider my="md" />
+              <Search.Pagination />
+            </React.Fragment>
+          );
+        }}
+      </Search.Provider>
+    </>
+  );
 }

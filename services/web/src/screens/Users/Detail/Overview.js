@@ -7,15 +7,39 @@ import {
   SimpleGrid,
   Card,
   Divider,
+  Anchor,
+  Image,
+  Group,
+  Paper,
 } from '@mantine/core';
+import { Link } from '@bedrockio/router';
 
 import Menu from './Menu';
 import { formatDateTime } from 'utils/date';
 
 import { formatRoles } from 'utils/permissions';
+import { useRequest } from 'utils/api';
+import { urlForUpload } from 'utils/uploads';
+
+function LinkWrapped({ children, ...props }) {
+  return (
+    <Anchor component={Link} {...props}>
+      {children}
+    </Anchor>
+  );
+}
 
 export default function UserOverview() {
   const { user } = usePage();
+
+  const shopsRequest = useRequest({
+    method: 'POST',
+    path: '/1/shops/search',
+    body: {
+      owner: user.id,
+      limit: 3,
+    },
+  });
 
   return (
     <>
@@ -78,13 +102,54 @@ export default function UserOverview() {
           </Stack>
         </Card>
 
-        <Card withBorder>
+        <Paper variant="filled" withBorder p="md">
           <Stack spacing="xs">
             <Text size="md" weight="bold">
               User Activity
             </Text>
             <Divider />
           </Stack>
+        </Paper>
+
+        <Card withBorder>
+          <Card.Section p="md" withBorder>
+            <Text size="md" weight="bold">
+              Shops
+            </Text>
+          </Card.Section>
+          {shopsRequest.data.length === 0 && (
+            <Text mt="md" size="xs" c="dimmed">
+              No shops yet
+            </Text>
+          )}
+          {shopsRequest.data.map((shop) => {
+            return (
+              <Card.Section
+                component={LinkWrapped}
+                to={`/shops/${shop.id}`}
+                p="md"
+                underline={false}
+                key={shop.id}>
+                <Group>
+                  <Image
+                    radius={4}
+                    h={40}
+                    w={40}
+                    fit
+                    src={urlForUpload(shop.images[0])}
+                  />
+                  <Stack gap={0}>
+                    <Text weight="bold" color="primary" td="none">
+                      {shop.name}
+                    </Text>
+                    <Text size="xs" c="dimmed" td="none">
+                      {shop.description}
+                    </Text>
+                  </Stack>
+                </Group>
+              </Card.Section>
+            );
+          })}
         </Card>
       </SimpleGrid>
     </>

@@ -59,7 +59,7 @@ export default function ProductForm({ product, shop, onSuccess = () => {} }) {
             shop: shop?.id || form.values.shop?.id,
           },
         }),
-    autoInvoke: false,
+    manual: true,
     onSuccess: ({ data }) => {
       showNotification({
         position: 'top-center',
@@ -81,7 +81,7 @@ export default function ProductForm({ product, shop, onSuccess = () => {} }) {
   return (
     <form
       onSubmit={form.onSubmit((values) =>
-        editRequest.invoke({ body: values }),
+        editRequest.request({ body: values }),
       )}>
       <Grid>
         <Grid.Col span={{ base: 12, md: 6 }}>

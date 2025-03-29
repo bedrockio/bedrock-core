@@ -1,11 +1,6 @@
 import React from 'react';
-import { Link } from '@bedrockio/router';
-
 import { usePage } from 'stores/page';
-
-import { Button } from '@mantine/core';
 import { IconPencil } from '@tabler/icons-react';
-
 import PageHeader from 'components/PageHeader.js';
 import Actions from '../Actions';
 

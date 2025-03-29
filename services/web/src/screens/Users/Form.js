@@ -1,4 +1,3 @@
-import UploadsField from 'components/form-fields/Uploads.js';
 import ErrorMessage from 'components/ErrorMessage.js';
 import PhoneField from 'components/form-fields/Phone';
 
@@ -20,6 +19,9 @@ import {
 
 import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
+import { useSession } from 'stores/session';
+
+import Restricted from 'components/Restricted';
 
 function parseUser(user) {
   if (!user) {
@@ -38,6 +40,8 @@ function parseUser(user) {
 
 export default function UserForm({ user, onSuccess = () => {} }) {
   const isUpdate = !!user;
+
+  const { hasAccess, organization } = useSession();
 
   const form = useForm({
     mode: 'controlled',
@@ -63,7 +67,7 @@ export default function UserForm({ user, onSuccess = () => {} }) {
           method: 'POST',
           path: '/1/users',
         }),
-    autoInvoke: false,
+    manual: true,
     onSuccess: ({ data }) => {
       showNotification({
         position: 'top-center',
@@ -86,7 +90,7 @@ export default function UserForm({ user, onSuccess = () => {} }) {
   return (
     <form
       onSubmit={form.onSubmit((values) =>
-        editRequest.invoke({ body: values }),
+        editRequest.request({ body: values }),
       )}>
       <Grid>
         <Grid.Col span={{ base: 12, md: 6 }}>
@@ -128,52 +132,54 @@ export default function UserForm({ user, onSuccess = () => {} }) {
         <Grid.Col span={{ base: 12, md: 6 }}>
           <Fieldset variant="filled" legend="Roles & Flags">
             <Stack gap="md">
-              {!rolesRequest.loading && (
+              <Restricted endpoint="users" permission="write" scope="global">
                 <Select
                   value={'superAdmin'}
                   label="Global Roles"
                   disabled={rolesRequest.loading}
                   multiple
                   description="Global scoped roles give a user permissions across all organizations."
+                  data={rolesRequest?.data
+                    .filter((c) => c.allowScopes.includes('global'))
+                    .map((c) => {
+                      return {
+                        id: c.id,
+                        value: c.id,
+                        label: c.name,
+                      };
+                    })}
+                />
+              </Restricted>
+              {organization && (
+                <Select
+                  readOnly={!hasAccess('users', 'write')}
+                  disabled={rolesRequest.loading}
+                  label="Organization Roles"
+                  description={
+                    <>
+                      <Text size="xs">
+                        Organization scoped roles give a user permissions for a
+                        single organization. You can only change the roles for
+                        the current organization.{' '}
+                        <Anchor size={'xs'}>View</Anchor>
+                      </Text>
+                    </>
+                  }
+                  multiple
                   data={
                     rolesRequest?.response?.data
-                      .filter((c) => c.allowScopes.includes('global'))
+                      .filter((c) => c.allowScopes.includes('organization'))
                       .map((c) => {
                         return {
-                          id: c.id,
                           value: c.id,
                           label: c.name,
                         };
                       }) || []
                   }
+                  {...form.getInputProps('organizationRoles')}
                 />
               )}
 
-              <Select
-                disabled={rolesRequest.loading}
-                label="Organization Roles"
-                description={
-                  <>
-                    <Text size="xs">
-                      Organization scoped roles give a user permissions for a
-                      single organization. You can only change the roles for the
-                      current organization. <Anchor size={'xs'}>View</Anchor>
-                    </Text>
-                  </>
-                }
-                multiple
-                data={
-                  rolesRequest?.response?.data
-                    .filter((c) => c.allowScopes.includes('organization'))
-                    .map((c) => {
-                      return {
-                        value: c.id,
-                        label: c.name,
-                      };
-                    }) || []
-                }
-                {...form.getInputProps('organizationRoles')}
-              />
               <Checkbox
                 label="Is Tester"
                 {...form.getInputProps('password', { type: 'checkbox' })}

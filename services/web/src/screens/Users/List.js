@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from '@bedrockio/router';
 import {
-  Paper,
+  Text,
   Group,
   Table,
   Button,
@@ -94,41 +94,40 @@ export default function UserList() {
                 }
               />
 
-              <Paper mt="md" shadow="md" p="md" withBorder>
-                <Group justify="space-between">
-                  <Group>
-                    <SearchFilters.Modal>
-                      <SearchFilters.Dropdown
-                        options={countries}
-                        search
-                        name="country"
-                        label="Country"
-                      />
-                      <SearchFilters.Dropdown
-                        options={[
-                          { value: 'admin', text: 'Admin' },
-                          { value: 'user', text: 'User' },
-                        ]}
-                        name="role"
-                        label="Role"
-                      />
-                      <SearchFilters.DateRange
-                        label="Created At"
-                        name="createdAt"
-                      />
-                    </SearchFilters.Modal>
-                    {loading && <Loader size={'sm'} />}
-                  </Group>
-
-                  <Group>
-                    <Search.Total />
-                    <SearchFilters.Keyword />
-                  </Group>
+              <Group justify="space-between" mt="md">
+                <Group>
+                  <SearchFilters.Modal>
+                    <SearchFilters.Dropdown
+                      options={countries}
+                      search
+                      name="country"
+                      label="Country"
+                    />
+                    <SearchFilters.Dropdown
+                      options={[
+                        { value: 'admin', text: 'Admin' },
+                        { value: 'user', text: 'User' },
+                      ]}
+                      name="role"
+                      label="Role"
+                    />
+                    <SearchFilters.DateRange
+                      label="Created At"
+                      name="createdAt"
+                    />
+                  </SearchFilters.Modal>
+                  {loading && <Loader size={'sm'} />}
                 </Group>
 
-                <ErrorMessage error={error} />
+                <Group>
+                  <Search.Total />
+                  <SearchFilters.Keyword />
+                </Group>
+              </Group>
 
-                <Table stickyHeader striped mt="md">
+              <ErrorMessage error={error} />
+              <Table.ScrollContainer minWidth={300} mt="md">
+                <Table stickyHeader striped>
                   <Table.Thead>
                     <Table.Tr>
                       <Table.Th width={200}>Name</Table.Th>
@@ -165,6 +164,15 @@ export default function UserList() {
                     </Table.Tr>
                   </Table.Thead>
                   <Table.Tbody>
+                    {users.length === 0 && (
+                      <Table.Tr>
+                        <Table.Td colSpan={5}>
+                          <Text p="md" fw="bold" ta="center">
+                            No users found.
+                          </Text>
+                        </Table.Td>
+                      </Table.Tr>
+                    )}
                     {users.map((user) => {
                       return (
                         <Table.Tr key={user.id}>
@@ -200,10 +208,10 @@ export default function UserList() {
                     })}
                   </Table.Tbody>
                 </Table>
+              </Table.ScrollContainer>
 
-                <Divider my="md" />
-                <Search.Pagination />
-              </Paper>
+              <Divider my="md" />
+              <Search.Pagination />
             </React.Fragment>
           );
         }}

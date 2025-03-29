@@ -27,7 +27,7 @@ export default () => {
           {
             icon: <IconPencil size={12} />,
             title: 'Edit',
-            href: `/products/${product.id}`,
+            href: `/products/${product.id}/edit`,
           },
         ]}
         rightSection={<Actions product={product} reload={reload} />}

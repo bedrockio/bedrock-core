@@ -38,13 +38,13 @@ export default function LoginAsUser({ user, close }) {
           {error.message}
         </Alert>
       )}
-      <p>
-        Are you sure you want to log in as {user.email}? The session will be
-        valid for 2 hours only.
-      </p>
 
       {!isReady && (
         <>
+          <p>
+            Are you sure you want to log in as {user.email}? The session will be
+            valid for 2 hours only.
+          </p>
           <Button primary fullWidth loading={loading} onClick={onConfigure}>
             Authenticate
           </Button>

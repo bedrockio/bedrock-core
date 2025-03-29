@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import request from './request';
+import requestFn from './request';
 
 export default function useRequest({
-  autoInvoke = true,
+  manual = false,
+  defaultData = [],
   onSuccess = () => {},
   onError = () => {},
   ...options
@@ -13,7 +14,7 @@ export default function useRequest({
   const [error, setError] = useState(null);
   const controller = useRef(null);
 
-  const invoke = useCallback(
+  const request = useCallback(
     (args) => {
       const requestArgs = { ...options, ...args };
       if (!requestArgs.path) {
@@ -28,7 +29,7 @@ export default function useRequest({
 
       setLoading(true);
 
-      return request({ signal: controller.current.signal, ...requestArgs })
+      return requestFn({ signal: controller.current.signal, ...requestArgs })
         .then(async (res) => {
           await onSuccess(res);
           setResponse(res);
@@ -57,9 +58,8 @@ export default function useRequest({
   }, []);
 
   useEffect(() => {
-    console.log(options.path, autoInvoke);
-    if (autoInvoke) {
-      invoke();
+    if (!manual) {
+      request();
     }
 
     return () => {
@@ -67,7 +67,14 @@ export default function useRequest({
         controller.current.abort('');
       }
     };
-  }, [options.path, autoInvoke]);
+  }, [options.path, manual]);
 
-  return { response, loading, error, invoke, abort };
+  return {
+    response,
+    data: response?.data || defaultData,
+    loading,
+    error,
+    request,
+    abort,
+  };
 }
