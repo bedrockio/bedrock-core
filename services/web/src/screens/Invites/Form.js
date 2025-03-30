@@ -39,44 +39,42 @@ export default function InviteForm({ onSuccess = () => {} }) {
     return email.match(emailRegexp);
   };
 
-  const handleEmailInput = (e) => {
-    const inputValue = e.currentTarget.value;
+  const handleEmailKeyDown = (e) => {
+    // reset errors
+    setInvalidEmails([]);
 
-    if (!inputValue.trim()) return;
+    if (e.key === 'Enter' || e.key === 'Tab') {
+      e.preventDefault();
 
-    // Check for separator characters (comma, semicolon, space)
-    if ([',', ';', ' ', '\n'].includes(inputValue.slice(-1))) {
-      const email = inputValue.slice(0, -1).trim().toLowerCase();
+      const inputValue = e.currentTarget.value.trim();
+      if (!inputValue) return;
 
-      if (email && validateEmail(email)) {
-        // Add valid email to form
-        form.setFieldValue('emails', [...form.values.emails, email]);
-      } else if (email) {
-        // Track invalid email
-        setInvalidEmails([...invalidEmails, email]);
+      const emailList = inputValue.split(/[,;\s]+/).filter(Boolean);
+      const validEmails = [];
+      const newInvalidEmails = [];
+
+      emailList.forEach((email) => {
+        const trimmedEmail = email.toLowerCase();
+        // Check if email is valid and not already in the form
+        if (
+          validateEmail(trimmedEmail) &&
+          !form.values.emails.includes(trimmedEmail)
+        ) {
+          validEmails.push(trimmedEmail);
+        } else if (!validateEmail(trimmedEmail)) {
+          newInvalidEmails.push(trimmedEmail);
+        }
+      });
+
+      if (validEmails.length > 0) {
+        form.setFieldValue('emails', [...form.values.emails, ...validEmails]);
+      }
+      if (newInvalidEmails.length > 0) {
+        setInvalidEmails([...invalidEmails, ...newInvalidEmails]);
       }
 
       // Clear the input
       e.currentTarget.value = '';
-    }
-  };
-
-  const handleEmailKeyDown = (e) => {
-    if (e.key === 'Enter' || e.key === 'Tab') {
-      e.preventDefault();
-
-      const email = e.currentTarget.value.trim().toLowerCase();
-
-      if (email) {
-        if (validateEmail(email)) {
-          form.setFieldValue('emails', [...form.values.emails, email]);
-        } else {
-          setInvalidEmails([...invalidEmails, email]);
-        }
-
-        // Clear the input
-        e.currentTarget.value = '';
-      }
     }
   };
 
@@ -136,7 +134,7 @@ export default function InviteForm({ onSuccess = () => {} }) {
                 mt="2px"
                 placeholder="Type or paste emails and press Enter"
                 onKeyDown={handleEmailKeyDown}
-                onChange={handleEmailInput}
+                //onChange={handleEmailInput}
               />
             </Stack>
           </PillsInput>

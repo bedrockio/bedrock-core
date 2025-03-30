@@ -1,7 +1,7 @@
 import PageHeader from 'components/PageHeader';
 
 import Form from './Form';
-import { Paper } from '@mantine/core';
+import { Box } from '@mantine/core';
 import { useNavigate } from '@bedrockio/router';
 
 export default function NewUser() {
@@ -17,13 +17,13 @@ export default function NewUser() {
           { title: 'New User' },
         ]}
       />
-      <Paper shadow="md" p="md" withBorder mt="md">
+      <Box mt="md">
         <Form
           onSuccess={(user) => {
             navigate(`/users/${user.id}`);
           }}
         />
-      </Paper>
+      </Box>
     </>
   );
 }

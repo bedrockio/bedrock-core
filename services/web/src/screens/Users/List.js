@@ -130,7 +130,12 @@ export default function UserList() {
                 <Table stickyHeader striped>
                   <Table.Thead>
                     <Table.Tr>
-                      <Table.Th width={200}>Name</Table.Th>
+                      <SortableTh
+                        sorted={getSorted('firstName')}
+                        onClick={() => setSort('firstName')}
+                        width={200}>
+                        Name
+                      </SortableTh>
                       <SortableTh
                         sorted={getSorted('email')}
                         onClick={() => setSort('email')}>
@@ -141,11 +146,11 @@ export default function UserList() {
                         onClick={() => setSort('phone')}>
                         Phone
                       </SortableTh>
-                      <Table.Th
-                        sorted={getSorted('role')}
-                        onClick={() => setSort('role')}>
+                      <SortableTh
+                        sorted={getSorted('roles')}
+                        onClick={() => setSort('roles')}>
                         Role
-                      </Table.Th>
+                      </SortableTh>
                       <SortableTh
                         sorted={getSorted('createdAt')}
                         onClick={() => setSort('createdAt')}

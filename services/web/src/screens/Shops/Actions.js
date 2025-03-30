@@ -78,6 +78,7 @@ export default function ShopsActions({ shop, reload }) {
         </Menu.Item>
 
         <Menu.Item
+          color="red"
           onClick={openDeleteModel}
           leftSection={<IconTrash size={14} />}>
           Delete

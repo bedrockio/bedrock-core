@@ -8,6 +8,7 @@ import {
 } from '@tabler/icons-react';
 import { Link } from '@bedrockio/router';
 
+import ErrorMessage from 'components/ErrorMessage';
 import InspectObject from 'components/InspectObject';
 import { request } from 'utils/api';
 
@@ -21,7 +22,7 @@ export default function ProductsActions({ product, reload }) {
   };
 
   const openDeleteModel = () => {
-    modals.open({
+    modals.openConfirmModal({
       title: `Delete Product`,
       children: (
         <Text>
@@ -32,13 +33,23 @@ export default function ProductsActions({ product, reload }) {
         cancel: 'Cancel',
         confirm: 'Delete',
       },
+      confirmProps: {
+        color: 'red',
+      },
       onConfirm: async () => {
-        await request({
-          method: 'DELETE',
-          path: `/1/products/${product.id}`,
-        });
-        reload();
-        modals.close();
+        try {
+          await request({
+            method: 'DELETE',
+            path: `/1/products/${product.id}`,
+          });
+          reload();
+          modals.close();
+        } catch (error) {
+          modals.open({
+            title: `Failed to delete shop ${product.name}`,
+            children: <ErrorMessage error={error} />,
+          });
+        }
       },
     });
   };
@@ -66,6 +77,7 @@ export default function ProductsActions({ product, reload }) {
         </Menu.Item>
 
         <Menu.Item
+          color="red"
           onClick={openDeleteModel}
           leftSection={<IconTrash size={14} />}>
           Delete
