@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form } from 'semantic';
 
 import SearchDropdown from 'components/SearchDropdown';
 
@@ -20,9 +19,9 @@ export default class DropdownFilter extends React.Component {
     return this.context.filters[name] || this.getDefaultValue();
   }
 
-  getOptions() {
-    let { options } = this.props;
-    if (!options) {
+  getData() {
+    let { data } = this.props;
+    if (!data) {
       const value = this.getValue();
       const arr = Array.isArray(value) ? value : [value];
       return arr.map((value) => {
@@ -33,6 +32,7 @@ export default class DropdownFilter extends React.Component {
         };
       });
     }
+    return data;
   }
 
   render() {
@@ -56,7 +56,7 @@ export default class DropdownFilter extends React.Component {
       return (
         <Select
           value={this.getValue()}
-          options={this.getOptions()}
+          data={this.getData()}
           onChange={(value) => {
             this.context.onFilterChange({
               value,
@@ -76,8 +76,5 @@ DropdownFilter.propTypes = {
 };
 
 DropdownFilter.defaultProps = {
-  fluid: true,
-  search: false,
   clearable: true,
-  selection: true,
 };

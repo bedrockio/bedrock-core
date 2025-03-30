@@ -56,7 +56,7 @@ export default function Invites() {
         onDataNeeded={onDataNeeded}>
         {({ items, getSorted, setSort, reload, error, loading }) => {
           return (
-            <React.Fragment>
+            <>
               <PageHeader
                 title="Invites"
                 breadcrumbItems={[
@@ -95,21 +95,20 @@ export default function Invites() {
                 <Group>
                   <SearchFilters.Modal>
                     <SearchFilters.Dropdown
-                      search
-                      multiple
                       name="status"
                       label="Status"
-                      options={[
+                      data={[
                         {
                           value: 'invited',
-                          text: 'Invited',
+                          label: 'Invited',
                         },
                         {
-                          value: 'Accepted',
-                          text: 'Accepted',
+                          value: 'accepted',
+                          label: 'Accepted',
                         },
                       ]}
                     />
+
                     <SearchFilters.DateRange
                       name="createdAt"
                       label="Created At"
@@ -140,15 +139,7 @@ export default function Invites() {
                         sorted={getSorted('createdAt')}
                         onClick={() => setSort('createdAt')}
                         width={280}>
-                        <Group>
-                          Invited At
-                          <Tooltip
-                            withArrow
-                            multiline={true}
-                            label="This is the date and time the invite was created.">
-                            <IconHelp size={14} />
-                          </Tooltip>
-                        </Group>
+                        Invited At
                       </SortableTh>
                       <Table.Th width={60}>Actions</Table.Th>
                     </Table.Tr>
@@ -185,7 +176,7 @@ export default function Invites() {
 
               <Divider my="md" />
               <Search.Pagination />
-            </React.Fragment>
+            </>
           );
         }}
       </Search.Provider>

@@ -127,6 +127,7 @@ class SearchProvider extends React.Component {
   }
 
   updateUrlSearchParams() {
+    return;
     const { filters, filterMapping = {} } = this.state;
     const queryObject = {};
 
@@ -292,6 +293,7 @@ class SearchProvider extends React.Component {
   };
 
   onFilterChange = ({ name, value }) => {
+    console.log('filter change', name, value);
     this.setFilters({
       ...this.state.filters,
       [name]: value,

@@ -45,7 +45,6 @@ export default class KeywordFilter extends React.Component {
     return (
       <TextInput
         {...this.props}
-        loading={loading}
         disabled={loading}
         type="search"
         style={{ minWidth: '220px' }}

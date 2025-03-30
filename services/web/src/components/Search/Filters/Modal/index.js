@@ -1,10 +1,9 @@
 import React from 'react';
 import { omit } from 'lodash';
 import PropTypes from 'prop-types';
-import { Form, Icon, Label, Popup, Ref } from 'semantic';
-import { Button, Stack, Group } from '@mantine/core';
+import { Button, Stack, Group, Badge } from '@mantine/core';
 
-import { IconAdjustmentsHorizontal } from '@tabler/icons-react';
+import { IconAdjustmentsHorizontal, IconFilter } from '@tabler/icons-react';
 
 import SearchContext from '../../Context';
 import Overview from './Overview';
@@ -64,6 +63,11 @@ export default class FilterModal extends React.Component {
       ...this.state.filters,
     });
 
+    console.log({
+      ...this.context.filters,
+      ...this.state.filters,
+    });
+
     this.setState({
       open: false,
     });
@@ -96,27 +100,26 @@ export default class FilterModal extends React.Component {
             ) : (
               <>
                 <Button variant="outline" primary size={size}>
-                  <Icon name="filter" />
+                  <IconFilter size={16} />
                   Filter
                 </Button>
                 {this.getFilterCount() > 0 && (
-                  <Label pointing="left">{this.getFilterCount()}</Label>
+                  <Badge>{this.getFilterCount()}</Badge>
                 )}
               </>
             )
           }>
-          <Ref innerRef={this.formRef}>
-            <Form id="filters" onSubmit={this.onSubmit}>
-              <SearchContext.Provider
-                value={{
-                  ...this.context,
-                  filters: this.state.filters,
-                  onFilterChange: this.onFilterChange,
-                }}>
-                <Stack gap="md">{this.props.children}</Stack>
-              </SearchContext.Provider>
-            </Form>
-          </Ref>
+          <form id="filters" onSubmit={this.onSubmit}>
+            <SearchContext.Provider
+              value={{
+                ...this.context,
+                filters: this.state.filters,
+                onFilterChange: this.onFilterChange,
+              }}>
+              <Stack gap="md">{this.props.children}</Stack>
+            </SearchContext.Provider>
+          </form>
+
           <Group mt="md">
             <Button form="filters" onClick={this.onSubmit}>
               Apply
@@ -126,21 +129,6 @@ export default class FilterModal extends React.Component {
             </Button>
           </Group>
         </ModalTrigger>
-
-        {this.context.filterMapping && this.getFilterCount() > 0 && (
-          <Popup
-            offset={[0, 10]}
-            on={['click', 'hover']}
-            style={{ padding: 0, minWidth: '280px' }}
-            hoverable
-            position="bottom center"
-            flowing
-            trigger={
-              <Label pointing="left">{this.getFilterCount()} Filters</Label>
-            }>
-            <Overview />
-          </Popup>
-        )}
       </>
     );
   }
