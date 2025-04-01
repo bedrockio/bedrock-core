@@ -106,6 +106,8 @@ class SearchProvider extends React.Component {
     // checking if props has been changed
     const changedProps = this.getChanged(this.props, lastProps) || {};
 
+    console.log('changedProps', changedProps);
+
     // check if the search query has been changed
     if (lastProps.location.search != this.props.location.search) {
       const { page, filters } = getStateFromQueryString(
@@ -117,17 +119,18 @@ class SearchProvider extends React.Component {
     }
 
     if (Object.keys(changedProps).length) {
+      console.log('changedProps', 'hasChanged');
       this.setState({
         ...changedProps,
       });
       // checking if the state has been changed
     } else if (this.getChanged(this.state, lastState)) {
+      console.log('changed');
       this.fetch();
     }
   }
 
   updateUrlSearchParams() {
-    return;
     const { filters, filterMapping = {} } = this.state;
     const queryObject = {};
 

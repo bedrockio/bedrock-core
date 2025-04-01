@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Group,
   Table,
@@ -6,10 +5,9 @@ import {
   Badge,
   Divider,
   Text,
-  Tooltip,
   Loader,
 } from '@mantine/core';
-import { IconPlus, IconHelp } from '@tabler/icons-react';
+import { IconPlus } from '@tabler/icons-react';
 
 import Search from 'components/Search';
 import PageHeader from 'components/PageHeader';

@@ -1,7 +1,5 @@
-import React from 'react';
 import { Link } from '@bedrockio/router';
 import {
-  Paper,
   Group,
   Table,
   Button,
@@ -13,10 +11,8 @@ import {
 } from '@mantine/core';
 import { IconPlus, IconHelp } from '@tabler/icons-react';
 
-import Meta from 'components/Meta';
 import PageHeader from 'components/PageHeader';
 
-import Layout from 'components/Layout';
 import Search from 'components/Search';
 
 import SearchFilters from 'components/Search/Filters';
@@ -30,7 +26,7 @@ import { urlForUpload } from 'utils/uploads';
 
 const countries = allCountries.map(({ countryCode, nameEn }) => ({
   value: countryCode,
-  text: nameEn,
+  label: nameEn,
   key: countryCode,
 }));
 
@@ -122,34 +118,32 @@ export default function ShopList() {
               />
 
               <Group mt="lg" justify="space-between">
-                <Group>
-                  <SearchFilters.Modal>
-                    <SearchFilters.Dropdown
-                      options={countries}
-                      search
-                      name="country"
-                      label="Country"
-                    />
-                    <SearchFilters.Dropdown
-                      search
-                      onDataNeeded={fetchOwners}
-                      name="owner"
-                      label="Owner"
-                    />
-                    <SearchFilters.Dropdown
-                      search
-                      multiple
-                      onDataNeeded={fetchCategories}
-                      name="categories"
-                      label="Categories"
-                    />
-                    <SearchFilters.DateRange
-                      label="Created At"
-                      name="createdAt"
-                    />
-                  </SearchFilters.Modal>
-                  {loading && <Loader size={'sm'} />}
-                </Group>
+                <SearchFilters.Modal>
+                  <SearchFilters.Dropdown
+                    data={countries}
+                    search
+                    name="country"
+                    label="Country"
+                  />
+                  <SearchFilters.Dropdown
+                    search
+                    onDataNeeded={fetchOwners}
+                    name="owner"
+                    label="Owner"
+                  />
+                  <SearchFilters.Dropdown
+                    search
+                    multiple
+                    onDataNeeded={fetchCategories}
+                    name="categories"
+                    label="Categories"
+                  />
+                  <SearchFilters.DateRange
+                    label="Created At"
+                    name="createdAt"
+                  />
+                </SearchFilters.Modal>
+                {loading && <Loader size={'sm'} />}
 
                 <Group>
                   <Search.Total />

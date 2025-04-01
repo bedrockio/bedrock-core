@@ -31,9 +31,19 @@ export default class DateRangeFilter extends React.Component {
     value = isEmpty(range) ? null : range;
 
     if (this.props.onChange) {
-      this.props.onChange({ name, value });
+      this.props.onChange({
+        name,
+        value: {
+          ...value,
+        },
+      });
     } else {
-      this.context.onFilterChange({ name, value });
+      this.context.onFilterChange({
+        name,
+        value: {
+          ...value,
+        },
+      });
     }
   };
 
