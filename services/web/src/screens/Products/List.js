@@ -50,10 +50,6 @@ export default function ProductList() {
         type: 'date',
         range: true,
       },
-      sellingPoints: {
-        label: 'Selling Points',
-        multiple: true,
-      },
       createdAt: {
         label: 'Created At',
         type: 'date',
@@ -109,13 +105,7 @@ export default function ProductList() {
                       name="expiresAt"
                       label="Expires At"
                     />
-                    <SearchFilters.Dropdown
-                      search
-                      multiple
-                      selection
-                      name="sellingPoints"
-                      label="Selling Points"
-                    />
+
                     <SearchFilters.DateRange
                       time
                       name="createdAt"
