@@ -11,17 +11,15 @@ export default function EditProduct() {
   const navigate = useNavigate();
 
   return (
-    <>
-      <Stack gap="lg">
-        <Menu />
-        <Form
-          product={product}
-          onSuccess={() => {
-            reload();
-            navigate(`/products/${product.id}`);
-          }}
-        />
-      </Stack>
-    </>
+    <Stack gap="lg">
+      <Menu />
+      <Form
+        product={product}
+        onSuccess={() => {
+          reload();
+          navigate(`/products/${product.id}`);
+        }}
+      />
+    </Stack>
   );
 }

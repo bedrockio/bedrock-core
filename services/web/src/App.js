@@ -8,10 +8,11 @@ import Products from 'screens/Products';
 import NotFound from 'screens/NotFound';
 import Users from 'screens/Users';
 import Invites from 'screens/Invites';
+import Organizations from 'screens/Organizations';
 
 /*
 import Settings from 'screens/Settings';
-import Organizations from 'screens/Organizations';
+
 import Applications from 'screens/Applications';
 import AuditTrail from 'screens/AuditTrail';
 
@@ -31,11 +32,12 @@ const App = () => {
         <Route path="/products" render={Products} />
         <Route path="/users" render={Users} />
         <Route path="/invites" render={Invites} />
+        <Route path="/organizations" render={Organizations} />
 
         {/*}
         <Route path="/settings/:id?" render={Settings} exact />
        
-        <Route path="/organizations/:id?" render={Organizations} />
+       
         
         <Route path="/applications/:id?" render={Applications} />
         <Route path="/audit-trail/:id?" render={AuditTrail} />

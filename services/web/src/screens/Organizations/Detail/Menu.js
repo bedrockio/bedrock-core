@@ -1,44 +1,35 @@
-import React from 'react';
-
-import { Menu, Button } from 'semantic';
-
 import { usePage } from 'stores/page';
 
-import Breadcrumbs from 'components/Breadcrumbs';
-import Layout from 'components/Layout';
-import EditOrganization from 'modals/EditOrganization';
+import PageHeader from 'components/PageHeader.js';
 
 import Actions from '../Actions';
 
-import { Link, NavLink } from '@bedrockio/router';
+import { IconPencil } from '@tabler/icons-react';
 
 export default function OrganizationMenu() {
   const { organization, reload } = usePage();
 
+  const items = [
+    {
+      title: 'Home',
+      href: '/',
+    },
+    { title: 'Organizations', href: '/organizations' },
+    { title: organization.name },
+  ];
+
   return (
-    <React.Fragment>
-      <Breadcrumbs
-        link={<Link to="/organizations">Organizations</Link>}
-        active={organization.name}></Breadcrumbs>
-      <Layout horizontal center spread>
-        <h1>{organization.name}</h1>
-        <Layout.Group>
-          <Actions organization={organization} reload={reload} />
-          <EditOrganization
-            organization={organization}
-            onSave={reload}
-            trigger={<Button primary icon="gear" content="Settings" />}
-          />
-        </Layout.Group>
-      </Layout>
-      <Menu pointing secondary>
-        <Menu.Item
-          name="Overview"
-          to={`/organizations/${organization.id}`}
-          as={NavLink}
-          exact
-        />
-      </Menu>
-    </React.Fragment>
+    <PageHeader
+      title={organization.name}
+      breadcrumbItems={items}
+      tabs={[
+        {
+          icon: <IconPencil size={12} />,
+          title: 'Edit',
+          href: `/organizations/${organization.id}/edit`,
+        },
+      ]}
+      rightSection={<Actions organization={organization} reload={reload} />}
+    />
   );
 }

@@ -1,6 +1,5 @@
 import ErrorMessage from 'components/ErrorMessage.js';
 import UploadsField from 'components/form-fields/Uploads.js';
-import CurrencyField from 'components/form-fields/Currency';
 import SearchDropdown from 'components/form-fields/SearchDropdown';
 
 import { useRequest } from 'utils/api';
