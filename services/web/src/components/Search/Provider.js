@@ -107,6 +107,7 @@ function SearchProvider({
 
   useEffect(() => {
     fetchRef.current();
+    updateUrlSearchParams();
   }, [state.filters, state.page, state.sort]);
 
   function fetchData() {
@@ -143,12 +144,16 @@ function SearchProvider({
       queryObject.page = state.page;
     }
 
+    console.log(filters);
+
     for (const key of Object.keys(filters)) {
       const value = filters[key]?.id || filters[key];
       const mapping = filterMapping[key];
       if (!mapping) {
+        console.warn('missing filterMapping for', key);
         continue;
       }
+      console.log(key);
       if (mapping.multiple) {
         queryObject[key] = value
           .map((value) => convertParamValue(mapping.type, value))
@@ -181,7 +186,6 @@ function SearchProvider({
       page: 1,
       filters: convertedFilters,
     }));
-    updateUrlSearchParams();
   }
 
   function onFilterChange({ name, value }) {
@@ -205,7 +209,6 @@ function SearchProvider({
         ...prevState,
         page,
       }));
-      updateUrlSearchParams();
     }
   }
 
