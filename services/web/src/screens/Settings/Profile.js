@@ -33,7 +33,13 @@ function Profile() {
   const [message, setMessage] = useState(null);
 
   const form = useForm({
-    initialValues: pick(user, ['firstName', 'lastName', 'phone', 'email']),
+    initialValues: pick(user, [
+      'id',
+      'firstName',
+      'lastName',
+      'phone',
+      'email',
+    ]),
   });
 
   if (!user) {
