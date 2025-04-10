@@ -16,12 +16,22 @@ describe('/1/shops', () => {
         description: 'Some description',
       });
 
-      const response = await request('POST', '/1/shops/search', {}, { user });
+      const response = await request(
+        'POST',
+        '/1/shops/search',
+        {
+          sort: {
+            field: 'name',
+            order: 'asc',
+          },
+        },
+        { user },
+      );
 
       expect(response.status).toBe(200);
       const body = response.body;
-      expect(body.data[1].name).toBe(shop1.name);
-      expect(body.data[0].name).toBe(shop2.name);
+      expect(body.data[0].name).toBe(shop1.name);
+      expect(body.data[1].name).toBe(shop2.name);
       expect(body.meta.total).toBe(2);
     });
   });
