@@ -1,30 +1,54 @@
-import React from 'react';
-import { Menu } from 'semantic';
-import { NavLink } from '@bedrockio/router';
+import {
+  IconFingerprintScan,
+  IconList,
+  IconMessage,
+  IconNotification,
+  IconPaint,
+  IconPassword,
+  IconUser,
+} from '@tabler/icons-react';
+import PageHeader from 'components/PageHeader';
 
-import Breadcrumbs from 'components/Breadcrumbs';
+export default function SettingsMenu() {
+  const items = [
+    {
+      title: 'Home',
+      href: '/',
+    },
+    { title: 'Settings' },
+  ];
 
-export default () => {
   return (
-    <React.Fragment>
-      <Breadcrumbs active="Settings"></Breadcrumbs>
-      <Menu pointing secondary>
-        <Menu.Item name="Profile" to="/settings/profile" as={NavLink} exact />
-        <Menu.Item
-          name="Notifications"
-          to="/settings/notifications"
-          as={NavLink}
-          exact
-        />
-        <Menu.Item
-          name="Appearance"
-          to="/settings/appearance"
-          as={NavLink}
-          exact
-        />
-        <Menu.Item name="Security" to="/settings/security" as={NavLink} exact />
-        <Menu.Item name="Sessions" to="/settings/sessions" as={NavLink} exact />
-      </Menu>
-    </React.Fragment>
+    <PageHeader
+      title="Settings"
+      breadcrumbItems={items}
+      tabs={[
+        {
+          title: 'Profile',
+          icon: <IconUser size={14} />,
+          href: `/settings/profile`,
+        },
+        {
+          title: 'Notifications',
+          icon: <IconMessage size={14} />,
+          href: '/settings/notifications',
+        },
+        {
+          title: 'Appearance',
+          icon: <IconPaint size={14} />,
+          href: '/settings/appearance',
+        },
+        {
+          title: 'Security',
+          icon: <IconFingerprintScan size={14} />,
+          href: '/settings/security',
+        },
+        {
+          title: 'Sessions',
+          icon: <IconList size={14} />,
+          href: '/settings/sessions',
+        },
+      ]}
+    />
   );
-};
+}

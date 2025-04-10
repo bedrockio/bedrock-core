@@ -11,6 +11,7 @@ import {
   IconOutbound,
   IconPackage,
   IconPlus,
+  IconSettings,
   IconUsersGroup,
 } from '@tabler/icons-react';
 
@@ -21,7 +22,7 @@ import { useMediaQuery } from '@mantine/hooks';
 import { LinksGroup } from './components/LinksGroup';
 import ModalTrigger from 'components/ModalTrigger';
 
-const links = [
+const menuItems = [
   { icon: IconBuildingStore, href: '/shops', label: 'Shops' },
   { icon: IconPackage, href: '/products', label: 'Products' },
   {
@@ -43,20 +44,18 @@ const links = [
   { icon: IconComponents, href: '/organizations', label: 'Organizations' },
 ];
 
+const accountItems = [
+  {
+    icon: IconSettings,
+    href: '/settings',
+    label: 'Settings',
+  },
+];
+
 export default function DashboardLayout({ children }) {
   const { user, organization } = useSession();
   const [opened, { toggle }] = useDisclosure();
   const isMobile = useMediaQuery('(max-width: 768px)');
-
-  const mainLinks = links.map((link) => (
-    <LinksGroup
-      href={link.href}
-      key={link.label}
-      icon={link.icon}
-      label={link.label}
-      links={link.links}
-    />
-  ));
 
   return (
     <AppShell
@@ -96,10 +95,27 @@ export default function DashboardLayout({ children }) {
           )}
         </AppShell.Section>
         <AppShell.Section grow my="md" component={ScrollArea}>
-          {mainLinks}
+          {menuItems.map((link) => (
+            <LinksGroup
+              href={link.href}
+              key={link.label}
+              icon={link.icon}
+              label={link.label}
+              links={link.links}
+            />
+          ))}
         </AppShell.Section>
         <AppShell.Section>
-          Navbar footer – always at the bottom
+          {accountItems.map((link) => {
+            return (
+              <LinksGroup
+                href={link.href}
+                key={link.label}
+                icon={link.icon}
+                label={link.label}
+              />
+            );
+          })}
         </AppShell.Section>
 
         {/*

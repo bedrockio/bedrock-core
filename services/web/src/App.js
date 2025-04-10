@@ -9,10 +9,9 @@ import NotFound from 'screens/NotFound';
 import Users from 'screens/Users';
 import Invites from 'screens/Invites';
 import Organizations from 'screens/Organizations';
-
-/*
 import Settings from 'screens/Settings';
 
+/*
 import Applications from 'screens/Applications';
 import AuditTrail from 'screens/AuditTrail';
 
@@ -34,11 +33,10 @@ const App = () => {
         <Route path="/invites" render={Invites} />
         <Route path="/organizations" render={Organizations} />
 
-        {/*}
         <Route path="/settings/:id?" render={Settings} exact />
-       
-       
-        
+
+        {/*
+
         <Route path="/applications/:id?" render={Applications} />
         <Route path="/audit-trail/:id?" render={AuditTrail} />
         <Route path="/accept-invite" render={AcceptInvite} exact />

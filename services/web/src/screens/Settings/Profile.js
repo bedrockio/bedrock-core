@@ -1,8 +1,17 @@
-import React from 'react';
+import { useState } from 'react';
 import { pick } from 'lodash';
-import { Segment, Form, Button, Message, Divider } from 'semantic';
+import {
+  Paper,
+  TextInput,
+  Button,
+  Alert,
+  Stack,
+  Group,
+  Space,
+} from '@mantine/core';
 
-import { withSession } from 'stores/session';
+import { useSession } from 'stores/session';
+import { useForm } from '@mantine/form';
 
 import Meta from 'components/Meta';
 
@@ -14,110 +23,91 @@ import { request } from 'utils/api';
 
 import Menu from './Menu';
 
-class Profile extends React.Component {
-  state = {
-    user: pick(this.context.user, ['firstName', 'lastName', 'phone', 'email']),
-    message: null,
-  };
+/**
+ * Profile settings component that allows users to update their profile information
+ */
+function Profile() {
+  const { user, updateUser } = useSession();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
 
-  setField = (evt, { name, value }) => {
-    this.setState({
-      user: {
-        ...this.state.user,
-        [name]: value,
-      },
-    });
-  };
+  const form = useForm({
+    initialValues: pick(user, ['firstName', 'lastName', 'phone', 'email']),
+  });
 
-  setCheckedField = (evt, { name, checked }) => {
-    this.setField(evt, { name, value: checked });
-  };
+  if (!user) {
+    return null;
+  }
 
-  onSubmit = async () => {
-    const { user } = this.state;
+  /**
+   * Handles form submission to update user profile
+   * @param {Object} values - Form values
+   */
+  async function handleSubmit(values) {
     try {
-      this.setState({
-        loading: true,
-        error: null,
-        message: null,
-      });
+      setLoading(true);
+      setError(null);
+      setMessage(null);
+
       const { data } = await request({
         method: 'PATCH',
         path: `/1/users/me`,
-        body: user,
+        body: values,
       });
-      this.context.updateUser(data);
-      this.setState({
-        error: false,
-        loading: false,
-        message: 'Settings Updated',
-      });
-    } catch (error) {
-      this.setState({
-        error,
-        loading: false,
-      });
-    }
-  };
 
-  render() {
-    const { user, error, loading, message } = this.state;
-    if (!this.context.user) {
-      return null;
+      updateUser(data);
+      setLoading(false);
+      setMessage('Settings Updated');
+    } catch (err) {
+      setError(err);
+      setLoading(false);
     }
+  }
 
-    return (
-      <React.Fragment>
-        <Meta title="Profile" />
-        <Menu />
-        <Divider hidden />
-        <ErrorMessage error={error} />
-        <Form onSubmit={this.onSubmit}>
-          {message && <Message success>{message}</Message>}
-          <Segment>
-            <Form.Input
-              type="text"
-              name="firstName"
+  return (
+    <>
+      <Meta title="Profile" />
+      <Menu />
+      <Space h="md" />
+      <ErrorMessage error={error} />
+      <form onSubmit={form.onSubmit(handleSubmit)}>
+        {message && (
+          <Alert color="green" title="Success" mb="md">
+            {message}
+          </Alert>
+        )}
+        <Paper p="md" withBorder>
+          <Stack>
+            <TextInput
               label="First Name"
-              value={user.firstName || ''}
-              onChange={this.setField}
+              {...form.getInputProps('firstName')}
             />
-            <Form.Input
-              type="text"
-              name="lastName"
-              label="Last Name"
-              value={user.lastName || ''}
-              onChange={this.setField}
-            />
+            <TextInput label="Last Name" {...form.getInputProps('lastName')} />
             {user.phone && (
               <PhoneField
                 disabled
-                name="phone"
                 label="Phone Number"
-                value={user.phone || ''}
-                onChange={this.setField}
+                {...form.getInputProps('phone')}
               />
             )}
             {user.email && (
               <EmailField
                 disabled
-                name="email"
                 label="Email"
-                value={user.email || ''}
+                {...form.getInputProps('email')}
               />
             )}
-          </Segment>
-          <div style={{ textAlign: 'right' }}>
-            <Button
-              primary
-              content="Save"
-              loading={loading}
-              disabled={loading}
-            />
-          </div>
-        </Form>
-      </React.Fragment>
-    );
-  }
+          </Stack>
+        </Paper>
+        <Group justify="flex-end" mt="md">
+          <Button type="submit" loading={loading} disabled={loading}>
+            Save
+          </Button>
+        </Group>
+      </form>
+    </>
+  );
 }
-export default withSession(Profile);
+
+export default Profile;
