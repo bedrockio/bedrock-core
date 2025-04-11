@@ -24,10 +24,14 @@ async function generateRegistrationOptions(user) {
   const options = await SimpleWebAuthn.generateRegistrationOptions({
     rpID,
     rpName,
-    // It seems that good practice when using passkeys is to
-    // have a unique identifier as the userName as they may
-    // have different logins under the same name. Amazon and
-    // others use the email where GitHub uses the username.
+    // It seems that good practice when using passkeys is to have a
+    // unique identifier as the userName as they may have different
+    // logins under the same name. Amazon and others use email where
+    // GitHub uses the username. We are also leaving off userDisplayName
+    // here for the same reason. Note also that some obfuscate or hide
+    // the userName altogether to prevent being leaked on public devices.
+    // This seems like overkill however the passkey enable dialog should
+    // probably have a warning to never enable it on a public device.
     userName: user.email || user.username,
     // Prevent users from re-registering existing authenticators
     excludeCredentials: passkeys.map((passkey) => ({

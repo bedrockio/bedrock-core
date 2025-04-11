@@ -23,7 +23,7 @@ import ErrorMessage from 'components/ErrorMessage';
 import Logo from 'components/Logo';
 
 import { request } from 'utils/api';
-import { AUTH_TYPE, AUTH_TRANSPORT, APP_NAME } from 'utils/env';
+import { AUTH_TYPE, AUTH_CHANNEL, APP_NAME } from 'utils/env';
 
 function login(values) {
   if (AUTH_TYPE === 'password') {
@@ -48,7 +48,7 @@ async function loginOtp(body) {
     body: {
       ...body,
       type: AUTH_TYPE,
-      transport: AUTH_TRANSPORT,
+      authChannel: AUTH_CHANNEL,
     },
   });
 }

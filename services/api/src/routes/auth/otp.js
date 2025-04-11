@@ -17,7 +17,7 @@ router
     '/send',
     validateBody({
       type: yd.string().allow('link', 'code').default('link'),
-      transport: yd.string().allow('email', 'sms').default('email'),
+      channel: yd.string().allow('email', 'sms').default('email'),
       email: yd.string().email(),
       phone: yd.string().phone(),
     }),
@@ -35,7 +35,7 @@ router
           challenge,
         },
       };
-    }
+    },
   )
   .post(
     '/login',
@@ -88,7 +88,7 @@ router
           token: await login(ctx, user),
         },
       };
-    }
+    },
   );
 
 module.exports = router;

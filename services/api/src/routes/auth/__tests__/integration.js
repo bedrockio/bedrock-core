@@ -26,7 +26,7 @@ describe('mfa', () => {
       expect(response.body.data).toEqual({
         challenge: {
           type: 'code',
-          transport: 'sms',
+          channel: 'sms',
           phone: user.phone,
         },
       });
@@ -75,7 +75,7 @@ describe('mfa', () => {
       expect(response.body.data).toEqual({
         challenge: {
           type: 'code',
-          transport: 'email',
+          channel: 'email',
           email: user.email,
         },
       });

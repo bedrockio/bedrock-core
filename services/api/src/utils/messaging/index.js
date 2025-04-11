@@ -3,20 +3,20 @@ const { sendPush } = require('./push');
 const { sendMail } = require('./mail');
 
 async function sendMessage(options) {
-  const { user, transport = getTransport(user) } = options;
+  const { user, channel = getChannel(user) } = options;
 
-  if (transport === 'email') {
+  if (channel === 'email') {
     await sendMail(options);
-  } else if (transport === 'sms') {
+  } else if (channel === 'sms') {
     await sendSms(options);
-  } else if (transport === 'push') {
+  } else if (channel === 'push') {
     await sendPush(options);
   } else {
-    throw new Error('No transport found to send message.');
+    throw new Error('No channel found to send message.');
   }
 }
 
-function getTransport(user) {
+function getChannel(user) {
   if (user.email) {
     return 'email';
   } else if (user.phone) {

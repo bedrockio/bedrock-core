@@ -22,7 +22,7 @@ import Federated from 'components/Auth/Federated';
 import Meta from 'components/Meta';
 
 import { useRequest } from 'utils/api';
-import { AUTH_TYPE, AUTH_TRANSPORT } from 'utils/env';
+import { AUTH_TYPE, AUTH_CHANNEL } from 'utils/env';
 
 export default function SignupPassword() {
   const navigate = useNavigate();
@@ -88,7 +88,10 @@ export default function SignupPassword() {
         <form
           onSubmit={form.onSubmit((formValues) => {
             signupRequest.request({
-              body: formValues,
+              body: {
+                ...formValues,
+                authChannel: AUTH_CHANNEL,
+              },
             });
           })}>
           <Stack spacing="md">

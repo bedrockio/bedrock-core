@@ -16,7 +16,7 @@ async function sendOtp(user, body) {
     return createChallenge(body);
   }
 
-  const { type, phase, transport } = body;
+  const { type, phase, channel } = body;
 
   const template = `otp-${phase}-${type}`;
   const code = await createOtp(user);
@@ -31,20 +31,20 @@ async function sendOtp(user, body) {
       user,
       code,
       template,
-      transport,
+      channel,
     });
     return createChallenge(body, user);
   }
 }
 
 function createChallenge(body, target = body) {
-  const { type, transport, code } = body;
-  const field = transport === 'sms' ? 'phone' : 'email';
+  const { type, channel, code } = body;
+  const field = channel === 'sms' ? 'phone' : 'email';
 
   return {
     type,
     code,
-    transport,
+    channel,
     [field]: target[field],
   };
 }

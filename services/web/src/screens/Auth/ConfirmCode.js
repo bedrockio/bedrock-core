@@ -36,14 +36,14 @@ export default function ConfirmCode() {
   }, []);
 
   async function login() {
-    const { email, phone, transport } = state;
+    const { email, phone, channel } = state;
 
     if (!canLogin()) {
       return;
     }
 
     try {
-      const method = transport === 'authenticator' ? 'totp' : 'otp';
+      const method = channel === 'authenticator' ? 'totp' : 'otp';
 
       const { data } = await request({
         method: 'POST',
@@ -119,10 +119,10 @@ export default function ConfirmCode() {
   }
 
   function renderLinkMessage() {
-    const { transport } = state;
-    if (transport === 'email') {
+    const { channel } = state;
+    if (channel === 'email') {
       return `Please click on the link sent to ${state.email}.`;
-    } else if (transport === 'sms') {
+    } else if (channel === 'sms') {
       return `Please click on the link sent to ${formatPhone(state.phone)}.`;
     }
   }
@@ -148,12 +148,12 @@ export default function ConfirmCode() {
   }
 
   function renderCodeMessage() {
-    const { transport } = state;
-    if (transport === 'email') {
+    const { channel } = state;
+    if (channel === 'email') {
       return `Please enter the code sent to ${state.email}.`;
-    } else if (transport === 'sms') {
+    } else if (channel === 'sms') {
       return `Please enter the code sent to ${formatPhone(state.phone)}.`;
-    } else if (transport === 'authenticator') {
+    } else if (channel === 'authenticator') {
       return 'Please enter the code from your authenticator app.';
     }
   }

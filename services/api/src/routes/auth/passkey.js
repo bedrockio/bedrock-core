@@ -3,6 +3,7 @@ const yd = require('@bedrockio/yada');
 
 const { validateBody } = require('../../utils/middleware/validate');
 const { authenticate } = require('../../utils/middleware/authenticate');
+const { expandRoles } = require('../../utils/permissions');
 
 const { login } = require('../../utils/auth');
 
@@ -49,7 +50,7 @@ router
       } catch (error) {
         ctx.throw(400, error);
       }
-    }
+    },
   )
   .use(authenticate())
   .post('/generate-new', async (ctx) => {
@@ -83,12 +84,12 @@ router
         });
 
         ctx.body = {
-          data: authUser,
+          data: expandRoles(authUser, ctx),
         };
       } catch (error) {
         ctx.throw(400, error);
       }
-    }
+    },
   )
   .delete('/:id', async (ctx) => {
     const { id } = ctx.params;
@@ -101,7 +102,7 @@ router
     await authUser.save();
 
     ctx.body = {
-      data: authUser,
+      data: expandRoles(authUser, ctx),
     };
   });
 

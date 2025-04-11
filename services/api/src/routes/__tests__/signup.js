@@ -71,7 +71,7 @@ describe('POST /signup', () => {
       expect(response.body.data).toEqual({
         challenge: {
           type: 'link',
-          transport: 'email',
+          channel: 'email',
           email,
         },
       });
@@ -107,7 +107,7 @@ describe('POST /signup', () => {
       expect(response.body.data).toEqual({
         challenge: {
           type: 'code',
-          transport: 'email',
+          channel: 'email',
           email,
         },
       });
@@ -133,7 +133,7 @@ describe('POST /signup', () => {
     it('should error if no email is provided', async () => {
       const response = await request('POST', '/1/signup', {
         type: 'code',
-        transport: 'email',
+        channel: 'email',
         firstName: 'Bob',
         lastName: 'Johnson',
       });
@@ -148,7 +148,7 @@ describe('POST /signup', () => {
 
       const response = await request('POST', '/1/signup', {
         type: 'link',
-        transport: 'sms',
+        channel: 'sms',
         firstName: 'Bob',
         lastName: 'Johnson',
         phone,
@@ -157,7 +157,7 @@ describe('POST /signup', () => {
       expect(response.body.data).toEqual({
         challenge: {
           type: 'link',
-          transport: 'sms',
+          channel: 'sms',
           phone,
         },
       });
@@ -185,7 +185,7 @@ describe('POST /signup', () => {
 
       const response = await request('POST', '/1/signup', {
         type: 'code',
-        transport: 'sms',
+        channel: 'sms',
         firstName: 'Bob',
         lastName: 'Johnson',
         phone,
@@ -194,7 +194,7 @@ describe('POST /signup', () => {
       expect(response.body.data).toEqual({
         challenge: {
           type: 'code',
-          transport: 'sms',
+          channel: 'sms',
           phone,
         },
       });

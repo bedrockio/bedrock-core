@@ -57,12 +57,12 @@ router
         challenge = await sendOtp(user, {
           type: 'code',
           phase: 'login',
-          transport: mfaMethod,
+          channel: mfaMethod,
         });
       } else if (mfaMethod === 'totp') {
         challenge = {
           type: 'code',
-          transport: 'authenticator',
+          channel: 'authenticator',
           email: user.email,
         };
       } else if (mfaMethod === 'none') {
@@ -79,7 +79,7 @@ router
           challenge,
         },
       };
-    }
+    },
   )
   .post(
     '/request',
@@ -103,7 +103,7 @@ router
       }
 
       ctx.status = 204;
-    }
+    },
   )
   .use(authenticate())
   .post(
@@ -130,7 +130,7 @@ router
           token,
         },
       };
-    }
+    },
   );
 
 module.exports = router;

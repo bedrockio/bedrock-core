@@ -63,7 +63,7 @@
                       "code"
                     ]
                   },
-                  "transport": {
+                  "channel": {
                     "default": "email",
                     "type": "string",
                     "enum": [
@@ -715,21 +715,6 @@
                   },
                   "phoneVerified": {
                     "type": "boolean"
-                  },
-                  "deviceToken": {
-                    "oneOf": [
-                      {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "nullable": true,
-                          "type": "string"
-                        }
-                      }
-                    ]
                   },
                   "notifications": {
                     "type": "object",
@@ -2771,7 +2756,7 @@
                       "password"
                     ]
                   },
-                  "transport": {
+                  "channel": {
                     "default": "email",
                     "type": "string",
                     "enum": [
@@ -4264,9 +4249,6 @@
           },
           "phoneVerified": {
             "type": "boolean"
-          },
-          "deviceToken": {
-            "type": "string"
           },
           "notifications": {
             "type": "array",

@@ -14,11 +14,13 @@ class PasskeyButton extends React.Component {
     try {
       this.props.onAuthStart();
       const result = await login();
-      this.props.onAuthStop();
 
       if (result) {
         const next = await this.context.authenticate(result.token);
+        this.props.onAuthStop();
         this.props.history.push(next);
+      } else {
+        this.props.onAuthStop();
       }
     } catch (error) {
       this.props.onAuthError(error);
