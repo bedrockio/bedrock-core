@@ -8,6 +8,7 @@ import { useDisclosure } from '@mantine/hooks';
 import {
   IconBuildingStore,
   IconComponents,
+  IconMail,
   IconOutbound,
   IconPackage,
   IconPlus,
@@ -35,7 +36,7 @@ const menuItems = [
         href: '/users',
       },
       {
-        icon: IconOutbound,
+        icon: IconMail,
         label: 'Invites',
         href: '/invites',
       },
@@ -60,7 +61,11 @@ export default function DashboardLayout({ children }) {
   return (
     <AppShell
       header={{ height: 50, collapsed: !isMobile }}
-      navbar={{ width: 350, breakpoint: 'sm', collapsed: { mobile: !opened } }}
+      navbar={{
+        width: 300,
+        breakpoint: 'sm',
+        collapsed: { mobile: !opened },
+      }}
       padding="md">
       <AppShell.Header height="100%">
         <Flex
@@ -74,16 +79,17 @@ export default function DashboardLayout({ children }) {
           <Logo height={20} />
         </Flex>
       </AppShell.Header>
-      <AppShell.Navbar p="md">
+      <AppShell.Navbar>
         <AppShell.Section>
           <NavLink to="/">
-            <Logo mb="md" w="160px" />
+            <Logo m="xs" w="160px" />
           </NavLink>
           {userCanSwitchOrganizations(user) && (
             <ModalTrigger
               title="Select Organization"
               trigger={
                 <TextInput
+                  p="xs"
                   m={0}
                   placeholder={organization?.name || 'Select Organization'}
                   leftSection={<IconBuildingStore size={14} />}
@@ -94,7 +100,7 @@ export default function DashboardLayout({ children }) {
             </ModalTrigger>
           )}
         </AppShell.Section>
-        <AppShell.Section grow my="md" component={ScrollArea}>
+        <AppShell.Section grow component={ScrollArea}>
           {menuItems.map((link) => (
             <LinksGroup
               href={link.href}

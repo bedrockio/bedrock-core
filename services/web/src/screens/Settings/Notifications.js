@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import {
-  Segment,
-  Label,
-  Dimmer,
-  Loader,
-  Form,
+  Paper,
+  LoadingOverlay,
   Button,
-  Divider,
-  Message,
-} from 'semantic';
+  Space,
+  Alert,
+  Text,
+  Group,
+  Pill,
+} from '@mantine/core';
 
 import { useSession } from 'stores/session';
 
@@ -98,28 +98,33 @@ export default function Notifications() {
       <React.Fragment>
         <Meta title="Notifications" />
         <Menu />
-        <Divider hidden />
+        <Space h="md" />
         <ErrorMessage error={error} />
-        <Form>
-          {message && <Message success>{message}</Message>}
-          <Segment>
-            {loading && (
-              <Dimmer inverted active>
-                <Loader />
-              </Dimmer>
-            )}
+        <form>
+          {message && (
+            <Alert
+              color="green"
+              title="Success"
+              mb="md"
+              withCloseButton
+              onClose={() => setMessage(null)}>
+              {message}
+            </Alert>
+          )}
+          <Paper p="md" pos="relative">
+            <LoadingOverlay visible={loading} overlayBlur={2} />
             {renderSettings()}
-          </Segment>
-          <div style={{ textAlign: 'right' }}>
+          </Paper>
+          <Group position="right" mt="md">
             <Button
-              primary
-              content="Save"
+              color="blue"
               loading={loading}
               disabled={loading}
-              onClick={onSubmit}
-            />
-          </div>
-        </Form>
+              onClick={onSubmit}>
+              Save
+            </Button>
+          </Group>
+        </form>
       </React.Fragment>
     );
   }
@@ -130,7 +135,7 @@ export default function Notifications() {
     }
     const { notifications } = meta;
     if (!notifications.length) {
-      return <div>No notification settings.</div>;
+      return <Text>No notification settings.</Text>;
     }
     return (
       <React.Fragment>
@@ -140,7 +145,7 @@ export default function Notifications() {
             return c.name === name;
           });
           return (
-            <Form.Field key={name}>
+            <>
               <label>{label}</label>
               <div
                 style={{
@@ -151,15 +156,17 @@ export default function Notifications() {
                 {CHANNELS.map((channel) => {
                   const { value, label } = channel;
                   const isActive = config?.[value] || false;
+                  //console.log('isActive', config?.[value], value);
                   return (
                     <React.Fragment key={name + value}>
-                      <Label
+                      <Pill
                         circular
                         color={isActive ? 'blue' : null}
                         style={{
                           cursor: 'pointer',
                         }}
                         onClick={() => {
+                          console.log('clicked', name, value);
                           updateConfig({
                             ...config,
                             name,
@@ -172,12 +179,12 @@ export default function Notifications() {
                           }}>
                           {label}
                         </span>
-                      </Label>
+                      </Pill>
                     </React.Fragment>
                   );
                 })}
               </div>
-            </Form.Field>
+            </>
           );
         })}
       </React.Fragment>

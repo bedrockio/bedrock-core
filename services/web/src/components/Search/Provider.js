@@ -144,8 +144,6 @@ function SearchProvider({
       queryObject.page = state.page;
     }
 
-    console.log(filters);
-
     for (const key of Object.keys(filters)) {
       const value = filters[key]?.id || filters[key];
       const mapping = filterMapping[key];
@@ -153,7 +151,6 @@ function SearchProvider({
         console.warn('missing filterMapping for', key);
         continue;
       }
-      console.log(key);
       if (mapping.multiple) {
         queryObject[key] = value
           .map((value) => convertParamValue(mapping.type, value))

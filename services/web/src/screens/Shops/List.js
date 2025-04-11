@@ -78,7 +78,7 @@ export default function ShopList() {
       },
       createdAt: {
         label: 'Created At',
-        type: 'date',
+        //type: 'date',
         range: true,
       },
       keyword: {},
