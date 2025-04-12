@@ -249,8 +249,6 @@ export default function Security(props) {
                 </Button>
               )}
             </Fieldset>
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 6 }}>
             <Fieldset mt="md" legend="Auth Providers" variant="filled">
               <ErrorMessage error={error} />
 
@@ -276,6 +274,8 @@ export default function Security(props) {
                 )}
               </div>
             </Fieldset>
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, md: 6 }}>
             <Fieldset mt="md" legend="Sessions" variant="filled">
               <Sessions />
             </Fieldset>

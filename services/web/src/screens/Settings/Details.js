@@ -154,7 +154,7 @@ function Profile() {
               })}
             </Fieldset>
             <Fieldset variant="filled" legend="Appearance" mt="md">
-              <Stack mt="md">
+              <Stack mt="xs">
                 <Radio
                   checked={colorScheme === 'light'}
                   label="Light Mode"
