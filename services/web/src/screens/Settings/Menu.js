@@ -24,29 +24,14 @@ export default function SettingsMenu() {
       breadcrumbItems={items}
       tabs={[
         {
-          title: 'Profile',
+          title: 'Details',
           icon: <IconUser size={14} />,
-          href: `/settings/profile`,
-        },
-        {
-          title: 'Notifications',
-          icon: <IconMessage size={14} />,
-          href: '/settings/notifications',
-        },
-        {
-          title: 'Appearance',
-          icon: <IconPaint size={14} />,
-          href: '/settings/appearance',
+          href: `/settings/details`,
         },
         {
           title: 'Security',
           icon: <IconFingerprintScan size={14} />,
           href: '/settings/security',
-        },
-        {
-          title: 'Sessions',
-          icon: <IconList size={14} />,
-          href: '/settings/sessions',
         },
       ]}
     />

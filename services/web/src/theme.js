@@ -21,7 +21,6 @@ export const theme = createTheme({
     info: DEFAULT_THEME.colors.blue,
     success: DEFAULT_THEME.colors.green,
     warning: DEFAULT_THEME.colors.orange,
-
     ...DEFAULT_THEME.colors,
   },
 });

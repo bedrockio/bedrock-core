@@ -18,7 +18,6 @@ import { Notifications } from '@mantine/notifications';
 import { theme } from './theme';
 
 import { SessionProvider, useSession } from 'stores/session';
-import { ThemeProvider } from 'stores/theme';
 
 import SessionSwitch from 'helpers/SessionSwitch';
 import 'utils/sentry';
@@ -52,19 +51,17 @@ export default function Wrapper() {
         <Notifications />
         <ModalsProvider>
           <BrowserRouter>
-            <ThemeProvider>
-              <HelmetProvider>
-                <SessionSwitch>
-                  <Suspense fallback={<LoadingScreen />}>
-                    <Routes>
-                      <Route path="/onboard" render={OnboardApp} />
-                      <Route path="/docs" render={DocsApp} />
-                      <Route path="/" render={AppSwitch} />
-                    </Routes>
-                  </Suspense>
-                </SessionSwitch>
-              </HelmetProvider>
-            </ThemeProvider>
+            <HelmetProvider>
+              <SessionSwitch>
+                <Suspense fallback={<LoadingScreen />}>
+                  <Routes>
+                    <Route path="/onboard" render={OnboardApp} />
+                    <Route path="/docs" render={DocsApp} />
+                    <Route path="/" render={AppSwitch} />
+                  </Routes>
+                </Suspense>
+              </SessionSwitch>
+            </HelmetProvider>
           </BrowserRouter>
         </ModalsProvider>
       </MantineProvider>
