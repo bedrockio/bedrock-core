@@ -32,7 +32,6 @@ function FilterModal({ size = 'small', children }) {
   }
 
   function handleSubmit(e) {
-    console.log('handleSubmit', filters);
     e.preventDefault();
     searchContext.setFilters({
       ...searchContext.filters,
@@ -52,14 +51,14 @@ function FilterModal({ size = 'small', children }) {
     <>
       {searchContext.filterMapping ? (
         <Button
-          variant="outline"
+          variant="light"
           onClick={() => open()}
           rightSection={<IconAdjustmentsHorizontal size={18} />}>
           Filter
         </Button>
       ) : (
         <>
-          <Button onClick={() => open()} variant="outline" primary size={size}>
+          <Button onClick={() => open()} variant="light" primary size={size}>
             <IconFilter size={16} />
             Filter
           </Button>

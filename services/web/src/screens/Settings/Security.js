@@ -1,19 +1,23 @@
-import React from 'react';
+import { useState } from 'react';
 import {
-  Segment,
+  Grid,
   Divider,
-  Message,
-  Header,
-  Form,
+  Alert,
+  Title,
   Button,
-  Dimmer,
-  Loader,
-} from 'semantic';
+  Group,
+  LoadingOverlay,
+  Text,
+  Select,
+  Stack,
+  Fieldset,
+  ActionIcon,
+} from '@mantine/core';
 
-import { withSession } from 'stores/session';
+import { useSession } from 'stores/session';
 
 import Meta from 'components/Meta';
-import Layout from 'components/Layout';
+
 import ErrorMessage from 'components/ErrorMessage';
 import AppleDisableButton from 'components/Auth/Apple/DisableButton';
 import GoogleDisableButton from 'components/Auth/Google/DisableButton';
@@ -24,145 +28,123 @@ import { formatDate, fromNow } from 'utils/date';
 import { request } from 'utils/api';
 
 import Menu from './Menu';
+import Sessions from './components/Sessions';
+import Authenticator from './components/Authenticator';
+import { IconTrash } from '@tabler/icons-react';
+import { notifications } from '@mantine/notifications';
+import { modals } from '@mantine/modals';
 
-class Security extends React.Component {
-  state = {
+export default function Security(props) {
+  const { user, updateUser } = useSession();
+
+  const [state, setState] = useState({
     error: null,
     loading: false,
     message: null,
-  };
+  });
+
+  const setLoading = (loading) => setState((prev) => ({ ...prev, loading }));
+  const setMessage = (message) => setState((prev) => ({ ...prev, message }));
+  const resetState = () =>
+    setState({ error: null, message: null, loading: true });
 
   // Federated
-
-  onGoogleEnabled = () => {
-    this.setState({
-      message: 'Enabled Google Login',
-    });
+  const onGoogleEnabled = () => {
+    setMessage('Enabled Google Login');
   };
 
-  onGoogleDisabled = () => {
-    this.setState({
-      message: 'Disabled Google Login',
-    });
+  const onGoogleDisabled = () => {
+    setMessage('Disabled Google Login');
   };
 
-  onAppleEnabled = () => {
-    this.setState({
-      message: 'Enabled Apple Login',
-    });
+  const onAppleEnabled = () => {
+    setMessage('Enabled Apple Login');
   };
 
-  onAppleDisabled = () => {
-    this.setState({
-      message: 'Disabled Apple Login',
-    });
+  const onAppleDisabled = () => {
+    setMessage('Disabled Apple Login');
   };
 
   // Passkey
-
-  onCreatePasskeyClick = async () => {
+  const onCreatePasskeyClick = async () => {
     try {
-      this.setState({
-        error: null,
-        message: null,
-        loading: true,
-      });
+      resetState();
       const result = await createPasskey();
       if (result) {
         const { data } = result;
-        this.context.updateUser(data);
-        this.setState({
-          message: 'Passkey added.',
-        });
+        updateUser(data);
+        setMessage('Passkey added.');
       }
-      this.setState({
-        loading: false,
-      });
+      setLoading(false);
     } catch (error) {
-      this.setState({
+      setState({
         error,
         loading: false,
+        message: null,
       });
     }
   };
 
-  deletePasskey = async (passkey) => {
+  const deletePasskey = async (passkey) => {
     try {
-      this.setState({
-        error: null,
-        message: null,
-        loading: true,
-      });
+      resetState();
       const { data } = await removePasskey(passkey);
-      this.context.updateUser(data);
-      this.setState({
+      updateUser(data);
+      setState({
         loading: false,
         message: 'Passkey disabled',
+        error: null,
       });
     } catch (error) {
-      this.setState({
+      setState({
         error,
         loading: false,
+        message: null,
       });
     }
   };
 
   // MFA
 
-  hasTotp() {
-    const { authenticators } = this.context.user;
-    return authenticators.some((authenticator) => {
-      return authenticator.type === 'totp';
-    });
-  }
+  const hasAuthenticator = (type) => {
+    return user.authenticators.find(
+      (authenticator) => authenticator.type === type,
+    );
+  };
 
-  hasAuthenticator(type) {
-    const { user } = this.context;
-    return user.authenticators.find((authenticator) => {
-      return authenticator.type === type;
-    });
-  }
-
-  getAuthenticators(type) {
-    const { user } = this.context;
-    return user.authenticators.filter((authenticator) => {
-      return authenticator.type === type;
-    });
-  }
-
-  removeTotp = async () => {
+  const removeTotp = async () => {
     try {
-      this.setState({
-        error: null,
-        message: null,
-        loading: true,
-      });
+      resetState();
       const { data } = await request({
         method: 'POST',
         path: '/1/auth/totp/disable',
       });
-      this.context.updateUser(data);
-      this.setState({
-        loading: false,
-      });
+      updateUser(data);
+      setLoading(false);
     } catch (error) {
-      this.setState({
+      setState({
         error,
         loading: false,
+        message: null,
       });
     }
   };
 
-  onMfaMethodChange = async (evt, { value }) => {
-    if (value === 'totp' && !this.hasTotp()) {
-      this.props.history.push('/settings/authenticator');
+  const getMfaMessage = (method) => {
+    return method === 'none'
+      ? 'Two-factor authentication disabled.'
+      : 'Two-factor authentication enabled.';
+  };
+
+  const onMfaMethodChange = async (value) => {
+    if (value === 'totp' && !hasTotp) {
+      modals.open({
+        title: 'Enable Authenticator',
+        children: <Authenticator onClose={() => modals.closeAll()} />,
+      });
     } else {
       try {
-        this.setState({
-          error: null,
-          message: null,
-          loading: true,
-        });
+        resetState();
         const { data } = await request({
           method: 'PATCH',
           path: '/1/auth/mfa-method',
@@ -170,202 +152,136 @@ class Security extends React.Component {
             method: value,
           },
         });
-        this.context.updateUser(data);
-        this.setState({
+
+        updateUser({
+          mfaMethod: data.mfaMethod,
+          authenticators: data.authenticators,
+        });
+        setState({
           loading: false,
-          message: this.getMfaMessage(value),
+          message: getMfaMessage(value),
+          error: null,
         });
       } catch (error) {
-        this.setState({
+        setState({
           error,
           loading: false,
+          message: null,
         });
       }
     }
   };
 
-  getMfaMessage(method) {
-    if (method === 'none') {
-      return 'Two-factor authentication disabled.';
-    } else {
-      return 'Two-factor authentication enabled.';
-    }
-  }
+  const { loading, error } = state;
+  const { mfaMethod } = user;
+  const passkeys = user.authenticators.filter(
+    (authenticator) => authenticator.type === 'passkey',
+  );
+  const hasTotp = user.authenticators.some(
+    (authenticator) => authenticator.type === 'totp',
+  );
 
-  render() {
-    const { loading, error, message } = this.state;
+  return (
+    <>
+      <Meta title="Security" />
+      <Menu />
+      <div style={{ position: 'relative' }}>
+        <LoadingOverlay visible={loading} overlayBlur={2} />
+        <Grid>
+          <Grid.Col span={{ base: 12, md: 6 }}>
+            <Fieldset mt="md" legend="Passkey" variant="filled">
+              <Stack spacing="xs" mb="xs">
+                {passkeys.map((passkey) => {
+                  const { id, name, createdAt, lastUsedAt } = passkey;
+                  return (
+                    <Group justify="space-between" align="center" key={id}>
+                      <Stack gap="0">
+                        <Text fw="bold">{name}</Text>
+                        <Text size="sm">
+                          Added on {formatDate(createdAt)} | Last used{' '}
+                          {fromNow(lastUsedAt)}
+                        </Text>
+                      </Stack>
+                      <ActionIcon
+                        title="Delete"
+                        variant="transparent"
+                        loading={loading}
+                        disabled={loading}
+                        onClick={() => deletePasskey(passkey)}>
+                        <IconTrash color="red" size={16} />
+                      </ActionIcon>
+                    </Group>
+                  );
+                })}
+              </Stack>
 
-    return (
-      <React.Fragment>
-        <Meta title="Security" />
-        <Menu />
-        {loading && (
-          <Dimmer inverted active>
-            <Loader />
-          </Dimmer>
-        )}
-        <Divider hidden />
-        {message && <Message info content={message} />}
-        <Segment>
-          <ErrorMessage error={error} />
-          <Header>Google</Header>
-          {this.renderGoogle()}
-          <Divider hidden />
-          <Header>Apple</Header>
-          {this.renderApple()}
-          <Divider hidden />
-          <Header>
-            <span>Passkeys</span>
-            <Button
-              basic
-              icon="plus"
-              circular
-              style={{
-                fontSize: '22px',
-                display: 'inline-flex',
-                alignItems: 'center',
-                verticalAlign: 'baseline',
-                padding: '0',
-              }}
-              onClick={this.onCreatePasskeyClick}
-            />
-          </Header>
-          {this.renderPasskeys()}
-          <Divider hidden />
-          <Header>Two-factor authentication</Header>
-          {this.renderMfa()}
-        </Segment>
-      </React.Fragment>
-    );
-  }
+              <Button variant="outline" onClick={onCreatePasskeyClick}>
+                Add Passkey
+              </Button>
+            </Fieldset>
+            <Fieldset
+              mt="md"
+              legend="Two-factor authentication"
+              variant="filled">
+              <Text size="sm">Select how you want to verify your identity</Text>
+              <Select
+                mt="xs"
+                value={mfaMethod}
+                onChange={onMfaMethodChange}
+                data={[
+                  { label: 'None', value: 'none' },
+                  { label: 'SMS', value: 'sms' },
+                  { label: 'Email', value: 'email' },
+                  { label: 'Authenticator', value: 'totp' },
+                ]}
+              />
 
-  renderGoogle() {
-    return (
-      <div>
-        {this.hasAuthenticator('google') ? (
-          <GoogleDisableButton onDisabled={this.onGoogleDisabled} />
-        ) : (
-          <div>Sign in with Google to enable.</div>
-        )}
-      </div>
-    );
-  }
-
-  renderApple() {
-    return (
-      <div>
-        {this.hasAuthenticator('apple') ? (
-          <AppleDisableButton onDisabled={this.onAppleDisabled} />
-        ) : (
-          <div>Sign in with Apple to enable.</div>
-        )}
-      </div>
-    );
-  }
-
-  renderPasskeys() {
-    const { loading } = this.state;
-    const passkeys = this.getAuthenticators('passkey');
-
-    if (passkeys.length) {
-      return passkeys.map((passkey) => {
-        const { id, name, createdAt, lastUsedAt } = passkey;
-        return (
-          <React.Fragment key={id}>
-            <Layout horizontal center spread>
-              <Layout.Group>
-                <Header size="small">{name}</Header>
-              </Layout.Group>
-              <Layout.Group>
+              {/* MFA Authenticator Section */}
+              {hasTotp && mfaMethod === 'totp' && (
                 <Button
-                  negative
-                  size="mini"
-                  icon="trash"
-                  onClick={() => {
-                    this.deletePasskey(passkey);
-                  }}
-                />
-              </Layout.Group>
-            </Layout>
-            <div>
-              <span>Added on {formatDate(createdAt)}</span>
-              <span> | </span>
-              <span>Last used {fromNow(lastUsedAt)}</span>
-            </div>
-          </React.Fragment>
-        );
-        // Added on Jan 27, 2025 | Last used 2 days ago
-      });
-    } else {
-      return (
-        <Button
-          basic
-          size="small"
-          content="Enable"
-          loading={loading}
-          onClick={this.onCreatePasskeyClick}
-        />
-      );
-    }
-  }
+                  mt="xs"
+                  variant="outline"
+                  onClick={removeTotp}
+                  loading={loading}
+                  size="sm"
+                  color="red">
+                  Reset
+                </Button>
+              )}
+            </Fieldset>
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, md: 6 }}>
+            <Fieldset mt="md" legend="Auth Providers" variant="filled">
+              <ErrorMessage error={error} />
 
-  renderMfa() {
-    const { mfaMethod } = this.context.user;
-    return (
-      <React.Fragment>
-        <Layout horizontal>
-          <Form>
-            <Form.Dropdown
-              selection
-              size="small"
-              value={mfaMethod}
-              onChange={this.onMfaMethodChange}
-              options={[
-                {
-                  text: 'None',
-                  value: 'none',
-                },
-                {
-                  text: 'SMS',
-                  value: 'sms',
-                },
-                {
-                  text: 'Email',
-                  value: 'email',
-                },
-                {
-                  text: 'Authenticator',
-                  value: 'totp',
-                },
-              ]}
-            />
-          </Form>
-        </Layout>
-        {this.renderMfaAuthenticator()}
-      </React.Fragment>
-    );
-  }
+              {/* Google Section */}
+              <Title order={4}>Google</Title>
+              <div>
+                {hasAuthenticator('google') ? (
+                  <GoogleDisableButton onDisabled={onGoogleDisabled} />
+                ) : (
+                  <Text>Sign in with Google to enable.</Text>
+                )}
+              </div>
 
-  renderMfaAuthenticator() {
-    const { loading } = this.state;
-    if (!this.hasTotp()) {
-      return;
-    }
-    return (
-      <React.Fragment>
-        <Divider hidden></Divider>
-        <Layout horizontal center spread>
-          <Button
-            onClick={this.removeTotp}
-            loading={loading}
-            size="small"
-            color="red">
-            Remove
-          </Button>
-        </Layout>
-      </React.Fragment>
-    );
-  }
+              <Divider my="md" />
+
+              {/* Apple Section */}
+              <Title order={4}>Apple</Title>
+              <div>
+                {hasAuthenticator('apple') ? (
+                  <AppleDisableButton onDisabled={onAppleDisabled} />
+                ) : (
+                  <Text>Sign in with Apple to enable.</Text>
+                )}
+              </div>
+            </Fieldset>
+            <Fieldset mt="md" legend="Sessions" variant="filled">
+              <Sessions />
+            </Fieldset>
+          </Grid.Col>
+        </Grid>
+      </div>
+    </>
+  );
 }
-
-export default withSession(Security);

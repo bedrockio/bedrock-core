@@ -128,10 +128,9 @@ function Profile() {
             <Fieldset variant="filled" legend="Notifications">
               {form.getValues().notifications.map((notification, index) => {
                 const { name, label } = notification;
-
                 return (
                   <Stack key={name}>
-                    <Text fw="bold">{label}</Text>
+                    <Text size="sm">{label}</Text>
                     <Group>
                       {CHANNELS.map((channel) => {
                         return (
