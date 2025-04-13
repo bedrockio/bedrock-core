@@ -1,4 +1,4 @@
-const { request, createUser } = require('../../../utils/testing');
+const { request, createUser, createAdmin } = require('../../../utils/testing');
 const { User } = require('../../../models');
 
 describe('/1/auth', () => {
@@ -77,7 +77,7 @@ describe('/1/auth', () => {
         {
           method: 'sms',
         },
-        { user }
+        { user },
       );
       expect(response.status).toBe(200);
 
@@ -93,7 +93,7 @@ describe('/1/auth', () => {
         {
           method: 'email',
         },
-        { user }
+        { user },
       );
       expect(response.status).toBe(200);
 
@@ -111,7 +111,7 @@ describe('/1/auth', () => {
         {
           method: 'none',
         },
-        { user }
+        { user },
       );
       expect(response.status).toBe(200);
 
@@ -127,9 +127,22 @@ describe('/1/auth', () => {
         {
           method: 'sms',
         },
-        { user }
+        { user },
       );
       expect(response.status).toBe(400);
+    });
+
+    it('should expand user roles', async () => {
+      const user = await createAdmin();
+      const response = await request(
+        'PATCH',
+        '/1/auth/mfa-method',
+        {
+          method: 'email',
+        },
+        { user },
+      );
+      expect(response.body.data.roles[0].roleDefinition.name).toBe('Admin');
     });
   });
 });
