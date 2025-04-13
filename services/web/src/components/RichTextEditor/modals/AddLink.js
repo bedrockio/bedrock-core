@@ -3,7 +3,6 @@ import { Modal, Form, Button } from 'semantic';
 
 import modal from 'helpers/modal';
 
-import AutoFocus from 'components/AutoFocus';
 import UrlField from 'components/form-fields/UrlField';
 import ErrorMessage from 'components/ErrorMessage';
 
@@ -41,12 +40,10 @@ class AddLink extends React.Component {
       <React.Fragment>
         <Modal.Header>Add Link</Modal.Header>
         <Modal.Content>
-          <AutoFocus>
-            <Form id="add-link" error={!!error} onSubmit={this.onSubmit}>
-              <ErrorMessage error={error} />
-              <UrlField label="URL" value={url} onChange={this.onLinkChange} />
-            </Form>
-          </AutoFocus>
+          <Form id="add-link" error={!!error} onSubmit={this.onSubmit}>
+            <ErrorMessage error={error} />
+            <UrlField label="URL" value={url} onChange={this.onLinkChange} />
+          </Form>
         </Modal.Content>
         <Modal.Actions>
           <Button primary form="add-link" content="Submit" />

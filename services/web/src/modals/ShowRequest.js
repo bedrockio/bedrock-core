@@ -3,7 +3,7 @@ import { Modal, Table, Menu, Divider } from 'semantic';
 
 import modal from 'helpers/modal';
 
-import Code from 'components/Code';
+import { Code } from '@mantine/core';
 import RequestBlock from 'components/RequestBlock';
 
 import { API_URL } from 'utils/env';

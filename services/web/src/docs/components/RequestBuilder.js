@@ -14,7 +14,7 @@ import {
 
 import { useClass } from 'helpers/bem';
 
-import Code from 'components/Code';
+import { Code } from '@mantine/core';
 import RequestBlock from 'components/RequestBlock';
 import { useDocs } from 'docs/utils/context';
 import {
@@ -58,7 +58,7 @@ export default function RequestBuilder(props) {
 
   const { className, getElementClass } = useClass(
     'request-builder',
-    active ? 'active' : null
+    active ? 'active' : null,
   );
 
   const ref = useRef();

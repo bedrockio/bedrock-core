@@ -8,7 +8,7 @@ import Layout from 'components/Layout';
 import Breadcrumbs from 'components/Breadcrumbs';
 import EditApplication from 'modals/EditApplication';
 
-export default () => {
+export default function ApplicationMenu() {
   const { application, reload } = usePage();
   return (
     <React.Fragment>
@@ -32,13 +32,7 @@ export default () => {
           as={NavLink}
           exact
         />
-        <Menu.Item
-          name="Logs"
-          to={`/applications/${application.id}/logs`}
-          as={NavLink}
-          exact
-        />
       </Menu>
     </React.Fragment>
   );
-};
+}

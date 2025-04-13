@@ -23,4 +23,16 @@ export const theme = createTheme({
     success: DEFAULT_THEME.colors.green,
     warning: DEFAULT_THEME.colors.orange,
   },
+  components: {
+    AppShell: {
+      styles: {
+        navbar: {
+          backgroundColor: '#f4f0eb',
+        },
+        header: {
+          backgroundColor: '#f4f0eb',
+        },
+      },
+    },
+  },
 });

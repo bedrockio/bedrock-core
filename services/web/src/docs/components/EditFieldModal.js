@@ -5,7 +5,6 @@ import { Button, Form, Modal, Icon } from 'semantic';
 import modal from 'helpers/modal';
 
 import HelpTip from 'components/HelpTip';
-import AutoFocus from 'components/AutoFocus';
 import ErrorMessage from 'components/ErrorMessage';
 
 import { DocsContext } from '../utils/context';
@@ -99,25 +98,23 @@ class EditFieldModal extends React.Component {
           )}
         </Modal.Header>
         <Modal.Content>
-          <AutoFocus>
-            <Form id="edit-docs-field" error={!!error} onSubmit={this.onSubmit}>
-              <ErrorMessage error={error} />
-              {markdown ? (
-                <Form.TextArea
-                  value={value || ''}
-                  onChange={this.setField}
-                  onKeyDown={this.onKeyDown}
-                />
-              ) : (
-                <Form.Input
-                  type="text"
-                  value={value || ''}
-                  onChange={this.setField}
-                />
-              )}
-              {this.renderUpdateModel()}
-            </Form>
-          </AutoFocus>
+          <Form id="edit-docs-field" error={!!error} onSubmit={this.onSubmit}>
+            <ErrorMessage error={error} />
+            {markdown ? (
+              <Form.TextArea
+                value={value || ''}
+                onChange={this.setField}
+                onKeyDown={this.onKeyDown}
+              />
+            ) : (
+              <Form.Input
+                type="text"
+                value={value || ''}
+                onChange={this.setField}
+              />
+            )}
+            {this.renderUpdateModel()}
+          </Form>
         </Modal.Content>
         <Modal.Actions>
           <Button

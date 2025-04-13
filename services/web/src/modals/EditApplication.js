@@ -3,8 +3,6 @@ import { Modal, Form, Button, Message } from 'semantic';
 
 import modal from 'helpers/modal';
 
-import AutoFocus from 'components/AutoFocus';
-
 import { request } from 'utils/api';
 
 class EditApplication extends React.Component {
@@ -76,29 +74,27 @@ class EditApplication extends React.Component {
           {this.isUpdate() ? `Edit "${application.name}"` : 'New Application'}
         </Modal.Header>
         <Modal.Content scrolling>
-          <AutoFocus>
-            <Form
-              noValidate
-              id="edit-application"
-              error={!!error}
-              onSubmit={this.onSubmit}>
-              {error && <Message error content={error.message} />}
-              <Form.Input
-                required
-                type="text"
-                name="name"
-                label="Name"
-                value={application.name || ''}
-                onChange={this.setField}
-              />
-              <Form.TextArea
-                name="description"
-                label="Description"
-                value={application.description || ''}
-                onChange={this.setField}
-              />
-            </Form>
-          </AutoFocus>
+          <Form
+            noValidate
+            id="edit-application"
+            error={!!error}
+            onSubmit={this.onSubmit}>
+            {error && <Message error content={error.message} />}
+            <Form.Input
+              required
+              type="text"
+              name="name"
+              label="Name"
+              value={application.name || ''}
+              onChange={this.setField}
+            />
+            <Form.TextArea
+              name="description"
+              label="Description"
+              value={application.description || ''}
+              onChange={this.setField}
+            />
+          </Form>
         </Modal.Content>
         <Modal.Actions>
           <Button

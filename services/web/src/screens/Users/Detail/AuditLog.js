@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from '@bedrockio/router';
-import { Table, Segment, Divider } from 'semantic';
+import { Table, Paper, Space, Group, Code, Tooltip } from '@mantine/core';
+import { IconSearch } from '@tabler/icons-react';
 
 import HelpTip from 'components/HelpTip';
 import Breadcrumbs from 'components/Breadcrumbs';
@@ -13,8 +14,8 @@ import { request } from 'utils/api';
 import { formatDateTime } from 'utils/date';
 import Meta from 'components/Meta';
 
-export default class AuditLog extends React.Component {
-  onDataNeeded = async (params) => {
+export default function AuditLog() {
+  const onDataNeeded = async (params) => {
     const response = await request({
       method: 'POST',
       path: '/1/audit-entries/search',
@@ -33,19 +34,17 @@ export default class AuditLog extends React.Component {
       store[item.ownerType] = list;
     });
 
-    // its split here because the owner could be a user or another collection
     const [users] = await Promise.all(
       Object.keys(store)
         .map((key) => {
           if (key === 'User') {
             const ids = [...new Set(store[key])];
             if (!ids.length) return null;
-            return this.fetchUsers({
+            return fetchUsers({
               ids,
               include: ['firstName', 'lastName', 'email'],
             });
           }
-          // eslint-disable-next-line no-console
           console.error('[AuditLog] Unknown ownerType', key);
           return null;
         })
@@ -63,7 +62,7 @@ export default class AuditLog extends React.Component {
     return response;
   };
 
-  fetchUsers = async (props) => {
+  const fetchUsers = async (props) => {
     const { data } = await request({
       method: 'POST',
       path: '/1/users/search',
@@ -72,7 +71,7 @@ export default class AuditLog extends React.Component {
     return data;
   };
 
-  fetchSearchOptions = async (props) => {
+  const fetchSearchOptions = async (props) => {
     const { data } = await request({
       method: 'POST',
       path: '/1/audit-entries/search-options',
@@ -81,19 +80,19 @@ export default class AuditLog extends React.Component {
     return data;
   };
 
-  getFilterMapping() {
+  const getFilterMapping = () => {
     return {
       actor: {
         label: 'Actor',
         getDisplayValue: async (id) => {
-          const data = await this.fetchUsers({ ids: [id] });
+          const data = await fetchUsers({ ids: [id] });
           return data[0].name;
         },
       },
       ownerId: {
         label: 'Owner',
         getDisplayValue: async (id) => {
-          const data = await this.fetchUsers({ ids: [id] });
+          const data = await fetchUsers({ ids: [id] });
           return data[0].name;
         },
       },
@@ -116,118 +115,106 @@ export default class AuditLog extends React.Component {
       },
       keyword: {},
     };
-  }
+  };
 
-  render() {
-    return (
-      <>
-        <Meta title="Audit Logs" />
-        <Search.Provider
-          //filterMapping={this.getFilterMapping()}
-          onDataNeeded={this.onDataNeeded}>
-          {({ items, getSorted, setSort }) => {
-            return (
-              <React.Fragment>
-                <Breadcrumbs active="Organizations" />
+  return (
+    <>
+      <Meta title="Audit Logs" />
+      <Search.Provider
+        //filterMapping={getFilterMapping()}
+        onDataNeeded={onDataNeeded}>
+        {({ items, getSorted, setSort }) => {
+          return (
+            <React.Fragment>
+              <Breadcrumbs active="Organizations" />
 
-                <Layout horizontal center spread>
-                  <h1>Audit Trail</h1>
-                  <Layout.Group></Layout.Group>
-                </Layout>
-                <Segment>
-                  <Layout horizontal center spread stackable>
-                    <SearchFilters.Modal></SearchFilters.Modal>
-                    <Layout horizontal stackable center right>
-                      <Search.Total />
-                      <SearchFilters.Keyword placeholder="Enter ObjectId" />
-                    </Layout>
-                  </Layout>
-                </Segment>
+              <Layout horizontal center spread>
+                <h1>Audit Trail</h1>
+                <Group></Group>
+              </Layout>
+              <Paper p="md" shadow="xs" withBorder>
+                <Group position="apart">
+                  <SearchFilters.Modal></SearchFilters.Modal>
+                  <Group>
+                    <Search.Total />
+                    <SearchFilters.Keyword placeholder="Enter ObjectId" />
+                  </Group>
+                </Group>
+              </Paper>
 
-                <Search.Status />
+              <Space h="md" />
+              <Search.Status />
 
-                {items.length !== 0 && (
-                  <Table celled sortable>
-                    <Table.Header>
-                      <Table.Row>
-                        <Table.HeaderCell width={2}>Actor</Table.HeaderCell>
+              {items.length !== 0 && (
+                <Table striped highlightOnHover>
+                  <Table.Thead>
+                    <Table.Tr>
+                      <Table.Th>Actor</Table.Th>
+                      <Table.Th>Activity</Table.Th>
+                      <Table.Th>Object Owner</Table.Th>
+                      <Table.Th>Request</Table.Th>
+                      <Table.Th onClick={() => setSort('createdAt')}>
+                        Date
+                        <Tooltip label="This is the date and time the organization was created">
+                          <span> ℹ️</span>
+                        </Tooltip>
+                      </Table.Th>
+                      <Table.Th>Actions</Table.Th>
+                    </Table.Tr>
+                  </Table.Thead>
 
-                        <Table.HeaderCell width={4}>Activity</Table.HeaderCell>
-                        <Table.HeaderCell width={3}>
-                          Object Owner
-                        </Table.HeaderCell>
-                        <Table.HeaderCell width={3}>Request</Table.HeaderCell>
-                        <Table.HeaderCell
-                          width={3}
-                          onClick={() => setSort('createdAt')}
-                          sorted={getSorted('createdAt')}>
-                          Date
-                          <HelpTip
-                            title="Created"
-                            text="This is the date and time the organization was created."
-                          />
-                        </Table.HeaderCell>
-                        <Table.HeaderCell textAlign="center">
-                          Actions
-                        </Table.HeaderCell>
-                      </Table.Row>
-                    </Table.Header>
-                    <Table.Body>
-                      {items.map((item) => {
-                        return (
-                          <Table.Row key={item.id}>
-                            <Table.Cell>
-                              {item.actor && (
-                                <Link
-                                  title={item.actor.email}
-                                  to={`/users/${item.actor.id}`}>
-                                  {item.actor.firstName} {item.actor.lastName}
-                                </Link>
-                              )}
-                            </Table.Cell>
-
-                            <Table.Cell>{item.activity}</Table.Cell>
-                            <Table.Cell>
-                              {item.owner && (
-                                <>
-                                  <Link
-                                    title={item.owner.email}
-                                    to={`/users/${item.owner.id}`}>
-                                    {item.owner.name}
-                                  </Link>
-                                </>
-                              )}
-                            </Table.Cell>
-                            <Table.Cell>
-                              <code>
-                                {item.requestMethod} {item.requestUrl}
-                              </code>
-                            </Table.Cell>
-                            <Table.Cell>
-                              {formatDateTime(item.createdAt)}
-                            </Table.Cell>
-                            <Table.Cell textAlign="center">
-                              {/*
-                              <ShowAuditEntry
-                                auditEntry={item}
-                                trigger={
-                                  <Button basic icon="magnifying-glass" />
-                                }
-                              />*/}
-                            </Table.Cell>
-                          </Table.Row>
-                        );
-                      })}
-                    </Table.Body>
-                  </Table>
-                )}
-                <Divider hidden />
-                <Search.Pagination />
-              </React.Fragment>
-            );
-          }}
-        </Search.Provider>
-      </>
-    );
-  }
+                  <Table.Tbody>
+                    {items.map((item) => (
+                      <Table.Tr key={item.id}>
+                        <Table.Td>
+                          {item.actor && (
+                            <Link
+                              title={item.actor.email}
+                              to={`/users/${item.actor.id}`}>
+                              {item.actor.firstName} {item.actor.lastName}
+                            </Link>
+                          )}
+                        </Table.Td>
+                        <Table.Td>{item.activity}</Table.Td>
+                        <Table.Td>
+                          {item.owner && (
+                            <Link
+                              title={item.owner.email}
+                              to={`/users/${item.owner.id}`}>
+                              {item.owner.name}
+                            </Link>
+                          )}
+                        </Table.Td>
+                        <Table.Td>
+                          <Code>
+                            {item.requestMethod} {item.requestUrl}
+                          </Code>
+                        </Table.Td>
+                        <Table.Td>{formatDateTime(item.createdAt)}</Table.Td>
+                        <Table.Td style={{ textAlign: 'center' }}>
+                          {/*
+                            <Tooltip label="View details">
+                              <ActionIcon 
+                                variant="subtle"
+                                onClick={() => {/* show modal */
+                          /*}}
+                              >
+                                <IconSearch size={16} />
+                              </ActionIcon>
+                            </Tooltip>
+                          */}
+                        </Table.Td>
+                      </Table.Tr>
+                    ))}
+                  </Table.Tbody>
+                </Table>
+              )}
+              <Space h="md" />
+              <Search.Pagination />
+            </React.Fragment>
+          );
+        }}
+      </Search.Provider>
+    </>
+  );
 }

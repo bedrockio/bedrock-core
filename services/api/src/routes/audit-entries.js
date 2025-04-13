@@ -33,7 +33,7 @@ router
   .post(
     '/search-options',
     validateBody({
-      field: yd.string().allow('routeNormalizedPath', 'objectType', 'activity', 'category').required(),
+      field: yd.string().allow('routeNormalizedPath', 'objectType', 'activity').required(),
     }),
     async (ctx) => {
       const values = await AuditEntry.distinct(ctx.request.body.field);

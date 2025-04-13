@@ -6,10 +6,11 @@ import { userCanSwitchOrganizations } from 'utils/permissions';
 import { useDisclosure } from '@mantine/hooks';
 
 import {
+  IconApps,
+  IconBook,
   IconBuildingStore,
   IconComponents,
   IconMail,
-  IconOutbound,
   IconPackage,
   IconPlus,
   IconSettings,
@@ -50,6 +51,16 @@ const accountItems = [
     icon: IconSettings,
     href: '/settings',
     label: 'Settings',
+  },
+  {
+    icon: IconApps,
+    href: '/applications',
+    label: 'Applications',
+  },
+  {
+    icon: IconBook,
+    href: '/docs',
+    label: 'API Docs',
   },
 ];
 

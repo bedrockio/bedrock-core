@@ -3,7 +3,7 @@ import { Icon } from 'semantic';
 
 import { useClass } from 'helpers/bem';
 
-import Code from 'components/Code';
+import { Code } from '@mantine/core';
 import { JumpLink } from 'components/Link';
 import { expandRef } from 'docs/utils';
 import Confirm from 'components/Confirm';

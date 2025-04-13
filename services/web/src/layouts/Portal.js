@@ -21,17 +21,6 @@ export default function PortalLayout(props) {
             <NavLink className="logo" to="/">
               <Logo height="40" />
             </NavLink>
-            <Menu className={getElementClass('menu-bottom')} secondary>
-              <Menu.Item as={NavLink} to="/docs/getting-started">
-                <Icon name="terminal" /> API Docs
-              </Menu.Item>
-              <Menu.Item as={NavLink} to="/docs/ui">
-                <Icon name="cube" /> UI Components
-              </Menu.Item>
-              <Menu.Item as={NavLink} to="/docs/icons">
-                <Icon name="icons" /> Icons
-              </Menu.Item>
-            </Menu>
           </Layout.Group>
           <Layout.Group>
             <Button primary compact as={NavLink} to="/">

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Icon } from 'semantic';
 
-import Code from 'components/Code';
+import { Code } from '@mantine/core';
 
 import RequestBuilder from './RequestBuilder';
 

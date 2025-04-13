@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Dropdown, Header } from 'semantic';
 
 import Layout from 'components/Layout';
-import Code from 'components/Code';
+import { Code } from '@mantine/core';
 
 import { API_URL } from 'utils/env';
 

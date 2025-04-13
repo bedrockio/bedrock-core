@@ -1,5 +1,14 @@
-import React from 'react';
-import { Table, Button, Message, Divider, Loader } from 'semantic';
+import {
+  Table,
+  Button,
+  Alert,
+  Loader,
+  Group,
+  Space,
+  Code,
+  ActionIcon,
+} from '@mantine/core';
+
 import { Link } from '@bedrockio/router';
 
 import Breadcrumbs from 'components/Breadcrumbs';
@@ -11,9 +20,12 @@ import EditApplication from 'modals/EditApplication';
 
 import { request } from 'utils/api';
 import Meta from 'components/Meta';
+import { Icon, Tab } from 'semantic-ui-react';
+import PageHeader from 'components/PageHeader';
+import { IconPlus } from '@tabler/icons-react';
 
-export default class Applications extends React.Component {
-  onDataNeeded = async (body) => {
+export default function Applications() {
+  const onDataNeeded = async (body) => {
     return await request({
       method: 'POST',
       path: '/1/applications/mine/search',
@@ -21,73 +33,90 @@ export default class Applications extends React.Component {
     });
   };
 
-  render() {
-    return (
-      <>
-        <Meta title="Applications" />
-        <Search.Provider onDataNeeded={this.onDataNeeded}>
-          {({ items, getSorted, setSort, reload, loading, error }) => {
-            return (
-              <React.Fragment>
-                <Breadcrumbs
-                  link={<Link to="/applications">Applications</Link>}
-                  active="Applications"
-                />
-                <Layout horizontal center spread>
-                  <h1>My Applications</h1>
-                  <Layout.Group>
-                    <EditApplication
-                      trigger={
-                        <Button primary content="New Appliction" icon="plus" />
-                      }
-                      onSave={reload}
-                    />
-                  </Layout.Group>
-                </Layout>
+  return (
+    <>
+      <Meta title="Applications" />
+      <Search.Provider onDataNeeded={onDataNeeded}>
+        {({ items, getSorted, setSort, reload, loading, error }) => {
+          return (
+            <>
+              <PageHeader
+                title="Applications"
+                breadcrumbItems={[
+                  {
+                    href: '/',
+                    title: 'Home',
+                  },
+                  {
+                    title: 'Applications',
+                  },
+                ]}
+                description="Manage your applications"
+                icon={<i className="fa fa-cubes" />}
+                rightSection={
+                  <Button
+                    component={Link}
+                    to="/applications/new"
+                    variant="light"
+                    rightSection={<IconPlus size={14} />}>
+                    New Application
+                  </Button>
+                }
+              />
 
-                {loading ? (
-                  <Loader active />
-                ) : error ? (
-                  <Message error content={error.message} />
-                ) : items.length === 0 ? (
-                  <Message>No applications created yet</Message>
-                ) : (
-                  <Table celled sortable>
-                    <Table.Header>
-                      <Table.Row>
-                        <Table.HeaderCell
-                          sorted={getSorted('name')}
-                          onClick={() => setSort('name')}>
-                          Name
-                        </Table.HeaderCell>
-                        <Table.HeaderCell width={4}>
-                          Description
-                        </Table.HeaderCell>
-                        <Table.HeaderCell>APIKey</Table.HeaderCell>
-                        <Table.HeaderCell>Request Count</Table.HeaderCell>
-                        <Table.HeaderCell textAlign="center">
-                          Actions
-                        </Table.HeaderCell>
-                      </Table.Row>
-                    </Table.Header>
-                    <Table.Body>
-                      {items.map((item) => {
-                        return (
-                          <Table.Row key={item.id}>
-                            <Table.Cell>
-                              <Link to={`/applications/${item.id}`}>
-                                {item.name}
-                              </Link>
-                            </Table.Cell>
-                            <Table.Cell>{item.description}</Table.Cell>
-                            <Table.Cell>
-                              <code>{item.apiKey}</code>
-                            </Table.Cell>
-                            <Table.Cell>{item.requestCount}</Table.Cell>
-                            <Table.Cell textAlign="center">
+              {loading ? (
+                <Loader size="lg" />
+              ) : error ? (
+                <Alert color="red" title="Error">
+                  {error.message}
+                </Alert>
+              ) : items.length === 0 ? (
+                <Alert color="blue">No applications created yet</Alert>
+              ) : (
+                <Table striped highlightOnHover>
+                  <Table.Thead>
+                    <Table.Tr>
+                      <Table.Th
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => setSort('name')}>
+                        Name{' '}
+                        {getSorted('name') === 'asc'
+                          ? '↑'
+                          : getSorted('name') === 'desc'
+                            ? '↓'
+                            : ''}
+                      </Table.Th>
+                      <Table.Th style={{ width: '25%' }}>Description</Table.Th>
+                      <Table.Th>APIKey</Table.Th>
+                      <Table.Th>Request Count</Table.Th>
+                      <Table.Th style={{ textAlign: 'center' }}>
+                        Actions
+                      </Table.Th>
+                    </Table.Tr>
+                  </Table.Thead>
+                  <Table.Tbody>
+                    {items.map((item) => {
+                      return (
+                        <Table.Tr key={item.id}>
+                          <Table.Td>
+                            <Link to={`/applications/${item.id}`}>
+                              {item.name}
+                            </Link>
+                          </Table.Td>
+                          <Table.Td>{item.description}</Table.Td>
+                          <Table.Td>
+                            <Code>{item.apiKey}</Code>
+                          </Table.Td>
+                          <Table.Td>{item.requestCount}</Table.Td>
+                          <Table.Td style={{ textAlign: 'center' }}>
+                            <Group position="center" spacing="xs">
                               <EditApplication
                                 application={item}
-                                trigger={<Button basic icon="pen-to-square" />}
+                                trigger={
+                                  <ActionIcon variant="light">
+                                    <i className="fa fa-pen-to-square" />
+                                  </ActionIcon>
+                                }
                                 onSave={reload}
                               />
                               <Confirm
@@ -95,7 +124,11 @@ export default class Applications extends React.Component {
                                 confirmButton="Delete"
                                 header={`Are you sure you want to delete "${item.name}"?`}
                                 content="All data will be permanently deleted"
-                                trigger={<Button basic icon="trash" />}
+                                trigger={
+                                  <ActionIcon variant="light" color="red">
+                                    <i className="fa fa-trash" />
+                                  </ActionIcon>
+                                }
                                 onConfirm={async () => {
                                   await request({
                                     method: 'DELETE',
@@ -104,20 +137,20 @@ export default class Applications extends React.Component {
                                   reload();
                                 }}
                               />
-                            </Table.Cell>
-                          </Table.Row>
-                        );
-                      })}
-                    </Table.Body>
-                  </Table>
-                )}
-                <Divider hidden />
-                <Search.Pagination />
-              </React.Fragment>
-            );
-          }}
-        </Search.Provider>
-      </>
-    );
-  }
+                            </Group>
+                          </Table.Td>
+                        </Table.Tr>
+                      );
+                    })}
+                  </Table.Tbody>
+                </Table>
+              )}
+              <Space h="md" />
+              <Search.Pagination />
+            </>
+          );
+        }}
+      </Search.Provider>
+    </>
+  );
 }

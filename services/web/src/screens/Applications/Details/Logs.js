@@ -18,7 +18,7 @@ import SearchFilters from 'components/Search/Filters';
 import Layout from 'components/Layout';
 import Search from 'components/Search';
 import ShowRequest from 'modals/ShowRequest';
-import Code from 'components/Code';
+import { Code } from '@mantine/core';
 
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';

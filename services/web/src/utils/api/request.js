@@ -5,7 +5,7 @@ import { trackRequest } from '../analytics';
 import { fetchWithTimeout } from '../fetch';
 import { ApiError, ApiParseError } from './errors';
 import { stringifyParams } from './params';
-import { getToken } from './token';
+import { getToken, setToken } from './token';
 
 export default async function request(options) {
   Object.assign(options, getIncludes(options));
@@ -43,6 +43,12 @@ export default async function request(options) {
   });
 
   if (res.status === 204) {
+    return;
+  }
+
+  if (res.status === 403) {
+    setToken(null);
+    window.location.href = '/';
     return;
   }
 

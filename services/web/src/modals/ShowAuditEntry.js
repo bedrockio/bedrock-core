@@ -3,8 +3,7 @@ import { Modal, Table, Menu, Divider } from 'semantic';
 import { Link } from '@bedrockio/router';
 
 import modal from 'helpers/modal';
-
-import Code from 'components/Code';
+import { Code } from '@mantine/core';
 
 import { formatDateTime } from 'utils/date';
 
