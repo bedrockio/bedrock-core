@@ -1,22 +1,12 @@
 const { Application } = require('../../models');
 
+const { ApplicationRequest } = require('../../models');
 const { customAlphabet } = require('nanoid');
 
 const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 const nanoid = customAlphabet(alphabet, 16);
 
-function sanitizeHeaders(headers) {
-  const sanatized = {};
-  Object.keys(headers).forEach((key) => {
-    sanatized[key.toLowerCase()] = headers[key];
-  });
 
-  if (sanatized.authorization && /^bearer/i.test(sanatized.authorization.trim())) {
-    sanatized.authorization = 'Bearer [redacted]';
-  }
-
-  return sanatized;
-}
 
 function isSimpleValue(value) {
   const type = typeof value;
@@ -103,11 +93,17 @@ function applicationMiddleware({ ignorePaths = [] }) {
 
     const { request, response } = ctx;
 
-    let responseBody;
-    if (response.get('Content-Type')?.includes('application/json')) {
-      // Response body is assumed to be serialized.
-      responseBody = redact(truncate(response.body));
-    }
+    
+    // This could be done as upsert
+    await Application.updateOne({
+      _id: application.id,
+    }, {
+      $set: {
+        lastUsedAt: new Date(),
+      },
+    }, {
+      upsert: true,
+    });
   };
 }
 
