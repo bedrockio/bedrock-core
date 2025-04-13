@@ -35,7 +35,16 @@
     },
     "category": {
       "type": "String",
-      "default": "default"
+      "enum": [
+        "permission",
+        "security",
+        "auth",
+        "objectModification",
+        "export",
+        "import",
+        "user" 
+      ],
+      "default": "objectModification"
     },
     "actor": {
       "type": "ObjectId",

@@ -14,7 +14,7 @@ export default function CodeField(props) {
 
   const { className, getElementClass } = useClass(
     'code-field',
-    disabled ? 'disabled' : null
+    disabled ? 'disabled' : null,
   );
 
   const characters = Array.from(new Array(length), (el, i) => {

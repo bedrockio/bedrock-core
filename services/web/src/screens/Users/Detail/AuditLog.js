@@ -1,19 +1,19 @@
 import React from 'react';
 import { Link } from '@bedrockio/router';
-import { Table, Button, Segment, Divider, Label } from 'semantic';
+import { Table, Segment, Divider } from 'semantic';
 
 import HelpTip from 'components/HelpTip';
 import Breadcrumbs from 'components/Breadcrumbs';
 import Layout from 'components/Layout';
 import Search from 'components/Search';
 import SearchFilters from 'components/Search/Filters';
-import ShowAuditEntry from 'modals/ShowAuditEntry';
+//import ShowAuditEntry from 'modals/ShowAuditEntry';
 
 import { request } from 'utils/api';
 import { formatDateTime } from 'utils/date';
 import Meta from 'components/Meta';
 
-export default class AuditTrailList extends React.Component {
+export default class AuditLog extends React.Component {
   onDataNeeded = async (params) => {
     const response = await request({
       method: 'POST',
@@ -123,7 +123,7 @@ export default class AuditTrailList extends React.Component {
       <>
         <Meta title="Audit Logs" />
         <Search.Provider
-          filterMapping={this.getFilterMapping()}
+          //filterMapping={this.getFilterMapping()}
           onDataNeeded={this.onDataNeeded}>
           {({ items, getSorted, setSort }) => {
             return (
@@ -136,53 +136,7 @@ export default class AuditTrailList extends React.Component {
                 </Layout>
                 <Segment>
                   <Layout horizontal center spread stackable>
-                    <SearchFilters.Modal>
-                      <SearchFilters.Dropdown
-                        onDataNeeded={(name) => this.fetchUsers({ name })}
-                        search
-                        name="actor"
-                        label="Actor"
-                      />
-                      <SearchFilters.Dropdown
-                        onDataNeeded={(name) => this.fetchUsers({ name })}
-                        search
-                        name="ownerId"
-                        label="Owner"
-                      />
-                      <SearchFilters.Dropdown
-                        onDataNeeded={() =>
-                          this.fetchSearchOptions({ field: 'category' })
-                        }
-                        name="category"
-                        label="Category"
-                      />
-                      <SearchFilters.Dropdown
-                        onDataNeeded={() =>
-                          this.fetchSearchOptions({ field: 'activity' })
-                        }
-                        name="activity"
-                        label="Activity"
-                      />
-                      <SearchFilters.Dropdown
-                        onDataNeeded={() =>
-                          this.fetchSearchOptions({
-                            field: 'objectType',
-                          })
-                        }
-                        name="objectType"
-                        label="ObjectType"
-                      />
-
-                      <SearchFilters.Dropdown
-                        onDataNeeded={() =>
-                          this.fetchSearchOptions({
-                            field: 'sessionId',
-                          })
-                        }
-                        name="sessionId"
-                        label="Session Id"
-                      />
-                    </SearchFilters.Modal>
+                    <SearchFilters.Modal></SearchFilters.Modal>
                     <Layout horizontal stackable center right>
                       <Search.Total />
                       <SearchFilters.Keyword placeholder="Enter ObjectId" />
@@ -197,7 +151,7 @@ export default class AuditTrailList extends React.Component {
                     <Table.Header>
                       <Table.Row>
                         <Table.HeaderCell width={2}>Actor</Table.HeaderCell>
-                        <Table.HeaderCell width={1}>Category</Table.HeaderCell>
+
                         <Table.HeaderCell width={4}>Activity</Table.HeaderCell>
                         <Table.HeaderCell width={3}>
                           Object Owner
@@ -232,13 +186,6 @@ export default class AuditTrailList extends React.Component {
                               )}
                             </Table.Cell>
 
-                            <Table.Cell>
-                              <Label
-                                style={{ textTransform: 'capitalize' }}
-                                color={this.getColorForCategory(item.category)}>
-                                {item.category || 'default'}
-                              </Label>
-                            </Table.Cell>
                             <Table.Cell>{item.activity}</Table.Cell>
                             <Table.Cell>
                               {item.owner && (
@@ -260,12 +207,13 @@ export default class AuditTrailList extends React.Component {
                               {formatDateTime(item.createdAt)}
                             </Table.Cell>
                             <Table.Cell textAlign="center">
+                              {/*
                               <ShowAuditEntry
                                 auditEntry={item}
                                 trigger={
                                   <Button basic icon="magnifying-glass" />
                                 }
-                              />
+                              />*/}
                             </Table.Cell>
                           </Table.Row>
                         );

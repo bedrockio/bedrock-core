@@ -18,7 +18,7 @@ import QRCode from 'components/QRCode';
 
 import { request } from 'utils/api';
 
-export default function Authenticator({ onClose }) {
+export default function Authenticator({ onClose, onSuccess }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [url, setUrl] = useState(null);
@@ -66,6 +66,7 @@ export default function Authenticator({ onClose }) {
       });
       updateUser(data);
       onClose();
+      onSuccess();
     } catch (err) {
       setError(err);
       setLoading(false);

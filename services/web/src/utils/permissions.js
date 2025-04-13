@@ -1,4 +1,4 @@
-import { IconGlobe, IconHome2, IconWorld } from '@tabler/icons-react';
+import { IconHome2, IconWorld } from '@tabler/icons-react';
 
 const VALID_SCOPES = ['global', 'organization'];
 

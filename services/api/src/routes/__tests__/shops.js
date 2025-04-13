@@ -85,7 +85,7 @@ describe('/1/shops', () => {
       const auditEntry = await AuditEntry.findOne({
         objectId: data.id,
       });
-      expect(auditEntry.activity).toBe('Created shop');
+      expect(auditEntry.activity).toBe('Created Shop');
       expect(auditEntry.actor).toEqual(user._id);
       expect(auditEntry.ownerId).toBe(user.id);
       expect(auditEntry.ownerType).toBe('User');
@@ -172,7 +172,7 @@ describe('/1/shops', () => {
       const auditEntry = await AuditEntry.findOne({
         objectId: shop.id,
       });
-      expect(auditEntry.activity).toBe('Deleted shop');
+      expect(auditEntry.activity).toBe('Deleted Shop');
       expect(auditEntry.actor).toEqual(admin._id);
       expect(auditEntry.ownerId).toBe(owner.id);
     });
@@ -192,7 +192,7 @@ describe('/1/shops', () => {
       const auditEntry = await AuditEntry.findOne({
         objectId: shop.id,
       });
-      expect(auditEntry.activity).toBe('Deleted shop');
+      expect(auditEntry.activity).toBe('Deleted Shop');
       expect(auditEntry.actor).toEqual(owner._id);
       expect(auditEntry.ownerId).toBe(owner.id);
     });

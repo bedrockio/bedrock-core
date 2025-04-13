@@ -63,6 +63,26 @@ router
       },
     };
   })
+  .post('/:id/audit-entries/search', requirePermissions('users.auditEntries'), async (ctx) => {
+    const { user } = ctx.state;
+    const authUser = ctx.state.authUser;
+
+    const { data, meta } = await AuditEntry.search({
+      ...ctx.request.body,
+      $or: [{
+        actor: user.id,
+      }, {
+        owner: user.id,
+      }, {
+        objectId: user.id,
+      }]
+    });
+
+    ctx.body = {
+      data: data,
+      meta,
+    };
+  })
   .use(requirePermissions('roles.list'))
   .get('/roles', (ctx) => {
     ctx.body = {
@@ -143,7 +163,7 @@ router
     const snapshot = new User(user);
     user.assign(ctx.request.body);
     await user.save();
-    await AuditEntry.append('Updated user', {
+    await AuditEntry.append('Updated User', {
       ctx,
       snapshot,
       object: user,

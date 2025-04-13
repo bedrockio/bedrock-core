@@ -24,7 +24,7 @@ function parseProduct(product) {
   return {
     ...product,
     // the DateTimePicker is very strict about getting an date object
-    expiresAt: product.expiresAt ? new Date(product.expiresAt) : null,
+    expiresAt: product?.expiresAt ? new Date(product.expiresAt) : null,
   };
 }
 

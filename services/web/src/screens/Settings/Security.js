@@ -29,7 +29,7 @@ import { request } from 'utils/api';
 
 import Menu from './Menu';
 import Sessions from './components/Sessions';
-import Authenticator from './components/Authenticator';
+import TwoFactorAuthentication from './components/TwoFactorAuthentication';
 import { IconTrash } from '@tabler/icons-react';
 import { notifications } from '@mantine/notifications';
 import { modals } from '@mantine/modals';
@@ -112,74 +112,7 @@ export default function Security(props) {
     );
   };
 
-  const removeTotp = async () => {
-    try {
-      resetState();
-      const { data } = await request({
-        method: 'POST',
-        path: '/1/auth/totp/disable',
-      });
-      updateUser(data);
-      setLoading(false);
-    } catch (error) {
-      setState({
-        error,
-        loading: false,
-        message: null,
-      });
-    }
-  };
-
-  const getMfaMessage = (method) => {
-    return method === 'none'
-      ? 'Two-factor authentication disabled.'
-      : 'Two-factor authentication enabled.';
-  };
-
-  const onMfaMethodChange = async (value) => {
-    if (value === 'totp' && !hasTotp) {
-      modals.open({
-        title: 'Enable Authenticator',
-        children: <Authenticator onClose={() => modals.closeAll()} />,
-      });
-    } else {
-      try {
-        resetState();
-        const { data } = await request({
-          method: 'PATCH',
-          path: '/1/auth/mfa-method',
-          body: {
-            method: value,
-          },
-        });
-
-        updateUser({
-          mfaMethod: data.mfaMethod,
-          authenticators: data.authenticators,
-        });
-        setState({
-          loading: false,
-          message: getMfaMessage(value),
-          error: null,
-        });
-      } catch (error) {
-        setState({
-          error,
-          loading: false,
-          message: null,
-        });
-      }
-    }
-  };
-
   const { loading, error } = state;
-  const { mfaMethod } = user;
-  const passkeys = user.authenticators.filter(
-    (authenticator) => authenticator.type === 'passkey',
-  );
-  const hasTotp = user.authenticators.some(
-    (authenticator) => authenticator.type === 'totp',
-  );
 
   return (
     <>
@@ -191,28 +124,30 @@ export default function Security(props) {
           <Grid.Col span={{ base: 12, md: 6 }}>
             <Fieldset mt="md" legend="Passkey" variant="filled">
               <Stack spacing="xs" mb="xs">
-                {passkeys.map((passkey) => {
-                  const { id, name, createdAt, lastUsedAt } = passkey;
-                  return (
-                    <Group justify="space-between" align="center" key={id}>
-                      <Stack gap="0">
-                        <Text fw="bold">{name}</Text>
-                        <Text size="sm">
-                          Added on {formatDate(createdAt)} | Last used{' '}
-                          {fromNow(lastUsedAt)}
-                        </Text>
-                      </Stack>
-                      <ActionIcon
-                        title="Delete"
-                        variant="transparent"
-                        loading={loading}
-                        disabled={loading}
-                        onClick={() => deletePasskey(passkey)}>
-                        <IconTrash color="red" size={16} />
-                      </ActionIcon>
-                    </Group>
-                  );
-                })}
+                {user.authenticators
+                  .filter((authenticator) => authenticator.type === 'passkey')
+                  .map((passkey) => {
+                    const { id, name, createdAt, lastUsedAt } = passkey;
+                    return (
+                      <Group justify="space-between" align="center" key={id}>
+                        <Stack gap="0">
+                          <Text fw="bold">{name}</Text>
+                          <Text size="sm">
+                            Added on {formatDate(createdAt)} | Last used{' '}
+                            {fromNow(lastUsedAt)}
+                          </Text>
+                        </Stack>
+                        <ActionIcon
+                          title="Delete"
+                          variant="transparent"
+                          loading={loading}
+                          disabled={loading}
+                          onClick={() => deletePasskey(passkey)}>
+                          <IconTrash color="red" size={16} />
+                        </ActionIcon>
+                      </Group>
+                    );
+                  })}
               </Stack>
 
               <Button variant="outline" onClick={onCreatePasskeyClick}>
@@ -223,36 +158,11 @@ export default function Security(props) {
               mt="md"
               legend="Two-factor authentication"
               variant="filled">
-              <Text size="sm">Select how you want to verify your identity</Text>
-              <Select
-                mt="xs"
-                value={mfaMethod}
-                onChange={onMfaMethodChange}
-                data={[
-                  { label: 'None', value: 'none' },
-                  { label: 'SMS', value: 'sms' },
-                  { label: 'Email', value: 'email' },
-                  { label: 'Authenticator', value: 'totp' },
-                ]}
-              />
-
-              {/* MFA Authenticator Section */}
-              {hasTotp && mfaMethod === 'totp' && (
-                <Button
-                  mt="xs"
-                  variant="outline"
-                  onClick={removeTotp}
-                  loading={loading}
-                  size="sm"
-                  color="red">
-                  Reset
-                </Button>
-              )}
+              <TwoFactorAuthentication />
             </Fieldset>
             <Fieldset mt="md" legend="Auth Providers" variant="filled">
               <ErrorMessage error={error} />
 
-              {/* Google Section */}
               <Title order={4}>Google</Title>
               <div>
                 {hasAuthenticator('google') ? (
@@ -264,7 +174,6 @@ export default function Security(props) {
 
               <Divider my="md" />
 
-              {/* Apple Section */}
               <Title order={4}>Apple</Title>
               <div>
                 {hasAuthenticator('apple') ? (

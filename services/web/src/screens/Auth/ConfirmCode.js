@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Redirect, Link, useNavigate, useLocation } from '@bedrockio/router';
-import { Dimmer, Form, Grid, Loader, Message, Segment } from 'semantic';
+import { Dimmer, Grid, Loader, Message, Segment } from 'semantic';
+import { Paper, PinInput } from '@mantine/core';
 
 import { useSession } from 'stores/session';
 
 import LogoTitle from 'components/LogoTitle';
-import CodeField from 'components/form-fields/Code';
 import ErrorMessage from 'components/ErrorMessage';
 import Meta from 'components/Meta';
 
@@ -68,21 +68,12 @@ export default function ConfirmCode() {
     return code && (email || phone);
   }
 
-  function onCodeChange(evt, { value }) {
-    setCode(value);
-  }
-
-  function onCodeComplete() {
-    setLoading(true);
-    login();
-  }
-
   function render() {
     return (
-      <React.Fragment>
+      <>
         <Meta title="Confirm Code" />
         <LogoTitle title="Confirm Code" />
-        <Segment.Group>
+        <Paper>
           {loading && (
             <Dimmer inverted active>
               <Loader />
@@ -96,8 +87,8 @@ export default function ConfirmCode() {
               </Grid.Column>
             </Grid>
           </Segment>
-        </Segment.Group>
-      </React.Fragment>
+        </Paper>
+      </>
     );
   }
 
@@ -131,17 +122,24 @@ export default function ConfirmCode() {
     return (
       <React.Fragment>
         <Message success>{renderCodeMessage()}</Message>
-        <Form>
+        <form>
           {!state.code && (
-            <CodeField
+            <PinInput
+              length={6}
+              //type="numeric"
+              size="lg"
+              value={code}
+              onChange={(value) => {
+                setCode(value);
+              }}
+              onComplete={() => {
+                setLoading(true);
+                login();
+              }}
               disabled={loading}
-              value={code || ''}
-              onChange={onCodeChange}
-              onComplete={onCodeComplete}
-              error={error}
             />
           )}
-        </Form>
+        </form>
         <ErrorMessage error={error} />
       </React.Fragment>
     );

@@ -1,4 +1,5 @@
 const { userHasAccess } = require('./../permissions');
+const { AuditEntry } = require('../../models/audit-entry');
 
 // This can be changed to "organization" to quickly enable
 // multi-tenancy. Be sure when doing this to lock down global
@@ -37,6 +38,17 @@ function requirePermissions(...args) {
     if (allowed) {
       return next();
     } else {
+      await AuditEntry.append('Permission Denied', {
+        ctx,
+        actor: authUser,
+        category: 'permission',
+        object: {
+          endpoint,
+          permission,
+          scope,
+          scopeRef: organization ? organization._id : undefined,
+        },
+      });
       return ctx.throw(403, `You don't have the right permissions (required permission: ${endpoint}.${permission}).`);
     }
   };
