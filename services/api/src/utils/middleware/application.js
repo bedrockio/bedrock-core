@@ -1,6 +1,5 @@
 const { Application } = require('../../models');
 
-const { ApplicationRequest } = require('../../models');
 const { customAlphabet } = require('nanoid');
 
 const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
@@ -109,26 +108,6 @@ function applicationMiddleware({ ignorePaths = [] }) {
       // Response body is assumed to be serialized.
       responseBody = redact(truncate(response.body));
     }
-
-    // This could be done as upsert
-    await ApplicationRequest.create({
-      application: application.id,
-      routeNormalizedPath: ctx.routerPath,
-      requestId,
-      request: {
-        sessionId: ctx.state.jwt?.jti,
-        ip: request.ip,
-        method: request.method,
-        path: request.url,
-        body: request.body ? redact(request.body) : undefined,
-        headers: sanitizeHeaders(request.headers),
-      },
-      response: {
-        status: ctx.status,
-        headers: sanitizeHeaders(response.headers),
-        body: responseBody,
-      },
-    });
   };
 }
 
