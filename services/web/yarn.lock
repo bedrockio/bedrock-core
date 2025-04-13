@@ -214,10 +214,10 @@
   resolved "https://registry.yarnpkg.com/@bedrockio/prettier-config/-/prettier-config-1.1.1.tgz#804cb96913e8dab50a237feaabdcd0e1715e34a7"
   integrity sha512-sL8BvR7z3X2z18AyfwgPqBTPPmS3iveJZe65JZk5YbN0s6Akba6W2F4JAygRVx6yueYRKErvpO0pcVMdtfYBSw==
 
-"@bedrockio/router@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@bedrockio/router/-/router-0.2.0.tgz#afcb00fda18d18955ebd72dff184807bf3464d3f"
-  integrity sha512-Rnqo43paYZGysS4vWCG87dSkx8hsnODf49C0TKqPQ5mF/TJrCQx4jTqg5UV+MwZn72gn2l+sMF9pXN+/9N1vtA==
+"@bedrockio/router@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@bedrockio/router/-/router-0.2.2.tgz#f9308b7ea996d1a6e35aa0ca3f589a9c3567de98"
+  integrity sha512-3wbmoXS/z43NvGS/aE+w0oNZOhBGPI+yfKakVqpLV0iViI6ukcszWNBOi0zv5tSwkKuIRkUyGUg+bwuIxoUPPQ==
   dependencies:
     path-to-regexp "^8.2.0"
 
