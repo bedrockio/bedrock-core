@@ -14,6 +14,7 @@ import {
   IconPackage,
   IconPlus,
   IconSettings,
+  IconTerminal2,
   IconUsersGroup,
 } from '@tabler/icons-react';
 
@@ -30,7 +31,7 @@ const menuItems = [
   {
     icon: IconUsersGroup,
     label: 'People',
-    links: [
+    items: [
       {
         icon: IconUsersGroup,
         label: 'Users',
@@ -48,19 +49,35 @@ const menuItems = [
 
 const accountItems = [
   {
+    icon: IconTerminal2,
+    label: 'System',
+    items: [
+      {
+        icon: IconApps,
+        href: '/applications',
+        label: 'Applications',
+      },
+      {
+        icon: IconBook,
+        href: '/docs',
+        label: 'API Docs',
+      },
+      {
+        icon: IconMail,
+        href: '/audit-trail',
+        label: 'Audit Trail',
+      },
+    ],
+  },
+  {
     icon: IconSettings,
     href: '/settings',
-    label: 'Settings',
+    label: 'My Settings',
   },
   {
-    icon: IconApps,
-    href: '/applications',
-    label: 'Applications',
-  },
-  {
-    icon: IconBook,
-    href: '/docs',
-    label: 'API Docs',
+    icon: IconMail,
+    href: '/logout',
+    label: 'Log Out',
   },
 ];
 
@@ -112,24 +129,25 @@ export default function DashboardLayout({ children }) {
           )}
         </AppShell.Section>
         <AppShell.Section grow component={ScrollArea}>
-          {menuItems.map((link) => (
+          {menuItems.map((item) => (
             <LinksGroup
-              href={link.href}
-              key={link.label}
-              icon={link.icon}
-              label={link.label}
-              links={link.links}
+              href={item.href}
+              key={item.label}
+              icon={item.icon}
+              label={item.label}
+              items={item.items}
             />
           ))}
         </AppShell.Section>
         <AppShell.Section>
-          {accountItems.map((link) => {
+          {accountItems.map((item) => {
             return (
               <LinksGroup
-                href={link.href}
-                key={link.label}
-                icon={link.icon}
-                label={link.label}
+                href={item.href}
+                key={item.label}
+                icon={item.icon}
+                label={item.label}
+                items={item.items}
               />
             );
           })}

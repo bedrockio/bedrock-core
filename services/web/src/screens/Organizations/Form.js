@@ -14,7 +14,7 @@ import ErrorMessage from 'components/ErrorMessage.js';
  * @param {Function} props.onSave - Callback function after successful save
  * @param {Function} props.close - Function to close the modal
  */
-function OrganizationForm({ organization, onSuccess = () => {} }) {
+function OrganizationForm({ organization, onSave = () => {} }) {
   const isUpdate = !!organization;
 
   const form = useForm({
@@ -43,10 +43,7 @@ function OrganizationForm({ organization, onSuccess = () => {} }) {
           : `${form.values.name} was successfully created.`,
         color: 'green',
       });
-      setTimeout(() => {
-        onSuccess(data);
-        close();
-      }, 200);
+      onSave(data);
     },
   });
 

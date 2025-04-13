@@ -7,15 +7,15 @@ import { useNavigate } from '@bedrockio/router';
 import Menu from './Menu.js';
 
 export default function EditApplication() {
-  const { shop, reload } = usePage();
+  const { application, reload } = usePage();
   const navigate = useNavigate();
 
   return (
     <Stack gap="lg">
       <Menu />
       <Form
-        shop={shop}
-        onSuccess={() => {
+        application={application}
+        onSave={() => {
           reload();
           navigate(`/applications`);
         }}

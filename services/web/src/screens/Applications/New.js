@@ -10,17 +10,17 @@ export default function NewShop() {
   return (
     <>
       <PageHeader
-        title="New Organization"
+        title="New Application"
         breadcrumbItems={[
           { title: 'Home', href: '/' },
-          { title: 'Organizations', href: '/organizations' },
-          { title: 'Organization Shop' },
+          { title: 'Applications', href: '/Applications' },
+          { title: 'New Application' },
         ]}
       />
       <Box mt="md">
         <Form
           onSave={() => {
-            navigate(`/organizations`);
+            navigate(`/applications`);
           }}
         />
       </Box>

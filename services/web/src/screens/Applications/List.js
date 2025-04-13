@@ -1,19 +1,9 @@
-import {
-  Table,
-  Button,
-  Group,
-  Space,
-  Code,
-  ActionIcon,
-  Anchor,
-} from '@mantine/core';
+import { Table, Button, Space, Code, Anchor } from '@mantine/core';
 
 import { Link } from '@bedrockio/router';
 
 import Search from 'components/Search';
-import Confirm from 'components/Confirm';
-
-import EditApplication from 'modals/EditApplication';
+import Actions from './Actions';
 
 import { request } from 'utils/api';
 import Meta from 'components/Meta';
@@ -35,7 +25,7 @@ export default function Applications() {
     <>
       <Meta title="Applications" />
       <Search.Provider onDataNeeded={onDataNeeded}>
-        {({ items, getSorted, setSort, reload, loading, error }) => {
+        {({ items, getSorted, setSort, reload }) => {
           return (
             <>
               <PageHeader
@@ -77,7 +67,7 @@ export default function Applications() {
                     <Table.Th style={{ width: '25%' }}>Description</Table.Th>
                     <Table.Th>APIKey</Table.Th>
                     <Table.Th>Request Count</Table.Th>
-                    <Table.Th style={{ textAlign: 'center' }}>Actions</Table.Th>
+                    <Table.Th width={60}>Actions</Table.Th>
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>
@@ -99,36 +89,8 @@ export default function Applications() {
                         <Table.Td>
                           {item.lastUsedAt ? fromNow(item.lastUsedAt) : 'N / A'}
                         </Table.Td>
-                        <Table.Td style={{ textAlign: 'center' }}>
-                          <Group position="center" spacing="xs">
-                            <EditApplication
-                              application={item}
-                              trigger={
-                                <ActionIcon variant="light">
-                                  <i className="fa fa-pen-to-square" />
-                                </ActionIcon>
-                              }
-                              onSave={reload}
-                            />
-                            <Confirm
-                              negative
-                              confirmButton="Delete"
-                              header={`Are you sure you want to delete "${item.name}"?`}
-                              content="All data will be permanently deleted"
-                              trigger={
-                                <ActionIcon variant="light" color="red">
-                                  <i className="fa fa-trash" />
-                                </ActionIcon>
-                              }
-                              onConfirm={async () => {
-                                await request({
-                                  method: 'DELETE',
-                                  path: `/1/applications/${item.id}`,
-                                });
-                                reload();
-                              }}
-                            />
-                          </Group>
+                        <Table.Td align="right">
+                          <Actions application={item} reload={reload} />
                         </Table.Td>
                       </Table.Tr>
                     );

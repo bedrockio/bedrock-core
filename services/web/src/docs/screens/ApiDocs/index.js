@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
-import { Container, Icon } from 'semantic';
+
 import { Link, useLocation, useNavigate } from '@bedrockio/router';
+import { Container } from '@mantine/core';
 
 import { useClass } from 'helpers/bem';
 
@@ -16,6 +17,7 @@ import DocsPath from '../../components/DocsPath';
 import { DEFAULT_PAGE_ID, pagesByPath, sorted } from '../../pages';
 
 import './api-docs.less';
+import { IconArrowRotaryStraight, IconRefresh } from '@tabler/icons-react';
 
 export default function ApiDocs() {
   const { className, getElementClass } = useClass('api-docs');
@@ -56,7 +58,7 @@ export default function ApiDocs() {
   function render() {
     return (
       <div className={className}>
-        <Meta title="Api Docs" />
+        <Meta title="API Docs" />
         {renderSidebar()}
         <main className={getElementClass('page')}>
           <Container>{renderPage()}</Container>
@@ -145,9 +147,7 @@ export default function ApiDocs() {
             confirmButton="Generate"
             header="Generate Documentation"
             content="Generates OpenApi documentation based on schemas and route validation. This will not overwrite current documentation."
-            trigger={
-              <Icon link name="arrows-rotate" title="Generate Documentation" />
-            }
+            trigger={<IconRefresh title="Generate Documentation" />}
             onConfirm={generateDocs}
           />
         </div>

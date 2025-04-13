@@ -1,35 +1,46 @@
-import { NavLink } from '@bedrockio/router';
-import { Button, Icon, Menu } from 'semantic';
+import { Link } from '@bedrockio/router';
+
+import { AppShell, Flex, Button } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 
 import { useClass } from 'helpers/bem';
 
 import Logo from 'components/Logo';
-import Layout from 'components/Layout';
 import ConnectionError from 'components/ConnectionError';
 
 import './portal.less';
+import { IconArrowBack } from '@tabler/icons-react';
 
-export default function PortalLayout(props) {
+export default function PortalLayout({ children }) {
   const { className, getElementClass } = useClass('portal-layout');
+  const [opened, { toggle }] = useDisclosure();
 
   return (
-    <div className={className}>
-      <ConnectionError />
-      <Layout className={getElementClass('menu')}>
-        <Layout className={getElementClass('menu-top')} horizontal spread>
-          <Layout.Group>
-            <NavLink className="logo" to="/">
-              <Logo height="40" />
-            </NavLink>
-          </Layout.Group>
-          <Layout.Group>
-            <Button primary compact as={NavLink} to="/">
-              Dashboard &rarr;
+    <>
+      <AppShell>
+        <AppShell.Header height="100%">
+          <Flex
+            h="50px"
+            flex="row"
+            gap="md"
+            justify="space-between"
+            align="center"
+            p="md">
+            <Logo height={20} />
+            <Button
+              size="compact-sm"
+              component={Link}
+              to="/"
+              rightSection={<IconArrowBack size={14} />}>
+              Go to Dashboard
             </Button>
-          </Layout.Group>
-        </Layout>
-      </Layout>
-      <Layout className={getElementClass('content')}>{props.children}</Layout>
-    </div>
+          </Flex>
+        </AppShell.Header>
+        <AppShell.Main>
+          <ConnectionError />
+          {children}
+        </AppShell.Main>
+      </AppShell>
+    </>
   );
 }

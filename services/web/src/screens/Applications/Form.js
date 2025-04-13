@@ -1,9 +1,16 @@
-import { Button, TextInput, Textarea, Stack, Fieldset } from '@mantine/core';
+import {
+  Button,
+  TextInput,
+  Textarea,
+  Stack,
+  Fieldset,
+  Grid,
+} from '@mantine/core';
 import { useForm } from '@mantine/form';
 import ErrorMessage from 'components/ErrorMessage';
 import { useRequest } from 'utils/api';
 
-export default function ApplicationForm({ application, onSave, close }) {
+export default function ApplicationForm({ application, onSave }) {
   const isUpdate = !!application;
 
   const form = useForm({
@@ -30,7 +37,6 @@ export default function ApplicationForm({ application, onSave, close }) {
         },
       });
       onSave();
-      close();
     } catch (e) {
       // Error handling is managed by useRequest
     }
@@ -38,27 +44,33 @@ export default function ApplicationForm({ application, onSave, close }) {
 
   return (
     <form onSubmit={form.onSubmit(onSubmit)}>
-      <Stack>
-        <ErrorMessage error={error} />
-        <Fieldset legend="Application Details" variant="filled">
-          <TextInput
-            required
-            label="Name"
-            placeholder="Application name"
-            {...form.getInputProps('name')}
-          />
+      <Grid>
+        <Grid.Col span={{ base: 12, sm: 6 }}>
+          <ErrorMessage error={error} />
+          <Fieldset legend="Application Details" variant="filled">
+            <Stack gap="md">
+              <TextInput
+                required
+                label="Name"
+                placeholder="Application name"
+                {...form.getInputProps('name')}
+              />
 
-          <Textarea
-            label="Description"
-            placeholder="Application description"
-            {...form.getInputProps('description')}
-          />
-        </Fieldset>
-
-        <Button type="submit" loading={loading} disabled={loading}>
-          {isUpdate ? 'Update' : 'Create'}
-        </Button>
-      </Stack>
+              <Textarea
+                label="Description"
+                placeholder="Application description"
+                {...form.getInputProps('description')}
+              />
+            </Stack>
+          </Fieldset>
+        </Grid.Col>
+        <Grid.Col span={{ base: 12, sm: 6 }}>
+          {/* Add any additional fields or components here */}
+        </Grid.Col>
+      </Grid>
+      <Button mt="md" type="submit" loading={loading} disabled={loading}>
+        {isUpdate ? 'Update Application' : 'Create New Application'}
+      </Button>
     </form>
   );
 }

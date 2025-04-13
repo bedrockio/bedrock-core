@@ -2,10 +2,10 @@ import { NavLink as MantineNavLink } from '@mantine/core';
 
 import { NavLink } from '@bedrockio/router';
 
-export function LinksGroup({ icon: Icon, label, href, links }) {
-  const hasLinks = Array.isArray(links);
+export function LinksGroup({ icon: Icon, label, href, items }) {
+  const hasLinks = Array.isArray(items);
 
-  const items = (hasLinks ? links : []).map((link) => (
+  const _items = (hasLinks ? items : []).map((link) => (
     <MantineNavLink
       leftSection={<link.icon size={16} />}
       component={NavLink}
@@ -26,7 +26,7 @@ export function LinksGroup({ icon: Icon, label, href, links }) {
           label={label}
           href={href}
           to={href}>
-          {items}
+          {_items}
         </MantineNavLink>
       ) : (
         <MantineNavLink

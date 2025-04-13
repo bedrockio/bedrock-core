@@ -1,7 +1,5 @@
 import { Routes, Route } from '@bedrockio/router';
 
-import '@mantine/code-highlight/styles.css';
-
 import PortalLayout from 'layouts/Portal';
 
 import ApiDocs from 'docs/screens/ApiDocs/index.js';

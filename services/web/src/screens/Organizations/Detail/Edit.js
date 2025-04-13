@@ -17,7 +17,7 @@ export default function OrganizationOverview() {
       <Menu />
       <Form
         organization={organization}
-        onSuccess={() => {
+        onSave={() => {
           reload();
           navigate('/organizations');
         }}
