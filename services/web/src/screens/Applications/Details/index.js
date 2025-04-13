@@ -1,4 +1,4 @@
-import { Link, Routes, Route } from '@bedrockio/router';
+import { Link, Routes, Route, Redirect } from '@bedrockio/router';
 
 import { usePageLoader } from 'stores/page';
 
@@ -6,8 +6,7 @@ import NotFound from 'screens/NotFound';
 
 import { request } from 'utils/api';
 
-import Overview from './Overview';
-import Logs from './Logs';
+import Edit from './Edit';
 
 export default function ApplicationDetail() {
   const Loader = usePageLoader(async (params) => {
@@ -28,8 +27,8 @@ export default function ApplicationDetail() {
         />
       }>
       <Routes>
-        <Route path="/applications/:id" render={Overview} exact />
-        <Route path="/applications/:id/logs" render={Logs} exact />
+        <Route path="/applications/:id/edit" render={Edit} exact />
+        <Redirect exact path="/applications/:id" to="/applications/:id/edit" />
         <Route render={NotFound} />
       </Routes>
     </Loader>

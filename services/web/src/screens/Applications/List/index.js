@@ -1,4 +1,12 @@
-import { Table, Button, Group, Space, Code, ActionIcon } from '@mantine/core';
+import {
+  Table,
+  Button,
+  Group,
+  Space,
+  Code,
+  ActionIcon,
+  Anchor,
+} from '@mantine/core';
 
 import { Link } from '@bedrockio/router';
 
@@ -12,6 +20,7 @@ import Meta from 'components/Meta';
 
 import PageHeader from 'components/PageHeader';
 import { IconPlus } from '@tabler/icons-react';
+import { fromNow } from 'utils/date';
 
 export default function Applications() {
   const onDataNeeded = async (body) => {
@@ -76,15 +85,20 @@ export default function Applications() {
                     return (
                       <Table.Tr key={item.id}>
                         <Table.Td>
-                          <Link to={`/applications/${item.id}`}>
+                          <Anchor
+                            size="sm"
+                            component={Link}
+                            to={`/applications/${item.id}`}>
                             {item.name}
-                          </Link>
+                          </Anchor>
                         </Table.Td>
                         <Table.Td>{item.description}</Table.Td>
                         <Table.Td>
                           <Code>{item.apiKey}</Code>
                         </Table.Td>
-                        <Table.Td>{item.requestCount}</Table.Td>
+                        <Table.Td>
+                          {item.lastUsedAt ? fromNow(item.lastUsedAt) : 'N / A'}
+                        </Table.Td>
                         <Table.Td style={{ textAlign: 'center' }}>
                           <Group position="center" spacing="xs">
                             <EditApplication

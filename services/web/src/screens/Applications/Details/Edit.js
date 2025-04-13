@@ -4,9 +4,9 @@ import { usePage } from 'stores/page';
 
 import { Stack } from '@mantine/core';
 import { useNavigate } from '@bedrockio/router';
-import Menu from './Menu';
+import Menu from './Menu.js';
 
-export default function EditShop() {
+export default function EditApplication() {
   const { shop, reload } = usePage();
   const navigate = useNavigate();
 
@@ -17,7 +17,7 @@ export default function EditShop() {
         shop={shop}
         onSuccess={() => {
           reload();
-          navigate(`/shops/${shop.id}`);
+          navigate(`/applications`);
         }}
       />
     </Stack>
