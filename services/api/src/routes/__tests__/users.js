@@ -184,7 +184,7 @@ describe('/1/users', () => {
         activity: 'Authenticated as user',
       });
       expect(auditEntry.objectType).toBe('User');
-      expect(auditEntry.objectId).toBe(user.id);
+      expect(auditEntry.object).toBe(user.id);
 
       superAdmin = await User.findById(superAdmin.id);
       user = await User.findById(user.id);
@@ -431,7 +431,7 @@ describe('/1/users', () => {
         actor: admin.id,
       });
       expect(auditEntry.objectType).toBe('User');
-      expect(auditEntry.objectId).toBe(user1.id);
+      expect(auditEntry.object).toBe(user1.id);
     });
 
     it('should throw an error when referenced by a shop', async () => {

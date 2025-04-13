@@ -1,9 +1,7 @@
 import React from 'react';
 import { Link } from '@bedrockio/router';
 import { Table, Paper, Space, Group, Code, Tooltip } from '@mantine/core';
-import { IconSearch } from '@tabler/icons-react';
 
-import HelpTip from 'components/HelpTip';
 import Breadcrumbs from 'components/Breadcrumbs';
 import Layout from 'components/Layout';
 import Search from 'components/Search';
@@ -128,10 +126,6 @@ export default function AuditLog() {
             <React.Fragment>
               <Breadcrumbs active="Organizations" />
 
-              <Layout horizontal center spread>
-                <h1>Audit Trail</h1>
-                <Group></Group>
-              </Layout>
               <Paper p="md" shadow="xs" withBorder>
                 <Group position="apart">
                   <SearchFilters.Modal></SearchFilters.Modal>

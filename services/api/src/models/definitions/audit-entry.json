@@ -15,8 +15,9 @@
       "type": "String",
       "required": true
     },
-    "objectId": {
-      "type": "String"
+    "object": {
+      "type": "String",
+      "refPath": "objectType"
     },
     "objectType": {
       "type": "String"
@@ -40,8 +41,6 @@
         "security",
         "auth",
         "objectModification",
-        "export",
-        "import",
         "user" 
       ],
       "default": "objectModification"
@@ -56,7 +55,7 @@
     "fields": [
       "actor",
       "ownerId",
-      "objectId"
+      "object"
     ]
   }
 }

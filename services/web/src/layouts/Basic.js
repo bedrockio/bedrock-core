@@ -7,12 +7,15 @@ import ConnectionError from 'components/ConnectionError';
 export default class BasicLayout extends React.Component {
   render() {
     return (
-      <Center style={{ height: '100vh' }}>
-        <Stack>
-          <ConnectionError />
-          {this.props.children}
-        </Stack>
-      </Center>
+      <div
+        style={{
+          height: '100vh',
+          background:
+            'linear-gradient(180deg,var(--mantine-color-brown-2) 320px, var(--mantine-color-white) 30%, var(--mantine-color-white) 100%)',
+        }}>
+        <ConnectionError />
+        {this.props.children}
+      </div>
     );
   }
 }

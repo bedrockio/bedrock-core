@@ -1,19 +1,9 @@
 import { Link } from '@bedrockio/router';
-import {
-  Table,
-  Badge,
-  Button,
-  Paper,
-  Divider,
-  Group,
-  Box,
-  Text,
-} from '@mantine/core';
+import { Table, Badge, Button, Divider, Group } from '@mantine/core';
 import { IconSearch } from '@tabler/icons-react';
 
-import HelpTip from 'components/HelpTip';
-import Breadcrumbs from 'components/Breadcrumbs';
-import Layout from 'components/Layout';
+import PageHeader from 'components/PageHeader';
+
 import Search from 'components/Search';
 import SearchFilters from 'components/Search/Filters';
 import ShowAuditEntry from 'modals/ShowAuditEntry';
@@ -148,93 +138,87 @@ export default function AuditTrailList() {
         onDataNeeded={onDataNeeded}>
         {({ items, getSorted, setSort }) => (
           <>
-            <Breadcrumbs active="Organizations" />
-
-            <Layout horizontal center spread>
-              <h1>Audit Trail</h1>
-              <Layout.Group></Layout.Group>
-            </Layout>
-
-            <Paper p="md" mb="md">
-              <Layout horizontal center spread stackable>
-                <SearchFilters.Modal>
-                  <SearchFilters.Dropdown
-                    onDataNeeded={(name) => fetchUsers({ name })}
-                    search
-                    name="actor"
-                    label="Actor"
-                  />
-                  <SearchFilters.Dropdown
-                    onDataNeeded={(name) => fetchUsers({ name })}
-                    search
-                    name="ownerId"
-                    label="Owner"
-                  />
-                  <SearchFilters.Dropdown
-                    onDataNeeded={() =>
-                      fetchSearchOptions({ field: 'category' })
-                    }
-                    name="category"
-                    label="Category"
-                  />
-                  <SearchFilters.Dropdown
-                    onDataNeeded={() =>
-                      fetchSearchOptions({ field: 'activity' })
-                    }
-                    name="activity"
-                    label="Activity"
-                  />
-                  <SearchFilters.Dropdown
-                    onDataNeeded={() =>
-                      fetchSearchOptions({ field: 'objectType' })
-                    }
-                    name="objectType"
-                    label="ObjectType"
-                  />
-                  <SearchFilters.Dropdown
-                    onDataNeeded={() =>
-                      fetchSearchOptions({ field: 'sessionId' })
-                    }
-                    name="sessionId"
-                    label="Session Id"
-                  />
-                </SearchFilters.Modal>
-                <Layout horizontal stackable center right>
-                  <Search.Total />
-                  <SearchFilters.Keyword placeholder="Enter ObjectId" />
-                </Layout>
-              </Layout>
-            </Paper>
-
-            <Search.Status />
+            <PageHeader
+              title="Audit Trail"
+              breadcrumbItems={[
+                {
+                  href: '/',
+                  title: 'Home',
+                },
+                {
+                  title: 'Audit Logs',
+                },
+              ]}
+            />
+            <Group>
+              <SearchFilters.Modal>
+                <SearchFilters.Dropdown
+                  onDataNeeded={(name) => fetchUsers({ name })}
+                  search
+                  name="actor"
+                  label="Actor"
+                />
+                <SearchFilters.Dropdown
+                  onDataNeeded={(name) => fetchUsers({ name })}
+                  search
+                  name="ownerId"
+                  label="Owner"
+                />
+                <SearchFilters.Dropdown
+                  onDataNeeded={() => fetchSearchOptions({ field: 'category' })}
+                  name="category"
+                  label="Category"
+                />
+                <SearchFilters.Dropdown
+                  onDataNeeded={() => fetchSearchOptions({ field: 'activity' })}
+                  name="activity"
+                  label="Activity"
+                />
+                <SearchFilters.Dropdown
+                  onDataNeeded={() =>
+                    fetchSearchOptions({ field: 'objectType' })
+                  }
+                  name="objectType"
+                  label="ObjectType"
+                />
+                <SearchFilters.Dropdown
+                  onDataNeeded={() =>
+                    fetchSearchOptions({ field: 'sessionId' })
+                  }
+                  name="sessionId"
+                  label="Session Id"
+                />
+              </SearchFilters.Modal>
+              <Search.Status />
+              <Search.Total />
+              <SearchFilters.Keyword placeholder="Enter ObjectId" />
+            </Group>
 
             {items.length !== 0 && (
               <Table striped highlightOnHover>
                 <Table.Thead>
                   <Table.Tr>
-                    <Table.Th w={150}>Actor</Table.Th>
-                    <Table.Th w={100}>Category</Table.Th>
-                    <Table.Th w={300}>Activity</Table.Th>
-                    <Table.Th w={200}>Object Owner</Table.Th>
-                    <Table.Th w={200}>Request</Table.Th>
+                    <Table.Th>Actor</Table.Th>
+                    <Table.Th>Category</Table.Th>
+                    <Table.Th>Activity</Table.Th>
+                    <Table.Th>Object Owner</Table.Th>
+                    <Table.Th>Object Name</Table.Th>
+
                     <Table.Th
-                      w={200}
                       onClick={() => setSort('createdAt')}
                       style={{ cursor: 'pointer' }}>
-                      <Group spacing="xs">
-                        <Text>Date</Text>
-                        <HelpTip
-                          title="Created"
-                          text="This is the date and time the organization was created."
-                        />
-                      </Group>
+                      Date
                     </Table.Th>
-                    <Table.Th style={{ textAlign: 'center' }}>Actions</Table.Th>
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>
                   {items.map((item) => (
-                    <Table.Tr key={item.id}>
+                    <Table.Tr
+                      style={{ cursor: 'pointer' }}
+                      key={item.id}
+                      onClick={() => {
+                        console.log(item);
+                      }}>
                       <Table.Td>
                         {item.actor && (
                           <Link
@@ -252,6 +236,7 @@ export default function AuditTrailList() {
                         </Badge>
                       </Table.Td>
                       <Table.Td>{item.activity}</Table.Td>
+                      <Table.Td>{item.object?.name || 'N/A'}</Table.Td>
                       <Table.Td>
                         {item.owner && (
                           <Link
@@ -261,31 +246,19 @@ export default function AuditTrailList() {
                           </Link>
                         )}
                       </Table.Td>
-                      <Table.Td>
-                        <Box
-                          style={{
-                            fontFamily: 'monospace',
-                            background: '#f5f5f5',
-                            padding: '4px 8px',
-                            borderRadius: '4px',
-                          }}>
-                          {item.requestMethod} {item.requestUrl}
-                        </Box>
-                      </Table.Td>
                       <Table.Td>{formatDateTime(item.createdAt)}</Table.Td>
-                      <Table.Td style={{ textAlign: 'center' }}>
-                        <ShowAuditEntry
-                          auditEntry={item}
-                          trigger={
-                            <Button
-                              variant="subtle"
-                              size="sm"
-                              p={0}
-                              leftIcon={<IconSearch size={16} />}
-                            />
-                          }
-                        />
-                      </Table.Td>
+
+                      <ShowAuditEntry
+                        auditEntry={item}
+                        trigger={
+                          <Button
+                            variant="subtle"
+                            size="sm"
+                            p={0}
+                            leftIcon={<IconSearch size={16} />}
+                          />
+                        }
+                      />
                     </Table.Tr>
                   ))}
                 </Table.Tbody>

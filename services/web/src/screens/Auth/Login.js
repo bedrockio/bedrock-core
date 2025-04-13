@@ -105,63 +105,65 @@ export default function PasswordLogin() {
   }
 
   return (
-    <Stack w={{ base: '100%', sm: 550 }} align="center">
-      <Meta title="Login" />
-      <Center mt={10} mb={20}>
+    <Center pt={{ base: 100, sm: 180 }}>
+      <Stack w={{ base: '95vw', sm: 480 }} align="center">
+        <Meta title="Login" />
+
         <Logo maw={200} title="Login" />
-      </Center>
-      <Paper miw={380} w="100%" p="xl" radius="md" withBorder>
-        <Stack gap="md">
-          <Title order={4}>Login to {APP_NAME}</Title>
-          <ErrorMessage error={error} />
-          <form onSubmit={form.onSubmit(onSubmit)}>
-            <Stack gap="md">
-              <TextInput
-                required
-                label="Email"
-                type="email"
-                placeholder="Email"
-                {...form.getInputProps('email')}
-              />
-              {AUTH_TYPE === 'password' && (
-                <PasswordInput
+
+        <Paper mt="md" w="100%" p="lg" radius="md" withBorder>
+          <Stack gap="md">
+            <Title order={3}>Login</Title>
+            <ErrorMessage error={error} />
+            <form onSubmit={form.onSubmit(onSubmit)}>
+              <Stack gap="md">
+                <TextInput
                   required
-                  label="Password"
-                  type="password"
-                  description={
-                    <>
-                      Forgot you password{' '}
-                      <Link to="/forgot-password">click here</Link>
-                    </>
-                  }
-                  placeholder="Password"
-                  {...form.getInputProps('password')}
+                  label="Email"
+                  type="email"
+                  placeholder="Email"
+                  {...form.getInputProps('email')}
                 />
-              )}
+                {AUTH_TYPE === 'password' && (
+                  <PasswordInput
+                    required
+                    label="Password"
+                    type="password"
+                    description={
+                      <>
+                        Forgot you password{' '}
+                        <Link to="/forgot-password">click here</Link>
+                      </>
+                    }
+                    placeholder="Password"
+                    {...form.getInputProps('password')}
+                  />
+                )}
 
-              <Federated
-                type="login"
-                onAuthStop={onAuthStop}
-                onAuthStart={onAuthStart}
-                onAuthError={onAuthError}
-              />
+                <Federated
+                  type="login"
+                  onAuthStop={onAuthStop}
+                  onAuthStart={onAuthStart}
+                  onAuthError={onAuthError}
+                />
 
-              <Button
-                fullWidth
-                loading={loading}
-                disabled={loading}
-                variant="filled"
-                type="submit">
-                Login
-              </Button>
+                <Button
+                  fullWidth
+                  loading={loading}
+                  disabled={loading}
+                  variant="filled"
+                  type="submit">
+                  Login
+                </Button>
 
-              <Text>
-                Don't have an account? <Link to="/signup">Register</Link>
-              </Text>
-            </Stack>
-          </form>
-        </Stack>
-      </Paper>
-    </Stack>
+                <Text>
+                  Don't have an account? <Link to="/signup">Register</Link>
+                </Text>
+              </Stack>
+            </form>
+          </Stack>
+        </Paper>
+      </Stack>
+    </Center>
   );
 }

@@ -20,7 +20,11 @@ router
     ),
     async (ctx) => {
       const { format, filename, ...params } = ctx.request.body;
-      const { data, meta } = await AuditEntry.search(params);
+      const { data, meta } = await AuditEntry.search(params).populate('object', {
+        name: 1,
+        id: 1,
+      });
+
       if (format === 'csv') {
         return csvExport(ctx, data);
       }
