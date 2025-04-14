@@ -14,6 +14,7 @@ import {
   Checkbox,
   NumberInput,
   TagsInput,
+  Fieldset,
 } from '@mantine/core';
 
 import { useForm } from '@mantine/form';
@@ -84,75 +85,83 @@ export default function ProductForm({ product, shop, onSuccess = () => {} }) {
       )}>
       <Grid>
         <Grid.Col span={{ base: 12, md: 6 }}>
-          <Stack gap="xs">
-            <TextInput required label="Name" {...form.getInputProps('name')} />
-
-            <Textarea
-              label="Description"
-              {...form.getInputProps('description')}
-            />
-            <Checkbox
-              label="Is Featured"
-              {...form.getInputProps('isFeatured', { type: 'checkbox' })}
-            />
-            <NumberInput
-              prefix="$"
-              thousandSeparator=","
-              allowDecimal={true}
-              decimalScale={2}
-              fixedDecimalScale
-              label="Price"
-              {...form.getInputProps('priceUsd')}
-            />
-            <DateTimePicker
-              {...form.getInputProps('expiresAt')}
-              label="Expires At"
-            />
-            <TagsInput
-              label="Selling Points"
-              data={
-                form.values.sellingPoints?.map((value) => ({
-                  value,
-                  label: value,
-                })) || []
-              }
-              value={form.values.sellingPoints || []}
-              onChange={handleSellingPointsChange}
-              creatable
-              searchable
-              getCreateLabel={(query) => `+ Add ${query}`}
-              onCreate={(query) => {
-                const newValue = query.trim();
-                form.setFieldValue('sellingPoints', [
-                  ...(form.values.sellingPoints || []),
-                  newValue,
-                ]);
-                return newValue;
-              }}
-            />
-            {!shop && (
-              <SearchDropdown
-                clearable
+          <Fieldset legend="Product Details" mb="md">
+            <Stack gap="xs">
+              <TextInput
                 required
-                name="shop"
-                label="Shop"
-                searchPath="/1/shops/search"
-                placeholder="Search Shops"
-                {...form.getInputProps('shop')}
+                label="Name"
+                {...form.getInputProps('name')}
               />
-            )}
-          </Stack>
+
+              <Textarea
+                label="Description"
+                {...form.getInputProps('description')}
+              />
+              <Checkbox
+                label="Is Featured"
+                {...form.getInputProps('isFeatured', { type: 'checkbox' })}
+              />
+              <NumberInput
+                prefix="$"
+                thousandSeparator=","
+                allowDecimal={true}
+                decimalScale={2}
+                fixedDecimalScale
+                label="Price"
+                {...form.getInputProps('priceUsd')}
+              />
+              <DateTimePicker
+                {...form.getInputProps('expiresAt')}
+                label="Expires At"
+              />
+              <TagsInput
+                label="Selling Points"
+                data={
+                  form.values.sellingPoints?.map((value) => ({
+                    value,
+                    label: value,
+                  })) || []
+                }
+                value={form.values.sellingPoints || []}
+                onChange={handleSellingPointsChange}
+                creatable
+                searchable
+                getCreateLabel={(query) => `+ Add ${query}`}
+                onCreate={(query) => {
+                  const newValue = query.trim();
+                  form.setFieldValue('sellingPoints', [
+                    ...(form.values.sellingPoints || []),
+                    newValue,
+                  ]);
+                  return newValue;
+                }}
+              />
+              {!shop && (
+                <SearchDropdown
+                  clearable
+                  required
+                  name="shop"
+                  label="Shop"
+                  searchPath="/1/shops/search"
+                  placeholder="Search Shops"
+                  {...form.getInputProps('shop')}
+                />
+              )}
+            </Stack>
+          </Fieldset>
         </Grid.Col>
         <Grid.Col span={{ base: 12, md: 6 }}>
-          <UploadsField
-            label="Images"
-            {...form.getInputProps('images')}
-            onError={(error) => editRequest.setError(error)}
-          />
+          <Fieldset legend="Product Images" mb="md">
+            <UploadsField
+              label="Images"
+              {...form.getInputProps('images')}
+              onError={(error) => editRequest.setError(error)}
+            />
+          </Fieldset>
         </Grid.Col>
       </Grid>
 
-      <Box mt="md" gap="md">
+      <Box mt="sm" gap="md">
         <ErrorMessage mb="md" error={editRequest.error} />
         <Button
           type="submit"

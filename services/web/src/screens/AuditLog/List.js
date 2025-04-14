@@ -12,7 +12,7 @@ import { request } from 'utils/api';
 import { formatDateTime } from 'utils/date';
 import Meta from 'components/Meta';
 
-export default function AuditTrailList() {
+export default function AuditLogList() {
   const onDataNeeded = async (params) => {
     const response = await request({
       method: 'POST',

@@ -1,34 +1,23 @@
-import { createTheme, DEFAULT_THEME } from '@mantine/core';
+import { Anchor, createTheme, DEFAULT_THEME, Fieldset } from '@mantine/core';
 
 export const theme = createTheme({
-  primaryShade: 6,
+  primaryShade: 9,
   autoContrast: true,
-  primaryColor: 'primary',
+
   luminanceThreshold: 0.3,
+  primaryColor: 'green',
   colors: {
-    primary: [
-      '#2a832a',
-      '#2a832a',
-      '#2a832a',
-      '#2a832a',
-      '#2a832a',
-      '#2a832a',
-      '#2a832a',
-      '#2a832a',
-      '#2a832a',
-      '#2a832a',
-    ],
     brown: [
-      '#f8f5f2',
-      '#ebe9e6',
-      '#d7d0c7',
-      '#c3b5a4',
-      '#b29f87',
-      '#a89074',
-      '#a48969',
-      '#8f7658',
-      '#80694c',
-      '#70593e',
+      '#f7f5f2',
+      '#e8e1d6',
+      '#d8cfc0',
+      '#c8bda9',
+      '#b8ab93',
+      '#a89a7d',
+      '#99896a',
+      '#8a7857',
+      '#7b673f',
+      '#6c5629',
     ],
     error: DEFAULT_THEME.colors.red,
     info: DEFAULT_THEME.colors.blue,
@@ -39,10 +28,28 @@ export const theme = createTheme({
     AppShell: {
       styles: {
         navbar: {
-          backgroundColor: '#f4f0eb',
+          backgroundColor: `light-dark(var(--mantine-color-brown-0), transparent)`,
         },
         header: {
-          backgroundColor: '#f4f0eb',
+          backgroundColor: `light-dark(var(--mantine-color-brown-0), transparent)`,
+        },
+      },
+    },
+    Anchor: {
+      styles: {
+        root: {
+          color: 'var(--mantine-color-text)',
+          '&:hover': {
+            color: 'var(--mantine-color-primary)',
+          },
+        },
+      },
+    },
+    Fieldset: {
+      styles: {
+        legend: {
+          fontSize: 'var(--mantine-font-size-md)',
+          fontWeight: 500,
         },
       },
     },

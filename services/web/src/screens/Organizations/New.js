@@ -19,7 +19,7 @@ export default function NewShop() {
       />
       <Box mt="md">
         <Form
-          onSave={() => {
+          onSave={() => { 
             navigate(`/organizations`);
           }}
         />

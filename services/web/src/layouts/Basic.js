@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { Center, Stack } from '@mantine/core';
-
 import ConnectionError from 'components/ConnectionError';
 
 export default class BasicLayout extends React.Component {
@@ -11,7 +9,7 @@ export default class BasicLayout extends React.Component {
         style={{
           height: '100vh',
           background:
-            'linear-gradient(180deg,var(--mantine-color-brown-2) 320px, var(--mantine-color-white) 30%, var(--mantine-color-white) 100%)',
+            'linear-gradient(180deg, light-dark(var(--mantine-color-brown-1), transparent) 260px, light-dark(var(--mantine-color-gray-0), transparent) 30%, light-dark(var(--mantine-color-gray-0), transparent) 100%)',
         }}>
         <ConnectionError />
         {this.props.children}

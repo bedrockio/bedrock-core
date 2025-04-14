@@ -9,6 +9,9 @@ import {
   Stack,
   TextInput,
   Text,
+  Group,
+  Anchor,
+  Title,
 } from '@mantine/core';
 
 import { useForm, isEmail } from '@mantine/form';
@@ -79,90 +82,96 @@ export default function SignupPassword() {
   }
 
   return (
-    <Stack w={{ base: '100%', sm: 550 }} align="center">
-      <Meta title="Signup" />
-      <Center mt={10} mb={20}>
+    <Group justify="center" align="center" pt={{ base: 30, sm: 120 }}>
+      <Stack w={{ base: '100%', sm: 480 }} align="center">
+        <Meta title="Signup" />
         <Logo maw={200} title="Login" />
-      </Center>
-      <Paper miw={380} w="100%" p="xl" radius="md" withBorder>
-        <form
-          onSubmit={form.onSubmit((formValues) => {
-            signupRequest.request({
-              body: {
-                ...formValues,
-                authChannel: AUTH_CHANNEL,
-              },
-            });
-          })}>
-          <Stack spacing="md">
-            {signupRequest.error?.type !== 'validation' && (
-              <ErrorMessage error={error} />
-            )}
+        <Paper mt="md" w="100%" p="lg" radius="md" withBorder>
+          <Title order={3} mb="md">
+            Signup
+          </Title>
+          <form
+            onSubmit={form.onSubmit((formValues) => {
+              signupRequest.request({
+                body: {
+                  ...formValues,
+                  authChannel: AUTH_CHANNEL,
+                },
+              });
+            })}>
+            <Stack spacing="md">
+              {signupRequest.error?.type !== 'validation' && (
+                <ErrorMessage error={error} />
+              )}
 
-            <TextInput
-              label="First Name"
-              placeholder="First Name"
-              autoComplete="given-name"
-              error={error?.hasField?.('firstName')}
-              {...form.getInputProps('firstName')}
-            />
-            <TextInput
-              label="Last Name"
-              name="lastName"
-              placeholder="Last Name"
-              autoComplete="family-name"
-              error={error?.hasField?.('lastName')}
-              {...form.getInputProps('lastName')}
-            />
-            <TextInput
-              label="Email"
-              type="email"
-              placeholder="Email"
-              autoComplete="email"
-              name="email"
-              error={error}
-              {...form.getInputProps('email')}
-            />
-
-            <PhoneField
-              label="Phone"
-              placeholder="Phone"
-              error={error}
-              {...form.getInputProps('phone')}
-            />
-
-            {AUTH_TYPE === 'password' && (
-              <PasswordInput
-                required
-                label="Password"
-                type="password"
-                placeholder="Password"
-                {...form.getInputProps('password')}
+              <TextInput
+                label="First Name"
+                placeholder="First Name"
+                autoComplete="given-name"
+                error={error?.hasField?.('firstName')}
+                {...form.getInputProps('firstName')}
               />
-            )}
+              <TextInput
+                label="Last Name"
+                name="lastName"
+                placeholder="Last Name"
+                autoComplete="family-name"
+                error={error?.hasField?.('lastName')}
+                {...form.getInputProps('lastName')}
+              />
+              <TextInput
+                label="Email"
+                type="email"
+                placeholder="Email"
+                autoComplete="email"
+                name="email"
+                error={error}
+                {...form.getInputProps('email')}
+              />
 
-            <Federated
-              type="signup"
-              onAuthStop={onAuthStop}
-              onAuthStart={onAuthStart}
-              onError={onAuthError}
-            />
+              <PhoneField
+                label="Phone"
+                placeholder="Phone"
+                error={error}
+                {...form.getInputProps('phone')}
+              />
 
-            <Button
-              fullWidth
-              loading={loading}
-              disabled={loading}
-              variant="filled"
-              type="submit">
-              Signup
-            </Button>
+              {AUTH_TYPE === 'password' && (
+                <PasswordInput
+                  required
+                  label="Password"
+                  type="password"
+                  placeholder="Password"
+                  {...form.getInputProps('password')}
+                />
+              )}
 
-            <Text>
-              Already have an account? <Link to="/login">Login</Link>
-            </Text>
-          </Stack>
-        </form>
-      </Paper>
-    </Stack>
+              <Federated
+                type="signup"
+                onAuthStop={onAuthStop}
+                onAuthStart={onAuthStart}
+                onError={onAuthError}
+              />
+
+              <Button
+                fullWidth
+                loading={loading}
+                disabled={loading}
+                variant="filled"
+                type="submit">
+                Signup
+              </Button>
+
+              <Text size="xs" c="dimmed">
+                Already have an account?{' '}
+                <Anchor component={Link} to="/login">
+                  Login
+                </Anchor>
+              </Text>
+            </Stack>
+          </form>
+        </Paper>
+      </Stack>
+    </Group>
   );
 }

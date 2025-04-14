@@ -18,7 +18,14 @@ import {
   IconUsersGroup,
 } from '@tabler/icons-react';
 
-import { AppShell, Burger, Flex, TextInput, ScrollArea } from '@mantine/core';
+import {
+  AppShell,
+  Burger,
+  Flex,
+  TextInput,
+  ScrollArea,
+  Center,
+} from '@mantine/core';
 
 import { useMediaQuery } from '@mantine/hooks';
 
@@ -64,8 +71,8 @@ const accountItems = [
       },
       {
         icon: IconMail,
-        href: '/audit-trail',
-        label: 'Audit Trail',
+        href: '/audit-log',
+        label: 'Audit Log',
       },
     ],
   },
@@ -109,9 +116,11 @@ export default function DashboardLayout({ children }) {
       </AppShell.Header>
       <AppShell.Navbar>
         <AppShell.Section>
-          <NavLink to="/">
-            <Logo m="xs" w="160px" />
-          </NavLink>
+          <Center mt="xs">
+            <NavLink to="/">
+              <Logo m="xs" w="160px" />
+            </NavLink>
+          </Center>
           {userCanSwitchOrganizations(user) && (
             <ModalTrigger
               title="Select Organization"

@@ -11,7 +11,7 @@ import Invites from 'screens/Invites';
 import Organizations from 'screens/Organizations';
 import Settings from 'screens/Settings';
 import Applications from 'screens/Applications';
-import AuditTrail from 'screens/AuditTrail';
+import AuditLog from 'screens/AuditLog';
 
 import Logout from 'screens/Auth/Logout';
 
@@ -31,7 +31,7 @@ const App = () => {
         <Route path="/organizations" render={Organizations} />
         <Route path="/settings/:id?" render={Settings} exact />
         <Route path="/applications/:id?" render={Applications} />
-        <Route path="/audit-trail/:id?" render={AuditTrail} />
+        <Route path="/audit-log/:id?" render={AuditLog} />
         <Route path="/accept-invite" render={AcceptInvite} exact />
         <Route path="/logout" render={Logout} exact />
         <Route render={NotFound} />

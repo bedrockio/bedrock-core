@@ -71,8 +71,8 @@ export default function ConfirmCode() {
   function render() {
     return (
       <>
-        <Meta title="Confirm Code" />
         <Group justify="center" align="center" pt={{ base: 30, sm: 120 }}>
+          <Meta title="Confirm Code" />
           <Stack w={{ base: '95vw', sm: 480 }} align="center">
             <Logo maw={200} title="Login" />
 
@@ -81,7 +81,6 @@ export default function ConfirmCode() {
                 <Title order={3}>Confirm Code</Title>
                 <Paper>
                   {renderMessage()}
-
                   <Link to="/login">Back</Link>
                 </Paper>
               </Stack>

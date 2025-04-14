@@ -134,15 +134,13 @@ export default function PasswordLogin() {
                       placeholder="Password"
                       {...form.getInputProps('password')}
                     />
-                    <Text size="xs" mt="xs">
-                      Forgot you password,{' '}
+                    <Text c="dimmed" size="xs" mt={4}>
                       <Anchor
                         tabIndex={3}
                         component={Link}
                         to="/forgot-password">
-                        click here
+                        Forgot password
                       </Anchor>
-                      .
                     </Text>
                   </div>
                 )}
@@ -163,12 +161,11 @@ export default function PasswordLogin() {
                   Login
                 </Button>
 
-                <Text size={'xs'}>
+                <Text size={'xs'} c="dimmed">
                   Don't have an account?{' '}
                   <Anchor tabIndex={4} component={Link} to="/signup">
                     Register
                   </Anchor>
-                  .
                 </Text>
               </Stack>
             </form>

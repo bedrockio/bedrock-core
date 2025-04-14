@@ -3,11 +3,11 @@ import { Routes, Route } from '@bedrockio/router';
 
 import List from './List';
 
-export default class Organizations extends React.Component {
+export default class AuditLog extends React.Component {
   render() {
     return (
       <Routes>
-        <Route path="/audit-trail" render={List} exact />
+        <Route path="/audit-Log" render={List} exact />
       </Routes>
     );
   }
