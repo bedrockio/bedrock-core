@@ -2,13 +2,14 @@ import { useState } from 'react';
 
 import {
   Button,
-  Center,
+  Group,
   Paper,
   PasswordInput,
   Stack,
   TextInput,
   Title,
   Text,
+  Anchor,
 } from '@mantine/core';
 
 import { isEmail, useForm } from '@mantine/form';
@@ -23,7 +24,7 @@ import ErrorMessage from 'components/ErrorMessage';
 import Logo from 'components/Logo';
 
 import { request } from 'utils/api';
-import { AUTH_TYPE, AUTH_CHANNEL, APP_NAME } from 'utils/env';
+import { AUTH_TYPE, AUTH_CHANNEL } from 'utils/env';
 
 function login(values) {
   if (AUTH_TYPE === 'password') {
@@ -105,7 +106,7 @@ export default function PasswordLogin() {
   }
 
   return (
-    <Center pt={{ base: 100, sm: 180 }}>
+    <Group justify="center" align="center" pt={{ base: 30, sm: 120 }}>
       <Stack w={{ base: '95vw', sm: 480 }} align="center">
         <Meta title="Login" />
 
@@ -125,19 +126,25 @@ export default function PasswordLogin() {
                   {...form.getInputProps('email')}
                 />
                 {AUTH_TYPE === 'password' && (
-                  <PasswordInput
-                    required
-                    label="Password"
-                    type="password"
-                    description={
-                      <>
-                        Forgot you password{' '}
-                        <Link to="/forgot-password">click here</Link>
-                      </>
-                    }
-                    placeholder="Password"
-                    {...form.getInputProps('password')}
-                  />
+                  <div>
+                    <PasswordInput
+                      required
+                      label="Password"
+                      type="password"
+                      placeholder="Password"
+                      {...form.getInputProps('password')}
+                    />
+                    <Text size="xs" mt="xs">
+                      Forgot you password,{' '}
+                      <Anchor
+                        tabIndex={3}
+                        component={Link}
+                        to="/forgot-password">
+                        click here
+                      </Anchor>
+                      .
+                    </Text>
+                  </div>
                 )}
 
                 <Federated
@@ -156,14 +163,18 @@ export default function PasswordLogin() {
                   Login
                 </Button>
 
-                <Text>
-                  Don't have an account? <Link to="/signup">Register</Link>
+                <Text size={'xs'}>
+                  Don't have an account?{' '}
+                  <Anchor tabIndex={4} component={Link} to="/signup">
+                    Register
+                  </Anchor>
+                  .
                 </Text>
               </Stack>
             </form>
           </Stack>
         </Paper>
       </Stack>
-    </Center>
+    </Group>
   );
 }

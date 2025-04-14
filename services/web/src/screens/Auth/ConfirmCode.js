@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Redirect, Link, useNavigate, useLocation } from '@bedrockio/router';
-import { Dimmer, Grid, Loader, Message, Segment } from 'semantic';
-import { Paper, PinInput } from '@mantine/core';
+import Logo from 'components/Logo';
+
+import { Paper, PinInput, Stack, Group, Alert, Title } from '@mantine/core';
 
 import { useSession } from 'stores/session';
 
-import LogoTitle from 'components/LogoTitle';
 import ErrorMessage from 'components/ErrorMessage';
 import Meta from 'components/Meta';
 
@@ -72,22 +72,22 @@ export default function ConfirmCode() {
     return (
       <>
         <Meta title="Confirm Code" />
-        <LogoTitle title="Confirm Code" />
-        <Paper>
-          {loading && (
-            <Dimmer inverted active>
-              <Loader />
-            </Dimmer>
-          )}
-          <Segment padded>{renderMessage()}</Segment>
-          <Segment secondary>
-            <Grid>
-              <Grid.Column floated="left" width={12}>
-                <Link to="/login">Back</Link>
-              </Grid.Column>
-            </Grid>
-          </Segment>
-        </Paper>
+        <Group justify="center" align="center" pt={{ base: 30, sm: 120 }}>
+          <Stack w={{ base: '95vw', sm: 480 }} align="center">
+            <Logo maw={200} title="Login" />
+
+            <Paper mt="md" w="100%" p="lg" radius="md" withBorder>
+              <Stack gap="md">
+                <Title order={3}>Confirm Code</Title>
+                <Paper>
+                  {renderMessage()}
+
+                  <Link to="/login">Back</Link>
+                </Paper>
+              </Stack>
+            </Paper>
+          </Stack>
+        </Group>
       </>
     );
   }
@@ -103,7 +103,7 @@ export default function ConfirmCode() {
   function renderLink() {
     return (
       <React.Fragment>
-        <Message success>{renderLinkMessage()}</Message>
+        <Alert success>{renderLinkMessage()}</Alert>
         <ErrorMessage error={error} />
       </React.Fragment>
     );
@@ -121,7 +121,7 @@ export default function ConfirmCode() {
   function renderCode() {
     return (
       <React.Fragment>
-        <Message success>{renderCodeMessage()}</Message>
+        <Alert success>{renderCodeMessage()}</Alert>
         <form>
           {!state.code && (
             <PinInput
