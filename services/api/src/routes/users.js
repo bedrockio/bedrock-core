@@ -69,14 +69,20 @@ router
 
     const { data, meta } = await AuditEntry.search({
       ...ctx.request.body,
-      $or: [{
-        actor: user.id,
-      }, {
-        owner: user.id,
-      }, {
-        objectId: user.id,
-      }]
-    });
+      $or: [
+        {
+          actor: user.id,
+        },
+        {
+          owner: user.id,
+        },
+        {
+          object: user.id,
+        },
+      ],
+    })
+      .populate('actor', 'firstName lastName')
+      .populate('object', 'firstName lastName name');
 
     ctx.body = {
       data: data,

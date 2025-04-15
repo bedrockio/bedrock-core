@@ -102,15 +102,6 @@ export default function UserOverview() {
           </Stack>
         </Card>
 
-        <Paper variant="filled" withBorder p="md">
-          <Stack spacing="xs">
-            <Text size="md" weight="bold">
-              User Activity
-            </Text>
-            <Divider />
-          </Stack>
-        </Paper>
-
         <Card withBorder>
           <Card.Section p="md" withBorder>
             <Text size="md" weight="bold">

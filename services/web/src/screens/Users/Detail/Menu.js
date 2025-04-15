@@ -19,11 +19,6 @@ export default () => {
   const tabs = [
     { title: 'Overview', href: `/users/${user.id}` },
     { title: 'Audit Log', href: `/users/${user.id}/audit-log` },
-    {
-      icon: <IconPencil size={12} />,
-      title: 'Edit',
-      href: `/users/${user.id}/edit`,
-    },
   ];
 
   return (

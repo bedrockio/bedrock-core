@@ -1,25 +1,28 @@
-import React from 'react';
+import { useState } from 'react';
 import { Link } from '@bedrockio/router';
-import { Table, Paper, Space, Group, Code, Tooltip } from '@mantine/core';
+import { Table, Drawer, Group, Anchor } from '@mantine/core';
 
-import Breadcrumbs from 'components/Breadcrumbs';
-import Layout from 'components/Layout';
+import Menu from './Menu';
 import Search from 'components/Search';
 import SearchFilters from 'components/Search/Filters';
-//import ShowAuditEntry from 'modals/ShowAuditEntry';
 
 import { request } from 'utils/api';
 import { formatDateTime } from 'utils/date';
-import Meta from 'components/Meta';
 
-export default function AuditLog() {
-  const onDataNeeded = async (params) => {
+import SortableTh from 'components/Table/SortableTh';
+import { usePage } from 'stores/page';
+
+export default function UserAuditLog() {
+  const { user } = usePage();
+
+  const [selectedItem, setSelectedItem] = useState();
+
+  async function onDataNeeded(params) {
     const response = await request({
       method: 'POST',
-      path: '/1/audit-entries/search',
+      path: `/1/users/${user.id}/audit-entries/search`,
       body: {
         ...params,
-        include: ['*', 'actor.firstName', 'actor.lastName'],
       },
     });
 
@@ -32,112 +35,66 @@ export default function AuditLog() {
       store[item.ownerType] = list;
     });
 
-    const [users] = await Promise.all(
-      Object.keys(store)
-        .map((key) => {
-          if (key === 'User') {
-            const ids = [...new Set(store[key])];
-            if (!ids.length) return null;
-            return fetchUsers({
-              ids,
-              include: ['firstName', 'lastName', 'email'],
-            });
-          }
-          console.error('[AuditLog] Unknown ownerType', key);
-          return null;
-        })
-        .filter(Boolean),
-    );
-
-    response.data.forEach((item) => {
-      if (item.ownerType === 'User') {
-        const user = users?.find((u) => u.id === item.ownerId);
-        if (!user) return;
-        item.owner = user;
-      }
-    });
-
     return response;
-  };
+  }
 
-  const fetchUsers = async (props) => {
-    const { data } = await request({
-      method: 'POST',
-      path: '/1/users/search',
-      body: props,
-    });
-    return data;
-  };
-
-  const fetchSearchOptions = async (props) => {
+  async function fetchSearchOptions(props) {
     const { data } = await request({
       method: 'POST',
       path: '/1/audit-entries/search-options',
       body: props,
     });
     return data;
-  };
+  }
 
-  const getFilterMapping = () => {
-    return {
-      actor: {
-        label: 'Actor',
-        getDisplayValue: async (id) => {
-          const data = await fetchUsers({ ids: [id] });
-          return data[0].name;
-        },
-      },
-      ownerId: {
-        label: 'Owner',
-        getDisplayValue: async (id) => {
-          const data = await fetchUsers({ ids: [id] });
-          return data[0].name;
-        },
-      },
-      category: {
-        label: 'Category',
-      },
-      activity: {
-        label: 'Activity',
-      },
-      objectType: {
-        label: 'Object Type',
-      },
-      sessionId: {
-        label: 'Session Id',
-      },
-      createdAt: {
-        label: 'Created At',
-        type: 'date',
-        range: true,
-      },
-      keyword: {},
-    };
-  };
+  function getFilterMapping() {
+    return {};
+  }
+
+  function renderActor(actor) {
+    if (!actor) return null;
+    const { id, name } = actor;
+
+    if (id !== user.id) {
+      return (
+        <Anchor component={Link} to={`/users/${id}`}>
+          {name}
+        </Anchor>
+      );
+    }
+    return name;
+  }
 
   return (
     <>
-      <Meta title="Audit Logs" />
+      <Drawer
+        position="right"
+        opened={!!selectedItem}
+        onClose={() => setSelectedItem(null)}>
+        <Group>
+          <Anchor component={Link} to={`/users/${user.id}`}>
+            {user.name}
+          </Anchor>
+        </Group>
+      </Drawer>
+      <Menu />
       <Search.Provider
-        //filterMapping={getFilterMapping()}
+        filterMapping={getFilterMapping()}
         onDataNeeded={onDataNeeded}>
         {({ items, getSorted, setSort }) => {
           return (
-            <React.Fragment>
-              <Breadcrumbs active="Organizations" />
-
-              <Paper p="md" shadow="xs" withBorder>
-                <Group position="apart">
+            <>
+              <Group mt="md" justify="space-between">
+                <Group>
                   <SearchFilters.Modal></SearchFilters.Modal>
-                  <Group>
-                    <Search.Total />
-                    <SearchFilters.Keyword placeholder="Enter ObjectId" />
-                  </Group>
+                  <Search.Status />
                 </Group>
-              </Paper>
 
-              <Space h="md" />
-              <Search.Status />
+                <Group>
+                  <Search.Total />
+                  <SearchFilters.Keyword placeholder="Enter ObjectId" />
+                </Group>
+              </Group>
 
               {items.length !== 0 && (
                 <Table striped highlightOnHover>
@@ -145,67 +102,39 @@ export default function AuditLog() {
                     <Table.Tr>
                       <Table.Th>Actor</Table.Th>
                       <Table.Th>Activity</Table.Th>
-                      <Table.Th>Object Owner</Table.Th>
-                      <Table.Th>Request</Table.Th>
-                      <Table.Th onClick={() => setSort('createdAt')}>
-                        Date
-                        <Tooltip label="This is the date and time the organization was created">
-                          <span> ℹ️</span>
-                        </Tooltip>
-                      </Table.Th>
-                      <Table.Th>Actions</Table.Th>
+                      <Table.Th>Object Type</Table.Th>
+                      <Table.Th>Object Name</Table.Th>
+                      <SortableTh
+                        width={170}
+                        sorted={getSorted('createdAt')}
+                        onClick={() => setSort('createdAt')}>
+                        Created At
+                      </SortableTh>
                     </Table.Tr>
                   </Table.Thead>
 
                   <Table.Tbody>
                     {items.map((item) => (
-                      <Table.Tr key={item.id}>
-                        <Table.Td>
-                          {item.actor && (
-                            <Link
-                              title={item.actor.email}
-                              to={`/users/${item.actor.id}`}>
-                              {item.actor.firstName} {item.actor.lastName}
-                            </Link>
-                          )}
-                        </Table.Td>
+                      <Table.Tr
+                        key={item.id}
+                        onClick={() => open()}
+                        style={{
+                          cursor: 'pointer',
+                        }}>
+                        <Table.Td>{renderActor(item.actor)}</Table.Td>
                         <Table.Td>{item.activity}</Table.Td>
-                        <Table.Td>
-                          {item.owner && (
-                            <Link
-                              title={item.owner.email}
-                              to={`/users/${item.owner.id}`}>
-                              {item.owner.name}
-                            </Link>
-                          )}
-                        </Table.Td>
-                        <Table.Td>
-                          <Code>
-                            {item.requestMethod} {item.requestUrl}
-                          </Code>
-                        </Table.Td>
-                        <Table.Td>{formatDateTime(item.createdAt)}</Table.Td>
-                        <Table.Td style={{ textAlign: 'center' }}>
-                          {/*
-                            <Tooltip label="View details">
-                              <ActionIcon 
-                                variant="subtle"
-                                onClick={() => {/* show modal */
-                          /*}}
-                              >
-                                <IconSearch size={16} />
-                              </ActionIcon>
-                            </Tooltip>
-                          */}
+                        <Table.Td>{item.objectType}</Table.Td>
+                        <Table.Td>{item.object?.name || 'N / A'}</Table.Td>
+                        <Table.Td align="right">
+                          {formatDateTime(item.createdAt)}
                         </Table.Td>
                       </Table.Tr>
                     ))}
                   </Table.Tbody>
                 </Table>
               )}
-              <Space h="md" />
               <Search.Pagination />
-            </React.Fragment>
+            </>
           );
         }}
       </Search.Provider>
