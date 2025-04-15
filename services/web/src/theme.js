@@ -1,4 +1,4 @@
-import { Anchor, createTheme, DEFAULT_THEME, Fieldset } from '@mantine/core';
+import { createTheme, DEFAULT_THEME } from '@mantine/core';
 
 export const theme = createTheme({
   primaryShade: 9,
