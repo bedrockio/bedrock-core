@@ -99,17 +99,6 @@ function SearchProvider({
     sort,
   });
 
-  const fetchRef = useRef();
-
-  useEffect(() => {
-    fetchRef.current = fetchData;
-  });
-
-  useEffect(() => {
-    fetchRef.current();
-    updateUrlSearchParams();
-  }, [state.filters, state.page, state.sort]);
-
   function fetchData() {
     setState((prevState) => ({ ...prevState, loading: true, error: null }));
 
@@ -131,6 +120,11 @@ function SearchProvider({
         setState((prevState) => ({ ...prevState, loading: false, error }));
       });
   }
+
+  useEffect(() => {
+    fetchData();
+    updateUrlSearchParams();
+  }, [state.filters, state.page, state.sort]);
 
   function updateUrlSearchParams() {
     const { filters, filterMapping = {} } = state;
