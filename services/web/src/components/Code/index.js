@@ -1,10 +1,9 @@
-/*
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Icon } from 'semantic';
+import { ActionIcon } from '@mantine/core';
 
 import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
-import atomDark from 'react-syntax-highlighter/dist/esm/styles/prism/atom-dark';
+import theme from 'react-syntax-highlighter/dist/esm/styles/prism/vsc-dark-plus';
 import bash from 'react-syntax-highlighter/dist/esm/languages/prism/bash';
 import json from 'react-syntax-highlighter/dist/esm/languages/prism/json';
 import swift from 'react-syntax-highlighter/dist/esm/languages/prism/swift';
@@ -13,13 +12,14 @@ import { useClass } from 'helpers/bem';
 
 import { copyToClipboard } from 'utils/copy';
 
-atomDark['pre[class*="language-"]'].margin = '0';
+theme['pre[class*="language-"]'].margin = '0';
 
 SyntaxHighlighter.registerLanguage('bash', bash);
 SyntaxHighlighter.registerLanguage('json', json);
 SyntaxHighlighter.registerLanguage('swift', swift);
 
 import './code.less';
+import { IconCheck, IconCopy } from '@tabler/icons-react';
 
 export default function Code(props) {
   const { scroll, action } = props;
@@ -28,7 +28,7 @@ export default function Code(props) {
 
   const { className, getElementClass } = useClass(
     'code',
-    scroll ? 'scroll' : null
+    scroll ? 'scroll' : null,
   );
 
   async function onCopyClick() {
@@ -44,7 +44,7 @@ export default function Code(props) {
     const { copy, scroll, ...rest } = props;
     return (
       <div className={className}>
-        <SyntaxHighlighter style={atomDark} {...rest} />
+        <SyntaxHighlighter style={theme} {...rest} />
         {renderAction()}
       </div>
     );
@@ -63,7 +63,9 @@ export default function Code(props) {
       <div
         onClick={onCopyClick}
         className={getElementClass('copy-button', copied ? null : 'clickable')}>
-        <Icon name={copied ? 'check' : 'copy'} fitted />
+        <ActionIcon variant="transparent">
+          {copied ? <IconCheck size={14} /> : <IconCopy size={14} />}
+        </ActionIcon>
       </div>
     );
   }
@@ -76,5 +78,3 @@ Code.propTypes = {
   action: PropTypes.node,
   children: PropTypes.string.isRequired,
 };
-
-*/

@@ -1,6 +1,7 @@
 ## Web Utils
 
-These helper functions are available to do common UI patterns on top of these libraries:
+These helper functions are available to do common UI patterns on top of these
+libraries:
 
 - [Lodash](https://lodash.com/docs) - General Purpose Utils
 - [Luxon](https://moment.github.io/luxon/) - Low-footprint Data Library
@@ -23,7 +24,9 @@ try {
 
 ## Env / Configuration
 
-Any environment variables can be passed from `.env`, a Docker container or the `serve.js` process. These can be explicitly exposed in [./env.js](./env.js). This is how they can be accessed anywhere in the code:
+Any environment variables can be passed from `.env`, a Docker container or the
+`serve.js` process. These can be explicitly exposed in [./env.js](./env.js).
+This is how they can be accessed anywhere in the code:
 
 ```javascript
 import { API_URL } from 'utils/env';
@@ -75,30 +78,6 @@ Format US Dollar amount:
 ```javascript
 import { formatUsd } from 'utils/currency';
 formatUsd(99.999999); // $99.99
-```
-
-Convert an option / rich enum to a Label element:
-
-```javascript
-import { formatOption } from 'utils/form';
-const statuses = {
-  pending: {
-    name: 'Pending',
-    icon: 'wait',
-  },
-  scheduled: {
-    name: 'Scheduled',
-    icon: 'checkmark',
-    color: 'olive',
-  },
-  cancelled: {
-    name: 'Cancelled',
-    icon: 'dont',
-    color: 'red',
-  },
-};
-
-formatOption(statuses, 'scheduled'); // <Label color="olive" icon="checkmark"...
 ```
 
 Format an `address` object:

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
 import { Link, useLocation, useNavigate } from '@bedrockio/router';
-import { Container } from '@mantine/core';
+import { ActionIcon, Container } from '@mantine/core';
 
 import { useClass } from 'helpers/bem';
 
@@ -147,7 +147,11 @@ export default function ApiDocs() {
             confirmButton="Generate"
             header="Generate Documentation"
             content="Generates OpenApi documentation based on schemas and route validation. This will not overwrite current documentation."
-            trigger={<IconRefresh title="Generate Documentation" />}
+            trigger={
+              <ActionIcon variant="transparent" title="Generate Documentation">
+                <IconRefresh size={14} />
+              </ActionIcon>
+            }
             onConfirm={generateDocs}
           />
         </div>

@@ -3,7 +3,7 @@ import { Icon } from 'semantic';
 
 import { useClass } from 'helpers/bem';
 
-import { Code } from '@mantine/core';
+import { ActionIcon, Code } from '@mantine/core';
 import { JumpLink } from 'components/Link';
 import { expandRef } from 'docs/utils';
 import Confirm from 'components/Confirm';
@@ -14,6 +14,7 @@ import { useDocs } from '../utils/context';
 import EditableField from './EditableField';
 
 import './route-example.less';
+import { IconTrash } from '@tabler/icons-react';
 
 export default function RouteExample(props) {
   const { path, status, schema, requestPath, requestBody, responseBody } =
@@ -58,14 +59,9 @@ export default function RouteExample(props) {
               }}
               className={getElementClass('summary')}
               trigger={
-                <Icon
-                  size="small"
-                  name="trash"
-                  link
-                  onClick={(evt) => {
-                    evt.stopPropagation();
-                  }}
-                />
+                <ActionIcon variant="transparent">
+                  <IconTrash size={14} />
+                </ActionIcon>
               }
             />
           </Layout.Group>

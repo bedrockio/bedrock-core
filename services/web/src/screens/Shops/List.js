@@ -8,6 +8,7 @@ import {
   Tooltip,
   Anchor,
   Text,
+  Loader,
 } from '@mantine/core';
 import { IconPlus, IconHelp } from '@tabler/icons-react';
 
@@ -32,7 +33,6 @@ const countries = allCountries.map(({ countryCode, nameEn }) => ({
 
 import Actions from './Actions';
 import SortableTh from 'components/Table/SortableTh';
-import { Loader } from 'semantic-ui-react';
 
 export default function ShopList() {
   async function onDataNeeded(body) {

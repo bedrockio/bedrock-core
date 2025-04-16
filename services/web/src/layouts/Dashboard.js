@@ -3,7 +3,7 @@ import { useSession } from 'stores/session';
 import Logo from 'components/Logo';
 import OrganizationSelector from 'components/OrganizationSelector';
 import { userCanSwitchOrganizations } from 'utils/permissions';
-import { useDisclosure } from '@mantine/hooks';
+import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 
 import {
   IconApps,
@@ -27,9 +27,7 @@ import {
   Center,
 } from '@mantine/core';
 
-import { useMediaQuery } from '@mantine/hooks';
-
-import { LinksGroup } from './components/LinksGroup';
+import MenuItem from '../components/MenuItem';
 import ModalTrigger from 'components/ModalTrigger';
 
 const menuItems = [
@@ -143,159 +141,16 @@ export default function DashboardLayout({ children }) {
         </AppShell.Section>
         <AppShell.Section grow component={ScrollArea}>
           {menuItems.map((item) => (
-            <LinksGroup
-              href={item.href}
-              key={item.label}
-              icon={item.icon}
-              label={item.label}
-              items={item.items}
-            />
+            <MenuItem key={item.href} {...item} />
           ))}
         </AppShell.Section>
         <AppShell.Section>
           {accountItems.map((item) => {
-            return (
-              <LinksGroup
-                href={item.href}
-                key={item.label}
-                icon={item.icon}
-                label={item.label}
-                items={item.items}
-              />
-            );
+            return <MenuItem key={item.href} {...item} />;
           })}
         </AppShell.Section>
-
-        {/*
-        <Stack gap="md">
-          <Sidebar.Link to="/settings">
-            <Icon name="gear" />
-            Settings
-          </Sidebar.Link>
-          <Protected endpoint="applications">
-            <Sidebar.Link to="/audit-trail">
-              <Icon name="list-ol" />
-              Audit Trail
-            </Sidebar.Link>
-            <Sidebar.Link to="/applications">
-              <Icon name="terminal" />
-              Applications
-            </Sidebar.Link>
-            <Sidebar.Accordion active="/applications">
-              <Sidebar.Link to="/docs">
-                <Icon name="book-open" />
-                API Docs
-              </Sidebar.Link>
-            </Sidebar.Accordion>
-            <Sidebar.Link to="/logout">
-              <Icon name="right-from-bracket" />
-              Log Out
-            </Sidebar.Link>
-          </Protected>
-        </Stack>
-        */}
       </AppShell.Navbar>
       <AppShell.Main>{children}</AppShell.Main>
     </AppShell>
   );
 }
-
-/*
-class DashboardLayoutOld extends React.Component {
-  render() {
-    const { user, organization } = this.context;
-    return (
-      <Sidebar>
-        <ConnectionError />
-        <Sidebar.Menu>
-          <Layout style={{ height: '100%' }}>
-            <NavLink style={{ margin: '5px 25px 20px 25px' }} to="/">
-              <Logo width="100%" />
-            </NavLink>
-            <Layout vertical spread>
-              <Layout.Group>
-                <Sidebar.Header>Main Menu</Sidebar.Header>
-              </Layout.Group>
-              <Layout.Group grow overflow>
-                <Sidebar.Link to="/shops">
-                  <Icon name="store" />
-                  Shops
-                </Sidebar.Link>
-                <Sidebar.Link to="/products">
-                  <Icon name="box" />
-                  Products
-                </Sidebar.Link>
-                <Protected endpoint="users">
-                  <Sidebar.Link to="/users" exact>
-                    <Icon name="users" />
-                    Users
-                  </Sidebar.Link>
-                  <Sidebar.Accordion active="/users">
-                    <Sidebar.Link to="/users/invites">
-                      <Icon name="envelope" />
-                      Invites
-                    </Sidebar.Link>
-                  </Sidebar.Accordion>
-                </Protected>
-                <Protected endpoint="organizations">
-                  <Sidebar.Link to="/organizations">
-                    <Icon name="building" />
-                    Organizations
-                  </Sidebar.Link>
-                </Protected>
-              </Layout.Group>
-              <Layout.Group>
-                <Sidebar.Divider />
-                <Sidebar.Link to="/settings">
-                  <Icon name="gear" />
-                  Settings
-                </Sidebar.Link>
-                <Protected endpoint="applications">
-                  <Sidebar.Link to="/audit-trail">
-                    <Icon name="list-ol" />
-                    Audit Trail
-                  </Sidebar.Link>
-                  <Sidebar.Link to="/applications">
-                    <Icon name="terminal" />
-                    Applications
-                  </Sidebar.Link>
-                  <Sidebar.Accordion active="/applications">
-                    <Sidebar.Link to="/docs">
-                      <Icon name="book-open" />
-                      API Docs
-                    </Sidebar.Link>
-                  </Sidebar.Accordion>
-                </Protected>
-                <Sidebar.Link to="/logout">
-                  <Icon name="right-from-bracket" />
-                  Log Out
-                </Sidebar.Link>
-              </Layout.Group>
-            </Layout>
-          </Layout>
-        </Sidebar.Menu>
-        <Sidebar.Content>
-          <Sidebar.Mobile>
-            <Layout horizontal spread center>
-              <Layout.Group>
-                <NavLink to="/">
-                  <img src={favicon} height="15" />
-                </NavLink>
-              </Layout.Group>
-              <Layout.Group>
-                <Sidebar.Trigger>
-                  <Icon name="bars" fitted />
-                </Sidebar.Trigger>
-              </Layout.Group>
-            </Layout>
-          </Sidebar.Mobile>
-          <Container>
-            <main>{this.props.children}</main>
-            <Footer />
-          </Container>
-        </Sidebar.Content>
-      </Sidebar>
-    );
-  }
-}
-*/

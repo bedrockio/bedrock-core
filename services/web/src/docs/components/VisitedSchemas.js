@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Divider } from 'semantic';
+import { Divider } from '@mantine/core';
 
 import { expandRef } from 'docs/utils';
 

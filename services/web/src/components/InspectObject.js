@@ -1,11 +1,9 @@
-import { CodeHighlight } from '@mantine/code-highlight';
-import '@mantine/code-highlight/styles.css';
-import { Button } from '@mantine/core';
+import Code from 'components/Code';
 
-export default function InspectObject({ context, object, ...props }) {
+export default function InspectObject({ object, ...props }) {
   return (
     <>
-      <CodeHighlight
+      <Code
         style={{
           borderRadius: 'var(--mantine-radius-md)',
         }}
