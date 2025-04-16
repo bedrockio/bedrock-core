@@ -29,10 +29,10 @@ const PageHeader = ({
             {breadcrumbItems.map((item, index) =>
               item?.href ? (
                 <Anchor component={Link} to={item.href} key={index}>
-                  <Text size="sm">{item.title}</Text>
+                  <Text size="xs">{item.title}</Text>
                 </Anchor>
               ) : (
-                <Text key={index} size="sm">
+                <Text key={index} size="xs">
                   {item.title}
                 </Text>
               ),
@@ -47,7 +47,7 @@ const PageHeader = ({
 
         {tabs.length > 0 && (
           <Tabs
-            variant="outline"
+            variant="default"
             value={location.pathname}
             onChange={(value) => navigate(value)}>
             <Tabs.List>
@@ -57,7 +57,7 @@ const PageHeader = ({
                   key={index}
                   value={tab.href}
                   color="primary">
-                  <Text size="xs" fw="bold">
+                  <Text size="sm" fw="bold">
                     {tab.title}
                   </Text>
                 </Tabs.Tab>

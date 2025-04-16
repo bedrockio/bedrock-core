@@ -1,5 +1,4 @@
 import PageHeader from 'components/PageHeader';
-
 import Form from './Form';
 import { Box } from '@mantine/core';
 import { useNavigate } from '@bedrockio/router';

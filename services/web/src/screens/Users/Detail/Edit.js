@@ -21,7 +21,7 @@ export default function EditUser() {
           { title: user.name, href: `/users/${user.id}` },
           { title: 'Edit' },
         ]}
-        rightSection={<Actions user={user} reload={reload} />}
+        rightSection={<Actions  user={user} reload={reload} />}
       />
       <Stack mt="md" gap="lg">
         <Form

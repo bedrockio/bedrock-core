@@ -71,11 +71,7 @@ export default function UserAuditLog() {
         position="right"
         opened={!!selectedItem}
         onClose={() => setSelectedItem(null)}>
-        <Group>
-          <Anchor component={Link} to={`/users/${user.id}`}>
-            {user.name}
-          </Anchor>
-        </Group>
+        <Group></Group>
       </Drawer>
       <Menu />
       <Search.Provider

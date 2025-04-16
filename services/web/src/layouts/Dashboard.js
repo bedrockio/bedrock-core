@@ -33,7 +33,11 @@ import { LinksGroup } from './components/LinksGroup';
 import ModalTrigger from 'components/ModalTrigger';
 
 const menuItems = [
-  { icon: IconBuildingStore, href: '/shops', label: 'Shops' },
+  {
+    icon: IconBuildingStore,
+    href: '/shops',
+    label: 'Shops',
+  },
   { icon: IconPackage, href: '/products', label: 'Products' },
   {
     icon: IconUsersGroup,
