@@ -171,10 +171,7 @@ export default function ApiDocs() {
     <PortalLayout menuItems={getMenuItems(sorted)} actions={renderActions()}>
       <div className={className}>
         <Meta title="API Docs" />
-        {renderSidebar()}
-        <main className={getElementClass('page')}>
-          <Container>{renderPage()}</Container>
-        </main>
+        <main className={getElementClass('page')}>{renderPage()}</main>
       </div>
     </PortalLayout>
   );

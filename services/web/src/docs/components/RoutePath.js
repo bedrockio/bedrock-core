@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { Icon } from 'semantic';
-
 import Code from 'components/Code';
 
 import RequestBuilder from './RequestBuilder';
+import { IconPlayerPlayFilled } from '@tabler/icons-react';
+import { ActionIcon } from '@mantine/core';
 
 export default class Route extends React.Component {
   render() {
@@ -12,7 +12,14 @@ export default class Route extends React.Component {
     return (
       <Code
         action={
-          <RequestBuilder route={route} trigger={<Icon name="play" link />} />
+          <RequestBuilder
+            route={route}
+            trigger={
+              <ActionIcon>
+                <IconPlayerPlayFilled size={14} />
+              </ActionIcon>
+            }
+          />
         }>
         {route}
       </Code>

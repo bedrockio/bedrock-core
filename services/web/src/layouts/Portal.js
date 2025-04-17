@@ -1,20 +1,30 @@
-import { Link } from '@bedrockio/router';
+import { Link, useLocation } from '@bedrockio/router';
 
-import { AppShell, Flex, Button, ScrollArea } from '@mantine/core';
+import {
+  AppShell,
+  Flex,
+  Button,
+  ScrollArea,
+  Burger,
+  Group,
+} from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-
-import { useClass } from 'helpers/bem';
 
 import Logo from 'components/Logo';
 import ConnectionError from 'components/ConnectionError';
 
-import './portal.less';
 import { IconArrowBack } from '@tabler/icons-react';
 import MenuItem from 'components/MenuItem';
+import { useEffect } from 'react';
 
 export default function PortalLayout({ children, menuItems, actions }) {
-  const { className, getElementClass } = useClass('portal-layout');
-  const [opened, { toggle }] = useDisclosure();
+  const [opened, { toggle, close }] = useDisclosure();
+
+  const location = useLocation();
+
+  useEffect(() => {
+    close();
+  }, [location.pathname]);
 
   return (
     <>
@@ -39,7 +49,15 @@ export default function PortalLayout({ children, menuItems, actions }) {
             justify="space-between"
             align="center"
             p="md">
-            <Logo height={20} />
+            <Group>
+              <Burger
+                opened={opened}
+                onClick={toggle}
+                hiddenFrom="sm"
+                size="sm"
+              />
+              <Logo height={20} />
+            </Group>
             <Button
               size="compact-sm"
               component={Link}

@@ -66,6 +66,7 @@ object `window.__env_conf`.
 ## Frameworks Used
 
 - [Mantine](https://mantine.dev/)
+- [Tabler Icons](https://tabler-icons.io/)
 - [Vite](https://vite.dev/)
 - [React](https://facebook.github.io/react/)
 - [Bedrock Router](https://github.com/bedrockio/router)

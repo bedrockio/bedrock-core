@@ -63,7 +63,7 @@ export default function Code(props) {
       <div
         onClick={onCopyClick}
         className={getElementClass('copy-button', copied ? null : 'clickable')}>
-        <ActionIcon variant="transparent">
+        <ActionIcon variant="outlined">
           {copied ? <IconCheck size={14} /> : <IconCopy size={14} />}
         </ActionIcon>
       </div>
