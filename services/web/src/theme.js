@@ -1,4 +1,6 @@
-import { createTheme, DEFAULT_THEME } from '@mantine/core';
+import { Anchor, createTheme, DEFAULT_THEME, Tabs } from '@mantine/core';
+import { text } from 'hast-util-to-mdast/lib/handlers/text';
+import { template } from 'lodash-es';
 
 export const theme = createTheme({
   primaryShade: 9,
@@ -6,6 +8,7 @@ export const theme = createTheme({
 
   luminanceThreshold: 0.3,
   primaryColor: 'green',
+
   colors: {
     brown: [
       '#f7f5f2',
@@ -39,9 +42,7 @@ export const theme = createTheme({
       styles: {
         root: {
           color: 'var(--mantine-color-text)',
-          '&:hover': {
-            color: 'var(--mantine-color-primary)',
-          },
+          fontWeight: 500,
         },
       },
     },
@@ -53,5 +54,25 @@ export const theme = createTheme({
         },
       },
     },
+    Breadcrumbs: {
+      styles: {
+        root: {
+          fontSize: 'var(--mantine-font-size-sm)',
+        },
+      },
+    },
+    Tabs: Tabs.extend({
+      vars: () => ({
+        tab: {
+          '--tab-hover-color': 'transparent',
+        },
+      }),
+      styles: {
+        tab: {
+          padding: 'var(--mantine-spacing-xs) 0rem',
+          marginRight: 'var(--mantine-spacing-md)',
+        },
+      },
+    }),
   },
 });

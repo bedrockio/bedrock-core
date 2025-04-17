@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Redirect } from '@bedrockio/router';
-import { Form, Segment } from 'semantic';
+import { Button, Paper, Stack } from 'mantine';
 import { startCase, pick } from 'lodash';
 
 import { useSession } from 'stores/session';
@@ -77,49 +77,51 @@ export default function OnboardScreen() {
     }
   }
 
-  function render() {
-    return (
-      <React.Fragment>
-        <Meta title="Tell Us More" />
-        <LogoTitle title="Tell Us More" />
-        <Form loading={loading} onSubmit={onSubmit} noValidate>
-          <Segment.Group>
-            <Segment padded>
-              {error?.type !== 'validation' && <ErrorMessage error={error} />}
-              {!user.email && (
-                <EmailField
-                  name="email"
-                  value={body.email || ''}
-                  onChange={setField}
-                  error={error}
-                />
-              )}
-              {!user.phone && (
-                <PhoneField
-                  name="phone"
-                  value={body.phone || ''}
-                  onChange={setField}
-                  error={error}
-                />
-              )}
-              <Form.Button
-                fluid
-                primary
-                size="large"
-                content="Continue"
-                loading={loading}
-                disabled={loading}
-              />
-            </Segment>
-          </Segment.Group>
-        </Form>
-      </React.Fragment>
-    );
-  }
-
   if (isValidUser(user)) {
     return <Redirect to="/" />;
   }
 
-  return render();
+  return (
+    <React.Fragment>
+      <Meta title="Tell Us More" />
+      <LogoTitle title="Tell Us More" />
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          onSubmit();
+        }}
+        noValidate>
+        <Paper shadow="xs" p="md" withBorder>
+          <Stack>
+            {error?.type !== 'validation' && <ErrorMessage error={error} />}
+            {!user.email && (
+              <EmailField
+                name="email"
+                value={body.email || ''}
+                onChange={setField}
+                error={error}
+              />
+            )}
+            {!user.phone && (
+              <PhoneField
+                name="phone"
+                value={body.phone || ''}
+                onChange={setField}
+                error={error}
+              />
+            )}
+            <Button
+              fullWidth
+              type="submit"
+              color="blue"
+              size="lg"
+              loading={loading}
+              disabled={loading}>
+              Continue
+            </Button>
+          </Stack>
+        </Paper>
+      </form>
+    </React.Fragment>
+  );
 }

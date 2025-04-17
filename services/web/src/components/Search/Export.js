@@ -12,6 +12,7 @@ export default function ExportButton({
   body = {},
   limit = 10000,
   filename,
+  size,
   as: As = Button,
   children = 'Export',
   ...props
@@ -54,6 +55,7 @@ export default function ExportButton({
         trigger={
           <As
             loading={loading}
+            size={size}
             disabled
             variant="default"
             rightSection={<IconDownload size={14} />}
@@ -67,6 +69,7 @@ export default function ExportButton({
 
   return (
     <As
+      size={size}
       variant="default"
       rightSection={<IconDownload size={14} />}
       loading={loading}

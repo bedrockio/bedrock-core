@@ -59,8 +59,13 @@ const menuItems = [
 const accountItems = [
   {
     icon: IconTerminal2,
-    label: 'System',
+    label: 'Developer',
     items: [
+      {
+        icon: IconMail,
+        href: '/audit-log',
+        label: 'Audit Log',
+      },
       {
         icon: IconApps,
         href: '/applications',
@@ -70,11 +75,7 @@ const accountItems = [
         icon: IconBook,
         href: '/docs',
         label: 'API Docs',
-      },
-      {
-        icon: IconMail,
-        href: '/audit-log',
-        label: 'Audit Log',
+        external: true,
       },
     ],
   },

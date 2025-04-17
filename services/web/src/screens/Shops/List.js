@@ -11,6 +11,7 @@ import {
   Loader,
 } from '@mantine/core';
 import { IconPlus, IconHelp } from '@tabler/icons-react';
+import Protected from 'components/Protected';
 
 import PageHeader from 'components/PageHeader';
 
@@ -107,12 +108,15 @@ export default function ShopList() {
                 rightSection={
                   <>
                     <Search.Export filename="shops" />
-                    <Button
-                      component={Link}
-                      to="/shops/new"
-                      rightSection={<IconPlus size={14} />}>
-                      New Shop
-                    </Button>
+                    <Protected permission="shops.create">
+                      <Button
+                        component={Link}
+                        variant="default"
+                        to="/shops/new"
+                        rightSection={<IconPlus size={14} />}>
+                        New Shop
+                      </Button>
+                    </Protected>
                   </>
                 }
               />
@@ -179,7 +183,13 @@ export default function ShopList() {
                           </Tooltip>
                         </Group>
                       </SortableTh>
-                      <Table.Th width={50}>Actions</Table.Th>
+                      <Table.Th
+                        width={100}
+                        style={{
+                          textAlign: 'right',
+                        }}>
+                        Actions
+                      </Table.Th>
                     </Table.Tr>
                   </Table.Thead>
                   <Table.Tbody>
@@ -216,8 +226,8 @@ export default function ShopList() {
                             )}
                           </Table.Td>
                           <Table.Td>{formatDateTime(shop.createdAt)}</Table.Td>
-                          <Table.Td align="right">
-                            <Actions shop={shop} reload={reload} />
+                          <Table.Td justify="flex-end">
+                            <Actions compact shop={shop} reload={reload} />
                           </Table.Td>
                         </Table.Tr>
                       );

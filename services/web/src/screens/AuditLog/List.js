@@ -1,5 +1,5 @@
 import { Link } from '@bedrockio/router';
-import { Table, Badge, Button, Divider, Group } from '@mantine/core';
+import { Table, Button, Divider, Group, Anchor } from '@mantine/core';
 import { IconSearch } from '@tabler/icons-react';
 
 import PageHeader from 'components/PageHeader';
@@ -11,6 +11,7 @@ import ShowAuditEntry from 'modals/ShowAuditEntry';
 import { request } from 'utils/api';
 import { formatDateTime } from 'utils/date';
 import Meta from 'components/Meta';
+import SortableTh from 'components/Table/SortableTh';
 
 export default function AuditLogList() {
   const onDataNeeded = async (params) => {
@@ -84,17 +85,9 @@ export default function AuditLogList() {
     return {
       actor: {
         label: 'Actor',
-        getDisplayValue: async (id) => {
-          const data = await fetchUsers({ ids: [id] });
-          return data[0].name;
-        },
       },
       ownerId: {
         label: 'Owner',
-        getDisplayValue: async (id) => {
-          const data = await fetchUsers({ ids: [id] });
-          return data[0].name;
-        },
       },
       category: {
         label: 'Category',
@@ -117,19 +110,6 @@ export default function AuditLogList() {
     };
   };
 
-  const getColorForCategory = (category) => {
-    switch (category) {
-      case 'security':
-        return 'red';
-      case 'user':
-        return 'blue';
-      case 'system':
-        return 'orange';
-      default:
-        return 'gray';
-    }
-  };
-
   return (
     <>
       <Meta title="Audit Logs" />
@@ -150,48 +130,48 @@ export default function AuditLogList() {
                 },
               ]}
             />
-            <Group>
-              <SearchFilters.Modal>
-                <SearchFilters.Dropdown
-                  onDataNeeded={(name) => fetchUsers({ name })}
-                  search
-                  name="actor"
-                  label="Actor"
-                />
-                <SearchFilters.Dropdown
-                  onDataNeeded={(name) => fetchUsers({ name })}
-                  search
-                  name="ownerId"
-                  label="Owner"
-                />
-                <SearchFilters.Dropdown
-                  onDataNeeded={() => fetchSearchOptions({ field: 'category' })}
-                  name="category"
-                  label="Category"
-                />
-                <SearchFilters.Dropdown
-                  onDataNeeded={() => fetchSearchOptions({ field: 'activity' })}
-                  name="activity"
-                  label="Activity"
-                />
-                <SearchFilters.Dropdown
-                  onDataNeeded={() =>
-                    fetchSearchOptions({ field: 'objectType' })
-                  }
-                  name="objectType"
-                  label="ObjectType"
-                />
-                <SearchFilters.Dropdown
-                  onDataNeeded={() =>
-                    fetchSearchOptions({ field: 'sessionId' })
-                  }
-                  name="sessionId"
-                  label="Session Id"
-                />
-              </SearchFilters.Modal>
-              <Search.Status />
-              <Search.Total />
-              <SearchFilters.Keyword placeholder="Enter ObjectId" />
+            <Group justify="space-between" mt="md">
+              <Group>
+                <SearchFilters.Modal>
+                  <SearchFilters.Dropdown
+                    onDataNeeded={(name) => fetchUsers({ name })}
+                    search
+                    name="actor"
+                    label="Actor"
+                  />
+                  <SearchFilters.Dropdown
+                    onDataNeeded={(name) => fetchUsers({ name })}
+                    search
+                    name="ownerId"
+                    label="Owner"
+                  />
+                  <SearchFilters.Dropdown
+                    onDataNeeded={() =>
+                      fetchSearchOptions({ field: 'activity' })
+                    }
+                    name="activity"
+                    label="Activity"
+                  />
+                  <SearchFilters.Dropdown
+                    onDataNeeded={() =>
+                      fetchSearchOptions({ field: 'objectType' })
+                    }
+                    name="objectType"
+                    label="ObjectType"
+                  />
+                  <SearchFilters.Dropdown
+                    onDataNeeded={() =>
+                      fetchSearchOptions({ field: 'sessionId' })
+                    }
+                    name="sessionId"
+                    label="Session Id"
+                  />
+                </SearchFilters.Modal>
+                <Search.Status />
+              </Group>
+              <Group>
+                <Search.Total />
+              </Group>
             </Group>
 
             {items.length !== 0 && (
@@ -199,44 +179,35 @@ export default function AuditLogList() {
                 <Table.Thead>
                   <Table.Tr>
                     <Table.Th>Actor</Table.Th>
-                    <Table.Th>Category</Table.Th>
                     <Table.Th>Activity</Table.Th>
                     <Table.Th>Object Owner</Table.Th>
                     <Table.Th>Object Name</Table.Th>
-
-                    <Table.Th
-                      onClick={() => setSort('createdAt')}
-                      style={{ cursor: 'pointer' }}>
+                    <SortableTh
+                      width={170}
+                      sorted={getSorted('createdAt')}
+                      onClick={() => setSort('createdAt')}>
                       Date
-                    </Table.Th>
+                    </SortableTh>
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>
                   {items.map((item) => (
-                    <Table.Tr
-                      style={{ cursor: 'pointer' }}
-                      key={item.id}
-                      onClick={() => {
-                        console.log(item);
-                      }}>
+                    <Table.Tr key={item.id}>
                       <Table.Td>
                         {item.actor && (
-                          <Link
+                          <Anchor
+                            componet={Link}
                             title={item.actor.email}
                             to={`/users/${item.actor.id}`}>
                             {item.actor.firstName} {item.actor.lastName}
-                          </Link>
+                          </Anchor>
                         )}
                       </Table.Td>
-                      <Table.Td>
-                        <Badge
-                          color={getColorForCategory(item.category)}
-                          style={{ textTransform: 'capitalize' }}>
-                          {item.category || 'default'}
-                        </Badge>
-                      </Table.Td>
+
                       <Table.Td>{item.activity}</Table.Td>
-                      <Table.Td>{item.object?.name || 'N/A'}</Table.Td>
+                      <Table.Td>
+                        {item.object?.name || item.object || 'N/A'}
+                      </Table.Td>
                       <Table.Td>
                         {item.owner && (
                           <Link

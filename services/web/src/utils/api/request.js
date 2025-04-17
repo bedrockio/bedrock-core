@@ -46,12 +46,6 @@ export default async function request(options) {
     return;
   }
 
-  if (res.status === 403) {
-    setToken(null);
-    window.location.href = '/';
-    return;
-  }
-
   const contentType = getContentType(res);
 
   let response = res;

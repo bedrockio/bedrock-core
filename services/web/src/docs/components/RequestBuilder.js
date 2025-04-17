@@ -17,6 +17,8 @@ import {
   TextInput,
   SegmentedControl,
   Fieldset,
+  Affix,
+  Paper,
 } from '@mantine/core';
 
 import RequestBlock from 'components/RequestBlock';
@@ -438,25 +440,28 @@ export default function RequestBuilder(props) {
               {renderResponsePane()}
             </Tabs.Panel>
           </Tabs>
-
-          <Group justify="flex-end" gap="xs">
-            {canEditDocs() && (
+        </Stack>
+        <Affix position={{ bottom: 0, right: 0 }}>
+          <Paper p="xs">
+            <Group justify="flex-end" gap="md">
+              {canEditDocs() && (
+                <ActionIcon
+                  variant="outline"
+                  title="Perform request and record as example"
+                  onClick={onRecordClick}>
+                  <IconPlayerRecordFilled size={14} />
+                </ActionIcon>
+              )}
               <ActionIcon
                 variant="outline"
-                title="Perform request and record as example"
-                onClick={onRecordClick}>
-                <IconPlayerRecordFilled size={14} />
+                disabled={loading}
+                onClick={onPlayClick}
+                title="Perform request">
+                <IconPlayerPlayFilled size={14} />
               </ActionIcon>
-            )}
-            <ActionIcon
-              variant="outline"
-              disabled={loading}
-              onClick={onPlayClick}
-              title="Perform request">
-              <IconPlayerPlayFilled size={14} />
-            </ActionIcon>
-          </Group>
-        </Stack>
+            </Group>
+          </Paper>
+        </Affix>
       </Drawer>
     </React.Fragment>
   );

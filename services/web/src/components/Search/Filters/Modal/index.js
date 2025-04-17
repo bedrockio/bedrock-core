@@ -51,15 +51,15 @@ function FilterModal({ size = 'small', children }) {
     <>
       {searchContext.filterMapping ? (
         <Button
-          variant="light"
+          variant="default"
           onClick={() => open()}
-          rightSection={<IconAdjustmentsHorizontal size={18} />}>
+          rightSection={<IconAdjustmentsHorizontal size={14} />}>
           Filter
         </Button>
       ) : (
         <>
-          <Button onClick={() => open()} variant="light" primary size={size}>
-            <IconFilter size={16} />
+          <Button onClick={() => open()} variant="light" primary>
+            <IconFilter size={14} />
             Filter
           </Button>
           {getFilterCount() > 0 && <Badge>{getFilterCount()}</Badge>}

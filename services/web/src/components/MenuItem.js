@@ -1,13 +1,25 @@
 import { NavLink as MantineNavLink } from '@mantine/core';
 import { NavLink } from '@bedrockio/router';
 
-export default function MenuItem({ icon: Icon, label, href, to, items }) {
+export default function MenuItem({
+  external,
+  icon: Icon,
+  label,
+  href,
+  to,
+  items,
+}) {
   const hasLinks = Array.isArray(items) && items.length > 0;
 
   const _items = (hasLinks ? items : []).map((link) => (
     <MantineNavLink
       leftSection={link.icon && <link.icon size={16} />}
-      component={NavLink}
+      component={(props) => {
+        if (link.external) {
+          return <a target="_blank" rel="noopener noreferrer" {...props} />;
+        }
+        return <NavLink {...props} />;
+      }}
       to={link.href}
       href={link.href || to}
       key={link.label}
@@ -31,7 +43,12 @@ export default function MenuItem({ icon: Icon, label, href, to, items }) {
         </MantineNavLink>
       ) : (
         <MantineNavLink
-          component={NavLink}
+          component={(props) => {
+            if (external) {
+              return <a target="_blank" rel="noopener noreferrer" {...props} />;
+            }
+            return <NavLink {...props} />;
+          }}
           leftSection={Icon && <Icon size={16} stroke={1.5} />}
           label={label}
           href={href || to}

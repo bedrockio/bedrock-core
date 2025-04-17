@@ -24,25 +24,29 @@ const PageHeader = ({
     <>
       <Meta title={title} />
       <Stack>
-        <Stack gap="xs">
-          <Breadcrumbs>
-            {breadcrumbItems.map((item, index) =>
-              item?.href ? (
-                <Anchor component={Link} to={item.href} key={index}>
-                  <Text size="xs">{item.title}</Text>
-                </Anchor>
-              ) : (
-                <Text key={index} size="xs">
-                  {item.title}
-                </Text>
-              ),
-            )}
-          </Breadcrumbs>
-
+        <Stack gap="0">
           <Group justify="space-between">
-            <Title order={2}>{title}</Title>
+            <Breadcrumbs separatorMargin="xs">
+              {breadcrumbItems.map((item, index) =>
+                item?.href ? (
+                  <Anchor component={Link} to={item.href} key={index}>
+                    <Text fw="bold" size="md">
+                      {item.title}
+                    </Text>
+                  </Anchor>
+                ) : (
+                  <Text key={index} size="md">
+                    {item.title}
+                  </Text>
+                ),
+              )}
+            </Breadcrumbs>
             <Group>{rightSection}</Group>
           </Group>
+
+          <Title mt={0} order={2}>
+            {title}
+          </Title>
         </Stack>
 
         {tabs.length > 0 && (

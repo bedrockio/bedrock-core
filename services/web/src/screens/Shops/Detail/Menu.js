@@ -24,11 +24,6 @@ export default () => {
   const tabs = [
     { title: 'Overview', href: `/shops/${shop.id}` },
     { title: 'Products', href: `/shops/${shop.id}/products` },
-    {
-      icon: <IconPencil size={12} />,
-      title: 'Edit',
-      href: `/shops/${shop.id}/edit`,
-    },
   ];
 
   return (
