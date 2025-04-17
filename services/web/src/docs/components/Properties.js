@@ -16,7 +16,7 @@ import './properties.less';
 const OBJECT_ID_REF = '#/components/schemas/ObjectId';
 
 export default function DocsProperties(props) {
-  const { path, model, getPath, hideFields, additionalSort } = props;
+  const { path, model, getPath, hideFields = [], additionalSort } = props;
 
   const { className, getElementClass } = useClass('docs-properties');
   // static contextType = DocsContext;
@@ -279,9 +279,4 @@ DocsProperties.propTypes = {
   path: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
   hideFields: PropTypes.arrayOf(PropTypes.string),
   additionalSort: PropTypes.func,
-};
-
-DocsProperties.defaultProps = {
-  hideFields: [],
-  required: false,
 };

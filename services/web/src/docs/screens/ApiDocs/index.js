@@ -17,7 +17,27 @@ import DocsPath from '../../components/DocsPath';
 import { DEFAULT_PAGE_ID, pagesByPath, sorted } from '../../pages';
 
 import './api-docs.less';
-import { IconArrowRotaryStraight, IconRefresh } from '@tabler/icons-react';
+import { IconRefresh } from '@tabler/icons-react';
+import PortalLayout from 'layouts/Portal';
+
+function getMenuItems(sorted) {
+  return sorted.map((page) => {
+    const { id, pages } = page;
+
+    return {
+      id,
+      label: page.title,
+      href: `/docs/${page.path}`,
+      items: pages.map((subpage) => {
+        return {
+          id: subpage.id,
+          label: subpage.title,
+          href: `/docs/${subpage.path}`,
+        };
+      }),
+    };
+  });
+}
 
 export default function ApiDocs() {
   const { className, getElementClass } = useClass('api-docs');
@@ -53,18 +73,6 @@ export default function ApiDocs() {
       const el = document.querySelector('.api-docs__page');
       el.scrollTo(0, 0);
     }
-  }
-
-  function render() {
-    return (
-      <div className={className}>
-        <Meta title="API Docs" />
-        {renderSidebar()}
-        <main className={getElementClass('page')}>
-          <Container>{renderPage()}</Container>
-        </main>
-      </div>
-    );
   }
 
   function renderSidebar() {
@@ -159,5 +167,15 @@ export default function ApiDocs() {
     }
   }
 
-  return render();
+  return (
+    <PortalLayout menuItems={getMenuItems(sorted)} actions={renderActions()}>
+      <div className={className}>
+        <Meta title="API Docs" />
+        {renderSidebar()}
+        <main className={getElementClass('page')}>
+          <Container>{renderPage()}</Container>
+        </main>
+      </div>
+    </PortalLayout>
+  );
 }

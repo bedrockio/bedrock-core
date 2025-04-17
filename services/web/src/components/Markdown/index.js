@@ -26,7 +26,3 @@ Markdown.propTypes = {
   source: PropTypes.string,
   renderers: PropTypes.object,
 };
-
-Markdown.defaultProps = {
-  renderers: {},
-};
