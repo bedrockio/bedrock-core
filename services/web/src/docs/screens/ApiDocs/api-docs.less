@@ -1,6 +1,4 @@
 @import 'styles/responsive';
-@import '../../../semantic/globals/site.variables';
-// TODO: clean this up
 
 .api-docs,
 .icon-sheet {
@@ -41,26 +39,6 @@
     &-scroll {
       overflow-y: auto;
       flex: auto;
-    }
-
-    &-link {
-      display: block;
-      font-size: 16px;
-      color: #1f1f1f;
-      padding: 0.2em 1em;
-      cursor: pointer;
-
-      &:hover {
-        color: @linkHoverColor;
-      }
-
-      &--active {
-        background-color: @primaryColor;
-        &,
-        &:hover {
-          color: #fff !important;
-        }
-      }
     }
 
     &-subpages .api-docs__sidebar-link {
@@ -138,11 +116,6 @@
       margin-left: -0.8em;
       padding-right: 0.2em;
       text-decoration: none;
-
-      .icon-link::after {
-        content: '#';
-        color: @linkHoverColor;
-      }
     }
 
     &:hover a {

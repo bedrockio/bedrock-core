@@ -1,10 +1,7 @@
-@import '../semantic/globals/site.variables';
-
 .portal-layout {
   --header-height: 100px;
 
   &__menu {
-    background: @mainMenuBackground;
     position: fixed;
     width: 100%;
     z-index: 1000;
@@ -29,11 +26,5 @@
 
   &__content {
     padding: var(--header-height) 0 0 0;
-  }
-}
-
-.nocturnal-theme .portal-layout {
-  &__menu {
-    background: @nocturnalMainMenuBackground;
   }
 }
