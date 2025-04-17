@@ -1,8 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { get, set } from 'lodash';
-import { Form, Dropdown, Icon } from 'semantic';
-
-import { useClass } from 'helpers/bem';
+import { Form } from 'semantic';
 
 import { useDisclosure } from '@mantine/hooks';
 
@@ -35,8 +33,10 @@ import ErrorMessage from 'components/ErrorMessage';
 
 import { request } from 'utils/api';
 import {
+  IconMinus,
   IconPlayerPlayFilled,
   IconPlayerRecordFilled,
+  IconPlus,
   IconTrash,
 } from '@tabler/icons-react';
 
@@ -61,14 +61,11 @@ export default function RequestBuilder(props) {
   const { docs, loadDocs, canEditDocs } = useDocs();
 
   const [error, setError] = useState(null);
-  const [active, setActive] = useState(false);
   const [loading, setLoading] = useState(false);
   const [recorded, setRecorded] = useState(false);
   const [req, setReq] = useState({});
   const [res, setRes] = useState({});
   const [activeTab, setActiveTab] = useState(0);
-
-  const ref = useRef();
 
   function resolveRoute() {
     let { method, path } = expandRoute(props.route);
@@ -134,7 +131,7 @@ export default function RequestBuilder(props) {
 
   function renderRequestPane() {
     return (
-      <Form autoComplete="off" autoCorrect="off">
+      <form autoComplete="off" autoCorrect="off">
         <Stack>
           {renderParameters()}
           {renderQuery()}
@@ -142,7 +139,7 @@ export default function RequestBuilder(props) {
           <Divider />
           {renderOutput()}
         </Stack>
-      </Form>
+      </form>
     );
   }
 
@@ -157,12 +154,9 @@ export default function RequestBuilder(props) {
           <h4>Path</h4>
           {parameters.map((param) => {
             const path = ['path', param.name];
-            return (
-              <Form.Field key={param.name}>
-                <label>{param.name}</label>
-                {renderInput(path)}
-              </Form.Field>
-            );
+            return renderInput(path, {
+              label: param.name,
+            });
           })}
         </React.Fragment>
       );
@@ -180,12 +174,7 @@ export default function RequestBuilder(props) {
           <h4>Path</h4>
           {parameters.map((param) => {
             const path = ['query', param.name];
-            return (
-              <Form.Field key={param.name}>
-                <label>{param.name}</label>
-                {renderInput(path)}
-              </Form.Field>
-            );
+            return renderInput(path, { label: param.name });
           })}
         </React.Fragment>
       );
@@ -264,12 +253,13 @@ export default function RequestBuilder(props) {
                   <React.Fragment>
                     <label style={{ marginBottom: '1em' }}>
                       {key}{' '}
-                      <Icon
-                        size="small"
-                        name={open ? 'minus' : 'plus'}
-                        onClick={toggle}
-                        link
-                      />
+                      <ActionIcon onClick={toggle}>
+                        {open ? (
+                          <IconMinus size={14} />
+                        ) : (
+                          <IconPlus size={14} />
+                        )}
+                      </ActionIcon>
                     </label>
                     {open && (
                       <div className="indent lined">
@@ -284,20 +274,15 @@ export default function RequestBuilder(props) {
             <React.Fragment>
               <label style={{ marginBottom: '1em' }}>
                 {key}{' '}
-                <Icon
-                  link
-                  size="small"
-                  name="plus"
-                  style={{
-                    marginLeft: '0.3em',
-                  }}
+                <ActionIcon
                   onClick={() => {
                     const p = [...path, key];
                     const values = get(req, p, []);
                     set(req, p, [...values, undefined]);
                     setReq({ ...req });
-                  }}
-                />
+                  }}>
+                  <IconPlus size={14} />
+                </ActionIcon>
               </label>
               {renderSchema(schema, [...path, key])}
             </React.Fragment>
@@ -342,7 +327,8 @@ export default function RequestBuilder(props) {
     );
   }
 
-  function setField(evt, { type, path, value, checked }) {
+  function setField(evt, { checked, type, value, path }) {
+    console.log('setField', evt, checked, type, value, path);
     if (type === 'number') {
       value = Number(value);
     } else if (type === 'checkbox') {
@@ -374,7 +360,9 @@ export default function RequestBuilder(props) {
         {...options}
         path={path}
         value={value || ''}
-        onChange={setField}
+        onChange={(e) => {
+          setField(event, { value: e.target.value, path, ...options });
+        }}
         autoComplete="chrome-off"
         spellCheck="false"
       />
@@ -388,7 +376,9 @@ export default function RequestBuilder(props) {
         toggle
         path={path}
         checked={value || false}
-        onChange={setField}
+        onChange={(e) => {
+          setField(event, { value: e.target.checked, path, ...options });
+        }}
         {...options}
       />
     );
