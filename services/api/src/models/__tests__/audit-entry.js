@@ -102,7 +102,7 @@ describe('AuditEntry', () => {
           requestMethod: 'GET',
           requestUrl: '/1/products/id',
           routeNormalizedPath: '/1/products/:id',
-        })
+        }),
       );
     });
   });
@@ -117,7 +117,6 @@ describe('AuditEntry', () => {
       await AuditEntry.append('did something', {
         ctx,
         object: user,
-        category: 'security',
       });
 
       const logs = await AuditEntry.find({
@@ -127,7 +126,6 @@ describe('AuditEntry', () => {
       expect(logs.length).toBe(1);
 
       const log = logs[0];
-      expect(log.category).toBe('security');
       expect(log.activity).toBe('did something');
       expect(log.objectId.toString()).toBe(user.id);
       expect(log.objectType).toBe('User');
@@ -144,7 +142,6 @@ describe('AuditEntry', () => {
 
       await AuditEntry.append('did something', {
         ctx,
-        category: 'security',
         objectId: user.id,
         objectType: 'user',
         objectAfter: {},

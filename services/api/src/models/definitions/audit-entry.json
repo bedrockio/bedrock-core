@@ -34,16 +34,8 @@
     "ownerType": {
       "type": "String"
     },
-    "category": {
-      "type": "String",
-      "enum": [
-        "permission",
-        "security",
-        "auth",
-        "objectModification",
-        "user" 
-      ],
-      "default": "objectModification"
+    "attributes": {
+      "type": "Object"
     },
     "actor": {
       "type": "ObjectId",

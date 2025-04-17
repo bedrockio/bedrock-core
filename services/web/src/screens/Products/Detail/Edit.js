@@ -1,10 +1,13 @@
 import Form from '../Form.js';
-import Menu from './Menu';
+import PageHeader from 'components/PageHeader.js';
 
 import { usePage } from 'stores/page';
 
-import { Stack } from '@mantine/core';
+import { Stack, Button } from '@mantine/core';
 import { useNavigate } from '@bedrockio/router';
+
+import { IconEye } from '@tabler/icons-react';
+import { Link } from '@bedrockio/router';
 
 export default function EditProduct() {
   const { product, reload } = usePage();
@@ -12,7 +15,24 @@ export default function EditProduct() {
 
   return (
     <Stack gap="lg">
-      <Menu />
+      <PageHeader
+        title={`Edit ${product.name}`}
+        breadcrumbItems={[
+          { title: 'Home', href: '/' },
+          { title: 'Products', href: '/products' },
+          { title: product.name, href: `/products/${product.id}` },
+        ]}
+        rightSection={
+          <Button
+            size="xs"
+            leftSection={<IconEye size={14} />}
+            component={Link}
+            to={`/products/${product.id}`}
+            variant="default">
+            Show
+          </Button>
+        }
+      />
       <Form
         product={product}
         onSuccess={() => {

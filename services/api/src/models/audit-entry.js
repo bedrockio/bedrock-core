@@ -78,7 +78,7 @@ schema.statics.getObjectFields = function (options) {
 };
 
 schema.statics.append = function (activity, options) {
-  const { ctx, category } = options;
+  const { ctx } = options;
 
   const objectFields = this.getObjectFields(options);
 
@@ -92,11 +92,9 @@ schema.statics.append = function (activity, options) {
     ...objectFields,
     actor: options.actor?.id || options.user?.id || ctx.state.authUser?.id,
     activity,
-    category,
   });
 };
 
-schema.index({ category: 1, createdAt: 1 });
 schema.index({ activity: 1, createdAt: 1 });
 schema.index({ actor: 1, createdAt: 1 });
 schema.index({ ownerId: 1, createdAt: 1 });

@@ -14,7 +14,7 @@ export default function ShopDetail() {
   const Loader = usePageLoader(async (params) => {
     const { data } = await request({
       method: 'GET',
-      path: `/1/shops/${params.id}?includes=categories`,
+      path: `/1/shops/${params.id}?include=categories`,
     });
     return {
       shop: data,

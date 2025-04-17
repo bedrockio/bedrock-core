@@ -16,7 +16,7 @@ router
     validateBody(
       AuditEntry.getSearchValidation({
         ...exportValidation(),
-      })
+      }),
     ),
     async (ctx) => {
       const { format, filename, ...params } = ctx.request.body;
@@ -32,7 +32,7 @@ router
         data,
         meta,
       };
-    }
+    },
   )
   .post(
     '/search-options',
@@ -40,12 +40,15 @@ router
       field: yd.string().allow('routeNormalizedPath', 'objectType', 'activity').required(),
     }),
     async (ctx) => {
+      console.log(ctx.request.body.field);
       const values = await AuditEntry.distinct(ctx.request.body.field);
+
+      console.log(values);
 
       ctx.body = {
         data: values,
       };
-    }
+    },
   );
 
 module.exports = router;

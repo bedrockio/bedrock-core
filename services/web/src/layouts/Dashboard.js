@@ -142,13 +142,13 @@ export default function DashboardLayout({ children }) {
         </AppShell.Section>
         <AppShell.Section grow component={ScrollArea}>
           {menuItems.map((item) => (
-            <MenuItem key={item.href} {...item} />
+            <MenuItem key={item.label} {...item} />
           ))}
         </AppShell.Section>
         <AppShell.Section>
-          {accountItems.map((item) => {
-            return <MenuItem key={item.href} {...item} />;
-          })}
+          {accountItems.map((item) => (
+            <MenuItem key={item.label} {...item} />
+          ))}
         </AppShell.Section>
       </AppShell.Navbar>
       <AppShell.Main>{children}</AppShell.Main>

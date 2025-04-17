@@ -22,7 +22,7 @@ export default function MenuItem({
       }}
       to={link.href}
       href={link.href || to}
-      key={link.label}
+      key={link.href}
       label={link.label}
       style={{
         paddingLeft: Icon ? `36px` : `var(--mantine-spacing-lg)`,

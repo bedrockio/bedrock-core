@@ -1,4 +1,4 @@
-import { ActionIcon, Menu, Text } from '@mantine/core';
+import { ActionIcon, Menu, Text, Group, Button } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import {
   IconTrash,
@@ -10,9 +10,11 @@ import { Link } from '@bedrockio/router';
 
 import ErrorMessage from 'components/ErrorMessage';
 import InspectObject from 'components/InspectObject';
+import Protected from 'components/Protected';
 import { request } from 'utils/api';
+import { IconEdit } from '@tabler/icons-react';
 
-export default function ProductsActions({ product, reload }) {
+export default function ProductsActions({ product, reload, compact }) {
   const openInspectModal = () => {
     modals.open({
       title: `Inspect ${product.name}`,
@@ -55,34 +57,49 @@ export default function ProductsActions({ product, reload }) {
   };
 
   return (
-    <Menu shadow="md">
-      <Menu.Target>
-        <ActionIcon variant="default">
-          <IconDotsVertical size={20} />
-        </ActionIcon>
-      </Menu.Target>
+    <Group gap="xs" justify="flex-end">
+      <Protected permission="product.update">
+        {!compact ? (
+          <Button
+            variant="default"
+            size="xs"
+            leftSection={<IconPencil size={14} />}
+            component={Link}
+            to={`/products/${product.id}/edit`}>
+            Edit
+          </Button>
+        ) : (
+          <ActionIcon
+            variant="default"
+            component={Link}
+            to={`/products/${product.id}/edit`}>
+            <IconEdit size={14} />
+          </ActionIcon>
+        )}
+      </Protected>
+      <Menu shadow="md">
+        <Menu.Target>
+          <ActionIcon variant="default">
+            <IconDotsVertical size={20} />
+          </ActionIcon>
+        </Menu.Target>
 
-      <Menu.Dropdown>
-        <Menu.Item
-          component={Link}
-          to={`/products/${product.id}/edit`}
-          leftSection={<IconPencil size={14} />}>
-          Edit
-        </Menu.Item>
-
-        <Menu.Item
-          onClick={openInspectModal}
-          leftSection={<IconCode size={14} />}>
-          Inspect
-        </Menu.Item>
-
-        <Menu.Item
-          color="red"
-          onClick={openDeleteModel}
-          leftSection={<IconTrash size={14} />}>
-          Delete
-        </Menu.Item>
-      </Menu.Dropdown>
-    </Menu>
+        <Menu.Dropdown>
+          <Menu.Item
+            onClick={openInspectModal}
+            leftSection={<IconCode size={14} />}>
+            Inspect
+          </Menu.Item>
+          <Protected permission="product.delete">
+            <Menu.Item
+              color="red"
+              onClick={openDeleteModel}
+              leftSection={<IconTrash size={14} />}>
+              Delete
+            </Menu.Item>
+          </Protected>
+        </Menu.Dropdown>
+      </Menu>
+    </Group>
   );
 }

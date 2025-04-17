@@ -44,7 +44,6 @@ router
         await AuditEntry.append('Incorrect Authenticator Code', {
           ctx,
           actor: user,
-          category: 'security',
         });
         ctx.throw(401, error);
       }
@@ -60,7 +59,7 @@ router
           token: await login(ctx, user),
         },
       };
-    }
+    },
   )
   .use(authenticate())
   .post('/request', async (ctx) => {
@@ -91,7 +90,7 @@ router
       } catch (error) {
         ctx.throw(400, error);
       }
-    }
+    },
   )
   .post('/disable', async (ctx) => {
     const { authUser } = ctx.state;

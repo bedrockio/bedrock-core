@@ -184,7 +184,11 @@ export default function ProductList() {
                             {formatDateTime(product.createdAt)}
                           </Table.Td>
                           <Table.Td align="right">
-                            <Actions product={product} reload={reload} />
+                            <Actions
+                              compact
+                              product={product}
+                              reload={reload}
+                            />
                           </Table.Td>
                         </Table.Tr>
                       );
