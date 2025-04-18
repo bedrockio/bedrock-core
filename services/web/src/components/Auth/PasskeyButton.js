@@ -1,62 +1,55 @@
-import React from 'react';
 import { noop } from 'lodash';
 import PropTypes from 'prop-types';
 import { withRouter } from '@bedrockio/router';
-
-import { Button } from 'semantic';
+import { ActionIcon } from '@mantine/core';
+import { IconFingerprint } from '@tabler/icons-react';
 
 import { withSession } from 'stores/session';
 
 import { login } from 'utils/auth/passkey';
 
-class PasskeyButton extends React.Component {
-  onClick = async () => {
+const PasskeyButton = ({
+  onAuthStart = noop,
+  onAuthStop = noop,
+  onAuthError = noop,
+  history,
+  session,
+}) => {
+  const handleClick = async () => {
     try {
-      this.props.onAuthStart();
+      onAuthStart();
       const result = await login();
 
       if (result) {
-        const next = await this.context.authenticate(result.token);
-        this.props.onAuthStop();
-        this.props.history.push(next);
+        const next = await session.authenticate(result.token);
+        onAuthStop();
+        history.push(next);
       } else {
-        this.props.onAuthStop();
+        onAuthStop();
       }
     } catch (error) {
-      this.props.onAuthError(error);
+      onAuthError(error);
     }
   };
 
-  render() {
-    return (
-      <Button
-        basic
-        circular
-        type="button"
-        icon="fingerprint"
-        title="Use passkey to sign in."
-        onClick={this.onClick}
-        style={{
-          width: '42px',
-          height: '42px',
-          marginRight: '0',
-          boxSizing: 'border-box',
-        }}
-      />
-    );
-  }
-}
+  return (
+    <ActionIcon
+      variant="outline"
+      radius="xl"
+      size={42}
+      title="Use passkey to sign in."
+      onClick={handleClick}>
+      <IconFingerprint size="1.2rem" />
+    </ActionIcon>
+  );
+};
 
 PasskeyButton.propTypes = {
   onAuthStart: PropTypes.func,
   onAuthStop: PropTypes.func,
-  onComplete: PropTypes.func,
-};
-
-PasskeyButton.defaultProps = {
-  onAuthStart: noop,
-  onAuthStop: noop,
-  onComplete: noop,
+  onAuthError: PropTypes.func,
+  history: PropTypes.object.isRequired,
+  session: PropTypes.object.isRequired,
 };
 
 export default withRouter(withSession(PasskeyButton));
