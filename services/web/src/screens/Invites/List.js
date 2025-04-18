@@ -170,10 +170,9 @@ export default function Invites() {
                     })}
                   </Table.Tbody>
                 </Table>
+                <Divider mb="md" />
+                <Search.Pagination />
               </Table.ScrollContainer>
-
-              <Divider my="md" />
-              <Search.Pagination />
             </>
           );
         }}

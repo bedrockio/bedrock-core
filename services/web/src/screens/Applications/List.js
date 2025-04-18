@@ -44,6 +44,7 @@ export default function Applications() {
                 icon={<i className="fa fa-cubes" />}
                 rightSection={
                   <Button
+                    variant="default"
                     component={Link}
                     to="/applications/new"
                     rightSection={<IconPlus size={14} />}>

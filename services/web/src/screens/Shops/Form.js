@@ -78,7 +78,7 @@ export default function ShopForm({ shop, onSuccess = () => {} }) {
       <Grid>
         <Grid.Col span={{ base: 12, md: 6 }}>
           <Stack gap="md">
-            <Fieldset variant="filled" legend="Shop Details">
+            <Fieldset legend="Shop Details">
               <Stack gap="xs">
                 <TextInput
                   required
@@ -99,7 +99,7 @@ export default function ShopForm({ shop, onSuccess = () => {} }) {
               </Stack>
             </Fieldset>
 
-            <Fieldset variant="filled" legend="Address">
+            <Fieldset legend="Address">
               <Stack gap="xs">
                 <TextInput
                   label="Address Line 1"

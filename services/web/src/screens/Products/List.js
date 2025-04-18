@@ -60,154 +60,138 @@ export default function ProductList() {
   }
 
   return (
-    <>
-      <Search.Provider
-        onDataNeeded={onDataNeeded}
-        filterMapping={getFilterMapping()}>
-        {({ items: products, getSorted, setSort, reload, error, loading }) => {
-          return (
-            <React.Fragment>
-              <PageHeader
-                title="Products"
-                breadcrumbItems={[
-                  {
-                    href: '/',
-                    title: 'Home',
-                  },
-                  {
-                    title: 'Products',
-                  },
-                ]}
-                rightSection={
-                  <>
-                    <Search.Export filename="products" />
+    <Search.Provider
+      onDataNeeded={onDataNeeded}
+      filterMapping={getFilterMapping()}>
+      {({ items: products, getSorted, setSort, reload, error, loading }) => {
+        return (
+          <React.Fragment>
+            <PageHeader
+              title="Products"
+              breadcrumbItems={[
+                {
+                  href: '/',
+                  title: 'Home',
+                },
+                {
+                  title: 'Products',
+                },
+              ]}
+              rightSection={
+                <>
+                  <Search.Export filename="products" />
 
-                    <Button
-                      variant="default"
-                      component={Link}
-                      to="/products/new"
-                      rightSection={<IconPlus size={14} />}>
-                      New Product
-                    </Button>
-                  </>
-                }
-              />
+                  <Button
+                    variant="default"
+                    component={Link}
+                    to="/products/new"
+                    rightSection={<IconPlus size={14} />}>
+                    New Product
+                  </Button>
+                </>
+              }
+            />
 
-              <Group mt="lg" justify="space-between">
-                <Group>
-                  <SearchFilters.Modal>
-                    <SearchFilters.Checkbox
-                      name="isFeatured"
-                      label="Is Featured"
-                    />
-                    <SearchFilters.Number name="priceUsd" label="Price Usd" />
-                    <SearchFilters.DateRange
-                      time
-                      name="expiresAt"
-                      label="Expires At"
-                    />
+            <Group mt="lg" justify="space-between">
+              <Group>
+                <SearchFilters.Modal>
+                  <SearchFilters.Checkbox
+                    name="isFeatured"
+                    label="Is Featured"
+                  />
+                  <SearchFilters.Number name="priceUsd" label="Price Usd" />
+                  <SearchFilters.DateRange
+                    time
+                    name="expiresAt"
+                    label="Expires At"
+                  />
 
-                    <SearchFilters.DateRange
-                      time
-                      name="createdAt"
-                      label="Created At"
-                    />
-                  </SearchFilters.Modal>
-                  {loading && <Loader size={'sm'} />}
-                </Group>
-
-                <Group>
-                  <Search.Total />
-                  <SearchFilters.Keyword />
-                </Group>
+                  <SearchFilters.DateRange
+                    time
+                    name="createdAt"
+                    label="Created At"
+                  />
+                </SearchFilters.Modal>
+                {loading && <Loader size={'sm'} />}
               </Group>
 
-              <ErrorMessage error={error} />
+              <Group>
+                <Search.Total />
+                <SearchFilters.Keyword />
+              </Group>
+            </Group>
 
-              <Table.ScrollContainer mt="md">
-                <Table stickyHeader striped>
-                  <Table.Thead>
-                    <Table.Tr>
-                      <SortableTh
-                        sorted={getSorted('name')}
-                        onClick={() => setSort('name')}>
-                        Name
-                      </SortableTh>
-                      <Table.Th width={60}>Image</Table.Th>
-                      <SortableTh
-                        sorted={getSorted('priceUsd')}
-                        onClick={() => setSort('priceUsd')}>
-                        Price
-                      </SortableTh>
-                      <SortableTh
-                        sorted={getSorted('createdAt')}
-                        onClick={() => setSort('createdAt')}
-                        width={280}>
-                        <Group>
-                          Created
-                          <Tooltip
-                            withArrow
-                            multiline={true}
-                            label="This is the date and time the product was created.">
-                            <IconHelp size={14} />
-                          </Tooltip>
-                        </Group>
-                      </SortableTh>
-                      <Table.Th
-                        style={{
-                          textAlign: 'right',
-                        }}>
-                        Actions
-                      </Table.Th>
-                    </Table.Tr>
-                  </Table.Thead>
-                  <Table.Tbody>
-                    {products.map((product) => {
-                      const [image] = product.images;
-                      return (
-                        <Table.Tr key={product.id}>
-                          <Table.Td>
-                            <Anchor
-                              size="sm"
-                              component={Link}
-                              to={`/products/${product.id}`}>
-                              {product.name}
-                            </Anchor>
-                          </Table.Td>
-                          <Table.Td>
-                            {image && (
-                              <Image
-                                radius={4}
-                                h={40}
-                                w={40}
-                                fit
-                                src={urlForUpload(image, true)}
-                              />
-                            )}
-                          </Table.Td>
-                          <Table.Td>{formatUsd(product.priceUsd)}</Table.Td>
-                          <Table.Td>
-                            {formatDateTime(product.createdAt)}
-                          </Table.Td>
-                          <Table.Td align="right" width={100}>
-                            <Actions
-                              compact
-                              product={product}
-                              reload={reload}
+            <ErrorMessage error={error} />
+
+            <Table.ScrollContainer mt="md">
+              <Table stickyHeader striped>
+                <Table.Thead>
+                  <Table.Tr>
+                    <SortableTh
+                      sorted={getSorted('name')}
+                      onClick={() => setSort('name')}>
+                      Name
+                    </SortableTh>
+                    <Table.Th width={60}>Image</Table.Th>
+                    <SortableTh
+                      sorted={getSorted('priceUsd')}
+                      onClick={() => setSort('priceUsd')}>
+                      Price
+                    </SortableTh>
+                    <SortableTh
+                      sorted={getSorted('createdAt')}
+                      onClick={() => setSort('createdAt')}
+                      width={280}>
+                      Created
+                    </SortableTh>
+                    <Table.Th
+                      style={{
+                        textAlign: 'right',
+                      }}>
+                      Actions
+                    </Table.Th>
+                  </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>
+                  {products.map((product) => {
+                    const [image] = product.images;
+                    return (
+                      <Table.Tr key={product.id}>
+                        <Table.Td>
+                          <Anchor
+                            size="sm"
+                            component={Link}
+                            to={`/products/${product.id}`}>
+                            {product.name}
+                          </Anchor>
+                        </Table.Td>
+                        <Table.Td>
+                          {image && (
+                            <Image
+                              radius={4}
+                              h={40}
+                              w={40}
+                              fit
+                              src={urlForUpload(image, true)}
                             />
-                          </Table.Td>
-                        </Table.Tr>
-                      );
-                    })}
-                  </Table.Tbody>
-                </Table>
-              </Table.ScrollContainer>
-              <Divider my="md" />
+                          )}
+                        </Table.Td>
+                        <Table.Td>{formatUsd(product.priceUsd)}</Table.Td>
+                        <Table.Td>{formatDateTime(product.createdAt)}</Table.Td>
+                        <Table.Td align="right" width={100}>
+                          <Actions compact product={product} reload={reload} />
+                        </Table.Td>
+                      </Table.Tr>
+                    );
+                  })}
+                </Table.Tbody>
+              </Table>
+              <Divider mb="md" />
               <Search.Pagination />
-            </React.Fragment>
-          );
-        }}
-      </Search.Provider>
-    </>
+            </Table.ScrollContainer>
+          </React.Fragment>
+        );
+      }}
+    </Search.Provider>
   );
 }

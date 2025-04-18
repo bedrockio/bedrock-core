@@ -37,7 +37,7 @@ export default function PortalLayout({ children, menuItems, actions }) {
         }}
         styles={{
           navbar: {
-            backgroundColor: 'var(--mantine-color-gray-0)',
+            //backgroundColor: 'var(--mantine-color-gray-0)',
           },
         }}
         padding="md">

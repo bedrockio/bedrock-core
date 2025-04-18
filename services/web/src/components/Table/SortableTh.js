@@ -17,7 +17,7 @@ export default function SortableTh({ children, sorted, onClick, ...props }) {
   return (
     <Table.Th style={{ padding: 0 }} {...props}>
       <UnstyledButton onClick={onClick} className={classes.control}>
-        <Group justify="space-between">
+        <Group justify="space-between" style={{ flexWrap: 'nowrap' }}>
           <Text span fw="bold" fz="sm">
             {children}
           </Text>

@@ -14,11 +14,17 @@ export default function MenuItem({
   const styles = {
     root: {
       fontSize: 'var(--mantine-font-size-sm)',
-      //paddingRight: 'var(--mantine-spacing-xs)',
     },
     section: {
       marginInlineEnd: 'var(--mantine-spacing-xs)',
-      margin: '0 var(--mantine-spacing-xs)',
+      marginRight: '0',
+    },
+    label: {
+      marginInlineStart: 'var(--mantine-spacing-xs)',
+    },
+    chevron: {
+      margin: 0,
+      //transition: 'transform 150ms ease',
     },
     //section: {},
   };

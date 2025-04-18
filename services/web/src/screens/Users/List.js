@@ -127,102 +127,94 @@ export default function UserList() {
               </Group>
 
               <ErrorMessage error={error} />
-
-              <Table stickyHeader striped mt={'md'}>
-                <Table.Thead>
-                  <Table.Tr>
-                    <SortableTh
-                      sorted={getSorted('firstName')}
-                      onClick={() => setSort('firstName')}
-                      width={200}>
-                      Name
-                    </SortableTh>
-                    <SortableTh
-                      sorted={getSorted('email')}
-                      onClick={() => setSort('email')}>
-                      Email
-                    </SortableTh>
-                    <SortableTh
-                      sorted={getSorted('phone')}
-                      onClick={() => setSort('phone')}>
-                      Phone
-                    </SortableTh>
-                    <SortableTh
-                      sorted={getSorted('roles')}
-                      onClick={() => setSort('roles')}>
-                      Role
-                    </SortableTh>
-                    <SortableTh
-                      sorted={getSorted('createdAt')}
-                      onClick={() => setSort('createdAt')}
-                      width={280}>
-                      <Group>
-                        Created
-                        <Tooltip
-                          withArrow
-                          multiline={true}
-                          label="This is the date and time the item was created.">
-                          <IconHelp size={14} />
-                        </Tooltip>
-                      </Group>
-                    </SortableTh>
-                    <Table.Th
-                      style={{
-                        textAlign: 'right',
-                      }}
-                      width={100}>
-                      Actions
-                    </Table.Th>
-                  </Table.Tr>
-                </Table.Thead>
-                <Table.Tbody>
-                  {users.length === 0 && (
+              <Table.ScrollContainer>
+                <Table stickyHeader striped mt={'md'}>
+                  <Table.Thead>
                     <Table.Tr>
-                      <Table.Td colSpan={5}>
-                        <Text p="md" fw="bold" ta="center">
-                          No users found.
-                        </Text>
-                      </Table.Td>
+                      <SortableTh
+                        sorted={getSorted('firstName')}
+                        onClick={() => setSort('firstName')}
+                        width={200}>
+                        Name
+                      </SortableTh>
+                      <SortableTh
+                        sorted={getSorted('email')}
+                        onClick={() => setSort('email')}>
+                        Email
+                      </SortableTh>
+                      <SortableTh
+                        sorted={getSorted('phone')}
+                        onClick={() => setSort('phone')}>
+                        Phone
+                      </SortableTh>
+                      <SortableTh
+                        sorted={getSorted('roles')}
+                        onClick={() => setSort('roles')}>
+                        Role
+                      </SortableTh>
+                      <SortableTh
+                        sorted={getSorted('createdAt')}
+                        onClick={() => setSort('createdAt')}
+                        width={280}>
+                        Created
+                      </SortableTh>
+                      <Table.Th
+                        style={{
+                          textAlign: 'right',
+                        }}
+                        width={100}>
+                        Actions
+                      </Table.Th>
                     </Table.Tr>
-                  )}
-                  {users.map((user) => {
-                    return (
-                      <Table.Tr key={user.id}>
-                        <Table.Td>
-                          <Anchor
-                            size="sm"
-                            component={Link}
-                            to={`/users/${user.id}`}>
-                            {user.name}
-                          </Anchor>
-                        </Table.Td>
-                        <Table.Td>{user.email}</Table.Td>
-                        <Table.Td>{user.phone}</Table.Td>
-                        <Table.Td>
-                          {formatRoles(user.roles).map((label) => {
-                            return (
-                              <Badge
-                                size="md"
-                                radius="md"
-                                leftSection={<label.icon size={14} />}
-                                key={label.key}>
-                                {label.content}
-                              </Badge>
-                            );
-                          })}
-                        </Table.Td>
-                        <Table.Td>{formatDateTime(user.createdAt)}</Table.Td>
-                        <Table.Td align="right">
-                          <Actions compact user={user} reload={reload} />
+                  </Table.Thead>
+                  <Table.Tbody>
+                    {users.length === 0 && (
+                      <Table.Tr>
+                        <Table.Td colSpan={5}>
+                          <Text p="md" fw="bold" ta="center">
+                            No users found.
+                          </Text>
                         </Table.Td>
                       </Table.Tr>
-                    );
-                  })}
-                </Table.Tbody>
-              </Table>
-
-              <Divider my="md" />
-              <Search.Pagination />
+                    )}
+                    {users.map((user) => {
+                      return (
+                        <Table.Tr key={user.id}>
+                          <Table.Td>
+                            <Anchor
+                              size="sm"
+                              component={Link}
+                              to={`/users/${user.id}`}>
+                              {user.name}
+                            </Anchor>
+                          </Table.Td>
+                          <Table.Td>{user.email}</Table.Td>
+                          <Table.Td>{user.phone}</Table.Td>
+                          <Table.Td>
+                            {formatRoles(user.roles).map((label) => {
+                              return (
+                                <Badge
+                                  size="md"
+                                  radius="md"
+                                  leftSection={<label.icon size={14} />}
+                                  key={label.key}>
+                                  {label.content}
+                                </Badge>
+                              );
+                            })}
+                          </Table.Td>
+                          <Table.Td>{formatDateTime(user.createdAt)}</Table.Td>
+                          <Table.Td align="right">
+                            <Actions compact user={user} reload={reload} />
+                          </Table.Td>
+                        </Table.Tr>
+                      );
+                    })}
+                  </Table.Tbody>
+                </Table>
+                <Divider mb="md" />
+                <Search.Pagination />
+              </Table.ScrollContainer>
             </React.Fragment>
           );
         }}

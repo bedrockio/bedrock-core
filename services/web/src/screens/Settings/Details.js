@@ -96,7 +96,7 @@ function Profile() {
         })}>
         <Grid>
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Fieldset variant="filled" legend="Profile" mb="md">
+            <Fieldset legend="Profile" mb="md">
               <Stack>
                 <TextInput
                   label="First Name"
@@ -125,7 +125,7 @@ function Profile() {
             </Fieldset>
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Fieldset variant="filled" legend="Notifications">
+            <Fieldset legend="Notifications">
               {form.getValues().notifications.map((notification, index) => {
                 const { name, label } = notification;
                 return (
@@ -153,7 +153,7 @@ function Profile() {
                 );
               })}
             </Fieldset>
-            <Fieldset variant="filled" legend="Appearance" mt="md">
+            <Fieldset legend="Appearance" mt="md">
               <Stack mt="xs">
                 <Radio
                   checked={colorScheme === 'light'}

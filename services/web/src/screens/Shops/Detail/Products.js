@@ -79,15 +79,7 @@ export default function ShopProducts() {
                       sorted={getSorted('createdAt')}
                       onClick={() => setSort('createdAt')}
                       width={280}>
-                      <Group>
-                        Created
-                        <Tooltip
-                          withArrow
-                          multiline={true}
-                          label="This is the date and time the item was created.">
-                          <IconHelp size={14} />
-                        </Tooltip>
-                      </Group>
+                      Created
                     </SortableTh>
                     <Table.Th width={120}>Actions</Table.Th>
                   </Table.Tr>

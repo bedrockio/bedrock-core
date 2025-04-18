@@ -24,7 +24,6 @@ export default function EditProduct() {
         ]}
         rightSection={
           <Button
-            size="xs"
             leftSection={<IconEye size={14} />}
             component={Link}
             to={`/products/${product.id}`}

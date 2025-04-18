@@ -95,7 +95,7 @@ export default function UserForm({ user, onSuccess = () => {} }) {
       <Grid>
         <Grid.Col span={{ base: 12, md: 6 }}>
           <Stack gap="md">
-            <Fieldset variant="filled" legend="Basic Information">
+            <Fieldset legend="Basic Information">
               <Stack gap="md">
                 <TextInput
                   required
@@ -118,19 +118,18 @@ export default function UserForm({ user, onSuccess = () => {} }) {
                   {...form.getInputProps('phone')}
                 />
               </Stack>
+              {!isUpdate && (
+                <PasswordInput
+                  required
+                  label="Password"
+                  {...form.getInputProps('password')}
+                />
+              )}
             </Fieldset>
-
-            {!isUpdate && (
-              <PasswordInput
-                required
-                label="Password"
-                {...form.getInputProps('password')}
-              />
-            )}
           </Stack>
         </Grid.Col>
         <Grid.Col span={{ base: 12, md: 6 }}>
-          <Fieldset variant="filled" legend="Roles & Flags">
+          <Fieldset legend="Roles & Flags">
             <Stack gap="md">
               <Protected endpoint="users" permission="write">
                 <Select

@@ -106,15 +106,7 @@ export default function OrganizationList() {
                       sorted={getSorted('createdAt')}
                       onClick={() => setSort('createdAt')}
                       width={280}>
-                      <Group>
-                        Created
-                        <Tooltip
-                          withArrow
-                          multiline
-                          label="This is the date and time the organization was created.">
-                          <IconHelp size={14} />
-                        </Tooltip>
-                      </Group>
+                      Created
                     </SortableTh>
                     <Table.Th style={{ textAlign: 'right' }} width={100}>
                       Actions

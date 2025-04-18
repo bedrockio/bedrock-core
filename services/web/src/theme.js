@@ -53,7 +53,7 @@ export const theme = createTheme({
       styles: {
         legend: {
           fontSize: 'var(--mantine-font-size-md)',
-          color: 'var(--mantine-color-dark-2)',
+          color: 'var(--mantine-color-gray-5)',
         },
       },
     },
@@ -77,5 +77,15 @@ export const theme = createTheme({
         },
       },
     }),
+    NavLink: {
+      styles: {
+        root: {
+          fontSize: 'var(--mantine-font-size-sm)',
+        },
+        section: {
+          marginInlineEnd: 'var(--mantine-spacing-xs)',
+        },
+      },
+    },
   },
 });

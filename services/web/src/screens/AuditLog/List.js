@@ -194,26 +194,29 @@ export default function AuditLogList() {
                       <Table.Td>
                         {item.actor && (
                           <Anchor
-                            componet={Link}
+                            size="sm"
+                            component={Link}
                             title={item.actor.email}
                             to={`/users/${item.actor.id}`}>
                             {item.actor.firstName} {item.actor.lastName}
                           </Anchor>
                         )}
                       </Table.Td>
-
                       <Table.Td>{item.activity}</Table.Td>
-                      <Table.Td>
-                        {item.object?.name || item.object || 'N/A'}
-                      </Table.Td>
+
                       <Table.Td>
                         {item.owner && (
-                          <Link
+                          <Anchor
+                            size="sm"
+                            component={Link}
                             title={item.owner.email}
                             to={`/users/${item.owner.id}`}>
                             {item.owner.name}
-                          </Link>
+                          </Anchor>
                         )}
+                      </Table.Td>
+                      <Table.Td>
+                        {item.object?.name || item.object || 'N/A'}
                       </Table.Td>
                       <Table.Td>{formatDateTime(item.createdAt)}</Table.Td>
 
@@ -233,7 +236,7 @@ export default function AuditLogList() {
                 </Table.Tbody>
               </Table>
             )}
-            <Divider my="md" />
+            <Divider my="md" mt={0} />
             <Search.Pagination />
           </>
         )}

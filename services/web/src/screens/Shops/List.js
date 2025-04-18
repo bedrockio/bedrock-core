@@ -173,15 +173,7 @@ export default function ShopList() {
                         sorted={getSorted('createdAt')}
                         onClick={() => setSort('createdAt')}
                         width={280}>
-                        <Group>
-                          Created
-                          <Tooltip
-                            withArrow
-                            multiline={true}
-                            label="This is the date and time the item was created.">
-                            <IconHelp size={14} />
-                          </Tooltip>
-                        </Group>
+                        <Group>Created</Group>
                       </SortableTh>
                       <Table.Th
                         width={100}
@@ -234,10 +226,9 @@ export default function ShopList() {
                     })}
                   </Table.Tbody>
                 </Table>
+                <Divider mb="md" />
+                <Search.Pagination />
               </Table.ScrollContainer>
-
-              <Divider my="md" />
-              <Search.Pagination />
             </>
           );
         }}

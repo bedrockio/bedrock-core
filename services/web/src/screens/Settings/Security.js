@@ -2,13 +2,11 @@ import { useState } from 'react';
 import {
   Grid,
   Divider,
-  Alert,
   Title,
   Button,
   Group,
   LoadingOverlay,
   Text,
-  Select,
   Stack,
   Fieldset,
   ActionIcon,
@@ -25,14 +23,10 @@ import GoogleDisableButton from 'components/Auth/Google/DisableButton';
 import { createPasskey, removePasskey } from 'utils/auth/passkey';
 import { formatDate, fromNow } from 'utils/date';
 
-import { request } from 'utils/api';
-
 import Menu from './Menu';
 import Sessions from './components/Sessions';
 import TwoFactorAuthentication from './components/TwoFactorAuthentication';
 import { IconTrash } from '@tabler/icons-react';
-import { notifications } from '@mantine/notifications';
-import { modals } from '@mantine/modals';
 
 export default function Security(props) {
   const { user, updateUser } = useSession();
@@ -122,7 +116,7 @@ export default function Security(props) {
         <LoadingOverlay visible={loading} overlayBlur={2} />
         <Grid>
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Fieldset mt="md" legend="Passkey" variant="filled">
+            <Fieldset mt="md" legend="Passkey">
               <Stack spacing="xs" mb="xs">
                 {user.authenticators
                   .filter((authenticator) => authenticator.type === 'passkey')
@@ -154,13 +148,10 @@ export default function Security(props) {
                 Add Passkey
               </Button>
             </Fieldset>
-            <Fieldset
-              mt="md"
-              legend="Two-factor authentication"
-              variant="filled">
+            <Fieldset mt="md" legend="Two-factor authentication">
               <TwoFactorAuthentication />
             </Fieldset>
-            <Fieldset mt="md" legend="Auth Providers" variant="filled">
+            <Fieldset mt="md" legend="Sign-in with">
               <ErrorMessage error={error} />
 
               <Title order={4}>Google</Title>
@@ -185,7 +176,7 @@ export default function Security(props) {
             </Fieldset>
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Fieldset mt="md" legend="Sessions" variant="filled">
+            <Fieldset mt="md" legend="Sessions">
               <Sessions />
             </Fieldset>
           </Grid.Col>
