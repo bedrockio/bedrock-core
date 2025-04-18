@@ -21,7 +21,7 @@ import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import { useSession } from 'stores/session';
 
-import Restricted from 'components/Restricted';
+import Protected from 'components/Protected';
 
 function parseUser(user) {
   if (!user) {
@@ -132,7 +132,7 @@ export default function UserForm({ user, onSuccess = () => {} }) {
         <Grid.Col span={{ base: 12, md: 6 }}>
           <Fieldset variant="filled" legend="Roles & Flags">
             <Stack gap="md">
-              <Restricted endpoint="users" permission="write" scope="global">
+              <Protected endpoint="users" permission="write">
                 <Select
                   value={'superAdmin'}
                   label="Global Roles"
@@ -149,7 +149,7 @@ export default function UserForm({ user, onSuccess = () => {} }) {
                       };
                     })}
                 />
-              </Restricted>
+              </Protected>
               {organization && (
                 <Select
                   readOnly={!hasAccess('users', 'write')}

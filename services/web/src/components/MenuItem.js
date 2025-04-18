@@ -25,7 +25,7 @@ export default function MenuItem({
       key={link.href}
       label={link.label}
       style={{
-        paddingLeft: Icon ? `36px` : `var(--mantine-spacing-lg)`,
+        paddingLeft: Icon ? `34px` : `var(--mantine-spacing-lg)`,
       }}
     />
   ));

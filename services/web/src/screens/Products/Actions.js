@@ -90,7 +90,7 @@ export default function ProductsActions({ product, reload, compact }) {
             leftSection={<IconCode size={14} />}>
             Inspect
           </Menu.Item>
-          <Protected endpont="products" permission="delete">
+          <Protected endpoint="products" permission="delete">
             <Menu.Item
               color="red"
               onClick={openDeleteModel}

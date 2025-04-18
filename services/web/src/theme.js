@@ -45,7 +45,6 @@ export const theme = createTheme({
       styles: {
         root: {
           color: 'var(--mantine-color-text)',
-          fontWeight: 500,
         },
       },
     },
@@ -53,14 +52,13 @@ export const theme = createTheme({
       styles: {
         legend: {
           fontSize: 'var(--mantine-font-size-md)',
-          fontWeight: 500,
         },
       },
     },
     Breadcrumbs: {
       styles: {
         root: {
-          fontSize: 'var(--mantine-font-size-sm)',
+          fontSize: 'var(--mantine-font-size-xs)',
         },
       },
     },
@@ -77,5 +75,15 @@ export const theme = createTheme({
         },
       },
     }),
+    NavLink: {
+      styles: {
+        root: {
+          fontSize: 'var(--mantine-font-size-sm)',
+        },
+        section: {
+          marginInlineEnd: 'var(--mantine-spacing-xs)',
+        },
+      },
+    },
   },
 });
