@@ -58,7 +58,7 @@ export default function ProductsActions({ product, reload, compact }) {
 
   return (
     <Group gap="xs" justify="flex-end">
-      <Protected permission="product.update">
+      <Protected endpoint="products" permission="update">
         {!compact ? (
           <Button
             variant="default"
@@ -90,7 +90,7 @@ export default function ProductsActions({ product, reload, compact }) {
             leftSection={<IconCode size={14} />}>
             Inspect
           </Menu.Item>
-          <Protected permission="product.delete">
+          <Protected endpont="products" permission="delete">
             <Menu.Item
               color="red"
               onClick={openDeleteModel}

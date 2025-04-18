@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Icon } from 'semantic';
 
 import { useClass } from 'helpers/bem';
 
@@ -14,7 +13,7 @@ import { useDocs } from '../utils/context';
 import EditableField from './EditableField';
 
 import './route-example.less';
-import { IconTrash } from '@tabler/icons-react';
+import { IconMinus, IconPlus, IconTrash } from '@tabler/icons-react';
 
 export default function RouteExample(props) {
   const { path, status, schema, requestPath, requestBody, responseBody } =
@@ -74,20 +73,18 @@ export default function RouteExample(props) {
                   confirmButton="Delete"
                   header="Delete this example?"
                   trigger={
-                    <Icon
-                      size="small"
-                      name="trash"
-                      link
+                    <ActionIcon
                       onClick={(evt) => {
                         evt.stopPropagation();
-                      }}
-                    />
+                      }}>
+                      <IconTrash size={14} />
+                    </ActionIcon>
                   }
                   onConfirm={onDeleteConfirm}
                 />
               </React.Fragment>
             )}
-            <Icon size="small" name={open ? 'minus' : 'plus'} link />
+            {open ? <IconMinus size={14} /> : <IconPlus size={14} />}
           </Layout.Group>
         </Layout>
         {open && (

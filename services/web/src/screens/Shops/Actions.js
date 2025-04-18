@@ -59,7 +59,7 @@ export default function ShopsActions({ shop, reload, compact }) {
 
   return (
     <Group gap="xs" justify="flex-end">
-      <Protected permission="shops.update">
+      <Protected endpoint="shops" permission="update">
         {!compact ? (
           <Button
             variant="default"
@@ -91,8 +91,16 @@ export default function ShopsActions({ shop, reload, compact }) {
             leftSection={<IconCode size={14} />}>
             Inspect
           </Menu.Item>
+          <Protected endpoint="auditEntries" permission="read">
+            <Menu.Item
+              component={Link}
+              to={`/audit-log?object=${shop.id}&filterLabel=${shop.name}`}
+              leftSection={<IconPencil size={14} />}>
+              Audit Logs
+            </Menu.Item>
+          </Protected>
 
-          <Protected permission="shops.delete">
+          <Protected endpoint="shops" permission="delete">
             <Menu.Item
               color="red"
               onClick={openDeleteModel}

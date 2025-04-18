@@ -38,16 +38,6 @@ function requirePermissions(...args) {
     if (allowed) {
       return next();
     } else {
-      await AuditEntry.append('Permission Denied', {
-        ctx,
-        actor: authUser,
-        attributes: {
-          endpoint,
-          permission,
-          scope,
-          scopeRef: organization ? organization._id : undefined,
-        },
-      });
       return ctx.throw(403, `You don't have the right permissions (required permission: ${endpoint}.${permission}).`);
     }
   };

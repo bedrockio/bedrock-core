@@ -98,6 +98,9 @@ export default function AuditLogList() {
       objectType: {
         label: 'Object Type',
       },
+      object: {
+        label: 'Object Id',
+      },
       sessionId: {
         label: 'Session Id',
       },
@@ -112,21 +115,21 @@ export default function AuditLogList() {
 
   return (
     <>
-      <Meta title="Audit Logs" />
+      <Meta title="Audit Log" />
       <Search.Provider
         filterMapping={getFilterMapping()}
         onDataNeeded={onDataNeeded}>
         {({ items, getSorted, setSort }) => (
           <>
             <PageHeader
-              title="Audit Trail"
+              title="Audit Log"
               breadcrumbItems={[
                 {
                   href: '/',
                   title: 'Home',
                 },
                 {
-                  title: 'Audit Logs',
+                  title: 'Audit Log',
                 },
               ]}
             />
@@ -159,13 +162,8 @@ export default function AuditLogList() {
                     name="objectType"
                     label="ObjectType"
                   />
-                  <SearchFilters.Dropdown
-                    onDataNeeded={() =>
-                      fetchSearchOptions({ field: 'sessionId' })
-                    }
-                    name="sessionId"
-                    label="Session Id"
-                  />
+                  <SearchFilters.Keyword name="sessionId" label="Session Id" />
+                  <SearchFilters.Keyword name="object" label="Object Id" />
                 </SearchFilters.Modal>
                 <Search.Status />
               </Group>

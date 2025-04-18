@@ -1,5 +1,5 @@
 import React from 'react';
-import { Loader } from 'semantic';
+import { Loader } from '@mantine/core';
 
 import Meta from 'components/Meta';
 
@@ -8,7 +8,7 @@ export default class LoadingScreen extends React.Component {
     return (
       <>
         <Meta title="Loading..." />
-        <Loader active />
+        <Loader />
       </>
     );
   }

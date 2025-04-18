@@ -10,7 +10,8 @@ export function userHasAccess(user, options) {
     return false;
   }
 
-  const { scope = 'global', permission = 'read', endpoint, scopeRef } = options;
+  const { endpoint, permission, scope, scopeRef } = options;
+
   if (!endpoint) {
     throw new Error('Expected endpoint (e.g. users)');
   } else if (!permission) {

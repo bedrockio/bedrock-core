@@ -108,7 +108,7 @@ export default function ShopList() {
                 rightSection={
                   <>
                     <Search.Export filename="shops" />
-                    <Protected permission="shops.create">
+                    <Protected endpoint="shops" permission="create">
                       <Button
                         component={Link}
                         variant="default"
@@ -155,7 +155,7 @@ export default function ShopList() {
                 </Group>
               </Group>
 
-              <ErrorMessage error={error} />
+              <ErrorMessage mt="md" error={error} />
 
               <Table.ScrollContainer minWidth={300} mt="md">
                 <Table stickyHeader striped>

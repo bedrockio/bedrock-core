@@ -17,6 +17,7 @@ export function formatNumber(value, locale) {
 }
 
 export function formatAddress(address) {
+  console.log('formatAddress', address);
   const components = [];
   if (address.line1) {
     components.push(address.line1);

@@ -1,65 +1,64 @@
-import React from 'react';
 import PropTypes from 'prop-types';
-import { Message, Button } from 'semantic';
+import { Alert, Button } from '@mantine/core';
 
-import { withSession } from 'stores/session';
+import { useSession } from 'stores/session';
 
 import Meta from 'components/Meta';
 import BasicLayout from 'layouts/Basic';
 
 import { ENV_NAME } from 'utils/env';
 
-class ErrorScreen extends React.Component {
-  onLogoutClick = async () => {
-    await this.context.logout(true);
+function ErrorScreen({ title = 'Something went wrong', error }) {
+  const { logout } = useSession();
+
+  const handleLogoutClick = async () => {
+    await logout(true);
   };
 
-  onReloadClick = () => {
+  const handleReloadClick = () => {
     window.location.reload();
   };
 
-  render() {
-    const { title } = this.props;
+  const renderReloadLink = (text) => {
     return (
-      <BasicLayout>
-        <Meta title={title || 'Error'} />
-        <Message error header={title} content={this.renderErrorBody()} />
-        <div>
-          <Button size="small" onClick={this.onLogoutClick} primary>
-            Logout
-          </Button>
-        </div>
-      </BasicLayout>
+      <span className="link" onClick={handleReloadClick}>
+        {text}
+      </span>
     );
-  }
+  };
 
-  renderErrorBody() {
-    const { error } = this.props;
+  const renderErrorBody = () => {
     if (ENV_NAME === 'production') {
       if (error.status >= 500) {
         return (
           <p>
             Our site seems to be having issues. Please wait a bit and{' '}
-            {this.renderReloadLink('reload')} the page.
+            {renderReloadLink('reload')} the page.
           </p>
         );
       } else {
         return (
-          <p>We're looking into the issue. {this.renderReloadLink('reload')}</p>
+          <p>We're looking into the issue. {renderReloadLink('reload')}</p>
         );
       }
     } else {
       return error.message;
     }
-  }
+  };
 
-  renderReloadLink(text) {
-    return (
-      <span className="link" onClick={this.onReloadClick}>
-        {text}
-      </span>
-    );
-  }
+  return (
+    <BasicLayout>
+      <Meta title={title || 'Error'} />
+      <Alert color="red" title={title} mb="md">
+        {renderErrorBody()}
+      </Alert>
+      <div>
+        <Button size="xs" onClick={handleLogoutClick} color="blue">
+          Logout
+        </Button>
+      </div>
+    </BasicLayout>
+  );
 }
 
 ErrorScreen.propTypes = {
@@ -67,8 +66,4 @@ ErrorScreen.propTypes = {
   error: PropTypes.object.isRequired,
 };
 
-ErrorScreen.defaultProps = {
-  title: 'Something went wrong',
-};
-
-export default withSession(ErrorScreen);
+export default ErrorScreen;

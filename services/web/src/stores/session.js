@@ -56,7 +56,7 @@ class SessionProvider extends React.PureComponent {
     return this.hasRoles([role]);
   };
 
-  hasAccess = (endpoint, permission, scope) => {
+  hasAccess = ({ endpoint, permission, scope }) => {
     return userHasAccess(this.state.user, {
       endpoint,
       permission,
