@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Alert, Button } from '@mantine/core';
+import { Alert, Button, Center, Box, Stack } from '@mantine/core';
 
 import { useSession } from 'stores/session';
 
@@ -48,21 +48,24 @@ function ErrorScreen({ title = 'Something went wrong', error }) {
 
   return (
     <BasicLayout>
-      <Meta title={title || 'Error'} />
-      <Alert color="red" title={title} mb="md">
-        {renderErrorBody()}
-      </Alert>
-      <div>
-        <Button size="xs" onClick={handleLogoutClick} color="blue">
-          Logout
-        </Button>
-      </div>
+      <Center maw={400} mx="auto" h="100vh">
+        <Stack gap="xs">
+          <Meta title={title || 'Error'} />
+          <Alert color="red" title={title}>
+            {renderErrorBody()}
+          </Alert>
+          <div>
+            <Button size="xs" onClick={handleLogoutClick} color="blue">
+              Logout
+            </Button>
+          </div>
+        </Stack>
+      </Center>
     </BasicLayout>
   );
 }
 
 ErrorScreen.propTypes = {
-  title: PropTypes.string.isRequired,
   error: PropTypes.object.isRequired,
 };
 

@@ -35,7 +35,6 @@ export default function Invites() {
     return {
       status: {
         label: 'Status',
-        multiple: true,
         getDisplayValue: (status) => status,
       },
       createdAt: {
@@ -68,6 +67,7 @@ export default function Invites() {
                 ]}
                 rightSection={
                   <Button
+                    variant="default"
                     onClick={() => {
                       modals.open({
                         title: 'Invite Users',

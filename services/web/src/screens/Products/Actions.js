@@ -5,6 +5,7 @@ import {
   IconCode,
   IconPencil,
   IconDotsVertical,
+  IconListSearch,
 } from '@tabler/icons-react';
 import { Link } from '@bedrockio/router';
 
@@ -90,6 +91,14 @@ export default function ProductsActions({ product, reload, compact }) {
             leftSection={<IconCode size={14} />}>
             Inspect
           </Menu.Item>
+          <Protected endpoint="auditEntries" permission="read">
+            <Menu.Item
+              component={Link}
+              to={`/audit-log?object=${product.id}&filterLabel=${product.name}`}
+              leftSection={<IconListSearch size={14} />}>
+              Audit Logs
+            </Menu.Item>
+          </Protected>
           <Protected endpoint="products" permission="delete">
             <Menu.Item
               color="red"

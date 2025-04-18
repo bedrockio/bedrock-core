@@ -85,6 +85,7 @@ export default function UserList() {
                   <>
                     <Search.Export filename="users" />
                     <Button
+                      variant="default"
                       component={Link}
                       to="/users/new"
                       rightSection={<IconPlus size={14} />}>
@@ -165,7 +166,13 @@ export default function UserList() {
                         </Tooltip>
                       </Group>
                     </SortableTh>
-                    <Table.Th width={60}>Actions</Table.Th>
+                    <Table.Th
+                      style={{
+                        textAlign: 'right',
+                      }}
+                      width={100}>
+                      Actions
+                    </Table.Th>
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>
@@ -206,7 +213,7 @@ export default function UserList() {
                         </Table.Td>
                         <Table.Td>{formatDateTime(user.createdAt)}</Table.Td>
                         <Table.Td align="right">
-                          <Actions user={user} reload={reload} />
+                          <Actions compact user={user} reload={reload} />
                         </Table.Td>
                       </Table.Tr>
                     );

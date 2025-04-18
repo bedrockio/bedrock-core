@@ -1,18 +1,21 @@
-import { ActionIcon, Menu, Text } from '@mantine/core';
+import { ActionIcon, Menu, Text, Button, Group } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import {
   IconTrash,
   IconCode,
-  IconPencil,
+  IconListSearch,
   IconDotsVertical,
+  IconPencil,
+  IconEdit,
 } from '@tabler/icons-react';
 import { Link } from '@bedrockio/router';
 
 import ErrorMessage from 'components/ErrorMessage';
 import InspectObject from 'components/InspectObject';
+import Protected from 'components/Protected';
 import { request } from 'utils/api';
 
-export default function OrganizationActions({ organization, reload }) {
+export default function OrganizationActions({ compact, organization, reload }) {
   function openInspectModal() {
     modals.open({
       title: `Inspect ${organization.name}`,
@@ -50,32 +53,62 @@ export default function OrganizationActions({ organization, reload }) {
   }
 
   return (
-    <Menu shadow="md">
-      <Menu.Target>
-        <ActionIcon variant="default">
-          <IconDotsVertical size={20} />
-        </ActionIcon>
-      </Menu.Target>
+    <Group gap="xs" justify="flex-end">
+      <Protected endpoint="shops" permission="update">
+        {!compact ? (
+          <Button
+            variant="default"
+            rightSection={<IconPencil size={14} />}
+            component={Link}
+            to={`/organizations/${organization.id}/edit`}>
+            Edit
+          </Button>
+        ) : (
+          <ActionIcon
+            variant="default"
+            component={Link}
+            to={`/organizations/${organization.id}/edit`}>
+            <IconEdit size={14} />
+          </ActionIcon>
+        )}
+      </Protected>
+      <Menu shadow="md">
+        <Menu.Target>
+          {!compact ? (
+            <ActionIcon size="input-sm" variant="default">
+              <IconDotsVertical size={14} />
+            </ActionIcon>
+          ) : (
+            <ActionIcon variant="default">
+              <IconDotsVertical size={14} />
+            </ActionIcon>
+          )}
+        </Menu.Target>
 
-      <Menu.Dropdown>
-        <Menu.Item
-          component={Link}
-          to={`/organizations/${organization.id}/edit`}
-          leftSection={<IconPencil size={14} />}>
-          Edit
-        </Menu.Item>
-        <Menu.Item
-          onClick={openInspectModal}
-          leftSection={<IconCode size={14} />}>
-          Inspect
-        </Menu.Item>
-        <Menu.Item
-          color="red"
-          onClick={openDeleteModal}
-          leftSection={<IconTrash size={14} />}>
-          Delete
-        </Menu.Item>
-      </Menu.Dropdown>
-    </Menu>
+        <Menu.Dropdown>
+          <Menu.Item
+            onClick={openInspectModal}
+            leftSection={<IconCode size={14} />}>
+            Inspect
+          </Menu.Item>
+          <Protected endpoint="auditEntries" permission="read">
+            <Menu.Item
+              component={Link}
+              to={`/audit-log?object=${organization.id}&filterLabel=${organization.name}`}
+              leftSection={<IconListSearch size={14} />}>
+              Audit Logs
+            </Menu.Item>
+          </Protected>
+          <Protected endpoint="organizations" permission="delete">
+            <Menu.Item
+              color="red"
+              onClick={openDeleteModal}
+              leftSection={<IconTrash size={14} />}>
+              Delete
+            </Menu.Item>
+          </Protected>
+        </Menu.Dropdown>
+      </Menu>
+    </Group>
   );
 }

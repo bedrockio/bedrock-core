@@ -152,7 +152,9 @@ export default function UserForm({ user, onSuccess = () => {} }) {
               </Protected>
               {organization && (
                 <Select
-                  readOnly={!hasAccess('users', 'write')}
+                  readOnly={
+                    !hasAccess({ endpoint: 'users', permission: 'write' })
+                  }
                   disabled={rolesRequest.loading}
                   label="Organization Roles"
                   description={

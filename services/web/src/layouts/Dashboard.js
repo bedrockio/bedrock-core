@@ -9,22 +9,23 @@ import {
   IconApps,
   IconBook,
   IconBuildingStore,
-  IconComponents,
+  IconBuilding,
   IconMail,
   IconPackage,
-  IconPlus,
   IconSettings,
   IconTerminal2,
   IconUsersGroup,
+  IconListSearch,
 } from '@tabler/icons-react';
 
 import {
   AppShell,
   Burger,
   Flex,
-  TextInput,
   ScrollArea,
   Center,
+  Button,
+  Text,
 } from '@mantine/core';
 
 import MenuItem from '../components/MenuItem';
@@ -53,7 +54,7 @@ const menuItems = [
       },
     ],
   },
-  { icon: IconComponents, href: '/organizations', label: 'Organizations' },
+  { icon: IconBuilding, href: '/organizations', label: 'Organizations' },
 ];
 
 const accountItems = [
@@ -62,7 +63,7 @@ const accountItems = [
     label: 'Developer',
     items: [
       {
-        icon: IconMail,
+        icon: IconListSearch,
         href: '/audit-log',
         label: 'Audit Log',
       },
@@ -128,13 +129,20 @@ export default function DashboardLayout({ children }) {
             <ModalTrigger
               title="Select Organization"
               trigger={
-                <TextInput
-                  p="xs"
-                  m={0}
-                  placeholder={organization?.name || 'Select Organization'}
-                  leftSection={<IconBuildingStore size={14} />}
-                  rightSection={<IconPlus size={14} />}
-                />
+                <Button
+                  variant="default"
+                  style={{
+                    background: 'transparent',
+                    width: 'calc(100% - 16px)',
+                  }}
+                  fullWidth
+                  m="xs"
+                  justify="flex-start"
+                  leftSection={<IconBuilding size={14} />}>
+                  <Text size="sm">
+                    {organization?.name || 'Select Organization'}
+                  </Text>
+                </Button>
               }>
               <OrganizationSelector />
             </ModalTrigger>

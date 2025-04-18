@@ -1,6 +1,5 @@
 import React from 'react';
 import { usePage } from 'stores/page';
-import { IconPencil } from '@tabler/icons-react';
 import PageHeader from 'components/PageHeader.js';
 import Actions from '../Actions';
 
@@ -16,10 +15,7 @@ export default () => {
     { title: user.name },
   ];
 
-  const tabs = [
-    { title: 'Overview', href: `/users/${user.id}` },
-    { title: 'Audit Log', href: `/users/${user.id}/audit-log` },
-  ];
+  const tabs = [{ title: 'Overview', href: `/users/${user.id}` }];
 
   return (
     <React.Fragment>

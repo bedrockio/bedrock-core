@@ -16,13 +16,14 @@ export default function InviteActions({ invite, reload }) {
     manual: true,
     onSuccess: () => {
       showNotification({
-        position: 'top-center',
+        position: 'top-right',
         title: 'Invite re-sent',
         color: 'green',
       });
     },
     onError: (error) => {
       notifications.show({
+        position: 'top-right',
         title: 'Failed to re-send invite',
         message: error.message,
         color: 'red',

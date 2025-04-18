@@ -11,6 +11,18 @@ export default function MenuItem({
 }) {
   const hasLinks = Array.isArray(items) && items.length > 0;
 
+  const styles = {
+    root: {
+      fontSize: 'var(--mantine-font-size-sm)',
+      //paddingRight: 'var(--mantine-spacing-xs)',
+    },
+    section: {
+      marginInlineEnd: 'var(--mantine-spacing-xs)',
+      margin: '0 var(--mantine-spacing-xs)',
+    },
+    //section: {},
+  };
+
   const _items = (hasLinks ? items : []).map((link) => (
     <MantineNavLink
       leftSection={link.icon && <link.icon size={16} />}
@@ -34,6 +46,7 @@ export default function MenuItem({
     <>
       {hasLinks ? (
         <MantineNavLink
+          styles={styles}
           childrenOffset={0}
           leftSection={Icon && <Icon size={16} stroke={1.5} />}
           label={label}
@@ -43,6 +56,7 @@ export default function MenuItem({
         </MantineNavLink>
       ) : (
         <MantineNavLink
+          styles={styles}
           component={(props) => {
             if (external) {
               return <a target="_blank" rel="noopener noreferrer" {...props} />;

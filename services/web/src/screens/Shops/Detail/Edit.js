@@ -20,7 +20,7 @@ export default function EditShop() {
         breadcrumbItems={[
           { title: 'Home', href: '/' },
           { title: 'Shops', href: '/shops' },
-          { title: shop.name, href: `/shops/${shop.id}` },
+          { title: shop.name },
         ]}
         rightSection={
           <Button

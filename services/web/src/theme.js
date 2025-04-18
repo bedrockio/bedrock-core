@@ -6,6 +6,7 @@ export const theme = createTheme({
 
   luminanceThreshold: 0.3,
   primaryColor: 'green',
+  fontFamily: 'Inter, sans-serif',
 
   colors: {
     brown: [
@@ -52,6 +53,7 @@ export const theme = createTheme({
       styles: {
         legend: {
           fontSize: 'var(--mantine-font-size-md)',
+          color: 'var(--mantine-color-dark-2)',
         },
       },
     },
@@ -75,15 +77,5 @@ export const theme = createTheme({
         },
       },
     }),
-    NavLink: {
-      styles: {
-        root: {
-          fontSize: 'var(--mantine-font-size-sm)',
-        },
-        section: {
-          marginInlineEnd: 'var(--mantine-spacing-xs)',
-        },
-      },
-    },
   },
 });

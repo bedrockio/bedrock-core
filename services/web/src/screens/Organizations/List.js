@@ -115,7 +115,9 @@ export default function OrganizationList() {
                         </Tooltip>
                       </Group>
                     </SortableTh>
-                    <Table.Th width={50}>Actions</Table.Th>
+                    <Table.Th style={{ textAlign: 'right' }} width={100}>
+                      Actions
+                    </Table.Th>
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>
@@ -133,7 +135,11 @@ export default function OrganizationList() {
                         {formatDateTime(organization.createdAt)}
                       </Table.Td>
                       <Table.Td align="right">
-                        <Actions organization={organization} reload={reload} />
+                        <Actions
+                          compact
+                          organization={organization}
+                          reload={reload}
+                        />
                       </Table.Td>
                     </Table.Tr>
                   ))}

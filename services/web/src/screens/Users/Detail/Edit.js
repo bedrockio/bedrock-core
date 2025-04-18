@@ -2,10 +2,10 @@ import Form from '../Form.js';
 
 import { usePage } from 'stores/page';
 
-import { Stack } from '@mantine/core';
-import { useNavigate } from '@bedrockio/router';
+import { Stack, Button } from '@mantine/core';
+import { useNavigate, Link } from '@bedrockio/router';
 import PageHeader from 'components/PageHeader';
-import Actions from '../Actions.js';
+import { IconEye } from '@tabler/icons-react';
 
 export default function EditUser() {
   const { user, reload } = usePage();
@@ -18,10 +18,17 @@ export default function EditUser() {
         breadcrumbItems={[
           { title: 'Home', href: '/' },
           { title: 'Users', href: '/users' },
-          { title: user.name, href: `/users/${user.id}` },
-          { title: 'Edit' },
+          { title: user.name },
         ]}
-        rightSection={<Actions  user={user} reload={reload} />}
+        rightSection={
+          <Button
+            leftSection={<IconEye size={14} />}
+            component={Link}
+            to={`/users/${user.id}`}
+            variant="default">
+            Show
+          </Button>
+        }
       />
       <Stack mt="md" gap="lg">
         <Form

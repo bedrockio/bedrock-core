@@ -7,6 +7,7 @@ import {
   IconPencil,
   IconDotsVertical,
   IconEdit,
+  IconListSearch,
 } from '@tabler/icons-react';
 import { Link } from '@bedrockio/router';
 
@@ -100,7 +101,7 @@ export default function ShopsActions({ shop, reload, compact }) {
             <Menu.Item
               component={Link}
               to={`/audit-log?object=${shop.id}&filterLabel=${shop.name}`}
-              leftSection={<IconPencil size={14} />}>
+              leftSection={<IconListSearch size={14} />}>
               Audit Logs
             </Menu.Item>
           </Protected>

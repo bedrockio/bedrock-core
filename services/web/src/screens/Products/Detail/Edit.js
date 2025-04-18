@@ -20,7 +20,7 @@ export default function EditProduct() {
         breadcrumbItems={[
           { title: 'Home', href: '/' },
           { title: 'Products', href: '/products' },
-          { title: product.name, href: `/products/${product.id}` },
+          { title: product.name },
         ]}
         rightSection={
           <Button

@@ -1,12 +1,13 @@
 import { PageContext } from 'stores/page';
 
-import { useNavigate } from '@bedrockio/router';
+import { useNavigate, Link } from '@bedrockio/router';
 
 import Form from '../Form.js';
-import Menu from './Menu';
 
-import { Stack } from '@mantine/core';
+import { Stack, Button } from '@mantine/core';
 import { useContext } from 'react';
+import PageHeader from 'components/PageHeader.js';
+import { IconEye } from '@tabler/icons-react';
 
 export default function OrganizationOverview() {
   const { organization, reload } = useContext(PageContext);
@@ -14,12 +15,29 @@ export default function OrganizationOverview() {
 
   return (
     <Stack gap="lg">
-      <Menu />
+      <PageHeader
+        title={`Edit ${organization.name}`}
+        breadcrumbItems={[
+          { title: 'Home', href: '/' },
+          { title: 'Organizations', href: '/organizations' },
+          { title: organization.name },
+        ]}
+        rightSection={
+          <Button
+            size="xs"
+            leftSection={<IconEye size={14} />}
+            component={Link}
+            to={`/organizations/${organization.id}`}
+            variant="default">
+            Show
+          </Button>
+        }
+      />
       <Form
         organization={organization}
-        onSave={() => {
+        onSuccess={() => {
           reload();
-          navigate('/organizations');
+          navigate(`/organizations/${organization.id}`);
         }}
       />
     </Stack>

@@ -1,4 +1,4 @@
-import { ActionIcon, Menu, Text } from '@mantine/core';
+import { ActionIcon, Group, Menu, Text, Button } from '@mantine/core';
 import { modals } from '@mantine/modals';
 
 import {
@@ -7,6 +7,7 @@ import {
   IconCode,
   IconPencil,
   IconUserCode,
+  IconEdit,
 } from '@tabler/icons-react';
 import { Link } from '@bedrockio/router';
 import { useSession } from 'stores/session';
@@ -15,8 +16,9 @@ import InspectObject from 'components/InspectObject';
 import { request } from 'utils/api';
 import ErrorMessage from 'components/ErrorMessage';
 import LoginAsUser from 'components/LoginAsUser';
+import Protected from 'components/Protected';
 
-export default function UserActions({ user, reload }) {
+export default function UserActions({ compact, user, reload }) {
   const { user: authUser } = useSession();
 
   const authenticatableRoles = authUser.roles.reduce(
@@ -79,41 +81,70 @@ export default function UserActions({ user, reload }) {
   };
 
   return (
-    <Menu shadow="md">
-      <Menu.Target>
-        <ActionIcon variant="default">
-          <IconDotsVertical size={20} />
-        </ActionIcon>
-      </Menu.Target>
+    <Group gap="xs" justify="flex-end">
+      <Protected endpoint="shops" permission="update">
+        {!compact ? (
+          <Button
+            variant="default"
+            rightSection={<IconPencil size={14} />}
+            component={Link}
+            to={`/users/${user.id}/edit`}>
+            Edit
+          </Button>
+        ) : (
+          <ActionIcon
+            variant="default"
+            component={Link}
+            to={`/users/${user.id}/edit`}>
+            <IconEdit size={14} />
+          </ActionIcon>
+        )}
+      </Protected>
+      <Menu shadow="md">
+        <Menu.Target>
+          {!compact ? (
+            <ActionIcon size="input-sm" variant="default">
+              <IconDotsVertical size={14} />
+            </ActionIcon>
+          ) : (
+            <ActionIcon variant="default">
+              <IconDotsVertical size={14} />
+            </ActionIcon>
+          )}
+        </Menu.Target>
 
-      <Menu.Dropdown>
-        <Menu.Item
-          disabled={!canAuthenticate}
-          onClick={() => openLoginAsUserModal()}
-          leftSection={<IconUserCode size={14} />}>
-          Login as User
-        </Menu.Item>
+        <Menu.Dropdown>
+          <Menu.Item
+            disabled={!canAuthenticate}
+            onClick={() => openLoginAsUserModal()}
+            leftSection={<IconUserCode size={14} />}>
+            Login as User
+          </Menu.Item>
 
-        <Menu.Item
-          component={Link}
-          to={`/users/${user.id}/edit`}
-          leftSection={<IconPencil size={14} />}>
-          Edit
-        </Menu.Item>
+          <Protected endpoint="auditEntries" permission="read">
+            <Menu.Item
+              component={Link}
+              to={`/audit-log?object=${user.id}&filterLabel=${user.name}`}
+              leftSection={<IconPencil size={14} />}>
+              Audit Logs
+            </Menu.Item>
+          </Protected>
 
-        <Menu.Item
-          onClick={openInspectModal}
-          leftSection={<IconCode size={14} />}>
-          Inspect
-        </Menu.Item>
-
-        <Menu.Item
-          color="red"
-          onClick={openDeleteModel}
-          leftSection={<IconTrash size={14} />}>
-          Delete
-        </Menu.Item>
-      </Menu.Dropdown>
-    </Menu>
+          <Menu.Item
+            onClick={openInspectModal}
+            leftSection={<IconCode size={14} />}>
+            Inspect
+          </Menu.Item>
+          <Protected endpoint="users" permission="delete">
+            <Menu.Item
+              color="red"
+              onClick={openDeleteModel}
+              leftSection={<IconTrash size={14} />}>
+              Delete
+            </Menu.Item>
+          </Protected>
+        </Menu.Dropdown>
+      </Menu>
+    </Group>
   );
 }
