@@ -1,7 +1,7 @@
 import PageHeader from 'components/PageHeader';
 
 import Form from './Form';
-import { Box, Button } from '@mantine/core';
+import { Box, Button, Stack } from '@mantine/core';
 import { useNavigate } from '@bedrockio/router';
 import { Link } from '@bedrockio/router';
 
@@ -11,7 +11,7 @@ export default function NewShop() {
   const navigate = useNavigate();
 
   return (
-    <>
+    <Stack gap="md">
       <PageHeader
         title="New Shop"
         breadcrumbItems={[
@@ -29,13 +29,11 @@ export default function NewShop() {
           </Button>
         }
       />
-      <Box mt="md">
-        <Form
-          onSuccess={(shop) => {
-            navigate(`/shops/${shop.id}`);
-          }}
-        />
-      </Box>
-    </>
+      <Form
+        onSuccess={(shop) => {
+          navigate(`/shops/${shop.id}`);
+        }}
+      />
+    </Stack>
   );
 }

@@ -11,6 +11,7 @@ import Meta from 'components/Meta';
 import PageHeader from 'components/PageHeader';
 import { IconPlus } from '@tabler/icons-react';
 import { fromNow } from 'utils/date';
+import SortableTh from 'components/Table/SortableTh';
 
 export default function Applications() {
   const onDataNeeded = async (body) => {
@@ -54,20 +55,21 @@ export default function Applications() {
               <Table mt="md" striped highlightOnHover>
                 <Table.Thead>
                   <Table.Tr>
-                    <Table.Th
-                      style={{ cursor: 'pointer' }}
+                    <SortableTh
+                      sorted={getSorted('name')}
                       onClick={() => setSort('name')}>
-                      Name{' '}
-                      {getSorted('name') === 'asc'
-                        ? '↑'
-                        : getSorted('name') === 'desc'
-                          ? '↓'
-                          : ''}
-                    </Table.Th>
+                      Name
+                    </SortableTh>
                     <Table.Th style={{ width: '25%' }}>Description</Table.Th>
                     <Table.Th>APIKey</Table.Th>
-                    <Table.Th>Request Count</Table.Th>
-                    <Table.Th width={60}>Actions</Table.Th>
+                    <Table.Th>Last Used</Table.Th>
+                    <Table.Th
+                      style={{
+                        textAlign: 'right',
+                      }}
+                      width={100}>
+                      Actions
+                    </Table.Th>
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>

@@ -10,32 +10,29 @@ export default function NewShop() {
   const navigate = useNavigate();
 
   return (
-    <>
-      <Stack gap="md">
-        <PageHeader
-          title="New Product"
-          breadcrumbItems={[
-            { title: 'Home', href: '/' },
-            { title: 'Shops', href: '/shops' },
-            { title: 'New Shop' },
-          ]}
-          rightSection={
-            <Button
-              component={Link}
-              to="/products"
-              variant="default"
-              rightSection={<IconArrowRight size={14} />}>
-              Back
-            </Button>
-          }
-        />
-
-        <Form
-          onSuccess={(product) => {
-            navigate(`/products/${product.id}`);
-          }}
-        />
-      </Stack>
-    </>
+    <Stack gap="md">
+      <PageHeader
+        title="New Product"
+        breadcrumbItems={[
+          { title: 'Home', href: '/' },
+          { title: 'Shops', href: '/shops' },
+          { title: 'New Shop' },
+        ]}
+        rightSection={
+          <Button
+            component={Link}
+            to="/products"
+            variant="default"
+            rightSection={<IconArrowRight size={14} />}>
+            Back
+          </Button>
+        }
+      />
+      <Form
+        onSuccess={(product) => {
+          navigate(`/products/${product.id}`);
+        }}
+      />
+    </Stack>
   );
 }

@@ -14,7 +14,7 @@ export default function EditProduct() {
   const navigate = useNavigate();
 
   return (
-    <Stack gap="lg">
+    <Stack gap="md">
       <PageHeader
         title={`Edit ${product.name}`}
         breadcrumbItems={[

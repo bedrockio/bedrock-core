@@ -17,8 +17,6 @@ import Logout from 'screens/Auth/Logout';
 
 import AcceptInvite from 'screens/Auth/AcceptInvite';
 
-//import 'styles/vars.less';
-
 const App = () => {
   return (
     <DashboardLayout>

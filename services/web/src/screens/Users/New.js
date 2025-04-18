@@ -1,13 +1,13 @@
 import PageHeader from 'components/PageHeader';
 import Form from './Form';
-import { Box } from '@mantine/core';
+import { Box, Stack } from '@mantine/core';
 import { useNavigate } from '@bedrockio/router';
 
 export default function NewUser() {
   const navigate = useNavigate();
 
   return (
-    <>
+    <Stack gap="md">
       <PageHeader
         title="New User"
         breadcrumbItems={[
@@ -16,13 +16,12 @@ export default function NewUser() {
           { title: 'New User' },
         ]}
       />
-      <Box mt="md">
-        <Form
-          onSuccess={(user) => {
-            navigate(`/users/${user.id}`);
-          }}
-        />
-      </Box>
-    </>
+
+      <Form
+        onSuccess={(user) => {
+          navigate(`/users/${user.id}`);
+        }}
+      />
+    </Stack>
   );
 }

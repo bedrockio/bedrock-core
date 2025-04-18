@@ -64,6 +64,7 @@ export default function OrganizationList() {
               ]}
               rightSection={
                 <Button
+                  variant="default"
                   component={Link}
                   to="/organizations/new"
                   rightSection={<IconPlus size={14} />}>

@@ -12,7 +12,7 @@ export default function EditUser() {
   const navigate = useNavigate();
 
   return (
-    <>
+    <Stack gap="md">
       <PageHeader
         title={`Edit ${user.name}`}
         breadcrumbItems={[
@@ -30,15 +30,14 @@ export default function EditUser() {
           </Button>
         }
       />
-      <Stack mt="md" gap="lg">
-        <Form
-          user={user}
-          onSuccess={() => {
-            reload();
-            navigate(`/users/${user.id}`);
-          }}
-        />
-      </Stack>
-    </>
+
+      <Form
+        user={user}
+        onSuccess={() => {
+          reload();
+          navigate(`/users/${user.id}`);
+        }}
+      />
+    </Stack>
   );
 }

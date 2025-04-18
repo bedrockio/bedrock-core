@@ -2,17 +2,37 @@ import Form from '../Form.js';
 
 import { usePage } from 'stores/page';
 
-import { Stack } from '@mantine/core';
+import { Stack, Button } from '@mantine/core';
 import { useNavigate } from '@bedrockio/router';
-import Menu from './Menu.js';
+import PageHeader from 'components/PageHeader.js';
+
+import { Link } from '@bedrockio/router';
+import { IconEye } from '@tabler/icons-react';
 
 export default function EditApplication() {
   const { application, reload } = usePage();
   const navigate = useNavigate();
 
   return (
-    <Stack gap="lg">
-      <Menu />
+    <Stack gap="md">
+      <PageHeader
+        title={`Edit ${application.name}`}
+        breadcrumbItems={[
+          { title: 'Home', href: '/' },
+          { title: 'Applications', href: '/applications' },
+          { title: application.name },
+        ]}
+        rightSection={
+          <Button
+            size="xs"
+            leftSection={<IconEye size={14} />}
+            component={Link}
+            to={`/applications/${application.id}`}
+            variant="default">
+            Show
+          </Button>
+        }
+      />
       <Form
         application={application}
         onSave={() => {

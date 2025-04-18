@@ -14,7 +14,7 @@ export default function OrganizationOverview() {
   const navigate = useNavigate();
 
   return (
-    <Stack gap="lg">
+    <Stack gap="md">
       <PageHeader
         title={`Edit ${organization.name}`}
         breadcrumbItems={[
