@@ -1,6 +1,4 @@
-import { Anchor, createTheme, DEFAULT_THEME, Tabs } from '@mantine/core';
-import { text } from 'hast-util-to-mdast/lib/handlers/text';
-import { template } from 'lodash-es';
+import { Button, createTheme, DEFAULT_THEME, Tabs } from '@mantine/core';
 
 export const theme = createTheme({
   primaryShade: 9,
@@ -28,6 +26,11 @@ export const theme = createTheme({
     warning: DEFAULT_THEME.colors.orange,
   },
   components: {
+    Button: Button.extend({
+      defaultProps: {
+        size: 'sm',
+      },
+    }),
     AppShell: {
       styles: {
         navbar: {

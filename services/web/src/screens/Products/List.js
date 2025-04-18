@@ -83,6 +83,7 @@ export default function ProductList() {
                     <Search.Export filename="products" />
 
                     <Button
+                      variant="default"
                       component={Link}
                       to="/products/new"
                       rightSection={<IconPlus size={14} />}>
@@ -123,7 +124,7 @@ export default function ProductList() {
 
               <ErrorMessage error={error} />
 
-              <Table.ScrollContainer minWidth={300} mt="md">
+              <Table.ScrollContainer mt="md">
                 <Table stickyHeader striped>
                   <Table.Thead>
                     <Table.Tr>
@@ -152,7 +153,12 @@ export default function ProductList() {
                           </Tooltip>
                         </Group>
                       </SortableTh>
-                      <Table.Th width={50}>Actions</Table.Th>
+                      <Table.Th
+                        style={{
+                          textAlign: 'right',
+                        }}>
+                        Actions
+                      </Table.Th>
                     </Table.Tr>
                   </Table.Thead>
                   <Table.Tbody>
@@ -183,7 +189,7 @@ export default function ProductList() {
                           <Table.Td>
                             {formatDateTime(product.createdAt)}
                           </Table.Td>
-                          <Table.Td align="right">
+                          <Table.Td align="right" width={100}>
                             <Actions
                               compact
                               product={product}

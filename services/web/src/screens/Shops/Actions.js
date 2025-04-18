@@ -63,8 +63,7 @@ export default function ShopsActions({ shop, reload, compact }) {
         {!compact ? (
           <Button
             variant="default"
-            size="xs"
-            leftSection={<IconPencil size={14} />}
+            rightSection={<IconPencil size={14} />}
             component={Link}
             to={`/shops/${shop.id}/edit`}>
             Edit
@@ -80,9 +79,15 @@ export default function ShopsActions({ shop, reload, compact }) {
       </Protected>
       <Menu shadow="md">
         <Menu.Target>
-          <ActionIcon variant="default">
-            <IconDotsVertical size={20} />
-          </ActionIcon>
+          {!compact ? (
+            <ActionIcon size="input-sm" variant="default">
+              <IconDotsVertical size={14} />
+            </ActionIcon>
+          ) : (
+            <ActionIcon variant="default">
+              <IconDotsVertical size={14} />
+            </ActionIcon>
+          )}
         </Menu.Target>
 
         <Menu.Dropdown>
