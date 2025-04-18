@@ -42,6 +42,8 @@
     "permissions": {
       "applications": "read",
       "auditEntries": "read",
+      "roles": "read",
+      "organizations": "read",
       "products": "read",
       "shops": "read",
       "users": "read",

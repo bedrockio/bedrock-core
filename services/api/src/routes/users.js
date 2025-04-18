@@ -63,32 +63,6 @@ router
       },
     };
   })
-  .post('/:id/audit-entries/search', requirePermissions('users.auditEntries'), async (ctx) => {
-    const { user } = ctx.state;
-    const authUser = ctx.state.authUser;
-
-    const { data, meta } = await AuditEntry.search({
-      ...ctx.request.body,
-      $or: [
-        {
-          actor: user.id,
-        },
-        {
-          owner: user.id,
-        },
-        {
-          object: user.id,
-        },
-      ],
-    })
-      .populate('actor', 'firstName lastName')
-      .populate('object', 'firstName lastName name');
-
-    ctx.body = {
-      data: data,
-      meta,
-    };
-  })
   .use(requirePermissions('roles.list'))
   .get('/roles', (ctx) => {
     ctx.body = {

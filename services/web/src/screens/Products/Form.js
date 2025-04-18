@@ -86,7 +86,7 @@ export default function ProductForm({ product, shop, onSuccess = () => {} }) {
       <Grid>
         <Grid.Col span={{ base: 12, md: 6 }}>
           <Fieldset legend="Product Details" mb="md">
-            <Stack gap="xs">
+            <Stack gap="md">
               <TextInput
                 required
                 label="Name"
