@@ -81,10 +81,10 @@ function Profile() {
   });
 
   return (
-    <>
+    <Stack gap="md">
       <Meta title="Account Details" />
       <Menu />
-      <Space h="md" />
+
       <ErrorMessage error={saveRequest.error} />
       <form
         onSubmit={form.onSubmit((values) => {
@@ -180,16 +180,15 @@ function Profile() {
             </Fieldset>
           </Grid.Col>
         </Grid>
-        <Group justify="flex-start" mt="md">
-          <Button
-            type="submit"
-            loading={saveRequest.loading}
-            disabled={saveRequest.loading}>
-            Update Details
-          </Button>
-        </Group>
+
+        <Button
+          type="submit"
+          loading={saveRequest.loading}
+          disabled={saveRequest.loading}>
+          Update Profile
+        </Button>
       </form>
-    </>
+    </Stack>
   );
 }
 
