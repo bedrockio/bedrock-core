@@ -116,7 +116,7 @@ export default function UserList() {
                 </Group>
               </Group>
 
-              <ErrorMessage error={error} />
+              <ErrorMessage mt="md" error={error} />
               <Table.ScrollContainer>
                 <Table stickyHeader striped mt={'md'}>
                   <Table.Thead>

@@ -1,15 +1,14 @@
-import React from 'react';
 import { Link } from '@bedrockio/router';
 import {
   Group,
   Table,
   Button,
   Divider,
-  Tooltip,
+  Text,
   Anchor,
   Loader,
 } from '@mantine/core';
-import { IconPlus, IconHelp } from '@tabler/icons-react';
+import { IconPlus } from '@tabler/icons-react';
 
 import PageHeader from 'components/PageHeader';
 import Search from 'components/Search';
@@ -114,6 +113,15 @@ export default function OrganizationList() {
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>
+                  {organizations.length === 0 && (
+                    <Table.Tr>
+                      <Table.Td colSpan={3} style={{ textAlign: 'center' }}>
+                        <Text p="md" fw="bold" ta="center">
+                          No organization found.
+                        </Text>
+                      </Table.Td>
+                    </Table.Tr>
+                  )}
                   {organizations.map((organization) => (
                     <Table.Tr key={organization.id}>
                       <Table.Td>
@@ -138,9 +146,9 @@ export default function OrganizationList() {
                   ))}
                 </Table.Tbody>
               </Table>
+              <Divider my="md" mt="0" />
+              <Search.Pagination />
             </Table.ScrollContainer>
-            <Divider my="md" />
-            <Search.Pagination />
           </>
         )}
       </Search.Provider>

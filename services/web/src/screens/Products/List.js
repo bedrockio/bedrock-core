@@ -6,11 +6,11 @@ import {
   Button,
   Image,
   Divider,
-  Tooltip,
+  Text,
   Anchor,
   Loader,
 } from '@mantine/core';
-import { IconPlus, IconHelp } from '@tabler/icons-react';
+import { IconPlus } from '@tabler/icons-react';
 
 import PageHeader from 'components/PageHeader';
 
@@ -153,6 +153,15 @@ export default function ProductList() {
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>
+                  {products.length === 0 && (
+                    <Table.Tr>
+                      <Table.Td colSpan={5} align="center">
+                        <Text p="md" fw="bold" ta="center">
+                          No products found.
+                        </Text>
+                      </Table.Td>
+                    </Table.Tr>
+                  )}
                   {products.map((product) => {
                     const [image] = product.images;
                     return (
