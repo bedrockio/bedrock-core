@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { get, set } from 'lodash';
-import { Form } from 'semantic';
 
 import { useDisclosure } from '@mantine/hooks';
 
@@ -247,7 +246,7 @@ export default function RequestBuilder(props) {
       schema = resolveRefs(docs, schema);
       const { type } = schema;
       return (
-        <Form.Field key={key}>
+        <div key={key}>
           {type === 'object' ? (
             <Collapsable>
               {({ open, toggle }) => {
@@ -294,7 +293,7 @@ export default function RequestBuilder(props) {
               {renderSchema(schema, [...path, key])}
             </React.Fragment>
           )}
-        </Form.Field>
+        </div>
       );
     });
   }

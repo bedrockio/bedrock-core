@@ -55,7 +55,7 @@ function ErrorScreen({ title = 'Something went wrong', error }) {
             {renderErrorBody()}
           </Alert>
           <div>
-            <Button size="xs" onClick={handleLogoutClick} color="blue">
+            <Button size="xs" onClick={handleLogoutClick}>
               Logout
             </Button>
           </div>

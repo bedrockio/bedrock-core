@@ -16,6 +16,7 @@ import {
   IconTerminal2,
   IconUsersGroup,
   IconListSearch,
+  IconChevronDown,
 } from '@tabler/icons-react';
 
 import {
@@ -60,7 +61,7 @@ const menuItems = [
 const accountItems = [
   {
     icon: IconTerminal2,
-    label: 'Developer',
+    label: 'System',
     items: [
       {
         icon: IconListSearch,
@@ -131,6 +132,12 @@ export default function DashboardLayout({ children }) {
               trigger={
                 <Button
                   variant="default"
+                  styles={{
+                    section: {},
+                    label: {
+                      flex: 1,
+                    },
+                  }}
                   style={{
                     background: 'transparent',
                     width: 'calc(100% - 16px)',
@@ -138,7 +145,8 @@ export default function DashboardLayout({ children }) {
                   fullWidth
                   m="xs"
                   justify="flex-start"
-                  leftSection={<IconBuilding size={14} />}>
+                  rightSection={<IconChevronDown size={16} stroke={1.5} />}
+                  leftSection={<IconBuilding size={16} stroke={1.5} />}>
                   <Text size="sm">
                     {organization?.name || 'Select Organization'}
                   </Text>

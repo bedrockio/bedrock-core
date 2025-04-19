@@ -1,11 +1,10 @@
 import React from 'react';
-import { List, Icon } from 'semantic';
-
-import Layout from 'components/Layout';
 
 import SearchContext from '../../Context';
 
 import DisplayValue from './DisplayValue';
+import { IconTrash } from '@tabler/icons-react';
+import { Group, List } from '@mantine/core';
 
 export default class Overview extends React.Component {
   static contextType = SearchContext;
@@ -20,7 +19,7 @@ export default class Overview extends React.Component {
   render() {
     const { filters, filterMapping = {} } = this.context;
     const filtersKeys = Object.keys(filters).filter(
-      (key) => filterMapping[key]?.label
+      (key) => filterMapping[key]?.label,
     );
 
     return (
@@ -56,11 +55,11 @@ export default class Overview extends React.Component {
                   borderTop: '0.5px solid rgba(127, 127, 127, .25)',
                   padding: '10px 0px 10px 0px',
                 }}>
-                <Layout horizontal center spread>
+                <Group>
                   {mapping.label}:{' '}
                   <DisplayValue mapping={mapping} value={filters[key]} />
-                  <Icon fitted name="close" style={{ top: 0 }} />
-                </Layout>
+                  <IconTrash fitted style={{ top: 0 }} />
+                </Group>
               </List.Item>
             );
           })}

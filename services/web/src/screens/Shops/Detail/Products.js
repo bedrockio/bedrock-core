@@ -116,7 +116,7 @@ export default function ShopProducts() {
                       <Table.Td>{formatUsd(product.priceUsd)}</Table.Td>
                       <Table.Td>{formatDateTime(product.createdAt)}</Table.Td>
                       <Table.Td textAlign="center">
-                        <Actions product={product} reload={reload} />
+                        <Actions compact product={product} reload={reload} />
                       </Table.Td>
                     </Table.Tr>
                   ))}

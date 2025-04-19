@@ -173,8 +173,7 @@ class SessionProvider extends React.PureComponent {
       }
       setToken(null);
     }
-    await this.bootstrap();
-    this.props.history.push(this.popRedirect() || '/');
+    window.location.href = '/';
   };
 
   authenticate = async (token) => {

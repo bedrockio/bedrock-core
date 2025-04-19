@@ -1,8 +1,17 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Redirect, Link, useNavigate, useLocation } from '@bedrockio/router';
 import Logo from 'components/Logo';
 
-import { Paper, PinInput, Stack, Group, Alert, Title } from '@mantine/core';
+import {
+  Paper,
+  PinInput,
+  Stack,
+  Group,
+  Alert,
+  Title,
+  Anchor,
+  Box,
+} from '@mantine/core';
 
 import { useSession } from 'stores/session';
 
@@ -68,29 +77,6 @@ export default function ConfirmCode() {
     return code && (email || phone);
   }
 
-  function render() {
-    return (
-      <>
-        <Group justify="center" align="center" pt={{ base: 30, sm: 120 }}>
-          <Meta title="Confirm Code" />
-          <Stack w={{ base: '95vw', sm: 480 }} align="center">
-            <Logo maw={200} title="Login" />
-
-            <Paper mt="md" w="100%" p="lg" radius="md" withBorder>
-              <Stack gap="md">
-                <Title order={3}>Confirm Code</Title>
-                <Paper>
-                  {renderMessage()}
-                  <Link to="/login">Back</Link>
-                </Paper>
-              </Stack>
-            </Paper>
-          </Stack>
-        </Group>
-      </>
-    );
-  }
-
   function renderMessage() {
     if (state.type === 'link') {
       return renderLink();
@@ -101,10 +87,10 @@ export default function ConfirmCode() {
 
   function renderLink() {
     return (
-      <React.Fragment>
+      <Stack>
         <Alert success>{renderLinkMessage()}</Alert>
         <ErrorMessage error={error} />
-      </React.Fragment>
+      </Stack>
     );
   }
 
@@ -119,7 +105,7 @@ export default function ConfirmCode() {
 
   function renderCode() {
     return (
-      <React.Fragment>
+      <Stack>
         <Alert success>{renderCodeMessage()}</Alert>
         <form>
           {!state.code && (
@@ -140,7 +126,7 @@ export default function ConfirmCode() {
           )}
         </form>
         <ErrorMessage error={error} />
-      </React.Fragment>
+      </Stack>
     );
   }
 
@@ -159,5 +145,26 @@ export default function ConfirmCode() {
     return <Redirect to="/login" />;
   }
 
-  return render();
+  return (
+    <Group justify="center" align="center" pt={{ base: 30, sm: 120 }}>
+      <Meta title="Confirm Code" />
+      <Stack w={{ base: '95vw', sm: 380 }} align="center">
+        <Logo maw={200} title="Login" />
+
+        <Paper mt="md" w="100%" p="lg" radius="md" withBorder>
+          <Stack gap="md">
+            <Title order={3}>Confirm Code</Title>
+            <Paper>
+              {renderMessage()}
+              <Box mt="md">
+                <Anchor component={Link} to="/login">
+                  Back
+                </Anchor>
+              </Box>
+            </Paper>
+          </Stack>
+        </Paper>
+      </Stack>
+    </Group>
+  );
 }

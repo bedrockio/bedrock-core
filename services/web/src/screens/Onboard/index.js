@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Redirect } from '@bedrockio/router';
-import { Button, Paper, Stack } from 'mantine';
+import { Button, Paper, Stack, TextInput } from '@mantine/core';
 import { startCase, pick } from 'lodash';
 
 import { useSession } from 'stores/session';
 
 import ErrorMessage from 'components/ErrorMessage';
-import EmailField from 'components/form-fields/Email';
+
 import PhoneField from 'components/form-fields/Phone';
-import LogoTitle from 'components/LogoTitle';
+import Logo from 'components/Logo';
 import Meta from 'components/Meta';
 
 import { request } from 'utils/api';
@@ -84,7 +84,7 @@ export default function OnboardScreen() {
   return (
     <React.Fragment>
       <Meta title="Tell Us More" />
-      <LogoTitle title="Tell Us More" />
+      <Logo />
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -95,8 +95,9 @@ export default function OnboardScreen() {
           <Stack>
             {error?.type !== 'validation' && <ErrorMessage error={error} />}
             {!user.email && (
-              <EmailField
+              <TextInput
                 name="email"
+                type="email"
                 value={body.email || ''}
                 onChange={setField}
                 error={error}

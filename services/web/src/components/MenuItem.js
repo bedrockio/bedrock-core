@@ -14,10 +14,11 @@ export default function MenuItem({
   const styles = {
     root: {
       fontSize: 'var(--mantine-font-size-sm)',
+      paddingLeft: 'var(--mantine-spacing-lg)',
     },
     section: {
-      marginInlineEnd: 'var(--mantine-spacing-xs)',
-      marginRight: '0',
+      //marginInlineEnd: 'var(--mantine-spacing-xs)',
+      marginRight: '6px',
     },
     label: {
       marginInlineStart: 'var(--mantine-spacing-xs)',
@@ -31,7 +32,7 @@ export default function MenuItem({
 
   const _items = (hasLinks ? items : []).map((link) => (
     <MantineNavLink
-      leftSection={link.icon && <link.icon size={16} />}
+      leftSection={link.icon && <link.icon size={16} stroke={1.5} />}
       component={(props) => {
         if (link.external) {
           return <a target="_blank" rel="noopener noreferrer" {...props} />;
@@ -43,7 +44,9 @@ export default function MenuItem({
       key={link.href}
       label={link.label}
       style={{
-        paddingLeft: Icon ? `34px` : `var(--mantine-spacing-lg)`,
+        paddingLeft: Icon
+          ? `calc(var(--mantine-spacing-lg) * 2)`
+          : `var(--mantine-spacing-xl)`,
       }}
     />
   ));

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Message } from 'semantic';
+import { Alert } from '@mantine/core';
 import { get } from 'lodash';
 
 import {
@@ -115,7 +115,7 @@ export default class RouteParams extends React.Component {
     const queryParams = this.getQueryParams();
 
     if (!routeEntry) {
-      return <Message error>No OpenApi entry found.</Message>;
+      return <Alert error>No OpenApi entry found.</Alert>;
     } else if (requestBody) {
       const { path, mime } = requestBody;
       return (

@@ -51,16 +51,13 @@ export const theme = createTheme({
     },
     Fieldset: {
       styles: {
-        legend: {
-          fontSize: 'var(--mantine-font-size-md)',
-          color: 'var(--mantine-color-gray-5)',
-        },
-      },
-    },
-    Breadcrumbs: {
-      styles: {
         root: {
+          borderRadius: 'var(--mantine-radius-xs)',
+        },
+        legend: {
           fontSize: 'var(--mantine-font-size-xs)',
+          color: 'var(--mantine-color-gray-6)',
+          textTransform: 'uppercase',
         },
       },
     },

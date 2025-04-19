@@ -24,7 +24,6 @@ export default function OrganizationOverview() {
         ]}
         rightSection={
           <Button
-            size="xs"
             leftSection={<IconEye size={14} />}
             component={Link}
             to={`/organizations/${organization.id}`}
