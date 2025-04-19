@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { ActionIcon } from '@mantine/core';
+import { ActionIcon, Paper } from '@mantine/core';
 
 import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
-import theme from 'react-syntax-highlighter/dist/esm/styles/prism/vsc-dark-plus';
+import theme from 'react-syntax-highlighter/dist/esm/styles/prism/prism';
 import bash from 'react-syntax-highlighter/dist/esm/languages/prism/bash';
 import json from 'react-syntax-highlighter/dist/esm/languages/prism/json';
 import swift from 'react-syntax-highlighter/dist/esm/languages/prism/swift';
@@ -12,7 +12,10 @@ import { useClass } from 'helpers/bem';
 
 import { copyToClipboard } from 'utils/copy';
 
+theme['pre[class*="language-"]'].lineHeight = '1';
 theme['pre[class*="language-"]'].margin = '0';
+theme['code[class*="language-"]'].fontSize = '14px';
+theme['code[class*="language-"]'].lineHeight = '1';
 
 SyntaxHighlighter.registerLanguage('bash', bash);
 SyntaxHighlighter.registerLanguage('json', json);
@@ -21,9 +24,7 @@ SyntaxHighlighter.registerLanguage('swift', swift);
 import './code.less';
 import { IconCheck, IconCopy } from '@tabler/icons-react';
 
-export default function Code(props) {
-  const { scroll, action } = props;
-
+export default function Code({ scroll, action, ...rest }) {
   const [copied, setCopied] = useState();
 
   const { className, getElementClass } = useClass(
@@ -32,7 +33,7 @@ export default function Code(props) {
   );
 
   async function onCopyClick() {
-    copyToClipboard(props.children);
+    copyToClipboard(rest.children);
     setCopied(true);
     await new Promise((resolve) => {
       setTimeout(resolve, 2000);
@@ -40,37 +41,25 @@ export default function Code(props) {
     setCopied(false);
   }
 
-  function render() {
-    const { copy, scroll, ...rest } = props;
-    return (
-      <div className={className}>
-        <SyntaxHighlighter style={theme} {...rest} />
-        {renderAction()}
-      </div>
-    );
-  }
-
-  function renderAction() {
-    return (
+  return (
+    <Paper className={className}>
+      <SyntaxHighlighter style={theme} {...rest} />
       <div className={getElementClass('action')}>
-        {action || renderCopyButton()}
+        {action || (
+          <div
+            onClick={onCopyClick}
+            className={getElementClass(
+              'copy-button',
+              copied ? null : 'clickable',
+            )}>
+            <ActionIcon variant="default">
+              {copied ? <IconCheck size={14} /> : <IconCopy size={14} />}
+            </ActionIcon>
+          </div>
+        )}
       </div>
-    );
-  }
-
-  function renderCopyButton() {
-    return (
-      <div
-        onClick={onCopyClick}
-        className={getElementClass('copy-button', copied ? null : 'clickable')}>
-        <ActionIcon variant="outlined">
-          {copied ? <IconCheck size={14} /> : <IconCopy size={14} />}
-        </ActionIcon>
-      </div>
-    );
-  }
-
-  return render();
+    </Paper>
+  );
 }
 
 Code.propTypes = {

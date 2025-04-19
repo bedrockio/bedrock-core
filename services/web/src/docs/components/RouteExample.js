@@ -58,7 +58,7 @@ export default function RouteExample(props) {
               }}
               className={getElementClass('summary')}
               trigger={
-                <ActionIcon variant="transparent">
+                <ActionIcon variant="default">
                   <IconTrash size={14} />
                 </ActionIcon>
               }
@@ -74,6 +74,7 @@ export default function RouteExample(props) {
                   header="Delete this example?"
                   trigger={
                     <ActionIcon
+                      variant="default"
                       onClick={(evt) => {
                         evt.stopPropagation();
                       }}>

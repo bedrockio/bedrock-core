@@ -254,7 +254,7 @@ export default function RequestBuilder(props) {
                   <React.Fragment>
                     <label style={{ marginBottom: '1em' }}>
                       {key}{' '}
-                      <ActionIcon onClick={toggle}>
+                      <ActionIcon variant="default" onClick={toggle}>
                         {open ? (
                           <IconMinus size={14} />
                         ) : (
@@ -276,6 +276,7 @@ export default function RequestBuilder(props) {
               <label style={{ marginBottom: '1em' }}>
                 {key}{' '}
                 <ActionIcon
+                  variant="default"
                   onClick={() => {
                     const p = [...path, key];
                     const values = get(req, p, []);
@@ -310,6 +311,7 @@ export default function RequestBuilder(props) {
                 ...options,
                 icon: (
                   <ActionIcon
+                    variant="default"
                     onClick={() => {
                       const updated = values.filter((value, j) => {
                         return j !== i;
@@ -445,14 +447,14 @@ export default function RequestBuilder(props) {
             <Group justify="flex-end" gap="md">
               {canEditDocs() && (
                 <ActionIcon
-                  variant="outline"
+                  variant="default"
                   title="Perform request and record as example"
                   onClick={onRecordClick}>
                   <IconPlayerRecordFilled size={14} />
                 </ActionIcon>
               )}
               <ActionIcon
-                variant="outline"
+                variant="default"
                 disabled={loading}
                 onClick={onPlayClick}
                 title="Perform request">

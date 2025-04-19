@@ -9,7 +9,7 @@ export default function EditButton() {
   const className = useClass('edit-button', mode === 'edit' ? 'active' : null);
   return (
     <ActionIcon
-      variant="transparent"
+      variant="default"
       className={className}
       onClick={() => setMode(mode === 'view' ? 'edit' : 'view')}>
       <IconPencil size={14} />

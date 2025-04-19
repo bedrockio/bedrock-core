@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 import { useLocation, useNavigate } from '@bedrockio/router';
-import { ActionIcon } from '@mantine/core';
+import { ActionIcon, Group } from '@mantine/core';
 
 import { useClass } from 'helpers/bem';
 
@@ -93,7 +93,7 @@ export default function ApiDocs() {
   function renderActions() {
     if (canEditDocs()) {
       return (
-        <div className={getElementClass('buttons')}>
+        <Group gap="xs" justify="flex-end" m="xs">
           <EditButton />
           <Confirm
             size="small"
@@ -101,13 +101,13 @@ export default function ApiDocs() {
             header="Generate Documentation"
             content="Generates OpenApi documentation based on schemas and route validation. This will not overwrite current documentation."
             trigger={
-              <ActionIcon variant="transparent" title="Generate Documentation">
+              <ActionIcon variant="default" title="Generate Documentation">
                 <IconRefresh size={14} />
               </ActionIcon>
             }
             onConfirm={generateDocs}
           />
-        </div>
+        </Group>
       );
     }
   }

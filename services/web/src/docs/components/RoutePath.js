@@ -15,7 +15,7 @@ export default class Route extends React.Component {
           <RequestBuilder
             route={route}
             trigger={
-              <ActionIcon>
+              <ActionIcon variant="default">
                 <IconPlayerPlayFilled size={14} />
               </ActionIcon>
             }
