@@ -6,6 +6,7 @@ const { authenticate } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
 const { exportValidation, csvExport } = require('../utils/csv');
 const { AuditEntry } = require('../models');
+const user = require('../models/user');
 const router = new Router();
 
 router
@@ -16,10 +17,26 @@ router
     validateBody(
       AuditEntry.getSearchValidation({
         ...exportValidation(),
+        user: yd.string(),
       }),
     ),
     async (ctx) => {
-      const { format, filename, ...params } = ctx.request.body;
+      const { user, format, filename, ...params } = ctx.request.body;
+
+      if (user) {
+        params.$or = [
+          {
+            actor: user,
+          },
+          {
+            owner: user,
+          },
+          {
+            object: user,
+          },
+        ];
+      }
+
       const { data, meta } = await AuditEntry.search(params).populate('object', {
         name: 1,
         id: 1,

@@ -1,20 +1,31 @@
+import { useState } from 'react';
 import { Link } from '@bedrockio/router';
-import { Table, Button, Divider, Group, Anchor } from '@mantine/core';
+import {
+  Table,
+  Divider,
+  Group,
+  Anchor,
+  Drawer,
+  ActionIcon,
+  Text,
+} from '@mantine/core';
 import { IconSearch } from '@tabler/icons-react';
 
 import PageHeader from 'components/PageHeader';
 
 import Search from 'components/Search';
 import SearchFilters from 'components/Search/Filters';
-import ShowAuditEntry from 'modals/ShowAuditEntry';
 
 import { request } from 'utils/api';
 import { formatDateTime } from 'utils/date';
 import Meta from 'components/Meta';
 import SortableTh from 'components/Table/SortableTh';
+import Overview from './Details/Overview';
 
 export default function AuditLogList() {
-  const onDataNeeded = async (params) => {
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  async function onDataNeeded(params) {
     const response = await request({
       method: 'POST',
       path: '/1/audit-entries/search',
@@ -61,25 +72,25 @@ export default function AuditLogList() {
     });
 
     return response;
-  };
+  }
 
-  const fetchUsers = async (props) => {
+  async function fetchUsers(props) {
     const { data } = await request({
       method: 'POST',
       path: '/1/users/search',
       body: props,
     });
     return data;
-  };
+  }
 
-  const fetchSearchOptions = async (props) => {
+  async function fetchSearchOptions(props) {
     const { data } = await request({
       method: 'POST',
       path: '/1/audit-entries/search-options',
       body: props,
     });
     return data;
-  };
+  }
 
   const getFilterMapping = () => {
     return {
@@ -87,6 +98,9 @@ export default function AuditLogList() {
         label: 'Actor',
       },
       ownerId: {
+        label: 'Owner',
+      },
+      user: {
         label: 'Owner',
       },
       category: {
@@ -116,6 +130,13 @@ export default function AuditLogList() {
   return (
     <>
       <Meta title="Audit Log" />
+      <Drawer
+        position="right"
+        opened={!!selectedItem}
+        onClose={() => setSelectedItem(null)}
+        title={`Audit Entry: ${selectedItem?.activity}`}>
+        <Overview auditEntry={selectedItem} />
+      </Drawer>
       <Search.Provider
         filterMapping={getFilterMapping()}
         onDataNeeded={onDataNeeded}>
@@ -172,70 +193,78 @@ export default function AuditLogList() {
               </Group>
             </Group>
 
-            {items.length !== 0 && (
-              <Table striped highlightOnHover>
-                <Table.Thead>
+            <Table striped highlightOnHover>
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>Actor</Table.Th>
+                  <Table.Th>Activity</Table.Th>
+                  <Table.Th>Object Owner</Table.Th>
+                  <Table.Th>Object Name</Table.Th>
+                  <SortableTh
+                    width={170}
+                    sorted={getSorted('createdAt')}
+                    onClick={() => setSort('createdAt')}>
+                    Date
+                  </SortableTh>
+                  <Table.Th style={{ textAlign: 'right' }}>Actions</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>
+                {items.length === 0 && (
                   <Table.Tr>
-                    <Table.Th>Actor</Table.Th>
-                    <Table.Th>Activity</Table.Th>
-                    <Table.Th>Object Owner</Table.Th>
-                    <Table.Th>Object Name</Table.Th>
-                    <SortableTh
-                      width={170}
-                      sorted={getSorted('createdAt')}
-                      onClick={() => setSort('createdAt')}>
-                      Date
-                    </SortableTh>
+                    <Table.Td colSpan={6}>
+                      <Text p="md" fw="bold" ta="center">
+                        No entries found.
+                      </Text>
+                    </Table.Td>
                   </Table.Tr>
-                </Table.Thead>
-                <Table.Tbody>
-                  {items.map((item) => (
-                    <Table.Tr key={item.id}>
-                      <Table.Td>
-                        {item.actor && (
-                          <Anchor
-                            size="sm"
-                            component={Link}
-                            title={item.actor.email}
-                            to={`/users/${item.actor.id}`}>
-                            {item.actor.firstName} {item.actor.lastName}
-                          </Anchor>
-                        )}
-                      </Table.Td>
-                      <Table.Td>{item.activity}</Table.Td>
+                )}
+                {items.map((item) => (
+                  <Table.Tr key={item.id} onClick={() => setSelectedItem(item)}>
+                    <Table.Td>
+                      {item.actor && (
+                        <Anchor
+                          size="sm"
+                          component={Link}
+                          title={item.actor.email}
+                          to={`/users/${item.actor.id}`}>
+                          {item.actor.firstName} {item.actor.lastName}
+                        </Anchor>
+                      )}
+                    </Table.Td>
+                    <Table.Td>{item.activity}</Table.Td>
 
-                      <Table.Td>
-                        {item.owner && (
-                          <Anchor
-                            size="sm"
-                            component={Link}
-                            title={item.owner.email}
-                            to={`/users/${item.owner.id}`}>
-                            {item.owner.name}
-                          </Anchor>
-                        )}
-                      </Table.Td>
-                      <Table.Td>
-                        {item.object?.name || item.object || 'N/A'}
-                      </Table.Td>
-                      <Table.Td>{formatDateTime(item.createdAt)}</Table.Td>
+                    <Table.Td>
+                      {item.owner && (
+                        <Anchor
+                          size="sm"
+                          component={Link}
+                          title={item.owner.email}
+                          to={`/users/${item.owner.id}`}>
+                          {item.owner.name}
+                        </Anchor>
+                      )}
+                    </Table.Td>
+                    <Table.Td>
+                      {item.object?.name || item.object || 'N/A'}
+                    </Table.Td>
+                    <Table.Td>{formatDateTime(item.createdAt)}</Table.Td>
 
-                      <ShowAuditEntry
-                        auditEntry={item}
-                        trigger={
-                          <Button
-                            variant="subtle"
-                            size="sm"
-                            p={0}
-                            leftIcon={<IconSearch size={16} />}
-                          />
-                        }
-                      />
-                    </Table.Tr>
-                  ))}
-                </Table.Tbody>
-              </Table>
-            )}
+                    <Table.Td style={{ textAlign: 'right' }}>
+                      <ActionIcon
+                        variant="default"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedItem(item);
+                        }}>
+                        <IconSearch size={16} />
+                      </ActionIcon>
+                    </Table.Td>
+                  </Table.Tr>
+                ))}
+              </Table.Tbody>
+            </Table>
+
             <Divider my="md" mt={0} />
             <Search.Pagination />
           </>

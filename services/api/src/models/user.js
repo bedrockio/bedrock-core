@@ -6,10 +6,6 @@ const definition = require('./definitions/user.json');
 
 const schema = createSchema(definition);
 
-schema.virtual('name').get(function () {
-  return [this.firstName, this.lastName].join(' ');
-});
-
 schema.virtual('password').set(function (password) {
   this._password = password;
 });
@@ -24,6 +20,9 @@ schema.pre('save', async function preSave(next) {
   if (this._password) {
     await setPassword(this, this._password);
     delete this._password;
+  }
+  if (this.isModified('firstName') || this.isModified('lastName')) {
+    this.name = `${this.firstName} ${this.lastName}`.trim();
   }
   return next();
 });

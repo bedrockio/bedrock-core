@@ -8,6 +8,7 @@ import {
   IconPencil,
   IconUserCode,
   IconEdit,
+  IconLogs,
 } from '@tabler/icons-react';
 import { Link } from '@bedrockio/router';
 import { useSession } from 'stores/session';
@@ -124,8 +125,8 @@ export default function UserActions({ compact, user, reload }) {
           <Protected endpoint="auditEntries" permission="read">
             <Menu.Item
               component={Link}
-              to={`/audit-log?object=${user.id}&filterLabel=${user.name}`}
-              leftSection={<IconPencil size={14} />}>
+              to={`/audit-log?user=${user.id}&filterLabel=${user.name}`}
+              leftSection={<IconLogs size={14} />}>
               Audit Logs
             </Menu.Item>
           </Protected>
