@@ -70,7 +70,7 @@ export default function UserForm({ user, onSuccess = () => {} }) {
     manual: true,
     onSuccess: ({ data }) => {
       showNotification({
-        position: 'top-center',
+        position: 'top-right',
         title: isUpdate
           ? `${data.name} was successfully updated.`
           : `${data.name} was successfully created.`,

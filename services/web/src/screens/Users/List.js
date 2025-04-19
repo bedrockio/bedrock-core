@@ -45,10 +45,6 @@ export default function UserList() {
 
   function getFilterMapping() {
     return {
-      country: {
-        label: 'Country',
-        getDisplayValue: (id) => countries.find((c) => c.value === id)?.text,
-      },
       role: {
         label: 'Role',
         getDisplayValue: (role) => role,
@@ -99,13 +95,7 @@ export default function UserList() {
                 <Group>
                   <SearchFilters.Modal>
                     <SearchFilters.Dropdown
-                      options={countries}
-                      search
-                      name="country"
-                      label="Country"
-                    />
-                    <SearchFilters.Dropdown
-                      options={[
+                      data={[
                         { value: 'admin', text: 'Admin' },
                         { value: 'user', text: 'User' },
                       ]}

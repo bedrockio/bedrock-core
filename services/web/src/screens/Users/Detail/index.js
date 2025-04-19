@@ -8,7 +8,6 @@ import { request } from 'utils/api';
 
 import Overview from './Overview';
 import Edit from './Edit';
-import AuditLog from './AuditLog';
 
 export default function UserDetail() {
   const Loader = usePageLoader(async (params) => {
@@ -31,7 +30,6 @@ export default function UserDetail() {
       }>
       <Routes>
         <Route exact path="/users/:id" render={Overview} />
-        <Route exact path="/users/:id/audit-log" render={AuditLog} />
         <Route exact path="/users/:id/edit" render={Edit} />
         <Route render={NotFound} />
       </Routes>
