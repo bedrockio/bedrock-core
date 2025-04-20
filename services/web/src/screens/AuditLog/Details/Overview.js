@@ -25,11 +25,13 @@ export default function Overview({ auditEntry }) {
             <Table.Tr>
               <Table.Th w={120}>Actor</Table.Th>
               <Table.Td>
-                <Link
+                <Anchor
+                  size="sm"
+                  component={Link}
                   title={auditEntry.actor.email}
                   to={`/users/${auditEntry.actor.id}`}>
                   {auditEntry.actor.firstName} {auditEntry.actor.lastName}
-                </Link>
+                </Anchor>
               </Table.Td>
             </Table.Tr>
             {auditEntry.objectType && (

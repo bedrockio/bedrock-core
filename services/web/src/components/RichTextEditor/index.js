@@ -15,6 +15,7 @@ import {
   toggleBlockType,
   handleKeyCommand,
 } from './utils';
+
 import { markdownToDraft, draftToMarkdown } from './utils/draft';
 import Button from './Button';
 import Divider from './Divider';
@@ -35,19 +36,21 @@ import './rich-text-editor.less';
 
 export default function RichTextEditor(props) {
   const {
-    markdown,
+    markdown = '',
     short,
-    scroll,
+    scroll = false,
     disabled,
     children,
-    toolbar,
+    toolbar = false,
     onChange,
     onEnterSubmit,
   } = props;
 
-  const [mode, setMode] = useState(props.mode);
+  const defaultMode = props.mode || 'inline';
+
+  const [mode, setMode] = useState(defaultMode);
   const [editorState, setEditorState] = useState(
-    getStateFromMarkdown(markdown)
+    getStateFromMarkdown(markdown),
   );
 
   const editorRef = useRef();
@@ -57,7 +60,7 @@ export default function RichTextEditor(props) {
     'rich-text-editor',
     short ? 'short' : null,
     scroll ? 'scroll' : null,
-    disabled ? 'disabled' : null
+    disabled ? 'disabled' : null,
   );
 
   useEffect(() => {
@@ -72,9 +75,9 @@ export default function RichTextEditor(props) {
   }, [markdown]);
 
   useEffect(() => {
-    setMode(props.mode);
+    setMode(defaultMode);
     resizeTextArea();
-  }, [props.mode]);
+  }, [defaultMode]);
 
   function getStateFromMarkdown(str) {
     const rawObject = markdownToDraft(str);
@@ -104,11 +107,8 @@ export default function RichTextEditor(props) {
   // Events
 
   function onMarkdownChange(evt) {
-    const { name, value } = evt.target;
-    onChange(evt, {
-      name,
-      value,
-    });
+    const { value } = evt.target;
+    onChange(value);
   }
 
   function onStateChange(editorState) {
@@ -119,12 +119,7 @@ export default function RichTextEditor(props) {
     setEditorState(editorState);
     const markdown = getMarkdownFromState(editorState);
     if (markdown !== props.markdown) {
-      // Required as this is a fake onChange event.
-      const evt = new CustomEvent('change');
-      onChange(evt, {
-        ...props,
-        value: markdown,
-      });
+      onChange(markdown);
     }
   }
 
@@ -156,21 +151,6 @@ export default function RichTextEditor(props) {
     if (blockType) {
       return toggleBlockType(editorState, blockType);
     }
-  }
-
-  function render() {
-    return (
-      <RichTextEditorContext.Provider
-        value={{
-          setMode,
-          updateEditorState,
-        }}>
-        <div className={className}>
-          {renderPresets()}
-          {renderEditor()}
-        </div>
-      </RichTextEditorContext.Provider>
-    );
   }
 
   function renderPresets() {
@@ -218,7 +198,18 @@ export default function RichTextEditor(props) {
     }
   }
 
-  return render();
+  return (
+    <RichTextEditorContext.Provider
+      value={{
+        setMode,
+        updateEditorState,
+      }}>
+      <div className={className}>
+        {renderPresets()}
+        {renderEditor()}
+      </div>
+    </RichTextEditorContext.Provider>
+  );
 }
 
 RichTextEditor.Button = Button;
@@ -243,11 +234,4 @@ RichTextEditor.propTypes = {
   toolbar: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   onEnterSubmit: PropTypes.func,
-};
-
-RichTextEditor.defaultProps = {
-  mode: 'inline',
-  markdown: '',
-  scroll: false,
-  toolbar: false,
 };

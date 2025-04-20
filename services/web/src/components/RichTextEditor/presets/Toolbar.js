@@ -25,19 +25,12 @@ export default function RichTextEditorToolbar(props) {
     evt.preventDefault();
   }
 
-  function render() {
-    return (
-      <div onMouseDown={onMouseDown} className={className}>
-        {children || renderDefault()}
-      </div>
-    );
-  }
-
   function renderDefault() {
     return (
       <React.Fragment>
         <ModeMenu />
-        {mode === 'inline' && (
+
+        {false && mode === 'inline' && (
           <React.Fragment>
             <Divider />
             <Button type="undo" />
@@ -60,5 +53,9 @@ export default function RichTextEditorToolbar(props) {
     );
   }
 
-  return render();
+  return (
+    <div onMouseDown={onMouseDown} className={className}>
+      {children || renderDefault()}
+    </div>
+  );
 }

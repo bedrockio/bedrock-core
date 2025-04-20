@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Button } from 'semantic';
+import { Button } from '@mantine/core';
 
 import { useClass } from 'helpers/bem';
 
@@ -22,14 +22,14 @@ import { useRichTextEditor } from './context';
 import './button.less';
 
 export default function RichTextEditorButton(props) {
-  const { type, toggled, disabled, ...rest } = props;
+  const { type, toggled = false, disabled = false, ...rest } = props;
 
   const { editorState, showMarkdown, toggleMarkdown, updateEditorState } =
     useRichTextEditor();
 
   const { className } = useClass(
     'rich-text-editor-button',
-    isToggled() ? 'toggled' : null
+    isToggled() ? 'toggled' : null,
   );
 
   function isToggled() {
@@ -73,32 +73,33 @@ export default function RichTextEditorButton(props) {
     }
   }
 
-  function render() {
-    const { icon, title, label } = BUTTON_STYLES[type];
-    return (
-      <Button
-        {...rest}
-        icon={icon}
-        type="button"
-        title={title}
-        content={label}
-        onClick={props.onClick || onClick}
-        className={className}
-        disabled={isDisabled()}
-      />
-    );
-  }
+  const { icon, title, label } = BUTTON_STYLES[type];
 
-  return render();
+  console.log('RichTextEditorButton', {
+    type,
+    toggled,
+    disabled,
+    icon,
+    title,
+    label,
+  });
+
+  return (
+    <Button
+      {...rest}
+      leftSection={icon}
+      type="button"
+      title={title}
+      onClick={props.onClick || onClick}
+      className={className}
+      disabled={isDisabled()}>
+      {label}
+    </Button>
+  );
 }
 
 RichTextEditorButton.propTypes = {
   type: PropTypes.oneOf(Object.keys(BUTTON_STYLES)).isRequired,
   toggled: PropTypes.bool,
   disabled: PropTypes.bool,
-};
-
-RichTextEditorButton.defaultProps = {
-  toggled: false,
-  disabled: false,
 };

@@ -1,8 +1,10 @@
-import { Icon } from 'semantic';
+import { Icon, Tab } from 'semantic';
 
 import { BUTTON_STYLES } from '../const';
 import { useRichTextEditor } from '../context';
 import Menu from '../Menu';
+import { IconPhoto } from '@tabler/icons-react';
+import { SegmentedControl } from '@mantine/core';
 
 export default function RichTextEditorModeMenu() {
   const { mode: docsMode, setMode } = useRichTextEditor();
@@ -19,16 +21,17 @@ export default function RichTextEditorModeMenu() {
         onClick={() => {
           setMode(mode);
         }}
+        leftSection={<IconPhoto size={12} />}
         active={active}
         title={title}>
-        <div style={{ padding: '10px 20px' }}>
-          <Icon name={icon} /> {label}
-        </div>
+        {label}
       </Menu.Item>
     );
   }
 
   const styles = getStyles();
+
+  return <SegmentedControl data={['inline', 'markdown', 'preview']} />;
 
   return (
     <Menu

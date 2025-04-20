@@ -1,20 +1,27 @@
-import React from 'react';
-import { Form } from 'semantic';
-
+import { InputLabel, InputWrapper } from '@mantine/core';
 import RichTextEditor from 'components/RichTextEditor';
 
-export default class RichTextField extends React.Component {
-  render() {
-    const { label, value, forwardRef, ...rest } = this.props;
-    return (
-      <Form.Field>
-        {label && <label>{label}</label>}
-        <RichTextEditor ref={forwardRef} markdown={value} {...rest} toolbar />
-      </Form.Field>
-    );
-  }
+/**
+ * RichTextField renders a rich text editor with an optional label.
+ * @param {object} props
+ * @param {string} [props.label] - The label for the field.
+ * @param {string} [props.value] - The markdown value.
+ * @param {object} [props.rest] - Additional props for the editor.
+ */
+function RichTextField(props) {
+  const { label, value, scroll = true, forwardRef, ...rest } = props;
+  return (
+    <InputWrapper>
+      {label && <InputLabel>{label}</InputLabel>}
+      <RichTextEditor
+        scroll={scroll}
+        ref={forwardRef}
+        markdown={value || ''}
+        {...rest}
+        toolbar
+      />
+    </InputWrapper>
+  );
 }
 
-RichTextField.defaultProps = {
-  scroll: true,
-};
+export default RichTextField;
