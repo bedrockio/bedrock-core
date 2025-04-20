@@ -22,6 +22,7 @@ export default function Sessions() {
       });
 
       notifications.show({
+        position: 'top-right',
         title: 'Success',
         message:
           data.mfaMethod === 'none'
@@ -32,6 +33,7 @@ export default function Sessions() {
     },
     onError: (error) => {
       notifications.show({
+        position: 'top-right',
         title: 'Error',
         message: error.message,
         color: 'red',
@@ -51,6 +53,7 @@ export default function Sessions() {
     },
     onError: (error) => {
       notifications.show({
+        position: 'top-right',
         title: 'Error',
         message: error.message,
         color: 'red',
@@ -67,6 +70,7 @@ export default function Sessions() {
             onClose={() => modals.closeAll()}
             onSuccess={() => {
               notifications.show({
+                position: 'top-right',
                 title: 'Success',
                 message: 'Two-factor authentication enabled.',
                 color: 'green',

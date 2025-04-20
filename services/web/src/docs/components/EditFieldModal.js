@@ -4,7 +4,6 @@ import { Button, Form, Modal, Icon } from 'semantic';
 
 import modal from 'helpers/modal';
 
-import HelpTip from 'components/HelpTip';
 import ErrorMessage from 'components/ErrorMessage';
 
 import { DocsContext } from '../utils/context';
@@ -84,7 +83,7 @@ class EditFieldModal extends React.Component {
         <Modal.Header>
           {label}
           {markdown && (
-            <HelpTip
+            <div
               icon={
                 <Icon
                   size="large"
@@ -93,7 +92,7 @@ class EditFieldModal extends React.Component {
                   fitted
                 />
               }
-              text="Supports Markdown"
+              //text="Supports Markdown"
             />
           )}
         </Modal.Header>

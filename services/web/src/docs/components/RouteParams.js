@@ -91,7 +91,7 @@ export default class RouteParams extends React.Component {
   };
 
   compareByRank(aName, bName) {
-    const { sortFields } = this.props;
+    const { sortFields = [] } = this.props;
     const aIndex = sortFields.indexOf(aName);
     const bIndex = sortFields.indexOf(bName);
     if (aIndex === bIndex) {
@@ -158,8 +158,4 @@ export default class RouteParams extends React.Component {
 RouteParams.propTypes = {
   route: PropTypes.string.isRequired,
   sortFields: PropTypes.arrayOf(PropTypes.string),
-};
-
-RouteParams.defaultProps = {
-  sortFields: [],
 };

@@ -1,64 +1,63 @@
-import React from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { omit, noop } from 'lodash';
-import { Button } from 'semantic';
+import { noop } from 'lodash';
+import { Button } from '@mantine/core'; // Import Mantine Button
 
-import { withSession } from 'stores/session';
+import { useSession } from 'stores/session'; // Assuming SessionContext is exported
 
 import { disable } from 'utils/auth/google';
 
-class DisableButton extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: false,
-    };
-  }
+/**
+ * Button to disable Google authentication for the current user.
+ * @param {object} props - Component props.
+ * @param {Function} [props.onError=noop] - Callback function for errors.
+ * @param {Function} [props.onDisabled=noop] - Callback function after successful disabling.
+ * @param {object} rest - Remaining props to pass to the Mantine Button.
+ * @returns {JSX.Element}
+ */
+export default function DisableButton({
+  onError = noop,
+  onDisabled = noop,
+  ...rest
+}) {
+  const [loading, setLoading] = useState(false);
+  const { user, updateUser } = useSession();
 
-  onClick = async () => {
-    let { user } = this.context;
-    try {
-      this.setState({
-        loading: true,
-      });
-      user = await disable(user);
-      this.setState({
-        loading: false,
-      });
-      this.context.updateUser(user);
-      this.props.onDisabled();
-    } catch (error) {
-      this.setState({
-        loading: false,
-      });
-      this.props.onError(error);
+  /**
+   * Handles the button click event to disable Google auth.
+   */
+  async function handleClick() {
+    // Use user from context directly
+    if (!user) {
+      onError(new Error('User not found in context.'));
+      return;
     }
-  };
-
-  render() {
-    const props = omit(this.props, Object.keys(DisableButton.propTypes));
-    const { loading } = this.state;
-    return (
-      <Button
-        color="red"
-        size="small"
-        content="Disable"
-        loading={loading}
-        onClick={this.onClick}
-        {...props}
-      />
-    );
+    try {
+      setLoading(true);
+      const updatedUser = await disable(user); // Use updatedUser variable name
+      setLoading(false);
+      updateUser(updatedUser); // Use updateUser from context
+      onDisabled();
+    } catch (error) {
+      setLoading(false);
+      onError(error);
+    }
   }
+
+  return (
+    <Button
+      color="red"
+      size="sm"
+      loading={loading}
+      onClick={handleClick}
+      {...rest} // Spread remaining props
+    >
+      Disable
+    </Button>
+  );
 }
 
 DisableButton.propTypes = {
   onError: PropTypes.func,
   onDisabled: PropTypes.func,
 };
-
-DisableButton.defaultProps = {
-  onError: noop,
-  onDisabled: noop,
-};
-
-export default withSession(DisableButton);

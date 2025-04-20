@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Redirect } from '@bedrockio/router';
 import { Button, Paper, Stack, TextInput } from '@mantine/core';
 import { startCase, pick } from 'lodash';
@@ -82,7 +82,7 @@ export default function OnboardScreen() {
   }
 
   return (
-    <React.Fragment>
+    <Stack>
       <Meta title="Tell Us More" />
       <Logo />
       <form
@@ -123,6 +123,6 @@ export default function OnboardScreen() {
           </Stack>
         </Paper>
       </form>
-    </React.Fragment>
+    </Stack>
   );
 }

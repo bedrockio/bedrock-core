@@ -27,10 +27,12 @@ import {
   Center,
   Button,
   Text,
+  Affix,
 } from '@mantine/core';
 
 import MenuItem from '../components/MenuItem';
 import ModalTrigger from 'components/ModalTrigger';
+import Footer from 'components/Footer';
 
 const menuItems = [
   {
@@ -167,7 +169,10 @@ export default function DashboardLayout({ children }) {
           ))}
         </AppShell.Section>
       </AppShell.Navbar>
-      <AppShell.Main>{children}</AppShell.Main>
+      <AppShell.Main>
+        {children}
+        <Footer />
+      </AppShell.Main>
     </AppShell>
   );
 }

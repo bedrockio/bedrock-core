@@ -32,6 +32,7 @@ export default function Sessions() {
     },
     onError: () => {
       notifications.show({
+        position: 'top-right',
         title: 'Error',
         message: 'Failed to logout session(s)',
         color: 'red',

@@ -53,27 +53,6 @@ class MyComponent extends React.Component {
 export default withSession(MyComponent);
 ```
 
-```jsx
-import { withLoadedSession } from 'stores/session';
-
-class MyComponent extends React.Component {
-  // Using withLoadedSession lets you immediately take
-  // action with the user object on component mount
-  componentDidMount() {
-    const { user, loading } = this.context;
-    console.log(user); // User object when logged in
-    console.log(loading); // false
-  }
-
-  render() {
-    const { user } = this.context;
-    return <div>Hello {user.name}.</div>;
-  }
-}
-
-export default withLoadedSession(MyComponent);
-```
-
 ## Hooks
 
 Hooks allow access to the session store via the `useSession` hook.

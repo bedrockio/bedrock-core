@@ -1,4 +1,10 @@
-import React, { useContext } from 'react';
+import React, {
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+} from 'react';
 import { withRouter } from '@bedrockio/router';
 import { omit } from 'lodash';
 
@@ -13,197 +19,71 @@ import { userHasAccess } from 'utils/permissions';
 
 const SessionContext = React.createContext();
 
-class SessionProvider extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      user: null,
-      error: null,
-      ready: false,
-      loading: true,
-      organization: null,
-      stored: this.loadStored(),
-    };
-  }
-
-  componentDidMount() {
-    this.bootstrap();
-  }
-
-  componentDidUpdate(lastProps) {
-    this.checkHistoryChange(lastProps);
-  }
-
-  componentDidCatch(error) {
-    captureError(error);
-    this.setState({
-      error,
-    });
-  }
-
-  isAdmin = () => {
-    return this.hasRoles(['admin']);
-  };
-
-  hasRoles = (roles = []) => {
-    const { user } = this.state;
-    return roles.some((role) => {
-      return user?.roles.includes(role);
-    });
-  };
-
-  hasRole = (role) => {
-    return this.hasRoles([role]);
-  };
-
-  hasAccess = ({ endpoint, permission, scope }) => {
-    return userHasAccess(this.state.user, {
-      endpoint,
-      permission,
-      scope: scope || 'organization',
-      scopeRef: this.state.organization?.id,
-    });
-  };
-
-  bootstrap = async () => {
-    if (hasToken()) {
-      this.setState({
-        loading: true,
-        error: null,
-      });
-      try {
-        const { data: user } = await request({
-          method: 'GET',
-          path: '/1/users/me',
-        });
-
-        const { data: meta } = await request({
-          method: 'GET',
-          path: '/1/meta',
-        });
-        const organization = await this.loadOrganization();
-
-        // Uncomment this line if you want to set up
-        // User-Id tracking. https://bit.ly/2DKQYEN.
-        // setUserId(user.id);
-
-        this.setState({
-          user,
-          meta,
-          organization,
-          loading: false,
-          ready: true,
-        });
-        console.log('ready');
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.log(error);
-        captureError(error);
-        if (error.type === 'token') {
-          await this.logout(true);
-        } else {
-          this.setState({
-            error,
-            loading: false,
-            ready: true,
-          });
-        }
-      }
-    } else {
-      this.setState({
-        user: null,
-        ready: true,
-        loading: false,
-      });
-    }
-  };
-
-  updateUser = (data) => {
-    this.setState({
-      user: merge(this.state.user, data),
-    });
-  };
-
-  clearUser = () => {
-    this.setState({
-      user: null,
-      error: null,
-    });
-  };
-
-  // Authentication
-
-  login = async (body) => {
-    this.setState({
-      isLoggingIn: true,
-    });
+function SessionProvider({ children, location, history }) {
+  const loadStoredData = () => {
+    let data;
     try {
-      const { data } = await request({
-        method: 'POST',
-        path: '/1/auth/password/login',
-        body,
-      });
-      const redirect = await this.authenticate(data.token);
-      this.setState({
-        isLoggingIn: false,
-      });
-      return redirect;
-    } catch (error) {
-      this.setState({
-        error,
-        isLoggingIn: false,
-      });
-      throw error;
-    }
-  };
-
-  logout = async (redirect) => {
-    if (redirect) {
-      this.pushRedirect();
-    }
-
-    if (hasToken()) {
-      try {
-        await request({
-          method: 'POST',
-          path: '/1/auth/logout',
-        });
-      } catch {
-        // JWT token errors may throw here
+      const str = localStorage.getItem('session');
+      if (str) {
+        data = JSON.parse(str);
       }
-      setToken(null);
+    } catch {
+      localStorage.removeItem('session');
     }
-    window.location.href = '/';
+    return data || {};
   };
 
-  authenticate = async (token) => {
-    setToken(token);
-    await this.bootstrap();
-    return this.popRedirect() || '/';
-  };
+  const [state, setState] = useState({
+    user: null,
+    error: null,
+    ready: false,
+    loading: true,
+    organization: null,
+    stored: loadStoredData(),
+    isLoggingIn: false,
+    meta: null,
+  });
 
-  popRedirect = () => {
-    const url = localStorage.getItem('redirect');
-    localStorage.removeItem('redirect');
-    return url;
-  };
+  const prevLocationRef = useRef(location);
 
-  pushRedirect = () => {
-    const { pathname, search } = window.location;
-    const url = pathname + search;
-    if (url !== '/') {
-      localStorage.setItem('redirect', url);
-    }
-  };
+  // Helper function to update state partially
+  const updateState = useCallback((newState) => {
+    setState((prevState) => ({ ...prevState, ...newState }));
+  }, []);
 
-  isLoggedIn = () => {
-    const { isLoggingIn } = this.state;
-    return hasToken() && !isLoggingIn;
-  };
+  const isAdmin = useCallback(() => {
+    return hasRoles(['admin']);
+  }, []);
 
-  // Organizations
+  const hasRoles = useCallback(
+    (roles = []) => {
+      return roles.some((role) => {
+        return state.user?.roles.includes(role);
+      });
+    },
+    [state.user],
+  );
 
-  loadOrganization = async () => {
+  const hasRole = useCallback(
+    (role) => {
+      return hasRoles([role]);
+    },
+    [hasRoles],
+  );
+
+  const hasAccess = useCallback(
+    ({ endpoint, permission, scope }) => {
+      return userHasAccess(state.user, {
+        endpoint,
+        permission,
+        scope: scope || 'organization',
+        scopeRef: state.organization?.id,
+      });
+    },
+    [state.user, state.organization],
+  );
+
+  const loadOrganization = useCallback(async () => {
     const organization = getOrganization();
     if (organization) {
       try {
@@ -218,99 +98,241 @@ class SessionProvider extends React.PureComponent {
         }
       }
     }
-  };
+    return null;
+  }, []);
 
-  // Session storage
+  const bootstrap = useCallback(async () => {
+    if (hasToken()) {
+      updateState({
+        loading: true,
+        error: null,
+      });
+      try {
+        const { data: user } = await request({
+          method: 'GET',
+          path: '/1/users/me',
+        });
 
-  setStored = (key, data) => {
-    this.updateStored(
-      merge({}, this.state.stored, {
-        [key]: data,
-      }),
-    );
-    trackSession('add', key, data);
-  };
+        const { data: meta } = await request({
+          method: 'GET',
+          path: '/1/meta',
+        });
+        const organization = await loadOrganization();
 
-  removeStored = (key) => {
-    this.updateStored(omit(this.state.stored, key));
-    trackSession('remove', key);
-  };
+        // Uncomment this line if you want to set up
+        // User-Id tracking. https://bit.ly/2DKQYEN.
+        // setUserId(user.id);
 
-  clearStored = () => {
-    this.updateStored({});
-  };
-
-  popStored = (key) => {
-    const stored = this.state.stored[key];
-    if (stored) {
-      this.removeStored(key);
-      return stored;
-    }
-  };
-
-  loadStored = () => {
-    let data;
-    try {
-      const str = localStorage.getItem('session');
-      if (str) {
-        data = JSON.parse(str);
+        updateState({
+          user,
+          meta,
+          organization,
+          loading: false,
+          ready: true,
+        });
+        console.log('ready');
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(error);
+        captureError(error);
+        if (error.type === 'token') {
+          await logout(true);
+        } else {
+          updateState({
+            error,
+            loading: false,
+            ready: true,
+          });
+        }
       }
-    } catch {
-      localStorage.removeItem('session');
-    }
-    return data || {};
-  };
-
-  updateStored = (data) => {
-    if (Object.keys(data).length > 0) {
-      localStorage.setItem('session', JSON.stringify(data));
     } else {
-      localStorage.removeItem('session');
+      updateState({
+        user: null,
+        ready: true,
+        loading: false,
+      });
     }
-    this.setState({
-      stored: data,
-    });
-  };
+  }, [loadOrganization]);
 
-  // History
+  const updateUser = useCallback(
+    (data) => {
+      updateState({
+        user: merge(state.user, data),
+      });
+    },
+    [state.user, updateState],
+  );
 
-  checkHistoryChange(lastProps) {
-    if (this.props.location !== lastProps.location) {
-      this.onHistoryChange();
-    }
-  }
-
-  onHistoryChange = () => {
-    this.setState({
+  const clearUser = useCallback(() => {
+    updateState({
+      user: null,
       error: null,
     });
+  }, [updateState]);
+
+  // Authentication
+  const login = useCallback(async (body) => {
+    updateState({
+      isLoggingIn: true,
+    });
+    try {
+      const { data } = await request({
+        method: 'POST',
+        path: '/1/auth/password/login',
+        body,
+      });
+      const redirect = await authenticate(data.token);
+      updateState({
+        isLoggingIn: false,
+      });
+      return redirect;
+    } catch (error) {
+      updateState({
+        error,
+        isLoggingIn: false,
+      });
+      throw error;
+    }
+  }, []);
+
+  const popRedirect = useCallback(() => {
+    const url = localStorage.getItem('redirect');
+    localStorage.removeItem('redirect');
+    return url;
+  }, []);
+
+  const pushRedirect = useCallback(() => {
+    const { pathname, search } = window.location;
+    const url = pathname + search;
+    if (url !== '/') {
+      localStorage.setItem('redirect', url);
+    }
+  }, []);
+
+  const logout = useCallback(
+    async (redirect) => {
+      if (redirect) {
+        pushRedirect();
+      }
+
+      if (hasToken()) {
+        try {
+          await request({
+            method: 'POST',
+            path: '/1/auth/logout',
+          });
+        } catch {
+          // JWT token errors may throw here
+        }
+        setToken(null);
+      }
+      window.location.href = '/';
+    },
+    [pushRedirect],
+  );
+
+  const authenticate = useCallback(
+    async (token) => {
+      setToken(token);
+      await bootstrap();
+      return popRedirect() || '/';
+    },
+    [bootstrap, popRedirect],
+  );
+
+  const isLoggedIn = useCallback(() => {
+    return hasToken() && !state.isLoggingIn;
+  }, [state.isLoggingIn]);
+
+  // Session storage methods
+  const updateStored = useCallback(
+    (data) => {
+      if (Object.keys(data).length > 0) {
+        localStorage.setItem('session', JSON.stringify(data));
+      } else {
+        localStorage.removeItem('session');
+      }
+      updateState({
+        stored: data,
+      });
+    },
+    [updateState],
+  );
+
+  const setStored = useCallback(
+    (key, data) => {
+      updateStored(
+        merge({}, state.stored, {
+          [key]: data,
+        }),
+      );
+      trackSession('add', key, data);
+    },
+    [state.stored, updateStored],
+  );
+
+  const removeStored = useCallback(
+    (key) => {
+      updateStored(omit(state.stored, key));
+      trackSession('remove', key);
+    },
+    [state.stored, updateStored],
+  );
+
+  const clearStored = useCallback(() => {
+    updateStored({});
+  }, [updateStored]);
+
+  const popStored = useCallback(
+    (key) => {
+      const stored = state.stored[key];
+      if (stored) {
+        removeStored(key);
+        return stored;
+      }
+      return undefined;
+    },
+    [state.stored, removeStored],
+  );
+
+  // Handle location change
+  useEffect(() => {
+    if (location !== prevLocationRef.current) {
+      updateState({ error: null });
+      prevLocationRef.current = location;
+    }
+  }, [location, updateState]);
+
+  // ComponentDidMount equivalent
+  useEffect(() => {
+    bootstrap();
+  }, [bootstrap]);
+
+  const contextValue = {
+    ...state,
+    bootstrap,
+    setStored,
+    removeStored,
+    clearStored,
+    updateUser,
+    clearUser,
+    login,
+    isLoggedIn,
+    authenticate,
+    logout,
+    hasRoles,
+    hasRole,
+    hasAccess,
+    isAdmin,
+    pushRedirect,
+    popStored,
   };
 
-  render() {
-    return (
-      <SessionContext.Provider
-        value={{
-          ...this.state,
-          bootstrap: this.bootstrap,
-          setStored: this.setStored,
-          removeStored: this.removeStored,
-          clearStored: this.clearStored,
-          updateUser: this.updateUser,
-          clearUser: this.clearUser,
-          login: this.login,
-          isLoggedIn: this.isLoggedIn,
-          authenticate: this.authenticate,
-          logout: this.logout,
-          hasRoles: this.hasRoles,
-          hasRole: this.hasRole,
-          hasAccess: this.hasAccess,
-          isAdmin: this.isAdmin,
-          pushRedirect: this.pushRedirect,
-        }}>
-        {this.props.children}
-      </SessionContext.Provider>
-    );
-  }
+  return (
+    <SessionContext.Provider value={contextValue}>
+      {children}
+    </SessionContext.Provider>
+  );
 }
 
 const Provider = withRouter(SessionProvider);
@@ -322,14 +344,3 @@ export function useSession() {
 }
 
 export const withSession = wrapContext(SessionContext);
-
-export function withLoadedSession(Component) {
-  Component = withSession(Component);
-  return (props) => {
-    const { loading } = useSession();
-    if (loading) {
-      return null;
-    }
-    return <Component {...props} />;
-  };
-}
