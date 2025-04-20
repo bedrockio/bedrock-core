@@ -13,50 +13,41 @@ import { Link } from '@bedrockio/router';
 
 import InspectObject from 'components/InspectObject';
 import { request } from 'utils/api';
-import ErrorMessage from 'components/ErrorMessage';
+import ConfirmModal from 'components/ConfirmModal';
 import Protected from 'components/Protected';
 
 export default function ShopsActions({ shop, reload, compact }) {
-  const openInspectModal = () => {
+  function openInspectModal() {
     modals.open({
       title: `Inspect ${shop.name}`,
       children: <InspectObject object={shop} name="shop" />,
       size: 'lg',
     });
-  };
+  }
 
-  const openDeleteModel = () => {
-    modals.openConfirmModal({
+  function openDeleteModel() {
+    modals.open({
       title: `Delete Shop`,
       children: (
-        <Text>
-          Are you sure you want to delete <strong>{shop.name}</strong>?
-        </Text>
+        <ConfirmModal
+          negative
+          onConfirm={async () => {
+            await request({
+              method: 'DELETE',
+              path: `/1/shops/${shop.id}`,
+            });
+            return reload();
+          }}
+          content={
+            <Text>
+              Are you sure you want to delete <strong>{shop.name}</strong>?
+            </Text>
+          }
+          confirmButton="Delete"
+        />
       ),
-      labels: {
-        cancel: 'Cancel',
-        confirm: 'Delete Shope',
-      },
-      confirmProps: {
-        color: 'red',
-      },
-      onConfirm: async () => {
-        try {
-          await request({
-            method: 'DELETE',
-            path: `/1/shops/${shop.id}`,
-          });
-          reload();
-          modals.close();
-        } catch (error) {
-          modals.open({
-            title: `Failed to delete shop ${shop.name}`,
-            children: <ErrorMessage error={error} />,
-          });
-        }
-      },
     });
-  };
+  }
 
   return (
     <Group gap="xs" justify="flex-end">

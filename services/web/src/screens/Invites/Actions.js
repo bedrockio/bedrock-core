@@ -5,8 +5,7 @@ import { showNotification } from '@mantine/notifications';
 import { IconDotsVertical, IconTrash, IconRepeat } from '@tabler/icons-react';
 
 import { request, useRequest } from 'utils/api';
-import ErrorMessage from 'components/ErrorMessage';
-
+import ConfirmModal from 'components/ConfirmModal';
 import { notifications } from '@mantine/notifications';
 
 export default function InviteActions({ invite, reload }) {
@@ -31,38 +30,29 @@ export default function InviteActions({ invite, reload }) {
     },
   });
 
-  const openDeleteModel = () => {
-    modals.openConfirmModal({
-      title: `Remove Invite`,
+  function openDeleteModel() {
+    modals.open({
+      title: `Delete Invite`,
       children: (
-        <Text>
-          Are you sure you want to remove <strong>{invite.email}</strong>?
-        </Text>
+        <ConfirmModal
+          negative
+          onConfirm={async () => {
+            await request({
+              method: 'DELETE',
+              path: `/1/invites/${invite.id}`,
+            });
+            return reload();
+          }}
+          confirmButton="Delete"
+          content={
+            <Text>
+              Are you sure you want to delete <strong>{invite.email}</strong>?
+            </Text>
+          }
+        />
       ),
-      labels: {
-        cancel: 'Cancel',
-        confirm: 'Remove Invite',
-      },
-      confirmProps: {
-        color: 'red',
-      },
-      onConfirm: async () => {
-        try {
-          await request({
-            method: 'DELETE',
-            path: `/1/invites/${invite.id}`,
-          });
-          reload();
-          modals.close();
-        } catch (error) {
-          modals.open({
-            title: `Failed to delete user ${invite.name}`,
-            children: <ErrorMessage error={error} />,
-          });
-        }
-      },
     });
-  };
+  }
 
   return (
     <Menu shadow="md">

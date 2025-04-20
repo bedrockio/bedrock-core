@@ -13,9 +13,11 @@ import {
 import { Link } from '@bedrockio/router';
 import { useSession } from 'stores/session';
 
+import ConfirmModal from 'components/ConfirmModal';
+
 import InspectObject from 'components/InspectObject';
 import { request } from 'utils/api';
-import ErrorMessage from 'components/ErrorMessage';
+
 import LoginAsUser from 'components/LoginAsUser';
 import Protected from 'components/Protected';
 
@@ -32,54 +34,45 @@ export default function UserActions({ compact, user, reload }) {
     authenticatableRoles.includes(role),
   );
 
-  const openLoginAsUserModal = () => {
+  function openLoginAsUserModal() {
     modals.open({
       title: `Login as ${user.name}`,
       children: <LoginAsUser user={user} />,
       size: 'lg',
     });
-  };
+  }
 
-  const openInspectModal = () => {
+  function openInspectModal() {
     modals.open({
       title: `Inspect ${user.name}`,
       children: <InspectObject object={user} name="user" />,
       size: 'lg',
     });
-  };
+  }
 
-  const openDeleteModel = () => {
-    modals.openConfirmModal({
+  function openDeleteModel() {
+    modals.open({
       title: `Delete User`,
       children: (
-        <Text>
-          Are you sure you want to delete <strong>{user.name}</strong>?
-        </Text>
+        <ConfirmModal
+          negative
+          confirmButton="Delete"
+          onConfirm={async () => {
+            await request({
+              method: 'DELETE',
+              path: `/1/users/${user.id}`,
+            });
+            return reload();
+          }}
+          content={
+            <Text>
+              Are you sure you want to delete {user.name} ({user.email})?
+            </Text>
+          }
+        />
       ),
-      labels: {
-        cancel: 'Cancel',
-        confirm: 'Delete User',
-      },
-      confirmProps: {
-        color: 'red',
-      },
-      onConfirm: async () => {
-        try {
-          await request({
-            method: 'DELETE',
-            path: `/1/users/${user.id}`,
-          });
-          reload();
-          modals.close();
-        } catch (error) {
-          modals.open({
-            title: `Failed to delete user ${user.name}`,
-            children: <ErrorMessage error={error} />,
-          });
-        }
-      },
     });
-  };
+  }
 
   return (
     <Group gap="xs" justify="flex-end">

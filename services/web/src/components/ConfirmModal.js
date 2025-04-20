@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { Button, Group, Stack } from '@mantine/core';
 import PropTypes from 'prop-types';
 import ErrorMessage from './ErrorMessage';
+import { modals } from '@mantine/modals';
 
 /**
  * Confirm dialog component using Mantine Modal.
@@ -14,13 +15,15 @@ import ErrorMessage from './ErrorMessage';
  * @param {function} props.close - Function to close the modal.
  * @returns {JSX.Element}
  */
-export default function Confirm(props) {
+export default function ConfirmModal(props) {
   const {
     content,
     confirmButton = 'OK',
     negative = false,
     onConfirm = () => {},
-    onClose = () => {},
+    onClose = () => {
+      modals.closeAll();
+    },
   } = props;
 
   const [loading, setLoading] = useState(false);
@@ -65,7 +68,7 @@ export default function Confirm(props) {
   );
 }
 
-Confirm.propTypes = {
+ConfirmModal.propTypes = {
   content: PropTypes.node,
   confirmButton: PropTypes.string,
   negative: PropTypes.bool,

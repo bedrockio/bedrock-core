@@ -23,7 +23,6 @@ const SearchPagination = () => {
       boundaries={2}
       siblings={2}
       disabled={loading}
-      loading={loading}
       value={page}
       onChange={handlePageChange}
       total={totalPages}

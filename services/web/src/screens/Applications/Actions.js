@@ -4,43 +4,34 @@ import { modals } from '@mantine/modals';
 import { IconDotsVertical, IconPencil, IconTrash } from '@tabler/icons-react';
 
 import { request } from 'utils/api';
-import ErrorMessage from 'components/ErrorMessage';
+import ConfirmModal from 'components/ConfirmModal';
 import { Link } from '@bedrockio/router';
 
 export default function ApplicationActions({ application, reload }) {
-  const openDeleteModel = () => {
-    modals.openConfirmModal({
-      title: `Remove Invite`,
+  function openDeleteModel() {
+    modals.open({
+      title: 'Delete Application',
       children: (
-        <Text>
-          Are you sure you want to remove <strong>{application.name}</strong>?
-        </Text>
+        <ConfirmModal
+          negative
+          onConfirm={async () => {
+            await request({
+              method: 'DELETE',
+              path: `/1/applications/${application.id}`,
+            });
+            return reload();
+          }}
+          confirmButton="Delete"
+          content={
+            <Text>
+              Are you sure you want to delete{' '}
+              <strong>{application.name}</strong>?
+            </Text>
+          }
+        />
       ),
-      labels: {
-        cancel: 'Cancel',
-        confirm: 'Remove Application',
-      },
-      confirmProps: {
-        color: 'red',
-      },
-      onConfirm: async () => {
-        try {
-          await request({
-            method: 'DELETE',
-            path: `/1/applications/${application.id}`,
-          });
-
-          reload();
-          modals.close();
-        } catch (error) {
-          modals.open({
-            title: `Failed to delete application ${application.name}`,
-            children: <ErrorMessage error={error} />,
-          });
-        }
-      },
     });
-  };
+  }
 
   return (
     <Menu shadow="md">

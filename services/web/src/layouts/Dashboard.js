@@ -27,7 +27,7 @@ import {
   Center,
   Button,
   Text,
-  Affix,
+  Box,
 } from '@mantine/core';
 
 import MenuItem from '../components/MenuItem';
@@ -170,7 +170,14 @@ export default function DashboardLayout({ children }) {
         </AppShell.Section>
       </AppShell.Navbar>
       <AppShell.Main>
-        {children}
+        <Box
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: 'calc(100vh - 50px)', // Subtract header height
+          }}>
+          <Box style={{ flex: 1 }}>{children}</Box>
+        </Box>
         <Footer />
       </AppShell.Main>
     </AppShell>

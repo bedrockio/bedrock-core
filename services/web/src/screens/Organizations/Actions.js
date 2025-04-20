@@ -10,8 +10,8 @@ import {
 } from '@tabler/icons-react';
 import { Link } from '@bedrockio/router';
 
-import ErrorMessage from 'components/ErrorMessage';
 import InspectObject from 'components/InspectObject';
+import ConfirmModal from 'components/ConfirmModal';
 import Protected from 'components/Protected';
 import { request } from 'utils/api';
 
@@ -24,31 +24,28 @@ export default function OrganizationActions({ compact, organization, reload }) {
     });
   }
 
-  function openDeleteModal() {
-    modals.openConfirmModal({
+  function openDeleteModel() {
+    modals.open({
       title: `Delete Organization`,
       children: (
-        <Text>
-          Are you sure you want to delete <strong>{organization.name}</strong>?
-        </Text>
+        <ConfirmModal
+          negative
+          onConfirm={async () => {
+            await request({
+              method: 'DELETE',
+              path: `/1/organizations/${organization.id}`,
+            });
+            return reload();
+          }}
+          confirmButton="Delete"
+          content={
+            <Text>
+              Are you sure you want to delete{' '}
+              <strong>{organization.name}</strong>?
+            </Text>
+          }
+        />
       ),
-      labels: { cancel: 'Cancel', confirm: 'Delete' },
-      confirmProps: { color: 'red' },
-      onConfirm: async () => {
-        try {
-          await request({
-            method: 'DELETE',
-            path: `/1/organizations/${organization.id}`,
-          });
-          reload();
-          modals.close();
-        } catch (error) {
-          modals.open({
-            title: `Failed to delete organization ${organization.name}`,
-            children: <ErrorMessage error={error} />,
-          });
-        }
-      },
     });
   }
 
@@ -102,7 +99,7 @@ export default function OrganizationActions({ compact, organization, reload }) {
           <Protected endpoint="organizations" permission="delete">
             <Menu.Item
               color="red"
-              onClick={openDeleteModal}
+              onClick={openDeleteModel}
               leftSection={<IconTrash size={14} />}>
               Delete
             </Menu.Item>

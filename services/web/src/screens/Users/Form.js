@@ -117,14 +117,14 @@ export default function UserForm({ user, onSuccess = () => {} }) {
                   label="Phone Number"
                   {...form.getInputProps('phone')}
                 />
+                {!isUpdate && (
+                  <PasswordInput
+                    required
+                    label="Password"
+                    {...form.getInputProps('password')}
+                  />
+                )}
               </Stack>
-              {!isUpdate && (
-                <PasswordInput
-                  required
-                  label="Password"
-                  {...form.getInputProps('password')}
-                />
-              )}
             </Fieldset>
           </Stack>
         </Grid.Col>
@@ -183,7 +183,7 @@ export default function UserForm({ user, onSuccess = () => {} }) {
 
               <Checkbox
                 label="Is Tester"
-                {...form.getInputProps('password', { type: 'checkbox' })}
+                {...form.getInputProps('isTester', { type: 'checkbox' })}
               />
             </Stack>
           </Fieldset>
