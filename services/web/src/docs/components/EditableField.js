@@ -1,23 +1,27 @@
+import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { get, startCase } from 'lodash';
-
+import { Text } from '@mantine/core';
 import { useClass } from 'helpers/bem';
 
 import Markdown from 'components/Markdown';
 
 import EditFieldModal from './EditFieldModal';
 import { useDocs } from '../utils/context';
+import { modals } from '@mantine/modals';
+import { DocsContext } from '../utils/context';
 
 import './editable-field.less';
 
 export default function DocsEditableField(props) {
   const { type, path, onClick, modelPath } = props;
+  const context = useContext(DocsContext);
 
   const { mode, docs } = useDocs();
 
   const { className, getElementClass } = useClass(
     'docs-editable-field',
-    ...getModifiers()
+    ...getModifiers(),
   );
 
   function getValue() {
@@ -37,29 +41,39 @@ export default function DocsEditableField(props) {
     return [mode === 'edit' ? 'editable' : null, value ? 'filled' : 'empty'];
   }
 
-  function render() {
-    const value = getValue();
-    const label = `Edit ${startCase(type)}`;
-    if (mode === 'edit') {
-      return (
+  function showEditField() {
+    modals.open({
+      title: [
+        `Edit ${startCase(type)}`,
+        props.markdown && ' - Supports Markdown',
+      ].filter(Boolean),
+      children: (
         <EditFieldModal
           {...props}
-          value={value}
-          label={label}
-          trigger={renderTrigger()}
+          docs={docs}
+          updatePath={context.updatePath}
+          value={getValue()}
+          label={`Edit ${startCase(type)}`}
+          close={() => modals.closeAll()}
         />
-      );
-    } else {
-      return renderTrigger();
-    }
+      ),
+    });
   }
 
-  function renderTrigger() {
-    return (
-      <div className={className} onClick={onClick}>
-        {renderValue()}
-      </div>
-    );
+  function render() {
+    if (mode === 'edit') {
+      return (
+        <div className={className} onClick={() => showEditField()}>
+          {renderValue()}
+        </div>
+      );
+    } else {
+      return (
+        <div className={className} onClick={onClick}>
+          {renderValue()}
+        </div>
+      );
+    }
   }
 
   function renderValue() {

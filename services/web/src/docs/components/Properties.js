@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { get, isEqual } from 'lodash';
-import { Popup } from 'semantic';
+import { Popover } from '@mantine/core';
 
 import { useClass } from 'helpers/bem';
 
@@ -180,11 +180,12 @@ export default function DocsProperties(props) {
           return (
             <React.Fragment>
               {renderType(oneOf[0])}
-              <Popup
-                position="right center"
-                trigger={<span className={getElementClass('note')}>*</span>}>
-                May also be an array.
-              </Popup>
+              <Popover position="right" withArrow>
+                <Popover.Target>
+                  <span className={getElementClass('note')}>*</span>
+                </Popover.Target>
+                <Popover.Dropdown>May also be an array.</Popover.Dropdown>
+              </Popover>
             </React.Fragment>
           );
         }

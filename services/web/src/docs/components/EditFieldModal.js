@@ -1,150 +1,120 @@
-import React from 'react';
+import { useContext, useEffect, useState, useCallback } from 'react';
 import { get } from 'lodash';
-import { Button, Form, Modal, Icon } from 'semantic';
-
-import modal from 'helpers/modal';
+import {
+  Button,
+  Textarea,
+  TextInput,
+  Checkbox,
+  Group,
+  Tooltip,
+  Stack,
+} from '@mantine/core';
+import { IconMarkdown } from '@tabler/icons-react';
 
 import ErrorMessage from 'components/ErrorMessage';
 
 import { DocsContext } from '../utils/context';
 
-class EditFieldModal extends React.Component {
-  static contextType = DocsContext;
+export default function EditFieldModal(props) {
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [updateModel, setUpdateModel] = useState(false);
+  const [value, setValue] = useState(props.value);
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      error: null,
-      loading: false,
-      updateModel: false,
-      value: props.value,
-    };
-  }
-
-  componentDidMount() {
-    this.setState({
-      updateModel: !this.isShadowedValue(),
-    });
-  }
-
-  isShadowedValue() {
-    const { docs } = this.context;
-    const { value, type, modelPath = [] } = this.props;
+  // Determine if the value is shadowed (different from model)
+  const isShadowedValue = useCallback(() => {
+    const { docs, value, type, modelPath = [] } = props;
     const modelValue = get(docs, [...modelPath, type]);
-    // undefined, null, and empty strings are all considered equal here
     return (value || null) !== (modelValue || null);
+  }, [props]);
+
+  useEffect(() => {
+    setUpdateModel(!isShadowedValue());
+  }, []);
+
+  function handleFieldChange(event) {
+    setValue(event.currentTarget.value);
   }
 
-  setField = (evt, { value }) => {
-    this.setState({
-      value,
-    });
-  };
-
-  onSubmit = async () => {
-    this.setState({
-      loading: true,
-    });
+  async function onSubmit(event) {
+    if (event) event.preventDefault();
+    setLoading(true);
+    setError(null);
     try {
-      const { type, modelPath } = this.props;
-      const { value, updateModel } = this.state;
-
-      let path;
+      const { type, modelPath, path } = props;
+      let updatePath;
       if (updateModel && modelPath) {
-        path = [...modelPath, type];
+        updatePath = [...modelPath, type];
       } else {
-        path = [...this.props.path, type];
+        updatePath = [...path, type];
       }
-      await this.context.updatePath(path, value);
-      this.setState({
-        loading: false,
-      });
-      this.props.close();
-    } catch (error) {
-      this.setState({
-        error,
-        loading: false,
-      });
+      await props.updatePath(updatePath, value);
+      setLoading(false);
+      props.close();
+    } catch (err) {
+      setError(err);
+      setLoading(false);
     }
-  };
+  }
 
-  onKeyDown = (evt) => {
+  function onKeyDown(evt) {
     const { key, metaKey } = evt;
     if (key === 'Enter' && metaKey) {
-      this.onSubmit();
+      onSubmit();
     }
-  };
-
-  render() {
-    const { label, markdown } = this.props;
-    const { value, loading, error } = this.state;
-    return (
-      <React.Fragment>
-        <Modal.Header>
-          {label}
-          {markdown && (
-            <div
-              icon={
-                <Icon
-                  size="large"
-                  name="brands markdown"
-                  style={{ color: '#666' }}
-                  fitted
-                />
-              }
-              //text="Supports Markdown"
-            />
-          )}
-        </Modal.Header>
-        <Modal.Content>
-          <Form id="edit-docs-field" error={!!error} onSubmit={this.onSubmit}>
-            <ErrorMessage error={error} />
-            {markdown ? (
-              <Form.TextArea
-                value={value || ''}
-                onChange={this.setField}
-                onKeyDown={this.onKeyDown}
-              />
-            ) : (
-              <Form.Input
-                type="text"
-                value={value || ''}
-                onChange={this.setField}
-              />
-            )}
-            {this.renderUpdateModel()}
-          </Form>
-        </Modal.Content>
-        <Modal.Actions>
-          <Button
-            primary
-            content="Save"
-            form="edit-docs-field"
-            loading={loading}
-            disabled={loading}
-          />
-        </Modal.Actions>
-      </React.Fragment>
-    );
   }
 
-  renderUpdateModel() {
-    const { model } = this.props;
+  function renderUpdateModel() {
+    const { model } = props;
     if (model) {
-      const { updateModel } = this.state;
       return (
-        <Form.Checkbox
+        <Checkbox
           label={`Update base ${model.toLowerCase()}.`}
           checked={updateModel}
-          onChange={(evt, { checked }) => {
-            this.setState({
-              updateModel: checked,
-            });
-          }}
+          onChange={(event) => setUpdateModel(event.currentTarget.checked)}
+          mt="md"
         />
       );
     }
+    return null;
   }
-}
 
-export default modal(EditFieldModal);
+  return (
+    <>
+      <Stack>
+        <form id="edit-docs-field" onSubmit={onSubmit}>
+          <ErrorMessage error={error} />
+          {props.markdown ? (
+            <Textarea
+              value={value || ''}
+              onChange={handleFieldChange}
+              onKeyDown={onKeyDown}
+              autosize
+              minRows={4}
+              data-autofocus
+              mt="sm"
+            />
+          ) : (
+            <TextInput
+              type="text"
+              value={value || ''}
+              onChange={handleFieldChange}
+              onKeyDown={onKeyDown}
+              data-autofocus
+              mt="sm"
+            />
+          )}
+          {renderUpdateModel()}
+        </form>
+
+        <Button
+          type="submit"
+          form="edit-docs-field"
+          loading={loading}
+          disabled={loading}>
+          Save
+        </Button>
+      </Stack>
+    </>
+  );
+}

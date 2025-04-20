@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form } from 'semantic';
-
 import SearchContext from '../Context';
+import { TextInput } from '@mantine/core';
 
 export default class SearchFilter extends React.Component {
   static contextType = SearchContext;
@@ -17,7 +16,7 @@ export default class SearchFilter extends React.Component {
     const { loading, onFilterChange } = this.context;
 
     return (
-      <Form.Input
+      <TextInput
         {...this.props}
         fluid
         loading={loading}
@@ -51,6 +50,5 @@ export default class SearchFilter extends React.Component {
 }
 
 SearchFilter.propTypes = {
-  ...Form.Input.propTypes,
   name: PropTypes.string.isRequired,
 };
