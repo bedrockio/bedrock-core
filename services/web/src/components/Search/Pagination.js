@@ -3,7 +3,7 @@ import { Pagination } from '@mantine/core';
 
 import SearchContext from './Context';
 
-const SearchPagination = () => {
+export default function SearchPagination() {
   const { loading, error, page, meta, onPageChange } =
     useContext(SearchContext);
 
@@ -28,6 +28,4 @@ const SearchPagination = () => {
       total={totalPages}
     />
   );
-};
-
-export default SearchPagination;
+}

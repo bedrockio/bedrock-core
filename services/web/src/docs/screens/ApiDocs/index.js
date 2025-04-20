@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
 
 import { useLocation, useNavigate } from '@bedrockio/router';
-import { ActionIcon, Group } from '@mantine/core';
+import { ActionIcon, Group, Text } from '@mantine/core';
+import { modals } from '@mantine/modals';
 
 import { useClass } from 'helpers/bem';
 
-import Confirm from 'components/Confirm';
+import ConfirmModal from 'components/ConfirmModal';
 import EditButton from 'docs/components/EditButton';
 import { useDocs } from 'docs/utils/context';
 
@@ -90,23 +91,37 @@ export default function ApiDocs() {
     }
   }
 
+  function confirmGenerate() {
+    modals.open({
+      title: `Generate Documentation`,
+      children: (
+        <ConfirmModal
+          onConfirm={() => {
+            return generateDocs();
+          }}
+          content={
+            <Text>
+              Generates OpenApi documentation based on schemas and route
+              validation. This will not overwrite current documentation.
+            </Text>
+          }
+          confirmButton="Generate Documentation"
+        />
+      ),
+    });
+  }
+
   function renderActions() {
     if (canEditDocs()) {
       return (
         <Group gap="xs" justify="flex-end" m="xs">
           <EditButton />
-          <Confirm
-            size="small"
-            confirmButton="Generate"
-            header="Generate Documentation"
-            content="Generates OpenApi documentation based on schemas and route validation. This will not overwrite current documentation."
-            trigger={
-              <ActionIcon variant="default" title="Generate Documentation">
-                <IconRefresh size={14} />
-              </ActionIcon>
-            }
-            onConfirm={generateDocs}
-          />
+          <ActionIcon
+            onClick={confirmGenerate}
+            variant="default"
+            title="Generate Documentation">
+            <IconRefresh size={14} />
+          </ActionIcon>
         </Group>
       );
     }

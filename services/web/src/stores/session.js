@@ -130,7 +130,6 @@ function SessionProvider({ children, location, history }) {
           loading: false,
           ready: true,
         });
-        console.log('ready');
       } catch (error) {
         // eslint-disable-next-line no-console
         console.log(error);
