@@ -81,7 +81,6 @@ const accountItems = [
         icon: IconBook,
         href: '/docs',
         label: 'API Docs',
-        external: true,
       },
     ],
   },
