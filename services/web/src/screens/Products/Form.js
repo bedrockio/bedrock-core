@@ -8,7 +8,7 @@ import {
   Button,
   Stack,
   Grid,
-  Box,
+  Group,
   TextInput,
   Textarea,
   Checkbox,
@@ -83,93 +83,95 @@ export default function ProductForm({ product, shop, onSuccess = () => {} }) {
       onSubmit={form.onSubmit((values) =>
         editRequest.request({ body: values }),
       )}>
-      <Grid gutter="xl">
-        <Grid.Col span={{ base: 12, md: 6 }}>
-          <Fieldset legend="Product Details" mb="md" variant="unstyled">
-            <Stack gap="xs">
-              <TextInput
-                required
-                label="Name"
-                {...form.getInputProps('name')}
-              />
-
-              <Textarea
-                label="Description"
-                {...form.getInputProps('description')}
-              />
-              <Checkbox
-                label="Is Featured"
-                {...form.getInputProps('isFeatured', { type: 'checkbox' })}
-              />
-              <NumberInput
-                prefix="$"
-                thousandSeparator=","
-                allowDecimal={true}
-                decimalScale={2}
-                fixedDecimalScale
-                label="Price"
-                {...form.getInputProps('priceUsd')}
-              />
-              <DateTimePicker
-                {...form.getInputProps('expiresAt')}
-                label="Expires At"
-              />
-              <TagsInput
-                label="Selling Points"
-                data={
-                  form.values.sellingPoints?.map((value) => ({
-                    value,
-                    label: value,
-                  })) || []
-                }
-                value={form.values.sellingPoints || []}
-                onChange={handleSellingPointsChange}
-                creatable
-                searchable
-                getCreateLabel={(query) => `+ Add ${query}`}
-                onCreate={(query) => {
-                  const newValue = query.trim();
-                  form.setFieldValue('sellingPoints', [
-                    ...(form.values.sellingPoints || []),
-                    newValue,
-                  ]);
-                  return newValue;
-                }}
-              />
-              {!shop && (
-                <SearchDropdown
-                  clearable
+      <Stack>
+        <Grid gutter="xl">
+          <Grid.Col span={{ base: 12, md: 6 }}>
+            <Fieldset legend="Product Details" mb="md" variant="unstyled">
+              <Stack gap="xs">
+                <TextInput
                   required
-                  name="shop"
-                  label="Shop"
-                  searchPath="/1/shops/search"
-                  placeholder="Search Shops"
-                  {...form.getInputProps('shop')}
+                  label="Name"
+                  {...form.getInputProps('name')}
                 />
-              )}
-            </Stack>
-          </Fieldset>
-        </Grid.Col>
-        <Grid.Col span={{ base: 12, md: 6 }}>
-          <Fieldset legend="Product Images" mb="md" variant="unstyled">
-            <UploadsField
-              label="Images"
-              {...form.getInputProps('images')}
-              onError={(error) => editRequest.setError(error)}
-            />
-          </Fieldset>
-        </Grid.Col>
-      </Grid>
 
-      <Box mt="sm" gap="md">
-        <ErrorMessage mb="md" error={editRequest.error} />
-        <Button
-          type="submit"
-          loading={editRequest.loading}
-          disabled={editRequest.loading}>
-          {isUpdate ? 'Update' : 'Create'} Product
-        </Button>
-      </Box>
+                <Textarea
+                  label="Description"
+                  {...form.getInputProps('description')}
+                />
+                <Checkbox
+                  label="Is Featured"
+                  {...form.getInputProps('isFeatured', { type: 'checkbox' })}
+                />
+                <NumberInput
+                  prefix="$"
+                  thousandSeparator=","
+                  allowDecimal={true}
+                  decimalScale={2}
+                  fixedDecimalScale
+                  label="Price"
+                  {...form.getInputProps('priceUsd')}
+                />
+                <DateTimePicker
+                  {...form.getInputProps('expiresAt')}
+                  label="Expires At"
+                />
+                <TagsInput
+                  label="Selling Points"
+                  data={
+                    form.values.sellingPoints?.map((value) => ({
+                      value,
+                      label: value,
+                    })) || []
+                  }
+                  value={form.values.sellingPoints || []}
+                  onChange={handleSellingPointsChange}
+                  creatable
+                  searchable
+                  getCreateLabel={(query) => `+ Add ${query}`}
+                  onCreate={(query) => {
+                    const newValue = query.trim();
+                    form.setFieldValue('sellingPoints', [
+                      ...(form.values.sellingPoints || []),
+                      newValue,
+                    ]);
+                    return newValue;
+                  }}
+                />
+                {!shop && (
+                  <SearchDropdown
+                    clearable
+                    required
+                    name="shop"
+                    label="Shop"
+                    searchPath="/1/shops/search"
+                    placeholder="Search Shops"
+                    {...form.getInputProps('shop')}
+                  />
+                )}
+              </Stack>
+            </Fieldset>
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, md: 6 }}>
+            <Fieldset legend="Product Images" mb="md" variant="unstyled">
+              <UploadsField
+                label="Images"
+                {...form.getInputProps('images')}
+                onError={(error) => editRequest.setError(error)}
+              />
+            </Fieldset>
+          </Grid.Col>
+        </Grid>
+
+        <Group>
+          <ErrorMessage mb="md" error={editRequest.error} />
+          <Button
+            type="submit"
+            loading={editRequest.loading}
+            disabled={editRequest.loading}>
+            {isUpdate ? 'Update' : 'Create'} Product
+          </Button>
+        </Group>
+      </Stack>
     </form>
   );
 }

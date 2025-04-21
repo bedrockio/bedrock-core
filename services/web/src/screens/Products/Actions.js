@@ -54,7 +54,6 @@ export default function ProductsActions({ product, reload, compact }) {
         {!compact ? (
           <Button
             variant="default"
-            size="xs"
             leftSection={<IconPencil size={14} />}
             component={Link}
             to={`/products/${product.id}/edit`}>
@@ -71,9 +70,15 @@ export default function ProductsActions({ product, reload, compact }) {
       </Protected>
       <Menu shadow="md">
         <Menu.Target>
-          <ActionIcon variant="default">
-            <IconDotsVertical size={20} />
-          </ActionIcon>
+          {!compact ? (
+            <ActionIcon size="input-sm" variant="default">
+              <IconDotsVertical size={20} />
+            </ActionIcon>
+          ) : (
+            <ActionIcon variant="default">
+              <IconDotsVertical size={20} />
+            </ActionIcon>
+          )}
         </Menu.Target>
 
         <Menu.Dropdown>

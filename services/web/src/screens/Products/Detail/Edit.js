@@ -6,7 +6,7 @@ import { usePage } from 'stores/page';
 import { Stack, Button } from '@mantine/core';
 import { useNavigate } from '@bedrockio/router';
 
-import { IconEye } from '@tabler/icons-react';
+import { IconArrowBack } from '@tabler/icons-react';
 import { Link } from '@bedrockio/router';
 
 export default function EditProduct() {
@@ -24,7 +24,7 @@ export default function EditProduct() {
         ]}
         rightSection={
           <Button
-            leftSection={<IconEye size={14} />}
+            rightSection={<IconArrowBack size={14} />}
             component={Link}
             to={`/products/${product.id}`}
             variant="default">

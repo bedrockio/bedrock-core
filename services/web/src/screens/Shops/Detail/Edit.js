@@ -7,7 +7,7 @@ import { useNavigate } from '@bedrockio/router';
 
 import PageHeader from 'components/PageHeader.js';
 import { Link } from '@bedrockio/router';
-import { IconEye } from '@tabler/icons-react';
+import { IconArrowBack, IconEye } from '@tabler/icons-react';
 
 export default function EditShop() {
   const { shop, reload } = usePage();
@@ -24,7 +24,7 @@ export default function EditShop() {
         ]}
         rightSection={
           <Button
-            leftSection={<IconEye size={14} />}
+            rightSection={<IconArrowBack size={14} />}
             component={Link}
             to={`/shops/${shop.id}`}
             variant="default">

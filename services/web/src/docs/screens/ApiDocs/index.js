@@ -18,6 +18,7 @@ import { DEFAULT_PAGE_ID, pagesByPath, sorted } from '../../pages';
 import './api-docs.less';
 import { IconRefresh } from '@tabler/icons-react';
 import PortalLayout from 'layouts/Portal';
+import Footer from 'components/Footer';
 
 function getMenuItems(sorted) {
   return sorted.map((page) => {
@@ -132,6 +133,7 @@ export default function ApiDocs() {
       <div className={className}>
         <Meta title="API Docs" />
         <main className={getElementClass('page')}>{renderPage()}</main>
+        <Footer />
       </div>
     </PortalLayout>
   );

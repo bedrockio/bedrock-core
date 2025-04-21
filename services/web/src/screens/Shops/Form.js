@@ -10,7 +10,7 @@ import {
   Button,
   Stack,
   Grid,
-  Box,
+  Group,
   TextInput,
   Textarea,
   Select,
@@ -26,7 +26,11 @@ const countries = allCountries.map(({ countryCode, nameEn }) => ({
   key: countryCode,
 }));
 
-export default function ShopForm({ shop, onSuccess = () => {} }) {
+export default function ShopForm({
+  shop,
+  onSuccess = () => {},
+  onCancel = () => {},
+}) {
   const isUpdate = !!shop;
 
   const form = useForm({
@@ -75,67 +79,69 @@ export default function ShopForm({ shop, onSuccess = () => {} }) {
       onSubmit={form.onSubmit((values) =>
         editRequest.request({ body: values }),
       )}>
-      <Grid>
-        <Grid.Col span={{ base: 12, md: 6 }}>
-          <Stack>
-            <Fieldset legend="Shop Details" variant="unstyled">
-              <Stack gap="xs">
-                <TextInput
-                  required
-                  label="Name"
-                  {...form.getInputProps('name')}
-                />
-                <Textarea
-                  label="Description"
-                  {...form.getInputProps('description')}
-                />
-                <SearchDropdown
-                  name="categories"
-                  multiple
-                  searchPath="/1/categories/search"
-                  label="Categories"
-                  {...form.getInputProps('categories')}
-                />
-              </Stack>
-            </Fieldset>
+      <Stack>
+        <Grid>
+          <Grid.Col span={{ base: 12, md: 6 }}>
+            <Stack>
+              <Fieldset legend="Shop Details" variant="unstyled">
+                <Stack gap="xs">
+                  <TextInput
+                    required
+                    label="Name"
+                    {...form.getInputProps('name')}
+                  />
+                  <Textarea
+                    label="Description"
+                    {...form.getInputProps('description')}
+                  />
+                  <SearchDropdown
+                    name="categories"
+                    multiple
+                    searchPath="/1/categories/search"
+                    label="Categories"
+                    {...form.getInputProps('categories')}
+                  />
+                </Stack>
+              </Fieldset>
 
-            <Fieldset legend="Address" variant="unstyled">
+              <Fieldset legend="Address" variant="unstyled">
+                <Stack gap="xs">
+                  <TextInput
+                    label="Address Line 1"
+                    {...form.getInputProps('address.line1')}
+                  />
+                  <TextInput
+                    label="Address Line 2 (Optional)"
+                    {...form.getInputProps('address.line2')}
+                  />
+                  <TextInput
+                    label="City/Town"
+                    {...form.getInputProps('address.city')}
+                  />
+                  <Select
+                    label="Country"
+                    data={countries}
+                    {...form.getInputProps('address.countryCode')}
+                  />
+                </Stack>
+              </Fieldset>
+            </Stack>
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, md: 6 }}>
+            <Fieldset variant="unstyled" legend="Images">
               <Stack gap="xs">
-                <TextInput
-                  label="Address Line 1"
-                  {...form.getInputProps('address.line1')}
-                />
-                <TextInput
-                  label="Address Line 2 (Optional)"
-                  {...form.getInputProps('address.line2')}
-                />
-                <TextInput
-                  label="City/Town"
-                  {...form.getInputProps('address.city')}
-                />
-                <Select
-                  label="Country"
-                  data={countries}
-                  {...form.getInputProps('address.countryCode')}
-                />
+                <UploadsField {...form.getInputProps('images')} />
               </Stack>
             </Fieldset>
-          </Stack>
-        </Grid.Col>
-        <Grid.Col span={{ base: 12, md: 6 }}>
-          <Fieldset variant="unstyled" legend="Images">
-            <Stack gap="xs">
-              <UploadsField {...form.getInputProps('images')} />
-            </Stack>
-          </Fieldset>
-        </Grid.Col>
-      </Grid>
-      <Box mt="md" gap="md">
-        <ErrorMessage error={editRequest.error} mb="md" />
-        <Button type="submit" onClick={() => scrollTo({ y: 0 })}>
-          {isUpdate ? 'Update' : 'Create New'} Shop
-        </Button>
-      </Box>
+          </Grid.Col>
+        </Grid>
+        <Group mt="md" gap="md">
+          <ErrorMessage error={editRequest.error} mb="md" />
+          <Button type="submit">
+            {isUpdate ? 'Update' : 'Create New'} Shop
+          </Button>
+        </Group>
+      </Stack>
     </form>
   );
 }

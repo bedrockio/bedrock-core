@@ -1,11 +1,10 @@
 import PageHeader from 'components/PageHeader';
 
 import Form from './Form';
-import { Box, Button, Stack } from '@mantine/core';
+import { Button, Stack } from '@mantine/core';
 import { useNavigate } from '@bedrockio/router';
 import { Link } from '@bedrockio/router';
-
-import { IconArrowRight } from '@tabler/icons-react';
+import { IconArrowBack } from '@tabler/icons-react';
 
 export default function NewShop() {
   const navigate = useNavigate();
@@ -21,10 +20,10 @@ export default function NewShop() {
         ]}
         rightSection={
           <Button
+            rightSection={<IconArrowBack size={14} />}
             component={Link}
             to="/shops"
-            variant="default"
-            rightSection={<IconArrowRight size={14} />}>
+            variant="default">
             Back
           </Button>
         }
@@ -32,6 +31,9 @@ export default function NewShop() {
       <Form
         onSuccess={(shop) => {
           navigate(`/shops/${shop.id}`);
+        }}
+        onCancel={() => {
+          navigate('/shops');
         }}
       />
     </Stack>
