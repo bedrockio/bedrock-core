@@ -5,7 +5,7 @@ import { usePage } from 'stores/page';
 import { Stack, Button } from '@mantine/core';
 import { useNavigate, Link } from '@bedrockio/router';
 import PageHeader from 'components/PageHeader';
-import { IconEye } from '@tabler/icons-react';
+import { IconArrowBack } from '@tabler/icons-react';
 
 export default function EditUser() {
   const { user, reload } = usePage();
@@ -22,7 +22,7 @@ export default function EditUser() {
         ]}
         rightSection={
           <Button
-            leftSection={<IconEye size={14} />}
+            rightSection={<IconArrowBack size={14} />}
             component={Link}
             to={`/users/${user.id}`}
             variant="default">

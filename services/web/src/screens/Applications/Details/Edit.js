@@ -7,7 +7,7 @@ import { useNavigate } from '@bedrockio/router';
 import PageHeader from 'components/PageHeader.js';
 
 import { Link } from '@bedrockio/router';
-import { IconEye } from '@tabler/icons-react';
+import { IconArrowBack } from '@tabler/icons-react';
 
 export default function EditApplication() {
   const { application, reload } = usePage();
@@ -24,7 +24,7 @@ export default function EditApplication() {
         ]}
         rightSection={
           <Button
-            leftSection={<IconEye size={14} />}
+            rightSection={<IconArrowBack size={14} />}
             component={Link}
             to={`/applications`}
             variant="default">

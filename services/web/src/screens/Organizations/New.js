@@ -4,13 +4,13 @@ import Form from './Form';
 import { Stack, Button } from '@mantine/core';
 import { useNavigate } from '@bedrockio/router';
 import { Link } from '@bedrockio/router';
-import { IconArrowRight } from '@tabler/icons-react';
+import { IconArrowBack } from '@tabler/icons-react';
 
 export default function NewShop() {
   const navigate = useNavigate();
 
   return (
-    <Stack gap="md">
+    <Stack>
       <PageHeader
         title="New Organization"
         breadcrumbItems={[
@@ -23,7 +23,7 @@ export default function NewShop() {
             component={Link}
             to="/applications"
             variant="default"
-            rightSection={<IconArrowRight size={14} />}>
+            rightSection={<IconArrowBack size={14} />}>
             Back
           </Button>
         }
