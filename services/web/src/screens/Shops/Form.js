@@ -77,7 +77,7 @@ export default function ShopForm({ shop, onSuccess = () => {} }) {
       )}>
       <Grid>
         <Grid.Col span={{ base: 12, md: 6 }}>
-          <Stack gap="md">
+          <Stack>
             <Fieldset legend="Shop Details" variant="unstyled">
               <Stack gap="xs">
                 <TextInput
@@ -124,7 +124,9 @@ export default function ShopForm({ shop, onSuccess = () => {} }) {
         </Grid.Col>
         <Grid.Col span={{ base: 12, md: 6 }}>
           <Fieldset variant="unstyled" legend="Images">
-            <UploadsField {...form.getInputProps('images')} />
+            <Stack gap="xs">
+              <UploadsField {...form.getInputProps('images')} />
+            </Stack>
           </Fieldset>
         </Grid.Col>
       </Grid>

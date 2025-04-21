@@ -24,9 +24,13 @@ const PageHeader = ({
     <>
       <Meta title={title} />
       <Stack>
-        <Stack gap="0">
+        <Stack gap={0}>
           <Group justify="space-between">
-            <Breadcrumbs separatorMargin="xs">
+            <Breadcrumbs
+              separatorMargin="xs"
+              style={{
+                height: '36px', // in case there is btns
+              }}>
               {breadcrumbItems.map((item, index) =>
                 item?.href ? (
                   <Anchor component={Link} to={item.href} key={index}>

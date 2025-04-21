@@ -83,10 +83,10 @@ export default function ProductForm({ product, shop, onSuccess = () => {} }) {
       onSubmit={form.onSubmit((values) =>
         editRequest.request({ body: values }),
       )}>
-      <Grid>
+      <Grid gutter="xl">
         <Grid.Col span={{ base: 12, md: 6 }}>
           <Fieldset legend="Product Details" mb="md" variant="unstyled">
-            <Stack gap="md">
+            <Stack gap="xs">
               <TextInput
                 required
                 label="Name"

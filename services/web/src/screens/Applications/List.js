@@ -1,4 +1,4 @@
-import { Table, Button, Space, Code, Anchor } from '@mantine/core';
+import { Table, Button, Space, Code, Anchor, Stack } from '@mantine/core';
 
 import { Link } from '@bedrockio/router';
 
@@ -28,7 +28,7 @@ export default function Applications() {
       <Search.Provider onDataNeeded={onDataNeeded}>
         {({ items, getSorted, setSort, reload }) => {
           return (
-            <>
+            <Stack>
               <PageHeader
                 title="Applications"
                 breadcrumbItems={[
@@ -53,7 +53,7 @@ export default function Applications() {
                 }
               />
 
-              <Table mt="md" striped highlightOnHover>
+              <Table striped highlightOnHover>
                 <Table.Thead>
                   <Table.Tr>
                     <SortableTh
@@ -103,7 +103,7 @@ export default function Applications() {
 
               <Space h="md" />
               <Search.Pagination />
-            </>
+            </Stack>
           );
         }}
       </Search.Provider>

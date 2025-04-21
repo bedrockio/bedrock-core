@@ -137,6 +137,8 @@ export default class SearchDropdown extends React.Component {
       const { getOptionLabel, getOptionValue } = this.props;
       const value = getOptionValue(item);
       return {
+        id: value,
+        key: value,
         label: getOptionLabel(item),
         value: value,
       };

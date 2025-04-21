@@ -44,11 +44,11 @@ export default function ApplicationForm({ application, onSave }) {
 
   return (
     <form onSubmit={form.onSubmit(onSubmit)}>
-      <Grid>
+      <Grid gutter="xl">
         <Grid.Col span={{ base: 12, sm: 6 }}>
           <ErrorMessage error={error} />
           <Fieldset legend="Application Details" variant="unstyled">
-            <Stack gap="md">
+            <Stack gap="xs">
               <TextInput
                 required
                 label="Name"

@@ -60,8 +60,6 @@ function AcceptInvite({ history }) {
       setError(null);
       setLoading(true);
 
-      console.log(omitBy(values, ['confirmPassword', 'email']));
-
       const { data } = await request({
         method: 'POST',
         path: '/1/invites/accept',

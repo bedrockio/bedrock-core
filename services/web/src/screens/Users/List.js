@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from '@bedrockio/router';
 import {
   Text,
@@ -7,11 +6,11 @@ import {
   Button,
   Badge,
   Divider,
-  Tooltip,
   Anchor,
   Loader,
+  Stack,
 } from '@mantine/core';
-import { IconPlus, IconHelp } from '@tabler/icons-react';
+import { IconPlus } from '@tabler/icons-react';
 import PageHeader from 'components/PageHeader';
 
 import Search from 'components/Search';
@@ -22,33 +21,42 @@ import ErrorMessage from 'components/ErrorMessage';
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
 
-import allCountries from 'utils/countries';
 import { formatRoles } from 'utils/permissions';
-
-const countries = allCountries.map(({ countryCode, nameEn }) => ({
-  value: countryCode,
-  text: nameEn,
-  key: countryCode,
-}));
 
 import Actions from './Actions';
 import SortableTh from 'components/Table/SortableTh';
 
 export default function UserList() {
-  async function onDataNeeded(body) {
+  async function onDataNeeded({ roles, ...body }) {
     return await request({
       method: 'POST',
       path: '/1/users/search',
-      body,
+      body: {
+        ...body,
+        roles: roles && {
+          role: roles.map((role) => role.id || role),
+        },
+      },
     });
+  }
+
+  async function fetchRoles() {
+    const { data } = await request({
+      method: 'GET',
+      path: `/1/users/roles`,
+    });
+
+    return { data };
   }
 
   function getFilterMapping() {
     return {
-      role: {
-        label: 'Role',
-        getDisplayValue: (role) => role,
+      /*
+      roles: {
+        label: 'Roles',
+        //getDisplayValue: (role) => role,
       },
+      */
       createdAt: {
         label: 'Created At',
         type: 'date',
@@ -65,7 +73,7 @@ export default function UserList() {
         filterMapping={getFilterMapping()}>
         {({ items: users, getSorted, setSort, reload, error, loading }) => {
           return (
-            <React.Fragment>
+            <Stack>
               <PageHeader
                 title="Users"
                 breadcrumbItems={[
@@ -91,16 +99,14 @@ export default function UserList() {
                 }
               />
 
-              <Group justify="space-between" mt="md">
+              <Group justify="space-between">
                 <Group>
                   <SearchFilters.Modal>
                     <SearchFilters.Dropdown
-                      data={[
-                        { value: 'admin', text: 'Admin' },
-                        { value: 'user', text: 'User' },
-                      ]}
-                      name="role"
-                      label="Role"
+                      onDataNeeded={fetchRoles}
+                      name="roles"
+                      label="Roles"
+                      multiple
                     />
                     <SearchFilters.DateRange
                       label="Created At"
@@ -116,9 +122,10 @@ export default function UserList() {
                 </Group>
               </Group>
 
-              <ErrorMessage mt="md" error={error} />
+              <ErrorMessage error={error} />
+
               <Table.ScrollContainer>
-                <Table stickyHeader striped mt={'md'}>
+                <Table stickyHeader striped>
                   <Table.Thead>
                     <Table.Tr>
                       <SortableTh
@@ -205,7 +212,7 @@ export default function UserList() {
                 <Divider mb="md" />
                 <Search.Pagination />
               </Table.ScrollContainer>
-            </React.Fragment>
+            </Stack>
           );
         }}
       </Search.Provider>

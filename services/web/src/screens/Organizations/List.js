@@ -7,6 +7,7 @@ import {
   Text,
   Anchor,
   Loader,
+  Stack,
 } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 
@@ -54,7 +55,7 @@ export default function OrganizationList() {
           error,
           loading,
         }) => (
-          <>
+          <Stack>
             <PageHeader
               title="Organizations"
               breadcrumbItems={[
@@ -72,7 +73,7 @@ export default function OrganizationList() {
               }
             />
 
-            <Group mt="lg" justify="space-between">
+            <Group justify="space-between">
               <Group>
                 <SearchFilters.Modal>
                   <SearchFilters.DateRange
@@ -92,7 +93,7 @@ export default function OrganizationList() {
 
             <ErrorMessage error={error} />
 
-            <Table.ScrollContainer minWidth={300} mt="md">
+            <Table.ScrollContainer>
               <Table stickyHeader striped>
                 <Table.Thead>
                   <Table.Tr>
@@ -149,7 +150,7 @@ export default function OrganizationList() {
               <Divider my="md" mt="0" />
               <Search.Pagination />
             </Table.ScrollContainer>
-          </>
+          </Stack>
         )}
       </Search.Provider>
     </>

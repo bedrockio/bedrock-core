@@ -8,6 +8,7 @@ import {
   Drawer,
   ActionIcon,
   Text,
+  Stack,
 } from '@mantine/core';
 import { IconSearch } from '@tabler/icons-react';
 
@@ -53,7 +54,7 @@ export default function AuditLogList() {
             if (!ids.length) return null;
             return fetchUsers({
               ids,
-              include: ['firstName', 'lastName', 'email'],
+              include: ['name', 'firstName', 'lastName', 'email'],
             });
           }
           // eslint-disable-next-line no-console
@@ -141,7 +142,7 @@ export default function AuditLogList() {
         filterMapping={getFilterMapping()}
         onDataNeeded={onDataNeeded}>
         {({ items, getSorted, setSort }) => (
-          <>
+          <Stack>
             <PageHeader
               title="Audit Log"
               breadcrumbItems={[
@@ -154,18 +155,16 @@ export default function AuditLogList() {
                 },
               ]}
             />
-            <Group justify="space-between" mt="md">
+            <Group justify="space-between">
               <Group>
                 <SearchFilters.Modal>
                   <SearchFilters.Dropdown
-                    onDataNeeded={(name) => fetchUsers({ name })}
-                    search
+                    onDataNeeded={fetchUsers}
                     name="actor"
                     label="Actor"
                   />
                   <SearchFilters.Dropdown
-                    onDataNeeded={(name) => fetchUsers({ name })}
-                    search
+                    onDataNeeded={fetchUsers}
                     name="ownerId"
                     label="Owner"
                   />
@@ -267,7 +266,7 @@ export default function AuditLogList() {
 
             <Divider my="md" mt={0} />
             <Search.Pagination />
-          </>
+          </Stack>
         )}
       </Search.Provider>
     </>

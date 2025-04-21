@@ -53,7 +53,7 @@ function OrganizationForm({ organization, onSave = () => {} }) {
         onSubmit={form.onSubmit((values) =>
           editRequest.request({ body: values }),
         )}>
-        <Grid>
+        <Grid gutter="xl">
           <Grid.Col span={{ base: 12, md: 6 }}>
             <Stack gap="md">
               <Fieldset variant="unstyled" legend="Organization Details">

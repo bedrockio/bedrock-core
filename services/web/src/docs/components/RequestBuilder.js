@@ -331,7 +331,6 @@ export default function RequestBuilder(props) {
   }
 
   function setField(evt, { checked, type, value, path }) {
-    console.log('setField', evt, checked, type, value, path);
     if (type === 'number') {
       value = Number(value);
     } else if (type === 'checkbox') {

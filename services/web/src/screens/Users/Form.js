@@ -121,7 +121,7 @@ export default function UserForm({ user, onSuccess = () => {} }) {
         <Grid.Col span={{ base: 12, md: 6 }}>
           <Stack>
             <Fieldset legend="Basic Information" variant="unstyled">
-              <Stack>
+              <Stack gap="xs">
                 <TextInput
                   required
                   label="First Name"
@@ -155,7 +155,7 @@ export default function UserForm({ user, onSuccess = () => {} }) {
         </Grid.Col>
         <Grid.Col span={{ base: 12, md: 6 }}>
           <Fieldset legend="Roles & Flags" variant="unstyled">
-            <Stack>
+            <Stack gap="xs">
               <Protected endpoint="users" permission="write">
                 <MultiSelect
                   value={'superAdmin'}
