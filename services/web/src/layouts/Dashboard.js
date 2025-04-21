@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { useLocation } from '@bedrockio/router';
 import { NavLink } from '@bedrockio/router';
 import { useSession } from 'stores/session';
 import Logo from 'components/Logo';
@@ -97,8 +99,14 @@ const accountItems = [
 
 export default function DashboardLayout({ children }) {
   const { user, organization } = useSession();
-  const [opened, { toggle }] = useDisclosure();
+  const [opened, { toggle, close }] = useDisclosure();
   const isMobile = useMediaQuery('(max-width: 768px)');
+
+  const location = useLocation();
+
+  useEffect(() => {
+    close();
+  }, [location.pathname]);
 
   return (
     <AppShell

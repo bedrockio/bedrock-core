@@ -5,12 +5,12 @@ import {
   Button,
   Image,
   Divider,
-  Tooltip,
   Anchor,
   Text,
   Loader,
+  Stack,
 } from '@mantine/core';
-import { IconPlus, IconHelp } from '@tabler/icons-react';
+import { IconPlus } from '@tabler/icons-react';
 import Protected from 'components/Protected';
 
 import PageHeader from 'components/PageHeader';
@@ -93,7 +93,7 @@ export default function ShopList() {
         filterMapping={getFilterMapping()}>
         {({ items: shops, getSorted, setSort, reload, error, loading }) => {
           return (
-            <>
+            <Stack>
               <PageHeader
                 title="Shops"
                 breadcrumbItems={[
@@ -121,7 +121,7 @@ export default function ShopList() {
                 }
               />
 
-              <Group mt="lg" justify="space-between">
+              <Group justify="space-between">
                 <SearchFilters.Modal>
                   <SearchFilters.Dropdown
                     data={countries}
@@ -155,9 +155,9 @@ export default function ShopList() {
                 </Group>
               </Group>
 
-              <ErrorMessage mt="md" error={error} />
+              <ErrorMessage error={error} />
 
-              <Table.ScrollContainer minWidth={300} mt="md">
+              <Table.ScrollContainer>
                 <Table stickyHeader striped>
                   <Table.Thead>
                     <Table.Tr>
@@ -229,7 +229,7 @@ export default function ShopList() {
                 <Divider mb="md" />
                 <Search.Pagination />
               </Table.ScrollContainer>
-            </>
+            </Stack>
           );
         }}
       </Search.Provider>

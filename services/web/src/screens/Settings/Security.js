@@ -118,7 +118,7 @@ export default function Security(props) {
           <Grid.Col span={{ base: 12, md: 6 }}>
             <Stack>
               <Fieldset legend="Passkey" variant="unstyled">
-                <Stack spacing="xs" mb="xs">
+                <Stack gap="xs">
                   {user.authenticators
                     .filter((authenticator) => authenticator.type === 'passkey')
                     .map((passkey) => {
@@ -126,7 +126,7 @@ export default function Security(props) {
                       return (
                         <Group justify="space-between" align="center" key={id}>
                           <Stack gap="0">
-                            <Text fw="bold">{name}</Text>
+                            <Text size="sm">{name}</Text>
                             <Text size="sm">
                               Added on {formatDate(createdAt)} | Last used{' '}
                               {fromNow(lastUsedAt)}
@@ -143,11 +143,15 @@ export default function Security(props) {
                         </Group>
                       );
                     })}
+                  <Group>
+                    <Button
+                      size="sm"
+                      variant="default"
+                      onClick={onCreatePasskeyClick}>
+                      Add Passkey
+                    </Button>
+                  </Group>
                 </Stack>
-
-                <Button variant="outline" onClick={onCreatePasskeyClick}>
-                  Add Passkey
-                </Button>
               </Fieldset>
               <Fieldset legend="Two-factor authentication" variant="unstyled">
                 <TwoFactorAuthentication />
@@ -155,23 +159,27 @@ export default function Security(props) {
               <Fieldset legend="Sign-in with" variant="unstyled">
                 <ErrorMessage error={error} />
 
-                <Title order={4}>Google</Title>
+                <Text size="sm" fw="bold">
+                  Google
+                </Text>
                 <div>
                   {hasAuthenticator('google') ? (
                     <GoogleDisableButton onDisabled={onGoogleDisabled} />
                   ) : (
-                    <Text>Sign in with Google to enable.</Text>
+                    <Text size="sm">Sign in with Google to enable.</Text>
                   )}
                 </div>
 
                 <Divider my="md" />
 
-                <Title order={4}>Apple</Title>
+                <Text size="sm" fw="bold">
+                  Apple
+                </Text>
                 <div>
                   {hasAuthenticator('apple') ? (
                     <AppleDisableButton onDisabled={onAppleDisabled} />
                   ) : (
-                    <Text>Sign in with Apple to enable.</Text>
+                    <Text size="sm">Sign in with Apple to enable.</Text>
                   )}
                 </div>
               </Fieldset>

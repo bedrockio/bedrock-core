@@ -6,6 +6,7 @@ import {
   Group,
   Table,
   Text,
+  Stack,
 } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
 import { useSession } from 'stores/session';
@@ -41,7 +42,7 @@ export default function Sessions() {
   });
 
   return (
-    <>
+    <Stack>
       <Table striped highlightOnHover>
         <Table.Thead>
           <Table.Tr>
@@ -99,15 +100,15 @@ export default function Sessions() {
         </Table.Tbody>
       </Table>
       <Divider />
-      <Button
-        mt="md"
-        variant="outline"
-        color="red"
-        loading={logoutRequest.loading}
-        disabled={logoutRequest.loading}
-        onClick={() => logoutRequest.request({ body: { all: true } })}>
-        Logout All Sessions
-      </Button>
-    </>
+      <Group>
+        <Button
+          color="red"
+          loading={logoutRequest.loading}
+          disabled={logoutRequest.loading}
+          onClick={() => logoutRequest.request({ body: { all: true } })}>
+          Logout All Sessions
+        </Button>
+      </Group>
+    </Stack>
   );
 }

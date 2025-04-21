@@ -1,4 +1,4 @@
-import { Button, Select, Text } from '@mantine/core';
+import { Button, Select, Text, Stack, Group } from '@mantine/core';
 import { useSession } from 'stores/session';
 import { useRequest } from 'utils/api';
 
@@ -93,10 +93,9 @@ export default function Sessions() {
   );
 
   return (
-    <>
+    <Stack gap="xs">
       <Text size="sm">Select how you want to verify your identity</Text>
       <Select
-        mt="xs"
         value={user.mfaMethod}
         loading={mfaRequest.loading}
         disabled={mfaRequest.loading}
@@ -110,19 +109,20 @@ export default function Sessions() {
       />
 
       {hasTotp && user.mfaMethod === 'totp' && (
-        <Button
-          mt="xs"
-          variant="outline"
-          onClick={() => {
-            removeTotpRequest.request();
-          }}
-          loading={removeTotpRequest.loading}
-          disabled={removeTotpRequest.loading}
-          size="sm"
-          color="red">
-          Reset Authenticator Configuration
-        </Button>
+        <Group>
+          <Button
+            size="sm"
+            variant="default"
+            onClick={() => {
+              removeTotpRequest.request();
+            }}
+            loading={removeTotpRequest.loading}
+            disabled={removeTotpRequest.loading}
+            color="red">
+            Reset Authenticator Configuration
+          </Button>
+        </Group>
       )}
-    </>
+    </Stack>
   );
 }

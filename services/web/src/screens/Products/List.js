@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from '@bedrockio/router';
 import {
   Group,
@@ -9,6 +8,7 @@ import {
   Text,
   Anchor,
   Loader,
+  Stack,
 } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 
@@ -65,7 +65,7 @@ export default function ProductList() {
       filterMapping={getFilterMapping()}>
       {({ items: products, getSorted, setSort, reload, error, loading }) => {
         return (
-          <React.Fragment>
+          <Stack>
             <PageHeader
               title="Products"
               breadcrumbItems={[
@@ -92,7 +92,7 @@ export default function ProductList() {
               }
             />
 
-            <Group mt="lg" justify="space-between">
+            <Group justify="space-between">
               <Group>
                 <SearchFilters.Modal>
                   <SearchFilters.Checkbox
@@ -123,7 +123,7 @@ export default function ProductList() {
 
             <ErrorMessage error={error} />
 
-            <Table.ScrollContainer mt="md">
+            <Table.ScrollContainer>
               <Table stickyHeader striped>
                 <Table.Thead>
                   <Table.Tr>
@@ -198,7 +198,7 @@ export default function ProductList() {
               <Divider mb="md" />
               <Search.Pagination />
             </Table.ScrollContainer>
-          </React.Fragment>
+          </Stack>
         );
       }}
     </Search.Provider>
