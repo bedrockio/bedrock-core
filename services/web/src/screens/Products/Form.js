@@ -20,7 +20,6 @@ import {
 import { useForm } from '@mantine/form';
 import { DateTimePicker } from '@mantine/dates';
 import { showNotification } from '@mantine/notifications';
-import RichTextEditor from 'components/form-fields/RichText';
 
 function parseProduct(product) {
   return {
@@ -94,7 +93,7 @@ export default function ProductForm({ product, shop, onSuccess = () => {} }) {
                 {...form.getInputProps('name')}
               />
 
-              <RichTextEditor
+              <Textarea
                 label="Description"
                 {...form.getInputProps('description')}
               />
