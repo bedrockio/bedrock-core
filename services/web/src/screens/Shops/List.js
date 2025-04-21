@@ -70,16 +70,10 @@ export default function ShopList() {
       },
       owner: {
         label: 'Owner',
-        getDisplayValue: async (id) => {
-          const owners = await fetchOwners({
-            ids: [id],
-          });
-          return owners[0].name;
-        },
       },
       createdAt: {
         label: 'Created At',
-        //type: 'date',
+        type: 'date',
         range: true,
       },
       keyword: {},

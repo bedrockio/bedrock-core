@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { pickBy } from 'lodash';
 import { withRouter } from '@bedrockio/router';
@@ -13,7 +13,7 @@ function convertFilters(filters) {
 
 function parseParamValue(type, value) {
   if (type === 'date') {
-    return new Date(value);
+    return new Date(Number(value));
   } else if (type === 'number') {
     return Number(value);
   } else if (type === 'boolean') {
@@ -31,10 +31,11 @@ function parseParamByType(param, value) {
 
   if (param.range) {
     value = value.split('/');
-    return {
+    const x = {
       gte: value[0] ? parseParamValue(type, value[0]) : undefined,
       lte: value[1] ? parseParamValue(type, value[1]) : undefined,
     };
+    return x;
   }
 
   return parseParamValue(type, value);
@@ -42,7 +43,7 @@ function parseParamByType(param, value) {
 
 function convertParamValue(type, value) {
   if (type === 'date') {
-    return new Date(value).toISOString();
+    return new Date(value).valueOf();
   } else if (type === 'number') {
     return Number(value);
   } else if (type === 'boolean') {
