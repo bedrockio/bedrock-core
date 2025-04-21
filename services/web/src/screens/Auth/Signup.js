@@ -3,7 +3,6 @@ import { Link, useNavigate } from '@bedrockio/router';
 
 import {
   Button,
-  Center,
   Paper,
   PasswordInput,
   Stack,
@@ -99,7 +98,7 @@ export default function SignupPassword() {
                 },
               });
             })}>
-            <Stack spacing="md">
+            <Stack gap="xs">
               {signupRequest.error?.type !== 'validation' && (
                 <ErrorMessage error={error} />
               )}

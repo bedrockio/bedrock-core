@@ -113,11 +113,11 @@ export default function PasswordLogin() {
         <Logo maw={200} title="Login" />
 
         <Paper mt="md" w="100%" p="lg" radius="md" withBorder>
-          <Stack gap="md">
+          <Stack>
             <Title order={3}>Login</Title>
             <ErrorMessage error={error} />
             <form onSubmit={form.onSubmit(onSubmit)}>
-              <Stack gap="md">
+              <Stack gap="xs">
                 <TextInput
                   required
                   label="Email"

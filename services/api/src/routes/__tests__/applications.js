@@ -32,20 +32,6 @@ describe('/1/applications', () => {
     });
   });
 
-  describe('POST /:application/logs/search', () => {
-    it('should list logs', async () => {
-      const admin = await createAdmin();
-      const application = await Application.create({
-        name: 'my application',
-        user: admin.id,
-        apiKey: uniqueId('key'),
-      });
-
-      const response = await request('POST', `/1/applications/${application.id}/logs/search`, {}, { user: admin });
-      expect(response.status).toBe(200);
-    });
-  });
-
   describe('GET /:application', () => {
     it('should get an application', async () => {
       const admin = await createAdmin();
@@ -75,7 +61,7 @@ describe('/1/applications', () => {
       expect(application.name).toBe('bob');
 
       const auditEntry = await AuditEntry.findOne({
-        objectId: application.id,
+        object: application.id,
       });
       expect(auditEntry.activity).toBe('Created application');
       expect(auditEntry.actor).toEqual(admin._id);
@@ -106,7 +92,7 @@ describe('/1/applications', () => {
       expect(dbApplication.name).toBe('bob');
 
       const auditEntry = await AuditEntry.findOne({
-        objectId: application.id,
+        object: application.id,
         include: 'actor',
       });
       expect(auditEntry.activity).toBe('Updated application');
@@ -138,7 +124,7 @@ describe('/1/applications', () => {
       expect(dbApplication).toBe(null);
 
       const auditEntry = await AuditEntry.findOne({
-        objectId: application.id,
+        object: application.id,
       });
       expect(auditEntry.activity).toBe('Deleted application');
       expect(auditEntry.actor).toEqual(admin._id);

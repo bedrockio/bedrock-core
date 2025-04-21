@@ -431,7 +431,7 @@ describe('/1/users', () => {
         actor: admin.id,
       });
       expect(auditEntry.objectType).toBe('User');
-    expect(auditEntry.object).toBe(user1.id);
+      expect(auditEntry.object).toBe(user1.id);
     });
 
     it('should throw an error when referenced by a shop', async () => {
