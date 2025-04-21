@@ -1,12 +1,4 @@
-import {
-  IconFingerprintScan,
-  IconList,
-  IconMessage,
-  IconNotification,
-  IconPaint,
-  IconPassword,
-  IconUser,
-} from '@tabler/icons-react';
+import { IconFingerprintScan, IconUser } from '@tabler/icons-react';
 import PageHeader from 'components/PageHeader';
 
 export default function SettingsMenu() {

@@ -8,15 +8,17 @@ export default function MenuItem({
   href,
   to,
   items,
+  compact,
 }) {
   const hasLinks = Array.isArray(items) && items.length > 0;
 
   const styles = {
     root: {
       fontSize: 'var(--mantine-font-size-sm)',
+      paddingLeft: compact ? '' : 'var(--mantine-spacing-lg)',
     },
     section: {
-      //marginInlineEnd: 'var(--mantine-spacing-xs)',
+      //marginInlineEnd: 'var(--mantine-spacing-lg)',
       marginRight: '6px',
     },
     label: {

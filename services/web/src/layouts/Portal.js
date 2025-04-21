@@ -70,7 +70,7 @@ export default function PortalLayout({ children, menuItems, actions }) {
         <AppShell.Navbar>
           <AppShell.Section component={ScrollArea} grow>
             {menuItems.map((item) => (
-              <MenuItem key={item.id} {...item} />
+              <MenuItem compact key={item.id} {...item} />
             ))}
           </AppShell.Section>
           <AppShell.Section>{actions}</AppShell.Section>

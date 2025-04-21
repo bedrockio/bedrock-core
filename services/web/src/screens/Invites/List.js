@@ -171,7 +171,7 @@ export default function Invites() {
                     })}
                   </Table.Tbody>
                 </Table>
-                <Divider mb="md" />
+                <Divider my="md" mt="0" />
                 <Search.Pagination />
               </Table.ScrollContainer>
             </Stack>

@@ -1,4 +1,4 @@
-import { Table, Button, Space, Code, Anchor, Stack } from '@mantine/core';
+import { Table, Button, Code, Divider, Stack } from '@mantine/core';
 
 import { Link } from '@bedrockio/router';
 
@@ -95,10 +95,9 @@ export default function Applications() {
                     })}
                   </Table.Tbody>
                 </Table>
+                <Divider my="md" mt="0" />
+                <Search.Pagination />
               </Table.ScrollContainer>
-
-              <Space h="md" />
-              <Search.Pagination />
             </Stack>
           );
         }}

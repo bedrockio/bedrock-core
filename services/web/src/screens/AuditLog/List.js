@@ -184,6 +184,10 @@ export default function AuditLogList() {
                   />
                   <SearchFilters.Keyword name="sessionId" label="Session Id" />
                   <SearchFilters.Keyword name="object" label="Object Id" />
+                  <SearchFilters.DateRange
+                    label="Created At"
+                    name="createdAt"
+                  />
                 </SearchFilters.Modal>
                 <Search.Status />
               </Group>
@@ -265,10 +269,9 @@ export default function AuditLogList() {
                   ))}
                 </Table.Tbody>
               </Table>
+              <Divider my="md" mt="0" />
+              <Search.Pagination />
             </Table.ScrollContainer>
-
-            <Divider my="md" mt={0} />
-            <Search.Pagination />
           </Stack>
         )}
       </Search.Provider>
