@@ -52,54 +52,50 @@ export default function Applications() {
                   </Button>
                 }
               />
-
-              <Table striped highlightOnHover>
-                <Table.Thead>
-                  <Table.Tr>
-                    <SortableTh
-                      sorted={getSorted('name')}
-                      onClick={() => setSort('name')}>
-                      Name
-                    </SortableTh>
-                    <Table.Th style={{ width: '25%' }}>Description</Table.Th>
-                    <Table.Th>APIKey</Table.Th>
-                    <Table.Th>Last Used</Table.Th>
-                    <Table.Th
-                      style={{
-                        textAlign: 'right',
-                      }}
-                      width={100}>
-                      Actions
-                    </Table.Th>
-                  </Table.Tr>
-                </Table.Thead>
-                <Table.Tbody>
-                  {items.map((item) => {
-                    return (
-                      <Table.Tr key={item.id}>
-                        <Table.Td>
-                          <Anchor
-                            size="sm"
-                            component={Link}
-                            to={`/applications/${item.id}`}>
-                            {item.name}
-                          </Anchor>
-                        </Table.Td>
-                        <Table.Td>{item.description}</Table.Td>
-                        <Table.Td>
-                          <Code>{item.apiKey}</Code>
-                        </Table.Td>
-                        <Table.Td>
-                          {item.lastUsedAt ? fromNow(item.lastUsedAt) : 'N / A'}
-                        </Table.Td>
-                        <Table.Td align="right">
-                          <Actions application={item} reload={reload} />
-                        </Table.Td>
-                      </Table.Tr>
-                    );
-                  })}
-                </Table.Tbody>
-              </Table>
+              <Table.ScrollContainer>
+                <Table striped highlightOnHover>
+                  <Table.Thead>
+                    <Table.Tr>
+                      <SortableTh
+                        sorted={getSorted('name')}
+                        onClick={() => setSort('name')}>
+                        Name
+                      </SortableTh>
+                      <Table.Th style={{ width: '25%' }}>Description</Table.Th>
+                      <Table.Th>APIKey</Table.Th>
+                      <Table.Th>Last Used</Table.Th>
+                      <Table.Th
+                        style={{
+                          textAlign: 'right',
+                        }}
+                        width={100}>
+                        Actions
+                      </Table.Th>
+                    </Table.Tr>
+                  </Table.Thead>
+                  <Table.Tbody>
+                    {items.map((item) => {
+                      return (
+                        <Table.Tr key={item.id}>
+                          <Table.Td>{item.name}</Table.Td>
+                          <Table.Td>{item.description}</Table.Td>
+                          <Table.Td>
+                            <Code>{item.apiKey}</Code>
+                          </Table.Td>
+                          <Table.Td>
+                            {item.lastUsedAt
+                              ? fromNow(item.lastUsedAt)
+                              : 'N / A'}
+                          </Table.Td>
+                          <Table.Td align="right">
+                            <Actions application={item} reload={reload} />
+                          </Table.Td>
+                        </Table.Tr>
+                      );
+                    })}
+                  </Table.Tbody>
+                </Table>
+              </Table.ScrollContainer>
 
               <Space h="md" />
               <Search.Pagination />

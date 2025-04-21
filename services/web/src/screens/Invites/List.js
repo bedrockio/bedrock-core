@@ -6,6 +6,7 @@ import {
   Divider,
   Text,
   Loader,
+  Stack,
 } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 
@@ -53,7 +54,7 @@ export default function Invites() {
         onDataNeeded={onDataNeeded}>
         {({ items, getSorted, setSort, reload, error, loading }) => {
           return (
-            <>
+            <Stack>
               <PageHeader
                 title="Invites"
                 breadcrumbItems={[
@@ -89,7 +90,7 @@ export default function Invites() {
                 }
               />
 
-              <Group justify="space-between" mt="md">
+              <Group justify="space-between">
                 <Group>
                   <SearchFilters.Modal>
                     <SearchFilters.Dropdown
@@ -121,9 +122,9 @@ export default function Invites() {
                 </Group>
               </Group>
 
-              <ErrorMessage mt="md" error={error} />
+              <ErrorMessage error={error} />
 
-              <Table.ScrollContainer minWidth={300} mt="md">
+              <Table.ScrollContainer>
                 <Table stickyHeader striped>
                   <Table.Thead>
                     <Table.Tr>
@@ -173,7 +174,7 @@ export default function Invites() {
                 <Divider mb="md" />
                 <Search.Pagination />
               </Table.ScrollContainer>
-            </>
+            </Stack>
           );
         }}
       </Search.Provider>

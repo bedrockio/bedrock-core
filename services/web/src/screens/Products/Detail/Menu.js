@@ -4,8 +4,6 @@ import PageHeader from 'components/PageHeader.js';
 import { usePage } from 'stores/page';
 import Actions from '../Actions';
 
-import { IconPencil } from '@tabler/icons-react';
-
 export default () => {
   const { product, reload } = usePage();
 
@@ -25,9 +23,8 @@ export default () => {
         breadcrumbItems={items}
         tabs={[
           {
-            icon: <IconPencil size={12} />,
-            title: 'Edit',
-            href: `/products/${product.id}/edit`,
+            title: 'Overview',
+            href: `/products/${product.id}`,
           },
         ]}
         rightSection={<Actions product={product} reload={reload} />}

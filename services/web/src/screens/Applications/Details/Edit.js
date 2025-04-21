@@ -26,7 +26,7 @@ export default function EditApplication() {
           <Button
             leftSection={<IconEye size={14} />}
             component={Link}
-            to={`/applications/${application.id}`}
+            to={`/applications`}
             variant="default">
             Show
           </Button>

@@ -191,78 +191,81 @@ export default function AuditLogList() {
                 <Search.Total />
               </Group>
             </Group>
-
-            <Table striped highlightOnHover>
-              <Table.Thead>
-                <Table.Tr>
-                  <Table.Th>Actor</Table.Th>
-                  <Table.Th>Activity</Table.Th>
-                  <Table.Th>Object Owner</Table.Th>
-                  <Table.Th>Object Name</Table.Th>
-                  <SortableTh
-                    width={170}
-                    sorted={getSorted('createdAt')}
-                    onClick={() => setSort('createdAt')}>
-                    Date
-                  </SortableTh>
-                  <Table.Th style={{ textAlign: 'right' }}>Actions</Table.Th>
-                </Table.Tr>
-              </Table.Thead>
-              <Table.Tbody>
-                {items.length === 0 && (
+            <Table.ScrollContainer>
+              <Table striped highlightOnHover>
+                <Table.Thead>
                   <Table.Tr>
-                    <Table.Td colSpan={6}>
-                      <Text p="md" fw="bold" ta="center">
-                        No entries found.
-                      </Text>
-                    </Table.Td>
+                    <Table.Th>Actor</Table.Th>
+                    <Table.Th>Activity</Table.Th>
+                    <Table.Th>Object Owner</Table.Th>
+                    <Table.Th>Object Name</Table.Th>
+                    <SortableTh
+                      width={170}
+                      sorted={getSorted('createdAt')}
+                      onClick={() => setSort('createdAt')}>
+                      Date
+                    </SortableTh>
+                    <Table.Th style={{ textAlign: 'right' }}>Actions</Table.Th>
                   </Table.Tr>
-                )}
-                {items.map((item) => (
-                  <Table.Tr key={item.id} onClick={() => setSelectedItem(item)}>
-                    <Table.Td>
-                      {item.actor && (
-                        <Anchor
-                          size="sm"
-                          component={Link}
-                          title={item.actor.email}
-                          to={`/users/${item.actor.id}`}>
-                          {item.actor.firstName} {item.actor.lastName}
-                        </Anchor>
-                      )}
-                    </Table.Td>
-                    <Table.Td>{item.activity}</Table.Td>
+                </Table.Thead>
+                <Table.Tbody>
+                  {items.length === 0 && (
+                    <Table.Tr>
+                      <Table.Td colSpan={6}>
+                        <Text p="md" fw="bold" ta="center">
+                          No entries found.
+                        </Text>
+                      </Table.Td>
+                    </Table.Tr>
+                  )}
+                  {items.map((item) => (
+                    <Table.Tr
+                      key={item.id}
+                      onClick={() => setSelectedItem(item)}>
+                      <Table.Td>
+                        {item.actor && (
+                          <Anchor
+                            size="sm"
+                            component={Link}
+                            title={item.actor.email}
+                            to={`/users/${item.actor.id}`}>
+                            {item.actor.firstName} {item.actor.lastName}
+                          </Anchor>
+                        )}
+                      </Table.Td>
+                      <Table.Td>{item.activity}</Table.Td>
 
-                    <Table.Td>
-                      {item.owner && (
-                        <Anchor
-                          size="sm"
-                          component={Link}
-                          title={item.owner.email}
-                          to={`/users/${item.owner.id}`}>
-                          {item.owner.name}
-                        </Anchor>
-                      )}
-                    </Table.Td>
-                    <Table.Td>
-                      {item.object?.name || item.object || 'N/A'}
-                    </Table.Td>
-                    <Table.Td>{formatDateTime(item.createdAt)}</Table.Td>
+                      <Table.Td>
+                        {item.owner && (
+                          <Anchor
+                            size="sm"
+                            component={Link}
+                            title={item.owner.email}
+                            to={`/users/${item.owner.id}`}>
+                            {item.owner.name}
+                          </Anchor>
+                        )}
+                      </Table.Td>
+                      <Table.Td>
+                        {item.object?.name || item.object || 'N/A'}
+                      </Table.Td>
+                      <Table.Td>{formatDateTime(item.createdAt)}</Table.Td>
 
-                    <Table.Td style={{ textAlign: 'right' }}>
-                      <ActionIcon
-                        variant="default"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedItem(item);
-                        }}>
-                        <IconSearch size={16} />
-                      </ActionIcon>
-                    </Table.Td>
-                  </Table.Tr>
-                ))}
-              </Table.Tbody>
-            </Table>
+                      <Table.Td style={{ textAlign: 'right' }}>
+                        <ActionIcon
+                          variant="default"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedItem(item);
+                          }}>
+                          <IconSearch size={16} />
+                        </ActionIcon>
+                      </Table.Td>
+                    </Table.Tr>
+                  ))}
+                </Table.Tbody>
+              </Table>
+            </Table.ScrollContainer>
 
             <Divider my="md" mt={0} />
             <Search.Pagination />
