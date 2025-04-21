@@ -94,9 +94,9 @@ function Profile() {
             },
           });
         })}>
-        <Grid>
+        <Grid gutter="xl">
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Fieldset legend="Profile" mb="md">
+            <Fieldset legend="Profile" mb="md" variant="unstyled">
               <Stack>
                 <TextInput
                   label="First Name"
@@ -125,7 +125,7 @@ function Profile() {
             </Fieldset>
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Fieldset legend="Notifications">
+            <Fieldset legend="Notifications" variant="unstyled">
               {form.getValues().notifications.map((notification, index) => {
                 const { name, label } = notification;
                 return (
@@ -153,8 +153,8 @@ function Profile() {
                 );
               })}
             </Fieldset>
-            <Fieldset legend="Appearance" mt="md">
-              <Stack mt="xs">
+            <Fieldset legend="Appearance" mt="md" variant="unstyled">
+              <Stack>
                 <Radio
                   checked={colorScheme === 'light'}
                   label="Light Mode"

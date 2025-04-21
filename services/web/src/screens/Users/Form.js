@@ -15,6 +15,7 @@ import {
   Anchor,
   Text,
   Fieldset,
+  MultiSelect,
 } from '@mantine/core';
 
 import { useForm } from '@mantine/form';
@@ -35,6 +36,30 @@ function parseUser(user) {
     organizationRoles: user.roles
       .filter((r) => r.scope === 'organization')
       .map((r) => r.role),
+  };
+}
+
+function serializeUser({
+  globalRoles = [],
+  organizationRoles = [],
+  ...user
+} = {}) {
+  if (!user) {
+    return null;
+  }
+  return {
+    ...user,
+    roles: [
+      ...(globalRoles || []).map((role) => ({
+        role,
+        scope: 'global',
+      })),
+      ...(organizationRoles || []).map((role) => ({
+        role,
+        scope: 'organization',
+        scopeRef: user.organization.id,
+      })),
+    ],
   };
 }
 
@@ -90,13 +115,13 @@ export default function UserForm({ user, onSuccess = () => {} }) {
   return (
     <form
       onSubmit={form.onSubmit((values) =>
-        editRequest.request({ body: values }),
+        editRequest.request({ body: serializeUser(values) }),
       )}>
-      <Grid>
+      <Grid gutter="xl">
         <Grid.Col span={{ base: 12, md: 6 }}>
-          <Stack gap="md">
-            <Fieldset legend="Basic Information">
-              <Stack gap="md">
+          <Stack>
+            <Fieldset legend="Basic Information" variant="unstyled">
+              <Stack>
                 <TextInput
                   required
                   label="First Name"
@@ -129,10 +154,10 @@ export default function UserForm({ user, onSuccess = () => {} }) {
           </Stack>
         </Grid.Col>
         <Grid.Col span={{ base: 12, md: 6 }}>
-          <Fieldset legend="Roles & Flags">
-            <Stack gap="md">
+          <Fieldset legend="Roles & Flags" variant="unstyled">
+            <Stack>
               <Protected endpoint="users" permission="write">
-                <Select
+                <MultiSelect
                   value={'superAdmin'}
                   label="Global Roles"
                   disabled={rolesRequest.loading}
@@ -147,10 +172,11 @@ export default function UserForm({ user, onSuccess = () => {} }) {
                         label: c.name,
                       };
                     })}
+                  {...form.getInputProps('globalRoles')}
                 />
               </Protected>
               {organization && (
-                <Select
+                <MultiSelect
                   readOnly={
                     !hasAccess({ endpoint: 'users', permission: 'write' })
                   }

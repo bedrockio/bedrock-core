@@ -3,7 +3,6 @@ import ReactMarkdown from 'react-markdown';
 
 import { useClass } from 'helpers/bem';
 
-import 'styles/github-markdown.less';
 import './markdown.less';
 
 import components from './components';

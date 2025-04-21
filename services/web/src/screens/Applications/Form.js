@@ -47,7 +47,7 @@ export default function ApplicationForm({ application, onSave }) {
       <Grid>
         <Grid.Col span={{ base: 12, sm: 6 }}>
           <ErrorMessage error={error} />
-          <Fieldset legend="Application Details" variant="filled">
+          <Fieldset legend="Application Details" variant="unstyled">
             <Stack gap="md">
               <TextInput
                 required

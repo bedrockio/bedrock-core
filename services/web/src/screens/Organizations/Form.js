@@ -56,7 +56,7 @@ function OrganizationForm({ organization, onSave = () => {} }) {
         <Grid>
           <Grid.Col span={{ base: 12, md: 6 }}>
             <Stack gap="md">
-              <Fieldset variant="filled" legend="Organization Details">
+              <Fieldset variant="unstyled" legend="Organization Details">
                 <Stack gap="xs">
                   <TextInput
                     required

@@ -109,79 +109,81 @@ export default function Security(props) {
   const { loading, error } = state;
 
   return (
-    <>
+    <Stack>
       <Meta title="Security" />
       <Menu />
       <div style={{ position: 'relative' }}>
         <LoadingOverlay visible={loading} overlayBlur={2} />
-        <Grid>
+        <Grid gutter="xl">
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Fieldset mt="md" legend="Passkey">
-              <Stack spacing="xs" mb="xs">
-                {user.authenticators
-                  .filter((authenticator) => authenticator.type === 'passkey')
-                  .map((passkey) => {
-                    const { id, name, createdAt, lastUsedAt } = passkey;
-                    return (
-                      <Group justify="space-between" align="center" key={id}>
-                        <Stack gap="0">
-                          <Text fw="bold">{name}</Text>
-                          <Text size="sm">
-                            Added on {formatDate(createdAt)} | Last used{' '}
-                            {fromNow(lastUsedAt)}
-                          </Text>
-                        </Stack>
-                        <ActionIcon
-                          title="Delete"
-                          variant="transparent"
-                          loading={loading}
-                          disabled={loading}
-                          onClick={() => deletePasskey(passkey)}>
-                          <IconTrash color="red" size={16} />
-                        </ActionIcon>
-                      </Group>
-                    );
-                  })}
-              </Stack>
+            <Stack>
+              <Fieldset legend="Passkey" variant="unstyled">
+                <Stack spacing="xs" mb="xs">
+                  {user.authenticators
+                    .filter((authenticator) => authenticator.type === 'passkey')
+                    .map((passkey) => {
+                      const { id, name, createdAt, lastUsedAt } = passkey;
+                      return (
+                        <Group justify="space-between" align="center" key={id}>
+                          <Stack gap="0">
+                            <Text fw="bold">{name}</Text>
+                            <Text size="sm">
+                              Added on {formatDate(createdAt)} | Last used{' '}
+                              {fromNow(lastUsedAt)}
+                            </Text>
+                          </Stack>
+                          <ActionIcon
+                            title="Delete"
+                            variant="transparent"
+                            loading={loading}
+                            disabled={loading}
+                            onClick={() => deletePasskey(passkey)}>
+                            <IconTrash color="red" size={16} />
+                          </ActionIcon>
+                        </Group>
+                      );
+                    })}
+                </Stack>
 
-              <Button variant="outline" onClick={onCreatePasskeyClick}>
-                Add Passkey
-              </Button>
-            </Fieldset>
-            <Fieldset mt="md" legend="Two-factor authentication">
-              <TwoFactorAuthentication />
-            </Fieldset>
-            <Fieldset mt="md" legend="Sign-in with">
-              <ErrorMessage error={error} />
+                <Button variant="outline" onClick={onCreatePasskeyClick}>
+                  Add Passkey
+                </Button>
+              </Fieldset>
+              <Fieldset legend="Two-factor authentication" variant="unstyled">
+                <TwoFactorAuthentication />
+              </Fieldset>
+              <Fieldset legend="Sign-in with" variant="unstyled">
+                <ErrorMessage error={error} />
 
-              <Title order={4}>Google</Title>
-              <div>
-                {hasAuthenticator('google') ? (
-                  <GoogleDisableButton onDisabled={onGoogleDisabled} />
-                ) : (
-                  <Text>Sign in with Google to enable.</Text>
-                )}
-              </div>
+                <Title order={4}>Google</Title>
+                <div>
+                  {hasAuthenticator('google') ? (
+                    <GoogleDisableButton onDisabled={onGoogleDisabled} />
+                  ) : (
+                    <Text>Sign in with Google to enable.</Text>
+                  )}
+                </div>
 
-              <Divider my="md" />
+                <Divider my="md" />
 
-              <Title order={4}>Apple</Title>
-              <div>
-                {hasAuthenticator('apple') ? (
-                  <AppleDisableButton onDisabled={onAppleDisabled} />
-                ) : (
-                  <Text>Sign in with Apple to enable.</Text>
-                )}
-              </div>
-            </Fieldset>
+                <Title order={4}>Apple</Title>
+                <div>
+                  {hasAuthenticator('apple') ? (
+                    <AppleDisableButton onDisabled={onAppleDisabled} />
+                  ) : (
+                    <Text>Sign in with Apple to enable.</Text>
+                  )}
+                </div>
+              </Fieldset>
+            </Stack>
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Fieldset mt="md" legend="Sessions">
+            <Fieldset mt="md" legend="Sessions" variant="unstyled">
               <Sessions />
             </Fieldset>
           </Grid.Col>
         </Grid>
       </div>
-    </>
+    </Stack>
   );
 }

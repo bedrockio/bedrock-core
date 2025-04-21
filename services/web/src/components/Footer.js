@@ -1,6 +1,7 @@
 import Logo from 'components/Logo';
 
-import { Group, Text } from '@mantine/core';
+import { Group, SegmentedControl, Text, Center } from '@mantine/core';
+import { IconSun, IconMoon, IconAutomation } from '@tabler/icons-react';
 
 export default function Footer() {
   return (

@@ -63,9 +63,9 @@ export default function DocsEditableField(props) {
   function render() {
     if (mode === 'edit') {
       return (
-        <div className={className} onClick={() => showEditField()}>
+        <Text className={className} onClick={() => showEditField()}>
           {renderValue()}
-        </div>
+        </Text>
       );
     } else {
       return (

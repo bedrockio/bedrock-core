@@ -306,7 +306,7 @@ export default function RequestBuilder(props) {
       <React.Fragment>
         {values.map((value, i) => {
           return (
-            <Fieldset key={i}>
+            <Fieldset variant="unstyled" key={i}>
               {renderSchema(items, [...path, i], {
                 ...options,
                 icon: (

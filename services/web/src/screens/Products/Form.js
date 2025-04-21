@@ -85,7 +85,7 @@ export default function ProductForm({ product, shop, onSuccess = () => {} }) {
       )}>
       <Grid>
         <Grid.Col span={{ base: 12, md: 6 }}>
-          <Fieldset legend="Product Details" mb="md">
+          <Fieldset legend="Product Details" mb="md" variant="unstyled">
             <Stack gap="md">
               <TextInput
                 required
@@ -151,7 +151,7 @@ export default function ProductForm({ product, shop, onSuccess = () => {} }) {
           </Fieldset>
         </Grid.Col>
         <Grid.Col span={{ base: 12, md: 6 }}>
-          <Fieldset legend="Product Images" mb="md">
+          <Fieldset legend="Product Images" mb="md" variant="unstyled">
             <UploadsField
               label="Images"
               {...form.getInputProps('images')}

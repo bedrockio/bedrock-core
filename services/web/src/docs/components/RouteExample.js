@@ -94,9 +94,14 @@ export default function RouteExample(props) {
         <div
           className={getElementClass('title', isGood() ? 'good' : 'bad')}
           onClick={onToggleClick}>
-          <Stack>
-            <Text>{status}</Text>
+          <Group justify="space-between">
             <Group grow>
+              <Text
+                style={{
+                  margin: 0,
+                }}>
+                {status}
+              </Text>
               <EditableField
                 type="summary"
                 path={path}
@@ -126,17 +131,16 @@ export default function RouteExample(props) {
               )}
               {open ? <IconMinus size={14} /> : <IconPlus size={14} />}
             </Group>
-
-            {open && (
-              <div className={getElementClass('content')}>
-                {renderRequestPath(requestPath)}
-                {renderSchema(schema)}
-                {renderBody('Request Body:', requestBody)}
-                {renderBody('Response Body:', responseBody)}
-              </div>
-            )}
-          </Stack>
+          </Group>
         </div>
+        {open && (
+          <div className={getElementClass('content')}>
+            {renderRequestPath(requestPath)}
+            {renderSchema(schema)}
+            {renderBody('Request Body:', requestBody)}
+            {renderBody('Response Body:', responseBody)}
+          </div>
+        )}
       </Stack>
     </div>
   );
