@@ -5,12 +5,9 @@ import {
   Button,
   Stack,
   Group,
-  Space,
   Fieldset,
   Text,
   Chip,
-  Radio,
-  useMantineColorScheme,
 } from '@mantine/core';
 
 import { useSession } from 'stores/session';
@@ -45,7 +42,6 @@ const CHANNELS = [
  */
 function Profile() {
   const { user, meta, updateUser } = useSession();
-  const { setColorScheme, colorScheme } = useMantineColorScheme();
 
   const form = useForm({
     initialValues: {
@@ -152,31 +148,6 @@ function Profile() {
                   </Stack>
                 );
               })}
-            </Fieldset>
-            <Fieldset legend="Appearance" mt="md" variant="unstyled">
-              <Stack>
-                <Radio
-                  checked={colorScheme === 'light'}
-                  label="Light Mode"
-                  onClick={() => {
-                    setColorScheme('light');
-                  }}
-                />
-                <Radio
-                  checked={colorScheme === 'dark'}
-                  label="Dark Mode"
-                  onClick={() => {
-                    setColorScheme('dark');
-                  }}
-                />
-                <Radio
-                  checked={colorScheme === 'auto'}
-                  label="Sync with System"
-                  onClick={() => {
-                    setColorScheme('auto');
-                  }}
-                />
-              </Stack>
             </Fieldset>
           </Grid.Col>
         </Grid>
