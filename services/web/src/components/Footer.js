@@ -4,8 +4,12 @@ import { Group, Text } from '@mantine/core';
 
 export default function Footer() {
   return (
-    <footer>
-      <Group gap={'xs'} justify="flex-start" align="center">
+    <footer
+      style={{
+        position: 'absolute',
+        right: 0,
+      }}>
+      <Group pb="xs" pr="md" gap={'xs'} justify="flex-end" align="center">
         <Text fw="bold" size="xs">
           Built with
         </Text>
