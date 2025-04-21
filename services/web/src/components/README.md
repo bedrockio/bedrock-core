@@ -34,8 +34,7 @@ onDataNeeded = async () => {
   - `reload` A function that reloads the data set.
   - `setSort` Sets the currently sorted field. If already sorting on that field
     flips the `order` flag.
-  - `getSorted` Returns either `ascending` or `descending`. For compatibility
-    with Semantic UI.
+  - `getSorted` Returns either `ascending` or `descending`.
   - `setFilters` Sets the currently sorted filters.
   - `filters` Current applied filters.
   - `loading` True when fetching data. Useful for manually handling loaders.
@@ -60,7 +59,7 @@ onDataNeeded = async () => {
 ## Filters
 
 A modal that allows filters to be used in conjunction with `SearchProvider`.
-Props will be passed down to Semantic UI form elements. Usage:
+Usage:
 
 ```jsx
 <Filters onSave={setFilters} filters={filters}>
@@ -74,15 +73,6 @@ Props will be passed down to Semantic UI form elements. Usage:
 
 - `onSave` A function called when filters are saved.
 - `filters` An arbitrary object describing currently applied filters.
-- `Filters.Text` Props handed off to
-  [`Form.Input`](https://react.semantic-ui.com/collections/form/). `name` is
-  required.
-- `Filters.Number` Props handed off to
-  [`Form.Input`](https://react.semantic-ui.com/collections/form/) with
-  `type="number"`. `name` is required.
-- `Filters.Dropdown` Props handed off to
-  [`Form.Dropdown`](https://react.semantic-ui.com/collections/form/). `name` is
-  required.
 
 ## Links
 
