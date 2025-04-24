@@ -130,7 +130,7 @@ describe('/1/shops', () => {
       });
       shop.name = 'new name';
       const response = await request('PATCH', `/1/shops/${shop.id}`, shop.toJSON(), { user });
-      expect(response.status).toBe(401);
+      expect(response.status).toBe(403);
     });
 
     it('should populate by request body', async () => {
@@ -206,7 +206,7 @@ describe('/1/shops', () => {
         owner: owner.id,
       });
       const response = await request('DELETE', `/1/shops/${shop.id}`, {}, { user });
-      expect(response.status).toBe(401);
+      expect(response.status).toBe(403);
     });
   });
 });
