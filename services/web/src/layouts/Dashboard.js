@@ -115,7 +115,7 @@ export default function DashboardLayout({ children }) {
         breakpoint: 'sm',
         collapsed: { mobile: !opened },
       }}
-      padding="md">
+      padding="lg">
       <AppShell.Header height="100%">
         <Flex
           h="50px"

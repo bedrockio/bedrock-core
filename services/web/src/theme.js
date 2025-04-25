@@ -54,10 +54,7 @@ export const theme = createTheme({
         legend: {
           fontSize: 'var(--mantine-font-size-sm)',
           color: 'var(--mantine-color-gray-text)',
-          //width: '100%',
-          //borderBottom: '1px solid var(--mantine-color-gray-text)',
           fontWeight: 'bold',
-          //extTransform: 'uppercase',
         },
       },
     },

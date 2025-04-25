@@ -3,7 +3,7 @@
 // Out of the box tracking with GTM.
 // For more see README.md
 
-import { pick } from 'lodash';
+import { pick } from 'lodash-es';
 
 const ENABLED = typeof dataLayer !== 'undefined';
 

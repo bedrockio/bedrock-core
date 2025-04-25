@@ -1,5 +1,5 @@
 import React from 'react';
-import { uniq } from 'lodash';
+import { uniq } from 'lodash-es';
 import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
 

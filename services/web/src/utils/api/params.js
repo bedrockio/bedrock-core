@@ -1,4 +1,4 @@
-import { isPlainObject } from 'lodash';
+import { isPlainObject } from 'lodash-es';
 
 export function stringifyParams(map = {}) {
   const params = new URLSearchParams();

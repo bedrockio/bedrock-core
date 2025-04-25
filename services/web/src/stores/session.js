@@ -6,7 +6,7 @@ import React, {
   useRef,
 } from 'react';
 import { withRouter } from '@bedrockio/router';
-import { omit } from 'lodash';
+import { omit } from 'lodash-es';
 
 import { request, hasToken, setToken } from 'utils/api';
 import { getOrganization, setOrganization } from 'utils/organization';
