@@ -23,6 +23,7 @@ export default defineConfig({
 
   resolve: {
     alias: {
+      lodash: 'lodash-es',
       helpers: path.resolve(__dirname, './src/helpers'),
       screens: path.resolve(__dirname, './src/screens'),
       stores: path.resolve(__dirname, './src/stores'),

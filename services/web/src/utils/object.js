@@ -1,4 +1,4 @@
-import { mergeWith } from 'lodash-es';
+import { mergeWith } from 'lodash';
 
 // Merges while keeping arrays intact instead of
 // trying to concat them together. Always returns

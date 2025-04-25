@@ -12,7 +12,7 @@ import {
 } from '@mantine/core';
 import { Link } from '@bedrockio/router';
 import { useForm } from '@mantine/form';
-import { omit, omitBy } from 'lodash-es';
+import { omit } from 'lodash';
 
 import { useSession } from 'stores/session';
 

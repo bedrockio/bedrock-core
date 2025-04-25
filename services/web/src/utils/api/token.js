@@ -1,4 +1,4 @@
-import { snakeCase } from 'lodash-es';
+import { snakeCase } from 'lodash';
 
 import { APP_NAME } from 'utils/env';
 import { localStorage, sessionStorage } from 'utils/storage';

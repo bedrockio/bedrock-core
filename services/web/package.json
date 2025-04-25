@@ -35,7 +35,6 @@
     "hast-util-sanitize": "^4.0.0",
     "hast-util-to-mdast": "^8.4.1",
     "less": "^4.3.0",
-    "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
     "postcss": "^8.5.3",
     "postcss-preset-mantine": "^1.17.0",
