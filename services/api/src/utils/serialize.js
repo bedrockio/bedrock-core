@@ -11,7 +11,7 @@ function serializeDocument(doc, ctx) {
 }
 
 function serializeObject(obj, ctx) {
-  if (obj instanceof Stream) {
+  if (obj instanceof Stream || obj instanceof ReadableStream) {
     return obj;
   } else if (obj instanceof mongoose.Document) {
     return serializeDocument(obj, ctx);
