@@ -22,9 +22,6 @@ import { SessionProvider, useSession } from 'stores/session';
 import SessionSwitch from 'helpers/SessionSwitch';
 import 'utils/sentry';
 
-// this is to handle some issue with rich editor
-window.global = window;
-
 import LoadingScreen from 'screens/Loading';
 
 import { hasAccess } from 'utils/user';
