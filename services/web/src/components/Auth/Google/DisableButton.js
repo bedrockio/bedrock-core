@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { noop } from 'lodash';
-import { Button } from '@mantine/core'; // Import Mantine Button
+import { Button } from '@mantine/core';
 
-import { useSession } from 'stores/session'; // Assuming SessionContext is exported
+import { useSession } from 'stores/session';
 
 import { disable } from 'utils/auth/google';
 
@@ -23,20 +23,16 @@ export default function DisableButton({
   const [loading, setLoading] = useState(false);
   const { user, updateUser } = useSession();
 
-  /**
-   * Handles the button click event to disable Google auth.
-   */
   async function handleClick() {
-    // Use user from context directly
     if (!user) {
       onError(new Error('User not found in context.'));
       return;
     }
     try {
       setLoading(true);
-      const updatedUser = await disable(user); // Use updatedUser variable name
+      const updatedUser = await disable(user);
       setLoading(false);
-      updateUser(updatedUser); // Use updateUser from context
+      updateUser(updatedUser);
       onDisabled();
     } catch (error) {
       setLoading(false);

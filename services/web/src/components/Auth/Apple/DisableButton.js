@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { omit, noop } from 'lodash';
-import { Button } from '@mantine/core'; // Import Mantine Button
+import { Button } from '@mantine/core';
 
-import { useSession } from 'stores/session'; // Import useSession hook
+import { useSession } from 'stores/session';
 
 import { disable } from 'utils/auth/apple';
 
