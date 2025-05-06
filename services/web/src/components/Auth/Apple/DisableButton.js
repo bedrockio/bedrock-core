@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { omit, noop } from 'lodash';
+import { noop } from 'lodash';
 import { Button } from '@mantine/core';
 
 import { useSession } from 'stores/session';

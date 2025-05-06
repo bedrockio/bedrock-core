@@ -62,7 +62,6 @@ export default function ProductForm({ product, shop, onSuccess = () => {} }) {
     manual: true,
     onSuccess: ({ data }) => {
       showNotification({
-        position: 'top-center',
         title: isUpdate
           ? `${form.values.name} was successfully updated.`
           : `${form.values.name} was successfully created.`,

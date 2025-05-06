@@ -3,7 +3,7 @@ import { usePage } from 'stores/page';
 import PageHeader from 'components/PageHeader.js';
 import Actions from '../Actions';
 
-export default () => {
+export default function UserMenu({ displayMode }) {
   const { user, reload } = usePage();
 
   const items = [
@@ -22,9 +22,11 @@ export default () => {
       <PageHeader
         title={user.name}
         breadcrumbItems={items}
-        rightSection={<Actions user={user} reload={reload} />}
-        tabs={tabs}
+        rightSection={
+          <Actions displayMode={displayMode} user={user} reload={reload} />
+        }
+        tabs={displayMode !== 'edit' && tabs}
       />
     </React.Fragment>
   );
-};
+}

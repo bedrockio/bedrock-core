@@ -7,6 +7,7 @@ import NotFound from 'screens/NotFound';
 import { request } from 'utils/api';
 
 import Edit from './Edit';
+import Overview from './Overview';
 
 export default function OrganizationDetail() {
   const Loader = usePageLoader(async (params) => {
@@ -28,7 +29,8 @@ export default function OrganizationDetail() {
       }>
       <Routes>
         <Route path="/organizations/:id/edit" render={Edit} exact />
-        <Redirect path="/organizations/:id" to="/organizations/:id/edit" />
+        <Route path="/organizations/:id" render={Overview} exact />
+
         <Route render={NotFound} />
       </Routes>
     </Loader>

@@ -202,7 +202,11 @@ export default function UserList() {
                           </Table.Td>
                           <Table.Td>{formatDateTime(user.createdAt)}</Table.Td>
                           <Table.Td align="right">
-                            <Actions compact user={user} reload={reload} />
+                            <Actions
+                              displayMode="list"
+                              user={user}
+                              reload={reload}
+                            />
                           </Table.Td>
                         </Table.Tr>
                       );

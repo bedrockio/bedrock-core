@@ -138,7 +138,7 @@ export default function OrganizationList() {
                       </Table.Td>
                       <Table.Td align="right">
                         <Actions
-                          compact
+                          displayMode="list"
                           organization={organization}
                           reload={reload}
                         />

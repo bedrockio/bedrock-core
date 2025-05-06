@@ -1,10 +1,9 @@
-import React from 'react';
-import PageHeader from 'components/PageHeader.js';
+import PageHeader from 'components/PageHeader';
 
 import { usePage } from 'stores/page';
 import Actions from '../Actions';
 
-export default () => {
+export default function ProductMenu({ displayMode }) {
   const { product, reload } = usePage();
 
   const items = [
@@ -17,18 +16,20 @@ export default () => {
   ];
 
   return (
-    <React.Fragment>
-      <PageHeader
-        title={product.name}
-        breadcrumbItems={items}
-        tabs={[
+    <PageHeader
+      title={product.name}
+      breadcrumbItems={items}
+      tabs={
+        displayMode !== 'edit' && [
           {
             title: 'Overview',
             href: `/products/${product.id}`,
           },
-        ]}
-        rightSection={<Actions product={product} reload={reload} />}
-      />
-    </React.Fragment>
+        ]
+      }
+      rightSection={
+        <Actions displayMode={displayMode} product={product} reload={reload} />
+      }
+    />
   );
-};
+}

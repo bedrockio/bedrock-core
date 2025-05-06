@@ -38,7 +38,6 @@ export default function ExportButton({
     } catch (err) {
       setLoading(false);
       showNotification({
-        position: 'top-center',
         title: 'Error exporting data',
         message: err.message,
         color: 'red',

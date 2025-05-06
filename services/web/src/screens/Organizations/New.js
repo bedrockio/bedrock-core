@@ -6,7 +6,7 @@ import { useNavigate } from '@bedrockio/router';
 import { Link } from '@bedrockio/router';
 import { IconArrowBack } from '@tabler/icons-react';
 
-export default function NewShop() {
+export default function NewOrganization() {
   const navigate = useNavigate();
 
   return (
@@ -21,7 +21,7 @@ export default function NewShop() {
         rightSection={
           <Button
             component={Link}
-            to="/applications"
+            to="/organizations"
             variant="default"
             rightSection={<IconArrowBack size={14} />}>
             Back

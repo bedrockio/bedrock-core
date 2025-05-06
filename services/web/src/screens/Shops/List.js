@@ -211,7 +211,12 @@ export default function ShopList() {
                           </Table.Td>
                           <Table.Td>{formatDateTime(shop.createdAt)}</Table.Td>
                           <Table.Td justify="flex-end">
-                            <Actions compact shop={shop} reload={reload} />
+                            <Actions
+                              compact
+                              shop={shop}
+                              reload={reload}
+                              displayMode="list"
+                            />
                           </Table.Td>
                         </Table.Tr>
                       );

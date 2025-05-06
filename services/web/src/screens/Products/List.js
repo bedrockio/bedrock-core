@@ -188,7 +188,11 @@ export default function ProductList() {
                         <Table.Td>{formatUsd(product.priceUsd)}</Table.Td>
                         <Table.Td>{formatDateTime(product.createdAt)}</Table.Td>
                         <Table.Td align="right" width={100}>
-                          <Actions compact product={product} reload={reload} />
+                          <Actions
+                            displayMode="list"
+                            product={product}
+                            reload={reload}
+                          />
                         </Table.Td>
                       </Table.Tr>
                     );

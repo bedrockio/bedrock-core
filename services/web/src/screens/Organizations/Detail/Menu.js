@@ -6,7 +6,7 @@ import Actions from '../Actions';
 
 import { IconPencil } from '@tabler/icons-react';
 
-export default function OrganizationMenu() {
+export default function OrganizationMenu({ displayMode }) {
   const { organization, reload } = usePage();
 
   const items = [
@@ -22,14 +22,21 @@ export default function OrganizationMenu() {
     <PageHeader
       title={organization.name}
       breadcrumbItems={items}
-      tabs={[
-        {
-          icon: <IconPencil size={12} />,
-          title: 'Edit',
-          href: `/organizations/${organization.id}/edit`,
-        },
-      ]}
-      rightSection={<Actions organization={organization} reload={reload} />}
+      tabs={
+        displayMode !== 'edit' && [
+          {
+            title: 'Overview',
+            href: `/organizations/${organization.id}`,
+          },
+        ]
+      }
+      rightSection={
+        <Actions
+          displayMode={displayMode}
+          organization={organization}
+          reload={reload}
+        />
+      }
     />
   );
 }

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Divider } from '@mantine/core';
 
 import { canShowGoogleSignin } from 'utils/auth/google';
@@ -9,6 +8,7 @@ import PasskeyButton from './PasskeyButton';
 import GoogleButton from './Google/SignInButton';
 import AppleButton from './Apple/SignInButton';
 
+import { Group } from '@mantine/core';
 export default function Federated(props) {
   const { type } = props;
 
@@ -23,40 +23,13 @@ export default function Federated(props) {
   }
 
   return (
-    <React.Fragment>
+    <>
       <Divider labelPosition="center" label="OR" />
-      <Container {...props}>
+      <Group grow>
         {showPasskey && <PasskeyButton {...props} />}
         {showGoogle && <GoogleButton {...props} />}
         {showApple && <AppleButton {...props} />}
-      </Container>
-    </React.Fragment>
+      </Group>
+    </>
   );
-}
-
-function Container(props) {
-  if (props.type === 'login') {
-    return (
-      <div
-        style={{
-          display: 'grid',
-          gap: '10px',
-          justifyContent: 'center',
-          gridTemplateColumns: 'repeat(auto-fit, 44px)',
-        }}>
-        {props.children}
-      </div>
-    );
-  } else {
-    return (
-      <div
-        style={{
-          display: 'flex',
-          flexFlow: 'column',
-          gap: '10px',
-        }}>
-        {props.children}
-      </div>
-    );
-  }
 }

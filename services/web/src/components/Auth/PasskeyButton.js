@@ -34,7 +34,7 @@ const PasskeyButton = ({
 
   return (
     <ActionIcon
-      variant="outline"
+      variant="default"
       radius="xl"
       size={42}
       title="Use passkey to sign in."

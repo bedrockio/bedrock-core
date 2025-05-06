@@ -88,7 +88,11 @@ export default function Applications() {
                               : 'N / A'}
                           </Table.Td>
                           <Table.Td align="right">
-                            <Actions application={item} reload={reload} />
+                            <Actions
+                              displayMode="list"
+                              application={item}
+                              reload={reload}
+                            />
                           </Table.Td>
                         </Table.Tr>
                       );

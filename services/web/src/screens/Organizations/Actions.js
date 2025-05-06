@@ -7,6 +7,7 @@ import {
   IconDotsVertical,
   IconPencil,
   IconEdit,
+  IconArrowBack,
 } from '@tabler/icons-react';
 import { Link } from '@bedrockio/router';
 
@@ -15,7 +16,11 @@ import ConfirmModal from 'components/ConfirmModal';
 import Protected from 'components/Protected';
 import { request } from 'utils/api';
 
-export default function OrganizationActions({ compact, organization, reload }) {
+export default function OrganizationActions({
+  displayMode = 'show',
+  organization,
+  reload,
+}) {
   function openInspectModal() {
     modals.open({
       title: `Inspect ${organization.name}`,
@@ -49,10 +54,31 @@ export default function OrganizationActions({ compact, organization, reload }) {
     });
   }
 
-  return (
-    <Group gap="xs" justify="flex-end">
-      <Protected endpoint="shops" permission="update">
-        {!compact ? (
+  function renderButton() {
+    if (displayMode === 'list') {
+      return (
+        <Protected endpoint="organizations" permission="update">
+          <ActionIcon
+            variant="default"
+            component={Link}
+            to={`/organizations/${organization.id}/edit`}>
+            <IconEdit size={14} />
+          </ActionIcon>
+        </Protected>
+      );
+    } else if (displayMode === 'edit') {
+      return (
+        <Button
+          variant="default"
+          rightSection={<IconArrowBack size={14} />}
+          component={Link}
+          to={`/organizations/${organization.id}`}>
+          Back
+        </Button>
+      );
+    } else if (displayMode === 'show') {
+      return (
+        <Protected endpoint="organizations" permission="update">
           <Button
             variant="default"
             rightSection={<IconPencil size={14} />}
@@ -60,18 +86,19 @@ export default function OrganizationActions({ compact, organization, reload }) {
             to={`/organizations/${organization.id}/edit`}>
             Edit
           </Button>
-        ) : (
-          <ActionIcon
-            variant="default"
-            component={Link}
-            to={`/organizations/${organization.id}/edit`}>
-            <IconEdit size={14} />
-          </ActionIcon>
-        )}
+        </Protected>
+      );
+    }
+  }
+
+  return (
+    <Group gap="xs" justify="flex-end">
+      <Protected endpoint="shops" permission="update">
+        {renderButton()}
       </Protected>
       <Menu shadow="md">
         <Menu.Target>
-          {!compact ? (
+          {displayMode !== 'list' ? (
             <ActionIcon size="input-sm" variant="default">
               <IconDotsVertical size={14} />
             </ActionIcon>

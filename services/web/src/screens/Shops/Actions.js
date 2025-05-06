@@ -8,6 +8,7 @@ import {
   IconDotsVertical,
   IconEdit,
   IconListSearch,
+  IconArrowBack,
 } from '@tabler/icons-react';
 import { Link } from '@bedrockio/router';
 
@@ -16,7 +17,7 @@ import { request } from 'utils/api';
 import ConfirmModal from 'components/ConfirmModal';
 import Protected from 'components/Protected';
 
-export default function ShopsActions({ shop, reload, compact }) {
+export default function ShopsActions({ shop, reload, displayMode = 'show' }) {
   function openInspectModal() {
     modals.open({
       title: `Inspect ${shop.name}`,
@@ -49,10 +50,31 @@ export default function ShopsActions({ shop, reload, compact }) {
     });
   }
 
-  return (
-    <Group gap="xs" justify="flex-end">
-      <Protected endpoint="shops" permission="update">
-        {!compact ? (
+  function renderButton() {
+    if (displayMode === 'list') {
+      return (
+        <Protected endpoint="shops" permission="update">
+          <ActionIcon
+            variant="default"
+            component={Link}
+            to={`/shops/${shop.id}/edit`}>
+            <IconEdit size={14} />
+          </ActionIcon>
+        </Protected>
+      );
+    } else if (displayMode === 'edit') {
+      return (
+        <Button
+          variant="default"
+          rightSection={<IconArrowBack size={14} />}
+          component={Link}
+          to={`/shops/${shop.id}`}>
+          Back
+        </Button>
+      );
+    } else if (displayMode === 'show') {
+      return (
+        <Protected endpoint="shops" permission="update">
           <Button
             variant="default"
             rightSection={<IconPencil size={14} />}
@@ -60,18 +82,17 @@ export default function ShopsActions({ shop, reload, compact }) {
             to={`/shops/${shop.id}/edit`}>
             Edit
           </Button>
-        ) : (
-          <ActionIcon
-            variant="default"
-            component={Link}
-            to={`/shops/${shop.id}/edit`}>
-            <IconEdit size={14} />
-          </ActionIcon>
-        )}
-      </Protected>
+        </Protected>
+      );
+    }
+  }
+
+  return (
+    <Group gap="xs" justify="flex-end">
+      {renderButton()}
       <Menu shadow="md">
         <Menu.Target>
-          {!compact ? (
+          {displayMode !== 'list' ? (
             <ActionIcon size="input-sm" variant="default">
               <IconDotsVertical size={14} />
             </ActionIcon>

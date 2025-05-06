@@ -9,6 +9,7 @@ import {
   IconUserCode,
   IconEdit,
   IconLogs,
+  IconArrowBack,
 } from '@tabler/icons-react';
 import { Link } from '@bedrockio/router';
 import { useSession } from 'stores/session';
@@ -21,7 +22,7 @@ import { request } from 'utils/api';
 import LoginAsUser from 'components/LoginAsUser';
 import Protected from 'components/Protected';
 
-export default function UserActions({ compact, user, reload }) {
+export default function UserActions({ displayMode = 'show', user, reload }) {
   const { user: authUser } = useSession();
 
   const authenticatableRoles = authUser.roles.reduce(
@@ -74,10 +75,31 @@ export default function UserActions({ compact, user, reload }) {
     });
   }
 
-  return (
-    <Group gap="xs" justify="flex-end">
-      <Protected endpoint="shops" permission="update">
-        {!compact ? (
+  function renderButton() {
+    if (displayMode === 'list') {
+      return (
+        <Protected endpoint="users" permission="update">
+          <ActionIcon
+            variant="default"
+            component={Link}
+            to={`/users/${user.id}/edit`}>
+            <IconEdit size={14} />
+          </ActionIcon>
+        </Protected>
+      );
+    } else if (displayMode === 'edit') {
+      return (
+        <Button
+          variant="default"
+          rightSection={<IconArrowBack size={14} />}
+          component={Link}
+          to={`/users/${user.id}`}>
+          Back
+        </Button>
+      );
+    } else if (displayMode === 'show') {
+      return (
+        <Protected endpoint="users" permission="update">
           <Button
             variant="default"
             rightSection={<IconPencil size={14} />}
@@ -85,18 +107,19 @@ export default function UserActions({ compact, user, reload }) {
             to={`/users/${user.id}/edit`}>
             Edit
           </Button>
-        ) : (
-          <ActionIcon
-            variant="default"
-            component={Link}
-            to={`/users/${user.id}/edit`}>
-            <IconEdit size={14} />
-          </ActionIcon>
-        )}
+        </Protected>
+      );
+    }
+  }
+
+  return (
+    <Group gap="xs" justify="flex-end">
+      <Protected endpoint="shops" permission="update">
+        {renderButton()}
       </Protected>
       <Menu shadow="md">
         <Menu.Target>
-          {!compact ? (
+          {displayMode !== 'list' ? (
             <ActionIcon size="input-sm" variant="default">
               <IconDotsVertical size={14} />
             </ActionIcon>

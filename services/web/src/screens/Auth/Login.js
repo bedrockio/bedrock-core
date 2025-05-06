@@ -144,14 +144,6 @@ export default function PasswordLogin() {
                     </Text>
                   </div>
                 )}
-
-                <Federated
-                  type="login"
-                  onAuthStop={onAuthStop}
-                  onAuthStart={onAuthStart}
-                  onAuthError={onAuthError}
-                />
-
                 <Button
                   fullWidth
                   loading={loading}
@@ -160,6 +152,13 @@ export default function PasswordLogin() {
                   type="submit">
                   Login
                 </Button>
+
+                <Federated
+                  type="login"
+                  onAuthStop={onAuthStop}
+                  onAuthStart={onAuthStart}
+                  onAuthError={onAuthError}
+                />
 
                 <Text size={'xs'} c="dimmed">
                   Don't have an account?{' '}

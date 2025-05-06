@@ -1,15 +1,11 @@
 import React from 'react';
-import { Link } from '@bedrockio/router';
 
 import { usePage } from 'stores/page';
-
-import { Button } from '@mantine/core';
-import { IconPencil } from '@tabler/icons-react';
 
 import PageHeader from 'components/PageHeader.js';
 import Actions from '../Actions';
 
-export default () => {
+export default function ShopMenu({ displayMode }) {
   const { shop, reload } = usePage();
 
   const items = [
@@ -31,9 +27,11 @@ export default () => {
       <PageHeader
         title={shop.name}
         breadcrumbItems={items}
-        rightSection={<Actions shop={shop} reload={reload} />}
-        tabs={tabs}
+        rightSection={
+          <Actions displayMode={displayMode} shop={shop} reload={reload} />
+        }
+        tabs={displayMode !== 'edit' && tabs}
       />
     </React.Fragment>
   );
-};
+}

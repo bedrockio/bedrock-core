@@ -10,7 +10,6 @@ import {
   Anchor,
   Image,
   Group,
-  Paper,
 } from '@mantine/core';
 import { Link } from '@bedrockio/router';
 

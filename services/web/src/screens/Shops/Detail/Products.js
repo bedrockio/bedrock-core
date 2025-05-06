@@ -1,21 +1,17 @@
-import React from 'react';
 import { Link } from '@bedrockio/router';
 import {
   Group,
   Table,
   Image,
   Divider,
-  Tooltip,
   Anchor,
   Text,
   Box,
   Loader,
 } from '@mantine/core';
 
-import { IconHelp, IconPencil } from '@tabler/icons-react';
 import { usePage } from 'stores/page';
 
-import Meta from 'components/Meta';
 import Search from 'components/Search';
 import SearchFilters from 'components/Search/Filters';
 import ErrorMessage from 'components/ErrorMessage';
