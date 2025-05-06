@@ -10,7 +10,7 @@ import SearchContext from '../Context';
 export default class DateRangeFilter extends React.Component {
   static contextType = SearchContext;
 
-  onChange = ({ name: part }, value) => {
+  onChange = (part, value) => {
     const { name } = this.props;
 
     const range = this.context.filters[name] || {};
@@ -57,7 +57,7 @@ export default class DateRangeFilter extends React.Component {
             name="gte"
             value={this.context.filters[name]?.gte}
             placeholder="Start"
-            onChange={this.onChange.bind(this, { name: 'gte' })}
+            onChange={(value) => this.onChange('gte', value)}
             clearable
           />
           <span className="divider">&ndash;</span>
@@ -65,7 +65,7 @@ export default class DateRangeFilter extends React.Component {
             name="lte"
             value={this.context.filters[name]?.lte}
             placeholder="Present"
-            onChange={this.onChange.bind(this, { name: 'lte' })}
+            onChange={(value) => this.onChange('lte', value)}
             clearable
           />
         </Group>
