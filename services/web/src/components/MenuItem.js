@@ -18,7 +18,6 @@ export default function MenuItem({
       paddingLeft: compact ? '' : 'var(--mantine-spacing-lg)',
     },
     section: {
-      //marginInlineEnd: 'var(--mantine-spacing-lg)',
       marginRight: '6px',
     },
     label: {
