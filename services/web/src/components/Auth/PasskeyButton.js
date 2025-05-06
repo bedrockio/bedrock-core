@@ -39,7 +39,7 @@ const PasskeyButton = ({
       size={42}
       title="Use passkey to sign in."
       onClick={handleClick}>
-      <IconFingerprint size="1.2rem" />
+      <IconFingerprint />
     </ActionIcon>
   );
 };

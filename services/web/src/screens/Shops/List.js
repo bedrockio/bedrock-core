@@ -155,14 +155,13 @@ export default function ShopList() {
                 <Table stickyHeader striped>
                   <Table.Thead>
                     <Table.Tr>
-                      {/* --- Generator: list-header-cells */}
                       <SortableTh
                         sorted={getSorted('name')}
                         onClick={() => setSort('name')}>
                         Name
                       </SortableTh>
                       <Table.Th width={60}>Image</Table.Th>
-                      {/* --- Generator: end */}
+
                       <SortableTh
                         sorted={getSorted('createdAt')}
                         onClick={() => setSort('createdAt')}
@@ -191,7 +190,6 @@ export default function ShopList() {
                     {shops.map((shop) => {
                       return (
                         <Table.Tr key={shop.id}>
-                          {/* --- Generator: list-body-cells */}
                           <Table.Td>
                             <Anchor
                               size="sm"

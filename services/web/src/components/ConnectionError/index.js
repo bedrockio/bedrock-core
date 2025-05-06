@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 import { useClass } from 'helpers/bem';
 
-//import './connection-error.less';
+import './connection-error.less';
 
 export default function ConnectionError() {
   const [stable, setStable] = useState(true);

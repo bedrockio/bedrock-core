@@ -21,9 +21,6 @@ schema.pre('save', async function preSave(next) {
     await setPassword(this, this._password);
     delete this._password;
   }
-  if (this.isModified('firstName') || this.isModified('lastName')) {
-    this.name = `${this.firstName} ${this.lastName}`.trim();
-  }
   return next();
 });
 

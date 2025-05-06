@@ -7,8 +7,6 @@ import { signInWithGoogle } from 'utils/auth/google';
 
 import logo from 'assets/google-logo.svg';
 
-//import './google.less';
-
 export default function GoogleSignInButton(props) {
   const { type } = props;
   const { onAuthStart, onAuthStop, onError } = props;

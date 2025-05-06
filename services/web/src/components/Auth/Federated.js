@@ -24,7 +24,7 @@ export default function Federated(props) {
 
   return (
     <React.Fragment>
-      <Divider labelPosition="center" label={<>OR</>} />
+      <Divider labelPosition="center" label="OR" />
       <Container {...props}>
         {showPasskey && <PasskeyButton {...props} />}
         {showGoogle && <GoogleButton {...props} />}

@@ -94,7 +94,7 @@ export default function ApiDocs() {
 
   function confirmGenerate() {
     modals.open({
-      title: `Generate Documentation`,
+      title: 'Generate Documentation',
       children: (
         <ConfirmModal
           onConfirm={() => {
