@@ -64,9 +64,6 @@ export default function PasswordLogin() {
       password: '',
       email: '',
     },
-    validate: {
-      email: isEmail('Invalid email'),
-    },
   });
 
   const [loading, setLoading] = useState(false);
