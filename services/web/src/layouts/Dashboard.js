@@ -7,6 +7,8 @@ import OrganizationSelector from 'components/OrganizationSelector';
 import { userCanSwitchOrganizations } from 'utils/permissions';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 
+import ConnectionError from 'components/ConnectionError';
+
 import {
   IconApps,
   IconBook,
@@ -183,7 +185,10 @@ export default function DashboardLayout({ children }) {
             flexDirection: 'column',
             minHeight: 'calc(100vh - 50px)', // Subtract header height
           }}>
-          <Box style={{ flex: 1 }}>{children}</Box>
+          <Box style={{ flex: 1 }}>
+            <ConnectionError />
+            {children}
+          </Box>
         </Box>
         <Footer />
       </AppShell.Main>
