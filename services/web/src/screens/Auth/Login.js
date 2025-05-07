@@ -59,7 +59,6 @@ export default function PasswordLogin() {
   const { authenticate } = useSession();
 
   const form = useForm({
-    mode: 'uncontrolled',
     initialValues: {
       password: '',
       email: '',

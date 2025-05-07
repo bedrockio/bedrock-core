@@ -3,7 +3,7 @@ import { NavLink } from '@bedrockio/router';
 
 export default function MenuItem({
   external,
-  icon: Icon,
+  icon,
   label,
   href,
   to,
@@ -28,38 +28,38 @@ export default function MenuItem({
     },
   };
 
-  const _items = (hasLinks ? items : []).map((link) => (
-    <MantineNavLink
-      leftSection={link.icon && <link.icon size={16} stroke={1.5} />}
-      component={(props) => {
-        if (link.external) {
-          return <a target="_blank" rel="noopener noreferrer" {...props} />;
-        }
-        return <NavLink {...props} />;
-      }}
-      to={link.href}
-      href={link.href || to}
-      key={link.href}
-      label={link.label}
-      style={{
-        paddingLeft: Icon
-          ? `calc(var(--mantine-spacing-lg) * 2)`
-          : `var(--mantine-spacing-xl)`,
-      }}
-    />
-  ));
-
   return (
     <>
       {hasLinks ? (
         <MantineNavLink
           styles={styles}
           childrenOffset={0}
-          leftSection={Icon && <Icon size={16} stroke={1.5} />}
+          leftSection={icon && <icon size={16} stroke={1.5} />}
           label={label}
           href={href || to}
           to={href}>
-          {_items}
+          {(hasLinks ? items : []).map((link) => (
+            <MantineNavLink
+              leftSection={link.icon && <link.icon size={16} stroke={1.5} />}
+              component={(props) => {
+                if (link.external) {
+                  return (
+                    <a target="_blank" rel="noopener noreferrer" {...props} />
+                  );
+                }
+                return <NavLink {...props} />;
+              }}
+              to={link.href}
+              href={link.href || to}
+              key={link.href}
+              label={link.label}
+              style={{
+                paddingLeft: icon
+                  ? `calc(var(--mantine-spacing-lg) * 2)`
+                  : `var(--mantine-spacing-xl)`,
+              }}
+            />
+          ))}
         </MantineNavLink>
       ) : (
         <MantineNavLink
@@ -70,7 +70,7 @@ export default function MenuItem({
             }
             return <NavLink {...props} />;
           }}
-          leftSection={Icon && <Icon size={16} stroke={1.5} />}
+          leftSection={icon && <icon size={16} stroke={1.5} />}
           label={label}
           href={href || to}
           to={href}
