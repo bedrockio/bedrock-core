@@ -1,10 +1,8 @@
 import { usePage } from 'stores/page';
 
-import PageHeader from 'components/PageHeader.js';
+import PageHeader from 'components/PageHeader';
 
 import Actions from '../Actions';
-
-import { IconPencil } from '@tabler/icons-react';
 
 export default function OrganizationMenu({ displayMode }) {
   const { organization, reload } = usePage();

@@ -4,7 +4,7 @@ import { Fieldset, Stack, Grid, TextInput, Box, Button } from '@mantine/core';
 
 import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
-import ErrorMessage from 'components/ErrorMessage.js';
+import ErrorMessage from 'components/ErrorMessage';
 
 /**
  * Organization form component for creating or updating an organization

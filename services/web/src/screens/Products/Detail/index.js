@@ -6,8 +6,8 @@ import NotFound from 'screens/NotFound';
 
 import { request } from 'utils/api';
 
-import Edit from './Edit.js';
-import Overview from './Overview.js';
+import Edit from './Edit';
+import Overview from './Overview';
 
 export default function ProductDetail() {
   const Loader = usePageLoader(async (params) => {

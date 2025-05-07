@@ -1,7 +1,7 @@
 import { Routes, Route } from '@bedrockio/router';
 
-import ApiDocs from 'docs/screens/ApiDocs/index.js';
-import { DocsProvider } from 'docs/utils/context.js';
+import ApiDocs from 'docs/screens/ApiDocs';
+import { DocsProvider } from 'docs/utils/context';
 
 function App() {
   return (

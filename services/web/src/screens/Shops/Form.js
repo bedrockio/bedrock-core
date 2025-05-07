@@ -1,6 +1,6 @@
-import UploadsField from 'components/form-fields/Uploads.js';
-import ErrorMessage from 'components/ErrorMessage.js';
-import SearchDropdown from 'components/SearchDropdown.js';
+import UploadsField from 'components/form-fields/Uploads';
+import ErrorMessage from 'components/ErrorMessage';
+import SearchDropdown from 'components/SearchDropdown';
 
 import allCountries from 'utils/countries';
 

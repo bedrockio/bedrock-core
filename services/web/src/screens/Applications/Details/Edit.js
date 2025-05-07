@@ -1,10 +1,10 @@
-import Form from '../Form.js';
+import Form from '../Form';
 
 import { usePage } from 'stores/page';
 
 import { Stack, Button } from '@mantine/core';
 import { useNavigate } from '@bedrockio/router';
-import PageHeader from 'components/PageHeader.js';
+import PageHeader from 'components/PageHeader';
 
 import { Link } from '@bedrockio/router';
 import { IconArrowBack } from '@tabler/icons-react';

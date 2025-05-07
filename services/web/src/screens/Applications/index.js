@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route } from '@bedrockio/router';
 
-import List from './List.js';
+import List from './List';
 import Details from './Details';
 import New from './New';
 

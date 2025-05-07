@@ -1,8 +1,8 @@
 import { Routes, Route } from '@bedrockio/router';
 
-import List from './List.js';
-import Detail from './Detail/index.js';
-import New from './New.js';
+import List from './List';
+import Detail from './Detail';
+import New from './New';
 
 export default function Shops() {
   return (

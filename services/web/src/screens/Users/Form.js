@@ -1,4 +1,4 @@
-import ErrorMessage from 'components/ErrorMessage.js';
+import ErrorMessage from 'components/ErrorMessage';
 import PhoneField from 'components/form-fields/Phone';
 
 import { useRequest } from 'utils/api';
@@ -11,7 +11,6 @@ import {
   TextInput,
   PasswordInput,
   Checkbox,
-  Select,
   Anchor,
   Text,
   Fieldset,

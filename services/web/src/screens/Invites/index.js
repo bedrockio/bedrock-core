@@ -1,6 +1,6 @@
 import { Routes, Route } from '@bedrockio/router';
 
-import List from './List.js';
+import List from './List';
 import NotFound from 'screens/NotFound';
 
 export default function Users() {
