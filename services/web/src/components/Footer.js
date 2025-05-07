@@ -39,11 +39,14 @@ export default function Footer() {
             }
           />
         </Group>
-
-        <Text fw="bold" size="xs" color="dimmed">
-          Built with
-        </Text>
-        <Logo width="112" height="17" />
+        <Group gap="xs">
+          <Text fw="bold" size="xs" color="dimmed">
+            Built with
+          </Text>
+          <div>
+            <Logo width="120" height="18" />
+          </div>
+        </Group>
       </Group>
     </footer>
   );

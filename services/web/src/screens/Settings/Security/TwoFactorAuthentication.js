@@ -6,7 +6,7 @@ import { notifications } from '@mantine/notifications';
 
 import { modals } from '@mantine/modals';
 
-import Authenticator from './Authenticator';
+import Authenticator from 'components/Authenticator';
 
 export default function Sessions() {
   const { user, updateUser } = useSession();

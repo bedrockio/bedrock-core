@@ -2,7 +2,6 @@ import { useState } from 'react';
 import {
   Grid,
   Divider,
-  Title,
   Button,
   Group,
   LoadingOverlay,
@@ -23,12 +22,12 @@ import GoogleDisableButton from 'components/Auth/Google/DisableButton';
 import { createPasskey, removePasskey } from 'utils/auth/passkey';
 import { formatDate, fromNow } from 'utils/date';
 
-import Menu from './Menu';
-import Sessions from './components/Sessions';
-import TwoFactorAuthentication from './components/TwoFactorAuthentication';
+import Menu from '../Menu';
+import Sessions from './Sessions';
+import TwoFactorAuthentication from './TwoFactorAuthentication';
 import { IconTrash } from '@tabler/icons-react';
 
-export default function Security(props) {
+export default function Security() {
   const { user, updateUser } = useSession();
 
   const [state, setState] = useState({
