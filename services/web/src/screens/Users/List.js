@@ -51,12 +51,6 @@ export default function UserList() {
 
   function getFilterMapping() {
     return {
-      /*
-      roles: {
-        label: 'Roles',
-        //getDisplayValue: (role) => role,
-      },
-      */
       createdAt: {
         label: 'Created At',
         type: 'date',
