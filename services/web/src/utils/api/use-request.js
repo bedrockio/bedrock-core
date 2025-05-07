@@ -31,6 +31,7 @@ export default function useRequest({
 
       return requestFn({ signal: controller.current.signal, ...requestArgs })
         .then(async (res) => {
+          console.log('Request completed:', res);
           await onSuccess(res);
           setResponse(res);
           setLoading(false);

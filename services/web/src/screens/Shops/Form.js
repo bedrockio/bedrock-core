@@ -26,11 +26,7 @@ const countries = allCountries.map(({ countryCode, nameEn }) => ({
   key: countryCode,
 }));
 
-export default function ShopForm({
-  shop,
-  onSuccess = () => {},
-  onCancel = () => {},
-}) {
+export default function ShopForm({ shop, onSuccess = () => {} }) {
   const isUpdate = !!shop;
 
   const form = useForm({
@@ -63,8 +59,8 @@ export default function ShopForm({
     onSuccess: ({ data }) => {
       showNotification({
         title: isUpdate
-          ? `${shop.name} was successfully updated.`
-          : `${shop.name} was successfully created.`,
+          ? `${data.name} was successfully updated.`
+          : `${data.name} was successfully created.`,
         color: 'green',
       });
       setTimeout(() => {
@@ -134,8 +130,8 @@ export default function ShopForm({
             </Fieldset>
           </Grid.Col>
         </Grid>
+        <ErrorMessage error={editRequest.error} mb="md" />
         <Group mt="md" gap="md">
-          <ErrorMessage error={editRequest.error} mb="md" />
           <Button type="submit">
             {isUpdate ? 'Update' : 'Create New'} Shop
           </Button>

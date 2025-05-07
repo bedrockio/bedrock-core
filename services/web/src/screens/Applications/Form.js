@@ -5,6 +5,7 @@ import {
   Stack,
   Fieldset,
   Grid,
+  Group,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import ErrorMessage from 'components/ErrorMessage';
@@ -68,9 +69,12 @@ export default function ApplicationForm({ application, onSave }) {
           {/* Add any additional fields or components here */}
         </Grid.Col>
       </Grid>
-      <Button mt="md" type="submit" loading={loading} disabled={loading}>
-        {isUpdate ? 'Update Application' : 'Create New Application'}
-      </Button>
+      <ErrorMessage error={error} />
+      <Group>
+        <Button mt="md" type="submit" loading={loading} disabled={loading}>
+          {isUpdate ? 'Update Application' : 'Create New Application'}
+        </Button>
+      </Group>
     </form>
   );
 }

@@ -124,17 +124,6 @@ export default function ProductForm({ product, shop, onSuccess = () => {} }) {
                   }
                   value={form.values.sellingPoints || []}
                   onChange={handleSellingPointsChange}
-                  creatable
-                  searchable
-                  getCreateLabel={(query) => `+ Add ${query}`}
-                  onCreate={(query) => {
-                    const newValue = query.trim();
-                    form.setFieldValue('sellingPoints', [
-                      ...(form.values.sellingPoints || []),
-                      newValue,
-                    ]);
-                    return newValue;
-                  }}
                 />
                 {!shop && (
                   <SearchDropdown
@@ -160,9 +149,8 @@ export default function ProductForm({ product, shop, onSuccess = () => {} }) {
             </Fieldset>
           </Grid.Col>
         </Grid>
-
+        <ErrorMessage mb="md" error={editRequest?.error} />
         <Group>
-          <ErrorMessage mb="md" error={editRequest.error} />
           <Button
             type="submit"
             loading={editRequest.loading}

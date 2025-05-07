@@ -213,8 +213,8 @@ export default function UserForm({ user, onSuccess = () => {} }) {
           </Fieldset>
         </Grid.Col>
       </Grid>
+      <ErrorMessage error={editRequest.error} mb="md" />
       <Box mt="md" gap="md">
-        <ErrorMessage error={editRequest.error} mb="md" />
         <Button type="submit" onClick={() => scrollTo({ y: 0 })}>
           {isUpdate ? 'Update' : 'Create New'} User
         </Button>

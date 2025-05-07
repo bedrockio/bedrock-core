@@ -6,6 +6,10 @@ const definition = require('./definitions/user.json');
 
 const schema = createSchema(definition);
 
+schema.virtual('name').get(function () {
+  return [this.firstName, this.lastName].join(' ');
+});
+
 schema.virtual('password').set(function (password) {
   this._password = password;
 });

@@ -3,7 +3,7 @@ import { NavLink } from '@bedrockio/router';
 
 export default function MenuItem({
   external,
-  icon,
+  icon: Icon,
   label,
   href,
   to,
@@ -34,7 +34,7 @@ export default function MenuItem({
         <MantineNavLink
           styles={styles}
           childrenOffset={0}
-          leftSection={icon && <icon size={16} stroke={1.5} />}
+          leftSection={Icon && <Icon size={16} stroke={1.5} />}
           label={label}
           href={href || to}
           to={href}>
@@ -54,7 +54,7 @@ export default function MenuItem({
               key={link.href}
               label={link.label}
               style={{
-                paddingLeft: icon
+                paddingLeft: Icon
                   ? `calc(var(--mantine-spacing-lg) * 2)`
                   : `var(--mantine-spacing-xl)`,
               }}
@@ -70,7 +70,7 @@ export default function MenuItem({
             }
             return <NavLink {...props} />;
           }}
-          leftSection={icon && <icon size={16} stroke={1.5} />}
+          leftSection={Icon && <Icon size={16} stroke={1.5} />}
           label={label}
           href={href || to}
           to={href}
