@@ -39,7 +39,7 @@ export default function InviteActions({ invite, reload }) {
               method: 'DELETE',
               path: `/1/invites/${invite.id}`,
             });
-            return reload();
+            reload();
           }}
           confirmButton="Delete"
           content={

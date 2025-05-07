@@ -63,7 +63,7 @@ export default function UserActions({ displayMode = 'show', user, reload }) {
               method: 'DELETE',
               path: `/1/users/${user.id}`,
             });
-            return reload();
+            reload();
           }}
           content={
             <Text>

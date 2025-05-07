@@ -40,7 +40,7 @@ export default function ProductsActions({
               method: 'DELETE',
               path: `/1/products/${product.id}`,
             });
-            return reload();
+            reload();
           }}
           content={
             <Text>

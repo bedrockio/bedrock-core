@@ -40,7 +40,7 @@ export default function OrganizationActions({
               method: 'DELETE',
               path: `/1/organizations/${organization.id}`,
             });
-            return reload();
+            reload();
           }}
           confirmButton="Delete"
           content={

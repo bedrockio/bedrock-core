@@ -37,7 +37,7 @@ export default function ShopsActions({ shop, reload, displayMode = 'show' }) {
               method: 'DELETE',
               path: `/1/shops/${shop.id}`,
             });
-            return reload();
+            reload();
           }}
           content={
             <Text>

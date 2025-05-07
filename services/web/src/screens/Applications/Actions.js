@@ -19,7 +19,7 @@ export default function ApplicationActions({ application, reload }) {
               method: 'DELETE',
               path: `/1/applications/${application.id}`,
             });
-            return reload();
+            reload();
           }}
           confirmButton="Delete"
           content={
