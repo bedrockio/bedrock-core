@@ -1,4 +1,4 @@
-import { Divider } from '@mantine/core';
+import { Divider, Stack } from '@mantine/core';
 
 import { canShowGoogleSignin } from 'utils/auth/google';
 import { canShowAppleSignin } from 'utils/auth/apple';
@@ -22,14 +22,16 @@ export default function Federated(props) {
     return null;
   }
 
+  const Wrapper = type === 'signup' ? Stack : Group;
+
   return (
     <>
       <Divider labelPosition="center" label="OR" />
-      <Group grow>
+      <Wrapper grow>
         {showPasskey && <PasskeyButton {...props} />}
         {showGoogle && <GoogleButton {...props} />}
         {showApple && <AppleButton {...props} />}
-      </Group>
+      </Wrapper>
     </>
   );
 }

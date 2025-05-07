@@ -145,13 +145,6 @@ export default function SignupPassword() {
                 />
               )}
 
-              <Federated
-                type="signup"
-                onAuthStop={onAuthStop}
-                onAuthStart={onAuthStart}
-                onError={onAuthError}
-              />
-
               <Button
                 fullWidth
                 loading={loading}
@@ -167,6 +160,13 @@ export default function SignupPassword() {
                   Login
                 </Anchor>
               </Text>
+
+              <Federated
+                type="signup"
+                onAuthStop={onAuthStop}
+                onAuthStart={onAuthStart}
+                onError={onAuthError}
+              />
             </Stack>
           </form>
         </Paper>

@@ -153,19 +153,19 @@ export default function PasswordLogin() {
                   Login
                 </Button>
 
-                <Federated
-                  type="login"
-                  onAuthStop={onAuthStop}
-                  onAuthStart={onAuthStart}
-                  onAuthError={onAuthError}
-                />
-
                 <Text size={'xs'} c="dimmed">
                   Don't have an account?{' '}
                   <Anchor tabIndex={4} component={Link} to="/signup">
                     Register
                   </Anchor>
                 </Text>
+
+                <Federated
+                  type="login"
+                  onAuthStop={onAuthStop}
+                  onAuthStart={onAuthStart}
+                  onAuthError={onAuthError}
+                />
               </Stack>
             </form>
           </Stack>
