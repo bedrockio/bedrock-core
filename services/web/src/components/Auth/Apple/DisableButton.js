@@ -15,7 +15,7 @@ import { disable } from 'utils/auth/apple';
  * @returns {JSX.Element} The DisableButton component.
  */
 export default function DisableButton(props) {
-  const { onError = noop, onDisabled = noop, ...rest } = props;
+  const { onError = noop, onDisabled = noop } = props;
   const [loading, setLoading] = useState(false);
   const { user, updateUser } = useSession();
 
@@ -38,7 +38,7 @@ export default function DisableButton(props) {
       size="sm"
       loading={loading}
       onClick={handleClick}
-      {...rest}>
+      {...props}>
       Disable
     </Button>
   );
