@@ -33,7 +33,6 @@ export default function ProductForm({ product, shop, onSuccess = () => {} }) {
   const isUpdate = !!product;
 
   const form = useForm({
-    mode: 'controlled',
     initialValues: parseProduct(product) || {
       name: '',
       description: '',
