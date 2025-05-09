@@ -127,7 +127,9 @@ export default function DashboardLayout({ children }) {
           align="center"
           p="md">
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-          <Logo height={20} />
+          <div>
+            <Logo height={20} />
+          </div>
         </Flex>
       </AppShell.Header>
       <AppShell.Navbar>
