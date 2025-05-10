@@ -1,5 +1,4 @@
-import React from 'react';
-import { Form, Select } from 'semantic';
+import { Select } from '@mantine/core';
 
 const states = {
   AL: 'Alabama',
@@ -65,25 +64,10 @@ const states = {
 
 const statesOptions = Object.keys(states).map((code) => ({
   value: code,
-  text: states[code],
+  label: states[code],
   key: code,
 }));
 
-export default class UsStates extends React.Component {
-  render() {
-    const { required, label = 'State', placeholder, value, name } = this.props;
-    return (
-      <Form.Field required={required}>
-        {label && <label>{label}</label>}
-        <Select
-          search
-          name={name}
-          value={value}
-          placeholder={placeholder}
-          options={statesOptions}
-          onChange={this.props.onChange}
-        />
-      </Form.Field>
-    );
-  }
+export default function UsStates({ label = 'State', ...props }) {
+  return <Select label={label} data={statesOptions} {...props} />;
 }

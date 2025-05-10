@@ -3,8 +3,7 @@ const { kebabCase } = require('lodash');
 const { fetchByParam } = require('../utils/middleware/params');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate } = require('../utils/middleware/authenticate');
-const { Application, ApplicationRequest, AuditEntry } = require('../models');
-const { exportValidation, csvExport } = require('../utils/csv');
+const { Application, AuditEntry } = require('../models');
 const { requirePermissions } = require('../utils/middleware/permissions');
 
 const router = new Router();
@@ -24,31 +23,6 @@ router
       meta,
     };
   })
-  .post(
-    '/:id/logs/search',
-    validateBody(
-      ApplicationRequest.getSearchValidation({
-        ...exportValidation(),
-      })
-    ),
-    async (ctx) => {
-      const { format, filename, ...params } = ctx.request.body;
-      const { application } = ctx.state;
-
-      const { data, meta } = await ApplicationRequest.search({
-        ...params,
-        application: application.id,
-      });
-
-      if (format === 'csv') {
-        return csvExport(ctx, data);
-      }
-      ctx.body = {
-        data,
-        meta,
-      };
-    }
-  )
   .get('/:id', async (ctx) => {
     ctx.body = {
       data: ctx.state.application,

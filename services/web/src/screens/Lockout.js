@@ -1,32 +1,34 @@
-import React from 'react';
-import { withRouter, Link } from '@bedrockio/router';
-import { Button, Segment } from 'semantic';
+import { useEffect } from 'react';
+import { useNavigate, Link } from '@bedrockio/router';
+import { Button, Paper, Text, Group, Center, Stack } from '@mantine/core';
 
-import { withSession } from 'stores/session';
+import { useSession } from 'stores/session';
 
-class Lockout extends React.Component {
-  componentDidMount() {
-    if (!this.context.isLoggedIn()) {
-      this.props.history.push('/login');
+function Lockout() {
+  const navigate = useNavigate();
+  const { isLoggedIn } = useSession();
+
+  useEffect(() => {
+    if (!isLoggedIn()) {
+      navigate('/login');
     }
-  }
+  }, [isLoggedIn, navigate]);
 
-  render() {
-    return (
-      <React.Fragment>
-        <Segment.Group>
-          <Segment padded>
-            <p>This site cannot be accessed.</p>
-          </Segment>
-          <Segment secondary textAlign="right">
-            <Button as={Link} to="/logout">
+  return (
+    <Center style={{ height: '100vh' }}>
+      <Paper>
+        <Stack gap="md">
+          <Text>This site cannot be accessed.</Text>
+
+          <Group position="right">
+            <Button component={Link} to="/logout">
               Logout
             </Button>
-          </Segment>
-        </Segment.Group>
-      </React.Fragment>
-    );
-  }
+          </Group>
+        </Stack>
+      </Paper>
+    </Center>
+  );
 }
 
-export default withRouter(withSession(Lockout));
+export default Lockout;

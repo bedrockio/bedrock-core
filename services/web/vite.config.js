@@ -23,6 +23,7 @@ export default defineConfig({
 
   resolve: {
     alias: {
+      lodash: 'lodash-es',
       helpers: path.resolve(__dirname, './src/helpers'),
       screens: path.resolve(__dirname, './src/screens'),
       stores: path.resolve(__dirname, './src/stores'),
@@ -34,6 +35,8 @@ export default defineConfig({
       modals: path.resolve(__dirname, './src/modals'),
       assets: path.resolve(__dirname, './src/assets'),
       docs: path.resolve(__dirname, './src/docs'),
+      // /esm/icons/index.mjs only exports the icons statically, so no separate chunks are created
+      '@tabler/icons-react': '@tabler/icons-react/dist/esm/icons/index.mjs',
     },
   },
 

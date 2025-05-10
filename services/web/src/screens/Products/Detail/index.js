@@ -6,6 +6,7 @@ import NotFound from 'screens/NotFound';
 
 import { request } from 'utils/api';
 
+import Edit from './Edit';
 import Overview from './Overview';
 
 export default function ProductDetail() {
@@ -18,6 +19,7 @@ export default function ProductDetail() {
       product: data,
     };
   });
+
   return (
     <Loader
       notFound={
@@ -27,7 +29,8 @@ export default function ProductDetail() {
         />
       }>
       <Routes>
-        <Route path="/products/:id" render={Overview} exact />
+        <Route path="/products/:id/edit" render={Edit} exact />
+        <Route exact path="/products/:id" render={Overview} />
         <Route render={NotFound} />
       </Routes>
     </Loader>

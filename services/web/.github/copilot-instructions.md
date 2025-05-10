@@ -1,0 +1,5 @@
+- We are formatted with eslint and prettier
+- Use Mantine v7.17 for UI components whenever possible.
+- Always check for reusable Mantine components before creating custom ones.
+- Use function declarations instead of arrow functions.
+- Include JSDoc comments when it make sense

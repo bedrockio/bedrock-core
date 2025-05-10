@@ -66,7 +66,12 @@ router
   .use(requirePermissions('roles.list'))
   .get('/roles', (ctx) => {
     ctx.body = {
-      data: roles,
+      data: Object.keys(roles).map((id) => {
+        return {
+          id,
+          ...roles[id],
+        };
+      }),
     };
   })
   .get('/permissions', (ctx) => {
@@ -138,7 +143,7 @@ router
     const snapshot = new User(user);
     user.assign(ctx.request.body);
     await user.save();
-    await AuditEntry.append('Updated user', {
+    await AuditEntry.append('Updated User', {
       ctx,
       snapshot,
       object: user,

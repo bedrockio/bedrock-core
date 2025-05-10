@@ -1,5 +1,4 @@
-import React from 'react';
-import { Divider } from 'semantic';
+import { Divider, Stack } from '@mantine/core';
 
 import { canShowGoogleSignin } from 'utils/auth/google';
 import { canShowAppleSignin } from 'utils/auth/apple';
@@ -9,6 +8,7 @@ import PasskeyButton from './PasskeyButton';
 import GoogleButton from './Google/SignInButton';
 import AppleButton from './Apple/SignInButton';
 
+import { Group } from '@mantine/core';
 export default function Federated(props) {
   const { type } = props;
 
@@ -22,41 +22,16 @@ export default function Federated(props) {
     return null;
   }
 
+  const Wrapper = type === 'signup' ? Stack : Group;
+
   return (
-    <React.Fragment>
-      <Divider horizontal>Or</Divider>
-      <Container {...props}>
+    <>
+      <Divider labelPosition="center" label="OR" />
+      <Wrapper grow>
         {showPasskey && <PasskeyButton {...props} />}
         {showGoogle && <GoogleButton {...props} />}
         {showApple && <AppleButton {...props} />}
-      </Container>
-    </React.Fragment>
+      </Wrapper>
+    </>
   );
-}
-
-function Container(props) {
-  if (props.type === 'login') {
-    return (
-      <div
-        style={{
-          display: 'grid',
-          gap: '10px',
-          justifyContent: 'center',
-          gridTemplateColumns: 'repeat(auto-fit, 44px)',
-        }}>
-        {props.children}
-      </div>
-    );
-  } else {
-    return (
-      <div
-        style={{
-          display: 'flex',
-          flexFlow: 'column',
-          gap: '10px',
-        }}>
-        {props.children}
-      </div>
-    );
-  }
 }

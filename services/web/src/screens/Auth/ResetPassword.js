@@ -1,143 +1,156 @@
-import React from 'react';
-import { Form, Button, Segment, Message } from 'semantic';
-import { Link } from '@bedrockio/router';
+import { useState } from 'react';
+import {
+  Button,
+  Group,
+  Paper,
+  Stack,
+  Title,
+  Text,
+  Anchor,
+  PasswordInput,
+} from '@mantine/core';
+import { useForm } from '@mantine/form';
+import { Link, useNavigate } from '@bedrockio/router';
 
-import { withSession } from 'stores/session';
-
-import LogoTitle from 'components/LogoTitle';
+import { useSession } from 'stores/session';
 import ErrorMessage from 'components/ErrorMessage';
-import PasswordField from 'components/form-fields/Password';
+import Logo from 'components/Logo';
 
 import { request } from 'utils/api';
 import { getUrlToken } from 'utils/token';
 import Meta from 'components/Meta';
 
-class ResetPassword extends React.Component {
-  constructor(props) {
-    super(props);
-    const { token, payload } = getUrlToken();
-    this.state = {
-      token,
-      payload,
-      loading: false,
-      touched: false,
-      success: false,
-      error: null,
-      body: {},
-    };
-  }
+export default function ResetPassword() {
+  const navigate = useNavigate();
+  const { authenticate } = useSession();
+  const { token, payload } = getUrlToken();
 
-  setField = (evt, { name, value }) => {
-    this.setState({
-      touched: true,
-      body: {
-        ...this.state.body,
-        [name]: value,
-      },
-    });
-  };
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(null);
 
-  onSubmit = async () => {
+  const form = useForm({
+    initialValues: {
+      password: '',
+      repeat: '',
+    },
+    validate: {
+      repeat: (value, values) =>
+        value !== values.password ? 'Passwords do not match.' : null,
+    },
+  });
+
+  async function onSubmit(values) {
     try {
-      const { password, repeat } = this.state.body;
-      if (password !== repeat) {
-        throw new Error('Passwords do not match.');
-      }
-      const { token } = this.state;
-      this.setState({
-        loading: true,
-        error: null,
-      });
+      setLoading(true);
+      setError(null);
+
       const { data } = await request({
         method: 'POST',
         path: '/1/auth/password/update',
         token,
         body: {
-          password,
+          password: values.password,
         },
       });
-      this.setState({
-        loading: false,
-        success: true,
-      });
-      this.props.history.push(await this.context.authenticate(data.token));
-    } catch (error) {
-      this.setState({
-        error,
-        loading: false,
-      });
-    }
-  };
 
-  render() {
+      setSuccess(true);
+      setLoading(false);
+      navigate(await authenticate(data.token));
+    } catch (err) {
+      setError(err);
+      setLoading(false);
+    }
+  }
+
+  function renderTokenMissing() {
     return (
-      <React.Fragment>
-        <Meta title="Reset Password" />
-        <LogoTitle title="Reset Password" />
-        <Segment.Group>
-          <Segment padded>{this.renderBody()}</Segment>
-        </Segment.Group>
-      </React.Fragment>
+      <Paper mt="md" w="100%" p="lg" radius="md" withBorder>
+        <Stack>
+          <Title order={3} color="red">
+            No valid token found
+          </Title>
+          <Text>
+            Please ensure you either click the email link in the email or copy
+            paste the link in full.
+          </Text>
+        </Stack>
+      </Paper>
     );
   }
 
-  renderBody() {
-    const { payload, success } = this.state;
+  function renderSuccessMessage() {
+    return (
+      <Paper mt="md" w="100%" p="lg" radius="md" withBorder>
+        <Stack>
+          <Title order={3} c="blue">
+            Your password has been changed!
+          </Title>
+          <Text>
+            Click here to open the{' '}
+            <Anchor component={Link} to="/">
+              Dashboard
+            </Anchor>
+          </Text>
+        </Stack>
+      </Paper>
+    );
+  }
+
+  function renderForm() {
+    return (
+      <Paper mt="md" w="100%" p="lg" radius="md" withBorder>
+        <Stack gap="md">
+          <Title order={3}>Reset Password</Title>
+          <ErrorMessage error={error} />
+          <form onSubmit={form.onSubmit(onSubmit)}>
+            <Stack gap="md">
+              <PasswordInput
+                required
+                label="New Password"
+                placeholder="New Password"
+                {...form.getInputProps('password')}
+              />
+
+              <PasswordInput
+                required
+                label="Repeat Password"
+                placeholder="Repeat Password"
+                {...form.getInputProps('repeat')}
+              />
+
+              <Button
+                fullWidth
+                variant="filled"
+                loading={loading}
+                disabled={loading}
+                type="submit">
+                Reset Password
+              </Button>
+            </Stack>
+          </form>
+        </Stack>
+      </Paper>
+    );
+  }
+
+  function renderBody() {
     if (!payload) {
-      return this.renderTokenMissing();
+      return renderTokenMissing();
     } else if (success) {
-      return this.renderSuccessMessage();
+      return renderSuccessMessage();
     } else {
-      return this.renderForm();
+      return renderForm();
     }
   }
 
-  renderTokenMissing() {
-    return (
-      <Message error>
-        <Message.Header>No valid token found</Message.Header>
-        <Message.Content>
-          Please ensure you either click the email link in the email or copy
-          paste the link in full.
-        </Message.Content>
-      </Message>
-    );
-  }
-
-  renderSuccessMessage() {
-    return (
-      <Message info>
-        <Message.Header>Your password has been changed!</Message.Header>
-        <p>
-          Click here to open the <Link to="/">Dashboard</Link>
-        </p>
-      </Message>
-    );
-  }
-
-  renderForm() {
-    const { body, touched, error } = this.state;
-    return (
-      <Form error={touched} size="large" onSubmit={this.onSubmit}>
-        {error?.type !== 'validation' && <ErrorMessage error={error} />}
-        <PasswordField
-          name="password"
-          placeholder="New Password"
-          value={body.password || ''}
-          onChange={this.setField}
-          error={error}
-        />
-
-        <PasswordField
-          name="repeat"
-          placeholder="Repeat Password"
-          value={body.repeat || ''}
-          onChange={this.setField}
-          error={error}
-        />
-        <Button fluid primary size="large" content="Reset Password" />
-      </Form>
-    );
-  }
+  return (
+    <Group justify="center" align="center" pt={{ base: 30, sm: 120 }}>
+      <Stack w={{ base: '95vw', sm: 480 }} align="center">
+        <Meta title="Reset Password" />
+        <Logo maw={200} title="Reset Password" />
+        {renderBody()}
+      </Stack>
+    </Group>
+  );
 }
-export default withSession(ResetPassword);
