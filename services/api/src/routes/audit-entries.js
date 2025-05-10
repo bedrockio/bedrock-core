@@ -6,7 +6,6 @@ const { authenticate } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
 const { exportValidation, csvExport } = require('../utils/csv');
 const { AuditEntry } = require('../models');
-const user = require('../models/user');
 const router = new Router();
 
 router
