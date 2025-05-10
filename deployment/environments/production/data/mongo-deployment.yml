@@ -13,7 +13,7 @@ spec:
         app: mongo
     spec:
       containers:
-        - image: mongo:7.0.8
+        - image: mongo:8.0.9
           name: main
           ports:
             - name: mongo
