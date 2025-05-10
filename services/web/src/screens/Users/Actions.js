@@ -1,5 +1,4 @@
 import { ActionIcon, Group, Menu, Text, Button } from '@mantine/core';
-import { modals } from '@mantine/modals';
 
 import {
   IconDotsVertical,
@@ -14,13 +13,14 @@ import {
 import { Link } from '@bedrockio/router';
 import { useSession } from 'stores/session';
 
-import ConfirmModal from 'components/ConfirmModal';
+import ConfirmModal from 'components/modals/Confirm';
 
-import InspectObject from 'components/InspectObject';
+import InspectObject from 'components/modals/InspectObject';
 import { request } from 'utils/api';
 
-import LoginAsUser from 'components/LoginAsUser';
+import LoginAsUser from 'components/modals/LoginAsUser';
 import Protected from 'components/Protected';
+import ModalWrapper from 'components/ModalWrapper';
 
 export default function UserActions({ displayMode = 'show', user, reload }) {
   const { user: authUser } = useSession();
@@ -34,46 +34,6 @@ export default function UserActions({ displayMode = 'show', user, reload }) {
   const canAuthenticate = [...user.roles].every(({ role }) =>
     authenticatableRoles.includes(role),
   );
-
-  function openLoginAsUserModal() {
-    modals.open({
-      title: `Login as ${user.name}`,
-      children: <LoginAsUser user={user} />,
-      size: 'lg',
-    });
-  }
-
-  function openInspectModal() {
-    modals.open({
-      title: `Inspect ${user.name}`,
-      children: <InspectObject object={user} name="user" />,
-      size: 'lg',
-    });
-  }
-
-  function openDeleteModel() {
-    modals.open({
-      title: `Delete User`,
-      children: (
-        <ConfirmModal
-          negative
-          confirmButton="Delete"
-          onConfirm={async () => {
-            await request({
-              method: 'DELETE',
-              path: `/1/users/${user.id}`,
-            });
-            reload();
-          }}
-          content={
-            <Text>
-              Are you sure you want to delete {user.name} ({user.email})?
-            </Text>
-          }
-        />
-      ),
-    });
-  }
 
   function renderButton() {
     if (displayMode === 'list') {
@@ -117,7 +77,7 @@ export default function UserActions({ displayMode = 'show', user, reload }) {
       <Protected endpoint="shops" permission="update">
         {renderButton()}
       </Protected>
-      <Menu shadow="md">
+      <Menu shadow="md" keepMounted>
         <Menu.Target>
           {displayMode !== 'list' ? (
             <ActionIcon size="input-sm" variant="default">
@@ -131,12 +91,18 @@ export default function UserActions({ displayMode = 'show', user, reload }) {
         </Menu.Target>
 
         <Menu.Dropdown>
-          <Menu.Item
-            disabled={!canAuthenticate}
-            onClick={() => openLoginAsUserModal()}
-            leftSection={<IconUserCode size={14} />}>
-            Login as User
-          </Menu.Item>
+          <ModalWrapper
+            title={`Login as ${user.name}`}
+            component={<LoginAsUser user={user} />}
+            size="lg"
+            trigger={
+              <Menu.Item
+                disabled={!canAuthenticate}
+                leftSection={<IconUserCode size={14} />}>
+                Login as User
+              </Menu.Item>
+            }
+          />
 
           <Protected endpoint="auditEntries" permission="read">
             <Menu.Item
@@ -147,18 +113,44 @@ export default function UserActions({ displayMode = 'show', user, reload }) {
             </Menu.Item>
           </Protected>
 
-          <Menu.Item
-            onClick={openInspectModal}
-            leftSection={<IconCode size={14} />}>
-            Inspect
-          </Menu.Item>
+          <ModalWrapper
+            title={`Inspect ${user.name}`}
+            component={<InspectObject object={user} name="user" />}
+            size="lg"
+            trigger={
+              <Menu.Item leftSection={<IconCode size={14} />}>
+                Inspect
+              </Menu.Item>
+            }
+          />
           <Protected endpoint="users" permission="delete">
-            <Menu.Item
-              color="red"
-              onClick={openDeleteModel}
-              leftSection={<IconTrash size={14} />}>
-              Delete
-            </Menu.Item>
+            <ModalWrapper
+              title="Delete User"
+              trigger={
+                <Menu.Item color="red" leftSection={<IconTrash size={14} />}>
+                  Delete
+                </Menu.Item>
+              }
+              component={
+                <ConfirmModal
+                  negative
+                  confirmButton="Delete"
+                  onConfirm={async () => {
+                    await request({
+                      method: 'DELETE',
+                      path: `/1/users/${user.id}`,
+                    });
+                    reload();
+                  }}
+                  content={
+                    <Text>
+                      Are you sure you want to delete {user.name} ({user.email}
+                      )?
+                    </Text>
+                  }
+                />
+              }
+            />
           </Protected>
         </Menu.Dropdown>
       </Menu>

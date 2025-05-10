@@ -8,6 +8,7 @@ import { userCanSwitchOrganizations } from 'utils/permissions';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 
 import ConnectionError from 'components/ConnectionError';
+import ErrorBoundary from 'components/ErrorBoundary';
 
 import {
   IconApps,
@@ -35,7 +36,7 @@ import {
 } from '@mantine/core';
 
 import MenuItem from '../components/MenuItem';
-import ModalTrigger from 'components/ModalTrigger';
+import ModalTrigger from 'components/ModalWrapper';
 import Footer from 'components/Footer';
 
 const menuItems = [
@@ -189,7 +190,7 @@ export default function DashboardLayout({ children }) {
           }}>
           <Box style={{ flex: 1 }}>
             <ConnectionError />
-            {children}
+            <ErrorBoundary>{children}</ErrorBoundary>
           </Box>
         </Box>
         <Footer />

@@ -5,10 +5,10 @@ import { Text } from '@mantine/core';
 import { useClass } from 'helpers/bem';
 
 import Markdown from 'components/Markdown';
+import ModalWrapper from 'components/ModalWrapper';
 
 import EditFieldModal from './EditFieldModal';
 import { useDocs } from '../utils/context';
-import { modals } from '@mantine/modals';
 import { DocsContext } from '../utils/context';
 
 import './editable-field.less';
@@ -41,31 +41,30 @@ export default function DocsEditableField(props) {
     return [mode === 'edit' ? 'editable' : null, value ? 'filled' : 'empty'];
   }
 
-  function showEditField() {
-    modals.open({
-      title: [
-        `Edit ${startCase(type)}`,
-        props.markdown && ' - Supports Markdown',
-      ].filter(Boolean),
-      children: (
-        <EditFieldModal
-          {...props}
-          docs={docs}
-          updatePath={context.updatePath}
-          value={getValue()}
-          label={`Edit ${startCase(type)}`}
-          close={() => modals.closeAll()}
-        />
-      ),
-    });
+  function renderModalContent({ close }) {
+    return (
+      <EditFieldModal
+        {...props}
+        docs={docs}
+        updatePath={context.updatePath}
+        value={getValue()}
+        label={`Edit ${startCase(type)}`}
+        close={close}
+      />
+    );
   }
 
   function render() {
     if (mode === 'edit') {
       return (
-        <Text className={className} onClick={() => showEditField()}>
-          {renderValue()}
-        </Text>
+        <ModalWrapper
+          title={[
+            `Edit ${startCase(type)}`,
+            props.markdown && ' - Supports Markdown',
+          ].filter(Boolean)}
+          component={renderModalContent}
+          trigger={<Text className={className}>{renderValue()}</Text>}
+        />
       );
     } else {
       return (

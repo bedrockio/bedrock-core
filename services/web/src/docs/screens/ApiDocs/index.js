@@ -2,11 +2,11 @@ import { useEffect } from 'react';
 
 import { useLocation, useNavigate } from '@bedrockio/router';
 import { ActionIcon, Group, Text } from '@mantine/core';
-import { modals } from '@mantine/modals';
 
 import { useClass } from 'helpers/bem';
 
-import ConfirmModal from 'components/ConfirmModal';
+import ConfirmModal from 'components/modals/Confirm';
+import ModalWrapper from 'components/ModalWrapper';
 import EditButton from 'docs/components/EditButton';
 import { useDocs } from 'docs/utils/context';
 
@@ -93,23 +93,25 @@ export default function ApiDocs() {
   }
 
   function confirmGenerate() {
-    modals.open({
-      title: 'Generate Documentation',
-      children: (
-        <ConfirmModal
-          onConfirm={() => {
-            return generateDocs();
-          }}
-          content={
-            <Text>
-              Generates OpenApi documentation based on schemas and route
-              validation. This will not overwrite current documentation.
-            </Text>
-          }
-          confirmButton="Generate Documentation"
-        />
-      ),
-    });
+    return (
+      <ModalWrapper
+        title="Generate Documentation"
+        component={
+          <ConfirmModal
+            onConfirm={() => {
+              return generateDocs();
+            }}
+            content={
+              <Text>
+                Generates OpenApi documentation based on schemas and route
+                validation. This will not overwrite current documentation.
+              </Text>
+            }
+            confirmButton="Generate Documentation"
+          />
+        }
+      />
+    );
   }
 
   function renderActions() {
@@ -117,12 +119,28 @@ export default function ApiDocs() {
       return (
         <Group gap="xs" justify="flex-end" m="xs">
           <EditButton />
-          <ActionIcon
-            onClick={confirmGenerate}
-            variant="default"
-            title="Generate Documentation">
-            <IconRefresh size={14} />
-          </ActionIcon>
+          <ModalWrapper
+            title="Generate Documentation"
+            component={
+              <ConfirmModal
+                onConfirm={() => {
+                  return generateDocs();
+                }}
+                content={
+                  <Text>
+                    Generates OpenApi documentation based on schemas and route
+                    validation. This will not overwrite current documentation.
+                  </Text>
+                }
+                confirmButton="Generate Documentation"
+              />
+            }
+            trigger={
+              <ActionIcon variant="default" title="Generate Documentation">
+                <IconRefresh size={14} />
+              </ActionIcon>
+            }
+          />
         </Group>
       );
     }

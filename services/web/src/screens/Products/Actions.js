@@ -1,5 +1,4 @@
 import { ActionIcon, Menu, Text, Group, Button } from '@mantine/core';
-import { modals } from '@mantine/modals';
 import {
   IconTrash,
   IconCode,
@@ -10,49 +9,18 @@ import {
 } from '@tabler/icons-react';
 import { Link } from '@bedrockio/router';
 
-import InspectObject from 'components/InspectObject';
-import ConfirmModal from 'components/ConfirmModal';
+import InspectObject from 'components/modals/InspectObject';
+import ConfirmModal from 'components/modals/Confirm';
 import Protected from 'components/Protected';
 import { request } from 'utils/api';
 import { IconEdit } from '@tabler/icons-react';
+import ModalWrapper from 'components/ModalWrapper';
 
 export default function ProductsActions({
   product,
   reload,
   displayMode = 'show',
 }) {
-  function openInspectModal() {
-    modals.open({
-      title: `Inspect ${product.name}`,
-      children: <InspectObject object={product} name="product" />,
-      size: 'lg',
-    });
-  }
-
-  function openDeleteModel() {
-    modals.open({
-      title: `Delete Product`,
-      children: (
-        <ConfirmModal
-          negative
-          onConfirm={async () => {
-            await request({
-              method: 'DELETE',
-              path: `/1/products/${product.id}`,
-            });
-            reload();
-          }}
-          content={
-            <Text>
-              Are you sure you want to delete <strong>{product.name}</strong>?
-            </Text>
-          }
-          confirmButton="Delete"
-        />
-      ),
-    });
-  }
-
   function renderButton() {
     if (displayMode === 'list') {
       return (
@@ -93,7 +61,7 @@ export default function ProductsActions({
   return (
     <Group gap="xs" justify="flex-end">
       {renderButton()}
-      <Menu shadow="md">
+      <Menu shadow="md" keepMounted>
         <Menu.Target>
           {displayMode !== 'list' ? (
             <ActionIcon size="input-sm" variant="default">
@@ -107,11 +75,16 @@ export default function ProductsActions({
         </Menu.Target>
 
         <Menu.Dropdown>
-          <Menu.Item
-            onClick={openInspectModal}
-            leftSection={<IconCode size={14} />}>
-            Inspect
-          </Menu.Item>
+          <ModalWrapper
+            title={`Inspect ${product.name}`}
+            component={<InspectObject object={product} name="product" />}
+            size="lg"
+            trigger={
+              <Menu.Item leftSection={<IconCode size={14} />}>
+                Inspect
+              </Menu.Item>
+            }
+          />
           <Protected endpoint="auditEntries" permission="read">
             <Menu.Item
               component={Link}
@@ -121,12 +94,33 @@ export default function ProductsActions({
             </Menu.Item>
           </Protected>
           <Protected endpoint="products" permission="delete">
-            <Menu.Item
-              color="red"
-              onClick={openDeleteModel}
-              leftSection={<IconTrash size={14} />}>
-              Delete
-            </Menu.Item>
+            <ModalWrapper
+              title="Delete Product"
+              trigger={
+                <Menu.Item color="red" leftSection={<IconTrash size={14} />}>
+                  Delete
+                </Menu.Item>
+              }
+              component={
+                <ConfirmModal
+                  negative
+                  onConfirm={async () => {
+                    await request({
+                      method: 'DELETE',
+                      path: `/1/products/${product.id}`,
+                    });
+                    reload();
+                  }}
+                  content={
+                    <Text>
+                      Are you sure you want to delete{' '}
+                      <strong>{product.name}</strong>?
+                    </Text>
+                  }
+                  confirmButton="Delete"
+                />
+              }
+            />
           </Protected>
         </Menu.Dropdown>
       </Menu>

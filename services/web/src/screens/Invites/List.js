@@ -18,7 +18,7 @@ import SortableTh from 'components/Table/SortableTh';
 import InviteForm from './Form';
 import Actions from './Actions';
 
-import { modals } from '@mantine/modals';
+import ModalWrapper from 'components/ModalWrapper';
 
 import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
@@ -67,26 +67,25 @@ export default function Invites() {
                   },
                 ]}
                 rightSection={
-                  <Button
-                    variant="default"
-                    onClick={() => {
-                      modals.open({
-                        title: 'Invite Users',
-                        children: (
-                          <InviteForm
-                            name="shop"
-                            onSuccess={() => {
-                              modals.closeAll();
-                              reload();
-                            }}
-                          />
-                        ),
-                        size: 'md',
-                      });
-                    }}
-                    rightSection={<IconPlus size={14} />}>
-                    Invite User
-                  </Button>
+                  <ModalWrapper
+                    title="Invite Users"
+                    size="md"
+                    component={
+                      <InviteForm
+                        name="shop"
+                        onSuccess={() => {
+                          reload();
+                        }}
+                      />
+                    }
+                    trigger={
+                      <Button
+                        variant="default"
+                        rightSection={<IconPlus size={14} />}>
+                        Invite User
+                      </Button>
+                    }
+                  />
                 }
               />
 

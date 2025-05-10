@@ -4,7 +4,7 @@ import { useRequest } from 'utils/api';
 
 import { notifications } from '@mantine/notifications';
 
-import { modals } from '@mantine/modals';
+import ModalWrapper from 'components/ModalWrapper';
 
 import Authenticator from 'components/Authenticator';
 
@@ -63,22 +63,23 @@ export default function Sessions() {
 
   function onMfaMethodChange(value) {
     if (value === 'totp' && !hasTotp) {
-      modals.open({
-        title: 'Enable Authenticator',
-        children: (
-          <Authenticator
-            onClose={() => modals.closeAll()}
-            onSuccess={() => {
-              notifications.show({
-                position: 'top-right',
-                title: 'Success',
-                message: 'Two-factor authentication enabled.',
-                color: 'green',
-              });
-            }}
-          />
-        ),
-      });
+      return (
+        <ModalWrapper
+          title="Enable Authenticator"
+          component={
+            <Authenticator
+              onSuccess={() => {
+                notifications.show({
+                  position: 'top-right',
+                  title: 'Success',
+                  message: 'Two-factor authentication enabled.',
+                  color: 'green',
+                });
+              }}
+            />
+          }
+        />
+      );
     } else {
       mfaRequest.request({
         body: {

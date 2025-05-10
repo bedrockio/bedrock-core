@@ -1,5 +1,4 @@
 import { ActionIcon, Menu, Text, Button, Group } from '@mantine/core';
-import { modals } from '@mantine/modals';
 import {
   IconTrash,
   IconCode,
@@ -11,49 +10,17 @@ import {
 } from '@tabler/icons-react';
 import { Link } from '@bedrockio/router';
 
-import InspectObject from 'components/InspectObject';
-import ConfirmModal from 'components/ConfirmModal';
+import InspectObject from 'components/modals/InspectObject';
+import ConfirmModal from 'components/modals/Confirm';
 import Protected from 'components/Protected';
 import { request } from 'utils/api';
+import ModalWrapper from 'components/ModalWrapper';
 
 export default function OrganizationActions({
   displayMode = 'show',
   organization,
   reload,
 }) {
-  function openInspectModal() {
-    modals.open({
-      title: `Inspect ${organization.name}`,
-      children: <InspectObject object={organization} name="organization" />,
-      size: 'lg',
-    });
-  }
-
-  function openDeleteModel() {
-    modals.open({
-      title: `Delete Organization`,
-      children: (
-        <ConfirmModal
-          negative
-          onConfirm={async () => {
-            await request({
-              method: 'DELETE',
-              path: `/1/organizations/${organization.id}`,
-            });
-            reload();
-          }}
-          confirmButton="Delete"
-          content={
-            <Text>
-              Are you sure you want to delete{' '}
-              <strong>{organization.name}</strong>?
-            </Text>
-          }
-        />
-      ),
-    });
-  }
-
   function renderButton() {
     if (displayMode === 'list') {
       return (
@@ -96,7 +63,7 @@ export default function OrganizationActions({
       <Protected endpoint="shops" permission="update">
         {renderButton()}
       </Protected>
-      <Menu shadow="md">
+      <Menu shadow="md" keepMounted>
         <Menu.Target>
           {displayMode !== 'list' ? (
             <ActionIcon size="input-sm" variant="default">
@@ -110,11 +77,18 @@ export default function OrganizationActions({
         </Menu.Target>
 
         <Menu.Dropdown>
-          <Menu.Item
-            onClick={openInspectModal}
-            leftSection={<IconCode size={14} />}>
-            Inspect
-          </Menu.Item>
+          <ModalWrapper
+            title={`Inspect ${organization.name}`}
+            component={
+              <InspectObject object={organization} name="organization" />
+            }
+            size="lg"
+            trigger={
+              <Menu.Item leftSection={<IconCode size={14} />}>
+                Inspect
+              </Menu.Item>
+            }
+          />
           <Protected endpoint="auditEntries" permission="read">
             <Menu.Item
               component={Link}
@@ -124,12 +98,33 @@ export default function OrganizationActions({
             </Menu.Item>
           </Protected>
           <Protected endpoint="organizations" permission="delete">
-            <Menu.Item
-              color="red"
-              onClick={openDeleteModel}
-              leftSection={<IconTrash size={14} />}>
-              Delete
-            </Menu.Item>
+            <ModalWrapper
+              title="Delete Organization"
+              trigger={
+                <Menu.Item color="red" leftSection={<IconTrash size={14} />}>
+                  Delete
+                </Menu.Item>
+              }
+              component={
+                <ConfirmModal
+                  negative
+                  onConfirm={async () => {
+                    await request({
+                      method: 'DELETE',
+                      path: `/1/organizations/${organization.id}`,
+                    });
+                    reload();
+                  }}
+                  confirmButton="Delete"
+                  content={
+                    <Text>
+                      Are you sure you want to delete{' '}
+                      <strong>{organization.name}</strong>?
+                    </Text>
+                  }
+                />
+              }
+            />
           </Protected>
         </Menu.Dropdown>
       </Menu>

@@ -6,8 +6,8 @@ import { ActionIcon, Code, Text, Stack, Group } from '@mantine/core';
 import { JumpLink } from 'components/Link';
 import { expandRef } from 'docs/utils';
 
-import ConfirmModal from 'components/ConfirmModal';
-import { modals } from '@mantine/modals';
+import ConfirmModal from 'components/modals/Confirm';
+import ModalWrapper from 'components/ModalWrapper';
 
 import { useDocs } from '../utils/context';
 
@@ -72,22 +72,6 @@ export default function RouteExample(props) {
     }
   }
 
-  function openDeleteExample() {
-    modals.open({
-      title: `Delete Example`,
-      children: (
-        <ConfirmModal
-          negative
-          confirmButton="Delete"
-          onConfirm={async () => {
-            unsetPath(path);
-          }}
-          content={<Text>Are you sure you want to delete this example?</Text>}
-        />
-      ),
-    });
-  }
-
   return (
     <div className={className}>
       <Stack>
@@ -120,14 +104,32 @@ export default function RouteExample(props) {
             </Group>
             <Group>
               {canEditDocs() && (
-                <ActionIcon
-                  variant="default"
-                  onClick={(evt) => {
-                    evt.stopPropagation();
-                    openDeleteExample();
-                  }}>
-                  <IconTrash size={14} />
-                </ActionIcon>
+                <ModalWrapper
+                  title="Delete Example"
+                  component={
+                    <ConfirmModal
+                      negative
+                      confirmButton="Delete"
+                      onConfirm={async () => {
+                        unsetPath(path);
+                      }}
+                      content={
+                        <Text>
+                          Are you sure you want to delete this example?
+                        </Text>
+                      }
+                    />
+                  }
+                  trigger={
+                    <ActionIcon
+                      variant="default"
+                      onClick={(evt) => {
+                        evt.stopPropagation();
+                      }}>
+                      <IconTrash size={14} />
+                    </ActionIcon>
+                  }
+                />
               )}
               {open ? <IconMinus size={14} /> : <IconPlus size={14} />}
             </Group>

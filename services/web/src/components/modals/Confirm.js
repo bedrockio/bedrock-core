@@ -1,8 +1,8 @@
 import { useState, useCallback } from 'react';
 import { Button, Group, Stack } from '@mantine/core';
-import PropTypes from 'prop-types';
-import ErrorMessage from './ErrorMessage';
-import { modals } from '@mantine/modals';
+import { useModalContext } from 'components/ModalWrapper';
+
+import ErrorMessage from '../ErrorMessage';
 
 /**
  * Confirm dialog component using Mantine Modal.
@@ -12,7 +12,6 @@ import { modals } from '@mantine/modals';
  * @param {string} [props.confirmButton] - Confirm button label.
  * @param {boolean} [props.negative] - If true, confirm button is red.
  * @param {function} [props.onConfirm] - Async function called on confirm.
- * @param {function} props.close - Function to close the modal.
  * @returns {JSX.Element}
  */
 export default function ConfirmModal(props) {
@@ -21,10 +20,9 @@ export default function ConfirmModal(props) {
     confirmButton = 'OK',
     negative = false,
     onConfirm = () => {},
-    onClose = () => {
-      modals.closeAll();
-    },
   } = props;
+
+  const { close } = useModalContext();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -34,44 +32,38 @@ export default function ConfirmModal(props) {
     setError(null);
     try {
       await onConfirm(() => {
-        onClose();
+        close();
       });
       if (!closed) {
         setLoading(false);
-        onClose();
+        close();
       }
     } catch (e) {
       setError(e);
       setLoading(false);
     }
-  }, [onConfirm, onClose]);
+  }, [onConfirm, close]);
 
   return (
-    <Stack>
-      <Stack gap="md">
-        {content}
-        {error && <ErrorMessage error={error} />}
-      </Stack>
+    <>
+      <Stack>
+        <Stack gap="md">
+          {content}
+          {error && <ErrorMessage error={error} />}
+        </Stack>
 
-      <Group justify="flex-end">
-        <Button variant="default" onClick={onClose} disabled={loading}>
-          Cancel
-        </Button>
-        <Button
-          color={negative && 'red'}
-          loading={loading}
-          onClick={handleConfirm}>
-          {confirmButton || 'Confirm'}
-        </Button>
-      </Group>
-    </Stack>
+        <Group justify="flex-end">
+          <Button variant="default" onClick={close} disabled={loading}>
+            Cancel
+          </Button>
+          <Button
+            color={negative && 'red'}
+            loading={loading}
+            onClick={handleConfirm}>
+            {confirmButton || 'Confirm'}
+          </Button>
+        </Group>
+      </Stack>
+    </>
   );
 }
-
-ConfirmModal.propTypes = {
-  content: PropTypes.node,
-  confirmButton: PropTypes.string,
-  negative: PropTypes.bool,
-  onConfirm: PropTypes.func.isRequired,
-  onClose: PropTypes.func,
-};

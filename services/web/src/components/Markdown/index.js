@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
 
 import { useClass } from 'helpers/bem';
@@ -20,8 +19,3 @@ export default function Markdown(props) {
 }
 
 export { components };
-
-Markdown.propTypes = {
-  source: PropTypes.string,
-  renderers: PropTypes.object,
-};

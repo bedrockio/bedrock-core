@@ -1,40 +1,15 @@
 import { ActionIcon, Menu, Text } from '@mantine/core';
-import { modals } from '@mantine/modals';
 
 import { IconDotsVertical, IconPencil, IconTrash } from '@tabler/icons-react';
 
 import { request } from 'utils/api';
-import ConfirmModal from 'components/ConfirmModal';
+import ConfirmModal from 'components/modals/Confirm';
 import { Link } from '@bedrockio/router';
+import ModalWrapper from 'components/ModalWrapper';
 
 export default function ApplicationActions({ application, reload }) {
-  function openDeleteModel() {
-    modals.open({
-      title: 'Delete Application',
-      children: (
-        <ConfirmModal
-          negative
-          onConfirm={async () => {
-            await request({
-              method: 'DELETE',
-              path: `/1/applications/${application.id}`,
-            });
-            reload();
-          }}
-          confirmButton="Delete"
-          content={
-            <Text>
-              Are you sure you want to delete{' '}
-              <strong>{application.name}</strong>?
-            </Text>
-          }
-        />
-      ),
-    });
-  }
-
   return (
-    <Menu shadow="md">
+    <Menu shadow="md" keepMounted>
       <Menu.Target>
         <ActionIcon variant="default">
           <IconDotsVertical size={20} />
@@ -48,12 +23,33 @@ export default function ApplicationActions({ application, reload }) {
           leftSection={<IconPencil size={14} />}>
           Edit
         </Menu.Item>
-        <Menu.Item
-          onClick={openDeleteModel}
-          color="red"
-          leftSection={<IconTrash size={14} />}>
-          Delete
-        </Menu.Item>
+        <ModalWrapper
+          title="Delete Application"
+          trigger={
+            <Menu.Item color="red" leftSection={<IconTrash size={14} />}>
+              Delete
+            </Menu.Item>
+          }
+          component={
+            <ConfirmModal
+              negative
+              onConfirm={async () => {
+                await request({
+                  method: 'DELETE',
+                  path: `/1/applications/${application.id}`,
+                });
+                reload();
+              }}
+              confirmButton="Delete"
+              content={
+                <Text>
+                  Are you sure you want to delete{' '}
+                  <strong>{application.name}</strong>?
+                </Text>
+              }
+            />
+          }
+        />
       </Menu.Dropdown>
     </Menu>
   );

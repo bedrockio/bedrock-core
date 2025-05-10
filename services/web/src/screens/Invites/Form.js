@@ -13,8 +13,10 @@ import {
 import { useForm } from '@mantine/form';
 import { emailRegexp } from 'utils/validate';
 import { useRequest } from 'utils/api';
+import { useModalContext } from 'components/ModalWrapper';
 
 export default function InviteForm({ onSuccess = () => {} }) {
+  const { close } = useModalContext();
   const [invalidEmails, setInvalidEmails] = useState([]);
 
   const form = useForm({
@@ -94,7 +96,7 @@ export default function InviteForm({ onSuccess = () => {} }) {
           emails: values.emails,
         },
       });
-
+      close();
       onSuccess(invite);
     } catch (e) {
       // Error handling is managed by useRequest
