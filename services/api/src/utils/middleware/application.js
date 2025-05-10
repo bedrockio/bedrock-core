@@ -1,58 +1,8 @@
 const { Application } = require('../../models');
-
-const { ApplicationRequest } = require('../../models');
 const { customAlphabet } = require('nanoid');
 
 const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 const nanoid = customAlphabet(alphabet, 16);
-
-
-
-function isSimpleValue(value) {
-  const type = typeof value;
-  return type === 'number' || type === 'string' || type === 'boolean' || value === null;
-}
-
-const protectedFields = /token|password|secret|hash|key|jwt|ping|payment|bank|iban/i;
-
-function redact(obj, prefix) {
-  const result = {};
-  for (let [key, value] of Object.entries(obj || {})) {
-    const keyMatched = key.match(protectedFields);
-    const simpleValue = isSimpleValue(value);
-
-    if (keyMatched && simpleValue) {
-      result[key] = '[redacted]';
-    } else if (keyMatched && Array.isArray(value) && typeof value[0] !== 'object') {
-      result[key] = value.map(() => '[redacted]');
-    } else if (simpleValue) {
-      result[key] = value;
-    } else if (Array.isArray(value)) {
-      result[key] = value.map((val) => {
-        return isSimpleValue(val) ? val : redact(val);
-      });
-    } else if (typeof value === 'object') {
-      Object.assign(result, redact(value, key));
-    }
-  }
-
-  if (prefix) {
-    return {
-      [prefix]: result,
-    };
-  }
-  return result;
-}
-
-function truncate(body) {
-  if (body.data?.length > 20 && Array.isArray(body.data)) {
-    return {
-      ...body,
-      data: [...body.data.concat().splice(0, 20), `[${body.data.length - 20} items has been truncated]`],
-    };
-  }
-  return body;
-}
 
 function applicationMiddleware({ ignorePaths = [] }) {
   return async (ctx, next) => {
@@ -79,7 +29,7 @@ function applicationMiddleware({ ignorePaths = [] }) {
       { apiKey },
       {
         $inc: { requestCount: 1 },
-      }
+      },
     );
 
     if (!application) {
@@ -91,19 +41,20 @@ function applicationMiddleware({ ignorePaths = [] }) {
 
     await next();
 
-    const { request, response } = ctx;
-
-    
     // This could be done as upsert
-    await Application.updateOne({
-      _id: application.id,
-    }, {
-      $set: {
-        lastUsedAt: new Date(),
+    await Application.updateOne(
+      {
+        _id: application.id,
       },
-    }, {
-      upsert: true,
-    });
+      {
+        $set: {
+          lastUsedAt: new Date(),
+        },
+      },
+      {
+        upsert: true,
+      },
+    );
   };
 }
 
