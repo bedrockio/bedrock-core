@@ -36,7 +36,7 @@ services:
       - api
 
   mongo:
-    image: mongo:7.0.8
+    image: mongo:8.0.9
     command: mongod --quiet --logpath /dev/null
     logging:
       driver: none
