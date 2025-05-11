@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-import request from "./request";
+import request from './request';
 
 export default function useRequest({
   triggerOnMount = false,
@@ -11,9 +11,9 @@ export default function useRequest({
 }) {
   const [response, setResponse] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = (useState < Error) | (null > null);
   const [success, setSuccess] = useState(false);
-  const controller = useRef<AbortController>(null);
+  const controller = useRef < AbortController > null;
 
   const requestWrapped = useCallback(
     (args) => {
@@ -48,30 +48,30 @@ export default function useRequest({
           await onError(err);
           setLoading(false);
 
-          if (err.name !== "AbortError") {
+          if (err.name !== 'AbortError') {
             setError(err);
           }
 
           return err;
         });
     },
-    [options.path, options.body, options.params]
+    [options.path, options.body, options.params],
   );
 
   const abort = useCallback(() => {
     if (controller.current) {
-      controller.current?.abort("");
+      controller.current?.abort('');
     }
   }, []);
 
   useEffect(() => {
-    if (!triggerOnMount) {
+    if (triggerOnMount) {
       requestWrapped(options);
     }
 
     return () => {
       if (controller.current) {
-        controller.current.abort("");
+        controller.current.abort('');
       }
     };
   }, [options.path, triggerOnMount, options.params, options.body]);
