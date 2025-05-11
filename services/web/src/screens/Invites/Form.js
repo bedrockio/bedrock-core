@@ -89,18 +89,14 @@ export default function InviteForm({ onSuccess = () => {} }) {
   const onSubmit = async (values) => {
     if (values.emails.length === 0) return;
 
-    try {
-      const invite = await request({
-        body: {
-          role: values.role,
-          emails: values.emails,
-        },
-      });
-      close();
-      onSuccess(invite);
-    } catch (e) {
-      // Error handling is managed by useRequest
-    }
+    const invite = await request({
+      body: {
+        role: values.role,
+        emails: values.emails,
+      },
+    });
+    close();
+    onSuccess(invite);
   };
 
   return (

@@ -19,7 +19,7 @@ import { userHasAccess } from 'utils/permissions';
 
 const SessionContext = React.createContext();
 
-function SessionProvider({ children, location, history }) {
+function SessionProvider({ children, location }) {
   const loadStoredData = () => {
     let data;
     try {

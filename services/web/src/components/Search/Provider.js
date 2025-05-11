@@ -143,6 +143,7 @@ function SearchProvider({
       const value = filters[key]?.id || filters[key];
       const mapping = filterMapping[key];
       if (!mapping) {
+        // eslint-disable-next-line no-console
         console.warn('missing filterMapping for', key);
         continue;
       }

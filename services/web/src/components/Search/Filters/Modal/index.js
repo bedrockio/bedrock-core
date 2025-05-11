@@ -9,7 +9,7 @@ import SearchContext from '../../Context';
 //import Overview from './Overview';
 import './modal.less';
 
-function FilterModal({ size = 'small', children }) {
+function FilterModal({ size = 'sm', children }) {
   const searchContext = useContext(SearchContext);
 
   const [opened, { open, close }] = useDisclosure(false);
@@ -67,6 +67,7 @@ function FilterModal({ size = 'small', children }) {
       )}
 
       <Modal
+        size={size}
         opened={opened}
         onClose={() => {
           setFilters(searchContext.filters);

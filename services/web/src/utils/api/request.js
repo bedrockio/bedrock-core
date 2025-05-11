@@ -5,7 +5,7 @@ import { trackRequest } from '../analytics';
 import { fetchWithTimeout } from '../fetch';
 import { ApiError, ApiParseError } from './errors';
 import { stringifyParams } from './params';
-import { getToken, setToken } from './token';
+import { getToken } from './token';
 
 export default async function request(options) {
   Object.assign(options, getIncludes(options));

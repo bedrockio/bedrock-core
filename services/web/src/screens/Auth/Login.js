@@ -12,7 +12,7 @@ import {
   Anchor,
 } from '@mantine/core';
 
-import { isEmail, useForm } from '@mantine/form';
+import { useForm } from '@mantine/form';
 
 import { Link, useNavigate } from '@bedrockio/router';
 

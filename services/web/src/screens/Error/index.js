@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Alert, Button, Center, Box, Stack } from '@mantine/core';
+import { Alert, Button, Center, Stack } from '@mantine/core';
 
 import { useSession } from 'stores/session';
 

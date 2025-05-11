@@ -50,16 +50,6 @@ const MIME_TYPES = {
 
 const MEDIA_TYPES = ['image', 'video', 'audio'];
 
-const ICONS = {
-  image: 'file-image',
-  video: 'file-video',
-  audio: 'file-audio',
-  text: 'file-lines',
-  pdf: 'file-pdf',
-  csv: 'file-excel',
-  zip: 'file-zipper',
-};
-
 export default class Uploads extends React.Component {
   constructor(props) {
     super(props);
@@ -69,6 +59,7 @@ export default class Uploads extends React.Component {
   }
   static defaultProps = {
     onError: (error) => {
+      // eslint-disable-next-line no-console
       console.error(error);
     },
     type: 'image',

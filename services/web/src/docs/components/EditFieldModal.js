@@ -1,19 +1,8 @@
-import { useContext, useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { get } from 'lodash';
-import {
-  Button,
-  Textarea,
-  TextInput,
-  Checkbox,
-  Group,
-  Tooltip,
-  Stack,
-} from '@mantine/core';
-import { IconMarkdown } from '@tabler/icons-react';
+import { Button, Textarea, TextInput, Checkbox, Stack } from '@mantine/core';
 
 import ErrorMessage from 'components/ErrorMessage';
-
-import { DocsContext } from '../utils/context';
 
 export default function EditFieldModal(props) {
   const [error, setError] = useState(null);

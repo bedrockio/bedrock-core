@@ -31,16 +31,12 @@ export default function ApplicationForm({ application, onSave }) {
   });
 
   const onSubmit = async (values) => {
-    try {
-      await request({
-        body: {
-          ...values,
-        },
-      });
-      onSave();
-    } catch (e) {
-      // Error handling is managed by useRequest
-    }
+    await request({
+      body: {
+        ...values,
+      },
+    });
+    onSave();
   };
 
   return (
