@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import request from "./request";
 
 export default function useRequest({
-  manual = true,
+  triggerOnMount = false,
   defaultData = [],
   onSuccess = () => {},
   onError = () => {},
@@ -65,7 +65,7 @@ export default function useRequest({
   }, []);
 
   useEffect(() => {
-    if (!manual) {
+    if (!triggerOnMount) {
       requestWrapped(options);
     }
 
