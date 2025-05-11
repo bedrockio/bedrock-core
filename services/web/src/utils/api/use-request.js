@@ -74,7 +74,7 @@ export default function useRequest({
         controller.current.abort("");
       }
     };
-  }, [options.path, manual, options.params, options.body]);
+  }, [options.path, triggerOnMount, options.params, options.body]);
 
   return {
     response,
