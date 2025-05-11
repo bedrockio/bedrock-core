@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from "react";
 
-import requestFn from './request';
+import request from "./request";
 
 export default function useRequest({
-  manual = false,
+  manual = true,
   defaultData = [],
   onSuccess = () => {},
   onError = () => {},
@@ -11,10 +11,11 @@ export default function useRequest({
 }) {
   const [response, setResponse] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const controller = useRef(null);
+  const [error, setError] = useState<Error | null>(null);
+  const [success, setSuccess] = useState(false);
+  const controller = useRef<AbortController>(null);
 
-  const request = useCallback(
+  const requestWrapped = useCallback(
     (args) => {
       const requestArgs = { ...options, ...args };
       if (!requestArgs.path) {
@@ -28,13 +29,18 @@ export default function useRequest({
       controller.current = new AbortController();
 
       setLoading(true);
+      setSuccess(false);
+      setError(null);
 
-      return requestFn({ signal: controller.current.signal, ...requestArgs })
+      return request({
+        signal: controller.current.signal,
+        ...requestArgs,
+      })
         .then(async (res) => {
-          console.log('Request completed:', res);
           await onSuccess(res);
           setResponse(res);
           setLoading(false);
+          setSuccess(true);
 
           return res;
         })
@@ -42,40 +48,41 @@ export default function useRequest({
           await onError(err);
           setLoading(false);
 
-          if (err.name !== 'AbortError') {
+          if (err.name !== "AbortError") {
             setError(err);
           }
 
           return err;
         });
     },
-    [options.path, options.body, options.params],
+    [options.path, options.body, options.params]
   );
 
   const abort = useCallback(() => {
     if (controller.current) {
-      controller.current?.abort('');
+      controller.current?.abort("");
     }
   }, []);
 
   useEffect(() => {
     if (!manual) {
-      request();
+      requestWrapped(options);
     }
 
     return () => {
       if (controller.current) {
-        controller.current.abort('');
+        controller.current.abort("");
       }
     };
-  }, [options.path, manual]);
+  }, [options.path, manual, options.params, options.body]);
 
   return {
     response,
     data: response?.data || defaultData,
     loading,
     error,
-    request,
+    request: requestWrapped,
     abort,
+    success,
   };
 }
