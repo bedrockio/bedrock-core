@@ -36,7 +36,6 @@ export default function SignupPassword() {
   const signupRequest = useRequest({
     method: 'POST',
     path: '/1/signup',
-    manual: true,
     onSuccess: ({ data }) => {
       const { token, challenge } = data;
       if (token) {

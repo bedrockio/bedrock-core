@@ -25,7 +25,6 @@ export default function ApplicationForm({ application, onSave }) {
   });
 
   const { loading, error, request } = useRequest({
-    manual: true,
     method: isUpdate ? 'PATCH' : 'POST',
     path: isUpdate ? `/1/applications/${application.id}` : '/1/applications',
   });

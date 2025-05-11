@@ -12,7 +12,6 @@ export default function Sessions() {
   const { user, updateUser } = useSession();
 
   const mfaRequest = useRequest({
-    manual: true,
     method: 'PATCH',
     path: '/1/auth/mfa-method',
     onSuccess: ({ data }) => {
@@ -42,7 +41,6 @@ export default function Sessions() {
   });
 
   const removeTotpRequest = useRequest({
-    manual: true,
     method: 'POST',
     path: '/1/auth/totp/disable',
     onSuccess: ({ data }) => {

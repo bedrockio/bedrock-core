@@ -65,7 +65,6 @@ function Profile() {
   const saveRequest = useRequest({
     method: 'PATCH',
     path: `/1/users/me`,
-    manual: true,
     onSuccess: ({ data }) => {
       updateUser(data);
       notifications.show({

@@ -91,7 +91,6 @@ export default function UserForm({ user, onSuccess = () => {} }) {
           method: 'POST',
           path: '/1/users',
         }),
-    manual: true,
     onSuccess: ({ data }) => {
       showNotification({
         title: isUpdate

@@ -12,7 +12,6 @@ export default function InviteActions({ invite, reload }) {
   const resentRequest = useRequest({
     method: 'POST',
     path: `/1/invites/${invite.id}/resend`,
-    manual: true,
     onSuccess: () => {
       showNotification({
         title: 'Invite re-sent',

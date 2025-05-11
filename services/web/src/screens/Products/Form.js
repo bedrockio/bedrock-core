@@ -58,7 +58,6 @@ export default function ProductForm({ product, shop, onSuccess = () => {} }) {
             shop: shop?.id || form.values.shop?.id,
           },
         }),
-    manual: true,
     onSuccess: ({ data }) => {
       showNotification({
         title: isUpdate

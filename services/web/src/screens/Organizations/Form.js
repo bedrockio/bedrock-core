@@ -34,7 +34,6 @@ function OrganizationForm({ organization, onSuccess = () => {} }) {
           method: 'POST',
           path: '/1/organizations',
         }),
-    manual: true,
     onSuccess: ({ data }) => {
       showNotification({
         title: isUpdate

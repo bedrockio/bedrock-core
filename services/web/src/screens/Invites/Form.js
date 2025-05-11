@@ -32,7 +32,6 @@ export default function InviteForm({ onSuccess = () => {} }) {
   });
 
   const { loading, error, request } = useRequest({
-    manual: true,
     method: 'POST',
     path: '/1/invites',
   });

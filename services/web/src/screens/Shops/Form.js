@@ -55,7 +55,6 @@ export default function ShopForm({ shop, onSuccess = () => {} }) {
           method: 'POST',
           path: '/1/shops',
         }),
-    manual: true,
     onSuccess: ({ data }) => {
       showNotification({
         title: isUpdate

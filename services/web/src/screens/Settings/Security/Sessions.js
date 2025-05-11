@@ -25,7 +25,6 @@ export default function Sessions() {
   const { jti } = parseToken(getToken());
 
   const logoutRequest = useRequest({
-    manual: true,
     method: 'POST',
     path: '/1/auth/logout',
     onSuccess: () => {
