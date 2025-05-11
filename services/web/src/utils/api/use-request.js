@@ -13,7 +13,7 @@ export default function useRequest({
   const [loading, setLoading] = useState(false);
   const [error, setError] = (useState < Error) | (null > null);
   const [success, setSuccess] = useState(false);
-  const controller = useRef < AbortController > null;
+  const controller = useRef(null);
 
   const requestWrapped = useCallback(
     (args) => {
