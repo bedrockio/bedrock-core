@@ -55,7 +55,7 @@ export default function useRequest({
           return err;
         });
     },
-    [options.path, options.body, options.params],
+    [options.path, options.params, options.body],
   );
 
   const abort = useCallback(() => {
@@ -74,7 +74,7 @@ export default function useRequest({
         controller.current.abort('');
       }
     };
-  }, [options.path, triggerOnMount, options.params, options.body]);
+  }, [options.path]);
 
   return {
     response,
