@@ -49,7 +49,6 @@ router
         await AuditEntry.append('Signed Up with Google', {
           ctx,
           actor: user,
-          category: 'auth',
         });
 
         result = 'signup';
@@ -64,7 +63,7 @@ router
           result,
         },
       };
-    }
+    },
   )
   .use(authenticate())
   .post('/disable', async (ctx) => {

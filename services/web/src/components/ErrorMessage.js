@@ -3,7 +3,7 @@
 // debugging.
 
 import React from 'react';
-import { Message } from 'semantic';
+import { Alert } from '@mantine/core';
 
 import { ApiError } from 'utils/api';
 import { CustomError } from 'utils/error';
@@ -35,15 +35,15 @@ export default class ErrorMessage extends React.Component {
   }
 
   render() {
-    const { error } = this.props;
+    const { error, ...props } = this.props;
     if (!error) {
       return null;
     }
 
     return (
-      <Message error size="small">
-        <p>{error.message}</p>
-      </Message>
+      <Alert color="error" size="small" {...props}>
+        {error.message || 'An error occurred'}
+      </Alert>
     );
   }
 }

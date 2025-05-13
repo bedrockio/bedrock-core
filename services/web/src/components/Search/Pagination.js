@@ -1,29 +1,31 @@
-import React from 'react';
-
-import Pagination from 'components/Pagination';
+import { useContext } from 'react';
+import { Pagination } from '@mantine/core';
 
 import SearchContext from './Context';
 
-export default class SearchPagination extends React.Component {
-  static contextType = SearchContext;
+export default function SearchPagination() {
+  const { loading, error, page, meta, onPageChange } =
+    useContext(SearchContext);
 
-  onPageChange = (evt, props) => {
+  const handlePageChange = (newPage) => {
     window.scrollTo(0, 0);
-    this.context.onPageChange(evt, props);
+    onPageChange(null, { activePage: newPage });
   };
 
-  render() {
-    const { loading, error, page, meta } = this.context;
-    if (loading || error || meta.total <= meta.limit) {
-      return null;
-    }
-    return (
-      <Pagination
-        page={page}
-        limit={meta.limit}
-        total={meta.total}
-        onPageChange={this.onPageChange}
-      />
-    );
+  if (!meta || error || meta.total <= meta.limit) {
+    return null;
   }
+
+  const totalPages = Math.ceil(meta.total / meta.limit);
+
+  return (
+    <Pagination
+      boundaries={2}
+      siblings={2}
+      disabled={loading}
+      value={page}
+      onChange={handlePageChange}
+      total={totalPages}
+    />
+  );
 }

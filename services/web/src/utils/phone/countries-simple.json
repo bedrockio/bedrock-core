@@ -4,10 +4,6 @@
     "prefix": "+1",
     "format": "(###) ###-####"
   },
-  "es": {
-    "name": "Spain",
-    "prefix": "+34"
-  },
   "fr": {
     "name": "France",
     "prefix": "+33",
@@ -22,10 +18,6 @@
     "name": "Japan",
     "prefix": "+81",
     "format": "### #### ####"
-  },
-  "mx": {
-    "name": "Mexico",
-    "prefix": "+52"
   },
   "us": {
     "name": "United States",

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { pickBy } from 'lodash';
 import { withRouter } from '@bedrockio/router';
@@ -13,7 +13,7 @@ function convertFilters(filters) {
 
 function parseParamValue(type, value) {
   if (type === 'date') {
-    return new Date(value);
+    return new Date(Number(value));
   } else if (type === 'number') {
     return Number(value);
   } else if (type === 'boolean') {
@@ -31,10 +31,11 @@ function parseParamByType(param, value) {
 
   if (param.range) {
     value = value.split('/');
-    return {
+    const x = {
       gte: value[0] ? parseParamValue(type, value[0]) : undefined,
       lte: value[1] ? parseParamValue(type, value[1]) : undefined,
     };
+    return x;
   }
 
   return parseParamValue(type, value);
@@ -42,7 +43,7 @@ function parseParamByType(param, value) {
 
 function convertParamValue(type, value) {
   if (type === 'date') {
-    return new Date(value).toISOString();
+    return new Date(value).valueOf();
   } else if (type === 'number') {
     return Number(value);
   } else if (type === 'boolean') {
@@ -61,17 +62,6 @@ function getFiltersFromSearchParams(urlParams, filterMapping = {}) {
   return filters;
 }
 
-// withRouter and ref doesnt work well together, we need todo forward ref manually
-const withRouterForwardRef = (Component) => {
-  const WithRouter = withRouter(({ forwardedRef, ...props }) => (
-    <Component ref={forwardedRef} {...props} />
-  ));
-
-  return React.forwardRef((props, ref) => (
-    <WithRouter {...props} forwardedRef={ref} />
-  ));
-};
-
 function getStateFromQueryString(search, filterMapping) {
   const urlParams = new URLSearchParams(search);
   const page = urlParams.get('page') ? Number(urlParams.get('page')) : 1;
@@ -83,67 +73,78 @@ function getStateFromQueryString(search, filterMapping) {
   };
 }
 
-class SearchProvider extends React.Component {
-  constructor(props) {
-    super(props);
+/**
+ * SearchProvider component to manage search state and context.
+ * @param {Object} props - Component props.
+ */
+function SearchProvider({
+  children,
+  onDataNeeded,
+  limit = 20,
+  //page = 1,
+  sort = { order: 'desc', field: 'createdAt' },
+  filters = {},
+  filterMapping,
+  onPageChange,
+  history,
+  location,
+}) {
+  const [state, setState] = useState({
+    loading: true,
+    items: [],
+    error: null,
+    filters,
+    ...getStateFromQueryString(location.search, filterMapping),
+    filterMapping,
+    limit,
+    sort,
+  });
 
-    this.state = {
-      loading: true,
-      items: [],
-      error: null,
-      ...getStateFromQueryString(props.location.search, props.filterMapping),
-      filterMapping: props.filterMapping,
-      limit: props.limit,
-      sort: props.sort,
-    };
-  }
+  function fetchData() {
+    setState((prevState) => ({ ...prevState, loading: true, error: null }));
 
-  componentDidMount() {
-    this.fetch();
-  }
-
-  componentDidUpdate(lastProps, lastState) {
-    // checking if props has been changed
-    const changedProps = this.getChanged(this.props, lastProps) || {};
-
-    // check if the search query has been changed
-    if (lastProps.location.search != this.props.location.search) {
-      const { page, filters } = getStateFromQueryString(
-        this.props.location.search,
-        this.props.filterMapping,
-      );
-      changedProps.page = page;
-      changedProps.filters = filters;
-    }
-
-    if (Object.keys(changedProps).length) {
-      this.setState({
-        ...changedProps,
+    onDataNeeded({
+      limit: state.limit,
+      sort: state.sort,
+      skip: (state.page - 1) * state.limit,
+      ...state.filters,
+    })
+      .then(({ data, meta }) => {
+        setState((prevState) => ({
+          ...prevState,
+          loading: false,
+          items: data,
+          meta: { ...prevState.meta, ...meta },
+        }));
+      })
+      .catch((error) => {
+        setState((prevState) => ({ ...prevState, loading: false, error }));
       });
-      // checking if the state has been changed
-    } else if (this.getChanged(this.state, lastState)) {
-      this.fetch();
-    }
   }
 
-  updateUrlSearchParams() {
-    const { filters, filterMapping = {} } = this.state;
+  useEffect(() => {
+    fetchData();
+    updateUrlSearchParams();
+  }, [state.filters, state.page, state.sort]);
+
+  function updateUrlSearchParams() {
+    const { filters, filterMapping = {} } = state;
     const queryObject = {};
 
-    // if there are no filters, dont update the url
-    // this will prevent provider from losing state due to the url changing
     if (!Object.keys(filterMapping).length) {
       return;
     }
 
-    if (this.state.page) {
-      queryObject.page = this.state.page;
+    if (state.page) {
+      queryObject.page = state.page;
     }
 
     for (const key of Object.keys(filters)) {
       const value = filters[key]?.id || filters[key];
       const mapping = filterMapping[key];
       if (!mapping) {
+        // eslint-disable-next-line no-console
+        console.warn('missing filterMapping for', key);
         continue;
       }
       if (mapping.multiple) {
@@ -162,164 +163,88 @@ class SearchProvider extends React.Component {
       }
     }
 
-    // only update the url if the search params have changed
     const params = new URLSearchParams(queryObject);
 
     if (!params.size) {
       return;
     }
 
-    this.props.history.push('?' + params);
+    history.push('?' + params);
   }
 
-  getChanged(current, last) {
-    let changed = null;
-    for (let key of ['page', 'sort', 'limit', 'filters', 'filterMapping']) {
-      // JSON.stringify just to avoid rerender problems around the filterMapping
-      if (JSON.stringify(last[key]) !== JSON.stringify(current[key])) {
-        changed = {
-          ...changed,
-          [key]: current[key],
-        };
-      }
-    }
-    return changed;
+  function setFilters(newFilters) {
+    const convertedFilters = convertFilters(newFilters);
+    setState((prevState) => ({
+      ...prevState,
+      page: 1,
+      filters: convertedFilters,
+    }));
   }
 
-  // Events
+  function onFilterChange({ name, value }) {
+    setFilters({
+      ...state.filters,
+      [name]: value,
+    });
+  }
 
-  onPageChange = (evt, data) => {
+  /**
+   * Handles page change events.
+   * @param {Object} evt - Event object.
+   * @param {Object} data - Data containing the active page.
+   */
+  function onPageChangeFn(evt, data) {
     const { activePage: page } = data;
-    if (this.props.onPageChange) {
-      this.props.onPageChange(evt, page);
+    if (typeof onPageChange === 'function') {
+      onPageChange(evt, page);
     } else {
-      this.setState(
-        {
-          page,
-        },
-        () => this.updateUrlSearchParams(),
-      );
+      setState((prevState) => ({
+        ...prevState,
+        page,
+      }));
     }
-  };
+  }
 
-  // Actions
-
-  fetch = async () => {
-    this.setState({
-      error: null,
-      loading: true,
-    });
-
-    try {
-      const { page, limit, sort, filters } = this.state;
-      const { data, meta } = await this.props.onDataNeeded({
-        limit,
-        sort,
-        skip: (page - 1) * limit,
-        ...filters,
-      });
-      this.setState({
-        loading: false,
-        items: data,
-        meta: Object.assign({}, this.state.meta, meta),
-      });
-    } catch (error) {
-      this.setState({
-        loading: false,
-        error,
-      });
-    }
-  };
-
-  reload = () => {
-    // Performed on a setTimeout
-    // to allow state to flush.
-    setTimeout(this.fetch);
-  };
-
-  updateItems = (items) => {
-    this.setState({
-      items,
-    });
-  };
-
-  replaceItem = (item, fn) => {
-    let { items } = this.state;
-    const index = items.findIndex((i) => {
-      return fn ? fn(i) : i === item;
-    });
-    if (index !== -1) {
-      items = [...items.slice(0, index), item, ...items.slice(index + 1)];
-      this.setState({
-        items,
-      });
-    }
-  };
-
-  getSorted = (field) => {
-    const { sort } = this.state;
-    if (field === sort.field) {
-      return sort.order === 'asc' ? 'ascending' : 'descending';
-    }
-  };
-
-  setSort = (field) => {
-    const { sort } = this.state;
+  function setSort(field) {
+    const { sort } = state;
     let order;
     if (field === sort.field && sort.order === 'asc') {
       order = 'desc';
     } else {
       order = 'asc';
     }
-    this.setState({
+    setState((prevState) => ({
+      ...prevState,
       sort: {
         field,
         order,
       },
-    });
-  };
-
-  setFilters = (filters) => {
-    const newFilters = convertFilters(filters);
-
-    this.setState(
-      {
-        page: 1, // set page to 1 when filters change
-        filters: newFilters,
-      },
-      () => this.updateUrlSearchParams(),
-    );
-  };
-
-  onFilterChange = ({ name, value }) => {
-    this.setFilters({
-      ...this.state.filters,
-      [name]: value,
-    });
-  };
-
-  render() {
-    const context = {
-      ...this.state,
-      reload: this.reload,
-      update: this.update,
-      setSort: this.setSort,
-      getSorted: this.getSorted,
-      setFilters: this.setFilters,
-      replaceItem: this.replaceItem,
-      updateItems: this.updateItems,
-      onPageChange: this.onPageChange,
-      onFilterChange: this.onFilterChange,
-      onDataNeeded: this.props.onDataNeeded,
-    };
-    return (
-      <SearchContext.Provider value={context}>
-        {typeof this.props.children === 'function'
-          ? this.props.children(context)
-          : this.props.children}
-      </SearchContext.Provider>
-    );
+    }));
   }
+
+  function getSorted(field) {
+    const { sort } = state;
+    if (field === sort.field) {
+      return sort.order === 'asc' ? 'ascending' : 'descending';
+    }
+  }
+
+  const context = {
+    ...state,
+    reload: fetchData,
+    setFilters,
+    onFilterChange,
+    onPageChange: onPageChangeFn, // Added onPageChange to the context
+    onDataNeeded,
+    getSorted,
+    setSort,
+  };
+
+  return (
+    <SearchContext.Provider value={context}>
+      {typeof children === 'function' ? children(context) : children}
+    </SearchContext.Provider>
+  );
 }
 
 SearchProvider.propTypes = {
@@ -331,17 +256,11 @@ SearchProvider.propTypes = {
     order: PropTypes.string,
     field: PropTypes.string,
   }),
+  filters: PropTypes.object,
+  filterMapping: PropTypes.object,
   onPageChange: PropTypes.func,
+  history: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
 };
 
-SearchProvider.defaultProps = {
-  page: 1,
-  limit: 20,
-  sort: {
-    order: 'desc',
-    field: 'createdAt',
-  },
-  filters: {},
-};
-
-export default withRouterForwardRef(SearchProvider);
+export default withRouter(SearchProvider);

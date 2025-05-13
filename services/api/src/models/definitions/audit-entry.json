@@ -15,8 +15,9 @@
       "type": "String",
       "required": true
     },
-    "objectId": {
-      "type": "String"
+    "object": {
+      "type": "String",
+      "refPath": "objectType"
     },
     "objectType": {
       "type": "String"
@@ -33,9 +34,8 @@
     "ownerType": {
       "type": "String"
     },
-    "category": {
-      "type": "String",
-      "default": "default"
+    "attributes": {
+      "type": "Object"
     },
     "actor": {
       "type": "ObjectId",
@@ -47,7 +47,7 @@
     "fields": [
       "actor",
       "ownerId",
-      "objectId"
+      "object"
     ]
   }
 }

@@ -1,19 +1,20 @@
-import React, { useState } from 'react';
-import { Icon } from 'semantic';
+import { useState } from 'react';
 
 import { useClass } from 'helpers/bem';
 
-import Code from 'components/Code';
+import { ActionIcon, Code, Text, Stack, Group } from '@mantine/core';
 import { JumpLink } from 'components/Link';
 import { expandRef } from 'docs/utils';
-import Confirm from 'components/Confirm';
-import Layout from 'components/Layout';
+
+import ConfirmModal from 'components/modals/Confirm';
+import ModalWrapper from 'components/ModalWrapper';
 
 import { useDocs } from '../utils/context';
 
 import EditableField from './EditableField';
 
 import './route-example.less';
+import { IconMinus, IconPlus, IconTrash } from '@tabler/icons-react';
 
 export default function RouteExample(props) {
   const { path, status, schema, requestPath, requestBody, responseBody } =
@@ -31,79 +32,6 @@ export default function RouteExample(props) {
 
   function onToggleClick() {
     setOpen(!open);
-  }
-
-  function onDeleteConfirm() {
-    unsetPath(path);
-  }
-
-  function render() {
-    return (
-      <div className={className}>
-        <Layout
-          horizontal
-          center
-          spread
-          className={getElementClass('title', isGood() ? 'good' : 'bad')}
-          onClick={onToggleClick}>
-          <Layout.Group>{status}</Layout.Group>
-          <Layout.Group grow>
-            <EditableField
-              type="summary"
-              path={path}
-              onClick={(evt) => {
-                if (mode === 'edit') {
-                  evt.stopPropagation();
-                }
-              }}
-              className={getElementClass('summary')}
-              trigger={
-                <Icon
-                  size="small"
-                  name="trash"
-                  link
-                  onClick={(evt) => {
-                    evt.stopPropagation();
-                  }}
-                />
-              }
-            />
-          </Layout.Group>
-          <Layout.Group>
-            {canEditDocs() && (
-              <React.Fragment>
-                <Confirm
-                  negative
-                  size="small"
-                  confirmButton="Delete"
-                  header="Delete this example?"
-                  trigger={
-                    <Icon
-                      size="small"
-                      name="trash"
-                      link
-                      onClick={(evt) => {
-                        evt.stopPropagation();
-                      }}
-                    />
-                  }
-                  onConfirm={onDeleteConfirm}
-                />
-              </React.Fragment>
-            )}
-            <Icon size="small" name={open ? 'minus' : 'plus'} link />
-          </Layout.Group>
-        </Layout>
-        {open && (
-          <div className={getElementClass('content')}>
-            {renderRequestPath(requestPath)}
-            {renderSchema(schema)}
-            {renderBody('Request Body:', requestBody)}
-            {renderBody('Response Body:', responseBody)}
-          </div>
-        )}
-      </div>
-    );
   }
 
   function renderRequestPath(path) {
@@ -144,5 +72,78 @@ export default function RouteExample(props) {
     }
   }
 
-  return render();
+  return (
+    <div className={className}>
+      <Stack>
+        <div
+          className={getElementClass('title', isGood() ? 'good' : 'bad')}
+          onClick={onToggleClick}>
+          <Group justify="space-between">
+            <Group grow>
+              <Text
+                style={{
+                  margin: 0,
+                }}>
+                {status}
+              </Text>
+              <EditableField
+                type="summary"
+                path={path}
+                onClick={(evt) => {
+                  if (mode === 'edit') {
+                    evt.stopPropagation();
+                  }
+                }}
+                className={getElementClass('summary')}
+                trigger={
+                  <ActionIcon variant="default">
+                    <IconTrash size={14} />
+                  </ActionIcon>
+                }
+              />
+            </Group>
+            <Group>
+              {canEditDocs() && (
+                <ModalWrapper
+                  title="Delete Example"
+                  component={
+                    <ConfirmModal
+                      negative
+                      confirmButton="Delete"
+                      onConfirm={async () => {
+                        unsetPath(path);
+                      }}
+                      content={
+                        <Text>
+                          Are you sure you want to delete this example?
+                        </Text>
+                      }
+                    />
+                  }
+                  trigger={
+                    <ActionIcon
+                      variant="default"
+                      onClick={(evt) => {
+                        evt.stopPropagation();
+                      }}>
+                      <IconTrash size={14} />
+                    </ActionIcon>
+                  }
+                />
+              )}
+              {open ? <IconMinus size={14} /> : <IconPlus size={14} />}
+            </Group>
+          </Group>
+        </div>
+        {open && (
+          <div className={getElementClass('content')}>
+            {renderRequestPath(requestPath)}
+            {renderSchema(schema)}
+            {renderBody('Request Body:', requestBody)}
+            {renderBody('Response Body:', responseBody)}
+          </div>
+        )}
+      </Stack>
+    </div>
+  );
 }

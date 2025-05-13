@@ -1,20 +1,16 @@
 import { useNavigate } from '@bedrockio/router';
-
 import { useSession } from 'stores/session';
-import { useClass } from 'helpers/bem';
-
 import { signInWithApple } from 'utils/auth/apple';
+import { ActionIcon, Button } from '@mantine/core';
 
-import logo from 'assets/apple-logo-white.svg';
+import { IconBrandAppleFilled } from '@tabler/icons-react';
 
-import './apple.less';
-
-export default function AppleSignInButton(props) {
-  const { type } = props;
-  const { onAuthStart, onAuthStop, onError } = props;
-
-  const { className, getElementClass } = useClass(`apple-${type}-button`);
-
+export default function AppleSignInButton({
+  onAuthStart,
+  onAuthStop,
+  onError,
+  type,
+}) {
   const navigate = useNavigate();
   const { authenticate } = useSession();
 
@@ -35,12 +31,25 @@ export default function AppleSignInButton(props) {
     }
   }
 
+  if (type === 'login') {
+    return (
+      <ActionIcon
+        variant="default"
+        radius="xl"
+        size={42}
+        title="Use Apple to sign in."
+        onClick={onClick}>
+        <IconBrandAppleFilled />
+      </ActionIcon>
+    );
+  }
+
   return (
-    <div className={className} onClick={onClick}>
-      <img src={logo} className={getElementClass('logo')} />
-      {type === 'signup' && (
-        <div className={getElementClass('text')}>Sign up with Apple</div>
-      )}
-    </div>
+    <Button
+      onClick={onClick}
+      leftSection={<IconBrandAppleFilled size={16} />}
+      variant="default">
+      Sign in with Apple
+    </Button>
   );
 }

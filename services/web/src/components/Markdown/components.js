@@ -1,6 +1,6 @@
 import { kebabCase, deburr } from 'lodash';
-
 import Code from 'components/Code';
+
 import { ContentLink } from 'components/Link';
 
 export default {

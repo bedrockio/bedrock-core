@@ -1,6 +1,7 @@
 import React from 'react';
 import { get } from 'lodash';
 import { Link } from '@bedrockio/router';
+import { Anchor } from '@mantine/core';
 
 import { getRoutePath } from 'docs/utils';
 
@@ -42,9 +43,17 @@ export default class Route extends React.Component {
 
   renderAuth() {
     if (this.authRequired()) {
-      return <Link to="/docs/getting-started#authentication">Required</Link>;
+      return (
+        <Anchor component={Link} to="/docs/getting-started#authentication">
+          Required
+        </Anchor>
+      );
     } else if (this.authOptional()) {
-      return <Link to="/docs/getting-started#authentication">Optional</Link>;
+      return (
+        <Anchor component={Link} to="/docs/getting-started#authentication">
+          Optional
+        </Anchor>
+      );
     } else {
       return 'None';
     }
