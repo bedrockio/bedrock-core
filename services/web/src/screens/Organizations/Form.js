@@ -18,7 +18,6 @@ function OrganizationForm({ organization, onSuccess = () => {} }) {
   const isUpdate = !!organization;
 
   const form = useForm({
-    mode: 'controlled',
     initialValues: organization || {
       name: '',
     },
