@@ -24,7 +24,9 @@ export default class FilterModal extends React.Component {
 
   componentDidMount() {
     this.setState({
-      filters: this.context.filters,
+      filters: {
+        ...this.context.filters,
+      },
     });
   }
 
@@ -36,14 +38,18 @@ export default class FilterModal extends React.Component {
   onModalOpen = () => {
     this.setState({
       open: true,
-      filters: this.context.filters,
+      filters: {
+        ...this.context.filters,
+      },
     });
   };
 
   onModalClose = () => {
     this.setState({
       open: false,
-      filters: this.prevFilters,
+      filters: {
+        ...this.prevFilters,
+      },
     });
   };
 

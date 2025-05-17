@@ -14,7 +14,9 @@ export default class DateRangeFilter extends React.Component {
   onChange = (evt, { name: part, value }) => {
     const { name } = this.props;
 
-    const range = this.context.filters[name] || {};
+    const range = {
+      ...this.context.filters[name],
+    };
     if (name === 'gte' && value === null) {
       delete range['lte'];
     }
