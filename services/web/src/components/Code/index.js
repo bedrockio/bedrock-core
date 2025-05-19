@@ -1,30 +1,50 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { ActionIcon, Paper } from '@mantine/core';
 
-import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
-import theme from 'react-syntax-highlighter/dist/esm/styles/prism/prism';
-import bash from 'react-syntax-highlighter/dist/esm/languages/prism/bash';
-import json from 'react-syntax-highlighter/dist/esm/languages/prism/json';
-import swift from 'react-syntax-highlighter/dist/esm/languages/prism/swift';
+import { Highlight, themes } from 'prism-react-renderer';
+
+function CodeBlock({ code, language }) {
+  if (!code) return null;
+
+  return (
+    <div
+      style={{
+        margin: 0,
+        fontSize: '1em',
+      }}>
+      <Highlight code={code.trim()} language={language} theme={themes.oneLight}>
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre
+            className={className}
+            style={{
+              ...style,
+              lineHeight: 1,
+              padding: '1em 0.5em',
+              margin: 0,
+            }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+    </div>
+  );
+}
 
 import { useClass } from 'helpers/bem';
 
 import { copyToClipboard } from 'utils/copy';
 
-theme['pre[class*="language-"]'].lineHeight = '1';
-theme['pre[class*="language-"]'].margin = '0';
-theme['code[class*="language-"]'].fontSize = '14px';
-theme['code[class*="language-"]'].lineHeight = '1';
-
-SyntaxHighlighter.registerLanguage('bash', bash);
-SyntaxHighlighter.registerLanguage('json', json);
-SyntaxHighlighter.registerLanguage('swift', swift);
-
 import './code.less';
 import { IconCheck, IconCopy } from '@tabler/icons-react';
 
-export default function Code({ scroll, action, ...rest }) {
+export default function Code({ code, language, scroll, action, ...rest }) {
   const [copied, setCopied] = useState();
 
   const { className, getElementClass } = useClass(
@@ -41,9 +61,16 @@ export default function Code({ scroll, action, ...rest }) {
     setCopied(false);
   }
 
+  const lang = useMemo(() => {
+    if (language === 'bash') {
+      return 'python';
+    }
+    return language || 'json';
+  }, [language]);
+
   return (
     <Paper className={className}>
-      <SyntaxHighlighter style={theme} {...rest} />
+      <CodeBlock code={code || rest.children} language={lang} />
       <div className={getElementClass('action')}>
         {action || (
           <div

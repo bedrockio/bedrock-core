@@ -75,6 +75,7 @@ export default function ShopsActions({ shop, reload, displayMode = 'show' }) {
           <ModalWrapper
             title="Inspect Shop"
             component={<InspectObject object={shop} name="shop" />}
+            size="lg"
             trigger={
               <Menu.Item leftSection={<IconCode size={14} />}>
                 Inspect
