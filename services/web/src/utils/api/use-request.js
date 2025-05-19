@@ -11,7 +11,7 @@ export default function useRequest({
 }) {
   const [response, setResponse] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = (useState < Error) | (null > null);
+  const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const controller = useRef(null);
 
