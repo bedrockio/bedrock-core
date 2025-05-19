@@ -2,6 +2,7 @@ const Router = require('@koa/router');
 const yd = require('@bedrockio/yada');
 const { validateBody } = require('../../utils/middleware/validate');
 const { authenticate } = require('../../utils/middleware/authenticate');
+const { expandRoles } = require('../../utils/permissions');
 const { removeAuthToken } = require('../../utils/auth/tokens');
 const { AuditEntry } = require('../../models');
 
@@ -32,7 +33,7 @@ router
       });
 
       ctx.status = 204;
-    }
+    },
   )
   .patch(
     '/mfa-method',
@@ -53,9 +54,9 @@ router
       await authUser.save();
 
       ctx.body = {
-        data: authUser,
+        data: expandRoles(authUser, ctx),
       };
-    }
+    },
   );
 
 module.exports = router;
