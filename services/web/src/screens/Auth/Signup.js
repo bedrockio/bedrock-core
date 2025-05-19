@@ -53,7 +53,6 @@ export default function SignupPassword() {
   });
 
   const form = useForm({
-    mode: 'controlled',
     initialValues: {
       firstName: '',
       lastName: '',

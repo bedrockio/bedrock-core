@@ -68,7 +68,6 @@ export default function UserForm({ user, onSuccess = () => {} }) {
   const { hasAccess, organization } = useSession();
 
   const form = useForm({
-    mode: 'controlled',
     initialValues: parseUser(user) || {
       firstName: '',
       lastName: '',

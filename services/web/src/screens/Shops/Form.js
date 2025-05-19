@@ -30,7 +30,6 @@ export default function ShopForm({ shop, onSuccess = () => {} }) {
   const isUpdate = !!shop;
 
   const form = useForm({
-    mode: 'controlled',
     initialValues: shop || {
       name: '',
       description: '',
