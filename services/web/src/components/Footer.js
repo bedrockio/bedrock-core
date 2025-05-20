@@ -9,9 +9,9 @@ export default function Footer() {
     <footer
       style={{
         position: 'absolute',
-        right: 0,
+        right: '10px',
       }}>
-      <Group pb="xs" pr="md" gap="md" justify="flex-end" align="center">
+      <Group p="md" gap="md" justify="flex-end" align="center">
         <Group gap="xs">
           <Text fw="bold" size="xs" color="dimmed">
             Theme
