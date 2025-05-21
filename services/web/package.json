@@ -12,7 +12,7 @@
     "static": "node ./serve/static",
     "lint": "eslint",
     "test": "vitest",
-    "test:e2e": "playwright test",
+    "test:e2e": "playwright test --ui",
     "generate": "cd ../../generator && yarn install && yarn generate",
     "postinstall": "cd serve && yarn install"
   },
