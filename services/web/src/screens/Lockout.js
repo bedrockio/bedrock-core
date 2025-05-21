@@ -3,6 +3,7 @@ import { useNavigate, Link } from '@bedrockio/router';
 import { Button, Paper, Text, Group, Center, Stack } from '@mantine/core';
 
 import { useSession } from 'stores/session';
+import Meta from 'components/Meta';
 
 function Lockout() {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ function Lockout() {
 
   return (
     <Center style={{ height: '100vh' }}>
+      <Meta title="Lockout" />
       <Paper>
         <Stack gap="md">
           <Text>This site cannot be accessed.</Text>

@@ -92,7 +92,8 @@ export default function SignupPassword() {
               signupRequest.request({
                 body: {
                   ...formValues,
-                  authChannel: AUTH_CHANNEL,
+                  type: AUTH_TYPE,
+                  channel: AUTH_CHANNEL,
                 },
               });
             })}>
@@ -145,8 +146,7 @@ export default function SignupPassword() {
 
               <Button
                 fullWidth
-                loading={loading}
-                disabled={loading}
+                loading={loading || signupRequest.loading}
                 variant="filled"
                 type="submit">
                 Signup

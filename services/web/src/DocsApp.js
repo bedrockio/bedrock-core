@@ -3,7 +3,7 @@ import { Routes, Route } from '@bedrockio/router';
 import ApiDocs from 'docs/screens/ApiDocs';
 import { DocsProvider } from 'docs/utils/context';
 
-function App() {
+export default function DocsApp() {
   return (
     <DocsProvider>
       <Routes>
@@ -12,5 +12,3 @@ function App() {
     </DocsProvider>
   );
 }
-
-export default App;
