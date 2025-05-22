@@ -27,12 +27,11 @@ import { hasAccess } from 'utils/user';
 
 const App = React.lazy(() => import('./App.js'));
 const AuthApp = React.lazy(() => import('./AuthApp.js'));
-const DocsApp = React.lazy(() => import('./Docs.js'));
+const DocsApp = React.lazy(() => import('./DocsApp.js'));
 const OnboardApp = React.lazy(() => import('./OnboardApp.js'));
 
 function AppSwitch() {
   const { user, ready } = useSession();
-
   if (hasAccess(user) && ready) {
     return <App />;
   } else {

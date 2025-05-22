@@ -3,6 +3,7 @@ import { useNavigate, Link } from '@bedrockio/router';
 import { Button, Paper, Text, Group, Center, Stack } from '@mantine/core';
 
 import { useSession } from 'stores/session';
+import Meta from 'components/Meta';
 
 function Lockout() {
   const navigate = useNavigate();
@@ -16,10 +17,14 @@ function Lockout() {
 
   return (
     <Center style={{ height: '100vh' }}>
+      <Meta title="Lockout" />
       <Paper>
         <Stack gap="md">
-          <Text>This site cannot be accessed.</Text>
-
+          <Text>
+            Your account is pending approval. Please wait for an administrator
+            to assign the necessary permissions/roles before you can access the
+            dashboard.
+          </Text>
           <Group position="right">
             <Button component={Link} to="/logout">
               Logout

@@ -17,7 +17,7 @@ import Logout from 'screens/Auth/Logout';
 
 import AcceptInvite from 'screens/Auth/AcceptInvite';
 
-const App = () => {
+export default function App() {
   return (
     <DashboardLayout>
       <Routes>
@@ -36,6 +36,4 @@ const App = () => {
       </Routes>
     </DashboardLayout>
   );
-};
-
-export default App;
+}
