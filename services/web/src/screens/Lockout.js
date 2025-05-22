@@ -20,8 +20,11 @@ function Lockout() {
       <Meta title="Lockout" />
       <Paper>
         <Stack gap="md">
-          <Text>This site cannot be accessed.</Text>
-
+          <Text>
+            Your account is pending approval. Please wait for an administrator
+            to assign the necessary permissions/roles before you can access the
+            dashboard.
+          </Text>
           <Group position="right">
             <Button component={Link} to="/logout">
               Logout
