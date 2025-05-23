@@ -21,7 +21,7 @@ jobs:
       - name: Build web app
         run: yarn build
       - name: Start web app
-        run: yarn static
+        run: yarn static &
       - name: Install Playwright Browsers
         run: yarn playwright install --with-deps chrome
       - name: Run Playwright tests
