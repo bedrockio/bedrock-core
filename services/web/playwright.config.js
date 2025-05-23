@@ -32,7 +32,7 @@ export default defineConfig({
       reuseExistingServer: !process.env.CI,
     },
     {
-      command: 'cd ../api && yarn run start:e2e',
+      command: 'cd ../api && source .env.e2e && node src/index.js',
       url: 'http://localhost:2300/1/status',
       name: 'API Server',
       timeout: 120 * 1000,
