@@ -11,7 +11,6 @@ jobs:
     services:
       mongo:
         image: mongo:8.0.9
-        command: ["mongod", "--quiet", "--logpath", "/dev/null"]
         ports:
           - 27017:27017
         options: >-
