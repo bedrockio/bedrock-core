@@ -7,7 +7,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "start:e2e": "source .env.e2e && node --watch src/index.js",
+    "start:e2e": ". .env.e2e && node --watch src/index.js",
     "start": "node --watch src/index.js",
     "debug": "MONGO_DEBUG=true yarn start",
     "staging": "source .env.staging && node --watch src/index.js",

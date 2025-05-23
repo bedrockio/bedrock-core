@@ -49,6 +49,7 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: yarn playwright install --with-deps chromium
       - name: Run Playwright tests
+        shell: bash
         run: yarn playwright test --debug
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
