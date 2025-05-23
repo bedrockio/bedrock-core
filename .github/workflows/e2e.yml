@@ -45,7 +45,7 @@ jobs:
       - name: Install Playwright Browsers
         if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: yarn playwright install --with-deps chromium
-        working-directory: services/api
+        working-directory: services/web
       - name: Run Playwright tests
         run: cd services/web && yarn playwright test --debug
       - uses: actions/upload-artifact@v4
