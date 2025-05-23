@@ -31,5 +31,12 @@ export default defineConfig({
       timeout: 120 * 1000,
       reuseExistingServer: !process.env.CI,
     },
+    {
+      command: 'cd ../api && yarn run start:e2e',
+      url: 'http://localhost:2300/1/status',
+      name: 'API Server',
+      timeout: 120 * 1000,
+      reuseExistingServer: !process.env.CI,
+    },
   ],
 });
