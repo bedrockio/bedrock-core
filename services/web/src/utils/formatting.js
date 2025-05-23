@@ -1,5 +1,3 @@
-import { Label } from 'semantic-ui-react';
-
 export { formatPhone } from './phone';
 
 export function round(value, decimals) {
@@ -16,18 +14,6 @@ export function truncate(text, limit = 100) {
 export function formatNumber(value, locale) {
   const formatter = new Intl.NumberFormat(locale);
   return formatter.format(value);
-}
-
-export function formatOption(types, key) {
-  const status = types[key];
-  const props = {
-    content: status.name,
-    icon: status.icon,
-  };
-  if (status.color) {
-    props.color = status.color;
-  }
-  return <Label {...props} />;
 }
 
 export function formatAddress(address) {

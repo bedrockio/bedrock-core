@@ -7,21 +7,20 @@ import NotFound from 'screens/NotFound';
 import { request } from 'utils/api';
 
 import Overview from './Overview';
-
-// --- Generator: detail-imports
 import Products from './Products';
-// --- Generator: end
+import EditShop from './Edit';
 
 export default function ShopDetail() {
   const Loader = usePageLoader(async (params) => {
     const { data } = await request({
       method: 'GET',
-      path: `/1/shops/${params.id}`,
+      path: `/1/shops/${params.id}?include=categories`,
     });
     return {
       shop: data,
     };
   });
+
   return (
     <Loader
       notFound={
@@ -32,9 +31,8 @@ export default function ShopDetail() {
       }>
       <Routes>
         <Route exact path="/shops/:id" render={Overview} />
-        {/* --- Generator: routes */}
+        <Route exact path="/shops/:id/edit" render={EditShop} />
         <Route exact path="/shops/:id/products" render={Products} />
-        {/* --- Generator: end */}
         <Route render={NotFound} />
       </Routes>
     </Loader>

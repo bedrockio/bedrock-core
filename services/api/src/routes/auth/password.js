@@ -44,7 +44,6 @@ router
         await AuditEntry.append('Password Incorrect', {
           ctx,
           actor: user,
-          category: 'security',
         });
         ctx.throw(401, error);
       }

@@ -1,3 +1,5 @@
+import { IconHome2, IconWorld } from '@tabler/icons-react';
+
 const VALID_SCOPES = ['global', 'organization'];
 
 // Note: this function is derived from the API and meant
@@ -8,7 +10,8 @@ export function userHasAccess(user, options) {
     return false;
   }
 
-  const { scope = 'global', permission = 'read', endpoint, scopeRef } = options;
+  const { endpoint, permission, scope, scopeRef } = options;
+
   if (!endpoint) {
     throw new Error('Expected endpoint (e.g. users)');
   } else if (!permission) {
@@ -71,7 +74,7 @@ export function formatRoles(roles) {
       labels.push({
         key: `global-${role.role}`,
         content: role.roleDefinition.name,
-        icon: 'globe',
+        icon: IconWorld,
       });
     } else {
       const key = `${role.role}-${role.scope}-${role.scopeRef}`;
@@ -80,7 +83,7 @@ export function formatRoles(roles) {
         labels.push({
           key: key,
           content: role.roleDefinition.name,
-          icon: 'building',
+          icon: IconHome2,
         });
       }
     }

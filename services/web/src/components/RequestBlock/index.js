@@ -1,8 +1,6 @@
-import React from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Dropdown, Header } from 'semantic';
-
-import Layout from 'components/Layout';
+import { Group, Title, Select } from '@mantine/core';
 import Code from 'components/Code';
 
 import { API_URL } from 'utils/env';
@@ -20,55 +18,44 @@ const TEMPLATES = {
 const OPTIONS = [
   {
     value: 'curl',
-    text: 'cURL',
+    label: 'cURL',
     language: 'bash',
   },
   {
     value: 'fetch',
-    text: 'Fetch',
+    label: 'Fetch',
     language: 'js',
   },
-
   {
     value: 'swift',
-    text: 'Swift',
+    label: 'Swift',
     language: 'swift',
   },
 ];
 
-export default class RequestBlock extends React.Component {
-  static propTypes = {
-    height: PropTypes.string,
-    apiKey: PropTypes.string,
-    authToken: PropTypes.string,
-    baseUrl: PropTypes.string,
-    header: PropTypes.bool,
-    template: PropTypes.string,
-    request: PropTypes.shape({
-      path: PropTypes.string.isRequired,
-      method: PropTypes.oneOf(['POST', 'GET', 'PATCH', 'DELETE', 'PUT'])
-        .isRequired,
-      body: PropTypes.object,
-      headers: PropTypes.object,
-    }).isRequired,
-  };
+/**
+ * Component that displays API request examples in different languages.
+ *
+ * @param {Object} props - Component props
+ * @returns {JSX.Element} RequestBlock component
+ */
+function RequestBlock(props) {
+  const {
+    header = false,
+    selector = true,
+    template = 'curl',
+    baseUrl = API_URL,
+    authToken,
+    apiKey,
+    request,
+  } = props;
 
-  static defaultProps = {
-    baseUrl: API_URL,
-    template: 'curl',
-    header: false,
-    selector: true,
-  };
+  const [current, setCurrent] = useState(template);
 
-  state = {
-    current: this.props.template,
-  };
-
-  getDefaultHeaders() {
-    const { authToken, apiKey, request } = this.props;
+  function getDefaultHeaders() {
     const headers = {
       'Api-Key': `${apiKey || '<apiKey>'}`,
-      ...this.props.headers,
+      ...props.headers,
     };
     if (authToken) {
       headers['Authorization'] = `Bearer ${authToken}`;
@@ -80,56 +67,63 @@ export default class RequestBlock extends React.Component {
     return headers;
   }
 
-  getData() {
-    const { baseUrl, request } = this.props;
+  function getData() {
     const { path, ...rest } = request;
     return {
       ...rest,
       url: baseUrl ? `${baseUrl}${path}` : path,
-      headers: this.getDefaultHeaders(),
+      headers: getDefaultHeaders(),
     };
   }
 
-  render() {
-    const { header, selector } = this.props;
-    const { current } = this.state;
-    const option = OPTIONS.find((c) => c.value === this.state.current);
-    const { method, path } = this.props.request;
+  const option = OPTIONS.find((c) => c.value === current);
+  const { method, path } = request;
+  const templateFunction = TEMPLATES[current];
 
-    const template = TEMPLATES[current];
+  console.log(getData());
+  console.log(templateFunction(getData()));
 
-    return (
-      <React.Fragment>
-        {(header || selector) && (
-          <Layout horizontal spread center>
-            <Layout.Group>
-              {header && (
-                <Header style={{ margin: 0 }}>
-                  {method} {path}
-                </Header>
-              )}
-            </Layout.Group>
-            <Layout.Group>
-              {selector && (
-                <React.Fragment>
-                  <Dropdown
-                    onChange={(e, { value }) => {
-                      this.setState({ current: value });
-                    }}
-                    selection
-                    options={OPTIONS}
-                    value={this.state.current}
-                    style={{
-                      marginBottom: '0.5em',
-                    }}
-                  />
-                </React.Fragment>
-              )}
-            </Layout.Group>
-          </Layout>
-        )}
-        <Code language={option.language}>{template(this.getData())}</Code>
-      </React.Fragment>
-    );
-  }
+  return (
+    <>
+      {(header || selector) && (
+        <Group justify="space-between" align="center" mb="xs">
+          {header && (
+            <Title order={4} m={0}>
+              {method} {path}
+            </Title>
+          )}
+          {selector && (
+            <Select
+              onChange={setCurrent}
+              data={OPTIONS}
+              value={current}
+              w={150}
+            />
+          )}
+        </Group>
+      )}
+      <Code language={option.language}>{templateFunction(getData())}</Code>
+    </>
+  );
 }
+
+RequestBlock.propTypes = {
+  height: PropTypes.string,
+  apiKey: PropTypes.string,
+  authToken: PropTypes.string,
+  baseUrl: PropTypes.string,
+  header: PropTypes.bool,
+  template: PropTypes.string,
+  selector: PropTypes.bool,
+  headers: PropTypes.object,
+  request: PropTypes.shape({
+    path: PropTypes.string.isRequired,
+    method: PropTypes.oneOf(['POST', 'GET', 'PATCH', 'DELETE', 'PUT'])
+      .isRequired,
+    body: PropTypes.object,
+    headers: PropTypes.object,
+    file: PropTypes.object,
+  }).isRequired,
+};
+
+export default RequestBlock;

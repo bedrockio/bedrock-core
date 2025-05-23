@@ -44,7 +44,7 @@ schema.statics.getObjectFields = function (options) {
     const ownerId = get(object, ownerPath);
 
     let result = {
-      objectId: object.id,
+      object: object.id,
       objectType: object.constructor.modelName,
       ownerId,
       ownerType,
@@ -78,7 +78,7 @@ schema.statics.getObjectFields = function (options) {
 };
 
 schema.statics.append = function (activity, options) {
-  const { ctx, category } = options;
+  const { ctx } = options;
 
   const objectFields = this.getObjectFields(options);
 
@@ -92,10 +92,12 @@ schema.statics.append = function (activity, options) {
     ...objectFields,
     actor: options.actor?.id || options.user?.id || ctx.state.authUser?.id,
     activity,
-    category,
   });
 };
 
-schema.index({ category: 1, objectType: 1, createdAt: 1, activity: 1, routeNormalizedPath: 1 });
+schema.index({ activity: 1, createdAt: 1 });
+schema.index({ actor: 1, createdAt: 1 });
+schema.index({ ownerId: 1, createdAt: 1 });
+schema.index({ object: 1, createdAt: 1 });
 
 module.exports = mongoose.models.AuditEntry || mongoose.model('AuditEntry', schema);

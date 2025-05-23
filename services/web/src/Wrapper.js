@@ -1,27 +1,25 @@
+import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
+import '@mantine/dates/styles.css';
+
+// part of integration with mantine
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
+
 import React, { Suspense } from 'react';
 
+import { MantineProvider } from '@mantine/core';
 import { BrowserRouter, Routes, Route } from '@bedrockio/router';
 import { HelmetProvider } from 'react-helmet-async';
+import { Notifications } from '@mantine/notifications';
 
-// Icons
-import { Icon } from 'semantic';
+import { theme } from './theme';
 
 import { SessionProvider, useSession } from 'stores/session';
-import { ThemeProvider } from 'stores/theme';
 
 import SessionSwitch from 'helpers/SessionSwitch';
 import 'utils/sentry';
-
-import solidIcons from 'semantic/assets/icons/solid.svg';
-import brandIcons from 'semantic/assets/icons/brands.svg';
-import regularIcons from 'semantic/assets/icons/regular.svg';
-
-// this is to handle some issue rich editor
-window.global = window;
-
-Icon.useSet(solidIcons);
-Icon.useSet(brandIcons, 'brands');
-Icon.useSet(regularIcons, 'regular');
 
 import LoadingScreen from 'screens/Loading';
 
@@ -29,12 +27,12 @@ import { hasAccess } from 'utils/user';
 
 const App = React.lazy(() => import('./App.js'));
 const AuthApp = React.lazy(() => import('./AuthApp.js'));
-const DocsApp = React.lazy(() => import('./Docs.js'));
+const DocsApp = React.lazy(() => import('./DocsApp.js'));
 const OnboardApp = React.lazy(() => import('./OnboardApp.js'));
 
 function AppSwitch() {
-  const { user } = useSession();
-  if (hasAccess(user)) {
+  const { user, ready } = useSession();
+  if (hasAccess(user) && ready) {
     return <App />;
   } else {
     return <AuthApp />;
@@ -43,10 +41,12 @@ function AppSwitch() {
 
 export default function Wrapper() {
   return (
-    <BrowserRouter>
-      <ThemeProvider>
-        <HelmetProvider>
-          <SessionProvider>
+    <SessionProvider>
+      <MantineProvider theme={theme}>
+        <Notifications />
+
+        <BrowserRouter>
+          <HelmetProvider>
             <SessionSwitch>
               <Suspense fallback={<LoadingScreen />}>
                 <Routes>
@@ -56,9 +56,9 @@ export default function Wrapper() {
                 </Routes>
               </Suspense>
             </SessionSwitch>
-          </SessionProvider>
-        </HelmetProvider>
-      </ThemeProvider>
-    </BrowserRouter>
+          </HelmetProvider>
+        </BrowserRouter>
+      </MantineProvider>
+    </SessionProvider>
   );
 }

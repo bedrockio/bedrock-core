@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useLocation, useParams } from '@bedrockio/router';
-import { Loader } from 'semantic';
+import { Loader } from '@mantine/core';
 
 import ErrorMessage from 'components/ErrorMessage';
 

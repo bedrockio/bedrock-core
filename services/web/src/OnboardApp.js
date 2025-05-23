@@ -4,7 +4,7 @@ import BasicLayout from 'layouts/Basic';
 
 import Onboard from 'screens/Onboard';
 
-function App() {
+export default function OnboardApp() {
   return (
     <BasicLayout>
       <Routes>
@@ -14,5 +14,3 @@ function App() {
     </BasicLayout>
   );
 }
-
-export default App;

@@ -1,11 +1,20 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Redirect, Link, useNavigate, useLocation } from '@bedrockio/router';
-import { Dimmer, Form, Grid, Loader, Message, Segment } from 'semantic';
+import Logo from 'components/Logo';
+
+import {
+  Paper,
+  PinInput,
+  Stack,
+  Group,
+  Alert,
+  Title,
+  Anchor,
+  Box,
+} from '@mantine/core';
 
 import { useSession } from 'stores/session';
 
-import LogoTitle from 'components/LogoTitle';
-import CodeField from 'components/form-fields/Code';
 import ErrorMessage from 'components/ErrorMessage';
 import Meta from 'components/Meta';
 
@@ -68,39 +77,6 @@ export default function ConfirmCode() {
     return code && (email || phone);
   }
 
-  function onCodeChange(evt, { value }) {
-    setCode(value);
-  }
-
-  function onCodeComplete() {
-    setLoading(true);
-    login();
-  }
-
-  function render() {
-    return (
-      <React.Fragment>
-        <Meta title="Confirm Code" />
-        <LogoTitle title="Confirm Code" />
-        <Segment.Group>
-          {loading && (
-            <Dimmer inverted active>
-              <Loader />
-            </Dimmer>
-          )}
-          <Segment padded>{renderMessage()}</Segment>
-          <Segment secondary>
-            <Grid>
-              <Grid.Column floated="left" width={12}>
-                <Link to="/login">Back</Link>
-              </Grid.Column>
-            </Grid>
-          </Segment>
-        </Segment.Group>
-      </React.Fragment>
-    );
-  }
-
   function renderMessage() {
     if (state.type === 'link') {
       return renderLink();
@@ -111,10 +87,10 @@ export default function ConfirmCode() {
 
   function renderLink() {
     return (
-      <React.Fragment>
-        <Message success>{renderLinkMessage()}</Message>
+      <Stack>
+        <Alert success>{renderLinkMessage()}</Alert>
         <ErrorMessage error={error} />
-      </React.Fragment>
+      </Stack>
     );
   }
 
@@ -129,21 +105,28 @@ export default function ConfirmCode() {
 
   function renderCode() {
     return (
-      <React.Fragment>
-        <Message success>{renderCodeMessage()}</Message>
-        <Form>
+      <Stack>
+        <Alert success>{renderCodeMessage()}</Alert>
+        <form>
           {!state.code && (
-            <CodeField
+            <PinInput
+              length={6}
+              //type="numeric"
+              size="lg"
+              value={code}
+              onChange={(value) => {
+                setCode(value);
+              }}
+              onComplete={() => {
+                setLoading(true);
+                login();
+              }}
               disabled={loading}
-              value={code || ''}
-              onChange={onCodeChange}
-              onComplete={onCodeComplete}
-              error={error}
             />
           )}
-        </Form>
+        </form>
         <ErrorMessage error={error} />
-      </React.Fragment>
+      </Stack>
     );
   }
 
@@ -162,5 +145,26 @@ export default function ConfirmCode() {
     return <Redirect to="/login" />;
   }
 
-  return render();
+  return (
+    <Group justify="center" align="center" pt={{ base: 30, sm: 120 }}>
+      <Meta title="Confirm Code" />
+      <Stack w={{ base: '95vw', sm: 380 }} align="center">
+        <Logo maw={200} title="Login" />
+
+        <Paper mt="md" w="100%" p="lg" radius="md" withBorder>
+          <Stack gap="md">
+            <Title order={3}>Confirm Code</Title>
+            <Paper>
+              {renderMessage()}
+              <Box mt="md">
+                <Anchor component={Link} to="/login">
+                  Back
+                </Anchor>
+              </Box>
+            </Paper>
+          </Stack>
+        </Paper>
+      </Stack>
+    </Group>
+  );
 }

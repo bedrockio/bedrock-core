@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Message } from 'semantic';
+import { Alert } from '@mantine/core';
 import { get } from 'lodash';
 
 import {
@@ -91,7 +91,7 @@ export default class RouteParams extends React.Component {
   };
 
   compareByRank(aName, bName) {
-    const { sortFields } = this.props;
+    const { sortFields = [] } = this.props;
     const aIndex = sortFields.indexOf(aName);
     const bIndex = sortFields.indexOf(bName);
     if (aIndex === bIndex) {
@@ -115,7 +115,7 @@ export default class RouteParams extends React.Component {
     const queryParams = this.getQueryParams();
 
     if (!routeEntry) {
-      return <Message error>No OpenApi entry found.</Message>;
+      return <Alert error>No OpenApi entry found.</Alert>;
     } else if (requestBody) {
       const { path, mime } = requestBody;
       return (
@@ -158,8 +158,4 @@ export default class RouteParams extends React.Component {
 RouteParams.propTypes = {
   route: PropTypes.string.isRequired,
   sortFields: PropTypes.arrayOf(PropTypes.string),
-};
-
-RouteParams.defaultProps = {
-  sortFields: [],
 };

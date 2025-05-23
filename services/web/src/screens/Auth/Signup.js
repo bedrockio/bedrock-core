@@ -1,18 +1,29 @@
-import React, { useState } from 'react';
-import { Form, Segment, Grid } from 'semantic';
+import { useState } from 'react';
 import { Link, useNavigate } from '@bedrockio/router';
+
+import {
+  Button,
+  Paper,
+  PasswordInput,
+  Stack,
+  TextInput,
+  Text,
+  Group,
+  Anchor,
+  Title,
+} from '@mantine/core';
+
+import { useForm, isEmail } from '@mantine/form';
 
 import { useSession } from 'stores/session';
 
-import LogoTitle from 'components/LogoTitle';
+import Logo from 'components/Logo';
 import ErrorMessage from 'components/ErrorMessage';
-import EmailField from 'components/form-fields/Email';
 import PhoneField from 'components/form-fields/Phone';
-import OptionalPassword from 'components/Auth/OptionalPassword';
 import Federated from 'components/Auth/Federated';
 import Meta from 'components/Meta';
 
-import { request } from 'utils/api';
+import { useRequest } from 'utils/api';
 import { AUTH_TYPE, AUTH_CHANNEL } from 'utils/env';
 
 export default function SignupPassword() {
@@ -21,7 +32,38 @@ export default function SignupPassword() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [body, setBody] = useState({});
+
+  const signupRequest = useRequest({
+    method: 'POST',
+    path: '/1/signup',
+    onSuccess: ({ data }) => {
+      const { token, challenge } = data;
+      if (token) {
+        authenticate(token).then(() => {
+          navigate('/onboard');
+        });
+      } else if (challenge) {
+        navigate('/confirm-code', challenge);
+      }
+    },
+    onError: (err) => {
+      setError(err);
+      setLoading(false);
+    },
+  });
+
+  const form = useForm({
+    initialValues: {
+      firstName: '',
+      lastName: '',
+      phone: '',
+      password: '',
+      email: '',
+    },
+    validate: {
+      email: isEmail('Invalid email'),
+    },
+  });
 
   function onAuthStart() {
     setLoading(true);
@@ -36,112 +78,97 @@ export default function SignupPassword() {
     setLoading(false);
   }
 
-  function setField(evt, { name, value }) {
-    setBody({
-      ...body,
-      [name]: value,
-    });
-  }
-
-  async function onSubmit() {
-    try {
-      setError(null);
-      setLoading(true);
-
-      const { data } = await request({
-        method: 'POST',
-        path: '/1/signup',
-        body: {
-          ...body,
-          type: AUTH_TYPE,
-          channel: AUTH_CHANNEL,
-        },
-      });
-
-      const { token, challenge } = data;
-
-      if (token) {
-        await authenticate(data.token);
-        navigate('/onboard');
-      } else if (challenge) {
-        navigate('/confirm-code', challenge);
-      }
-    } catch (error) {
-      setError(error);
-      setLoading(false);
-    }
-  }
-
-  function render() {
-    return (
-      <React.Fragment>
+  return (
+    <Group justify="center" align="center" pt={{ base: 30, sm: 120 }}>
+      <Stack w={{ base: '100%', sm: 480 }} align="center">
         <Meta title="Signup" />
-        <LogoTitle title="Create your account" />
-        <Form size="large" loading={loading} onSubmit={onSubmit}>
-          <Segment.Group>
-            <Segment padded>
-              {error?.type !== 'validation' && <ErrorMessage error={error} />}
-              <Form.Input
-                name="firstName"
-                value={body.firstName || ''}
+        <Logo maw={200} title="Login" />
+        <Paper mt="md" w="100%" p="lg" radius="md" withBorder>
+          <Title order={3} mb="md">
+            Signup
+          </Title>
+          <form
+            onSubmit={form.onSubmit((formValues) => {
+              signupRequest.request({
+                body: {
+                  ...formValues,
+                  type: AUTH_TYPE,
+                  channel: AUTH_CHANNEL,
+                },
+              });
+            })}>
+            <Stack gap="xs">
+              {signupRequest.error?.type !== 'validation' && (
+                <ErrorMessage error={error} />
+              )}
+
+              <TextInput
+                label="First Name"
                 placeholder="First Name"
                 autoComplete="given-name"
-                onChange={setField}
                 error={error?.hasField?.('firstName')}
+                {...form.getInputProps('firstName')}
               />
-              <Form.Input
+              <TextInput
+                label="Last Name"
                 name="lastName"
-                value={body.lastName || ''}
                 placeholder="Last Name"
                 autoComplete="family-name"
-                onChange={setField}
                 error={error?.hasField?.('lastName')}
+                {...form.getInputProps('lastName')}
               />
-              <EmailField
+              <TextInput
+                label="Email"
+                type="email"
+                placeholder="Email"
+                autoComplete="email"
                 name="email"
-                value={body.email || ''}
-                onChange={setField}
                 error={error}
+                {...form.getInputProps('email')}
               />
+
               <PhoneField
-                name="phone"
-                value={body.phone || ''}
-                onChange={setField}
+                label="Phone"
+                placeholder="Phone"
                 error={error}
+                {...form.getInputProps('phone')}
               />
-              <OptionalPassword
-                name="password"
-                value={body.password || ''}
-                onChange={setField}
-                error={error}
-              />
-              <Form.Button
-                fluid
-                primary
-                size="large"
-                content="Signup"
-                loading={loading}
-                disabled={loading}
-              />
+
+              {AUTH_TYPE === 'password' && (
+                <PasswordInput
+                  required
+                  label="Password"
+                  type="password"
+                  placeholder="Password"
+                  {...form.getInputProps('password')}
+                />
+              )}
+
+              <Button
+                fullWidth
+                loading={loading || signupRequest.loading}
+                variant="filled"
+                type="submit">
+                Signup
+              </Button>
+
+              <Text size="xs" c="dimmed">
+                Already have an account?{' '}
+                <Anchor component={Link} to="/login">
+                  Login
+                </Anchor>
+              </Text>
+
               <Federated
                 type="signup"
                 onAuthStop={onAuthStop}
                 onAuthStart={onAuthStart}
                 onError={onAuthError}
               />
-            </Segment>
-            <Segment secondary>
-              <Grid>
-                <Grid.Column floated="left" width={12}>
-                  Already have an account? <Link to="/login">Login</Link>
-                </Grid.Column>
-              </Grid>
-            </Segment>
-          </Segment.Group>
-        </Form>
-      </React.Fragment>
-    );
-  }
-
-  return render();
+            </Stack>
+          </form>
+        </Paper>
+      </Stack>
+    </Group>
+  );
 }
