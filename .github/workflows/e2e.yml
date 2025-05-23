@@ -16,13 +16,24 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
+          cache: "yarn"
+          cache-dependency-path: ./services/web/yarn.lock
       - name: Install dependencies
         run: yarn install
       - name: Build web app
         run: yarn build
       - name: Start web app
         run: yarn static &
+      - name: Cache Playwright Browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
       - name: Install Playwright Browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: yarn playwright install --with-deps chrome
       - name: Run Playwright tests
         run: yarn playwright test
