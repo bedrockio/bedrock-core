@@ -11,6 +11,7 @@ jobs:
     services:
       mongo:
         image: mongo:8.0.9
+        command: ["mongod", "--quiet", "--logpath", "/dev/null"]
         ports:
           - 27017:27017
         options: >-
@@ -18,7 +19,6 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
-        args: --quiet --logpath /dev/null
 
     steps:
       - uses: actions/checkout@v4
