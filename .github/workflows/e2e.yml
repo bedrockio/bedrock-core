@@ -47,7 +47,7 @@ jobs:
         run: yarn playwright install --with-deps chromium
         working-directory: services/web
       - name: Run Playwright tests
-        run: cd services/web && yarn playwright test --debug
+        run: cd services/web && yarn playwright test --headed=false
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
