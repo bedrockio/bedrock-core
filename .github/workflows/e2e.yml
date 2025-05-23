@@ -19,9 +19,6 @@ jobs:
           --health-timeout=5s
           --health-retries=5
 
-    defaults:
-      run:
-        working-directory: ./services/web
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -32,11 +29,11 @@ jobs:
             ./services/web/yarn.lock
             ./services/api/yarn.lock
       - name: Install API dependencies
-        run: cd ../api && yarn install
+        run: yarn install
+        working-directory: services/web
       - name: Install web dependencies
         run: yarn install
-      - name: Test
-        run: ls
+        working-directory: services/api
       - name: Cache Playwright Browsers
         uses: actions/cache@v4
         id: playwright-cache
@@ -49,8 +46,7 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: yarn playwright install --with-deps chromium
       - name: Run Playwright tests
-        shell: bash
-        run: yarn playwright test --debug
+        run: cd services/web && yarn playwright test --debug
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
