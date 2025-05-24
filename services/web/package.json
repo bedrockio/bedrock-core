@@ -11,9 +11,8 @@
     "start": "vite",
     "static": "node ./serve/static",
     "lint": "eslint",
-    "test": "vitest",
+    "test": "vitest src",
     "test:e2e": "playwright test",
-    "generate": "cd ../../generator && yarn install && yarn generate",
     "postinstall": "cd serve && yarn install"
   },
   "dependencies": {
