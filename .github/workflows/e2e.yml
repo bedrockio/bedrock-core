@@ -47,3 +47,6 @@ jobs:
       - name: Run Playwright tests
         run: yarn playwright test
         working-directory: services/web
+      - name: Run tests
+        run: yarn test
+        working-directory: services/web
