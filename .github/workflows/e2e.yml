@@ -15,27 +15,15 @@ jobs:
           - 27017:27017
         env:
           MONGODB_LOG_VERBOSITY: "0"
-        options: >-
-          --health-cmd="mongosh --eval 'db.runCommand({ ping: 1 })'"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
           cache: "yarn"
-          cache-dependency-path: |
-            ./services/web/yarn.lock
-            ./services/api/yarn.lock
-      - name: Install API dependencies
+          cache-dependency-path: yarn.lock
+      - name: Install API + Web dependencies
         run: yarn install
-        working-directory: services/api
-      - name: Install web dependencies
-        run: yarn install
-        working-directory: services/web
       - name: Cache Playwright Browsers
         uses: actions/cache@v4
         id: playwright-cache
