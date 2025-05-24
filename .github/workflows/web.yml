@@ -52,3 +52,4 @@ jobs:
         working-directory: services/web
       - name: Run Lint
         run: yarn lint .
+        working-directory: services/web
