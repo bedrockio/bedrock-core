@@ -1,0 +1,7 @@
+{
+  "private": true,
+  "workspaces": [
+    "services/api",
+    "services/web"
+  ]
+}
