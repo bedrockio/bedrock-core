@@ -20,8 +20,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
-          cache: "yarn"
-          cache-dependency-path: yarn.lock
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            services/api/node_modules
+            services/web/node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
       - name: Install API + Web dependencies
         run: yarn install
       - name: Cache Playwright Browsers
