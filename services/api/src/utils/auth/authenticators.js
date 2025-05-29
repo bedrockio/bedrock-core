@@ -25,7 +25,7 @@ function addAuthenticator(user, attributes) {
 function assertAuthenticator(user, type) {
   const authenticator = getAuthenticator(user, type);
   if (!authenticator) {
-    throw Error(`No ${type} set.`);
+    throw new Error(`No ${type} set.`);
   }
   return authenticator;
 }

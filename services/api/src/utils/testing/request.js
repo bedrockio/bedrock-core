@@ -66,7 +66,7 @@ module.exports = async function handleRequest(httpMethod, url, bodyOrQuery = {},
         .get(`${url}?${qs.stringify({ ...bodyOrQuery })}`)
         .set(headers);
     } else {
-      throw Error(`${httpMethod} is not supported`);
+      throw new Error(`${httpMethod} is not supported`);
     }
   }
 
@@ -75,7 +75,7 @@ module.exports = async function handleRequest(httpMethod, url, bodyOrQuery = {},
   }
 
   if (httpMethod === 'PUT') {
-    throw Error('Use PATCH instead of PUT the api support PATCH not PUT');
+    throw new Error('Use PATCH instead of PUT the api support PATCH not PUT');
   }
-  throw Error(`Method not support ${httpMethod} by handleRequest`);
+  throw new Error(`Method not support ${httpMethod} by handleRequest`);
 };

@@ -61,7 +61,7 @@ async function verifyLoginAttempts(user, ctx) {
       actor: user,
       category: 'security',
     });
-    throw Error('Too many login attempts. Please wait a bit and try again.');
+    throw new Error('Too many login attempts. Please wait a bit and try again.');
   }
 }
 

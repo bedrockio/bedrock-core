@@ -8,10 +8,14 @@ const MFA_THRESHOLD = 5 * 60 * 1000;
 async function verifyPassword(user, password) {
   const authenticator = assertAuthenticator(user, 'password');
 
+  if (!authenticator.secret) {
+    throw new Error('No password set.');
+  }
+
   const match = await bcrypt.compare(password, authenticator.secret);
 
   if (!match) {
-    throw Error('Incorrect password.');
+    throw new Error('Incorrect password.');
   }
   authenticator.lastUsedAt = new Date();
 
