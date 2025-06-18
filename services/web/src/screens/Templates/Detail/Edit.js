@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Form,
   Dimmer,
@@ -11,8 +11,8 @@ import {
 
 import { usePage } from 'stores/page';
 
+import InspectObject from 'modals/InspectObject';
 import ErrorMessage from 'components/ErrorMessage';
-
 import Layout from 'components/Layout';
 
 import { request } from 'utils/api';
@@ -25,10 +25,31 @@ export default function TemplateEdit() {
   const { template, update } = usePage();
 
   const [fields, setFields] = useState(template);
+  const [params, setParams] = useState(null);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
   const [channel, setChannel] = useState(template.channels[0]);
+
+  useEffect(() => {
+    loadParams();
+  }, []);
+
+  async function loadParams() {
+    try {
+      setError(null);
+      setLoading(true);
+      const { data } = await request({
+        method: 'GET',
+        path: `/1/templates/${template.id}/params`,
+      });
+      setParams(data);
+      setLoading(false);
+    } catch (error) {
+      setError(error);
+      setLoading(false);
+    }
+  }
 
   async function onSubmit() {
     try {
@@ -96,6 +117,13 @@ export default function TemplateEdit() {
               size="small"
               trigger={
                 <Button basic type="button" size="tiny" content="Help" />
+              }
+            />
+            <InspectObject
+              name="Params"
+              object={params}
+              trigger={
+                <Button basic type="button" size="tiny" content="Params" />
               }
             />
 

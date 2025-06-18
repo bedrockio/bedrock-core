@@ -58,6 +58,12 @@ router
       meta,
     };
   })
+  .get('/:id/params', async (ctx) => {
+    const params = await getPreviewParams();
+    ctx.body = {
+      data: params,
+    };
+  })
   .get('/:id/preview', async (ctx) => {
     const { template } = ctx.state;
     const params = await getPreviewParams();

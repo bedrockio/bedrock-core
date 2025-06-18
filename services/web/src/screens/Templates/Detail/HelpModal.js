@@ -5,7 +5,7 @@ import modal from 'helpers/modal';
 
 import Code from 'components/Code';
 
-function Help() {
+function HelpModal() {
   function render() {
     return (
       <React.Fragment>
@@ -18,7 +18,7 @@ function Help() {
 {{link text="Text" url="/page"}}
 {{link text="Text" url="/page/:id" id="12345"}}
 `}</Code>
-          <h4 style={{ marginTop: '0' }}>Button Helpers</h4>
+          <h4>Button Helpers</h4>
           <Code>{`
 {{button "Text" "https://example.com/"}}
 {{button "Text" "/page"}}
@@ -96,4 +96,4 @@ Name | Email
   return render();
 }
 
-export default modal(Help);
+export default modal(HelpModal);
