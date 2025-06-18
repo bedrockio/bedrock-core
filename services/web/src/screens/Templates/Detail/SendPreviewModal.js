@@ -7,6 +7,7 @@ import { useSession } from 'stores/session';
 import ErrorMessage from 'components/ErrorMessage';
 import EmailField from 'components/form-fields/Email';
 import PhoneField from 'components/form-fields/Phone';
+import SearchDropdown from 'components/SearchDropdown';
 
 import { request } from 'utils/api';
 
@@ -23,7 +24,7 @@ function SendPreviewModal(props) {
     } else if (channel === 'sms') {
       return { phone: user.phone };
     } else if (channel === 'push') {
-      return { token: user.deviceToken };
+      return { userId: user.id };
     }
   });
 
@@ -114,10 +115,12 @@ function SendPreviewModal(props) {
 
   function renderPush() {
     return (
-      <Form.Input
-        name="token"
-        label="Token"
-        value={fields.token || ''}
+      <SearchDropdown
+        label="User"
+        name="userId"
+        value={fields.userId || ''}
+        searchPath="/1/templates/push-users/search"
+        placeholder="Search Users"
         onChange={setField}
       />
     );

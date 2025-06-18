@@ -72,26 +72,55 @@ router
   .post(
     '/:id/send',
     validateBody({
-      token: yd.string(),
       email: yd.string().email(),
       phone: yd.string().phone(),
+      userId: yd.string().mongo(),
       channel: yd.string().allow('email', 'sms', 'push').required(),
     }),
     async (ctx) => {
       const { template } = ctx.state;
       const { body } = ctx.request;
+      const { channel, userId } = body;
 
       const params = await getPreviewParams();
 
-      await sendMessage({
-        ...body,
-        ...params,
-        template: template.name,
-      });
+      try {
+        let user;
+        if (channel === 'push') {
+          user = await User.findById(userId);
+          if (!user) {
+            ctx.throw(400, 'User not found.');
+          } else if (!user.deviceToken) {
+            ctx.throw(400, 'User has not registered push notifications.');
+          }
+        }
+
+        await sendMessage({
+          ...body,
+          ...params,
+          template: template.name,
+          user,
+        });
+      } catch (error) {
+        ctx.throw(400, error);
+      }
 
       ctx.status = 204;
     },
   )
+  .post('/push-users/search', validateBody(User.getSearchValidation()), async (ctx) => {
+    const { data, meta } = await User.search({
+      ...ctx.request.body,
+      deviceToken: {
+        $exists: true,
+      },
+    });
+
+    ctx.body = {
+      data,
+      meta,
+    };
+  })
   .patch('/:id', validateBody(Template.getUpdateValidation()), async (ctx) => {
     const { template } = ctx.state;
     const snapshot = new Template(template);
