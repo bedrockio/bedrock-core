@@ -1,7 +1,7 @@
 const { assertPushSent } = require('firebase-admin');
-const { createUser, createUpload, createTemplate } = require('../../testing');
-const { getImageUrl } = require('../../images');
-const { sendPush } = require('../push');
+const { createUser, createUpload, createTemplate } = require('../testing');
+const { getImageUrl } = require('../images');
+const { sendPush } = require('./push');
 
 const welcomeTemplate = `
 Welcome!

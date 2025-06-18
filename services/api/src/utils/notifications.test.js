@@ -1,10 +1,10 @@
 const { assertMailCount, assertMailSent } = require('postmark');
 const { assertSmsCount } = require('twilio');
 const { assertPushCount } = require('firebase-admin');
-const { createUser, createTemplate } = require('../../utils/testing');
-const { sendNotification } = require('../notifications');
-const { mockTime, unmockTime } = require('../../utils/testing/time');
-const { User } = require('../../models');
+const { createUser, createTemplate } = require('./testing');
+const { sendNotification } = require('./notifications');
+const { mockTime, unmockTime } = require('./testing/time');
+const { User } = require('../models');
 
 jest.mock('../lib/notifications/types', () => {
   return [

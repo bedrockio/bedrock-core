@@ -1,6 +1,6 @@
-const { sendSms } = require('./sms');
 const { assertSmsSent } = require('twilio');
-const { createUser, createTemplate } = require('../../testing');
+const { createUser, createTemplate } = require('../testing');
+const { sendSms } = require('./sms');
 
 const welcomeTemplate = `
 Welcome!

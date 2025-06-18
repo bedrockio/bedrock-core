@@ -1,6 +1,6 @@
-const { request, createUser } = require('../../utils/testing');
-const { createMailToken } = require('../../utils/auth/tokens');
-const { User } = require('../../models');
+const { request, createUser } = require('../utils/testing');
+const { createMailToken } = require('../utils/auth/tokens');
+const { User } = require('../models');
 
 describe('/1/notifications', () => {
   describe('POST /unsubscribe', () => {

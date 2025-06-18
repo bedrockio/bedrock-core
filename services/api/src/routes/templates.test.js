@@ -1,5 +1,5 @@
-const { request, createAdmin, createTemplate } = require('../../utils/testing');
-const { Template } = require('../../models');
+const { request, createAdmin, createTemplate } = require('../utils/testing');
+const { Template } = require('../models');
 
 describe('/1/templates', () => {
   describe('POST /', () => {

@@ -6,16 +6,19 @@ const { requirePermissions } = require('../utils/middleware/permissions');
 const { validateBody, validateDelete } = require('../utils/middleware/validate');
 const { sendMessage } = require('../utils/messaging');
 const { getMailParams } = require('../utils/messaging/mail');
-const { Template, Shop, Product, AuditEntry } = require('../models');
+const { Template, User, Shop, Product, AuditEntry } = require('../models');
 
 const router = new Router();
 
 // Loads some dummy conten for consumption in the templates.
+// Adjust this as needed for the app.
 async function getPreviewParams() {
+  const user = await User.findOne({});
   const shop = await Shop.findOne();
   const product = await Product.findOne();
 
   return {
+    user,
     shop,
     product,
   };
@@ -56,10 +59,9 @@ router
     };
   })
   .get('/:id/preview', async (ctx) => {
-    const { template, authUser } = ctx.state;
+    const { template } = ctx.state;
     const params = await getPreviewParams();
     const result = await getMailParams({
-      user: authUser,
       template: template.name,
       ...params,
     });

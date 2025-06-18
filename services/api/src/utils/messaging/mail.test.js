@@ -1,7 +1,7 @@
 const config = require('@bedrockio/config');
-const { assertMailSent } = require('postmark');
-const { createUser, createUpload, createTemplate } = require('../../testing');
-const { getImageUrl } = require('../../images');
+const { assertMailSent, assertMailCount } = require('postmark');
+const { createUser, createUpload, createTemplate } = require('../testing');
+const { getImageUrl } = require('../images');
 const { sendMail } = require('./mail');
 
 const APP_NAME = config.get('APP_NAME');
@@ -158,7 +158,7 @@ describe('sendMail', () => {
       });
     });
 
-    it('should be able to specify the subject with frontmatter', async () => {
+    it('should specify the subject with frontmatter', async () => {
       const user = await createUser();
       await sendMail({
         user,
@@ -183,7 +183,7 @@ describe('sendMail', () => {
       });
     });
 
-    it('should be able to assert on the text body', async () => {
+    it('should assert on the text body', async () => {
       await sendMail({
         email: 'marlon@brando.com',
         file: 'link.md',
@@ -206,8 +206,9 @@ describe('sendMail', () => {
     });
   });
 
-  describe('conditionals', () => {
-    const body = `
+  describe('templates', () => {
+    describe('conditionals', () => {
+      const body = `
 Hello {{user.name}}!
 
 {{#if author}}
@@ -215,233 +216,298 @@ Author: {{author.name}}
 {{/if}}
       `.trim();
 
-    it('should include conditional block', async () => {
-      const user = await createUser();
-      await sendMail({
-        user,
-        body,
-        author: {
-          name: 'Joe',
-        },
+      it('should include conditional block', async () => {
+        const user = await createUser();
+        await sendMail({
+          user,
+          body,
+          author: {
+            name: 'Joe',
+          },
+        });
+
+        assertMailSent({
+          email: user.email,
+          html: '<body><p>Hello Test User!</p>\n<p>Author: Joe</p></body>',
+        });
       });
 
-      assertMailSent({
-        email: user.email,
-        html: '<body><p>Hello Test User!</p>\n<p>Author: Joe</p></body>',
-      });
-    });
+      it('should exclude conditional block', async () => {
+        const user = await createUser();
+        await sendMail({
+          user,
+          body,
+        });
 
-    it('should exclude conditional block', async () => {
-      const user = await createUser();
-      await sendMail({
-        user,
-        body,
-      });
-
-      assertMailSent({
-        email: user.email,
-        html: '<body><p>Hello Test User!</p></body>',
-      });
-    });
-  });
-
-  describe('images', () => {
-    it('should build an image URL', async () => {
-      const user = await createUser();
-      const upload = await createUpload();
-
-      await sendMail({
-        user,
-        body: '{{{image upload}}}',
-        upload,
-      });
-
-      const url = getImageUrl(upload);
-
-      assertMailSent({
-        email: user.email,
-        html: `<body><p><img src="${url}" alt="test.png"></p></body>`,
+        assertMailSent({
+          email: user.email,
+          html: '<body><p>Hello Test User!</p></body>',
+        });
       });
     });
 
-    it('should override default params', async () => {
-      const user = await createUser();
-      const upload = await createUpload();
+    describe('looping', () => {
+      it('should allow a non-zero-index to be output for arrays', async () => {
+        const body = `
+      {{number}}
+{{#each users}}
+Author {{number}}: {{name}}
+{{/each}}
+      `.trim();
+        const user = await createUser();
+        await sendMail({
+          user,
+          body,
+          users: [
+            {
+              name: 'Frank',
+            },
+            {
+              name: 'Dennis',
+            },
+          ],
+        });
 
-      await sendMail({
-        user,
-        body: '{{image upload fit="crop"}}',
-        upload,
-      });
-
-      const url = getImageUrl(upload, {
-        fit: 'crop',
-      });
-
-      assertMailSent({
-        email: user.email,
-        html: `<body><p><img src="${url}" alt="test.png"></p></body>`,
+        assertMailSent({
+          email: user.email,
+          html: '<body><p>Author 1: Frank\nAuthor 2: Dennis</p></body>',
+        });
       });
     });
 
-    it('should add extra params', async () => {
-      const user = await createUser();
-      const upload = await createUpload();
+    describe('images', () => {
+      it('should build an image URL', async () => {
+        const user = await createUser();
+        const upload = await createUpload();
 
-      await sendMail({
-        user,
-        body: '{{image upload fit="crop" blur=50}}',
-        upload,
-      });
-      const url = getImageUrl(upload, {
-        blur: 50,
-        fit: 'crop',
+        await sendMail({
+          user,
+          body: '{{{image upload}}}',
+          upload,
+        });
+
+        const url = getImageUrl(upload);
+
+        assertMailSent({
+          email: user.email,
+          html: `<body><p><img src="${url}" alt="test.png"></p></body>`,
+        });
       });
 
-      assertMailSent({
-        email: user.email,
-        html: `<body><p><img src="${url}" alt="test.png"></p></body>`,
+      it('should override default params', async () => {
+        const user = await createUser();
+        const upload = await createUpload();
+
+        await sendMail({
+          user,
+          body: '{{image upload fit="crop"}}',
+          upload,
+        });
+
+        const url = getImageUrl(upload, {
+          fit: 'crop',
+        });
+
+        assertMailSent({
+          email: user.email,
+          html: `<body><p><img src="${url}" alt="test.png"></p></body>`,
+        });
+      });
+
+      it('should add extra params', async () => {
+        const user = await createUser();
+        const upload = await createUpload();
+
+        await sendMail({
+          user,
+          body: '{{image upload fit="crop" blur=50}}',
+          upload,
+        });
+        const url = getImageUrl(upload, {
+          blur: 50,
+          fit: 'crop',
+        });
+
+        assertMailSent({
+          email: user.email,
+          html: `<body><p><img src="${url}" alt="test.png"></p></body>`,
+        });
+      });
+
+      it('should return an empty string when no argument passed', async () => {
+        const user = await createUser();
+
+        await sendMail({
+          user,
+          body: '{{image upload}}',
+        });
+
+        assertMailSent({
+          email: user.email,
+          html: '<body></body>',
+        });
+      });
+
+      it('should allow type alias', async () => {
+        const user = await createUser();
+        const upload = await createUpload();
+
+        await sendMail({
+          user,
+          body: '{{image upload type="avatar"}}',
+          upload,
+        });
+        const url = getImageUrl(upload, {
+          height: 150,
+        });
+
+        assertMailSent({
+          email: user.email,
+          html: `<body><p><img src="${url}" alt="test.png" height="150"></p></body>`,
+        });
+      });
+
+      it('should support picking the first off an array', async () => {
+        const user = await createUser();
+        const upload = await createUpload();
+
+        await sendMail({
+          user,
+          body: '{{image uploads}}',
+          uploads: [upload],
+        });
+        const url = getImageUrl(upload);
+
+        assertMailSent({
+          email: user.email,
+          html: `<body><p><img src="${url}" alt="test.png"></p></body>`,
+        });
+      });
+
+      it('should set alt text', async () => {
+        const user = await createUser();
+        const upload = await createUpload();
+
+        await sendMail({
+          user,
+          body: '{{image uploads alt="Hello"}}',
+          uploads: [upload],
+        });
+        const url = getImageUrl(upload);
+
+        assertMailSent({
+          email: user.email,
+          html: `<body><p><img src="${url}" alt="Hello"></p></body>`,
+        });
       });
     });
 
-    it('should return an empty string when no argument passed', async () => {
-      const user = await createUser();
-
-      await sendMail({
-        user,
-        body: '{{image upload}}',
-      });
-
-      assertMailSent({
-        email: user.email,
-        html: '<body></body>',
-      });
-    });
-
-    it('should allow type alias', async () => {
-      const user = await createUser();
-      const upload = await createUpload();
-
-      await sendMail({
-        user,
-        body: '{{image upload type="avatar"}}',
-        upload,
-      });
-      const url = getImageUrl(upload, {
-        height: 150,
-      });
-
-      assertMailSent({
-        email: user.email,
-        html: `<body><p><img src="${url}" alt="test.png" height="150"></p></body>`,
+    describe('links', () => {
+      it('should handle relative URLs', async () => {
+        await sendMail({
+          email: 'marlon@brando.com',
+          body: '{{link text="Click" url="/foo"}}',
+        });
+        assertMailSent({
+          email: 'marlon@brando.com',
+          html: '<body><p><a href="http://localhost:2200/foo" target="_blank">Click</a></p></body>',
+        });
       });
     });
 
-    it('should support picking the first off an array', async () => {
-      const user = await createUser();
-      const upload = await createUpload();
-
-      await sendMail({
-        user,
-        body: '{{image uploads}}',
-        uploads: [upload],
+    describe('buttons', () => {
+      it('should generate a button by arguments', async () => {
+        await sendMail({
+          email: 'marlon@brando.com',
+          body: '{{button "Click" "http://example.com"}}',
+        });
+        assertMailSent({
+          email: 'marlon@brando.com',
+          html: '<body><p><a href="http://example.com" class="button" target="_blank">Click</a></p></body>',
+        });
       });
-      const url = getImageUrl(upload);
 
-      assertMailSent({
-        email: user.email,
-        html: `<body><p><img src="${url}" alt="test.png"></p></body>`,
+      it('should generate a button by named', async () => {
+        await sendMail({
+          email: 'marlon@brando.com',
+          body: '{{button text="Click" url="http://example.com"}}',
+        });
+        assertMailSent({
+          email: 'marlon@brando.com',
+          html: '<body><p><a href="http://example.com" class="button" target="_blank">Click</a></p></body>',
+        });
+      });
+
+      it('should handle relative URLs', async () => {
+        await sendMail({
+          email: 'marlon@brando.com',
+          body: '{{button text="Click" url="/foo"}}',
+        });
+        assertMailSent({
+          email: 'marlon@brando.com',
+          html: '<body><p><a href="http://localhost:2200/foo" class="button" target="_blank">Click</a></p></body>',
+        });
+      });
+
+      it('should inject URL params', async () => {
+        await sendMail({
+          email: 'marlon@brando.com',
+          body: '{{button text="Click" url="/foo/:one/bar/:two" one="123" two="456"}}',
+        });
+        assertMailSent({
+          email: 'marlon@brando.com',
+          html: '<body><p><a href="http://localhost:2200/foo/123/bar/456" class="button" target="_blank">Click</a></p></body>',
+        });
       });
     });
 
-    it('should be able to set alt text', async () => {
-      const user = await createUser();
-      const upload = await createUpload();
-
-      await sendMail({
-        user,
-        body: '{{image uploads alt="Hello"}}',
-        uploads: [upload],
-      });
-      const url = getImageUrl(upload);
-
-      assertMailSent({
-        email: user.email,
-        html: `<body><p><img src="${url}" alt="Hello"></p></body>`,
-      });
-    });
-  });
-
-  describe('buttons', () => {
-    it('should be able to generate a button by arguments', async () => {
-      await sendMail({
-        email: 'marlon@brando.com',
-        body: '{{button "Click" "http://example.com"}}',
-      });
-      assertMailSent({
-        email: 'marlon@brando.com',
-        html: '<body><p><a href="http://example.com" class="button" target="_blank">Click</a></p></body>',
+    describe('date', () => {
+      it('should format a date', async () => {
+        await sendMail({
+          email: 'marlon@brando.com',
+          body: 'Start: {{date start}}',
+          start: '2025-03-21T00:00:00.000Z',
+        });
+        assertMailSent({
+          email: 'marlon@brando.com',
+          html: '<body><p>Start: March 20, 2025</p></body>',
+        });
       });
     });
 
-    it('should be able to generate a button by named', async () => {
-      await sendMail({
-        email: 'marlon@brando.com',
-        body: '{{button text="Click" href="http://example.com"}}',
-      });
-      assertMailSent({
-        email: 'marlon@brando.com',
-        html: '<body><p><a href="http://example.com" class="button" target="_blank">Click</a></p></body>',
-      });
-    });
-  });
-
-  describe('date', () => {
-    it('should format a date', async () => {
-      await sendMail({
-        email: 'marlon@brando.com',
-        body: 'Start: {{date start}}',
-        start: '2025-03-21T00:00:00.000Z',
-      });
-      assertMailSent({
-        email: 'marlon@brando.com',
-        html: '<body><p>Start: March 20, 2025</p></body>',
+    describe('time', () => {
+      it('should format a time', async () => {
+        await sendMail({
+          email: 'marlon@brando.com',
+          body: 'Start: {{time start}}',
+          start: '2025-03-21T00:00:00.000Z',
+        });
+        assertMailSent({
+          email: 'marlon@brando.com',
+          html: '<body><p>Start: 8:00pm</p></body>',
+        });
       });
     });
-  });
 
-  describe('time', () => {
-    it('should format a time', async () => {
-      await sendMail({
-        email: 'marlon@brando.com',
-        body: 'Start: {{time start}}',
-        start: '2025-03-21T00:00:00.000Z',
-      });
-      assertMailSent({
-        email: 'marlon@brando.com',
-        html: '<body><p>Start: 8:00pm</p></body>',
-      });
-    });
-  });
-
-  describe('rtime', () => {
-    it('should format a relative time', async () => {
-      const date = new Date();
-      date.setHours(date.getHours() - 2);
-      await sendMail({
-        email: 'marlon@brando.com',
-        body: 'Start: {{rtime start}}',
-        start: date,
-      });
-      assertMailSent({
-        email: 'marlon@brando.com',
-        html: '<body><p>Start: 2 hours ago</p></body>',
+    describe('rtime', () => {
+      it('should format a relative time', async () => {
+        const date = new Date();
+        date.setHours(date.getHours() - 2);
+        await sendMail({
+          email: 'marlon@brando.com',
+          body: 'Start: {{rtime start}}',
+          start: date,
+        });
+        assertMailSent({
+          email: 'marlon@brando.com',
+          html: '<body><p>Start: 2 hours ago</p></body>',
+        });
       });
     });
   });
 
   describe('other', () => {
-    it('should be able to send a mail to a user without to', async () => {
+    it('should send a mail to a user without email param', async () => {
       const user = await createUser();
       await sendMail({
         user,
@@ -453,7 +519,21 @@ Author: {{author.name}}
       });
     });
 
-    it('should be able to send a mail to multiple users', async () => {
+    it('should prioritize email param over user', async () => {
+      const user = await createUser();
+      await sendMail({
+        user,
+        email: 'foo@bar.com',
+        body: 'Hello!',
+      });
+      assertMailCount(1);
+      assertMailSent({
+        email: 'foo@bar.com',
+        body: 'Hello!',
+      });
+    });
+
+    it('should send a mail to multiple users', async () => {
       const user1 = await createUser();
       const user2 = await createUser();
       await sendMail({

@@ -163,8 +163,16 @@ Handlebars.registerHelper('imageUrl', (arg, options) => {
   return getImageUrl(upload, options.hash);
 });
 
+Handlebars.registerHelper('link', (...args) => {
+  const params = resolveParams(args, 'text', 'url');
+  return generateHtml('a', {
+    ...params,
+    target: '_blank',
+  });
+});
+
 Handlebars.registerHelper('button', (...args) => {
-  const params = gatherHelperParams(args, 'text', 'href');
+  const params = resolveParams(args, 'text', 'url');
   return generateHtml('a', {
     ...params,
     class: 'button',
@@ -184,6 +192,14 @@ Handlebars.registerHelper('rtime', (arg) => {
   return getDateTime(arg).relative();
 });
 
+Handlebars.registerHelper('number', (arg) => {
+  const { index } = arg.data;
+  if (index == null) {
+    return '';
+  }
+  return index + 1;
+});
+
 // Allow fallback to default values.
 Handlebars.registerHelper('helperMissing', (value) => {
   return typeof value === 'string' ? value : '';
@@ -191,15 +207,48 @@ Handlebars.registerHelper('helperMissing', (value) => {
 
 // Helper utils
 
-function gatherHelperParams(args, ...names) {
+function resolveParams(args, ...names) {
   const ordered = args.slice(0, -1);
   const [options] = args.slice(-1);
-  const params = { ...options.hash };
+  let params = { ...options.hash };
   ordered.forEach((value, i) => {
     const name = names[i];
     params[name] = value;
   });
+
+  params = normalizeParams(params);
+
   return params;
+}
+
+function normalizeParams(params) {
+  const result = {};
+  for (let [key, value] of Object.entries(params)) {
+    if (key === 'url') {
+      key = 'href';
+      value = normalizeUrl(value, result);
+    }
+    result[key] = value;
+  }
+  return result;
+}
+
+const PARAM_REG = /:([a-z]+)/gi;
+
+function normalizeUrl(str, params) {
+  if (str.startsWith('/')) {
+    str = `${ENV['APP_URL']}${str}`;
+  }
+
+  str = str.replace(PARAM_REG, (_, key) => {
+    const value = params[key];
+    // Need to delete the injected params or they
+    // will be passed on to the HTML element.
+    delete params[key];
+    return value;
+  });
+
+  return str;
 }
 
 function resolveUpload(arg) {
