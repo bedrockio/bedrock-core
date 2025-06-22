@@ -15,5 +15,10 @@
         "invited"
       ]
     }
+  },
+  "search": {
+    "fields": [
+      "email"
+    ]
   }
 }

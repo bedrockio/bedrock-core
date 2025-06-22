@@ -19,9 +19,8 @@
       "required": true,
       "writeAccess": "none"
     },
-    "requestCount": {
-      "type": "Number",
-      "default": 0,
+    "lastUsedAt": {
+      "type": "Date",
       "writeAccess": "none"
     }
   }

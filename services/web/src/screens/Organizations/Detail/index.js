@@ -6,6 +6,7 @@ import NotFound from 'screens/NotFound';
 
 import { request } from 'utils/api';
 
+import Edit from './Edit';
 import Overview from './Overview';
 
 export default function OrganizationDetail() {
@@ -27,7 +28,9 @@ export default function OrganizationDetail() {
         />
       }>
       <Routes>
+        <Route path="/organizations/:id/edit" render={Edit} exact />
         <Route path="/organizations/:id" render={Overview} exact />
+
         <Route render={NotFound} />
       </Routes>
     </Loader>

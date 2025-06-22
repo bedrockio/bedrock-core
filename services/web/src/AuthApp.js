@@ -12,7 +12,7 @@ import ResetPassword from 'screens/Auth/ResetPassword';
 import AcceptInvite from 'screens/Auth/AcceptInvite';
 import ConfirmCode from 'screens/Auth/ConfirmCode';
 
-function App() {
+export default function AuthApp() {
   return (
     <BasicLayout>
       <Routes>
@@ -28,5 +28,3 @@ function App() {
     </BasicLayout>
   );
 }
-
-export default App;

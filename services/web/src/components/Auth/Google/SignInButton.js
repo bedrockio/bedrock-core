@@ -1,20 +1,17 @@
 import { useNavigate } from '@bedrockio/router';
 
 import { useSession } from 'stores/session';
-import { useClass } from 'helpers/bem';
 
 import { signInWithGoogle } from 'utils/auth/google';
-
+import { ActionIcon, Button } from '@mantine/core';
 import logo from 'assets/google-logo.svg';
 
-import './google.less';
-
-export default function GoogleSignInButton(props) {
-  const { type } = props;
-  const { onAuthStart, onAuthStop, onError } = props;
-
-  const { className, getElementClass } = useClass(`google-${type}-button`);
-
+export default function GoogleSignInButton({
+  onAuthStart,
+  onAuthStop,
+  onError,
+  type,
+}) {
   const navigate = useNavigate();
   const { authenticate } = useSession();
 
@@ -35,12 +32,25 @@ export default function GoogleSignInButton(props) {
     }
   }
 
+  if (type === 'login') {
+    return (
+      <ActionIcon
+        variant="default"
+        radius="xl"
+        size={42}
+        title="Use Apple to sign in."
+        onClick={onClick}>
+        <img src={logo} alt="Google" height={16} />
+      </ActionIcon>
+    );
+  }
+
   return (
-    <div className={className} onClick={onClick}>
-      <img src={logo} className={getElementClass('logo')} />
-      {type === 'signup' && (
-        <div className={getElementClass('text')}>Sign up with Google</div>
-      )}
-    </div>
+    <Button
+      onClick={onClick}
+      leftSection={<img src={logo} alt="Google" height={13} />}
+      variant="default">
+      Sign in with Google
+    </Button>
   );
 }

@@ -1,37 +1,59 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Icon } from 'semantic';
+import { ActionIcon, Paper } from '@mantine/core';
 
-import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
-import atomDark from 'react-syntax-highlighter/dist/esm/styles/prism/atom-dark';
-import bash from 'react-syntax-highlighter/dist/esm/languages/prism/bash';
-import json from 'react-syntax-highlighter/dist/esm/languages/prism/json';
-import swift from 'react-syntax-highlighter/dist/esm/languages/prism/swift';
+import { Highlight, themes } from 'prism-react-renderer';
+
+function CodeBlock({ code, language }) {
+  if (!code) return null;
+
+  return (
+    <div
+      style={{
+        margin: 0,
+        fontSize: '1em',
+      }}>
+      <Highlight code={code.trim()} language={language} theme={themes.oneLight}>
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre
+            className={className}
+            style={{
+              ...style,
+              lineHeight: 1,
+              padding: '1em 0.5em',
+              margin: 0,
+            }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+    </div>
+  );
+}
 
 import { useClass } from 'helpers/bem';
 
 import { copyToClipboard } from 'utils/copy';
 
-atomDark['pre[class*="language-"]'].margin = '0';
-
-SyntaxHighlighter.registerLanguage('bash', bash);
-SyntaxHighlighter.registerLanguage('json', json);
-SyntaxHighlighter.registerLanguage('swift', swift);
-
 import './code.less';
+import { IconCheck, IconCopy } from '@tabler/icons-react';
 
-export default function Code(props) {
-  const { scroll, action } = props;
-
+export default function Code({ code, language, scroll, action, ...rest }) {
   const [copied, setCopied] = useState();
 
   const { className, getElementClass } = useClass(
     'code',
-    scroll ? 'scroll' : null
+    scroll ? 'scroll' : null,
   );
 
   async function onCopyClick() {
-    copyToClipboard(props.children);
+    copyToClipboard(rest.children);
     setCopied(true);
     await new Promise((resolve) => {
       setTimeout(resolve, 2000);
@@ -39,35 +61,32 @@ export default function Code(props) {
     setCopied(false);
   }
 
-  function render() {
-    const { copy, scroll, ...rest } = props;
-    return (
-      <div className={className}>
-        <SyntaxHighlighter style={atomDark} {...rest} />
-        {renderAction()}
-      </div>
-    );
-  }
+  const lang = useMemo(() => {
+    if (language === 'bash') {
+      return 'python';
+    }
+    return language || 'json';
+  }, [language]);
 
-  function renderAction() {
-    return (
+  return (
+    <Paper className={className}>
+      <CodeBlock code={code || rest.children} language={lang} />
       <div className={getElementClass('action')}>
-        {action || renderCopyButton()}
+        {action || (
+          <div
+            onClick={onCopyClick}
+            className={getElementClass(
+              'copy-button',
+              copied ? null : 'clickable',
+            )}>
+            <ActionIcon variant="default">
+              {copied ? <IconCheck size={14} /> : <IconCopy size={14} />}
+            </ActionIcon>
+          </div>
+        )}
       </div>
-    );
-  }
-
-  function renderCopyButton() {
-    return (
-      <div
-        onClick={onCopyClick}
-        className={getElementClass('copy-button', copied ? null : 'clickable')}>
-        <Icon name={copied ? 'check' : 'copy'} fitted />
-      </div>
-    );
-  }
-
-  return render();
+    </Paper>
+  );
 }
 
 Code.propTypes = {

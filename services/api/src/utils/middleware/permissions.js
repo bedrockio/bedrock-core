@@ -1,4 +1,5 @@
 const { userHasAccess } = require('./../permissions');
+const AuditEntry = require('../../models/audit-entry');
 
 // This can be changed to "organization" to quickly enable
 // multi-tenancy. Be sure when doing this to lock down global
