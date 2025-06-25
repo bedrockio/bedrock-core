@@ -1,5 +1,5 @@
 const { assertMailCount } = require('postmark');
-const { assertSmsCount } = require('twilio');
+const { assertSmsCount, setTwilioUnsubscribed } = require('twilio');
 const { assertPushCount } = require('firebase-admin');
 const { createUser } = require('./testing');
 const { sendNotification } = require('./notifications');
@@ -87,6 +87,7 @@ describe('sendNotification', () => {
       type: 'product-updated',
       user,
     });
+
     assertMailCount(1);
     assertPushCount(1);
     assertSmsCount(1);
@@ -156,5 +157,56 @@ describe('sendNotification', () => {
     ]);
 
     unmockTime();
+  });
+
+  it('should not halt on unsubscribed and disable SMS', async () => {
+    let user = await createUser({
+      phone: '+15551234567',
+      deviceToken: 'fake-token',
+      notifications: [
+        {
+          name: 'product-updated',
+          sms: true,
+          push: true,
+          email: true,
+        },
+        {
+          name: 'other',
+          sms: true,
+          push: true,
+          email: true,
+        },
+      ],
+    });
+
+    setTwilioUnsubscribed('+15551234567');
+
+    await sendNotification({
+      type: 'product-updated',
+      user,
+    });
+
+    assertSmsCount(0);
+    assertMailCount(1);
+    assertPushCount(1);
+
+    user = await User.findById(user.id);
+
+    expect(user.notifications).toMatchObject([
+      {
+        name: 'product-updated',
+        sms: false,
+        push: true,
+        email: true,
+        sent: 1,
+      },
+      {
+        name: 'other',
+        sms: false,
+        push: true,
+        email: true,
+        sent: 0,
+      },
+    ]);
   });
 });

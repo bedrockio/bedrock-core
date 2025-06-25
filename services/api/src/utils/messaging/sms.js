@@ -4,6 +4,7 @@ const config = require('@bedrockio/config');
 const logger = require('@bedrockio/logger');
 
 const { interpolate, loadTemplate } = require('./utils');
+const { UnsubscribedError } = require('./errors');
 
 const API_URL = config.get('API_URL');
 const ENV_NAME = config.get('ENV_NAME');
@@ -49,12 +50,20 @@ Body: ${body}
 
   logger.debug(`Sending SMS to ${phone}`);
 
-  await client.messages.create({
-    body,
-    to: phone,
-    from: FROM_NUMBER,
-    template: params.template,
-  });
+  try {
+    await client.messages.create({
+      body,
+      to: phone,
+      from: FROM_NUMBER,
+      template: params.template,
+    });
+  } catch (error) {
+    if (error.code === 21610) {
+      throw new UnsubscribedError();
+    } else {
+      throw error;
+    }
+  }
 }
 
 // Allows a tunnel to be set up to test incoming webhooks.
