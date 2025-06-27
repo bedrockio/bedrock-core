@@ -25,7 +25,7 @@ async function sendMail(options) {
 }
 
 async function getMailParams(options) {
-  let { layout = DEFAULT_LAYOUT, ...params } = options;
+  let { layout = DEFAULT_LAYOUT, cc, bcc, ...params } = options;
 
   const email = getAddresses(options);
   const template = params.template || params.file;
@@ -51,6 +51,8 @@ async function getMailParams(options) {
     body,
     subject,
     template,
+    cc,
+    bcc,
   };
 }
 
@@ -83,11 +85,26 @@ async function dispatchMail(options) {
       HtmlBody: html,
       template,
       body,
+      ...resolveCopies(options),
     });
   } catch (error) {
     logger.error(`Error happened while sending email to ${email} (${error.message})`);
     logger.error(error);
   }
+}
+
+function resolveCopies(options) {
+  return {
+    Cc: resolveCopyArray(options.cc),
+    Bcc: resolveCopyArray(options.bcc),
+  };
+}
+
+function resolveCopyArray(arg) {
+  if (Array.isArray(arg)) {
+    return arg.join(', ');
+  }
+  return arg;
 }
 
 function getAddresses(options) {
