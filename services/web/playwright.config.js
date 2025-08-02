@@ -2,6 +2,8 @@
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
+  globalSetup: '../api/src/utils/testing/setup/database-setup',
+
   testDir: './e2e',
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -24,6 +26,7 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
   ],
+
   webServer: [
     {
       command: 'yarn run start',
