@@ -3,7 +3,7 @@ const yd = require('@bedrockio/yada');
 const { validateBody } = require('../../utils/middleware/validate');
 const { authenticate } = require('../../utils/middleware/authenticate');
 
-const { login, createAuthToken } = require('../../utils/auth');
+const { login, createAuthToken } = require('../../utils/auth/login');
 const { verifyToken, upsertAppleAuthenticator, removeAppleAuthenticator } = require('../../utils/auth/apple');
 const { User, AuditEntry } = require('../../models');
 

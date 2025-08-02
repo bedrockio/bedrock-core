@@ -18,10 +18,7 @@ async function teardownDb() {
   await mongoose.disconnect();
 }
 
-beforeAll(async () => {
-  await setupDb();
-});
-
-afterAll(async () => {
-  await teardownDb();
-});
+module.exports = {
+  setupDb,
+  teardownDb,
+};

@@ -13,7 +13,7 @@ const rpName = APP_NAME;
 
 // A unique identifier for your website.
 // For SSO this should be the root domain.
-const rpID = getRootDomain(APP_URL);
+const rpID = getRootDomain();
 
 // The URL at which registrations and authentications should occur
 const origin = config.get('APP_URL');

@@ -1,12 +1,12 @@
 const Router = require('@koa/router');
 
-const otp = require('./otp');
-const totp = require('./totp');
-const apple = require('./apple');
-const google = require('./google');
-const passkey = require('./passkey');
-const password = require('./password');
-const other = require('./other');
+const otp = require('./otp.js');
+const totp = require('./totp.js');
+const apple = require('./apple.js');
+const google = require('./google.js');
+const passkey = require('./passkey.js');
+const password = require('./password.js');
+const other = require('./other.js');
 
 const router = new Router();
 

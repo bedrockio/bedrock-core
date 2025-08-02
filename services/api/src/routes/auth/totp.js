@@ -4,7 +4,7 @@ const { validateBody } = require('../../utils/middleware/validate');
 const { authenticate } = require('../../utils/middleware/authenticate');
 
 const { expandRoles } = require('../../utils/permissions');
-const { login, verifyLoginAttempts } = require('../../utils/auth');
+const { login, verifyLoginAttempts } = require('../../utils/auth/login');
 const { verifyRecentPassword } = require('../../utils/auth/password');
 const { verifyCode, verifyTotp, generateTotp, enableTotp, revokeTotp } = require('../../utils/auth/totp');
 
