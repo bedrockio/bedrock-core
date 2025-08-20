@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconWarning } from '@tabler/icons-react';
+import { PiWarningFill } from 'react-icons/pi';
 
 export default class Overview extends React.Component {
   state = {};
@@ -50,7 +50,7 @@ export default class Overview extends React.Component {
     if (this.state.error) {
       return (
         <span title={this.state.error}>
-          <IconWarning />
+          <PiWarningFill />
         </span>
       );
     }

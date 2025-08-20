@@ -123,7 +123,7 @@ export default function ShopForm({ shop, onSuccess = () => {} }) {
           <Grid.Col span={{ base: 12, md: 6 }}>
             <Fieldset variant="unstyled" legend="Images">
               <Stack gap="xs">
-                <UploadsField {...form.getInputProps('images')} />
+                <UploadsField {...form.getInputProps('images')} type="pdf" />
               </Stack>
             </Fieldset>
           </Grid.Col>

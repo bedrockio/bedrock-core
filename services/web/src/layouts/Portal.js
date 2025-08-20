@@ -13,7 +13,6 @@ import { useDisclosure } from '@mantine/hooks';
 import Logo from 'components/Logo';
 import ConnectionError from 'components/ConnectionError';
 
-import { IconArrowBack } from '@tabler/icons-react';
 import MenuItem from 'components/MenuItem';
 import { useEffect } from 'react';
 
@@ -29,7 +28,7 @@ export default function PortalLayout({ children, menuItems, actions }) {
   return (
     <>
       <AppShell
-        header={{ height: 50 }}
+        header={{ height: 75 }}
         navbar={{
           width: 220,
           breakpoint: 'sm',
@@ -43,7 +42,7 @@ export default function PortalLayout({ children, menuItems, actions }) {
         padding="md">
         <AppShell.Header height="100%">
           <Flex
-            h="50px"
+            h="75px"
             flex="row"
             gap="md"
             justify="space-between"
@@ -56,13 +55,9 @@ export default function PortalLayout({ children, menuItems, actions }) {
                 hiddenFrom="sm"
                 size="sm"
               />
-              <Logo height={20} />
+              <Logo height={35} />
             </Group>
-            <Button
-              size="compact-sm"
-              component={Link}
-              to="/"
-              rightSection={<IconArrowBack size={14} />}>
+            <Button size="compact-sm" component={Link} to="/">
               Go to Dashboard
             </Button>
           </Flex>

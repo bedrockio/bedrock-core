@@ -1,16 +1,12 @@
 import Logo from 'components/Logo';
 
 import { Group, Switch, Text, useMantineColorScheme } from '@mantine/core';
-import { IconSun, IconMoonStars } from '@tabler/icons-react';
+import { PiSunFill, PiMoonFill } from 'react-icons/pi';
 
 export default function Footer() {
   const { setColorScheme, colorScheme } = useMantineColorScheme();
   return (
-    <footer
-      style={{
-        position: 'absolute',
-        right: '10px',
-      }}>
+    <footer>
       <Group p="md" gap="md" justify="flex-end" align="center">
         <Group gap="xs">
           <Text fw="bold" size="xs" color="dimmed">
@@ -24,17 +20,15 @@ export default function Footer() {
             size="md"
             color="dark.4"
             onLabel={
-              <IconSun
-                size={16}
-                stroke={2.5}
+              <PiSunFill
                 color="var(--mantine-color-yellow-4)"
+                style={{ fontSize: '2em' }}
               />
             }
             offLabel={
-              <IconMoonStars
-                size={16}
-                stroke={2.5}
+              <PiMoonFill
                 color="var(--mantine-color-blue-6)"
+                style={{ fontSize: '2em' }}
               />
             }
           />

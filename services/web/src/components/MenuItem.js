@@ -1,81 +1,53 @@
 import { NavLink as MantineNavLink } from '@mantine/core';
-import { NavLink } from '@bedrockio/router';
+import { NavLink, useLocation } from '@bedrockio/router';
+import { ExternalLink } from './Link';
 
-export default function MenuItem({
-  external,
-  icon: Icon,
-  label,
-  href,
-  to,
-  items,
-  compact,
-}) {
-  const hasLinks = Array.isArray(items) && items.length > 0;
+export default function MenuItem(props) {
+  const { url, label, icon: Icon, items = [], exact } = props;
 
-  const styles = {
-    root: {
-      fontSize: 'var(--mantine-font-size-sm)',
-      paddingLeft: compact ? '' : 'var(--mantine-spacing-lg)',
-    },
-    section: {
-      marginRight: '6px',
-    },
-    label: {
-      marginInlineStart: 'var(--mantine-spacing-xs)',
-    },
-    chevron: {
-      margin: 0,
-    },
-  };
+  const isExternal = url?.startsWith('http');
+
+  const { pathname } = useLocation();
+
+  function getNestedProps() {
+    if (items.length) {
+      return {
+        exact: true,
+        opened: isOpened(),
+        children: items.map((item) => {
+          return <MenuItem key={item.url} {...item} />;
+        }),
+      };
+    }
+  }
+
+  function getNavProps() {
+    if (url && isExternal) {
+      return {
+        component: ExternalLink,
+        href: url,
+      };
+    } else if (url) {
+      return {
+        exact,
+        component: NavLink,
+        to: url,
+      };
+    }
+  }
+
+  function isOpened() {
+    if (url) {
+      return exact ? url === pathname : pathname.startsWith(url);
+    }
+  }
 
   return (
-    <>
-      {hasLinks ? (
-        <MantineNavLink
-          styles={styles}
-          childrenOffset={0}
-          leftSection={Icon && <Icon size={16} stroke={1.5} />}
-          label={label}
-          href={href || to}
-          to={href}>
-          {(hasLinks ? items : []).map((link) => (
-            <MantineNavLink
-              leftSection={link.icon && <link.icon size={16} stroke={1.5} />}
-              component={(props) => {
-                if (link.external) {
-                  return (
-                    <a target="_blank" rel="noopener noreferrer" {...props} />
-                  );
-                }
-                return <NavLink {...props} />;
-              }}
-              to={link.href}
-              href={link.href || to}
-              key={link.href}
-              label={link.label}
-              style={{
-                paddingLeft: Icon
-                  ? `calc(var(--mantine-spacing-lg) * 2)`
-                  : `var(--mantine-spacing-xl)`,
-              }}
-            />
-          ))}
-        </MantineNavLink>
-      ) : (
-        <MantineNavLink
-          styles={styles}
-          component={(props) => {
-            if (external) {
-              return <a target="_blank" rel="noopener noreferrer" {...props} />;
-            }
-            return <NavLink {...props} />;
-          }}
-          leftSection={Icon && <Icon size={16} stroke={1.5} />}
-          label={label}
-          href={href || to}
-          to={href}
-        />
-      )}
-    </>
+    <MantineNavLink
+      label={label}
+      leftSection={Icon && <Icon />}
+      {...getNavProps()}
+      {...getNestedProps()}
+    />
   );
 }

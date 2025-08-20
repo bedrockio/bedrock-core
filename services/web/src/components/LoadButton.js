@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Button, Popover, Alert } from '@mantine/core';
-import { IconAlertCircle } from '@tabler/icons-react';
+import { PiWarningCircleFill } from 'react-icons/pi';
 
 /**
  * A button that displays a loading indicator during an async onClick operation
@@ -72,7 +72,7 @@ export default function LoadButton({ onClick, children, ...otherProps }) {
       <Popover.Dropdown sx={{ pointerEvents: 'none' }}>
         {error && (
           <Alert
-            icon={<IconAlertCircle size="1rem" />}
+            icon={<PiWarningCircleFill />}
             title="Error"
             color="red"
             withCloseButton={false} // Popover handles closing

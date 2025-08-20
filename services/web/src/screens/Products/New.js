@@ -4,8 +4,6 @@ import Form from './Form';
 import { Stack, Button } from '@mantine/core';
 import { useNavigate, Link } from '@bedrockio/router';
 
-import { IconArrowBack } from '@tabler/icons-react';
-
 export default function NewShop() {
   const navigate = useNavigate();
 
@@ -19,11 +17,7 @@ export default function NewShop() {
           { title: 'New Shop' },
         ]}
         rightSection={
-          <Button
-            component={Link}
-            to="/products"
-            variant="default"
-            rightSection={<IconArrowBack size={14} />}>
+          <Button component={Link} to="/products" variant="default">
             Back
           </Button>
         }

@@ -7,7 +7,6 @@ import { useNavigate } from '@bedrockio/router';
 import PageHeader from 'components/PageHeader';
 
 import { Link } from '@bedrockio/router';
-import { IconArrowBack } from '@tabler/icons-react';
 
 export default function EditApplication() {
   const { application, reload } = usePage();
@@ -23,11 +22,7 @@ export default function EditApplication() {
           { title: application.name },
         ]}
         rightSection={
-          <Button
-            rightSection={<IconArrowBack size={14} />}
-            component={Link}
-            to={`/applications`}
-            variant="default">
+          <Button component={Link} to={`/applications`} variant="default">
             Show
           </Button>
         }

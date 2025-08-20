@@ -1,7 +1,7 @@
 import { Anchor } from '@mantine/core';
 import React from 'react';
 
-import { IconExternalLink } from '@tabler/icons-react';
+import { PiArrowSquareOutFill } from 'react-icons/pi';
 
 export default class ExternalLink extends React.Component {
   render() {
@@ -13,7 +13,7 @@ export default class ExternalLink extends React.Component {
         target="_blank"
         rel="external noopener noreferrer"
         {...rest}>
-        {icon && <IconExternalLink size={14} />}
+        {icon && <PiArrowSquareOutFill />}
         {children || href}
       </Anchor>
     );

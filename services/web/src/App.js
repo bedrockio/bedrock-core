@@ -24,8 +24,8 @@ export default function App() {
         <Route path="/" render={Dashboard} exact />
         <Route path="/shops" render={Shops} />
         <Route path="/products" render={Products} />
+        <Route path="/users/invites" render={Invites} />
         <Route path="/users" render={Users} />
-        <Route path="/invites" render={Invites} />
         <Route path="/organizations" render={Organizations} />
         <Route path="/settings/:id?" render={Settings} exact />
         <Route path="/applications/:id?" render={Applications} />

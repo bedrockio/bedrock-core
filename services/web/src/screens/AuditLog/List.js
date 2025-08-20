@@ -10,7 +10,7 @@ import {
   Text,
   Stack,
 } from '@mantine/core';
-import { IconSearch } from '@tabler/icons-react';
+import { PiMagnifyingGlass } from 'react-icons/pi';
 
 import PageHeader from 'components/PageHeader';
 
@@ -262,7 +262,7 @@ export default function AuditLogList() {
                             e.stopPropagation();
                             setSelectedItem(item);
                           }}>
-                          <IconSearch size={16} />
+                          <PiMagnifyingGlass />
                         </ActionIcon>
                       </Table.Td>
                     </Table.Tr>

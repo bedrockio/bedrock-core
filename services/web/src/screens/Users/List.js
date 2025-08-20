@@ -10,7 +10,7 @@ import {
   Loader,
   Stack,
 } from '@mantine/core';
-import { IconPlus } from '@tabler/icons-react';
+import { PiPlus } from 'react-icons/pi';
 import PageHeader from 'components/PageHeader';
 
 import Search from 'components/Search';
@@ -86,7 +86,7 @@ export default function UserList() {
                       variant="default"
                       component={Link}
                       to="/users/new"
-                      rightSection={<IconPlus size={14} />}>
+                      rightSection={<PiPlus />}>
                       New User
                     </Button>
                   </>

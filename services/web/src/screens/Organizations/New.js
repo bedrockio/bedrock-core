@@ -4,7 +4,6 @@ import Form from './Form';
 import { Stack, Button } from '@mantine/core';
 import { useNavigate } from '@bedrockio/router';
 import { Link } from '@bedrockio/router';
-import { IconArrowBack } from '@tabler/icons-react';
 
 export default function NewOrganization() {
   const navigate = useNavigate();
@@ -19,11 +18,7 @@ export default function NewOrganization() {
           { title: 'Organization Shop' },
         ]}
         rightSection={
-          <Button
-            component={Link}
-            to="/organizations"
-            variant="default"
-            rightSection={<IconArrowBack size={14} />}>
+          <Button component={Link} to="/organizations" variant="default">
             Back
           </Button>
         }

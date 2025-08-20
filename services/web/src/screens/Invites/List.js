@@ -8,7 +8,7 @@ import {
   Loader,
   Stack,
 } from '@mantine/core';
-import { IconPlus } from '@tabler/icons-react';
+import { PiPlus } from 'react-icons/pi';
 
 import Search from 'components/Search';
 import PageHeader from 'components/PageHeader';
@@ -79,9 +79,7 @@ export default function Invites() {
                       />
                     }
                     trigger={
-                      <Button
-                        variant="default"
-                        rightSection={<IconPlus size={14} />}>
+                      <Button variant="default" rightSection={<PiPlus />}>
                         Invite User
                       </Button>
                     }

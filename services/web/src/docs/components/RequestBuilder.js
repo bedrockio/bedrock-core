@@ -34,12 +34,12 @@ import ErrorMessage from 'components/ErrorMessage';
 
 import { request } from 'utils/api';
 import {
-  IconMinus,
-  IconPlayerPlayFilled,
-  IconPlayerRecordFilled,
-  IconPlus,
-  IconTrash,
-} from '@tabler/icons-react';
+  PiRecordFill,
+  PiPlayFill,
+  PiPlus,
+  PiMinus,
+  PiTrashFill,
+} from 'react-icons/pi';
 
 const NAME_RANK = {
   keyword: 0,
@@ -255,11 +255,7 @@ export default function RequestBuilder(props) {
                     <label style={{ marginBottom: '1em' }}>
                       {key}{' '}
                       <ActionIcon variant="default" onClick={toggle}>
-                        {open ? (
-                          <IconMinus size={14} />
-                        ) : (
-                          <IconPlus size={14} />
-                        )}
+                        {open ? <PiMinus /> : <PiPlus />}
                       </ActionIcon>
                     </label>
                     {open && (
@@ -283,7 +279,7 @@ export default function RequestBuilder(props) {
                     set(req, p, [...values, undefined]);
                     setReq({ ...req });
                   }}>
-                  <IconPlus size={14} />
+                  <PiPlus />
                 </ActionIcon>
               </label>
               {renderSchema(schema, [...path, key])}
@@ -319,7 +315,7 @@ export default function RequestBuilder(props) {
                       set(req, path, updated);
                       setReq({ ...req });
                     }}>
-                    <IconTrash size={14} />
+                    <PiTrashFill />
                   </ActionIcon>
                 ),
               })}
@@ -449,7 +445,7 @@ export default function RequestBuilder(props) {
                   variant="default"
                   title="Perform request and record as example"
                   onClick={onRecordClick}>
-                  <IconPlayerRecordFilled size={14} />
+                  <PiRecordFill />
                 </ActionIcon>
               )}
               <ActionIcon
@@ -457,7 +453,7 @@ export default function RequestBuilder(props) {
                 disabled={loading}
                 onClick={onPlayClick}
                 title="Perform request">
-                <IconPlayerPlayFilled size={14} />
+                <PiPlayFill />
               </ActionIcon>
             </Group>
           </Paper>

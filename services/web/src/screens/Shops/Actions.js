@@ -1,14 +1,12 @@
 import { ActionIcon, Menu, Text, Group, Button } from '@mantine/core';
 
 import {
-  IconTrash,
-  IconCode,
-  IconPencil,
-  IconDotsVertical,
-  IconEdit,
-  IconListSearch,
-  IconArrowBack,
-} from '@tabler/icons-react';
+  PiCode,
+  PiPencilSimpleFill,
+  PiTrashFill,
+  PiListMagnifyingGlass,
+  PiDotsThreeOutlineVerticalFill,
+} from 'react-icons/pi';
 import { Link } from '@bedrockio/router';
 
 import InspectObject from 'components/modals/InspectObject';
@@ -26,17 +24,13 @@ export default function ShopsActions({ shop, reload, displayMode = 'show' }) {
             variant="default"
             component={Link}
             to={`/shops/${shop.id}/edit`}>
-            <IconEdit size={14} />
+            <PiPencilSimpleFill />
           </ActionIcon>
         </Protected>
       );
     } else if (displayMode === 'edit') {
       return (
-        <Button
-          variant="default"
-          rightSection={<IconArrowBack size={14} />}
-          component={Link}
-          to={`/shops/${shop.id}`}>
+        <Button variant="default" component={Link} to={`/shops/${shop.id}`}>
           Back
         </Button>
       );
@@ -45,7 +39,7 @@ export default function ShopsActions({ shop, reload, displayMode = 'show' }) {
         <Protected endpoint="shops" permission="update">
           <Button
             variant="default"
-            rightSection={<IconPencil size={14} />}
+            rightSection={<PiPencilSimpleFill />}
             component={Link}
             to={`/shops/${shop.id}/edit`}>
             Edit
@@ -61,12 +55,12 @@ export default function ShopsActions({ shop, reload, displayMode = 'show' }) {
       <Menu keepMounted shadow="md">
         <Menu.Target>
           {displayMode !== 'list' ? (
-            <ActionIcon size="input-sm" variant="default">
-              <IconDotsVertical size={14} />
+            <ActionIcon variant="default">
+              <PiDotsThreeOutlineVerticalFill />
             </ActionIcon>
           ) : (
             <ActionIcon variant="default">
-              <IconDotsVertical size={14} />
+              <PiDotsThreeOutlineVerticalFill />
             </ActionIcon>
           )}
         </Menu.Target>
@@ -76,17 +70,13 @@ export default function ShopsActions({ shop, reload, displayMode = 'show' }) {
             title="Inspect Shop"
             component={<InspectObject object={shop} name="shop" />}
             size="lg"
-            trigger={
-              <Menu.Item leftSection={<IconCode size={14} />}>
-                Inspect
-              </Menu.Item>
-            }
+            trigger={<Menu.Item leftSection={<PiCode />}>Inspect</Menu.Item>}
           />
           <Protected endpoint="auditEntries" permission="read">
             <Menu.Item
               component={Link}
               to={`/audit-log?object=${shop.id}&filterLabel=${shop.name}`}
-              leftSection={<IconListSearch size={14} />}>
+              leftSection={<PiListMagnifyingGlass />}>
               Audit Logs
             </Menu.Item>
           </Protected>
@@ -95,7 +85,7 @@ export default function ShopsActions({ shop, reload, displayMode = 'show' }) {
             <ModalWrapper
               title="Delete Shop"
               trigger={
-                <Menu.Item color="red" leftSection={<IconTrash size={14} />}>
+                <Menu.Item color="red" leftSection={<PiTrashFill />}>
                   Delete
                 </Menu.Item>
               }

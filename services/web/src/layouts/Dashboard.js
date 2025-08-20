@@ -9,20 +9,20 @@ import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 
 import ConnectionError from 'components/ConnectionError';
 import ErrorBoundary from 'components/ErrorBoundary';
-
 import {
-  IconApps,
-  IconBook,
-  IconBuildingStore,
-  IconBuilding,
-  IconMail,
-  IconPackage,
-  IconSettings,
-  IconTerminal2,
-  IconUsersGroup,
-  IconListSearch,
-  IconChevronDown,
-} from '@tabler/icons-react';
+  PiBookFill,
+  PiBuildingOfficeFill,
+  PiDoorFill,
+  PiEnvelopeSimpleFill,
+  PiGearFill,
+  PiGridFourFill,
+  PiListMagnifyingGlass,
+  PiStorefrontFill,
+  PiTagFill,
+  PiTerminalFill,
+  PiUserFill,
+} from 'react-icons/pi';
+import { TbChevronDown } from 'react-icons/tb';
 
 import {
   AppShell,
@@ -41,60 +41,64 @@ import Footer from 'components/Footer';
 
 const menuItems = [
   {
-    icon: IconBuildingStore,
-    href: '/shops',
+    icon: PiStorefrontFill,
+    url: '/shops',
     label: 'Shops',
   },
-  { icon: IconPackage, href: '/products', label: 'Products' },
   {
-    icon: IconUsersGroup,
-    label: 'People',
+    icon: PiTagFill,
+    url: '/products',
+    label: 'Products',
+  },
+  {
+    icon: PiUserFill,
+    label: 'Users',
+    url: '/users',
     items: [
       {
-        icon: IconUsersGroup,
-        label: 'Users',
-        href: '/users',
-      },
-      {
-        icon: IconMail,
+        icon: PiEnvelopeSimpleFill,
         label: 'Invites',
-        href: '/invites',
+        url: '/users/invites',
       },
     ],
   },
-  { icon: IconBuilding, href: '/organizations', label: 'Organizations' },
+  {
+    icon: PiBuildingOfficeFill,
+    url: '/organizations',
+    label: 'Organizations',
+  },
 ];
 
 const accountItems = [
   {
-    icon: IconTerminal2,
+    icon: PiTerminalFill,
     label: 'System',
     items: [
       {
-        icon: IconListSearch,
-        href: '/audit-log',
+        icon: PiListMagnifyingGlass,
+        url: '/audit-log',
         label: 'Audit Log',
       },
       {
-        icon: IconApps,
-        href: '/applications',
+        icon: PiGridFourFill,
+        url: '/applications',
         label: 'Applications',
       },
       {
-        icon: IconBook,
-        href: '/docs',
+        icon: PiBookFill,
+        url: '/docs',
         label: 'API Docs',
       },
     ],
   },
   {
-    icon: IconSettings,
-    href: '/settings',
+    icon: PiGearFill,
+    url: '/settings',
     label: 'My Settings',
   },
   {
-    icon: IconMail,
-    href: '/logout',
+    icon: PiDoorFill,
+    url: '/logout',
     label: 'Log Out',
   },
 ];
@@ -114,7 +118,7 @@ export default function DashboardLayout({ children }) {
     <AppShell
       header={{ height: 50, collapsed: !isMobile }}
       navbar={{
-        width: 300,
+        width: 260,
         breakpoint: 'sm',
         collapsed: { mobile: !opened },
       }}
@@ -137,7 +141,7 @@ export default function DashboardLayout({ children }) {
         <AppShell.Section>
           <Center mt="xs">
             <NavLink to="/">
-              <Logo m="xs" w="160px" />
+              <Logo h="50px" p="4px" />
             </NavLink>
           </Center>
           {userCanSwitchOrganizations(user) && (
@@ -147,7 +151,9 @@ export default function DashboardLayout({ children }) {
                 <Button
                   variant="default"
                   styles={{
-                    section: {},
+                    root: {
+                      border: 'none',
+                    },
                     label: {
                       flex: 1,
                     },
@@ -159,9 +165,9 @@ export default function DashboardLayout({ children }) {
                   fullWidth
                   m="xs"
                   justify="flex-start"
-                  rightSection={<IconChevronDown size={16} stroke={1.5} />}
-                  leftSection={<IconBuilding size={16} stroke={1.5} />}>
-                  <Text size="sm">
+                  rightSection={<TbChevronDown />}
+                  leftSection={<PiBuildingOfficeFill />}>
+                  <Text size="sm" fw="500">
                     {organization?.name || 'Select Organization'}
                   </Text>
                 </Button>
@@ -182,16 +188,9 @@ export default function DashboardLayout({ children }) {
         </AppShell.Section>
       </AppShell.Navbar>
       <AppShell.Main>
-        <Box
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            minHeight: 'calc(100vh - 50px)', // Subtract header height
-          }}>
-          <Box style={{ flex: 1 }}>
-            <ConnectionError />
-            <ErrorBoundary>{children}</ErrorBoundary>
-          </Box>
+        <Box style={{ flex: 1 }}>
+          <ConnectionError />
+          <ErrorBoundary>{children}</ErrorBoundary>
         </Box>
         <Footer />
       </AppShell.Main>

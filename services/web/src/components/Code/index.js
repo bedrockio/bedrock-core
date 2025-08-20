@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import { ActionIcon, Paper } from '@mantine/core';
+import { Paper } from '@mantine/core';
 
 import { Highlight, themes } from 'prism-react-renderer';
 
@@ -13,7 +13,7 @@ function CodeBlock({ code, language }) {
         margin: 0,
         fontSize: '1em',
       }}>
-      <Highlight code={code.trim()} language={language} theme={themes.oneLight}>
+      <Highlight code={code.trim()} language={language} theme={themes.vsDark}>
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
           <pre
             className={className}
@@ -42,7 +42,7 @@ import { useClass } from 'helpers/bem';
 import { copyToClipboard } from 'utils/copy';
 
 import './code.less';
-import { IconCheck, IconCopy } from '@tabler/icons-react';
+import { PiCopyFill, PiCheckFatFill } from 'react-icons/pi';
 
 export default function Code({ code, language, scroll, action, ...rest }) {
   const [copied, setCopied] = useState();
@@ -79,9 +79,7 @@ export default function Code({ code, language, scroll, action, ...rest }) {
               'copy-button',
               copied ? null : 'clickable',
             )}>
-            <ActionIcon variant="default">
-              {copied ? <IconCheck size={14} /> : <IconCopy size={14} />}
-            </ActionIcon>
+            {copied ? <PiCheckFatFill /> : <PiCopyFill />}
           </div>
         )}
       </div>

@@ -3,7 +3,7 @@ import { useSession } from 'stores/session';
 import { signInWithApple } from 'utils/auth/apple';
 import { ActionIcon, Button } from '@mantine/core';
 
-import { IconBrandAppleFilled } from '@tabler/icons-react';
+import { FaApple } from 'react-icons/fa';
 
 export default function AppleSignInButton({
   onAuthStart,
@@ -39,16 +39,13 @@ export default function AppleSignInButton({
         size={42}
         title="Use Apple to sign in."
         onClick={onClick}>
-        <IconBrandAppleFilled />
+        <FaApple />
       </ActionIcon>
     );
   }
 
   return (
-    <Button
-      onClick={onClick}
-      leftSection={<IconBrandAppleFilled size={16} />}
-      variant="default">
+    <Button onClick={onClick} leftSection={<FaApple />} variant="default">
       Sign in with Apple
     </Button>
   );

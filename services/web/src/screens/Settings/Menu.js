@@ -1,4 +1,4 @@
-import { IconFingerprintScan, IconUser } from '@tabler/icons-react';
+import { PiLockKeyOpenFill, PiUserFill } from 'react-icons/pi';
 import PageHeader from 'components/PageHeader';
 
 export default function SettingsMenu() {
@@ -17,12 +17,12 @@ export default function SettingsMenu() {
       tabs={[
         {
           title: 'Details',
-          icon: <IconUser size={14} />,
+          icon: <PiUserFill />,
           href: `/settings/details`,
         },
         {
           title: 'Security',
-          icon: <IconFingerprintScan size={14} />,
+          icon: <PiLockKeyOpenFill />,
           href: '/settings/security',
         },
       ]}

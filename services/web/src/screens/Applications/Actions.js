@@ -1,7 +1,10 @@
 import { ActionIcon, Menu, Text } from '@mantine/core';
 
-import { IconDotsVertical, IconPencil, IconTrash } from '@tabler/icons-react';
-
+import {
+  PiTrashFill,
+  PiPencilSimpleFill,
+  PiDotsThreeOutlineVerticalFill,
+} from 'react-icons/pi';
 import { request } from 'utils/api';
 import ConfirmModal from 'components/modals/Confirm';
 import { Link } from '@bedrockio/router';
@@ -12,7 +15,7 @@ export default function ApplicationActions({ application, reload }) {
     <Menu shadow="md" keepMounted>
       <Menu.Target>
         <ActionIcon variant="default">
-          <IconDotsVertical size={20} />
+          <PiDotsThreeOutlineVerticalFill />
         </ActionIcon>
       </Menu.Target>
 
@@ -20,13 +23,13 @@ export default function ApplicationActions({ application, reload }) {
         <Menu.Item
           component={Link}
           to={`/applications/${application.id}/edit`}
-          leftSection={<IconPencil size={14} />}>
+          leftSection={<PiPencilSimpleFill />}>
           Edit
         </Menu.Item>
         <ModalWrapper
           title="Delete Application"
           trigger={
-            <Menu.Item color="red" leftSection={<IconTrash size={14} />}>
+            <Menu.Item color="red" leftSection={<PiTrashFill />}>
               Delete
             </Menu.Item>
           }

@@ -16,7 +16,7 @@ import Meta from 'components/Meta';
 import { DEFAULT_PAGE_ID, pagesByPath, sorted } from '../../pages';
 
 import './api-docs.less';
-import { IconRefresh } from '@tabler/icons-react';
+import { PiArrowClockwiseFill } from 'react-icons/pi';
 import PortalLayout from 'layouts/Portal';
 import Footer from 'components/Footer';
 
@@ -27,12 +27,12 @@ function getMenuItems(sorted) {
     return {
       id,
       label: page.title,
-      href: `/docs/${page.path}`,
+      url: `/docs/${page.path}`,
       items: pages.map((subpage) => {
         return {
           id: subpage.id,
           label: subpage.title,
-          href: `/docs/${subpage.path}`,
+          url: `/docs/${subpage.path}`,
         };
       }),
     };
@@ -137,7 +137,7 @@ export default function ApiDocs() {
             }
             trigger={
               <ActionIcon variant="default" title="Generate Documentation">
-                <IconRefresh size={14} />
+                <PiArrowClockwiseFill />
               </ActionIcon>
             }
           />

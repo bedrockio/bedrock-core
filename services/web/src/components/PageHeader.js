@@ -29,12 +29,10 @@ const PageHeader = ({
             {breadcrumbItems.map((item, index) =>
               item?.href ? (
                 <Anchor component={Link} to={item.href} key={index}>
-                  <Text size="sm">{item.title}</Text>
+                  {item.title}
                 </Anchor>
               ) : (
-                <Text key={index} size="sm">
-                  {item.title}
-                </Text>
+                item.title
               ),
             )}
           </Breadcrumbs>

@@ -3,7 +3,6 @@ import Form from './Form';
 import { Stack, Button } from '@mantine/core';
 import { useNavigate } from '@bedrockio/router';
 import { Link } from '@bedrockio/router';
-import { IconArrowBack } from '@tabler/icons-react';
 
 export default function NewUser() {
   const navigate = useNavigate();
@@ -18,11 +17,7 @@ export default function NewUser() {
           { title: 'New User' },
         ]}
         rightSection={
-          <Button
-            component={Link}
-            to="/users"
-            variant="default"
-            rightSection={<IconArrowBack size={14} />}>
+          <Button component={Link} to="/users" variant="default">
             Back
           </Button>
         }

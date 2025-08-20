@@ -17,3 +17,12 @@
   height: 21px;
   border-radius: 21px;
 }
+
+.control .icon {
+  visibility: hidden;
+}
+
+.control[data-sorted='true'] .icon,
+.control:hover .icon {
+  visibility: visible;
+}

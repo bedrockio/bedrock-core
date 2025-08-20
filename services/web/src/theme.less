@@ -1,0 +1,32 @@
+:root {
+  --ai-size-md: calc(5rem * var(--mantine-scale));
+}
+
+.mantine-NavLink-root {
+  font-weight: 500;
+
+  &[data-active] {
+    color: light-dark(
+      var(--mantine-primary-green-4),
+      var(--mantine-primary-green-10)
+    );
+  }
+}
+
+.mantine-AppShell-main {
+  display: flex;
+  flex-flow: column;
+}
+
+.mantine-ActionIcon-root {
+  padding: 6px;
+  --ai-size-md: 32px;
+}
+
+.mantine-NavLink-children {
+  padding-inline-start: 0;
+
+  > a {
+    padding-inline-start: var(--nl-offset, var(--mantine-spacing-lg));
+  }
+}

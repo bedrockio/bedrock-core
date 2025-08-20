@@ -2,7 +2,7 @@ import { noop } from 'lodash';
 import PropTypes from 'prop-types';
 import { withRouter } from '@bedrockio/router';
 import { ActionIcon } from '@mantine/core';
-import { IconFingerprint } from '@tabler/icons-react';
+import { PiFingerprintFill } from 'react-icons/pi';
 
 import { withSession } from 'stores/session';
 
@@ -39,7 +39,7 @@ const PasskeyButton = ({
       size={42}
       title="Use passkey to sign in."
       onClick={handleClick}>
-      <IconFingerprint />
+      <PiFingerprintFill />
     </ActionIcon>
   );
 };

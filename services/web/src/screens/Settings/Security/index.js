@@ -25,7 +25,7 @@ import { formatDate, fromNow } from 'utils/date';
 import Menu from '../Menu';
 import Sessions from './Sessions';
 import TwoFactorAuthentication from './TwoFactorAuthentication';
-import { IconTrash } from '@tabler/icons-react';
+import { PiTrashFill } from 'react-icons/pi';
 
 export default function Security() {
   const { user, updateUser } = useSession();
@@ -137,7 +137,7 @@ export default function Security() {
                             loading={loading}
                             disabled={loading}
                             onClick={() => deletePasskey(passkey)}>
-                            <IconTrash color="red" size={16} />
+                            <PiTrashFill />
                           </ActionIcon>
                         </Group>
                       );

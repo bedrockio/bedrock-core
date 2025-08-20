@@ -10,7 +10,7 @@ import {
   Loader,
   Stack,
 } from '@mantine/core';
-import { IconPlus } from '@tabler/icons-react';
+import { PiPlus } from 'react-icons/pi';
 
 import PageHeader from 'components/PageHeader';
 
@@ -85,7 +85,7 @@ export default function ProductList() {
                     variant="default"
                     component={Link}
                     to="/products/new"
-                    rightSection={<IconPlus size={14} />}>
+                    rightSection={<PiPlus />}>
                     New Product
                   </Button>
                 </>

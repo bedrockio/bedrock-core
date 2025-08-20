@@ -14,7 +14,7 @@ import { useDocs } from '../utils/context';
 import EditableField from './EditableField';
 
 import './route-example.less';
-import { IconMinus, IconPlus, IconTrash } from '@tabler/icons-react';
+import { PiMinus, PiPlus, PiTrashFill } from 'react-icons/pi';
 
 export default function RouteExample(props) {
   const { path, status, schema, requestPath, requestBody, responseBody } =
@@ -97,7 +97,7 @@ export default function RouteExample(props) {
                 className={getElementClass('summary')}
                 trigger={
                   <ActionIcon variant="default">
-                    <IconTrash size={14} />
+                    <PiTrashFill />
                   </ActionIcon>
                 }
               />
@@ -126,12 +126,12 @@ export default function RouteExample(props) {
                       onClick={(evt) => {
                         evt.stopPropagation();
                       }}>
-                      <IconTrash size={14} />
+                      <PiTrashFill />
                     </ActionIcon>
                   }
                 />
               )}
-              {open ? <IconMinus size={14} /> : <IconPlus size={14} />}
+              {open ? <PiMinus /> : <PiPlus />}
             </Group>
           </Group>
         </div>

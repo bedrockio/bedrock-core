@@ -3,7 +3,7 @@ import React from 'react';
 import Code from 'components/Code';
 
 import RequestBuilder from './RequestBuilder';
-import { IconPlayerPlayFilled } from '@tabler/icons-react';
+import { PiPlayFill } from 'react-icons/pi';
 import { ActionIcon } from '@mantine/core';
 
 export default class Route extends React.Component {
@@ -16,7 +16,7 @@ export default class Route extends React.Component {
             route={route}
             trigger={
               <ActionIcon variant="default">
-                <IconPlayerPlayFilled size={14} />
+                <PiPlayFill />
               </ActionIcon>
             }
           />

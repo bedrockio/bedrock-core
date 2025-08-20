@@ -8,7 +8,7 @@ import {
   Text,
   Stack,
 } from '@mantine/core';
-import { IconTrash } from '@tabler/icons-react';
+import { PiTrash } from 'react-icons/pi';
 import { useSession } from 'stores/session';
 import { parseUserAgent } from 'utils/user-agent';
 import { fromNow } from 'utils/date';
@@ -90,7 +90,7 @@ export default function Sessions() {
                     onClick={() =>
                       logoutRequest.request({ body: { jti: token.jti } })
                     }>
-                    <IconTrash color="red" size={16} />
+                    <PiTrash color="red" />
                   </ActionIcon>
                 </Table.Td>
               </Table.Tr>

@@ -6,7 +6,7 @@ import NotFound from 'screens/NotFound';
 export default function Users() {
   return (
     <Routes>
-      <Route path="/invites" render={List} exact />
+      <Route path="/users/invites" render={List} exact />
       <Route render={NotFound} />
     </Routes>
   );

@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from 'react';
 import { omit } from 'lodash';
 import { Button, Stack, Group, Badge, Modal } from '@mantine/core';
-import { IconAdjustmentsHorizontal, IconFilter } from '@tabler/icons-react';
+import { PiSlidersHorizontalFill, PiFunnelFill } from 'react-icons/pi';
 
 import { useDisclosure } from '@mantine/hooks';
 
@@ -53,13 +53,13 @@ function FilterModal({ size = 'sm', children }) {
         <Button
           variant="default"
           onClick={() => open()}
-          rightSection={<IconAdjustmentsHorizontal size={14} />}>
+          rightSection={<PiSlidersHorizontalFill />}>
           Filter
         </Button>
       ) : (
         <>
           <Button onClick={() => open()} variant="light" primary>
-            <IconFilter size={14} />
+            <PiFunnelFill />
             Filter
           </Button>
           {getFilterCount() > 0 && <Badge>{getFilterCount()}</Badge>}

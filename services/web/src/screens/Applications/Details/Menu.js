@@ -3,7 +3,7 @@ import { usePage } from 'stores/page';
 import PageHeader from 'components/PageHeader';
 import Actions from '../Actions';
 
-import { IconPencil } from '@tabler/icons-react';
+import { PiPencilSimpleFill } from 'react-icons/pi';
 
 export default function ApplicationMenu() {
   const { application, reload } = usePage();
@@ -19,7 +19,7 @@ export default function ApplicationMenu() {
       rightSection={<Actions application={application} reload={reload} />}
       tabs={[
         {
-          icon: <IconPencil size={12} />,
+          icon: <PiPencilSimpleFill />,
           title: 'Edit',
           href: `/applications/${application.id}/edit`,
         },

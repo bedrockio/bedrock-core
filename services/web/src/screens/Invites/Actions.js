@@ -1,7 +1,11 @@
 import { ActionIcon, Menu, Text } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 
-import { IconDotsVertical, IconTrash, IconRepeat } from '@tabler/icons-react';
+import {
+  PiTrashFill,
+  PiRepeatFill,
+  PiDotsThreeOutlineVerticalFill,
+} from 'react-icons/pi';
 
 import { request, useRequest } from 'utils/api';
 import ConfirmModal from 'components/modals/Confirm';
@@ -31,7 +35,7 @@ export default function InviteActions({ invite, reload }) {
     <Menu shadow="md" keepMounted>
       <Menu.Target>
         <ActionIcon variant="default">
-          <IconDotsVertical size={20} />
+          <PiDotsThreeOutlineVerticalFill />
         </ActionIcon>
       </Menu.Target>
 
@@ -40,14 +44,14 @@ export default function InviteActions({ invite, reload }) {
           onClick={() => {
             resentRequest.request();
           }}
-          leftSection={<IconRepeat size={14} />}>
+          leftSection={<PiRepeatFill />}>
           Resend Invite
         </Menu.Item>
 
         <ModalWrapper
           title="Delete Invite"
           trigger={
-            <Menu.Item color="red" leftSection={<IconTrash size={14} />}>
+            <Menu.Item color="red" leftSection={<PiTrashFill />}>
               Delete
             </Menu.Item>
           }

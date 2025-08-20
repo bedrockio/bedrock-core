@@ -1,19 +1,17 @@
 import { ActionIcon, Menu, Text, Group, Button } from '@mantine/core';
+
 import {
-  IconTrash,
-  IconCode,
-  IconPencil,
-  IconDotsVertical,
-  IconListSearch,
-  IconArrowBack,
-} from '@tabler/icons-react';
+  PiCode,
+  PiPencilSimpleFill,
+  PiListMagnifyingGlass,
+  PiDotsThreeOutlineVerticalFill,
+} from 'react-icons/pi';
 import { Link } from '@bedrockio/router';
 
 import InspectObject from 'components/modals/InspectObject';
 import ConfirmModal from 'components/modals/Confirm';
 import Protected from 'components/Protected';
 import { request } from 'utils/api';
-import { IconEdit } from '@tabler/icons-react';
 import ModalWrapper from 'components/ModalWrapper';
 
 export default function ProductsActions({
@@ -29,7 +27,7 @@ export default function ProductsActions({
             variant="default"
             component={Link}
             to={`/products/${product.id}/edit`}>
-            <IconEdit size={14} />
+            <PiPencilSimpleFill />
           </ActionIcon>
         </Protected>
       );
@@ -37,7 +35,6 @@ export default function ProductsActions({
       return (
         <Button
           variant="default"
-          rightSection={<IconArrowBack size={14} />}
           component={Link}
           to={`/products/${product.id}`}>
           Back
@@ -48,7 +45,7 @@ export default function ProductsActions({
         <Protected endpoint="users" permission="update">
           <Button
             variant="default"
-            rightSection={<IconPencil size={14} />}
+            rightSection={<PiPencilSimpleFill />}
             component={Link}
             to={`/products/${product.id}/edit`}>
             Edit
@@ -64,12 +61,12 @@ export default function ProductsActions({
       <Menu shadow="md" keepMounted>
         <Menu.Target>
           {displayMode !== 'list' ? (
-            <ActionIcon size="input-sm" variant="default">
-              <IconDotsVertical size={20} />
+            <ActionIcon variant="default">
+              <PiDotsThreeOutlineVerticalFill />
             </ActionIcon>
           ) : (
             <ActionIcon variant="default">
-              <IconDotsVertical size={20} />
+              <PiDotsThreeOutlineVerticalFill />
             </ActionIcon>
           )}
         </Menu.Target>
@@ -79,17 +76,13 @@ export default function ProductsActions({
             title={`Inspect ${product.name}`}
             component={<InspectObject object={product} name="product" />}
             size="lg"
-            trigger={
-              <Menu.Item leftSection={<IconCode size={14} />}>
-                Inspect
-              </Menu.Item>
-            }
+            trigger={<Menu.Item leftSection={<PiCode />}>Inspect</Menu.Item>}
           />
           <Protected endpoint="auditEntries" permission="read">
             <Menu.Item
               component={Link}
               to={`/audit-log?object=${product.id}&filterLabel=${product.name}`}
-              leftSection={<IconListSearch size={14} />}>
+              leftSection={<PiListMagnifyingGlass />}>
               Audit Logs
             </Menu.Item>
           </Protected>
@@ -97,7 +90,7 @@ export default function ProductsActions({
             <ModalWrapper
               title="Delete Product"
               trigger={
-                <Menu.Item color="red" leftSection={<IconTrash size={14} />}>
+                <Menu.Item color="red" leftSection={<PiListMagnifyingGlass />}>
                   Delete
                 </Menu.Item>
               }

@@ -3,19 +3,11 @@ import { uniq } from 'lodash';
 import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
 
-import {
-  Input,
-  SimpleGrid,
-  Image,
-  Paper,
-  Text,
-  Pill,
-  Loader,
-} from '@mantine/core';
+import { Input, SimpleGrid, Image, Paper, Text, Loader } from '@mantine/core';
 
 import { request } from 'utils/api';
 import { urlForUpload } from 'utils/uploads';
-import { IconFile, IconTrash } from '@tabler/icons-react';
+import { PiTrashSimpleFill, PiFileFill } from 'react-icons/pi';
 
 const MIME_TYPES = {
   image: {
@@ -213,12 +205,16 @@ export default class Uploads extends React.Component {
                   key={this.getUploadId(upload)}
                   className="upload-card">
                   {this.renderUpload(upload)}
-                  <IconTrash
+                  <PiTrashSimpleFill
                     style={{
                       position: 'absolute',
                       top: 5,
                       right: 5,
                       cursor: 'pointer',
+                      boxSizing: 'content-box',
+                      padding: '3px',
+                      background: '#fff',
+                      borderRadius: '50%',
                     }}
                     size="14"
                     onClick={() => this.delete(upload)}
@@ -242,19 +238,26 @@ export default class Uploads extends React.Component {
               ))}
             </SimpleGrid>
           ) : (
-            <Paper color="blue">
-              {uploads.map((upload) => (
-                <Pill key={this.getUploadId(upload)}>
-                  {this.renderIconForType()}
-                  {upload.filename || 'File'}
-                  <IconTrash
-                    size={14}
-                    style={{ cursor: 'pointer' }}
-                    onClick={(evt) => this.delete(evt, upload)}
-                  />
-                </Pill>
-              ))}
-            </Paper>
+            uploads.map((upload) => (
+              <div
+                key={this.getUploadId(upload)}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  borderRadius: '50px',
+                  fontSize: '14px',
+                  color: '#fff',
+                  background: 'var(--mantine-color-blue-7)',
+                  padding: '0.3em 0.8em',
+                  gap: '0.3em',
+                }}>
+                {upload.filename || 'File'}
+                <PiTrashSimpleFill
+                  style={{ cursor: 'pointer' }}
+                  onClick={(evt) => this.delete(evt, upload)}
+                />
+              </div>
+            ))
           ))}
         <Dropzone
           accept={this.getMimeTypes()}
@@ -310,7 +313,7 @@ export default class Uploads extends React.Component {
   }
 
   renderIconForType() {
-    return <IconFile />;
+    return <PiFileFill />;
   }
 }
 

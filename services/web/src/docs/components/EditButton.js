@@ -1,7 +1,7 @@
 import { useClass } from 'helpers/bem';
 
 import { useDocs } from '../utils/context';
-import { IconPencil } from '@tabler/icons-react';
+import { PiPencilSimpleFill } from 'react-icons/pi';
 import { ActionIcon } from '@mantine/core';
 
 export default function EditButton() {
@@ -12,7 +12,7 @@ export default function EditButton() {
       variant="default"
       className={className}
       onClick={() => setMode(mode === 'view' ? 'edit' : 'view')}>
-      <IconPencil size={14} />
+      <PiPencilSimpleFill />
     </ActionIcon>
   );
 }

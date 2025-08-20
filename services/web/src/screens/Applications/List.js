@@ -9,7 +9,7 @@ import { request } from 'utils/api';
 import Meta from 'components/Meta';
 
 import PageHeader from 'components/PageHeader';
-import { IconPlus } from '@tabler/icons-react';
+import { PiPlus } from 'react-icons/pi';
 import { fromNow } from 'utils/date';
 import SortableTh from 'components/Table/SortableTh';
 
@@ -47,7 +47,7 @@ export default function Applications() {
                     variant="default"
                     component={Link}
                     to="/applications/new"
-                    rightSection={<IconPlus size={14} />}>
+                    rightSection={<PiPlus />}>
                     New Application
                   </Button>
                 }

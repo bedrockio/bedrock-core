@@ -3,7 +3,6 @@ import PageHeader from 'components/PageHeader';
 import Form from './Form';
 import { Stack, Button } from '@mantine/core';
 import { useNavigate, Link } from '@bedrockio/router';
-import { IconArrowRight } from '@tabler/icons-react';
 
 export default function NewShop() {
   const navigate = useNavigate();
@@ -18,11 +17,7 @@ export default function NewShop() {
           { title: 'New Application' },
         ]}
         rightSection={
-          <Button
-            component={Link}
-            to="/applications"
-            variant="default"
-            rightSection={<IconArrowRight size={14} />}>
+          <Button component={Link} to="/applications" variant="default">
             Back
           </Button>
         }

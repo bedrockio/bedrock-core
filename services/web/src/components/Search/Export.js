@@ -4,7 +4,7 @@ import { safeFileName } from 'utils/formatting';
 import { downloadResponse } from 'utils/download';
 
 import SearchContext from './Context';
-import { IconDownload } from '@tabler/icons-react';
+import { PiDownloadFill } from 'react-icons/pi';
 import { useContext, useState } from 'react';
 import { showNotification } from '@mantine/notifications';
 
@@ -13,7 +13,7 @@ export default function ExportButton({
   limit = 10000,
   filename,
   size,
-  as: As = Button,
+  as: Component = Button,
   children = 'Export',
   ...props
 }) {
@@ -52,29 +52,29 @@ export default function ExportButton({
         w={220}
         label="Too many rows to export, narrow your search"
         trigger={
-          <As
+          <Component
             loading={loading}
             size={size}
             disabled
             variant="default"
-            rightSection={<IconDownload size={14} />}
+            rightSection={<PiDownloadFill />}
             {...props}>
             {children}
-          </As>
+          </Component>
         }
       />
     );
   }
 
   return (
-    <As
+    <Component
       size={size}
       variant="default"
-      rightSection={<IconDownload size={14} />}
+      rightSection={<PiDownloadFill />}
       loading={loading}
       disabled={context.meta?.total === 0 || loading}
       onClick={handleSubmit}>
       {children}
-    </As>
+    </Component>
   );
 }

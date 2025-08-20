@@ -1,4 +1,4 @@
-import { IconHome2, IconWorld } from '@tabler/icons-react';
+import { PiHouseFill, PiGlobeHemisphereWestFill } from 'react-icons/pi';
 
 const VALID_SCOPES = ['global', 'organization'];
 
@@ -74,7 +74,7 @@ export function formatRoles(roles) {
       labels.push({
         key: `global-${role.role}`,
         content: role.roleDefinition.name,
-        icon: IconWorld,
+        icon: PiGlobeHemisphereWestFill,
       });
     } else {
       const key = `${role.role}-${role.scope}-${role.scopeRef}`;
@@ -83,7 +83,7 @@ export function formatRoles(roles) {
         labels.push({
           key: key,
           content: role.roleDefinition.name,
-          icon: IconHome2,
+          icon: PiHouseFill,
         });
       }
     }

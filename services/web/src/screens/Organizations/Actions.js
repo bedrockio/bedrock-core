@@ -1,13 +1,15 @@
 import { ActionIcon, Menu, Text, Button, Group } from '@mantine/core';
+
 import {
-  IconTrash,
-  IconCode,
-  IconListSearch,
-  IconDotsVertical,
-  IconPencil,
-  IconEdit,
-  IconArrowBack,
-} from '@tabler/icons-react';
+  PiCode,
+  PiPencilSimpleFill,
+  PiTrashFill,
+  PiListMagnifyingGlass,
+  PiDotsThreeOutlineVerticalFill,
+  PiArrowUUpLeft,
+  PiPencil,
+} from 'react-icons/pi';
+
 import { Link } from '@bedrockio/router';
 
 import InspectObject from 'components/modals/InspectObject';
@@ -29,7 +31,7 @@ export default function OrganizationActions({
             variant="default"
             component={Link}
             to={`/organizations/${organization.id}/edit`}>
-            <IconEdit size={14} />
+            <PiPencilSimpleFill />
           </ActionIcon>
         </Protected>
       );
@@ -37,7 +39,7 @@ export default function OrganizationActions({
       return (
         <Button
           variant="default"
-          rightSection={<IconArrowBack size={14} />}
+          rightSection={<PiArrowUUpLeft />}
           component={Link}
           to={`/organizations/${organization.id}`}>
           Back
@@ -48,7 +50,7 @@ export default function OrganizationActions({
         <Protected endpoint="organizations" permission="update">
           <Button
             variant="default"
-            rightSection={<IconPencil size={14} />}
+            rightSection={<PiPencil />}
             component={Link}
             to={`/organizations/${organization.id}/edit`}>
             Edit
@@ -66,12 +68,12 @@ export default function OrganizationActions({
       <Menu shadow="md" keepMounted>
         <Menu.Target>
           {displayMode !== 'list' ? (
-            <ActionIcon size="input-sm" variant="default">
-              <IconDotsVertical size={14} />
+            <ActionIcon variant="default">
+              <PiDotsThreeOutlineVerticalFill />
             </ActionIcon>
           ) : (
             <ActionIcon variant="default">
-              <IconDotsVertical size={14} />
+              <PiDotsThreeOutlineVerticalFill />
             </ActionIcon>
           )}
         </Menu.Target>
@@ -83,17 +85,13 @@ export default function OrganizationActions({
               <InspectObject object={organization} name="organization" />
             }
             size="lg"
-            trigger={
-              <Menu.Item leftSection={<IconCode size={14} />}>
-                Inspect
-              </Menu.Item>
-            }
+            trigger={<Menu.Item leftSection={<PiCode />}>Inspect</Menu.Item>}
           />
           <Protected endpoint="auditEntries" permission="read">
             <Menu.Item
               component={Link}
               to={`/audit-log?object=${organization.id}&filterLabel=${organization.name}`}
-              leftSection={<IconListSearch size={14} />}>
+              leftSection={<PiListMagnifyingGlass />}>
               Audit Logs
             </Menu.Item>
           </Protected>
@@ -101,7 +99,7 @@ export default function OrganizationActions({
             <ModalWrapper
               title="Delete Organization"
               trigger={
-                <Menu.Item color="red" leftSection={<IconTrash size={14} />}>
+                <Menu.Item color="red" leftSection={<PiTrashFill />}>
                   Delete
                 </Menu.Item>
               }

@@ -1,15 +1,14 @@
 import { ActionIcon, Group, Menu, Text, Button } from '@mantine/core';
 
 import {
-  IconDotsVertical,
-  IconTrash,
-  IconCode,
-  IconPencil,
-  IconUserCode,
-  IconEdit,
-  IconLogs,
-  IconArrowBack,
-} from '@tabler/icons-react';
+  PiCode,
+  PiTrashFill,
+  PiDotsThreeOutlineVerticalFill,
+  PiPencilSimpleFill,
+  PiKeyFill,
+  PiRowsFill,
+} from 'react-icons/pi';
+
 import { Link } from '@bedrockio/router';
 import { useSession } from 'stores/session';
 
@@ -43,17 +42,13 @@ export default function UserActions({ displayMode = 'show', user, reload }) {
             variant="default"
             component={Link}
             to={`/users/${user.id}/edit`}>
-            <IconEdit size={14} />
+            <PiPencilSimpleFill />
           </ActionIcon>
         </Protected>
       );
     } else if (displayMode === 'edit') {
       return (
-        <Button
-          variant="default"
-          rightSection={<IconArrowBack size={14} />}
-          component={Link}
-          to={`/users/${user.id}`}>
+        <Button variant="default" component={Link} to={`/users/${user.id}`}>
           Back
         </Button>
       );
@@ -62,7 +57,7 @@ export default function UserActions({ displayMode = 'show', user, reload }) {
         <Protected endpoint="users" permission="update">
           <Button
             variant="default"
-            rightSection={<IconPencil size={14} />}
+            rightSection={<PiPencilSimpleFill />}
             component={Link}
             to={`/users/${user.id}/edit`}>
             Edit
@@ -80,12 +75,12 @@ export default function UserActions({ displayMode = 'show', user, reload }) {
       <Menu shadow="md" keepMounted>
         <Menu.Target>
           {displayMode !== 'list' ? (
-            <ActionIcon size="input-sm" variant="default">
-              <IconDotsVertical size={14} />
+            <ActionIcon variant="default">
+              <PiDotsThreeOutlineVerticalFill />
             </ActionIcon>
           ) : (
             <ActionIcon variant="default">
-              <IconDotsVertical size={14} />
+              <PiDotsThreeOutlineVerticalFill />
             </ActionIcon>
           )}
         </Menu.Target>
@@ -98,7 +93,7 @@ export default function UserActions({ displayMode = 'show', user, reload }) {
             trigger={
               <Menu.Item
                 disabled={!canAuthenticate}
-                leftSection={<IconUserCode size={14} />}>
+                leftSection={<PiKeyFill />}>
                 Login as User
               </Menu.Item>
             }
@@ -108,7 +103,7 @@ export default function UserActions({ displayMode = 'show', user, reload }) {
             <Menu.Item
               component={Link}
               to={`/audit-log?user=${user.id}&filterLabel=${user.name}`}
-              leftSection={<IconLogs size={14} />}>
+              leftSection={<PiRowsFill />}>
               Audit Logs
             </Menu.Item>
           </Protected>
@@ -117,17 +112,13 @@ export default function UserActions({ displayMode = 'show', user, reload }) {
             title={`Inspect ${user.name}`}
             component={<InspectObject object={user} name="user" />}
             size="lg"
-            trigger={
-              <Menu.Item leftSection={<IconCode size={14} />}>
-                Inspect
-              </Menu.Item>
-            }
+            trigger={<Menu.Item leftSection={<PiCode />}>Inspect</Menu.Item>}
           />
           <Protected endpoint="users" permission="delete">
             <ModalWrapper
               title="Delete User"
               trigger={
-                <Menu.Item color="red" leftSection={<IconTrash size={14} />}>
+                <Menu.Item color="red" leftSection={<PiTrashFill />}>
                   Delete
                 </Menu.Item>
               }

@@ -3,7 +3,7 @@ import React from 'react';
 import SearchContext from '../../Context';
 
 import DisplayValue from './DisplayValue';
-import { IconTrash } from '@tabler/icons-react';
+import { PiTrashFill } from 'react-icons/pi';
 import { Group, List } from '@mantine/core';
 
 export default class Overview extends React.Component {
@@ -58,7 +58,7 @@ export default class Overview extends React.Component {
                 <Group>
                   {mapping.label}:{' '}
                   <DisplayValue mapping={mapping} value={filters[key]} />
-                  <IconTrash fitted style={{ top: 0 }} />
+                  <PiTrashFill />
                 </Group>
               </List.Item>
             );

@@ -1,4 +1,12 @@
-import { Button, createTheme, DEFAULT_THEME, Tabs } from '@mantine/core';
+import {
+  Button,
+  ActionIcon,
+  createTheme,
+  DEFAULT_THEME,
+  Tabs,
+} from '@mantine/core';
+
+import './theme.less';
 
 export const theme = createTheme({
   primaryShade: 9,
@@ -6,11 +14,13 @@ export const theme = createTheme({
 
   luminanceThreshold: 0.3,
   primaryColor: 'green',
-  fontFamily: 'Inter, sans-serif',
+  fontFamily:
+    'system-ui,-apple-system,BlinkMacSystemFont,Helvetica,"Segoe UI",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji"',
 
   colors: {
     brown: [
-      '#f7f5f2',
+      '#fcfbfa',
+      '#f4f0ea',
       '#e8e1d6',
       '#d8cfc0',
       '#c8bda9',
@@ -21,6 +31,20 @@ export const theme = createTheme({
       '#7b673f',
       '#6c5629',
     ],
+    green: [
+      '#ebfbee',
+      '#d3f9d8',
+      '#b2f2bb',
+      '#8ce99a',
+      '#69db7c',
+      '#51cf66',
+      '#40c057',
+      '#37b24d',
+      '#2f9e44',
+      '#2b8a3e',
+      '#054011',
+    ],
+
     error: DEFAULT_THEME.colors.red,
     info: DEFAULT_THEME.colors.blue,
     success: DEFAULT_THEME.colors.green,
@@ -35,9 +59,12 @@ export const theme = createTheme({
     AppShell: {
       styles: {
         navbar: {
-          backgroundColor: `light-dark(var(--mantine-color-brown-0), transparent)`,
+          backgroundColor: `light-dark(var(--mantine-color-brown-1), transparent)`,
         },
         header: {
+          backgroundColor: `light-dark(var(--mantine-color-brown-1), transparent)`,
+        },
+        main: {
           backgroundColor: `light-dark(var(--mantine-color-brown-0), transparent)`,
         },
       },
@@ -71,13 +98,15 @@ export const theme = createTheme({
         },
       },
     }),
-    NavLink: {
+    Breadcrumbs: {
       styles: {
         root: {
-          fontSize: 'var(--mantine-font-size-sm)',
+          fontSize: 'var(--mantine-font-size-xs)',
         },
-        section: {
-          marginInlineEnd: 'var(--mantine-spacing-xs)',
+        breadcrumb: {
+          fontSize: 'var(--mantine-font-size-xs)',
+          fontWeight: '500',
+          textTransform: 'uppercase',
         },
       },
     },
