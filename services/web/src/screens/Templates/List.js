@@ -1,29 +1,29 @@
 import { Link } from '@bedrockio/router';
+
 import {
-  Group,
-  Table,
+  Anchor,
+  Badge,
   Button,
   Divider,
-  Anchor,
-  Text,
+  Group,
   Loader,
   Stack,
-  Badge,
+  Table,
+  Text,
 } from '@mantine/core';
+
 import { PiPlus } from 'react-icons/pi';
-import Protected from 'components/Protected';
 
-import PageHeader from 'components/PageHeader';
-
-import Search from 'components/Search';
-
-import SearchFilters from 'components/Search/Filters';
 import ErrorMessage from 'components/ErrorMessage';
+import PageHeader from 'components/PageHeader';
+import Protected from 'components/Protected';
+import Search from 'components/Search';
+import SearchFilters from 'components/Search/Filters';
+import SortableTh from 'components/Table/SortableTh';
 
 import { request } from 'utils/api';
 
 import Actions from './Actions';
-import SortableTh from 'components/Table/SortableTh';
 
 export default function TemplateList() {
   async function onDataNeeded(body) {

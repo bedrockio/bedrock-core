@@ -1,9 +1,9 @@
-import { APP_NAME } from 'utils/env';
+import { Image, useMantineColorScheme } from '@mantine/core';
 
-import logoLight from 'assets/logo-light.svg';
 import logoDark from 'assets/logo-dark.svg';
+import logoLight from 'assets/logo-light.svg';
 
-import { useMantineColorScheme, Image } from '@mantine/core';
+import { APP_NAME } from 'utils/env';
 
 export default function Logo(props) {
   const { colorScheme } = useMantineColorScheme();

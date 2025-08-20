@@ -1,4 +1,4 @@
-import { Table, Stack, Group, Badge } from '@mantine/core';
+import { Badge, Group, Stack, Table } from '@mantine/core';
 
 import { usePage } from 'stores/page';
 

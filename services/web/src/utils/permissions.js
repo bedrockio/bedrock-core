@@ -1,4 +1,4 @@
-import { PiHouseFill, PiGlobeHemisphereWestFill } from 'react-icons/pi';
+import { PiGlobeHemisphereWestFill, PiHouseFill } from 'react-icons/pi';
 
 const VALID_SCOPES = ['global', 'organization'];
 

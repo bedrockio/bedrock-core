@@ -1,14 +1,13 @@
-import { Divider, Stack } from '@mantine/core';
+import { Divider, Group, Stack } from '@mantine/core';
 
-import { canShowGoogleSignin } from 'utils/auth/google';
 import { canShowAppleSignin } from 'utils/auth/apple';
+import { canShowGoogleSignin } from 'utils/auth/google';
 import { canShowPasskey } from 'utils/auth/passkey';
 
-import PasskeyButton from './PasskeyButton';
-import GoogleButton from './Google/SignInButton';
 import AppleButton from './Apple/SignInButton';
+import GoogleButton from './Google/SignInButton';
+import PasskeyButton from './PasskeyButton';
 
-import { Group } from '@mantine/core';
 export default function Federated(props) {
   const { type } = props;
 

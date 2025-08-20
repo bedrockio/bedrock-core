@@ -1,25 +1,25 @@
-import ErrorMessage from 'components/ErrorMessage';
-import UploadsField from 'components/form-fields/Uploads';
-import SearchDropdown from 'components/SearchDropdown';
-
-import { useRequest } from 'utils/api';
-
 import {
   Button,
-  Stack,
+  Checkbox,
+  Fieldset,
   Grid,
   Group,
+  NumberInput,
+  Stack,
+  TagsInput,
   TextInput,
   Textarea,
-  Checkbox,
-  NumberInput,
-  TagsInput,
-  Fieldset,
 } from '@mantine/core';
 
-import { useForm } from '@mantine/form';
 import { DateTimePicker } from '@mantine/dates';
+import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
+
+import ErrorMessage from 'components/ErrorMessage';
+import SearchDropdown from 'components/SearchDropdown';
+import UploadsField from 'components/form-fields/Uploads';
+
+import { useRequest } from 'utils/api';
 
 function parseProduct(product) {
   return {

@@ -1,10 +1,11 @@
-import Form from '../Form';
+import { useNavigate } from '@bedrockio/router';
+import { Space } from '@mantine/core';
 
 import { usePage } from 'stores/page';
 
-import { Space } from '@mantine/core';
-import { useNavigate } from '@bedrockio/router';
 import BackLink from 'components/BackLink';
+
+import Form from '../Form';
 
 export default function TemplateEdit() {
   const { template, reload } = usePage();

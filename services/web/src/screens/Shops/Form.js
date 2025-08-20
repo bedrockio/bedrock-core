@@ -1,24 +1,23 @@
-import UploadsField from 'components/form-fields/Uploads';
-import ErrorMessage from 'components/ErrorMessage';
-import SearchDropdown from 'components/SearchDropdown';
-
-import allCountries from 'utils/countries';
-
-import { useRequest } from 'utils/api';
-
 import {
   Button,
-  Stack,
+  Fieldset,
   Grid,
   Group,
+  Select,
+  Stack,
   TextInput,
   Textarea,
-  Select,
-  Fieldset,
 } from '@mantine/core';
 
 import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
+
+import ErrorMessage from 'components/ErrorMessage';
+import SearchDropdown from 'components/SearchDropdown';
+import UploadsField from 'components/form-fields/Uploads';
+
+import { useRequest } from 'utils/api';
+import allCountries from 'utils/countries';
 
 const countries = allCountries.map(({ countryCode, nameEn }) => ({
   value: countryCode,

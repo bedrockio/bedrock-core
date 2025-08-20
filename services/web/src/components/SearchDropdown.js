@@ -1,7 +1,7 @@
-import React from 'react';
+import { Loader, MultiSelect, Select } from '@mantine/core';
+import { debounce, isEmpty, omit, uniqBy } from 'lodash';
 import PropTypes from 'prop-types';
-import { Select, MultiSelect, Loader } from '@mantine/core';
-import { debounce, uniqBy, isEmpty, omit } from 'lodash';
+import React from 'react';
 
 import { request } from 'utils/api';
 

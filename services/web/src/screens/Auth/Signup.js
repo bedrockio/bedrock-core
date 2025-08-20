@@ -1,30 +1,30 @@
-import { useState } from 'react';
 import { Link, useNavigate } from '@bedrockio/router';
 
 import {
+  Anchor,
   Button,
+  Group,
   Paper,
   PasswordInput,
   Stack,
-  TextInput,
   Text,
-  Group,
-  Anchor,
+  TextInput,
   Title,
 } from '@mantine/core';
 
-import { useForm, isEmail } from '@mantine/form';
+import { isEmail, useForm } from '@mantine/form';
+import { useState } from 'react';
 
 import { useSession } from 'stores/session';
 
-import Logo from 'components/Logo';
-import ErrorMessage from 'components/ErrorMessage';
-import PhoneField from 'components/form-fields/Phone';
 import Federated from 'components/Auth/Federated';
+import ErrorMessage from 'components/ErrorMessage';
+import Logo from 'components/Logo';
 import Meta from 'components/Meta';
+import PhoneField from 'components/form-fields/Phone';
 
 import { useRequest } from 'utils/api';
-import { AUTH_TYPE, AUTH_CHANNEL } from 'utils/env';
+import { AUTH_CHANNEL, AUTH_TYPE } from 'utils/env';
 
 export default function SignupPassword() {
   const navigate = useNavigate();

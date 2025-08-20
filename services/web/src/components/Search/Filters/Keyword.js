@@ -1,7 +1,7 @@
+import { TextInput } from '@mantine/core';
 import React from 'react';
 
 import SearchContext from '../Context';
-import { TextInput } from '@mantine/core';
 
 export default class KeywordFilter extends React.Component {
   static contextType = SearchContext;

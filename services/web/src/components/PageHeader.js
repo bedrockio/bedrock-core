@@ -1,12 +1,13 @@
 import { Link, useLocation, useNavigate } from '@bedrockio/router';
+
 import {
-  Breadcrumbs,
-  Tabs,
-  Stack,
-  Title,
-  Group,
-  Text,
   Anchor,
+  Breadcrumbs,
+  Group,
+  Stack,
+  Tabs,
+  Text,
+  Title,
 } from '@mantine/core';
 
 import Meta from './Meta';

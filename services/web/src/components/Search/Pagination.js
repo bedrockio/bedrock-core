@@ -1,5 +1,5 @@
-import { useContext } from 'react';
 import { Pagination } from '@mantine/core';
+import { useContext } from 'react';
 
 import SearchContext from './Context';
 

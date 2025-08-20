@@ -1,26 +1,28 @@
-import { useState } from 'react';
 import { Link } from '@bedrockio/router';
+
 import {
-  Table,
-  Divider,
-  Group,
-  Anchor,
-  Drawer,
   ActionIcon,
-  Text,
+  Anchor,
+  Divider,
+  Drawer,
+  Group,
   Stack,
+  Table,
+  Text,
 } from '@mantine/core';
+
+import { useState } from 'react';
 import { PiMagnifyingGlass } from 'react-icons/pi';
 
+import Meta from 'components/Meta';
 import PageHeader from 'components/PageHeader';
-
 import Search from 'components/Search';
 import SearchFilters from 'components/Search/Filters';
+import SortableTh from 'components/Table/SortableTh';
 
 import { request } from 'utils/api';
 import { formatDateTime } from 'utils/date';
-import Meta from 'components/Meta';
-import SortableTh from 'components/Table/SortableTh';
+
 import Overview from './Details/Overview';
 
 export default function AuditLogList() {

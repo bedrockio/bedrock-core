@@ -1,14 +1,17 @@
 import {
   Button,
-  TextInput,
-  Textarea,
-  Stack,
   Fieldset,
   Grid,
   Group,
+  Stack,
+  TextInput,
+  Textarea,
 } from '@mantine/core';
+
 import { useForm } from '@mantine/form';
+
 import ErrorMessage from 'components/ErrorMessage';
+
 import { useRequest } from 'utils/api';
 
 export default function ApplicationForm({ application, onSave }) {

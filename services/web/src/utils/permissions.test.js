@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { userHasAccess } from './permissions';
 
 const organization1Id = '662f11c8af6870637eab9f0f';

@@ -1,27 +1,28 @@
 import {
-  Group,
-  Table,
-  Button,
   Badge,
+  Button,
   Divider,
-  Text,
+  Group,
   Loader,
   Stack,
+  Table,
+  Text,
 } from '@mantine/core';
+
 import { PiPlus } from 'react-icons/pi';
 
-import Search from 'components/Search';
-import PageHeader from 'components/PageHeader';
-import SearchFilters from 'components/Search/Filters';
 import ErrorMessage from 'components/ErrorMessage';
-import SortableTh from 'components/Table/SortableTh';
-import InviteForm from './Form';
-import Actions from './Actions';
-
 import ModalWrapper from 'components/ModalWrapper';
+import PageHeader from 'components/PageHeader';
+import Search from 'components/Search';
+import SearchFilters from 'components/Search/Filters';
+import SortableTh from 'components/Table/SortableTh';
 
-import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
+import { formatDateTime } from 'utils/date';
+
+import Actions from './Actions';
+import InviteForm from './Form';
 
 export default function Invites() {
   async function onDataNeeded(params) {

@@ -1,5 +1,6 @@
-import { NavLink as MantineNavLink } from '@mantine/core';
 import { NavLink, useLocation } from '@bedrockio/router';
+import { NavLink as MantineNavLink } from '@mantine/core';
+
 import { ExternalLink } from './Link';
 
 export default function MenuItem(props) {

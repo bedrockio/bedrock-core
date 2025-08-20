@@ -1,6 +1,6 @@
-import { useRef, useEffect, useState } from 'react';
 import { omit } from 'lodash';
 import PropTypes from 'prop-types';
+import { useEffect, useRef, useState } from 'react';
 
 import { useClass } from 'helpers/bem';
 

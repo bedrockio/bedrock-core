@@ -1,9 +1,11 @@
-import { Routes, Route } from '@bedrockio/router';
+import { Route, Routes } from '@bedrockio/router';
 
 import DashboardLayout from 'layouts/Dashboard';
 
 import Applications from 'screens/Applications';
 import AuditLog from 'screens/AuditLog';
+import AcceptInvite from 'screens/Auth/AcceptInvite';
+import Logout from 'screens/Auth/Logout';
 import Dashboard from 'screens/Dashboard';
 import Invites from 'screens/Invites';
 import NotFound from 'screens/NotFound';
@@ -13,10 +15,6 @@ import Settings from 'screens/Settings';
 import Shops from 'screens/Shops';
 import Templates from 'screens/Templates';
 import Users from 'screens/Users';
-
-import Logout from 'screens/Auth/Logout';
-
-import AcceptInvite from 'screens/Auth/AcceptInvite';
 
 export default function App() {
   return (

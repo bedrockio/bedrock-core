@@ -1,9 +1,10 @@
+import { useSession } from 'stores/session';
+
 import SearchDropdown from 'components/SearchDropdown';
 
 import { request } from 'utils/api';
-import { userHasAccess } from 'utils/permissions';
-import { useSession } from 'stores/session';
 import { getOrganization, setOrganization } from 'utils/organization';
+import { userHasAccess } from 'utils/permissions';
 
 export default function OrganizationSelector() {
   const { user } = useSession();

@@ -1,5 +1,5 @@
+import { Redirect, Route, Routes } from '@bedrockio/router';
 import React from 'react';
-import { Routes, Route, Redirect } from '@bedrockio/router';
 
 import Details from './Details';
 import Security from './Security';

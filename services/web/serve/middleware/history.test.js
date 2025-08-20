@@ -1,8 +1,8 @@
-import { it, describe, expect } from 'vitest';
-import history from './history';
-import httpMocks from 'node-mocks-http';
-
 import Koa from 'koa';
+import httpMocks from 'node-mocks-http';
+import { describe, expect, it } from 'vitest';
+
+import history from './history';
 
 const app = new Koa();
 

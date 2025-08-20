@@ -1,12 +1,12 @@
 import { Button, Tooltip } from '@mantine/core';
+import { showNotification } from '@mantine/notifications';
+import { useContext, useState } from 'react';
+import { PiDownloadFill } from 'react-icons/pi';
 
-import { safeFileName } from 'utils/formatting';
 import { downloadResponse } from 'utils/download';
+import { safeFileName } from 'utils/formatting';
 
 import SearchContext from './Context';
-import { PiDownloadFill } from 'react-icons/pi';
-import { useContext, useState } from 'react';
-import { showNotification } from '@mantine/notifications';
 
 export default function ExportButton({
   body = {},

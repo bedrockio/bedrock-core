@@ -1,15 +1,14 @@
-import { useState } from 'react';
 import { Redirect } from '@bedrockio/router';
 import { Button, Paper, Stack, TextInput } from '@mantine/core';
-import { startCase, pick } from 'lodash';
+import { pick, startCase } from 'lodash';
+import { useState } from 'react';
 
 import { useSession } from 'stores/session';
 
 import ErrorMessage from 'components/ErrorMessage';
-
-import PhoneField from 'components/form-fields/Phone';
 import Logo from 'components/Logo';
 import Meta from 'components/Meta';
+import PhoneField from 'components/form-fields/Phone';
 
 import { request } from 'utils/api';
 

@@ -1,4 +1,4 @@
-import { Link, Routes, Route } from '@bedrockio/router';
+import { Link, Route, Routes } from '@bedrockio/router';
 
 import { usePageLoader } from 'stores/page';
 

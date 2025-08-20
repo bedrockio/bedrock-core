@@ -1,4 +1,4 @@
-import { Routes, Route } from '@bedrockio/router';
+import { Route, Routes } from '@bedrockio/router';
 
 import ApiDocs from 'docs/screens/ApiDocs';
 import { DocsProvider } from 'docs/utils/context';

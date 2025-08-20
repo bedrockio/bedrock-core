@@ -1,4 +1,4 @@
-import { Link, Routes, Route } from '@bedrockio/router';
+import { Link, Route, Routes } from '@bedrockio/router';
 
 import { usePageLoader } from 'stores/page';
 
@@ -6,9 +6,9 @@ import NotFound from 'screens/NotFound';
 
 import { request } from 'utils/api';
 
+import Edit from './Edit';
 import Overview from './Overview';
 import Preview from './Preview';
-import Edit from './Edit';
 
 export default function TemplateDetail() {
   const Loader = usePageLoader(async (params) => {
