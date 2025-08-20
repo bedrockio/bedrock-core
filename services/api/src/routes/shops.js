@@ -16,7 +16,7 @@ router
       owner: ctx.state.authUser._id,
     });
 
-    await AuditEntry.append('Created shop', {
+    await AuditEntry.append('Created Shop', {
       ctx,
       object: shop,
       fields: ['name', 'owner', 'country'],
@@ -61,7 +61,7 @@ router
 
     await shop.save();
 
-    await AuditEntry.append('Updated shop', {
+    await AuditEntry.append('Updated Shop', {
       ctx,
       object: shop,
       fields: ['name', 'owner', 'country'],
@@ -79,7 +79,7 @@ router
     } catch (err) {
       ctx.throw(400, err);
     }
-    await AuditEntry.append('Deleted shop', {
+    await AuditEntry.append('Deleted Shop', {
       ctx,
       object: shop,
     });

@@ -39,7 +39,7 @@ describe('AuditEntry', () => {
         object: user,
         fields: ['email'],
       });
-      expect(fields.objectId).toBe(user.id);
+      expect(fields.object).toBe(user.id);
       expect(fields.objectType).toBe('User');
       expect(fields.objectAfter.email).toBe('bob@new.com');
       expect(fields.objectBefore).not.toBeDefined();
@@ -66,7 +66,7 @@ describe('AuditEntry', () => {
         object: newModel,
       });
 
-      expect(fields.objectId).toBe(newModel.id);
+      expect(fields.object).toBe(newModel.id);
       expect(fields.objectType).toBe('NewModel');
       expect(fields.objectAfter.user.toString()).toBe(user.id.toString());
       expect(fields.objectBefore).not.toBeDefined();
@@ -85,7 +85,7 @@ describe('AuditEntry', () => {
         object: dbUser,
         snapshot,
       });
-      expect(fields.objectId).toBe(dbUser.id);
+      expect(fields.object).toBe(dbUser.id);
       expect(fields.objectType).toBe('User');
       expect(fields.objectBefore.email).toBe('hugo@old.com');
       expect(fields.objectAfter.email).toBe('hugo@new.com');
@@ -117,19 +117,17 @@ describe('AuditEntry', () => {
       await AuditEntry.append('did something', {
         ctx,
         object: user,
-        category: 'security',
       });
 
       const logs = await AuditEntry.find({
-        objectId: user.id,
+        object: user.id,
         include: 'actor',
       });
       expect(logs.length).toBe(1);
 
       const log = logs[0];
-      expect(log.category).toBe('security');
       expect(log.activity).toBe('did something');
-      expect(log.objectId.toString()).toBe(user.id);
+      expect(log.object.toString()).toBe(user.id);
       expect(log.objectType).toBe('User');
       expect(log.requestMethod).toBe('GET');
       expect(log.requestUrl).toBe('/1/products/id');
@@ -144,7 +142,6 @@ describe('AuditEntry', () => {
 
       await AuditEntry.append('did something', {
         ctx,
-        category: 'security',
         objectId: user.id,
         objectType: 'user',
         objectAfter: {},

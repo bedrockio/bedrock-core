@@ -1,36 +1,29 @@
-import React from 'react';
-import {
-  Table,
-  Message,
-  Loader,
-  Button,
-  Header,
-  Divider,
-  Image,
-} from 'semantic';
 import { Link } from '@bedrockio/router';
+import {
+  Group,
+  Table,
+  Image,
+  Divider,
+  Anchor,
+  Text,
+  Box,
+  Loader,
+} from '@mantine/core';
 
 import { usePage } from 'stores/page';
 
-import Layout from 'components/Layout';
-import HelpTip from 'components/HelpTip';
 import Search from 'components/Search';
 import SearchFilters from 'components/Search/Filters';
 import ErrorMessage from 'components/ErrorMessage';
-import EditProduct from 'modals/EditProduct';
-
 import Actions from 'screens/Products/Actions';
+import SortableTh from 'components/Table/SortableTh';
 
 import { formatDateTime } from 'utils/date';
 import { formatUsd } from 'utils/currency';
 import { request } from 'utils/api';
-
-// --- Generator: subscreen-imports
 import { urlForUpload } from 'utils/uploads';
-// --- Generator: end
 
 import Menu from './Menu';
-import Meta from 'components/Meta';
 
 export default function ShopProducts() {
   const { shop } = usePage();
@@ -48,97 +41,87 @@ export default function ShopProducts() {
 
   return (
     <>
-      <Meta title="Products" />
+      <Menu />
+
       <Search.Provider onDataNeeded={onDataNeeded}>
         {({ items: products, getSorted, setSort, reload, loading, error }) => {
           return (
-            <React.Fragment>
-              <Menu />
-              <Layout horizontal center spread>
-                <Header as="h2">Products</Header>
-                <Layout horizontal right center>
+            <Box mt="md">
+              <Group justify="space-between">
+                <Group>{loading && <Loader size="sm" />}</Group>
+                <Group>
                   <Search.Total />
                   <SearchFilters.Keyword />
-                </Layout>
-              </Layout>
+                </Group>
+              </Group>
+
               <ErrorMessage error={error} />
-              {loading ? (
-                <Loader active />
-              ) : products.length === 0 ? (
-                <Message>No products added yet</Message>
-              ) : (
-                <Table sortable celled>
-                  <Table.Header>
-                    <Table.Row>
-                      {/* --- Generator: list-header-cells */}
-                      <Table.HeaderCell
-                        width={3}
-                        sorted={getSorted('name')}
-                        onClick={() => setSort('name')}>
-                        Name
-                      </Table.HeaderCell>
-                      {/* --- Generator: end */}
-                      <Table.HeaderCell width={2}>Image</Table.HeaderCell>
-                      <Table.HeaderCell
-                        onClick={() => setSort('priceUsd')}
-                        sorted={getSorted('priceUsd')}>
-                        Price
-                      </Table.HeaderCell>
-                      <Table.HeaderCell
-                        sorted={getSorted('createdAt')}
-                        onClick={() => setSort('createdAt')}>
-                        Created
-                        <HelpTip
-                          title="Created"
-                          text="This is the date and time the item was created."
+
+              <Table stickyHeader striped mt="md">
+                <Table.Thead>
+                  <Table.Tr>
+                    <SortableTh
+                      sorted={getSorted('name')}
+                      onClick={() => setSort('name')}>
+                      Name
+                    </SortableTh>
+                    <Table.Th width={60}>Image</Table.Th>
+                    <SortableTh
+                      sorted={getSorted('priceUsd')}
+                      onClick={() => setSort('priceUsd')}>
+                      Price
+                    </SortableTh>
+                    <SortableTh
+                      sorted={getSorted('createdAt')}
+                      onClick={() => setSort('createdAt')}
+                      width={280}>
+                      Created
+                    </SortableTh>
+                    <Table.Th width={120}>Actions</Table.Th>
+                  </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>
+                  {products.length === 0 && (
+                    <Table.Tr>
+                      <Table.Td colSpan={5}>
+                        <Text p="md" fw="bold" ta="center">
+                          No products found.
+                        </Text>
+                      </Table.Td>
+                    </Table.Tr>
+                  )}
+                  {products.map((product) => (
+                    <Table.Tr key={product.id}>
+                      <Table.Td>
+                        <Anchor
+                          size="sm"
+                          component={Link}
+                          to={`/products/${product.id}`}>
+                          {product.name}
+                        </Anchor>
+                      </Table.Td>
+                      <Table.Td>
+                        <Image
+                          radius={4}
+                          h={40}
+                          w={40}
+                          fit
+                          src={urlForUpload(product.images[0])}
                         />
-                      </Table.HeaderCell>
-                      <Table.HeaderCell textAlign="center">
-                        Actions
-                      </Table.HeaderCell>
-                    </Table.Row>
-                  </Table.Header>
-                  <Table.Body>
-                    {products.map((product) => {
-                      return (
-                        <Table.Row key={product.id}>
-                          {/* --- Generator: list-body-cells */}
-                          <Table.Cell>
-                            <Link to={`/products/${product.id}`}>
-                              {product.name}
-                            </Link>
-                          </Table.Cell>
-                          {/* --- Generator: end */}
-                          <Table.Cell>
-                            {product.images[0] && (
-                              <Image
-                                style={{ width: '100%' }}
-                                src={urlForUpload(product.images[0])}
-                              />
-                            )}
-                          </Table.Cell>
-                          <Table.Cell>{formatUsd(product.priceUsd)}</Table.Cell>
-                          <Table.Cell>
-                            {formatDateTime(product.createdAt)}
-                          </Table.Cell>
-                          <Table.Cell textAlign="center">
-                            <EditProduct
-                              shop={shop}
-                              product={product}
-                              onSave={reload}
-                              trigger={<Button basic icon="pen-to-square" />}
-                            />
-                            <Actions product={product} reload={reload} />
-                          </Table.Cell>
-                        </Table.Row>
-                      );
-                    })}
-                  </Table.Body>
-                </Table>
-              )}
-              <Divider hidden />
+                      </Table.Td>
+                      <Table.Td>{formatUsd(product.priceUsd)}</Table.Td>
+                      <Table.Td>{formatDateTime(product.createdAt)}</Table.Td>
+                      <Table.Td textAlign="center">
+                        <Actions compact product={product} reload={reload} />
+                      </Table.Td>
+                    </Table.Tr>
+                  ))}
+                </Table.Tbody>
+              </Table>
+
+              <Divider my="md" />
               <Search.Pagination />
-            </React.Fragment>
+            </Box>
           );
         }}
       </Search.Provider>

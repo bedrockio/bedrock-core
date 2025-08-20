@@ -1,35 +1,21 @@
 import React from 'react';
-import { Loader, Message, Segment } from 'semantic';
+import { Loader } from '@mantine/core';
 
 import ErrorMessage from 'components/ErrorMessage';
 
 import SearchContext from './Context';
 
-export default class SearchStatus extends React.Component {
-  static contextType = SearchContext;
+export default function SearchStatus() {
+  const context = React.useContext(SearchContext);
+  const { loading, error = { message: 'something went wrong' } } = context;
 
-  render() {
-    const { loading, error, items } = this.context;
-    if (loading) {
-      return (
-        <Segment style={{ height: '100px' }}>
-          <Loader active>Loading</Loader>
-        </Segment>
-      );
-    }
-
-    if (error) {
-      return <ErrorMessage error={error} />;
-    }
-
-    if (items.length === 0) {
-      return (
-        <Segment>
-          <Message>{this.props.noResults || 'No results found'}</Message>
-        </Segment>
-      );
-    }
-
-    return null;
+  if (loading) {
+    return <Loader size="sm" />;
   }
+
+  if (error) {
+    return <ErrorMessage error={error} />;
+  }
+
+  return null;
 }

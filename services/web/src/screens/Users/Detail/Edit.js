@@ -1,0 +1,26 @@
+import Form from '../Form';
+
+import { usePage } from 'stores/page';
+
+import { Stack } from '@mantine/core';
+import { useNavigate } from '@bedrockio/router';
+import Menu from './Menu';
+
+export default function EditUser() {
+  const { user, reload } = usePage();
+  const navigate = useNavigate();
+
+  return (
+    <Stack gap="md">
+      <Menu displayMode="edit" />
+
+      <Form
+        user={user}
+        onSuccess={() => {
+          reload();
+          navigate(`/users/${user.id}`);
+        }}
+      />
+    </Stack>
+  );
+}

@@ -4356,64 +4356,6 @@
           }
         }
       },
-      "ApplicationRequest": {
-        "type": "object",
-        "properties": {
-          "application": {
-            "$ref": "#/components/schemas/ObjectId",
-            "required": true
-          },
-          "routeNormalizedPath": {
-            "type": "string"
-          },
-          "requestId": {
-            "type": "string"
-          },
-          "request": {
-            "type": "object",
-            "properties": {
-              "sessionId": {
-                "type": "string"
-              },
-              "ip": {
-                "type": "string"
-              },
-              "path": {
-                "type": "string"
-              },
-              "headers": {
-                "type": "object"
-              },
-              "method": {
-                "type": "string"
-              },
-              "body": {
-                "type": "object"
-              }
-            }
-          },
-          "response": {
-            "type": "object",
-            "properties": {
-              "status": {
-                "type": "number"
-              },
-              "body": {
-                "type": "object"
-              },
-              "headers": {
-                "type": "object"
-              }
-            }
-          },
-          "createdAt": {
-            "$ref": "#/components/schemas/DateTime"
-          },
-          "updatedAt": {
-            "$ref": "#/components/schemas/DateTime"
-          }
-        }
-      },
       "Application": {
         "type": "object",
         "properties": {

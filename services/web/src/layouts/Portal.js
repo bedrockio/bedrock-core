@@ -1,46 +1,85 @@
-import { NavLink } from '@bedrockio/router';
-import { Button, Icon, Menu } from 'semantic';
+import { Link, useLocation } from '@bedrockio/router';
 
-import { useClass } from 'helpers/bem';
+import {
+  AppShell,
+  Flex,
+  Button,
+  ScrollArea,
+  Burger,
+  Group,
+} from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 
 import Logo from 'components/Logo';
-import Layout from 'components/Layout';
 import ConnectionError from 'components/ConnectionError';
 
-import './portal.less';
+import { IconArrowBack } from '@tabler/icons-react';
+import MenuItem from 'components/MenuItem';
+import { useEffect } from 'react';
 
-export default function PortalLayout(props) {
-  const { className, getElementClass } = useClass('portal-layout');
+export default function PortalLayout({ children, menuItems, actions }) {
+  const [opened, { toggle, close }] = useDisclosure();
+
+  const location = useLocation();
+
+  useEffect(() => {
+    close();
+  }, [location.pathname]);
 
   return (
-    <div className={className}>
-      <ConnectionError />
-      <Layout className={getElementClass('menu')}>
-        <Layout className={getElementClass('menu-top')} horizontal spread>
-          <Layout.Group>
-            <NavLink className="logo" to="/">
-              <Logo height="40" />
-            </NavLink>
-            <Menu className={getElementClass('menu-bottom')} secondary>
-              <Menu.Item as={NavLink} to="/docs/getting-started">
-                <Icon name="terminal" /> API Docs
-              </Menu.Item>
-              <Menu.Item as={NavLink} to="/docs/ui">
-                <Icon name="cube" /> UI Components
-              </Menu.Item>
-              <Menu.Item as={NavLink} to="/docs/icons">
-                <Icon name="icons" /> Icons
-              </Menu.Item>
-            </Menu>
-          </Layout.Group>
-          <Layout.Group>
-            <Button primary compact as={NavLink} to="/">
-              Dashboard &rarr;
+    <>
+      <AppShell
+        header={{ height: 50 }}
+        navbar={{
+          width: 220,
+          breakpoint: 'sm',
+          collapsed: { mobile: !opened },
+        }}
+        styles={{
+          navbar: {
+            //backgroundColor: 'var(--mantine-color-gray-0)',
+          },
+        }}
+        padding="md">
+        <AppShell.Header height="100%">
+          <Flex
+            h="50px"
+            flex="row"
+            gap="md"
+            justify="space-between"
+            align="center"
+            p="md">
+            <Group>
+              <Burger
+                opened={opened}
+                onClick={toggle}
+                hiddenFrom="sm"
+                size="sm"
+              />
+              <Logo height={20} />
+            </Group>
+            <Button
+              size="compact-sm"
+              component={Link}
+              to="/"
+              rightSection={<IconArrowBack size={14} />}>
+              Go to Dashboard
             </Button>
-          </Layout.Group>
-        </Layout>
-      </Layout>
-      <Layout className={getElementClass('content')}>{props.children}</Layout>
-    </div>
+          </Flex>
+        </AppShell.Header>
+        <AppShell.Navbar>
+          <AppShell.Section component={ScrollArea} grow>
+            {menuItems.map((item) => (
+              <MenuItem compact key={item.id} {...item} />
+            ))}
+          </AppShell.Section>
+          <AppShell.Section>{actions}</AppShell.Section>
+        </AppShell.Navbar>
+        <AppShell.Main>
+          <ConnectionError />
+          {children}
+        </AppShell.Main>
+      </AppShell>
+    </>
   );
 }

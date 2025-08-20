@@ -56,7 +56,6 @@ router
         await AuditEntry.append('Signed Up with Apple', {
           ctx,
           actor: user,
-          category: 'auth',
         });
 
         result = 'signup';
@@ -71,7 +70,7 @@ router
           result,
         },
       };
-    }
+    },
   )
   .use(authenticate())
   .post(
@@ -94,7 +93,7 @@ router
       ctx.body = {
         data: authUser,
       };
-    }
+    },
   )
   .post('/disable', async (ctx) => {
     const { authUser } = ctx.state;

@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Redirect } from '@bedrockio/router';
-import { Form, Segment } from 'semantic';
+import { Button, Paper, Stack, TextInput } from '@mantine/core';
 import { startCase, pick } from 'lodash';
 
 import { useSession } from 'stores/session';
 
 import ErrorMessage from 'components/ErrorMessage';
-import EmailField from 'components/form-fields/Email';
+
 import PhoneField from 'components/form-fields/Phone';
-import LogoTitle from 'components/LogoTitle';
+import Logo from 'components/Logo';
 import Meta from 'components/Meta';
 
 import { request } from 'utils/api';
@@ -77,49 +77,52 @@ export default function OnboardScreen() {
     }
   }
 
-  function render() {
-    return (
-      <React.Fragment>
-        <Meta title="Tell Us More" />
-        <LogoTitle title="Tell Us More" />
-        <Form loading={loading} onSubmit={onSubmit} noValidate>
-          <Segment.Group>
-            <Segment padded>
-              {error?.type !== 'validation' && <ErrorMessage error={error} />}
-              {!user.email && (
-                <EmailField
-                  name="email"
-                  value={body.email || ''}
-                  onChange={setField}
-                  error={error}
-                />
-              )}
-              {!user.phone && (
-                <PhoneField
-                  name="phone"
-                  value={body.phone || ''}
-                  onChange={setField}
-                  error={error}
-                />
-              )}
-              <Form.Button
-                fluid
-                primary
-                size="large"
-                content="Continue"
-                loading={loading}
-                disabled={loading}
-              />
-            </Segment>
-          </Segment.Group>
-        </Form>
-      </React.Fragment>
-    );
-  }
-
   if (isValidUser(user)) {
     return <Redirect to="/" />;
   }
 
-  return render();
+  return (
+    <Stack>
+      <Meta title="Tell Us More" />
+      <Logo />
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          onSubmit();
+        }}
+        noValidate>
+        <Paper shadow="xs" p="md" withBorder>
+          <Stack>
+            {error?.type !== 'validation' && <ErrorMessage error={error} />}
+            {!user.email && (
+              <TextInput
+                name="email"
+                type="email"
+                value={body.email || ''}
+                onChange={setField}
+                error={error}
+              />
+            )}
+            {!user.phone && (
+              <PhoneField
+                name="phone"
+                value={body.phone || ''}
+                onChange={setField}
+                error={error}
+              />
+            )}
+            <Button
+              fullWidth
+              type="submit"
+              color="blue"
+              size="lg"
+              loading={loading}
+              disabled={loading}>
+              Continue
+            </Button>
+          </Stack>
+        </Paper>
+      </form>
+    </Stack>
+  );
 }

@@ -11,7 +11,7 @@ if (import.meta.hot) {
   // If this wasn't here HMR would perform a full
   // page reload. This is much faster but note it
   // does still re-render the entire React root.
-  import.meta.hot.accept('./Wrapper', (newModule) => {
+  import.meta.hot.accept('./Wrapper.js', (newModule) => {
     const NextWrapper = newModule.default;
     root.render(<NextWrapper />);
   });

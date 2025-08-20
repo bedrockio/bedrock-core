@@ -1,9 +1,7 @@
-import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
 
 import { useClass } from 'helpers/bem';
 
-import 'styles/github-markdown.less';
 import './markdown.less';
 
 import components from './components';
@@ -21,12 +19,3 @@ export default function Markdown(props) {
 }
 
 export { components };
-
-Markdown.propTypes = {
-  source: PropTypes.string,
-  renderers: PropTypes.object,
-};
-
-Markdown.defaultProps = {
-  renderers: {},
-};

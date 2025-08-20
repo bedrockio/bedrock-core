@@ -1,16 +1,15 @@
-import React from 'react';
 import { Routes, Route } from '@bedrockio/router';
 
 import List from './List';
 import Detail from './Detail';
+import NewOrganization from './New';
 
-export default class Organizations extends React.Component {
-  render() {
-    return (
-      <Routes>
-        <Route path="/organizations" render={List} exact />
-        <Route path="/organizations/:id" render={Detail} />
-      </Routes>
-    );
-  }
+export default function Organizations() {
+  return (
+    <Routes>
+      <Route path="/organizations" render={List} exact />
+      <Route path="/organizations/new" render={NewOrganization} />
+      <Route path="/organizations/:id" render={Detail} />
+    </Routes>
+  );
 }

@@ -1,57 +1,58 @@
-import React from 'react';
-import { Table, Divider } from 'semantic';
+import { Table, Title, Image, Stack, Group, Text } from '@mantine/core';
 
 import { usePage } from 'stores/page';
-import Meta from 'components/Meta';
 
-// --- Generator: overview-imports
-import { Header, Image } from 'semantic';
 import { arrayToList, formatAddress } from 'utils/formatting';
 
 import { formatDateTime } from 'utils/date';
 import { urlForUpload } from 'utils/uploads';
-// --- Generator: end
 
 import Menu from './Menu';
 
 export default function ShopOverview() {
   const { shop } = usePage();
   return (
-    <React.Fragment>
-      <Meta title={shop.name} />
+    <>
       <Menu />
-      <Divider hidden />
-      {/* --- Generator: overview-fields */}
-      <p>{shop.description}</p>
-      <Header as="h3">Images</Header>
-      <Image.Group size="large">
-        {shop.images.map((image) => (
-          <Image key={image} src={urlForUpload(image)} />
-        ))}
-      </Image.Group>
-      {/* --- Generator: end */}
-      <Table definition>
-        <Table.Body>
-          {/* --- Generator: overview-rows */}
-          <Table.Row>
-            <Table.Cell>Categories</Table.Cell>
-            <Table.Cell>{arrayToList(shop.categories)}</Table.Cell>
-          </Table.Row>
-          <Table.Row>
-            <Table.Cell>Address</Table.Cell>
-            <Table.Cell>{formatAddress(shop.address)}</Table.Cell>
-          </Table.Row>
-          {/* --- Generator: end */}
-          <Table.Row>
-            <Table.Cell>Created At</Table.Cell>
-            <Table.Cell>{formatDateTime(shop.createdAt)}</Table.Cell>
-          </Table.Row>
-          <Table.Row>
-            <Table.Cell>Updated At</Table.Cell>
-            <Table.Cell>{formatDateTime(shop.updatedAt)}</Table.Cell>
-          </Table.Row>
-        </Table.Body>
-      </Table>
-    </React.Fragment>
+
+      <Stack mt="md" spacing="md">
+        <Text fz="md" lh="md">
+          {shop.description}
+        </Text>
+        <Title order={4}>Images</Title>
+        <Group>
+          {shop.images.map((image) => (
+            <Image
+              w={300}
+              fit="object-cover"
+              radius="xs"
+              key={image}
+              src={urlForUpload(image)}
+            />
+          ))}
+        </Group>
+
+        <Table mt="md" variant="vertical" layout="fixed" withTableBorder>
+          <Table.Tbody>
+            <Table.Tr>
+              <Table.Th w={160}>Categories</Table.Th>
+              <Table.Td>{arrayToList(shop.categories)}</Table.Td>
+            </Table.Tr>
+            <Table.Tr>
+              <Table.Th>Address</Table.Th>
+              <Table.Td>{formatAddress(shop.address)}</Table.Td>
+            </Table.Tr>
+            <Table.Tr>
+              <Table.Th>Created At</Table.Th>
+              <Table.Td>{formatDateTime(shop.createdAt)}</Table.Td>
+            </Table.Tr>
+            <Table.Tr>
+              <Table.Th>Updated At</Table.Th>
+              <Table.Td>{formatDateTime(shop.updatedAt)}</Table.Td>
+            </Table.Tr>
+          </Table.Tbody>
+        </Table>
+      </Stack>
+    </>
   );
 }

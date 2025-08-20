@@ -3,10 +3,9 @@
 import React from 'react';
 import { omit } from 'lodash';
 import PropTypes from 'prop-types';
-import { Image } from 'semantic';
+import { Image } from '@mantine/core';
 
 import { request } from 'utils/api';
-
 import { ExternalLink } from './Link';
 
 export default class PrivateImage extends React.Component {

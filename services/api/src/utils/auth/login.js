@@ -28,7 +28,6 @@ async function login(ctx, user, options = {}) {
   await AuditEntry.append(message, {
     ctx,
     actor: user,
-    category: 'auth',
   });
 
   return token;
@@ -59,7 +58,6 @@ async function verifyLoginAttempts(user, ctx) {
     await AuditEntry.append('Reached max authentication attempts', {
       ctx,
       actor: user,
-      category: 'security',
     });
     throw new Error('Too many login attempts. Please wait a bit and try again.');
   }

@@ -2,6 +2,7 @@
   "name": "serve",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "scripts": {
     "start": "node dev",
     "static": "node static"

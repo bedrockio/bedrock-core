@@ -1,124 +1,108 @@
-import React from 'react';
+import { useState } from 'react';
 import { Link } from '@bedrockio/router';
-import { Form, Button, Segment, Message, Grid } from 'semantic';
+import {
+  TextInput,
+  Button,
+  Paper,
+  Alert,
+  Stack,
+  Group,
+  Title,
+  Anchor,
+} from '@mantine/core';
+import { useForm } from '@mantine/form';
 
-import LogoTitle from 'components/LogoTitle';
-import ErrorMessage from 'components/ErrorMessage';
-import EmailField from 'components/form-fields/Email';
+import Logo from 'components/Logo';
 import Meta from 'components/Meta';
 
 import { request } from 'utils/api';
 
-export default class ForgotPassword extends React.Component {
-  state = {
-    success: false,
-    loading: false,
-    error: null,
-    body: {},
-  };
+export default function ForgotPassword() {
+  const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  setField = (evt, { name, value }) => {
-    this.setState({
-      touched: true,
-      body: {
-        ...this.state.body,
-        [name]: value,
-      },
-    });
-  };
+  const form = useForm({
+    initialValues: {
+      email: '',
+    },
+    validate: {
+      email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
+    },
+  });
 
-  onSubmit = async () => {
-    this.setState({
-      error: null,
-      loading: true,
-    });
+  const handleSubmit = async (values) => {
+    setError(null);
+    setLoading(true);
+
     try {
-      const { body } = this.state;
       await request({
         method: 'POST',
         path: '/1/auth/password/request',
-        body,
+        body: values,
       });
-      this.setState({
-        success: true,
-        loading: false,
-      });
-    } catch (error) {
-      this.setState({
-        error,
-        loading: false,
-      });
+
+      setSuccess(true);
+      setLoading(false);
+    } catch (err) {
+      setError(err);
+      setLoading(false);
     }
   };
 
-  render() {
+  const renderMessage = () => {
     return (
-      <React.Fragment>
-        <Meta title="Forgot Password" />
-        <LogoTitle title="Forgot Password" />
-        <Segment.Group>
-          <Segment padded>{this.renderBody()}</Segment>
-          <Segment secondary>
-            <Grid>
-              <Grid.Column floated="left" width={8}>
-                <Link to="/login">Login</Link>
-              </Grid.Column>
-              <Grid.Column floated="right" width={8} textAlign="right">
-                <Link to="/signup">Dont have an account</Link>
-              </Grid.Column>
-            </Grid>
-          </Segment>
-        </Segment.Group>
-      </React.Fragment>
+      <Alert title="Mail sent!" variant="light">
+        Please follow the instructions in the email we sent to{' '}
+        <b>{form.values.email}</b>
+      </Alert>
     );
-  }
+  };
 
-  renderBody() {
-    const { success } = this.state;
-    if (success) {
-      return this.renderMessage();
-    } else {
-      return this.renderForm();
-    }
-  }
-
-  renderMessage() {
-    const { email } = this.state.body;
+  const renderForm = () => {
     return (
-      <Message info>
-        <Message.Header>Mail sent!</Message.Header>
-        <p>
-          Please follow the instructions in the email we sent to <b>{email}</b>
-        </p>
-      </Message>
-    );
-  }
+      <form onSubmit={form.onSubmit(handleSubmit)}>
+        {error && (
+          <Alert color="red" title="Error" mb="md">
+            {error.message || 'Something went wrong'}
+          </Alert>
+        )}
 
-  renderForm() {
-    const { body, error, loading } = this.state;
-    return (
-      <Form
-        size="large"
-        error={!!error}
-        loading={loading}
-        onSubmit={this.onSubmit}>
-        <ErrorMessage error={error} />
-        <EmailField
-          name="email"
-          value={body.email || ''}
-          onChange={this.setField}
+        <TextInput
+          required
+          label="Email"
+          placeholder="Your email"
+          {...form.getInputProps('email')}
+          mb="md"
         />
-        <div>
-          <Button
-            fluid
-            primary
-            size="large"
-            content="Request password"
-            loading={loading}
-            disabled={loading}
-          />
-        </div>
-      </Form>
+
+        <Button fullWidth type="submit" loading={loading} disabled={loading}>
+          Reset password
+        </Button>
+      </form>
     );
-  }
+  };
+
+  return (
+    <Group justify="center" align="center" pt={{ base: 30, sm: 120 }}>
+      <Meta title="Forgot Password" />
+      <Stack w={{ base: '95vw', sm: 480 }} align="center">
+        <Logo maw={200} title="Login" />
+
+        <Paper mt="lg" w="100%" p="lg" radius="md" withBorder>
+          <Title order={3}>Forgot Password</Title>
+          <Stack mt="md">{success ? renderMessage() : renderForm()}</Stack>
+
+          <Group mt="md" justify="space-between">
+            <Anchor size="xs" component={Link} to="/login">
+              Back to login
+            </Anchor>
+            <Anchor size="xs" component={Link} to="/signup">
+              Don't have an account
+            </Anchor>
+          </Group>
+        </Paper>
+      </Stack>
+    </Group>
+  );
 }

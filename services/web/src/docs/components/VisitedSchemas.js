@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Divider } from 'semantic';
+import { Divider } from '@mantine/core';
 
 import { expandRef } from 'docs/utils';
 
@@ -27,7 +27,8 @@ export default class VisitedSchemas extends React.Component {
             const { name, path } = expandRef(ref);
             return (
               <React.Fragment key={name}>
-                {i > 0 && <Divider />}
+                {i > 0 && <Divider my="sm" />}
+
                 <div id={name}>
                   <h3>{name}</h3>
                   <EditableField type="description" path={path} />

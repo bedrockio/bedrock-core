@@ -1,42 +1,40 @@
-import React from 'react';
-import { Link, NavLink } from '@bedrockio/router';
-import { Menu, Button } from 'semantic';
-
 import { usePage } from 'stores/page';
 
-import Breadcrumbs from 'components/Breadcrumbs';
-import Layout from 'components/Layout';
-import EditOrganization from 'modals/EditOrganization';
+import PageHeader from 'components/PageHeader';
 
 import Actions from '../Actions';
 
-export default () => {
+export default function OrganizationMenu({ displayMode }) {
   const { organization, reload } = usePage();
 
+  const items = [
+    {
+      title: 'Home',
+      href: '/',
+    },
+    { title: 'Organizations', href: '/organizations' },
+    { title: organization.name },
+  ];
+
   return (
-    <React.Fragment>
-      <Breadcrumbs
-        link={<Link to="/organizations">Organizations</Link>}
-        active={organization.name}></Breadcrumbs>
-      <Layout horizontal center spread>
-        <h1>{organization.name}</h1>
-        <Layout.Group>
-          <Actions organization={organization} reload={reload} />
-          <EditOrganization
-            organization={organization}
-            onSave={reload}
-            trigger={<Button primary icon="gear" content="Settings" />}
-          />
-        </Layout.Group>
-      </Layout>
-      <Menu pointing secondary>
-        <Menu.Item
-          name="Overview"
-          to={`/organizations/${organization.id}`}
-          as={NavLink}
-          exact
+    <PageHeader
+      title={organization.name}
+      breadcrumbItems={items}
+      tabs={
+        displayMode !== 'edit' && [
+          {
+            title: 'Overview',
+            href: `/organizations/${organization.id}`,
+          },
+        ]
+      }
+      rightSection={
+        <Actions
+          displayMode={displayMode}
+          organization={organization}
+          reload={reload}
         />
-      </Menu>
-    </React.Fragment>
+      }
+    />
   );
-};
+}

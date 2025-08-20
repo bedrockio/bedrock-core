@@ -1,23 +1,27 @@
+import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { get, startCase } from 'lodash';
-
+import { Text } from '@mantine/core';
 import { useClass } from 'helpers/bem';
 
 import Markdown from 'components/Markdown';
+import ModalWrapper from 'components/ModalWrapper';
 
 import EditFieldModal from './EditFieldModal';
 import { useDocs } from '../utils/context';
+import { DocsContext } from '../utils/context';
 
 import './editable-field.less';
 
 export default function DocsEditableField(props) {
   const { type, path, onClick, modelPath } = props;
+  const context = useContext(DocsContext);
 
   const { mode, docs } = useDocs();
 
   const { className, getElementClass } = useClass(
     'docs-editable-field',
-    ...getModifiers()
+    ...getModifiers(),
   );
 
   function getValue() {
@@ -37,29 +41,38 @@ export default function DocsEditableField(props) {
     return [mode === 'edit' ? 'editable' : null, value ? 'filled' : 'empty'];
   }
 
+  function renderModalContent({ close }) {
+    return (
+      <EditFieldModal
+        {...props}
+        docs={docs}
+        updatePath={context.updatePath}
+        value={getValue()}
+        label={`Edit ${startCase(type)}`}
+        close={close}
+      />
+    );
+  }
+
   function render() {
-    const value = getValue();
-    const label = `Edit ${startCase(type)}`;
     if (mode === 'edit') {
       return (
-        <EditFieldModal
-          {...props}
-          value={value}
-          label={label}
-          trigger={renderTrigger()}
+        <ModalWrapper
+          title={[
+            `Edit ${startCase(type)}`,
+            props.markdown && ' - Supports Markdown',
+          ].filter(Boolean)}
+          component={renderModalContent}
+          trigger={<Text className={className}>{renderValue()}</Text>}
         />
       );
     } else {
-      return renderTrigger();
+      return (
+        <div className={className} onClick={onClick}>
+          {renderValue()}
+        </div>
+      );
     }
-  }
-
-  function renderTrigger() {
-    return (
-      <div className={className} onClick={onClick}>
-        {renderValue()}
-      </div>
-    );
   }
 
   function renderValue() {

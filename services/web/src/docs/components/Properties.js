@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { get, isEqual } from 'lodash';
-import { Popup } from 'semantic';
+import { Popover } from '@mantine/core';
 
 import { useClass } from 'helpers/bem';
 
@@ -16,7 +16,7 @@ import './properties.less';
 const OBJECT_ID_REF = '#/components/schemas/ObjectId';
 
 export default function DocsProperties(props) {
-  const { path, model, getPath, hideFields, additionalSort } = props;
+  const { path, model, getPath, hideFields = [], additionalSort } = props;
 
   const { className, getElementClass } = useClass('docs-properties');
   // static contextType = DocsContext;
@@ -180,11 +180,12 @@ export default function DocsProperties(props) {
           return (
             <React.Fragment>
               {renderType(oneOf[0])}
-              <Popup
-                position="right center"
-                trigger={<span className={getElementClass('note')}>*</span>}>
-                May also be an array.
-              </Popup>
+              <Popover position="right" withArrow>
+                <Popover.Target>
+                  <span className={getElementClass('note')}>*</span>
+                </Popover.Target>
+                <Popover.Dropdown>May also be an array.</Popover.Dropdown>
+              </Popover>
             </React.Fragment>
           );
         }
@@ -279,9 +280,4 @@ DocsProperties.propTypes = {
   path: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
   hideFields: PropTypes.arrayOf(PropTypes.string),
   additionalSort: PropTypes.func,
-};
-
-DocsProperties.defaultProps = {
-  hideFields: [],
-  required: false,
 };

@@ -1,64 +1,50 @@
-import React from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { omit, noop } from 'lodash';
-import { Button } from 'semantic';
+import { noop } from 'lodash';
+import { Button } from '@mantine/core';
 
-import { withSession } from 'stores/session';
+import { useSession } from 'stores/session';
 
 import { disable } from 'utils/auth/apple';
 
-class DisableButton extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: false,
-    };
-  }
+/**
+ * Button component for disabling Apple authentication.
+ * @param {object} props Component props.
+ * @param {function} [props.onError=noop] Callback function for errors.
+ * @param {function} [props.onDisabled=noop] Callback function after successful disabling.
+ * @returns {JSX.Element} The DisableButton component.
+ */
+export default function DisableButton(props) {
+  const { onError = noop, onDisabled = noop } = props;
+  const [loading, setLoading] = useState(false);
+  const { user, updateUser } = useSession();
 
-  onClick = async () => {
-    let { user } = this.context;
+  async function handleClick() {
     try {
-      this.setState({
-        loading: true,
-      });
-      user = await disable(user);
-      this.setState({
-        loading: false,
-      });
-      this.context.updateUser(user);
-      this.props.onDisabled();
+      setLoading(true);
+      const updatedUser = await disable(user);
+      updateUser(updatedUser);
+      setLoading(false);
+      onDisabled();
     } catch (error) {
-      this.setState({
-        loading: false,
-      });
-      this.props.onError(error);
+      setLoading(false);
+      onError(error);
     }
-  };
-
-  render() {
-    const props = omit(this.props, Object.keys(DisableButton.propTypes));
-    const { loading } = this.state;
-    return (
-      <Button
-        color="red"
-        size="small"
-        content="Disable"
-        loading={loading}
-        onClick={this.onClick}
-        {...props}
-      />
-    );
   }
+
+  return (
+    <Button
+      color="red"
+      size="sm"
+      loading={loading}
+      onClick={handleClick}
+      {...props}>
+      Disable
+    </Button>
+  );
 }
 
 DisableButton.propTypes = {
   onError: PropTypes.func,
   onDisabled: PropTypes.func,
 };
-
-DisableButton.defaultProps = {
-  onError: noop,
-  onDisabled: noop,
-};
-
-export default withSession(DisableButton);

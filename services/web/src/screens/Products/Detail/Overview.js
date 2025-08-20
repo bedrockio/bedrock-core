@@ -1,66 +1,61 @@
-import React from 'react';
-import { Table, Image, Divider } from 'semantic';
+import { Table, Title, Image, Stack, Group, Text } from '@mantine/core';
 
-import { PageContext } from 'stores/page';
+import { usePage } from 'stores/page';
+
+import { arrayToList } from 'utils/formatting';
 
 import { formatDateTime } from 'utils/date';
 import { urlForUpload } from 'utils/uploads';
-import Meta from 'components/Meta';
 
 import Menu from './Menu';
+import { formatCurrency } from 'utils/currency';
 
-export default class ProductOverview extends React.Component {
-  static contextType = PageContext;
+export default function ShopOverview() {
+  const { product } = usePage();
+  return (
+    <>
+      <Menu />
 
-  render() {
-    const { product } = this.context;
-    return (
-      <React.Fragment>
-        <Meta title={product.name} />
-        <Menu />
-        <Divider hidden />
-        <Image.Group size="small">
-          {product.images.map((image) => {
-            return <Image key={image} src={urlForUpload(image)} />;
-          })}
-        </Image.Group>
-        <Table definition>
-          <Table.Body>
-            <Table.Row>
-              <Table.Cell>Description</Table.Cell>
-              <Table.Cell>{product.description || 'None'}</Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell>Is Featured</Table.Cell>
-              <Table.Cell>{product.isFeatured ? 'Yes' : 'No'}</Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell>Price Usd</Table.Cell>
-              <Table.Cell>{product.priceUsd || 'None'}</Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell>Expires At</Table.Cell>
-              <Table.Cell>
-                {product.expiresAt ? formatDateTime(product.expiresAt) : 'None'}
-              </Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell>Selling Points</Table.Cell>
-              <Table.Cell>
-                {product.sellingPoints.join(', ') || 'None'}
-              </Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell>Created At</Table.Cell>
-              <Table.Cell>{formatDateTime(product.createdAt)}</Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell>Updated At</Table.Cell>
-              <Table.Cell>{formatDateTime(product.updatedAt)}</Table.Cell>
-            </Table.Row>
-          </Table.Body>
+      <Stack mt="md" spacing="md">
+        <Text fz="md" lh="md">
+          {product.description}
+        </Text>
+        <Title order={4}>Images</Title>
+        <Group>
+          {product.images.map((image) => (
+            <Image
+              w={300}
+              fit="object-cover"
+              radius="xs"
+              key={image}
+              src={urlForUpload(image)}
+            />
+          ))}
+        </Group>
+
+        <Table mt="md" variant="vertical" layout="fixed" withTableBorder>
+          <Table.Tbody>
+            <Table.Tr>
+              <Table.Th w={160}>Price</Table.Th>
+              <Table.Td>
+                {formatCurrency(product.priceUsd || 0, 'USD')}
+              </Table.Td>
+            </Table.Tr>
+            <Table.Tr>
+              <Table.Th w={160}>Selling Points</Table.Th>
+              <Table.Td>{arrayToList(product.sellingPoints)}</Table.Td>
+            </Table.Tr>
+            <Table.Tr>
+              <Table.Th>Created At</Table.Th>
+              <Table.Td>{formatDateTime(product.createdAt)}</Table.Td>
+            </Table.Tr>
+            <Table.Tr>
+              <Table.Th>Updated At</Table.Th>
+              <Table.Td>{formatDateTime(product.updatedAt)}</Table.Td>
+            </Table.Tr>
+          </Table.Tbody>
         </Table>
-      </React.Fragment>
-    );
-  }
+      </Stack>
+    </>
+  );
 }

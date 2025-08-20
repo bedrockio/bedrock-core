@@ -2,10 +2,20 @@ import React from 'react';
 import { uniq } from 'lodash';
 import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
-import { Form, Image, Icon, Label, Card } from 'semantic';
+
+import {
+  Input,
+  SimpleGrid,
+  Image,
+  Paper,
+  Text,
+  Pill,
+  Loader,
+} from '@mantine/core';
 
 import { request } from 'utils/api';
 import { urlForUpload } from 'utils/uploads';
+import { IconFile, IconTrash } from '@tabler/icons-react';
 
 const MIME_TYPES = {
   image: {
@@ -40,16 +50,6 @@ const MIME_TYPES = {
 
 const MEDIA_TYPES = ['image', 'video', 'audio'];
 
-const ICONS = {
-  image: 'file-image',
-  video: 'file-video',
-  audio: 'file-audio',
-  text: 'file-lines',
-  pdf: 'file-pdf',
-  csv: 'file-excel',
-  zip: 'file-zipper',
-};
-
 export default class Uploads extends React.Component {
   constructor(props) {
     super(props);
@@ -57,11 +57,18 @@ export default class Uploads extends React.Component {
       loading: false,
     };
   }
+  static defaultProps = {
+    onError: (error) => {
+      // eslint-disable-next-line no-console
+      console.error(error);
+    },
+    type: 'image',
+  };
 
   // Events
 
-  onDrop = async (acceptedFiles, rejectedFiles, evt) => {
-    const { name, value } = this.props;
+  onDrop = async (acceptedFiles, rejectedFiles) => {
+    const { value } = this.props;
     try {
       if (!this.isMultiple()) {
         acceptedFiles = acceptedFiles.slice(0, 1);
@@ -97,15 +104,9 @@ export default class Uploads extends React.Component {
       });
 
       if (this.isMultiple()) {
-        this.props.onChange(evt, {
-          name,
-          value: [...value, ...data],
-        });
+        this.props.onChange([...value, ...data]);
       } else {
-        this.props.onChange(evt, {
-          name,
-          value: data[0],
-        });
+        this.props.onChange(data[0]);
       }
     } catch (error) {
       this.setState({
@@ -134,21 +135,17 @@ export default class Uploads extends React.Component {
     return Array.isArray(this.props.value);
   }
 
-  delete(evt, upload) {
-    const { name, value } = this.props;
+  delete(upload) {
+    const { value } = this.props;
     if (this.isMultiple()) {
       const removeId = this.getUploadId(upload);
-      this.props.onChange(evt, {
-        name,
-        value: value.filter((obj) => {
+      this.props.onChange(
+        value.filter((obj) => {
           return this.getUploadId(obj) !== removeId;
         }),
-      });
+      );
     } else {
-      this.props.onChange(evt, {
-        name,
-        value: null,
-      });
+      this.props.onChange(value);
     }
   }
 
@@ -205,42 +202,59 @@ export default class Uploads extends React.Component {
     const { loading } = this.state;
     const uploads = this.getUploads();
     return (
-      <Form.Field required={required}>
-        {label && <label>{label}</label>}
+      <Input.Wrapper label={label} required={required}>
         {uploads.length > 0 &&
           (this.hasMedia() ? (
-            <Card.Group itemsPerRow={4}>
+            <SimpleGrid cols={4}>
               {uploads.map((upload) => (
-                <Card
+                <Paper
+                  style={{ position: 'relative' }}
+                  shadow="xl"
                   key={this.getUploadId(upload)}
-                  className="upload-card"
-                  >
+                  className="upload-card">
                   {this.renderUpload(upload)}
-                  <Icon
-                    fitted
-                    name="circle-xmark"
-                    onClick={(evt) => this.delete(evt, upload)}
+                  <IconTrash
+                    style={{
+                      position: 'absolute',
+                      top: 5,
+                      right: 5,
+                      cursor: 'pointer',
+                    }}
+                    size="14"
+                    onClick={() => this.delete(upload)}
                   />
                   {upload.filename && (
-                    <div className="caption">{upload.filename}</div>
+                    <Text
+                      style={{
+                        position: 'absolute',
+                        bottom: 0,
+                        left: 0,
+                        width: '100%',
+                        color: '#fff',
+                        padding: '4px 8px',
+                        background: 'rgba(0, 0, 0, 0.5)',
+                        overflow: 'ellipsis',
+                      }}>
+                      {upload.filename}
+                    </Text>
                   )}
-                </Card>
+                </Paper>
               ))}
-            </Card.Group>
+            </SimpleGrid>
           ) : (
-            <Label.Group color="blue">
+            <Paper color="blue">
               {uploads.map((upload) => (
-                <Label key={this.getUploadId(upload)}>
+                <Pill key={this.getUploadId(upload)}>
                   {this.renderIconForType()}
                   {upload.filename || 'File'}
-                  <Icon
-                    name="delete"
+                  <IconTrash
+                    size={14}
                     style={{ cursor: 'pointer' }}
                     onClick={(evt) => this.delete(evt, upload)}
                   />
-                </Label>
+                </Pill>
               ))}
-            </Label.Group>
+            </Paper>
           ))}
         <Dropzone
           accept={this.getMimeTypes()}
@@ -256,34 +270,30 @@ export default class Uploads extends React.Component {
                     : 'ui icon message upload-dropzone'
                 }
                 style={{ cursor: 'pointer', outline: 0 }}>
-                {loading ? (
-                  <Icon name="rotate" loading />
-                ) : (
-                  this.renderIconForType()
-                )}
+                {loading && <Loader />}
                 <input {...getInputProps()} />
-                <div className="content">
+                <Paper withBorder mt="md" p="md">
                   {loading ? (
-                    <p>Uploading...</p>
+                    <Text>Uploading...</Text>
                   ) : isDragActive ? (
-                    <p>Drop files here...</p>
+                    <Text>Drop files here...</Text>
                   ) : this.isMultiple() ? (
-                    <p>
+                    <Text size="sm">
                       Try dropping some files here, or click to select files to
                       upload.
-                    </p>
+                    </Text>
                   ) : (
-                    <p>
+                    <Text size="sm">
                       Try dropping a file here, or click to select a file to
                       upload.
-                    </p>
+                    </Text>
                   )}
-                </div>
+                </Paper>
               </div>
             );
           }}
         </Dropzone>
-      </Form.Field>
+      </Input.Wrapper>
     );
   }
 
@@ -300,8 +310,7 @@ export default class Uploads extends React.Component {
   }
 
   renderIconForType() {
-    const { type } = this.props;
-    return <Icon name={ICONS[type] || 'file'} />;
+    return <IconFile />;
   }
 }
 
@@ -310,9 +319,4 @@ Uploads.propTypes = {
   types: PropTypes.arrayOf(PropTypes.oneOf(Object.keys(MIME_TYPES))),
   onChange: PropTypes.func.isRequired,
   onError: PropTypes.func,
-};
-
-Uploads.defaultProps = {
-  type: 'image',
-  onError: () => {},
 };

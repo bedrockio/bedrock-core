@@ -1,17 +1,16 @@
 import React from 'react';
-import { Form } from 'semantic';
+import { Group, Stack, Text } from '@mantine/core';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
 
-import DateField from 'components/form-fields/Date';
+import { DateInput } from '@mantine/dates';
 
 import SearchContext from '../Context';
-import './date-range.less';
 
 export default class DateRangeFilter extends React.Component {
   static contextType = SearchContext;
 
-  onChange = (evt, { name: part, value }) => {
+  onChange = (part, value) => {
     const { name } = this.props;
 
     const range = {
@@ -34,37 +33,45 @@ export default class DateRangeFilter extends React.Component {
     value = isEmpty(range) ? null : range;
 
     if (this.props.onChange) {
-      this.props.onChange(evt, { name, value });
+      this.props.onChange({
+        name,
+        value: {
+          ...value,
+        },
+      });
     } else {
-      this.context.onFilterChange({ name, value });
+      this.context.onFilterChange({
+        name,
+        value: {
+          ...value,
+        },
+      });
     }
   };
 
   render() {
     const { label, name } = this.props;
     return (
-      <Form.Field className="date-range">
-        <label>{label}</label>
-        <Form.Group>
-          <DateField
-            start
+      <Stack gap={0}>
+        <Text size="sm">{label}</Text>
+        <Group justify="space-between" wrap="no-wrap">
+          <DateInput
             name="gte"
             value={this.context.filters[name]?.gte}
             placeholder="Start"
-            onChange={this.onChange}
+            onChange={(value) => this.onChange('gte', value)}
             clearable
           />
           <span className="divider">&ndash;</span>
-          <DateField
-            end
+          <DateInput
             name="lte"
             value={this.context.filters[name]?.lte}
             placeholder="Present"
-            onChange={this.onChange}
+            onChange={(value) => this.onChange('lte', value)}
             clearable
           />
-        </Form.Group>
-      </Form.Field>
+        </Group>
+      </Stack>
     );
   }
 }

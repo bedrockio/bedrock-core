@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form } from 'semantic';
+import { Slider } from '@mantine/core';
 
 import SearchContext from '../Context';
 
@@ -17,7 +17,7 @@ export default class CheckboxFilter extends React.Component {
   render() {
     const { name, ...rest } = this.props;
     return (
-      <Form.Checkbox
+      <Slider
         id={name}
         name={name}
         checked={this.context.filters[name] || false}
@@ -29,6 +29,6 @@ export default class CheckboxFilter extends React.Component {
 }
 
 CheckboxFilter.propTypes = {
-  ...Form.Input.propTypes,
+  ...Slider.propTypes,
   name: PropTypes.string.isRequired,
 };
