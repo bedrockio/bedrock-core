@@ -1,10 +1,11 @@
 import { useNavigate } from '@bedrockio/router';
+import { ActionIcon, Button } from '@mantine/core';
 
 import { useSession } from 'stores/session';
 
-import { signInWithGoogle } from 'utils/auth/google';
-import { ActionIcon, Button } from '@mantine/core';
 import logo from 'assets/google-logo.svg';
+
+import { signInWithGoogle } from 'utils/auth/google';
 
 export default function GoogleSignInButton({
   onAuthStart,

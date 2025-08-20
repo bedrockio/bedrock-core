@@ -1,4 +1,4 @@
-import { Group, Center, Text, UnstyledButton, Table } from '@mantine/core';
+import { Center, Group, Table, Text, UnstyledButton } from '@mantine/core';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa6';
 
 import classes from './SortableTh.module.css';

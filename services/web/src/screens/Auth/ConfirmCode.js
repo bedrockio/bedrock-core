@@ -1,26 +1,26 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Redirect, Link, useNavigate, useLocation } from '@bedrockio/router';
-import Logo from 'components/Logo';
+import { Link, Redirect, useLocation, useNavigate } from '@bedrockio/router';
 
 import {
+  Alert,
+  Anchor,
+  Box,
+  Group,
   Paper,
   PinInput,
   Stack,
-  Group,
-  Alert,
   Title,
-  Anchor,
-  Box,
 } from '@mantine/core';
+
+import { useEffect, useMemo, useState } from 'react';
 
 import { useSession } from 'stores/session';
 
 import ErrorMessage from 'components/ErrorMessage';
+import Logo from 'components/Logo';
 import Meta from 'components/Meta';
 
-import { formatPhone } from 'utils/phone';
-
 import { request } from 'utils/api';
+import { formatPhone } from 'utils/phone';
 
 export default function ConfirmCode() {
   const { authenticate } = useSession();

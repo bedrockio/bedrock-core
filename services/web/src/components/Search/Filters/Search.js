@@ -1,7 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import SearchContext from '../Context';
 import { TextInput } from '@mantine/core';
+import PropTypes from 'prop-types';
+import React from 'react';
+
+import SearchContext from '../Context';
 
 export default class SearchFilter extends React.Component {
   static contextType = SearchContext;

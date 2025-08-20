@@ -1,19 +1,20 @@
-import { ActionIcon, Menu, Text, Group, Button } from '@mantine/core';
+import { Link } from '@bedrockio/router';
+import { ActionIcon, Button, Group, Menu, Text } from '@mantine/core';
 
 import {
   PiCode,
+  PiDotsThreeOutlineVerticalFill,
+  PiListMagnifyingGlass,
   PiPencilSimpleFill,
   PiTrashFill,
-  PiListMagnifyingGlass,
-  PiDotsThreeOutlineVerticalFill,
 } from 'react-icons/pi';
-import { Link } from '@bedrockio/router';
 
-import InspectObject from 'components/modals/InspectObject';
-import { request } from 'utils/api';
-import Confirm from 'components/modals/Confirm';
-import Protected from 'components/Protected';
 import ModalWrapper from 'components/ModalWrapper';
+import Protected from 'components/Protected';
+import Confirm from 'components/modals/Confirm';
+import InspectObject from 'components/modals/InspectObject';
+
+import { request } from 'utils/api';
 
 export default function ShopsActions({ shop, reload, displayMode = 'show' }) {
   function renderButton() {

@@ -1,16 +1,14 @@
-import Koa from 'koa';
-
-import koaMount from 'koa-mount';
-import koaBasicAuth from 'koa-basic-auth';
-
 import config from '@bedrockio/config';
 import logger from '@bedrockio/logger';
+import Koa from 'koa';
+import koaBasicAuth from 'koa-basic-auth';
+import koaMount from 'koa-mount';
 
-import envMiddleware from './middleware/env.js';
 import assetsMiddleware from './middleware/assets.js';
+import envMiddleware from './middleware/env.js';
+import healthCheckMiddleware from './middleware/healthCheck.js';
 import historyMiddleware from './middleware/history.js';
 import templateMiddleware from './middleware/template.js';
-import healthCheckMiddleware from './middleware/healthCheck.js';
 
 const SERVER_PORT = config.get('SERVER_PORT');
 const SERVER_HOST = config.get('SERVER_HOST');

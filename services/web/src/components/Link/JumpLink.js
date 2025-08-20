@@ -1,9 +1,8 @@
+import { Anchor } from '@mantine/core';
 import React from 'react';
 
 import ScrollWaypoint from '../ScrollWaypoint';
-
 import './jump-link.less';
-import { Anchor } from '@mantine/core';
 
 class JumpTarget extends React.Component {
   onScrollEnter = () => {

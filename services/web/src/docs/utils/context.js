@@ -1,10 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
-
 import { set, unset } from 'lodash';
-
-import { ENV_NAME } from 'utils/env';
+import React, { useContext, useEffect, useState } from 'react';
 
 import { request } from 'utils/api';
+import { ENV_NAME } from 'utils/env';
 
 export const DocsContext = React.createContext({});
 

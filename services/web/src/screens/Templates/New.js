@@ -1,6 +1,8 @@
-import { Space } from '@mantine/core';
 import { useNavigate } from '@bedrockio/router';
+import { Space } from '@mantine/core';
+
 import BackLink from 'components/BackLink';
+
 import Form from './Form';
 
 export default function NewTemplate() {

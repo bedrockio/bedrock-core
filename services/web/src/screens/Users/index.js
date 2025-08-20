@@ -1,8 +1,8 @@
-import { Routes, Route } from '@bedrockio/router';
+import { Route, Routes } from '@bedrockio/router';
 
+import Detail from './Detail';
 import List from './List';
 import New from './New';
-import Detail from './Detail';
 
 export default function Users() {
   return (

@@ -4,20 +4,21 @@ import {
   Button,
   Divider,
   Group,
+  Stack,
   Table,
   Text,
-  Stack,
 } from '@mantine/core';
-import { PiTrash } from 'react-icons/pi';
-import { useSession } from 'stores/session';
-import { parseUserAgent } from 'utils/user-agent';
-import { fromNow } from 'utils/date';
-import countries from 'utils/countries';
-import { useRequest } from 'utils/api';
 
-import { getToken } from 'utils/api';
-import { parseToken } from 'utils/token';
 import { notifications } from '@mantine/notifications';
+import { PiTrash } from 'react-icons/pi';
+
+import { useSession } from 'stores/session';
+
+import { getToken, useRequest } from 'utils/api';
+import countries from 'utils/countries';
+import { fromNow } from 'utils/date';
+import { parseToken } from 'utils/token';
+import { parseUserAgent } from 'utils/user-agent';
 
 export default function Sessions() {
   const { user, bootstrap } = useSession();

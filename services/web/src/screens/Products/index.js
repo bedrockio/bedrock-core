@@ -1,7 +1,7 @@
-import { Routes, Route } from '@bedrockio/router';
+import { Route, Routes } from '@bedrockio/router';
 
-import List from './List';
 import Detail from './Detail';
+import List from './List';
 import NewShop from './New';
 
 export default function Products() {

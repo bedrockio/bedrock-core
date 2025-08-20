@@ -1,10 +1,9 @@
+import { Group, List } from '@mantine/core';
 import React from 'react';
-
-import SearchContext from '../../Context';
+import { PiTrashFill } from 'react-icons/pi';
 
 import DisplayValue from './DisplayValue';
-import { PiTrashFill } from 'react-icons/pi';
-import { Group, List } from '@mantine/core';
+import SearchContext from '../../Context';
 
 export default class Overview extends React.Component {
   static contextType = SearchContext;

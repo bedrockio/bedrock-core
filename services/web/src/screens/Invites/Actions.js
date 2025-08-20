@@ -1,16 +1,16 @@
 import { ActionIcon, Menu, Text } from '@mantine/core';
-import { showNotification } from '@mantine/notifications';
+import { notifications, showNotification } from '@mantine/notifications';
 
 import {
-  PiTrashFill,
-  PiRepeatFill,
   PiDotsThreeOutlineVerticalFill,
+  PiRepeatFill,
+  PiTrashFill,
 } from 'react-icons/pi';
 
-import { request, useRequest } from 'utils/api';
-import ConfirmModal from 'components/modals/Confirm';
-import { notifications } from '@mantine/notifications';
 import ModalWrapper from 'components/ModalWrapper';
+import ConfirmModal from 'components/modals/Confirm';
+
+import { request, useRequest } from 'utils/api';
 
 export default function InviteActions({ invite, reload }) {
   const resentRequest = useRequest({

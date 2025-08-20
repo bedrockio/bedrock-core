@@ -1,6 +1,6 @@
-import React from 'react';
+import { Checkbox, Slider } from '@mantine/core';
 import PropTypes from 'prop-types';
-import { Checkbox } from '@mantine/core';
+import React from 'react';
 
 import SearchContext from '../Context';
 

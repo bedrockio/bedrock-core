@@ -2,9 +2,8 @@ import ReactMarkdown from 'react-markdown';
 
 import { useClass } from 'helpers/bem';
 
-import './markdown.less';
-
 import components from './components';
+import './markdown.less';
 
 export default function Markdown(props) {
   const { inline, source } = props;

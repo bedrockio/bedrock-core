@@ -1,24 +1,21 @@
-import { useEffect } from 'react';
-
 import { useLocation, useNavigate } from '@bedrockio/router';
 import { ActionIcon, Group, Text } from '@mantine/core';
+import { useEffect } from 'react';
+import { PiArrowClockwiseFill } from 'react-icons/pi';
 
 import { useClass } from 'helpers/bem';
+import PortalLayout from 'layouts/Portal';
 
-import ConfirmModal from 'components/modals/Confirm';
+import Footer from 'components/Footer';
+import { components as markdownComponents } from 'components/Markdown';
+import Meta from 'components/Meta';
 import ModalWrapper from 'components/ModalWrapper';
+import ConfirmModal from 'components/modals/Confirm';
 import EditButton from 'docs/components/EditButton';
 import { useDocs } from 'docs/utils/context';
 
-import { components as markdownComponents } from 'components/Markdown';
-import Meta from 'components/Meta';
-
-import { DEFAULT_PAGE_ID, pagesByPath, sorted } from '../../pages';
-
 import './api-docs.less';
-import { PiArrowClockwiseFill } from 'react-icons/pi';
-import PortalLayout from 'layouts/Portal';
-import Footer from 'components/Footer';
+import { DEFAULT_PAGE_ID, pagesByPath, sorted } from '../../pages';
 
 function getMenuItems(sorted) {
   return sorted.map((page) => {

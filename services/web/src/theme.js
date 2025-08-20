@@ -1,4 +1,7 @@
-import { Button, createTheme, DEFAULT_THEME, Tabs } from '@mantine/core';
+import { Button, DEFAULT_THEME, Tabs, createTheme } from '@mantine/core';
+import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
+import '@mantine/notifications/styles.css';
 
 import './theme.less';
 

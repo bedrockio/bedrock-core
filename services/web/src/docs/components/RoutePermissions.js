@@ -1,5 +1,5 @@
-import React from 'react';
 import { get, startCase } from 'lodash';
+import React from 'react';
 
 import { getRoutePath } from 'docs/utils';
 

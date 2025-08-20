@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/browser';
 
-import { SENTRY_DSN, ENV_NAME } from 'utils/env';
+import { ENV_NAME, SENTRY_DSN } from 'utils/env';
 
 if (SENTRY_DSN && !['development', 'test'].includes(ENV_NAME)) {
   Sentry.init({

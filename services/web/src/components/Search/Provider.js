@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { pickBy } from 'lodash';
 import { withRouter } from '@bedrockio/router';
+import { pickBy } from 'lodash';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 
 import SearchContext from './Context';
 

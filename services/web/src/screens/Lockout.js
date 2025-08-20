@@ -1,8 +1,9 @@
+import { Link, useNavigate } from '@bedrockio/router';
+import { Button, Center, Group, Paper, Stack, Text } from '@mantine/core';
 import { useEffect } from 'react';
-import { useNavigate, Link } from '@bedrockio/router';
-import { Button, Paper, Text, Group, Center, Stack } from '@mantine/core';
 
 import { useSession } from 'stores/session';
+
 import Meta from 'components/Meta';
 
 function Lockout() {

@@ -1,17 +1,16 @@
-import { Table, Button, Code, Divider, Stack } from '@mantine/core';
-
 import { Link } from '@bedrockio/router';
+import { Button, Code, Divider, Stack, Table } from '@mantine/core';
+import { PiPlus } from 'react-icons/pi';
 
+import Meta from 'components/Meta';
+import PageHeader from 'components/PageHeader';
 import Search from 'components/Search';
-import Actions from './Actions';
+import SortableTh from 'components/Table/SortableTh';
 
 import { request } from 'utils/api';
-import Meta from 'components/Meta';
-
-import PageHeader from 'components/PageHeader';
-import { PiPlus } from 'react-icons/pi';
 import { fromNow } from 'utils/date';
-import SortableTh from 'components/Table/SortableTh';
+
+import Actions from './Actions';
 
 export default function Applications() {
   const onDataNeeded = async (body) => {

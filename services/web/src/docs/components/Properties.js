@@ -1,17 +1,16 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { get, isEqual } from 'lodash';
 import { Popover } from '@mantine/core';
+import { get, isEqual } from 'lodash';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 import { useClass } from 'helpers/bem';
 
 import { JumpLink } from 'components/Link';
 
 import { expandRef } from '../utils';
-import { useDocs } from '../utils/context';
 import EditableField from './EditableField';
-
 import './properties.less';
+import { useDocs } from '../utils/context';
 
 const OBJECT_ID_REF = '#/components/schemas/ObjectId';
 

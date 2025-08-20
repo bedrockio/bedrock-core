@@ -1,26 +1,27 @@
-import { pick } from 'lodash';
 import {
-  Grid,
-  TextInput,
   Button,
-  Stack,
-  Group,
-  Fieldset,
-  Text,
   Chip,
+  Fieldset,
+  Grid,
+  Group,
+  Stack,
+  Text,
+  TextInput,
 } from '@mantine/core';
 
-import { useSession } from 'stores/session';
 import { useForm } from '@mantine/form';
+import { notifications } from '@mantine/notifications';
+import { pick } from 'lodash';
 
-import Meta from 'components/Meta';
+import { useSession } from 'stores/session';
 
 import ErrorMessage from 'components/ErrorMessage';
+import Meta from 'components/Meta';
 import PhoneField from 'components/form-fields/Phone';
+
 import { useRequest } from 'utils/api';
 
 import Menu from './Menu';
-import { notifications } from '@mantine/notifications';
 
 const CHANNELS = [
   {

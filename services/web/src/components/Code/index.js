@@ -1,8 +1,14 @@
-import { useMemo, useState } from 'react';
-import PropTypes from 'prop-types';
 import { Paper } from '@mantine/core';
-
 import { Highlight, themes } from 'prism-react-renderer';
+import PropTypes from 'prop-types';
+import { useMemo, useState } from 'react';
+import { PiCheckFatFill, PiCopyFill } from 'react-icons/pi';
+
+import { useClass } from 'helpers/bem';
+
+import { copyToClipboard } from 'utils/copy';
+
+import './code.less';
 
 function CodeBlock({ code, language }) {
   if (!code) return null;
@@ -36,13 +42,6 @@ function CodeBlock({ code, language }) {
     </div>
   );
 }
-
-import { useClass } from 'helpers/bem';
-
-import { copyToClipboard } from 'utils/copy';
-
-import './code.less';
-import { PiCopyFill, PiCheckFatFill } from 'react-icons/pi';
 
 export default function Code({ code, language, scroll, action, ...rest }) {
   const [copied, setCopied] = useState();

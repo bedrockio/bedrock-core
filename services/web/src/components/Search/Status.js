@@ -1,5 +1,5 @@
-import React from 'react';
 import { Loader } from '@mantine/core';
+import React from 'react';
 
 import ErrorMessage from 'components/ErrorMessage';
 

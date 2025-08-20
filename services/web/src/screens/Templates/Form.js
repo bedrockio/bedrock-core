@@ -1,33 +1,35 @@
-import { useState, useEffect } from 'react';
-import ErrorMessage from 'components/ErrorMessage';
-import ModalWrapper from 'components/ModalWrapper';
-import HelpModal from './Detail/HelpModal';
-import SendPreviewButton from './Detail/SendPreviewButton';
-
-import { useRequest, request } from 'utils/api';
-
 import {
   Button,
-  Stack,
+  Fieldset,
   Grid,
   Group,
-  TextInput,
   MultiSelect,
-  Fieldset,
-  Textarea,
-  SegmentedControl,
   Paper,
+  SegmentedControl,
+  Stack,
+  TextInput,
+  Textarea,
 } from '@mantine/core';
-import {
-  PiEnvelopeFill,
-  PiChatCircleFill,
-  PiDeviceMobileFill,
-  PiQuestionFill,
-  PiCodeFill,
-} from 'react-icons/pi';
 
 import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
+import { useEffect, useState } from 'react';
+
+import {
+  PiChatCircleFill,
+  PiCodeFill,
+  PiDeviceMobileFill,
+  PiEnvelopeFill,
+  PiQuestionFill,
+} from 'react-icons/pi';
+
+import ErrorMessage from 'components/ErrorMessage';
+import ModalWrapper from 'components/ModalWrapper';
+
+import { request, useRequest } from 'utils/api';
+
+import HelpModal from './Detail/HelpModal';
+import SendPreviewButton from './Detail/SendPreviewButton';
 
 const channelOptions = [
   { value: 'email', label: 'Email' },

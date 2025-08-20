@@ -1,4 +1,4 @@
-import { Stack, Alert, Text } from '@mantine/core';
+import { Alert, Stack, Text } from '@mantine/core';
 
 import Code from 'components/Code';
 

@@ -1,19 +1,20 @@
-import { useState, useEffect } from 'react';
 import {
   Button,
-  Loader,
-  Stack,
-  Group,
-  Text,
-  PinInput,
   Container,
   Divider,
+  Group,
+  Loader,
+  PinInput,
+  Stack,
+  Text,
 } from '@mantine/core';
+
+import { useEffect, useState } from 'react';
 
 import { useSession } from 'stores/session';
 
-import { ExternalLink } from 'components/Link';
 import ErrorMessage from 'components/ErrorMessage';
+import { ExternalLink } from 'components/Link';
 import QRCode from 'components/QRCode';
 
 import { request } from 'utils/api';

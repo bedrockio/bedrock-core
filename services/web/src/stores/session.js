@@ -1,21 +1,22 @@
-import React, {
-  useContext,
-  useState,
-  useEffect,
-  useCallback,
-  useRef,
-} from 'react';
 import { withRouter } from '@bedrockio/router';
 import { omit } from 'lodash';
 
-import { request, hasToken, setToken } from 'utils/api';
-import { getOrganization, setOrganization } from 'utils/organization';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+
 import { trackSession } from 'utils/analytics';
-import { captureError } from 'utils/sentry';
+import { hasToken, request, setToken } from 'utils/api';
 import { wrapContext } from 'utils/hoc';
-import { localStorage } from 'utils/storage';
 import { merge } from 'utils/object';
+import { getOrganization, setOrganization } from 'utils/organization';
 import { userHasAccess } from 'utils/permissions';
+import { captureError } from 'utils/sentry';
+import { localStorage } from 'utils/storage';
 
 const SessionContext = React.createContext();
 

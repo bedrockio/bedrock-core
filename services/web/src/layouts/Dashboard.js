@@ -1,19 +1,25 @@
-import { useEffect } from 'react';
-import { useLocation } from '@bedrockio/router';
-import { NavLink } from '@bedrockio/router';
-import { useSession } from 'stores/session';
-import Logo from 'components/Logo';
-import OrganizationSelector from 'components/OrganizationSelector';
-import { userCanSwitchOrganizations } from 'utils/permissions';
-import { useDisclosure, useMediaQuery } from '@mantine/hooks';
+import { NavLink, useLocation } from '@bedrockio/router';
 
-import ConnectionError from 'components/ConnectionError';
-import ErrorBoundary from 'components/ErrorBoundary';
+import {
+  AppShell,
+  Box,
+  Burger,
+  Button,
+  Center,
+  Flex,
+  ScrollArea,
+  Text,
+} from '@mantine/core';
+
+import { useDisclosure, useMediaQuery } from '@mantine/hooks';
+import { useEffect } from 'react';
+
 import {
   PiBookFill,
   PiBuildingOfficeFill,
   PiDoorFill,
   PiEnvelopeSimpleFill,
+  PiFileFill,
   PiGearFill,
   PiGridFourFill,
   PiListMagnifyingGlass,
@@ -21,24 +27,22 @@ import {
   PiTagFill,
   PiTerminalFill,
   PiUserFill,
-  PiFileFill,
 } from 'react-icons/pi';
+
 import { TbChevronDown } from 'react-icons/tb';
 
-import {
-  AppShell,
-  Burger,
-  Flex,
-  ScrollArea,
-  Center,
-  Button,
-  Text,
-  Box,
-} from '@mantine/core';
+import { useSession } from 'stores/session';
+
+import ConnectionError from 'components/ConnectionError';
+import ErrorBoundary from 'components/ErrorBoundary';
+import Footer from 'components/Footer';
+import Logo from 'components/Logo';
+import ModalTrigger from 'components/ModalWrapper';
+import OrganizationSelector from 'components/OrganizationSelector';
+
+import { userCanSwitchOrganizations } from 'utils/permissions';
 
 import MenuItem from '../components/MenuItem';
-import ModalTrigger from 'components/ModalWrapper';
-import Footer from 'components/Footer';
 
 const menuItems = [
   {

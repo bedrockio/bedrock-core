@@ -1,17 +1,9 @@
-import { mdx, jest, react, recommended } from '@bedrockio/eslint-plugin';
-
-export default [
-  mdx,
+import {
   jest,
+  mdx,
   react,
   recommended,
-  {
-    files: ['src/**/*.js'],
-    languageOptions: {
-      parserOptions: {
-        ecmaVersion: 'latest',
-        sourceType: 'module',
-      },
-    },
-  },
-];
+  viteImports,
+} from '@bedrockio/eslint-plugin';
+
+export default [mdx, jest, react, recommended, viteImports];

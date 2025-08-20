@@ -1,7 +1,7 @@
-import { Helmet } from 'react-helmet-async';
 import { useLocation } from '@bedrockio/router';
+import { Helmet } from 'react-helmet-async';
 
-import { APP_URL, APP_NAME } from 'utils/env';
+import { APP_NAME, APP_URL } from 'utils/env';
 
 export default function Meta(props) {
   const { title, children } = props;

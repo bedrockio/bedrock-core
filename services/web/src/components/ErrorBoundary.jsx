@@ -1,6 +1,6 @@
-import React from 'react';
+import { Button, Group, Paper, Stack, Text, Title } from '@mantine/core';
 import PropTypes from 'prop-types';
-import { Button, Stack, Title, Text, Paper, Group } from '@mantine/core';
+import React from 'react';
 import { PiArrowClockwiseFill } from 'react-icons/pi';
 
 class ErrorBoundary extends React.Component {

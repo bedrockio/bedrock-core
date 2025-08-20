@@ -1,9 +1,10 @@
+import { PiPencilSimpleFill } from 'react-icons/pi';
+
 import { usePage } from 'stores/page';
 
 import PageHeader from 'components/PageHeader';
-import Actions from '../Actions';
 
-import { PiPencilSimpleFill } from 'react-icons/pi';
+import Actions from '../Actions';
 
 export default function ApplicationMenu() {
   const { application, reload } = usePage();

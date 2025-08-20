@@ -1,30 +1,30 @@
 import { Link } from '@bedrockio/router';
+
 import {
-  Text,
-  Group,
-  Table,
-  Button,
-  Badge,
-  Divider,
   Anchor,
+  Badge,
+  Button,
+  Divider,
+  Group,
   Loader,
   Stack,
+  Table,
+  Text,
 } from '@mantine/core';
+
 import { PiPlus } from 'react-icons/pi';
-import PageHeader from 'components/PageHeader';
 
-import Search from 'components/Search';
-
-import SearchFilters from 'components/Search/Filters';
 import ErrorMessage from 'components/ErrorMessage';
+import PageHeader from 'components/PageHeader';
+import Search from 'components/Search';
+import SearchFilters from 'components/Search/Filters';
+import SortableTh from 'components/Table/SortableTh';
 
-import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
-
+import { formatDateTime } from 'utils/date';
 import { formatRoles } from 'utils/permissions';
 
 import Actions from './Actions';
-import SortableTh from 'components/Table/SortableTh';
 
 export default function UserList() {
   async function onDataNeeded({ roles, ...body }) {

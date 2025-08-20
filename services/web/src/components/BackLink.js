@@ -1,5 +1,5 @@
-import { NavLink } from '@mantine/core';
 import { useNavigate } from '@bedrockio/router';
+import { NavLink } from '@mantine/core';
 
 export default function BackLink(props) {
   const { label = 'Back' } = props;

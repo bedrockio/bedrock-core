@@ -1,8 +1,8 @@
-import React from 'react';
+import { NumberInput } from '@mantine/core';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 import SearchContext from '../Context';
-import { NumberInput } from '@mantine/core';
 
 export default class NumberFilter extends React.Component {
   static contextType = SearchContext;

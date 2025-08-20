@@ -1,16 +1,16 @@
 import { kebabCase } from 'lodash';
 
-import * as GettingStarted from './GettingStarted.mdx';
 import * as Authentication from './Authentication.mdx';
-import * as PasswordAuthentication from './PasswordAuthentication.mdx';
-import * as PasskeyAuthentication from './PasskeyAuthentication.mdx';
 import * as FederatedAuthentication from './FederatedAuthentication.mdx';
+import * as GettingStarted from './GettingStarted.mdx';
 import * as OtpAuthentication from './OtpAuthentication.mdx';
-import * as TotpAuthentication from './TotpAuthentication.mdx';
+import * as PasskeyAuthentication from './PasskeyAuthentication.mdx';
+import * as PasswordAuthentication from './PasswordAuthentication.mdx';
 import * as Products from './Products.mdx';
-import * as Uploads from './Uploads.mdx';
-import * as Signup from './Signup.mdx';
 import * as Shops from './Shops.mdx';
+import * as Signup from './Signup.mdx';
+import * as TotpAuthentication from './TotpAuthentication.mdx';
+import * as Uploads from './Uploads.mdx';
 import * as Users from './Users.mdx';
 
 const PAGES = {
@@ -87,4 +87,4 @@ function getSorted(obj = {}) {
 
 const sorted = getSorted(root);
 
-export { sorted, pagesByPath };
+export { pagesByPath, sorted };

@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Paper, Alert, Loader, Stack, Group } from '@mantine/core';
+import { Alert, Group, Loader, Paper, Stack } from '@mantine/core';
+import { useEffect, useState } from 'react';
 
 import { usePage } from 'stores/page';
 

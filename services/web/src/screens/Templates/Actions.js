@@ -1,21 +1,26 @@
-import { ActionIcon, Menu, Text, Group, Button } from '@mantine/core';
+import { Link } from '@bedrockio/router';
+import { ActionIcon, Button, Group, Menu, Text } from '@mantine/core';
 
 import {
   PiCode,
+  PiDotsThreeOutlineVerticalFill,
+  PiListMagnifyingGlass,
   PiPencilSimpleFill,
   PiTrashFill,
-  PiListMagnifyingGlass,
-  PiDotsThreeOutlineVerticalFill,
 } from 'react-icons/pi';
-import { Link } from '@bedrockio/router';
 
-import InspectObject from 'components/modals/InspectObject';
-import { request } from 'utils/api';
-import Confirm from 'components/modals/Confirm';
-import Protected from 'components/Protected';
 import ModalWrapper from 'components/ModalWrapper';
+import Protected from 'components/Protected';
+import Confirm from 'components/modals/Confirm';
+import InspectObject from 'components/modals/InspectObject';
 
-export default function TemplatesActions({ template, reload, displayMode = 'show' }) {
+import { request } from 'utils/api';
+
+export default function TemplatesActions({
+  template,
+  reload,
+  displayMode = 'show',
+}) {
   function renderButton() {
     if (displayMode === 'list') {
       return (
@@ -30,7 +35,10 @@ export default function TemplatesActions({ template, reload, displayMode = 'show
       );
     } else if (displayMode === 'edit') {
       return (
-        <Button variant="default" component={Link} to={`/templates/${template.id}`}>
+        <Button
+          variant="default"
+          component={Link}
+          to={`/templates/${template.id}`}>
           Back
         </Button>
       );

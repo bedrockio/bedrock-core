@@ -2,9 +2,9 @@
 
 import { once } from 'lodash';
 
-import { loadScript } from 'utils/script';
-import { GOOGLE_CLIENT_ID } from 'utils/env';
 import { request } from 'utils/api';
+import { GOOGLE_CLIENT_ID } from 'utils/env';
+import { loadScript } from 'utils/script';
 
 const SCRIPT_URL = 'https://accounts.google.com/gsi/client?hl=en-US';
 

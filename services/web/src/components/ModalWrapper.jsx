@@ -1,6 +1,6 @@
-import { useDisclosure } from '@mantine/hooks';
 import { Modal } from '@mantine/core';
-import { cloneElement, isValidElement, createContext, useContext } from 'react';
+import { useDisclosure } from '@mantine/hooks';
+import { cloneElement, createContext, isValidElement, useContext } from 'react';
 
 // Create a context for the modal
 const ModalContext = createContext({

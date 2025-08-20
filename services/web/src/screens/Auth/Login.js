@@ -1,30 +1,29 @@
-import { useState } from 'react';
+import { Link, useNavigate } from '@bedrockio/router';
 
 import {
+  Anchor,
   Button,
   Group,
   Paper,
   PasswordInput,
   Stack,
+  Text,
   TextInput,
   Title,
-  Text,
-  Anchor,
 } from '@mantine/core';
 
 import { useForm } from '@mantine/form';
-
-import { Link, useNavigate } from '@bedrockio/router';
+import { useState } from 'react';
 
 import { useSession } from 'stores/session';
-import Meta from 'components/Meta';
 
 import Federated from 'components/Auth/Federated';
 import ErrorMessage from 'components/ErrorMessage';
 import Logo from 'components/Logo';
+import Meta from 'components/Meta';
 
 import { request } from 'utils/api';
-import { AUTH_TYPE, AUTH_CHANNEL } from 'utils/env';
+import { AUTH_CHANNEL, AUTH_TYPE } from 'utils/env';
 
 function login(values) {
   if (AUTH_TYPE === 'password') {

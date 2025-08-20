@@ -1,13 +1,20 @@
-import path from 'path';
 import { readFileSync } from 'fs';
+import { fileURLToPath } from 'node:url';
+import path from 'path';
+
+import config from '@bedrockio/config';
+// eslint-disable-next-line
+import { mdx } from '@cyco130/vite-plugin-mdx';
+// eslint-disable-next-line
 import react from '@vitejs/plugin-react';
 
 import { omitBy, template } from 'lodash-es';
 import { defineConfig } from 'vite';
-import { mdx } from '@cyco130/vite-plugin-mdx';
-import config from '@bedrockio/config';
 
 const { SERVER_PORT, ...rest } = config.getAll();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // https://vitejs.dev/config/
 export default defineConfig({

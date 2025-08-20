@@ -3,8 +3,8 @@
 import { once } from 'lodash';
 
 import { request } from 'utils/api';
+import { APPLE_RETURN_URL, APPLE_SERVICE_ID } from 'utils/env';
 import { loadScript } from 'utils/script';
-import { APPLE_SERVICE_ID, APPLE_RETURN_URL } from 'utils/env';
 
 const SCRIPT_URL =
   'https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js';

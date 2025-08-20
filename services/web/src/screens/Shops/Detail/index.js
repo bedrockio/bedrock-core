@@ -1,4 +1,4 @@
-import { Link, Routes, Route } from '@bedrockio/router';
+import { Link, Route, Routes } from '@bedrockio/router';
 
 import { usePageLoader } from 'stores/page';
 
@@ -6,9 +6,9 @@ import NotFound from 'screens/NotFound';
 
 import { request } from 'utils/api';
 
+import EditShop from './Edit';
 import Overview from './Overview';
 import Products from './Products';
-import EditShop from './Edit';
 
 export default function ShopDetail() {
   const Loader = usePageLoader(async (params) => {

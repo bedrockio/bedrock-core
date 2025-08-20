@@ -1,25 +1,24 @@
-import { ActionIcon, Group, Menu, Text, Button } from '@mantine/core';
+import { Link } from '@bedrockio/router';
+import { ActionIcon, Button, Group, Menu, Text } from '@mantine/core';
 
 import {
   PiCode,
-  PiTrashFill,
   PiDotsThreeOutlineVerticalFill,
-  PiPencilSimpleFill,
   PiKeyFill,
+  PiPencilSimpleFill,
   PiRowsFill,
+  PiTrashFill,
 } from 'react-icons/pi';
 
-import { Link } from '@bedrockio/router';
 import { useSession } from 'stores/session';
 
-import ConfirmModal from 'components/modals/Confirm';
-
-import InspectObject from 'components/modals/InspectObject';
-import { request } from 'utils/api';
-
-import LoginAsUser from 'components/modals/LoginAsUser';
-import Protected from 'components/Protected';
 import ModalWrapper from 'components/ModalWrapper';
+import Protected from 'components/Protected';
+import ConfirmModal from 'components/modals/Confirm';
+import InspectObject from 'components/modals/InspectObject';
+import LoginAsUser from 'components/modals/LoginAsUser';
+
+import { request } from 'utils/api';
 
 export default function UserActions({ displayMode = 'show', user, reload }) {
   const { user: authUser } = useSession();

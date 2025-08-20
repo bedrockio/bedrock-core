@@ -1,13 +1,11 @@
-import React from 'react';
-
 import { Divider } from '@mantine/core';
+import React from 'react';
 
 import { expandRef } from 'docs/utils';
 
-import { DocsContext } from '../utils/context';
-
 import EditableField from './EditableField';
 import Properties from './Properties';
+import { DocsContext } from '../utils/context';
 
 export default class VisitedSchemas extends React.Component {
   static contextType = DocsContext;
