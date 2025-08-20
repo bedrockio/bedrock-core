@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { Form, Button, Message, Modal } from 'semantic';
+import { useState } from 'react';
+import { Button, Alert, Stack } from '@mantine/core';
 
-import modal from 'helpers/modal';
 import { useSession } from 'stores/session';
 
 import ErrorMessage from 'components/ErrorMessage';
@@ -11,9 +10,12 @@ import SearchDropdown from 'components/SearchDropdown';
 
 import { request } from 'utils/api';
 
-function SendPreviewModal(props) {
-  const { channel, template, close, onSent } = props;
-
+export default function SendPreviewModal({
+  channel,
+  template,
+  onSent,
+  onClose,
+}) {
   const { user } = useSession();
 
   const [error, setError] = useState(null);
@@ -36,7 +38,7 @@ function SendPreviewModal(props) {
   }
 
   async function onSubmit(evt) {
-    evt.stopPropagation();
+    evt.preventDefault();
     try {
       setError(null);
       setLoading(true);
@@ -50,35 +52,11 @@ function SendPreviewModal(props) {
       });
       setLoading(false);
       onSent();
-      close();
+      onClose();
     } catch (error) {
       setError(error);
       setLoading(false);
     }
-  }
-
-  function render() {
-    return (
-      <React.Fragment>
-        <Modal.Header>Send Test</Modal.Header>
-        <Modal.Content>
-          <Form noValidate id="send-mail" onSubmit={onSubmit}>
-            <ErrorMessage error={error} />
-            {renderField()}
-          </Form>
-          <Message>Dummy data will be used to populate objects.</Message>
-        </Modal.Content>
-        <Modal.Actions>
-          <Button
-            primary
-            form="send-mail"
-            loading={loading}
-            disabled={loading}
-            content="Send"
-          />
-        </Modal.Actions>
-      </React.Fragment>
-    );
   }
 
   function renderField() {
@@ -126,7 +104,16 @@ function SendPreviewModal(props) {
     );
   }
 
-  return render();
+  return (
+    <form onSubmit={onSubmit}>
+      <Stack spacing="md">
+        <ErrorMessage error={error} />
+        {renderField()}
+        <Alert color="blue">Dummy data will be used to populate objects.</Alert>
+        <Button type="submit" loading={loading} disabled={loading}>
+          Send
+        </Button>
+      </Stack>
+    </form>
+  );
 }
-
-export default modal(SendPreviewModal);

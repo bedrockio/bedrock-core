@@ -10,7 +10,7 @@ export default class Settings extends React.Component {
       <Routes>
         <Route exact path="/settings/details" render={Details} />
         <Route exact path="/settings/security" render={Security} />
-        <Redirect exact to="/settings/details" />
+        <Redirect to="/settings/details" />
       </Routes>
     );
   }

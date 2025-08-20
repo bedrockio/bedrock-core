@@ -12,7 +12,6 @@ export default function MenuItem(props) {
   function getNestedProps() {
     if (items.length) {
       return {
-        exact: true,
         opened: isOpened(),
         children: items.map((item) => {
           return <MenuItem key={item.url} {...item} />;

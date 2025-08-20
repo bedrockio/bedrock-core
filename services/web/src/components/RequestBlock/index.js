@@ -80,9 +80,6 @@ function RequestBlock(props) {
   const { method, path } = request;
   const templateFunction = TEMPLATES[current];
 
-  console.log(getData());
-  console.log(templateFunction(getData()));
-
   return (
     <>
       {(header || selector) && (

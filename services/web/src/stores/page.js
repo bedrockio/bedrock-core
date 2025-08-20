@@ -64,7 +64,7 @@ function useLoader(names, params, fn) {
   function PageLoader(props) {
     const { fallback, notFound } = props;
     if (loading) {
-      return fallback || <Loader active />;
+      return fallback || <Loader />;
     } else if (error) {
       if (error.status === 404 && notFound) {
         return notFound;
