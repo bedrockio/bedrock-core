@@ -21,6 +21,7 @@ import {
   PiTagFill,
   PiTerminalFill,
   PiUserFill,
+  PiFileFill,
 } from 'react-icons/pi';
 import { TbChevronDown } from 'react-icons/tb';
 
@@ -74,6 +75,11 @@ const accountItems = [
     icon: PiTerminalFill,
     label: 'System',
     items: [
+      {
+        icon: PiFileFill,
+        url: '/templates',
+        label: 'Templates',
+      },
       {
         icon: PiListMagnifyingGlass,
         url: '/audit-log',

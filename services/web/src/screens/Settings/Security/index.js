@@ -42,17 +42,17 @@ export default function Security() {
     setState({ error: null, message: null, loading: true });
 
   // Federated
-  const onGoogleEnabled = () => {
-    setMessage('Enabled Google Login');
-  };
+  // const onGoogleEnabled = () => {
+  //   setMessage('Enabled Google Login');
+  // };
 
   const onGoogleDisabled = () => {
     setMessage('Disabled Google Login');
   };
 
-  const onAppleEnabled = () => {
-    setMessage('Enabled Apple Login');
-  };
+  // const onAppleEnabled = () => {
+  //   setMessage('Enabled Apple Login');
+  // };
 
   const onAppleDisabled = () => {
     setMessage('Disabled Apple Login');

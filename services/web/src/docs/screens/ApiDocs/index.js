@@ -92,28 +92,6 @@ export default function ApiDocs() {
     }
   }
 
-  function confirmGenerate() {
-    return (
-      <ModalWrapper
-        title="Generate Documentation"
-        component={
-          <ConfirmModal
-            onConfirm={() => {
-              return generateDocs();
-            }}
-            content={
-              <Text>
-                Generates OpenApi documentation based on schemas and route
-                validation. This will not overwrite current documentation.
-              </Text>
-            }
-            confirmButton="Generate Documentation"
-          />
-        }
-      />
-    );
-  }
-
   function renderActions() {
     if (canEditDocs()) {
       return (

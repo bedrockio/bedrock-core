@@ -1,10 +1,4 @@
-import {
-  Button,
-  ActionIcon,
-  createTheme,
-  DEFAULT_THEME,
-  Tabs,
-} from '@mantine/core';
+import { Button, createTheme, DEFAULT_THEME, Tabs } from '@mantine/core';
 
 import './theme.less';
 

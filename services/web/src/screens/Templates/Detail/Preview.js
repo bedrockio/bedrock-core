@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { Divider, Segment, Message, Dimmer, Loader } from 'semantic';
+import { useState, useEffect } from 'react';
+import { Paper, Alert, Loader, Stack, Group } from '@mantine/core';
 
 import { usePage } from 'stores/page';
 
 import ErrorMessage from 'components/ErrorMessage';
-import Layout from 'components/Layout';
 
 import { request } from 'utils/api';
 
 import Menu from './Menu';
 import SendTestButton from './SendPreviewButton';
 
-export default function TemplateEdit() {
+export default function TemplatePreview() {
   const { template } = usePage();
 
   const [error, setError] = useState(null);
@@ -45,30 +44,42 @@ export default function TemplateEdit() {
   }
 
   return (
-    <React.Fragment>
+    <>
       <Menu />
-      <Divider hidden />
-      <ErrorMessage error={error} />
-      {message && <Message success>{message}</Message>}
-      <Segment>
-        {loading && (
-          <Dimmer inverted active>
-            <Loader />
-          </Dimmer>
-        )}
-        <iframe
-          srcDoc={preview?.html}
-          style={{ width: '100%', height: '500px' }}
-          frameBorder="0"
-        />
-      </Segment>
-      <Layout horizontal right>
-        <SendTestButton
-          channel="email"
-          template={template}
-          onSent={onTestSent}
-        />
-      </Layout>
-    </React.Fragment>
+      <Stack mt="md" spacing="md">
+        <ErrorMessage error={error} />
+        {message && <Alert color="green">{message}</Alert>}
+        <Paper withBorder style={{ position: 'relative' }}>
+          {loading && (
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                zIndex: 1,
+              }}>
+              <Loader />
+            </div>
+          )}
+          <iframe
+            srcDoc={preview?.html}
+            style={{ width: '100%', height: '500px', border: 'none' }}
+          />
+        </Paper>
+        <Group justify="flex-end">
+          <SendTestButton
+            channel="email"
+            template={template}
+            onSent={onTestSent}
+          />
+        </Group>
+      </Stack>
+    </>
   );
 }
