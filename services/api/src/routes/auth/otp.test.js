@@ -138,6 +138,7 @@ describe('/1/auth/otp', () => {
       });
       expect(authenticators.length).toBe(1);
       expect(authenticators[0].code).not.toBe(oldCode);
+      expect(response.body.data.challenge.code).toBeUndefined();
     });
 
     it('should return a test code if the user is a tester', async () => {

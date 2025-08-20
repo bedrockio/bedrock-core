@@ -59,4 +59,16 @@ describe('User', () => {
       await expect(user.validate()).rejects.toThrow(mongoose.Error.ValidationError);
     });
   });
+
+  describe('password', () => {
+    it('should not add an authenticator with a null password', async () => {
+      const user = await User.create({
+        firstName: 'Neo',
+        lastName: 'One',
+        email: 'foo@bar.com',
+        password: null,
+      });
+      expect(user.authenticators).toEqual([]);
+    });
+  });
 });

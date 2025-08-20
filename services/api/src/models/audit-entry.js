@@ -19,7 +19,7 @@ schema.statics.getObjectFields = function (options) {
 
   if (object) {
     if (!(object instanceof mongoose.Model)) {
-      throw Error('AuditEntry.getObjectFields only works with mongoose documents');
+      throw new Error('AuditEntry.getObjectFields only works with mongoose documents');
     }
 
     // Depopulate mutates the object so clone it here.

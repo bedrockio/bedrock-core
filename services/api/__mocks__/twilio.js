@@ -6,13 +6,23 @@ const AUTH_TOKEN = config.get('TWILIO_AUTH_TOKEN');
 
 let sentMessages;
 let createdRooms;
+let unsubscribed;
 
 beforeEach(() => {
   sentMessages = [];
   createdRooms = [];
+  unsubscribed = [];
 });
 
 async function sendMessage(options) {
+  const { to } = options;
+  if (!to) {
+    throw new Error('No phone number.');
+  } else if (unsubscribed.includes(to)) {
+    const error = new Error('Attempt to send to unsubscribed recipient');
+    error.code = 21610;
+    throw error;
+  }
   sentMessages.push({
     ...options,
     phone: options.to,
@@ -29,7 +39,7 @@ function assertSmsSent(options) {
           body: expect.stringContaining(body),
         }),
       }),
-    ])
+    ]),
   );
 }
 
@@ -97,6 +107,10 @@ function signRequest(path, params) {
   return crypto.createHmac('sha1', AUTH_TOKEN).update(Buffer.from(data, 'utf-8')).digest('base64');
 }
 
+function setTwilioUnsubscribed(phone) {
+  unsubscribed.push(phone);
+}
+
 Object.assign(createClient, {
   ...twilio,
   signRequest,
@@ -104,6 +118,7 @@ Object.assign(createClient, {
   assertSmsSent,
   assertSmsCount,
   assertRoomCreated,
+  setTwilioUnsubscribed,
 });
 
 module.exports = createClient;

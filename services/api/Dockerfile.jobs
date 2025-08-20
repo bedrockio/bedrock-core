@@ -7,17 +7,29 @@ ARG NODE_ENV=production
 
 # Note layers should be ordered from less to more likely to change.
 
-# Update & install required packages
-RUN apk add --update bash jq curl gcc musl-dev python3 python3-dev py3-pip;
+# Enable community & install Python + pipx + yq
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.21/community" \
+      >> /etc/apk/repositories && \
+    apk add --no-cache \
+      bash \
+      curl \
+      gcc \
+      jq \
+      musl-dev \
+      python3 \
+      py3-pip \
+      pipx
 
-# Create and activate a virtual environment
-RUN python3 -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
+# Use pipx to install your global Python tools
+RUN pipx ensurepath && \
+    pipx install yacron
 
-RUN python3 -m pip install pipx yq
-RUN python3 -m pipx ensurepath
-RUN python3 -m pipx install yacron
-RUN wget https://github.com/mikefarah/yq/releases/download/v4.6.3/yq_linux_386.tar.gz -O - | tar xz && mv yq_linux_386 /usr/bin/yq
+# Download Mike Farah’s yq
+ARG YQ_VERSION=v4.44.5
+ARG YQ_BINARY=yq_linux_amd64
+RUN wget -qO /usr/local/bin/yq \
+      https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/${YQ_BINARY} \
+    && chmod +x /usr/local/bin/yq
 
 # Needed for Gcloud Storage resumable file uploads
 RUN mkdir -p /root/.config
