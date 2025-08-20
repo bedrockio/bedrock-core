@@ -31,10 +31,13 @@ export default class PrivateImage extends React.Component {
 
       const id = upload?.id || upload;
 
-      const { data: url } = await request({
+      const response = await request({
         method: 'GET',
-        path: `/1/uploads/${id}/url`,
+        path: `/1/uploads/${id}/raw`,
       });
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
 
       this.setState({
         src: url,
