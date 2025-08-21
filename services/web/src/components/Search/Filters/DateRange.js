@@ -1,9 +1,8 @@
-import React from 'react';
 import { Group, Stack, Text } from '@mantine/core';
-import PropTypes from 'prop-types';
-import { isEmpty } from 'lodash';
-
 import { DateInput } from '@mantine/dates';
+import { isEmpty } from 'lodash';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 import SearchContext from '../Context';
 

@@ -1,5 +1,5 @@
-import React from 'react';
 import { withRouter } from '@bedrockio/router';
+import React from 'react';
 
 import { withSession } from 'stores/session';
 

@@ -1,14 +1,13 @@
-import { Table, Title, Image, Stack, Group, Text } from '@mantine/core';
+import { Group, Image, Stack, Table, Text, Title } from '@mantine/core';
 
 import { usePage } from 'stores/page';
 
-import { arrayToList } from 'utils/formatting';
-
+import { formatCurrency } from 'utils/currency';
 import { formatDateTime } from 'utils/date';
+import { arrayToList } from 'utils/formatting';
 import { urlForUpload } from 'utils/uploads';
 
 import Menu from './Menu';
-import { formatCurrency } from 'utils/currency';
 
 export default function ShopOverview() {
   const { product } = usePage();

@@ -1,6 +1,6 @@
-import React from 'react';
-import qr from 'qr.js';
 import PropTypes from 'prop-types';
+import qr from 'qr.js';
+import React from 'react';
 
 export default class QRCode extends React.Component {
   constructor(props) {

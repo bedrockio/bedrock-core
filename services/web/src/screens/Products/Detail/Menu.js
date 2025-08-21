@@ -1,6 +1,7 @@
+import { usePage } from 'stores/page';
+
 import PageHeader from 'components/PageHeader';
 
-import { usePage } from 'stores/page';
 import Actions from '../Actions';
 
 export default function ProductMenu({ displayMode }) {

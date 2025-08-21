@@ -1,6 +1,5 @@
 import { Anchor } from '@mantine/core';
 import React from 'react';
-
 import { PiArrowSquareOutFill } from 'react-icons/pi';
 
 export default class ExternalLink extends React.Component {

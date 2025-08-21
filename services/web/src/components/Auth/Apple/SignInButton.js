@@ -1,9 +1,10 @@
 import { useNavigate } from '@bedrockio/router';
-import { useSession } from 'stores/session';
-import { signInWithApple } from 'utils/auth/apple';
 import { ActionIcon, Button } from '@mantine/core';
-
 import { FaApple } from 'react-icons/fa';
+
+import { useSession } from 'stores/session';
+
+import { signInWithApple } from 'utils/auth/apple';
 
 export default function AppleSignInButton({
   onAuthStart,

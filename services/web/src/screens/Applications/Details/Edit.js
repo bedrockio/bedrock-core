@@ -1,12 +1,11 @@
-import Form from '../Form';
+import { Link, useNavigate } from '@bedrockio/router';
+import { Button, Stack } from '@mantine/core';
 
 import { usePage } from 'stores/page';
 
-import { Stack, Button } from '@mantine/core';
-import { useNavigate } from '@bedrockio/router';
 import PageHeader from 'components/PageHeader';
 
-import { Link } from '@bedrockio/router';
+import Form from '../Form';
 
 export default function EditApplication() {
   const { application, reload } = usePage();

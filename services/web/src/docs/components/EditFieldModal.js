@@ -1,6 +1,6 @@
-import { useEffect, useState, useCallback } from 'react';
+import { Button, Checkbox, Stack, TextInput, Textarea } from '@mantine/core';
 import { get } from 'lodash';
-import { Button, Textarea, TextInput, Checkbox, Stack } from '@mantine/core';
+import { useCallback, useEffect, useState } from 'react';
 
 import ErrorMessage from 'components/ErrorMessage';
 

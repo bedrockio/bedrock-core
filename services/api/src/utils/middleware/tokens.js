@@ -16,7 +16,7 @@ function validateToken(options = {}) {
     const { type = 'user', optional } = options;
 
     // ignoring signature for the moment
-    const token = getToken(ctx);
+    const token = getToken(ctx, options);
 
     if (!token) {
       if (optional) {
@@ -29,13 +29,14 @@ function validateToken(options = {}) {
     const decoded = jwt.decode(token, {
       complete: true,
     });
+
     if (decoded === null) {
       throw new TokenError('bad jwt token');
     }
 
     const { payload } = decoded;
 
-    if (payload.kid !== type) {
+    if (type !== 'any' && payload.kid !== type) {
       throw new TokenError(`Token type "${payload.kid}" does not match "${type}".`);
     }
 
@@ -50,7 +51,18 @@ function validateToken(options = {}) {
   };
 }
 
-function getToken(ctx) {
+function getToken(ctx, options) {
+  const { type } = options;
+  if (type === 'any') {
+    return getHeaderToken(ctx) || getParamsToken(ctx);
+  } else if (type === 'mail') {
+    return getParamsToken(ctx);
+  } else {
+    return getHeaderToken(ctx);
+  }
+}
+
+function getHeaderToken(ctx) {
   let token;
   const parts = (ctx.request.get('authorization') || '').split(' ');
   if (parts.length === 2) {
@@ -60,6 +72,10 @@ function getToken(ctx) {
     }
   }
   return token;
+}
+
+function getParamsToken(ctx) {
+  return ctx.request.query?.token || ctx.request.body?.token;
 }
 
 module.exports = {

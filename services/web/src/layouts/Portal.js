@@ -2,19 +2,19 @@ import { Link, useLocation } from '@bedrockio/router';
 
 import {
   AppShell,
-  Flex,
-  Button,
-  ScrollArea,
   Burger,
+  Button,
+  Flex,
   Group,
+  ScrollArea,
 } from '@mantine/core';
+
 import { useDisclosure } from '@mantine/hooks';
-
-import Logo from 'components/Logo';
-import ConnectionError from 'components/ConnectionError';
-
-import MenuItem from 'components/MenuItem';
 import { useEffect } from 'react';
+
+import ConnectionError from 'components/ConnectionError';
+import Logo from 'components/Logo';
+import MenuItem from 'components/MenuItem';
 
 export default function PortalLayout({ children, menuItems, actions }) {
   const [opened, { toggle, close }] = useDisclosure();

@@ -1,10 +1,10 @@
-import PropTypes from 'prop-types';
 import { Alert, Button, Center, Stack } from '@mantine/core';
+import PropTypes from 'prop-types';
 
+import BasicLayout from 'layouts/Basic';
 import { useSession } from 'stores/session';
 
 import Meta from 'components/Meta';
-import BasicLayout from 'layouts/Basic';
 
 import { ENV_NAME } from 'utils/env';
 

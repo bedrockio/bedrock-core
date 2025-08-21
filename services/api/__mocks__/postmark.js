@@ -5,7 +5,7 @@ beforeEach(() => {
 });
 
 function assertMailSent(options) {
-  const { body, ...rest } = options;
+  const { body, html, ...rest } = options;
   expect(sentMessages).toEqual(
     expect.arrayContaining([
       expect.objectContaining({
@@ -13,8 +13,11 @@ function assertMailSent(options) {
         ...(body && {
           body: expect.stringContaining(body),
         }),
+        ...(html && {
+          html: expect.stringContaining(html),
+        }),
       }),
-    ])
+    ]),
   );
 }
 
@@ -30,8 +33,10 @@ class ServerClient {
       subject: email.Subject,
       text: email.TextBody.trim(),
       html: email.HtmlBody.trim(),
-      template: email.template,
       body: email.body,
+      template: email.template,
+      cc: email.Cc,
+      bcc: email.Bcc,
     });
   }
 }
@@ -48,8 +53,13 @@ function normalizeAddress(str) {
     .join(',');
 }
 
+function getLastSent() {
+  return sentMessages[sentMessages.length - 1];
+}
+
 module.exports = {
   ServerClient,
   assertMailSent,
   assertMailCount,
+  getLastSent,
 };

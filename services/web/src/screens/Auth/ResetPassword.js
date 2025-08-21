@@ -1,24 +1,27 @@
-import { useState } from 'react';
+import { Link, useNavigate } from '@bedrockio/router';
+
 import {
+  Anchor,
   Button,
   Group,
   Paper,
-  Stack,
-  Title,
-  Text,
-  Anchor,
   PasswordInput,
+  Stack,
+  Text,
+  Title,
 } from '@mantine/core';
+
 import { useForm } from '@mantine/form';
-import { Link, useNavigate } from '@bedrockio/router';
+import { useState } from 'react';
 
 import { useSession } from 'stores/session';
+
 import ErrorMessage from 'components/ErrorMessage';
 import Logo from 'components/Logo';
+import Meta from 'components/Meta';
 
 import { request } from 'utils/api';
 import { getUrlToken } from 'utils/token';
-import Meta from 'components/Meta';
 
 export default function ResetPassword() {
   const navigate = useNavigate();

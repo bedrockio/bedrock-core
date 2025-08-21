@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+
 import { useSession } from 'stores/session';
 
 export default function Logout() {

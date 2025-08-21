@@ -1,10 +1,10 @@
-import React from 'react';
+import { Select } from '@mantine/core';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 import SearchDropdown from 'components/SearchDropdown';
 
 import SearchContext from '../Context';
-import { Select } from '@mantine/core';
 
 export default class DropdownFilter extends React.Component {
   static contextType = SearchContext;

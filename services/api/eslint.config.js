@@ -1,2 +1,3 @@
-import { jest, recommended } from '@bedrockio/eslint-plugin';
-export default [jest, recommended];
+const { jest, recommended } = require('@bedrockio/eslint-plugin');
+
+module.exports = [jest, recommended];

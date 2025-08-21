@@ -1,5 +1,6 @@
-import { useState, useCallback } from 'react';
 import { Button, Group, Stack } from '@mantine/core';
+import { useCallback, useState } from 'react';
+
 import { useModalContext } from 'components/ModalWrapper';
 
 import ErrorMessage from '../ErrorMessage';

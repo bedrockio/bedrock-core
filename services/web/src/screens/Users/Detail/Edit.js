@@ -1,9 +1,9 @@
-import Form from '../Form';
+import { useNavigate } from '@bedrockio/router';
+import { Stack } from '@mantine/core';
 
 import { usePage } from 'stores/page';
 
-import { Stack } from '@mantine/core';
-import { useNavigate } from '@bedrockio/router';
+import Form from '../Form';
 import Menu from './Menu';
 
 export default function EditUser() {

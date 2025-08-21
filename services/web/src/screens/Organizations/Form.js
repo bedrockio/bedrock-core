@@ -1,10 +1,10 @@
-import { useRequest } from 'utils/api';
-
-import { Fieldset, Stack, Grid, TextInput, Box, Button } from '@mantine/core';
-
+import { Box, Button, Fieldset, Grid, Stack, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
+
 import ErrorMessage from 'components/ErrorMessage';
+
+import { useRequest } from 'utils/api';
 
 /**
  * Organization form component for creating or updating an organization

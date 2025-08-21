@@ -1,4 +1,4 @@
-import { Table, Stack, Text } from '@mantine/core';
+import { Stack, Table, Text } from '@mantine/core';
 
 import { usePage } from 'stores/page';
 
