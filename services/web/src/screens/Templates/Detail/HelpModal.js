@@ -1,54 +1,27 @@
-import { Alert, Stack, Text } from '@mantine/core';
+import { Alert, Text, Typography } from '@mantine/core';
 
 import Code from 'components/Code';
 
 export default function HelpModal() {
   return (
-    <Stack spacing="md">
-      <h4 style={{ marginTop: '0' }}>Link Helpers</h4>
-      <Code>{`
-[Text](https://example.com)
-{{link "Text" "/page"}}
-{{link text="Text" url="/page"}}
-{{link text="Text" url="/page/:id" id="12345"}}
-`}</Code>
+    <Typography>
+      <h5>Link Helpers</h5>
+      <Code>{Help.Link}</Code>
 
-      <h4>Button Helpers</h4>
-      <Code>{`
-{{button "Text" "https://example.com/"}}
-{{button "Text" "/page"}}
-{{button text="Text" url="/page"}}
-{{button text="Text" url="/page/:id" id="12345"}}
-`}</Code>
+      <h5>Button Helpers</h5>
+      <Code>{Help.Button}</Code>
 
-      <h4>Image Helpers</h4>
-      <Code>{`
-{{image user.profileImage}}
-{{image user.profileImage type=avatar}}
-{{image user.profileImage width=150 height=150}}
-{{image user.profileImage blur=50}}
-{{imageUrl user.profileImage}}
-`}</Code>
+      <h5>Image Helpers</h5>
+      <Code>{Help.Image}</Code>
 
-      <h4>Date/Time Helpers</h4>
-      <Code>{`
-{{date startsAt}}
-{{time startsAt}}
-`}</Code>
+      <h5>Date/Time Helpers</h5>
+      <Code>{Help.Date}</Code>
 
-      <h4>Relative Time Helpers</h4>
-      <Code>{`
-{{rtime startsAt}}
-`}</Code>
+      <h5>Relative Time Helpers</h5>
+      <Code>{Help.Relative}</Code>
 
-      <h4>Metadata</h4>
-      <Code>{`
----
-subject: Subject here.
-image: "{{imageUrl user.profileImage}}"
----
-Body here.
-`}</Code>
+      <h5>Metadata</h5>
+      <Code>{Help.Metadata}</Code>
 
       <Alert color="yellow">
         <Text>
@@ -57,22 +30,66 @@ Body here.
         </Text>
       </Alert>
 
-      <h4>Conditional Rendering</h4>
-      <Code>{`
+      <h5>Conditional Rendering</h5>
+      <Code>{Help.Conditional}</Code>
+
+      <h5>Looping (Simple)</h5>
+      <Code>{Help.LoopingSimple}</Code>
+
+      <h5>Looping (List)</h5>
+      <Code>{Help.LoopingList}</Code>
+
+      <h5>Looping (Table)</h5>
+      <Code>{Help.LoopingTable}</Code>
+    </Typography>
+  );
+}
+
+const Help = {
+  Link: `
+[Text](https://example.com)
+{{link "Text" "/page"}}
+{{link text="Text" url="/page"}}
+{{link text="Text" url="/page/:id" id="12345"}}
+`,
+  Button: `
+{{button "Text" "https://example.com/"}}
+{{button "Text" "/page"}}
+{{button text="Text" url="/page"}}
+{{button text="Text" url="/page/:id" id="12345"}}
+`,
+  Image: `
+{{image user.profileImage}}
+{{image user.profileImage type=avatar}}
+{{image user.profileImage width=150 height=150}}
+{{image user.profileImage blur=50}}
+{{imageUrl user.profileImage}}
+`,
+  Date: `
+{{date startsAt}}
+{{time startsAt}}
+`,
+  Relative: `
+{{rtime startsAt}}
+`,
+  Metadata: `
+---
+subject: Subject here.
+image: "{{imageUrl user.profileImage}}"
+---
+Body here.
+`,
+  Conditional: `
 {{#if user}}
   Your name is {{user.name}}.
 {{/if}}
-`}</Code>
-
-      <h4>Looping (Simple)</h4>
-      <Code>{`
+`,
+  LoopingSimple: `
 {{#each users}}
   User {{number}}: {{name}}
 {{/each}}
-`}</Code>
-
-      <h4>Looping (List)</h4>
-      <Code>{`
+`,
+  LoopingList: `
 {{#each users}}
 - User {{number}}:
 
@@ -81,10 +98,8 @@ Body here.
   {{email}}
 
 {{/each}}
-`}</Code>
-
-      <h4>Looping (Table)</h4>
-      <Code>{`
+`,
+  LoopingTable: `
 {{#if users}}
 Name | Email
 ---- | -----
@@ -92,7 +107,5 @@ Name | Email
   {{name}} | {{email}}
 {{/each}}
 {{/if}}
-`}</Code>
-    </Stack>
-  );
-}
+`,
+};

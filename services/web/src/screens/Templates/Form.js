@@ -170,15 +170,14 @@ export default function TemplateForm({ template, onSuccess = () => {} }) {
                 {...form.getInputProps(currentChannel)}
               />
 
-              {/* Helper Buttons */}
               <Group gap="md">
                 <ModalWrapper
                   title="Template Help"
                   size="lg"
                   trigger={
                     <Button
-                      variant="default"
                       size="sm"
+                      variant="default"
                       leftSection={<PiQuestionFill />}>
                       Help
                     </Button>

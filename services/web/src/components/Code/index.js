@@ -25,7 +25,7 @@ function CodeBlock({ code, language }) {
             className={className}
             style={{
               ...style,
-              lineHeight: 1,
+              lineHeight: 1.2,
               padding: '1em 0.5em',
               margin: 0,
             }}>
