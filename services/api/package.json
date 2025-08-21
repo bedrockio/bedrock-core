@@ -21,6 +21,7 @@
     "docs:generate": "./scripts/docs/generate"
   },
   "dependencies": {
+    "@bedrockio/chrono": "^0.6.2",
     "@bedrockio/config": "^2.2.3",
     "@bedrockio/fixtures": "^1.3.4",
     "@bedrockio/logger": "^1.1.3",
@@ -38,6 +39,7 @@
     "front-matter": "^4.0.2",
     "glob": "^11.0.0",
     "google-auth-library": "^9.2.0",
+    "handlebars": "^4.7.8",
     "html-to-text": "^9.0.5",
     "jsonwebtoken": "^9.0.0",
     "koa": "^3.0.0",
@@ -67,10 +69,10 @@
     "jest-util": "^29.5.0",
     "mongodb": "^6.13.0",
     "prettier": "^3.5.1",
-    "supertest": "^7.0.0"
+    "supertest": "^7.1.4"
   },
   "volta": {
-    "node": "22.14.0",
+    "node": "22.18.0",
     "yarn": "1.22.22"
   }
 }

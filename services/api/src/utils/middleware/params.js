@@ -4,10 +4,8 @@ const { lowerFirst } = require('lodash');
 function fetchByParam(Model, options = {}) {
   const docName = options.as || lowerFirst(Model.modelName);
   return async (id, ctx, next) => {
-    // Allow query or request body to populate fields here.
     let include = ctx.query?.include;
     include ||= ctx.request.body?.include;
-
     if (!mongoose.Types.ObjectId.isValid(id)) {
       ctx.throw(404);
     }

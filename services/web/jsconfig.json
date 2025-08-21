@@ -3,6 +3,9 @@
     "baseUrl": "./src",
     "jsx": "react-jsx",
     "checkJs": false,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
     "paths": {
       "helpers": [
         "./src/helpers/*"

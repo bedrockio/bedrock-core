@@ -8,6 +8,7 @@
       "applications": "all",
       "auditEntries": "all",
       "organizations": "all",
+      "templates": "all",
       "products": "all",
       "roles": "all",
       "shops": "all",
@@ -27,6 +28,7 @@
     "permissions": {
       "auditEntries": "read",
       "applications": "all",
+      "templates": "all",
       "products": "all",
       "roles": "all",
       "shops": "all",

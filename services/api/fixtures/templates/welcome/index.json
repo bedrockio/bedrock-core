@@ -1,0 +1,7 @@
+{
+  "name": "welcome",
+  "email": "./email.md",
+  "channels": [
+    "email"
+  ]
+}
