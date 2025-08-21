@@ -1,9 +1,9 @@
-const path = require('path');
-const postmark = require('postmark');
 const marked = require('marked');
+const postmark = require('postmark');
 const htmlToText = require('html-to-text');
+const { omit } = require('lodash');
 
-const { loadTemplate, interpolate, escapeHtml } = require('./utils');
+const { getInterpolator } = require('./utils');
 
 const config = require('@bedrockio/config');
 const logger = require('@bedrockio/logger');
@@ -15,47 +15,45 @@ const POSTMARK_API_KEY = config.get('POSTMARK_API_KEY');
 const POSTMARK_DEV_EMAIL = config.get('POSTMARK_DEV_EMAIL');
 const POSTMARK_WEBHOOK_KEY = config.get('POSTMARK_WEBHOOK_KEY');
 
-const TEMPLATE_DIR = path.join(__dirname, '../../templates/emails');
-
 const DEFAULT_LAYOUT = 'layout.html';
 
+const interpolate = getInterpolator('email');
+
 async function sendMail(options) {
-  let { layout = DEFAULT_LAYOUT, ...params } = options;
+  const params = await getMailParams(options);
+  await dispatchMail(params);
+}
+
+async function getMailParams(options) {
+  let { layout = DEFAULT_LAYOUT, cc, bcc, ...params } = options;
 
   const email = getAddresses(options);
+  const template = params.template || params.file;
 
-  const { body: templateBody, meta: templateMeta } = await loadTemplate(TEMPLATE_DIR, options);
-  const { body: layoutBody } = await loadTemplate(TEMPLATE_DIR, {
+  // First interpolate variables into the template.
+  const { body, subject } = await interpolate(params);
+
+  // Next parse as markdown and convert to html.
+  const content = marked.parse(body).trim();
+
+  const { body: html } = await interpolate({
+    ...omit(params, 'template'),
     file: layout,
+    content,
   });
 
-  params = {
-    ...templateMeta,
-    ...params,
-  };
+  const text = stripHtml(html);
 
-  // Variables must be interpolated, then parsed as
-  // markdown, then interpolated again into the layout.
-  let body = templateBody;
-  body = escapeHtml(interpolate(body, params));
-
-  let html = marked.parse(body).trim();
-  html = interpolate(layoutBody, {
-    ...params,
-    content: html,
-  });
-
-  const text = await convertHtml(html);
-  const subject = interpolate(templateMeta.subject || '{{subject}}', params);
-
-  await dispatchMail({
+  return {
     email,
     html,
     text,
     body,
     subject,
-    template: params.template,
-  });
+    template,
+    cc,
+    bcc,
+  };
 }
 
 async function dispatchMail(options) {
@@ -71,8 +69,8 @@ async function dispatchMail(options) {
   ${text}
   --------------------------
                 `);
+      return;
     }
-    return;
   }
 
   logger.debug(`Sending email to ${email}`);
@@ -87,6 +85,7 @@ async function dispatchMail(options) {
       HtmlBody: html,
       template,
       body,
+      ...resolveCopies(options),
     });
   } catch (error) {
     logger.error(`Error happened while sending email to ${email} (${error.message})`);
@@ -94,37 +93,19 @@ async function dispatchMail(options) {
   }
 }
 
-// Marked config
+function resolveCopies(options) {
+  return {
+    Cc: resolveCopyArray(options.cc),
+    Bcc: resolveCopyArray(options.bcc),
+  };
+}
 
-marked.use({
-  walkTokens: (token) => {
-    if (token.type === 'paragraph') {
-      const tokens = token.tokens || [];
-
-      if (tokens.length === 1 && tokens[0].type === 'strong') {
-        const strong = tokens[0];
-        const strongTokens = strong.tokens || [];
-        if (strongTokens.length === 1 && strongTokens[0].type === 'link') {
-          const link = strongTokens[0];
-          link.title = '$button$';
-        }
-      }
-    }
-  },
-
-  renderer: {
-    link(href, title, text) {
-      if (title === '$button$') {
-        return `<a href="${href}" class="button" target="_blank"><span class="text">${text}</span></a>`;
-      } else if (href.includes('{{')) {
-        // Links may include template interpolation which
-        // gets escaped so output it unescaped here.
-        return `<a href="${href}">${text}</a>`;
-      }
-      return false;
-    },
-  },
-});
+function resolveCopyArray(arg) {
+  if (Array.isArray(arg)) {
+    return arg.join(', ');
+  }
+  return arg;
+}
 
 function getAddresses(options) {
   let { email, user, users = [] } = options;
@@ -136,9 +117,11 @@ function getAddresses(options) {
   if (user) {
     users = [user];
   }
+
   if (!users.length) {
     throw new Error('No addresses to send to.');
   }
+
   return users
     .map((user) => {
       return `${user.name} <${user.email}>`;
@@ -147,7 +130,7 @@ function getAddresses(options) {
 }
 
 // Remove html tags while preserving links for plaintext.
-function convertHtml(str) {
+function stripHtml(str) {
   return htmlToText.convert(str, {
     selectors: [
       {
@@ -172,5 +155,6 @@ function validateWebhookKey(ctx) {
 
 module.exports = {
   sendMail,
+  getMailParams,
   validateWebhookKey,
 };

@@ -89,7 +89,7 @@ function throwError(ctx, error) {
   if (isImplementationError(error)) {
     ctx.throw(500, error.getFullMessage());
   } else if (isPermissionsError(error)) {
-    ctx.throw(403, error);
+    ctx.throw(401, error);
   } else {
     ctx.throw(400, error);
   }

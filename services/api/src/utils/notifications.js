@@ -1,8 +1,12 @@
+const config = require('@bedrockio/config');
 const logger = require('@bedrockio/logger');
 const { sendMail, sendSms, sendPush } = require('./messaging');
 const { UnsubscribedError } = require('./messaging/errors');
+const { createMailToken } = require('./auth/tokens');
 const types = require('../lib/notifications/types');
 const { User } = require('../models');
+
+const API_URL = config.get('API_URL');
 
 async function sendNotification(options = {}) {
   assertOptions(options);
@@ -87,7 +91,10 @@ async function attemptSend(channel, options) {
     } else if (channel === 'push') {
       await sendPush(options);
     } else if (channel === 'email') {
-      await sendMail(options);
+      await sendMail({
+        ...options,
+        unsubscribeUrl: getUnsubscribeUrl(options),
+      });
     }
     return 1;
   } catch (error) {
@@ -116,6 +123,45 @@ async function disableNotificationsForChannel(user, channel) {
   );
 }
 
+// Unsubscribe
+
+async function unsubscribe(options) {
+  assertOptions(options);
+  const { user, type, channel } = options;
+
+  for (let notification of user.notifications) {
+    if (notification.name === type) {
+      if (hasChannel(channel, 'email')) {
+        notification.email = false;
+      }
+      if (hasChannel(channel, 'push')) {
+        notification.push = false;
+      }
+      if (hasChannel(channel, 'sms')) {
+        notification.sms = false;
+      }
+    }
+  }
+  user.markModified('notifications');
+  await user.save();
+}
+
+function hasChannel(channel, name) {
+  return channel === name || channel === 'all';
+}
+
+function getUnsubscribeUrl(options) {
+  const { type, user } = options;
+  const token = createMailToken(user.email);
+
+  const url = new URL('/1/notifications/unsubscribe', API_URL);
+  url.searchParams.set('type', type);
+  url.searchParams.set('token', token);
+  url.searchParams.set('channel', 'email');
+  return url.toString();
+}
+
 module.exports = {
   sendNotification,
+  unsubscribe,
 };

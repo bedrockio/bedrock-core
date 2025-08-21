@@ -9,6 +9,7 @@ const DURATIONS = {
   invite: '1d',
   regular: '30d',
   temporary: '1h',
+  mail: '30d',
 };
 
 function createAuthToken(ctx, user, options = {}) {
@@ -59,9 +60,20 @@ function createInviteToken(invite) {
     {
       kid: 'invite',
       sub: invite.email,
-      jti: generateTokenId(),
+      jti: generateToken(),
     },
-    duration
+    duration,
+  );
+}
+
+function createMailToken(email) {
+  const duration = DURATIONS.mail;
+  return signToken(
+    {
+      kid: 'mail',
+      sub: email,
+    },
+    duration,
   );
 }
 
@@ -96,11 +108,11 @@ function getAuthTokenPayload(user) {
   return {
     kid: 'user',
     sub: user.id,
-    jti: generateTokenId(),
+    jti: generateToken(),
   };
 }
 
-function generateTokenId() {
+function generateToken() {
   // https://zelark.github.io/nano-id-cc/ 15 chars ~ 158 years with 1k/s
   return nanoid(15);
 }
@@ -115,5 +127,6 @@ module.exports = {
   removeExpiredTokens,
   createTemporaryAuthToken,
   createImpersonateAuthToken,
+  createMailToken,
   signToken,
 };
