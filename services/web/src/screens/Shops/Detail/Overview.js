@@ -3,7 +3,7 @@ import { Group, Image, Stack, Table, Text, Title } from '@mantine/core';
 import { usePage } from 'stores/page';
 
 import { formatDateTime } from 'utils/date';
-import { arrayToList, formatAddress } from 'utils/formatting';
+import { formatAddress } from 'utils/formatting';
 import { urlForUpload } from 'utils/uploads';
 
 import Menu from './Menu';
