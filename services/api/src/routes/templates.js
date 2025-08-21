@@ -84,17 +84,17 @@ router
 
       const params = await getPreviewParams();
 
-      try {
-        let user;
-        if (channel === 'push') {
-          user = await User.findById(userId);
-          if (!user) {
-            ctx.throw(400, 'User not found.');
-          } else if (!user.deviceToken) {
-            ctx.throw(400, 'User has not registered push notifications.');
-          }
+      let user;
+      if (channel === 'push') {
+        user = await User.findById(userId);
+        if (!user) {
+          ctx.throw(400, 'User not found.');
+        } else if (!user.deviceToken) {
+          ctx.throw(400, 'User has not registered push notifications.');
         }
+      }
 
+      try {
         await sendMessage({
           ...body,
           ...params,
