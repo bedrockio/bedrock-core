@@ -63,6 +63,7 @@ export default function ApiDocs() {
       const el = document.getElementById(hash.slice(1));
       if (el) {
         el.scrollIntoView({
+          block: 'center',
           behavior: 'smooth',
         });
       }

@@ -3,12 +3,13 @@ import { fileURLToPath } from 'node:url';
 import path from 'path';
 
 import config from '@bedrockio/config';
-// eslint-disable-next-line
-import { mdx } from '@cyco130/vite-plugin-mdx';
+import mdx from '@mdx-js/rollup';
 // eslint-disable-next-line
 import react from '@vitejs/plugin-react';
-
 import { omitBy, template } from 'lodash-es';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import rehypeSlug from 'rehype-slug';
+import remarkGfm from 'remark-gfm';
 import { defineConfig } from 'vite';
 
 const { SERVER_PORT, ...rest } = config.getAll();
@@ -25,7 +26,15 @@ export default defineConfig({
     port: SERVER_PORT,
   },
   // mdx has to go before react
-  plugins: [mdx(), react(), env(), partials()],
+  plugins: [
+    mdx({
+      remarkPlugins: [remarkGfm],
+      rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
+    }),
+    react(),
+    env(),
+    partials(),
+  ],
   envPrefix: 'PUBLIC',
 
   resolve: {
