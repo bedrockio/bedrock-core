@@ -36,7 +36,13 @@ export default function ShopOverview() {
           <Table.Tbody>
             <Table.Tr>
               <Table.Th w={160}>Categories</Table.Th>
-              <Table.Td>{arrayToList(shop.categories)}</Table.Td>
+              <Table.Td>
+                <ul>
+                  {shop.categories.map((category) => {
+                    return <li key={category.id}>{category.name}</li>;
+                  })}
+                </ul>
+              </Table.Td>
             </Table.Tr>
             <Table.Tr>
               <Table.Th>Address</Table.Th>
