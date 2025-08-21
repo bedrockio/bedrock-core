@@ -60,7 +60,7 @@ function createInviteToken(invite) {
     {
       kid: 'invite',
       sub: invite.email,
-      jti: generateToken(),
+      jti: generateTokenId(),
     },
     duration,
   );
@@ -108,11 +108,11 @@ function getAuthTokenPayload(user) {
   return {
     kid: 'user',
     sub: user.id,
-    jti: generateToken(),
+    jti: generateTokenId(),
   };
 }
 
-function generateToken() {
+function generateTokenId() {
   // https://zelark.github.io/nano-id-cc/ 15 chars ~ 158 years with 1k/s
   return nanoid(15);
 }
