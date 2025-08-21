@@ -1,6 +1,7 @@
+const config = require('@bedrockio/config');
 const { DateTime } = require('@bedrockio/chrono');
 
-const DEFAULT_TIME_ZONE = 'America/New_York';
+const DEFAULT_TIME_ZONE = config.get('DEFAULT_TIME_ZONE');
 
 function getDateTime(arg, user) {
   const { timeZone = DEFAULT_TIME_ZONE } = user || {};
