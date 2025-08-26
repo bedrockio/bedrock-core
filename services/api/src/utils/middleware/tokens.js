@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const { verifyToken } = require('../auth/tokens');
+const { verifyToken } = require('../tokens');
 
 class TokenError extends Error {
   type = 'token';
@@ -36,7 +36,7 @@ function validateToken(options = {}) {
 
     const { payload } = decoded;
 
-    if (type !== 'any' && payload.kid !== type) {
+    if (payload.kid !== type) {
       throw new TokenError(`Token type "${payload.kid}" does not match "${type}".`);
     }
 
@@ -51,18 +51,7 @@ function validateToken(options = {}) {
   };
 }
 
-function getToken(ctx, options) {
-  const { type } = options;
-  if (type === 'any') {
-    return getHeaderToken(ctx) || getParamsToken(ctx);
-  } else if (type === 'mail') {
-    return getParamsToken(ctx);
-  } else {
-    return getHeaderToken(ctx);
-  }
-}
-
-function getHeaderToken(ctx) {
+function getToken(ctx) {
   let token;
   const parts = (ctx.request.get('authorization') || '').split(' ');
   if (parts.length === 2) {
@@ -72,10 +61,6 @@ function getHeaderToken(ctx) {
     }
   }
   return token;
-}
-
-function getParamsToken(ctx) {
-  return ctx.request.query?.token || ctx.request.body?.token;
 }
 
 module.exports = {

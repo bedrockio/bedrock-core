@@ -1,5 +1,5 @@
 const { User } = require('../../models');
-const { createAuthToken } = require('./tokens');
+const { createAuthToken } = require('../tokens');
 const { context } = require('../testing');
 
 describe('createAuthToken', () => {

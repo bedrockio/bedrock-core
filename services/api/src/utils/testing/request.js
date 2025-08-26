@@ -2,14 +2,14 @@ const request = require('supertest');
 const rootApp = require('../../app');
 const qs = require('querystring');
 const { Blob } = require('node:buffer');
-const { getAuthTokenPayload, signToken } = require('../auth/tokens');
+const { getAuthPayload, signToken } = require('../tokens');
 
 module.exports = async function handleRequest(httpMethod, url, bodyOrQuery = {}, options = {}) {
   const headers = options.headers || {};
   if (options.user) {
     const { user } = options;
 
-    const payload = getAuthTokenPayload(user);
+    const payload = getAuthPayload(user);
     const token = signToken(payload);
 
     headers.Authorization = `Bearer ${token}`;

@@ -1,15 +1,18 @@
 const Router = require('@koa/router');
+const config = require('@bedrockio/config');
 const yd = require('@bedrockio/yada');
 
 const { validateBody } = require('../../utils/middleware/validate');
 const { authenticate } = require('../../utils/middleware/authenticate');
 
-const { createAuthToken, createTemporaryAuthToken } = require('../../utils/auth/tokens');
+const { createAuthToken, createAccessToken } = require('../../utils/tokens');
 const { login, verifyLoginAttempts } = require('../../utils/auth');
 const { verifyPassword } = require('../../utils/auth/password');
 const { sendOtp } = require('../../utils/auth/otp');
 const { sendMail } = require('../../utils/messaging');
 const { User, AuditEntry } = require('../../models');
+
+const APP_URL = config.get('APP_URL');
 
 const router = new Router();
 
@@ -90,7 +93,11 @@ router
       const user = await User.findOne({ email });
 
       if (user) {
-        const token = createTemporaryAuthToken(ctx, user);
+        const token = createAccessToken(user, {
+          action: 'reset-password',
+          duration: '30m',
+        });
+
         await user.save();
 
         await sendMail({
@@ -98,15 +105,18 @@ router
           email,
           token,
           template: 'reset-password',
+          resetUrl: new URL(`/reset-password?token=${token}`, APP_URL),
         });
       }
 
       ctx.status = 204;
     },
   )
-  .use(authenticate())
   .post(
     '/update',
+    authenticate({
+      type: 'access',
+    }),
     validateBody({
       password: yd.string().password().required(),
     }),

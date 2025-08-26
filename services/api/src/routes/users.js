@@ -6,7 +6,7 @@ const { authenticate } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
 
 const { exportValidation, csvExport } = require('../utils/csv');
-const { createImpersonateAuthToken } = require('../utils/auth/tokens');
+const { createImpersonateAuthToken } = require('../utils/tokens');
 const { expandRoles, validateUserRoles } = require('./../utils/permissions');
 const { User } = require('../models');
 

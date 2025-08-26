@@ -1,5 +1,5 @@
 const { authenticate, authorizeUser } = require('./authenticate');
-const { getAuthTokenPayload, signToken } = require('../auth/tokens');
+const { getAuthPayload, signToken } = require('../tokens');
 
 const { context, createUser } = require('../testing');
 const { User } = require('../../models');
@@ -17,7 +17,7 @@ describe('authenticate', () => {
       ],
     });
 
-    const payload = getAuthTokenPayload(user);
+    const payload = getAuthPayload(user);
     const token = signToken(payload);
 
     const ctx = context({ headers: { authorization: `Bearer ${token}` } });

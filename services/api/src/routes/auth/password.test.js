@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
 const { assertSmsSent } = require('twilio');
-const { assertMailSent } = require('postmark');
+const { assertMailSent, getLastSent } = require('postmark');
 const { request, context, createUser } = require('../../utils/testing');
 const { mockTime, unmockTime, advanceTime } = require('../../utils/testing/time');
-const { createAuthToken, createTemporaryAuthToken } = require('../../utils/auth/tokens');
+const { createAuthToken, createAccessToken, verifyToken } = require('../../utils/tokens');
 const { verifyPassword } = require('../../utils/auth/password');
 const { assertAuthToken } = require('../../utils/testing/tokens');
 const { getAuthenticator } = require('../../utils/auth/authenticators');
@@ -302,26 +302,20 @@ describe('/1/auth', () => {
         email: user.email,
       });
       expect(response.status).toBe(204);
+
       assertMailSent({
         email: user.email,
-      });
-    });
-
-    it('should set a temporary token', async () => {
-      mockTime('2020-01-01T00:00:00.000Z');
-      let user = await createUser();
-      await request('POST', '/1/auth/password/request', {
-        email: user.email,
+        template: 'reset-password',
+        body: '/reset-password?token=',
       });
 
-      user = await User.findById(user.id);
+      const last = getLastSent();
+      const match = last.body.match(/token=([^*]+)/);
+      const token = match[1];
+      const payload = verifyToken(token);
 
-      expect(user.authTokens).toEqual([
-        expect.objectContaining({
-          expiresAt: new Date('2020-01-01T01:00:00.000Z'),
-        }),
-      ]);
-      unmockTime();
+      // Expiration should be less than 30 minutes
+      expect(payload.exp).toBeLessThan(Math.ceil(Date.now() / 1000 + 30 * 60));
     });
 
     it('should not error on unknown user', async () => {
@@ -337,7 +331,10 @@ describe('/1/auth', () => {
     it('should allow a user to set a password', async () => {
       let user = await createUser();
       const password = 'very new password';
-      const token = createTemporaryAuthToken(context(), user);
+      const token = createAccessToken(user, {
+        action: 'reset',
+        duration: '30m',
+      });
       await user.save();
 
       const response = await request(
@@ -351,16 +348,13 @@ describe('/1/auth', () => {
         },
       );
 
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       assertAuthToken(user, response.body.data.token);
 
       user = await User.findById(user.id);
       await expect(verifyPassword(user, password)).resolves.not.toThrow();
 
       expect(user.authTokens).toEqual([
-        expect.objectContaining({
-          jti: getJti(token),
-        }),
         expect.objectContaining({
           jti: getJti(response.body.data.token),
         }),
@@ -377,7 +371,10 @@ describe('/1/auth', () => {
     it('should only be valid for 1 hour', async () => {
       mockTime('2020-01-01T00:00:00.000Z');
       const user = await createUser();
-      const token = createTemporaryAuthToken(context(), user);
+      const token = createAccessToken(user, {
+        action: 'reset',
+        duration: '30m',
+      });
       await user.save();
 
       let response = await request(
@@ -409,7 +406,6 @@ describe('/1/auth', () => {
 
     it('should not consume token on unsuccessful attempt', async () => {
       let user = await createUser();
-      const token = createTemporaryAuthToken(context(), user);
       await user.save();
 
       let response = await request(
@@ -425,11 +421,7 @@ describe('/1/auth', () => {
       expect(response.status).toBe(401);
 
       user = await User.findById(user.id);
-      expect(user.authTokens).toEqual([
-        expect.objectContaining({
-          jti: getJti(token),
-        }),
-      ]);
+      expect(user.authTokens).toEqual([]);
     });
 
     it('should handle invalid tokens', async () => {

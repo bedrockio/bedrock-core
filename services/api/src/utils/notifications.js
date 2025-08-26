@@ -2,15 +2,15 @@ const config = require('@bedrockio/config');
 const logger = require('@bedrockio/logger');
 const { sendMail, sendSms, sendPush } = require('./messaging');
 const { UnsubscribedError } = require('./messaging/errors');
-const { createMailToken } = require('./auth/tokens');
+const { createAccessToken } = require('./tokens');
 const types = require('../lib/notifications/types');
 const { User } = require('../models');
 
-const API_URL = config.get('API_URL');
+const APP_URL = config.get('APP_URL');
 
 async function sendNotification(options = {}) {
   assertOptions(options);
-  const { type, user } = options;
+  const { name, user } = options;
 
   const base = getBase(options);
   const userConfig = getUserConfig(options);
@@ -22,7 +22,7 @@ async function sendNotification(options = {}) {
 
   if (!userConfig) {
     user.notifications.push({
-      name: type,
+      name,
       ...base,
     });
     await user.save();
@@ -44,7 +44,7 @@ async function sendNotification(options = {}) {
     await User.updateOne(
       {
         _id: user.id,
-        'notifications.name': type,
+        'notifications.name': name,
       },
       {
         $inc: {
@@ -56,30 +56,30 @@ async function sendNotification(options = {}) {
       },
     );
   } else {
-    logger.debug(`Notification "${type}" not sent to ${user.id}.`);
+    logger.debug(`Notification "${name}" not sent to ${user.id}.`);
   }
 }
 
 function assertOptions(options) {
-  const { type, user } = options;
-  if (!type) {
-    throw new Error('Type required');
+  const { name, user } = options;
+  if (!name) {
+    throw new Error('Name required');
   } else if (!user) {
     throw new Error('User required');
   }
 }
 
 function getBase(options) {
-  const { type } = options;
+  const { name } = options;
   return types.find((t) => {
-    return t.name === type;
+    return t.name === name;
   });
 }
 
 function getUserConfig(options) {
-  const { user, type } = options;
+  const { name, user } = options;
   return user.notifications.find((n) => {
-    return n.name === type;
+    return n.name === name;
   });
 }
 
@@ -127,10 +127,10 @@ async function disableNotificationsForChannel(user, channel) {
 
 async function unsubscribe(options) {
   assertOptions(options);
-  const { user, type, channel } = options;
+  const { user, name, channel } = options;
 
   for (let notification of user.notifications) {
-    if (notification.name === type) {
+    if (notification.name === name) {
       if (hasChannel(channel, 'email')) {
         notification.email = false;
       }
@@ -151,13 +151,16 @@ function hasChannel(channel, name) {
 }
 
 function getUnsubscribeUrl(options) {
-  const { type, user } = options;
-  const token = createMailToken(user.email);
+  const { name, user } = options;
 
-  const url = new URL('/1/notifications/unsubscribe', API_URL);
-  url.searchParams.set('type', type);
+  const token = createAccessToken(user, {
+    name,
+    action: 'unsubscribe',
+    channel: 'email',
+  });
+
+  const url = new URL('/unsubscribe', APP_URL);
   url.searchParams.set('token', token);
-  url.searchParams.set('channel', 'email');
   return url.toString();
 }
 
