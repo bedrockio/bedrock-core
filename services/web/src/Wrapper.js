@@ -11,6 +11,7 @@ import SessionSwitch from 'helpers/SessionSwitch';
 import { SessionProvider, useSession } from 'stores/session';
 
 import LoadingScreen from 'screens/Loading';
+import Unsubscribe from 'screens/Unsubscribe';
 
 import 'utils/sentry';
 import { hasAccess } from 'utils/user';
@@ -45,6 +46,7 @@ export default function Wrapper() {
               <Suspense fallback={<LoadingScreen />}>
                 <Routes>
                   <Route path="/onboard" render={OnboardApp} />
+                  <Route path="/unsubscribe" render={Unsubscribe} exact />
                   <Route path="/docs" render={DocsApp} />
                   <Route path="/" render={AppSwitch} />
                 </Routes>

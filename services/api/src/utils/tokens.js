@@ -21,7 +21,7 @@ function createAuthToken(ctx, user, options = {}) {
   const country = ctx.get('cf-ipcountry')?.toUpperCase();
   const userAgent = ctx.get('user-agent');
 
-  const payload = getAuthTokenPayload(user);
+  const payload = getAuthPayload(user);
   const duration = DURATIONS[type];
   const { jti } = payload;
 
@@ -39,12 +39,6 @@ function createAuthToken(ctx, user, options = {}) {
   ];
 
   return signToken(payload, duration);
-}
-
-function createTemporaryAuthToken(ctx, user) {
-  return createAuthToken(ctx, user, {
-    type: 'temporary',
-  });
 }
 
 function createImpersonateAuthToken(ctx, user, authUser) {
@@ -66,12 +60,14 @@ function createInviteToken(invite) {
   );
 }
 
-function createMailToken(email) {
-  const duration = DURATIONS.mail;
+function createAccessToken(user, options) {
+  const { duration, ...claims } = options;
   return signToken(
     {
-      kid: 'mail',
-      sub: email,
+      kid: 'access',
+      sub: user.id,
+      jti: generateTokenId(),
+      ...claims,
     },
     duration,
   );
@@ -104,7 +100,7 @@ function signToken(payload, duration) {
   });
 }
 
-function getAuthTokenPayload(user) {
+function getAuthPayload(user) {
   return {
     kid: 'user',
     sub: user.id,
@@ -121,12 +117,11 @@ module.exports = {
   verifyToken,
   createAuthToken,
   removeAuthToken,
-  getAuthTokenPayload,
+  getAuthPayload,
   createInviteToken,
   createPasskeyToken,
   removeExpiredTokens,
-  createTemporaryAuthToken,
   createImpersonateAuthToken,
-  createMailToken,
+  createAccessToken,
   signToken,
 };

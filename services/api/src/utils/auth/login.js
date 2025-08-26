@@ -1,5 +1,5 @@
 const { AuditEntry } = require('../../models');
-const { createAuthToken, removeExpiredTokens } = require('./tokens');
+const { createAuthToken, removeExpiredTokens } = require('../tokens');
 
 const LOGIN_TIMEOUT_RULES = [
   {

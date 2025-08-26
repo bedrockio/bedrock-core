@@ -1,3 +1,4 @@
+import { IoMdNotifications } from 'react-icons/io';
 import { PiLockKeyOpenFill, PiUserFill } from 'react-icons/pi';
 
 import PageHeader from 'components/PageHeader';
@@ -25,6 +26,11 @@ export default function SettingsMenu() {
           title: 'Security',
           icon: <PiLockKeyOpenFill />,
           href: '/settings/security',
+        },
+        {
+          title: 'Notifications',
+          icon: <IoMdNotifications />,
+          href: '/settings/notifications',
         },
       ]}
     />

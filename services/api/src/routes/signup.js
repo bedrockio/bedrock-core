@@ -3,7 +3,7 @@ const yd = require('@bedrockio/yada');
 
 const { sendOtp } = require('../utils/auth/otp');
 const { sendMessage } = require('../utils/messaging');
-const { createAuthToken } = require('../utils/auth/tokens');
+const { createAuthToken } = require('../utils/tokens');
 const { validateBody } = require('../utils/middleware/validate');
 
 const { User, AuditEntry } = require('../models');
