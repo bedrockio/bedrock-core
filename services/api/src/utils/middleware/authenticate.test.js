@@ -90,6 +90,7 @@ describe('authorizeUser', () => {
     const user = await createUser({
       authTokens: [
         {
+          kid: 'user',
           jti: 'jti-id',
           ip: '123.12.1.2',
           expiresAt: new Date(Date.now() + 10000),
@@ -104,6 +105,7 @@ describe('authorizeUser', () => {
     });
     ctx.state = {
       jwt: {
+        kid: 'user',
         sub: user.id,
         jti: 'jti-id',
       },
