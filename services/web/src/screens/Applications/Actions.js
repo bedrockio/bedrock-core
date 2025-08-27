@@ -1,14 +1,16 @@
+import { Link } from '@bedrockio/router';
 import { ActionIcon, Menu, Text } from '@mantine/core';
 
 import {
-  PiTrashFill,
-  PiPencilSimpleFill,
   PiDotsThreeOutlineVerticalFill,
+  PiPencilSimpleFill,
+  PiTrashFill,
 } from 'react-icons/pi';
-import { request } from 'utils/api';
-import ConfirmModal from 'components/modals/Confirm';
-import { Link } from '@bedrockio/router';
+
 import ModalWrapper from 'components/ModalWrapper';
+import ConfirmModal from 'components/modals/Confirm';
+
+import { request } from 'utils/api';
 
 export default function ApplicationActions({ application, reload }) {
   return (

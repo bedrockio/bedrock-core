@@ -3,7 +3,7 @@ const yd = require('@bedrockio/yada');
 const { validateBody } = require('../../utils/middleware/validate');
 const { authenticate } = require('../../utils/middleware/authenticate');
 const { expandRoles } = require('../../utils/permissions');
-const { removeAuthToken } = require('../../utils/auth/tokens');
+const { removeAuthToken } = require('../../utils/tokens');
 const { AuditEntry } = require('../../models');
 
 const router = new Router();

@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { assertMailSent } = require('postmark');
-const { createInviteToken } = require('../utils/auth/tokens');
+const { createInviteToken } = require('../utils/tokens');
 const { request, createUser, createAdmin } = require('../utils/testing');
 const { User, Invite } = require('../models');
 

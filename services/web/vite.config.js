@@ -1,13 +1,21 @@
-import path from 'path';
 import { readFileSync } from 'fs';
-import react from '@vitejs/plugin-react';
+import { fileURLToPath } from 'node:url';
+import path from 'path';
 
-import { omitBy, template } from 'lodash-es';
-import { defineConfig } from 'vite';
-import { mdx } from '@cyco130/vite-plugin-mdx';
 import config from '@bedrockio/config';
+import mdx from '@mdx-js/rollup';
+// eslint-disable-next-line
+import react from '@vitejs/plugin-react';
+import { omitBy, template } from 'lodash-es';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import rehypeSlug from 'rehype-slug';
+import remarkGfm from 'remark-gfm';
+import { defineConfig } from 'vite';
 
 const { SERVER_PORT, ...rest } = config.getAll();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -18,7 +26,15 @@ export default defineConfig({
     port: SERVER_PORT,
   },
   // mdx has to go before react
-  plugins: [mdx(), react(), env(), partials()],
+  plugins: [
+    mdx({
+      remarkPlugins: [remarkGfm],
+      rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
+    }),
+    react(),
+    env(),
+    partials(),
+  ],
   envPrefix: 'PUBLIC',
 
   resolve: {
@@ -30,7 +46,6 @@ export default defineConfig({
       components: path.resolve(__dirname, './src/components'),
       layouts: path.resolve(__dirname, './src/layouts'),
       styles: path.resolve(__dirname, './src/styles'),
-      semantic: path.resolve(__dirname, './src/semantic'),
       utils: path.resolve(__dirname, './src/utils'),
       modals: path.resolve(__dirname, './src/modals'),
       assets: path.resolve(__dirname, './src/assets'),

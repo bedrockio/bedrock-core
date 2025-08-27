@@ -1,14 +1,13 @@
 @import 'styles/responsive';
 
-.api-docs,
-.icon-sheet {
+.api-docs {
   .ui.table td {
     vertical-align: top;
   }
 
   &__page {
     padding-top: 20px;
-    padding-left: calc(var(--sidebar-width) + 30px);
+    padding-left: 30px;
     padding-bottom: 80px;
     padding-right: 30px;
     height: 100%;
@@ -69,6 +68,7 @@
   h2[id] {
     position: relative;
     scroll-margin-top: 55px;
+    cursor: pointer;
 
     > a {
       display: inline-flex;
@@ -76,6 +76,11 @@
       margin-left: -0.8em;
       padding-right: 0.2em;
       text-decoration: none;
+
+      .icon-link::after {
+        content: '#';
+        color: var(--mantine-color-green-9);
+      }
     }
 
     &:hover a {

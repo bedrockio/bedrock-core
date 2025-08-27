@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
 import { get } from 'lodash';
+import PropTypes from 'prop-types';
 
 import { useDocs } from '../utils/context';
 

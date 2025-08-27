@@ -1,4 +1,4 @@
-import { Routes, Route, Redirect } from '@bedrockio/router';
+import { Redirect, Route, Routes } from '@bedrockio/router';
 
 import BasicLayout from 'layouts/Basic';
 

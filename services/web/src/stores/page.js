@@ -1,6 +1,6 @@
-import { createContext, useContext, useState, useEffect } from 'react';
 import { useLocation, useParams } from '@bedrockio/router';
 import { Loader } from '@mantine/core';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 import ErrorMessage from 'components/ErrorMessage';
 
@@ -64,7 +64,7 @@ function useLoader(names, params, fn) {
   function PageLoader(props) {
     const { fallback, notFound } = props;
     if (loading) {
-      return fallback || <Loader active />;
+      return fallback || <Loader />;
     } else if (error) {
       if (error.status === 404 && notFound) {
         return notFound;

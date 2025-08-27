@@ -1,13 +1,11 @@
-import { useState, useContext, useEffect } from 'react';
-import { omit } from 'lodash';
-import { Button, Stack, Group, Badge, Modal } from '@mantine/core';
-import { PiSlidersHorizontalFill, PiFunnelFill } from 'react-icons/pi';
-
+import { Badge, Button, Group, Modal, Stack } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import { omit } from 'lodash';
+import { useContext, useEffect, useState } from 'react';
+import { PiFunnelFill, PiSlidersHorizontalFill } from 'react-icons/pi';
 
-import SearchContext from '../../Context';
-//import Overview from './Overview';
 import './modal.less';
+import SearchContext from '../../Context';
 
 function FilterModal({ size = 'sm', children }) {
   const searchContext = useContext(SearchContext);

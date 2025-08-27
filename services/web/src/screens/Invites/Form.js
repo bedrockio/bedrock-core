@@ -1,19 +1,21 @@
-import { useState } from 'react';
-import ErrorMessage from 'components/ErrorMessage';
 import {
+  Alert,
+  Button,
+  Pill,
+  PillsInput,
   Select,
   Stack,
-  Button,
-  Alert,
-  PillsInput,
-  Pill,
   Text,
 } from '@mantine/core';
 
 import { useForm } from '@mantine/form';
-import { emailRegexp } from 'utils/validate';
-import { useRequest } from 'utils/api';
+import { useState } from 'react';
+
+import ErrorMessage from 'components/ErrorMessage';
 import { useModalContext } from 'components/ModalWrapper';
+
+import { useRequest } from 'utils/api';
+import { emailRegexp } from 'utils/validate';
 
 export default function InviteForm({ onSuccess = () => {} }) {
   const { close } = useModalContext();

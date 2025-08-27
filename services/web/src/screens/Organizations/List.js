@@ -1,26 +1,28 @@
 import { Link } from '@bedrockio/router';
+
 import {
-  Group,
-  Table,
+  Anchor,
   Button,
   Divider,
-  Text,
-  Anchor,
+  Group,
   Loader,
   Stack,
+  Table,
+  Text,
 } from '@mantine/core';
+
 import { PiPlus } from 'react-icons/pi';
 
+import ErrorMessage from 'components/ErrorMessage';
 import PageHeader from 'components/PageHeader';
 import Search from 'components/Search';
 import SearchFilters from 'components/Search/Filters';
-import ErrorMessage from 'components/ErrorMessage';
+import SortableTh from 'components/Table/SortableTh';
 
-import { formatDateTime } from 'utils/date';
 import { request } from 'utils/api';
+import { formatDateTime } from 'utils/date';
 
 import Actions from './Actions';
-import SortableTh from 'components/Table/SortableTh';
 
 export default function OrganizationList() {
   async function onDataNeeded(body) {

@@ -1,26 +1,27 @@
 import { Link } from '@bedrockio/router';
+
 import {
-  Group,
-  Table,
-  Image,
-  Divider,
   Anchor,
-  Text,
   Box,
+  Divider,
+  Group,
+  Image,
   Loader,
+  Table,
+  Text,
 } from '@mantine/core';
 
 import { usePage } from 'stores/page';
 
+import ErrorMessage from 'components/ErrorMessage';
 import Search from 'components/Search';
 import SearchFilters from 'components/Search/Filters';
-import ErrorMessage from 'components/ErrorMessage';
-import Actions from 'screens/Products/Actions';
 import SortableTh from 'components/Table/SortableTh';
+import Actions from 'screens/Products/Actions';
 
-import { formatDateTime } from 'utils/date';
-import { formatUsd } from 'utils/currency';
 import { request } from 'utils/api';
+import { formatUsd } from 'utils/currency';
+import { formatDateTime } from 'utils/date';
 import { urlForUpload } from 'utils/uploads';
 
 import Menu from './Menu';

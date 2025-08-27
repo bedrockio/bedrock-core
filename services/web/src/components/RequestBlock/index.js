@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { Group, Select, Title } from '@mantine/core';
 import PropTypes from 'prop-types';
-import { Group, Title, Select } from '@mantine/core';
+import { useState } from 'react';
+
 import Code from 'components/Code';
 
 import { API_URL } from 'utils/env';
@@ -79,9 +80,6 @@ function RequestBlock(props) {
   const option = OPTIONS.find((c) => c.value === current);
   const { method, path } = request;
   const templateFunction = TEMPLATES[current];
-
-  console.log(getData());
-  console.log(templateFunction(getData()));
 
   return (
     <>

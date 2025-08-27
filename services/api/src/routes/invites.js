@@ -6,11 +6,11 @@ const { validateToken } = require('../utils/middleware/tokens');
 const { authenticate } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
 
-const { createAuthToken } = require('../utils/auth/tokens');
+const { createAuthToken } = require('../utils/tokens');
 const { Invite, User, AuditEntry } = require('../models');
 
 const { sendMessage, sendMail } = require('../utils/messaging');
-const { createInviteToken } = require('../utils/auth/tokens');
+const { createInviteToken } = require('../utils/tokens');
 
 const router = new Router();
 
@@ -40,7 +40,7 @@ router
         },
         {
           $set: { status: 'accepted' },
-        }
+        },
       );
       if (!invite) {
         return ctx.throw(400, 'Invite could not be found');
@@ -92,7 +92,7 @@ router
           },
         };
       }
-    }
+    },
   )
   .use(authenticate())
   .use(requirePermissions('users.read'))
@@ -134,12 +134,12 @@ router
           {
             new: true,
             upsert: true,
-          }
+          },
         );
         await sendInvite(authUser, invite);
       }
       ctx.status = 204;
-    }
+    },
   )
   .post('/:id/resend', async (ctx) => {
     const { invite, authUser } = ctx.state;

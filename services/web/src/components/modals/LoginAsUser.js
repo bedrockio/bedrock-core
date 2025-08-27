@@ -1,7 +1,7 @@
+import { Alert, Button } from '@mantine/core';
 import { useState } from 'react';
 
 import { JWT_KEY, request } from 'utils/api';
-import { Button, Alert } from '@mantine/core';
 
 export default function LoginAsUser({ user, close }) {
   const [loading, setLoading] = useState(false);

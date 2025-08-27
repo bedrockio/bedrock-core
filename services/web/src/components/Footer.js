@@ -1,7 +1,7 @@
-import Logo from 'components/Logo';
-
 import { Group, Switch, Text, useMantineColorScheme } from '@mantine/core';
-import { PiSunFill, PiMoonFill } from 'react-icons/pi';
+import { PiMoonFill, PiSunFill } from 'react-icons/pi';
+
+import Logo from 'components/Logo';
 
 export default function Footer() {
   const { setColorScheme, colorScheme } = useMantineColorScheme();

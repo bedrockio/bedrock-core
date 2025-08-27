@@ -1,23 +1,24 @@
-import { useState } from 'react';
 import {
-  Grid,
-  Divider,
+  ActionIcon,
   Button,
+  Divider,
+  Fieldset,
+  Grid,
   Group,
   LoadingOverlay,
-  Text,
   Stack,
-  Fieldset,
-  ActionIcon,
+  Text,
 } from '@mantine/core';
+
+import { useState } from 'react';
+import { PiTrashFill } from 'react-icons/pi';
 
 import { useSession } from 'stores/session';
 
-import Meta from 'components/Meta';
-
-import ErrorMessage from 'components/ErrorMessage';
 import AppleDisableButton from 'components/Auth/Apple/DisableButton';
 import GoogleDisableButton from 'components/Auth/Google/DisableButton';
+import ErrorMessage from 'components/ErrorMessage';
+import Meta from 'components/Meta';
 
 import { createPasskey, removePasskey } from 'utils/auth/passkey';
 import { formatDate, fromNow } from 'utils/date';
@@ -25,7 +26,6 @@ import { formatDate, fromNow } from 'utils/date';
 import Menu from '../Menu';
 import Sessions from './Sessions';
 import TwoFactorAuthentication from './TwoFactorAuthentication';
-import { PiTrashFill } from 'react-icons/pi';
 
 export default function Security() {
   const { user, updateUser } = useSession();
@@ -42,17 +42,17 @@ export default function Security() {
     setState({ error: null, message: null, loading: true });
 
   // Federated
-  const onGoogleEnabled = () => {
-    setMessage('Enabled Google Login');
-  };
+  // const onGoogleEnabled = () => {
+  //   setMessage('Enabled Google Login');
+  // };
 
   const onGoogleDisabled = () => {
     setMessage('Disabled Google Login');
   };
 
-  const onAppleEnabled = () => {
-    setMessage('Enabled Apple Login');
-  };
+  // const onAppleEnabled = () => {
+  //   setMessage('Enabled Apple Login');
+  // };
 
   const onAppleDisabled = () => {
     setMessage('Disabled Apple Login');

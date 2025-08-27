@@ -1,7 +1,7 @@
-import { noop } from 'lodash';
-import PropTypes from 'prop-types';
 import { withRouter } from '@bedrockio/router';
 import { ActionIcon } from '@mantine/core';
+import { noop } from 'lodash';
+import PropTypes from 'prop-types';
 import { PiFingerprintFill } from 'react-icons/pi';
 
 import { withSession } from 'stores/session';

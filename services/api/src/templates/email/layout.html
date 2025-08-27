@@ -210,7 +210,14 @@
         text-align: center;
       }
 
+
       .email-footer p {
+        margin: 0.5em 0;
+        line-height: 1.4;
+      }
+
+      .email-footer p,
+      .email-footer a {
         color: #a8aaaf;
       }
 
@@ -328,6 +335,13 @@
                         {{APP_COMPANY_NAME}}
                         <br />{{APP_COMPANY_ADDRESS}}
                       </p>
+                      {{#if unsubscribeUrl}}
+                      <p class="f-fallback sub align-center">
+                        <a href="{{{unsubscribeUrl}}}">Unsubscribe</a>
+                        <span>|</span>
+                        <a href="{{{NOTIFICATIONS_URL}}}">Manage Preferences</a>
+                      </p>
+                      {{/if}}
                     </td>
                   </tr>
                 </table>

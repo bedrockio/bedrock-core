@@ -1,28 +1,36 @@
-import React, { useState } from 'react';
-import { get, set } from 'lodash';
-
-import { useDisclosure } from '@mantine/hooks';
-
 import {
   ActionIcon,
-  Drawer,
-  LoadingOverlay,
-  Group,
+  Affix,
   Divider,
-  Tabs,
-  Switch,
+  Drawer,
+  Fieldset,
+  Group,
+  LoadingOverlay,
+  Paper,
+  SegmentedControl,
   Stack,
+  Switch,
+  Tabs,
   Text,
   TextInput,
-  SegmentedControl,
-  Fieldset,
-  Affix,
-  Paper,
 } from '@mantine/core';
 
-import RequestBlock from 'components/RequestBlock';
-import { useDocs } from 'docs/utils/context';
+import { useDisclosure } from '@mantine/hooks';
+import { get, set } from 'lodash';
+import React, { useState } from 'react';
+
+import {
+  PiMinus,
+  PiPlayFill,
+  PiPlus,
+  PiRecordFill,
+  PiTrashFill,
+} from 'react-icons/pi';
+
 import Code from 'components/Code';
+import ErrorMessage from 'components/ErrorMessage';
+import RequestBlock from 'components/RequestBlock';
+
 import {
   expandRoute,
   getParametersPath,
@@ -30,16 +38,9 @@ import {
   resolveRefs,
 } from 'docs/utils';
 
-import ErrorMessage from 'components/ErrorMessage';
+import { useDocs } from 'docs/utils/context';
 
 import { request } from 'utils/api';
-import {
-  PiRecordFill,
-  PiPlayFill,
-  PiPlus,
-  PiMinus,
-  PiTrashFill,
-} from 'react-icons/pi';
 
 const NAME_RANK = {
   keyword: 0,

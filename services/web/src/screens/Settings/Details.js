@@ -1,45 +1,18 @@
+import { Button, Fieldset, Stack, TextInput } from '@mantine/core';
+import { useForm } from '@mantine/form';
+import { notifications } from '@mantine/notifications';
 import { pick } from 'lodash';
-import {
-  Grid,
-  TextInput,
-  Button,
-  Stack,
-  Group,
-  Fieldset,
-  Text,
-  Chip,
-} from '@mantine/core';
 
 import { useSession } from 'stores/session';
-import { useForm } from '@mantine/form';
-
-import Meta from 'components/Meta';
 
 import ErrorMessage from 'components/ErrorMessage';
+import Meta from 'components/Meta';
 import PhoneField from 'components/form-fields/Phone';
+
 import { useRequest } from 'utils/api';
 
 import Menu from './Menu';
-import { notifications } from '@mantine/notifications';
 
-const CHANNELS = [
-  {
-    label: 'SMS',
-    value: 'sms',
-  },
-  {
-    label: 'Email',
-    value: 'email',
-  },
-  {
-    label: 'Push',
-    value: 'push',
-  },
-];
-
-/**
- * Profile settings component that allows users to update their profile information
- */
 function Profile() {
   const { user, meta, updateUser } = useSession();
 
@@ -89,67 +62,30 @@ function Profile() {
             },
           });
         })}>
-        <Grid gutter="xl">
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <Fieldset legend="Profile" mb="md" variant="unstyled">
-              <Stack>
-                <TextInput
-                  label="First Name"
-                  {...form.getInputProps('firstName')}
-                />
-                <TextInput
-                  label="Last Name"
-                  {...form.getInputProps('lastName')}
-                />
-                {user.phone && (
-                  <PhoneField
-                    disabled
-                    label="Phone Number"
-                    {...form.getInputProps('phone')}
-                  />
-                )}
-                {user.email && (
-                  <TextInput
-                    type="email"
-                    disabled
-                    label="Email"
-                    {...form.getInputProps('email')}
-                  />
-                )}
-              </Stack>
-            </Fieldset>
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <Fieldset legend="Notifications" variant="unstyled">
-              {form.getValues().notifications.map((notification, index) => {
-                const { name, label } = notification;
-                return (
-                  <Stack key={name}>
-                    <Text size="sm">{label}</Text>
-                    <Group>
-                      {CHANNELS.map((channel) => {
-                        return (
-                          <Chip
-                            key={channel.name}
-                            label={channel.label}
-                            size="xs"
-                            {...form.getInputProps(
-                              `notifications.${index}.${channel.value}`,
-                              {
-                                type: 'checkbox',
-                              },
-                            )}>
-                            {channel.label}
-                          </Chip>
-                        );
-                      })}
-                    </Group>
-                  </Stack>
-                );
-              })}
-            </Fieldset>
-          </Grid.Col>
-        </Grid>
+        <Fieldset legend="Profile" mb="md" variant="unstyled">
+          <Stack>
+            <TextInput
+              label="First Name"
+              {...form.getInputProps('firstName')}
+            />
+            <TextInput label="Last Name" {...form.getInputProps('lastName')} />
+            {user.phone && (
+              <PhoneField
+                disabled
+                label="Phone Number"
+                {...form.getInputProps('phone')}
+              />
+            )}
+            {user.email && (
+              <TextInput
+                type="email"
+                disabled
+                label="Email"
+                {...form.getInputProps('email')}
+              />
+            )}
+          </Stack>
+        </Fieldset>
 
         <Button
           type="submit"

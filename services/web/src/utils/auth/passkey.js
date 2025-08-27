@@ -1,6 +1,6 @@
 import {
-  startRegistration,
   startAuthentication,
+  startRegistration,
 } from '@simplewebauthn/browser';
 
 import { AUTH_PASSKEY } from 'utils/env';

@@ -1,10 +1,13 @@
-const { assertMailCount } = require('postmark');
+const config = require('@bedrockio/config');
+const { assertMailSent, assertMailCount } = require('postmark');
 const { assertSmsCount, setTwilioUnsubscribed } = require('twilio');
 const { assertPushCount } = require('firebase-admin');
 const { createUser } = require('./testing');
 const { sendNotification } = require('./notifications');
 const { mockTime, unmockTime } = require('./testing/time');
 const { User } = require('../models');
+
+const APP_URL = config.get('APP_URL');
 
 jest.mock('../lib/notifications/types', () => {
   return [
@@ -21,7 +24,7 @@ describe('sendNotification', () => {
     const user = await createUser();
 
     await sendNotification({
-      type: 'product-updated',
+      name: 'product-updated',
       user,
     });
     assertMailCount(1);
@@ -40,7 +43,7 @@ describe('sendNotification', () => {
     });
 
     await sendNotification({
-      type: 'product-updated',
+      name: 'product-updated',
       user,
     });
     assertMailCount(1);
@@ -60,7 +63,7 @@ describe('sendNotification', () => {
     });
 
     await sendNotification({
-      type: 'product-updated',
+      name: 'product-updated',
       user,
     });
     assertMailCount(0);
@@ -84,7 +87,7 @@ describe('sendNotification', () => {
     });
 
     await sendNotification({
-      type: 'product-updated',
+      name: 'product-updated',
       user,
     });
 
@@ -111,7 +114,7 @@ describe('sendNotification', () => {
     });
 
     await sendNotification({
-      type: 'product-updated',
+      name: 'product-updated',
       user,
     });
 
@@ -140,7 +143,7 @@ describe('sendNotification', () => {
     });
 
     await sendNotification({
-      type: 'product-updated',
+      name: 'product-updated',
       user,
     });
 
@@ -155,6 +158,27 @@ describe('sendNotification', () => {
         lastSentAt: new Date(),
       },
     ]);
+
+    unmockTime();
+  });
+
+  it('should have unsubscribe link', async () => {
+    mockTime('2025-03-01T00:00:00.000Z');
+
+    let user = await createUser({
+      email: 'foo@bar.com',
+      phone: '+15551234567',
+      deviceToken: 'fake-token',
+    });
+
+    await sendNotification({
+      name: 'product-updated',
+      user,
+    });
+
+    assertMailSent({
+      html: `${APP_URL}/unsubscribe`,
+    });
 
     unmockTime();
   });
@@ -182,7 +206,7 @@ describe('sendNotification', () => {
     setTwilioUnsubscribed('+15551234567');
 
     await sendNotification({
-      type: 'product-updated',
+      name: 'product-updated',
       user,
     });
 

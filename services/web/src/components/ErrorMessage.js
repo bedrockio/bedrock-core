@@ -2,8 +2,8 @@
 // also captures and logs error stack for production
 // debugging.
 
-import React from 'react';
 import { Alert } from '@mantine/core';
+import React from 'react';
 
 import { ApiError } from 'utils/api';
 import { CustomError } from 'utils/error';

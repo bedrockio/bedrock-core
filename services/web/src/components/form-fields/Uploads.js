@@ -1,13 +1,12 @@
-import React from 'react';
+import { Image, Input, Loader, Paper, SimpleGrid, Text } from '@mantine/core';
 import { uniq } from 'lodash';
 import PropTypes from 'prop-types';
+import React from 'react';
 import Dropzone from 'react-dropzone';
-
-import { Input, SimpleGrid, Image, Paper, Text, Loader } from '@mantine/core';
+import { PiFileFill, PiTrashSimpleFill } from 'react-icons/pi';
 
 import { request } from 'utils/api';
 import { urlForUpload } from 'utils/uploads';
-import { PiTrashSimpleFill, PiFileFill } from 'react-icons/pi';
 
 const MIME_TYPES = {
   image: {

@@ -1,10 +1,10 @@
-import Provider from './Provider';
 import Context from './Context';
-import Filters from './Filters';
 import Export from './Export';
+import Filters from './Filters';
+import Pagination from './Pagination';
+import Provider from './Provider';
 import Status from './Status';
 import Total from './Total';
-import Pagination from './Pagination';
 
 export default {
   Provider,

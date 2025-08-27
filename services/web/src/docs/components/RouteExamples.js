@@ -1,11 +1,10 @@
-import React from 'react';
 import { get } from 'lodash';
+import React from 'react';
 
 import { getRoutePath } from 'docs/utils';
 
-import { DocsContext } from '../utils/context';
-
 import RouteExample from './RouteExample';
+import { DocsContext } from '../utils/context';
 
 export default class RouteExamples extends React.Component {
   static contextType = DocsContext;
@@ -65,7 +64,7 @@ export default class RouteExamples extends React.Component {
               } else {
                 return [];
               }
-            }
+            },
           );
         })
         .sort((a, b) => {

@@ -1,8 +1,9 @@
+import { ActionIcon } from '@mantine/core';
+import { PiPencilSimpleFill } from 'react-icons/pi';
+
 import { useClass } from 'helpers/bem';
 
 import { useDocs } from '../utils/context';
-import { PiPencilSimpleFill } from 'react-icons/pi';
-import { ActionIcon } from '@mantine/core';
 
 export default function EditButton() {
   const { mode, setMode } = useDocs();

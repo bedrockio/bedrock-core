@@ -5,14 +5,24 @@ beforeEach(() => {
 });
 
 function assertPushSent(options) {
-  const { user, body, ...rest } = options;
+  const { user, body, title, image, data } = options;
   expect(sentMessages).toEqual(
     expect.arrayContaining([
       expect.objectContaining({
-        ...rest,
         token: user.deviceToken,
-        ...(body && {
-          body: expect.stringContaining(body),
+        notification: expect.objectContaining({
+          ...(body && {
+            body: expect.stringContaining(body),
+          }),
+          ...(title && {
+            title: expect.stringContaining(title),
+          }),
+          ...(image && {
+            image: expect.stringContaining(image),
+          }),
+        }),
+        ...(data && {
+          data,
         }),
       }),
     ]),
@@ -25,12 +35,28 @@ function assertPushCount(count) {
 
 class MockMessaging {
   send(message) {
-    const { notification } = message;
-    sentMessages.push({
-      ...message,
-      ...notification,
-    });
+    sentMessages.push(message);
   }
+
+  sendEachForMulticast(options) {
+    const { tokens, ...rest } = options;
+    for (let token of tokens) {
+      sentMessages.push({
+        ...rest,
+        token,
+      });
+    }
+
+    return {
+      responses: tokens.map(() => {
+        return { success: true };
+      }),
+    };
+  }
+}
+
+function getLastMessage() {
+  return sentMessages[sentMessages.length - 1];
 }
 
 module.exports = {
@@ -48,4 +74,5 @@ module.exports = {
   },
   assertPushSent,
   assertPushCount,
+  getLastMessage,
 };

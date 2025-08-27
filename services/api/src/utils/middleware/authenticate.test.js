@@ -1,5 +1,5 @@
 const { authenticate, authorizeUser } = require('./authenticate');
-const { getAuthTokenPayload, signToken } = require('../auth/tokens');
+const { getAuthPayload, signToken } = require('../tokens');
 
 const { context, createUser } = require('../testing');
 const { User } = require('../../models');
@@ -17,7 +17,7 @@ describe('authenticate', () => {
       ],
     });
 
-    const payload = getAuthTokenPayload(user);
+    const payload = getAuthPayload(user);
     const token = signToken(payload);
 
     const ctx = context({ headers: { authorization: `Bearer ${token}` } });
@@ -90,6 +90,7 @@ describe('authorizeUser', () => {
     const user = await createUser({
       authTokens: [
         {
+          kid: 'user',
           jti: 'jti-id',
           ip: '123.12.1.2',
           expiresAt: new Date(Date.now() + 10000),
@@ -104,6 +105,7 @@ describe('authorizeUser', () => {
     });
     ctx.state = {
       jwt: {
+        kid: 'user',
         sub: user.id,
         jti: 'jti-id',
       },
