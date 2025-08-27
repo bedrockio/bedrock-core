@@ -4,7 +4,7 @@ const { validateBody } = require('../../utils/middleware/validate');
 
 const { sendOtp } = require('../../utils/auth/otp');
 const { verifyOtp } = require('../../utils/auth/otp');
-const { login, verifyLoginAttempts } = require('../../utils/auth');
+const { login, verifyLoginAttempts } = require('../../utils/auth/login');
 const { verifyRecentPassword } = require('../../utils/auth/password');
 
 const { AuditEntry } = require('../../models');

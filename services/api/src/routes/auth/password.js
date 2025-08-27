@@ -5,7 +5,7 @@ const { validateBody } = require('../../utils/middleware/validate');
 const { authenticate } = require('../../utils/middleware/authenticate');
 
 const { createAuthToken, createTemporaryAuthToken } = require('../../utils/auth/tokens');
-const { login, verifyLoginAttempts } = require('../../utils/auth');
+const { login, verifyLoginAttempts } = require('../../utils/auth/login');
 const { verifyPassword } = require('../../utils/auth/password');
 const { sendOtp } = require('../../utils/auth/otp');
 const { sendMail } = require('../../utils/messaging');

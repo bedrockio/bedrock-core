@@ -5,7 +5,7 @@ const { validateBody } = require('../../utils/middleware/validate');
 const { authenticate } = require('../../utils/middleware/authenticate');
 const { expandRoles } = require('../../utils/permissions');
 
-const { login } = require('../../utils/auth');
+const { login } = require('../../utils/auth/login');
 
 const {
   generateRegistrationOptions,

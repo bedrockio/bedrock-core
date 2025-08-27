@@ -11,8 +11,8 @@
     "start": "vite",
     "static": "node ./serve/static",
     "lint": "eslint",
-    "test": "vitest",
-    "generate": "cd ../../generator && yarn install && yarn generate",
+    "test": "vitest src",
+    "test:e2e": "playwright test",
     "postinstall": "cd serve && yarn install"
   },
   "dependencies": {
@@ -55,6 +55,8 @@
   "devDependencies": {
     "@bedrockio/eslint-plugin": "^1.1.3",
     "@bedrockio/prettier-config": "^1.0.2",
+    "@playwright/test": "^1.52.0",
+    "@types/node": "^22.15.19",
     "eslint": "^9.19.0",
     "eslint-plugin-mdx": "^3.1.5",
     "prettier": "^3.5.2"
