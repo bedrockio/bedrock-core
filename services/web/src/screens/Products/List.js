@@ -82,10 +82,10 @@ export default function ProductList() {
                   <Search.Export filename="products" />
 
                   <Button
-                    variant="default"
+                    variant="primary"
                     component={Link}
                     to="/products/new"
-                    rightSection={<PiPlus />}>
+                    leftSection={<PiPlus />}>
                     New Product
                   </Button>
                 </>
@@ -123,85 +123,83 @@ export default function ProductList() {
 
             <ErrorMessage error={error} />
 
-            <Table.ScrollContainer>
-              <Table stickyHeader striped>
-                <Table.Thead>
+            <Table stickyHeader striped>
+              <Table.Thead>
+                <Table.Tr>
+                  <SortableTh
+                    sorted={getSorted('name')}
+                    onClick={() => setSort('name')}>
+                    Name
+                  </SortableTh>
+                  <Table.Th width={60}>Image</Table.Th>
+                  <SortableTh
+                    sorted={getSorted('priceUsd')}
+                    onClick={() => setSort('priceUsd')}>
+                    Price
+                  </SortableTh>
+                  <SortableTh
+                    sorted={getSorted('createdAt')}
+                    onClick={() => setSort('createdAt')}
+                    width={280}>
+                    Created
+                  </SortableTh>
+                  <Table.Th
+                    style={{
+                      textAlign: 'right',
+                    }}>
+                    Actions
+                  </Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>
+                {products.length === 0 && (
                   <Table.Tr>
-                    <SortableTh
-                      sorted={getSorted('name')}
-                      onClick={() => setSort('name')}>
-                      Name
-                    </SortableTh>
-                    <Table.Th width={60}>Image</Table.Th>
-                    <SortableTh
-                      sorted={getSorted('priceUsd')}
-                      onClick={() => setSort('priceUsd')}>
-                      Price
-                    </SortableTh>
-                    <SortableTh
-                      sorted={getSorted('createdAt')}
-                      onClick={() => setSort('createdAt')}
-                      width={280}>
-                      Created
-                    </SortableTh>
-                    <Table.Th
-                      style={{
-                        textAlign: 'right',
-                      }}>
-                      Actions
-                    </Table.Th>
+                    <Table.Td colSpan={5} align="center">
+                      <Text p="md" fw="bold" ta="center">
+                        No products found.
+                      </Text>
+                    </Table.Td>
                   </Table.Tr>
-                </Table.Thead>
-                <Table.Tbody>
-                  {products.length === 0 && (
-                    <Table.Tr>
-                      <Table.Td colSpan={5} align="center">
-                        <Text p="md" fw="bold" ta="center">
-                          No products found.
-                        </Text>
+                )}
+                {products.map((product) => {
+                  const [image] = product.images;
+                  return (
+                    <Table.Tr key={product.id}>
+                      <Table.Td>
+                        <Anchor
+                          size="sm"
+                          component={Link}
+                          to={`/products/${product.id}`}>
+                          {product.name}
+                        </Anchor>
+                      </Table.Td>
+                      <Table.Td>
+                        {image && (
+                          <Image
+                            radius={4}
+                            h={40}
+                            w={40}
+                            fit
+                            src={urlForUpload(image, true)}
+                          />
+                        )}
+                      </Table.Td>
+                      <Table.Td>{formatUsd(product.priceUsd)}</Table.Td>
+                      <Table.Td>{formatDateTime(product.createdAt)}</Table.Td>
+                      <Table.Td align="right" width={100}>
+                        <Actions
+                          displayMode="list"
+                          product={product}
+                          reload={reload}
+                        />
                       </Table.Td>
                     </Table.Tr>
-                  )}
-                  {products.map((product) => {
-                    const [image] = product.images;
-                    return (
-                      <Table.Tr key={product.id}>
-                        <Table.Td>
-                          <Anchor
-                            size="sm"
-                            component={Link}
-                            to={`/products/${product.id}`}>
-                            {product.name}
-                          </Anchor>
-                        </Table.Td>
-                        <Table.Td>
-                          {image && (
-                            <Image
-                              radius={4}
-                              h={40}
-                              w={40}
-                              fit
-                              src={urlForUpload(image, true)}
-                            />
-                          )}
-                        </Table.Td>
-                        <Table.Td>{formatUsd(product.priceUsd)}</Table.Td>
-                        <Table.Td>{formatDateTime(product.createdAt)}</Table.Td>
-                        <Table.Td align="right" width={100}>
-                          <Actions
-                            displayMode="list"
-                            product={product}
-                            reload={reload}
-                          />
-                        </Table.Td>
-                      </Table.Tr>
-                    );
-                  })}
-                </Table.Tbody>
-              </Table>
-              <Divider mb="md" />
-              <Search.Pagination />
-            </Table.ScrollContainer>
+                  );
+                })}
+              </Table.Tbody>
+            </Table>
+            <Divider mb="md" />
+            <Search.Pagination />
           </Stack>
         );
       }}

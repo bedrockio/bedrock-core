@@ -47,61 +47,58 @@ export default function Applications() {
                     variant="default"
                     component={Link}
                     to="/applications/new"
-                    rightSection={<PiPlus />}>
+                    leftSection={<PiPlus />}>
                     New Application
                   </Button>
                 }
               />
-              <Table.ScrollContainer>
-                <Table striped highlightOnHover>
-                  <Table.Thead>
-                    <Table.Tr>
-                      <SortableTh
-                        sorted={getSorted('name')}
-                        onClick={() => setSort('name')}>
-                        Name
-                      </SortableTh>
-                      <Table.Th style={{ width: '25%' }}>Description</Table.Th>
-                      <Table.Th>APIKey</Table.Th>
-                      <Table.Th>Last Used</Table.Th>
-                      <Table.Th
-                        style={{
-                          textAlign: 'right',
-                        }}
-                        width={100}>
-                        Actions
-                      </Table.Th>
-                    </Table.Tr>
-                  </Table.Thead>
-                  <Table.Tbody>
-                    {items.map((item) => {
-                      return (
-                        <Table.Tr key={item.id}>
-                          <Table.Td>{item.name}</Table.Td>
-                          <Table.Td>{item.description}</Table.Td>
-                          <Table.Td>
-                            <Code>{item.apiKey}</Code>
-                          </Table.Td>
-                          <Table.Td>
-                            {item.lastUsedAt
-                              ? fromNow(item.lastUsedAt)
-                              : 'N / A'}
-                          </Table.Td>
-                          <Table.Td align="right">
-                            <Actions
-                              displayMode="list"
-                              application={item}
-                              reload={reload}
-                            />
-                          </Table.Td>
-                        </Table.Tr>
-                      );
-                    })}
-                  </Table.Tbody>
-                </Table>
-                <Divider my="md" mt="0" />
-                <Search.Pagination />
-              </Table.ScrollContainer>
+
+              <Table striped highlightOnHover>
+                <Table.Thead>
+                  <Table.Tr>
+                    <SortableTh
+                      sorted={getSorted('name')}
+                      onClick={() => setSort('name')}>
+                      Name
+                    </SortableTh>
+                    <Table.Th style={{ width: '25%' }}>Description</Table.Th>
+                    <Table.Th>APIKey</Table.Th>
+                    <Table.Th>Last Used</Table.Th>
+                    <Table.Th
+                      style={{
+                        textAlign: 'right',
+                      }}
+                      width={100}>
+                      Actions
+                    </Table.Th>
+                  </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>
+                  {items.map((item) => {
+                    return (
+                      <Table.Tr key={item.id}>
+                        <Table.Td>{item.name}</Table.Td>
+                        <Table.Td>{item.description}</Table.Td>
+                        <Table.Td>
+                          <Code>{item.apiKey}</Code>
+                        </Table.Td>
+                        <Table.Td>
+                          {item.lastUsedAt ? fromNow(item.lastUsedAt) : 'N / A'}
+                        </Table.Td>
+                        <Table.Td align="right">
+                          <Actions
+                            displayMode="list"
+                            application={item}
+                            reload={reload}
+                          />
+                        </Table.Td>
+                      </Table.Tr>
+                    );
+                  })}
+                </Table.Tbody>
+              </Table>
+              <Divider my="md" mt="0" />
+              <Search.Pagination />
             </Stack>
           );
         }}

@@ -83,10 +83,10 @@ export default function UserList() {
                   <>
                     <Search.Export filename="users" />
                     <Button
-                      variant="default"
+                      variant="primary"
                       component={Link}
                       to="/users/new"
-                      rightSection={<PiPlus />}>
+                      leftSection={<PiPlus />}>
                       New User
                     </Button>
                   </>
@@ -185,6 +185,7 @@ export default function UserList() {
                             {formatRoles(user.roles).map((label) => {
                               return (
                                 <Badge
+                                  variant="default"
                                   size="md"
                                   radius="md"
                                   leftSection={<label.icon size={14} />}

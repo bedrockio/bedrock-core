@@ -45,7 +45,6 @@ export default function ProductsActions({
         <Protected endpoint="users" permission="update">
           <Button
             variant="default"
-            rightSection={<PiPencilSimpleFill />}
             component={Link}
             to={`/products/${product.id}/edit`}>
             Edit
