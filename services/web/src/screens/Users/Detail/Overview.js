@@ -74,6 +74,7 @@ export default function UserOverview() {
                 {formatRoles(user.roles).map((label) => {
                   return (
                     <Badge
+                      variant="default"
                       size="md"
                       radius="md"
                       leftSection={<label.icon size={14} />}
