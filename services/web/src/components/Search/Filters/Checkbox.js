@@ -16,7 +16,6 @@ export default class CheckboxFilter extends React.Component {
 
   render() {
     const { name, ...rest } = this.props;
-    console.log(this.context.filters[name] || false);
     return (
       <Checkbox
         id={name}
