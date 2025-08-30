@@ -1,4 +1,4 @@
-import { Button, createTheme, DEFAULT_THEME, Tabs } from '@mantine/core';
+import { Button, createTheme, DEFAULT_THEME, Modal, Tabs } from '@mantine/core';
 
 import './theme.less';
 
@@ -112,6 +112,20 @@ export const theme = createTheme({
         // sadly needed for when stickyHeader is used
         th: {
           backgroundColor: 'transparent',
+        },
+      },
+    },
+    Modal: {
+      styles: {
+        title: {
+          fontWeight: 'bold',
+        },
+      },
+    },
+    Drawer: {
+      styles: {
+        title: {
+          fontWeight: 'bold',
         },
       },
     },

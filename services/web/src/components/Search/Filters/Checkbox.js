@@ -1,23 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Slider } from '@mantine/core';
+import { Checkbox } from '@mantine/core';
 
 import SearchContext from '../Context';
 
 export default class CheckboxFilter extends React.Component {
   static contextType = SearchContext;
 
-  onChange = (evt, { checked, ...rest }) => {
+  onChange = (evt) => {
     this.context.onFilterChange({
-      ...rest,
-      value: checked,
+      value: evt.target.checked,
+      name: this.props.name,
     });
   };
 
   render() {
     const { name, ...rest } = this.props;
+    console.log(this.context.filters[name] || false);
     return (
-      <Slider
+      <Checkbox
         id={name}
         name={name}
         checked={this.context.filters[name] || false}
@@ -29,6 +30,6 @@ export default class CheckboxFilter extends React.Component {
 }
 
 CheckboxFilter.propTypes = {
-  ...Slider.propTypes,
+  ...Checkbox.propTypes,
   name: PropTypes.string.isRequired,
 };
