@@ -57,7 +57,6 @@ export default function ExportButton({
             size={size}
             disabled
             variant="default"
-            rightSection={<PiDownloadFill />}
             {...props}>
             {children}
           </Component>
@@ -70,7 +69,6 @@ export default function ExportButton({
     <Component
       size={size}
       variant="default"
-      rightSection={<PiDownloadFill />}
       loading={loading}
       disabled={context.meta?.total === 0 || loading}
       onClick={handleSubmit}>

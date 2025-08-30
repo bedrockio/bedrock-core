@@ -1,10 +1,4 @@
-import {
-  Button,
-  ActionIcon,
-  createTheme,
-  DEFAULT_THEME,
-  Tabs,
-} from '@mantine/core';
+import { Button, createTheme, DEFAULT_THEME, Tabs } from '@mantine/core';
 
 import './theme.less';
 
@@ -107,6 +101,17 @@ export const theme = createTheme({
           fontSize: 'var(--mantine-font-size-xs)',
           fontWeight: '500',
           textTransform: 'uppercase',
+        },
+      },
+    },
+    Table: {
+      styles: {
+        thead: {
+          backgroundColor: `light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-7))`,
+        },
+        // sadly needed for when stickyHeader is used
+        th: {
+          backgroundColor: 'transparent',
         },
       },
     },

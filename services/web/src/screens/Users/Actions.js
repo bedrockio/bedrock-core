@@ -57,7 +57,6 @@ export default function UserActions({ displayMode = 'show', user, reload }) {
         <Protected endpoint="users" permission="update">
           <Button
             variant="default"
-            rightSection={<PiPencilSimpleFill />}
             component={Link}
             to={`/users/${user.id}/edit`}>
             Edit

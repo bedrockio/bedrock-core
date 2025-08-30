@@ -39,7 +39,6 @@ export default function ShopsActions({ shop, reload, displayMode = 'show' }) {
         <Protected endpoint="shops" permission="update">
           <Button
             variant="default"
-            rightSection={<PiPencilSimpleFill />}
             component={Link}
             to={`/shops/${shop.id}/edit`}>
             Edit

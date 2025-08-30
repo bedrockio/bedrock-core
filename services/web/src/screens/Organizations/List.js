@@ -63,13 +63,15 @@ export default function OrganizationList() {
                 { title: 'Organizations' },
               ]}
               rightSection={
-                <Button
-                  variant="default"
-                  component={Link}
-                  to="/organizations/new"
-                  rightSection={<PiPlus />}>
-                  New Organization
-                </Button>
+                <>
+                  <Button
+                    variant="primary"
+                    component={Link}
+                    to="/organizations/new"
+                    leftSection={<PiPlus />}>
+                    New Organization
+                  </Button>
+                </>
               }
             />
 
@@ -93,63 +95,61 @@ export default function OrganizationList() {
 
             <ErrorMessage error={error} />
 
-            <Table.ScrollContainer>
-              <Table stickyHeader striped>
-                <Table.Thead>
+            <Table stickyHeader striped>
+              <Table.Thead>
+                <Table.Tr>
+                  <SortableTh
+                    sorted={getSorted('name')}
+                    onClick={() => setSort('name')}>
+                    Name
+                  </SortableTh>
+                  <SortableTh
+                    sorted={getSorted('createdAt')}
+                    onClick={() => setSort('createdAt')}
+                    width={280}>
+                    Created
+                  </SortableTh>
+                  <Table.Th style={{ textAlign: 'right' }} width={100}>
+                    Actions
+                  </Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>
+                {organizations.length === 0 && (
                   <Table.Tr>
-                    <SortableTh
-                      sorted={getSorted('name')}
-                      onClick={() => setSort('name')}>
-                      Name
-                    </SortableTh>
-                    <SortableTh
-                      sorted={getSorted('createdAt')}
-                      onClick={() => setSort('createdAt')}
-                      width={280}>
-                      Created
-                    </SortableTh>
-                    <Table.Th style={{ textAlign: 'right' }} width={100}>
-                      Actions
-                    </Table.Th>
+                    <Table.Td colSpan={3} style={{ textAlign: 'center' }}>
+                      <Text p="md" fw="bold" ta="center">
+                        No organization found.
+                      </Text>
+                    </Table.Td>
                   </Table.Tr>
-                </Table.Thead>
-                <Table.Tbody>
-                  {organizations.length === 0 && (
-                    <Table.Tr>
-                      <Table.Td colSpan={3} style={{ textAlign: 'center' }}>
-                        <Text p="md" fw="bold" ta="center">
-                          No organization found.
-                        </Text>
-                      </Table.Td>
-                    </Table.Tr>
-                  )}
-                  {organizations.map((organization) => (
-                    <Table.Tr key={organization.id}>
-                      <Table.Td>
-                        <Anchor
-                          size="sm"
-                          component={Link}
-                          to={`/organizations/${organization.id}`}>
-                          {organization.name}
-                        </Anchor>
-                      </Table.Td>
-                      <Table.Td>
-                        {formatDateTime(organization.createdAt)}
-                      </Table.Td>
-                      <Table.Td align="right">
-                        <Actions
-                          displayMode="list"
-                          organization={organization}
-                          reload={reload}
-                        />
-                      </Table.Td>
-                    </Table.Tr>
-                  ))}
-                </Table.Tbody>
-              </Table>
-              <Divider my="md" mt="0" />
-              <Search.Pagination />
-            </Table.ScrollContainer>
+                )}
+                {organizations.map((organization) => (
+                  <Table.Tr key={organization.id}>
+                    <Table.Td>
+                      <Anchor
+                        size="sm"
+                        component={Link}
+                        to={`/organizations/${organization.id}`}>
+                        {organization.name}
+                      </Anchor>
+                    </Table.Td>
+                    <Table.Td>
+                      {formatDateTime(organization.createdAt)}
+                    </Table.Td>
+                    <Table.Td align="right">
+                      <Actions
+                        displayMode="list"
+                        organization={organization}
+                        reload={reload}
+                      />
+                    </Table.Td>
+                  </Table.Tr>
+                ))}
+              </Table.Tbody>
+            </Table>
+            <Divider my="md" mt="0" />
+            <Search.Pagination />
           </Stack>
         )}
       </Search.Provider>

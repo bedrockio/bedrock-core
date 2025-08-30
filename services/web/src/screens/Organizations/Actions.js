@@ -39,7 +39,6 @@ export default function OrganizationActions({
       return (
         <Button
           variant="default"
-          rightSection={<PiArrowUUpLeft />}
           component={Link}
           to={`/organizations/${organization.id}`}>
           Back
@@ -50,7 +49,6 @@ export default function OrganizationActions({
         <Protected endpoint="organizations" permission="update">
           <Button
             variant="default"
-            rightSection={<PiPencil />}
             component={Link}
             to={`/organizations/${organization.id}/edit`}>
             Edit

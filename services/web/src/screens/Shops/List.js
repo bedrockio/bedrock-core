@@ -105,9 +105,9 @@ export default function ShopList() {
                     <Protected endpoint="shops" permission="create">
                       <Button
                         component={Link}
-                        variant="default"
+                        variant="primary"
                         to="/shops/new"
-                        rightSection={<PiPlus />}>
+                        leftSection={<PiPlus />}>
                         New Shop
                       </Button>
                     </Protected>
@@ -151,81 +151,79 @@ export default function ShopList() {
 
               <ErrorMessage error={error} />
 
-              <Table.ScrollContainer>
-                <Table stickyHeader striped>
-                  <Table.Thead>
-                    <Table.Tr>
-                      <SortableTh
-                        sorted={getSorted('name')}
-                        onClick={() => setSort('name')}>
-                        Name
-                      </SortableTh>
-                      <Table.Th width={60}>Image</Table.Th>
+              <Table stickyHeader striped>
+                <Table.Thead>
+                  <Table.Tr>
+                    <SortableTh
+                      sorted={getSorted('name')}
+                      onClick={() => setSort('name')}>
+                      Name
+                    </SortableTh>
+                    <Table.Th width={60}>Image</Table.Th>
 
-                      <SortableTh
-                        sorted={getSorted('createdAt')}
-                        onClick={() => setSort('createdAt')}
-                        width={280}>
-                        <Group>Created</Group>
-                      </SortableTh>
-                      <Table.Th
-                        width={100}
-                        style={{
-                          textAlign: 'right',
-                        }}>
-                        Actions
-                      </Table.Th>
+                    <SortableTh
+                      sorted={getSorted('createdAt')}
+                      onClick={() => setSort('createdAt')}
+                      width={280}>
+                      <Group>Created</Group>
+                    </SortableTh>
+                    <Table.Th
+                      width={100}
+                      style={{
+                        textAlign: 'right',
+                      }}>
+                      Actions
+                    </Table.Th>
+                  </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>
+                  {shops.length === 0 && (
+                    <Table.Tr>
+                      <Table.Td colSpan={5}>
+                        <Text p="md" fw="bold" ta="center">
+                          No shops found.
+                        </Text>
+                      </Table.Td>
                     </Table.Tr>
-                  </Table.Thead>
-                  <Table.Tbody>
-                    {shops.length === 0 && (
-                      <Table.Tr>
-                        <Table.Td colSpan={5}>
-                          <Text p="md" fw="bold" ta="center">
-                            No shops found.
-                          </Text>
+                  )}
+                  {shops.map((shop) => {
+                    return (
+                      <Table.Tr key={shop.id}>
+                        <Table.Td>
+                          <Anchor
+                            size="sm"
+                            component={Link}
+                            to={`/shops/${shop.id}`}>
+                            {shop.name}
+                          </Anchor>
+                        </Table.Td>
+                        <Table.Td>
+                          {shop.images.length > 0 && (
+                            <Image
+                              radius={4}
+                              h={40}
+                              w={40}
+                              fit
+                              src={urlForUpload(shop.images[0], true)}
+                            />
+                          )}
+                        </Table.Td>
+                        <Table.Td>{formatDateTime(shop.createdAt)}</Table.Td>
+                        <Table.Td justify="flex-end">
+                          <Actions
+                            compact
+                            shop={shop}
+                            reload={reload}
+                            displayMode="list"
+                          />
                         </Table.Td>
                       </Table.Tr>
-                    )}
-                    {shops.map((shop) => {
-                      return (
-                        <Table.Tr key={shop.id}>
-                          <Table.Td>
-                            <Anchor
-                              size="sm"
-                              component={Link}
-                              to={`/shops/${shop.id}`}>
-                              {shop.name}
-                            </Anchor>
-                          </Table.Td>
-                          <Table.Td>
-                            {shop.images.length > 0 && (
-                              <Image
-                                radius={4}
-                                h={40}
-                                w={40}
-                                fit
-                                src={urlForUpload(shop.images[0], true)}
-                              />
-                            )}
-                          </Table.Td>
-                          <Table.Td>{formatDateTime(shop.createdAt)}</Table.Td>
-                          <Table.Td justify="flex-end">
-                            <Actions
-                              compact
-                              shop={shop}
-                              reload={reload}
-                              displayMode="list"
-                            />
-                          </Table.Td>
-                        </Table.Tr>
-                      );
-                    })}
-                  </Table.Tbody>
-                </Table>
-                <Divider mb="md" />
-                <Search.Pagination />
-              </Table.ScrollContainer>
+                    );
+                  })}
+                </Table.Tbody>
+              </Table>
+              <Divider mb="md" />
+              <Search.Pagination />
             </Stack>
           );
         }}
