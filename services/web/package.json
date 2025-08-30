@@ -27,6 +27,7 @@
     "@mantine/notifications": "^8.2.5",
     "@sentry/browser": "^9.15.0",
     "@simplewebauthn/browser": "^13.1.0",
+    "@uiw/react-json-view": "^2.0.0-alpha.37",
     "@vitejs/plugin-react": "^4.4.1",
     "dayjs": "^1.11.13",
     "hast-util-sanitize": "^4.0.0",
