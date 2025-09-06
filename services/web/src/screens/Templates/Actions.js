@@ -3,10 +3,10 @@ import { ActionIcon, Button, Group, Menu, Text } from '@mantine/core';
 
 import {
   PiCode,
-  PiDotsThreeOutlineVerticalFill,
+  PiDotsThreeOutlineVerticalBold,
   PiListMagnifyingGlass,
-  PiPencilSimpleFill,
-  PiTrashFill,
+  PiPencilSimpleBold,
+  PiTrashBold,
 } from 'react-icons/pi';
 
 import ModalWrapper from 'components/ModalWrapper';
@@ -29,7 +29,7 @@ export default function TemplatesActions({
             variant="default"
             component={Link}
             to={`/templates/${template.id}/edit`}>
-            <PiPencilSimpleFill />
+            <PiPencilSimpleBold />
           </ActionIcon>
         </Protected>
       );
@@ -47,7 +47,7 @@ export default function TemplatesActions({
         <Protected endpoint="templates" permission="update">
           <Button
             variant="default"
-            rightSection={<PiPencilSimpleFill />}
+            rightSection={<PiPencilSimpleBold />}
             component={Link}
             to={`/templates/${template.id}/edit`}>
             Edit
@@ -64,11 +64,11 @@ export default function TemplatesActions({
         <Menu.Target>
           {displayMode !== 'list' ? (
             <ActionIcon variant="default">
-              <PiDotsThreeOutlineVerticalFill />
+              <PiDotsThreeOutlineVerticalBold />
             </ActionIcon>
           ) : (
             <ActionIcon variant="default">
-              <PiDotsThreeOutlineVerticalFill />
+              <PiDotsThreeOutlineVerticalBold />
             </ActionIcon>
           )}
         </Menu.Target>
@@ -93,7 +93,7 @@ export default function TemplatesActions({
             <ModalWrapper
               title="Delete Template"
               trigger={
-                <Menu.Item color="red" leftSection={<PiTrashFill />}>
+                <Menu.Item color="red" leftSection={<PiTrashBold />}>
                   Delete
                 </Menu.Item>
               }

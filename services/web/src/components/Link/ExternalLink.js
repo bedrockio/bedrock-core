@@ -1,6 +1,6 @@
 import { Anchor } from '@mantine/core';
 import React from 'react';
-import { PiArrowSquareOutFill } from 'react-icons/pi';
+import { PiArrowSquareOutBold } from 'react-icons/pi';
 
 export default class ExternalLink extends React.Component {
   render() {
@@ -12,7 +12,7 @@ export default class ExternalLink extends React.Component {
         target="_blank"
         rel="external noopener noreferrer"
         {...rest}>
-        {icon && <PiArrowSquareOutFill />}
+        {icon && <PiArrowSquareOutBold />}
         {children || href}
       </Anchor>
     );

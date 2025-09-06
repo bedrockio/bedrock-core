@@ -3,7 +3,7 @@ import { uniq } from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Dropzone from 'react-dropzone';
-import { PiFileFill, PiTrashSimpleFill } from 'react-icons/pi';
+import { PiFileBold, PiTrashSimpleBold } from 'react-icons/pi';
 
 import { request } from 'utils/api';
 import { urlForUpload } from 'utils/uploads';
@@ -204,7 +204,7 @@ export default class Uploads extends React.Component {
                   key={this.getUploadId(upload)}
                   className="upload-card">
                   {this.renderUpload(upload)}
-                  <PiTrashSimpleFill
+                  <PiTrashSimpleBold
                     style={{
                       position: 'absolute',
                       top: 5,
@@ -251,7 +251,7 @@ export default class Uploads extends React.Component {
                   gap: '0.3em',
                 }}>
                 {upload.filename || 'File'}
-                <PiTrashSimpleFill
+                <PiTrashSimpleBold
                   style={{ cursor: 'pointer' }}
                   onClick={(evt) => this.delete(evt, upload)}
                 />
@@ -312,7 +312,7 @@ export default class Uploads extends React.Component {
   }
 
   renderIconForType() {
-    return <PiFileFill />;
+    return <PiFileBold />;
   }
 }
 

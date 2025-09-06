@@ -1,5 +1,5 @@
 import { Button } from '@mantine/core';
-import { PiPaperPlaneTiltFill } from 'react-icons/pi';
+import { PiPaperPlaneTiltBold } from 'react-icons/pi';
 
 import ModalWrapper from 'components/ModalWrapper';
 
@@ -10,7 +10,7 @@ export default function SendPreviewButton(props) {
     <ModalWrapper
       title="Send Test"
       trigger={
-        <Button variant="default" leftSection={<PiPaperPlaneTiltFill />}>
+        <Button variant="default" leftSection={<PiPaperPlaneTiltBold />}>
           Test
         </Button>
       }

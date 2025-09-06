@@ -1,6 +1,6 @@
 import { ActionIcon, Code, Group, Stack, Text } from '@mantine/core';
 import { useState } from 'react';
-import { PiMinus, PiPlus, PiTrashFill } from 'react-icons/pi';
+import { PiMinus, PiPlus, PiTrashBold } from 'react-icons/pi';
 
 import { useClass } from 'helpers/bem';
 
@@ -94,7 +94,7 @@ export default function RouteExample(props) {
                 className={getElementClass('summary')}
                 trigger={
                   <ActionIcon variant="default">
-                    <PiTrashFill />
+                    <PiTrashBold />
                   </ActionIcon>
                 }
               />
@@ -123,7 +123,7 @@ export default function RouteExample(props) {
                       onClick={(evt) => {
                         evt.stopPropagation();
                       }}>
-                      <PiTrashFill />
+                      <PiTrashBold />
                     </ActionIcon>
                   }
                 />

@@ -3,10 +3,10 @@ import { ActionIcon, Button, Group, Menu, Text } from '@mantine/core';
 
 import {
   PiCode,
-  PiDotsThreeOutlineVerticalFill,
+  PiDotsThreeOutlineVerticalBold,
   PiListMagnifyingGlass,
-  PiPencilSimpleFill,
-  PiTrashFill,
+  PiPencilSimpleBold,
+  PiTrashBold,
 } from 'react-icons/pi';
 
 import ModalWrapper from 'components/ModalWrapper';
@@ -29,7 +29,7 @@ export default function OrganizationActions({
             variant="default"
             component={Link}
             to={`/organizations/${organization.id}/edit`}>
-            <PiPencilSimpleFill />
+            <PiPencilSimpleBold />
           </ActionIcon>
         </Protected>
       );
@@ -65,11 +65,11 @@ export default function OrganizationActions({
         <Menu.Target>
           {displayMode !== 'list' ? (
             <ActionIcon variant="default">
-              <PiDotsThreeOutlineVerticalFill />
+              <PiDotsThreeOutlineVerticalBold />
             </ActionIcon>
           ) : (
             <ActionIcon variant="default">
-              <PiDotsThreeOutlineVerticalFill />
+              <PiDotsThreeOutlineVerticalBold />
             </ActionIcon>
           )}
         </Menu.Target>
@@ -95,7 +95,7 @@ export default function OrganizationActions({
             <ModalWrapper
               title="Delete Organization"
               trigger={
-                <Menu.Item color="red" leftSection={<PiTrashFill />}>
+                <Menu.Item color="red" leftSection={<PiTrashBold />}>
                   Delete
                 </Menu.Item>
               }

@@ -2,7 +2,7 @@ import { Badge, Button, Group, Modal, Stack } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { omit } from 'lodash';
 import { useContext, useEffect, useState } from 'react';
-import { PiFunnelFill, PiSlidersHorizontalFill } from 'react-icons/pi';
+import { PiFunnelBold, PiSlidersHorizontalBold } from 'react-icons/pi';
 
 import './modal.less';
 import SearchContext from '../../Context';
@@ -51,13 +51,13 @@ function FilterModal({ size = 'sm', children }) {
         <Button
           variant="default"
           onClick={() => open()}
-          rightSection={<PiSlidersHorizontalFill />}>
+          rightSection={<PiSlidersHorizontalBold />}>
           Filter
         </Button>
       ) : (
         <>
           <Button onClick={() => open()} variant="light" primary>
-            <PiFunnelFill />
+            <PiFunnelBold />
             Filter
           </Button>
           {getFilterCount() > 0 && <Badge>{getFilterCount()}</Badge>}

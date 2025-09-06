@@ -3,11 +3,11 @@ import { ActionIcon, Button, Group, Menu, Text } from '@mantine/core';
 
 import {
   PiCode,
-  PiDotsThreeOutlineVerticalFill,
-  PiKeyFill,
-  PiPencilSimpleFill,
-  PiRowsFill,
-  PiTrashFill,
+  PiDotsThreeOutlineVerticalBold,
+  PiKeyBold,
+  PiPencilSimpleBold,
+  PiRowsBold,
+  PiTrashBold,
 } from 'react-icons/pi';
 
 import { useSession } from 'stores/session';
@@ -41,7 +41,7 @@ export default function UserActions({ displayMode = 'show', user, reload }) {
             variant="default"
             component={Link}
             to={`/users/${user.id}/edit`}>
-            <PiPencilSimpleFill />
+            <PiPencilSimpleBold />
           </ActionIcon>
         </Protected>
       );
@@ -74,11 +74,11 @@ export default function UserActions({ displayMode = 'show', user, reload }) {
         <Menu.Target>
           {displayMode !== 'list' ? (
             <ActionIcon variant="default">
-              <PiDotsThreeOutlineVerticalFill />
+              <PiDotsThreeOutlineVerticalBold />
             </ActionIcon>
           ) : (
             <ActionIcon variant="default">
-              <PiDotsThreeOutlineVerticalFill />
+              <PiDotsThreeOutlineVerticalBold />
             </ActionIcon>
           )}
         </Menu.Target>
@@ -91,7 +91,7 @@ export default function UserActions({ displayMode = 'show', user, reload }) {
             trigger={
               <Menu.Item
                 disabled={!canAuthenticate}
-                leftSection={<PiKeyFill />}>
+                leftSection={<PiKeyBold />}>
                 Login as User
               </Menu.Item>
             }
@@ -101,7 +101,7 @@ export default function UserActions({ displayMode = 'show', user, reload }) {
             <Menu.Item
               component={Link}
               to={`/audit-log?user=${user.id}&filterLabel=${user.name}`}
-              leftSection={<PiRowsFill />}>
+              leftSection={<PiRowsBold />}>
               Audit Logs
             </Menu.Item>
           </Protected>
@@ -116,7 +116,7 @@ export default function UserActions({ displayMode = 'show', user, reload }) {
             <ModalWrapper
               title="Delete User"
               trigger={
-                <Menu.Item color="red" leftSection={<PiTrashFill />}>
+                <Menu.Item color="red" leftSection={<PiTrashBold />}>
                   Delete
                 </Menu.Item>
               }

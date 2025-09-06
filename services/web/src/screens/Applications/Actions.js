@@ -2,9 +2,9 @@ import { Link } from '@bedrockio/router';
 import { ActionIcon, Menu, Text } from '@mantine/core';
 
 import {
-  PiDotsThreeOutlineVerticalFill,
-  PiPencilSimpleFill,
-  PiTrashFill,
+  PiDotsThreeOutlineVerticalBold,
+  PiPencilSimpleBold,
+  PiTrashBold,
 } from 'react-icons/pi';
 
 import ModalWrapper from 'components/ModalWrapper';
@@ -17,7 +17,7 @@ export default function ApplicationActions({ application, reload }) {
     <Menu shadow="md" keepMounted>
       <Menu.Target>
         <ActionIcon variant="default">
-          <PiDotsThreeOutlineVerticalFill />
+          <PiDotsThreeOutlineVerticalBold />
         </ActionIcon>
       </Menu.Target>
 
@@ -25,13 +25,13 @@ export default function ApplicationActions({ application, reload }) {
         <Menu.Item
           component={Link}
           to={`/applications/${application.id}/edit`}
-          leftSection={<PiPencilSimpleFill />}>
+          leftSection={<PiPencilSimpleBold />}>
           Edit
         </Menu.Item>
         <ModalWrapper
           title="Delete Application"
           trigger={
-            <Menu.Item color="red" leftSection={<PiTrashFill />}>
+            <Menu.Item color="red" leftSection={<PiTrashBold />}>
               Delete
             </Menu.Item>
           }

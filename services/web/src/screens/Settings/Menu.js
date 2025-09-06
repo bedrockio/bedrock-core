@@ -1,5 +1,5 @@
 import { IoMdNotifications } from 'react-icons/io';
-import { PiLockKeyOpenFill, PiUserFill } from 'react-icons/pi';
+import { PiLockKeyOpenBold, PiUserBold } from 'react-icons/pi';
 
 import PageHeader from 'components/PageHeader';
 
@@ -19,12 +19,12 @@ export default function SettingsMenu() {
       tabs={[
         {
           title: 'Details',
-          icon: <PiUserFill />,
+          icon: <PiUserBold />,
           href: `/settings/details`,
         },
         {
           title: 'Security',
-          icon: <PiLockKeyOpenFill />,
+          icon: <PiLockKeyOpenBold />,
           href: '/settings/security',
         },
         {

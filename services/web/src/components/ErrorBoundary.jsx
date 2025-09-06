@@ -1,7 +1,7 @@
 import { Button, Group, Paper, Stack, Text, Title } from '@mantine/core';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { PiArrowClockwiseFill } from 'react-icons/pi';
+import { PiArrowClockwiseBold } from 'react-icons/pi';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -34,7 +34,7 @@ class ErrorBoundary extends React.Component {
             <Group>
               <Button
                 onClick={this.handleReset}
-                leftIcon={<PiArrowClockwiseFill />}>
+                leftIcon={<PiArrowClockwiseBold />}>
                 Try Again
               </Button>
               <Button

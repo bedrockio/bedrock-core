@@ -2,7 +2,7 @@ import { Paper } from '@mantine/core';
 import { Highlight, themes } from 'prism-react-renderer';
 import PropTypes from 'prop-types';
 import { useMemo, useState } from 'react';
-import { PiCheckFatFill, PiCopyFill } from 'react-icons/pi';
+import { PiCheckFatBold, PiCopyBold } from 'react-icons/pi';
 
 import { useClass } from 'helpers/bem';
 
@@ -78,7 +78,7 @@ export default function Code({ code, language, scroll, action, ...rest }) {
               'copy-button',
               copied ? null : 'clickable',
             )}>
-            {copied ? <PiCheckFatFill /> : <PiCopyFill />}
+            {copied ? <PiCheckFatBold /> : <PiCopyBold />}
           </div>
         )}
       </div>

@@ -3,9 +3,9 @@ import { ActionIcon, Button, Group, Menu, Text } from '@mantine/core';
 
 import {
   PiCode,
-  PiDotsThreeOutlineVerticalFill,
+  PiDotsThreeOutlineVerticalBold,
   PiListMagnifyingGlass,
-  PiPencilSimpleFill,
+  PiPencilSimpleBold,
 } from 'react-icons/pi';
 
 import ModalWrapper from 'components/ModalWrapper';
@@ -28,7 +28,7 @@ export default function ProductsActions({
             variant="default"
             component={Link}
             to={`/products/${product.id}/edit`}>
-            <PiPencilSimpleFill />
+            <PiPencilSimpleBold />
           </ActionIcon>
         </Protected>
       );
@@ -62,11 +62,11 @@ export default function ProductsActions({
         <Menu.Target>
           {displayMode !== 'list' ? (
             <ActionIcon variant="default">
-              <PiDotsThreeOutlineVerticalFill />
+              <PiDotsThreeOutlineVerticalBold />
             </ActionIcon>
           ) : (
             <ActionIcon variant="default">
-              <PiDotsThreeOutlineVerticalFill />
+              <PiDotsThreeOutlineVerticalBold />
             </ActionIcon>
           )}
         </Menu.Target>

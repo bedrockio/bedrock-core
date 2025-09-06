@@ -1,6 +1,6 @@
 import { Group, List } from '@mantine/core';
 import React from 'react';
-import { PiTrashFill } from 'react-icons/pi';
+import { PiTrashBold } from 'react-icons/pi';
 
 import DisplayValue from './DisplayValue';
 import SearchContext from '../../Context';
@@ -57,7 +57,7 @@ export default class Overview extends React.Component {
                 <Group>
                   {mapping.label}:{' '}
                   <DisplayValue mapping={mapping} value={filters[key]} />
-                  <PiTrashFill />
+                  <PiTrashBold />
                 </Group>
               </List.Item>
             );

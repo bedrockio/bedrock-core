@@ -3,10 +3,10 @@ import { ActionIcon, Button, Group, Menu, Text } from '@mantine/core';
 
 import {
   PiCode,
-  PiDotsThreeOutlineVerticalFill,
+  PiDotsThreeOutlineVerticalBold,
   PiListMagnifyingGlass,
-  PiPencilSimpleFill,
-  PiTrashFill,
+  PiPencilSimpleBold,
+  PiTrashBold,
 } from 'react-icons/pi';
 
 import ModalWrapper from 'components/ModalWrapper';
@@ -25,7 +25,7 @@ export default function ShopsActions({ shop, reload, displayMode = 'show' }) {
             variant="default"
             component={Link}
             to={`/shops/${shop.id}/edit`}>
-            <PiPencilSimpleFill />
+            <PiPencilSimpleBold />
           </ActionIcon>
         </Protected>
       );
@@ -56,11 +56,11 @@ export default function ShopsActions({ shop, reload, displayMode = 'show' }) {
         <Menu.Target>
           {displayMode !== 'list' ? (
             <ActionIcon variant="default">
-              <PiDotsThreeOutlineVerticalFill />
+              <PiDotsThreeOutlineVerticalBold />
             </ActionIcon>
           ) : (
             <ActionIcon variant="default">
-              <PiDotsThreeOutlineVerticalFill />
+              <PiDotsThreeOutlineVerticalBold />
             </ActionIcon>
           )}
         </Menu.Target>
@@ -85,7 +85,7 @@ export default function ShopsActions({ shop, reload, displayMode = 'show' }) {
             <ModalWrapper
               title="Delete Shop"
               trigger={
-                <Menu.Item color="red" leftSection={<PiTrashFill />}>
+                <Menu.Item color="red" leftSection={<PiTrashBold />}>
                   Delete
                 </Menu.Item>
               }

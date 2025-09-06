@@ -1,5 +1,5 @@
 import { ActionIcon } from '@mantine/core';
-import { PiPencilSimpleFill } from 'react-icons/pi';
+import { PiPencilSimpleBold } from 'react-icons/pi';
 
 import { useClass } from 'helpers/bem';
 
@@ -13,7 +13,7 @@ export default function EditButton() {
       variant="default"
       className={className}
       onClick={() => setMode(mode === 'view' ? 'edit' : 'view')}>
-      <PiPencilSimpleFill />
+      <PiPencilSimpleBold />
     </ActionIcon>
   );
 }

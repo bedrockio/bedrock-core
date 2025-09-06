@@ -21,10 +21,10 @@ import React, { useState } from 'react';
 
 import {
   PiMinus,
-  PiPlayFill,
+  PiPlayBold,
   PiPlus,
-  PiRecordFill,
-  PiTrashFill,
+  PiRecordBold,
+  PiTrashBold,
 } from 'react-icons/pi';
 
 import Code from 'components/Code';
@@ -316,7 +316,7 @@ export default function RequestBuilder(props) {
                       set(req, path, updated);
                       setReq({ ...req });
                     }}>
-                    <PiTrashFill />
+                    <PiTrashBold />
                   </ActionIcon>
                 ),
               })}
@@ -446,7 +446,7 @@ export default function RequestBuilder(props) {
                   variant="default"
                   title="Perform request and record as example"
                   onClick={onRecordClick}>
-                  <PiRecordFill />
+                  <PiRecordBold />
                 </ActionIcon>
               )}
               <ActionIcon
@@ -454,7 +454,7 @@ export default function RequestBuilder(props) {
                 disabled={loading}
                 onClick={onPlayClick}
                 title="Perform request">
-                <PiPlayFill />
+                <PiPlayBold />
               </ActionIcon>
             </Group>
           </Paper>

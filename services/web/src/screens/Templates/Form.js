@@ -16,11 +16,11 @@ import { showNotification } from '@mantine/notifications';
 import { useEffect, useState } from 'react';
 
 import {
-  PiChatCircleFill,
-  PiCodeFill,
-  PiDeviceMobileFill,
-  PiEnvelopeFill,
-  PiQuestionFill,
+  PiChatCircleBold,
+  PiCodeBold,
+  PiDeviceMobileBold,
+  PiEnvelopeBold,
+  PiQuestionBold,
 } from 'react-icons/pi';
 
 import ErrorMessage from 'components/ErrorMessage';
@@ -38,9 +38,9 @@ const channelOptions = [
 ];
 
 const CHANNEL_ICONS = {
-  email: PiEnvelopeFill,
-  sms: PiChatCircleFill,
-  push: PiDeviceMobileFill,
+  email: PiEnvelopeBold,
+  sms: PiChatCircleBold,
+  push: PiDeviceMobileBold,
 };
 
 export default function TemplateForm({ template, onSuccess = () => {} }) {
@@ -178,7 +178,7 @@ export default function TemplateForm({ template, onSuccess = () => {} }) {
                     <Button
                       size="sm"
                       variant="default"
-                      leftSection={<PiQuestionFill />}>
+                      leftSection={<PiQuestionBold />}>
                       Help
                     </Button>
                   }
@@ -193,7 +193,7 @@ export default function TemplateForm({ template, onSuccess = () => {} }) {
                       <Button
                         variant="default"
                         size="sm"
-                        leftSection={<PiCodeFill />}>
+                        leftSection={<PiCodeBold />}>
                         Params
                       </Button>
                     }

@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from '@bedrockio/router';
 import { ActionIcon, Group, Text } from '@mantine/core';
 import { useEffect } from 'react';
-import { PiArrowClockwiseFill } from 'react-icons/pi';
+import { PiArrowClockwiseBold } from 'react-icons/pi';
 
 import { useClass } from 'helpers/bem';
 import PortalLayout from 'layouts/Portal';
@@ -113,7 +113,7 @@ export default function ApiDocs() {
             }
             trigger={
               <ActionIcon variant="default" title="Generate Documentation">
-                <PiArrowClockwiseFill />
+                <PiArrowClockwiseBold />
               </ActionIcon>
             }
           />

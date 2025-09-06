@@ -16,18 +16,18 @@ import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import React, { useEffect } from 'react';
 
 import {
-  PiBookFill,
-  PiBuildingOfficeFill,
-  PiDoorFill,
-  PiEnvelopeSimpleFill,
-  PiFileFill,
-  PiGearFill,
-  PiGridFourFill,
+  PiBookBold,
+  PiBuildingOfficeBold,
+  PiDoorBold,
+  PiEnvelopeSimpleBold,
+  PiFileBold,
+  PiGearBold,
+  PiGridFourBold,
   PiListMagnifyingGlass,
-  PiStorefrontFill,
-  PiTagFill,
-  PiTerminalFill,
-  PiUserFill,
+  PiStorefrontBold,
+  PiTagBold,
+  PiTerminalBold,
+  PiUserBold,
 } from 'react-icons/pi';
 
 import { TbChevronDown } from 'react-icons/tb';
@@ -47,29 +47,29 @@ import MenuItem from '../components/MenuItem';
 
 const menuItems = [
   {
-    icon: PiStorefrontFill,
+    icon: PiStorefrontBold,
     url: '/shops',
     label: 'Shops',
   },
   {
-    icon: PiTagFill,
+    icon: PiTagBold,
     url: '/products',
     label: 'Products',
   },
   {
-    icon: PiUserFill,
+    icon: PiUserBold,
     label: 'Users',
     url: '/users',
     items: [
       {
-        icon: PiEnvelopeSimpleFill,
+        icon: PiEnvelopeSimpleBold,
         label: 'Invites',
         url: '/users/invites',
       },
     ],
   },
   {
-    icon: PiBuildingOfficeFill,
+    icon: PiBuildingOfficeBold,
     url: '/organizations',
     label: 'Organizations',
   },
@@ -77,11 +77,11 @@ const menuItems = [
 
 const accountItems = [
   {
-    icon: PiTerminalFill,
+    icon: PiTerminalBold,
     label: 'System',
     items: [
       {
-        icon: PiFileFill,
+        icon: PiFileBold,
         url: '/templates',
         label: 'Templates',
       },
@@ -91,24 +91,24 @@ const accountItems = [
         label: 'Audit Log',
       },
       {
-        icon: PiGridFourFill,
+        icon: PiGridFourBold,
         url: '/applications',
         label: 'Applications',
       },
       {
-        icon: PiBookFill,
+        icon: PiBookBold,
         url: '/docs',
         label: 'API Docs',
       },
     ],
   },
   {
-    icon: PiGearFill,
+    icon: PiGearBold,
     url: '/settings',
     label: 'My Settings',
   },
   {
-    icon: PiDoorFill,
+    icon: PiDoorBold,
     url: '/logout',
     label: 'Log Out',
   },
@@ -178,7 +178,7 @@ export default function DashboardLayout({ children }) {
                     m="xs"
                     justify="flex-start"
                     rightSection={<TbChevronDown />}
-                    leftSection={<PiBuildingOfficeFill />}>
+                    leftSection={<PiBuildingOfficeBold />}>
                     <Text size="sm" fw="500">
                       {organization?.name || 'Select Organization'}
                     </Text>

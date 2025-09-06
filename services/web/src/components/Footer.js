@@ -1,5 +1,5 @@
 import { Group, Switch, Text, useMantineColorScheme } from '@mantine/core';
-import { PiMoonFill, PiSunFill } from 'react-icons/pi';
+import { PiMoonBold, PiSunBold } from 'react-icons/pi';
 
 import Logo from 'components/Logo';
 
@@ -20,13 +20,13 @@ export default function Footer() {
             size="md"
             color="dark.4"
             onLabel={
-              <PiSunFill
+              <PiSunBold
                 color="var(--mantine-color-yellow-4)"
                 style={{ fontSize: '2em' }}
               />
             }
             offLabel={
-              <PiMoonFill
+              <PiMoonBold
                 color="var(--mantine-color-blue-6)"
                 style={{ fontSize: '2em' }}
               />

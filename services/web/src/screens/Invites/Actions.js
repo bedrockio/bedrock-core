@@ -2,9 +2,9 @@ import { ActionIcon, Menu, Text } from '@mantine/core';
 import { notifications, showNotification } from '@mantine/notifications';
 
 import {
-  PiDotsThreeOutlineVerticalFill,
-  PiRepeatFill,
-  PiTrashFill,
+  PiDotsThreeOutlineVerticalBold,
+  PiRepeatBold,
+  PiTrashBold,
 } from 'react-icons/pi';
 
 import ModalWrapper from 'components/ModalWrapper';
@@ -35,7 +35,7 @@ export default function InviteActions({ invite, reload }) {
     <Menu shadow="md" keepMounted>
       <Menu.Target>
         <ActionIcon variant="default">
-          <PiDotsThreeOutlineVerticalFill />
+          <PiDotsThreeOutlineVerticalBold />
         </ActionIcon>
       </Menu.Target>
 
@@ -44,14 +44,14 @@ export default function InviteActions({ invite, reload }) {
           onClick={() => {
             resentRequest.request();
           }}
-          leftSection={<PiRepeatFill />}>
+          leftSection={<PiRepeatBold />}>
           Resend Invite
         </Menu.Item>
 
         <ModalWrapper
           title="Delete Invite"
           trigger={
-            <Menu.Item color="red" leftSection={<PiTrashFill />}>
+            <Menu.Item color="red" leftSection={<PiTrashBold />}>
               Delete
             </Menu.Item>
           }

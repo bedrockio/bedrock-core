@@ -1,4 +1,4 @@
-import { PiPencilSimpleFill } from 'react-icons/pi';
+import { PiPencilSimpleBold } from 'react-icons/pi';
 
 import { usePage } from 'stores/page';
 
@@ -20,7 +20,7 @@ export default function ApplicationMenu() {
       rightSection={<Actions application={application} reload={reload} />}
       tabs={[
         {
-          icon: <PiPencilSimpleFill />,
+          icon: <PiPencilSimpleBold />,
           title: 'Edit',
           href: `/applications/${application.id}/edit`,
         },

@@ -11,7 +11,7 @@ import {
 } from '@mantine/core';
 
 import { useState } from 'react';
-import { PiTrashFill } from 'react-icons/pi';
+import { PiTrashBold } from 'react-icons/pi';
 
 import { useSession } from 'stores/session';
 
@@ -137,7 +137,7 @@ export default function Security() {
                             loading={loading}
                             disabled={loading}
                             onClick={() => deletePasskey(passkey)}>
-                            <PiTrashFill />
+                            <PiTrashBold />
                           </ActionIcon>
                         </Group>
                       );
