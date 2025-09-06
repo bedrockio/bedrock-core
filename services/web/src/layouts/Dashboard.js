@@ -6,13 +6,14 @@ import {
   Burger,
   Button,
   Center,
+  Divider,
   Flex,
   ScrollArea,
   Text,
 } from '@mantine/core';
 
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 import {
   PiBookFill,
@@ -129,7 +130,7 @@ export default function DashboardLayout({ children }) {
       header={{ height: 50, collapsed: !isMobile }}
       navbar={{
         width: 260,
-        breakpoint: 'sm',
+        breakpoint: 'md',
         collapsed: { mobile: !opened },
       }}
       padding="lg">
@@ -155,35 +156,38 @@ export default function DashboardLayout({ children }) {
             </NavLink>
           </Center>
           {userCanSwitchOrganizations(user) && (
-            <ModalTrigger
-              title="Select Organization"
-              trigger={
-                <Button
-                  variant="default"
-                  styles={{
-                    root: {
-                      border: 'none',
-                    },
-                    label: {
-                      flex: 1,
-                    },
-                  }}
-                  style={{
-                    background: 'transparent',
-                    width: 'calc(100% - 16px)',
-                  }}
-                  fullWidth
-                  m="xs"
-                  justify="flex-start"
-                  rightSection={<TbChevronDown />}
-                  leftSection={<PiBuildingOfficeFill />}>
-                  <Text size="sm" fw="500">
-                    {organization?.name || 'Select Organization'}
-                  </Text>
-                </Button>
-              }>
-              <OrganizationSelector />
-            </ModalTrigger>
+            <React.Fragment>
+              <ModalTrigger
+                title="Select Organization"
+                trigger={
+                  <Button
+                    variant="default"
+                    styles={{
+                      root: {
+                        border: 'none',
+                      },
+                      label: {
+                        flex: 1,
+                      },
+                    }}
+                    style={{
+                      background: 'transparent',
+                      width: 'calc(100% - 16px)',
+                    }}
+                    fullWidth
+                    m="xs"
+                    justify="flex-start"
+                    rightSection={<TbChevronDown />}
+                    leftSection={<PiBuildingOfficeFill />}>
+                    <Text size="sm" fw="500">
+                      {organization?.name || 'Select Organization'}
+                    </Text>
+                  </Button>
+                }>
+                <OrganizationSelector />
+              </ModalTrigger>
+              <Divider />
+            </React.Fragment>
           )}
         </AppShell.Section>
         <AppShell.Section grow component={ScrollArea}>

@@ -4,6 +4,11 @@
 
 .mantine-NavLink-root {
   font-weight: 500;
+  padding-left: var(--mantine-spacing-lg);
+
+  &:hover {
+    background: var(--mantine-primary-color-light-hover);
+  }
 
   &[data-active] {
     color: light-dark(
@@ -35,4 +40,8 @@
   :where(pre) {
     font-size: inherit;
   }
+}
+
+.mantine-Divider-root {
+  --divider-color: rgb(0 0 0 / 10%);
 }
