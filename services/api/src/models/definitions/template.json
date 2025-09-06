@@ -1,0 +1,33 @@
+{
+  "attributes": {
+    "name": {
+      "type": "String",
+      "required": true
+    },
+    "channels": [
+      {
+        "type": "String",
+        "enum": [
+          "email",
+          "push",
+          "sms"
+        ]
+      }
+    ],
+    "email": {
+      "type": "String"
+    },
+    "sms": {
+      "type": "String"
+    },
+    "push": {
+      "type": "String"
+    }
+  },
+  "search": {
+    "fields": [
+      "name",
+      "subject"
+    ]
+  }
+}

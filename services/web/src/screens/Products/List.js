@@ -1,31 +1,31 @@
 import { Link } from '@bedrockio/router';
+
 import {
-  Group,
-  Table,
-  Button,
-  Image,
-  Divider,
-  Text,
   Anchor,
+  Button,
+  Divider,
+  Group,
+  Image,
   Loader,
   Stack,
+  Table,
+  Text,
 } from '@mantine/core';
+
 import { PiPlus } from 'react-icons/pi';
 
-import PageHeader from 'components/PageHeader';
-
-import Search from 'components/Search';
-
-import SearchFilters from 'components/Search/Filters';
 import ErrorMessage from 'components/ErrorMessage';
+import PageHeader from 'components/PageHeader';
+import Search from 'components/Search';
+import SearchFilters from 'components/Search/Filters';
+import SortableTh from 'components/Table/SortableTh';
 
+import { request } from 'utils/api';
+import { formatUsd } from 'utils/currency';
 import { formatDateTime } from 'utils/date';
 import { urlForUpload } from 'utils/uploads';
-import { formatUsd } from 'utils/currency';
-import { request } from 'utils/api';
 
 import Actions from './Actions';
-import SortableTh from 'components/Table/SortableTh';
 
 export default function ProductList() {
   async function onDataNeeded(body) {

@@ -1,9 +1,9 @@
+import { Text } from '@mantine/core';
 import React from 'react';
 
 import { formatNumber } from 'utils/formatting';
 
 import SearchContext from './Context';
-import { Text } from '@mantine/core';
 
 export default function Total({ itemName }) {
   const { meta } = React.useContext(SearchContext);

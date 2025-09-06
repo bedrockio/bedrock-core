@@ -1,10 +1,10 @@
+import { ActionIcon } from '@mantine/core';
 import React from 'react';
+import { PiPlayFill } from 'react-icons/pi';
 
 import Code from 'components/Code';
 
 import RequestBuilder from './RequestBuilder';
-import { PiPlayFill } from 'react-icons/pi';
-import { ActionIcon } from '@mantine/core';
 
 export default class Route extends React.Component {
   render() {

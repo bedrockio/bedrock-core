@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const { verifyToken } = require('../auth/tokens');
+const { verifyToken } = require('../tokens');
 
 class TokenError extends Error {
   type = 'token';
@@ -16,7 +16,7 @@ function validateToken(options = {}) {
     const { type = 'user', optional } = options;
 
     // ignoring signature for the moment
-    const token = getToken(ctx);
+    const token = getToken(ctx, options);
 
     if (!token) {
       if (optional) {
@@ -29,6 +29,7 @@ function validateToken(options = {}) {
     const decoded = jwt.decode(token, {
       complete: true,
     });
+
     if (decoded === null) {
       throw new TokenError('bad jwt token');
     }

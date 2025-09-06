@@ -56,10 +56,7 @@ router
       field: yd.string().allow('routeNormalizedPath', 'objectType', 'activity').required(),
     }),
     async (ctx) => {
-      console.log(ctx.request.body.field);
       const values = await AuditEntry.distinct(ctx.request.body.field);
-
-      console.log(values);
 
       ctx.body = {
         data: values,

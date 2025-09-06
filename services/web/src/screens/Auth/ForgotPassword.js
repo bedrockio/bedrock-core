@@ -1,16 +1,18 @@
-import { useState } from 'react';
 import { Link } from '@bedrockio/router';
+
 import {
-  TextInput,
-  Button,
-  Paper,
   Alert,
-  Stack,
-  Group,
-  Title,
   Anchor,
+  Button,
+  Group,
+  Paper,
+  Stack,
+  TextInput,
+  Title,
 } from '@mantine/core';
+
 import { useForm } from '@mantine/form';
+import { useState } from 'react';
 
 import Logo from 'components/Logo';
 import Meta from 'components/Meta';

@@ -2,7 +2,7 @@ const SimpleWebAuthn = require('@simplewebauthn/server');
 const config = require('@bedrockio/config');
 
 const { getAuthenticators, removeAuthenticator, addAuthenticator } = require('./authenticators');
-const { createPasskeyToken, verifyToken } = require('./tokens');
+const { createPasskeyToken, verifyToken } = require('../tokens');
 const { User } = require('../../models');
 
 const APP_NAME = config.get('APP_NAME');

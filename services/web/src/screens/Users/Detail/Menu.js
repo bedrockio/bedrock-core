@@ -1,6 +1,9 @@
 import React from 'react';
+
 import { usePage } from 'stores/page';
+
 import PageHeader from 'components/PageHeader';
+
 import Actions from '../Actions';
 
 export default function UserMenu({ displayMode }) {

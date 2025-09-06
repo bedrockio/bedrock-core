@@ -1,24 +1,26 @@
-import { usePage } from 'stores/page';
-import {
-  Badge,
-  Stack,
-  Text,
-  Box,
-  SimpleGrid,
-  Card,
-  Divider,
-  Anchor,
-  Image,
-  Group,
-} from '@mantine/core';
 import { Link } from '@bedrockio/router';
 
-import Menu from './Menu';
-import { formatDateTime } from 'utils/date';
+import {
+  Anchor,
+  Badge,
+  Box,
+  Card,
+  Divider,
+  Group,
+  Image,
+  SimpleGrid,
+  Stack,
+  Text,
+} from '@mantine/core';
 
-import { formatRoles } from 'utils/permissions';
+import { usePage } from 'stores/page';
+
 import { useRequest } from 'utils/api';
+import { formatDateTime } from 'utils/date';
+import { formatRoles } from 'utils/permissions';
 import { urlForUpload } from 'utils/uploads';
+
+import Menu from './Menu';
 
 function LinkWrapped({ children, ...props }) {
   return (

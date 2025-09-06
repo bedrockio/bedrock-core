@@ -1,5 +1,5 @@
 const { request, createUser } = require('../../utils/testing');
-const { createPasskeyToken } = require('../../utils/auth/tokens');
+const { createPasskeyToken } = require('../../utils/tokens');
 const { assertAuthToken } = require('../../utils/testing/tokens');
 const { mockTime, unmockTime } = require('../../utils/testing/time');
 const { User } = require('../../models');

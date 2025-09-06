@@ -1,12 +1,12 @@
-import { Button, Select, Text, Stack, Group } from '@mantine/core';
-import { useSession } from 'stores/session';
-import { useRequest } from 'utils/api';
-
+import { Button, Group, Select, Stack, Text } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 
-import ModalWrapper from 'components/ModalWrapper';
+import { useSession } from 'stores/session';
 
 import Authenticator from 'components/Authenticator';
+import ModalWrapper from 'components/ModalWrapper';
+
+import { useRequest } from 'utils/api';
 
 export default function Sessions() {
   const { user, updateUser } = useSession();

@@ -1,5 +1,5 @@
+import { Route, Routes } from '@bedrockio/router';
 import React from 'react';
-import { Routes, Route } from '@bedrockio/router';
 
 import List from './List';
 

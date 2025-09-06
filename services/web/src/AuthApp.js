@@ -1,16 +1,15 @@
-import { Routes, Route } from '@bedrockio/router';
+import { Route, Routes } from '@bedrockio/router';
 
 import BasicLayout from 'layouts/Basic';
 
-import Lockout from 'screens/Lockout';
-
-import Login from 'screens/Auth/Login';
-import Logout from 'screens/Auth/Logout';
-import Signup from 'screens/Auth/Signup';
-import ForgotPassword from 'screens/Auth/ForgotPassword';
-import ResetPassword from 'screens/Auth/ResetPassword';
 import AcceptInvite from 'screens/Auth/AcceptInvite';
 import ConfirmCode from 'screens/Auth/ConfirmCode';
+import ForgotPassword from 'screens/Auth/ForgotPassword';
+import Login from 'screens/Auth/Login';
+import Logout from 'screens/Auth/Logout';
+import ResetPassword from 'screens/Auth/ResetPassword';
+import Signup from 'screens/Auth/Signup';
+import Lockout from 'screens/Lockout';
 
 export default function AuthApp() {
   return (

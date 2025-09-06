@@ -1,27 +1,27 @@
-import ErrorMessage from 'components/ErrorMessage';
-import PhoneField from 'components/form-fields/Phone';
-
-import { useRequest } from 'utils/api';
-
 import {
-  Button,
-  Stack,
-  Grid,
-  Box,
-  TextInput,
-  PasswordInput,
-  Checkbox,
   Anchor,
-  Text,
+  Box,
+  Button,
+  Checkbox,
   Fieldset,
+  Grid,
   MultiSelect,
+  PasswordInput,
+  Stack,
+  Text,
+  TextInput,
 } from '@mantine/core';
 
 import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
+
 import { useSession } from 'stores/session';
 
+import ErrorMessage from 'components/ErrorMessage';
 import Protected from 'components/Protected';
+import PhoneField from 'components/form-fields/Phone';
+
+import { useRequest } from 'utils/api';
 
 function parseUser(user) {
   if (!user) {

@@ -1,7 +1,7 @@
 import { useSession } from 'stores/session';
 
-import LoadingScreen from 'screens/Loading';
 import ErrorScreen from 'screens/Error';
+import LoadingScreen from 'screens/Loading';
 
 export default function SessionSwitch({ children }) {
   const { ready, error } = useSession();

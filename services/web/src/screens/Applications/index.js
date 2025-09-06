@@ -1,8 +1,8 @@
+import { Route, Routes } from '@bedrockio/router';
 import React from 'react';
-import { Routes, Route } from '@bedrockio/router';
 
-import List from './List';
 import Details from './Details';
+import List from './List';
 import New from './New';
 
 export default class Applications extends React.Component {

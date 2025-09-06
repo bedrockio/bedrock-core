@@ -1,6 +1,6 @@
 const { sendSms } = require('./sms');
 const { assertSmsSent } = require('twilio');
-const { createUser } = require('../testing');
+const { createUser, createTemplate } = require('../testing');
 
 const welcomeTemplate = `
 Welcome!
@@ -11,7 +11,7 @@ const escapeTemplate = `
 `;
 
 const interpolatedTemplate = `
-Hello {{fullName}}. Welcome to {{&url}}.
+Hello {{fullName}}. Welcome to {{{url}}}.
 `;
 
 jest.mock('fs/promises', () => ({
@@ -29,7 +29,7 @@ jest.mock('fs/promises', () => ({
 }));
 
 describe('sendSms', () => {
-  describe('without template', () => {
+  describe('with options', () => {
     it('should send out a basic sms with body', async () => {
       await sendSms({
         phone: '+11111111111',
@@ -38,6 +38,28 @@ describe('sendSms', () => {
       assertSmsSent({
         phone: '+11111111111',
         body: 'Hello!',
+      });
+    });
+  });
+
+  describe('with document', () => {
+    it('should send a templated push', async () => {
+      const user = await createUser({
+        phone: '+11111111111',
+      });
+      await createTemplate({
+        name: 'test',
+        sms: 'Hello {{user.name}}!',
+      });
+
+      await sendSms({
+        user,
+        template: 'test',
+      });
+
+      assertSmsSent({
+        phone: user.phone,
+        body: 'Hello Test User!',
       });
     });
   });
@@ -71,7 +93,7 @@ describe('sendSms', () => {
     it('should assume an extension for a template', async () => {
       await sendSms({
         phone: '+11111111111',
-        template: 'welcome',
+        file: 'welcome',
       });
       assertSmsSent({
         phone: '+11111111111',

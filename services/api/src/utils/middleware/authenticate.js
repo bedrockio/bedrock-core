@@ -6,11 +6,11 @@ const config = require('@bedrockio/config');
 const ENV_NAME = config.get('ENV_NAME');
 
 function authenticate(options = {}) {
-  const { optional } = options;
+  const { type = 'user', optional } = options;
   const fn = compose([
     validateToken({
       ...options,
-      type: 'user',
+      type,
     }),
     authorizeUser(),
   ]);
@@ -36,12 +36,13 @@ function authorizeUser() {
       } else {
         authUser = await User.findById(jwt.sub);
 
-        const token = authUser.authTokens.find((token) => token.jti === jwt.jti);
-
-        if (token) {
-          await updateAuthToken(ctx, authUser, token);
-        } else if (ENV_NAME !== 'test') {
-          throw new Error();
+        if (jwt.kid === 'user') {
+          const token = authUser.authTokens.find((token) => token.jti === jwt.jti);
+          if (token) {
+            await updateAuthToken(ctx, authUser, token);
+          } else if (ENV_NAME !== 'test') {
+            throw new Error();
+          }
         }
       }
     } catch {

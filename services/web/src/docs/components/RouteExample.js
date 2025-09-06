@@ -1,20 +1,17 @@
+import { ActionIcon, Code, Group, Stack, Text } from '@mantine/core';
 import { useState } from 'react';
+import { PiMinus, PiPlus, PiTrashFill } from 'react-icons/pi';
 
 import { useClass } from 'helpers/bem';
 
-import { ActionIcon, Code, Text, Stack, Group } from '@mantine/core';
 import { JumpLink } from 'components/Link';
+import ModalWrapper from 'components/ModalWrapper';
+import ConfirmModal from 'components/modals/Confirm';
 import { expandRef } from 'docs/utils';
 
-import ConfirmModal from 'components/modals/Confirm';
-import ModalWrapper from 'components/ModalWrapper';
-
-import { useDocs } from '../utils/context';
-
 import EditableField from './EditableField';
-
 import './route-example.less';
-import { PiMinus, PiPlus, PiTrashFill } from 'react-icons/pi';
+import { useDocs } from '../utils/context';
 
 export default function RouteExample(props) {
   const { path, status, schema, requestPath, requestBody, responseBody } =

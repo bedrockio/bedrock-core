@@ -1,29 +1,24 @@
-import '@mantine/core/styles.css';
-import '@mantine/notifications/styles.css';
-import '@mantine/dates/styles.css';
-
 // part of integration with mantine
+import { BrowserRouter, Route, Routes } from '@bedrockio/router';
+import { MantineProvider } from '@mantine/core';
+import { Notifications } from '@mantine/notifications';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-dayjs.extend(customParseFormat);
-
 import React, { Suspense } from 'react';
-
-import { MantineProvider } from '@mantine/core';
-import { BrowserRouter, Routes, Route } from '@bedrockio/router';
 import { HelmetProvider } from 'react-helmet-async';
-import { Notifications } from '@mantine/notifications';
+
+import SessionSwitch from 'helpers/SessionSwitch';
+import { SessionProvider, useSession } from 'stores/session';
+
+import LoadingScreen from 'screens/Loading';
+import Unsubscribe from 'screens/Unsubscribe';
+
+import 'utils/sentry';
+import { hasAccess } from 'utils/user';
 
 import { theme } from './theme';
 
-import { SessionProvider, useSession } from 'stores/session';
-
-import SessionSwitch from 'helpers/SessionSwitch';
-import 'utils/sentry';
-
-import LoadingScreen from 'screens/Loading';
-
-import { hasAccess } from 'utils/user';
+dayjs.extend(customParseFormat);
 
 const App = React.lazy(() => import('./App.js'));
 const AuthApp = React.lazy(() => import('./AuthApp.js'));
@@ -51,6 +46,7 @@ export default function Wrapper() {
               <Suspense fallback={<LoadingScreen />}>
                 <Routes>
                   <Route path="/onboard" render={OnboardApp} />
+                  <Route path="/unsubscribe" render={Unsubscribe} exact />
                   <Route path="/docs" render={DocsApp} />
                   <Route path="/" render={AppSwitch} />
                 </Routes>

@@ -1,10 +1,17 @@
-import { useRef, useState } from 'react';
-import PropTypes from 'prop-types';
-import { omit } from 'lodash';
-import { TextInput, Flex, Box } from '@mantine/core';
-import { COUNTRIES, formatPhone } from 'utils/phone';
+import {
+  Box,
+  Combobox,
+  Flex,
+  InputBase,
+  TextInput,
+  useCombobox,
+} from '@mantine/core';
 
-import { Combobox, InputBase, useCombobox } from '@mantine/core';
+import { omit } from 'lodash';
+import PropTypes from 'prop-types';
+import { useRef, useState } from 'react';
+
+import { COUNTRIES, formatPhone } from 'utils/phone';
 
 const COUNTRY_CODES_OPTIONS = Object.entries(COUNTRIES).map(
   ([code, countryData]) => ({

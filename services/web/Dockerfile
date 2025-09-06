@@ -1,5 +1,5 @@
 # Base stage
-FROM node:22.13.0-alpine AS base
+FROM node:22.18.0-alpine AS base
 
 # Yarn will not install any package listed in devDependencies if the NODE_ENV
 # environment variable is set to production. Use this flag to instruct Yarn to

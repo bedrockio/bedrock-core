@@ -1,11 +1,12 @@
 // Component for use with private uploads.
 
-import React from 'react';
+import { Image } from '@mantine/core';
 import { omit } from 'lodash';
 import PropTypes from 'prop-types';
-import { Image } from '@mantine/core';
+import React from 'react';
 
 import { request } from 'utils/api';
+
 import { ExternalLink } from './Link';
 
 export default class PrivateImage extends React.Component {

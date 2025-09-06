@@ -1,10 +1,10 @@
 import React from 'react';
 
+import RouteAuthentication from './RouteAuthentication';
+import RouteExamples from './RouteExamples';
+import RouteParams from './RouteParams';
 import RoutePath from './RoutePath';
 import RoutePermissions from './RoutePermissions';
-import RouteAuthentication from './RouteAuthentication';
-import RouteParams from './RouteParams';
-import RouteExamples from './RouteExamples';
 
 export default class Route extends React.Component {
   render() {

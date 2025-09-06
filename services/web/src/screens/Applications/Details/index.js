@@ -1,4 +1,4 @@
-import { Link, Routes, Route, Redirect } from '@bedrockio/router';
+import { Link, Redirect, Route, Routes } from '@bedrockio/router';
 
 import { usePageLoader } from 'stores/page';
 
@@ -28,7 +28,7 @@ export default function ApplicationDetail() {
       }>
       <Routes>
         <Route path="/applications/:id/edit" render={Edit} exact />
-        <Redirect exact path="/applications/:id" to="/applications/:id/edit" />
+        <Redirect path="/applications/:id" to="/applications/:id/edit" />
       </Routes>
     </Loader>
   );

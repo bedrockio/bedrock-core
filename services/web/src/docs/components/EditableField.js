@@ -1,17 +1,16 @@
-import { useContext } from 'react';
-import PropTypes from 'prop-types';
-import { get, startCase } from 'lodash';
 import { Text } from '@mantine/core';
+import { get, startCase } from 'lodash';
+import PropTypes from 'prop-types';
+import { useContext } from 'react';
+
 import { useClass } from 'helpers/bem';
 
 import Markdown from 'components/Markdown';
 import ModalWrapper from 'components/ModalWrapper';
 
 import EditFieldModal from './EditFieldModal';
-import { useDocs } from '../utils/context';
-import { DocsContext } from '../utils/context';
-
 import './editable-field.less';
+import { DocsContext, useDocs } from '../utils/context';
 
 export default function DocsEditableField(props) {
   const { type, path, onClick, modelPath } = props;

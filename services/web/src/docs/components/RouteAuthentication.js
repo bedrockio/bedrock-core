@@ -1,7 +1,7 @@
-import React from 'react';
-import { get } from 'lodash';
 import { Link } from '@bedrockio/router';
 import { Anchor } from '@mantine/core';
+import { get } from 'lodash';
+import React from 'react';
 
 import { getRoutePath } from 'docs/utils';
 

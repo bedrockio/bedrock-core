@@ -1,19 +1,18 @@
-import React from 'react';
-import PropTypes from 'prop-types';
 import { Alert } from '@mantine/core';
 import { get } from 'lodash';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 import {
   expandRoute,
-  getRequestBodyPath,
-  getParametersPath,
-  getRoutePath,
   getModelPath,
+  getParametersPath,
+  getRequestBodyPath,
+  getRoutePath,
 } from 'docs/utils';
 
-import { DocsContext } from '../utils/context';
-
 import Properties from './Properties';
+import { DocsContext } from '../utils/context';
 
 export default class RouteParams extends React.Component {
   static contextType = DocsContext;

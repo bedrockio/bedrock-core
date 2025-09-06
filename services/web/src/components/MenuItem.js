@@ -1,5 +1,6 @@
-import { NavLink as MantineNavLink } from '@mantine/core';
 import { NavLink, useLocation } from '@bedrockio/router';
+import { NavLink as MantineNavLink } from '@mantine/core';
+
 import { ExternalLink } from './Link';
 
 export default function MenuItem(props) {
@@ -12,7 +13,6 @@ export default function MenuItem(props) {
   function getNestedProps() {
     if (items.length) {
       return {
-        exact: true,
         opened: isOpened(),
         children: items.map((item) => {
           return <MenuItem key={item.url} {...item} />;

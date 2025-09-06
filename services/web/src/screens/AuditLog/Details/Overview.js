@@ -1,9 +1,9 @@
 import { Link } from '@bedrockio/router';
-
-import { Anchor, Text, Stack, Paper, Divider, Table } from '@mantine/core';
-import { formatDateTime } from 'utils/date';
+import { Anchor, Divider, Paper, Stack, Table, Text } from '@mantine/core';
 
 import Code from 'components/Code';
+
+import { formatDateTime } from 'utils/date';
 
 export default function Overview({ auditEntry }) {
   if (!auditEntry) {

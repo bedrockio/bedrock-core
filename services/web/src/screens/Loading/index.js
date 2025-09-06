@@ -1,5 +1,5 @@
+import { Center, Loader } from '@mantine/core';
 import React from 'react';
-import { Loader, Center } from '@mantine/core';
 
 import Meta from 'components/Meta';
 
