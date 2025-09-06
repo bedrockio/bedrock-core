@@ -3,15 +3,12 @@ import { Link } from '@bedrockio/router';
 import {
   Anchor,
   Button,
-  Divider,
   Group,
   Loader,
   Stack,
   Table,
   Text,
 } from '@mantine/core';
-
-import { PiPlus } from 'react-icons/pi';
 
 import ErrorMessage from 'components/ErrorMessage';
 import PageHeader from 'components/PageHeader';
@@ -69,8 +66,7 @@ export default function OrganizationList() {
                   <Button
                     variant="primary"
                     component={Link}
-                    to="/organizations/new"
-                    leftSection={<PiPlus />}>
+                    to="/organizations/new">
                     New Organization
                   </Button>
                 </>
@@ -150,7 +146,6 @@ export default function OrganizationList() {
                 ))}
               </Table.Tbody>
             </Table>
-            <Divider my="md" mt="0" />
             <Search.Pagination />
           </Stack>
         )}

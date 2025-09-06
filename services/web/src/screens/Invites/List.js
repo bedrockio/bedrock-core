@@ -1,15 +1,12 @@
 import {
   Badge,
   Button,
-  Divider,
   Group,
   Loader,
   Stack,
   Table,
   Text,
 } from '@mantine/core';
-
-import { PiPlus } from 'react-icons/pi';
 
 import ErrorMessage from 'components/ErrorMessage';
 import ModalWrapper from 'components/ModalWrapper';
@@ -79,11 +76,7 @@ export default function Invites() {
                         }}
                       />
                     }
-                    trigger={
-                      <Button variant="default" leftSection={<PiPlus />}>
-                        Invite User
-                      </Button>
-                    }
+                    trigger={<Button variant="default">Invite User</Button>}
                   />
                 }
               />
@@ -168,7 +161,6 @@ export default function Invites() {
                   })}
                 </Table.Tbody>
               </Table>
-              <Divider my="md" mt="0" />
               <Search.Pagination />
             </Stack>
           );

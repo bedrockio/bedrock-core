@@ -57,7 +57,7 @@ export default function PortalLayout({ children, menuItems, actions }) {
               />
               <Logo height={35} />
             </Group>
-            <Button size="compact-sm" component={Link} to="/">
+            <Button component={Link} to="/">
               Go to Dashboard
             </Button>
           </Flex>

@@ -1,6 +1,5 @@
 import { Link } from '@bedrockio/router';
-import { Button, Code, Divider, Stack, Table } from '@mantine/core';
-import { PiPlus } from 'react-icons/pi';
+import { Button, Code, Stack, Table } from '@mantine/core';
 
 import Meta from 'components/Meta';
 import PageHeader from 'components/PageHeader';
@@ -45,8 +44,7 @@ export default function Applications() {
                   <Button
                     variant="default"
                     component={Link}
-                    to="/applications/new"
-                    leftSection={<PiPlus />}>
+                    to="/applications/new">
                     New Application
                   </Button>
                 }
@@ -96,7 +94,6 @@ export default function Applications() {
                   })}
                 </Table.Tbody>
               </Table>
-              <Divider my="md" mt="0" />
               <Search.Pagination />
             </Stack>
           );

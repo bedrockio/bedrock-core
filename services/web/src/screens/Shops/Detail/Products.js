@@ -1,15 +1,5 @@
 import { Link } from '@bedrockio/router';
-
-import {
-  Anchor,
-  Box,
-  Divider,
-  Group,
-  Image,
-  Loader,
-  Table,
-  Text,
-} from '@mantine/core';
+import { Anchor, Box, Group, Image, Loader, Table, Text } from '@mantine/core';
 
 import { usePage } from 'stores/page';
 
@@ -120,7 +110,6 @@ export default function ShopProducts() {
                 </Table.Tbody>
               </Table>
 
-              <Divider my="md" />
               <Search.Pagination />
             </Box>
           );

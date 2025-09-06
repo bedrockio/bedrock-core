@@ -4,15 +4,12 @@ import {
   Anchor,
   Badge,
   Button,
-  Divider,
   Group,
   Loader,
   Stack,
   Table,
   Text,
 } from '@mantine/core';
-
-import { PiPlus } from 'react-icons/pi';
 
 import ErrorMessage from 'components/ErrorMessage';
 import PageHeader from 'components/PageHeader';
@@ -82,11 +79,7 @@ export default function UserList() {
                 rightSection={
                   <>
                     <Search.Export filename="users" />
-                    <Button
-                      variant="primary"
-                      component={Link}
-                      to="/users/new"
-                      leftSection={<PiPlus />}>
+                    <Button variant="primary" component={Link} to="/users/new">
                       New User
                     </Button>
                   </>
@@ -208,7 +201,6 @@ export default function UserList() {
                     })}
                   </Table.Tbody>
                 </Table>
-                <Divider mb="md" />
                 <Search.Pagination />
               </Table.ScrollContainer>
             </Stack>

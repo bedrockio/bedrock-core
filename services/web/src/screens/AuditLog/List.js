@@ -3,7 +3,6 @@ import { Link } from '@bedrockio/router';
 import {
   ActionIcon,
   Anchor,
-  Divider,
   Drawer,
   Group,
   Stack,
@@ -268,7 +267,6 @@ export default function AuditLogList() {
                 ))}
               </Table.Tbody>
             </Table>
-            <Divider my="md" mt="0" />
             <Search.Pagination />
           </Stack>
         )}

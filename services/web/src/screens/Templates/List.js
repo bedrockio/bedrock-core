@@ -4,15 +4,12 @@ import {
   Anchor,
   Badge,
   Button,
-  Divider,
   Group,
   Loader,
   Stack,
   Table,
   Text,
 } from '@mantine/core';
-
-import { PiPlus } from 'react-icons/pi';
 
 import ErrorMessage from 'components/ErrorMessage';
 import PageHeader from 'components/PageHeader';
@@ -68,8 +65,7 @@ export default function TemplateList() {
                       <Button
                         component={Link}
                         variant="default"
-                        to="/templates/new"
-                        rightSection={<PiPlus />}>
+                        to="/templates/new">
                         New Template
                       </Button>
                     </Protected>
@@ -155,7 +151,6 @@ export default function TemplateList() {
                     })}
                   </Table.Tbody>
                 </Table>
-                <Divider mb="md" />
                 <Search.Pagination />
               </Table.ScrollContainer>
             </Stack>

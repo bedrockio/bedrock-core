@@ -3,7 +3,6 @@ import { Link } from '@bedrockio/router';
 import {
   Anchor,
   Button,
-  Divider,
   Group,
   Image,
   Loader,
@@ -11,8 +10,6 @@ import {
   Table,
   Text,
 } from '@mantine/core';
-
-import { PiPlus } from 'react-icons/pi';
 
 import ErrorMessage from 'components/ErrorMessage';
 import PageHeader from 'components/PageHeader';
@@ -105,8 +102,7 @@ export default function ShopList() {
                       <Button
                         component={Link}
                         variant="primary"
-                        to="/shops/new"
-                        leftSection={<PiPlus />}>
+                        to="/shops/new">
                         New Shop
                       </Button>
                     </Protected>
@@ -221,7 +217,6 @@ export default function ShopList() {
                   })}
                 </Table.Tbody>
               </Table>
-              <Divider mb="md" />
               <Search.Pagination />
             </Stack>
           );
