@@ -2,11 +2,9 @@ import { Link } from '@bedrockio/router';
 import { ActionIcon, Button, Group, Menu, Text } from '@mantine/core';
 
 import {
-  PiArrowUUpLeft,
   PiCode,
   PiDotsThreeOutlineVerticalFill,
   PiListMagnifyingGlass,
-  PiPencil,
   PiPencilSimpleFill,
   PiTrashFill,
 } from 'react-icons/pi';

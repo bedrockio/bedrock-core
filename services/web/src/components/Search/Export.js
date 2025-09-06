@@ -1,7 +1,6 @@
 import { Button, Tooltip } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { useContext, useState } from 'react';
-import { PiDownloadFill } from 'react-icons/pi';
 
 import { downloadResponse } from 'utils/download';
 import { safeFileName } from 'utils/formatting';

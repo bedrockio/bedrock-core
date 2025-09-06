@@ -1,4 +1,4 @@
-import { Checkbox, Slider } from '@mantine/core';
+import { Checkbox } from '@mantine/core';
 import PropTypes from 'prop-types';
 import React from 'react';
 

@@ -1,17 +1,17 @@
-import { useState } from 'react';
-import JsonView from '@uiw/react-json-view';
-import { darkTheme } from '@uiw/react-json-view/dark';
-
 import {
-  Checkbox,
-  Stack,
-  Group,
   ActionIcon,
+  Checkbox,
   CopyButton,
+  Group,
+  Stack,
   Tooltip,
 } from '@mantine/core';
 
-import { PiCopy, PiCheck } from 'react-icons/pi';
+import JsonView from '@uiw/react-json-view';
+// eslint-disable-next-line
+import { darkTheme } from '@uiw/react-json-view/dark';
+import { useState } from 'react';
+import { PiCheck, PiCopy } from 'react-icons/pi';
 
 export default function InspectObject({ object }) {
   const [expandAll, setExpandAll] = useState(false);
