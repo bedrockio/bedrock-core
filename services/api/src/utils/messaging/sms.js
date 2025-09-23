@@ -14,7 +14,7 @@ const TEST_NUMBER = config.get('TWILIO_TEST_NUMBER');
 const FROM_NUMBER = config.get('TWILIO_FROM_NUMBER');
 const WEBHOOK_URL = config.get('TWILIO_WEBHOOK_URL');
 
-const client = twilio(ACCOUNT_SID, AUTH_TOKEN);
+const client = getClient();
 
 const interpolate = getInterpolator('sms');
 
@@ -92,6 +92,12 @@ function validateSignature(ctx) {
 
   if (!twilio.validateRequest(AUTH_TOKEN, signature, url, body)) {
     ctx.throw(400, 'Invalid Message Signature');
+  }
+}
+
+function getClient() {
+  if (ACCOUNT_SID && AUTH_TOKEN) {
+    return twilio(ACCOUNT_SID, AUTH_TOKEN);
   }
 }
 
