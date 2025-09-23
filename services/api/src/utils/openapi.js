@@ -285,6 +285,12 @@ function generateModelSchemas() {
   const schemas = {};
   for (let model of Object.values(mongoose.models)) {
     const { modelName } = model;
+
+    if (modelName.startsWith('_')) {
+      // Skip helper models like __counter for incrementing.
+      continue;
+    }
+
     schemas[modelName] = model.getBaseSchema().toOpenApi();
   }
   return schemas;
