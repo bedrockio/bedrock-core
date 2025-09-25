@@ -1,10 +1,10 @@
-const { PassThrough } = require('stream');
+const { PassThrough, Readable } = require('stream');
 
 const csv = require('fast-csv');
 const yd = require('@bedrockio/yada');
 const config = require('@bedrockio/config');
 const mongoose = require('mongoose');
-const { get, startCase } = require('lodash');
+const { get, once, startCase } = require('lodash');
 
 const { serializeObject } = require('./serialize');
 
@@ -277,7 +277,58 @@ function convertCase(obj, options) {
   return result;
 }
 
+// Parsing
+
+const PARSE_OPTIONS = {
+  trim: true,
+  headers: true,
+  ignoreEmpty: true,
+};
+
+function parseCsv(str) {
+  const getStream = once(async () => {
+    if (str.startsWith('http')) {
+      const response = await fetch(str);
+      if (!response.ok) {
+        throw new Error(`Could not download ${str}.`);
+      }
+      const nodeStream = Readable.fromWeb(response.body);
+      return csv.parseStream(nodeStream, PARSE_OPTIONS);
+    } else if (str.includes('\n')) {
+      return csv.parseString(str, PARSE_OPTIONS);
+    } else {
+      return csv.parseFile(str, PARSE_OPTIONS);
+    }
+  });
+
+  return {
+    [Symbol.asyncIterator]() {
+      async function* iterate() {
+        const stream = await getStream();
+        for await (const row of stream) {
+          yield row;
+        }
+      }
+      return iterate();
+    },
+
+    async then(resolve, reject) {
+      try {
+        const stream = await getStream();
+        const rows = [];
+        for await (const row of stream) {
+          rows.push(row);
+        }
+        resolve(rows);
+      } catch (error) {
+        reject(error);
+      }
+    },
+  };
+}
+
 module.exports = {
   csvExport,
+  parseCsv,
   exportValidation,
 };
