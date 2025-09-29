@@ -46,6 +46,7 @@ export default defineConfig({
       components: path.resolve(__dirname, './src/components'),
       layouts: path.resolve(__dirname, './src/layouts'),
       styles: path.resolve(__dirname, './src/styles'),
+      hooks: path.resolve(__dirname, './src/hooks'),
       utils: path.resolve(__dirname, './src/utils'),
       modals: path.resolve(__dirname, './src/modals'),
       assets: path.resolve(__dirname, './src/assets'),
