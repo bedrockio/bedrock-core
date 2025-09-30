@@ -68,14 +68,7 @@ export default function Invites() {
                   <ModalWrapper
                     title="Invite Users"
                     size="md"
-                    component={
-                      <InviteForm
-                        name="shop"
-                        onSuccess={() => {
-                          reload();
-                        }}
-                      />
-                    }
+                    component={<InviteForm name="shop" onSuccess={reload} />}
                     trigger={<Button variant="default">Invite User</Button>}
                   />
                 }

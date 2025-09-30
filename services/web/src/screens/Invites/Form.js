@@ -1,179 +1,80 @@
-import {
-  Alert,
-  Button,
-  Pill,
-  PillsInput,
-  Select,
-  Stack,
-  Text,
-} from '@mantine/core';
-
-import { useForm } from '@mantine/form';
+import { Button, NativeSelect, Textarea } from '@mantine/core';
 import { useState } from 'react';
 
 import ErrorMessage from 'components/ErrorMessage';
 import { useModalContext } from 'components/ModalWrapper';
+import Actions from 'components/form-fields/Actions';
+import { useFields } from 'hooks/forms';
+import { useRequest } from 'hooks/request';
 
-import { useRequest } from 'utils/api';
-import { emailRegexp } from 'utils/validate';
+import { request } from 'utils/api';
 
-export default function InviteForm({ onSuccess = () => {} }) {
+export default function InviteForm(props) {
   const { close } = useModalContext();
-  const [invalidEmails, setInvalidEmails] = useState([]);
 
-  const form = useForm({
-    initialValues: {
-      emails: [],
-      role: '',
-    },
-    validate: {
-      emails: (value) =>
-        value.length === 0 ? 'At least one email is required' : null,
-      role: (value) => (!value ? 'Role is required' : null),
-    },
+  const [input, setInput] = useState('');
+  const [body, setField] = useFields({
+    role: 'viewer',
   });
 
-  const { loading, error, request } = useRequest({
-    method: 'POST',
-    path: '/1/invites',
-  });
-
-  const validateEmail = (email) => {
-    return email.match(emailRegexp);
-  };
-
-  const handleEmailKeyDown = (e) => {
-    // reset errors
-    setInvalidEmails([]);
-
-    if (e.key === 'Enter' || e.key === 'Tab') {
-      e.preventDefault();
-
-      const inputValue = e.currentTarget.value.trim();
-      if (!inputValue) return;
-
-      const emailList = inputValue.split(/[,;\s]+/).filter(Boolean);
-      const validEmails = [];
-      const newInvalidEmails = [];
-
-      emailList.forEach((email) => {
-        const trimmedEmail = email.toLowerCase();
-        // Check if email is valid and not already in the form
-        if (
-          validateEmail(trimmedEmail) &&
-          !form.values.emails.includes(trimmedEmail)
-        ) {
-          validEmails.push(trimmedEmail);
-        } else if (!validateEmail(trimmedEmail)) {
-          newInvalidEmails.push(trimmedEmail);
-        }
-      });
-
-      if (validEmails.length > 0) {
-        form.setFieldValue('emails', [...form.values.emails, ...validEmails]);
-      }
-      if (newInvalidEmails.length > 0) {
-        setInvalidEmails([...invalidEmails, ...newInvalidEmails]);
-      }
-
-      // Clear the input
-      e.currentTarget.value = '';
-    }
-  };
-
-  const removeEmail = (index) => {
-    const updatedEmails = [...form.values.emails];
-    updatedEmails.splice(index, 1);
-    form.setFieldValue('emails', updatedEmails);
-  };
-
-  const onSubmit = async (values) => {
-    if (values.emails.length === 0) return;
-
-    const invite = await request({
-      body: {
-        role: values.role,
-        emails: values.emails,
-      },
+  const { run, loading, error } = useRequest(async () => {
+    await request({
+      method: 'POST',
+      path: '/1/invites',
+      body,
     });
+    await props.onSuccess?.();
     close();
-    onSuccess(invite);
-  };
+  });
+
+  function onEmailsBlur() {
+    setField({
+      name: 'emails',
+      value: input.split(/,\s+/),
+    });
+  }
 
   return (
-    <form onSubmit={form.onSubmit(onSubmit)}>
-      <Stack>
-        <ErrorMessage error={error} />
+    <form onSubmit={run}>
+      <ErrorMessage error={error} />
 
-        {invalidEmails.length > 0 && (
-          <Alert color="red" title="Invalid emails">
-            The following emails are invalid: {invalidEmails.join(', ')}
-          </Alert>
-        )}
+      <Textarea
+        rows="5"
+        label="Emails"
+        value={input}
+        onChange={(evt) => {
+          setInput(evt.target.value);
+        }}
+        onBlur={onEmailsBlur}
+        placeholder="Enter email addresses separated by comma or new line."
+      />
 
-        <div>
-          <Text size="sm" fw={500} mb={3}>
-            Enter email addresses
-          </Text>
-          <PillsInput {...form.getInputProps('emails')}>
-            <Stack>
-              {form.values.emails.length > 0 && (
-                <Pill.Group>
-                  {form.values.emails.map((email, index) => (
-                    <Pill
-                      key={index}
-                      withRemoveButton
-                      onRemove={() => removeEmail(index)}>
-                      {email}
-                    </Pill>
-                  ))}
-                </Pill.Group>
-              )}
-              <PillsInput.Field
-                mt="2px"
-                placeholder="Type or paste emails and press Enter"
-                onKeyDown={handleEmailKeyDown}
-                //onChange={handleEmailInput}
-              />
-            </Stack>
-          </PillsInput>
-          {form.errors.emails && (
-            <Text size="xs" c="red" mt={4}>
-              {form.errors.emails}
-            </Text>
-          )}
-        </div>
-
-        <Select
-          label="Role"
-          placeholder="Choose Role"
-          {...form.getInputProps('role')}
-          data={[
-            {
-              label: 'Viewer',
-              value: 'viewer',
-            },
-            {
-              label: 'Admin',
-              value: 'admin',
-            },
-            {
-              label: 'Super Admin',
-              value: 'superAdmin',
-            },
-          ]}
-        />
-
-        <Button
-          type="submit"
-          loading={loading}
-          disabled={form.values.emails.length === 0}>
-          Invite Members{' '}
-          {form.values.emails.length > 0
-            ? `(${form.values.emails.length})`
-            : ''}
+      <NativeSelect
+        name="role"
+        label="Role"
+        placeholder="Choose Role"
+        onChange={setField}
+        value={body.role || ''}
+        data={[
+          {
+            label: 'Viewer',
+            value: 'viewer',
+          },
+          {
+            label: 'Admin',
+            value: 'admin',
+          },
+          {
+            label: 'Super Admin',
+            value: 'superAdmin',
+          },
+        ]}
+      />
+      <Actions>
+        <Button type="submit" loading={loading}>
+          Invite Members
         </Button>
-      </Stack>
+      </Actions>
     </form>
   );
 }
