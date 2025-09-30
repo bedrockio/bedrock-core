@@ -216,17 +216,28 @@ function SessionProvider({ children, location }) {
       }
 
       if (hasToken()) {
+        updateState({
+          loading: true,
+          error: null,
+        });
         try {
           await request({
             method: 'POST',
             path: '/1/auth/logout',
           });
-        } catch {
+          updateState({
+            user: null,
+            loading: false,
+          });
+        } catch (error) {
+          updateState({
+            error,
+            loading: false,
+          });
           // JWT token errors may throw here
         }
         setToken(null);
       }
-      window.location.href = '/';
     },
     [pushRedirect],
   );

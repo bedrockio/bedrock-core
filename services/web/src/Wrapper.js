@@ -1,3 +1,5 @@
+// TODO: remove?
+
 // part of integration with mantine
 import { BrowserRouter, Route, Routes } from '@bedrockio/router';
 import { MantineProvider } from '@mantine/core';
@@ -26,8 +28,10 @@ const DocsApp = React.lazy(() => import('./DocsApp.js'));
 const OnboardApp = React.lazy(() => import('./OnboardApp.js'));
 
 function AppSwitch() {
-  const { user, ready } = useSession();
-  if (hasAccess(user) && ready) {
+  const { user, loading } = useSession();
+  if (loading) {
+    return <LoadingScreen />;
+  } else if (hasAccess(user)) {
     return <App />;
   } else {
     return <AuthApp />;
@@ -39,7 +43,6 @@ export default function Wrapper() {
     <SessionProvider>
       <MantineProvider theme={theme}>
         <Notifications />
-
         <BrowserRouter>
           <HelmetProvider>
             <SessionSwitch>
