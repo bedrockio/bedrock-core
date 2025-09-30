@@ -1,5 +1,16 @@
 import { useState } from 'react';
 
+/**
+ * Hook to manage form field state with a simple setter function.
+ *
+ * @param {Object} current - Object containing initial field values
+ * @returns {[Object, setField]} Array with [fields object, setField function]
+ *
+ * @callback setField
+ * @param {Object} options
+ * @param {string} options.name - Field name to change.
+ * @param {*} options.value - New value for the field.
+ */
 export function useFields(current) {
   const [fields, setFields] = useState({ ...current });
 
