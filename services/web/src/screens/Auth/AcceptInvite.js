@@ -124,7 +124,7 @@ function AcceptInvite() {
             required
             label="Email"
             placeholder="Email"
-            disabled
+            readOnly
             {...form.getInputProps('email')}
           />
 
