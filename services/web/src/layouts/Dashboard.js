@@ -23,9 +23,9 @@ import {
   PiFileBold,
   PiGearBold,
   PiGridFourBold,
+  PiHeartBold,
   PiListMagnifyingGlass,
-  PiStorefrontBold,
-  PiTagBold,
+  PiPillBold,
   PiTerminalBold,
   PiUserBold,
 } from 'react-icons/pi';
@@ -47,14 +47,14 @@ import MenuItem from '../components/MenuItem';
 
 const menuItems = [
   {
-    icon: PiStorefrontBold,
-    url: '/shops',
-    label: 'Shops',
+    icon: PiPillBold,
+    url: '/drugs',
+    label: 'Drugs',
   },
   {
-    icon: PiTagBold,
-    url: '/products',
-    label: 'Products',
+    icon: PiHeartBold,
+    url: '/symptoms',
+    label: 'Symptoms',
   },
   {
     icon: PiUserBold,
@@ -117,7 +117,7 @@ const accountItems = [
 export default function DashboardLayout({ children }) {
   const { user, organization } = useSession();
   const [opened, { toggle, close }] = useDisclosure();
-  const isMobile = useMediaQuery('(max-width: 768px)');
+  const isMobile = useMediaQuery('(max-width: 62em)');
 
   const location = useLocation();
 
@@ -142,7 +142,7 @@ export default function DashboardLayout({ children }) {
           justify="flex-start"
           align="center"
           p="md">
-          <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+          <Burger opened={opened} onClick={toggle} hiddenFrom="md" size="md" />
           <div>
             <Logo height={20} />
           </div>

@@ -13,7 +13,12 @@ export default function AcceptInviteAuthenticated() {
         logout and accept the invite?
       </p>
       <div>
-        <Button onClick={logout}>Continue</Button>
+        <Button
+          onClick={() => {
+            logout();
+          }}>
+          Continue
+        </Button>
       </div>
     </>
   );

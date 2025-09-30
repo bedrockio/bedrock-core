@@ -126,6 +126,7 @@ export default function ResetPassword() {
               required
               label="New Password"
               placeholder="New Password"
+              autoComplete="new-password"
               {...form.getInputProps('password')}
             />
 
@@ -133,6 +134,7 @@ export default function ResetPassword() {
               required
               label="Repeat Password"
               placeholder="Repeat Password"
+              autoComplete="new-password"
               {...form.getInputProps('repeat')}
             />
 

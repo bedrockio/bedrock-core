@@ -134,6 +134,7 @@ export default function SignupPassword() {
               label="Password"
               type="password"
               placeholder="Password"
+              autoComplete="new-password"
               {...form.getInputProps('password')}
             />
           )}

@@ -1,4 +1,4 @@
-import { Alert, Button, Center, Stack } from '@mantine/core';
+import { Alert, Button } from '@mantine/core';
 import PropTypes from 'prop-types';
 
 import BasicLayout from 'layouts/Basic';
@@ -12,7 +12,7 @@ function ErrorScreen({ title = 'Something went wrong', error }) {
   const { logout } = useSession();
 
   const handleLogoutClick = async () => {
-    await logout(true);
+    await logout();
   };
 
   const handleReloadClick = () => {
@@ -48,19 +48,15 @@ function ErrorScreen({ title = 'Something went wrong', error }) {
 
   return (
     <BasicLayout>
-      <Center maw={400} mx="auto" h="100vh">
-        <Stack gap="xs">
-          <Meta title={title || 'Error'} />
-          <Alert color="red" title={title}>
-            {renderErrorBody()}
-          </Alert>
-          <div>
-            <Button size="xs" onClick={handleLogoutClick}>
-              Logout
-            </Button>
-          </div>
-        </Stack>
-      </Center>
+      <Meta title={title || 'Error'} />
+      <Alert color="red" title={title}>
+        {renderErrorBody()}
+      </Alert>
+      <div>
+        <Button size="xs" onClick={handleLogoutClick}>
+          Logout
+        </Button>
+      </div>
     </BasicLayout>
   );
 }

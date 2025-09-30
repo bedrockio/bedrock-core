@@ -136,7 +136,7 @@ function SessionProvider({ children, location }) {
         console.log(error);
         captureError(error);
         if (error.type === 'token') {
-          await logout(true);
+          await logout();
         } else {
           updateState({
             error,

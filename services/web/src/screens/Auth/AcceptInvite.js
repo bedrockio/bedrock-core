@@ -132,6 +132,7 @@ function AcceptInvite() {
             required
             label="Password"
             placeholder="Password"
+            autoComplete="new-password"
             {...form.getInputProps('password')}
           />
 
@@ -139,6 +140,7 @@ function AcceptInvite() {
             required
             label="Confirm Password"
             placeholder="Confirm Password"
+            autoComplete="new-password"
             {...form.getInputProps('confirmPassword')}
           />
 
