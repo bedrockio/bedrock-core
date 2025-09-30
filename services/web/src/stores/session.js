@@ -225,18 +225,17 @@ function SessionProvider({ children, location }) {
             method: 'POST',
             path: '/1/auth/logout',
           });
+        } finally {
+          // Note: User may have a bad token which will throw
+          // errors on the logout call. We need to swallow these
+          // and not set them so that the app can proceed back
+          // to an unauthenticated state.
+          setToken(null);
           updateState({
             user: null,
             loading: false,
           });
-        } catch (error) {
-          updateState({
-            error,
-            loading: false,
-          });
-          // JWT token errors may throw here
         }
-        setToken(null);
       }
     },
     [pushRedirect],
