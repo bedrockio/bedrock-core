@@ -23,7 +23,7 @@ async function createUploads(arg, options) {
   return await Promise.all(
     files.map(async (file) => {
       return await createUpload(file, options);
-    })
+    }),
   );
 }
 
@@ -77,11 +77,10 @@ async function uploadLocal(file, upload) {
 async function uploadGcs(file, upload) {
   const { filepath, buffer } = file;
 
-  const filename = path.basename(filepath);
   const destination = getUploadFilename(upload);
   const gcsFile = bucket.file(destination);
 
-  logger.info('Uploading gcs %s -> gs://%s/%s', filename, BUCKET_NAME, destination);
+  logger.info('Uploading file gs://%s/%s', BUCKET_NAME, destination);
 
   if (buffer) {
     await gcsFile.save(buffer);
