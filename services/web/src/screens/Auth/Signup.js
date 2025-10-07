@@ -3,8 +3,6 @@ import { Link, useNavigate } from '@bedrockio/router';
 import {
   Anchor,
   Button,
-  Group,
-  Paper,
   PasswordInput,
   Stack,
   Text,
@@ -13,13 +11,12 @@ import {
 } from '@mantine/core';
 
 import { isEmail, useForm } from '@mantine/form';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import { useSession } from 'stores/session';
 
 import Federated from 'components/Auth/Federated';
 import ErrorMessage from 'components/ErrorMessage';
-import Logo from 'components/Logo';
 import Meta from 'components/Meta';
 import PhoneField from 'components/form-fields/Phone';
 
@@ -79,96 +76,92 @@ export default function SignupPassword() {
   }
 
   return (
-    <Group justify="center" align="center" pt={{ base: 30, sm: 120 }}>
-      <Stack w={{ base: '100%', sm: 480 }} align="center">
-        <Meta title="Signup" />
-        <Logo maw={200} title="Login" />
-        <Paper mt="md" w="100%" p="lg" radius="md" withBorder>
-          <Title order={3} mb="md">
+    <React.Fragment>
+      <Meta title="Signup" />
+      <Title order={3} mb="md">
+        Signup
+      </Title>
+      <form
+        onSubmit={form.onSubmit((formValues) => {
+          signupRequest.request({
+            body: {
+              ...formValues,
+              type: AUTH_TYPE,
+              channel: AUTH_CHANNEL,
+            },
+          });
+        })}>
+        <Stack gap="xs">
+          {signupRequest.error?.type !== 'validation' && (
+            <ErrorMessage error={error} />
+          )}
+
+          <TextInput
+            label="First Name"
+            placeholder="First Name"
+            autoComplete="given-name"
+            error={error?.hasField?.('firstName')}
+            {...form.getInputProps('firstName')}
+          />
+          <TextInput
+            label="Last Name"
+            name="lastName"
+            placeholder="Last Name"
+            autoComplete="family-name"
+            error={error?.hasField?.('lastName')}
+            {...form.getInputProps('lastName')}
+          />
+          <TextInput
+            label="Email"
+            type="email"
+            placeholder="Email"
+            autoComplete="email"
+            name="email"
+            error={error}
+            {...form.getInputProps('email')}
+          />
+
+          <PhoneField
+            label="Phone"
+            placeholder="Phone"
+            error={error}
+            {...form.getInputProps('phone')}
+          />
+
+          {AUTH_TYPE === 'password' && (
+            <PasswordInput
+              required
+              label="Password"
+              type="password"
+              placeholder="Password"
+              autoComplete="new-password"
+              {...form.getInputProps('password')}
+            />
+          )}
+
+          <Button
+            fullWidth
+            loading={loading || signupRequest.loading}
+            variant="filled"
+            type="submit">
             Signup
-          </Title>
-          <form
-            onSubmit={form.onSubmit((formValues) => {
-              signupRequest.request({
-                body: {
-                  ...formValues,
-                  type: AUTH_TYPE,
-                  channel: AUTH_CHANNEL,
-                },
-              });
-            })}>
-            <Stack gap="xs">
-              {signupRequest.error?.type !== 'validation' && (
-                <ErrorMessage error={error} />
-              )}
+          </Button>
 
-              <TextInput
-                label="First Name"
-                placeholder="First Name"
-                autoComplete="given-name"
-                error={error?.hasField?.('firstName')}
-                {...form.getInputProps('firstName')}
-              />
-              <TextInput
-                label="Last Name"
-                name="lastName"
-                placeholder="Last Name"
-                autoComplete="family-name"
-                error={error?.hasField?.('lastName')}
-                {...form.getInputProps('lastName')}
-              />
-              <TextInput
-                label="Email"
-                type="email"
-                placeholder="Email"
-                autoComplete="email"
-                name="email"
-                error={error}
-                {...form.getInputProps('email')}
-              />
+          <Text size="xs" c="dimmed">
+            Already have an account?{' '}
+            <Anchor component={Link} to="/login">
+              Login
+            </Anchor>
+          </Text>
 
-              <PhoneField
-                label="Phone"
-                placeholder="Phone"
-                error={error}
-                {...form.getInputProps('phone')}
-              />
-
-              {AUTH_TYPE === 'password' && (
-                <PasswordInput
-                  required
-                  label="Password"
-                  type="password"
-                  placeholder="Password"
-                  {...form.getInputProps('password')}
-                />
-              )}
-
-              <Button
-                fullWidth
-                loading={loading || signupRequest.loading}
-                variant="filled"
-                type="submit">
-                Signup
-              </Button>
-
-              <Text size="xs" c="dimmed">
-                Already have an account?{' '}
-                <Anchor component={Link} to="/login">
-                  Login
-                </Anchor>
-              </Text>
-
-              <Federated
-                type="signup"
-                onAuthStop={onAuthStop}
-                onAuthStart={onAuthStart}
-                onError={onAuthError}
-              />
-            </Stack>
-          </form>
-        </Paper>
-      </Stack>
-    </Group>
+          <Federated
+            type="signup"
+            onAuthStop={onAuthStop}
+            onAuthStart={onAuthStart}
+            onError={onAuthError}
+          />
+        </Stack>
+      </form>
+    </React.Fragment>
   );
 }

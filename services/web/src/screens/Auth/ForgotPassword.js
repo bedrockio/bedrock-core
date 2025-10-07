@@ -5,16 +5,14 @@ import {
   Anchor,
   Button,
   Group,
-  Paper,
   Stack,
   TextInput,
   Title,
 } from '@mantine/core';
 
 import { useForm } from '@mantine/form';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
-import Logo from 'components/Logo';
 import Meta from 'components/Meta';
 
 import { request } from 'utils/api';
@@ -86,25 +84,19 @@ export default function ForgotPassword() {
   };
 
   return (
-    <Group justify="center" align="center" pt={{ base: 30, sm: 120 }}>
+    <React.Fragment>
       <Meta title="Forgot Password" />
-      <Stack w={{ base: '95vw', sm: 480 }} align="center">
-        <Logo maw={200} title="Login" />
+      <Title order={3}>Forgot Password</Title>
+      <Stack mt="md">{success ? renderMessage() : renderForm()}</Stack>
 
-        <Paper mt="lg" w="100%" p="lg" radius="md" withBorder>
-          <Title order={3}>Forgot Password</Title>
-          <Stack mt="md">{success ? renderMessage() : renderForm()}</Stack>
-
-          <Group mt="md" justify="space-between">
-            <Anchor size="xs" component={Link} to="/login">
-              Back to login
-            </Anchor>
-            <Anchor size="xs" component={Link} to="/signup">
-              Don't have an account
-            </Anchor>
-          </Group>
-        </Paper>
-      </Stack>
-    </Group>
+      <Group mt="md" justify="space-between">
+        <Anchor size="xs" component={Link} to="/login">
+          Back to login
+        </Anchor>
+        <Anchor size="xs" component={Link} to="/signup">
+          Don't have an account
+        </Anchor>
+      </Group>
+    </React.Fragment>
   );
 }

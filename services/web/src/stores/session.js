@@ -136,7 +136,7 @@ function SessionProvider({ children, location }) {
         console.log(error);
         captureError(error);
         if (error.type === 'token') {
-          await logout(true);
+          await logout();
         } else {
           updateState({
             error,
@@ -216,17 +216,27 @@ function SessionProvider({ children, location }) {
       }
 
       if (hasToken()) {
+        updateState({
+          loading: true,
+          error: null,
+        });
         try {
           await request({
             method: 'POST',
             path: '/1/auth/logout',
           });
-        } catch {
-          // JWT token errors may throw here
+        } finally {
+          // Note: User may have a bad token which will throw
+          // errors on the logout call. We need to swallow these
+          // and not set them so that the app can proceed back
+          // to an unauthenticated state.
+          setToken(null);
+          updateState({
+            user: null,
+            loading: false,
+          });
         }
-        setToken(null);
       }
-      window.location.href = '/';
     },
     [pushRedirect],
   );

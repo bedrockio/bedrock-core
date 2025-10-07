@@ -3,7 +3,6 @@ import { Link, useNavigate } from '@bedrockio/router';
 import {
   Anchor,
   Button,
-  Group,
   Paper,
   PasswordInput,
   Stack,
@@ -12,12 +11,11 @@ import {
 } from '@mantine/core';
 
 import { useForm } from '@mantine/form';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import { useSession } from 'stores/session';
 
 import ErrorMessage from 'components/ErrorMessage';
-import Logo from 'components/Logo';
 import Meta from 'components/Meta';
 
 import { request } from 'utils/api';
@@ -66,78 +64,16 @@ export default function ResetPassword() {
     }
   }
 
-  function renderTokenMissing() {
+  function render() {
     return (
-      <Paper mt="md" w="100%" p="lg" radius="md" withBorder>
-        <Stack>
-          <Title order={3} color="red">
-            No valid token found
-          </Title>
-          <Text>
-            Please ensure you either click the email link in the email or copy
-            paste the link in full.
-          </Text>
-        </Stack>
-      </Paper>
+      <React.Fragment>
+        <Meta title="Reset Password" />
+        {renderSwitch()}
+      </React.Fragment>
     );
   }
 
-  function renderSuccessMessage() {
-    return (
-      <Paper mt="md" w="100%" p="lg" radius="md" withBorder>
-        <Stack>
-          <Title order={3} c="blue">
-            Your password has been changed!
-          </Title>
-          <Text>
-            Click here to open the{' '}
-            <Anchor component={Link} to="/">
-              Dashboard
-            </Anchor>
-          </Text>
-        </Stack>
-      </Paper>
-    );
-  }
-
-  function renderForm() {
-    return (
-      <Paper mt="md" w="100%" p="lg" radius="md" withBorder>
-        <Stack gap="md">
-          <Title order={3}>Reset Password</Title>
-          <ErrorMessage error={error} />
-          <form onSubmit={form.onSubmit(onSubmit)}>
-            <Stack gap="md">
-              <PasswordInput
-                required
-                label="New Password"
-                placeholder="New Password"
-                {...form.getInputProps('password')}
-              />
-
-              <PasswordInput
-                required
-                label="Repeat Password"
-                placeholder="Repeat Password"
-                {...form.getInputProps('repeat')}
-              />
-
-              <Button
-                fullWidth
-                variant="filled"
-                loading={loading}
-                disabled={loading}
-                type="submit">
-                Reset Password
-              </Button>
-            </Stack>
-          </form>
-        </Stack>
-      </Paper>
-    );
-  }
-
-  function renderBody() {
+  function renderSwitch() {
     if (!payload) {
       return renderTokenMissing();
     } else if (success) {
@@ -147,13 +83,74 @@ export default function ResetPassword() {
     }
   }
 
-  return (
-    <Group justify="center" align="center" pt={{ base: 30, sm: 120 }}>
-      <Stack w={{ base: '95vw', sm: 480 }} align="center">
-        <Meta title="Reset Password" />
-        <Logo maw={200} title="Reset Password" />
-        {renderBody()}
-      </Stack>
-    </Group>
-  );
+  function renderTokenMissing() {
+    return (
+      <React.Fragment>
+        <Title order={3} color="red">
+          No valid token found
+        </Title>
+        <Text>
+          Please ensure you either click the email link in the email or copy
+          paste the link in full.
+        </Text>
+      </React.Fragment>
+    );
+  }
+
+  function renderSuccessMessage() {
+    return (
+      <React.Fragment>
+        <Title order={3} c="blue">
+          Your password has been changed!
+        </Title>
+        <Text>
+          Click here to open the{' '}
+          <Anchor component={Link} to="/">
+            Dashboard
+          </Anchor>
+        </Text>
+      </React.Fragment>
+    );
+  }
+
+  function renderForm() {
+    return (
+      <React.Fragment>
+        <Title order={3} mb="md">
+          Reset Password
+        </Title>
+        <ErrorMessage error={error} />
+        <form onSubmit={form.onSubmit(onSubmit)}>
+          <Stack gap="md">
+            <PasswordInput
+              required
+              label="New Password"
+              placeholder="New Password"
+              autoComplete="new-password"
+              {...form.getInputProps('password')}
+            />
+
+            <PasswordInput
+              required
+              label="Repeat Password"
+              placeholder="Repeat Password"
+              autoComplete="new-password"
+              {...form.getInputProps('repeat')}
+            />
+
+            <Button
+              fullWidth
+              variant="filled"
+              loading={loading}
+              disabled={loading}
+              type="submit">
+              Reset Password
+            </Button>
+          </Stack>
+        </form>
+      </React.Fragment>
+    );
+  }
+
+  return render();
 }

@@ -1,22 +1,10 @@
 import { Link, Redirect, useLocation, useNavigate } from '@bedrockio/router';
-
-import {
-  Alert,
-  Anchor,
-  Box,
-  Group,
-  Paper,
-  PinInput,
-  Stack,
-  Title,
-} from '@mantine/core';
-
-import { useEffect, useMemo, useState } from 'react';
+import { Alert, Anchor, Box, PinInput, Stack } from '@mantine/core';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import { useSession } from 'stores/session';
 
 import ErrorMessage from 'components/ErrorMessage';
-import Logo from 'components/Logo';
 import Meta from 'components/Meta';
 
 import { request } from 'utils/api';
@@ -146,25 +134,14 @@ export default function ConfirmCode() {
   }
 
   return (
-    <Group justify="center" align="center" pt={{ base: 30, sm: 120 }}>
+    <React.Fragment>
       <Meta title="Confirm Code" />
-      <Stack w={{ base: '95vw', sm: 380 }} align="center">
-        <Logo maw={200} title="Login" />
-
-        <Paper mt="md" w="100%" p="lg" radius="md" withBorder>
-          <Stack gap="md">
-            <Title order={3}>Confirm Code</Title>
-            <Paper>
-              {renderMessage()}
-              <Box mt="md">
-                <Anchor component={Link} to="/login">
-                  Back
-                </Anchor>
-              </Box>
-            </Paper>
-          </Stack>
-        </Paper>
-      </Stack>
-    </Group>
+      {renderMessage()}
+      <Box mt="md">
+        <Anchor component={Link} to="/login">
+          Back
+        </Anchor>
+      </Box>
+    </React.Fragment>
   );
 }

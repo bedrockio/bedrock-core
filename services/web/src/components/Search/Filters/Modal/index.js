@@ -4,7 +4,6 @@ import { omit } from 'lodash';
 import { useContext, useEffect, useState } from 'react';
 import { PiFunnelBold, PiSlidersHorizontalBold } from 'react-icons/pi';
 
-import './modal.less';
 import SearchContext from '../../Context';
 
 function FilterModal({ size = 'sm', children }) {

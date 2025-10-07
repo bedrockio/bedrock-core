@@ -5,6 +5,48 @@ const { request, createUser, createAdmin } = require('../utils/testing');
 const { User, Invite } = require('../models');
 
 describe('/1/invites', () => {
+  describe('POST /check', () => {
+    it('should pass if invite is not accepted yet', async () => {
+      const invite = await Invite.create({
+        status: 'invited',
+        email: 'some@email.com',
+      });
+      const token = createInviteToken(invite);
+      const response = await request(
+        'POST',
+        '/1/invites/check',
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      expect(response).toHaveStatus(204);
+    });
+
+    it('should error if invite has already been accepted', async () => {
+      const invite = await Invite.create({
+        status: 'accepted',
+        email: 'some@email.com',
+      });
+      const token = createInviteToken(invite);
+      const response = await request(
+        'POST',
+        '/1/invites/check',
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      expect(response).toHaveStatus(400);
+    });
+  });
+
   describe('POST /accept', () => {
     it('should send an email to the registered user', async () => {
       const invite = await Invite.create({

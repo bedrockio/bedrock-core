@@ -25,6 +25,17 @@ function sendInvite(sender, invite) {
 }
 
 router
+  .post('/check', validateToken({ type: 'invite' }), async (ctx) => {
+    const invite = await Invite.findOne({
+      email: ctx.state.jwt.sub,
+    });
+
+    if (invite.status === 'accepted') {
+      return ctx.throw(400, 'Invite has already been accepted.');
+    }
+
+    ctx.status = 204;
+  })
   .post(
     '/accept',
     validateBody({

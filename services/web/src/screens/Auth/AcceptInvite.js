@@ -1,11 +1,9 @@
-import { Link } from '@bedrockio/router';
+import { Link, useNavigate } from '@bedrockio/router';
 
 import {
   Anchor,
   Button,
-  Container,
   Group,
-  Paper,
   PasswordInput,
   Stack,
   Text,
@@ -14,26 +12,24 @@ import {
 
 import { useForm } from '@mantine/form';
 import { omit } from 'lodash';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { useSession } from 'stores/session';
 
-import Logo from 'components/Logo';
+import ErrorMessage from 'components/ErrorMessage';
 import Meta from 'components/Meta';
+import { useRequest } from 'hooks/request';
 
 import { request } from 'utils/api';
 import { getUrlToken } from 'utils/token';
 
-/**
- * Accept Invite screen component
- * Allows users to accept invitations to the platform
- */
-function AcceptInvite({ history }) {
+function AcceptInvite() {
   const { token, payload } = getUrlToken();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const { isLoggedIn, logout, authenticate } = useSession();
+  const { authenticate } = useSession();
+  const navigate = useNavigate();
 
   const form = useForm({
     initialValues: {
@@ -57,6 +53,16 @@ function AcceptInvite({ history }) {
     },
   });
 
+  const { run: checkInvite, error: checkError } = useRequest({
+    method: 'POST',
+    path: '/1/invites/check',
+    token,
+  });
+
+  useEffect(() => {
+    checkInvite();
+  }, []);
+
   async function handleSubmit(values) {
     try {
       setError(null);
@@ -70,116 +76,90 @@ function AcceptInvite({ history }) {
       });
 
       const next = await authenticate(data.token);
-      history.push(next);
+      navigate(next);
     } catch (err) {
       setError(err);
       setLoading(false);
     }
   }
 
-  function handleLogoutClick() {
-    logout(true);
-  }
-
-  function renderLoggedIn() {
+  function render() {
     return (
-      <Container size="sm">
-        <Stack>
-          <Text size="xl" fw={700}>
-            Accept Invite
-          </Text>
-          <Text>
-            Invites can only be accepted from a logged out state. Would you like
-            to logout and accept the invite?
-          </Text>
-          <div>
-            <Button onClick={handleLogoutClick}>Continue</Button>
-          </div>
-        </Stack>
-      </Container>
+      <React.Fragment>
+        <Meta title="Login" />
+        {renderSwitch()}
+      </React.Fragment>
     );
+  }
+  function renderSwitch() {
+    if (checkError) {
+      return <ErrorMessage error={checkError} />;
+    } else {
+      return renderLoggedOut();
+    }
   }
 
   function renderLoggedOut() {
     return (
-      <>
-        <Group justify="center" align="center" pt={{ base: 30, sm: 120 }}>
-          <Stack w={{ base: '95vw', sm: 480 }} align="center">
-            <Meta title="Login" />
+      <Stack gap="md">
+        <form onSubmit={form.onSubmit(handleSubmit)}>
+          <ErrorMessage error={error} />
 
-            <Logo maw={200} title="Login" />
-            <Paper radius="md" withBorder>
-              <Stack p="md">
-                <form onSubmit={form.onSubmit(handleSubmit)}>
-                  {error && (
-                    <Text c="red" size="sm" mb="md">
-                      {error.message || 'An error occurred. Please try again.'}
-                    </Text>
-                  )}
+          <Group grow>
+            <TextInput
+              required
+              label="First Name"
+              placeholder="First Name"
+              {...form.getInputProps('firstName')}
+            />
+            <TextInput
+              required
+              label="Last Name"
+              placeholder="Last Name"
+              {...form.getInputProps('lastName')}
+            />
+          </Group>
 
-                  <Stack gap="md">
-                    <Group grow>
-                      <TextInput
-                        required
-                        label="First Name"
-                        placeholder="First Name"
-                        {...form.getInputProps('firstName')}
-                      />
-                      <TextInput
-                        required
-                        label="Last Name"
-                        placeholder="Last Name"
-                        {...form.getInputProps('lastName')}
-                      />
-                    </Group>
+          <TextInput
+            required
+            label="Email"
+            placeholder="Email"
+            readOnly
+            {...form.getInputProps('email')}
+          />
 
-                    <TextInput
-                      required
-                      label="Email"
-                      placeholder="Email"
-                      disabled
-                      {...form.getInputProps('email')}
-                    />
+          <PasswordInput
+            required
+            label="Password"
+            placeholder="Password"
+            autoComplete="new-password"
+            {...form.getInputProps('password')}
+          />
 
-                    <PasswordInput
-                      required
-                      label="Password"
-                      placeholder="Password"
-                      {...form.getInputProps('password')}
-                    />
+          <PasswordInput
+            required
+            label="Confirm Password"
+            placeholder="Confirm Password"
+            autoComplete="new-password"
+            {...form.getInputProps('confirmPassword')}
+          />
 
-                    <PasswordInput
-                      required
-                      label="Confirm Password"
-                      placeholder="Confirm Password"
-                      {...form.getInputProps('confirmPassword')}
-                    />
+          <Button type="submit" loading={loading} fullWidth mt="md">
+            Create Account
+          </Button>
+        </form>
 
-                    <Button type="submit" loading={loading} fullWidth mt="md">
-                      Create Account
-                    </Button>
-                  </Stack>
-                </form>
-                <Text size="xs">
-                  Already have an account?{' '}
-                  <Anchor component={Link} to="/login">
-                    Login
-                  </Anchor>
-                </Text>
-              </Stack>
-            </Paper>
-          </Stack>
-        </Group>
-      </>
+        <Text size="xs">
+          Already have an account?{' '}
+          <Anchor component={Link} to="/login">
+            Login
+          </Anchor>
+        </Text>
+      </Stack>
     );
   }
 
-  return (
-    <>
-      <Meta title="Accept Invite" />
-      {isLoggedIn() ? renderLoggedIn() : renderLoggedOut()}
-    </>
-  );
+  return render();
 }
 
 export default AcceptInvite;

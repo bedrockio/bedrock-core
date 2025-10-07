@@ -30,7 +30,7 @@ export default function InviteForm(props) {
   function onEmailsBlur() {
     setField({
       name: 'emails',
-      value: input.split(/,\s+/),
+      value: input.trim().split(/,\s+/),
     });
   }
 

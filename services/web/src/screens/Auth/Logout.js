@@ -1,13 +1,20 @@
+import { useNavigate } from '@bedrockio/router';
 import { useEffect } from 'react';
 
 import { useSession } from 'stores/session';
 
 export default function Logout() {
-  const session = useSession();
+  const { logout } = useSession();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    session.logout();
-  }, [session]);
+    onMount();
+  }, []);
+
+  async function onMount() {
+    await logout();
+    navigate('/login');
+  }
 
   return <div />;
 }
