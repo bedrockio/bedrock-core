@@ -332,7 +332,7 @@ describe('/1/auth/otp', () => {
         assertAuthToken(user, response.body.data.token);
       });
 
-      it('should not issue token if password was not recently verified', async () => {
+      it('should issue token if password was not recently verified', async () => {
         mockTime('2020-01-01T00:00:00.000Z');
         const user = await createUser({
           email: 'foo@bar.com',
@@ -340,6 +340,25 @@ describe('/1/auth/otp', () => {
         });
         advanceTime(60 * 60 * 1000);
         const code = await createOtp(user);
+        const response = await request('POST', '/1/auth/otp/login', {
+          email: user.email,
+          code,
+        });
+        expect(response.status).toBe(200);
+        assertAuthToken(user, response.body.data.token);
+        unmockTime();
+      });
+
+      it('should not issue token if part of mfa challenge', async () => {
+        mockTime('2020-01-01T00:00:00.000Z');
+        const user = await createUser({
+          email: 'foo@bar.com',
+          password: '12345',
+        });
+        advanceTime(60 * 60 * 1000);
+        const code = await createOtp(user, {
+          isMfa: true,
+        });
         const response = await request('POST', '/1/auth/otp/login', {
           email: user.email,
           code,

@@ -2,6 +2,7 @@ const speakeasy = require('speakeasy');
 const config = require('@bedrockio/config');
 
 const { clearAuthenticators, addAuthenticator, assertAuthenticator } = require('./authenticators');
+const { verifyRecentPassword } = require('./password');
 
 const APP_NAME = config.get('APP_NAME');
 
@@ -44,9 +45,14 @@ async function revokeTotp(user) {
   await user.save();
 }
 
-function verifyTotp(user, code) {
+async function verifyTotp(user, code) {
   const authenticator = assertAuthenticator(user, 'totp');
   verifyCode(authenticator.secret, code);
+
+  if (authenticator.isMfa) {
+    await verifyRecentPassword(user);
+  }
+
   authenticator.lastUsedAt = new Date();
 }
 

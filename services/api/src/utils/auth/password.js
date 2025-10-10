@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 
-const { getAuthenticator, clearAuthenticators, addAuthenticator, assertAuthenticator } = require('./authenticators');
+const { clearAuthenticators, addAuthenticator, assertAuthenticator } = require('./authenticators');
 
 // 5 minutes
 const MFA_THRESHOLD = 5 * 60 * 1000;
@@ -24,13 +24,10 @@ async function verifyPassword(user, password) {
 
 // To allow OTP login, passwords may be changed to optional.
 function verifyRecentPassword(user) {
-  const authenticator = getAuthenticator(user, 'password');
-
-  if (!authenticator) {
-    return;
-  }
+  const authenticator = assertAuthenticator(user, 'password');
 
   const dt = new Date() - authenticator.lastUsedAt;
+
   if (dt > MFA_THRESHOLD) {
     throw new Error('Password not verified.');
   }

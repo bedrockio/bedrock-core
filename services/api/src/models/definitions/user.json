@@ -133,6 +133,10 @@
               "type": "String",
               "readAccess": "none"
             },
+            "isMfa": {
+              "type": "Boolean",
+              "readAccess": "none"
+            },
             "info": {
               "type": "Object",
               "readAccess": "none"

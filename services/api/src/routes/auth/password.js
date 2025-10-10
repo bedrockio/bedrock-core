@@ -60,6 +60,7 @@ router
           type: 'code',
           phase: 'login',
           channel: mfaMethod,
+          isMfa: true,
         });
       } else if (mfaMethod === 'totp') {
         challenge = {

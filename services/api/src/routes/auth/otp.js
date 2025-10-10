@@ -5,7 +5,6 @@ const { validateBody } = require('../../utils/middleware/validate');
 const { sendOtp } = require('../../utils/auth/otp');
 const { verifyOtp } = require('../../utils/auth/otp');
 const { login, verifyLoginAttempts } = require('../../utils/auth');
-const { verifyRecentPassword } = require('../../utils/auth/password');
 
 const { AuditEntry } = require('../../models');
 const { findUser } = require('./utils');
@@ -60,19 +59,13 @@ router
       }
 
       try {
-        verifyOtp(user, code);
+        await verifyOtp(user, code);
       } catch (error) {
         await user.save();
-        await AuditEntry.append('Incorrect OTP', {
+        await AuditEntry.append('OTP Verification Failure', {
           ctx,
           actor: user,
         });
-        ctx.throw(401, error);
-      }
-
-      try {
-        await verifyRecentPassword(user);
-      } catch (error) {
         ctx.throw(401, error);
       }
 

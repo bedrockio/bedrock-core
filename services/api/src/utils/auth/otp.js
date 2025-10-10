@@ -2,6 +2,7 @@ const { customAlphabet } = require('nanoid');
 const { sendMessage } = require('../messaging');
 
 const { clearAuthenticators, addAuthenticator, assertAuthenticator } = require('./authenticators');
+const { verifyRecentPassword } = require('./password');
 
 const generateCode = customAlphabet('1234567890', 6);
 
@@ -11,19 +12,19 @@ const TESTER_CODE = '111111';
 // 1 hour
 const EXPIRE = 60 * 60 * 1000;
 
-async function sendOtp(user, body) {
+async function sendOtp(user, options) {
   if (!user) {
-    return createChallenge(body);
+    return createChallenge(options);
   }
 
-  const { type, phase, channel } = body;
+  const { type, phase, channel } = options;
 
   const template = `otp-${phase}-${type}`;
-  const code = await createOtp(user);
+  const code = await createOtp(user, options);
 
   if (user.isTester) {
     return createChallenge({
-      ...body,
+      ...options,
       code,
     });
   } else {
@@ -33,7 +34,7 @@ async function sendOtp(user, body) {
       template,
       channel,
     });
-    return createChallenge(body, user);
+    return createChallenge(options, user);
   }
 }
 
@@ -49,14 +50,16 @@ function createChallenge(body, target = body) {
   };
 }
 
-async function createOtp(user) {
+async function createOtp(user, options = {}) {
   clearAuthenticators(user, 'otp');
 
   const code = user.isTester ? TESTER_CODE : generateCode();
+  const { isMfa = false } = options;
 
   addAuthenticator(user, {
     type: 'otp',
     code,
+    isMfa,
     expiresAt: new Date(Date.now() + EXPIRE),
   });
 
@@ -65,17 +68,23 @@ async function createOtp(user) {
   return code;
 }
 
-function verifyOtp(user, code) {
+async function verifyOtp(user, code) {
   const authenticator = assertAuthenticator(user, 'otp');
-  if (authenticator.code === code) {
-    const dt = authenticator.expiresAt - new Date();
-    if (dt <= 0) {
-      throw new Error('Code expired.');
-    }
-    clearAuthenticators(user, 'otp');
-  } else {
+
+  if (authenticator.code !== code) {
     throw new Error('Incorrect code.');
   }
+
+  const dt = authenticator.expiresAt - new Date();
+  if (dt <= 0) {
+    throw new Error('Code expired.');
+  }
+
+  if (authenticator.isMfa) {
+    await verifyRecentPassword(user);
+  }
+
+  clearAuthenticators(user, 'otp');
 }
 
 module.exports = {

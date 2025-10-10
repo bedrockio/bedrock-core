@@ -5,7 +5,6 @@ const { authenticate } = require('../../utils/middleware/authenticate');
 
 const { expandRoles } = require('../../utils/permissions');
 const { login, verifyLoginAttempts } = require('../../utils/auth');
-const { verifyRecentPassword } = require('../../utils/auth/password');
 const { verifyCode, verifyTotp, generateTotp, enableTotp, revokeTotp } = require('../../utils/auth/totp');
 
 const { AuditEntry } = require('../../models');
@@ -38,19 +37,13 @@ router
       }
 
       try {
-        verifyTotp(user, code);
+        await verifyTotp(user, code);
       } catch (error) {
         await user.save();
-        await AuditEntry.append('Incorrect Authenticator Code', {
+        await AuditEntry.append('TOTP Verification Failure', {
           ctx,
           actor: user,
         });
-        ctx.throw(401, error);
-      }
-
-      try {
-        await verifyRecentPassword(user);
-      } catch (error) {
         ctx.throw(401, error);
       }
 

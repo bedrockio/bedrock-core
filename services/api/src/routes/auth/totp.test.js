@@ -33,7 +33,7 @@ describe('/1/auth/totp', () => {
           user,
         },
       );
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       assertAuthToken(user, response.body.data.token);
 
       user = await User.findById(user.id);
@@ -64,7 +64,7 @@ describe('/1/auth/totp', () => {
         email: user.email,
         code: '000000',
       });
-      expect(response.status).toBe(401);
+      expect(response).toHaveStatus(401);
 
       code = speakeasy.totp({
         secret,
@@ -73,7 +73,7 @@ describe('/1/auth/totp', () => {
         email: user.email,
         code,
       });
-      expect(response.status).toBe(401);
+      expect(response).toHaveStatus(401);
 
       advanceTime(60 * 1000);
       code = speakeasy.totp({
@@ -83,7 +83,7 @@ describe('/1/auth/totp', () => {
         email: user.email,
         code,
       });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
 
       unmockTime();
     });
@@ -100,13 +100,13 @@ describe('/1/auth/totp', () => {
           user,
         },
       );
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data.url.startsWith('otpauth://')).toBe(true);
     });
 
     it('should request authentication', async () => {
       const response = await request('POST', '/1/auth/totp/request', {}, {});
-      expect(response.status).toBe(401);
+      expect(response).toHaveStatus(401);
     });
   });
 
@@ -131,7 +131,7 @@ describe('/1/auth/totp', () => {
           user,
         },
       );
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
 
       user = await User.findById(user.id);
       expect(user.authenticators.toObject()).toMatchObject([
@@ -147,7 +147,7 @@ describe('/1/auth/totp', () => {
 
     it('should request authentication', async () => {
       const response = await request('POST', '/1/auth/totp/enable', {}, {});
-      expect(response.status).toBe(401);
+      expect(response).toHaveStatus(401);
     });
   });
 
@@ -166,7 +166,7 @@ describe('/1/auth/totp', () => {
           user,
         },
       );
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
 
       user = await User.findById(user.id);
       expect(user.mfaMethod).toBe('none');
@@ -182,7 +182,7 @@ describe('/1/auth/totp', () => {
 
     it('should request authentication', async () => {
       const response = await request('POST', '/1/auth/totp/disable', {}, {});
-      expect(response.status).toBe(401);
+      expect(response).toHaveStatus(401);
     });
   });
 });

@@ -1,6 +1,5 @@
 const { assertSmsSent } = require('twilio');
 const { assertMailSent } = require('postmark');
-const { createOtp } = require('../../utils/auth/otp');
 const { request, createUser } = require('../../utils/testing');
 const { assertAuthToken } = require('../../utils/testing/tokens');
 const { mockTime, unmockTime, advanceTime } = require('../../utils/testing/time');
@@ -22,7 +21,7 @@ describe('mfa', () => {
         email: user.email,
         password: '123456789abcd',
       });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data).toEqual({
         challenge: {
           type: 'code',
@@ -46,14 +45,14 @@ describe('mfa', () => {
         code: '000000',
         phone: user.phone,
       });
-      expect(response.status).toBe(401);
+      expect(response).toHaveStatus(401);
 
       // Second attempt succeeded
       response = await request('POST', '/1/auth/otp/login', {
         code,
         phone: user.phone,
       });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       assertAuthToken(user, response.body.data.token);
     });
 
@@ -71,7 +70,7 @@ describe('mfa', () => {
         email: user.email,
         password: '123456789abcd',
       });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data).toEqual({
         challenge: {
           type: 'code',
@@ -95,19 +94,56 @@ describe('mfa', () => {
         code: '000000',
         email: user.email,
       });
-      expect(response.status).toBe(401);
+      expect(response).toHaveStatus(401);
 
       // Second attempt succeeded
       response = await request('POST', '/1/auth/otp/login', {
         code,
         email: user.email,
       });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       assertAuthToken(user, response.body.data.token);
     });
 
-    it('should not allow code verification when password not verified recently', async () => {
+    it('should not verify recent password for simple otp', async () => {
       mockTime('2020-01-01T00:00:00.000Z');
+
+      let response;
+
+      let user = await createUser({
+        phone: '+12223456789',
+      });
+
+      response = await request('POST', '/1/auth/otp/send', {
+        type: 'code',
+        channel: 'sms',
+        phone: user.phone,
+      });
+
+      expect(response).toHaveStatus(200);
+
+      advanceTime(10 * 60 * 1000);
+
+      user = await User.findById(user.id);
+
+      const { code } = user.authenticators.find((authenticator) => {
+        return authenticator.type === 'otp';
+      });
+
+      response = await request('POST', '/1/auth/otp/login', {
+        code,
+        phone: user.phone,
+      });
+
+      expect(response).toHaveStatus(200);
+      assertAuthToken(user, response.body.data.token);
+
+      unmockTime();
+    });
+
+    it('should verify recent password in sms mfa flow', async () => {
+      mockTime('2020-01-01T00:00:00.000Z');
+
       let response;
 
       let user = await createUser({
@@ -116,16 +152,26 @@ describe('mfa', () => {
         mfaMethod: 'sms',
       });
 
-      const code = await createOtp(user);
+      // Login met with mfa challenge
+      response = await request('POST', '/1/auth/password/login', {
+        email: user.email,
+        password: '123456789abcd',
+      });
+
+      user = await User.findById(user.id);
 
       advanceTime(10 * 60 * 1000);
 
-      // Second attempt succeeded
+      const { code } = user.authenticators.find((authenticator) => {
+        return authenticator.type === 'otp';
+      });
+
+      // Attempt to verify OTP after expired.
       response = await request('POST', '/1/auth/otp/login', {
         code,
         phone: user.phone,
       });
-      expect(response.status).toBe(401);
+      expect(response).toHaveStatus(401);
 
       unmockTime();
     });
