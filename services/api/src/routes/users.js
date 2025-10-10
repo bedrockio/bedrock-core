@@ -108,9 +108,10 @@ router
   .post(
     '/',
     validateBody(
-      User.getCreateValidation({
-        password: yd.string().password(),
-      })
+      User.getCreateValidation()
+        .append({
+          password: yd.string().password(),
+        })
         .custom((val) => {
           if (!val.email && !val.phone) {
             throw new Error('email or phone number is required');

@@ -94,7 +94,7 @@ describe('/1/users', () => {
         { user: admin },
       );
       const data = response.body.data;
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(data.firstName).toBe('Mellow');
       expect(data.lastName).toBe('Yellow');
       expect(data.name).toBe('Mellow Yellow');
