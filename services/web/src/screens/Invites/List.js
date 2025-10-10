@@ -77,7 +77,7 @@ export default function Invites() {
               <Group justify="space-between">
                 <Group>
                   <SearchFilters.Modal>
-                    <SearchFilters.Dropdown
+                    <SearchFilters.Select
                       name="status"
                       label="Status"
                       data={[

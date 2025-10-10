@@ -89,7 +89,7 @@ export default function UserList() {
               <Group justify="space-between">
                 <Group>
                   <SearchFilters.Modal>
-                    <SearchFilters.Dropdown
+                    <SearchFilters.Select
                       onDataNeeded={fetchRoles}
                       name="roles"
                       label="Roles"

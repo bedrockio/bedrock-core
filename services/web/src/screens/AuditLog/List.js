@@ -159,24 +159,24 @@ export default function AuditLogList() {
             <Group justify="space-between">
               <Group>
                 <SearchFilters.Modal>
-                  <SearchFilters.Dropdown
+                  <SearchFilters.Select
                     onDataNeeded={fetchUsers}
                     name="actor"
                     label="Actor"
                   />
-                  <SearchFilters.Dropdown
+                  <SearchFilters.Select
                     onDataNeeded={fetchUsers}
                     name="ownerId"
                     label="Owner"
                   />
-                  <SearchFilters.Dropdown
+                  <SearchFilters.Select
                     onDataNeeded={() =>
                       fetchSearchOptions({ field: 'activity' })
                     }
                     name="activity"
                     label="Activity"
                   />
-                  <SearchFilters.Dropdown
+                  <SearchFilters.Select
                     onDataNeeded={() =>
                       fetchSearchOptions({ field: 'objectType' })
                     }

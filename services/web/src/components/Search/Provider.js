@@ -82,7 +82,7 @@ function SearchProvider({
   onDataNeeded,
   limit = 20,
   //page = 1,
-  sort = { order: 'desc', field: 'createdAt' },
+  sort,
   filters = {},
   filterMapping,
   onPageChange,
@@ -208,7 +208,7 @@ function SearchProvider({
   function setSort(field) {
     const { sort } = state;
     let order;
-    if (field === sort.field && sort.order === 'asc') {
+    if (field === sort?.field && sort?.order === 'asc') {
       order = 'desc';
     } else {
       order = 'asc';
@@ -224,7 +224,7 @@ function SearchProvider({
 
   function getSorted(field) {
     const { sort } = state;
-    if (field === sort.field) {
+    if (field === sort?.field) {
       return sort.order === 'asc' ? 'ascending' : 'descending';
     }
   }

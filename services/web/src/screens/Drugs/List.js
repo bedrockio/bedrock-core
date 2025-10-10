@@ -2,9 +2,9 @@ import { Link } from '@bedrockio/router';
 
 import {
   Anchor,
+  Badge,
   Button,
   Group,
-  Image,
   Loader,
   Stack,
   Table,
@@ -19,53 +19,31 @@ import SearchFilters from 'components/Search/Filters';
 import SortableTh from 'components/Table/SortableTh';
 
 import { request } from 'utils/api';
-import allCountries from 'utils/countries';
 import { formatDateTime } from 'utils/date';
-import { urlForUpload } from 'utils/uploads';
 
 import Actions from './Actions';
 
-const countries = allCountries.map(({ countryCode, nameEn }) => ({
-  value: countryCode,
-  label: nameEn,
-  key: countryCode,
-}));
-
-export default function ShopList() {
+export default function DrugList() {
   async function onDataNeeded(body) {
     return await request({
       method: 'POST',
-      path: '/1/shops/search',
+      path: '/1/drugs/search',
       body,
     });
   }
 
-  async function fetchOwners(props) {
-    const { data } = await request({
-      method: 'POST',
-      path: '/1/users/search',
-      body: props,
-    });
-    return data;
-  }
-
-  async function fetchCategories(props) {
-    const { data } = await request({
-      method: 'POST',
-      path: '/1/categories/search',
-      body: props,
-    });
-    return data;
-  }
-
   function getFilterMapping() {
     return {
-      country: {
-        label: 'Country',
-        getDisplayValue: (id) => countries.find((c) => c.value === id)?.text,
+      category: {
+        label: 'Category',
       },
-      owner: {
-        label: 'Owner',
+      pregnancySafe: {
+        label: 'Pregnancy Safe',
+        type: 'boolean',
+      },
+      breastfeedingSafe: {
+        label: 'Breastfeeding Safe',
+        type: 'boolean',
       },
       createdAt: {
         label: 'Created At',
@@ -81,29 +59,29 @@ export default function ShopList() {
       <Search.Provider
         onDataNeeded={onDataNeeded}
         filterMapping={getFilterMapping()}>
-        {({ items: shops, getSorted, setSort, reload, error, loading }) => {
+        {({ items: drugs, getSorted, setSort, reload, error, loading }) => {
           return (
             <Stack>
               <PageHeader
-                title="Shops"
+                title="Drugs"
                 breadcrumbItems={[
                   {
                     href: '/',
                     title: 'Home',
                   },
                   {
-                    title: 'Shops',
+                    title: 'Drugs',
                   },
                 ]}
                 rightSection={
                   <>
-                    <Search.Export filename="shops" />
-                    <Protected endpoint="shops" permission="create">
+                    <Search.Export filename="drugs" />
+                    <Protected endpoint="drugs" permission="create">
                       <Button
                         component={Link}
                         variant="primary"
-                        to="/shops/new">
-                        New Shop
+                        to="/drugs/new">
+                        New Drug
                       </Button>
                     </Protected>
                   </>
@@ -112,24 +90,36 @@ export default function ShopList() {
 
               <Group justify="space-between">
                 <SearchFilters.Modal>
+                  <SearchFilters.Search name="category" label="Category" />
                   <SearchFilters.Select
-                    data={countries}
-                    search
-                    name="country"
-                    label="Country"
+                    name="category"
+                    label="Category"
+                    data={[
+                      {
+                        label: 'Peptide',
+                        value: 'peptide',
+                      },
+                      {
+                        value: 'false',
+                        label: 'No',
+                      },
+                    ]}
                   />
                   <SearchFilters.Select
-                    search
-                    onDataNeeded={fetchOwners}
-                    name="owner"
-                    label="Owner"
+                    name="pregnancySafe"
+                    label="Pregnancy Safe"
+                    data={[
+                      { value: 'true', label: 'Yes' },
+                      { value: 'false', label: 'No' },
+                    ]}
                   />
                   <SearchFilters.Select
-                    search
-                    multiple
-                    onDataNeeded={fetchCategories}
-                    name="categories"
-                    label="Categories"
+                    name="breastfeedingSafe"
+                    label="Breastfeeding Safe"
+                    data={[
+                      { value: 'true', label: 'Yes' },
+                      { value: 'false', label: 'No' },
+                    ]}
                   />
                   <SearchFilters.DateRange
                     label="Created At"
@@ -154,8 +144,9 @@ export default function ShopList() {
                       onClick={() => setSort('name')}>
                       Name
                     </SortableTh>
-                    <Table.Th width={60}>Image</Table.Th>
-
+                    <Table.Th>Development Name</Table.Th>
+                    <Table.Th>Category</Table.Th>
+                    <Table.Th>Safety</Table.Th>
                     <SortableTh
                       sorted={getSorted('createdAt')}
                       onClick={() => setSort('createdAt')}
@@ -172,42 +163,53 @@ export default function ShopList() {
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>
-                  {shops.length === 0 && (
+                  {drugs.length === 0 && (
                     <Table.Tr>
-                      <Table.Td colSpan={5}>
+                      <Table.Td colSpan={6}>
                         <Text p="md" fw="bold" ta="center">
-                          No shops found.
+                          No drugs found.
                         </Text>
                       </Table.Td>
                     </Table.Tr>
                   )}
-                  {shops.map((shop) => {
+                  {drugs.map((drug) => {
                     return (
-                      <Table.Tr key={shop.id}>
+                      <Table.Tr key={drug.id}>
                         <Table.Td>
                           <Anchor
                             size="sm"
                             component={Link}
-                            to={`/shops/${shop.id}`}>
-                            {shop.name}
+                            to={`/drugs/${drug.id}`}>
+                            {drug.name}
                           </Anchor>
                         </Table.Td>
                         <Table.Td>
-                          {shop.images.length > 0 && (
-                            <Image
-                              radius={4}
-                              h={40}
-                              w={40}
-                              fit
-                              src={urlForUpload(shop.images[0], true)}
-                            />
-                          )}
+                          <Text size="sm" c="dimmed">
+                            {drug.developmentName || '-'}
+                          </Text>
                         </Table.Td>
-                        <Table.Td>{formatDateTime(shop.createdAt)}</Table.Td>
+                        <Table.Td>
+                          <Text size="sm">{drug.category || '-'}</Text>
+                        </Table.Td>
+                        <Table.Td>
+                          <Group gap="xs">
+                            {drug.pregnancySafe && (
+                              <Badge size="sm" color="green">
+                                Pregnancy Safe
+                              </Badge>
+                            )}
+                            {drug.breastfeedingSafe && (
+                              <Badge size="sm" color="blue">
+                                Breastfeeding Safe
+                              </Badge>
+                            )}
+                          </Group>
+                        </Table.Td>
+                        <Table.Td>{formatDateTime(drug.createdAt)}</Table.Td>
                         <Table.Td justify="flex-end">
                           <Actions
                             compact
-                            shop={shop}
+                            drug={drug}
                             reload={reload}
                             displayMode="list"
                           />
