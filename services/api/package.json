@@ -23,10 +23,10 @@
   "dependencies": {
     "@bedrockio/chrono": "^0.6.2",
     "@bedrockio/config": "^2.2.3",
-    "@bedrockio/fixtures": "^1.3.4",
+    "@bedrockio/fixtures": "^1.4.5",
     "@bedrockio/logger": "^1.1.3",
-    "@bedrockio/model": "^0.11.3",
-    "@bedrockio/yada": "^1.4.1",
+    "@bedrockio/model": "^0.15.0",
+    "@bedrockio/yada": "^1.8.1",
     "@google-cloud/storage": "^7.11.1",
     "@koa/cors": "^4.0.0",
     "@koa/router": "^12.0.0",

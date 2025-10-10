@@ -199,10 +199,10 @@ export default function RequestBuilder(props) {
 
   function renderSchema(schema, path, options) {
     schema = resolveRefs(docs, schema);
-    const { type, oneOf } = schema;
-    if (oneOf) {
+    const { type, anyOf } = schema;
+    if (anyOf) {
       return (
-        <OneOfSchema
+        <AnyOfSchema
           schema={schema}
           renderSchema={(schema) => {
             return renderSchema(schema, path, options);
@@ -483,9 +483,9 @@ function Collapsable(props) {
   return render();
 }
 
-function OneOfSchema(props) {
+function AnyOfSchema(props) {
   const { schema, renderSchema } = props;
-  const { oneOf = [] } = schema;
+  const { anyOf = [] } = schema;
 
   const [selected, setSelected] = useState(0);
 
@@ -493,7 +493,7 @@ function OneOfSchema(props) {
     <React.Fragment>
       <SegmentedControl
         value={selected}
-        data={oneOf
+        data={anyOf
           .map((schema, i) => {
             return {
               label: schema.type || '',
@@ -507,7 +507,7 @@ function OneOfSchema(props) {
           setSelected(value);
         }}
       />
-      {renderSchema(oneOf[selected])}
+      {renderSchema(anyOf[selected])}
     </React.Fragment>
   );
 }

@@ -145,7 +145,7 @@ function generatePaths(routes) {
       const { type, schema } = validationLayer.validation;
 
       const openApi = schema.toOpenApi({
-        tag: (meta) => {
+        tag(meta) {
           if (meta.format === 'date-time') {
             return {
               'x-schema': 'DateTime',

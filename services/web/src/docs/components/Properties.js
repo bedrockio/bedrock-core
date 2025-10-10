@@ -18,8 +18,7 @@ export default function DocsProperties(props) {
   const { path, model, getPath, hideFields = [], additionalSort } = props;
 
   const { className, getElementClass } = useClass('docs-properties');
-  // static contextType = DocsContext;
-  //
+
   const { docs, loading, visitedComponents } = useDocs();
 
   function getModelPath(name) {
@@ -49,6 +48,16 @@ export default function DocsProperties(props) {
     }
   }
 
+  function isRequired(name, options = {}) {
+    const { type, required = [] } = options.parent || {};
+
+    if (type !== 'object') {
+      return false;
+    }
+
+    return required.includes(name);
+  }
+
   function render() {
     if (!docs) {
       return null;
@@ -60,15 +69,22 @@ export default function DocsProperties(props) {
       return null;
     }
 
-    return <div className={className}>{renderParams(data, path)}</div>;
+    return (
+      <div className={className}>
+        {renderParams(data.properties, path, {
+          parent: data,
+        })}
+      </div>
+    );
   }
 
   function renderParams(data, path, options = {}) {
     const { level = 0 } = options;
     let entries = Object.entries(data);
+
     entries.sort((a, b) => {
-      const aRequired = a[1].required || false;
-      const bRequired = b[1].required || false;
+      const aRequired = isRequired(a[0], options);
+      const bRequired = isRequired(b[0], options);
 
       if (aRequired !== bRequired) {
         return bRequired - aRequired;
@@ -95,6 +111,7 @@ export default function DocsProperties(props) {
                 {renderParams(desc.properties, [...path, name], {
                   ...options,
                   level: level + 1,
+                  parent: desc,
                 })}
               </div>
             </React.Fragment>
@@ -110,6 +127,7 @@ export default function DocsProperties(props) {
                 {renderParams(desc.items.properties, [...path, name], {
                   ...options,
                   level: level + 1,
+                  parent: desc,
                 })}
               </div>
             </React.Fragment>
@@ -125,7 +143,10 @@ export default function DocsProperties(props) {
 
   function renderParam(name, desc, path, options) {
     const { level } = options;
-    const { description, required, default: defaultValue } = desc;
+    const { description, default: defaultValue } = desc;
+
+    const required = isRequired(name, options);
+
     return (
       <div
         key={name}

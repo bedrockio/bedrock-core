@@ -14,7 +14,7 @@ export function getParametersPath(route) {
 }
 
 export function getRequestBodyPath(route, mime) {
-  return [...getSchemaPath(route, mime), 'properties'];
+  return getSchemaPath(route, mime);
 }
 
 export function getModelPath(route) {

@@ -34,6 +34,7 @@ export default class RouteParams extends React.Component {
     const { docs } = this.context;
     const path = getRequestBodyPath(route, mime);
     const entry = get(docs, path);
+
     if (entry) {
       return {
         path,
@@ -114,7 +115,7 @@ export default class RouteParams extends React.Component {
     const queryParams = this.getQueryParams();
 
     if (!routeEntry) {
-      return <Alert error>No OpenApi entry found.</Alert>;
+      return <Alert>No OpenApi entry found.</Alert>;
     } else if (requestBody) {
       const { path, mime } = requestBody;
       return (
