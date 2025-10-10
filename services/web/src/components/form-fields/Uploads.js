@@ -37,6 +37,10 @@ const MIME_TYPES = {
     mime: 'application/zip,application/x-zip-compressed,application/octet-stream',
     extensions: ['.zip'],
   },
+  document: {
+    mime: 'application/pdf,image/*,text/*',
+    extensions: ['.pdf', '.png', '.jpg', '.jpeg', '.txt'],
+  },
 };
 
 const MEDIA_TYPES = ['image', 'video', 'audio'];
@@ -48,12 +52,13 @@ export default class Uploads extends React.Component {
       loading: false,
     };
   }
+
   static defaultProps = {
     onError: (error) => {
       // eslint-disable-next-line no-console
       console.error(error);
     },
-    type: 'image',
+    type: 'document',
   };
 
   // Events
