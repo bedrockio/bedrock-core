@@ -16,7 +16,7 @@ describe('/1/auth', () => {
       });
 
       const response = await request('POST', '/1/auth/logout', { all: true }, { user });
-      expect(response.status).toBe(204);
+      expect(response).toHaveStatus(204);
       const updatedUser = await User.findById(user.id);
       expect(updatedUser.authTokens).toHaveLength(0);
     });
@@ -33,7 +33,7 @@ describe('/1/auth', () => {
         ],
       });
       const response = await request('POST', '/1/auth/logout', {}, { user });
-      expect(response.status).toBe(204);
+      expect(response).toHaveStatus(204);
       const updatedUser = await User.findById(user.id);
       expect(updatedUser.authTokens).toHaveLength(1);
       expect(updatedUser.authTokens[0].jti).toBe('old session not expired');
@@ -59,7 +59,7 @@ describe('/1/auth', () => {
         ],
       });
       const response = await request('POST', '/1/auth/logout', { jti: 'otherid' }, { user });
-      expect(response.status).toBe(204);
+      expect(response).toHaveStatus(204);
       const updatedUser = await User.findById(user.id);
       expect(updatedUser.authTokens).toHaveLength(1);
       expect(updatedUser.authTokens[0].jti).toBe('someid');
@@ -79,7 +79,7 @@ describe('/1/auth', () => {
         },
         { user },
       );
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
 
       user = await User.findById(user.id);
       expect(user.mfaMethod).toBe('sms');
@@ -95,7 +95,7 @@ describe('/1/auth', () => {
         },
         { user },
       );
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
 
       user = await User.findById(user.id);
       expect(user.mfaMethod).toBe('email');
@@ -113,7 +113,7 @@ describe('/1/auth', () => {
         },
         { user },
       );
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
 
       user = await User.findById(user.id);
       expect(user.mfaMethod).toBe('none');
@@ -129,7 +129,7 @@ describe('/1/auth', () => {
         },
         { user },
       );
-      expect(response.status).toBe(400);
+      expect(response).toHaveStatus(400);
     });
 
     it('should expand user roles', async () => {

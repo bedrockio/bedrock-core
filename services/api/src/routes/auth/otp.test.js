@@ -17,7 +17,7 @@ describe('/1/auth/otp', () => {
         const response = await request('POST', '/1/auth/otp/send', {
           email,
         });
-        expect(response.status).toBe(200);
+        expect(response).toHaveStatus(200);
         expect(response.body.data).toEqual({
           challenge: {
             type: 'link',
@@ -41,7 +41,7 @@ describe('/1/auth/otp', () => {
           phone,
           channel: 'sms',
         });
-        expect(response.status).toBe(200);
+        expect(response).toHaveStatus(200);
         expect(response.body.data).toEqual({
           challenge: {
             type: 'link',
@@ -68,7 +68,7 @@ describe('/1/auth/otp', () => {
           type: 'code',
           channel: 'sms',
         });
-        expect(response.status).toBe(200);
+        expect(response).toHaveStatus(200);
         expect(response.body.data).toEqual({
           challenge: {
             type: 'code',
@@ -88,7 +88,7 @@ describe('/1/auth/otp', () => {
       const response = await request('POST', '/1/auth/otp/send', {
         email: 'foo@bar.com',
       });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data).toEqual({
         challenge: {
           email: 'foo@bar.com',
@@ -107,7 +107,7 @@ describe('/1/auth/otp', () => {
       const response = await request('POST', '/1/auth/otp/send', {
         phone: '+12223456789',
       });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
 
       user = await User.findById(user.id);
 
@@ -129,7 +129,7 @@ describe('/1/auth/otp', () => {
       const response = await request('POST', '/1/auth/otp/send', {
         phone: '+12223456789',
       });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
 
       user = await User.findById(user.id);
 
@@ -153,7 +153,7 @@ describe('/1/auth/otp', () => {
       response = await request('POST', '/1/auth/otp/send', {
         email: 'tester@foo.com',
       });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data.challenge.code).toBe('111111');
 
       response = await request('POST', '/1/auth/otp/login', {
@@ -161,7 +161,7 @@ describe('/1/auth/otp', () => {
         code: '111111',
       });
 
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
 
       user = await User.findById(user.id);
       assertMailCount(0);
@@ -181,7 +181,7 @@ describe('/1/auth/otp', () => {
           email: user.email,
           code,
         });
-        expect(response.status).toBe(200);
+        expect(response).toHaveStatus(200);
         assertAuthToken(user, response.body.data.token);
       });
 
@@ -194,7 +194,7 @@ describe('/1/auth/otp', () => {
           phone: user.phone,
           code,
         });
-        expect(response.status).toBe(200);
+        expect(response).toHaveStatus(200);
         assertAuthToken(user, response.body.data.token);
       });
 
@@ -210,7 +210,7 @@ describe('/1/auth/otp', () => {
           phone: user.phone,
           code,
         });
-        expect(response.status).toBe(401);
+        expect(response).toHaveStatus(401);
         unmockTime();
       });
 
@@ -219,7 +219,7 @@ describe('/1/auth/otp', () => {
           phone: '+12223456789',
           code: '123456',
         });
-        expect(response.status).toBe(400);
+        expect(response).toHaveStatus(400);
       });
 
       it('should throw an error if code is incorrect', async () => {
@@ -231,7 +231,7 @@ describe('/1/auth/otp', () => {
           phone: user.phone,
           code: '123456',
         });
-        expect(response.status).toBe(401);
+        expect(response).toHaveStatus(401);
         expect(response.body.error.message).toBe('Incorrect code.');
       });
 
@@ -298,20 +298,20 @@ describe('/1/auth/otp', () => {
           email: user.email,
           code: '000000',
         });
-        expect(response.status).toBe(401);
+        expect(response).toHaveStatus(401);
 
         response = await request('POST', '/1/auth/otp/login', {
           email: user.email,
           code,
         });
-        expect(response.status).toBe(401);
+        expect(response).toHaveStatus(401);
 
         advanceTime(60 * 1000);
         response = await request('POST', '/1/auth/otp/login', {
           email: user.email,
           code,
         });
-        expect(response.status).toBe(200);
+        expect(response).toHaveStatus(200);
 
         unmockTime();
       });
@@ -328,7 +328,7 @@ describe('/1/auth/otp', () => {
           email: user.email,
           code,
         });
-        expect(response.status).toBe(200);
+        expect(response).toHaveStatus(200);
         assertAuthToken(user, response.body.data.token);
       });
 
@@ -344,7 +344,7 @@ describe('/1/auth/otp', () => {
           email: user.email,
           code,
         });
-        expect(response.status).toBe(200);
+        expect(response).toHaveStatus(200);
         assertAuthToken(user, response.body.data.token);
         unmockTime();
       });
@@ -363,7 +363,7 @@ describe('/1/auth/otp', () => {
           email: user.email,
           code,
         });
-        expect(response.status).toBe(401);
+        expect(response).toHaveStatus(401);
         expect(response.body.error.message).toBe('Password not verified.');
         unmockTime();
       });

@@ -24,7 +24,7 @@ describe('/1/uploads', () => {
       const user = await createUser();
       const upload = await createUpload();
       const response = await request('GET', `/1/uploads/${upload.id}`, {}, { user });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data.filename).toBe('test.png');
     });
 
@@ -34,7 +34,7 @@ describe('/1/uploads', () => {
         private: true,
       });
       const response = await request('GET', `/1/uploads/${upload.id}`, {}, { user: admin });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data.filename).toBe('test.png');
     });
 
@@ -43,7 +43,7 @@ describe('/1/uploads', () => {
         private: true,
       });
       const response = await request('GET', `/1/uploads/${upload.id}`, {}, {});
-      expect(response.status).toBe(401);
+      expect(response).toHaveStatus(401);
     });
 
     it('should not allow access private upload as other user', async () => {
@@ -61,7 +61,7 @@ describe('/1/uploads', () => {
           user: user2,
         },
       );
-      expect(response.status).toBe(401);
+      expect(response).toHaveStatus(401);
     });
   });
 
@@ -72,7 +72,7 @@ describe('/1/uploads', () => {
         owner: user,
       });
       const response = await request('GET', `/1/uploads/${upload.id}/url`, {}, { user });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data.startsWith(os.tmpdir())).toBe(true);
     });
 
@@ -85,7 +85,7 @@ describe('/1/uploads', () => {
 
       const response = await request('GET', `/1/uploads/${upload.id}/url`, {}, { user });
 
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data.startsWith(os.tmpdir())).toBe(true);
     });
 
@@ -98,7 +98,7 @@ describe('/1/uploads', () => {
         owner: user,
       });
       const response = await request('GET', `/1/uploads/${upload.id}/url`, {}, { user: admin });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data.startsWith(os.tmpdir())).toBe(true);
       unmockReadStream();
     });
@@ -108,7 +108,7 @@ describe('/1/uploads', () => {
         private: true,
       });
       const response = await request('GET', `/1/uploads/${upload.id}/url`, {}, {});
-      expect(response.status).toBe(401);
+      expect(response).toHaveStatus(401);
     });
   });
 
@@ -120,7 +120,7 @@ describe('/1/uploads', () => {
 
       const response = await request('GET', `/1/uploads/${upload.id}/raw`, {}, { user });
 
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.toString().startsWith(os.tmpdir())).toBe(true);
       unmockReadStream();
     });
@@ -130,7 +130,7 @@ describe('/1/uploads', () => {
         private: true,
       });
       const response = await request('GET', `/1/uploads/${upload.id}/raw`, {}, {});
-      expect(response.status).toBe(401);
+      expect(response).toHaveStatus(401);
     });
   });
 
@@ -139,7 +139,7 @@ describe('/1/uploads', () => {
       const user = await createUser();
       const response = await request('POST', '/1/uploads', {}, { user, file });
       const [upload] = response.body.data;
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(upload.mimeType).toBe('image/png');
       expect(upload.storageType).toBe('local');
       expect(upload.filename).toBe('test.png');
@@ -158,7 +158,7 @@ describe('/1/uploads', () => {
         },
       );
       const data = response.body.data;
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(data).toMatchObject([
         {
           filename: 'test.png',
@@ -182,7 +182,7 @@ describe('/1/uploads', () => {
     it('should error if no file passed', async () => {
       const user = await createUser();
       const response = await request('POST', '/1/uploads', {}, { user });
-      expect(response.status).toBe(400);
+      expect(response).toHaveStatus(400);
     });
 
     it('should be able to derive a mimeType if the file has one', async () => {
@@ -198,7 +198,7 @@ describe('/1/uploads', () => {
           }),
         },
       );
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data[0]).toMatchObject({
         mimeType: 'text/plain',
       });
@@ -218,7 +218,7 @@ describe('/1/uploads', () => {
         },
       );
       const [upload] = response.body.data;
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(upload.private).toBe(true);
     });
 
@@ -234,7 +234,7 @@ describe('/1/uploads', () => {
         },
       );
       const data = response.body.data;
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(data).toMatchObject([
         {
           private: true,
@@ -265,7 +265,7 @@ describe('/1/uploads', () => {
         owner: user,
       });
       const response = await request('DELETE', `/1/uploads/${upload.id}`, {}, { user });
-      expect(response.status).toBe(204);
+      expect(response).toHaveStatus(204);
       const dbUpload = await Upload.findByIdDeleted(upload.id);
       expect(dbUpload.deletedAt).toBeDefined();
     });
@@ -274,7 +274,7 @@ describe('/1/uploads', () => {
       const user = await createUser();
       const upload = await createUpload();
       const response = await request('DELETE', `/1/uploads/${upload.id}`, {}, { user });
-      expect(response.status).toBe(403);
+      expect(response).toHaveStatus(403);
     });
   });
 });

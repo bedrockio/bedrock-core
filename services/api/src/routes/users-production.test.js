@@ -14,7 +14,7 @@ describe('/1/users', () => {
         },
       },
     );
-    expect(response.status).toBe(401);
+    expect(response).toHaveStatus(401);
     expect(response.body).toEqual({
       error: {
         type: 'token',

@@ -28,7 +28,7 @@ describe('/1/shops', () => {
         { user },
       );
 
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       const body = response.body;
       expect(body.data[0].name).toBe(shop1.name);
       expect(body.data[1].name).toBe(shop2.name);
@@ -43,7 +43,7 @@ describe('/1/shops', () => {
         name: 'new shop',
       });
       const response = await request('GET', `/1/shops/${shop.id}`, {}, { user });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data.name).toBe(shop.name);
     });
 
@@ -62,7 +62,7 @@ describe('/1/shops', () => {
         },
         { user },
       );
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data.images[0].id).toBe(image.id);
     });
   });
@@ -79,7 +79,7 @@ describe('/1/shops', () => {
         { user },
       );
       const data = response.body.data;
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(data.name).toBe('shop name');
 
       const auditEntry = await AuditEntry.findOne({
@@ -101,7 +101,7 @@ describe('/1/shops', () => {
       });
       shop.name = 'new name';
       const response = await request('PATCH', `/1/shops/${shop.id}`, shop.toJSON(), { user: admin });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data.name).toBe('new name');
       shop = await Shop.findById(shop.id);
       expect(shop.name).toEqual('new name');
@@ -116,7 +116,7 @@ describe('/1/shops', () => {
       });
       shop.name = 'new name';
       const response = await request('PATCH', `/1/shops/${shop.id}`, shop.toJSON(), { user: owner });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data.name).toBe('new name');
       shop = await Shop.findById(shop.id);
       expect(shop.name).toEqual('new name');
@@ -130,7 +130,7 @@ describe('/1/shops', () => {
       });
       shop.name = 'new name';
       const response = await request('PATCH', `/1/shops/${shop.id}`, shop.toJSON(), { user });
-      expect(response.status).toBe(401);
+      expect(response).toHaveStatus(401);
     });
 
     it('should populate by request body', async () => {
@@ -150,7 +150,7 @@ describe('/1/shops', () => {
         },
         { user: admin },
       );
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data.images[0].id).toBe(image.id);
     });
   });
@@ -165,7 +165,7 @@ describe('/1/shops', () => {
         owner: owner.id,
       });
       const response = await request('DELETE', `/1/shops/${shop.id}`, {}, { user: admin });
-      expect(response.status).toBe(204);
+      expect(response).toHaveStatus(204);
       shop = await Shop.findByIdDeleted(shop.id);
       expect(shop.deletedAt).toBeDefined();
 
@@ -185,7 +185,7 @@ describe('/1/shops', () => {
         owner: owner.id,
       });
       const response = await request('DELETE', `/1/shops/${shop.id}`, {}, { user: owner });
-      expect(response.status).toBe(204);
+      expect(response).toHaveStatus(204);
       shop = await Shop.findByIdDeleted(shop.id);
       expect(shop.deletedAt).toBeDefined();
 
@@ -206,7 +206,7 @@ describe('/1/shops', () => {
         owner: owner.id,
       });
       const response = await request('DELETE', `/1/shops/${shop.id}`, {}, { user });
-      expect(response.status).toBe(401);
+      expect(response).toHaveStatus(401);
     });
   });
 });

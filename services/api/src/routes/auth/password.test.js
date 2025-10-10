@@ -25,7 +25,7 @@ describe('/1/auth', () => {
         email: user.email,
         password,
       });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
 
       assertAuthToken(user, response.body.data.token);
     });
@@ -42,7 +42,7 @@ describe('/1/auth', () => {
         password: '123password!',
       });
 
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data).toEqual({
         challenge: {
           type: 'code',
@@ -67,7 +67,7 @@ describe('/1/auth', () => {
         password: '123password!',
       });
 
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data).toEqual({
         challenge: {
           type: 'code',
@@ -92,7 +92,7 @@ describe('/1/auth', () => {
         password: '123password!',
       });
 
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data).toEqual({
         challenge: {
           type: 'code',
@@ -134,7 +134,7 @@ describe('/1/auth', () => {
         email: user.email,
         password,
       });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
 
       user = await User.findById(user.id);
       expect(user.authTokens).toEqual([
@@ -157,7 +157,7 @@ describe('/1/auth', () => {
         email: user.email,
         password,
       });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data).toEqual({
         challenge: {
           type: 'code',
@@ -207,7 +207,7 @@ describe('/1/auth', () => {
         });
 
         response = await request('POST', '/1/auth/password/login', { email: user.email, password });
-        expect(response.status).toBe(200);
+        expect(response).toHaveStatus(200);
 
         unmockTime();
       });
@@ -225,18 +225,18 @@ describe('/1/auth', () => {
         });
 
         response = await request('POST', '/1/auth/password/login', { email: user.email, password });
-        expect(response.status).toBe(401);
+        expect(response).toHaveStatus(401);
 
         advanceTime(59 * 1000);
         user.loginAttempts = 9;
         await user.save();
 
         response = await request('POST', '/1/auth/password/login', { email: user.email, password });
-        expect(response.status).toBe(401);
+        expect(response).toHaveStatus(401);
 
         advanceTime(60 * 1000);
         response = await request('POST', '/1/auth/password/login', { email: user.email, password });
-        expect(response.status).toBe(200);
+        expect(response).toHaveStatus(200);
 
         unmockTime();
       });
@@ -254,17 +254,17 @@ describe('/1/auth', () => {
         });
 
         response = await request('POST', '/1/auth/password/login', { email: user.email, password });
-        expect(response.status).toBe(401);
+        expect(response).toHaveStatus(401);
 
         advanceTime(59 * 60 * 1000);
         await user.save();
 
         response = await request('POST', '/1/auth/password/login', { email: user.email, password });
-        expect(response.status).toBe(401);
+        expect(response).toHaveStatus(401);
 
         advanceTime(60 * 60 * 1000);
         response = await request('POST', '/1/auth/password/login', { email: user.email, password });
-        expect(response.status).toBe(200);
+        expect(response).toHaveStatus(200);
 
         unmockTime();
       });
@@ -283,12 +283,12 @@ describe('/1/auth', () => {
         advanceTime(60 * 60 * 1000);
 
         response = await request('POST', '/1/auth/password/login', { email: user.email, password });
-        expect(response.status).toBe(200);
+        expect(response).toHaveStatus(200);
 
         advanceTime(1000);
 
         response = await request('POST', '/1/auth/password/login', { email: user.email, password });
-        expect(response.status).toBe(200);
+        expect(response).toHaveStatus(200);
 
         unmockTime();
       });
@@ -301,7 +301,7 @@ describe('/1/auth', () => {
       const response = await request('POST', '/1/auth/password/request', {
         email: user.email,
       });
-      expect(response.status).toBe(204);
+      expect(response).toHaveStatus(204);
 
       assertMailSent({
         email: user.email,
@@ -323,7 +323,7 @@ describe('/1/auth', () => {
       const response = await request('POST', '/1/auth/password/request', {
         email,
       });
-      expect(response.status).toBe(204);
+      expect(response).toHaveStatus(204);
     });
   });
 
@@ -365,7 +365,7 @@ describe('/1/auth', () => {
       const response = await request('POST', '/1/auth/password/update', {
         password: 'new password',
       });
-      expect(response.status).toBe(401);
+      expect(response).toHaveStatus(401);
     });
 
     it('should only be valid for 1 hour', async () => {
@@ -387,7 +387,7 @@ describe('/1/auth', () => {
           token,
         },
       );
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
 
       advanceTime(60 * 60 * 1000);
       response = await request(
@@ -400,7 +400,7 @@ describe('/1/auth', () => {
           token,
         },
       );
-      expect(response.status).toBe(401);
+      expect(response).toHaveStatus(401);
       unmockTime();
     });
 
@@ -418,7 +418,7 @@ describe('/1/auth', () => {
           token: 'bad token',
         },
       );
-      expect(response.status).toBe(401);
+      expect(response).toHaveStatus(401);
 
       user = await User.findById(user.id);
       expect(user.authTokens).toEqual([]);
@@ -436,7 +436,7 @@ describe('/1/auth', () => {
           token: 'bad',
         },
       );
-      expect(response.status).toBe(401);
+      expect(response).toHaveStatus(401);
       expect(response.body.error.type).toBe('token');
       expect(response.body.error.message).toBe('bad jwt token');
     });

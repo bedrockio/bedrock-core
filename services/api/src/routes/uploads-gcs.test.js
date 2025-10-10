@@ -26,7 +26,7 @@ describe('/1/uploads', () => {
         storageType: 'gcs',
       });
       const response = await request('GET', `/1/uploads/${upload.id}/url`, {}, { user });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data).toBe('PublicUrl');
     });
 
@@ -40,7 +40,7 @@ describe('/1/uploads', () => {
 
       const response = await request('GET', `/1/uploads/${upload.id}/url`, {}, { user });
 
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data).toBe('PrivateUrl');
     });
 
@@ -54,7 +54,7 @@ describe('/1/uploads', () => {
         owner: user,
       });
       const response = await request('GET', `/1/uploads/${upload.id}/url`, {}, { user: admin });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data).toBe('PrivateUrl');
       unmockReadStream();
     });
@@ -64,7 +64,7 @@ describe('/1/uploads', () => {
         private: true,
       });
       const response = await request('GET', `/1/uploads/${upload.id}/url`, {}, {});
-      expect(response.status).toBe(401);
+      expect(response).toHaveStatus(401);
     });
   });
 
@@ -75,7 +75,7 @@ describe('/1/uploads', () => {
         storageType: 'gcs',
       });
       const response = await request('GET', `/1/uploads/${upload.id}/raw`, {}, { user });
-      expect(response.status).toBe(302);
+      expect(response).toHaveStatus(302);
       expect(response.headers.location).toBe('PublicUrl');
     });
 
@@ -90,7 +90,7 @@ describe('/1/uploads', () => {
 
       const response = await request('GET', `/1/uploads/${upload.id}/raw`, {}, { user });
 
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.toString()).toBe('PrivateUrl');
       unmockReadStream();
     });
@@ -105,7 +105,7 @@ describe('/1/uploads', () => {
         owner: user,
       });
       const response = await request('GET', `/1/uploads/${upload.id}/raw`, {}, { user: admin });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.toString()).toBe('PrivateUrl');
       unmockReadStream();
     });
@@ -115,7 +115,7 @@ describe('/1/uploads', () => {
         private: true,
       });
       const response = await request('GET', `/1/uploads/${upload.id}/raw`, {}, {});
-      expect(response.status).toBe(401);
+      expect(response).toHaveStatus(401);
     });
   });
 
@@ -123,7 +123,7 @@ describe('/1/uploads', () => {
     it('should store mimetype on file', async () => {
       const user = await createUser();
       const response = await request('POST', '/1/uploads', {}, { user, file });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       assertFileStored({
         contentType: 'image/png',
       });

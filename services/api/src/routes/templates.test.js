@@ -18,7 +18,7 @@ describe('/1/templates', () => {
         { user },
       );
       const data = response.body.data;
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(data.name).toBe('template name');
     });
   });
@@ -30,7 +30,7 @@ describe('/1/templates', () => {
         name: 'new template',
       });
       const response = await request('GET', `/1/templates/${template.id}`, {}, { user });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data.name).toBe(template.name);
     });
   });
@@ -61,7 +61,7 @@ describe('/1/templates', () => {
         { user },
       );
 
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       const body = response.body;
       expect(body.data[0].name).toBe(template1.name);
       expect(body.data[1].name).toBe(template2.name);
@@ -83,7 +83,7 @@ subject: Hello
         `.trim(),
       });
       const response = await request('GET', `/1/templates/${template.id}/preview`, {}, { user });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data.subject).toBe('Hello');
       expect(response.body.data.body).toBe('Test User');
     });
@@ -101,7 +101,7 @@ subject: Hello
         },
         { user: admin },
       );
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data.name).toBe('updated name');
       template = await Template.findById(template.id);
       expect(template.name).toEqual('updated name');
@@ -115,7 +115,7 @@ subject: Hello
         name: 'test template',
       });
       const response = await request('DELETE', `/1/templates/${template.id}`, {}, { user: admin });
-      expect(response.status).toBe(204);
+      expect(response).toHaveStatus(204);
       template = await Template.findByIdDeleted(template.id);
       expect(template.deletedAt).toBeDefined();
     });

@@ -17,7 +17,7 @@ describe('/1/products', () => {
         { user },
       );
       const data = response.body.data;
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(data.name).toBe('some other product');
     });
   });
@@ -31,7 +31,7 @@ describe('/1/products', () => {
         shop: new mongoose.Types.ObjectId(),
       });
       const response = await request('GET', `/1/products/${product.id}`, {}, { user });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data.name).toBe(product.name);
     });
   });
@@ -63,7 +63,7 @@ describe('/1/products', () => {
         { user },
       );
 
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       const body = response.body;
       expect(body.data[0].name).toBe(product1.name);
       expect(body.data[1].name).toBe(product2.name);
@@ -81,7 +81,7 @@ describe('/1/products', () => {
         shop: new mongoose.Types.ObjectId(),
       });
       const response = await request('PATCH', `/1/products/${product.id}`, { name: 'new name' }, { user });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data.name).toBe('new name');
       const dbProduct = await Product.findById(product.id);
       expect(dbProduct.name).toEqual('new name');
@@ -97,7 +97,7 @@ describe('/1/products', () => {
         shop: new mongoose.Types.ObjectId(),
       });
       const response = await request('DELETE', `/1/products/${product.id}`, {}, { user });
-      expect(response.status).toBe(204);
+      expect(response).toHaveStatus(204);
       const dbProduct = await Product.findByIdDeleted(product.id);
       expect(dbProduct.deletedAt).toBeDefined();
     });

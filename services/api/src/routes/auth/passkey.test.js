@@ -18,7 +18,7 @@ describe('/1/auth/passkeys', () => {
   describe('POST /generate-login', () => {
     it('should return authentication options', async () => {
       const response = await request('POST', '/1/auth/passkey/generate-login', {});
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data.options).toEqual({
         rpID: 'rpID',
         challenge: 'challenge',
@@ -48,7 +48,7 @@ describe('/1/auth/passkeys', () => {
         },
       });
 
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       assertAuthToken(user, response.body.data.token);
 
       user = await User.findById(user.id);
@@ -73,7 +73,7 @@ describe('/1/auth/passkeys', () => {
           type: 'bad',
         },
       });
-      expect(response.status).toBe(400);
+      expect(response).toHaveStatus(400);
     });
 
     it('should error if user does not exist', async () => {
@@ -83,7 +83,7 @@ describe('/1/auth/passkeys', () => {
           type: 'good',
         },
       });
-      expect(response.status).toBe(400);
+      expect(response).toHaveStatus(400);
     });
 
     it('should error if user does not have passkey', async () => {
@@ -95,7 +95,7 @@ describe('/1/auth/passkeys', () => {
           type: 'good',
         },
       });
-      expect(response.status).toBe(400);
+      expect(response).toHaveStatus(400);
     });
   });
 
@@ -111,7 +111,7 @@ describe('/1/auth/passkeys', () => {
           user,
         },
       );
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data.options).toMatchObject({
         challenge: 'challenge',
         user: {
@@ -129,7 +129,7 @@ describe('/1/auth/passkeys', () => {
       const response = await request('POST', '/1/auth/passkey/generate-new', {
         email: 'foo@bar.com',
       });
-      expect(response.status).toBe(401);
+      expect(response).toHaveStatus(401);
     });
   });
 
@@ -155,7 +155,7 @@ describe('/1/auth/passkeys', () => {
           user,
         },
       );
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data).toMatchObject({
         id: user.id,
       });
@@ -237,7 +237,7 @@ describe('/1/auth/passkeys', () => {
           type: 'good',
         },
       });
-      expect(response.status).toBe(401);
+      expect(response).toHaveStatus(401);
     });
   });
 
@@ -257,7 +257,7 @@ describe('/1/auth/passkeys', () => {
           user,
         },
       );
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
 
       user = await User.findById(user.id);
       expect(user.authenticators.toObject()).toEqual([]);
@@ -265,7 +265,7 @@ describe('/1/auth/passkeys', () => {
 
     it('should error if not authenticated', async () => {
       const response = await request('DELETE', '/1/auth/passkey/id', {});
-      expect(response.status).toBe(401);
+      expect(response).toHaveStatus(401);
     });
   });
 });

@@ -12,7 +12,7 @@ describe('/1/organizations', () => {
         name: 'org 2',
       });
       const response = await request('POST', '/1/organizations/search', {}, { user });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.meta.total).toBe(2);
     });
   });
@@ -56,7 +56,7 @@ describe('/1/organizations', () => {
         },
         { user },
       );
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data).toMatchObject([
         {
           name: 'org 1',
@@ -78,7 +78,7 @@ describe('/1/organizations', () => {
       ]);
       const user = await createUser();
       const response = await request('POST', '/1/organizations/mine/search', {}, { user });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data).toEqual([]);
     });
   });
@@ -90,7 +90,7 @@ describe('/1/organizations', () => {
         name: 'org',
       });
       const response = await request('GET', `/1/organizations/${organization.id}`, {}, { user });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data.name).toBe('org');
     });
   });
@@ -107,7 +107,7 @@ describe('/1/organizations', () => {
         { user },
       );
       const data = response.body.data;
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(data.name).toBe('org');
     });
   });
@@ -119,7 +119,7 @@ describe('/1/organizations', () => {
         name: 'org',
       });
       const response = await request('DELETE', `/1/organizations/${organization.id}`, {}, { user });
-      expect(response.status).toBe(204);
+      expect(response).toHaveStatus(204);
       organization = await Organization.findByIdDeleted(organization.id);
       expect(organization.deletedAt).toBeDefined();
     });
@@ -130,7 +130,7 @@ describe('/1/organizations', () => {
         name: 'org',
       });
       const response = await request('DELETE', `/1/organizations/${organization.id}`, {}, { user });
-      expect(response.status).toBe(403);
+      expect(response).toHaveStatus(403);
     });
   });
 
@@ -141,7 +141,7 @@ describe('/1/organizations', () => {
         name: 'org',
       });
       const response = await request('PATCH', `/1/organizations/${organization.id}`, { name: 'hello' }, { user });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       organization = await Organization.findById(organization.id);
       expect(organization.name).toBe('hello');
     });

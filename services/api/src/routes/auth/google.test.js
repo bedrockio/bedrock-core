@@ -20,7 +20,7 @@ describe('/1/auth/google', () => {
       const response = await request('POST', '/1/auth/google', {
         code,
       });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data.result).toBe('signup');
 
       const user = await User.findOne({
@@ -50,7 +50,7 @@ describe('/1/auth/google', () => {
       const response = await request('POST', '/1/auth/google', {
         code,
       });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       assertAuthToken(user, response.body.data.token);
       expect(response.body.data.result).toBe('login');
 
@@ -76,7 +76,7 @@ describe('/1/auth/google', () => {
         lastName: 'Reynolds',
         code,
       });
-      expect(response.status).toBe(400);
+      expect(response).toHaveStatus(400);
     });
 
     it('should add authenticator if none', async () => {
@@ -92,7 +92,7 @@ describe('/1/auth/google', () => {
         code,
       });
 
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       user = await User.findById(user.id);
       expect(user.authenticators).toMatchObject([
         {
@@ -128,7 +128,7 @@ describe('/1/auth/google', () => {
       const response = await request('POST', '/1/auth/google', {
         token: 'bad',
       });
-      expect(response.status).toBe(400);
+      expect(response).toHaveStatus(400);
     });
   });
 
@@ -148,7 +148,7 @@ describe('/1/auth/google', () => {
           user,
         },
       );
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data.id).toBe(user.id);
 
       user = await User.findById(user.id);

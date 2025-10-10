@@ -69,7 +69,7 @@ describe('/1/invites', () => {
         },
       );
 
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
 
       const { payload } = jwt.decode(response.body.data.token, { complete: true });
       expect(payload).toHaveProperty('kid', 'user');
@@ -104,7 +104,7 @@ describe('/1/invites', () => {
         { user },
       );
 
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       const body = response.body;
       expect(body.data[0].email).toBe(invite1.email);
       expect(body.data[1].email).toBe(invite2.email);
@@ -123,7 +123,7 @@ describe('/1/invites', () => {
         },
         { user },
       );
-      expect(response.status).toBe(204);
+      expect(response).toHaveStatus(204);
       assertMailSent({
         email: 'new@platform.com',
       });
@@ -142,7 +142,7 @@ describe('/1/invites', () => {
         },
         { user },
       );
-      expect(response.status).toBe(400);
+      expect(response).toHaveStatus(400);
     });
   });
 
@@ -153,7 +153,7 @@ describe('/1/invites', () => {
         email: 'delete@platform.com',
       });
       const response = await request('POST', `/1/invites/${invite.id}/resend`, {}, { user });
-      expect(response.status).toBe(204);
+      expect(response).toHaveStatus(204);
     });
   });
 
@@ -164,7 +164,7 @@ describe('/1/invites', () => {
         email: 'delete@platform.com',
       });
       const response = await request('DELETE', `/1/invites/${invite.id}`, {}, { user });
-      expect(response.status).toBe(204);
+      expect(response).toHaveStatus(204);
       const dbInvite = await Invite.findByIdDeleted(invite.id);
       expect(dbInvite.deletedAt).toBeDefined();
     });

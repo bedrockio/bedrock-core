@@ -16,7 +16,7 @@ describe('POST /signup', () => {
         password: '123password!',
         email,
       });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
 
       assertMailSent({
         email,
@@ -52,7 +52,7 @@ describe('POST /signup', () => {
         lastName: 'Johnson',
         email,
       });
-      expect(response.status).toBe(400);
+      expect(response).toHaveStatus(400);
       expect(response.body.error.message).toBe('Password is required.');
     });
   });
@@ -67,7 +67,7 @@ describe('POST /signup', () => {
         lastName: 'Johnson',
         email,
       });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data).toEqual({
         challenge: {
           type: 'link',
@@ -103,7 +103,7 @@ describe('POST /signup', () => {
         lastName: 'Johnson',
         email,
       });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data).toEqual({
         challenge: {
           type: 'code',
@@ -137,7 +137,7 @@ describe('POST /signup', () => {
         firstName: 'Bob',
         lastName: 'Johnson',
       });
-      expect(response.status).toBe(400);
+      expect(response).toHaveStatus(400);
       expect(response.body.error.message).toBe('Email is required.');
     });
   });
@@ -153,7 +153,7 @@ describe('POST /signup', () => {
         lastName: 'Johnson',
         phone,
       });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data).toEqual({
         challenge: {
           type: 'link',
@@ -190,7 +190,7 @@ describe('POST /signup', () => {
         lastName: 'Johnson',
         phone,
       });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data).toEqual({
         challenge: {
           type: 'code',
@@ -225,7 +225,7 @@ describe('POST /signup', () => {
         password: '123password!',
         email: 'foo@bar.com',
       });
-      expect(response.status).toBe(400);
+      expect(response).toHaveStatus(400);
       expect(response.body.error.message).toBe('"firstName" is required.');
     });
 
@@ -241,7 +241,7 @@ describe('POST /signup', () => {
         password: '123password!',
         email,
       });
-      expect(response.status).toBe(400);
+      expect(response).toHaveStatus(400);
       expect(response.body.error.message).toBe('A user with that email already exists.');
     });
 
@@ -259,7 +259,7 @@ describe('POST /signup', () => {
         email: 'foo@bar.com',
         phone,
       });
-      expect(response.status).toBe(400);
+      expect(response).toHaveStatus(400);
       expect(response.body.error.message).toBe('A user with that phone number already exists.');
     });
   });

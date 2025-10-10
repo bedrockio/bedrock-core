@@ -20,7 +20,7 @@ describe('/1/applications', () => {
       });
 
       const response = await request('POST', '/1/applications/mine/search', {}, { user: admin });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data).toHaveLength(1);
       expect(response.body.data[0].id).toBe(application.id);
     });
@@ -28,7 +28,7 @@ describe('/1/applications', () => {
     it('should deny access to users with no access', async () => {
       const user = await createUser({});
       const response = await request('POST', '/1/applications/mine/search', {}, { user });
-      expect(response.status).toBe(403);
+      expect(response).toHaveStatus(403);
     });
   });
 
@@ -41,7 +41,7 @@ describe('/1/applications', () => {
         apiKey: uniqueId('key'),
       });
       const response = await request('GET', `/1/applications/${application.id}`, {}, { user: admin });
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
     });
   });
 
@@ -56,7 +56,7 @@ describe('/1/applications', () => {
         },
         { user: admin },
       );
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       const application = await Application.findOne({ _id: response.body.data.id });
       expect(application.name).toBe('bob');
 
@@ -86,7 +86,7 @@ describe('/1/applications', () => {
         },
         { user: admin },
       );
-      expect(response.status).toBe(200);
+      expect(response).toHaveStatus(200);
       expect(response.body.data.name).toBe('bob');
       const dbApplication = await Application.findOne({ _id: response.body.data.id });
       expect(dbApplication.name).toBe('bob');
@@ -118,7 +118,7 @@ describe('/1/applications', () => {
       });
 
       const response = await request('DELETE', `/1/applications/${application.id}`, {}, { user: admin });
-      expect(response.status).toBe(204);
+      expect(response).toHaveStatus(204);
 
       const dbApplication = await Application.findById(application.id);
       expect(dbApplication).toBe(null);
