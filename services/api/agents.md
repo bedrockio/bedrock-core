@@ -78,28 +78,6 @@ Models use [@bedrockio/model](https://github.com/bedrockio/model):
 - Authentication routes in `src/routes/auth/`
 - OpenAPI documentation in `src/routes/__openapi__/`
 
-### Authentication
-Multiple authentication methods supported:
-
-#### Password Authentication
-- Default method in `src/routes/auth/password.js`
-- Optional MFA: OTP (SMS/Email), TOTP (Authenticator apps)
-- MFA configuration in user model
-
-#### OTP Authentication
-- SMS via Twilio (`src/routes/auth/otp.js`)
-- Email via Postmark
-- Testing users (`isTester: true`) always receive OTP: `111111`
-
-#### Passkey Authentication
-- WebAuthn-based in `src/routes/auth/passkey.js`
-- Requires HTTPS (use Cloudflare Tunnel for local dev)
-- No MFA required (inherently secure)
-
-#### Federated Authentication
-- Apple Sign-In (`src/routes/auth/apple.js`)
-- Google Sign-In (`src/routes/auth/google.js`)
-
 ### Utilities
 Common utilities in `src/utils/`:
 - `middleware/` - Express/Koa middleware
