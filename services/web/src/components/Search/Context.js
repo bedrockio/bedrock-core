@@ -1,14 +1,7 @@
-import React from 'react';
-const Context = React.createContext();
+import React, { useContext } from 'react';
 
-export default Context;
+export const SearchContext = React.createContext();
 
-export function withSearchProvider(Component) {
-  return function WrapperComponent(props) {
-    return (
-      <Context.Consumer>
-        {(state) => <Component {...props} context={state} />}
-      </Context.Consumer>
-    );
-  };
+export function useSearch() {
+  return useContext(SearchContext);
 }

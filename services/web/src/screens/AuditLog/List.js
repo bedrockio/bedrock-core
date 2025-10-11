@@ -17,7 +17,6 @@ import Meta from 'components/Meta';
 import PageHeader from 'components/PageHeader';
 import Search from 'components/Search';
 import SearchFilters from 'components/Search/Filters';
-import SortableTh from 'components/Table/SortableTh';
 
 import { request } from 'utils/api';
 import { formatDateTime } from 'utils/date';
@@ -142,7 +141,7 @@ export default function AuditLogList() {
       <Search.Provider
         filterMapping={getFilterMapping()}
         onDataNeeded={onDataNeeded}>
-        {({ items, getSorted, setSort }) => (
+        {({ items }) => (
           <Stack>
             <PageHeader
               title="Audit Log"
@@ -193,23 +192,22 @@ export default function AuditLogList() {
                 <Search.Status />
               </Group>
               <Group>
-                <Search.Total />
+                <Search.Status />
               </Group>
             </Group>
             <Table striped highlightOnHover>
               <Table.Thead>
                 <Table.Tr>
-                  <Table.Th>Actor</Table.Th>
-                  <Table.Th>Activity</Table.Th>
-                  <Table.Th>Object Owner</Table.Th>
-                  <Table.Th>Object Name</Table.Th>
-                  <SortableTh
-                    width={170}
-                    sorted={getSorted('createdAt')}
-                    onClick={() => setSort('createdAt')}>
+                  <Search.Header>Actor</Search.Header>
+                  <Search.Header>Activity</Search.Header>
+                  <Search.Header>Object Owner</Search.Header>
+                  <Search.Header>Object Name</Search.Header>
+                  <Search.Header name="createdAt" width={170}>
                     Date
-                  </SortableTh>
-                  <Table.Th style={{ textAlign: 'right' }}>Actions</Table.Th>
+                  </Search.Header>
+                  <Search.Header style={{ textAlign: 'right' }}>
+                    Actions
+                  </Search.Header>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>

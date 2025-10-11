@@ -7,6 +7,9 @@ const COUNTRIES_BY_PREFIX = mapKeys(COUNTRIES, (country) => {
 });
 
 export function formatPhone(phone, country) {
+  if (!phone) {
+    return '';
+  }
   if (!country) {
     country = getCountry(phone);
   }

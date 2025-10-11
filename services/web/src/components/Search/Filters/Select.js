@@ -1,28 +1,26 @@
 import { Select } from '@mantine/core';
 import PropTypes from 'prop-types';
-import React from 'react';
 
 import SearchDropdown from 'components/SearchDropdown';
 
-import SearchContext from '../Context';
+import { useSearch } from '../Context';
 
-export default class SelectFilter extends React.Component {
-  static contextType = SearchContext;
+export default function SelectFilter(props) {
+  const { name, data, multiple, ...rest } = props;
 
-  getDefaultValue() {
-    const { multiple } = this.props;
+  const { filters, setFilters } = useSearch();
+
+  function getDefaultValue() {
     return multiple ? [] : '';
   }
 
-  getValue() {
-    const { name } = this.props;
-    return this.context.filters[name] || this.getDefaultValue();
+  function getValue() {
+    return filters[name] || getDefaultValue();
   }
 
-  getData() {
-    let { data } = this.props;
+  function getData() {
     if (!data) {
-      const value = this.getValue();
+      const value = getValue();
       const arr = Array.isArray(value) ? value : [value];
       return arr.map((value) => {
         return {
@@ -35,18 +33,17 @@ export default class SelectFilter extends React.Component {
     return data;
   }
 
-  render() {
-    if (this.props.onDataNeeded) {
-      const { label, ...rest } = this.props;
+  function render() {
+    if (props.onDataNeeded) {
+      const { label, ...rest } = props;
       return (
         <SearchDropdown
           label={label}
           objectMode={false}
-          value={this.getValue()}
+          value={getValue()}
           onChange={(value) => {
-            this.context.onFilterChange({
-              value: value,
-              name: this.props.name,
+            setFilters({
+              [name]: value,
             });
           }}
           {...rest}
@@ -55,19 +52,20 @@ export default class SelectFilter extends React.Component {
     } else {
       return (
         <Select
-          value={this.getValue()}
-          data={this.getData()}
+          value={getValue()}
+          data={getData()}
           onChange={(value) => {
-            this.context.onFilterChange({
-              value,
-              name: this.props.name,
+            setFilters({
+              [name]: value,
             });
           }}
-          {...this.props}
+          {...rest}
         />
       );
     }
   }
+
+  return render();
 }
 
 SelectFilter.propTypes = {

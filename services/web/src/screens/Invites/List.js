@@ -1,19 +1,10 @@
-import {
-  Badge,
-  Button,
-  Group,
-  Loader,
-  Stack,
-  Table,
-  Text,
-} from '@mantine/core';
+import { Badge, Button, Group, Stack, Table, Text } from '@mantine/core';
 
 import ErrorMessage from 'components/ErrorMessage';
 import ModalWrapper from 'components/ModalWrapper';
 import PageHeader from 'components/PageHeader';
 import Search from 'components/Search';
 import SearchFilters from 'components/Search/Filters';
-import SortableTh from 'components/Table/SortableTh';
 
 import { request } from 'utils/api';
 import { formatDateTime } from 'utils/date';
@@ -30,27 +21,10 @@ export default function Invites() {
     });
   }
 
-  function getFilterMapping() {
-    return {
-      status: {
-        label: 'Status',
-        getDisplayValue: (status) => status,
-      },
-      createdAt: {
-        label: 'Created At',
-        type: 'date',
-        range: true,
-      },
-      keyword: {},
-    };
-  }
-
   return (
     <>
-      <Search.Provider
-        filterMapping={getFilterMapping()}
-        onDataNeeded={onDataNeeded}>
-        {({ items, getSorted, setSort, reload, error, loading }) => {
+      <Search.Provider onDataNeeded={onDataNeeded}>
+        {({ items, reload, error }) => {
           return (
             <Stack>
               <PageHeader
@@ -97,11 +71,10 @@ export default function Invites() {
                       label="Created At"
                     />
                   </SearchFilters.Modal>
-                  {loading && <Loader size={'sm'} />}
                 </Group>
 
                 <Group>
-                  <Search.Total />
+                  <Search.Status />
                   <SearchFilters.Keyword />
                 </Group>
               </Group>
@@ -111,19 +84,12 @@ export default function Invites() {
               <Table stickyHeader striped>
                 <Table.Thead>
                   <Table.Tr>
-                    <Table.Th>Email</Table.Th>
-                    <SortableTh
-                      sorted={getSorted('status')}
-                      onClick={() => setSort('status')}>
-                      Status
-                    </SortableTh>
-                    <SortableTh
-                      sorted={getSorted('createdAt')}
-                      onClick={() => setSort('createdAt')}
-                      width={280}>
+                    <Search.Header>Email</Search.Header>
+                    <Search.Header name="status">Status</Search.Header>
+                    <Search.Header name="createdAt" width={280}>
                       Invited At
-                    </SortableTh>
-                    <Table.Th width={60}>Actions</Table.Th>
+                    </Search.Header>
+                    <Search.Header width={60}>Actions</Search.Header>
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>

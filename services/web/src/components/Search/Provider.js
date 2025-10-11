@@ -1,266 +1,97 @@
-import { withRouter } from '@bedrockio/router';
-import { pickBy } from 'lodash';
-import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 
-import SearchContext from './Context';
+import { useRequest } from 'hooks/request';
 
-function convertFilters(filters) {
-  return pickBy(filters, (val) => {
-    return Array.isArray(val) ? val.length : val;
-  });
-}
+import { stripEmpty } from 'utils/object';
 
-function parseParamValue(type, value) {
-  if (type === 'date') {
-    return new Date(Number(value));
-  } else if (type === 'number') {
-    return Number(value);
-  } else if (type === 'boolean') {
-    return Boolean(value);
-  }
-  return value;
-}
+import { SearchContext } from './Context';
 
-function parseParamByType(param, value) {
-  const type = param.type;
-  if (param.multiple) {
-    value = value.split('_');
-    return value.map((value) => parseParamValue(type, value));
-  }
+const DEFAULT_SORT = { field: '_id', order: 'asc' };
 
-  if (param.range) {
-    value = value.split('/');
-    const x = {
-      gte: value[0] ? parseParamValue(type, value[0]) : undefined,
-      lte: value[1] ? parseParamValue(type, value[1]) : undefined,
-    };
-    return x;
-  }
+export default function SearchProvider(props) {
+  const { children, skip = 0, limit = 20, onDataNeeded } = props;
 
-  return parseParamValue(type, value);
-}
+  const { run, result, loading, error } = useRequest(onDataNeeded);
 
-function convertParamValue(type, value) {
-  if (type === 'date') {
-    return new Date(value).valueOf();
-  } else if (type === 'number') {
-    return Number(value);
-  } else if (type === 'boolean') {
-    return Boolean(value);
-  }
-  return value?.id || value;
-}
-
-function getFiltersFromSearchParams(urlParams, filterMapping = {}) {
-  const filters = {};
-  for (let [key, value] of urlParams) {
-    if (filterMapping[key]) {
-      filters[key] = parseParamByType(filterMapping[key], value);
-    }
-  }
-  return filters;
-}
-
-function getStateFromQueryString(search, filterMapping) {
-  const urlParams = new URLSearchParams(search);
-  const page = urlParams.get('page') ? Number(urlParams.get('page')) : 1;
-
-  const filters = getFiltersFromSearchParams(urlParams, filterMapping);
-  return {
-    filters,
-    page,
-  };
-}
-
-/**
- * SearchProvider component to manage search state and context.
- * @param {Object} props - Component props.
- */
-function SearchProvider({
-  children,
-  onDataNeeded,
-  limit = 20,
-  //page = 1,
-  sort,
-  filters = {},
-  filterMapping,
-  onPageChange,
-  history,
-  location,
-}) {
-  const [state, setState] = useState({
-    loading: true,
-    items: [],
-    error: null,
-    filters,
-    ...getStateFromQueryString(location.search, filterMapping),
-    filterMapping,
+  const [params, setParams] = useState({
+    ...props.filters,
+    sort: {
+      ...DEFAULT_SORT,
+      ...props.sort,
+    },
+    skip,
     limit,
-    sort,
   });
-
-  function fetchData() {
-    setState((prevState) => ({ ...prevState, loading: true, error: null }));
-
-    onDataNeeded({
-      limit: state.limit,
-      sort: state.sort,
-      skip: (state.page - 1) * state.limit,
-      ...state.filters,
-    })
-      .then(({ data, meta }) => {
-        setState((prevState) => ({
-          ...prevState,
-          loading: false,
-          items: data,
-          meta: { ...prevState.meta, ...meta },
-        }));
-      })
-      .catch((error) => {
-        setState((prevState) => ({ ...prevState, loading: false, error }));
-      });
-  }
 
   useEffect(() => {
-    fetchData();
-    updateUrlSearchParams();
-  }, [state.filters, state.page, state.sort]);
+    run(params);
+  }, [params]);
 
-  function updateUrlSearchParams() {
-    const { filters, filterMapping = {} } = state;
-    const queryObject = {};
+  const context = {
+    error,
+    reload,
+    loading,
+    setSort,
+    setSkip,
+    setFilters,
+    resetFilters,
+    onDataNeeded,
+    sort: params.sort,
+    filters: getFilters(),
+    items: result?.data || [],
+    meta: result?.meta,
+  };
 
-    if (!Object.keys(filterMapping).length) {
-      return;
-    }
-
-    if (state.page) {
-      queryObject.page = state.page;
-    }
-
-    for (const key of Object.keys(filters)) {
-      const value = filters[key]?.id || filters[key];
-      const mapping = filterMapping[key];
-      if (!mapping) {
-        // eslint-disable-next-line no-console
-        console.warn('missing filterMapping for', key);
-        continue;
-      }
-      if (mapping.multiple) {
-        queryObject[key] = value
-          .map((value) => convertParamValue(mapping.type, value))
-          .join('_');
-      } else if (mapping.range) {
-        queryObject[key] = [
-          value.gte && convertParamValue(mapping.type, value.gte),
-          value.lte && convertParamValue(mapping.type, value.lte),
-        ]
-          .filter(Boolean)
-          .join('/');
-      } else {
-        queryObject[key] = convertParamValue(mapping.type, value);
-      }
-    }
-
-    const params = new URLSearchParams(queryObject);
-
-    if (!params.size) {
-      return;
-    }
-
-    history.push('?' + params);
+  function getFilters() {
+    const { sort, skip, limit, ...filters } = params;
+    return filters;
   }
 
   function setFilters(newFilters) {
-    const convertedFilters = convertFilters(newFilters);
-    setState((prevState) => ({
-      ...prevState,
-      page: 1,
-      filters: convertedFilters,
-    }));
+    const newParams = stripEmpty({
+      ...params,
+      ...newFilters,
+      skip: 0,
+    });
+    setParams(newParams);
   }
 
-  function onFilterChange({ name, value }) {
-    setFilters({
-      ...state.filters,
-      [name]: value,
+  function resetFilters() {
+    const { keyword, sort, limit } = params;
+    setParams({
+      sort,
+      limit,
+      keyword,
+      skip: 0,
     });
   }
 
-  /**
-   * Handles page change events.
-   * @param {Object} evt - Event object.
-   * @param {Object} data - Data containing the active page.
-   */
-  function onPageChangeFn(evt, data) {
-    const { activePage: page } = data;
-    if (typeof onPageChange === 'function') {
-      onPageChange(evt, page);
-    } else {
-      setState((prevState) => ({
-        ...prevState,
-        page,
-      }));
-    }
+  function setSort(newSort) {
+    setParams({
+      ...params,
+      sort: newSort,
+      skip: 0,
+    });
   }
 
-  function setSort(field) {
-    const { sort } = state;
-    let order;
-    if (field === sort?.field && sort?.order === 'asc') {
-      order = 'desc';
-    } else {
-      order = 'asc';
-    }
-    setState((prevState) => ({
-      ...prevState,
-      sort: {
-        field,
-        order,
-      },
-    }));
+  function setSkip(newSkip) {
+    setParams({
+      ...params,
+      skip: newSkip,
+    });
   }
 
-  function getSorted(field) {
-    const { sort } = state;
-    if (field === sort?.field) {
-      return sort.order === 'asc' ? 'ascending' : 'descending';
-    }
+  function reload() {
+    run(params);
   }
 
-  const context = {
-    ...state,
-    reload: fetchData,
-    setFilters,
-    onFilterChange,
-    onPageChange: onPageChangeFn, // Added onPageChange to the context
-    onDataNeeded,
-    getSorted,
-    setSort,
-  };
+  function render() {
+    return <SearchContext value={context}>{renderChildren()}</SearchContext>;
+  }
 
-  return (
-    <SearchContext.Provider value={context}>
-      {typeof children === 'function' ? children(context) : children}
-    </SearchContext.Provider>
-  );
+  function renderChildren() {
+    return children(context);
+  }
+
+  return render();
 }
-
-SearchProvider.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired,
-  onDataNeeded: PropTypes.func.isRequired,
-  limit: PropTypes.number,
-  page: PropTypes.number,
-  sort: PropTypes.shape({
-    order: PropTypes.string,
-    field: PropTypes.string,
-  }),
-  filters: PropTypes.object,
-  filterMapping: PropTypes.object,
-  onPageChange: PropTypes.func,
-  history: PropTypes.object.isRequired,
-  location: PropTypes.object.isRequired,
-};
-
-export default withRouter(SearchProvider);

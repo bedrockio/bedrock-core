@@ -10,3 +10,13 @@ export function merge(target, ...sources) {
     }
   });
 }
+
+export function stripEmpty(obj) {
+  const result = {};
+  for (let [key, value] of Object.entries(obj || {})) {
+    if (value !== '' && value != null) {
+      result[key] = value;
+    }
+  }
+  return result;
+}

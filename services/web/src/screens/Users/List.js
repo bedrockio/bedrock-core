@@ -15,11 +15,11 @@ import ErrorMessage from 'components/ErrorMessage';
 import PageHeader from 'components/PageHeader';
 import Search from 'components/Search';
 import SearchFilters from 'components/Search/Filters';
-import SortableTh from 'components/Table/SortableTh';
 
 import { request } from 'utils/api';
 import { formatDateTime } from 'utils/date';
 import { formatRoles } from 'utils/permissions';
+import { formatPhone } from 'utils/phone';
 
 import Actions from './Actions';
 
@@ -46,23 +46,10 @@ export default function UserList() {
     return { data };
   }
 
-  function getFilterMapping() {
-    return {
-      createdAt: {
-        label: 'Created At',
-        type: 'date',
-        range: true,
-      },
-      keyword: {},
-    };
-  }
-
   return (
     <>
-      <Search.Provider
-        onDataNeeded={onDataNeeded}
-        filterMapping={getFilterMapping()}>
-        {({ items: users, getSorted, setSort, reload, error, loading }) => {
+      <Search.Provider onDataNeeded={onDataNeeded}>
+        {({ items: users, reload, error, loading }) => {
           return (
             <Stack>
               <PageHeader
@@ -78,7 +65,7 @@ export default function UserList() {
                 ]}
                 rightSection={
                   <>
-                    <Search.Export filename="users" />
+                    <Search.Export />
                     <Button variant="primary" component={Link} to="/users/new">
                       New User
                     </Button>
@@ -104,7 +91,7 @@ export default function UserList() {
                 </Group>
 
                 <Group>
-                  <Search.Total />
+                  <Search.Status />
                   <SearchFilters.Keyword />
                 </Group>
               </Group>
@@ -115,40 +102,22 @@ export default function UserList() {
                 <Table stickyHeader striped>
                   <Table.Thead>
                     <Table.Tr>
-                      <SortableTh
-                        sorted={getSorted('firstName')}
-                        onClick={() => setSort('firstName')}
-                        width={200}>
+                      <Search.Header name="firstName" width={200}>
                         Name
-                      </SortableTh>
-                      <SortableTh
-                        sorted={getSorted('email')}
-                        onClick={() => setSort('email')}>
-                        Email
-                      </SortableTh>
-                      <SortableTh
-                        sorted={getSorted('phone')}
-                        onClick={() => setSort('phone')}>
-                        Phone
-                      </SortableTh>
-                      <SortableTh
-                        sorted={getSorted('roles')}
-                        onClick={() => setSort('roles')}>
-                        Role
-                      </SortableTh>
-                      <SortableTh
-                        sorted={getSorted('createdAt')}
-                        onClick={() => setSort('createdAt')}
-                        width={280}>
+                      </Search.Header>
+                      <Search.Header name="email">Email</Search.Header>
+                      <Search.Header name="phone">Phone</Search.Header>
+                      <Search.Header name="roles">Role</Search.Header>
+                      <Search.Header name="createdAt" width={280}>
                         Created
-                      </SortableTh>
-                      <Table.Th
+                      </Search.Header>
+                      <Search.Header
                         style={{
                           textAlign: 'right',
                         }}
                         width={100}>
                         Actions
-                      </Table.Th>
+                      </Search.Header>
                     </Table.Tr>
                   </Table.Thead>
                   <Table.Tbody>
@@ -173,7 +142,7 @@ export default function UserList() {
                             </Anchor>
                           </Table.Td>
                           <Table.Td>{user.email}</Table.Td>
-                          <Table.Td>{user.phone}</Table.Td>
+                          <Table.Td>{formatPhone(user.phone)}</Table.Td>
                           <Table.Td>
                             {formatRoles(user.roles).map((label) => {
                               return (

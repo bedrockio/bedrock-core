@@ -1,18 +1,26 @@
 import { Divider, Pagination } from '@mantine/core';
-import React, { useContext } from 'react';
+import React, { useMemo } from 'react';
 
-import SearchContext from './Context';
+import { useSearch } from './Context';
 
 export default function SearchPagination() {
-  const { loading, error, page, meta, onPageChange } =
-    useContext(SearchContext);
+  const { loading, meta, setSkip } = useSearch();
 
-  const handlePageChange = (newPage) => {
+  const page = useMemo(() => {
+    if (meta) {
+      const { skip, limit } = meta;
+      return Math.floor(skip / limit) + 1;
+    } else {
+      return 1;
+    }
+  }, [meta]);
+
+  function onPageChange(newPage) {
     window.scrollTo(0, 0);
-    onPageChange(null, { activePage: newPage });
-  };
+    setSkip((newPage - 1) * meta.limit);
+  }
 
-  if (!meta || error || meta.total <= meta.limit) {
+  if (!meta || meta.total <= meta.limit) {
     return null;
   }
 
@@ -24,9 +32,9 @@ export default function SearchPagination() {
       <Pagination
         boundaries={2}
         siblings={2}
-        disabled={loading}
         value={page}
-        onChange={handlePageChange}
+        disabled={loading}
+        onChange={onPageChange}
         total={totalPages}
       />
     </React.Fragment>

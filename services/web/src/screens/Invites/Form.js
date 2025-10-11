@@ -13,11 +13,12 @@ export default function InviteForm(props) {
   const { close } = useModalContext();
 
   const [input, setInput] = useState('');
-  const [body, setField] = useFields({
+
+  const { fields, setField } = useFields({
     role: 'viewer',
   });
 
-  const { run, loading, error } = useRequest(async () => {
+  const { run, loading, error } = useRequest(async (body) => {
     await request({
       method: 'POST',
       path: '/1/invites',
@@ -27,6 +28,11 @@ export default function InviteForm(props) {
     close();
   });
 
+  function onSubmit(evt) {
+    evt.preventDefault();
+    run(fields);
+  }
+
   function onEmailsBlur() {
     setField({
       name: 'emails',
@@ -35,7 +41,7 @@ export default function InviteForm(props) {
   }
 
   return (
-    <form onSubmit={run}>
+    <form onSubmit={onSubmit}>
       <ErrorMessage error={error} />
 
       <Textarea
@@ -54,7 +60,7 @@ export default function InviteForm(props) {
         label="Role"
         placeholder="Choose Role"
         onChange={setField}
-        value={body.role || ''}
+        value={fields.role || ''}
         data={[
           {
             label: 'Viewer',

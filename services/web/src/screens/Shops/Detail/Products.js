@@ -6,7 +6,6 @@ import { usePage } from 'stores/page';
 import ErrorMessage from 'components/ErrorMessage';
 import Search from 'components/Search';
 import SearchFilters from 'components/Search/Filters';
-import SortableTh from 'components/Table/SortableTh';
 import Actions from 'screens/Products/Actions';
 
 import { request } from 'utils/api';
@@ -35,13 +34,13 @@ export default function ShopProducts() {
       <Menu />
 
       <Search.Provider onDataNeeded={onDataNeeded}>
-        {({ items: products, getSorted, setSort, reload, loading, error }) => {
+        {({ items: products, reload, loading, error }) => {
           return (
             <Box mt="md">
               <Group justify="space-between">
                 <Group>{loading && <Loader size="sm" />}</Group>
                 <Group>
-                  <Search.Total />
+                  <Search.Status />
                   <SearchFilters.Keyword />
                 </Group>
               </Group>
@@ -51,24 +50,13 @@ export default function ShopProducts() {
               <Table stickyHeader striped mt="md">
                 <Table.Thead>
                   <Table.Tr>
-                    <SortableTh
-                      sorted={getSorted('name')}
-                      onClick={() => setSort('name')}>
-                      Name
-                    </SortableTh>
-                    <Table.Th width={60}>Image</Table.Th>
-                    <SortableTh
-                      sorted={getSorted('priceUsd')}
-                      onClick={() => setSort('priceUsd')}>
-                      Price
-                    </SortableTh>
-                    <SortableTh
-                      sorted={getSorted('createdAt')}
-                      onClick={() => setSort('createdAt')}
-                      width={280}>
+                    <Search.Header name="name">Name</Search.Header>
+                    <Search.Header width={60}>Image</Search.Header>
+                    <Search.Header name="priceUsd">Price</Search.Header>
+                    <Search.Header name="createdAt" width={280}>
                       Created
-                    </SortableTh>
-                    <Table.Th width={120}>Actions</Table.Th>
+                    </Search.Header>
+                    <Search.Header width={120}>Actions</Search.Header>
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>

@@ -16,7 +16,6 @@ import PageHeader from 'components/PageHeader';
 import Protected from 'components/Protected';
 import Search from 'components/Search';
 import SearchFilters from 'components/Search/Filters';
-import SortableTh from 'components/Table/SortableTh';
 
 import { request } from 'utils/api';
 
@@ -45,7 +44,7 @@ export default function TemplateList() {
       <Search.Provider
         onDataNeeded={onDataNeeded}
         filterMapping={getFilterMapping()}>
-        {({ items: templates, getSorted, setSort, reload, error, loading }) => {
+        {({ items: templates, reload, error, loading }) => {
           return (
             <Stack>
               <PageHeader
@@ -80,7 +79,7 @@ export default function TemplateList() {
                 {loading && <Loader size={'sm'} />}
 
                 <Group>
-                  <Search.Total />
+                  <Search.Status />
                   <SearchFilters.Keyword />
                 </Group>
               </Group>
@@ -91,23 +90,15 @@ export default function TemplateList() {
                 <Table stickyHeader striped>
                   <Table.Thead>
                     <Table.Tr>
-                      <SortableTh
-                        sorted={getSorted('name')}
-                        onClick={() => setSort('name')}>
-                        Name
-                      </SortableTh>
-                      <SortableTh
-                        sorted={getSorted('channels')}
-                        onClick={() => setSort('channels')}>
-                        Channels
-                      </SortableTh>
-                      <Table.Th
+                      <Search.Header name="name">Name</Search.Header>
+                      <Search.Header name="channels">Channels</Search.Header>
+                      <Search.Header
                         width={100}
                         style={{
                           textAlign: 'right',
                         }}>
                         Actions
-                      </Table.Th>
+                      </Search.Header>
                     </Table.Tr>
                   </Table.Thead>
                   <Table.Tbody>
