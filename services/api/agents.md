@@ -209,6 +209,83 @@ Email templates in `src/templates/email/`:
 - Sentry integration for error tracking
 - Request/response logging middleware
 
+## RBAC (Role-Based Access Control)
+
+The API implements a flexible RBAC system using roles and permissions.
+
+### Roles Definition
+
+Roles are defined in `src/roles.json` with the following structure:
+```json
+{
+  "superAdmin": {
+    "name": "Super Admin",
+    "allowScopes": ["global"],
+    "permissions": {
+      "users": "all",
+      "products": "all"
+    }
+  }
+}
+```
+
+### Role Assignment
+
+Roles are assigned to users via the `roles` array in the User model (`src/models/definitions/user.json`):
+```json
+{
+  "roles": [
+    {
+      "role": "admin",
+      "scope": "global",
+      "scopeRef": "ObjectId"
+    }
+  ]
+}
+```
+
+- **role**: The role name (must match a key in `roles.json`)
+- **scope**: Either `"global"` or `"organization"` for multi-tenancy
+- **scopeRef**: Reference to an Organization when scope is `"organization"`
+
+### Permission Middleware
+
+Use the `requirePermissions` middleware to protect routes:
+```javascript
+const { requirePermissions } = require('../utils/middleware/permissions');
+
+router.post('/users', requirePermissions('users.write'), async (ctx) => {
+  // Only users with 'users.write' permission can access
+});
+```
+
+### Permission Utilities
+
+Check permissions programmatically:
+```javascript
+const { userHasAccess } = require('../utils/permissions');
+
+const allowed = userHasAccess(user, {
+  endpoint: 'users',
+  permission: 'read',
+  scope: 'global'
+});
+```
+
+### Permission Levels
+
+- `"all"` - Full access (read, write, delete)
+- `"read"` - Read-only access
+- `"write"` - Create and update access
+- `["read", "write"]` - Array of specific permissions
+
+### Multi-Tenancy Support
+
+The default scope is `"global"`, but you can enable organization-scoped permissions by:
+1. Changing `DEFAULT_SCOPE` in `src/utils/middleware/permissions.js`
+2. Using organization-scoped role assignments
+3. Passing `scope: 'organization'` to `requirePermissions`
+
 ## Security Considerations
 
 - Never commit secrets to repository
@@ -217,14 +294,6 @@ Email templates in `src/templates/email/`:
 - Implement proper authentication/authorization
 - Use HTTPS in production
 - Keep dependencies updated
-
-## Troubleshooting
-
-- Check MongoDB connection: `MONGO_URI` environment variable
-- Verify Node.js version: use Volta
-- Clear `node_modules` and reinstall if dependency issues
-- Check logs in console output
-- Use debugger or add console.log for debugging
 
 ## Additional Resources
 

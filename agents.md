@@ -53,11 +53,6 @@ For detailed guidance on each service, see:
 - Default values are in `.env` files
 - Never commit secrets to the repository
 
-### Authentication
-- JWT-based authentication is used across services
-- Multiple auth methods supported: password, OTP, passkeys, federated (Apple, Google)
-- MFA options: SMS OTP, Email OTP, TOTP (authenticator apps)
-
 ### Deployment
 - Uses Google Cloud Platform (GCP) and Kubernetes
 - Managed via `bedrock-cli` tool
@@ -90,7 +85,6 @@ docker compose up
 
 ## Resources
 
-- [Contributing Guidelines](CONTRIBUTING.md)
 - [API README](services/api/README.md)
 - [Web README](services/web/README.md)
 - [Deployment README](deployment/README.md)

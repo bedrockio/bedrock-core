@@ -11,10 +11,9 @@ The Bedrock Web service is a React-based web application providing:
 
 Built with:
 - **React** - UI framework
-- **Mantine v7.17** - UI component library
+- **Mantine v7.x** - UI component library (check package.json for exact version)
 - **Vite** - Build tool and dev server
 - **React Router** - Client-side routing
-- **MobX** - State management
 
 ## Directory Structure
 
@@ -75,7 +74,7 @@ Environment variables (see `.env`):
 ### General Guidelines
 - Use **function declarations** instead of arrow functions for components
 - Format with ESLint and Prettier (configured in project)
-- Include JSDoc comments when appropriate
+- Include JSDoc comments only when building custom code that is meant to be reused
 - Follow existing code patterns
 
 ### UI Components
@@ -107,10 +106,48 @@ export default MyForm;
 ## Key Features
 
 ### State Management (Stores)
-Using MobX for global state:
-- Store files in `src/stores/`
-- Examples: user store, auth store, UI store
+Session management using React Context:
+- Session store in `src/stores/session.js`
+- Access via `useSession()` hook or `withSession()` HOC
+- Manages user authentication state and stored data
 - See: [Stores Documentation](src/stores/README.md)
+
+### API Requests
+
+The `request` and `useRequest` utilities handle API communication:
+
+#### request
+Basic API call function:
+```javascript
+import { request } from 'utils/api';
+
+const { data } = await request({
+  method: 'POST',
+  path: '/1/users/search',
+  body: { /* query */ }
+});
+```
+
+#### useRequest
+React hook for API calls with loading/error states:
+```javascript
+import { useRequest } from 'utils/api';
+
+function MyComponent() {
+  const { data, loading, error, request: doRequest } = useRequest({
+    method: 'GET',
+    path: '/1/users'
+  });
+
+  useEffect(() => {
+    doRequest();
+  }, []);
+
+  if (loading) return <Loader />;
+  if (error) return <div>Error: {error.message}</div>;
+  return <div>{data.length} users</div>;
+}
+```
 
 ### Utilities
 Helper functions in `src/utils/`:
@@ -192,15 +229,6 @@ Reusable components in `src/components/`:
 
 See: [Components Documentation](src/components)
 
-## Analytics
-
-Analytics integration in `src/utils/analytics/`:
-- Track page views
-- Track user events
-- Integration with analytics providers
-
-See: [Analytics Documentation](src/utils/analytics/README.md)
-
 ## Common Tasks
 
 ### Adding a New Screen
@@ -243,43 +271,6 @@ MFA options:
 - TOTP (Authenticator apps)
 
 Settings page for users to manage auth methods.
-
-## Testing
-
-- Test files colocated with components
-- Use React Testing Library
-- Test user interactions and state changes
-
-## Build & Deployment
-
-### Development Build
-- Hot module replacement
-- Source maps
-- Fast rebuild
-
-### Production Build
-- Minified assets
-- Optimized bundles
-- Asset hashing for caching
-
-### Static Server
-Production server in `serve/static.js`:
-- Serves built assets from `dist/`
-- Handles SPA routing
-- Optional basic auth
-
-## Lodash
-
-Lodash available for utility functions:
-- Import specific functions: `import { kebabCase } from 'lodash';`
-- Common uses: data manipulation, formatting, validation
-
-## Accessibility
-
-- Use semantic HTML
-- Provide ARIA labels where needed
-- Ensure keyboard navigation works
-- Test with screen readers
 
 ## Best Practices
 
