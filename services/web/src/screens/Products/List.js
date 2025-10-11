@@ -32,33 +32,8 @@ export default function ProductList() {
     });
   }
 
-  function getFilterMapping() {
-    return {
-      isFeatured: {
-        label: 'Is Featured',
-        type: 'boolean',
-      },
-      priceUsd: {
-        label: 'Price Usd',
-      },
-      expiresAt: {
-        label: 'Expires At',
-        type: 'date',
-        range: true,
-      },
-      createdAt: {
-        label: 'Created At',
-        type: 'date',
-        range: true,
-      },
-      keyword: {},
-    };
-  }
-
   return (
-    <Search.Provider
-      onDataNeeded={onDataNeeded}
-      filterMapping={getFilterMapping()}>
+    <Search.Provider onDataNeeded={onDataNeeded}>
       {({ items: products, reload, error, loading }) => {
         return (
           <Stack>

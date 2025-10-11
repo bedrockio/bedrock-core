@@ -7,9 +7,9 @@ import { useDebounce } from 'hooks/debounce';
 import { useSearch } from '../Context';
 
 export default function KeywordFilter(props) {
-  const { loading, setFilters } = useSearch();
+  const { loading, filters, setFilters } = useSearch();
 
-  const [keyword, setKeyword] = useState('');
+  const [keyword, setKeyword] = useState(filters.keyword || '');
 
   function onChange(evt) {
     const { value } = evt.currentTarget;

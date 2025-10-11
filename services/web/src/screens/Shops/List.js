@@ -57,29 +57,9 @@ export default function ShopList() {
     return data;
   }
 
-  function getFilterMapping() {
-    return {
-      country: {
-        label: 'Country',
-        getDisplayValue: (id) => countries.find((c) => c.value === id)?.text,
-      },
-      owner: {
-        label: 'Owner',
-      },
-      createdAt: {
-        label: 'Created At',
-        type: 'date',
-        range: true,
-      },
-      keyword: {},
-    };
-  }
-
   return (
     <>
-      <Search.Provider
-        onDataNeeded={onDataNeeded}
-        filterMapping={getFilterMapping()}>
+      <Search.Provider onDataNeeded={onDataNeeded}>
         {({ items: shops, reload, error, loading }) => {
           return (
             <Stack>

@@ -30,20 +30,9 @@ export default function TemplateList() {
     });
   }
 
-  function getFilterMapping() {
-    return {
-      subject: {
-        label: 'Subject',
-      },
-      keyword: {},
-    };
-  }
-
   return (
     <>
-      <Search.Provider
-        onDataNeeded={onDataNeeded}
-        filterMapping={getFilterMapping()}>
+      <Search.Provider onDataNeeded={onDataNeeded}>
         {({ items: templates, reload, error, loading }) => {
           return (
             <Stack>

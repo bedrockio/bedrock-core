@@ -29,22 +29,9 @@ export default function OrganizationList() {
     });
   }
 
-  function getFilterMapping() {
-    return {
-      keyword: {},
-      createdAt: {
-        label: 'Created At',
-        type: 'date',
-        range: true,
-      },
-    };
-  }
-
   return (
     <>
-      <Search.Provider
-        onDataNeeded={onDataNeeded}
-        filterMapping={getFilterMapping()}>
+      <Search.Provider onDataNeeded={onDataNeeded}>
         {({ items: organizations, reload, error, loading }) => (
           <Stack>
             <PageHeader

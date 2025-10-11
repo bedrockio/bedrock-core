@@ -93,41 +93,6 @@ export default function AuditLogList() {
     return data;
   }
 
-  const getFilterMapping = () => {
-    return {
-      actor: {
-        label: 'Actor',
-      },
-      ownerId: {
-        label: 'Owner',
-      },
-      user: {
-        label: 'Owner',
-      },
-      category: {
-        label: 'Category',
-      },
-      activity: {
-        label: 'Activity',
-      },
-      objectType: {
-        label: 'Object Type',
-      },
-      object: {
-        label: 'Object Id',
-      },
-      sessionId: {
-        label: 'Session Id',
-      },
-      createdAt: {
-        label: 'Created At',
-        type: 'date',
-        range: true,
-      },
-      keyword: {},
-    };
-  };
-
   return (
     <>
       <Meta title="Audit Log" />
@@ -138,9 +103,7 @@ export default function AuditLogList() {
         title={`Audit Entry: ${selectedItem?.activity}`}>
         <Overview auditEntry={selectedItem} />
       </Drawer>
-      <Search.Provider
-        filterMapping={getFilterMapping()}
-        onDataNeeded={onDataNeeded}>
+      <Search.Provider onDataNeeded={onDataNeeded}>
         {({ items }) => (
           <Stack>
             <PageHeader

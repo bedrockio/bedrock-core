@@ -4,6 +4,7 @@ import Header from './Header';
 import Pagination from './Pagination';
 import Provider from './Provider';
 import Status from './Status';
+import UrlProvider from './UrlProvider';
 
 export default {
   Provider,
@@ -11,5 +12,6 @@ export default {
   Export,
   Header,
   Status,
+  UrlProvider,
   Pagination,
 };

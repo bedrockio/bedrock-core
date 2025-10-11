@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 
 import { useRequest } from 'hooks/request';
@@ -6,25 +7,27 @@ import { stripEmpty } from 'utils/object';
 
 import { SearchContext } from './Context';
 
-const DEFAULT_SORT = { field: '_id', order: 'asc' };
-
 export default function SearchProvider(props) {
-  const { children, skip = 0, limit = 20, onDataNeeded } = props;
+  const {
+    children,
+    skip = 0,
+    limit = 20,
+    onDataNeeded,
+    onParamsChange,
+  } = props;
 
   const { run, result, loading, error } = useRequest(onDataNeeded);
 
   const [params, setParams] = useState({
     ...props.filters,
-    sort: {
-      ...DEFAULT_SORT,
-      ...props.sort,
-    },
+    sort: isEmpty(props.sort) ? undefined : props.sort,
     skip,
     limit,
   });
 
   useEffect(() => {
     run(params);
+    onParamsChange?.(params);
   }, [params]);
 
   const context = {
