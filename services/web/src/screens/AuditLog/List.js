@@ -103,7 +103,7 @@ export default function AuditLogList() {
         title={`Audit Entry: ${selectedItem?.activity}`}>
         <Overview auditEntry={selectedItem} />
       </Drawer>
-      <Search.Provider onDataNeeded={onDataNeeded}>
+      <Search.UrlProvider onDataNeeded={onDataNeeded}>
         {({ items }) => (
           <Stack>
             <PageHeader
@@ -121,32 +121,32 @@ export default function AuditLogList() {
             <Group justify="space-between">
               <Group>
                 <SearchFilters.Modal>
-                  <SearchFilters.Select
+                  <SearchFilters.Search
                     onDataNeeded={fetchUsers}
                     name="actor"
                     label="Actor"
                   />
-                  <SearchFilters.Select
+                  <SearchFilters.Search
                     onDataNeeded={fetchUsers}
                     name="ownerId"
                     label="Owner"
                   />
-                  <SearchFilters.Select
+                  <SearchFilters.Search
                     onDataNeeded={() =>
                       fetchSearchOptions({ field: 'activity' })
                     }
                     name="activity"
                     label="Activity"
                   />
-                  <SearchFilters.Select
+                  <SearchFilters.Search
+                    name="objectType"
+                    label="Object Type"
                     onDataNeeded={() =>
                       fetchSearchOptions({ field: 'objectType' })
                     }
-                    name="objectType"
-                    label="ObjectType"
                   />
-                  <SearchFilters.Keyword name="sessionId" label="Session Id" />
-                  <SearchFilters.Keyword name="object" label="Object Id" />
+                  <SearchFilters.Input name="sessionId" label="Session Id" />
+                  <SearchFilters.Input name="object" label="Object Id" />
                   <SearchFilters.DateRange
                     label="Created At"
                     name="createdAt"
@@ -161,8 +161,8 @@ export default function AuditLogList() {
             <Table striped highlightOnHover>
               <Table.Thead>
                 <Table.Tr>
-                  <Search.Header>Actor</Search.Header>
-                  <Search.Header>Activity</Search.Header>
+                  <Search.Header name="actor">Actor</Search.Header>
+                  <Search.Header name="activity">Activity</Search.Header>
                   <Search.Header>Object Owner</Search.Header>
                   <Search.Header>Object Name</Search.Header>
                   <Search.Header name="createdAt" width={170}>
@@ -231,7 +231,7 @@ export default function AuditLogList() {
             <Search.Pagination />
           </Stack>
         )}
-      </Search.Provider>
+      </Search.UrlProvider>
     </>
   );
 }

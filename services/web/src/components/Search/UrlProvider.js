@@ -1,4 +1,5 @@
-import { useNavigate, useSearch } from '@bedrockio/router';
+import { useLocation, useNavigate, useSearch } from '@bedrockio/router';
+import { camelCase, mapKeys, snakeCase } from 'lodash';
 
 import Provider from './Provider';
 
@@ -6,6 +7,7 @@ export default function UrlProvider(props) {
   const { sort: defaultSort } = props;
 
   const search = useSearch();
+  const location = useLocation();
 
   const navigate = useNavigate();
 
@@ -17,7 +19,7 @@ export default function UrlProvider(props) {
   } = search;
 
   const params = {
-    filters: rest,
+    filters: toCamelCase(rest),
     skip: Number(search.skip) || 0,
     sort: {
       ...defaultSort,
@@ -32,7 +34,14 @@ export default function UrlProvider(props) {
 
   function onParamsChange(state) {
     const { sort, skip, limit, ...rest } = state;
-    const params = new URLSearchParams(rest);
+
+    const params = new URLSearchParams();
+
+    for (let [key, value] of Object.entries(rest)) {
+      if (value != null && value !== '') {
+        params.set(snakeCase(key), value);
+      }
+    }
 
     const { field, order } = sort || {};
 
@@ -48,8 +57,14 @@ export default function UrlProvider(props) {
       params.set('skip', skip);
     }
 
-    navigate.replace(params.size ? `?${params}` : '');
+    if (params.toString() !== location.search) {
+      navigate.replace(params.size ? `?${params}` : '');
+    }
   }
 
   return <Provider {...props} {...params} onParamsChange={onParamsChange} />;
+}
+
+function toCamelCase(obj) {
+  return mapKeys(obj, (_, key) => camelCase(key));
 }

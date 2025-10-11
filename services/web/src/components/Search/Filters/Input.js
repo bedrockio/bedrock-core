@@ -18,6 +18,7 @@ export default function InputFilter(props) {
       [name]: '',
     });
   }
+
   function onChange(evt) {
     setFilters({
       [name]: evt.target.value,

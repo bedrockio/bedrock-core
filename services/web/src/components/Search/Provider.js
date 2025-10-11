@@ -60,7 +60,7 @@ export default function SearchProvider(props) {
   }
 
   function resetFilters() {
-    const { keyword, sort, limit } = params;
+    const { keyword = '', sort, limit } = params;
     setParams({
       sort,
       limit,
