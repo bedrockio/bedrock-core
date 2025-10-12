@@ -1,20 +1,28 @@
-import { Loader } from '@mantine/core';
-import React from 'react';
+import { Loader, Text } from '@mantine/core';
 
-import ErrorMessage from 'components/ErrorMessage';
+import { formatNumber } from 'utils/formatting';
 
-import SearchContext from './Context';
+import { useSearch } from './Context';
 
 export default function SearchStatus() {
-  const context = React.useContext(SearchContext);
-  const { loading, error = { message: 'something went wrong' } } = context;
+  const { meta, loading, error } = useSearch();
 
   if (loading) {
     return <Loader size="sm" />;
-  }
-
-  if (error) {
-    return <ErrorMessage error={error} />;
+  } else if (error) {
+    return (
+      <Text size="sm" c="error">
+        {error.message}
+      </Text>
+    );
+  } else if (meta) {
+    const total = formatNumber(meta.total);
+    const s = meta.total === 1 ? '' : 's';
+    return (
+      <Text size="sm">
+        {total} result{s} found
+      </Text>
+    );
   }
 
   return null;

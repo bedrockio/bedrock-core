@@ -15,7 +15,6 @@ import ErrorMessage from 'components/ErrorMessage';
 import PageHeader from 'components/PageHeader';
 import Search from 'components/Search';
 import SearchFilters from 'components/Search/Filters';
-import SortableTh from 'components/Table/SortableTh';
 
 import { request } from 'utils/api';
 import { formatUsd } from 'utils/currency';
@@ -33,34 +32,9 @@ export default function ProductList() {
     });
   }
 
-  function getFilterMapping() {
-    return {
-      isFeatured: {
-        label: 'Is Featured',
-        type: 'boolean',
-      },
-      priceUsd: {
-        label: 'Price Usd',
-      },
-      expiresAt: {
-        label: 'Expires At',
-        type: 'date',
-        range: true,
-      },
-      createdAt: {
-        label: 'Created At',
-        type: 'date',
-        range: true,
-      },
-      keyword: {},
-    };
-  }
-
   return (
-    <Search.Provider
-      onDataNeeded={onDataNeeded}
-      filterMapping={getFilterMapping()}>
-      {({ items: products, getSorted, setSort, reload, error, loading }) => {
+    <Search.Provider onDataNeeded={onDataNeeded}>
+      {({ items: products, reload, error, loading }) => {
         return (
           <Stack>
             <PageHeader
@@ -109,7 +83,7 @@ export default function ProductList() {
               </Group>
 
               <Group>
-                <Search.Total />
+                <Search.Status />
                 <SearchFilters.Keyword />
               </Group>
             </Group>
@@ -119,29 +93,18 @@ export default function ProductList() {
             <Table stickyHeader striped>
               <Table.Thead>
                 <Table.Tr>
-                  <SortableTh
-                    sorted={getSorted('name')}
-                    onClick={() => setSort('name')}>
-                    Name
-                  </SortableTh>
-                  <Table.Th width={60}>Image</Table.Th>
-                  <SortableTh
-                    sorted={getSorted('priceUsd')}
-                    onClick={() => setSort('priceUsd')}>
-                    Price
-                  </SortableTh>
-                  <SortableTh
-                    sorted={getSorted('createdAt')}
-                    onClick={() => setSort('createdAt')}
-                    width={280}>
+                  <Search.Header name="name">Name</Search.Header>
+                  <Search.Header width={60}>Image</Search.Header>
+                  <Search.Header name="priceUsd">Price</Search.Header>
+                  <Search.Header name="createdAt" width={280}>
                     Created
-                  </SortableTh>
-                  <Table.Th
+                  </Search.Header>
+                  <Search.Header
                     style={{
                       textAlign: 'right',
                     }}>
                     Actions
-                  </Table.Th>
+                  </Search.Header>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>

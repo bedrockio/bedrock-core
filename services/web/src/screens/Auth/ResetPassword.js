@@ -3,7 +3,6 @@ import { Link, useNavigate } from '@bedrockio/router';
 import {
   Anchor,
   Button,
-  Paper,
   PasswordInput,
   Stack,
   Text,

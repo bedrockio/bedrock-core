@@ -1,17 +1,17 @@
-import Context from './Context';
 import Export from './Export';
 import Filters from './Filters';
+import Header from './Header';
 import Pagination from './Pagination';
 import Provider from './Provider';
 import Status from './Status';
-import Total from './Total';
+import UrlProvider from './UrlProvider';
 
 export default {
   Provider,
-  Context,
   Filters,
   Export,
+  Header,
   Status,
-  Total,
+  UrlProvider,
   Pagination,
 };

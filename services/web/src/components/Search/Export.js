@@ -1,77 +1,86 @@
 import { Button, Tooltip } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
-import { useContext, useState } from 'react';
+
+import { useRequest } from 'hooks/request';
 
 import { downloadResponse } from 'utils/download';
-import { safeFileName } from 'utils/formatting';
 
-import SearchContext from './Context';
+import { useSearch } from './Context';
 
-export default function ExportButton({
-  body = {},
-  limit = 10000,
-  filename,
-  size,
-  as: Component = Button,
-  children = 'Export',
-  ...props
-}) {
-  const [loading, setLoading] = useState(false);
+export default function ExportButton(props) {
+  const { children = 'Export', limit = 10000, size, ...rest } = props;
 
-  const context = useContext(SearchContext);
+  const { meta, filters, onDataNeeded } = useSearch();
 
-  const handleSubmit = async () => {
-    setLoading(true);
-    try {
-      const res = await context.onDataNeeded({
+  const { run, loading } = useRequest({
+    handler: async () => {
+      const response = await onDataNeeded({
+        ...filters,
         format: 'csv',
         limit,
-        filename: filename
-          ? `${safeFileName(filename.replace('.csv', ''))}.csv`
-          : 'export.csv',
-        ...context.filters,
-        ...body,
       });
-      await downloadResponse(res);
-      setLoading(false);
-    } catch (err) {
-      setLoading(false);
+      await downloadResponse(response);
+    },
+    onError(error) {
       showNotification({
-        title: 'Error exporting data',
-        message: err.message,
+        message: error.message,
         color: 'red',
       });
-    }
-  };
+    },
+  });
 
-  if (!loading && context.meta?.total > limit) {
+  function isTooMany() {
+    return meta?.total > limit;
+  }
+
+  function render() {
+    if (!loading && isTooMany()) {
+      return renderTooMany();
+    } else {
+      return renderButton();
+    }
+  }
+
+  function getButtonProps() {
+    if (isTooMany()) {
+      return {
+        color: 'red',
+        variant: 'outline',
+        disabled: true,
+      };
+    } else {
+      return {
+        variant: 'default',
+        disabled: meta?.total === 0 || loading,
+      };
+    }
+  }
+
+  function renderButton() {
     return (
-      <Tooltip
-        multiline
-        w={220}
-        label="Too many rows to export, narrow your search"
-        trigger={
-          <Component
-            loading={loading}
-            size={size}
-            disabled
-            variant="default"
-            {...props}>
-            {children}
-          </Component>
-        }
-      />
+      <Button
+        {...rest}
+        {...getButtonProps()}
+        size={size}
+        loading={loading}
+        onClick={run}>
+        {children}
+      </Button>
     );
   }
 
-  return (
-    <Component
-      size={size}
-      variant="default"
-      loading={loading}
-      disabled={context.meta?.total === 0 || loading}
-      onClick={handleSubmit}>
-      {children}
-    </Component>
-  );
+  function renderTooMany() {
+    return (
+      <Tooltip
+        w={220}
+        multiline
+        withArrow
+        color="red"
+        label="Too many rows to export, narrow your search.">
+        {renderButton()}
+      </Tooltip>
+    );
+  }
+
+  return render();
 }

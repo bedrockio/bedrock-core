@@ -4,7 +4,6 @@ import { Button, Code, Stack, Table } from '@mantine/core';
 import Meta from 'components/Meta';
 import PageHeader from 'components/PageHeader';
 import Search from 'components/Search';
-import SortableTh from 'components/Table/SortableTh';
 
 import { request } from 'utils/api';
 import { fromNow } from 'utils/date';
@@ -24,7 +23,7 @@ export default function Applications() {
     <>
       <Meta title="Applications" />
       <Search.Provider onDataNeeded={onDataNeeded}>
-        {({ items, getSorted, setSort, reload }) => {
+        {({ items, reload }) => {
           return (
             <Stack>
               <PageHeader
@@ -53,21 +52,19 @@ export default function Applications() {
               <Table striped highlightOnHover>
                 <Table.Thead>
                   <Table.Tr>
-                    <SortableTh
-                      sorted={getSorted('name')}
-                      onClick={() => setSort('name')}>
-                      Name
-                    </SortableTh>
-                    <Table.Th style={{ width: '25%' }}>Description</Table.Th>
-                    <Table.Th>APIKey</Table.Th>
-                    <Table.Th>Last Used</Table.Th>
-                    <Table.Th
+                    <Search.Header name="name">Name</Search.Header>
+                    <Search.Header style={{ width: '25%' }}>
+                      Description
+                    </Search.Header>
+                    <Search.Header>APIKey</Search.Header>
+                    <Search.Header>Last Used</Search.Header>
+                    <Search.Header
                       style={{
                         textAlign: 'right',
                       }}
                       width={100}>
                       Actions
-                    </Table.Th>
+                    </Search.Header>
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>

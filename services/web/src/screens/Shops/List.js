@@ -16,7 +16,6 @@ import PageHeader from 'components/PageHeader';
 import Protected from 'components/Protected';
 import Search from 'components/Search';
 import SearchFilters from 'components/Search/Filters';
-import SortableTh from 'components/Table/SortableTh';
 
 import { request } from 'utils/api';
 import allCountries from 'utils/countries';
@@ -58,30 +57,10 @@ export default function ShopList() {
     return data;
   }
 
-  function getFilterMapping() {
-    return {
-      country: {
-        label: 'Country',
-        getDisplayValue: (id) => countries.find((c) => c.value === id)?.text,
-      },
-      owner: {
-        label: 'Owner',
-      },
-      createdAt: {
-        label: 'Created At',
-        type: 'date',
-        range: true,
-      },
-      keyword: {},
-    };
-  }
-
   return (
     <>
-      <Search.Provider
-        onDataNeeded={onDataNeeded}
-        filterMapping={getFilterMapping()}>
-        {({ items: shops, getSorted, setSort, reload, error, loading }) => {
+      <Search.Provider onDataNeeded={onDataNeeded}>
+        {({ items: shops, reload, error, loading }) => {
           return (
             <Stack>
               <PageHeader
@@ -139,7 +118,7 @@ export default function ShopList() {
                 {loading && <Loader size={'sm'} />}
 
                 <Group>
-                  <Search.Total />
+                  <Search.Status />
                   <SearchFilters.Keyword />
                 </Group>
               </Group>
@@ -149,26 +128,18 @@ export default function ShopList() {
               <Table stickyHeader striped>
                 <Table.Thead>
                   <Table.Tr>
-                    <SortableTh
-                      sorted={getSorted('name')}
-                      onClick={() => setSort('name')}>
-                      Name
-                    </SortableTh>
-                    <Table.Th width={60}>Image</Table.Th>
-
-                    <SortableTh
-                      sorted={getSorted('createdAt')}
-                      onClick={() => setSort('createdAt')}
-                      width={280}>
-                      <Group>Created</Group>
-                    </SortableTh>
-                    <Table.Th
+                    <Search.Header name="name">Name</Search.Header>
+                    <Search.Header width={60}>Image</Search.Header>
+                    <Search.Header name="createdAt" width={280}>
+                      Created
+                    </Search.Header>
+                    <Search.Header
                       width={100}
                       style={{
                         textAlign: 'right',
                       }}>
                       Actions
-                    </Table.Th>
+                    </Search.Header>
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>

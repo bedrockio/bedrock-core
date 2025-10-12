@@ -14,7 +14,6 @@ import ErrorMessage from 'components/ErrorMessage';
 import PageHeader from 'components/PageHeader';
 import Search from 'components/Search';
 import SearchFilters from 'components/Search/Filters';
-import SortableTh from 'components/Table/SortableTh';
 
 import { request } from 'utils/api';
 import { formatDateTime } from 'utils/date';
@@ -30,30 +29,10 @@ export default function OrganizationList() {
     });
   }
 
-  function getFilterMapping() {
-    return {
-      keyword: {},
-      createdAt: {
-        label: 'Created At',
-        type: 'date',
-        range: true,
-      },
-    };
-  }
-
   return (
     <>
-      <Search.Provider
-        onDataNeeded={onDataNeeded}
-        filterMapping={getFilterMapping()}>
-        {({
-          items: organizations,
-          getSorted,
-          setSort,
-          reload,
-          error,
-          loading,
-        }) => (
+      <Search.Provider onDataNeeded={onDataNeeded}>
+        {({ items: organizations, reload, error, loading }) => (
           <Stack>
             <PageHeader
               title="Organizations"
@@ -86,7 +65,7 @@ export default function OrganizationList() {
               </Group>
 
               <Group>
-                <Search.Total />
+                <Search.Status />
                 <SearchFilters.Keyword />
               </Group>
             </Group>
@@ -96,20 +75,13 @@ export default function OrganizationList() {
             <Table stickyHeader striped>
               <Table.Thead>
                 <Table.Tr>
-                  <SortableTh
-                    sorted={getSorted('name')}
-                    onClick={() => setSort('name')}>
-                    Name
-                  </SortableTh>
-                  <SortableTh
-                    sorted={getSorted('createdAt')}
-                    onClick={() => setSort('createdAt')}
-                    width={280}>
+                  <Search.Header name="name">Name</Search.Header>
+                  <Search.Header name="createdAt" width={280}>
                     Created
-                  </SortableTh>
-                  <Table.Th style={{ textAlign: 'right' }} width={100}>
+                  </Search.Header>
+                  <Search.Header style={{ textAlign: 'right' }} width={100}>
                     Actions
-                  </Table.Th>
+                  </Search.Header>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>

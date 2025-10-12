@@ -23,9 +23,9 @@ import {
   PiFileBold,
   PiGearBold,
   PiGridFourBold,
-  PiHeartBold,
   PiListMagnifyingGlass,
-  PiPillBold,
+  PiStorefrontBold,
+  PiTagBold,
   PiTerminalBold,
   PiUserBold,
 } from 'react-icons/pi';
@@ -47,14 +47,14 @@ import MenuItem from '../components/MenuItem';
 
 const menuItems = [
   {
-    icon: PiPillBold,
-    url: '/drugs',
-    label: 'Drugs',
+    icon: PiStorefrontBold,
+    url: '/shops',
+    label: 'Shops',
   },
   {
-    icon: PiHeartBold,
-    url: '/symptoms',
-    label: 'Symptoms',
+    icon: PiTagBold,
+    url: '/products',
+    label: 'Products',
   },
   {
     icon: PiUserBold,

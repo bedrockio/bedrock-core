@@ -1,46 +1,32 @@
 import { NumberInput } from '@mantine/core';
 import PropTypes from 'prop-types';
-import React from 'react';
 
-import SearchContext from '../Context';
+import NumberField from 'components/form-fields/Number';
 
-export default class NumberFilter extends React.Component {
-  static contextType = SearchContext;
+import { useSearch } from '../Context';
 
-  onChange = (value) => {
-    this.context.onFilterChange({
-      name: this.props.name,
-      value: Number(value),
+export default function NumberFilter(props) {
+  const { name, value, label, min, max, ...rest } = props;
+
+  const { filters, setFilters } = useSearch();
+
+  function onChange({ name, value }) {
+    setFilters({
+      [name]: value,
     });
-  };
-
-  render() {
-    const { name, min, max } = this.props;
-    const value = this.context.filters[name];
-    return (
-      <NumberInput
-        id={name}
-        type="number"
-        min={min}
-        max={max}
-        icon={
-          value != '' && {
-            name: 'close',
-            link: true,
-            onClick: (evt) => {
-              if (value) {
-                this.context.onFilterChange({ name, value: '' });
-              }
-              evt.target.closest('.input').querySelector('input').focus();
-            },
-          }
-        }
-        value={value || ''}
-        onChange={this.onChange}
-        {...this.props}
-      />
-    );
   }
+
+  return (
+    <NumberField
+      {...rest}
+      name={name}
+      min={min}
+      max={max}
+      label={label}
+      value={filters[name] || ''}
+      onChange={onChange}
+    />
+  );
 }
 
 NumberFilter.propTypes = {

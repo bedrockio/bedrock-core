@@ -1,31 +1,28 @@
 import { Checkbox } from '@mantine/core';
 import PropTypes from 'prop-types';
-import React from 'react';
 
-import SearchContext from '../Context';
+import { useSearch } from '../Context';
 
-export default class CheckboxFilter extends React.Component {
-  static contextType = SearchContext;
+export default function CheckboxFilter(props) {
+  const { name, ...rest } = props;
 
-  onChange = (evt) => {
-    this.context.onFilterChange({
-      value: evt.target.checked,
-      name: this.props.name,
+  const { filters, setFilters } = useSearch();
+
+  function onChange(evt) {
+    setFilters({
+      [name]: evt.target.checked,
     });
-  };
-
-  render() {
-    const { name, ...rest } = this.props;
-    return (
-      <Checkbox
-        id={name}
-        name={name}
-        checked={this.context.filters[name] || false}
-        onChange={this.onChange}
-        {...rest}
-      />
-    );
   }
+
+  return (
+    <Checkbox
+      id={name}
+      name={name}
+      checked={filters[name] || false}
+      onChange={onChange}
+      {...rest}
+    />
+  );
 }
 
 CheckboxFilter.propTypes = {

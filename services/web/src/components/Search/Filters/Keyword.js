@@ -1,81 +1,63 @@
 import { TextInput } from '@mantine/core';
-import React from 'react';
+import { useState } from 'react';
+import { PiMagnifyingGlass, PiXBold } from 'react-icons/pi';
 
-import SearchContext from '../Context';
+import { useDebounce } from 'hooks/debounce';
 
-export default class KeywordFilter extends React.Component {
-  static contextType = SearchContext;
+import { useSearch } from '../Context';
 
-  constructor(props) {
-    super(props);
-    this.state = {
+export default function KeywordFilter(props) {
+  const { loading, filters, setFilters } = useSearch();
+
+  const [keyword, setKeyword] = useState(filters.keyword || '');
+
+  function onChange(evt) {
+    const { value } = evt.currentTarget;
+    setKeyword(value);
+    setFilterDeferred(value);
+  }
+
+  function onClearClick() {
+    setKeyword('');
+    setFilters({
       keyword: '',
-    };
-  }
-
-  componentDidMount() {
-    const { filters } = this.context;
-    this.setState({
-      keyword: filters['keyword'] || '',
     });
   }
 
-  onChange = (e) => {
-    const { value } = e.currentTarget;
-    this.setState({
-      keyword: value,
-    });
-  };
-
-  onKeyDown = (evt) => {
-    if (evt.key === 'Enter') {
-      evt.preventDefault();
-      const { keyword } = this.state;
-      this.context.onFilterChange({
-        name: 'keyword',
-        value: keyword,
+  const setFilterDeferred = useDebounce({
+    run(newKeyword) {
+      setFilters({
+        keyword: newKeyword,
       });
-    }
-  };
+    },
+    timeout: 500,
+    deps: [setFilters],
+  });
 
-  render() {
-    const { keyword } = this.state;
-    const { loading } = this.context;
-
+  function render() {
     return (
       <TextInput
-        {...this.props}
+        {...props}
         disabled={loading}
         type="search"
         style={{ minWidth: '220px' }}
         placeholder="Search by keyword"
-        icon={this.renderIcon()}
+        rightSection={renderIcon()}
         value={keyword}
-        onChange={this.onChange}
-        onKeyDown={this.onKeyDown}
+        onChange={onChange}
       />
     );
   }
 
-  renderIcon() {
-    const { keyword } = this.state;
-    return {
-      name: keyword ? 'close' : 'magnifying-glass',
-      link: true,
-      onClick: (evt) => {
-        if (keyword) {
-          this.setState({
-            keyword: '',
-          });
-          this.context.onFilterChange({
-            name: 'keyword',
-            value: '',
-          });
-        }
-        evt.target.closest('.input').querySelector('input').focus();
-      },
-    };
+  function renderIcon() {
+    if (keyword) {
+      return <PiXBold onClick={onClearClick} />;
+    } else {
+      return <PiMagnifyingGlass />;
+    }
   }
+
+  return render();
 }
 
 KeywordFilter.propTypes = {

@@ -17,7 +17,6 @@ import Meta from 'components/Meta';
 import PageHeader from 'components/PageHeader';
 import Search from 'components/Search';
 import SearchFilters from 'components/Search/Filters';
-import SortableTh from 'components/Table/SortableTh';
 
 import { request } from 'utils/api';
 import { formatDateTime } from 'utils/date';
@@ -94,41 +93,6 @@ export default function AuditLogList() {
     return data;
   }
 
-  const getFilterMapping = () => {
-    return {
-      actor: {
-        label: 'Actor',
-      },
-      ownerId: {
-        label: 'Owner',
-      },
-      user: {
-        label: 'Owner',
-      },
-      category: {
-        label: 'Category',
-      },
-      activity: {
-        label: 'Activity',
-      },
-      objectType: {
-        label: 'Object Type',
-      },
-      object: {
-        label: 'Object Id',
-      },
-      sessionId: {
-        label: 'Session Id',
-      },
-      createdAt: {
-        label: 'Created At',
-        type: 'date',
-        range: true,
-      },
-      keyword: {},
-    };
-  };
-
   return (
     <>
       <Meta title="Audit Log" />
@@ -139,10 +103,8 @@ export default function AuditLogList() {
         title={`Audit Entry: ${selectedItem?.activity}`}>
         <Overview auditEntry={selectedItem} />
       </Drawer>
-      <Search.Provider
-        filterMapping={getFilterMapping()}
-        onDataNeeded={onDataNeeded}>
-        {({ items, getSorted, setSort }) => (
+      <Search.UrlProvider onDataNeeded={onDataNeeded}>
+        {({ items }) => (
           <Stack>
             <PageHeader
               title="Audit Log"
@@ -159,32 +121,32 @@ export default function AuditLogList() {
             <Group justify="space-between">
               <Group>
                 <SearchFilters.Modal>
-                  <SearchFilters.Select
+                  <SearchFilters.Search
                     onDataNeeded={fetchUsers}
                     name="actor"
                     label="Actor"
                   />
-                  <SearchFilters.Select
+                  <SearchFilters.Search
                     onDataNeeded={fetchUsers}
                     name="ownerId"
                     label="Owner"
                   />
-                  <SearchFilters.Select
+                  <SearchFilters.Search
                     onDataNeeded={() =>
                       fetchSearchOptions({ field: 'activity' })
                     }
                     name="activity"
                     label="Activity"
                   />
-                  <SearchFilters.Select
+                  <SearchFilters.Search
+                    name="objectType"
+                    label="Object Type"
                     onDataNeeded={() =>
                       fetchSearchOptions({ field: 'objectType' })
                     }
-                    name="objectType"
-                    label="ObjectType"
                   />
-                  <SearchFilters.Keyword name="sessionId" label="Session Id" />
-                  <SearchFilters.Keyword name="object" label="Object Id" />
+                  <SearchFilters.Input name="sessionId" label="Session Id" />
+                  <SearchFilters.Input name="object" label="Object Id" />
                   <SearchFilters.DateRange
                     label="Created At"
                     name="createdAt"
@@ -193,23 +155,22 @@ export default function AuditLogList() {
                 <Search.Status />
               </Group>
               <Group>
-                <Search.Total />
+                <Search.Status />
               </Group>
             </Group>
             <Table striped highlightOnHover>
               <Table.Thead>
                 <Table.Tr>
-                  <Table.Th>Actor</Table.Th>
-                  <Table.Th>Activity</Table.Th>
-                  <Table.Th>Object Owner</Table.Th>
-                  <Table.Th>Object Name</Table.Th>
-                  <SortableTh
-                    width={170}
-                    sorted={getSorted('createdAt')}
-                    onClick={() => setSort('createdAt')}>
+                  <Search.Header name="actor">Actor</Search.Header>
+                  <Search.Header name="activity">Activity</Search.Header>
+                  <Search.Header>Object Owner</Search.Header>
+                  <Search.Header>Object Name</Search.Header>
+                  <Search.Header name="createdAt" width={170}>
                     Date
-                  </SortableTh>
-                  <Table.Th style={{ textAlign: 'right' }}>Actions</Table.Th>
+                  </Search.Header>
+                  <Search.Header style={{ textAlign: 'right' }}>
+                    Actions
+                  </Search.Header>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
@@ -270,7 +231,7 @@ export default function AuditLogList() {
             <Search.Pagination />
           </Stack>
         )}
-      </Search.Provider>
+      </Search.UrlProvider>
     </>
   );
 }

@@ -206,6 +206,7 @@ SearchDropdown.propTypes = PropTypes.oneOfType([
 
 SearchDropdown.defaultProps = {
   keywordField: 'keyword',
+  // TODO: why is this default?
   objectMode: true,
   getOptionLabel: (item) => item?.name || item,
   getOptionValue: (item) => item?.id || item,

@@ -2,18 +2,17 @@ import { Group, Stack, Text } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 import { isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
-import React from 'react';
 
-import SearchContext from '../Context';
+import { useSearch } from '../Context';
 
-export default class DateRangeFilter extends React.Component {
-  static contextType = SearchContext;
+export default function DateRangeFilter(props) {
+  const { name, label } = props;
 
-  onChange = (part, value) => {
-    const { name } = this.props;
+  const { filters, setFilters } = useSearch();
 
+  function onChange(part, value) {
     const range = {
-      ...this.context.filters[name],
+      ...filters[name],
     };
     if (name === 'gte' && value === null) {
       delete range['lte'];
@@ -31,56 +30,37 @@ export default class DateRangeFilter extends React.Component {
 
     value = isEmpty(range) ? null : range;
 
-    if (this.props.onChange) {
-      this.props.onChange({
-        name,
-        value: {
-          ...value,
-        },
-      });
-    } else {
-      this.context.onFilterChange({
-        name,
-        value: {
-          ...value,
-        },
-      });
-    }
-  };
-
-  render() {
-    const { label, name } = this.props;
-    return (
-      <Stack gap={0}>
-        <Text size="sm">{label}</Text>
-        <Group justify="space-between" wrap="no-wrap">
-          <DateInput
-            name="gte"
-            value={this.context.filters[name]?.gte}
-            placeholder="Start"
-            onChange={(value) => this.onChange('gte', value)}
-            clearable
-          />
-          <span className="divider">&ndash;</span>
-          <DateInput
-            name="lte"
-            value={this.context.filters[name]?.lte}
-            placeholder="Present"
-            onChange={(value) => this.onChange('lte', value)}
-            clearable
-          />
-        </Group>
-      </Stack>
-    );
+    setFilters({
+      [name]: value,
+    });
   }
+
+  return (
+    <Stack gap={0}>
+      <Text size="sm" fw="500">
+        {label}
+      </Text>
+      <Group wrap="no-wrap">
+        <DateInput
+          name="gte"
+          value={filters[name]?.gte}
+          placeholder="Start"
+          onChange={(value) => onChange('gte', value)}
+          clearable
+        />
+        <DateInput
+          name="lte"
+          value={filters[name]?.lte}
+          placeholder="End"
+          onChange={(value) => onChange('lte', value)}
+          clearable
+        />
+      </Group>
+    </Stack>
+  );
 }
 
 DateRangeFilter.propTypes = {
   value: PropTypes.object,
   name: PropTypes.string.isRequired,
-};
-
-DateRangeFilter.defaultProps = {
-  object: true,
-  value: {},
 };
