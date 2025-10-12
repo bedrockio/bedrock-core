@@ -61,7 +61,7 @@
     "prettier": "^3.5.2"
   },
   "volta": {
-    "node": "22.18.0",
+    "node": "22.20.0",
     "yarn": "1.22.22"
   },
   "prettier": "@bedrockio/prettier-config"
