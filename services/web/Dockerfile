@@ -4,18 +4,21 @@
 # Base Stage
 FROM node:22.20.0-alpine AS base
 
+# Update & install required packages
+RUN apk add --update bash curl
+
+# Set work directory
+WORKDIR /service
+
+# Build Stage
+FROM base AS build
+
 # Yarn will not install any package listed in devDependencies if the NODE_ENV
 # environment variable is set to production. Use this flag to instruct Yarn to
 # ignore NODE_ENV and take its production-or-not status from this flag instead.
 ARG NODE_ENV=production
 
 # Note layers should be ordered from less to more likely to change.
-
-# Update & install required packages
-RUN apk add --update bash curl;
-
-# Set work directory
-WORKDIR /service
 
 # Install dependencies
 COPY package.json yarn.lock ./
@@ -26,9 +29,6 @@ RUN yarn install --frozen-lockfile
 # Copy app source
 COPY . .
 
-# Build Stage
-FROM base AS build
-
 # Build app
 RUN yarn build
 
@@ -36,7 +36,7 @@ RUN yarn build
 RUN rm -rf src/ node_modules/
 
 # Final Stage
-FROM node:22.20.0-alpine
+FROM base
 
 WORKDIR /service
 
