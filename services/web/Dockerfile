@@ -1,31 +1,29 @@
-FROM node:22.20.0-alpine
+# Note we are using a 2-stage build to keep the resulting image small.
+# As docker layers are immutable this is the only way to reduce size.
 
-# Yarn will not install any package listed in devDependencies if the NODE_ENV
-# environment variable is set to production. Use this flag to instruct Yarn to
-# ignore NODE_ENV and take its production-or-not status from this flag instead.
+# Build Stage
+FROM node:22.20.0-alpine AS build
+
 ARG NODE_ENV=production
 
-# Note layers should be ordered from less to more likely to change.
-
-# Update & install required packages
-RUN apk add --update bash curl;
-
-# Set work directory
 WORKDIR /service
 
-# Install dependencies and store yarn cache
 COPY package.json yarn.lock ./
 COPY serve/package.json serve/yarn.lock ./serve/
-RUN --mount=type=cache,target=/root/.yarn YARN_CACHE_FOLDER=/root/.yarn yarn install --frozen-lockfile
 
-# Copy app source
+RUN yarn install --frozen-lockfile
+
 COPY . .
-
-# Build the application
 RUN yarn build
 
-# Clean up to reduce image size
-RUN rm -rf src/ node_modules/
+# Final Stage
+FROM node:22.20.0-alpine
+
+WORKDIR /service
+
+RUN apk add --update bash curl
+
+COPY --from=build /service .
 
 EXPOSE 2200
 
