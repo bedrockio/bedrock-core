@@ -17,3 +17,4 @@ globalConfig.json
 .eslintcache
 .vscode
 secrets
+.claude

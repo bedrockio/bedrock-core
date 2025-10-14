@@ -22,19 +22,14 @@
 // admin.site.com  /page        200     /admin/
 //
 
-const HOT_UPDATE_REG = /__webpack_hmr/;
 const EXT_URL = /\.[a-z0-9]+$/i;
 
 function canRewriteUrl(path) {
-  return !hasFileExension(path) && !isHotUpdateUrl(path);
+  return !hasFileExension(path);
 }
 
 function hasFileExension(url) {
   return EXT_URL.test(url);
-}
-
-function isHotUpdateUrl(url) {
-  return HOT_UPDATE_REG.test(url);
 }
 
 function matchSubdomainApp(subdomains, apps) {

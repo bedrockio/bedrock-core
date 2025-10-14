@@ -1,5 +1,17 @@
-# Base stage
-FROM node:22.18.0-alpine AS base
+# Note we are using a multi-stage build to keep the resulting image small.
+# As docker layers are immutable this is the only way to reduce size.
+
+# Base Stage
+FROM node:22.20.0-alpine AS base
+
+# Update & install required packages
+RUN apk add --update bash curl
+
+# Set work directory
+WORKDIR /service
+
+# Build Stage
+FROM base AS build
 
 # Yarn will not install any package listed in devDependencies if the NODE_ENV
 # environment variable is set to production. Use this flag to instruct Yarn to
@@ -8,32 +20,24 @@ ARG NODE_ENV=production
 
 # Note layers should be ordered from less to more likely to change.
 
-# Update & install required packages
-RUN apk add --update bash curl;
-
-# Set work directory
-WORKDIR /service
-
-# Install dependencies and store yarn cache
+# Install dependencies
 COPY package.json yarn.lock ./
 COPY serve/package.json serve/yarn.lock ./serve/
-RUN --mount=type=cache,target=/root/.yarn YARN_CACHE_FOLDER=/root/.yarn yarn install --frozen-lockfile
+
+RUN yarn install --frozen-lockfile
 
 # Copy app source
 COPY . .
 
-# build stage
-FROM base AS build
+# Build app
+RUN yarn build
 
+# Clean up to reduce image size
+RUN rm -rf src/ node_modules/
 
-# Build and store webpack cache
-RUN --mount=type=cache,target=./.webpack-cache yarn build
+# Final Stage
+FROM base
 
-RUN rm -rf src/
-RUN rm -rf node_modules/
-
-## Default (deployment image)
-FROM node:20.12.2-alpine
 WORKDIR /service
 
 EXPOSE 2200
