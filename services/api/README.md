@@ -506,7 +506,6 @@ the lowercase form of the object reference:
         "type": "ObjectId",
         "ref": "Condition",
       },
-      "startedAt": "Date",
     },
   ],
 }
