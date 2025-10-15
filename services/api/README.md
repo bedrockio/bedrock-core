@@ -34,7 +34,7 @@ See http://localhost:2200/docs for full documentation on this API (requires runn
 - `src/utils` - Various utilities, helpers and middleware extensions
 - `src/routes` - API Routes
 - `src/routes/__openapi__` - OpenAPI descriptions for use in documentation portal
-- `src/models` - [Mongoose ORM models](/src/models/README.md) (code and JSON) based on
+- `src/models` - [Mongoose ORM models](src/models/README.md) (code and JSON) based on
   [@bedrockio/model](https://github.com/bedrockio/model).
 - `src/app.js` - Entrypoint into API (does not bind, so can be used in unit tests)
 - `src/index.js` - Launch script for the API
