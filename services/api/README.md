@@ -22,7 +22,6 @@ See http://localhost:2200/docs for full documentation on this API (requires runn
 - [Logging](#logging)
 - [Documentation](#documentation)
 - [Authentication](#authentication)
-- [Data Modeling](#data-modeling)
 - [Troubleshooting](#troubleshooting)
 
 ---
@@ -35,7 +34,8 @@ See http://localhost:2200/docs for full documentation on this API (requires runn
 - `src/utils` - Various utilities, helpers and middleware extensions
 - `src/routes` - API Routes
 - `src/routes/__openapi__` - OpenAPI descriptions for use in documentation portal
-- `src/models` - Mongoose ORM models (code and JSON) based on [@bedrockio/model](https://github.com/bedrockio/model).
+- `src/models` - [Mongoose ORM models](/src/models/README.md) (code and JSON) based on
+  [@bedrockio/model](https://github.com/bedrockio/model).
 - `src/app.js` - Entrypoint into API (does not bind, so can be used in unit tests)
 - `src/index.js` - Launch script for the API
 - `emails` - Email templates
@@ -457,70 +457,6 @@ To set up Sign-in with Apple, in the [developer console](https://developer.apple
 Login entrypoints may be replaced or customized as needed, for example a dropdown allowing multiple login methods to be
 chosen from in the same screen, however it is recommended to leave the rest of the flows intact as they have been
 optimized for each method.
-
-## Data Modeling
-
-When modeling data there are some guidelines to follow.
-
-### Avoid direct references in arrays.
-
-When doing initial data modeling for a project it's often tempting to put direct ObjectId references into arrays, for
-example to store a list of `conditions` on a user.
-
-However as a project evolves a common requirement is to ask something like "when did this condition start?". Storing
-direct references in an array in this case is like having a join table in SQL that cannot hold other fields. It will
-require a fundamental data model change to fix and often causes downstream issues due to API changes.
-
-Avoiding this from the start will save headaches later. As a convention it is better to nest the object in a key that is
-the lowercase form of the object reference:
-
-❌ Avoid:
-
-```jsonc
-// In model:
-{
-  "conditions": [
-    {
-      "type": "ObjectId",
-      "ref": "Condition",
-    },
-  ],
-}
-
-// As data:
-
-{
-  "conditions": ["68ed8b92bb75e0aeee461156"]
-}
-
-```
-
-✅ Instead do:
-
-```jsonc
-// In model:
-{
-  "conditions": [
-    {
-      "condition": {
-        "type": "ObjectId",
-        "ref": "Condition",
-      },
-    },
-  ],
-}
-
-// As data:
-
-{
-  "conditions": [
-    {
-      "condition": "68ed8b92bb75e0aeee461156"
-    }
-  ]
-}
-
-```
 
 ## Troubleshooting
 
