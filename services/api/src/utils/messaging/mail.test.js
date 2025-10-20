@@ -1,3 +1,4 @@
+const path = require('path');
 const config = require('@bedrockio/config');
 const { assertMailSent, assertMailCount } = require('postmark');
 const { createUser, createUpload, createTemplate } = require('../testing');
@@ -6,57 +7,45 @@ const { sendMail } = require('./mail');
 
 const APP_NAME = config.get('APP_NAME');
 
-const welcomeTemplate = `
-Welcome!
-`;
+beforeEach(() => {
+  mockFiles();
+});
 
-const subjectTemplate = `
+afterEach(() => {
+  jest.restoreAllMocks();
+});
+
+const mocks = {
+  // Basic template
+  'welcome.md': 'Welcome!',
+
+  // Template with meta subject
+  'with-subject.md': `
 ---
 subject: "Hello {{user.name}}!"
 ---
 Welcome!
-`;
+  `,
 
-const linkTemplate = `
-I'm a [link](http://example.com) inside the body.
-`;
+  // Template with injected params
+  'link.md': `I'm a [link](http://example.com) inside the body.`,
 
-const layout = `<body>{{{content}}}</body>`;
+  // Basic html layout
+  'layout.html': '<body>{{{content}}}</body>',
+};
 
-const fullLayout = `
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style type="text/css" rel="stylesheet" media="all">
-      p {
-        color: #51545e;
-      }
-    </style>
-  </head>
-  <body>
-    {{{content}}}
-  </body>
-</html>
-`;
-
-jest.mock('fs/promises', () => ({
-  readFile: async (file) => {
-    if (file.endsWith('layout.html')) {
-      return layout;
-    } else if (file.endsWith('full.html')) {
-      return fullLayout;
-    } else if (file.endsWith('welcome.md')) {
-      return welcomeTemplate.trim();
-    } else if (file.endsWith('with-subject.md')) {
-      return subjectTemplate.trim();
-    } else if (file.endsWith('link.md')) {
-      return linkTemplate.trim();
-    } else {
-      throw new Error('File not found.');
+function mockFiles() {
+  const fs = require('fs');
+  const readFileSync = fs.readFileSync;
+  jest.spyOn(fs, 'readFileSync').mockImplementation((...args) => {
+    const filename = path.basename(args[0]);
+    const value = mocks[filename];
+    if (value) {
+      return value;
     }
-  },
-}));
+    return readFileSync(...args);
+  });
+}
 
 describe('sendMail', () => {
   describe('with options', () => {
@@ -99,7 +88,6 @@ describe('sendMail', () => {
       await sendMail({
         email: 'marlon@brando.com',
         body: '**[foo](http://foo.com)**',
-        layout: 'full.html',
       });
       assertMailSent({
         email: 'marlon@brando.com',
@@ -130,7 +118,12 @@ describe('sendMail', () => {
       const user = await createUser();
       await createTemplate({
         name: 'test',
-        email: subjectTemplate,
+        email: `
+---
+subject: "Hello {{user.name}}!"
+---
+Welcome!
+        `,
       });
       await sendMail({
         user,
@@ -149,7 +142,7 @@ describe('sendMail', () => {
     it('should send out a templated mail', async () => {
       await sendMail({
         email: 'marlon@brando.com',
-        file: 'welcome.md',
+        template: 'welcome.md',
       });
       assertMailSent({
         email: 'marlon@brando.com',
@@ -162,7 +155,7 @@ describe('sendMail', () => {
       await sendMail({
         user,
         email: 'marlon@brando.com',
-        file: 'with-subject.md',
+        template: 'with-subject.md',
       });
       assertMailSent({
         email: 'marlon@brando.com',
@@ -174,7 +167,7 @@ describe('sendMail', () => {
     it('should convert html body to plain text', async () => {
       await sendMail({
         email: 'marlon@brando.com',
-        file: 'link.md',
+        template: 'link.md',
       });
       assertMailSent({
         email: 'marlon@brando.com',
@@ -185,7 +178,7 @@ describe('sendMail', () => {
     it('should assert on the text body', async () => {
       await sendMail({
         email: 'marlon@brando.com',
-        file: 'link.md',
+        template: 'link.md',
       });
       assertMailSent({
         email: 'marlon@brando.com',
@@ -196,7 +189,7 @@ describe('sendMail', () => {
     it('should assume an extension for a template file', async () => {
       await sendMail({
         email: 'marlon@brando.com',
-        file: 'welcome',
+        template: 'welcome',
       });
       assertMailSent({
         email: 'marlon@brando.com',
@@ -275,7 +268,7 @@ Author {{number}}: {{name}}
     });
 
     describe('images', () => {
-      it('should build an image URL', async () => {
+      it('should build an image', async () => {
         const user = await createUser();
         const upload = await createUpload();
 
@@ -289,7 +282,7 @@ Author {{number}}: {{name}}
 
         assertMailSent({
           email: user.email,
-          html: `<body><p><img src="${url}" alt="test.png"></p></body>`,
+          html: `<body><img src="${url}" alt="test.png" /></body>`,
         });
       });
 
@@ -309,7 +302,7 @@ Author {{number}}: {{name}}
 
         assertMailSent({
           email: user.email,
-          html: `<body><p><img src="${url}" alt="test.png"></p></body>`,
+          html: `<body><img src="${url}" alt="test.png" /></body>`,
         });
       });
 
@@ -329,7 +322,7 @@ Author {{number}}: {{name}}
 
         assertMailSent({
           email: user.email,
-          html: `<body><p><img src="${url}" alt="test.png"></p></body>`,
+          html: `<body><img src="${url}" alt="test.png" /></body>`,
         });
       });
 
@@ -362,7 +355,7 @@ Author {{number}}: {{name}}
 
         assertMailSent({
           email: user.email,
-          html: `<body><p><img src="${url}" alt="test.png" height="150"></p></body>`,
+          html: `<body><img src="${url}" alt="test.png" height="150" /></body>`,
         });
       });
 
@@ -379,7 +372,7 @@ Author {{number}}: {{name}}
 
         assertMailSent({
           email: user.email,
-          html: `<body><p><img src="${url}" alt="test.png"></p></body>`,
+          html: `<body><img src="${url}" alt="test.png" /></body>`,
         });
       });
 
@@ -396,7 +389,7 @@ Author {{number}}: {{name}}
 
         assertMailSent({
           email: user.email,
-          html: `<body><p><img src="${url}" alt="Hello"></p></body>`,
+          html: `<body><img src="${url}" alt="Hello" /></body>`,
         });
       });
     });
@@ -409,7 +402,7 @@ Author {{number}}: {{name}}
         });
         assertMailSent({
           email: 'marlon@brando.com',
-          html: '<body><p><a href="http://localhost:2200/foo" target="_blank">Click</a></p></body>',
+          html: '<body><p><a href="http://localhost:2200/foo">Click</a></p></body>',
         });
       });
     });
@@ -422,7 +415,7 @@ Author {{number}}: {{name}}
         });
         assertMailSent({
           email: 'marlon@brando.com',
-          html: '<body><p><a href="http://example.com" class="button" target="_blank">Click</a></p></body>',
+          html: '<body><p><a href="http://example.com" class="button">Click</a></p></body>',
         });
       });
 
@@ -433,7 +426,7 @@ Author {{number}}: {{name}}
         });
         assertMailSent({
           email: 'marlon@brando.com',
-          html: '<body><p><a href="http://example.com" class="button" target="_blank">Click</a></p></body>',
+          html: '<body><p><a href="http://example.com" class="button">Click</a></p></body>',
         });
       });
 
@@ -444,7 +437,7 @@ Author {{number}}: {{name}}
         });
         assertMailSent({
           email: 'marlon@brando.com',
-          html: '<body><p><a href="http://localhost:2200/foo" class="button" target="_blank">Click</a></p></body>',
+          html: '<body><p><a href="http://localhost:2200/foo" class="button">Click</a></p></body>',
         });
       });
 
@@ -455,16 +448,28 @@ Author {{number}}: {{name}}
         });
         assertMailSent({
           email: 'marlon@brando.com',
-          html: '<body><p><a href="http://localhost:2200/foo/123/bar/456" class="button" target="_blank">Click</a></p></body>',
+          html: '<body><p><a href="http://localhost:2200/foo/123/bar/456" class="button">Click</a></p></body>',
         });
       });
     });
 
     describe('date', () => {
-      it('should format a date', async () => {
+      it('should format an ISO date', async () => {
         await sendMail({
           email: 'marlon@brando.com',
           body: 'Start: {{date start}}',
+          start: '2025-03-21T00:00:00.000Z',
+        });
+        assertMailSent({
+          email: 'marlon@brando.com',
+          html: '<body><p>Start: 2025-03-20</p></body>',
+        });
+      });
+
+      it('should format an ISO date', async () => {
+        await sendMail({
+          email: 'marlon@brando.com',
+          body: 'Start: {{dateLong start}}',
           start: '2025-03-21T00:00:00.000Z',
         });
         assertMailSent({
@@ -488,13 +493,13 @@ Author {{number}}: {{name}}
       });
     });
 
-    describe('rtime', () => {
+    describe('relTime', () => {
       it('should format a relative time', async () => {
         const date = new Date();
         date.setHours(date.getHours() - 2);
         await sendMail({
           email: 'marlon@brando.com',
-          body: 'Start: {{rtime start}}',
+          body: 'Start: {{relTime start}}',
           start: date,
         });
         assertMailSent({
@@ -542,19 +547,6 @@ Author {{number}}: {{name}}
       assertMailSent({
         email: `${user1.email},${user2.email}`,
         body: 'Hello!',
-      });
-    });
-
-    it('should allow defaults', async () => {
-      const user = await createUser();
-      await sendMail({
-        user,
-        body: '{{user.foo "whee"}}',
-      });
-
-      assertMailSent({
-        email: user.email,
-        body: 'whee',
       });
     });
 

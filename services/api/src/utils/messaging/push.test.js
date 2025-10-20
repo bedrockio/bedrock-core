@@ -1,43 +1,49 @@
+const path = require('path');
 const { assertPushSent } = require('firebase-admin');
 const { createUser, createUpload, createTemplate } = require('../testing');
 const { getImageUrl } = require('../images');
 const { sendPush } = require('./push');
 
-const welcomeTemplate = `
-Welcome!
-`;
+beforeEach(() => {
+  mockFiles();
+});
 
-const escapeTemplate = `
-{{body}}
-`;
+afterEach(() => {
+  jest.restoreAllMocks();
+});
 
-const fullTemplate = `
+const mocks = {
+  // Basic template
+  'welcome.txt': 'Welcome!',
+
+  // Basic injected template
+  'body.txt': '{{body}}',
+
+  // Template with interpolated params
+  'interpolated.txt': 'Hello {{fullName}}. Welcome to {{{url}}}.',
+
+  // Template with metadata
+  'meta.txt': `
 ---
 title: "Title!"
 image: "Image!"
 ---
 Hello!
-`;
+  `,
+};
 
-const interpolatedTemplate = `
-Hello {{fullName}}. Welcome to {{{url}}}.
-`;
-
-jest.mock('fs/promises', () => ({
-  readFile: async (file) => {
-    if (file.endsWith('full.txt')) {
-      return fullTemplate.trim();
-    } else if (file.endsWith('welcome.txt')) {
-      return welcomeTemplate.trim();
-    } else if (file.endsWith('escape.txt')) {
-      return escapeTemplate.trim();
-    } else if (file.endsWith('interpolated.txt')) {
-      return interpolatedTemplate.trim();
-    } else {
-      throw new Error('File not found.');
+function mockFiles() {
+  const fs = require('fs');
+  const readFileSync = fs.readFileSync;
+  jest.spyOn(fs, 'readFileSync').mockImplementation((...args) => {
+    const filename = path.basename(args[0]);
+    const value = mocks[filename];
+    if (value) {
+      return value;
     }
-  },
-}));
+    return readFileSync(...args);
+  });
+}
 
 describe('sendPush', () => {
   describe('with options', () => {
@@ -53,30 +59,32 @@ describe('sendPush', () => {
       });
     });
 
-    it('should allow interpolation in title', async () => {
+    it('should send with just a title', async () => {
       const user = await createUser();
       await sendPush({
         user,
-        title: 'Hi, {{user.name}}!',
+        title: 'Hello!',
       });
       assertPushSent({
         user,
-        title: 'Hi, Test User!',
+        title: 'Hello!',
       });
     });
 
-    it('should be able to interpolate an upload to an image URL', async () => {
+    it('should send with just an image', async () => {
       const upload = await createUpload();
       const user = await createUser();
       user.profileImage = upload;
+      const url = getImageUrl(upload);
+
       await sendPush({
         user,
-        image: '{{imageUrl user.profileImage}}',
+        image: url,
       });
 
       assertPushSent({
         user,
-        imageUrl: getImageUrl(upload),
+        imageUrl: url,
       });
     });
   });
@@ -96,7 +104,7 @@ describe('sendPush', () => {
 
       assertPushSent({
         user,
-        body: 'Hello Test User',
+        body: 'Hello Test User!',
       });
     });
 
@@ -104,7 +112,13 @@ describe('sendPush', () => {
       const user = await createUser();
       await createTemplate({
         name: 'full',
-        push: fullTemplate,
+        push: `
+---
+title: "Title!"
+image: "Image!"
+---
+Hello!
+        `,
       });
 
       await sendPush({
@@ -126,7 +140,7 @@ describe('sendPush', () => {
       const user = await createUser();
       await sendPush({
         user,
-        file: 'welcome.txt',
+        template: 'welcome.txt',
       });
       assertPushSent({
         user,
@@ -141,7 +155,7 @@ describe('sendPush', () => {
         body: 'Hello!',
         url: 'https://foo.com',
         fullName: 'Marlon Brando',
-        file: 'interpolated.txt',
+        template: 'interpolated.txt',
       });
       assertPushSent({
         user,
@@ -153,7 +167,7 @@ describe('sendPush', () => {
       const user = await createUser();
       await sendPush({
         user,
-        file: 'welcome',
+        template: 'welcome',
       });
       assertPushSent({
         user,
@@ -165,7 +179,7 @@ describe('sendPush', () => {
       const user = await createUser();
       await sendPush({
         user,
-        file: 'escape.txt',
+        template: 'body.txt',
         body: "It's me!",
       });
       assertPushSent({
@@ -178,7 +192,7 @@ describe('sendPush', () => {
       const user = await createUser();
       await sendPush({
         user,
-        file: 'full.txt',
+        template: 'meta.txt',
       });
       assertPushSent({
         user,

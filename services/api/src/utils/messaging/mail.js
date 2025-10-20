@@ -1,12 +1,11 @@
 const marked = require('marked');
 const postmark = require('postmark');
 const htmlToText = require('html-to-text');
-const { omit } = require('lodash');
-
-const { getInterpolator } = require('./utils');
 
 const config = require('@bedrockio/config');
 const logger = require('@bedrockio/logger');
+
+const { renderTemplate } = require('../templates');
 
 const ENV_NAME = config.get('ENV_NAME');
 const APP_NAME = config.get('APP_NAME');
@@ -17,54 +16,58 @@ const POSTMARK_WEBHOOK_KEY = config.get('POSTMARK_WEBHOOK_KEY');
 
 const DEFAULT_LAYOUT = 'layout.html';
 
-const interpolate = getInterpolator('email');
-
 async function sendMail(options) {
+  const to = getAddresses(options);
   const params = await getMailParams(options);
-  await dispatchMail(params);
+
+  await dispatchMail({
+    ...options,
+    ...params,
+    to,
+  });
 }
 
 async function getMailParams(options) {
-  let { layout = DEFAULT_LAYOUT, cc, bcc, ...params } = options;
-
-  const email = getAddresses(options);
-  const template = params.template || params.file;
+  let { subject, layout = DEFAULT_LAYOUT, template } = options;
 
   // First interpolate variables into the template.
-  const { body, subject } = await interpolate(params);
+  const { body, meta } = await renderTemplate({
+    ...options,
+    channel: 'email',
+  });
+
+  subject ||= meta.subject;
 
   // Next parse as markdown and convert to html.
   const content = marked.parse(body).trim();
 
-  const { body: html } = await interpolate({
-    ...omit(params, 'template'),
-    file: layout,
+  const { body: html } = await renderTemplate({
+    ...options,
+    channel: 'email',
+    template: layout,
     content,
   });
 
   const text = stripHtml(html);
 
   return {
-    email,
     html,
     text,
     body,
     subject,
     template,
-    cc,
-    bcc,
   };
 }
 
 async function dispatchMail(options) {
-  let { email, subject, html, text, body, template } = options;
+  let { to, subject, html, text, body, template } = options;
   if (ENV_NAME === 'development') {
     if (POSTMARK_DEV_EMAIL) {
-      email = POSTMARK_DEV_EMAIL;
+      to = POSTMARK_DEV_EMAIL;
     } else {
       logger.info(`
   ---------- Email Sent -------------
-  To: ${email}
+  To: ${to}
   Body:
   ${text}
   --------------------------
@@ -73,13 +76,13 @@ async function dispatchMail(options) {
     }
   }
 
-  logger.debug(`Sending email to ${email}`);
+  logger.debug(`Sending email to ${to}`);
 
   try {
     const client = new postmark.ServerClient(POSTMARK_API_KEY);
     await client.sendEmail({
       From: `${APP_NAME} <${POSTMARK_FROM}>`,
-      To: email,
+      To: to,
       Subject: subject,
       TextBody: text,
       HtmlBody: html,
@@ -88,7 +91,7 @@ async function dispatchMail(options) {
       ...resolveCopies(options),
     });
   } catch (error) {
-    logger.error(`Error happened while sending email to ${email} (${error.message})`);
+    logger.error(`Error happened while sending email to ${to} (${error.message})`);
     logger.error(error);
   }
 }

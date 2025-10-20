@@ -2,8 +2,9 @@ const twilio = require('twilio');
 const config = require('@bedrockio/config');
 const logger = require('@bedrockio/logger');
 
-const { getInterpolator } = require('./utils');
 const { UnsubscribedError } = require('./errors');
+
+const { renderTemplate } = require('../templates');
 
 const API_URL = config.get('API_URL');
 const ENV_NAME = config.get('ENV_NAME');
@@ -16,8 +17,6 @@ const WEBHOOK_URL = config.get('TWILIO_WEBHOOK_URL');
 
 const client = getClient();
 
-const interpolate = getInterpolator('sms');
-
 async function sendSms(options) {
   let { phone, ...params } = options;
 
@@ -27,7 +26,10 @@ async function sendSms(options) {
     throw new Error('No phone number specified.');
   }
 
-  const { body } = await interpolate(params);
+  const { body } = await renderTemplate({
+    channel: 'sms',
+    ...params,
+  });
 
   if (ENV_NAME === 'development') {
     if (TEST_NUMBER) {

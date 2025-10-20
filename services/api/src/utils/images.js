@@ -19,7 +19,7 @@ function getImagePath(arg) {
     return null;
   }
   const id = String(arg._id || arg);
-  return `/1/uploads/${id}/raw`;
+  return `1/uploads/${id}/raw`;
 }
 
 function getImageUrl(arg, options) {
@@ -37,18 +37,26 @@ function canTransformImage(options = {}) {
 // Requires Image Transformations API to be enabled for domain here:
 // https://dash.cloudflare.com/<ACCOUNT>/images/delivery-zones
 function getTransformedImage(arg, options) {
-  const path = getImagePath(arg);
+  const imagePath = getImagePath(arg);
 
-  if (!path) {
+  if (!imagePath) {
     return;
   }
 
-  const params = resolveParams(options);
-  const p = Object.entries(params)
+  const params = Object.entries(resolveParams(options))
+    .filter((e) => {
+      return e[1];
+    })
     .map((e) => e.join('='))
     .join(',');
 
-  return new URL(`/cdn-cgi/image/${p}${path}`, API_URL).toString();
+  const path = [params, imagePath]
+    .filter((p) => {
+      return p;
+    })
+    .join('/');
+
+  return new URL(`/cdn-cgi/image/${path}`, API_URL).toString();
 }
 
 function getImageDimensions(options) {

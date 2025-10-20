@@ -63,7 +63,7 @@ router
     const params = await getPreviewParams();
     const result = await getMailParams({
       template: template.name,
-      ...params,
+      params,
     });
     ctx.body = {
       data: result,

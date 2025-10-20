@@ -75,6 +75,7 @@ describe('/1/templates', () => {
       await createUser();
 
       const template = await createTemplate({
+        name: 'my-template',
         email: `
 ---
 subject: Hello

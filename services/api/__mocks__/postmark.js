@@ -5,7 +5,7 @@ beforeEach(() => {
 });
 
 function assertMailSent(options) {
-  const { body, html, ...rest } = options;
+  const { body, html, text, ...rest } = options;
   expect(sentMessages).toEqual(
     expect.arrayContaining([
       expect.objectContaining({
@@ -15,6 +15,9 @@ function assertMailSent(options) {
         }),
         ...(html && {
           html: expect.stringContaining(html),
+        }),
+        ...(text && {
+          text: expect.stringContaining(text),
         }),
       }),
     ]),

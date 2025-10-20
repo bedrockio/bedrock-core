@@ -21,11 +21,12 @@
     "docs:generate": "./scripts/docs/generate"
   },
   "dependencies": {
-    "@bedrockio/chrono": "^0.6.2",
+    "@bedrockio/chrono": "^0.8.0",
     "@bedrockio/config": "^2.2.3",
     "@bedrockio/fixtures": "^1.4.5",
     "@bedrockio/logger": "^1.1.3",
     "@bedrockio/model": "^0.15.0",
+    "@bedrockio/templates": "^0.2.1",
     "@bedrockio/yada": "^1.8.1",
     "@google-cloud/storage": "^7.11.1",
     "@koa/cors": "^4.0.0",

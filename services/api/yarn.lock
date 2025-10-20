@@ -477,10 +477,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@bedrockio/chrono@^0.6.2":
-  version "0.6.2"
-  resolved "https://registry.yarnpkg.com/@bedrockio/chrono/-/chrono-0.6.2.tgz#3072713c07f666cbca0ffad99b30bd49ce71ceb1"
-  integrity sha512-pJfZi7TU1+Kw2tcd9qhHnmgCpbI/6J8bV4KSW2HdUaQnYSXFlE9UUpn1Ld8J7CPQ7hDt8SfpwrQW1/85jKLWQA==
+"@bedrockio/chrono@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@bedrockio/chrono/-/chrono-0.8.0.tgz#2e92764d980a523cf0ffd61614366870ab0aa905"
+  integrity sha512-l04dZoSIgH+28GWmVyuFqh3bOz4Qo0iXFtZ49lyKaMLMfA7JGQNPwRM3p+9Ko+BlDZJsIBOyQfLoXd6Pcw5T9A==
 
 "@bedrockio/config@^2.2.3":
   version "2.2.3"
@@ -584,6 +584,16 @@
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@bedrockio/prettier-config/-/prettier-config-1.1.1.tgz#804cb96913e8dab50a237feaabdcd0e1715e34a7"
   integrity sha512-sL8BvR7z3X2z18AyfwgPqBTPPmS3iveJZe65JZk5YbN0s6Akba6W2F4JAygRVx6yueYRKErvpO0pcVMdtfYBSw==
+
+"@bedrockio/templates@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@bedrockio/templates/-/templates-0.2.1.tgz#c78790badd5634696873505755932e94da6f7df2"
+  integrity sha512-cKDUkUBZ5weslF1m0CVt4t3Q8Jjhs+7yere4Z/CTDsP8aQ+g/+/i7lF6bvr0/oUwXrVAPCGHH8re3A5OqjWh5w==
+  dependencies:
+    "@bedrockio/chrono" "^0.8.0"
+    front-matter "^4.0.2"
+    handlebars "^4.7.8"
+    lodash.memoize "^4.1.2"
 
 "@bedrockio/yada@^1.8.1":
   version "1.8.1"
@@ -6049,6 +6059,11 @@ lodash.isundefined@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/lodash.isundefined/-/lodash.isundefined-3.0.1.tgz#23ef3d9535565203a66cefd5b830f848911afb48"
   integrity sha512-MXB1is3s899/cD8jheYYE2V9qTHwKvt+npCwpD+1Sxm3Q3cECXCiYHjeHWXNwr6Q0SOBPrYUDxendrO6goVTEA==
+
+lodash.memoize@^4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
+  integrity sha512-t7j+NzmgnQzTAYXcsHYLgimltOV1MXHtlOWf6GjL9Kj8GK5FInw5JotxvbOs+IvV1/Dzo04/fCGfLVs7aXb4Ag==
 
 lodash.merge@^4.6.2:
   version "4.6.2"

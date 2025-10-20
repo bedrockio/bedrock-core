@@ -1,7 +1,7 @@
 const config = require('@bedrockio/config');
 const logger = require('@bedrockio/logger');
 const admin = require('firebase-admin');
-const { getInterpolator } = require('./utils');
+const { renderTemplate } = require('../templates');
 
 const ENV_NAME = config.get('ENV_NAME');
 const FIREBASE_DEV_TOKEN = config.get('FIREBASE_DEV_TOKEN');
@@ -10,17 +10,18 @@ const client = admin.initializeApp({
   credential: admin.credential.applicationDefault(),
 });
 
-const interpolate = getInterpolator('push');
-
 async function sendPush(options) {
+  let { title, image, data } = options;
+
   let tokens = resolveTokens(options);
 
-  const { body, title, image, ...other } = await interpolate(options);
+  const { body, meta } = await renderTemplate({
+    channel: 'push',
+    ...options,
+  });
 
-  const data = {
-    ...options.data,
-    ...other,
-  };
+  title ||= meta.title;
+  image ||= meta.image;
 
   if (ENV_NAME === 'development') {
     // To test locally download the service account key and set

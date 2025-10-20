@@ -1,32 +1,39 @@
+const path = require('path');
 const { sendSms } = require('./sms');
 const { assertSmsSent } = require('twilio');
 const { createUser, createTemplate } = require('../testing');
 
-const welcomeTemplate = `
-Welcome!
-`;
+beforeEach(() => {
+  mockFiles();
+});
 
-const escapeTemplate = `
-{{body}}
-`;
+afterEach(() => {
+  jest.restoreAllMocks();
+});
 
-const interpolatedTemplate = `
-Hello {{fullName}}. Welcome to {{{url}}}.
-`;
+const mocks = {
+  // Basic template
+  'welcome.txt': 'Welcome!',
 
-jest.mock('fs/promises', () => ({
-  readFile: async (file) => {
-    if (file.endsWith('welcome.txt')) {
-      return welcomeTemplate.trim();
-    } else if (file.endsWith('escape.txt')) {
-      return escapeTemplate.trim();
-    } else if (file.endsWith('interpolated.txt')) {
-      return interpolatedTemplate.trim();
-    } else {
-      throw new Error('File not found.');
+  // Basic injected template
+  'body.txt': '{{body}}',
+
+  // Template with interpolated params
+  'interpolated.txt': 'Hello {{fullName}}. Welcome to {{{url}}}.',
+};
+
+function mockFiles() {
+  const fs = require('fs');
+  const readFileSync = fs.readFileSync;
+  jest.spyOn(fs, 'readFileSync').mockImplementation((...args) => {
+    const filename = path.basename(args[0]);
+    const value = mocks[filename];
+    if (value) {
+      return value;
     }
-  },
-}));
+    return readFileSync(...args);
+  });
+}
 
 describe('sendSms', () => {
   describe('with options', () => {
@@ -64,11 +71,11 @@ describe('sendSms', () => {
     });
   });
 
-  describe('with template', () => {
+  describe('with file', () => {
     it('send out sms with template', async () => {
       await sendSms({
         phone: '+11111111111',
-        file: 'welcome.txt',
+        template: 'welcome.txt',
       });
       assertSmsSent({
         phone: '+11111111111',
@@ -82,7 +89,7 @@ describe('sendSms', () => {
         body: 'Hello!',
         url: 'https://foo.com',
         fullName: 'Marlon Brando',
-        file: 'interpolated.txt',
+        template: 'interpolated.txt',
       });
       assertSmsSent({
         phone: '+11111111111',
@@ -93,7 +100,7 @@ describe('sendSms', () => {
     it('should assume an extension for a template', async () => {
       await sendSms({
         phone: '+11111111111',
-        file: 'welcome',
+        template: 'welcome',
       });
       assertSmsSent({
         phone: '+11111111111',
@@ -104,7 +111,7 @@ describe('sendSms', () => {
     it('should not escape apostrophes', async () => {
       await sendSms({
         phone: '+11111111111',
-        file: 'escape.txt',
+        template: 'body.txt',
         body: "It's me!",
       });
       assertSmsSent({
