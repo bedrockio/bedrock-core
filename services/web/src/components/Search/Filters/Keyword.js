@@ -17,6 +17,16 @@ export default function KeywordFilter(props) {
     setFilterDeferred(value);
   }
 
+  function onKeyDown(evt) {
+    if (evt.key === 'Enter') {
+      evt.preventDefault();
+      setFilters({
+        keyword,
+      });
+      setFilterDeferred.cancel();
+    }
+  }
+
   function onClearClick() {
     setKeyword('');
     setFilters({
@@ -45,6 +55,7 @@ export default function KeywordFilter(props) {
         rightSection={renderIcon()}
         value={keyword}
         onChange={onChange}
+        onKeyDown={onKeyDown}
       />
     );
   }
