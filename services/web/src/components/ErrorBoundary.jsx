@@ -34,7 +34,7 @@ class ErrorBoundary extends React.Component {
             <Group>
               <Button
                 onClick={this.handleReset}
-                leftIcon={<PiArrowClockwiseBold />}>
+                leftSection={<PiArrowClockwiseBold />}>
                 Try Again
               </Button>
               <Button
