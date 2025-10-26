@@ -31,14 +31,21 @@ function authorizeUser() {
     let authUser;
 
     try {
-      if (jwt.authenticateUser) {
-        authUser = await User.findById(jwt.authenticateUser);
-      } else {
-        authUser = await User.findById(jwt.sub);
+      authUser = await User.findById(jwt.sub);
 
-        if (jwt.kid === 'user') {
-          const token = authUser.authTokens.find((token) => token.jti === jwt.jti);
-          if (token) {
+      if (jwt.kid === 'user') {
+        const token = authUser.authTokens.find((token) => token.jti === jwt.jti);
+        if (token) {
+          await updateAuthToken(ctx, authUser, token);
+        } else {
+          // Note that bearer user may not be the same
+          // as auth user in the case of impersonation.
+          const bearerUser = await User.findOne({
+            'authTokens.jti': jwt.jti,
+          });
+
+          if (bearerUser) {
+            const token = bearerUser.authTokens.find((token) => token.jti === jwt.jti);
             await updateAuthToken(ctx, authUser, token);
           } else if (ENV_NAME !== 'test') {
             throw new Error();

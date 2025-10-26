@@ -12,11 +12,10 @@ import {
 
 import { useSession } from 'stores/session';
 
-import ModalWrapper from 'components/ModalWrapper';
 import Protected from 'components/Protected';
-import ConfirmModal from 'components/modals/Confirm';
-import InspectObject from 'components/modals/InspectObject';
-import LoginAsUser from 'components/modals/LoginAsUser';
+import Confirm from 'modals/Confirm';
+import InspectObject from 'modals/InspectObject';
+import LoginAsUser from 'modals/LoginAsUser';
 
 import { request } from 'utils/api';
 
@@ -67,7 +66,7 @@ export default function UserActions({ displayMode = 'show', user, reload }) {
 
   return (
     <Group gap="xs" justify="flex-end">
-      <Protected endpoint="shops" permission="update">
+      <Protected endpoint="users" permission="update">
         {renderButton()}
       </Protected>
       <Menu shadow="md" keepMounted>
@@ -84,10 +83,9 @@ export default function UserActions({ displayMode = 'show', user, reload }) {
         </Menu.Target>
 
         <Menu.Dropdown>
-          <ModalWrapper
+          <LoginAsUser
             title={`Login as ${user.name}`}
-            component={<LoginAsUser user={user} />}
-            size="lg"
+            user={user}
             trigger={
               <Menu.Item
                 disabled={!canAuthenticate}
@@ -106,38 +104,33 @@ export default function UserActions({ displayMode = 'show', user, reload }) {
             </Menu.Item>
           </Protected>
 
-          <ModalWrapper
+          <InspectObject
             title={`Inspect ${user.name}`}
-            component={<InspectObject object={user} name="user" />}
-            size="lg"
+            object={user}
             trigger={<Menu.Item leftSection={<PiCode />}>Inspect</Menu.Item>}
           />
           <Protected endpoint="users" permission="delete">
-            <ModalWrapper
+            <Confirm
               title="Delete User"
+              negative
+              confirmButton="Delete"
+              onConfirm={async () => {
+                await request({
+                  method: 'DELETE',
+                  path: `/1/users/${user.id}`,
+                });
+                reload();
+              }}
+              content={
+                <Text>
+                  Are you sure you want to delete {user.name} ({user.email}
+                  )?
+                </Text>
+              }
               trigger={
                 <Menu.Item color="red" leftSection={<PiTrashBold />}>
                   Delete
                 </Menu.Item>
-              }
-              component={
-                <ConfirmModal
-                  negative
-                  confirmButton="Delete"
-                  onConfirm={async () => {
-                    await request({
-                      method: 'DELETE',
-                      path: `/1/users/${user.id}`,
-                    });
-                    reload();
-                  }}
-                  content={
-                    <Text>
-                      Are you sure you want to delete {user.name} ({user.email}
-                      )?
-                    </Text>
-                  }
-                />
               }
             />
           </Protected>

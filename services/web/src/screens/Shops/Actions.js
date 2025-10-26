@@ -11,8 +11,8 @@ import {
 
 import ModalWrapper from 'components/ModalWrapper';
 import Protected from 'components/Protected';
-import Confirm from 'components/modals/Confirm';
-import InspectObject from 'components/modals/InspectObject';
+import Confirm from 'modals/Confirm';
+import InspectObject from 'modals/InspectObject';
 
 import { request } from 'utils/api';
 
@@ -66,10 +66,9 @@ export default function ShopsActions({ shop, reload, displayMode = 'show' }) {
         </Menu.Target>
 
         <Menu.Dropdown>
-          <ModalWrapper
+          <InspectObject
             title="Inspect Shop"
-            component={<InspectObject object={shop} name="shop" />}
-            size="lg"
+            object={shop}
             trigger={<Menu.Item leftSection={<PiCode />}>Inspect</Menu.Item>}
           />
           <Protected endpoint="auditEntries" permission="read">
@@ -82,31 +81,27 @@ export default function ShopsActions({ shop, reload, displayMode = 'show' }) {
           </Protected>
 
           <Protected endpoint="shops" permission="delete">
-            <ModalWrapper
+            <Confirm
               title="Delete Shop"
+              negative
+              onConfirm={async () => {
+                await request({
+                  method: 'DELETE',
+                  path: `/1/shops/${shop.id}`,
+                });
+                reload();
+              }}
+              content={
+                <Text>
+                  Are you sure you want to delete{' '}
+                  <strong>{shop.name}</strong>?
+                </Text>
+              }
+              confirmButton="Delete"
               trigger={
                 <Menu.Item color="red" leftSection={<PiTrashBold />}>
                   Delete
                 </Menu.Item>
-              }
-              component={
-                <Confirm
-                  negative
-                  onConfirm={async () => {
-                    await request({
-                      method: 'DELETE',
-                      path: `/1/shops/${shop.id}`,
-                    });
-                    reload();
-                  }}
-                  content={
-                    <Text>
-                      Are you sure you want to delete{' '}
-                      <strong>{shop.name}</strong>?
-                    </Text>
-                  }
-                  confirmButton="Delete"
-                />
               }
             />
           </Protected>

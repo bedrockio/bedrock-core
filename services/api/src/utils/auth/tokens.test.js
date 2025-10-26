@@ -25,4 +25,42 @@ describe('createAuthToken', () => {
       },
     ]);
   });
+
+  it('should add second auth token for different user', () => {
+    const user = new User({
+      firstName: 'Neo',
+      lastName: 'One',
+      email: 'user@email.com',
+    });
+
+    const admin = new User({
+      firstName: 'Marlon',
+      lastName: 'Brando',
+      email: 'admin@email.com',
+    });
+
+    const ctx = context({
+      headers: {
+        'x-forwarded-for': '122.312.31.2',
+        'user-agent': 'test',
+      },
+    });
+
+    admin.authTokens = [createAuthToken(ctx, admin)];
+
+    createAuthToken(ctx, user, {
+      authUser: admin,
+    });
+
+    expect(admin.authTokens).toMatchObject([
+      {
+        ip: '122.312.31.2',
+        userAgent: 'test',
+      },
+      {
+        ip: '122.312.31.2',
+        userAgent: 'test',
+      },
+    ]);
+  });
 });

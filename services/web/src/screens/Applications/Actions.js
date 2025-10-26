@@ -8,7 +8,7 @@ import {
 } from 'react-icons/pi';
 
 import ModalWrapper from 'components/ModalWrapper';
-import ConfirmModal from 'components/modals/Confirm';
+import Confirm from 'modals/Confirm';
 
 import { request } from 'utils/api';
 
@@ -28,31 +28,27 @@ export default function ApplicationActions({ application, reload }) {
           leftSection={<PiPencilSimpleBold />}>
           Edit
         </Menu.Item>
-        <ModalWrapper
+        <Confirm
           title="Delete Application"
+          negative
+          onConfirm={async () => {
+            await request({
+              method: 'DELETE',
+              path: `/1/applications/${application.id}`,
+            });
+            reload();
+          }}
+          confirmButton="Delete"
+          content={
+            <Text>
+              Are you sure you want to delete{' '}
+              <strong>{application.name}</strong>?
+            </Text>
+          }
           trigger={
             <Menu.Item color="red" leftSection={<PiTrashBold />}>
               Delete
             </Menu.Item>
-          }
-          component={
-            <ConfirmModal
-              negative
-              onConfirm={async () => {
-                await request({
-                  method: 'DELETE',
-                  path: `/1/applications/${application.id}`,
-                });
-                reload();
-              }}
-              confirmButton="Delete"
-              content={
-                <Text>
-                  Are you sure you want to delete{' '}
-                  <strong>{application.name}</strong>?
-                </Text>
-              }
-            />
           }
         />
       </Menu.Dropdown>

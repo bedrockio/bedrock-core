@@ -11,8 +11,8 @@ import {
 
 import ModalWrapper from 'components/ModalWrapper';
 import Protected from 'components/Protected';
-import Confirm from 'components/modals/Confirm';
-import InspectObject from 'components/modals/InspectObject';
+import Confirm from 'modals/Confirm';
+import InspectObject from 'modals/InspectObject';
 
 import { request } from 'utils/api';
 
@@ -74,10 +74,9 @@ export default function TemplatesActions({
         </Menu.Target>
 
         <Menu.Dropdown>
-          <ModalWrapper
+          <InspectObject
             title="Inspect Template"
-            component={<InspectObject object={template} name="template" />}
-            size="lg"
+            object={template}
             trigger={<Menu.Item leftSection={<PiCode />}>Inspect</Menu.Item>}
           />
           <Protected endpoint="auditEntries" permission="read">
@@ -90,31 +89,27 @@ export default function TemplatesActions({
           </Protected>
 
           <Protected endpoint="templates" permission="delete">
-            <ModalWrapper
+            <Confirm
               title="Delete Template"
+              negative
+              onConfirm={async () => {
+                await request({
+                  method: 'DELETE',
+                  path: `/1/templates/${template.id}`,
+                });
+                reload();
+              }}
+              content={
+                <Text>
+                  Are you sure you want to delete{' '}
+                  <strong>{template.name}</strong>?
+                </Text>
+              }
+              confirmButton="Delete"
               trigger={
                 <Menu.Item color="red" leftSection={<PiTrashBold />}>
                   Delete
                 </Menu.Item>
-              }
-              component={
-                <Confirm
-                  negative
-                  onConfirm={async () => {
-                    await request({
-                      method: 'DELETE',
-                      path: `/1/templates/${template.id}`,
-                    });
-                    reload();
-                  }}
-                  content={
-                    <Text>
-                      Are you sure you want to delete{' '}
-                      <strong>{template.name}</strong>?
-                    </Text>
-                  }
-                  confirmButton="Delete"
-                />
               }
             />
           </Protected>

@@ -13,7 +13,16 @@ import { darkTheme } from '@uiw/react-json-view/dark';
 import { useState } from 'react';
 import { PiCheck, PiCopy } from 'react-icons/pi';
 
-export default function InspectObject({ object }) {
+import ModalWrapper from 'components/ModalWrapper';
+
+/**
+ * InspectObject component for viewing JSON objects.
+ *
+ * @param {object} props
+ * @param {object} props.object - The object to inspect.
+ * @returns {JSX.Element}
+ */
+function InspectObject({ object }) {
   const [expandAll, setExpandAll] = useState(false);
 
   return (
@@ -56,3 +65,14 @@ export default function InspectObject({ object }) {
     </Stack>
   );
 }
+
+function Wrapper(props) {
+  const { title, trigger, size = 'lg', object } = props;
+  return (
+    <ModalWrapper title={title} trigger={trigger} size={size}>
+      <InspectObject object={object} />
+    </ModalWrapper>
+  );
+}
+
+export default Wrapper;

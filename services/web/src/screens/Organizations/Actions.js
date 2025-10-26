@@ -11,8 +11,8 @@ import {
 
 import ModalWrapper from 'components/ModalWrapper';
 import Protected from 'components/Protected';
-import ConfirmModal from 'components/modals/Confirm';
-import InspectObject from 'components/modals/InspectObject';
+import Confirm from 'modals/Confirm';
+import InspectObject from 'modals/InspectObject';
 
 import { request } from 'utils/api';
 
@@ -75,12 +75,9 @@ export default function OrganizationActions({
         </Menu.Target>
 
         <Menu.Dropdown>
-          <ModalWrapper
+          <InspectObject
             title={`Inspect ${organization.name}`}
-            component={
-              <InspectObject object={organization} name="organization" />
-            }
-            size="lg"
+            object={organization}
             trigger={<Menu.Item leftSection={<PiCode />}>Inspect</Menu.Item>}
           />
           <Protected endpoint="auditEntries" permission="read">
@@ -92,31 +89,27 @@ export default function OrganizationActions({
             </Menu.Item>
           </Protected>
           <Protected endpoint="organizations" permission="delete">
-            <ModalWrapper
+            <Confirm
               title="Delete Organization"
+              negative
+              onConfirm={async () => {
+                await request({
+                  method: 'DELETE',
+                  path: `/1/organizations/${organization.id}`,
+                });
+                reload();
+              }}
+              confirmButton="Delete"
+              content={
+                <Text>
+                  Are you sure you want to delete{' '}
+                  <strong>{organization.name}</strong>?
+                </Text>
+              }
               trigger={
                 <Menu.Item color="red" leftSection={<PiTrashBold />}>
                   Delete
                 </Menu.Item>
-              }
-              component={
-                <ConfirmModal
-                  negative
-                  onConfirm={async () => {
-                    await request({
-                      method: 'DELETE',
-                      path: `/1/organizations/${organization.id}`,
-                    });
-                    reload();
-                  }}
-                  confirmButton="Delete"
-                  content={
-                    <Text>
-                      Are you sure you want to delete{' '}
-                      <strong>{organization.name}</strong>?
-                    </Text>
-                  }
-                />
               }
             />
           </Protected>

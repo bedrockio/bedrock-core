@@ -6,7 +6,7 @@ import { useClass } from 'helpers/bem';
 
 import { JumpLink } from 'components/Link';
 import ModalWrapper from 'components/ModalWrapper';
-import ConfirmModal from 'components/modals/Confirm';
+import Confirm from 'modals/Confirm';
 import { expandRef } from 'docs/utils';
 
 import EditableField from './EditableField';
@@ -101,21 +101,17 @@ export default function RouteExample(props) {
             </Group>
             <Group>
               {canEditDocs() && (
-                <ModalWrapper
+                <Confirm
                   title="Delete Example"
-                  component={
-                    <ConfirmModal
-                      negative
-                      confirmButton="Delete"
-                      onConfirm={async () => {
-                        unsetPath(path);
-                      }}
-                      content={
-                        <Text>
-                          Are you sure you want to delete this example?
-                        </Text>
-                      }
-                    />
+                  negative
+                  confirmButton="Delete"
+                  onConfirm={async () => {
+                    unsetPath(path);
+                  }}
+                  content={
+                    <Text>
+                      Are you sure you want to delete this example?
+                    </Text>
                   }
                   trigger={
                     <ActionIcon

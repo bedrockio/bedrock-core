@@ -6,7 +6,7 @@ const { nanoid } = require('nanoid');
 const JWT_SECRET = config.get('JWT_SECRET');
 
 const DURATIONS = {
-  invite: '30d',
+  invite: '7d',
   regular: '30d',
   temporary: '1h',
   mail: '30d',
@@ -27,7 +27,7 @@ function createAuthToken(ctx, user, options = {}) {
 
   authUser.authTokens = [
     // filter out any tokens that might have the same jti, very unlikely but possible
-    ...user.authTokens.filter((existing) => existing.jti !== jti),
+    ...authUser.authTokens.filter((existing) => existing.jti !== jti),
     {
       ip,
       jti,
