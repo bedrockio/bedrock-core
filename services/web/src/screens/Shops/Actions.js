@@ -9,7 +9,6 @@ import {
   PiTrashBold,
 } from 'react-icons/pi';
 
-import ModalWrapper from 'components/ModalWrapper';
 import Protected from 'components/Protected';
 import Confirm from 'modals/Confirm';
 import InspectObject from 'modals/InspectObject';
@@ -93,8 +92,7 @@ export default function ShopsActions({ shop, reload, displayMode = 'show' }) {
               }}
               content={
                 <Text>
-                  Are you sure you want to delete{' '}
-                  <strong>{shop.name}</strong>?
+                  Are you sure you want to delete <strong>{shop.name}</strong>?
                 </Text>
               }
               confirmButton="Delete"

@@ -7,7 +7,6 @@ import {
   PiTrashBold,
 } from 'react-icons/pi';
 
-import ModalWrapper from 'components/ModalWrapper';
 import Confirm from 'modals/Confirm';
 
 import { request } from 'utils/api';

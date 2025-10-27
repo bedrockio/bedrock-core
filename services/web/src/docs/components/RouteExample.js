@@ -5,9 +5,8 @@ import { PiMinus, PiPlus, PiTrashBold } from 'react-icons/pi';
 import { useClass } from 'helpers/bem';
 
 import { JumpLink } from 'components/Link';
-import ModalWrapper from 'components/ModalWrapper';
-import Confirm from 'modals/Confirm';
 import { expandRef } from 'docs/utils';
+import Confirm from 'modals/Confirm';
 
 import EditableField from './EditableField';
 import './route-example.less';
@@ -109,9 +108,7 @@ export default function RouteExample(props) {
                     unsetPath(path);
                   }}
                   content={
-                    <Text>
-                      Are you sure you want to delete this example?
-                    </Text>
+                    <Text>Are you sure you want to delete this example?</Text>
                   }
                   trigger={
                     <ActionIcon

@@ -9,7 +9,6 @@ import {
   PiTrashBold,
 } from 'react-icons/pi';
 
-import ModalWrapper from 'components/ModalWrapper';
 import Protected from 'components/Protected';
 import Confirm from 'modals/Confirm';
 import InspectObject from 'modals/InspectObject';

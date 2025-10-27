@@ -7,7 +7,6 @@ import {
   PiTrashBold,
 } from 'react-icons/pi';
 
-import ModalWrapper from 'components/ModalWrapper';
 import Confirm from 'modals/Confirm';
 
 import { request, useRequest } from 'utils/api';
@@ -61,8 +60,7 @@ export default function InviteActions({ invite, reload }) {
           confirmButton="Delete"
           content={
             <Text>
-              Are you sure you want to delete{' '}
-              <strong>{invite.email}</strong>?
+              Are you sure you want to delete <strong>{invite.email}</strong>?
             </Text>
           }
           trigger={

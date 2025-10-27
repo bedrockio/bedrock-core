@@ -9,10 +9,9 @@ import PortalLayout from 'layouts/Portal';
 import Footer from 'components/Footer';
 import { components as markdownComponents } from 'components/Markdown';
 import Meta from 'components/Meta';
-import ModalWrapper from 'components/ModalWrapper';
-import Confirm from 'modals/Confirm';
 import EditButton from 'docs/components/EditButton';
 import { useDocs } from 'docs/utils/context';
+import Confirm from 'modals/Confirm';
 
 import './api-docs.less';
 import { DEFAULT_PAGE_ID, pagesByPath, sorted } from '../../pages';
