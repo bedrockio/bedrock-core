@@ -9,10 +9,9 @@ import PortalLayout from 'layouts/Portal';
 import Footer from 'components/Footer';
 import { components as markdownComponents } from 'components/Markdown';
 import Meta from 'components/Meta';
-import ModalWrapper from 'components/ModalWrapper';
-import ConfirmModal from 'components/modals/Confirm';
 import EditButton from 'docs/components/EditButton';
 import { useDocs } from 'docs/utils/context';
+import Confirm from 'modals/Confirm';
 
 import './api-docs.less';
 import { DEFAULT_PAGE_ID, pagesByPath, sorted } from '../../pages';
@@ -95,22 +94,18 @@ export default function ApiDocs() {
       return (
         <Group gap="xs" justify="flex-end" m="xs">
           <EditButton />
-          <ModalWrapper
+          <Confirm
             title="Generate Documentation"
-            component={
-              <ConfirmModal
-                onConfirm={() => {
-                  return generateDocs();
-                }}
-                content={
-                  <Text>
-                    Generates OpenApi documentation based on schemas and route
-                    validation. This will not overwrite current documentation.
-                  </Text>
-                }
-                confirmButton="Generate Documentation"
-              />
+            onConfirm={() => {
+              return generateDocs();
+            }}
+            content={
+              <Text>
+                Generates OpenApi documentation based on schemas and route
+                validation. This will not overwrite current documentation.
+              </Text>
             }
+            confirmButton="Generate Documentation"
             trigger={
               <ActionIcon variant="default" title="Generate Documentation">
                 <PiArrowClockwiseBold />

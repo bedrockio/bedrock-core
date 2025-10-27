@@ -7,8 +7,7 @@ import {
   PiTrashBold,
 } from 'react-icons/pi';
 
-import ModalWrapper from 'components/ModalWrapper';
-import ConfirmModal from 'components/modals/Confirm';
+import Confirm from 'modals/Confirm';
 
 import { request, useRequest } from 'utils/api';
 
@@ -48,31 +47,26 @@ export default function InviteActions({ invite, reload }) {
           Resend Invite
         </Menu.Item>
 
-        <ModalWrapper
+        <Confirm
           title="Delete Invite"
+          negative
+          onConfirm={async () => {
+            await request({
+              method: 'DELETE',
+              path: `/1/invites/${invite.id}`,
+            });
+            reload();
+          }}
+          confirmButton="Delete"
+          content={
+            <Text>
+              Are you sure you want to delete <strong>{invite.email}</strong>?
+            </Text>
+          }
           trigger={
             <Menu.Item color="red" leftSection={<PiTrashBold />}>
               Delete
             </Menu.Item>
-          }
-          component={
-            <ConfirmModal
-              negative
-              onConfirm={async () => {
-                await request({
-                  method: 'DELETE',
-                  path: `/1/invites/${invite.id}`,
-                });
-                reload();
-              }}
-              confirmButton="Delete"
-              content={
-                <Text>
-                  Are you sure you want to delete{' '}
-                  <strong>{invite.email}</strong>?
-                </Text>
-              }
-            />
           }
         />
       </Menu.Dropdown>

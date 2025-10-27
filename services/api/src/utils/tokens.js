@@ -27,7 +27,7 @@ function createAuthToken(ctx, user, options = {}) {
 
   authUser.authTokens = [
     // filter out any tokens that might have the same jti, very unlikely but possible
-    ...user.authTokens.filter((existing) => existing.jti !== jti),
+    ...authUser.authTokens.filter((existing) => existing.jti !== jti),
     {
       ip,
       jti,

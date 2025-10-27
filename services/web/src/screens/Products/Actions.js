@@ -8,10 +8,9 @@ import {
   PiPencilSimpleBold,
 } from 'react-icons/pi';
 
-import ModalWrapper from 'components/ModalWrapper';
 import Protected from 'components/Protected';
-import ConfirmModal from 'components/modals/Confirm';
-import InspectObject from 'components/modals/InspectObject';
+import Confirm from 'modals/Confirm';
+import InspectObject from 'modals/InspectObject';
 
 import { request } from 'utils/api';
 
@@ -72,10 +71,9 @@ export default function ProductsActions({
         </Menu.Target>
 
         <Menu.Dropdown>
-          <ModalWrapper
+          <InspectObject
             title={`Inspect ${product.name}`}
-            component={<InspectObject object={product} name="product" />}
-            size="lg"
+            object={product}
             trigger={<Menu.Item leftSection={<PiCode />}>Inspect</Menu.Item>}
           />
           <Protected endpoint="auditEntries" permission="read">
@@ -87,31 +85,27 @@ export default function ProductsActions({
             </Menu.Item>
           </Protected>
           <Protected endpoint="products" permission="delete">
-            <ModalWrapper
+            <Confirm
               title="Delete Product"
+              negative
+              onConfirm={async () => {
+                await request({
+                  method: 'DELETE',
+                  path: `/1/products/${product.id}`,
+                });
+                reload();
+              }}
+              content={
+                <Text>
+                  Are you sure you want to delete{' '}
+                  <strong>{product.name}</strong>?
+                </Text>
+              }
+              confirmButton="Delete"
               trigger={
                 <Menu.Item color="red" leftSection={<PiListMagnifyingGlass />}>
                   Delete
                 </Menu.Item>
-              }
-              component={
-                <ConfirmModal
-                  negative
-                  onConfirm={async () => {
-                    await request({
-                      method: 'DELETE',
-                      path: `/1/products/${product.id}`,
-                    });
-                    reload();
-                  }}
-                  content={
-                    <Text>
-                      Are you sure you want to delete{' '}
-                      <strong>{product.name}</strong>?
-                    </Text>
-                  }
-                  confirmButton="Delete"
-                />
               }
             />
           </Protected>

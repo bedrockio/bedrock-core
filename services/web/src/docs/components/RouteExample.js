@@ -5,9 +5,8 @@ import { PiMinus, PiPlus, PiTrashBold } from 'react-icons/pi';
 import { useClass } from 'helpers/bem';
 
 import { JumpLink } from 'components/Link';
-import ModalWrapper from 'components/ModalWrapper';
-import ConfirmModal from 'components/modals/Confirm';
 import { expandRef } from 'docs/utils';
+import Confirm from 'modals/Confirm';
 
 import EditableField from './EditableField';
 import './route-example.less';
@@ -101,21 +100,15 @@ export default function RouteExample(props) {
             </Group>
             <Group>
               {canEditDocs() && (
-                <ModalWrapper
+                <Confirm
                   title="Delete Example"
-                  component={
-                    <ConfirmModal
-                      negative
-                      confirmButton="Delete"
-                      onConfirm={async () => {
-                        unsetPath(path);
-                      }}
-                      content={
-                        <Text>
-                          Are you sure you want to delete this example?
-                        </Text>
-                      }
-                    />
+                  negative
+                  confirmButton="Delete"
+                  onConfirm={async () => {
+                    unsetPath(path);
+                  }}
+                  content={
+                    <Text>Are you sure you want to delete this example?</Text>
                   }
                   trigger={
                     <ActionIcon
