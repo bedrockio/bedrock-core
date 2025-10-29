@@ -11,11 +11,14 @@ export default class RouteExamples extends React.Component {
 
   render() {
     const { docs } = this.context;
+
     if (!docs) {
       return null;
     }
 
-    const routePath = getRoutePath(this.props.route);
+    const { route } = this.props;
+
+    const routePath = getRoutePath(route);
     const routeData = get(docs, routePath);
 
     if (routeData) {
@@ -75,7 +78,7 @@ export default class RouteExamples extends React.Component {
           <React.Fragment>
             <h4>Examples:</h4>
             {items.map((item, i) => {
-              return <RouteExample key={i} {...item} />;
+              return <RouteExample key={i} route={route} {...item} />;
             })}
           </React.Fragment>
         );

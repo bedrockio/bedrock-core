@@ -3,6 +3,7 @@
   margin-bottom: 10px;
   background-color: #2e2e2e;
   color: #fff;
+  -webkit-font-smoothing: antialiased;
 
   user-select: none;
 
@@ -27,7 +28,6 @@
   &__header {
     font-size: 14px;
     font-weight: 500;
-    margin-bottom: 0.5em;
   }
 
   &__title {
@@ -60,16 +60,21 @@
     padding: 10px 20px 20px 20px;
   }
 
+  &__route-body {
+    background-color: #1f1f1f;
+    padding: 0.5em 1em;
+    font-size: 16px;
+    border-radius: 4px;
+    margin-top: 0.6em;
+  }
+
   &__body {
     pre {
-      color: #fff;
       background-color: #1f1f1f;
       font-size: 13px;
       padding: 5px 10px;
-      font-family: Menlo, Monaco, Consolas, 'Roboto Mono', monospace;
-      -webkit-font-smoothing: antialiased;
       border-radius: 2px;
-      max-height: 50vh !important;
+      margin-top: 0.6em;
     }
   }
 }

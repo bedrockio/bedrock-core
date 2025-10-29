@@ -1,4 +1,4 @@
-import { ActionIcon, Code, Group, Stack, Text } from '@mantine/core';
+import { ActionIcon, Code, Group, Text } from '@mantine/core';
 import { useState } from 'react';
 import { PiMinus, PiPlus, PiTrashBold } from 'react-icons/pi';
 
@@ -13,8 +13,15 @@ import './route-example.less';
 import { useDocs } from '../utils/context';
 
 export default function RouteExample(props) {
-  const { path, status, schema, requestPath, requestBody, responseBody } =
-    props;
+  const {
+    route,
+    path,
+    status,
+    schema,
+    requestPath,
+    requestBody,
+    responseBody,
+  } = props;
 
   const { mode, unsetPath, canEditDocs } = useDocs();
 
@@ -30,15 +37,13 @@ export default function RouteExample(props) {
     setOpen(!open);
   }
 
-  function renderRequestPath(path) {
-    if (path) {
-      return (
-        <div className={getElementClass('request-path')}>
-          <div className={getElementClass('header')}>Path:</div>
-          <Code>{path}</Code>
-        </div>
-      );
-    }
+  function renderFullRoute() {
+    return (
+      <div className={getElementClass('route')}>
+        <div className={getElementClass('header')}>Route:</div>
+        <pre className={getElementClass('route-body')}>{route}</pre>
+      </div>
+    );
   }
 
   function renderSchema(schema) {
@@ -62,7 +67,7 @@ export default function RouteExample(props) {
       return (
         <div className={getElementClass('body')}>
           <div className={getElementClass('header')}>{title}</div>
-          <Code language="json">{body}</Code>
+          <pre className={getElementClass('content')}>{body}</pre>
         </div>
       );
     }
@@ -70,70 +75,68 @@ export default function RouteExample(props) {
 
   return (
     <div className={className}>
-      <Stack>
-        <div
-          className={getElementClass('title', isGood() ? 'good' : 'bad')}
-          onClick={onToggleClick}>
-          <Group justify="space-between">
-            <Group grow>
-              <Text
-                style={{
-                  margin: 0,
-                }}>
-                {status}
-              </Text>
-              <EditableField
-                type="summary"
-                path={path}
-                onClick={(evt) => {
-                  if (mode === 'edit') {
-                    evt.stopPropagation();
-                  }
+      <div
+        className={getElementClass('title', isGood() ? 'good' : 'bad')}
+        onClick={onToggleClick}>
+        <Group justify="space-between">
+          <Group grow>
+            <Text
+              style={{
+                margin: 0,
+              }}>
+              {status}
+            </Text>
+            <EditableField
+              type="summary"
+              path={path}
+              onClick={(evt) => {
+                if (mode === 'edit') {
+                  evt.stopPropagation();
+                }
+              }}
+              className={getElementClass('summary')}
+              trigger={
+                <ActionIcon variant="default">
+                  <PiTrashBold />
+                </ActionIcon>
+              }
+            />
+          </Group>
+          <Group>
+            {canEditDocs() && (
+              <Confirm
+                title="Delete Example"
+                negative
+                confirmButton="Delete"
+                onConfirm={async () => {
+                  unsetPath(path);
                 }}
-                className={getElementClass('summary')}
+                content={
+                  <Text>Are you sure you want to delete this example?</Text>
+                }
                 trigger={
-                  <ActionIcon variant="default">
+                  <ActionIcon
+                    variant="default"
+                    onClick={(evt) => {
+                      evt.stopPropagation();
+                    }}>
                     <PiTrashBold />
                   </ActionIcon>
                 }
               />
-            </Group>
-            <Group>
-              {canEditDocs() && (
-                <Confirm
-                  title="Delete Example"
-                  negative
-                  confirmButton="Delete"
-                  onConfirm={async () => {
-                    unsetPath(path);
-                  }}
-                  content={
-                    <Text>Are you sure you want to delete this example?</Text>
-                  }
-                  trigger={
-                    <ActionIcon
-                      variant="default"
-                      onClick={(evt) => {
-                        evt.stopPropagation();
-                      }}>
-                      <PiTrashBold />
-                    </ActionIcon>
-                  }
-                />
-              )}
-              {open ? <PiMinus /> : <PiPlus />}
-            </Group>
+            )}
+            {open ? <PiMinus /> : <PiPlus />}
           </Group>
+        </Group>
+      </div>
+      {open && (
+        <div className={getElementClass('content')}>
+          {renderFullRoute()}
+          {renderSchema(schema)}
+          {renderBody('Request Body:', requestBody)}
+          {renderBody('Response Body:', responseBody)}
         </div>
-        {open && (
-          <div className={getElementClass('content')}>
-            {renderRequestPath(requestPath)}
-            {renderSchema(schema)}
-            {renderBody('Request Body:', requestBody)}
-            {renderBody('Response Body:', responseBody)}
-          </div>
-        )}
-      </Stack>
+      )}
     </div>
   );
 }
