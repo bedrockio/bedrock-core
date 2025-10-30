@@ -5,7 +5,7 @@
 
 import { CustomError } from './error';
 
-const TIMEOUT_DELAY = 20000;
+const DEFAULT_TIMEOUT = 20000;
 const ERROR_THRESHOLD = 1;
 
 let errorCount = 0;
@@ -30,16 +30,18 @@ export class TimeoutError extends CustomError {
 }
 
 export async function fetchWithTimeout(url, options) {
+  const { timeout = DEFAULT_TIMEOUT, ...rest } = options;
+
   try {
     // Set up an abort controller to allow the network
     // connection to be closed when the request times out.
     const controller = new AbortController();
     const res = await Promise.race([
       fetchWithNetworkError(url, {
-        ...options,
+        ...rest,
         signal: controller.signal,
       }),
-      timeout(controller),
+      sleep(controller, timeout),
     ]);
     onConnectionSuccess();
     return res;
@@ -75,12 +77,12 @@ function onConnectionFail(error) {
   }
 }
 
-function timeout(controller) {
+function sleep(controller, timeout) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       controller.abort();
       reject(new TimeoutError());
-    }, TIMEOUT_DELAY);
+    }, timeout);
   });
 }
 

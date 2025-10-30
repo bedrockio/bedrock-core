@@ -10,7 +10,7 @@ import { getToken } from './token';
 export default async function request(options) {
   Object.assign(options, getIncludes(options));
 
-  const { method = 'GET', path, params, files } = options;
+  const { method = 'GET', path, params, files, timeout } = options;
 
   let { body } = options;
 
@@ -37,6 +37,7 @@ export default async function request(options) {
   }
 
   const res = await fetchWithTimeout(url, {
+    timeout,
     method,
     headers,
     body,
