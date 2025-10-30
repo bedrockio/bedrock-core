@@ -1,4 +1,4 @@
-import { ActionIcon, Code, Group, Text } from '@mantine/core';
+import { ActionIcon, Group, Text } from '@mantine/core';
 import { useState } from 'react';
 import { PiMinus, PiPlus, PiTrashBold } from 'react-icons/pi';
 
@@ -13,15 +13,7 @@ import './route-example.less';
 import { useDocs } from '../utils/context';
 
 export default function RouteExample(props) {
-  const {
-    route,
-    path,
-    status,
-    schema,
-    requestPath,
-    requestBody,
-    responseBody,
-  } = props;
+  const { route, path, status, schema, requestBody, responseBody } = props;
 
   const { mode, unsetPath, canEditDocs } = useDocs();
 

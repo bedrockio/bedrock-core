@@ -173,6 +173,11 @@
     "@babel/helper-string-parser" "^7.27.1"
     "@babel/helper-validator-identifier" "^7.27.1"
 
+"@bedrockio/chrono@^0.9.1":
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/@bedrockio/chrono/-/chrono-0.9.1.tgz#f0f3c34d12743351545181fabfc16d72e5c93275"
+  integrity sha512-oUyiJXgYvu40dMBtjhhKVo9xFX9ufoxKdIkHmkK511kylZcEjTHnrzLPZ+LcerS6/HTdUOlUUUphQj/roiCrEA==
+
 "@bedrockio/config@^2.2.3":
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/@bedrockio/config/-/config-2.2.3.tgz#bac37d12e36a99ec16668c8b5d1e05dec9658fa9"
