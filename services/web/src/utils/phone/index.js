@@ -6,13 +6,15 @@ const COUNTRIES_BY_PREFIX = mapKeys(COUNTRIES, (country) => {
   return country.prefix;
 });
 
-export function formatPhone(phone, country) {
+export function formatPhone(phone, countryCode) {
   if (!phone) {
     return '';
   }
-  if (!country) {
-    country = getCountry(phone);
-  }
+
+  const country = countryCode
+    ? COUNTRIES[countryCode]
+    : getCountryByPrefix(phone);
+
   if (country) {
     const { prefix, format } = country;
     phone = phone.replace(prefix, '');
@@ -27,7 +29,7 @@ export function getFormatLength(code) {
   return digits.length;
 }
 
-function getCountry(phone) {
+function getCountryByPrefix(phone) {
   let prefix = '';
   const len = Math.min(phone.length, 5);
   for (let i = 0; i < len; i++) {
