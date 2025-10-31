@@ -183,49 +183,52 @@ export default function AuditLogList() {
                     </Table.Td>
                   </Table.Tr>
                 )}
-                {items.map((item) => (
-                  <Table.Tr key={item.id} onClick={() => setSelectedItem(item)}>
-                    <Table.Td>
-                      {item.actor && (
-                        <Anchor
-                          size="sm"
-                          component={Link}
-                          title={item.actor.email}
-                          to={`/users/${item.actor.id}`}>
-                          {item.actor.firstName} {item.actor.lastName}
-                        </Anchor>
-                      )}
-                    </Table.Td>
-                    <Table.Td>{item.activity}</Table.Td>
+                {items.map((item) => {
+                  const name = item.object?.name || item.actor?.name || '';
+                  return (
+                    <Table.Tr
+                      key={item.id}
+                      onClick={() => setSelectedItem(item)}>
+                      <Table.Td>
+                        {item.actor && (
+                          <Anchor
+                            size="sm"
+                            component={Link}
+                            title={item.actor.email}
+                            to={`/users/${item.actor.id}`}>
+                            {item.actor.firstName} {item.actor.lastName}
+                          </Anchor>
+                        )}
+                      </Table.Td>
+                      <Table.Td>{item.activity}</Table.Td>
 
-                    <Table.Td>
-                      {item.owner && (
-                        <Anchor
-                          size="sm"
-                          component={Link}
-                          title={item.owner.email}
-                          to={`/users/${item.owner.id}`}>
-                          {item.owner.name}
-                        </Anchor>
-                      )}
-                    </Table.Td>
-                    <Table.Td>
-                      {item.object?.name || item.object || 'N/A'}
-                    </Table.Td>
-                    <Table.Td>{formatDateTime(item.createdAt)}</Table.Td>
+                      <Table.Td>
+                        {item.owner && (
+                          <Anchor
+                            size="sm"
+                            component={Link}
+                            title={item.owner.email}
+                            to={`/users/${item.owner.id}`}>
+                            {item.owner.name}
+                          </Anchor>
+                        )}
+                      </Table.Td>
+                      <Table.Td>{name}</Table.Td>
+                      <Table.Td>{formatDateTime(item.createdAt)}</Table.Td>
 
-                    <Table.Td style={{ textAlign: 'right' }}>
-                      <ActionIcon
-                        variant="default"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedItem(item);
-                        }}>
-                        <PiMagnifyingGlass />
-                      </ActionIcon>
-                    </Table.Td>
-                  </Table.Tr>
-                ))}
+                      <Table.Td style={{ textAlign: 'right' }}>
+                        <ActionIcon
+                          variant="default"
+                          onClick={(evt) => {
+                            evt.stopPropagation();
+                            setSelectedItem(item);
+                          }}>
+                          <PiMagnifyingGlass />
+                        </ActionIcon>
+                      </Table.Td>
+                    </Table.Tr>
+                  );
+                })}
               </Table.Tbody>
             </Table>
             <Search.Pagination />
