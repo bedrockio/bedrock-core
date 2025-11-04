@@ -25,6 +25,9 @@ function flattenFields(error) {
 
 function setFields(details, result, path = []) {
   if (details) {
+    if (!Array.isArray(details)) {
+      details = [details];
+    }
     for (let error of details) {
       if (error.type === 'field') {
         setFields(error.details, result, [...path, error.field]);
