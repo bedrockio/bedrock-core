@@ -93,7 +93,7 @@ export default function Invites() {
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>
-                  {items.length === 0 && (
+                  <Search.EmptyMessage>
                     <Table.Tr>
                       <Table.Td colSpan={5}>
                         <Text p="md" fw="bold" ta="center">
@@ -101,7 +101,7 @@ export default function Invites() {
                         </Text>
                       </Table.Td>
                     </Table.Tr>
-                  )}
+                  </Search.EmptyMessage>
                   {items.map((item) => {
                     return (
                       <Table.Tr key={item.id}>

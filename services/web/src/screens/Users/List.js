@@ -121,7 +121,7 @@ export default function UserList() {
                     </Table.Tr>
                   </Table.Thead>
                   <Table.Tbody>
-                    {users.length === 0 && (
+                    <Search.EmptyMessage>
                       <Table.Tr>
                         <Table.Td colSpan={5}>
                           <Text p="md" fw="bold" ta="center">
@@ -129,7 +129,7 @@ export default function UserList() {
                           </Text>
                         </Table.Td>
                       </Table.Tr>
-                    )}
+                    </Search.EmptyMessage>
                     {users.map((user) => {
                       return (
                         <Table.Tr key={user.id}>

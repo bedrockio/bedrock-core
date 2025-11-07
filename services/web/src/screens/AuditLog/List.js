@@ -174,7 +174,7 @@ export default function AuditLogList() {
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
-                {items.length === 0 && (
+                <Search.EmptyMessage>
                   <Table.Tr>
                     <Table.Td colSpan={6}>
                       <Text p="md" fw="bold" ta="center">
@@ -182,7 +182,7 @@ export default function AuditLogList() {
                       </Text>
                     </Table.Td>
                   </Table.Tr>
-                )}
+                </Search.EmptyMessage>
                 {items.map((item) => {
                   const name = item.object?.name || item.actor?.name || '';
                   return (

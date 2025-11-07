@@ -85,7 +85,7 @@ export default function OrganizationList() {
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
-                {organizations.length === 0 && (
+                <Search.EmptyMessage>
                   <Table.Tr>
                     <Table.Td colSpan={3} style={{ textAlign: 'center' }}>
                       <Text p="md" fw="bold" ta="center">
@@ -93,7 +93,7 @@ export default function OrganizationList() {
                       </Text>
                     </Table.Td>
                   </Table.Tr>
-                )}
+                </Search.EmptyMessage>
                 {organizations.map((organization) => (
                   <Table.Tr key={organization.id}>
                     <Table.Td>

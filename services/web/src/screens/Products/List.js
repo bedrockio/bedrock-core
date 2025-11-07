@@ -108,7 +108,7 @@ export default function ProductList() {
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
-                {products.length === 0 && (
+                <Search.EmptyMessage>
                   <Table.Tr>
                     <Table.Td colSpan={5} align="center">
                       <Text p="md" fw="bold" ta="center">
@@ -116,7 +116,7 @@ export default function ProductList() {
                       </Text>
                     </Table.Td>
                   </Table.Tr>
-                )}
+                </Search.EmptyMessage>
                 {products.map((product) => {
                   const [image] = product.images;
                   return (

@@ -143,7 +143,7 @@ export default function ShopList() {
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>
-                  {shops.length === 0 && (
+                  <Search.EmptyMessage>
                     <Table.Tr>
                       <Table.Td colSpan={5}>
                         <Text p="md" fw="bold" ta="center">
@@ -151,7 +151,7 @@ export default function ShopList() {
                         </Text>
                       </Table.Td>
                     </Table.Tr>
-                  )}
+                  </Search.EmptyMessage>
                   {shops.map((shop) => {
                     return (
                       <Table.Tr key={shop.id}>

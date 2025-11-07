@@ -60,7 +60,7 @@ export default function ShopProducts() {
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>
-                  {products.length === 0 && (
+                  <Search.EmptyMessage>
                     <Table.Tr>
                       <Table.Td colSpan={5}>
                         <Text p="md" fw="bold" ta="center">
@@ -68,7 +68,7 @@ export default function ShopProducts() {
                         </Text>
                       </Table.Td>
                     </Table.Tr>
-                  )}
+                  </Search.EmptyMessage>
                   {products.map((product) => (
                     <Table.Tr key={product.id}>
                       <Table.Td>

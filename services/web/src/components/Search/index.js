@@ -1,3 +1,4 @@
+import EmptyMessage from './EmptyMessage';
 import Export from './Export';
 import Filters from './Filters';
 import Header from './Header';
@@ -12,6 +13,7 @@ export default {
   Export,
   Header,
   Status,
+  EmptyMessage,
   UrlProvider,
   Pagination,
 };

@@ -91,7 +91,7 @@ export default function TemplateList() {
                     </Table.Tr>
                   </Table.Thead>
                   <Table.Tbody>
-                    {templates.length === 0 && (
+                    <Search.EmptyMessage>
                       <Table.Tr>
                         <Table.Td colSpan={3}>
                           <Text p="md" fw="bold" ta="center">
@@ -99,7 +99,7 @@ export default function TemplateList() {
                           </Text>
                         </Table.Td>
                       </Table.Tr>
-                    )}
+                    </Search.EmptyMessage>
                     {templates.map((template) => {
                       return (
                         <Table.Tr key={template.id}>
