@@ -37,6 +37,8 @@ async function createUpload(file, attributes) {
   // names that cause "invalid character" error.
   filename = filename.replace(/\u202F/g, ' ');
 
+  file.filename ||= filename;
+
   const mimeType = file.mimetype || mime.lookup(filename);
 
   if (!mimeType) {
@@ -60,12 +62,14 @@ async function createUpload(file, attributes) {
 }
 
 async function uploadLocal(file, upload) {
-  const { filename, filepath, buffer } = file;
+  const { filename, filepath, buffer, blob } = file;
   const destination = await getUploadUrl(upload);
   if (filepath) {
     await copyFile(filepath, destination);
   } else if (buffer) {
     await writeFile(destination, buffer);
+  } else if (blob) {
+    await writeFile(destination, new Uint8Array(await blob.arrayBuffer()));
   } else {
     throw new Error('Cannot upload local file.');
   }
@@ -75,18 +79,25 @@ async function uploadLocal(file, upload) {
 }
 
 async function uploadGcs(file, upload) {
-  const { filepath, buffer } = file;
+  const { filepath, buffer, blob } = file;
 
   const destination = getUploadFilename(upload);
   const gcsFile = bucket.file(destination);
 
   logger.info('Uploading file gs://%s/%s', BUCKET_NAME, destination);
 
+  const meta = {
+    contentType: upload.mimeType,
+  };
+
   if (buffer) {
-    await gcsFile.save(buffer);
+    await gcsFile.save(buffer, meta);
+  } else if (blob) {
+    const arrayBuffer = await blob.arrayBuffer();
+    await gcsFile.save(Buffer.from(arrayBuffer), meta);
   } else {
     await bucket.upload(filepath, {
-      contentType: upload.mimeType,
+      ...meta,
       destination,
     });
   }
