@@ -52,7 +52,6 @@ export default class Uploads extends React.Component {
       loading: false,
     };
   }
-
   static defaultProps = {
     onError: (error) => {
       // eslint-disable-next-line no-console
@@ -64,7 +63,7 @@ export default class Uploads extends React.Component {
   // Events
 
   onDrop = async (acceptedFiles, rejectedFiles) => {
-    const { value } = this.props;
+    const { name, value } = this.props;
     try {
       if (!this.isMultiple()) {
         acceptedFiles = acceptedFiles.slice(0, 1);
@@ -100,9 +99,9 @@ export default class Uploads extends React.Component {
       });
 
       if (this.isMultiple()) {
-        this.props.onChange([...value, ...data]);
+        this.props.onChange(name, [...value, ...data]);
       } else {
-        this.props.onChange(data[0]);
+        this.props.onChange(name, data[0]);
       }
     } catch (error) {
       this.setState({
@@ -132,16 +131,20 @@ export default class Uploads extends React.Component {
   }
 
   delete(upload) {
-    const { value } = this.props;
+    const { name, value } = this.props;
     if (this.isMultiple()) {
       const removeId = this.getUploadId(upload);
-      this.props.onChange(
-        value.filter((obj) => {
+      this.props.onChange({
+        name,
+        value: value.filter((obj) => {
           return this.getUploadId(obj) !== removeId;
         }),
-      );
+      });
     } else {
-      this.props.onChange(value);
+      this.props.onChange({
+        name,
+        value: null,
+      });
     }
   }
 
@@ -205,7 +208,7 @@ export default class Uploads extends React.Component {
               {uploads.map((upload) => (
                 <Paper
                   style={{ position: 'relative' }}
-                  shadow="xl"
+                  shadow="xs"
                   key={this.getUploadId(upload)}
                   className="upload-card">
                   {this.renderUpload(upload)}

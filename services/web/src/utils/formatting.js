@@ -33,7 +33,7 @@ export function formatAddress(address) {
   return components.join(', ');
 }
 
-export function arrayToList(arr, fallback = 'None') {
+export function arrayToList(arr, fallback = '') {
   if (!arr?.length) {
     return fallback;
   }

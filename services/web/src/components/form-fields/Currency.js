@@ -1,30 +1,39 @@
 import PropTypes from 'prop-types';
-import React from 'react';
 
 import { getCurrencySymbol } from 'utils/currency';
 
 import NumberField from './Number';
 
-export default class CurrencyField extends React.Component {
-  render() {
-    let { value, cents, currency = 'USD', ...rest } = this.props;
-    if (cents) {
-      value /= 100;
+export default function CurrencyField(props) {
+  let { value, currency = 'USD', ...rest } = props;
+
+  function getValue() {
+    if (value) {
+      return value / 100;
+    } else {
+      return '';
+    }
+  }
+
+  function onChange({ value, ...rest }) {
+    if (value != null) {
+      value *= 100;
     }
 
-    return (
-      <NumberField
-        leftSection={getCurrencySymbol(currency)}
-        value={value}
-        labelPosition="right"
-        {...rest}
-      />
-    );
+    props.onChange({ ...rest, value });
   }
+
+  return (
+    <NumberField
+      {...rest}
+      value={getValue()}
+      leftSection={getCurrencySymbol(currency)}
+      onChange={onChange}
+    />
+  );
 }
 
 CurrencyField.propTypes = {
-  cents: PropTypes.bool,
   currency: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
