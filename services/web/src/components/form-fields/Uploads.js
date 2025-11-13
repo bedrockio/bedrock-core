@@ -1,9 +1,20 @@
-import { Image, Input, Loader, Paper, SimpleGrid, Text } from '@mantine/core';
+import { Badge, Group, Image, Input, Loader, Paper, Text } from '@mantine/core';
 import { uniq } from 'lodash';
 import PropTypes from 'prop-types';
-import React from 'react';
 import Dropzone from 'react-dropzone';
-import { PiFileBold, PiTrashSimpleBold } from 'react-icons/pi';
+
+import {
+  PiFileArchiveLight,
+  PiFileAudioLight,
+  PiFileImageLight,
+  PiFileLight,
+  PiFileTextLight,
+  PiFileVideoLight,
+  PiTrashSimpleBold,
+} from 'react-icons/pi';
+
+import PrivateImage from 'components/PrivateImage';
+import { useRequest } from 'hooks/request';
 
 import { request } from 'utils/api';
 import { urlForUpload } from 'utils/uploads';
@@ -45,126 +56,113 @@ const MIME_TYPES = {
 
 const MEDIA_TYPES = ['image', 'video', 'audio'];
 
-export default class Uploads extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: false,
-    };
-  }
-  static defaultProps = {
-    onError: (error) => {
-      // eslint-disable-next-line no-console
-      console.error(error);
-    },
-    type: 'document',
-  };
+export default function UploadsField(props) {
+  const { name, value, private: isPrivate } = props;
 
   // Events
 
-  onDrop = async (acceptedFiles, rejectedFiles) => {
-    const { name, value } = this.props;
-    try {
-      if (!this.isMultiple()) {
-        acceptedFiles = acceptedFiles.slice(0, 1);
-      }
-      if (rejectedFiles.length) {
-        const messages = rejectedFiles.flatMap((rejectedFile) => {
-          return rejectedFile.errors.map((error) => {
-            let { code, message } = error;
-            if (code === 'file-invalid-type') {
-              const types = this.getTypes();
-              const formatted = new Intl.ListFormat('en', {
-                style: 'short',
-                type: 'disjunction',
-              }).format(types);
-              message = `File must be of ${formatted} type.`;
-            }
-            return message;
-          });
-        });
-        const message = uniq(messages).join(' ');
-        throw new Error(message);
-      }
-      this.setState({
-        loading: true,
-      });
+  function getUploadUrl() {
+    return isPrivate ? '/1/uploads/private' : '/1/uploads';
+  }
+  const { run: upload, loading } = useRequest({
+    async handler(files) {
       const { data } = await request({
         method: 'POST',
-        path: '/1/uploads',
-        files: acceptedFiles,
-      });
-      this.setState({
-        loading: false,
+        path: getUploadUrl(),
+        files,
       });
 
-      if (this.isMultiple()) {
-        this.props.onChange(name, [...value, ...data]);
+      if (isMultiple()) {
+        props.onChange(name, [...value, ...data]);
       } else {
-        this.props.onChange(name, data[0]);
+        props.onChange(name, data[0]);
       }
-    } catch (error) {
-      this.setState({
-        loading: false,
-      });
-      this.props.onError(error);
+    },
+    onError(error) {
+      props.onError?.(error);
+    },
+  });
+
+  async function onDrop(acceptedFiles, rejectedFiles) {
+    if (!isMultiple()) {
+      acceptedFiles = acceptedFiles.slice(0, 1);
     }
-  };
+    if (rejectedFiles.length) {
+      const messages = rejectedFiles.flatMap((rejectedFile) => {
+        return rejectedFile.errors.map((error) => {
+          let { code, message } = error;
+          if (code === 'file-invalid-type') {
+            const types = getTypes();
+            const formatted = new Intl.ListFormat('en', {
+              style: 'short',
+              type: 'disjunction',
+            }).format(types);
+            message = `File must be of ${formatted} type.`;
+          }
+          return message;
+        });
+      });
+      const message = uniq(messages).join(' ');
+      throw new Error(message);
+    }
+
+    upload(acceptedFiles);
+  }
 
   // Helpers
 
-  getUploads() {
-    const { value } = this.props;
-    if (this.isMultiple()) {
+  function getUploads() {
+    if (isMultiple()) {
       return value;
     } else {
       return value ? [value] : [];
     }
   }
 
-  getUploadId(obj) {
+  function getUploadId(obj) {
     return obj.id || obj;
   }
 
-  isMultiple() {
-    return Array.isArray(this.props.value);
+  function isMultiple() {
+    return Array.isArray(value);
   }
 
-  delete(upload) {
-    const { name, value } = this.props;
-    if (this.isMultiple()) {
-      const removeId = this.getUploadId(upload);
-      this.props.onChange({
+  function remove(upload) {
+    if (isMultiple()) {
+      const removeId = getUploadId(upload);
+      props.onChange({
         name,
         value: value.filter((obj) => {
-          return this.getUploadId(obj) !== removeId;
+          return getUploadId(obj) !== removeId;
         }),
       });
     } else {
-      this.props.onChange({
+      props.onChange({
         name,
         value: null,
       });
     }
   }
 
-  getMediaStyles() {
+  function getMediaStyles() {
     return {
       objectFit: 'cover',
       width: '100%',
       height: '100%',
+      maxHeight: '100px',
     };
   }
 
   // Type helpers
 
-  getTypes() {
-    return this.props.types || [this.props.type];
+  function getTypes() {
+    const { types, type = 'document' } = props;
+    return types || [type];
   }
 
-  getTypeForUpload(upload) {
+  function getTypeForUpload(upload) {
     let type;
-    const types = this.getTypes();
+    const types = getTypes();
     if (upload.mimeType) {
       const [base, subtype] = upload.mimeType.split('/');
       type = Object.keys(MIME_TYPES).find((key) => {
@@ -180,126 +178,51 @@ export default class Uploads extends React.Component {
     return type;
   }
 
-  getMimeTypes() {
+  function getMimeTypes() {
     const allowedTypes = {};
-    for (let type of this.getTypes()) {
+    for (let type of getTypes()) {
       const { mime, extensions } = MIME_TYPES[type];
-      allowedTypes[mime] = extensions;
+      for (let inner of mime.split(',')) {
+        allowedTypes[inner] = extensions;
+      }
     }
     return allowedTypes;
   }
 
-  hasMedia() {
-    const types = this.getTypes();
-    return types.some((type) => {
+  function isMedia() {
+    const types = getTypes();
+    return types.every((type) => {
       return MEDIA_TYPES.includes(type);
     });
   }
 
-  render() {
-    const { required, label } = this.props;
-    const { loading } = this.state;
-    const uploads = this.getUploads();
+  function render() {
+    const { required, label } = props;
     return (
       <Input.Wrapper label={label} required={required}>
-        {uploads.length > 0 &&
-          (this.hasMedia() ? (
-            <SimpleGrid cols={4}>
-              {uploads.map((upload) => (
-                <Paper
-                  style={{ position: 'relative' }}
-                  shadow="xs"
-                  key={this.getUploadId(upload)}
-                  className="upload-card">
-                  {this.renderUpload(upload)}
-                  <PiTrashSimpleBold
-                    style={{
-                      position: 'absolute',
-                      top: 5,
-                      right: 5,
-                      cursor: 'pointer',
-                      boxSizing: 'content-box',
-                      padding: '3px',
-                      background: '#fff',
-                      borderRadius: '50%',
-                    }}
-                    size="14"
-                    onClick={() => this.delete(upload)}
-                  />
-                  {upload.filename && (
-                    <Text
-                      style={{
-                        position: 'absolute',
-                        bottom: 0,
-                        left: 0,
-                        width: '100%',
-                        color: '#fff',
-                        padding: '4px 8px',
-                        background: 'rgba(0, 0, 0, 0.5)',
-                        overflow: 'ellipsis',
-                      }}>
-                      {upload.filename}
-                    </Text>
-                  )}
-                </Paper>
-              ))}
-            </SimpleGrid>
-          ) : (
-            uploads.map((upload) => (
-              <div
-                key={this.getUploadId(upload)}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  borderRadius: '50px',
-                  fontSize: '14px',
-                  color: '#fff',
-                  background: 'var(--mantine-color-blue-7)',
-                  padding: '0.3em 0.8em',
-                  gap: '0.3em',
-                }}>
-                {upload.filename || 'File'}
-                <PiTrashSimpleBold
-                  style={{ cursor: 'pointer' }}
-                  onClick={(evt) => this.delete(evt, upload)}
-                />
-              </div>
-            ))
-          ))}
+        {renderUploads()}
         <Dropzone
-          accept={this.getMimeTypes()}
+          accept={getMimeTypes()}
           maxSize={5 * 1024 * 1024}
-          onDrop={this.onDrop}>
+          onDrop={onDrop}>
           {({ getRootProps, getInputProps, isDragActive }) => {
+            const background = isDragActive
+              ? 'rgb(248 229 52 / 9%)'
+              : 'rgb(0 0 0 / 2%)';
             return (
-              <div
+              <Paper
                 {...getRootProps()}
-                className={
-                  isDragActive
-                    ? 'ui icon blue message upload-dropzone-active'
-                    : 'ui icon message upload-dropzone'
-                }
-                style={{ cursor: 'pointer', outline: 0 }}>
-                {loading && <Loader />}
+                p="md"
+                mt="md"
+                withBorder
+                style={{
+                  background,
+                  borderColor: 'rgb(0 0 0 / 15%)',
+                  cursor: 'pointer',
+                }}>
                 <input {...getInputProps()} />
-                <Paper withBorder mt="md" p="md">
-                  {loading ? (
-                    <Text>Uploading...</Text>
-                  ) : isDragActive ? (
-                    <Text>Drop files here...</Text>
-                  ) : this.isMultiple() ? (
-                    <Text size="sm">
-                      Try dropping some files here, or click to select files to
-                      upload.
-                    </Text>
-                  ) : (
-                    <Text size="sm">
-                      Try dropping a file here, or click to select a file to
-                      upload.
-                    </Text>
-                  )}
-                </Paper>
-              </div>
+                {renderMessage(isDragActive)}
+              </Paper>
             );
           }}
         </Dropzone>
@@ -307,26 +230,147 @@ export default class Uploads extends React.Component {
     );
   }
 
-  renderUpload(upload) {
+  function renderUploads() {
+    const uploads = getUploads();
+
+    if (!uploads.length) {
+      return;
+    }
+
+    if (isMedia()) {
+      return renderUploadMedia(uploads);
+    } else {
+      return renderUploadFilenames(uploads);
+    }
+  }
+
+  function renderUploadMedia(uploads) {
+    return (
+      <Group mt="md" gap="xs">
+        {uploads.map((upload) => (
+          <Paper
+            withBorder
+            key={getUploadId(upload)}
+            style={{ position: 'relative' }}>
+            {renderUpload(upload)}
+            <PiTrashSimpleBold
+              style={{
+                position: 'absolute',
+                inset: '5px 5px auto auto',
+                cursor: 'pointer',
+                boxSizing: 'content-box',
+                padding: '3px',
+                background: '#fff',
+                borderRadius: '50%',
+              }}
+              size="14"
+              onClick={() => remove(upload)}
+            />
+            {upload.filename && (
+              <Text
+                size="xs"
+                style={{
+                  position: 'absolute',
+                  inset: 'auto 0 0 0',
+                  color: '#fff',
+                  padding: '4px 8px',
+                  background: 'rgba(0, 0, 0, 0.4)',
+                  overflow: 'ellipsis',
+                }}>
+                {upload.filename}
+              </Text>
+            )}
+          </Paper>
+        ))}
+      </Group>
+    );
+  }
+
+  function renderUploadFilenames(uploads) {
+    return (
+      <Group mt="md" gap="xs">
+        {uploads.map((upload) => (
+          <Badge
+            key={getUploadId(upload)}
+            variant="default"
+            rightSection={
+              <PiTrashSimpleBold
+                style={{ cursor: 'pointer' }}
+                onClick={(evt) => remove(evt, upload)}
+              />
+            }>
+            {upload.filename || 'File'}
+          </Badge>
+        ))}
+      </Group>
+    );
+  }
+
+  function renderMessage(isDragActive) {
+    if (loading) {
+      return (
+        <Group gap="xs">
+          <Loader />
+          Uploading...
+        </Group>
+      );
+    } else if (isDragActive) {
+      return 'Drop files here...';
+    } else {
+      const text = isMultiple()
+        ? 'Try dropping some files here, or select files to upload.'
+        : 'Try dropping a file here, or select a file to upload.';
+      return (
+        <Group gap="xs">
+          <Text size="28px" lh="1">
+            {renderIconForType()}
+          </Text>
+          {text}
+        </Group>
+      );
+    }
+  }
+
+  function renderUpload(upload) {
     const src = urlForUpload(upload);
-    const type = this.getTypeForUpload(upload);
+    const type = getTypeForUpload(upload);
     if (type === 'image') {
-      return <Image src={src} style={this.getMediaStyles()} />;
+      if (isPrivate) {
+        return <PrivateImage upload={upload} style={getMediaStyles()} />;
+      } else {
+        return <Image src={src} style={getMediaStyles()} />;
+      }
     } else if (type === 'video') {
-      return <video src={src} style={this.getMediaStyles()} controls />;
+      return <video src={src} style={getMediaStyles()} controls />;
     } else if (type === 'audio') {
       return <audio src={src} controls />;
     }
   }
 
-  renderIconForType() {
-    return <PiFileBold />;
+  function renderIconForType(type) {
+    type ||= getTypes()[0];
+    if (type === 'zip') {
+      return <PiFileArchiveLight />;
+    } else if (type === 'image') {
+      return <PiFileImageLight />;
+    } else if (type === 'audio') {
+      return <PiFileAudioLight />;
+    } else if (type === 'video') {
+      return <PiFileVideoLight />;
+    } else if (type === 'text') {
+      return <PiFileTextLight />;
+    } else {
+      return <PiFileLight />;
+    }
   }
+
+  return render();
 }
 
-Uploads.propTypes = {
+UploadsField.propTypes = {
   type: PropTypes.oneOf(Object.keys(MIME_TYPES)),
   types: PropTypes.arrayOf(PropTypes.oneOf(Object.keys(MIME_TYPES))),
+  private: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   onError: PropTypes.func,
 };
