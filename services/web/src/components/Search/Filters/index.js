@@ -1,3 +1,4 @@
+import Boolean from './Boolean';
 import Checkbox from './Checkbox';
 import DateRange from './DateRange';
 import Input from './Input';
@@ -14,6 +15,7 @@ export default {
   Search,
   Keyword,
   Select,
+  Boolean,
   Checkbox,
   DateRange,
 };

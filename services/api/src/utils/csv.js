@@ -290,7 +290,7 @@ function parseCsv(str) {
     if (str.startsWith('http')) {
       const response = await fetch(str);
       if (!response.ok) {
-        throw new Error(`Could not download ${str}.`);
+        throw new Error(response.statusText);
       }
       const nodeStream = Readable.fromWeb(response.body);
       return csv.parseStream(nodeStream, PARSE_OPTIONS);

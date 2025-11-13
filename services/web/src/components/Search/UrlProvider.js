@@ -1,12 +1,12 @@
-import { useLocation, useNavigate, useSearch } from '@bedrockio/router';
-import { camelCase, mapKeys, snakeCase } from 'lodash';
+import { useLocation, useNavigate, useQuery } from '@bedrockio/router';
+import { camelCase, snakeCase } from 'lodash';
 
 import Provider from './Provider';
 
 export default function UrlProvider(props) {
   const { sort: defaultSort } = props;
 
-  const search = useSearch();
+  const query = useQuery();
   const location = useLocation();
 
   const navigate = useNavigate();
@@ -16,11 +16,11 @@ export default function UrlProvider(props) {
     'sort.field': sortField,
     'sort.order': sortOrder,
     ...rest
-  } = search;
+  } = query;
 
   const params = {
-    filters: toCamelCase(rest),
-    skip: Number(search.skip) || 0,
+    filters: getUrlFilters(rest),
+    skip: Number(query.skip) || 0,
     sort: {
       ...defaultSort,
       ...(sortField && {
@@ -65,6 +65,18 @@ export default function UrlProvider(props) {
   return <Provider {...props} {...params} onParamsChange={onParamsChange} />;
 }
 
-function toCamelCase(obj) {
-  return mapKeys(obj, (_, key) => camelCase(key));
+function getUrlFilters(obj) {
+  const filters = {};
+
+  for (let [key, value] of Object.entries(obj)) {
+    if (value === 'true') {
+      value = true;
+    } else if (value === 'false') {
+      value = false;
+    }
+
+    filters[camelCase(key)] = value;
+  }
+
+  return filters;
 }
