@@ -424,6 +424,36 @@ describe('/1/auth', () => {
       expect(user.authTokens).toEqual([]);
     });
 
+    it('should reset login attempts', async () => {
+      let user = await createUser({
+        loginAttempts: 11,
+        lastLoginAttemptAt: new Date(),
+      });
+
+      const password = 'very new password';
+      const token = createAccessToken(user, {
+        action: 'reset',
+        duration: '30m',
+      });
+      await user.save();
+
+      const response = await request(
+        'POST',
+        '/1/auth/password/update',
+        {
+          password,
+        },
+        {
+          token,
+        },
+      );
+
+      expect(response).toHaveStatus(200);
+
+      user = await User.findById(user.id);
+      expect(user.loginAttempts).toBe(0);
+    });
+
     it('should handle invalid tokens', async () => {
       const password = 'very new password';
       const response = await request(
