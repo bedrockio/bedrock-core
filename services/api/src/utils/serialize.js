@@ -6,7 +6,7 @@ function serializeDocument(doc, ctx) {
   const { authUser } = ctx.state || {};
   return doc.toObject({
     ...ctx.state,
-    scopes: authUser?.getScopes(),
+    scopes: authUser?.getScopes() || [],
   });
 }
 
