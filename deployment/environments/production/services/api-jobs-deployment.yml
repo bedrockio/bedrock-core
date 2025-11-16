@@ -29,5 +29,22 @@ spec:
               value: "mongodb://mongo:27017/bedrock_production"
             - name: POSTMARK_FROM
               value: "no-reply@bedrock.foundation"
+            - name: TWILIO_ACCOUNT_SID
+              value: ""
+            - name: TWILIO_FROM_NUMBER
+              value: ""
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: JWT_SECRET
             - name: POSTMARK_API_KEY
-              value: "abc"
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: POSTMARK_API_KEY
+            - name: TWILIO_AUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: TWILIO_AUTH_TOKEN

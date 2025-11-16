@@ -2,7 +2,7 @@ const twilio = require('twilio');
 const config = require('@bedrockio/config');
 const logger = require('@bedrockio/logger');
 
-const { UnsubscribedError } = require('./errors');
+const { UnsubscribedError, TwilioError } = require('./errors');
 
 const { renderTemplate } = require('../templates');
 
@@ -60,7 +60,7 @@ Body: ${body}
     if (error.code === 21610) {
       throw new UnsubscribedError();
     } else {
-      throw error;
+      throw new TwilioError(error);
     }
   }
 }

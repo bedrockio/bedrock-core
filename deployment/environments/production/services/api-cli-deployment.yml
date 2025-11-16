@@ -47,3 +47,8 @@ spec:
                 secretKeyRef:
                   name: secrets
                   key: POSTMARK_API_KEY
+            - name: TWILIO_AUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: TWILIO_AUTH_TOKEN
