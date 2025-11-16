@@ -25,7 +25,7 @@ program
 
   Note that multiple user filters will use an $or with the exception of
   before/after dates which work together.
-    `
+    `,
   )
   .option('-a, --created-after [date]', 'Limit to users created after a certain date. Can be any parseable date.')
   .option('-b, --created-before [date]', 'Limit to users created before a certain date. Can be any parseable date.')
@@ -278,7 +278,7 @@ async function exportCollections(options) {
     }
 
     if (flags.length) {
-      promises.push(runExport(['-c', collection, ...flags]));
+      promises.push(runCollectionExport(collection, flags, options));
       exclude.push(collection);
     }
   }
@@ -314,6 +314,24 @@ async function runExport(flags = []) {
   const { out } = options;
   const args = [MONGO_URI, '--gzip', `--out=${out}`, ...flags];
   await exec('mongodump', args);
+}
+
+async function runCollectionExport(collection, flags = [], options = {}) {
+  await runExport(['-c', collection, ...flags]);
+
+  if (collection.endsWith('_sanitized')) {
+    const original = collection.replace(/_sanitized$/, '');
+    await renameExportFile(`${collection}.bson.gz`, `${original}.bson.gz`, options);
+    await renameExportFile(`${collection}.metadata.json.gz`, `${original}.metadata.json.gz`, options);
+  }
+}
+
+async function renameExportFile(prev, next, options) {
+  const { out, connection } = options;
+  const { name: dbName } = connection;
+  const oldname = path.join(out, dbName, prev);
+  const newname = path.join(out, dbName, next);
+  await fs.rename(oldname, newname);
 }
 
 function getExcludeFlags(excludes) {
