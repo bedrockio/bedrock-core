@@ -15,7 +15,7 @@ router
   .post(
     '/send',
     validateBody({
-      type: yd.string().allow('link', 'code').default('link'),
+      type: yd.string().allow('link', 'code').default('code'),
       channel: yd.string().allow('email', 'sms').default('email'),
       email: yd.string().email(),
       phone: yd.string().phone(),

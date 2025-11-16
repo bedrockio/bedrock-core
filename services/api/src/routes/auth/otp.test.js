@@ -8,13 +8,40 @@ const { User } = require('../../models');
 
 describe('/1/auth/otp', () => {
   describe('POST /send', () => {
+    describe('code', () => {
+      it('should send a code to sms by default', async () => {
+        const phone = '+15551234567';
+        await createUser({
+          phone,
+        });
+        const response = await request('POST', '/1/auth/otp/send', {
+          phone,
+          channel: 'sms',
+        });
+        expect(response).toHaveStatus(200);
+        expect(response.body.data).toEqual({
+          challenge: {
+            type: 'code',
+            channel: 'sms',
+            phone,
+          },
+        });
+
+        assertSmsSent({
+          phone,
+          template: 'otp-login-code',
+        });
+      });
+    });
+
     describe('links', () => {
-      it('should send an otp link via email by default', async () => {
+      it('should send an otp link via email', async () => {
         const email = 'foo@bar.com';
         await createUser({
           email,
         });
         const response = await request('POST', '/1/auth/otp/send', {
+          type: 'link',
           email,
         });
         expect(response).toHaveStatus(200);
@@ -39,6 +66,7 @@ describe('/1/auth/otp', () => {
         });
         const response = await request('POST', '/1/auth/otp/send', {
           phone,
+          type: 'link',
           channel: 'sms',
         });
         expect(response).toHaveStatus(200);
@@ -57,33 +85,6 @@ describe('/1/auth/otp', () => {
       });
     });
 
-    describe('raw code', () => {
-      it('should send a code to sms', async () => {
-        const phone = '+15551234567';
-        await createUser({
-          phone,
-        });
-        const response = await request('POST', '/1/auth/otp/send', {
-          phone,
-          type: 'code',
-          channel: 'sms',
-        });
-        expect(response).toHaveStatus(200);
-        expect(response.body.data).toEqual({
-          challenge: {
-            type: 'code',
-            channel: 'sms',
-            phone,
-          },
-        });
-
-        assertSmsSent({
-          phone,
-          template: 'otp-login-code',
-        });
-      });
-    });
-
     it('should return empty response without sending if no user exists', async () => {
       const response = await request('POST', '/1/auth/otp/send', {
         email: 'foo@bar.com',
@@ -93,7 +94,7 @@ describe('/1/auth/otp', () => {
         challenge: {
           email: 'foo@bar.com',
           channel: 'email',
-          type: 'link',
+          type: 'code',
         },
       });
 
