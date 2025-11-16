@@ -98,7 +98,7 @@ function validateSignature(ctx) {
 }
 
 function getClient() {
-  if (ACCOUNT_SID && AUTH_TOKEN) {
+  if (ACCOUNT_SID || ENV_NAME === 'test') {
     return twilio(ACCOUNT_SID, AUTH_TOKEN);
   }
 }
