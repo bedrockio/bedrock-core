@@ -12,12 +12,9 @@ router
   .use(authenticate())
   .use(requirePermissions('applications.read'))
   .param('id', fetchByParam(Application))
-  .post('/mine/search', validateBody(Application.getSearchValidation()), async (ctx) => {
-    const { body } = ctx.request;
-    const { data, meta } = await Application.search({
-      ...body,
-      user: ctx.state.authUser.id,
-    });
+  .post('/search', validateBody(Application.getSearchValidation()), async (ctx) => {
+    const { data, meta } = await Application.search(ctx.request.body);
+
     ctx.body = {
       data,
       meta,

@@ -14,7 +14,7 @@ export default function Applications() {
   const onDataNeeded = async (body) => {
     return await request({
       method: 'POST',
-      path: '/1/applications/mine/search',
+      path: '/1/applications/search',
       body,
     });
   };
