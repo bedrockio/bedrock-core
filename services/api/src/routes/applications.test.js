@@ -3,11 +3,12 @@ const { uniqueId } = require('lodash');
 const { Application, AuditEntry } = require('../models');
 
 describe('/1/applications', () => {
-  describe('POST /mine/search', () => {
-    it('should list applications for a given user', async () => {
+  describe('POST /search', () => {
+    it('should list applications', async () => {
       const admin = await createAdmin();
       const otherAdmin = await createAdmin();
-      const application = await Application.create({
+
+      await Application.create({
         name: 'my application',
         user: admin.id,
         apiKey: uniqueId('key'),
@@ -19,15 +20,14 @@ describe('/1/applications', () => {
         apiKey: uniqueId('key'),
       });
 
-      const response = await request('POST', '/1/applications/mine/search', {}, { user: admin });
+      const response = await request('POST', '/1/applications/search', {}, { user: admin });
       expect(response).toHaveStatus(200);
-      expect(response.body.data).toHaveLength(1);
-      expect(response.body.data[0].id).toBe(application.id);
+      expect(response.body.data).toHaveLength(2);
     });
 
     it('should deny access to users with no access', async () => {
       const user = await createUser({});
-      const response = await request('POST', '/1/applications/mine/search', {}, { user });
+      const response = await request('POST', '/1/applications/search', {}, { user });
       expect(response).toHaveStatus(403);
     });
   });
