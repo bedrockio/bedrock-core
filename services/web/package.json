@@ -19,7 +19,7 @@
     "@bedrockio/chrono": "^0.9.1",
     "@bedrockio/config": "^2.2.3",
     "@bedrockio/logger": "^1.1.3",
-    "@bedrockio/router": "^0.2.5",
+    "@bedrockio/router": "^0.3.2",
     "@mantine/core": "^8.2.5",
     "@mantine/dates": "^8.2.5",
     "@mantine/form": "^8.2.5",

@@ -1,4 +1,4 @@
-import { useSearch } from '@bedrockio/router';
+import { useQuery } from '@bedrockio/router';
 import { Alert, Group, LoadingOverlay, Stack } from '@mantine/core';
 import { useEffect, useState } from 'react';
 
@@ -9,7 +9,7 @@ import Meta from 'components/Meta';
 import { request } from 'utils/api';
 
 export default function Unsubscribe() {
-  const { token } = useSearch();
+  const { token } = useQuery();
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(true);
