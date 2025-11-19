@@ -2,7 +2,7 @@ import { debounce } from 'lodash';
 import { useCallback } from 'react';
 
 export function useDebounce(...args) {
-  const { run, timeout, deps } = resolveOptions(...args);
+  const { run, timeout, deps = [] } = resolveOptions(...args);
   return useCallback(debounce(run, timeout), deps);
 }
 
