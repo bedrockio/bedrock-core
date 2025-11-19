@@ -3,10 +3,11 @@ import { useState } from 'react';
 import { request } from 'utils/api';
 
 export function useRequest(arg) {
-  const options = resolveOptions(arg);
+  const { handler, getInitial, onSuccess, onError, onAbort, controller } =
+    resolveOptions(arg);
 
   const [error, setError] = useState(null);
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState(getInitial?.());
   const [loading, setLoading] = useState(false);
 
   async function run(...args) {
@@ -14,20 +15,20 @@ export function useRequest(arg) {
     setLoading(true);
 
     try {
-      const result = await options.handler(...args);
+      const result = await handler(...args);
       setLoading(false);
       setResult(result);
-      options.onSuccess?.(result);
+      onSuccess?.(result);
     } catch (error) {
       setError(error);
       setLoading(false);
-      options.onError?.(error);
+      onError?.(error);
     }
   }
 
   function abort() {
-    options.controller.abort();
-    options.onAbort?.();
+    controller.abort();
+    onAbort?.();
   }
 
   return {
