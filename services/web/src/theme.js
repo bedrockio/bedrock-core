@@ -132,5 +132,19 @@ export const theme = createTheme({
         },
       },
     },
+    Select: {
+      styles: {
+        dropdown: {
+          borderColor: 'var(--mantine-color-gray-5)',
+        },
+      },
+    },
+    MultiSelect: {
+      styles: {
+        dropdown: {
+          borderColor: 'var(--mantine-color-gray-5)',
+        },
+      },
+    },
   },
 });
