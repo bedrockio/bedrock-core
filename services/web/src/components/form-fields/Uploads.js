@@ -213,7 +213,6 @@ export default function UploadsField(props) {
               <Paper
                 {...getRootProps()}
                 p="md"
-                mt="md"
                 withBorder
                 style={{
                   background,
@@ -246,7 +245,7 @@ export default function UploadsField(props) {
 
   function renderUploadMedia(uploads) {
     return (
-      <Group mt="md" gap="xs">
+      <Group mb="0.3em" gap="xs">
         {uploads.map((upload) => (
           <Paper
             withBorder

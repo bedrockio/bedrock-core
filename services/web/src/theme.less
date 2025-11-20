@@ -1,6 +1,7 @@
 :root {
   --ai-size-md: calc(5rem * var(--mantine-scale));
   --popover-shadow: 0px 1px 2px rgb(0 0 0 / 30%);
+  --switch-cursor: pointer;
 }
 
 .mantine-NavLink-root {
@@ -80,4 +81,14 @@ form {
   list-style: circle inside;
   padding: 0 0 0 0.5em;
   margin: 0;
+}
+
+.mantine-Fieldset-root {
+  display: flex;
+  flex-flow: column;
+  gap: 0.75em;
+}
+
+.mantine-Switch-label {
+  cursor: pointer;
 }

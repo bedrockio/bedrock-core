@@ -15,6 +15,8 @@ import {
 
 import { usePage } from 'stores/page';
 
+import UserImage from 'components/UserImage';
+
 import { useRequest } from 'utils/api';
 import { formatDateTime } from 'utils/date';
 import { formatRoles } from 'utils/permissions';
@@ -45,6 +47,7 @@ export default function UserOverview() {
   return (
     <>
       <Menu />
+      <UserImage user={user} />
 
       <SimpleGrid mt="md" cols={{ base: 1, md: 2 }} spacing="xl">
         <Card withBorder>

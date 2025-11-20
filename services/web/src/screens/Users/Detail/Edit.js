@@ -1,5 +1,6 @@
 import { useNavigate } from '@bedrockio/router';
-import { Stack } from '@mantine/core';
+import { Paper } from '@mantine/core';
+import React from 'react';
 
 import { usePage } from 'stores/page';
 
@@ -11,16 +12,17 @@ export default function EditUser() {
   const navigate = useNavigate();
 
   return (
-    <Stack gap="md">
+    <React.Fragment>
       <Menu displayMode="edit" />
-
-      <Form
-        user={user}
-        onSuccess={() => {
-          reload();
-          navigate(`/users/${user.id}`);
-        }}
-      />
-    </Stack>
+      <Paper p="md" withBorder>
+        <Form
+          user={user}
+          onSuccess={() => {
+            reload();
+            navigate.back();
+          }}
+        />
+      </Paper>
+    </React.Fragment>
   );
 }

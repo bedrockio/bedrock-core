@@ -37,6 +37,10 @@
       "default": false,
       "writeAccess": "none"
     },
+    "image": {
+      "type": "ObjectId",
+      "ref": "Upload"
+    },
     "deviceToken": {
       "type": "String",
       "readAccess": "none",

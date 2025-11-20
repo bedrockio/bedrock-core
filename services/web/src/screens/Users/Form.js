@@ -15,6 +15,7 @@ import Protected from 'components/Protected';
 import Actions from 'components/form-fields/Actions';
 import PhoneField from 'components/form-fields/Phone';
 import RolesField from 'components/form-fields/Roles';
+import UploadsField from 'components/form-fields/Uploads';
 import { useFields } from 'hooks/forms';
 import { useRequest } from 'hooks/request';
 
@@ -23,7 +24,10 @@ import { request } from 'utils/api';
 export default function UserForm(props) {
   const { user } = props;
 
-  const { fields, setField } = useFields(user);
+  const { fields, setField } = useFields({
+    roles: [],
+    ...user,
+  });
 
   const { run, loading, error } = useRequest(async (body) => {
     await request({
@@ -33,8 +37,10 @@ export default function UserForm(props) {
     });
     showNotification({
       icon: <PiCheckBold />,
-      message: 'Created availability rule.',
+      message: 'Updated user.',
     });
+
+    props.onSuccess?.();
   });
 
   function onSubmit(evt) {
@@ -75,6 +81,13 @@ export default function UserForm(props) {
           value={fields.phone || ''}
           onChange={setField}
         />
+        <UploadsField
+          type="image"
+          name="image"
+          label="Image"
+          value={fields.image}
+          onChange={setField}
+        />
       </Fieldset>
       <Fieldset legend="Other">
         <Protected endpoint="users" permission="write">
@@ -87,16 +100,19 @@ export default function UserForm(props) {
           />
         </Protected>
 
-        <Text fz="sm" fw="500" mt="xs">
-          Flags
-        </Text>
-        <Switch
-          name="isTester"
-          label="Tester"
-          checked={fields.isTester}
-          onChange={setField}
-          p="0.5em 0"
-        />
+        <div>
+          <Text fz="sm" fw="500" mt="xs">
+            Flags
+          </Text>
+
+          <Switch
+            name="isTester"
+            label="Tester"
+            checked={fields.isTester}
+            onChange={setField}
+            p="0.5em 0"
+          />
+        </div>
       </Fieldset>
       <Actions>
         <Button type="submit">Submit</Button>
