@@ -2,9 +2,10 @@ import { Group, Image, Stack, Table, Text, Title } from '@mantine/core';
 
 import { usePage } from 'stores/page';
 
+import ArrayList from 'components/ArrayList';
+
 import { formatCurrency } from 'utils/currency';
 import { formatDateTime } from 'utils/date';
-import { arrayToList } from 'utils/formatting';
 import { urlForUpload } from 'utils/uploads';
 
 import Menu from './Menu';
@@ -42,7 +43,9 @@ export default function ShopOverview() {
             </Table.Tr>
             <Table.Tr>
               <Table.Th w={160}>Selling Points</Table.Th>
-              <Table.Td>{arrayToList(product.sellingPoints)}</Table.Td>
+              <Table.Td>
+                <ArrayList array={product.sellingPoints} />
+              </Table.Td>
             </Table.Tr>
             <Table.Tr>
               <Table.Th>Created At</Table.Th>

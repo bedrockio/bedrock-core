@@ -32,16 +32,3 @@ export function formatAddress(address) {
   }
   return components.join(', ');
 }
-
-export function arrayToList(arr, fallback = '') {
-  if (!arr?.length) {
-    return fallback;
-  }
-  return (
-    <ul>
-      {arr.map((el, i) => {
-        return <li key={i}>{el}</li>;
-      })}
-    </ul>
-  );
-}

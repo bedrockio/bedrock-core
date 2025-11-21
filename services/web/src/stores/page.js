@@ -61,6 +61,13 @@ function useLoader(names, params, fn) {
     }
   }
 
+  function update(newState) {
+    setState({
+      ...state,
+      ...newState,
+    });
+  }
+
   function PageLoader(props) {
     const { fallback, notFound } = props;
     if (loading) {
@@ -78,6 +85,7 @@ function useLoader(names, params, fn) {
         value={{
           ...parent,
           ...state,
+          update,
           reload: loadPage,
         }}>
         {props.children}
