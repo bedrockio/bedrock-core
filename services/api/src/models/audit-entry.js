@@ -23,7 +23,7 @@ schema.statics.getObjectFields = function (options) {
     }
 
     // Depopulate mutates the object so clone it here.
-    object = object.$clone();
+    object = object.clone();
 
     snapshot.depopulate?.();
     object.depopulate?.();
