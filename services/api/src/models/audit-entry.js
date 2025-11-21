@@ -22,12 +22,6 @@ schema.statics.getObjectFields = function (options) {
       throw new Error('AuditEntry.getObjectFields only works with mongoose documents');
     }
 
-    // Depopulate mutates the object so clone it here.
-    object = object.clone();
-
-    snapshot.depopulate?.();
-    object.depopulate?.();
-
     const paths = object.constructor.schema.paths;
 
     let ownerPath = options.ownerPath;
@@ -41,7 +35,7 @@ schema.statics.getObjectFields = function (options) {
     const schemaField = paths[ownerPath];
     const ownerType = schemaField?.options?.ref;
     // keep in mind the ownerPath might be a nested path `location.user`
-    const ownerId = get(object, ownerPath);
+    const ownerId = getId(object, ownerPath);
 
     let result = {
       object: object.id,
@@ -54,8 +48,8 @@ schema.statics.getObjectFields = function (options) {
       let objectBefore;
       let objectAfter;
       for (let field of fields) {
-        const sValue = snapshot[field];
-        const oValue = object[field];
+        const sValue = getId(snapshot, field);
+        const oValue = getId(object, field);
         if (sValue !== oValue) {
           if (sValue !== undefined) {
             objectBefore ||= {};
@@ -94,6 +88,11 @@ schema.statics.append = function (activity, options) {
     activity,
   });
 };
+
+function getId(object, path) {
+  const value = get(object, path);
+  return value?._id || value;
+}
 
 schema.index({ activity: 1, createdAt: 1 });
 schema.index({ actor: 1, createdAt: 1 });
