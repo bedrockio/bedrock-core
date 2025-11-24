@@ -14,7 +14,7 @@ export default function NewSearchDropdownSingle(props) {
   function onClear() {
     clearOptions();
     props.onChange(name, null);
-    runSearchDeferred.cancel();
+    loadOptionsDeferred.cancel();
   }
 
   // NOTE: Mantine calls this both on blur and when an
@@ -25,7 +25,7 @@ export default function NewSearchDropdownSingle(props) {
     if (isFocused) {
       if (keyword) {
         if (keyword !== value?.name) {
-          runSearchDeferred(keyword);
+          loadOptionsDeferred(keyword);
         }
       } else {
         clearOptions();
@@ -40,7 +40,7 @@ export default function NewSearchDropdownSingle(props) {
     if (option) {
       props.onChange(name, option.data);
     }
-    runSearchDeferred.cancel();
+    loadOptionsDeferred.cancel();
   }
 
   function onKeyDown(evt) {
@@ -85,7 +85,7 @@ export default function NewSearchDropdownSingle(props) {
     options,
     runSearch,
     clearOptions,
-    runSearchDeferred,
+    loadOptionsDeferred,
   } = useSearchOptions(props);
 
   function render() {

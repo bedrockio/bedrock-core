@@ -8,10 +8,17 @@ import { request } from 'utils/api';
 export default function useSearchOptions(props) {
   const { searchPath, searchBody } = props;
 
+  function isMultiple() {
+    const { value } = props;
+    return Array.isArray(value);
+  }
+
   function mapOptions(data) {
     return data.map((doc) => {
+      // Best guess at data name.
+      const label = doc.name || doc.description || 'Unknown';
       return {
-        label: doc.name,
+        label,
         value: doc.id,
         data: doc,
       };
@@ -20,7 +27,7 @@ export default function useSearchOptions(props) {
 
   function getValues() {
     const { value } = props;
-    if (Array.isArray(value)) {
+    if (isMultiple()) {
       return value;
     } else if (value) {
       return [value];
@@ -41,51 +48,76 @@ export default function useSearchOptions(props) {
     });
   }
 
-  function loadInitialOptions() {
+  async function loadInitial() {
     const ids = getUnpopulated();
     if (ids.length) {
-      runSearch({
+      const data = await runSearch({
         ids,
       });
+
+      const { name } = props;
+      const value = isMultiple ? data : data[0];
+
+      props.onChange(name, value);
+      setOptions(mapOptions(data));
     }
   }
 
-  const runSearch = useCallback(async (params) => {
-    setError(null);
-    setLoading(true);
+  const runSearch = useCallback(
+    async (params) => {
+      setError(null);
+      setLoading(true);
 
-    try {
-      await new Promise((resolve) => {
-        setTimeout(resolve, 500);
+      try {
+        const { data } = await request({
+          method: 'POST',
+          path: searchPath,
+          body: {
+            ...searchBody,
+            ...params,
+          },
+        });
+
+        setLoading(false);
+
+        return data;
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
+    },
+    [props.value],
+  );
+
+  async function loadOptions(params) {
+    const data = await runSearch(params);
+
+    const populated = getPopulated();
+
+    for (let document of populated) {
+      const hasDocument = data.some((d) => {
+        return d.id === document.id;
       });
 
-      const { data } = await request({
-        method: 'POST',
-        path: searchPath,
-        body: {
-          ...searchBody,
-          ...params,
-        },
-      });
-
-      setOptions(mapOptions(data));
-      setLoading(false);
-
-      return data;
-    } catch (error) {
-      setError(error);
-      setLoading(false);
+      if (!hasDocument) {
+        data.push(document);
+      }
     }
-  }, []);
+
+    setOptions(mapOptions(data));
+  }
 
   const clearOptions = useCallback(() => {
     setOptions([]);
   });
 
-  const runSearchDeferred = useDebounce((keyword) => {
-    runSearch({
-      keyword,
-    });
+  const loadOptionsDeferred = useDebounce({
+    run(keyword) {
+      loadOptions({
+        keyword,
+      });
+    },
+    deps: [props.value],
   });
 
   // -----------------
@@ -95,7 +127,7 @@ export default function useSearchOptions(props) {
   const [options, setOptions] = useState(mapOptions(getPopulated()));
 
   useEffect(() => {
-    loadInitialOptions();
+    loadInitial();
   }, []);
 
   return {
@@ -104,6 +136,6 @@ export default function useSearchOptions(props) {
     options,
     runSearch,
     clearOptions,
-    runSearchDeferred,
+    loadOptionsDeferred,
   };
 }

@@ -245,7 +245,7 @@ export default function UploadsField(props) {
 
   function renderUploadMedia(uploads) {
     return (
-      <Group mb="0.3em" gap="xs">
+      <Group mb="0.4em" gap="xs">
         {uploads.map((upload) => (
           <Paper
             withBorder

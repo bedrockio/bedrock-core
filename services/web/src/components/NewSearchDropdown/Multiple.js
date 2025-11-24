@@ -7,9 +7,6 @@ export default function NewSearchDropdownMultiple(props) {
   const { name, value, label, placeholder } = props;
 
   function getValue() {
-    if (loading) {
-      return [];
-    }
     return value.map((obj) => {
       return obj.id || obj;
     });
@@ -21,7 +18,7 @@ export default function NewSearchDropdownMultiple(props) {
     const isFocused = ref.current === document.activeElement;
 
     if (isFocused && keyword) {
-      runSearchDeferred(keyword);
+      loadOptionsDeferred(keyword);
     }
   }
 
@@ -35,7 +32,7 @@ export default function NewSearchDropdownMultiple(props) {
       });
 
     props.onChange(name, docs);
-    runSearchDeferred.cancel();
+    loadOptionsDeferred.cancel();
   }
 
   function onKeyDown(evt) {
@@ -53,7 +50,7 @@ export default function NewSearchDropdownMultiple(props) {
 
   const ref = useRef();
 
-  const { error, loading, options, runSearch, runSearchDeferred } =
+  const { error, loading, options, runSearch, loadOptionsDeferred } =
     useSearchOptions(props);
 
   function render() {
@@ -69,10 +66,18 @@ export default function NewSearchDropdownMultiple(props) {
         onKeyDown={onKeyDown}
         placeholder={placeholder}
         onSearchChange={onSearchChange}
-        nothingFoundMessage="No results"
+        nothingFoundMessage={renderNothingFound()}
         searchable
       />
     );
+  }
+
+  function renderNothingFound() {
+    if (loading) {
+      return 'Loading...';
+    } else {
+      return 'No results';
+    }
   }
 
   function getRightProps() {
