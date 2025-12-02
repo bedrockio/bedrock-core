@@ -415,6 +415,29 @@ describe('/1/users', () => {
       expect(user._password).toBeUndefined();
       expect(user.authenticators).toEqual([]);
     });
+
+    it('should not set authenticators', async () => {
+      const admin = await createAdmin();
+      let user = await createUser({
+        password: 'fake password',
+      });
+
+      await request(
+        'PATCH',
+        `/1/users/${user.id}`,
+        {
+          authenticators: [
+            {
+              type: 'password',
+            },
+          ],
+        },
+        { user: admin },
+      );
+
+      user = await User.findById(user.id);
+      expect(user.authenticators[0].secret).toBeDefined();
+    });
   });
 
   describe('DELETE /:user', () => {
