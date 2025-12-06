@@ -77,6 +77,37 @@ describe('/1/users', () => {
       user = await User.findById(user._id);
       expect(user.deviceToken).toBe('new-token');
     });
+
+    it('should allow flattened fields', async () => {
+      let user = await createUser({
+        name: 'new name',
+        terms: {
+          hipaa: true,
+          privacy: true,
+          communication: true,
+        },
+      });
+
+      const response = await request(
+        'PATCH',
+        '/1/users/me',
+        {
+          'terms.hipaa': false,
+        },
+        {
+          user,
+        },
+      );
+      expect(response).toHaveStatus(200);
+
+      user = await User.findById(user.id);
+
+      expect(user.toObject().terms).toMatchObject({
+        hipaa: false,
+        privacy: true,
+        communication: true,
+      });
+    });
   });
 
   describe('POST /', () => {

@@ -101,7 +101,7 @@
       "type": "Boolean",
       "default": false
     },
-    "$private": {
+    "$readOnly": {
       "type": "Scope",
       "readAccess": "self",
       "writeAccess": "none",
