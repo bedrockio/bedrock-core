@@ -310,7 +310,7 @@ describe('/1/auth', () => {
       });
 
       const last = getLastSent();
-      const match = last.body.match(/token=([^*]+)/);
+      const match = last.body.match(/token=([^*)]+)/);
       const token = match[1];
       const payload = verifyToken(token);
 
