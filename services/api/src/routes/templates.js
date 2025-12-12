@@ -63,7 +63,7 @@ router
     const params = await getPreviewParams();
     const result = await getMailParams({
       template: template.name,
-      params,
+      ...params,
     });
     ctx.body = {
       data: result,
@@ -80,26 +80,36 @@ router
     async (ctx) => {
       const { template } = ctx.state;
       const { body } = ctx.request;
-      const { channel, userId } = body;
+      const { email, phone, userId, channel } = body;
 
       const params = await getPreviewParams();
 
       let user;
-      if (channel === 'push') {
+      if (channel === 'email') {
+        user = await User.findOne({
+          email,
+        });
+      } else if (channel === 'phone') {
+        user = await User.findOne({
+          phone,
+        });
+      } else if (channel === 'push') {
         user = await User.findById(userId);
-        if (!user) {
-          ctx.throw(400, 'User not found.');
-        } else if (!user.deviceToken) {
+        if (!user.deviceToken) {
           ctx.throw(400, 'User has not registered push notifications.');
         }
       }
 
+      if (!user) {
+        ctx.throw(400, 'User not found.');
+      }
+
       try {
         await sendMessage({
+          user,
           ...body,
           ...params,
           template: template.name,
-          user,
         });
       } catch (error) {
         ctx.throw(400, error);
