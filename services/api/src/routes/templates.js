@@ -106,10 +106,10 @@ router
 
       try {
         await sendMessage({
-          user,
           ...body,
           ...params,
           template: template.name,
+          user,
         });
       } catch (error) {
         ctx.throw(400, error);
