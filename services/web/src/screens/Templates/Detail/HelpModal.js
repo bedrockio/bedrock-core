@@ -1,8 +1,9 @@
 import { Alert, Text, Typography } from '@mantine/core';
 
 import Code from 'components/Code';
+import ModalWrapper from 'components/ModalWrapper';
 
-export default function HelpModal() {
+function HelpModal() {
   return (
     <Typography>
       <h5>Link Helpers</h5>
@@ -109,3 +110,13 @@ Name | Email
 {{/if}}
 `,
 };
+
+function Wrapper(props) {
+  const { trigger, ...rest } = props;
+  return (
+    <ModalWrapper title="Template Help" size="xl" trigger={trigger}>
+      <HelpModal {...rest} />
+    </ModalWrapper>
+  );
+}
+export default Wrapper;

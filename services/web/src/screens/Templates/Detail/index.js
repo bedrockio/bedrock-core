@@ -6,6 +6,7 @@ import NotFound from 'screens/NotFound';
 
 import { request } from 'utils/api';
 
+import Content from './Content';
 import Edit from './Edit';
 import Overview from './Overview';
 import Preview from './Preview';
@@ -32,6 +33,7 @@ export default function TemplateDetail() {
       <Routes>
         <Route path="/templates/:id" render={Overview} exact />
         <Route path="/templates/:id/edit" render={Edit} exact />
+        <Route path="/templates/:id/content" render={Content} exact />
         <Route path="/templates/:id/preview" render={Preview} exact />
         <Route render={NotFound} />
       </Routes>

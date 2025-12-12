@@ -16,9 +16,6 @@ export default function NewTemplate() {
         onSuccess={(template) => {
           navigate(`/templates/${template.id}`);
         }}
-        onCancel={() => {
-          navigate('/templates');
-        }}
       />
     </>
   );

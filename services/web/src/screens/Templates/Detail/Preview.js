@@ -10,7 +10,7 @@ import { request } from 'utils/api';
 import Menu from './Menu';
 import SendTestButton from './SendPreviewButton';
 
-export default function TemplatePreview() {
+export default function Preview() {
   const { template } = usePage();
 
   const [error, setError] = useState(null);

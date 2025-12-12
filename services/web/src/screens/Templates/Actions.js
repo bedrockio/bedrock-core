@@ -1,5 +1,5 @@
 import { Link } from '@bedrockio/router';
-import { ActionIcon, Button, Group, Menu, Text } from '@mantine/core';
+import { ActionIcon, Group, Menu, Text } from '@mantine/core';
 
 import {
   PiCode,
@@ -15,61 +15,16 @@ import InspectObject from 'modals/InspectObject';
 
 import { request } from 'utils/api';
 
-export default function TemplatesActions({
-  template,
-  reload,
-  displayMode = 'show',
-}) {
-  function renderButton() {
-    if (displayMode === 'list') {
-      return (
-        <Protected endpoint="templates" permission="update">
-          <ActionIcon
-            variant="default"
-            component={Link}
-            to={`/templates/${template.id}/edit`}>
-            <PiPencilSimpleBold />
-          </ActionIcon>
-        </Protected>
-      );
-    } else if (displayMode === 'edit') {
-      return (
-        <Button
-          variant="default"
-          component={Link}
-          to={`/templates/${template.id}`}>
-          Back
-        </Button>
-      );
-    } else if (displayMode === 'show') {
-      return (
-        <Protected endpoint="templates" permission="update">
-          <Button
-            variant="default"
-            rightSection={<PiPencilSimpleBold />}
-            component={Link}
-            to={`/templates/${template.id}/edit`}>
-            Edit
-          </Button>
-        </Protected>
-      );
-    }
-  }
+export default function TemplatesActions(props) {
+  const { template, reload } = props;
 
   return (
     <Group gap="xs" justify="flex-end">
-      {renderButton()}
       <Menu keepMounted shadow="md">
         <Menu.Target>
-          {displayMode !== 'list' ? (
-            <ActionIcon variant="default">
-              <PiDotsThreeOutlineVerticalBold />
-            </ActionIcon>
-          ) : (
-            <ActionIcon variant="default">
-              <PiDotsThreeOutlineVerticalBold />
-            </ActionIcon>
-          )}
+          <ActionIcon variant="default">
+            <PiDotsThreeOutlineVerticalBold />
+          </ActionIcon>
         </Menu.Target>
 
         <Menu.Dropdown>
@@ -78,6 +33,14 @@ export default function TemplatesActions({
             object={template}
             trigger={<Menu.Item leftSection={<PiCode />}>Inspect</Menu.Item>}
           />
+          <Protected endpoint="templates" permission="update">
+            <Menu.Item
+              component={Link}
+              to={`/templates/${template.id}/edit`}
+              leftSection={<PiPencilSimpleBold />}>
+              Edit
+            </Menu.Item>
+          </Protected>
           <Protected endpoint="auditEntries" permission="read">
             <Menu.Item
               component={Link}

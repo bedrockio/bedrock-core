@@ -6,12 +6,11 @@ import { formatDateTime } from 'utils/date';
 
 import Menu from './Menu';
 
-export default function TemplateOverview() {
+export default function Overview() {
   const { template } = usePage();
   return (
     <>
       <Menu />
-
       <Stack mt="md" spacing="md">
         <Table mt="md" variant="vertical" layout="fixed" withTableBorder>
           <Table.Tbody>

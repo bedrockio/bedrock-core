@@ -1,25 +1,25 @@
 import { Alert, Button, Stack } from '@mantine/core';
 import { useState } from 'react';
 
+import { showSuccessNotification } from 'helpers/notifications';
 import { useSession } from 'stores/session';
 
 import ErrorMessage from 'components/ErrorMessage';
+import ModalWrapper, { useModalContext } from 'components/ModalWrapper';
 import SearchDropdown from 'components/SearchDropdown';
 import EmailField from 'components/form-fields/Email';
 import PhoneField from 'components/form-fields/Phone';
 
 import { request } from 'utils/api';
 
-export default function SendPreviewModal({
-  channel,
-  template,
-  onSent,
-  onClose,
-}) {
+function SendPreviewModal(props) {
+  const { channel, template } = props;
   const { user } = useSession();
+  const { close } = useModalContext();
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+
   const [fields, setFields] = useState(() => {
     if (channel === 'email') {
       return { email: user.email };
@@ -39,6 +39,7 @@ export default function SendPreviewModal({
 
   async function onSubmit(evt) {
     evt.preventDefault();
+    evt.stopPropagation();
     try {
       setError(null);
       setLoading(true);
@@ -51,8 +52,11 @@ export default function SendPreviewModal({
         },
       });
       setLoading(false);
-      onSent();
-      onClose();
+      showSuccessNotification({
+        message: 'Test message sent.',
+      });
+
+      close();
     } catch (error) {
       setError(error);
       setLoading(false);
@@ -117,3 +121,13 @@ export default function SendPreviewModal({
     </form>
   );
 }
+
+function Wrapper(props) {
+  const { trigger, ...rest } = props;
+  return (
+    <ModalWrapper title="Send Test" trigger={trigger}>
+      <SendPreviewModal {...rest} />
+    </ModalWrapper>
+  );
+}
+export default Wrapper;
