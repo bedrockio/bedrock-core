@@ -2,7 +2,7 @@
 # As docker layers are immutable this is the only way to reduce size.
 
 # Base Stage
-FROM node:22.20.0-alpine AS base
+FROM node:24.12.0-alpine AS base
 
 # Update & install required packages
 RUN apk add --update bash curl
