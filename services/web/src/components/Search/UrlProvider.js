@@ -3,6 +3,18 @@ import { camelCase, snakeCase } from 'lodash';
 
 import Provider from './Provider';
 
+/**
+ * A search provider that syncs search state with URL query parameters.
+ * Wraps the base Provider component and manages URL-based pagination,
+ * sorting, and filtering. Filter keys are converted between camelCase
+ * (internal) and snake_case (URL).
+ *
+ * @param {Object} props - Component props passed to the underlying Provider.
+ * @param {Object} [props.sort] - Default sort configuration.
+ * @param {string} [props.sort.field] - Default field to sort by.
+ * @param {string} [props.sort.order] - Default sort order ('asc' or 'desc').
+ * @returns {JSX.Element} Provider component with URL-synced search state.
+ */
 export default function UrlProvider(props) {
   const { sort: defaultSort } = props;
 

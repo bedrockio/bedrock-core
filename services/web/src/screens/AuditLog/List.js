@@ -103,7 +103,12 @@ export default function AuditLogList() {
         title={`Audit Entry: ${selectedItem?.activity}`}>
         <Overview auditEntry={selectedItem} />
       </Drawer>
-      <Search.UrlProvider onDataNeeded={onDataNeeded}>
+      <Search.UrlProvider
+        sort={{
+          field: 'createdAt',
+          order: 'desc',
+        }}
+        onDataNeeded={onDataNeeded}>
         {({ items }) => (
           <Stack>
             <PageHeader
