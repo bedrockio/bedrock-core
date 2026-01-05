@@ -16,7 +16,7 @@ jobs:
         working-directory: ./services/api
     strategy:
       matrix:
-        node-version: [22.x]
+        node-version: [24.x]
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
