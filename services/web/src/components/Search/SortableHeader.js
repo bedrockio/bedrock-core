@@ -9,7 +9,14 @@ export default function SortableHeader(props) {
   const { sort, setSort } = useSearch();
 
   function getSorted() {
-    const { field, order } = sort || {};
+    let { field, order } = sort || {};
+
+    // Note that _id is a default that serves as a proxy for createdAt.
+    // The reasoning for that is here:
+    // https://github.com/bedrockio/model?tab=readme-ov-file#default-sort-order
+    if (field === '_id') {
+      field = 'createdAt';
+    }
 
     if (name !== field) {
       return;

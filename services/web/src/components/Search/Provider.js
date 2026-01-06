@@ -1,4 +1,3 @@
-import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 
 import { useRequest } from 'hooks/request';
@@ -6,12 +5,17 @@ import { useRequest } from 'hooks/request';
 import { stripEmpty } from 'utils/object';
 
 import { SearchContext } from './Context';
+import { DEFAULT_LIMIT, DEFAULT_SORT } from './const';
 
 export default function SearchProvider(props) {
   const {
     children,
     skip = 0,
-    limit = 20,
+    limit = DEFAULT_LIMIT,
+    sort = {
+      ...DEFAULT_SORT,
+      ...props.sort,
+    },
     onDataNeeded,
     onParamsChange,
   } = props;
@@ -20,7 +24,7 @@ export default function SearchProvider(props) {
 
   const [params, setParams] = useState({
     ...props.filters,
-    sort: isEmpty(props.sort) ? undefined : props.sort,
+    sort,
     skip,
     limit,
   });

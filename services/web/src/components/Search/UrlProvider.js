@@ -2,7 +2,7 @@ import { useLocation, useNavigate, useQuery } from '@bedrockio/router';
 import { camelCase, snakeCase } from 'lodash';
 
 import Provider from './Provider';
-
+import { DEFAULT_SORT } from './const';
 /**
  * A search provider that syncs search state with URL query parameters.
  * Wraps the base Provider component and manages URL-based pagination,
@@ -16,7 +16,7 @@ import Provider from './Provider';
  * @returns {JSX.Element} Provider component with URL-synced search state.
  */
 export default function UrlProvider(props) {
-  const { sort: defaultSort } = props;
+  const { sort: defaultSort = DEFAULT_SORT } = props;
 
   const query = useQuery();
   const location = useLocation();

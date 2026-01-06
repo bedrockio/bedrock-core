@@ -32,7 +32,7 @@ export default function AuditLogList() {
       path: '/1/audit-entries/search',
       body: {
         ...params,
-        include: ['*', 'actor.firstName', 'actor.lastName'],
+        include: ['actor'],
       },
     });
 
@@ -103,12 +103,7 @@ export default function AuditLogList() {
         title={`Audit Entry: ${selectedItem?.activity}`}>
         <Overview auditEntry={selectedItem} />
       </Drawer>
-      <Search.UrlProvider
-        sort={{
-          field: 'createdAt',
-          order: 'desc',
-        }}
-        onDataNeeded={onDataNeeded}>
+      <Search.UrlProvider onDataNeeded={onDataNeeded}>
         {({ items }) => (
           <Stack>
             <PageHeader
