@@ -56,6 +56,7 @@ export default function TemplateForm(props) {
           <TextInput
             required
             label="Name"
+            name="name"
             value={fields.name || ''}
             onChange={setField}
           />
