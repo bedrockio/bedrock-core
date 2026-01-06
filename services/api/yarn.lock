@@ -572,10 +572,10 @@
     kleur "^4.1.5"
     stdout-stream "^2.0.0"
 
-"@bedrockio/model@^0.15.0":
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/@bedrockio/model/-/model-0.15.0.tgz#73c82642550d5c4e1c14971819d25b223eb7bdeb"
-  integrity sha512-h0cCLjRHLa8nTeRhhAXIpqN+00Opy3U46DbaKjyL19xuxJaFCL89uV9qqwM9lbxkx1mx2cY9Dx2qKpwVYEwhkQ==
+"@bedrockio/model@^0.19.3":
+  version "0.19.3"
+  resolved "https://registry.yarnpkg.com/@bedrockio/model/-/model-0.19.3.tgz#fe5c7cc714b3799f7bbf991d7f511b06816aa710"
+  integrity sha512-KGgfXHM/SH1Kfr2BAeo2GZ4zIQPKAC3kXger9wmpB9TlFc42lTN0xKZxyDd983alu2fh6MeRCKtNuG9FbvktmQ==
   dependencies:
     "@bedrockio/logger" "^1.1.1"
     lodash "^4.17.21"
@@ -595,13 +595,13 @@
     handlebars "^4.7.8"
     lodash.memoize "^4.1.2"
 
-"@bedrockio/yada@^1.8.1":
-  version "1.8.1"
-  resolved "https://registry.yarnpkg.com/@bedrockio/yada/-/yada-1.8.1.tgz#139dbee082eebbea1b07ef066c158921653164ee"
-  integrity sha512-IHFgsivtkK3J076Y9kRlsywEZFrQnw7EtViRIF28vAunvv0srHN4xYNbPWeZN0b4e0Qx3HtWb1v5IxhZUVbdFg==
+"@bedrockio/yada@^1.10.3":
+  version "1.10.3"
+  resolved "https://registry.yarnpkg.com/@bedrockio/yada/-/yada-1.10.3.tgz#9999c886befa960ab21ba652e2122d1524774598"
+  integrity sha512-aNy3nn7u0B7TxEhsbUo2MHPJmqpPOUgddkb9ck5SG1Agrzpg2p+uGHpI6HXtPdEbGrM4UKcGPfwiWtpcoGemxw==
   dependencies:
     lodash "^4.17.21"
-    validator "^13.9.0"
+    validator "^13.15.20"
 
 "@emnapi/core@^1.4.3":
   version "1.4.5"
@@ -8651,10 +8651,10 @@ validate-npm-package-name@^5.0.0:
   resolved "https://registry.yarnpkg.com/validate-npm-package-name/-/validate-npm-package-name-5.0.1.tgz#a316573e9b49f3ccd90dbb6eb52b3f06c6d604e8"
   integrity sha512-OljLrQ9SQdOUqTaQxqL5dEfZWrXExyyWsozYlAWFawPVNuD83igl7uJD2RTkNMbniIYgt8l81eCJGIdQF7avLQ==
 
-validator@^13.9.0:
-  version "13.12.0"
-  resolved "https://registry.yarnpkg.com/validator/-/validator-13.12.0.tgz#7d78e76ba85504da3fee4fd1922b385914d4b35f"
-  integrity sha512-c1Q0mCiPlgdTVVVIJIrBuxNicYE+t/7oKeI9MWLj3fh/uq2Pxh/3eeWbVZ4OcGW1TUf53At0njHw5SMdA3tmMg==
+validator@^13.15.20:
+  version "13.15.26"
+  resolved "https://registry.yarnpkg.com/validator/-/validator-13.15.26.tgz#36c3deeab30e97806a658728a155c66fcaa5b944"
+  integrity sha512-spH26xU080ydGggxRyR1Yhcbgx+j3y5jbNXk/8L+iRvdIEQ4uTRH2Sgf2dokud6Q4oAtsbNvJ1Ft+9xmm6IZcA==
 
 vary@^1.1.2:
   version "1.1.2"

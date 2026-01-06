@@ -153,6 +153,35 @@ describe('/1/shops', () => {
       expect(response).toHaveStatus(200);
       expect(response.body.data.images[0].id).toBe(image.id);
     });
+
+    it('should allow flattened fields', async () => {
+      const admin = await createAdmin();
+      const shop = await Shop.create({
+        name: 'shop',
+      });
+
+      const response = await request(
+        'PATCH',
+        `/1/shops/${shop.id}`,
+        {
+          'address.line1': '123 Beat St.',
+        },
+        {
+          user: admin,
+        },
+      );
+      expect(response).toHaveStatus(200);
+
+      await shop.reload();
+
+      expect(shop.toObject().address).toMatchObject({
+        line1: '123 Beat St.',
+        geometry: {
+          coordinates: [],
+          type: 'Point',
+        },
+      });
+    });
   });
 
   describe('DELETE /:shop', () => {
