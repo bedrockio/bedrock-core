@@ -42,6 +42,8 @@ The following command serves all HTML/JS/CSS and watches all changes to
 yarn start
 ```
 
+UI is running at [http://localhost:2200/](http://localhost:2200/)
+
 ## Testing
 
 We are using
@@ -56,8 +58,6 @@ Run tests with:
 ```
 yarn test
 ```
-
-UI is running at [http://localhost:2200/](http://localhost:2200/)
 
 ## Configuration
 
