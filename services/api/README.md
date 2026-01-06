@@ -58,6 +58,13 @@ yarn install
 
 ## Testing
 
+- Tests MUST prioritize complex logic, edge cases, and critical flows.
+- Tests MUST NOT over-cover trivial behavior.
+- Tests MUST validate observable behavior, not implementation details.
+- Tests MUST be colocated with the source file and use a .test.js suffix.
+
+Run tests with:
+
 ```
 yarn test
 ```

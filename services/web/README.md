@@ -42,6 +42,21 @@ The following command serves all HTML/JS/CSS and watches all changes to
 yarn start
 ```
 
+## Testing
+
+We are using
+
+- Tests MUST prioritize complex logic, edge cases, and critical flows.
+- Tests MUST NOT over-cover trivial behavior.
+- Tests MUST validate observable behavior, not implementation details.
+- Tests MUST be colocated with the source file and use a .test.js suffix.
+
+Run tests with:
+
+```
+yarn test
+```
+
 UI is running at [http://localhost:2200/](http://localhost:2200/)
 
 ## Configuration
