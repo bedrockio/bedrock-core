@@ -7,8 +7,7 @@ import {
   TextInput,
 } from '@mantine/core';
 
-import { showNotification } from '@mantine/notifications';
-import { PiCheckBold } from 'react-icons/pi';
+import { showSuccessNotification } from 'helpers/notifications';
 
 import ErrorMessage from 'components/ErrorMessage';
 import Protected from 'components/Protected';
@@ -30,17 +29,27 @@ export default function UserForm(props) {
   });
 
   const { run, loading, error } = useRequest(async (body) => {
-    await request({
-      method: 'PATCH',
-      path: `/1/users/${user.id}`,
-      body,
-    });
-    showNotification({
-      icon: <PiCheckBold />,
-      message: 'Updated user.',
-    });
-
-    props.onSuccess?.();
+    if (user) {
+      const { data } = await request({
+        method: 'PATCH',
+        path: `/1/users/${user.id}`,
+        body,
+      });
+      showSuccessNotification({
+        message: 'User Updated',
+      });
+      props.onSuccess?.(data);
+    } else {
+      const { data } = await request({
+        method: 'POST',
+        path: '/1/users',
+        body,
+      });
+      showSuccessNotification({
+        message: 'User Created',
+      });
+      props.onSuccess?.(data);
+    }
   });
 
   function onSubmit(evt) {

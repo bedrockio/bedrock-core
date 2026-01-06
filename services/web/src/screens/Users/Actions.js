@@ -1,4 +1,4 @@
-import { Link } from '@bedrockio/router';
+import { Link, useNavigate } from '@bedrockio/router';
 import { ActionIcon, Button, Group, Menu, Text } from '@mantine/core';
 
 import {
@@ -10,6 +10,7 @@ import {
   PiTrashBold,
 } from 'react-icons/pi';
 
+import { showSuccessNotification } from 'helpers/notifications';
 import { useSession } from 'stores/session';
 
 import Protected from 'components/Protected';
@@ -19,8 +20,11 @@ import LoginAsUser from 'modals/LoginAsUser';
 
 import { request } from 'utils/api';
 
-export default function UserActions({ displayMode = 'show', user, reload }) {
+export default function UserActions(props) {
+  const { displayMode = 'show', user, reload } = props;
   const { user: authUser } = useSession();
+
+  const navigate = useNavigate();
 
   const authenticatableRoles = authUser.roles.reduce(
     (result, { roleDefinition }) =>
@@ -119,7 +123,14 @@ export default function UserActions({ displayMode = 'show', user, reload }) {
                   method: 'DELETE',
                   path: `/1/users/${user.id}`,
                 });
-                reload();
+                if (displayMode === 'list') {
+                  reload();
+                } else {
+                  navigate('/users');
+                }
+                showSuccessNotification({
+                  message: 'User Deleted',
+                });
               }}
               content={
                 <Text>
