@@ -58,9 +58,11 @@ yarn install
 
 ## Testing
 
-- Tests MUST prioritize complex logic, edge cases, and critical flows.
-- Tests MUST NOT over-cover trivial behavior.
-- Tests MUST validate observable behavior, not implementation details.
+Tests are written using Jest. Tests MUST follow these guidelines:
+
+- Tests SHOULD focus on critical flows and complex logic. Edge cases should be covered reasonably, but avoid unnecessary
+  detail or trivial cases.
+- Tests MUST validate observable behavior rather than implementation details.
 - Tests MUST be colocated with the source file and use a .test.js suffix.
 
 Run tests with:
