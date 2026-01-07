@@ -1,5 +1,8 @@
 # Models
 
+Models are built using [@bedrockio/model](https://github.com/bedrockio/model). Before creating or modifying models,
+review the package documentation for schema syntax, validation, access control, soft delete, search, and other features.
+
 ## Data Modeling Best Practices
 
 Design collections and document shapes based on how the application reads and filters data, not only how it writes it.
