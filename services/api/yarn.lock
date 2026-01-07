@@ -572,10 +572,10 @@
     kleur "^4.1.5"
     stdout-stream "^2.0.0"
 
-"@bedrockio/model@^0.19.3":
-  version "0.19.3"
-  resolved "https://registry.yarnpkg.com/@bedrockio/model/-/model-0.19.3.tgz#fe5c7cc714b3799f7bbf991d7f511b06816aa710"
-  integrity sha512-KGgfXHM/SH1Kfr2BAeo2GZ4zIQPKAC3kXger9wmpB9TlFc42lTN0xKZxyDd983alu2fh6MeRCKtNuG9FbvktmQ==
+"@bedrockio/model@^0.20.0":
+  version "0.20.0"
+  resolved "https://registry.npmjs.org/@bedrockio/model/-/model-0.20.0.tgz#9f6018064b0fc6558f00cdf079024ed6ca70b764"
+  integrity sha512-FkpPK8bG+YcQRGSw7/dtz/AXyJuatJcijZ5iLO7nQf/5Evc4G9KzTeSdHMMRPBvpcGmN6YaUFEPJw1hpJFtceA==
   dependencies:
     "@bedrockio/logger" "^1.1.1"
     lodash "^4.17.21"
