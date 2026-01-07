@@ -71,10 +71,6 @@ Run tests with:
 yarn test
 ```
 
-## DB Modeling
-
-See `src/models/README.md` for more information on how to model data.
-
 ## Running in Development
 
 Code reload using nodemon:

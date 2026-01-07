@@ -77,16 +77,6 @@ the lowercase form of the object reference:
 
 ```
 
-## Indexing Guidelines
-
-When designing indexes, follow the Equality → Range → Sort (ESR) guideline:
-
-- Equality fields first — fields used in equality filters (=).
-- Range fields next — fields used in range queries (<, >, <=, >=).
-- Sort fields last — fields used for ordering results.
-
-Reference: https://www.mongodb.com/docs/manual/tutorial/equality-sort-range-guideline/#std-label-esr-indexing-guideline
-
 ### Index Management Workflow:
 
 Store all database indexes in a dedicated /indexes folder. Do not add indexes directly to the models in src/models. Each
