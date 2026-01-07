@@ -56,6 +56,19 @@ Install dependencies: (will install correct Node.js version)
 yarn install
 ```
 
+## Bedrock Packages
+
+This API uses several `@bedrockio` packages. Consult their documentation before making changes:
+
+| Package                                                        | Description                                                                 |
+| -------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| [@bedrockio/model](https://github.com/bedrockio/model)         | Mongoose schema extensions, validation, search, soft delete, access control |
+| [@bedrockio/config](https://github.com/bedrockio/config)       | Environment configuration from `.env` files                                 |
+| [@bedrockio/yada](https://github.com/bedrockio/yada)           | Request validation schemas                                                  |
+| [@bedrockio/fixtures](https://github.com/bedrockio/fixtures)   | Database seeding and fixtures                                               |
+| [@bedrockio/logger](https://github.com/bedrockio/logger)       | Structured logging with GCP integration                                     |
+| [@bedrockio/templates](https://github.com/bedrockio/templates) | Email and other template rendering                                          |
+
 ## Testing
 
 Tests are written using Jest. Tests MUST follow these guidelines:
@@ -73,7 +86,7 @@ yarn test
 
 ## Running in Development
 
-Code reload using nodemon:
+Start the development server with auto-reload:
 
 ```
 yarn start
@@ -83,8 +96,9 @@ This command will automatically populate MongoDB fixtures when and empty DB is f
 
 ## Configuration
 
-All configuration is done using environment variables. The default values in `.env` can be overwritten using environment
-variables.
+All configuration is done using environment variables managed by
+[@bedrockio/config](https://github.com/bedrockio/config). The default values in `.env` can be overwritten using
+environment variables.
 
 - `SERVER_HOST` - Host to bind to, defaults to `"0.0.0.0"`
 - `SERVER_PORT` - Port to bind to, defaults to `2300`
@@ -237,9 +251,9 @@ router
   );
 ```
 
-## E-Mail Templates
+## Email Templates
 
-E-mail templates can be found in `emails`. There is a layout.html that contains the styling and default layout, and a
+Email templates can be found in `emails`. There is a layout.html that contains the styling and default layout, and a
 template for each email, that gets injected into the layout. Multiple layouts are supported, just make sure you specify
 what layout to use when calling `template({ layout: "other-layout.html", template: "..." })`
 
