@@ -112,7 +112,7 @@ export default function Security() {
       <Meta title="Security" />
       <Menu />
       <div style={{ position: 'relative' }}>
-        <LoadingOverlay visible={loading} overlayBlur={2} />
+        <LoadingOverlay visible={loading} />
         <Grid gutter="xl">
           <Grid.Col span={{ base: 12, md: 6 }}>
             <Stack>

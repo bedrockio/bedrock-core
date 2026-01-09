@@ -96,7 +96,6 @@ export default function Sessions() {
       <Text size="sm">Select how you want to verify your identity</Text>
       <Select
         value={user.mfaMethod}
-        loading={mfaRequest.loading}
         disabled={mfaRequest.loading}
         onChange={onMfaMethodChange}
         data={[
