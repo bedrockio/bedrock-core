@@ -33,7 +33,7 @@
     "@koa/router": "^12.0.0",
     "@sentry/node": "^7.56.0",
     "@simplewebauthn/server": "^13.1.0",
-    "bcrypt": "^5.1.0",
+    "bcryptjs": "^3.0.3",
     "commander": "^12.1.0",
     "fast-csv": "^5.0.1",
     "firebase-admin": "^12.2.0",
