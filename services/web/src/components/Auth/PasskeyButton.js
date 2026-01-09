@@ -1,36 +1,34 @@
-import { withRouter } from '@bedrockio/router';
+import { useNavigate } from '@bedrockio/router';
 import { ActionIcon } from '@mantine/core';
 import { noop } from 'lodash';
-import PropTypes from 'prop-types';
 import { PiFingerprintBold } from 'react-icons/pi';
 
-import { withSession } from 'stores/session';
+import { useSession } from 'stores/session';
 
 import { login } from 'utils/auth/passkey';
 
-const PasskeyButton = ({
-  onAuthStart = noop,
-  onAuthStop = noop,
-  onAuthError = noop,
-  history,
-  session,
-}) => {
-  const handleClick = async () => {
+export default function PasskeyButton(props) {
+  const { onAuthStart = noop, onAuthStop = noop, onAuthError = noop } = props;
+
+  const { authenticate } = useSession();
+  const navigate = useNavigate();
+
+  async function onClick() {
     try {
       onAuthStart();
       const result = await login();
 
       if (result) {
-        const next = await session.authenticate(result.token);
+        const next = await authenticate(result.token);
         onAuthStop();
-        history.push(next);
+        navigate(next);
       } else {
         onAuthStop();
       }
     } catch (error) {
       onAuthError(error);
     }
-  };
+  }
 
   return (
     <ActionIcon
@@ -38,18 +36,8 @@ const PasskeyButton = ({
       radius="xl"
       size={42}
       title="Use passkey to sign in."
-      onClick={handleClick}>
+      onClick={onClick}>
       <PiFingerprintBold />
     </ActionIcon>
   );
-};
-
-PasskeyButton.propTypes = {
-  onAuthStart: PropTypes.func,
-  onAuthStop: PropTypes.func,
-  onAuthError: PropTypes.func,
-  history: PropTypes.object.isRequired,
-  session: PropTypes.object.isRequired,
-};
-
-export default withRouter(withSession(PasskeyButton));
+}

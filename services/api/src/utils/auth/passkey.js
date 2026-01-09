@@ -63,6 +63,7 @@ async function registerNewPasskey(user, options) {
     expectedChallenge: payload.challenge,
     expectedOrigin: origin,
     expectedRPID: rpID,
+    requireUserVerification: false,
   });
 
   const { credential, credentialDeviceType, credentialBackedUp } = registrationInfo;
@@ -166,6 +167,7 @@ async function authenticatePasskeyResponse(options) {
       transports: passkey.info.transports,
       publicKey: new Uint8Array(passkey.info.publicKey.buffer),
     },
+    requireUserVerification: false,
   });
 
   if (!verified) {

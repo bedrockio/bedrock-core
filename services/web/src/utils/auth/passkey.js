@@ -66,7 +66,6 @@ async function register(options) {
   try {
     return await startRegistration({
       optionsJSON: options,
-      useAutoRegister: true,
     });
   } catch (error) {
     const { code } = error;
