@@ -91,6 +91,25 @@ export default function RequestBuilder(props) {
     return str ? `?${str}` : '';
   }
 
+  // By JSONSchema spec type may be an array
+  function getBaseType(arg) {
+    if (!Array.isArray(arg)) {
+      return arg;
+    }
+    const types = arg;
+
+    if (types.length === 1) {
+      return types[0];
+    }
+    const nonNulls = types.filter((type) => {
+      return type !== 'null';
+    });
+
+    if (nonNulls.length === 1) {
+      return nonNulls[0];
+    }
+  }
+
   function onPlayClick() {
     performRequest();
   }
@@ -210,7 +229,8 @@ export default function RequestBuilder(props) {
         />
       );
     }
-    switch (type) {
+    const baseType = getBaseType(type);
+    switch (baseType) {
       case 'object':
         return renderObjectSchema(schema, path, options);
       case 'array':
@@ -223,7 +243,7 @@ export default function RequestBuilder(props) {
       case 'ObjectId':
         return renderStringSchema(schema, path, options);
       default:
-        throw new Error(`Cannot find type ${type}.`);
+        throw new Error(`Cannot find type ${baseType}.`);
     }
   }
 

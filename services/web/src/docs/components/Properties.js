@@ -68,10 +68,11 @@ export default function DocsProperties(props) {
     if (loading || !data) {
       return null;
     }
+    const params = data.properties || data;
 
     return (
       <div className={className}>
-        {renderParams(data.properties, path, {
+        {renderParams(params, path, {
           parent: data,
         })}
       </div>
@@ -158,7 +159,7 @@ export default function DocsProperties(props) {
           <code>{name}</code>
         </div>
         <div className={getElementClass('description')}>
-          <div className={getElementClass('types')}>{renderType(desc)}</div>
+          <div className={getElementClass('types')}>{renderTypes(desc)}</div>
 
           {required && (
             <div className={getElementClass('required')}>Required</div>
@@ -181,14 +182,14 @@ export default function DocsProperties(props) {
     );
   }
 
-  function renderType(desc, isArray = false) {
+  function renderTypes(desc, isArray = false) {
     const { type, $ref, oneOf, format, enum: allowed } = desc;
     if (oneOf) {
       if (isArrayVariant(oneOf)) {
         if (props.query) {
           return (
             <React.Fragment>
-              {renderType(oneOf[0])}
+              {renderTypes(oneOf[0])}
               <span
                 title="May pass multiple parameters in query."
                 className={getElementClass('note')}>
@@ -199,7 +200,7 @@ export default function DocsProperties(props) {
         } else {
           return (
             <React.Fragment>
-              {renderType(oneOf[0])}
+              {renderTypes(oneOf[0])}
               <Popover position="right" withArrow>
                 <Popover.Target>
                   <span className={getElementClass('note')}>*</span>
@@ -213,7 +214,7 @@ export default function DocsProperties(props) {
         visitedComponents.add(oneOf[2].$ref);
         return (
           <React.Fragment>
-            {renderType(oneOf[0])}
+            {renderTypes(oneOf[0])}
             <span
               title="May also be an array or range (see below)."
               className={getElementClass('note')}>
@@ -227,13 +228,13 @@ export default function DocsProperties(props) {
           return (
             <React.Fragment key={i}>
               {comma}
-              {renderType(entry)}
+              {renderTypes(entry)}
             </React.Fragment>
           );
         });
       }
     } else if (type === 'array') {
-      return renderType(desc.items, '[]');
+      return renderTypes(desc.items, true);
     } else if ($ref) {
       visitedComponents.add($ref);
       const { name } = expandRef($ref);
@@ -265,6 +266,10 @@ export default function DocsProperties(props) {
       visitedComponents.add(OBJECT_ID_REF);
       const { name } = expandRef(OBJECT_ID_REF);
       return <JumpLink to={name}>{isArray ? `[${name}]` : name}</JumpLink>;
+    } else if (Array.isArray(type)) {
+      // Note that the "type" entry in a JSON schema does NOT
+      // suggest an array but instead an alternating type.
+      return <span>{type.join(', ')}</span>;
     } else if (type) {
       return <span>{isArray ? `[${type}]` : type}</span>;
     } else {
