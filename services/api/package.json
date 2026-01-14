@@ -7,7 +7,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "start": "node --watch src/index.js",
+    "start": "node --env-file-if-exists=.env.local --watch src/index.js",
     "debug": "MONGO_DEBUG=true yarn start",
     "staging": "node --env-file .env.staging --watch src/index.js",
     "production": "node --env-file .env.production --watch src/index.js",
@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@bedrockio/chrono": "^0.8.0",
-    "@bedrockio/config": "^2.2.3",
+    "@bedrockio/config": "^3.0.0",
     "@bedrockio/fixtures": "^1.4.5",
     "@bedrockio/logger": "^1.1.3",
     "@bedrockio/model": "^0.20.0",
