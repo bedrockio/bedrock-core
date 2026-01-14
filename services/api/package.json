@@ -7,7 +7,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "start": "node --env-file-if-exists=.env.local --watch src/index.js",
+    "start": "scripts/start",
     "debug": "MONGO_DEBUG=true yarn start",
     "staging": "node --env-file .env.staging --watch src/index.js",
     "production": "node --env-file .env.production --watch src/index.js",
