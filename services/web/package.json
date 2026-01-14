@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "vite build",
-    "start": "vite",
+    "start": "node --env-file-if-exists=.env.local node_modules/.bin/vite",
     "static": "node ./serve/static",
     "lint": "eslint",
     "test": "vitest",
@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@bedrockio/chrono": "^0.9.1",
-    "@bedrockio/config": "^2.2.3",
+    "@bedrockio/config": "^3.0.0",
     "@bedrockio/logger": "^1.1.3",
     "@bedrockio/router": "^0.3.2",
     "@mantine/core": "^8.3.10",
