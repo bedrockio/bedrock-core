@@ -1,5 +1,3 @@
-import { useNavigate } from '@bedrockio/router';
-
 import {
   Button,
   Group,
@@ -9,7 +7,6 @@ import {
   Textarea,
 } from '@mantine/core';
 
-import { startCase } from 'lodash';
 import { useState } from 'react';
 
 import {
@@ -24,27 +21,18 @@ import { showSuccessNotification } from 'helpers/notifications';
 import { usePage } from 'stores/page';
 
 import ErrorMessage from 'components/ErrorMessage';
-import ModalWrapper from 'components/ModalWrapper';
 import Actions from 'components/form-fields/Actions';
 import { useFields } from 'hooks/forms';
-import { useLoader } from 'hooks/loader';
 import { useRequest } from 'hooks/request';
 
 import { request } from 'utils/api';
 
 import HelpModal from './HelpModal';
-import Form from '../Form';
 // import HelpModal from './Detail/HelpModal';
 // import SendPreviewButton from './Detail/SendPreviewButton';
 import Menu from './Menu';
 import ParamsModal from './ParamsModal';
 import SendPreviewButton from './SendPreviewButton';
-
-const channelOptions = [
-  { value: 'email', label: 'Email' },
-  { value: 'sms', label: 'SMS' },
-  { value: 'push', label: 'Push' },
-];
 
 const CHANNEL_ICONS = {
   email: PiEnvelopeBold,
@@ -59,8 +47,7 @@ const CHANNEL_LABELS = {
 };
 
 export default function Content() {
-  const { template, reload } = usePage();
-  const navigate = useNavigate();
+  const { template } = usePage();
 
   const [channel, setChannel] = useState(template.channels[0] || 'email');
 
