@@ -6,7 +6,6 @@ logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-env
 *.pyc
 *.code-workspace
 tmp
@@ -16,6 +15,6 @@ services/api/data
 globalConfig.json
 .eslintcache
 .vscode
-secrets
 .claude
-.env.local
+secrets
+.env*.local

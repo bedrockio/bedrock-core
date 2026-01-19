@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+if [ -n "$1" ]; then
+  # Note that there is an issue currently where --env-file is not watched so
+  # using --env-file-if-exists here even though it should probably error if
+  # no config exists. Chagne this if this issue lands.
+  #
+  # https://github.com/nodejs/node/issues/54001
+  node --env-file-if-exists=.env.$1 --env-file-if-exists=.env.local --watch src/index.js
+else
+  node --env-file-if-exists=.env.local --watch src/index.js
+fi

@@ -7,7 +7,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "start": "scripts/start",
+    "start": "scripts/start-dev",
     "debug": "MONGO_DEBUG=true yarn start",
     "start:production": "node src/index",
     "lint": "eslint",

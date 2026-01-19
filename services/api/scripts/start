@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-if [ -n "$1" ]; then
-  node --env-file=.env.$1 --watch src/index.js
-else
-  node --watch src/index.js
-fi
