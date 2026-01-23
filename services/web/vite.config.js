@@ -67,6 +67,10 @@ export default defineConfig({
       },
     },
   },
+
+  build: {
+    sourcemap: true,
+  },
 });
 
 const ENV = omitBy(rest, (_, key) => key.startsWith('SERVER'));
