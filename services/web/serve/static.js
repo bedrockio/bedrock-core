@@ -13,8 +13,6 @@ import templateMiddleware from './middleware/template.js';
 const SERVER_PORT = config.get('SERVER_PORT');
 const SERVER_HOST = config.get('SERVER_HOST');
 
-logger.setupGoogleCloud({});
-
 const app = new Koa();
 
 app.use(healthCheckMiddleware);

@@ -1,6 +1,11 @@
 // Serves assets with cache control headers and sane defaults.
 
+import config from '@bedrockio/config';
 import koaStatic from 'koa-static';
+
+const SERVER_SOURCE_MAP_TOKEN = config.get('SERVER_SOURCE_MAP_TOKEN');
+
+const DEBUG_COOKIE_NAME = 'debug';
 
 export default function assetsMiddleware(path) {
   const serve = koaStatic(path, {
@@ -12,12 +17,35 @@ export default function assetsMiddleware(path) {
     immutable: true,
   });
   return async (ctx, next) => {
+    if (isDisallowed(ctx)) {
+      ctx.status = 404;
+      return next();
+    }
     await serve(ctx, next);
-    if (ctx.status === 404 && !ctx.response.get('Cache-Control')) {
-      // If no asset is found then explicitly pass no-cache to cloudflare.
-      // This step is crucial to our rolling deploys as without it freshly
-      // rolled out bundles will continue to 404 breaking the entire app.
+    if (!canCache(ctx)) {
       ctx.response.set('Cache-Control', 'no-cache');
     }
   };
+}
+
+function canCache(ctx) {
+  if (ctx.status === 404 && !ctx.response.get('Cache-Control')) {
+    // If no asset is found then explicitly pass no-cache to cloudflare.
+    // This step is crucial to our rolling deploys as without it freshly
+    // rolled out bundles will continue to 404 breaking the entire app.
+    return false;
+  }
+  return !isSourceMap(ctx);
+}
+
+function isSourceMap(ctx) {
+  return ctx.url.endsWith('.map');
+}
+
+function isDisallowed(ctx) {
+  if (isSourceMap(ctx) && SERVER_SOURCE_MAP_TOKEN) {
+    return ctx.cookies.get(DEBUG_COOKIE_NAME) !== SERVER_SOURCE_MAP_TOKEN;
+  }
+
+  return false;
 }
