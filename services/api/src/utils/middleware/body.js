@@ -1,30 +1,14 @@
 const compose = require('koa-compose');
 const { koaBody } = require('koa-body');
 
-const unparsed = Symbol.for('unparsedBody');
-
 function composeMiddlewares() {
   return compose([
     koaBody({
       multipart: true,
       includeUnparsed: true,
     }),
-    includeRawBody(),
     parseMultipartBody(),
   ]);
-}
-
-// Allow koa body to parse the body first, then pull
-// out a reference to the raw body and add it to request
-// as it may be lost if other middleware (such as validate)
-// overwrite the body.
-function includeRawBody() {
-  return async (ctx, next) => {
-    if (ctx.request.body) {
-      ctx.request.rawBody = ctx.request.body[unparsed];
-    }
-    return next();
-  };
 }
 
 // Multipart bodies are assumed to be simple key/value pairs.
