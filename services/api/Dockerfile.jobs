@@ -1,4 +1,4 @@
-FROM node:24.12.0-alpine
+FROM node:24.13.0-alpine
 
 # Yarn will not install any package listed in devDependencies if the NODE_ENV
 # environment variable is set to production. Use this flag to instruct Yarn to
@@ -20,9 +20,7 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.21/community" \
       py3-pip \
       pipx
 
-# Use pipx to install your global Python tools
-RUN pipx ensurepath && \
-    pipx install yacron
+RUN pip install --break-system-packages yacron
 
 # Download Mike Farah’s yq
 ARG YQ_VERSION=v4.44.5
@@ -44,4 +42,4 @@ RUN --mount=type=cache,target=/root/.yarn YARN_CACHE_FOLDER=/root/.yarn yarn ins
 # Copy app source
 COPY . .
 
-CMD ["./scripts/entrypoints/jobs.sh", "jobs/default.yml"]
+CMD ["python3", "./scripts/entrypoints/jobs.py", "jobs/default.yml"]
