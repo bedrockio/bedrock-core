@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "vite build",
-    "start": "node --env-file-if-exists=.env.local node_modules/.bin/vite",
+    "start": "scripts/start",
     "static": "node ./serve/static",
     "lint": "eslint",
     "test": "vitest",

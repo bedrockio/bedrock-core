@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Load .env.local if it exists (for untracked secrets)
+# - env-file flags don't work in NODE_OPTIONS so invoke node directly
+# - $(yarn bin vite) required for docker compose as node_modules
+#    are removed in the Dockerfile
+exec node --env-file-if-exists=.env.local $(yarn bin vite)
