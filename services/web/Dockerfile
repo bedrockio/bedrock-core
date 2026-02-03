@@ -1,47 +1,42 @@
-# Note we are using a multi-stage build to keep the resulting image small.
-# As docker layers are immutable this is the only way to reduce size.
-
-# Base Stage
+# Base layer has core package deps
 FROM node:24.12.0-alpine AS base
 
-# Update & install required packages
 RUN apk add --update bash curl
 
-# Set work directory
 WORKDIR /service
 
-# Build Stage
+# Build layer runs root yarn install and builds the app.
+# Note that layers are immutable so node_modules will
+# persist in the image even if removed. This is why the
+# production stage copies only the files it needs.
 FROM base AS build
 
-# Yarn will not install any package listed in devDependencies if the NODE_ENV
-# environment variable is set to production. Use this flag to instruct Yarn to
-# ignore NODE_ENV and take its production-or-not status from this flag instead.
 ARG NODE_ENV=production
 
-# Note layers should be ordered from less to more likely to change.
-
-# Install dependencies
 COPY package.json yarn.lock ./
 COPY serve/package.json serve/yarn.lock ./serve/
 
 RUN yarn install --frozen-lockfile
 
-# Copy app source
 COPY . .
 
-# Build app
 RUN yarn build
 
-# Clean up to reduce image size
-RUN rm -rf src/ node_modules/
-
-# Final Stage
-FROM base
-
-WORKDIR /service
+# Dev target exposed here for docker compose
+FROM build AS dev
 
 EXPOSE 2200
 
-COPY --from=build /service .
+CMD ["yarn", "start"]
 
-CMD ["yarn", "run", "static"]
+# Production (default) build copies over files
+# without node_modules to keep the image small.
+FROM base
+
+EXPOSE 2200
+
+COPY --from=build /service/dist ./dist
+COPY --from=build /service/serve ./serve
+COPY .env .
+
+CMD ["node", "serve/static.js"]

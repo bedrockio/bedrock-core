@@ -23,17 +23,15 @@ services:
 
   web:
     build:
+      target: dev
       context: ./services/web
       dockerfile: Dockerfile
       args:
         NODE_ENV: development
-    command: yarn start
     volumes:
       - ./services/web/src:/service/src
     ports:
       - "2200:2200"
-    depends_on:
-      - api
 
   mongo:
     image: mongo:8.0.9
