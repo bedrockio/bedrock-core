@@ -4,7 +4,7 @@ const yd = require('@bedrockio/yada');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
-const { exportValidation, csvExport } = require('../utils/csv');
+const { csvExport } = require('../utils/csv');
 const { AuditEntry } = require('../models');
 const router = new Router();
 
@@ -15,7 +15,8 @@ router
     '/search',
     validateBody(
       AuditEntry.getSearchValidation({
-        ...exportValidation(),
+        allowExport: true,
+      }).append({
         user: yd.string(),
       }),
     ),

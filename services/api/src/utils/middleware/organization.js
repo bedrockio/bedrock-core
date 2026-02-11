@@ -16,7 +16,10 @@ async function organization(ctx, next) {
     const organization = await Organization.findOneAndUpdate(
       { name: DEFAULT_ORGANIZATION_NAME },
       { name: DEFAULT_ORGANIZATION_NAME },
-      { new: true, upsert: true }
+      {
+        upsert: true,
+        returnDocument: 'after',
+      },
     );
     ctx.state.organization = organization;
   }

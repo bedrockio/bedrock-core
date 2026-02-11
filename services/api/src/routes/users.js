@@ -5,7 +5,7 @@ const { validateBody } = require('../utils/middleware/validate');
 const { authenticate } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
 
-const { exportValidation, csvExport } = require('../utils/csv');
+const { csvExport } = require('../utils/csv');
 const { createImpersonateAuthToken } = require('../utils/tokens');
 const { expandRoles, validateUserRoles } = require('./../utils/permissions');
 const { User } = require('../models');
@@ -84,7 +84,7 @@ router
     '/search',
     validateBody(
       User.getSearchValidation({
-        ...exportValidation(),
+        allowExport: true,
       }),
     ),
     async (ctx) => {

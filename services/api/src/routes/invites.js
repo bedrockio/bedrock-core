@@ -140,11 +140,13 @@ router
             deleted: false,
             email,
             role,
-            $unset: { deletedAt: 1 },
+            $unset: {
+              deletedAt: 1,
+            },
           },
           {
-            new: true,
             upsert: true,
+            returnDocument: 'after',
           },
         );
         await sendInvite(authUser, invite);

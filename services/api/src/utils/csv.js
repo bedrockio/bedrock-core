@@ -1,7 +1,6 @@
 const { PassThrough, Readable } = require('stream');
 
 const csv = require('fast-csv');
-const yd = require('@bedrockio/yada');
 const config = require('@bedrockio/config');
 const mongoose = require('mongoose');
 const { get, once, startCase } = require('lodash');
@@ -47,14 +46,6 @@ function csvExport(ctx, data, options) {
   ctx.set('Content-Type', 'text/csv');
 
   csvStream.end();
-}
-
-function exportValidation(options = {}) {
-  const { filename = 'export.csv' } = options;
-  return {
-    filename: yd.string().default(filename).description('Applies only when `format` is `"csv"`.'),
-    format: yd.string().allow('json', 'csv').default('json'),
-  };
 }
 
 function exportRow(item, options) {
@@ -330,5 +321,4 @@ function parseCsv(str) {
 module.exports = {
   csvExport,
   parseCsv,
-  exportValidation,
 };

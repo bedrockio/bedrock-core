@@ -21,7 +21,6 @@ describe('validateToken', () => {
     let ctx;
     ctx = context({ headers: { authorization: 'Bearer badToken' } });
     await expect(middleware(ctx)).rejects.toHaveProperty('message', 'bad jwt token');
-    ctx = context({});
   });
 
   it('should confirm that token has a valid kid', async () => {

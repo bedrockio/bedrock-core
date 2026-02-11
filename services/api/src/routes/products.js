@@ -2,7 +2,7 @@ const Router = require('@koa/router');
 const { fetchByParam } = require('../utils/middleware/params');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate } = require('../utils/middleware/authenticate');
-const { exportValidation, csvExport } = require('../utils/csv');
+const { csvExport } = require('../utils/csv');
 const { Product } = require('../models');
 
 const router = new Router();
@@ -27,8 +27,8 @@ router
     '/search',
     validateBody(
       Product.getSearchValidation({
-        ...exportValidation(),
-      })
+        allowExport: true,
+      }),
     ),
     async (ctx) => {
       const { format, filename, ...params } = ctx.request.body;
@@ -42,7 +42,7 @@ router
         data,
         meta,
       };
-    }
+    },
   )
   .patch('/:id', validateBody(Product.getUpdateValidation()), async (ctx) => {
     const { product } = ctx.state;

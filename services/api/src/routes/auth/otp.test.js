@@ -147,10 +147,11 @@ describe('/1/auth/otp', () => {
 
       let response;
 
-      let user = await createUser({
+      const user = await createUser({
         email: 'tester@foo.com',
         isTester: true,
       });
+
       response = await request('POST', '/1/auth/otp/send', {
         email: 'tester@foo.com',
       });
@@ -164,7 +165,6 @@ describe('/1/auth/otp', () => {
 
       expect(response).toHaveStatus(200);
 
-      user = await User.findById(user.id);
       assertMailCount(0);
 
       unmockTime();

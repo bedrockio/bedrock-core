@@ -157,6 +157,7 @@ describe('mfa', () => {
         email: user.email,
         password: '123456789abcd',
       });
+      expect(response).toHaveStatus(200);
 
       user = await User.findById(user.id);
 

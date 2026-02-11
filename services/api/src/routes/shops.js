@@ -3,7 +3,7 @@ const { fetchByParam } = require('../utils/middleware/params');
 const { validateBody, validateDelete } = require('../utils/middleware/validate');
 const { authenticate } = require('../utils/middleware/authenticate');
 const { Shop, AuditEntry } = require('../models');
-const { exportValidation, csvExport } = require('../utils/csv');
+const { csvExport } = require('../utils/csv');
 
 const router = new Router();
 
@@ -36,7 +36,7 @@ router
     '/search',
     validateBody(
       Shop.getSearchValidation({
-        ...exportValidation(),
+        allowExport: true,
       }),
     ),
     async (ctx) => {

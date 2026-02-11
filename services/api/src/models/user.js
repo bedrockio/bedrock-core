@@ -20,12 +20,11 @@ schema.method('getScopes', function () {
   });
 });
 
-schema.pre('save', async function preSave(next) {
+schema.pre('save', async function preSave() {
   if (this._password) {
     await setPassword(this, this._password);
     delete this._password;
   }
-  return next();
 });
 
 module.exports = mongoose.models.User || mongoose.model('User', schema);
