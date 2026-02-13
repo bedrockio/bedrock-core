@@ -136,5 +136,14 @@ describe('/1/uploads', () => {
         contentType: 'image/png',
       });
     });
+
+    it('should store content-disposition on file', async () => {
+      const user = await createUser();
+      const response = await request('POST', '/1/uploads', {}, { user, file });
+      expect(response).toHaveStatus(200);
+      assertFileStored({
+        contentDisposition: 'inline; filename="test.png"',
+      });
+    });
   });
 });

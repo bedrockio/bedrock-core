@@ -20,12 +20,19 @@ class Bucket {
 class File {
   constructor(filepath, options = {}) {
     this.contentType = options.contentType;
+    this.contentDisposition = options.contentDisposition;
     this.destination = options.destination;
     this.filepath = filepath;
     this.isPublic = false;
   }
 
-  async save() {
+  async save(buffer, options = {}) {
+    if (options.contentType) {
+      this.contentType = options.contentType;
+    }
+    if (options.contentDisposition) {
+      this.contentDisposition = options.contentDisposition;
+    }
     storedFiles.push(this);
   }
 

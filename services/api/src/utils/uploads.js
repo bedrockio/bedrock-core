@@ -88,6 +88,7 @@ async function uploadGcs(file, upload) {
 
   const meta = {
     contentType: upload.mimeType,
+    contentDisposition: `inline; filename="${upload.filename}"`,
   };
 
   if (buffer) {
