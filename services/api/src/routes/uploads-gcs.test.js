@@ -79,6 +79,14 @@ describe('/1/uploads', () => {
       expect(response.headers.location).toBe('PublicUrl');
     });
 
+    it('should always serve without forcing a download', async () => {
+      const upload = await createUpload({
+        storageType: 'gcs',
+      });
+      const response = await request('GET', `/1/uploads/${upload.id}/raw`, {}, {});
+      expect(response.headers['content-disposition']).toBe('inline; filename="test.png"');
+    });
+
     it('should serve a private GCS file', async () => {
       mockReadStream();
       const user = await createUser();

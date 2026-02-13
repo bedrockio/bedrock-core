@@ -44,7 +44,7 @@ router
           return upload.owner?.equals(ctx.state.authUser.id);
         }
       },
-    })
+    }),
   )
   .use(authenticate({ optional: true }))
   .get('/:id', async (ctx) => {
@@ -74,7 +74,7 @@ router
       const url = await getUploadUrl(upload);
 
       ctx.set('Content-Type', upload.mimeType);
-      ctx.set('Content-Disposition', `attachment; filename="${upload.filename}"`);
+      ctx.set('Content-Disposition', `inline; filename="${upload.filename}"`);
 
       if (upload.storageType === 'gcs') {
         if (upload.private) {
