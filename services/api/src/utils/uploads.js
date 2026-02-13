@@ -177,10 +177,46 @@ function createUrlStream(url) {
   }
 }
 
+async function createUploadFromUrl(url, options) {
+  const response = await fetch(url);
+
+  const file = {
+    ...parseResponseHeaders(response),
+    buffer: Buffer.from(await response.arrayBuffer()),
+  };
+
+  return await createUpload(file, options);
+}
+
+function parseResponseHeaders(response) {
+  const { headers } = response;
+
+  let mimetype = headers.get('content-type') || 'application/octet-stream';
+
+  // Strip out charset if it exists
+  mimetype = mimetype.split(';')[0].trim();
+
+  const disposition = headers.get('content-disposition');
+
+  let filename;
+
+  if (disposition) {
+    filename = disposition.match(/filename="(.+)"/)?.[1];
+  }
+
+  filename ||= `file.${mime.extension(mimetype)}`;
+
+  return {
+    mimetype,
+    filename,
+  };
+}
+
 module.exports = {
   createUploads,
   createUpload,
   getUploadUrl,
   createUrlStream,
+  createUploadFromUrl,
   getUploadFilename,
 };
