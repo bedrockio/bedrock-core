@@ -20,4 +20,15 @@ describe('/1/meta', () => {
       });
     });
   });
+
+  it('should throw proper JSON error for 404', async () => {
+    const user = await createUser();
+    const response = await request('GET', '/1/meta/foo', {}, { user });
+    expect(response).toHaveStatus(404);
+    expect(response.body.error).toEqual({
+      type: 'other',
+      status: 404,
+      message: 'Not Found',
+    });
+  });
 });

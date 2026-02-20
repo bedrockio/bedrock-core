@@ -5,6 +5,9 @@ const ENV_NAME = config.get('ENV_NAME');
 async function errorHandler(ctx, next) {
   try {
     await next();
+    if (ctx.status === 404 && !ctx.body) {
+      ctx.throw(404);
+    }
   } catch (err) {
     let { status = 500, type = 'other', message, details, expose } = err;
 
