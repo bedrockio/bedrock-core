@@ -233,6 +233,7 @@ function SessionProvider({ children, location }) {
           setToken(null);
           updateState({
             user: null,
+            ready: true,
             loading: false,
           });
         }
