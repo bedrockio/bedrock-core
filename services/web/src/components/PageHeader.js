@@ -39,12 +39,12 @@ const PageHeader = ({
           </Breadcrumbs>
         </Group>
 
-        <Title mt={0} order={2}>
-          <Group justify="space-between">
+        <Group justify="space-between" wrap="nowrap">
+          <Title mt={0} order={2}>
             {title}
-            <Group>{rightSection}</Group>
-          </Group>
-        </Title>
+          </Title>
+          <Group flex="none">{rightSection}</Group>
+        </Group>
 
         {tabs.length > 0 && (
           <Tabs
