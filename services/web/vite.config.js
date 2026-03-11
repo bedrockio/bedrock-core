@@ -4,7 +4,6 @@ import path from 'path';
 
 import config from '@bedrockio/config';
 import mdx from '@mdx-js/rollup';
-// eslint-disable-next-line
 import react from '@vitejs/plugin-react';
 import { omitBy, template } from 'lodash-es';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';

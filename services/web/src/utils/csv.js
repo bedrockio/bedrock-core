@@ -28,7 +28,7 @@ export function parseType(type, rawValue) {
     if (rawValue.match(/\./)) {
       if (rawValue.match(/,/)) {
         throw new Error(
-          'Could not autodetect european or american number format for kwh'
+          'Could not autodetect european or american number format for kwh',
         );
       }
       return parseFloat(rawValue, 10);
@@ -58,7 +58,7 @@ function csvTextToArray(strData, strDelimiter) {
   strDelimiter = strDelimiter || ',';
 
   // Create a regular expression to parse the CSV values.
-  var objPattern = new RegExp(
+  const objPattern = new RegExp(
     // Delimiters.
     '(\\' +
       strDelimiter +
@@ -69,22 +69,22 @@ function csvTextToArray(strData, strDelimiter) {
       '([^"\\' +
       strDelimiter +
       '\\r\\n]*))',
-    'gi'
+    'gi',
   );
 
   // Create an array to hold our data. Give the array
   // a default empty first row.
-  var arrData = [[]];
+  const arrData = [[]];
 
   // Create an array to hold our individual pattern
   // matching groups.
-  var arrMatches = null;
+  let arrMatches;
 
   // Keep looping over the regular expression matches
   // until we can no longer find a match.
   while ((arrMatches = objPattern.exec(strData))) {
     // Get the delimiter that was found.
-    var strMatchedDelimiter = arrMatches[1];
+    const strMatchedDelimiter = arrMatches[1];
 
     // Check to see if the given delimiter has a length
     // (is not the start of string) and if it matches
@@ -96,7 +96,7 @@ function csvTextToArray(strData, strDelimiter) {
       arrData.push([]);
     }
 
-    var strMatchedValue;
+    let strMatchedValue;
 
     // Now that we have our delimiter out of the way,
     // let's check to see which kind of value we
@@ -166,7 +166,7 @@ export function matchColumns(columnMapping, fields) {
         examples = examples.concat(configuration.exactMatches);
       }
       throw new Error(
-        `Could not find required column ${key} (${examples.join(', ')})`
+        `Could not find required column ${key} (${examples.join(', ')})`,
       );
     }
     mapping[key] = result;
@@ -195,7 +195,7 @@ export function createItems(lines, mapping) {
 
 export function processText(columnMapping, text) {
   const sheet = csvTextToArray(text).filter(
-    (row) => !(row.length === 1 && row[0] === '')
+    (row) => !(row.length === 1 && row[0] === ''),
   );
   const mapping = matchColumns(columnMapping, sheet[0]);
   const items = createItems(sheet.slice(1), mapping);
@@ -227,15 +227,15 @@ export function processFile(columnMapping, file) {
 }
 
 function getDeepKeys(obj) {
-  var keys = [];
-  for (var key in obj) {
+  let keys = [];
+  for (const key in obj) {
     keys.push(key);
     if (typeof obj[key] === 'object') {
-      var subkeys = getDeepKeys(obj[key]);
+      const subkeys = getDeepKeys(obj[key]);
       keys = keys.concat(
         subkeys.map(function (subkey) {
           return key + '.' + subkey;
-        })
+        }),
       );
     }
   }

@@ -23,7 +23,9 @@ export async function signInWithApple() {
     if (object.error === 'popup_closed_by_user') {
       return;
     } else {
-      throw new Error(object.error);
+      throw new Error(object.error, {
+        cause: object,
+      });
     }
   }
 

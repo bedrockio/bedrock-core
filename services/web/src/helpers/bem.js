@@ -3,7 +3,7 @@
 
 export function useClass(block, ...args) {
   let extra;
-  let modifiers = [];
+  let modifiers;
   if (args[0] && typeof args[0] === 'object') {
     extra = args[0].className;
     modifiers = args.slice(1);

@@ -22,7 +22,7 @@ onDataNeeded = async () => {
     return (
       // render table or list here.
     )
-  }
+  }}
 </SearchProvider>
 ```
 

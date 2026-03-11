@@ -70,7 +70,9 @@ async function register(options) {
   } catch (error) {
     const { code } = error;
     if (code === 'ERROR_AUTHENTICATOR_PREVIOUSLY_REGISTERED') {
-      throw new Error('This passkey has already been registered.');
+      throw new Error('This passkey has already been registered.', {
+        cause: error,
+      });
     } else if (code === 'ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY') {
       return;
     }

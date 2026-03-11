@@ -65,7 +65,7 @@ export default function ScrollWaypoint(props) {
   function destroyObserver(observer) {
     if (SUPPORTED && observer) {
       observer.disconnect();
-      observer = null;
+      setObserver(null);
     }
   }
 

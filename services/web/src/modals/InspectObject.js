@@ -8,7 +8,6 @@ import {
 } from '@mantine/core';
 
 import JsonView from '@uiw/react-json-view';
-// eslint-disable-next-line
 import { darkTheme } from '@uiw/react-json-view/dark';
 import { useState } from 'react';
 import { PiCheck, PiCopy } from 'react-icons/pi';
