@@ -12,3 +12,25 @@ spec:
     - port: 80
       targetPort: 2300
       protocol: TCP
+---
+# A PodDisruptionBudget (PDB) sets a floor on how many pods must remain
+# available during planned disruptions (node drains, auto-repair, upgrades).
+# With minAvailable: 1, evictions are serialized — there's always at least
+# 1 healthy pod serving traffic.
+#
+# Note:
+# - replicas: 2
+# - podAntiAffinity
+# - this PDB
+
+# These are only meaningful with 2+ nodes, otherwise pods land on the same node.
+# ~$70/mo extra on n2-standard-2 - worth it for prod, overkill for dev.
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: api-pdb
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: api
