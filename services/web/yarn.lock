@@ -183,10 +183,10 @@
   resolved "https://registry.npmjs.org/@bedrockio/config/-/config-3.0.0.tgz#e1986e205372886812f8cc84954461a9a45f39cd"
   integrity sha512-o7QJTVdL1yKt9NWVdEcSMnn8hQCPLE83u4Lj0+sW3DCHEkappTCKfospzqic/uI1kq1Uq6WKoRiAh6QQ8oF1GA==
 
-"@bedrockio/eslint-plugin@^1.5.1":
-  version "1.5.1"
-  resolved "https://registry.npmjs.org/@bedrockio/eslint-plugin/-/eslint-plugin-1.5.1.tgz#746037544dfc3fed475ef88e9cb16e8e30c8d79a"
-  integrity sha512-bhb9OwzEb0RMK/0ble4N6o9WkG155DFu0/LpGVvsB2wjfpWnPkSnjOsdXXo+KWW5ugk39Z5ivcyT9RCI/qJevQ==
+"@bedrockio/eslint-plugin@^1.5.3":
+  version "1.5.3"
+  resolved "https://registry.npmjs.org/@bedrockio/eslint-plugin/-/eslint-plugin-1.5.3.tgz#84457c658769abab0411d06c03feb103a40ba8cc"
+  integrity sha512-zYSFSrg15+HfzejkLnQAT94JDbzZiqmh8GJUoOHbtqZZqUOwnMOAYJd9oI1eyIujw43OkBGMbb1R/SYobYTIKQ==
   dependencies:
     "@eslint/js" "^10.0.1"
     eslint-import-resolver-alias "^1.1.2"
