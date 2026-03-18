@@ -1,6 +1,5 @@
-const Koa = require('koa');
-
-const httpMocks = require('node-mocks-http');
+import Koa from 'koa';
+import httpMocks from 'node-mocks-http';
 
 const app = new Koa();
 
