@@ -18,25 +18,28 @@ export default function TemplateForm(props) {
   const navigate = useNavigate();
 
   const { run, loading, error } = useRequest(async (body) => {
+    let result;
     if (template) {
-      await request({
+      const { data } = await request({
         method: 'PATCH',
         path: `/1/templates/${template.id}`,
         body,
       });
+      result = data;
     } else {
-      await request({
+      const { data } = await request({
         method: 'POST',
         path: '/1/templates',
         body,
       });
+      result = data;
     }
 
     showSuccessNotification({
-      message: 'Added routine',
+      message: 'Added template',
     });
 
-    onSuccess?.();
+    onSuccess?.(result);
   });
 
   function onSubmit(evt) {
