@@ -4,7 +4,7 @@ import { NavLink as MantineNavLink } from '@mantine/core';
 import { ExternalLink } from './Link';
 
 export default function MenuItem(props) {
-  const { url, label, icon: Icon, items = [], exact } = props;
+  const { url, label, icon: Icon, items = [], exact, level = 1 } = props;
 
   const isExternal = url?.startsWith('http');
 
@@ -15,7 +15,7 @@ export default function MenuItem(props) {
       return {
         opened: isOpened(),
         children: items.map((item) => {
-          return <MenuItem key={item.url} {...item} />;
+          return <MenuItem key={item.url} {...item} level={level + 1} />;
         }),
       };
     }
@@ -29,8 +29,8 @@ export default function MenuItem(props) {
       };
     } else if (url) {
       return {
-        exact,
         component: NavLink,
+        exact: true,
         to: url,
       };
     }
@@ -45,6 +45,7 @@ export default function MenuItem(props) {
   return (
     <MantineNavLink
       label={label}
+      data-level={level}
       leftSection={Icon && <Icon />}
       {...getNavProps()}
       {...getNestedProps()}

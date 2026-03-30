@@ -18,6 +18,18 @@
       var(--mantine-primary-color-4)
     );
   }
+
+  &[data-level='2'] {
+    padding-inline-start: calc(var(--mantine-spacing-lg) + 1em);
+  }
+
+  &[data-level='3'] {
+    padding-inline-start: calc(var(--mantine-spacing-lg) + 2em);
+  }
+}
+
+.mantine-NavLink-children {
+  padding-inline-start: 0;
 }
 
 .mantine-AppShell-main {
@@ -28,10 +40,6 @@
 .mantine-ActionIcon-root {
   padding: 6px;
   --ai-size-md: 32px;
-}
-
-.mantine-NavLink-children {
-  padding-inline-start: var(--nl-offset, var(--mantine-spacing-sm));
 }
 
 .mantine-Typography-root {
