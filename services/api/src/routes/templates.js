@@ -61,13 +61,18 @@ router
   .get('/:id/preview', async (ctx) => {
     const { template } = ctx.state;
     const params = await getPreviewParams();
-    const result = await getMailParams({
-      template: template.name,
-      ...params,
-    });
-    ctx.body = {
-      data: result,
-    };
+
+    try {
+      const result = await getMailParams({
+        template: template.name,
+        ...params,
+      });
+      ctx.body = {
+        data: result,
+      };
+    } catch (error) {
+      ctx.throw(400, error);
+    }
   })
   .post(
     '/:id/send',
