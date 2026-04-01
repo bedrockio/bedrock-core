@@ -1,4 +1,4 @@
-import { Paper } from '@mantine/core';
+import { Alert, Paper } from '@mantine/core';
 
 import ModalWrapper from 'components/ModalWrapper';
 import { useLoader } from 'hooks/loader';
@@ -20,6 +20,10 @@ function ParamsModal(props) {
 
   return (
     <Paper p="md">
+      <Alert variant="light" color="yellow">
+        Note that this is dummy data for template creation and not what will
+        actually be sent.
+      </Alert>
       <pre style={{ fontSize: '12px', overflow: 'auto' }}>
         {JSON.stringify(params, null, 2)}
       </pre>
