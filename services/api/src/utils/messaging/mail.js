@@ -28,13 +28,21 @@ async function sendMail(options) {
 }
 
 async function getMailParams(options) {
-  let { subject, layout = DEFAULT_LAYOUT, template } = options;
+  let { subject, layout = DEFAULT_LAYOUT, template, validate } = options;
 
   // First interpolate variables into the template.
   const { body, meta } = await renderTemplate({
     ...options,
     channel: 'email',
   });
+
+  if (validate) {
+    for (let key of Object.keys(meta)) {
+      if (key.match(/^[A-Z]/)) {
+        throw new Error(`Meta field "${key}" should be lower case.`);
+      }
+    }
+  }
 
   subject ||= meta.subject;
 

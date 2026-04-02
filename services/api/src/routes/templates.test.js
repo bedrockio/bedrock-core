@@ -75,7 +75,6 @@ describe('/1/templates', () => {
       await createUser();
 
       const template = await createTemplate({
-        name: 'my-template',
         email: `
 ---
 subject: Hello
@@ -87,6 +86,23 @@ subject: Hello
       expect(response).toHaveStatus(200);
       expect(response.body.data.subject).toBe('Hello');
       expect(response.body.data.body).toBe('Test User');
+    });
+
+    it('should error on caps Subject', async () => {
+      const user = await createAdmin();
+      await createUser();
+
+      const template = await createTemplate({
+        email: `
+---
+Subject: Hello
+---
+{{user.name}}
+        `.trim(),
+      });
+      const response = await request('GET', `/1/templates/${template.id}/preview`, {}, { user });
+      expect(response).toHaveStatus(400);
+      expect(response.body.error.message).toBe('Meta field "Subject" should be lower case.');
     });
   });
 

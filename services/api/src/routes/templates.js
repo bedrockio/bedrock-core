@@ -64,6 +64,7 @@ router
 
     try {
       const result = await getMailParams({
+        validate: true,
         template: template.name,
         ...params,
       });
