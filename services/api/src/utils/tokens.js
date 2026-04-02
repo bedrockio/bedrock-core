@@ -115,6 +115,7 @@ function generateTokenId() {
 
 module.exports = {
   verifyToken,
+  generateTokenId,
   createAuthToken,
   removeAuthToken,
   getAuthPayload,

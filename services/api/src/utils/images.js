@@ -19,7 +19,7 @@ function getImagePath(arg) {
     return null;
   }
   const id = String(arg._id || arg);
-  return `1/uploads/${id}/raw`;
+  return `/1/uploads/${id}/raw`;
 }
 
 function getImageUrl(arg, options) {
@@ -43,18 +43,20 @@ function getTransformedImage(arg, options) {
     return;
   }
 
-  const params = Object.entries(resolveParams(options))
+  let params = Object.entries(resolveParams(options))
     .filter((e) => {
       return e[1];
     })
     .map((e) => e.join('='))
     .join(',');
 
-  const path = [params, imagePath]
-    .filter((p) => {
-      return p;
-    })
-    .join('/');
+  if (!params) {
+    // Cloudflare image URLs REQUIRE the params segment
+    // so if no params are passed it must use format=auto.
+    params = 'format=auto';
+  }
+
+  const path = params + imagePath;
 
   return new URL(`/cdn-cgi/image/${path}`, API_URL).toString();
 }

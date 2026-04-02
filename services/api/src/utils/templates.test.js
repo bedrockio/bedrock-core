@@ -90,7 +90,7 @@ describe('renderTemplate', () => {
         },
       });
 
-      expect(result.body).toBe(`${API_URL}/cdn-cgi/image/1/uploads/${upload.id}/raw`);
+      expect(result.body).toBe(`${API_URL}/cdn-cgi/image/format=auto/1/uploads/${upload.id}/raw`);
     });
 
     it('should render a basic HTML image', async () => {
@@ -103,7 +103,7 @@ describe('renderTemplate', () => {
         },
       });
 
-      const url = `${API_URL}/cdn-cgi/image/1/uploads/${upload.id}/raw`;
+      const url = `${API_URL}/cdn-cgi/image/format=auto/1/uploads/${upload.id}/raw`;
       expect(result.body).toBe(`<img src="${url}" alt="test.png" />`);
     });
 
