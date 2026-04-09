@@ -8,7 +8,7 @@ const APP_URL = config.get('APP_URL');
 
 const renderer = new TemplateRenderer({
   baseUrl: APP_URL,
-  helpers: getDefaultHelpers(),
+  helpers: getHelpers(),
   params: {
     // TODO: change to getPublic
     ...config.getAll(),
@@ -73,7 +73,7 @@ function isTemplateName(template) {
 
 // Helpers
 
-function getDefaultHelpers() {
+function getHelpers() {
   return {
     // Returns an image URL.
     imageUrl(image) {
