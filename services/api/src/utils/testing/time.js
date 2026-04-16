@@ -29,6 +29,10 @@ function advanceTime(ms) {
   clock.setSystemTime(Date.now() + ms);
 }
 
+afterEach(() => {
+  unmockTime();
+});
+
 module.exports = {
   setTime,
   mockTime,

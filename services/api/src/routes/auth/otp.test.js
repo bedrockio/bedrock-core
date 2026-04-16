@@ -3,7 +3,7 @@ const { assertMailSent, assertMailCount } = require('postmark');
 const { createOtp } = require('../../utils/auth/otp');
 const { request, createUser } = require('../../utils/testing');
 const { assertAuthToken } = require('../../utils/testing/tokens');
-const { mockTime, unmockTime, advanceTime } = require('../../utils/testing/time');
+const { mockTime, advanceTime } = require('../../utils/testing/time');
 const { User } = require('../../models');
 
 describe('/1/auth/otp', () => {
@@ -166,8 +166,6 @@ describe('/1/auth/otp', () => {
       expect(response).toHaveStatus(200);
 
       assertMailCount(0);
-
-      unmockTime();
     });
   });
 
@@ -212,7 +210,6 @@ describe('/1/auth/otp', () => {
           code,
         });
         expect(response).toHaveStatus(401);
-        unmockTime();
       });
 
       it('should throw an error if user not found', async () => {
@@ -313,8 +310,6 @@ describe('/1/auth/otp', () => {
           code,
         });
         expect(response).toHaveStatus(200);
-
-        unmockTime();
       });
     });
 
@@ -347,7 +342,6 @@ describe('/1/auth/otp', () => {
         });
         expect(response).toHaveStatus(200);
         assertAuthToken(user, response.body.data.token);
-        unmockTime();
       });
 
       it('should not issue token if part of mfa challenge', async () => {
@@ -366,7 +360,6 @@ describe('/1/auth/otp', () => {
         });
         expect(response).toHaveStatus(401);
         expect(response.body.error.message).toBe('Password not verified.');
-        unmockTime();
       });
     });
   });

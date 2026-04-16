@@ -3,7 +3,7 @@ const { request, createUser } = require('../../utils/testing');
 const { assertAuthToken } = require('../../utils/testing/tokens');
 const { hasAuthenticator } = require('../../utils/auth/authenticators');
 const { upsertAppleAuthenticator } = require('../../utils/auth/apple');
-const { mockTime, unmockTime } = require('../../utils/testing/time');
+const { mockTime } = require('../../utils/testing/time');
 const { User } = require('../../models');
 
 describe('/1/auth/apple', () => {
@@ -79,8 +79,6 @@ describe('/1/auth/apple', () => {
           createdAt: new Date('2020-01-01'),
         },
       ]);
-
-      unmockTime();
     });
 
     it('should not add multiple authenticators', async () => {

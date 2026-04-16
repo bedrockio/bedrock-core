@@ -1,7 +1,7 @@
 const speakeasy = require('speakeasy');
 const { request, createUser } = require('../../utils/testing');
 const { assertAuthToken } = require('../../utils/testing/tokens');
-const { mockTime, unmockTime, advanceTime } = require('../../utils/testing/time');
+const { mockTime, advanceTime } = require('../../utils/testing/time');
 const { createSecret, enableTotp } = require('../../utils/auth/totp');
 const { User } = require('../../models');
 
@@ -43,8 +43,6 @@ describe('/1/auth/totp', () => {
           lastUsedAt: new Date('2020-01-01T00:00:01.000Z'),
         },
       ]);
-
-      unmockTime();
     });
 
     it('should throttle logins', async () => {
@@ -84,8 +82,6 @@ describe('/1/auth/totp', () => {
         code,
       });
       expect(response).toHaveStatus(200);
-
-      unmockTime();
     });
   });
 
@@ -141,8 +137,6 @@ describe('/1/auth/totp', () => {
           createdAt: new Date('2020-01-01'),
         },
       ]);
-
-      unmockTime();
     });
 
     it('should request authentication', async () => {

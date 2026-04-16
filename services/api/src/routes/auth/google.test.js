@@ -3,7 +3,7 @@ const { request, createUser } = require('../../utils/testing');
 const { assertAuthToken } = require('../../utils/testing/tokens');
 const { upsertGoogleAuthenticator } = require('../../utils/auth/google');
 const { hasAuthenticator } = require('../../utils/auth/authenticators');
-const { mockTime, unmockTime, advanceTime } = require('../../utils/testing/time');
+const { mockTime, advanceTime } = require('../../utils/testing/time');
 const { User } = require('../../models');
 
 describe('/1/auth/google', () => {
@@ -61,7 +61,6 @@ describe('/1/auth/google', () => {
       });
 
       expect(lastUsedAt).toEqual(new Date('2020-01-01T00:00:01.000Z'));
-      unmockTime();
     });
 
     it('should not be able to register with an unverified email', async () => {
@@ -100,8 +99,6 @@ describe('/1/auth/google', () => {
           createdAt: new Date('2020-01-01'),
         },
       ]);
-
-      unmockTime();
     });
 
     it('should not add multiple authenticators', async () => {

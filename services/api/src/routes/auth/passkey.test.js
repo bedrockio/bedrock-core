@@ -1,7 +1,7 @@
 const { request, createUser } = require('../../utils/testing');
 const { createPasskeyToken } = require('../../utils/tokens');
 const { assertAuthToken } = require('../../utils/testing/tokens');
-const { mockTime, unmockTime } = require('../../utils/testing/time');
+const { mockTime } = require('../../utils/testing/time');
 const { User } = require('../../models');
 
 function getPasskey() {
@@ -59,7 +59,6 @@ describe('/1/auth/passkeys', () => {
           lastUsedAt: new Date(),
         },
       ]);
-      unmockTime();
     });
 
     it('should error on a bad response', async () => {
@@ -171,7 +170,6 @@ describe('/1/auth/passkeys', () => {
           },
         },
       ]);
-      unmockTime();
     });
 
     it('should derive name from platform', async () => {

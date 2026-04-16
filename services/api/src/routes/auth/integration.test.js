@@ -2,7 +2,7 @@ const { assertSmsSent } = require('twilio');
 const { assertMailSent } = require('postmark');
 const { request, createUser } = require('../../utils/testing');
 const { assertAuthToken } = require('../../utils/testing/tokens');
-const { mockTime, unmockTime, advanceTime } = require('../../utils/testing/time');
+const { mockTime, advanceTime } = require('../../utils/testing/time');
 const { User } = require('../../models');
 
 describe('mfa', () => {
@@ -137,8 +137,6 @@ describe('mfa', () => {
 
       expect(response).toHaveStatus(200);
       assertAuthToken(user, response.body.data.token);
-
-      unmockTime();
     });
 
     it('should verify recent password in sms mfa flow', async () => {
@@ -173,8 +171,6 @@ describe('mfa', () => {
         phone: user.phone,
       });
       expect(response).toHaveStatus(401);
-
-      unmockTime();
     });
   });
 });

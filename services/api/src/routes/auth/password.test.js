@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const { assertSmsSent } = require('twilio');
 const { assertMailSent, getLastSent } = require('postmark');
 const { request, context, createUser } = require('../../utils/testing');
-const { mockTime, unmockTime, advanceTime } = require('../../utils/testing/time');
+const { mockTime, advanceTime } = require('../../utils/testing/time');
 const { createAuthToken, createAccessToken, verifyToken } = require('../../utils/tokens');
 const { verifyPassword } = require('../../utils/auth/password');
 const { assertAuthToken } = require('../../utils/testing/tokens');
@@ -120,7 +120,6 @@ describe('/1/auth', () => {
       user = await User.findById(user);
       const authenticator = getAuthenticator(user, 'password');
       expect(authenticator.lastUsedAt).toEqual(new Date('2020-01-01T00:00:01.000Z'));
-      unmockTime();
     });
 
     it('should store the new token payload on the user', async () => {
@@ -143,7 +142,6 @@ describe('/1/auth', () => {
           expiresAt: new Date('2020-01-31T00:00:00.000Z'),
         }),
       ]);
-      unmockTime();
     });
 
     it('should challenge password login via sms otp', async () => {
@@ -189,8 +187,6 @@ describe('/1/auth', () => {
 
       user = await User.findById(user.id);
       expect(user.authTokens.length).toBe(1);
-
-      unmockTime();
     });
 
     describe('login throttling', () => {
@@ -208,8 +204,6 @@ describe('/1/auth', () => {
 
         response = await request('POST', '/1/auth/password/login', { email: user.email, password });
         expect(response).toHaveStatus(200);
-
-        unmockTime();
       });
 
       it('should throttle 1 minute up to 10 attempts', async () => {
@@ -237,8 +231,6 @@ describe('/1/auth', () => {
         advanceTime(60 * 1000);
         response = await request('POST', '/1/auth/password/login', { email: user.email, password });
         expect(response).toHaveStatus(200);
-
-        unmockTime();
       });
 
       it('should throttle 1 hour after 10 attempts', async () => {
@@ -265,8 +257,6 @@ describe('/1/auth', () => {
         advanceTime(60 * 60 * 1000);
         response = await request('POST', '/1/auth/password/login', { email: user.email, password });
         expect(response).toHaveStatus(200);
-
-        unmockTime();
       });
 
       it('should not throttle after successful login attempt', async () => {
@@ -289,8 +279,6 @@ describe('/1/auth', () => {
 
         response = await request('POST', '/1/auth/password/login', { email: user.email, password });
         expect(response).toHaveStatus(200);
-
-        unmockTime();
       });
     });
   });
@@ -401,7 +389,6 @@ describe('/1/auth', () => {
         },
       );
       expect(response).toHaveStatus(401);
-      unmockTime();
     });
 
     it('should not consume token on unsuccessful attempt', async () => {

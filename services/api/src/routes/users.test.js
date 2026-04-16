@@ -1,5 +1,5 @@
 const { request, createUser, createAdmin } = require('../utils/testing');
-const { mockTime, unmockTime, advanceTime } = require('../utils/testing/time');
+const { mockTime, advanceTime } = require('../utils/testing/time');
 const { User, Shop, AuditEntry } = require('../models');
 const { importFixtures } = require('../utils/fixtures');
 
@@ -241,7 +241,6 @@ describe('/1/users', () => {
       );
       expect(response).toHaveStatus(401);
       expect(response.body.error.message).toBe('jwt expired');
-      unmockTime();
     });
 
     it('dont allow an superAdmin to authenticate as another admin', async () => {
