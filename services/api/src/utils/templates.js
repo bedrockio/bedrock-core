@@ -17,7 +17,7 @@ const renderer = new TemplateRenderer({
 
 async function renderTemplate(options) {
   const { dir, ...rest } = resolveOptions(options);
-  const template = await resolveTemplate(options);
+  const template = await resolveTemplateArg(options);
 
   return renderer.run({
     dir,
@@ -34,6 +34,7 @@ function resolveOptions(options) {
   const { channel } = options;
 
   let dir;
+
   if (channel) {
     dir = path.resolve(__dirname, '../templates', channel);
   }
@@ -44,31 +45,56 @@ function resolveOptions(options) {
   };
 }
 
-// Note this function is intentionally NOT memoized
-// as new templates may be created and must be found.
-async function resolveTemplate(options) {
-  let { body, template, channel } = options;
+async function resolveTemplateArg(options) {
+  const { body, template } = options;
 
-  template ||= body;
-  template ||= '';
+  if (typeof template === 'string' && path.extname(template) !== '') {
+    // Return template filename if an extension if found.
+    return template;
+  } else if (template) {
+    const templateBody = await resolveTemplateBody(options);
 
-  if (isTemplateName(template) && channel) {
-    const doc = await Template.findOne({
-      name: template,
-    });
-
-    template = doc?.[channel] || template;
+    // If the template arg is a name then find the template
+    // and return the body for the channel. Fall back to the
+    // template name to find it as a file.
+    return templateBody || template;
+  } else {
+    return body;
   }
-
-  return template;
 }
 
-// Best guess if this is template name or not.
-function isTemplateName(template) {
-  if (template && path.extname(template)) {
-    return true;
+async function resolveTemplate(options) {
+  const { template: input } = options;
+
+  if (input instanceof Template) {
+    return input;
+  } else if (typeof input === 'string') {
+    return await Template.findOne({
+      name: input,
+    });
   }
-  return !template.includes('\n');
+}
+
+async function resolveTemplateBody(options) {
+  const template = await resolveTemplate(options);
+
+  if (!template) {
+    return;
+  }
+
+  const { channel } = options;
+
+  if (!channel) {
+    throw new Error('Channel required.');
+  }
+
+  const body = template[channel];
+
+  if (!body) {
+    throw new Error(`Template body not found for ${template.id}:${channel}`);
+  }
+
+  return body;
 }
 
 // Helpers
@@ -115,4 +141,5 @@ function resolveUpload(arg) {
 
 module.exports = {
   renderTemplate,
+  resolveTemplate,
 };

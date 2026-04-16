@@ -10,7 +10,7 @@ describe('/1/unsubscribe', () => {
         description: 'Some description',
         notifications: [
           {
-            name: 'product-updated',
+            type: 'product-updated',
             sms: false,
             push: false,
             email: true,
@@ -19,7 +19,7 @@ describe('/1/unsubscribe', () => {
       });
 
       const token = createAccessToken(user, {
-        name: 'product-updated',
+        type: 'product-updated',
         action: 'unsubscribe',
         channel: 'email',
       });
@@ -32,7 +32,7 @@ describe('/1/unsubscribe', () => {
 
       expect(user.notifications.toObject()).toMatchObject([
         {
-          name: 'product-updated',
+          type: 'product-updated',
           sms: false,
           push: false,
           email: false,

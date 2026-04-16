@@ -6,18 +6,18 @@ const router = new Router();
 
 router.post('/', authenticate({ type: 'access' }), async (ctx) => {
   const { jwt, authUser } = ctx.state;
-  const { action, name, channel } = jwt;
+  const { action, type, channel } = jwt;
 
   if (action !== 'unsubscribe') {
     ctx.throw(400, 'Invalid token.');
-  } else if (!name) {
-    ctx.throw(400, 'No name found.');
+  } else if (!type) {
+    ctx.throw(400, 'No type found.');
   } else if (!channel) {
     ctx.throw(400, 'No channel found.');
   }
 
   await unsubscribe({
-    name,
+    type,
     channel,
     user: authUser,
   });

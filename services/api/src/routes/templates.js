@@ -10,7 +10,7 @@ const { Template, User, AuditEntry } = require('../models');
 
 const router = new Router();
 
-// Loads some dummy conten for consumption in the templates.
+// Loads some dummy content for consumption in the templates.
 // Adjust this as needed for the app.
 async function getPreviewParams() {
   return {
@@ -65,7 +65,7 @@ router
     try {
       const result = await getMailParams({
         validate: true,
-        template: template.name,
+        template,
         ...params,
       });
       ctx.body = {
@@ -95,7 +95,7 @@ router
         user = await User.findOne({
           email,
         });
-      } else if (channel === 'phone') {
+      } else if (channel === 'sms') {
         user = await User.findOne({
           phone,
         });

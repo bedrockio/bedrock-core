@@ -1,12 +1,12 @@
 const process = require('process');
 const logger = require('@bedrockio/logger');
 const { initialize } = require('../../src/utils/database');
-const { sleep } = require('../../src/utils/sleep');
+const { sendNotifications } = require('../../src/utils/notifications');
 
 async function run() {
   await initialize();
-  logger.info('Running example job');
-  await sleep(30 * 1000);
+  logger.info('Sending notifications');
+  await sendNotifications();
   logger.info('Done');
 }
 

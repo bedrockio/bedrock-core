@@ -1,6 +1,6 @@
 module.exports = [
   {
-    name: 'product-updated',
+    type: 'product-updated',
     label: 'Product Updated',
     email: true,
   },

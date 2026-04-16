@@ -14,7 +14,7 @@ describe('/1/meta', () => {
           {
             email: true,
             label: 'Product Updated',
-            name: 'product-updated',
+            type: 'product-updated',
           },
         ],
       });

@@ -3,83 +3,128 @@ const logger = require('@bedrockio/logger');
 const { sendMail, sendSms, sendPush } = require('./messaging');
 const { UnsubscribedError } = require('./messaging/errors');
 const { createAccessToken } = require('./tokens');
-const types = require('../lib/notifications/types');
-const { User } = require('../models');
+const { getDateTime } = require('./date');
+const { Notification } = require('../models');
+const { resolveTemplate } = require('./templates');
 
 const APP_URL = config.get('APP_URL');
 
-async function sendNotification(options = {}) {
-  assertOptions(options);
-  const { name, user } = options;
+async function scheduleNotification(options) {
+  const { offset, ...attributes } = options;
 
-  const base = getBase(options);
-  const userConfig = getUserConfig(options);
+  const template = await resolveTemplate(options);
 
-  const config = {
-    ...base,
-    ...userConfig?.toObject(),
-  };
-
-  if (!userConfig) {
-    user.notifications.push({
-      name,
-      ...base,
-    });
-    await user.save();
+  if (!template) {
+    throw new Error(`Could not find template ${options.template}.`);
   }
 
-  let sent = 0;
+  let runAt = getDateTime();
 
-  if (config.sms) {
-    sent += await attemptSend('sms', options);
-  }
-  if (config.push) {
-    sent += await attemptSend('push', options);
-  }
-  if (config.email) {
-    sent += await attemptSend('email', options);
+  if (offset) {
+    runAt = runAt.advance(offset);
   }
 
-  if (sent > 0) {
-    await User.updateOne(
-      {
-        _id: user.id,
-        'notifications.name': name,
-      },
-      {
-        $inc: {
-          'notifications.$.sent': 1,
-        },
-        $set: {
-          'notifications.$.lastSentAt': new Date(),
-        },
-      },
-    );
-  } else {
-    logger.debug(`Notification "${name}" not sent to ${user.id}.`);
-  }
-}
-
-function assertOptions(options) {
-  const { name, user } = options;
-  if (!name) {
-    throw new Error('Name required');
-  } else if (!user) {
-    throw new Error('User required');
-  }
-}
-
-function getBase(options) {
-  const { name } = options;
-  return types.find((t) => {
-    return t.name === name;
+  await Notification.create({
+    ...attributes,
+    template,
+    runAt,
   });
 }
 
-function getUserConfig(options) {
-  const { name, user } = options;
+async function cancelNotification(options) {
+  const { user } = options;
+  if (!user) {
+    throw new Error('User required.');
+  }
+
+  const template = await resolveTemplate(options);
+
+  if (!template) {
+    throw new Error('Template required.');
+  }
+
+  const notifications = await Notification.find({
+    user,
+    template,
+  });
+
+  for (let notification of notifications) {
+    notification.status = 'canceled';
+    await notification.save();
+  }
+}
+
+async function sendNotifications() {
+  const now = new Date();
+
+  const notifications = await Notification.find({
+    status: 'pending',
+    runAt: {
+      $lte: now,
+    },
+  });
+
+  for (let notification of notifications) {
+    try {
+      await sendNotification(notification);
+    } catch (error) {
+      logger.error(error);
+    }
+  }
+}
+
+async function sendNotification(notification) {
+  await notification.include(['user', 'template']);
+
+  const config = await ensureUserConfig(notification);
+
+  const { type, user, template } = notification;
+  const { channels } = template;
+
+  let sent = false;
+
+  for (let channel of channels) {
+    if (config[channel] === false) {
+      continue;
+    }
+
+    const success = await attemptSend(channel, {
+      template,
+      user,
+      type,
+    });
+
+    sent ||= success;
+  }
+
+  if (sent) {
+    config.lastSentAt = new Date();
+  }
+
+  await user.save();
+
+  notification.status = 'completed';
+  await notification.save();
+}
+
+async function ensureUserConfig(notification) {
+  const { user, type } = notification;
+  let config = getUserConfig(user, type);
+
+  if (!config) {
+    user.notifications.push({
+      type,
+    });
+
+    config = getUserConfig(user, type);
+  }
+
+  return config;
+}
+
+function getUserConfig(user, type) {
   return user.notifications.find((n) => {
-    return n.name === name;
+    return n.type === type;
   });
 }
 
@@ -96,12 +141,12 @@ async function attemptSend(channel, options) {
         unsubscribeUrl: getUnsubscribeUrl(options),
       });
     }
-    return 1;
+    return true;
   } catch (error) {
     if (error instanceof UnsubscribedError) {
       logger.debug(`User ${user.id} unsubscribed.`);
-      await disableNotificationsForChannel(user, channel);
-      return 0;
+      disableNotificationsForChannel(user, channel);
+      return false;
     } else {
       throw error;
     }
@@ -109,28 +154,19 @@ async function attemptSend(channel, options) {
 }
 
 // Disable all notification for given channel.
-async function disableNotificationsForChannel(user, channel) {
-  await User.updateOne(
-    {
-      _id: user.id,
-      [`notifications.${channel}`]: true,
-    },
-    {
-      $set: {
-        [`notifications.$[].${channel}`]: false,
-      },
-    },
-  );
+function disableNotificationsForChannel(user, channel) {
+  for (let setting of user.notifications) {
+    setting[channel] = false;
+  }
 }
 
 // Unsubscribe
 
 async function unsubscribe(options) {
-  assertOptions(options);
-  const { user, name, channel } = options;
+  const { user, type, channel } = options;
 
   for (let notification of user.notifications) {
-    if (notification.name === name) {
+    if (notification.type === type) {
       if (hasChannel(channel, 'email')) {
         notification.email = false;
       }
@@ -142,19 +178,18 @@ async function unsubscribe(options) {
       }
     }
   }
-  user.markModified('notifications');
   await user.save();
 }
 
-function hasChannel(channel, name) {
-  return channel === name || channel === 'all';
+function hasChannel(channel, target) {
+  return channel === target || channel === 'all';
 }
 
 function getUnsubscribeUrl(options) {
-  const { name, user } = options;
+  const { type, user } = options;
 
   const token = createAccessToken(user, {
-    name,
+    type,
     action: 'unsubscribe',
     channel: 'email',
   });
@@ -165,6 +200,8 @@ function getUnsubscribeUrl(options) {
 }
 
 module.exports = {
-  sendNotification,
+  sendNotifications,
+  scheduleNotification,
+  cancelNotification,
   unsubscribe,
 };

@@ -48,27 +48,21 @@
     },
     "notifications": [
       {
-        "name": {
+        "type": {
           "type": "String",
           "required": true
         },
         "sms": {
           "type": "Boolean",
-          "default": false
+          "default": true
         },
         "push": {
           "type": "Boolean",
-          "default": false
+          "default": true
         },
         "email": {
           "type": "Boolean",
-          "default": false
-        },
-        "sent": {
-          "type": "Number",
-          "default": 0,
-          "readAccess": "none",
-          "writeAccess": "none"
+          "default": true
         },
         "lastSentAt": {
           "type": "Date",

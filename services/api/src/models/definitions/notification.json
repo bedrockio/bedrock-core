@@ -1,0 +1,32 @@
+{
+  "attributes": {
+    "status": {
+      "type": "String",
+      "required": true,
+      "default": "pending",
+      "enum": [
+        "pending",
+        "completed",
+        "canceled"
+      ]
+    },
+    "type": {
+      "type": "String",
+      "default": "one-off",
+      "required": true
+    },
+    "runAt": {
+      "type": "Date"
+    },
+    "template": {
+      "type": "ObjectId",
+      "ref": "Template",
+      "required": true
+    },
+    "user": {
+      "type": "ObjectId",
+      "ref": "User",
+      "required": true
+    }
+  }
+}

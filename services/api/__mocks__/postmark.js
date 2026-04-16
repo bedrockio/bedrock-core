@@ -37,7 +37,7 @@ class ServerClient {
       text: email.TextBody.trim(),
       html: email.HtmlBody.trim(),
       body: email.body,
-      template: email.template,
+      template: email.template?.name || email.template,
       cc: email.Cc,
       bcc: email.Bcc,
     });

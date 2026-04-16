@@ -2,7 +2,7 @@ const config = require('@bedrockio/config');
 const { Template } = require('../models');
 const { createUpload } = require('./testing');
 const { renderTemplate } = require('./templates');
-const { mockTime, unmockTime } = require('./testing/time');
+const { mockTime } = require('./testing/time');
 
 const APP_NAME = config.get('APP_NAME');
 const API_URL = config.get('API_URL');
@@ -76,8 +76,6 @@ describe('renderTemplate', () => {
       });
 
       expect(result.body).toBe('Today is: 2025-01-01');
-
-      unmockTime();
     });
 
     it('should render an image URL', async () => {
@@ -131,8 +129,6 @@ describe('renderTemplate', () => {
       });
 
       expect(result.body).toBe('This year is: 2025');
-
-      unmockTime();
     });
 
     it('should include public env', async () => {
