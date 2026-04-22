@@ -2,36 +2,16 @@ const Router = require('@koa/router');
 const { fetchByParam } = require('../utils/middleware/params');
 const { authenticate } = require('../utils/middleware/authenticate');
 const { validateFiles } = require('../utils/middleware/validate');
-const { createUploads, getUploadUrl, createUrlStream } = require('../utils/uploads');
-const { userHasAccess } = require('./../utils/permissions');
+const {
+  createUploads,
+  createUrlStream,
+  getUploadLocalPath,
+  getUploadUrl,
+  validateAccess,
+} = require('../utils/uploads');
 const { Upload } = require('../models');
 
 const router = new Router();
-
-function validateAccess(ctx, upload) {
-  if (!upload) {
-    ctx.throw(404);
-  }
-  if (upload.private) {
-    const { authUser } = ctx.state;
-    let allowed;
-    if (!authUser) {
-      allowed = false;
-    } else if (authUser.equals(upload.owner)) {
-      allowed = true;
-    } else {
-      allowed = userHasAccess(authUser, {
-        endpoint: 'uploads',
-        permission: 'read',
-        scope: 'global',
-      });
-    }
-
-    if (!allowed) {
-      ctx.throw(401, 'Cannot access upload.');
-    }
-  }
-}
 
 router
   .param(
@@ -55,12 +35,13 @@ router
     };
   })
   .get('/:id/url', async (ctx) => {
-    const { upload } = ctx.state;
+    const { upload, authUser } = ctx.state;
     validateAccess(ctx, upload);
-
     try {
       ctx.body = {
-        data: await getUploadUrl(upload),
+        data: await getUploadUrl(upload, {
+          authUser,
+        }),
       };
     } catch (error) {
       ctx.throw(400, error);
@@ -70,33 +51,19 @@ router
     const { upload } = ctx.state;
     validateAccess(ctx, upload);
 
+    ctx.set('Content-Type', upload.mimeType);
+    ctx.set('Content-Disposition', `inline; filename="${upload.filename}"`);
+
     try {
-      const url = await getUploadUrl(upload);
-
-      ctx.set('Content-Type', upload.mimeType);
-      ctx.set('Content-Disposition', `inline; filename="${upload.filename}"`);
-
       if (upload.storageType === 'gcs') {
+        const url = await getUploadUrl(upload);
         if (upload.private) {
-          // Note that private images cannot be served via an <img> tag as this
-          // will not send the Authorize header and so will not pass the above
-          // validateAccess check.
-          //
-          // Additionally they cannot be redirected to as browser fetch requests
-          // will strip the Origin header on redirect, which will result in the
-          // cors access control headers being stripped from the response as the
-          // bucket objects are private, which will result in a cors error.
           ctx.body = createUrlStream(url);
         } else {
-          // Public images CAN be redirected to, however note that in order to be
-          // loaded by a fetch request (as opposed to an <img> tag) the bucket must
-          // have the correct cors configuration. This is particularly relevant for
-          // flutter web in canvas mode, which uses the fetch API to load images. In
-          // such an environment the bucket must be correctly configured.
           ctx.redirect(url);
         }
       } else {
-        ctx.body = createUrlStream(url);
+        ctx.body = createUrlStream(getUploadLocalPath(upload));
       }
     } catch (error) {
       ctx.throw(400, error);

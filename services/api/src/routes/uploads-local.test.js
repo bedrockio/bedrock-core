@@ -1,6 +1,8 @@
 const fs = require('fs');
 const os = require('os');
 const { request, createUpload, createUser, createAdmin } = require('../utils/testing');
+const { mockTime, unmockTime, advanceTime } = require('../utils/testing/time');
+const { createAccessToken } = require('../utils/tokens');
 const { Upload } = require('../models');
 const { Blob } = require('node:buffer');
 
@@ -66,17 +68,20 @@ describe('/1/uploads', () => {
   });
 
   describe('GET /:id/url', () => {
-    it('should get the URL for a public file', async () => {
+    it('should return raw URL without token for a public file', async () => {
       const user = await createUser();
       const upload = await createUpload({
         owner: user,
       });
       const response = await request('GET', `/1/uploads/${upload.id}/url`, {}, { user });
       expect(response).toHaveStatus(200);
-      expect(response.body.data.startsWith(os.tmpdir())).toBe(true);
+      expect(response.body.data).toMatch(
+        new RegExp(`/1/uploads/${upload.id}/raw$`),
+      );
+      expect(response.body.data).not.toContain('token=');
     });
 
-    it('should get the URL for a private file', async () => {
+    it('should return raw URL with a scoped token for a private file', async () => {
       const user = await createUser();
       const upload = await createUpload({
         private: true,
@@ -86,11 +91,12 @@ describe('/1/uploads', () => {
       const response = await request('GET', `/1/uploads/${upload.id}/url`, {}, { user });
 
       expect(response).toHaveStatus(200);
-      expect(response.body.data.startsWith(os.tmpdir())).toBe(true);
+      expect(response.body.data).toMatch(
+        new RegExp(`/1/uploads/${upload.id}/raw\\?token=`),
+      );
     });
 
     it('should allow access as admin', async () => {
-      mockReadStream();
       const admin = await createAdmin();
       const user = await createUser();
       const upload = await createUpload({
@@ -99,8 +105,7 @@ describe('/1/uploads', () => {
       });
       const response = await request('GET', `/1/uploads/${upload.id}/url`, {}, { user: admin });
       expect(response).toHaveStatus(200);
-      expect(response.body.data.startsWith(os.tmpdir())).toBe(true);
-      unmockReadStream();
+      expect(response.body.data).toContain(`?token=`);
     });
 
     it('should not allow access for unauthenticated', async () => {
@@ -131,6 +136,114 @@ describe('/1/uploads', () => {
       });
       const response = await request('GET', `/1/uploads/${upload.id}/raw`, {}, {});
       expect(response).toHaveStatus(401);
+    });
+
+    it('should allow access with a valid upload-scoped token query param', async () => {
+      mockReadStream();
+      const user = await createUser();
+      const upload = await createUpload({
+        private: true,
+        owner: user,
+      });
+      const token = createAccessToken(user, {
+        duration: '5m',
+        upload: upload.id,
+      });
+
+      const response = await request(
+        'GET',
+        `/1/uploads/${upload.id}/raw`,
+        { token },
+        {},
+      );
+
+      expect(response).toHaveStatus(200);
+      unmockReadStream();
+    });
+
+    it('should reject a token scoped to a different upload', async () => {
+      const user = await createUser();
+      const upload = await createUpload({
+        private: true,
+        owner: user,
+      });
+      const otherUpload = await createUpload({
+        private: true,
+        owner: user,
+      });
+      const token = createAccessToken(user, {
+        duration: '5m',
+        upload: otherUpload.id,
+      });
+
+      const response = await request(
+        'GET',
+        `/1/uploads/${upload.id}/raw`,
+        { token },
+        {},
+      );
+
+      expect(response).toHaveStatus(401);
+    });
+
+    it('should reject a malformed token', async () => {
+      const upload = await createUpload({
+        private: true,
+      });
+
+      const response = await request(
+        'GET',
+        `/1/uploads/${upload.id}/raw`,
+        { token: 'not-a-real-jwt' },
+        {},
+      );
+
+      expect(response).toHaveStatus(401);
+    });
+
+    it('should reject a non-access token type', async () => {
+      const user = await createUser();
+      const upload = await createUpload({
+        private: true,
+        owner: user,
+      });
+      // Auth tokens have kid='user', not 'access' — should not grant upload access.
+      const { signToken, getAuthPayload } = require('../utils/tokens');
+      const token = signToken({ ...getAuthPayload(user), upload: upload.id });
+
+      const response = await request(
+        'GET',
+        `/1/uploads/${upload.id}/raw`,
+        { token },
+        {},
+      );
+
+      expect(response).toHaveStatus(401);
+    });
+
+    it('should reject an expired token', async () => {
+      mockTime('2026-01-01T00:00:00Z');
+      const user = await createUser();
+      const upload = await createUpload({
+        private: true,
+        owner: user,
+      });
+      const token = createAccessToken(user, {
+        duration: '5m',
+        upload: upload.id,
+      });
+
+      advanceTime(10 * 60 * 1000);
+
+      const response = await request(
+        'GET',
+        `/1/uploads/${upload.id}/raw`,
+        { token },
+        {},
+      );
+
+      expect(response).toHaveStatus(401);
+      unmockTime();
     });
   });
 

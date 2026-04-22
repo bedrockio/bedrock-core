@@ -10,7 +10,10 @@ const mime = require('mime-types');
 const Readable = require('stream').Readable;
 const { Storage } = require('@google-cloud/storage');
 const { Upload } = require('../models');
+const { createAccessToken, verifyToken } = require('./tokens');
+const { userHasAccess } = require('./permissions');
 
+const API_URL = config.get('API_URL');
 const BUCKET_NAME = config.get('UPLOADS_GCS_BUCKET');
 const UPLOADS_STORE = config.get('UPLOADS_STORE');
 
@@ -63,7 +66,7 @@ async function createUpload(file, attributes) {
 
 async function uploadLocal(file, upload) {
   const { filename, filepath, buffer, blob } = file;
-  const destination = await getUploadUrl(upload);
+  const destination = getUploadLocalPath(upload);
   if (filepath) {
     await copyFile(filepath, destination);
   } else if (buffer) {
@@ -111,9 +114,21 @@ async function uploadGcs(file, upload) {
 // 6 hours
 const SIGNED_URL_TTL = 6 * 60 * 60 * 1000;
 
-async function getUploadUrl(upload) {
+// Browser-usable URL for the upload.
+// For local storage, private uploads get a short-lived access token appended
+// so `<audio>`/`<img>` tags can authenticate without sending headers.
+async function getUploadUrl(upload, options = {}) {
   if (upload.storageType === 'local') {
-    return path.join(os.tmpdir(), getUploadFilename(upload));
+    let url = `${API_URL}/1/uploads/${upload.id}/raw`;
+    if (upload.private) {
+      const { authUser } = options;
+      const token = createAccessToken(authUser, {
+        duration: '5m',
+        upload: upload.id,
+      });
+      url += `?token=${token}`;
+    }
+    return url;
   } else {
     const file = getGcsFile(upload);
     if (upload.private) {
@@ -129,6 +144,49 @@ async function getUploadUrl(upload) {
     } else {
       return file.publicUrl();
     }
+  }
+}
+
+function getUploadLocalPath(upload) {
+  return path.join(os.tmpdir(), getUploadFilename(upload));
+}
+
+function validateAccess(ctx, upload) {
+  if (!upload) {
+    ctx.throw(404);
+  }
+  if (!upload.private) {
+    return;
+  }
+
+  const { token } = ctx.query;
+  if (token) {
+    try {
+      const decoded = verifyToken(token);
+      if (decoded.kid === 'access' && decoded.upload === upload.id) {
+        return;
+      }
+    } catch {
+      // invalid/expired — fall through to bearer check
+    }
+  }
+
+  const { authUser } = ctx.state;
+  let allowed;
+  if (!authUser) {
+    allowed = false;
+  } else if (authUser.equals(upload.owner)) {
+    allowed = true;
+  } else {
+    allowed = userHasAccess(authUser, {
+      endpoint: 'uploads',
+      permission: 'read',
+      scope: 'global',
+    });
+  }
+
+  if (!allowed) {
+    ctx.throw(401, 'Cannot access upload.');
   }
 }
 
@@ -216,6 +274,8 @@ module.exports = {
   createUploads,
   createUpload,
   getUploadUrl,
+  getUploadLocalPath,
+  validateAccess,
   createUrlStream,
   createUploadFromUrl,
   getUploadFilename,
