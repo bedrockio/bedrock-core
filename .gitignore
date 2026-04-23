@@ -17,4 +17,4 @@ globalConfig.json
 .vscode
 .claude
 secrets
-.env*.local
+.env.*
