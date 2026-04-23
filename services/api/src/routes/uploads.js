@@ -1,12 +1,14 @@
+const fs = require('fs');
+
 const Router = require('@koa/router');
 const { fetchByParam } = require('../utils/middleware/params');
 const { authenticate } = require('../utils/middleware/authenticate');
 const { validateFiles } = require('../utils/middleware/validate');
 const {
   createUploads,
-  createUrlStream,
   getUploadLocalPath,
   getUploadUrl,
+  parseRange,
   validateAccess,
 } = require('../utils/uploads');
 const { Upload } = require('../models');
@@ -51,22 +53,30 @@ router
     const { upload } = ctx.state;
     validateAccess(ctx, upload);
 
-    ctx.set('Content-Type', upload.mimeType);
-    ctx.set('Content-Disposition', `inline; filename="${upload.filename}"`);
+    const { storageType } = upload;
 
-    try {
-      if (upload.storageType === 'gcs') {
-        const url = await getUploadUrl(upload);
-        if (upload.private) {
-          ctx.body = createUrlStream(url);
-        } else {
-          ctx.redirect(url);
-        }
-      } else {
-        ctx.body = createUrlStream(getUploadLocalPath(upload));
+    if (storageType === 'gcs') {
+      try {
+        ctx.redirect(await getUploadUrl(upload));
+      } catch (error) {
+        ctx.throw(400, error);
       }
-    } catch (error) {
-      ctx.throw(400, error);
+    } else if (storageType === 'local') {
+      const filePath = getUploadLocalPath(upload);
+
+      ctx.set('Accept-Ranges', 'bytes');
+      ctx.set('Content-Type', upload.mimeType);
+      ctx.set('Content-Disposition', `inline; filename="${upload.filename}"`);
+
+      if (ctx.headers.range) {
+        const { start, end, size } = await parseRange(ctx.headers.range, filePath);
+        ctx.set('Content-Length', String(end - start + 1));
+        ctx.set('Content-Range', `bytes ${start}-${end}/${size}`);
+        ctx.body = fs.createReadStream(filePath, { start, end });
+        ctx.status = 206;
+      } else {
+        ctx.body = fs.createReadStream(filePath);
+      }
     }
   })
   .use(authenticate())

@@ -1,22 +1,9 @@
 process.env.UPLOADS_STORE = 'gcs';
 
-const fs = require('fs');
 const { request, createUpload, createUser, createAdmin } = require('../utils/testing');
 const { assertFileStored } = require('@google-cloud/storage');
 
 const file = __dirname + '/__fixtures__/test.png';
-
-let createReadStream = fs.createReadStream;
-
-function mockReadStream() {
-  fs.createReadStream = (url) => {
-    return url;
-  };
-}
-
-function unmockReadStream() {
-  fs.createReadStream = createReadStream;
-}
 
 describe('/1/uploads', () => {
   describe('GET /:id/url', () => {
@@ -45,7 +32,6 @@ describe('/1/uploads', () => {
     });
 
     it('should allow access as admin', async () => {
-      mockReadStream();
       const admin = await createAdmin();
       const user = await createUser();
       const upload = await createUpload({
@@ -56,7 +42,6 @@ describe('/1/uploads', () => {
       const response = await request('GET', `/1/uploads/${upload.id}/url`, {}, { user: admin });
       expect(response).toHaveStatus(200);
       expect(response.body.data).toBe('PrivateUrl');
-      unmockReadStream();
     });
 
     it('should not allow access for unauthenticated', async () => {
@@ -79,16 +64,7 @@ describe('/1/uploads', () => {
       expect(response.headers.location).toBe('PublicUrl');
     });
 
-    it('should always serve without forcing a download', async () => {
-      const upload = await createUpload({
-        storageType: 'gcs',
-      });
-      const response = await request('GET', `/1/uploads/${upload.id}/raw`, {}, {});
-      expect(response.headers['content-disposition']).toBe('inline; filename="test.png"');
-    });
-
-    it('should serve a private GCS file', async () => {
-      mockReadStream();
+    it('should redirect to signed URL for a private GCS file', async () => {
       const user = await createUser();
       const upload = await createUpload({
         private: true,
@@ -98,13 +74,11 @@ describe('/1/uploads', () => {
 
       const response = await request('GET', `/1/uploads/${upload.id}/raw`, {}, { user });
 
-      expect(response).toHaveStatus(200);
-      expect(response.body.toString()).toBe('PrivateUrl');
-      unmockReadStream();
+      expect(response).toHaveStatus(302);
+      expect(response.headers.location).toBe('PrivateUrl');
     });
 
     it('should allow access as admin', async () => {
-      mockReadStream();
       const admin = await createAdmin();
       const user = await createUser();
       const upload = await createUpload({
@@ -113,9 +87,8 @@ describe('/1/uploads', () => {
         owner: user,
       });
       const response = await request('GET', `/1/uploads/${upload.id}/raw`, {}, { user: admin });
-      expect(response).toHaveStatus(200);
-      expect(response.body.toString()).toBe('PrivateUrl');
-      unmockReadStream();
+      expect(response).toHaveStatus(302);
+      expect(response.headers.location).toBe('PrivateUrl');
     });
 
     it('should not allow access for unauthenticated', async () => {

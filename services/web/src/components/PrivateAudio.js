@@ -1,14 +1,11 @@
-// Component for use with private uploads.
+// Component for use with private audio uploads.
 
-import { Image } from '@mantine/core';
 import { useEffect, useState } from 'react';
 
 import { request } from 'utils/api';
 
-import { ExternalLink } from './Link';
-
-export default function PrivateImage(props) {
-  const { upload, ...rest } = props;
+export default function PrivateAudio(props) {
+  const { upload, ref, ...rest } = props;
   const uploadId = upload?.id || upload;
   const [src, setSrc] = useState(null);
 
@@ -22,9 +19,5 @@ export default function PrivateImage(props) {
     })();
   }, [uploadId]);
 
-  return (
-    <ExternalLink href={src}>
-      <Image {...rest} src={src} />
-    </ExternalLink>
-  );
+  return <audio {...rest} ref={ref} src={src} />;
 }

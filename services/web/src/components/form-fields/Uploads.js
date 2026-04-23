@@ -13,6 +13,7 @@ import {
   PiTrashSimpleBold,
 } from 'react-icons/pi';
 
+import PrivateAudio from 'components/PrivateAudio';
 import PrivateImage from 'components/PrivateImage';
 import { useRequest } from 'hooks/request';
 
@@ -342,7 +343,11 @@ export default function UploadsField(props) {
     } else if (type === 'video') {
       return <video src={src} style={getMediaStyles()} controls />;
     } else if (type === 'audio') {
-      return <audio src={src} controls />;
+      if (isPrivate) {
+        return <PrivateAudio upload={upload} controls />;
+      } else {
+        return <audio src={src} controls />;
+      }
     }
   }
 

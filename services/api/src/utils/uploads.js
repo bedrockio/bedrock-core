@@ -1,13 +1,10 @@
 const os = require('os');
-const fs = require('fs');
 const path = require('path');
-const https = require('https');
-const { copyFile, writeFile } = require('fs/promises');
+const { copyFile, stat, writeFile } = require('fs/promises');
 
 const config = require('@bedrockio/config');
 const logger = require('@bedrockio/logger');
 const mime = require('mime-types');
-const Readable = require('stream').Readable;
 const { Storage } = require('@google-cloud/storage');
 const { Upload } = require('../models');
 const { createAccessToken, verifyToken } = require('./tokens');
@@ -199,40 +196,36 @@ function getGcsFile(upload) {
   return bucket.file(getUploadFilename(upload));
 }
 
-function createUrlStream(url) {
-  if (url.startsWith('http')) {
-    // Create a readable stream from the response
-    const readableStream = new Readable({
-      read() {
-        // This function will be called when the stream is read from
-        // You can use it to push data into the stream
-      },
-    });
-
-    https
-      .get(url, (response) => {
-        if (response.statusCode !== 200) {
-          throw new Error(`Failed to download ${url}.`);
-        }
-
-        response.on('data', (chunk) => {
-          // Push the received data into the readable stream
-          readableStream.push(chunk);
-        });
-
-        response.on('end', () => {
-          // Signal the end of the stream
-          readableStream.push(null);
-        });
-      })
-      .on('error', (error) => {
-        throw new Error(error.message);
-      });
-
-    return readableStream;
-  } else {
-    return fs.createReadStream(url);
+// Parses a single-range `Range` header against the file at `filePath`.
+// Returns `{ start, end, size }` inclusive, or null for no/invalid range.
+async function parseRange(header, filePath) {
+  if (!header) {
+    return null;
   }
+  const match = header.match(/^bytes=(\d*)-(\d*)$/);
+  if (!match) {
+    return null;
+  }
+  const { size } = await stat(filePath);
+  const [, startStr, endStr] = match;
+  let start;
+  let end;
+  if (startStr === '') {
+    // Suffix: last N bytes
+    const suffix = Number(endStr);
+    if (!suffix) {
+      return null;
+    }
+    start = Math.max(0, size - suffix);
+    end = size - 1;
+  } else {
+    start = Number(startStr);
+    end = endStr === '' ? size - 1 : Math.min(Number(endStr), size - 1);
+  }
+  if (start > end || start >= size) {
+    return null;
+  }
+  return { start, end, size };
 }
 
 async function createUploadFromUrl(url, options) {
@@ -276,7 +269,7 @@ module.exports = {
   getUploadUrl,
   getUploadLocalPath,
   validateAccess,
-  createUrlStream,
+  parseRange,
   createUploadFromUrl,
   getUploadFilename,
 };
