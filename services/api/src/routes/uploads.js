@@ -42,7 +42,7 @@ router
     try {
       ctx.body = {
         data: await getUploadUrl(upload, {
-          authUser,
+          user: authUser,
         }),
       };
     } catch (error) {

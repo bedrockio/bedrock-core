@@ -118,8 +118,8 @@ async function getUploadUrl(upload, options = {}) {
   if (upload.storageType === 'local') {
     let url = `${API_URL}/1/uploads/${upload.id}/raw`;
     if (upload.private) {
-      const { authUser } = options;
-      const token = createAccessToken(authUser, {
+      const { user } = options;
+      const token = createAccessToken(user, {
         duration: '5m',
         upload: upload.id,
       });
