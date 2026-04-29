@@ -3,7 +3,6 @@
     "./src"
   ],
   "compilerOptions": {
-    "baseUrl": "./src",
     "jsx": "react-jsx",
     "checkJs": false,
     "module": "ESNext",
@@ -29,7 +28,7 @@
         "./src/layouts/*"
       ],
       "stores": [
-        "src/stores/*"
+        "./src/stores/*"
       ],
       "styles": [
         "./src/styles/*"
