@@ -1,6 +1,12 @@
 import { useLocation, useParams } from '@bedrockio/router';
 import { Loader } from '@mantine/core';
-import { createContext, useContext, useEffect, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
 import ErrorMessage from 'components/ErrorMessage';
 
@@ -68,30 +74,33 @@ function useLoader(names, params, fn) {
     });
   }
 
-  function PageLoader(props) {
-    const { fallback, notFound } = props;
-    if (loading) {
-      return fallback || <Loader />;
-    } else if (error) {
-      if (error.status === 404 && notFound) {
-        return notFound;
-      } else {
-        return <ErrorMessage error={error} />;
+  const PageLoader = useCallback(
+    (props) => {
+      const { fallback, notFound } = props;
+      if (loading) {
+        return fallback || <Loader />;
+      } else if (error) {
+        if (error.status === 404 && notFound) {
+          return notFound;
+        } else {
+          return <ErrorMessage error={error} />;
+        }
       }
-    }
 
-    return (
-      <PageContext.Provider
-        value={{
-          ...parent,
-          ...state,
-          update,
-          reload: loadPage,
-        }}>
-        {props.children}
-      </PageContext.Provider>
-    );
-  }
+      return (
+        <PageContext.Provider
+          value={{
+            ...parent,
+            ...state,
+            update,
+            reload: loadPage,
+          }}>
+          {props.children}
+        </PageContext.Provider>
+      );
+    },
+    [loading, error],
+  );
 
   return PageLoader;
 }
