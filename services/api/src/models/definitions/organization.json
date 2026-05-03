@@ -2,7 +2,7 @@
   "attributes": {
     "name": {
       "type": "String",
-      "required": "true"
+      "required": true
     }
   },
   "search": {

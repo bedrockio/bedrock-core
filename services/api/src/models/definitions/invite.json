@@ -10,7 +10,7 @@
     },
     "status": {
       "type": "String",
-      "emum": [
+      "enum": [
         "accepted",
         "invited"
       ]
