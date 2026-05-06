@@ -9,28 +9,28 @@
     "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "helpers": [
+      "helpers/*": [
         "./src/helpers/*"
       ],
-      "components": [
+      "components/*": [
         "./src/components/*"
       ],
-      "screens": [
+      "screens/*": [
         "./src/screens/*"
       ],
-      "docs": [
+      "docs/*": [
         "./src/docs/*"
       ],
-      "utils": [
+      "utils/*": [
         "./src/utils/*"
       ],
-      "layouts": [
+      "layouts/*": [
         "./src/layouts/*"
       ],
-      "stores": [
+      "stores/*": [
         "./src/stores/*"
       ],
-      "styles": [
+      "styles/*": [
         "./src/styles/*"
       ]
     }
