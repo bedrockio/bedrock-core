@@ -1,5 +1,6 @@
 const Router = require('@koa/router');
 const config = require('@bedrockio/config');
+const logger = require('@bedrockio/logger');
 const yd = require('@bedrockio/yada');
 
 const { validateBody } = require('../../utils/middleware/validate');
@@ -108,6 +109,8 @@ router
           template: 'reset-password',
           resetUrl: new URL(`/reset-password?token=${token}`, APP_URL),
         });
+      } else {
+        logger.info(`Silently skipping password reset request for null user "${email}".`);
       }
 
       ctx.status = 204;
