@@ -5,6 +5,7 @@ import koaBasicAuth from 'koa-basic-auth';
 import koaMount from 'koa-mount';
 
 import assetsMiddleware from './middleware/assets.js';
+
 import envMiddleware from './middleware/env.js';
 import healthCheckMiddleware from './middleware/healthCheck.js';
 import historyMiddleware from './middleware/history.js';
@@ -30,7 +31,7 @@ if (config.has('SERVER_AUTH_PATH')) {
 }
 
 app
-  .use(koaMount('/assets/', assetsMiddleware('./dist/assets')))
+  .use(assetsMiddleware('./dist'))
   .use(logger.middleware())
   .use(envMiddleware())
   .use(historyMiddleware({ apps: ['/'] }))

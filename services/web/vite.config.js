@@ -35,7 +35,7 @@ export default defineConfig({
     partials(),
   ],
   envPrefix: 'PUBLIC',
-
+  publicDir: 'src/public',
   resolve: {
     alias: {
       lodash: 'lodash-es',
