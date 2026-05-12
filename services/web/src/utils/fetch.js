@@ -32,36 +32,46 @@ export class TimeoutError extends CustomError {
 export async function fetchWithTimeout(url, options) {
   const { timeout = DEFAULT_TIMEOUT, ...rest } = options;
 
+  if (timeout === 0) {
+    return fetchWithNetworkError(url, rest);
+  }
+
+  // Set up an abort controller to allow the network
+  // connection to be closed when the request times out.
+  const controller = new AbortController();
+  const { cancelTimeout, timeoutPromise } = createTimeout(timeout);
+
   try {
-    // Set up an abort controller to allow the network
-    // connection to be closed when the request times out.
-    const controller = new AbortController();
-    const res = await Promise.race([
-      fetchWithNetworkError(url, {
-        ...rest,
-        signal: controller.signal,
-      }),
-      sleep(controller, timeout),
-    ]);
+    const fetchPromise = fetchWithNetworkError(url, {
+      ...rest,
+      signal: controller.signal,
+    });
+
+    await Promise.race([fetchPromise, timeoutPromise]);
+
     onConnectionSuccess();
-    return res;
+    return await fetchPromise;
   } catch (error) {
+    controller.abort();
     onConnectionFail(error);
     throw error;
+  } finally {
+    cancelTimeout();
   }
 }
 
 async function fetchWithNetworkError(url, options) {
-  const promise = fetch(url, options);
   try {
     // Rejected promises from fetch *usually* represent a bad
     // connection, as opposed to synchronous errors thrown due
     // to malformed requests. This is not 100% guaranteed however
     // as bad CORS headers etc will still reject asynchoronously,
     // so this could potentially be better.
-    return await promise;
-  } catch {
-    throw new NetworkError();
+    return await fetch(url, options);
+  } catch (error) {
+    if (error.name !== 'AbortError') {
+      throw new NetworkError();
+    }
   }
 }
 
@@ -77,13 +87,22 @@ function onConnectionFail(error) {
   }
 }
 
-function sleep(controller, timeout) {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      controller.abort();
+function createTimeout(ms) {
+  let timer;
+  const timeoutPromise = new Promise((resolve, reject) => {
+    timer = setTimeout(() => {
       reject(new TimeoutError());
-    }, timeout);
+    }, ms);
   });
+
+  function cancelTimeout() {
+    clearTimeout(timer);
+  }
+
+  return {
+    cancelTimeout,
+    timeoutPromise,
+  };
 }
 
 function dispatchEvent(name, detail) {
