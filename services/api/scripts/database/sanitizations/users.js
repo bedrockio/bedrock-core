@@ -39,7 +39,12 @@ module.exports = async () => {
               else: {
                 $concat: [
                   {
-                    $toString: '$_id',
+                    $arrayElemAt: [
+                      {
+                        $split: ['$email', '@'],
+                      },
+                      0,
+                    ],
                   },
                   '@bedrock.foundation',
                 ],
