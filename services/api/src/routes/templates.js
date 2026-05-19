@@ -15,6 +15,7 @@ const router = new Router();
 async function getPreviewParams() {
   return {
     user: await User.findOne(),
+    sender: await User.findOne(),
   };
 }
 
@@ -65,7 +66,7 @@ router
     try {
       const result = await getMailParams({
         validate: true,
-        template,
+        template: template.name,
         ...params,
       });
       ctx.body = {
@@ -92,30 +93,22 @@ router
 
       let user;
       if (channel === 'email') {
-        user = await User.findOne({
-          email,
-        });
-      } else if (channel === 'sms') {
-        user = await User.findOne({
-          phone,
-        });
+        params.email = email;
+      } else if (channel === 'phone') {
+        params.phone = phone;
       } else if (channel === 'push') {
         user = await User.findById(userId);
-        if (!user.deviceToken) {
+        if (!user) {
+          ctx.throw(400, 'User not found.');
+        } else if (!user.deviceToken) {
           ctx.throw(400, 'User has not registered push notifications.');
         }
       }
 
-      if (!user) {
-        ctx.throw(400, 'User not found.');
-      }
-
       try {
         await sendMessage({
-          ...body,
           ...params,
           template: template.name,
-          user,
         });
       } catch (error) {
         ctx.throw(400, error);
