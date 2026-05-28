@@ -7,7 +7,7 @@ const { get, once, startCase } = require('lodash');
 
 const { serializeObject } = require('./serialize');
 
-const formatter = Intl.NumberFormat('us');
+const formatter = Intl.NumberFormat('en-US');
 
 const API_URL = config.get('API_URL');
 
