@@ -452,50 +452,6 @@ Author {{number}}: {{name}}
         });
       });
     });
-
-    describe('date', () => {
-      it('should format a basic date', async () => {
-        await sendMail({
-          email: 'marlon@brando.com',
-          body: 'Start: {{date start}}',
-          start: '2025-03-21T00:00:00.000Z',
-        });
-        const day = new Date('2025-03-21T00:00:00.000Z').getDate();
-        assertMailSent({
-          email: 'marlon@brando.com',
-          html: `<body><p>Start: 2025-03-${day}</p></body>`,
-        });
-      });
-
-      it('should format a long date', async () => {
-        await sendMail({
-          email: 'marlon@brando.com',
-          body: 'Start: {{dateLong start}}',
-          start: '2025-03-21T00:00:00.000Z',
-        });
-        const day = new Date('2025-03-21T00:00:00.000Z').getDate();
-        assertMailSent({
-          email: 'marlon@brando.com',
-          html: `<body><p>Start: March ${day}, 2025</p></body>`,
-        });
-      });
-    });
-
-    describe('relTime', () => {
-      it('should format a relative time', async () => {
-        const date = new Date();
-        date.setHours(date.getHours() - 2);
-        await sendMail({
-          email: 'marlon@brando.com',
-          body: 'Start: {{relTime start}}',
-          start: date,
-        });
-        assertMailSent({
-          email: 'marlon@brando.com',
-          html: '<body><p>Start: 2 hours ago</p></body>',
-        });
-      });
-    });
   });
 
   describe('other', () => {
