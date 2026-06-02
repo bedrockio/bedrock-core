@@ -44,6 +44,10 @@ class File {
     return ['PrivateUrl'];
   }
 
+  createResumableUpload() {
+    return ['ResumableUrl'];
+  }
+
   publicUrl() {
     return 'PublicUrl';
   }

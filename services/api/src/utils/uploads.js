@@ -1,5 +1,6 @@
 const os = require('os');
 const path = require('path');
+const fs = require('fs');
 const { copyFile, stat, writeFile } = require('fs/promises');
 
 const config = require('@bedrockio/config');
@@ -11,6 +12,7 @@ const { createAccessToken, verifyToken } = require('./tokens');
 const { userHasAccess } = require('./permissions');
 
 const API_URL = config.get('API_URL');
+const APP_URL = config.get('APP_URL');
 const BUCKET_NAME = config.get('UPLOADS_GCS_BUCKET');
 const UPLOADS_STORE = config.get('UPLOADS_STORE');
 
@@ -144,8 +146,38 @@ async function getUploadUrl(upload, options = {}) {
   }
 }
 
+async function createResumableUpload(attributes) {
+  const upload = await Upload.create({
+    ...attributes,
+    storageType: UPLOADS_STORE,
+  });
+
+  const file = getGcsFile(upload);
+
+  // `origin` should be the client origin without a trailing slash.
+  // GCS pins it from this request and echoes it as a header on every
+  // upload to the session so it must match exactly. Note that in this
+  // flow the CORS config on the bucket is not consulted so it does not
+  // require any special configuration.
+  const [url] = await file.createResumableUpload({
+    origin: APP_URL,
+  });
+
+  return url;
+}
+
 function getUploadLocalPath(upload) {
   return path.join(os.tmpdir(), getUploadFilename(upload));
+}
+
+function getUploadReadStream(upload) {
+  if (upload.storageType === 'local') {
+    return fs.createReadStream(getUploadLocalPath(upload));
+  }
+  if (upload.storageType === 'gcs') {
+    return getGcsFile(upload).createReadStream();
+  }
+  throw new Error(`Unsupported upload storage type: ${upload.storageType}`);
 }
 
 function validateAccess(ctx, upload) {
@@ -268,8 +300,9 @@ module.exports = {
   createUpload,
   getUploadUrl,
   getUploadLocalPath,
+  getUploadReadStream,
   validateAccess,
   parseRange,
   createUploadFromUrl,
-  getUploadFilename,
+  createResumableUpload,
 };
