@@ -134,7 +134,8 @@ describe('/1/uploads', () => {
         { user },
       );
       expect(response).toHaveStatus(200);
-      expect(response.body.data).toBe('ResumableUrl');
+      expect(response.body.data.url).toBe('ResumableUrl');
+      expect(response.body.data.upload.id).toBeDefined();
 
       const upload = await Upload.findOne({
         owner: user.id,

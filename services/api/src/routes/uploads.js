@@ -99,12 +99,12 @@ router
     const { authUser } = ctx.state;
 
     try {
-      const url = await createResumableUpload({
+      const result = await createResumableUpload({
         ...ctx.request.body,
         owner: authUser,
       });
       ctx.body = {
-        data: url,
+        data: result,
       };
     } catch (error) {
       ctx.throw(400, error);

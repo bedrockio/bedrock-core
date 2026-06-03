@@ -163,7 +163,10 @@ async function createResumableUpload(attributes) {
     origin: APP_URL,
   });
 
-  return url;
+  return {
+    url,
+    upload,
+  };
 }
 
 function getUploadLocalPath(upload) {
