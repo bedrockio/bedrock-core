@@ -14,12 +14,14 @@
     },
     "storageType": {
       "type": "String",
-      "required": true
+      "required": true,
+      "writeAccess": "none"
     },
     "owner": {
       "type": "ObjectId",
       "ref": "User",
-      "required": true
+      "required": true,
+      "writeAccess": "none"
     }
   }
 }

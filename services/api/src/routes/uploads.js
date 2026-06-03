@@ -3,9 +3,10 @@ const fs = require('fs');
 const Router = require('@koa/router');
 const { fetchByParam } = require('../utils/middleware/params');
 const { authenticate } = require('../utils/middleware/authenticate');
-const { validateFiles } = require('../utils/middleware/validate');
+const { validateFiles, validateBody } = require('../utils/middleware/validate');
 const {
   createUploads,
+  createResumableUpload,
   getUploadLocalPath,
   getUploadUrl,
   parseRange,
@@ -89,6 +90,21 @@ router
       });
       ctx.body = {
         data: uploads,
+      };
+    } catch (error) {
+      ctx.throw(400, error);
+    }
+  })
+  .post('/resumable', validateBody(Upload.getCreateValidation()), async (ctx) => {
+    const { authUser } = ctx.state;
+
+    try {
+      const result = await createResumableUpload({
+        ...ctx.request.body,
+        owner: authUser,
+      });
+      ctx.body = {
+        data: result,
       };
     } catch (error) {
       ctx.throw(400, error);

@@ -1,5 +1,6 @@
 const os = require('os');
 const path = require('path');
+const fs = require('fs');
 const { copyFile, stat, writeFile } = require('fs/promises');
 
 const config = require('@bedrockio/config');
@@ -11,6 +12,7 @@ const { createAccessToken, verifyToken } = require('./tokens');
 const { userHasAccess } = require('./permissions');
 
 const API_URL = config.get('API_URL');
+const APP_URL = config.get('APP_URL');
 const BUCKET_NAME = config.get('UPLOADS_GCS_BUCKET');
 const UPLOADS_STORE = config.get('UPLOADS_STORE');
 
@@ -144,8 +146,48 @@ async function getUploadUrl(upload, options = {}) {
   }
 }
 
+async function createResumableUpload(attributes) {
+  const upload = await Upload.create({
+    ...attributes,
+    storageType: UPLOADS_STORE,
+  });
+
+  const file = getGcsFile(upload);
+
+  const isPublic = !upload.private;
+
+  const [url] = await file.createResumableUpload({
+    // Must match the browser origin exactly: GCS pins it from this request and
+    // echoes it as the CORS header on every chunk PUT, so the bucket's own CORS
+    // config is never consulted.
+    origin: APP_URL,
+    // Bake the public-read ACL into the write. makePublic() (used by the
+    // at-once path) can't work here: the client writes the bytes, so the server
+    // never sees a finalized object to ACL afterward. predefinedAcl applies it
+    // as GCS finalizes the object. Private uploads serve via signed URLs.
+    ...(isPublic && {
+      predefinedAcl: 'publicRead',
+    }),
+  });
+
+  return {
+    url,
+    upload,
+  };
+}
+
 function getUploadLocalPath(upload) {
   return path.join(os.tmpdir(), getUploadFilename(upload));
+}
+
+function getUploadReadStream(upload) {
+  if (upload.storageType === 'local') {
+    return fs.createReadStream(getUploadLocalPath(upload));
+  }
+  if (upload.storageType === 'gcs') {
+    return getGcsFile(upload).createReadStream();
+  }
+  throw new Error(`Unsupported upload storage type: ${upload.storageType}`);
 }
 
 function validateAccess(ctx, upload) {
@@ -268,8 +310,9 @@ module.exports = {
   createUpload,
   getUploadUrl,
   getUploadLocalPath,
+  getUploadReadStream,
   validateAccess,
   parseRange,
   createUploadFromUrl,
-  getUploadFilename,
+  createResumableUpload,
 };

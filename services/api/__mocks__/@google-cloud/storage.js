@@ -1,4 +1,5 @@
 let storedFiles = [];
+let resumableUploads = [];
 
 class Storage {
   bucket(name) {
@@ -44,6 +45,11 @@ class File {
     return ['PrivateUrl'];
   }
 
+  createResumableUpload(options = {}) {
+    resumableUploads.push(options);
+    return ['ResumableUrl'];
+  }
+
   publicUrl() {
     return 'PublicUrl';
   }
@@ -51,13 +57,19 @@ class File {
 
 afterEach(() => {
   storedFiles = [];
+  resumableUploads = [];
 });
 
 function assertFileStored(options) {
   expect(storedFiles).toEqual(expect.arrayContaining([expect.objectContaining(options)]));
 }
 
+function getResumableUploads() {
+  return resumableUploads;
+}
+
 module.exports = {
   Storage,
   assertFileStored,
+  getResumableUploads,
 };

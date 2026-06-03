@@ -1,7 +1,8 @@
 process.env.UPLOADS_STORE = 'gcs';
 
 const { request, createUpload, createUser, createAdmin } = require('../utils/testing');
-const { assertFileStored } = require('@google-cloud/storage');
+const { assertFileStored, getResumableUploads } = require('@google-cloud/storage');
+const { Upload } = require('../models');
 
 const file = __dirname + '/__fixtures__/test.png';
 
@@ -117,6 +118,83 @@ describe('/1/uploads', () => {
       assertFileStored({
         contentDisposition: 'inline; filename="test.png"',
       });
+    });
+  });
+
+  describe('POST /resumable', () => {
+    it('should create a resumable upload URL and store the upload', async () => {
+      const user = await createUser();
+      const response = await request(
+        'POST',
+        '/1/uploads/resumable',
+        {
+          filename: 'test.png',
+          mimeType: 'image/png',
+        },
+        { user },
+      );
+      expect(response).toHaveStatus(200);
+      expect(response.body.data.url).toBe('ResumableUrl');
+      expect(response.body.data.upload.id).toBeDefined();
+
+      const upload = await Upload.findOne({
+        owner: user.id,
+      });
+      expect(upload.filename).toBe('test.png');
+      expect(upload.mimeType).toBe('image/png');
+      expect(upload.storageType).toBe('gcs');
+    });
+
+    it('should not allow access for unauthenticated', async () => {
+      const response = await request(
+        'POST',
+        '/1/uploads/resumable',
+        {
+          filename: 'test.png',
+          mimeType: 'image/png',
+        },
+        {},
+      );
+      expect(response).toHaveStatus(401);
+    });
+
+    it('should require a filename and mime type', async () => {
+      const user = await createUser();
+      const response = await request('POST', '/1/uploads/resumable', {}, { user });
+      expect(response).toHaveStatus(400);
+    });
+
+    it('should make a public upload object public-read up front', async () => {
+      const user = await createUser();
+      const response = await request(
+        'POST',
+        '/1/uploads/resumable',
+        {
+          filename: 'test.png',
+          mimeType: 'image/png',
+        },
+        { user },
+      );
+      expect(response).toHaveStatus(200);
+      expect(getResumableUploads()[0]).toMatchObject({
+        predefinedAcl: 'publicRead',
+      });
+    });
+
+    it('should not set an ACL for a private upload', async () => {
+      const user = await createUser();
+      const response = await request(
+        'POST',
+        '/1/uploads/resumable',
+        {
+          filename: 'test.png',
+          mimeType: 'image/png',
+          private: true,
+        },
+        { user },
+      );
+      expect(response).toHaveStatus(200);
+      expect(getResumableUploads()[0].predefinedAcl).toBeUndefined();
     });
   });
 });
