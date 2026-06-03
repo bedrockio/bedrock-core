@@ -1,7 +1,7 @@
 process.env.UPLOADS_STORE = 'gcs';
 
 const { request, createUpload, createUser, createAdmin } = require('../utils/testing');
-const { assertFileStored } = require('@google-cloud/storage');
+const { assertFileStored, getResumableUploads } = require('@google-cloud/storage');
 const { Upload } = require('../models');
 
 const file = __dirname + '/__fixtures__/test.png';
@@ -162,6 +162,39 @@ describe('/1/uploads', () => {
       const user = await createUser();
       const response = await request('POST', '/1/uploads/resumable', {}, { user });
       expect(response).toHaveStatus(400);
+    });
+
+    it('should make a public upload object public-read up front', async () => {
+      const user = await createUser();
+      const response = await request(
+        'POST',
+        '/1/uploads/resumable',
+        {
+          filename: 'test.png',
+          mimeType: 'image/png',
+        },
+        { user },
+      );
+      expect(response).toHaveStatus(200);
+      expect(getResumableUploads()[0]).toMatchObject({
+        predefinedAcl: 'publicRead',
+      });
+    });
+
+    it('should not set an ACL for a private upload', async () => {
+      const user = await createUser();
+      const response = await request(
+        'POST',
+        '/1/uploads/resumable',
+        {
+          filename: 'test.png',
+          mimeType: 'image/png',
+          private: true,
+        },
+        { user },
+      );
+      expect(response).toHaveStatus(200);
+      expect(getResumableUploads()[0].predefinedAcl).toBeUndefined();
     });
   });
 });

@@ -154,13 +154,20 @@ async function createResumableUpload(attributes) {
 
   const file = getGcsFile(upload);
 
-  // `origin` should be the client origin without a trailing slash.
-  // GCS pins it from this request and echoes it as a header on every
-  // upload to the session so it must match exactly. Note that in this
-  // flow the CORS config on the bucket is not consulted so it does not
-  // require any special configuration.
+  const isPublic = !upload.private;
+
   const [url] = await file.createResumableUpload({
+    // Must match the browser origin exactly: GCS pins it from this request and
+    // echoes it as the CORS header on every chunk PUT, so the bucket's own CORS
+    // config is never consulted.
     origin: APP_URL,
+    // Bake the public-read ACL into the write. makePublic() (used by the
+    // at-once path) can't work here: the client writes the bytes, so the server
+    // never sees a finalized object to ACL afterward. predefinedAcl applies it
+    // as GCS finalizes the object. Private uploads serve via signed URLs.
+    ...(isPublic && {
+      predefinedAcl: 'publicRead',
+    }),
   });
 
   return {
